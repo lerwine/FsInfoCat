@@ -120,6 +120,8 @@ const string NAME_NewIdNavRef = "NewIdNavRef";
 const string NAME_UniqueIdentifier = "UniqueIdentifier";
 const string NAME_value = "value";
 const string NAME_DefaultNull = "DefaultNull";
+const string NAME_DefaultNow = "DefaultNow";
+const string NAME_DefaultZero = "DefaultZero";
 const string NAME_AllowNull = "AllowNull";
 const string NAME_IsGenericWritable = "IsGenericWritable";
 const string NAME_DisplayNameResource = "DisplayNameResource";
@@ -151,6 +153,14 @@ const string NAME_Text = "Text";
 const string NAME_VolumeIdentifier = "VolumeIdentifier";
 const string NAME_DriveType = "DriveType";
 const string NAME_MaxLength = "MaxLength";
+const string NAME_MinLength = "MinLength";
+const string NAME_MaxValue = "MaxValue";
+const string NAME_MinValue = "MinValue";
+const string NAME_CreatedOn = "CreatedOn";
+const string NAME_ModifiedOn = "ModifiedOn";
+const string NAME_UpstreamId = "UpstreamId";
+const string NAME_LastSynchronizedOn = "LastSynchronizedOn";
+const string NAME_IsNormalized = "IsNormalized";
 static readonly XName XNAME_Root = XName.Get(NAME_Root);
 static readonly XName XNAME_Upstream = XName.Get(NAME_Upstream);
 static readonly XName XNAME_Local = XName.Get(NAME_Local);
@@ -198,6 +208,8 @@ static readonly XName XNAME_NewIdNavRef = XName.Get(NAME_NewIdNavRef);
 static readonly XName XNAME_UniqueIdentifier = XName.Get(NAME_UniqueIdentifier);
 static readonly XName XNAME_value = XName.Get(NAME_value);
 static readonly XName XNAME_DefaultNull = XName.Get(NAME_DefaultNull);
+static readonly XName XNAME_DefaultNow = XName.Get(NAME_DefaultNow);
+static readonly XName XNAME_DefaultZero = XName.Get(NAME_DefaultZero);
 static readonly XName XNAME_AllowNull = XName.Get(NAME_AllowNull);
 static readonly XName XNAME_IsGenericWritable = XName.Get(NAME_IsGenericWritable);
 static readonly XName XNAME_DisplayNameResource = XName.Get(NAME_DisplayNameResource);
@@ -229,6 +241,14 @@ static readonly XName XNAME_Text = XName.Get(NAME_Text);
 static readonly XName XNAME_VolumeIdentifier = XName.Get(NAME_VolumeIdentifier);
 static readonly XName XNAME_DriveType = XName.Get(NAME_DriveType);
 static readonly XName XNAME_MaxLength = XName.Get(NAME_MaxLength);
+static readonly XName XNAME_CreatedOn = XName.Get(NAME_CreatedOn);
+static readonly XName XNAME_ModifiedOn = XName.Get(NAME_ModifiedOn);
+static readonly XName XNAME_UpstreamId = XName.Get(NAME_UpstreamId);
+static readonly XName XNAME_LastSynchronizedOn = XName.Get(NAME_LastSynchronizedOn);
+static readonly XName XNAME_IsNormalized = XName.Get(NAME_IsNormalized);
+static readonly XName XNAME_MinLength = XName.Get(NAME_MinLength);
+static readonly XName XNAME_MaxValue = XName.Get(NAME_MaxValue);
+static readonly XName XNAME_MinValue = XName.Get(NAME_MinValue);
 
 private static string _templateFolder = null;
 private static EnvDTE.DTE _dte = null;
@@ -551,6 +571,30 @@ XElement GetCollectionNavigationItemEntity(XElement collectionNavigationProperty
             return FindUpstreamEntityByName(collectionNavigationPropertyElement.Attribute(XNAME_ItemType)?.Value);
         default:
             return null;
+    }
+}
+
+void GetAllProperties(XElement entityElement, Collection<(string Name, LinkedList<XElement> Sources)> collection)
+{
+    foreach (XElement baseEntity in GetBaseEntities(entityElement).Reverse())
+        GetAllProperties(baseEntity, collection);
+    foreach (XAttribute attribute in entityElement.Elements(XNAME_Properties).Elements().Attributes(XNAME_Name))
+    {
+        XElement propertyElement = attribute.Parent;
+        string propertyName = attribute.Value;
+        if (collection.Any(t => t.Name == propertyName))
+        {
+            (string Name, LinkedList<XElement> Sources) property = collection.First(t => t.Name == propertyName);
+            if (property.Sources.Any(e => ReferenceEquals(e, propertyElement)))
+                break;
+            property.Sources.AddFirst(propertyElement);
+        }
+        else
+        {
+            (string Name, LinkedList<XElement> Sources) property = new(propertyName, new LinkedList<XElement>());
+            property.Sources.AddLast(propertyElement);
+            collection.Add(property);
+        }
     }
 }
 

@@ -4544,33 +4544,6 @@ namespace FsInfoCat.Local
         new ILocalVolume Target { get; }
     }
 
-    /// <summary>Specifies the configuration of a file system crawl.</summary>
-    /// <seealso cref="ILocalDbEntity" />
-    /// <seealso cref="ICrawlConfiguration" />
-    public interface ILocalCrawlConfiguration : ILocalDbEntity, ICrawlConfiguration
-    {
-        /// <summary>Gets the starting subdirectory for the configured subdirectory crawl.</summary>
-        /// <value>The root subdirectory of the configured subdirectory crawl.</value>
-        [Display(Name = nameof(Properties.Resources.DisplayName_Root), ResourceType = typeof(Properties.Resources))]
-        new ILocalSubdirectory Root { get; }
-
-        /// <summary>Gets the crawl log entries.</summary>
-        /// <value>The crawl log entries.</value>
-        [Display(Name = nameof(Properties.Resources.DisplayName_Logs), ResourceType = typeof(Properties.Resources))]
-        new IEnumerable<ILocalCrawlJobLog> Logs { get; }
-    }
-
-    /// <summary>Log of crawl job results.</summary>
-    /// <seealso cref="ILocalDbEntity" />
-    /// <seealso cref="ICrawlJobLog" />
-    public interface ILocalCrawlJobLog : ILocalDbEntity, ICrawlJobLog
-    {
-        /// <summary>Gets the configuration source for the file system crawl.</summary>
-        /// <value>The configuration for the file system crawl.</value>
-        [Display(Name = nameof(Properties.Resources.DisplayName_Configuration), ResourceType = typeof(Properties.Resources))]
-        new ILocalCrawlConfiguration Configuration { get; }
-    }
-
     /// <summary></summary>
     /// <seealso cref="ILocalDbEntity" />
     /// <seealso cref="IDbFsItem" />
@@ -4622,6 +4595,33 @@ namespace FsInfoCat.Local
         /// <value>The access errors for the current file system item.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_AccessErrors), ResourceType = typeof(Properties.Resources))]
         new IEnumerable<ILocalSubdirectoryAccessError> AccessErrors { get; }
+    }
+
+    /// <summary>Specifies the configuration of a file system crawl.</summary>
+    /// <seealso cref="ILocalDbEntity" />
+    /// <seealso cref="ICrawlConfiguration" />
+    public interface ILocalCrawlConfiguration : ILocalDbEntity, ICrawlConfiguration
+    {
+        /// <summary>Gets the starting subdirectory for the configured subdirectory crawl.</summary>
+        /// <value>The root subdirectory of the configured subdirectory crawl.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_Root), ResourceType = typeof(Properties.Resources))]
+        new ILocalSubdirectory Root { get; }
+
+        /// <summary>Gets the crawl log entries.</summary>
+        /// <value>The crawl log entries.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_Logs), ResourceType = typeof(Properties.Resources))]
+        new IEnumerable<ILocalCrawlJobLog> Logs { get; }
+    }
+
+    /// <summary>Log of crawl job results.</summary>
+    /// <seealso cref="ILocalDbEntity" />
+    /// <seealso cref="ICrawlJobLog" />
+    public interface ILocalCrawlJobLog : ILocalDbEntity, ICrawlJobLog
+    {
+        /// <summary>Gets the configuration source for the file system crawl.</summary>
+        /// <value>The configuration for the file system crawl.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_Configuration), ResourceType = typeof(Properties.Resources))]
+        new ILocalCrawlConfiguration Configuration { get; }
     }
 
     /// <summary></summary>
@@ -5343,33 +5343,6 @@ namespace FsInfoCat.Upstream
         new IUpstreamVolume Target { get; }
     }
 
-    /// <summary>Specifies the configuration of a file system crawl.</summary>
-    /// <seealso cref="IUpstreamDbEntity" />
-    /// <seealso cref="ICrawlConfiguration" />
-    public interface IUpstreamCrawlConfiguration : IUpstreamDbEntity, ICrawlConfiguration
-    {
-        /// <summary>Gets the starting subdirectory for the configured subdirectory crawl.</summary>
-        /// <value>The root subdirectory of the configured subdirectory crawl.</value>
-        [Display(Name = nameof(Properties.Resources.DisplayName_Root), ResourceType = typeof(Properties.Resources))]
-        new IUpstreamSubdirectory Root { get; }
-
-        /// <summary>Gets the crawl log entries.</summary>
-        /// <value>The crawl log entries.</value>
-        [Display(Name = nameof(Properties.Resources.DisplayName_Logs), ResourceType = typeof(Properties.Resources))]
-        new IEnumerable<IUpstreamCrawlJobLog> Logs { get; }
-    }
-
-    /// <summary>Log of crawl job results.</summary>
-    /// <seealso cref="IUpstreamDbEntity" />
-    /// <seealso cref="ICrawlJobLog" />
-    public interface IUpstreamCrawlJobLog : IUpstreamDbEntity, ICrawlJobLog
-    {
-        /// <summary>Gets the configuration source for the file system crawl.</summary>
-        /// <value>The configuration for the file system crawl.</value>
-        [Display(Name = nameof(Properties.Resources.DisplayName_Configuration), ResourceType = typeof(Properties.Resources))]
-        new IUpstreamCrawlConfiguration Configuration { get; }
-    }
-
     /// <summary></summary>
     /// <seealso cref="IUpstreamDbEntity" />
     /// <seealso cref="IDbFsItem" />
@@ -5421,6 +5394,33 @@ namespace FsInfoCat.Upstream
         /// <value>The access errors for the current file system item.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_AccessErrors), ResourceType = typeof(Properties.Resources))]
         new IEnumerable<IUpstreamSubdirectoryAccessError> AccessErrors { get; }
+    }
+
+    /// <summary>Specifies the configuration of a file system crawl.</summary>
+    /// <seealso cref="IUpstreamDbEntity" />
+    /// <seealso cref="ICrawlConfiguration" />
+    public interface IUpstreamCrawlConfiguration : IUpstreamDbEntity, ICrawlConfiguration
+    {
+        /// <summary>Gets the starting subdirectory for the configured subdirectory crawl.</summary>
+        /// <value>The root subdirectory of the configured subdirectory crawl.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_Root), ResourceType = typeof(Properties.Resources))]
+        new IUpstreamSubdirectory Root { get; }
+
+        /// <summary>Gets the crawl log entries.</summary>
+        /// <value>The crawl log entries.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_Logs), ResourceType = typeof(Properties.Resources))]
+        new IEnumerable<IUpstreamCrawlJobLog> Logs { get; }
+    }
+
+    /// <summary>Log of crawl job results.</summary>
+    /// <seealso cref="IUpstreamDbEntity" />
+    /// <seealso cref="ICrawlJobLog" />
+    public interface IUpstreamCrawlJobLog : IUpstreamDbEntity, ICrawlJobLog
+    {
+        /// <summary>Gets the configuration source for the file system crawl.</summary>
+        /// <value>The configuration for the file system crawl.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_Configuration), ResourceType = typeof(Properties.Resources))]
+        new IUpstreamCrawlConfiguration Configuration { get; }
     }
 
     /// <summary></summary>

@@ -104,6 +104,10 @@ namespace FsInfoCat.UnitTests.DbUnitTestHelpers
         const string NAME_VolumeIdentifier = "VolumeIdentifier";
         const string NAME_DriveType = "DriveType";
         const string NAME_MaxLength = "MaxLength";
+        const string NAME_CreatedOn = "CreatedOn";
+        const string NAME_ModifiedOn = "ModifiedOn";
+        const string NAME_UpstreamId = "UpstreamId";
+        const string NAME_LastSynchronizedOn = "LastSynchronizedOn";
         static readonly XName XNAME_Root = XName.Get(NAME_Root);
         static readonly XName XNAME_Upstream = XName.Get(NAME_Upstream);
         static readonly XName XNAME_Local = XName.Get(NAME_Local);
@@ -182,6 +186,10 @@ namespace FsInfoCat.UnitTests.DbUnitTestHelpers
         static readonly XName XNAME_VolumeIdentifier = XName.Get(NAME_VolumeIdentifier);
         static readonly XName XNAME_DriveType = XName.Get(NAME_DriveType);
         static readonly XName XNAME_MaxLength = XName.Get(NAME_MaxLength);
+        static readonly XName XNAME_CreatedOn = XName.Get(NAME_CreatedOn);
+        static readonly XName XNAME_ModifiedOn = XName.Get(NAME_ModifiedOn);
+        static readonly XName XNAME_UpstreamId = XName.Get(NAME_UpstreamId);
+        static readonly XName XNAME_LastSynchronizedOn = XName.Get(NAME_LastSynchronizedOn);
 
         XDocument EntityDefinitionsDocument
         {
@@ -195,9 +203,10 @@ namespace FsInfoCat.UnitTests.DbUnitTestHelpers
 
         static readonly EntityDefinitionsReader Instance = new();
         private readonly object _document;
-
+        //private readonly ReadOnlyCollection<(string Selector, ReadOnlyCollection<string> Fields)> _keys;
         private EntityDefinitionsReader()
         {
+            Collection<(string Selector, ReadOnlyCollection<string> Field)> keys = new();
             object document;
             try
             {
@@ -208,6 +217,7 @@ namespace FsInfoCat.UnitTests.DbUnitTestHelpers
                 if (!File.Exists(path))
                     throw new FileNotFoundException($"Could not find entity configuration schema file {path}", path);
                 XmlReaderSettings readerSettings = new() { ValidationType = ValidationType.Schema };
+                //XmlSchema schema = readerSettings.Schemas.Add("", path);
                 readerSettings.Schemas.Add("", path);
                 Collection<ValidationEventArgs> validationArgs = new();
                 readerSettings.ValidationEventHandler += new ValidationEventHandler((object sender, ValidationEventArgs e) => validationArgs.Add(e));
@@ -219,13 +229,65 @@ namespace FsInfoCat.UnitTests.DbUnitTestHelpers
                 if (d.Root is null)
                     throw new InvalidDataException("Not root element found.");
                 document = d;
+                //Collection<XmlSchemaKey> keyElements = new();
+                //GetAllSchemaKeys(schema, keyElements);
+                //foreach (XmlSchemaKey key in keyElements)
+                //{
+                //    string selector = key.Selector?.XPath;
+                //    if (string.IsNullOrEmpty(selector))
+                //        continue;
+                //    string[] fields = key.Fields.OfType<XmlSchemaXPath>().Select(f => f.XPath).Where(f => !(string.IsNullOrEmpty(f) || f.Contains('/'))).ToArray();
+                //    if (fields.Length > 0)
+                //        keys.Add(new(selector, new ReadOnlyCollection<string>(fields)));
+                //}
             }
             catch (Exception exception)
             {
                 document = exception;
             }
+            //finally
+            //{
+            //    _keys = new(keys);
+            //}
             _document = document;
         }
+
+        //static void GetAllSchemaKeys(XmlSchemaObject obj, Collection<XmlSchemaKey> keyCollection)
+        //{
+        //    if (obj is null)
+        //        return;
+        //    if (obj is XmlSchema schema)
+        //    {
+        //        foreach (XmlSchemaElement element in schema.Elements.Values)
+        //            GetAllSchemaKeys(element, keyCollection);
+        //        foreach (XmlSchemaComplexType complexType in schema.SchemaTypes.Values.OfType<XmlSchemaComplexType>())
+        //        {
+        //            GetAllSchemaKeys(complexType.Particle, keyCollection);
+        //            GetAllSchemaKeys(complexType.ContentModel?.Content, keyCollection);
+        //        }
+        //        foreach (XmlSchemaObject o in schema.Groups.Values)
+        //            GetAllSchemaKeys(o, keyCollection);
+        //    }
+        //    else if (obj is XmlSchemaGroupBase groupBase)
+        //    {
+        //        foreach (XmlSchemaObject o in groupBase.Items)
+        //            GetAllSchemaKeys(o, keyCollection);
+        //    }
+        //    else if (obj is XmlSchemaElement element)
+        //    {
+        //        foreach (XmlSchemaKey key in element.Constraints.OfType<XmlSchemaKey>())
+        //            keyCollection.Add(key);
+        //        if (element.ElementSchemaType is XmlSchemaComplexType complexType)
+        //        {
+        //            GetAllSchemaKeys(complexType.Particle, keyCollection);
+        //            GetAllSchemaKeys(complexType.ContentModel?.Content, keyCollection);
+        //        }
+        //    }
+        //    else if (obj is XmlSchemaComplexContentRestriction complexContentRestriction)
+        //        GetAllSchemaKeys(complexContentRestriction.Particle, keyCollection);
+        //    else if (obj is XmlSchemaComplexContentExtension complexContentExtension)
+        //        GetAllSchemaKeys(complexContentExtension.Particle, keyCollection);
+        //}
 
         XElement FindRootEntityByName(string name)
         {
@@ -435,171 +497,266 @@ namespace FsInfoCat.UnitTests.DbUnitTestHelpers
             };
         }
 
-        interface IColumnDefinition
-        {
-            string Name { get; }
-            XElement Source { get; }
-            PropertyDefinition Property { get; }
-        }
-        record RangableColumnDefinition(string Name, uint? MaxValue, uint? MinValue);
-        record TableDefinition(string Name, EntityDefinition Entity, ReadOnlyCollection<IColumnDefinition> Columns);
+        record CodeValues(string SQL, string CLR);
+        interface IColumnConstraint { }
+        record ColumnDefinition(string Name, bool IsPrimaryKey, CodeValues DefaultValue, ReadOnlyCollection<IColumnConstraint> Constraints, PropertyDefinition Property, XElement Source);
+        record ForeignKeyConstraint(string Name, string TableName, string KeyName) : IColumnConstraint;
+        record RangeColumnConstraint(CodeValues MaxValue, CodeValues MinValue) : IColumnConstraint;
+        record LengthColumnConstraint(CodeValues MaxLength, CodeValues MinLength) : IColumnConstraint;
+        record TableDefinition(string Name, ReadOnlyCollection<ColumnDefinition> Columns, XElement Source);
 
         record PropertyDefinition(string Name, string ClrType, bool AllowsNull, bool IsGenericWritable, ReadOnlyCollection<PropertyDefinition> Base, XElement Source);
 
-        record EntityDefinition(string Name, TableDefinition Table, ReadOnlyCollection<PropertyDefinition> Properties, ReadOnlyCollection<EntityDefinition> BaseDefinitions, XElement Source);
+        record EntityDefinition(string Name, TableDefinition Table, ReadOnlyCollection<PropertyDefinition> Properties, ReadOnlyCollection<EntityDefinition> BaseDefinitions, ReadOnlyCollection<string> BaseTypeNames, XElement Source);
 
-        EntityDefinition GetEntityDefinition(XElement entityElement)
+        private static readonly ReadOnlyCollection<XName> NameKeyed = new(new[] { XNAME_Entity, XNAME_Field, XNAME_Byte, XNAME_SByte, XNAME_ByteArray, XNAME_MultiStringValue, XNAME_MD5Hash, XNAME_ByteValues, XNAME_Short, XNAME_UShort, XNAME_Int,
+            XNAME_UInt, XNAME_Long, XNAME_ULong, XNAME_Double, XNAME_Float, XNAME_Decimal, XNAME_NVarChar, XNAME_Char, XNAME_DateTime, XNAME_TimeSpan, XNAME_UniqueIdentifier, XNAME_NewIdNavRef, XNAME_Bit, XNAME_Text, XNAME_VolumeIdentifier,
+            XNAME_DriveType, XNAME_Enum, XNAME_RelatedEntity, XNAME_NewRelatedEntity, XNAME_CollectionNavigation, XNAME_NewCollectionNavigation, XNAME_Byte, XNAME_SByte, XNAME_Short, XNAME_UShort, XNAME_Int, XNAME_UInt, XNAME_Long,
+            XNAME_ULong });
+
+        private static readonly ReadOnlyCollection<XName> TypeKeyed = new(new[] { XNAME_ImplementsGenericEntity, XNAME_ImplementsEntity, XNAME_Implements });
+
+        string ToXPath(XNode node)
         {
-            ReadOnlyCollection<EntityDefinition> baseDefinitions = new(GetBaseEntities(entityElement).Select(e => GetEntityDefinition(e)).ToArray());
-            EntityDefinition entityDefinition = entityElement.Annotation<EntityDefinition>();
-            if (entityDefinition is not null)
-                return entityDefinition;
-
-            ReadOnlyCollection<PropertyDefinition> properties = new(entityElement.Elements(XNAME_Properties).Elements()
-                .Select(p => GetPropertyDefinition(p, baseDefinitions)).ToArray());
-            TableDefinition tableDefinition = GetTableDefinition(entityElement, baseDefinitions, properties);
-            entityDefinition = new(entityElement.Attribute(XNAME_Name)?.Value.Replace("{", "<").Replace("}", ">"), tableDefinition,
-                properties, baseDefinitions, entityElement);
-            entityElement.AddAnnotation(entityDefinition);
-            return entityDefinition;
-        }
-
-        private TableDefinition GetTableDefinition(XElement entityElement, ReadOnlyCollection<EntityDefinition> baseDefinitions,
-            ReadOnlyCollection<PropertyDefinition> properties)
-        {
-            TableDefinition tableDefinition = entityElement.Annotation<TableDefinition>();
-            if (tableDefinition is not null)
-                return tableDefinition;
-            string tableName = entityElement.Attribute(XNAME_TableName)?.Value;
-            if (tableName is null)
-                return null;
-            Collection<IColumnDefinition> columns = new();
-            foreach (PropertyDefinition pd in properties)
-                columns.Add(GetColumnDefinition(pd, baseDefinitions));
-            throw new NotImplementedException();
-        }
-
-        private IColumnDefinition GetColumnDefinition(PropertyDefinition pd, ReadOnlyCollection<EntityDefinition> baseDefinitions)
-        {
-            IColumnDefinition columnDefinition = pd.Source.Annotation<IColumnDefinition>();
-            if (columnDefinition is not null)
-                return columnDefinition;
-            string propertyName = pd.Source.Attribute(XNAME_ColName)?.Value ?? pd.Source.Attribute(XNAME_Name)?.Value;
-            SqlColType? sqlType = ToSqlSqlColType(pd.Source, out string sqlExpr);
-            if (!sqlType.HasValue)
-                return null;
-            switch (sqlType.Value)
+            if (node is XDocument)
+                return "/";
+            if (node is XElement element)
             {
-                case SqlColType.UNSIGNED_TINYINT:
-                case SqlColType.TINYINT:
-                case SqlColType.UNSIGNED_SMALLINT:
-                case SqlColType.SMALLINT:
-                case SqlColType.UNSIGNED_INT:
-                case SqlColType.INT:
-                case SqlColType.BIGINT:
-                case SqlColType.UNSIGNED_BIGINT:
-                case SqlColType.BINARY:
-                case SqlColType.NVARCHAR:
-                case SqlColType.CHARACTER:
-                case SqlColType.REAL:
-                case SqlColType.NUMERIC:
-                    break;
-                case SqlColType.DATETIME:
-                case SqlColType.TIME:
-                case SqlColType.UNIQUEIDENTIFIER:
-                case SqlColType.BIT:
-                case SqlColType.TEXT:
-                case SqlColType.BLOB:
-                case SqlColType.NULL:
-                    break;
-                default:
-                    break;
+                string leaf;
+                if (NameKeyed.Contains(element.Name))
+                {
+                    string name = element.Attribute(XNAME_Name)?.Value;
+                    leaf = string.IsNullOrWhiteSpace(name) ? null : $"{element.Name}[@{NAME_Name}=\"{name.Replace("\"", "&quot;")}\"]";
+                }
+                else if (TypeKeyed.Contains(element.Name))
+                {
+                    string type = element.Attribute(XNAME_Name)?.Value;
+                    leaf = string.IsNullOrWhiteSpace(type) ? null : $"{element.Name}[@{NAME_Name}=\"{type.Replace("\"", "&quot;")}\"]";
+                }
+                else
+                    leaf = null;
+                if (leaf is null)
+                {
+                    int count = element.NodesBeforeSelf().OfType<XElement>().Count(e => e.Name == element.Name);
+                    if (count > 0 || element.NodesAfterSelf().OfType<XElement>().Any(e => e.Name == element.Name))
+                        leaf = $"{element.Name}[@{count + 1}]";
+                    else
+                        leaf = element.Name.ToString();
+                }
+                return (node.Parent is null) ? ((node.Document is null) ? leaf : $"/{leaf}") : $"{ToXPath(node.Parent)}/{leaf}";
             }
-            throw new NotImplementedException();
+            return (node.Parent is null) ? ((node.Document is null) ? "." : "/") : ToXPath(node.Parent);
         }
 
-        PropertyDefinition GetPropertyDefinition(XElement propertyElement, IReadOnlyCollection<EntityDefinition> baseDefinitions)
-        {
-            string propertyName = propertyElement.Attribute(XNAME_Name)?.Value;
-            ReadOnlyCollection<PropertyDefinition> baseProperties = new(baseDefinitions.SelectMany(d => d.Properties.Where(p => p.Name == propertyName)).ToArray());
+        //EntityDefinition GetEntityDefinition(XElement entityElement)
+        //{
+        //    EntityDefinition entityDefinition = entityElement.Annotation<EntityDefinition>();
+        //    if (entityDefinition is not null)
+        //        return entityDefinition;
+        //    XElement parentElement;
+        //    if (entityElement is null || entityElement?.Name != XNAME_Entity || (parentElement = entityElement?.Parent) is null)
+        //        return null;
+        //    Func<string, XElement> findEntityByName;
+        //    if (parentElement.Name == XNAME_Root)
+        //        findEntityByName = FindRootEntityByName;
+        //    else if (parentElement.Name == XNAME_Local)
+        //        findEntityByName = FindLocalEntityByName;
+        //    else if (parentElement.Name == XNAME_Upstream)
+        //        findEntityByName = FindUpstreamByName;
+        //    else
+        //        return null;
+        //    IEnumerable<(string Name, EntityDefinition Definition)> baseTypes = entityElement.Elements(XNAME_ExtendsEntity)
+        //        .Select<XElement, (string Name, EntityDefinition Definition)>(e =>
+        //        {
+        //            XElement element = findEntityByName(e.Attribute(XNAME_Type)?.Value);
+        //            if (element is null)
+        //                throw new InvalidDataException($"Could not find element \"{e.Attribute(XNAME_Type)?.Value}\" at {ToXPath(e)}");
+        //            return new(e.Attribute(XNAME_Type)?.Value, GetEntityDefinition(element));
+        //        }).Concat(entityElement.Elements(XNAME_ExtendsGenericEntity)
+        //        .Select<XElement, (string Name, EntityDefinition Definition)>(e =>
+        //    {
+        //        XElement element = findEntityByName(e.Attribute(XNAME_TypeDef)?.Value);
+        //        if (element is null)
+        //            throw new InvalidDataException($"Could not find element \"{e.Attribute(XNAME_TypeDef)?.Value}\" at {ToXPath(e)}");
+        //        return new(e.Attribute(XNAME_Type)?.Value, GetEntityDefinition(element));
+        //    })).Concat(entityElement.Elements().Select<XElement, (string Name, EntityDefinition Definition)>(e =>
+        //    {
+        //        XElement element;
+        //        if (e.Name == XNAME_Implements)
+        //            return new(e.Attribute(XNAME_Type)?.Value, null);
+        //        if (e.Name == XNAME_ImplementsEntity)
+        //        {
+        //            element = findEntityByName(e.Attribute(XNAME_Type)?.Value);
+        //            if (element is null)
+        //                throw new InvalidDataException($"Could not find element \"{e.Attribute(XNAME_Type)?.Value}\" at {ToXPath(e)}");
+        //            return new(e.Attribute(XNAME_Type)?.Value, GetEntityDefinition(element));
+        //        }
+        //        if (e.Name != XNAME_ImplementsGenericEntity)
+        //            return new (null, null);
+        //        element = findEntityByName(e.Attribute(XNAME_TypeDef)?.Value);
+        //        if (element is null)
+        //            throw new InvalidDataException($"Could not find element \"{e.Attribute(XNAME_TypeDef)?.Value}\" at {ToXPath(e)}");
+        //        return new(e.Attribute(XNAME_Type)?.Value, GetEntityDefinition(element));
+        //    }).Where(t => t.Name is not null));
+        //    string rootInterface = entityElement.Attribute(XNAME_RootInterface)?.Value;
+        //    if (!string.IsNullOrWhiteSpace(rootInterface))
+        //    {
+        //        XElement element = findEntityByName(rootInterface);
+        //        if (element is null)
+        //            throw new InvalidDataException($"Could not find element \"{rootInterface}\" at {ToXPath(entityElement)}");
+        //        baseTypes = new (string Name, EntityDefinition Definition)[] { new(rootInterface, GetEntityDefinition(element)) }.Concat(baseTypes);
+        //    }
+        //    ReadOnlyCollection<EntityDefinition> baseDefinitions = new(baseTypes.Select(b => b.Definition).Where(d => d is not null).ToArray());
+        //    ReadOnlyCollection<PropertyDefinition> properties = new(entityElement.Elements(XNAME_Properties).Elements()
+        //        .Select(p => GetPropertyDefinition(p, baseDefinitions)).ToArray());
+        //    TableDefinition tableDefinition = GetTableDefinition(entityElement, baseDefinitions, properties);
+        //    entityDefinition = new(entityElement.Attribute(XNAME_Name)?.Value.Replace("{", "<").Replace("}", ">"), tableDefinition,
+        //        properties, baseDefinitions, new ReadOnlyCollection<string>(baseTypes.Select(b => b.Name).ToArray()), entityElement);
+        //    entityElement.AddAnnotation(entityDefinition);
+        //    return entityDefinition;
+        //}
 
-            PropertyDefinition propertyDefinition = propertyElement.Annotation<PropertyDefinition>();
-            if (propertyDefinition is not null)
-                return propertyDefinition;
-            bool allowsNull = propertyElement.Attributes(XNAME_AllowNull).Any(a => a.Value == "true") || propertyElement.Elements(XNAME_DefaultNull).Any() ||
-                    baseProperties.Any(p => p.AllowsNull);
-            bool isGenericWritable = propertyElement.Attributes(XNAME_IsGenericWritable).Any(a => a.Value == "true") || baseProperties.Any(p => p.IsGenericWritable);
-            switch (propertyElement.Name.LocalName)
-            {
-                case NAME_Byte:
-                case NAME_SByte:
-                case NAME_Short:
-                case NAME_UShort:
-                case NAME_Int:
-                case NAME_UInt:
-                case NAME_Long:
-                case NAME_ULong:
-                case NAME_Float:
-                case NAME_Double:
-                case NAME_Decimal:
-                case NAME_Char:
-                    propertyDefinition = new PropertyDefinition(propertyName,
-                        (allowsNull ? $"{propertyElement.Name.LocalName}?" : propertyElement.Name.LocalName).ToLower(),
-                        allowsNull, isGenericWritable, baseProperties, propertyElement);
-                    break;
-                case NAME_ByteArray:
-                    propertyDefinition = new PropertyDefinition(propertyName, "byte[]", allowsNull, isGenericWritable, baseProperties, propertyElement);
-                    break;
-                case NAME_Text:
-                case NAME_NVarChar:
-                    propertyDefinition = new PropertyDefinition(propertyName, "string", allowsNull, isGenericWritable, baseProperties, propertyElement);
-                    break;
-                case NAME_VolumeIdentifier:
-                case NAME_DriveType:
-                case NAME_MD5Hash:
-                case NAME_DateTime:
-                case NAME_TimeSpan:
-                    propertyDefinition = new PropertyDefinition(propertyName, allowsNull ? $"{propertyElement.Name.LocalName}?" : propertyElement.Name.LocalName,
-                        allowsNull, isGenericWritable, baseProperties, propertyElement);
-                    break;
-                case NAME_ByteValues:
-                case NAME_MultiStringValue:
-                    propertyDefinition = new PropertyDefinition(propertyName, propertyElement.Name.LocalName, allowsNull, isGenericWritable, baseProperties,
-                        propertyElement);
-                    break;
-                case NAME_UniqueIdentifier:
-                case NAME_NewIdNavRef:
-                    propertyDefinition = new PropertyDefinition(propertyName, allowsNull ? "Guid?" : "Guid", allowsNull, isGenericWritable, baseProperties,
-                        propertyElement);
-                    break;
-                case NAME_Bit:
-                    propertyDefinition = new PropertyDefinition(propertyName, allowsNull ? "bool?" : "bool", allowsNull, isGenericWritable, baseProperties,
-                        propertyElement);
-                    break;
-                case NAME_Enum:
-                    string tn = propertyElement.Attribute(XNAME_Type)?.Value;
-                    propertyDefinition = new PropertyDefinition(propertyName, allowsNull ? $"{tn}?" : tn, allowsNull, isGenericWritable, baseProperties,
-                        propertyElement);
-                    break;
-                case NAME_CollectionNavigation:
-                case NAME_NewCollectionNavigation:
-                    propertyDefinition = new PropertyDefinition(propertyName, $"IEnumerable<{propertyElement.Attribute(XNAME_ItemType)?.Value}>", allowsNull,
-                        isGenericWritable,
-                        baseProperties, propertyElement);
-                    break;
-                case NAME_RelatedEntity:
-                case NAME_NewRelatedEntity:
-                    propertyDefinition = new PropertyDefinition(propertyName,
-                        (propertyElement.Attribute(XNAME_TypeDef)?.Value ?? propertyElement.Attribute(XNAME_Reference)?.Value), allowsNull, isGenericWritable,
-                        baseProperties, propertyElement);
-                    break;
-                default:
-                    propertyDefinition = new PropertyDefinition(propertyName, "object", allowsNull, isGenericWritable, baseProperties, propertyElement);
-                    break;
-            }
-            propertyElement.AddAnnotation(propertyDefinition);
-            return propertyDefinition;
-        }
+        //private TableDefinition GetTableDefinition(XElement entityElement, ReadOnlyCollection<EntityDefinition> baseDefinitions, ReadOnlyCollection<PropertyDefinition> properties)
+        //{
+        //    TableDefinition tableDefinition = entityElement.Annotation<TableDefinition>();
+        //    if (tableDefinition is not null)
+        //        return tableDefinition;
+        //    string tableName = entityElement.Attribute(XNAME_TableName)?.Value;
+        //    if (tableName is null)
+        //        return null;
+        //    Collection<IColumnDefinition> columns = new();
+        //    foreach (PropertyDefinition pd in properties)
+        //    {
+        //        IColumnDefinition columnDefinition = GetColumnDefinition(pd, baseDefinitions);
+        //        if (columnDefinition is not null)
+        //            columns.Add(columnDefinition);
+        //    }
+        //    tableDefinition = new TableDefinition(tableName, new ReadOnlyCollection<IColumnDefinition>(columns), entityElement);
+        //    entityElement.AddAnnotation(tableDefinition);
+        //    return tableDefinition;
+        //}
+
+        //private IColumnDefinition GetColumnDefinition(PropertyDefinition pd, ReadOnlyCollection<EntityDefinition> baseDefinitions)
+        //{
+        //    IColumnDefinition columnDefinition = pd.Source.Annotation<IColumnDefinition>();
+        //    if (columnDefinition is not null)
+        //        return columnDefinition;
+        //    string propertyName = pd.Source.Attribute(XNAME_ColName)?.Value ?? pd.Source.Attribute(XNAME_Name)?.Value;
+        //    SqlColType? sqlType = ToSqlSqlColType(pd.Source, out string sqlExpr);
+        //    if (!sqlType.HasValue || string.IsNullOrWhiteSpace(propertyName))
+        //        return null;
+        //    switch (sqlType.Value)
+        //    {
+        //        case SqlColType.UNSIGNED_TINYINT:
+        //        case SqlColType.TINYINT:
+        //        case SqlColType.UNSIGNED_SMALLINT:
+        //        case SqlColType.SMALLINT:
+        //        case SqlColType.UNSIGNED_INT:
+        //        case SqlColType.INT:
+        //        case SqlColType.BIGINT:
+        //        case SqlColType.UNSIGNED_BIGINT:
+        //        case SqlColType.BINARY:
+        //        case SqlColType.NVARCHAR:
+        //        case SqlColType.CHARACTER:
+        //        case SqlColType.REAL:
+        //        case SqlColType.NUMERIC:
+        //            break;
+        //        case SqlColType.DATETIME:
+        //        case SqlColType.TIME:
+        //        case SqlColType.UNIQUEIDENTIFIER:
+        //        case SqlColType.BIT:
+        //        case SqlColType.TEXT:
+        //        case SqlColType.BLOB:
+        //        case SqlColType.NULL:
+        //            break;
+        //        default:
+        //            break;
+        //    }
+        //    throw new NotImplementedException();
+        //}
+
+        //PropertyDefinition GetPropertyDefinition(XElement propertyElement, IReadOnlyCollection<EntityDefinition> baseDefinitions)
+        //{
+        //    string propertyName = propertyElement.Attribute(XNAME_Name)?.Value;
+        //    ReadOnlyCollection<PropertyDefinition> baseProperties = new(baseDefinitions.SelectMany(d => d.Properties.Where(p => p.Name == propertyName)).ToArray());
+
+        //    PropertyDefinition propertyDefinition = propertyElement.Annotation<PropertyDefinition>();
+        //    if (propertyDefinition is not null)
+        //        return propertyDefinition;
+        //    bool allowsNull = propertyElement.Attributes(XNAME_AllowNull).Any(a => a.Value == "true") || propertyElement.Elements(XNAME_DefaultNull).Any() ||
+        //            baseProperties.Any(p => p.AllowsNull);
+        //    bool isGenericWritable = propertyElement.Attributes(XNAME_IsGenericWritable).Any(a => a.Value == "true") || baseProperties.Any(p => p.IsGenericWritable);
+        //    switch (propertyElement.Name.LocalName)
+        //    {
+        //        case NAME_Byte:
+        //        case NAME_SByte:
+        //        case NAME_Short:
+        //        case NAME_UShort:
+        //        case NAME_Int:
+        //        case NAME_UInt:
+        //        case NAME_Long:
+        //        case NAME_ULong:
+        //        case NAME_Float:
+        //        case NAME_Double:
+        //        case NAME_Decimal:
+        //        case NAME_Char:
+        //            propertyDefinition = new PropertyDefinition(propertyName,
+        //                (allowsNull ? $"{propertyElement.Name.LocalName}?" : propertyElement.Name.LocalName).ToLower(),
+        //                allowsNull, isGenericWritable, baseProperties, propertyElement);
+        //            break;
+        //        case NAME_ByteArray:
+        //            propertyDefinition = new PropertyDefinition(propertyName, "byte[]", allowsNull, isGenericWritable, baseProperties, propertyElement);
+        //            break;
+        //        case NAME_Text:
+        //        case NAME_NVarChar:
+        //            propertyDefinition = new PropertyDefinition(propertyName, "string", allowsNull, isGenericWritable, baseProperties, propertyElement);
+        //            break;
+        //        case NAME_VolumeIdentifier:
+        //        case NAME_DriveType:
+        //        case NAME_MD5Hash:
+        //        case NAME_DateTime:
+        //        case NAME_TimeSpan:
+        //            propertyDefinition = new PropertyDefinition(propertyName, allowsNull ? $"{propertyElement.Name.LocalName}?" : propertyElement.Name.LocalName,
+        //                allowsNull, isGenericWritable, baseProperties, propertyElement);
+        //            break;
+        //        case NAME_ByteValues:
+        //        case NAME_MultiStringValue:
+        //            propertyDefinition = new PropertyDefinition(propertyName, propertyElement.Name.LocalName, allowsNull, isGenericWritable, baseProperties,
+        //                propertyElement);
+        //            break;
+        //        case NAME_UniqueIdentifier:
+        //        case NAME_NewIdNavRef:
+        //            propertyDefinition = new PropertyDefinition(propertyName, allowsNull ? "Guid?" : "Guid", allowsNull, isGenericWritable, baseProperties,
+        //                propertyElement);
+        //            break;
+        //        case NAME_Bit:
+        //            propertyDefinition = new PropertyDefinition(propertyName, allowsNull ? "bool?" : "bool", allowsNull, isGenericWritable, baseProperties,
+        //                propertyElement);
+        //            break;
+        //        case NAME_Enum:
+        //            string tn = propertyElement.Attribute(XNAME_Type)?.Value;
+        //            propertyDefinition = new PropertyDefinition(propertyName, allowsNull ? $"{tn}?" : tn, allowsNull, isGenericWritable, baseProperties,
+        //                propertyElement);
+        //            break;
+        //        case NAME_CollectionNavigation:
+        //        case NAME_NewCollectionNavigation:
+        //            propertyDefinition = new PropertyDefinition(propertyName, $"IEnumerable<{propertyElement.Attribute(XNAME_ItemType)?.Value}>", allowsNull,
+        //                isGenericWritable,
+        //                baseProperties, propertyElement);
+        //            break;
+        //        case NAME_RelatedEntity:
+        //        case NAME_NewRelatedEntity:
+        //            propertyDefinition = new PropertyDefinition(propertyName,
+        //                (propertyElement.Attribute(XNAME_TypeDef)?.Value ?? propertyElement.Attribute(XNAME_Reference)?.Value), allowsNull, isGenericWritable,
+        //                baseProperties, propertyElement);
+        //            break;
+        //        default:
+        //            propertyDefinition = new PropertyDefinition(propertyName, "object", allowsNull, isGenericWritable, baseProperties, propertyElement);
+        //            break;
+        //    }
+        //    propertyElement.AddAnnotation(propertyDefinition);
+        //    return propertyDefinition;
+        //}
         /*
 
 foreach (XElement entityElement in entityDefinitionsElement.Elements().Elements(XNAME_Entity))
@@ -674,6 +831,29 @@ switch (propertyElement.Name)
                     .Select(n => FindUpstreamEntityByName(n)).Where(e => e is not null),
                 _ => Array.Empty<XElement>(),
             };
+        }
+
+        void GetAllProperties(XElement entityElement, Collection<(string Name, LinkedList<XElement> Sources)> collection)
+        {
+            foreach (XElement baseEntity in GetBaseEntities(entityElement).Reverse())
+                GetAllProperties(baseEntity, collection);
+            foreach (XAttribute attribute in entityElement.Elements(XNAME_Properties).Elements().Attributes(XNAME_Name))
+            {
+                XElement propertyElement = attribute.Parent;
+                string propertyName = attribute.Value;
+                if (collection.Any(t => t.Name == propertyName))
+                {
+                    (string Name, LinkedList<XElement> Sources) property = collection.First(t => t.Name == propertyName);
+                    if (!property.Sources.Any(e => ReferenceEquals(e, propertyElement)))
+                        property.Sources.AddFirst(attribute.Parent);
+                }
+                else
+                {
+                    (string Name, LinkedList<XElement> Sources) property = new(propertyName, new LinkedList<XElement>());
+                    property.Sources.AddLast(attribute.Parent);
+                    collection.Add(property);
+                }
+            }
         }
 
         void GetAllBaseEntities(XElement entityElement, int level, Collection<(XElement Element, int Level)> collection, Func<IEnumerable<string>, IEnumerable<XElement>> getEntities)

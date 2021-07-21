@@ -310,7 +310,7 @@
                         The <see cref="AccessErrorCode" /> value that represents the numeric error code.
                     </value>
                 </Enum>
-                <NVarChar Name="Message" MaxLength="1024" MinLength="1" FullName="IAccessError.Message" ColName="Message">
+                <NVarChar Name="Message" MaxLength="1024" MinLength="1" IsNormalized="true" FullName="IAccessError.Message" ColName="Message">
                     <summary>
                         Gets the brief error message.
                     </summary>
@@ -321,6 +321,7 @@
                         Gets the error detail text.
                     </summary>
                     <value>The error detail text.</value>
+                    <Default></Default>
                 </Text>
                 <RelatedEntity Name="Target" Reference="IDbEntity" FullName="IAccessError.Target">
                     <summary>
@@ -356,7 +357,7 @@
                         The <see cref="Guid">unique identifier</see> used as the current entity's primary key the database.
                     </value>
                 </UniqueIdentifier>
-                <NVarChar Name="DisplayName" MaxLength="1024" MinLength="1" IsIndexed="true" IsUnique="true" FullName="IFileSystem.DisplayName" ColName="DisplayName">
+                <NVarChar Name="DisplayName" MaxLength="1024" MinLength="1" IsNormalized="true" IsIndexed="true" IsUnique="true" FullName="IFileSystem.DisplayName" ColName="DisplayName">
                     <summary>Gets the display name.</summary>
                     <value>The display name of the file system.</value>
                 </NVarChar>
@@ -436,7 +437,7 @@
                         The <see cref="Guid">unique identifier</see> used as the current entity's primary key the database.
                     </value>
                 </UniqueIdentifier>
-                <NVarChar Name="Name" IsIndexed="true" MinLength="1" MaxLength="256" FullName="ISymbolicName.Name" ColName="Name">
+                <NVarChar Name="Name" IsNormalized="true" IsIndexed="true" MinLength="1" MaxLength="256" FullName="ISymbolicName.Name" ColName="Name">
                     <summary>
                         Gets the symbolic name.
                     </summary>
@@ -454,6 +455,7 @@
                         Gets the priority for this symbolic name.
                     </summary>
                     <value>The priority of this symbolic name in relation to other symbolic names that refer to the same file system type, with lower values being higher priority.</value>
+                    <Default>0</Default>
                 </Int>
                 <Bit Name="IsInactive" IsIndexed="true" FullName="ISymbolicName.IsInactive" ColName="IsInactive">
                     <summary>
@@ -486,17 +488,18 @@
                         The <see cref="Guid">unique identifier</see> used as the current entity's primary key the database.
                     </value>
                 </UniqueIdentifier>
-                <NVarChar Name="DisplayName" MaxLength="1024" MinLength="1" FullName="IVolume.DisplayName" ColName="DisplayName">
+                <NVarChar Name="DisplayName" MaxLength="1024" MinLength="1" IsNormalized="true" FullName="IVolume.DisplayName" ColName="DisplayName">
                     <summary>
                         Gets the display name of the volume.
                     </summary>
                     <value>The display name of the volume.</value>
                 </NVarChar>
-                <NVarChar Name="VolumeName" MaxLength="128" FullName="IVolume.VolumeName" ColName="VolumeName">
+                <NVarChar Name="VolumeName" MaxLength="128" IsNormalized="true" FullName="IVolume.VolumeName" ColName="VolumeName">
                     <summary>
                         Gets the name of the volume.
                     </summary>
                     <value>The name of the volume.</value>
+                    <Default></Default>
                 </NVarChar>
                 <VolumeIdentifier Name="Identifier" FullName="IVolume.Identifier" ColName="Identifier">
                     <summary>
@@ -536,6 +539,7 @@
                         Gets the drive type for this volume.
                     </summary>
                     <value>The drive type for this volume.</value>
+                    <Default>Unknown</Default>
                 </DriveType>
                 <Text Name="Notes" FullName="IVolume.Notes" ColName="Notes">
                     <summary>
@@ -549,6 +553,7 @@
                         Gets the volume status.
                     </summary>
                     <value>The volume status value.</value>
+                    <Default>VolumeStatus.Unknown</Default>
                 </Enum>
                 <RelatedEntity Name="RootDirectory" Reference="ISubdirectory" FullName="IVolume.RootDirectory">
                     <summary>
@@ -597,12 +602,14 @@
                     </summary>
                     <value>The maximum sub-folder recursion depth, where a value less than <c>1</c> only crawls the <see cref="Root" /> <see cref="ISubdirectory" />,
                         a value will crawl 1 sub-folder deep, and so on.</value>
+                    <Default>32</Default>
                 </UShort>
-                <ULong Name="MaxTotalItems" FullName="ICrawlSettings.MaxTotalItems" ColName="MaxTotalItems">
+                <ULong Name="MaxTotalItems" FullName="ICrawlSettings.MaxTotalItems" AllowNull="true" ColName="MaxTotalItems">
                     <summary>
                         Gets the maximum total items to crawl.
                     </summary>
                     <value>The maximum total items to crawl, including both files and subdirectories.</value>
+                    <DefaultNull/>                    
                 </ULong>
                 <Long Name="TTL" AllowNull="true" FullName="ICrawlSettings.TTL" ColName="TTL">
                     <summary>
@@ -628,7 +635,7 @@
                         The <see cref="Guid">unique identifier</see> used as the current entity's primary key the database.
                     </value>
                 </UniqueIdentifier>
-                <NVarChar Name="DisplayName" MaxLength="1024" MinLength="1" DisplayNameResource="DisplayName_DisplayName" FullName="ICrawlConfiguration.DisplayName" ColName="DisplayName">
+                <NVarChar Name="DisplayName" MaxLength="1024" MinLength="1" IsNormalized="true" DisplayNameResource="DisplayName_DisplayName" FullName="ICrawlConfiguration.DisplayName" ColName="DisplayName">
                     <summary>
                         Gets the display name.
                     </summary>
@@ -738,7 +745,7 @@
                     <value>The date and time when the crawl was finshed or <see langword="null" /> if the current crawl is still active.</value>
                     <DefaultNull />
                 </DateTime>
-                <NVarChar Name="StatusMessage" MaxLength="1024" DisplayNameResource="DisplayName_Message" FullName="ICrawlJobLog.StatusMessage" ColName="StatusMessage">
+                <NVarChar Name="StatusMessage" MaxLength="1024" IsNormalized="true" DisplayNameResource="DisplayName_Message" FullName="ICrawlJobLog.StatusMessage" ColName="StatusMessage">
                     <summary>Gets the status message.</summary>
                     <value>The crawl status message.</value>
                 </NVarChar>
@@ -833,7 +840,15 @@
                     <value>The status value for the current subdirectory.</value>
                     <Default>DirectoryStatus.Incomplete</Default>
                 </Enum>
-                <RelatedEntity Name="Volume" Reference="IVolume" FullName="ISubdirectory.Volume">
+                <NewRelatedEntity Name="Parent" Reference="ISubdirectory" FullName="ISubdirectory.Parent">
+                    <summary>
+                        Gets the parent subdirectory of the current file system item.
+                    </summary>
+                    <value>
+                        The parent <see cref="ISubdirectory" /> of the current file system item or <see langword="null" /> if this is the root subdirectory.
+                    </value>
+                </NewRelatedEntity>
+                <RelatedEntity Name="Volume" Reference="IVolume" AllowNull="" FullName="ISubdirectory.Volume">
                     <summary>
                         Gets the parent volume.
                     </summary>
@@ -935,7 +950,7 @@
                 Represents extended file summary properties.
             </summary>
             <Properties>
-                <NVarChar Name="ApplicationName" MaxLength="1024" AllowNull="true" FullName="ISummaryProperties.ApplicationName" ColName="ApplicationName">
+                <NVarChar Name="ApplicationName" MaxLength="1024" IsNormalized="true" AllowNull="true" FullName="ISummaryProperties.ApplicationName" ColName="ApplicationName">
                     <summary>
                         Gets the Application Name.
                     </summary>
@@ -1057,7 +1072,7 @@
                     </remarks>
                     <DefaultNull />
                 </MultiStringValue>
-                <NVarChar Name="Subject" MaxLength="1024" AllowNull="true" FullName="ISummaryProperties.Subject" ColName="Subject">
+                <NVarChar Name="Subject" MaxLength="1024" IsNormalized="true" AllowNull="true" FullName="ISummaryProperties.Subject" ColName="Subject">
                     <summary>
                         Gets the Subject.
                     </summary>
@@ -1088,7 +1103,7 @@
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
-                <NVarChar Name="Title" MaxLength="1024" AllowNull="true" FullName="ISummaryProperties.Title" ColName="Title">
+                <NVarChar Name="Title" MaxLength="1024" IsNormalized="true" AllowNull="true" FullName="ISummaryProperties.Title" ColName="Title">
                     <summary>
                         Gets the Title of the item.
                     </summary>
@@ -1119,7 +1134,7 @@
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
-                <NVarChar Name="Company" MaxLength="1024" AllowNull="true" FullName="ISummaryProperties.Company" ColName="Company">
+                <NVarChar Name="Company" MaxLength="1024" IsNormalized="true" AllowNull="true" FullName="ISummaryProperties.Company" ColName="Company">
                     <summary>
                         Gets the company or publisher.
                     </summary>
@@ -1150,7 +1165,7 @@
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
-                <NVarChar Name="ContentType" MaxLength="1024" AllowNull="true" FullName="ISummaryProperties.ContentType" ColName="ContentType">
+                <NVarChar Name="ContentType" MaxLength="1024" IsNormalized="true" AllowNull="true" FullName="ISummaryProperties.ContentType" ColName="ContentType">
                     <summary>
                         Gets the Content Type.
                     </summary>
@@ -1181,7 +1196,7 @@
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
-                <NVarChar Name="Copyright" MaxLength="1024" AllowNull="true" FullName="ISummaryProperties.Copyright" ColName="Copyright">
+                <NVarChar Name="Copyright" MaxLength="1024" IsNormalized="true" AllowNull="true" FullName="ISummaryProperties.Copyright" ColName="Copyright">
                     <summary>
                         Gets the Copyright.
                     </summary>
@@ -1212,7 +1227,7 @@
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
-                <NVarChar Name="ParentalRating" MaxLength="32" AllowNull="true" FullName="ISummaryProperties.ParentalRating" ColName="ParentalRating">
+                <NVarChar Name="ParentalRating" MaxLength="32" IsNormalized="true" AllowNull="true" FullName="ISummaryProperties.ParentalRating" ColName="ParentalRating">
                     <summary>
                         Gets the Parental Rating.
                     </summary>
@@ -1305,7 +1320,7 @@
                     </remarks>
                     <DefaultNull />
                 </MultiStringValue>
-                <NVarChar Name="ItemType" MaxLength="32" AllowNull="true" FullName="ISummaryProperties.ItemType" ColName="ItemType">
+                <NVarChar Name="ItemType" MaxLength="32" IsNormalized="true" AllowNull="true" FullName="ISummaryProperties.ItemType" ColName="ItemType">
                     <summary>
                         Gets the canonical item type.
                     </summary>
@@ -1340,7 +1355,7 @@
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
-                <NVarChar Name="ItemTypeText" MaxLength="64" AllowNull="true" FullName="ISummaryProperties.ItemTypeText" DisplayNameResource="DisplayName_ItemType" ColName="ItemTypeText">
+                <NVarChar Name="ItemTypeText" MaxLength="64" IsNormalized="true" AllowNull="true" FullName="ISummaryProperties.ItemTypeText" DisplayNameResource="DisplayName_ItemType" ColName="ItemTypeText">
                     <summary>
                         Gets the item type name.
                     </summary>
@@ -1406,7 +1421,7 @@
                     </remarks>
                     <DefaultNull />
                 </MultiStringValue>
-                <NVarChar Name="MIMEType" MaxLength="1024" AllowNull="true" FullName="ISummaryProperties.MIMEType" ColName="MIMEType">
+                <NVarChar Name="MIMEType" MaxLength="1024" IsNormalized="true" AllowNull="true" FullName="ISummaryProperties.MIMEType" ColName="MIMEType">
                     <summary>
                         Gets the MIME type.
                     </summary>
@@ -1468,7 +1483,7 @@
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
-                <NVarChar Name="ParentalRatingsOrganization" MaxLength="1024" AllowNull="true" FullName="ISummaryProperties.ParentalRatingsOrganization" ColName="ParentalRatingsOrganization">
+                <NVarChar Name="ParentalRatingsOrganization" MaxLength="1024" IsNormalized="true" AllowNull="true" FullName="ISummaryProperties.ParentalRatingsOrganization" ColName="ParentalRatingsOrganization">
                     <summary>
                         Gets the Parental Ratings Organization.
                     </summary>
@@ -1529,7 +1544,7 @@
                     </remarks>
                     <DefaultNull />
                 </UShort>
-                <NVarChar Name="SensitivityText" MaxLength="1024" AllowNull="true" FullName="ISummaryProperties.SensitivityText" DisplayNameResource="DisplayName_Sensitivity" ColName="SensitivityText">
+                <NVarChar Name="SensitivityText" MaxLength="1024" IsNormalized="true" AllowNull="true" FullName="ISummaryProperties.SensitivityText" DisplayNameResource="DisplayName_Sensitivity" ColName="SensitivityText">
                     <summary>
                         Gets the user-friendly Sensitivity value.
                     </summary>
@@ -1590,7 +1605,7 @@
                     </remarks>
                     <DefaultNull />
                 </UInt>
-                <NVarChar Name="Trademarks" MaxLength="1024" AllowNull="true" FullName="ISummaryProperties.Trademarks" ColName="Trademarks">
+                <NVarChar Name="Trademarks" MaxLength="1024" IsNormalized="true" AllowNull="true" FullName="ISummaryProperties.Trademarks" ColName="Trademarks">
                     <summary>
                         Gets the Legal Trademarks.
                     </summary>
@@ -1621,7 +1636,7 @@
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
-                <NVarChar Name="ProductName" MaxLength="256" AllowNull="true" FullName="ISummaryProperties.ProductName" ColName="ProductName">
+                <NVarChar Name="ProductName" MaxLength="256" IsNormalized="true" AllowNull="true" FullName="ISummaryProperties.ProductName" ColName="ProductName">
                     <summary>
                         Gets the Product Name.
                     </summary>
@@ -1659,7 +1674,7 @@
                 Represents extended file properties for document files.
             </summary>
             <Properties>
-                <NVarChar Name="ClientID" MaxLength="64" AllowNull="true" FullName="IDocumentProperties.ClientID" ColName="ClientID">
+                <NVarChar Name="ClientID" MaxLength="64" IsNormalized="true" AllowNull="true" FullName="IDocumentProperties.ClientID" ColName="ClientID">
                     <summary>
                         Gets the Client ID.
                     </summary>
@@ -1751,7 +1766,7 @@
                     </remarks>
                     <DefaultNull />
                 </DateTime>
-                <NVarChar Name="LastAuthor" MaxLength="1024" AllowNull="true" FullName="IDocumentProperties.LastAuthor" ColName="LastAuthor">
+                <NVarChar Name="LastAuthor" MaxLength="1024" IsNormalized="true" AllowNull="true" FullName="IDocumentProperties.LastAuthor" ColName="LastAuthor">
                     <summary>
                         Gets the Last Author.
                     </summary>
@@ -1782,7 +1797,7 @@
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
-                <NVarChar Name="RevisionNumber" MaxLength="64" AllowNull="true" FullName="IDocumentProperties.RevisionNumber" ColName="RevisionNumber">
+                <NVarChar Name="RevisionNumber" MaxLength="64" IsNormalized="true" AllowNull="true" FullName="IDocumentProperties.RevisionNumber" ColName="RevisionNumber">
                     <summary>
                         Gets the Revision Number.
                     </summary>
@@ -1843,7 +1858,7 @@
                     </remarks>
                     <DefaultNull />
                 </Int>
-                <NVarChar Name="Division" MaxLength="256" AllowNull="true" FullName="IDocumentProperties.Division" ColName="Division">
+                <NVarChar Name="Division" MaxLength="256" IsNormalized="true" AllowNull="true" FullName="IDocumentProperties.Division" ColName="Division">
                     <summary>
                         Gets the Division.
                     </summary>
@@ -1872,7 +1887,7 @@
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
-                <NVarChar Name="DocumentID" MaxLength="64" AllowNull="true" FullName="IDocumentProperties.DocumentID" ColName="DocumentID">
+                <NVarChar Name="DocumentID" MaxLength="64" IsNormalized="true" AllowNull="true" FullName="IDocumentProperties.DocumentID" ColName="DocumentID">
                     <summary>
                         Gets the Document ID.
                     </summary>
@@ -1901,7 +1916,7 @@
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
-                <NVarChar Name="Manager" MaxLength="256" AllowNull="true" FullName="IDocumentProperties.Manager" ColName="Manager">
+                <NVarChar Name="Manager" MaxLength="256" IsNormalized="true" AllowNull="true" FullName="IDocumentProperties.Manager" ColName="Manager">
                     <summary>
                         Gets the Manager.
                     </summary>
@@ -1930,7 +1945,7 @@
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
-                <NVarChar Name="PresentationFormat" MaxLength="256" AllowNull="true" FullName="IDocumentProperties.PresentationFormat" ColName="PresentationFormat">
+                <NVarChar Name="PresentationFormat" MaxLength="256" IsNormalized="true" AllowNull="true" FullName="IDocumentProperties.PresentationFormat" ColName="PresentationFormat">
                     <summary>
                         Gets the Presentation Format.
                     </summary>
@@ -1959,7 +1974,7 @@
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
-                <NVarChar Name="Version" MaxLength="64" AllowNull="true" FullName="IDocumentProperties.Version" ColName="Version">
+                <NVarChar Name="Version" MaxLength="64" IsNormalized="true" AllowNull="true" FullName="IDocumentProperties.Version" ColName="Version">
                     <summary>
                         Gets the Version.
                     </summary>
@@ -1995,7 +2010,7 @@
                 Represents extended file properties for audio files.
             </summary>
             <Properties>
-                <NVarChar Name="Compression" MaxLength="256" AllowNull="true" FullName="IAudioProperties.Compression" ColName="Compression">
+                <NVarChar Name="Compression" MaxLength="256" IsNormalized="true" AllowNull="true" FullName="IAudioProperties.Compression" ColName="Compression">
                     <summary>
                         Gets the Compression Method.
                     </summary>
@@ -2056,7 +2071,7 @@
                     </remarks>
                     <DefaultNull />
                 </UInt>
-                <NVarChar Name="Format" MaxLength="256" AllowNull="true" FullName="IAudioProperties.Format" ColName="Format">
+                <NVarChar Name="Format" MaxLength="256" IsNormalized="true" AllowNull="true" FullName="IAudioProperties.Format" ColName="Format">
                     <summary>
                         Indicates the format of the audio file.
                     </summary>
@@ -2403,7 +2418,7 @@
                 Represents extended file properties for GPS information.
             </summary>
             <Properties>
-                <NVarChar Name="AreaInformation" MaxLength="1024" AllowNull="true" FullName="IGPSProperties.AreaInformation" ColName="AreaInformation">
+                <NVarChar Name="AreaInformation" MaxLength="1024" IsNormalized="true" AllowNull="true" FullName="IGPSProperties.AreaInformation" ColName="AreaInformation">
                     <summary>
                         Gets the name of the GPS area.
                     </summary>
@@ -2522,7 +2537,7 @@
                     </remarks>
                     <DefaultNull />
                 </Double>
-                <NVarChar Name="LatitudeRef" MaxLength="256" AllowNull="true" FullName="IGPSProperties.LatitudeRef" ColName="LatitudeRef">
+                <NVarChar Name="LatitudeRef" MaxLength="256" IsNormalized="true" AllowNull="true" FullName="IGPSProperties.LatitudeRef" ColName="LatitudeRef">
                     <summary>
                         Indicates whether latitude is north or south latitude.
                     </summary>
@@ -2646,7 +2661,7 @@
                     </remarks>
                     <DefaultNull />
                 </Double>
-                <NVarChar Name="LongitudeRef" MaxLength="256" AllowNull="true" FullName="IGPSProperties.LongitudeRef" ColName="LongitudeRef">
+                <NVarChar Name="LongitudeRef" MaxLength="256" IsNormalized="true" AllowNull="true" FullName="IGPSProperties.LongitudeRef" ColName="LongitudeRef">
                     <summary>
                         Indicates whether longitude is east or west longitude.
                     </summary>
@@ -2677,7 +2692,7 @@
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
-                <NVarChar Name="MeasureMode" MaxLength="256" AllowNull="true" FullName="IGPSProperties.MeasureMode" ColName="MeasureMode">
+                <NVarChar Name="MeasureMode" MaxLength="256" IsNormalized="true" AllowNull="true" FullName="IGPSProperties.MeasureMode" ColName="MeasureMode">
                     <summary>
                         Indicates the GPS measurement mode.
                     </summary>
@@ -2708,7 +2723,7 @@
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
-                <NVarChar Name="ProcessingMethod" MaxLength="256" AllowNull="true" FullName="IGPSProperties.ProcessingMethod" ColName="ProcessingMethod">
+                <NVarChar Name="ProcessingMethod" MaxLength="256" IsNormalized="true" AllowNull="true" FullName="IGPSProperties.ProcessingMethod" ColName="ProcessingMethod">
                     <summary>
                         Indicates the name of the method used for location finding.
                     </summary>
@@ -2899,7 +2914,7 @@
                     </remarks>
                     <DefaultNull />
                 </UShort>
-                <NVarChar Name="CompressionText" MaxLength="256" AllowNull="true" FullName="IImageProperties.CompressionText" DisplayNameResource="DisplayName_Compression" ColName="CompressionText">
+                <NVarChar Name="CompressionText" MaxLength="256" IsNormalized="true" AllowNull="true" FullName="IImageProperties.CompressionText" DisplayNameResource="DisplayName_Compression" ColName="CompressionText">
                     <summary>
                         This is the user-friendly form of System.Image.Compression.
                     </summary>
@@ -2990,7 +3005,7 @@
                     </remarks>
                     <DefaultNull />
                 </UInt>
-                <NVarChar Name="ImageID" MaxLength="256" AllowNull="true" FullName="IImageProperties.ImageID" ColName="ImageID">
+                <NVarChar Name="ImageID" MaxLength="256" IsNormalized="true" AllowNull="true" FullName="IImageProperties.ImageID" ColName="ImageID">
                     <summary>
                         Gets the Image ID.
                     </summary>
@@ -3119,7 +3134,7 @@
                 Represents extended file properties for media files.
             </summary>
             <Properties>
-                <NVarChar Name="ContentDistributor" MaxLength="256" AllowNull="true" FullName="IMediaProperties.ContentDistributor" ColName="ContentDistributor">
+                <NVarChar Name="ContentDistributor" MaxLength="256" IsNormalized="true" AllowNull="true" FullName="IMediaProperties.ContentDistributor" ColName="ContentDistributor">
                     <summary>
                         Gets the Content Distributor.
                     </summary>
@@ -3150,7 +3165,7 @@
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
-                <NVarChar Name="CreatorApplication" MaxLength="256" AllowNull="true" FullName="IMediaProperties.CreatorApplication" ColName="CreatorApplication">
+                <NVarChar Name="CreatorApplication" MaxLength="256" IsNormalized="true" AllowNull="true" FullName="IMediaProperties.CreatorApplication" ColName="CreatorApplication">
                     <summary>
                         Gets the Creator Application.
                     </summary>
@@ -3181,7 +3196,7 @@
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
-                <NVarChar Name="CreatorApplicationVersion" MaxLength="64" AllowNull="true" FullName="IMediaProperties.CreatorApplicationVersion" ColName="CreatorApplicationVersion">
+                <NVarChar Name="CreatorApplicationVersion" MaxLength="64" IsNormalized="true" AllowNull="true" FullName="IMediaProperties.CreatorApplicationVersion" ColName="CreatorApplicationVersion">
                     <summary>
                         Gets the Creator Application Version.
                     </summary>
@@ -3212,7 +3227,7 @@
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
-                <NVarChar Name="DateReleased" MaxLength="64" AllowNull="true" FullName="IMediaProperties.DateReleased" ColName="DateReleased">
+                <NVarChar Name="DateReleased" MaxLength="64" IsNormalized="true" AllowNull="true" FullName="IMediaProperties.DateReleased" ColName="DateReleased">
                     <summary>
                         Gets the Date Released.
                     </summary>
@@ -3273,7 +3288,7 @@
                     </remarks>
                     <DefaultNull />
                 </ULong>
-                <NVarChar Name="DVDID" MaxLength="64" AllowNull="true" FullName="IMediaProperties.DVDID" ColName="DVDID">
+                <NVarChar Name="DVDID" MaxLength="64" IsNormalized="true" AllowNull="true" FullName="IMediaProperties.DVDID" ColName="DVDID">
                     <summary>
                         Gets the DVD ID.
                     </summary>
@@ -3365,7 +3380,7 @@
                     </remarks>
                     <DefaultNull />
                 </MultiStringValue>
-                <NVarChar Name="ProtectionType" MaxLength="256" AllowNull="true" FullName="IMediaProperties.ProtectionType" ColName="ProtectionType">
+                <NVarChar Name="ProtectionType" MaxLength="256" IsNormalized="true" AllowNull="true" FullName="IMediaProperties.ProtectionType" ColName="ProtectionType">
                     <summary>
                         Gets the Protection Type.
                     </summary>
@@ -3396,7 +3411,7 @@
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
-                <NVarChar Name="ProviderRating" MaxLength="256" AllowNull="true" FullName="IMediaProperties.ProviderRating" ColName="ProviderRating">
+                <NVarChar Name="ProviderRating" MaxLength="256" IsNormalized="true" AllowNull="true" FullName="IMediaProperties.ProviderRating" ColName="ProviderRating">
                     <summary>
                         Gets the Provider Rating.
                     </summary>
@@ -3427,7 +3442,7 @@
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
-                <NVarChar Name="ProviderStyle" MaxLength="256" AllowNull="true" FullName="IMediaProperties.ProviderStyle" ColName="ProviderStyle">
+                <NVarChar Name="ProviderStyle" MaxLength="256" IsNormalized="true" AllowNull="true" FullName="IMediaProperties.ProviderStyle" ColName="ProviderStyle">
                     <summary>
                         Style of music or video.
                     </summary>
@@ -3458,7 +3473,7 @@
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
-                <NVarChar Name="Publisher" MaxLength="256" AllowNull="true" FullName="IMediaProperties.Publisher" ColName="Publisher">
+                <NVarChar Name="Publisher" MaxLength="256" IsNormalized="true" AllowNull="true" FullName="IMediaProperties.Publisher" ColName="Publisher">
                     <summary>
                         Gets the Publisher.
                     </summary>
@@ -3489,7 +3504,7 @@
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
-                <NVarChar Name="Subtitle" MaxLength="256" AllowNull="true" FullName="IMediaProperties.Subtitle" ColName="Subtitle">
+                <NVarChar Name="Subtitle" MaxLength="256" IsNormalized="true" AllowNull="true" FullName="IMediaProperties.Subtitle" ColName="Subtitle">
                     <summary>
                         Gets the Subtitle.
                     </summary>
@@ -3589,7 +3604,7 @@
                 Represents extended file properties for music files.
             </summary>
             <Properties>
-                <NVarChar Name="AlbumArtist" MaxLength="1024" AllowNull="true" FullName="IMusicProperties.AlbumArtist" ColName="AlbumArtist">
+                <NVarChar Name="AlbumArtist" MaxLength="1024" IsNormalized="true" AllowNull="true" FullName="IMusicProperties.AlbumArtist" ColName="AlbumArtist">
                     <summary>
                         Gets the Album Artist.
                     </summary>
@@ -3618,7 +3633,7 @@
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
-                <NVarChar Name="AlbumTitle" MaxLength="1024" AllowNull="true" FullName="IMusicProperties.AlbumTitle" ColName="AlbumTitle">
+                <NVarChar Name="AlbumTitle" MaxLength="1024" IsNormalized="true" AllowNull="true" FullName="IMusicProperties.AlbumTitle" ColName="AlbumTitle">
                     <summary>
                         Gets the Album Title.
                     </summary>
@@ -3818,7 +3833,7 @@
                     </remarks>
                     <DefaultNull />
                 </MultiStringValue>
-                <NVarChar Name="PartOfSet" MaxLength="64" AllowNull="true" FullName="IMusicProperties.PartOfSet" ColName="PartOfSet">
+                <NVarChar Name="PartOfSet" MaxLength="64" IsNormalized="true" AllowNull="true" FullName="IMusicProperties.PartOfSet" ColName="PartOfSet">
                     <summary>
                         Gets the Part of the Set.
                     </summary>
@@ -3847,7 +3862,7 @@
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
-                <NVarChar Name="Period" MaxLength="64" AllowNull="true" FullName="IMusicProperties.Period" ColName="Period">
+                <NVarChar Name="Period" MaxLength="64" IsNormalized="true" AllowNull="true" FullName="IMusicProperties.Period" ColName="Period">
                     <summary>
                         Gets the Period.
                     </summary>
@@ -3911,7 +3926,7 @@
                 Represents extended file properties for photo files.
             </summary>
             <Properties>
-                <NVarChar Name="CameraManufacturer" MaxLength="256" AllowNull="true" FullName="IPhotoProperties.CameraManufacturer" ColName="CameraManufacturer">
+                <NVarChar Name="CameraManufacturer" MaxLength="256" IsNormalized="true" AllowNull="true" FullName="IPhotoProperties.CameraManufacturer" ColName="CameraManufacturer">
                     <summary>
                         Gets the Camera Manufacturer.
                     </summary>
@@ -3942,7 +3957,7 @@
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
-                <NVarChar Name="CameraModel" MaxLength="256" AllowNull="true" FullName="IPhotoProperties.CameraModel" ColName="CameraModel">
+                <NVarChar Name="CameraModel" MaxLength="256" IsNormalized="true" AllowNull="true" FullName="IPhotoProperties.CameraModel" ColName="CameraModel">
                     <summary>
                         Gets the Camera Model.
                     </summary>
@@ -4034,7 +4049,7 @@
                     </remarks>
                     <DefaultNull />
                 </MultiStringValue>
-                <NVarChar Name="EXIFVersion" MaxLength="256" AllowNull="true" FullName="IPhotoProperties.EXIFVersion" ColName="EXIFVersion">
+                <NVarChar Name="EXIFVersion" MaxLength="256" IsNormalized="true" AllowNull="true" FullName="IPhotoProperties.EXIFVersion" ColName="EXIFVersion">
                     <summary>
                         Returns the EXIF version.
                     </summary>
@@ -4095,7 +4110,7 @@
                     </remarks>
                     <DefaultNull />
                 </UShort>
-                <NVarChar Name="OrientationText" MaxLength="256" AllowNull="true" FullName="IPhotoProperties.OrientationText" DisplayNameResource="DisplayName_Orientation" ColName="OrientationText">
+                <NVarChar Name="OrientationText" MaxLength="256" IsNormalized="true" AllowNull="true" FullName="IPhotoProperties.OrientationText" DisplayNameResource="DisplayName_Orientation" ColName="OrientationText">
                     <summary>
                         Gets the user-friendly form of System.Photo.Orientation.
                     </summary>
@@ -4194,7 +4209,7 @@
                     </remarks>
                     <DefaultNull />
                 </UInt>
-                <NVarChar Name="EpisodeName" MaxLength="1024" AllowNull="true" FullName="IRecordedTVProperties.EpisodeName" ColName="EpisodeName">
+                <NVarChar Name="EpisodeName" MaxLength="1024" IsNormalized="true" AllowNull="true" FullName="IRecordedTVProperties.EpisodeName" ColName="EpisodeName">
                     <summary>
                         Gets the Episode Name.
                     </summary>
@@ -4287,7 +4302,7 @@
                     </remarks>
                     <DefaultNull />
                 </Bit>
-                <NVarChar Name="NetworkAffiliation" MaxLength="256" AllowNull="true" FullName="IRecordedTVProperties.NetworkAffiliation" ColName="NetworkAffiliation">
+                <NVarChar Name="NetworkAffiliation" MaxLength="256" IsNormalized="true" AllowNull="true" FullName="IRecordedTVProperties.NetworkAffiliation" ColName="NetworkAffiliation">
                     <summary>
                         Gets the Network Affiliation.
                     </summary>
@@ -4373,7 +4388,7 @@
                     </remarks>
                     <DefaultNull />
                 </Text>
-                <NVarChar Name="StationCallSign" MaxLength="32" AllowNull="true" FullName="IRecordedTVProperties.StationCallSign" ColName="StationCallSign">
+                <NVarChar Name="StationCallSign" MaxLength="32" IsNormalized="true" AllowNull="true" FullName="IRecordedTVProperties.StationCallSign" ColName="StationCallSign">
                     <summary>
                         Gets the Station Call Sign.
                     </summary>
@@ -4404,7 +4419,7 @@
                     </remarks>
                     <DefaultNull />
                 </NVarChar>
-                <NVarChar Name="StationName" MaxLength="256" AllowNull="true" FullName="IRecordedTVProperties.StationName" ColName="StationName">
+                <NVarChar Name="StationName" MaxLength="256" IsNormalized="true" AllowNull="true" FullName="IRecordedTVProperties.StationName" ColName="StationName">
                     <summary>
                         Gets the Station Name.
                     </summary>
@@ -4442,7 +4457,7 @@
                 Represents extended file properties for video files.
             </summary>
             <Properties>
-                <NVarChar Name="Compression" MaxLength="256" AllowNull="true" FullName="IVideoProperties.Compression" ColName="Compression">
+                <NVarChar Name="Compression" MaxLength="256" IsNormalized="true" AllowNull="true" FullName="IVideoProperties.Compression" ColName="Compression">
                     <summary>
                         Indicates the level of compression for the video stream.
                     </summary>
@@ -4685,7 +4700,7 @@
                     </remarks>
                     <DefaultNull />
                 </UShort>
-                <NVarChar Name="StreamName" MaxLength="256" AllowNull="true" FullName="IVideoProperties.StreamName" ColName="StreamName">
+                <NVarChar Name="StreamName" MaxLength="256" IsNormalized="true" AllowNull="true" FullName="IVideoProperties.StreamName" ColName="StreamName">
                     <summary>
                         Gets the name for the video stream..
                     </summary>
@@ -4776,7 +4791,7 @@
                 Interface for database objects that contain extended file summary property values.
             </summary>
             <ExtendsEntity Type="IPropertySet" />
-            <Implements Type="ISummaryProperties" />
+            <ImplementsEntity Type="ISummaryProperties" />
             <Properties></Properties>
         </Entity>
         <Entity Name="IDocumentPropertySet">
@@ -4784,7 +4799,7 @@
                 Interface for database objects that contain extended file property values of document files.
             </summary>
             <ExtendsEntity Type="IPropertySet" />
-            <Implements Type="IDocumentProperties" />
+            <ImplementsEntity Type="IDocumentProperties" />
             <Properties></Properties>
         </Entity>
         <Entity Name="IAudioPropertySet">
@@ -4792,7 +4807,7 @@
                 Interface for database objects that contain extended file property values of audio files.
             </summary>
             <ExtendsEntity Type="IPropertySet" />
-            <Implements Type="IAudioProperties" />
+            <ImplementsEntity Type="IAudioProperties" />
             <Properties></Properties>
         </Entity>
         <Entity Name="IDRMPropertySet">
@@ -4800,7 +4815,7 @@
                 Interface for database objects that contain extended file DRM property values.
             </summary>
             <ExtendsEntity Type="IPropertySet" />
-            <Implements Type="IDRMProperties" />
+            <ImplementsEntity Type="IDRMProperties" />
             <Properties></Properties>
         </Entity>
         <Entity Name="IGPSPropertySet">
@@ -4808,7 +4823,7 @@
                 Interface for database objects that contain extended file GPS property values.
             </summary>
             <ExtendsEntity Type="IPropertySet" />
-            <Implements Type="IGPSProperties" />
+            <ImplementsEntity Type="IGPSProperties" />
             <Properties></Properties>
         </Entity>
         <Entity Name="IImagePropertySet">
@@ -4816,7 +4831,7 @@
                 Interface for database objects that contain extended file property values of image files.
             </summary>
             <ExtendsEntity Type="IPropertySet" />
-            <Implements Type="IImageProperties" />
+            <ImplementsEntity Type="IImageProperties" />
             <Properties></Properties>
         </Entity>
         <Entity Name="IMediaPropertySet">
@@ -4824,7 +4839,7 @@
                 Interface for database objects that contain extended file property values of media files.
             </summary>
             <ExtendsEntity Type="IPropertySet" />
-            <Implements Type="IMediaProperties" />
+            <ImplementsEntity Type="IMediaProperties" />
             <Properties></Properties>
         </Entity>
         <Entity Name="IMusicPropertySet">
@@ -4832,7 +4847,7 @@
                 Interface for database objects that contain extended file property values of music files.
             </summary>
             <ExtendsEntity Type="IPropertySet" />
-            <Implements Type="IMusicProperties" />
+            <ImplementsEntity Type="IMusicProperties" />
             <Properties></Properties>
         </Entity>
         <Entity Name="IPhotoPropertySet">
@@ -4840,7 +4855,7 @@
                 Interface for database objects that contain extended file property values of photo files.
             </summary>
             <ExtendsEntity Type="IPropertySet" />
-            <Implements Type="IPhotoProperties" />
+            <ImplementsEntity Type="IPhotoProperties" />
             <Properties></Properties>
         </Entity>
         <Entity Name="IRecordedTVPropertySet">
@@ -4848,7 +4863,7 @@
                 Interface for database objects that contain extended file property values of recorded TV files.
             </summary>
             <ExtendsEntity Type="IPropertySet" />
-            <Implements Type="IRecordedTVProperties" />
+            <ImplementsEntity Type="IRecordedTVProperties" />
             <Properties></Properties>
         </Entity>
         <Entity Name="IVideoPropertySet">
@@ -4856,7 +4871,7 @@
                 Interface for database objects that contain extended file property values of video files.
             </summary>
             <ExtendsEntity Type="IPropertySet" />
-            <Implements Type="IVideoProperties" />
+            <ImplementsEntity Type="IVideoProperties" />
             <Properties></Properties>
         </Entity>
         <Entity Name="IFile">
@@ -4872,6 +4887,7 @@
                     <value>
                         A <see cref="FileCrawlOptions" /> value that contains the crawl options for the current file.
                     </value>
+                    <Default>FileCrawlOptions.None</Default>
                 </Enum>
                 <Enum Name="Status" Type="FileCorrelationStatus" FullName="IFile.Status" ColName="Status">
                     <summary>
@@ -4880,6 +4896,7 @@
                     <value>
                         A <see cref="FileCorrelationStatus" /> value that indicates the file's correlation status.
                     </value>
+                    <Default>FileCorrelationStatus.Dissociated</Default>
                 </Enum>
                 <DateTime Name="LastHashCalculation" FullName="IFile.LastHashCalculation" AllowNull="true" ColName="LastHashCalculation">
                     <summary>
@@ -4888,6 +4905,7 @@
                     <value>
                         The date and time that the <see cref="MD5Hash">MD5 hash</see> was calculated for the current file or <see langword="null" /> if no <see cref="MD5Hash">MD5 hash</see> has been calculated, yet.
                     </value>
+                    <DefaultNull/>
                 </DateTime>
                 <RelatedEntity Name="BinaryProperties" Reference="IBinaryPropertySet" FullName="IFile.BinaryProperties">
                     <summary>
@@ -5043,7 +5061,7 @@
                         The <see cref="Guid">unique identifier</see> used as the current entity's primary key the database.
                     </value>
                 </UniqueIdentifier>
-                <NVarChar Name="Reference" MaxLength="128" FullName="IRedundantSet.Reference" ColName="Reference">
+                <NVarChar Name="Reference" MaxLength="128" IsNormalized="true" FullName="IRedundantSet.Reference" ColName="Reference">
                     <summary>
                         Gets the custom reference value.
                     </summary>
@@ -5074,7 +5092,7 @@
             <summary>.</summary>
             <ExtendsEntity Type="IDbEntity" />
             <Properties>
-                <NVarChar Name="Reference" MaxLength="128" FullName="IRedundancy.Reference" ColName="Reference">
+                <NVarChar Name="Reference" MaxLength="128" IsNormalized="true" FullName="IRedundancy.Reference" ColName="Reference">
                     <summary>
                         Gets the custom reference value.
                     </summary>
@@ -5255,25 +5273,6 @@
                 <NewRelatedEntity Name="Target" Reference="ILocalVolume" FullName="ILocalVolumeAccessError.Target" />
             </Properties>
         </Entity>
-        <Entity Name="ILocalCrawlConfiguration" RootInterface="ICrawlConfiguration">
-            <summary>
-                Specifies the configuration of a file system crawl.
-            </summary>
-            <ExtendsEntity Type="ILocalDbEntity" />
-            <Properties>
-                <NewRelatedEntity Name="Root" Reference="ILocalSubdirectory" FullName="ILocalCrawlConfiguration.Root" />
-                <NewCollectionNavigation Name="Logs" ItemType="ILocalCrawlJobLog" FullName="ILocalCrawlConfiguration.Logs" />
-            </Properties>
-        </Entity>
-        <Entity Name="ILocalCrawlJobLog" RootInterface="ICrawlJobLog" TableName="CrawlJobLogs">
-            <summary>
-                Log of crawl job results.
-            </summary>
-            <ExtendsEntity Type="ILocalDbEntity" />
-            <Properties>
-                <NewRelatedEntity Name="Configuration" Reference="ILocalCrawlConfiguration" FullName="ILocalCrawlJobLog.Configuration" />
-            </Properties>
-        </Entity>
         <Entity Name="ILocalDbFsItem" RootInterface="IDbFsItem">
             <summary></summary>
             <ExtendsEntity Type="ILocalDbEntity" />
@@ -5313,6 +5312,25 @@
                 <NewCollectionNavigation Name="Files" ItemType="ILocalFile" FullName="ILocalSubdirectory.Files" />
                 <NewCollectionNavigation Name="SubDirectories" ItemType="ILocalSubdirectory" FullName="ILocalSubdirectory.SubDirectories" />
                 <NewCollectionNavigation Name="AccessErrors" ItemType="ILocalSubdirectoryAccessError" FullName="ILocalSubdirectory.AccessErrors" />
+            </Properties>
+        </Entity>
+        <Entity Name="ILocalCrawlConfiguration" RootInterface="ICrawlConfiguration" TableName="CrawlConfiguration">
+            <summary>
+                Specifies the configuration of a file system crawl.
+            </summary>
+            <ExtendsEntity Type="ILocalDbEntity" />
+            <Properties>
+                <NewRelatedEntity Name="Root" Reference="ILocalSubdirectory" FullName="ILocalCrawlConfiguration.Root" />
+                <NewCollectionNavigation Name="Logs" ItemType="ILocalCrawlJobLog" FullName="ILocalCrawlConfiguration.Logs" />
+            </Properties>
+        </Entity>
+        <Entity Name="ILocalCrawlJobLog" RootInterface="ICrawlJobLog" TableName="CrawlJobLogs">
+            <summary>
+                Log of crawl job results.
+            </summary>
+            <ExtendsEntity Type="ILocalDbEntity" />
+            <Properties>
+                <NewRelatedEntity Name="Configuration" Reference="ILocalCrawlConfiguration" FullName="ILocalCrawlJobLog.Configuration" />
             </Properties>
         </Entity>
         <Entity Name="ILocalSubdirectoryAccessError" RootInterface="ISubdirectoryAccessError" TableName="SubdirectoryAccessErrors">
@@ -5752,27 +5770,27 @@
                 Base interface for user profile database entities.
             </summary>
             <Properties>
-                <NVarChar Name="DisplayName" MaxLength="640" FullName="IUserProfile.DisplayName" ColName="DisplayName">
+                <NVarChar Name="DisplayName" MaxLength="640" IsNormalized="true" FullName="IUserProfile.DisplayName" ColName="DisplayName">
                     <summary>Gets the user's display name</summary>
                     <value>The user's display name</value>
                 </NVarChar>
-                <NVarChar Name="FirstName" MaxLength="128" FullName="IUserProfile.FirstName" ColName="FirstName">
+                <NVarChar Name="FirstName" MaxLength="128" IsNormalized="true" FullName="IUserProfile.FirstName" ColName="FirstName">
                     <summary></summary>
                     <value></value>
                 </NVarChar>
-                <NVarChar Name="LastName" MaxLength="128" FullName="IUserProfile.LastName" ColName="LastName">
+                <NVarChar Name="LastName" MaxLength="128" IsNormalized="true" FullName="IUserProfile.LastName" ColName="LastName">
                     <summary></summary>
                     <value></value>
                 </NVarChar>
-                <NVarChar Name="MI" MaxLength="1" FullName="IUserProfile.MI" ColName="MI">
+                <NVarChar Name="MI" MaxLength="1" IsNormalized="true" FullName="IUserProfile.MI" ColName="MI">
                     <summary></summary>
                     <value></value>
                 </NVarChar>
-                <NVarChar Name="Suffix" MaxLength="128" FullName="IUserProfile.Suffix" ColName="Suffix">
+                <NVarChar Name="Suffix" MaxLength="128" IsNormalized="true" FullName="IUserProfile.Suffix" ColName="Suffix">
                     <summary></summary>
                     <value></value>
                 </NVarChar>
-                <NVarChar Name="Title" MaxLength="128" FullName="IUserProfile.Title" ColName="Title">
+                <NVarChar Name="Title" MaxLength="128" IsNormalized="true" FullName="IUserProfile.Title" ColName="Title">
                     <summary></summary>
                     <value></value>
                 </NVarChar>
@@ -5807,7 +5825,7 @@
             <summary>
             </summary>
             <Properties>
-                <NVarChar Name="Name" MaxLength="64" FullName="IUserGroup.Name" ColName="Name">
+                <NVarChar Name="Name" MaxLength="64" IsNormalized="true" FullName="IUserGroup.Name" ColName="Name">
                     <summary></summary>
                     <value></value>
                 </NVarChar>
@@ -5852,7 +5870,7 @@
             <summary>
             </summary>
             <Properties>
-                <NVarChar Name="ShortDescription" MaxLength="256" FullName="IMitigationTask.ShortDescription" ColName="ShortDescription">
+                <NVarChar Name="ShortDescription" MaxLength="256" IsNormalized="true" FullName="IMitigationTask.ShortDescription" ColName="ShortDescription">
                     <summary></summary>
                     <value></value>
                 </NVarChar>
@@ -5890,7 +5908,7 @@
             <summary>
             </summary>
             <Properties>
-                <NVarChar Name="DisplayName" MaxLength="256" FullName="IHostPlatform.DisplayName" ColName="DisplayName">
+                <NVarChar Name="DisplayName" MaxLength="256" IsNormalized="true" FullName="IHostPlatform.DisplayName" ColName="DisplayName">
                     <summary></summary>
                     <value></value>
                 </NVarChar>
@@ -5920,15 +5938,15 @@
             <summary>
             </summary>
             <Properties>
-                <NVarChar Name="DisplayName" MaxLength="256" FullName="IHostDevice.DisplayName" ColName="DisplayName">
+                <NVarChar Name="DisplayName" MaxLength="256" IsNormalized="true" FullName="IHostDevice.DisplayName" ColName="DisplayName">
                     <summary></summary>
                     <value></value>
                 </NVarChar>
-                <NVarChar Name="MachineIdentifer" MaxLength="1024" FullName="IHostDevice.MachineIdentifer" ColName="MachineIdentifer">
+                <NVarChar Name="MachineIdentifer" MaxLength="1024" IsNormalized="true" FullName="IHostDevice.MachineIdentifer" ColName="MachineIdentifer">
                     <summary></summary>
                     <value></value>
                 </NVarChar>
-                <NVarChar Name="MachineName" MaxLength="256" FullName="IHostDevice.MachineName" ColName="MachineName">
+                <NVarChar Name="MachineName" MaxLength="256" IsNormalized="true" FullName="IHostDevice.MachineName" ColName="MachineName">
                     <summary></summary>
                     <value></value>
                 </NVarChar>
@@ -5999,25 +6017,6 @@
                 </NewRelatedEntity>
             </Properties>
         </Entity>
-        <Entity Name="IUpstreamCrawlConfiguration" RootInterface="ICrawlConfiguration" TableName="CrawlConfigurations">
-            <summary>
-                Specifies the configuration of a file system crawl.
-            </summary>
-            <ExtendsEntity Type="IUpstreamDbEntity" />
-            <Properties>
-                <NewRelatedEntity Name="Root" Reference="IUpstreamSubdirectory" FullName="IUpstreamCrawlConfiguration.Root" />
-                <NewCollectionNavigation Name="Logs" ItemType="IUpstreamCrawlJobLog" FullName="IUpstreamCrawlConfiguration.Logs" />
-            </Properties>
-        </Entity>
-        <Entity Name="IUpstreamCrawlJobLog" RootInterface="ICrawlJobLog" TableName="CrawlJobLogs">
-            <summary>
-                Log of crawl job results.
-            </summary>
-            <ExtendsEntity Type="IUpstreamDbEntity" />
-            <Properties>
-                <NewRelatedEntity Name="Configuration" Reference="IUpstreamCrawlConfiguration" FullName="IUpstreamCrawlJobLog.Configuration" />
-            </Properties>
-        </Entity>
         <Entity Name="IUpstreamDbFsItem" RootInterface="IDbFsItem">
             <summary></summary>
             <ExtendsEntity Type="IUpstreamDbEntity" />
@@ -6057,6 +6056,25 @@
                 <NewCollectionNavigation Name="Files" ItemType="IUpstreamFile" FullName="IUpstreamSubdirectory.Files" />
                 <NewCollectionNavigation Name="SubDirectories" ItemType="IUpstreamSubdirectory" FullName="IUpstreamSubdirectory.SubDirectories" />
                 <NewCollectionNavigation Name="AccessErrors" ItemType="IUpstreamSubdirectoryAccessError" FullName="IUpstreamSubdirectory.AccessErrors" />
+            </Properties>
+        </Entity>
+        <Entity Name="IUpstreamCrawlConfiguration" RootInterface="ICrawlConfiguration" TableName="CrawlConfigurations">
+            <summary>
+                Specifies the configuration of a file system crawl.
+            </summary>
+            <ExtendsEntity Type="IUpstreamDbEntity" />
+            <Properties>
+                <NewRelatedEntity Name="Root" Reference="IUpstreamSubdirectory" FullName="IUpstreamCrawlConfiguration.Root" />
+                <NewCollectionNavigation Name="Logs" ItemType="IUpstreamCrawlJobLog" FullName="IUpstreamCrawlConfiguration.Logs" />
+            </Properties>
+        </Entity>
+        <Entity Name="IUpstreamCrawlJobLog" RootInterface="ICrawlJobLog" TableName="CrawlJobLogs">
+            <summary>
+                Log of crawl job results.
+            </summary>
+            <ExtendsEntity Type="IUpstreamDbEntity" />
+            <Properties>
+                <NewRelatedEntity Name="Configuration" Reference="IUpstreamCrawlConfiguration" FullName="IUpstreamCrawlJobLog.Configuration" />
             </Properties>
         </Entity>
         <Entity Name="IUpstreamSubdirectoryAccessError" RootInterface="ISubdirectoryAccessError" TableName="SubdirectoryAccessErrors">
