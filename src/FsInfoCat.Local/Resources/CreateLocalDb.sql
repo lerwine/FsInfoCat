@@ -1,3 +1,4 @@
+-- Deleting tables
 
 DROP TABLE IF EXISTS "Comparisons";
 DROP TABLE IF EXISTS "Redundancies";
@@ -18,12 +19,14 @@ DROP TABLE IF EXISTS "SummaryPropertySets";
 DROP TABLE IF EXISTS "BinaryPropertySets";
 DROP TABLE IF EXISTS "SubdirectoryAccessErrors";
 DROP TABLE IF EXISTS "CrawlJobLogs";
-DROP TABLE IF EXISTS "CrawlConfiguration";
+DROP TABLE IF EXISTS "CrawlConfigurations";
 DROP TABLE IF EXISTS "Subdirectories";
 DROP TABLE IF EXISTS "VolumeAccessErrors";
 DROP TABLE IF EXISTS "Volumes";
 DROP TABLE IF EXISTS "SymbolicNames";
 DROP TABLE IF EXISTS "FileSystems";
+
+-- Creating tables
 
 CREATE TABLE IF NOT EXISTS "FileSystems" (
 	"CreatedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
@@ -108,15 +111,15 @@ CREATE TABLE IF NOT EXISTS "Subdirectories" (
 	#bug Need some way to override AllowNull for entity references
 	"Options" UNSIGNED TINYINT NOT NULL DEFAULT 0, -- DirectoryCrawlOptions.None
 	"Status" UNSIGNED TINYINT NOT NULL DEFAULT 0, -- DirectoryStatus.Incomplete
-	"VolumeId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_SubdirectoriesVolumes" REFERENCES "Volumes"("Id") ON DELETE RESTRICT,
+	"VolumeId" UNIQUEIDENTIFIER CONSTRAINT "FK_SubdirectoriesVolumes" REFERENCES "Volumes"("Id") ON DELETE RESTRICT,
 	#bug Need some way to override AllowNull for entity references
-	"CrawlConfigurationId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_SubdirectoriesCrawlConfiguration" REFERENCES "CrawlConfiguration"("Id") ON DELETE RESTRICT,
+	"CrawlConfigurationId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_SubdirectoriesCrawlConfigurations" REFERENCES "CrawlConfigurations"("Id") ON DELETE RESTRICT,
 	#bug Need some way to override AllowNull for entity references
 	CONSTRAINT "PK_Subdirectories" PRIMARY KEY("Id"),
     CHECK(CreatedOn<=ModifiedOn AND
         (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL))
 );
-CREATE TABLE IF NOT EXISTS "CrawlConfiguration" (
+CREATE TABLE IF NOT EXISTS "CrawlConfigurations" (
 	"CreatedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
 	"ModifiedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
 	"UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL,
@@ -134,9 +137,9 @@ CREATE TABLE IF NOT EXISTS "CrawlConfiguration" (
 	"RescheduleInterval" BIGINT DEFAULT NULL,
 	"RescheduleFromJobEnd" BIT NOT NULL DEFAULT 0,
 	"RescheduleAfterFail" BIT NOT NULL DEFAULT 0,
-	"RootId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_CrawlConfigurationSubdirectories" REFERENCES "Subdirectories"("Id") ON DELETE RESTRICT,
+	"RootId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_CrawlConfigurationsSubdirectories" REFERENCES "Subdirectories"("Id") ON DELETE RESTRICT,
 	#bug Need some way to override AllowNull for entity references
-	CONSTRAINT "PK_CrawlConfiguration" PRIMARY KEY("Id"),
+	CONSTRAINT "PK_CrawlConfigurations" PRIMARY KEY("Id"),
     CHECK(CreatedOn<=ModifiedOn AND
         (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL))
 );
@@ -155,7 +158,7 @@ CREATE TABLE IF NOT EXISTS "CrawlJobLogs" (
 	"CrawlEnd" DATETIME DEFAULT NULL,
 	"StatusMessage" NVARCHAR(1024) CHECK(length(trim("StatusMessage")) = length("StatusMessage")) NOT NULL,
 	"StatusDetail" TEXT NOT NULL,
-	"ConfigurationId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_CrawlJobLogsCrawlConfiguration" REFERENCES "CrawlConfiguration"("Id") ON DELETE RESTRICT,
+	"ConfigurationId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_CrawlJobLogsCrawlConfigurations" REFERENCES "CrawlConfigurations"("Id") ON DELETE RESTRICT,
 	#bug Need some way to override AllowNull for entity references
 	CONSTRAINT "PK_CrawlJobLogs" PRIMARY KEY("Id"),
     CHECK(CreatedOn<=ModifiedOn AND

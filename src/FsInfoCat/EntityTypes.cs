@@ -519,7 +519,7 @@ namespace FsInfoCat
         /// <summary>Gets the maximum total items to crawl.</summary>
         /// <value>The maximum total items to crawl, including both files and subdirectories.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_MaxTotalItems), ResourceType = typeof(Properties.Resources))]
-        ulong MaxTotalItems { get; }
+        ulong? MaxTotalItems { get; }
 
         /// <summary>Gets the maximum duration of the crawl.</summary>
         /// <value>The maximum duration of the crawl, in seconds. This value should never be less than <c>1</c>.</value>
@@ -713,6 +713,11 @@ namespace FsInfoCat
         /// <value>The status value for the current subdirectory.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_Status), ResourceType = typeof(Properties.Resources))]
         DirectoryStatus Status { get; }
+
+        /// <summary>Gets the parent subdirectory of the current file system item.</summary>
+        /// <value>The parent <see cref="ISubdirectory" /> of the current file system item or <see langword="null" /> if this is the root subdirectory.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_Parent), ResourceType = typeof(Properties.Resources))]
+        new ISubdirectory Parent { get; }
 
         /// <summary>Gets the parent volume.</summary>
         /// <value>The parent volume (if this is the root subdirectory or <see langword="null" /> if this is a subdirectory.</value>

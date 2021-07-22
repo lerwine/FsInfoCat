@@ -21,6 +21,7 @@
 <#@ import namespace="System.Xml.Schema" #>
 <#@ include file="../../FsInfoCat/core.ttinclude" #>
 <#@ output extension=".sql" #>
+-- Deleting tables
 
 <#
 foreach (XAttribute attribute in EntityDefinitionsDocument.Root.Elements("Local").Elements("Entity").Attributes("TableName").Reverse())
@@ -30,6 +31,8 @@ DROP TABLE IF EXISTS "<#=attribute.Value#>";
 <#
 }
 #>
+
+-- Creating tables
 
 <#
 foreach (XAttribute tableAttribute in EntityDefinitionsDocument.Root.Elements("Local").Elements("Entity").Attributes("TableName"))
@@ -42,7 +45,7 @@ CREATE TABLE IF NOT EXISTS "<#=tableName#>" (
     PushIndent("	");
     Collection<(string Name, LinkedList<XElement> Sources)> collection = new();
     GetAllProperties(entityElement, collection);
-    
+
     (string Name, LinkedList<XElement> Sources)[] columns = collection.Where(t => t.Sources.Last.Value.Name.LocalName != "CollectionNavigation").Select<(string Name, LinkedList<XElement> Sources),(string Name, LinkedList<XElement> Sources)>(property =>
     {
         string colName = property.Sources.First.Value.Attribute(XNAME_TableName)?.Value ?? property.Name;
@@ -300,7 +303,7 @@ CREATE TABLE IF NOT EXISTS "<#=tableName#>" (
                         WriteLine($" DEFAULT {element.Value},");
                     break;
                 case "RelatedEntity":
-                    element = FindLocalEntityByName(property.Sources.Attributes(XNAME_Reference).Select(a => a.Value).First());
+                    element = FindLocalEntityByName(property.Sources.Elements(XNAME_Reference).Select(a => a.Value).First());
                     if (element is null)
                         WriteLine(",");
                     else
@@ -338,4 +341,355 @@ CREATE TABLE IF NOT EXISTS "<#=tableName#>" (
 );
 <#
 }
+#>
+<#+
+
+void GenerateCreateTableSql(XElement entityElement)
+{
+    string tableName = entityElement.Attribute(XNAME_TableName)?.Value;
+    string entityName = entityElement.Attribute(XNAME_Name)?.Value;
+    if (string.IsNullOrWhiteSpace(tableName))
+        return;
+    Write("CREATE TABLE IF NOT EXISTS ");
+    Write(tableName);
+    WriteLine(" (");
+    PushIndent("    ");
+    Collection<(string Name, LinkedList<XElement> Sources)> collection = new();
+    GetAllProperties(entityElement, collection);
+    (string Name, LinkedList<XElement> Sources)[] columns = collection.Select<(string Name, LinkedList<XElement> Sources), (string Name, LinkedList<XElement> Sources)>(t => new(GenerateTableColumnSql(tableName, entityName, t.Name, t.Sources), t.Sources))
+        .Where(t => t.Name is not null).ToArray();
+    PopIndent();
+    foreach ((string Name, LinkedList<XElement> Sources) tuple in columns)
+        GenerateTableIndexSql(tableName, entityName, tuple.Name, tuple.Sources);
+}
+
+string PropertyElementToSqlType(XElement propertyElement, out string typeName, out bool isNumeric)
+{
+    if (propertyElement is null || propertyElement.Name.NamespaceName.Length > 0)
+    {
+        isNumeric = false;
+        typeName = "BLOB";
+        return typeName;
+    }
+    switch (propertyElement.Name.LocalName)
+    {
+        case NAME_Enum:
+            return PropertyElementToSqlType(FindLocalEnumByName(propertyElement.Attribute(XNAME_Type)?.Value), out typeName, out isNumeric);
+        case NAME_UniqueIdentifier:
+        case NAME_RelatedEntity:
+            isNumeric = false;
+            typeName = "UNIQUEIDENTIFIER";
+            return typeName;
+        case NAME_NVarChar:
+            isNumeric = false;
+            typeName = "NVARCHAR";
+            return $"{typeName}({propertyElement.Attribute(XNAME_MaxLength)?.Value})";
+        case NAME_VolumeIdentifier:
+            isNumeric = false;
+            typeName = "NVARCHAR";
+            return "NVARCHAR(1024)";
+        case NAME_MultiStringValue:
+        case NAME_Text:
+            isNumeric = false;
+            typeName = "TEXT";
+            return typeName;
+        case NAME_DateTime:
+            isNumeric = false;
+            typeName = "DATETIME";
+            return typeName;
+        case NAME_TimeSpan:
+            isNumeric = false;
+            typeName = "TIME";
+            return typeName;
+        case NAME_Bit:
+            isNumeric = false;
+            typeName = "BIT";
+            return typeName;
+        case NAME_ByteValues:
+            isNumeric = false;
+            typeName = "VARBINARY";
+            return $"{typeName}({propertyElement.Attribute(XNAME_MaxLength)?.Value})";
+        case NAME_MD5Hash:
+            isNumeric = false;
+            typeName = "BINARY";
+            return "BINARY(16)";
+        case NAME_DriveType:
+            isNumeric = false;
+            typeName = "UNSIGNED TINYINT";
+            return typeName;
+        case NAME_Byte:
+            isNumeric = true;
+            typeName = "UNSIGNED TINYINT";
+            return typeName;
+        case NAME_SByte:
+            isNumeric = true;
+            typeName = "TINYINT";
+            return typeName;
+        case NAME_Short:
+            isNumeric = true;
+            typeName = "SMALLINT";
+            return typeName;
+        case NAME_UShort:
+            isNumeric = true;
+            typeName = "UNSIGNED SMALLINT";
+            return typeName;
+        case NAME_Int:
+            isNumeric = true;
+            typeName = "INT";
+            return typeName;
+        case NAME_UInt:
+            isNumeric = true;
+            typeName = "UNSIGNED INT";
+            return typeName;
+        case NAME_Long:
+            isNumeric = true;
+            typeName = "BIGINT";
+            return typeName;
+        case NAME_ULong:
+            isNumeric = true;
+            typeName = "UNSIGNED BIGINT";
+            return typeName;
+        case NAME_Float:
+        case NAME_Double:
+            isNumeric = true;
+            typeName = "REAL";
+            return typeName;
+        case NAME_Decimal:
+            isNumeric = true;
+            typeName = "NUMERIC";
+            return typeName;
+        default:
+            isNumeric = false;
+            typeName = null;
+            return typeName;
+    }
+}
+
+string GenerateTableColumnSql(string tableName, string entityName, string propertyName, LinkedList<XElement> sources)
+{
+    XElement baseProperty = sources.Last.Value;
+    if (baseProperty.Name == XNAME_CollectionNavigation)
+        return null;
+    XElement implProperty = sources.First.Value;
+    string propertyTypeName = baseProperty.Name.LocalName;
+    string colName = implProperty.Attribute(XNAME_ColName)?.Value ?? propertyName;
+    bool isIndexed = sources.Attributes(XNAME_IsIndexed).Any(a => a.Value == "true");
+    bool defaultNull = sources.Elements(XNAME_DefaultNull).Any();
+    bool allowNull = defaultNull || sources.Attributes(XNAME_AllowNull).Any(a => a.Value == "true");
+    Write("\"");
+    Write(colName);
+    Write("\" ");
+    Write(PropertyElementToSqlType(baseProperty, out string typeName, out bool isNumeric));
+    if (!allowNull)
+        Write(" NOT NULL");
+
+    if (isNumeric)
+    {
+        string minValue = sources.Attributes(XNAME_MinValue).Select(a => a.Value.Trim()).DefaultIfEmpty("").First();
+        string maxValue = sources.Attributes(XNAME_MaxValue).Select(a => a.Value.Trim()).DefaultIfEmpty("").First();
+        if (minValue.Length > 0)
+        {
+            if (maxValue.Length > 0)
+            {
+                if (allowNull)
+                    Write($" CHECK(\"{colName}\" IS NULL OR (\"{colName}\">={minValue} AND \"{colName}\"<={maxValue}))");
+                else
+                    Write($" CHECK(\"{colName}\">={minValue} AND \"{colName}\"<={maxValue})");
+            }
+            else if (allowNull)
+                Write($" CHECK(\"{colName}\" IS NULL OR \"{colName}\">={minValue})");
+            else
+                Write($" CHECK(\"{colName}\">={minValue})");
+        }
+        else if (maxValue.Length > 0)
+        {
+            if (allowNull)
+                Write($" CHECK(\"{colName}\" IS NULL OR \"{colName}\"<={maxValue})");
+            else
+                Write($" CHECK(\"{colName}\"<={maxValue})");
+        }
+    }
+    else
+    {
+        int minLength;
+        switch (propertyTypeName)
+        {
+            case NAME_NVarChar:
+                minLength = sources.Attributes(XNAME_MinLength).Select(a => XmlConvert.ToInt32(a.Value.Trim())).DefaultIfEmpty(0).First();
+                if (minLength > 0)
+                {
+                    if (sources.Attributes(XNAME_IsNormalized).Any(a => a.Value == "true"))
+                    {
+                        if (allowNull)
+                            Write($" CHECK(\"{colName}\" IS NULL OR (length(trim(\"{colName}\") = length(\"{colName}\") AND length(\"{colName}\")>{minLength - 1}))");
+                        else
+                            Write($" CHECK(length(trim(\"{colName}\") = length(\"{colName}\") AND length(\"{colName}\")>{minLength - 1})");
+                    }
+                    else if (allowNull)
+                        Write($" CHECK(\"{colName}\" IS NULL OR length(\"{colName}\")>{minLength - 1})");
+                    else
+                        Write($" CHECK(length(\"{colName}\")>{minLength - 1})");
+                }
+                else if (sources.Attributes(XNAME_IsNormalized).Any(a => a.Value == "true"))
+                {
+                    if (allowNull)
+                        Write($" CHECK(\"{colName}\" IS NULL OR length(trim(\"{colName}\") = length(\"{colName}\"))");
+                    else
+                        Write($" CHECK(length(trim(\"{colName}\") = length(\"{colName}\"))");
+                }
+                break;
+            case NAME_ByteValues:
+                minLength = sources.Attributes(XNAME_MinLength).Select(a => XmlConvert.ToInt32(a.Value.Trim())).DefaultIfEmpty(0).First();
+                int maxLength = sources.Attributes(XNAME_MaxLength).Select(a => XmlConvert.ToInt32(a.Value.Trim())).DefaultIfEmpty(0).First();
+                if (minLength > 0)
+                {
+                    if (maxLength > 0)
+                    {
+                        if (allowNull)
+                            Write($" CHECK(\"{colName}\" IS NULL OR (length(\"{colName}\")<{maxLength + 1} AND length(\"{colName}\")>{minLength - 1}))");
+                        else
+                            Write($" CHECK(length(\"{colName}\")<{maxLength + 1} AND length(\"{colName}\")>{minLength - 1})");
+                    }
+                    else if (allowNull)
+                        Write($" CHECK(\"{colName}\" IS NULL OR length(\"{colName}\")>{minLength - 1})");
+                    else
+                        Write($" CHECK(length(\"{colName}\")>{minLength - 1})");
+                }
+                else if (maxLength > 0)
+                {
+                    if (allowNull)
+                        Write($" CHECK(\"{colName}\" IS NULL OR length(\"{colName}\")<{maxLength + 1})");
+                    else
+                        Write($" CHECK(length(\"{colName}\")<{maxLength + 1})");
+                }
+                break;
+            case NAME_RelatedEntity:
+                XElement parentEntityElement = FindLocalEntityByName(sources.Elements(XNAME_Reference).Select(e => e.Value).First());
+                Write("CONSTRAINT \"FK_");
+                Write(typeName);
+                Write(parentEntityElement.Attribute(XNAME_Name)?.Value);
+                Write("\" REFERENCES \"");
+                Write(parentEntityElement.Attribute(XNAME_TableName)?.Value);
+                Write("\"(\"Id\") ON DELETE RESTRICT");
+                break;
+        }
+    }
+
+    if (defaultNull)
+        Write(" DEFAULT NULL,");
+    else
+    {
+        string defaultValue = sources.Elements(XNAME_Default).Select(e => e.Value).FirstOrDefault();
+        if (defaultValue is null)
+            switch (propertyTypeName)
+            {
+                case NAME_DateTime:
+                    if (sources.Elements(XNAME_DefaultNow).Any())
+                        Write(" DEFAULT (datetime('now','localtime')),");
+                    break;
+                case NAME_TimeSpan:
+                    if (sources.Elements(XNAME_DefaultZero).Any())
+                        Write(" DEFAULT (time('00:00:00.000')),");
+                    break;
+                case NAME_ByteValues:
+                    if (sources.Elements(XNAME_DefaultEmpty).Any())
+                        Write(" DEFAULT X'',");
+                    break;
+                default:
+                    WriteLine(",");
+                    break;
+            }
+        else
+        {
+            switch (propertyTypeName)
+            {
+                case NAME_Enum:
+                    Write(FindLocalFieldByFullName(defaultValue.Trim())?.Value);
+                    Write(", -- ");
+                    WriteLine(defaultValue.Trim());
+                    break;
+                case NAME_Char:
+                case NAME_NVarChar:
+                case NAME_VolumeIdentifier:
+                case NAME_MultiStringValue:
+                case NAME_Text:
+                    Write(" DEFAULT '");
+                    Write($"'{defaultValue.Replace("'", "''")}'");
+                    WriteLine("',");
+                    break;
+                case NAME_TimeSpan:
+                    Write(" DEFAULT ");
+                    WriteLine(XmlConvert.ToTimeSpan(defaultValue.Trim()).ToString(@"\'hh\:mm\:ss\.fff\',"));
+                    break;
+                case NAME_DateTime:
+                    Write(XmlConvert.ToDateTime(defaultValue.Trim(), XmlDateTimeSerializationMode.RoundtripKind).ToLocalTime().ToString(@"'yyyy-MM-dd HH:mm:ss"));
+                    break;
+                case NAME_Bit:
+                    WriteLine((defaultValue == "true") ? " DEFAULT 1," : " DEFAULT 0,");
+                    break;
+                case NAME_ByteValues:
+                    Write(" DEFAULT X'");
+                    Write(BitConverter.ToString(Convert.FromBase64String(defaultValue.Trim())));
+                    WriteLine("',");
+                    break;
+                case NAME_DriveType:
+                    switch (defaultValue.Trim())
+                    {
+                        case "NoRootDirectory":
+                            WriteLine(" DEFAULT 1,  -- DriveType.NoRootDirectory");
+                            break;
+                        case "Removable":
+                            WriteLine(" DEFAULT 2,  -- DriveType.Removable");
+                            break;
+                        case "Fixed":
+                            WriteLine(" DEFAULT 3,  -- DriveType.Fixed");
+                            break;
+                        case "Network":
+                            WriteLine(" DEFAULT 4,  -- DriveType.Network");
+                            break;
+                        case "CDRom":
+                            WriteLine(" DEFAULT 5,  -- DriveType.CDRom");
+                            break;
+                        case "Ram":
+                            WriteLine(" DEFAULT 6,  -- DriveType.Ram");
+                            break;
+                        default:
+                            Write(" DEFAULT 0,  -- DriveType.");
+                            WriteLine(defaultValue.Trim());
+                            break;
+                    }
+                    break;
+                default:
+                    Write(" DEFAULT ");
+                    Write(defaultValue);
+                    WriteLine(",");
+                    break;
+            }
+        }
+    }
+    if (sources.Attributes(XNAME_IsUnique).Any(a => a.Value == "true"))
+        Write(" UNIQUE");
+    switch (propertyTypeName)
+    {
+        case NAME_RelatedEntity:
+        case NAME_UniqueIdentifier:
+        case NAME_VolumeIdentifier:
+            Write(" COLLATE NOCASE");
+            break;
+        case NAME_NVarChar:
+            XAttribute attribute = sources.Attributes(XNAME_IsUnique).FirstOrDefault();
+            if (attribute is not null)
+            {
+                Write(" COLLATE ");
+                Write(attribute.Value);
+            }
+            break;
+    }
+    return colName;
+}
+
+void GenerateTableIndexSql(string tableName, string entityName, string colName, LinkedList<XElement> sources)
+{
+}
+
 #>

@@ -30,7 +30,11 @@ DROP TABLE IF EXISTS "FileSystems";
 -- Creating tables
 
 CREATE TABLE IF NOT EXISTS "FileSystems" (
-	"Id"	UNIQUEIDENTIFIER NOT NULL,
+	"CreatedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+	"ModifiedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+    "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL,
+    "LastSynchronizedOn" DATETIME DEFAULT NULL,
+	"Id"	UNIQUEIDENTIFIER NOT NULL COLLATE NOCASE,
 	"DisplayName"	NVARCHAR(1024) NOT NULL CHECK(length(trim("DisplayName")) = length("DisplayName") AND length("DisplayName")>0) UNIQUE COLLATE NOCASE,
 	"CaseSensitiveSearch"	BIT NOT NULL DEFAULT 0,
 	"ReadOnly"	BIT NOT NULL DEFAULT 0,
@@ -38,10 +42,6 @@ CREATE TABLE IF NOT EXISTS "FileSystems" (
 	"DefaultDriveType"	TINYINT CHECK("DefaultDriveType" IS NULL OR ("DefaultDriveType">=0 AND DefaultDriveType<7)),
 	"Notes"	TEXT NOT NULL DEFAULT '',
 	"IsInactive"	BIT NOT NULL DEFAULT 0,
-    "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL,
-    "LastSynchronizedOn" DATETIME DEFAULT NULL,
-	"CreatedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
-	"ModifiedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
 	CONSTRAINT "PK_FileSystems" PRIMARY KEY("Id"),
     CHECK(CreatedOn<=ModifiedOn AND
         (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL))

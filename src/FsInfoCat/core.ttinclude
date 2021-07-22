@@ -59,10 +59,10 @@
 //                                                                            => "/EntityDefinitions/*/Entity"
 //
 //    "/EntityDefinitions/*/Entity/Properties/(RelatedEntity|NewRelatedEntity)"
-//    XElement GetRelatedEntityPrimaryKeyProperty(XElement relatedEntityPropertyElement); // "./@PrimaryKey" => "/EntityDefinitions/*/Entity"
+//    XElement GetRelatedEntityKeyProperty(XElement relatedEntityPropertyElement); // "./@PrimaryKey" => "/EntityDefinitions/*/Entity"
 //
 //    "/EntityDefinitions/*/Entity/Properties/(CollectionNavigation|NewCollectionNavigation)"
-//    XElement GetCollectionNavigationForeignKeyProperty(XElement collectionNavigationPropertyElement); // "./@ForeignKey" => "/EntityDefinitions/*/Entity"
+//    XElement GetCollectionNavigationItemKeyProperty(XElement collectionNavigationPropertyElement); // "./@ForeignKey" => "/EntityDefinitions/*/Entity"
 
 static readonly Regex NewLineRegex = new Regex(@"\r\n?|[\n\p{Zl}\p{Zp}]", RegexOptions.Compiled);
 static readonly Regex NormalizeWsRegex = new Regex(@" ((?![\r\n])\s)*|(?! )((?![\r\n])\s)+", RegexOptions.Compiled);
@@ -100,8 +100,8 @@ const string NAME_ImplementsGenericEntity = "ImplementsGenericEntity";
 const string NAME_RootInterface = "RootInterface";
 const string NAME_Type = "Type";
 const string NAME_TypeDef = "TypeDef";
-const string NAME_PrimaryKey = "PrimaryKey";
-const string NAME_ForeignKey = "ForeignKey";
+const string NAME_ReferenceKey = "ReferenceKey";
+const string NAME_ItemKey = "ItemKey";
 const string NAME_AmbientBoolean = "AmbientBoolean";
 const string NAME_AmbientInt = "AmbientInt";
 const string NAME_AmbientByte = "AmbientByte";
@@ -122,6 +122,7 @@ const string NAME_value = "value";
 const string NAME_DefaultNull = "DefaultNull";
 const string NAME_DefaultNow = "DefaultNow";
 const string NAME_DefaultZero = "DefaultZero";
+const string NAME_DefaultEmpty = "DefaultEmpty";
 const string NAME_AllowNull = "AllowNull";
 const string NAME_IsGenericWritable = "IsGenericWritable";
 const string NAME_DisplayNameResource = "DisplayNameResource";
@@ -131,7 +132,6 @@ const string NAME_TableName = "TableName";
 const string NAME_ColName = "ColName";
 const string NAME_Byte = "Byte";
 const string NAME_SByte = "SByte";
-const string NAME_ByteArray = "ByteArray";
 const string NAME_MultiStringValue = "MultiStringValue";
 const string NAME_MD5Hash = "MD5Hash";
 const string NAME_ByteValues = "ByteValues";
@@ -161,6 +161,9 @@ const string NAME_ModifiedOn = "ModifiedOn";
 const string NAME_UpstreamId = "UpstreamId";
 const string NAME_LastSynchronizedOn = "LastSynchronizedOn";
 const string NAME_IsNormalized = "IsNormalized";
+const string NAME_IsIndexed = "IsIndexed";
+const string NAME_IsUnique = "IsIndexed";
+
 static readonly XName XNAME_Root = XName.Get(NAME_Root);
 static readonly XName XNAME_Upstream = XName.Get(NAME_Upstream);
 static readonly XName XNAME_Local = XName.Get(NAME_Local);
@@ -188,8 +191,8 @@ static readonly XName XNAME_ImplementsGenericEntity = XName.Get(NAME_ImplementsG
 static readonly XName XNAME_RootInterface = XName.Get(NAME_RootInterface);
 static readonly XName XNAME_Type = XName.Get(NAME_Type);
 static readonly XName XNAME_TypeDef = XName.Get(NAME_TypeDef);
-static readonly XName XNAME_PrimaryKey = XName.Get(NAME_PrimaryKey);
-static readonly XName XNAME_ForeignKey = XName.Get(NAME_ForeignKey);
+static readonly XName XNAME_ReferenceKey = XName.Get(NAME_ReferenceKey);
+static readonly XName XNAME_ItemKey = XName.Get(NAME_ItemKey);
 static readonly XName XNAME_AmbientBoolean = XName.Get(NAME_AmbientBoolean);
 static readonly XName XNAME_AmbientInt = XName.Get(NAME_AmbientInt);
 static readonly XName XNAME_AmbientByte = XName.Get(NAME_AmbientByte);
@@ -219,7 +222,6 @@ static readonly XName XNAME_TableName = XName.Get(NAME_TableName);
 static readonly XName XNAME_ColName = XName.Get(NAME_ColName);
 static readonly XName XNAME_Byte = XName.Get(NAME_Byte);
 static readonly XName XNAME_SByte = XName.Get(NAME_SByte);
-static readonly XName XNAME_ByteArray = XName.Get(NAME_ByteArray);
 static readonly XName XNAME_MultiStringValue = XName.Get(NAME_MultiStringValue);
 static readonly XName XNAME_MD5Hash = XName.Get(NAME_MD5Hash);
 static readonly XName XNAME_ByteValues = XName.Get(NAME_ByteValues);
@@ -249,6 +251,9 @@ static readonly XName XNAME_IsNormalized = XName.Get(NAME_IsNormalized);
 static readonly XName XNAME_MinLength = XName.Get(NAME_MinLength);
 static readonly XName XNAME_MaxValue = XName.Get(NAME_MaxValue);
 static readonly XName XNAME_MinValue = XName.Get(NAME_MinValue);
+static readonly XName XNAME_IsIndexed = XName.Get(NAME_IsIndexed);
+static readonly XName XNAME_DefaultEmpty = XName.Get(NAME_DefaultEmpty);
+static readonly XName XNAME_IsUnique = XName.Get(NAME_IsUnique);
 
 private static string _templateFolder = null;
 private static EnvDTE.DTE _dte = null;
@@ -538,19 +543,25 @@ XElement GetEnumFieldAmbientEnumField(XElement enumFieldElement)
     }
 }
 
-XElement GetRelatedEntityReferenceEntity(XElement relatedEntityPropertyElement)
+XElement GetRelatedEntity(XElement relatedEntityPropertyElement)
 {
-    XElement parent = relatedEntityPropertyElement?.Parent;
-    if (parent is null || (relatedEntityPropertyElement.Name != XNAME_RelatedEntity && relatedEntityPropertyElement.Name != XNAME_NewRelatedEntity))
+    XElement scopeElement, parentEntityElement = relatedEntityPropertyElement?.Parent?.Parent;
+    if (parentEntityElement is null || (scopeElement = parentEntityElement.Parent) is null ||
+            (relatedEntityPropertyElement.Name != XNAME_RelatedEntity && relatedEntityPropertyElement.Name != XNAME_NewRelatedEntity))
         return null;
-    switch (parent.Name.LocalName)
+    XElement referenceElement;
+    switch (scopeElement.Name.LocalName)
     {
         case "Root":
-            return FindRootEntityByName(relatedEntityPropertyElement.Attribute(XNAME_Reference)?.Value);
+            referenceElement = relatedEntityPropertyElement.Element(XNAME_Reference);
+            return (referenceElement is null) ? FindRootPropertyByFullName(relatedEntityPropertyElement.Element(XNAME_ReferenceKey)?.Value)?.Parent : FindRootEntityByName(referenceElement.Value);
         case "Local":
-            return FindLocalEntityByName(relatedEntityPropertyElement.Attribute(XNAME_Reference)?.Value);
+            referenceElement = relatedEntityPropertyElement.Element(XNAME_Reference);
+            return (referenceElement is null) ? FindLocalPropertyByFullName(relatedEntityPropertyElement.Element(XNAME_ReferenceKey)?.Value)?.Parent : FindLocalEntityByName(referenceElement.Value);
         case "Upstream":
-            return FindUpstreamEntityByName(relatedEntityPropertyElement.Attribute(XNAME_Reference)?.Value);
+            referenceElement = relatedEntityPropertyElement.Element(XNAME_Reference);
+            return (referenceElement is null) ? FindUpstreamPropertyByFullName(relatedEntityPropertyElement.Element(XNAME_ReferenceKey)?.Value)?.Parent :
+                FindUpstreamEntityByName(referenceElement.Value);
         default:
             return null;
     }
@@ -558,17 +569,25 @@ XElement GetRelatedEntityReferenceEntity(XElement relatedEntityPropertyElement)
 
 XElement GetCollectionNavigationItemEntity(XElement collectionNavigationPropertyElement)
 {
-    XElement parent = collectionNavigationPropertyElement?.Parent;
-    if (parent is null || (collectionNavigationPropertyElement.Name != XNAME_CollectionNavigation && collectionNavigationPropertyElement.Name != XNAME_NewCollectionNavigation))
+    XElement scopeElement, parentEntityElement = collectionNavigationPropertyElement?.Parent?.Parent;
+    if (parentEntityElement is null || (scopeElement = parentEntityElement.Parent) is null ||
+            (collectionNavigationPropertyElement.Name != XNAME_CollectionNavigation && collectionNavigationPropertyElement.Name != XNAME_NewCollectionNavigation))
         return null;
-    switch (parent.Name.LocalName)
+    XElement itemTypeElement;
+    switch (scopeElement.Name.LocalName)
     {
         case "Root":
-            return FindRootEntityByName(collectionNavigationPropertyElement.Attribute(XNAME_ItemType)?.Value);
+            itemTypeElement = collectionNavigationPropertyElement.Element(XNAME_ItemType);
+            return (itemTypeElement is null) ? FindRootPropertyByFullName(collectionNavigationPropertyElement.Element(XNAME_ItemKey)?.Value)?.Parent :
+                FindRootEntityByName(itemTypeElement.Value);
         case "Local":
-            return FindLocalEntityByName(collectionNavigationPropertyElement.Attribute(XNAME_ItemType)?.Value);
+            itemTypeElement = collectionNavigationPropertyElement.Element(XNAME_ItemType);
+            return (itemTypeElement is null) ? FindLocalPropertyByFullName(collectionNavigationPropertyElement.Element(XNAME_ItemKey)?.Value)?.Parent :
+                FindLocalEntityByName(itemTypeElement.Value);
         case "Upstream":
-            return FindUpstreamEntityByName(collectionNavigationPropertyElement.Attribute(XNAME_ItemType)?.Value);
+            itemTypeElement = collectionNavigationPropertyElement.Element(XNAME_ItemType);
+            return (itemTypeElement is null) ? FindUpstreamPropertyByFullName(collectionNavigationPropertyElement.Element(XNAME_ItemKey)?.Value)?.Parent :
+                FindUpstreamEntityByName(itemTypeElement.Value);
         default:
             return null;
     }
@@ -721,37 +740,81 @@ XElement[] GetAllBaseProperties(XElement propertyElement, XElement[] orderedBase
     return results.ToArray();
 }
 
-XElement GetRelatedEntityPrimaryKeyProperty(XElement relatedEntityPropertyElement)
+XElement GetRelatedEntityKeyProperty(XElement relatedEntityPropertyElement)
 {
     XElement parent = relatedEntityPropertyElement?.Parent;
     if (parent is null || (relatedEntityPropertyElement.Name != XNAME_RelatedEntity && relatedEntityPropertyElement.Name != XNAME_NewRelatedEntity))
         return null;
+    XElement referenceElement;
     switch (parent.Name.LocalName)
     {
         case "Root":
-            return FindRootPropertyByFullName(relatedEntityPropertyElement.Attribute(XNAME_PrimaryKey)?.Value);
+            if ((referenceElement = relatedEntityPropertyElement.Element(XNAME_ReferenceKey)) is null)
+            {
+                if ((referenceElement = relatedEntityPropertyElement.Element(XNAME_Reference)) is null || (referenceElement = FindRootEntityByName(referenceElement.Value)) is null)
+                    return null;
+                string name = relatedEntityPropertyElement.Attribute(XNAME_Name)?.Value;
+                return referenceElement.Elements(XNAME_Properties).Elements().FirstOrDefault(e => e.Attribute(XNAME_Name)?.Value == name);
+            }
+            return FindRootPropertyByFullName(referenceElement.Value);
         case "Local":
-            return FindLocalPropertyByFullName(relatedEntityPropertyElement.Attribute(XNAME_PrimaryKey)?.Value);
+            if ((referenceElement = relatedEntityPropertyElement.Element(XNAME_ReferenceKey)) is null)
+            {
+                if ((referenceElement = relatedEntityPropertyElement.Element(XNAME_Reference)) is null || (referenceElement = FindLocalEntityByName(referenceElement.Value)) is null)
+                    return null;
+                string name = relatedEntityPropertyElement.Attribute(XNAME_Name)?.Value;
+                return referenceElement.Elements(XNAME_Properties).Elements().FirstOrDefault(e => e.Attribute(XNAME_Name)?.Value == name);
+            }
+            return FindLocalPropertyByFullName(referenceElement.Value);
         case "Upstream":
-            return FindUpstreamPropertyByFullName(relatedEntityPropertyElement.Attribute(XNAME_PrimaryKey)?.Value);
+            if ((referenceElement = relatedEntityPropertyElement.Element(XNAME_ReferenceKey)) is null)
+            {
+                if ((referenceElement = relatedEntityPropertyElement.Element(XNAME_Reference)) is null || (referenceElement = FindUpstreamEntityByName(referenceElement.Value)) is null)
+                    return null;
+                string name = relatedEntityPropertyElement.Attribute(XNAME_Name)?.Value;
+                return referenceElement.Elements(XNAME_Properties).Elements().FirstOrDefault(e => e.Attribute(XNAME_Name)?.Value == name);
+            }
+            return FindUpstreamPropertyByFullName(referenceElement.Value);
         default:
             return null;
     }
 }
 
-XElement GetCollectionNavigationForeignKeyProperty(XElement collectionNavigationPropertyElement)
+XElement GetCollectionNavigationItemKeyProperty(XElement collectionNavigationPropertyElement)
 {
     XElement parent = collectionNavigationPropertyElement?.Parent;
     if (parent is null || (collectionNavigationPropertyElement.Name != XNAME_CollectionNavigation && collectionNavigationPropertyElement.Name != XNAME_NewCollectionNavigation))
         return null;
+    XElement itemKeyElement;
     switch (parent.Name.LocalName)
     {
         case "Root":
-            return FindRootPropertyByFullName(collectionNavigationPropertyElement.Attribute(XNAME_ForeignKey)?.Value);
+            if ((itemKeyElement = collectionNavigationPropertyElement.Element(XNAME_ItemKey)) is null)
+            {
+                if ((itemKeyElement = collectionNavigationPropertyElement.Element(XNAME_ItemType)) is null || (itemKeyElement = FindRootEntityByName(itemKeyElement.Value)) is null)
+                    return null;
+                string name = collectionNavigationPropertyElement.Attribute(XNAME_Name)?.Value;
+                return itemKeyElement.Elements(XNAME_Properties).Elements().FirstOrDefault(e => e.Attribute(XNAME_Name)?.Value == name);
+            }
+            return FindRootPropertyByFullName(collectionNavigationPropertyElement.Element(XNAME_ItemKey)?.Value);
         case "Local":
-            return FindLocalPropertyByFullName(collectionNavigationPropertyElement.Attribute(XNAME_ForeignKey)?.Value);
+            if ((itemKeyElement = collectionNavigationPropertyElement.Element(XNAME_ItemKey)) is null)
+            {
+                if ((itemKeyElement = collectionNavigationPropertyElement.Element(XNAME_ItemType)) is null || (itemKeyElement = FindLocalEntityByName(itemKeyElement.Value)) is null)
+                    return null;
+                string name = collectionNavigationPropertyElement.Attribute(XNAME_Name)?.Value;
+                return itemKeyElement.Elements(XNAME_Properties).Elements().FirstOrDefault(e => e.Attribute(XNAME_Name)?.Value == name);
+            }
+            return FindLocalPropertyByFullName(collectionNavigationPropertyElement.Element(XNAME_ItemKey)?.Value);
         case "Upstream":
-            return FindUpstreamPropertyByFullName(collectionNavigationPropertyElement.Attribute(XNAME_ForeignKey)?.Value);
+            if ((itemKeyElement = collectionNavigationPropertyElement.Element(XNAME_ItemKey)) is null)
+            {
+                if ((itemKeyElement = collectionNavigationPropertyElement.Element(XNAME_ItemType)) is null || (itemKeyElement = FindUpstreamEntityByName(itemKeyElement.Value)) is null)
+                    return null;
+                string name = collectionNavigationPropertyElement.Attribute(XNAME_Name)?.Value;
+                return itemKeyElement.Elements(XNAME_Properties).Elements().FirstOrDefault(e => e.Attribute(XNAME_Name)?.Value == name);
+            }
+            return FindUpstreamPropertyByFullName(collectionNavigationPropertyElement.Element(XNAME_ItemKey)?.Value);
         default:
             return null;
     }

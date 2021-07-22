@@ -94,7 +94,7 @@ foreach (XElement entityElement in entityDefinitionsElement.Elements().Elements(
     else
     {
         string typeXPath = $"/{entityElement.Parent.Parent.Name}/{entityElement.Parent.Name}/{XNAME_Entity}[@Name='{typeName}']";
-        foreach (XElement propertyElement in entityElement.Elements(XNAME_Field))
+        foreach (XElement propertyElement in entityElement.Elements(XNAME_Properties).Elements())
         {
             XName elementName = propertyElement.Name;
             string propertyName = propertyElement.Attribute(XNAME_Name)?.Value;
@@ -102,7 +102,7 @@ foreach (XElement entityElement in entityDefinitionsElement.Elements().Elements(
                 WriteLine($"#warning {XNAME_Name} attribute missing or empty for {typeXPath}/{elementName}[{(propertyElement.NodesBeforeSelf().OfType<XElement>().Count(e => e.Name == elementName) + 1)}]");
             else
             {
-                string propertyXPath = $"{typeXPath}/{XNAME_Field}[@Name='{propertyName}']";
+                string propertyXPath = $"{typeXPath}/{elementName}[@Name='{propertyName}']";
                 XAttribute attribute = propertyElement.Attribute(XNAME_FullName);
                 string expected = $"{typeName}.{propertyName}";
                 if (attribute is null)
@@ -121,7 +121,6 @@ foreach (XElement entityElement in entityDefinitionsElement.Elements().Elements(
 }
 
 PushIndent("    ");
-
 bool isSubsequentMember = GenerateEnumTypes(entityDefinitionsElement.Elements(XNAME_Root).Elements(XNAME_EnumTypes).Elements());
 GenerateEntityTypes(entityDefinitionsElement.Elements(XNAME_Root).Elements(XNAME_Entity), isSubsequentMember);
 PopIndent();
@@ -554,9 +553,6 @@ void GenerateEntityInterface(XElement entityElement)
                 Write(propertyElement.Name.LocalName.ToLower());
                 Write(allowsNull ? "? " : " ");
                 break;
-            case "ByteArray":
-                Write("byte[] ");
-                break;
             case "Text":
             case "NVarChar":
                 Write("string ");
@@ -587,16 +583,16 @@ void GenerateEntityInterface(XElement entityElement)
             case "CollectionNavigation":
             case "NewCollectionNavigation":
                 Write("IEnumerable<");
-                Write(propertyElement.Attribute(XNAME_ItemType)?.Value);
+                Write(propertyElement.Attribute(XNAME_ItemType)?.Value ?? GetCollectionNavigationItemEntity(propertyElement)?.Attribute(XNAME_Name)?.Value);
                 Write("> ");
                 break;
             case "RelatedEntity":
             case "NewRelatedEntity":
-                Write(propertyElement.Attribute(XNAME_TypeDef)?.Value ?? propertyElement.Attribute(XNAME_Reference)?.Value);
+                Write(propertyElement.Attribute(XNAME_TypeDef)?.Value ?? GetRelatedEntity(propertyElement)?.Attribute(XNAME_Name)?.Value);
                 Write(" ");
                 break;
             default:
-                WriteLine("#warning Unknown element: {propertyElement.Name.LocalName}");
+                WriteLine($"#warning Unknown element: {propertyElement.Name.LocalName}");
                 Write("object ");
                 break;
         }
