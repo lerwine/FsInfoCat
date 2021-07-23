@@ -38,327 +38,166 @@ DROP TABLE IF EXISTS "<#=attribute.Value#>";
 foreach (XAttribute tableAttribute in EntityDefinitionsDocument.Root.Elements("Local").Elements("Entity").Attributes("TableName"))
 {
     XElement entityElement = tableAttribute.Parent;
-    string tableName = tableAttribute.Value;
-#>
-CREATE TABLE IF NOT EXISTS "<#=tableName#>" (
-<#
-    PushIndent("	");
-    Collection<(string Name, LinkedList<XElement> Sources)> collection = new();
-    GetAllProperties(entityElement, collection);
-
-    (string Name, LinkedList<XElement> Sources)[] columns = collection.Where(t => t.Sources.Last.Value.Name.LocalName != "CollectionNavigation").Select<(string Name, LinkedList<XElement> Sources),(string Name, LinkedList<XElement> Sources)>(property =>
-    {
-        string colName = property.Sources.First.Value.Attribute(XNAME_TableName)?.Value ?? property.Name;
-        XElement valueElement = property.Sources.Last.Value;
-        string elementName = valueElement.Name.LocalName;
-        bool defaultNull = property.Sources.Elements(XNAME_DefaultNull).Any();
-        bool allowNull = defaultNull || property.Sources.Attributes("AllowNull").Any(a => a.Value == "true");
-        if (elementName == NAME_Enum)
-        {
-            XElement ve = FindLocalEnumByName(valueElement.Attribute(XNAME_Type)?.Value);
-            if (ve is not null)
-                valueElement = ve;
-        }
-        bool isNumeric;
-        int minLength;
-        switch (valueElement.Name.LocalName)
-        {
-            case "RelatedEntity":
-                Write($"\"{colName}Id\" UNIQUEIDENTIFIER");
-                isNumeric = false;
-                break;
-            case NAME_UniqueIdentifier:
-                Write($"\"{colName}\" UNIQUEIDENTIFIER");
-                isNumeric = false;
-                break;
-            case NAME_NVarChar:
-                Write($"\"{colName}\" NVARCHAR({property.Sources.Attributes(XNAME_MaxLength).Select(a => a.Value).First()})");
-                minLength = property.Sources.Attributes(XNAME_MinLength).Select(a => XmlConvert.ToInt32(a.Value)).DefaultIfEmpty(0).First();
-                if (property.Sources.Attributes(NAME_IsNormalized).Any(a => a.Value == "true"))
-                {
-                    if (allowNull)
-                    {
-                        if (minLength > 0)
-                            Write($" CHECK(\"{colName}\" IS NULL OR (length(trim(\"{colName}\")) = length(\"{colName}\") AND length(\"{colName}\")>{minLength - 1}))");
-                        else
-                            Write($" CHECK(\"{colName}\" IS NULL OR length(trim(\"{colName}\")) = length(\"{colName}\"))");
-                    }
-                    else if (minLength > 0)
-                        Write($" CHECK(length(trim(\"{colName}\")) = length(\"{colName}\") AND length(\"{colName}\")>{minLength - 1})");
-                    else
-                        Write($" CHECK(length(trim(\"{colName}\")) = length(\"{colName}\"))");
-                }
-                else if (minLength > 0)
-                {
-                    if (allowNull)
-                        Write($" CHECK(\"{colName}\" IS NULL OR length(\"{colName}\")>{minLength - 1})");
-                    else
-                        Write($" CHECK(length(\"{colName}\")>{minLength - 1})");
-                }
-                isNumeric = false;
-                break;
-            case NAME_VolumeIdentifier:
-                Write($"\"{colName}\" NVARCHAR(1024)");
-                if (allowNull)
-                    Write($" CHECK(\"{colName}\" IS NULL OR (length(trim(\"{colName}\")) = length(\"{colName}\") AND length(\"{colName}\")>0))");
-                else
-                    Write($" CHECK(length(trim(\"{colName}\")) = length(\"{colName}\") AND length(\"{colName}\")>0)");
-                isNumeric = false;
-                break;
-            case NAME_MultiStringValue:
-            case NAME_Text:
-                Write($"\"{colName}\" TEXT");
-                isNumeric = false;
-                break;
-            case NAME_DateTime:
-                Write($"\"{colName}\" DATETIME");
-                isNumeric = false;
-                break;
-            case NAME_Bit:
-                Write($"\"{colName}\" BIT");
-                isNumeric = false;
-                break;
-            case NAME_ByteValues:
-                Write($"\"{colName}\" VARBINARY({property.Sources.Attributes(XNAME_MaxLength).Select(a => a.Value).First()})");
-                minLength = property.Sources.Attributes(XNAME_MinLength).Select(a => XmlConvert.ToInt32(a.Value)).DefaultIfEmpty(0).First();
-                if (minLength > 0)
-                {
-                    if (allowNull)
-                        Write($" CHECK(\"{colName}\" IS NULL OR length(\"{colName}\")>{minLength - 1})");
-                    else
-                        Write($" CHECK(length(\"{colName}\")>{minLength - 1})");
-                }
-                isNumeric = false;
-                break;
-            case NAME_MD5Hash:
-                Write($"\"{colName}\" BINARY(16)");
-                isNumeric = false;
-                break;
-            case NAME_DriveType:
-                isNumeric = false;
-                break;
-            case NAME_Byte:
-                Write($"\"{colName}\" UNSIGNED TINYINT");
-                isNumeric = true;
-                break;
-            case NAME_SByte:
-                Write($"\"{colName}\" TINYINT");
-                isNumeric = true;
-                break;
-            case NAME_Short:
-                Write($"\"{colName}\" SMALLINT");
-                isNumeric = true;
-                break;
-            case NAME_UShort:
-                Write($"\"{colName}\" UNSIGNED SMALLINT");
-                isNumeric = true;
-                break;
-            case NAME_Int:
-                Write($"\"{colName}\" INT");
-                isNumeric = true;
-                break;
-            case NAME_UInt:
-                Write($"\"{colName}\" UNSIGNED INT");
-                isNumeric = true;
-                break;
-            case NAME_Long:
-                Write($"\"{colName}\" BIGINT");
-                isNumeric = true;
-                break;
-            case NAME_ULong:
-                Write($"\"{colName}\" UNSIGNED BIGINT");
-                isNumeric = true;
-                break;
-            case NAME_Float:
-            case NAME_Double:
-                Write($"\"{colName}\" REAL");
-                isNumeric = true;
-                break;
-            case NAME_Decimal:
-                Write($"\"{colName}\" NUMERIC");
-                isNumeric = true;
-                break;
-            default:
-                Write($"\"{colName}\" BLOB {elementName}");
-                isNumeric = true;
-                break;
-        }
-
-        if (isNumeric)
-        {
-            string minValue = property.Sources.Attributes(XNAME_MinValue).Select(a => a.Value.Trim()).DefaultIfEmpty("").First();
-            string maxValue = property.Sources.Attributes(XNAME_MaxValue).Select(a => a.Value.Trim()).DefaultIfEmpty("").First();
-            if (minValue.Length > 0)
-            {
-                if (maxValue.Length > 0)
-                {
-                    if (allowNull)
-                        Write($" CHECK(\"{colName}\" IS NULL OR (\"{colName}\">={minValue} AND \"{colName}\"<={maxValue}))");
-                    else
-                        Write($" CHECK(\"{colName}\">={minValue} AND \"{colName}\"<={maxValue})");
-                }
-                else if (allowNull)
-                    Write($" CHECK(\"{colName}\" IS NULL OR \"{colName}\">={minValue})");
-                else
-                    Write($" CHECK(\"{colName}\">={minValue})");
-            }
-            else if (maxValue.Length > 0)
-            {
-                if (allowNull)
-                    Write($" CHECK(\"{colName}\" IS NULL OR \"{colName}\"<={maxValue})");
-                else
-                    Write($" CHECK(\"{colName}\"<={maxValue})");
-            }
-        }
-        XElement element;
-        if (!allowNull)
-            Write(" NOT NULL");
-        if (defaultNull)
-            WriteLine(" DEFAULT NULL,");
-        else
-            switch (elementName)
-            {
-                case NAME_MD5Hash:
-                case NAME_ByteValues:
-                    WriteLine(",");
-                    break;
-                case NAME_VolumeIdentifier:
-                case NAME_NVarChar:
-                case NAME_Text:
-                case NAME_MultiStringValue:
-                    element = property.Sources.Elements("Default").FirstOrDefault();
-                    if (element is null)
-                        WriteLine(",");
-                    else
-                        WriteLine($" DEFAULT '{element.Value.Replace("'", "''")}',");
-                    break;
-                case NAME_Enum:
-                    element = property.Sources.Elements("Default").FirstOrDefault();
-                    if (element is null)
-                        WriteLine(",");
-                    else
-                    {
-                        XElement field = FindLocalFieldByFullName(element.Value);
-                        WriteLine($" DEFAULT {field.Attributes(XNAME_Value).Select(a => a.Value).FirstOrDefault()}, -- {element.Value}");
-                    }
-                    break;
-                case NAME_DateTime:
-                    if (property.Sources.Elements(XNAME_DefaultNow).Any())
-                        WriteLine(" DEFAULT (datetime('now','localtime')),");
-                    else
-                        WriteLine(",");
-                    break;
-                case NAME_Bit:
-                    element = property.Sources.Elements("Default").FirstOrDefault();
-                    if (element is null)
-                        WriteLine(",");
-                    else
-                        WriteLine($" DEFAULT {((element.Value == "true") ? "1" : "0")},");
-                    break;
-                case NAME_DriveType:
-                    element = property.Sources.Elements("Default").FirstOrDefault();
-                    if (element is null)
-                        WriteLine(",");
-                    else
-                        switch (element.Attribute("Type")?.Value ?? "")
-                        {
-                            case "NoRootDirectory":
-                                WriteLine(" DEFAULT 1, -- DriveType.NoRootDirectory");
-                                break;
-                            case "Removable":
-                                WriteLine(" DEFAULT 2, -- DriveType.Removable");
-                                break;
-                            case "Fixed":
-                                WriteLine(" DEFAULT 3, -- DriveType.Fixed");
-                                break;
-                            case "Network":
-                                WriteLine(" DEFAULT 4, -- DriveType.Network");
-                                break;
-                            case "CDRom":
-                                WriteLine(" DEFAULT 5, -- DriveType.CDRom");
-                                break;
-                            case "Ram":
-                                WriteLine(" DEFAULT 6, -- DriveType.Ram");
-                                break;
-                            default:
-                                WriteLine($" DEFAULT 0, -- DriveType.{element.Attribute("Type")?.Value}");
-                                break;
-                        }
-                    break;
-                case NAME_Byte:
-                case NAME_SByte:
-                case NAME_Short:
-                case NAME_UShort:
-                case NAME_Int:
-                case NAME_UInt:
-                case NAME_Long:
-                case NAME_ULong:
-                case NAME_Float:
-                case NAME_Double:
-                case NAME_Decimal:
-                    element = property.Sources.Elements("Default").FirstOrDefault();
-                    if (element is null)
-                        WriteLine(",");
-                    else
-                        WriteLine($" DEFAULT {element.Value},");
-                    break;
-                case "RelatedEntity":
-                    element = FindLocalEntityByName(property.Sources.Elements(XNAME_Reference).Select(a => a.Value).First());
-                    if (element is null)
-                        WriteLine(",");
-                    else
-                    {
-                        string tn = element.Attributes(XNAME_TableName).Concat(property.Sources.Attributes(XNAME_Name)).Select(a => a.Value).First();
-                        WriteLine($" CONSTRAINT \"FK_{tableName}{tn}\" REFERENCES \"{tn}\"(\"Id\") ON DELETE RESTRICT,");
-                        WriteLine("#bug Need some way to override AllowNull for entity references");
-                    }
-                    break;
-                case NAME_UniqueIdentifier:
-                    WriteLine(",");
-                    break;
-                default:
-                    WriteLine($", -- {elementName}");
-                    break;
-            }
-        return new(colName, property.Sources);
-    }).ToArray();
-    PopIndent();
-#>
-	CONSTRAINT "PK_<#=tableName#>" PRIMARY KEY("<#=string.Join("\", \"", columns.Where(c => c.Sources.Attributes("IsPrimaryKey").Any(a => a.Value == "true")).Select(c => c.Name))#>"),
-<#
-    if (columns.Any(c => c.Name == NAME_UpstreamId))
-    {
-#>
-    CHECK(CreatedOn<=ModifiedOn AND
-        (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL))
-<#
-    } else {
-#>
-    CHECK(CreatedOn<=ModifiedOn)
-<#
-    }
-#>
-);
-<#
+    GenerateCreateTableSql(tableAttribute.Value, tableAttribute.Parent);
 }
 #>
 <#+
 
-void GenerateCreateTableSql(XElement entityElement)
+void GenerateCreateTableSql(string tableName, XElement entityElement)
 {
-    string tableName = entityElement.Attribute(XNAME_TableName)?.Value;
     string entityName = entityElement.Attribute(XNAME_Name)?.Value;
-    if (string.IsNullOrWhiteSpace(tableName))
-        return;
     Write("CREATE TABLE IF NOT EXISTS ");
     Write(tableName);
     WriteLine(" (");
     PushIndent("    ");
     Collection<(string Name, LinkedList<XElement> Sources)> collection = new();
     GetAllProperties(entityElement, collection);
-    (string Name, LinkedList<XElement> Sources)[] columns = collection.Select<(string Name, LinkedList<XElement> Sources), (string Name, LinkedList<XElement> Sources)>(t => new(GenerateTableColumnSql(tableName, entityName, t.Name, t.Sources), t.Sources))
-        .Where(t => t.Name is not null).ToArray();
+    (string Name, LinkedList<XElement> Sources) firstCol = new(GenerateTableColumnSql(tableName, entityName, collection[0].Name, collection[0].Sources), collection[0].Sources);
+    (string Name, LinkedList<XElement> Sources)[] columns = new (string Name, LinkedList<XElement> Sources)[] { firstCol }
+        .Concat(collection.Skip(1).Select<(string Name, LinkedList<XElement> Sources), (string Name, LinkedList<XElement> Sources)>(t =>
+        {
+            WriteLine(",");
+            return new(GenerateTableColumnSql(tableName, entityName, t.Name, t.Sources), t.Sources);
+        }).Where(t => t.Name is not null)).ToArray();
+    string[] keyColumns = columns.Where(c => c.Sources.Where(e => e.Attribute(XNAME_IsPrimaryKey)?.Value == "true" && (e.Name == XNAME_UniqueIdentifier || e.Name == XNAME_UniqueIdentifier)))
+        .Select(c => $"\"{c.Name}\"").ToArray();
+    Collection<string> constraints = new();
+    foreach (XElement element in new XElement[] { entityElement }.Concat(GetAllBaseEntities(entityElement)))
+    {
+        if (element.Name == XNAME_EitherOrConstraint)
+        {
+            string p1 = element.Elements(XNAME_Property).Take(1).Select(p =>
+            {
+                string disallowEmptyIfNotNull = p.Attribute(XNAME_DisallowEmptyIfNotNull)?.Value;
+                if (string.IsNullOrWhiteSpace(disallowEmptyIfNotNull))
+                    return $"\"{p.Attribute(XNAME_Name)?.Value}\" IS NULL";
+                return $"(\"{p.Attribute(XNAME_Name)?.Value}\" IS NULL OR length(trim(\"{disallowEmptyIfNotNull}\")>0)";
+            }).First();
+            string p2 = element.Elements(XNAME_Property).Skip(1).Take(1).Select(p =>
+            {
+                string disallowEmptyIfNotNull = p.Attribute(XNAME_DisallowEmptyIfNotNull)?.Value;
+                if (string.IsNullOrWhiteSpace(disallowEmptyIfNotNull))
+                    return $"\"{p.Attribute(XNAME_Name)?.Value}\" IS NULL";
+                return $"(\"{p.Attribute(XNAME_Name)?.Value}\" IS NOT NULL AND length(trim(\"{disallowEmptyIfNotNull}\")>0)";
+            }).First();
+            string value = $"{p2} OR {p1}";
+            if (constraints.Contains(value))
+                continue;
+            value = $"{p1} OR {p2}";
+            if (!constraints.Contains(value))
+                constraints.Add(value);
+        }
+        else if (element.Name == XNAME_IsNullSameConstraint)
+        {
+            string[] values = element.Elements(XNAME_Property).Attributes(XNAME_Name).Select(a => a.Value).ToArray();
+            string value = $"\"{values[1]}\" IS NULL OR \"{values[0]}\" IS NOT NULL";
+            if (constraints.Contains(value))
+                continue;
+            value = $"\"{values[0]}\" IS NULL OR \"{values[1]}\" IS NOT NULL";
+            if (!constraints.Contains(value))
+                constraints.Add(value);
+        }
+        else if (element.Name == XNAME_FieldComparisonConstraint)
+        {
+            string leftProperty = element.Attribute(XNAME_LeftProperty)?.Value;
+            string rightProperty = element.Attribute(XNAME_RightProperty)?.Value;
+            string value;
+            switch (element.Attribute(XNAME_Operator)?.Value ?? "")
+            {
+                case "LessThan":
+                    value = $"\"{rightProperty}\">=\"{leftProperty}\"";
+                    if (constraints.Contains(value))
+                        continue;
+                    value = $"\"{leftProperty}\"<\"{rightProperty}\"";
+                    break;
+                case "NotGreaterThan":
+                    value = $"\"{rightProperty}\">\"{leftProperty}\"";
+                    if (constraints.Contains(value))
+                        continue;
+                    value = $"\"{leftProperty}\"<=\"{rightProperty}\"";
+                    break;
+                case "NotEqualTo":
+                    value = $"\"{rightProperty}\"<>\"{leftProperty}\"";
+                    if (constraints.Contains(value))
+                        continue;
+                    value = $"\"{leftProperty}\"<>\"{rightProperty}\"";
+                    break;
+                case "NotLessThan":
+                    value = $"\"{rightProperty}\"<\"{leftProperty}\"";
+                    if (constraints.Contains(value))
+                        continue;
+                    value = $"\"{leftProperty}\">=\"{rightProperty}\"";
+                    break;
+                case "GreaterThan":
+                    value = $"\"{rightProperty}\"<=\"{leftProperty}\"";
+                    if (constraints.Contains(value))
+                        continue;
+                    value = $"\"{leftProperty}\">\"{rightProperty}\"";
+                    break;
+                default:
+                    value = $"\"{rightProperty}\"=\"{leftProperty}\"";
+                    if (constraints.Contains(value))
+                        continue;
+                    value = $"\"{leftProperty}\"=\"{rightProperty}\"";
+                    break;
+            }
+            if (!constraints.Contains(value))
+                constraints.Add(value);
+        }
+    }
+    // TODO: Need to change from appending comma/newline in case there are no constraints or key columns
+    if (keyColumns.Length == 1)
+    {
+        WriteLine(",");
+        Write("CONSTRAINT \"PK_");
+        Write(tableName);
+        Write("\" PRIMARY KEY(\"");
+        Write(keyColumns[0]);
+        if (constraints.Count > 0)
+            Write("\")");
+        else
+            WriteLine("\")");
+    }
+    else if (keyColumns.Length > 1)
+    {
+        WriteLine(",");
+        Write("CONSTRAINT \"PK_");
+        Write(tableName);
+        Write("\" PRIMARY KEY(\"");
+        Write(keyColumns[0]);
+        foreach (string c in keyColumns.Skip(1))
+        {
+            Write(", ");
+            Write(c);
+        }
+        if (constraints.Count > 0)
+            Write("\")");
+        else
+            WriteLine("\")");
+    }
+    if (constraints.Count == 1)
+    {
+        WriteLine(",");
+        Write("CHECK(");
+        Write(constraints[0]);
+        WriteLine(")");
+    }
+    else if (constraints.Count > 1)
+    {
+        WriteLine(",");
+        Write("CHECK((");
+        Write(constraints[0]);
+        foreach (string c in constraints.Skip(1))
+        {
+            Write(") AND (");
+            Write(c);
+        }
+        WriteLine("))");
+    }
+    else if (keyColumns.Length == 0)
+        WriteLine("");
     PopIndent();
+    WriteLine(");");
     foreach ((string Name, LinkedList<XElement> Sources) tuple in columns)
         GenerateTableIndexSql(tableName, entityName, tuple.Name, tuple.Sources);
 }
@@ -465,11 +304,14 @@ string PropertyElementToSqlType(XElement propertyElement, out string typeName, o
     }
 }
 
-string GenerateTableColumnSql(string tableName, string entityName, string propertyName, LinkedList<XElement> sources)
+string GenerateTableColumnSql(string tableName, string entityName, string propertyName, LinkedList<XElement> sources, out string comment)
 {
     XElement baseProperty = sources.Last.Value;
     if (baseProperty.Name == XNAME_CollectionNavigation)
+    {
+        comment = null;
         return null;
+    }
     XElement implProperty = sources.First.Value;
     string propertyTypeName = baseProperty.Name.LocalName;
     string colName = implProperty.Attribute(XNAME_ColName)?.Value ?? propertyName;
@@ -576,37 +418,39 @@ string GenerateTableColumnSql(string tableName, string entityName, string proper
     }
 
     if (defaultNull)
-        Write(" DEFAULT NULL,");
+    {
+        comment = null;
+        Write(" DEFAULT NULL");
+    }
     else
     {
         string defaultValue = sources.Elements(XNAME_Default).Select(e => e.Value).FirstOrDefault();
         if (defaultValue is null)
+        {
             switch (propertyTypeName)
             {
                 case NAME_DateTime:
                     if (sources.Elements(XNAME_DefaultNow).Any())
-                        Write(" DEFAULT (datetime('now','localtime')),");
+                        Write(" DEFAULT (datetime('now','localtime'))");
                     break;
                 case NAME_TimeSpan:
                     if (sources.Elements(XNAME_DefaultZero).Any())
-                        Write(" DEFAULT (time('00:00:00.000')),");
+                        Write(" DEFAULT (time('00:00:00.000'))");
                     break;
                 case NAME_ByteValues:
                     if (sources.Elements(XNAME_DefaultEmpty).Any())
-                        Write(" DEFAULT X'',");
-                    break;
-                default:
-                    WriteLine(",");
+                        Write(" DEFAULT X''");
                     break;
             }
+            comment = null;
+        }
         else
         {
             switch (propertyTypeName)
             {
                 case NAME_Enum:
                     Write(FindLocalFieldByFullName(defaultValue.Trim())?.Value);
-                    Write(", -- ");
-                    WriteLine(defaultValue.Trim());
+                    comment = defaultValue.Trim();
                     break;
                 case NAME_Char:
                 case NAME_NVarChar:
@@ -615,54 +459,60 @@ string GenerateTableColumnSql(string tableName, string entityName, string proper
                 case NAME_Text:
                     Write(" DEFAULT '");
                     Write($"'{defaultValue.Replace("'", "''")}'");
-                    WriteLine("',");
+                    Write("'");
                     break;
                 case NAME_TimeSpan:
                     Write(" DEFAULT ");
-                    WriteLine(XmlConvert.ToTimeSpan(defaultValue.Trim()).ToString(@"\'hh\:mm\:ss\.fff\',"));
+                    Write(XmlConvert.ToTimeSpan(defaultValue.Trim()).ToString(@"\'hh\:mm\:ss\.fff\'"));
                     break;
                 case NAME_DateTime:
                     Write(XmlConvert.ToDateTime(defaultValue.Trim(), XmlDateTimeSerializationMode.RoundtripKind).ToLocalTime().ToString(@"'yyyy-MM-dd HH:mm:ss"));
                     break;
                 case NAME_Bit:
-                    WriteLine((defaultValue == "true") ? " DEFAULT 1," : " DEFAULT 0,");
+                    Write((defaultValue == "true") ? " DEFAULT 1," : " DEFAULT 0");
                     break;
                 case NAME_ByteValues:
                     Write(" DEFAULT X'");
                     Write(BitConverter.ToString(Convert.FromBase64String(defaultValue.Trim())));
-                    WriteLine("',");
+                    Write("'");
                     break;
                 case NAME_DriveType:
                     switch (defaultValue.Trim())
                     {
                         case "NoRootDirectory":
-                            WriteLine(" DEFAULT 1,  -- DriveType.NoRootDirectory");
+                            Write(" DEFAULT 1");
+                            comment = "DriveType.NoRootDirectory";
                             break;
                         case "Removable":
-                            WriteLine(" DEFAULT 2,  -- DriveType.Removable");
+                            Write(" DEFAULT 2");
+                            comment = "DriveType.Removable";
                             break;
                         case "Fixed":
-                            WriteLine(" DEFAULT 3,  -- DriveType.Fixed");
+                            Write(" DEFAULT 3");
+                            comment = "DriveType.Fixed";
                             break;
                         case "Network":
-                            WriteLine(" DEFAULT 4,  -- DriveType.Network");
+                            Write(" DEFAULT 4");
+                            comment = "DriveType.Network";
                             break;
                         case "CDRom":
-                            WriteLine(" DEFAULT 5,  -- DriveType.CDRom");
+                            Write(" DEFAULT 5");
+                            comment = "DriveType.CDRom";
                             break;
                         case "Ram":
-                            WriteLine(" DEFAULT 6,  -- DriveType.Ram");
+                            Write(" DEFAULT 6");
+                            comment = "DriveType.Ram";
                             break;
                         default:
-                            Write(" DEFAULT 0,  -- DriveType.");
-                            WriteLine(defaultValue.Trim());
+                            Write(" DEFAULT 0");
+                            comment = defaultValue.Trim();
                             break;
                     }
                     break;
                 default:
+                    comment = null;
                     Write(" DEFAULT ");
                     Write(defaultValue);
-                    WriteLine(",");
                     break;
             }
         }
