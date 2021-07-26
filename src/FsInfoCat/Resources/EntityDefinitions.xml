@@ -362,9 +362,10 @@
                         The <see cref="Guid">unique identifier</see> used as the current entity's primary key the database.
                     </value>
                 </UniqueIdentifier>
-                <NVarChar Name="DisplayName" MaxLength="1024" MinLength="1" IsNormalized="true" IsIndexed="true" IsUnique="true" FullName="IFileSystem.DisplayName" ColName="DisplayName" IsCaseSensitive="false">
+                <NVarChar Name="DisplayName" MaxLength="1024" MinLength="1" IsNormalized="true" FullName="IFileSystem.DisplayName" ColName="DisplayName" IsCaseSensitive="false">
                     <summary>Gets the display name.</summary>
                     <value>The display name of the file system.</value>
+                    <Index Name="IDX_FileSystem_DisplayName"/>
                 </NVarChar>
                 <Bit Name="CaseSensitiveSearch" FullName="IFileSystem.CaseSensitiveSearch" ColName="CaseSensitiveSearch">
                     <summary>
@@ -405,13 +406,14 @@
                     <value>The custom notes to associate with this file system type.</value>
                     <Default></Default>
                 </Text>
-                <Bit Name="IsInactive" IsIndexed="true" FullName="IFileSystem.IsInactive" ColName="IsInactive">
+                <Bit Name="IsInactive" FullName="IFileSystem.IsInactive" ColName="IsInactive">
                     <summary>
                         Gets a value indicating whether this file system type is inactive.
                     </summary>
                     <value>
                         <see langword="true" /> if this file system type is inactive; otherwise, <see langword="false" />.
                     </value>
+                    <Index Name="IDX_FileSystem_IsInactive"/>
                     <Default>false</Default>
                 </Bit>
                 <CollectionNavigation Name="Volumes" FullName="IFileSystem.Volumes">
@@ -429,6 +431,9 @@
                     <ItemType>ISymbolicName</ItemType>
                 </CollectionNavigation>
             </Properties>
+            <Unique Name="UK_FileSystem_DislayName">
+                <Property Name="DisplayName"/>
+            </Unique>
         </Entity>
         <Entity Name="ISymbolicName">
             <summary>
@@ -444,11 +449,12 @@
                         The <see cref="Guid">unique identifier</see> used as the current entity's primary key the database.
                     </value>
                 </UniqueIdentifier>
-                <NVarChar Name="Name" IsNormalized="true" IsIndexed="true" MinLength="1" MaxLength="256" FullName="ISymbolicName.Name" ColName="Name" IsCaseSensitive="false">
+                <NVarChar Name="Name" IsNormalized="true" MinLength="1" MaxLength="256" FullName="ISymbolicName.Name" ColName="Name" IsCaseSensitive="false">
                     <summary>
                         Gets the symbolic name.
                     </summary>
                     <value>The symbolic name which refers to a file system type..</value>
+                    <Index Name="IDX_SymbolicName_Name"/>
                 </NVarChar>
                 <Text Name="Notes" FullName="ISymbolicName.Notes" ColName="Notes">
                     <summary>
@@ -464,13 +470,14 @@
                     <value>The priority of this symbolic name in relation to other symbolic names that refer to the same file system type, with lower values being higher priority.</value>
                     <Default>0</Default>
                 </Int>
-                <Bit Name="IsInactive" IsIndexed="true" FullName="ISymbolicName.IsInactive" ColName="IsInactive">
+                <Bit Name="IsInactive" FullName="ISymbolicName.IsInactive" ColName="IsInactive">
                     <summary>
                         Gets a value indicating whether this symbolic name is inactive.
                     </summary>
                     <value>
                         <see langword="true" /> if this symbolic name  is inactive; otherwise, <see langword="false" />.
                     </value>
+                    <Index Name="IDX_SymbolicName_IsInactive"/>
                     <Default>false</Default>
                 </Bit>
                 <RelatedEntity Name="FileSystem" FullName="ISymbolicName.FileSystem" Reference="IFileSystem" FkPropertyName="FileSystemId" ConstraintName="FK_SymbolicName_FileSystem">
@@ -480,6 +487,9 @@
                     <value>The file system entity that represents the file system type that this symbolic name refers to.</value>
                 </RelatedEntity>
             </Properties>
+            <Unique Name="UK_FileSystem_Name">
+                <Property Name="Name"/>
+            </Unique>
         </Entity>
         <Entity Name="IVolume">
             <summary>
@@ -506,13 +516,15 @@
                         Gets the name of the volume.
                     </summary>
                     <value>The name of the volume.</value>
+                    <Index Name="IDX_Volume_VolumeName"/>
                     <Default></Default>
                 </NVarChar>
-                <VolumeIdentifier Name="Identifier" IsIndexed="true" FullName="IVolume.Identifier" ColName="Identifier">
+                <VolumeIdentifier Name="Identifier" FullName="IVolume.Identifier" ColName="Identifier">
                     <summary>
                         Gets the unique volume identifier.
                     </summary>
                     <value>The system-independent unique identifier, which identifies the volume.</value>
+                    <Index Name="IDX_Volume_Identifier"/>
                 </VolumeIdentifier>
                 <Bit Name="CaseSensitiveSearch" AllowNull="true" FullName="IVolume.CaseSensitiveSearch" ColName="CaseSensitiveSearch">
                     <summary>
@@ -555,11 +567,12 @@
                     <value>The custom notes to associate with this volume.</value>
                     <Default></Default>
                 </Text>
-                <Enum Name="Status" Type="VolumeStatus" IsIndexed="true" FullName="IVolume.Status" ColName="Status">
+                <Enum Name="Status" Type="VolumeStatus" FullName="IVolume.Status" ColName="Status">
                     <summary>
                         Gets the volume status.
                     </summary>
                     <value>The volume status value.</value>
+                    <Index Name="IDX_Volume_Status"/>
                     <Default>VolumeStatus.Unknown</Default>
                 </Enum>
                 <RelatedEntity Name="RootDirectory" FullName="IVolume.RootDirectory" Reference="ISubdirectory">
@@ -582,6 +595,9 @@
                     <ItemType>IVolumeAccessError</ItemType>
                 </CollectionNavigation>
             </Properties>
+            <Unique Name="UK_FileSystem_Volume">
+                <Property Name="Identifier"/>
+            </Unique>
         </Entity>
         <Entity Name="IVolumeAccessError">
             <summary>
@@ -656,7 +672,7 @@
                     <value>The custom notes to associate with the current crawl configuration.</value>
                     <Default></Default>
                 </Text>
-                <Enum Name="StatusValue" IsIndexed="true" FullName="ICrawlConfiguration.StatusValue" Type="CrawlStatus" DisplayNameResource="DisplayName_Status" ColName="StatusValue">
+                <Enum Name="StatusValue" FullName="ICrawlConfiguration.StatusValue" Type="CrawlStatus" DisplayNameResource="DisplayName_Status" ColName="StatusValue">
                     <summary>
                         Gets a value indicating whether the current crawl configuration has been deactivated.
                     </summary>
@@ -664,6 +680,7 @@
                         <see langword="true" /> if the current crawl configuration has been deactivated; otherwise, <see langword="false" /> to indicate that is
                         available for use.
                     </value>
+                    <Index Name="IDX_CrawlConfiguration_StatusValue"/>
                     <Default>CrawlStatus.NotRunning</Default>
                 </Enum>
                 <DateTime Name="LastCrawlStart" AllowNull="true" FullName="ICrawlConfiguration.LastCrawlStart" ColName="LastCrawlStart">
@@ -734,7 +751,7 @@
                     <summary>Gets root path of the crawl.</summary>
                     <value>The root path of the crawl.</value>
                 </NVarChar>
-                <Enum Name="StatusCode" IsIndexed="true" FullName="ICrawlJobLog.StatusCode" Type="CrawlStatus" ColName="StatusCode">
+                <Enum Name="StatusCode" FullName="ICrawlJobLog.StatusCode" Type="CrawlStatus" ColName="StatusCode">
                     <summary>
                         Gets a value indicating whether the current crawl configuration has been deactivated.
                     </summary>
@@ -742,6 +759,7 @@
                         <see langword="true" /> if the current crawl configuration has been deactivated; otherwise, <see langword="false" /> to indicate that is
                         available for use.
                     </value>
+                    <Index Name="IDX_CrawlJobLog_StatusCode"/>
                     <Default>CrawlStatus.NotRunning</Default>
                 </Enum>
                 <DateTime Name="CrawlStart" FullName="ICrawlJobLog.CrawlStart" ColName="CrawlStart">
@@ -843,11 +861,12 @@
                     <value>The crawl options for the current subdirectory.</value>
                     <Default>DirectoryCrawlOptions.None</Default>
                 </Enum>
-                <Enum Name="Status" Type="DirectoryStatus" IsIndexed="true" FullName="ISubdirectory.Status" ColName="Status">
+                <Enum Name="Status" Type="DirectoryStatus" FullName="ISubdirectory.Status" ColName="Status">
                     <summary>
                         Gets the status of the current subdirectory.
                     </summary>
                     <value>The status value for the current subdirectory.</value>
+                    <Index Name="IDX_Subdirectory_Status"/>
                     <Default>DirectoryStatus.Incomplete</Default>
                 </Enum>
                 <NewRelatedEntity Name="Parent" FullName="ISubdirectory.Parent" Reference="ISubdirectory">
@@ -936,21 +955,23 @@
                         The <see cref="Guid">unique identifier</see> used as the current entity's primary key the database.
                     </value>
                 </UniqueIdentifier>
-                <Long Name="Length" IsIndexed="true" FullName="IBinaryPropertySet.Length" ColName="Length">
+                <Long Name="Length" FullName="IBinaryPropertySet.Length" ColName="Length">
                     <summary>
                         Gets the file length.
                     </summary>
                     <value>
                         The file length in bytes.
                     </value>
+                    <Index Name="IDX_BinaryPropertySet_Length"/>
                 </Long>
-                <MD5Hash Name="Hash" IsIndexed="true" FullName="IBinaryPropertySet.Hash" AllowNull="true" ColName="Hash">
+                <MD5Hash Name="Hash" FullName="IBinaryPropertySet.Hash" AllowNull="true" ColName="Hash">
                     <summary>
                         Gets the MD5 hash of the file's contents.
                     </summary>
                     <value>
                         The MD5 hash of the file's contents or <see langword="null" /> if the hash has not yet been calculated.
                     </value>
+                    <Index Name="IDX_BinaryPropertySet_Hash"/>
                     <DefaultNull />
                 </MD5Hash>
                 <CollectionNavigation Name="Files" FullName="IBinaryPropertySet.Files">
@@ -972,6 +993,10 @@
                     <ItemType>IRedundantSet</ItemType>
                 </CollectionNavigation>
             </Properties>
+            <Unique Name="UK_BinaryPropertySet_Length_Hash">
+                <Property Name="Length"/>
+                <Property Name="Hash"/>
+            </Unique>
         </Entity>
         <Entity Name="ISummaryProperties">
             <summary>
@@ -4918,13 +4943,14 @@
                     </value>
                     <Default>FileCrawlOptions.None</Default>
                 </Enum>
-                <Enum Name="Status" Type="FileCorrelationStatus" IsIndexed="true" FullName="IFile.Status" ColName="Status">
+                <Enum Name="Status" Type="FileCorrelationStatus" FullName="IFile.Status" ColName="Status">
                     <summary>
                         Gets the correlative status of the current file.
                     </summary>
                     <value>
                         A <see cref="FileCorrelationStatus" /> value that indicates the file's correlation status.
                     </value>
+                    <Index Name="IDX_File_Status"/>
                     <Default>FileCorrelationStatus.Dissociated</Default>
                 </Enum>
                 <DateTime Name="LastHashCalculation" FullName="IFile.LastHashCalculation" AllowNull="true" ColName="LastHashCalculation">
@@ -4936,7 +4962,7 @@
                     </value>
                     <DefaultNull />
                 </DateTime>
-                <RelatedEntity Name="BinaryProperties" FullName="IFile.BinaryProperties" Reference="IBinaryPropertySet" FkPropertyName="BinaryPropertiesId" ConstraintName="FK_File_BinaryPropertySet">
+                <RelatedEntity Name="BinaryProperties" FullName="IFile.BinaryProperties" Reference="IBinaryPropertySet" FkPropertyName="BinaryPropertySetId" ConstraintName="FK_File_BinaryPropertySet">
                     <summary>
                         Gets the binary properties for the current file.
                     </summary>
@@ -4944,7 +4970,7 @@
                         The generic <see cref="IBinaryPropertySet" /> that contains the file size and optionally, the <see cref="MD5Hash">MD5 hash</see> value of its binary contents.
                     </value>
                 </RelatedEntity>
-                <RelatedEntity Name="SummaryProperties" FullName="IFile.SummaryProperties" Reference="ISummaryPropertySet" FkPropertyName="SummaryPropertiesId" ConstraintName="FK_File_SummaryPropertySet">
+                <RelatedEntity Name="SummaryProperties" FullName="IFile.SummaryProperties" Reference="ISummaryPropertySet" FkPropertyName="SummaryPropertySetId" ConstraintName="FK_File_SummaryPropertySet">
                     <summary>
                         Gets the summary properties for the current file.
                     </summary>
@@ -4952,7 +4978,7 @@
                         The generic <see cref="IBinaryPropertySet" /> that contains the summary properties for the current file or <see langword="null" /> if no summary properties are defined on the current file.
                     </value>
                 </RelatedEntity>
-                <RelatedEntity Name="DocumentProperties" FullName="IFile.DocumentProperties" Reference="IDocumentPropertySet" FkPropertyName="DocumentPropertiesId" ConstraintName="FK_File_DocumentPropertySet">
+                <RelatedEntity Name="DocumentProperties" FullName="IFile.DocumentProperties" Reference="IDocumentPropertySet" FkPropertyName="DocumentPropertySetId" ConstraintName="FK_File_DocumentPropertySet">
                     <summary>
                         Gets the document properties for the current file.
                     </summary>
@@ -4960,7 +4986,7 @@
                         The generic <see cref="IDocumentPropertySet" /> that contains the document properties for the current file or <see langword="null" /> if no document properties are defined on the current file.
                     </value>
                 </RelatedEntity>
-                <RelatedEntity Name="AudioProperties" FullName="IFile.AudioProperties" Reference="IAudioPropertySet" FkPropertyName="AudioPropertiesId" ConstraintName="FK_File_AudioPropertySet">
+                <RelatedEntity Name="AudioProperties" FullName="IFile.AudioProperties" Reference="IAudioPropertySet" FkPropertyName="AudioPropertySetId" ConstraintName="FK_File_AudioPropertySet">
                     <summary>
                         Gets the audio properties for the current file.
                     </summary>
@@ -4968,7 +4994,7 @@
                         The generic <see cref="IAudioPropertySet" /> that contains the audio properties for the current file or <see langword="null" /> if no audio properties are defined on the current file.
                     </value>
                 </RelatedEntity>
-                <RelatedEntity Name="DRMProperties" FullName="IFile.DRMProperties" Reference="IDRMPropertySet" FkPropertyName="DRMPropertiesId" ConstraintName="FK_File_DRMPropertySet">
+                <RelatedEntity Name="DRMProperties" FullName="IFile.DRMProperties" Reference="IDRMPropertySet" FkPropertyName="DRMPropertySetId" ConstraintName="FK_File_DRMPropertySet">
                     <summary>
                         Gets the DRM properties for the current file.
                     </summary>
@@ -4976,7 +5002,7 @@
                         The generic <see cref="IDRMPropertySet" /> that contains the DRM properties for the current file or <see langword="null" /> if no DRM properties are defined on the current file.
                     </value>
                 </RelatedEntity>
-                <RelatedEntity Name="GPSProperties" FullName="IFile.GPSProperties" Reference="IGPSPropertySet" FkPropertyName="GPSPropertiesId" ConstraintName="FK_File_GPSPropertySet">
+                <RelatedEntity Name="GPSProperties" FullName="IFile.GPSProperties" Reference="IGPSPropertySet" FkPropertyName="GPSPropertySetId" ConstraintName="FK_File_GPSPropertySet">
                     <summary>
                         Gets the GPS properties for the current file.
                     </summary>
@@ -4984,7 +5010,7 @@
                         The generic <see cref="IGPSPropertySet" /> that contains the GPS properties for the current file or <see langword="null" /> if no GPS properties are defined on the current file.
                     </value>
                 </RelatedEntity>
-                <RelatedEntity Name="ImageProperties" FullName="IFile.ImageProperties" Reference="IImagePropertySet" FkPropertyName="ImagePropertiesId" ConstraintName="FK_File_ImagePropertySet">
+                <RelatedEntity Name="ImageProperties" FullName="IFile.ImageProperties" Reference="IImagePropertySet" FkPropertyName="ImagePropertySetId" ConstraintName="FK_File_ImagePropertySet">
                     <summary>
                         Gets the image properties for the current file.
                     </summary>
@@ -4992,7 +5018,7 @@
                         The generic <see cref="IImagePropertySet" /> that contains the image properties for the current file or <see langword="null" /> if no image properties are defined on the current file.
                     </value>
                 </RelatedEntity>
-                <RelatedEntity Name="MediaProperties" FullName="IFile.MediaProperties" Reference="IMediaPropertySet" FkPropertyName="MediaPropertiesId" ConstraintName="FK_File_MediaPropertySet">
+                <RelatedEntity Name="MediaProperties" FullName="IFile.MediaProperties" Reference="IMediaPropertySet" FkPropertyName="MediaPropertySetId" ConstraintName="FK_File_MediaPropertySet">
                     <summary>
                         Gets the media properties for the current file.
                     </summary>
@@ -5000,7 +5026,7 @@
                         The generic <see cref="IMediaPropertySet" /> that contains the media properties for the current file or <see langword="null" /> if no media properties are defined on the current file.
                     </value>
                 </RelatedEntity>
-                <RelatedEntity Name="MusicProperties" FullName="IFile.MusicProperties" Reference="IMusicPropertySet" FkPropertyName="MusicPropertiesId" ConstraintName="FK_File_MusicPropertySet">
+                <RelatedEntity Name="MusicProperties" FullName="IFile.MusicProperties" Reference="IMusicPropertySet" FkPropertyName="MusicPropertySetId" ConstraintName="FK_File_MusicPropertySet">
                     <summary>
                         Gets the music properties for the current file.
                     </summary>
@@ -5008,7 +5034,7 @@
                         The generic <see cref="IMusicPropertySet" /> that contains the music properties for the current file or <see langword="null" /> if no music properties are defined on the current file.
                     </value>
                 </RelatedEntity>
-                <RelatedEntity Name="PhotoProperties" FullName="IFile.PhotoProperties" Reference="IPhotoPropertySet" FkPropertyName="PhotoPropertiesId" ConstraintName="FK_File_PhotoPropertySet">
+                <RelatedEntity Name="PhotoProperties" FullName="IFile.PhotoProperties" Reference="IPhotoPropertySet" FkPropertyName="PhotoPropertySetId" ConstraintName="FK_File_PhotoPropertySet">
                     <summary>
                         Gets the photo properties for the current file.
                     </summary>
@@ -5016,7 +5042,7 @@
                         The generic <see cref="IPhotoPropertySet" /> that contains the photo properties for the current file or <see langword="null" /> if no photo properties are defined on the current file.
                     </value>
                 </RelatedEntity>
-                <RelatedEntity Name="RecordedTVProperties" FullName="IFile.RecordedTVProperties" Reference="IRecordedTVPropertySet" FkPropertyName="RecordedTVPropertiesId" ConstraintName="FK_File_RecordedTVPropertySet">
+                <RelatedEntity Name="RecordedTVProperties" FullName="IFile.RecordedTVProperties" Reference="IRecordedTVPropertySet" FkPropertyName="RecordedTVPropertySetId" ConstraintName="FK_File_RecordedTVPropertySet">
                     <summary>
                         Gets the recorded tv properties for the current file.
                     </summary>
@@ -5024,7 +5050,7 @@
                         The generic <see cref="IRecordedTVPropertySet" /> that contains the recorded TV properties for the current file or <see langword="null" /> if no recorded TV properties are defined on the current file.
                     </value>
                 </RelatedEntity>
-                <RelatedEntity Name="VideoProperties" FullName="IFile.VideoProperties" Reference="IVideoPropertySet" FkPropertyName="VideoPropertiesId" ConstraintName="FK_File_VideoPropertySet">
+                <RelatedEntity Name="VideoProperties" FullName="IFile.VideoProperties" Reference="IVideoPropertySet" FkPropertyName="VideoPropertySetId" ConstraintName="FK_File_VideoPropertySet">
                     <summary>
                         Gets the video properties for the current file.
                     </summary>
@@ -5032,7 +5058,7 @@
                         The generic <see cref="IVideoPropertySet" /> that contains the video properties for the current file or <see langword="null" /> if no video properties are defined on the current file.
                     </value>
                 </RelatedEntity>
-                <RelatedEntity Name="Redundancy" FullName="IFile.Redundancy" Reference="IRedundancy" FkPropertyName="RedundancyId" ConstraintName="FK_File_Redundancy">
+                <RelatedEntity Name="Redundancy" FullName="IFile.Redundancy" Reference="IRedundancy" ConstraintName="FK_File_Redundancy">
                     <summary>
                         Gets the redundancy item that indicates the membership of a collection of redundant files.
                     </summary>
@@ -5107,7 +5133,7 @@
                     <value>The custom notes to associate with the current set of redunant files.</value>
                     <Default></Default>
                 </Text>
-                <RelatedEntity Name="BinaryProperties" FullName="IRedundantSet.BinaryProperties" Reference="IBinaryPropertySet" FkPropertyName="BinaryPropertiesId" ConstraintName="FK_RedundantSet_BinaryPropertySet">
+                <RelatedEntity Name="BinaryProperties" FullName="IRedundantSet.BinaryProperties" Reference="IBinaryPropertySet" FkPropertyName="BinaryPropertySetId" ConstraintName="FK_RedundantSet_BinaryPropertySet">
                     <summary>
                         Gets the binary properties in common with all files in the current redundant set.
                     </summary>
@@ -5148,7 +5174,7 @@
                     </value>
                     <remarks>This is also part of this entity's compound primary key.</remarks>
                 </UniqueIdentifier>
-                <RelatedEntity Name="File" FullName="IRedundancy.File" Reference="IFile" FkPropertyName="FileId" ConstraintName="FK_Redundancy_File">
+                <RelatedEntity Name="File" FullName="IRedundancy.File" Reference="IFile" ConstraintName="FK_Redundancy_File">
                     <summary>
                         Gets the file that belongs to the redundancy set.
                     </summary>
@@ -5163,7 +5189,7 @@
                     </value>
                     <remarks>This is also part of this entity's compound primary key.</remarks>
                 </UniqueIdentifier>
-                <RelatedEntity Name="RedundantSet" FullName="IRedundancy.RedundantSet" Reference="IRedundantSet" FkPropertyName="RedundantSetId" ConstraintName="FK_Redundancy_RedundantSet">
+                <RelatedEntity Name="RedundantSet" FullName="IRedundancy.RedundantSet" Reference="IRedundantSet" ConstraintName="FK_Redundancy_RedundantSet">
                     <summary>
                         Gets the redundancy set.
                     </summary>
@@ -5847,13 +5873,15 @@
                     <summary>Gets the user's display name</summary>
                     <value>The user's display name</value>
                 </NVarChar>
-                <NVarChar IsIndexed="true" Name="FirstName" MaxLength="128" IsNormalized="true" FullName="IUserProfile.FirstName" ColName="FirstName" IsCaseSensitive="false">
+                <NVarChar Name="FirstName" MaxLength="128" IsNormalized="true" FullName="IUserProfile.FirstName" ColName="FirstName" IsCaseSensitive="false">
                     <summary></summary>
                     <value></value>
+                    <Index Name="IDX_UserProfile_FirstName"/>
                 </NVarChar>
-                <NVarChar IsIndexed="true" Name="LastName" MaxLength="128" IsNormalized="true" FullName="IUserProfile.LastName" ColName="LastName" IsCaseSensitive="false">
+                <NVarChar Name="LastName" MaxLength="128" IsNormalized="true" FullName="IUserProfile.LastName" ColName="LastName" IsCaseSensitive="false">
                     <summary></summary>
                     <value></value>
+                    <Index Name="IDX_UserProfile_LastName"/>
                 </NVarChar>
                 <NVarChar Name="MI" MaxLength="1" IsNormalized="true" FullName="IUserProfile.MI" ColName="MI" IsCaseSensitive="false">
                     <summary></summary>
@@ -5867,22 +5895,25 @@
                     <summary></summary>
                     <value></value>
                 </NVarChar>
-                <Int Name="DbPrincipalId" IsIndexed="true" AllowNull="true" FullName="IUserProfile.DbPrincipalId" ColName="DbPrincipalId">
+                <Int Name="DbPrincipalId" AllowNull="true" FullName="IUserProfile.DbPrincipalId" ColName="DbPrincipalId">
                     <summary></summary>
                     <value></value>
+                    <Index Name="IDX_UserProfile_DbPrincipalId"/>
                     <DefaultNull />
                 </Int>
-                <ByteValues Name="SID" IsIndexed="true" FullName="IUserProfile.SID" ColName="SID" MaxLength="68">
+                <ByteValues Name="SID" FullName="IUserProfile.SID" ColName="SID" MaxLength="68">
                     <summary></summary>
                     <value></value>
+                    <Index Name="IDX_UserProfile_SID"/>
                 </ByteValues>
                 <Text Name="Notes" FullName="IUserProfile.Notes" ColName="Notes">
                     <summary></summary>
                     <value></value>
                 </Text>
-                <Bit Name="IsInactive" IsIndexed="true" FullName="IUserProfile.IsInactive" ColName="IsInactive">
+                <Bit Name="IsInactive" FullName="IUserProfile.IsInactive" ColName="IsInactive">
                     <summary></summary>
                     <value></value>
+                    <Index Name="IDX_UserProfile_IsInactive"/>
                 </Bit>
                 <CollectionNavigation Name="MemberOf" FullName="IUserProfile.MemberOf">
                     <summary></summary>
@@ -5895,6 +5926,15 @@
                     <ItemType>IMitigationTask</ItemType>
                 </CollectionNavigation>
             </Properties>
+            <Unique Name="UK_UserProfile_DisplayName">
+                <Property Name="DisplayName"/>
+            </Unique>
+            <Unique Name="UK_UserProfile_DbPrincipalId">
+                <Property Name="DbPrincipalId"/>
+            </Unique>
+            <Unique Name="UK_UserProfile_SID">
+                <Property Name="SID"/>
+            </Unique>
         </Entity>
         <Entity Name="IUserGroup" RootInterface="IUpstreamDbEntity" TableName="UserGroups">
             <summary>
@@ -5903,6 +5943,7 @@
                 <NVarChar Name="Name" MaxLength="64" IsNormalized="true" FullName="IUserGroup.Name" ColName="Name" IsCaseSensitive="false">
                     <summary></summary>
                     <value></value>
+                    <Index Name="IDX_UserGroup_Name"/>
                 </NVarChar>
                 <Enum Name="Roles" Type="UserRole" FullName="IUserGroup.Roles" ColName="Roles">
                     <summary></summary>
@@ -5912,6 +5953,11 @@
                     <summary></summary>
                     <value></value>
                 </Text>
+                <Bit Name="IsInactive" FullName="IUserGroup.IsInactive" ColName="IsInactive">
+                    <summary></summary>
+                    <value></value>
+                    <Index Name="IDX_UserGroup_IsInactive"/>
+                </Bit>
                 <CollectionNavigation Name="Members" FullName="IUserGroup.Members">
                     <summary></summary>
                     <value></value>
@@ -5923,6 +5969,9 @@
                     <ItemType>IMitigationTask</ItemType>
                 </CollectionNavigation>
             </Properties>
+            <Unique Name="UK_UserGroup_Name">
+                <Property Name="Name"/>
+            </Unique>
         </Entity>
         <Entity Name="IGroupMembership" RootInterface="IUpstreamDbEntity" TableName="GroupMemberships">
             <summary>
@@ -5955,9 +6004,10 @@
                     <summary></summary>
                     <value></value>
                 </Text>
-                <Enum Name="Status" Type="TaskStatus" IsIndexed="true" FullName="IMitigationTask.Status" ColName="Status">
+                <Enum Name="Status" Type="TaskStatus" FullName="IMitigationTask.Status" ColName="Status">
                     <summary></summary>
                     <value></value>
+                    <Index Name="IDX_MitigationTask_Status"/>
                 </Enum>
                 <Enum Name="Priority" Type="PriorityLevel" FullName="IMitigationTask.Priority" ColName="Priority">
                     <summary></summary>
@@ -5999,9 +6049,10 @@
                     <summary></summary>
                     <value></value>
                 </Text>
-                <Bit Name="IsInactive" IsIndexed="true" FullName="IHostPlatform.IsInactive" ColName="IsInactive">
+                <Bit Name="IsInactive" FullName="IHostPlatform.IsInactive" ColName="IsInactive">
                     <summary></summary>
                     <value></value>
+                    <Index Name="IDX_HostPlatform_IsInactive"/>
                 </Bit>
                 <RelatedEntity Name="DefaultFsType" FullName="IHostPlatform.DefaultFsType" Reference="IUpstreamFileSystem" FkPropertyName="DefaultFsTypeId" ConstraintName="FK_HostPlatform_FileSystem">
                     <summary></summary>
@@ -6034,9 +6085,10 @@
                     <summary></summary>
                     <value></value>
                 </Text>
-                <Bit Name="IsInactive" IsIndexed="true" FullName="IHostDevice.IsInactive" ColName="IsInactive">
+                <Bit Name="IsInactive" FullName="IHostDevice.IsInactive" ColName="IsInactive">
                     <summary></summary>
                     <value></value>
+                    <Index Name="IDX_HostDevice_IsInactive"/>
                 </Bit>
                 <RelatedEntity Name="Platform" FullName="IHostDevice.Platform" Reference="IHostPlatform" FkPropertyName="PlatformId" ConstraintName="FK_HostDevice_HostPlatform">
                     <summary></summary>

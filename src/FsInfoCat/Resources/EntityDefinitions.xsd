@@ -528,10 +528,33 @@
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
+    <xs:complexType name="PropertyConstraints">
+        <xs:sequence>
+        </xs:sequence>
+    </xs:complexType>
     <xs:complexType name="EntityProperty">
         <xs:complexContent>
             <xs:extension base="MemberDefinition">
-                <xs:group ref="PropertyCommentDoc" />
+                <xs:sequence>
+                    <xs:group ref="PropertyCommentDoc" />
+                    <xs:element name="Index" minOccurs="0">
+                        <xs:annotation>
+                            <xs:documentation>Indicates that the column is indexed.</xs:documentation>
+                        </xs:annotation>
+                        <xs:complexType>
+                            <xs:attribute name="Name">
+                                <xs:annotation>
+                                    <xs:documentation>The name of the database index.</xs:documentation>
+                                </xs:annotation>
+                                <xs:simpleType>
+                                    <xs:restriction base="CsIdentifier">
+                                        <xs:pattern value="^IDX_[^_]+_[^_].*"/>
+                                    </xs:restriction>
+                                </xs:simpleType>
+                            </xs:attribute>
+                        </xs:complexType>
+                    </xs:element>
+                </xs:sequence>
                 <xs:attribute name="AllowNull" type="xs:boolean" use="optional" default="false">
                     <xs:annotation>
                         <xs:documentation>Indicates whether to allow null values.</xs:documentation>
@@ -540,16 +563,6 @@
                 <xs:attribute name="IsGenericWritable" type="xs:boolean" use="optional" default="false">
                     <xs:annotation>
                         <xs:documentation>Indicates whether the property is read/write on generic interfaces.</xs:documentation>
-                    </xs:annotation>
-                </xs:attribute>
-                <xs:attribute name="IsUnique" type="xs:boolean" use="optional" default="false">
-                    <xs:annotation>
-                        <xs:documentation>Indicates whether to add a unique constraint.</xs:documentation>
-                    </xs:annotation>
-                </xs:attribute>
-                <xs:attribute name="IsIndexed" type="xs:boolean" use="optional" default="false">
-                    <xs:annotation>
-                        <xs:documentation>Indicates whether the column is indexed.</xs:documentation>
                     </xs:annotation>
                 </xs:attribute>
                 <xs:attribute name="ColName" type="CsIdentifier" use="optional">
@@ -1537,6 +1550,31 @@
                     <xs:field xpath="@Navigation" />
                 </xs:keyref>
             </xs:element>
+            <xs:element name="Unique" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation>Adds a unique constraint.</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:choice minOccurs="0" maxOccurs="unbounded">
+                        <xs:element name="Property">
+                            <xs:complexType>
+                                <xs:attribute name="Name" type="CsIdentifier" use="required"/>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:choice>
+                    <xs:attribute name="Name" use="required">
+                        <xs:simpleType>
+                            <xs:restriction base="CsIdentifier">
+                                <xs:pattern value="^UK_.+"/>
+                            </xs:restriction>
+                        </xs:simpleType>
+                    </xs:attribute>
+                </xs:complexType>
+                <xs:unique name="IDX_Unique_Property">
+                    <xs:selector xpath="Property"/>
+                    <xs:field xpath="@Name"/>
+                </xs:unique>
+            </xs:element>
             <xs:element name="Check" minOccurs="0">
                 <xs:complexType>
                     <xs:choice>
@@ -1565,7 +1603,7 @@
                 <xs:attribute name="TableName" use="optional">
                     <xs:simpleType>
                         <xs:restriction base="CsIdentifier">
-                            <xs:pattern value="^(?i)(?!(PK|FK|IDX)_)" />
+                            <xs:pattern value="^(?i)(?!(PK|FK|IDX|UK)_)" />
                         </xs:restriction>
                     </xs:simpleType>
                 </xs:attribute>
@@ -1668,6 +1706,10 @@
                                             <xs:selector xpath="FieldComparisonConstraint"/>
                                             <xs:field xpath="@RightProperty"/>
                                         </xs:keyref>
+                                        <xs:keyref name="FK_Unique_PropertyName" refer="PK_RootPropertyName">
+                                            <xs:selector xpath="Unique/Property"/>
+                                            <xs:field xpath="@Name"/>
+                                        </xs:keyref>
                                     </xs:element>
                                 </xs:choice>
                             </xs:extension>
@@ -1762,8 +1804,12 @@
             <xs:field xpath="@ConstraintName"/>
         </xs:unique>
         <xs:unique name="IDX_Local_Entity_IndexName">
-            <xs:selector xpath="Root/Entity/Properties/*|Local/Entity/Properties/*"/>
-            <xs:field xpath="@IndexName"/>
+            <xs:selector xpath="Root/Entity/Properties/*/Index|Local/Entity/Properties/*/Index"/>
+            <xs:field xpath="@Name"/>
+        </xs:unique>
+        <xs:unique name="IDX_Local_Entity_UniqueName">
+            <xs:selector xpath="Root/Entity/Unique|Local/Entity/Unique"/>
+            <xs:field xpath="@Name"/>
         </xs:unique>
         <xs:unique name="IDX_Upstream_Type_Name">
             <xs:selector xpath="Root/Entity|Root/EnumTypes/*|Upstream/Entity|Upstream/EnumTypes/*" />
@@ -1778,8 +1824,12 @@
             <xs:field xpath="@ConstraintName"/>
         </xs:unique>
         <xs:unique name="IDX_Upstream_Entity_IndexName">
-            <xs:selector xpath="Root/Entity/Properties/*|Upstream/Entity/Properties/*"/>
-            <xs:field xpath="@IndexName"/>
+            <xs:selector xpath="Root/Entity/Properties/*/Index|Upstream/Entity/Properties/*/Index"/>
+            <xs:field xpath="@Name"/>
+        </xs:unique>
+        <xs:unique name="IDX_Upstream_Entity_UniqueName">
+            <xs:selector xpath="Root/Entity/Unique|Upstream/Entity/Unique"/>
+            <xs:field xpath="@Name"/>
         </xs:unique>
 
         <xs:key name="PK_RootScope_Enum_Name">

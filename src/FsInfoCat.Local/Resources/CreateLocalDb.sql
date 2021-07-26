@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS "FileSystems" (
     "CreatedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
     "ModifiedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
     "Id" UNIQUEIDENTIFIER NOT NULL COLLATE NOCASE,
-    "DisplayName" NVARCHAR(1024) NOT NULL CHECK(length(trim("DisplayName"))=length("DisplayName") AND "DisplayName">0) UNIQUE COLLATE NOCASE,
+    "DisplayName" NVARCHAR(1024) NOT NULL CHECK(length(trim("DisplayName"))=length("DisplayName") AND "DisplayName">0) COLLATE NOCASE,
     "CaseSensitiveSearch" BIT NOT NULL DEFAULT 0,
     "ReadOnly" BIT NOT NULL DEFAULT 0,
     "MaxNameLength" UNSIGNED INT NOT NULL DEFAULT 255,
@@ -42,12 +42,13 @@ CREATE TABLE IF NOT EXISTS "FileSystems" (
     "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL COLLATE NOCASE,
     "LastSynchronizedOn" DATETIME DEFAULT NULL,
     CONSTRAINT "PK_FileSystems" PRIMARY KEY("Id"),
+    CONSTRAINT "UK_FileSystem_DislayName" UNIQUE("DisplayName"),
     CHECK((("UpstreamId" IS NULL AND "LastSynchronizedOn" IS NULL) OR ("UpstreamId" IS NOT NULL AND "LastSynchronizedOn" IS NOT NULL)) AND "CreatedOn"<="ModifiedOn")
 );
 
-CREATE INDEX "IDX_FileSystems_DisplayName" ON "FileSystems" ("DisplayName" COLLATE NOCASE);
+CREATE INDEX "IDX_FileSystem_DisplayName" ON "FileSystems" ("DisplayName" COLLATE NOCASE);
 
-CREATE INDEX "IDX_FileSystems_IsInactive" ON "FileSystems" ("IsInactive");
+CREATE INDEX "IDX_FileSystem_IsInactive" ON "FileSystems" ("IsInactive");
 
 CREATE TABLE IF NOT EXISTS "SymbolicNames" (
     "CreatedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
@@ -61,12 +62,13 @@ CREATE TABLE IF NOT EXISTS "SymbolicNames" (
     "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL COLLATE NOCASE,
     "LastSynchronizedOn" DATETIME DEFAULT NULL,
     CONSTRAINT "PK_SymbolicNames" PRIMARY KEY("Id"),
+    CONSTRAINT "UK_FileSystem_Name" UNIQUE("Name"),
     CHECK((("UpstreamId" IS NULL AND "LastSynchronizedOn" IS NULL) OR ("UpstreamId" IS NOT NULL AND "LastSynchronizedOn" IS NOT NULL)) AND "CreatedOn"<="ModifiedOn")
 );
 
-CREATE INDEX "IDX_SymbolicNames_Name" ON "SymbolicNames" ("Name" COLLATE NOCASE);
+CREATE INDEX "IDX_SymbolicName_Name" ON "SymbolicNames" ("Name" COLLATE NOCASE);
 
-CREATE INDEX "IDX_SymbolicNames_IsInactive" ON "SymbolicNames" ("IsInactive");
+CREATE INDEX "IDX_SymbolicName_IsInactive" ON "SymbolicNames" ("IsInactive");
 
 CREATE TABLE IF NOT EXISTS "Volumes" (
     "CreatedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
@@ -85,12 +87,15 @@ CREATE TABLE IF NOT EXISTS "Volumes" (
     "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL COLLATE NOCASE,
     "LastSynchronizedOn" DATETIME DEFAULT NULL,
     CONSTRAINT "PK_Volumes" PRIMARY KEY("Id"),
+    CONSTRAINT "UK_FileSystem_Volume" UNIQUE("Identifier"),
     CHECK((("UpstreamId" IS NULL AND "LastSynchronizedOn" IS NULL) OR ("UpstreamId" IS NOT NULL AND "LastSynchronizedOn" IS NOT NULL)) AND "CreatedOn"<="ModifiedOn")
 );
 
-CREATE INDEX "IDX_Volumes_Identifier" ON "Volumes" ("Identifier" COLLATE NOCASE);
+CREATE INDEX "IDX_Volume_VolumeName" ON "Volumes" ("VolumeName" COLLATE NOCASE);
 
-CREATE INDEX "IDX_Volumes_Status" ON "Volumes" ("Status");
+CREATE INDEX "IDX_Volume_Identifier" ON "Volumes" ("Identifier" COLLATE NOCASE);
+
+CREATE INDEX "IDX_Volume_Status" ON "Volumes" ("Status");
 
 CREATE TABLE IF NOT EXISTS "VolumeAccessErrors" (
     "CreatedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
@@ -124,7 +129,7 @@ CREATE TABLE IF NOT EXISTS "Subdirectories" (
     CHECK((("Parent" IS NULL AND "Volume" IS NOT NULL) OR ("Parent" IS NOT NULL AND "Volume" IS NULL)) AND (("UpstreamId" IS NULL AND "LastSynchronizedOn" IS NULL) OR ("UpstreamId" IS NOT NULL AND "LastSynchronizedOn" IS NOT NULL)) AND "CreatedOn"<="ModifiedOn")
 );
 
-CREATE INDEX "IDX_Subdirectories_Status" ON "Subdirectories" ("Status");
+CREATE INDEX "IDX_Subdirectory_Status" ON "Subdirectories" ("Status");
 
 CREATE TABLE IF NOT EXISTS "CrawlConfigurations" (
     "MaxRecursionDepth" UNSIGNED SMALLINT NOT NULL DEFAULT 128,
@@ -149,7 +154,7 @@ CREATE TABLE IF NOT EXISTS "CrawlConfigurations" (
     CHECK((("UpstreamId" IS NULL AND "LastSynchronizedOn" IS NULL) OR ("UpstreamId" IS NOT NULL AND "LastSynchronizedOn" IS NOT NULL)) AND "CreatedOn"<="ModifiedOn")
 );
 
-CREATE INDEX "IDX_CrawlConfigurations_StatusValue" ON "CrawlConfigurations" ("StatusValue");
+CREATE INDEX "IDX_CrawlConfiguration_StatusValue" ON "CrawlConfigurations" ("StatusValue");
 
 CREATE TABLE IF NOT EXISTS "CrawlJobLogs" (
     "MaxRecursionDepth" UNSIGNED SMALLINT NOT NULL DEFAULT 128,
@@ -171,7 +176,7 @@ CREATE TABLE IF NOT EXISTS "CrawlJobLogs" (
     CHECK((("UpstreamId" IS NULL AND "LastSynchronizedOn" IS NULL) OR ("UpstreamId" IS NOT NULL AND "LastSynchronizedOn" IS NOT NULL)) AND "CreatedOn"<="ModifiedOn")
 );
 
-CREATE INDEX "IDX_CrawlJobLogs_StatusCode" ON "CrawlJobLogs" ("StatusCode");
+CREATE INDEX "IDX_CrawlJobLog_StatusCode" ON "CrawlJobLogs" ("StatusCode");
 
 CREATE TABLE IF NOT EXISTS "SubdirectoryAccessErrors" (
     "CreatedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
@@ -194,12 +199,13 @@ CREATE TABLE IF NOT EXISTS "BinaryPropertySets" (
     "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL COLLATE NOCASE,
     "LastSynchronizedOn" DATETIME DEFAULT NULL,
     CONSTRAINT "PK_BinaryPropertySets" PRIMARY KEY("Id"),
+    CONSTRAINT "UK_BinaryPropertySet_Length_Hash" UNIQUE("Length", "Hash"),
     CHECK((("UpstreamId" IS NULL AND "LastSynchronizedOn" IS NULL) OR ("UpstreamId" IS NOT NULL AND "LastSynchronizedOn" IS NOT NULL)) AND "CreatedOn"<="ModifiedOn")
 );
 
-CREATE INDEX "IDX_BinaryPropertySets_Length" ON "BinaryPropertySets" ("Length");
+CREATE INDEX "IDX_BinaryPropertySet_Length" ON "BinaryPropertySets" ("Length");
 
-CREATE INDEX "IDX_BinaryPropertySets_Hash" ON "BinaryPropertySets" ("Hash");
+CREATE INDEX "IDX_BinaryPropertySet_Hash" ON "BinaryPropertySets" ("Hash");
 
 CREATE TABLE IF NOT EXISTS "SummaryPropertySets" (
     "ApplicationName" NVARCHAR(1024) CHECK("ApplicationName" IS NULL OR length(trim("ApplicationName"))=length("ApplicationName")) DEFAULT NULL COLLATE NOCASE,
@@ -440,7 +446,7 @@ CREATE TABLE IF NOT EXISTS "RedundantSets" (
     "Id" UNIQUEIDENTIFIER NOT NULL COLLATE NOCASE,
     "Reference" NVARCHAR(128) NOT NULL CHECK(length(trim("Reference"))=length("Reference")) COLLATE NOCASE,
     "Notes" TEXT NOT NULL DEFAULT '',
-    "BinaryPropertiesId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_RedundantSet_BinaryPropertySet" REFERENCES "BinaryPropertySets"("Id") ON DELETE RESTRICT COLLATE NOCASE,
+    "BinaryPropertySetId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_RedundantSet_BinaryPropertySet" REFERENCES "BinaryPropertySets"("Id") ON DELETE RESTRICT COLLATE NOCASE,
     "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL COLLATE NOCASE,
     "LastSynchronizedOn" DATETIME DEFAULT NULL,
     CONSTRAINT "PK_RedundantSets" PRIMARY KEY("Id"),
@@ -462,24 +468,24 @@ CREATE TABLE IF NOT EXISTS "Files" (
     "Options" UNSIGNED TINYINT NOT NULL CHECK("Options"<=8) DEFAULT 0, -- FileCrawlOptions.None
     "Status" UNSIGNED TINYINT NOT NULL CHECK("Status"<=9) DEFAULT 0, -- FileCorrelationStatus.Dissociated
     "LastHashCalculation" DATETIME DEFAULT NULL,
-    "BinaryPropertiesId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_File_BinaryPropertySet" REFERENCES "BinaryPropertySets"("Id") ON DELETE RESTRICT COLLATE NOCASE,
-    "SummaryPropertiesId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_File_SummaryPropertySet" REFERENCES "SummaryPropertySets"("Id") ON DELETE RESTRICT COLLATE NOCASE,
-    "DocumentPropertiesId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_File_DocumentPropertySet" REFERENCES "DocumentPropertySets"("Id") ON DELETE RESTRICT COLLATE NOCASE,
-    "AudioPropertiesId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_File_AudioPropertySet" REFERENCES "AudioPropertySets"("Id") ON DELETE RESTRICT COLLATE NOCASE,
-    "DRMPropertiesId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_File_DRMPropertySet" REFERENCES "DRMPropertySets"("Id") ON DELETE RESTRICT COLLATE NOCASE,
-    "GPSPropertiesId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_File_GPSPropertySet" REFERENCES "GPSPropertySets"("Id") ON DELETE RESTRICT COLLATE NOCASE,
-    "ImagePropertiesId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_File_ImagePropertySet" REFERENCES "ImagePropertySets"("Id") ON DELETE RESTRICT COLLATE NOCASE,
-    "MediaPropertiesId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_File_MediaPropertySet" REFERENCES "MediaPropertySets"("Id") ON DELETE RESTRICT COLLATE NOCASE,
-    "MusicPropertiesId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_File_MusicPropertySet" REFERENCES "MusicPropertySets"("Id") ON DELETE RESTRICT COLLATE NOCASE,
-    "PhotoPropertiesId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_File_PhotoPropertySet" REFERENCES "PhotoPropertySets"("Id") ON DELETE RESTRICT COLLATE NOCASE,
-    "RecordedTVPropertiesId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_File_RecordedTVPropertySet" REFERENCES "RecordedTVPropertySets"("Id") ON DELETE RESTRICT COLLATE NOCASE,
-    "VideoPropertiesId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_File_VideoPropertySet" REFERENCES "VideoPropertySets"("Id") ON DELETE RESTRICT COLLATE NOCASE,
+    "BinaryPropertySetId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_File_BinaryPropertySet" REFERENCES "BinaryPropertySets"("Id") ON DELETE RESTRICT COLLATE NOCASE,
+    "SummaryPropertySetId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_File_SummaryPropertySet" REFERENCES "SummaryPropertySets"("Id") ON DELETE RESTRICT COLLATE NOCASE,
+    "DocumentPropertySetId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_File_DocumentPropertySet" REFERENCES "DocumentPropertySets"("Id") ON DELETE RESTRICT COLLATE NOCASE,
+    "AudioPropertySetId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_File_AudioPropertySet" REFERENCES "AudioPropertySets"("Id") ON DELETE RESTRICT COLLATE NOCASE,
+    "DRMPropertySetId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_File_DRMPropertySet" REFERENCES "DRMPropertySets"("Id") ON DELETE RESTRICT COLLATE NOCASE,
+    "GPSPropertySetId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_File_GPSPropertySet" REFERENCES "GPSPropertySets"("Id") ON DELETE RESTRICT COLLATE NOCASE,
+    "ImagePropertySetId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_File_ImagePropertySet" REFERENCES "ImagePropertySets"("Id") ON DELETE RESTRICT COLLATE NOCASE,
+    "MediaPropertySetId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_File_MediaPropertySet" REFERENCES "MediaPropertySets"("Id") ON DELETE RESTRICT COLLATE NOCASE,
+    "MusicPropertySetId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_File_MusicPropertySet" REFERENCES "MusicPropertySets"("Id") ON DELETE RESTRICT COLLATE NOCASE,
+    "PhotoPropertySetId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_File_PhotoPropertySet" REFERENCES "PhotoPropertySets"("Id") ON DELETE RESTRICT COLLATE NOCASE,
+    "RecordedTVPropertySetId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_File_RecordedTVPropertySet" REFERENCES "RecordedTVPropertySets"("Id") ON DELETE RESTRICT COLLATE NOCASE,
+    "VideoPropertySetId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_File_VideoPropertySet" REFERENCES "VideoPropertySets"("Id") ON DELETE RESTRICT COLLATE NOCASE,
     "RedundancyId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_File_Redundancy" REFERENCES "Redundancies"("Id") ON DELETE RESTRICT COLLATE NOCASE,
     CONSTRAINT "PK_Files" PRIMARY KEY("Id"),
     CHECK((("UpstreamId" IS NULL AND "LastSynchronizedOn" IS NULL) OR ("UpstreamId" IS NOT NULL AND "LastSynchronizedOn" IS NOT NULL)) AND "CreatedOn"<="ModifiedOn")
 );
 
-CREATE INDEX "IDX_Files_Status" ON "Files" ("Status");
+CREATE INDEX "IDX_File_Status" ON "Files" ("Status");
 
 CREATE TABLE IF NOT EXISTS "FileAccessErrors" (
     "CreatedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),

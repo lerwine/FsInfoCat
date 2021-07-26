@@ -219,8 +219,8 @@ namespace FsInfoCat.UnitTests.DbUnitTestHelpers
         const string NAME_UpstreamId = "UpstreamId";
         const string NAME_LastSynchronizedOn = "LastSynchronizedOn";
         const string NAME_IsNormalized = "IsNormalized";
-        const string NAME_IsIndexed = "IsIndexed";
-        const string NAME_IsUnique = "IsUnique";
+        const string NAME_Index = "Index";
+        const string NAME_Unique = "Unique";
         const string NAME_IsPrimaryKey = "IsPrimaryKey";
         const string NAME_Property = "Property";
         const string NAME_LeftProperty = "LeftProperty";
@@ -340,9 +340,9 @@ namespace FsInfoCat.UnitTests.DbUnitTestHelpers
         static readonly XName XNAME_MinLength = XName.Get(NAME_MinLength);
         static readonly XName XNAME_MaxValue = XName.Get(NAME_MaxValue);
         static readonly XName XNAME_MinValue = XName.Get(NAME_MinValue);
-        static readonly XName XNAME_IsIndexed = XName.Get(NAME_IsIndexed);
+        static readonly XName XNAME_Index = XName.Get(NAME_Index);
         static readonly XName XNAME_DefaultEmpty = XName.Get(NAME_DefaultEmpty);
-        static readonly XName XNAME_IsUnique = XName.Get(NAME_IsUnique);
+        static readonly XName XNAME_Unique = XName.Get(NAME_Unique);
         static readonly XName XNAME_IsPrimaryKey = XName.Get(NAME_IsPrimaryKey);
         static readonly XName XNAME_Property = XName.Get(NAME_Property);
         static readonly XName XNAME_LeftProperty = XName.Get(NAME_LeftProperty);
@@ -1437,7 +1437,7 @@ namespace <#=DefaultNamespace#>.Upstream
             (string Name, List<XElement> Sources) firstCol = new(GenerateTableColumnSql(tableName, entityName, collection[0].Name, collection[0].Sources, out string comment),
                 collection[0].Sources);
             (string Name, List<XElement> Sources)[] columns = new (string Name, List<XElement> Sources)[] { firstCol }
-                .Concat(collection.Skip(1).Select<(string Name, List<XElement> Sources), (string Name, List<XElement> Sources)>(t =>
+                .Concat(collection.Skip(1).Select(t =>
                 {
                     if (string.IsNullOrEmpty(comment))
                         WriteLine(",");
@@ -1453,7 +1453,8 @@ namespace <#=DefaultNamespace#>.Upstream
             string[] keyColumns = columns.Where(c => c.Sources.Any(e => (FromXmlBoolean(e.Attribute(XNAME_IsPrimaryKey)?.Value) ?? false) && e.Name == XNAME_UniqueIdentifier))
                 .Select(c => $"\"{c.Name}\"").ToArray();
             CheckConstraint constraints = null;
-            foreach (XElement element in new XElement[] { entityElement }.Concat(GetAllBaseEntities(entityElement)).Elements())
+            IEnumerable<XElement> currentAndBaseEntities = new XElement[] { entityElement }.Concat(GetAllBaseEntities(entityElement));
+            foreach (XElement element in currentAndBaseEntities.Elements())
             {
                 if (element.Name == XNAME_Check)
                 {
@@ -1462,6 +1463,8 @@ namespace <#=DefaultNamespace#>.Upstream
                         constraints = (constraints is null) ? cc : constraints.And(cc);
                 }
             }
+            (string Name, string[] Properties)[] uniqueConstraints = currentAndBaseEntities.Elements(XNAME_Unique).Attributes(XNAME_Name).Select(a => (Name: a.Value, Properties: a.Parent.Elements(XNAME_Property).Attributes(XNAME_Name).Select(a => a.Value).ToArray()))
+                .Where(t => t.Properties.Length > 0).ToArray();
             if (keyColumns.Length == 1)
             {
                 if (string.IsNullOrEmpty(comment))
@@ -1476,7 +1479,7 @@ namespace <#=DefaultNamespace#>.Upstream
                 Write(tableName);
                 Write("\" PRIMARY KEY(");
                 Write(keyColumns[0]);
-                if (constraints is null)
+                if (constraints is null && uniqueConstraints.Length == 0)
                     WriteLine(")");
                 else
                     Write(")");
@@ -1500,10 +1503,45 @@ namespace <#=DefaultNamespace#>.Upstream
                     Write(", ");
                     Write(c);
                 }
-                if (constraints is null)
+                if (constraints is null && uniqueConstraints.Length == 0)
                     WriteLine("\")");
                 else
                     Write("\")");
+            }
+            if (uniqueConstraints.Length > 0)
+            {
+                if (string.IsNullOrEmpty(comment))
+                    WriteLine(",");
+                else
+                {
+                    Write(", -- ");
+                    WriteLine(comment);
+                    comment = null;
+                }
+                Write("CONSTRAINT \"");
+                Write(uniqueConstraints[0].Name);
+                Write("\" UNIQUE(\"");
+                Write(uniqueConstraints[0].Properties[0]);
+                foreach (string n in uniqueConstraints[0].Properties.Skip(1))
+                {
+                    Write("\", \"");
+                    Write(n);
+                }
+                Write("\")");
+                foreach ((string Name, string[] Properties) u in uniqueConstraints.Skip(1))
+                {
+                    WriteLine(",");
+                    Write("CONSTRAINT \"");
+                    Write(u.Name);
+                    Write("\" UNIQUE(\"");
+                    Write(u.Properties[0]);
+                    foreach (string n in u.Properties.Skip(1))
+                    {
+                        Write("\", \"");
+                        Write(n);
+                    }
+                    Write("\")");
+                }
             }
             if (constraints is not null)
             {
@@ -1519,7 +1557,7 @@ namespace <#=DefaultNamespace#>.Upstream
                 Write(constraints.ToSqlString());
                 WriteLine(")");
             }
-            else if (keyColumns.Length == 0)
+            else if (keyColumns.Length == 0 && uniqueConstraints.Length == 0)
             {
                 if (string.IsNullOrEmpty(comment))
                     WriteLine("");
@@ -1533,10 +1571,11 @@ namespace <#=DefaultNamespace#>.Upstream
             WriteLine(");");
             foreach ((string Name, List<XElement> Sources) in columns)
             {
-                if (Sources.Attributes(XNAME_IsIndexed).Any(a => FromXmlBoolean(a.Value) ?? false))
+                string indexName = Sources.Elements(XNAME_Index).Attributes(XNAME_Name).Select(a => a.Value).LastOrDefault();
+                if (!string.IsNullOrEmpty(indexName))
                 {
                     WriteLine("");
-                    Write($"CREATE INDEX \"IDX_{tableName}_{Name}\" ON \"{tableName}\" (\"{Name}\"");
+                    Write($"CREATE INDEX \"{indexName}\" ON \"{tableName}\" (\"{Name}\"");
                     switch (Sources.Last().Name.LocalName)
                     {
                         case NAME_RelatedEntity:
@@ -1888,8 +1927,7 @@ namespace <#=DefaultNamespace#>.Upstream
                     }
                 }
             }
-            if (sources.Attributes(XNAME_IsUnique).Any(a => FromXmlBoolean(a.Value) ?? false))
-                Write(" UNIQUE");
+
             switch (propertyTypeName)
             {
                 case NAME_RelatedEntity:

@@ -47,6 +47,8 @@ CREATE TABLE IF NOT EXISTS "FileSystems" (
 
 CREATE INDEX "IDX_FileSystem_DisplayName" ON "FileSystems" ("DisplayName" COLLATE NOCASE);
 
+CREATE INDEX "IDX_FileSystem_IsInactive" ON "FileSystems" ("IsInactive");
+
 CREATE TABLE IF NOT EXISTS "SymbolicNames" (
 	"CreatedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
 	"ModifiedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
@@ -405,16 +407,35 @@ CREATE TABLE IF NOT EXISTS "VideoPropertySets" (
     CHECK(CreatedOn<=ModifiedOn AND (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL))
 );
 
+CREATE TABLE IF NOT EXISTS "RedundantSets" (
+	"CreatedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+	"ModifiedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+	"Id"	UNIQUEIDENTIFIER NOT NULL,
+    "Reference" NVARCHAR(128) NOT NULL DEFAULT '' COLLATE NOCASE,
+    "Notes" TEXT NOT NULL DEFAULT '',
+	"BinaryPropertySetId"	UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_RedundantSetBinaryPropertySet" REFERENCES "BinaryPropertySets"("Id") ON DELETE RESTRICT,
+    "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL,
+    "LastSynchronizedOn" DATETIME DEFAULT NULL,
+	CONSTRAINT "PK_RedundantSets" PRIMARY KEY("Id"),
+    CHECK(CreatedOn<=ModifiedOn AND (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL))
+);
+
 CREATE TABLE IF NOT EXISTS "Files" (
+	"CreatedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+	"ModifiedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
 	"Id"	UNIQUEIDENTIFIER NOT NULL,
     "Name" NVARCHAR(1024) NOT NULL CHECK(length(trim("Name"))>0) COLLATE NOCASE,
-    "Options" TINYINT  NOT NULL CHECK("Options">=0 AND "Options"<15) DEFAULT 0,
-    "Status" TINYINT  NOT NULL CHECK("Status">=0 AND "Status"<10) DEFAULT 0,
     "LastAccessed" DATETIME  NOT NULL,
-    "LastHashCalculation" DATETIME DEFAULT NULL,
     "Notes" TEXT NOT NULL DEFAULT '',
 	"CreationTime"	DATETIME NOT NULL,
 	"LastWriteTime"	DATETIME NOT NULL,
+	"ParentId"	UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_FileSubdirectory" REFERENCES "Subdirectories"("Id") ON DELETE RESTRICT,
+    "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL,
+    "LastSynchronizedOn" DATETIME DEFAULT NULL,
+    "Options" TINYINT  NOT NULL CHECK("Options">=0 AND "Options"<15) DEFAULT 0,
+    "Status" TINYINT  NOT NULL CHECK("Status">=0 AND "Status"<10) DEFAULT 0,
+    "LastHashCalculation" DATETIME DEFAULT NULL,
+	"BinaryPropertySetId"	UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_FileBinaryPropertySet" REFERENCES "BinaryPropertySets"("Id") ON DELETE RESTRICT,
     "SummaryPropertySetId" UNIQUEIDENTIFIER DEFAULT NULL CONSTRAINT "FK_FileSummaryPropertySet" REFERENCES "SummaryPropertySets"("Id") ON DELETE RESTRICT,
     "DocumentPropertySetId" UNIQUEIDENTIFIER DEFAULT NULL CONSTRAINT "FK_FileDocumentPropertySet" REFERENCES "DocumentPropertySets"("Id") ON DELETE RESTRICT,
     "AudioPropertySetId" UNIQUEIDENTIFIER DEFAULT NULL CONSTRAINT "FK_FileAudioPropertySet" REFERENCES "AudioPropertySets"("Id") ON DELETE RESTRICT,
@@ -426,15 +447,8 @@ CREATE TABLE IF NOT EXISTS "Files" (
     "PhotoPropertySetId" UNIQUEIDENTIFIER DEFAULT NULL CONSTRAINT "FK_FilePhotoPropertySet" REFERENCES "PhotoPropertySets"("Id") ON DELETE RESTRICT,
     "RecordedTVPropertySetId" UNIQUEIDENTIFIER DEFAULT NULL CONSTRAINT "FK_FileRecordedTVPropertySet" REFERENCES "RecordedTVPropertySets"("Id") ON DELETE RESTRICT,
     "VideoPropertySetId" UNIQUEIDENTIFIER DEFAULT NULL CONSTRAINT "FK_FileVideoPropertySet" REFERENCES "VideoPropertySets"("Id") ON DELETE RESTRICT,
-	"BinaryPropertySetId"	UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_FileBinaryPropertySet" REFERENCES "BinaryPropertySets"("Id") ON DELETE RESTRICT,
-	"ParentId"	UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_FileSubdirectory" REFERENCES "Subdirectories"("Id") ON DELETE RESTRICT,
-    "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL,
-    "LastSynchronizedOn" DATETIME DEFAULT NULL,
-	"CreatedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
-	"ModifiedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
 	CONSTRAINT "PK_Files" PRIMARY KEY("Id"),
-    CHECK(CreatedOn<=ModifiedOn AND LastAccessed >= CreatedOn AND
-        (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL))
+    CHECK(CreatedOn<=ModifiedOn AND LastAccessed >= CreatedOn AND (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL))
 );
 
 CREATE INDEX "IDX_File_Status" ON "Files" ("Status");
@@ -449,20 +463,6 @@ CREATE TABLE IF NOT EXISTS "FileAccessErrors" (
 	"ModifiedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
 	CONSTRAINT "PK_FileccessErrors" PRIMARY KEY("Id"),
     CHECK(CreatedOn<=ModifiedOn)
-);
-
-CREATE TABLE IF NOT EXISTS "RedundantSets" (
-	"Id"	UNIQUEIDENTIFIER NOT NULL,
-    "Reference" NVARCHAR(128) NOT NULL DEFAULT '' COLLATE NOCASE,
-    "Notes" TEXT NOT NULL DEFAULT '',
-	"BinaryPropertySetId"	UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_RedundantSetBinaryPropertySet" REFERENCES "BinaryPropertySets"("Id") ON DELETE RESTRICT,
-    "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL,
-    "LastSynchronizedOn" DATETIME DEFAULT NULL,
-	"CreatedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
-	"ModifiedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
-	CONSTRAINT "PK_RedundantSets" PRIMARY KEY("Id"),
-    CHECK(CreatedOn<=ModifiedOn AND
-        (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL))
 );
 
 CREATE TABLE IF NOT EXISTS "Redundancies" (
