@@ -1199,19 +1199,16 @@
                         </xs:annotation>
                         <xs:complexType></xs:complexType>
                     </xs:element>
-                    <xs:choice>
-                        <xs:element name="Reference" type="CsIdentifier">
-                            <xs:annotation>
-                                <xs:documentation>The value of the Name attribute of the related entity.</xs:documentation>
-                            </xs:annotation>
-                        </xs:element>
-                        <xs:element name="ReferenceKey" type="CsMemberReference">
-                            <xs:annotation>
-                                <xs:documentation>The full name of the primary key property of the parent entity.</xs:documentation>
-                            </xs:annotation>
-                        </xs:element>
-                    </xs:choice>
                 </xs:sequence>
+                <xs:attribute name="Reference" type="CsIdentifier" use="required"/>
+                <xs:attribute name="FkPropertyName" type="CsIdentifier" use="optional"/>
+                <xs:attribute name="ConstraintName" use="optional">
+                    <xs:simpleType>
+                        <xs:restriction base="CsIdentifier">
+                            <xs:pattern value="^FK_.+$"/>
+                        </xs:restriction>
+                    </xs:simpleType>
+                </xs:attribute>
                 <xs:attribute name="IsOneToOne" type="xs:boolean" use="optional" default="false"/>
             </xs:extension>
         </xs:complexContent>
@@ -1219,18 +1216,7 @@
     <xs:complexType name="NewRelatedEntityProperty">
         <xs:complexContent>
             <xs:extension base="NewEntityProperty">
-                <xs:choice>
-                    <xs:element name="Reference" type="CsIdentifier">
-                        <xs:annotation>
-                            <xs:documentation>The value of the Name attribute of the related entity.</xs:documentation>
-                        </xs:annotation>
-                    </xs:element>
-                    <xs:element name="ReferenceKey" type="CsMemberReference">
-                        <xs:annotation>
-                            <xs:documentation>The full name of the primary key property of the parent entity.</xs:documentation>
-                        </xs:annotation>
-                    </xs:element>
-                </xs:choice>
+                <xs:attribute name="Reference" type="CsIdentifier" use="required"/>
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
@@ -1309,6 +1295,134 @@
             <xs:element name="NewRelatedEntity" type="NewRelatedEntityProperty" />
             <xs:element name="CollectionNavigation" type="NavigationSetProperty"/>
             <xs:element name="NewCollectionNavigation" type="NewNavigationSetProperty"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:complexType name="PropertyNameReference">
+        <xs:attribute name="Name" type="CsIdentifier" use="required"/>
+    </xs:complexType>
+    <xs:complexType name="PropertyValueReference">
+        <xs:complexContent>
+            <xs:extension base="PropertyNameReference">
+                <xs:attribute name="Trimmed" type="xs:boolean" use="optional" default="false"/>
+                <xs:attribute name="Length" type="xs:boolean" use="optional" default="false"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="PropertyComparison">
+        <xs:complexContent>
+            <xs:extension base="PropertyValueReference">
+                <xs:choice>
+                    <xs:element name="OtherProperty" type="PropertyValueReference" />
+                    <xs:element name="True">
+                        <xs:complexType></xs:complexType>
+                    </xs:element>
+                    <xs:element name="False">
+                        <xs:complexType></xs:complexType>
+                    </xs:element>
+                    <xs:element name="Now">
+                        <xs:complexType></xs:complexType>
+                    </xs:element>
+                    <xs:element name="Byte">
+                        <xs:complexType>
+                            <xs:attribute name="Value" type="xs:unsignedByte" use="required"/>
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element name="SByte">
+                        <xs:complexType>
+                            <xs:attribute name="Value" type="xs:byte" use="required"/>
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element name="Short">
+                        <xs:complexType>
+                            <xs:attribute name="Value" type="xs:unsignedByte" use="required"/>
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element name="UShort">
+                        <xs:complexType>
+                            <xs:attribute name="Value" type="xs:unsignedByte" use="required"/>
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element name="Int">
+                        <xs:complexType>
+                            <xs:attribute name="Value" type="xs:unsignedByte" use="required"/>
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element name="UInt">
+                        <xs:complexType>
+                            <xs:attribute name="Value" type="xs:unsignedByte" use="required"/>
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element name="Long">
+                        <xs:complexType>
+                            <xs:attribute name="Value" type="xs:unsignedByte" use="required"/>
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element name="ULong">
+                        <xs:complexType>
+                            <xs:attribute name="Value" type="xs:unsignedByte" use="required"/>
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element name="Double">
+                        <xs:complexType>
+                            <xs:attribute name="Value" type="xs:unsignedByte" use="required"/>
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element name="Float">
+                        <xs:complexType>
+                            <xs:attribute name="Value" type="xs:unsignedByte" use="required"/>
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element name="Decimal">
+                        <xs:complexType>
+                            <xs:attribute name="Value" type="xs:unsignedByte" use="required"/>
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element name="NVarChar">
+                        <xs:complexType>
+                            <xs:attribute name="Value" type="xs:unsignedByte" use="required"/>
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element name="DateTime">
+                        <xs:complexType>
+                            <xs:attribute name="Value" use="required">
+                                <xs:simpleType>
+                                    <xs:union memberTypes="xs:dateTime">
+                                        <xs:simpleType>
+                                            <xs:restriction base="xs:token">
+                                                <xs:enumeration value="now"/>
+                                            </xs:restriction>
+                                        </xs:simpleType>
+                                    </xs:union>
+                                </xs:simpleType>
+                            </xs:attribute>
+                        </xs:complexType>
+                    </xs:element>
+                </xs:choice>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:group name="SimpleConditions">
+        <xs:choice>
+            <xs:element name="IsNull" type="PropertyNameReference"/>
+            <xs:element name="NotNull" type="PropertyNameReference"/>
+            <xs:element name="LessThan" type="PropertyComparison"/>
+            <xs:element name="NotGreaterThan" type="PropertyComparison"/>
+            <xs:element name="Equals" type="PropertyComparison"/>
+            <xs:element name="NotEquals" type="PropertyComparison"/>
+            <xs:element name="NotLessThan" type="PropertyComparison"/>
+            <xs:element name="GreaterThan" type="PropertyComparison"/>
+        </xs:choice>
+    </xs:group>
+    <xs:complexType name="AndCondition">
+        <xs:choice minOccurs="2" maxOccurs="unbounded">
+            <xs:element name="Or" type="OrCondition"/>
+            <xs:group ref="SimpleConditions"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:complexType name="OrCondition">
+        <xs:choice minOccurs="2" maxOccurs="unbounded">
+            <xs:element name="And" type="AndCondition"/>
+            <xs:group ref="SimpleConditions"/>
         </xs:choice>
     </xs:complexType>
     <xs:complexType name="EntityDefinition">
@@ -1423,70 +1537,13 @@
                     <xs:field xpath="@Navigation" />
                 </xs:keyref>
             </xs:element>
-            <xs:element name="EitherOrConstraint" minOccurs="0">
-                <xs:annotation>
-                    <xs:documentation>Constraint to check 2 properties whwere one is null and the other is not null.</xs:documentation>
-                </xs:annotation>
+            <xs:element name="Check" minOccurs="0">
                 <xs:complexType>
-                    <xs:choice minOccurs="2" maxOccurs="2">
-                        <xs:element name="Property">
-                            <xs:complexType>
-                                <xs:attribute name="Name" type="CsIdentifier" use="required">
-                                    <xs:annotation>
-                                        <xs:documentation>Name of property to test.</xs:documentation>
-                                    </xs:annotation>
-                                </xs:attribute>
-                                <xs:attribute name="DisallowEmptyIfNotNull" type="CsIdentifier" use="optional">
-                                    <xs:annotation>
-                                        <xs:documentation>Optional additional constraint to check that a value is non-empty unless it is null.</xs:documentation>
-                                    </xs:annotation>
-                                </xs:attribute>
-                            </xs:complexType>
-                        </xs:element>
+                    <xs:choice>
+                        <xs:element name="And" type="AndCondition"/>
+                        <xs:element name="Or" type="OrCondition"/>
+                        <xs:group ref="SimpleConditions"/>
                     </xs:choice>
-                </xs:complexType>
-                <xs:unique name="IDX_EitherOrConstraint_Name">
-                    <xs:selector xpath="Property" />
-                    <xs:field xpath="@Name" />
-                </xs:unique>
-            </xs:element>
-            <xs:element name="IsNullSameConstraint" minOccurs="0">
-                <xs:annotation>
-                    <xs:documentation>Constraint to check 2 properties where both are null or both are not null.</xs:documentation>
-                </xs:annotation>
-                <xs:complexType>
-                    <xs:choice minOccurs="2" maxOccurs="2">
-                        <xs:element name="Property">
-                            <xs:complexType>
-                                <xs:attribute name="Name" type="CsIdentifier" use="required" />
-                            </xs:complexType>
-                        </xs:element>
-                    </xs:choice>
-                </xs:complexType>
-                <xs:unique name="IDX_IsNullSameConstraint_Name">
-                    <xs:selector xpath="Property" />
-                    <xs:field xpath="@Name" />
-                </xs:unique>
-            </xs:element>
-            <xs:element name="FieldComparisonConstraint" minOccurs="0">
-                <xs:annotation>
-                    <xs:documentation>Constraint to compare 2 properties.</xs:documentation>
-                </xs:annotation>
-                <xs:complexType>
-                    <xs:attribute name="LeftProperty" type="CsIdentifier" use="required" />
-                    <xs:attribute name="Operator" use="required">
-                        <xs:simpleType>
-                            <xs:restriction base="xs:token">
-                                <xs:enumeration value="LessThan" />
-                                <xs:enumeration value="NotGreaterThan" />
-                                <xs:enumeration value="EqualTo" />
-                                <xs:enumeration value="NotEqualTo" />
-                                <xs:enumeration value="NotLessThan" />
-                                <xs:enumeration value="GreaterThan" />
-                            </xs:restriction>
-                        </xs:simpleType>
-                    </xs:attribute>
-                    <xs:attribute name="RightProperty" type="CsIdentifier" use="required" />
                 </xs:complexType>
             </xs:element>
         </xs:sequence>
@@ -1505,7 +1562,13 @@
     <xs:complexType name="DbEntityDefinition">
         <xs:complexContent>
             <xs:extension base="EntityDefinition">
-                <xs:attribute name="TableName" type="CsIdentifier" use="optional" />
+                <xs:attribute name="TableName" use="optional">
+                    <xs:simpleType>
+                        <xs:restriction base="CsIdentifier">
+                            <xs:pattern value="^(?i)(?!(PK|FK|IDX)_)" />
+                        </xs:restriction>
+                    </xs:simpleType>
+                </xs:attribute>
                 <xs:attribute name="RootInterface" type="CsIdentifier" use="optional">
                     <xs:annotation>
                         <xs:documentation>The root interface name matching XPath "/EntityDefinitions/*/Entity/@Name".</xs:documentation>
@@ -1694,6 +1757,14 @@
             <xs:selector xpath="Root/Entity/Properties/*|Root/EnumTypes/*/Field|Local/Entity/Properties/*|Local/EnumTypes/*/Field" />
             <xs:field xpath="@FullName" />
         </xs:unique>
+        <xs:unique name="IDX_Local_RelatedEntity_ConstraintName">
+            <xs:selector xpath="Root/Entity/Properties/RelatedEntity|Local/Entity/Properties/RelatedEntity|Root/Entity/Properties/NewRelatedEntity|Local/Entity/Properties/NewRelatedEntity"/>
+            <xs:field xpath="@ConstraintName"/>
+        </xs:unique>
+        <xs:unique name="IDX_Local_Entity_IndexName">
+            <xs:selector xpath="Root/Entity/Properties/*|Local/Entity/Properties/*"/>
+            <xs:field xpath="@IndexName"/>
+        </xs:unique>
         <xs:unique name="IDX_Upstream_Type_Name">
             <xs:selector xpath="Root/Entity|Root/EnumTypes/*|Upstream/Entity|Upstream/EnumTypes/*" />
             <xs:field xpath="@Name" />
@@ -1701,6 +1772,14 @@
         <xs:unique name="IDX_Upstream_Member_FullName">
             <xs:selector xpath="Root/Entity/Properties/*|Root/EnumTypes/*/Field|Upstream/Entity/Properties/*|Upstream/EnumTypes/*/Field" />
             <xs:field xpath="@FullName" />
+        </xs:unique>
+        <xs:unique name="IDX_Upstream_RelatedEntity_ConstraintName">
+            <xs:selector xpath="Root/Entity/Properties/RelatedEntity|Upstream/Entity/Properties/RelatedEntity|Root/Entity/Properties/NewRelatedEntity|Upstream/Entity/Properties/NewRelatedEntity"/>
+            <xs:field xpath="@ConstraintName"/>
+        </xs:unique>
+        <xs:unique name="IDX_Upstream_Entity_IndexName">
+            <xs:selector xpath="Root/Entity/Properties/*|Upstream/Entity/Properties/*"/>
+            <xs:field xpath="@IndexName"/>
         </xs:unique>
 
         <xs:key name="PK_RootScope_Enum_Name">
@@ -1729,10 +1808,6 @@
             <xs:selector xpath="Root/Entity"/>
             <xs:field xpath="@Name"/>
         </xs:key>
-        <xs:keyref name="FK_Root_Entity_RelatedEntity_Reference" refer="PK_RootScope_Entity_Name">
-            <xs:selector xpath="Root/Entity/Properties/RelatedEntity|Root/Entity/Properties/NewRelatedEntity"/>
-            <xs:field xpath="Reference"/>
-        </xs:keyref>
         <xs:keyref name="FK_Root_Entity_CollectionNavigation_ItemType" refer="PK_RootScope_Entity_Name">
             <xs:selector xpath="Root/Entity/Properties/CollectionNavigation|Root/Entity/Properties/NewCollectionNavigation"/>
             <xs:field xpath="ItemType"/>
@@ -1753,15 +1828,15 @@
             <xs:selector xpath="Root/Entity/ImplementsGenericEntity"/>
             <xs:field xpath="@TypeDef"/>
         </xs:keyref>
+        <xs:keyref name="FK_Root_RelatedEntity_Reference" refer="PK_RootScope_Entity_Name">
+            <xs:selector xpath="Root/Entity/Properties/RelatedEntity|Root/Entity/Properties/NewRelatedEntity"/>
+            <xs:field xpath="@Reference"/>
+        </xs:keyref>
 
         <xs:key name="PK_RootScope_Entity_Property_FullName">
             <xs:selector xpath="Root/Entity/Properties/*"/>
             <xs:field xpath="@FullName"/>
         </xs:key>
-        <xs:keyref name="FK_Root_RelatedEntity_ReferenceKey" refer="PK_RootScope_Entity_Property_FullName">
-            <xs:selector xpath="Root/Entity/Properties/RelatedEntity|Root/Entity/Properties/NewRelatedEntity"/>
-            <xs:field xpath="ReferenceKey"/>
-        </xs:keyref>
         <xs:keyref name="FK_Root_CollectionNavigation_ItemKey" refer="PK_RootScope_Entity_Property_FullName">
             <xs:selector xpath="Root/Entity/Properties/CollectionNavigation|Root/Entity/Properties/NewCollectionNavigation"/>
             <xs:field xpath="ItemKey"/>
@@ -1793,10 +1868,6 @@
             <xs:selector xpath="Root/Entity|Local/Entity"/>
             <xs:field xpath="@Name"/>
         </xs:key>
-        <xs:keyref name="FK_Local_Entity_RelatedEntity_Reference" refer="PK_LocalScope_Entity_Name">
-            <xs:selector xpath="Local/Entity/Properties/RelatedEntity|Local/Entity/Properties/NewRelatedEntity"/>
-            <xs:field xpath="Reference"/>
-        </xs:keyref>
         <xs:keyref name="FK_Local_Entity_CollectionNavigation_ItemType" refer="PK_LocalScope_Entity_Name">
             <xs:selector xpath="Local/Entity/Properties/CollectionNavigation|Local/Entity/Properties/NewCollectionNavigation"/>
             <xs:field xpath="ItemType"/>
@@ -1821,15 +1892,15 @@
             <xs:selector xpath="Local/Entity"/>
             <xs:field xpath="@RootInterface"/>
         </xs:keyref>
+        <xs:keyref name="FK_Local_RelatedEntity_Reference" refer="PK_LocalScope_Entity_Name">
+            <xs:selector xpath="Local/Entity/Properties/RelatedEntity|Local/Entity/Properties/NewRelatedEntity"/>
+            <xs:field xpath="@Reference"/>
+        </xs:keyref>
 
         <xs:key name="PK_LocalScope_Entity_Property_FullName">
             <xs:selector xpath="Root/Entity/Properties/*|Local/Entity/Properties/*"/>
             <xs:field xpath="@FullName"/>
         </xs:key>
-        <xs:keyref name="FK_Local_RelatedEntity_ReferenceKey" refer="PK_LocalScope_Entity_Property_FullName">
-            <xs:selector xpath="Local/Entity/Properties/RelatedEntity|Local/Entity/Properties/NewRelatedEntity"/>
-            <xs:field xpath="ReferenceKey"/>
-        </xs:keyref>
         <xs:keyref name="FK_Local_CollectionNavigation_ItemKey" refer="PK_LocalScope_Entity_Property_FullName">
             <xs:selector xpath="Local/Entity/Properties/CollectionNavigation|Local/Entity/Properties/NewCollectionNavigation"/>
             <xs:field xpath="ItemKey"/>
@@ -1861,10 +1932,6 @@
             <xs:selector xpath="Root/Entity|Upstream/Entity"/>
             <xs:field xpath="@Name"/>
         </xs:key>
-        <xs:keyref name="FK_Upstream_Entity_RelatedEntity_Reference" refer="PK_UpstreamScope_Entity_Name">
-            <xs:selector xpath="Upstream/Entity/Properties/RelatedEntity|Upstream/Entity/Properties/NewRelatedEntity"/>
-            <xs:field xpath="Reference"/>
-        </xs:keyref>
         <xs:keyref name="FK_Upstream_Entity_CollectionNavigation_ItemType" refer="PK_UpstreamScope_Entity_Name">
             <xs:selector xpath="Upstream/Entity/Properties/CollectionNavigation|Upstream/Entity/Properties/NewCollectionNavigation"/>
             <xs:field xpath="ItemType"/>
@@ -1889,15 +1956,15 @@
             <xs:selector xpath="Upstream/Entity"/>
             <xs:field xpath="@RootInterface"/>
         </xs:keyref>
+        <xs:keyref name="FK_Upstream_RelatedEntity_Reference" refer="PK_UpstreamScope_Entity_Name">
+            <xs:selector xpath="Upstream/Entity/Properties/RelatedEntity|Upstream/Entity/Properties/NewRelatedEntity"/>
+            <xs:field xpath="@Reference"/>
+        </xs:keyref>
 
         <xs:key name="PK_UpstreamScope_Entity_Property_FullName">
             <xs:selector xpath="Root/Entity/Properties/*|Upstream/Entity/Properties/*"/>
             <xs:field xpath="@FullName"/>
         </xs:key>
-        <xs:keyref name="FK_Upstream_RelatedEntity_ReferenceKey" refer="PK_UpstreamScope_Entity_Property_FullName">
-            <xs:selector xpath="Upstream/Entity/Properties/RelatedEntity|Upstream/Entity/Properties/NewRelatedEntity"/>
-            <xs:field xpath="ReferenceKey"/>
-        </xs:keyref>
         <xs:keyref name="FK_Upstream_CollectionNavigation_ItemKey" refer="PK_UpstreamScope_Entity_Property_FullName">
             <xs:selector xpath="Upstream/Entity/Properties/CollectionNavigation|Upstream/Entity/Properties/NewCollectionNavigation"/>
             <xs:field xpath="ItemKey"/>

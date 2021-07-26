@@ -20,7 +20,7 @@ namespace FsInfoCat.UnitTests.DbUnitTestHelpers
         #region Fakes
 
         internal StringBuilder HostEnvironment = new();
-        Stack<string> _indentValues = new();
+        readonly Stack<string> _indentValues = new();
         int _lastLineStart = 0;
         bool _lastLineNotEmpty = false;
         private string _currentIndent = "";
@@ -78,11 +78,7 @@ namespace FsInfoCat.UnitTests.DbUnitTestHelpers
             }
         }
 
-        string TemplateFolder { get; } = "";
-
         string DefaultNamespace { get; } = "";
-
-        string CustomToolOutput { get; } = "";
 
         void WriteLine(string text)
         {
@@ -115,6 +111,27 @@ namespace FsInfoCat.UnitTests.DbUnitTestHelpers
 
         #region core.ttinclude
 
+        #region Entity Related Fields
+
+        const string SQL_TYPENAME_BLOB = "BLOB";
+        const string SQL_TYPENAME_UNIQUEIDENTIFIER = "UNIQUEIDENTIFIER";
+        const string SQL_TYPENAME_NVARCHAR = "NVARCHAR";
+        const string SQL_TYPENAME_TEXT = "TEXT";
+        const string SQL_TYPENAME_DATETIME = "DATETIME";
+        const string SQL_TYPENAME_TIME = "TIME";
+        const string SQL_TYPENAME_BIT = "BIT";
+        const string SQL_TYPENAME_VARBINARY = "VARBINARY";
+        const string SQL_TYPENAME_BINARY = "BINARY";
+        const string SQL_TYPENAME_TINYINT = "TINYINT";
+        const string SQL_TYPENAME_UNSIGNED_TINYINT = "UNSIGNED TINYINT";
+        const string SQL_TYPENAME_SMALLINT = "SMALLINT";
+        const string SQL_TYPENAME_UNSIGNED_SMALLINT = "UNSIGNED SMALLINT";
+        const string SQL_TYPENAME_INT = "INT";
+        const string SQL_TYPENAME_UNSIGNED_INT = "UNSIGNED INT";
+        const string SQL_TYPENAME_BIGINT = "BIGINT";
+        const string SQL_TYPENAME_UNSIGNED_BIGINT = "UNSIGNED BIGINT";
+        const string SQL_TYPENAME_REAL = "REAL";
+        const string SQL_TYPENAME_NUMERIC = "NUMERIC";
         const string NAME_Root = "Root";
         const string NAME_Upstream = "Upstream";
         const string NAME_Local = "Local";
@@ -142,7 +159,6 @@ namespace FsInfoCat.UnitTests.DbUnitTestHelpers
         const string NAME_RootInterface = "RootInterface";
         const string NAME_Type = "Type";
         const string NAME_TypeDef = "TypeDef";
-        const string NAME_ReferenceKey = "ReferenceKey";
         const string NAME_ItemKey = "ItemKey";
         const string NAME_AmbientBoolean = "AmbientBoolean";
         const string NAME_AmbientInt = "AmbientInt";
@@ -204,17 +220,40 @@ namespace FsInfoCat.UnitTests.DbUnitTestHelpers
         const string NAME_LastSynchronizedOn = "LastSynchronizedOn";
         const string NAME_IsNormalized = "IsNormalized";
         const string NAME_IsIndexed = "IsIndexed";
-        const string NAME_IsUnique = "IsIndexed";
+        const string NAME_IsUnique = "IsUnique";
         const string NAME_IsPrimaryKey = "IsPrimaryKey";
-        const string NAME_EitherOrConstraint = "EitherOrConstraint";
         const string NAME_Property = "Property";
-        const string NAME_DisallowEmptyIfNotNull = "DisallowEmptyIfNotNull";
-        const string NAME_IsNullSameConstraint = "IsNullSameConstraint";
-        const string NAME_FieldComparisonConstraint = "IsNullSameConstraint";
         const string NAME_LeftProperty = "LeftProperty";
         const string NAME_RightProperty = "RightProperty";
         const string NAME_Operator = "Operator";
-
+        const string XNAME_langword = "langword";
+        const string XNAME_see = "see";
+        const string NAME_PrimaryKey = "PrimaryKey";
+        const string NAME_ForeignKey = "ForeignKey";
+        const string NAME_AmbientString = "AmbientString";
+        const string NAME_AmbientUInt = "AmbientUInt";
+        const string NAME_AmbientLong = "AmbientLong";
+        const string NAME_AmbientULong = "AmbientULong";
+        const string NAME_IsCaseSensitive = "IsCaseSensitive";
+        const string NAME_ConstraintName = "ConstraintName";
+        const string NAME_FkPropertyName = "FkPropertyName";
+        const string NAME_Check = "Check";
+        const string NAME_And = "And";
+        const string NAME_Or = "Or";
+        const string NAME_IsNull = "IsNull";
+        const string NAME_NotNull = "NotNull";
+        const string NAME_LessThan = "LessThan";
+        const string NAME_NotGreaterThan = "NotGreaterThan";
+        const string NAME_Equals = "Equals";
+        const string NAME_NotEquals = "NotEquals";
+        const string NAME_NotLessThan = "NotLessThan";
+        const string NAME_GreaterThan = "GreaterThan";
+        const string NAME_OtherProperty = "OtherProperty";
+        const string NAME_True = "True";
+        const string NAME_False = "False";
+        const string NAME_Now = "Now";
+        const string NAME_Trimmed = "Trimmed";
+        const string NAME_Length = "Length";
         static readonly XName XNAME_Root = XName.Get(NAME_Root);
         static readonly XName XNAME_Upstream = XName.Get(NAME_Upstream);
         static readonly XName XNAME_Local = XName.Get(NAME_Local);
@@ -242,7 +281,6 @@ namespace FsInfoCat.UnitTests.DbUnitTestHelpers
         static readonly XName XNAME_RootInterface = XName.Get(NAME_RootInterface);
         static readonly XName XNAME_Type = XName.Get(NAME_Type);
         static readonly XName XNAME_TypeDef = XName.Get(NAME_TypeDef);
-        static readonly XName XNAME_ReferenceKey = XName.Get(NAME_ReferenceKey);
         static readonly XName XNAME_ItemKey = XName.Get(NAME_ItemKey);
         static readonly XName XNAME_AmbientBoolean = XName.Get(NAME_AmbientBoolean);
         static readonly XName XNAME_AmbientInt = XName.Get(NAME_AmbientInt);
@@ -306,15 +344,36 @@ namespace FsInfoCat.UnitTests.DbUnitTestHelpers
         static readonly XName XNAME_DefaultEmpty = XName.Get(NAME_DefaultEmpty);
         static readonly XName XNAME_IsUnique = XName.Get(NAME_IsUnique);
         static readonly XName XNAME_IsPrimaryKey = XName.Get(NAME_IsPrimaryKey);
-        static readonly XName XNAME_EitherOrConstraint = XName.Get(NAME_EitherOrConstraint);
         static readonly XName XNAME_Property = XName.Get(NAME_Property);
-        static readonly XName XNAME_DisallowEmptyIfNotNull = XName.Get(NAME_DisallowEmptyIfNotNull);
-        static readonly XName XNAME_IsNullSameConstraint = XName.Get(NAME_IsNullSameConstraint);
-        static readonly XName XNAME_FieldComparisonConstraint = XName.Get(NAME_FieldComparisonConstraint);
         static readonly XName XNAME_LeftProperty = XName.Get(NAME_LeftProperty);
         static readonly XName XNAME_RightProperty = XName.Get(NAME_RightProperty);
         static readonly XName XNAME_Operator = XName.Get(NAME_Operator);
-
+        static readonly XName XNAME_PrimaryKey = XName.Get(NAME_PrimaryKey);
+        static readonly XName XNAME_ForeignKey = XName.Get(NAME_ForeignKey);
+        static readonly XName XNAME_AmbientString = XName.Get(NAME_AmbientString);
+        static readonly XName XNAME_AmbientUInt = XName.Get(NAME_AmbientUInt);
+        static readonly XName XNAME_AmbientLong = XName.Get(NAME_AmbientLong);
+        static readonly XName XNAME_AmbientULong = XName.Get(NAME_AmbientULong);
+        static readonly XName XNAME_IsCaseSensitive = XName.Get(NAME_IsCaseSensitive);
+        static readonly XName XNAME_ConstraintName = XName.Get(NAME_ConstraintName);
+        static readonly XName XNAME_FkPropertyName = XName.Get(NAME_FkPropertyName);
+        static readonly XName XNAME_Check = XName.Get(NAME_Check);
+        static readonly XName XNAME_And = XName.Get(NAME_And);
+        static readonly XName XNAME_Or = XName.Get(NAME_Or);
+        static readonly XName XNAME_IsNull = XName.Get(NAME_IsNull);
+        static readonly XName XNAME_NotNull = XName.Get(NAME_NotNull);
+        static readonly XName XNAME_LessThan = XName.Get(NAME_LessThan);
+        static readonly XName XNAME_NotGreaterThan = XName.Get(NAME_NotGreaterThan);
+        static readonly XName XNAME_Equals = XName.Get(NAME_Equals);
+        static readonly XName XNAME_NotEquals = XName.Get(NAME_NotEquals);
+        static readonly XName XNAME_NotLessThan = XName.Get(NAME_NotLessThan);
+        static readonly XName XNAME_GreaterThan = XName.Get(NAME_GreaterThan);
+        static readonly XName XNAME_OtherProperty = XName.Get(NAME_OtherProperty);
+        static readonly XName XNAME_True = XName.Get(NAME_True);
+        static readonly XName XNAME_False = XName.Get(NAME_False);
+        static readonly XName XNAME_Now = XName.Get(NAME_Now);
+        static readonly XName XNAME_Trimmed = XName.Get(NAME_Trimmed);
+        static readonly XName XNAME_Length = XName.Get(NAME_Length);
         static readonly Regex NewLineRegex = new(@"\r\n?|[\n\p{Zl}\p{Zp}]", RegexOptions.Compiled);
         static readonly Regex NormalizeWsRegex = new(@" ((?![\r\n])\s)*|(?! )((?![\r\n])\s)+", RegexOptions.Compiled);
         static readonly Regex NormalizeNewLineRegex = new(@"[\v\t\p{Zl}\p{Zp}]|\r(?!\n)", RegexOptions.Compiled);
@@ -325,509 +384,57 @@ namespace FsInfoCat.UnitTests.DbUnitTestHelpers
         static readonly Regex TrailingEmptyLine = new(@"(\r\n?|\n)([^\r\n\S]+)?$", RegexOptions.Compiled);
         static readonly Regex TrailingWsRegex = new(@"\s+$", RegexOptions.Compiled);
 
-        public record ValueRecord
-        {
-            public string SqlCode { get; init; }
-            public string CsCode { get; init; }
-        }
-        public interface IProperty
-        {
-            public string Name { get; }
-            public string FullName { get; }
-            public string ColName { get; }
-            public string SqlType { get; }
-            public string CsType { get; }
-            public bool AllowNull { get; }
-            public bool IsGenericWritable { get; }
-            public bool IsUnique { get; }
-            public bool IsIndexed { get; }
-            public Entity Entity { get; }
-            public XElement Source { get; }
-        }
-        public record Property : IProperty
-        {
-            public string Name { get; init; }
-            public string FullName { get; init; }
-            public string ColName { get; init; }
-            public string SqlType { get; init; }
-            public string CsType { get; init; }
-            public bool AllowNull { get; init; }
-            public bool IsGenericWritable { get; init; }
-            public bool IsUnique { get; init; }
-            public bool IsIndexed { get; init; }
-            public ValueRecord DefaultValue { get; init; }
-            public Entity Entity { get; init; }
-            public XElement Source { get; init; }
-        }
-        public record NumericProperty : IProperty
-        {
-            public string Name { get; init; }
-            public string FullName { get; init; }
-            public string ColName { get; init; }
-            public string SqlType { get; init; }
-            public string CsType { get; init; }
-            public bool AllowNull { get; init; }
-            public bool IsGenericWritable { get; init; }
-            public bool IsUnique { get; init; }
-            public bool IsIndexed { get; init; }
-            public ValueRecord MinValue { get; init; }
-            public ValueRecord MaxValue { get; init; }
-            public ValueRecord DefaultValue { get; init; }
-            public Entity Entity { get; init; }
-            public XElement Source { get; init; }
-        }
-        public record VarCharProperty : IProperty
-        {
-            public string Name { get; init; }
-            public string FullName { get; init; }
-            public string ColName { get; init; }
-            public string SqlType { get; init; }
-            public string CsType { get; init; }
-            public bool AllowNull { get; init; }
-            public bool IsGenericWritable { get; init; }
-            public bool IsUnique { get; init; }
-            public bool IsIndexed { get; init; }
-            public int? MinLength { get; init; }
-            public int MaxLength { get; init; }
-            public ValueRecord DefaultValue { get; init; }
-            public Entity Entity { get; init; }
-            public XElement Source { get; init; }
-        }
-        public record Entity
-        {
-            public string Name { get; init; }
-            public string Namespace { get; init; }
-            public string TableName { get; init; }
-            public ReadOnlyCollection<Entity> BaseTypes { get; init; }
-            public ReadOnlyCollection<Property> Properties { get; init; }
-            public XElement Source { get; init; }
-        }
-        Entity GetEntity(XElement source)
-        {
-            if (source is null || source.Name != XNAME_Entity)
-                return null;
-            Entity entity = source.Annotation<Entity>();
-            if (entity is not null)
-                return entity;
-            XName parentName = source.Parent?.Name;
-            string ns;
-            Func<string, XElement> findEntityByName;
-            Func<string, XElement> findEnumByName;
-            Func<string, XElement> findPropertyByFullName;
-            Func<string, XElement> findFieldByFullName;
-            if (parentName == XNAME_Root)
-            {
-                findEntityByName = FindRootEntityByName;
-                findEnumByName = FindRootEnumByName;
-                findPropertyByFullName = FindRootPropertyByFullName;
-                findFieldByFullName = FindRootFieldByFullName;
-                ns = "";
-            }
-            else if (parentName == XNAME_Local)
-            {
-                findEntityByName = FindLocalEntityByName;
-                findEnumByName = FindLocalEnumByName;
-                findPropertyByFullName = FindLocalPropertyByFullName;
-                findFieldByFullName = FindLocalFieldByFullName;
-                ns = NAME_Local;
-            }
-            else if (parentName == XNAME_Local || parentName == XNAME_Upstream)
-            {
-                findEntityByName = FindUpstreamEntityByName;
-                findEnumByName = FindUpstreamEnumByName;
-                findPropertyByFullName = FindUpstreamPropertyByFullName;
-                findFieldByFullName = FindUpstreamFieldByFullName;
-                ns = NAME_Upstream;
-            }
-            else
-                return null;
-            Collection<Property> properties = new();
-            entity = new()
-            {
-                Name = source.Attribute(XNAME_Name)?.Value,
-                Namespace = ns,
-                TableName = source.Attribute(XNAME_TableName)?.Value,
-                BaseTypes = new ReadOnlyCollection<Entity>(source.Elements(XNAME_ExtendsGenericEntity).Attributes(XNAME_TypeDef).Concat(source.Elements(XNAME_ExtendsEntity)
-                    .Attributes(XNAME_Type)).Take(1).Concat(source.Attributes(XNAME_RootInterface))
-                    .Concat(source.Elements().SelectMany(e => (e.Name == XNAME_ImplementsGenericEntity) ? e.Attributes(XNAME_TypeDef) :
-                    (e.Name == XNAME_ImplementsEntity) ? e.Attributes("Type") : Enumerable.Empty<XAttribute>())).Select(a => GetEntity(findEntityByName(a.Value)))
-                    .Where(e => e is not null).ToArray()),
-                Properties = new ReadOnlyCollection<Property>(properties),
-                Source = source
-            };
-            source.AddAnnotation(entity);
-            foreach (XElement element in source.Elements(XNAME_Properties).Elements())
-            {
-                string name = element.Attribute(XNAME_Name)?.Value;
-                string fullName = element.Attribute(XNAME_FullName)?.Value;
-                string colName = element.Attribute(XNAME_ColName)?.Value;
-                bool defaultNull = element.Element(XNAME_DefaultNull) is not null;
-                bool allowNull = defaultNull || (FromXmlBoolean(element.Attribute(XNAME_AllowNull)?.Value) ?? false);
-                bool isGenericWritable = FromXmlBoolean(element.Attribute(XNAME_IsGenericWritable)?.Value) ?? false;
-                bool isUnique = FromXmlBoolean(element.Attribute(XNAME_IsUnique)?.Value) ?? false;
-                bool isIndexed = FromXmlBoolean(element.Attribute(XNAME_IsIndexed)?.Value) ?? false;
-                IProperty property;
-                ValueRecord defaultValue;
-                string text;
-                if (element.Name == XNAME_MD5Hash)
-                {
+        #endregion
 
-                }
-                else if (element.Name == XNAME_DateTime)
-                {
-                    DateTime? defaultDateTime;
-                    if (defaultNull)
-                        defaultValue = new ValueRecord { CsCode = "null", SqlCode = "NULL" };
-                    else if ((text = element.Attribute(XNAME_Default)?.Value) is null || !(defaultDateTime = FromXmlDateTime(text)).HasValue)
-                    {
-                        if (element.Element(XNAME_DefaultNow) is null)
-                            defaultValue = null;
-                        else
-                            defaultValue = new ValueRecord
-                            {
-                                CsCode = "DateTime.Now",
-                                SqlCode = "(datetime('now','localtime'))"
-                            };
-                    }
-                    else
-                        defaultValue = new ValueRecord
-                        {
-                            CsCode = $"new DateTime({defaultDateTime.Value.Year}, {defaultDateTime.Value.Month}, {defaultDateTime.Value.Day}, {defaultDateTime.Value.Hour}, {defaultDateTime.Value.Minute}, {defaultDateTime.Value.Second}, DateTimeKind.Local)",
-                            SqlCode = defaultDateTime.Value.ToString("'yyyy-MM-dd HH:mm:ss")
-                        };
-                    property = new Property
-                    {
-                        Name = name,
-                        FullName = fullName,
-                        ColName = colName,
-                        CsType = "TimeSpan",
-                        SqlType = "TIME",
-                        AllowNull = allowNull,
-                        IsGenericWritable = isGenericWritable,
-                        IsUnique = isUnique,
-                        IsIndexed = isIndexed,
-                        DefaultValue = defaultValue,
-                        Entity = entity,
-                        Source = element
-                    };
-                }
-                else if (element.Name == XNAME_TimeSpan)
-                {
-                    TimeSpan? defaultTimeSpan;
-                    if (defaultNull)
-                        defaultValue = new ValueRecord { CsCode = "null", SqlCode = "NULL" };
-                    else if ((text = element.Attribute(XNAME_Default)?.Value) is null || !(defaultTimeSpan = FromXmlTimeSpan(text)).HasValue)
-                    {
-                        if (element.Element(XNAME_DefaultZero) is null)
-                            defaultValue = null;
-                        else
-                            defaultValue = new ValueRecord
-                            {
-                                CsCode = "TimeSpan.Zero",
-                                SqlCode = "'00:00:00.000'"
-                            };
-                    }
-                    else
-                        defaultValue = new ValueRecord
-                        {
-                            CsCode = $"new TimeSpan({defaultTimeSpan.Value.Hours}, {defaultTimeSpan.Value.Minutes}, {defaultTimeSpan.Value.Seconds})",
-                            SqlCode = defaultTimeSpan.Value.ToString("\\'hh\\:mm\\:ss\\.fff\\'")
-                        };
-                    property = new Property
-                    {
-                        Name = name,
-                        FullName = fullName,
-                        ColName = colName,
-                        CsType = "TimeSpan",
-                        SqlType = "TIME",
-                        AllowNull = allowNull,
-                        IsGenericWritable = isGenericWritable,
-                        IsUnique = isUnique,
-                        IsIndexed = isIndexed,
-                        DefaultValue = defaultValue,
-                        Entity = entity,
-                        Source = element
-                    };
-                }
-                else if (element.Name == XNAME_UniqueIdentifier)
-                    property = new Property
-                    {
-                        Name = name,
-                        FullName = fullName,
-                        ColName = colName,
-                        CsType = "char",
-                        SqlType = "CHAR(1)",
-                        AllowNull = allowNull,
-                        IsGenericWritable = isGenericWritable,
-                        IsUnique = isUnique,
-                        IsIndexed = isIndexed,
-                        DefaultValue = defaultNull ? new ValueRecord { CsCode = "null", SqlCode = "NULL" } : null,
-                        Entity = entity,
-                        Source = element
-                    };
-                else if (element.Name == XNAME_Char)
-                {
-                    if (defaultNull)
-                        defaultValue = new ValueRecord { CsCode = "null", SqlCode = "NULL" };
-                    else if ((text = element.Attribute(XNAME_Default)?.Value) is null)
-                        defaultValue = null;
-                    else
-                        defaultValue = new ValueRecord
-                        {
-                            CsCode = $"'{text.Replace("\\", "\\\\").Replace("\n", "\\n").Replace("\r", "\\r").Replace("\t", "\\t").Replace("\"", "\\\"")}'",
-                            SqlCode = $"'{text.Replace("'", "''")}'"
-                        };
-                    property = new Property
-                    {
-                        Name = name,
-                        FullName = fullName,
-                        ColName = colName,
-                        CsType = "char",
-                        SqlType = "CHAR(1)",
-                        AllowNull = allowNull,
-                        IsGenericWritable = isGenericWritable,
-                        IsUnique = isUnique,
-                        IsIndexed = isIndexed,
-                        DefaultValue = defaultValue,
-                        Entity = entity,
-                        Source = element
-                    };
-                }
-                else if (element.Name == XNAME_NVarChar)
-                {
-                    if (defaultNull)
-                        defaultValue = new ValueRecord { CsCode = "null", SqlCode = "NULL" };
-                    else if ((text = element.Attribute(XNAME_Default)?.Value) is null)
-                        defaultValue = null;
-                    else
-                        defaultValue = new ValueRecord
-                        {
-                            CsCode = $"\"{text.Replace("\\", "\\\\").Replace("\n", "\\n").Replace("\r", "\\r").Replace("\t", "\\t").Replace("\"", "\\\"")}\"",
-                            SqlCode = text
-                        };
-                    int? minLength = FromXmlInt32(element.Attribute(XNAME_MinLength)?.Value);
-                    int? maxLength = FromXmlInt32(element.Attribute(XNAME_MaxLength)?.Value);
-                    property = new VarCharProperty
-                    {
-                        Name = name,
-                        FullName = fullName,
-                        ColName = colName,
-                        CsType = element.Name.LocalName.ToLower(),
-                        SqlType = maxLength.HasValue ? $"NVARCHAR({maxLength.Value})" : "NVARCHAR",
-                        AllowNull = allowNull,
-                        IsGenericWritable = isGenericWritable,
-                        IsUnique = isUnique,
-                        IsIndexed = isIndexed,
-                        MinLength = minLength,
-                        MaxLength = maxLength.HasValue ? maxLength.Value : 0,
-                        DefaultValue = defaultValue,
-                        Entity = entity,
-                        Source = element
-                    };
-                }
-                else if (element.Name == XNAME_Text || element.Name == XNAME_MultiStringValue)
-                {
-                    if (defaultNull)
-                        defaultValue = new ValueRecord { CsCode = "null", SqlCode = "NULL" };
-                    else if ((text = element.Attribute(XNAME_Default)?.Value) is null)
-                        defaultValue = null;
-                    else
-                        defaultValue = new ValueRecord
-                        {
-                            CsCode = $"\"{text.Replace("\\", "\\\\").Replace("\n", "\\n").Replace("\r", "\\r").Replace("\t", "\\t").Replace("\"", "\\\"")}\"",
-                            SqlCode = text
-                        };
-                    property = new Property
-                    {
-                        Name = name,
-                        FullName = fullName,
-                        ColName = colName,
-                        CsType = "string",
-                        SqlType = "TEXT",
-                        AllowNull = allowNull,
-                        IsGenericWritable = isGenericWritable,
-                        IsUnique = isUnique,
-                        IsIndexed = isIndexed,
-                        DefaultValue = defaultValue,
-                        Entity = entity,
-                        Source = element
-                    };
-                }
-                else if (element.Name == XNAME_NewIdNavRef)
-                {
+        #region Entity-Related Methods
 
-                }
-                else if (element.Name == XNAME_Bit)
-                {
-
-                }
-                else if (element.Name == XNAME_VolumeIdentifier)
-                {
-
-                }
-                else if (element.Name == XNAME_DriveType)
-                {
-
-                }
-                else if (element.Name == XNAME_Enum)
-                {
-
-                }
-                else if (element.Name == XNAME_RelatedEntity)
-                {
-
-                }
-                else if (element.Name == XNAME_NewRelatedEntity)
-                {
-
-                }
-                else if (element.Name == XNAME_CollectionNavigation)
-                {
-
-                }
-                else if (element.Name == XNAME_NewCollectionNavigation)
-                {
-
-                }
-                else
-                {
-                    if (defaultNull)
-                        defaultValue = new ValueRecord { CsCode = "null", SqlCode = "NULL" };
-                    else if ((text = element.Attribute(XNAME_Default)?.Value) is null || (text = text.Trim()).Length == 0)
-                        defaultValue = null;
-                    else
-                        defaultValue = new ValueRecord { CsCode = text, SqlCode = text };
-                    string sqlType;
-                    if (element.Name == XNAME_Byte)
-                    {
-                        if (!(defaultNull || defaultValue is null))
-                            defaultValue = defaultValue with { CsCode = $"(byte){defaultValue.CsCode}" };
-                        sqlType = "UNSIGNED TINYINT";
-                    }
-                    else if (element.Name == XNAME_SByte)
-                    {
-                        if (!(defaultNull || defaultValue is null))
-                            defaultValue = defaultValue with { CsCode = $"(sbyte){defaultValue.CsCode}" };
-                        sqlType = "TINYINT";
-                    }
-                    else if (element.Name == XNAME_Short)
-                    {
-                        if (!(defaultNull || defaultValue is null))
-                            defaultValue = defaultValue with { CsCode = $"(short){defaultValue.CsCode}" };
-                        sqlType = "SMALLINT";
-                    }
-                    else if (element.Name == XNAME_UShort)
-                    {
-                        if (!(defaultNull || defaultValue is null))
-                            defaultValue = defaultValue with { CsCode = $"(ushort){defaultValue.CsCode}" };
-                        sqlType = "UNSIGNED SMALLINT";
-                    }
-                    else if (element.Name == XNAME_Int)
-                        sqlType = "INT";
-                    else if (element.Name == XNAME_UInt)
-                    {
-                        if (!(defaultNull || defaultValue is null))
-                            defaultValue = defaultValue with { CsCode = $"(uint){defaultValue.CsCode}" };
-                        sqlType = "UNSIGNED INT";
-                    }
-                    else if (element.Name == XNAME_Long)
-                    {
-                        if (!(defaultNull || defaultValue is null))
-                            defaultValue = defaultValue with { CsCode = $"{defaultValue.CsCode}L" };
-                        sqlType = "BIGINT";
-                    }
-                    else if (element.Name == XNAME_ULong)
-                    {
-                        if (!(defaultNull || defaultValue is null))
-                            defaultValue = defaultValue with { CsCode = $"{defaultValue.CsCode}UL" };
-                        sqlType = "UNSIGNED BIGINT";
-                    }
-                    else if (element.Name == XNAME_Decimal)
-                    {
-                        if (!(defaultNull || defaultValue is null))
-                            defaultValue = defaultValue with { CsCode = $"{defaultValue.CsCode}m" };
-                        sqlType = "NUMERIC";
-                    }
-                    else
-                    {
-                        if (element.Name == XNAME_Double)
-                        {
-                            if (!(defaultNull || defaultValue is null || defaultValue.CsCode.Contains("")))
-                                defaultValue = defaultValue with { CsCode = $"{defaultValue.CsCode}.0" };
-                        }
-                        else if (element.Name == XNAME_Float)
-                        {
-                            if (!(defaultNull || defaultValue is null))
-                                defaultValue = defaultValue with { CsCode = $"{defaultValue.CsCode}f" };
-                        }
-                        else
-                            continue;
-                        sqlType = "REAL";
-                    }
-                    text = element.Attribute(XNAME_MinValue)?.Value;
-                    string maxValue = element.Attribute(XNAME_MaxValue)?.Value;
-                    property = new NumericProperty
-                    {
-                        Name = name,
-                        FullName = fullName,
-                        ColName = colName,
-                        CsType = element.Name.LocalName.ToLower(),
-                        SqlType = sqlType,
-                        AllowNull = allowNull,
-                        IsGenericWritable = isGenericWritable,
-                        IsUnique = isUnique,
-                        IsIndexed = isIndexed,
-                        MinValue = (text is null || (text = text.Trim()).Length == 0) ? null : new ValueRecord { CsCode = text, SqlCode = text },
-                        MaxValue = (maxValue is null || (maxValue = maxValue.Trim()).Length == 0) ? null : new ValueRecord { CsCode = maxValue, SqlCode = maxValue },
-                        DefaultValue = defaultValue, 
-                        Entity = entity,
-                        Source = element
-                    };
-                }
-            }
-            return entity;
-        }
-
-        bool? FromXmlBoolean(string xml)
+        IEnumerable<XElement> AllRootEntityElements => EntityDefinitionsDocument.Root?.Elements(XNAME_Root).Elements(XNAME_Entity);
+        IEnumerable<XElement> AllRootEnumTypeElements => EntityDefinitionsDocument.Root?.Elements(XNAME_Root).Elements(XNAME_EnumTypes).Elements();
+        IEnumerable<XElement> AllRootPropertyElements => AllRootEntityElements.Elements(XNAME_Properties).Elements();
+        IEnumerable<XElement> AllRootEnumFieldElements => AllRootEnumTypeElements.Elements(XNAME_Field);
+        IEnumerable<XElement> AllLocalEntityElements => AllRootEntityElements.Concat(EntityDefinitionsDocument.Root?.Elements(XNAME_Local).Elements(XNAME_Entity));
+        IEnumerable<XElement> AllLocalEnumTypeElements => AllRootEnumTypeElements.Concat(EntityDefinitionsDocument.Root?.Elements(XNAME_Local).Elements(XNAME_EnumTypes).Elements());
+        IEnumerable<XElement> AllLocalPropertyElements => AllRootPropertyElements.Concat(AllLocalEntityElements.Elements(XNAME_Properties).Elements());
+        IEnumerable<XElement> AllLocalEnumFieldElements => AllRootEnumFieldElements.Concat(AllLocalEnumTypeElements.Elements(XNAME_Properties).Elements());
+        IEnumerable<XElement> AllUpstreamEntityElements => AllRootEntityElements.Concat(EntityDefinitionsDocument.Root?.Elements(XNAME_Upstream).Elements(XNAME_Entity));
+        IEnumerable<XElement> AllUpstreamEnumTypeElements => AllRootEnumTypeElements.Concat(EntityDefinitionsDocument.Root?.Elements(XNAME_Upstream).Elements(XNAME_EnumTypes).Elements());
+        IEnumerable<XElement> AllUpstreamPropertyElements => AllRootPropertyElements.Concat(AllUpstreamEntityElements.Elements(XNAME_Properties).Elements());
+        IEnumerable<XElement> AllUpstreamEnumFieldElements => AllRootEnumFieldElements.Concat(AllUpstreamEnumTypeElements.Elements(XNAME_Properties).Elements());
+        static bool? FromXmlBoolean(string xml)
         {
             if (string.IsNullOrWhiteSpace(xml))
                 return null;
             try { return XmlConvert.ToBoolean(xml); }
             catch { return null; }
         }
-
-        int? FromXmlInt32(string xml)
+        static int? FromXmlInt32(string xml)
         {
             if (string.IsNullOrWhiteSpace(xml))
                 return null;
             try { return XmlConvert.ToInt32(xml); }
             catch { return null; }
         }
-
-        DateTime? FromXmlDateTime(string xml)
+        static DateTime? FromXmlDateTime(string xml)
         {
             if (string.IsNullOrWhiteSpace(xml))
                 return null;
             try { return XmlConvert.ToDateTime(xml, XmlDateTimeSerializationMode.RoundtripKind); }
             catch { return null; }
         }
-
-        TimeSpan? FromXmlTimeSpan(string xml)
+        static TimeSpan? FromXmlTimeSpan(string xml)
         {
             if (string.IsNullOrWhiteSpace(xml))
                 return null;
             try { return XmlConvert.ToTimeSpan(xml); }
             catch { return null; }
         }
-
-        Guid? FromXmlGuid(string xml)
+        static Guid? FromXmlGuid(string xml)
         {
             if (string.IsNullOrWhiteSpace(xml))
                 return null;
             try { return XmlConvert.ToGuid(xml); }
             catch { return null; }
         }
-
         byte[] FromXmlBinary(string xml)
         {
             if (xml is null)
@@ -837,477 +444,231 @@ namespace FsInfoCat.UnitTests.DbUnitTestHelpers
                 catch { return null; }
             return Array.Empty<byte>();
         }
-
-        XElement FindRootEntityByName(string name)
+        static TValue GetAnnotatedCacheValue<TCache, TValue>(XElement target, Func<TCache> ifNotExist)
+            where TCache : class, IElementCacheItem<TValue>
         {
-            if (name is null)
-                return null;
-            XAttribute matchingAttribute = EntityDefinitionsDocument.Root?.Element(XNAME_Root)?.Elements(XNAME_Entity).Attributes(XNAME_Name).FirstOrDefault(a => a.Value == name);
-            if (matchingAttribute is null)
-                return null;
-            return matchingAttribute.Parent;
-        }
-
-        XElement FindRootEnumByName(string name)
-        {
-            if (name is null)
-                return null;
-            XAttribute matchingAttribute = EntityDefinitionsDocument.Root?.Element(XNAME_Root)?.Elements(XNAME_EnumTypes).Elements().Attributes(XNAME_Name).FirstOrDefault(a => a.Value == name);
-            if (matchingAttribute is null)
-                return null;
-            return matchingAttribute.Parent;
-        }
-
-        XElement FindRootByName(string name) { return (name is null) ? null : (FindRootEntityByName(name) ?? FindRootEnumByName(name)); }
-
-        XElement FindLocalEntityByName(string name)
-        {
-            if (name is null)
-                return null;
-            XAttribute matchingAttribute = EntityDefinitionsDocument.Root?.Element(XNAME_Local)?.Elements(XNAME_Entity).Attributes(XNAME_Name).FirstOrDefault(a => a.Value == name);
-            if (matchingAttribute is null)
-                return FindRootEntityByName(name);
-            return matchingAttribute.Parent;
-        }
-
-        XElement FindLocalEnumByName(string name)
-        {
-            if (name is null)
-                return null;
-            XAttribute matchingAttribute = EntityDefinitionsDocument.Root?.Element(XNAME_Local)?.Elements(XNAME_EnumTypes).Elements().Attributes(XNAME_Name).FirstOrDefault(a => a.Value == name);
-            if (matchingAttribute is null)
-                return FindRootEnumByName(name);
-            return matchingAttribute.Parent;
-        }
-
-        XElement FindLocalByName(string name) { return (name is null) ? null : (FindLocalEntityByName(name) ?? FindLocalEnumByName(name)); }
-
-        XElement FindUpstreamEntityByName(string name)
-        {
-            if (name is null)
-                return null;
-            XAttribute matchingAttribute = EntityDefinitionsDocument.Root?.Element(XNAME_Upstream)?.Elements(XNAME_Entity).Attributes(XNAME_Name).FirstOrDefault(a => a.Value == name);
-            if (matchingAttribute is null)
-                return FindRootEntityByName(name);
-            return matchingAttribute.Parent;
-        }
-
-        XElement FindUpstreamEnumByName(string name)
-        {
-            if (name is null)
-                return null;
-            XAttribute matchingAttribute = EntityDefinitionsDocument.Root?.Element(XNAME_Upstream)?.Elements(XNAME_EnumTypes).Elements().Attributes(XNAME_Name).FirstOrDefault(a => a.Value == name);
-            if (matchingAttribute is null)
-                return FindRootEnumByName(name);
-            return matchingAttribute.Parent;
-        }
-
-        XElement FindUpstreamByName(string name) { return (name is null) ? null : (FindUpstreamEntityByName(name) ?? FindUpstreamEnumByName(name)); }
-
-        XElement FindRootPropertyByFullName(string fullName)
-        {
-            if (fullName is null)
-                return null;
-            XAttribute matchingAttribute = EntityDefinitionsDocument.Root.Element(XNAME_Root).Elements(XNAME_Entity).Elements(XNAME_Properties).Elements().Attributes(XNAME_FullName)
-                .FirstOrDefault(a => a.Value == fullName);
-            if (matchingAttribute is null)
-                return null;
-            return matchingAttribute.Parent;
-        }
-
-        XElement FindRootFieldByFullName(string fullName)
-        {
-            if (fullName is null)
-                return null;
-            XAttribute matchingAttribute = EntityDefinitionsDocument.Root.Element(XNAME_Root).Elements(XNAME_EnumTypes).Elements().Elements(XNAME_Field).Attributes(XNAME_FullName)
-                .FirstOrDefault(a => a.Value == fullName);
-            if (matchingAttribute is null)
-                return null;
-            return matchingAttribute.Parent;
-        }
-
-        XElement FindRootMemberByFullName(string fullName) { return (fullName is null) ? null : (FindRootPropertyByFullName(fullName) ?? FindRootFieldByFullName(fullName)); }
-
-        XElement FindLocalPropertyByFullName(string fullName)
-        {
-            if (fullName is null)
-                return null;
-            XAttribute matchingAttribute = EntityDefinitionsDocument.Root.Element(XNAME_Local).Elements(XNAME_Entity).Elements(XNAME_Properties).Elements().Attributes(XNAME_FullName)
-                .FirstOrDefault(a => a.Value == fullName);
-            if (matchingAttribute is null)
-                return FindRootPropertyByFullName(fullName);
-            return matchingAttribute.Parent;
-        }
-
-        XElement FindLocalFieldByFullName(string fullName)
-        {
-            if (fullName is null)
-                return null;
-            XAttribute matchingAttribute = EntityDefinitionsDocument.Root.Element(XNAME_Local).Elements(XNAME_EnumTypes).Elements().Elements(XNAME_Field).Attributes(XNAME_FullName)
-                .FirstOrDefault(a => a.Value == fullName);
-            if (matchingAttribute is null)
-                return FindRootFieldByFullName(fullName);
-            return matchingAttribute.Parent;
-        }
-
-        XElement FindLocalMemberByFullName(string fullName) { return (fullName is null) ? null : (FindLocalPropertyByFullName(fullName) ?? FindLocalFieldByFullName(fullName)); }
-
-        XElement FindUpstreamPropertyByFullName(string fullName)
-        {
-            if (fullName is null)
-                return null;
-            XAttribute matchingAttribute = EntityDefinitionsDocument.Root.Element(XNAME_Upstream).Elements(XNAME_Entity).Elements(XNAME_Properties).Elements().Attributes(XNAME_FullName)
-                .FirstOrDefault(a => a.Value == fullName);
-            if (matchingAttribute is null)
-                return FindRootPropertyByFullName(fullName);
-            return matchingAttribute.Parent;
-        }
-
-        XElement FindUpstreamFieldByFullName(string fullName)
-        {
-            if (fullName is null)
-                return null;
-            XAttribute matchingAttribute = EntityDefinitionsDocument.Root.Element(XNAME_Upstream).Elements(XNAME_EnumTypes).Elements().Elements(XNAME_Field).Attributes(XNAME_FullName)
-                .FirstOrDefault(a => a.Value == fullName);
-            if (matchingAttribute is null)
-                return FindRootFieldByFullName(fullName);
-            return matchingAttribute.Parent;
-        }
-
-        XElement FindUpstreamMemberByFullName(string fullName) { return (fullName is null) ? null : (FindUpstreamPropertyByFullName(fullName) ?? FindUpstreamFieldByFullName(fullName)); }
-
-        XElement GetEnumPropertyEnumType(XElement enumPropertyElement)
-        {
-            XElement parent = enumPropertyElement?.Parent;
-            if (parent is null || enumPropertyElement.Name != XNAME_Enum)
-                return null;
-            switch (parent.Name.LocalName)
+            if (target is null)
+                return default;
+            TCache cacheItem = target.Annotation<TCache>();
+            if (cacheItem is null)
             {
-                case NAME_Root:
-                    return FindRootEnumByName(enumPropertyElement.Attribute(XNAME_Name)?.Value);
-                case NAME_Local:
-                    return FindLocalEnumByName(enumPropertyElement.Attribute(XNAME_Name)?.Value);
-                case NAME_Upstream:
-                    return FindUpstreamEnumByName(enumPropertyElement.Attribute(XNAME_Name)?.Value);
-                default:
-                    return null;
+                cacheItem = ifNotExist();
+                target.AddAnnotation(cacheItem);
             }
+            return cacheItem.Value;
         }
-
-        XElement GetEnumPropertyDefaultField(XElement enumPropertyElement)
+        static IEnumerable<XElement> GetElementsByNames(XElement source, params XName[] names)
         {
-            XElement parent = enumPropertyElement?.Parent;
-            if (parent is null || enumPropertyElement.Name != XNAME_Enum)
+            if (names is null || names.Length == 0)
+                return source.Elements();
+            if (names.Length > 1)
+                return source.Elements().Where(e => names.Any(n => e.Name == n));
+            return source.Elements(names[0]);
+        }
+        static IEnumerable<XElement> GetElementsByName(IEnumerable<XElement> source, params XName[] names)
+        {
+            if (names is null || names.Length == 0)
+                return source.Elements();
+            if (names.Length > 1)
+                return source.Elements().Where(e => names.Any(n => e.Name == n));
+            return source.Elements(names[0]);
+        }
+        static IEnumerable<XElement> GetElementsByAttributeValue(XName name, string value, IEnumerable<XElement> source) => (value is null || source is null || !source.Any()) ?
+            Enumerable.Empty<XElement>() : source.Attributes(name).Where(a => a.Value == value).Select(a => a.Parent);
+        static IEnumerable<XElement> GetElementsByAttributeValue(XName name, IEnumerable<string> values, IEnumerable<XElement> source) =>
+            (values is null || source is null || !values.Any() || !source.Any()) ? Enumerable.Empty<XElement>() :
+            values.Distinct().SelectMany(v => source.Attributes(name).Where(a => a.Value == v)).Select(a => a.Parent);
+        XElement FindRootEntityByName(string name) => GetElementsByAttributeValue(XNAME_Name, name, AllRootEntityElements).FirstOrDefault();
+        XElement FindRootEnumTypeByName(string name) => GetElementsByAttributeValue(XNAME_Name, name, AllRootEnumTypeElements).FirstOrDefault();
+        XElement FindLocalEntityByName(string name) => GetElementsByAttributeValue(XNAME_Name, name, AllLocalEntityElements).FirstOrDefault();
+        XElement FindLocalEnumTypeByName(string name) => GetElementsByAttributeValue(XNAME_Name, name, AllLocalEnumTypeElements).FirstOrDefault();
+        XElement FindUpstreamEntityByName(string name) => GetElementsByAttributeValue(XNAME_Name, name, AllUpstreamEntityElements).FirstOrDefault();
+        XElement FindUpstreamEnumTypeByName(string name) => GetElementsByAttributeValue(XNAME_Name, name, AllUpstreamEnumTypeElements).FirstOrDefault();
+        XElement FindRootPropertyByFullName(string fullName) => GetElementsByAttributeValue(XNAME_FullName, fullName, AllRootPropertyElements).FirstOrDefault();
+        XElement FindRootFieldByFullName(string fullName) => GetElementsByAttributeValue(XNAME_FullName, fullName, AllRootEnumFieldElements).FirstOrDefault();
+        XElement FindLocalPropertyByFullName(string fullName) => GetElementsByAttributeValue(XNAME_FullName, fullName, AllLocalPropertyElements).FirstOrDefault();
+        XElement FindLocalFieldByFullName(string fullName) => GetElementsByAttributeValue(XNAME_FullName, fullName, AllLocalEnumFieldElements).FirstOrDefault();
+        XElement FindUpstreamPropertyByFullName(string fullName) => GetElementsByAttributeValue(XNAME_FullName, fullName, AllUpstreamPropertyElements).FirstOrDefault();
+        XElement FindUpstreamFieldByFullName(string fullName) => GetElementsByAttributeValue(XNAME_FullName, fullName, AllUpstreamEnumFieldElements).FirstOrDefault();
+        static bool IsEntityElement(XElement element) => element?.Name == XNAME_Entity;
+        static bool IsEnumTypeElement(XElement element) => element?.Parent?.Name == XNAME_EnumTypes;
+        static bool IsPropertyElement(XElement element) => element?.Parent?.Name == XNAME_Properties;
+        static bool IsEnumFieldElement(XElement element) => element?.Name == XNAME_Field;
+        static XElement GetScopeElement(XElement refElement)
+        {
+            XElement root = refElement.Document?.Root;
+            return (root is null) ? null : refElement.AncestorsAndSelf().FirstOrDefault(e => ReferenceEquals(root, e.Parent));
+        }
+        static IEnumerable<XElement> GetAllEntityElements(XElement refElement)
+        {
+            XElement scopeElement = GetScopeElement(refElement);
+            if (scopeElement is null)
+                return Enumerable.Empty<XElement>();
+            if (scopeElement.Name != XNAME_Root)
+                return scopeElement.Elements(XNAME_Entity).Concat(scopeElement.Ancestors().Take(1).Elements(XNAME_Root).Elements(XNAME_Entity));
+            return scopeElement.Elements(XNAME_Entity);
+        }
+        static IEnumerable<XElement> GetAllPropertyElements(XElement refElement) => GetAllEntityElements(refElement).Elements(XNAME_Properties).Elements();
+        static IEnumerable<XElement> GetAllEnumTypeElements(XElement refElement)
+        {
+            XElement scopeElement = GetScopeElement(refElement);
+            if (scopeElement is null)
+                return Enumerable.Empty<XElement>();
+            if (scopeElement.Name != XNAME_Root)
+            {
+                XElement rootElement = scopeElement.Parent?.Element(XNAME_Root);
+                if (rootElement is not null)
+                    return scopeElement.Elements(XNAME_EnumTypes).Concat(scopeElement.Ancestors().Take(1).Elements(XNAME_Root).Elements(XNAME_EnumTypes)).Elements();
+            }
+            return scopeElement.Elements(XNAME_EnumTypes).Elements();
+        }
+        static IEnumerable<XElement> GetAllEnumFieldElements(XElement refElement) => GetAllEnumTypeElements(refElement).Elements(XNAME_Field);
+        static XElement FindEntityByName(XElement refElement, string name) => GetElementsByAttributeValue(XNAME_Name, name, GetAllEntityElements(refElement)).FirstOrDefault();
+        static IEnumerable<XElement> FindEntitiesByNames(XElement refElement, IEnumerable<string> names) => GetElementsByAttributeValue(XNAME_Name, names, GetAllEntityElements(refElement));
+        static XElement FindEnumTypeByName(XElement refElement, string name) => GetElementsByAttributeValue(XNAME_Name, name, GetAllEnumTypeElements(refElement)).FirstOrDefault();
+        static XElement FindPropertyByFullName(XElement refElement, string fullName) => GetElementsByAttributeValue(XNAME_FullName, fullName, GetAllPropertyElements(refElement)).FirstOrDefault();
+        static XElement FindFieldByFullName(XElement refElement, string fullName) => GetElementsByAttributeValue(XNAME_FullName, fullName, GetAllEnumFieldElements(refElement)).FirstOrDefault();
+        static XElement GetEnumType(XElement enumPropertyElement) => GetAnnotatedCacheValue<EnumTypeCacheItem, XElement>(enumPropertyElement,
+            () => new EnumTypeCacheItem(FindEnumTypeByName(enumPropertyElement, enumPropertyElement?.Attribute(XNAME_Name)?.Value)));
+        static XElement GetDefaultValueField(XElement enumPropertyElement) => GetAnnotatedCacheValue<DefaultValueCacheItem<XElement>, XElement>(enumPropertyElement,
+            () => new DefaultValueCacheItem<XElement>((enumPropertyElement?.Name == XNAME_Enum) ?
+                FindFieldByFullName(enumPropertyElement, enumPropertyElement.Element(XNAME_Default)?.Value) : null));
+        static XElement GetAmbientValueField(XElement enumFieldElement) => GetAnnotatedCacheValue<RelatedValueCacheItem<XElement>, XElement>(enumFieldElement,
+            () => new RelatedValueCacheItem<XElement>((enumFieldElement?.Name == XNAME_Field) ?
+                FindFieldByFullName(enumFieldElement, enumFieldElement.Elements(XNAME_AmbientEnum).Attributes(XNAME_Value).Select(a => a.Value).FirstOrDefault()) : null));
+        static XElement GetRelatedEntity(XElement relatedEntityPropertyElement)
+        {
+            if (relatedEntityPropertyElement is null || (relatedEntityPropertyElement.Name != XNAME_RelatedEntity && relatedEntityPropertyElement.Name != XNAME_NewRelatedEntity))
                 return null;
-            switch (parent.Name.LocalName)
-            {
-                case NAME_Root:
-                    return FindRootFieldByFullName(enumPropertyElement.Element(XNAME_Default)?.Value);
-                case NAME_Local:
-                    return FindLocalFieldByFullName(enumPropertyElement.Element(XNAME_Default)?.Value);
-                case NAME_Upstream:
-                    return FindUpstreamFieldByFullName(enumPropertyElement.Element(XNAME_Default)?.Value);
-                default:
-                    return null;
-            }
+            return GetAnnotatedCacheValue<RelatedValueCacheItem<XElement>, XElement>(relatedEntityPropertyElement, () =>
+                new RelatedValueCacheItem<XElement>(FindEntityByName(relatedEntityPropertyElement, relatedEntityPropertyElement.Attribute(XNAME_Reference)?.Value)));
         }
-
-        XElement GetEnumFieldAmbientEnumField(XElement enumFieldElement)
+        static XElement GetItemEntity(XElement collectionNavigationPropertyElement)
         {
-            XElement parent = enumFieldElement?.Parent;
-            if (parent is null || enumFieldElement.Name != XNAME_Enum)
+            if (collectionNavigationPropertyElement is null || (collectionNavigationPropertyElement.Name != XNAME_CollectionNavigation &&
+                    collectionNavigationPropertyElement.Name != XNAME_NewCollectionNavigation))
                 return null;
-            switch (parent.Name.LocalName)
+            return GetAnnotatedCacheValue<RelatedValueCacheItem<XElement>, XElement>(collectionNavigationPropertyElement, () =>
             {
-                case NAME_Root:
-                    return FindRootFieldByFullName(enumFieldElement.Elements(XNAME_AmbientEnum).Attributes(XNAME_Value).Select(a => a.Value).FirstOrDefault());
-                case NAME_Local:
-                    return FindLocalFieldByFullName(enumFieldElement.Elements(XNAME_AmbientEnum).Attributes(XNAME_Value).Select(a => a.Value).FirstOrDefault());
-                case NAME_Upstream:
-                    return FindUpstreamFieldByFullName(enumFieldElement.Elements(XNAME_AmbientEnum).Attributes(XNAME_Value).Select(a => a.Value).FirstOrDefault());
-                default:
-                    return null;
-            }
+                XElement itemTypeElement = collectionNavigationPropertyElement.Element(XNAME_ItemType);
+                return new RelatedValueCacheItem<XElement>((itemTypeElement is null) ?
+                    FindPropertyByFullName(collectionNavigationPropertyElement, collectionNavigationPropertyElement.Element(XNAME_ItemKey)?.Value)?.Parent :
+                    FindEntityByName(itemTypeElement, itemTypeElement.Value));
+            });
         }
-
-        XElement GetRelatedEntity(XElement relatedEntityPropertyElement)
+        static XElement[] GetBaseEntities(XElement entityElement)
         {
-            XElement scopeElement, parentEntityElement = relatedEntityPropertyElement?.Parent?.Parent;
-            if (parentEntityElement is null || (scopeElement = parentEntityElement.Parent) is null ||
-                    (relatedEntityPropertyElement.Name != XNAME_RelatedEntity && relatedEntityPropertyElement.Name != XNAME_NewRelatedEntity))
-                return null;
-            XElement referenceElement;
-            switch (scopeElement.Name.LocalName)
-            {
-                case NAME_Root:
-                    referenceElement = relatedEntityPropertyElement.Element(XNAME_Reference);
-                    return (referenceElement is null) ? FindRootPropertyByFullName(relatedEntityPropertyElement.Element(XNAME_ReferenceKey)?.Value)?.Parent : FindRootEntityByName(referenceElement.Value);
-                case NAME_Local:
-                    referenceElement = relatedEntityPropertyElement.Element(XNAME_Reference);
-                    return (referenceElement is null) ? FindLocalPropertyByFullName(relatedEntityPropertyElement.Element(XNAME_ReferenceKey)?.Value)?.Parent : FindLocalEntityByName(referenceElement.Value);
-                case NAME_Upstream:
-                    referenceElement = relatedEntityPropertyElement.Element(XNAME_Reference);
-                    return (referenceElement is null) ? FindUpstreamPropertyByFullName(relatedEntityPropertyElement.Element(XNAME_ReferenceKey)?.Value)?.Parent :
-                        FindUpstreamEntityByName(referenceElement.Value);
-                default:
-                    return null;
-            }
-        }
-
-        XElement GetCollectionNavigationItemEntity(XElement collectionNavigationPropertyElement)
-        {
-            XElement scopeElement, parentEntityElement = collectionNavigationPropertyElement?.Parent?.Parent;
-            if (parentEntityElement is null || (scopeElement = parentEntityElement.Parent) is null ||
-                    (collectionNavigationPropertyElement.Name != XNAME_CollectionNavigation && collectionNavigationPropertyElement.Name != XNAME_NewCollectionNavigation))
-                return null;
-            XElement itemTypeElement;
-            switch (scopeElement.Name.LocalName)
-            {
-                case NAME_Root:
-                    itemTypeElement = collectionNavigationPropertyElement.Element(XNAME_ItemType);
-                    return (itemTypeElement is null) ? FindRootPropertyByFullName(collectionNavigationPropertyElement.Element(XNAME_ItemKey)?.Value)?.Parent :
-                        FindRootEntityByName(itemTypeElement.Value);
-                case NAME_Local:
-                    itemTypeElement = collectionNavigationPropertyElement.Element(XNAME_ItemType);
-                    return (itemTypeElement is null) ? FindLocalPropertyByFullName(collectionNavigationPropertyElement.Element(XNAME_ItemKey)?.Value)?.Parent :
-                        FindLocalEntityByName(itemTypeElement.Value);
-                case NAME_Upstream:
-                    itemTypeElement = collectionNavigationPropertyElement.Element(XNAME_ItemType);
-                    return (itemTypeElement is null) ? FindUpstreamPropertyByFullName(collectionNavigationPropertyElement.Element(XNAME_ItemKey)?.Value)?.Parent :
-                        FindUpstreamEntityByName(itemTypeElement.Value);
-                default:
-                    return null;
-            }
-        }
-
-        void GetAllProperties(XElement entityElement, Collection<(string Name, LinkedList<XElement> Sources)> collection)
-        {
-            foreach (XElement baseEntity in GetBaseEntities(entityElement).Reverse())
-                GetAllProperties(baseEntity, collection);
-            foreach (XAttribute attribute in entityElement.Elements(XNAME_Properties).Elements().Attributes(XNAME_Name))
-            {
-                XElement propertyElement = attribute.Parent;
-                string propertyName = attribute.Value;
-                if (collection.Any(t => t.Name == propertyName))
-                {
-                    (string Name, LinkedList<XElement> Sources) property = collection.First(t => t.Name == propertyName);
-                    if (property.Sources.Any(e => ReferenceEquals(e, propertyElement)))
-                        break;
-                    property.Sources.AddFirst(propertyElement);
-                }
-                else
-                {
-                    (string Name, LinkedList<XElement> Sources) property = new(propertyName, new LinkedList<XElement>());
-                    property.Sources.AddLast(propertyElement);
-                    collection.Add(property);
-                }
-            }
-        }
-
-        IEnumerable<XElement> GetBaseEntities(XElement entityElement)
-        {
-            XElement parent = entityElement?.Parent;
-            if (parent is null || entityElement?.Name != XNAME_Entity)
+            if (entityElement is null || entityElement.Name != XNAME_Entity)
                 return Array.Empty<XElement>();
-
-            IEnumerable<string> names = entityElement.Elements().Select(e => (
-                IsType: e.Name == XNAME_ExtendsEntity || e.Name == XNAME_ImplementsEntity,
-                IsDef: e.Name == XNAME_ExtendsGenericEntity || e.Name == XNAME_ImplementsGenericEntity,
-                Element: e
-            )).Where(t => t.IsType || t.IsDef).SelectMany(t => t.Element.Attributes(t.IsType ? XNAME_Type : XNAME_TypeDef)).Select(a => a.Value);
-            switch (parent.Name.LocalName)
-            {
-                case NAME_Root:
-                    return names.Distinct().Select(n => FindRootEntityByName(n)).Where(e => e is not null);
-                case NAME_Local:
-                    return entityElement.Attributes(XNAME_RootInterface).Select(a => a.Value).Concat(names).Distinct()
-                        .Select(n => FindLocalEntityByName(n)).Where(e => e is not null);
-                case NAME_Upstream:
-                    return entityElement.Attributes(XNAME_RootInterface).Select(a => a.Value).Concat(names).Distinct()
-                        .Select(n => FindUpstreamEntityByName(n)).Where(e => e is not null);
-                default:
-                    return Array.Empty<XElement>();
-            }
+            return GetAnnotatedCacheValue<ImmediateBaseValuesCacheItem<XElement>, XElement[]>(entityElement, () =>
+                new ImmediateBaseValuesCacheItem<XElement>(FindEntitiesByNames(entityElement, entityElement.Elements(XNAME_ExtendsEntity).Attributes(XNAME_Type)
+                    .Concat(entityElement.Elements(XNAME_ExtendsGenericEntity).Attributes(XNAME_TypeDef))
+                    .Concat(entityElement.Attributes(XNAME_RootInterface))
+                    .Concat(entityElement.Elements().Select(e => (e.Name == XNAME_ImplementsEntity) ? e.Attribute(XNAME_Type) :
+                        (e.Name == XNAME_ImplementsGenericEntity) ? e.Attribute(XNAME_TypeDef) : null).Where(a => a is not null))
+                    .Select(a => a.Value)).ToArray()));
         }
-
-        void GetAllBaseEntities(XElement entityElement, int level, Collection<(XElement Element, int Level)> collection, Func<IEnumerable<string>, IEnumerable<XElement>> getEntities)
+        static AllBaseValuesCacheItem<XElement> GetAllBaseEntitiesCachItem(XElement entityElement)
         {
-            IEnumerable<string> names = entityElement.Elements().Select(e => (
-                IsType: e.Name == XNAME_ExtendsEntity || e.Name == XNAME_ImplementsEntity,
-                IsDef: e.Name == XNAME_ExtendsGenericEntity || e.Name == XNAME_ImplementsGenericEntity,
-                Element: e
-            )).Where(t => t.IsType || t.IsDef).SelectMany(t => t.Element.Attributes(t.IsType ? XNAME_Type : XNAME_TypeDef)).Select(a => a.Value);
-            int nextLevel = level + 1;
-            foreach (XElement baseEntity in getEntities(names))
+            List<XElement> result = GetBaseEntities(entityElement).ToList();
+            if (result.Count == 0)
+                return new AllBaseValuesCacheItem<XElement>(Array.Empty<XElement>());
+            foreach (XElement element in result.SelectMany((e, n) => GetAllBaseEntities(e).Select((e, i) => (e, i + result.Count + n))).OrderBy(t => t.Item2).Select(t => t.e).ToArray())
             {
-                IEnumerable<(XElement Element, int Level)> items = collection.Where(e => ReferenceEquals(e.Element, baseEntity));
-                if (items.Any())
+                if (!result.Any(e => ReferenceEquals(e, element)))
+                    result.Add(element);
+            }
+            return new AllBaseValuesCacheItem<XElement>(result.ToArray());
+        }
+        static XElement[] GetAllBaseEntities(XElement entityElement)
+        {
+            if (entityElement is null || entityElement.Name != XNAME_Entity)
+                return Array.Empty<XElement>();
+            return GetAnnotatedCacheValue<AllBaseValuesCacheItem<XElement>, XElement[]>(entityElement, () => GetAllBaseEntitiesCachItem(entityElement));
+        }
+        static XElement[] GetProperties(XElement entityElement) => (entityElement is null || entityElement.Name != XNAME_Entity) ? Array.Empty<XElement>() :
+            GetAnnotatedCacheValue<ImmediateMembersCacheItem<XElement>, XElement[]>(entityElement,
+                () => new ImmediateMembersCacheItem<XElement>(entityElement.Elements(XNAME_Properties).Elements().ToArray()));
+        static (string Name, List<XElement> Sources)[] GetAllProperties(XElement entityElement)
+        {
+            if (entityElement is null || entityElement.Name != XNAME_Entity)
+                return Array.Empty<(string Name, List<XElement> Sources)>();
+            return GetAnnotatedCacheValue<AllMembersCacheItem<(string Name, List<XElement> Sources)>, (string Name, List<XElement> Sources)[]>(entityElement, () =>
+            {
+                List<(string Name, List<XElement> Sources)> results = new();
+                foreach ((string Name, List<XElement> Sources) p in GetAllBaseEntities(entityElement).Reverse().SelectMany(e => GetAllProperties(e)))
                 {
-                    (XElement Element, int Level) t = items.First();
-                    if (level < t.Level)
+                    if (results.Any(t => t.Name == p.Name))
                     {
-                        collection.Remove(t);
-                        collection.Add(new(baseEntity, level));
+                        List<XElement> sources = results.First(t => t.Name == p.Name).Sources;
+                        foreach (XElement s in p.Sources)
+                        {
+                            if (!sources.Any(e => ReferenceEquals(s, e)))
+                                sources.Add(s);
+                        }
+                    }
+                    else
+                        results.Add(p);
+                }
+                foreach (XElement element in GetProperties(entityElement))
+                {
+                    string name = element.Attribute(XNAME_Name)?.Value ?? "";
+                    if (results.Any(t => t.Name == name))
+                    {
+                        List<XElement> sources = results.First(t => t.Name == name).Sources;
+                        if (!sources.Any(e => ReferenceEquals(element, e)))
+                            sources.Add(element);
+                    }
+                    else
+                    {
+                        List<XElement> sources = new();
+                        sources.Add(element);
+                        results.Add((name, sources));
                     }
                 }
-                else
-                {
-                    collection.Add(new(baseEntity, level));
-                    GetAllBaseEntities(baseEntity, nextLevel, collection, getEntities);
-                }
-            }
+                return new AllMembersCacheItem<(string Name, List<XElement> Sources)>(results.ToArray());
+            });
         }
-
-        XElement[] GetAllBaseEntities(XElement entityElement)
-        {
-            XElement parent = entityElement?.Parent;
-            if (parent is null || entityElement?.Name != XNAME_Entity)
-                return Array.Empty<XElement>();
-            Collection<(XElement Element, int Level)> result = new();
-            Func<IEnumerable<string>, IEnumerable<XElement>> getEntities;
-            switch (parent.Name.LocalName)
-            {
-                case NAME_Root:
-                    getEntities = names => names.Distinct().Select(n => FindRootEntityByName(n)).Where(e => e is not null);
-                    break;
-                case NAME_Local:
-                    getEntities = names => entityElement.Attributes(XNAME_RootInterface).Select(a => a.Value).Concat(names).Distinct()
-                        .Select(n => FindLocalEntityByName(n)).Where(e => e is not null);
-                    break;
-                case NAME_Upstream:
-                    getEntities = names => entityElement.Attributes(XNAME_RootInterface).Select(a => a.Value).Concat(names).Distinct()
-                        .Select(n => FindUpstreamEntityByName(n)).Where(e => e is not null);
-                    break;
-                default:
-                    return Array.Empty<XElement>();
-            }
-            GetAllBaseEntities(entityElement, 0, result, getEntities);
-            return result.OrderBy(t => t.Level).Select(t => t.Element).ToArray();
-        }
-
-        XElement[] GetAllBaseProperties(XElement propertyElement, XElement[] orderedBaseEntities, out XElement baseProperty, out bool isNew, out bool doNotEmit)
+        static AllBasePropertiesCacheItem GetAllBasePropertiesCacheItem(XElement propertyElement)
         {
             string propertyName = propertyElement?.Attribute(XNAME_Name)?.Value;
-            if (propertyName is null || orderedBaseEntities is null || orderedBaseEntities.Length == 0)
-            {
-                baseProperty = propertyElement;
-                isNew = doNotEmit = false;
-                return Array.Empty<XElement>();
-            }
+            XElement[] allBaseEntities;
+            if ((allBaseEntities = GetAllBaseEntities(propertyElement.Parent?.Parent)).Length == 0)
+                return new AllBasePropertiesCacheItem(new PropertyInheritanceInfo(propertyElement, false, false, Array.Empty<XElement>(), propertyElement));
             XName baseName;
-            XName inheritedName;
+            bool n, e;
             switch (propertyElement.Name.LocalName)
             {
-                case "NewIdNavRef":
-                    isNew = false;
-                    doNotEmit = true;
+                case NAME_NewIdNavRef:
+                    n = false;
+                    e = true;
                     baseName = XNAME_UniqueIdentifier;
-                    inheritedName = XNAME_NewIdNavRef;
                     break;
-                case "NewRelatedEntity":
-                    isNew = true;
-                    doNotEmit = false;
+                case NAME_NewRelatedEntity:
+                    n = true;
+                    e = false;
                     baseName = XNAME_RelatedEntity;
-                    inheritedName = XNAME_NewRelatedEntity;
                     break;
-                case "NewCollectionNavigation":
-                    isNew = true;
-                    doNotEmit = false;
+                case NAME_NewCollectionNavigation:
+                    n = true;
+                    e = false;
                     baseName = XNAME_CollectionNavigation;
-                    inheritedName = XNAME_NewCollectionNavigation;
                     break;
                 default:
-                    isNew = doNotEmit = false;
-                    baseProperty = propertyElement;
-                    return orderedBaseEntities.Elements(XNAME_Properties).Elements(propertyElement.Name).Attributes(XNAME_Name).Where(a => a.Value == propertyName).Select(a => a.Parent).ToArray();
+                    return new AllBasePropertiesCacheItem(new PropertyInheritanceInfo(propertyElement, false, false,
+                        GetElementsByAttributeValue(XNAME_Name, propertyName, allBaseEntities.Elements(XNAME_Properties).Elements()).ToArray(), propertyElement));
             }
-            IEnumerable<XElement> results = orderedBaseEntities.Elements(XNAME_Properties).Elements().Where(e => e.Name == baseName || e.Name == inheritedName)
-                .Attributes(XNAME_Name).Where(a => a.Value == propertyName).Select(a => a.Parent);
-            baseProperty = results.Where(e => e.Name == baseName).DefaultIfEmpty(propertyElement).First();
-            return results.ToArray();
+            IEnumerable<XElement> results = GetElementsByAttributeValue(XNAME_Name, propertyName, allBaseEntities.Elements(XNAME_Properties).Elements());
+            return new AllBasePropertiesCacheItem(new PropertyInheritanceInfo(results.Where(e => e.Name == baseName).DefaultIfEmpty(propertyElement).First(), n, e,
+                results.ToArray(), propertyElement));
         }
-
-        XElement GetRelatedEntityKeyProperty(XElement relatedEntityPropertyElement)
+        static PropertyInheritanceInfo GetAllBaseProperties(XElement propertyElement)
         {
-            XElement parent = relatedEntityPropertyElement?.Parent;
-            if (parent is null || (relatedEntityPropertyElement.Name != XNAME_RelatedEntity && relatedEntityPropertyElement.Name != XNAME_NewRelatedEntity))
-                return null;
-            XElement referenceElement;
-            switch (parent.Name.LocalName)
-            {
-                case NAME_Root:
-                    if ((referenceElement = relatedEntityPropertyElement.Element(XNAME_ReferenceKey)) is null)
-                    {
-                        if ((referenceElement = relatedEntityPropertyElement.Element(XNAME_Reference)) is null || (referenceElement = FindRootEntityByName(referenceElement.Value)) is null)
-                            return null;
-                        string name = relatedEntityPropertyElement.Attribute(XNAME_Name)?.Value;
-                        return referenceElement.Elements(XNAME_Properties).Elements().FirstOrDefault(e => e.Attribute(XNAME_Name)?.Value == name);
-                    }
-                    return FindRootPropertyByFullName(referenceElement.Value);
-                case NAME_Local:
-                    if ((referenceElement = relatedEntityPropertyElement.Element(XNAME_ReferenceKey)) is null)
-                    {
-                        if ((referenceElement = relatedEntityPropertyElement.Element(XNAME_Reference)) is null || (referenceElement = FindLocalEntityByName(referenceElement.Value)) is null)
-                            return null;
-                        string name = relatedEntityPropertyElement.Attribute(XNAME_Name)?.Value;
-                        return referenceElement.Elements(XNAME_Properties).Elements().FirstOrDefault(e => e.Attribute(XNAME_Name)?.Value == name);
-                    }
-                    return FindLocalPropertyByFullName(referenceElement.Value);
-                case NAME_Upstream:
-                    if ((referenceElement = relatedEntityPropertyElement.Element(XNAME_ReferenceKey)) is null)
-                    {
-                        if ((referenceElement = relatedEntityPropertyElement.Element(XNAME_Reference)) is null || (referenceElement = FindUpstreamEntityByName(referenceElement.Value)) is null)
-                            return null;
-                        string name = relatedEntityPropertyElement.Attribute(XNAME_Name)?.Value;
-                        return referenceElement.Elements(XNAME_Properties).Elements().FirstOrDefault(e => e.Attribute(XNAME_Name)?.Value == name);
-                    }
-                    return FindUpstreamPropertyByFullName(referenceElement.Value);
-                default:
-                    return null;
-            }
+            if (propertyElement is null || propertyElement.Parent?.Name != XNAME_Properties)
+                return new PropertyInheritanceInfo(propertyElement, false, true, Array.Empty<XElement>(), propertyElement);
+            return GetAnnotatedCacheValue<AllBasePropertiesCacheItem, PropertyInheritanceInfo>(propertyElement, () => GetAllBasePropertiesCacheItem(propertyElement));
         }
-
-        XElement GetCollectionNavigationItemKeyProperty(XElement collectionNavigationPropertyElement)
-        {
-            XElement parent = collectionNavigationPropertyElement?.Parent;
-            if (parent is null || (collectionNavigationPropertyElement.Name != XNAME_CollectionNavigation && collectionNavigationPropertyElement.Name != XNAME_NewCollectionNavigation))
-                return null;
-            XElement itemKeyElement;
-            switch (parent.Name.LocalName)
-            {
-                case NAME_Root:
-                    if ((itemKeyElement = collectionNavigationPropertyElement.Element(XNAME_ItemKey)) is null)
-                    {
-                        if ((itemKeyElement = collectionNavigationPropertyElement.Element(XNAME_ItemType)) is null || (itemKeyElement = FindRootEntityByName(itemKeyElement.Value)) is null)
-                            return null;
-                        string name = collectionNavigationPropertyElement.Attribute(XNAME_Name)?.Value;
-                        return itemKeyElement.Elements(XNAME_Properties).Elements().FirstOrDefault(e => e.Attribute(XNAME_Name)?.Value == name);
-                    }
-                    return FindRootPropertyByFullName(collectionNavigationPropertyElement.Element(XNAME_ItemKey)?.Value);
-                case NAME_Local:
-                    if ((itemKeyElement = collectionNavigationPropertyElement.Element(XNAME_ItemKey)) is null)
-                    {
-                        if ((itemKeyElement = collectionNavigationPropertyElement.Element(XNAME_ItemType)) is null || (itemKeyElement = FindLocalEntityByName(itemKeyElement.Value)) is null)
-                            return null;
-                        string name = collectionNavigationPropertyElement.Attribute(XNAME_Name)?.Value;
-                        return itemKeyElement.Elements(XNAME_Properties).Elements().FirstOrDefault(e => e.Attribute(XNAME_Name)?.Value == name);
-                    }
-                    return FindLocalPropertyByFullName(collectionNavigationPropertyElement.Element(XNAME_ItemKey)?.Value);
-                case NAME_Upstream:
-                    if ((itemKeyElement = collectionNavigationPropertyElement.Element(XNAME_ItemKey)) is null)
-                    {
-                        if ((itemKeyElement = collectionNavigationPropertyElement.Element(XNAME_ItemType)) is null || (itemKeyElement = FindUpstreamEntityByName(itemKeyElement.Value)) is null)
-                            return null;
-                        string name = collectionNavigationPropertyElement.Attribute(XNAME_Name)?.Value;
-                        return itemKeyElement.Elements(XNAME_Properties).Elements().FirstOrDefault(e => e.Attribute(XNAME_Name)?.Value == name);
-                    }
-                    return FindUpstreamPropertyByFullName(collectionNavigationPropertyElement.Element(XNAME_ItemKey)?.Value);
-                default:
-                    return null;
-            }
-        }
-
-        XText ToWhiteSpaceNormalized(XText source)
+        static XText ToWhiteSpaceNormalized(XText source)
         {
             string text = source.Value;
             if (NormalizeNewLineRegex.IsMatch(text))
@@ -1318,11 +679,10 @@ namespace FsInfoCat.UnitTests.DbUnitTestHelpers
                 text = NormalizeWsRegex.Replace(text, " ");
             return new XText(StripWsRegex.IsMatch(text) ? StripWsRegex.Replace(text, "") : text);
         }
-
-        XElement WsNormalizedWithoutElementNamespace(XElement sourceParent)
+        static XElement WsNormalizedWithoutElementNamespace(XElement sourceParent)
         {
-            if (sourceParent.Name.LocalName == "langword")
-                return new XElement(XNamespace.None.GetName("see"), new XAttribute("langword", sourceParent.Value));
+            if (sourceParent.Name.LocalName == XNAME_langword)
+                return new XElement(XNamespace.None.GetName(XNAME_see), new XAttribute(XNAME_langword, sourceParent.Value));
             XElement resultElement = new(XNamespace.None.GetName(sourceParent.Name.LocalName));
             foreach (XAttribute attribute in sourceParent.Attributes())
                 resultElement.Add(new XAttribute(attribute));
@@ -1342,11 +702,10 @@ namespace FsInfoCat.UnitTests.DbUnitTestHelpers
             }
             return resultElement;
         }
-
-        XElement WithoutElementNamespace(XElement sourceParent)
+        static XElement WithoutElementNamespace(XElement sourceParent)
         {
-            if (sourceParent.Name.LocalName == "langword")
-                return new XElement(XNamespace.None.GetName("see"), new XAttribute("langword", sourceParent.Value));
+            if (sourceParent.Name.LocalName == XNAME_langword)
+                return new XElement(XNamespace.None.GetName(XNAME_see), new XAttribute(XNAME_langword, sourceParent.Value));
             XElement resultElement = new(XNamespace.None.GetName(sourceParent.Name.LocalName));
             foreach (XAttribute attribute in sourceParent.Attributes())
                 resultElement.Add(new XAttribute(attribute));
@@ -1366,35 +725,7 @@ namespace FsInfoCat.UnitTests.DbUnitTestHelpers
             }
             return resultElement;
         }
-
-        IEnumerable<XElement> GetByNames(XElement source, params XName[] names) => names.SelectMany(n => source.Elements(n));
-
-        string[] ToXmlLines(IEnumerable<XElement> elements)
-        {
-            if (elements is null || !elements.Any())
-                return Array.Empty<string>();
-            using StringWriter stringWriter = new();
-            XDocument doc = new(new XElement(WsNormalizedWithoutElementNamespace(elements.First())));
-            using (XmlWriter writer = XmlWriter.Create(stringWriter, new XmlWriterSettings() { Indent = true, OmitXmlDeclaration = true }))
-            {
-                doc.WriteTo(writer);
-                writer.Flush();
-            }
-            foreach (XElement e in elements.Skip(1))
-            {
-                stringWriter.WriteLine();
-                using XmlWriter xmlWriter = XmlWriter.Create(stringWriter, new XmlWriterSettings() { Indent = true, OmitXmlDeclaration = true });
-                doc = new XDocument(new XElement(WsNormalizedWithoutElementNamespace(e)));
-                doc.WriteTo(xmlWriter);
-                xmlWriter.Flush();
-            }
-            string result = stringWriter.ToString();
-            string[] lines = NewLineRegex.IsMatch(result) ? NewLineRegex.Split(result) : new string[] { result };
-            int trimLength = lines.Select(t => LeadingWsRegex.Match(t)).Select(m => m.Success ? m.Length : 0).Min();
-            return (trimLength > 0) ? lines.Select(t => t.Substring(trimLength)).ToArray() : lines;
-        }
-
-        Type ToUnderlyingType(Type type)
+        static Type ToUnderlyingType(Type type)
         {
             if (type is null)
                 return null;
@@ -1435,66 +766,62 @@ namespace FsInfoCat.UnitTests.DbUnitTestHelpers
             }
             return type;
         }
-
-        string ToSqlTypeName(Type type, out string fullName, out Type dbCompatible)
+        static int FindPrimeNumber(int startValue)
         {
-            if (type is null)
+            try
             {
-                fullName = "NULL";
-                dbCompatible = null;
-                return fullName;
+                if ((Math.Abs(startValue) & 1) == 0)
+                    startValue++;
+                while (!IsPrimeNumber(startValue))
+                    startValue += 2;
             }
-            dbCompatible = ToUnderlyingType(type);
-            if (dbCompatible.IsPrimitive)
-            {
-                if (dbCompatible == typeof(char))
-                {
-                    fullName = "CHARACTER(1)";
-                    return "CHARACTER";
-                }
-                if (dbCompatible == typeof(bool))
-                    fullName = "BIT";
-                else if (dbCompatible == typeof(byte))
-                    fullName = "UNSIGNED TINYINT";
-                else if (dbCompatible == typeof(sbyte))
-                    fullName = "TINYINT";
-                else if (dbCompatible == typeof(short))
-                    fullName = "SMALLINT";
-                else if (dbCompatible == typeof(ushort))
-                    fullName = "UNSIGNED SMALLINT";
-                else if (dbCompatible == typeof(int))
-                    fullName = "INT";
-                else if (dbCompatible == typeof(uint))
-                    fullName = "UNSIGNED INT";
-                else if (dbCompatible == typeof(long))
-                    fullName = "BIGINT";
-                else if (dbCompatible == typeof(ulong))
-                    fullName = "UNSIGNED BIGINT";
-                else
-                    fullName = "REAL";
-            }
-            else if (dbCompatible == typeof(decimal))
-                fullName = "NUMERIC";
-            else if (dbCompatible == typeof(DateTime))
-                fullName = "DATETIME";
-            else if (dbCompatible == typeof(DateTimeOffset))
-                fullName = "DATETIMEOFFSET";
-            else if (dbCompatible == typeof(TimeSpan))
-                fullName = "TIME";
-            else if (dbCompatible == typeof(Guid))
-                fullName = "UNIQUEIDENTIFIER";
-            else if (dbCompatible == typeof(string))
-                fullName = "TEXT";
-            else
-                fullName = "BLOB";
-            return fullName;
+            catch (OverflowException) { return 1; }
+            return startValue;
         }
+        static bool IsPrimeNumber(int value)
+        {
+            if (((value = Math.Abs(value)) & 1) == 0)
+                return false;
+            for (int i = value >> 1; i > 1; i--)
+            {
+                if (value % i == 0)
+                    return false;
+            }
+            return true;
+        }
+        interface IElementCacheItem<T> { T Value { get; } }
+        public class DefaultValueCacheItem<T> : IElementCacheItem<T> { public T Value { get; } public DefaultValueCacheItem(T value) { Value = value; } }
+        public class EnumTypeCacheItem : IElementCacheItem<XElement> { public XElement Value { get; } public EnumTypeCacheItem(XElement value) { Value = value; } }
+        public class RelatedValueCacheItem<T> : IElementCacheItem<T> { public T Value { get; } public RelatedValueCacheItem(T value) { Value = value; } }
+        public class ImmediateBaseValuesCacheItem<T> : IElementCacheItem<T[]> { public T[] Value { get; } public ImmediateBaseValuesCacheItem(T[] value) { Value = value; } }
+        public class AllBaseValuesCacheItem<T> : IElementCacheItem<T[]> { public T[] Value { get; } public AllBaseValuesCacheItem(T[] value) { Value = value; } }
+        public class ImmediateMembersCacheItem<T> : IElementCacheItem<T[]> { public T[] Value { get; } public ImmediateMembersCacheItem(T[] value) { Value = value; } }
+        public class AllMembersCacheItem<T> : IElementCacheItem<T[]> { public T[] Value { get; } public AllMembersCacheItem(T[] value) { Value = value; } }
+        public class PropertyInheritanceInfo
+        {
+            public XElement BaseDefinitionElement { get; }
+            public bool IsNew { get; }
+            public bool DoNotEmit { get; }
+            public XElement[] InheritedProperties { get; }
+            public XElement Source { get; }
+            public PropertyInheritanceInfo(XElement baseDefinitionElement, bool isNew, bool doNotEmit, XElement[] inheritedProperties, XElement source)
+            {
+                BaseDefinitionElement = baseDefinitionElement;
+                IsNew = isNew;
+                DoNotEmit = doNotEmit;
+                InheritedProperties = inheritedProperties;
+                Source = source;
+            }
+        }
+        public class AllBasePropertiesCacheItem : IElementCacheItem<PropertyInheritanceInfo> { public PropertyInheritanceInfo Value { get; } public AllBasePropertiesCacheItem(PropertyInheritanceInfo value) { Value = value; } }
+
+        #endregion
 
         #endregion
 
         #region EntityTypes.tt
 
-        public void GenerateEntityTypes()
+        public void EntityTypes()
         {
             #region TemplatedText
 
@@ -1530,7 +857,7 @@ namespace <#={DefaultNamespace}#>
                 string typeName = enumElement.Attribute(XNAME_Name)?.Value;
                 XName elementName = enumElement.Name;
                 if (string.IsNullOrWhiteSpace(typeName))
-                    WriteLine($"#warning {XNAME_Name} attribute missing or empty for /{enumElement.Parent.Parent.Parent.Name}/{enumElement.Parent.Parent.Name}/{XNAME_EnumTypes}/{elementName}[(enumElement.NodesBeforeSelf().OfType<XElement>().Count(e => e.Name == elementName) + 1)]");
+                    WriteLine($"#warning {XNAME_Name} attribute missing or empty for /{enumElement.Parent.Parent.Parent.Name}/{enumElement.Parent.Parent.Name}/{XNAME_EnumTypes}/{elementName}[{(enumElement.NodesBeforeSelf().OfType<XElement>().Count(e => e.Name == elementName) + 1)}]");
                 else
                 {
                     string enumXPath = $"/{enumElement.Parent.Parent.Parent.Name}/{enumElement.Parent.Parent.Name}/{XNAME_EnumTypes}/{elementName}[@Name='{typeName}']";
@@ -1624,7 +951,6 @@ namespace <#=DefaultNamespace#>.Local
             #endregion
 
             PushIndent("    ");
-
             isSubsequentMember = GenerateEnumTypes(entityDefinitionsElement.Elements(XNAME_Local).Elements(XNAME_EnumTypes).Elements());
             GenerateEntityTypes(entityDefinitionsElement.Elements(XNAME_Local).Elements(XNAME_Entity), isSubsequentMember);
             PopIndent();
@@ -1652,14 +978,14 @@ namespace <#=DefaultNamespace#>.Upstream
             #endregion
         }
 
-        IEnumerable<string> GetBaseTypeNames(XElement entityElement)
+        static IEnumerable<string> GetBaseTypeNames(XElement entityElement)
         {
             XElement parent = entityElement?.Parent;
             if (parent is null || entityElement?.Name != XNAME_Entity)
                 return Enumerable.Empty<string>();
 
-            IEnumerable<string> extends = entityElement.Elements().Where(e => e.Name == XNAME_ExtendsEntity || e.Name == XNAME_ExtendsGenericEntity).Attributes(XNAME_Type).Select(a => a.Value);
-            IEnumerable<string> implements = entityElement.Elements().Where(e => e.Name == XNAME_Implements || e.Name == XNAME_ImplementsEntity || e.Name == XNAME_ImplementsGenericEntity).Attributes(XNAME_Type).Select(a => a.Value);
+            IEnumerable<string> extends = GetElementsByNames(entityElement, XNAME_ExtendsEntity, XNAME_ExtendsGenericEntity).Attributes(XNAME_Type).Select(a => a.Value);
+            IEnumerable<string> implements = GetElementsByNames(entityElement, XNAME_Implements, XNAME_ImplementsEntity, XNAME_ImplementsGenericEntity).Attributes(XNAME_Type).Select(a => a.Value);
             switch (parent.Name.LocalName)
             {
                 case NAME_Root:
@@ -1674,10 +1000,9 @@ namespace <#=DefaultNamespace#>.Upstream
             }
             return extends.Select(n => n.Replace("{", "<").Replace("}", ">"));
         }
-
         void WriteAmbientValueAttribute(XElement memberElement)
         {
-            string ambientValue = memberElement.Elements("AmbientString").Attributes(XNAME_Value).Select(a => a.Value).FirstOrDefault();
+            string ambientValue = memberElement.Elements(XNAME_AmbientString).Attributes(XNAME_Value).Select(a => a.Value).FirstOrDefault();
             if (ambientValue is not null)
             {
                 Write("[AmbientValue(\"");
@@ -1696,7 +1021,7 @@ namespace <#=DefaultNamespace#>.Upstream
                     return;
                 }
             }
-            ambientValue = memberElement.Elements("AmbientUInt").Attributes(XNAME_Value).Select(a => a.Value).FirstOrDefault();
+            ambientValue = memberElement.Elements(XNAME_AmbientUInt).Attributes(XNAME_Value).Select(a => a.Value).FirstOrDefault();
             if (!string.IsNullOrWhiteSpace(ambientValue))
             {
                 Write("[AmbientValue(");
@@ -1704,7 +1029,7 @@ namespace <#=DefaultNamespace#>.Upstream
                 WriteLine("u)]");
                 return;
             }
-            ambientValue = memberElement.Elements("AmbientLong").Attributes(XNAME_Value).Select(a => a.Value).FirstOrDefault();
+            ambientValue = memberElement.Elements(XNAME_AmbientLong).Attributes(XNAME_Value).Select(a => a.Value).FirstOrDefault();
             if (!string.IsNullOrWhiteSpace(ambientValue))
             {
                 Write("[AmbientValue(");
@@ -1712,7 +1037,7 @@ namespace <#=DefaultNamespace#>.Upstream
                 WriteLine("L)]");
                 return;
             }
-            ambientValue = memberElement.Elements("AmbientULong").Attributes(XNAME_Value).Select(a => a.Value).FirstOrDefault();
+            ambientValue = memberElement.Elements(XNAME_AmbientULong).Attributes(XNAME_Value).Select(a => a.Value).FirstOrDefault();
             if (!string.IsNullOrWhiteSpace(ambientValue))
             {
                 Write("[AmbientValue(");
@@ -1750,7 +1075,6 @@ namespace <#=DefaultNamespace#>.Upstream
                 }
             }
         }
-
         void WriteDisplayAttribute(string memberName, Func<XName, IEnumerable<XAttribute>> getAttributes, string typeName = null)
         {
             string displayNameResource = getAttributes(XNAME_DisplayNameResource).Select(a => a.Value).DefaultIfEmpty(string.IsNullOrWhiteSpace(typeName) ?
@@ -1786,7 +1110,6 @@ namespace <#=DefaultNamespace#>.Upstream
                 WriteLine("))]");
             }
         }
-
         void GenerateXmlDoc(XElement xmlDocElement)
         {
             if (xmlDocElement is null)
@@ -1867,7 +1190,6 @@ namespace <#=DefaultNamespace#>.Upstream
             Write("/// ");
             WriteLine(lines.Last().Trim());
         }
-
         void GenerateEnumType(XElement enumElement)
         {
             GenerateXmlDoc(enumElement.Element(XNAME_summary));
@@ -1878,7 +1200,7 @@ namespace <#=DefaultNamespace#>.Upstream
                     e.RemoveAll();
                 GenerateXmlDoc(e);
             }
-            if (enumElement.Attributes(XNAME_IsFlags).Any(a => a.Value == "true"))
+            if (enumElement.Attributes(XNAME_IsFlags).Any(a => FromXmlBoolean(a.Value) ?? false))
                 WriteLine("[Flags]");
             Write("public enum ");
             string typeName = enumElement.Attribute(XNAME_Name)?.Value;
@@ -1918,7 +1240,6 @@ namespace <#=DefaultNamespace#>.Upstream
             WriteLine("");
             WriteLine("}");
         }
-
         bool GenerateEnumTypes(IEnumerable<XElement> enumElements)
         {
             if (!enumElements.Any())
@@ -1931,7 +1252,6 @@ namespace <#=DefaultNamespace#>.Upstream
             }
             return true;
         }
-
         void GenerateEntityTypes(IEnumerable<XElement> entityElements, bool isSubsequentMember)
         {
             if (isSubsequentMember)
@@ -1943,7 +1263,94 @@ namespace <#=DefaultNamespace#>.Upstream
                 GenerateEntityInterface(typeElement);
             }
         }
+        void GenerateProperty(string typeName, PropertyInheritanceInfo property)
+        {
+            string propertyName = property.BaseDefinitionElement.Attribute(XNAME_Name)?.Value;
+            XElement commentDocElement = property.Source.Element(XNAME_summary) ?? property.InheritedProperties.Elements(XNAME_summary).FirstOrDefault();
+            if (commentDocElement is null)
+                WriteLine($"#warning No summary element found for {typeName}.{propertyName}");
+            else
+                GenerateXmlDoc(commentDocElement);
+            commentDocElement = property.Source.Element(XNAME_value) ?? property.InheritedProperties.Elements(XNAME_value).FirstOrDefault();
+            if (commentDocElement is null)
+                WriteLine($"#warning No value element found for {typeName}.{propertyName}");
+            else
+                GenerateXmlDoc(commentDocElement);
+            commentDocElement = property.Source.Element(XNAME_remarks) ?? property.InheritedProperties.Elements(XNAME_remarks).FirstOrDefault();
+            if (commentDocElement is not null)
+                GenerateXmlDoc(commentDocElement);
+            foreach (XElement e in property.Source.Elements(XNAME_seealso).Concat(property.InheritedProperties.Elements(XNAME_seealso)).Distinct())
+            {
+                if (!e.IsEmpty && e.Value.Trim().Length == 0)
+                    e.RemoveAll();
+                GenerateXmlDoc(e);
+            }
+            WriteDisplayAttribute(propertyName, n => property.Source.Attributes(n).Concat(property.InheritedProperties.Attributes(n)));
+            bool allowsNull = property.BaseDefinitionElement.Attributes(XNAME_AllowNull).Any(a => FromXmlBoolean(a.Value) ?? false) || property.BaseDefinitionElement.Elements(XNAME_DefaultNull).Any();
+            if (property.IsNew)
+                Write("new ");
+            switch (property.Source.Name.LocalName)
+            {
+                case NAME_Byte:
+                case NAME_SByte:
+                case NAME_Short:
+                case NAME_UShort:
+                case NAME_Int:
+                case NAME_UInt:
+                case NAME_Long:
+                case NAME_ULong:
+                case NAME_Float:
+                case NAME_Double:
+                    Write(property.Source.Name.LocalName.ToLower());
+                    Write(allowsNull ? "? " : " ");
+                    break;
+                case NAME_Text:
+                case NAME_NVarChar:
+                    Write("string ");
+                    break;
+                case NAME_VolumeIdentifier:
+                case NAME_DriveType:
+                case NAME_MD5Hash:
+                case NAME_DateTime:
+                    Write(property.Source.Name.LocalName);
+                    Write(allowsNull ? "? " : " ");
+                    break;
+                case NAME_ByteValues:
+                case NAME_MultiStringValue:
+                    Write(property.Source.Name.LocalName);
+                    Write(" ");
+                    break;
+                case NAME_UniqueIdentifier:
+                case NAME_NewIdNavRef:
+                    Write(allowsNull ? "Guid? " : "Guid ");
+                    break;
+                case NAME_Bit:
+                    Write(allowsNull ? "bool? " : "bool ");
+                    break;
+                case NAME_Enum:
+                    Write(property.Source.Attribute(XNAME_Type)?.Value);
+                    Write(allowsNull ? "? " : " ");
+                    break;
+                case NAME_CollectionNavigation:
+                case NAME_NewCollectionNavigation:
+                    Write("IEnumerable<");
+                    Write(property.Source.Attribute(XNAME_ItemType)?.Value ?? GetItemEntity(property.Source)?.Attribute(XNAME_Name)?.Value);
+                    Write("> ");
+                    break;
+                case NAME_RelatedEntity:
+                case NAME_NewRelatedEntity:
+                    Write(property.Source.Attribute(XNAME_TypeDef)?.Value ?? GetRelatedEntity(property.Source)?.Attribute(XNAME_Name)?.Value);
+                    Write(" ");
+                    break;
+                default:
+                    WriteLine($"#warning Unknown element: {property.Source.Name.LocalName}");
+                    Write("object ");
+                    break;
+            }
 
+            Write(propertyName);
+            WriteLine(property.BaseDefinitionElement.Attributes(XNAME_IsGenericWritable).Any(a => FromXmlBoolean(a.Value) ?? false) ? " { get; set; }" : " { get; }");
+        }
         void GenerateEntityInterface(XElement entityElement)
         {
             XElement[] baseEntities = GetAllBaseEntities(entityElement);
@@ -1966,6 +1373,7 @@ namespace <#=DefaultNamespace#>.Upstream
                     e.RemoveAll();
                 GenerateXmlDoc(e);
             }
+            PropertyInheritanceInfo[] properties = entityElement.Elements(XNAME_Properties).Elements().Select(e => GetAllBaseProperties(e)).Where(e => !e.DoNotEmit).ToArray();
             Write("public interface ");
             if (baseTypeNames.Length > 0)
             {
@@ -1980,111 +1388,33 @@ namespace <#=DefaultNamespace#>.Upstream
                         Write(", ");
                     }
                 }
+                if (properties.Length == 0)
+                {
+                    Write(baseTypeNames.Last());
+                    WriteLine("{ }");
+                    return;
+                }
                 WriteLine(baseTypeNames.Last());
             }
             else
+            {
+                if (properties.Length == 0)
+                {
+                    Write(typeName);
+                    WriteLine("{ }");
+                    return;
+                }
                 WriteLine(typeName);
+            }
+
             WriteLine("{");
             PushIndent("    ");
-            bool isSubsequentMember = false;
-            foreach (XElement propertyElement in entityElement.Elements(XNAME_Properties).Elements())
-            {
-                if (propertyElement.Name.NamespaceName.Length > 0)
-                    continue;
-                string propertyName = propertyElement.Attribute(XNAME_Name)?.Value;
-                if (string.IsNullOrEmpty(propertyName))
-                    continue;
-                XElement[] inheritedProperties = GetAllBaseProperties(propertyElement, baseEntities, out XElement baseProperty, out bool isNew, out bool doNotEmit);
-                if (doNotEmit)
-                    continue;
-                if (isSubsequentMember)
-                    WriteLine("");
-                else
-                    isSubsequentMember = true;
-                commentDocElement = propertyElement.Element(XNAME_summary) ?? inheritedProperties.Elements(XNAME_summary).FirstOrDefault();
-                if (commentDocElement is null)
-                    WriteLine($"#warning No summary element found for {typeName}.{propertyName}");
-                else
-                    GenerateXmlDoc(commentDocElement);
-                commentDocElement = propertyElement.Element(XNAME_value) ?? inheritedProperties.Elements(XNAME_value).FirstOrDefault();
-                if (commentDocElement is null)
-                    WriteLine($"#warning No value element found for {typeName}.{propertyName}");
-                else
-                    GenerateXmlDoc(commentDocElement);
-                commentDocElement = propertyElement.Element(XNAME_remarks) ?? inheritedProperties.Elements(XNAME_remarks).FirstOrDefault();
-                if (commentDocElement is not null)
-                    GenerateXmlDoc(commentDocElement);
-                foreach (XElement e in propertyElement.Elements(XNAME_seealso).Concat(inheritedProperties.Elements(XNAME_seealso)).Distinct())
-                {
-                    if (!e.IsEmpty && e.Value.Trim().Length == 0)
-                        e.RemoveAll();
-                    GenerateXmlDoc(e);
-                }
-                WriteDisplayAttribute(propertyName, n => propertyElement.Attributes(n).Concat(inheritedProperties.Attributes(n)));
-                bool allowsNull = baseProperty.Attributes(XNAME_AllowNull).Any(a => a.Value == "true") || baseProperty.Elements(XNAME_DefaultNull).Any();
-                if (isNew)
-                    Write("new ");
-                switch (propertyElement.Name.LocalName)
-                {
-                    case "Byte":
-                    case "SByte":
-                    case "Short":
-                    case "UShort":
-                    case "Int":
-                    case "UInt":
-                    case "Long":
-                    case "ULong":
-                    case "Float":
-                    case "Double":
-                        Write(propertyElement.Name.LocalName.ToLower());
-                        Write(allowsNull ? "? " : " ");
-                        break;
-                    case "Text":
-                    case "NVarChar":
-                        Write("string ");
-                        break;
-                    case "VolumeIdentifier":
-                    case "DriveType":
-                    case "MD5Hash":
-                    case "DateTime":
-                        Write(propertyElement.Name.LocalName);
-                        Write(allowsNull ? "? " : " ");
-                        break;
-                    case "ByteValues":
-                    case "MultiStringValue":
-                        Write(propertyElement.Name.LocalName);
-                        Write(" ");
-                        break;
-                    case "UniqueIdentifier":
-                    case "NewIdNavRef":
-                        Write(allowsNull ? "Guid? " : "Guid ");
-                        break;
-                    case "Bit":
-                        Write(allowsNull ? "bool? " : "bool ");
-                        break;
-                    case "Enum":
-                        Write(propertyElement.Attribute(XNAME_Type)?.Value);
-                        Write(allowsNull ? "? " : " ");
-                        break;
-                    case "CollectionNavigation":
-                    case "NewCollectionNavigation":
-                        Write("IEnumerable<");
-                        Write(propertyElement.Attribute(XNAME_ItemType)?.Value ?? GetCollectionNavigationItemEntity(propertyElement)?.Attribute(XNAME_Name)?.Value);
-                        Write("> ");
-                        break;
-                    case "RelatedEntity":
-                    case "NewRelatedEntity":
-                        Write(propertyElement.Attribute(XNAME_TypeDef)?.Value ?? GetRelatedEntity(propertyElement)?.Attribute(XNAME_Name)?.Value);
-                        Write(" ");
-                        break;
-                    default:
-                        WriteLine($"#warning Unknown element: {propertyElement.Name.LocalName}");
-                        Write("object ");
-                        break;
-                }
 
-                Write(propertyName);
-                WriteLine(baseProperty.Attributes(XNAME_IsGenericWritable).Any(a => a.Value == "true") ? " { get; set; }" : " { get; }");
+            GenerateProperty(typeName, properties[0]);
+            foreach (PropertyInheritanceInfo p in properties.Skip(1))
+            {
+                WriteLine("");
+                GenerateProperty(typeName, p);
             }
 
             PopIndent();
@@ -2098,15 +1428,16 @@ namespace <#=DefaultNamespace#>.Upstream
         void GenerateCreateTableSql(string tableName, XElement entityElement)
         {
             string entityName = entityElement.Attribute(XNAME_Name)?.Value;
-            Write("CREATE TABLE IF NOT EXISTS ");
+            Write("CREATE TABLE IF NOT EXISTS \"");
             Write(tableName);
-            WriteLine(" (");
+            WriteLine("\" (");
             PushIndent("    ");
-            Collection<(string Name, LinkedList<XElement> Sources)> collection = new();
-            GetAllProperties(entityElement, collection);
-            (string Name, LinkedList<XElement> Sources) firstCol = new(GenerateTableColumnSql(tableName, entityName, collection[0].Name, collection[0].Sources, out string comment), collection[0].Sources);
-            (string Name, LinkedList<XElement> Sources)[] columns = new (string Name, LinkedList<XElement> Sources)[] { firstCol }
-                .Concat(collection.Skip(1).Select<(string Name, LinkedList<XElement> Sources), (string Name, LinkedList<XElement> Sources)>(t =>
+            (string Name, List<XElement> Sources)[] collection = GetAllProperties(entityElement)
+                .Where(t => !t.Sources.Any(e => e.Name == XNAME_CollectionNavigation || (e.Name == XNAME_RelatedEntity && e.Attribute(XNAME_FkPropertyName) is null))).ToArray();
+            (string Name, List<XElement> Sources) firstCol = new(GenerateTableColumnSql(tableName, entityName, collection[0].Name, collection[0].Sources, out string comment),
+                collection[0].Sources);
+            (string Name, List<XElement> Sources)[] columns = new (string Name, List<XElement> Sources)[] { firstCol }
+                .Concat(collection.Skip(1).Select<(string Name, List<XElement> Sources), (string Name, List<XElement> Sources)>(t =>
                 {
                     if (string.IsNullOrEmpty(comment))
                         WriteLine(",");
@@ -2115,97 +1446,22 @@ namespace <#=DefaultNamespace#>.Upstream
                         Write(", -- ");
                         WriteLine(comment);
                     }
-                    (string Name, LinkedList<XElement> Sources) r = new(GenerateTableColumnSql(tableName, entityName, t.Name, t.Sources, out string comment2), t.Sources);
+                    (string Name, List<XElement> Sources) r = new(GenerateTableColumnSql(tableName, entityName, t.Name, t.Sources, out string comment2), t.Sources);
                     comment = comment2;
                     return r;
                 }).Where(t => t.Name is not null)).ToArray();
-            string[] keyColumns = columns.Where(c => c.Sources.Any(e => e.Attribute(XNAME_IsPrimaryKey)?.Value == "true" && e.Name == XNAME_UniqueIdentifier))
+            string[] keyColumns = columns.Where(c => c.Sources.Any(e => (FromXmlBoolean(e.Attribute(XNAME_IsPrimaryKey)?.Value) ?? false) && e.Name == XNAME_UniqueIdentifier))
                 .Select(c => $"\"{c.Name}\"").ToArray();
-            Collection<string> constraints = new();
-            foreach (XElement element in new XElement[] { entityElement }.Concat(GetAllBaseEntities(entityElement)))
+            CheckConstraint constraints = null;
+            foreach (XElement element in new XElement[] { entityElement }.Concat(GetAllBaseEntities(entityElement)).Elements())
             {
-                if (element.Name == XNAME_EitherOrConstraint)
+                if (element.Name == XNAME_Check)
                 {
-                    string p1 = element.Elements(XNAME_Property).Take(1).Select(p =>
-                    {
-                        string disallowEmptyIfNotNull = p.Attribute(XNAME_DisallowEmptyIfNotNull)?.Value;
-                        if (string.IsNullOrWhiteSpace(disallowEmptyIfNotNull))
-                            return $"\"{p.Attribute(XNAME_Name)?.Value}\" IS NULL";
-                        return $"(\"{p.Attribute(XNAME_Name)?.Value}\" IS NULL OR length(trim(\"{disallowEmptyIfNotNull}\")>0)";
-                    }).First();
-                    string p2 = element.Elements(XNAME_Property).Skip(1).Take(1).Select(p =>
-                    {
-                        string disallowEmptyIfNotNull = p.Attribute(XNAME_DisallowEmptyIfNotNull)?.Value;
-                        if (string.IsNullOrWhiteSpace(disallowEmptyIfNotNull))
-                            return $"\"{p.Attribute(XNAME_Name)?.Value}\" IS NULL";
-                        return $"(\"{p.Attribute(XNAME_Name)?.Value}\" IS NOT NULL AND length(trim(\"{disallowEmptyIfNotNull}\")>0)";
-                    }).First();
-                    string value = $"{p2} OR {p1}";
-                    if (constraints.Contains(value))
-                        continue;
-                    value = $"{p1} OR {p2}";
-                    if (!constraints.Contains(value))
-                        constraints.Add(value);
-                }
-                else if (element.Name == XNAME_IsNullSameConstraint)
-                {
-                    string[] values = element.Elements(XNAME_Property).Attributes(XNAME_Name).Select(a => a.Value).ToArray();
-                    string value = $"\"{values[1]}\" IS NULL OR \"{values[0]}\" IS NOT NULL";
-                    if (constraints.Contains(value))
-                        continue;
-                    value = $"\"{values[0]}\" IS NULL OR \"{values[1]}\" IS NOT NULL";
-                    if (!constraints.Contains(value))
-                        constraints.Add(value);
-                }
-                else if (element.Name == XNAME_FieldComparisonConstraint)
-                {
-                    string leftProperty = element.Attribute(XNAME_LeftProperty)?.Value;
-                    string rightProperty = element.Attribute(XNAME_RightProperty)?.Value;
-                    string value;
-                    switch (element.Attribute(XNAME_Operator)?.Value ?? "")
-                    {
-                        case "LessThan":
-                            value = $"\"{rightProperty}\">=\"{leftProperty}\"";
-                            if (constraints.Contains(value))
-                                continue;
-                            value = $"\"{leftProperty}\"<\"{rightProperty}\"";
-                            break;
-                        case "NotGreaterThan":
-                            value = $"\"{rightProperty}\">\"{leftProperty}\"";
-                            if (constraints.Contains(value))
-                                continue;
-                            value = $"\"{leftProperty}\"<=\"{rightProperty}\"";
-                            break;
-                        case "NotEqualTo":
-                            value = $"\"{rightProperty}\"<>\"{leftProperty}\"";
-                            if (constraints.Contains(value))
-                                continue;
-                            value = $"\"{leftProperty}\"<>\"{rightProperty}\"";
-                            break;
-                        case "NotLessThan":
-                            value = $"\"{rightProperty}\"<\"{leftProperty}\"";
-                            if (constraints.Contains(value))
-                                continue;
-                            value = $"\"{leftProperty}\">=\"{rightProperty}\"";
-                            break;
-                        case "GreaterThan":
-                            value = $"\"{rightProperty}\"<=\"{leftProperty}\"";
-                            if (constraints.Contains(value))
-                                continue;
-                            value = $"\"{leftProperty}\">\"{rightProperty}\"";
-                            break;
-                        default:
-                            value = $"\"{rightProperty}\"=\"{leftProperty}\"";
-                            if (constraints.Contains(value))
-                                continue;
-                            value = $"\"{leftProperty}\"=\"{rightProperty}\"";
-                            break;
-                    }
-                    if (!constraints.Contains(value))
-                        constraints.Add(value);
+                    CheckConstraint cc = CheckConstraint.Import(element);
+                    if (cc is not null)
+                        constraints = (constraints is null) ? cc : constraints.And(cc);
                 }
             }
-            // TODO: Need to change from appending comma/newline in case there are no constraints or key columns
             if (keyColumns.Length == 1)
             {
                 if (string.IsNullOrEmpty(comment))
@@ -2218,12 +1474,12 @@ namespace <#=DefaultNamespace#>.Upstream
                 }
                 Write("CONSTRAINT \"PK_");
                 Write(tableName);
-                Write("\" PRIMARY KEY(\"");
+                Write("\" PRIMARY KEY(");
                 Write(keyColumns[0]);
-                if (constraints.Count > 0)
-                    Write("\")");
+                if (constraints is null)
+                    WriteLine(")");
                 else
-                    WriteLine("\")");
+                    Write(")");
             }
             else if (keyColumns.Length > 1)
             {
@@ -2244,12 +1500,12 @@ namespace <#=DefaultNamespace#>.Upstream
                     Write(", ");
                     Write(c);
                 }
-                if (constraints.Count > 0)
-                    Write("\")");
-                else
+                if (constraints is null)
                     WriteLine("\")");
+                else
+                    Write("\")");
             }
-            if (constraints.Count == 1)
+            if (constraints is not null)
             {
                 if (string.IsNullOrEmpty(comment))
                     WriteLine(",");
@@ -2260,27 +1516,8 @@ namespace <#=DefaultNamespace#>.Upstream
                     comment = null;
                 }
                 Write("CHECK(");
-                Write(constraints[0]);
+                Write(constraints.ToSqlString());
                 WriteLine(")");
-            }
-            else if (constraints.Count > 1)
-            {
-                if (string.IsNullOrEmpty(comment))
-                    WriteLine(",");
-                else
-                {
-                    Write(", -- ");
-                    WriteLine(comment);
-                    comment = null;
-                }
-                Write("CHECK((");
-                Write(constraints[0]);
-                foreach (string c in constraints.Skip(1))
-                {
-                    Write(") AND (");
-                    Write(c);
-                }
-                WriteLine("))");
             }
             else if (keyColumns.Length == 0)
             {
@@ -2294,104 +1531,129 @@ namespace <#=DefaultNamespace#>.Upstream
             }
             PopIndent();
             WriteLine(");");
-            foreach ((string Name, LinkedList<XElement> Sources) tuple in columns)
-                GenerateTableIndexSql(tableName, entityName, tuple.Name, tuple.Sources);
+            foreach ((string Name, List<XElement> Sources) in columns)
+            {
+                if (Sources.Attributes(XNAME_IsIndexed).Any(a => FromXmlBoolean(a.Value) ?? false))
+                {
+                    WriteLine("");
+                    Write($"CREATE INDEX \"IDX_{tableName}_{Name}\" ON \"{tableName}\" (\"{Name}\"");
+                    switch (Sources.Last().Name.LocalName)
+                    {
+                        case NAME_RelatedEntity:
+                        case NAME_UniqueIdentifier:
+                        case NAME_VolumeIdentifier:
+                            Write(" COLLATE NOCASE");
+                            break;
+                        case NAME_NVarChar:
+                            XAttribute attribute = Sources.Attributes(XNAME_IsCaseSensitive).FirstOrDefault();
+                            if (attribute is not null)
+                            {
+                                Write(" COLLATE ");
+                                Write((FromXmlBoolean(attribute.Value) ?? false) ? SQL_TYPENAME_BINARY : "NOCASE");
+                            }
+                            break;
+                    }
+                    WriteLine(");");
+                }
+            }
         }
-
         string PropertyElementToSqlType(XElement propertyElement, out string typeName, out bool isNumeric)
         {
             if (propertyElement is null || propertyElement.Name.NamespaceName.Length > 0)
             {
                 isNumeric = false;
-                typeName = "BLOB";
+                typeName = SQL_TYPENAME_BLOB;
                 return typeName;
             }
+
             switch (propertyElement.Name.LocalName)
             {
                 case NAME_Enum:
-                    return PropertyElementToSqlType(FindLocalEnumByName(propertyElement.Attribute(XNAME_Type)?.Value), out typeName, out isNumeric);
+                    string sqlType = PropertyElementToSqlType(FindLocalEnumTypeByName(propertyElement.Attribute(XNAME_Type)?.Value), out typeName, out _);
+                    isNumeric = false;
+                    return sqlType;
                 case NAME_UniqueIdentifier:
                 case NAME_RelatedEntity:
                     isNumeric = false;
-                    typeName = "UNIQUEIDENTIFIER";
+                    typeName = SQL_TYPENAME_UNIQUEIDENTIFIER;
                     return typeName;
                 case NAME_NVarChar:
                     isNumeric = false;
-                    typeName = "NVARCHAR";
+                    typeName = SQL_TYPENAME_NVARCHAR;
                     return $"{typeName}({propertyElement.Attribute(XNAME_MaxLength)?.Value})";
                 case NAME_VolumeIdentifier:
                     isNumeric = false;
-                    typeName = "NVARCHAR";
-                    return "NVARCHAR(1024)";
+                    typeName = SQL_TYPENAME_NVARCHAR;
+                    return $"{typeName}(1024)";
                 case NAME_MultiStringValue:
                 case NAME_Text:
                     isNumeric = false;
-                    typeName = "TEXT";
+                    typeName = SQL_TYPENAME_TEXT;
                     return typeName;
                 case NAME_DateTime:
                     isNumeric = false;
-                    typeName = "DATETIME";
+                    typeName = SQL_TYPENAME_DATETIME;
                     return typeName;
                 case NAME_TimeSpan:
                     isNumeric = false;
-                    typeName = "TIME";
+                    typeName = SQL_TYPENAME_TIME;
                     return typeName;
                 case NAME_Bit:
                     isNumeric = false;
-                    typeName = "BIT";
+                    typeName = SQL_TYPENAME_BIT;
                     return typeName;
                 case NAME_ByteValues:
                     isNumeric = false;
-                    typeName = "VARBINARY";
+                    typeName = SQL_TYPENAME_VARBINARY;
                     return $"{typeName}({propertyElement.Attribute(XNAME_MaxLength)?.Value})";
                 case NAME_MD5Hash:
                     isNumeric = false;
-                    typeName = "BINARY";
-                    return "BINARY(16)";
+                    typeName = SQL_TYPENAME_BINARY;
+                    return $"{typeName}(16)";
                 case NAME_DriveType:
                     isNumeric = false;
-                    typeName = "UNSIGNED TINYINT";
+                    typeName = SQL_TYPENAME_UNSIGNED_TINYINT;
                     return typeName;
                 case NAME_Byte:
                     isNumeric = true;
-                    typeName = "UNSIGNED TINYINT";
+                    typeName = SQL_TYPENAME_UNSIGNED_TINYINT;
                     return typeName;
                 case NAME_SByte:
                     isNumeric = true;
-                    typeName = "TINYINT";
+                    typeName = SQL_TYPENAME_TINYINT;
                     return typeName;
                 case NAME_Short:
                     isNumeric = true;
-                    typeName = "SMALLINT";
+                    typeName = SQL_TYPENAME_SMALLINT;
                     return typeName;
                 case NAME_UShort:
                     isNumeric = true;
-                    typeName = "UNSIGNED SMALLINT";
+                    typeName = SQL_TYPENAME_UNSIGNED_SMALLINT;
                     return typeName;
                 case NAME_Int:
                     isNumeric = true;
-                    typeName = "INT";
+                    typeName = SQL_TYPENAME_INT;
                     return typeName;
                 case NAME_UInt:
                     isNumeric = true;
-                    typeName = "UNSIGNED INT";
+                    typeName = SQL_TYPENAME_UNSIGNED_INT;
                     return typeName;
                 case NAME_Long:
                     isNumeric = true;
-                    typeName = "BIGINT";
+                    typeName = SQL_TYPENAME_BIGINT;
                     return typeName;
                 case NAME_ULong:
                     isNumeric = true;
-                    typeName = "UNSIGNED BIGINT";
+                    typeName = SQL_TYPENAME_UNSIGNED_BIGINT;
                     return typeName;
                 case NAME_Float:
                 case NAME_Double:
                     isNumeric = true;
-                    typeName = "REAL";
+                    typeName = SQL_TYPENAME_REAL;
                     return typeName;
                 case NAME_Decimal:
                     isNumeric = true;
-                    typeName = "NUMERIC";
+                    typeName = SQL_TYPENAME_NUMERIC;
                     return typeName;
                 default:
                     isNumeric = false;
@@ -2399,21 +1661,20 @@ namespace <#=DefaultNamespace#>.Upstream
                     return typeName;
             }
         }
-
-        string GenerateTableColumnSql(string tableName, string entityName, string propertyName, LinkedList<XElement> sources, out string comment)
+        string GenerateTableColumnSql(string tableName, string entityName, string propertyName, IList<XElement> sources, out string comment)
         {
-            XElement baseProperty = sources.Last.Value;
+            XElement baseProperty = sources.First();
             if (baseProperty.Name == XNAME_CollectionNavigation)
             {
                 comment = null;
                 return null;
             }
-            XElement implProperty = sources.First.Value;
+            XElement implProperty = sources.Last();
             string propertyTypeName = baseProperty.Name.LocalName;
-            string colName = implProperty.Attribute(XNAME_ColName)?.Value ?? propertyName;
-            bool isIndexed = sources.Attributes(XNAME_IsIndexed).Any(a => a.Value == "true");
+            string colName = (baseProperty.Name == XNAME_RelatedEntity) ? (baseProperty.Attribute(XNAME_FkPropertyName)?.Value ?? $"{propertyName}Id") :
+                implProperty.Attribute(XNAME_ColName)?.Value ?? propertyName;
             bool defaultNull = sources.Elements(XNAME_DefaultNull).Any();
-            bool allowNull = defaultNull || sources.Attributes(XNAME_AllowNull).Any(a => a.Value == "true");
+            bool allowNull = defaultNull || sources.Attributes(XNAME_AllowNull).Any(a => FromXmlBoolean(a.Value) ?? false);
             Write("\"");
             Write(colName);
             Write("\" ");
@@ -2421,30 +1682,45 @@ namespace <#=DefaultNamespace#>.Upstream
             if (!allowNull)
                 Write(" NOT NULL");
 
+            CheckConstraint check = null;
             if (isNumeric)
             {
                 string minValue = sources.Attributes(XNAME_MinValue).Select(a => a.Value.Trim()).DefaultIfEmpty("").First();
                 string maxValue = sources.Attributes(XNAME_MaxValue).Select(a => a.Value.Trim()).DefaultIfEmpty("").First();
                 if (minValue.Length > 0)
                 {
-                    if (maxValue.Length > 0)
+                    check = propertyTypeName switch
                     {
-                        if (allowNull)
-                            Write($" CHECK(\"{colName}\" IS NULL OR (\"{colName}\">={minValue} AND \"{colName}\"<={maxValue}))");
-                        else
-                            Write($" CHECK(\"{colName}\">={minValue} AND \"{colName}\"<={maxValue})");
-                    }
-                    else if (allowNull)
-                        Write($" CHECK(\"{colName}\" IS NULL OR \"{colName}\">={minValue})");
-                    else
-                        Write($" CHECK(\"{colName}\">={minValue})");
+                        NAME_Byte => ComparisonConstraint.NotLessThan(new SimpleColumnValueReference(colName), ConstantValueReference.Byte(minValue)),
+                        NAME_SByte => ComparisonConstraint.NotLessThan(new SimpleColumnValueReference(colName), ConstantValueReference.SByte(minValue)),
+                        NAME_Short => ComparisonConstraint.NotLessThan(new SimpleColumnValueReference(colName), ConstantValueReference.Short(minValue)),
+                        NAME_UShort => ComparisonConstraint.NotLessThan(new SimpleColumnValueReference(colName), ConstantValueReference.UShort(minValue)),
+                        NAME_UInt => ComparisonConstraint.NotLessThan(new SimpleColumnValueReference(colName), ConstantValueReference.UInt(minValue)),
+                        NAME_Long => ComparisonConstraint.NotLessThan(new SimpleColumnValueReference(colName), ConstantValueReference.Long(minValue)),
+                        NAME_ULong => ComparisonConstraint.NotLessThan(new SimpleColumnValueReference(colName), ConstantValueReference.ULong(minValue)),
+                        NAME_Decimal => ComparisonConstraint.NotLessThan(new SimpleColumnValueReference(colName), ConstantValueReference.Decimal(minValue)),
+                        NAME_Double => ComparisonConstraint.NotLessThan(new SimpleColumnValueReference(colName), ConstantValueReference.Double(minValue)),
+                        NAME_Float => ComparisonConstraint.NotLessThan(new SimpleColumnValueReference(colName), ConstantValueReference.Float(minValue)),
+                        _ => ComparisonConstraint.NotLessThan(new SimpleColumnValueReference(colName), ConstantValueReference.Int(minValue)),
+                    };
                 }
-                else if (maxValue.Length > 0)
+                if (maxValue.Length > 0)
                 {
-                    if (allowNull)
-                        Write($" CHECK(\"{colName}\" IS NULL OR \"{colName}\"<={maxValue})");
-                    else
-                        Write($" CHECK(\"{colName}\"<={maxValue})");
+                    ComparisonConstraint cc = propertyTypeName switch
+                    {
+                        NAME_Byte => ComparisonConstraint.NotLessThan(new SimpleColumnValueReference(colName), ConstantValueReference.Byte(maxValue)),
+                        NAME_SByte => ComparisonConstraint.NotLessThan(new SimpleColumnValueReference(colName), ConstantValueReference.SByte(maxValue)),
+                        NAME_Short => ComparisonConstraint.NotLessThan(new SimpleColumnValueReference(colName), ConstantValueReference.Short(maxValue)),
+                        NAME_UShort => ComparisonConstraint.NotLessThan(new SimpleColumnValueReference(colName), ConstantValueReference.UShort(maxValue)),
+                        NAME_UInt => ComparisonConstraint.NotLessThan(new SimpleColumnValueReference(colName), ConstantValueReference.UInt(maxValue)),
+                        NAME_Long => ComparisonConstraint.NotLessThan(new SimpleColumnValueReference(colName), ConstantValueReference.Long(maxValue)),
+                        NAME_ULong => ComparisonConstraint.NotLessThan(new SimpleColumnValueReference(colName), ConstantValueReference.ULong(maxValue)),
+                        NAME_Decimal => ComparisonConstraint.NotLessThan(new SimpleColumnValueReference(colName), ConstantValueReference.Decimal(maxValue)),
+                        NAME_Double => ComparisonConstraint.NotLessThan(new SimpleColumnValueReference(colName), ConstantValueReference.Double(maxValue)),
+                        NAME_Float => ComparisonConstraint.NotLessThan(new SimpleColumnValueReference(colName), ConstantValueReference.Float(maxValue)),
+                        _ => ComparisonConstraint.NotLessThan(new SimpleColumnValueReference(colName), ConstantValueReference.Int(maxValue)),
+                    };
+                    check = (check is null) ? cc : check.And(cc);
                 }
             }
             else
@@ -2452,65 +1728,58 @@ namespace <#=DefaultNamespace#>.Upstream
                 int minLength;
                 switch (propertyTypeName)
                 {
+                    case NAME_Enum:
+                        XElement enumType = FindLocalEnumTypeByName(baseProperty.Attribute(XNAME_Type)?.Value);
+                        IEnumerable<string> enumValueStrings = enumType.Elements(XNAME_Field).Attributes(XNAME_Value).Select(a => a.Value);
+                        bool isFlags = FromXmlBoolean(baseProperty.Attribute(XNAME_IsFlags)?.Value) ?? false;
+                        check = typeName switch
+                        {
+                            SQL_TYPENAME_TINYINT => GetEnumCheckConstraintMinMax(colName, sbyte.MinValue, sbyte.MaxValue, ConstantValueReference.Of, enumValueStrings.Select(v => XmlConvert.ToSByte(v)), isFlags ? (x, y) => (sbyte)(x | y) : null),
+                            SQL_TYPENAME_UNSIGNED_TINYINT => GetEnumCheckConstraintMinMax(colName, byte.MinValue, byte.MaxValue, ConstantValueReference.Of, enumValueStrings.Select(v => XmlConvert.ToByte(v)), isFlags ? (x, y) => (byte)(x | y) : null),
+                            SQL_TYPENAME_SMALLINT => GetEnumCheckConstraintMinMax(colName, short.MinValue, short.MaxValue, ConstantValueReference.Of, enumValueStrings.Select(v => XmlConvert.ToInt16(v)), isFlags ? (x, y) => (short)(x | y) : null),
+                            SQL_TYPENAME_UNSIGNED_SMALLINT => GetEnumCheckConstraintMinMax(colName, ushort.MinValue, ushort.MaxValue, ConstantValueReference.Of, enumValueStrings.Select(v => XmlConvert.ToUInt16(v)), isFlags ? (x, y) => (ushort)(x | y) : null),
+                            SQL_TYPENAME_UNSIGNED_INT => GetEnumCheckConstraintMinMax(colName, uint.MinValue, uint.MaxValue, ConstantValueReference.Of, enumValueStrings.Select(v => XmlConvert.ToUInt32(v)), isFlags ? (x, y) => x | y : null),
+                            SQL_TYPENAME_BIGINT => GetEnumCheckConstraintMinMax(colName, long.MinValue, long.MaxValue, ConstantValueReference.Of, enumValueStrings.Select(v => XmlConvert.ToInt64(v)), isFlags ? (x, y) => x | y : null),
+                            SQL_TYPENAME_UNSIGNED_BIGINT => GetEnumCheckConstraintMinMax(colName, ulong.MinValue, ulong.MaxValue, ConstantValueReference.Of, enumValueStrings.Select(v => XmlConvert.ToUInt64(v)), isFlags ? (x, y) => x | y : null),
+                            _ => GetEnumCheckConstraintMinMax(colName, int.MinValue, int.MaxValue, ConstantValueReference.Of, enumValueStrings.Select(v => XmlConvert.ToInt32(v)), isFlags ? (x, y) => x | y : null),
+                        };
+                        break;
                     case NAME_NVarChar:
-                        minLength = sources.Attributes(XNAME_MinLength).Select(a => XmlConvert.ToInt32(a.Value.Trim())).DefaultIfEmpty(0).First();
+                        if (sources.Attributes(XNAME_IsNormalized).Any(a => FromXmlBoolean(a.Value) ?? false))
+                            check = new SimpleColumnValueReference(colName).Trimmed().Length().IsEqualTo(new SimpleColumnValueReference(colName).Length());
+                        minLength = sources.Attributes(XNAME_MinLength).Select(a => FromXmlInt32(a.Value.Trim()) ?? 0).DefaultIfEmpty(0).First();
                         if (minLength > 0)
-                        {
-                            if (sources.Attributes(XNAME_IsNormalized).Any(a => a.Value == "true"))
-                            {
-                                if (allowNull)
-                                    Write($" CHECK(\"{colName}\" IS NULL OR (length(trim(\"{colName}\") = length(\"{colName}\") AND length(\"{colName}\")>{minLength - 1}))");
-                                else
-                                    Write($" CHECK(length(trim(\"{colName}\") = length(\"{colName}\") AND length(\"{colName}\")>{minLength - 1})");
-                            }
-                            else if (allowNull)
-                                Write($" CHECK(\"{colName}\" IS NULL OR length(\"{colName}\")>{minLength - 1})");
-                            else
-                                Write($" CHECK(length(\"{colName}\")>{minLength - 1})");
-                        }
-                        else if (sources.Attributes(XNAME_IsNormalized).Any(a => a.Value == "true"))
-                        {
-                            if (allowNull)
-                                Write($" CHECK(\"{colName}\" IS NULL OR length(trim(\"{colName}\") = length(\"{colName}\"))");
-                            else
-                                Write($" CHECK(length(trim(\"{colName}\") = length(\"{colName}\"))");
-                        }
+                            check = (check is null) ? new SimpleColumnValueReference(colName).GreaterThanLiteral(minLength - 1) : check.And(new SimpleColumnValueReference(colName).GreaterThanLiteral(minLength - 1));
                         break;
                     case NAME_ByteValues:
-                        minLength = sources.Attributes(XNAME_MinLength).Select(a => XmlConvert.ToInt32(a.Value.Trim())).DefaultIfEmpty(0).First();
-                        int maxLength = sources.Attributes(XNAME_MaxLength).Select(a => XmlConvert.ToInt32(a.Value.Trim())).DefaultIfEmpty(0).First();
+                        minLength = sources.Attributes(XNAME_MinLength).Select(a => FromXmlInt32(a.Value.Trim()) ?? 0).DefaultIfEmpty(0).First();
                         if (minLength > 0)
-                        {
-                            if (maxLength > 0)
-                            {
-                                if (allowNull)
-                                    Write($" CHECK(\"{colName}\" IS NULL OR (length(\"{colName}\")<{maxLength + 1} AND length(\"{colName}\")>{minLength - 1}))");
-                                else
-                                    Write($" CHECK(length(\"{colName}\")<{maxLength + 1} AND length(\"{colName}\")>{minLength - 1})");
-                            }
-                            else if (allowNull)
-                                Write($" CHECK(\"{colName}\" IS NULL OR length(\"{colName}\")>{minLength - 1})");
-                            else
-                                Write($" CHECK(length(\"{colName}\")>{minLength - 1})");
-                        }
-                        else if (maxLength > 0)
-                        {
-                            if (allowNull)
-                                Write($" CHECK(\"{colName}\" IS NULL OR length(\"{colName}\")<{maxLength + 1})");
-                            else
-                                Write($" CHECK(length(\"{colName}\")<{maxLength + 1})");
-                        }
+                            check = new SimpleColumnValueReference(colName).Length().GreaterThanLiteral(minLength - 1);
+                        int maxLength = sources.Attributes(XNAME_MaxLength).Select(a => FromXmlInt32(a.Value.Trim()) ?? 0).DefaultIfEmpty(0).First();
+                        if (maxLength > 0)
+                            check = new SimpleColumnValueReference(colName).Length().LessThanLiteral(maxLength + 1);
                         break;
                     case NAME_RelatedEntity:
-                        XElement parentEntityElement = FindLocalEntityByName(sources.Elements(XNAME_Reference).Select(e => e.Value).First());
-                        Write("CONSTRAINT \"FK_");
-                        Write(typeName);
-                        Write(parentEntityElement.Attribute(XNAME_Name)?.Value);
+                        Write(" CONSTRAINT \"");
+                        Write(sources.Attributes(XNAME_ConstraintName).Select(e => e.Value).First());
                         Write("\" REFERENCES \"");
-                        Write(parentEntityElement.Attribute(XNAME_TableName)?.Value);
+                        Write(sources.Attributes(XNAME_Reference).Select(e => FindLocalEntityByName(e.Value)?.Attribute(XNAME_TableName)?.Value)
+                            .Where(n => n is not null).First());
                         Write("\"(\"Id\") ON DELETE RESTRICT");
                         break;
+                    case NAME_DriveType:
+                        check = new SimpleColumnValueReference(colName).NotLessThanLiteral(0).And(new SimpleColumnValueReference(colName).LessThanLiteral(7));
+                        break;
+                    default:
+                        check = null;
+                        break;
                 }
+            }
+            if (check is not null)
+            {
+                Write(" CHECK(");
+                Write((allowNull ? new NullCheckConstraint(new SimpleColumnValueReference(colName), true).Or(check) : check).ToSqlString());
+                Write(")");
             }
 
             if (defaultNull)
@@ -2545,7 +1814,8 @@ namespace <#=DefaultNamespace#>.Upstream
                     switch (propertyTypeName)
                     {
                         case NAME_Enum:
-                            Write(FindLocalFieldByFullName(defaultValue.Trim())?.Value);
+                            Write(" DEFAULT ");
+                            Write(FindLocalFieldByFullName(defaultValue.Trim())?.Attribute(XNAME_Value)?.Value);
                             comment = defaultValue.Trim();
                             break;
                         case NAME_Char:
@@ -2555,26 +1825,26 @@ namespace <#=DefaultNamespace#>.Upstream
                         case NAME_Text:
                             comment = null;
                             Write(" DEFAULT '");
-                            Write($"'{defaultValue.Replace("'", "''")}'");
+                            Write(defaultValue.Replace("'", "''"));
                             Write("'");
                             break;
                         case NAME_TimeSpan:
                             comment = null;
                             Write(" DEFAULT ");
-                            Write(XmlConvert.ToTimeSpan(defaultValue.Trim()).ToString(@"\'hh\:mm\:ss\.fff\'"));
+                            Write(FromXmlTimeSpan(defaultValue.Trim()).Value.ToString(@"\'hh\:mm\:ss\.fff\'"));
                             break;
                         case NAME_DateTime:
                             comment = null;
-                            Write(XmlConvert.ToDateTime(defaultValue.Trim(), XmlDateTimeSerializationMode.RoundtripKind).ToLocalTime().ToString(@"'yyyy-MM-dd HH:mm:ss"));
+                            Write(FromXmlDateTime(defaultValue.Trim()).Value.ToLocalTime().ToString(@"'yyyy-MM-dd HH:mm:ss"));
                             break;
                         case NAME_Bit:
                             comment = null;
-                            Write((defaultValue == "true") ? " DEFAULT 1," : " DEFAULT 0");
+                            Write((FromXmlBoolean(defaultValue) ?? false) ? " DEFAULT 1," : " DEFAULT 0");
                             break;
                         case NAME_ByteValues:
                             comment = null;
                             Write(" DEFAULT X'");
-                            Write(BitConverter.ToString(Convert.FromBase64String(defaultValue.Trim())));
+                            Write(BitConverter.ToString(FromXmlBinary(defaultValue.Trim())));
                             Write("'");
                             break;
                         case NAME_DriveType:
@@ -2618,7 +1888,7 @@ namespace <#=DefaultNamespace#>.Upstream
                     }
                 }
             }
-            if (sources.Attributes(XNAME_IsUnique).Any(a => a.Value == "true"))
+            if (sources.Attributes(XNAME_IsUnique).Any(a => FromXmlBoolean(a.Value) ?? false))
                 Write(" UNIQUE");
             switch (propertyTypeName)
             {
@@ -2628,19 +1898,387 @@ namespace <#=DefaultNamespace#>.Upstream
                     Write(" COLLATE NOCASE");
                     break;
                 case NAME_NVarChar:
-                    XAttribute attribute = sources.Attributes(XNAME_IsUnique).FirstOrDefault();
+                    XAttribute attribute = sources.Attributes(XNAME_IsCaseSensitive).FirstOrDefault();
                     if (attribute is not null)
                     {
                         Write(" COLLATE ");
-                        Write(attribute.Value);
+                        Write((FromXmlBoolean(attribute.Value) ?? false) ? SQL_TYPENAME_BINARY : "NOCASE");
                     }
                     break;
             }
             return colName;
         }
-
-        void GenerateTableIndexSql(string tableName, string entityName, string colName, LinkedList<XElement> sources)
+        CheckConstraint GetEnumCheckConstraintMinMax<T>(string colName, T minValue, T maxValue, Func<T, ConstantValueReference> toConstantValueReference, IEnumerable<T> values, Func<T, T, T> bitwiseOrFunc = null)
+            where T : struct, IComparable<T>
         {
+            T min = values.Min();
+            T max = values.Max();
+            if (bitwiseOrFunc is not null)
+            {
+                T av = values.Aggregate(bitwiseOrFunc);
+                if (av.CompareTo(min) < 0)
+                    min = av;
+                else if (av.CompareTo(max) > 0)
+                    max = av;
+            }
+            if (min.CompareTo(minValue) > 0)
+            {
+                if (max.CompareTo(maxValue) < 0)
+                    return ComparisonConstraint.NotLessThan(new SimpleColumnValueReference(colName), toConstantValueReference(min))
+                        .And(ComparisonConstraint.NotGreaterThan(new SimpleColumnValueReference(colName), toConstantValueReference(max)));
+                return ComparisonConstraint.NotLessThan(new SimpleColumnValueReference(colName), toConstantValueReference(min));
+            }
+            else if (max.CompareTo(maxValue) < 0)
+                return ComparisonConstraint.NotGreaterThan(new SimpleColumnValueReference(colName), toConstantValueReference(max));
+            return null;
+        }
+        public abstract class CheckConstraint : IEquatable<CheckConstraint>
+        {
+            public abstract bool IsCompound { get; }
+            public static CheckConstraint Import(XElement checkElement)
+            {
+                if (checkElement is null)
+                    return null;
+                if (checkElement.Name == XNAME_Check || checkElement.Name == XNAME_And)
+                {
+                    CheckConstraint[] constraints = checkElement.Elements().Select(e => Import(e)).Where(c => c is not null).ToArray();
+                    if (constraints.Length == 1)
+                        return constraints[0];
+                    if (constraints.Length > 1)
+                        return new ComparisonGroup(false, constraints);
+                    return null;
+                }
+                if (checkElement.Name == XNAME_Or)
+                {
+                    CheckConstraint[] constraints = checkElement.Elements().Select(e => Import(e)).Where(c => c is not null).ToArray();
+                    if (constraints.Length == 1)
+                        return constraints[0];
+                    if (constraints.Length > 1)
+                        return new ComparisonGroup(true, constraints);
+                    return null;
+                }
+                SimpleColumnValueReference name = new(checkElement.Attribute(XNAME_Name)?.Value);
+                if (checkElement.Name == XNAME_IsNull)
+                    return new NullCheckConstraint(name, true);
+                if (checkElement.Name == XNAME_NotNull)
+                    return new NullCheckConstraint(name, false);
+
+                ColumnValueReference lValue = (FromXmlBoolean(checkElement.Attribute(XNAME_Trimmed)?.Value) ?? false) ? ColumnValueMethodResultReference.Trim(name) : name;
+                if (FromXmlBoolean(checkElement.Attribute(XNAME_Length)?.Value) ?? false)
+                    lValue = ColumnValueMethodResultReference.Length(lValue);
+                XElement other = checkElement.Elements().First();
+                ValueReference rValue;
+                if (other.Name == XNAME_OtherProperty)
+                {
+                    name = new SimpleColumnValueReference(other.Attribute(XNAME_Name)?.Value);
+                    ColumnValueReference r = (FromXmlBoolean(other.Attribute(XNAME_Trimmed)?.Value) ?? false) ? ColumnValueMethodResultReference.Trim(name) : name;
+                    rValue = (FromXmlBoolean(other.Attribute(XNAME_Length)?.Value) ?? false) ? ColumnValueMethodResultReference.Length(r) : r;
+                }
+                else if (other.Name == XNAME_True)
+                    rValue = ConstantValueReference.Of(true);
+                else if (other.Name == XNAME_False)
+                    rValue = ConstantValueReference.Of(false);
+                else if (other.Name == XNAME_Now)
+                    rValue = ConstantValueReference.Now();
+                else
+                {
+                    string t = other.Attribute(XNAME_Value)?.Value;
+                    if (other.Name == XNAME_Byte)
+                        rValue = ConstantValueReference.Byte(t);
+                    else if (other.Name == XNAME_SByte)
+                        rValue = ConstantValueReference.SByte(t);
+                    else if (other.Name == XNAME_Short)
+                        rValue = ConstantValueReference.Short(t);
+                    else if (other.Name == XNAME_UShort)
+                        rValue = ConstantValueReference.UShort(t);
+                    else if (other.Name == XNAME_Int)
+                        rValue = ConstantValueReference.Int(t);
+                    else if (other.Name == XNAME_UInt)
+                        rValue = ConstantValueReference.UInt(t);
+                    else if (other.Name == XNAME_Long)
+                        rValue = ConstantValueReference.Long(t);
+                    else if (other.Name == XNAME_ULong)
+                        rValue = ConstantValueReference.ULong(t);
+                    else if (other.Name == XNAME_Double)
+                        rValue = ConstantValueReference.Double(t);
+                    else if (other.Name == XNAME_Float)
+                        rValue = ConstantValueReference.Float(t);
+                    else if (other.Name == XNAME_Decimal)
+                        rValue = ConstantValueReference.Decimal(t);
+                    else if (other.Name == XNAME_DateTime)
+                        rValue = ConstantValueReference.DateTime(t);
+                    else
+                        rValue = ConstantValueReference.String(t);
+                }
+                if (checkElement.Name == XNAME_LessThan)
+                    return ComparisonConstraint.LessThan(lValue, rValue);
+                if (checkElement.Name == XNAME_NotGreaterThan)
+                    return ComparisonConstraint.NotGreaterThan(lValue, rValue);
+                if (checkElement.Name == XNAME_NotEquals)
+                    return ComparisonConstraint.NotEqual(lValue, rValue);
+                if (checkElement.Name == XNAME_NotLessThan)
+                    return ComparisonConstraint.NotLessThan(lValue, rValue);
+                if (checkElement.Name == XNAME_GreaterThan)
+                    return ComparisonConstraint.GreaterThan(lValue, rValue);
+                return ComparisonConstraint.AreEqual(lValue, rValue);
+            }
+            public abstract bool Equals(CheckConstraint other);
+            public abstract string ToSqlString();
+            public abstract string ToCsString();
+            public virtual CheckConstraint And(CheckConstraint cc)
+            {
+                if (cc is null || Equals(cc))
+                    return this;
+                return new ComparisonGroup(false, this, cc);
+            }
+            public virtual CheckConstraint Or(CheckConstraint cc)
+            {
+                if (cc is null || Equals(cc))
+                    return this;
+                return new ComparisonGroup(true, this, cc);
+            }
+        }
+        public abstract class ValueReference : IEquatable<ValueReference>
+        {
+            public abstract bool Equals(ValueReference other);
+            public abstract string ToSqlString();
+            public abstract string ToCsString();
+        }
+        public abstract class ColumnValueReference : ValueReference, IEquatable<ColumnValueReference>
+        {
+            public abstract string Name { get; }
+            public abstract bool Equals(ColumnValueReference other);
+            internal ComparisonConstraint LessThanLiteral(int value) => ComparisonConstraint.LessThan(this, ConstantValueReference.Of(value));
+            internal ComparisonConstraint NotLessThanLiteral(int minValue) => ComparisonConstraint.NotLessThan(this, ConstantValueReference.Of(minValue));
+            internal ComparisonConstraint GreaterThanLiteral(int value) => ComparisonConstraint.GreaterThan(this, ConstantValueReference.Of(value));
+            internal ComparisonConstraint IsEqualTo(ValueReference value) => ComparisonConstraint.AreEqual(this, value);
+            internal ColumnValueReference Length() => ColumnValueMethodResultReference.Length(this);
+            internal ColumnValueReference Trimmed() => ColumnValueMethodResultReference.Trim(this);
+        }
+        public sealed class ConstantValueReference : ValueReference, IEquatable<ConstantValueReference>
+        {
+            private ConstantValueReference(string sqlValue, string csValue)
+            {
+                SqlValue = sqlValue;
+                CsValue = csValue;
+            }
+            public string SqlValue { get; }
+            public string CsValue { get; }
+            public bool Equals(ConstantValueReference other) => other is not null && (ReferenceEquals(this, other) || CsValue == other.CsValue);
+            public override bool Equals(ValueReference other) => other is ConstantValueReference o && Equals(o);
+            public override bool Equals(object obj) => obj is ConstantValueReference other && Equals(other);
+            public override int GetHashCode() => CsValue.GetHashCode();
+            public override string ToString() => SqlValue;
+            public override string ToCsString() => CsValue;
+            public override string ToSqlString() => SqlValue;
+            public static ConstantValueReference Int(string value) => new(value, value);
+            public static ConstantValueReference String(string value) => new($"N'{value}'", $"{value.Replace("\\", "\\\\").Replace("\r", "\\r").Replace("\n", "\\n").Replace("\t", "\\t").Replace("\"", "\\\"")}");
+            internal static ConstantValueReference DateTime(string value) => Of(XmlConvert.ToDateTime(value, XmlDateTimeSerializationMode.RoundtripKind));
+            internal static ConstantValueReference Decimal(string value) => new(value, $"{value}m");
+            internal static ConstantValueReference Float(string value) => new(value, $"{value}f");
+            internal static ConstantValueReference Double(string value) => new(value, value.Contains('.') ? value : $"{value}.0");
+            internal static ConstantValueReference ULong(string value) => new(value, $"{value}UL");
+            internal static ConstantValueReference Long(string value) => new(value, $"{value}L");
+            internal static ConstantValueReference UInt(string value) => new(value, $"{value}u");
+            internal static ConstantValueReference UShort(string value) => new(value, $"(ushort){value}");
+            internal static ConstantValueReference Short(string value) => new(value, $"(short){value}");
+            internal static ConstantValueReference SByte(string value) => new(value, $"(sbyte){value}");
+            internal static ConstantValueReference Byte(string value) => new(value, $"(byte){value}");
+            internal static ConstantValueReference Now() => new("(datetime('now','localtime'))", "DateTime.Now");
+            public static ConstantValueReference Of(bool value) => value ? new ConstantValueReference("1", "true") : new ConstantValueReference("0", "false");
+            internal static ConstantValueReference Of(sbyte value) => new(value.ToString(), $"(sbyte){value}");
+            internal static ConstantValueReference Of(byte value) => new(value.ToString(), $"(byte){value}");
+            internal static ConstantValueReference Of(short value) => new(value.ToString(), $"(short){value}");
+            internal static ConstantValueReference Of(ushort value) => new(value.ToString(), $"(ushort){value}");
+            internal static ConstantValueReference Of(int value) => new(value.ToString(), value.ToString());
+            internal static ConstantValueReference Of(uint value) => new(value.ToString(), $"{value}u");
+            internal static ConstantValueReference Of(long value) => new(value.ToString(), $"{value}L");
+            internal static ConstantValueReference Of(ulong value) => new(value.ToString(), $"{value}UL");
+            internal static ConstantValueReference Of(DateTime dateTime) => new(dateTime.ToString("yyyy-MM-dd HH:mm:ss"), $"new DateTime({dateTime.Year}, {dateTime.Month}, {dateTime.Day}, {dateTime.Hour}, {dateTime.Minute}, {dateTime.Second})");
+        }
+        public sealed class SimpleColumnValueReference : ColumnValueReference, IEquatable<SimpleColumnValueReference>
+        {
+            private readonly string _name;
+            public SimpleColumnValueReference(string name) { _name = name ?? ""; }
+            public override string Name => _name;
+            public bool Equals(SimpleColumnValueReference other) => other is not null && (ReferenceEquals(this, other) || _name == other._name);
+            public override bool Equals(ColumnValueReference other) => other is SimpleColumnValueReference o && Equals(o);
+            public override bool Equals(ValueReference other) => other is SimpleColumnValueReference o && Equals(o);
+            public override bool Equals(object obj) => obj is SimpleColumnValueReference other && Equals(other);
+            public override int GetHashCode() => _name.GetHashCode();
+            public override string ToString() => ToSqlString();
+            public override string ToCsString() => _name;
+            public override string ToSqlString() => $"\"{_name}\"";
+        }
+        public sealed class ColumnValueMethodResultReference : ColumnValueReference, IEquatable<ColumnValueMethodResultReference>
+        {
+            public const string SqlMethodName_trim = "trim";
+            public const string CsNemberName_trim = "Trim()";
+            public const string SqlMethodName_length = "length";
+            public const string CsNemberName_length = "Length";
+            private ColumnValueMethodResultReference(ColumnValueReference column, string methodName, string csMemberName)
+            {
+                Column = column;
+                SqlMethodName = methodName;
+            }
+            public ColumnValueReference Column { get; }
+            public string SqlMethodName { get; }
+            public string CsMemberName { get; }
+            public override string Name => Column.Name;
+            public static ColumnValueMethodResultReference LengthTrimmed(ColumnValueReference column) => (column is ColumnValueMethodResultReference m) ?
+                ((m.SqlMethodName == SqlMethodName_length) ? m : Length((m.SqlMethodName == SqlMethodName_trim) ? m : Trim(column))) : Length(Trim(column));
+            public static ColumnValueMethodResultReference Trim(ColumnValueReference column)
+            {
+                if (column is ColumnValueMethodResultReference m)
+                {
+                    if (m.SqlMethodName == SqlMethodName_trim)
+                        return m;
+                    if (m.SqlMethodName == SqlMethodName_length)
+                    {
+                        if (m.Column is ColumnValueMethodResultReference c && c.SqlMethodName == SqlMethodName_trim)
+                            return m;
+                        return Length(Trim(m.Column));
+                    }
+                }
+                return new ColumnValueMethodResultReference(column, SqlMethodName_trim, CsNemberName_trim);
+            }
+            public static ColumnValueMethodResultReference Length(ColumnValueReference column) => (column is ColumnValueMethodResultReference m && m.SqlMethodName == SqlMethodName_length) ? m :
+                new ColumnValueMethodResultReference(column, SqlMethodName_length, CsNemberName_length);
+            public bool Equals(ColumnValueMethodResultReference other) => other is not null && (ReferenceEquals(this, other) || (SqlMethodName == other.SqlMethodName && Column.Equals(other.Column)));
+            public override bool Equals(ColumnValueReference other) => other is ColumnValueMethodResultReference o && Equals(o);
+            public override bool Equals(ValueReference other) => other is ColumnValueMethodResultReference o && Equals(o);
+            public override bool Equals(object obj) => obj is ColumnValueMethodResultReference other && Equals(other);
+            public override int GetHashCode() { unchecked { return (SqlMethodName.GetHashCode() * 3) ^ Column.GetHashCode(); } }
+            public override string ToString() => ToSqlString();
+            public override string ToSqlString() => $"{SqlMethodName}({Column.ToSqlString()})";
+            public override string ToCsString() => $"{Column.ToCsString()}.{CsMemberName}";
+        }
+        public sealed class NullCheckConstraint : CheckConstraint, IEquatable<NullCheckConstraint>
+        {
+            public NullCheckConstraint(SimpleColumnValueReference column, bool isNull)
+            {
+                Column = column;
+                IsNull = isNull;
+            }
+            public SimpleColumnValueReference Column { get; }
+            public bool IsNull { get; }
+            public override bool IsCompound => false;
+            public bool Equals(NullCheckConstraint other) => other is not null && (ReferenceEquals(this, other) || (IsNull == other.IsNull && Column.Equals(other.Column)));
+            public override bool Equals(CheckConstraint other) => other is NullCheckConstraint o && Equals(o);
+            public override bool Equals(object obj) => obj is NullCheckConstraint other && Equals(other);
+            public override int GetHashCode() { unchecked { return (IsNull ? 0 : 3) ^ Column.GetHashCode(); } }
+            public override string ToString() => ToSqlString();
+            public override string ToSqlString() => IsNull ? $"{Column.ToSqlString()} IS NULL" : $"{Column.ToSqlString()} IS NOT NULL";
+            public override string ToCsString() => IsNull ? $"{Column.ToCsString()} is null" : $"{Column.ToCsString()} is not null";
+        }
+        public sealed class ComparisonConstraint : CheckConstraint, IEquatable<ComparisonConstraint>
+        {
+            private ComparisonConstraint(ColumnValueReference lValue, string sqlOp, string csOp, ValueReference rValue)
+            {
+                LValue = lValue;
+                SqlOp = sqlOp;
+                CsOp = csOp;
+                RValue = rValue;
+            }
+            public ColumnValueReference LValue { get; }
+            public string SqlOp { get; }
+            public string CsOp { get; }
+            public ValueReference RValue { get; }
+            public override bool IsCompound => false;
+            public static ComparisonConstraint AreEqual(ColumnValueReference lValue, ValueReference rValue) => new(lValue, "=", "==", rValue);
+            public static ComparisonConstraint NotEqual(ColumnValueReference lValue, ValueReference rValue) => new(lValue, "<>", "!=", rValue);
+            public static ComparisonConstraint LessThan(ColumnValueReference lValue, ValueReference rValue) => new(lValue, "<", "<", rValue);
+            public static ComparisonConstraint NotGreaterThan(ColumnValueReference lValue, ValueReference rValue) => new(lValue, "<=", "<=", rValue);
+            public static ComparisonConstraint GreaterThan(ColumnValueReference lValue, ValueReference rValue) => new(lValue, ">", ">", rValue);
+            public static ComparisonConstraint NotLessThan(ColumnValueReference lValue, ValueReference rValue) => new(lValue, ">=", ">=", rValue);
+            public bool Equals(ComparisonConstraint other) => other is not null && (ReferenceEquals(this, other) || (LValue.Equals(other.LValue) && SqlOp == other.SqlOp && RValue.Equals(other.RValue)));
+            public override bool Equals(CheckConstraint other) => other is ComparisonConstraint o && Equals(o);
+            public override bool Equals(object obj) => obj is ComparisonConstraint other && Equals(other);
+            public override int GetHashCode() { unchecked { return (((LValue.GetHashCode() * 3) ^ SqlOp.GetHashCode()) * 5) ^ RValue.GetHashCode(); } }
+            public override string ToString() => ToSqlString();
+            public override string ToSqlString() => $"{LValue.ToSqlString()}{SqlOp}{RValue.ToSqlString()}";
+            public override string ToCsString() => $"{LValue.ToCsString()} {CsOp} {RValue.ToCsString()}";
+        }
+        public sealed class ComparisonGroup : CheckConstraint, IEquatable<ComparisonGroup>
+        {
+            public ComparisonGroup(bool isOr, params CheckConstraint[] constraints)
+            {
+                if (constraints is null || (constraints = constraints.Where(c => c is not null)
+                        .SelectMany(c => (c is ComparisonGroup g && g.IsOr == isOr) ? g.Constraints : Enumerable.Repeat(c, 1)).ToArray()).Length == 0)
+                    throw new ArgumentOutOfRangeException(nameof(constraints));
+                using IEnumerator<CheckConstraint> enumerator = (constraints ?? Array.Empty<CheckConstraint>()).Where(c => c is not null).GetEnumerator();
+                if (!enumerator.MoveNext())
+                    throw new ArgumentOutOfRangeException(nameof(constraints));
+                IsOr = isOr;
+                List<CheckConstraint> checkConstraints = new();
+                do
+                {
+                    if (!checkConstraints.Contains(enumerator.Current))
+                        checkConstraints.Add(enumerator.Current);
+                }
+                while (enumerator.MoveNext());
+                Constraints = new ReadOnlyCollection<CheckConstraint>(checkConstraints);
+            }
+            public bool IsOr { get; }
+            public ReadOnlyCollection<CheckConstraint> Constraints { get; }
+            public override bool IsCompound => Constraints.Count > 1;
+            public override CheckConstraint And(CheckConstraint cc)
+            {
+                if (cc is null || Equals(cc) || Constraints.Contains(cc))
+                    return this;
+                if (IsOr)
+                    return base.And(cc);
+                return new ComparisonGroup(false, Constraints.Concat((cc is ComparisonGroup cg && !cg.IsOr) ? cg.Constraints : Enumerable.Repeat(cc, 1)).ToArray());
+            }
+            public override CheckConstraint Or(CheckConstraint cc)
+            {
+                if (cc is null || Equals(cc) || Constraints.Contains(cc))
+                    return this;
+                if (!IsOr)
+                    return base.Or(cc);
+                return new ComparisonGroup(true, Constraints.Concat((cc is ComparisonGroup cg && cg.IsOr) ? cg.Constraints : Enumerable.Repeat(cc, 1)).ToArray());
+            }
+            public bool Equals(ComparisonGroup other)
+            {
+                if (other is null)
+                    return false;
+                if (ReferenceEquals(this, other))
+                    return true;
+                if (IsOr != other.IsOr || Constraints.Count != other.Constraints.Count)
+                    return false;
+                return Constraints.All(c => other.Constraints.Contains(c));
+            }
+            public override bool Equals(CheckConstraint other) => other is ComparisonGroup g && Equals(g);
+            public override bool Equals(object obj) => obj is ComparisonGroup other && Equals(other);
+            public override int GetHashCode()
+            {
+                if (Constraints.Count == 0)
+                    return IsOr ? 1 : 0;
+                int seed = Constraints.Count + 1;
+                int prime = FindPrimeNumber(seed & 0xffff);
+                seed = FindPrimeNumber(prime + 1);
+                return new int[] { IsOr ? 1 : 0 }.Concat(Constraints.Select(c => c.GetHashCode())).Aggregate(seed, (a, i) =>
+                {
+                    unchecked { return (a * prime) ^ i; }
+                });
+            }
+            public override string ToString() => ToSqlString();
+            public override string ToSqlString()
+            {
+                if (Constraints.Count == 0)
+                    return "";
+                if (Constraints.Count == 1)
+                    return Constraints[0].ToSqlString();
+                return string.Join(IsOr ? " OR " : " AND ", Constraints.Select(c => c.IsCompound ? $"({c.ToSqlString()})" : c.ToSqlString()));
+            }
+            public override string ToCsString()
+            {
+                if (Constraints.Count == 0)
+                    return "";
+                if (Constraints.Count == 1)
+                    return Constraints[0].ToCsString();
+                return string.Join(IsOr? " || " : " && ", Constraints.Select(c => c.IsCompound? $"({c.ToCsString()})" : c.ToCsString()));
+            }
         }
 
         #endregion
@@ -2709,9 +2347,6 @@ namespace <#=DefaultNamespace#>.Upstream
         record CodeValues(string SQL, string CLR);
         interface IColumnConstraint { }
         record ColumnDefinitionOld(string Name, bool IsPrimaryKey, CodeValues DefaultValue, ReadOnlyCollection<IColumnConstraint> Constraints, PropertyDefinitionOld Property, XElement Source);
-        record ForeignKeyConstraintOld(string Name, string TableName, string KeyName) : IColumnConstraint;
-        record RangeColumnConstraintOld(CodeValues MaxValue, CodeValues MinValue) : IColumnConstraint;
-        record LengthColumnConstraintOld(CodeValues MaxLength, CodeValues MinLength) : IColumnConstraint;
         record TableDefinitionOld(string Name, ReadOnlyCollection<ColumnDefinitionOld> Columns, XElement Source);
 
         record PropertyDefinitionOld(string Name, string ClrType, bool AllowsNull, bool IsGenericWritable, ReadOnlyCollection<PropertyDefinitionOld> Base, XElement Source);
@@ -2756,416 +2391,6 @@ namespace <#=DefaultNamespace#>.Upstream
             }
             return (node.Parent is null) ? ((node.Document is null) ? "." : "/") : ToXPath(node.Parent);
         }
-
-        //EntityDefinition GetEntityDefinition(XElement entityElement)
-        //{
-        //    EntityDefinition entityDefinition = entityElement.Annotation<EntityDefinition>();
-        //    if (entityDefinition is not null)
-        //        return entityDefinition;
-        //    XElement parentElement;
-        //    if (entityElement is null || entityElement?.Name != XNAME_Entity || (parentElement = entityElement?.Parent) is null)
-        //        return null;
-        //    Func<string, XElement> findEntityByName;
-        //    if (parentElement.Name == XNAME_Root)
-        //        findEntityByName = FindRootEntityByName;
-        //    else if (parentElement.Name == XNAME_Local)
-        //        findEntityByName = FindLocalEntityByName;
-        //    else if (parentElement.Name == XNAME_Upstream)
-        //        findEntityByName = FindUpstreamByName;
-        //    else
-        //        return null;
-        //    IEnumerable<(string Name, EntityDefinition Definition)> baseTypes = entityElement.Elements(XNAME_ExtendsEntity)
-        //        .Select<XElement, (string Name, EntityDefinition Definition)>(e =>
-        //        {
-        //            XElement element = findEntityByName(e.Attribute(XNAME_Type)?.Value);
-        //            if (element is null)
-        //                throw new InvalidDataException($"Could not find element \"{e.Attribute(XNAME_Type)?.Value}\" at {ToXPath(e)}");
-        //            return new(e.Attribute(XNAME_Type)?.Value, GetEntityDefinition(element));
-        //        }).Concat(entityElement.Elements(XNAME_ExtendsGenericEntity)
-        //        .Select<XElement, (string Name, EntityDefinition Definition)>(e =>
-        //    {
-        //        XElement element = findEntityByName(e.Attribute(XNAME_TypeDef)?.Value);
-        //        if (element is null)
-        //            throw new InvalidDataException($"Could not find element \"{e.Attribute(XNAME_TypeDef)?.Value}\" at {ToXPath(e)}");
-        //        return new(e.Attribute(XNAME_Type)?.Value, GetEntityDefinition(element));
-        //    })).Concat(entityElement.Elements().Select<XElement, (string Name, EntityDefinition Definition)>(e =>
-        //    {
-        //        XElement element;
-        //        if (e.Name == XNAME_Implements)
-        //            return new(e.Attribute(XNAME_Type)?.Value, null);
-        //        if (e.Name == XNAME_ImplementsEntity)
-        //        {
-        //            element = findEntityByName(e.Attribute(XNAME_Type)?.Value);
-        //            if (element is null)
-        //                throw new InvalidDataException($"Could not find element \"{e.Attribute(XNAME_Type)?.Value}\" at {ToXPath(e)}");
-        //            return new(e.Attribute(XNAME_Type)?.Value, GetEntityDefinition(element));
-        //        }
-        //        if (e.Name != XNAME_ImplementsGenericEntity)
-        //            return new (null, null);
-        //        element = findEntityByName(e.Attribute(XNAME_TypeDef)?.Value);
-        //        if (element is null)
-        //            throw new InvalidDataException($"Could not find element \"{e.Attribute(XNAME_TypeDef)?.Value}\" at {ToXPath(e)}");
-        //        return new(e.Attribute(XNAME_Type)?.Value, GetEntityDefinition(element));
-        //    }).Where(t => t.Name is not null));
-        //    string rootInterface = entityElement.Attribute(XNAME_RootInterface)?.Value;
-        //    if (!string.IsNullOrWhiteSpace(rootInterface))
-        //    {
-        //        XElement element = findEntityByName(rootInterface);
-        //        if (element is null)
-        //            throw new InvalidDataException($"Could not find element \"{rootInterface}\" at {ToXPath(entityElement)}");
-        //        baseTypes = new (string Name, EntityDefinition Definition)[] { new(rootInterface, GetEntityDefinition(element)) }.Concat(baseTypes);
-        //    }
-        //    ReadOnlyCollection<EntityDefinition> baseDefinitions = new(baseTypes.Select(b => b.Definition).Where(d => d is not null).ToArray());
-        //    ReadOnlyCollection<PropertyDefinition> properties = new(entityElement.Elements(XNAME_Properties).Elements()
-        //        .Select(p => GetPropertyDefinition(p, baseDefinitions)).ToArray());
-        //    TableDefinition tableDefinition = GetTableDefinition(entityElement, baseDefinitions, properties);
-        //    entityDefinition = new(entityElement.Attribute(XNAME_Name)?.Value.Replace("{", "<").Replace("}", ">"), tableDefinition,
-        //        properties, baseDefinitions, new ReadOnlyCollection<string>(baseTypes.Select(b => b.Name).ToArray()), entityElement);
-        //    entityElement.AddAnnotation(entityDefinition);
-        //    return entityDefinition;
-        //}
-
-        //private TableDefinition GetTableDefinition(XElement entityElement, ReadOnlyCollection<EntityDefinition> baseDefinitions, ReadOnlyCollection<PropertyDefinition> properties)
-        //{
-        //    TableDefinition tableDefinition = entityElement.Annotation<TableDefinition>();
-        //    if (tableDefinition is not null)
-        //        return tableDefinition;
-        //    string tableName = entityElement.Attribute(XNAME_TableName)?.Value;
-        //    if (tableName is null)
-        //        return null;
-        //    Collection<IColumnDefinition> columns = new();
-        //    foreach (PropertyDefinition pd in properties)
-        //    {
-        //        IColumnDefinition columnDefinition = GetColumnDefinition(pd, baseDefinitions);
-        //        if (columnDefinition is not null)
-        //            columns.Add(columnDefinition);
-        //    }
-        //    tableDefinition = new TableDefinition(tableName, new ReadOnlyCollection<IColumnDefinition>(columns), entityElement);
-        //    entityElement.AddAnnotation(tableDefinition);
-        //    return tableDefinition;
-        //}
-
-        //private IColumnDefinition GetColumnDefinition(PropertyDefinition pd, ReadOnlyCollection<EntityDefinition> baseDefinitions)
-        //{
-        //    IColumnDefinition columnDefinition = pd.Source.Annotation<IColumnDefinition>();
-        //    if (columnDefinition is not null)
-        //        return columnDefinition;
-        //    string propertyName = pd.Source.Attribute(XNAME_ColName)?.Value ?? pd.Source.Attribute(XNAME_Name)?.Value;
-        //    SqlColType? sqlType = ToSqlSqlColType(pd.Source, out string sqlExpr);
-        //    if (!sqlType.HasValue || string.IsNullOrWhiteSpace(propertyName))
-        //        return null;
-        //    switch (sqlType.Value)
-        //    {
-        //        case SqlColType.UNSIGNED_TINYINT:
-        //        case SqlColType.TINYINT:
-        //        case SqlColType.UNSIGNED_SMALLINT:
-        //        case SqlColType.SMALLINT:
-        //        case SqlColType.UNSIGNED_INT:
-        //        case SqlColType.INT:
-        //        case SqlColType.BIGINT:
-        //        case SqlColType.UNSIGNED_BIGINT:
-        //        case SqlColType.BINARY:
-        //        case SqlColType.NVARCHAR:
-        //        case SqlColType.CHARACTER:
-        //        case SqlColType.REAL:
-        //        case SqlColType.NUMERIC:
-        //            break;
-        //        case SqlColType.DATETIME:
-        //        case SqlColType.TIME:
-        //        case SqlColType.UNIQUEIDENTIFIER:
-        //        case SqlColType.BIT:
-        //        case SqlColType.TEXT:
-        //        case SqlColType.BLOB:
-        //        case SqlColType.NULL:
-        //            break;
-        //        default:
-        //            break;
-        //    }
-        //    throw new NotImplementedException();
-        //}
-
-        //PropertyDefinition GetPropertyDefinition(XElement propertyElement, IReadOnlyCollection<EntityDefinition> baseDefinitions)
-        //{
-        //    string propertyName = propertyElement.Attribute(XNAME_Name)?.Value;
-        //    ReadOnlyCollection<PropertyDefinition> baseProperties = new(baseDefinitions.SelectMany(d => d.Properties.Where(p => p.Name == propertyName)).ToArray());
-
-        //    PropertyDefinition propertyDefinition = propertyElement.Annotation<PropertyDefinition>();
-        //    if (propertyDefinition is not null)
-        //        return propertyDefinition;
-        //    bool allowsNull = propertyElement.Attributes(XNAME_AllowNull).Any(a => a.Value == "true") || propertyElement.Elements(XNAME_DefaultNull).Any() ||
-        //            baseProperties.Any(p => p.AllowsNull);
-        //    bool isGenericWritable = propertyElement.Attributes(XNAME_IsGenericWritable).Any(a => a.Value == "true") || baseProperties.Any(p => p.IsGenericWritable);
-        //    switch (propertyElement.Name.LocalName)
-        //    {
-        //        case NAME_Byte:
-        //        case NAME_SByte:
-        //        case NAME_Short:
-        //        case NAME_UShort:
-        //        case NAME_Int:
-        //        case NAME_UInt:
-        //        case NAME_Long:
-        //        case NAME_ULong:
-        //        case NAME_Float:
-        //        case NAME_Double:
-        //        case NAME_Decimal:
-        //        case NAME_Char:
-        //            propertyDefinition = new PropertyDefinition(propertyName,
-        //                (allowsNull ? $"{propertyElement.Name.LocalName}?" : propertyElement.Name.LocalName).ToLower(),
-        //                allowsNull, isGenericWritable, baseProperties, propertyElement);
-        //            break;
-        //        case NAME_ByteArray:
-        //            propertyDefinition = new PropertyDefinition(propertyName, "byte[]", allowsNull, isGenericWritable, baseProperties, propertyElement);
-        //            break;
-        //        case NAME_Text:
-        //        case NAME_NVarChar:
-        //            propertyDefinition = new PropertyDefinition(propertyName, "string", allowsNull, isGenericWritable, baseProperties, propertyElement);
-        //            break;
-        //        case NAME_VolumeIdentifier:
-        //        case NAME_DriveType:
-        //        case NAME_MD5Hash:
-        //        case NAME_DateTime:
-        //        case NAME_TimeSpan:
-        //            propertyDefinition = new PropertyDefinition(propertyName, allowsNull ? $"{propertyElement.Name.LocalName}?" : propertyElement.Name.LocalName,
-        //                allowsNull, isGenericWritable, baseProperties, propertyElement);
-        //            break;
-        //        case NAME_ByteValues:
-        //        case NAME_MultiStringValue:
-        //            propertyDefinition = new PropertyDefinition(propertyName, propertyElement.Name.LocalName, allowsNull, isGenericWritable, baseProperties,
-        //                propertyElement);
-        //            break;
-        //        case NAME_UniqueIdentifier:
-        //        case NAME_NewIdNavRef:
-        //            propertyDefinition = new PropertyDefinition(propertyName, allowsNull ? "Guid?" : "Guid", allowsNull, isGenericWritable, baseProperties,
-        //                propertyElement);
-        //            break;
-        //        case NAME_Bit:
-        //            propertyDefinition = new PropertyDefinition(propertyName, allowsNull ? "bool?" : "bool", allowsNull, isGenericWritable, baseProperties,
-        //                propertyElement);
-        //            break;
-        //        case NAME_Enum:
-        //            string tn = propertyElement.Attribute(XNAME_Type)?.Value;
-        //            propertyDefinition = new PropertyDefinition(propertyName, allowsNull ? $"{tn}?" : tn, allowsNull, isGenericWritable, baseProperties,
-        //                propertyElement);
-        //            break;
-        //        case NAME_CollectionNavigation:
-        //        case NAME_NewCollectionNavigation:
-        //            propertyDefinition = new PropertyDefinition(propertyName, $"IEnumerable<{propertyElement.Attribute(XNAME_ItemType)?.Value}>", allowsNull,
-        //                isGenericWritable,
-        //                baseProperties, propertyElement);
-        //            break;
-        //        case NAME_RelatedEntity:
-        //        case NAME_NewRelatedEntity:
-        //            propertyDefinition = new PropertyDefinition(propertyName,
-        //                (propertyElement.Attribute(XNAME_TypeDef)?.Value ?? propertyElement.Attribute(XNAME_Reference)?.Value), allowsNull, isGenericWritable,
-        //                baseProperties, propertyElement);
-        //            break;
-        //        default:
-        //            propertyDefinition = new PropertyDefinition(propertyName, "object", allowsNull, isGenericWritable, baseProperties, propertyElement);
-        //            break;
-        //    }
-        //    propertyElement.AddAnnotation(propertyDefinition);
-        //    return propertyDefinition;
-        //}
-        /*
-
-foreach (XElement entityElement in entityDefinitionsElement.Elements().Elements(XNAME_Entity))
-{
-string typeName = entityElement.Attribute(XNAME_Name)?.Value;
-if (string.IsNullOrWhiteSpace(typeName))
-continue;
-
-foreach (XElement propertyElement in entityElement.Elements(XNAME_Field))
-{
-XName elementName = propertyElement.Name;
-string propertyName = propertyElement.Attribute(XNAME_Name)?.Value;
-if (string.IsNullOrWhiteSpace(propertyName))
-   continue;
-string expected = $"{typeName}.{propertyName}";
-XAttribute attribute;
-switch (propertyElement.Name)
-{
-   case NAME_Byte:
-   case NAME_SByte:
-   case NAME_Short:
-   case NAME_UShort:
-   case NAME_Int:
-   case NAME_UInt:
-   case NAME_Long:
-   case NAME_ULong:
-   case NAME_Float:
-   case NAME_Double:
-   case NAME_Decimal:
-       if ((attribute = propertyElement.Attribute(XNAME_MaxValue)) is not null)
-           WriteLine("")
-       //(@MaxValue|@MinValue|Default)
-       break;
-   case NAME_NVarChar:
-   case NAME_ByteValues:
-   case NAME_ByteArray:
-       //(@MaxLength|@MinLength|Default)
-       break;
-   case NAME_Char:
-   case NAME_Text:
-   case NAME_Bit:
-   case NAME_VolumeIdentifier:
-   case NAME_DateTime:
-   case NAME_DriveType:
-   case NAME_Enum:
-       //Default
-       break;
-   case NAME_TimeSpan:
-       //(Default|DefaultZero)
-       break;
-}
-}
-}
-*/
-        //IEnumerable<XElement> GetBaseEntities(XElement entityElement)
-        //{
-        //    XElement parent = entityElement?.Parent;
-        //    if (parent is null || entityElement?.Name != XNAME_Entity)
-        //        return Array.Empty<XElement>();
-
-        //    IEnumerable<string> names = entityElement.Elements().Select(e => (
-        //        IsType: e.Name == XNAME_ExtendsEntity || e.Name == XNAME_ImplementsEntity,
-        //        IsDef: e.Name == XNAME_ExtendsGenericEntity || e.Name == XNAME_ImplementsGenericEntity,
-        //        Element: e
-        //    )).Where(t => t.IsType || t.IsDef).SelectMany(t => t.Element.Attributes(t.IsType ? XNAME_Type : XNAME_TypeDef)).Select(a => a.Value);
-        //    return parent.Name.LocalName switch
-        //    {
-        //        NAME_Root => names.Distinct().Select(n => FindRootEntityByName(n)).Where(e => e is not null),
-        //        NAME_Local => entityElement.Attributes(XNAME_RootInterface).Select(a => a.Value).Concat(names).Distinct()
-        //            .Select(n => FindLocalEntityByName(n)).Where(e => e is not null),
-        //        NAME_Upstream => entityElement.Attributes(XNAME_RootInterface).Select(a => a.Value).Concat(names).Distinct()
-        //            .Select(n => FindUpstreamEntityByName(n)).Where(e => e is not null),
-        //        _ => Array.Empty<XElement>(),
-        //    };
-        //}
-
-        //void GetAllProperties(XElement entityElement, Collection<(string Name, LinkedList<XElement> Sources)> collection)
-        //{
-        //    foreach (XElement baseEntity in GetBaseEntities(entityElement).Reverse())
-        //        GetAllProperties(baseEntity, collection);
-        //    foreach (XAttribute attribute in entityElement.Elements(XNAME_Properties).Elements().Attributes(XNAME_Name))
-        //    {
-        //        XElement propertyElement = attribute.Parent;
-        //        string propertyName = attribute.Value;
-        //        if (collection.Any(t => t.Name == propertyName))
-        //        {
-        //            (string Name, LinkedList<XElement> Sources) property = collection.First(t => t.Name == propertyName);
-        //            if (!property.Sources.Any(e => ReferenceEquals(e, propertyElement)))
-        //                property.Sources.AddFirst(attribute.Parent);
-        //        }
-        //        else
-        //        {
-        //            (string Name, LinkedList<XElement> Sources) property = new(propertyName, new LinkedList<XElement>());
-        //            property.Sources.AddLast(attribute.Parent);
-        //            collection.Add(property);
-        //        }
-        //    }
-        //}
-
-        //void GetAllBaseEntities(XElement entityElement, int level, Collection<(XElement Element, int Level)> collection, Func<IEnumerable<string>, IEnumerable<XElement>> getEntities)
-        //{
-        //    IEnumerable<string> names = entityElement.Elements().Select(e => (
-        //        IsType: e.Name == XNAME_ExtendsEntity || e.Name == XNAME_ImplementsEntity,
-        //        IsDef: e.Name == XNAME_ExtendsGenericEntity || e.Name == XNAME_ImplementsGenericEntity,
-        //        Element: e
-        //    )).Where(t => t.IsType || t.IsDef).SelectMany(t => t.Element.Attributes(t.IsType ? XNAME_Type : XNAME_TypeDef)).Select(a => a.Value);
-        //    int nextLevel = level + 1;
-        //    foreach (XElement baseEntity in getEntities(names))
-        //    {
-        //        IEnumerable<(XElement Element, int Level)> items = collection.Where(e => ReferenceEquals(e.Element, baseEntity));
-        //        if (items.Any())
-        //        {
-        //            (XElement Element, int Level) t = items.First();
-        //            if (level < t.Level)
-        //            {
-        //                collection.Remove(t);
-        //                collection.Add(new(baseEntity, level));
-        //            }
-        //        }
-        //        else
-        //        {
-        //            collection.Add(new(baseEntity, level));
-        //            GetAllBaseEntities(baseEntity, nextLevel, collection, getEntities);
-        //        }
-        //    }
-        //}
-
-        //XElement[] GetAllBaseEntities(XElement entityElement)
-        //{
-        //    XElement parent = entityElement?.Parent;
-        //    if (parent is null || entityElement?.Name != XNAME_Entity)
-        //        return Array.Empty<XElement>();
-        //    Collection<(XElement Element, int Level)> result = new();
-        //    Func<IEnumerable<string>, IEnumerable<XElement>> getEntities;
-        //    switch (parent.Name.LocalName)
-        //    {
-        //        case NAME_Root:
-        //            getEntities = names => names.Distinct().Select(n => FindRootEntityByName(n)).Where(e => e is not null);
-        //            break;
-        //        case NAME_Local:
-        //            getEntities = names => entityElement.Attributes(XNAME_RootInterface).Select(a => a.Value).Concat(names).Distinct()
-        //                .Select(n => FindLocalEntityByName(n)).Where(e => e is not null);
-        //            break;
-        //        case NAME_Upstream:
-        //            getEntities = names => entityElement.Attributes(XNAME_RootInterface).Select(a => a.Value).Concat(names).Distinct()
-        //                .Select(n => FindUpstreamEntityByName(n)).Where(e => e is not null);
-        //            break;
-        //        default:
-        //            return Array.Empty<XElement>();
-        //    }
-        //    GetAllBaseEntities(entityElement, 0, result, getEntities);
-        //    return result.OrderBy(t => t.Level).Select(t => t.Element).ToArray();
-        //}
-
-        //static XElement[] GetAllBaseProperties(XElement propertyElement, XElement[] orderedBaseEntities, out XElement baseProperty, out bool isNew, out bool doNotEmit)
-        //{
-        //    string propertyName = propertyElement?.Attribute(XNAME_Name)?.Value;
-        //    if (propertyName is null || orderedBaseEntities is null || orderedBaseEntities.Length == 0)
-        //    {
-        //        baseProperty = propertyElement;
-        //        isNew = doNotEmit = false;
-        //        return Array.Empty<XElement>();
-        //    }
-        //    XName baseName;
-        //    XName inheritedName;
-        //    switch (propertyElement.Name.LocalName)
-        //    {
-        //        case NAME_NewIdNavRef:
-        //            isNew = false;
-        //            doNotEmit = true;
-        //            baseName = XNAME_UniqueIdentifier;
-        //            inheritedName = XNAME_NewIdNavRef;
-        //            break;
-        //        case NAME_NewRelatedEntity:
-        //            isNew = true;
-        //            doNotEmit = false;
-        //            baseName = XNAME_RelatedEntity;
-        //            inheritedName = XNAME_NewRelatedEntity;
-        //            break;
-        //        case NAME_NewCollectionNavigation:
-        //            isNew = true;
-        //            doNotEmit = false;
-        //            baseName = XNAME_CollectionNavigation;
-        //            inheritedName = XNAME_NewCollectionNavigation;
-        //            break;
-        //        default:
-        //            isNew = doNotEmit = false;
-        //            baseProperty = propertyElement;
-        //            return orderedBaseEntities.Elements(XNAME_Properties).Elements(propertyElement.Name).Attributes(XNAME_Name).Where(a => a.Value == propertyName).Select(a => a.Parent).ToArray();
-        //    }
-        //    IEnumerable<XElement> results = orderedBaseEntities.Elements(XNAME_Properties).Elements().Where(e => e.Name == baseName || e.Name == inheritedName)
-        //        .Attributes(XNAME_Name).Where(a => a.Value == propertyName).Select(a => a.Parent);
-        //    baseProperty = results.Where(e => e.Name == baseName).DefaultIfEmpty(propertyElement).First();
-        //    return results.ToArray();
-        //}
-
-        const string NAME_PrimaryKey = "PrimaryKey";
-        const string NAME_ForeignKey = "ForeignKey";
-        public static readonly XName XNAME_PrimaryKey = XName.Get(NAME_PrimaryKey);
-        public static readonly XName XNAME_ForeignKey = XName.Get(NAME_ForeignKey);
 
         XElement GetRelatedEntityPrimaryKeyProperty(XElement relatedEntityPropertyElement)
         {

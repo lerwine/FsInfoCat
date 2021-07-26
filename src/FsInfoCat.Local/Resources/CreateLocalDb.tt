@@ -24,7 +24,7 @@
 -- Deleting tables
 
 <#
-foreach (XAttribute attribute in EntityDefinitionsDocument.Root.Elements("Local").Elements("Entity").Attributes("TableName").Reverse())
+foreach (XAttribute attribute in EntityDefinitionsDocument.Root.Elements(XNAME_Local).Elements(XNAME_Entity).Attributes(XNAME_TableName).Reverse())
 {
 #>
 DROP TABLE IF EXISTS "<#=attribute.Value#>";
@@ -35,9 +35,11 @@ DROP TABLE IF EXISTS "<#=attribute.Value#>";
 -- Creating tables
 
 <#
-foreach (XAttribute tableAttribute in EntityDefinitionsDocument.Root.Elements("Local").Elements("Entity").Attributes("TableName"))
+XAttribute[] tableNames = EntityDefinitionsDocument.Root.Elements(XNAME_Local).Elements(XNAME_Entity).Attributes(XNAME_TableName).ToArray();
+GenerateCreateTableSql(tableNames[0].Value, tableNames[0].Parent);
+foreach (XAttribute tableAttribute in tableNames.Skip(1))
 {
-    XElement entityElement = tableAttribute.Parent;
+    WriteLine("");
     GenerateCreateTableSql(tableAttribute.Value, tableAttribute.Parent);
 }
 #>
@@ -46,121 +48,69 @@ foreach (XAttribute tableAttribute in EntityDefinitionsDocument.Root.Elements("L
 void GenerateCreateTableSql(string tableName, XElement entityElement)
 {
     string entityName = entityElement.Attribute(XNAME_Name)?.Value;
-    Write("CREATE TABLE IF NOT EXISTS ");
+    Write("CREATE TABLE IF NOT EXISTS \"");
     Write(tableName);
-    WriteLine(" (");
+    WriteLine("\" (");
     PushIndent("    ");
-    Collection<(string Name, LinkedList<XElement> Sources)> collection = new();
-    GetAllProperties(entityElement, collection);
-    (string Name, LinkedList<XElement> Sources) firstCol = new(GenerateTableColumnSql(tableName, entityName, collection[0].Name, collection[0].Sources), collection[0].Sources);
-    (string Name, LinkedList<XElement> Sources)[] columns = new (string Name, LinkedList<XElement> Sources)[] { firstCol }
-        .Concat(collection.Skip(1).Select<(string Name, LinkedList<XElement> Sources), (string Name, LinkedList<XElement> Sources)>(t =>
+    (string Name, List<XElement> Sources)[] collection = GetAllProperties(entityElement)
+        .Where(t => !t.Sources.Any(e => e.Name == XNAME_CollectionNavigation || (e.Name == XNAME_RelatedEntity && e.Attribute(XNAME_FkPropertyName) is null))).ToArray();
+    (string Name, List<XElement> Sources) firstCol = new(GenerateTableColumnSql(tableName, entityName, collection[0].Name, collection[0].Sources, out string comment),
+        collection[0].Sources);
+    (string Name, List<XElement> Sources)[] columns = new (string Name, List<XElement> Sources)[] { firstCol }
+        .Concat(collection.Skip(1).Select<(string Name, List<XElement> Sources), (string Name, List<XElement> Sources)>(t =>
         {
-            WriteLine(",");
-            return new(GenerateTableColumnSql(tableName, entityName, t.Name, t.Sources), t.Sources);
-        }).Where(t => t.Name is not null)).ToArray();
-    string[] keyColumns = columns.Where(c => c.Sources.Where(e => e.Attribute(XNAME_IsPrimaryKey)?.Value == "true" && (e.Name == XNAME_UniqueIdentifier || e.Name == XNAME_UniqueIdentifier)))
-        .Select(c => $"\"{c.Name}\"").ToArray();
-    Collection<string> constraints = new();
-    foreach (XElement element in new XElement[] { entityElement }.Concat(GetAllBaseEntities(entityElement)))
-    {
-        if (element.Name == XNAME_EitherOrConstraint)
-        {
-            string p1 = element.Elements(XNAME_Property).Take(1).Select(p =>
+            if (string.IsNullOrEmpty(comment))
+                WriteLine(",");
+            else
             {
-                string disallowEmptyIfNotNull = p.Attribute(XNAME_DisallowEmptyIfNotNull)?.Value;
-                if (string.IsNullOrWhiteSpace(disallowEmptyIfNotNull))
-                    return $"\"{p.Attribute(XNAME_Name)?.Value}\" IS NULL";
-                return $"(\"{p.Attribute(XNAME_Name)?.Value}\" IS NULL OR length(trim(\"{disallowEmptyIfNotNull}\")>0)";
-            }).First();
-            string p2 = element.Elements(XNAME_Property).Skip(1).Take(1).Select(p =>
-            {
-                string disallowEmptyIfNotNull = p.Attribute(XNAME_DisallowEmptyIfNotNull)?.Value;
-                if (string.IsNullOrWhiteSpace(disallowEmptyIfNotNull))
-                    return $"\"{p.Attribute(XNAME_Name)?.Value}\" IS NULL";
-                return $"(\"{p.Attribute(XNAME_Name)?.Value}\" IS NOT NULL AND length(trim(\"{disallowEmptyIfNotNull}\")>0)";
-            }).First();
-            string value = $"{p2} OR {p1}";
-            if (constraints.Contains(value))
-                continue;
-            value = $"{p1} OR {p2}";
-            if (!constraints.Contains(value))
-                constraints.Add(value);
-        }
-        else if (element.Name == XNAME_IsNullSameConstraint)
-        {
-            string[] values = element.Elements(XNAME_Property).Attributes(XNAME_Name).Select(a => a.Value).ToArray();
-            string value = $"\"{values[1]}\" IS NULL OR \"{values[0]}\" IS NOT NULL";
-            if (constraints.Contains(value))
-                continue;
-            value = $"\"{values[0]}\" IS NULL OR \"{values[1]}\" IS NOT NULL";
-            if (!constraints.Contains(value))
-                constraints.Add(value);
-        }
-        else if (element.Name == XNAME_FieldComparisonConstraint)
-        {
-            string leftProperty = element.Attribute(XNAME_LeftProperty)?.Value;
-            string rightProperty = element.Attribute(XNAME_RightProperty)?.Value;
-            string value;
-            switch (element.Attribute(XNAME_Operator)?.Value ?? "")
-            {
-                case "LessThan":
-                    value = $"\"{rightProperty}\">=\"{leftProperty}\"";
-                    if (constraints.Contains(value))
-                        continue;
-                    value = $"\"{leftProperty}\"<\"{rightProperty}\"";
-                    break;
-                case "NotGreaterThan":
-                    value = $"\"{rightProperty}\">\"{leftProperty}\"";
-                    if (constraints.Contains(value))
-                        continue;
-                    value = $"\"{leftProperty}\"<=\"{rightProperty}\"";
-                    break;
-                case "NotEqualTo":
-                    value = $"\"{rightProperty}\"<>\"{leftProperty}\"";
-                    if (constraints.Contains(value))
-                        continue;
-                    value = $"\"{leftProperty}\"<>\"{rightProperty}\"";
-                    break;
-                case "NotLessThan":
-                    value = $"\"{rightProperty}\"<\"{leftProperty}\"";
-                    if (constraints.Contains(value))
-                        continue;
-                    value = $"\"{leftProperty}\">=\"{rightProperty}\"";
-                    break;
-                case "GreaterThan":
-                    value = $"\"{rightProperty}\"<=\"{leftProperty}\"";
-                    if (constraints.Contains(value))
-                        continue;
-                    value = $"\"{leftProperty}\">\"{rightProperty}\"";
-                    break;
-                default:
-                    value = $"\"{rightProperty}\"=\"{leftProperty}\"";
-                    if (constraints.Contains(value))
-                        continue;
-                    value = $"\"{leftProperty}\"=\"{rightProperty}\"";
-                    break;
+                Write(", -- ");
+                WriteLine(comment);
             }
-            if (!constraints.Contains(value))
-                constraints.Add(value);
+            (string Name, List<XElement> Sources) r = new(GenerateTableColumnSql(tableName, entityName, t.Name, t.Sources, out string comment2), t.Sources);
+            comment = comment2;
+            return r;
+        }).Where(t => t.Name is not null)).ToArray();
+    string[] keyColumns = columns.Where(c => c.Sources.Any(e => (FromXmlBoolean(e.Attribute(XNAME_IsPrimaryKey)?.Value) ?? false) && e.Name == XNAME_UniqueIdentifier))
+        .Select(c => $"\"{c.Name}\"").ToArray();
+    CheckConstraint constraints = null;
+    foreach (XElement element in new XElement[] { entityElement }.Concat(GetAllBaseEntities(entityElement)).Elements())
+    {
+        if (element.Name == XNAME_Check)
+        {
+            CheckConstraint cc = CheckConstraint.Import(element);
+            if (cc is not null)
+                constraints = (constraints is null) ? cc : constraints.And(cc);
         }
     }
-    // TODO: Need to change from appending comma/newline in case there are no constraints or key columns
     if (keyColumns.Length == 1)
     {
-        WriteLine(",");
+        if (string.IsNullOrEmpty(comment))
+            WriteLine(",");
+        else
+        {
+            Write(", -- ");
+            WriteLine(comment);
+            comment = null;
+        }
         Write("CONSTRAINT \"PK_");
         Write(tableName);
-        Write("\" PRIMARY KEY(\"");
+        Write("\" PRIMARY KEY(");
         Write(keyColumns[0]);
-        if (constraints.Count > 0)
-            Write("\")");
+        if (constraints is null)
+            WriteLine(")");
         else
-            WriteLine("\")");
+            Write(")");
     }
     else if (keyColumns.Length > 1)
     {
-        WriteLine(",");
+        if (string.IsNullOrEmpty(comment))
+            WriteLine(",");
+        else
+        {
+            Write(", -- ");
+            WriteLine(comment);
+            comment = null;
+        }
         Write("CONSTRAINT \"PK_");
         Write(tableName);
         Write("\" PRIMARY KEY(\"");
@@ -170,132 +120,160 @@ void GenerateCreateTableSql(string tableName, XElement entityElement)
             Write(", ");
             Write(c);
         }
-        if (constraints.Count > 0)
-            Write("\")");
-        else
+        if (constraints is null)
             WriteLine("\")");
+        else
+            Write("\")");
     }
-    if (constraints.Count == 1)
+    if (constraints is not null)
     {
-        WriteLine(",");
+        if (string.IsNullOrEmpty(comment))
+            WriteLine(",");
+        else
+        {
+            Write(", -- ");
+            WriteLine(comment);
+            comment = null;
+        }
         Write("CHECK(");
-        Write(constraints[0]);
+        Write(constraints.ToSqlString());
         WriteLine(")");
     }
-    else if (constraints.Count > 1)
-    {
-        WriteLine(",");
-        Write("CHECK((");
-        Write(constraints[0]);
-        foreach (string c in constraints.Skip(1))
-        {
-            Write(") AND (");
-            Write(c);
-        }
-        WriteLine("))");
-    }
     else if (keyColumns.Length == 0)
-        WriteLine("");
+    {
+        if (string.IsNullOrEmpty(comment))
+            WriteLine("");
+        else
+        {
+            Write(" -- ");
+            WriteLine(comment);
+        }
+    }
     PopIndent();
     WriteLine(");");
-    foreach ((string Name, LinkedList<XElement> Sources) tuple in columns)
-        GenerateTableIndexSql(tableName, entityName, tuple.Name, tuple.Sources);
+    foreach ((string Name, List<XElement> Sources) in columns)
+    {
+        if (Sources.Attributes(XNAME_IsIndexed).Any(a => FromXmlBoolean(a.Value) ?? false))
+        {
+            WriteLine("");
+            Write($"CREATE INDEX \"IDX_{tableName}_{Name}\" ON \"{tableName}\" (\"{Name}\"");
+            switch (Sources.Last().Name.LocalName)
+            {
+                case NAME_RelatedEntity:
+                case NAME_UniqueIdentifier:
+                case NAME_VolumeIdentifier:
+                    Write(" COLLATE NOCASE");
+                    break;
+                case NAME_NVarChar:
+                    XAttribute attribute = Sources.Attributes(XNAME_IsCaseSensitive).FirstOrDefault();
+                    if (attribute is not null)
+                    {
+                        Write(" COLLATE ");
+                        Write((FromXmlBoolean(attribute.Value) ?? false) ? SQL_TYPENAME_BINARY : "NOCASE");
+                    }
+                    break;
+            }
+            WriteLine(");");
+        }
+    }
 }
-
 string PropertyElementToSqlType(XElement propertyElement, out string typeName, out bool isNumeric)
 {
     if (propertyElement is null || propertyElement.Name.NamespaceName.Length > 0)
     {
         isNumeric = false;
-        typeName = "BLOB";
+        typeName = SQL_TYPENAME_BLOB;
         return typeName;
     }
+
     switch (propertyElement.Name.LocalName)
     {
         case NAME_Enum:
-            return PropertyElementToSqlType(FindLocalEnumByName(propertyElement.Attribute(XNAME_Type)?.Value), out typeName, out isNumeric);
+            string sqlType = PropertyElementToSqlType(FindLocalEnumTypeByName(propertyElement.Attribute(XNAME_Type)?.Value), out typeName, out _);
+            isNumeric = false;
+            return sqlType;
         case NAME_UniqueIdentifier:
         case NAME_RelatedEntity:
             isNumeric = false;
-            typeName = "UNIQUEIDENTIFIER";
+            typeName = SQL_TYPENAME_UNIQUEIDENTIFIER;
             return typeName;
         case NAME_NVarChar:
             isNumeric = false;
-            typeName = "NVARCHAR";
+            typeName = SQL_TYPENAME_NVARCHAR;
             return $"{typeName}({propertyElement.Attribute(XNAME_MaxLength)?.Value})";
         case NAME_VolumeIdentifier:
             isNumeric = false;
-            typeName = "NVARCHAR";
-            return "NVARCHAR(1024)";
+            typeName = SQL_TYPENAME_NVARCHAR;
+            return $"{typeName}(1024)";
         case NAME_MultiStringValue:
         case NAME_Text:
             isNumeric = false;
-            typeName = "TEXT";
+            typeName = SQL_TYPENAME_TEXT;
             return typeName;
         case NAME_DateTime:
             isNumeric = false;
-            typeName = "DATETIME";
+            typeName = SQL_TYPENAME_DATETIME;
             return typeName;
         case NAME_TimeSpan:
             isNumeric = false;
-            typeName = "TIME";
+            typeName = SQL_TYPENAME_TIME;
             return typeName;
         case NAME_Bit:
             isNumeric = false;
-            typeName = "BIT";
+            typeName = SQL_TYPENAME_BIT;
             return typeName;
         case NAME_ByteValues:
             isNumeric = false;
-            typeName = "VARBINARY";
+            typeName = SQL_TYPENAME_VARBINARY;
             return $"{typeName}({propertyElement.Attribute(XNAME_MaxLength)?.Value})";
         case NAME_MD5Hash:
             isNumeric = false;
-            typeName = "BINARY";
-            return "BINARY(16)";
+            typeName = SQL_TYPENAME_BINARY;
+            return $"{typeName}(16)";
         case NAME_DriveType:
             isNumeric = false;
-            typeName = "UNSIGNED TINYINT";
+            typeName = SQL_TYPENAME_UNSIGNED_TINYINT;
             return typeName;
         case NAME_Byte:
             isNumeric = true;
-            typeName = "UNSIGNED TINYINT";
+            typeName = SQL_TYPENAME_UNSIGNED_TINYINT;
             return typeName;
         case NAME_SByte:
             isNumeric = true;
-            typeName = "TINYINT";
+            typeName = SQL_TYPENAME_TINYINT;
             return typeName;
         case NAME_Short:
             isNumeric = true;
-            typeName = "SMALLINT";
+            typeName = SQL_TYPENAME_SMALLINT;
             return typeName;
         case NAME_UShort:
             isNumeric = true;
-            typeName = "UNSIGNED SMALLINT";
+            typeName = SQL_TYPENAME_UNSIGNED_SMALLINT;
             return typeName;
         case NAME_Int:
             isNumeric = true;
-            typeName = "INT";
+            typeName = SQL_TYPENAME_INT;
             return typeName;
         case NAME_UInt:
             isNumeric = true;
-            typeName = "UNSIGNED INT";
+            typeName = SQL_TYPENAME_UNSIGNED_INT;
             return typeName;
         case NAME_Long:
             isNumeric = true;
-            typeName = "BIGINT";
+            typeName = SQL_TYPENAME_BIGINT;
             return typeName;
         case NAME_ULong:
             isNumeric = true;
-            typeName = "UNSIGNED BIGINT";
+            typeName = SQL_TYPENAME_UNSIGNED_BIGINT;
             return typeName;
         case NAME_Float:
         case NAME_Double:
             isNumeric = true;
-            typeName = "REAL";
+            typeName = SQL_TYPENAME_REAL;
             return typeName;
         case NAME_Decimal:
             isNumeric = true;
-            typeName = "NUMERIC";
+            typeName = SQL_TYPENAME_NUMERIC;
             return typeName;
         default:
             isNumeric = false;
@@ -303,21 +281,20 @@ string PropertyElementToSqlType(XElement propertyElement, out string typeName, o
             return typeName;
     }
 }
-
-string GenerateTableColumnSql(string tableName, string entityName, string propertyName, LinkedList<XElement> sources, out string comment)
+string GenerateTableColumnSql(string tableName, string entityName, string propertyName, IList<XElement> sources, out string comment)
 {
-    XElement baseProperty = sources.Last.Value;
+    XElement baseProperty = sources.First();
     if (baseProperty.Name == XNAME_CollectionNavigation)
     {
         comment = null;
         return null;
     }
-    XElement implProperty = sources.First.Value;
+    XElement implProperty = sources.Last();
     string propertyTypeName = baseProperty.Name.LocalName;
-    string colName = implProperty.Attribute(XNAME_ColName)?.Value ?? propertyName;
-    bool isIndexed = sources.Attributes(XNAME_IsIndexed).Any(a => a.Value == "true");
+    string colName = (baseProperty.Name == XNAME_RelatedEntity) ? (baseProperty.Attribute(XNAME_FkPropertyName)?.Value ?? $"{propertyName}Id") :
+        implProperty.Attribute(XNAME_ColName)?.Value ?? propertyName;
     bool defaultNull = sources.Elements(XNAME_DefaultNull).Any();
-    bool allowNull = defaultNull || sources.Attributes(XNAME_AllowNull).Any(a => a.Value == "true");
+    bool allowNull = defaultNull || sources.Attributes(XNAME_AllowNull).Any(a => FromXmlBoolean(a.Value) ?? false);
     Write("\"");
     Write(colName);
     Write("\" ");
@@ -325,30 +302,45 @@ string GenerateTableColumnSql(string tableName, string entityName, string proper
     if (!allowNull)
         Write(" NOT NULL");
 
+    CheckConstraint check = null;
     if (isNumeric)
     {
         string minValue = sources.Attributes(XNAME_MinValue).Select(a => a.Value.Trim()).DefaultIfEmpty("").First();
         string maxValue = sources.Attributes(XNAME_MaxValue).Select(a => a.Value.Trim()).DefaultIfEmpty("").First();
         if (minValue.Length > 0)
         {
-            if (maxValue.Length > 0)
+            check = propertyTypeName switch
             {
-                if (allowNull)
-                    Write($" CHECK(\"{colName}\" IS NULL OR (\"{colName}\">={minValue} AND \"{colName}\"<={maxValue}))");
-                else
-                    Write($" CHECK(\"{colName}\">={minValue} AND \"{colName}\"<={maxValue})");
-            }
-            else if (allowNull)
-                Write($" CHECK(\"{colName}\" IS NULL OR \"{colName}\">={minValue})");
-            else
-                Write($" CHECK(\"{colName}\">={minValue})");
+                NAME_Byte => ComparisonConstraint.NotLessThan(new SimpleColumnValueReference(colName), ConstantValueReference.Byte(minValue)),
+                NAME_SByte => ComparisonConstraint.NotLessThan(new SimpleColumnValueReference(colName), ConstantValueReference.SByte(minValue)),
+                NAME_Short => ComparisonConstraint.NotLessThan(new SimpleColumnValueReference(colName), ConstantValueReference.Short(minValue)),
+                NAME_UShort => ComparisonConstraint.NotLessThan(new SimpleColumnValueReference(colName), ConstantValueReference.UShort(minValue)),
+                NAME_UInt => ComparisonConstraint.NotLessThan(new SimpleColumnValueReference(colName), ConstantValueReference.UInt(minValue)),
+                NAME_Long => ComparisonConstraint.NotLessThan(new SimpleColumnValueReference(colName), ConstantValueReference.Long(minValue)),
+                NAME_ULong => ComparisonConstraint.NotLessThan(new SimpleColumnValueReference(colName), ConstantValueReference.ULong(minValue)),
+                NAME_Decimal => ComparisonConstraint.NotLessThan(new SimpleColumnValueReference(colName), ConstantValueReference.Decimal(minValue)),
+                NAME_Double => ComparisonConstraint.NotLessThan(new SimpleColumnValueReference(colName), ConstantValueReference.Double(minValue)),
+                NAME_Float => ComparisonConstraint.NotLessThan(new SimpleColumnValueReference(colName), ConstantValueReference.Float(minValue)),
+                _ => ComparisonConstraint.NotLessThan(new SimpleColumnValueReference(colName), ConstantValueReference.Int(minValue)),
+            };
         }
-        else if (maxValue.Length > 0)
+        if (maxValue.Length > 0)
         {
-            if (allowNull)
-                Write($" CHECK(\"{colName}\" IS NULL OR \"{colName}\"<={maxValue})");
-            else
-                Write($" CHECK(\"{colName}\"<={maxValue})");
+            ComparisonConstraint cc = propertyTypeName switch
+            {
+                NAME_Byte => ComparisonConstraint.NotLessThan(new SimpleColumnValueReference(colName), ConstantValueReference.Byte(maxValue)),
+                NAME_SByte => ComparisonConstraint.NotLessThan(new SimpleColumnValueReference(colName), ConstantValueReference.SByte(maxValue)),
+                NAME_Short => ComparisonConstraint.NotLessThan(new SimpleColumnValueReference(colName), ConstantValueReference.Short(maxValue)),
+                NAME_UShort => ComparisonConstraint.NotLessThan(new SimpleColumnValueReference(colName), ConstantValueReference.UShort(maxValue)),
+                NAME_UInt => ComparisonConstraint.NotLessThan(new SimpleColumnValueReference(colName), ConstantValueReference.UInt(maxValue)),
+                NAME_Long => ComparisonConstraint.NotLessThan(new SimpleColumnValueReference(colName), ConstantValueReference.Long(maxValue)),
+                NAME_ULong => ComparisonConstraint.NotLessThan(new SimpleColumnValueReference(colName), ConstantValueReference.ULong(maxValue)),
+                NAME_Decimal => ComparisonConstraint.NotLessThan(new SimpleColumnValueReference(colName), ConstantValueReference.Decimal(maxValue)),
+                NAME_Double => ComparisonConstraint.NotLessThan(new SimpleColumnValueReference(colName), ConstantValueReference.Double(maxValue)),
+                NAME_Float => ComparisonConstraint.NotLessThan(new SimpleColumnValueReference(colName), ConstantValueReference.Float(maxValue)),
+                _ => ComparisonConstraint.NotLessThan(new SimpleColumnValueReference(colName), ConstantValueReference.Int(maxValue)),
+            };
+            check = (check is null) ? cc : check.And(cc);
         }
     }
     else
@@ -356,65 +348,58 @@ string GenerateTableColumnSql(string tableName, string entityName, string proper
         int minLength;
         switch (propertyTypeName)
         {
+            case NAME_Enum:
+                XElement enumType = FindLocalEnumTypeByName(baseProperty.Attribute(XNAME_Type)?.Value);
+                IEnumerable<string> enumValueStrings = enumType.Elements(XNAME_Field).Attributes(XNAME_Value).Select(a => a.Value);
+                bool isFlags = FromXmlBoolean(baseProperty.Attribute(XNAME_IsFlags)?.Value) ?? false;
+                check = typeName switch
+                {
+                    SQL_TYPENAME_TINYINT => GetEnumCheckConstraintMinMax(colName, sbyte.MinValue, sbyte.MaxValue, ConstantValueReference.Of, enumValueStrings.Select(v => XmlConvert.ToSByte(v)), isFlags ? (x, y) => (sbyte)(x | y) : null),
+                    SQL_TYPENAME_UNSIGNED_TINYINT => GetEnumCheckConstraintMinMax(colName, byte.MinValue, byte.MaxValue, ConstantValueReference.Of, enumValueStrings.Select(v => XmlConvert.ToByte(v)), isFlags ? (x, y) => (byte)(x | y) : null),
+                    SQL_TYPENAME_SMALLINT => GetEnumCheckConstraintMinMax(colName, short.MinValue, short.MaxValue, ConstantValueReference.Of, enumValueStrings.Select(v => XmlConvert.ToInt16(v)), isFlags ? (x, y) => (short)(x | y) : null),
+                    SQL_TYPENAME_UNSIGNED_SMALLINT => GetEnumCheckConstraintMinMax(colName, ushort.MinValue, ushort.MaxValue, ConstantValueReference.Of, enumValueStrings.Select(v => XmlConvert.ToUInt16(v)), isFlags ? (x, y) => (ushort)(x | y) : null),
+                    SQL_TYPENAME_UNSIGNED_INT => GetEnumCheckConstraintMinMax(colName, uint.MinValue, uint.MaxValue, ConstantValueReference.Of, enumValueStrings.Select(v => XmlConvert.ToUInt32(v)), isFlags ? (x, y) => x | y : null),
+                    SQL_TYPENAME_BIGINT => GetEnumCheckConstraintMinMax(colName, long.MinValue, long.MaxValue, ConstantValueReference.Of, enumValueStrings.Select(v => XmlConvert.ToInt64(v)), isFlags ? (x, y) => x | y : null),
+                    SQL_TYPENAME_UNSIGNED_BIGINT => GetEnumCheckConstraintMinMax(colName, ulong.MinValue, ulong.MaxValue, ConstantValueReference.Of, enumValueStrings.Select(v => XmlConvert.ToUInt64(v)), isFlags ? (x, y) => x | y : null),
+                    _ => GetEnumCheckConstraintMinMax(colName, int.MinValue, int.MaxValue, ConstantValueReference.Of, enumValueStrings.Select(v => XmlConvert.ToInt32(v)), isFlags ? (x, y) => x | y : null),
+                };
+                break;
             case NAME_NVarChar:
-                minLength = sources.Attributes(XNAME_MinLength).Select(a => XmlConvert.ToInt32(a.Value.Trim())).DefaultIfEmpty(0).First();
+                if (sources.Attributes(XNAME_IsNormalized).Any(a => FromXmlBoolean(a.Value) ?? false))
+                    check = new SimpleColumnValueReference(colName).Trimmed().Length().IsEqualTo(new SimpleColumnValueReference(colName).Length());
+                minLength = sources.Attributes(XNAME_MinLength).Select(a => FromXmlInt32(a.Value.Trim()) ?? 0).DefaultIfEmpty(0).First();
                 if (minLength > 0)
-                {
-                    if (sources.Attributes(XNAME_IsNormalized).Any(a => a.Value == "true"))
-                    {
-                        if (allowNull)
-                            Write($" CHECK(\"{colName}\" IS NULL OR (length(trim(\"{colName}\") = length(\"{colName}\") AND length(\"{colName}\")>{minLength - 1}))");
-                        else
-                            Write($" CHECK(length(trim(\"{colName}\") = length(\"{colName}\") AND length(\"{colName}\")>{minLength - 1})");
-                    }
-                    else if (allowNull)
-                        Write($" CHECK(\"{colName}\" IS NULL OR length(\"{colName}\")>{minLength - 1})");
-                    else
-                        Write($" CHECK(length(\"{colName}\")>{minLength - 1})");
-                }
-                else if (sources.Attributes(XNAME_IsNormalized).Any(a => a.Value == "true"))
-                {
-                    if (allowNull)
-                        Write($" CHECK(\"{colName}\" IS NULL OR length(trim(\"{colName}\") = length(\"{colName}\"))");
-                    else
-                        Write($" CHECK(length(trim(\"{colName}\") = length(\"{colName}\"))");
-                }
+                    check = (check is null) ? new SimpleColumnValueReference(colName).GreaterThanLiteral(minLength - 1) : check.And(new SimpleColumnValueReference(colName).GreaterThanLiteral(minLength - 1));
                 break;
             case NAME_ByteValues:
-                minLength = sources.Attributes(XNAME_MinLength).Select(a => XmlConvert.ToInt32(a.Value.Trim())).DefaultIfEmpty(0).First();
-                int maxLength = sources.Attributes(XNAME_MaxLength).Select(a => XmlConvert.ToInt32(a.Value.Trim())).DefaultIfEmpty(0).First();
+                minLength = sources.Attributes(XNAME_MinLength).Select(a => FromXmlInt32(a.Value.Trim()) ?? 0).DefaultIfEmpty(0).First();
                 if (minLength > 0)
-                {
-                    if (maxLength > 0)
-                    {
-                        if (allowNull)
-                            Write($" CHECK(\"{colName}\" IS NULL OR (length(\"{colName}\")<{maxLength + 1} AND length(\"{colName}\")>{minLength - 1}))");
-                        else
-                            Write($" CHECK(length(\"{colName}\")<{maxLength + 1} AND length(\"{colName}\")>{minLength - 1})");
-                    }
-                    else if (allowNull)
-                        Write($" CHECK(\"{colName}\" IS NULL OR length(\"{colName}\")>{minLength - 1})");
-                    else
-                        Write($" CHECK(length(\"{colName}\")>{minLength - 1})");
-                }
-                else if (maxLength > 0)
-                {
-                    if (allowNull)
-                        Write($" CHECK(\"{colName}\" IS NULL OR length(\"{colName}\")<{maxLength + 1})");
-                    else
-                        Write($" CHECK(length(\"{colName}\")<{maxLength + 1})");
-                }
+                    check = new SimpleColumnValueReference(colName).Length().GreaterThanLiteral(minLength - 1);
+                int maxLength = sources.Attributes(XNAME_MaxLength).Select(a => FromXmlInt32(a.Value.Trim()) ?? 0).DefaultIfEmpty(0).First();
+                if (maxLength > 0)
+                    check = new SimpleColumnValueReference(colName).Length().LessThanLiteral(maxLength + 1);
                 break;
             case NAME_RelatedEntity:
-                XElement parentEntityElement = FindLocalEntityByName(sources.Elements(XNAME_Reference).Select(e => e.Value).First());
-                Write("CONSTRAINT \"FK_");
-                Write(typeName);
-                Write(parentEntityElement.Attribute(XNAME_Name)?.Value);
+                Write(" CONSTRAINT \"");
+                Write(sources.Attributes(XNAME_ConstraintName).Select(e => e.Value).First());
                 Write("\" REFERENCES \"");
-                Write(parentEntityElement.Attribute(XNAME_TableName)?.Value);
+                Write(sources.Attributes(XNAME_Reference).Select(e => FindLocalEntityByName(e.Value)?.Attribute(XNAME_TableName)?.Value)
+                    .Where(n => n is not null).First());
                 Write("\"(\"Id\") ON DELETE RESTRICT");
                 break;
+            case NAME_DriveType:
+                check = new SimpleColumnValueReference(colName).NotLessThanLiteral(0).And(new SimpleColumnValueReference(colName).LessThanLiteral(7));
+                break;
+            default:
+                check = null;
+                break;
         }
+    }
+    if (check is not null)
+    {
+        Write(" CHECK(");
+        Write((allowNull ? new NullCheckConstraint(new SimpleColumnValueReference(colName), true).Or(check) : check).ToSqlString());
+        Write(")");
     }
 
     if (defaultNull)
@@ -449,7 +434,8 @@ string GenerateTableColumnSql(string tableName, string entityName, string proper
             switch (propertyTypeName)
             {
                 case NAME_Enum:
-                    Write(FindLocalFieldByFullName(defaultValue.Trim())?.Value);
+                    Write(" DEFAULT ");
+                    Write(FindLocalFieldByFullName(defaultValue.Trim())?.Attribute(XNAME_Value)?.Value);
                     comment = defaultValue.Trim();
                     break;
                 case NAME_Char:
@@ -457,23 +443,28 @@ string GenerateTableColumnSql(string tableName, string entityName, string proper
                 case NAME_VolumeIdentifier:
                 case NAME_MultiStringValue:
                 case NAME_Text:
+                    comment = null;
                     Write(" DEFAULT '");
-                    Write($"'{defaultValue.Replace("'", "''")}'");
+                    Write(defaultValue.Replace("'", "''"));
                     Write("'");
                     break;
                 case NAME_TimeSpan:
+                    comment = null;
                     Write(" DEFAULT ");
-                    Write(XmlConvert.ToTimeSpan(defaultValue.Trim()).ToString(@"\'hh\:mm\:ss\.fff\'"));
+                    Write(FromXmlTimeSpan(defaultValue.Trim()).Value.ToString(@"\'hh\:mm\:ss\.fff\'"));
                     break;
                 case NAME_DateTime:
-                    Write(XmlConvert.ToDateTime(defaultValue.Trim(), XmlDateTimeSerializationMode.RoundtripKind).ToLocalTime().ToString(@"'yyyy-MM-dd HH:mm:ss"));
+                    comment = null;
+                    Write(FromXmlDateTime(defaultValue.Trim()).Value.ToLocalTime().ToString(@"'yyyy-MM-dd HH:mm:ss"));
                     break;
                 case NAME_Bit:
-                    Write((defaultValue == "true") ? " DEFAULT 1," : " DEFAULT 0");
+                    comment = null;
+                    Write((FromXmlBoolean(defaultValue) ?? false) ? " DEFAULT 1," : " DEFAULT 0");
                     break;
                 case NAME_ByteValues:
+                    comment = null;
                     Write(" DEFAULT X'");
-                    Write(BitConverter.ToString(Convert.FromBase64String(defaultValue.Trim())));
+                    Write(BitConverter.ToString(FromXmlBinary(defaultValue.Trim())));
                     Write("'");
                     break;
                 case NAME_DriveType:
@@ -517,7 +508,7 @@ string GenerateTableColumnSql(string tableName, string entityName, string proper
             }
         }
     }
-    if (sources.Attributes(XNAME_IsUnique).Any(a => a.Value == "true"))
+    if (sources.Attributes(XNAME_IsUnique).Any(a => FromXmlBoolean(a.Value) ?? false))
         Write(" UNIQUE");
     switch (propertyTypeName)
     {
@@ -527,19 +518,387 @@ string GenerateTableColumnSql(string tableName, string entityName, string proper
             Write(" COLLATE NOCASE");
             break;
         case NAME_NVarChar:
-            XAttribute attribute = sources.Attributes(XNAME_IsUnique).FirstOrDefault();
+            XAttribute attribute = sources.Attributes(XNAME_IsCaseSensitive).FirstOrDefault();
             if (attribute is not null)
             {
                 Write(" COLLATE ");
-                Write(attribute.Value);
+                Write((FromXmlBoolean(attribute.Value) ?? false) ? SQL_TYPENAME_BINARY : "NOCASE");
             }
             break;
     }
     return colName;
 }
-
-void GenerateTableIndexSql(string tableName, string entityName, string colName, LinkedList<XElement> sources)
+CheckConstraint GetEnumCheckConstraintMinMax<T>(string colName, T minValue, T maxValue, Func<T, ConstantValueReference> toConstantValueReference, IEnumerable<T> values, Func<T, T, T> bitwiseOrFunc = null)
+    where T : struct, IComparable<T>
 {
+    T min = values.Min();
+    T max = values.Max();
+    if (bitwiseOrFunc is not null)
+    {
+        T av = values.Aggregate(bitwiseOrFunc);
+        if (av.CompareTo(min) < 0)
+            min = av;
+        else if (av.CompareTo(max) > 0)
+            max = av;
+    }
+    if (min.CompareTo(minValue) > 0)
+    {
+        if (max.CompareTo(maxValue) < 0)
+            return ComparisonConstraint.NotLessThan(new SimpleColumnValueReference(colName), toConstantValueReference(min))
+                .And(ComparisonConstraint.NotGreaterThan(new SimpleColumnValueReference(colName), toConstantValueReference(max)));
+        return ComparisonConstraint.NotLessThan(new SimpleColumnValueReference(colName), toConstantValueReference(min));
+    }
+    else if (max.CompareTo(maxValue) < 0)
+        return ComparisonConstraint.NotGreaterThan(new SimpleColumnValueReference(colName), toConstantValueReference(max));
+    return null;
+}
+public abstract class CheckConstraint : IEquatable<CheckConstraint>
+{
+    public abstract bool IsCompound { get; }
+    public static CheckConstraint Import(XElement checkElement)
+    {
+        if (checkElement is null)
+            return null;
+        if (checkElement.Name == XNAME_Check || checkElement.Name == XNAME_And)
+        {
+            CheckConstraint[] constraints = checkElement.Elements().Select(e => Import(e)).Where(c => c is not null).ToArray();
+            if (constraints.Length == 1)
+                return constraints[0];
+            if (constraints.Length > 1)
+                return new ComparisonGroup(false, constraints);
+            return null;
+        }
+        if (checkElement.Name == XNAME_Or)
+        {
+            CheckConstraint[] constraints = checkElement.Elements().Select(e => Import(e)).Where(c => c is not null).ToArray();
+            if (constraints.Length == 1)
+                return constraints[0];
+            if (constraints.Length > 1)
+                return new ComparisonGroup(true, constraints);
+            return null;
+        }
+        SimpleColumnValueReference name = new(checkElement.Attribute(XNAME_Name)?.Value);
+        if (checkElement.Name == XNAME_IsNull)
+            return new NullCheckConstraint(name, true);
+        if (checkElement.Name == XNAME_NotNull)
+            return new NullCheckConstraint(name, false);
+
+        ColumnValueReference lValue = (FromXmlBoolean(checkElement.Attribute(XNAME_Trimmed)?.Value) ?? false) ? ColumnValueMethodResultReference.Trim(name) : name;
+        if (FromXmlBoolean(checkElement.Attribute(XNAME_Length)?.Value) ?? false)
+            lValue = ColumnValueMethodResultReference.Length(lValue);
+        XElement other = checkElement.Elements().First();
+        ValueReference rValue;
+        if (other.Name == XNAME_OtherProperty)
+        {
+            name = new SimpleColumnValueReference(other.Attribute(XNAME_Name)?.Value);
+            ColumnValueReference r = (FromXmlBoolean(other.Attribute(XNAME_Trimmed)?.Value) ?? false) ? ColumnValueMethodResultReference.Trim(name) : name;
+            rValue = (FromXmlBoolean(other.Attribute(XNAME_Length)?.Value) ?? false) ? ColumnValueMethodResultReference.Length(r) : r;
+        }
+        else if (other.Name == XNAME_True)
+            rValue = ConstantValueReference.Of(true);
+        else if (other.Name == XNAME_False)
+            rValue = ConstantValueReference.Of(false);
+        else if (other.Name == XNAME_Now)
+            rValue = ConstantValueReference.Now();
+        else
+        {
+            string t = other.Attribute(XNAME_Value)?.Value;
+            if (other.Name == XNAME_Byte)
+                rValue = ConstantValueReference.Byte(t);
+            else if (other.Name == XNAME_SByte)
+                rValue = ConstantValueReference.SByte(t);
+            else if (other.Name == XNAME_Short)
+                rValue = ConstantValueReference.Short(t);
+            else if (other.Name == XNAME_UShort)
+                rValue = ConstantValueReference.UShort(t);
+            else if (other.Name == XNAME_Int)
+                rValue = ConstantValueReference.Int(t);
+            else if (other.Name == XNAME_UInt)
+                rValue = ConstantValueReference.UInt(t);
+            else if (other.Name == XNAME_Long)
+                rValue = ConstantValueReference.Long(t);
+            else if (other.Name == XNAME_ULong)
+                rValue = ConstantValueReference.ULong(t);
+            else if (other.Name == XNAME_Double)
+                rValue = ConstantValueReference.Double(t);
+            else if (other.Name == XNAME_Float)
+                rValue = ConstantValueReference.Float(t);
+            else if (other.Name == XNAME_Decimal)
+                rValue = ConstantValueReference.Decimal(t);
+            else if (other.Name == XNAME_DateTime)
+                rValue = ConstantValueReference.DateTime(t);
+            else
+                rValue = ConstantValueReference.String(t);
+        }
+        if (checkElement.Name == XNAME_LessThan)
+            return ComparisonConstraint.LessThan(lValue, rValue);
+        if (checkElement.Name == XNAME_NotGreaterThan)
+            return ComparisonConstraint.NotGreaterThan(lValue, rValue);
+        if (checkElement.Name == XNAME_NotEquals)
+            return ComparisonConstraint.NotEqual(lValue, rValue);
+        if (checkElement.Name == XNAME_NotLessThan)
+            return ComparisonConstraint.NotLessThan(lValue, rValue);
+        if (checkElement.Name == XNAME_GreaterThan)
+            return ComparisonConstraint.GreaterThan(lValue, rValue);
+        return ComparisonConstraint.AreEqual(lValue, rValue);
+    }
+    public abstract bool Equals(CheckConstraint other);
+    public abstract string ToSqlString();
+    public abstract string ToCsString();
+    public virtual CheckConstraint And(CheckConstraint cc)
+    {
+        if (cc is null || Equals(cc))
+            return this;
+        return new ComparisonGroup(false, this, cc);
+    }
+    public virtual CheckConstraint Or(CheckConstraint cc)
+    {
+        if (cc is null || Equals(cc))
+            return this;
+        return new ComparisonGroup(true, this, cc);
+    }
+}
+public abstract class ValueReference : IEquatable<ValueReference>
+{
+    public abstract bool Equals(ValueReference other);
+    public abstract string ToSqlString();
+    public abstract string ToCsString();
+}
+public abstract class ColumnValueReference : ValueReference, IEquatable<ColumnValueReference>
+{
+    public abstract string Name { get; }
+    public abstract bool Equals(ColumnValueReference other);
+    internal ComparisonConstraint LessThanLiteral(int value) => ComparisonConstraint.LessThan(this, ConstantValueReference.Of(value));
+    internal ComparisonConstraint NotLessThanLiteral(int minValue) => ComparisonConstraint.NotLessThan(this, ConstantValueReference.Of(minValue));
+    internal ComparisonConstraint GreaterThanLiteral(int value) => ComparisonConstraint.GreaterThan(this, ConstantValueReference.Of(value));
+    internal ComparisonConstraint IsEqualTo(ValueReference value) => ComparisonConstraint.AreEqual(this, value);
+    internal ColumnValueReference Length() => ColumnValueMethodResultReference.Length(this);
+    internal ColumnValueReference Trimmed() => ColumnValueMethodResultReference.Trim(this);
+}
+public sealed class ConstantValueReference : ValueReference, IEquatable<ConstantValueReference>
+{
+    private ConstantValueReference(string sqlValue, string csValue)
+    {
+        SqlValue = sqlValue;
+        CsValue = csValue;
+    }
+    public string SqlValue { get; }
+    public string CsValue { get; }
+    public bool Equals(ConstantValueReference other) => other is not null && (ReferenceEquals(this, other) || CsValue == other.CsValue);
+    public override bool Equals(ValueReference other) => other is ConstantValueReference o && Equals(o);
+    public override bool Equals(object obj) => obj is ConstantValueReference other && Equals(other);
+    public override int GetHashCode() => CsValue.GetHashCode();
+    public override string ToString() => SqlValue;
+    public override string ToCsString() => CsValue;
+    public override string ToSqlString() => SqlValue;
+    public static ConstantValueReference Int(string value) => new(value, value);
+    public static ConstantValueReference String(string value) => new($"N'{value}'", $"{value.Replace("\\", "\\\\").Replace("\r", "\\r").Replace("\n", "\\n").Replace("\t", "\\t").Replace("\"", "\\\"")}");
+    internal static ConstantValueReference DateTime(string value) => Of(XmlConvert.ToDateTime(value, XmlDateTimeSerializationMode.RoundtripKind));
+    internal static ConstantValueReference Decimal(string value) => new(value, $"{value}m");
+    internal static ConstantValueReference Float(string value) => new(value, $"{value}f");
+    internal static ConstantValueReference Double(string value) => new(value, value.Contains('.') ? value : $"{value}.0");
+    internal static ConstantValueReference ULong(string value) => new(value, $"{value}UL");
+    internal static ConstantValueReference Long(string value) => new(value, $"{value}L");
+    internal static ConstantValueReference UInt(string value) => new(value, $"{value}u");
+    internal static ConstantValueReference UShort(string value) => new(value, $"(ushort){value}");
+    internal static ConstantValueReference Short(string value) => new(value, $"(short){value}");
+    internal static ConstantValueReference SByte(string value) => new(value, $"(sbyte){value}");
+    internal static ConstantValueReference Byte(string value) => new(value, $"(byte){value}");
+    internal static ConstantValueReference Now() => new("(datetime('now','localtime'))", "DateTime.Now");
+    public static ConstantValueReference Of(bool value) => value ? new ConstantValueReference("1", "true") : new ConstantValueReference("0", "false");
+    internal static ConstantValueReference Of(sbyte value) => new(value.ToString(), $"(sbyte){value}");
+    internal static ConstantValueReference Of(byte value) => new(value.ToString(), $"(byte){value}");
+    internal static ConstantValueReference Of(short value) => new(value.ToString(), $"(short){value}");
+    internal static ConstantValueReference Of(ushort value) => new(value.ToString(), $"(ushort){value}");
+    internal static ConstantValueReference Of(int value) => new(value.ToString(), value.ToString());
+    internal static ConstantValueReference Of(uint value) => new(value.ToString(), $"{value}u");
+    internal static ConstantValueReference Of(long value) => new(value.ToString(), $"{value}L");
+    internal static ConstantValueReference Of(ulong value) => new(value.ToString(), $"{value}UL");
+    internal static ConstantValueReference Of(DateTime dateTime) => new(dateTime.ToString("yyyy-MM-dd HH:mm:ss"), $"new DateTime({dateTime.Year}, {dateTime.Month}, {dateTime.Day}, {dateTime.Hour}, {dateTime.Minute}, {dateTime.Second})");
+}
+public sealed class SimpleColumnValueReference : ColumnValueReference, IEquatable<SimpleColumnValueReference>
+{
+    private readonly string _name;
+    public SimpleColumnValueReference(string name) { _name = name ?? ""; }
+    public override string Name => _name;
+    public bool Equals(SimpleColumnValueReference other) => other is not null && (ReferenceEquals(this, other) || _name == other._name);
+    public override bool Equals(ColumnValueReference other) => other is SimpleColumnValueReference o && Equals(o);
+    public override bool Equals(ValueReference other) => other is SimpleColumnValueReference o && Equals(o);
+    public override bool Equals(object obj) => obj is SimpleColumnValueReference other && Equals(other);
+    public override int GetHashCode() => _name.GetHashCode();
+    public override string ToString() => ToSqlString();
+    public override string ToCsString() => _name;
+    public override string ToSqlString() => $"\"{_name}\"";
+}
+public sealed class ColumnValueMethodResultReference : ColumnValueReference, IEquatable<ColumnValueMethodResultReference>
+{
+    public const string SqlMethodName_trim = "trim";
+    public const string CsNemberName_trim = "Trim()";
+    public const string SqlMethodName_length = "length";
+    public const string CsNemberName_length = "Length";
+    private ColumnValueMethodResultReference(ColumnValueReference column, string methodName, string csMemberName)
+    {
+        Column = column;
+        SqlMethodName = methodName;
+    }
+    public ColumnValueReference Column { get; }
+    public string SqlMethodName { get; }
+    public string CsMemberName { get; }
+    public override string Name => Column.Name;
+    public static ColumnValueMethodResultReference LengthTrimmed(ColumnValueReference column) => (column is ColumnValueMethodResultReference m) ?
+        ((m.SqlMethodName == SqlMethodName_length) ? m : Length((m.SqlMethodName == SqlMethodName_trim) ? m : Trim(column))) : Length(Trim(column));
+    public static ColumnValueMethodResultReference Trim(ColumnValueReference column)
+    {
+        if (column is ColumnValueMethodResultReference m)
+        {
+            if (m.SqlMethodName == SqlMethodName_trim)
+                return m;
+            if (m.SqlMethodName == SqlMethodName_length)
+            {
+                if (m.Column is ColumnValueMethodResultReference c && c.SqlMethodName == SqlMethodName_trim)
+                    return m;
+                return Length(Trim(m.Column));
+            }
+        }
+        return new ColumnValueMethodResultReference(column, SqlMethodName_trim, CsNemberName_trim);
+    }
+    public static ColumnValueMethodResultReference Length(ColumnValueReference column) => (column is ColumnValueMethodResultReference m && m.SqlMethodName == SqlMethodName_length) ? m :
+        new ColumnValueMethodResultReference(column, SqlMethodName_length, CsNemberName_length);
+    public bool Equals(ColumnValueMethodResultReference other) => other is not null && (ReferenceEquals(this, other) || (SqlMethodName == other.SqlMethodName && Column.Equals(other.Column)));
+    public override bool Equals(ColumnValueReference other) => other is ColumnValueMethodResultReference o && Equals(o);
+    public override bool Equals(ValueReference other) => other is ColumnValueMethodResultReference o && Equals(o);
+    public override bool Equals(object obj) => obj is ColumnValueMethodResultReference other && Equals(other);
+    public override int GetHashCode() { unchecked { return (SqlMethodName.GetHashCode() * 3) ^ Column.GetHashCode(); } }
+    public override string ToString() => ToSqlString();
+    public override string ToSqlString() => $"{SqlMethodName}({Column.ToSqlString()})";
+    public override string ToCsString() => $"{Column.ToCsString()}.{CsMemberName}";
+}
+public sealed class NullCheckConstraint : CheckConstraint, IEquatable<NullCheckConstraint>
+{
+    public NullCheckConstraint(SimpleColumnValueReference column, bool isNull)
+    {
+        Column = column;
+        IsNull = isNull;
+    }
+    public SimpleColumnValueReference Column { get; }
+    public bool IsNull { get; }
+    public override bool IsCompound => false;
+    public bool Equals(NullCheckConstraint other) => other is not null && (ReferenceEquals(this, other) || (IsNull == other.IsNull && Column.Equals(other.Column)));
+    public override bool Equals(CheckConstraint other) => other is NullCheckConstraint o && Equals(o);
+    public override bool Equals(object obj) => obj is NullCheckConstraint other && Equals(other);
+    public override int GetHashCode() { unchecked { return (IsNull ? 0 : 3) ^ Column.GetHashCode(); } }
+    public override string ToString() => ToSqlString();
+    public override string ToSqlString() => IsNull ? $"{Column.ToSqlString()} IS NULL" : $"{Column.ToSqlString()} IS NOT NULL";
+    public override string ToCsString() => IsNull ? $"{Column.ToCsString()} is null" : $"{Column.ToCsString()} is not null";
+}
+public sealed class ComparisonConstraint : CheckConstraint, IEquatable<ComparisonConstraint>
+{
+    private ComparisonConstraint(ColumnValueReference lValue, string sqlOp, string csOp, ValueReference rValue)
+    {
+        LValue = lValue;
+        SqlOp = sqlOp;
+        CsOp = csOp;
+        RValue = rValue;
+    }
+    public ColumnValueReference LValue { get; }
+    public string SqlOp { get; }
+    public string CsOp { get; }
+    public ValueReference RValue { get; }
+    public override bool IsCompound => false;
+    public static ComparisonConstraint AreEqual(ColumnValueReference lValue, ValueReference rValue) => new(lValue, "=", "==", rValue);
+    public static ComparisonConstraint NotEqual(ColumnValueReference lValue, ValueReference rValue) => new(lValue, "<>", "!=", rValue);
+    public static ComparisonConstraint LessThan(ColumnValueReference lValue, ValueReference rValue) => new(lValue, "<", "<", rValue);
+    public static ComparisonConstraint NotGreaterThan(ColumnValueReference lValue, ValueReference rValue) => new(lValue, "<=", "<=", rValue);
+    public static ComparisonConstraint GreaterThan(ColumnValueReference lValue, ValueReference rValue) => new(lValue, ">", ">", rValue);
+    public static ComparisonConstraint NotLessThan(ColumnValueReference lValue, ValueReference rValue) => new(lValue, ">=", ">=", rValue);
+    public bool Equals(ComparisonConstraint other) => other is not null && (ReferenceEquals(this, other) || (LValue.Equals(other.LValue) && SqlOp == other.SqlOp && RValue.Equals(other.RValue)));
+    public override bool Equals(CheckConstraint other) => other is ComparisonConstraint o && Equals(o);
+    public override bool Equals(object obj) => obj is ComparisonConstraint other && Equals(other);
+    public override int GetHashCode() { unchecked { return (((LValue.GetHashCode() * 3) ^ SqlOp.GetHashCode()) * 5) ^ RValue.GetHashCode(); } }
+    public override string ToString() => ToSqlString();
+    public override string ToSqlString() => $"{LValue.ToSqlString()}{SqlOp}{RValue.ToSqlString()}";
+    public override string ToCsString() => $"{LValue.ToCsString()} {CsOp} {RValue.ToCsString()}";
+}
+public sealed class ComparisonGroup : CheckConstraint, IEquatable<ComparisonGroup>
+{
+    public ComparisonGroup(bool isOr, params CheckConstraint[] constraints)
+    {
+        if (constraints is null || (constraints = constraints.Where(c => c is not null)
+                .SelectMany(c => (c is ComparisonGroup g && g.IsOr == isOr) ? g.Constraints : Enumerable.Repeat(c, 1)).ToArray()).Length == 0)
+            throw new ArgumentOutOfRangeException(nameof(constraints));
+        using IEnumerator<CheckConstraint> enumerator = (constraints ?? Array.Empty<CheckConstraint>()).Where(c => c is not null).GetEnumerator();
+        if (!enumerator.MoveNext())
+            throw new ArgumentOutOfRangeException(nameof(constraints));
+        IsOr = isOr;
+        List<CheckConstraint> checkConstraints = new();
+        do
+        {
+            if (!checkConstraints.Contains(enumerator.Current))
+                checkConstraints.Add(enumerator.Current);
+        }
+        while (enumerator.MoveNext());
+        Constraints = new ReadOnlyCollection<CheckConstraint>(checkConstraints);
+    }
+    public bool IsOr { get; }
+    public ReadOnlyCollection<CheckConstraint> Constraints { get; }
+    public override bool IsCompound => Constraints.Count > 1;
+    public override CheckConstraint And(CheckConstraint cc)
+    {
+        if (cc is null || Equals(cc) || Constraints.Contains(cc))
+            return this;
+        if (IsOr)
+            return base.And(cc);
+        return new ComparisonGroup(false, Constraints.Concat((cc is ComparisonGroup cg && !cg.IsOr) ? cg.Constraints : Enumerable.Repeat(cc, 1)).ToArray());
+    }
+    public override CheckConstraint Or(CheckConstraint cc)
+    {
+        if (cc is null || Equals(cc) || Constraints.Contains(cc))
+            return this;
+        if (!IsOr)
+            return base.Or(cc);
+        return new ComparisonGroup(true, Constraints.Concat((cc is ComparisonGroup cg && cg.IsOr) ? cg.Constraints : Enumerable.Repeat(cc, 1)).ToArray());
+    }
+    public bool Equals(ComparisonGroup other)
+    {
+        if (other is null)
+            return false;
+        if (ReferenceEquals(this, other))
+            return true;
+        if (IsOr != other.IsOr || Constraints.Count != other.Constraints.Count)
+            return false;
+        return Constraints.All(c => other.Constraints.Contains(c));
+    }
+    public override bool Equals(CheckConstraint other) => other is ComparisonGroup g && Equals(g);
+    public override bool Equals(object obj) => obj is ComparisonGroup other && Equals(other);
+    public override int GetHashCode()
+    {
+        if (Constraints.Count == 0)
+            return IsOr ? 1 : 0;
+        int seed = Constraints.Count + 1;
+        int prime = FindPrimeNumber(seed & 0xffff);
+        seed = FindPrimeNumber(prime + 1);
+        return new int[] { IsOr ? 1 : 0 }.Concat(Constraints.Select(c => c.GetHashCode())).Aggregate(seed, (a, i) =>
+        {
+            unchecked { return (a * prime) ^ i; }
+        });
+    }
+    public override string ToString() => ToSqlString();
+    public override string ToSqlString()
+    {
+        if (Constraints.Count == 0)
+            return "";
+        if (Constraints.Count == 1)
+            return Constraints[0].ToSqlString();
+        return string.Join(IsOr ? " OR " : " AND ", Constraints.Select(c => c.IsCompound ? $"({c.ToSqlString()})" : c.ToSqlString()));
+    }
+    public override string ToCsString()
+    {
+        if (Constraints.Count == 0)
+            return "";
+        if (Constraints.Count == 1)
+            return Constraints[0].ToCsString();
+        return string.Join(IsOr? " || " : " && ", Constraints.Select(c => c.IsCompound? $"({c.ToCsString()})" : c.ToCsString()));
+    }
 }
 
 #>

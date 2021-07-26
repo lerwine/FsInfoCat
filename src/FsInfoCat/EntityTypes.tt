@@ -54,7 +54,7 @@ foreach (XElement enumElement in entityDefinitionsElement.Elements().Elements(XN
     string typeName = enumElement.Attribute(XNAME_Name)?.Value;
     XName elementName = enumElement.Name;
     if (string.IsNullOrWhiteSpace(typeName))
-        WriteLine($"#warning {XNAME_Name} attribute missing or empty for /{enumElement.Parent.Parent.Parent.Name}/{enumElement.Parent.Parent.Name}/{XNAME_EnumTypes}/{elementName}[(enumElement.NodesBeforeSelf().OfType<XElement>().Count(e => e.Name == elementName) + 1)]");
+        WriteLine($"#warning {XNAME_Name} attribute missing or empty for /{enumElement.Parent.Parent.Parent.Name}/{enumElement.Parent.Parent.Name}/{XNAME_EnumTypes}/{elementName}[{(enumElement.NodesBeforeSelf().OfType<XElement>().Count(e => e.Name == elementName) + 1)}]");
     else
     {
         string enumXPath = $"/{enumElement.Parent.Parent.Parent.Name}/{enumElement.Parent.Parent.Name}/{XNAME_EnumTypes}/{elementName}[@Name='{typeName}']";
@@ -146,10 +146,10 @@ namespace <#=DefaultNamespace#>.Local
 <#
 
 PushIndent("    ");
-
 isSubsequentMember = GenerateEnumTypes(entityDefinitionsElement.Elements(XNAME_Local).Elements(XNAME_EnumTypes).Elements());
 GenerateEntityTypes(entityDefinitionsElement.Elements(XNAME_Local).Elements(XNAME_Entity), isSubsequentMember);
 PopIndent();
+
 #>
 }
 
@@ -161,26 +161,27 @@ PushIndent("    ");
 isSubsequentMember = GenerateEnumTypes(entityDefinitionsElement.Elements(XNAME_Upstream).Elements(XNAME_EnumTypes).Elements());
 GenerateEntityTypes(entityDefinitionsElement.Elements(XNAME_Upstream).Elements(XNAME_Entity), isSubsequentMember);
 PopIndent();
+
 #>
 }
 
 <#+
 
-IEnumerable<string> GetBaseTypeNames(XElement entityElement)
+static IEnumerable<string> GetBaseTypeNames(XElement entityElement)
 {
     XElement parent = entityElement?.Parent;
     if (parent is null || entityElement?.Name != XNAME_Entity)
         return Enumerable.Empty<string>();
-
-    IEnumerable<string> extends = entityElement.Elements().Where(e => e.Name == XNAME_ExtendsEntity || e.Name == XNAME_ExtendsGenericEntity).Attributes(XNAME_Type).Select(a => a.Value);
-    IEnumerable<string> implements = entityElement.Elements().Where(e => e.Name == XNAME_Implements || e.Name == XNAME_ImplementsEntity || e.Name == XNAME_ImplementsGenericEntity).Attributes(XNAME_Type).Select(a => a.Value);
+            
+    IEnumerable<string> extends = GetElementsByNames(entityElement, XNAME_ExtendsEntity, XNAME_ExtendsGenericEntity).Attributes(XNAME_Type).Select(a => a.Value);
+    IEnumerable<string> implements = GetElementsByNames(entityElement, XNAME_Implements, XNAME_ImplementsEntity, XNAME_ImplementsGenericEntity).Attributes(XNAME_Type).Select(a => a.Value);
     switch (parent.Name.LocalName)
     {
-        case "Root":
+        case NAME_Root:
             extends = extends.Concat(implements).Distinct();
             break;
-        case "Local":
-        case "Upstream":
+        case NAME_Local:
+        case NAME_Upstream:
             extends = extends.Concat(entityElement.Attributes(XNAME_RootInterface).Select(a => a.Value)).Concat(implements).Distinct();
             break;
         default:
@@ -188,10 +189,9 @@ IEnumerable<string> GetBaseTypeNames(XElement entityElement)
     }
     return extends.Select(n => n.Replace("{", "<").Replace("}", ">"));
 }
-
 void WriteAmbientValueAttribute(XElement memberElement)
 {
-    string ambientValue = memberElement.Elements("AmbientString").Attributes(XNAME_Value).Select(a => a.Value).FirstOrDefault();
+    string ambientValue = memberElement.Elements(XNAME_AmbientString).Attributes(XNAME_Value).Select(a => a.Value).FirstOrDefault();
     if (ambientValue is not null)
     {
         Write("[AmbientValue(\"");
@@ -210,7 +210,7 @@ void WriteAmbientValueAttribute(XElement memberElement)
             return;
         }
     }
-    ambientValue = memberElement.Elements("AmbientUInt").Attributes(XNAME_Value).Select(a => a.Value).FirstOrDefault();
+    ambientValue = memberElement.Elements(XNAME_AmbientUInt).Attributes(XNAME_Value).Select(a => a.Value).FirstOrDefault();
     if (!string.IsNullOrWhiteSpace(ambientValue))
     {
         Write("[AmbientValue(");
@@ -218,7 +218,7 @@ void WriteAmbientValueAttribute(XElement memberElement)
         WriteLine("u)]");
         return;
     }
-    ambientValue = memberElement.Elements("AmbientLong").Attributes(XNAME_Value).Select(a => a.Value).FirstOrDefault();
+    ambientValue = memberElement.Elements(XNAME_AmbientLong).Attributes(XNAME_Value).Select(a => a.Value).FirstOrDefault();
     if (!string.IsNullOrWhiteSpace(ambientValue))
     {
         Write("[AmbientValue(");
@@ -226,7 +226,7 @@ void WriteAmbientValueAttribute(XElement memberElement)
         WriteLine("L)]");
         return;
     }
-    ambientValue = memberElement.Elements("AmbientULong").Attributes(XNAME_Value).Select(a => a.Value).FirstOrDefault();
+    ambientValue = memberElement.Elements(XNAME_AmbientULong).Attributes(XNAME_Value).Select(a => a.Value).FirstOrDefault();
     if (!string.IsNullOrWhiteSpace(ambientValue))
     {
         Write("[AmbientValue(");
@@ -264,7 +264,6 @@ void WriteAmbientValueAttribute(XElement memberElement)
         }
     }
 }
-
 void WriteDisplayAttribute(string memberName, Func<XName, IEnumerable<XAttribute>> getAttributes, string typeName = null)
 {
     string displayNameResource = getAttributes(XNAME_DisplayNameResource).Select(a => a.Value).DefaultIfEmpty(string.IsNullOrWhiteSpace(typeName) ?
@@ -300,7 +299,6 @@ void WriteDisplayAttribute(string memberName, Func<XName, IEnumerable<XAttribute
         WriteLine("))]");
     }
 }
-
 void GenerateXmlDoc(XElement xmlDocElement)
 {
     if (xmlDocElement is null)
@@ -381,7 +379,6 @@ void GenerateXmlDoc(XElement xmlDocElement)
     Write("/// ");
     WriteLine(lines.Last().Trim());
 }
-
 void GenerateEnumType(XElement enumElement)
 {
     GenerateXmlDoc(enumElement.Element(XNAME_summary));
@@ -392,7 +389,7 @@ void GenerateEnumType(XElement enumElement)
             e.RemoveAll();
         GenerateXmlDoc(e);
     }
-    if (enumElement.Attributes(XNAME_IsFlags).Any(a => a.Value == "true"))
+    if (enumElement.Attributes(XNAME_IsFlags).Any(a => FromXmlBoolean(a.Value) ?? false))
         WriteLine("[Flags]");
     Write("public enum ");
     string typeName = enumElement.Attribute(XNAME_Name)?.Value;
@@ -432,7 +429,6 @@ void GenerateEnumType(XElement enumElement)
     WriteLine("");
     WriteLine("}");
 }
-
 bool GenerateEnumTypes(IEnumerable<XElement> enumElements)
 {
     if (!enumElements.Any())
@@ -445,7 +441,6 @@ bool GenerateEnumTypes(IEnumerable<XElement> enumElements)
     }
     return true;
 }
-
 void GenerateEntityTypes(IEnumerable<XElement> entityElements, bool isSubsequentMember)
 {
     if (isSubsequentMember)
@@ -457,7 +452,94 @@ void GenerateEntityTypes(IEnumerable<XElement> entityElements, bool isSubsequent
         GenerateEntityInterface(typeElement);
     }
 }
+void GenerateProperty(string typeName, PropertyInheritanceInfo property)
+{
+    string propertyName = property.BaseDefinitionElement.Attribute(XNAME_Name)?.Value;
+    XElement commentDocElement = property.Source.Element(XNAME_summary) ?? property.InheritedProperties.Elements(XNAME_summary).FirstOrDefault();
+    if (commentDocElement is null)
+        WriteLine($"#warning No summary element found for {typeName}.{propertyName}");
+    else
+        GenerateXmlDoc(commentDocElement);
+    commentDocElement = property.Source.Element(XNAME_value) ?? property.InheritedProperties.Elements(XNAME_value).FirstOrDefault();
+    if (commentDocElement is null)
+        WriteLine($"#warning No value element found for {typeName}.{propertyName}");
+    else
+        GenerateXmlDoc(commentDocElement);
+    commentDocElement = property.Source.Element(XNAME_remarks) ?? property.InheritedProperties.Elements(XNAME_remarks).FirstOrDefault();
+    if (commentDocElement is not null)
+        GenerateXmlDoc(commentDocElement);
+    foreach (XElement e in property.Source.Elements(XNAME_seealso).Concat(property.InheritedProperties.Elements(XNAME_seealso)).Distinct())
+    {
+        if (!e.IsEmpty && e.Value.Trim().Length == 0)
+            e.RemoveAll();
+        GenerateXmlDoc(e);
+    }
+    WriteDisplayAttribute(propertyName, n => property.Source.Attributes(n).Concat(property.InheritedProperties.Attributes(n)));
+    bool allowsNull = property.BaseDefinitionElement.Attributes(XNAME_AllowNull).Any(a => FromXmlBoolean(a.Value) ?? false) || property.BaseDefinitionElement.Elements(XNAME_DefaultNull).Any();
+    if (property.IsNew)
+        Write("new ");
+    switch (property.Source.Name.LocalName)
+    {
+        case NAME_Byte:
+        case NAME_SByte:
+        case NAME_Short:
+        case NAME_UShort:
+        case NAME_Int:
+        case NAME_UInt:
+        case NAME_Long:
+        case NAME_ULong:
+        case NAME_Float:
+        case NAME_Double:
+            Write(property.Source.Name.LocalName.ToLower());
+            Write(allowsNull ? "? " : " ");
+            break;
+        case NAME_Text:
+        case NAME_NVarChar:
+            Write("string ");
+            break;
+        case NAME_VolumeIdentifier:
+        case NAME_DriveType:
+        case NAME_MD5Hash:
+        case NAME_DateTime:
+            Write(property.Source.Name.LocalName);
+            Write(allowsNull ? "? " : " ");
+            break;
+        case NAME_ByteValues:
+        case NAME_MultiStringValue:
+            Write(property.Source.Name.LocalName);
+            Write(" ");
+            break;
+        case NAME_UniqueIdentifier:
+        case NAME_NewIdNavRef:
+            Write(allowsNull ? "Guid? " : "Guid ");
+            break;
+        case NAME_Bit:
+            Write(allowsNull ? "bool? " : "bool ");
+            break;
+        case NAME_Enum:
+            Write(property.Source.Attribute(XNAME_Type)?.Value);
+            Write(allowsNull ? "? " : " ");
+            break;
+        case NAME_CollectionNavigation:
+        case NAME_NewCollectionNavigation:
+            Write("IEnumerable<");
+            Write(property.Source.Attribute(XNAME_ItemType)?.Value ?? GetItemEntity(property.Source)?.Attribute(XNAME_Name)?.Value);
+            Write("> ");
+            break;
+        case NAME_RelatedEntity:
+        case NAME_NewRelatedEntity:
+            Write(property.Source.Attribute(XNAME_TypeDef)?.Value ?? GetRelatedEntity(property.Source)?.Attribute(XNAME_Name)?.Value);
+            Write(" ");
+            break;
+        default:
+            WriteLine($"#warning Unknown element: {property.Source.Name.LocalName}");
+            Write("object ");
+            break;
+    }
 
+    Write(propertyName);
+    WriteLine(property.BaseDefinitionElement.Attributes(XNAME_IsGenericWritable).Any(a => FromXmlBoolean(a.Value) ?? false) ? " { get; set; }" : " { get; }");
+}
 void GenerateEntityInterface(XElement entityElement)
 {
     XElement[] baseEntities = GetAllBaseEntities(entityElement);
@@ -480,6 +562,7 @@ void GenerateEntityInterface(XElement entityElement)
             e.RemoveAll();
         GenerateXmlDoc(e);
     }
+    PropertyInheritanceInfo[] properties = entityElement.Elements(XNAME_Properties).Elements().Select(e => GetAllBaseProperties(e)).Where(e => !e.DoNotEmit).ToArray();
     Write("public interface ");
     if (baseTypeNames.Length > 0)
     {
@@ -494,111 +577,33 @@ void GenerateEntityInterface(XElement entityElement)
                 Write(", ");
             }
         }
+        if (properties.Length == 0)
+        {
+            Write(baseTypeNames.Last());
+            WriteLine("{ }");
+            return;
+        }
         WriteLine(baseTypeNames.Last());
     }
     else
+    {
+        if (properties.Length == 0)
+        {
+            Write(typeName);
+            WriteLine("{ }");
+            return;
+        }
         WriteLine(typeName);
+    }
+
     WriteLine("{");
     PushIndent("    ");
-    bool isSubsequentMember = false;
-    foreach (XElement propertyElement in entityElement.Elements(XNAME_Properties).Elements())
-    {
-        if (propertyElement.Name.NamespaceName.Length > 0)
-            continue;
-        string propertyName = propertyElement.Attribute(XNAME_Name)?.Value;
-        if (string.IsNullOrEmpty(propertyName))
-            continue;
-        XElement[] inheritedProperties = GetAllBaseProperties(propertyElement, baseEntities, out XElement baseProperty, out bool isNew, out bool doNotEmit);
-        if (doNotEmit)
-            continue;
-        if (isSubsequentMember)
-            WriteLine("");
-        else
-            isSubsequentMember = true;
-        commentDocElement = propertyElement.Element(XNAME_summary) ?? inheritedProperties.Elements(XNAME_summary).FirstOrDefault();
-        if (commentDocElement is null)
-            WriteLine($"#warning No summary element found for {typeName}.{propertyName}");
-        else
-            GenerateXmlDoc(commentDocElement);
-        commentDocElement = propertyElement.Element(XNAME_value) ?? inheritedProperties.Elements(XNAME_value).FirstOrDefault();
-        if (commentDocElement is null)
-            WriteLine($"#warning No value element found for {typeName}.{propertyName}");
-        else
-            GenerateXmlDoc(commentDocElement);
-        commentDocElement = propertyElement.Element(XNAME_remarks) ?? inheritedProperties.Elements(XNAME_remarks).FirstOrDefault();
-        if (commentDocElement is not null)
-            GenerateXmlDoc(commentDocElement);
-        foreach (XElement e in propertyElement.Elements(XNAME_seealso).Concat(inheritedProperties.Elements(XNAME_seealso)).Distinct())
-        {
-            if (!e.IsEmpty && e.Value.Trim().Length == 0)
-                e.RemoveAll();
-            GenerateXmlDoc(e);
-        }
-        WriteDisplayAttribute(propertyName, n => propertyElement.Attributes(n).Concat(inheritedProperties.Attributes(n)));
-        bool allowsNull = baseProperty.Attributes(XNAME_AllowNull).Any(a => a.Value == "true") || baseProperty.Elements(XNAME_DefaultNull).Any();
-        if (isNew)
-            Write("new ");
-        switch (propertyElement.Name.LocalName)
-        {
-            case "Byte":
-            case "SByte":
-            case "Short":
-            case "UShort":
-            case "Int":
-            case "UInt":
-            case "Long":
-            case "ULong":
-            case "Float":
-            case "Double":
-                Write(propertyElement.Name.LocalName.ToLower());
-                Write(allowsNull ? "? " : " ");
-                break;
-            case "Text":
-            case "NVarChar":
-                Write("string ");
-                break;
-            case "VolumeIdentifier":
-            case "DriveType":
-            case "MD5Hash":
-            case "DateTime":
-                Write(propertyElement.Name.LocalName);
-                Write(allowsNull ? "? " : " ");
-                break;
-            case "ByteValues":
-            case "MultiStringValue":
-                Write(propertyElement.Name.LocalName);
-                Write(" ");
-                break;
-            case "UniqueIdentifier":
-            case "NewIdNavRef":
-                Write(allowsNull ? "Guid? " : "Guid ");
-                break;
-            case "Bit":
-                Write(allowsNull ? "bool? " : "bool ");
-                break;
-            case "Enum":
-                Write(propertyElement.Attribute(XNAME_Type)?.Value);
-                Write(allowsNull ? "? " : " ");
-                break;
-            case "CollectionNavigation":
-            case "NewCollectionNavigation":
-                Write("IEnumerable<");
-                Write(propertyElement.Attribute(XNAME_ItemType)?.Value ?? GetCollectionNavigationItemEntity(propertyElement)?.Attribute(XNAME_Name)?.Value);
-                Write("> ");
-                break;
-            case "RelatedEntity":
-            case "NewRelatedEntity":
-                Write(propertyElement.Attribute(XNAME_TypeDef)?.Value ?? GetRelatedEntity(propertyElement)?.Attribute(XNAME_Name)?.Value);
-                Write(" ");
-                break;
-            default:
-                WriteLine($"#warning Unknown element: {propertyElement.Name.LocalName}");
-                Write("object ");
-                break;
-        }
 
-        Write(propertyName);
-        WriteLine(baseProperty.Attributes(XNAME_IsGenericWritable).Any(a => a.Value == "true") ? " { get; set; }" : " { get; }");
+    GenerateProperty(typeName, properties[0]);
+    foreach (PropertyInheritanceInfo p in properties.Skip(1))
+    {
+        WriteLine("");
+        GenerateProperty(typeName, p);
     }
 
     PopIndent();

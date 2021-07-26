@@ -4139,79 +4139,57 @@ namespace FsInfoCat
     /// <summary>Interface for database objects that contain extended file summary property values.</summary>
     /// <seealso cref="IPropertySet" />
     /// <seealso cref="ISummaryProperties" />
-    public interface ISummaryPropertySet : IPropertySet, ISummaryProperties
-    {
-    }
+    public interface ISummaryPropertySet : IPropertySet, ISummaryProperties{ }
 
     /// <summary>Interface for database objects that contain extended file property values of document files.</summary>
     /// <seealso cref="IPropertySet" />
     /// <seealso cref="IDocumentProperties" />
-    public interface IDocumentPropertySet : IPropertySet, IDocumentProperties
-    {
-    }
+    public interface IDocumentPropertySet : IPropertySet, IDocumentProperties{ }
 
     /// <summary>Interface for database objects that contain extended file property values of audio files.</summary>
     /// <seealso cref="IPropertySet" />
     /// <seealso cref="IAudioProperties" />
-    public interface IAudioPropertySet : IPropertySet, IAudioProperties
-    {
-    }
+    public interface IAudioPropertySet : IPropertySet, IAudioProperties{ }
 
     /// <summary>Interface for database objects that contain extended file DRM property values.</summary>
     /// <seealso cref="IPropertySet" />
     /// <seealso cref="IDRMProperties" />
-    public interface IDRMPropertySet : IPropertySet, IDRMProperties
-    {
-    }
+    public interface IDRMPropertySet : IPropertySet, IDRMProperties{ }
 
     /// <summary>Interface for database objects that contain extended file GPS property values.</summary>
     /// <seealso cref="IPropertySet" />
     /// <seealso cref="IGPSProperties" />
-    public interface IGPSPropertySet : IPropertySet, IGPSProperties
-    {
-    }
+    public interface IGPSPropertySet : IPropertySet, IGPSProperties{ }
 
     /// <summary>Interface for database objects that contain extended file property values of image files.</summary>
     /// <seealso cref="IPropertySet" />
     /// <seealso cref="IImageProperties" />
-    public interface IImagePropertySet : IPropertySet, IImageProperties
-    {
-    }
+    public interface IImagePropertySet : IPropertySet, IImageProperties{ }
 
     /// <summary>Interface for database objects that contain extended file property values of media files.</summary>
     /// <seealso cref="IPropertySet" />
     /// <seealso cref="IMediaProperties" />
-    public interface IMediaPropertySet : IPropertySet, IMediaProperties
-    {
-    }
+    public interface IMediaPropertySet : IPropertySet, IMediaProperties{ }
 
     /// <summary>Interface for database objects that contain extended file property values of music files.</summary>
     /// <seealso cref="IPropertySet" />
     /// <seealso cref="IMusicProperties" />
-    public interface IMusicPropertySet : IPropertySet, IMusicProperties
-    {
-    }
+    public interface IMusicPropertySet : IPropertySet, IMusicProperties{ }
 
     /// <summary>Interface for database objects that contain extended file property values of photo files.</summary>
     /// <seealso cref="IPropertySet" />
     /// <seealso cref="IPhotoProperties" />
-    public interface IPhotoPropertySet : IPropertySet, IPhotoProperties
-    {
-    }
+    public interface IPhotoPropertySet : IPropertySet, IPhotoProperties{ }
 
     /// <summary>Interface for database objects that contain extended file property values of recorded TV files.</summary>
     /// <seealso cref="IPropertySet" />
     /// <seealso cref="IRecordedTVProperties" />
-    public interface IRecordedTVPropertySet : IPropertySet, IRecordedTVProperties
-    {
-    }
+    public interface IRecordedTVPropertySet : IPropertySet, IRecordedTVProperties{ }
 
     /// <summary>Interface for database objects that contain extended file property values of video files.</summary>
     /// <seealso cref="IPropertySet" />
     /// <seealso cref="IVideoProperties" />
-    public interface IVideoPropertySet : IPropertySet, IVideoProperties
-    {
-    }
+    public interface IVideoPropertySet : IPropertySet, IVideoProperties{ }
 
     /// <summary>Represents a structural instance of file.</summary>
     /// <seealso cref="IDbFsItem" />
@@ -4543,8 +4521,8 @@ namespace FsInfoCat.Local
     /// <seealso cref="IAccessError&lt;ILocalVolume&gt;" />
     public interface ILocalVolumeAccessError : ILocalAccessError, IVolumeAccessError, IAccessError<ILocalVolume>
     {
-        /// <summary>Gets the target volume to which the access error applies.</summary>
-        /// <value>The <typeparamref name="IVolume" /> entity that this error applies to.</value>
+        /// <summary>Gets the target entity to which the access error applies.</summary>
+        /// <value>The <see cref="ILocalDbEntity" /> object that this error applies to.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_Target), ResourceType = typeof(Properties.Resources))]
         new ILocalVolume Target { get; }
     }
@@ -4672,79 +4650,57 @@ namespace FsInfoCat.Local
     /// <summary></summary>
     /// <seealso cref="ILocalPropertySet" />
     /// <seealso cref="ISummaryPropertySet" />
-    public interface ILocalSummaryPropertySet : ILocalPropertySet, ISummaryPropertySet
-    {
-    }
+    public interface ILocalSummaryPropertySet : ILocalPropertySet, ISummaryPropertySet{ }
 
     /// <summary></summary>
     /// <seealso cref="ILocalPropertySet" />
     /// <seealso cref="IDocumentPropertySet" />
-    public interface ILocalDocumentPropertySet : ILocalPropertySet, IDocumentPropertySet
-    {
-    }
+    public interface ILocalDocumentPropertySet : ILocalPropertySet, IDocumentPropertySet{ }
 
     /// <summary></summary>
     /// <seealso cref="ILocalPropertySet" />
     /// <seealso cref="IAudioPropertySet" />
-    public interface ILocalAudioPropertySet : ILocalPropertySet, IAudioPropertySet
-    {
-    }
+    public interface ILocalAudioPropertySet : ILocalPropertySet, IAudioPropertySet{ }
 
     /// <summary></summary>
     /// <seealso cref="ILocalPropertySet" />
     /// <seealso cref="IDRMPropertySet" />
-    public interface ILocalDRMPropertySet : ILocalPropertySet, IDRMPropertySet
-    {
-    }
+    public interface ILocalDRMPropertySet : ILocalPropertySet, IDRMPropertySet{ }
 
     /// <summary></summary>
     /// <seealso cref="ILocalPropertySet" />
     /// <seealso cref="IGPSPropertySet" />
-    public interface ILocalGPSPropertySet : ILocalPropertySet, IGPSPropertySet
-    {
-    }
+    public interface ILocalGPSPropertySet : ILocalPropertySet, IGPSPropertySet{ }
 
     /// <summary></summary>
     /// <seealso cref="ILocalPropertySet" />
     /// <seealso cref="IImagePropertySet" />
-    public interface ILocalImagePropertySet : ILocalPropertySet, IImagePropertySet
-    {
-    }
+    public interface ILocalImagePropertySet : ILocalPropertySet, IImagePropertySet{ }
 
     /// <summary></summary>
     /// <seealso cref="ILocalPropertySet" />
     /// <seealso cref="IMediaPropertySet" />
-    public interface ILocalMediaPropertySet : ILocalPropertySet, IMediaPropertySet
-    {
-    }
+    public interface ILocalMediaPropertySet : ILocalPropertySet, IMediaPropertySet{ }
 
     /// <summary></summary>
     /// <seealso cref="ILocalPropertySet" />
     /// <seealso cref="IMusicPropertySet" />
-    public interface ILocalMusicPropertySet : ILocalPropertySet, IMusicPropertySet
-    {
-    }
+    public interface ILocalMusicPropertySet : ILocalPropertySet, IMusicPropertySet{ }
 
     /// <summary></summary>
     /// <seealso cref="ILocalPropertySet" />
     /// <seealso cref="IPhotoPropertySet" />
-    public interface ILocalPhotoPropertySet : ILocalPropertySet, IPhotoPropertySet
-    {
-    }
+    public interface ILocalPhotoPropertySet : ILocalPropertySet, IPhotoPropertySet{ }
 
     /// <summary></summary>
     /// <seealso cref="ILocalPropertySet" />
     /// <seealso cref="IRecordedTVPropertySet" />
-    public interface ILocalRecordedTVPropertySet : ILocalPropertySet, IRecordedTVPropertySet
-    {
-    }
+    public interface ILocalRecordedTVPropertySet : ILocalPropertySet, IRecordedTVPropertySet{ }
 
     /// <summary></summary>
     /// <seealso cref="ILocalPropertySet" />
     /// <seealso cref="IVideoPropertySet" />
-    public interface ILocalVideoPropertySet : ILocalPropertySet, IVideoPropertySet
-    {
-    }
+    public interface ILocalVideoPropertySet : ILocalPropertySet, IVideoPropertySet{ }
 
     /// <summary></summary>
     /// <seealso cref="ILocalDbEntity" />
@@ -5491,79 +5447,57 @@ namespace FsInfoCat.Upstream
     /// <summary></summary>
     /// <seealso cref="IUpstreamPropertySet" />
     /// <seealso cref="ISummaryPropertySet" />
-    public interface IUpstreamSummaryPropertySet : IUpstreamPropertySet, ISummaryPropertySet
-    {
-    }
+    public interface IUpstreamSummaryPropertySet : IUpstreamPropertySet, ISummaryPropertySet{ }
 
     /// <summary></summary>
     /// <seealso cref="IUpstreamPropertySet" />
     /// <seealso cref="IDocumentPropertySet" />
-    public interface IUpstreamDocumentPropertySet : IUpstreamPropertySet, IDocumentPropertySet
-    {
-    }
+    public interface IUpstreamDocumentPropertySet : IUpstreamPropertySet, IDocumentPropertySet{ }
 
     /// <summary></summary>
     /// <seealso cref="IUpstreamPropertySet" />
     /// <seealso cref="IAudioPropertySet" />
-    public interface IUpstreamAudioPropertySet : IUpstreamPropertySet, IAudioPropertySet
-    {
-    }
+    public interface IUpstreamAudioPropertySet : IUpstreamPropertySet, IAudioPropertySet{ }
 
     /// <summary></summary>
     /// <seealso cref="IUpstreamPropertySet" />
     /// <seealso cref="IDRMPropertySet" />
-    public interface IUpstreamDRMPropertySet : IUpstreamPropertySet, IDRMPropertySet
-    {
-    }
+    public interface IUpstreamDRMPropertySet : IUpstreamPropertySet, IDRMPropertySet{ }
 
     /// <summary></summary>
     /// <seealso cref="IUpstreamPropertySet" />
     /// <seealso cref="IGPSPropertySet" />
-    public interface IUpstreamGPSPropertySet : IUpstreamPropertySet, IGPSPropertySet
-    {
-    }
+    public interface IUpstreamGPSPropertySet : IUpstreamPropertySet, IGPSPropertySet{ }
 
     /// <summary></summary>
     /// <seealso cref="IUpstreamPropertySet" />
     /// <seealso cref="IImagePropertySet" />
-    public interface IUpstreamImagePropertySet : IUpstreamPropertySet, IImagePropertySet
-    {
-    }
+    public interface IUpstreamImagePropertySet : IUpstreamPropertySet, IImagePropertySet{ }
 
     /// <summary></summary>
     /// <seealso cref="IUpstreamPropertySet" />
     /// <seealso cref="IMediaPropertySet" />
-    public interface IUpstreamMediaPropertySet : IUpstreamPropertySet, IMediaPropertySet
-    {
-    }
+    public interface IUpstreamMediaPropertySet : IUpstreamPropertySet, IMediaPropertySet{ }
 
     /// <summary></summary>
     /// <seealso cref="IUpstreamPropertySet" />
     /// <seealso cref="IMusicPropertySet" />
-    public interface IUpstreamMusicPropertySet : IUpstreamPropertySet, IMusicPropertySet
-    {
-    }
+    public interface IUpstreamMusicPropertySet : IUpstreamPropertySet, IMusicPropertySet{ }
 
     /// <summary></summary>
     /// <seealso cref="IUpstreamPropertySet" />
     /// <seealso cref="IPhotoPropertySet" />
-    public interface IUpstreamPhotoPropertySet : IUpstreamPropertySet, IPhotoPropertySet
-    {
-    }
+    public interface IUpstreamPhotoPropertySet : IUpstreamPropertySet, IPhotoPropertySet{ }
 
     /// <summary></summary>
     /// <seealso cref="IUpstreamPropertySet" />
     /// <seealso cref="IRecordedTVPropertySet" />
-    public interface IUpstreamRecordedTVPropertySet : IUpstreamPropertySet, IRecordedTVPropertySet
-    {
-    }
+    public interface IUpstreamRecordedTVPropertySet : IUpstreamPropertySet, IRecordedTVPropertySet{ }
 
     /// <summary></summary>
     /// <seealso cref="IUpstreamPropertySet" />
     /// <seealso cref="IVideoPropertySet" />
-    public interface IUpstreamVideoPropertySet : IUpstreamPropertySet, IVideoPropertySet
-    {
-    }
+    public interface IUpstreamVideoPropertySet : IUpstreamPropertySet, IVideoPropertySet{ }
 
     /// <summary></summary>
     /// <seealso cref="IUpstreamDbEntity" />
