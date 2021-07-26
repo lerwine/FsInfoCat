@@ -1603,7 +1603,7 @@
                 <xs:attribute name="TableName" use="optional">
                     <xs:simpleType>
                         <xs:restriction base="CsIdentifier">
-                            <xs:pattern value="^(?i)(?!(PK|FK|IDX|UK)_)" />
+                            <xs:pattern value="^(?i)(?!(PK|FK|IDX|UK)_).+" />
                         </xs:restriction>
                     </xs:simpleType>
                 </xs:attribute>
