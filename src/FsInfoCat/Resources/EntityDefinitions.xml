@@ -5465,77 +5465,77 @@
         </Entity>
         <Entity Name="ILocalSummaryPropertySet" RootInterface="ISummaryPropertySet" TableName="SummaryPropertySets">
             <summary>
-                Interface for database objects that contain extended file summary property values.
+                Contains extended summary file property values.
             </summary>
             <ExtendsEntity Type="ILocalPropertySet" />
             <Properties></Properties>
         </Entity>
         <Entity Name="ILocalDocumentPropertySet" RootInterface="IDocumentPropertySet" TableName="DocumentPropertySets">
             <summary>
-                Interface for database objects that contain extended file property values of document files.
+                Contains extended document file property values.
             </summary>
             <ExtendsEntity Type="ILocalPropertySet" />
             <Properties></Properties>
         </Entity>
         <Entity Name="ILocalAudioPropertySet" RootInterface="IAudioPropertySet" TableName="AudioPropertySets">
             <summary>
-                Interface for database objects that contain extended file property values of audio files.
+                Contains extended audio file property values.
             </summary>
             <ExtendsEntity Type="ILocalPropertySet" />
             <Properties></Properties>
         </Entity>
         <Entity Name="ILocalDRMPropertySet" RootInterface="IDRMPropertySet" TableName="DRMPropertySets">
             <summary>
-                Interface for database objects that contain extended file DRM property values.
+                Contains extended DRM property values.
             </summary>
             <ExtendsEntity Type="ILocalPropertySet" />
             <Properties></Properties>
         </Entity>
         <Entity Name="ILocalGPSPropertySet" RootInterface="IGPSPropertySet" TableName="GPSPropertySets">
             <summary>
-                Interface for database objects that contain extended file GPS property values.
+                Contains extended GPS property values.
             </summary>
             <ExtendsEntity Type="ILocalPropertySet" />
             <Properties></Properties>
         </Entity>
         <Entity Name="ILocalImagePropertySet" RootInterface="IImagePropertySet" TableName="ImagePropertySets">
             <summary>
-                Interface for database objects that contain extended file property values of image files.
+                Contains extended image file property values.
             </summary>
             <ExtendsEntity Type="ILocalPropertySet" />
             <Properties></Properties>
         </Entity>
         <Entity Name="ILocalMediaPropertySet" RootInterface="IMediaPropertySet" TableName="MediaPropertySets">
             <summary>
-                Interface for database objects that contain extended file property values of media files.
+                Contains extended media file property values.
             </summary>
             <ExtendsEntity Type="ILocalPropertySet" />
             <Properties></Properties>
         </Entity>
         <Entity Name="ILocalMusicPropertySet" RootInterface="IMusicPropertySet" TableName="MusicPropertySets">
             <summary>
-                Interface for database objects that contain extended file property values of music files.
+                Contains extended music file property values.
             </summary>
             <ExtendsEntity Type="ILocalPropertySet" />
             <Properties></Properties>
         </Entity>
         <Entity Name="ILocalPhotoPropertySet" RootInterface="IPhotoPropertySet" TableName="PhotoPropertySets">
             <summary>
-                Interface for database objects that contain extended file property values of photo files.
+                Contains extended photo file property values.
             </summary>
             <ExtendsEntity Type="ILocalPropertySet" />
             <Properties></Properties>
         </Entity>
         <Entity Name="ILocalRecordedTVPropertySet" RootInterface="IRecordedTVPropertySet" TableName="RecordedTVPropertySets">
             <summary>
-                Interface for database objects that contain extended file property values of recorded TV files.
+                Contains extended recorded TV file property values.
             </summary>
             <ExtendsEntity Type="ILocalPropertySet" />
             <Properties></Properties>
         </Entity>
         <Entity Name="ILocalVideoPropertySet" RootInterface="IVideoPropertySet" TableName="VideoPropertySets">
             <summary>
-                Interface for database objects that contain extended file property values of video files.
+                Contains extended video file property values.
             </summary>
             <ExtendsEntity Type="ILocalPropertySet" />
             <Properties></Properties>
@@ -5554,7 +5554,7 @@
         </Entity>
         <Entity Name="ILocalFile" RootInterface="IFile" TableName="Files">
             <summary>
-                Represents a structural instance of file.
+                Represents a structural instance of file on a local host file system.
             </summary>
             <ExtendsEntity Type="ILocalDbFsItem" />
             <Properties>
@@ -6337,77 +6337,77 @@
         </Entity>
         <Entity Name="IUpstreamSummaryPropertySet" RootInterface="ISummaryPropertySet" TableName="SummaryPropertySets">
             <summary>
-                Interface for database objects that contain extended file summary property values.
+                Contains extended summary file property values.
             </summary>
             <ExtendsEntity Type="IUpstreamPropertySet" />
             <Properties></Properties>
         </Entity>
         <Entity Name="IUpstreamDocumentPropertySet" RootInterface="IDocumentPropertySet" TableName="DocumentPropertySets">
             <summary>
-                Interface for database objects that contain extended file property values of document files.
+                Contains extended document file property values.
             </summary>
             <ExtendsEntity Type="IUpstreamPropertySet" />
             <Properties></Properties>
         </Entity>
         <Entity Name="IUpstreamAudioPropertySet" RootInterface="IAudioPropertySet" TableName="AudioPropertySets">
             <summary>
-                Interface for database objects that contain extended file property values of audio files.
+                Contains extended audio file property values.
             </summary>
             <ExtendsEntity Type="IUpstreamPropertySet" />
             <Properties></Properties>
         </Entity>
         <Entity Name="IUpstreamDRMPropertySet" RootInterface="IDRMPropertySet" TableName="DRMPropertySets">
             <summary>
-                Interface for database objects that contain extended file DRM property values.
+                Contains extended DRM (Digital Rights Management) property values.
             </summary>
             <ExtendsEntity Type="IUpstreamPropertySet" />
             <Properties></Properties>
         </Entity>
         <Entity Name="IUpstreamGPSPropertySet" RootInterface="IGPSPropertySet" TableName="GPSPropertySets">
             <summary>
-                Interface for database objects that contain extended file GPS property values.
+                Contains extended GPS property values.
             </summary>
             <ExtendsEntity Type="IUpstreamPropertySet" />
             <Properties></Properties>
         </Entity>
         <Entity Name="IUpstreamImagePropertySet" RootInterface="IImagePropertySet" TableName="ImagePropertySets">
             <summary>
-                Interface for database objects that contain extended file property values of image files.
+                Contains extended image file property values.
             </summary>
             <ExtendsEntity Type="IUpstreamPropertySet" />
             <Properties></Properties>
         </Entity>
         <Entity Name="IUpstreamMediaPropertySet" RootInterface="IMediaPropertySet" TableName="MediaPropertySets">
             <summary>
-                Interface for database objects that contain extended file property values of media files.
+                Contains extended media file property values.
             </summary>
             <ExtendsEntity Type="IUpstreamPropertySet" />
             <Properties></Properties>
         </Entity>
         <Entity Name="IUpstreamMusicPropertySet" RootInterface="IMusicPropertySet" TableName="MusicPropertySets">
             <summary>
-                Interface for database objects that contain extended file property values of music files.
+                Contains extended music file property values.
             </summary>
             <ExtendsEntity Type="IUpstreamPropertySet" />
             <Properties></Properties>
         </Entity>
         <Entity Name="IUpstreamPhotoPropertySet" RootInterface="IPhotoPropertySet" TableName="PhotoPropertySets">
             <summary>
-                Interface for database objects that contain extended file property values of photo files.
+                Contains extended photo file property values.
             </summary>
             <ExtendsEntity Type="IUpstreamPropertySet" />
             <Properties></Properties>
         </Entity>
         <Entity Name="IUpstreamRecordedTVPropertySet" RootInterface="IRecordedTVPropertySet" TableName="RecordedTVPropertySets">
             <summary>
-                Interface for database objects that contain extended file property values of recorded TV files.
+                Contains extended recorded TV file property values.
             </summary>
             <ExtendsEntity Type="IUpstreamPropertySet" />
             <Properties></Properties>
         </Entity>
         <Entity Name="IUpstreamVideoPropertySet" RootInterface="IVideoPropertySet" TableName="VideoPropertySets">
             <summary>
-                Interface for database objects that contain extended file property values of video files.
+                Contains extended video file property values.
             </summary>
             <ExtendsEntity Type="IUpstreamPropertySet" />
             <Properties></Properties>

@@ -4647,57 +4647,57 @@ namespace FsInfoCat.Local
         new IEnumerable<ILocalFile> Files { get; }
     }
 
-    /// <summary>Interface for database objects that contain extended file summary property values.</summary>
+    /// <summary>Contains extended summary file property values.</summary>
     /// <seealso cref="ILocalPropertySet" />
     /// <seealso cref="ISummaryPropertySet" />
     public interface ILocalSummaryPropertySet : ILocalPropertySet, ISummaryPropertySet{ }
 
-    /// <summary>Interface for database objects that contain extended file property values of document files.</summary>
+    /// <summary>Contains extended document file property values.</summary>
     /// <seealso cref="ILocalPropertySet" />
     /// <seealso cref="IDocumentPropertySet" />
     public interface ILocalDocumentPropertySet : ILocalPropertySet, IDocumentPropertySet{ }
 
-    /// <summary>Interface for database objects that contain extended file property values of audio files.</summary>
+    /// <summary>Contains extended audio file property values.</summary>
     /// <seealso cref="ILocalPropertySet" />
     /// <seealso cref="IAudioPropertySet" />
     public interface ILocalAudioPropertySet : ILocalPropertySet, IAudioPropertySet{ }
 
-    /// <summary>Interface for database objects that contain extended file DRM property values.</summary>
+    /// <summary>Contains extended DRM property values.</summary>
     /// <seealso cref="ILocalPropertySet" />
     /// <seealso cref="IDRMPropertySet" />
     public interface ILocalDRMPropertySet : ILocalPropertySet, IDRMPropertySet{ }
 
-    /// <summary>Interface for database objects that contain extended file GPS property values.</summary>
+    /// <summary>Contains extended GPS property values.</summary>
     /// <seealso cref="ILocalPropertySet" />
     /// <seealso cref="IGPSPropertySet" />
     public interface ILocalGPSPropertySet : ILocalPropertySet, IGPSPropertySet{ }
 
-    /// <summary>Interface for database objects that contain extended file property values of image files.</summary>
+    /// <summary>Contains extended image file property values.</summary>
     /// <seealso cref="ILocalPropertySet" />
     /// <seealso cref="IImagePropertySet" />
     public interface ILocalImagePropertySet : ILocalPropertySet, IImagePropertySet{ }
 
-    /// <summary>Interface for database objects that contain extended file property values of media files.</summary>
+    /// <summary>Contains extended media file property values.</summary>
     /// <seealso cref="ILocalPropertySet" />
     /// <seealso cref="IMediaPropertySet" />
     public interface ILocalMediaPropertySet : ILocalPropertySet, IMediaPropertySet{ }
 
-    /// <summary>Interface for database objects that contain extended file property values of music files.</summary>
+    /// <summary>Contains extended music file property values.</summary>
     /// <seealso cref="ILocalPropertySet" />
     /// <seealso cref="IMusicPropertySet" />
     public interface ILocalMusicPropertySet : ILocalPropertySet, IMusicPropertySet{ }
 
-    /// <summary>Interface for database objects that contain extended file property values of photo files.</summary>
+    /// <summary>Contains extended photo file property values.</summary>
     /// <seealso cref="ILocalPropertySet" />
     /// <seealso cref="IPhotoPropertySet" />
     public interface ILocalPhotoPropertySet : ILocalPropertySet, IPhotoPropertySet{ }
 
-    /// <summary>Interface for database objects that contain extended file property values of recorded TV files.</summary>
+    /// <summary>Contains extended recorded TV file property values.</summary>
     /// <seealso cref="ILocalPropertySet" />
     /// <seealso cref="IRecordedTVPropertySet" />
     public interface ILocalRecordedTVPropertySet : ILocalPropertySet, IRecordedTVPropertySet{ }
 
-    /// <summary>Interface for database objects that contain extended file property values of video files.</summary>
+    /// <summary>Contains extended video file property values.</summary>
     /// <seealso cref="ILocalPropertySet" />
     /// <seealso cref="IVideoPropertySet" />
     public interface ILocalVideoPropertySet : ILocalPropertySet, IVideoPropertySet{ }
@@ -4718,7 +4718,7 @@ namespace FsInfoCat.Local
         new IEnumerable<ILocalRedundancy> Redundancies { get; }
     }
 
-    /// <summary>Represents a structural instance of file.</summary>
+    /// <summary>Represents a structural instance of file on a local host file system.</summary>
     /// <seealso cref="ILocalDbFsItem" />
     /// <seealso cref="IFile" />
     public interface ILocalFile : ILocalDbFsItem, IFile
@@ -5450,57 +5450,57 @@ namespace FsInfoCat.Upstream
         new IEnumerable<IUpstreamFile> Files { get; }
     }
 
-    /// <summary>Interface for database objects that contain extended file summary property values.</summary>
+    /// <summary>Contains extended summary file property values.</summary>
     /// <seealso cref="IUpstreamPropertySet" />
     /// <seealso cref="ISummaryPropertySet" />
     public interface IUpstreamSummaryPropertySet : IUpstreamPropertySet, ISummaryPropertySet{ }
 
-    /// <summary>Interface for database objects that contain extended file property values of document files.</summary>
+    /// <summary>Contains extended document file property values.</summary>
     /// <seealso cref="IUpstreamPropertySet" />
     /// <seealso cref="IDocumentPropertySet" />
     public interface IUpstreamDocumentPropertySet : IUpstreamPropertySet, IDocumentPropertySet{ }
 
-    /// <summary>Interface for database objects that contain extended file property values of audio files.</summary>
+    /// <summary>Contains extended audio file property values.</summary>
     /// <seealso cref="IUpstreamPropertySet" />
     /// <seealso cref="IAudioPropertySet" />
     public interface IUpstreamAudioPropertySet : IUpstreamPropertySet, IAudioPropertySet{ }
 
-    /// <summary>Interface for database objects that contain extended file DRM property values.</summary>
+    /// <summary>Contains extended DRM (Digital Rights Management) property values.</summary>
     /// <seealso cref="IUpstreamPropertySet" />
     /// <seealso cref="IDRMPropertySet" />
     public interface IUpstreamDRMPropertySet : IUpstreamPropertySet, IDRMPropertySet{ }
 
-    /// <summary>Interface for database objects that contain extended file GPS property values.</summary>
+    /// <summary>Contains extended GPS property values.</summary>
     /// <seealso cref="IUpstreamPropertySet" />
     /// <seealso cref="IGPSPropertySet" />
     public interface IUpstreamGPSPropertySet : IUpstreamPropertySet, IGPSPropertySet{ }
 
-    /// <summary>Interface for database objects that contain extended file property values of image files.</summary>
+    /// <summary>Contains extended image file property values.</summary>
     /// <seealso cref="IUpstreamPropertySet" />
     /// <seealso cref="IImagePropertySet" />
     public interface IUpstreamImagePropertySet : IUpstreamPropertySet, IImagePropertySet{ }
 
-    /// <summary>Interface for database objects that contain extended file property values of media files.</summary>
+    /// <summary>Contains extended media file property values.</summary>
     /// <seealso cref="IUpstreamPropertySet" />
     /// <seealso cref="IMediaPropertySet" />
     public interface IUpstreamMediaPropertySet : IUpstreamPropertySet, IMediaPropertySet{ }
 
-    /// <summary>Interface for database objects that contain extended file property values of music files.</summary>
+    /// <summary>Contains extended music file property values.</summary>
     /// <seealso cref="IUpstreamPropertySet" />
     /// <seealso cref="IMusicPropertySet" />
     public interface IUpstreamMusicPropertySet : IUpstreamPropertySet, IMusicPropertySet{ }
 
-    /// <summary>Interface for database objects that contain extended file property values of photo files.</summary>
+    /// <summary>Contains extended photo file property values.</summary>
     /// <seealso cref="IUpstreamPropertySet" />
     /// <seealso cref="IPhotoPropertySet" />
     public interface IUpstreamPhotoPropertySet : IUpstreamPropertySet, IPhotoPropertySet{ }
 
-    /// <summary>Interface for database objects that contain extended file property values of recorded TV files.</summary>
+    /// <summary>Contains extended recorded TV file property values.</summary>
     /// <seealso cref="IUpstreamPropertySet" />
     /// <seealso cref="IRecordedTVPropertySet" />
     public interface IUpstreamRecordedTVPropertySet : IUpstreamPropertySet, IRecordedTVPropertySet{ }
 
-    /// <summary>Interface for database objects that contain extended file property values of video files.</summary>
+    /// <summary>Contains extended video file property values.</summary>
     /// <seealso cref="IUpstreamPropertySet" />
     /// <seealso cref="IVideoPropertySet" />
     public interface IUpstreamVideoPropertySet : IUpstreamPropertySet, IVideoPropertySet{ }
