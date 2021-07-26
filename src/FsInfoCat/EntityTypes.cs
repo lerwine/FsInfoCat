@@ -182,7 +182,7 @@ namespace FsInfoCat
         FlaggedForRescan = 8
     }
 
-    /// <summary></summary>
+    /// <summary>Represents correlation status of a file.</summary>
     public enum FileCorrelationStatus : byte
     {
         /// <summary>File has been added to the database or modified and needs to be analyzed.</summary>
@@ -230,7 +230,7 @@ namespace FsInfoCat
         Deleted = 9
     }
 
-    /// <summary>Values to represent the file crawl status.</summary>
+    /// <summary>Repress the crawl status of a file.</summary>
     public enum CrawlStatus : byte
     {
         /// <summary>File system crawl is not running.</summary>
@@ -4454,7 +4454,7 @@ namespace FsInfoCat.Local
         DateTime? LastSynchronizedOn { get; }
     }
 
-    /// <summary></summary>
+    /// <summary>Generic interface for access error entities that occur on the local host system.</summary>
     /// <typeparam name="TTarget">The target entity type.</typeparam>
     /// <seealso cref="IAccessError&lt;ILocalDbEntity&gt;" />
     /// <seealso cref="IDbEntity" />
@@ -4493,7 +4493,7 @@ namespace FsInfoCat.Local
         new ILocalFileSystem FileSystem { get; }
     }
 
-    /// <summary></summary>
+    /// <summary>Interface for entities which represent a logical file system volume on the local host machine.</summary>
     /// <seealso cref="ILocalDbEntity" />
     /// <seealso cref="IVolume" />
     public interface ILocalVolume : ILocalDbEntity, IVolume
@@ -4527,7 +4527,7 @@ namespace FsInfoCat.Local
         new ILocalVolume Target { get; }
     }
 
-    /// <summary></summary>
+    /// <summary>Base interface for a database entity that represents a file system node on the local host machine.</summary>
     /// <seealso cref="ILocalDbEntity" />
     /// <seealso cref="IDbFsItem" />
     public interface ILocalDbFsItem : ILocalDbEntity, IDbFsItem
@@ -4548,7 +4548,7 @@ namespace FsInfoCat.Local
         new IEnumerable<ILocalAccessError> AccessErrors { get; }
     }
 
-    /// <summary></summary>
+    /// <summary>Interface for entities that represent a subdirectory node within a file system on the local host machine.</summary>
     /// <seealso cref="ILocalDbFsItem" />
     /// <seealso cref="ISubdirectory" />
     public interface ILocalSubdirectory : ILocalDbFsItem, ISubdirectory
@@ -4607,7 +4607,7 @@ namespace FsInfoCat.Local
         new ILocalCrawlConfiguration Configuration { get; }
     }
 
-    /// <summary></summary>
+    /// <summary>Generic interface for subdirectory access error entities that occurred on the local host machine.</summary>
     /// <typeparam name="TTarget">The target entity type.</typeparam>
     /// <seealso cref="ILocalAccessError" />
     /// <seealso cref="ISubdirectoryAccessError" />
@@ -4620,7 +4620,7 @@ namespace FsInfoCat.Local
         new ILocalSubdirectory Target { get; }
     }
 
-    /// <summary></summary>
+    /// <summary>Represents a set of files that have the same file size and cryptographic hash.</summary>
     /// <seealso cref="ILocalDbEntity" />
     /// <seealso cref="IBinaryPropertySet" />
     public interface ILocalBinaryPropertySet : ILocalDbEntity, IBinaryPropertySet
@@ -4636,7 +4636,7 @@ namespace FsInfoCat.Local
         new IEnumerable<ILocalRedundantSet> RedundantSets { get; }
     }
 
-    /// <summary></summary>
+    /// <summary>Base interface for entities that represent a grouping of extended file properties.</summary>
     /// <seealso cref="ILocalDbEntity" />
     /// <seealso cref="IPropertySet" />
     public interface ILocalPropertySet : ILocalDbEntity, IPropertySet
@@ -4647,62 +4647,62 @@ namespace FsInfoCat.Local
         new IEnumerable<ILocalFile> Files { get; }
     }
 
-    /// <summary></summary>
+    /// <summary>Interface for database objects that contain extended file summary property values.</summary>
     /// <seealso cref="ILocalPropertySet" />
     /// <seealso cref="ISummaryPropertySet" />
     public interface ILocalSummaryPropertySet : ILocalPropertySet, ISummaryPropertySet{ }
 
-    /// <summary></summary>
+    /// <summary>Interface for database objects that contain extended file property values of document files.</summary>
     /// <seealso cref="ILocalPropertySet" />
     /// <seealso cref="IDocumentPropertySet" />
     public interface ILocalDocumentPropertySet : ILocalPropertySet, IDocumentPropertySet{ }
 
-    /// <summary></summary>
+    /// <summary>Interface for database objects that contain extended file property values of audio files.</summary>
     /// <seealso cref="ILocalPropertySet" />
     /// <seealso cref="IAudioPropertySet" />
     public interface ILocalAudioPropertySet : ILocalPropertySet, IAudioPropertySet{ }
 
-    /// <summary></summary>
+    /// <summary>Interface for database objects that contain extended file DRM property values.</summary>
     /// <seealso cref="ILocalPropertySet" />
     /// <seealso cref="IDRMPropertySet" />
     public interface ILocalDRMPropertySet : ILocalPropertySet, IDRMPropertySet{ }
 
-    /// <summary></summary>
+    /// <summary>Interface for database objects that contain extended file GPS property values.</summary>
     /// <seealso cref="ILocalPropertySet" />
     /// <seealso cref="IGPSPropertySet" />
     public interface ILocalGPSPropertySet : ILocalPropertySet, IGPSPropertySet{ }
 
-    /// <summary></summary>
+    /// <summary>Interface for database objects that contain extended file property values of image files.</summary>
     /// <seealso cref="ILocalPropertySet" />
     /// <seealso cref="IImagePropertySet" />
     public interface ILocalImagePropertySet : ILocalPropertySet, IImagePropertySet{ }
 
-    /// <summary></summary>
+    /// <summary>Interface for database objects that contain extended file property values of media files.</summary>
     /// <seealso cref="ILocalPropertySet" />
     /// <seealso cref="IMediaPropertySet" />
     public interface ILocalMediaPropertySet : ILocalPropertySet, IMediaPropertySet{ }
 
-    /// <summary></summary>
+    /// <summary>Interface for database objects that contain extended file property values of music files.</summary>
     /// <seealso cref="ILocalPropertySet" />
     /// <seealso cref="IMusicPropertySet" />
     public interface ILocalMusicPropertySet : ILocalPropertySet, IMusicPropertySet{ }
 
-    /// <summary></summary>
+    /// <summary>Interface for database objects that contain extended file property values of photo files.</summary>
     /// <seealso cref="ILocalPropertySet" />
     /// <seealso cref="IPhotoPropertySet" />
     public interface ILocalPhotoPropertySet : ILocalPropertySet, IPhotoPropertySet{ }
 
-    /// <summary></summary>
+    /// <summary>Interface for database objects that contain extended file property values of recorded TV files.</summary>
     /// <seealso cref="ILocalPropertySet" />
     /// <seealso cref="IRecordedTVPropertySet" />
     public interface ILocalRecordedTVPropertySet : ILocalPropertySet, IRecordedTVPropertySet{ }
 
-    /// <summary></summary>
+    /// <summary>Interface for database objects that contain extended file property values of video files.</summary>
     /// <seealso cref="ILocalPropertySet" />
     /// <seealso cref="IVideoPropertySet" />
     public interface ILocalVideoPropertySet : ILocalPropertySet, IVideoPropertySet{ }
 
-    /// <summary></summary>
+    /// <summary>Represents a set of files that have the same size, Hash and remediation status.</summary>
     /// <seealso cref="ILocalDbEntity" />
     /// <seealso cref="IRedundantSet" />
     public interface ILocalRedundantSet : ILocalDbEntity, IRedundantSet
@@ -4718,7 +4718,7 @@ namespace FsInfoCat.Local
         new IEnumerable<ILocalRedundancy> Redundancies { get; }
     }
 
-    /// <summary></summary>
+    /// <summary>Represents a structural instance of file.</summary>
     /// <seealso cref="ILocalDbFsItem" />
     /// <seealso cref="IFile" />
     public interface ILocalFile : ILocalDbFsItem, IFile
@@ -4807,7 +4807,7 @@ namespace FsInfoCat.Local
         new IEnumerable<ILocalFileAccessError> AccessErrors { get; }
     }
 
-    /// <summary></summary>
+    /// <summary>Generic interface for file access error entities.</summary>
     /// <typeparam name="TTarget">The target entity type.</typeparam>
     /// <seealso cref="ILocalAccessError" />
     /// <seealso cref="IFileAccessError" />
@@ -4820,7 +4820,7 @@ namespace FsInfoCat.Local
         new ILocalFile Target { get; }
     }
 
-    /// <summary></summary>
+    /// <summary>.</summary>
     /// <seealso cref="ILocalDbEntity" />
     /// <seealso cref="IRedundancy" />
     public interface ILocalRedundancy : ILocalDbEntity, IRedundancy
@@ -4836,7 +4836,7 @@ namespace FsInfoCat.Local
         new ILocalRedundantSet RedundantSet { get; }
     }
 
-    /// <summary></summary>
+    /// <summary>The results of a byte-for-byte comparison of 2 files.</summary>
     /// <seealso cref="ILocalDbEntity" />
     /// <seealso cref="IComparison" />
     public interface ILocalComparison : ILocalDbEntity, IComparison
@@ -4855,125 +4855,123 @@ namespace FsInfoCat.Local
 
 namespace FsInfoCat.Upstream
 {
-    /// <summary></summary>
+    /// <summary>Defines an application user role.</summary>
     [Flags]
     public enum UserRole : byte
     {
-        /// <summary></summary>
+        /// <summary>No application roles.</summary>
         [Display(Name = nameof(Properties.Resources.DisplayName_UserRole_None), ResourceType = typeof(Properties.Resources))]
         None = 0,
 
-        /// <summary></summary>
+        /// <summary>Read-only application access.</summary>
         [Display(Name = nameof(Properties.Resources.DisplayName_UserRole_Reader), ResourceType = typeof(Properties.Resources))]
         Reader = 1,
 
-        /// <summary></summary>
+        /// <summary>Extended read-only application access for auditing purposes.</summary>
         [Display(Name = nameof(Properties.Resources.DisplayName_UserRole_Auditor), ResourceType = typeof(Properties.Resources))]
         Auditor = 2,
 
-        /// <summary></summary>
+        /// <summary>User can read and write file system crawl results for their own shared crawl results as well as read and write task records.</summary>
         [Display(Name = nameof(Properties.Resources.DisplayName_UserRole_Contributor), ResourceType = typeof(Properties.Resources))]
         Contributor = 4,
 
-        /// <summary></summary>
+        /// <summary>User can read and write all file system crawl results and task records.</summary>
         [Display(Name = nameof(Properties.Resources.DisplayName_UserRole_ITSupport), ResourceType = typeof(Properties.Resources))]
         ITSupport = 8,
 
-        /// <summary></summary>
+        /// <summary>User can assign manual remediation tasks as well as determine desired state.</summary>
+        /// <remarks>This role implies the privileges of the <see cref="Contributor" /> and <see cref="ITSupport" /> roles as well.</remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_UserRole_ChangeAdministrator), ResourceType = typeof(Properties.Resources))]
         ChangeAdministrator = 16,
 
-        /// <summary></summary>
+        /// <summary>User can make changes to most application settings.</summary>
+        /// <remarks>This role implies the privileges of the <see cref="ChangeAdministrator" />, <see cref="Contributor" /> and <see cref="ITSupport" /> roles as well.</remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_UserRole_AppAdministrator), ResourceType = typeof(Properties.Resources))]
         AppAdministrator = 32,
 
-        /// <summary></summary>
+        /// <summary>User can make changes to all application settings as well as the ability to read and write all records.</summary>
         [Display(Name = nameof(Properties.Resources.DisplayName_UserRole_SystemAdmin), ResourceType = typeof(Properties.Resources))]
         SystemAdmin = 64
     }
 
-    /// <summary></summary>
+    /// <summary>Represent the status of a task.</summary>
     public enum TaskStatus : byte
     {
-        /// <summary></summary>
+        /// <summary>Task has not been acknowledged.</summary>
         [Display(Name = nameof(Properties.Resources.DisplayName_TaskStatus_New), ResourceType = typeof(Properties.Resources))]
         New = 0,
 
-        /// <summary></summary>
+        /// <summary>Task has been acknowledged, but not yet started.</summary>
         [Display(Name = nameof(Properties.Resources.DisplayName_TaskStatus_Open), ResourceType = typeof(Properties.Resources))]
         Open = 1,
 
-        /// <summary></summary>
+        /// <summary>Task is currently being addressed.</summary>
         [Display(Name = nameof(Properties.Resources.DisplayName_TaskStatus_Active), ResourceType = typeof(Properties.Resources))]
         Active = 2,
 
-        /// <summary></summary>
+        /// <summary>Task is in a paused state, pending some other factor.</summary>
         [Display(Name = nameof(Properties.Resources.DisplayName_TaskStatus_Pending), ResourceType = typeof(Properties.Resources))]
         Pending = 3,
 
-        /// <summary></summary>
+        /// <summary>Task has been canceled.</summary>
         [Display(Name = nameof(Properties.Resources.DisplayName_TaskStatus_Canceled), ResourceType = typeof(Properties.Resources))]
         Canceled = 4,
 
-        /// <summary></summary>
+        /// <summary>Task has been completed.</summary>
         [Display(Name = nameof(Properties.Resources.DisplayName_TaskStatus_Completed), ResourceType = typeof(Properties.Resources))]
         Completed = 5
     }
 
-    /// <summary></summary>
+    /// <summary>Represents the priority level of a task.</summary>
     public enum PriorityLevel : byte
     {
-        /// <summary></summary>
+        /// <summary>Task has been deferred to a later date.</summary>
         [Display(Name = nameof(Properties.Resources.DisplayName_PriorityLevel_Deferred), ResourceType = typeof(Properties.Resources))]
         Deferred = 0,
 
-        /// <summary></summary>
+        /// <summary>Task has the highest priority.</summary>
         [Display(Name = nameof(Properties.Resources.DisplayName_PriorityLevel_Critical), ResourceType = typeof(Properties.Resources))]
         Critical = 1,
 
-        /// <summary></summary>
+        /// <summary>Task has elevated priority.</summary>
         [Display(Name = nameof(Properties.Resources.DisplayName_PriorityLevel_High), ResourceType = typeof(Properties.Resources))]
         High = 2,
 
-        /// <summary></summary>
+        /// <summary>Task has normal priority.</summary>
         [Display(Name = nameof(Properties.Resources.DisplayName_PriorityLevel_Normal), ResourceType = typeof(Properties.Resources))]
         Normal = 3,
 
-        /// <summary></summary>
+        /// <summary>Task has low priority.</summary>
         [Display(Name = nameof(Properties.Resources.DisplayName_PriorityLevel_Low), ResourceType = typeof(Properties.Resources))]
         Low = 4
     }
 
-    /// <summary></summary>
+    /// <summary>Represents a host platform type.</summary>
     public enum PlatformType : byte
     {
-        /// <summary></summary>
+        /// <summary>Host platform type is unknown.</summary>
         [Display(Name = nameof(Properties.Resources.DisplayName_PlatformType_Unknown), ResourceType = typeof(Properties.Resources))]
         Unknown = 0,
 
-        /// <summary></summary>
+        /// <summary>Host machine runs on a Windows-based operating system.</summary>
         [Display(Name = nameof(Properties.Resources.DisplayName_PlatformType_Windows), ResourceType = typeof(Properties.Resources))]
         Windows = 1,
 
-        /// <summary></summary>
+        /// <summary>Host machine runs on a Linux-based operating system.</summary>
         [Display(Name = nameof(Properties.Resources.DisplayName_PlatformType_Linux), ResourceType = typeof(Properties.Resources))]
         Linux = 2,
 
-        /// <summary></summary>
+        /// <summary>Host machine runs on a OSX-based operating system.</summary>
         [Display(Name = nameof(Properties.Resources.DisplayName_PlatformType_OSX), ResourceType = typeof(Properties.Resources))]
         OSX = 3,
 
-        /// <summary></summary>
+        /// <summary>Host is an android device.</summary>
         [Display(Name = nameof(Properties.Resources.DisplayName_PlatformType_Android), ResourceType = typeof(Properties.Resources))]
         Android = 4,
 
-        /// <summary></summary>
+        /// <summary>Host is an IOS device.</summary>
         [Display(Name = nameof(Properties.Resources.DisplayName_PlatformType_IOS), ResourceType = typeof(Properties.Resources))]
-        IOS = 5,
-
-        /// <summary></summary>
-        [Display(Name = nameof(Properties.Resources.DisplayName_PlatformType_Other), ResourceType = typeof(Properties.Resources))]
-        Other = 255
+        IOS = 5
     }
 
     /// <summary>Base interface for all database entity objects for the database which is hosted on the local machine.</summary>
@@ -4991,7 +4989,10 @@ namespace FsInfoCat.Upstream
         IUserProfile ModifiedBy { get; }
     }
 
-    /// <summary></summary>
+    /// <summary>
+    /// Base interface for all database entity objects which track the creation and modification dates as well as implementing the
+    /// <see cref="IValidatableObject" /> and <see cref="IRevertibleChangeTracking" /> interfaces.
+    /// </summary>
     /// <typeparam name="TTarget">The target entity type.</typeparam>
     /// <seealso cref="IAccessError&lt;IUpstreamDbEntity&gt;" />
     /// <seealso cref="IDbEntity" />
@@ -5012,58 +5013,58 @@ namespace FsInfoCat.Upstream
         [Display(Name = nameof(Properties.Resources.DisplayName_DisplayName), ResourceType = typeof(Properties.Resources))]
         string DisplayName { get; }
 
-        /// <summary></summary>
-        /// <value></value>
+        /// <summary>Gets the user's first name.</summary>
+        /// <value>The user's first name.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_FirstName), ResourceType = typeof(Properties.Resources))]
         string FirstName { get; }
 
-        /// <summary></summary>
-        /// <value></value>
+        /// <summary>Gets the user's last name.</summary>
+        /// <value>The user's last name.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_LastName), ResourceType = typeof(Properties.Resources))]
         string LastName { get; }
 
-        /// <summary></summary>
-        /// <value></value>
+        /// <summary>Gets the user's middle initial.</summary>
+        /// <value>The user's middle initial.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_MI), ResourceType = typeof(Properties.Resources))]
         string MI { get; }
 
-        /// <summary></summary>
-        /// <value></value>
+        /// <summary>Gets the suffix that is to be appended to the user's display name.</summary>
+        /// <value>The suffix that is to be appended to the user's display name.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_Suffix), ResourceType = typeof(Properties.Resources))]
         string Suffix { get; }
 
-        /// <summary></summary>
-        /// <value></value>
+        /// <summary>Gets the user's professional title, position or rank.</summary>
+        /// <value>The user's professional title, position or rank.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_Title), ResourceType = typeof(Properties.Resources))]
         string Title { get; }
 
-        /// <summary></summary>
-        /// <value></value>
+        /// <summary>Gets the database principal ID for the current user profile record.</summary>
+        /// <value>The database principal ID for the current user profile record.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_DbPrincipalId), ResourceType = typeof(Properties.Resources))]
         int? DbPrincipalId { get; }
 
-        /// <summary></summary>
-        /// <value></value>
+        /// <summary>Gets the Security Identifier for the user associated with the current user profile record.</summary>
+        /// <value>The Security Identifier for the user associated with the current user profile record.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_SID), ResourceType = typeof(Properties.Resources))]
         ByteValues SID { get; }
 
-        /// <summary></summary>
-        /// <value></value>
+        /// <summary>Gets the custom notes to be associated with the current user profile.</summary>
+        /// <value>The custom notes to be associated with the current user profile.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_Notes), ResourceType = typeof(Properties.Resources))]
         string Notes { get; }
 
-        /// <summary></summary>
-        /// <value></value>
+        /// <summary>Indicates whether the current user is inactive.</summary>
+        /// <value><see langword="true" /> if the current user is inactive; otherwise, <see langword="false" />.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_IsInactive), ResourceType = typeof(Properties.Resources))]
         bool IsInactive { get; }
 
-        /// <summary></summary>
-        /// <value></value>
+        /// <summary>Gets the membership objects that determine what groups the current user belongs to.</summary>
+        /// <value>The <see cref="IGroupMembership">membership objects</see> that determine what groups the current user belongs to.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_MemberOf), ResourceType = typeof(Properties.Resources))]
         IEnumerable<IGroupMembership> MemberOf { get; }
 
-        /// <summary></summary>
-        /// <value></value>
+        /// <summary>Gets the tasks that are assigned to the current user.</summary>
+        /// <value>The <see cref="IMitigationTask">tasks</see> that are assigned to the current user.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_Tasks), ResourceType = typeof(Properties.Resources))]
         IEnumerable<IMitigationTask> Tasks { get; }
     }
@@ -5086,6 +5087,11 @@ namespace FsInfoCat.Upstream
         /// <value></value>
         [Display(Name = nameof(Properties.Resources.DisplayName_Notes), ResourceType = typeof(Properties.Resources))]
         string Notes { get; }
+
+        /// <summary></summary>
+        /// <value></value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_IsInactive), ResourceType = typeof(Properties.Resources))]
+        bool IsInactive { get; }
 
         /// <summary></summary>
         /// <value></value>
@@ -5265,7 +5271,7 @@ namespace FsInfoCat.Upstream
         new IUpstreamFileSystem FileSystem { get; }
     }
 
-    /// <summary></summary>
+    /// <summary>Interface for entities which represent a logical file system volume.</summary>
     /// <seealso cref="IUpstreamDbEntity" />
     /// <seealso cref="IVolume" />
     public interface IUpstreamVolume : IUpstreamDbEntity, IVolume
@@ -5304,7 +5310,7 @@ namespace FsInfoCat.Upstream
         new IUpstreamVolume Target { get; }
     }
 
-    /// <summary></summary>
+    /// <summary>Base interface for a database entity that represents a file system node.</summary>
     /// <seealso cref="IUpstreamDbEntity" />
     /// <seealso cref="IDbFsItem" />
     public interface IUpstreamDbFsItem : IUpstreamDbEntity, IDbFsItem
@@ -5325,7 +5331,7 @@ namespace FsInfoCat.Upstream
         new IEnumerable<IUpstreamAccessError> AccessErrors { get; }
     }
 
-    /// <summary></summary>
+    /// <summary>Interface for entities that represent a subdirectory node within a file system.</summary>
     /// <seealso cref="IUpstreamDbFsItem" />
     /// <seealso cref="ISubdirectory" />
     public interface IUpstreamSubdirectory : IUpstreamDbFsItem, ISubdirectory
@@ -5384,7 +5390,7 @@ namespace FsInfoCat.Upstream
         new IUpstreamCrawlConfiguration Configuration { get; }
     }
 
-    /// <summary></summary>
+    /// <summary>Generic interface for subdirectory access error entities.</summary>
     /// <typeparam name="TTarget">The target entity type.</typeparam>
     /// <seealso cref="IUpstreamAccessError" />
     /// <seealso cref="ISubdirectoryAccessError" />
@@ -5417,7 +5423,7 @@ namespace FsInfoCat.Upstream
         IUpstreamSubdirectory Target { get; }
     }
 
-    /// <summary></summary>
+    /// <summary>Represents a set of files that have the same file size and cryptographic hash.</summary>
     /// <seealso cref="IUpstreamDbEntity" />
     /// <seealso cref="IBinaryPropertySet" />
     public interface IUpstreamBinaryPropertySet : IUpstreamDbEntity, IBinaryPropertySet
@@ -5433,7 +5439,7 @@ namespace FsInfoCat.Upstream
         new IEnumerable<IUpstreamRedundantSet> RedundantSets { get; }
     }
 
-    /// <summary></summary>
+    /// <summary>Base interface for entities that represent a grouping of extended file properties.</summary>
     /// <seealso cref="IUpstreamDbEntity" />
     /// <seealso cref="IPropertySet" />
     public interface IUpstreamPropertySet : IUpstreamDbEntity, IPropertySet
@@ -5444,62 +5450,62 @@ namespace FsInfoCat.Upstream
         new IEnumerable<IUpstreamFile> Files { get; }
     }
 
-    /// <summary></summary>
+    /// <summary>Interface for database objects that contain extended file summary property values.</summary>
     /// <seealso cref="IUpstreamPropertySet" />
     /// <seealso cref="ISummaryPropertySet" />
     public interface IUpstreamSummaryPropertySet : IUpstreamPropertySet, ISummaryPropertySet{ }
 
-    /// <summary></summary>
+    /// <summary>Interface for database objects that contain extended file property values of document files.</summary>
     /// <seealso cref="IUpstreamPropertySet" />
     /// <seealso cref="IDocumentPropertySet" />
     public interface IUpstreamDocumentPropertySet : IUpstreamPropertySet, IDocumentPropertySet{ }
 
-    /// <summary></summary>
+    /// <summary>Interface for database objects that contain extended file property values of audio files.</summary>
     /// <seealso cref="IUpstreamPropertySet" />
     /// <seealso cref="IAudioPropertySet" />
     public interface IUpstreamAudioPropertySet : IUpstreamPropertySet, IAudioPropertySet{ }
 
-    /// <summary></summary>
+    /// <summary>Interface for database objects that contain extended file DRM property values.</summary>
     /// <seealso cref="IUpstreamPropertySet" />
     /// <seealso cref="IDRMPropertySet" />
     public interface IUpstreamDRMPropertySet : IUpstreamPropertySet, IDRMPropertySet{ }
 
-    /// <summary></summary>
+    /// <summary>Interface for database objects that contain extended file GPS property values.</summary>
     /// <seealso cref="IUpstreamPropertySet" />
     /// <seealso cref="IGPSPropertySet" />
     public interface IUpstreamGPSPropertySet : IUpstreamPropertySet, IGPSPropertySet{ }
 
-    /// <summary></summary>
+    /// <summary>Interface for database objects that contain extended file property values of image files.</summary>
     /// <seealso cref="IUpstreamPropertySet" />
     /// <seealso cref="IImagePropertySet" />
     public interface IUpstreamImagePropertySet : IUpstreamPropertySet, IImagePropertySet{ }
 
-    /// <summary></summary>
+    /// <summary>Interface for database objects that contain extended file property values of media files.</summary>
     /// <seealso cref="IUpstreamPropertySet" />
     /// <seealso cref="IMediaPropertySet" />
     public interface IUpstreamMediaPropertySet : IUpstreamPropertySet, IMediaPropertySet{ }
 
-    /// <summary></summary>
+    /// <summary>Interface for database objects that contain extended file property values of music files.</summary>
     /// <seealso cref="IUpstreamPropertySet" />
     /// <seealso cref="IMusicPropertySet" />
     public interface IUpstreamMusicPropertySet : IUpstreamPropertySet, IMusicPropertySet{ }
 
-    /// <summary></summary>
+    /// <summary>Interface for database objects that contain extended file property values of photo files.</summary>
     /// <seealso cref="IUpstreamPropertySet" />
     /// <seealso cref="IPhotoPropertySet" />
     public interface IUpstreamPhotoPropertySet : IUpstreamPropertySet, IPhotoPropertySet{ }
 
-    /// <summary></summary>
+    /// <summary>Interface for database objects that contain extended file property values of recorded TV files.</summary>
     /// <seealso cref="IUpstreamPropertySet" />
     /// <seealso cref="IRecordedTVPropertySet" />
     public interface IUpstreamRecordedTVPropertySet : IUpstreamPropertySet, IRecordedTVPropertySet{ }
 
-    /// <summary></summary>
+    /// <summary>Interface for database objects that contain extended file property values of video files.</summary>
     /// <seealso cref="IUpstreamPropertySet" />
     /// <seealso cref="IVideoPropertySet" />
     public interface IUpstreamVideoPropertySet : IUpstreamPropertySet, IVideoPropertySet{ }
 
-    /// <summary></summary>
+    /// <summary>Represents a set of files that have the same size, Hash and remediation status.</summary>
     /// <seealso cref="IUpstreamDbEntity" />
     /// <seealso cref="IRedundantSet" />
     public interface IUpstreamRedundantSet : IUpstreamDbEntity, IRedundantSet
@@ -5515,7 +5521,7 @@ namespace FsInfoCat.Upstream
         new IEnumerable<IUpstreamRedundancy> Redundancies { get; }
     }
 
-    /// <summary></summary>
+    /// <summary>Represents a structural instance of file.</summary>
     /// <seealso cref="IUpstreamDbFsItem" />
     /// <seealso cref="IFile" />
     public interface IUpstreamFile : IUpstreamDbFsItem, IFile
@@ -5624,7 +5630,7 @@ namespace FsInfoCat.Upstream
         IUpstreamSubdirectory Target { get; }
     }
 
-    /// <summary></summary>
+    /// <summary>Generic interface for file access error entities.</summary>
     /// <typeparam name="TTarget">The target entity type.</typeparam>
     /// <seealso cref="IUpstreamAccessError" />
     /// <seealso cref="IFileAccessError" />
@@ -5637,7 +5643,7 @@ namespace FsInfoCat.Upstream
         new IUpstreamFile Target { get; }
     }
 
-    /// <summary></summary>
+    /// <summary>.</summary>
     /// <seealso cref="IUpstreamDbEntity" />
     /// <seealso cref="IRedundancy" />
     public interface IUpstreamRedundancy : IUpstreamDbEntity, IRedundancy
@@ -5653,7 +5659,7 @@ namespace FsInfoCat.Upstream
         new IUpstreamRedundantSet RedundantSet { get; }
     }
 
-    /// <summary></summary>
+    /// <summary>The results of a byte-for-byte comparison of 2 files.</summary>
     /// <seealso cref="IUpstreamDbEntity" />
     /// <seealso cref="IComparison" />
     public interface IUpstreamComparison : IUpstreamDbEntity, IComparison

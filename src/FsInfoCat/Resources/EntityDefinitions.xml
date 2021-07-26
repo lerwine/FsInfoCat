@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <EntityDefinitions xsi:noNamespaceSchemaLocation="EntityDefinitions.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <Root>
         <EnumTypes>
@@ -192,7 +192,7 @@
                 </Field>
             </Byte>
             <Byte Name="FileCorrelationStatus">
-                <summary></summary>
+                <summary>Represents correlation status of a file.</summary>
                 <Field Name="Dissociated" Value="0" DescriptionResource="Description_FileCorrelationStatus_Dissociated" FullName="FileCorrelationStatus.Dissociated">
                     <summary>File has been added to the database or modified and needs to be analyzed.</summary>
                 </Field>
@@ -229,7 +229,7 @@
                 </Field>
             </Byte>
             <Byte Name="CrawlStatus">
-                <summary>Values to represent the file crawl status.</summary>
+                <summary>Repress the crawl status of a file.</summary>
                 <Field Name="NotRunning" Value="0" FullName="CrawlStatus.NotRunning">
                     <summary>File system crawl is not running.</summary>
                 </Field>
@@ -289,7 +289,7 @@
             </Properties>
             <Check>
                 <NotGreaterThan Name="CreatedOn">
-                    <OtherProperty Name="ModifiedOn"/>
+                    <OtherProperty Name="ModifiedOn" />
                 </NotGreaterThan>
             </Check>
         </Entity>
@@ -365,7 +365,7 @@
                 <NVarChar Name="DisplayName" MaxLength="1024" MinLength="1" IsNormalized="true" FullName="IFileSystem.DisplayName" ColName="DisplayName" IsCaseSensitive="false">
                     <summary>Gets the display name.</summary>
                     <value>The display name of the file system.</value>
-                    <Index Name="IDX_FileSystem_DisplayName"/>
+                    <Index Name="IDX_FileSystem_DisplayName" />
                 </NVarChar>
                 <Bit Name="CaseSensitiveSearch" FullName="IFileSystem.CaseSensitiveSearch" ColName="CaseSensitiveSearch">
                     <summary>
@@ -413,7 +413,7 @@
                     <value>
                         <see langword="true" /> if this file system type is inactive; otherwise, <see langword="false" />.
                     </value>
-                    <Index Name="IDX_FileSystem_IsInactive"/>
+                    <Index Name="IDX_FileSystem_IsInactive" />
                     <Default>false</Default>
                 </Bit>
                 <CollectionNavigation Name="Volumes" FullName="IFileSystem.Volumes">
@@ -432,7 +432,7 @@
                 </CollectionNavigation>
             </Properties>
             <Unique Name="UK_FileSystem_DislayName">
-                <Property Name="DisplayName"/>
+                <Property Name="DisplayName" />
             </Unique>
         </Entity>
         <Entity Name="ISymbolicName">
@@ -454,7 +454,7 @@
                         Gets the symbolic name.
                     </summary>
                     <value>The symbolic name which refers to a file system type..</value>
-                    <Index Name="IDX_SymbolicName_Name"/>
+                    <Index Name="IDX_SymbolicName_Name" />
                 </NVarChar>
                 <Text Name="Notes" FullName="ISymbolicName.Notes" ColName="Notes">
                     <summary>
@@ -477,7 +477,7 @@
                     <value>
                         <see langword="true" /> if this symbolic name  is inactive; otherwise, <see langword="false" />.
                     </value>
-                    <Index Name="IDX_SymbolicName_IsInactive"/>
+                    <Index Name="IDX_SymbolicName_IsInactive" />
                     <Default>false</Default>
                 </Bit>
                 <RelatedEntity Name="FileSystem" FullName="ISymbolicName.FileSystem" Reference="IFileSystem" FkPropertyName="FileSystemId" ConstraintName="FK_SymbolicName_FileSystem">
@@ -488,7 +488,7 @@
                 </RelatedEntity>
             </Properties>
             <Unique Name="UK_FileSystem_Name">
-                <Property Name="Name"/>
+                <Property Name="Name" />
             </Unique>
         </Entity>
         <Entity Name="IVolume">
@@ -516,7 +516,7 @@
                         Gets the name of the volume.
                     </summary>
                     <value>The name of the volume.</value>
-                    <Index Name="IDX_Volume_VolumeName"/>
+                    <Index Name="IDX_Volume_VolumeName" />
                     <Default></Default>
                 </NVarChar>
                 <VolumeIdentifier Name="Identifier" FullName="IVolume.Identifier" ColName="Identifier">
@@ -524,7 +524,7 @@
                         Gets the unique volume identifier.
                     </summary>
                     <value>The system-independent unique identifier, which identifies the volume.</value>
-                    <Index Name="IDX_Volume_Identifier"/>
+                    <Index Name="IDX_Volume_Identifier" />
                 </VolumeIdentifier>
                 <Bit Name="CaseSensitiveSearch" AllowNull="true" FullName="IVolume.CaseSensitiveSearch" ColName="CaseSensitiveSearch">
                     <summary>
@@ -572,7 +572,7 @@
                         Gets the volume status.
                     </summary>
                     <value>The volume status value.</value>
-                    <Index Name="IDX_Volume_Status"/>
+                    <Index Name="IDX_Volume_Status" />
                     <Default>VolumeStatus.Unknown</Default>
                 </Enum>
                 <RelatedEntity Name="RootDirectory" FullName="IVolume.RootDirectory" Reference="ISubdirectory">
@@ -596,7 +596,7 @@
                 </CollectionNavigation>
             </Properties>
             <Unique Name="UK_FileSystem_Volume">
-                <Property Name="Identifier"/>
+                <Property Name="Identifier" />
             </Unique>
         </Entity>
         <Entity Name="IVolumeAccessError">
@@ -680,7 +680,7 @@
                         <see langword="true" /> if the current crawl configuration has been deactivated; otherwise, <see langword="false" /> to indicate that is
                         available for use.
                     </value>
-                    <Index Name="IDX_CrawlConfiguration_StatusValue"/>
+                    <Index Name="IDX_CrawlConfiguration_StatusValue" />
                     <Default>CrawlStatus.NotRunning</Default>
                 </Enum>
                 <DateTime Name="LastCrawlStart" AllowNull="true" FullName="ICrawlConfiguration.LastCrawlStart" ColName="LastCrawlStart">
@@ -759,7 +759,7 @@
                         <see langword="true" /> if the current crawl configuration has been deactivated; otherwise, <see langword="false" /> to indicate that is
                         available for use.
                     </value>
-                    <Index Name="IDX_CrawlJobLog_StatusCode"/>
+                    <Index Name="IDX_CrawlJobLog_StatusCode" />
                     <Default>CrawlStatus.NotRunning</Default>
                 </Enum>
                 <DateTime Name="CrawlStart" FullName="ICrawlJobLog.CrawlStart" ColName="CrawlStart">
@@ -866,7 +866,7 @@
                         Gets the status of the current subdirectory.
                     </summary>
                     <value>The status value for the current subdirectory.</value>
-                    <Index Name="IDX_Subdirectory_Status"/>
+                    <Index Name="IDX_Subdirectory_Status" />
                     <Default>DirectoryStatus.Incomplete</Default>
                 </Enum>
                 <NewRelatedEntity Name="Parent" FullName="ISubdirectory.Parent" Reference="ISubdirectory">
@@ -915,12 +915,12 @@
             <Check>
                 <Or>
                     <And>
-                        <IsNull Name="Parent"/>
-                        <NotNull Name="Volume"/>
+                        <IsNull Name="Parent" />
+                        <NotNull Name="Volume" />
                     </And>
                     <And>
-                        <NotNull Name="Parent"/>
-                        <IsNull Name="Volume"/>
+                        <NotNull Name="Parent" />
+                        <IsNull Name="Volume" />
                     </And>
                 </Or>
             </Check>
@@ -962,7 +962,7 @@
                     <value>
                         The file length in bytes.
                     </value>
-                    <Index Name="IDX_BinaryPropertySet_Length"/>
+                    <Index Name="IDX_BinaryPropertySet_Length" />
                 </Long>
                 <MD5Hash Name="Hash" FullName="IBinaryPropertySet.Hash" AllowNull="true" ColName="Hash">
                     <summary>
@@ -971,7 +971,7 @@
                     <value>
                         The MD5 hash of the file's contents or <see langword="null" /> if the hash has not yet been calculated.
                     </value>
-                    <Index Name="IDX_BinaryPropertySet_Hash"/>
+                    <Index Name="IDX_BinaryPropertySet_Hash" />
                     <DefaultNull />
                 </MD5Hash>
                 <CollectionNavigation Name="Files" FullName="IBinaryPropertySet.Files">
@@ -994,8 +994,8 @@
                 </CollectionNavigation>
             </Properties>
             <Unique Name="UK_BinaryPropertySet_Length_Hash">
-                <Property Name="Length"/>
-                <Property Name="Hash"/>
+                <Property Name="Length" />
+                <Property Name="Hash" />
             </Unique>
         </Entity>
         <Entity Name="ISummaryProperties">
@@ -4950,7 +4950,7 @@
                     <value>
                         A <see cref="FileCorrelationStatus" /> value that indicates the file's correlation status.
                     </value>
-                    <Index Name="IDX_File_Status"/>
+                    <Index Name="IDX_File_Status" />
                     <Default>FileCorrelationStatus.Dissociated</Default>
                 </Enum>
                 <DateTime Name="LastHashCalculation" FullName="IFile.LastHashCalculation" AllowNull="true" ColName="LastHashCalculation">
@@ -5294,7 +5294,7 @@
             </Check>
         </Entity>
         <Entity Name="ILocalAccessError" RootInterface="IDbEntity">
-            <summary></summary>
+            <summary>Generic interface for access error entities that occur on the local host system.</summary>
             <ExtendsGenericEntity Type="IAccessError{ILocalDbEntity}" TypeDef="IAccessError{TTarget}" />
             <Properties>
                 <NewRelatedEntity Name="Target" FullName="ILocalAccessError.Target" Reference="ILocalDbEntity">
@@ -5331,7 +5331,7 @@
             </Properties>
         </Entity>
         <Entity Name="ILocalVolume" RootInterface="IVolume" TableName="Volumes">
-            <summary></summary>
+            <summary>Interface for entities which represent a logical file system volume on the local host machine.</summary>
             <ExtendsEntity Type="ILocalDbEntity" />
             <Properties>
                 <NewRelatedEntity Name="RootDirectory" FullName="ILocalVolume.RootDirectory" Reference="ILocalSubdirectory" />
@@ -5352,7 +5352,7 @@
             </Properties>
         </Entity>
         <Entity Name="ILocalDbFsItem" RootInterface="IDbFsItem">
-            <summary></summary>
+            <summary>Base interface for a database entity that represents a file system node on the local host machine.</summary>
             <ExtendsEntity Type="ILocalDbEntity" />
             <Properties>
                 <NewRelatedEntity Name="Parent" FullName="ILocalDbFsItem.Parent" Reference="ILocalSubdirectory">
@@ -5374,7 +5374,7 @@
             </Properties>
         </Entity>
         <Entity Name="ILocalSubdirectory" RootInterface="ISubdirectory" TableName="Subdirectories">
-            <summary></summary>
+            <summary>Interface for entities that represent a subdirectory node within a file system on the local host machine.</summary>
             <ExtendsEntity Type="ILocalDbFsItem" />
             <Properties>
                 <NewRelatedEntity Name="Volume" FullName="ILocalSubdirectory.Volume" Reference="ILocalVolume">
@@ -5422,7 +5422,7 @@
             </Properties>
         </Entity>
         <Entity Name="ILocalSubdirectoryAccessError" RootInterface="ISubdirectoryAccessError" TableName="SubdirectoryAccessErrors">
-            <summary></summary>
+            <summary>Generic interface for subdirectory access error entities that occurred on the local host machine.</summary>
             <ExtendsEntity Type="ILocalAccessError" />
             <ImplementsGenericEntity Type="IAccessError{ILocalSubdirectory}" TypeDef="IAccessError{TTarget}" />
             <Properties>
@@ -5437,7 +5437,7 @@
             </Properties>
         </Entity>
         <Entity Name="ILocalBinaryPropertySet" RootInterface="IBinaryPropertySet" TableName="BinaryPropertySets">
-            <summary></summary>
+            <summary>Represents a set of files that have the same file size and cryptographic hash.</summary>
             <ExtendsEntity Type="ILocalDbEntity" />
             <Properties>
                 <NewCollectionNavigation Name="Files" FullName="ILocalBinaryPropertySet.Files">
@@ -5449,7 +5449,7 @@
             </Properties>
         </Entity>
         <Entity Name="ILocalPropertySet" RootInterface="IPropertySet">
-            <summary></summary>
+            <summary>Base interface for entities that represent a grouping of extended file properties.</summary>
             <ExtendsEntity Type="ILocalDbEntity" />
             <Properties>
                 <NewCollectionNavigation Name="Files" FullName="ILocalPropertySet.Files">
@@ -5464,62 +5464,86 @@
             </Properties>
         </Entity>
         <Entity Name="ILocalSummaryPropertySet" RootInterface="ISummaryPropertySet" TableName="SummaryPropertySets">
-            <summary></summary>
+            <summary>
+                Interface for database objects that contain extended file summary property values.
+            </summary>
             <ExtendsEntity Type="ILocalPropertySet" />
             <Properties></Properties>
         </Entity>
         <Entity Name="ILocalDocumentPropertySet" RootInterface="IDocumentPropertySet" TableName="DocumentPropertySets">
-            <summary></summary>
+            <summary>
+                Interface for database objects that contain extended file property values of document files.
+            </summary>
             <ExtendsEntity Type="ILocalPropertySet" />
             <Properties></Properties>
         </Entity>
         <Entity Name="ILocalAudioPropertySet" RootInterface="IAudioPropertySet" TableName="AudioPropertySets">
-            <summary></summary>
+            <summary>
+                Interface for database objects that contain extended file property values of audio files.
+            </summary>
             <ExtendsEntity Type="ILocalPropertySet" />
             <Properties></Properties>
         </Entity>
         <Entity Name="ILocalDRMPropertySet" RootInterface="IDRMPropertySet" TableName="DRMPropertySets">
-            <summary></summary>
+            <summary>
+                Interface for database objects that contain extended file DRM property values.
+            </summary>
             <ExtendsEntity Type="ILocalPropertySet" />
             <Properties></Properties>
         </Entity>
         <Entity Name="ILocalGPSPropertySet" RootInterface="IGPSPropertySet" TableName="GPSPropertySets">
-            <summary></summary>
+            <summary>
+                Interface for database objects that contain extended file GPS property values.
+            </summary>
             <ExtendsEntity Type="ILocalPropertySet" />
             <Properties></Properties>
         </Entity>
         <Entity Name="ILocalImagePropertySet" RootInterface="IImagePropertySet" TableName="ImagePropertySets">
-            <summary></summary>
+            <summary>
+                Interface for database objects that contain extended file property values of image files.
+            </summary>
             <ExtendsEntity Type="ILocalPropertySet" />
             <Properties></Properties>
         </Entity>
         <Entity Name="ILocalMediaPropertySet" RootInterface="IMediaPropertySet" TableName="MediaPropertySets">
-            <summary></summary>
+            <summary>
+                Interface for database objects that contain extended file property values of media files.
+            </summary>
             <ExtendsEntity Type="ILocalPropertySet" />
             <Properties></Properties>
         </Entity>
         <Entity Name="ILocalMusicPropertySet" RootInterface="IMusicPropertySet" TableName="MusicPropertySets">
-            <summary></summary>
+            <summary>
+                Interface for database objects that contain extended file property values of music files.
+            </summary>
             <ExtendsEntity Type="ILocalPropertySet" />
             <Properties></Properties>
         </Entity>
         <Entity Name="ILocalPhotoPropertySet" RootInterface="IPhotoPropertySet" TableName="PhotoPropertySets">
-            <summary></summary>
+            <summary>
+                Interface for database objects that contain extended file property values of photo files.
+            </summary>
             <ExtendsEntity Type="ILocalPropertySet" />
             <Properties></Properties>
         </Entity>
         <Entity Name="ILocalRecordedTVPropertySet" RootInterface="IRecordedTVPropertySet" TableName="RecordedTVPropertySets">
-            <summary></summary>
+            <summary>
+                Interface for database objects that contain extended file property values of recorded TV files.
+            </summary>
             <ExtendsEntity Type="ILocalPropertySet" />
             <Properties></Properties>
         </Entity>
         <Entity Name="ILocalVideoPropertySet" RootInterface="IVideoPropertySet" TableName="VideoPropertySets">
-            <summary></summary>
+            <summary>
+                Interface for database objects that contain extended file property values of video files.
+            </summary>
             <ExtendsEntity Type="ILocalPropertySet" />
             <Properties></Properties>
         </Entity>
         <Entity Name="ILocalRedundantSet" RootInterface="IRedundantSet" TableName="RedundantSets">
-            <summary></summary>
+            <summary>
+                Represents a set of files that have the same size, Hash and remediation status.
+            </summary>
             <ExtendsEntity Type="ILocalDbEntity" />
             <Properties>
                 <NewRelatedEntity Name="BinaryProperties" FullName="ILocalRedundantSet.BinaryProperties" Reference="ILocalBinaryPropertySet" />
@@ -5529,7 +5553,9 @@
             </Properties>
         </Entity>
         <Entity Name="ILocalFile" RootInterface="IFile" TableName="Files">
-            <summary></summary>
+            <summary>
+                Represents a structural instance of file.
+            </summary>
             <ExtendsEntity Type="ILocalDbFsItem" />
             <Properties>
                 <NewRelatedEntity Name="BinaryProperties" FullName="ILocalFile.BinaryProperties" Reference="ILocalBinaryPropertySet">
@@ -5661,7 +5687,9 @@
             </Properties>
         </Entity>
         <Entity Name="ILocalFileAccessError" RootInterface="IFileAccessError" TableName="FileAccessErrors">
-            <summary></summary>
+            <summary>
+                Generic interface for file access error entities.
+            </summary>
             <ExtendsEntity Type="ILocalAccessError" />
             <ImplementsGenericEntity Type="IAccessError{ILocalFile}" TypeDef="IAccessError{TTarget}" />
             <Properties>
@@ -5676,7 +5704,7 @@
             </Properties>
         </Entity>
         <Entity Name="ILocalRedundancy" RootInterface="IRedundancy" TableName="Redundancies">
-            <summary></summary>
+            <summary>.</summary>
             <ExtendsEntity Type="ILocalDbEntity" />
             <Properties>
                 <NewIdNavRef Name="FileId" FullName="ILocalRedundancy.FileId" Navigation="File">
@@ -5702,7 +5730,9 @@
             </Properties>
         </Entity>
         <Entity Name="ILocalComparison" RootInterface="IComparison" TableName="Comparisons">
-            <summary></summary>
+            <summary>
+                The results of a byte-for-byte comparison of 2 files.
+            </summary>
             <ExtendsEntity Type="ILocalDbEntity" />
             <Properties>
                 <NewIdNavRef Name="BaselineId" FullName="ILocalComparison.BaselineId" Navigation="Baseline">
@@ -5745,93 +5775,92 @@
     <Upstream>
         <EnumTypes>
             <Byte Name="UserRole" IsFlags="true">
-                <summary></summary>
+                <summary>Defines an application user role.</summary>
                 <Field Name="None" Value="0" FullName="UserRole.None">
-                    <summary></summary>
+                    <summary>No application roles.</summary>
                 </Field>
                 <Field Name="Reader" Value="1" FullName="UserRole.Reader">
-                    <summary></summary>
+                    <summary>Read-only application access.</summary>
                 </Field>
                 <Field Name="Auditor" Value="2" FullName="UserRole.Auditor">
-                    <summary></summary>
+                    <summary>Extended read-only application access for auditing purposes.</summary>
                 </Field>
                 <Field Name="Contributor" Value="4" FullName="UserRole.Contributor">
-                    <summary></summary>
+                    <summary>User can read and write file system crawl results for their own shared crawl results as well as read and write task records.</summary>
                 </Field>
                 <Field Name="ITSupport" Value="8" FullName="UserRole.ITSupport">
-                    <summary></summary>
+                    <summary>User can read and write all file system crawl results and task records.</summary>
                 </Field>
                 <Field Name="ChangeAdministrator" Value="16" FullName="UserRole.ChangeAdministrator">
-                    <summary></summary>
+                    <summary>User can assign manual remediation tasks as well as determine desired state.</summary>
+                    <remarks>This role implies the privileges of the <see cref="Contributor"/> and <see cref="ITSupport"/> roles as well.</remarks>
                 </Field>
                 <Field Name="AppAdministrator" Value="32" FullName="UserRole.AppAdministrator">
-                    <summary></summary>
+                    <summary>User can make changes to most application settings.</summary>
+                    <remarks>This role implies the privileges of the <see cref="ChangeAdministrator"/>, <see cref="Contributor"/> and <see cref="ITSupport"/> roles as well.</remarks>
                 </Field>
                 <Field Name="SystemAdmin" Value="64" FullName="UserRole.SystemAdmin">
-                    <summary></summary>
+                    <summary>User can make changes to all application settings as well as the ability to read and write all records.</summary>
                 </Field>
             </Byte>
             <Byte Name="TaskStatus">
-                <summary></summary>
+                <summary>Represent the status of a task.</summary>
                 <Field Name="New" Value="0" FullName="TaskStatus.New">
-                    <summary></summary>
+                    <summary>Task has not been acknowledged.</summary>
                 </Field>
                 <Field Name="Open" Value="1" FullName="TaskStatus.Open">
-                    <summary></summary>
+                    <summary>Task has been acknowledged, but not yet started.</summary>
                 </Field>
                 <Field Name="Active" Value="2" FullName="TaskStatus.Active">
-                    <summary></summary>
+                    <summary>Task is currently being addressed.</summary>
                 </Field>
                 <Field Name="Pending" Value="3" FullName="TaskStatus.Pending">
-                    <summary></summary>
+                    <summary>Task is in a paused state, pending some other factor.</summary>
                 </Field>
                 <Field Name="Canceled" Value="4" FullName="TaskStatus.Canceled">
-                    <summary></summary>
+                    <summary>Task has been canceled.</summary>
                 </Field>
                 <Field Name="Completed" Value="5" FullName="TaskStatus.Completed">
-                    <summary></summary>
+                    <summary>Task has been completed.</summary>
                 </Field>
             </Byte>
             <Byte Name="PriorityLevel">
-                <summary></summary>
+                <summary>Represents the priority level of a task.</summary>
                 <Field Name="Deferred" Value="0" FullName="PriorityLevel.Deferred">
-                    <summary></summary>
+                    <summary>Task has been deferred to a later date.</summary>
                 </Field>
                 <Field Name="Critical" Value="1" FullName="PriorityLevel.Critical">
-                    <summary></summary>
+                    <summary>Task has the highest priority.</summary>
                 </Field>
                 <Field Name="High" Value="2" FullName="PriorityLevel.High">
-                    <summary></summary>
+                    <summary>Task has elevated priority.</summary>
                 </Field>
                 <Field Name="Normal" Value="3" FullName="PriorityLevel.Normal">
-                    <summary></summary>
+                    <summary>Task has normal priority.</summary>
                 </Field>
                 <Field Name="Low" Value="4" FullName="PriorityLevel.Low">
-                    <summary></summary>
+                    <summary>Task has low priority.</summary>
                 </Field>
             </Byte>
             <Byte Name="PlatformType">
-                <summary></summary>
+                <summary>Represents a host platform type.</summary>
                 <Field Name="Unknown" Value="0" FullName="PlatformType.Unknown">
-                    <summary></summary>
+                    <summary>Host platform type is unknown.</summary>
                 </Field>
                 <Field Name="Windows" Value="1" FullName="PlatformType.Windows">
-                    <summary></summary>
+                    <summary>Host machine runs on a Windows-based operating system.</summary>
                 </Field>
                 <Field Name="Linux" Value="2" FullName="PlatformType.Linux">
-                    <summary></summary>
+                    <summary>Host machine runs on a Linux-based operating system.</summary>
                 </Field>
                 <Field Name="OSX" Value="3" FullName="PlatformType.OSX">
-                    <summary></summary>
+                    <summary>Host machine runs on a OSX-based operating system.</summary>
                 </Field>
                 <Field Name="Android" Value="4" FullName="PlatformType.Android">
-                    <summary></summary>
+                    <summary>Host is an android device.</summary>
                 </Field>
                 <Field Name="IOS" Value="5" FullName="PlatformType.IOS">
-                    <summary></summary>
-                </Field>
-                <Field Name="Other" Value="255" FullName="PlatformType.Other">
-                    <summary></summary>
+                    <summary>Host is an IOS device.</summary>
                 </Field>
             </Byte>
         </EnumTypes>
@@ -5851,7 +5880,10 @@
             </Properties>
         </Entity>
         <Entity Name="IUpstreamAccessError" RootInterface="IDbEntity">
-            <summary></summary>
+            <summary>
+                Base interface for all database entity objects which track the creation and modification dates as well as implementing the
+                <see cref="IValidatableObject" /> and <see cref="IRevertibleChangeTracking" /> interfaces.
+            </summary>
             <ExtendsGenericEntity Type="IAccessError{IUpstreamDbEntity}" TypeDef="IAccessError{TTarget}" />
             <Properties>
                 <NewRelatedEntity Name="Target" FullName="IUpstreamAccessError.Target" Reference="IUpstreamDbEntity">
@@ -5874,66 +5906,66 @@
                     <value>The user's display name</value>
                 </NVarChar>
                 <NVarChar Name="FirstName" MaxLength="128" IsNormalized="true" FullName="IUserProfile.FirstName" ColName="FirstName" IsCaseSensitive="false">
-                    <summary></summary>
-                    <value></value>
-                    <Index Name="IDX_UserProfile_FirstName"/>
+                    <summary>Gets the user's first name.</summary>
+                    <value>The user's first name.</value>
+                    <Index Name="IDX_UserProfile_FirstName" />
                 </NVarChar>
                 <NVarChar Name="LastName" MaxLength="128" IsNormalized="true" FullName="IUserProfile.LastName" ColName="LastName" IsCaseSensitive="false">
-                    <summary></summary>
-                    <value></value>
-                    <Index Name="IDX_UserProfile_LastName"/>
+                    <summary>Gets the user's last name.</summary>
+                    <value>The user's last name.</value>
+                    <Index Name="IDX_UserProfile_LastName" />
                 </NVarChar>
                 <NVarChar Name="MI" MaxLength="1" IsNormalized="true" FullName="IUserProfile.MI" ColName="MI" IsCaseSensitive="false">
-                    <summary></summary>
-                    <value></value>
+                    <summary>Gets the user's middle initial.</summary>
+                    <value>The user's middle initial.</value>
                 </NVarChar>
                 <NVarChar Name="Suffix" MaxLength="128" IsNormalized="true" FullName="IUserProfile.Suffix" ColName="Suffix" IsCaseSensitive="false">
-                    <summary></summary>
-                    <value></value>
+                    <summary>Gets the suffix that is to be appended to the user's display name.</summary>
+                    <value>The suffix that is to be appended to the user's display name.</value>
                 </NVarChar>
                 <NVarChar Name="Title" MaxLength="128" IsNormalized="true" FullName="IUserProfile.Title" ColName="Title" IsCaseSensitive="false">
-                    <summary></summary>
-                    <value></value>
+                    <summary>Gets the user's professional title, position or rank.</summary>
+                    <value>The user's professional title, position or rank.</value>
                 </NVarChar>
                 <Int Name="DbPrincipalId" AllowNull="true" FullName="IUserProfile.DbPrincipalId" ColName="DbPrincipalId">
-                    <summary></summary>
-                    <value></value>
-                    <Index Name="IDX_UserProfile_DbPrincipalId"/>
+                    <summary>Gets the database principal ID for the current user profile record.</summary>
+                    <value>The database principal ID for the current user profile record.</value>
+                    <Index Name="IDX_UserProfile_DbPrincipalId" />
                     <DefaultNull />
                 </Int>
                 <ByteValues Name="SID" FullName="IUserProfile.SID" ColName="SID" MaxLength="68">
-                    <summary></summary>
-                    <value></value>
-                    <Index Name="IDX_UserProfile_SID"/>
+                    <summary>Gets the Security Identifier for the user associated with the current user profile record.</summary>
+                    <value>The Security Identifier for the user associated with the current user profile record.</value>
+                    <Index Name="IDX_UserProfile_SID" />
                 </ByteValues>
                 <Text Name="Notes" FullName="IUserProfile.Notes" ColName="Notes">
-                    <summary></summary>
-                    <value></value>
+                    <summary>Gets the custom notes to be associated with the current user profile.</summary>
+                    <value>The custom notes to be associated with the current user profile.</value>
                 </Text>
                 <Bit Name="IsInactive" FullName="IUserProfile.IsInactive" ColName="IsInactive">
-                    <summary></summary>
-                    <value></value>
-                    <Index Name="IDX_UserProfile_IsInactive"/>
+                    <summary>Indicates whether the current user is inactive.</summary>
+                    <value><see langword="true" /> if the current user is inactive; otherwise, <see langword="false" />.</value>
+                    <Index Name="IDX_UserProfile_IsInactive" />
                 </Bit>
                 <CollectionNavigation Name="MemberOf" FullName="IUserProfile.MemberOf">
-                    <summary></summary>
-                    <value></value>
+                    <summary>Gets the membership objects that determine what groups the current user belongs to.</summary>
+                    <value>The <see cref="IGroupMembership">membership objects</see> that determine what groups the current user belongs to.</value>
                     <ItemType>IGroupMembership</ItemType>
                 </CollectionNavigation>
                 <CollectionNavigation Name="Tasks" FullName="IUserProfile.Tasks">
-                    <summary></summary>
-                    <value></value>
+                    <summary>Gets the tasks that are assigned to the current user.</summary>
+                    <value>The <see cref="IMitigationTask">tasks</see> that are assigned to the current user.</value>
                     <ItemType>IMitigationTask</ItemType>
                 </CollectionNavigation>
             </Properties>
             <Unique Name="UK_UserProfile_DisplayName">
-                <Property Name="DisplayName"/>
+                <Property Name="DisplayName" />
             </Unique>
             <Unique Name="UK_UserProfile_DbPrincipalId">
-                <Property Name="DbPrincipalId"/>
+                <Property Name="DbPrincipalId" />
             </Unique>
             <Unique Name="UK_UserProfile_SID">
-                <Property Name="SID"/>
+                <Property Name="SID" />
             </Unique>
         </Entity>
         <Entity Name="IUserGroup" RootInterface="IUpstreamDbEntity" TableName="UserGroups">
@@ -5943,7 +5975,7 @@
                 <NVarChar Name="Name" MaxLength="64" IsNormalized="true" FullName="IUserGroup.Name" ColName="Name" IsCaseSensitive="false">
                     <summary></summary>
                     <value></value>
-                    <Index Name="IDX_UserGroup_Name"/>
+                    <Index Name="IDX_UserGroup_Name" />
                 </NVarChar>
                 <Enum Name="Roles" Type="UserRole" FullName="IUserGroup.Roles" ColName="Roles">
                     <summary></summary>
@@ -5956,7 +5988,7 @@
                 <Bit Name="IsInactive" FullName="IUserGroup.IsInactive" ColName="IsInactive">
                     <summary></summary>
                     <value></value>
-                    <Index Name="IDX_UserGroup_IsInactive"/>
+                    <Index Name="IDX_UserGroup_IsInactive" />
                 </Bit>
                 <CollectionNavigation Name="Members" FullName="IUserGroup.Members">
                     <summary></summary>
@@ -5970,7 +6002,7 @@
                 </CollectionNavigation>
             </Properties>
             <Unique Name="UK_UserGroup_Name">
-                <Property Name="Name"/>
+                <Property Name="Name" />
             </Unique>
         </Entity>
         <Entity Name="IGroupMembership" RootInterface="IUpstreamDbEntity" TableName="GroupMemberships">
@@ -6007,7 +6039,7 @@
                 <Enum Name="Status" Type="TaskStatus" FullName="IMitigationTask.Status" ColName="Status">
                     <summary></summary>
                     <value></value>
-                    <Index Name="IDX_MitigationTask_Status"/>
+                    <Index Name="IDX_MitigationTask_Status" />
                 </Enum>
                 <Enum Name="Priority" Type="PriorityLevel" FullName="IMitigationTask.Priority" ColName="Priority">
                     <summary></summary>
@@ -6052,7 +6084,7 @@
                 <Bit Name="IsInactive" FullName="IHostPlatform.IsInactive" ColName="IsInactive">
                     <summary></summary>
                     <value></value>
-                    <Index Name="IDX_HostPlatform_IsInactive"/>
+                    <Index Name="IDX_HostPlatform_IsInactive" />
                 </Bit>
                 <RelatedEntity Name="DefaultFsType" FullName="IHostPlatform.DefaultFsType" Reference="IUpstreamFileSystem" FkPropertyName="DefaultFsTypeId" ConstraintName="FK_HostPlatform_FileSystem">
                     <summary></summary>
@@ -6088,7 +6120,7 @@
                 <Bit Name="IsInactive" FullName="IHostDevice.IsInactive" ColName="IsInactive">
                     <summary></summary>
                     <value></value>
-                    <Index Name="IDX_HostDevice_IsInactive"/>
+                    <Index Name="IDX_HostDevice_IsInactive" />
                 </Bit>
                 <RelatedEntity Name="Platform" FullName="IHostDevice.Platform" Reference="IHostPlatform" FkPropertyName="PlatformId" ConstraintName="FK_HostDevice_HostPlatform">
                     <summary></summary>
@@ -6125,7 +6157,9 @@
             </Properties>
         </Entity>
         <Entity Name="IUpstreamVolume" RootInterface="IVolume" TableName="Volumes">
-            <summary></summary>
+            <summary>
+                Interface for entities which represent a logical file system volume.
+            </summary>
             <ExtendsEntity Type="IUpstreamDbEntity" />
             <Properties>
                 <RelatedEntity Name="HostDevice" FullName="IUpstreamVolume.HostDevice" Reference="IHostDevice" FkPropertyName="HostDeviceId" ConstraintName="FK_Volume_HostDevice">
@@ -6157,7 +6191,9 @@
             </Properties>
         </Entity>
         <Entity Name="IUpstreamDbFsItem" RootInterface="IDbFsItem">
-            <summary></summary>
+            <summary>
+                Base interface for a database entity that represents a file system node.
+            </summary>
             <ExtendsEntity Type="IUpstreamDbEntity" />
             <Properties>
                 <NewRelatedEntity Name="Parent" FullName="IUpstreamDbFsItem.Parent" Reference="IUpstreamSubdirectory">
@@ -6179,7 +6215,9 @@
             </Properties>
         </Entity>
         <Entity Name="IUpstreamSubdirectory" RootInterface="ISubdirectory" TableName="Subdirectories">
-            <summary></summary>
+            <summary>
+                Interface for entities that represent a subdirectory node within a file system.
+            </summary>
             <ExtendsEntity Type="IUpstreamDbFsItem" />
             <Properties>
                 <NewRelatedEntity Name="Volume" FullName="IUpstreamSubdirectory.Volume" Reference="IUpstreamVolume">
@@ -6227,7 +6265,9 @@
             </Properties>
         </Entity>
         <Entity Name="IUpstreamSubdirectoryAccessError" RootInterface="ISubdirectoryAccessError" TableName="SubdirectoryAccessErrors">
-            <summary></summary>
+            <summary>
+                Generic interface for subdirectory access error entities.
+            </summary>
             <ExtendsEntity Type="IUpstreamAccessError" />
             <ImplementsGenericEntity Type="IAccessError{IUpstreamSubdirectory}" TypeDef="IAccessError{TTarget}" />
             <Properties>
@@ -6265,7 +6305,9 @@
             </Properties>
         </Entity>
         <Entity Name="IUpstreamBinaryPropertySet" RootInterface="IBinaryPropertySet" TableName="BinaryPropertySets">
-            <summary></summary>
+            <summary>
+                Represents a set of files that have the same file size and cryptographic hash.
+            </summary>
             <ExtendsEntity Type="IUpstreamDbEntity" />
             <Properties>
                 <NewCollectionNavigation Name="Files" FullName="IUpstreamBinaryPropertySet.Files">
@@ -6277,7 +6319,9 @@
             </Properties>
         </Entity>
         <Entity Name="IUpstreamPropertySet" RootInterface="IPropertySet">
-            <summary></summary>
+            <summary>
+                Base interface for entities that represent a grouping of extended file properties.
+            </summary>
             <ExtendsEntity Type="IUpstreamDbEntity" />
             <Properties>
                 <NewCollectionNavigation Name="Files" FullName="IUpstreamPropertySet.Files">
@@ -6292,62 +6336,86 @@
             </Properties>
         </Entity>
         <Entity Name="IUpstreamSummaryPropertySet" RootInterface="ISummaryPropertySet" TableName="SummaryPropertySets">
-            <summary></summary>
+            <summary>
+                Interface for database objects that contain extended file summary property values.
+            </summary>
             <ExtendsEntity Type="IUpstreamPropertySet" />
             <Properties></Properties>
         </Entity>
         <Entity Name="IUpstreamDocumentPropertySet" RootInterface="IDocumentPropertySet" TableName="DocumentPropertySets">
-            <summary></summary>
+            <summary>
+                Interface for database objects that contain extended file property values of document files.
+            </summary>
             <ExtendsEntity Type="IUpstreamPropertySet" />
             <Properties></Properties>
         </Entity>
         <Entity Name="IUpstreamAudioPropertySet" RootInterface="IAudioPropertySet" TableName="AudioPropertySets">
-            <summary></summary>
+            <summary>
+                Interface for database objects that contain extended file property values of audio files.
+            </summary>
             <ExtendsEntity Type="IUpstreamPropertySet" />
             <Properties></Properties>
         </Entity>
         <Entity Name="IUpstreamDRMPropertySet" RootInterface="IDRMPropertySet" TableName="DRMPropertySets">
-            <summary></summary>
+            <summary>
+                Interface for database objects that contain extended file DRM property values.
+            </summary>
             <ExtendsEntity Type="IUpstreamPropertySet" />
             <Properties></Properties>
         </Entity>
         <Entity Name="IUpstreamGPSPropertySet" RootInterface="IGPSPropertySet" TableName="GPSPropertySets">
-            <summary></summary>
+            <summary>
+                Interface for database objects that contain extended file GPS property values.
+            </summary>
             <ExtendsEntity Type="IUpstreamPropertySet" />
             <Properties></Properties>
         </Entity>
         <Entity Name="IUpstreamImagePropertySet" RootInterface="IImagePropertySet" TableName="ImagePropertySets">
-            <summary></summary>
+            <summary>
+                Interface for database objects that contain extended file property values of image files.
+            </summary>
             <ExtendsEntity Type="IUpstreamPropertySet" />
             <Properties></Properties>
         </Entity>
         <Entity Name="IUpstreamMediaPropertySet" RootInterface="IMediaPropertySet" TableName="MediaPropertySets">
-            <summary></summary>
+            <summary>
+                Interface for database objects that contain extended file property values of media files.
+            </summary>
             <ExtendsEntity Type="IUpstreamPropertySet" />
             <Properties></Properties>
         </Entity>
         <Entity Name="IUpstreamMusicPropertySet" RootInterface="IMusicPropertySet" TableName="MusicPropertySets">
-            <summary></summary>
+            <summary>
+                Interface for database objects that contain extended file property values of music files.
+            </summary>
             <ExtendsEntity Type="IUpstreamPropertySet" />
             <Properties></Properties>
         </Entity>
         <Entity Name="IUpstreamPhotoPropertySet" RootInterface="IPhotoPropertySet" TableName="PhotoPropertySets">
-            <summary></summary>
+            <summary>
+                Interface for database objects that contain extended file property values of photo files.
+            </summary>
             <ExtendsEntity Type="IUpstreamPropertySet" />
             <Properties></Properties>
         </Entity>
         <Entity Name="IUpstreamRecordedTVPropertySet" RootInterface="IRecordedTVPropertySet" TableName="RecordedTVPropertySets">
-            <summary></summary>
+            <summary>
+                Interface for database objects that contain extended file property values of recorded TV files.
+            </summary>
             <ExtendsEntity Type="IUpstreamPropertySet" />
             <Properties></Properties>
         </Entity>
         <Entity Name="IUpstreamVideoPropertySet" RootInterface="IVideoPropertySet" TableName="VideoPropertySets">
-            <summary></summary>
+            <summary>
+                Interface for database objects that contain extended file property values of video files.
+            </summary>
             <ExtendsEntity Type="IUpstreamPropertySet" />
             <Properties></Properties>
         </Entity>
         <Entity Name="IUpstreamRedundantSet" RootInterface="IRedundantSet" TableName="RedundantSets">
-            <summary></summary>
+            <summary>
+                Represents a set of files that have the same size, Hash and remediation status.
+            </summary>
             <ExtendsEntity Type="IUpstreamDbEntity" />
             <Properties>
                 <NewRelatedEntity Name="BinaryProperties" FullName="IUpstreamRedundantSet.BinaryProperties" Reference="IUpstreamBinaryPropertySet" />
@@ -6357,7 +6425,9 @@
             </Properties>
         </Entity>
         <Entity Name="IUpstreamFile" RootInterface="IFile" TableName="Files">
-            <summary></summary>
+            <summary>
+                Represents a structural instance of file.
+            </summary>
             <ExtendsEntity Type="IUpstreamDbFsItem" />
             <Properties>
                 <NewRelatedEntity Name="BinaryProperties" FullName="IUpstreamFile.BinaryProperties" Reference="IUpstreamBinaryPropertySet">
@@ -6512,7 +6582,9 @@
             </Properties>
         </Entity>
         <Entity Name="IUpstreamFileAccessError" RootInterface="IFileAccessError" TableName="FileAccessErrors">
-            <summary></summary>
+            <summary>
+                Generic interface for file access error entities.
+            </summary>
             <ExtendsEntity Type="IUpstreamAccessError" />
             <ImplementsGenericEntity Type="IAccessError{IUpstreamFile}" TypeDef="IAccessError{TTarget}" />
             <Properties>
@@ -6527,7 +6599,7 @@
             </Properties>
         </Entity>
         <Entity Name="IUpstreamRedundancy" RootInterface="IRedundancy" TableName="Redundancies">
-            <summary></summary>
+            <summary>.</summary>
             <ExtendsEntity Type="IUpstreamDbEntity" />
             <Properties>
                 <NewIdNavRef Name="FileId" FullName="IUpstreamRedundancy.FileId" Navigation="File">
@@ -6553,7 +6625,9 @@
             </Properties>
         </Entity>
         <Entity Name="IUpstreamComparison" RootInterface="IComparison" TableName="Comparisons">
-            <summary></summary>
+            <summary>
+                The results of a byte-for-byte comparison of 2 files.
+            </summary>
             <ExtendsEntity Type="IUpstreamDbEntity" />
             <Properties>
                 <NewIdNavRef Name="BaselineId" FullName="IUpstreamComparison.BaselineId" Navigation="Baseline">
