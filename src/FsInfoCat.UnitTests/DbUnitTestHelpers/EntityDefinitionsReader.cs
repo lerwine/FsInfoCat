@@ -254,6 +254,7 @@ namespace FsInfoCat.UnitTests.DbUnitTestHelpers
         const string NAME_Now = "Now";
         const string NAME_Trimmed = "Trimmed";
         const string NAME_Length = "Length";
+        const string NAME_Navigation = "Navigation";
         static readonly XName XNAME_Root = XName.Get(NAME_Root);
         static readonly XName XNAME_Upstream = XName.Get(NAME_Upstream);
         static readonly XName XNAME_Local = XName.Get(NAME_Local);
@@ -374,6 +375,7 @@ namespace FsInfoCat.UnitTests.DbUnitTestHelpers
         static readonly XName XNAME_Now = XName.Get(NAME_Now);
         static readonly XName XNAME_Trimmed = XName.Get(NAME_Trimmed);
         static readonly XName XNAME_Length = XName.Get(NAME_Length);
+        static readonly XName XNAME_Navigation = XName.Get(NAME_Navigation);
         static readonly Regex NewLineRegex = new(@"\r\n?|[\n\p{Zl}\p{Zp}]", RegexOptions.Compiled);
         static readonly Regex NormalizeWsRegex = new(@" ((?![\r\n])\s)*|(?! )((?![\r\n])\s)+", RegexOptions.Compiled);
         static readonly Regex NormalizeNewLineRegex = new(@"[\v\t\p{Zl}\p{Zp}]|\r(?!\n)", RegexOptions.Compiled);
@@ -1797,6 +1799,26 @@ namespace <#=DefaultNamespace#>.Upstream
                         int maxLength = sources.Attributes(XNAME_MaxLength).Select(a => FromXmlInt32(a.Value.Trim()) ?? 0).DefaultIfEmpty(0).First();
                         if (maxLength > 0)
                             check = new SimpleColumnValueReference(colName).Length().LessThanLiteral(maxLength + 1);
+                        break;
+                    case NAME_UniqueIdentifier:
+                        IEnumerable<(string ConstraintName, string TableName)> relatedEntities = sources.Attributes(XNAME_Navigation).Select(a =>
+                        {
+                            string n = a.Value;
+                            XElement[] refersTo = sources.SelectMany(p => p.Parent.Elements().Attributes(XNAME_Name).Where(a1 => a1.Value == n).Select(a1 => a1.Parent)).ToArray();
+                            return (
+                                ConstraintName: refersTo.Attributes(XNAME_ConstraintName).Select(e => e.Value).FirstOrDefault(),
+                                TableName: refersTo.Attributes(XNAME_Reference).Select(e => FindLocalEntityByName(e.Value)?.Attribute(XNAME_TableName)?.Value).Where(n => n is not null).FirstOrDefault()
+                            );
+                        }).Where(t => !(string.IsNullOrEmpty(t.ConstraintName) || string.IsNullOrEmpty(t.TableName)));
+                        if (relatedEntities.Any())
+                        {
+                            (string ConstraintName, string TableName) re = relatedEntities.First();
+                            Write(" CONSTRAINT \"");
+                            Write(re.ConstraintName);
+                            Write("\" REFERENCES \"");
+                            Write(re.TableName);
+                            Write("\"(\"Id\") ON DELETE RESTRICT");
+                        }
                         break;
                     case NAME_RelatedEntity:
                         Write(" CONSTRAINT \"");

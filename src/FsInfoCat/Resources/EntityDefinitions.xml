@@ -5229,7 +5229,7 @@
                     </value>
                     <remarks>This is also part of this entity's compound primary key.</remarks>
                 </UniqueIdentifier>
-                <RelatedEntity Name="Baseline" FullName="IComparison.Baseline" Reference="IFile" FkPropertyName="BaselineId" ConstraintName="FK_Comparison_BaselineFile">
+                <RelatedEntity Name="Baseline" FullName="IComparison.Baseline" Reference="IFile" ConstraintName="FK_Comparison_BaselineFile">
                     <summary>
                         Gets the baseline file in the comparison.
                     </summary>
@@ -5246,7 +5246,7 @@
                     </value>
                     <remarks>This is also part of this entity's compound primary key.</remarks>
                 </UniqueIdentifier>
-                <RelatedEntity Name="Correlative" FullName="IComparison.Correlative" Reference="IFile" FkPropertyName="CorrelativeId" ConstraintName="FK_Comparison_CorrelativeFile">
+                <RelatedEntity Name="Correlative" FullName="IComparison.Correlative" Reference="IFile" ConstraintName="FK_Comparison_CorrelativeFile">
                     <summary>
                         Gets the correlative file in the comparison.
                     </summary>
