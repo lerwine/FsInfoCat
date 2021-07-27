@@ -1203,19 +1203,45 @@
         </xs:complexContent>
     </xs:complexType>
     <xs:complexType name="RelatedEntityProperty">
+        <xs:annotation>
+            <xs:documentation>Defines a property for a relationship with another table where the current table is the dependent.</xs:documentation>
+        </xs:annotation>
         <xs:complexContent>
             <xs:extension base="EntityProperty">
                 <xs:sequence>
+                    <xs:choice>
+                        <xs:element name="PrimaryEntity" type="CsIdentifier">
+                            <xs:annotation>
+                                <xs:documentation>The name of the related entity. The primary key for the relationship is assumed to be "Id".</xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element name="PrimaryProperty" type="CsMemberReference">
+                            <xs:annotation>
+                                <xs:documentation>The full name of the primary entity's primary key for the relationship.</xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                    </xs:choice>
                     <xs:element name="DbRelationship" minOccurs="0">
+                        <xs:annotation>
+                            <xs:documentation>Defines a foreign key relationship on the current table.</xs:documentation>
+                        </xs:annotation>
                         <xs:complexType>
                             <xs:attribute name="Name" use="required">
+                                <xs:annotation>
+                                    <xs:documentation>The name to give the foriegn key relationship.</xs:documentation>
+                                </xs:annotation>
                                 <xs:simpleType>
                                     <xs:restriction base="CsIdentifier">
                                         <xs:pattern value="^FK_.+$"/>
                                     </xs:restriction>
                                 </xs:simpleType>
                             </xs:attribute>
-                            <xs:attribute name="FkPropertyName" type="CsIdentifier" use="optional"/>
+                            <xs:attribute name="FkPropertyName" type="CsIdentifier" use="optional">
+                                <xs:annotation>
+                                    <xs:documentation>The name of the property on the current table that serves as the primary key.
+                                    If this is not specified, the foreign key property name will assumed to be the same as the this property's name with "Id" appended.</xs:documentation>
+                                </xs:annotation>
+                            </xs:attribute>
                         </xs:complexType>
                     </xs:element>
                     <xs:element name="DefaultNull" minOccurs="0">
@@ -1225,8 +1251,13 @@
                         <xs:complexType></xs:complexType>
                     </xs:element>
                 </xs:sequence>
-                <xs:attribute name="Reference" type="CsIdentifier" use="required"/>
-                <xs:attribute name="IsOneToOne" type="xs:boolean" use="optional" default="false"/>
+                <xs:attribute name="IsOneToOne" type="xs:boolean" use="optional" default="false">
+                    <xs:annotation>
+                        <xs:documentation>
+                            If true, then the current table is in a one-to-one relationship; otherwise, the current table is in a one-to-many relationship with the current table being the dependent.
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
@@ -1237,7 +1268,19 @@
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
+    <xs:complexType name="NewRelatedEntityKeyProperty">
+        <xs:complexContent>
+            <xs:extension base="NewEntityProperty">
+                <xs:attribute name="Reference" type="CsMemberReference" use="required"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
     <xs:complexType name="NavigationSetProperty">
+        <xs:annotation>
+            <xs:documentation>
+                Defines a property for a one-to-many relationship with another table where the current table is the primary and the other table is the dependent.
+            </xs:documentation>
+        </xs:annotation>
         <xs:complexContent>
             <xs:extension base="EntityProperty">
                 <xs:choice>
@@ -1310,6 +1353,7 @@
             <xs:element name="Enum" type="EnumProperty"/>
             <xs:element name="RelatedEntity" type="RelatedEntityProperty" />
             <xs:element name="NewRelatedEntity" type="NewRelatedEntityProperty" />
+            <xs:element name="NewRelatedEntityKey" type="NewRelatedEntityKeyProperty" />
             <xs:element name="CollectionNavigation" type="NavigationSetProperty"/>
             <xs:element name="NewCollectionNavigation" type="NewNavigationSetProperty"/>
         </xs:choice>

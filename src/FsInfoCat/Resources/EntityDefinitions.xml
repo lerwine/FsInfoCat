@@ -335,6 +335,7 @@
                     <value>
                         The <see cref="IDbEntity" /> object that this error applies to.
                     </value>
+                    <PrimaryEntity>IDbEntity</PrimaryEntity>
                     <DbRelationship Name="FK_AccessError_DbEntity" FkPropertyName="TargetId"/>
                 </RelatedEntity>
             </Properties>
@@ -346,7 +347,7 @@
             <typeparam name="TTarget">The target entity type.</typeparam>
             <ExtendsEntity Type="IAccessError" />
             <Properties>
-                <NewRelatedEntity Name="Target" FullName="IAccessError{TTarget}.Target" Reference="IDbEntity" />
+                <NewRelatedEntity Name="Target" FullName="IAccessError{TTarget}.Target" Reference="IDbEntity"/>
             </Properties>
         </Entity>
         <Entity Name="IFileSystem">
@@ -486,6 +487,7 @@
                         Gets the file system that this symbolic name refers to.
                     </summary>
                     <value>The file system entity that represents the file system type that this symbolic name refers to.</value>
+                    <PrimaryEntity>IFileSystem</PrimaryEntity>
                     <DbRelationship Name="FK_SymbolicName_FileSystem" FkPropertyName="FileSystemId"/>
                 </RelatedEntity>
             </Properties>
@@ -582,12 +584,14 @@
                         Gets the root directory of this volume.
                     </summary>
                     <value>The root directory of this volume.</value>
+                    <PrimaryEntity>ISubdirectory</PrimaryEntity>
                 </RelatedEntity>
                 <RelatedEntity Name="FileSystem" FullName="IVolume.FileSystem" Reference="IFileSystem">
                     <summary>
                         Gets the file system type.
                     </summary>
                     <value>The file system type for this volume.</value>
+                    <PrimaryEntity>IFileSystem</PrimaryEntity>
                     <DbRelationship Name="FK_Volume_FileSystem" FkPropertyName="FileSystemId"/>
                 </RelatedEntity>
                 <CollectionNavigation Name="AccessErrors" FullName="IVolume.AccessErrors">
@@ -727,6 +731,7 @@
                         Gets the starting subdirectory for the configured subdirectory crawl.
                     </summary>
                     <value>The root subdirectory of the configured subdirectory crawl.</value>
+                    <PrimaryEntity>ISubdirectory</PrimaryEntity>
                     <DbRelationship Name="FK_CrawlConfiguration_Subdirectory" FkPropertyName="RootId"/>
                 </RelatedEntity>
                 <CollectionNavigation Name="Logs" FullName="ICrawlConfiguration.Logs">
@@ -787,6 +792,7 @@
                 <RelatedEntity Name="Configuration" FullName="ICrawlJobLog.Configuration" Reference="ICrawlConfiguration">
                     <summary>Gets the configuration source for the file system crawl.</summary>
                     <value>The configuration for the file system crawl.</value>
+                    <PrimaryEntity>ICrawlConfiguration</PrimaryEntity>
                     <DbRelationship Name="FK_CrawlJobLog_CrawlConfiguration" FkPropertyName="ConfigurationId"/>
                 </RelatedEntity>
             </Properties>
@@ -843,6 +849,7 @@
                     <value>
                         The parent <see cref="ISubdirectory" /> of the current file system item or <see langword="null" /> if this is the root subdirectory.
                     </value>
+                    <PrimaryEntity>ISubdirectory</PrimaryEntity>
                     <DbRelationship Name="FK_DbFsItem_Subdirectory" FkPropertyName="ParentId"/>
                 </RelatedEntity>
                 <CollectionNavigation Name="AccessErrors" FullName="IDbFsItem.AccessErrors">
@@ -893,6 +900,7 @@
                     <remarks>
                         If this is <see langword="null" />, then <see cref="ISubdirectory.Parent" /> should not be null, and vice-versa.
                     </remarks>
+                    <PrimaryEntity>IVolume</PrimaryEntity>
                     <DbRelationship Name="FK_Subdirectory_Volume" FkPropertyName="VolumeId"/>
                 </RelatedEntity>
                 <RelatedEntity Name="CrawlConfiguration" FullName="ISubdirectory.CrawlConfiguration" Reference="ICrawlConfiguration">
@@ -900,6 +908,7 @@
                         Gets the crawl configuration that starts with the current subdirectory.
                     </summary>
                     <value>The crawl configuration that starts with the current subdirectory.</value>
+                    <PrimaryEntity>ICrawlConfiguration</PrimaryEntity>
                     <DbRelationship Name="FK_Subdirectory_CrawlConfiguration" FkPropertyName="CrawlConfigurationId"/>
                 </RelatedEntity>
                 <CollectionNavigation Name="Files" FullName="ISubdirectory.Files">
@@ -4977,6 +4986,7 @@
                     <value>
                         The generic <see cref="IBinaryPropertySet" /> that contains the file size and optionally, the <see cref="MD5Hash">MD5 hash</see> value of its binary contents.
                     </value>
+                    <PrimaryEntity>IBinaryPropertySet</PrimaryEntity>
                     <DbRelationship Name="FK_File_BinaryPropertySet" FkPropertyName="BinaryPropertySetId"/>
                 </RelatedEntity>
                 <RelatedEntity Name="SummaryProperties" FullName="IFile.SummaryProperties" Reference="ISummaryPropertySet">
@@ -4986,6 +4996,7 @@
                     <value>
                         The generic <see cref="IBinaryPropertySet" /> that contains the summary properties for the current file or <see langword="null" /> if no summary properties are defined on the current file.
                     </value>
+                    <PrimaryEntity>ISummaryPropertySet</PrimaryEntity>
                     <DbRelationship Name="FK_File_SummaryPropertySet" FkPropertyName="SummaryPropertySetId"/>
                 </RelatedEntity>
                 <RelatedEntity Name="DocumentProperties" FullName="IFile.DocumentProperties" Reference="IDocumentPropertySet">
@@ -4995,6 +5006,7 @@
                     <value>
                         The generic <see cref="IDocumentPropertySet" /> that contains the document properties for the current file or <see langword="null" /> if no document properties are defined on the current file.
                     </value>
+                    <PrimaryEntity>IDocumentPropertySet</PrimaryEntity>
                     <DbRelationship Name="FK_File_DocumentPropertySet" FkPropertyName="DocumentPropertySetId"/>
                 </RelatedEntity>
                 <RelatedEntity Name="AudioProperties" FullName="IFile.AudioProperties" Reference="IAudioPropertySet">
@@ -5004,6 +5016,7 @@
                     <value>
                         The generic <see cref="IAudioPropertySet" /> that contains the audio properties for the current file or <see langword="null" /> if no audio properties are defined on the current file.
                     </value>
+                    <PrimaryEntity>IAudioPropertySet</PrimaryEntity>
                     <DbRelationship Name="FK_File_AudioPropertySet" FkPropertyName="AudioPropertySetId"/>
                 </RelatedEntity>
                 <RelatedEntity Name="DRMProperties" FullName="IFile.DRMProperties" Reference="IDRMPropertySet">
@@ -5013,6 +5026,7 @@
                     <value>
                         The generic <see cref="IDRMPropertySet" /> that contains the DRM properties for the current file or <see langword="null" /> if no DRM properties are defined on the current file.
                     </value>
+                    <PrimaryEntity>IDRMPropertySet</PrimaryEntity>
                     <DbRelationship Name="FK_File_DRMPropertySet" FkPropertyName="DRMPropertySetId"/>
                 </RelatedEntity>
                 <RelatedEntity Name="GPSProperties" FullName="IFile.GPSProperties" Reference="IGPSPropertySet">
@@ -5022,6 +5036,7 @@
                     <value>
                         The generic <see cref="IGPSPropertySet" /> that contains the GPS properties for the current file or <see langword="null" /> if no GPS properties are defined on the current file.
                     </value>
+                    <PrimaryEntity>IGPSPropertySet</PrimaryEntity>
                     <DbRelationship Name="FK_File_GPSPropertySet" FkPropertyName="GPSPropertySetId"/>
                 </RelatedEntity>
                 <RelatedEntity Name="ImageProperties" FullName="IFile.ImageProperties" Reference="IImagePropertySet">
@@ -5031,6 +5046,7 @@
                     <value>
                         The generic <see cref="IImagePropertySet" /> that contains the image properties for the current file or <see langword="null" /> if no image properties are defined on the current file.
                     </value>
+                    <PrimaryEntity>IImagePropertySet</PrimaryEntity>
                     <DbRelationship Name="FK_File_ImagePropertySet" FkPropertyName="ImagePropertySetId"/>
                 </RelatedEntity>
                 <RelatedEntity Name="MediaProperties" FullName="IFile.MediaProperties" Reference="IMediaPropertySet">
@@ -5040,6 +5056,7 @@
                     <value>
                         The generic <see cref="IMediaPropertySet" /> that contains the media properties for the current file or <see langword="null" /> if no media properties are defined on the current file.
                     </value>
+                    <PrimaryEntity>IMediaPropertySet</PrimaryEntity>
                     <DbRelationship Name="FK_File_MediaPropertySet" FkPropertyName="MediaPropertySetId"/>
                 </RelatedEntity>
                 <RelatedEntity Name="MusicProperties" FullName="IFile.MusicProperties" Reference="IMusicPropertySet">
@@ -5049,6 +5066,7 @@
                     <value>
                         The generic <see cref="IMusicPropertySet" /> that contains the music properties for the current file or <see langword="null" /> if no music properties are defined on the current file.
                     </value>
+                    <PrimaryEntity>IMusicPropertySet</PrimaryEntity>
                     <DbRelationship Name="FK_File_MusicPropertySet" FkPropertyName="MusicPropertySetId"/>
                 </RelatedEntity>
                 <RelatedEntity Name="PhotoProperties" FullName="IFile.PhotoProperties" Reference="IPhotoPropertySet">
@@ -5058,6 +5076,7 @@
                     <value>
                         The generic <see cref="IPhotoPropertySet" /> that contains the photo properties for the current file or <see langword="null" /> if no photo properties are defined on the current file.
                     </value>
+                    <PrimaryEntity>IPhotoPropertySet</PrimaryEntity>
                     <DbRelationship Name="FK_File_PhotoPropertySet" FkPropertyName="PhotoPropertySetId"/>
                 </RelatedEntity>
                 <RelatedEntity Name="RecordedTVProperties" FullName="IFile.RecordedTVProperties" Reference="IRecordedTVPropertySet">
@@ -5067,6 +5086,7 @@
                     <value>
                         The generic <see cref="IRecordedTVPropertySet" /> that contains the recorded TV properties for the current file or <see langword="null" /> if no recorded TV properties are defined on the current file.
                     </value>
+                    <PrimaryEntity>IRecordedTVPropertySet</PrimaryEntity>
                     <DbRelationship Name="FK_File_RecordedTVPropertySet" FkPropertyName="RecordedTVPropertySetId"/>
                 </RelatedEntity>
                 <RelatedEntity Name="VideoProperties" FullName="IFile.VideoProperties" Reference="IVideoPropertySet">
@@ -5076,6 +5096,7 @@
                     <value>
                         The generic <see cref="IVideoPropertySet" /> that contains the video properties for the current file or <see langword="null" /> if no video properties are defined on the current file.
                     </value>
+                    <PrimaryEntity>IVideoPropertySet</PrimaryEntity>
                     <DbRelationship Name="FK_File_VideoPropertySet" FkPropertyName="VideoPropertySetId"/>
                 </RelatedEntity>
                 <RelatedEntity Name="Redundancy" FullName="IFile.Redundancy" Reference="IRedundancy">
@@ -5086,6 +5107,7 @@
                         A <see cref="IRedundancy" /> object that indicates the current file is an exact copy of other files that belong to the same <see cref="IRedundancy.RedundantSet" />
                         or <see langword="null" /> if this file has not been identified as being redundant with any other.
                     </value>
+                    <PrimaryEntity>IRedundancy</PrimaryEntity>
                     <DbRelationship Name="FK_File_Redundancy"/>
                 </RelatedEntity>
                 <CollectionNavigation Name="BaselineComparisons" FullName="IFile.BaselineComparisons">
@@ -5159,6 +5181,7 @@
                         Gets the binary properties in common with all files in the current redundant set.
                     </summary>
                     <value>The binary properties in common with all files in the current redundant set.</value>
+                    <PrimaryEntity>IBinaryPropertySet</PrimaryEntity>
                     <DbRelationship Name="FK_RedundantSet_BinaryPropertySet" FkPropertyName="BinaryPropertySetId"/>
                 </RelatedEntity>
                 <CollectionNavigation Name="Redundancies" FullName="IRedundantSet.Redundancies">
@@ -5201,6 +5224,7 @@
                         Gets the file that belongs to the redundancy set.
                     </summary>
                     <value>The file that belongs to the redundancy set.</value>
+                    <PrimaryEntity>IFile</PrimaryEntity>
                     <DbRelationship Name="FK_Redundancy_File"/>
                 </RelatedEntity>
                 <UniqueIdentifier Name="RedundantSetId" FullName="IRedundancy.RedundantSetId" Navigation="RedundantSet" IsPrimaryKey="true" ColName="RedundantSetId">
@@ -5217,6 +5241,7 @@
                         Gets the redundancy set.
                     </summary>
                     <value>The redundancy set.</value>
+                    <PrimaryEntity>IRedundantSet</PrimaryEntity>
                     <DbRelationship Name="FK_Redundancy_RedundantSet"/>
                 </RelatedEntity>
             </Properties>
@@ -5260,6 +5285,7 @@
                     <value>
                         The generic <see cref="IFile" /> that represents the baseline file in the comparison.
                     </value>
+                    <PrimaryEntity>IFile</PrimaryEntity>
                     <DbRelationship Name="FK_Comparison_BaselineFile"/>
                 </RelatedEntity>
                 <UniqueIdentifier Name="CorrelativeId" FullName="IComparison.CorrelativeId" Navigation="Correlative" ColName="CorrelativeId">
@@ -5278,6 +5304,7 @@
                     <value>
                         The generic <see cref="IFile" /> that represents the correlative file, which is the new or changed file in the comparison.
                     </value>
+                    <PrimaryEntity>IFile</PrimaryEntity>
                     <DbRelationship Name="FK_Comparison_CorrelativeFile"/>
                 </RelatedEntity>
             </Properties>
@@ -5898,11 +5925,13 @@
                 <RelatedEntity Name="CreatedBy" FullName="IUpstreamDbEntity.CreatedBy" Reference="IUserProfile">
                     <summary>Gets the user who created the current record.</summary>
                     <value>The user who created the current record.</value>
+                    <PrimaryEntity></PrimaryEntity>
                     <DbRelationship Name="FK_DbEntity_CreatorUserProfile" FkPropertyName="CreatedById"/>
                 </RelatedEntity>
                 <RelatedEntity Name="ModifiedBy" FullName="IUpstreamDbEntity.ModifiedBy" Reference="IUserProfile">
                     <summary>Gets the user who last modified the current record.</summary>
                     <value>The user who last modified the current record.</value>
+                    <PrimaryEntity></PrimaryEntity>
                     <DbRelationship Name="FK_DbEntity_ModifierUserProfile" FkPropertyName="ModifiedById"/>
                 </RelatedEntity>
             </Properties>
@@ -6045,11 +6074,13 @@
                 <RelatedEntity Name="Group" FullName="IGroupMembership.Group" Reference="IUserGroup">
                     <summary></summary>
                     <value></value>
+                    <PrimaryEntity></PrimaryEntity>
                     <DbRelationship Name="FK_GroupMembership_UserGroup" FkPropertyName="GroupId"/>
                 </RelatedEntity>
                 <RelatedEntity Name="User" FullName="IGroupMembership.User" Reference="IUserProfile">
                     <summary></summary>
                     <value></value>
+                    <PrimaryEntity></PrimaryEntity>
                     <DbRelationship Name="FK_GroupMembership_UserProfile" FkPropertyName="UserId"/>
                 </RelatedEntity>
             </Properties>
@@ -6078,11 +6109,13 @@
                 <RelatedEntity Name="AssignmentGroup" FullName="IMitigationTask.AssignmentGroup" Reference="IUserGroup">
                     <summary></summary>
                     <value></value>
+                    <PrimaryEntity></PrimaryEntity>
                     <DbRelationship Name="FK_MitigationTask_UserGroup" FkPropertyName="AssignmentGroupId"/>
                 </RelatedEntity>
                 <RelatedEntity Name="AssignedTo" FullName="IMitigationTask.AssignedTo" Reference="IUserProfile">
                     <summary></summary>
                     <value></value>
+                    <PrimaryEntity></PrimaryEntity>
                     <DbRelationship Name="FK_MitigationTask_UserProfile" FkPropertyName="AssignedToId"/>
                 </RelatedEntity>
                 <CollectionNavigation Name="FileActions" FullName="IMitigationTask.FileActions">
@@ -6121,6 +6154,7 @@
                 <RelatedEntity Name="DefaultFsType" FullName="IHostPlatform.DefaultFsType" Reference="IUpstreamFileSystem">
                     <summary></summary>
                     <value></value>
+                    <PrimaryEntity></PrimaryEntity>
                     <DbRelationship Name="FK_HostPlatform_FileSystem" FkPropertyName="DefaultFsTypeId"/>
                 </RelatedEntity>
                 <CollectionNavigation Name="HostDevices" FullName="IHostPlatform.HostDevices">
@@ -6158,6 +6192,7 @@
                 <RelatedEntity Name="Platform" FullName="IHostDevice.Platform" Reference="IHostPlatform">
                     <summary></summary>
                     <value></value>
+                    <PrimaryEntity></PrimaryEntity>
                     <DbRelationship Name="FK_HostDevice_HostPlatform" FkPropertyName="PlatformId"/>
                 </RelatedEntity>
                 <CollectionNavigation Name="Volumes" FullName="IHostDevice.Volumes">
@@ -6199,6 +6234,7 @@
                 <RelatedEntity Name="HostDevice" FullName="IUpstreamVolume.HostDevice" Reference="IHostDevice">
                     <summary>Gets the device that hosts the current volume.</summary>
                     <value>The device that hosts the current volume.</value>
+                    <PrimaryEntity></PrimaryEntity>
                     <DbRelationship Name="FK_Volume_HostDevice" FkPropertyName="HostDeviceId"/>
                 </RelatedEntity>
                 <NewRelatedEntity Name="RootDirectory" FullName="IUpstreamVolume.RootDirectory" Reference="IUpstreamSubdirectory" />
@@ -6324,6 +6360,7 @@
                     </summary>
                     <value>
                     </value>
+                    <PrimaryEntity></PrimaryEntity>
                     <DbRelationship Name="FK_SubdirectoryAction_MitigationTask" FkPropertyName="TaskId"/>
                 </RelatedEntity>
                 <RelatedEntity Name="Source" FullName="ISubdirectoryAction.Source" Reference="IUpstreamSubdirectory">
@@ -6331,6 +6368,7 @@
                     </summary>
                     <value>
                     </value>
+                    <PrimaryEntity></PrimaryEntity>
                     <DbRelationship Name="FK_SubdirectoryAction_SourceSubdirectory" FkPropertyName="SourceId"/>
                 </RelatedEntity>
                 <RelatedEntity Name="Target" FullName="ISubdirectoryAction.Target" Reference="IUpstreamSubdirectory">
@@ -6338,6 +6376,7 @@
                     </summary>
                     <value>
                     </value>
+                    <PrimaryEntity></PrimaryEntity>
                     <DbRelationship Name="FK_SubdirectoryAction_TargetSubdirectory" FkPropertyName="TargetId"/>
                 </RelatedEntity>
             </Properties>
@@ -6604,6 +6643,7 @@
                     </summary>
                     <value>
                     </value>
+                    <PrimaryEntity></PrimaryEntity>
                     <DbRelationship Name="FK_FileAction_MitigationTask" FkPropertyName="TaskId"/>
                 </RelatedEntity>
                 <RelatedEntity Name="Source" FullName="IFileAction.Source" Reference="IUpstreamFile">
@@ -6611,6 +6651,7 @@
                     </summary>
                     <value>
                     </value>
+                    <PrimaryEntity></PrimaryEntity>
                     <DbRelationship Name="FK_FileAction_File" FkPropertyName="SourceId"/>
                 </RelatedEntity>
                 <RelatedEntity Name="Target" FullName="IFileAction.Target" Reference="IUpstreamSubdirectory">
@@ -6618,6 +6659,7 @@
                     </summary>
                     <value>
                     </value>
+                    <PrimaryEntity></PrimaryEntity>
                     <DbRelationship Name="FK_FileAction_Subdirectory" FkPropertyName="TargetId"/>
                 </RelatedEntity>
             </Properties>

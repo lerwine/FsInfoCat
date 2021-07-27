@@ -652,6 +652,7 @@ namespace FsInfoCat.UnitTests.DbUnitTestHelpers
                 return new AllMembersCacheItem<(string Name, List<XElement> Sources)>(results.ToArray());
             });
         }
+        [Obsolete()]
         static AllBasePropertiesCacheItem GetAllBasePropertiesCacheItem(XElement propertyElement)
         {
             string propertyName = propertyElement?.Attribute(XNAME_Name)?.Value;
@@ -685,6 +686,7 @@ namespace FsInfoCat.UnitTests.DbUnitTestHelpers
             return new AllBasePropertiesCacheItem(new PropertyInheritanceInfo(results.Where(e => e.Name == baseName).DefaultIfEmpty(propertyElement).First(), n, e,
                 results.ToArray(), propertyElement));
         }
+        [Obsolete()]
         static PropertyInheritanceInfo GetAllBaseProperties(XElement propertyElement)
         {
             if (propertyElement is null || propertyElement.Parent?.Name != XNAME_Properties)
@@ -1729,7 +1731,8 @@ namespace FsInfoCat.UnitTests.DbUnitTestHelpers
                 return (v is null) ? 0 : _resultComparer.GetHashCode(v);
             }
         }
-        [Obsolete]
+        
+        [Obsolete("Use PropertyGenerationInfo, instead")]
         public class PropertyInheritanceInfo
         {
             public XElement BaseDefinitionElement { get; }
@@ -1746,7 +1749,7 @@ namespace FsInfoCat.UnitTests.DbUnitTestHelpers
                 Source = source;
             }
         }
-        [Obsolete]
+        [Obsolete("Use EntityGenerationInfo, instead")]
         public class AllBasePropertiesCacheItem : IElementCacheItem<PropertyInheritanceInfo> { public PropertyInheritanceInfo Value { get; } public AllBasePropertiesCacheItem(PropertyInheritanceInfo value) { Value = value; } }
 
         #endregion
@@ -2197,6 +2200,8 @@ namespace <#=DefaultNamespace#>.Upstream
                 GenerateEntityInterface(typeElement);
             }
         }
+        
+        [Obsolete("Need to create a method that uses PropertyGenerationInfo")]
         void GenerateProperty(string typeName, PropertyInheritanceInfo property)
         {
             string propertyName = property.BaseDefinitionElement.Attribute(XNAME_Name)?.Value;
