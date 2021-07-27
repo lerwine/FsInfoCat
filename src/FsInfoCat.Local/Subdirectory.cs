@@ -204,6 +204,8 @@ namespace FsInfoCat.Local
 
         IEnumerable<IAccessError> IDbFsItem.AccessErrors => AccessErrors.Cast<IAccessError>();
 
+        ISubdirectory ISubdirectory.Parent => Parent;
+
         #endregion
 
         public Subdirectory()
@@ -237,7 +239,7 @@ namespace FsInfoCat.Local
             await dbContext.SaveChangesAsync(cancellationToken);
         }
 
-        public async Task MarkBranchIncompleteAsync(LocalDbContext dbContext, CancellationToken cancellationToken, bool doNotSaveChanges = false)
+        public async Task MarkBranchIncompleteAsync(LocalDbContext dbContext, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
             EntityEntry<Subdirectory> dbEntry = dbContext.Entry(this);

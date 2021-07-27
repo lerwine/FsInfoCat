@@ -2,6 +2,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Data;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
@@ -116,6 +117,7 @@ namespace FsInfoCat.UnitTests.DbUnitTestHelpers
         const string SQL_TYPENAME_BLOB = "BLOB";
         const string SQL_TYPENAME_UNIQUEIDENTIFIER = "UNIQUEIDENTIFIER";
         const string SQL_TYPENAME_NVARCHAR = "NVARCHAR";
+        const string SQL_TYPENAME_CHARACTER = "CHARACTER";
         const string SQL_TYPENAME_TEXT = "TEXT";
         const string SQL_TYPENAME_DATETIME = "DATETIME";
         const string SQL_TYPENAME_TIME = "TIME";
@@ -150,7 +152,8 @@ namespace FsInfoCat.UnitTests.DbUnitTestHelpers
         const string NAME_Default = "Default";
         const string NAME_Value = "Value";
         const string NAME_EnumTypes = "EnumTypes";
-        const string NAME_Properties = "Properties";
+        const string NAME_Properties = "Properties"; 
+        const string NAME_BaseType = "BaseType";
         const string NAME_ExtendsEntity = "ExtendsEntity";
         const string NAME_ExtendsGenericEntity = "ExtendsGenericEntity";
         const string NAME_Implements = "Implements";
@@ -235,7 +238,9 @@ namespace FsInfoCat.UnitTests.DbUnitTestHelpers
         const string NAME_AmbientLong = "AmbientLong";
         const string NAME_AmbientULong = "AmbientULong";
         const string NAME_IsCaseSensitive = "IsCaseSensitive";
+        [Obsolete("Remove this")]
         const string NAME_ConstraintName = "ConstraintName";
+        const string NAME_DbRelationship = "DbRelationship";
         const string NAME_FkPropertyName = "FkPropertyName";
         const string NAME_Check = "Check";
         const string NAME_And = "And";
@@ -273,7 +278,8 @@ namespace FsInfoCat.UnitTests.DbUnitTestHelpers
         static readonly XName XNAME_Default = XName.Get(NAME_Default);
         static readonly XName XNAME_Value = XName.Get(NAME_Value);
         static readonly XName XNAME_EnumTypes = XName.Get(NAME_EnumTypes);
-        static readonly XName XNAME_Properties = XName.Get(NAME_Properties);
+        static readonly XName XNAME_Properties = XName.Get(NAME_Properties); 
+        static readonly XName XNAME_BaseType = XName.Get(NAME_BaseType);
         static readonly XName XNAME_ExtendsEntity = XName.Get(NAME_ExtendsEntity);
         static readonly XName XNAME_ExtendsGenericEntity = XName.Get(NAME_ExtendsGenericEntity);
         static readonly XName XNAME_Implements = XName.Get(NAME_Implements);
@@ -356,7 +362,9 @@ namespace FsInfoCat.UnitTests.DbUnitTestHelpers
         static readonly XName XNAME_AmbientLong = XName.Get(NAME_AmbientLong);
         static readonly XName XNAME_AmbientULong = XName.Get(NAME_AmbientULong);
         static readonly XName XNAME_IsCaseSensitive = XName.Get(NAME_IsCaseSensitive);
+        [Obsolete("Remove this")]
         static readonly XName XNAME_ConstraintName = XName.Get(NAME_ConstraintName);
+        static readonly XName XNAME_DbRelationship = XName.Get(NAME_DbRelationship);
         static readonly XName XNAME_FkPropertyName = XName.Get(NAME_FkPropertyName);
         static readonly XName XNAME_Check = XName.Get(NAME_Check);
         static readonly XName XNAME_And = XName.Get(NAME_And);
@@ -437,7 +445,7 @@ namespace FsInfoCat.UnitTests.DbUnitTestHelpers
             try { return XmlConvert.ToGuid(xml); }
             catch { return null; }
         }
-        byte[] FromXmlBinary(string xml)
+        static byte[] FromXmlBinary(string xml)
         {
             if (xml is null)
                 return null;
@@ -492,18 +500,29 @@ namespace FsInfoCat.UnitTests.DbUnitTestHelpers
         XElement FindLocalFieldByFullName(string fullName) => GetElementsByAttributeValue(XNAME_FullName, fullName, AllLocalEnumFieldElements).FirstOrDefault();
         XElement FindUpstreamPropertyByFullName(string fullName) => GetElementsByAttributeValue(XNAME_FullName, fullName, AllUpstreamPropertyElements).FirstOrDefault();
         XElement FindUpstreamFieldByFullName(string fullName) => GetElementsByAttributeValue(XNAME_FullName, fullName, AllUpstreamEnumFieldElements).FirstOrDefault();
-        static bool IsEntityElement(XElement element) => element?.Name == XNAME_Entity;
-        static bool IsEnumTypeElement(XElement element) => element?.Parent?.Name == XNAME_EnumTypes;
-        static bool IsPropertyElement(XElement element) => element?.Parent?.Name == XNAME_Properties;
-        static bool IsEnumFieldElement(XElement element) => element?.Name == XNAME_Field;
-        static XElement GetScopeElement(XElement refElement)
+        static bool IsScopeElement(XElement element)
+        {
+            if (element is null)
+                return false;
+            XElement root = element.Document?.Root;
+            if (root is null)
+                return element.Name == XNAME_Root || element.Name == XNAME_Local || element.Name == XNAME_Upstream;
+            return ReferenceEquals(root, element.Parent);
+        }
+        static bool IsEntityElement(XElement element) => element is not null && element.Name == XNAME_Entity && (element.Parent is null || IsScopeElement(element.Parent));
+        static bool IsEnumTypeElement(XElement element) => element is not null && element.Parent?.Name == XNAME_EnumTypes && (element.Parent?.Parent is null || IsScopeElement(element.Parent?.Parent));
+        static bool IsPropertyElement(XElement element) => element is not null && element.Parent?.Name == XNAME_Properties && IsEntityElement(element.Parent?.Parent);
+        static bool IsEnumFieldElement(XElement element) => element is not null && element.Name == XNAME_Field && IsEnumTypeElement(element.Parent);
+        static XElement GetCurrentScopeElement(XElement refElement)
         {
             XElement root = refElement.Document?.Root;
             return (root is null) ? null : refElement.AncestorsAndSelf().FirstOrDefault(e => ReferenceEquals(root, e.Parent));
         }
+        static XElement GetCurrentEntityElement(XElement refElement) => refElement?.AncestorsAndSelf().FirstOrDefault(IsEntityElement);
+        static XElement GetCurrentPropertyElement(XElement refElement) => refElement?.AncestorsAndSelf().FirstOrDefault(IsPropertyElement);
         static IEnumerable<XElement> GetAllEntityElements(XElement refElement)
         {
-            XElement scopeElement = GetScopeElement(refElement);
+            XElement scopeElement = GetCurrentScopeElement(refElement);
             if (scopeElement is null)
                 return Enumerable.Empty<XElement>();
             if (scopeElement.Name != XNAME_Root)
@@ -513,7 +532,7 @@ namespace FsInfoCat.UnitTests.DbUnitTestHelpers
         static IEnumerable<XElement> GetAllPropertyElements(XElement refElement) => GetAllEntityElements(refElement).Elements(XNAME_Properties).Elements();
         static IEnumerable<XElement> GetAllEnumTypeElements(XElement refElement)
         {
-            XElement scopeElement = GetScopeElement(refElement);
+            XElement scopeElement = GetCurrentScopeElement(refElement);
             if (scopeElement is null)
                 return Enumerable.Empty<XElement>();
             if (scopeElement.Name != XNAME_Root)
@@ -525,6 +544,8 @@ namespace FsInfoCat.UnitTests.DbUnitTestHelpers
             return scopeElement.Elements(XNAME_EnumTypes).Elements();
         }
         static IEnumerable<XElement> GetAllEnumFieldElements(XElement refElement) => GetAllEnumTypeElements(refElement).Elements(XNAME_Field);
+        static XElement FindCurrentEntityPropertyByName(XElement refElement, string name) => (name is null) ? null :
+            GetCurrentEntityElement(refElement)?.Element(XNAME_Properties).Attributes(XNAME_Name).Where(a => a.Value == name).Select(a => a.Parent).FirstOrDefault();
         static XElement FindEntityByName(XElement refElement, string name) => GetElementsByAttributeValue(XNAME_Name, name, GetAllEntityElements(refElement)).FirstOrDefault();
         static IEnumerable<XElement> FindEntitiesByNames(XElement refElement, IEnumerable<string> names) => GetElementsByAttributeValue(XNAME_Name, names, GetAllEntityElements(refElement));
         static XElement FindEnumTypeByName(XElement refElement, string name) => GetElementsByAttributeValue(XNAME_Name, name, GetAllEnumTypeElements(refElement)).FirstOrDefault();
@@ -799,6 +820,916 @@ namespace FsInfoCat.UnitTests.DbUnitTestHelpers
         public class AllBaseValuesCacheItem<T> : IElementCacheItem<T[]> { public T[] Value { get; } public AllBaseValuesCacheItem(T[] value) { Value = value; } }
         public class ImmediateMembersCacheItem<T> : IElementCacheItem<T[]> { public T[] Value { get; } public ImmediateMembersCacheItem(T[] value) { Value = value; } }
         public class AllMembersCacheItem<T> : IElementCacheItem<T[]> { public T[] Value { get; } public AllMembersCacheItem(T[] value) { Value = value; } }
+        public interface IMemberGenerationInfo
+        {
+            string Name { get; }
+            DbType Type { get; }
+            string CsTypeName { get; }
+            string SqlTypeName { get; }
+            XElement Source { get; }
+            ITypeGenerationInfo DeclaringType { get; }
+        }
+        public interface ITypeGenerationInfo
+        {
+            string Name { get; }
+            XElement Source { get; }
+            IEnumerable<IMemberGenerationInfo> GetMembers();
+        }
+        public struct PropertyValueCode
+        {
+            public string CsCode { get; }
+            public string SqlCode { get; }
+            public static readonly PropertyValueCode Null = new("null", "NULL");
+            public static readonly PropertyValueCode Now = new("DateTime.Now", "datetime('now','localtime')");
+            public static readonly PropertyValueCode Zero = new("TimeSpan.Zero", "'0:00:00'");
+
+            private PropertyValueCode(string csCode, string sqlCode)
+            {
+                CsCode = csCode;
+                SqlCode = sqlCode;
+            }
+            internal static PropertyValueCode? Of(bool? value) => value.HasValue ? (value.Value ? new("true", "1") : new("false", "0")) : null;
+            internal static PropertyValueCode? Of(byte? value) => value.HasValue ? new($"(byte){value.Value}", value.Value.ToString()) : null;
+            internal static PropertyValueCode? Of(sbyte? value) => value.HasValue ? new($"(sbyte){value.Value}", value.Value.ToString()) : null;
+            internal static PropertyValueCode? Of(short? value) => value.HasValue ? new($"(short){value.Value}", value.Value.ToString()) : null;
+            internal static PropertyValueCode? Of(ushort? value) => value.HasValue ? new($"(ushort){value.Value}", value.Value.ToString()) : null;
+            internal static PropertyValueCode? Of(int? value) => value.HasValue ? new(value.Value.ToString(), value.Value.ToString()) : null;
+            internal static PropertyValueCode? Of(uint? value) => value.HasValue ? new($"{value.Value}u", value.Value.ToString()) : null;
+            internal static PropertyValueCode? Of(long? value) => value.HasValue ? new($"{value.Value}L", value.Value.ToString()) : null;
+            internal static PropertyValueCode? Of(ulong? value) => value.HasValue ? new($"{value.Value}LU", value.Value.ToString()) : null;
+            internal static PropertyValueCode? Of(decimal? value) => value.HasValue ? new($"{value.Value}m", value.Value.ToString()) : null;
+            internal static PropertyValueCode? Of(double? value)
+            {
+                if (value.HasValue)
+                {
+                    string s = value.Value.ToString();
+                    return new(s.Contains('.') ? $"{s}.0" : s, s);
+                }
+                return null;
+            }
+            internal static PropertyValueCode? Of(float? value) => value.HasValue ? new($"{value.Value}f", value.Value.ToString()) : null;
+            internal static PropertyValueCode? Of(char? value)
+            {
+                if (value.HasValue)
+                    switch (value.Value)
+                    {
+                        case '\\':
+                            return new("'\\\\'", "N'\\'");
+                        case '\'':
+                            return new("'\\\''", "N''''");
+                        case '\a':
+                            return new("'\\\a'", "N'\a'");
+                        case '\b':
+                            return new("'\\\b'", "N'\b'");
+                        case '\f':
+                            return new("'\\\f'", "N'\f'");
+                        case '\n':
+                            return new("'\\\n'", "N'\n'");
+                        case '\r':
+                            return new("'\\\r'", "N'\r'");
+                        case '\t':
+                            return new("'\\\t'", "N'\t'");
+                        case '\v':
+                            return new("'\\\v'", "N'\v'");
+                        default:
+                            if (char.IsControl(value.Value) || char.IsWhiteSpace(value.Value) || char.IsHighSurrogate(value.Value) || char.IsLowSurrogate(value.Value))
+                            {
+                                int i = (int)value.Value;
+                                if (i < 256)
+                                    return new($"'\\x{i:X2}'", $"N'{value.Value}'");
+                                return new($"'\\u{i:X4}'", $"N'{value.Value}'");
+                            }
+                            return new($"'{value.Value}'", $"N'{value.Value}'");
+                    }
+                return null;
+            }
+            internal static PropertyValueCode? Of(DateTime? value) =>
+                value.HasValue ? new($"new DateTime({value.Value.Year}, {value.Value.Month}, {value.Value.Day}, {value.Value.Hour}, {value.Value.Minute}, {value.Value.Second})",
+                $"'{value.Value:yyyy-MM-dd HH:mm:ss}'") : null;
+            internal static PropertyValueCode? Of(Guid? value) => value.HasValue ? new(value.Value.Equals(Guid.Empty) ? "Guid.Empty" : $"Guid.Parse(\"{value.Value:N}\")",
+                $"'{value:N}'") : null;
+            internal static PropertyValueCode? Of(TimeSpan? value) => value.HasValue ? new(value.Value.Equals(TimeSpan.Zero) ? "TimeSpan.Zero" :
+                $"new TimeSpan({value.Value.Days}, {value.Value.Hours}, {value.Value.Minutes}, {value.Value.Seconds}),",
+                (value.Value.Hours == 0) ? $"'{value.Value:h\\:mm\\:ss}'" : $"'{(value.Value.Days * 24) + value.Value.Hours}{value.Value:mm\\:ss}'") : null;
+            internal static PropertyValueCode? Of(string value)
+            {
+                if (value is null)
+                    return null;
+                if (value.Length == 0)
+                    return new("\"\"", "N''");
+                return new($"\"{value.Replace(@"\", @"\\").Replace("\"", "\\\"").Replace("\a", @"\a").Replace("\b", @"\b").Replace("\f", @"\f").Replace("\n", @"\n").Replace("\r", @"\r").Replace("\t", @"\t").Replace("\v", @"\v")}\"",
+                    $"N'{value.Replace("'", "''")}'");
+            }
+            internal static PropertyValueCode? Of(byte[] value)
+            {
+                if (value is null)
+                    return null;
+                if (value.Length == 0)
+                    return new("Array.Empty<byte>()", "x''");
+                return new($"Convert.FromBase64String(\"{Convert.ToBase64String(value)}\")", $"x'{BitConverter.ToString(value)}'");
+            }
+            internal static PropertyValueCode? Of(DriveType? driveType) => driveType.HasValue ? new($"{nameof(DriveType)}.{driveType:F}", ((int)driveType).ToString()) :
+                null;
+            internal static PropertyValueCode? OfEnumType(FieldGenerationInfo field)
+            {
+                if (field is null)
+                    return null;
+                return new PropertyValueCode(field.Name, field.RawValue.ToString());
+            }
+            internal static T? ToValue<T>(string text, Func<string, T> converter)
+                where T : struct
+            {
+                if (text is not null && (text = text.Trim()).Length > 0)
+                    try { return converter(text); } catch { return null; }
+                return null;
+            }
+            internal static T? ElementToValue<T>(XName name, XElement element, Func<string, T> converter)
+                where T : struct => ((element = element?.Element(name)) is null || element.IsEmpty) ? null : ToValue(element.Value, converter);
+            internal static T? AttributeToValue<T>(XName name, XElement element, Func<string, T> converter)
+                where T : struct => ToValue(element?.Attribute(name)?.Value, converter);
+            internal static T? ToFirstValue<T>(IEnumerable<string> values, Func<string, T> converter)
+                where T : struct
+            {
+                foreach (string s in values.Where(s => s is not null).Select(s => s.Trim()))
+                {
+                    if (s.Length > 0)
+                        try { return converter(s); } catch { /* okay to ignore */ }
+                }
+                return null;
+            }
+            internal static T? ToFirstElementValue<T>(XName name, IEnumerable<XElement> sourceElements, Func<string, T> converter)
+                where T : struct => ToFirstValue(sourceElements.Elements(name).Select(e => (e is null || e.IsEmpty) ? null : e.Value), converter);
+            internal static T? ToFirstAttributeValue<T>(XName name, IEnumerable<XElement> sourceElements, Func<string, T> converter)
+                where T : struct => ToFirstValue(sourceElements.Attributes(name).Select(a => a?.Value), converter);
+            internal static T ToFirstObject<T>(IEnumerable<string> values, Func<string, T> converter)
+                where T : class
+            {
+                foreach (string s in values.Where(s => s is not null).Select(s => s.Trim()))
+                {
+                    if (s.Length > 0)
+                        try
+                        {
+                            T result = converter(s);
+                            if (result is not null)
+                                return result;
+                        }
+                        catch { /* okay to ignore */ }
+                }
+                return null;
+            }
+            internal static T ToFirstElementObject<T>(XName name, IEnumerable<XElement> sourceElements, Func<string, T> converter)
+                where T : class => ToFirstObject(sourceElements.Elements(name).Select(e => (e is null || e.IsEmpty) ? null : e.Value), converter);
+            internal static T ToFirstAttributeObject<T>(XName name, IEnumerable<XElement> sourceElements, Func<string, T> converter)
+                where T : class => ToFirstObject(sourceElements.Attributes(name).Select(a => a?.Value), converter);
+            internal static T ToObject<T>(string text, Func<string, T> converter)
+                where T : class
+            {
+                if (text is not null && (text = text.Trim()).Length > 0)
+                    try { return converter(text); } catch { return null; }
+                return null;
+            }
+            public static string ElementToString(XName name, IEnumerable<XElement> sourceElements) => sourceElements?.Elements(name).Where(e => !e.IsEmpty)
+                .Select(e => e.Value).FirstOrDefault();
+            public static string ElementToString(XName name, XElement element) => element?.Elements(name).Where(e => !e.IsEmpty)
+                .Select(e => e.Value).FirstOrDefault();
+            public static string AttributeToString(XName name, IEnumerable<XElement> sourceElements) => sourceElements?.Attributes(name)
+                .Select(e => e.Value).FirstOrDefault();
+            public static string AttributeToString(XName name, XElement element) => element?.Attributes(name).Select(e => e.Value).FirstOrDefault();
+            public static byte[] ElementToBinary(XName name, IEnumerable<XElement> sourceElements) => ToFirstObject(sourceElements.Elements(name)
+                .Select(e => e.IsEmpty ? null : e.Value), Convert.FromBase64String);
+            public static byte[] ElementToBinary(XName name, XElement element) => ToObject(element.Element(name)?.Value, Convert.FromBase64String);
+            public static byte[] AttributeToBinary(XName name, IEnumerable<XElement> sourceElements) => ToFirstObject(sourceElements.Attributes(name)
+                .Select(a => a.Value), Convert.FromBase64String);
+            public static byte[] AttributeToBinary(XName name, XElement element) => ToObject(element.Attribute(name)?.Value, Convert.FromBase64String);
+            public static bool? ElementToBoolean(XName name, IEnumerable<XElement> sourceElements) => ToFirstValue(sourceElements.Elements(name)
+                .Select(e => e.IsEmpty ? null : e.Value), XmlConvert.ToBoolean);
+            public static bool? ElementToBoolean(XName name, XElement element) => ToValue(element.Element(name)?.Value, XmlConvert.ToBoolean);
+            public static bool? AttributeToBoolean(XName name, IEnumerable<XElement> sourceElements) => ToFirstValue(sourceElements.Attributes(name)
+                .Select(a => a.Value), XmlConvert.ToBoolean);
+            public static bool? AttributeToBoolean(XName name, XElement element) => ToValue(element.Attribute(name)?.Value, XmlConvert.ToBoolean);
+            public static byte? ElementToByte(XName name, IEnumerable<XElement> sourceElements) => ToFirstValue(sourceElements.Elements(name)
+                .Select(e => e.IsEmpty ? null : e.Value), XmlConvert.ToByte);
+            public static byte? ElementToByte(XName name, XElement element) => ToValue(element.Element(name)?.Value, XmlConvert.ToByte);
+            public static byte? AttributeToByte(XName name, IEnumerable<XElement> sourceElements) => ToFirstValue(sourceElements.Attributes(name)
+                .Select(a => a.Value), XmlConvert.ToByte);
+            public static byte? AttributeToByte(XName name, XElement element) => ToValue(element.Attribute(name)?.Value, XmlConvert.ToByte);
+            public static sbyte? ElementToSByte(XName name, IEnumerable<XElement> sourceElements) => ToFirstValue(sourceElements.Elements(name)
+                .Select(e => e.IsEmpty ? null : e.Value), XmlConvert.ToSByte);
+            public static sbyte? ElementToSByte(XName name, XElement element) => ToValue(element.Element(name)?.Value, XmlConvert.ToSByte);
+            public static sbyte? AttributeToSByte(XName name, IEnumerable<XElement> sourceElements) => ToFirstValue(sourceElements.Attributes(name)
+                .Select(a => a.Value), XmlConvert.ToSByte);
+            public static sbyte? AttributeToSByte(XName name, XElement element) => ToValue(element.Attribute(name)?.Value, XmlConvert.ToSByte);
+            public static char? ElementToChar(XName name, IEnumerable<XElement> sourceElements) => ToFirstValue(sourceElements.Elements(name)
+                .Select(e => e.IsEmpty ? null : e.Value), XmlConvert.ToChar);
+            public static char? ElementToChar(XName name, XElement element) => ToValue(element.Element(name)?.Value, XmlConvert.ToChar);
+            public static char? AttributeToChar(XName name, IEnumerable<XElement> sourceElements) => ToFirstValue(sourceElements.Attributes(name)
+                .Select(a => a.Value), XmlConvert.ToChar);
+            public static char? AttributeToChar(XName name, XElement element) => ToValue(element.Attribute(name)?.Value, XmlConvert.ToChar);
+            public static DateTime? ElementToDateTime(XName name, IEnumerable<XElement> sourceElements) => ToFirstValue(sourceElements.Elements(name)
+                .Select(e => e.IsEmpty ? null : e.Value), t => XmlConvert.ToDateTime(t, XmlDateTimeSerializationMode.RoundtripKind));
+            public static DateTime? ElementToDateTime(XName name, XElement element) => ToValue(element.Element(name)?.Value,
+                t => XmlConvert.ToDateTime(t, XmlDateTimeSerializationMode.RoundtripKind));
+            public static DateTime? AttributeToDateTime(XName name, IEnumerable<XElement> sourceElements) => ToFirstValue(sourceElements.Attributes(name)
+                .Select(a => a.Value), t => XmlConvert.ToDateTime(t, XmlDateTimeSerializationMode.RoundtripKind));
+            public static DateTime? AttributeToDateTime(XName name, XElement element) => ToValue(element.Attribute(name)?.Value,
+                t => XmlConvert.ToDateTime(t, XmlDateTimeSerializationMode.RoundtripKind));
+            public static Guid? ElementToGuid(XName name, IEnumerable<XElement> sourceElements) => ToFirstValue(sourceElements.Elements(name)
+                .Select(e => e.IsEmpty ? null : e.Value), XmlConvert.ToGuid);
+            public static Guid? ElementToGuid(XName name, XElement element) => ToValue(element.Element(name)?.Value, XmlConvert.ToGuid);
+            public static Guid? AttributeToGuid(XName name, IEnumerable<XElement> sourceElements) => ToFirstValue(sourceElements.Attributes(name)
+                .Select(a => a.Value), XmlConvert.ToGuid);
+            public static Guid? AttributeToGuid(XName name, XElement element) => ToValue(element.Attribute(name)?.Value, XmlConvert.ToGuid);
+            public static short? ElementToInt16(XName name, IEnumerable<XElement> sourceElements) => ToFirstValue(sourceElements.Elements(name)
+                .Select(e => e.IsEmpty ? null : e.Value), XmlConvert.ToInt16);
+            public static short? ElementToInt16(XName name, XElement element) => ToValue(element.Element(name)?.Value, XmlConvert.ToInt16);
+            public static short? AttributeToInt16(XName name, IEnumerable<XElement> sourceElements) => ToFirstValue(sourceElements.Attributes(name)
+                .Select(a => a.Value), XmlConvert.ToInt16);
+            public static short? AttributeToInt16(XName name, XElement element) => ToValue(element.Attribute(name)?.Value, XmlConvert.ToInt16);
+            public static int? ElementToInt32(XName name, IEnumerable<XElement> sourceElements) => ToFirstValue(sourceElements.Elements(name)
+                .Select(e => e.IsEmpty ? null : e.Value), XmlConvert.ToInt32);
+            public static int? ElementToInt32(XName name, XElement element) => ToValue(element.Element(name)?.Value, XmlConvert.ToInt32);
+            public static int? AttributeToInt32(XName name, IEnumerable<XElement> sourceElements) => ToFirstValue(sourceElements.Attributes(name)
+                .Select(a => a.Value), XmlConvert.ToInt32);
+            public static int? AttributeToInt32(XName name, XElement element) => ToValue(element.Attribute(name)?.Value, XmlConvert.ToInt32);
+            public static long? ElementToInt64(XName name, IEnumerable<XElement> sourceElements) => ToFirstValue(sourceElements.Elements(name)
+                .Select(e => e.IsEmpty ? null : e.Value), XmlConvert.ToInt64);
+            public static long? ElementToInt64(XName name, XElement element) => ToValue(element.Element(name)?.Value, XmlConvert.ToInt64);
+            public static long? AttributeToInt64(XName name, IEnumerable<XElement> sourceElements) => ToFirstValue(sourceElements.Attributes(name)
+                .Select(a => a.Value), XmlConvert.ToInt64);
+            public static long? AttributeToInt64(XName name, XElement element) => ToValue(element.Attribute(name)?.Value, XmlConvert.ToInt64);
+            public static ushort? ElementToUInt16(XName name, IEnumerable<XElement> sourceElements) => ToFirstValue(sourceElements.Elements(name)
+                .Select(e => e.IsEmpty ? null : e.Value), XmlConvert.ToUInt16);
+            public static ushort? ElementToUInt16(XName name, XElement element) => ToValue(element.Element(name)?.Value, XmlConvert.ToUInt16);
+            public static ushort? AttributeToUInt16(XName name, IEnumerable<XElement> sourceElements) => ToFirstValue(sourceElements.Attributes(name)
+                .Select(a => a.Value), XmlConvert.ToUInt16);
+            public static ushort? AttributeToUInt16(XName name, XElement element) => ToValue(element.Attribute(name)?.Value, XmlConvert.ToUInt16);
+            public static uint? ElementToUInt32(XName name, IEnumerable<XElement> sourceElements) => ToFirstValue(sourceElements.Elements(name)
+                .Select(e => e.IsEmpty ? null : e.Value), XmlConvert.ToUInt32);
+            public static uint? ElementToUInt32(XName name, XElement element) => ToValue(element.Element(name)?.Value, XmlConvert.ToUInt32);
+            public static uint? AttributeToUInt32(XName name, IEnumerable<XElement> sourceElements) => ToFirstValue(sourceElements.Attributes(name)
+                .Select(a => a.Value), XmlConvert.ToUInt32);
+            public static uint? AttributeToUInt32(XName name, XElement element) => ToValue(element.Attribute(name)?.Value, XmlConvert.ToUInt32);
+            public static ulong? ElementToUInt64(XName name, IEnumerable<XElement> sourceElements) => ToFirstValue(sourceElements.Elements(name)
+                .Select(e => e.IsEmpty ? null : e.Value), XmlConvert.ToUInt64);
+            public static ulong? ElementToUInt64(XName name, XElement element) => ToValue(element.Element(name)?.Value, XmlConvert.ToUInt64);
+            public static ulong? AttributeToUInt64(XName name, IEnumerable<XElement> sourceElements) => ToFirstValue(sourceElements.Attributes(name)
+                .Select(a => a.Value), XmlConvert.ToUInt64);
+            public static ulong? AttributeToUInt64(XName name, XElement element) => ToValue(element.Attribute(name)?.Value, XmlConvert.ToUInt64);
+            public static decimal? ElementToDecimal(XName name, IEnumerable<XElement> sourceElements) => ToFirstValue(sourceElements.Elements(name)
+                .Select(e => e.IsEmpty ? null : e.Value), XmlConvert.ToDecimal);
+            public static decimal? ElementToDecimal(XName name, XElement element) => ToValue(element.Element(name)?.Value, XmlConvert.ToDecimal);
+            public static decimal? AttributeToDecimal(XName name, IEnumerable<XElement> sourceElements) => ToFirstValue(sourceElements.Attributes(name)
+                .Select(a => a.Value), XmlConvert.ToDecimal);
+            public static decimal? AttributeToDecimal(XName name, XElement element) => ToValue(element.Attribute(name)?.Value, XmlConvert.ToDecimal);
+            public static double? ElementToDouble(XName name, IEnumerable<XElement> sourceElements) => ToFirstValue(sourceElements.Elements(name)
+                .Select(e => e.IsEmpty ? null : e.Value), XmlConvert.ToDouble);
+            public static double? ElementToDouble(XName name, XElement element) => ToValue(element.Element(name)?.Value, XmlConvert.ToDouble);
+            public static double? AttributeToDouble(XName name, IEnumerable<XElement> sourceElements) => ToFirstValue(sourceElements.Attributes(name)
+                .Select(a => a.Value), XmlConvert.ToDouble);
+            public static double? AttributeToDouble(XName name, XElement element) => ToValue(element.Attribute(name)?.Value, XmlConvert.ToDouble);
+            public static float? ElementToSingle(XName name, IEnumerable<XElement> sourceElements) => ToFirstValue(sourceElements.Elements(name)
+                .Select(e => e.IsEmpty ? null : e.Value), XmlConvert.ToSingle);
+            public static float? ElementToSingle(XName name, XElement element) => ToValue(element.Element(name)?.Value, XmlConvert.ToSingle);
+            public static float? AttributeToSingle(XName name, IEnumerable<XElement> sourceElements) => ToFirstValue(sourceElements.Attributes(name)
+                .Select(a => a.Value), XmlConvert.ToSingle);
+            public static float? AttributeToSingle(XName name, XElement element) => ToValue(element.Attribute(name)?.Value, XmlConvert.ToSingle);
+            public static TimeSpan? ElementToTimeSpan(XName name, IEnumerable<XElement> sourceElements) => ToFirstValue(sourceElements.Elements(name)
+                .Select(e => e.IsEmpty ? null : e.Value), XmlConvert.ToTimeSpan);
+            public static TimeSpan? ElementToTimeSpan(XName name, XElement element) => ToValue(element.Element(name)?.Value, XmlConvert.ToTimeSpan);
+            public static TimeSpan? AttributeToTimeSpan(XName name, IEnumerable<XElement> sourceElements) => ToFirstValue(sourceElements.Attributes(name)
+                .Select(a => a.Value), XmlConvert.ToTimeSpan);
+            public static TimeSpan? AttributeToTimeSpan(XName name, XElement element) => ToValue(element.Attribute(name)?.Value, XmlConvert.ToTimeSpan);
+            public static DriveType? ElementToDriveType(XName name, IEnumerable<XElement> sourceElements) => ToFirstValue(sourceElements.Elements(name)
+                .Select(e => e.IsEmpty ? null : e.Value), s => Enum.Parse<DriveType>(s));
+            public static DriveType? ElementToDriveType(XName name, XElement element) => ToValue(element.Element(name)?.Value, s => Enum.Parse<DriveType>(s));
+            public static DriveType? AttributeToDriveType(XName name, IEnumerable<XElement> sourceElements) => ToFirstValue(sourceElements.Attributes(name)
+                .Select(a => a.Value), s => Enum.Parse<DriveType>(s));
+            public static DriveType? AttributeToDriveType(XName name, XElement element) => ToValue(element.Attribute(name)?.Value, s => Enum.Parse<DriveType>(s));
+        }
+        public class FieldGenerationInfo : IMemberGenerationInfo
+        {
+            internal FieldGenerationInfo(XElement fieldElement, EnumGenerationInfo declaringType, Func<string, IComparable> toRawValue)
+            {
+                Name = (Source = fieldElement).Attribute(XNAME_Name)?.Value;
+                DeclaringType = declaringType;
+                RawValue = toRawValue(fieldElement.Attribute(XNAME_Value)?.Value);
+                Value = PropertyValueCode.OfEnumType(this).Value;
+            }
+            public string Name { get; }
+            public PropertyValueCode Value { get; }
+            public IComparable RawValue { get; }
+            public DbType Type => DeclaringType.Type;
+            public string CsTypeName => DeclaringType.CsTypeName;
+            public XElement Source { get; }
+            public EnumGenerationInfo DeclaringType { get; }
+            ITypeGenerationInfo IMemberGenerationInfo.DeclaringType => DeclaringType;
+            public string SqlTypeName => DeclaringType.SqlTypeName;
+        }
+        public class EnumGenerationInfo : ITypeGenerationInfo
+        {
+            private EnumGenerationInfo(XElement enumElement)
+            {
+                Func<string, IComparable> toRawValue;
+                Func<IEnumerable<IComparable>, (PropertyValueCode Min, PropertyValueCode Max)> getRange;
+                IsFlags = PropertyValueCode.AttributeToBoolean(XNAME_IsFlags, enumElement) ?? false;
+                Name = (Source = enumElement).Attribute(NAME_Name)?.Value;
+                if (enumElement.Name.Namespace != XNAME_EnumTypes.Namespace)
+                {
+                    Type = DbType.Int32;
+                    CsTypeName = "int";
+                    SqlTypeName = SQL_TYPENAME_INT;
+                    toRawValue = s => XmlConvert.ToInt32(s);
+                    if (IsFlags)
+                        getRange = en => (PropertyValueCode.Of(en.Cast<int>().Min()).Value, PropertyValueCode.Of(en.Cast<int>().Aggregate((x, y) => x | y)).Value);
+                    else
+                        getRange = en => (PropertyValueCode.Of(en.Cast<int>().Min()).Value, PropertyValueCode.Of(en.Cast<int>().Max()).Value);
+                }
+                else
+                {
+                    switch (enumElement.Name.LocalName)
+                    {
+                        case NAME_Byte:
+                            Type = DbType.Byte;
+                            CsTypeName = "byte";
+                            SqlTypeName = SQL_TYPENAME_UNSIGNED_TINYINT;
+                            toRawValue = s => XmlConvert.ToByte(s);
+                            if (IsFlags)
+                                getRange = en => (PropertyValueCode.Of(en.Cast<byte>().Min()).Value,
+                                PropertyValueCode.Of(en.Cast<byte>().Aggregate((x, y) => (byte)(x | y))).Value);
+                            else
+                                getRange = en => (PropertyValueCode.Of(en.Cast<byte>().Min()).Value,
+                                    PropertyValueCode.Of(en.Cast<byte>().Max()).Value);
+                            break;
+                        case NAME_SByte:
+                            Type = DbType.SByte;
+                            CsTypeName = "sbyte";
+                            SqlTypeName = SQL_TYPENAME_TINYINT;
+                            toRawValue = s => XmlConvert.ToSByte(s);
+                            if (IsFlags)
+                                getRange = en => (PropertyValueCode.Of(en.Cast<sbyte>().Min()).Value,
+                                PropertyValueCode.Of(en.Cast<sbyte>().Aggregate((x, y) => (sbyte)(x | y))).Value);
+                            else
+                                getRange = en => (PropertyValueCode.Of(en.Cast<sbyte>().Min()).Value, PropertyValueCode.Of(en.Cast<sbyte>().Max()).Value);
+                            break;
+                        case NAME_Short:
+                            Type = DbType.Int16;
+                            CsTypeName = "short";
+                            SqlTypeName = SQL_TYPENAME_SMALLINT;
+                            toRawValue = s => XmlConvert.ToInt16(s);
+                            if (IsFlags)
+                                getRange = en => (PropertyValueCode.Of(en.Cast<short>().Min()).Value,
+                                PropertyValueCode.Of(en.Cast<short>().Aggregate((x, y) => (short)(x | y))).Value);
+                            else
+                                getRange = en => (PropertyValueCode.Of(en.Cast<short>().Min()).Value, PropertyValueCode.Of(en.Cast<short>().Max()).Value);
+                            break;
+                        case NAME_UShort:
+                            Type = DbType.UInt16;
+                            CsTypeName = "ushort";
+                            SqlTypeName = SQL_TYPENAME_UNSIGNED_SMALLINT;
+                            toRawValue = s => XmlConvert.ToUInt16(s);
+                            if (IsFlags)
+                                getRange = en => (PropertyValueCode.Of(en.Cast<ushort>().Min()).Value,
+                                PropertyValueCode.Of(en.Cast<ushort>().Aggregate((x, y) => (ushort)(x | y))).Value);
+                            else
+                                getRange = en => (PropertyValueCode.Of(en.Cast<ushort>().Min()).Value, PropertyValueCode.Of(en.Cast<ushort>().Max()).Value);
+                            break;
+                        case NAME_UInt:
+                            Type = DbType.UInt32;
+                            CsTypeName = "uint";
+                            SqlTypeName = SQL_TYPENAME_UNSIGNED_INT;
+                            toRawValue = s => XmlConvert.ToUInt32(s);
+                            if (IsFlags)
+                                getRange = en => (PropertyValueCode.Of(en.Cast<uint>().Min()).Value,
+                                PropertyValueCode.Of(en.Cast<uint>().Aggregate((x, y) => x | y)).Value);
+                            else
+                                getRange = en => (PropertyValueCode.Of(en.Cast<uint>().Min()).Value, PropertyValueCode.Of(en.Cast<uint>().Max()).Value);
+                            break;
+                        case NAME_Long:
+                            Type = DbType.Int64;
+                            CsTypeName = "long";
+                            SqlTypeName = SQL_TYPENAME_BIGINT;
+                            toRawValue = s => XmlConvert.ToInt64(s);
+                            if (IsFlags)
+                                getRange = en => (PropertyValueCode.Of(en.Cast<long>().Min()).Value,
+                                PropertyValueCode.Of(en.Cast<long>().Aggregate((x, y) => x | y)).Value);
+                            else
+                                getRange = en => (PropertyValueCode.Of(en.Cast<long>().Min()).Value, PropertyValueCode.Of(en.Cast<long>().Max()).Value);
+                            break;
+                        case NAME_ULong:
+                            Type = DbType.UInt64;
+                            CsTypeName = "ulong";
+                            SqlTypeName = SQL_TYPENAME_UNSIGNED_BIGINT;
+                            toRawValue = s => XmlConvert.ToUInt64(s);
+                            if (IsFlags)
+                                getRange = en => (PropertyValueCode.Of(en.Cast<ulong>().Min()).Value,
+                                PropertyValueCode.Of(en.Cast<ulong>().Aggregate((x, y) => x | y)).Value);
+                            else
+                                getRange = en => (PropertyValueCode.Of(en.Cast<ulong>().Min()).Value, PropertyValueCode.Of(en.Cast<ulong>().Max()).Value);
+                            break;
+                        default:
+                            Type = DbType.Int32;
+                            CsTypeName = "int";
+                            SqlTypeName = SQL_TYPENAME_INT;
+                            toRawValue = s => XmlConvert.ToInt32(s);
+                            if (IsFlags)
+                                getRange = en => (PropertyValueCode.Of(en.Cast<int>().Min()).Value,
+                                PropertyValueCode.Of(en.Cast<int>().Aggregate((x, y) => x | y)).Value);
+                            else
+                                getRange = en => (PropertyValueCode.Of(en.Cast<int>().Min()).Value, PropertyValueCode.Of(en.Cast<int>().Max()).Value);
+                            break;
+                    }
+                }
+                Fields = new ReadOnlyCollection<FieldGenerationInfo>(enumElement.Elements(XNAME_Field).Select(e => new FieldGenerationInfo(e, this, toRawValue))
+                    .ToArray());
+                (PropertyValueCode min, PropertyValueCode max) = getRange(Fields.Select(f => f.RawValue));
+                MinValue = min;
+                MaxValue = max;
+            }
+            public string Name { get; }
+            public DbType Type { get; }
+            public string CsTypeName { get; }
+            public string SqlTypeName { get; }
+            public XElement Source { get; }
+            public PropertyValueCode MaxValue { get; }
+            public PropertyValueCode MinValue { get; }
+            public ReadOnlyCollection<FieldGenerationInfo> Fields { get; }
+            public bool IsFlags { get; }
+
+            internal static EnumGenerationInfo Get(XElement xElement)
+            {
+                throw new NotImplementedException();
+            }
+
+            public IEnumerable<IMemberGenerationInfo> GetMembers()
+            {
+                throw new NotImplementedException();
+            }
+        }
+        public class PropertyGenerationInfo : IMemberGenerationInfo
+        {
+            private PropertyGenerationInfo(XElement propertyElement, EntityGenerationInfo entity)
+            {
+                Name = (Source = propertyElement).Attribute(NAME_Name)?.Value;
+                DeclaringType = entity;
+                Inherited = new(entity.BaseTypes.SelectMany(e => e.Entity.Properties.Where(p => p.Name == Name)).Distinct().OrderBy(p => p, new ProxyValueComparer<PropertyGenerationInfo>((x, y) =>
+                    x.DeclaringType.Extends(y.DeclaringType) ? -1 : y.DeclaringType.Extends(x.DeclaringType) ? 1 : 0)).ToArray());
+                ColumnName = propertyElement.Attribute(NAME_ColName)?.Value ?? Inherited.Select(p => p.ColumnName).FirstOrDefault(n => n is not null);
+                bool defaultNull = propertyElement.Elements(XNAME_DefaultNull).Any() || Inherited.Select(i => i.Source).Elements(XNAME_DefaultNull).Any();
+                AllowNull = defaultNull || (FromXmlBoolean(propertyElement.Attribute(XNAME_AllowNull)?.Value) ??
+                    Inherited.Any(i => i.Source.Attributes(XNAME_AllowNull).Any(a => FromXmlBoolean(a.Value) ?? false)));
+                IsGenericWritable = FromXmlBoolean(propertyElement.Attribute(XNAME_IsGenericWritable)?.Value) ??
+                    Inherited.Any(i => i.Source.Attributes(XNAME_IsGenericWritable).Any(a => FromXmlBoolean(a.Value) ?? false));
+                if (propertyElement.Name.Namespace != XNAME_UniqueIdentifier.Namespace)
+                {
+                    Type = DbType.Object;
+                    CsTypeName = "object";
+                    SqlTypeName = SQL_TYPENAME_BLOB;
+                }
+                else
+                {
+                    IEnumerable<XElement> allPropertyElements = Enumerable.Repeat(propertyElement, 1).Concat(Inherited.Select(i => i.Source));
+                    switch (propertyElement.Name.LocalName)
+                    {
+                        case NAME_Bit:
+                            Type = DbType.Boolean;
+                            CsTypeName = "bool";
+                            SqlTypeName = SQL_TYPENAME_BIT;
+                            DefaultValue = (defaultNull) ? PropertyValueCode.Null : PropertyValueCode.Of(PropertyValueCode.ElementToBoolean(XNAME_Default, allPropertyElements));
+                            break;
+                        case NAME_Byte:
+                            Type = DbType.Byte;
+                            CsTypeName = "byte";
+                            SqlTypeName = SQL_TYPENAME_UNSIGNED_TINYINT;
+                            DefaultValue = (defaultNull) ? PropertyValueCode.Null : PropertyValueCode.Of(PropertyValueCode.ElementToByte(XNAME_Default, allPropertyElements));
+                            MinValue = (defaultNull) ? PropertyValueCode.Null : PropertyValueCode.Of(PropertyValueCode.AttributeToByte(XNAME_MinValue, allPropertyElements));
+                            MaxValue = (defaultNull) ? PropertyValueCode.Null : PropertyValueCode.Of(PropertyValueCode.AttributeToByte(XNAME_MaxValue, allPropertyElements));
+                            break;
+                        case NAME_SByte:
+                            Type = DbType.SByte;
+                            CsTypeName = "sbyte";
+                            SqlTypeName = SQL_TYPENAME_TINYINT;
+                            DefaultValue = (defaultNull) ? PropertyValueCode.Null : PropertyValueCode.Of(PropertyValueCode.ElementToSByte(XNAME_Default, allPropertyElements));
+                            MinValue = (defaultNull) ? PropertyValueCode.Null : PropertyValueCode.Of(PropertyValueCode.AttributeToSByte(XNAME_MinValue, allPropertyElements));
+                            MaxValue = (defaultNull) ? PropertyValueCode.Null : PropertyValueCode.Of(PropertyValueCode.AttributeToSByte(XNAME_MaxValue, allPropertyElements));
+                            break;
+                        case NAME_Short:
+                            Type = DbType.Int16;
+                            CsTypeName = "short";
+                            SqlTypeName = SQL_TYPENAME_SMALLINT;
+                            DefaultValue = (defaultNull) ? PropertyValueCode.Null : PropertyValueCode.Of(PropertyValueCode.ElementToInt16(XNAME_Default, allPropertyElements));
+                            MinValue = (defaultNull) ? PropertyValueCode.Null : PropertyValueCode.Of(PropertyValueCode.AttributeToInt16(XNAME_MinValue, allPropertyElements));
+                            MaxValue = (defaultNull) ? PropertyValueCode.Null : PropertyValueCode.Of(PropertyValueCode.AttributeToInt16(XNAME_MaxValue, allPropertyElements));
+                            break;
+                        case NAME_UShort:
+                            Type = DbType.UInt16;
+                            CsTypeName = "ushort";
+                            SqlTypeName = SQL_TYPENAME_UNSIGNED_SMALLINT;
+                            DefaultValue = (defaultNull) ? PropertyValueCode.Null : PropertyValueCode.Of(PropertyValueCode.ElementToUInt16(XNAME_Default, allPropertyElements));
+                            MinValue = (defaultNull) ? PropertyValueCode.Null : PropertyValueCode.Of(PropertyValueCode.AttributeToUInt16(XNAME_MinValue, allPropertyElements));
+                            MaxValue = (defaultNull) ? PropertyValueCode.Null : PropertyValueCode.Of(PropertyValueCode.AttributeToUInt16(XNAME_MaxValue, allPropertyElements));
+                            break;
+                        case NAME_Int:
+                            Type = DbType.Int32;
+                            CsTypeName = "int";
+                            SqlTypeName = SQL_TYPENAME_INT;
+                            DefaultValue = (defaultNull) ? PropertyValueCode.Null : PropertyValueCode.Of(PropertyValueCode.ElementToInt32(XNAME_Default, allPropertyElements));
+                            MinValue = (defaultNull) ? PropertyValueCode.Null : PropertyValueCode.Of(PropertyValueCode.AttributeToInt32(XNAME_MinValue, allPropertyElements));
+                            MaxValue = (defaultNull) ? PropertyValueCode.Null : PropertyValueCode.Of(PropertyValueCode.AttributeToInt32(XNAME_MaxValue, allPropertyElements));
+                            break;
+                        case NAME_UInt:
+                            Type = DbType.UInt32;
+                            CsTypeName = "uint";
+                            SqlTypeName = SQL_TYPENAME_UNSIGNED_INT;
+                            DefaultValue = (defaultNull) ? PropertyValueCode.Null : PropertyValueCode.Of(PropertyValueCode.ElementToUInt32(XNAME_Default, allPropertyElements));
+                            MinValue = (defaultNull) ? PropertyValueCode.Null : PropertyValueCode.Of(PropertyValueCode.AttributeToUInt32(XNAME_MinValue, allPropertyElements));
+                            MaxValue = (defaultNull) ? PropertyValueCode.Null : PropertyValueCode.Of(PropertyValueCode.AttributeToUInt32(XNAME_MaxValue, allPropertyElements));
+                            break;
+                        case NAME_Long:
+                            Type = DbType.Int64;
+                            CsTypeName = "long";
+                            SqlTypeName = SQL_TYPENAME_BIGINT;
+                            DefaultValue = (defaultNull) ? PropertyValueCode.Null : PropertyValueCode.Of(PropertyValueCode.ElementToInt64(XNAME_Default, allPropertyElements));
+                            MinValue = (defaultNull) ? PropertyValueCode.Null : PropertyValueCode.Of(PropertyValueCode.AttributeToInt64(XNAME_MinValue, allPropertyElements));
+                            MaxValue = (defaultNull) ? PropertyValueCode.Null : PropertyValueCode.Of(PropertyValueCode.AttributeToInt64(XNAME_MaxValue, allPropertyElements));
+                            break;
+                        case NAME_ULong:
+                            Type = DbType.UInt64;
+                            CsTypeName = "ulong";
+                            SqlTypeName = SQL_TYPENAME_UNSIGNED_BIGINT;
+                            DefaultValue = (defaultNull) ? PropertyValueCode.Null : PropertyValueCode.Of(PropertyValueCode.ElementToUInt64(XNAME_Default, allPropertyElements));
+                            MinValue = (defaultNull) ? PropertyValueCode.Null : PropertyValueCode.Of(PropertyValueCode.AttributeToUInt64(XNAME_MinValue, allPropertyElements));
+                            MaxValue = (defaultNull) ? PropertyValueCode.Null : PropertyValueCode.Of(PropertyValueCode.AttributeToUInt64(XNAME_MaxValue, allPropertyElements));
+                            break;
+                        case NAME_Float:
+                            Type = DbType.Single;
+                            CsTypeName = "float";
+                            SqlTypeName = SQL_TYPENAME_REAL;
+                            DefaultValue = (defaultNull) ? PropertyValueCode.Null : PropertyValueCode.Of(PropertyValueCode.ElementToSingle(XNAME_Default, allPropertyElements));
+                            MinValue = (defaultNull) ? PropertyValueCode.Null : PropertyValueCode.Of(PropertyValueCode.AttributeToSingle(XNAME_MinValue, allPropertyElements));
+                            MaxValue = (defaultNull) ? PropertyValueCode.Null : PropertyValueCode.Of(PropertyValueCode.AttributeToSingle(XNAME_MaxValue, allPropertyElements));
+                            break;
+                        case NAME_Double:
+                            Type = DbType.Double;
+                            CsTypeName = "double";
+                            SqlTypeName = SQL_TYPENAME_REAL;
+                            DefaultValue = (defaultNull) ? PropertyValueCode.Null : PropertyValueCode.Of(PropertyValueCode.ElementToDouble(XNAME_Default, allPropertyElements));
+                            MinValue = (defaultNull) ? PropertyValueCode.Null : PropertyValueCode.Of(PropertyValueCode.AttributeToDouble(XNAME_MinValue, allPropertyElements));
+                            MaxValue = (defaultNull) ? PropertyValueCode.Null : PropertyValueCode.Of(PropertyValueCode.AttributeToDouble(XNAME_MaxValue, allPropertyElements));
+                            break;
+                        case NAME_Decimal:
+                            Type = DbType.Decimal;
+                            CsTypeName = "decimal";
+                            SqlTypeName = SQL_TYPENAME_NUMERIC;
+                            DefaultValue = (defaultNull) ? PropertyValueCode.Null : PropertyValueCode.Of(PropertyValueCode.ElementToDecimal(XNAME_Default, allPropertyElements));
+                            MinValue = (defaultNull) ? PropertyValueCode.Null : PropertyValueCode.Of(PropertyValueCode.AttributeToDecimal(XNAME_MinValue, allPropertyElements));
+                            MaxValue = (defaultNull) ? PropertyValueCode.Null : PropertyValueCode.Of(PropertyValueCode.AttributeToDecimal(XNAME_MaxValue, allPropertyElements));
+                            break;
+                        case NAME_Char:
+                            Type = DbType.StringFixedLength;
+                            CsTypeName = "char";
+                            SqlTypeName = $"{SQL_TYPENAME_CHARACTER}(1)";
+                            MinLength = MaxLength = 1;
+                            DefaultValue = (defaultNull) ? PropertyValueCode.Null : PropertyValueCode.Of(PropertyValueCode.ElementToChar(XNAME_Default, allPropertyElements));
+                            break;
+                        case NAME_Enum:
+                            CsTypeName = propertyElement.Attribute(XNAME_Type)?.Value;
+                            EnumGenerationInfo enumGenerationInfo = EnumGenerationInfo.Get(FindEnumTypeByName(propertyElement, CsTypeName));
+                            ReferencedType = enumGenerationInfo;
+                            Type = enumGenerationInfo.Type;
+                            SqlTypeName = enumGenerationInfo.SqlTypeName;
+                            MinValue = enumGenerationInfo.MinValue;
+                            MaxValue = enumGenerationInfo.MaxValue;
+                            if (defaultNull)
+                                DefaultValue = PropertyValueCode.Null;
+                            else
+                            {
+                                FieldGenerationInfo defaultField = allPropertyElements.Elements(XNAME_Default).Where(e => !e.IsEmpty).Select(e => e.Value)
+                                    .Select(s => enumGenerationInfo.Fields.FirstOrDefault(f => f.Name == s)).FirstOrDefault(f => f is not null);
+                                if (defaultField is not null)
+                                    DefaultValue = defaultField.Value;
+                            }
+                            break;
+                        case NAME_UniqueIdentifier:
+                            Type = DbType.Guid;
+                            CsTypeName = nameof(Guid);
+                            SqlTypeName = SQL_TYPENAME_UNIQUEIDENTIFIER;
+                            if (defaultNull)
+                                DefaultValue = PropertyValueCode.Null;
+                            IsCaseSensitive = false;
+                            IsNormalized = true;
+                            IsPrimaryKey = PropertyValueCode.AttributeToBoolean(XNAME_IsPrimaryKey, allPropertyElements) ?? false;
+                            NavigationProperty = allPropertyElements.Attributes(XNAME_Navigation);
+                            break;
+                        case NAME_NewIdNavRef:
+                            Type = DbType.Guid;
+                            CsTypeName = nameof(Guid);
+                            SqlTypeName = SQL_TYPENAME_UNIQUEIDENTIFIER;
+                            if (defaultNull)
+                                DefaultValue = PropertyValueCode.Null;
+                            IsCaseSensitive = false;
+                            IsNormalized = true;
+                            IsPrimaryKey = PropertyValueCode.AttributeToBoolean(XNAME_IsPrimaryKey, allPropertyElements) ?? false;
+                            NavigationProperty = allPropertyElements.Attributes(XNAME_Navigation);
+                            break;
+                        case NAME_RelatedEntity:
+                            Type = DbType.Guid;
+                            CsTypeName = nameof(Guid);
+                            SqlTypeName = SQL_TYPENAME_UNIQUEIDENTIFIER;
+                            if (defaultNull)
+                                DefaultValue = PropertyValueCode.Null;
+                            IsCaseSensitive = false;
+                            IsNormalized = true;
+                            DbRelationship = allPropertyElements.Elements(XNAME_DbRelationship).Attributes(XNAME_Name).Select(a => (a.Value, a.Parent.Attribute(XNAME_FkPropertyName)?.Value))
+                                .Cast<(string Name, string FkPropertyName)?>().FirstOrDefault();
+                            break;
+                        case NAME_NewRelatedEntity:
+                            Type = DbType.Guid;
+                            CsTypeName = nameof(Guid);
+                            SqlTypeName = SQL_TYPENAME_UNIQUEIDENTIFIER;
+                            if (defaultNull)
+                                DefaultValue = PropertyValueCode.Null;
+                            IsCaseSensitive = false;
+                            IsNormalized = true;
+                            break;
+                        case NAME_NVarChar:
+                            Type = DbType.String;
+                            CsTypeName = "string";
+                            MaxLength = FromXmlInt32(propertyElement.Attribute(XNAME_MaxLength)?.Value);
+                            MinLength = FromXmlInt32(propertyElement.Attribute(XNAME_MinLength)?.Value);
+                            SqlTypeName = $"{SQL_TYPENAME_NVARCHAR}({MaxLength})";
+                            DefaultValue = defaultNull ? PropertyValueCode.Null : PropertyValueCode.Of(PropertyValueCode.ElementToString(XNAME_Default, allPropertyElements));
+                            IsNormalized = FromXmlBoolean(propertyElement.Attribute(XNAME_IsNormalized)?.Value) ??
+                                Inherited.SelectMany(i => i.Source.Attributes(XNAME_IsNormalized).Select(a => FromXmlBoolean(a.Value)))
+                                .Where(b => b.HasValue).FirstOrDefault();
+                            IsCaseSensitive = FromXmlBoolean(propertyElement.Attribute(XNAME_IsCaseSensitive)?.Value) ??
+                                Inherited.Any(i => i.Source.Attributes(XNAME_IsCaseSensitive).Any(a => FromXmlBoolean(a.Value) ?? false));
+                            break;
+                        case NAME_VolumeIdentifier:
+                            Type = DbType.String;
+                            CsTypeName = "VolumeIdentifier";
+                            MaxLength = 1024;
+                            SqlTypeName = $"{SQL_TYPENAME_NVARCHAR}({MaxLength})";
+                            DefaultValue = defaultNull ? PropertyValueCode.Null : PropertyValueCode.Of(PropertyValueCode.ElementToString(XNAME_Default, allPropertyElements));
+                            IsCaseSensitive = false;
+                            IsNormalized = true;
+                            break;
+                        case NAME_MultiStringValue:
+                            Type = DbType.String;
+                            CsTypeName = "MultiStringValue";
+                            SqlTypeName = SQL_TYPENAME_TEXT;
+                            DefaultValue = defaultNull ? PropertyValueCode.Null : PropertyValueCode.Of(PropertyValueCode.ElementToString(XNAME_Default, allPropertyElements));
+                            break;
+                        case NAME_Text:
+                            Type = DbType.String;
+                            CsTypeName = "string";
+                            SqlTypeName = SQL_TYPENAME_TEXT;
+                            DefaultValue = defaultNull ? PropertyValueCode.Null : PropertyValueCode.Of(PropertyValueCode.ElementToString(XNAME_Default, allPropertyElements));
+                            break;
+                        case NAME_DateTime:
+                            Type = DbType.DateTime;
+                            CsTypeName = nameof(DateTime);
+                            SqlTypeName = SQL_TYPENAME_DATETIME;
+                            if (defaultNull)
+                                DefaultValue = PropertyValueCode.Null;
+                            else if (propertyElement.Elements(XNAME_DefaultNull).Any() || Inherited.Select(i => i.Source).Elements(XNAME_DefaultNull).Any())
+                                DefaultValue = PropertyValueCode.Now;
+                            else
+                                DefaultValue = PropertyValueCode.Of(PropertyValueCode.ElementToDateTime(XNAME_Default, allPropertyElements));
+                            break;
+                        case NAME_TimeSpan:
+                            Type = DbType.Time;
+                            CsTypeName = nameof(TimeSpan);
+                            SqlTypeName = SQL_TYPENAME_TIME;
+                            if (defaultNull)
+                                DefaultValue = PropertyValueCode.Null;
+                            else if (propertyElement.Elements(XNAME_DefaultZero).Any() || Inherited.Select(i => i.Source).Elements(XNAME_DefaultZero).Any())
+                                DefaultValue = PropertyValueCode.Zero;
+                            else
+                                DefaultValue = PropertyValueCode.Of(PropertyValueCode.ElementToTimeSpan(XNAME_Default, allPropertyElements));
+                            break;
+                        case NAME_ByteValues:
+                            Type = DbType.Binary;
+                            MaxLength = FromXmlInt32(propertyElement.Attribute(XNAME_MaxLength)?.Value);
+                            MinLength = FromXmlInt32(propertyElement.Attribute(XNAME_MinLength)?.Value);
+                            CsTypeName = "byte[]";
+                            SqlTypeName = $"{SQL_TYPENAME_VARBINARY}({MaxLength})";
+                            DefaultValue = defaultNull ? PropertyValueCode.Null : PropertyValueCode.Of(PropertyValueCode.ElementToBinary(XNAME_Default, allPropertyElements));
+                            break;
+                        case NAME_MD5Hash:
+                            Type = DbType.Binary;
+                            MinLength = MaxLength = 16;
+                            CsTypeName = "MD5Hash";
+                            SqlTypeName = $"{SQL_TYPENAME_BINARY}(16)";
+                            if (defaultNull)
+                                DefaultValue = PropertyValueCode.Null;
+                            break;
+                        case NAME_DriveType:
+                            Type = DbType.Byte;
+                            CsTypeName = nameof(DriveType);
+                            IEnumerable<DriveType> values = Enum.GetValues<DriveType>().OrderBy(dt => dt);
+                            MinValue = PropertyValueCode.Of(values.First());
+                            MaxValue = PropertyValueCode.Of(values.Last());
+                            SqlTypeName = SQL_TYPENAME_UNSIGNED_TINYINT;
+                            if (defaultNull)
+                                DefaultValue = PropertyValueCode.Null;
+                            else
+                            {
+                                DefaultValue = PropertyValueCode.Of(PropertyValueCode.AttributeToDriveType(XNAME_Default, allPropertyElements));
+                            }
+                            break;
+                        case NAME_CollectionNavigation:
+                            Type = DbType.Object;
+                            break;
+                        case NAME_NewCollectionNavigation:
+                            Type = DbType.Object;
+                            break;
+                        default:
+                            Type = DbType.Object;
+                            CsTypeName = "object";
+                            SqlTypeName = SQL_TYPENAME_BLOB;
+                            break;
+                    }
+                }
+            }
+            public string Name { get; }
+            public string ColumnName { get; }
+            public DbType Type { get; }
+            public string CsTypeName { get; }
+            public string SqlTypeName { get; }
+            public int? MaxLength { get; }
+            public int? MinLength { get; }
+            public PropertyValueCode? MaxValue { get; }
+            public PropertyValueCode? MinValue { get; }
+            public PropertyValueCode? DefaultValue { get; }
+            public bool? IsNormalized { get; }
+            public (string Name, string FkPropertyName)? DbRelationship { get; }
+            public bool IsPrimaryKey { get; }
+            public IEnumerable<XAttribute> NavigationProperty { get; }
+            public bool? IsCaseSensitive { get; }
+            public ReadOnlyCollection<PropertyGenerationInfo> Inherited { get; }
+            public ITypeGenerationInfo ReferencedType { get; }
+            public EntityGenerationInfo DeclaringType { get; }
+            ITypeGenerationInfo IMemberGenerationInfo.DeclaringType => DeclaringType;
+            public XElement Source { get; }
+            public bool AllowNull { get; }
+            public bool IsGenericWritable { get; }
+            internal static PropertyGenerationInfo Get(XElement propertyElement)
+            {
+                if (propertyElement is null)
+                    return null;
+                EntityGenerationInfo entityGenerationInfo = EntityGenerationInfo.Get(propertyElement.Parent);
+                PropertyGenerationInfo result = propertyElement.Annotation<PropertyGenerationInfo>();
+                if (result is not null)
+                    return result;
+                if (IsPropertyElement(propertyElement) && entityGenerationInfo is not null)
+                    return new PropertyGenerationInfo(propertyElement, entityGenerationInfo);
+                return null;
+            }
+        }
+        public class EntityGenerationInfo : ITypeGenerationInfo
+        {
+            private ReadOnlyCollection<EntityGenerationInfo> _allOrdered = null;
+            private EntityGenerationInfo(XElement entityElement, Collection<PropertyGenerationInfo> properties,
+                Collection<(string Name, ReadOnlyCollection<PropertyGenerationInfo> Properties)> uniqueConstraints)
+            {
+                Name = (Source = entityElement).Attribute(NAME_Name)?.Value;
+                TableName = entityElement.Attribute(NAME_TableName)?.Value;
+                BaseTypes = new(entityElement.Elements(XNAME_ExtendsGenericEntity).Select(e => (false, e.Attribute(XNAME_Type)?.Value, Get(FindEntityByName(entityElement, e.Attribute(XNAME_TypeDef)?.Value))))
+                    .Concat(entityElement.Elements(XNAME_ExtendsEntity).Attributes(XNAME_Type).Select(a => (false, a.Value, Get(FindEntityByName(entityElement, a.Value)))))
+                    .Concat(entityElement.Elements(XNAME_BaseType).Attributes(XNAME_Type).Select(a => (true, a.Value, (EntityGenerationInfo)null)))
+                    .Concat(entityElement.Elements(XNAME_RootInterface).Attributes(XNAME_Type).Select(a => (false, a.Value, Get(FindEntityByName(entityElement, a.Value)))))
+                    .Concat(entityElement.Elements().Select(e =>
+                    {
+                        if (e.Name == XNAME_ImplementsGenericEntity)
+                            return (false, e.Attribute(XNAME_Type)?.Value, Get(FindEntityByName(entityElement, e.Attribute(XNAME_TypeDef)?.Value)));
+                        if (e.Name == XNAME_ImplementsEntity)
+                        {
+                            string n = e.Attribute(XNAME_Type)?.Value;
+                            return (false, n, Get(FindEntityByName(entityElement, n)));
+                        }
+                        if (e.Name == XNAME_Implements)
+                            return (true, e.Attribute(XNAME_Type)?.Value, (EntityGenerationInfo)null);
+                        return (false, null, null);
+                    })).Where(t => t.Item1 ? t.Item2 is not null : t.Item3 is not null).Select(t => (t.Item2 ?? t.Item3.Name, t.Item3)).ToArray());
+                Properties = new ReadOnlyCollection<PropertyGenerationInfo>(properties);
+                UniqueConstraints = new(uniqueConstraints);
+                CheckConstraint cc = CheckConstraint.Import(entityElement.Element(XNAME_Check));
+                foreach ((string Name, EntityGenerationInfo Entity) in BaseTypes)
+                {
+                    CheckConstraint bc = Entity?.CheckConstraints;
+                    if (bc is not null)
+                        cc = (cc is null) ? bc : cc.And(bc);
+                }
+                CheckConstraints = cc;
+            }
+            public string Name { get; }
+            public XElement Source { get; }
+            public string TableName { get; }
+            public ReadOnlyCollection<(string Name, EntityGenerationInfo Entity)> BaseTypes { get; }
+            public ReadOnlyCollection<PropertyGenerationInfo> Properties { get; }
+            public ReadOnlyCollection<(string Name, ReadOnlyCollection<PropertyGenerationInfo> Properties)> UniqueConstraints { get; }
+            public CheckConstraint CheckConstraints { get; }
+            public bool Extends(EntityGenerationInfo other) => !(other is null || ReferenceEquals(this, other)) &&
+                (BaseTypes.Any(e => ReferenceEquals(other, e.Entity)) || BaseTypes.Any(e => e.Entity.Extends(other)));
+            IEnumerable<EntityGenerationInfo> GetAllBaseTypes() => (BaseTypes.Count > 0) ?
+                BaseTypes.Select(b => b.Entity).Concat(BaseTypes.SelectMany(b => b.Entity.GetAllBaseTypes())).Distinct() : Enumerable.Empty<EntityGenerationInfo>();
+            public ReadOnlyCollection<EntityGenerationInfo> GetAllBaseTypesOrdered()
+            {
+                if (_allOrdered is not null)
+                    return _allOrdered;
+                if (BaseTypes.Count == 0)
+                    _allOrdered = new(Array.Empty<EntityGenerationInfo>());
+                else
+                {
+                    LinkedList<EntityGenerationInfo> result = new();
+                    result.AddLast(BaseTypes[0].Entity);
+                    foreach (EntityGenerationInfo g in GetAllBaseTypes().Skip(1))
+                    {
+                        LinkedListNode<EntityGenerationInfo> node = result.Last;
+                        while (g.Extends(node.Value))
+                        {
+                            if ((node = node.Previous) is null)
+                                break;
+                        }
+                        if (node is null)
+                            result.AddFirst(g);
+                        else if (!ReferenceEquals(node.Value, g))
+                            result.AddAfter(node, g);
+                    }
+                    _allOrdered = new(result.ToArray());
+                }
+                return _allOrdered;
+            }
+            public static EntityGenerationInfo Get(XElement entityElement)
+            {
+                if (entityElement is null)
+                    return null;
+                EntityGenerationInfo result = entityElement.Annotation<EntityGenerationInfo>();
+                if (result is not null)
+                    return result;
+                if (IsEntityElement(entityElement))
+                {
+                    Collection<PropertyGenerationInfo> properties = new();
+                    Collection<(string Name, ReadOnlyCollection<PropertyGenerationInfo> Properties)> uniqueConstraints = new();
+                    result = new EntityGenerationInfo(entityElement, properties, uniqueConstraints);
+                    entityElement.AddAnnotation(result);
+                    foreach (XElement element in entityElement.Elements(XNAME_Properties).Elements())
+                    {
+                        PropertyGenerationInfo property = PropertyGenerationInfo.Get(element);
+                        if (property is not null)
+                            properties.Add(property);
+                    }
+                    foreach (PropertyGenerationInfo bp in result.GetAllBaseTypes().SelectMany(t => t.Properties).Distinct())
+                    {
+                        string n = bp.Name;
+                        PropertyGenerationInfo ep = properties.FirstOrDefault(p => p.Name == n);
+                        if (ep is null)
+                            properties.Add(bp);
+                        else if (!ReferenceEquals(ep.DeclaringType, result) && bp.DeclaringType.Extends(ep.DeclaringType))
+                            properties[properties.IndexOf(ep)] = bp;
+                    }
+                    foreach ((string Name, ReadOnlyCollection<PropertyGenerationInfo> Properties) uc in entityElement.Elements(XNAME_Unique).Attributes(XNAME_Name).Select<XAttribute, (string, PropertyGenerationInfo[])>(a => (
+                        a.Value,
+                        a.Parent.Elements(XNAME_Property).Attributes(XNAME_Name).Select(n => n.Value).Select(n => properties.FirstOrDefault(p => p.Name == n))
+                        .Where(p => p is not null).ToArray()
+                    )).Where(t => t.Item2.Length > 0).Select(t => (t.Item1, new ReadOnlyCollection<PropertyGenerationInfo>(t.Item2))))
+                        uniqueConstraints.Add(uc);
+                }
+                return null;
+            }
+            IEnumerable<IMemberGenerationInfo> ITypeGenerationInfo.GetMembers() => Properties.Cast<IMemberGenerationInfo>();
+        }
+        class ProxyValueComparer<T> : IComparer<T>
+        {
+            private readonly Func<T, T, int> _compareFunc;
+            internal ProxyValueComparer(Func<T, T, int> compareFunc) { _compareFunc = compareFunc; }
+            public int Compare(T x, T y) => _compareFunc(x, y);
+        }
+        class CalculatedValueEqualityComparer<T, V> : IEqualityComparer<T>
+            where V : class
+        {
+            private readonly Func<T, V> _getValue;
+            private readonly IEqualityComparer<V> _resultComparer;
+            internal CalculatedValueEqualityComparer(Func<T, V> getValue, IEqualityComparer<V> resultComparer)
+            {
+                _getValue = getValue;
+                _resultComparer = resultComparer;
+            }
+
+            public bool Equals(T x, T y)
+            {
+                V a = _getValue(x);
+                V b = _getValue(y);
+                return (a is null) ? b is null : (b is not null && _resultComparer.Equals(a, b));
+            }
+
+            public int GetHashCode(T obj)
+            {
+                V v = _getValue(obj);
+                return (v is null) ? 0 : _resultComparer.GetHashCode(v);
+            }
+        }
+        [Obsolete]
         public class PropertyInheritanceInfo
         {
             public XElement BaseDefinitionElement { get; }
@@ -815,6 +1746,7 @@ namespace FsInfoCat.UnitTests.DbUnitTestHelpers
                 Source = source;
             }
         }
+        [Obsolete]
         public class AllBasePropertiesCacheItem : IElementCacheItem<PropertyInheritanceInfo> { public PropertyInheritanceInfo Value { get; } public AllBasePropertiesCacheItem(PropertyInheritanceInfo value) { Value = value; } }
 
         #endregion
@@ -1804,7 +2736,7 @@ namespace <#=DefaultNamespace#>.Upstream
                         IEnumerable<(string ConstraintName, string TableName)> relatedEntities = sources.Attributes(XNAME_Navigation).Select(a =>
                         {
                             string n = a.Value;
-                            XElement[] refersTo = sources.SelectMany(p => p.Parent.Elements().Attributes(XNAME_Name).Where(a1 => a1.Value == n).Select(a1 => a1.Parent)).ToArray();
+                            XElement[] refersTo = sources.Select(p => FindCurrentEntityPropertyByName(p, n)).Where(e => e is not null).ToArray();
                             return (
                                 ConstraintName: refersTo.Attributes(XNAME_ConstraintName).Select(e => e.Value).FirstOrDefault(),
                                 TableName: refersTo.Attributes(XNAME_Reference).Select(e => FindLocalEntityByName(e.Value)?.Attribute(XNAME_TableName)?.Value).Where(n => n is not null).FirstOrDefault()
@@ -1812,21 +2744,25 @@ namespace <#=DefaultNamespace#>.Upstream
                         }).Where(t => !(string.IsNullOrEmpty(t.ConstraintName) || string.IsNullOrEmpty(t.TableName)));
                         if (relatedEntities.Any())
                         {
-                            (string ConstraintName, string TableName) re = relatedEntities.First();
+                            (string ConstraintName, string TableName) = relatedEntities.First();
                             Write(" CONSTRAINT \"");
-                            Write(re.ConstraintName);
+                            Write(ConstraintName);
                             Write("\" REFERENCES \"");
-                            Write(re.TableName);
+                            Write(TableName);
                             Write("\"(\"Id\") ON DELETE RESTRICT");
                         }
                         break;
                     case NAME_RelatedEntity:
-                        Write(" CONSTRAINT \"");
-                        Write(sources.Attributes(XNAME_ConstraintName).Select(e => e.Value).First());
-                        Write("\" REFERENCES \"");
-                        Write(sources.Attributes(XNAME_Reference).Select(e => FindLocalEntityByName(e.Value)?.Attribute(XNAME_TableName)?.Value)
-                            .Where(n => n is not null).First());
-                        Write("\"(\"Id\") ON DELETE RESTRICT");
+                        string constraintName = sources.Elements(XNAME_DbRelationship).Attributes(XNAME_Name).Select(e => e.Value).FirstOrDefault();
+                        if (constraintName is not null)
+                        {
+                            Write(" CONSTRAINT \"");
+                            Write(constraintName);
+                            Write("\" REFERENCES \"");
+                            Write(sources.Attributes(XNAME_Reference).Select(e => FindLocalEntityByName(e.Value)?.Attribute(XNAME_TableName)?.Value)
+                                .Where(n => n is not null).First());
+                            Write("\"(\"Id\") ON DELETE RESTRICT");
+                        }
                         break;
                     case NAME_DriveType:
                         check = new SimpleColumnValueReference(colName).NotLessThanLiteral(0).And(new SimpleColumnValueReference(colName).LessThanLiteral(7));
@@ -1968,7 +2904,7 @@ namespace <#=DefaultNamespace#>.Upstream
             }
             return colName;
         }
-        CheckConstraint GetEnumCheckConstraintMinMax<T>(string colName, T minValue, T maxValue, Func<T, ConstantValueReference> toConstantValueReference, IEnumerable<T> values, Func<T, T, T> bitwiseOrFunc = null)
+        static CheckConstraint GetEnumCheckConstraintMinMax<T>(string colName, T minValue, T maxValue, Func<T, ConstantValueReference> toConstantValueReference, IEnumerable<T> values, Func<T, T, T> bitwiseOrFunc = null)
             where T : struct, IComparable<T>
         {
             T min = values.Min();

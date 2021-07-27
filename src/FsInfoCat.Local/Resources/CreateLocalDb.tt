@@ -430,11 +430,11 @@ string GenerateTableColumnSql(string tableName, string entityName, string proper
                 }).Where(t => !(string.IsNullOrEmpty(t.ConstraintName) || string.IsNullOrEmpty(t.TableName)));
                 if (relatedEntities.Any())
                 {
-                    (string ConstraintName, string TableName) re = relatedEntities.First();
+                    (string ConstraintName, string TableName) = relatedEntities.First();
                     Write(" CONSTRAINT \"");
-                    Write(re.ConstraintName);
+                    Write(ConstraintName);
                     Write("\" REFERENCES \"");
-                    Write(re.TableName);
+                    Write(TableName);
                     Write("\"(\"Id\") ON DELETE RESTRICT");
                 }
                 break;
@@ -586,7 +586,7 @@ string GenerateTableColumnSql(string tableName, string entityName, string proper
     }
     return colName;
 }
-CheckConstraint GetEnumCheckConstraintMinMax<T>(string colName, T minValue, T maxValue, Func<T, ConstantValueReference> toConstantValueReference, IEnumerable<T> values, Func<T, T, T> bitwiseOrFunc = null)
+static CheckConstraint GetEnumCheckConstraintMinMax<T>(string colName, T minValue, T maxValue, Func<T, ConstantValueReference> toConstantValueReference, IEnumerable<T> values, Func<T, T, T> bitwiseOrFunc = null)
     where T : struct, IComparable<T>
 {
     T min = values.Min();

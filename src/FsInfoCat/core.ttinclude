@@ -420,7 +420,7 @@ static Guid? FromXmlGuid(string xml)
     try { return XmlConvert.ToGuid(xml); }
     catch { return null; }
 }
-byte[] FromXmlBinary(string xml)
+static byte[] FromXmlBinary(string xml)
 {
     if (xml is null)
         return null;

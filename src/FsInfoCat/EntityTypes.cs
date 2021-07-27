@@ -4418,7 +4418,6 @@ namespace FsInfoCat
         public const int DbColMaxLen_FileName = 1024;
         public const uint DbColDefaultValue_MaxNameLength = 255;
         public const ushort DbColDefaultValue_MaxRecursionDepth = 256;
-        public const ulong DbColDefaultValue_MaxTotalItems = ulong.MaxValue;
     }
 
 }

@@ -16,9 +16,9 @@ namespace FsInfoCat.PS.Export
 
         [XmlAttribute(nameof(IsInactive))]
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public string __XML_MaxTotalItems { get => MaxTotalItems.ToUInt64Xml(DbConstants.DbColDefaultValue_MaxTotalItems); set => MaxTotalItems = value.FromXmlUInt64(MaxTotalItems); }
+        public string __XML_MaxTotalItems { get => MaxTotalItems.HasValue ? null : MaxTotalItems.ToUInt64Xml(); set => MaxTotalItems = value.FromXmlUInt64(); }
         [XmlIgnore]
-        public ulong MaxTotalItems { get; set; } = DbConstants.DbColDefaultValue_MaxTotalItems;
+        public ulong? MaxTotalItems { get; set; }
 
         [XmlAttribute(nameof(IsInactive))]
         [EditorBrowsable(EditorBrowsableState.Never)]

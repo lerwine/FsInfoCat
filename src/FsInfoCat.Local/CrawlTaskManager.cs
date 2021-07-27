@@ -25,7 +25,7 @@ namespace FsInfoCat.Local
 
         public ushort MaxRecursionDepth { get; }
 
-        public ulong MaxTotalItems { get; }
+        public ulong? MaxTotalItems { get; }
 
         public ulong TotalItems { get; private set; }
 

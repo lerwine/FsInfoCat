@@ -25,7 +25,7 @@ namespace FsInfoCat.Desktop.ViewModel
 
         public ushort MaxRecursionDepth => _crawlConfiguration.MaxRecursionDepth;
 
-        public ulong MaxTotalItems => _crawlConfiguration.MaxTotalItems;
+        public ulong? MaxTotalItems => _crawlConfiguration.MaxTotalItems;
 
         public string FullName { get; private set; }
 

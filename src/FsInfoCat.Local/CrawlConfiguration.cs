@@ -15,7 +15,7 @@ namespace FsInfoCat.Local
         private readonly IPropertyChangeTracker<Guid> _id;
         private readonly IPropertyChangeTracker<string> _displayName;
         private readonly IPropertyChangeTracker<ushort> _maxRecursionDepth;
-        private readonly IPropertyChangeTracker<ulong> _totalMaxItems;
+        private readonly IPropertyChangeTracker<ulong?> _totalMaxItems;
         private readonly IPropertyChangeTracker<long?> _ttl;
         private readonly IPropertyChangeTracker<string> _notes;
         private readonly IPropertyChangeTracker<CrawlStatus> _statusValue;
@@ -60,7 +60,7 @@ namespace FsInfoCat.Local
 
         /// <summary>Gets the maximum total items to crawl.</summary>
         /// <value>The maximum total items to crawl, including both files and subdirectories.</value>
-        public virtual ulong MaxTotalItems { get => _totalMaxItems.GetValue(); set => _totalMaxItems.SetValue(value); }
+        public virtual ulong? MaxTotalItems { get => _totalMaxItems.GetValue(); set => _totalMaxItems.SetValue(value); }
 
         /// <summary>Gets the maximum duration of the crawl.</summary>
         /// <value>The maximum duration of the crawl, in seconds. This value should never be less than <c>1</c>.</value>
@@ -151,7 +151,7 @@ namespace FsInfoCat.Local
             _id = AddChangeTracker(nameof(Id), Guid.Empty);
             _displayName = AddChangeTracker(nameof(DisplayName), "", TrimmedNonNullStringCoersion.Default);
             _maxRecursionDepth = AddChangeTracker(nameof(MaxRecursionDepth), DbConstants.DbColDefaultValue_MaxRecursionDepth);
-            _totalMaxItems = AddChangeTracker(nameof(MaxTotalItems), DbConstants.DbColDefaultValue_MaxTotalItems);
+            _totalMaxItems = AddChangeTracker<ulong?>(nameof(MaxTotalItems), null);
             _ttl = AddChangeTracker<long?>(nameof(TTL), null);
             _notes = AddChangeTracker(nameof(Notes), "", NonWhiteSpaceOrEmptyStringCoersion.Default);
             _statusValue = AddChangeTracker(nameof(StatusValue), CrawlStatus.NotRunning);
