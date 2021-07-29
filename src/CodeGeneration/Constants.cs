@@ -42,11 +42,13 @@ namespace CodeGeneration
         public const string NAME_FullName = "FullName";
         public const string NAME_Field = "Field";
         public const string NAME_CollectionNavigation = "CollectionNavigation";
-        public const string NAME_NewCollectionNavigation = "NewCollectionNavigation";
+        public const string NAME_CollectionNavigation_ItemType = "CollectionNavigation.ItemType";
+        public const string NAME_CollectionNavigation_ItemKey = "CollectionNavigation.ItemKey";
         public const string NAME_RelatedEntity = "RelatedEntity";
-        public const string NAME_NewRelatedEntity = "NewRelatedEntity";
-        public const string NAME_NewRelatedEntityKey = "NewRelatedEntityKey";
-        public const string NAME_ItemType = "ItemType";
+        public const string NAME_RelatedEntity_Type = "RelatedEntity.Type";
+        public const string NAME_RelatedEntity_Key = "RelatedEntity.Key";
+        public const string NAME_PrimaryEntity = "PrimaryEntity";
+        public const string NAME_PrimaryProperty = "PrimaryProperty";
         public const string NAME_Reference = "Reference";
         public const string NAME_AmbientEnum = "AmbientEnum";
         public const string NAME_Default = "Default";
@@ -62,6 +64,7 @@ namespace CodeGeneration
         public const string NAME_RootInterface = "RootInterface";
         public const string NAME_Type = "Type";
         public const string NAME_TypeDef = "TypeDef";
+        public const string NAME_ItemType = "ItemType";
         public const string NAME_ItemKey = "ItemKey";
         public const string NAME_AmbientBoolean = "AmbientBoolean";
         public const string NAME_AmbientInt = "AmbientInt";
@@ -77,7 +80,6 @@ namespace CodeGeneration
         public const string NAME_IsFlags = "IsFlags";
         public const string NAME_typeparam = "typeparam";
         public const string NAME_cref = "cref";
-        public const string NAME_NewIdNavRef = "NewIdNavRef";
         public const string NAME_UniqueIdentifier = "UniqueIdentifier";
         public const string NAME_value = "value";
         public const string NAME_DefaultNull = "DefaultNull";
@@ -90,6 +92,7 @@ namespace CodeGeneration
         public const string NAME_DescriptionResource = "DescriptionResource";
         public const string NAME_ResourceType = "ResourceType";
         public const string NAME_TableName = "TableName";
+        public const string NAME_SingularName = "SingularName";
         public const string NAME_ColName = "ColName";
         public const string NAME_Byte = "Byte";
         public const string NAME_SByte = "SByte";
@@ -175,11 +178,15 @@ namespace CodeGeneration
         public static readonly XName XNAME_FullName = XName.Get(NAME_FullName);
         public static readonly XName XNAME_Field = XName.Get(NAME_Field);
         public static readonly XName XNAME_CollectionNavigation = XName.Get(NAME_CollectionNavigation);
-        public static readonly XName XNAME_NewCollectionNavigation = XName.Get(NAME_NewCollectionNavigation);
+        public static readonly XName XNAME_CollectionNavigation_ItemType = XName.Get(NAME_CollectionNavigation_ItemType);
+        public static readonly XName XNAME_CollectionNavigation_ItemKey = XName.Get(NAME_CollectionNavigation_ItemKey);
         public static readonly XName XNAME_RelatedEntity = XName.Get(NAME_RelatedEntity);
-        public static readonly XName XNAME_NewRelatedEntity = XName.Get(NAME_NewRelatedEntity);
-        public static readonly XName XNAME_NewRelatedEntityKey = XName.Get(NAME_NewRelatedEntityKey);
+        public static readonly XName XNAME_RelatedEntity_Type = XName.Get(NAME_RelatedEntity_Type);
+        public static readonly XName XNAME_RelatedEntity_Key = XName.Get(NAME_RelatedEntity_Key);
+        public static readonly XName XNAME_PrimaryEntity = XName.Get(NAME_PrimaryEntity);
+        public static readonly XName XNAME_PrimaryProperty = XName.Get(NAME_PrimaryProperty);
         public static readonly XName XNAME_ItemType = XName.Get(NAME_ItemType);
+        public static readonly XName XNAME_ItemKey = XName.Get(NAME_ItemKey);
         public static readonly XName XNAME_Reference = XName.Get(NAME_Reference);
         public static readonly XName XNAME_AmbientEnum = XName.Get(NAME_AmbientEnum);
         public static readonly XName XNAME_Default = XName.Get(NAME_Default);
@@ -195,7 +202,6 @@ namespace CodeGeneration
         public static readonly XName XNAME_RootInterface = XName.Get(NAME_RootInterface);
         public static readonly XName XNAME_Type = XName.Get(NAME_Type);
         public static readonly XName XNAME_TypeDef = XName.Get(NAME_TypeDef);
-        public static readonly XName XNAME_ItemKey = XName.Get(NAME_ItemKey);
         public static readonly XName XNAME_AmbientBoolean = XName.Get(NAME_AmbientBoolean);
         public static readonly XName XNAME_AmbientInt = XName.Get(NAME_AmbientInt);
         public static readonly XName XNAME_AmbientByte = XName.Get(NAME_AmbientByte);
@@ -210,7 +216,6 @@ namespace CodeGeneration
         public static readonly XName XNAME_IsFlags = XName.Get(NAME_IsFlags);
         public static readonly XName XNAME_typeparam = XName.Get(NAME_typeparam);
         public static readonly XName XNAME_cref = XName.Get(NAME_cref);
-        public static readonly XName XNAME_NewIdNavRef = XName.Get(NAME_NewIdNavRef);
         public static readonly XName XNAME_UniqueIdentifier = XName.Get(NAME_UniqueIdentifier);
         public static readonly XName XNAME_value = XName.Get(NAME_value);
         public static readonly XName XNAME_DefaultNull = XName.Get(NAME_DefaultNull);
@@ -222,6 +227,7 @@ namespace CodeGeneration
         public static readonly XName XNAME_DescriptionResource = XName.Get(NAME_DescriptionResource);
         public static readonly XName XNAME_ResourceType = XName.Get(NAME_ResourceType);
         public static readonly XName XNAME_TableName = XName.Get(NAME_TableName);
+        public static readonly XName XNAME_SingularName = XName.Get(NAME_SingularName);
         public static readonly XName XNAME_ColName = XName.Get(NAME_ColName);
         public static readonly XName XNAME_Byte = XName.Get(NAME_Byte);
         public static readonly XName XNAME_SByte = XName.Get(NAME_SByte);

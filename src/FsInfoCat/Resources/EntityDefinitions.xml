@@ -328,7 +328,7 @@
                     <value>The error detail text.</value>
                     <Default></Default>
                 </Text>
-                <RelatedEntity Name="Target" FullName="IAccessError.Target" Reference="IDbEntity">
+                <RelatedEntity Name="Target" FullName="IAccessError.Target">
                     <summary>
                         Gets the target entity to which the access error applies.
                     </summary>
@@ -347,7 +347,7 @@
             <typeparam name="TTarget">The target entity type.</typeparam>
             <ExtendsEntity Type="IAccessError" />
             <Properties>
-                <NewRelatedEntity Name="Target" FullName="IAccessError{TTarget}.Target" Reference="IDbEntity"/>
+                <RelatedEntity.Type Name="Target" FullName="IAccessError{TTarget}.Target" Reference="IDbEntity"/>
             </Properties>
         </Entity>
         <Entity Name="IFileSystem">
@@ -482,7 +482,7 @@
                     <Index Name="IDX_SymbolicName_IsInactive" />
                     <Default>false</Default>
                 </Bit>
-                <RelatedEntity Name="FileSystem" FullName="ISymbolicName.FileSystem" Reference="IFileSystem">
+                <RelatedEntity Name="FileSystem" FullName="ISymbolicName.FileSystem">
                     <summary>
                         Gets the file system that this symbolic name refers to.
                     </summary>
@@ -579,14 +579,14 @@
                     <Index Name="IDX_Volume_Status" />
                     <Default>VolumeStatus.Unknown</Default>
                 </Enum>
-                <RelatedEntity Name="RootDirectory" FullName="IVolume.RootDirectory" Reference="ISubdirectory">
+                <RelatedEntity Name="RootDirectory" FullName="IVolume.RootDirectory">
                     <summary>
                         Gets the root directory of this volume.
                     </summary>
                     <value>The root directory of this volume.</value>
                     <PrimaryEntity>ISubdirectory</PrimaryEntity>
                 </RelatedEntity>
-                <RelatedEntity Name="FileSystem" FullName="IVolume.FileSystem" Reference="IFileSystem">
+                <RelatedEntity Name="FileSystem" FullName="IVolume.FileSystem">
                     <summary>
                         Gets the file system type.
                     </summary>
@@ -612,14 +612,14 @@
             </summary>
             <ExtendsGenericEntity Type="IAccessError{IVolume}" TypeDef="IAccessError{TTarget}" />
             <Properties>
-                <NewRelatedEntity Name="Target" FullName="IVolumeAccessError.Target" Reference="IVolume">
+                <RelatedEntity.Type Name="Target" FullName="IVolumeAccessError.Target" Reference="IVolume">
                     <summary>
                         Gets the target volume to which the access error applies.
                     </summary>
                     <value>
                         The <typeparamref name="IVolume" /> entity that this error applies to.
                     </value>
-                </NewRelatedEntity>
+                </RelatedEntity.Type>
             </Properties>
         </Entity>
         <Entity Name="ICrawlSettings">
@@ -726,7 +726,7 @@
                     re-scheduled only if the preceding job did not fail.</value>
                     <Default>false</Default>
                 </Bit>
-                <RelatedEntity Name="Root" FullName="ICrawlConfiguration.Root" Reference="ISubdirectory">
+                <RelatedEntity Name="Root" FullName="ICrawlConfiguration.Root">
                     <summary>
                         Gets the starting subdirectory for the configured subdirectory crawl.
                     </summary>
@@ -789,7 +789,7 @@
                     <summary>Gets the status details.</summary>
                     <value>The status details.</value>
                 </Text>
-                <RelatedEntity Name="Configuration" FullName="ICrawlJobLog.Configuration" Reference="ICrawlConfiguration">
+                <RelatedEntity Name="Configuration" FullName="ICrawlJobLog.Configuration">
                     <summary>Gets the configuration source for the file system crawl.</summary>
                     <value>The configuration for the file system crawl.</value>
                     <PrimaryEntity>ICrawlConfiguration</PrimaryEntity>
@@ -842,7 +842,7 @@
                     </summary>
                     <value>The last write time as reported by the host file system.</value>
                 </DateTime>
-                <RelatedEntity Name="Parent" FullName="IDbFsItem.Parent" Reference="ISubdirectory">
+                <RelatedEntity Name="Parent" FullName="IDbFsItem.Parent">
                     <summary>
                         Gets the parent subdirectory of the current file system item.
                     </summary>
@@ -882,15 +882,15 @@
                     <Index Name="IDX_Subdirectory_Status" />
                     <Default>DirectoryStatus.Incomplete</Default>
                 </Enum>
-                <NewRelatedEntity Name="Parent" FullName="ISubdirectory.Parent" Reference="ISubdirectory">
+                <RelatedEntity.Type Name="Parent" FullName="ISubdirectory.Parent" Reference="ISubdirectory">
                     <summary>
                         Gets the parent subdirectory of the current file system item.
                     </summary>
                     <value>
                         The parent <see cref="ISubdirectory" /> of the current file system item or <see langword="null" /> if this is the root subdirectory.
                     </value>
-                </NewRelatedEntity>
-                <RelatedEntity Name="Volume" AllowNull="true" FullName="ISubdirectory.Volume" Reference="IVolume">
+                </RelatedEntity.Type>
+                <RelatedEntity Name="Volume" AllowNull="true" FullName="ISubdirectory.Volume">
                     <summary>
                         Gets the parent volume.
                     </summary>
@@ -903,7 +903,7 @@
                     <PrimaryEntity>IVolume</PrimaryEntity>
                     <DbRelationship Name="FK_Subdirectory_Volume" FkPropertyName="VolumeId"/>
                 </RelatedEntity>
-                <RelatedEntity Name="CrawlConfiguration" FullName="ISubdirectory.CrawlConfiguration" Reference="ICrawlConfiguration">
+                <RelatedEntity Name="CrawlConfiguration" FullName="ISubdirectory.CrawlConfiguration">
                     <summary>
                         Gets the crawl configuration that starts with the current subdirectory.
                     </summary>
@@ -925,9 +925,7 @@
                     <value>The nested subdirectories directly contained within this subdirectory.</value>
                     <ItemType>ISubdirectory</ItemType>
                 </CollectionNavigation>
-                <NewCollectionNavigation Name="AccessErrors" FullName="ISubdirectory.AccessErrors">
-                    <ItemType>ISubdirectoryAccessError</ItemType>
-                </NewCollectionNavigation>
+                <CollectionNavigation.ItemType Name="AccessErrors" FullName="ISubdirectory.AccessErrors" Reference="ISubdirectoryAccessError" />
             </Properties>
             <Check>
                 <Or>
@@ -948,14 +946,14 @@
             </summary>
             <ExtendsGenericEntity Type="IAccessError{ISubdirectory}" TypeDef="IAccessError{TTarget}" />
             <Properties>
-                <NewRelatedEntity Name="Target" FullName="ISubdirectoryAccessError.Target" Reference="ISubdirectory">
+                <RelatedEntity.Type Name="Target" FullName="ISubdirectoryAccessError.Target" Reference="ISubdirectory">
                     <summary>
                         Gets the target subdirectory to which the access error applies.
                     </summary>
                     <value>
                         The <typeparamref name="ISubdirectory" /> entity that this error applies to.
                     </value>
-                </NewRelatedEntity>
+                </RelatedEntity.Type>
             </Properties>
         </Entity>
         <Entity Name="IBinaryPropertySet">
@@ -4979,7 +4977,7 @@
                     </value>
                     <DefaultNull />
                 </DateTime>
-                <RelatedEntity Name="BinaryProperties" FullName="IFile.BinaryProperties" Reference="IBinaryPropertySet">
+                <RelatedEntity Name="BinaryProperties" FullName="IFile.BinaryProperties">
                     <summary>
                         Gets the binary properties for the current file.
                     </summary>
@@ -4989,7 +4987,7 @@
                     <PrimaryEntity>IBinaryPropertySet</PrimaryEntity>
                     <DbRelationship Name="FK_File_BinaryPropertySet" FkPropertyName="BinaryPropertySetId"/>
                 </RelatedEntity>
-                <RelatedEntity Name="SummaryProperties" FullName="IFile.SummaryProperties" Reference="ISummaryPropertySet">
+                <RelatedEntity Name="SummaryProperties" FullName="IFile.SummaryProperties">
                     <summary>
                         Gets the summary properties for the current file.
                     </summary>
@@ -4999,7 +4997,7 @@
                     <PrimaryEntity>ISummaryPropertySet</PrimaryEntity>
                     <DbRelationship Name="FK_File_SummaryPropertySet" FkPropertyName="SummaryPropertySetId"/>
                 </RelatedEntity>
-                <RelatedEntity Name="DocumentProperties" FullName="IFile.DocumentProperties" Reference="IDocumentPropertySet">
+                <RelatedEntity Name="DocumentProperties" FullName="IFile.DocumentProperties">
                     <summary>
                         Gets the document properties for the current file.
                     </summary>
@@ -5009,7 +5007,7 @@
                     <PrimaryEntity>IDocumentPropertySet</PrimaryEntity>
                     <DbRelationship Name="FK_File_DocumentPropertySet" FkPropertyName="DocumentPropertySetId"/>
                 </RelatedEntity>
-                <RelatedEntity Name="AudioProperties" FullName="IFile.AudioProperties" Reference="IAudioPropertySet">
+                <RelatedEntity Name="AudioProperties" FullName="IFile.AudioProperties">
                     <summary>
                         Gets the audio properties for the current file.
                     </summary>
@@ -5019,7 +5017,7 @@
                     <PrimaryEntity>IAudioPropertySet</PrimaryEntity>
                     <DbRelationship Name="FK_File_AudioPropertySet" FkPropertyName="AudioPropertySetId"/>
                 </RelatedEntity>
-                <RelatedEntity Name="DRMProperties" FullName="IFile.DRMProperties" Reference="IDRMPropertySet">
+                <RelatedEntity Name="DRMProperties" FullName="IFile.DRMProperties">
                     <summary>
                         Gets the DRM properties for the current file.
                     </summary>
@@ -5029,7 +5027,7 @@
                     <PrimaryEntity>IDRMPropertySet</PrimaryEntity>
                     <DbRelationship Name="FK_File_DRMPropertySet" FkPropertyName="DRMPropertySetId"/>
                 </RelatedEntity>
-                <RelatedEntity Name="GPSProperties" FullName="IFile.GPSProperties" Reference="IGPSPropertySet">
+                <RelatedEntity Name="GPSProperties" FullName="IFile.GPSProperties">
                     <summary>
                         Gets the GPS properties for the current file.
                     </summary>
@@ -5039,7 +5037,7 @@
                     <PrimaryEntity>IGPSPropertySet</PrimaryEntity>
                     <DbRelationship Name="FK_File_GPSPropertySet" FkPropertyName="GPSPropertySetId"/>
                 </RelatedEntity>
-                <RelatedEntity Name="ImageProperties" FullName="IFile.ImageProperties" Reference="IImagePropertySet">
+                <RelatedEntity Name="ImageProperties" FullName="IFile.ImageProperties">
                     <summary>
                         Gets the image properties for the current file.
                     </summary>
@@ -5049,7 +5047,7 @@
                     <PrimaryEntity>IImagePropertySet</PrimaryEntity>
                     <DbRelationship Name="FK_File_ImagePropertySet" FkPropertyName="ImagePropertySetId"/>
                 </RelatedEntity>
-                <RelatedEntity Name="MediaProperties" FullName="IFile.MediaProperties" Reference="IMediaPropertySet">
+                <RelatedEntity Name="MediaProperties" FullName="IFile.MediaProperties">
                     <summary>
                         Gets the media properties for the current file.
                     </summary>
@@ -5059,7 +5057,7 @@
                     <PrimaryEntity>IMediaPropertySet</PrimaryEntity>
                     <DbRelationship Name="FK_File_MediaPropertySet" FkPropertyName="MediaPropertySetId"/>
                 </RelatedEntity>
-                <RelatedEntity Name="MusicProperties" FullName="IFile.MusicProperties" Reference="IMusicPropertySet">
+                <RelatedEntity Name="MusicProperties" FullName="IFile.MusicProperties">
                     <summary>
                         Gets the music properties for the current file.
                     </summary>
@@ -5069,7 +5067,7 @@
                     <PrimaryEntity>IMusicPropertySet</PrimaryEntity>
                     <DbRelationship Name="FK_File_MusicPropertySet" FkPropertyName="MusicPropertySetId"/>
                 </RelatedEntity>
-                <RelatedEntity Name="PhotoProperties" FullName="IFile.PhotoProperties" Reference="IPhotoPropertySet">
+                <RelatedEntity Name="PhotoProperties" FullName="IFile.PhotoProperties">
                     <summary>
                         Gets the photo properties for the current file.
                     </summary>
@@ -5079,7 +5077,7 @@
                     <PrimaryEntity>IPhotoPropertySet</PrimaryEntity>
                     <DbRelationship Name="FK_File_PhotoPropertySet" FkPropertyName="PhotoPropertySetId"/>
                 </RelatedEntity>
-                <RelatedEntity Name="RecordedTVProperties" FullName="IFile.RecordedTVProperties" Reference="IRecordedTVPropertySet">
+                <RelatedEntity Name="RecordedTVProperties" FullName="IFile.RecordedTVProperties">
                     <summary>
                         Gets the recorded tv properties for the current file.
                     </summary>
@@ -5089,7 +5087,7 @@
                     <PrimaryEntity>IRecordedTVPropertySet</PrimaryEntity>
                     <DbRelationship Name="FK_File_RecordedTVPropertySet" FkPropertyName="RecordedTVPropertySetId"/>
                 </RelatedEntity>
-                <RelatedEntity Name="VideoProperties" FullName="IFile.VideoProperties" Reference="IVideoPropertySet">
+                <RelatedEntity Name="VideoProperties" FullName="IFile.VideoProperties">
                     <summary>
                         Gets the video properties for the current file.
                     </summary>
@@ -5099,7 +5097,7 @@
                     <PrimaryEntity>IVideoPropertySet</PrimaryEntity>
                     <DbRelationship Name="FK_File_VideoPropertySet" FkPropertyName="VideoPropertySetId"/>
                 </RelatedEntity>
-                <RelatedEntity Name="Redundancy" FullName="IFile.Redundancy" Reference="IRedundancy">
+                <RelatedEntity Name="Redundancy" FullName="IFile.Redundancy">
                     <summary>
                         Gets the redundancy item that indicates the membership of a collection of redundant files.
                     </summary>
@@ -5108,7 +5106,7 @@
                         or <see langword="null" /> if this file has not been identified as being redundant with any other.
                     </value>
                     <PrimaryEntity>IRedundancy</PrimaryEntity>
-                    <DbRelationship Name="FK_File_Redundancy"/>
+                    <DbRelationship Name="FK_File_Redundancy" FkPropertyName="RedundancyId" />
                 </RelatedEntity>
                 <CollectionNavigation Name="BaselineComparisons" FullName="IFile.BaselineComparisons">
                     <summary>
@@ -5128,9 +5126,7 @@
                     </value>
                     <ItemType>IComparison</ItemType>
                 </CollectionNavigation>
-                <NewCollectionNavigation Name="AccessErrors" FullName="IFile.AccessErrors">
-                    <ItemType>IFileAccessError</ItemType>
-                </NewCollectionNavigation>
+                <CollectionNavigation.ItemType Name="AccessErrors" FullName="IFile.AccessErrors" Reference="IFileAccessError" />
             </Properties>
         </Entity>
         <Entity Name="IFileAccessError">
@@ -5139,14 +5135,14 @@
             </summary>
             <ExtendsGenericEntity Type="IAccessError{IFile}" TypeDef="IAccessError{TTarget}" />
             <Properties>
-                <NewRelatedEntity Name="Target" FullName="IFileAccessError.Target" Reference="IFile">
+                <RelatedEntity.Type Name="Target" FullName="IFileAccessError.Target" Reference="IFile">
                     <summary>
                         Gets the target file to which the access error applies.
                     </summary>
                     <value>
                         The <typeparamref name="IFile" /> entity that this error applies to.
                     </value>
-                </NewRelatedEntity>
+                </RelatedEntity.Type>
             </Properties>
         </Entity>
         <Entity Name="IRedundantSet">
@@ -5176,7 +5172,7 @@
                     <value>The custom notes to associate with the current set of redunant files.</value>
                     <Default></Default>
                 </Text>
-                <RelatedEntity Name="BinaryProperties" FullName="IRedundantSet.BinaryProperties" Reference="IBinaryPropertySet">
+                <RelatedEntity Name="BinaryProperties" FullName="IRedundantSet.BinaryProperties">
                     <summary>
                         Gets the binary properties in common with all files in the current redundant set.
                     </summary>
@@ -5210,7 +5206,7 @@
                     <value>The custom notes to associate with the current redundancy.</value>
                     <Default></Default>
                 </Text>
-                <UniqueIdentifier Name="FileId" FullName="IRedundancy.FileId" Navigation="File" IsPrimaryKey="true" ColName="FileId">
+                <UniqueIdentifier Name="FileId" FullName="IRedundancy.FileId" IsPrimaryKey="true" ColName="FileId">
                     <summary>
                         Gets the primary key of the file in the that belongs to the redundancy set.
                     </summary>
@@ -5219,15 +5215,15 @@
                     </value>
                     <remarks>This is also part of this entity's compound primary key.</remarks>
                 </UniqueIdentifier>
-                <RelatedEntity Name="File" FullName="IRedundancy.File" Reference="IFile">
+                <RelatedEntity Name="File" FullName="IRedundancy.File">
                     <summary>
                         Gets the file that belongs to the redundancy set.
                     </summary>
                     <value>The file that belongs to the redundancy set.</value>
                     <PrimaryEntity>IFile</PrimaryEntity>
-                    <DbRelationship Name="FK_Redundancy_File"/>
+                    <DbRelationship Name="FK_Redundancy_File" FkPropertyName="FileId"/>
                 </RelatedEntity>
-                <UniqueIdentifier Name="RedundantSetId" FullName="IRedundancy.RedundantSetId" Navigation="RedundantSet" IsPrimaryKey="true" ColName="RedundantSetId">
+                <UniqueIdentifier Name="RedundantSetId" FullName="IRedundancy.RedundantSetId" IsPrimaryKey="true" ColName="RedundantSetId">
                     <summary>
                         Gets the primary key of the redundancy set file belongs to.
                     </summary>
@@ -5236,13 +5232,13 @@
                     </value>
                     <remarks>This is also part of this entity's compound primary key.</remarks>
                 </UniqueIdentifier>
-                <RelatedEntity Name="RedundantSet" FullName="IRedundancy.RedundantSet" Reference="IRedundantSet">
+                <RelatedEntity Name="RedundantSet" FullName="IRedundancy.RedundantSet">
                     <summary>
                         Gets the redundancy set.
                     </summary>
                     <value>The redundancy set.</value>
                     <PrimaryEntity>IRedundantSet</PrimaryEntity>
-                    <DbRelationship Name="FK_Redundancy_RedundantSet"/>
+                    <DbRelationship Name="FK_Redundancy_RedundantSet" FkPropertyName="RedundantSetId"/>
                 </RelatedEntity>
             </Properties>
         </Entity>
@@ -5269,7 +5265,7 @@
                         The date and time when <see cref="IComparison.Baseline" /> was compared to <see cref="IComparison.Correlative" />.
                     </value>
                 </DateTime>
-                <UniqueIdentifier Name="BaselineId" FullName="IComparison.BaselineId" Navigation="Baseline" ColName="BaselineId">
+                <UniqueIdentifier Name="BaselineId" FullName="IComparison.BaselineId" ColName="BaselineId">
                     <summary>
                         Gets the primary key of the baseline file in the comparison.
                     </summary>
@@ -5278,7 +5274,7 @@
                     </value>
                     <remarks>This is also part of this entity's compound primary key.</remarks>
                 </UniqueIdentifier>
-                <RelatedEntity Name="Baseline" FullName="IComparison.Baseline" Reference="IFile">
+                <RelatedEntity Name="Baseline" FullName="IComparison.Baseline">
                     <summary>
                         Gets the baseline file in the comparison.
                     </summary>
@@ -5286,9 +5282,9 @@
                         The generic <see cref="IFile" /> that represents the baseline file in the comparison.
                     </value>
                     <PrimaryEntity>IFile</PrimaryEntity>
-                    <DbRelationship Name="FK_Comparison_BaselineFile"/>
+                    <DbRelationship Name="FK_Comparison_BaselineFile" FkPropertyName="BaselineId"/>
                 </RelatedEntity>
-                <UniqueIdentifier Name="CorrelativeId" FullName="IComparison.CorrelativeId" Navigation="Correlative" ColName="CorrelativeId">
+                <UniqueIdentifier Name="CorrelativeId" FullName="IComparison.CorrelativeId" ColName="CorrelativeId">
                     <summary>
                         Gets the primary key of the correlative file in the comparison.
                     </summary>
@@ -5297,7 +5293,7 @@
                     </value>
                     <remarks>This is also part of this entity's compound primary key.</remarks>
                 </UniqueIdentifier>
-                <RelatedEntity Name="Correlative" FullName="IComparison.Correlative" Reference="IFile">
+                <RelatedEntity Name="Correlative" FullName="IComparison.Correlative">
                     <summary>
                         Gets the correlative file in the comparison.
                     </summary>
@@ -5305,7 +5301,7 @@
                         The generic <see cref="IFile" /> that represents the correlative file, which is the new or changed file in the comparison.
                     </value>
                     <PrimaryEntity>IFile</PrimaryEntity>
-                    <DbRelationship Name="FK_Comparison_CorrelativeFile"/>
+                    <DbRelationship Name="FK_Comparison_CorrelativeFile" FkPropertyName="CorrelativeId"/>
                 </RelatedEntity>
             </Properties>
         </Entity>
@@ -5350,14 +5346,14 @@
             <summary>Generic interface for access error entities that occur on the local host system.</summary>
             <ExtendsGenericEntity Type="IAccessError{ILocalDbEntity}" TypeDef="IAccessError{TTarget}" />
             <Properties>
-                <NewRelatedEntity Name="Target" FullName="ILocalAccessError.Target" Reference="ILocalDbEntity">
+                <RelatedEntity.Type Name="Target" FullName="ILocalAccessError.Target" Reference="ILocalDbEntity">
                     <summary>
                         Gets the target entity to which the access error applies.
                     </summary>
                     <value>
                         The <see cref="ILocalDbEntity" /> object that this error applies to.
                     </value>
-                </NewRelatedEntity>
+                </RelatedEntity.Type>
             </Properties>
         </Entity>
         <Entity Name="ILocalFileSystem" RootInterface="IFileSystem" TableName="FileSystems">
@@ -5366,12 +5362,8 @@
             </summary>
             <ExtendsEntity Type="ILocalDbEntity" />
             <Properties>
-                <NewCollectionNavigation Name="Volumes" FullName="ILocalFileSystem.Volumes">
-                    <ItemType>ILocalVolume</ItemType>
-                </NewCollectionNavigation>
-                <NewCollectionNavigation Name="SymbolicNames" FullName="ILocalFileSystem.SymbolicNames">
-                    <ItemType>ILocalSymbolicName</ItemType>
-                </NewCollectionNavigation>
+                <CollectionNavigation.ItemType Name="Volumes" FullName="ILocalFileSystem.Volumes" Reference="ILocalVolume" />
+                <CollectionNavigation.ItemType Name="SymbolicNames" FullName="ILocalFileSystem.SymbolicNames" Reference="ILocalSymbolicName" />
             </Properties>
         </Entity>
         <Entity Name="ILocalSymbolicName" RootInterface="ISymbolicName" TableName="SymbolicNames">
@@ -5380,18 +5372,16 @@
             </summary>
             <ExtendsEntity Type="ILocalDbEntity" />
             <Properties>
-                <NewRelatedEntity Name="FileSystem" FullName="ILocalSymbolicName.FileSystem" Reference="ILocalFileSystem" />
+                <RelatedEntity.Type Name="FileSystem" FullName="ILocalSymbolicName.FileSystem" Reference="ILocalFileSystem" />
             </Properties>
         </Entity>
         <Entity Name="ILocalVolume" RootInterface="IVolume" TableName="Volumes">
             <summary>Interface for entities which represent a logical file system volume on the local host machine.</summary>
             <ExtendsEntity Type="ILocalDbEntity" />
             <Properties>
-                <NewRelatedEntity Name="RootDirectory" FullName="ILocalVolume.RootDirectory" Reference="ILocalSubdirectory" />
-                <NewRelatedEntity Name="FileSystem" FullName="ILocalVolume.FileSystem" Reference="ILocalFileSystem" />
-                <NewCollectionNavigation Name="AccessErrors" FullName="ILocalVolume.AccessErrors">
-                    <ItemType>ILocalVolumeAccessError</ItemType>
-                </NewCollectionNavigation>
+                <RelatedEntity.Type Name="RootDirectory" FullName="ILocalVolume.RootDirectory" Reference="ILocalSubdirectory" />
+                <RelatedEntity.Type Name="FileSystem" FullName="ILocalVolume.FileSystem" Reference="ILocalFileSystem" />
+                <CollectionNavigation.ItemType Name="AccessErrors" FullName="ILocalVolume.AccessErrors" Reference="ILocalVolumeAccessError" />
             </Properties>
         </Entity>
         <Entity Name="ILocalVolumeAccessError" RootInterface="IVolumeAccessError" TableName="VolumeAccessErrors">
@@ -5401,14 +5391,14 @@
             <ExtendsEntity Type="ILocalAccessError" />
             <ImplementsGenericEntity Type="IAccessError{ILocalVolume}" TypeDef="IAccessError{TTarget}" />
             <Properties>
-                <NewRelatedEntity Name="Target" FullName="ILocalVolumeAccessError.Target" Reference="ILocalVolume" />
+                <RelatedEntity.Type Name="Target" FullName="ILocalVolumeAccessError.Target" Reference="ILocalVolume" />
             </Properties>
         </Entity>
         <Entity Name="ILocalDbFsItem" RootInterface="IDbFsItem">
             <summary>Base interface for a database entity that represents a file system node on the local host machine.</summary>
             <ExtendsEntity Type="ILocalDbEntity" />
             <Properties>
-                <NewRelatedEntity Name="Parent" FullName="ILocalDbFsItem.Parent" Reference="ILocalSubdirectory">
+                <RelatedEntity.Type Name="Parent" FullName="ILocalDbFsItem.Parent" Reference="ILocalSubdirectory">
                     <summary>
                         Gets the parent subdirectory.
                     </summary>
@@ -5420,17 +5410,15 @@
                         then <see cref="ILocalSubdirectory.Volume" /> should not be <see langword="null" />, and vice-versa;
                         otherwise, if the current entity is a <see cref="ILocalFile" />, then this should never be <see langword="null" />.
                     </remarks>
-                </NewRelatedEntity>
-                <NewCollectionNavigation Name="AccessErrors" FullName="ILocalDbFsItem.AccessErrors">
-                    <ItemType>ILocalAccessError</ItemType>
-                </NewCollectionNavigation>
+                </RelatedEntity.Type>
+                <CollectionNavigation.ItemType Name="AccessErrors" FullName="ILocalDbFsItem.AccessErrors" Reference="ILocalAccessError" />
             </Properties>
         </Entity>
         <Entity Name="ILocalSubdirectory" RootInterface="ISubdirectory" TableName="Subdirectories">
             <summary>Interface for entities that represent a subdirectory node within a file system on the local host machine.</summary>
             <ExtendsEntity Type="ILocalDbFsItem" />
             <Properties>
-                <NewRelatedEntity Name="Volume" FullName="ILocalSubdirectory.Volume" Reference="ILocalVolume">
+                <RelatedEntity.Type Name="Volume" FullName="ILocalSubdirectory.Volume" Reference="ILocalVolume">
                     <summary>
                         Gets the parent volume.
                     </summary>
@@ -5440,17 +5428,11 @@
                     <remarks>
                         If this is <see langword="null" />, then <see cref="ISubdirectory.Parent" /> should not be null, and vice-versa.
                     </remarks>
-                </NewRelatedEntity>
-                <NewRelatedEntity Name="CrawlConfiguration" FullName="ILocalSubdirectory.CrawlConfiguration" Reference="ILocalCrawlConfiguration" />
-                <NewCollectionNavigation Name="Files" FullName="ILocalSubdirectory.Files">
-                    <ItemType>ILocalFile</ItemType>
-                </NewCollectionNavigation>
-                <NewCollectionNavigation Name="SubDirectories" FullName="ILocalSubdirectory.SubDirectories">
-                    <ItemType>ILocalSubdirectory</ItemType>
-                </NewCollectionNavigation>
-                <NewCollectionNavigation Name="AccessErrors" FullName="ILocalSubdirectory.AccessErrors">
-                    <ItemType>ILocalSubdirectoryAccessError</ItemType>
-                </NewCollectionNavigation>
+                </RelatedEntity.Type>
+                <RelatedEntity.Type Name="CrawlConfiguration" FullName="ILocalSubdirectory.CrawlConfiguration" Reference="ILocalCrawlConfiguration" />
+                <CollectionNavigation.ItemType Name="Files" FullName="ILocalSubdirectory.Files" Reference="ILocalFile" />
+                <CollectionNavigation.ItemType Name="SubDirectories" FullName="ILocalSubdirectory.SubDirectories" Reference="ILocalSubdirectory" />
+                <CollectionNavigation.ItemType Name="AccessErrors" FullName="ILocalSubdirectory.AccessErrors" Reference="ILocalSubdirectoryAccessError" />
             </Properties>
         </Entity>
         <Entity Name="ILocalCrawlConfiguration" RootInterface="ICrawlConfiguration" TableName="CrawlConfigurations">
@@ -5459,10 +5441,8 @@
             </summary>
             <ExtendsEntity Type="ILocalDbEntity" />
             <Properties>
-                <NewRelatedEntity Name="Root" FullName="ILocalCrawlConfiguration.Root" Reference="ILocalSubdirectory" />
-                <NewCollectionNavigation Name="Logs" FullName="ILocalCrawlConfiguration.Logs">
-                    <ItemType>ILocalCrawlJobLog</ItemType>
-                </NewCollectionNavigation>
+                <RelatedEntity.Type Name="Root" FullName="ILocalCrawlConfiguration.Root" Reference="ILocalSubdirectory" />
+                <CollectionNavigation.ItemType Name="Logs" FullName="ILocalCrawlConfiguration.Logs" Reference="ILocalCrawlJobLog" />
             </Properties>
         </Entity>
         <Entity Name="ILocalCrawlJobLog" RootInterface="ICrawlJobLog" TableName="CrawlJobLogs">
@@ -5471,7 +5451,7 @@
             </summary>
             <ExtendsEntity Type="ILocalDbEntity" />
             <Properties>
-                <NewRelatedEntity Name="Configuration" FullName="ILocalCrawlJobLog.Configuration" Reference="ILocalCrawlConfiguration" />
+                <RelatedEntity.Type Name="Configuration" FullName="ILocalCrawlJobLog.Configuration" Reference="ILocalCrawlConfiguration" />
             </Properties>
         </Entity>
         <Entity Name="ILocalSubdirectoryAccessError" RootInterface="ISubdirectoryAccessError" TableName="SubdirectoryAccessErrors">
@@ -5479,41 +5459,36 @@
             <ExtendsEntity Type="ILocalAccessError" />
             <ImplementsGenericEntity Type="IAccessError{ILocalSubdirectory}" TypeDef="IAccessError{TTarget}" />
             <Properties>
-                <NewRelatedEntity Name="Target" FullName="ILocalSubdirectoryAccessError.Target" Reference="ILocalSubdirectory">
+                <RelatedEntity.Type Name="Target" FullName="ILocalSubdirectoryAccessError.Target" Reference="ILocalSubdirectory">
                     <summary>
                         Gets the target subdirectory to which the access error applies.
                     </summary>
                     <value>
                         The <typeparamref name="ISubdirectory" /> entity that this error applies to.
                     </value>
-                </NewRelatedEntity>
+                </RelatedEntity.Type>
             </Properties>
         </Entity>
         <Entity Name="ILocalBinaryPropertySet" RootInterface="IBinaryPropertySet" TableName="BinaryPropertySets">
             <summary>Represents a set of files that have the same file size and cryptographic hash.</summary>
             <ExtendsEntity Type="ILocalDbEntity" />
             <Properties>
-                <NewCollectionNavigation Name="Files" FullName="ILocalBinaryPropertySet.Files">
-                    <ItemType>ILocalFile</ItemType>
-                </NewCollectionNavigation>
-                <NewCollectionNavigation Name="RedundantSets" FullName="ILocalBinaryPropertySet.RedundantSets">
-                    <ItemType>ILocalRedundantSet</ItemType>
-                </NewCollectionNavigation>
+                <CollectionNavigation.ItemType Name="Files" FullName="ILocalBinaryPropertySet.Files" Reference="ILocalFile" />
+                <CollectionNavigation.ItemType Name="RedundantSets" FullName="ILocalBinaryPropertySet.RedundantSets" Reference="ILocalRedundantSet" />
             </Properties>
         </Entity>
         <Entity Name="ILocalPropertySet" RootInterface="IPropertySet">
             <summary>Base interface for entities that represent a grouping of extended file properties.</summary>
             <ExtendsEntity Type="ILocalDbEntity" />
             <Properties>
-                <NewCollectionNavigation Name="Files" FullName="ILocalPropertySet.Files">
+                <CollectionNavigation.ItemType Name="Files" FullName="ILocalPropertySet.Files" Reference="ILocalFile">
                     <summary>
                         Gets the files that share the same property values as this property set.
                     </summary>
                     <value>
                         The <see cref="ILocalFile">files</see> that share the same property values as this property set.
                     </value>
-                    <ItemType>ILocalFile</ItemType>
-                </NewCollectionNavigation>
+                </CollectionNavigation.ItemType>
             </Properties>
         </Entity>
         <Entity Name="ILocalSummaryPropertySet" RootInterface="ISummaryPropertySet" TableName="SummaryPropertySets">
@@ -5599,10 +5574,8 @@
             </summary>
             <ExtendsEntity Type="ILocalDbEntity" />
             <Properties>
-                <NewRelatedEntity Name="BinaryProperties" FullName="ILocalRedundantSet.BinaryProperties" Reference="ILocalBinaryPropertySet" />
-                <NewCollectionNavigation Name="Redundancies" FullName="ILocalRedundantSet.Redundancies">
-                    <ItemType>ILocalRedundancy</ItemType>
-                </NewCollectionNavigation>
+                <RelatedEntity.Type Name="BinaryProperties" FullName="ILocalRedundantSet.BinaryProperties" Reference="ILocalBinaryPropertySet" />
+                <CollectionNavigation.ItemType Name="Redundancies" FullName="ILocalRedundantSet.Redundancies" Reference="ILocalRedundancy" />
             </Properties>
         </Entity>
         <Entity Name="ILocalFile" RootInterface="IFile" TableName="Files">
@@ -5611,103 +5584,103 @@
             </summary>
             <ExtendsEntity Type="ILocalDbFsItem" />
             <Properties>
-                <NewRelatedEntity Name="BinaryProperties" FullName="ILocalFile.BinaryProperties" Reference="ILocalBinaryPropertySet">
+                <RelatedEntity.Type Name="BinaryProperties" FullName="ILocalFile.BinaryProperties" Reference="ILocalBinaryPropertySet">
                     <summary>
                         Gets the binary properties for the current file.
                     </summary>
                     <value>
                         The generic <see cref="ILocalBinaryPropertySet" /> that contains the file size and optionally, the <see cref="MD5Hash">MD5 hash</see> value of its binary contents.
                     </value>
-                </NewRelatedEntity>
-                <NewRelatedEntity Name="SummaryProperties" FullName="ILocalFile.SummaryProperties" Reference="ILocalSummaryPropertySet">
+                </RelatedEntity.Type>
+                <RelatedEntity.Type Name="SummaryProperties" FullName="ILocalFile.SummaryProperties" Reference="ILocalSummaryPropertySet">
                     <summary>
                         Gets the summary properties for the current file.
                     </summary>
                     <value>
                         The generic <see cref="ILocaBinaryPropertySet" /> that contains the summary properties for the current file or <see langword="null" /> if no summary properties are defined on the current file.
                     </value>
-                </NewRelatedEntity>
-                <NewRelatedEntity Name="DocumentProperties" FullName="ILocalFile.DocumentProperties" Reference="ILocalDocumentPropertySet">
+                </RelatedEntity.Type>
+                <RelatedEntity.Type Name="DocumentProperties" FullName="ILocalFile.DocumentProperties" Reference="ILocalDocumentPropertySet">
                     <summary>
                         Gets the document properties for the current file.
                     </summary>
                     <value>
                         The generic <see cref="ILocaDocumentPropertySet" /> that contains the document properties for the current file or <see langword="null" /> if no document properties are defined on the current file.
                     </value>
-                </NewRelatedEntity>
-                <NewRelatedEntity Name="AudioProperties" FullName="ILocalFile.AudioProperties" Reference="ILocalAudioPropertySet">
+                </RelatedEntity.Type>
+                <RelatedEntity.Type Name="AudioProperties" FullName="ILocalFile.AudioProperties" Reference="ILocalAudioPropertySet">
                     <summary>
                         Gets the audio properties for the current file.
                     </summary>
                     <value>
                         The generic <see cref="ILocaAudioPropertySet" /> that contains the audio properties for the current file or <see langword="null" /> if no audio properties are defined on the current file.
                     </value>
-                </NewRelatedEntity>
-                <NewRelatedEntity Name="DRMProperties" FullName="ILocalFile.DRMProperties" Reference="ILocalDRMPropertySet">
+                </RelatedEntity.Type>
+                <RelatedEntity.Type Name="DRMProperties" FullName="ILocalFile.DRMProperties" Reference="ILocalDRMPropertySet">
                     <summary>
                         Gets the DRM properties for the current file.
                     </summary>
                     <value>
                         The generic <see cref="ILocaDRMPropertySet" /> that contains the DRM properties for the current file or <see langword="null" /> if no DRM properties are defined on the current file.
                     </value>
-                </NewRelatedEntity>
-                <NewRelatedEntity Name="GPSProperties" FullName="ILocalFile.GPSProperties" Reference="ILocalGPSPropertySet">
+                </RelatedEntity.Type>
+                <RelatedEntity.Type Name="GPSProperties" FullName="ILocalFile.GPSProperties" Reference="ILocalGPSPropertySet">
                     <summary>
                         Gets the GPS properties for the current file.
                     </summary>
                     <value>
                         The generic <see cref="ILocaGPSPropertySet" /> that contains the GPS properties for the current file or <see langword="null" /> if no GPS properties are defined on the current file.
                     </value>
-                </NewRelatedEntity>
-                <NewRelatedEntity Name="ImageProperties" FullName="ILocalFile.ImageProperties" Reference="ILocalImagePropertySet">
+                </RelatedEntity.Type>
+                <RelatedEntity.Type Name="ImageProperties" FullName="ILocalFile.ImageProperties" Reference="ILocalImagePropertySet">
                     <summary>
                         Gets the image properties for the current file.
                     </summary>
                     <value>
                         The generic <see cref="ILocaImagePropertySet" /> that contains the image properties for the current file or <see langword="null" /> if no image properties are defined on the current file.
                     </value>
-                </NewRelatedEntity>
-                <NewRelatedEntity Name="MediaProperties" FullName="ILocalFile.MediaProperties" Reference="ILocalMediaPropertySet">
+                </RelatedEntity.Type>
+                <RelatedEntity.Type Name="MediaProperties" FullName="ILocalFile.MediaProperties" Reference="ILocalMediaPropertySet">
                     <summary>
                         Gets the media properties for the current file.
                     </summary>
                     <value>
                         The generic <see cref="ILocaMediaPropertySet" /> that contains the media properties for the current file or <see langword="null" /> if no media properties are defined on the current file.
                     </value>
-                </NewRelatedEntity>
-                <NewRelatedEntity Name="MusicProperties" FullName="ILocalFile.MusicProperties" Reference="ILocalMusicPropertySet">
+                </RelatedEntity.Type>
+                <RelatedEntity.Type Name="MusicProperties" FullName="ILocalFile.MusicProperties" Reference="ILocalMusicPropertySet">
                     <summary>
                         Gets the music properties for the current file.
                     </summary>
                     <value>
                         The generic <see cref="ILocaMusicPropertySet" /> that contains the music properties for the current file or <see langword="null" /> if no music properties are defined on the current file.
                     </value>
-                </NewRelatedEntity>
-                <NewRelatedEntity Name="PhotoProperties" FullName="ILocalFile.PhotoProperties" Reference="ILocalPhotoPropertySet">
+                </RelatedEntity.Type>
+                <RelatedEntity.Type Name="PhotoProperties" FullName="ILocalFile.PhotoProperties" Reference="ILocalPhotoPropertySet">
                     <summary>
                         Gets the photo properties for the current file.
                     </summary>
                     <value>
                         The generic <see cref="ILocaPhotoPropertySet" /> that contains the photo properties for the current file or <see langword="null" /> if no photo properties are defined on the current file.
                     </value>
-                </NewRelatedEntity>
-                <NewRelatedEntity Name="RecordedTVProperties" FullName="ILocalFile.RecordedTVProperties" Reference="ILocalRecordedTVPropertySet">
+                </RelatedEntity.Type>
+                <RelatedEntity.Type Name="RecordedTVProperties" FullName="ILocalFile.RecordedTVProperties" Reference="ILocalRecordedTVPropertySet">
                     <summary>
                         Gets the recorded tv properties for the current file.
                     </summary>
                     <value>
                         The generic <see cref="ILocaRecordedTVPropertySet" /> that contains the recorded TV properties for the current file or <see langword="null" /> if no recorded TV properties are defined on the current file.
                     </value>
-                </NewRelatedEntity>
-                <NewRelatedEntity Name="VideoProperties" FullName="ILocalFile.VideoProperties" Reference="ILocalVideoPropertySet">
+                </RelatedEntity.Type>
+                <RelatedEntity.Type Name="VideoProperties" FullName="ILocalFile.VideoProperties" Reference="ILocalVideoPropertySet">
                     <summary>
                         Gets the video properties for the current file.
                     </summary>
                     <value>
                         The generic <see cref="ILocaVideoPropertySet" /> that contains the video properties for the current file or <see langword="null" /> if no video properties are defined on the current file.
                     </value>
-                </NewRelatedEntity>
-                <NewRelatedEntity Name="Redundancy" FullName="ILocalFile.Redundancy" Reference="ILocalRedundancy">
+                </RelatedEntity.Type>
+                <RelatedEntity.Type Name="Redundancy" FullName="ILocalFile.Redundancy" Reference="ILocalRedundancy">
                     <summary>
                         Gets the redundancy item that indicates the membership of a collection of redundant files.
                     </summary>
@@ -5715,28 +5688,24 @@
                         A <see cref="ILocaRedundancy" /> object that indicates the current file is an exact copy of other files that belong to the same <see cref="IRedundancy.RedundantSet" />
                         or <see langword="null" /> if this file has not been identified as being redundant with any other.
                     </value>
-                </NewRelatedEntity>
-                <NewCollectionNavigation Name="BaselineComparisons" FullName="ILocalFile.BaselineComparisons">
+                </RelatedEntity.Type>
+                <CollectionNavigation.ItemType Name="BaselineComparisons" FullName="ILocalFile.BaselineComparisons" Reference="ILocalComparison">
                     <summary>
                         Gets the comparisons where the current file was the <see cref="IComparison.Baseline" />.
                     </summary>
                     <value>
-                        The <see cref="ILocaComparison" /> entities where the current file is the <see cref="IComparison.Baseline" />.
+                        The <see cref="ILocalComparison" /> entities where the current file is the <see cref="IComparison.Baseline" />.
                     </value>
-                    <ItemType>ILocalComparison</ItemType>
-                </NewCollectionNavigation>
-                <NewCollectionNavigation Name="CorrelativeComparisons" FullName="ILocalFile.CorrelativeComparisons">
+                </CollectionNavigation.ItemType>
+                <CollectionNavigation.ItemType Name="CorrelativeComparisons" FullName="ILocalFile.CorrelativeComparisons" Reference="ILocalComparison">
                     <summary>
                         Gets the comparisons where the current file was the <see cref="IComparison.Correlative" /> being compared to a separate <see cref="IComparison.Baseline" /> file.
                     </summary>
                     <value>
                         The <see cref="ILocaComparison" /> entities where the current file is the <see cref="IComparison.Correlative" />.
                     </value>
-                    <ItemType>ILocalComparison</ItemType>
-                </NewCollectionNavigation>
-                <NewCollectionNavigation Name="AccessErrors" FullName="ILocalFile.AccessErrors">
-                    <ItemType>ILocalFileAccessError</ItemType>
-                </NewCollectionNavigation>
+                </CollectionNavigation.ItemType>
+                <CollectionNavigation.ItemType Name="AccessErrors" FullName="ILocalFile.AccessErrors" Reference="ILocalFileAccessError" />
             </Properties>
         </Entity>
         <Entity Name="ILocalFileAccessError" RootInterface="IFileAccessError" TableName="FileAccessErrors">
@@ -5746,40 +5715,22 @@
             <ExtendsEntity Type="ILocalAccessError" />
             <ImplementsGenericEntity Type="IAccessError{ILocalFile}" TypeDef="IAccessError{TTarget}" />
             <Properties>
-                <NewRelatedEntity Name="Target" FullName="ILocalFileAccessError.Target" Reference="ILocalFile">
+                <RelatedEntity.Type Name="Target" FullName="ILocalFileAccessError.Target" Reference="ILocalFile">
                     <summary>
                         Gets the target file to which the access error applies.
                     </summary>
                     <value>
                         The <typeparamref name="ILocalFile" /> entity that this error applies to.
                     </value>
-                </NewRelatedEntity>
+                </RelatedEntity.Type>
             </Properties>
         </Entity>
         <Entity Name="ILocalRedundancy" RootInterface="IRedundancy" TableName="Redundancies">
             <summary>.</summary>
             <ExtendsEntity Type="ILocalDbEntity" />
             <Properties>
-                <NewIdNavRef Name="FileId" FullName="ILocalRedundancy.FileId" Navigation="File">
-                    <summary>
-                        Gets the primary key of the file in the that belongs to the redundancy set.
-                    </summary>
-                    <value>
-                        The <see cref="Guid">unique identifier</see> used as the foreign key that refers to the <see cref="ILocalRedundancy.File" /><see cref="ILocalFile">entity</see>.
-                    </value>
-                    <remarks>This is also part of this entity's compound primary key.</remarks>
-                </NewIdNavRef>
-                <NewRelatedEntity Name="File" FullName="ILocalRedundancy.File" Reference="ILocalFile" />
-                <NewIdNavRef Name="RedundantSetId" FullName="ILocalRedundancy.RedundantSetId" Navigation="RedundantSet">
-                    <summary>
-                        Gets the primary key of the redundancy set file belongs to.
-                    </summary>
-                    <value>
-                        The <see cref="Guid">unique identifier</see> used as the foreign key that refers to the <see cref="ILocalRedundancy.RedundantSet" /><see cref="ILocalRedundantSet">entity</see>.
-                    </value>
-                    <remarks>This is also part of this entity's compound primary key.</remarks>
-                </NewIdNavRef>
-                <NewRelatedEntity Name="RedundantSet" FullName="ILocalRedundancy.RedundantSet" Reference="ILocalRedundantSet" />
+                <RelatedEntity.Type Name="File" FullName="ILocalRedundancy.File" Reference="ILocalFile" />
+                <RelatedEntity.Type Name="RedundantSet" FullName="ILocalRedundancy.RedundantSet" Reference="ILocalRedundantSet" />
             </Properties>
         </Entity>
         <Entity Name="ILocalComparison" RootInterface="IComparison" TableName="Comparisons">
@@ -5788,40 +5739,22 @@
             </summary>
             <ExtendsEntity Type="ILocalDbEntity" />
             <Properties>
-                <NewIdNavRef Name="BaselineId" FullName="ILocalComparison.BaselineId" Navigation="Baseline">
-                    <summary>
-                        Gets the primary key of the baseline file in the comparison.
-                    </summary>
-                    <value>
-                        The <see cref="Guid">unique identifier</see> used as the foreign key that refers to the <see cref="ILocalComparison.Baseline" /><see cref="IFile">file entity</see>.
-                    </value>
-                    <remarks>This is also part of this entity's compound primary key.</remarks>
-                </NewIdNavRef>
-                <NewRelatedEntity Name="Baseline" FullName="ILocalComparison.Baseline" Reference="ILocalFile">
+                <RelatedEntity.Type Name="Baseline" FullName="ILocalComparison.Baseline" Reference="ILocalFile">
                     <summary>
                         Gets the baseline file in the comparison.
                     </summary>
                     <value>
                         The generic <see cref="ILocalFile" /> that represents the baseline file in the comparison.
                     </value>
-                </NewRelatedEntity>
-                <NewIdNavRef Name="CorrelativeId" FullName="ILocalComparison.CorrelativeId" Navigation="Correlative">
-                    <summary>
-                        Gets the primary key of the correlative file in the comparison.
-                    </summary>
-                    <value>
-                        The <see cref="Guid">unique identifier</see> used as the foreign key that refers to the <see cref="ILocalComparison.Correlative" /><see cref="IFile">file entity</see>.
-                    </value>
-                    <remarks>This is also part of this entity's compound primary key.</remarks>
-                </NewIdNavRef>
-                <NewRelatedEntity Name="Correlative" FullName="ILocalComparison.Correlative" Reference="ILocalFile">
+                </RelatedEntity.Type>
+                <RelatedEntity.Type Name="Correlative" FullName="ILocalComparison.Correlative" Reference="ILocalFile">
                     <summary>
                         Gets the correlative file in the comparison.
                     </summary>
                     <value>
                         The generic <see cref="ILocalFile" /> that represents the correlative file, which is the new or changed file in the comparison.
                     </value>
-                </NewRelatedEntity>
+                </RelatedEntity.Type>
             </Properties>
         </Entity>
     </Local>
@@ -5922,16 +5855,16 @@
                 Base interface for all database entity objects for the database which is hosted on the local machine.
             </summary>
             <Properties>
-                <RelatedEntity Name="CreatedBy" FullName="IUpstreamDbEntity.CreatedBy" Reference="IUserProfile">
+                <RelatedEntity Name="CreatedBy" FullName="IUpstreamDbEntity.CreatedBy">
                     <summary>Gets the user who created the current record.</summary>
                     <value>The user who created the current record.</value>
-                    <PrimaryEntity></PrimaryEntity>
+                    <PrimaryEntity>IUserProfile</PrimaryEntity>
                     <DbRelationship Name="FK_DbEntity_CreatorUserProfile" FkPropertyName="CreatedById"/>
                 </RelatedEntity>
-                <RelatedEntity Name="ModifiedBy" FullName="IUpstreamDbEntity.ModifiedBy" Reference="IUserProfile">
+                <RelatedEntity Name="ModifiedBy" FullName="IUpstreamDbEntity.ModifiedBy">
                     <summary>Gets the user who last modified the current record.</summary>
                     <value>The user who last modified the current record.</value>
-                    <PrimaryEntity></PrimaryEntity>
+                    <PrimaryEntity>IUserProfile</PrimaryEntity>
                     <DbRelationship Name="FK_DbEntity_ModifierUserProfile" FkPropertyName="ModifiedById"/>
                 </RelatedEntity>
             </Properties>
@@ -5943,14 +5876,14 @@
             </summary>
             <ExtendsGenericEntity Type="IAccessError{IUpstreamDbEntity}" TypeDef="IAccessError{TTarget}" />
             <Properties>
-                <NewRelatedEntity Name="Target" FullName="IUpstreamAccessError.Target" Reference="IUpstreamDbEntity">
+                <RelatedEntity.Type Name="Target" FullName="IUpstreamAccessError.Target" Reference="IUpstreamDbEntity">
                     <summary>
                         Gets the target entity to which the access error applies.
                     </summary>
                     <value>
                         The <see cref="IUpstreamDbEntity" /> object that this error applies to.
                     </value>
-                </NewRelatedEntity>
+                </RelatedEntity.Type>
             </Properties>
         </Entity>
         <Entity Name="IUserProfile" RootInterface="IUpstreamDbEntity" TableName="UserProfiles">
@@ -6071,16 +6004,16 @@
                     <value></value>
                     <Default>false</Default>
                 </Bit>
-                <RelatedEntity Name="Group" FullName="IGroupMembership.Group" Reference="IUserGroup">
+                <RelatedEntity Name="Group" FullName="IGroupMembership.Group">
                     <summary></summary>
                     <value></value>
-                    <PrimaryEntity></PrimaryEntity>
+                    <PrimaryEntity>IUserGroup</PrimaryEntity>
                     <DbRelationship Name="FK_GroupMembership_UserGroup" FkPropertyName="GroupId"/>
                 </RelatedEntity>
-                <RelatedEntity Name="User" FullName="IGroupMembership.User" Reference="IUserProfile">
+                <RelatedEntity Name="User" FullName="IGroupMembership.User">
                     <summary></summary>
                     <value></value>
-                    <PrimaryEntity></PrimaryEntity>
+                    <PrimaryEntity>IUserProfile</PrimaryEntity>
                     <DbRelationship Name="FK_GroupMembership_UserProfile" FkPropertyName="UserId"/>
                 </RelatedEntity>
             </Properties>
@@ -6106,16 +6039,16 @@
                     <summary></summary>
                     <value></value>
                 </Enum>
-                <RelatedEntity Name="AssignmentGroup" FullName="IMitigationTask.AssignmentGroup" Reference="IUserGroup">
+                <RelatedEntity Name="AssignmentGroup" FullName="IMitigationTask.AssignmentGroup">
                     <summary></summary>
                     <value></value>
-                    <PrimaryEntity></PrimaryEntity>
+                    <PrimaryEntity>IUserGroup</PrimaryEntity>
                     <DbRelationship Name="FK_MitigationTask_UserGroup" FkPropertyName="AssignmentGroupId"/>
                 </RelatedEntity>
-                <RelatedEntity Name="AssignedTo" FullName="IMitigationTask.AssignedTo" Reference="IUserProfile">
+                <RelatedEntity Name="AssignedTo" FullName="IMitigationTask.AssignedTo">
                     <summary></summary>
                     <value></value>
-                    <PrimaryEntity></PrimaryEntity>
+                    <PrimaryEntity>IUserProfile</PrimaryEntity>
                     <DbRelationship Name="FK_MitigationTask_UserProfile" FkPropertyName="AssignedToId"/>
                 </RelatedEntity>
                 <CollectionNavigation Name="FileActions" FullName="IMitigationTask.FileActions">
@@ -6151,10 +6084,10 @@
                     <value></value>
                     <Index Name="IDX_HostPlatform_IsInactive" />
                 </Bit>
-                <RelatedEntity Name="DefaultFsType" FullName="IHostPlatform.DefaultFsType" Reference="IUpstreamFileSystem">
+                <RelatedEntity Name="DefaultFsType" FullName="IHostPlatform.DefaultFsType">
                     <summary></summary>
                     <value></value>
-                    <PrimaryEntity></PrimaryEntity>
+                    <PrimaryEntity>IUpstreamFileSystem</PrimaryEntity>
                     <DbRelationship Name="FK_HostPlatform_FileSystem" FkPropertyName="DefaultFsTypeId"/>
                 </RelatedEntity>
                 <CollectionNavigation Name="HostDevices" FullName="IHostPlatform.HostDevices">
@@ -6189,10 +6122,10 @@
                     <value></value>
                     <Index Name="IDX_HostDevice_IsInactive" />
                 </Bit>
-                <RelatedEntity Name="Platform" FullName="IHostDevice.Platform" Reference="IHostPlatform">
+                <RelatedEntity Name="Platform" FullName="IHostDevice.Platform">
                     <summary></summary>
                     <value></value>
-                    <PrimaryEntity></PrimaryEntity>
+                    <PrimaryEntity>IHostPlatform</PrimaryEntity>
                     <DbRelationship Name="FK_HostDevice_HostPlatform" FkPropertyName="PlatformId"/>
                 </RelatedEntity>
                 <CollectionNavigation Name="Volumes" FullName="IHostDevice.Volumes">
@@ -6208,12 +6141,8 @@
             </summary>
             <ExtendsEntity Type="IUpstreamDbEntity" />
             <Properties>
-                <NewCollectionNavigation Name="Volumes" FullName="IUpstreamFileSystem.Volumes">
-                    <ItemType>IUpstreamVolume</ItemType>
-                </NewCollectionNavigation>
-                <NewCollectionNavigation Name="SymbolicNames" FullName="IUpstreamFileSystem.SymbolicNames">
-                    <ItemType>IUpstreamSymbolicName</ItemType>
-                </NewCollectionNavigation>
+                <CollectionNavigation.ItemType Name="Volumes" FullName="IUpstreamFileSystem.Volumes" Reference="IUpstreamVolume" />
+                <CollectionNavigation.ItemType Name="SymbolicNames" FullName="IUpstreamFileSystem.SymbolicNames" Reference="IUpstreamSymbolicName" />
             </Properties>
         </Entity>
         <Entity Name="IUpstreamSymbolicName" RootInterface="ISymbolicName" TableName="SymbolicNames">
@@ -6222,7 +6151,7 @@
             </summary>
             <ExtendsEntity Type="IUpstreamDbEntity" />
             <Properties>
-                <NewRelatedEntity Name="FileSystem" FullName="IUpstreamSymbolicName.FileSystem" Reference="IUpstreamFileSystem" />
+                <RelatedEntity.Type Name="FileSystem" FullName="IUpstreamSymbolicName.FileSystem" Reference="IUpstreamFileSystem" />
             </Properties>
         </Entity>
         <Entity Name="IUpstreamVolume" RootInterface="IVolume" TableName="Volumes">
@@ -6231,17 +6160,15 @@
             </summary>
             <ExtendsEntity Type="IUpstreamDbEntity" />
             <Properties>
-                <RelatedEntity Name="HostDevice" FullName="IUpstreamVolume.HostDevice" Reference="IHostDevice">
+                <RelatedEntity Name="HostDevice" FullName="IUpstreamVolume.HostDevice">
                     <summary>Gets the device that hosts the current volume.</summary>
                     <value>The device that hosts the current volume.</value>
-                    <PrimaryEntity></PrimaryEntity>
+                    <PrimaryEntity>IHostDevice</PrimaryEntity>
                     <DbRelationship Name="FK_Volume_HostDevice" FkPropertyName="HostDeviceId"/>
                 </RelatedEntity>
-                <NewRelatedEntity Name="RootDirectory" FullName="IUpstreamVolume.RootDirectory" Reference="IUpstreamSubdirectory" />
-                <NewRelatedEntity Name="FileSystem" FullName="IUpstreamVolume.FileSystem" Reference="IUpstreamFileSystem" />
-                <NewCollectionNavigation Name="AccessErrors" FullName="IUpstreamVolume.AccessErrors">
-                    <ItemType>IUpstreamVolumeAccessError</ItemType>
-                </NewCollectionNavigation>
+                <RelatedEntity.Type Name="RootDirectory" FullName="IUpstreamVolume.RootDirectory" Reference="IUpstreamSubdirectory" />
+                <RelatedEntity.Type Name="FileSystem" FullName="IUpstreamVolume.FileSystem" Reference="IUpstreamFileSystem" />
+                <CollectionNavigation.ItemType Name="AccessErrors" FullName="IUpstreamVolume.AccessErrors" Reference="IUpstreamVolumeAccessError" />
             </Properties>
         </Entity>
         <Entity Name="IUpstreamVolumeAccessError" RootInterface="IVolumeAccessError" TableName="VolumeAccessErrors">
@@ -6251,14 +6178,14 @@
             <ExtendsEntity Type="IUpstreamAccessError" />
             <ImplementsGenericEntity Type="IAccessError{IUpstreamVolume}" TypeDef="IAccessError{TTarget}" />
             <Properties>
-                <NewRelatedEntity Name="Target" FullName="IUpstreamVolumeAccessError.Target" Reference="IUpstreamVolume">
+                <RelatedEntity.Type Name="Target" FullName="IUpstreamVolumeAccessError.Target" Reference="IUpstreamVolume">
                     <summary>
                         Gets the target volume to which the access error applies.
                     </summary>
                     <value>
                         The <typeparamref name="IUpstreamVolume" /> entity that this error applies to.
                     </value>
-                </NewRelatedEntity>
+                </RelatedEntity.Type>
             </Properties>
         </Entity>
         <Entity Name="IUpstreamDbFsItem" RootInterface="IDbFsItem">
@@ -6267,7 +6194,7 @@
             </summary>
             <ExtendsEntity Type="IUpstreamDbEntity" />
             <Properties>
-                <NewRelatedEntity Name="Parent" FullName="IUpstreamDbFsItem.Parent" Reference="IUpstreamSubdirectory">
+                <RelatedEntity.Type Name="Parent" FullName="IUpstreamDbFsItem.Parent" Reference="IUpstreamSubdirectory">
                     <summary>
                         Gets the parent subdirectory.
                     </summary>
@@ -6279,10 +6206,8 @@
                         then <see cref="IUpstreamSubdirectory.Volume" /> should not be <see langword="null" />, and vice-versa;
                         otherwise, if the current entity is a <see cref="IUpstreamFile" />, then this should never be <see langword="null" />.
                     </remarks>
-                </NewRelatedEntity>
-                <NewCollectionNavigation Name="AccessErrors" FullName="IUpstreamDbFsItem.AccessErrors">
-                    <ItemType>IUpstreamAccessError</ItemType>
-                </NewCollectionNavigation>
+                </RelatedEntity.Type>
+                <CollectionNavigation.ItemType Name="AccessErrors" FullName="IUpstreamDbFsItem.AccessErrors" Reference="IUpstreamAccessError" />
             </Properties>
         </Entity>
         <Entity Name="IUpstreamSubdirectory" RootInterface="ISubdirectory" TableName="Subdirectories">
@@ -6291,7 +6216,7 @@
             </summary>
             <ExtendsEntity Type="IUpstreamDbFsItem" />
             <Properties>
-                <NewRelatedEntity Name="Volume" FullName="IUpstreamSubdirectory.Volume" Reference="IUpstreamVolume">
+                <RelatedEntity.Type Name="Volume" FullName="IUpstreamSubdirectory.Volume" Reference="IUpstreamVolume">
                     <summary>
                         Gets the parent volume.
                     </summary>
@@ -6301,17 +6226,11 @@
                     <remarks>
                         If this is <see langword="null" />, then <see cref="IUpstreamSubdirectory.Parent" /> should not be null, and vice-versa.
                     </remarks>
-                </NewRelatedEntity>
-                <NewRelatedEntity Name="CrawlConfiguration" FullName="IUpstreamSubdirectory.CrawlConfiguration" Reference="IUpstreamCrawlConfiguration" />
-                <NewCollectionNavigation Name="Files" FullName="IUpstreamSubdirectory.Files">
-                    <ItemType>IUpstreamFile</ItemType>
-                </NewCollectionNavigation>
-                <NewCollectionNavigation Name="SubDirectories" FullName="IUpstreamSubdirectory.SubDirectories">
-                    <ItemType>IUpstreamSubdirectory</ItemType>
-                </NewCollectionNavigation>
-                <NewCollectionNavigation Name="AccessErrors" FullName="IUpstreamSubdirectory.AccessErrors">
-                    <ItemType>IUpstreamSubdirectoryAccessError</ItemType>
-                </NewCollectionNavigation>
+                </RelatedEntity.Type>
+                <RelatedEntity.Type Name="CrawlConfiguration" FullName="IUpstreamSubdirectory.CrawlConfiguration" Reference="IUpstreamCrawlConfiguration" />
+                <CollectionNavigation.ItemType Name="Files" FullName="IUpstreamSubdirectory.Files" Reference="IUpstreamFile" />
+                <CollectionNavigation.ItemType Name="SubDirectories" FullName="IUpstreamSubdirectory.SubDirectories" Reference="IUpstreamSubdirectory" />
+                <CollectionNavigation.ItemType Name="AccessErrors" FullName="IUpstreamSubdirectory.AccessErrors" Reference="IUpstreamSubdirectoryAccessError" />
             </Properties>
         </Entity>
         <Entity Name="IUpstreamCrawlConfiguration" RootInterface="ICrawlConfiguration" TableName="CrawlConfigurations">
@@ -6320,10 +6239,8 @@
             </summary>
             <ExtendsEntity Type="IUpstreamDbEntity" />
             <Properties>
-                <NewRelatedEntity Name="Root" FullName="IUpstreamCrawlConfiguration.Root" Reference="IUpstreamSubdirectory" />
-                <NewCollectionNavigation Name="Logs" FullName="IUpstreamCrawlConfiguration.Logs">
-                    <ItemType>IUpstreamCrawlJobLog</ItemType>
-                </NewCollectionNavigation>
+                <RelatedEntity.Type Name="Root" FullName="IUpstreamCrawlConfiguration.Root" Reference="IUpstreamSubdirectory" />
+                <CollectionNavigation.ItemType Name="Logs" FullName="IUpstreamCrawlConfiguration.Logs" Reference="IUpstreamCrawlJobLog" />
             </Properties>
         </Entity>
         <Entity Name="IUpstreamCrawlJobLog" RootInterface="ICrawlJobLog" TableName="CrawlJobLogs">
@@ -6332,7 +6249,7 @@
             </summary>
             <ExtendsEntity Type="IUpstreamDbEntity" />
             <Properties>
-                <NewRelatedEntity Name="Configuration" FullName="IUpstreamCrawlJobLog.Configuration" Reference="IUpstreamCrawlConfiguration" />
+                <RelatedEntity.Type Name="Configuration" FullName="IUpstreamCrawlJobLog.Configuration" Reference="IUpstreamCrawlConfiguration" />
             </Properties>
         </Entity>
         <Entity Name="IUpstreamSubdirectoryAccessError" RootInterface="ISubdirectoryAccessError" TableName="SubdirectoryAccessErrors">
@@ -6342,41 +6259,41 @@
             <ExtendsEntity Type="IUpstreamAccessError" />
             <ImplementsGenericEntity Type="IAccessError{IUpstreamSubdirectory}" TypeDef="IAccessError{TTarget}" />
             <Properties>
-                <NewRelatedEntity Name="Target" FullName="IUpstreamSubdirectoryAccessError.Target" Reference="IUpstreamSubdirectory">
+                <RelatedEntity.Type Name="Target" FullName="IUpstreamSubdirectoryAccessError.Target" Reference="IUpstreamSubdirectory">
                     <summary>
                         Gets the target subdirectory to which the access error applies.
                     </summary>
                     <value>
                         The <typeparamref name="IUpstreamSubdirectory" /> entity that this error applies to.
                     </value>
-                </NewRelatedEntity>
+                </RelatedEntity.Type>
             </Properties>
         </Entity>
         <Entity Name="ISubdirectoryAction" RootInterface="IUpstreamDbEntity" TableName="SubdirectoryActions">
             <summary></summary>
             <Properties>
-                <RelatedEntity Name="Task" FullName="ISubdirectoryAction.Task" Reference="IMitigationTask">
+                <RelatedEntity Name="Task" FullName="ISubdirectoryAction.Task">
                     <summary>
                     </summary>
                     <value>
                     </value>
-                    <PrimaryEntity></PrimaryEntity>
+                    <PrimaryEntity>IMitigationTask</PrimaryEntity>
                     <DbRelationship Name="FK_SubdirectoryAction_MitigationTask" FkPropertyName="TaskId"/>
                 </RelatedEntity>
-                <RelatedEntity Name="Source" FullName="ISubdirectoryAction.Source" Reference="IUpstreamSubdirectory">
+                <RelatedEntity Name="Source" FullName="ISubdirectoryAction.Source">
                     <summary>
                     </summary>
                     <value>
                     </value>
-                    <PrimaryEntity></PrimaryEntity>
+                    <PrimaryEntity>IUpstreamSubdirectory</PrimaryEntity>
                     <DbRelationship Name="FK_SubdirectoryAction_SourceSubdirectory" FkPropertyName="SourceId"/>
                 </RelatedEntity>
-                <RelatedEntity Name="Target" FullName="ISubdirectoryAction.Target" Reference="IUpstreamSubdirectory">
+                <RelatedEntity Name="Target" FullName="ISubdirectoryAction.Target">
                     <summary>
                     </summary>
                     <value>
                     </value>
-                    <PrimaryEntity></PrimaryEntity>
+                    <PrimaryEntity>IUpstreamSubdirectory</PrimaryEntity>
                     <DbRelationship Name="FK_SubdirectoryAction_TargetSubdirectory" FkPropertyName="TargetId"/>
                 </RelatedEntity>
             </Properties>
@@ -6387,12 +6304,8 @@
             </summary>
             <ExtendsEntity Type="IUpstreamDbEntity" />
             <Properties>
-                <NewCollectionNavigation Name="Files" FullName="IUpstreamBinaryPropertySet.Files">
-                    <ItemType>IUpstreamFile</ItemType>
-                </NewCollectionNavigation>
-                <NewCollectionNavigation Name="RedundantSets" FullName="IUpstreamBinaryPropertySet.RedundantSets">
-                    <ItemType>IUpstreamRedundantSet</ItemType>
-                </NewCollectionNavigation>
+                <CollectionNavigation.ItemType Name="Files" FullName="IUpstreamBinaryPropertySet.Files" Reference="IUpstreamFile" />
+                <CollectionNavigation.ItemType Name="RedundantSets" FullName="IUpstreamBinaryPropertySet.RedundantSets" Reference="IUpstreamRedundantSet" />
             </Properties>
         </Entity>
         <Entity Name="IUpstreamPropertySet" RootInterface="IPropertySet">
@@ -6401,15 +6314,14 @@
             </summary>
             <ExtendsEntity Type="IUpstreamDbEntity" />
             <Properties>
-                <NewCollectionNavigation Name="Files" FullName="IUpstreamPropertySet.Files">
+                <CollectionNavigation.ItemType Name="Files" FullName="IUpstreamPropertySet.Files" Reference="IUpstreamFile">
                     <summary>
                         Gets the files that share the same property values as this property set.
                     </summary>
                     <value>
                         The <see cref="IUpstreamFile">files</see> that share the same property values as this property set.
                     </value>
-                    <ItemType>IUpstreamFile</ItemType>
-                </NewCollectionNavigation>
+                </CollectionNavigation.ItemType>
             </Properties>
         </Entity>
         <Entity Name="IUpstreamSummaryPropertySet" RootInterface="ISummaryPropertySet" TableName="SummaryPropertySets">
@@ -6495,10 +6407,8 @@
             </summary>
             <ExtendsEntity Type="IUpstreamDbEntity" />
             <Properties>
-                <NewRelatedEntity Name="BinaryProperties" FullName="IUpstreamRedundantSet.BinaryProperties" Reference="IUpstreamBinaryPropertySet" />
-                <NewCollectionNavigation Name="Redundancies" FullName="IUpstreamRedundantSet.Redundancies">
-                    <ItemType>IUpstreamRedundancy</ItemType>
-                </NewCollectionNavigation>
+                <RelatedEntity.Type Name="BinaryProperties" FullName="IUpstreamRedundantSet.BinaryProperties" Reference="IUpstreamBinaryPropertySet" />
+                <CollectionNavigation.ItemType Name="Redundancies" FullName="IUpstreamRedundantSet.Redundancies" Reference="IUpstreamRedundancy" />
             </Properties>
         </Entity>
         <Entity Name="IUpstreamFile" RootInterface="IFile" TableName="Files">
@@ -6507,103 +6417,103 @@
             </summary>
             <ExtendsEntity Type="IUpstreamDbFsItem" />
             <Properties>
-                <NewRelatedEntity Name="BinaryProperties" FullName="IUpstreamFile.BinaryProperties" Reference="IUpstreamBinaryPropertySet">
+                <RelatedEntity.Type Name="BinaryProperties" FullName="IUpstreamFile.BinaryProperties" Reference="IUpstreamBinaryPropertySet">
                     <summary>
                         Gets the binary properties for the current file.
                     </summary>
                     <value>
                         The generic <see cref="IUpstreamBinaryPropertySet" /> that contains the file size and optionally, the <see cref="MD5Hash">MD5 hash</see> value of its binary contents.
                     </value>
-                </NewRelatedEntity>
-                <NewRelatedEntity Name="SummaryProperties" FullName="IUpstreamFile.SummaryProperties" Reference="IUpstreamSummaryPropertySet">
+                </RelatedEntity.Type>
+                <RelatedEntity.Type Name="SummaryProperties" FullName="IUpstreamFile.SummaryProperties" Reference="IUpstreamSummaryPropertySet">
                     <summary>
                         Gets the summary properties for the current file.
                     </summary>
                     <value>
                         The generic <see cref="IUpstreamBinaryPropertySet" /> that contains the summary properties for the current file or <see langword="null" /> if no summary properties are defined on the current file.
                     </value>
-                </NewRelatedEntity>
-                <NewRelatedEntity Name="DocumentProperties" FullName="IUpstreamFile.DocumentProperties" Reference="IUpstreamDocumentPropertySet">
+                </RelatedEntity.Type>
+                <RelatedEntity.Type Name="DocumentProperties" FullName="IUpstreamFile.DocumentProperties" Reference="IUpstreamDocumentPropertySet">
                     <summary>
                         Gets the document properties for the current file.
                     </summary>
                     <value>
                         The generic <see cref="IUpstreamDocumentPropertySet" /> that contains the document properties for the current file or <see langword="null" /> if no document properties are defined on the current file.
                     </value>
-                </NewRelatedEntity>
-                <NewRelatedEntity Name="AudioProperties" FullName="IUpstreamFile.AudioProperties" Reference="IUpstreamAudioPropertySet">
+                </RelatedEntity.Type>
+                <RelatedEntity.Type Name="AudioProperties" FullName="IUpstreamFile.AudioProperties" Reference="IUpstreamAudioPropertySet">
                     <summary>
                         Gets the audio properties for the current file.
                     </summary>
                     <value>
                         The generic <see cref="IUpstreamAudioPropertySet" /> that contains the audio properties for the current file or <see langword="null" /> if no audio properties are defined on the current file.
                     </value>
-                </NewRelatedEntity>
-                <NewRelatedEntity Name="DRMProperties" FullName="IUpstreamFile.DRMProperties" Reference="IUpstreamDRMPropertySet">
+                </RelatedEntity.Type>
+                <RelatedEntity.Type Name="DRMProperties" FullName="IUpstreamFile.DRMProperties" Reference="IUpstreamDRMPropertySet">
                     <summary>
                         Gets the DRM properties for the current file.
                     </summary>
                     <value>
                         The generic <see cref="IUpstreamDRMPropertySet" /> that contains the DRM properties for the current file or <see langword="null" /> if no DRM properties are defined on the current file.
                     </value>
-                </NewRelatedEntity>
-                <NewRelatedEntity Name="GPSProperties" FullName="IUpstreamFile.GPSProperties" Reference="IUpstreamGPSPropertySet">
+                </RelatedEntity.Type>
+                <RelatedEntity.Type Name="GPSProperties" FullName="IUpstreamFile.GPSProperties" Reference="IUpstreamGPSPropertySet">
                     <summary>
                         Gets the GPS properties for the current file.
                     </summary>
                     <value>
                         The generic <see cref="IUpstreamGPSPropertySet" /> that contains the GPS properties for the current file or <see langword="null" /> if no GPS properties are defined on the current file.
                     </value>
-                </NewRelatedEntity>
-                <NewRelatedEntity Name="ImageProperties" FullName="IUpstreamFile.ImageProperties" Reference="IUpstreamImagePropertySet">
+                </RelatedEntity.Type>
+                <RelatedEntity.Type Name="ImageProperties" FullName="IUpstreamFile.ImageProperties" Reference="IUpstreamImagePropertySet">
                     <summary>
                         Gets the image properties for the current file.
                     </summary>
                     <value>
                         The generic <see cref="IUpstreamImagePropertySet" /> that contains the image properties for the current file or <see langword="null" /> if no image properties are defined on the current file.
                     </value>
-                </NewRelatedEntity>
-                <NewRelatedEntity Name="MediaProperties" FullName="IUpstreamFile.MediaProperties" Reference="IUpstreamMediaPropertySet">
+                </RelatedEntity.Type>
+                <RelatedEntity.Type Name="MediaProperties" FullName="IUpstreamFile.MediaProperties" Reference="IUpstreamMediaPropertySet">
                     <summary>
                         Gets the media properties for the current file.
                     </summary>
                     <value>
                         The generic <see cref="IUpstreamMediaPropertySet" /> that contains the media properties for the current file or <see langword="null" /> if no media properties are defined on the current file.
                     </value>
-                </NewRelatedEntity>
-                <NewRelatedEntity Name="MusicProperties" FullName="IUpstreamFile.MusicProperties" Reference="IUpstreamMusicPropertySet">
+                </RelatedEntity.Type>
+                <RelatedEntity.Type Name="MusicProperties" FullName="IUpstreamFile.MusicProperties" Reference="IUpstreamMusicPropertySet">
                     <summary>
                         Gets the music properties for the current file.
                     </summary>
                     <value>
                         The generic <see cref="IUpstreamMusicPropertySet" /> that contains the music properties for the current file or <see langword="null" /> if no music properties are defined on the current file.
                     </value>
-                </NewRelatedEntity>
-                <NewRelatedEntity Name="PhotoProperties" FullName="IUpstreamFile.PhotoProperties" Reference="IUpstreamPhotoPropertySet">
+                </RelatedEntity.Type>
+                <RelatedEntity.Type Name="PhotoProperties" FullName="IUpstreamFile.PhotoProperties" Reference="IUpstreamPhotoPropertySet">
                     <summary>
                         Gets the photo properties for the current file.
                     </summary>
                     <value>
                         The generic <see cref="IUpstreamPhotoPropertySet" /> that contains the photo properties for the current file or <see langword="null" /> if no photo properties are defined on the current file.
                     </value>
-                </NewRelatedEntity>
-                <NewRelatedEntity Name="RecordedTVProperties" FullName="IUpstreamFile.RecordedTVProperties" Reference="IUpstreamRecordedTVPropertySet">
+                </RelatedEntity.Type>
+                <RelatedEntity.Type Name="RecordedTVProperties" FullName="IUpstreamFile.RecordedTVProperties" Reference="IUpstreamRecordedTVPropertySet">
                     <summary>
                         Gets the recorded tv properties for the current file.
                     </summary>
                     <value>
                         The generic <see cref="IUpstreamRecordedTVPropertySet" /> that contains the recorded TV properties for the current file or <see langword="null" /> if no recorded TV properties are defined on the current file.
                     </value>
-                </NewRelatedEntity>
-                <NewRelatedEntity Name="VideoProperties" FullName="IUpstreamFile.VideoProperties" Reference="IUpstreamVideoPropertySet">
+                </RelatedEntity.Type>
+                <RelatedEntity.Type Name="VideoProperties" FullName="IUpstreamFile.VideoProperties" Reference="IUpstreamVideoPropertySet">
                     <summary>
                         Gets the video properties for the current file.
                     </summary>
                     <value>
                         The generic <see cref="IUpstreamVideoPropertySet" /> that contains the video properties for the current file or <see langword="null" /> if no video properties are defined on the current file.
                     </value>
-                </NewRelatedEntity>
-                <NewRelatedEntity Name="Redundancy" FullName="IUpstreamFile.Redundancy" Reference="IUpstreamRedundancy">
+                </RelatedEntity.Type>
+                <RelatedEntity.Type Name="Redundancy" FullName="IUpstreamFile.Redundancy" Reference="IUpstreamRedundancy">
                     <summary>
                         Gets the redundancy item that indicates the membership of a collection of redundant files.
                     </summary>
@@ -6611,55 +6521,51 @@
                         A <see cref="IUpstreamRedundancy" /> object that indicates the current file is an exact copy of other files that belong to the same <see cref="IRedundancy.RedundantSet" />
                         or <see langword="null" /> if this file has not been identified as being redundant with any other.
                     </value>
-                </NewRelatedEntity>
-                <NewCollectionNavigation Name="BaselineComparisons" FullName="IUpstreamFile.BaselineComparisons">
+                </RelatedEntity.Type>
+                <CollectionNavigation.ItemType Name="BaselineComparisons" FullName="IUpstreamFile.BaselineComparisons" Reference="IUpstreamComparison">
                     <summary>
                         Gets the comparisons where the current file was the <see cref="IComparison.Baseline" />.
                     </summary>
                     <value>
                         The <see cref="IUpstreamComparison" /> entities where the current file is the <see cref="IComparison.Baseline" />.
                     </value>
-                    <ItemType>IUpstreamComparison</ItemType>
-                </NewCollectionNavigation>
-                <NewCollectionNavigation Name="CorrelativeComparisons" FullName="IUpstreamFile.CorrelativeComparisons">
+                </CollectionNavigation.ItemType>
+                <CollectionNavigation.ItemType Name="CorrelativeComparisons" FullName="IUpstreamFile.CorrelativeComparisons" Reference="IUpstreamComparison">
                     <summary>
                         Gets the comparisons where the current file was the <see cref="IComparison.Correlative" /> being compared to a separate <see cref="IComparison.Baseline" /> file.
                     </summary>
                     <value>
                         The <see cref="IUpstreamComparison" /> entities where the current file is the <see cref="IComparison.Correlative" />.
                     </value>
-                    <ItemType>IUpstreamComparison</ItemType>
-                </NewCollectionNavigation>
-                <NewCollectionNavigation Name="AccessErrors" FullName="IUpstreamFile.AccessErrors">
-                    <ItemType>IUpstreamFileAccessError</ItemType>
-                </NewCollectionNavigation>
+                </CollectionNavigation.ItemType>
+                <CollectionNavigation.ItemType Name="AccessErrors" FullName="IUpstreamFile.AccessErrors" Reference="IUpstreamFileAccessError" />
             </Properties>
         </Entity>
         <Entity Name="IFileAction" RootInterface="IUpstreamDbEntity" TableName="FileActions">
             <summary></summary>
             <Properties>
-                <RelatedEntity Name="Task" FullName="IFileAction.Task" Reference="IMitigationTask">
+                <RelatedEntity Name="Task" FullName="IFileAction.Task">
                     <summary>
                     </summary>
                     <value>
                     </value>
-                    <PrimaryEntity></PrimaryEntity>
+                    <PrimaryEntity>IMitigationTask</PrimaryEntity>
                     <DbRelationship Name="FK_FileAction_MitigationTask" FkPropertyName="TaskId"/>
                 </RelatedEntity>
-                <RelatedEntity Name="Source" FullName="IFileAction.Source" Reference="IUpstreamFile">
+                <RelatedEntity Name="Source" FullName="IFileAction.Source">
                     <summary>
                     </summary>
                     <value>
                     </value>
-                    <PrimaryEntity></PrimaryEntity>
+                    <PrimaryEntity>IUpstreamFile</PrimaryEntity>
                     <DbRelationship Name="FK_FileAction_File" FkPropertyName="SourceId"/>
                 </RelatedEntity>
-                <RelatedEntity Name="Target" FullName="IFileAction.Target" Reference="IUpstreamSubdirectory">
+                <RelatedEntity Name="Target" FullName="IFileAction.Target">
                     <summary>
                     </summary>
                     <value>
                     </value>
-                    <PrimaryEntity></PrimaryEntity>
+                    <PrimaryEntity>IUpstreamSubdirectory</PrimaryEntity>
                     <DbRelationship Name="FK_FileAction_Subdirectory" FkPropertyName="TargetId"/>
                 </RelatedEntity>
             </Properties>
@@ -6671,40 +6577,22 @@
             <ExtendsEntity Type="IUpstreamAccessError" />
             <ImplementsGenericEntity Type="IAccessError{IUpstreamFile}" TypeDef="IAccessError{TTarget}" />
             <Properties>
-                <NewRelatedEntity Name="Target" FullName="IUpstreamFileAccessError.Target" Reference="IUpstreamFile">
+                <RelatedEntity.Type Name="Target" FullName="IUpstreamFileAccessError.Target" Reference="IUpstreamFile">
                     <summary>
                         Gets the target file to which the access error applies.
                     </summary>
                     <value>
                         The <typeparamref name="IUpstreamFile" /> entity that this error applies to.
                     </value>
-                </NewRelatedEntity>
+                </RelatedEntity.Type>
             </Properties>
         </Entity>
         <Entity Name="IUpstreamRedundancy" RootInterface="IRedundancy" TableName="Redundancies">
             <summary>.</summary>
             <ExtendsEntity Type="IUpstreamDbEntity" />
             <Properties>
-                <NewIdNavRef Name="FileId" FullName="IUpstreamRedundancy.FileId" Navigation="File">
-                    <summary>
-                        Gets the primary key of the file in the that belongs to the redundancy set.
-                    </summary>
-                    <value>
-                        The <see cref="Guid">unique identifier</see> used as the foreign key that refers to the <see cref="IUpstreamRedundancy.File" /><see cref="IUpstreamFile">entity</see>.
-                    </value>
-                    <remarks>This is also part of this entity's compound primary key.</remarks>
-                </NewIdNavRef>
-                <NewRelatedEntity Name="File" FullName="IUpstreamRedundancy.File" Reference="IUpstreamFile" />
-                <NewIdNavRef Name="RedundantSetId" FullName="IUpstreamRedundancy.RedundantSetId" Navigation="RedundantSet">
-                    <summary>
-                        Gets the primary key of the redundancy set file belongs to.
-                    </summary>
-                    <value>
-                        The <see cref="Guid">unique identifier</see> used as the foreign key that refers to the <see cref="IUpstreamRedundancy.RedundantSet" /><see cref="IUpstreamRedundantSet">entity</see>.
-                    </value>
-                    <remarks>This is also part of this entity's compound primary key.</remarks>
-                </NewIdNavRef>
-                <NewRelatedEntity Name="RedundantSet" FullName="IUpstreamRedundancy.RedundantSet" Reference="IUpstreamRedundantSet" />
+                <RelatedEntity.Type Name="File" FullName="IUpstreamRedundancy.File" Reference="IUpstreamFile" />
+                <RelatedEntity.Type Name="RedundantSet" FullName="IUpstreamRedundancy.RedundantSet" Reference="IUpstreamRedundantSet" />
             </Properties>
         </Entity>
         <Entity Name="IUpstreamComparison" RootInterface="IComparison" TableName="Comparisons">
@@ -6713,40 +6601,22 @@
             </summary>
             <ExtendsEntity Type="IUpstreamDbEntity" />
             <Properties>
-                <NewIdNavRef Name="BaselineId" FullName="IUpstreamComparison.BaselineId" Navigation="Baseline">
-                    <summary>
-                        Gets the primary key of the baseline file in the comparison.
-                    </summary>
-                    <value>
-                        The <see cref="Guid">unique identifier</see> used as the foreign key that refers to the <see cref="IUpstreamComparison.Baseline" /><see cref="IFile">file entity</see>.
-                    </value>
-                    <remarks>This is also part of this entity's compound primary key.</remarks>
-                </NewIdNavRef>
-                <NewRelatedEntity Name="Baseline" FullName="IUpstreamComparison.Baseline" Reference="IUpstreamFile">
+                <RelatedEntity.Type Name="Baseline" FullName="IUpstreamComparison.Baseline" Reference="IUpstreamFile">
                     <summary>
                         Gets the baseline file in the comparison.
                     </summary>
                     <value>
                         The generic <see cref="IUpstreamFile" /> that represents the baseline file in the comparison.
                     </value>
-                </NewRelatedEntity>
-                <NewIdNavRef Name="CorrelativeId" FullName="IUpstreamComparison.CorrelativeId" Navigation="Correlative">
-                    <summary>
-                        Gets the primary key of the correlative file in the comparison.
-                    </summary>
-                    <value>
-                        The <see cref="Guid">unique identifier</see> used as the foreign key that refers to the <see cref="IUpstreamComparison.Correlative" /><see cref="IFile">file entity</see>.
-                    </value>
-                    <remarks>This is also part of this entity's compound primary key.</remarks>
-                </NewIdNavRef>
-                <NewRelatedEntity Name="Correlative" FullName="IUpstreamComparison.Correlative" Reference="IUpstreamFile">
+                </RelatedEntity.Type>
+                <RelatedEntity.Type Name="Correlative" FullName="IUpstreamComparison.Correlative" Reference="IUpstreamFile">
                     <summary>
                         Gets the correlative file in the comparison.
                     </summary>
                     <value>
                         The generic <see cref="IUpstreamFile" /> that represents the correlative file, which is the new or changed file in the comparison.
                     </value>
-                </NewRelatedEntity>
+                </RelatedEntity.Type>
             </Properties>
         </Entity>
     </Upstream>

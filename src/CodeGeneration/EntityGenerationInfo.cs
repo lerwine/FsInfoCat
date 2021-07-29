@@ -17,6 +17,16 @@ namespace CodeGeneration
             Name = (Source = entityElement).Attribute(NAME_Name)?.Value;
             CsName = Name.Replace("{", "<").Replace("}", ">");
             TableName = entityElement.Attribute(NAME_TableName)?.Value;
+            string name = entityElement.Attribute(NAME_SingularName)?.Value;
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                int index = name.IndexOf("{");
+                name = (index < 0) ? Name : Name.Substring(0, index);
+                SingularName = (name.Length > 1 && name.StartsWith("I")) ? name.Substring(1) : name;
+            }
+            else
+                SingularName = name;
+
             BaseTypes = new(entityElement.Elements(XNAME_ExtendsGenericEntity).Select(e => (false, e.Attribute(XNAME_Type)?.Value, Get(entityElement.FindEntityByName(e.Attribute(XNAME_TypeDef)?.Value))))
                 .Concat(entityElement.Elements(XNAME_ExtendsEntity).Attributes(XNAME_Type).Select(a => (false, a.Value, Get(entityElement.FindEntityByName(a.Value)))))
                 .Concat(entityElement.Elements(XNAME_BaseType).Attributes(XNAME_Type).Select(a => (true, a.Value, (EntityGenerationInfo)null)))
@@ -53,6 +63,8 @@ namespace CodeGeneration
         public ReadOnlyCollection<PropertyGenerationInfo> Properties { get; }
         public ReadOnlyCollection<(string Name, ReadOnlyCollection<PropertyGenerationInfo> Properties)> UniqueConstraints { get; }
         public CheckConstraint CheckConstraints { get; }
+        public string SingularName { get; }
+
         public bool Extends(EntityGenerationInfo other) => !(other is null || ReferenceEquals(this, other)) &&
             (BaseTypes.Any(e => ReferenceEquals(other, e.Entity)) || BaseTypes.Any(e => e.Entity.Extends(other)));
         IEnumerable<EntityGenerationInfo> GetAllBaseTypes() => (BaseTypes.Count > 0) ?

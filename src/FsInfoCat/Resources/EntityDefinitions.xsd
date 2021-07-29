@@ -535,8 +535,24 @@
     <xs:complexType name="EntityProperty">
         <xs:complexContent>
             <xs:extension base="MemberDefinition">
+                <xs:group ref="PropertyCommentDoc" />
+                <xs:attribute name="AllowNull" type="xs:boolean" use="optional" default="false">
+                    <xs:annotation>
+                        <xs:documentation>Indicates whether to allow null values.</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="IsGenericWritable" type="xs:boolean" use="optional" default="false">
+                    <xs:annotation>
+                        <xs:documentation>Indicates whether the property is read/write on generic interfaces.</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="PrimitiveEntityProperty">
+        <xs:complexContent>
+            <xs:extension base="EntityProperty">
                 <xs:sequence>
-                    <xs:group ref="PropertyCommentDoc" />
                     <xs:element name="Index" minOccurs="0">
                         <xs:annotation>
                             <xs:documentation>Indicates that the column is indexed.</xs:documentation>
@@ -555,16 +571,6 @@
                         </xs:complexType>
                     </xs:element>
                 </xs:sequence>
-                <xs:attribute name="AllowNull" type="xs:boolean" use="optional" default="false">
-                    <xs:annotation>
-                        <xs:documentation>Indicates whether to allow null values.</xs:documentation>
-                    </xs:annotation>
-                </xs:attribute>
-                <xs:attribute name="IsGenericWritable" type="xs:boolean" use="optional" default="false">
-                    <xs:annotation>
-                        <xs:documentation>Indicates whether the property is read/write on generic interfaces.</xs:documentation>
-                    </xs:annotation>
-                </xs:attribute>
                 <xs:attribute name="ColName" type="CsIdentifier" use="optional">
                     <xs:annotation>
                         <xs:documentation>Specifies a column name that is different from the property name.</xs:documentation>
@@ -575,7 +581,7 @@
     </xs:complexType>
     <xs:complexType name="BitProperty">
         <xs:complexContent>
-            <xs:extension base="EntityProperty">
+            <xs:extension base="PrimitiveEntityProperty">
                 <xs:choice minOccurs="0" maxOccurs="1">
                     <xs:element name="Default" type="xs:boolean">
                         <xs:annotation>
@@ -594,7 +600,7 @@
     </xs:complexType>
     <xs:complexType name="ByteProperty">
         <xs:complexContent>
-            <xs:extension base="EntityProperty">
+            <xs:extension base="PrimitiveEntityProperty">
                 <xs:choice minOccurs="0" maxOccurs="1">
                     <xs:element name="Default" type="xs:unsignedByte">
                         <xs:annotation>
@@ -623,7 +629,7 @@
     </xs:complexType>
     <xs:complexType name="SByteProperty">
         <xs:complexContent>
-            <xs:extension base="EntityProperty">
+            <xs:extension base="PrimitiveEntityProperty">
                 <xs:choice minOccurs="0" maxOccurs="1">
                     <xs:element name="Default" type="xs:byte">
                         <xs:annotation>
@@ -652,7 +658,7 @@
     </xs:complexType>
     <xs:complexType name="ShortProperty">
         <xs:complexContent>
-            <xs:extension base="EntityProperty">
+            <xs:extension base="PrimitiveEntityProperty">
                 <xs:choice minOccurs="0" maxOccurs="1">
                     <xs:element name="Default" type="xs:short">
                         <xs:annotation>
@@ -681,7 +687,7 @@
     </xs:complexType>
     <xs:complexType name="UShortProperty">
         <xs:complexContent>
-            <xs:extension base="EntityProperty">
+            <xs:extension base="PrimitiveEntityProperty">
                 <xs:choice minOccurs="0" maxOccurs="1">
                     <xs:element name="Default" type="xs:unsignedShort">
                         <xs:annotation>
@@ -710,7 +716,7 @@
     </xs:complexType>
     <xs:complexType name="IntProperty">
         <xs:complexContent>
-            <xs:extension base="EntityProperty">
+            <xs:extension base="PrimitiveEntityProperty">
                 <xs:choice minOccurs="0" maxOccurs="1">
                     <xs:element name="Default" type="xs:int">
                         <xs:annotation>
@@ -739,7 +745,7 @@
     </xs:complexType>
     <xs:complexType name="UIntProperty">
         <xs:complexContent>
-            <xs:extension base="EntityProperty">
+            <xs:extension base="PrimitiveEntityProperty">
                 <xs:choice minOccurs="0" maxOccurs="1">
                     <xs:element name="Default" type="xs:unsignedInt">
                         <xs:annotation>
@@ -768,7 +774,7 @@
     </xs:complexType>
     <xs:complexType name="LongProperty">
         <xs:complexContent>
-            <xs:extension base="EntityProperty">
+            <xs:extension base="PrimitiveEntityProperty">
                 <xs:choice minOccurs="0" maxOccurs="1">
                     <xs:element name="Default" type="xs:long">
                         <xs:annotation>
@@ -797,7 +803,7 @@
     </xs:complexType>
     <xs:complexType name="ULongProperty">
         <xs:complexContent>
-            <xs:extension base="EntityProperty">
+            <xs:extension base="PrimitiveEntityProperty">
                 <xs:choice minOccurs="0" maxOccurs="1">
                     <xs:element name="Default" type="xs:unsignedLong">
                         <xs:annotation>
@@ -826,7 +832,7 @@
     </xs:complexType>
     <xs:complexType name="FloatProperty">
         <xs:complexContent>
-            <xs:extension base="EntityProperty">
+            <xs:extension base="PrimitiveEntityProperty">
                 <xs:choice minOccurs="0" maxOccurs="1">
                     <xs:element name="Default" type="xs:float">
                         <xs:annotation>
@@ -855,7 +861,7 @@
     </xs:complexType>
     <xs:complexType name="DoubleProperty">
         <xs:complexContent>
-            <xs:extension base="EntityProperty">
+            <xs:extension base="PrimitiveEntityProperty">
                 <xs:choice minOccurs="0" maxOccurs="1">
                     <xs:element name="Default" type="xs:double">
                         <xs:annotation>
@@ -884,7 +890,7 @@
     </xs:complexType>
     <xs:complexType name="DecimalProperty">
         <xs:complexContent>
-            <xs:extension base="EntityProperty">
+            <xs:extension base="PrimitiveEntityProperty">
                 <xs:choice minOccurs="0" maxOccurs="1">
                     <xs:element name="Default" type="xs:decimal">
                         <xs:annotation>
@@ -913,7 +919,7 @@
     </xs:complexType>
     <xs:complexType name="NVarCharProperty">
         <xs:complexContent>
-            <xs:extension base="EntityProperty">
+            <xs:extension base="PrimitiveEntityProperty">
                 <xs:choice minOccurs="0" maxOccurs="1">
                     <xs:element name="Default" type="xs:string">
                         <xs:annotation>
@@ -952,7 +958,7 @@
     </xs:complexType>
     <xs:complexType name="CharProperty">
         <xs:complexContent>
-            <xs:extension base="EntityProperty">
+            <xs:extension base="PrimitiveEntityProperty">
                 <xs:choice minOccurs="0" maxOccurs="1">
                     <xs:element name="Default" type="SingleChar">
                         <xs:annotation>
@@ -971,7 +977,7 @@
     </xs:complexType>
     <xs:complexType name="TextProperty">
         <xs:complexContent>
-            <xs:extension base="EntityProperty">
+            <xs:extension base="PrimitiveEntityProperty">
                 <xs:choice minOccurs="0" maxOccurs="1">
                     <xs:element name="Default" type="xs:string">
                         <xs:annotation>
@@ -990,7 +996,7 @@
     </xs:complexType>
     <xs:complexType name="MultiStringValueProperty">
         <xs:complexContent>
-            <xs:extension base="EntityProperty">
+            <xs:extension base="PrimitiveEntityProperty">
                 <xs:choice minOccurs="0" maxOccurs="1">
                     <xs:element name="Default" type="xs:string">
                         <xs:annotation>
@@ -1009,7 +1015,7 @@
     </xs:complexType>
     <xs:complexType name="DateTimeProperty">
         <xs:complexContent>
-            <xs:extension base="EntityProperty">
+            <xs:extension base="PrimitiveEntityProperty">
                 <xs:choice minOccurs="0" maxOccurs="1">
                     <xs:element name="Default" type="xs:dateTime">
                         <xs:annotation>
@@ -1034,7 +1040,7 @@
     </xs:complexType>
     <xs:complexType name="TimeSpanProperty">
         <xs:complexContent>
-            <xs:extension base="EntityProperty">
+            <xs:extension base="PrimitiveEntityProperty">
                 <xs:choice minOccurs="0" maxOccurs="1">
                     <xs:element name="Default" type="xs:duration">
                         <xs:annotation>
@@ -1059,7 +1065,7 @@
     </xs:complexType>
     <xs:complexType name="UniqueIdentifierProperty">
         <xs:complexContent>
-            <xs:extension base="EntityProperty">
+            <xs:extension base="PrimitiveEntityProperty">
                 <xs:sequence>
                     <xs:element name="DefaultNull" minOccurs="0">
                         <xs:annotation>
@@ -1073,32 +1079,12 @@
                         <xs:documentation>Designates column as a primary key if true.</xs:documentation>
                     </xs:annotation>
                 </xs:attribute>
-                <xs:attribute name="Navigation" type="CsIdentifier" use="optional">
-                    <xs:annotation>
-                        <xs:documentation>
-                            Specifies a property as the navigation property in a foreign key relationship matching XPath "../*/@Name".
-                        </xs:documentation>
-                    </xs:annotation>
-                </xs:attribute>
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-    <xs:complexType name="NewIdNavRefProperty">
-        <xs:complexContent>
-            <xs:extension base="NewEntityProperty">
-                <xs:attribute name="Navigation" type="CsIdentifier" use="required">
-                    <xs:annotation>
-                        <xs:documentation>
-                            Specifies a property as the navigation property in a foreign key relationship matching XPath "../*/@Name".
-                        </xs:documentation>
-                    </xs:annotation>
-                </xs:attribute>
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
     <xs:complexType name="VolumeIdentifierProperty">
         <xs:complexContent>
-            <xs:extension base="EntityProperty">
+            <xs:extension base="PrimitiveEntityProperty">
                 <xs:choice minOccurs="0" maxOccurs="1">
                     <xs:element name="Default" type="xs:string">
                         <xs:annotation>
@@ -1117,7 +1103,7 @@
     </xs:complexType>
     <xs:complexType name="MD5HashProperty">
         <xs:complexContent>
-            <xs:extension base="EntityProperty">
+            <xs:extension base="PrimitiveEntityProperty">
                 <xs:sequence>
                     <xs:element name="DefaultNull" minOccurs="0">
                         <xs:annotation>
@@ -1131,7 +1117,7 @@
     </xs:complexType>
     <xs:complexType name="ByteValuesProperty">
         <xs:complexContent>
-            <xs:extension base="EntityProperty">
+            <xs:extension base="PrimitiveEntityProperty">
                 <xs:choice minOccurs="0">
                     <xs:element name="DefaultNull" minOccurs="0">
                         <xs:annotation>
@@ -1161,7 +1147,7 @@
     </xs:complexType>
     <xs:complexType name="DriveTypeProperty">
         <xs:complexContent>
-            <xs:extension base="EntityProperty">
+            <xs:extension base="PrimitiveEntityProperty">
                 <xs:choice minOccurs="0" maxOccurs="1">
                     <xs:element name="Default" type="DriveType">
                         <xs:annotation>
@@ -1180,7 +1166,7 @@
     </xs:complexType>
     <xs:complexType name="EnumProperty">
         <xs:complexContent>
-            <xs:extension base="EntityProperty">
+            <xs:extension base="PrimitiveEntityProperty">
                 <xs:choice minOccurs="0" maxOccurs="1">
                     <xs:element name="Default" type="CsTypeName">
                         <xs:annotation>
@@ -1223,7 +1209,9 @@
                     </xs:choice>
                     <xs:element name="DbRelationship" minOccurs="0">
                         <xs:annotation>
-                            <xs:documentation>Defines a foreign key relationship on the current table.</xs:documentation>
+                            <xs:documentation>Defines a foreign key relationship on the current entity. If this element is omitted, then it is assumed that the current
+                            property is the navigation propert for the opposite end of a one-to-one relationship with another entity that is linked by the current entity's primary
+                            key.</xs:documentation>
                         </xs:annotation>
                         <xs:complexType>
                             <xs:attribute name="Name" use="required">
@@ -1238,8 +1226,8 @@
                             </xs:attribute>
                             <xs:attribute name="FkPropertyName" type="CsIdentifier" use="optional">
                                 <xs:annotation>
-                                    <xs:documentation>The name of the property on the current table that serves as the primary key.
-                                    If this is not specified, the foreign key property name will assumed to be the same as the this property's name with "Id" appended.</xs:documentation>
+                                    <xs:documentation>The name of the foreign key property on the current entity type that matches the primary key of the related entity.
+                                    If this is not specified, then this is assumed to be the same as the current property name with "Id" appended.</xs:documentation>
                                 </xs:annotation>
                             </xs:attribute>
                         </xs:complexType>
@@ -1254,21 +1242,21 @@
                 <xs:attribute name="IsOneToOne" type="xs:boolean" use="optional" default="false">
                     <xs:annotation>
                         <xs:documentation>
-                            If true, then the current table is in a one-to-one relationship; otherwise, the current table is in a one-to-many relationship with the current table being the dependent.
+                            If true, then the current entity is in a one-to-one relationship; otherwise, the current entity is in a one-to-many relationship with the current table being the dependent.
                         </xs:documentation>
                     </xs:annotation>
                 </xs:attribute>
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
-    <xs:complexType name="NewRelatedEntityProperty">
+    <xs:complexType name="RelatedEntityTypeProperty">
         <xs:complexContent>
             <xs:extension base="NewEntityProperty">
                 <xs:attribute name="Reference" type="CsIdentifier" use="required"/>
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
-    <xs:complexType name="NewRelatedEntityKeyProperty">
+    <xs:complexType name="RelatedEntityKeyProperty">
         <xs:complexContent>
             <xs:extension base="NewEntityProperty">
                 <xs:attribute name="Reference" type="CsMemberReference" use="required"/>
@@ -1302,25 +1290,27 @@
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
-    <xs:complexType name="NewNavigationSetProperty">
+    <xs:complexType name="NavigationSetItemTypeProperty">
+        <xs:annotation>
+            <xs:documentation>
+                The entity element type matching XPath "/EntityDefinitions/*/Entity/@Name".
+            </xs:documentation>
+        </xs:annotation>
         <xs:complexContent>
             <xs:extension base="NewEntityProperty">
-                <xs:choice>
-                    <xs:element name="ItemType" type="CsIdentifier">
-                        <xs:annotation>
-                            <xs:documentation>
-                                The entity element type matching XPath "/EntityDefinitions/*/Entity/@Name".
-                            </xs:documentation>
-                        </xs:annotation>
-                    </xs:element>
-                    <xs:element name="ItemKey" type="CsMemberReference">
-                        <xs:annotation>
-                            <xs:documentation>
-                                THe property full name representing the foreign key, matching XPath "/EntityDefinitions/*/Entity/Properties/*/@FullName"
-                            </xs:documentation>
-                        </xs:annotation>
-                    </xs:element>
-                </xs:choice>
+                <xs:attribute name="Reference" type="CsIdentifier"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="NavigationSetItemKeyProperty">
+        <xs:annotation>
+            <xs:documentation>
+                THe property full name representing the foreign key, matching XPath "/EntityDefinitions/*/Entity/Properties/*/@FullName"
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="NewEntityProperty">
+                <xs:attribute name="Reference" type="CsMemberReference"/>
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
@@ -1345,17 +1335,17 @@
             <xs:element name="DateTime" type="DateTimeProperty" />
             <xs:element name="TimeSpan" type="TimeSpanProperty" />
             <xs:element name="UniqueIdentifier" type="UniqueIdentifierProperty" />
-            <xs:element name="NewIdNavRef" type="NewIdNavRefProperty" />
             <xs:element name="Bit" type="BitProperty" />
             <xs:element name="Text" type="TextProperty" />
             <xs:element name="VolumeIdentifier" type="VolumeIdentifierProperty"/>
             <xs:element name="DriveType" type="DriveTypeProperty"/>
             <xs:element name="Enum" type="EnumProperty"/>
             <xs:element name="RelatedEntity" type="RelatedEntityProperty" />
-            <xs:element name="NewRelatedEntity" type="NewRelatedEntityProperty" />
-            <xs:element name="NewRelatedEntityKey" type="NewRelatedEntityKeyProperty" />
+            <xs:element name="RelatedEntity.Type" type="RelatedEntityTypeProperty" />
+            <xs:element name="RelatedEntity.Key" type="RelatedEntityKeyProperty" />
             <xs:element name="CollectionNavigation" type="NavigationSetProperty"/>
-            <xs:element name="NewCollectionNavigation" type="NewNavigationSetProperty"/>
+            <xs:element name="CollectionNavigation.ItemType" type="NavigationSetItemTypeProperty"/>
+            <xs:element name="CollectionNavigation.ItemKey" type="NavigationSetItemKeyProperty"/>
         </xs:choice>
     </xs:complexType>
     <xs:complexType name="PropertyNameReference">
@@ -1487,6 +1477,9 @@
         </xs:choice>
     </xs:complexType>
     <xs:complexType name="EntityDefinition">
+        <xs:annotation>
+            <xs:documentation>Defines an entity type.</xs:documentation>
+        </xs:annotation>
         <xs:sequence>
             <xs:element name="summary" type="CommentDoc">
                 <xs:annotation>
@@ -1590,13 +1583,9 @@
                     <xs:field xpath="@Name"/>
                 </xs:unique>
                 <xs:key name="PK_RelatedEntity_Name">
-                    <xs:selector xpath="RelatedEntity|NewRelatedEntity" />
+                    <xs:selector xpath="RelatedEntity|RelatedEntity.Type" />
                     <xs:field xpath="@Name" />
                 </xs:key>
-                <xs:keyref name="FK_NavigationProperty" refer="PK_RelatedEntity_Name">
-                    <xs:selector xpath="UniqueIdentifier|NewIdNavRef" />
-                    <xs:field xpath="@Navigation" />
-                </xs:keyref>
             </xs:element>
             <xs:element name="Unique" minOccurs="0" maxOccurs="unbounded">
                 <xs:annotation>
@@ -1638,6 +1627,7 @@
                 <xs:documentation>The class name of the entity.</xs:documentation>
             </xs:annotation>
         </xs:attribute>
+        <xs:attribute name="SingularName" type="CsIdentifier" use="optional"/>
     </xs:complexType>
     <xs:complexType name="CommonEntityDefinition">
         <xs:complexContent>
@@ -1664,53 +1654,83 @@
         </xs:complexContent>
     </xs:complexType>
     <xs:complexType name="NamespaceDefinition">
+        <xs:annotation>
+            <xs:documentation>Base type for entity definitions withinin the same namespace.</xs:documentation>
+        </xs:annotation>
         <xs:sequence>
             <xs:element name="EnumTypes" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Enumerated types that are used as property types within entity type definitions.</xs:documentation>
+                </xs:annotation>
                 <xs:complexType>
                     <xs:choice maxOccurs="unbounded">
                         <xs:element name="Byte" type="ByteEnumDefinition">
+                            <xs:annotation>
+                                <xs:documentation>Defines an enumerated data type that is stored as byte values.</xs:documentation>
+                            </xs:annotation>
                             <xs:unique name="IDX_ByteEnum">
                                 <xs:selector xpath="Field"/>
                                 <xs:field xpath="@Name"/>
                             </xs:unique>
                         </xs:element>
                         <xs:element name="SByte" type="SByteEnumDefinition">
+                            <xs:annotation>
+                                <xs:documentation>Defines an enumerated data type that is stored as signed byte values.</xs:documentation>
+                            </xs:annotation>
                             <xs:unique name="IDX_SByteEnum">
                                 <xs:selector xpath="Field"/>
                                 <xs:field xpath="@Name"/>
                             </xs:unique>
                         </xs:element>
                         <xs:element name="Short" type="ShortEnumDefinition">
+                            <xs:annotation>
+                                <xs:documentation>Defines an enumerated data type that is stored as 16-bit integer values.</xs:documentation>
+                            </xs:annotation>
                             <xs:unique name="IDX_ShortEnum">
                                 <xs:selector xpath="Field"/>
                                 <xs:field xpath="@Name"/>
                             </xs:unique>
                         </xs:element>
                         <xs:element name="UShort" type="UShortEnumDefinition">
+                            <xs:annotation>
+                                <xs:documentation>Defines an enumerated data type that is stored as unsigned 16-bit integer values.</xs:documentation>
+                            </xs:annotation>
                             <xs:unique name="IDX_UShortEnum">
                                 <xs:selector xpath="Field"/>
                                 <xs:field xpath="@Name"/>
                             </xs:unique>
                         </xs:element>
                         <xs:element name="Int" type="IntEnumDefinition">
+                            <xs:annotation>
+                                <xs:documentation>Defines an enumerated data type that is stored as 32-bit integer values.</xs:documentation>
+                            </xs:annotation>
                             <xs:unique name="IDX_IntEnum">
                                 <xs:selector xpath="Field"/>
                                 <xs:field xpath="@Name"/>
                             </xs:unique>
                         </xs:element>
                         <xs:element name="UInt" type="UIntEnumDefinition">
+                            <xs:annotation>
+                                <xs:documentation>Defines an enumerated data type that is stored as unsigned 32-bit integer values.</xs:documentation>
+                            </xs:annotation>
                             <xs:unique name="IDX_UIntEnum">
                                 <xs:selector xpath="Field"/>
                                 <xs:field xpath="@Name"/>
                             </xs:unique>
                         </xs:element>
                         <xs:element name="Long" type="LongEnumDefinition">
+                            <xs:annotation>
+                                <xs:documentation>Defines an enumerated data type that is stored as 64-bit integer values.</xs:documentation>
+                            </xs:annotation>
                             <xs:unique name="IDX_LongEnum">
                                 <xs:selector xpath="Field"/>
                                 <xs:field xpath="@Name"/>
                             </xs:unique>
                         </xs:element>
                         <xs:element name="ULong" type="ULongEnumDefinition">
+                            <xs:annotation>
+                                <xs:documentation>Defines an enumerated data type that is stored as unsigned 64-bit integer values.</xs:documentation>
+                            </xs:annotation>
                             <xs:unique name="IDX_ULongEnum">
                                 <xs:selector xpath="Field"/>
                                 <xs:field xpath="@Name"/>
@@ -1725,11 +1745,17 @@
         <xs:complexType>
             <xs:sequence>
                 <xs:element name="Root">
+                    <xs:annotation>
+                        <xs:documentation>Entity type definitions within the root namespace (FsInfoCat).</xs:documentation>
+                    </xs:annotation>
                     <xs:complexType>
                         <xs:complexContent>
                             <xs:extension base="NamespaceDefinition">
                                 <xs:choice maxOccurs="unbounded">
                                     <xs:element name="Entity" type="CommonEntityDefinition">
+                                        <xs:annotation>
+                                            <xs:documentation>Defines an entity type.</xs:documentation>
+                                        </xs:annotation>
                                         <xs:key name="PK_RootPropertyName">
                                             <xs:selector xpath="Properties/*"/>
                                             <xs:field xpath="@Name"/>
@@ -1906,10 +1932,6 @@
             <xs:selector xpath="Root/Entity"/>
             <xs:field xpath="@Name"/>
         </xs:key>
-        <xs:keyref name="FK_Root_Entity_CollectionNavigation_ItemType" refer="PK_RootScope_Entity_Name">
-            <xs:selector xpath="Root/Entity/Properties/CollectionNavigation|Root/Entity/Properties/NewCollectionNavigation"/>
-            <xs:field xpath="ItemType"/>
-        </xs:keyref>
         <xs:keyref name="FK_Root_ExtendsEntity_Type" refer="PK_RootScope_Entity_Name">
             <xs:selector xpath="Root/Entity/ExtendsEntity"/>
             <xs:field xpath="@Type"/>
@@ -1926,8 +1948,16 @@
             <xs:selector xpath="Root/Entity/ImplementsGenericEntity"/>
             <xs:field xpath="@TypeDef"/>
         </xs:keyref>
-        <xs:keyref name="FK_Root_RelatedEntity_Reference" refer="PK_RootScope_Entity_Name">
-            <xs:selector xpath="Root/Entity/Properties/RelatedEntity|Root/Entity/Properties/NewRelatedEntity"/>
+        <xs:keyref name="FK_Root_RelatedEntity_Type_Reference" refer="PK_RootScope_Entity_Name">
+            <xs:selector xpath="Root/Entity/Properties/RelatedEntity|Root/Entity/Properties/RelatedEntity.Type"/>
+            <xs:field xpath="@Reference"/>
+        </xs:keyref>
+        <xs:keyref name="FK_Root_Entity_CollectionNavigation_ItemType" refer="PK_RootScope_Entity_Name">
+            <xs:selector xpath="Root/Entity/Properties/CollectionNavigation"/>
+            <xs:field xpath="ItemType"/>
+        </xs:keyref>
+        <xs:keyref name="FK_Root_Entity_CollectionNavigation_ItemType_Reference" refer="PK_RootScope_Entity_Name">
+            <xs:selector xpath="Root/Entity/Properties/CollectionNavigation.ItemType"/>
             <xs:field xpath="@Reference"/>
         </xs:keyref>
 
@@ -1936,8 +1966,12 @@
             <xs:field xpath="@FullName"/>
         </xs:key>
         <xs:keyref name="FK_Root_CollectionNavigation_ItemKey" refer="PK_RootScope_Entity_Property_FullName">
-            <xs:selector xpath="Root/Entity/Properties/CollectionNavigation|Root/Entity/Properties/NewCollectionNavigation"/>
+            <xs:selector xpath="Root/Entity/Properties/CollectionNavigation"/>
             <xs:field xpath="ItemKey"/>
+        </xs:keyref>
+        <xs:keyref name="FK_Root_CollectionNavigation_ItemKey_REference" refer="PK_RootScope_Entity_Property_FullName">
+            <xs:selector xpath="Root/Entity/Properties/CollectionNavigation.ItemKey"/>
+            <xs:field xpath="@Reference"/>
         </xs:keyref>
 
         <xs:key name="PK_LocalScope_Enum_Name">
@@ -1966,10 +2000,6 @@
             <xs:selector xpath="Root/Entity|Local/Entity"/>
             <xs:field xpath="@Name"/>
         </xs:key>
-        <xs:keyref name="FK_Local_Entity_CollectionNavigation_ItemType" refer="PK_LocalScope_Entity_Name">
-            <xs:selector xpath="Local/Entity/Properties/CollectionNavigation|Local/Entity/Properties/NewCollectionNavigation"/>
-            <xs:field xpath="ItemType"/>
-        </xs:keyref>
         <xs:keyref name="FK_Local_ExtendsEntity_Type" refer="PK_LocalScope_Entity_Name">
             <xs:selector xpath="Local/Entity/ExtendsEntity"/>
             <xs:field xpath="@Type"/>
@@ -1990,8 +2020,20 @@
             <xs:selector xpath="Local/Entity"/>
             <xs:field xpath="@RootInterface"/>
         </xs:keyref>
-        <xs:keyref name="FK_Local_RelatedEntity_Reference" refer="PK_LocalScope_Entity_Name">
-            <xs:selector xpath="Local/Entity/Properties/RelatedEntity|Local/Entity/Properties/NewRelatedEntity"/>
+        <xs:keyref name="FK_Local_RelatedEntity_PrimaryEntity" refer="PK_LocalScope_Entity_Name">
+            <xs:selector xpath="Local/Entity/Properties/RelatedEntity" />
+            <xs:field xpath="PrimaryEntity_Reference" />
+        </xs:keyref>
+        <xs:keyref name="FK_Local_RelatedEntity_Type_Reference" refer="PK_LocalScope_Entity_Name">
+            <xs:selector xpath="Local/Entity/Properties/RelatedEntity.Type" />
+            <xs:field xpath="@Reference" />
+        </xs:keyref>
+        <xs:keyref name="FK_Local_Entity_CollectionNavigation_ItemType" refer="PK_LocalScope_Entity_Name">
+            <xs:selector xpath="Local/Entity/Properties/CollectionNavigation"/>
+            <xs:field xpath="ItemType"/>
+        </xs:keyref>
+        <xs:keyref name="FK_Local_Entity_CollectionNavigation_ItemType_Reference" refer="PK_LocalScope_Entity_Name">
+            <xs:selector xpath="Local/Entity/Properties/CollectionNavigation.ItemType"/>
             <xs:field xpath="@Reference"/>
         </xs:keyref>
 
@@ -1999,9 +2041,21 @@
             <xs:selector xpath="Root/Entity/Properties/*|Local/Entity/Properties/*"/>
             <xs:field xpath="@FullName"/>
         </xs:key>
+        <xs:keyref name="FK_Local_RelatedEntity_PrimaryProperty" refer="PK_LocalScope_Entity_Property_FullName">
+            <xs:selector xpath="Local/Entity/Properties/RelatedEntity" />
+            <xs:field xpath="PrimaryProperty" />
+        </xs:keyref>
+        <xs:keyref name="FK_Local_RelatedEntity_Key_Reference" refer="PK_LocalScope_Entity_Property_FullName">
+            <xs:selector xpath="Local/Entity/Properties/RelatedEntity.Key" />
+            <xs:field xpath="@Reference" />
+        </xs:keyref>
         <xs:keyref name="FK_Local_CollectionNavigation_ItemKey" refer="PK_LocalScope_Entity_Property_FullName">
-            <xs:selector xpath="Local/Entity/Properties/CollectionNavigation|Local/Entity/Properties/NewCollectionNavigation"/>
+            <xs:selector xpath="Local/Entity/Properties/CollectionNavigation"/>
             <xs:field xpath="ItemKey"/>
+        </xs:keyref>
+        <xs:keyref name="FK_Local_CollectionNavigation_ItemKey_REference" refer="PK_LocalScope_Entity_Property_FullName">
+            <xs:selector xpath="Local/Entity/Properties/CollectionNavigation.ItemKey"/>
+            <xs:field xpath="@Reference"/>
         </xs:keyref>
 
         <xs:key name="PK_UpstreamScope_Enum_Name">
@@ -2030,10 +2084,6 @@
             <xs:selector xpath="Root/Entity|Upstream/Entity"/>
             <xs:field xpath="@Name"/>
         </xs:key>
-        <xs:keyref name="FK_Upstream_Entity_CollectionNavigation_ItemType" refer="PK_UpstreamScope_Entity_Name">
-            <xs:selector xpath="Upstream/Entity/Properties/CollectionNavigation|Upstream/Entity/Properties/NewCollectionNavigation"/>
-            <xs:field xpath="ItemType"/>
-        </xs:keyref>
         <xs:keyref name="FK_Upstream_ExtendsEntity_Type" refer="PK_UpstreamScope_Entity_Name">
             <xs:selector xpath="Upstream/Entity/ExtendsEntity"/>
             <xs:field xpath="@Type"/>
@@ -2054,8 +2104,20 @@
             <xs:selector xpath="Upstream/Entity"/>
             <xs:field xpath="@RootInterface"/>
         </xs:keyref>
-        <xs:keyref name="FK_Upstream_RelatedEntity_Reference" refer="PK_UpstreamScope_Entity_Name">
-            <xs:selector xpath="Upstream/Entity/Properties/RelatedEntity|Upstream/Entity/Properties/NewRelatedEntity"/>
+        <xs:keyref name="FK_Upstream_RelatedEntity_PrimaryEntity" refer="PK_UpstreamScope_Entity_Name">
+            <xs:selector xpath="Upstream/Entity/Properties/RelatedEntity" />
+            <xs:field xpath="PrimaryEntity_Reference" />
+        </xs:keyref>
+        <xs:keyref name="FK_Upstream_RelatedEntity_Type_Reference" refer="PK_UpstreamScope_Entity_Name">
+            <xs:selector xpath="Upstream/Entity/Properties/RelatedEntity.Type" />
+            <xs:field xpath="@Reference" />
+        </xs:keyref>
+        <xs:keyref name="FK_Upstream_Entity_CollectionNavigation_ItemType" refer="PK_UpstreamScope_Entity_Name">
+            <xs:selector xpath="Upstream/Entity/Properties/CollectionNavigation"/>
+            <xs:field xpath="ItemType"/>
+        </xs:keyref>
+        <xs:keyref name="FK_Upstream_Entity_CollectionNavigation_ItemType_Reference" refer="PK_UpstreamScope_Entity_Name">
+            <xs:selector xpath="Upstream/Entity/Properties/CollectionNavigation.ItemType"/>
             <xs:field xpath="@Reference"/>
         </xs:keyref>
 
@@ -2063,9 +2125,21 @@
             <xs:selector xpath="Root/Entity/Properties/*|Upstream/Entity/Properties/*"/>
             <xs:field xpath="@FullName"/>
         </xs:key>
+        <xs:keyref name="FK_Upstream_RelatedEntity_PrimaryProperty" refer="PK_UpstreamScope_Entity_Property_FullName">
+            <xs:selector xpath="Upstream/Entity/Properties/RelatedEntity" />
+            <xs:field xpath="PrimaryProperty" />
+        </xs:keyref>
+        <xs:keyref name="FK_Upstream_RelatedEntity_Key_Reference" refer="PK_UpstreamScope_Entity_Property_FullName">
+            <xs:selector xpath="Upstream/Entity/Properties/RelatedEntity.Key" />
+            <xs:field xpath="@Reference" />
+        </xs:keyref>
         <xs:keyref name="FK_Upstream_CollectionNavigation_ItemKey" refer="PK_UpstreamScope_Entity_Property_FullName">
-            <xs:selector xpath="Upstream/Entity/Properties/CollectionNavigation|Upstream/Entity/Properties/NewCollectionNavigation"/>
+            <xs:selector xpath="Upstream/Entity/Properties/CollectionNavigation"/>
             <xs:field xpath="ItemKey"/>
+        </xs:keyref>
+        <xs:keyref name="FK_Upstream_CollectionNavigation_ItemKey_REference" refer="PK_UpstreamScope_Entity_Property_FullName">
+            <xs:selector xpath="Upstream/Entity/Properties/CollectionNavigation.ItemKey"/>
+            <xs:field xpath="@Reference"/>
         </xs:keyref>
     </xs:element>
 </xs:schema>
