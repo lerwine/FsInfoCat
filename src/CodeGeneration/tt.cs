@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Data;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -609,7 +610,6 @@ namespace <#=DefaultNamespace#>.Upstream
                     Write(" ");
                     break;
                 case Constants.NAME_UniqueIdentifier:
-                case Constants.NAME_NewIdNavRef:
                     Write(property.AllowNull ? "Guid? " : "Guid ");
                     break;
                 case Constants.NAME_Bit:
@@ -620,14 +620,15 @@ namespace <#=DefaultNamespace#>.Upstream
                     Write(property.AllowNull ? "? " : " ");
                     break;
                 case Constants.NAME_CollectionNavigation:
-                case Constants.NAME_NewCollectionNavigation:
+                case Constants.NAME_CollectionNavigation_ItemKey:
+                case Constants.NAME_CollectionNavigation_ItemType:
                     Write("IEnumerable<");
                     Write(property.ReferencedType.CsName);
                     Write("> ");
                     break;
                 case Constants.NAME_RelatedEntity:
-                case Constants.NAME_NewRelatedEntity:
-                case Constants.NAME_NewRelatedEntityKey:
+                case Constants.NAME_RelatedEntity_Key:
+                case Constants.NAME_RelatedEntity_Type:
                     Write(property.ReferencedType.CsName);
                     Write(" ");
                     break;
@@ -962,284 +963,169 @@ namespace <#=DefaultNamespace#>.Upstream
             if (!generationInfo.AllowNull)
                 Write(" NOT NULL");
             CheckConstraint check = null;
-            if (isNumeric)
+            switch (generationInfo.Type)
             {
-                string minValue = sources.Attributes(Constants.XNAME_MinValue).Select(a => a.Value.Trim()).DefaultIfEmpty("").First();
-                string maxValue = sources.Attributes(Constants.XNAME_MaxValue).Select(a => a.Value.Trim()).DefaultIfEmpty("").First();
-                if (minValue.Length > 0)
-                {
-                    check = propertyTypeName switch
+                case DbType.Byte:
+                case DbType.SByte:
+                case DbType.Int16:
+                case DbType.UInt16:
+                case DbType.Int32:
+                case DbType.UInt32:
+                case DbType.Int64:
+                case DbType.UInt64:
+                case DbType.Single:
+                case DbType.Double:
+                case DbType.Decimal:
+                    if (generationInfo.MinValue.HasValue)
                     {
-                        Constants.NAME_Byte => ComparisonConstraint.NotLessThan(new SimpleColumnValueReference(colName), ConstantValueReference.Byte(minValue)),
-                        Constants.NAME_SByte => ComparisonConstraint.NotLessThan(new SimpleColumnValueReference(colName), ConstantValueReference.SByte(minValue)),
-                        Constants.NAME_Short => ComparisonConstraint.NotLessThan(new SimpleColumnValueReference(colName), ConstantValueReference.Short(minValue)),
-                        Constants.NAME_UShort => ComparisonConstraint.NotLessThan(new SimpleColumnValueReference(colName), ConstantValueReference.UShort(minValue)),
-                        Constants.NAME_UInt => ComparisonConstraint.NotLessThan(new SimpleColumnValueReference(colName), ConstantValueReference.UInt(minValue)),
-                        Constants.NAME_Long => ComparisonConstraint.NotLessThan(new SimpleColumnValueReference(colName), ConstantValueReference.Long(minValue)),
-                        Constants.NAME_ULong => ComparisonConstraint.NotLessThan(new SimpleColumnValueReference(colName), ConstantValueReference.ULong(minValue)),
-                        Constants.NAME_Decimal => ComparisonConstraint.NotLessThan(new SimpleColumnValueReference(colName), ConstantValueReference.Decimal(minValue)),
-                        Constants.NAME_Double => ComparisonConstraint.NotLessThan(new SimpleColumnValueReference(colName), ConstantValueReference.Double(minValue)),
-                        Constants.NAME_Float => ComparisonConstraint.NotLessThan(new SimpleColumnValueReference(colName), ConstantValueReference.Float(minValue)),
-                        _ => ComparisonConstraint.NotLessThan(new SimpleColumnValueReference(colName), ConstantValueReference.Int(minValue)),
-                    };
-                }
-                if (maxValue.Length > 0)
-                {
-                    ComparisonConstraint cc = propertyTypeName switch
-                    {
-                        Constants.NAME_Byte => ComparisonConstraint.NotLessThan(new SimpleColumnValueReference(colName), ConstantValueReference.Byte(maxValue)),
-                        Constants.NAME_SByte => ComparisonConstraint.NotLessThan(new SimpleColumnValueReference(colName), ConstantValueReference.SByte(maxValue)),
-                        Constants.NAME_Short => ComparisonConstraint.NotLessThan(new SimpleColumnValueReference(colName), ConstantValueReference.Short(maxValue)),
-                        Constants.NAME_UShort => ComparisonConstraint.NotLessThan(new SimpleColumnValueReference(colName), ConstantValueReference.UShort(maxValue)),
-                        Constants.NAME_UInt => ComparisonConstraint.NotLessThan(new SimpleColumnValueReference(colName), ConstantValueReference.UInt(maxValue)),
-                        Constants.NAME_Long => ComparisonConstraint.NotLessThan(new SimpleColumnValueReference(colName), ConstantValueReference.Long(maxValue)),
-                        Constants.NAME_ULong => ComparisonConstraint.NotLessThan(new SimpleColumnValueReference(colName), ConstantValueReference.ULong(maxValue)),
-                        Constants.NAME_Decimal => ComparisonConstraint.NotLessThan(new SimpleColumnValueReference(colName), ConstantValueReference.Decimal(maxValue)),
-                        Constants.NAME_Double => ComparisonConstraint.NotLessThan(new SimpleColumnValueReference(colName), ConstantValueReference.Double(maxValue)),
-                        Constants.NAME_Float => ComparisonConstraint.NotLessThan(new SimpleColumnValueReference(colName), ConstantValueReference.Float(maxValue)),
-                        _ => ComparisonConstraint.NotLessThan(new SimpleColumnValueReference(colName), ConstantValueReference.Int(maxValue)),
-                    };
-                    check = (check is null) ? cc : check.And(cc);
-                }
-            }
-            else
-            {
-                int minLength;
-                switch (propertyTypeName)
-                {
-                    case Constants.NAME_Enum:
-                        XElement enumType = EntityDefinitionsDocument.FindLocalEnumTypeByName(baseProperty.Attribute(Constants.XNAME_Type)?.Value);
-                        IEnumerable<string> enumValueStrings = enumType.Elements(Constants.XNAME_Field).Attributes(Constants.XNAME_Value).Select(a => a.Value);
-                        bool isFlags = baseProperty.AttributeToBoolean(Constants.XNAME_IsFlags) ?? false;
-                        check = typeName switch
+                        if (generationInfo.MaxValue.HasValue)
+                            check = generationInfo.Type switch
+                            {
+                                DbType.Byte => ComparisonConstraint.NotLessThan(new SimpleColumnValueReference(generationInfo.ColumnName), ConstantValueReference.Byte(generationInfo.MinValue.Value.SqlCode))
+                                    .And(ComparisonConstraint.NotGreaterThan(new SimpleColumnValueReference(generationInfo.ColumnName), ConstantValueReference.Byte(generationInfo.MaxValue.Value.SqlCode))),
+                                DbType.SByte => ComparisonConstraint.NotLessThan(new SimpleColumnValueReference(generationInfo.ColumnName), ConstantValueReference.SByte(generationInfo.MinValue.Value.SqlCode))
+                                    .And(ComparisonConstraint.NotGreaterThan(new SimpleColumnValueReference(generationInfo.ColumnName), ConstantValueReference.SByte(generationInfo.MaxValue.Value.SqlCode))),
+                                DbType.Int16 => ComparisonConstraint.NotLessThan(new SimpleColumnValueReference(generationInfo.ColumnName), ConstantValueReference.Short(generationInfo.MinValue.Value.SqlCode))
+                                    .And(ComparisonConstraint.NotGreaterThan(new SimpleColumnValueReference(generationInfo.ColumnName), ConstantValueReference.Short(generationInfo.MaxValue.Value.SqlCode))),
+                                DbType.UInt16 => ComparisonConstraint.NotLessThan(new SimpleColumnValueReference(generationInfo.ColumnName), ConstantValueReference.UShort(generationInfo.MinValue.Value.SqlCode))
+                                    .And(ComparisonConstraint.NotGreaterThan(new SimpleColumnValueReference(generationInfo.ColumnName), ConstantValueReference.UShort(generationInfo.MaxValue.Value.SqlCode))),
+                                DbType.UInt32 => ComparisonConstraint.NotLessThan(new SimpleColumnValueReference(generationInfo.ColumnName), ConstantValueReference.UInt(generationInfo.MinValue.Value.SqlCode))
+                                    .And(ComparisonConstraint.NotGreaterThan(new SimpleColumnValueReference(generationInfo.ColumnName), ConstantValueReference.UInt(generationInfo.MaxValue.Value.SqlCode))),
+                                DbType.Int64 => ComparisonConstraint.NotLessThan(new SimpleColumnValueReference(generationInfo.ColumnName), ConstantValueReference.Long(generationInfo.MinValue.Value.SqlCode))
+                                    .And(ComparisonConstraint.NotGreaterThan(new SimpleColumnValueReference(generationInfo.ColumnName), ConstantValueReference.Long(generationInfo.MaxValue.Value.SqlCode))),
+                                DbType.UInt64 => ComparisonConstraint.NotLessThan(new SimpleColumnValueReference(generationInfo.ColumnName), ConstantValueReference.ULong(generationInfo.MinValue.Value.SqlCode))
+                                    .And(ComparisonConstraint.NotGreaterThan(new SimpleColumnValueReference(generationInfo.ColumnName), ConstantValueReference.ULong(generationInfo.MaxValue.Value.SqlCode))),
+                                DbType.Decimal => ComparisonConstraint.NotLessThan(new SimpleColumnValueReference(generationInfo.ColumnName), ConstantValueReference.Decimal(generationInfo.MinValue.Value.SqlCode))
+                                    .And(ComparisonConstraint.NotGreaterThan(new SimpleColumnValueReference(generationInfo.ColumnName), ConstantValueReference.Decimal(generationInfo.MaxValue.Value.SqlCode))),
+                                DbType.Double => ComparisonConstraint.NotLessThan(new SimpleColumnValueReference(generationInfo.ColumnName), ConstantValueReference.Double(generationInfo.MinValue.Value.SqlCode))
+                                    .And(ComparisonConstraint.NotGreaterThan(new SimpleColumnValueReference(generationInfo.ColumnName), ConstantValueReference.Double(generationInfo.MaxValue.Value.SqlCode))),
+                                DbType.Single => ComparisonConstraint.NotLessThan(new SimpleColumnValueReference(generationInfo.ColumnName), ConstantValueReference.Float(generationInfo.MinValue.Value.SqlCode))
+                                    .And(ComparisonConstraint.NotGreaterThan(new SimpleColumnValueReference(generationInfo.ColumnName), ConstantValueReference.Float(generationInfo.MaxValue.Value.SqlCode))),
+                                _ => ComparisonConstraint.NotLessThan(new SimpleColumnValueReference(generationInfo.ColumnName), ConstantValueReference.Int(generationInfo.MinValue.Value.SqlCode))
+                                    .And(ComparisonConstraint.NotGreaterThan(new SimpleColumnValueReference(generationInfo.ColumnName), ConstantValueReference.Int(generationInfo.MaxValue.Value.SqlCode)))
+                            };
+                        else
+                            check = generationInfo.Type switch
+                            {
+                                DbType.Byte => ComparisonConstraint.NotLessThan(new SimpleColumnValueReference(generationInfo.ColumnName), ConstantValueReference.Byte(generationInfo.MinValue.Value.SqlCode)),
+                                DbType.SByte => ComparisonConstraint.NotLessThan(new SimpleColumnValueReference(generationInfo.ColumnName), ConstantValueReference.SByte(generationInfo.MinValue.Value.SqlCode)),
+                                DbType.Int16 => ComparisonConstraint.NotLessThan(new SimpleColumnValueReference(generationInfo.ColumnName), ConstantValueReference.Short(generationInfo.MinValue.Value.SqlCode)),
+                                DbType.UInt16 => ComparisonConstraint.NotLessThan(new SimpleColumnValueReference(generationInfo.ColumnName), ConstantValueReference.UShort(generationInfo.MinValue.Value.SqlCode)),
+                                DbType.UInt32 => ComparisonConstraint.NotLessThan(new SimpleColumnValueReference(generationInfo.ColumnName), ConstantValueReference.UInt(generationInfo.MinValue.Value.SqlCode)),
+                                DbType.Int64 => ComparisonConstraint.NotLessThan(new SimpleColumnValueReference(generationInfo.ColumnName), ConstantValueReference.Long(generationInfo.MinValue.Value.SqlCode)),
+                                DbType.UInt64 => ComparisonConstraint.NotLessThan(new SimpleColumnValueReference(generationInfo.ColumnName), ConstantValueReference.ULong(generationInfo.MinValue.Value.SqlCode)),
+                                DbType.Decimal => ComparisonConstraint.NotLessThan(new SimpleColumnValueReference(generationInfo.ColumnName), ConstantValueReference.Decimal(generationInfo.MinValue.Value.SqlCode)),
+                                DbType.Double => ComparisonConstraint.NotLessThan(new SimpleColumnValueReference(generationInfo.ColumnName), ConstantValueReference.Double(generationInfo.MinValue.Value.SqlCode)),
+                                DbType.Single => ComparisonConstraint.NotLessThan(new SimpleColumnValueReference(generationInfo.ColumnName), ConstantValueReference.Float(generationInfo.MinValue.Value.SqlCode)),
+                                _ => ComparisonConstraint.NotLessThan(new SimpleColumnValueReference(generationInfo.ColumnName), ConstantValueReference.Int(generationInfo.MinValue.Value.SqlCode))
+                            };
+                    }
+                    else if (generationInfo.MaxValue.HasValue)
+                        check = generationInfo.Type switch
                         {
-                            Constants.SQL_TYPENAME_TINYINT => GetEnumCheckConstraintMinMax(colName, sbyte.MinValue, sbyte.MaxValue, ConstantValueReference.Of, enumValueStrings.Select(v => XmlConvert.ToSByte(v)), isFlags ? (x, y) => (sbyte)(x | y) : null),
-                            Constants.SQL_TYPENAME_UNSIGNED_TINYINT => GetEnumCheckConstraintMinMax(colName, byte.MinValue, byte.MaxValue, ConstantValueReference.Of, enumValueStrings.Select(v => XmlConvert.ToByte(v)), isFlags ? (x, y) => (byte)(x | y) : null),
-                            Constants.SQL_TYPENAME_SMALLINT => GetEnumCheckConstraintMinMax(colName, short.MinValue, short.MaxValue, ConstantValueReference.Of, enumValueStrings.Select(v => XmlConvert.ToInt16(v)), isFlags ? (x, y) => (short)(x | y) : null),
-                            Constants.SQL_TYPENAME_UNSIGNED_SMALLINT => GetEnumCheckConstraintMinMax(colName, ushort.MinValue, ushort.MaxValue, ConstantValueReference.Of, enumValueStrings.Select(v => XmlConvert.ToUInt16(v)), isFlags ? (x, y) => (ushort)(x | y) : null),
-                            Constants.SQL_TYPENAME_UNSIGNED_INT => GetEnumCheckConstraintMinMax(colName, uint.MinValue, uint.MaxValue, ConstantValueReference.Of, enumValueStrings.Select(v => XmlConvert.ToUInt32(v)), isFlags ? (x, y) => x | y : null),
-                            Constants.SQL_TYPENAME_BIGINT => GetEnumCheckConstraintMinMax(colName, long.MinValue, long.MaxValue, ConstantValueReference.Of, enumValueStrings.Select(v => XmlConvert.ToInt64(v)), isFlags ? (x, y) => x | y : null),
-                            Constants.SQL_TYPENAME_UNSIGNED_BIGINT => GetEnumCheckConstraintMinMax(colName, ulong.MinValue, ulong.MaxValue, ConstantValueReference.Of, enumValueStrings.Select(v => XmlConvert.ToUInt64(v)), isFlags ? (x, y) => x | y : null),
-                            _ => GetEnumCheckConstraintMinMax(colName, int.MinValue, int.MaxValue, ConstantValueReference.Of, enumValueStrings.Select(v => XmlConvert.ToInt32(v)), isFlags ? (x, y) => x | y : null),
+                            DbType.Byte => ComparisonConstraint.NotGreaterThan(new SimpleColumnValueReference(generationInfo.ColumnName), ConstantValueReference.Byte(generationInfo.MaxValue.Value.SqlCode)),
+                            DbType.SByte => ComparisonConstraint.NotGreaterThan(new SimpleColumnValueReference(generationInfo.ColumnName), ConstantValueReference.SByte(generationInfo.MaxValue.Value.SqlCode)),
+                            DbType.Int16 => ComparisonConstraint.NotGreaterThan(new SimpleColumnValueReference(generationInfo.ColumnName), ConstantValueReference.Short(generationInfo.MaxValue.Value.SqlCode)),
+                            DbType.UInt16 => ComparisonConstraint.NotGreaterThan(new SimpleColumnValueReference(generationInfo.ColumnName), ConstantValueReference.UShort(generationInfo.MaxValue.Value.SqlCode)),
+                            DbType.UInt32 => ComparisonConstraint.NotGreaterThan(new SimpleColumnValueReference(generationInfo.ColumnName), ConstantValueReference.UInt(generationInfo.MaxValue.Value.SqlCode)),
+                            DbType.Int64 => ComparisonConstraint.NotGreaterThan(new SimpleColumnValueReference(generationInfo.ColumnName), ConstantValueReference.Long(generationInfo.MaxValue.Value.SqlCode)),
+                            DbType.UInt64 => ComparisonConstraint.NotGreaterThan(new SimpleColumnValueReference(generationInfo.ColumnName), ConstantValueReference.ULong(generationInfo.MaxValue.Value.SqlCode)),
+                            DbType.Decimal => ComparisonConstraint.NotGreaterThan(new SimpleColumnValueReference(generationInfo.ColumnName), ConstantValueReference.Decimal(generationInfo.MaxValue.Value.SqlCode)),
+                            DbType.Double => ComparisonConstraint.NotGreaterThan(new SimpleColumnValueReference(generationInfo.ColumnName), ConstantValueReference.Double(generationInfo.MaxValue.Value.SqlCode)),
+                            DbType.Single => ComparisonConstraint.NotGreaterThan(new SimpleColumnValueReference(generationInfo.ColumnName), ConstantValueReference.Float(generationInfo.MaxValue.Value.SqlCode)),
+                            _ => ComparisonConstraint.NotGreaterThan(new SimpleColumnValueReference(generationInfo.ColumnName), ConstantValueReference.Int(generationInfo.MaxValue.Value.SqlCode))
                         };
-                        break;
-                    case Constants.NAME_NVarChar:
-                        if (sources.AttributeToBoolean(Constants.XNAME_IsNormalized) ?? false)
-                            check = new SimpleColumnValueReference(colName).Trimmed().Length().IsEqualTo(new SimpleColumnValueReference(colName).Length());
-                        minLength = sources.AttributeToInt32(Constants.XNAME_MinLength) ?? 0;
-                        if (minLength > 0)
-                            check = (check is null) ? new SimpleColumnValueReference(colName).GreaterThanLiteral(minLength - 1) : check.And(new SimpleColumnValueReference(colName).GreaterThanLiteral(minLength - 1));
-                        break;
-                    case Constants.NAME_ByteValues:
-                        minLength = sources.AttributeToInt32(Constants.XNAME_MinLength) ?? 0;
-                        if (minLength > 0)
-                            check = new SimpleColumnValueReference(colName).Length().GreaterThanLiteral(minLength - 1);
-                        int maxLength = sources.AttributeToInt32(Constants.XNAME_MaxLength) ?? 0;
-                        if (maxLength > 0)
-                            check = new SimpleColumnValueReference(colName).Length().LessThanLiteral(maxLength + 1);
-                        break;
-                    case Constants.NAME_UniqueIdentifier:
-                        IEnumerable<(string ConstraintName, string TableName)> relatedEntities = sources.Attributes(Constants.XNAME_Navigation).Select(a =>
-                        {
-                            string n = a.Value;
-                            XElement[] refersTo = sources.Select(p => p.FindCurrentEntityPropertyByName(n)).Where(e => e is not null).ToArray();
-                            return (
-                                ConstraintName: refersTo.Attributes(Constants.XNAME_ConstraintName).Select(e => e.Value).FirstOrDefault(),
-                                TableName: refersTo.Attributes(Constants.XNAME_Reference).Select(e => EntityDefinitionsDocument.FindLocalEntityByName(e.Value)?.Attribute(Constants.XNAME_TableName)?.Value).Where(n => n is not null).FirstOrDefault()
-                            );
-                        }).Where(t => !(string.IsNullOrEmpty(t.ConstraintName) || string.IsNullOrEmpty(t.TableName)));
-                        if (relatedEntities.Any())
-                        {
-                            (string ConstraintName, string TableName) = relatedEntities.First();
-                            Write(" CONSTRAINT \"");
-                            Write(ConstraintName);
-                            Write("\" REFERENCES \"");
-                            Write(TableName);
-                            Write("\"(\"Id\") ON DELETE RESTRICT");
-                        }
-                        break;
-                    case Constants.NAME_RelatedEntity:
-                        string constraintName = sources.Elements(Constants.XNAME_DbRelationship).Attributes(Constants.XNAME_Name).Select(e => e.Value).FirstOrDefault();
-                        if (constraintName is not null)
-                        {
-                            Write(" CONSTRAINT \"");
-                            Write(constraintName);
-                            Write("\" REFERENCES \"");
-                            Write(sources.Attributes(Constants.XNAME_Reference).Select(e => EntityDefinitionsDocument.FindLocalEntityByName(e.Value)?.Attribute(Constants.XNAME_TableName)?.Value)
-                                .Where(n => n is not null).First());
-                            Write("\"(\"Id\") ON DELETE RESTRICT");
-                        }
-                        break;
-                    case Constants.NAME_DriveType:
-                        check = new SimpleColumnValueReference(colName).NotLessThanLiteral(0).And(new SimpleColumnValueReference(colName).LessThanLiteral(7));
-                        break;
-                    default:
-                        check = null;
-                        break;
-                }
-            }
-            if (generationInfo.DbRelationship.HasValue)
-            {
-                Write(" CONSTRAINT \"");
-                Write(generationInfo.DbRelationship.Value.Name);
-                Write("\" REFERENCES \"");
-                Write(TableName);
-                Write("\"(\"Id\") ON DELETE RESTRICT");
+                    break;
+                default:
+                    switch (generationInfo.Source.Name.LocalName)
+                    {
+                        case Constants.NAME_ByteValues:
+                        case Constants.NAME_NVarChar:
+                            if (generationInfo.IsNormalized ?? false)
+                                check = new SimpleColumnValueReference(generationInfo.ColumnName).Trimmed().Length().IsEqualTo(new SimpleColumnValueReference(generationInfo.ColumnName).Length());
+                            if (generationInfo.MinLength.HasValue)
+                                check = (check is null) ? new SimpleColumnValueReference(generationInfo.ColumnName).GreaterThanLiteral(generationInfo.MinLength.Value - 1) :
+                                    check.And(new SimpleColumnValueReference(generationInfo.ColumnName).GreaterThanLiteral(generationInfo.MinLength.Value - 1));
+                            break;
+                            if (generationInfo.MinLength.HasValue)
+                                check = (check is null) ? new SimpleColumnValueReference(generationInfo.ColumnName).GreaterThanLiteral(generationInfo.MinLength.Value - 1) :
+                                    check.And(new SimpleColumnValueReference(generationInfo.ColumnName).GreaterThanLiteral(generationInfo.MinLength.Value - 1));
+                            break;
+                        case Constants.NAME_UniqueIdentifier:
+                            PropertyGenerationInfo nav = generationInfo.DeclaringType.Properties.FirstOrDefault(p => p.DbRelationship?.FkPropertyName == generationInfo.ColumnName);
+                            if (nav is not null)
+                            {
+                                Write(" CONSTRAINT \"");
+                                Write(nav.DbRelationship.Value.Name);
+                                Write("\" REFERENCES \"");
+                                Write(((EntityGenerationInfo)nav.ReferencedType).TableName);
+                                Write("\"(\"Id\") ON DELETE RESTRICT");
+                            }
+                            break;
+                        case Constants.NAME_RelatedEntity:
+                        case Constants.NAME_RelatedEntity_Key:
+                        case Constants.NAME_RelatedEntity_Type:
+                            string name = generationInfo.DbRelationship?.FkPropertyName;
+                            if (!generationInfo.DeclaringType.Properties.Any(p => p.Name == name))
+                            {
+                                Write(" CONSTRAINT \"");
+                                Write(generationInfo.DbRelationship?.Name);
+                                Write("\" REFERENCES \"");
+                                Write(((EntityGenerationInfo)generationInfo.ReferencedType).TableName);
+                                Write("\"(\"Id\") ON DELETE RESTRICT");
+                            }
+                            break;
+                        case Constants.NAME_DriveType:
+                            check = new SimpleColumnValueReference(generationInfo.ColumnName).NotLessThanLiteral(0).And(new SimpleColumnValueReference(generationInfo.ColumnName).LessThanLiteral(7));
+                            break;
+                        default:
+                            check = null;
+                            break;
+                    }
+                    break;
             }
             if (check is not null)
             {
                 Write(" CHECK(");
-                Write((allowNull ? new NullCheckConstraint(new SimpleColumnValueReference(colName), true).Or(check) : check).ToSqlString());
+                Write((generationInfo.AllowNull ? new NullCheckConstraint(new SimpleColumnValueReference(generationInfo.ColumnName), true).Or(check) : check).ToSqlString());
                 Write(")");
             }
 
-            if (defaultNull)
+            if (generationInfo.DefaultValue.HasValue)
             {
-                comment = null;
-                Write(" DEFAULT NULL");
-            }
-            else
-            {
-                //string defaultValue = sources.Elements(Constants.XNAME_Default).Select(e => e.Value).FirstOrDefault();
-                switch (propertyTypeName)
+                Write(" DEFAULT ");
+                Write(generationInfo.DefaultValue.Value.SqlCode);
+                switch (generationInfo.Source.Name.LocalName)
                 {
                     case Constants.NAME_Enum:
-                        string defaultEnumField = sources.ElementToString(Constants.XNAME_Default);
-                        if (defaultEnumField is not null)
-                        {
-                            Write(" DEFAULT ");
-                            Write(EntityDefinitionsDocument.FindLocalFieldByFullName(defaultEnumField)?.Attribute(Constants.XNAME_Value)?.Value);
-                            comment = defaultEnumField.Trim();
-                        }
-                        else
-                            comment = null;
-                        break;
-                    case Constants.NAME_Char:
-                    case Constants.NAME_NVarChar:
-                    case Constants.NAME_VolumeIdentifier:
-                    case Constants.NAME_MultiStringValue:
-                    case Constants.NAME_Text:
-                        comment = null;
-                        string defaultText = sources.ElementToString(Constants.XNAME_Default);
-                        if (defaultText is not null)
-                        {
-                            Write(" DEFAULT '");
-                            Write(defaultText.Replace("'", "''"));
-                            Write("'");
-                        }
-                        break;
-                    case Constants.NAME_TimeSpan:
-                        comment = null;
-                        if (sources.Elements(Constants.XNAME_DefaultZero).Any())
-                            Write(" DEFAULT (time('00:00:00.000'))");
-                        else
-                        {
-                            TimeSpan? defaultTimeSpan = sources.ElementToTimeSpan(Constants.XNAME_Default);
-                            if (defaultTimeSpan.HasValue)
-                            {
-                                Write(" DEFAULT ");
-                                Write(defaultTimeSpan.Value.ToString(@"\'hh\:mm\:ss\.fff\'"));
-                            }
-                        }
-                        break;
-                    case Constants.NAME_DateTime:
-                        if (sources.Elements(Constants.XNAME_DefaultNow).Any())
-                            Write(" DEFAULT (datetime('now','localtime'))");
-                        else
-                        {
-                            DateTime? defaultDateTime = sources.ElementToDateTime(Constants.XNAME_Default);
-                            if (defaultDateTime.HasValue)
-                                Write(defaultDateTime.Value.ToLocalTime().ToString(@"'yyyy-MM-dd HH:mm:ss"));
-                        }
-                        comment = null;
-                        break;
-                    case Constants.NAME_Bit:
-                        comment = null;
-                        bool? isDefaultTrue = sources.ElementToBoolean(Constants.XNAME_Default);
-                        if (isDefaultTrue.HasValue)
-                            Write(isDefaultTrue.Value ? " DEFAULT 1," : " DEFAULT 0");
-                        break;
-                    case Constants.NAME_ByteValues:
-                        comment = null;
-                        if (sources.Elements(Constants.XNAME_DefaultEmpty).Any())
-                            Write(" DEFAULT X''");
-                        else
-                        {
-                            byte[] data = sources.ElementToBinary(Constants.XNAME_Default);
-                            if (data is not null)
-                            {
-                                Write(" DEFAULT X'");
-                                Write(BitConverter.ToString(data));
-                                Write("'");
-                            }
-                        }
-                        break;
                     case Constants.NAME_DriveType:
-                        string defaultDriveType = sources.ElementToString(Constants.XNAME_Default);
-                        if (defaultDriveType is not null)
-                            switch (defaultDriveType.Trim())
-                            {
-                                case "NoRootDirectory":
-                                    Write(" DEFAULT 1");
-                                    comment = "DriveType.NoRootDirectory";
-                                    break;
-                                case "Removable":
-                                    Write(" DEFAULT 2");
-                                    comment = "DriveType.Removable";
-                                    break;
-                                case "Fixed":
-                                    Write(" DEFAULT 3");
-                                    comment = "DriveType.Fixed";
-                                    break;
-                                case "Network":
-                                    Write(" DEFAULT 4");
-                                    comment = "DriveType.Network";
-                                    break;
-                                case "CDRom":
-                                    Write(" DEFAULT 5");
-                                    comment = "DriveType.CDRom";
-                                    break;
-                                case "Ram":
-                                    Write(" DEFAULT 6");
-                                    comment = "DriveType.Ram";
-                                    break;
-                                default:
-                                    Write(" DEFAULT 0");
-                                    comment = defaultDriveType.Trim();
-                                    break;
-                            }
-                        else
-                            comment = "";
+                        comment = generationInfo.DefaultValue.Value.CsCode;
                         break;
                     default:
                         comment = null;
-                        string defaultValue = sources.ElementToString(Constants.XNAME_Default);
-                        if (defaultValue is not null)
-                        {
-                            Write(" DEFAULT ");
-                            Write(defaultValue);
-                        }
                         break;
                 }
             }
+            else
+                comment = null;
 
-            switch (propertyTypeName)
+            switch (generationInfo.Source.Name.LocalName)
             {
                 case Constants.NAME_RelatedEntity:
+                case Constants.NAME_RelatedEntity_Key:
+                case Constants.NAME_RelatedEntity_Type:
                 case Constants.NAME_UniqueIdentifier:
                 case Constants.NAME_VolumeIdentifier:
                     Write(" COLLATE NOCASE");
                     break;
                 case Constants.NAME_NVarChar:
-                    bool? isCaseSensitive = sources.AttributeToBoolean(Constants.XNAME_IsCaseSensitive);
-                    if (isCaseSensitive.HasValue)
+                    if (generationInfo.IsCaseSensitive.HasValue)
                     {
                         Write(" COLLATE ");
-                        Write(isCaseSensitive.Value ? Constants.SQL_TYPENAME_BINARY : "NOCASE");
+                        Write(generationInfo.IsCaseSensitive.Value ? Constants.SQL_TYPENAME_BINARY : "NOCASE");
                     }
                     break;
             }
-            return colName;
         }
         static CheckConstraint GetEnumCheckConstraintMinMax<T>(string colName, T minValue, T maxValue, Func<T, ConstantValueReference> toConstantValueReference, IEnumerable<T> values, Func<T, T, T> bitwiseOrFunc = null)
             where T : struct, IComparable<T>
