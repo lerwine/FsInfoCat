@@ -135,51 +135,6 @@ namespace FsInfoCat.Local
                 results.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_DuplicateMessage, new string[] { nameof(Message) }));
         }
 
-        // TODO: Use ImportAsync
-        [Obsolete("Use ImportAsync")]
-        internal static void Import(LocalDbContext dbContext, ILogger<LocalDbContext> logger, Guid volumeId, XElement accessErrorElement)
-        {
-            XName n = nameof(Id);
-            Guid accessErrorId = accessErrorElement.GetAttributeGuid(n).Value;
-            StringBuilder sql = new StringBuilder("INSERT INTO \"").Append(nameof(LocalDbContext.SubdirectoryAccessErrors)).Append("\" (\"").Append(nameof(Id)).Append("\" , \"").Append(nameof(TargetId)).Append('"');
-            List<object> values = new();
-            values.Add(accessErrorId);
-            values.Add(volumeId);
-            foreach (XAttribute attribute in accessErrorElement.Attributes().Where(a => a.Name != n))
-            {
-                sql.Append(", \"").Append(attribute.Name.LocalName).Append('"');
-                switch (attribute.Name.LocalName)
-                {
-                    case nameof(Message):
-                        values.Add(attribute.Value);
-                        break;
-                    case nameof(ErrorCode):
-                        values.Add(Enum.ToObject(typeof(AccessErrorCode), Enum.Parse<AccessErrorCode>(attribute.Value)));
-                        break;
-                    case nameof(CreatedOn):
-                    case nameof(ModifiedOn):
-                        values.Add(XmlConvert.ToDateTime(attribute.Value, XmlDateTimeSerializationMode.RoundtripKind));
-                        break;
-                    default:
-                        throw new NotSupportedException($"Attribute {attribute.Name} is not supported for {nameof(SubdirectoryAccessError)}");
-                }
-            }
-            if (!accessErrorElement.IsEmpty)
-            {
-                string details = accessErrorElement.Value;
-                if (details.Trim().Length > 0)
-                {
-                    sql.Append(", \"").Append(nameof(Details)).Append('"');
-                    values.Add(details);
-                }
-            }
-            sql.Append(") Values({0}");
-            for (int i = 1; i < values.Count; i++)
-                sql.Append(", {").Append(i).Append('}');
-            logger.LogInformation($"Inserting {nameof(SubdirectoryAccessError)} with Id {{Id}}", volumeId);
-            dbContext.Database.ExecuteSqlRaw(sql.Append(')').ToString(), values.ToArray());
-        }
-
         internal static async Task<int> ImportAsync(LocalDbContext dbContext, ILogger<LocalDbContext> logger, Guid subdirectoryId, XElement accessErrorElement)
         {
             string n = nameof(Id);

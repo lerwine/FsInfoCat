@@ -20,21 +20,6 @@ namespace FsInfoCat
 
         public const string DEFAULT_LOCAL_DB_FILENAME = "FsInfoCat.db";
 
-        [Obsolete("Use ExtensionMethods.NewLineRegex")]
-        public static readonly Regex NewLineRegex = new(@"\r\n?|\n", RegexOptions.Compiled);
-
-        [Obsolete("Use ExtensionMethods.AbnormalWsRegex")]
-        public static readonly Regex AbnormalWsRegex = new(@" [\s\p{Z}\p{C}]+|(?! )[\s\p{Z}\p{C}]+", RegexOptions.Compiled);
-
-        [Obsolete("Use ExtensionMethods.OuterWsRegex")]
-        public static readonly Regex OuterWsRegex = new(@"^[\s\p{Z}\p{C}]+|[\s\p{Z}\p{C}]+$", RegexOptions.Compiled);
-
-        [Obsolete("Use ExtensionMethods.BackslashEscapablePattern")]
-        public static readonly Regex BackslashEscapablePattern = new(@"(?<l>[""\\])|[\0\a\b\f\n\r\t\v]|(\p{C}|(?! )(\s|\p{Z}))(?<x>[\da-fA-F])?", RegexOptions.Compiled);
-
-        [Obsolete("Use ExtensionMethods.BackslashEscapableLBPattern")]
-        public static readonly Regex BackslashEscapableLBPattern = new(@"(?<l>[""\\])|(?<n>\r\n?|\n)|[\0\a\b\f\t\v]|(\p{C}|(?! )(\s|\p{Z}))(?<x>[\da-fA-F])?", RegexOptions.Compiled);
-
         public static IHost Host => _host is null
                     ? _initializeTask is null
                         ? throw new InvalidOperationException($"{nameof(Services)}.{nameof(Initialize)} has not been invoked.")
@@ -111,6 +96,7 @@ namespace FsInfoCat
             return await _initializeTask;
         }
 
+        // TODO: Replace usages with ExtensionMethods.ToCsTypeName(Type, bool)
         [Obsolete("Use ExtensionMethods.ToCsTypeName(Type, bool)")]
         public static string ToCsTypeName(Type type, bool omitNamespaces = false)
         {

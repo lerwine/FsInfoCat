@@ -13,17 +13,6 @@ namespace FsInfoCat
 {
     public static class EntityExtensions
     {
-        [Obsolete("Pass cancellation token")]
-        public static async Task<IEnumerable<TProperty>> GetRelatedCollectionAsync<TEntity, TProperty>([DisallowNull] this EntityEntry<TEntity> entry, [DisallowNull] Expression<Func<TEntity, IEnumerable<TProperty>>> propertyExpression)
-            where TEntity : class
-            where TProperty : class
-        {
-            CollectionEntry<TEntity, TProperty> collectionEntry = entry.Collection(propertyExpression);
-            if (!collectionEntry.IsLoaded)
-                await collectionEntry.LoadAsync();
-            return collectionEntry.CurrentValue;
-        }
-
         public static async Task<IEnumerable<TProperty>> GetRelatedCollectionAsync<TEntity, TProperty>([DisallowNull] this EntityEntry<TEntity> entry,
             [DisallowNull] Expression<Func<TEntity, IEnumerable<TProperty>>> propertyExpression, CancellationToken cancellationToken)
             where TEntity : class
@@ -34,17 +23,6 @@ namespace FsInfoCat
             if (!collectionEntry.IsLoaded)
                 await collectionEntry.LoadAsync(cancellationToken);
             return collectionEntry.CurrentValue;
-        }
-
-        [Obsolete("Pass cancellation token")]
-        public static async Task<TProperty> GetRelatedReferenceAsync<TEntity, TProperty>([DisallowNull] this EntityEntry<TEntity> entry, [DisallowNull] Expression<Func<TEntity, TProperty>> propertyExpression)
-            where TEntity : class
-            where TProperty : class
-        {
-            ReferenceEntry<TEntity, TProperty> referenceEntry = entry.Reference(propertyExpression);
-            if (!referenceEntry.IsLoaded)
-                await referenceEntry.LoadAsync();
-            return referenceEntry.CurrentValue;
         }
 
         /// <summary>
