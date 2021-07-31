@@ -10,19 +10,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="Entities.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Entities.tt</DependentUpon>
-    </None>
-    <None Include="EntityTypes.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>EntityTypes.tt</DependentUpon>
-    </None>
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.6" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="5.0.6" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.6">
@@ -49,11 +36,6 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Entities.tt</DependentUpon>
     </Compile>
-    <Compile Update="EntityTypes.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>EntityTypes.tt</DependentUpon>
-    </Compile>
     <Compile Update="Properties\Resources.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -76,10 +58,6 @@
     <None Update="Entities.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Entities.cs</LastGenOutput>
-    </None>
-    <None Update="EntityTypes.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>EntityTypes.cs</LastGenOutput>
     </None>
   </ItemGroup>
 

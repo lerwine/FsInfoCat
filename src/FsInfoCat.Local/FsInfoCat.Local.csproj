@@ -60,15 +60,6 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Entities.cs</LastGenOutput>
     </None>
-    <None Update="Resources\CreateLocalDb.sql">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>CreateLocalDb.tt</DependentUpon>
-    </None>
-    <None Update="Resources\CreateLocalDb.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>CreateLocalDb.sql</LastGenOutput>
-    </None>
   </ItemGroup>
 
   <ItemGroup>
