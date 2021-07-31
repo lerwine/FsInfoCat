@@ -141,7 +141,7 @@ namespace FsInfoCat.Local
             _ttl = AddChangeTracker<long?>(nameof(TTL), null);
             _configuration = AddChangeTracker<CrawlConfiguration>(nameof(Configuration), null);
             _configurationId = AddChangeTracker(nameof(ConfigurationId), Guid.Empty);
-            
+
         }
 
         internal static void BuildEntity(EntityTypeBuilder<CrawlJobLog> builder)
