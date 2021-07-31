@@ -4,7 +4,7 @@ using System.Xml.Linq;
 
 namespace CodeGeneration
 {
-    public static class Constants
+    public static class CgConstants
     {
         #region Sqlite Code Constants
 
@@ -57,13 +57,10 @@ namespace CodeGeneration
         public const string NAME_Properties = "Properties";
         public const string NAME_BaseType = "BaseType";
         public const string NAME_ExtendsEntity = "ExtendsEntity";
-        public const string NAME_ExtendsGenericEntity = "ExtendsGenericEntity";
         public const string NAME_Implements = "Implements";
         public const string NAME_ImplementsEntity = "ImplementsEntity";
-        public const string NAME_ImplementsGenericEntity = "ImplementsGenericEntity";
         public const string NAME_RootInterface = "RootInterface";
         public const string NAME_Type = "Type";
-        public const string NAME_TypeDef = "TypeDef";
         public const string NAME_ItemType = "ItemType";
         public const string NAME_ItemKey = "ItemKey";
         public const string NAME_AmbientBoolean = "AmbientBoolean";
@@ -195,13 +192,10 @@ namespace CodeGeneration
         public static readonly XName XNAME_Properties = XName.Get(NAME_Properties);
         public static readonly XName XNAME_BaseType = XName.Get(NAME_BaseType);
         public static readonly XName XNAME_ExtendsEntity = XName.Get(NAME_ExtendsEntity);
-        public static readonly XName XNAME_ExtendsGenericEntity = XName.Get(NAME_ExtendsGenericEntity);
         public static readonly XName XNAME_Implements = XName.Get(NAME_Implements);
         public static readonly XName XNAME_ImplementsEntity = XName.Get(NAME_ImplementsEntity);
-        public static readonly XName XNAME_ImplementsGenericEntity = XName.Get(NAME_ImplementsGenericEntity);
         public static readonly XName XNAME_RootInterface = XName.Get(NAME_RootInterface);
         public static readonly XName XNAME_Type = XName.Get(NAME_Type);
-        public static readonly XName XNAME_TypeDef = XName.Get(NAME_TypeDef);
         public static readonly XName XNAME_AmbientBoolean = XName.Get(NAME_AmbientBoolean);
         public static readonly XName XNAME_AmbientInt = XName.Get(NAME_AmbientInt);
         public static readonly XName XNAME_AmbientByte = XName.Get(NAME_AmbientByte);

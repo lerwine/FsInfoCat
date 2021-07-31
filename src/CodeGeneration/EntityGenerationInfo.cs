@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 using System.Data;
 using System.Linq;
 using System.Xml.Linq;
-using static CodeGeneration.Constants;
+using static CodeGeneration.CgConstants;
 
 namespace CodeGeneration
 {
@@ -15,26 +15,24 @@ namespace CodeGeneration
             Collection<(string Name, ReadOnlyCollection<PropertyGenerationInfo> Properties)> uniqueConstraints)
         {
             Name = (Source = entityElement).Attribute(NAME_Name)?.Value;
-            CsName = Name.Replace("{", "<").Replace("}", ">");
             TableName = entityElement.Attribute(NAME_TableName)?.Value;
             string name = entityElement.Attribute(NAME_SingularName)?.Value;
             if (string.IsNullOrWhiteSpace(name))
             {
                 int index = name.IndexOf("{");
                 name = (index < 0) ? Name : Name.Substring(0, index);
+#pragma warning disable IDE0057 // Use range operator
                 SingularName = (name.Length > 1 && name.StartsWith("I")) ? name.Substring(1) : name;
+#pragma warning restore IDE0057 // Use range operator
             }
             else
                 SingularName = name;
 
-            BaseTypes = new(entityElement.Elements(XNAME_ExtendsGenericEntity).Select(e => (false, e.Attribute(XNAME_Type)?.Value, Get(entityElement.FindEntityByName(e.Attribute(XNAME_TypeDef)?.Value))))
-                .Concat(entityElement.Elements(XNAME_ExtendsEntity).Attributes(XNAME_Type).Select(a => (false, a.Value, Get(entityElement.FindEntityByName(a.Value)))))
+            BaseTypes = new(entityElement.Elements(XNAME_ExtendsEntity).Attributes(XNAME_Type).Select(a => (false, a.Value, Get(entityElement.FindEntityByName(a.Value))))
                 .Concat(entityElement.Elements(XNAME_BaseType).Attributes(XNAME_Type).Select(a => (true, a.Value, (EntityGenerationInfo)null)))
                 .Concat(entityElement.Elements(XNAME_RootInterface).Attributes(XNAME_Type).Select(a => (false, a.Value, Get(entityElement.FindEntityByName(a.Value)))))
                 .Concat(entityElement.Elements().Select(e =>
                 {
-                    if (e.Name == XNAME_ImplementsGenericEntity)
-                        return (false, e.Attribute(XNAME_Type)?.Value, Get(entityElement.FindEntityByName(e.Attribute(XNAME_TypeDef)?.Value)));
                     if (e.Name == XNAME_ImplementsEntity)
                     {
                         string n = e.Attribute(XNAME_Type)?.Value;
@@ -55,20 +53,29 @@ namespace CodeGeneration
             }
             CheckConstraints = cc;
         }
+
         public string Name { get; }
-        public string CsName { get; }
+
         public XElement Source { get; }
+
         public string TableName { get; }
+
         public ReadOnlyCollection<(string Name, EntityGenerationInfo Entity)> BaseTypes { get; }
+
         public ReadOnlyCollection<PropertyGenerationInfo> Properties { get; }
+
         public ReadOnlyCollection<(string Name, ReadOnlyCollection<PropertyGenerationInfo> Properties)> UniqueConstraints { get; }
+
         public CheckConstraint CheckConstraints { get; }
+
         public string SingularName { get; }
 
         public bool Extends(EntityGenerationInfo other) => !(other is null || ReferenceEquals(this, other)) &&
             (BaseTypes.Any(e => ReferenceEquals(other, e.Entity)) || BaseTypes.Any(e => e.Entity.Extends(other)));
+
         IEnumerable<EntityGenerationInfo> GetAllBaseTypes() => (BaseTypes.Count > 0) ?
             BaseTypes.Select(b => b.Entity).Concat(BaseTypes.SelectMany(b => b.Entity.GetAllBaseTypes())).Distinct() : Enumerable.Empty<EntityGenerationInfo>();
+
         public ReadOnlyCollection<EntityGenerationInfo> GetAllBaseTypesOrdered()
         {
             if (_allOrdered is not null)

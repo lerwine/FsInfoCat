@@ -3,10 +3,13 @@
 <#@ assembly name="EnvDTE80" #>
 <#@ assembly name="System.Core" #>
 <#@ assembly name="System.Linq" #>
+<#@ assembly name="System.Text.RegularExpressions" #>
 <#@ assembly name="System.Xml" #>
 <#@ assembly name="System.Xml.Linq" #>
+<#@ assembly name="System.Xml.XDocument" #>
 <#@ assembly name="System.Xml.ReaderWriter"#>
-<#@ assembly name="C:\Users\lerwi\source\repos\FsInfoCat\src\CodeGeneration\bin\Debug\net5.0\CodeGeneration.dll"#>
+<#@ assembly name="C:\Users\lerwi\Git\FsInfoCat\src\CodeGeneration\bin\Debug\net5.0\CodeGeneration.dll"#>
+<#@ import namespace="CodeGeneration" #>
 <#@ import namespace="EnvDTE" #>
 <#@ import namespace="EnvDTE80" #>
 <#@ import namespace="Microsoft.VisualStudio.TextTemplating" #>
@@ -50,85 +53,85 @@ foreach (ValidationEventArgs e in ValidationErrors)
     }
 }
 
-foreach (XElement enumElement in entityDefinitionsElement.Elements().Elements(XNAME_EnumTypes).Elements())
+foreach (XElement enumElement in entityDefinitionsElement.Elements().Elements(CgConstants.XNAME_EnumTypes).Elements())
 {
-    string typeName = enumElement.Attribute(XNAME_Name)?.Value;
+    string typeName = enumElement.Attribute(CgConstants.XNAME_Name)?.Value;
     XName elementName = enumElement.Name;
     if (string.IsNullOrWhiteSpace(typeName))
-        WriteLine($"#warning {XNAME_Name} attribute missing or empty for /{enumElement.Parent.Parent.Parent.Name}/{enumElement.Parent.Parent.Name}/{XNAME_EnumTypes}/{elementName}[{(enumElement.NodesBeforeSelf().OfType<XElement>().Count(e => e.Name == elementName) + 1)}]");
+        WriteLine($"#warning {CgConstants.XNAME_Name} attribute missing or empty for /{enumElement.Parent.Parent.Parent.Name}/{enumElement.Parent.Parent.Name}/{CgConstants.XNAME_EnumTypes}/{elementName}[{(enumElement.NodesBeforeSelf().OfType<XElement>().Count(e => e.Name == elementName) + 1)}]");
     else
     {
-        string enumXPath = $"/{enumElement.Parent.Parent.Parent.Name}/{enumElement.Parent.Parent.Name}/{XNAME_EnumTypes}/{elementName}[@Name='{typeName}']";
-        foreach (XElement fieldElement in enumElement.Elements(XNAME_Field))
+        string enumXPath = $"/{enumElement.Parent.Parent.Parent.Name}/{enumElement.Parent.Parent.Name}/{CgConstants.XNAME_EnumTypes}/{elementName}[@Name='{typeName}']";
+        foreach (XElement fieldElement in enumElement.Elements(CgConstants.XNAME_Field))
         {
-            string fieldName = fieldElement.Attribute(XNAME_Name)?.Value;
+            string fieldName = fieldElement.Attribute(CgConstants.XNAME_Name)?.Value;
             if (string.IsNullOrWhiteSpace(fieldName))
-                WriteLine($"#warning {XNAME_Name} attribute missing or empty for {enumXPath}/{XNAME_Field}[{(fieldElement.NodesBeforeSelf().OfType<XElement>().Count(e => e.Name == XNAME_Field) + 1)}]");
+                WriteLine($"#warning {CgConstants.XNAME_Name} attribute missing or empty for {enumXPath}/{CgConstants.XNAME_Field}[{(fieldElement.NodesBeforeSelf().OfType<XElement>().Count(e => e.Name == CgConstants.XNAME_Field) + 1)}]");
             else
             {
-                string fieldXPath = $"{enumXPath}/{XNAME_Field}[@Name='{fieldName}']";
-                XAttribute attribute = fieldElement.Attribute(XNAME_FullName);
+                string fieldXPath = $"{enumXPath}/{CgConstants.XNAME_Field}[@Name='{fieldName}']";
+                XAttribute attribute = fieldElement.Attribute(CgConstants.XNAME_FullName);
                 string expected = $"{typeName}.{fieldName}";
                 if (attribute is null)
                 {
-                    WriteLine($"#warning {XNAME_FullName} attribute missing for {fieldXPath}");
-                    fieldElement.SetAttributeValue(XNAME_FullName, expected);
+                    WriteLine($"#warning {CgConstants.XNAME_FullName} attribute missing for {fieldXPath}");
+                    fieldElement.SetAttributeValue(CgConstants.XNAME_FullName, expected);
                 }
                 else if (attribute.Value != expected)
                 {
-                    WriteLine($"#warning {XNAME_FullName} attribute does not match the value \"{expected}\" for {fieldXPath}");
-                    fieldElement.SetAttributeValue(XNAME_FullName, expected);
+                    WriteLine($"#warning {CgConstants.XNAME_FullName} attribute does not match the value \"{expected}\" for {fieldXPath}");
+                    fieldElement.SetAttributeValue(CgConstants.XNAME_FullName, expected);
                 }
             }
         }
     }
 }
 
-foreach (XElement entityElement in entityDefinitionsElement.Elements().Elements(XNAME_Entity))
+foreach (XElement entityElement in entityDefinitionsElement.Elements().Elements(CgConstants.XNAME_Entity))
 {
-    string typeName = entityElement.Attribute(XNAME_Name)?.Value;
+    string typeName = entityElement.Attribute(CgConstants.XNAME_Name)?.Value;
     if (string.IsNullOrWhiteSpace(typeName))
     {
         XName elementName = entityElement.Name;
-        WriteLine($"#warning {XNAME_Name} attribute missing or empty for /{entityElement.Parent.Parent.Name}/{entityElement.Parent.Name}/{XNAME_Entity}[(entityElement.NodesBeforeSelf().OfType<XElement>().Count()]");
+        WriteLine($"#warning {CgConstants.XNAME_Name} attribute missing or empty for /{entityElement.Parent.Parent.Name}/{entityElement.Parent.Name}/{CgConstants.XNAME_Entity}[(entityElement.NodesBeforeSelf().OfType<XElement>().Count()]");
     }
     else
     {
-        string typeXPath = $"/{entityElement.Parent.Parent.Name}/{entityElement.Parent.Name}/{XNAME_Entity}[@Name='{typeName}']";
-        foreach (XElement propertyElement in entityElement.Elements(XNAME_Properties).Elements())
+        string typeXPath = $"/{entityElement.Parent.Parent.Name}/{entityElement.Parent.Name}/{CgConstants.XNAME_Entity}[@Name='{typeName}']";
+        foreach (XElement propertyElement in entityElement.Elements(CgConstants.XNAME_Properties).Elements())
         {
             XName elementName = propertyElement.Name;
-            string propertyName = propertyElement.Attribute(XNAME_Name)?.Value;
+            string propertyName = propertyElement.Attribute(CgConstants.XNAME_Name)?.Value;
             if (string.IsNullOrWhiteSpace(propertyName))
-                WriteLine($"#warning {XNAME_Name} attribute missing or empty for {typeXPath}/{elementName}[{(propertyElement.NodesBeforeSelf().OfType<XElement>().Count(e => e.Name == elementName) + 1)}]");
+                WriteLine($"#warning {CgConstants.XNAME_Name} attribute missing or empty for {typeXPath}/{elementName}[{(propertyElement.NodesBeforeSelf().OfType<XElement>().Count(e => e.Name == elementName) + 1)}]");
             else
             {
                 string propertyXPath = $"{typeXPath}/{elementName}[@Name='{propertyName}']";
-                XAttribute attribute = propertyElement.Attribute(XNAME_FullName);
+                XAttribute attribute = propertyElement.Attribute(CgConstants.XNAME_FullName);
                 string expected = $"{typeName}.{propertyName}";
                 if (attribute is null)
                 {
-                    WriteLine($"#warning {XNAME_FullName} attribute missing for {propertyXPath}");
-                    propertyElement.SetAttributeValue(XNAME_FullName, expected);
+                    WriteLine($"#warning {CgConstants.XNAME_FullName} attribute missing for {propertyXPath}");
+                    propertyElement.SetAttributeValue(CgConstants.XNAME_FullName, expected);
                 }
                 else if (attribute.Value != expected)
                 {
-                    WriteLine($"#warning {XNAME_FullName} attribute does not match the value \"{expected}\" for {propertyXPath}");
-                    propertyElement.SetAttributeValue(XNAME_FullName, expected);
+                    WriteLine($"#warning {CgConstants.XNAME_FullName} attribute does not match the value \"{expected}\" for {propertyXPath}");
+                    propertyElement.SetAttributeValue(CgConstants.XNAME_FullName, expected);
                 }
             }
         }
     }
 }
 
-PushIndent("    ");
-bool isSubsequentMember = GenerateEnumTypes(entityDefinitionsElement.Elements(XNAME_Root).Elements(XNAME_EnumTypes).Elements());
-GenerateEntityTypes(entityDefinitionsElement.Elements(XNAME_Root).Elements(XNAME_Entity), isSubsequentMember);
+PushIndent("    "); 
+bool isSubsequentMember = GenerateEnumTypes(entityDefinitionsElement.Elements(CgConstants.XNAME_Root).Elements(CgConstants.XNAME_EnumTypes).Elements());
+GenerateEntityTypes(entityDefinitionsElement.Elements(CgConstants.XNAME_Root).Elements(CgConstants.XNAME_Entity), isSubsequentMember);
 PopIndent();
 
 #>
 
-    public static class DbConstants
+    public static class DbCgConstants
     {
         public const int DbColMaxLen_SimpleName = 256;
         public const int DbColMaxLen_LongName = 1024;
@@ -146,8 +149,8 @@ namespace <#=DefaultNamespace#>.Local
 <#
 
 PushIndent("    ");
-isSubsequentMember = GenerateEnumTypes(entityDefinitionsElement.Elements(XNAME_Local).Elements(XNAME_EnumTypes).Elements());
-GenerateEntityTypes(entityDefinitionsElement.Elements(XNAME_Local).Elements(XNAME_Entity), isSubsequentMember);
+isSubsequentMember = GenerateEnumTypes(entityDefinitionsElement.Elements(CgConstants.XNAME_Local).Elements(CgConstants.XNAME_EnumTypes).Elements());
+GenerateEntityTypes(entityDefinitionsElement.Elements(CgConstants.XNAME_Local).Elements(CgConstants.XNAME_Entity), isSubsequentMember);
 PopIndent();
 
 #>
@@ -158,8 +161,8 @@ namespace <#=DefaultNamespace#>.Upstream
 <#
 
 PushIndent("    ");
-isSubsequentMember = GenerateEnumTypes(entityDefinitionsElement.Elements(XNAME_Upstream).Elements(XNAME_EnumTypes).Elements());
-GenerateEntityTypes(entityDefinitionsElement.Elements(XNAME_Upstream).Elements(XNAME_Entity), isSubsequentMember);
+isSubsequentMember = GenerateEnumTypes(entityDefinitionsElement.Elements(CgConstants.XNAME_Upstream).Elements(CgConstants.XNAME_EnumTypes).Elements());
+GenerateEntityTypes(entityDefinitionsElement.Elements(CgConstants.XNAME_Upstream).Elements(CgConstants.XNAME_Entity), isSubsequentMember);
 PopIndent();
 
 #>
@@ -167,31 +170,9 @@ PopIndent();
 
 <#+
 
-static IEnumerable<string> GetBaseTypeNames(XElement entityElement)
-{
-    XElement parent = entityElement?.Parent;
-    if (parent is null || entityElement?.Name != XNAME_Entity)
-        return Enumerable.Empty<string>();
-            
-    IEnumerable<string> extends = GetElementsByNames(entityElement, XNAME_ExtendsEntity, XNAME_ExtendsGenericEntity).Attributes(XNAME_Type).Select(a => a.Value);
-    IEnumerable<string> implements = GetElementsByNames(entityElement, XNAME_Implements, XNAME_ImplementsEntity, XNAME_ImplementsGenericEntity).Attributes(XNAME_Type).Select(a => a.Value);
-    switch (parent.Name.LocalName)
-    {
-        case NAME_Root:
-            extends = extends.Concat(implements).Distinct();
-            break;
-        case NAME_Local:
-        case NAME_Upstream:
-            extends = extends.Concat(entityElement.Attributes(XNAME_RootInterface).Select(a => a.Value)).Concat(implements).Distinct();
-            break;
-        default:
-            return Enumerable.Empty<string>();
-    }
-    return extends.Select(n => n.Replace("{", "<").Replace("}", ">"));
-}
 void WriteAmbientValueAttribute(XElement memberElement)
 {
-    string ambientValue = memberElement.Elements(XNAME_AmbientString).Attributes(XNAME_Value).Select(a => a.Value).FirstOrDefault();
+    string ambientValue = memberElement.Elements(CgConstants.XNAME_AmbientString).Attributes(CgConstants.XNAME_Value).Select(a => a.Value).FirstOrDefault();
     if (ambientValue is not null)
     {
         Write("[AmbientValue(\"");
@@ -199,9 +180,9 @@ void WriteAmbientValueAttribute(XElement memberElement)
         WriteLine("\")]");
         return;
     }
-    foreach (XName name in new[] { XNAME_AmbientEnum, XNAME_AmbientBoolean, XNAME_AmbientInt })
+    foreach (XName name in new[] { CgConstants.XNAME_AmbientEnum, CgConstants.XNAME_AmbientBoolean, CgConstants.XNAME_AmbientInt })
     {
-        ambientValue = memberElement.Elements(name).Attributes(XNAME_Value).Select(a => a.Value).FirstOrDefault();
+        ambientValue = memberElement.Elements(name).Attributes(CgConstants.XNAME_Value).Select(a => a.Value).FirstOrDefault();
         if (!string.IsNullOrWhiteSpace(ambientValue))
         {
             Write("[AmbientValue(");
@@ -210,7 +191,7 @@ void WriteAmbientValueAttribute(XElement memberElement)
             return;
         }
     }
-    ambientValue = memberElement.Elements(XNAME_AmbientUInt).Attributes(XNAME_Value).Select(a => a.Value).FirstOrDefault();
+    ambientValue = memberElement.Elements(CgConstants.XNAME_AmbientUInt).Attributes(CgConstants.XNAME_Value).Select(a => a.Value).FirstOrDefault();
     if (!string.IsNullOrWhiteSpace(ambientValue))
     {
         Write("[AmbientValue(");
@@ -218,7 +199,7 @@ void WriteAmbientValueAttribute(XElement memberElement)
         WriteLine("u)]");
         return;
     }
-    ambientValue = memberElement.Elements(XNAME_AmbientLong).Attributes(XNAME_Value).Select(a => a.Value).FirstOrDefault();
+    ambientValue = memberElement.Elements(CgConstants.XNAME_AmbientLong).Attributes(CgConstants.XNAME_Value).Select(a => a.Value).FirstOrDefault();
     if (!string.IsNullOrWhiteSpace(ambientValue))
     {
         Write("[AmbientValue(");
@@ -226,7 +207,7 @@ void WriteAmbientValueAttribute(XElement memberElement)
         WriteLine("L)]");
         return;
     }
-    ambientValue = memberElement.Elements(XNAME_AmbientULong).Attributes(XNAME_Value).Select(a => a.Value).FirstOrDefault();
+    ambientValue = memberElement.Elements(CgConstants.XNAME_AmbientULong).Attributes(CgConstants.XNAME_Value).Select(a => a.Value).FirstOrDefault();
     if (!string.IsNullOrWhiteSpace(ambientValue))
     {
         Write("[AmbientValue(");
@@ -234,7 +215,7 @@ void WriteAmbientValueAttribute(XElement memberElement)
         WriteLine("UL)]");
         return;
     }
-    ambientValue = memberElement.Elements(XNAME_AmbientDouble).Attributes(XNAME_Value).Select(a => a.Value).FirstOrDefault();
+    ambientValue = memberElement.Elements(CgConstants.XNAME_AmbientDouble).Attributes(CgConstants.XNAME_Value).Select(a => a.Value).FirstOrDefault();
     if (!string.IsNullOrWhiteSpace(ambientValue))
     {
         Write("[AmbientValue(");
@@ -242,7 +223,7 @@ void WriteAmbientValueAttribute(XElement memberElement)
         WriteLine(ambientValue.Contains(".") ? ")]" : ".0)]");
         return;
     }
-    ambientValue = memberElement.Elements(XNAME_AmbientFloat).Attributes(XNAME_Value).Select(a => a.Value).FirstOrDefault();
+    ambientValue = memberElement.Elements(CgConstants.XNAME_AmbientFloat).Attributes(CgConstants.XNAME_Value).Select(a => a.Value).FirstOrDefault();
     if (!string.IsNullOrWhiteSpace(ambientValue))
     {
         Write("[AmbientValue(");
@@ -250,13 +231,15 @@ void WriteAmbientValueAttribute(XElement memberElement)
         WriteLine("f)]");
         return;
     }
-    foreach (XName name in new[] { XNAME_AmbientByte, XNAME_AmbientSByte, XNAME_AmbientShort, XNAME_AmbientUShort })
+    foreach (XName name in new[] { CgConstants.XNAME_AmbientByte, CgConstants.XNAME_AmbientSByte, CgConstants.XNAME_AmbientShort, CgConstants.XNAME_AmbientUShort })
     {
-        ambientValue = memberElement.Elements(name).Attributes(XNAME_Value).Select(a => a.Value).FirstOrDefault();
+        ambientValue = memberElement.Elements(name).Attributes(CgConstants.XNAME_Value).Select(a => a.Value).FirstOrDefault();
         if (!string.IsNullOrWhiteSpace(ambientValue))
         {
             Write("[AmbientValue((");
+#pragma warning disable IDE0057 // Use range operator
             Write(name.LocalName.Substring(7).ToLower());
+#pragma warning restore IDE0057 // Use range operator
             Write(")");
             Write(ambientValue);
             WriteLine(")]");
@@ -266,10 +249,10 @@ void WriteAmbientValueAttribute(XElement memberElement)
 }
 void WriteDisplayAttribute(string memberName, Func<XName, IEnumerable<XAttribute>> getAttributes, string typeName = null)
 {
-    string displayNameResource = getAttributes(XNAME_DisplayNameResource).Select(a => a.Value).DefaultIfEmpty(string.IsNullOrWhiteSpace(typeName) ?
+    string displayNameResource = getAttributes(CgConstants.XNAME_DisplayNameResource).Select(a => a.Value).DefaultIfEmpty(string.IsNullOrWhiteSpace(typeName) ?
         $"DisplayName_{memberName}" : $"DisplayName_{typeName}_{memberName}").First();
-    string descriptionResource = getAttributes(XNAME_DescriptionResource).Select(a => a.Value).FirstOrDefault();
-    string resourceType = getAttributes(XNAME_ResourceType).Select(a => a.Value).DefaultIfEmpty("Properties.Resources").First();
+    string descriptionResource = getAttributes(CgConstants.XNAME_DescriptionResource).Select(a => a.Value).FirstOrDefault();
+    string resourceType = getAttributes(CgConstants.XNAME_ResourceType).Select(a => a.Value).DefaultIfEmpty("Properties.Resources").First();
     if (string.IsNullOrWhiteSpace(displayNameResource))
     {
         if (!string.IsNullOrWhiteSpace(descriptionResource))
@@ -305,7 +288,7 @@ void GenerateXmlDoc(XElement xmlDocElement)
         return;
     if (xmlDocElement.IsEmpty)
     {
-        foreach (string lt in NewLineRegex.Split(xmlDocElement.ToString(SaveOptions.None)))
+        foreach (string lt in CgConstants.NewLineRegex.Split(xmlDocElement.ToString(SaveOptions.None)))
         {
             Write("/// ");
             WriteLine(lt.Trim());
@@ -319,7 +302,7 @@ void GenerateXmlDoc(XElement xmlDocElement)
             lastNode.Value = $"{previousTextNode.Value}{lastNode.Value}";
             previousTextNode.Remove();
         }
-        if (!TrailingEmptyLine.IsMatch(lastNode.Value))
+        if (!CgConstants.TrailingEmptyLine.IsMatch(lastNode.Value))
             lastNode.Value = $"{lastNode.Value}\n";
     }
     else
@@ -336,15 +319,15 @@ void GenerateXmlDoc(XElement xmlDocElement)
         }
         if (ReferenceEquals(firstNode, lastNode))
         {
-            if (LeadingEmptyLine.Match(firstNode.Value).Length < firstNode.Value.Length)
+            if (CgConstants.LeadingEmptyLine.Match(firstNode.Value).Length < firstNode.Value.Length)
                 firstNode.Value = $"\n{firstNode.Value}";
         }
-        else if (!LeadingEmptyLine.IsMatch(firstNode.Value))
+        else if (!CgConstants.LeadingEmptyLine.IsMatch(firstNode.Value))
             firstNode.Value = $"\n{firstNode.Value}";
     }
     else
         xmlDocElement.FirstNode.AddBeforeSelf(new XText("\n"));
-    IEnumerable<string> lines = NewLineRegex.Split(xmlDocElement.ToString(SaveOptions.None));
+    IEnumerable<string> lines = CgConstants.NewLineRegex.Split(xmlDocElement.ToString(SaveOptions.None));
     if (!(lines.Skip(2).Any() && (lines = lines.Take(1).Concat(lines.Skip(1).SkipWhile(s => string.IsNullOrWhiteSpace(s))).ToArray()).Skip(3).Any() &&
         (lines = lines.Reverse().Take(1).Concat(lines.Reverse().Skip(1).SkipWhile(s => string.IsNullOrWhiteSpace(s))).Reverse().ToArray()).Skip(3).Any()))
     {
@@ -356,17 +339,21 @@ void GenerateXmlDoc(XElement xmlDocElement)
         return;
     }
 
-    if (LeadingWsRegex.IsMatch(lines.Skip(1).First()))
+    if (CgConstants.LeadingWsRegex.IsMatch(lines.Skip(1).First()))
     {
-        int indent = lines.Skip(1).Reverse().Skip(1).Reverse().Select(s => LeadingWsRegex.Match(s)).Select(m => m.Success ? m.Length : 0).Min();
+        int indent = lines.Skip(1).Reverse().Skip(1).Reverse().Select(s => CgConstants.LeadingWsRegex.Match(s)).Select(m => m.Success ? m.Length : 0).Min();
         if (indent > 0)
+#pragma warning disable IDE0057 // Use range operator
             lines = lines.Take(1).Concat(lines.Skip(1).Reverse().Skip(1).Reverse().Select(s => s.Substring(indent))).Concat(lines.Reverse().Take(1));
+#pragma warning restore IDE0057 // Use range operator
     }
     else
     {
-        int indent = lines.Skip(2).Reverse().Skip(1).Reverse().Select(s => LeadingWsRegex.Match(s)).Select(m => m.Success ? m.Length : 0).Min();
+        int indent = lines.Skip(2).Reverse().Skip(1).Reverse().Select(s => CgConstants.LeadingWsRegex.Match(s)).Select(m => m.Success ? m.Length : 0).Min();
         if (indent > 0)
+#pragma warning disable IDE0057 // Use range operator
             lines = lines.Take(2).Concat(lines.Skip(2).Reverse().Skip(1).Reverse().Select(s => s.Substring(indent))).Concat(lines.Reverse().Take(1));
+#pragma warning restore IDE0057 // Use range operator
     }
 
     Write("/// ");
@@ -381,25 +368,25 @@ void GenerateXmlDoc(XElement xmlDocElement)
 }
 void GenerateEnumType(XElement enumElement)
 {
-    GenerateXmlDoc(enumElement.Element(XNAME_summary));
-    GenerateXmlDoc(enumElement.Element(XNAME_remarks));
-    foreach (XElement e in enumElement.Elements(XNAME_seealso))
+    GenerateXmlDoc(enumElement.Element(CgConstants.XNAME_summary));
+    GenerateXmlDoc(enumElement.Element(CgConstants.XNAME_remarks));
+    foreach (XElement e in enumElement.Elements(CgConstants.XNAME_seealso))
     {
         if (!e.IsEmpty && e.Value.Trim().Length == 0)
             e.RemoveAll();
         GenerateXmlDoc(e);
     }
-    if (enumElement.Attributes(XNAME_IsFlags).Any(a => FromXmlBoolean(a.Value) ?? false))
+    EnumGenerationInfo generationInfo = EnumGenerationInfo.Get(enumElement);
+    if (generationInfo.IsFlags)
         WriteLine("[Flags]");
     Write("public enum ");
-    string typeName = enumElement.Attribute(XNAME_Name)?.Value;
-    Write(typeName);
+    Write(generationInfo.Name);
     Write(" : ");
-    WriteLine(enumElement.Name.LocalName.ToLower());
+    WriteLine(generationInfo.CsTypeName);
     WriteLine("{");
     PushIndent("    ");
     bool isSubsequentMember = false;
-    foreach (XElement fieldElement in enumElement.Elements(XNAME_Field))
+    foreach (FieldGenerationInfo field in generationInfo.Fields)
     {
         if (isSubsequentMember)
         {
@@ -409,20 +396,19 @@ void GenerateEnumType(XElement enumElement)
         }
         else
             isSubsequentMember = true;
-        GenerateXmlDoc(fieldElement.Element(XNAME_summary));
-        GenerateXmlDoc(fieldElement.Element(XNAME_remarks));
-        foreach (XElement e in fieldElement.Elements(XNAME_seealso))
+        GenerateXmlDoc(field.Source.Element(CgConstants.XNAME_summary));
+        GenerateXmlDoc(field.Source.Element(CgConstants.XNAME_remarks));
+        foreach (XElement e in field.Source.Elements(CgConstants.XNAME_seealso))
         {
             if (!e.IsEmpty && e.Value.Trim().Length == 0)
                 e.RemoveAll();
             GenerateXmlDoc(e);
         }
-        WriteAmbientValueAttribute(fieldElement);
-        string fieldName = fieldElement.Attribute(XNAME_Name)?.Value;
-        WriteDisplayAttribute(fieldName, n => fieldElement.Attributes(n), typeName);
-        Write(fieldName);
+        WriteAmbientValueAttribute(field.Source);
+        WriteDisplayAttribute(field.Name, n => field.Source.Attributes(n), generationInfo.Name);
+        Write(field.Name);
         Write(" = ");
-        Write(fieldElement.Attribute(XNAME_Value)?.Value);
+        Write(field.Value.CsCode);
     }
 
     PopIndent();
@@ -452,83 +438,82 @@ void GenerateEntityTypes(IEnumerable<XElement> entityElements, bool isSubsequent
         GenerateEntityInterface(typeElement);
     }
 }
-void GenerateProperty(string typeName, PropertyInheritanceInfo property)
+void GenerateProperty(string typeName, PropertyGenerationInfo property)
 {
-    string propertyName = property.BaseDefinitionElement.Attribute(XNAME_Name)?.Value;
-    XElement commentDocElement = property.Source.Element(XNAME_summary) ?? property.InheritedProperties.Elements(XNAME_summary).FirstOrDefault();
+    XElement commentDocElement = property.Source.Element(CgConstants.XNAME_summary) ?? property.Inherited.Select(p => p.Source).Elements(CgConstants.XNAME_summary).FirstOrDefault();
     if (commentDocElement is null)
-        WriteLine($"#warning No summary element found for {typeName}.{propertyName}");
+        WriteLine($"#warning No summary element found for {typeName}.{property.Name}");
     else
         GenerateXmlDoc(commentDocElement);
-    commentDocElement = property.Source.Element(XNAME_value) ?? property.InheritedProperties.Elements(XNAME_value).FirstOrDefault();
+    commentDocElement = property.Source.Element(CgConstants.XNAME_value) ?? property.Inherited.Select(p => p.Source).Elements(CgConstants.XNAME_value).FirstOrDefault();
     if (commentDocElement is null)
-        WriteLine($"#warning No value element found for {typeName}.{propertyName}");
+        WriteLine($"#warning No value element found for {typeName}.{property.Name}");
     else
         GenerateXmlDoc(commentDocElement);
-    commentDocElement = property.Source.Element(XNAME_remarks) ?? property.InheritedProperties.Elements(XNAME_remarks).FirstOrDefault();
+    commentDocElement = property.Source.Element(CgConstants.XNAME_remarks) ?? property.Inherited.Select(p => p.Source).Elements(CgConstants.XNAME_remarks).FirstOrDefault();
     if (commentDocElement is not null)
         GenerateXmlDoc(commentDocElement);
-    foreach (XElement e in property.Source.Elements(XNAME_seealso).Concat(property.InheritedProperties.Elements(XNAME_seealso)).Distinct())
+    foreach (XElement e in property.Source.Elements(CgConstants.XNAME_seealso).Concat(property.Inherited.Select(p => p.Source).Elements(CgConstants.XNAME_seealso)).Distinct())
     {
         if (!e.IsEmpty && e.Value.Trim().Length == 0)
             e.RemoveAll();
         GenerateXmlDoc(e);
     }
-    WriteDisplayAttribute(propertyName, n => property.Source.Attributes(n).Concat(property.InheritedProperties.Attributes(n)));
-    bool allowsNull = property.BaseDefinitionElement.Attributes(XNAME_AllowNull).Any(a => FromXmlBoolean(a.Value) ?? false) || property.BaseDefinitionElement.Elements(XNAME_DefaultNull).Any();
-    if (property.IsNew)
+    WriteDisplayAttribute(property.Name, n => property.Source.Attributes(n).Concat(property.Inherited.Select(p => p.Source).Attributes(n)));
+    if (property.Inherited.Count > 0)
         Write("new ");
     switch (property.Source.Name.LocalName)
     {
-        case NAME_Byte:
-        case NAME_SByte:
-        case NAME_Short:
-        case NAME_UShort:
-        case NAME_Int:
-        case NAME_UInt:
-        case NAME_Long:
-        case NAME_ULong:
-        case NAME_Float:
-        case NAME_Double:
+        case CgConstants.NAME_Byte:
+        case CgConstants.NAME_SByte:
+        case CgConstants.NAME_Short:
+        case CgConstants.NAME_UShort:
+        case CgConstants.NAME_Int:
+        case CgConstants.NAME_UInt:
+        case CgConstants.NAME_Long:
+        case CgConstants.NAME_ULong:
+        case CgConstants.NAME_Float:
+        case CgConstants.NAME_Double:
             Write(property.Source.Name.LocalName.ToLower());
-            Write(allowsNull ? "? " : " ");
+            Write(property.AllowNull ? "? " : " ");
             break;
-        case NAME_Text:
-        case NAME_NVarChar:
+        case CgConstants.NAME_Text:
+        case CgConstants.NAME_NVarChar:
             Write("string ");
             break;
-        case NAME_VolumeIdentifier:
-        case NAME_DriveType:
-        case NAME_MD5Hash:
-        case NAME_DateTime:
+        case CgConstants.NAME_VolumeIdentifier:
+        case CgConstants.NAME_DriveType:
+        case CgConstants.NAME_MD5Hash:
+        case CgConstants.NAME_DateTime:
             Write(property.Source.Name.LocalName);
-            Write(allowsNull ? "? " : " ");
+            Write(property.AllowNull ? "? " : " ");
             break;
-        case NAME_ByteValues:
-        case NAME_MultiStringValue:
+        case CgConstants.NAME_ByteValues:
+        case CgConstants.NAME_MultiStringValue:
             Write(property.Source.Name.LocalName);
             Write(" ");
             break;
-        case NAME_UniqueIdentifier:
-        case NAME_NewIdNavRef:
-            Write(allowsNull ? "Guid? " : "Guid ");
+        case CgConstants.NAME_UniqueIdentifier:
+            Write(property.AllowNull ? "Guid? " : "Guid ");
             break;
-        case NAME_Bit:
-            Write(allowsNull ? "bool? " : "bool ");
+        case CgConstants.NAME_Bit:
+            Write(property.AllowNull ? "bool? " : "bool ");
             break;
-        case NAME_Enum:
-            Write(property.Source.Attribute(XNAME_Type)?.Value);
-            Write(allowsNull ? "? " : " ");
+        case CgConstants.NAME_Enum:
+            Write(property.Source.Attribute(CgConstants.XNAME_Type)?.Value);
+            Write(property.AllowNull ? "? " : " ");
             break;
-        case NAME_CollectionNavigation:
-        case NAME_NewCollectionNavigation:
+        case CgConstants.NAME_CollectionNavigation:
+        case CgConstants.NAME_CollectionNavigation_ItemKey:
+        case CgConstants.NAME_CollectionNavigation_ItemType:
             Write("IEnumerable<");
-            Write(property.Source.Attribute(XNAME_ItemType)?.Value ?? GetItemEntity(property.Source)?.Attribute(XNAME_Name)?.Value);
+            Write(property.ReferencedType.Name);
             Write("> ");
             break;
-        case NAME_RelatedEntity:
-        case NAME_NewRelatedEntity:
-            Write(property.Source.Attribute(XNAME_TypeDef)?.Value ?? GetRelatedEntity(property.Source)?.Attribute(XNAME_Name)?.Value);
+        case CgConstants.NAME_RelatedEntity:
+        case CgConstants.NAME_RelatedEntity_Key:
+        case CgConstants.NAME_RelatedEntity_Type:
+            Write(property.ReferencedType.Name);
             Write(" ");
             break;
         default:
@@ -537,73 +522,70 @@ void GenerateProperty(string typeName, PropertyInheritanceInfo property)
             break;
     }
 
-    Write(propertyName);
-    WriteLine(property.BaseDefinitionElement.Attributes(XNAME_IsGenericWritable).Any(a => FromXmlBoolean(a.Value) ?? false) ? " { get; set; }" : " { get; }");
+    Write(property.Name);
+    WriteLine(property.IsGenericWritable ? " { get; set; }" : " { get; }");
 }
 void GenerateEntityInterface(XElement entityElement)
 {
-    XElement[] baseEntities = GetAllBaseEntities(entityElement);
-    string typeName = entityElement.Attribute(XNAME_Name)?.Value.Replace("{", "<").Replace("}", ">");
-
-    string[] baseTypeNames = GetBaseTypeNames(entityElement).ToArray();
-    XElement commentDocElement = entityElement.Element(XNAME_summary) ?? baseEntities.Elements(XNAME_summary).FirstOrDefault();
+    EntityGenerationInfo generationInfo = EntityGenerationInfo.Get(entityElement);
+    XElement commentDocElement = entityElement.Element(CgConstants.XNAME_summary) ?? generationInfo.BaseTypes.Select(b => b.Entity.Source).Elements(CgConstants.XNAME_summary).FirstOrDefault();
     if (commentDocElement is null)
-        WriteLine($"#warning No summary element found for {typeName}");
+        WriteLine($"#warning No summary element found for {generationInfo.Name}");
     else
         GenerateXmlDoc(commentDocElement);
-    foreach (XElement e in entityElement.Elements(XNAME_typeparam).Concat(baseEntities.Elements(XNAME_typeparam)).Distinct())
+    foreach (XElement e in entityElement.Elements(CgConstants.XNAME_typeparam).Concat(generationInfo.BaseTypes.Select(b => b.Entity.Source).Elements(CgConstants.XNAME_typeparam)).Distinct())
         GenerateXmlDoc(e);
-    commentDocElement = entityElement.Element(XNAME_remarks) ?? baseEntities.Elements(XNAME_remarks).FirstOrDefault();
+    commentDocElement = entityElement.Element(CgConstants.XNAME_remarks) ?? generationInfo.BaseTypes.Select(b => b.Entity.Source).Elements(CgConstants.XNAME_remarks).FirstOrDefault();
     if (commentDocElement is not null)
         GenerateXmlDoc(commentDocElement);
-    foreach (XElement e in entityElement.Elements(XNAME_seealso).Concat(baseTypeNames.Select(s => new XElement(XNAME_seealso, new XAttribute(XNAME_cref, s)))))
+    foreach (XElement e in entityElement.Elements(CgConstants.XNAME_seealso).Concat(generationInfo.BaseTypes.Select(b => b.Entity.Source).Select(s => new XElement(CgConstants.XNAME_seealso, new XAttribute(CgConstants.XNAME_cref, s)))))
     {
         if (!e.IsEmpty && e.Value.Trim().Length == 0)
             e.RemoveAll();
         GenerateXmlDoc(e);
     }
-    PropertyInheritanceInfo[] properties = entityElement.Elements(XNAME_Properties).Elements().Select(e => GetAllBaseProperties(e)).Where(e => !e.DoNotEmit).ToArray();
+    IEnumerable<PropertyGenerationInfo> properties = generationInfo.Properties.Where(p => ReferenceEquals(p.ReferencedType, generationInfo));
     Write("public interface ");
-    if (baseTypeNames.Length > 0)
+    if (generationInfo.BaseTypes.Count > 0)
     {
-        Write(typeName);
+        Write(generationInfo.Name);
         Write(" : ");
 
-        if (baseTypeNames.Skip(1).Any())
+        if (generationInfo.BaseTypes.Count > 1)
         {
-            foreach (string t in baseTypeNames.Reverse().Skip(1).Reverse())
+            foreach ((string Name, EntityGenerationInfo Entity) t in generationInfo.BaseTypes.Reverse().Skip(1).Reverse())
             {
-                Write(t);
+                Write(t.Name);
                 Write(", ");
             }
         }
-        if (properties.Length == 0)
+        if (!properties.Any())
         {
-            Write(baseTypeNames.Last());
+            Write(generationInfo.BaseTypes.Last().Name);
             WriteLine("{ }");
             return;
         }
-        WriteLine(baseTypeNames.Last());
+        Write(generationInfo.BaseTypes.Last().Name);
     }
     else
     {
-        if (properties.Length == 0)
+        if (!properties.Any())
         {
-            Write(typeName);
+            Write(generationInfo.Name);
             WriteLine("{ }");
             return;
         }
-        WriteLine(typeName);
+        WriteLine(generationInfo.Name);
     }
 
     WriteLine("{");
     PushIndent("    ");
 
-    GenerateProperty(typeName, properties[0]);
-    foreach (PropertyInheritanceInfo p in properties.Skip(1))
+    GenerateProperty(generationInfo.Name, properties.First());
+    foreach (PropertyGenerationInfo p in properties.Skip(1))
     {
         WriteLine("");
-        GenerateProperty(typeName, p);
+        GenerateProperty(generationInfo.Name, p);
     }
 
     PopIndent();

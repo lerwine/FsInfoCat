@@ -5,7 +5,7 @@ using System.Data;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
-using static CodeGeneration.Constants;
+using static CodeGeneration.CgConstants;
 
 namespace CodeGeneration
 {
@@ -129,24 +129,40 @@ namespace CodeGeneration
             MinValue = min;
             MaxValue = max;
         }
+
         public string Name { get; }
+
         public DbType Type { get; }
+
         public string CsTypeName { get; }
+
         public string SqlTypeName { get; }
+
         public XElement Source { get; }
+
         public PropertyValueCode MaxValue { get; }
+
         public PropertyValueCode MinValue { get; }
+
         public ReadOnlyCollection<FieldGenerationInfo> Fields { get; }
+
         public bool IsFlags { get; }
 
-        public static EnumGenerationInfo Get(XElement xElement)
+        public static EnumGenerationInfo Get(XElement enumElement)
         {
-            throw new NotImplementedException();
+            if (enumElement is null)
+                return null;
+            EnumGenerationInfo result = enumElement.Annotation<EnumGenerationInfo>();
+            if (result is not null)
+                return result;
+            if (enumElement.IsEnumTypeElement())
+            {
+                result = new(enumElement);
+                enumElement.AddAnnotation(result);
+            }
+            return result;
         }
 
-        public IEnumerable<IMemberGenerationInfo> GetMembers()
-        {
-            throw new NotImplementedException();
-        }
+        public IEnumerable<IMemberGenerationInfo> GetMembers() => Fields.Cast<IMemberGenerationInfo>();
     }
 }

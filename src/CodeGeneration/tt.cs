@@ -36,9 +36,9 @@ namespace TextTemplating
                 _lastLineStart = 0;
                 _lastLineNotEmpty = false;
             }
-            if (Constants.NewLineRegex.IsMatch(text))
+            if (CgConstants.NewLineRegex.IsMatch(text))
             {
-                string[] lines = Constants.NewLineRegex.Split(text);
+                string[] lines = CgConstants.NewLineRegex.Split(text);
                 if (_currentIndent.Length > 0)
                 {
                     if (_lastLineNotEmpty)
@@ -119,7 +119,7 @@ namespace TextTemplating
             {
                 if (_entityDefinitionsDocument is null)
                 {
-                    XmlReaderSettings readerSettings = new XmlReaderSettings { ValidationType = ValidationType.Schema };
+                    XmlReaderSettings readerSettings = new() { ValidationType = ValidationType.Schema };
                     readerSettings.Schemas.Add("", Path.Combine(Path.GetDirectoryName(Solution.FullName), "FsInfoCat\\Resources\\EntityDefinitions.xsd"));
                     readerSettings.ValidationEventHandler += XmlValidationEventHandler;
                     using XmlReader reader = XmlReader.Create(Path.Combine(Path.GetDirectoryName(Solution.FullName), "FsInfoCat\\Resources\\EntityDefinitions.xml"), readerSettings);
@@ -166,71 +166,71 @@ namespace <#={DefaultNamespace}#>
                 }
             }
 
-            foreach (XElement enumElement in entityDefinitionsElement.Elements().Elements(Constants.XNAME_EnumTypes).Elements())
+            foreach (XElement enumElement in entityDefinitionsElement.Elements().Elements(CgConstants.XNAME_EnumTypes).Elements())
             {
-                string typeName = enumElement.Attribute(Constants.XNAME_Name)?.Value;
+                string typeName = enumElement.Attribute(CgConstants.XNAME_Name)?.Value;
                 XName elementName = enumElement.Name;
                 if (string.IsNullOrWhiteSpace(typeName))
-                    WriteLine($"#warning {Constants.XNAME_Name} attribute missing or empty for /{enumElement.Parent.Parent.Parent.Name}/{enumElement.Parent.Parent.Name}/{Constants.XNAME_EnumTypes}/{elementName}[{(enumElement.NodesBeforeSelf().OfType<XElement>().Count(e => e.Name == elementName) + 1)}]");
+                    WriteLine($"#warning {CgConstants.XNAME_Name} attribute missing or empty for /{enumElement.Parent.Parent.Parent.Name}/{enumElement.Parent.Parent.Name}/{CgConstants.XNAME_EnumTypes}/{elementName}[{(enumElement.NodesBeforeSelf().OfType<XElement>().Count(e => e.Name == elementName) + 1)}]");
                 else
                 {
-                    string enumXPath = $"/{enumElement.Parent.Parent.Parent.Name}/{enumElement.Parent.Parent.Name}/{Constants.XNAME_EnumTypes}/{elementName}[@Name='{typeName}']";
-                    foreach (XElement fieldElement in enumElement.Elements(Constants.XNAME_Field))
+                    string enumXPath = $"/{enumElement.Parent.Parent.Parent.Name}/{enumElement.Parent.Parent.Name}/{CgConstants.XNAME_EnumTypes}/{elementName}[@Name='{typeName}']";
+                    foreach (XElement fieldElement in enumElement.Elements(CgConstants.XNAME_Field))
                     {
-                        string fieldName = fieldElement.Attribute(Constants.XNAME_Name)?.Value;
+                        string fieldName = fieldElement.Attribute(CgConstants.XNAME_Name)?.Value;
                         if (string.IsNullOrWhiteSpace(fieldName))
-                            WriteLine($"#warning {Constants.XNAME_Name} attribute missing or empty for {enumXPath}/{Constants.XNAME_Field}[{(fieldElement.NodesBeforeSelf().OfType<XElement>().Count(e => e.Name == Constants.XNAME_Field) + 1)}]");
+                            WriteLine($"#warning {CgConstants.XNAME_Name} attribute missing or empty for {enumXPath}/{CgConstants.XNAME_Field}[{(fieldElement.NodesBeforeSelf().OfType<XElement>().Count(e => e.Name == CgConstants.XNAME_Field) + 1)}]");
                         else
                         {
-                            string fieldXPath = $"{enumXPath}/{Constants.XNAME_Field}[@Name='{fieldName}']";
-                            XAttribute attribute = fieldElement.Attribute(Constants.XNAME_FullName);
+                            string fieldXPath = $"{enumXPath}/{CgConstants.XNAME_Field}[@Name='{fieldName}']";
+                            XAttribute attribute = fieldElement.Attribute(CgConstants.XNAME_FullName);
                             string expected = $"{typeName}.{fieldName}";
                             if (attribute is null)
                             {
-                                WriteLine($"#warning {Constants.XNAME_FullName} attribute missing for {fieldXPath}");
-                                fieldElement.SetAttributeValue(Constants.XNAME_FullName, expected);
+                                WriteLine($"#warning {CgConstants.XNAME_FullName} attribute missing for {fieldXPath}");
+                                fieldElement.SetAttributeValue(CgConstants.XNAME_FullName, expected);
                             }
                             else if (attribute.Value != expected)
                             {
-                                WriteLine($"#warning {Constants.XNAME_FullName} attribute does not match the value \"{expected}\" for {fieldXPath}");
-                                fieldElement.SetAttributeValue(Constants.XNAME_FullName, expected);
+                                WriteLine($"#warning {CgConstants.XNAME_FullName} attribute does not match the value \"{expected}\" for {fieldXPath}");
+                                fieldElement.SetAttributeValue(CgConstants.XNAME_FullName, expected);
                             }
                         }
                     }
                 }
             }
 
-            foreach (XElement entityElement in entityDefinitionsElement.Elements().Elements(Constants.XNAME_Entity))
+            foreach (XElement entityElement in entityDefinitionsElement.Elements().Elements(CgConstants.XNAME_Entity))
             {
-                string typeName = entityElement.Attribute(Constants.XNAME_Name)?.Value;
+                string typeName = entityElement.Attribute(CgConstants.XNAME_Name)?.Value;
                 if (string.IsNullOrWhiteSpace(typeName))
                 {
                     XName elementName = entityElement.Name;
-                    WriteLine($"#warning {Constants.XNAME_Name} attribute missing or empty for /{entityElement.Parent.Parent.Name}/{entityElement.Parent.Name}/{Constants.XNAME_Entity}[(entityElement.NodesBeforeSelf().OfType<XElement>().Count()]");
+                    WriteLine($"#warning {CgConstants.XNAME_Name} attribute missing or empty for /{entityElement.Parent.Parent.Name}/{entityElement.Parent.Name}/{CgConstants.XNAME_Entity}[(entityElement.NodesBeforeSelf().OfType<XElement>().Count()]");
                 }
                 else
                 {
-                    string typeXPath = $"/{entityElement.Parent.Parent.Name}/{entityElement.Parent.Name}/{Constants.XNAME_Entity}[@Name='{typeName}']";
-                    foreach (XElement propertyElement in entityElement.Elements(Constants.XNAME_Properties).Elements())
+                    string typeXPath = $"/{entityElement.Parent.Parent.Name}/{entityElement.Parent.Name}/{CgConstants.XNAME_Entity}[@Name='{typeName}']";
+                    foreach (XElement propertyElement in entityElement.Elements(CgConstants.XNAME_Properties).Elements())
                     {
                         XName elementName = propertyElement.Name;
-                        string propertyName = propertyElement.Attribute(Constants.XNAME_Name)?.Value;
+                        string propertyName = propertyElement.Attribute(CgConstants.XNAME_Name)?.Value;
                         if (string.IsNullOrWhiteSpace(propertyName))
-                            WriteLine($"#warning {Constants.XNAME_Name} attribute missing or empty for {typeXPath}/{elementName}[{(propertyElement.NodesBeforeSelf().OfType<XElement>().Count(e => e.Name == elementName) + 1)}]");
+                            WriteLine($"#warning {CgConstants.XNAME_Name} attribute missing or empty for {typeXPath}/{elementName}[{(propertyElement.NodesBeforeSelf().OfType<XElement>().Count(e => e.Name == elementName) + 1)}]");
                         else
                         {
                             string propertyXPath = $"{typeXPath}/{elementName}[@Name='{propertyName}']";
-                            XAttribute attribute = propertyElement.Attribute(Constants.XNAME_FullName);
+                            XAttribute attribute = propertyElement.Attribute(CgConstants.XNAME_FullName);
                             string expected = $"{typeName}.{propertyName}";
                             if (attribute is null)
                             {
-                                WriteLine($"#warning {Constants.XNAME_FullName} attribute missing for {propertyXPath}");
-                                propertyElement.SetAttributeValue(Constants.XNAME_FullName, expected);
+                                WriteLine($"#warning {CgConstants.XNAME_FullName} attribute missing for {propertyXPath}");
+                                propertyElement.SetAttributeValue(CgConstants.XNAME_FullName, expected);
                             }
                             else if (attribute.Value != expected)
                             {
-                                WriteLine($"#warning {Constants.XNAME_FullName} attribute does not match the value \"{expected}\" for {propertyXPath}");
-                                propertyElement.SetAttributeValue(Constants.XNAME_FullName, expected);
+                                WriteLine($"#warning {CgConstants.XNAME_FullName} attribute does not match the value \"{expected}\" for {propertyXPath}");
+                                propertyElement.SetAttributeValue(CgConstants.XNAME_FullName, expected);
                             }
                         }
                     }
@@ -238,8 +238,8 @@ namespace <#={DefaultNamespace}#>
             }
 
             PushIndent("    "); 
-            bool isSubsequentMember = GenerateEnumTypes(entityDefinitionsElement.Elements(Constants.XNAME_Root).Elements(Constants.XNAME_EnumTypes).Elements());
-            GenerateEntityTypes(entityDefinitionsElement.Elements(Constants.XNAME_Root).Elements(Constants.XNAME_Entity), isSubsequentMember);
+            bool isSubsequentMember = GenerateEnumTypes(entityDefinitionsElement.Elements(CgConstants.XNAME_Root).Elements(CgConstants.XNAME_EnumTypes).Elements());
+            GenerateEntityTypes(entityDefinitionsElement.Elements(CgConstants.XNAME_Root).Elements(CgConstants.XNAME_Entity), isSubsequentMember);
             PopIndent();
 
             #region TemplatedText
@@ -265,8 +265,8 @@ namespace <#=DefaultNamespace#>.Local
             #endregion
 
             PushIndent("    ");
-            isSubsequentMember = GenerateEnumTypes(entityDefinitionsElement.Elements(Constants.XNAME_Local).Elements(Constants.XNAME_EnumTypes).Elements());
-            GenerateEntityTypes(entityDefinitionsElement.Elements(Constants.XNAME_Local).Elements(Constants.XNAME_Entity), isSubsequentMember);
+            isSubsequentMember = GenerateEnumTypes(entityDefinitionsElement.Elements(CgConstants.XNAME_Local).Elements(CgConstants.XNAME_EnumTypes).Elements());
+            GenerateEntityTypes(entityDefinitionsElement.Elements(CgConstants.XNAME_Local).Elements(CgConstants.XNAME_Entity), isSubsequentMember);
             PopIndent();
 
             #region TemplatedText
@@ -280,8 +280,8 @@ namespace <#=DefaultNamespace#>.Upstream
             #endregion
 
             PushIndent("    ");
-            isSubsequentMember = GenerateEnumTypes(entityDefinitionsElement.Elements(Constants.XNAME_Upstream).Elements(Constants.XNAME_EnumTypes).Elements());
-            GenerateEntityTypes(entityDefinitionsElement.Elements(Constants.XNAME_Upstream).Elements(Constants.XNAME_Entity), isSubsequentMember);
+            isSubsequentMember = GenerateEnumTypes(entityDefinitionsElement.Elements(CgConstants.XNAME_Upstream).Elements(CgConstants.XNAME_EnumTypes).Elements());
+            GenerateEntityTypes(entityDefinitionsElement.Elements(CgConstants.XNAME_Upstream).Elements(CgConstants.XNAME_Entity), isSubsequentMember);
             PopIndent();
 
             #region TemplatedText
@@ -294,7 +294,7 @@ namespace <#=DefaultNamespace#>.Upstream
 
         void WriteAmbientValueAttribute(XElement memberElement)
         {
-            string ambientValue = memberElement.Elements(Constants.XNAME_AmbientString).Attributes(Constants.XNAME_Value).Select(a => a.Value).FirstOrDefault();
+            string ambientValue = memberElement.Elements(CgConstants.XNAME_AmbientString).Attributes(CgConstants.XNAME_Value).Select(a => a.Value).FirstOrDefault();
             if (ambientValue is not null)
             {
                 Write("[AmbientValue(\"");
@@ -302,9 +302,9 @@ namespace <#=DefaultNamespace#>.Upstream
                 WriteLine("\")]");
                 return;
             }
-            foreach (XName name in new[] { Constants.XNAME_AmbientEnum, Constants.XNAME_AmbientBoolean, Constants.XNAME_AmbientInt })
+            foreach (XName name in new[] { CgConstants.XNAME_AmbientEnum, CgConstants.XNAME_AmbientBoolean, CgConstants.XNAME_AmbientInt })
             {
-                ambientValue = memberElement.Elements(name).Attributes(Constants.XNAME_Value).Select(a => a.Value).FirstOrDefault();
+                ambientValue = memberElement.Elements(name).Attributes(CgConstants.XNAME_Value).Select(a => a.Value).FirstOrDefault();
                 if (!string.IsNullOrWhiteSpace(ambientValue))
                 {
                     Write("[AmbientValue(");
@@ -313,7 +313,7 @@ namespace <#=DefaultNamespace#>.Upstream
                     return;
                 }
             }
-            ambientValue = memberElement.Elements(Constants.XNAME_AmbientUInt).Attributes(Constants.XNAME_Value).Select(a => a.Value).FirstOrDefault();
+            ambientValue = memberElement.Elements(CgConstants.XNAME_AmbientUInt).Attributes(CgConstants.XNAME_Value).Select(a => a.Value).FirstOrDefault();
             if (!string.IsNullOrWhiteSpace(ambientValue))
             {
                 Write("[AmbientValue(");
@@ -321,7 +321,7 @@ namespace <#=DefaultNamespace#>.Upstream
                 WriteLine("u)]");
                 return;
             }
-            ambientValue = memberElement.Elements(Constants.XNAME_AmbientLong).Attributes(Constants.XNAME_Value).Select(a => a.Value).FirstOrDefault();
+            ambientValue = memberElement.Elements(CgConstants.XNAME_AmbientLong).Attributes(CgConstants.XNAME_Value).Select(a => a.Value).FirstOrDefault();
             if (!string.IsNullOrWhiteSpace(ambientValue))
             {
                 Write("[AmbientValue(");
@@ -329,7 +329,7 @@ namespace <#=DefaultNamespace#>.Upstream
                 WriteLine("L)]");
                 return;
             }
-            ambientValue = memberElement.Elements(Constants.XNAME_AmbientULong).Attributes(Constants.XNAME_Value).Select(a => a.Value).FirstOrDefault();
+            ambientValue = memberElement.Elements(CgConstants.XNAME_AmbientULong).Attributes(CgConstants.XNAME_Value).Select(a => a.Value).FirstOrDefault();
             if (!string.IsNullOrWhiteSpace(ambientValue))
             {
                 Write("[AmbientValue(");
@@ -337,7 +337,7 @@ namespace <#=DefaultNamespace#>.Upstream
                 WriteLine("UL)]");
                 return;
             }
-            ambientValue = memberElement.Elements(Constants.XNAME_AmbientDouble).Attributes(Constants.XNAME_Value).Select(a => a.Value).FirstOrDefault();
+            ambientValue = memberElement.Elements(CgConstants.XNAME_AmbientDouble).Attributes(CgConstants.XNAME_Value).Select(a => a.Value).FirstOrDefault();
             if (!string.IsNullOrWhiteSpace(ambientValue))
             {
                 Write("[AmbientValue(");
@@ -345,7 +345,7 @@ namespace <#=DefaultNamespace#>.Upstream
                 WriteLine(ambientValue.Contains(".") ? ")]" : ".0)]");
                 return;
             }
-            ambientValue = memberElement.Elements(Constants.XNAME_AmbientFloat).Attributes(Constants.XNAME_Value).Select(a => a.Value).FirstOrDefault();
+            ambientValue = memberElement.Elements(CgConstants.XNAME_AmbientFloat).Attributes(CgConstants.XNAME_Value).Select(a => a.Value).FirstOrDefault();
             if (!string.IsNullOrWhiteSpace(ambientValue))
             {
                 Write("[AmbientValue(");
@@ -353,13 +353,15 @@ namespace <#=DefaultNamespace#>.Upstream
                 WriteLine("f)]");
                 return;
             }
-            foreach (XName name in new[] { Constants.XNAME_AmbientByte, Constants.XNAME_AmbientSByte, Constants.XNAME_AmbientShort, Constants.XNAME_AmbientUShort })
+            foreach (XName name in new[] { CgConstants.XNAME_AmbientByte, CgConstants.XNAME_AmbientSByte, CgConstants.XNAME_AmbientShort, CgConstants.XNAME_AmbientUShort })
             {
-                ambientValue = memberElement.Elements(name).Attributes(Constants.XNAME_Value).Select(a => a.Value).FirstOrDefault();
+                ambientValue = memberElement.Elements(name).Attributes(CgConstants.XNAME_Value).Select(a => a.Value).FirstOrDefault();
                 if (!string.IsNullOrWhiteSpace(ambientValue))
                 {
                     Write("[AmbientValue((");
+#pragma warning disable IDE0057 // Use range operator
                     Write(name.LocalName.Substring(7).ToLower());
+#pragma warning restore IDE0057 // Use range operator
                     Write(")");
                     Write(ambientValue);
                     WriteLine(")]");
@@ -369,10 +371,10 @@ namespace <#=DefaultNamespace#>.Upstream
         }
         void WriteDisplayAttribute(string memberName, Func<XName, IEnumerable<XAttribute>> getAttributes, string typeName = null)
         {
-            string displayNameResource = getAttributes(Constants.XNAME_DisplayNameResource).Select(a => a.Value).DefaultIfEmpty(string.IsNullOrWhiteSpace(typeName) ?
+            string displayNameResource = getAttributes(CgConstants.XNAME_DisplayNameResource).Select(a => a.Value).DefaultIfEmpty(string.IsNullOrWhiteSpace(typeName) ?
                 $"DisplayName_{memberName}" : $"DisplayName_{typeName}_{memberName}").First();
-            string descriptionResource = getAttributes(Constants.XNAME_DescriptionResource).Select(a => a.Value).FirstOrDefault();
-            string resourceType = getAttributes(Constants.XNAME_ResourceType).Select(a => a.Value).DefaultIfEmpty("Properties.Resources").First();
+            string descriptionResource = getAttributes(CgConstants.XNAME_DescriptionResource).Select(a => a.Value).FirstOrDefault();
+            string resourceType = getAttributes(CgConstants.XNAME_ResourceType).Select(a => a.Value).DefaultIfEmpty("Properties.Resources").First();
             if (string.IsNullOrWhiteSpace(displayNameResource))
             {
                 if (!string.IsNullOrWhiteSpace(descriptionResource))
@@ -408,7 +410,7 @@ namespace <#=DefaultNamespace#>.Upstream
                 return;
             if (xmlDocElement.IsEmpty)
             {
-                foreach (string lt in Constants.NewLineRegex.Split(xmlDocElement.ToString(SaveOptions.None)))
+                foreach (string lt in CgConstants.NewLineRegex.Split(xmlDocElement.ToString(SaveOptions.None)))
                 {
                     Write("/// ");
                     WriteLine(lt.Trim());
@@ -422,7 +424,7 @@ namespace <#=DefaultNamespace#>.Upstream
                     lastNode.Value = $"{previousTextNode.Value}{lastNode.Value}";
                     previousTextNode.Remove();
                 }
-                if (!Constants.TrailingEmptyLine.IsMatch(lastNode.Value))
+                if (!CgConstants.TrailingEmptyLine.IsMatch(lastNode.Value))
                     lastNode.Value = $"{lastNode.Value}\n";
             }
             else
@@ -439,15 +441,15 @@ namespace <#=DefaultNamespace#>.Upstream
                 }
                 if (ReferenceEquals(firstNode, lastNode))
                 {
-                    if (Constants.LeadingEmptyLine.Match(firstNode.Value).Length < firstNode.Value.Length)
+                    if (CgConstants.LeadingEmptyLine.Match(firstNode.Value).Length < firstNode.Value.Length)
                         firstNode.Value = $"\n{firstNode.Value}";
                 }
-                else if (!Constants.LeadingEmptyLine.IsMatch(firstNode.Value))
+                else if (!CgConstants.LeadingEmptyLine.IsMatch(firstNode.Value))
                     firstNode.Value = $"\n{firstNode.Value}";
             }
             else
                 xmlDocElement.FirstNode.AddBeforeSelf(new XText("\n"));
-            IEnumerable<string> lines = Constants.NewLineRegex.Split(xmlDocElement.ToString(SaveOptions.None));
+            IEnumerable<string> lines = CgConstants.NewLineRegex.Split(xmlDocElement.ToString(SaveOptions.None));
             if (!(lines.Skip(2).Any() && (lines = lines.Take(1).Concat(lines.Skip(1).SkipWhile(s => string.IsNullOrWhiteSpace(s))).ToArray()).Skip(3).Any() &&
                 (lines = lines.Reverse().Take(1).Concat(lines.Reverse().Skip(1).SkipWhile(s => string.IsNullOrWhiteSpace(s))).Reverse().ToArray()).Skip(3).Any()))
             {
@@ -459,17 +461,21 @@ namespace <#=DefaultNamespace#>.Upstream
                 return;
             }
 
-            if (Constants.LeadingWsRegex.IsMatch(lines.Skip(1).First()))
+            if (CgConstants.LeadingWsRegex.IsMatch(lines.Skip(1).First()))
             {
-                int indent = lines.Skip(1).Reverse().Skip(1).Reverse().Select(s => Constants.LeadingWsRegex.Match(s)).Select(m => m.Success ? m.Length : 0).Min();
+                int indent = lines.Skip(1).Reverse().Skip(1).Reverse().Select(s => CgConstants.LeadingWsRegex.Match(s)).Select(m => m.Success ? m.Length : 0).Min();
                 if (indent > 0)
+#pragma warning disable IDE0057 // Use range operator
                     lines = lines.Take(1).Concat(lines.Skip(1).Reverse().Skip(1).Reverse().Select(s => s.Substring(indent))).Concat(lines.Reverse().Take(1));
+#pragma warning restore IDE0057 // Use range operator
             }
             else
             {
-                int indent = lines.Skip(2).Reverse().Skip(1).Reverse().Select(s => Constants.LeadingWsRegex.Match(s)).Select(m => m.Success ? m.Length : 0).Min();
+                int indent = lines.Skip(2).Reverse().Skip(1).Reverse().Select(s => CgConstants.LeadingWsRegex.Match(s)).Select(m => m.Success ? m.Length : 0).Min();
                 if (indent > 0)
+#pragma warning disable IDE0057 // Use range operator
                     lines = lines.Take(2).Concat(lines.Skip(2).Reverse().Skip(1).Reverse().Select(s => s.Substring(indent))).Concat(lines.Reverse().Take(1));
+#pragma warning restore IDE0057 // Use range operator
             }
 
             Write("/// ");
@@ -484,9 +490,9 @@ namespace <#=DefaultNamespace#>.Upstream
         }
         void GenerateEnumType(XElement enumElement)
         {
-            GenerateXmlDoc(enumElement.Element(Constants.XNAME_summary));
-            GenerateXmlDoc(enumElement.Element(Constants.XNAME_remarks));
-            foreach (XElement e in enumElement.Elements(Constants.XNAME_seealso))
+            GenerateXmlDoc(enumElement.Element(CgConstants.XNAME_summary));
+            GenerateXmlDoc(enumElement.Element(CgConstants.XNAME_remarks));
+            foreach (XElement e in enumElement.Elements(CgConstants.XNAME_seealso))
             {
                 if (!e.IsEmpty && e.Value.Trim().Length == 0)
                     e.RemoveAll();
@@ -512,9 +518,9 @@ namespace <#=DefaultNamespace#>.Upstream
                 }
                 else
                     isSubsequentMember = true;
-                GenerateXmlDoc(field.Source.Element(Constants.XNAME_summary));
-                GenerateXmlDoc(field.Source.Element(Constants.XNAME_remarks));
-                foreach (XElement e in field.Source.Elements(Constants.XNAME_seealso))
+                GenerateXmlDoc(field.Source.Element(CgConstants.XNAME_summary));
+                GenerateXmlDoc(field.Source.Element(CgConstants.XNAME_remarks));
+                foreach (XElement e in field.Source.Elements(CgConstants.XNAME_seealso))
                 {
                     if (!e.IsEmpty && e.Value.Trim().Length == 0)
                         e.RemoveAll();
@@ -556,20 +562,20 @@ namespace <#=DefaultNamespace#>.Upstream
         }
         void GenerateProperty(string typeName, PropertyGenerationInfo property)
         {
-            XElement commentDocElement = property.Source.Element(Constants.XNAME_summary) ?? property.Inherited.Select(p => p.Source).Elements(Constants.XNAME_summary).FirstOrDefault();
+            XElement commentDocElement = property.Source.Element(CgConstants.XNAME_summary) ?? property.Inherited.Select(p => p.Source).Elements(CgConstants.XNAME_summary).FirstOrDefault();
             if (commentDocElement is null)
                 WriteLine($"#warning No summary element found for {typeName}.{property.Name}");
             else
                 GenerateXmlDoc(commentDocElement);
-            commentDocElement = property.Source.Element(Constants.XNAME_value) ?? property.Inherited.Select(p => p.Source).Elements(Constants.XNAME_value).FirstOrDefault();
+            commentDocElement = property.Source.Element(CgConstants.XNAME_value) ?? property.Inherited.Select(p => p.Source).Elements(CgConstants.XNAME_value).FirstOrDefault();
             if (commentDocElement is null)
                 WriteLine($"#warning No value element found for {typeName}.{property.Name}");
             else
                 GenerateXmlDoc(commentDocElement);
-            commentDocElement = property.Source.Element(Constants.XNAME_remarks) ?? property.Inherited.Select(p => p.Source).Elements(Constants.XNAME_remarks).FirstOrDefault();
+            commentDocElement = property.Source.Element(CgConstants.XNAME_remarks) ?? property.Inherited.Select(p => p.Source).Elements(CgConstants.XNAME_remarks).FirstOrDefault();
             if (commentDocElement is not null)
                 GenerateXmlDoc(commentDocElement);
-            foreach (XElement e in property.Source.Elements(Constants.XNAME_seealso).Concat(property.Inherited.Select(p => p.Source).Elements(Constants.XNAME_seealso)).Distinct())
+            foreach (XElement e in property.Source.Elements(CgConstants.XNAME_seealso).Concat(property.Inherited.Select(p => p.Source).Elements(CgConstants.XNAME_seealso)).Distinct())
             {
                 if (!e.IsEmpty && e.Value.Trim().Length == 0)
                     e.RemoveAll();
@@ -580,56 +586,56 @@ namespace <#=DefaultNamespace#>.Upstream
                 Write("new ");
             switch (property.Source.Name.LocalName)
             {
-                case Constants.NAME_Byte:
-                case Constants.NAME_SByte:
-                case Constants.NAME_Short:
-                case Constants.NAME_UShort:
-                case Constants.NAME_Int:
-                case Constants.NAME_UInt:
-                case Constants.NAME_Long:
-                case Constants.NAME_ULong:
-                case Constants.NAME_Float:
-                case Constants.NAME_Double:
+                case CgConstants.NAME_Byte:
+                case CgConstants.NAME_SByte:
+                case CgConstants.NAME_Short:
+                case CgConstants.NAME_UShort:
+                case CgConstants.NAME_Int:
+                case CgConstants.NAME_UInt:
+                case CgConstants.NAME_Long:
+                case CgConstants.NAME_ULong:
+                case CgConstants.NAME_Float:
+                case CgConstants.NAME_Double:
                     Write(property.Source.Name.LocalName.ToLower());
                     Write(property.AllowNull ? "? " : " ");
                     break;
-                case Constants.NAME_Text:
-                case Constants.NAME_NVarChar:
+                case CgConstants.NAME_Text:
+                case CgConstants.NAME_NVarChar:
                     Write("string ");
                     break;
-                case Constants.NAME_VolumeIdentifier:
-                case Constants.NAME_DriveType:
-                case Constants.NAME_MD5Hash:
-                case Constants.NAME_DateTime:
+                case CgConstants.NAME_VolumeIdentifier:
+                case CgConstants.NAME_DriveType:
+                case CgConstants.NAME_MD5Hash:
+                case CgConstants.NAME_DateTime:
                     Write(property.Source.Name.LocalName);
                     Write(property.AllowNull ? "? " : " ");
                     break;
-                case Constants.NAME_ByteValues:
-                case Constants.NAME_MultiStringValue:
+                case CgConstants.NAME_ByteValues:
+                case CgConstants.NAME_MultiStringValue:
                     Write(property.Source.Name.LocalName);
                     Write(" ");
                     break;
-                case Constants.NAME_UniqueIdentifier:
+                case CgConstants.NAME_UniqueIdentifier:
                     Write(property.AllowNull ? "Guid? " : "Guid ");
                     break;
-                case Constants.NAME_Bit:
+                case CgConstants.NAME_Bit:
                     Write(property.AllowNull ? "bool? " : "bool ");
                     break;
-                case Constants.NAME_Enum:
-                    Write(property.Source.Attribute(Constants.XNAME_Type)?.Value);
+                case CgConstants.NAME_Enum:
+                    Write(property.Source.Attribute(CgConstants.XNAME_Type)?.Value);
                     Write(property.AllowNull ? "? " : " ");
                     break;
-                case Constants.NAME_CollectionNavigation:
-                case Constants.NAME_CollectionNavigation_ItemKey:
-                case Constants.NAME_CollectionNavigation_ItemType:
+                case CgConstants.NAME_CollectionNavigation:
+                case CgConstants.NAME_CollectionNavigation_ItemKey:
+                case CgConstants.NAME_CollectionNavigation_ItemType:
                     Write("IEnumerable<");
-                    Write(property.ReferencedType.CsName);
+                    Write(property.ReferencedType.Name);
                     Write("> ");
                     break;
-                case Constants.NAME_RelatedEntity:
-                case Constants.NAME_RelatedEntity_Key:
-                case Constants.NAME_RelatedEntity_Type:
-                    Write(property.ReferencedType.CsName);
+                case CgConstants.NAME_RelatedEntity:
+                case CgConstants.NAME_RelatedEntity_Key:
+                case CgConstants.NAME_RelatedEntity_Type:
+                    Write(property.ReferencedType.Name);
                     Write(" ");
                     break;
                 default:
@@ -644,17 +650,17 @@ namespace <#=DefaultNamespace#>.Upstream
         void GenerateEntityInterface(XElement entityElement)
         {
             EntityGenerationInfo generationInfo = EntityGenerationInfo.Get(entityElement);
-            XElement commentDocElement = entityElement.Element(Constants.XNAME_summary) ?? generationInfo.BaseTypes.Select(b => b.Entity.Source).Elements(Constants.XNAME_summary).FirstOrDefault();
+            XElement commentDocElement = entityElement.Element(CgConstants.XNAME_summary) ?? generationInfo.BaseTypes.Select(b => b.Entity.Source).Elements(CgConstants.XNAME_summary).FirstOrDefault();
             if (commentDocElement is null)
-                WriteLine($"#warning No summary element found for {generationInfo.CsName}");
+                WriteLine($"#warning No summary element found for {generationInfo.Name}");
             else
                 GenerateXmlDoc(commentDocElement);
-            foreach (XElement e in entityElement.Elements(Constants.XNAME_typeparam).Concat(generationInfo.BaseTypes.Select(b => b.Entity.Source).Elements(Constants.XNAME_typeparam)).Distinct())
+            foreach (XElement e in entityElement.Elements(CgConstants.XNAME_typeparam).Concat(generationInfo.BaseTypes.Select(b => b.Entity.Source).Elements(CgConstants.XNAME_typeparam)).Distinct())
                 GenerateXmlDoc(e);
-            commentDocElement = entityElement.Element(Constants.XNAME_remarks) ?? generationInfo.BaseTypes.Select(b => b.Entity.Source).Elements(Constants.XNAME_remarks).FirstOrDefault();
+            commentDocElement = entityElement.Element(CgConstants.XNAME_remarks) ?? generationInfo.BaseTypes.Select(b => b.Entity.Source).Elements(CgConstants.XNAME_remarks).FirstOrDefault();
             if (commentDocElement is not null)
                 GenerateXmlDoc(commentDocElement);
-            foreach (XElement e in entityElement.Elements(Constants.XNAME_seealso).Concat(generationInfo.BaseTypes.Select(b => b.Entity.Source).Select(s => new XElement(Constants.XNAME_seealso, new XAttribute(Constants.XNAME_cref, s)))))
+            foreach (XElement e in entityElement.Elements(CgConstants.XNAME_seealso).Concat(generationInfo.BaseTypes.Select(b => b.Entity.Source).Select(s => new XElement(CgConstants.XNAME_seealso, new XAttribute(CgConstants.XNAME_cref, s)))))
             {
                 if (!e.IsEmpty && e.Value.Trim().Length == 0)
                     e.RemoveAll();
@@ -664,7 +670,7 @@ namespace <#=DefaultNamespace#>.Upstream
             Write("public interface ");
             if (generationInfo.BaseTypes.Count > 0)
             {
-                Write(generationInfo.CsName);
+                Write(generationInfo.Name);
                 Write(" : ");
 
                 if (generationInfo.BaseTypes.Count > 1)
@@ -687,21 +693,21 @@ namespace <#=DefaultNamespace#>.Upstream
             {
                 if (!properties.Any())
                 {
-                    Write(generationInfo.CsName);
+                    Write(generationInfo.Name);
                     WriteLine("{ }");
                     return;
                 }
-                WriteLine(generationInfo.CsName);
+                WriteLine(generationInfo.Name);
             }
 
             WriteLine("{");
             PushIndent("    ");
 
-            GenerateProperty(generationInfo.CsName, properties.First());
+            GenerateProperty(generationInfo.Name, properties.First());
             foreach (PropertyGenerationInfo p in properties.Skip(1))
             {
                 WriteLine("");
-                GenerateProperty(generationInfo.CsName, p);
+                GenerateProperty(generationInfo.Name, p);
             }
 
             PopIndent();
@@ -855,98 +861,98 @@ namespace <#=DefaultNamespace#>.Upstream
             if (propertyElement is null || propertyElement.Name.NamespaceName.Length > 0)
             {
                 isNumeric = false;
-                typeName = Constants.SQL_TYPENAME_BLOB;
+                typeName = CgConstants.SQL_TYPENAME_BLOB;
                 return typeName;
             }
 
             switch (propertyElement.Name.LocalName)
             {
-                case Constants.NAME_Enum:
-                    string sqlType = PropertyElementToSqlType(EntityDefinitionsDocument.FindLocalEnumTypeByName(propertyElement.Attribute(Constants.XNAME_Type)?.Value), out typeName, out _);
+                case CgConstants.NAME_Enum:
+                    string sqlType = PropertyElementToSqlType(EntityDefinitionsDocument.FindLocalEnumTypeByName(propertyElement.Attribute(CgConstants.XNAME_Type)?.Value), out typeName, out _);
                     isNumeric = false;
                     return sqlType;
-                case Constants.NAME_UniqueIdentifier:
-                case Constants.NAME_RelatedEntity:
+                case CgConstants.NAME_UniqueIdentifier:
+                case CgConstants.NAME_RelatedEntity:
                     isNumeric = false;
-                    typeName = Constants.SQL_TYPENAME_UNIQUEIDENTIFIER;
+                    typeName = CgConstants.SQL_TYPENAME_UNIQUEIDENTIFIER;
                     return typeName;
-                case Constants.NAME_NVarChar:
+                case CgConstants.NAME_NVarChar:
                     isNumeric = false;
-                    typeName = Constants.SQL_TYPENAME_NVARCHAR;
-                    return $"{typeName}({propertyElement.Attribute(Constants.XNAME_MaxLength)?.Value})";
-                case Constants.NAME_VolumeIdentifier:
+                    typeName = CgConstants.SQL_TYPENAME_NVARCHAR;
+                    return $"{typeName}({propertyElement.Attribute(CgConstants.XNAME_MaxLength)?.Value})";
+                case CgConstants.NAME_VolumeIdentifier:
                     isNumeric = false;
-                    typeName = Constants.SQL_TYPENAME_NVARCHAR;
+                    typeName = CgConstants.SQL_TYPENAME_NVARCHAR;
                     return $"{typeName}(1024)";
-                case Constants.NAME_MultiStringValue:
-                case Constants.NAME_Text:
+                case CgConstants.NAME_MultiStringValue:
+                case CgConstants.NAME_Text:
                     isNumeric = false;
-                    typeName = Constants.SQL_TYPENAME_TEXT;
+                    typeName = CgConstants.SQL_TYPENAME_TEXT;
                     return typeName;
-                case Constants.NAME_DateTime:
+                case CgConstants.NAME_DateTime:
                     isNumeric = false;
-                    typeName = Constants.SQL_TYPENAME_DATETIME;
+                    typeName = CgConstants.SQL_TYPENAME_DATETIME;
                     return typeName;
-                case Constants.NAME_TimeSpan:
+                case CgConstants.NAME_TimeSpan:
                     isNumeric = false;
-                    typeName = Constants.SQL_TYPENAME_TIME;
+                    typeName = CgConstants.SQL_TYPENAME_TIME;
                     return typeName;
-                case Constants.NAME_Bit:
+                case CgConstants.NAME_Bit:
                     isNumeric = false;
-                    typeName = Constants.SQL_TYPENAME_BIT;
+                    typeName = CgConstants.SQL_TYPENAME_BIT;
                     return typeName;
-                case Constants.NAME_ByteValues:
+                case CgConstants.NAME_ByteValues:
                     isNumeric = false;
-                    typeName = Constants.SQL_TYPENAME_VARBINARY;
-                    return $"{typeName}({propertyElement.Attribute(Constants.XNAME_MaxLength)?.Value})";
-                case Constants.NAME_MD5Hash:
+                    typeName = CgConstants.SQL_TYPENAME_VARBINARY;
+                    return $"{typeName}({propertyElement.Attribute(CgConstants.XNAME_MaxLength)?.Value})";
+                case CgConstants.NAME_MD5Hash:
                     isNumeric = false;
-                    typeName = Constants.SQL_TYPENAME_BINARY;
+                    typeName = CgConstants.SQL_TYPENAME_BINARY;
                     return $"{typeName}(16)";
-                case Constants.NAME_DriveType:
+                case CgConstants.NAME_DriveType:
                     isNumeric = false;
-                    typeName = Constants.SQL_TYPENAME_UNSIGNED_TINYINT;
+                    typeName = CgConstants.SQL_TYPENAME_UNSIGNED_TINYINT;
                     return typeName;
-                case Constants.NAME_Byte:
+                case CgConstants.NAME_Byte:
                     isNumeric = true;
-                    typeName = Constants.SQL_TYPENAME_UNSIGNED_TINYINT;
+                    typeName = CgConstants.SQL_TYPENAME_UNSIGNED_TINYINT;
                     return typeName;
-                case Constants.NAME_SByte:
+                case CgConstants.NAME_SByte:
                     isNumeric = true;
-                    typeName = Constants.SQL_TYPENAME_TINYINT;
+                    typeName = CgConstants.SQL_TYPENAME_TINYINT;
                     return typeName;
-                case Constants.NAME_Short:
+                case CgConstants.NAME_Short:
                     isNumeric = true;
-                    typeName = Constants.SQL_TYPENAME_SMALLINT;
+                    typeName = CgConstants.SQL_TYPENAME_SMALLINT;
                     return typeName;
-                case Constants.NAME_UShort:
+                case CgConstants.NAME_UShort:
                     isNumeric = true;
-                    typeName = Constants.SQL_TYPENAME_UNSIGNED_SMALLINT;
+                    typeName = CgConstants.SQL_TYPENAME_UNSIGNED_SMALLINT;
                     return typeName;
-                case Constants.NAME_Int:
+                case CgConstants.NAME_Int:
                     isNumeric = true;
-                    typeName = Constants.SQL_TYPENAME_INT;
+                    typeName = CgConstants.SQL_TYPENAME_INT;
                     return typeName;
-                case Constants.NAME_UInt:
+                case CgConstants.NAME_UInt:
                     isNumeric = true;
-                    typeName = Constants.SQL_TYPENAME_UNSIGNED_INT;
+                    typeName = CgConstants.SQL_TYPENAME_UNSIGNED_INT;
                     return typeName;
-                case Constants.NAME_Long:
+                case CgConstants.NAME_Long:
                     isNumeric = true;
-                    typeName = Constants.SQL_TYPENAME_BIGINT;
+                    typeName = CgConstants.SQL_TYPENAME_BIGINT;
                     return typeName;
-                case Constants.NAME_ULong:
+                case CgConstants.NAME_ULong:
                     isNumeric = true;
-                    typeName = Constants.SQL_TYPENAME_UNSIGNED_BIGINT;
+                    typeName = CgConstants.SQL_TYPENAME_UNSIGNED_BIGINT;
                     return typeName;
-                case Constants.NAME_Float:
-                case Constants.NAME_Double:
+                case CgConstants.NAME_Float:
+                case CgConstants.NAME_Double:
                     isNumeric = true;
-                    typeName = Constants.SQL_TYPENAME_REAL;
+                    typeName = CgConstants.SQL_TYPENAME_REAL;
                     return typeName;
-                case Constants.NAME_Decimal:
+                case CgConstants.NAME_Decimal:
                     isNumeric = true;
-                    typeName = Constants.SQL_TYPENAME_NUMERIC;
+                    typeName = CgConstants.SQL_TYPENAME_NUMERIC;
                     return typeName;
                 default:
                     isNumeric = false;
@@ -1039,19 +1045,15 @@ namespace <#=DefaultNamespace#>.Upstream
                 default:
                     switch (generationInfo.Source.Name.LocalName)
                     {
-                        case Constants.NAME_ByteValues:
-                        case Constants.NAME_NVarChar:
+                        case CgConstants.NAME_ByteValues:
+                        case CgConstants.NAME_NVarChar:
                             if (generationInfo.IsNormalized ?? false)
                                 check = new SimpleColumnValueReference(generationInfo.ColumnName).Trimmed().Length().IsEqualTo(new SimpleColumnValueReference(generationInfo.ColumnName).Length());
                             if (generationInfo.MinLength.HasValue)
                                 check = (check is null) ? new SimpleColumnValueReference(generationInfo.ColumnName).GreaterThanLiteral(generationInfo.MinLength.Value - 1) :
                                     check.And(new SimpleColumnValueReference(generationInfo.ColumnName).GreaterThanLiteral(generationInfo.MinLength.Value - 1));
                             break;
-                            if (generationInfo.MinLength.HasValue)
-                                check = (check is null) ? new SimpleColumnValueReference(generationInfo.ColumnName).GreaterThanLiteral(generationInfo.MinLength.Value - 1) :
-                                    check.And(new SimpleColumnValueReference(generationInfo.ColumnName).GreaterThanLiteral(generationInfo.MinLength.Value - 1));
-                            break;
-                        case Constants.NAME_UniqueIdentifier:
+                        case CgConstants.NAME_UniqueIdentifier:
                             PropertyGenerationInfo nav = generationInfo.DeclaringType.Properties.FirstOrDefault(p => p.DbRelationship?.FkPropertyName == generationInfo.ColumnName);
                             if (nav is not null)
                             {
@@ -1062,9 +1064,9 @@ namespace <#=DefaultNamespace#>.Upstream
                                 Write("\"(\"Id\") ON DELETE RESTRICT");
                             }
                             break;
-                        case Constants.NAME_RelatedEntity:
-                        case Constants.NAME_RelatedEntity_Key:
-                        case Constants.NAME_RelatedEntity_Type:
+                        case CgConstants.NAME_RelatedEntity:
+                        case CgConstants.NAME_RelatedEntity_Key:
+                        case CgConstants.NAME_RelatedEntity_Type:
                             string name = generationInfo.DbRelationship?.FkPropertyName;
                             if (!generationInfo.DeclaringType.Properties.Any(p => p.Name == name))
                             {
@@ -1075,7 +1077,7 @@ namespace <#=DefaultNamespace#>.Upstream
                                 Write("\"(\"Id\") ON DELETE RESTRICT");
                             }
                             break;
-                        case Constants.NAME_DriveType:
+                        case CgConstants.NAME_DriveType:
                             check = new SimpleColumnValueReference(generationInfo.ColumnName).NotLessThanLiteral(0).And(new SimpleColumnValueReference(generationInfo.ColumnName).LessThanLiteral(7));
                             break;
                         default:
@@ -1095,34 +1097,29 @@ namespace <#=DefaultNamespace#>.Upstream
             {
                 Write(" DEFAULT ");
                 Write(generationInfo.DefaultValue.Value.SqlCode);
-                switch (generationInfo.Source.Name.LocalName)
+                comment = generationInfo.Source.Name.LocalName switch
                 {
-                    case Constants.NAME_Enum:
-                    case Constants.NAME_DriveType:
-                        comment = generationInfo.DefaultValue.Value.CsCode;
-                        break;
-                    default:
-                        comment = null;
-                        break;
-                }
+                    CgConstants.NAME_Enum or CgConstants.NAME_DriveType => generationInfo.DefaultValue.Value.CsCode,
+                    _ => null,
+                };
             }
             else
                 comment = null;
 
             switch (generationInfo.Source.Name.LocalName)
             {
-                case Constants.NAME_RelatedEntity:
-                case Constants.NAME_RelatedEntity_Key:
-                case Constants.NAME_RelatedEntity_Type:
-                case Constants.NAME_UniqueIdentifier:
-                case Constants.NAME_VolumeIdentifier:
+                case CgConstants.NAME_RelatedEntity:
+                case CgConstants.NAME_RelatedEntity_Key:
+                case CgConstants.NAME_RelatedEntity_Type:
+                case CgConstants.NAME_UniqueIdentifier:
+                case CgConstants.NAME_VolumeIdentifier:
                     Write(" COLLATE NOCASE");
                     break;
-                case Constants.NAME_NVarChar:
+                case CgConstants.NAME_NVarChar:
                     if (generationInfo.IsCaseSensitive.HasValue)
                     {
                         Write(" COLLATE ");
-                        Write(generationInfo.IsCaseSensitive.Value ? Constants.SQL_TYPENAME_BINARY : "NOCASE");
+                        Write(generationInfo.IsCaseSensitive.Value ? CgConstants.SQL_TYPENAME_BINARY : "NOCASE");
                     }
                     break;
             }

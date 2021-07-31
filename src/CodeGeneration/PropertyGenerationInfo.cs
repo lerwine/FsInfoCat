@@ -5,12 +5,14 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
-using static CodeGeneration.Constants;
+using static CodeGeneration.CgConstants;
 
 namespace CodeGeneration
 {
     public class PropertyGenerationInfo : IMemberGenerationInfo
     {
+        private ITypeGenerationInfo _referencedType;
+
         private PropertyGenerationInfo(XElement propertyElement, EntityGenerationInfo entity)
         {
             Name = (Source = propertyElement).Attribute(NAME_Name)?.Value;
@@ -413,7 +415,6 @@ namespace CodeGeneration
             }
             ColumnName = (propertyElement.AttributeToString(NAME_ColName) ?? Inherited.Select(p => p.Source).AttributeToString(NAME_ColName)) ?? Name;
         }
-        private ITypeGenerationInfo _referencedType;
 
         /// <summary>
         /// The property name.
@@ -513,6 +514,7 @@ namespace CodeGeneration
         public bool IsPrimaryKey { get; }
 
         public bool? IsCaseSensitive { get; }
+
         /// <summary>
         /// Gets the entity type referenced by <see cref="PrimaryEntity"/> pr <see cref="ItemEntity"/>.
         /// </summary>
@@ -520,6 +522,13 @@ namespace CodeGeneration
         {
             get
             {
+                if (_referencedType is null)
+                {
+                    if (PrimaryEntity.HasValue)
+                        _referencedType = EntityGenerationInfo.Get(Source.FindEntityByName(PrimaryEntity.Value.EntityName));
+                    else if (ItemEntity.HasValue)
+                        _referencedType = EntityGenerationInfo.Get(Source.FindEntityByName(ItemEntity.Value.EntityName));
+                }
                 // TODO: Look up referenced type if it is null and DbRelationship.Name is not null or NavigationProperty is not null
                 return _referencedType;
             }

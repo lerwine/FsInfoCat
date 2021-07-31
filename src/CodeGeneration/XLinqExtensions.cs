@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
-using static CodeGeneration.Constants;
+using static CodeGeneration.CgConstants;
 
 namespace CodeGeneration
 {

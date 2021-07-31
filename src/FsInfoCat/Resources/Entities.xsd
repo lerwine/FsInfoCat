@@ -1,345 +1,1442 @@
-<?xml version="1.0" encoding="utf-8"?>
-<xs:schema attributeFormDefault="unqualified" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-    <xs:simpleType name="LangWord">
-        <xs:restriction base="xs:NCName">
-            <xs:enumeration value="true" />
-            <xs:enumeration value="false" />
-            <xs:enumeration value="null" />
+<xs:schema id="EntityDefinitions" attributeFormDefault="unqualified" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <xs:simpleType name="TypeName">
+        <xs:restriction base="xs:token">
+            <xs:pattern value="^[A-Z][A-Za-z\d_]*({[A-Z][A-Za-z\d_]*(,[A-Z][A-Za-z\d_]*)*})?$" />
         </xs:restriction>
     </xs:simpleType>
-    <xs:complexType name="XmlDocSee" mixed="true">
-        <xs:attribute name="cref" type="xs:string" use="required" />
-    </xs:complexType>
-    <xs:complexType name="XmlDocLink">
-        <xs:simpleContent>
-            <xs:extension base="xs:string">
-                <xs:attribute name="href" type="xs:string" use="required" />
-            </xs:extension>
-        </xs:simpleContent>
-    </xs:complexType>
-    <xs:complexType mixed="true" name="XmlDocDescription">
-        <xs:sequence minOccurs="0">
-            <xs:element name="a" type="XmlDocLink"/>
-        </xs:sequence>
-    </xs:complexType>
-    <xs:complexType name="XmlDocItem">
+    <xs:simpleType name="SimpleIdentifier">
+        <xs:restriction base="TypeName">
+            <xs:pattern value="^[A-Z][A-Za-z\d_]*$" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="GenericTypeDefinition">
+        <xs:restriction base="TypeName">
+            <xs:pattern value="^[A-Z][A-Za-z\d_]*{[A-Z][A-Za-z\d_]*(,[A-Z][A-Za-z\d_]*)*}$" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="CsTypeName">
+        <xs:restriction base="xs:token">
+            <xs:pattern value="^((?=[A-Za-z\d_]+\.)[A-Z][A-Za-z\d_]*\.)*[A-Z][A-Za-z\d_]*({[A-Z][A-Za-z\d_]*(,[A-Z][A-Za-z\d_]*)*})?$" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="SimpleCsTypeName">
+        <xs:restriction base="CsTypeName">
+            <xs:pattern value="^((?=[A-Za-z\d_]+\.)[A-Z][A-Za-z\d_]*\.)*[A-Z][A-Za-z\d_]*$" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="FullGenericTypeName">
+        <xs:restriction base="CsTypeName">
+            <xs:pattern value="^((?=[A-Za-z\d_]+\.)[A-Z][A-Za-z\d_]*\.)*[A-Z][A-Za-z\d_]*{[A-Z][A-Za-z\d_]*(,[A-Z][A-Za-z\d_]*)*}$" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="MemberReference">
+        <xs:restriction base="xs:token">
+            <xs:pattern value="^((?=[A-Za-z\d_]+[.{])[A-Z][A-Za-z\d_]*\.?)+({[A-Z][A-Za-z\d_]*(,[A-Z][A-Za-z\d_]*)*}\.)?[A-Z][A-Za-z\d_]*" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="SimpleMemberFullName">
+        <xs:restriction base="MemberReference">
+            <xs:pattern value="^((?=[A-Za-z\d_]+\.)[A-Z][A-Za-z\d_]*\.)+[A-Z][A-Za-z\d_]*$" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="GenericTypePropertyReference">
+        <xs:restriction base="MemberReference">
+            <xs:pattern value="^((?=[A-Za-z\d_]+\.)[A-Z][A-Za-z\d_]*\.)*[A-Z][A-Za-z\d_]*{[A-Z][A-Za-z\d_]*(,[A-Z][A-Za-z\d_]*)*}\.*[A-Z][A-Za-z\d_]*$" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="SimpleIdentifierOrEmpty">
+        <xs:union memberTypes="SimpleIdentifier">
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:length value="0"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:union>
+    </xs:simpleType>
+    <xs:simpleType name="DriveType">
+        <xs:restriction base="SimpleIdentifier">
+            <xs:enumeration value="Unknown"/>
+            <xs:enumeration value="CDRom"/>
+            <xs:enumeration value="Fixed"/>
+            <xs:enumeration value="Network"/>
+            <xs:enumeration value="NoRootDirectory"/>
+            <xs:enumeration value="Ram"/>
+            <xs:enumeration value="Removable"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="SingleChar">
+        <xs:restriction base="xs:string">
+            <xs:length value="1"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:complexType name="CommentDoc" mixed="true">
         <xs:sequence>
-            <xs:element minOccurs="0" name="term" type="xs:string" />
-            <xs:element name="description" type="XmlDocDescription" />
+            <xs:any processContents="skip" minOccurs="0" maxOccurs="unbounded"/>
         </xs:sequence>
     </xs:complexType>
-    <xs:complexType name="XmlDocList">
-        <xs:choice>
-            <xs:element maxOccurs="unbounded" name="item" type="XmlDocItem"/>
-        </xs:choice>
-        <xs:attribute name="type" type="xs:string" use="required" />
+    <xs:complexType name="TypeParamCommentDoc">
+        <xs:complexContent>
+            <xs:extension base="CommentDoc">
+                <xs:attribute name="name" type="SimpleIdentifier">
+                    <xs:annotation>
+                        <xs:documentation>The name of the generic type parameter name used in the Name of the current entity that refers a generic entity type.</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+            </xs:extension>
+        </xs:complexContent>
     </xs:complexType>
-    <xs:complexType mixed="true" name="XmlDocPara">
-        <xs:sequence minOccurs="0">
-            <xs:element maxOccurs="unbounded" name="see" type="XmlDocSee" />
+    <xs:group name="DetailsCommentDoc">
+        <xs:sequence>
+            <xs:element name="remarks" type="CommentDoc" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Remarks xml source code documentation.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="seealso" type="CommentDoc" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation>See-also xml source code documentation.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
         </xs:sequence>
-    </xs:complexType>
-    <xs:group name="BlockXmlDoc">
+    </xs:group>
+    <xs:group name="SimpleCommentDoc">
+        <xs:sequence>
+            <xs:element name="summary" type="CommentDoc">
+                <xs:annotation>
+                    <xs:documentation>Summary xml source code documentation.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:group ref="DetailsCommentDoc" />
+        </xs:sequence>
+    </xs:group>
+    <xs:group name="PropertyCommentDoc">
+        <xs:sequence>
+            <xs:element name="summary" type="CommentDoc">
+                <xs:annotation>
+                    <xs:documentation>Summary xml source code documentation.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="value" type="CommentDoc">
+                <xs:annotation>
+                    <xs:documentation>Value xml source code documentation.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:group ref="DetailsCommentDoc" />
+        </xs:sequence>
+    </xs:group>
+    <xs:group name="AmbientEnumTypes">
         <xs:choice>
-            <xs:element minOccurs="0" maxOccurs="unbounded" name="see" type="XmlDocSee"/>
-            <xs:element name="langword" type="LangWord"/>
-            <xs:element minOccurs="0" name="para" type="XmlDocPara"/>
-            <xs:element minOccurs="0" name="list" type="XmlDocList"/>
+            <xs:element name="Ambient.Boolean">
+                <xs:complexType>
+                    <xs:attribute name="Value" type="xs:boolean" use="required" />
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="Ambient.Byte">
+                <xs:complexType>
+                    <xs:attribute name="Value" type="xs:unsignedByte" use="required" />
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="Ambient.SByte">
+                <xs:complexType>
+                    <xs:attribute name="Value" type="xs:byte" use="required" />
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="Ambient.Int16">
+                <xs:complexType>
+                    <xs:attribute name="Value" type="xs:short" use="required" />
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="Ambient.UInt16">
+                <xs:complexType>
+                    <xs:attribute name="Value" type="xs:unsignedShort" use="required" />
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="Ambient.Int32">
+                <xs:complexType>
+                    <xs:attribute name="Value" type="xs:int" use="required" />
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="Ambient.UInt32">
+                <xs:complexType>
+                    <xs:attribute name="Value" type="xs:unsignedInt" use="required" />
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="Ambient.Int64">
+                <xs:complexType>
+                    <xs:attribute name="Value" type="xs:long" use="required" />
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="Ambient.UInt64">
+                <xs:complexType>
+                    <xs:attribute name="Value" type="xs:unsignedLong" use="required" />
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="Ambient.Decimal">
+                <xs:complexType>
+                    <xs:attribute name="Value" type="xs:decimal" use="required" />
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="Ambient.Double">
+                <xs:complexType>
+                    <xs:attribute name="Value" type="xs:double" use="required" />
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="Ambient.Single">
+                <xs:complexType>
+                    <xs:attribute name="Value" type="xs:float" use="required" />
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="Ambient.String">
+                <xs:complexType>
+                    <xs:attribute name="Value" type="xs:string" use="required" />
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="Ambient.Enum">
+                <xs:complexType>
+                    <xs:attribute name="Value" type="SimpleMemberFullName" use="required" />
+                </xs:complexType>
+            </xs:element>
         </xs:choice>
     </xs:group>
-    <xs:complexType mixed="true" name="XmlDocSummary">
-        <xs:sequence minOccurs="0">
-            <xs:element maxOccurs="unbounded" name="see" type="XmlDocSee" />
+    <xs:complexType name="EnumMember">
+        <xs:sequence>
+            <xs:group ref="SimpleCommentDoc"/>
+            <xs:group ref="AmbientEnumTypes" minOccurs="0"/>
         </xs:sequence>
+        <xs:attribute name="Name" type="SimpleIdentifier" use="required" />
+        <xs:attribute name="Value" use="required"/>
+        <xs:attribute name="FullName" type="SimpleMemberFullName" />
+        <xs:attribute name="DisplayNameResource" type="SimpleIdentifier" use="optional" />
+        <xs:attribute name="DescriptionResource" type="SimpleIdentifier" use="optional" />
     </xs:complexType>
-    <xs:complexType name="XmlDocTypeParam">
-        <xs:simpleContent>
-            <xs:extension base="xs:string">
-                <xs:attribute name="name" type="xs:string" use="required" />
-            </xs:extension>
-        </xs:simpleContent>
+    <xs:complexType name="ByteEnumMember">
+        <xs:complexContent>
+            <xs:restriction base="EnumMember">
+                <xs:sequence>
+                    <xs:group ref="SimpleCommentDoc"/>
+                    <xs:group ref="AmbientEnumTypes" minOccurs="0"/>
+                </xs:sequence>
+                <xs:attribute name="Value" type="xs:unsignedByte" use="required"/>
+            </xs:restriction>
+        </xs:complexContent>
     </xs:complexType>
-    <xs:complexType mixed="true" name="XmlDocRemarks">
-        <xs:group ref="BlockXmlDoc" minOccurs="0" maxOccurs="unbounded" />
+    <xs:complexType name="SByteEnumMember">
+        <xs:complexContent>
+            <xs:restriction base="EnumMember">
+                <xs:sequence>
+                    <xs:group ref="SimpleCommentDoc"/>
+                    <xs:group ref="AmbientEnumTypes" minOccurs="0"/>
+                </xs:sequence>
+                <xs:attribute name="Value" type="xs:byte" use="required"/>
+            </xs:restriction>
+        </xs:complexContent>
     </xs:complexType>
-    <xs:complexType mixed="true" name="XmlDocSeeAlso">
-        <xs:attribute name="cref" type="xs:string" use="required" />
+    <xs:complexType name="Int16EnumMember">
+        <xs:complexContent>
+            <xs:restriction base="EnumMember">
+                <xs:sequence>
+                    <xs:group ref="SimpleCommentDoc"/>
+                    <xs:group ref="AmbientEnumTypes" minOccurs="0"/>
+                </xs:sequence>
+                <xs:attribute name="Value" type="xs:short" use="required"/>
+            </xs:restriction>
+        </xs:complexContent>
     </xs:complexType>
-    <xs:complexType name="XmlDocTypeParamRef">
-        <xs:attribute name="name" type="xs:string" use="required" />
+    <xs:complexType name="UInt16EnumMember">
+        <xs:complexContent>
+            <xs:restriction base="EnumMember">
+                <xs:sequence>
+                    <xs:group ref="SimpleCommentDoc"/>
+                    <xs:group ref="AmbientEnumTypes" minOccurs="0"/>
+                </xs:sequence>
+                <xs:attribute name="Value" type="xs:unsignedShort" use="required"/>
+            </xs:restriction>
+        </xs:complexContent>
     </xs:complexType>
-    <xs:complexType mixed="true" name="XmlDocValue">
-        <xs:choice minOccurs="0" maxOccurs="unbounded">
-            <xs:element minOccurs="0" name="typeparamref" type="XmlDocTypeParamRef"/>
-            <xs:group ref="BlockXmlDoc" minOccurs="0" maxOccurs="unbounded" />
+    <xs:complexType name="Int32EnumMember">
+        <xs:complexContent>
+            <xs:restriction base="EnumMember">
+                <xs:sequence>
+                    <xs:group ref="SimpleCommentDoc"/>
+                    <xs:group ref="AmbientEnumTypes" minOccurs="0"/>
+                </xs:sequence>
+                <xs:attribute name="Value" type="xs:int" use="required"/>
+            </xs:restriction>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="UInt32EnumMember">
+        <xs:complexContent>
+            <xs:restriction base="EnumMember">
+                <xs:sequence>
+                    <xs:group ref="SimpleCommentDoc"/>
+                    <xs:group ref="AmbientEnumTypes" minOccurs="0"/>
+                </xs:sequence>
+                <xs:attribute name="Value" type="xs:unsignedInt" use="required"/>
+            </xs:restriction>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="Int64EnumMember">
+        <xs:complexContent>
+            <xs:restriction base="EnumMember">
+                <xs:sequence>
+                    <xs:group ref="SimpleCommentDoc"/>
+                    <xs:group ref="AmbientEnumTypes" minOccurs="0"/>
+                </xs:sequence>
+                <xs:attribute name="Value" type="xs:long" use="required"/>
+            </xs:restriction>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="UInt64EnumMember">
+        <xs:complexContent>
+            <xs:restriction base="EnumMember">
+                <xs:sequence>
+                    <xs:group ref="SimpleCommentDoc"/>
+                    <xs:group ref="AmbientEnumTypes" minOccurs="0"/>
+                </xs:sequence>
+                <xs:attribute name="Value" type="xs:unsignedLong" use="required"/>
+            </xs:restriction>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="EnumType">
+        <xs:sequence>
+            <xs:group ref="SimpleCommentDoc"/>
+            <xs:element name="Member" type="EnumMember" minOccurs="2" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="Name" type="SimpleIdentifier" use="required" />
+        <xs:attribute name="IsFlags" type="xs:boolean" use="optional" default="false" />
+    </xs:complexType>
+    <xs:complexType name="ByteEnumType">
+        <xs:complexContent>
+            <xs:restriction base="EnumType">
+                <xs:sequence>
+                    <xs:group ref="SimpleCommentDoc"/>
+                    <xs:element name="Member" type="ByteEnumMember" minOccurs="2" maxOccurs="unbounded" />
+                </xs:sequence>
+            </xs:restriction>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="SByteEnumType">
+        <xs:complexContent>
+            <xs:restriction base="EnumType">
+                <xs:sequence>
+                    <xs:group ref="SimpleCommentDoc"/>
+                    <xs:element name="Member" type="SByteEnumMember" minOccurs="2" maxOccurs="unbounded" />
+                </xs:sequence>
+            </xs:restriction>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="Int16EnumType">
+        <xs:complexContent>
+            <xs:restriction base="EnumType">
+                <xs:sequence>
+                    <xs:group ref="SimpleCommentDoc"/>
+                    <xs:element name="Member" type="Int16EnumMember" minOccurs="2" maxOccurs="unbounded" />
+                </xs:sequence>
+            </xs:restriction>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="UInt16EnumType">
+        <xs:complexContent>
+            <xs:restriction base="EnumType">
+                <xs:sequence>
+                    <xs:group ref="SimpleCommentDoc"/>
+                    <xs:element name="Member" type="UInt16EnumMember" minOccurs="2" maxOccurs="unbounded" />
+                </xs:sequence>
+            </xs:restriction>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="Int32EnumType">
+        <xs:complexContent>
+            <xs:restriction base="EnumType">
+                <xs:sequence>
+                    <xs:group ref="SimpleCommentDoc"/>
+                    <xs:element name="Member" type="Int32EnumMember" minOccurs="2" maxOccurs="unbounded" />
+                </xs:sequence>
+            </xs:restriction>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="UInt32EnumType">
+        <xs:complexContent>
+            <xs:restriction base="EnumType">
+                <xs:sequence>
+                    <xs:group ref="SimpleCommentDoc"/>
+                    <xs:element name="Member" type="UInt32EnumMember" minOccurs="2" maxOccurs="unbounded" />
+                </xs:sequence>
+            </xs:restriction>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="Int64EnumType">
+        <xs:complexContent>
+            <xs:restriction base="EnumType">
+                <xs:sequence>
+                    <xs:group ref="SimpleCommentDoc"/>
+                    <xs:element name="Member" type="Int64EnumMember" minOccurs="2" maxOccurs="unbounded" />
+                </xs:sequence>
+            </xs:restriction>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="UInt64EnumType">
+        <xs:complexContent>
+            <xs:restriction base="EnumType">
+                <xs:sequence>
+                    <xs:group ref="SimpleCommentDoc"/>
+                    <xs:element name="Member" type="UInt64EnumMember" minOccurs="2" maxOccurs="unbounded" />
+                </xs:sequence>
+            </xs:restriction>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="EnumTypes">
+        <xs:choice maxOccurs="unbounded">
+            <xs:element name="Byte" type="ByteEnumType" />
+            <xs:element name="SByte" type="SByteEnumType" />
+            <xs:element name="Int16" type="Int16EnumType" />
+            <xs:element name="UInt16" type="UInt16EnumType" />
+            <xs:element name="Int32" type="Int32EnumType" />
+            <xs:element name="UInt32" type="UInt32EnumType" />
+            <xs:element name="Int64" type="Int64EnumType" />
+            <xs:element name="UInt64" type="UInt64EnumType" />
         </xs:choice>
     </xs:complexType>
-    <xs:complexType name="TypeExtends">
-        <xs:attribute name="cref" type="xs:string" use="required" />
-        <xs:attribute name="generic" type="xs:string" use="optional" />
-    </xs:complexType>
-    <xs:complexType name="MemberProperty">
+    <xs:complexType name="EntityProperty">
         <xs:sequence>
-            <xs:element minOccurs="0" name="summary" type="XmlDocSummary"/>
-            <xs:element minOccurs="0" name="value" type="XmlDocValue"/>
-            <xs:element minOccurs="0" name="remarks" type="XmlDocRemarks"/>
-            <xs:element minOccurs="0" name="Default">
-                <xs:complexType mixed="true">
-                    <xs:attribute name="CLR" type="xs:string" use="optional"/>
-                </xs:complexType>
-            </xs:element>
-            <xs:element minOccurs="0" name="MinValue">
-                <xs:complexType mixed="true">
-                    <xs:attribute name="CLR" type="xs:string" use="optional"/>
-                </xs:complexType>
-            </xs:element>
-            <xs:element minOccurs="0" name="MaxValue">
-                <xs:complexType mixed="true">
-                    <xs:attribute name="CLR" type="xs:string" use="optional"/>
+            <xs:group ref="PropertyCommentDoc"/>
+            <xs:element name="Index" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Indicates that the column is indexed.</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:attribute name="Name">
+                        <xs:annotation>
+                            <xs:documentation>The name of the database index.</xs:documentation>
+                        </xs:annotation>
+                        <xs:simpleType>
+                            <xs:restriction base="SimpleIdentifier">
+                                <xs:pattern value="^IDX_[^_]+_[^_].*"/>
+                            </xs:restriction>
+                        </xs:simpleType>
+                    </xs:attribute>
                 </xs:complexType>
             </xs:element>
         </xs:sequence>
-        <xs:attribute name="Name" type="xs:string" use="required" />
-        <xs:attribute name="Type" type="xs:string" use="required" />
-        <xs:attribute name="PrimaryKey" type="xs:boolean" use="optional" default="false" />
-        <xs:attribute name="Unique" type="xs:boolean" use="optional" default="false" />
-        <xs:attribute name="Indexed" type="xs:boolean" use="optional" default="false" />
-        <xs:attribute name="MaxLength" type="xs:unsignedShort" use="optional" />
-        <xs:attribute name="MinLength" type="xs:unsignedByte" use="optional" />
-        <xs:attribute name="Normalized" type="xs:boolean" use="optional" default="false" />
-        <xs:attribute name="NotNull" type="xs:boolean" use="optional" default="false" />
-        <xs:attribute name="DisplayNameResource" type="xs:NCName" use="optional" />
-        <xs:attribute name="DescriptionResource" type="xs:NCName" use="optional" />
-        <xs:attribute name="GenericWritable" type="xs:boolean" use="optional" default="false"/>
+        <xs:attribute name="Name" type="SimpleIdentifier" use="required" />
+        <xs:attribute name="FullName" type="SimpleMemberFullName" />
+        <xs:attribute name="DisplayNameResource" type="SimpleIdentifier" use="optional" />
+        <xs:attribute name="DescriptionResource" type="SimpleIdentifier" use="optional" />
+        <xs:attribute name="IsGenericWritable" type="xs:boolean" use="optional" default="false" />
+        <xs:attribute name="ColName" type="SimpleIdentifier" use="optional" />
+    </xs:complexType>
+    <xs:complexType name="BooleanEntityProperty">
+        <xs:complexContent>
+            <xs:extension base="EntityProperty">
+                <xs:choice>
+                    <xs:element name="Default">
+                        <xs:complexType>
+                            <xs:simpleContent>
+                                <xs:extension base="xs:boolean">
+                                    <xs:attribute name="AllowNull" type="xs:boolean" use="optional" default="false" />
+                                </xs:extension>
+                            </xs:simpleContent>
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element name="DefaultNull"><xs:complexType></xs:complexType></xs:element>
+                    <xs:element name="Required">
+                        <xs:complexType>
+                            <xs:attribute name="AllowNull" type="xs:boolean" use="optional" default="false" />
+                        </xs:complexType>
+                    </xs:element>
+                </xs:choice>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="ByteEntityProperty">
+        <xs:complexContent>
+            <xs:extension base="EntityProperty">
+                <xs:choice>
+                    <xs:element name="Default">
+                        <xs:complexType>
+                            <xs:simpleContent>
+                                <xs:extension base="xs:unsignedByte">
+                                    <xs:attribute name="AllowNull" type="xs:boolean" use="optional" default="false" />
+                                </xs:extension>
+                            </xs:simpleContent>
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element name="DefaultNull"><xs:complexType></xs:complexType></xs:element>
+                    <xs:element name="Required">
+                        <xs:complexType>
+                            <xs:attribute name="AllowNull" type="xs:boolean" use="optional" default="false" />
+                        </xs:complexType>
+                    </xs:element>
+                </xs:choice>
+                <xs:attribute name="MinValue" type="xs:unsignedByte" use="optional">
+                    <xs:annotation>
+                        <xs:documentation>The constant minimum value.</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="MaxValue" type="xs:unsignedByte" use="optional">
+                    <xs:annotation>
+                        <xs:documentation>The constant maximum value.</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="SByteEntityProperty">
+        <xs:complexContent>
+            <xs:extension base="EntityProperty">
+                <xs:choice>
+                    <xs:element name="Default">
+                        <xs:complexType>
+                            <xs:simpleContent>
+                                <xs:extension base="xs:byte">
+                                    <xs:attribute name="AllowNull" type="xs:boolean" use="optional" default="false" />
+                                </xs:extension>
+                            </xs:simpleContent>
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element name="DefaultNull"><xs:complexType></xs:complexType></xs:element>
+                    <xs:element name="Required">
+                        <xs:complexType>
+                            <xs:attribute name="AllowNull" type="xs:boolean" use="optional" default="false" />
+                        </xs:complexType>
+                    </xs:element>
+                </xs:choice>
+                <xs:attribute name="MinValue" type="xs:byte" use="optional">
+                    <xs:annotation>
+                        <xs:documentation>The constant minimum value.</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="MaxValue" type="xs:byte" use="optional">
+                    <xs:annotation>
+                        <xs:documentation>The constant maximum value.</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="Int16EntityProperty">
+        <xs:complexContent>
+            <xs:extension base="EntityProperty">
+                <xs:choice>
+                    <xs:element name="Default">
+                        <xs:complexType>
+                            <xs:simpleContent>
+                                <xs:extension base="xs:short">
+                                    <xs:attribute name="AllowNull" type="xs:boolean" use="optional" default="false" />
+                                </xs:extension>
+                            </xs:simpleContent>
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element name="DefaultNull"><xs:complexType></xs:complexType></xs:element>
+                    <xs:element name="Required">
+                        <xs:complexType>
+                            <xs:attribute name="AllowNull" type="xs:boolean" use="optional" default="false" />
+                        </xs:complexType>
+                    </xs:element>
+                </xs:choice>
+                <xs:attribute name="MinValue" type="xs:short" use="optional">
+                    <xs:annotation>
+                        <xs:documentation>The constant minimum value.</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="MaxValue" type="xs:short" use="optional">
+                    <xs:annotation>
+                        <xs:documentation>The constant maximum value.</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="UInt16EntityProperty">
+        <xs:complexContent>
+            <xs:extension base="EntityProperty">
+                <xs:choice>
+                    <xs:element name="Default">
+                        <xs:complexType>
+                            <xs:simpleContent>
+                                <xs:extension base="xs:unsignedShort">
+                                    <xs:attribute name="AllowNull" type="xs:boolean" use="optional" default="false" />
+                                </xs:extension>
+                            </xs:simpleContent>
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element name="DefaultNull"><xs:complexType></xs:complexType></xs:element>
+                    <xs:element name="Required">
+                        <xs:complexType>
+                            <xs:attribute name="AllowNull" type="xs:boolean" use="optional" default="false" />
+                        </xs:complexType>
+                    </xs:element>
+                </xs:choice>
+                <xs:attribute name="MinValue" type="xs:unsignedShort" use="optional">
+                    <xs:annotation>
+                        <xs:documentation>The constant minimum value.</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="MaxValue" type="xs:unsignedShort" use="optional">
+                    <xs:annotation>
+                        <xs:documentation>The constant maximum value.</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="Int32EntityProperty">
+        <xs:complexContent>
+            <xs:extension base="EntityProperty">
+                <xs:choice>
+                    <xs:element name="Default">
+                        <xs:complexType>
+                            <xs:simpleContent>
+                                <xs:extension base="xs:int">
+                                    <xs:attribute name="AllowNull" type="xs:boolean" use="optional" default="false" />
+                                </xs:extension>
+                            </xs:simpleContent>
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element name="DefaultNull"><xs:complexType></xs:complexType></xs:element>
+                    <xs:element name="Required">
+                        <xs:complexType>
+                            <xs:attribute name="AllowNull" type="xs:boolean" use="optional" default="false" />
+                        </xs:complexType>
+                    </xs:element>
+                </xs:choice>
+                <xs:attribute name="MinValue" type="xs:int" use="optional">
+                    <xs:annotation>
+                        <xs:documentation>The constant minimum value.</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="MaxValue" type="xs:int" use="optional">
+                    <xs:annotation>
+                        <xs:documentation>The constant maximum value.</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="UInt32EntityProperty">
+        <xs:complexContent>
+            <xs:extension base="EntityProperty">
+                <xs:choice>
+                    <xs:element name="Default">
+                        <xs:complexType>
+                            <xs:simpleContent>
+                                <xs:extension base="xs:unsignedInt">
+                                    <xs:attribute name="AllowNull" type="xs:boolean" use="optional" default="false" />
+                                </xs:extension>
+                            </xs:simpleContent>
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element name="DefaultNull"><xs:complexType></xs:complexType></xs:element>
+                    <xs:element name="Required">
+                        <xs:complexType>
+                            <xs:attribute name="AllowNull" type="xs:boolean" use="optional" default="false" />
+                        </xs:complexType>
+                    </xs:element>
+                </xs:choice>
+                <xs:attribute name="MinValue" type="xs:unsignedInt" use="optional">
+                    <xs:annotation>
+                        <xs:documentation>The constant minimum value.</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="MaxValue" type="xs:unsignedInt" use="optional">
+                    <xs:annotation>
+                        <xs:documentation>The constant maximum value.</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="Int64EntityProperty">
+        <xs:complexContent>
+            <xs:extension base="EntityProperty">
+                <xs:choice>
+                    <xs:element name="Default">
+                        <xs:complexType>
+                            <xs:simpleContent>
+                                <xs:extension base="xs:long">
+                                    <xs:attribute name="AllowNull" type="xs:boolean" use="optional" default="false" />
+                                </xs:extension>
+                            </xs:simpleContent>
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element name="DefaultNull"><xs:complexType></xs:complexType></xs:element>
+                    <xs:element name="Required">
+                        <xs:complexType>
+                            <xs:attribute name="AllowNull" type="xs:boolean" use="optional" default="false" />
+                        </xs:complexType>
+                    </xs:element>
+                </xs:choice>
+                <xs:attribute name="MinValue" type="xs:long" use="optional">
+                    <xs:annotation>
+                        <xs:documentation>The constant minimum value.</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="MaxValue" type="xs:long" use="optional">
+                    <xs:annotation>
+                        <xs:documentation>The constant maximum value.</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="UInt64EntityProperty">
+        <xs:complexContent>
+            <xs:extension base="EntityProperty">
+                <xs:choice>
+                    <xs:element name="Default">
+                        <xs:complexType>
+                            <xs:simpleContent>
+                                <xs:extension base="xs:unsignedLong">
+                                    <xs:attribute name="AllowNull" type="xs:boolean" use="optional" default="false" />
+                                </xs:extension>
+                            </xs:simpleContent>
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element name="DefaultNull"><xs:complexType></xs:complexType></xs:element>
+                    <xs:element name="Required">
+                        <xs:complexType>
+                            <xs:attribute name="AllowNull" type="xs:boolean" use="optional" default="false" />
+                        </xs:complexType>
+                    </xs:element>
+                </xs:choice>
+                <xs:attribute name="MinValue" type="xs:unsignedLong" use="optional">
+                    <xs:annotation>
+                        <xs:documentation>The constant minimum value.</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="MaxValue" type="xs:unsignedLong" use="optional">
+                    <xs:annotation>
+                        <xs:documentation>The constant maximum value.</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="DecimalEntityProperty">
+        <xs:complexContent>
+            <xs:extension base="EntityProperty">
+                <xs:choice>
+                    <xs:element name="Default">
+                        <xs:complexType>
+                            <xs:simpleContent>
+                                <xs:extension base="xs:decimal">
+                                    <xs:attribute name="AllowNull" type="xs:boolean" use="optional" default="false" />
+                                </xs:extension>
+                            </xs:simpleContent>
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element name="DefaultNull"><xs:complexType></xs:complexType></xs:element>
+                    <xs:element name="Required">
+                        <xs:complexType>
+                            <xs:attribute name="AllowNull" type="xs:boolean" use="optional" default="false" />
+                        </xs:complexType>
+                    </xs:element>
+                </xs:choice>
+                <xs:attribute name="MinValue" type="xs:decimal" use="optional">
+                    <xs:annotation>
+                        <xs:documentation>The constant minimum value.</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="MaxValue" type="xs:decimal" use="optional">
+                    <xs:annotation>
+                        <xs:documentation>The constant maximum value.</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="DoubleEntityProperty">
+        <xs:complexContent>
+            <xs:extension base="EntityProperty">
+                <xs:choice>
+                    <xs:element name="Default">
+                        <xs:complexType>
+                            <xs:simpleContent>
+                                <xs:extension base="xs:double">
+                                    <xs:attribute name="AllowNull" type="xs:boolean" use="optional" default="false" />
+                                </xs:extension>
+                            </xs:simpleContent>
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element name="DefaultNull"><xs:complexType></xs:complexType></xs:element>
+                    <xs:element name="Required">
+                        <xs:complexType>
+                            <xs:attribute name="AllowNull" type="xs:boolean" use="optional" default="false" />
+                        </xs:complexType>
+                    </xs:element>
+                </xs:choice>
+                <xs:attribute name="MinValue" type="xs:double" use="optional">
+                    <xs:annotation>
+                        <xs:documentation>The constant minimum value.</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="MaxValue" type="xs:double" use="optional">
+                    <xs:annotation>
+                        <xs:documentation>The constant maximum value.</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="SingleEntityProperty">
+        <xs:complexContent>
+            <xs:extension base="EntityProperty">
+                <xs:choice>
+                    <xs:element name="Default">
+                        <xs:complexType>
+                            <xs:simpleContent>
+                                <xs:extension base="xs:float">
+                                    <xs:attribute name="AllowNull" type="xs:boolean" use="optional" default="false" />
+                                </xs:extension>
+                            </xs:simpleContent>
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element name="DefaultNull"><xs:complexType></xs:complexType></xs:element>
+                    <xs:element name="Required">
+                        <xs:complexType>
+                            <xs:attribute name="AllowNull" type="xs:boolean" use="optional" default="false" />
+                        </xs:complexType>
+                    </xs:element>
+                </xs:choice>
+                <xs:attribute name="MinValue" type="xs:float" use="optional">
+                    <xs:annotation>
+                        <xs:documentation>The constant minimum value.</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="MaxValue" type="xs:float" use="optional">
+                    <xs:annotation>
+                        <xs:documentation>The constant maximum value.</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="DriveTypeEntityProperty">
+        <xs:complexContent>
+            <xs:extension base="EntityProperty">
+                <xs:choice>
+                    <xs:element name="Default">
+                        <xs:complexType>
+                            <xs:simpleContent>
+                                <xs:extension base="DriveType">
+                                    <xs:attribute name="AllowNull" type="xs:boolean" use="optional" default="false" />
+                                </xs:extension>
+                            </xs:simpleContent>
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element name="DefaultNull"><xs:complexType></xs:complexType></xs:element>
+                    <xs:element name="Required">
+                        <xs:complexType>
+                            <xs:attribute name="AllowNull" type="xs:boolean" use="optional" default="false" />
+                        </xs:complexType>
+                    </xs:element>
+                </xs:choice>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="EnumEntityProperty">
+        <xs:complexContent>
+            <xs:extension base="EntityProperty">
+                <xs:choice>
+                    <xs:element name="Default">
+                        <xs:complexType>
+                            <xs:simpleContent>
+                                <xs:extension base="SimpleMemberFullName">
+                                    <xs:attribute name="AllowNull" type="xs:boolean" use="optional" default="false" />
+                                </xs:extension>
+                            </xs:simpleContent>
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element name="DefaultNull">
+                        <xs:complexType>
+                            <xs:attribute name="Type" type="SimpleIdentifier" />
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element name="Required">
+                        <xs:complexType>
+                            <xs:attribute name="Type" type="SimpleIdentifier" />
+                        </xs:complexType>
+                    </xs:element>
+                </xs:choice>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="GuidEntityProperty">
+        <xs:complexContent>
+            <xs:extension base="EntityProperty">
+                <xs:choice>
+                    <xs:element name="DefaultNull"><xs:complexType></xs:complexType></xs:element>
+                    <xs:element name="Required"><xs:complexType></xs:complexType></xs:element>
+                </xs:choice>
+                <xs:attribute name="IsPrimaryKey" use="optional" default="false" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="MD5EntityProperty">
+        <xs:complexContent>
+            <xs:extension base="EntityProperty">
+                <xs:choice>
+                    <xs:element name="DefaultNull"><xs:complexType></xs:complexType></xs:element>
+                    <xs:element name="Required">
+                        <xs:complexType>
+                            <xs:attribute name="AllowNull" type="xs:boolean" use="optional" default="false" />
+                        </xs:complexType>
+                    </xs:element>
+                </xs:choice>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="BinaryEntityProperty">
+        <xs:complexContent>
+            <xs:extension base="EntityProperty">
+                <xs:choice>
+                    <xs:element name="Default">
+                        <xs:complexType>
+                            <xs:simpleContent>
+                                <xs:extension base="xs:base64Binary">
+                                    <xs:attribute name="AllowNull" type="xs:boolean" use="optional" default="false" />
+                                </xs:extension>
+                            </xs:simpleContent>
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element name="DefaultNull"><xs:complexType></xs:complexType></xs:element>
+                    <xs:element name="Required">
+                        <xs:complexType>
+                            <xs:attribute name="AllowNull" type="xs:boolean" use="optional" default="false" />
+                        </xs:complexType>
+                    </xs:element>
+                </xs:choice>
+                <xs:attribute name="MinLength" type="xs:unsignedShort" use="optional" default="0">
+                    <xs:annotation>
+                        <xs:documentation>The constant minimum value.</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="MaxLength" type="xs:unsignedShort" use="required">
+                    <xs:annotation>
+                        <xs:documentation>The constant maximum value.</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="DateTimeEntityProperty">
+        <xs:complexContent>
+            <xs:extension base="EntityProperty">
+                <xs:choice>
+                    <xs:element name="Default">
+                        <xs:complexType>
+                            <xs:simpleContent>
+                                <xs:extension base="xs:base64Binary">
+                                    <xs:attribute name="AllowNull" type="xs:boolean" use="optional" default="false" />
+                                </xs:extension>
+                            </xs:simpleContent>
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element name="DefaultNow">
+                        <xs:complexType>
+                            <xs:attribute name="AllowNull" type="xs:boolean" use="optional" default="false" />
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element name="DefaultNull"><xs:complexType></xs:complexType></xs:element>
+                    <xs:element name="Required">
+                        <xs:complexType>
+                            <xs:attribute name="AllowNull" type="xs:boolean" use="optional" default="false" />
+                        </xs:complexType>
+                    </xs:element>
+                </xs:choice>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="TimeEntityProperty">
+        <xs:complexContent>
+            <xs:extension base="EntityProperty">
+                <xs:choice>
+                    <xs:element name="Default">
+                        <xs:complexType>
+                            <xs:simpleContent>
+                                <xs:extension base="xs:time">
+                                    <xs:attribute name="AllowNull" type="xs:boolean" use="optional" default="false" />
+                                </xs:extension>
+                            </xs:simpleContent>
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element name="DefaultZero">
+                        <xs:complexType>
+                            <xs:attribute name="AllowNull" type="xs:boolean" use="optional" default="false" />
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element name="DefaultNull"><xs:complexType></xs:complexType></xs:element>
+                    <xs:element name="Required">
+                        <xs:complexType>
+                            <xs:attribute name="AllowNull" type="xs:boolean" use="optional" default="false" />
+                        </xs:complexType>
+                    </xs:element>
+                </xs:choice>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="TextEntityProperty">
+        <xs:complexContent>
+            <xs:extension base="EntityProperty">
+                <xs:choice>
+                    <xs:element name="Default">
+                        <xs:complexType>
+                            <xs:simpleContent>
+                                <xs:extension base="xs:string">
+                                    <xs:attribute name="AllowNull" type="xs:boolean" use="optional" default="false" />
+                                </xs:extension>
+                            </xs:simpleContent>
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element name="DefaultNull"><xs:complexType></xs:complexType></xs:element>
+                    <xs:element name="Required">
+                        <xs:complexType>
+                            <xs:attribute name="AllowNull" type="xs:boolean" use="optional" default="false" />
+                        </xs:complexType>
+                    </xs:element>
+                </xs:choice>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="MultiStringValueProperty">
+        <xs:complexContent>
+            <xs:extension base="EntityProperty">
+                <xs:choice>
+                    <xs:element name="DefaultNull">
+                        <xs:complexType></xs:complexType>
+                    </xs:element>
+                    <xs:element name="Required">
+                        <xs:complexType>
+                            <xs:attribute name="AllowNull" type="xs:boolean" use="optional" default="false" />
+                        </xs:complexType>
+                    </xs:element>
+                </xs:choice>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="VarCharEntityProperty">
+        <xs:complexContent>
+            <xs:extension base="TextEntityProperty">
+                <xs:attribute name="MinLength" type="xs:unsignedShort" use="optional" default="0">
+                    <xs:annotation>
+                        <xs:documentation>The constant minimum value.</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="MaxLength" type="xs:unsignedShort" use="required">
+                    <xs:annotation>
+                        <xs:documentation>The constant maximum value.</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="IsNormalized" type="xs:boolean" use="optional" default="false">
+                    <xs:annotation>
+                        <xs:documentation>Whether strings are trimmed and whitespace-normalized.</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="IsCaseSensitive" type="xs:boolean" use="optional" default="false">
+                    <xs:annotation>
+                        <xs:documentation>Indicates whether the column search is case-sensitive.</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="VolumeIdentifierEntityProperty">
+        <xs:complexContent>
+            <xs:extension base="EntityProperty">
+                <xs:choice>
+                    <xs:element name="DefaultNull"><xs:complexType></xs:complexType></xs:element>
+                    <xs:element name="Required">
+                        <xs:complexType>
+                            <xs:attribute name="AllowNull" type="xs:boolean" use="optional" default="false" />
+                        </xs:complexType>
+                    </xs:element>
+                </xs:choice>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="CollectionNavigationProperty">
+        <xs:annotation>
+            <xs:documentation>
+                Defines a property for a one-to-many relationship with another table where the current table is the primary and the other table is the dependent.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="EntityProperty">
+                <xs:choice>
+                    <xs:element name="ItemType" type="SimpleIdentifier">
+                        <xs:annotation>
+                            <xs:documentation>
+                                The entity element type matching XPath "/EntityDefinitions/*/Entity/@Name".
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="ItemKey" type="MemberReference">
+                        <xs:annotation>
+                            <xs:documentation>
+                                THe property full name representing the foreign key,  matching XPath "/EntityDefinitions/*/Entity/Properties/*/@FullName"
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                </xs:choice>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="NavigationTypeProperty">
+        <xs:group ref="PropertyCommentDoc" minOccurs="0"/>
+        <xs:attribute name="Name" type="SimpleIdentifier" use="required" />
+        <xs:attribute name="Type" type="SimpleIdentifier" use="required" />
+    </xs:complexType>
+    <xs:complexType name="NavigationKeyProperty">
+        <xs:group ref="PropertyCommentDoc" minOccurs="0"/>
+        <xs:attribute name="Name" type="SimpleIdentifier" use="required" />
+        <xs:attribute name="Key" type="SimpleMemberFullName" use="required" />
+    </xs:complexType>
+    <xs:complexType name="NavigationProperty">
+        <xs:complexContent>
+            <xs:extension base="EntityProperty">
+                <xs:sequence>
+                    <xs:choice>
+                        <xs:element name="DefaultNull"><xs:complexType></xs:complexType></xs:element>
+                        <xs:element name="Required"><xs:complexType></xs:complexType></xs:element>
+                    </xs:choice>
+                    <xs:choice>
+                        <xs:element name="Reference">
+                            <xs:complexType>
+                                <xs:attribute name="Entity" type="SimpleIdentifier" use="required" />
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="ReferenceKey">
+                            <xs:complexType>
+                                <xs:attribute name="Property" type="SimpleMemberFullName" use="required" />
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:choice>
+                    <xs:element name="DbRelationship" minOccurs="0">
+                        <xs:annotation>
+                            <xs:documentation>
+                                Defines a foreign key relationship on the current entity. If this element is omitted, then it is assumed that the current
+                                property is the navigation propert for the opposite end of a one-to-one relationship with another entity that is linked by the current entity's primary
+                                key.
+                            </xs:documentation>
+                        </xs:annotation>
+                        <xs:complexType>
+                            <xs:attribute name="Name" use="required">
+                                <xs:annotation>
+                                    <xs:documentation>The name to give the foriegn key relationship.</xs:documentation>
+                                </xs:annotation>
+                                <xs:simpleType>
+                                    <xs:restriction base="SimpleIdentifier">
+                                        <xs:pattern value="^FK_.+$"/>
+                                    </xs:restriction>
+                                </xs:simpleType>
+                            </xs:attribute>
+                            <xs:attribute name="FkPropertyName" type="SimpleIdentifier" use="optional">
+                                <xs:annotation>
+                                    <xs:documentation>
+                                        The name of the foreign key property on the current entity type that matches the primary key of the related entity.
+                                        If this is not specified, then this is assumed to be the same as the current property name with "Id" appended.
+                                    </xs:documentation>
+                                </xs:annotation>
+                            </xs:attribute>
+                        </xs:complexType>
+                    </xs:element>
+                </xs:sequence>
+                <xs:attribute name="IsPrimaryKey" use="optional" default="false" />
+                <xs:attribute name="ForeignKeyPropertyName" use="optional" />
+                <xs:attribute name="Multiplicity" use="optional" default="Many">
+                    <xs:simpleType>
+                        <xs:restriction base="xs:token">
+                            <xs:enumeration value="Many" />
+                            <xs:enumeration value="One" />
+                        </xs:restriction>
+                    </xs:simpleType>
+                </xs:attribute>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="PropertiesType">
+        <xs:choice maxOccurs="unbounded">
+            <xs:element name="Boolean" type="BooleanEntityProperty" />
+            <xs:element name="Byte" type="ByteEntityProperty" />
+            <xs:element name="SByte" type="SByteEntityProperty" />
+            <xs:element name="Int16" type="Int16EntityProperty" />
+            <xs:element name="UInt16" type="UInt16EntityProperty" />
+            <xs:element name="Int32" type="Int32EntityProperty" />
+            <xs:element name="UInt32" type="UInt32EntityProperty" />
+            <xs:element name="Int64" type="Int64EntityProperty" />
+            <xs:element name="UInt64" type="UInt64EntityProperty" />
+            <xs:element name="Decimal" type="DecimalEntityProperty" />
+            <xs:element name="Double" type="DoubleEntityProperty" />
+            <xs:element name="Single" type="SingleEntityProperty" />
+            <xs:element name="DriveType" type="DriveTypeEntityProperty" />
+            <xs:element name="Enum" type="EnumEntityProperty" />
+            <xs:element name="Guid" type="GuidEntityProperty" />
+            <xs:element name="MD5" type="MD5EntityProperty" />
+            <xs:element name="Binary" type="BinaryEntityProperty" />
+            <xs:element name="DateTime" type="DateTimeEntityProperty" />
+            <xs:element name="Time" type="TimeEntityProperty" />
+            <xs:element name="VarChar" type="VarCharEntityProperty" />
+            <xs:element name="Text" type="TextEntityProperty" />
+            <xs:element name="MultiStringValue" type="MultiStringValueProperty" />
+            <xs:element name="VolumeIdentifier" type="VolumeIdentifierEntityProperty" />
+            <xs:element name="Navigation" type="NavigationProperty" />
+            <xs:element name="Navigation.Type" type="NavigationTypeProperty" />
+            <xs:element name="Navigation.Key" type="NavigationKeyProperty" />
+            <xs:element name="CollectionNavigation" type="CollectionNavigationProperty" />
+            <xs:element name="CollectionNavigation.Type" type="NavigationTypeProperty" />
+            <xs:element name="CollectionNavigation.Key" type="NavigationKeyProperty" />
+        </xs:choice>
+    </xs:complexType>
+    <xs:complexType name="PropertyConditionType">
+        <xs:attribute name="Name" type="SimpleIdentifier" use="required" />
+    </xs:complexType>
+    <xs:complexType name="PropertyComparisonType">
+        <xs:complexContent>
+            <xs:extension base="PropertyConditionType">
+                <xs:sequence>
+                    <xs:element name="Property" type="PropertyConditionType" />
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:group name="SimpleConditions">
+        <xs:choice>
+            <xs:element name="IsNull" type="PropertyConditionType"/>
+            <xs:element name="NotNull" type="PropertyConditionType"/>
+            <xs:element name="LessThan" type="PropertyComparisonType"/>
+            <xs:element name="NotGreaterThan" type="PropertyComparisonType"/>
+            <xs:element name="Equals" type="PropertyComparisonType"/>
+            <xs:element name="NotEquals" type="PropertyComparisonType"/>
+            <xs:element name="NotLessThan" type="PropertyComparisonType"/>
+            <xs:element name="GreaterThan" type="PropertyComparisonType"/>
+        </xs:choice>
+    </xs:group>
+    <xs:complexType name="AndCondition">
+        <xs:choice minOccurs="2" maxOccurs="unbounded">
+            <xs:element name="Or" type="OrCondition">
+                <xs:keyref name="FK_Local_Or_Check_Condition" refer="PK_Local_Property_Name">
+                    <xs:selector xpath="IsNull|NotNull|LessThan|NotGreaterThan|Equals|NotEquals|NotLessThan|GreaterThan|LessThan/Property|NotGreaterThan/Property|Equals/Property|NotEquals/Property|NotLessThan/Property|GreaterThan/Property" />
+                    <xs:field xpath="@Name" />
+                </xs:keyref>
+                <xs:keyref name="FK_Upstream_Or_Check_Condition" refer="PK_Upstream_Property_Name">
+                    <xs:selector xpath="IsNull|NotNull|LessThan|NotGreaterThan|Equals|NotEquals|NotLessThan|GreaterThan|LessThan/Property|NotGreaterThan/Property|Equals/Property|NotEquals/Property|NotLessThan/Property|GreaterThan/Property" />
+                    <xs:field xpath="@Name" />
+                </xs:keyref>
+            </xs:element>
+            <xs:group ref="SimpleConditions"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:complexType name="OrCondition">
+        <xs:choice minOccurs="2" maxOccurs="unbounded">
+            <xs:element name="And" type="AndCondition">
+                <xs:keyref name="FK_Local_And_Check_Condition" refer="PK_Local_Property_Name">
+                    <xs:selector xpath="IsNull|NotNull|LessThan|NotGreaterThan|Equals|NotEquals|NotLessThan|GreaterThan|LessThan/Property|NotGreaterThan/Property|Equals/Property|NotEquals/Property|NotLessThan/Property|GreaterThan/Property" />
+                    <xs:field xpath="@Name" />
+                </xs:keyref>
+                <xs:keyref name="FK_Upstream_And_Check_Condition" refer="PK_Upstream_Property_Name">
+                    <xs:selector xpath="IsNull|NotNull|LessThan|NotGreaterThan|Equals|NotEquals|NotLessThan|GreaterThan|LessThan/Property|NotGreaterThan/Property|Equals/Property|NotEquals/Property|NotLessThan/Property|GreaterThan/Property" />
+                    <xs:field xpath="@Name" />
+                </xs:keyref>
+            </xs:element>
+            <xs:group ref="SimpleConditions"/>
+        </xs:choice>
     </xs:complexType>
     <xs:complexType name="EntityType">
         <xs:sequence>
-            <xs:element minOccurs="0" name="summary" type="XmlDocSummary"/>
-            <xs:element minOccurs="0" name="typeparam" type="XmlDocTypeParam"/>
-            <xs:element minOccurs="0" name="remarks" type="XmlDocRemarks"/>
-            <xs:element minOccurs="0" name="seealso" type="XmlDocSeeAlso"/>
-            <xs:element minOccurs="0" maxOccurs="unbounded" name="Extends" type="TypeExtends"/>
-            <xs:element minOccurs="0" maxOccurs="unbounded" name="Property" type="MemberProperty"/>
+            <xs:element name="summary" type="CommentDoc">
+                <xs:annotation>
+                    <xs:documentation>Summary xml source code documentation.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="typeparam" type="TypeParamCommentDoc" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation>Type parameter xml source code documentation.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:group ref="DetailsCommentDoc" />
+            <xs:choice minOccurs="0">
+                <xs:element name="Extends" type="CsTypeName" />
+                <xs:element name="ExtendsEntity" type="SimpleIdentifier" />
+            </xs:choice>
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+                <xs:element name="Implements" type="CsTypeName" />
+                <xs:element name="ImplementsEntity" type="SimpleIdentifier" />
+            </xs:choice>
+            <xs:element name="Properties" type="PropertiesType" minOccurs="0" />
+            <xs:element name="Unique" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation>Adds a unique constraint.</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:choice minOccurs="0" maxOccurs="unbounded">
+                        <xs:element name="Property">
+                            <xs:complexType>
+                                <xs:attribute name="Name" type="SimpleIdentifier" use="required"/>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:choice>
+                    <xs:attribute name="Name" use="required">
+                        <xs:simpleType>
+                            <xs:restriction base="SimpleIdentifier">
+                                <xs:pattern value="^UK_.+"/>
+                            </xs:restriction>
+                        </xs:simpleType>
+                    </xs:attribute>
+                </xs:complexType>
+                <xs:unique name="IDX_Unique_Property">
+                    <xs:selector xpath="Property"/>
+                    <xs:field xpath="@Name"/>
+                </xs:unique>
+            </xs:element>
+            <xs:element name="Check" minOccurs="0">
+                <xs:complexType>
+                    <xs:choice>
+                        <xs:element name="And" type="AndCondition"/>
+                        <xs:element name="Or" type="OrCondition"/>
+                        <xs:group ref="SimpleConditions"/>
+                    </xs:choice>
+                </xs:complexType>
+            </xs:element>
         </xs:sequence>
-        <xs:attribute name="Name" type="xs:string" use="required" />
-        <xs:attribute name="ResourceType" type="xs:NCName" use="optional" />
+        <xs:attribute name="Name" type="SimpleIdentifier" use="required" />
     </xs:complexType>
-    <xs:group name="EnumFieldGroup">
+    <xs:complexType name="ScopedEntityType">
         <xs:sequence>
-            <xs:element minOccurs="0" name="summary" type="XmlDocSummary"/>
-            <xs:element minOccurs="0" name="remarks" type="XmlDocRemarks"/>
-            <xs:element minOccurs="0" name="seealso" type="XmlDocSeeAlso"/>
+            <xs:group ref="SimpleCommentDoc" minOccurs="0"/>
+            <xs:element name="Properties">
+                
+            </xs:element>
         </xs:sequence>
-    </xs:group>
-    <xs:complexType name="EnumByteField">
-        <xs:group ref="EnumFieldGroup"/>
-        <xs:attribute name="Name" type="xs:NCName" use="required" />
-        <xs:attribute name="Value" type="xs:unsignedByte" use="required" />
-        <xs:attribute name="DisplayNameResource" type="xs:NCName" use="optional" />
-        <xs:attribute name="DescriptionResource" type="xs:NCName" use="optional" />
     </xs:complexType>
-    <xs:complexType name="EnumSByteField">
-        <xs:group ref="EnumFieldGroup"/>
-        <xs:attribute name="Name" type="xs:NCName" use="required" />
-        <xs:attribute name="Value" type="xs:byte" use="required" />
-        <xs:attribute name="DisplayNameResource" type="xs:NCName" use="optional" />
-        <xs:attribute name="DescriptionResource" type="xs:NCName" use="optional" />
-    </xs:complexType>
-    <xs:complexType name="EnumInt16Field">
-        <xs:group ref="EnumFieldGroup"/>
-        <xs:attribute name="Name" type="xs:NCName" use="required" />
-        <xs:attribute name="Value" type="xs:short" use="required" />
-        <xs:attribute name="DisplayNameResource" type="xs:NCName" use="optional" />
-        <xs:attribute name="DescriptionResource" type="xs:NCName" use="optional" />
-    </xs:complexType>
-    <xs:complexType name="EnumUInt16Field">
-        <xs:group ref="EnumFieldGroup"/>
-        <xs:attribute name="Name" type="xs:NCName" use="required" />
-        <xs:attribute name="Value" type="xs:unsignedShort" use="required" />
-        <xs:attribute name="DisplayNameResource" type="xs:NCName" use="optional" />
-        <xs:attribute name="DescriptionResource" type="xs:NCName" use="optional" />
-    </xs:complexType>
-    <xs:complexType name="EnumInt32Field">
-        <xs:group ref="EnumFieldGroup"/>
-        <xs:attribute name="Name" type="xs:NCName" use="required" />
-        <xs:attribute name="Value" type="xs:int" use="required" />
-        <xs:attribute name="DisplayNameResource" type="xs:NCName" use="optional" />
-        <xs:attribute name="DescriptionResource" type="xs:NCName" use="optional" />
-    </xs:complexType>
-    <xs:complexType name="EnumUInt32Field">
-        <xs:group ref="EnumFieldGroup"/>
-        <xs:attribute name="Name" type="xs:NCName" use="required" />
-        <xs:attribute name="Value" type="xs:unsignedInt" use="required" />
-        <xs:attribute name="DisplayNameResource" type="xs:NCName" use="optional" />
-        <xs:attribute name="DescriptionResource" type="xs:NCName" use="optional" />
-    </xs:complexType>
-    <xs:complexType name="EnumInt64Field">
-        <xs:group ref="EnumFieldGroup"/>
-        <xs:attribute name="Name" type="xs:NCName" use="required" />
-        <xs:attribute name="Value" type="xs:long" use="required" />
-        <xs:attribute name="DisplayNameResource" type="xs:NCName" use="optional" />
-        <xs:attribute name="DescriptionResource" type="xs:NCName" use="optional" />
-    </xs:complexType>
-    <xs:complexType name="EnumUInt64Field">
-        <xs:group ref="EnumFieldGroup"/>
-        <xs:attribute name="Name" type="xs:NCName" use="required" />
-        <xs:attribute name="Value" type="xs:unsignedLong" use="required" />
-        <xs:attribute name="DisplayNameResource" type="xs:NCName" use="optional" />
-        <xs:attribute name="DescriptionResource" type="xs:NCName" use="optional" />
-    </xs:complexType>
-    <xs:group name="EnumGroup">
-        <xs:sequence>
-            <xs:element minOccurs="0" name="summary" type="XmlDocSummary"/>
-            <xs:element minOccurs="0" name="remarks" type="XmlDocRemarks"/>
-            <xs:element minOccurs="0" name="seealso" type="XmlDocSeeAlso"/>
-        </xs:sequence>
-    </xs:group>
-    <xs:complexType name="DbTableType">
-        <xs:sequence>
-            <xs:element minOccurs="0" name="summary" type="XmlDocSummary"/>
-            <xs:element minOccurs="0" name="remarks" type="XmlDocRemarks"/>
-            <xs:element minOccurs="0" name="seealso" type="XmlDocSeeAlso"/>
-            <xs:element minOccurs="0" maxOccurs="unbounded" name="Extends" type="TypeExtends"/>
-        </xs:sequence>
-        <xs:attribute name="Name" type="xs:NCName" use="required" />
-        <xs:attribute name="ItemType" type="xs:NCName" use="required" />
-    </xs:complexType>
-    <xs:complexType name="ConcreteDbTableType">
+    <xs:complexType name="ScopeExclusiveEntityType">
         <xs:complexContent>
-            <xs:extension base="DbTableType">
-                <xs:attribute name="ConcreteType" type="xs:NCName" use="required" />
-                <xs:attribute name="TableName" type="xs:NCName" use="optional" />
+            <xs:extension base="EntityType">
+
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
-    <xs:complexType name="BaseDbContextType">
-        <xs:sequence>
-            <xs:element minOccurs="0" name="summary" type="XmlDocSummary"/>
-            <xs:element minOccurs="0" name="remarks" type="XmlDocRemarks"/>
-            <xs:element minOccurs="0" name="seealso" type="XmlDocSeeAlso"/>
-            <xs:element minOccurs="0" maxOccurs="unbounded" name="Extends" type="TypeExtends"/>
-        </xs:sequence>
-        <xs:attribute name="Name" type="xs:string" use="required" />
-    </xs:complexType>
-    <xs:complexType name="DbContextType">
-        <xs:complexContent>
-            <xs:extension base="BaseDbContextType">
-                <xs:sequence>
-                    <xs:element maxOccurs="unbounded" name="Table" type="DbTableType" />
-                </xs:sequence>
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-    <xs:complexType name="ConcreteDbContextType">
-        <xs:complexContent>
-            <xs:extension base="BaseDbContextType">
-                <xs:sequence>
-                    <xs:element maxOccurs="unbounded" name="Table" type="ConcreteDbTableType" />
-                </xs:sequence>
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-    <xs:group name="EnumTypes">
-        <xs:choice>
-            <xs:element name="ByteEnum">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:group ref="EnumGroup"/>
-                        <xs:element minOccurs="0" maxOccurs="unbounded" name="Field" type="EnumByteField"/>
-                    </xs:sequence>
-                    <xs:attribute name="Name" type="xs:NCName" use="required" />
-                </xs:complexType>
-            </xs:element>
-            <xs:element name="SByteEnum">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:group ref="EnumGroup"/>
-                        <xs:element minOccurs="0" maxOccurs="unbounded" name="Field" type="EnumSByteField"/>
-                    </xs:sequence>
-                    <xs:attribute name="Name" type="xs:NCName" use="required" />
-                </xs:complexType>
-            </xs:element>
-            <xs:element name="Int16Enum">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:group ref="EnumGroup"/>
-                        <xs:element minOccurs="0" maxOccurs="unbounded" name="Field" type="EnumInt16Field"/>
-                    </xs:sequence>
-                    <xs:attribute name="Name" type="xs:NCName" use="required" />
-                </xs:complexType>
-            </xs:element>
-            <xs:element name="UInt16Enum">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:group ref="EnumGroup"/>
-                        <xs:element minOccurs="0" maxOccurs="unbounded" name="Field" type="EnumUInt16Field"/>
-                    </xs:sequence>
-                    <xs:attribute name="Name" type="xs:NCName" use="required" />
-                </xs:complexType>
-            </xs:element>
-            <xs:element name="Int32Enum">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:group ref="EnumGroup"/>
-                        <xs:element minOccurs="0" maxOccurs="unbounded" name="Field" type="EnumInt32Field"/>
-                    </xs:sequence>
-                    <xs:attribute name="Name" type="xs:NCName" use="required" />
-                </xs:complexType>
-            </xs:element>
-            <xs:element name="UInt32Enum">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:group ref="EnumGroup"/>
-                        <xs:element minOccurs="0" maxOccurs="unbounded" name="Field" type="EnumUInt32Field"/>
-                    </xs:sequence>
-                    <xs:attribute name="Name" type="xs:NCName" use="required" />
-                </xs:complexType>
-            </xs:element>
-            <xs:element name="Int64Enum">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:group ref="EnumGroup"/>
-                        <xs:element minOccurs="0" maxOccurs="unbounded" name="Field" type="EnumInt64Field"/>
-                    </xs:sequence>
-                    <xs:attribute name="Name" type="xs:NCName" use="required" />
-                </xs:complexType>
-            </xs:element>
-            <xs:element name="UInt64Enum">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:group ref="EnumGroup"/>
-                        <xs:element minOccurs="0" maxOccurs="unbounded" name="Field" type="EnumUInt64Field"/>
-                    </xs:sequence>
-                    <xs:attribute name="Name" type="xs:NCName" use="required" />
-                </xs:complexType>
-            </xs:element>
-        </xs:choice>
-    </xs:group>
-    <xs:element name="Entities">
+    <xs:element name="Schema">
         <xs:complexType>
             <xs:sequence>
-                <xs:group ref="EnumTypes" minOccurs="0" maxOccurs="unbounded"/>
-                <xs:element maxOccurs="unbounded" name="Entity" type="EntityType"/>
-                <xs:element name="DbContext" type="DbContextType"/>
-                <xs:element maxOccurs="unbounded" name="Local">
+                <xs:element name="EnumTypes" type="EnumTypes" minOccurs="0" />
+                <xs:element name="EntityType" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:complexContent>
+                            <xs:extension base="EntityType">
+                                <xs:sequence>
+                                    <xs:element name="Local" type="ScopedEntityType" minOccurs="0" />
+                                    <xs:element name="Upstream" type="ScopedEntityType" minOccurs="0" />
+                                </xs:sequence>
+                            </xs:extension>
+                        </xs:complexContent>
+                    </xs:complexType>
+                    <xs:key name="PK_Local_Property_Name">
+                        <xs:selector xpath="Properties/*|Local/Properties/*" />
+                        <xs:field xpath="@Name"/>
+                    </xs:key>
+                    <xs:keyref name="FK_Local_Null_Check_Condition" refer="PK_Local_Property_Name">
+                        <xs:selector xpath="Check|Check/And|Check/Or" />
+                        <xs:field xpath="IsNull|NotNull" />
+                    </xs:keyref>
+                    <xs:keyref name="FK_Local_Check_Condition" refer="PK_Local_Property_Name">
+                        <xs:selector xpath="IsNull|NotNull|LessThan|NotGreaterThan|Equals|NotEquals|NotLessThan|GreaterThan|LessThan/Property|NotGreaterThan/Property|Equals/Property|NotEquals/Property|NotLessThan/Property|GreaterThan/Property" />
+                        <xs:field xpath="@Name" />
+                    </xs:keyref>
+                    <xs:key name="PK_Upstream_Property_Name">
+                        <xs:selector xpath="Properties/*|Upstream/Properties/*" />
+                        <xs:field xpath="@Name"/>
+                    </xs:key>
+                    <xs:keyref name="FK_Upstream_Check_Condition" refer="PK_Upstream_Property_Name">
+                        <xs:selector xpath="IsNull|NotNull|LessThan|NotGreaterThan|Equals|NotEquals|NotLessThan|GreaterThan|LessThan/Property|NotGreaterThan/Property|Equals/Property|NotEquals/Property|NotLessThan/Property|GreaterThan/Property" />
+                        <xs:field xpath="@Name" />
+                    </xs:keyref>
+                </xs:element>
+                <xs:element name="Local" minOccurs="0">
                     <xs:complexType>
                         <xs:sequence>
-                            <xs:group ref="EnumTypes" minOccurs="0" maxOccurs="unbounded"/>
-                            <xs:element maxOccurs="unbounded" name="Entity" type="EntityType"/>
-                            <xs:element name="DbContext" type="ConcreteDbContextType"/>
+                            <xs:element name="EnumTypes" type="EnumTypes" minOccurs="0" />
+                            <xs:element name="EntityType" type="ScopeExclusiveEntityType" maxOccurs="unbounded" />
                         </xs:sequence>
                     </xs:complexType>
                 </xs:element>
-                <xs:element maxOccurs="unbounded" name="Upstream">
+                <xs:element name="Upstream" minOccurs="0">
                     <xs:complexType>
                         <xs:sequence>
-                            <xs:group ref="EnumTypes" minOccurs="0" maxOccurs="unbounded"/>
-                            <xs:element maxOccurs="unbounded" name="Entity" type="EntityType"/>
-                            <xs:element name="DbContext" type="ConcreteDbContextType"/>
+                            <xs:element name="EnumTypes" type="EnumTypes" minOccurs="0" />
+                            <xs:element name="EntityType" type="ScopeExclusiveEntityType" maxOccurs="unbounded" />
                         </xs:sequence>
                     </xs:complexType>
                 </xs:element>
             </xs:sequence>
         </xs:complexType>
+        <xs:unique name="IDX_Local_Type_Name">
+            <xs:selector xpath="EnumTypes/*|Local/EnumTypes/*|Entity|Local/Entity" />
+            <xs:field xpath="@Name" />
+        </xs:unique>
+        <xs:unique name="IDX_Upstream_Type_Name">
+            <xs:selector xpath="EnumTypes/*|Upstream/EnumTypes/*|Entity|Upstream/Entity" />
+            <xs:field xpath="@Name" />
+        </xs:unique>
+        <xs:key name="PK_LocalScope_EnumType_Name">
+            <xs:selector xpath="EnumTypes/*|Local/EnumTypes/*" />
+            <xs:field xpath="@Name" />
+        </xs:key>
+        <xs:key name="PK_LocalScope_EntityType_Name">
+            <xs:selector xpath="Entity|Local/Entity" />
+            <xs:field xpath="@Name" />
+        </xs:key>
+        <xs:key name="PK_UpstreamScope_EnumType_Name">
+            <xs:selector xpath="EnumTypes/*|Upstream/EnumTypes/*" />
+            <xs:field xpath="@Name" />
+        </xs:key>
+        <xs:key name="PK_UpstreamScope_EntityType_Name">
+            <xs:selector xpath="Entity|Upstream/Entity" />
+            <xs:field xpath="@Name" />
+        </xs:key>
+        
+        <xs:key name="PK_LocalScope_EnumType_Member_FullName">
+            <xs:selector xpath="EnumTypes/*/Member|Local/EnumTypes/*/Member" />
+            <xs:field xpath="@FullName" />
+        </xs:key>
+        <xs:keyref name="FK_Local_EnumProperty_Default" refer="PK_LocalScope_EnumType_Member_FullName">
+            <xs:selector xpath="Entity/Properties/*|Local/Entity/Properties/*" />
+            <xs:field xpath="Default" />
+        </xs:keyref>
+        <xs:keyref name="FK_Local_EnumProperty_Type" refer="PK_LocalScope_EnumType_Member_FullName">
+            <xs:selector xpath="Entity/Properties/*/DefaultNull|Entity/Properties/*/Required|Local/Entity/Properties/*/DefaultNull|Local/Entity/Properties/*/Required" />
+            <xs:field xpath="@Type" />
+        </xs:keyref>
+        <xs:keyref name="FK_Local_EnumMember_AmbientValue" refer="PK_LocalScope_EnumType_Member_FullName">
+            <xs:selector xpath="EnumTypes/*/Member/Ambient.Enum|Local/EnumTypes/*/Member/Ambient.Enum" />
+            <xs:field xpath="@Value" />
+        </xs:keyref>
+        
+        <xs:key name="PK_UpstreamScope_EnumType_Member_FullName">
+            <xs:selector xpath="EnumTypes/*/Member|Upstream/EnumTypes/*/Member" />
+            <xs:field xpath="@FullName" />
+        </xs:key>
+        <xs:keyref name="FK_Upstream_EnumProperty_Default" refer="PK_UpstreamScope_EnumType_Member_FullName">
+            <xs:selector xpath="Entity/Properties/*|Upstream/Entity/Properties/*" />
+            <xs:field xpath="Default" />
+        </xs:keyref>
+        <xs:keyref name="FK_Upstream_EnumProperty_Type" refer="PK_UpstreamScope_EnumType_Member_FullName">
+            <xs:selector xpath="Entity/Properties/*/DefaultNull|Entity/Properties/*/Required|Upstream/Entity/Properties/*/DefaultNull|Upstream/Entity/Properties/*/Required" />
+            <xs:field xpath="@Type" />
+        </xs:keyref>
+        <xs:keyref name="FK_Upstream_EnumMember_AmbientValue" refer="PK_UpstreamScope_EnumType_Member_FullName">
+            <xs:selector xpath="EnumTypes/*/Member/Ambient.Enum|Upstream/EnumTypes/*/Member/Ambient.Enum" />
+            <xs:field xpath="@Value" />
+        </xs:keyref>
+        
+        <xs:key name="PK_LocalScope_Entity_Property_FullName">
+            <xs:selector xpath="Entity/Properties/*|Local/Entity/Properties/*" />
+            <xs:field xpath="@FullName" />
+        </xs:key>
+        
+        <xs:key name="PK_UpstreamScope_Entity_Property_FullName">
+            <xs:selector xpath="Entity/Properties/*|Upstream/Entity/Properties/*" />
+            <xs:field xpath="@FullName" />
+        </xs:key>
+
     </xs:element>
 </xs:schema>

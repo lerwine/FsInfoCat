@@ -610,7 +610,7 @@
             <summary>
                 Generic interface for volume access error entities.
             </summary>
-            <ExtendsGenericEntity Type="IAccessError{IVolume}" TypeDef="IAccessError{TTarget}" />
+            <ExtendsEntity Type="IAccessError" />
             <Properties>
                 <RelatedEntity.Type Name="Target" FullName="IVolumeAccessError.Target" Reference="IVolume">
                     <summary>
@@ -944,7 +944,7 @@
             <summary>
                 Generic interface for subdirectory access error entities.
             </summary>
-            <ExtendsGenericEntity Type="IAccessError{ISubdirectory}" TypeDef="IAccessError{TTarget}" />
+            <ExtendsEntity Type="IAccessError" />
             <Properties>
                 <RelatedEntity.Type Name="Target" FullName="ISubdirectoryAccessError.Target" Reference="ISubdirectory">
                     <summary>
@@ -5133,7 +5133,7 @@
             <summary>
                 Generic interface for file access error entities.
             </summary>
-            <ExtendsGenericEntity Type="IAccessError{IFile}" TypeDef="IAccessError{TTarget}" />
+            <ExtendsEntity Type="IAccessError" />
             <Properties>
                 <RelatedEntity.Type Name="Target" FullName="IFileAccessError.Target" Reference="IFile">
                     <summary>
@@ -5344,7 +5344,7 @@
         </Entity>
         <Entity Name="ILocalAccessError" RootInterface="IDbEntity">
             <summary>Generic interface for access error entities that occur on the local host system.</summary>
-            <ExtendsGenericEntity Type="IAccessError{ILocalDbEntity}" TypeDef="IAccessError{TTarget}" />
+            <ExtendsEntity Type="IAccessError" />
             <Properties>
                 <RelatedEntity.Type Name="Target" FullName="ILocalAccessError.Target" Reference="ILocalDbEntity">
                     <summary>
@@ -5389,7 +5389,6 @@
                 Generic interface for volume access error entities.
             </summary>
             <ExtendsEntity Type="ILocalAccessError" />
-            <ImplementsGenericEntity Type="IAccessError{ILocalVolume}" TypeDef="IAccessError{TTarget}" />
             <Properties>
                 <RelatedEntity.Type Name="Target" FullName="ILocalVolumeAccessError.Target" Reference="ILocalVolume" />
             </Properties>
@@ -5457,7 +5456,6 @@
         <Entity Name="ILocalSubdirectoryAccessError" RootInterface="ISubdirectoryAccessError" TableName="SubdirectoryAccessErrors">
             <summary>Generic interface for subdirectory access error entities that occurred on the local host machine.</summary>
             <ExtendsEntity Type="ILocalAccessError" />
-            <ImplementsGenericEntity Type="IAccessError{ILocalSubdirectory}" TypeDef="IAccessError{TTarget}" />
             <Properties>
                 <RelatedEntity.Type Name="Target" FullName="ILocalSubdirectoryAccessError.Target" Reference="ILocalSubdirectory">
                     <summary>
@@ -5713,7 +5711,6 @@
                 Generic interface for file access error entities.
             </summary>
             <ExtendsEntity Type="ILocalAccessError" />
-            <ImplementsGenericEntity Type="IAccessError{ILocalFile}" TypeDef="IAccessError{TTarget}" />
             <Properties>
                 <RelatedEntity.Type Name="Target" FullName="ILocalFileAccessError.Target" Reference="ILocalFile">
                     <summary>
@@ -5874,7 +5871,6 @@
                 Base interface for all database entity objects which track the creation and modification dates as well as implementing the
                 <see cref="IValidatableObject" /> and <see cref="IRevertibleChangeTracking" /> interfaces.
             </summary>
-            <ExtendsGenericEntity Type="IAccessError{IUpstreamDbEntity}" TypeDef="IAccessError{TTarget}" />
             <Properties>
                 <RelatedEntity.Type Name="Target" FullName="IUpstreamAccessError.Target" Reference="IUpstreamDbEntity">
                     <summary>
@@ -6176,7 +6172,6 @@
                 Generic interface for volume access error entities.
             </summary>
             <ExtendsEntity Type="IUpstreamAccessError" />
-            <ImplementsGenericEntity Type="IAccessError{IUpstreamVolume}" TypeDef="IAccessError{TTarget}" />
             <Properties>
                 <RelatedEntity.Type Name="Target" FullName="IUpstreamVolumeAccessError.Target" Reference="IUpstreamVolume">
                     <summary>
@@ -6257,7 +6252,6 @@
                 Generic interface for subdirectory access error entities.
             </summary>
             <ExtendsEntity Type="IUpstreamAccessError" />
-            <ImplementsGenericEntity Type="IAccessError{IUpstreamSubdirectory}" TypeDef="IAccessError{TTarget}" />
             <Properties>
                 <RelatedEntity.Type Name="Target" FullName="IUpstreamSubdirectoryAccessError.Target" Reference="IUpstreamSubdirectory">
                     <summary>
@@ -6575,7 +6569,6 @@
                 Generic interface for file access error entities.
             </summary>
             <ExtendsEntity Type="IUpstreamAccessError" />
-            <ImplementsGenericEntity Type="IAccessError{IUpstreamFile}" TypeDef="IAccessError{TTarget}" />
             <Properties>
                 <RelatedEntity.Type Name="Target" FullName="IUpstreamFileAccessError.Target" Reference="IUpstreamFile">
                     <summary>

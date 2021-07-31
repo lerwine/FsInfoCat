@@ -2,7 +2,7 @@
 using System.Data;
 using System.Linq;
 using System.Xml.Linq;
-using static CodeGeneration.Constants;
+using static CodeGeneration.CgConstants;
 
 namespace CodeGeneration
 {
