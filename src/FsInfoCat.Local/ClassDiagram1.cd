@@ -33,7 +33,6 @@
       <Property Name="ILocalFile.ImageProperties" Hidden="true" />
       <Property Name="ILocalFile.MediaProperties" Hidden="true" />
       <Property Name="ILocalFile.MusicProperties" Hidden="true" />
-      <Property Name="ILocalFile.Parent" Hidden="true" />
       <Property Name="ILocalFile.PhotoProperties" Hidden="true" />
       <Property Name="ILocalFile.RecordedTVProperties" Hidden="true" />
       <Property Name="ILocalFile.Redundancy" Hidden="true" />
@@ -44,7 +43,7 @@
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>lXi27AQGIcg0IUJRixfAS670DQWMI6mQShTAwBxI0gc=</HashCode>
+      <HashCode>lXi27AQGIch0IUpRixfAS670DQWMI6CQShjAwBxI0gc=</HashCode>
       <FileName>DbFile.cs</FileName>
     </TypeIdentifier>
     <ShowAsCollectionAssociation>
@@ -54,37 +53,42 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="FsInfoCat.Local.FileAccessError">
-    <Position X="0.5" Y="0.75" Width="1.75" />
+    <Position X="0.5" Y="0.75" Width="2.75" />
     <Members>
       <Property Name="IAccessError.Target" Hidden="true" />
+      <Property Name="IAccessError&lt;DbFile&gt;.Target" Hidden="true" />
       <Property Name="IAccessError&lt;IFile&gt;.Target" Hidden="true" />
-      <Property Name="IAccessError&lt;ILocalDbFsItem&gt;.Target" Hidden="true" />
+      <Property Name="IAccessError&lt;ILocalDbEntity&gt;.Target" Hidden="true" />
       <Property Name="IAccessError&lt;ILocalFile&gt;.Target" Hidden="true" />
+      <Property Name="IFileAccessError.Target" Hidden="true" />
+      <Property Name="ILocalAccessError.Target" Hidden="true" />
+      <Property Name="ILocalFileAccessError.Target" Hidden="true" />
     </Members>
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>AAACAAEAAAAFAAAAIEXABCAAQEgAACCAEAAAIAABAAA=</HashCode>
+      <HashCode>AAADQAAAAAAFAAAAAEXEBCAAREgAACCEEAAAIAABAAA=</HashCode>
       <FileName>FileAccessError.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="FsInfoCat.Local.Subdirectory">
-    <Position X="0.5" Y="8.75" Width="2.5" />
+    <Position X="0.5" Y="9.5" Width="2.5" />
     <Members>
       <Property Name="IDbFsItem.AccessErrors" Hidden="true" />
       <Property Name="IDbFsItem.Parent" Hidden="true" />
       <Property Name="ILocalDbFsItem.AccessErrors" Hidden="true" />
+      <Property Name="ILocalDbFsItem.Parent" Hidden="true" />
       <Property Name="ILocalSubdirectory.AccessErrors" Hidden="true" />
       <Property Name="ILocalSubdirectory.CrawlConfiguration" Hidden="true" />
       <Property Name="ILocalSubdirectory.Files" Hidden="true" />
-      <Property Name="ILocalSubdirectory.Parent" Hidden="true" />
       <Property Name="ILocalSubdirectory.SubDirectories" Hidden="true" />
       <Property Name="ILocalSubdirectory.Volume" Hidden="true" />
       <Property Name="ISubdirectory.AccessErrors" Hidden="true" />
       <Property Name="ISubdirectory.CrawlConfiguration" Hidden="true" />
       <Property Name="ISubdirectory.Files" Hidden="true" />
+      <Property Name="ISubdirectory.Parent" Hidden="true" />
       <Property Name="ISubdirectory.SubDirectories" Hidden="true" />
       <Property Name="ISubdirectory.Volume" Hidden="true" />
     </Members>
@@ -92,34 +96,38 @@
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>BFJ6IAAEIUAQIAkBHQVJQgYwCBWEIORSQgIggATQEJA=</HashCode>
+      <HashCode>BFJ6IAAEIUAQIAkBHQFJQgYwCBWEIORSQgoggATQEJA=</HashCode>
       <FileName>Subdirectory.cs</FileName>
     </TypeIdentifier>
     <ShowAsCollectionAssociation>
-      <Property Name="AccessErrors" />
       <Property Name="Files" />
+      <Property Name="AccessErrors" />
     </ShowAsCollectionAssociation>
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="FsInfoCat.Local.SubdirectoryAccessError">
-    <Position X="4.5" Y="13" Width="2" />
+    <Position X="4.5" Y="13.75" Width="2" />
     <Members>
       <Property Name="IAccessError.Target" Hidden="true" />
-      <Property Name="IAccessError&lt;ILocalDbFsItem&gt;.Target" Hidden="true" />
+      <Property Name="IAccessError&lt;ILocalDbEntity&gt;.Target" Hidden="true" />
       <Property Name="IAccessError&lt;ILocalSubdirectory&gt;.Target" Hidden="true" />
       <Property Name="IAccessError&lt;ISubdirectory&gt;.Target" Hidden="true" />
+      <Property Name="IAccessError&lt;Subdirectory&gt;.Target" Hidden="true" />
+      <Property Name="ILocalAccessError.Target" Hidden="true" />
+      <Property Name="ILocalSubdirectoryAccessError.Target" Hidden="true" />
+      <Property Name="ISubdirectoryAccessError.Target" Hidden="true" />
     </Members>
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>AAACIAEgAAAFAAAAIEHABCAAQEgAACCAEAAAIAABAAA=</HashCode>
+      <HashCode>AAACYAAgAAAFAAAAAEHABCAAQFgAACCEEAAQIAABAAA=</HashCode>
       <FileName>SubdirectoryAccessError.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="FsInfoCat.Local.Volume">
-    <Position X="7.75" Y="9" Width="1.75" />
+    <Position X="7.75" Y="9" Width="2" />
     <Members>
       <Property Name="ILocalVolume.AccessErrors" Hidden="true" />
       <Property Name="ILocalVolume.FileSystem" Hidden="true" />
@@ -132,7 +140,7 @@
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>hEAyMACEAAAEABQAIEFAwAcAAAQEgCEAAQgIQABAsAI=</HashCode>
+      <HashCode>hEAyMACEAAAEABQAIEFCwAcAAAQEgCEAAQgIQABAsAI=</HashCode>
       <FileName>Volume.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -147,14 +155,19 @@
     <Position X="11" Y="11.5" Width="1.75" />
     <Members>
       <Property Name="IAccessError.Target" Hidden="true" />
+      <Property Name="IAccessError&lt;ILocalDbEntity&gt;.Target" Hidden="true" />
       <Property Name="IAccessError&lt;ILocalVolume&gt;.Target" Hidden="true" />
       <Property Name="IAccessError&lt;IVolume&gt;.Target" Hidden="true" />
+      <Property Name="IAccessError&lt;Volume&gt;.Target" Hidden="true" />
+      <Property Name="ILocalAccessError.Target" Hidden="true" />
+      <Property Name="ILocalVolumeAccessError.Target" Hidden="true" />
+      <Property Name="IVolumeAccessError.Target" Hidden="true" />
     </Members>
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>AAADAAgAAAAFAAAAIEHABCAAQEgAACCAEAAAIAABAAA=</HashCode>
+      <HashCode>AAADQAgAAAAFAAACBEHABCAAQEgAACCEEAQAIAABAAA=</HashCode>
       <FileName>VolumeAccessError.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -192,7 +205,7 @@
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>AACyAACAAABEBABHEgBAAAAIADAAQCAAAEAAAgBAAIA=</HashCode>
+      <HashCode>AACyAACAAABEBABHEgBAAAAIADAAQCAAAEAAAABAAAA=</HashCode>
       <FileName>RedundantSet.cs</FileName>
     </TypeIdentifier>
     <ShowAsCollectionAssociation>
@@ -221,7 +234,7 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="FsInfoCat.Local.FileComparison">
-    <Position X="0.5" Y="5.25" Width="1.5" />
+    <Position X="0.5" Y="6" Width="1.5" />
     <Members>
       <Property Name="IComparison.Baseline" Hidden="true" />
       <Property Name="IComparison.Correlative" Hidden="true" />
