@@ -396,15 +396,28 @@ namespace FsInfoCat.Local
         internal void SetUnspecifiedError([DisallowNull] LocalDbContext dbContext, [DisallowNull] Exception exception) =>
             SetError(dbContext, AccessErrorCode.Unspecified, exception);
 
-        public static async Task<List<((string, Guid), T)>> LoadFullNamesAsync<T>(IEnumerable<T> source, Func<T, Subdirectory> factory, LocalDbContext dbContext) => await Task.Run(() =>
+        /// <summary>
+        /// Asyncrhonously loads subdirectory full path names.
+        /// </summary>
+        /// <typeparam name="T">The input item type.</typeparam>
+        /// <param name="source">The input items.</param>
+        /// <param name="factory">Gets the <see cref="Subdirectory"/> from the associated item;</param>
+        /// <param name="dbContext">The database context to use.</param>
+        /// <returns>A list with the associated subdirecty full path names:
+        /// <list type="bullet">
+        ///<item><term>FullName</term><description>The full path of the associated subdirectory.</description></item>
+        ///<item><term>SubdirectoryId</term><description>The full path of the associated subdirectory.</description></item>
+        ///<item><term>Source</term><description>The orignal source item.</description></item>
+        /// </list></returns>
+        public static async Task<List<(string FullName, Guid SubdirectoryId, T Source)>> LoadFullNamesAsync<T>(IEnumerable<T> source, Func<T, Subdirectory> factory, LocalDbContext dbContext) => await Task.Run(() =>
         {
             Dictionary<Guid, string> fullNames = new();
             return source.Select(t =>
             {
                 Subdirectory subdirectory = factory(t);
                 if (subdirectory is null)
-                    return (((string)null, Guid.Empty), t);
-                return ((LookupFullName(fullNames, subdirectory, dbContext), subdirectory.Id), t);
+                    return ((string)null, Guid.Empty, t);
+                return (LookupFullName(fullNames, subdirectory, dbContext), subdirectory.Id, t);
             }).ToList();
         });
 

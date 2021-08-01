@@ -24,18 +24,22 @@ namespace FsInfoCat.Desktop.Converters
 
         object IValueConverter.Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value == null)
+            if (value is null)
                 return NullSource;
-
-            if (!(value is TSource))
-                return value;
-
-            return Convert((TSource)value, parameter, culture);
+            if (value is TTarget target)
+                return target;
+            return value is TSource source ? Convert(source, parameter, culture) : value;
         }
 
         object IValueConverter.ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            throw new NotSupportedException();
+            if (value is null)
+                return null;
+            if (value is TSource source)
+                return source;
+            return (value is TTarget target) ? ConvertBack(target, parameter, culture) : value;
         }
+
+        protected virtual object ConvertBack(TTarget target, object parameter, CultureInfo culture) => throw new NotSupportedException();
     }
 }

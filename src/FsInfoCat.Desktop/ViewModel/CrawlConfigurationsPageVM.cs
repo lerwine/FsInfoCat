@@ -155,10 +155,10 @@ namespace FsInfoCat.Desktop.ViewModel
             });
         }
 
-        private static async Task<List<((string, Guid), CrawlConfiguration)>> LoadInitialDataAsync()
+        private static async Task<List<(string FullName, Guid SubdirectoryId, CrawlConfiguration Source)>> LoadInitialDataAsync()
         {
             using LocalDbContext dbContext = Services.ServiceProvider.GetService<LocalDbContext>();
-            List<CrawlConfiguration> configurations = await dbContext.CrawlConfigurations.ToListAsync();
+            List<CrawlConfiguration> configurations = await dbContext.CrawlConfigurations.Include(c => c.Root).ToListAsync();
             return await Subdirectory.LoadFullNamesAsync(configurations, c =>
             {
                 Subdirectory root = c.Root;
@@ -169,13 +169,13 @@ namespace FsInfoCat.Desktop.ViewModel
 
         }
 
-        private void OnInitialDataLoaded(IEnumerable<((string, Guid), CrawlConfiguration)> items)
+        private void OnInitialDataLoaded(IEnumerable<(string FullName, Guid SubdirectoryId, CrawlConfiguration Source)> items)
         {
             _allCrawlConfigurations.Clear();
             InnerCrawlConfigurations.Clear();
-            _allCrawlConfigurations.AddRange(items.Select(i => new CrawlConfigurationVM(i.Item2, i.Item1.Item1, i.Item1.Item2)));
+            _allCrawlConfigurations.AddRange(items.Select(i => new CrawlConfigurationVM(i.Source, i.FullName, i.SubdirectoryId)));
             foreach (CrawlConfigurationVM item in ShowAllCrawlConfigurations ? _allCrawlConfigurations :
-                    (ShowInactiveCrawlConfigurationsOnly ? _allCrawlConfigurations.Where(i => i.IsInactive) : _allCrawlConfigurations.Where(i => !i.IsInactive)))
+                    (ShowInactiveCrawlConfigurationsOnly ? _allCrawlConfigurations.Where(i => i.StatusValue == CrawlStatus.Disabled) : _allCrawlConfigurations.Where(i => i.StatusValue != CrawlStatus.Disabled)))
                 InnerCrawlConfigurations.Add(item);
         }
 

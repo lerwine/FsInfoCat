@@ -61,6 +61,105 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to An error occurred while trying to enumerate directory items..
+        /// </summary>
+        public static string Description_DirectoryStatus_AccessError {
+            get {
+                return ResourceManager.GetString("Description_DirectoryStatus_AccessError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to All files and nested subdirectories have been crawled..
+        /// </summary>
+        public static string Description_DirectoryStatus_Complete {
+            get {
+                return ResourceManager.GetString("Description_DirectoryStatus_Complete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The directory has been deleted..
+        /// </summary>
+        public static string Description_DirectoryStatus_Deleted {
+            get {
+                return ResourceManager.GetString("Description_DirectoryStatus_Deleted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Not all files and nested subdirectories have been crawled..
+        /// </summary>
+        public static string Description_DirectoryStatus_Incomplete {
+            get {
+                return ResourceManager.GetString("Description_DirectoryStatus_Incomplete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The drive is an optical disc device, such as a CD or DVD-ROM..
+        /// </summary>
+        public static string Description_DriveType_CDRom {
+            get {
+                return ResourceManager.GetString("Description_DriveType_CDRom", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The drive is a fixed disk..
+        /// </summary>
+        public static string Description_DriveType_Fixed {
+            get {
+                return ResourceManager.GetString("Description_DriveType_Fixed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The drive is a network drive..
+        /// </summary>
+        public static string Description_DriveType_Network {
+            get {
+                return ResourceManager.GetString("Description_DriveType_Network", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The drive does not have a root directory..
+        /// </summary>
+        public static string Description_DriveType_NoRootDirectory {
+            get {
+                return ResourceManager.GetString("Description_DriveType_NoRootDirectory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The drive is a RAM disk..
+        /// </summary>
+        public static string Description_DriveType_Ram {
+            get {
+                return ResourceManager.GetString("Description_DriveType_Ram", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The drive is a removable storage device, such as a USB flash drive..
+        /// </summary>
+        public static string Description_DriveType_Removable {
+            get {
+                return ResourceManager.GetString("Description_DriveType_Removable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The type of drive is unknown..
+        /// </summary>
+        public static string Description_DriveType_Unknown {
+            get {
+                return ResourceManager.GetString("Description_DriveType_Unknown", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Correlations to other files are being established..
         /// </summary>
         public static string Description_FileCorrelationStatus_Analyzing {
@@ -106,7 +205,7 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to File Deleted.
+        ///   Looks up a localized string similar to File has been deleted..
         /// </summary>
         public static string Description_FileCorrelationStatus_FileDeleted {
             get {
@@ -151,6 +250,33 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The format of the specified path was not recognized by the target operating system..
+        /// </summary>
+        public static string Description_InvalidPathError {
+            get {
+                return ResourceManager.GetString("Description_InvalidPathError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An error has occurred while trying to read file or directory data..
+        /// </summary>
+        public static string Description_IOError {
+            get {
+                return ResourceManager.GetString("Description_IOError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The specified path was too long for the target operating system..
+        /// </summary>
+        public static string Description_PathTooLongError {
+            get {
+                return ResourceManager.GetString("Description_PathTooLongError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Files in the current redundant set have been deleted..
         /// </summary>
         public static string Description_RemediationStatus_Deleted {
@@ -174,6 +300,33 @@ namespace FsInfoCat.Properties {
         public static string Description_RemediationStatus_Unconfirmed {
             get {
                 return ResourceManager.GetString("Description_RemediationStatus_Unconfirmed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The application and/or current user account has been denied access to a file, folder or related resource..
+        /// </summary>
+        public static string Description_SecurityException {
+            get {
+                return ResourceManager.GetString("Description_SecurityException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The application and/or current user account was not authorized to access a file, folder or related resource..
+        /// </summary>
+        public static string Description_UnauthorizedAccessError {
+            get {
+                return ResourceManager.GetString("Description_UnauthorizedAccessError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An unexpected type of error has occurred. See application logs for more information..
+        /// </summary>
+        public static string Description_UnexpectedError {
+            get {
+                return ResourceManager.GetString("Description_UnexpectedError", resourceCulture);
             }
         }
         
@@ -237,6 +390,15 @@ namespace FsInfoCat.Properties {
         public static string Description_VolumeStatus_Unknown {
             get {
                 return ResourceManager.GetString("Description_VolumeStatus_Unknown", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Access Denied.
+        /// </summary>
+        public static string DisplayName_AccessDenied {
+            get {
+                return ResourceManager.GetString("DisplayName_AccessDenied", resourceCulture);
             }
         }
         
@@ -619,6 +781,15 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Crawl Failed.
+        /// </summary>
+        public static string DisplayName_CrawlFailed {
+            get {
+                return ResourceManager.GetString("DisplayName_CrawlFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Crawl Operation Failed.
         /// </summary>
         public static string DisplayName_CrawlOperationFailed {
@@ -997,6 +1168,69 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Optical Disc Drive.
+        /// </summary>
+        public static string DisplayName_DriveType_CDRom {
+            get {
+                return ResourceManager.GetString("DisplayName_DriveType_CDRom", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Fixed Disk.
+        /// </summary>
+        public static string DisplayName_DriveType_Fixed {
+            get {
+                return ResourceManager.GetString("DisplayName_DriveType_Fixed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Network Drive.
+        /// </summary>
+        public static string DisplayName_DriveType_Network {
+            get {
+                return ResourceManager.GetString("DisplayName_DriveType_Network", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Not Root Directory.
+        /// </summary>
+        public static string DisplayName_DriveType_NoRootDirectory {
+            get {
+                return ResourceManager.GetString("DisplayName_DriveType_NoRootDirectory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to RAM disk.
+        /// </summary>
+        public static string DisplayName_DriveType_Ram {
+            get {
+                return ResourceManager.GetString("DisplayName_DriveType_Ram", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Removable Storage.
+        /// </summary>
+        public static string DisplayName_DriveType_Removable {
+            get {
+                return ResourceManager.GetString("DisplayName_DriveType_Removable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unknown.
+        /// </summary>
+        public static string DisplayName_DriveType_Unknown {
+            get {
+                return ResourceManager.GetString("DisplayName_DriveType_Unknown", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to DRM Properties.
         /// </summary>
         public static string DisplayName_DRMProperties {
@@ -1047,6 +1281,15 @@ namespace FsInfoCat.Properties {
         public static string DisplayName_EpisodeName {
             get {
                 return ResourceManager.GetString("DisplayName_EpisodeName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error.
+        /// </summary>
+        public static string DisplayName_Error {
+            get {
+                return ResourceManager.GetString("DisplayName_Error", resourceCulture);
             }
         }
         
@@ -1438,6 +1681,15 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Invalid Path.
+        /// </summary>
+        public static string DisplayName_InvalidPath {
+            get {
+                return ResourceManager.GetString("DisplayName_InvalidPath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Invalid Path Error.
         /// </summary>
         public static string DisplayName_InvalidPathError {
@@ -1515,6 +1767,15 @@ namespace FsInfoCat.Properties {
         public static string DisplayName_ItemAuthors {
             get {
                 return ResourceManager.GetString("DisplayName_ItemAuthors", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Item Limit.
+        /// </summary>
+        public static string DisplayName_ItemLimit {
+            get {
+                return ResourceManager.GetString("DisplayName_ItemLimit", resourceCulture);
             }
         }
         
@@ -1884,6 +2145,15 @@ namespace FsInfoCat.Properties {
         public static string DisplayName_NextScheduledStart {
             get {
                 return ResourceManager.GetString("DisplayName_NextScheduledStart", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No.
+        /// </summary>
+        public static string DisplayName_No {
+            get {
+                return ResourceManager.GetString("DisplayName_No", resourceCulture);
             }
         }
         
@@ -2698,11 +2968,29 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Timeout.
+        /// </summary>
+        public static string DisplayName_Timeout {
+            get {
+                return ResourceManager.GetString("DisplayName_Timeout", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Title.
         /// </summary>
         public static string DisplayName_Title {
             get {
                 return ResourceManager.GetString("DisplayName_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Too Long.
+        /// </summary>
+        public static string DisplayName_TooLong {
+            get {
+                return ResourceManager.GetString("DisplayName_TooLong", resourceCulture);
             }
         }
         
@@ -2739,6 +3027,15 @@ namespace FsInfoCat.Properties {
         public static string DisplayName_Type {
             get {
                 return ResourceManager.GetString("DisplayName_Type", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unauthorized.
+        /// </summary>
+        public static string DisplayName_Unauthorized {
+            get {
+                return ResourceManager.GetString("DisplayName_Unauthorized", resourceCulture);
             }
         }
         
@@ -3018,6 +3315,15 @@ namespace FsInfoCat.Properties {
         public static string DisplayName_Year {
             get {
                 return ResourceManager.GetString("DisplayName_Year", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Yes.
+        /// </summary>
+        public static string DisplayName_Yes {
+            get {
+                return ResourceManager.GetString("DisplayName_Yes", resourceCulture);
             }
         }
         

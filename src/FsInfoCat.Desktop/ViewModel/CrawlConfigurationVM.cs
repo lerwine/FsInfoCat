@@ -10,6 +10,8 @@ namespace FsInfoCat.Desktop.ViewModel
     public class CrawlConfigurationVM : DispatcherObject, INotifyPropertyChanged
     {
         private readonly CrawlConfiguration _crawlConfiguration;
+        private TimeSpan? _ttl;
+        private TimeSpan? _rescheduleInterval;
 
         public event EventHandler Edit;
         public event EventHandler Activate;
@@ -19,19 +21,29 @@ namespace FsInfoCat.Desktop.ViewModel
 
         public string DisplayName => _crawlConfiguration.DisplayName;
 
-        public bool IsInactive => _crawlConfiguration.StatusValue == CrawlStatus.Disabled;
-
         public CrawlStatus StatusValue => _crawlConfiguration.StatusValue;
 
         public ushort MaxRecursionDepth => _crawlConfiguration.MaxRecursionDepth;
 
         public ulong? MaxTotalItems => _crawlConfiguration.MaxTotalItems;
 
+        public TimeSpan? TTL => _ttl;
+
+        public DateTime? LastCrawlStart => _crawlConfiguration.LastCrawlStart;
+
+        public DateTime? LastCrawlEnd => _crawlConfiguration.LastCrawlEnd;
+
+        public DateTime? NextScheduledStart => _crawlConfiguration.NextScheduledStart;
+
+        public TimeSpan? RescheduleInterval => _rescheduleInterval;
+
+        public bool RescheduleFromJobEnd => _crawlConfiguration.RescheduleFromJobEnd;
+
+        public bool RescheduleAfterFail => _crawlConfiguration.RescheduleAfterFail;
+
         public string FullName { get; private set; }
 
         public string Notes => _crawlConfiguration.Notes;
-
-        // TODO: Add new properties from model
 
         public DateTime? LastSynchronizedOn => _crawlConfiguration.LastSynchronizedOn;
 
@@ -51,7 +63,7 @@ namespace FsInfoCat.Desktop.ViewModel
 
         internal CrawlConfigurationVM([DisallowNull] CrawlConfiguration model, string fullName, Guid rootId)
         {
-            FullName = fullName ?? "";
+            FullName = fullName;
             Subdirectory root = (_crawlConfiguration = model).Root;
             EditCommand = new Commands.RelayCommand(() => Dispatcher.Invoke(() => Edit?.Invoke(this, EventArgs.Empty)));
             (ActivateCommand = new Commands.RelayCommand(() => Dispatcher.Invoke(() =>
@@ -79,6 +91,8 @@ namespace FsInfoCat.Desktop.ViewModel
                     else if (!task.IsCanceled)
                         Dispatcher.Invoke(() => OnLookupFullNameComplete(task.Result ?? ""));
                 });
+            OnTtlChanged();
+            OnRescheduleIntervalChanged();
         }
 
         private void OnLookupFullNameComplete(string result)
@@ -102,6 +116,12 @@ namespace FsInfoCat.Desktop.ViewModel
                 case nameof(CrawlConfiguration.StatusValue):
                     DeactivateCommand.IsEnabled = !(ActivateCommand.IsEnabled = _crawlConfiguration.StatusValue == CrawlStatus.Disabled);
                     break;
+                case nameof(CrawlConfiguration.TTL):
+                    OnTtlChanged();
+                    break;
+                case nameof(CrawlConfiguration.RescheduleInterval):
+                    OnRescheduleIntervalChanged();
+                    break;
                 case nameof(CrawlConfiguration.Root):
                     Subdirectory root = _crawlConfiguration.Root;
                     if (root is null)
@@ -117,6 +137,18 @@ namespace FsInfoCat.Desktop.ViewModel
                     return;
             }
             PropertyChanged?.Invoke(this, e);
+        }
+
+        private void OnTtlChanged()
+        {
+            long? seconds = _crawlConfiguration.TTL;
+            _ttl = (seconds.HasValue) ? TimeSpan.FromSeconds(seconds.Value) : null;
+        }
+
+        private void OnRescheduleIntervalChanged()
+        {
+            long? seconds = _crawlConfiguration.RescheduleInterval;
+            _rescheduleInterval = (seconds.HasValue) ? TimeSpan.FromSeconds(seconds.Value) : null;
         }
     }
 }

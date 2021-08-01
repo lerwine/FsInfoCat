@@ -515,7 +515,7 @@
     <value>File has been added to the database or modified and needs to be analyzed.</value>
   </data>
   <data name="Description_FileCorrelationStatus_FileDeleted" xml:space="preserve">
-    <value>File Deleted</value>
+    <value>File has been deleted.</value>
   </data>
   <data name="Description_FileCorrelationStatus_Insupportable" xml:space="preserve">
     <value>Files in the current redundant set should be deleted.</value>
@@ -1242,5 +1242,107 @@
   </data>
   <data name="DisplayName_UserRole_SystemAdmin" xml:space="preserve">
     <value />
+  </data>
+  <data name="Description_DirectoryStatus_AccessError" xml:space="preserve">
+    <value>An error occurred while trying to enumerate directory items.</value>
+  </data>
+  <data name="Description_DirectoryStatus_Complete" xml:space="preserve">
+    <value>All files and nested subdirectories have been crawled.</value>
+  </data>
+  <data name="Description_DirectoryStatus_Deleted" xml:space="preserve">
+    <value>The directory has been deleted.</value>
+  </data>
+  <data name="Description_DirectoryStatus_Incomplete" xml:space="preserve">
+    <value>Not all files and nested subdirectories have been crawled.</value>
+  </data>
+  <data name="Description_DriveType_CDRom" xml:space="preserve">
+    <value>The drive is an optical disc device, such as a CD or DVD-ROM.</value>
+  </data>
+  <data name="Description_DriveType_Fixed" xml:space="preserve">
+    <value>The drive is a fixed disk.</value>
+  </data>
+  <data name="Description_DriveType_Network" xml:space="preserve">
+    <value>The drive is a network drive.</value>
+  </data>
+  <data name="Description_DriveType_NoRootDirectory" xml:space="preserve">
+    <value>The drive does not have a root directory.</value>
+  </data>
+  <data name="Description_DriveType_Ram" xml:space="preserve">
+    <value>The drive is a RAM disk.</value>
+  </data>
+  <data name="Description_DriveType_Removable" xml:space="preserve">
+    <value>The drive is a removable storage device, such as a USB flash drive.</value>
+  </data>
+  <data name="Description_DriveType_Unknown" xml:space="preserve">
+    <value>The type of drive is unknown.</value>
+  </data>
+  <data name="Description_InvalidPathError" xml:space="preserve">
+    <value>The format of the specified path was not recognized by the target operating system.</value>
+  </data>
+  <data name="Description_IOError" xml:space="preserve">
+    <value>An error has occurred while trying to read file or directory data.</value>
+  </data>
+  <data name="Description_PathTooLongError" xml:space="preserve">
+    <value>The specified path was too long for the target operating system.</value>
+  </data>
+  <data name="Description_SecurityException" xml:space="preserve">
+    <value>The application and/or current user account has been denied access to a file, folder or related resource.</value>
+  </data>
+  <data name="Description_UnauthorizedAccessError" xml:space="preserve">
+    <value>The application and/or current user account was not authorized to access a file, folder or related resource.</value>
+  </data>
+  <data name="Description_UnexpectedError" xml:space="preserve">
+    <value>An unexpected type of error has occurred. See application logs for more information.</value>
+  </data>
+  <data name="DisplayName_AccessDenied" xml:space="preserve">
+    <value>Access Denied</value>
+  </data>
+  <data name="DisplayName_CrawlFailed" xml:space="preserve">
+    <value>Crawl Failed</value>
+  </data>
+  <data name="DisplayName_DriveType_CDRom" xml:space="preserve">
+    <value>Optical Disc Drive</value>
+  </data>
+  <data name="DisplayName_DriveType_Fixed" xml:space="preserve">
+    <value>Fixed Disk</value>
+  </data>
+  <data name="DisplayName_DriveType_Network" xml:space="preserve">
+    <value>Network Drive</value>
+  </data>
+  <data name="DisplayName_DriveType_NoRootDirectory" xml:space="preserve">
+    <value>Not Root Directory</value>
+  </data>
+  <data name="DisplayName_DriveType_Ram" xml:space="preserve">
+    <value>RAM disk</value>
+  </data>
+  <data name="DisplayName_DriveType_Removable" xml:space="preserve">
+    <value>Removable Storage</value>
+  </data>
+  <data name="DisplayName_DriveType_Unknown" xml:space="preserve">
+    <value>Unknown</value>
+  </data>
+  <data name="DisplayName_Error" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="DisplayName_InvalidPath" xml:space="preserve">
+    <value>Invalid Path</value>
+  </data>
+  <data name="DisplayName_ItemLimit" xml:space="preserve">
+    <value>Item Limit</value>
+  </data>
+  <data name="DisplayName_No" xml:space="preserve">
+    <value>No</value>
+  </data>
+  <data name="DisplayName_Timeout" xml:space="preserve">
+    <value>Timeout</value>
+  </data>
+  <data name="DisplayName_TooLong" xml:space="preserve">
+    <value>Too Long</value>
+  </data>
+  <data name="DisplayName_Unauthorized" xml:space="preserve">
+    <value>Unauthorized</value>
+  </data>
+  <data name="DisplayName_Yes" xml:space="preserve">
+    <value>Yes</value>
   </data>
 </root>
