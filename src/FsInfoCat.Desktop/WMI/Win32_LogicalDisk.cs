@@ -19,7 +19,7 @@ namespace FsInfoCat.Desktop.WMI
 
         public string VolumeSerialNumber { get; private set; }
 
-        public bool ReadOnly => (Access & CIMLogicalDiskAccess.Writeable) == CIMLogicalDiskAccess.Unknown;
+        public bool IsReadOnly => (Access & CIMLogicalDiskAccess.Writeable) == CIMLogicalDiskAccess.Unknown;
 
         public string Caption { get; private set; }
 

@@ -22,7 +22,7 @@ namespace FsInfoCat.Desktop.Converters
         {
             if (newValue)
             {
-                Unknown = FsInfoCat.Properties.Resources.DisplayName_DriveType_Unknown;
+                Unknown = FsInfoCat.Properties.Resources.DisplayName_Unknown;
                 NoRootDirectory = FsInfoCat.Properties.Resources.DisplayName_DriveType_NoRootDirectory;
                 Removable = FsInfoCat.Properties.Resources.DisplayName_DriveType_Removable;
                 Fixed = FsInfoCat.Properties.Resources.DisplayName_DriveType_Fixed;
@@ -57,7 +57,7 @@ namespace FsInfoCat.Desktop.Converters
         {
             CoerceValueCallback = (DependencyObject d, object baseValue) => (baseValue is string s) ? s :
                 ((d as DriveTypeToStringConverter)?.UseLongDescription ?? false) ? FsInfoCat.Properties.Resources.Description_DriveType_Unknown :
-                FsInfoCat.Properties.Resources.DisplayName_DriveType_Unknown
+                FsInfoCat.Properties.Resources.DisplayName_Unknown
         });
 
         public string Unknown

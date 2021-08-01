@@ -61,6 +61,141 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to File system was stopped prior to completion because the alotted execution duration had been reached..
+        /// </summary>
+        public static string Description_CrawlStatus_AllottedTimeElapsed {
+            get {
+                return ResourceManager.GetString("Description_CrawlStatus_AllottedTimeElapsed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File system crawl was manually canceled before completion..
+        /// </summary>
+        public static string Description_CrawlStatus_Canceled {
+            get {
+                return ResourceManager.GetString("Description_CrawlStatus_Canceled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File system crawl ran to completion..
+        /// </summary>
+        public static string Description_CrawlStatus_Completed {
+            get {
+                return ResourceManager.GetString("Description_CrawlStatus_Completed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File system crawl configuration is disabled..
+        /// </summary>
+        public static string Description_CrawlStatus_Disabled {
+            get {
+                return ResourceManager.GetString("Description_CrawlStatus_Disabled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File system crawl was aborted due to an unrecoverable failure..
+        /// </summary>
+        public static string Description_CrawlStatus_Failed {
+            get {
+                return ResourceManager.GetString("Description_CrawlStatus_Failed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File system crawl is in progress..
+        /// </summary>
+        public static string Description_CrawlStatus_InProgress {
+            get {
+                return ResourceManager.GetString("Description_CrawlStatus_InProgress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File system was stopped prior to completion because the maximum number of items had been processed..
+        /// </summary>
+        public static string Description_CrawlStatus_MaxItemCountReached {
+            get {
+                return ResourceManager.GetString("Description_CrawlStatus_MaxItemCountReached", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File system crawl is not running..
+        /// </summary>
+        public static string Description_CrawlStatus_NotRunning {
+            get {
+                return ResourceManager.GetString("Description_CrawlStatus_NotRunning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Do not compare files contained within in sub-directory for redundancies..
+        /// </summary>
+        public static string Description_DirectoryCrawlOptions_DoNotCompareFiles {
+            get {
+                return ResourceManager.GetString("Description_DirectoryCrawlOptions_DoNotCompareFiles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Do not show contents of directory in public result displays..
+        /// </summary>
+        public static string Description_DirectoryCrawlOptions_DoNotShow {
+            get {
+                return ResourceManager.GetString("Description_DirectoryCrawlOptions_DoNotShow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Indicates that the directory and its contents should be deleted..
+        /// </summary>
+        public static string Description_DirectoryCrawlOptions_FlaggedForDeletion {
+            get {
+                return ResourceManager.GetString("Description_DirectoryCrawlOptions_FlaggedForDeletion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Indicates that the directory and its contents should be re-scanned..
+        /// </summary>
+        public static string Description_DirectoryCrawlOptions_FlaggedForRescan {
+            get {
+                return ResourceManager.GetString("Description_DirectoryCrawlOptions_FlaggedForRescan", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No directory-specific crawl options selected..
+        /// </summary>
+        public static string Description_DirectoryCrawlOptions_None {
+            get {
+                return ResourceManager.GetString("Description_DirectoryCrawlOptions_None", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Skip entire directory..
+        /// </summary>
+        public static string Description_DirectoryCrawlOptions_Skip {
+            get {
+                return ResourceManager.GetString("Description_DirectoryCrawlOptions_Skip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Do not crawl nested sub-directories..
+        /// </summary>
+        public static string Description_DirectoryCrawlOptions_SkipSubdirectories {
+            get {
+                return ResourceManager.GetString("Description_DirectoryCrawlOptions_SkipSubdirectories", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to An error occurred while trying to enumerate directory items..
         /// </summary>
         public static string Description_DirectoryStatus_AccessError {
@@ -160,6 +295,33 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The destination subdirectory to move/copy source file into..
+        /// </summary>
+        public static string Description_FileAction_Destination {
+            get {
+                return ResourceManager.GetString("Description_FileAction_Destination", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The source file that should be deleted, moved or copied..
+        /// </summary>
+        public static string Description_FileAction_Source {
+            get {
+                return ResourceManager.GetString("Description_FileAction_Source", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mitigation Task that describes the action to take on the source file..
+        /// </summary>
+        public static string Description_FileAction_Task {
+            get {
+                return ResourceManager.GetString("Description_FileAction_Task", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Correlations to other files are being established..
         /// </summary>
         public static string Description_FileCorrelationStatus_Analyzing {
@@ -250,6 +412,177 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Do not compare file with others for redundancy..
+        /// </summary>
+        public static string Description_FileCrawlOptions_DoNotCompare {
+            get {
+                return ResourceManager.GetString("Description_FileCrawlOptions_DoNotCompare", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Indicates that the file should be deleted..
+        /// </summary>
+        public static string Description_FileCrawlOptions_FlaggedForDeletion {
+            get {
+                return ResourceManager.GetString("Description_FileCrawlOptions_FlaggedForDeletion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Indicates that the file should be re-scanned..
+        /// </summary>
+        public static string Description_FileCrawlOptions_FlaggedForRescan {
+            get {
+                return ResourceManager.GetString("Description_FileCrawlOptions_FlaggedForRescan", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ignore the file..
+        /// </summary>
+        public static string Description_FileCrawlOptions_Ignore {
+            get {
+                return ResourceManager.GetString("Description_FileCrawlOptions_Ignore", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No file-specific crawl options are selected..
+        /// </summary>
+        public static string Description_FileCrawlOptions_None {
+            get {
+                return ResourceManager.GetString("Description_FileCrawlOptions_None", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The target group..
+        /// </summary>
+        public static string Description_GroupMembership_Group {
+            get {
+                return ResourceManager.GetString("Description_GroupMembership_Group", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Can maintain group membership..
+        /// </summary>
+        public static string Description_GroupMembership_IsGroupAdmin {
+            get {
+                return ResourceManager.GetString("Description_GroupMembership_IsGroupAdmin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The group member..
+        /// </summary>
+        public static string Description_GroupMembership_User {
+            get {
+                return ResourceManager.GetString("Description_GroupMembership_User", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to User-friendly display name..
+        /// </summary>
+        public static string Description_HostDevice_DisplayName {
+            get {
+                return ResourceManager.GetString("Description_HostDevice_DisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Indicates whether the current host device record is inactive (archived)..
+        /// </summary>
+        public static string Description_HostDevice_IsInactive {
+            get {
+                return ResourceManager.GetString("Description_HostDevice_IsInactive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Programmatic machine identifier string..
+        /// </summary>
+        public static string Description_HostDevice_MachineIdentifer {
+            get {
+                return ResourceManager.GetString("Description_HostDevice_MachineIdentifer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Machine host name or IP address..
+        /// </summary>
+        public static string Description_HostDevice_MachineName {
+            get {
+                return ResourceManager.GetString("Description_HostDevice_MachineName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The host device&apos;s platform type..
+        /// </summary>
+        public static string Description_HostDevice_Platform {
+            get {
+                return ResourceManager.GetString("Description_HostDevice_Platform", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Volumes that have been mounted on the host device..
+        /// </summary>
+        public static string Description_HostDevice_Volumes {
+            get {
+                return ResourceManager.GetString("Description_HostDevice_Volumes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Default file system type for the current platform (optional)..
+        /// </summary>
+        public static string Description_HostPlatform_DefaultFsType {
+            get {
+                return ResourceManager.GetString("Description_HostPlatform_DefaultFsType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to User-friendly display name..
+        /// </summary>
+        public static string Description_HostPlatform_DisplayName {
+            get {
+                return ResourceManager.GetString("Description_HostPlatform_DisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Host devices with this platform..
+        /// </summary>
+        public static string Description_HostPlatform_HostDevices {
+            get {
+                return ResourceManager.GetString("Description_HostPlatform_HostDevices", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Indicates whether the current host device record is inactive (archived)..
+        /// </summary>
+        public static string Description_HostPlatform_IsInactive {
+            get {
+                return ResourceManager.GetString("Description_HostPlatform_IsInactive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Generalized platform type..
+        /// </summary>
+        public static string Description_HostPlatform_PlatformType {
+            get {
+                return ResourceManager.GetString("Description_HostPlatform_PlatformType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The format of the specified path was not recognized by the target operating system..
         /// </summary>
         public static string Description_InvalidPathError {
@@ -273,6 +606,105 @@ namespace FsInfoCat.Properties {
         public static string Description_PathTooLongError {
             get {
                 return ResourceManager.GetString("Description_PathTooLongError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Anroid-based platform type..
+        /// </summary>
+        public static string Description_PlatformType_Android {
+            get {
+                return ResourceManager.GetString("Description_PlatformType_Android", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to IOS platform type..
+        /// </summary>
+        public static string Description_PlatformType_IOS {
+            get {
+                return ResourceManager.GetString("Description_PlatformType_IOS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Linux/Unix-based platform type..
+        /// </summary>
+        public static string Description_PlatformType_Linux {
+            get {
+                return ResourceManager.GetString("Description_PlatformType_Linux", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to OS/X platform type..
+        /// </summary>
+        public static string Description_PlatformType_OSX {
+            get {
+                return ResourceManager.GetString("Description_PlatformType_OSX", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Platform type is not known..
+        /// </summary>
+        public static string Description_PlatformType_Unknown {
+            get {
+                return ResourceManager.GetString("Description_PlatformType_Unknown", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Windows-based platform type..
+        /// </summary>
+        public static string Description_PlatformType_Windows {
+            get {
+                return ResourceManager.GetString("Description_PlatformType_Windows", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Task has business-critical urgency and should take precedence over normal work routine..
+        /// </summary>
+        public static string Description_PriorityLevel_Critical {
+            get {
+                return ResourceManager.GetString("Description_PriorityLevel_Critical", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Task has been deferred to a later date..
+        /// </summary>
+        public static string Description_PriorityLevel_Deferred {
+            get {
+                return ResourceManager.GetString("Description_PriorityLevel_Deferred", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Task has higher priority and should be addressed before tasks with lesser priority..
+        /// </summary>
+        public static string Description_PriorityLevel_High {
+            get {
+                return ResourceManager.GetString("Description_PriorityLevel_High", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Task has low priority and should be addressed as time/resources permit..
+        /// </summary>
+        public static string Description_PriorityLevel_Low {
+            get {
+                return ResourceManager.GetString("Description_PriorityLevel_Low", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Task has normal priority..
+        /// </summary>
+        public static string Description_PriorityLevel_Normal {
+            get {
+                return ResourceManager.GetString("Description_PriorityLevel_Normal", resourceCulture);
             }
         }
         
@@ -313,6 +745,87 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The destination subdirectory to move the source subdirectory into..
+        /// </summary>
+        public static string Description_SubdirectoryAction_Destination {
+            get {
+                return ResourceManager.GetString("Description_SubdirectoryAction_Destination", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The source subdirectory that should be deleted, moved or copied..
+        /// </summary>
+        public static string Description_SubdirectoryAction_Source {
+            get {
+                return ResourceManager.GetString("Description_SubdirectoryAction_Source", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mitigation Task that describes the action to take on the source subdirectory..
+        /// </summary>
+        public static string Description_SubdirectoryAction_Task {
+            get {
+                return ResourceManager.GetString("Description_SubdirectoryAction_Task", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Task is currently being addressed..
+        /// </summary>
+        public static string Description_TaskStatus_Active {
+            get {
+                return ResourceManager.GetString("Description_TaskStatus_Active", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Task has been canceled..
+        /// </summary>
+        public static string Description_TaskStatus_Canceled {
+            get {
+                return ResourceManager.GetString("Description_TaskStatus_Canceled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Task has been completed..
+        /// </summary>
+        public static string Description_TaskStatus_Completed {
+            get {
+                return ResourceManager.GetString("Description_TaskStatus_Completed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Task has not been acknowledged..
+        /// </summary>
+        public static string Description_TaskStatus_New {
+            get {
+                return ResourceManager.GetString("Description_TaskStatus_New", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Task has been acknowledged, but not yet started..
+        /// </summary>
+        public static string Description_TaskStatus_Open {
+            get {
+                return ResourceManager.GetString("Description_TaskStatus_Open", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Task is in a paused state, pending some other factor..
+        /// </summary>
+        public static string Description_TaskStatus_Pending {
+            get {
+                return ResourceManager.GetString("Description_TaskStatus_Pending", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The application and/or current user account was not authorized to access a file, folder or related resource..
         /// </summary>
         public static string Description_UnauthorizedAccessError {
@@ -327,6 +840,78 @@ namespace FsInfoCat.Properties {
         public static string Description_UnexpectedError {
             get {
                 return ResourceManager.GetString("Description_UnexpectedError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Read / write access to all records as well as the ability to make changes to most application settings..
+        /// </summary>
+        public static string Description_UserRole_AppAdministrator {
+            get {
+                return ResourceManager.GetString("Description_UserRole_AppAdministrator", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Extended read-only application access..
+        /// </summary>
+        public static string Description_UserRole_Auditor {
+            get {
+                return ResourceManager.GetString("Description_UserRole_Auditor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Same privileges as IT Support and can also create new remediation tasks as well as determine desired state of files and directories..
+        /// </summary>
+        public static string Description_UserRole_ChangeAdministrator {
+            get {
+                return ResourceManager.GetString("Description_UserRole_ChangeAdministrator", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Read / write access to file system crawl results for personal shared crawl results as well as read / write access to task records, including ability to reassign tasks..
+        /// </summary>
+        public static string Description_UserRole_Contributor {
+            get {
+                return ResourceManager.GetString("Description_UserRole_Contributor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Read / write access to all file system crawl results and task records..
+        /// </summary>
+        public static string Description_UserRole_ITSupport {
+            get {
+                return ResourceManager.GetString("Description_UserRole_ITSupport", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No application access granted..
+        /// </summary>
+        public static string Description_UserRole_None {
+            get {
+                return ResourceManager.GetString("Description_UserRole_None", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Basic read-only application access..
+        /// </summary>
+        public static string Description_UserRole_Reader {
+            get {
+                return ResourceManager.GetString("Description_UserRole_Reader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Read / write access to all application data and settings..
+        /// </summary>
+        public static string Description_UserRole_SystemAdmin {
+            get {
+                return ResourceManager.GetString("Description_UserRole_SystemAdmin", resourceCulture);
             }
         }
         
@@ -417,6 +1002,15 @@ namespace FsInfoCat.Properties {
         public static string DisplayName_AccessErrors {
             get {
                 return ResourceManager.GetString("DisplayName_AccessErrors", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Admin.
+        /// </summary>
+        public static string DisplayName_Admin {
+            get {
+                return ResourceManager.GetString("DisplayName_Admin", resourceCulture);
             }
         }
         
@@ -583,6 +1177,15 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Canceled.
+        /// </summary>
+        public static string DisplayName_Canceled {
+            get {
+                return ResourceManager.GetString("DisplayName_Canceled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Case-sensitive Search.
         /// </summary>
         public static string DisplayName_CaseSensitiveSearch {
@@ -651,6 +1254,15 @@ namespace FsInfoCat.Properties {
         public static string DisplayName_ComparedOn {
             get {
                 return ResourceManager.GetString("DisplayName_ComparedOn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Completed.
+        /// </summary>
+        public static string DisplayName_Completed {
+            get {
+                return ResourceManager.GetString("DisplayName_Completed", resourceCulture);
             }
         }
         
@@ -826,15 +1438,6 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Completed.
-        /// </summary>
-        public static string DisplayName_CrawlStatus_Completed {
-            get {
-                return ResourceManager.GetString("DisplayName_CrawlStatus_Completed", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Crawl Job Disabled.
         /// </summary>
         public static string DisplayName_CrawlStatus_Disabled {
@@ -925,6 +1528,15 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Critical.
+        /// </summary>
+        public static string DisplayName_Critical {
+            get {
+                return ResourceManager.GetString("DisplayName_Critical", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Date Created.
         /// </summary>
         public static string DisplayName_DateCreated {
@@ -970,7 +1582,7 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to Database Principal ID.
         /// </summary>
         public static string DisplayName_DbPrincipalId {
             get {
@@ -988,11 +1600,20 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Default File System ]Type.
+        ///   Looks up a localized string similar to Default FS Type.
         /// </summary>
         public static string DisplayName_DefaultFsType {
             get {
                 return ResourceManager.GetString("DisplayName_DefaultFsType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Deferred.
+        /// </summary>
+        public static string DisplayName_Deferred {
+            get {
+                return ResourceManager.GetString("DisplayName_Deferred", resourceCulture);
             }
         }
         
@@ -1011,6 +1632,15 @@ namespace FsInfoCat.Properties {
         public static string DisplayName_Description {
             get {
                 return ResourceManager.GetString("DisplayName_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Destination.
+        /// </summary>
+        public static string DisplayName_Destination {
+            get {
+                return ResourceManager.GetString("DisplayName_Destination", resourceCulture);
             }
         }
         
@@ -1047,24 +1677,6 @@ namespace FsInfoCat.Properties {
         public static string DisplayName_DirectoryCrawlOptions_DoNotCompareFiles {
             get {
                 return ResourceManager.GetString("DisplayName_DirectoryCrawlOptions_DoNotCompareFiles", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Do Not Crawl.
-        /// </summary>
-        public static string DisplayName_DirectoryCrawlOptions_DoNotCrawl {
-            get {
-                return ResourceManager.GetString("DisplayName_DirectoryCrawlOptions_DoNotCrawl", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Do Not Show.
-        /// </summary>
-        public static string DisplayName_DirectoryCrawlOptions_DoNotShow {
-            get {
-                return ResourceManager.GetString("DisplayName_DirectoryCrawlOptions_DoNotShow", resourceCulture);
             }
         }
         
@@ -1114,6 +1726,15 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Display.
+        /// </summary>
+        public static string DisplayName_Display {
+            get {
+                return ResourceManager.GetString("DisplayName_Display", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Display Artist.
         /// </summary>
         public static string DisplayName_DisplayArtist {
@@ -1155,6 +1776,33 @@ namespace FsInfoCat.Properties {
         public static string DisplayName_DocumentProperties {
             get {
                 return ResourceManager.GetString("DisplayName_DocumentProperties", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Do not compare.
+        /// </summary>
+        public static string DisplayName_DoNotCompare {
+            get {
+                return ResourceManager.GetString("DisplayName_DoNotCompare", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Do Not Crawl.
+        /// </summary>
+        public static string DisplayName_DoNotCrawl {
+            get {
+                return ResourceManager.GetString("DisplayName_DoNotCrawl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Do Not Show.
+        /// </summary>
+        public static string DisplayName_DoNotShow {
+            get {
+                return ResourceManager.GetString("DisplayName_DoNotShow", resourceCulture);
             }
         }
         
@@ -1218,15 +1866,6 @@ namespace FsInfoCat.Properties {
         public static string DisplayName_DriveType_Removable {
             get {
                 return ResourceManager.GetString("DisplayName_DriveType_Removable", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Unknown.
-        /// </summary>
-        public static string DisplayName_DriveType_Unknown {
-            get {
-                return ResourceManager.GetString("DisplayName_DriveType_Unknown", resourceCulture);
             }
         }
         
@@ -1335,6 +1974,33 @@ namespace FsInfoCat.Properties {
         public static string DisplayName_File {
             get {
                 return ResourceManager.GetString("DisplayName_File", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Destination Subdirectory.
+        /// </summary>
+        public static string DisplayName_FileAction_Destination {
+            get {
+                return ResourceManager.GetString("DisplayName_FileAction_Destination", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Source File.
+        /// </summary>
+        public static string DisplayName_FileAction_Source {
+            get {
+                return ResourceManager.GetString("DisplayName_FileAction_Source", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mitigation Task.
+        /// </summary>
+        public static string DisplayName_FileAction_Task {
+            get {
+                return ResourceManager.GetString("DisplayName_FileAction_Task", resourceCulture);
             }
         }
         
@@ -1600,6 +2266,24 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Hide.
+        /// </summary>
+        public static string DisplayName_Hide {
+            get {
+                return ResourceManager.GetString("DisplayName_Hide", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to High.
+        /// </summary>
+        public static string DisplayName_High {
+            get {
+                return ResourceManager.GetString("DisplayName_High", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Horizontal Aspect Ratio.
         /// </summary>
         public static string DisplayName_HorizontalAspectRatio {
@@ -1645,6 +2329,15 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Default File System Type.
+        /// </summary>
+        public static string DisplayName_HostPlatform_DefaultFsType {
+            get {
+                return ResourceManager.GetString("DisplayName_HostPlatform_DefaultFsType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Unique Identifier.
         /// </summary>
         public static string DisplayName_Id {
@@ -1654,11 +2347,29 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Identifer.
+        /// </summary>
+        public static string DisplayName_Identifer {
+            get {
+                return ResourceManager.GetString("DisplayName_Identifer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Volume Identifier.
         /// </summary>
         public static string DisplayName_Identifier {
             get {
                 return ResourceManager.GetString("DisplayName_Identifier", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ignore.
+        /// </summary>
+        public static string DisplayName_Ignore {
+            get {
+                return ResourceManager.GetString("DisplayName_Ignore", resourceCulture);
             }
         }
         
@@ -1677,6 +2388,15 @@ namespace FsInfoCat.Properties {
         public static string DisplayName_ImageProperties {
             get {
                 return ResourceManager.GetString("DisplayName_ImageProperties", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Inactive.
+        /// </summary>
+        public static string DisplayName_Inactive {
+            get {
+                return ResourceManager.GetString("DisplayName_Inactive", resourceCulture);
             }
         }
         
@@ -1789,6 +2509,15 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Justified.
+        /// </summary>
+        public static string DisplayName_Justified {
+            get {
+                return ResourceManager.GetString("DisplayName_Justified", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Tags.
         /// </summary>
         public static string DisplayName_Keywords {
@@ -1825,7 +2554,7 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to Last Crawl End.
         /// </summary>
         public static string DisplayName_LastCrawlEnd {
             get {
@@ -1834,7 +2563,7 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to Last Crawl Start.
         /// </summary>
         public static string DisplayName_LastCrawlStart {
             get {
@@ -1974,6 +2703,15 @@ namespace FsInfoCat.Properties {
         public static string DisplayName_LongitudeSeconds {
             get {
                 return ResourceManager.GetString("DisplayName_LongitudeSeconds", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Low.
+        /// </summary>
+        public static string DisplayName_Low {
+            get {
+                return ResourceManager.GetString("DisplayName_Low", resourceCulture);
             }
         }
         
@@ -2140,7 +2878,7 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to Next Scheduled Start.
         /// </summary>
         public static string DisplayName_NextScheduledStart {
             get {
@@ -2158,11 +2896,29 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to None.
+        /// </summary>
+        public static string DisplayName_None {
+            get {
+                return ResourceManager.GetString("DisplayName_None", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No Options Selected.
         /// </summary>
         public static string DisplayName_NoOptionsSelected {
             get {
                 return ResourceManager.GetString("DisplayName_NoOptionsSelected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Normal.
+        /// </summary>
+        public static string DisplayName_Normal {
+            get {
+                return ResourceManager.GetString("DisplayName_Normal", resourceCulture);
             }
         }
         
@@ -2257,6 +3013,15 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Pending.
+        /// </summary>
+        public static string DisplayName_Pending {
+            get {
+                return ResourceManager.GetString("DisplayName_Pending", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to People Tags.
         /// </summary>
         public static string DisplayName_PeopleNames {
@@ -2293,7 +3058,16 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to Platform Type.
+        /// </summary>
+        public static string DisplayName_PlatformType {
+            get {
+                return ResourceManager.GetString("DisplayName_PlatformType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Android.
         /// </summary>
         public static string DisplayName_PlatformType_Android {
             get {
@@ -2302,7 +3076,7 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to IOS.
         /// </summary>
         public static string DisplayName_PlatformType_IOS {
             get {
@@ -2311,7 +3085,7 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to Linux.
         /// </summary>
         public static string DisplayName_PlatformType_Linux {
             get {
@@ -2320,7 +3094,7 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to OS/X.
         /// </summary>
         public static string DisplayName_PlatformType_OSX {
             get {
@@ -2329,7 +3103,7 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to Other.
         /// </summary>
         public static string DisplayName_PlatformType_Other {
             get {
@@ -2338,7 +3112,7 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to Unknown Platform Type.
         /// </summary>
         public static string DisplayName_PlatformType_Unknown {
             get {
@@ -2347,7 +3121,7 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to Windows.
         /// </summary>
         public static string DisplayName_PlatformType_Windows {
             get {
@@ -2383,7 +3157,7 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to Critical Urgency.
         /// </summary>
         public static string DisplayName_PriorityLevel_Critical {
             get {
@@ -2392,16 +3166,7 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
-        /// </summary>
-        public static string DisplayName_PriorityLevel_Deferred {
-            get {
-                return ResourceManager.GetString("DisplayName_PriorityLevel_Deferred", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to High Priority.
         /// </summary>
         public static string DisplayName_PriorityLevel_High {
             get {
@@ -2410,7 +3175,7 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to Low Priority.
         /// </summary>
         public static string DisplayName_PriorityLevel_Low {
             get {
@@ -2419,7 +3184,7 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to Normal Priority.
         /// </summary>
         public static string DisplayName_PriorityLevel_Normal {
             get {
@@ -2590,7 +3355,16 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to Re-scan.
+        /// </summary>
+        public static string DisplayName_Rescan {
+            get {
+                return ResourceManager.GetString("DisplayName_Rescan", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reschedule After Fail.
         /// </summary>
         public static string DisplayName_RescheduleAfterFail {
             get {
@@ -2599,7 +3373,7 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to Reschedule From Job End Time.
         /// </summary>
         public static string DisplayName_RescheduleFromJobEnd {
             get {
@@ -2815,6 +3589,33 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Destination Subdirectory.
+        /// </summary>
+        public static string DisplayName_SubdirectoryAction_Destination {
+            get {
+                return ResourceManager.GetString("DisplayName_SubdirectoryAction_Destination", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Source Subdirectory.
+        /// </summary>
+        public static string DisplayName_SubdirectoryAction_Source {
+            get {
+                return ResourceManager.GetString("DisplayName_SubdirectoryAction_Source", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mitigation Task.
+        /// </summary>
+        public static string DisplayName_SubdirectoryAction_Task {
+            get {
+                return ResourceManager.GetString("DisplayName_SubdirectoryAction_Task", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Sub-directory Actions.
         /// </summary>
         public static string DisplayName_SubdirectoryActions {
@@ -2914,7 +3715,7 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to Active.
         /// </summary>
         public static string DisplayName_TaskStatus_Active {
             get {
@@ -2923,25 +3724,7 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
-        /// </summary>
-        public static string DisplayName_TaskStatus_Canceled {
-            get {
-                return ResourceManager.GetString("DisplayName_TaskStatus_Canceled", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to .
-        /// </summary>
-        public static string DisplayName_TaskStatus_Completed {
-            get {
-                return ResourceManager.GetString("DisplayName_TaskStatus_Completed", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to New.
         /// </summary>
         public static string DisplayName_TaskStatus_New {
             get {
@@ -2950,20 +3733,11 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to Open.
         /// </summary>
         public static string DisplayName_TaskStatus_Open {
             get {
                 return ResourceManager.GetString("DisplayName_TaskStatus_Open", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to .
-        /// </summary>
-        public static string DisplayName_TaskStatus_Pending {
-            get {
-                return ResourceManager.GetString("DisplayName_TaskStatus_Pending", resourceCulture);
             }
         }
         
@@ -2982,6 +3756,15 @@ namespace FsInfoCat.Properties {
         public static string DisplayName_Title {
             get {
                 return ResourceManager.GetString("DisplayName_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to To Delete.
+        /// </summary>
+        public static string DisplayName_ToDelete {
+            get {
+                return ResourceManager.GetString("DisplayName_ToDelete", resourceCulture);
             }
         }
         
@@ -3058,6 +3841,15 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Unknown.
+        /// </summary>
+        public static string DisplayName_Unknown {
+            get {
+                return ResourceManager.GetString("DisplayName_Unknown", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Remote DB Identifier.
         /// </summary>
         public static string DisplayName_UpstreamId {
@@ -3076,7 +3868,16 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to App Admin.
+        /// </summary>
+        public static string DisplayName_UserRole_AppAdmin {
+            get {
+                return ResourceManager.GetString("DisplayName_UserRole_AppAdmin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Application Administrator.
         /// </summary>
         public static string DisplayName_UserRole_AppAdministrator {
             get {
@@ -3085,7 +3886,7 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to Application Auditor.
         /// </summary>
         public static string DisplayName_UserRole_Auditor {
             get {
@@ -3094,7 +3895,16 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to Change Admin.
+        /// </summary>
+        public static string DisplayName_UserRole_ChangeAdmin {
+            get {
+                return ResourceManager.GetString("DisplayName_UserRole_ChangeAdmin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Change Administrator.
         /// </summary>
         public static string DisplayName_UserRole_ChangeAdministrator {
             get {
@@ -3103,16 +3913,25 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to Contrib.
         /// </summary>
-        public static string DisplayName_UserRole_Contributor {
+        public static string DisplayName_UserRole_Contrib {
             get {
-                return ResourceManager.GetString("DisplayName_UserRole_Contributor", resourceCulture);
+                return ResourceManager.GetString("DisplayName_UserRole_Contrib", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to IT.
+        /// </summary>
+        public static string DisplayName_UserRole_IT {
+            get {
+                return ResourceManager.GetString("DisplayName_UserRole_IT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to IT Supporty.
         /// </summary>
         public static string DisplayName_UserRole_ITSupport {
             get {
@@ -3121,7 +3940,7 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to No Access.
         /// </summary>
         public static string DisplayName_UserRole_None {
             get {
@@ -3130,16 +3949,16 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to Sysadmin.
         /// </summary>
-        public static string DisplayName_UserRole_Reader {
+        public static string DisplayName_UserRole_SysAdmin {
             get {
-                return ResourceManager.GetString("DisplayName_UserRole_Reader", resourceCulture);
+                return ResourceManager.GetString("DisplayName_UserRole_SysAdmin", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to Host System Administrator.
         /// </summary>
         public static string DisplayName_UserRole_SystemAdmin {
             get {
@@ -3207,6 +4026,15 @@ namespace FsInfoCat.Properties {
         public static string DisplayName_VideoProperties {
             get {
                 return ResourceManager.GetString("DisplayName_VideoProperties", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Violation.
+        /// </summary>
+        public static string DisplayName_Violation {
+            get {
+                return ResourceManager.GetString("DisplayName_Violation", resourceCulture);
             }
         }
         
@@ -3288,15 +4116,6 @@ namespace FsInfoCat.Properties {
         public static string DisplayName_VolumeStatus_Uncontrolled {
             get {
                 return ResourceManager.GetString("DisplayName_VolumeStatus_Uncontrolled", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Unknown.
-        /// </summary>
-        public static string DisplayName_VolumeStatus_Unknown {
-            get {
-                return ResourceManager.GetString("DisplayName_VolumeStatus_Unknown", resourceCulture);
             }
         }
         
