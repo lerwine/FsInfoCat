@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:FsInfoCat.Desktop"
         mc:Ignorable="d"
         xmlns:converters="clr-namespace:FsInfoCat.Desktop.Converters"
-        Title="FS InfoCat" Height="600" Width="800" DataContext="{Binding Mode=OneWay, Source={DynamicResource MainViewModel}}" WindowState="Maximized">
+        Title="FS InfoCat" Height="600" Width="800" DataContext="{DynamicResource MainViewModel}" WindowState="Maximized">
     <Window.Resources>
         <!--<converters:AccountToStringConverter x:Key="AccountConverter" NullSource="(not logged in)"/>-->
         <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>

@@ -2,487 +2,531 @@
     <DbCreation>
         <Text Message="Creating table 'FileSystems'">
             <![CDATA[CREATE TABLE IF NOT EXISTS "FileSystems" (
-	"Id"	UNIQUEIDENTIFIER NOT NULL,
-	"DisplayName"	NVARCHAR(1024) NOT NULL CHECK(length(trim("DisplayName")) = length("DisplayName") AND length("DisplayName")>0) UNIQUE COLLATE NOCASE,
-	"CaseSensitiveSearch"	BIT NOT NULL DEFAULT 0,
-	"ReadOnly"	BIT NOT NULL DEFAULT 0,
-	"MaxNameLength"	BIGINT NOT NULL CHECK("MaxNameLength">0 AND "MaxNameLength"<4294967296) DEFAULT 255,
-	"DefaultDriveType"	TINYINT CHECK("DefaultDriveType" IS NULL OR ("DefaultDriveType">=0 AND DefaultDriveType<7)),
-	"Notes"	TEXT NOT NULL DEFAULT '',
-	"IsInactive"	BIT NOT NULL DEFAULT 0,
-    "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL,
+    "Id" UNIQUEIDENTIFIER NOT NULL COLLATE NOCASE,
+    "DisplayName" NVARCHAR(1024) NOT NULL CHECK(length(trim("DisplayName"))=length("DisplayName") AND length("DisplayName")>0) COLLATE NOCASE,
+    "CaseSensitiveSearch" BIT NOT NULL DEFAULT 0,
+    "ReadOnly" BIT NOT NULL DEFAULT 0,
+    "MaxNameLength" UNSIGNED INT NOT NULL DEFAULT 255,
+    "DefaultDriveType" UNSIGNED TINYINT CHECK("DefaultDriveType" IS NULL OR ("DefaultDriveType">=0 AND "DefaultDriveType"<7)) DEFAULT NULL,
+    "Notes" TEXT NOT NULL DEFAULT '',
+    "IsInactive" BIT NOT NULL DEFAULT 0,
+    "CreatedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+    "ModifiedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+    "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL COLLATE NOCASE,
     "LastSynchronizedOn" DATETIME DEFAULT NULL,
-	"CreatedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
-	"ModifiedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
-	CONSTRAINT "PK_FileSystems" PRIMARY KEY("Id"),
-    CHECK(CreatedOn<=ModifiedOn AND
-        (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL))
+    CONSTRAINT "PK_FileSystems" PRIMARY KEY("Id"),
+    CONSTRAINT "UK_FileSystem_DislayName" UNIQUE("DisplayName"),
+    CHECK((("UpstreamId" IS NULL AND "LastSynchronizedOn" IS NULL) OR ("UpstreamId" IS NOT NULL AND "LastSynchronizedOn" IS NOT NULL)) AND "CreatedOn"<="ModifiedOn")
 )]]>
         </Text>
         <Text Message="Creating index 'IDX_FileSystem_DisplayName'"><![CDATA[CREATE INDEX "IDX_FileSystem_DisplayName" ON "FileSystems" ("DisplayName" COLLATE NOCASE)]]></Text>
+        <Text Message="Creating index 'IDX_FileSystem_IsInactive'"><![CDATA[CREATE INDEX "IDX_FileSystem_IsInactive" ON "FileSystems" ("IsInactive")]]></Text>
         <Text Message="Creating table 'SymbolicNames'">
             <![CDATA[CREATE TABLE IF NOT EXISTS "SymbolicNames" (
-	"Id"	UNIQUEIDENTIFIER NOT NULL,
-	"Name"	NVARCHAR(256) NOT NULL CHECK(length(trim(Name)) = length(Name) AND length(Name)>0) UNIQUE COLLATE NOCASE,
+    "Id" UNIQUEIDENTIFIER NOT NULL COLLATE NOCASE,
+    "Name" NVARCHAR(256) NOT NULL CHECK(length(trim("Name"))=length("Name") AND length("Name")>0) COLLATE NOCASE,
+    "Notes" TEXT NOT NULL DEFAULT '',
     "Priority" INT NOT NULL DEFAULT 0,
-	"Notes"	TEXT NOT NULL DEFAULT '',
-	"IsInactive"	BIT NOT NULL DEFAULT 0,
-	"FileSystemId"	UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_SymbolicNameFileSystem" REFERENCES "FileSystems"("Id") ON DELETE RESTRICT,
-    "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL,
+    "IsInactive" BIT NOT NULL DEFAULT 0,
+    "CreatedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+    "ModifiedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+    "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL COLLATE NOCASE,
     "LastSynchronizedOn" DATETIME DEFAULT NULL,
-	"CreatedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
-	"ModifiedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
-	CONSTRAINT "PK_SymbolicNames" PRIMARY KEY("Id"),
-    CHECK(CreatedOn<=ModifiedOn AND
-        (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL))
+    "FileSystemId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_SymbolicName_FileSystem" REFERENCES "FileSystems"("Id") ON DELETE RESTRICT COLLATE NOCASE,
+    CONSTRAINT "PK_SymbolicNames" PRIMARY KEY("Id"),
+    CONSTRAINT "UK_FileSystem_Name" UNIQUE("Name"),
+    CHECK((("UpstreamId" IS NULL AND "LastSynchronizedOn" IS NULL) OR ("UpstreamId" IS NOT NULL AND "LastSynchronizedOn" IS NOT NULL)) AND "CreatedOn"<="ModifiedOn")
 )]]>
         </Text>
-        <Text Message="Creating index 'IDX_SymbolicName_Name'"><![CDATA[CREATE INDEX "IDX_SymbolicName_Name" ON "SymbolicNames" ("Name" COLLATE NOCASE)]]></Text>
-        <Text Message="Creating index 'IDX_SymbolicName_IsInactive'"><![CDATA[CREATE INDEX "IDX_SymbolicName_IsInactive" ON "SymbolicNames" ("IsInactive")]]></Text>
+        <Text Message="Creating index 'IDX_SymbolicName_Name'">
+            <![CDATA[CREATE INDEX "IDX_SymbolicName_Name" ON "SymbolicNames" ("Name" COLLATE NOCASE)]]>
+        </Text>
+        <Text Message="Creating index 'IDX_SymbolicName_IsInactive'">
+            <![CDATA[CREATE INDEX "IDX_SymbolicName_IsInactive" ON "SymbolicNames" ("IsInactive")]]>
+        </Text>
         <Text Message="Creating table 'Volumes'">
             <![CDATA[CREATE TABLE IF NOT EXISTS "Volumes" (
-	"Id"	UNIQUEIDENTIFIER NOT NULL,
-    "DisplayName" NVARCHAR(1024) NOT NULL CHECK(length(trim(DisplayName)) = length(DisplayName) AND length(DisplayName)>0) COLLATE NOCASE,
-    "VolumeName" NVARCHAR(128) NOT NULL CHECK(length(trim(VolumeName)) = length(VolumeName)) COLLATE NOCASE,
-    "Identifier" NVARCHAR(1024) NOT NULL CHECK(length(trim(Identifier)) = length(Identifier) AND length(Identifier)>0) UNIQUE COLLATE NOCASE,
+    "Id" UNIQUEIDENTIFIER NOT NULL COLLATE NOCASE,
+    "DisplayName" NVARCHAR(1024) NOT NULL CHECK(length(trim("DisplayName"))=length("DisplayName") AND length("DisplayName")>0) COLLATE NOCASE,
+    "VolumeName" NVARCHAR(128) NOT NULL CHECK(length(trim("VolumeName"))=length("VolumeName")) DEFAULT '' COLLATE NOCASE,
+    "Identifier" NVARCHAR(1024) NOT NULL COLLATE NOCASE,
     "CaseSensitiveSearch" BIT DEFAULT NULL,
     "ReadOnly" BIT DEFAULT NULL,
-    "MaxNameLength" INT CHECK(MaxNameLength IS NULL OR ("MaxNameLength">0 AND "MaxNameLength"<4294967296)) DEFAULT NULL,
-    "Type" TINYINT NOT NULL CHECK(Type>=0 AND Type<7) DEFAULT 0,
+    "MaxNameLength" UNSIGNED INT DEFAULT NULL,
+    "Type" UNSIGNED TINYINT NOT NULL CHECK("Type">=0 AND "Type"<7) DEFAULT 0, -- Unknown
+    "Status" UNSIGNED TINYINT NOT NULL CHECK("Status"<=6) DEFAULT 0, -- VolumeStatus.Unknown
     "Notes" TEXT NOT NULL DEFAULT '',
-    "Status" TINYINT NOT NULL CHECK(Type>=0 AND Type<7) DEFAULT 0,
-	"FileSystemId"	UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_VolumeFileSystem" REFERENCES "FileSystems"("Id") ON DELETE RESTRICT,
-    "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL,
+    "CreatedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+    "ModifiedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+    "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL COLLATE NOCASE,
     "LastSynchronizedOn" DATETIME DEFAULT NULL,
-	"CreatedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
-	"ModifiedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
-	CONSTRAINT "PK_Volumes" PRIMARY KEY("Id"),
-    CHECK(CreatedOn<=ModifiedOn AND
-        (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL))
+    "FileSystemId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_Volume_FileSystem" REFERENCES "FileSystems"("Id") ON DELETE RESTRICT COLLATE NOCASE,
+    CONSTRAINT "PK_Volumes" PRIMARY KEY("Id"),
+    CONSTRAINT "UK_FileSystem_Volume" UNIQUE("Identifier"),
+    CHECK((("UpstreamId" IS NULL AND "LastSynchronizedOn" IS NULL) OR ("UpstreamId" IS NOT NULL AND "LastSynchronizedOn" IS NOT NULL)) AND "CreatedOn"<="ModifiedOn")
 )]]>
         </Text>
-        <Text Message="Creating index 'IDX_Volume_Identifier'"><![CDATA[CREATE INDEX "IDX_Volume_Identifier" ON "Volumes" ("Identifier" COLLATE NOCASE)]]></Text>
-        <Text Message="Creating index 'IDX_Volume_Status'"><![CDATA[CREATE INDEX "IDX_Volume_Status" ON "Volumes" ("Status")]]></Text>
+        <Text Message="Creating index 'IDX_Volume_VolumeName'">
+            <![CDATA[CREATE INDEX "IDX_Volume_VolumeName" ON "Volumes" ("VolumeName" COLLATE NOCASE)]]>
+        </Text>
+        <Text Message="Creating index 'IDX_Volume_Identifier'">
+            <![CDATA[CREATE INDEX "IDX_Volume_Identifier" ON "Volumes" ("Identifier" COLLATE NOCASE)]]>
+        </Text>
+        <Text Message="Creating index 'IDX_Volume_Status'">
+            <![CDATA[CREATE INDEX "IDX_Volume_Status" ON "Volumes" ("Status")]]>
+        </Text>
         <Text Message="Creating table 'VolumeAccessErrors'">
             <![CDATA[CREATE TABLE IF NOT EXISTS "VolumeAccessErrors" (
-	"Id"	UNIQUEIDENTIFIER NOT NULL,
-    "Message" NVARCHAR(1024) NOT NULL CHECK(length(trim("Message")) = length("Message") AND length("Message")>0) COLLATE NOCASE,
+    "Id" UNIQUEIDENTIFIER NOT NULL COLLATE NOCASE,
+    "ErrorCode" UNSIGNED TINYINT NOT NULL CHECK("ErrorCode"<=5),
+    "Message" NVARCHAR(1024) NOT NULL CHECK(length(trim("Message"))=length("Message") AND length("Message")>0) COLLATE NOCASE,
     "Details" TEXT NOT NULL DEFAULT '',
-    "ErrorCode" INT NOT NULL,
-	"TargetId"	UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_AccessErrorVolume" REFERENCES "Volume"("Id") ON DELETE RESTRICT,
-	"CreatedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
-	"ModifiedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
-	CONSTRAINT "PK_VolumeAccessErrors" PRIMARY KEY("Id"),
-    CHECK(CreatedOn<=ModifiedOn)
+    "CreatedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+    "ModifiedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+    "TargetId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_AccessError_Volume" REFERENCES "Volumes"("Id") ON DELETE RESTRICT COLLATE NOCASE,
+    CONSTRAINT "PK_VolumeAccessErrors" PRIMARY KEY("Id"),
+    CHECK("CreatedOn"<="ModifiedOn")
 )]]>
+        </Text>
+        <Text Message="Creating table 'Subdirectories'">
+            <![CDATA[CREATE TABLE IF NOT EXISTS "Subdirectories" (
+    "Id" UNIQUEIDENTIFIER NOT NULL COLLATE NOCASE,
+    "Name" NVARCHAR(1024) NOT NULL COLLATE NOCASE,
+    "LastAccessed" DATETIME NOT NULL,
+    "CreationTime" DATETIME NOT NULL,
+    "LastWriteTime" DATETIME NOT NULL,
+    "Options" UNSIGNED TINYINT NOT NULL CHECK("Options"<=32) DEFAULT 0, -- DirectoryCrawlOptions.None
+    "Status" UNSIGNED TINYINT NOT NULL CHECK("Status"<=3) DEFAULT 0, -- DirectoryStatus.Incomplete
+    "Notes" TEXT NOT NULL DEFAULT '',
+    "CreatedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+    "ModifiedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+    "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL COLLATE NOCASE,
+    "LastSynchronizedOn" DATETIME DEFAULT NULL,
+    "ParentId" UNIQUEIDENTIFIER CONSTRAINT "FK_Subdirectory_Parent" REFERENCES "Subdirectories"("Id") ON DELETE RESTRICT COLLATE NOCASE,
+    "VolumeId" UNIQUEIDENTIFIER CONSTRAINT "FK_Subdirectory_Volume" REFERENCES "Volumes"("Id") ON DELETE RESTRICT COLLATE NOCASE,
+    CONSTRAINT "PK_Subdirectories" PRIMARY KEY("Id"),
+    CHECK((("ParentId" IS NULL AND "VolumeId" IS NOT NULL) OR ("ParentId" IS NOT NULL AND "VolumeId" IS NULL)) AND (("UpstreamId" IS NULL AND "LastSynchronizedOn" IS NULL) OR ("UpstreamId" IS NOT NULL AND "LastSynchronizedOn" IS NOT NULL)) AND "CreatedOn"<="ModifiedOn")
+)]]>
+        </Text>
+        <Text Message="Creating index 'IDX_Subdirectory_Status'">
+            <![CDATA[CREATE INDEX "IDX_Subdirectory_Status" ON "Subdirectories" ("Status")]]>
         </Text>
         <Text Message="Creating table 'CrawlConfigurations'">
             <![CDATA[CREATE TABLE IF NOT EXISTS "CrawlConfigurations" (
-	"Id"	UNIQUEIDENTIFIER NOT NULL,
-    "DisplayName" NVARCHAR(1024) NOT NULL CHECK(length(trim("DisplayName")) = length("DisplayName") AND length("DisplayName")>0) COLLATE NOCASE,
-	"IsInactive"	BIT NOT NULL DEFAULT 0,
-    "MaxRecursionDepth" INT NOT NULL CHECK("MaxRecursionDepth">=0 AND "MaxRecursionDepth"<65536) DEFAULT 256,
-    "MaxTotalItems" BIGINT NOT NULL CHECK("MaxTotalItems">0) DEFAULT 18446744073709551615,
-    "TTL" BIGINT CHECK("TTL" IS NULL OR ("TTL">0 AND "TTL"<9223372036854775808)) DEFAULT NULL,
+    "Id" UNIQUEIDENTIFIER NOT NULL COLLATE NOCASE,
+    "DisplayName" NVARCHAR(1024) NOT NULL CHECK(length(trim("DisplayName"))=length("DisplayName") AND length("DisplayName")>0) COLLATE NOCASE,
+    "MaxRecursionDepth" UNSIGNED SMALLINT NOT NULL DEFAULT 128,
+    "MaxTotalItems" UNSIGNED BIGINT DEFAULT NULL,
+    "TTL" BIGINT DEFAULT NULL,
+    "StatusValue" UNSIGNED TINYINT NOT NULL CHECK("StatusValue"<=7) DEFAULT 0, -- CrawlStatus.NotRunning
+    "LastCrawlStart" DATETIME DEFAULT NULL,
+    "LastCrawlEnd" DATETIME DEFAULT NULL,
+    "NextScheduledStart" DATETIME DEFAULT NULL,
+    "RescheduleInterval" BIGINT DEFAULT NULL,
+    "RescheduleFromJobEnd" BIT NOT NULL DEFAULT 0,
+    "RescheduleAfterFail" BIT NOT NULL DEFAULT 0,
     "Notes" TEXT NOT NULL DEFAULT '',
-    "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL,
+    "CreatedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+    "ModifiedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+    "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL COLLATE NOCASE,
     "LastSynchronizedOn" DATETIME DEFAULT NULL,
-	"CreatedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
-	"ModifiedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
-	CONSTRAINT "PK_CrawlConfigurations" PRIMARY KEY("Id"),
-    CHECK(CreatedOn<=ModifiedOn AND
-        (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL))
+    "RootId" UNIQUEIDENTIFIER CONSTRAINT "FK_CrawlConfiguration_Root" REFERENCES "Subdirectories"("Id") ON DELETE RESTRICT COLLATE NOCASE,
+    CONSTRAINT "PK_CrawlConfigurations" PRIMARY KEY("Id"),
+    CHECK((("UpstreamId" IS NULL AND "LastSynchronizedOn" IS NULL) OR ("UpstreamId" IS NOT NULL AND "LastSynchronizedOn" IS NOT NULL)) AND "CreatedOn"<="ModifiedOn")
 )]]>
         </Text>
-        <Text Message="Creating index 'IDX_CrawlConfiguration_IsInactive'"><![CDATA[CREATE INDEX "IDX_CrawlConfiguration_IsInactive" ON "CrawlConfigurations" ("IsInactive")]]></Text>
-        <Text Message="Creating table 'Subdirectories'">
-            <![CDATA[CREATE TABLE IF NOT EXISTS "Subdirectories" (
-	"Id"	UNIQUEIDENTIFIER NOT NULL,
-    "Name" NVARCHAR(1024) NOT NULL COLLATE NOCASE,
-    "Options" TINYINT  NOT NULL CHECK(Options>=0 AND Options<64) DEFAULT 0,
-    "LastAccessed" DATETIME  NOT NULL,
-    "Notes" TEXT NOT NULL DEFAULT '',
-    "Status" TINYINT  NOT NULL CHECK(Options>=0 AND Options<4) DEFAULT 0,
-	"CreationTime"	DATETIME NOT NULL,
-	"LastWriteTime"	DATETIME NOT NULL,
-	"ParentId"	UNIQUEIDENTIFIER CONSTRAINT "FK_SubdirectoryParent" REFERENCES "Subdirectories"("Id") ON DELETE RESTRICT,
-	"VolumeId"	UNIQUEIDENTIFIER CONSTRAINT "FK_SubdirectoryVolume" REFERENCES "Volumes"("Id") ON DELETE RESTRICT,
-    "CrawlConfigurationId"	UNIQUEIDENTIFIER CONSTRAINT "FK_SubdirectoryCrawlConfiguration" REFERENCES CrawlConfigurations("Id") ON DELETE RESTRICT,
-    "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL,
+        <Text Message="Creating index 'IDX_CrawlConfiguration_StatusValue'">
+            <![CDATA[CREATE INDEX "IDX_CrawlConfiguration_StatusValue" ON "CrawlConfigurations" ("StatusValue")]]>
+        </Text>
+        <Text Message="Creating table 'CrawlJobLogs'">
+            <![CDATA[CREATE TABLE IF NOT EXISTS "CrawlJobLogs" (
+    "Id" UNIQUEIDENTIFIER NOT NULL COLLATE NOCASE,
+    "MaxRecursionDepth" UNSIGNED SMALLINT NOT NULL DEFAULT 128,
+    "MaxTotalItems" UNSIGNED BIGINT DEFAULT NULL,
+    "TTL" BIGINT DEFAULT NULL,
+    "RootPath" NVARCHAR(4096) NOT NULL COLLATE NOCASE,
+    "StatusCode" UNSIGNED TINYINT NOT NULL CHECK("StatusCode"<=7) DEFAULT 0, -- CrawlStatus.NotRunning
+    "CrawlStart" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+    "CrawlEnd" DATETIME DEFAULT NULL,
+    "StatusMessage" NVARCHAR(1024) NOT NULL CHECK(length(trim("StatusMessage"))=length("StatusMessage")) COLLATE NOCASE,
+    "StatusDetail" TEXT NOT NULL,
+    "CreatedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+    "ModifiedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+    "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL COLLATE NOCASE,
     "LastSynchronizedOn" DATETIME DEFAULT NULL,
-	"CreatedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
-	"ModifiedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
-	CONSTRAINT "PK_Subdirectories" PRIMARY KEY("Id"),
-    CHECK(CreatedOn<=ModifiedOn AND LastAccessed >= CreatedOn AND
-        (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL) AND
-        ((ParentId IS NULL AND VolumeId IS NOT NULL) OR
-        (ParentId IS NOT NULL AND VolumeId IS NULL AND length(trim(Name))>0)))
+    "ConfigurationId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_CrawlJobLog_CrawlConfiguration" REFERENCES "CrawlConfigurations"("Id") ON DELETE RESTRICT COLLATE NOCASE,
+    CONSTRAINT "PK_CrawlJobLogs" PRIMARY KEY("Id"),
+    CHECK((("UpstreamId" IS NULL AND "LastSynchronizedOn" IS NULL) OR ("UpstreamId" IS NOT NULL AND "LastSynchronizedOn" IS NOT NULL)) AND "CreatedOn"<="ModifiedOn")
 )]]>
         </Text>
-        <Text Message="Creating index 'IDX_Subdirectory_Status'"><![CDATA[CREATE INDEX "IDX_Subdirectory_Status" ON "Subdirectories" ("Status")]]></Text>
+        <Text Message="Creating index 'IDX_CrawlJobLog_StatusCode'">
+            <![CDATA[CREATE INDEX "IDX_CrawlJobLog_StatusCode" ON "CrawlJobLogs" ("StatusCode")]]>
+        </Text>
         <Text Message="Creating table 'SubdirectoryAccessErrors'">
             <![CDATA[CREATE TABLE IF NOT EXISTS "SubdirectoryAccessErrors" (
-	"Id"	UNIQUEIDENTIFIER NOT NULL,
-    "Message" NVARCHAR(1024) NOT NULL CHECK(length(trim("Message")) = length("Message") AND length("Message")>0) COLLATE NOCASE,
+    "Id" UNIQUEIDENTIFIER NOT NULL COLLATE NOCASE,
+    "ErrorCode" UNSIGNED TINYINT NOT NULL CHECK("ErrorCode"<=5),
+    "Message" NVARCHAR(1024) NOT NULL CHECK(length(trim("Message"))=length("Message") AND length("Message")>0) COLLATE NOCASE,
     "Details" TEXT NOT NULL DEFAULT '',
-    "ErrorCode" INT NOT NULL,
-	"TargetId"	UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_AccessErrorSubdirectory" REFERENCES "Subdirectory"("Id") ON DELETE RESTRICT,
-	"CreatedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
-	"ModifiedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
-	CONSTRAINT "PK_SubdirectoryccessErrors" PRIMARY KEY("Id"),
-    CHECK(CreatedOn<=ModifiedOn)
-))]]>
+    "CreatedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+    "ModifiedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+    "TargetId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_AccessError_Subdirectory" REFERENCES "Subdirectories"("Id") ON DELETE RESTRICT COLLATE NOCASE,
+    CONSTRAINT "PK_SubdirectoryAccessErrors" PRIMARY KEY("Id"),
+    CHECK("CreatedOn"<="ModifiedOn")
+)]]>
         </Text>
         <Text Message="Creating table 'BinaryPropertySets'">
             <![CDATA[CREATE TABLE IF NOT EXISTS "BinaryPropertySets" (
-	"Id"	UNIQUEIDENTIFIER NOT NULL,
-	"Length"	BIGINT NOT NULL CHECK(Length>=0),
-	"Hash"	BINARY(16) CHECK(Hash IS NULL OR length(HASH)=16),
-    "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL,
+    "Id" UNIQUEIDENTIFIER NOT NULL COLLATE NOCASE,
+    "Length" BIGINT NOT NULL,
+    "Hash" BINARY(16) DEFAULT NULL,
+    "CreatedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+    "ModifiedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+    "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL COLLATE NOCASE,
     "LastSynchronizedOn" DATETIME DEFAULT NULL,
-	"CreatedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
-	"ModifiedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
-	CONSTRAINT "PK_BinaryPropertySet" PRIMARY KEY("Id"),
-	CONSTRAINT "UK_LengthHash" UNIQUE("Length","Hash"),
-    CHECK(CreatedOn<=ModifiedOn AND
-        (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL))
+    CONSTRAINT "PK_BinaryPropertySets" PRIMARY KEY("Id"),
+    CONSTRAINT "UK_BinaryPropertySet_Length_Hash" UNIQUE("Length", "Hash"),
+    CHECK((("UpstreamId" IS NULL AND "LastSynchronizedOn" IS NULL) OR ("UpstreamId" IS NOT NULL AND "LastSynchronizedOn" IS NOT NULL)) AND "CreatedOn"<="ModifiedOn")
 )]]>
         </Text>
-        <Text Message="Creating index 'IDX_BinaryPropertySet_Length'"><![CDATA[CREATE INDEX "IDX_BinaryPropertySet_Length" ON "BinaryPropertySets" ("Length")]]></Text>
-        <Text Message="Creating index 'IDX_BinaryPropertySet_Hash'"><![CDATA[CREATE INDEX "IDX_BinaryPropertySet_Hash" ON "BinaryPropertySets" ("Hash")]]></Text>
+        <Text Message="Creating index 'IDX_BinaryPropertySet_Length'">
+            <![CDATA[CREATE INDEX "IDX_BinaryPropertySet_Length" ON "BinaryPropertySets" ("Length")]]>
+        </Text>
+        <Text Message="Creating index 'IDX_BinaryPropertySet_Hash'">
+            <![CDATA[CREATE INDEX "IDX_BinaryPropertySet_Hash" ON "BinaryPropertySets" ("Hash")]]>
+        </Text>
         <Text Message="Creating table 'SummaryPropertySets'">
             <![CDATA[CREATE TABLE IF NOT EXISTS "SummaryPropertySets" (
-	"Id"	UNIQUEIDENTIFIER NOT NULL,
-	"ApplicationName" NVARCHAR(1024) DEFAULT NULL COLLATE NOCASE,
-	"Author" TEXT DEFAULT NULL COLLATE NOCASE,
-	"Comment" TEXT DEFAULT NULL COLLATE NOCASE,
-	"Keywords" TEXT DEFAULT NULL COLLATE NOCASE,
-	"Subject" NVARCHAR(1024) DEFAULT NULL COLLATE NOCASE,
-	"Title" NVARCHAR(1024) DEFAULT NULL COLLATE NOCASE,
-	"Category" TEXT DEFAULT NULL COLLATE NOCASE,
-	"Company" NVARCHAR(1024) DEFAULT NULL COLLATE NOCASE,
-	"ContentType" NVARCHAR(1024) DEFAULT NULL COLLATE NOCASE,
-	"Copyright" NVARCHAR(1024) DEFAULT NULL COLLATE NOCASE,
-	"ParentalRating" NVARCHAR(32) DEFAULT NULL COLLATE NOCASE,
-	"Rating" TINYINT CHECK("Rating" IS NULL OR ("Rating">0 AND "Rating"<100)) DEFAULT NULL,
-	"ItemAuthors" TEXT DEFAULT NULL COLLATE NOCASE,
-	"ItemType" NVARCHAR(32) DEFAULT NULL COLLATE NOCASE,
-	"ItemTypeText" NVARCHAR(64) DEFAULT NULL COLLATE NOCASE,
-	"Kind" TEXT DEFAULT NULL COLLATE NOCASE,
-	"MIMEType" NVARCHAR(1024) DEFAULT NULL COLLATE NOCASE,
-	"ParentalRatingReason" NVARCHAR(1024) DEFAULT NULL COLLATE NOCASE,
-	"ParentalRatingsOrganization" NVARCHAR(1024) DEFAULT NULL COLLATE NOCASE,
-	"Sensitivity" INT CHECK("Sensitivity" IS NULL OR ("Sensitivity">=0 AND "Sensitivity"<65536)) DEFAULT NULL,
-	"SensitivityText" NVARCHAR(1024) DEFAULT NULL COLLATE NOCASE,
-	"SimpleRating" TinyInt CHECK("SimpleRating" IS NULL OR ("SimpleRating">=0 AND "SimpleRating"<6)) DEFAULT NULL,
-	"Trademarks" NVARCHAR(1024) DEFAULT NULL COLLATE NOCASE,
-	"ProductName" NVARCHAR(256) DEFAULT NULL COLLATE NOCASE,
-	"UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL,
-	"LastSynchronizedOn" DATETIME DEFAULT NULL,
-	"CreatedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
-	"ModifiedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
-	CONSTRAINT "PK_SummaryPropertySet" PRIMARY KEY("Id"),
-    CHECK(CreatedOn<=ModifiedOn AND (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL))
+    "Id" UNIQUEIDENTIFIER NOT NULL COLLATE NOCASE,
+    "ApplicationName" NVARCHAR(1024) CHECK("ApplicationName" IS NULL OR length(trim("ApplicationName"))=length("ApplicationName")) DEFAULT NULL COLLATE NOCASE,
+    "Author" TEXT DEFAULT NULL,
+    "Comment" NVARCHAR(1024) DEFAULT NULL COLLATE NOCASE,
+    "Keywords" TEXT DEFAULT NULL,
+    "Subject" NVARCHAR(1024) CHECK("Subject" IS NULL OR length(trim("Subject"))=length("Subject")) DEFAULT NULL COLLATE NOCASE,
+    "Title" NVARCHAR(1024) CHECK("Title" IS NULL OR length(trim("Title"))=length("Title")) DEFAULT NULL COLLATE NOCASE,
+    "Company" NVARCHAR(1024) CHECK("Company" IS NULL OR length(trim("Company"))=length("Company")) DEFAULT NULL COLLATE NOCASE,
+    "ContentType" NVARCHAR(1024) CHECK("ContentType" IS NULL OR length(trim("ContentType"))=length("ContentType")) DEFAULT NULL COLLATE NOCASE,
+    "Copyright" NVARCHAR(1024) CHECK("Copyright" IS NULL OR length(trim("Copyright"))=length("Copyright")) DEFAULT NULL COLLATE NOCASE,
+    "ParentalRating" NVARCHAR(32) CHECK("ParentalRating" IS NULL OR length(trim("ParentalRating"))=length("ParentalRating")) DEFAULT NULL COLLATE NOCASE,
+    "Rating" UNSIGNED INT DEFAULT NULL,
+    "ItemAuthors" TEXT DEFAULT NULL,
+    "ItemType" NVARCHAR(32) CHECK("ItemType" IS NULL OR length(trim("ItemType"))=length("ItemType")) DEFAULT NULL COLLATE NOCASE,
+    "ItemTypeText" NVARCHAR(64) CHECK("ItemTypeText" IS NULL OR length(trim("ItemTypeText"))=length("ItemTypeText")) DEFAULT NULL COLLATE NOCASE,
+    "Kind" TEXT DEFAULT NULL,
+    "MIMEType" NVARCHAR(1024) CHECK("MIMEType" IS NULL OR length(trim("MIMEType"))=length("MIMEType")) DEFAULT NULL COLLATE NOCASE,
+    "ParentalRatingReason" NVARCHAR(1024) DEFAULT NULL COLLATE NOCASE,
+    "ParentalRatingsOrganization" NVARCHAR(1024) CHECK("ParentalRatingsOrganization" IS NULL OR length(trim("ParentalRatingsOrganization"))=length("ParentalRatingsOrganization")) DEFAULT NULL COLLATE NOCASE,
+    "Sensitivity" UNSIGNED SMALLINT DEFAULT NULL,
+    "SensitivityText" NVARCHAR(1024) CHECK("SensitivityText" IS NULL OR length(trim("SensitivityText"))=length("SensitivityText")) DEFAULT NULL COLLATE NOCASE,
+    "SimpleRating" UNSIGNED INT DEFAULT NULL,
+    "Trademarks" NVARCHAR(1024) CHECK("Trademarks" IS NULL OR length(trim("Trademarks"))=length("Trademarks")) DEFAULT NULL COLLATE NOCASE,
+    "ProductName" NVARCHAR(256) CHECK("ProductName" IS NULL OR length(trim("ProductName"))=length("ProductName")) DEFAULT NULL COLLATE NOCASE,
+    "CreatedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+    "ModifiedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+    "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL COLLATE NOCASE,
+    "LastSynchronizedOn" DATETIME DEFAULT NULL,
+    CONSTRAINT "PK_SummaryPropertySets" PRIMARY KEY("Id"),
+    CHECK((("UpstreamId" IS NULL AND "LastSynchronizedOn" IS NULL) OR ("UpstreamId" IS NOT NULL AND "LastSynchronizedOn" IS NOT NULL)) AND "CreatedOn"<="ModifiedOn")
 )]]>
         </Text>
         <Text Message="Creating table 'DocumentPropertySets'">
             <![CDATA[CREATE TABLE IF NOT EXISTS "DocumentPropertySets" (
-	"Id"	UNIQUEIDENTIFIER NOT NULL,
-	"ClientID" NVARCHAR(64) DEFAULT NULL COLLATE NOCASE,
-	"Contributor" TEXT DEFAULT NULL COLLATE NOCASE,
-	"DateCreated" DATETIME DEFAULT NULL,
-	"LastAuthor" NVARCHAR(1024) DEFAULT NULL COLLATE NOCASE,
-	"RevisionNumber" NVARCHAR(64) DEFAULT NULL COLLATE NOCASE,
-	"Security" INT DEFAULT NULL,
-	"Division" NVARCHAR(256) DEFAULT NULL COLLATE NOCASE,
-	"DocumentID" NVARCHAR(64) DEFAULT NULL COLLATE NOCASE,
-	"Manager" NVARCHAR(256) DEFAULT NULL COLLATE NOCASE,
-	"PresentationFormat" NVARCHAR(256) DEFAULT NULL COLLATE NOCASE,
-	"Version" NVARCHAR(64) DEFAULT NULL COLLATE NOCASE,
-	"UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL,
-	"LastSynchronizedOn" DATETIME DEFAULT NULL,
-	"CreatedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
-	"ModifiedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
-	CONSTRAINT "PK_DocumentPropertySet" PRIMARY KEY("Id"),
-    CHECK(CreatedOn<=ModifiedOn AND (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL))
+    "Id" UNIQUEIDENTIFIER NOT NULL COLLATE NOCASE,
+    "ClientID" NVARCHAR(64) CHECK("ClientID" IS NULL OR length(trim("ClientID"))=length("ClientID")) DEFAULT NULL COLLATE NOCASE,
+    "Contributor" TEXT DEFAULT NULL,
+    "DateCreated" DATETIME DEFAULT NULL,
+    "LastAuthor" NVARCHAR(1024) CHECK("LastAuthor" IS NULL OR length(trim("LastAuthor"))=length("LastAuthor")) DEFAULT NULL COLLATE NOCASE,
+    "RevisionNumber" NVARCHAR(64) CHECK("RevisionNumber" IS NULL OR length(trim("RevisionNumber"))=length("RevisionNumber")) DEFAULT NULL COLLATE NOCASE,
+    "Security" INT DEFAULT NULL,
+    "Division" NVARCHAR(256) CHECK("Division" IS NULL OR length(trim("Division"))=length("Division")) DEFAULT NULL COLLATE NOCASE,
+    "DocumentID" NVARCHAR(64) CHECK("DocumentID" IS NULL OR length(trim("DocumentID"))=length("DocumentID")) DEFAULT NULL COLLATE NOCASE,
+    "Manager" NVARCHAR(256) CHECK("Manager" IS NULL OR length(trim("Manager"))=length("Manager")) DEFAULT NULL COLLATE NOCASE,
+    "PresentationFormat" NVARCHAR(256) CHECK("PresentationFormat" IS NULL OR length(trim("PresentationFormat"))=length("PresentationFormat")) DEFAULT NULL COLLATE NOCASE,
+    "Version" NVARCHAR(64) CHECK("Version" IS NULL OR length(trim("Version"))=length("Version")) DEFAULT NULL COLLATE NOCASE,
+    "CreatedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+    "ModifiedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+    "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL COLLATE NOCASE,
+    "LastSynchronizedOn" DATETIME DEFAULT NULL,
+    CONSTRAINT "PK_DocumentPropertySets" PRIMARY KEY("Id"),
+    CHECK((("UpstreamId" IS NULL AND "LastSynchronizedOn" IS NULL) OR ("UpstreamId" IS NOT NULL AND "LastSynchronizedOn" IS NOT NULL)) AND "CreatedOn"<="ModifiedOn")
 )]]>
         </Text>
         <Text Message="Creating table 'AudioPropertySets'">
             <![CDATA[CREATE TABLE IF NOT EXISTS "AudioPropertySets" (
-	"Id"	UNIQUEIDENTIFIER NOT NULL,
-	"Compression" NVARCHAR(256) DEFAULT NULL COLLATE NOCASE,
-	"EncodingBitrate" BIGINT CHECK("EncodingBitrate" IS NULL OR ("EncodingBitrate">=0 AND "EncodingBitrate"<4294967296)) DEFAULT NULL,
-	"Format" NVARCHAR(256) DEFAULT NULL COLLATE NOCASE,
-	"IsVariableBitrate" BIT DEFAULT NULL,
-	"SampleRate" BIGINT CHECK("SampleRate" IS NULL OR ("SampleRate">=0 AND "SampleRate"<4294967296)) DEFAULT NULL,
-	"SampleSize" BIGINT CHECK("SampleSize" IS NULL OR ("SampleSize">=0 AND "SampleSize"<4294967296)) DEFAULT NULL,
-	"StreamName" NVARCHAR(256) DEFAULT NULL,
-	"StreamNumber" INT CHECK("StreamNumber" IS NULL OR ("StreamNumber">=0 AND "StreamNumber"<65536)) DEFAULT NULL,
-	"UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL,
-	"LastSynchronizedOn" DATETIME DEFAULT NULL,
-	"CreatedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
-	"ModifiedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
-	CONSTRAINT "PK_AudioPropertySet" PRIMARY KEY("Id"),
-    CHECK(CreatedOn<=ModifiedOn AND (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL))
+    "Id" UNIQUEIDENTIFIER NOT NULL COLLATE NOCASE,
+    "Compression" NVARCHAR(256) CHECK("Compression" IS NULL OR length(trim("Compression"))=length("Compression")) DEFAULT NULL COLLATE NOCASE,
+    "EncodingBitrate" UNSIGNED INT DEFAULT NULL,
+    "Format" NVARCHAR(256) CHECK("Format" IS NULL OR length(trim("Format"))=length("Format")) DEFAULT NULL COLLATE NOCASE,
+    "IsVariableBitrate" BIT DEFAULT NULL,
+    "SampleRate" UNSIGNED INT DEFAULT NULL,
+    "SampleSize" UNSIGNED INT DEFAULT NULL,
+    "StreamName" NVARCHAR(256) DEFAULT NULL COLLATE NOCASE,
+    "StreamNumber" UNSIGNED SMALLINT DEFAULT NULL,
+    "CreatedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+    "ModifiedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+    "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL COLLATE NOCASE,
+    "LastSynchronizedOn" DATETIME DEFAULT NULL,
+    CONSTRAINT "PK_AudioPropertySets" PRIMARY KEY("Id"),
+    CHECK((("UpstreamId" IS NULL AND "LastSynchronizedOn" IS NULL) OR ("UpstreamId" IS NOT NULL AND "LastSynchronizedOn" IS NOT NULL)) AND "CreatedOn"<="ModifiedOn")
 )]]>
         </Text>
         <Text Message="Creating table 'DRMPropertySets'">
             <![CDATA[CREATE TABLE IF NOT EXISTS "DRMPropertySets" (
-	"Id"	UNIQUEIDENTIFIER NOT NULL,
-	"DatePlayExpires" DATETIME DEFAULT NULL,
-	"DatePlayStarts" DATETIME DEFAULT NULL,
-	"Description" TEXT DEFAULT NULL COLLATE NOCASE,
-	"IsProtected" BIT DEFAULT NULL,
-	"PlayCount" BIGINT CHECK("PlayCount" IS NULL OR ("PlayCount">=0 AND "PlayCount"<4294967296)) DEFAULT NULL,
-	"UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL,
-	"LastSynchronizedOn" DATETIME DEFAULT NULL,
-	"CreatedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
-	"ModifiedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
-	CONSTRAINT "PK_DRMPropertySet" PRIMARY KEY("Id"),
-    CHECK(CreatedOn<=ModifiedOn AND (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL))
+    "Id" UNIQUEIDENTIFIER NOT NULL COLLATE NOCASE,
+    "DatePlayExpires" DATETIME DEFAULT NULL,
+    "DatePlayStarts" DATETIME DEFAULT NULL,
+    "Description" TEXT DEFAULT NULL,
+    "IsProtected" BIT DEFAULT NULL,
+    "PlayCount" UNSIGNED INT DEFAULT NULL,
+    "CreatedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+    "ModifiedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+    "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL COLLATE NOCASE,
+    "LastSynchronizedOn" DATETIME DEFAULT NULL,
+    CONSTRAINT "PK_DRMPropertySets" PRIMARY KEY("Id"),
+    CHECK((("UpstreamId" IS NULL AND "LastSynchronizedOn" IS NULL) OR ("UpstreamId" IS NOT NULL AND "LastSynchronizedOn" IS NOT NULL)) AND "CreatedOn"<="ModifiedOn")
 )]]>
         </Text>
         <Text Message="Creating table 'GPSPropertySets'">
             <![CDATA[CREATE TABLE IF NOT EXISTS "GPSPropertySets" (
-	"Id"	UNIQUEIDENTIFIER NOT NULL,
-	"AreaInformation" NVARCHAR(1024) DEFAULT NULL COLLATE NOCASE,
-	"LatitudeDegrees" DOUBLE DEFAULT NULL,
-	"LatitudeMinutes" DOUBLE DEFAULT NULL,
-	"Latitude" DOUBLE DEFAULT NULL,
-	"LatitudeRef" NVARCHAR(256) DEFAULT NULL COLLATE NOCASE,
-	"LongitudeDegrees" DOUBLE DEFAULT NULL,
-	"LongitudeMinutes" DOUBLE DEFAULT NULL,
-	"LongitudeSeconds" DOUBLE DEFAULT NULL,
-	"LongitudeRef" NVARCHAR(256) DEFAULT NULL COLLATE NOCASE,
-	"MeasureMode" NVARCHAR(256) DEFAULT NULL COLLATE NOCASE,
-	"ProcessingMethod" NVARCHAR(256) DEFAULT NULL,
-	"VersionID" NVARCHAR(128) DEFAULT NULL COLLATE NOCASE,
-	"UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL,
-	"LastSynchronizedOn" DATETIME DEFAULT NULL,
-	"CreatedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
-	"ModifiedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
-	CONSTRAINT "PK_GPSPropertySet" PRIMARY KEY("Id"),
-    CHECK(CreatedOn<=ModifiedOn AND (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL))
+    "Id" UNIQUEIDENTIFIER NOT NULL COLLATE NOCASE,
+    "AreaInformation" NVARCHAR(1024) CHECK("AreaInformation" IS NULL OR length(trim("AreaInformation"))=length("AreaInformation")) DEFAULT NULL COLLATE NOCASE,
+    "LatitudeDegrees" REAL DEFAULT NULL,
+    "LatitudeMinutes" REAL DEFAULT NULL,
+    "LatitudeSeconds" REAL DEFAULT NULL,
+    "LatitudeRef" NVARCHAR(256) CHECK("LatitudeRef" IS NULL OR length(trim("LatitudeRef"))=length("LatitudeRef")) DEFAULT NULL COLLATE NOCASE,
+    "LongitudeDegrees" REAL DEFAULT NULL,
+    "LongitudeMinutes" REAL DEFAULT NULL,
+    "LongitudeSeconds" REAL DEFAULT NULL,
+    "LongitudeRef" NVARCHAR(256) CHECK("LongitudeRef" IS NULL OR length(trim("LongitudeRef"))=length("LongitudeRef")) DEFAULT NULL COLLATE NOCASE,
+    "MeasureMode" NVARCHAR(256) CHECK("MeasureMode" IS NULL OR length(trim("MeasureMode"))=length("MeasureMode")) DEFAULT NULL COLLATE NOCASE,
+    "ProcessingMethod" NVARCHAR(256) CHECK("ProcessingMethod" IS NULL OR length(trim("ProcessingMethod"))=length("ProcessingMethod")) DEFAULT NULL COLLATE NOCASE,
+    "VersionID" VARBINARY(128) CHECK("VersionID" IS NULL OR length("VersionID")<129) DEFAULT NULL,
+    "CreatedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+    "ModifiedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+    "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL COLLATE NOCASE,
+    "LastSynchronizedOn" DATETIME DEFAULT NULL,
+    CONSTRAINT "PK_GPSPropertySets" PRIMARY KEY("Id"),
+    CHECK((("UpstreamId" IS NULL AND "LastSynchronizedOn" IS NULL) OR ("UpstreamId" IS NOT NULL AND "LastSynchronizedOn" IS NOT NULL)) AND "CreatedOn"<="ModifiedOn")
 )]]>
         </Text>
         <Text Message="Creating table 'ImagePropertySets'">
             <![CDATA[CREATE TABLE IF NOT EXISTS "ImagePropertySets" (
-	"Id"	UNIQUEIDENTIFIER NOT NULL,
-	"BitDepth" BIGINT CHECK("BitDepth" IS NULL OR ("BitDepth">=0 AND "BitDepth"<4294967296)) DEFAULT NULL,
-	"ColorSpace" INT CHECK("ColorSpace" IS NULL OR ("ColorSpace">=0 AND "ColorSpace"<65536)) DEFAULT NULL,
-	"CompressedBitsPerPixel" DOUBLE DEFAULT NULL,
-	"Compression" INT CHECK("Compression" IS NULL OR ("Compression">=0 AND "Compression"<65536)) DEFAULT NULL,
-	"CompressionText" NVARCHAR(256) DEFAULT NULL COLLATE NOCASE,
-	"HorizontalResolution" DOUBLE DEFAULT NULL,
-	"HorizontalSize" BIGINT CHECK("HorizontalSize" IS NULL OR ("HorizontalSize">=0 AND "HorizontalSize"<4294967296)) DEFAULT NULL,
-	"ImageID" NVARCHAR(256) DEFAULT NULL COLLATE NOCASE,
-	"ResolutionUnit" TINYINT DEFAULT NULL,
-	"VerticalResolution" DOUBLE DEFAULT NULL,
-	"VerticalSize" BIGINT CHECK("VerticalSize" IS NULL OR ("VerticalSize">=0 AND "VerticalSize"<4294967296)) DEFAULT NULL,
-	"UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL,
-	"LastSynchronizedOn" DATETIME DEFAULT NULL,
-	"CreatedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
-	"ModifiedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
-	CONSTRAINT "PK_ImagePropertySet" PRIMARY KEY("Id"),
-    CHECK(CreatedOn<=ModifiedOn AND (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL))
+    "Id" UNIQUEIDENTIFIER NOT NULL COLLATE NOCASE,
+    "BitDepth" UNSIGNED INT DEFAULT NULL,
+    "ColorSpace" UNSIGNED SMALLINT DEFAULT NULL,
+    "CompressedBitsPerPixel" REAL DEFAULT NULL,
+    "Compression" UNSIGNED SMALLINT DEFAULT NULL,
+    "CompressionText" NVARCHAR(256) CHECK("CompressionText" IS NULL OR length(trim("CompressionText"))=length("CompressionText")) DEFAULT NULL COLLATE NOCASE,
+    "HorizontalResolution" REAL DEFAULT NULL,
+    "HorizontalSize" UNSIGNED INT DEFAULT NULL,
+    "ImageID" NVARCHAR(256) CHECK("ImageID" IS NULL OR length(trim("ImageID"))=length("ImageID")) DEFAULT NULL COLLATE NOCASE,
+    "ResolutionUnit" SMALLINT DEFAULT NULL,
+    "VerticalResolution" REAL DEFAULT NULL,
+    "VerticalSize" UNSIGNED INT DEFAULT NULL,
+    "CreatedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+    "ModifiedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+    "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL COLLATE NOCASE,
+    "LastSynchronizedOn" DATETIME DEFAULT NULL,
+    CONSTRAINT "PK_ImagePropertySets" PRIMARY KEY("Id"),
+    CHECK((("UpstreamId" IS NULL AND "LastSynchronizedOn" IS NULL) OR ("UpstreamId" IS NOT NULL AND "LastSynchronizedOn" IS NOT NULL)) AND "CreatedOn"<="ModifiedOn")
 )]]>
         </Text>
         <Text Message="Creating table 'MediaPropertySets'">
             <![CDATA[CREATE TABLE IF NOT EXISTS "MediaPropertySets" (
-	"Id"	UNIQUEIDENTIFIER NOT NULL,
-	"ContentDistributor" NVARCHAR(256) DEFAULT NULL COLLATE NOCASE,
-	"CreatorApplication" NVARCHAR(256) DEFAULT NULL COLLATE NOCASE,
-	"CreatorApplicationVersion" NVARCHAR(64) DEFAULT NULL COLLATE NOCASE,
-	"DateReleased" NVARCHAR(64) DEFAULT NULL,
-	"Duration" BIGINT DEFAULT NULL,
-	"DVDID" NVARCHAR(64) DEFAULT NULL COLLATE NOCASE,
-	"FrameCount" BIGINT CHECK("FrameCount" IS NULL OR ("FrameCount">=0 AND "FrameCount"<4294967296)) DEFAULT NULL,
-	"Producer" TEXT DEFAULT NULL COLLATE NOCASE,
-	"ProtectionType" NVARCHAR(256) DEFAULT NULL COLLATE NOCASE,
-	"ProviderRating" NVARCHAR(256) DEFAULT NULL COLLATE NOCASE,
-	"ProviderStyle" NVARCHAR(256) DEFAULT NULL COLLATE NOCASE,
-	"Publisher" NVARCHAR(256) DEFAULT NULL COLLATE NOCASE,
-	"Subtitle" NVARCHAR(256) DEFAULT NULL COLLATE NOCASE,
-	"Writer" TEXT DEFAULT NULL COLLATE NOCASE,
-	"Year" BIGINT CHECK("Year" IS NULL OR ("Year">=0 AND "Year"<4294967296)) DEFAULT NULL,
-	"UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL,
-	"LastSynchronizedOn" DATETIME DEFAULT NULL,
-	"CreatedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
-	"ModifiedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
-	CONSTRAINT "PK_MediaPropertySet" PRIMARY KEY("Id"),
-    CHECK(CreatedOn<=ModifiedOn AND (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL))
+    "Id" UNIQUEIDENTIFIER NOT NULL COLLATE NOCASE,
+    "ContentDistributor" NVARCHAR(256) CHECK("ContentDistributor" IS NULL OR length(trim("ContentDistributor"))=length("ContentDistributor")) DEFAULT NULL COLLATE NOCASE,
+    "CreatorApplication" NVARCHAR(256) CHECK("CreatorApplication" IS NULL OR length(trim("CreatorApplication"))=length("CreatorApplication")) DEFAULT NULL COLLATE NOCASE,
+    "CreatorApplicationVersion" NVARCHAR(64) CHECK("CreatorApplicationVersion" IS NULL OR length(trim("CreatorApplicationVersion"))=length("CreatorApplicationVersion")) DEFAULT NULL COLLATE NOCASE,
+    "DateReleased" NVARCHAR(64) CHECK("DateReleased" IS NULL OR length(trim("DateReleased"))=length("DateReleased")) DEFAULT NULL COLLATE NOCASE,
+    "Duration" UNSIGNED BIGINT DEFAULT NULL,
+    "DVDID" NVARCHAR(64) CHECK("DVDID" IS NULL OR length(trim("DVDID"))=length("DVDID")) DEFAULT NULL COLLATE NOCASE,
+    "FrameCount" UNSIGNED INT DEFAULT NULL,
+    "Producer" TEXT DEFAULT NULL,
+    "ProtectionType" NVARCHAR(256) CHECK("ProtectionType" IS NULL OR length(trim("ProtectionType"))=length("ProtectionType")) DEFAULT NULL COLLATE NOCASE,
+    "ProviderRating" NVARCHAR(256) CHECK("ProviderRating" IS NULL OR length(trim("ProviderRating"))=length("ProviderRating")) DEFAULT NULL COLLATE NOCASE,
+    "ProviderStyle" NVARCHAR(256) CHECK("ProviderStyle" IS NULL OR length(trim("ProviderStyle"))=length("ProviderStyle")) DEFAULT NULL COLLATE NOCASE,
+    "Publisher" NVARCHAR(256) CHECK("Publisher" IS NULL OR length(trim("Publisher"))=length("Publisher")) DEFAULT NULL COLLATE NOCASE,
+    "Subtitle" NVARCHAR(256) CHECK("Subtitle" IS NULL OR length(trim("Subtitle"))=length("Subtitle")) DEFAULT NULL COLLATE NOCASE,
+    "Writer" TEXT DEFAULT NULL,
+    "Year" UNSIGNED INT DEFAULT NULL,
+    "CreatedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+    "ModifiedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+    "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL COLLATE NOCASE,
+    "LastSynchronizedOn" DATETIME DEFAULT NULL,
+    CONSTRAINT "PK_MediaPropertySets" PRIMARY KEY("Id"),
+    CHECK((("UpstreamId" IS NULL AND "LastSynchronizedOn" IS NULL) OR ("UpstreamId" IS NOT NULL AND "LastSynchronizedOn" IS NOT NULL)) AND "CreatedOn"<="ModifiedOn")
 )]]>
         </Text>
         <Text Message="Creating table 'MusicPropertySets'">
             <![CDATA[CREATE TABLE IF NOT EXISTS "MusicPropertySets" (
-	"Id"	UNIQUEIDENTIFIER NOT NULL,
-	"AlbumArtist" NVARCHAR(1024) DEFAULT NULL COLLATE NOCASE,
-	"AlbumTitle" NVARCHAR(1024) DEFAULT NULL COLLATE NOCASE,
-	"Artist" TEXT DEFAULT NULL COLLATE NOCASE,
-	"Composer" TEXT DEFAULT NULL COLLATE NOCASE,
-	"Conductor" TEXT DEFAULT NULL COLLATE NOCASE,
-	"DisplayArtist" TEXT DEFAULT NULL COLLATE NOCASE,
-	"Genre" TEXT DEFAULT NULL COLLATE NOCASE,
-	"PartOfSet" NVARCHAR(64) DEFAULT NULL COLLATE NOCASE,
-	"Period" NVARCHAR(64) DEFAULT NULL COLLATE NOCASE,
-	"TrackNumber" BIGINT CHECK("TrackNumber" IS NULL OR ("TrackNumber">=0 AND "TrackNumber"<4294967296)) DEFAULT NULL,
-	"UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL,
-	"LastSynchronizedOn" DATETIME DEFAULT NULL,
-	"CreatedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
-	"ModifiedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
-	CONSTRAINT "PK_MusicPropertySet" PRIMARY KEY("Id"),
-    CHECK(CreatedOn<=ModifiedOn AND (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL))
+    "Id" UNIQUEIDENTIFIER NOT NULL COLLATE NOCASE,
+    "AlbumArtist" NVARCHAR(1024) CHECK("AlbumArtist" IS NULL OR length(trim("AlbumArtist"))=length("AlbumArtist")) DEFAULT NULL COLLATE NOCASE,
+    "AlbumTitle" NVARCHAR(1024) CHECK("AlbumTitle" IS NULL OR length(trim("AlbumTitle"))=length("AlbumTitle")) DEFAULT NULL COLLATE NOCASE,
+    "Artist" TEXT DEFAULT NULL,
+    "ChannelCount" UNSIGNED INT DEFAULT NULL,
+    "Composer" TEXT DEFAULT NULL,
+    "Conductor" TEXT DEFAULT NULL,
+    "DisplayArtist" TEXT DEFAULT NULL,
+    "Genre" TEXT DEFAULT NULL,
+    "PartOfSet" NVARCHAR(64) CHECK("PartOfSet" IS NULL OR length(trim("PartOfSet"))=length("PartOfSet")) DEFAULT NULL COLLATE NOCASE,
+    "Period" NVARCHAR(64) CHECK("Period" IS NULL OR length(trim("Period"))=length("Period")) DEFAULT NULL COLLATE NOCASE,
+    "TrackNumber" UNSIGNED INT DEFAULT NULL,
+    "CreatedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+    "ModifiedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+    "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL COLLATE NOCASE,
+    "LastSynchronizedOn" DATETIME DEFAULT NULL,
+    CONSTRAINT "PK_MusicPropertySets" PRIMARY KEY("Id"),
+    CHECK((("UpstreamId" IS NULL AND "LastSynchronizedOn" IS NULL) OR ("UpstreamId" IS NOT NULL AND "LastSynchronizedOn" IS NOT NULL)) AND "CreatedOn"<="ModifiedOn")
 )]]>
         </Text>
         <Text Message="Creating table 'PhotoPropertySets'">
             <![CDATA[CREATE TABLE IF NOT EXISTS "PhotoPropertySets" (
-	"Id"	UNIQUEIDENTIFIER NOT NULL,
-	"CameraManufacturer" NVARCHAR(256) DEFAULT NULL COLLATE NOCASE,
-	"CameraModel" NVARCHAR(256) DEFAULT NULL COLLATE NOCASE,
-	"DateTaken" DATETIME DEFAULT NULL,
-	"Event" TEXT DEFAULT NULL COLLATE NOCASE,
-	"EXIFVersion" NVARCHAR(256) DEFAULT NULL COLLATE NOCASE,
-	"Orientation" INT CHECK("Orientation" IS NULL OR ("Orientation">=0 AND "Orientation"<65536)) DEFAULT NULL,
-	"OrientationText" NVARCHAR DEFAULT NULL COLLATE NOCASE,
-	"PeopleNames" TEXT DEFAULT NULL COLLATE NOCASE,
-	"UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL,
-	"LastSynchronizedOn" DATETIME DEFAULT NULL,
-	"CreatedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
-	"ModifiedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
-	CONSTRAINT "PK_PhotoPropertySet" PRIMARY KEY("Id"),
-    CHECK(CreatedOn<=ModifiedOn AND (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL))
+    "Id" UNIQUEIDENTIFIER NOT NULL COLLATE NOCASE,
+    "CameraManufacturer" NVARCHAR(256) CHECK("CameraManufacturer" IS NULL OR length(trim("CameraManufacturer"))=length("CameraManufacturer")) DEFAULT NULL COLLATE NOCASE,
+    "CameraModel" NVARCHAR(256) CHECK("CameraModel" IS NULL OR length(trim("CameraModel"))=length("CameraModel")) DEFAULT NULL COLLATE NOCASE,
+    "DateTaken" DATETIME DEFAULT NULL,
+    "Event" TEXT DEFAULT NULL,
+    "EXIFVersion" NVARCHAR(256) CHECK("EXIFVersion" IS NULL OR length(trim("EXIFVersion"))=length("EXIFVersion")) DEFAULT NULL COLLATE NOCASE,
+    "Orientation" UNSIGNED SMALLINT DEFAULT NULL,
+    "OrientationText" NVARCHAR(256) CHECK("OrientationText" IS NULL OR length(trim("OrientationText"))=length("OrientationText")) DEFAULT NULL COLLATE NOCASE,
+    "PeopleNames" TEXT DEFAULT NULL,
+    "CreatedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+    "ModifiedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+    "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL COLLATE NOCASE,
+    "LastSynchronizedOn" DATETIME DEFAULT NULL,
+    CONSTRAINT "PK_PhotoPropertySets" PRIMARY KEY("Id"),
+    CHECK((("UpstreamId" IS NULL AND "LastSynchronizedOn" IS NULL) OR ("UpstreamId" IS NOT NULL AND "LastSynchronizedOn" IS NOT NULL)) AND "CreatedOn"<="ModifiedOn")
 )]]>
         </Text>
         <Text Message="Creating table 'RecordedTVPropertySets'">
             <![CDATA[CREATE TABLE IF NOT EXISTS "RecordedTVPropertySets" (
-	"Id"	UNIQUEIDENTIFIER NOT NULL,
-	"ChannelNumber" BIGINT CHECK("ChannelNumber" IS NULL OR ("ChannelNumber">=0 AND "ChannelNumber"<4294967296)) DEFAULT NULL,
-	"EpisodeName" NVARCHAR(1024) DEFAULT NULL COLLATE NOCASE,
-	"IsDTVContent" BIT DEFAULT NULL,
-	"IsHDContent" BIT DEFAULT NULL,
-	"NetworkAffiliation" NVARCHAR(256) DEFAULT NULL COLLATE NOCASE,
-	"OriginalBroadcastDate" DATETIME DEFAULT NULL,
-	"ProgramDescription" TEXT DEFAULT NULL,
-	"StationCallSign" NVARCHAR(32) DEFAULT NULL COLLATE NOCASE,
-	"StationName" NVARCHAR(256) DEFAULT NULL COLLATE NOCASE,
-	"UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL,
-	"LastSynchronizedOn" DATETIME DEFAULT NULL,
-	"CreatedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
-	"ModifiedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
-	CONSTRAINT "PK_RecordedTVPropertySet" PRIMARY KEY("Id"),
-    CHECK(CreatedOn<=ModifiedOn AND (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL))
+    "Id" UNIQUEIDENTIFIER NOT NULL COLLATE NOCASE,
+    "ChannelNumber" UNSIGNED INT DEFAULT NULL,
+    "EpisodeName" NVARCHAR(1024) CHECK("EpisodeName" IS NULL OR length(trim("EpisodeName"))=length("EpisodeName")) DEFAULT NULL COLLATE NOCASE,
+    "IsDTVContent" BIT DEFAULT NULL,
+    "IsHDContent" BIT DEFAULT NULL,
+    "NetworkAffiliation" NVARCHAR(256) CHECK("NetworkAffiliation" IS NULL OR length(trim("NetworkAffiliation"))=length("NetworkAffiliation")) DEFAULT NULL COLLATE NOCASE,
+    "OriginalBroadcastDate" DATETIME DEFAULT NULL,
+    "ProgramDescription" TEXT DEFAULT NULL,
+    "StationCallSign" NVARCHAR(32) CHECK("StationCallSign" IS NULL OR length(trim("StationCallSign"))=length("StationCallSign")) DEFAULT NULL COLLATE NOCASE,
+    "StationName" NVARCHAR(256) CHECK("StationName" IS NULL OR length(trim("StationName"))=length("StationName")) DEFAULT NULL COLLATE NOCASE,
+    "CreatedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+    "ModifiedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+    "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL COLLATE NOCASE,
+    "LastSynchronizedOn" DATETIME DEFAULT NULL,
+    CONSTRAINT "PK_RecordedTVPropertySets" PRIMARY KEY("Id"),
+    CHECK((("UpstreamId" IS NULL AND "LastSynchronizedOn" IS NULL) OR ("UpstreamId" IS NOT NULL AND "LastSynchronizedOn" IS NOT NULL)) AND "CreatedOn"<="ModifiedOn")
 )]]>
         </Text>
         <Text Message="Creating table 'VideoPropertySets'">
             <![CDATA[CREATE TABLE IF NOT EXISTS "VideoPropertySets" (
-	"Id"	UNIQUEIDENTIFIER NOT NULL,
-	"Compression" NVARCHAR(256) DEFAULT NULL COLLATE NOCASE,
-	"Director" TEXT DEFAULT NULL COLLATE NOCASE,
-	"EncodingBitrate" BIGINT CHECK("EncodingBitrate" IS NULL OR ("EncodingBitrate">=0 AND "EncodingBitrate"<4294967296)) DEFAULT NULL,
-	"FrameHeight" BIGINT CHECK("FrameHeight" IS NULL OR ("FrameHeight">=0 AND "FrameHeight"<4294967296)) DEFAULT NULL,
-	"FrameRate" BIGINT CHECK("FrameRate" IS NULL OR ("FrameRate">=0 AND "FrameRate"<4294967296)) DEFAULT NULL,
-	"FrameWidth" BIGINT CHECK("FrameWidth" IS NULL OR ("FrameWidth">=0 AND "FrameWidth"<4294967296)) DEFAULT NULL,
-	"HorizontalAspectRatio" BIGINT CHECK("HorizontalAspectRatio" IS NULL OR ("HorizontalAspectRatio">=0 AND "HorizontalAspectRatio"<4294967296)) DEFAULT NULL,
-	"StreamName" NVARCHAR(256) DEFAULT NULL COLLATE NOCASE,
-	"StreamNumber" INT CHECK("StreamNumber" IS NULL OR ("StreamNumber">=0 AND "StreamNumber"<65536)) DEFAULT NULL,
-	"VerticalAspectRatio" BIGINT CHECK("VerticalAspectRatio" IS NULL OR ("VerticalAspectRatio">=0 AND "VerticalAspectRatio"<4294967296)) DEFAULT NULL,
-	"UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL,
-	"LastSynchronizedOn" DATETIME DEFAULT NULL,
-	"CreatedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
-	"ModifiedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
-	CONSTRAINT "PK_VideoPropertySet" PRIMARY KEY("Id"),
-    CHECK(CreatedOn<=ModifiedOn AND (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL))
-)]]>
-        </Text>
-        <Text Message="Creating table 'Files'">
-            <![CDATA[CREATE TABLE IF NOT EXISTS "Files" (
-	"Id"	UNIQUEIDENTIFIER NOT NULL,
-    "Name" NVARCHAR(1024) NOT NULL CHECK(length(trim("Name"))>0) COLLATE NOCASE,
-    "Options" TINYINT  NOT NULL CHECK("Options">=0 AND "Options"<15) DEFAULT 0,
-    "Status" TINYINT  NOT NULL CHECK("Status">=0 AND "Status"<10) DEFAULT 0,
-    "LastAccessed" DATETIME  NOT NULL,
-    "LastHashCalculation" DATETIME DEFAULT NULL,
-    "Notes" TEXT NOT NULL DEFAULT '',
-	"CreationTime"	DATETIME NOT NULL,
-	"LastWriteTime"	DATETIME NOT NULL,
-    "SummaryPropertySetId" UNIQUEIDENTIFIER DEFAULT NULL CONSTRAINT "FK_FileSummaryPropertySet" REFERENCES "SummaryPropertySets"("Id") ON DELETE RESTRICT,
-    "DocumentPropertySetId" UNIQUEIDENTIFIER DEFAULT NULL CONSTRAINT "FK_FileDocumentPropertySet" REFERENCES "DocumentPropertySets"("Id") ON DELETE RESTRICT,
-    "AudioPropertySetId" UNIQUEIDENTIFIER DEFAULT NULL CONSTRAINT "FK_FileAudioPropertySet" REFERENCES "AudioPropertySets"("Id") ON DELETE RESTRICT,
-    "DRMPropertySetId" UNIQUEIDENTIFIER DEFAULT NULL CONSTRAINT "FK_FileDRMPropertySet" REFERENCES "DRMPropertySets"("Id") ON DELETE RESTRICT,
-    "GPSPropertySetId" UNIQUEIDENTIFIER DEFAULT NULL CONSTRAINT "FK_FileGPSPropertySet" REFERENCES "GPSPropertySets"("Id") ON DELETE RESTRICT,
-    "ImagePropertySetId" UNIQUEIDENTIFIER DEFAULT NULL CONSTRAINT "FK_FileImagePropertySet" REFERENCES "ImagePropertySets"("Id") ON DELETE RESTRICT,
-    "MediaPropertySetId" UNIQUEIDENTIFIER DEFAULT NULL CONSTRAINT "FK_FileMediaPropertySet" REFERENCES "MediaPropertySets"("Id") ON DELETE RESTRICT,
-    "MusicPropertySetId" UNIQUEIDENTIFIER DEFAULT NULL CONSTRAINT "FK_FileMusicPropertySet" REFERENCES "MusicPropertySets"("Id") ON DELETE RESTRICT,
-    "PhotoPropertySetId" UNIQUEIDENTIFIER DEFAULT NULL CONSTRAINT "FK_FilePhotoPropertySet" REFERENCES "PhotoPropertySets"("Id") ON DELETE RESTRICT,
-    "RecordedTVPropertySetId" UNIQUEIDENTIFIER DEFAULT NULL CONSTRAINT "FK_FileRecordedTVPropertySet" REFERENCES "RecordedTVPropertySets"("Id") ON DELETE RESTRICT,
-    "VideoPropertySetId" UNIQUEIDENTIFIER DEFAULT NULL CONSTRAINT "FK_FileVideoPropertySet" REFERENCES "VideoPropertySets"("Id") ON DELETE RESTRICT,
-	"BinaryPropertySetId"	UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_FileBinaryPropertySet" REFERENCES "BinaryPropertySets"("Id") ON DELETE RESTRICT,
-	"ParentId"	UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_FileSubdirectory" REFERENCES "Subdirectories"("Id") ON DELETE RESTRICT,
-    "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL,
+    "Id" UNIQUEIDENTIFIER NOT NULL COLLATE NOCASE,
+    "Compression" NVARCHAR(256) CHECK("Compression" IS NULL OR length(trim("Compression"))=length("Compression")) DEFAULT NULL COLLATE NOCASE,
+    "Director" TEXT DEFAULT NULL,
+    "EncodingBitrate" UNSIGNED INT DEFAULT NULL,
+    "FrameHeight" UNSIGNED INT DEFAULT NULL,
+    "FrameRate" UNSIGNED INT DEFAULT NULL,
+    "FrameWidth" UNSIGNED INT DEFAULT NULL,
+    "HorizontalAspectRatio" UNSIGNED INT DEFAULT NULL,
+    "StreamNumber" UNSIGNED SMALLINT DEFAULT NULL,
+    "StreamName" NVARCHAR(256) CHECK("StreamName" IS NULL OR length(trim("StreamName"))=length("StreamName")) DEFAULT NULL COLLATE NOCASE,
+    "VerticalAspectRatio" UNSIGNED INT DEFAULT NULL,
+    "CreatedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+    "ModifiedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+    "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL COLLATE NOCASE,
     "LastSynchronizedOn" DATETIME DEFAULT NULL,
-	"CreatedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
-	"ModifiedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
-	CONSTRAINT "PK_Files" PRIMARY KEY("Id"),
-    CHECK(CreatedOn<=ModifiedOn AND LastAccessed >= CreatedOn AND
-        (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL))
-)]]>
-        </Text>
-        <Text Message="Creating index 'IDX_File_Status'"><![CDATA[CREATE INDEX "IDX_File_Status" ON "Files" ("Status")]]></Text>
-        <Text Message="Creating table 'FileAccessErrors'">
-            <![CDATA[CREATE TABLE IF NOT EXISTS "FileAccessErrors" (
-	"Id"	UNIQUEIDENTIFIER NOT NULL,
-    "Message" NVARCHAR(1024) NOT NULL CHECK(length(trim("Message")) = length("Message") AND length("Message")>0) COLLATE NOCASE,
-    "Details" TEXT NOT NULL DEFAULT '',
-    "ErrorCode" INT NOT NULL,
-	"TargetId"	UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_AccessErrorFile" REFERENCES "Files"("Id") ON DELETE RESTRICT,
-	"CreatedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
-	"ModifiedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
-	CONSTRAINT "PK_FileccessErrors" PRIMARY KEY("Id"),
-    CHECK(CreatedOn<=ModifiedOn)
+    CONSTRAINT "PK_VideoPropertySets" PRIMARY KEY("Id"),
+    CHECK((("UpstreamId" IS NULL AND "LastSynchronizedOn" IS NULL) OR ("UpstreamId" IS NOT NULL AND "LastSynchronizedOn" IS NOT NULL)) AND "CreatedOn"<="ModifiedOn")
 )]]>
         </Text>
         <Text Message="Creating table 'RedundantSets'">
             <![CDATA[CREATE TABLE IF NOT EXISTS "RedundantSets" (
-	"Id"	UNIQUEIDENTIFIER NOT NULL,
-    "Reference" NVARCHAR(128) NOT NULL DEFAULT '' COLLATE NOCASE,
+    "Id" UNIQUEIDENTIFIER NOT NULL COLLATE NOCASE,
+    "Reference" NVARCHAR(128) NOT NULL CHECK(length(trim("Reference"))=length("Reference")) COLLATE NOCASE,
     "Notes" TEXT NOT NULL DEFAULT '',
-	"BinaryPropertySetId"	UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_RedundantSetBinaryPropertySet" REFERENCES "BinaryPropertySets"("Id") ON DELETE RESTRICT,
-    "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL,
+    "CreatedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+    "ModifiedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+    "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL COLLATE NOCASE,
     "LastSynchronizedOn" DATETIME DEFAULT NULL,
-	"CreatedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
-	"ModifiedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
-	CONSTRAINT "PK_RedundantSets" PRIMARY KEY("Id"),
-    CHECK(CreatedOn<=ModifiedOn AND
-        (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL))
+    "BinaryPropertySetId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_RedundantSet_BinaryPropertySet" REFERENCES "BinaryPropertySets"("Id") ON DELETE RESTRICT COLLATE NOCASE,
+    CONSTRAINT "PK_RedundantSets" PRIMARY KEY("Id"),
+    CHECK((("UpstreamId" IS NULL AND "LastSynchronizedOn" IS NULL) OR ("UpstreamId" IS NOT NULL AND "LastSynchronizedOn" IS NOT NULL)) AND "CreatedOn"<="ModifiedOn")
+)]]>
+        </Text>
+        <Text Message="Creating table 'Files'">
+            <![CDATA[CREATE TABLE IF NOT EXISTS "Files" (
+    "Id" UNIQUEIDENTIFIER NOT NULL COLLATE NOCASE,
+    "Name" NVARCHAR(1024) NOT NULL COLLATE NOCASE,
+    "LastAccessed" DATETIME NOT NULL,
+    "Options" UNSIGNED TINYINT NOT NULL CHECK("Options"<=8) DEFAULT 0, -- FileCrawlOptions.None
+    "Status" UNSIGNED TINYINT NOT NULL CHECK("Status"<=9) DEFAULT 0, -- FileCorrelationStatus.Dissociated
+    "LastHashCalculation" DATETIME DEFAULT NULL,
+    "CreationTime" DATETIME NOT NULL,
+    "LastWriteTime" DATETIME NOT NULL,
+    "Notes" TEXT NOT NULL DEFAULT '',
+    "CreatedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+    "ModifiedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+    "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL COLLATE NOCASE,
+    "LastSynchronizedOn" DATETIME DEFAULT NULL,
+    "ParentId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_File_Parent" REFERENCES "Subdirectories"("Id") ON DELETE RESTRICT COLLATE NOCASE,
+    "BinaryPropertySetId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_File_BinaryPropertySet" REFERENCES "BinaryPropertySets"("Id") ON DELETE RESTRICT COLLATE NOCASE,
+    "SummaryPropertySetId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_File_SummaryPropertySet" REFERENCES "SummaryPropertySets"("Id") ON DELETE RESTRICT COLLATE NOCASE,
+    "DocumentPropertySetId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_File_DocumentPropertySet" REFERENCES "DocumentPropertySets"("Id") ON DELETE RESTRICT COLLATE NOCASE,
+    "AudioPropertySetId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_File_AudioPropertySet" REFERENCES "AudioPropertySets"("Id") ON DELETE RESTRICT COLLATE NOCASE,
+    "DRMPropertySetId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_File_DRMPropertySet" REFERENCES "DRMPropertySets"("Id") ON DELETE RESTRICT COLLATE NOCASE,
+    "GPSPropertySetId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_File_GPSPropertySet" REFERENCES "GPSPropertySets"("Id") ON DELETE RESTRICT COLLATE NOCASE,
+    "ImagePropertySetId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_File_ImagePropertySet" REFERENCES "ImagePropertySets"("Id") ON DELETE RESTRICT COLLATE NOCASE,
+    "MediaPropertySetId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_File_MediaPropertySet" REFERENCES "MediaPropertySets"("Id") ON DELETE RESTRICT COLLATE NOCASE,
+    "MusicPropertySetId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_File_MusicPropertySet" REFERENCES "MusicPropertySets"("Id") ON DELETE RESTRICT COLLATE NOCASE,
+    "PhotoPropertySetId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_File_PhotoPropertySet" REFERENCES "PhotoPropertySets"("Id") ON DELETE RESTRICT COLLATE NOCASE,
+    "RecordedTVPropertySetId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_File_RecordedTVPropertySet" REFERENCES "RecordedTVPropertySets"("Id") ON DELETE RESTRICT COLLATE NOCASE,
+    "VideoPropertySetId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_File_VideoPropertySet" REFERENCES "VideoPropertySets"("Id") ON DELETE RESTRICT COLLATE NOCASE,
+    CONSTRAINT "PK_Files" PRIMARY KEY("Id"),
+    CHECK((("UpstreamId" IS NULL AND "LastSynchronizedOn" IS NULL) OR ("UpstreamId" IS NOT NULL AND "LastSynchronizedOn" IS NOT NULL)) AND "CreatedOn"<="ModifiedOn")
+)]]>
+        </Text>
+        <Text Message="Creating index 'IDX_File_Status'">
+            <![CDATA[CREATE INDEX "IDX_File_Status" ON "Files" ("Status")]]>
+        </Text>
+        <Text Message="Creating table 'FileAccessErrors'">
+            <![CDATA[CREATE TABLE IF NOT EXISTS "FileAccessErrors" (
+    "Id" UNIQUEIDENTIFIER NOT NULL COLLATE NOCASE,
+    "ErrorCode" UNSIGNED TINYINT NOT NULL CHECK("ErrorCode"<=5),
+    "Message" NVARCHAR(1024) NOT NULL CHECK(length(trim("Message"))=length("Message") AND length("Message")>0) COLLATE NOCASE,
+    "Details" TEXT NOT NULL DEFAULT '',
+    "CreatedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+    "ModifiedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+    "TargetId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_AccessError_File" REFERENCES "Files"("Id") ON DELETE RESTRICT COLLATE NOCASE,
+    CONSTRAINT "PK_FileAccessErrors" PRIMARY KEY("Id"),
+    CHECK("CreatedOn"<="ModifiedOn")
 )]]>
         </Text>
         <Text Message="Creating table 'Redundancies'">
             <![CDATA[CREATE TABLE IF NOT EXISTS "Redundancies" (
-	"FileId"	UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_RedundancyFile" REFERENCES "Files"("Id") ON DELETE RESTRICT,
-	"RedundantSetId"	UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_RedundancyRedundantSet" REFERENCES "RedundantSets"("Id") ON DELETE RESTRICT,
-    "Reference" NVARCHAR(128) NOT NULL DEFAULT '' COLLATE NOCASE,
+    "FileId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_Redundancy_File" REFERENCES "Files"("Id") ON DELETE RESTRICT COLLATE NOCASE,
+    "RedundantSetId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_Redundancy_RedundantSet" REFERENCES "RedundantSets"("Id") ON DELETE RESTRICT COLLATE NOCASE,
+    "Reference" NVARCHAR(128) NOT NULL CHECK(length(trim("Reference"))=length("Reference")) COLLATE NOCASE,
     "Notes" TEXT NOT NULL DEFAULT '',
-    "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL,
+    "CreatedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+    "ModifiedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+    "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL COLLATE NOCASE,
     "LastSynchronizedOn" DATETIME DEFAULT NULL,
-	"CreatedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
-	"ModifiedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
-	CONSTRAINT "PK_Redundancies" PRIMARY KEY("FileId","RedundantSetId"),
-    CHECK(CreatedOn<=ModifiedOn AND
-        (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL))
+    CONSTRAINT "PK_Redundancies" PRIMARY KEY("FileId", "RedundantSetId"),
+    CHECK((("UpstreamId" IS NULL AND "LastSynchronizedOn" IS NULL) OR ("UpstreamId" IS NOT NULL AND "LastSynchronizedOn" IS NOT NULL)) AND "CreatedOn"<="ModifiedOn")
 )]]>
         </Text>
         <Text Message="Creating table 'Comparisons'">
             <![CDATA[CREATE TABLE IF NOT EXISTS "Comparisons" (
-    "BaselineId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_ComparisonBaseline" REFERENCES "Files"("Id") ON DELETE RESTRICT,
-    "CorrelativeId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_ComparisonCorrelative" REFERENCES "Files"("Id") ON DELETE RESTRICT,
+    "BaselineId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_Comparison_BaselineFile" REFERENCES "Files"("Id") ON DELETE RESTRICT COLLATE NOCASE,
+    "CorrelativeId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_Comparison_CorrelativeFile" REFERENCES "Files"("Id") ON DELETE RESTRICT COLLATE NOCASE,
     "AreEqual" BIT NOT NULL DEFAULT 0,
-    "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL,
+    "ComparedOn" DATETIME NOT NULL,
+    "CreatedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+    "ModifiedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+    "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL COLLATE NOCASE,
     "LastSynchronizedOn" DATETIME DEFAULT NULL,
-	"CreatedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
-	"ModifiedOn"	DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
-	CONSTRAINT "PK_Comparisons" PRIMARY KEY("BaselineId","CorrelativeId"),
-    CHECK(CreatedOn<=ModifiedOn AND BaselineId<>CorrelativeId AND
-        (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL))
+    CONSTRAINT "PK_Comparisons" PRIMARY KEY("BaselineId", "CorrelativeId"),
+    CHECK("BaselineId"<>"CorrelativeId" AND (("UpstreamId" IS NULL AND "LastSynchronizedOn" IS NULL) OR ("UpstreamId" IS NOT NULL AND "LastSynchronizedOn" IS NOT NULL)) AND "CreatedOn"<="ModifiedOn")
 )]]>
         </Text>
         <Text Message="Creating trigger 'validate_new_file_name'">
@@ -502,27 +546,27 @@ END]]>
 BEGIN
     SELECT RAISE (ABORT,'Duplicate file names are not allowed within the same subdirectory.');
 END]]>
-</Text>
-<Text Message="Creating trigger 'validate_new_subdirectory_name'">
-    <![CDATA[CREATE TRIGGER IF NOT EXISTS validate_new_subdirectory_name
+        </Text>
+        <Text Message="Creating trigger 'validate_new_subdirectory_name'">
+            <![CDATA[CREATE TRIGGER IF NOT EXISTS validate_new_subdirectory_name
    BEFORE INSERT
    ON "Subdirectories"
    WHEN NEW."ParentId" IS NOT NULL AND (SELECT COUNT(Id) FROM "Subdirectories" WHERE "Name"=NEW."Name" AND "ParentId"=NEW."ParentId" COLLATE BINARY)>0
 BEGIN
     SELECT RAISE (ABORT,'Duplicate file names are not allowed within the same subdirectory.');
 END]]>
-</Text>
-<Text Message="Creating trigger 'validate_subdirectory_name_change'">
-    <![CDATA[CREATE TRIGGER IF NOT EXISTS validate_subdirectory_name_change
+        </Text>
+        <Text Message="Creating trigger 'validate_subdirectory_name_change'">
+            <![CDATA[CREATE TRIGGER IF NOT EXISTS validate_subdirectory_name_change
    BEFORE UPDATE
    ON "Subdirectories"
    WHEN NEW."ParentId" IS NOT NULL AND OLD."Name"<>NEW."Name" AND (SELECT COUNT(Id) FROM "Files" WHERE "Name"=NEW."Name" AND "ParentId"=NEW."ParentId" COLLATE BINARY)>0
 BEGIN
     SELECT RAISE (ABORT,'Duplicate file names are not allowed within the same subdirectory.');
 END]]>
-</Text>
-<Text Message="Creating trigger 'validate_new_subdirectory_parent'">
-    <![CDATA[CREATE TRIGGER IF NOT EXISTS validate_new_subdirectory_parent
+        </Text>
+        <Text Message="Creating trigger 'validate_new_subdirectory_parent'">
+            <![CDATA[CREATE TRIGGER IF NOT EXISTS validate_new_subdirectory_parent
    BEFORE INSERT
    ON "Subdirectories"
    WHEN (NEW."ParentId" IS NULL) = (NEW."VolumeId" IS NULL)
@@ -538,23 +582,41 @@ END]]>
 BEGIN
     SELECT RAISE (ABORT,'ParentId and VolumeId are exclusive and cannot simultaneously be null or have a value.');
 END]]>
-</Text>
-<Text Message="Creating trigger 'validate_new_root_subdirectory'">
-    <![CDATA[CREATE TRIGGER IF NOT EXISTS validate_new_root_subdirectory
+        </Text>
+        <Text Message="Creating trigger 'validate_new_root_subdirectory'">
+            <![CDATA[CREATE TRIGGER IF NOT EXISTS validate_new_root_subdirectory
    BEFORE INSERT
    ON "Subdirectories"
    WHEN NEW."VolumeId" IS NOT NULL AND (SELECT COUNT(Id) FROM "Subdirectories" WHERE "Id"=NEW."VolumeId")>0
 BEGIN
     SELECT RAISE (ABORT,'Volume already as a root subdirectory.');
 END]]>
-</Text>
-<Text Message="Creating trigger 'validate_root_subdirectory_change'">
-    <![CDATA[CREATE TRIGGER IF NOT EXISTS validate_root_subdirectory_change
+        </Text>
+        <Text Message="Creating trigger 'validate_root_subdirectory_change'">
+            <![CDATA[CREATE TRIGGER IF NOT EXISTS validate_root_subdirectory_change
    BEFORE UPDATE
    ON "Subdirectories"
    WHEN OLD."VolumeId"<>NEW."VolumeId" AND (SELECT COUNT(Id) FROM "Subdirectories" WHERE "Id"=NEW."VolumeId")>0
 BEGIN
     SELECT RAISE (ABORT,'Volume already as a root subdirectory.');
+END]]>
+        </Text>
+        <Text Message="Creating trigger 'validate_new_crawlconfiguration'">
+            <![CDATA[CREATE TRIGGER IF NOT EXISTS validate_new_crawlconfiguration
+   BEFORE INSERT
+   ON "CrawlConfigurations"
+   WHEN (SELECT COUNT(Id) FROM "CrawlConfigurations" WHERE "RootId"=NEW."RootId")>0
+BEGIN
+    SELECT RAISE (ABORT,'Subdirectory already has a crawl configuration.');
+END]]>
+        </Text>
+        <Text Message="Creating trigger 'validate_crawlconfiguration_root_change'">
+            <![CDATA[CREATE TRIGGER IF NOT EXISTS validate_crawlconfiguration_root_change
+   BEFORE UPDATE
+   ON "CrawlConfigurations"
+   WHEN OLD."RootId"<>NEW."RootId" AND (SELECT COUNT(Id) FROM "CrawlConfigurations" WHERE "RootId"=NEW."RootId")>0
+BEGIN
+    SELECT RAISE (ABORT,'Subdirectory already has a crawl configuration.');
 END]]>
         </Text>
         <Text Message="Creating trigger 'validate_new_redundancy'">
@@ -565,50 +627,26 @@ END]]>
 BEGIN
     SELECT RAISE (ABORT,'File does not have the same binary property set as the redundancy set.');
 END]]>
-</Text>
-<Text Message="Creating trigger 'validate_redundancy_change'">
-    <![CDATA[CREATE TRIGGER IF NOT EXISTS validate_redundancy_change
+        </Text>
+        <Text Message="Creating trigger 'validate_redundancy_change'">
+            <![CDATA[CREATE TRIGGER IF NOT EXISTS validate_redundancy_change
    BEFORE UPDATE
    ON Redundancies
    WHEN (NEW.FileId<>OLD.FileID OR NEW.RedundantSetId<>OLD.RedundantSetId) AND (SELECT COUNT(f.Id) FROM Files f LEFT JOIN RedundantSets r ON f.BinaryPropertySetId=r.BinaryPropertySetId WHERE f.Id=NEW.FileId AND r.Id=NEW.RedundantSetId)=0
 BEGIN
     SELECT RAISE (ABORT,'File does not have the same binary property set as the redundancy set.');
 END]]>
-</Text>
-<Text Message="Creating trigger 'validate_new_crawl_config'">
-    <![CDATA[CREATE TRIGGER IF NOT EXISTS validate_new_crawl_config
-   BEFORE INSERT
-   ON Subdirectories
-   WHEN NEW.CrawlConfigurationId IS NOT NULL AND (SELECT COUNT(Id) FROM Subdirectories WHERE CrawlConfigurationId=NEW.CrawlConfigurationId)<>0
-BEGIN
-    SELECT RAISE (ABORT,'Crawl configuration can only be applied to one subdirectory.');
-END]]>
-</Text>
-<Text Message="Creating trigger 'validate_crawl_config_change'">
-    <![CDATA[CREATE TRIGGER IF NOT EXISTS validate_crawl_config_change
-   BEFORE UPDATE
-   ON Subdirectories
-   WHEN NEW.CrawlConfigurationId IS NOT NULL AND NEW.CrawlConfigurationId<>OLD.CrawlConfigurationId AND (SELECT COUNT(Id) FROM Subdirectories WHERE Id<>NEW.Id AND CrawlConfigurationId=NEW.CrawlConfigurationId)<>0
-BEGIN
-    SELECT RAISE (ABORT,'Crawl configuration can only be applied to one subdirectory.');
-END]]>
         </Text>
     </DbCreation>
     <DropTables>
-        <Text Message="Dropping table 'VolumeAccessErrors'">
-            <![CDATA[DROP TABLE IF EXISTS "VolumeAccessErrors"]]>
-        </Text>
-        <Text Message="Dropping table 'SubdirectoryAccessErrors'">
-            <![CDATA[DROP TABLE IF EXISTS "SubdirectoryAccessErrors"]]>
-        </Text>
-        <Text Message="Dropping table 'FileAccessErrors'">
-            <![CDATA[DROP TABLE IF EXISTS "FileAccessErrors"]]>
-        </Text>
         <Text Message="Dropping table 'Comparisons'">
             <![CDATA[DROP TABLE IF EXISTS "Comparisons"]]>
         </Text>
         <Text Message="Dropping table 'Redundancies'">
             <![CDATA[DROP TABLE IF EXISTS "Redundancies"]]>
+        </Text>
+        <Text Message="Dropping table 'FileAccessErrors'">
+            <![CDATA[DROP TABLE IF EXISTS "FileAccessErrors"]]>
         </Text>
         <Text Message="Dropping table 'Files'">
             <![CDATA[DROP TABLE IF EXISTS "Files"]]>
@@ -616,53 +654,62 @@ END]]>
         <Text Message="Dropping table 'RedundantSets'">
             <![CDATA[DROP TABLE IF EXISTS "RedundantSets"]]>
         </Text>
-        <Text Message="Dropping table 'BinaryPropertySets'">
-            <![CDATA[DROP TABLE IF EXISTS "BinaryPropertySets"]]>
-        </Text>
-        <Text Message="Dropping table 'SummaryPropertySets'">
-            <![CDATA[DROP TABLE IF EXISTS "SummaryPropertySets"]]>
-        </Text>
-        <Text Message="Dropping table 'DocumentPropertySets'">
-            <![CDATA[DROP TABLE IF EXISTS "DocumentPropertySets"]]>
-        </Text>
-        <Text Message="Dropping table 'AudioPropertySets'">
-            <![CDATA[DROP TABLE IF EXISTS "AudioPropertySets"]]>
-        </Text>
-        <Text Message="Dropping table 'DRMPropertySets'">
-            <![CDATA[DROP TABLE IF EXISTS "DRMPropertySets"]]>
-        </Text>
-        <Text Message="Dropping table 'GPSPropertySets'">
-            <![CDATA[DROP TABLE IF EXISTS "GPSPropertySets"]]>
-        </Text>
-        <Text Message="Dropping table 'ImagePropertySets'">
-            <![CDATA[DROP TABLE IF EXISTS "ImagePropertySets"]]>
-        </Text>
-        <Text Message="Dropping table 'MediaPropertySets'">
-            <![CDATA[DROP TABLE IF EXISTS "MediaPropertySets"]]>
-        </Text>
-        <Text Message="Dropping table 'MusicPropertySets'">
-            <![CDATA[DROP TABLE IF EXISTS "MusicPropertySets"]]>
-        </Text>
-        <Text Message="Dropping table 'PhotoPropertySets'">
-            <![CDATA[DROP TABLE IF EXISTS "PhotoPropertySets"]]>
+        <Text Message="Dropping table 'VideoPropertySets'">
+            <![CDATA[DROP TABLE IF EXISTS "VideoPropertySets"]]>
         </Text>
         <Text Message="Dropping table 'RecordedTVPropertySets'">
             <![CDATA[DROP TABLE IF EXISTS "RecordedTVPropertySets"]]>
         </Text>
-        <Text Message="Dropping table 'VideoPropertySets'">
-            <![CDATA[DROP TABLE IF EXISTS "VideoPropertySets";]]>
+        <Text Message="Dropping table 'PhotoPropertySets'">
+            <![CDATA[DROP TABLE IF EXISTS "PhotoPropertySets"]]>
         </Text>
-        <Text Message="Turning foreign_keys OFF">
-            <![CDATA[PRAGMA foreign_keys = OFF]]>
+        <Text Message="Dropping table 'MusicPropertySets'">
+            <![CDATA[DROP TABLE IF EXISTS "MusicPropertySets"]]>
+        </Text>
+        <Text Message="Dropping table 'MediaPropertySets'">
+            <![CDATA[DROP TABLE IF EXISTS "MediaPropertySets"]]>
+        </Text>
+        <Text Message="Dropping table 'ImagePropertySets'">
+            <![CDATA[DROP TABLE IF EXISTS "ImagePropertySets"]]>
+        </Text>
+        <Text Message="Dropping table 'GPSPropertySets'">
+            <![CDATA[DROP TABLE IF EXISTS "GPSPropertySets"]]>
+        </Text>
+        <Text Message="Dropping table 'DRMPropertySets'">
+            <![CDATA[DROP TABLE IF EXISTS "DRMPropertySets"]]>
+        </Text>
+        <Text Message="Dropping table 'AudioPropertySets'">
+            <![CDATA[DROP TABLE IF EXISTS "AudioPropertySets"]]>
+        </Text>
+        <Text Message="Dropping table 'DocumentPropertySets'">
+            <![CDATA[DROP TABLE IF EXISTS "DocumentPropertySets"]]>
+        </Text>
+        <Text Message="Dropping table 'SummaryPropertySets'">
+            <![CDATA[DROP TABLE IF EXISTS "SummaryPropertySets"]]>
+        </Text>
+        <Text Message="Dropping table 'BinaryPropertySets'">
+            <![CDATA[DROP TABLE IF EXISTS "BinaryPropertySets"]]>
+        </Text>
+        <Text Message="Dropping table 'SubdirectoryAccessErrors'">
+            <![CDATA[DROP TABLE IF EXISTS "SubdirectoryAccessErrors"]]>
+        </Text>
+        <Text Message="Dropping table 'CrawlJobLogs'">
+            <![CDATA[DROP TABLE IF EXISTS "CrawlJobLogs"]]>
+        </Text>
+        <Text Message="Dropping table 'CrawlConfigurations'">
+            <![CDATA[DROP TABLE IF EXISTS "CrawlConfigurations"]]>
+        </Text>
+        <Text Message="Dropping table 'Subdirectories'">
+            <![CDATA[PRAGMA foreign_keys=off"]]>
         </Text>
         <Text Message="Dropping table 'Subdirectories'">
             <![CDATA[DROP TABLE IF EXISTS "Subdirectories"]]>
         </Text>
-        <Text Message="Turning foreign_keys back ON">
-            <![CDATA[PRAGMA foreign_keys = ON]]>
-        </Text>
         <Text Message="Dropping table 'Subdirectories'">
-            <![CDATA[DROP TABLE IF EXISTS "CrawlConfigurations"]]>
+            <![CDATA[PRAGMA foreign_keys=on"]]>
+        </Text>
+        <Text Message="Dropping table 'VolumeAccessErrors'">
+            <![CDATA[DROP TABLE IF EXISTS "VolumeAccessErrors"]]>
         </Text>
         <Text Message="Dropping table 'Volumes'">
             <![CDATA[DROP TABLE IF EXISTS "Volumes"]]>

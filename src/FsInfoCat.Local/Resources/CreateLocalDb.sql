@@ -20,7 +20,9 @@ DROP TABLE IF EXISTS "BinaryPropertySets";
 DROP TABLE IF EXISTS "SubdirectoryAccessErrors";
 DROP TABLE IF EXISTS "CrawlJobLogs";
 DROP TABLE IF EXISTS "CrawlConfigurations";
+PRAGMA foreign_keys=off;
 DROP TABLE IF EXISTS "Subdirectories";
+PRAGMA foreign_keys=on;
 DROP TABLE IF EXISTS "VolumeAccessErrors";
 DROP TABLE IF EXISTS "Volumes";
 DROP TABLE IF EXISTS "SymbolicNames";
@@ -30,7 +32,7 @@ DROP TABLE IF EXISTS "FileSystems";
 
 CREATE TABLE IF NOT EXISTS "FileSystems" (
     "Id" UNIQUEIDENTIFIER NOT NULL COLLATE NOCASE,
-    "DisplayName" NVARCHAR(1024) NOT NULL CHECK(length(trim("DisplayName"))=length("DisplayName") AND "DisplayName">0) COLLATE NOCASE,
+    "DisplayName" NVARCHAR(1024) NOT NULL CHECK(length(trim("DisplayName"))=length("DisplayName") AND length("DisplayName")>0) COLLATE NOCASE,
     "CaseSensitiveSearch" BIT NOT NULL DEFAULT 0,
     "ReadOnly" BIT NOT NULL DEFAULT 0,
     "MaxNameLength" UNSIGNED INT NOT NULL DEFAULT 255,
@@ -52,15 +54,15 @@ CREATE INDEX "IDX_FileSystem_IsInactive" ON "FileSystems" ("IsInactive");
 
 CREATE TABLE IF NOT EXISTS "SymbolicNames" (
     "Id" UNIQUEIDENTIFIER NOT NULL COLLATE NOCASE,
-    "Name" NVARCHAR(256) NOT NULL CHECK(length(trim("Name"))=length("Name") AND "Name">0) COLLATE NOCASE,
+    "Name" NVARCHAR(256) NOT NULL CHECK(length(trim("Name"))=length("Name") AND length("Name")>0) COLLATE NOCASE,
     "Notes" TEXT NOT NULL DEFAULT '',
     "Priority" INT NOT NULL DEFAULT 0,
     "IsInactive" BIT NOT NULL DEFAULT 0,
-    "FileSystemId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_SymbolicName_FileSystem" REFERENCES "FileSystems"("Id") ON DELETE RESTRICT COLLATE NOCASE,
     "CreatedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
     "ModifiedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
     "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL COLLATE NOCASE,
     "LastSynchronizedOn" DATETIME DEFAULT NULL,
+    "FileSystemId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_SymbolicName_FileSystem" REFERENCES "FileSystems"("Id") ON DELETE RESTRICT COLLATE NOCASE,
     CONSTRAINT "PK_SymbolicNames" PRIMARY KEY("Id"),
     CONSTRAINT "UK_FileSystem_Name" UNIQUE("Name"),
     CHECK((("UpstreamId" IS NULL AND "LastSynchronizedOn" IS NULL) OR ("UpstreamId" IS NOT NULL AND "LastSynchronizedOn" IS NOT NULL)) AND "CreatedOn"<="ModifiedOn")
@@ -72,7 +74,7 @@ CREATE INDEX "IDX_SymbolicName_IsInactive" ON "SymbolicNames" ("IsInactive");
 
 CREATE TABLE IF NOT EXISTS "Volumes" (
     "Id" UNIQUEIDENTIFIER NOT NULL COLLATE NOCASE,
-    "DisplayName" NVARCHAR(1024) NOT NULL CHECK(length(trim("DisplayName"))=length("DisplayName") AND "DisplayName">0) COLLATE NOCASE,
+    "DisplayName" NVARCHAR(1024) NOT NULL CHECK(length(trim("DisplayName"))=length("DisplayName") AND length("DisplayName")>0) COLLATE NOCASE,
     "VolumeName" NVARCHAR(128) NOT NULL CHECK(length(trim("VolumeName"))=length("VolumeName")) DEFAULT '' COLLATE NOCASE,
     "Identifier" NVARCHAR(1024) NOT NULL COLLATE NOCASE,
     "CaseSensitiveSearch" BIT DEFAULT NULL,
@@ -100,11 +102,11 @@ CREATE INDEX "IDX_Volume_Status" ON "Volumes" ("Status");
 CREATE TABLE IF NOT EXISTS "VolumeAccessErrors" (
     "Id" UNIQUEIDENTIFIER NOT NULL COLLATE NOCASE,
     "ErrorCode" UNSIGNED TINYINT NOT NULL CHECK("ErrorCode"<=5),
-    "Message" NVARCHAR(1024) NOT NULL CHECK(length(trim("Message"))=length("Message") AND "Message">0) COLLATE NOCASE,
+    "Message" NVARCHAR(1024) NOT NULL CHECK(length(trim("Message"))=length("Message") AND length("Message")>0) COLLATE NOCASE,
     "Details" TEXT NOT NULL DEFAULT '',
     "CreatedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
     "ModifiedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
-    "TargetId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_AccessError_DbEntity" REFERENCES "Volumes"("Id") ON DELETE RESTRICT COLLATE NOCASE,
+    "TargetId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_AccessError_Volume" REFERENCES "Volumes"("Id") ON DELETE RESTRICT COLLATE NOCASE,
     CONSTRAINT "PK_VolumeAccessErrors" PRIMARY KEY("Id"),
     CHECK("CreatedOn"<="ModifiedOn")
 );
@@ -122,7 +124,7 @@ CREATE TABLE IF NOT EXISTS "Subdirectories" (
     "ModifiedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
     "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL COLLATE NOCASE,
     "LastSynchronizedOn" DATETIME DEFAULT NULL,
-    "ParentId" UNIQUEIDENTIFIER CONSTRAINT "FK_DbFsItem_Subdirectory" REFERENCES "Subdirectories"("Id") ON DELETE RESTRICT COLLATE NOCASE,
+    "ParentId" UNIQUEIDENTIFIER CONSTRAINT "FK_Subdirectory_Parent" REFERENCES "Subdirectories"("Id") ON DELETE RESTRICT COLLATE NOCASE,
     "VolumeId" UNIQUEIDENTIFIER CONSTRAINT "FK_Subdirectory_Volume" REFERENCES "Volumes"("Id") ON DELETE RESTRICT COLLATE NOCASE,
     CONSTRAINT "PK_Subdirectories" PRIMARY KEY("Id"),
     CHECK((("ParentId" IS NULL AND "VolumeId" IS NOT NULL) OR ("ParentId" IS NOT NULL AND "VolumeId" IS NULL)) AND (("UpstreamId" IS NULL AND "LastSynchronizedOn" IS NULL) OR ("UpstreamId" IS NOT NULL AND "LastSynchronizedOn" IS NOT NULL)) AND "CreatedOn"<="ModifiedOn")
@@ -132,7 +134,7 @@ CREATE INDEX "IDX_Subdirectory_Status" ON "Subdirectories" ("Status");
 
 CREATE TABLE IF NOT EXISTS "CrawlConfigurations" (
     "Id" UNIQUEIDENTIFIER NOT NULL COLLATE NOCASE,
-    "DisplayName" NVARCHAR(1024) NOT NULL CHECK(length(trim("DisplayName"))=length("DisplayName") AND "DisplayName">0) COLLATE NOCASE,
+    "DisplayName" NVARCHAR(1024) NOT NULL CHECK(length(trim("DisplayName"))=length("DisplayName") AND length("DisplayName")>0) COLLATE NOCASE,
     "MaxRecursionDepth" UNSIGNED SMALLINT NOT NULL DEFAULT 128,
     "MaxTotalItems" UNSIGNED BIGINT DEFAULT NULL,
     "TTL" BIGINT DEFAULT NULL,
@@ -148,7 +150,7 @@ CREATE TABLE IF NOT EXISTS "CrawlConfigurations" (
     "ModifiedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
     "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL COLLATE NOCASE,
     "LastSynchronizedOn" DATETIME DEFAULT NULL,
-    "RootId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_CrawlConfiguration_Subdirectory" REFERENCES "Subdirectories"("Id") ON DELETE RESTRICT COLLATE NOCASE,
+    "RootId" UNIQUEIDENTIFIER CONSTRAINT "FK_CrawlConfiguration_Root" REFERENCES "Subdirectories"("Id") ON DELETE RESTRICT COLLATE NOCASE,
     CONSTRAINT "PK_CrawlConfigurations" PRIMARY KEY("Id"),
     CHECK((("UpstreamId" IS NULL AND "LastSynchronizedOn" IS NULL) OR ("UpstreamId" IS NOT NULL AND "LastSynchronizedOn" IS NOT NULL)) AND "CreatedOn"<="ModifiedOn")
 );
@@ -180,11 +182,11 @@ CREATE INDEX "IDX_CrawlJobLog_StatusCode" ON "CrawlJobLogs" ("StatusCode");
 CREATE TABLE IF NOT EXISTS "SubdirectoryAccessErrors" (
     "Id" UNIQUEIDENTIFIER NOT NULL COLLATE NOCASE,
     "ErrorCode" UNSIGNED TINYINT NOT NULL CHECK("ErrorCode"<=5),
-    "Message" NVARCHAR(1024) NOT NULL CHECK(length(trim("Message"))=length("Message") AND "Message">0) COLLATE NOCASE,
+    "Message" NVARCHAR(1024) NOT NULL CHECK(length(trim("Message"))=length("Message") AND length("Message")>0) COLLATE NOCASE,
     "Details" TEXT NOT NULL DEFAULT '',
     "CreatedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
     "ModifiedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
-    "TargetId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_AccessError_DbEntity" REFERENCES "Volumes"("Id") ON DELETE RESTRICT COLLATE NOCASE,
+    "TargetId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_AccessError_Subdirectory" REFERENCES "Subdirectories"("Id") ON DELETE RESTRICT COLLATE NOCASE,
     CONSTRAINT "PK_SubdirectoryAccessErrors" PRIMARY KEY("Id"),
     CHECK("CreatedOn"<="ModifiedOn")
 );
@@ -466,7 +468,7 @@ CREATE TABLE IF NOT EXISTS "Files" (
     "ModifiedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
     "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL COLLATE NOCASE,
     "LastSynchronizedOn" DATETIME DEFAULT NULL,
-    "ParentId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_DbFsItem_Subdirectory" REFERENCES "Subdirectories"("Id") ON DELETE RESTRICT COLLATE NOCASE,
+    "ParentId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_File_Parent" REFERENCES "Subdirectories"("Id") ON DELETE RESTRICT COLLATE NOCASE,
     "BinaryPropertySetId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_File_BinaryPropertySet" REFERENCES "BinaryPropertySets"("Id") ON DELETE RESTRICT COLLATE NOCASE,
     "SummaryPropertySetId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_File_SummaryPropertySet" REFERENCES "SummaryPropertySets"("Id") ON DELETE RESTRICT COLLATE NOCASE,
     "DocumentPropertySetId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_File_DocumentPropertySet" REFERENCES "DocumentPropertySets"("Id") ON DELETE RESTRICT COLLATE NOCASE,
@@ -488,11 +490,11 @@ CREATE INDEX "IDX_File_Status" ON "Files" ("Status");
 CREATE TABLE IF NOT EXISTS "FileAccessErrors" (
     "Id" UNIQUEIDENTIFIER NOT NULL COLLATE NOCASE,
     "ErrorCode" UNSIGNED TINYINT NOT NULL CHECK("ErrorCode"<=5),
-    "Message" NVARCHAR(1024) NOT NULL CHECK(length(trim("Message"))=length("Message") AND "Message">0) COLLATE NOCASE,
+    "Message" NVARCHAR(1024) NOT NULL CHECK(length(trim("Message"))=length("Message") AND length("Message")>0) COLLATE NOCASE,
     "Details" TEXT NOT NULL DEFAULT '',
     "CreatedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
     "ModifiedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
-    "TargetId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_AccessError_DbEntity" REFERENCES "Volumes"("Id") ON DELETE RESTRICT COLLATE NOCASE,
+    "TargetId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_AccessError_File" REFERENCES "Files"("Id") ON DELETE RESTRICT COLLATE NOCASE,
     CONSTRAINT "PK_FileAccessErrors" PRIMARY KEY("Id"),
     CHECK("CreatedOn"<="ModifiedOn")
 );
@@ -520,7 +522,7 @@ CREATE TABLE IF NOT EXISTS "Comparisons" (
     "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL COLLATE NOCASE,
     "LastSynchronizedOn" DATETIME DEFAULT NULL,
     CONSTRAINT "PK_Comparisons" PRIMARY KEY("BaselineId", "CorrelativeId"),
-    CHECK((("UpstreamId" IS NULL AND "LastSynchronizedOn" IS NULL) OR ("UpstreamId" IS NOT NULL AND "LastSynchronizedOn" IS NOT NULL)) AND "CreatedOn"<="ModifiedOn")
+    CHECK("BaselineId"<>"CorrelativeId" AND (("UpstreamId" IS NULL AND "LastSynchronizedOn" IS NULL) OR ("UpstreamId" IS NOT NULL AND "LastSynchronizedOn" IS NOT NULL)) AND "CreatedOn"<="ModifiedOn")
 );
 
 CREATE TRIGGER IF NOT EXISTS validate_new_file_name
@@ -528,7 +530,7 @@ CREATE TRIGGER IF NOT EXISTS validate_new_file_name
    ON "Files"
    WHEN (SELECT COUNT(Id) FROM "Files" WHERE "Name"=NEW."Name" AND "ParentId"=NEW."ParentId" COLLATE BINARY)>0 OR (SELECT COUNT(Id) FROM "Subdirectories" WHERE "Name"=NEW."Name" AND "ParentId"=NEW."ParentId" COLLATE BINARY)>0
 BEGIN
-    SELECT RAISE (ABORT,'Duplicate file names are not allowed within the same subdirectory.');
+    SELECT RAISE (ABORT,'Duplicate file/directory names are not allowed within the same subdirectory.');
 END;
 
 CREATE TRIGGER IF NOT EXISTS validate_file_name_change
@@ -536,7 +538,7 @@ CREATE TRIGGER IF NOT EXISTS validate_file_name_change
    ON "Files"
    WHEN OLD."Name"<>NEW."Name" AND ((SELECT COUNT(Id) FROM "Files" WHERE "Name"=NEW."Name" AND "ParentId"=NEW."ParentId" COLLATE BINARY)>0 OR (SELECT COUNT(Id) FROM "Subdirectories" WHERE "Name"=NEW."Name" AND "ParentId"=NEW."ParentId" COLLATE BINARY)>0)
 BEGIN
-    SELECT RAISE (ABORT,'Duplicate file names are not allowed within the same subdirectory.');
+    SELECT RAISE (ABORT,'Duplicate file/directory names are not allowed within the same subdirectory.');
 END;
 
 CREATE TRIGGER IF NOT EXISTS validate_new_subdirectory_name
@@ -544,7 +546,7 @@ CREATE TRIGGER IF NOT EXISTS validate_new_subdirectory_name
    ON "Subdirectories"
    WHEN NEW."ParentId" IS NOT NULL AND (SELECT COUNT(Id) FROM "Subdirectories" WHERE "Name"=NEW."Name" AND "ParentId"=NEW."ParentId" COLLATE BINARY)>0
 BEGIN
-    SELECT RAISE (ABORT,'Duplicate file names are not allowed within the same subdirectory.');
+    SELECT RAISE (ABORT,'Duplicate file/directory names are not allowed within the same subdirectory.');
 END;
 
 CREATE TRIGGER IF NOT EXISTS validate_subdirectory_name_change
@@ -552,7 +554,7 @@ CREATE TRIGGER IF NOT EXISTS validate_subdirectory_name_change
    ON "Subdirectories"
    WHEN NEW."ParentId" IS NOT NULL AND OLD."Name"<>NEW."Name" AND (SELECT COUNT(Id) FROM "Files" WHERE "Name"=NEW."Name" AND "ParentId"=NEW."ParentId" COLLATE BINARY)>0
 BEGIN
-    SELECT RAISE (ABORT,'Duplicate file names are not allowed within the same subdirectory.');
+    SELECT RAISE (ABORT,'Duplicate file/directory names are not allowed within the same subdirectory.');
 END;
 
 CREATE TRIGGER IF NOT EXISTS validate_new_subdirectory_parent
@@ -576,7 +578,7 @@ CREATE TRIGGER IF NOT EXISTS validate_new_root_subdirectory
    ON "Subdirectories"
    WHEN NEW."VolumeId" IS NOT NULL AND (SELECT COUNT(Id) FROM "Subdirectories" WHERE "Id"=NEW."VolumeId")>0
 BEGIN
-    SELECT RAISE (ABORT,'Volume already as a root subdirectory.');
+    SELECT RAISE (ABORT,'Volume already has a root subdirectory.');
 END;
 
 CREATE TRIGGER IF NOT EXISTS validate_root_subdirectory_change
@@ -584,7 +586,23 @@ CREATE TRIGGER IF NOT EXISTS validate_root_subdirectory_change
    ON "Subdirectories"
    WHEN OLD."VolumeId"<>NEW."VolumeId" AND (SELECT COUNT(Id) FROM "Subdirectories" WHERE "Id"=NEW."VolumeId")>0
 BEGIN
-    SELECT RAISE (ABORT,'Volume already as a root subdirectory.');
+    SELECT RAISE (ABORT,'Volume already has a root subdirectory.');
+END;
+
+CREATE TRIGGER IF NOT EXISTS validate_new_crawlconfiguration
+   BEFORE INSERT
+   ON "CrawlConfigurations"
+   WHEN (SELECT COUNT(Id) FROM "CrawlConfigurations" WHERE "RootId"=NEW."RootId")>0
+BEGIN
+    SELECT RAISE (ABORT,'Subdirectory already has a crawl configuration.');
+END;
+
+CREATE TRIGGER IF NOT EXISTS validate_crawlconfiguration_root_change
+   BEFORE UPDATE
+   ON "CrawlConfigurations"
+   WHEN OLD."RootId"<>NEW."RootId" AND (SELECT COUNT(Id) FROM "CrawlConfigurations" WHERE "RootId"=NEW."RootId")>0
+BEGIN
+    SELECT RAISE (ABORT,'Subdirectory already has a crawl configuration.');
 END;
 
 CREATE TRIGGER IF NOT EXISTS validate_new_redundancy 
@@ -652,4 +670,3 @@ INSERT INTO "Subdirectories" ("Id", "Name", "LastAccessed", "CreationTime", "Las
     VALUES ('3dfc92c9-8af0-4ab6-bcc3-9104fdcdc35a', 'Videos', '2021-06-05 00:58:34', '2019-11-23 20:30:23', '2021-05-16 18:54:50', '38a40fde-acf0-4cc5-9302-d37ec2cbb631', NULL, '2021-06-05 00:58:34', '2021-06-05 00:58:34');
 INSERT INTO "main"."CrawlConfigurations" ("Id", "DisplayName", "RootId", "CreatedOn", "ModifiedOn")
     VALUES ('9c91ba89-6ab5-4d4e-9798-0d926b405f41', 'Lenny''s Laptop Videos', '3dfc92c9-8af0-4ab6-bcc3-9104fdcdc35a', '2021-07-31 15:28:18', '2021-07-31 15:28:18');
-

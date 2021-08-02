@@ -90,7 +90,7 @@ namespace FsInfoCat.Local
         }
 
         internal static void BuildEntity([DisallowNull] EntityTypeBuilder<GPSPropertySet> builder) =>
-            (builder ?? throw new ArgumentOutOfRangeException(nameof(builder))).Property(nameof(VersionID)).HasConversion(MultiStringValue.Converter);
+            (builder ?? throw new ArgumentOutOfRangeException(nameof(builder))).Property(nameof(VersionID)).HasConversion(ByteValues.Converter);
 
         internal static async Task RefreshAsync([DisallowNull] EntityEntry<DbFile> entry, [DisallowNull] IFileDetailProvider fileDetailProvider,
             CancellationToken cancellationToken)

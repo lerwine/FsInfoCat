@@ -10,8 +10,6 @@ namespace FsInfoCat.Desktop.ViewModel
     public class CrawlConfigurationVM : DispatcherObject, INotifyPropertyChanged
     {
         private readonly CrawlConfiguration _crawlConfiguration;
-        private TimeSpan? _ttl;
-        private TimeSpan? _rescheduleInterval;
 
         public event EventHandler Edit;
         public event EventHandler Activate;
@@ -27,7 +25,7 @@ namespace FsInfoCat.Desktop.ViewModel
 
         public ulong? MaxTotalItems => _crawlConfiguration.MaxTotalItems;
 
-        public TimeSpan? TTL => _ttl;
+        public TimeSpan? TTL { get; private set; }
 
         public DateTime? LastCrawlStart => _crawlConfiguration.LastCrawlStart;
 
@@ -35,7 +33,7 @@ namespace FsInfoCat.Desktop.ViewModel
 
         public DateTime? NextScheduledStart => _crawlConfiguration.NextScheduledStart;
 
-        public TimeSpan? RescheduleInterval => _rescheduleInterval;
+        public TimeSpan? RescheduleInterval { get; private set; }
 
         public bool RescheduleFromJobEnd => _crawlConfiguration.RescheduleFromJobEnd;
 
@@ -84,13 +82,13 @@ namespace FsInfoCat.Desktop.ViewModel
 
             model.PropertyChanged += Model_PropertyChanged;
             if (root is not null && root.Id != rootId)
-                Subdirectory.LookupFullNameAsync(root).ContinueWith(task =>
-                {
-                    if (task.IsFaulted)
-                        Dispatcher.Invoke(() => OnLookupFullNameError(task.Exception));
-                    else if (!task.IsCanceled)
-                        Dispatcher.Invoke(() => OnLookupFullNameComplete(task.Result ?? ""));
-                });
+                _ = Subdirectory.LookupFullNameAsync(root).ContinueWith(task =>
+                  {
+                      if (task.IsFaulted)
+                          Dispatcher.Invoke(() => OnLookupFullNameError(task.Exception));
+                      else if (!task.IsCanceled)
+                          Dispatcher.Invoke(() => OnLookupFullNameComplete(task.Result ?? ""));
+                  });
             OnTtlChanged();
             OnRescheduleIntervalChanged();
         }
@@ -127,13 +125,13 @@ namespace FsInfoCat.Desktop.ViewModel
                     if (root is null)
                         OnLookupFullNameComplete("");
                     else
-                        Subdirectory.LookupFullNameAsync(root).ContinueWith(task =>
-                        {
-                            if (task.IsFaulted)
-                                Dispatcher.Invoke(() => OnLookupFullNameError(task.Exception));
-                            else if (!task.IsCanceled)
-                                Dispatcher.Invoke(() => OnLookupFullNameComplete(task.Result ?? ""));
-                        });
+                        _ = Subdirectory.LookupFullNameAsync(root).ContinueWith(task =>
+                          {
+                              if (task.IsFaulted)
+                                  Dispatcher.Invoke(() => OnLookupFullNameError(task.Exception));
+                              else if (!task.IsCanceled)
+                                  Dispatcher.Invoke(() => OnLookupFullNameComplete(task.Result ?? ""));
+                          });
                     return;
             }
             PropertyChanged?.Invoke(this, e);
@@ -142,13 +140,13 @@ namespace FsInfoCat.Desktop.ViewModel
         private void OnTtlChanged()
         {
             long? seconds = _crawlConfiguration.TTL;
-            _ttl = (seconds.HasValue) ? TimeSpan.FromSeconds(seconds.Value) : null;
+            TTL = seconds.HasValue ? TimeSpan.FromSeconds(seconds.Value) : null;
         }
 
         private void OnRescheduleIntervalChanged()
         {
             long? seconds = _crawlConfiguration.RescheduleInterval;
-            _rescheduleInterval = (seconds.HasValue) ? TimeSpan.FromSeconds(seconds.Value) : null;
+            RescheduleInterval = seconds.HasValue ? TimeSpan.FromSeconds(seconds.Value) : null;
         }
     }
 }

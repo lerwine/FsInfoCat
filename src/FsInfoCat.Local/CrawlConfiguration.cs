@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -25,6 +27,7 @@ namespace FsInfoCat.Local
         private readonly IPropertyChangeTracker<long?> _rescheduleInterval;
         private readonly IPropertyChangeTracker<bool> _rescheduleFromJobEnd;
         private readonly IPropertyChangeTracker<bool> _rescheduleAfterFail;
+        private readonly IPropertyChangeTracker<Guid> _rootId;
         private readonly IPropertyChangeTracker<Subdirectory> _root;
         private HashSet<CrawlJobLog> _logs = new();
 
@@ -122,10 +125,31 @@ namespace FsInfoCat.Local
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_RescheduleAfterFail), ResourceType = typeof(Properties.Resources))]
         public bool RescheduleAfterFail { get => _rescheduleAfterFail.GetValue(); set => _rescheduleAfterFail.SetValue(value); }
 
+        public Guid RootId
+        {
+            get => _rootId.GetValue();
+            set
+            {
+                if (_rootId.SetValue(value))
+                {
+                    Subdirectory nav = _root.GetValue();
+                    if (!(nav is null || nav.Id.Equals(value)))
+                        _root.SetValue(null);
+                }
+            }
+        }
+
         /// <summary>Gets the starting subdirectory for the configured subdirectory crawl.</summary>
         /// <value>The root subdirectory of the configured subdirectory crawl.</value>
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_Root), ResourceType = typeof(Properties.Resources))]
-        public Subdirectory Root { get => _root.GetValue(); set => _root.SetValue(value); }
+        public Subdirectory Root
+        {
+            get => _root.GetValue(); set
+            {
+                if (_root.SetValue(value))
+                    _rootId.SetValue((value is null) ? Guid.Empty : value.Id);
+            }
+        }
 
         /// <summary>Gets the crawl log entries.</summary>
         /// <value>The crawl log entries.</value>
@@ -161,7 +185,13 @@ namespace FsInfoCat.Local
             _rescheduleInterval = AddChangeTracker<long?>(nameof(RescheduleInterval), null);
             _rescheduleFromJobEnd = AddChangeTracker(nameof(RescheduleFromJobEnd), false);
             _rescheduleAfterFail = AddChangeTracker(nameof(RescheduleAfterFail), false);
+            _rootId = AddChangeTracker(nameof(RootId), Guid.Empty);
             _root = AddChangeTracker<Subdirectory>(nameof(Root), null);
+        }
+
+        internal static void BuildEntity(EntityTypeBuilder<CrawlConfiguration> builder)
+        {
+            builder.HasOne(s => s.Root).WithOne(c => c.CrawlConfiguration).HasForeignKey<CrawlConfiguration>(nameof(RootId)).OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

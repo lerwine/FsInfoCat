@@ -5,11 +5,31 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:FsInfoCat.Desktop.View"
       xmlns:vm="clr-namespace:FsInfoCat.Desktop.ViewModel"
-      mc:Ignorable="d" 
+      xmlns:cvt="clr-namespace:FsInfoCat.Desktop.Converters"
+      mc:Ignorable="d" DataContext="{DynamicResource VM}"
       d:DesignHeight="450" d:DesignWidth="800"
       Title="Crawl Configurations">
-
+    <Page.Resources>
+        <vm:CrawlConfigurationsPageVM x:Key="VM"/>
+    </Page.Resources>
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="121*"/>
+            <RowDefinition Height="29*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="13*"/>
+            <ColumnDefinition Width="12*"/>
+        </Grid.ColumnDefinitions>
+        <GridSplitter Grid.Column="1" HorizontalAlignment="Left"  Width="5" Grid.RowSpan="2"/>
+        <DataGrid ItemsSource="{Binding CrawlConfigurations, Mode=OneWay}" AutoGenerateColumns="False">
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding DisplayName, Mode=OneWay}" IsReadOnly="True"/>
+            </DataGrid.Columns>
+        </DataGrid>
+        <WrapPanel Grid.Row="1" FlowDirection="RightToLeft">
+            <Button Content="Add" Command="{Binding NewCrawlConfigCommand, Mode=OneWay}"/>
+        </WrapPanel>
+
     </Grid>
 </Page>

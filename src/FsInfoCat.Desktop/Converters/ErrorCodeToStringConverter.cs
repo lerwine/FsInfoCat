@@ -1,0 +1,7 @@
+﻿namespace FsInfoCat.Desktop.Converters
+{
+    public sealed class ErrorCodeToStringConverter : SchemaEnumToStringComverter<ErrorCode>
+    {
+
+    }
+}

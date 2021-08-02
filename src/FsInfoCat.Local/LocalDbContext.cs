@@ -98,7 +98,11 @@ namespace FsInfoCat.Local
                             using SqliteCommand command = connection.CreateCommand();
                             command.CommandText = element.Value;
                             command.CommandType = System.Data.CommandType.Text;
-                            command.ExecuteNonQuery();
+                            try { command.ExecuteNonQuery(); }
+                            catch (Exception exception)
+                            {
+                                throw new Exception($"Error executing query '{element.Value}': {exception.Message}");
+                            }
                         }
                     }
                 }
@@ -115,27 +119,27 @@ namespace FsInfoCat.Local
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.HasDefaultSchema("dbo");
-            modelBuilder.Entity<SymbolicName>(SymbolicName.BuildEntity);
-            modelBuilder.Entity<Volume>(Volume.BuildEntity);
-            modelBuilder.Entity<Subdirectory>(Subdirectory.BuildEntity);
-            modelBuilder.Entity<CrawlJobLog>(CrawlJobLog.BuildEntity);
-            modelBuilder.Entity<DbFile>(DbFile.BuildEntity);
-            modelBuilder.Entity<BinaryPropertySet>(BinaryPropertySet.BuildEntity);
-            modelBuilder.Entity<FileComparison>(FileComparison.BuildEntity);
-            modelBuilder.Entity<RedundantSet>(RedundantSet.BuildEntity);
-            modelBuilder.Entity<Redundancy>(Redundancy.BuildEntity);
-            modelBuilder.Entity<SummaryPropertySet>(SummaryPropertySet.BuildEntity);
-            modelBuilder.Entity<DocumentPropertySet>(DocumentPropertySet.BuildEntity);
-            modelBuilder.Entity<GPSPropertySet>(GPSPropertySet.BuildEntity);
-            modelBuilder.Entity<MediaPropertySet>(MediaPropertySet.BuildEntity);
-            modelBuilder.Entity<MusicPropertySet>(MusicPropertySet.BuildEntity);
-            modelBuilder.Entity<PhotoPropertySet>(PhotoPropertySet.BuildEntity);
-            modelBuilder.Entity<VideoPropertySet>(VideoPropertySet.BuildEntity);
+            modelBuilder.HasDefaultSchema("dbo")
+                .Entity<SymbolicName>(SymbolicName.BuildEntity)
+                .Entity<Volume>(Volume.BuildEntity)
+                .Entity<Subdirectory>(Subdirectory.BuildEntity)
+                .Entity<CrawlConfiguration>(CrawlConfiguration.BuildEntity)
+                .Entity<CrawlJobLog>(CrawlJobLog.BuildEntity)
+                .Entity<DbFile>(DbFile.BuildEntity)
+                .Entity<BinaryPropertySet>(BinaryPropertySet.BuildEntity)
+                .Entity<FileComparison>(FileComparison.BuildEntity)
+                .Entity<RedundantSet>(RedundantSet.BuildEntity)
+                .Entity<Redundancy>(Redundancy.BuildEntity)
+                .Entity<SummaryPropertySet>(SummaryPropertySet.BuildEntity)
+                .Entity<DocumentPropertySet>(DocumentPropertySet.BuildEntity)
+                .Entity<GPSPropertySet>(GPSPropertySet.BuildEntity)
+                .Entity<MediaPropertySet>(MediaPropertySet.BuildEntity)
+                .Entity<MusicPropertySet>(MusicPropertySet.BuildEntity)
+                .Entity<PhotoPropertySet>(PhotoPropertySet.BuildEntity)
+                .Entity<VideoPropertySet>(VideoPropertySet.BuildEntity);
         }
 
-        public static void AddDbContextPool(IServiceCollection services, Assembly assembly, string dbFileName) =>
-            AddDbContextPool(services, GetDbFilePath(assembly, dbFileName));
+        public static void AddDbContextPool(IServiceCollection services, Assembly assembly, string dbFileName) => AddDbContextPool(services, GetDbFilePath(assembly, dbFileName));
 
         public static void AddDbContextPool(IServiceCollection services, string dbPath)
         {
@@ -161,9 +165,7 @@ namespace FsInfoCat.Local
         {
             if (string.IsNullOrWhiteSpace(dbFileName))
                 dbFileName = Services.DEFAULT_LOCAL_DB_FILENAME;
-            if (Path.IsPathFullyQualified(dbFileName))
-                return Path.GetFullPath(dbFileName);
-            return Path.Combine(Services.GetAppDataPath(assembly), dbFileName);
+            return Path.IsPathFullyQualified(dbFileName) ? Path.GetFullPath(dbFileName) : Path.Combine(Services.GetAppDataPath(assembly), dbFileName);
         }
 
         public async Task<IEnumerable<TProperty>> GetRelatedCollectionAsync<TEntity, TProperty>([DisallowNull] TEntity entity,

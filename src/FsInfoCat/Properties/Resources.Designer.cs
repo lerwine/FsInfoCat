@@ -1042,6 +1042,15 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Archive.
+        /// </summary>
+        public static string DisplayName_Archive {
+            get {
+                return ResourceManager.GetString("DisplayName_Archive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Area Information.
         /// </summary>
         public static string DisplayName_AreaInformation {
@@ -1272,6 +1281,15 @@ namespace FsInfoCat.Properties {
         public static string DisplayName_Composer {
             get {
                 return ResourceManager.GetString("DisplayName_Composer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Compressed.
+        /// </summary>
+        public static string DisplayName_Compressed {
+            get {
+                return ResourceManager.GetString("DisplayName_Compressed", resourceCulture);
             }
         }
         
@@ -1915,6 +1933,15 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Encrypted.
+        /// </summary>
+        public static string DisplayName_Encrypted {
+            get {
+                return ResourceManager.GetString("DisplayName_Encrypted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Episode Name.
         /// </summary>
         public static string DisplayName_EpisodeName {
@@ -2010,6 +2037,78 @@ namespace FsInfoCat.Properties {
         public static string DisplayName_FileActions {
             get {
                 return ResourceManager.GetString("DisplayName_FileActions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Device File.
+        /// </summary>
+        public static string DisplayName_FileAttributes_Device {
+            get {
+                return ResourceManager.GetString("DisplayName_FileAttributes_Device", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Integrity Stream.
+        /// </summary>
+        public static string DisplayName_FileAttributes_IntegrityStream {
+            get {
+                return ResourceManager.GetString("DisplayName_FileAttributes_IntegrityStream", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Normal File.
+        /// </summary>
+        public static string DisplayName_FileAttributes_Normal {
+            get {
+                return ResourceManager.GetString("DisplayName_FileAttributes_Normal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No Scrub Data.
+        /// </summary>
+        public static string DisplayName_FileAttributes_NoScrubData {
+            get {
+                return ResourceManager.GetString("DisplayName_FileAttributes_NoScrubData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reparse Point.
+        /// </summary>
+        public static string DisplayName_FileAttributes_ReparsePoint {
+            get {
+                return ResourceManager.GetString("DisplayName_FileAttributes_ReparsePoint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sparse File.
+        /// </summary>
+        public static string DisplayName_FileAttributes_SparseFile {
+            get {
+                return ResourceManager.GetString("DisplayName_FileAttributes_SparseFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to System File.
+        /// </summary>
+        public static string DisplayName_FileAttributes_System {
+            get {
+                return ResourceManager.GetString("DisplayName_FileAttributes_System", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Temporary File.
+        /// </summary>
+        public static string DisplayName_FileAttributes_Temporary {
+            get {
+                return ResourceManager.GetString("DisplayName_FileAttributes_Temporary", resourceCulture);
             }
         }
         
@@ -2262,6 +2361,15 @@ namespace FsInfoCat.Properties {
         public static string DisplayName_Hash {
             get {
                 return ResourceManager.GetString("DisplayName_Hash", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hidden.
+        /// </summary>
+        public static string DisplayName_Hidden {
+            get {
+                return ResourceManager.GetString("DisplayName_Hidden", resourceCulture);
             }
         }
         
@@ -2905,6 +3013,15 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to (none).
+        /// </summary>
+        public static string DisplayName_None_Parentheses {
+            get {
+                return ResourceManager.GetString("DisplayName_None_Parentheses", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No Options Selected.
         /// </summary>
         public static string DisplayName_NoOptionsSelected {
@@ -2928,6 +3045,24 @@ namespace FsInfoCat.Properties {
         public static string DisplayName_Notes {
             get {
                 return ResourceManager.GetString("DisplayName_Notes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Not Indexed.
+        /// </summary>
+        public static string DisplayName_NotIndexed {
+            get {
+                return ResourceManager.GetString("DisplayName_NotIndexed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Offline.
+        /// </summary>
+        public static string DisplayName_Offline {
+            get {
+                return ResourceManager.GetString("DisplayName_Offline", resourceCulture);
             }
         }
         

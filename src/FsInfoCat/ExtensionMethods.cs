@@ -76,6 +76,19 @@ namespace FsInfoCat
             return (result = memberInfo.GetCustomAttributes<DisplayNameAttribute>(true).Select(a => a.DisplayName.NullIfWhiteSpace()).FirstOrDefault(d => d is not null)) is not null;
         }
 
+        public static bool TryGetShortName(this MemberInfo memberInfo, out string result)
+        {
+            if (memberInfo is null)
+            {
+                result = null;
+                return false;
+            }
+            DisplayAttribute attribute = memberInfo.GetCustomAttributes<DisplayAttribute>(true).FirstOrDefault();
+            if (attribute is not null && (result = attribute.GetShortName().NullIfWhiteSpace()) is not null)
+                return true;
+            return (result = memberInfo.GetCustomAttributes<DisplayNameAttribute>(true).Select(a => a.DisplayName.NullIfWhiteSpace()).FirstOrDefault(d => d is not null)) is not null;
+        }
+
         public static string GetDisplayName<TEnum>(this TEnum value) where TEnum : struct, Enum
         {
             string name = Enum.GetName(value);
@@ -86,6 +99,12 @@ namespace FsInfoCat
                     return result;
             }
             return Enum.GetName(typeof(TEnum), value);
+        }
+
+        public static bool TryGetShortName<TEnum>(this TEnum value, out string result) where TEnum : struct, Enum
+        {
+            result = Enum.GetName(value);
+            return result is not null && typeof(TEnum).GetField(result).TryGetShortName(out result);
         }
 
         public static bool TryGetDisplayName<TEnum>(this TEnum value, out string result) where TEnum : struct, Enum

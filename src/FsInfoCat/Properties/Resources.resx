@@ -1618,4 +1618,49 @@
   <data name="DisplayName_PlatformType" xml:space="preserve">
     <value>Platform Type</value>
   </data>
+  <data name="DisplayName_Archive" xml:space="preserve">
+    <value>Archive</value>
+  </data>
+  <data name="DisplayName_Compressed" xml:space="preserve">
+    <value>Compressed</value>
+  </data>
+  <data name="DisplayName_Encrypted" xml:space="preserve">
+    <value>Encrypted</value>
+  </data>
+  <data name="DisplayName_FileAttributes_Device" xml:space="preserve">
+    <value>Device File</value>
+  </data>
+  <data name="DisplayName_FileAttributes_IntegrityStream" xml:space="preserve">
+    <value>Integrity Stream</value>
+  </data>
+  <data name="DisplayName_FileAttributes_Normal" xml:space="preserve">
+    <value>Normal File</value>
+  </data>
+  <data name="DisplayName_FileAttributes_NoScrubData" xml:space="preserve">
+    <value>No Scrub Data</value>
+  </data>
+  <data name="DisplayName_FileAttributes_ReparsePoint" xml:space="preserve">
+    <value>Reparse Point</value>
+  </data>
+  <data name="DisplayName_FileAttributes_SparseFile" xml:space="preserve">
+    <value>Sparse File</value>
+  </data>
+  <data name="DisplayName_FileAttributes_System" xml:space="preserve">
+    <value>System File</value>
+  </data>
+  <data name="DisplayName_FileAttributes_Temporary" xml:space="preserve">
+    <value>Temporary File</value>
+  </data>
+  <data name="DisplayName_Hidden" xml:space="preserve">
+    <value>Hidden</value>
+  </data>
+  <data name="DisplayName_NotIndexed" xml:space="preserve">
+    <value>Not Indexed</value>
+  </data>
+  <data name="DisplayName_Offline" xml:space="preserve">
+    <value>Offline</value>
+  </data>
+  <data name="DisplayName_None_Parentheses" xml:space="preserve">
+    <value>(none)</value>
+  </data>
 </root>

@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -140,33 +139,35 @@ namespace FsInfoCat.Desktop.ViewModel
 
         private void OnNewCrawlConfigExecute(object parameter)
         {
-            // TODO: Implement OnNewCrawlConfigExecute Logic
+            View.FolderBrowserWindow window = new();
+            MainWindow mainWindow = Services.ServiceProvider.GetService<MainWindow>();
+            if (mainWindow is not null)
+                window.Owner = mainWindow;
+            window.ShowDialog();
         }
 
         public CrawlConfigurationsPageVM()
         {
             _logger = Services.ServiceProvider.GetRequiredService<ILogger<CrawlConfigurationsPageVM>>();
-            LoadInitialDataAsync().ContinueWith(task =>
-            {
-                if (task.IsFaulted)
-                    Dispatcher.Invoke(() => OnInitialDataLoadError(task.Exception));
-                else if (!task.IsCanceled)
-                    Dispatcher.Invoke(() => OnInitialDataLoaded(task.Result));
-            });
+            _ = LoadInitialDataAsync().ContinueWith(task =>
+              {
+                  if (task.IsFaulted)
+                  {
+                      _logger.LogError(task.Exception, "Error executing LoadInitialDataAsync");
+                      Dispatcher.Invoke(() => OnInitialDataLoadError(task.Exception));
+                  }
+                  else if (task.IsCanceled)
+                      _logger.LogWarning("LoadInitialDataAsync canceled.");
+                  else
+                      Dispatcher.Invoke(() => OnInitialDataLoaded(task.Result));
+              });
         }
 
         private static async Task<List<(string FullName, Guid SubdirectoryId, CrawlConfiguration Source)>> LoadInitialDataAsync()
         {
             using LocalDbContext dbContext = Services.ServiceProvider.GetService<LocalDbContext>();
             List<CrawlConfiguration> configurations = await dbContext.CrawlConfigurations.Include(c => c.Root).ToListAsync();
-            return await Subdirectory.LoadFullNamesAsync(configurations, c =>
-            {
-                Subdirectory root = c.Root;
-                if (root is null)
-                    c.Root = root = Subdirectory.FindByCrawlConfiguration(c.Id, dbContext);
-                return root;
-            }, dbContext);
-
+            return await Subdirectory.LoadFullNamesAsync(configurations, c =>c.Root, dbContext);
         }
 
         private void OnInitialDataLoaded(IEnumerable<(string FullName, Guid SubdirectoryId, CrawlConfiguration Source)> items)
@@ -185,8 +186,7 @@ namespace FsInfoCat.Desktop.ViewModel
             InnerCrawlConfigurations.Clear();
             MainWindow mainWindow = Services.ServiceProvider.GetService<MainWindow>();
             if (mainWindow is not null)
-                MessageBox.Show(mainWindow, string.IsNullOrWhiteSpace(exception.Message) ? exception.ToString() : exception.Message,
-                    "Data Load Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(mainWindow, string.IsNullOrWhiteSpace(exception.Message) ? exception.ToString() : exception.Message, "Data Load Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
 }
