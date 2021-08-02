@@ -8,8 +8,8 @@ namespace FsInfoCat.Collections
 {
     public class ByteValues : ReadOnlyCollection<byte>, IEquatable<ByteValues>, IConvertible
     {
-        public static readonly ValueConverter<ByteValues, string> Converter = new(
-            v => v == null ? null : v.ToString(),
+        public static readonly ValueConverter<ByteValues, byte[]> Converter = new(
+            v => v == null ? null : v.ToArray(),
             s => s == null ? null : new ByteValues(s)
         );
 
