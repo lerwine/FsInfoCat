@@ -19,7 +19,7 @@ namespace FsInfoCat.Desktop.WMI
 
         public string VolumeSerialNumber { get; private set; }
 
-        public bool IsReadOnly => (Access & CIMLogicalDiskAccess.Writeable) == CIMLogicalDiskAccess.Unknown;
+        public bool? IsReadOnly => (Access == CIMLogicalDiskAccess.Unknown) ? null : (Access & CIMLogicalDiskAccess.Writeable) == CIMLogicalDiskAccess.Unknown;
 
         public string Caption { get; private set; }
 
@@ -43,13 +43,15 @@ namespace FsInfoCat.Desktop.WMI
 
         public CIMLogicalDiskAccess Access { get; private set; }
 
-        public CIMLogicalDiskAvailability Availability { get; private set; }
+        public CIMLogicalDiskAvailability? Availability { get; private set; }
 
         internal Win32_Directory RootDirectory { get; }
 
         string ILogicalDiskInfo.FileSystemName => FileSystem;
 
         uint ILogicalDiskInfo.MaxNameLength => MaximumComponentLength;
+
+        bool ILogicalDiskInfo.IsReadOnly => IsReadOnly ?? false;
 
         internal Win32_LogicalDisk(ManagementObject obj)
         {
@@ -67,8 +69,8 @@ namespace FsInfoCat.Desktop.WMI
             DriveType = (DriveType)obj.GetUInt32(nameof(DriveType));
             MaximumComponentLength = obj.GetUInt32(nameof(MaximumComponentLength));
             Access = (CIMLogicalDiskAccess)obj.GetUInt16(nameof(Access));
-            Availability = (CIMLogicalDiskAvailability)obj.GetUInt16(nameof(Availability));
-            RootDirectory = obj.GetRelated("Win32_LogicalDiskRootDirectory").OfType<ManagementObject>().Select(m => new Win32_Directory(m)).FirstOrDefault();
+            Availability = (CIMLogicalDiskAvailability?)obj.GetUInt16Opt(nameof(Availability));
+            RootDirectory = obj.GetRelated("Win32_Directory").OfType<ManagementObject>().Select(m => new Win32_Directory(m)).FirstOrDefault();
         }
 
         internal static async Task<Win32_LogicalDisk> GetLogicalDiskAsync(DirectoryInfo directoryInfo, CancellationToken cancellationToken)

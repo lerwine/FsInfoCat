@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -18,12 +19,10 @@ namespace FsInfoCat.Desktop.ViewModel
 
         #region CrawlConfigurations Property Members
 
-        private static readonly DependencyPropertyKey InnerCrawlConfigurationsPropertyKey =
-            DependencyProperty.RegisterReadOnly(nameof(InnerCrawlConfigurations), typeof(ObservableCollection<CrawlConfigurationVM>), typeof(CrawlConfigurationsPageVM),
-                new PropertyMetadata(new ObservableCollection<CrawlConfigurationVM>()));
+        private static readonly DependencyPropertyKey InnerCrawlConfigurationsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(InnerCrawlConfigurations), typeof(ObservableCollection<CrawlConfigurationVM>), typeof(CrawlConfigurationsPageVM),
+                new PropertyMetadata(null));
 
-        private static readonly DependencyPropertyKey CrawlConfigurationsPropertyKey =
-            DependencyProperty.RegisterReadOnly(nameof(CrawlConfigurations), typeof(ReadOnlyObservableCollection<CrawlConfigurationVM>), typeof(CrawlConfigurationsPageVM),
+        private static readonly DependencyPropertyKey CrawlConfigurationsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(CrawlConfigurations), typeof(ReadOnlyObservableCollection<CrawlConfigurationVM>), typeof(CrawlConfigurationsPageVM),
                 new PropertyMetadata(null));
 
         protected static readonly DependencyProperty InnerCrawlConfigurationsProperty = InnerCrawlConfigurationsPropertyKey.DependencyProperty;
@@ -55,10 +54,8 @@ namespace FsInfoCat.Desktop.ViewModel
 
         #endregion
 
-        public static readonly DependencyProperty ShowActiveCrawlConfigurationsOnlyProperty =
-            DependencyProperty.Register(nameof(ShowActiveCrawlConfigurationsOnly), typeof(bool), typeof(CrawlConfigurationsPageVM),
-                new PropertyMetadata(true, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                    (d as CrawlConfigurationsPageVM).OnShowActiveCrawlConfigurationsOnlyPropertyChanged((bool)e.OldValue, (bool)e.NewValue)));
+        public static readonly DependencyProperty ShowActiveCrawlConfigurationsOnlyProperty = DependencyProperty.Register(nameof(ShowActiveCrawlConfigurationsOnly), typeof(bool), typeof(CrawlConfigurationsPageVM),
+                new PropertyMetadata(true, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as CrawlConfigurationsPageVM).OnShowActiveCrawlConfigurationsOnlyPropertyChanged((bool)e.OldValue, (bool)e.NewValue)));
 
         public bool ShowActiveCrawlConfigurationsOnly
         {
@@ -77,10 +74,8 @@ namespace FsInfoCat.Desktop.ViewModel
                 ShowInactiveCrawlConfigurationsOnly = true;
         }
 
-        public static readonly DependencyProperty ShowInactiveCrawlConfigurationsOnlyProperty =
-            DependencyProperty.Register(nameof(ShowInactiveCrawlConfigurationsOnly), typeof(bool), typeof(CrawlConfigurationsPageVM),
-                new PropertyMetadata(false, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                    (d as CrawlConfigurationsPageVM).OnShowInactiveCrawlConfigurationsOnlyPropertyChanged((bool)e.OldValue, (bool)e.NewValue)));
+        public static readonly DependencyProperty ShowInactiveCrawlConfigurationsOnlyProperty = DependencyProperty.Register(nameof(ShowInactiveCrawlConfigurationsOnly), typeof(bool), typeof(CrawlConfigurationsPageVM),
+                new PropertyMetadata(false, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as CrawlConfigurationsPageVM).OnShowInactiveCrawlConfigurationsOnlyPropertyChanged((bool)e.OldValue, (bool)e.NewValue)));
 
         public bool ShowInactiveCrawlConfigurationsOnly
         {
@@ -99,10 +94,8 @@ namespace FsInfoCat.Desktop.ViewModel
                 ShowActiveCrawlConfigurationsOnly = true;
         }
 
-        public static readonly DependencyProperty ShowAllCrawlConfigurationsProperty =
-            DependencyProperty.Register(nameof(ShowAllCrawlConfigurations), typeof(bool), typeof(CrawlConfigurationsPageVM),
-                new PropertyMetadata(false, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                    (d as CrawlConfigurationsPageVM).OnShowAllCrawlConfigurationsPropertyChanged((bool)e.OldValue, (bool)e.NewValue)));
+        public static readonly DependencyProperty ShowAllCrawlConfigurationsProperty = DependencyProperty.Register(nameof(ShowAllCrawlConfigurations), typeof(bool), typeof(CrawlConfigurationsPageVM),
+                new PropertyMetadata(false, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as CrawlConfigurationsPageVM).OnShowAllCrawlConfigurationsPropertyChanged((bool)e.OldValue, (bool)e.NewValue)));
 
         public bool ShowAllCrawlConfigurations
         {
@@ -123,9 +116,7 @@ namespace FsInfoCat.Desktop.ViewModel
 
         public event EventHandler NewCrawlConfig;
 
-        private static readonly DependencyPropertyKey NewCrawlConfigCommandPropertyKey = DependencyProperty.RegisterReadOnly(nameof(NewCrawlConfigCommand),
-            typeof(Commands.RelayCommand), typeof(CrawlConfigurationsPageVM), new PropertyMetadata(null, null, (DependencyObject d, object baseValue) =>
-                (baseValue is Commands.RelayCommand rc) ? rc : new Commands.RelayCommand(((CrawlConfigurationsPageVM)d).InvokeNewCrawlConfigCommand)));
+        private static readonly DependencyPropertyKey NewCrawlConfigCommandPropertyKey = DependencyProperty.RegisterReadOnly(nameof(NewCrawlConfigCommand), typeof(Commands.RelayCommand), typeof(CrawlConfigurationsPageVM), new PropertyMetadata(null));
 
         public static readonly DependencyProperty NewCrawlConfigCommandProperty = NewCrawlConfigCommandPropertyKey.DependencyProperty;
 
@@ -148,19 +139,27 @@ namespace FsInfoCat.Desktop.ViewModel
 
         public CrawlConfigurationsPageVM()
         {
-            _logger = Services.ServiceProvider.GetRequiredService<ILogger<CrawlConfigurationsPageVM>>();
+            InnerCrawlConfigurations = new();
+            CrawlConfigurations = new(InnerCrawlConfigurations);
+            if (!DesignerProperties.GetIsInDesignMode(this))
+                _logger = Services.ServiceProvider.GetRequiredService<ILogger<CrawlConfigurationsPageVM>>();
             _ = LoadInitialDataAsync().ContinueWith(task =>
               {
                   if (task.IsFaulted)
                   {
-                      _logger.LogError(task.Exception, "Error executing LoadInitialDataAsync");
+                      if (!DesignerProperties.GetIsInDesignMode(this))
+                          _logger.LogError(task.Exception, "Error executing LoadInitialDataAsync");
                       Dispatcher.Invoke(() => OnInitialDataLoadError(task.Exception));
                   }
                   else if (task.IsCanceled)
-                      _logger.LogWarning("LoadInitialDataAsync canceled.");
+                  {
+                      if (!DesignerProperties.GetIsInDesignMode(this))
+                          _logger.LogWarning("LoadInitialDataAsync canceled.");
+                  }
                   else
                       Dispatcher.Invoke(() => OnInitialDataLoaded(task.Result));
               });
+            SetValue(NewCrawlConfigCommandPropertyKey, new Commands.RelayCommand(InvokeNewCrawlConfigCommand));
         }
 
         private static async Task<List<(string FullName, Guid SubdirectoryId, CrawlConfiguration Source)>> LoadInitialDataAsync()

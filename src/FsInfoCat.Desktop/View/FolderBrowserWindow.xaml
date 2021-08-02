@@ -9,12 +9,6 @@
         Title="FolderBrowserWindow" Height="450" Width="800">
     <Window.Resources>
         <vm:FolderBrowserVM x:Key="VM"/>
-        <HierarchicalDataTemplate x:Key="FoldersDataTemplate" ItemsSource="{Binding Path=SubFolders, Mode=OneWay}">
-
-        </HierarchicalDataTemplate>
-        <DataTemplate x:Key="LogicalDisksDataTemplate">
-            
-        </DataTemplate>
     </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
@@ -30,15 +24,17 @@
         <Button Content="Go" Grid.Column="1" Height="25" />
         <Grid Grid.Row="1" Grid.ColumnSpan="2">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="9*"/>
-                <ColumnDefinition Width="11*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <TreeView ItemsSource="{Binding LogicalDisks, Mode=OneWay}">
-                <TreeView.ItemTemplate>
-                    <DataTemplate>
-                        <TextBlock Text="{Binding Name, Mode=OneWay}" />
-                    </DataTemplate>
-                </TreeView.ItemTemplate>
+                <TreeView.Resources>
+                    <HierarchicalDataTemplate DataType="{x:Type vm:FolderVM}" ItemsSource="{Binding SubFolders}">
+                        <WrapPanel>
+                            <TextBlock Text="{Binding Name}" />
+                        </WrapPanel>
+                    </HierarchicalDataTemplate>
+                </TreeView.Resources>
             </TreeView>
             <DataGrid Grid.Column="1"/>
         </Grid>

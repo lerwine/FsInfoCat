@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -19,7 +20,7 @@ namespace FsInfoCat.Desktop.ViewModel
         public event DependencyPropertyChangedEventHandler CurrentPathPropertyChanged;
 
         public static readonly DependencyProperty CurrentPathProperty = DependencyProperty.Register(nameof(CurrentPath), typeof(string), typeof(FolderBrowserVM),
-                new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as FolderBrowserVM).OnCurrentPathPropertyChanged(e)));
+                new PropertyMetadata("Test", (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as FolderBrowserVM).OnCurrentPathPropertyChanged(e)));
 
         public string CurrentPath
         {
@@ -40,25 +41,23 @@ namespace FsInfoCat.Desktop.ViewModel
 
         #region LogicalDisks Property Members
 
-        private static readonly DependencyPropertyKey InnerLogicalDisksPropertyKey = DependencyProperty.RegisterReadOnly(nameof(InnerLogicalDisks), typeof(ObservableCollection<LogicalDiskVM>), typeof(FolderBrowserVM),
-                new PropertyMetadata(new ObservableCollection<LogicalDiskVM>()));
+        private static readonly DependencyPropertyKey InnerLogicalDisksPropertyKey = DependencyProperty.RegisterReadOnly(nameof(InnerLogicalDisks), typeof(ObservableCollection<FolderVM>), typeof(FolderBrowserVM), new PropertyMetadata(null));
 
-        private static readonly DependencyPropertyKey LogicalDisksPropertyKey = DependencyProperty.RegisterReadOnly(nameof(LogicalDisks), typeof(ReadOnlyObservableCollection<LogicalDiskVM>), typeof(FolderBrowserVM),
-                new PropertyMetadata(null));
+        private static readonly DependencyPropertyKey LogicalDisksPropertyKey = DependencyProperty.RegisterReadOnly(nameof(LogicalDisks), typeof(ReadOnlyObservableCollection<FolderVM>), typeof(FolderBrowserVM), new PropertyMetadata(null));
 
         protected static readonly DependencyProperty InnerLogicalDisksProperty = InnerLogicalDisksPropertyKey.DependencyProperty;
 
         public static readonly DependencyProperty LogicalDisksProperty = LogicalDisksPropertyKey.DependencyProperty;
 
-        protected ObservableCollection<LogicalDiskVM> InnerLogicalDisks
+        protected ObservableCollection<FolderVM> InnerLogicalDisks
         {
-            get => (ObservableCollection<LogicalDiskVM>)GetValue(InnerLogicalDisksProperty);
+            get => (ObservableCollection<FolderVM>)GetValue(InnerLogicalDisksProperty);
             private set => SetValue(InnerLogicalDisksPropertyKey, value);
         }
 
-        public ReadOnlyObservableCollection<LogicalDiskVM> LogicalDisks
+        public ReadOnlyObservableCollection<FolderVM> LogicalDisks
         {
-            get => (ReadOnlyObservableCollection<LogicalDiskVM>)GetValue(LogicalDisksProperty);
+            get => (ReadOnlyObservableCollection<FolderVM>)GetValue(LogicalDisksProperty);
             private set => SetValue(LogicalDisksPropertyKey, value);
         }
 
@@ -66,35 +65,34 @@ namespace FsInfoCat.Desktop.ViewModel
 
         public FolderBrowserVM()
         {
-            _logger = Services.ServiceProvider.GetRequiredService<ILogger<FolderBrowserVM>>();
+            InnerLogicalDisks = new();
+            LogicalDisks = new(InnerLogicalDisks);
+            if (!DesignerProperties.GetIsInDesignMode(this))
+                _logger = Services.ServiceProvider.GetRequiredService<ILogger<FolderBrowserVM>>();
             using CancellationTokenSource tokenSource = new();
             ExitEventHandler handler = new((sender, e) => tokenSource.Cancel(true));
             Application.Current.Exit += handler;
-            try
+            _ = Win32_LogicalDisk.GetLogicalDisksAsync(tokenSource.Token).ContinueWith(task =>
             {
-                _ = Win32_LogicalDisk.GetLogicalDisksAsync(tokenSource.Token).ContinueWith(task =>
+                if (task.IsCanceled)
+                    _logger.LogWarning("GetLogicalDisksAsync canceled.");
+                //return;
+                else if (task.IsFaulted)
+                //if (task.IsFaulted)
                 {
-                    if (task.IsCanceled)
-                        _logger.LogWarning("GetLogicalDisksAsync canceled.");
-                        //return;
-                    else if (task.IsFaulted)
-                    //if (task.IsFaulted)
-                    {
+                    if (!DesignerProperties.GetIsInDesignMode(this))
                         _logger.LogError(task.Exception, "Unexpected error while getting logical disks");
-                        Dispatcher.Invoke(new Action<string, Exception>(NotifyError), "", task.Exception);
-                    }
-                    else
-                        Dispatcher.Invoke(new Action<Win32_LogicalDisk[]>(OnGetLogicalDisksCompleted), task.Result);
-                });
-            }
-            finally { Application.Current.Exit -= handler; }
+                    Dispatcher.Invoke(new Action<string, Exception>(NotifyError), "", task.Exception);
+                }
+                else
+                    Dispatcher.Invoke(new Action<Win32_LogicalDisk[]>(OnGetLogicalDisksCompleted), new object[] { task.Result });
+            }).ContinueWith(t => Dispatcher.Invoke(() => Application.Current.Exit -= handler));
         }
 
         private void OnGetLogicalDisksCompleted(Win32_LogicalDisk[] logicalDisks)
         {
-            foreach (LogicalDiskVM ld in logicalDisks.Select(d => new LogicalDiskVM(d, 3)))
+            foreach (FolderVM ld in logicalDisks.Select(d => new FolderVM(d, 3)))
                 InnerLogicalDisks.Add(ld);
-
         }
         private void NotifyError(string title, Exception exception)
         {

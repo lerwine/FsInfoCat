@@ -17,13 +17,13 @@ namespace FsInfoCat.Desktop.WMI
             FileName = obj.GetString(nameof(FileName));
             Path = obj.GetString(nameof(Path));
             FSName = obj.GetString(nameof(FSName));
-            CreationDate = obj.GetDateTime(nameof(CreationDate));
-            LastModified = obj.GetDateTime(nameof(LastModified));
-            Archive = obj.GetBoolean(nameof(Archive));
-            Hidden = obj.GetBoolean(nameof(Hidden));
+            CreationDate = obj.GetDateTimeOpt(nameof(CreationDate));
+            LastModified = obj.GetDateTimeOpt(nameof(LastModified));
+            Archive = obj.GetBooleanOpt(nameof(Archive));
+            Hidden = obj.GetBooleanOpt(nameof(Hidden));
             Readable = obj.GetBoolean(nameof(Readable));
-            System = obj.GetBoolean(nameof(System));
-            Writeable = obj.GetBoolean(nameof(Writeable));
+            System = obj.GetBooleanOpt(nameof(System));
+            Writeable = obj.GetBooleanOpt(nameof(Writeable));
         }
 
         public string Name { get; }
@@ -36,12 +36,12 @@ namespace FsInfoCat.Desktop.WMI
         public string FileName { get; }
         public string Path { get; }
         public string FSName { get; }
-        public DateTime CreationDate { get; }
-        public DateTime LastModified { get; }
-        public bool Archive { get; }
-        public bool Hidden { get; }
+        public DateTime? CreationDate { get; }
+        public DateTime? LastModified { get; }
+        public bool? Archive { get; }
+        public bool? Hidden { get; }
         public bool Readable { get; }
-        public bool System { get; }
-        public bool Writeable { get; }
+        public bool? System { get; }
+        public bool? Writeable { get; }
     }
 }

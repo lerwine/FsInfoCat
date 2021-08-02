@@ -14,12 +14,12 @@
     </Page.Resources>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="121*"/>
-            <RowDefinition Height="29*"/>
+            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="13*"/>
-            <ColumnDefinition Width="12*"/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <GridSplitter Grid.Column="1" HorizontalAlignment="Left"  Width="5" Grid.RowSpan="2"/>
         <DataGrid ItemsSource="{Binding CrawlConfigurations, Mode=OneWay}" AutoGenerateColumns="False">
@@ -28,8 +28,7 @@
             </DataGrid.Columns>
         </DataGrid>
         <WrapPanel Grid.Row="1" FlowDirection="RightToLeft">
-            <Button Content="Add" Command="{Binding NewCrawlConfigCommand, Mode=OneWay}"/>
+            <Button Content="Add" Command="{Binding NewCrawlConfigCommand, Mode=OneWay}" Width="75" Height="25"/>
         </WrapPanel>
-
     </Grid>
 </Page>

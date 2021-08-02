@@ -45,7 +45,7 @@
             </MultiTrigger>
         </Style.Triggers>
     </Style>
-    <Style x:Key="InfoMessageTextBlock" TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
+    <!--<Style x:Key="InfoMessageTextBlock" TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
         <Setter Property="Foreground" Value="{StaticResource InfoBrush}"/>
         <Setter Property="TextWrapping" Value="Wrap"/>
     </Style>
@@ -59,46 +59,7 @@
     </Style>
     <Style TargetType="PasswordBox" BasedOn="{StaticResource {x:Type PasswordBox}}">
         <Setter Property="Height" Value="{StaticResource DefaultTextBoxHeight}"/>
-    </Style>
-    <ControlTemplate x:Key="DefaultButtonBaseControlTemplate" TargetType="{x:Type ButtonBase}">
-        <ControlTemplate.Triggers>
-            <Trigger Property="IsEnabled" Value="False">
-                <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
-            </Trigger>
-        </ControlTemplate.Triggers>
-    </ControlTemplate>
-    <Style x:Key="DefaultButtonBaseStyle" TargetType="{x:Type ButtonBase}">
-        <Setter Property="FocusVisualStyle">
-            <Setter.Value>
-                <Style>
-                    <Setter Property="Control.Template">
-                        <Setter.Value>
-                            <ControlTemplate>
-                                <Rectangle Margin="3" SnapsToDevicePixels="True" Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" StrokeThickness="1" StrokeDashArray="1 2"/>
-                            </ControlTemplate>
-                        </Setter.Value>
-                    </Setter>
-                </Style>
-            </Setter.Value>
-        </Setter>
-        <Setter Property="Background" Value="{DynamicResource ButtonBackgroundBrush}"/>
-        <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderBrush}"/>
-        <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
-        <Setter Property="HorizontalContentAlignment" Value="Center"/>
-        <Setter Property="VerticalContentAlignment" Value="Center"/>
-        <Setter Property="Template" Value="{StaticResource DefaultButtonBaseControlTemplate}"/>
-    </Style>
-    <Style x:Key="DefaultButtonStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource DefaultButtonBaseStyle}">
-        <Setter Property="Height" Value="{StaticResource DefaultButtonHeight}"/>
-        <Setter Property="Width" Value="{StaticResource DefaultButtonWidth}"/>
-    </Style>
-    <Style TargetType="Button" BasedOn="{StaticResource DefaultButtonStyle}"/>
-    <Style x:Key="SquareButton" TargetType="Button" BasedOn="{StaticResource DefaultButtonStyle}">
-        <Setter Property="Width" Value="{StaticResource DefaultButtonHeight}"/>
-    </Style>
-    <Style x:Key="BrowseButton" TargetType="Button" BasedOn="{StaticResource SquareButton}">
-        <Setter Property="Content" Value="…"/>
-    </Style>
+    </Style>-->
     <ControlTemplate x:Key="DefaultGridSplitterControlTemplate" TargetType="{x:Type GridSplitter}">
         <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}"/>
     </ControlTemplate>
@@ -116,7 +77,7 @@
         </Setter>
         <Setter Property="Template" Value="{DynamicResource DefaultGridSplitterControlTemplate}"/>
     </Style>
-    <Style x:Key="VerticalGridSplitterStyle" TargetType="{x:Type GridSplitter}" BasedOn="{StaticResource DefaultGridSplitterStyle}">
+    <!--<Style x:Key="VerticalGridSplitterStyle" TargetType="{x:Type GridSplitter}" BasedOn="{StaticResource DefaultGridSplitterStyle}">
         <Setter Property="Background" Value="{StaticResource VerticalSeparatorBrush}"/>
         <Setter Property="ResizeDirection" Value="Columns"/>
         <Setter Property="Width" Value="{StaticResource NormalSpacing}"/>
@@ -130,9 +91,9 @@
         <Setter Property="HorizontalAlignment" Value="Stretch"/>
         <Setter Property="Cursor" Value="SizeNS"/>
     </Style>
+    <Style TargetType="GroupBox" BasedOn="{StaticResource DefaultGroupBoxStyle}"/>-->
     <Style x:Key="DefaultGroupBoxStyle" TargetType="GroupBox">
         <Setter Property="BorderBrush" Value="{StaticResource LightBorderBrush}"/>
         <Setter Property="BorderThickness" Value="1"/>
     </Style>
-    <Style TargetType="GroupBox" BasedOn="{StaticResource DefaultGroupBoxStyle}"/>
 </ResourceDictionary>

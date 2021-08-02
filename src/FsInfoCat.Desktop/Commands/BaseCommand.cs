@@ -149,7 +149,6 @@ namespace FsInfoCat.Desktop.Commands
                 UpdateCanExecute();
                 OnExecute(parameter);
             }
-            catch { throw; }
             finally
             {
                 _execCount--;

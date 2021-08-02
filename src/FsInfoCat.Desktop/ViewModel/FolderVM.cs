@@ -1,3 +1,4 @@
+using FsInfoCat.Desktop.WMI;
 using System;
 using System.Collections.ObjectModel;
 using System.IO;
@@ -16,6 +17,16 @@ namespace FsInfoCat.Desktop.ViewModel
         {
             get => GetValue(NameProperty) as string;
             private set => SetValue(NamePropertyKey, value);
+        }
+
+        private static readonly DependencyPropertyKey PathPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Path), typeof(string), typeof(FolderVM), new PropertyMetadata(""));
+
+        public static readonly DependencyProperty PathProperty = PathPropertyKey.DependencyProperty;
+
+        public string Path
+        {
+            get { return GetValue(PathProperty) as string; }
+            private set { SetValue(PathPropertyKey, value); }
         }
 
         private static readonly DependencyPropertyKey AttributesPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Attributes), typeof(FileAttributes), typeof(FolderVM), new PropertyMetadata(FileAttributes.Normal));
@@ -50,7 +61,7 @@ namespace FsInfoCat.Desktop.ViewModel
 
         #region SubFolders Property Members
 
-        private static readonly DependencyPropertyKey InnerSubFoldersPropertyKey = DependencyProperty.RegisterReadOnly(nameof(InnerSubFolders), typeof(ObservableCollection<FolderVM>), typeof(FolderVM), new PropertyMetadata(new ObservableCollection<FolderVM>()));
+        private static readonly DependencyPropertyKey InnerSubFoldersPropertyKey = DependencyProperty.RegisterReadOnly(nameof(InnerSubFolders), typeof(ObservableCollection<FolderVM>), typeof(FolderVM), new PropertyMetadata(null));
 
         private static readonly DependencyPropertyKey SubFoldersPropertyKey = DependencyProperty.RegisterReadOnly(nameof(SubFolders), typeof(ReadOnlyObservableCollection<FolderVM>), typeof(FolderVM), new PropertyMetadata(null));
 
@@ -74,7 +85,7 @@ namespace FsInfoCat.Desktop.ViewModel
 
         #region Files Property Members
 
-        private static readonly DependencyPropertyKey InnerFilesPropertyKey = DependencyProperty.RegisterReadOnly(nameof(InnerFiles), typeof(ObservableCollection<FileVM>), typeof(FolderVM), new PropertyMetadata(new ObservableCollection<FileVM>()));
+        private static readonly DependencyPropertyKey InnerFilesPropertyKey = DependencyProperty.RegisterReadOnly(nameof(InnerFiles), typeof(ObservableCollection<FileVM>), typeof(FolderVM), new PropertyMetadata(null));
 
         private static readonly DependencyPropertyKey FilesPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Files), typeof(ReadOnlyObservableCollection<FileVM>), typeof(FolderVM), new PropertyMetadata(null));
 
@@ -96,20 +107,49 @@ namespace FsInfoCat.Desktop.ViewModel
 
         #endregion
 
-        internal FolderVM(DirectoryInfo directoryInfo, int preloadDepth)
+        private static readonly DependencyPropertyKey AccessErrorPropertyKey = DependencyProperty.RegisterReadOnly(nameof(AccessError), typeof(string), typeof(FolderVM), new PropertyMetadata(""));
+
+        public static readonly DependencyProperty AccessErrorProperty = AccessErrorPropertyKey.DependencyProperty;
+
+        public string AccessError
         {
-            Name = directoryInfo.Name;
+            get => GetValue(AccessErrorProperty) as string;
+            private set => SetValue(AccessErrorPropertyKey, value);
+        }
+
+        private FolderVM(string name, DirectoryInfo directoryInfo, int preloadDepth)
+        {
+            Name = name;
+            Path = directoryInfo.FullName;
             Attributes = directoryInfo.Attributes;
             CreationTime = directoryInfo.CreationTime;
             LastWriteTime = directoryInfo.LastWriteTime;
-            if (preloadDepth > 0)
+            InnerSubFolders = new();
+            InnerFiles = new();
+            SubFolders = new(InnerSubFolders);
+            Files = new(InnerFiles);
+            DirectoryInfo[] directories;
+            FileInfo[] files;
+            try
             {
-                preloadDepth--;
-                foreach (DirectoryInfo c in directoryInfo.GetDirectories())
-                    InnerSubFolders.Add(new FolderVM(c, preloadDepth));
+                directories = (preloadDepth-- > 0) ? directoryInfo.GetDirectories() : Array.Empty<DirectoryInfo>();
+                files = directoryInfo.GetFiles();
             }
-            foreach (FileInfo c in directoryInfo.GetFiles())
+            catch (Exception exception)
+            {
+                AccessError = string.IsNullOrWhiteSpace(exception.Message) ? exception.ToString() : exception.Message;
+                directories = Array.Empty<DirectoryInfo>();
+                files = Array.Empty<FileInfo>();
+            }
+            foreach (DirectoryInfo c in directories)
+                InnerSubFolders.Add(new FolderVM(c, preloadDepth));
+            foreach (FileInfo c in files)
                 InnerFiles.Add(new FileVM(c));
         }
+
+        internal FolderVM(Win32_LogicalDisk logicalDisk, int preloadDepth) : this(string.IsNullOrWhiteSpace(logicalDisk.VolumeName) ? logicalDisk.DisplayName : $"{logicalDisk.DisplayName} ({logicalDisk.VolumeName})",
+            new DirectoryInfo(string.IsNullOrEmpty(logicalDisk.RootDirectory.Path) ? logicalDisk.RootDirectory.Name : logicalDisk.RootDirectory.Path), preloadDepth) { }
+
+        internal FolderVM(DirectoryInfo directoryInfo, int preloadDepth) : this(directoryInfo.Name, directoryInfo, preloadDepth) { }
     }
 }
