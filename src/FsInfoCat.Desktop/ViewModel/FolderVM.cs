@@ -25,8 +25,8 @@ namespace FsInfoCat.Desktop.ViewModel
 
         public string Path
         {
-            get { return GetValue(PathProperty) as string; }
-            private set { SetValue(PathPropertyKey, value); }
+            get => GetValue(PathProperty) as string;
+            private set => SetValue(PathPropertyKey, value);
         }
 
         private static readonly DependencyPropertyKey AttributesPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Attributes), typeof(FileAttributes), typeof(FolderVM), new PropertyMetadata(FileAttributes.Normal));
@@ -57,6 +57,50 @@ namespace FsInfoCat.Desktop.ViewModel
         {
             get => (DateTime)GetValue(LastWriteTimeProperty);
             private set => SetValue(LastWriteTimePropertyKey, value);
+        }
+
+        public event DependencyPropertyChangedEventHandler IsSelectedPropertyChanged;
+
+        public static readonly DependencyProperty IsSelectedProperty = DependencyProperty.Register(nameof(IsSelected), typeof(bool), typeof(FolderVM),
+                new PropertyMetadata(false, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as FolderVM).OnIsSelectedPropertyChanged(e)));
+
+        public bool IsSelected
+        {
+            get => (bool)GetValue(IsSelectedProperty);
+            set => SetValue(IsSelectedProperty, value);
+        }
+
+        protected virtual void OnIsSelectedPropertyChanged(DependencyPropertyChangedEventArgs args)
+        {
+            try { OnIsSelectedPropertyChanged((bool)args.OldValue, (bool)args.NewValue); }
+            finally { IsSelectedPropertyChanged?.Invoke(this, args); }
+        }
+
+        protected virtual void OnIsSelectedPropertyChanged(bool oldValue, bool newValue)
+        {
+            // TODO: Implement OnIsSelectedPropertyChanged Logic
+        }
+
+        public event DependencyPropertyChangedEventHandler IsExpandedPropertyChanged;
+
+        public static readonly DependencyProperty IsExpandedProperty = DependencyProperty.Register(nameof(IsExpanded), typeof(bool), typeof(FolderVM),
+                new PropertyMetadata(false, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as FolderVM).OnIsExpandedPropertyChanged(e)));
+
+        public bool IsExpanded
+        {
+            get => (bool)GetValue(IsExpandedProperty);
+            set => SetValue(IsExpandedProperty, value);
+        }
+
+        protected virtual void OnIsExpandedPropertyChanged(DependencyPropertyChangedEventArgs args)
+        {
+            try { OnIsExpandedPropertyChanged((bool)args.OldValue, (bool)args.NewValue); }
+            finally { IsExpandedPropertyChanged?.Invoke(this, args); }
+        }
+
+        protected virtual void OnIsExpandedPropertyChanged(bool oldValue, bool newValue)
+        {
+            // TODO: Implement OnIsExpandedPropertyChanged Logic
         }
 
         #region SubFolders Property Members

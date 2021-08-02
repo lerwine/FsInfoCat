@@ -20,7 +20,7 @@ namespace FsInfoCat.Desktop.ViewModel
         public event DependencyPropertyChangedEventHandler CurrentPathPropertyChanged;
 
         public static readonly DependencyProperty CurrentPathProperty = DependencyProperty.Register(nameof(CurrentPath), typeof(string), typeof(FolderBrowserVM),
-                new PropertyMetadata("Test", (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as FolderBrowserVM).OnCurrentPathPropertyChanged(e)));
+                new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as FolderBrowserVM).OnCurrentPathPropertyChanged(e)));
 
         public string CurrentPath
         {
@@ -62,6 +62,31 @@ namespace FsInfoCat.Desktop.ViewModel
         }
 
         #endregion
+
+        private static readonly DependencyPropertyKey ItemExpandedCommandPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ItemExpandedCommand), typeof(Commands.RelayCommand), typeof(FolderBrowserVM), new PropertyMetadata(null, null, (DependencyObject d, object baseValue) =>
+                (baseValue is Commands.RelayCommand rc) ? rc : new Commands.RelayCommand(((FolderBrowserVM)d).OnItemExpandedExecute)));
+
+        public static readonly DependencyProperty ItemExpandedCommandProperty = ItemExpandedCommandPropertyKey.DependencyProperty;
+
+        public Commands.RelayCommand ItemExpandedCommand => (Commands.RelayCommand)GetValue(ItemExpandedCommandProperty);
+
+        private void OnItemExpandedExecute(object parameter)
+        {
+            // TODO: Implement OnItemExpandedExecute Logic
+        }
+
+
+        private static readonly DependencyPropertyKey ItemSelectedCommandPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ItemSelectedCommand), typeof(Commands.RelayCommand), typeof(FolderBrowserVM), new PropertyMetadata(null, null, (DependencyObject d, object baseValue) =>
+                (baseValue is Commands.RelayCommand rc) ? rc : new Commands.RelayCommand(((FolderBrowserVM)d).OnItemSelectedExecute)));
+
+        public static readonly DependencyProperty ItemSelectedCommandProperty = ItemSelectedCommandPropertyKey.DependencyProperty;
+
+        public Commands.RelayCommand ItemSelectedCommand => (Commands.RelayCommand)GetValue(ItemSelectedCommandProperty);
+
+        private void OnItemSelectedExecute(object parameter)
+        {
+            // TODO: Implement OnItemSelectedExecute Logic
+        }
 
         public FolderBrowserVM()
         {
