@@ -25,7 +25,8 @@ namespace FsInfoCat.UnitTests
         [TestMethod("new SymbolicName()")]
         public void NewSymbolicNameTestMethod()
         {
-            using var dbContext = Services.ServiceProvider.GetService<LocalDbContext>();
+            using IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             SymbolicName target = new();
 
             EntityEntry<SymbolicName> entry = dbContext.Entry(target);

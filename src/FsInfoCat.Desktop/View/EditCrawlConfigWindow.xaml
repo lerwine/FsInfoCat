@@ -1,0 +1,160 @@
+<Window x:Class="FsInfoCat.Desktop.View.EditCrawlConfigWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:FsInfoCat.Desktop.ViewModel"
+        xmlns:cvt="clr-namespace:FsInfoCat.Desktop.Converters"
+        xmlns:local="clr-namespace:FsInfoCat.Desktop.View"
+        mc:Ignorable="d" DataContext="{DynamicResource VM}"
+        Title="{Binding WindowTitle, Mode=OneWay}" Height="600" Width="800">
+    <Window.Resources>
+        <vm:EditCrawlConfigVM x:Key="VM"/>
+    </Window.Resources>
+    <StackPanel>
+        <GroupBox Margin="{DynamicResource DefaultSpacingTopLeftRight}">
+            <GroupBox.Header>
+                <Label Content="Path" Padding="{DynamicResource DefaultSpacingLeft}"/>
+            </GroupBox.Header>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBox Margin="{DynamicResource DefaultSpacingTopLeft}" IsReadOnly="True" MaxLines="1" Text="{Binding Path, Mode=OneWay}" />
+                <Button Content="..." Grid.Column="1" Margin="{DynamicResource DefaultSpacingTopRight}"/>
+            </Grid>
+        </GroupBox>
+        <GroupBox Margin="{DynamicResource DefaultSpacingTopLeftRight}">
+            <GroupBox.Header>
+                <Label Content="Display Name" Padding="{DynamicResource DefaultSpacingLeft}"/>
+            </GroupBox.Header>
+            <TextBox Margin="{DynamicResource DefaultSpacingTopLeftRight}" MaxLines="1" Text="{Binding DisplayName, Mode=TwoWay}" />
+        </GroupBox>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <GroupBox Margin="{DynamicResource DefaultSpacingTopLeftRight}" Header="Max Recursion Depth">
+                <TextBox Margin="{DynamicResource DefaultSpacingTopLeftRight}" MaxLines="1" Text="{Binding MaxRecursionDepth, Mode=TwoWay}" />
+            </GroupBox>
+            <GroupBox Grid.Row="1" Margin="{DynamicResource DefaultSpacingTopLeftRight}">
+                <GroupBox.Header>
+                    <CheckBox Content="Max Total Items" HorizontalAlignment="Left" Margin="{DynamicResource DefaultSpacingLeft}" IsChecked="{Binding LimitTotalItems, Mode=TwoWay}" />
+                </GroupBox.Header>
+                <TextBox Margin="{DynamicResource DefaultSpacingTopLeftRight}" MaxLines="1" Text="{Binding MaxTotalItems, Mode=TwoWay}" />
+            </GroupBox>
+            <GroupBox Margin="{DynamicResource DefaultSpacingTopLeftRight}" Header="Status" Grid.Column="1" Grid.RowSpan="2">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Label Content="Status:" />
+                    <TextBlock Grid.Column="1" Grid.ColumnSpan="2"/>
+                    <CheckBox Content="Enabled" Grid.Column="3" IsChecked="{Binding IsEnabled, Mode=TwoWay}" />
+                    <Label Content="Last Crawl Start" Grid.Row="1" Grid.ColumnSpan="2"/>
+                    <TextBlock Grid.Row="2" Grid.ColumnSpan="2"/>
+                    <Label Content="Last Crawl End" Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2"/>
+                    <TextBlock Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="2"/>
+                    <Label Content="Next Scheduled Crawl Start" Grid.Row="3" Grid.ColumnSpan="4"/>
+                    <TextBlock Grid.Row="4" Grid.ColumnSpan="4"/>
+                </Grid>
+            </GroupBox>
+        </Grid>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <GroupBox Margin="{DynamicResource DefaultSpacingTopLeftRight}">
+                <GroupBox.Header>
+                    <CheckBox Content="Maximum Crawl Duration" Margin="{DynamicResource DefaultSpacingLeft}" IsChecked="{Binding LimitTTL, Mode=TwoWay}"/>
+                </GroupBox.Header>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Label Content="Days" Grid.ColumnSpan="2" Padding="{DynamicResource DefaultSpacingLeftRight}" />
+                    <TextBox Grid.Row="1" Margin="{DynamicResource DefaultSpacingLeftRight}" MaxLines="1" Text="{Binding TtlDays, Mode=TwoWay}" />
+                    <TextBlock Grid.Row="1" Text=", " Grid.Column="1" Padding="{DynamicResource DefaultSpacingLeftRight}"/>
+                    <Label Content="Hours" Grid.Column="2" Grid.ColumnSpan="2" Padding="{DynamicResource DefaultSpacingLeftRight}" />
+                    <TextBox Grid.Row="1" Grid.Column="2" Margin="{DynamicResource DefaultSpacingLeftRight}" MaxLines="1" Text="{Binding TtlHours, Mode=TwoWay}" />
+                    <TextBlock Grid.Row="1" Text=":" Grid.Column="3" Padding="{DynamicResource DefaultSpacingLeftRight}"/>
+                    <Label Content="Minutes" Grid.Column="4" Grid.ColumnSpan="2" Padding="{DynamicResource DefaultSpacingLeftRight}" />
+                    <TextBox Grid.Row="1" Grid.Column="4" Margin="{DynamicResource DefaultSpacingLeftRight}" MaxLines="1" Text="{Binding TtlMinutes, Mode=TwoWay}" />
+                    <TextBlock Grid.Row="1" Text=":" Grid.Column="5" Padding="{DynamicResource DefaultSpacingLeftRight}"/>
+                    <Label Content="Seconds" Grid.Column="6" Grid.ColumnSpan="2" Padding="{DynamicResource DefaultSpacingLeftRight}" />
+                    <TextBox Grid.Row="1" Grid.Column="6" Margin="{DynamicResource DefaultSpacingLeftRight}" MaxLines="1" Text="{Binding TtlSeconds, Mode=TwoWay}" />
+                </Grid>
+            </GroupBox>
+            <GroupBox Grid.Column="1" Margin="{DynamicResource DefaultSpacingTopLeftRight}">
+                <GroupBox.Header>
+                    <CheckBox Content="Auto Reschedule" Margin="{DynamicResource DefaultSpacingLeft}" IsChecked="{Binding AutoReschedule}" />
+                </GroupBox.Header>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Label Content="Days" Grid.ColumnSpan="2" Padding="{DynamicResource DefaultSpacingLeftRight}" />
+                    <TextBox Grid.Row="1" Margin="{DynamicResource DefaultSpacingLeftRight}" MaxLines="1" />
+                    <TextBlock Grid.Row="1" Text=", " Grid.Column="1" Padding="{DynamicResource DefaultSpacingLeftRight}"/>
+                    <Label Content="Hours" Grid.Column="2" Grid.ColumnSpan="2" Padding="{DynamicResource DefaultSpacingLeftRight}" />
+                    <TextBox Grid.Row="1" Grid.Column="2" Margin="{DynamicResource DefaultSpacingLeftRight}" MaxLines="1" />
+                    <TextBlock Grid.Row="1" Text=":" Grid.Column="3" Padding="{DynamicResource DefaultSpacingLeftRight}"/>
+                    <Label Content="Minutes" Grid.Column="4" Grid.ColumnSpan="2" Padding="{DynamicResource DefaultSpacingLeftRight}" />
+                    <TextBox Grid.Row="1" Grid.Column="4" Margin="{DynamicResource DefaultSpacingLeftRight}" MaxLines="1" />
+                    <TextBlock Grid.Row="1" Text=":" Grid.Column="5" Padding="{DynamicResource DefaultSpacingLeftRight}"/>
+                    <Label Content="Seconds" Grid.Column="6" Grid.ColumnSpan="2" Padding="{DynamicResource DefaultSpacingLeftRight}" />
+                    <TextBox Grid.Row="1" Grid.Column="6" Margin="{DynamicResource DefaultSpacingLeftRight}" MaxLines="1" />
+                    <RadioButton Grid.Row="2" Grid.ColumnSpan="4" Content="After Last Scheduled Start" Margin="{DynamicResource DefaultSpacingTopLeftRight}" />
+                    <RadioButton Grid.Row="2" Grid.Column="4" Grid.ColumnSpan="3" Content="After Last Completion Time" Margin="{DynamicResource DefaultSpacingTopLeftRight}" />
+                    <CheckBox Grid.Row="3" Grid.ColumnSpan="7" Content="Restart After Failure" Margin="{DynamicResource DefaultSpacingTopLeftRight}" IsChecked="{Binding RescheduleAfterFail, Mode=TwoWay}" />
+                </Grid>
+            </GroupBox>
+        </Grid>
+        <GroupBox Margin="{DynamicResource DefaultSpacingTopLeftRight}" Header="Nodes">
+            <TextBox Margin="{DynamicResource DefaultSpacingTopLeftRight}" VerticalScrollBarVisibility="Auto" AcceptsReturn="True" AcceptsTab="True" TextWrapping="Wrap" Height="120" Text="{Binding Notes, Mode=TwoWay}" />
+        </GroupBox>
+        <WrapPanel FlowDirection="RightToLeft">
+            <Button Content="Cancel" Width="75" Height="25" Margin="{DynamicResource DefaultSpacingTopBottomLeft}"/>
+            <Button Content="Save" Width="75" Height="25" Margin="{DynamicResource DefaultSpacing}"/>
+        </WrapPanel>
+    </StackPanel>
+</Window>

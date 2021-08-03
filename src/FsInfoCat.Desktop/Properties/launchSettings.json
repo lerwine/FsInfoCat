@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "FsInfoCat.Desktop": {
+      "commandName": "Project",
+      "commandLineArgs": "--environment Development"
+    }
+  }
+}

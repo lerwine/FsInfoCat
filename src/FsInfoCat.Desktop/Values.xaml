@@ -10,6 +10,7 @@
     <Thickness x:Key="DefaultSpacingRight" Left="0" Top="0" Right="{StaticResource NormalSpacing}" Bottom="0"/>
     <Thickness x:Key="DefaultSpacingBottomRight" Left="0" Top="0" Right="{StaticResource NormalSpacing}" Bottom="{StaticResource NormalSpacing}"/>
     <Thickness x:Key="DefaultSpacingTop" Left="0" Top="{StaticResource NormalSpacing}" Right="0" Bottom="0"/>
+    <System:Double x:Key="LargeFontSize">16</System:Double>
     <Thickness x:Key="DefaultSpacingTopBottom" Left="0" Top="{StaticResource NormalSpacing}" Right="0" Bottom="{StaticResource NormalSpacing}"/>
     <Thickness x:Key="DefaultSpacingTopRight" Left="0" Top="{StaticResource NormalSpacing}" Right="{StaticResource NormalSpacing}" Bottom="0"/>
     <Thickness x:Key="DefaultSpacingTopBottomRight" Left="0" Top="{StaticResource NormalSpacing}" Right="{StaticResource NormalSpacing}" Bottom="{StaticResource NormalSpacing}"/>

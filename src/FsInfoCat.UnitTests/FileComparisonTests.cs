@@ -25,7 +25,8 @@ namespace FsInfoCat.UnitTests
         [TestMethod("new FileComparison()")]
         public void NewFileComparisonTestMethod()
         {
-            using var dbContext = Services.ServiceProvider.GetService<LocalDbContext>();
+            using IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetService<LocalDbContext>();
             FileComparison target = new();
 
             EntityEntry<FileComparison> entry = dbContext.Entry(target);

@@ -25,7 +25,8 @@ namespace FsInfoCat.UnitTests
         [TestMethod("new SubdirectoryAccessError()")]
         public void NewSubdirectoryAccessErrorTestMethod()
         {
-            using var dbContext = Services.ServiceProvider.GetService<LocalDbContext>();
+            using IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             SubdirectoryAccessError target = new();
 
             EntityEntry<SubdirectoryAccessError> entry = dbContext.Entry(target);

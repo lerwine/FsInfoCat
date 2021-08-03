@@ -26,7 +26,8 @@ namespace FsInfoCat.UnitTests
         [TestMethod("new FileSystem()")]
         public void NewFileSystemTestMethod()
         {
-            using var dbContext = Services.ServiceProvider.GetService<LocalDbContext>();
+            using IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             FileSystem target = new();
 
             EntityEntry<FileSystem> entry = dbContext.Entry(target);

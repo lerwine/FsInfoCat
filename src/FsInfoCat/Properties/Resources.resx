@@ -1663,4 +1663,22 @@
   <data name="DisplayName_None_Parentheses" xml:space="preserve">
     <value>(none)</value>
   </data>
+  <data name="Description_IO_Operation_Canceled" xml:space="preserve">
+    <value>I/O operation was canceled.</value>
+  </data>
+  <data name="DisplayName_DirectoryNotFound" xml:space="preserve">
+    <value>Directory not found</value>
+  </data>
+  <data name="DisplayName_GetLogicalDisksFailure" xml:space="preserve">
+    <value>Cannot get logical disks</value>
+  </data>
+  <data name="DisplayName_NotFound" xml:space="preserve">
+    <value>Not found</value>
+  </data>
+  <data name="ErrorMessage_DirectoryNotFound" xml:space="preserve">
+    <value>Directory was not found.</value>
+  </data>
+  <data name="ErrorMessage_GetLogicalDisksFailure" xml:space="preserve">
+    <value>Unexpected error while getting logical disks.</value>
+  </data>
 </root>

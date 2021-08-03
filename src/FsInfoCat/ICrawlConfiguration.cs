@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -24,10 +24,9 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_Notes), ResourceType = typeof(Properties.Resources))]
         string Notes { get; }
 
-        /// <summary>Gets a value indicating whether the current crawl configuration has been deactivated.</summary>
+        /// <summary>Gets a value indicating current crawl configuration status.</summary>
         /// <value>
-        /// <see langword="true" /> if the current crawl configuration has been deactivated; otherwise, <see langword="false" /> to indicate that is
-        /// available for use.
+        /// The <see cref="CrawlStatus" /> value that indicates the current status.
         /// </value>
         [Display(Name = nameof(Properties.Resources.DisplayName_Status), ResourceType = typeof(Properties.Resources))]
         CrawlStatus StatusValue { get; }

@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -130,43 +131,52 @@ namespace FsInfoCat.Desktop.ViewModel
 
         private void OnNewCrawlConfigExecute(object parameter)
         {
-            View.FolderBrowserWindow window = new();
-            MainWindow mainWindow = Services.ServiceProvider.GetService<MainWindow>();
-            if (mainWindow is not null)
-                window.Owner = mainWindow;
-            window.ShowDialog();
+            DirectoryInfo crawlRoot = FolderBrowserVM.Prompt("Crawl Root Folder", "Select root folder for new crawl configuration.");
+            if (crawlRoot is not null)
+            {
+                CrawlConfiguration item = EditCrawlConfigVM.Edit(crawlRoot);
+                if (item is not null)
+                {
+                    if (ShowAllCrawlConfigurations)
+                        EditCrawlConfigVM.UpsertItem(item, CrawlConfigurations, _allCrawlConfigurations, true, true);
+                    else if (ShowActiveCrawlConfigurationsOnly)
+                        EditCrawlConfigVM.UpsertItem(item, CrawlConfigurations, _allCrawlConfigurations, true, false);
+                    else
+                        EditCrawlConfigVM.UpsertItem(item, CrawlConfigurations, _allCrawlConfigurations, false, true);
+                }
+            }
         }
 
         public CrawlConfigurationsPageVM()
         {
             InnerCrawlConfigurations = new();
             CrawlConfigurations = new(InnerCrawlConfigurations);
-            if (!DesignerProperties.GetIsInDesignMode(this))
-                _logger = Services.ServiceProvider.GetRequiredService<ILogger<CrawlConfigurationsPageVM>>();
-            _ = LoadInitialDataAsync().ContinueWith(task =>
-              {
-                  if (task.IsFaulted)
-                  {
-                      if (!DesignerProperties.GetIsInDesignMode(this))
-                          _logger.LogError(task.Exception, "Error executing LoadInitialDataAsync");
-                      Dispatcher.Invoke(() => OnInitialDataLoadError(task.Exception));
-                  }
-                  else if (task.IsCanceled)
-                  {
-                      if (!DesignerProperties.GetIsInDesignMode(this))
-                          _logger.LogWarning("LoadInitialDataAsync canceled.");
-                  }
-                  else
-                      Dispatcher.Invoke(() => OnInitialDataLoaded(task.Result));
-              });
             SetValue(NewCrawlConfigCommandPropertyKey, new Commands.RelayCommand(InvokeNewCrawlConfigCommand));
+            _logger = App.GetLogger(this);
+#if DEBUG
+            if (DesignerProperties.GetIsInDesignMode(this))
+                return;
+#endif
+            _ = LoadInitialDataAsync().ContinueWith(task =>
+            {
+                if (task.IsFaulted)
+                {
+                    _logger.LogError(task.Exception, "Error executing LoadInitialDataAsync");
+                    Dispatcher.Invoke(() => OnInitialDataLoadError(task.Exception));
+                }
+                else if (task.IsCanceled)
+                    _logger.LogWarning("LoadInitialDataAsync canceled.");
+                else
+                    Dispatcher.Invoke(() => OnInitialDataLoaded(task.Result));
+            });
         }
 
         private static async Task<List<(string FullName, Guid SubdirectoryId, CrawlConfiguration Source)>> LoadInitialDataAsync()
         {
-            using LocalDbContext dbContext = Services.ServiceProvider.GetService<LocalDbContext>();
+            using IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetService<LocalDbContext>();
             List<CrawlConfiguration> configurations = await dbContext.CrawlConfigurations.Include(c => c.Root).ToListAsync();
-            return await Subdirectory.LoadFullNamesAsync(configurations, c =>c.Root, dbContext);
+            return await Subdirectory.LoadFullNamesAsync(configurations, c => c.Root, dbContext);
         }
 
         private void OnInitialDataLoaded(IEnumerable<(string FullName, Guid SubdirectoryId, CrawlConfiguration Source)> items)

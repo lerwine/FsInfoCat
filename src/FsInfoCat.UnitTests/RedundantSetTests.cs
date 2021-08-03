@@ -25,7 +25,8 @@ namespace FsInfoCat.UnitTests
         [TestMethod("new RedundantSet()")]
         public void NewRedundantSetTestMethod()
         {
-            using var dbContext = Services.ServiceProvider.GetService<LocalDbContext>();
+            using IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             RedundantSet target = new();
 
             EntityEntry<RedundantSet> entry = dbContext.Entry(target);

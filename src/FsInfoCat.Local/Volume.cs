@@ -226,11 +226,12 @@ namespace FsInfoCat.Local
         {
             VolumeIdentifier identifier = Identifier;
             LocalDbContext dbContext;
+            using IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
             if (identifier.IsEmpty())
                 results.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_IdentifierRequired, new string[] { nameof(Identifier) }));
             else if (identifier.ToString().Length > DbConstants.DbColMaxLen_Identifier)
                 results.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_IdentifierLength, new string[] { nameof(Identifier) }));
-            else if ((dbContext = validationContext.GetService<LocalDbContext>()) is not null)
+            else if ((dbContext = serviceScope.ServiceProvider.GetService<LocalDbContext>()) is not null)
             {
                 Guid id = Id;
                 if (dbContext.Volumes.Any(v => id != v.Id && v.Identifier == identifier))

@@ -142,7 +142,8 @@ namespace FsInfoCat.Local
             if (string.IsNullOrEmpty(displayName))
                 return;
             Guid id = Id;
-            LocalDbContext dbContext = validationContext.GetService<LocalDbContext>();
+            using IServiceScope serviceScope = validationContext.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetService<LocalDbContext>();
             if (dbContext is not null)
             {
                 if (dbContext.FileSystems.Any(fs => id != fs.Id && fs.DisplayName == displayName))

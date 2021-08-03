@@ -94,7 +94,8 @@ namespace FsInfoCat.Local
         {
             _logger.LogWarning("Crawl Started");
             crawlEventReceiver?.RaiseCrawlStarted(this);
-            using LocalDbContext dbContext = Services.ServiceProvider.GetRequiredService<LocalDbContext>();
+            using IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             Subdirectory subdirectory = await dbContext.Entry(configuration).GetRelatedReferenceAsync(c => c.Root, cancellationToken);
             if (subdirectory is null)
                 throw new InvalidOperationException($"Unexpected error: {nameof(CrawlConfiguration)}.{nameof(CrawlConfiguration.Root)} was null.");

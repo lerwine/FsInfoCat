@@ -402,7 +402,8 @@ namespace FsInfoCat.Local
                 throw new ArgumentNullException(nameof(subdirectory));
             if (dbContext is null)
             {
-                using LocalDbContext context = Services.ServiceProvider.GetRequiredService<LocalDbContext>();
+                using IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
+                using LocalDbContext context = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
                 return await LookupFullNameAsync(subdirectory, context);
             }
             Guid? parentId = subdirectory.ParentId;
@@ -478,11 +479,12 @@ namespace FsInfoCat.Local
             Volume volume = Volume;
             Guid id = Id;
             LocalDbContext dbContext;
+            using IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
             if (parent is null)
             {
                 if (volume is null)
                     results.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_VolumeOrParentRequired, new string[] { nameof(Parent) }));
-                else if ((dbContext = validationContext.GetService<LocalDbContext>()) is not null)
+                else if ((dbContext = serviceScope.ServiceProvider.GetService<LocalDbContext>()) is not null)
                 {
                     Guid volumeId = volume.Id;
                     var entities = from sn in dbContext.Subdirectories where id != sn.Id && sn.VolumeId == volumeId select sn;
@@ -494,7 +496,7 @@ namespace FsInfoCat.Local
             {
                 if (Id.Equals(parent.Id))
                     results.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_CircularReference, new string[] { nameof(Name) }));
-                else if ((dbContext = validationContext.GetService<LocalDbContext>()) is not null)
+                else if ((dbContext = serviceScope.ServiceProvider.GetService<LocalDbContext>()) is not null)
                 {
                     string name = Name;
                     if (string.IsNullOrEmpty(name))

@@ -25,7 +25,8 @@ namespace FsInfoCat.UnitTests
         [TestMethod("new VolumeAccessError()")]
         public void NewVolumeAccessErrorTestMethod()
         {
-            using var dbContext = Services.ServiceProvider.GetService<LocalDbContext>();
+            using IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             VolumeAccessError target = new();
 
             EntityEntry<VolumeAccessError> entry = dbContext.Entry(target);

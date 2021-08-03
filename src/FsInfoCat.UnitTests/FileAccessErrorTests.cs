@@ -25,7 +25,8 @@ namespace FsInfoCat.UnitTests
         [TestMethod("new FileAccessError()")]
         public void NewFileAccessErrorTestMethod()
         {
-            using var dbContext = Services.ServiceProvider.GetService<LocalDbContext>();
+            using IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetService<LocalDbContext>();
             FileAccessError target = new();
 
             EntityEntry<FileAccessError> entry = dbContext.Entry(target);

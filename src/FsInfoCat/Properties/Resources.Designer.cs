@@ -592,6 +592,15 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to I/O operation was canceled..
+        /// </summary>
+        public static string Description_IO_Operation_Canceled {
+            get {
+                return ResourceManager.GetString("Description_IO_Operation_Canceled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to An error has occurred while trying to read file or directory data..
         /// </summary>
         public static string Description_IOError {
@@ -1717,6 +1726,15 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Directory not found.
+        /// </summary>
+        public static string DisplayName_DirectoryNotFound {
+            get {
+                return ResourceManager.GetString("DisplayName_DirectoryNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Directory Status.
         /// </summary>
         public static string DisplayName_DirectoryStatus {
@@ -2334,6 +2352,15 @@ namespace FsInfoCat.Properties {
         public static string DisplayName_Genre {
             get {
                 return ResourceManager.GetString("DisplayName_Genre", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cannot get logical disks.
+        /// </summary>
+        public static string DisplayName_GetLogicalDisksFailure {
+            get {
+                return ResourceManager.GetString("DisplayName_GetLogicalDisksFailure", resourceCulture);
             }
         }
         
@@ -3045,6 +3072,15 @@ namespace FsInfoCat.Properties {
         public static string DisplayName_Notes {
             get {
                 return ResourceManager.GetString("DisplayName_Notes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Not found.
+        /// </summary>
+        public static string DisplayName_NotFound {
+            get {
+                return ResourceManager.GetString("DisplayName_NotFound", resourceCulture);
             }
         }
         
@@ -4336,6 +4372,15 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Directory was not found..
+        /// </summary>
+        public static string ErrorMessage_DirectoryNotFound {
+            get {
+                return ResourceManager.GetString("ErrorMessage_DirectoryNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Display Name too long..
         /// </summary>
         public static string ErrorMessage_DisplayNameLength {
@@ -4413,6 +4458,15 @@ namespace FsInfoCat.Properties {
         public static string ErrorMessage_FileSystemRequired {
             get {
                 return ResourceManager.GetString("ErrorMessage_FileSystemRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unexpected error while getting logical disks..
+        /// </summary>
+        public static string ErrorMessage_GetLogicalDisksFailure {
+            get {
+                return ResourceManager.GetString("ErrorMessage_GetLogicalDisksFailure", resourceCulture);
             }
         }
         

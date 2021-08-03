@@ -1,17 +1,26 @@
 using FsInfoCat.Desktop.WMI;
+using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
+using System.Security;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel
 {
     public class FolderVM : DependencyObject
     {
+        private readonly object _syncRoot = new();
+        private CancellableTask<Task, int> _preload;
 
         private static readonly DependencyPropertyKey NamePropertyKey = DependencyProperty.RegisterReadOnly(nameof(Name), typeof(string), typeof(FolderVM), new PropertyMetadata(""));
 
         public static readonly DependencyProperty NameProperty = NamePropertyKey.DependencyProperty;
+        private readonly ILogger<FolderVM> _logger;
 
         public string Name
         {
@@ -30,6 +39,61 @@ namespace FsInfoCat.Desktop.ViewModel
         }
 
         private static readonly DependencyPropertyKey AttributesPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Attributes), typeof(FileAttributes), typeof(FolderVM), new PropertyMetadata(FileAttributes.Normal));
+
+        internal static Task<LinkedList<FolderVM>> FindByPathAsync(IEnumerable<FolderVM> logicalDisks, string path) => Task.Factory.StartNew(() => FindByPath(logicalDisks, path));
+
+        private static LinkedList<FolderVM> FindByPath(IEnumerable<FolderVM> logicalDisks, string path)
+        {
+            if (string.IsNullOrEmpty(path))
+                return null;
+            string name = System.IO.Path.GetFileName(path);
+            string parentPath = System.IO.Path.GetDirectoryName(path);
+            while (string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(parentPath))
+            {
+                name = System.IO.Path.GetFileName(parentPath);
+                parentPath = System.IO.Path.GetDirectoryName(parentPath);
+            }
+            LinkedList<FolderVM> list;
+            FolderVM item;
+            if (string.IsNullOrEmpty(parentPath) || string.IsNullOrEmpty(name))
+            {
+                item = logicalDisks.FirstOrDefault(d => d.Dispatcher.Invoke(() => d.Path == path));
+                if (item is null && path.Any(c => char.IsLetter(c)))
+                {
+                    StringComparer comparer = StringComparer.InvariantCultureIgnoreCase;
+                    item = logicalDisks.FirstOrDefault(d => d.Dispatcher.Invoke(() => comparer.Equals(d.Path, path)));
+                }
+                if (item is null)
+                    return null;
+                list = new();
+                list.AddLast(item);
+            }
+            else if ((list = FindByPath(logicalDisks, parentPath)) is not null)
+            {
+                FolderVM result = list.Last.Value;
+                ReadOnlyObservableCollection<FolderVM> subFolders = result.Dispatcher.Invoke(() => result.SubFolders);
+                if (subFolders.Count == 0)
+                {
+                    if (!(result._preload?.Task.IsCompleted ?? false))
+                    {
+                        result.PreloadAsync(0).Wait();
+                        subFolders = result.Dispatcher.Invoke(() => result.SubFolders);
+                    }
+                    if (subFolders.Count == 0)
+                        return null;
+                }
+                item = result.Dispatcher.Invoke(() => subFolders.FirstOrDefault(d => d.Name == name));
+                if (item is null && name.Any(c => char.IsLetter(c)))
+                {
+                    StringComparer comparer = StringComparer.InvariantCultureIgnoreCase;
+                    item = result.Dispatcher.Invoke(() => subFolders.FirstOrDefault(d => comparer.Equals(d.Name, name)));
+                }
+                if (item is null)
+                    return null;
+                list.AddLast(item);
+            }
+            return list;
+        }
 
         public static readonly DependencyProperty AttributesProperty = AttributesPropertyKey.DependencyProperty;
 
@@ -59,8 +123,6 @@ namespace FsInfoCat.Desktop.ViewModel
             private set => SetValue(LastWriteTimePropertyKey, value);
         }
 
-        public event DependencyPropertyChangedEventHandler IsSelectedPropertyChanged;
-
         public static readonly DependencyProperty IsSelectedProperty = DependencyProperty.Register(nameof(IsSelected), typeof(bool), typeof(FolderVM),
                 new PropertyMetadata(false, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as FolderVM).OnIsSelectedPropertyChanged(e)));
 
@@ -72,16 +134,9 @@ namespace FsInfoCat.Desktop.ViewModel
 
         protected virtual void OnIsSelectedPropertyChanged(DependencyPropertyChangedEventArgs args)
         {
-            try { OnIsSelectedPropertyChanged((bool)args.OldValue, (bool)args.NewValue); }
-            finally { IsSelectedPropertyChanged?.Invoke(this, args); }
+            if ((bool)args.NewValue)
+                PreloadAsync();
         }
-
-        protected virtual void OnIsSelectedPropertyChanged(bool oldValue, bool newValue)
-        {
-            // TODO: Implement OnIsSelectedPropertyChanged Logic
-        }
-
-        public event DependencyPropertyChangedEventHandler IsExpandedPropertyChanged;
 
         public static readonly DependencyProperty IsExpandedProperty = DependencyProperty.Register(nameof(IsExpanded), typeof(bool), typeof(FolderVM),
                 new PropertyMetadata(false, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as FolderVM).OnIsExpandedPropertyChanged(e)));
@@ -94,13 +149,8 @@ namespace FsInfoCat.Desktop.ViewModel
 
         protected virtual void OnIsExpandedPropertyChanged(DependencyPropertyChangedEventArgs args)
         {
-            try { OnIsExpandedPropertyChanged((bool)args.OldValue, (bool)args.NewValue); }
-            finally { IsExpandedPropertyChanged?.Invoke(this, args); }
-        }
-
-        protected virtual void OnIsExpandedPropertyChanged(bool oldValue, bool newValue)
-        {
-            // TODO: Implement OnIsExpandedPropertyChanged Logic
+            if ((bool)args.NewValue)
+                PreloadAsync();
         }
 
         #region SubFolders Property Members
@@ -161,39 +211,230 @@ namespace FsInfoCat.Desktop.ViewModel
             private set => SetValue(AccessErrorPropertyKey, value);
         }
 
-        private FolderVM(string name, DirectoryInfo directoryInfo, int preloadDepth)
+        private FolderVM(string name, DirectoryInfo directoryInfo)
         {
+            _logger = App.GetLogger(this);
             Name = name;
             Path = directoryInfo.FullName;
             Attributes = directoryInfo.Attributes;
             CreationTime = directoryInfo.CreationTime;
             LastWriteTime = directoryInfo.LastWriteTime;
             InnerSubFolders = new();
-            InnerFiles = new();
             SubFolders = new(InnerSubFolders);
+            InnerFiles = new();
             Files = new(InnerFiles);
-            DirectoryInfo[] directories;
-            FileInfo[] files;
-            try
-            {
-                directories = (preloadDepth-- > 0) ? directoryInfo.GetDirectories() : Array.Empty<DirectoryInfo>();
-                files = directoryInfo.GetFiles();
-            }
-            catch (Exception exception)
-            {
-                AccessError = string.IsNullOrWhiteSpace(exception.Message) ? exception.ToString() : exception.Message;
-                directories = Array.Empty<DirectoryInfo>();
-                files = Array.Empty<FileInfo>();
-            }
-            foreach (DirectoryInfo c in directories)
-                InnerSubFolders.Add(new FolderVM(c, preloadDepth));
-            foreach (FileInfo c in files)
-                InnerFiles.Add(new FileVM(c));
         }
 
-        internal FolderVM(Win32_LogicalDisk logicalDisk, int preloadDepth) : this(string.IsNullOrWhiteSpace(logicalDisk.VolumeName) ? logicalDisk.DisplayName : $"{logicalDisk.DisplayName} ({logicalDisk.VolumeName})",
-            new DirectoryInfo(string.IsNullOrEmpty(logicalDisk.RootDirectory.Path) ? logicalDisk.RootDirectory.Name : logicalDisk.RootDirectory.Path), preloadDepth) { }
+        private void Preload(int depth, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            string path = Dispatcher.Invoke(() => Path);
+            using IDisposable scope = _logger.BeginScope("Pre-loading {Path}; Depth={Depth}", path, depth);
+            FolderVM[] subFolders;
+            if (path is not null)
+            {
+                DirectoryInfo[] directories;
+                FileInfo[] files;
+                try
+                {
+                    DirectoryInfo directory = new(path);
+                    directories = directory.GetDirectories();
+                    files = directory.GetFiles();
+                }
+                catch (UnauthorizedAccessException unauthorizedAccessException)
+                {
+                    _logger.LogError(ErrorCode.UnauthorizedAccess.ToEventId(), unauthorizedAccessException, "Access to \"{Path}\" not authorized.", path);
+                    Dispatcher.Invoke(() => AccessError = string.IsNullOrWhiteSpace(unauthorizedAccessException.Message) ? unauthorizedAccessException.ToString() : unauthorizedAccessException.Message);
+                    return;
+                }
+                catch (SecurityException securityException)
+                {
+                    _logger.LogError(ErrorCode.SecurityException.ToEventId(), securityException, "Security error while trying to access \"{Path}\".", path);
+                    Dispatcher.Invoke(() => AccessError = string.IsNullOrWhiteSpace(securityException.Message) ? securityException.ToString() : securityException.Message);
+                    return;
+                }
+                catch (PathTooLongException pathTooLongException)
+                {
+                    _logger.LogError(ErrorCode.PathTooLong.ToEventId(), pathTooLongException, "Path too long: \"{Path}\".", path);
+                    Dispatcher.Invoke(() => AccessError = string.IsNullOrWhiteSpace(pathTooLongException.Message) ? pathTooLongException.ToString() : pathTooLongException.Message);
+                    return;
+                }
+                catch (DirectoryNotFoundException argumentException)
+                {
+                    _logger.LogError(ErrorCode.InvalidPath.ToEventId(), argumentException, "Directory does not exist: \"{Path}\".", path);
+                    Dispatcher.Invoke(() => AccessError = string.IsNullOrWhiteSpace(argumentException.Message) ? argumentException.ToString() : argumentException.Message);
+                    return;
+                }
+                catch (ArgumentException argumentException)
+                {
+                    _logger.LogError(ErrorCode.InvalidPath.ToEventId(), argumentException, "Possible invalid path: \"{Path}\".", path);
+                    Dispatcher.Invoke(() => AccessError = string.IsNullOrWhiteSpace(argumentException.Message) ? argumentException.ToString() : argumentException.Message);
+                    return;
+                }
+                catch (IOException ioException)
+                {
+                    _logger.LogError(ErrorCode.IOError.ToEventId(), ioException, "I/O error while trying to access \"{Path}\"", path);
+                    Dispatcher.Invoke(() => AccessError = string.IsNullOrWhiteSpace(ioException.Message) ? ioException.ToString() : ioException.Message);
+                    return;
+                }
+                catch (Exception exception)
+                {
+                    _logger.LogError(ErrorCode.Unexpected.ToEventId(), exception, "Unknown error while trying to access \"{Path}\"", path);
+                    Dispatcher.Invoke(() => AccessError = string.IsNullOrWhiteSpace(exception.Message) ? exception.ToString() : exception.Message);
+                    return;
+                }
+                cancellationToken.ThrowIfCancellationRequested();
+                if (depth < 1)
+                {
+                    Dispatcher.Invoke(() =>
+                    {
+                        _logger.LogDebug("Populating SubFolders collection");
+                        foreach (DirectoryInfo d in directories)
+                        {
+                            cancellationToken.ThrowIfCancellationRequested();
+                            InnerSubFolders.Add(new(d));
+                        }
+                        _logger.LogDebug("Populating Files collection");
+                        foreach (FileInfo f in files)
+                        {
+                            cancellationToken.ThrowIfCancellationRequested();
+                            InnerFiles.Add(new(f));
+                        }
+                    });
+                    return;
+                }
+                subFolders = Dispatcher.Invoke(() =>
+                {
+                    _logger.LogDebug("Populating SubFolders collection");
+                    FolderVM[] folders = directories.Select(d =>
+                    {
+                        cancellationToken.ThrowIfCancellationRequested();
+                        return new FolderVM(d);
+                    }).ToArray();
+                    foreach (FolderVM f in folders)
+                        InnerSubFolders.Add(f);
+                    _logger.LogDebug("Populating Files collection");
+                    foreach (FileInfo f in files)
+                    {
+                        cancellationToken.ThrowIfCancellationRequested();
+                        InnerFiles.Add(new(f));
+                    }
+                    return folders;
+                });
+            }
+            else
+            {
+                if (depth < 1)
+                    return;
+                _logger.LogDebug("Retrieving items from SubFolders collection");
+                subFolders = Dispatcher.Invoke(() =>
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
+                    return InnerSubFolders.ToArray();
+                });
+            }
+            if (subFolders.Length > 0)
+            {
+                _logger.LogDebug("Pre-loading {Count} SubFolders", subFolders.Length);
+                depth--;
+                foreach (FolderVM folder in subFolders)
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
+                    folder.PreloadAsync(depth).Wait();
+                }
+            }
+            else
+                _logger.LogDebug("No SubFolders to pre-load");
+        }
 
-        internal FolderVM(DirectoryInfo directoryInfo, int preloadDepth) : this(directoryInfo.Name, directoryInfo, preloadDepth) { }
+        private void PreloadSubdirectories(int depth, CancellationToken cancellationToken)
+        {
+            using IDisposable scope = _logger.BeginScope("Pre-loading child items of {Path}; Depth={Depth}", Dispatcher.Invoke(() => Path), depth);
+            FolderVM[] subFolders = Dispatcher.Invoke(() =>
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                return InnerSubFolders.ToArray();
+            });
+            if (subFolders.Length > 0)
+            {
+                _logger.LogDebug("Pre-loading {Count} SubFolders", subFolders.Length);
+                foreach (FolderVM folder in subFolders)
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
+                    folder.PreloadAsync(depth).Wait();
+                }
+            }
+            else
+                _logger.LogDebug("No SubFolders to pre-load");
+        }
+
+        internal Task PreloadAsync(int depth = 2)
+        {
+            CancellableTask<Task, int> preload;
+            lock (_syncRoot)
+            {
+                if (_preload is null)
+                {
+                    CancellationTokenSource tokenSource = new();
+                    _preload = preload = new CancellableTask<Task, int>
+                    {
+                        Task = Task.Factory.StartNew(() => Preload(depth, tokenSource.Token)),
+                        TokenSource = tokenSource,
+                        State = depth
+                    };
+                }
+                else if (_preload.State < depth)
+                {
+                    CancellationTokenSource tokenSource = new();
+                    _preload = preload = new CancellableTask<Task, int>
+                    {
+                        Task = Task.Factory.StartNew(() => PreloadSubdirectories(depth - 1, tokenSource.Token)),
+                        TokenSource = tokenSource,
+                        State = depth
+                    };
+                }
+                else
+                    return _preload.Task;
+            }
+            preload.Task.ContinueWith(task =>
+            {
+                lock (_syncRoot)
+                {
+                    if (_preload is not null && ReferenceEquals(_preload, preload))
+                        _preload = preload with { TokenSource = null };
+                }
+                preload.TokenSource.Dispose();
+            });
+            return preload.Task;
+        }
+
+        internal void CancelPreload(bool throwOnFirstException)
+        {
+            CancellableTask<Task, int> preload;
+            lock (_syncRoot)
+            {
+                preload = _preload;
+                _preload = null;
+            }
+            if (preload is not null && !(preload.TokenSource?.IsCancellationRequested ?? false))
+                preload.TokenSource.Cancel(throwOnFirstException);
+            if (Dispatcher.CheckAccess())
+            {
+                foreach (FolderVM folder in SubFolders)
+                    folder.CancelPreload(throwOnFirstException);
+            }
+            else
+                Dispatcher.Invoke(() =>
+                {
+                    foreach (FolderVM folder in SubFolders)
+                        folder.CancelPreload(throwOnFirstException);
+                });
+        }
+
+        internal FolderVM(Win32_LogicalDisk logicalDisk) : this((logicalDisk.DriveType == DriveType.Network && !string.IsNullOrWhiteSpace(logicalDisk.ProviderName)) ? $"{logicalDisk.DisplayName} ({logicalDisk.ProviderName})" :
+            string.IsNullOrWhiteSpace(logicalDisk.VolumeName) ? logicalDisk.DisplayName : $"{logicalDisk.DisplayName} ({logicalDisk.VolumeName})",
+            new DirectoryInfo(string.IsNullOrEmpty(logicalDisk.RootDirectory.Path) ? logicalDisk.RootDirectory.Name : logicalDisk.RootDirectory.Path)) { }
+
+        internal FolderVM(DirectoryInfo directoryInfo) : this(directoryInfo.Name, directoryInfo) { }
     }
 }

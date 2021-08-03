@@ -2,6 +2,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
+using System.ComponentModel;
 using System.Windows;
 
 namespace FsInfoCat.Desktop
@@ -13,6 +14,12 @@ namespace FsInfoCat.Desktop
     {
         private ILogger<App> _logger;
 
+        public static ILogger<T> GetLogger<T>(T dependencyObject) where T : DependencyObject
+        {
+            if (DesignerProperties.GetIsInDesignMode(dependencyObject))
+                return DesignTimeLoggerFactory.GetLogger<T>();
+            return Services.ServiceProvider.GetRequiredService<ILogger<T>>();
+        }
         private async void Application_Startup(object sender, StartupEventArgs e)
         {
             await Services.Initialize(e.Args);

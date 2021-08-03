@@ -30,7 +30,8 @@ namespace FsInfoCat.UnitTests
         [TestMethod("new Volume()")]
         public void NewVolumeTestMethod()
         {
-            using var dbContext = Services.ServiceProvider.GetService<LocalDbContext>();
+            using IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             Volume target = new();
             EntityEntry<Volume> entry = dbContext.Entry(target);
             Assert.AreEqual(EntityState.Detached, entry.State);

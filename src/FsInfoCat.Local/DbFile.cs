@@ -729,8 +729,9 @@ namespace FsInfoCat.Local
             string name = Name;
             EntityEntry entry;
             LocalDbContext dbContext;
+            using IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
             if (string.IsNullOrEmpty(name) || (entry = validationContext.GetService<EntityEntry>()) is null ||
-                (dbContext = validationContext.GetService<LocalDbContext>()) is null)
+                (dbContext = serviceScope.ServiceProvider.GetService<LocalDbContext>()) is null)
                 return;
             Guid parentId = ParentId;
             if (entry.State == EntityState.Added)

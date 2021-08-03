@@ -124,8 +124,9 @@ namespace FsInfoCat.Local
                         return;
                 }
             string message = Message;
+            using IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
             LocalDbContext dbContext;
-            if (string.IsNullOrEmpty(Message) || (dbContext = validationContext.GetService<LocalDbContext>()) is null)
+            if (string.IsNullOrEmpty(Message) || (dbContext = serviceScope.ServiceProvider.GetService<LocalDbContext>()) is null)
                 return;
             Guid id = Id;
             AccessErrorCode errorCode = ErrorCode;

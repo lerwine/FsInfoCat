@@ -25,7 +25,8 @@ namespace FsInfoCat.UnitTests
         [TestMethod("new Subdirectory()")]
         public void NewSubdirectoryTestMethod()
         {
-            using var dbContext = Services.ServiceProvider.GetService<LocalDbContext>();
+            using IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             Subdirectory target = new();
 
             EntityEntry<Subdirectory> entry = dbContext.Entry(target);

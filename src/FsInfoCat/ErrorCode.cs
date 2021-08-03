@@ -31,7 +31,14 @@ namespace FsInfoCat
 
         /// <summary>Crawl operation has failed and terminated before completion.</summary>
         [Display(Name = nameof(Properties.Resources.DisplayName_CrawlOperationFailed), ShortName = nameof(Properties.Resources.DisplayName_CrawlFailed), Description = nameof(Properties.Resources.ErrorMessage_CrawlOperationFailed), ResourceType = typeof(Properties.Resources))]
-        CrawlOperationFailed = 6
+        CrawlOperationFailed = 6,
+
+        /// <summary>A <see cref="System.IO.DirectoryNotFoundException"/> has occurred.</summary>
+        [Display(Name = nameof(Properties.Resources.DisplayName_DirectoryNotFound), ShortName = nameof(Properties.Resources.DisplayName_NotFound), Description = nameof(Properties.Resources.ErrorMessage_DirectoryNotFound), ResourceType = typeof(Properties.Resources))]
+        DirectoryNotFound = 7,
+
+        [Display(Name = nameof(Properties.Resources.DisplayName_GetLogicalDisksFailure), ShortName = nameof(Properties.Resources.DisplayName_GetLogicalDisksFailure), Description = nameof(Properties.Resources.ErrorMessage_GetLogicalDisksFailure), ResourceType = typeof(Properties.Resources))]
+        GetLogicalDisksFailure = 8
     }
 
 }

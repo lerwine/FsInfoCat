@@ -7,28 +7,104 @@
       xmlns:vm="clr-namespace:FsInfoCat.Desktop.ViewModel"
       xmlns:cvt="clr-namespace:FsInfoCat.Desktop.Converters"
       mc:Ignorable="d" DataContext="{DynamicResource VM}"
-      d:DesignHeight="450" d:DesignWidth="800"
+      d:DesignHeight="768" d:DesignWidth="1024"
       Title="Crawl Configurations">
     <Page.Resources>
         <vm:CrawlConfigurationsPageVM x:Key="VM"/>
     </Page.Resources>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <GridSplitter Grid.Column="1" HorizontalAlignment="Left"  Width="5" Grid.RowSpan="2"/>
-        <DataGrid ItemsSource="{Binding CrawlConfigurations, Mode=OneWay}" AutoGenerateColumns="False">
+        <Label Content="Crawl Configurationa" HorizontalAlignment="Center" FontWeight="Bold" FontSize="{DynamicResource LargeFontSize}"/>
+        <DataGrid ItemsSource="{Binding CrawlConfigurations, Mode=OneWay}" AutoGenerateColumns="False" Grid.Row="1" Margin="{DynamicResource DefaultSpacing}">
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding DisplayName, Mode=OneWay}" IsReadOnly="True"/>
             </DataGrid.Columns>
         </DataGrid>
-        <WrapPanel Grid.Row="1" FlowDirection="RightToLeft">
-            <Button Content="Add" Command="{Binding NewCrawlConfigCommand, Mode=OneWay}" Width="75" Height="25"/>
-        </WrapPanel>
+        <StackPanel Grid.Column="1" Grid.RowSpan="2" Margin="{DynamicResource DefaultSpacingLeft}">
+            <WrapPanel Grid.Row="1" FlowDirection="RightToLeft">
+                <Button Content="Delete" Width="{DynamicResource DefaultButtonWidth}" Height="{DynamicResource DefaultButtonHeight}" Margin="{DynamicResource DefaultSpacing}"/>
+                <Button Content="New" Command="{Binding NewCrawlConfigCommand, Mode=OneWay}" Width="{DynamicResource DefaultButtonWidth}" Height="{DynamicResource DefaultButtonHeight}" Margin="{DynamicResource DefaultSpacing}"/>
+                <Button Content="Edit" Width="{DynamicResource DefaultButtonWidth}" Height="{DynamicResource DefaultButtonHeight}" Margin="{DynamicResource DefaultSpacing}"/>
+            </WrapPanel>
+            <GroupBox Margin="{DynamicResource DefaultSpacingLeftRight}">
+                <GroupBox.Header>
+                    <Label Content="Path" Padding="{DynamicResource DefaultSpacingLeft}"/>
+                </GroupBox.Header>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Padding="{DynamicResource DefaultSpacingTopLeft}" />
+                    <Button Content="..." Grid.Column="1" Margin="{DynamicResource DefaultSpacingTopRight}"/>
+                </Grid>
+            </GroupBox>
+            <GroupBox Margin="{DynamicResource DefaultSpacingTopLeftRight}">
+                <GroupBox.Header>
+                    <Label Content="Display Name" Padding="{DynamicResource DefaultSpacingLeft}"/>
+                </GroupBox.Header>
+                <TextBlock Padding="{DynamicResource DefaultSpacingTopLeftRight}" />
+            </GroupBox>
+            <GroupBox Header="Limits">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Label Content="Max Recursion Depth" FontWeight="Bold"/>
+                    <TextBlock Padding="{DynamicResource DefaultSpacingTopLeftRight}" Grid.Row="1" />
+                    <Label Content="Max Total Items" Grid.Column="1" FontWeight="Bold"/>
+                    <TextBlock Padding="{DynamicResource DefaultSpacingTopLeftRight}" Grid.Row="1" Grid.Column="1" />
+                    <Label Content="Maximum Crawl Duration" Grid.Row="2" FontWeight="Bold"/>
+                    <TextBlock Padding="{DynamicResource DefaultSpacingTopLeftRight}" Grid.Row="3" />
+                    <Label Content="Auto-Reschedule" Grid.Column="1" Grid.Row="2" FontWeight="Bold"/>
+                    <TextBlock Padding="{DynamicResource DefaultSpacingTopLeftRight}" Grid.Row="3" Grid.Column="1" />
+                </Grid>
+            </GroupBox>
+            <GroupBox Margin="{DynamicResource DefaultSpacingTopLeftRight}" Header="Status">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Label Content="Last Crawl Start" FontWeight="Bold"/>
+                    <TextBlock Padding="{DynamicResource DefaultSpacingTopLeftRight}" Grid.Row="1" />
+                    <Label Content="Last Crawl End" Grid.Column="1" FontWeight="Bold"/>
+                    <TextBlock Padding="{DynamicResource DefaultSpacingTopLeftRight}" Grid.Row="1" Grid.Column="1" />
+                    <Label Content="Next Crawl Start" Grid.Row="2" FontWeight="Bold"/>
+                    <TextBlock Padding="{DynamicResource DefaultSpacingTopLeftRight}" Grid.Row="3" />
+                    <Label Content="Current Status" Grid.Column="1" Grid.Row="2" FontWeight="Bold"/>
+                    <TextBlock Padding="{DynamicResource DefaultSpacingTopLeftRight}" Grid.Row="3" Grid.Column="1" />
+                </Grid>
+            </GroupBox>
+            <GroupBox Margin="{DynamicResource DefaultSpacing}" Header="Notes">
+                <TextBlock Padding="{DynamicResource DefaultSpacingTopLeftRight}" />
+            </GroupBox>
+            <WrapPanel Grid.Row="1" FlowDirection="RightToLeft">
+                <Button Content="Delete" Width="{DynamicResource DefaultButtonWidth}" Height="{DynamicResource DefaultButtonHeight}" Margin="{DynamicResource DefaultSpacing}"/>
+                <Button Content="New" Command="{Binding NewCrawlConfigCommand, Mode=OneWay}" Width="{DynamicResource DefaultButtonWidth}" Height="{DynamicResource DefaultButtonHeight}" Margin="{DynamicResource DefaultSpacing}"/>
+                <Button Content="Edit" Width="{DynamicResource DefaultButtonWidth}" Height="{DynamicResource DefaultButtonHeight}" Margin="{DynamicResource DefaultSpacing}"/>
+            </WrapPanel>
+        </StackPanel>
+        <GridSplitter Grid.Column="1" HorizontalAlignment="Left" Width="5" Grid.RowSpan="2"/>
     </Grid>
 </Page>

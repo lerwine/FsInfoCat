@@ -33,7 +33,8 @@ namespace FsInfoCat.UnitTests
         [TestMethod("new LocalDbContext(DbContextOptions<LocalDbContext>)")]
         public void NewLocalDbContextDbContextOptionsTestMethod()
         {
-            using LocalDbContext dbContext = Services.ServiceProvider.GetService<LocalDbContext>();
+            using IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
 
             Assert.IsNotNull(dbContext.FileSystems);
             Assert.IsNotNull(dbContext.SymbolicNames);
