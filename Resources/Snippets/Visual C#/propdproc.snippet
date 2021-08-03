@@ -1,0 +1,58 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<CodeSnippets  xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <Title>Define a read-only DependencyProperty with a protected &quot;OnPropertyChanged&quot; method.</Title>
+      <Shortcut>propdproc</Shortcut>
+      <Description>Code snippet for a read-only property using DependencyProperty as the backing store with a protected &quot;OnPropertyChanged&quot; method.</Description>
+      <Author>Leonard T. Erwine</Author>
+      <SnippetTypes>
+        <SnippetType>Expansion</SnippetType>
+      </SnippetTypes>
+    </Header>
+    <Snippet>
+      <Declarations>
+        <Literal>
+          <ID>type</ID>
+          <ToolTip>Property Type</ToolTip>
+          <Default>int</Default>
+        </Literal>
+        <Literal>
+          <ID>property</ID>
+          <ToolTip>Property Name</ToolTip>
+          <Default>MyProperty</Default>
+        </Literal>
+        <Literal>
+          <ID>ownerclass</ID>
+          <Function>ClassName()</Function>
+          <ToolTip>The owning class of this Property.  Typically the class that it is declared in.</ToolTip>
+        </Literal>
+        <Literal>
+          <ID>defaultvalue</ID>
+          <ToolTip>The default value for this property.</ToolTip>
+          <Default>0</Default>
+        </Literal>
+      </Declarations>
+      <Code Language="csharp">
+        <![CDATA[
+private static readonly DependencyPropertyKey $property$PropertyKey = DependencyProperty.RegisterReadOnly(nameof($property$), typeof($type$), typeof($ownerclass$),
+        new PropertyMetadata($defaultvalue$, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
+            (d as $ownerclass$).On$property$PropertyChanged(($type$)e.OldValue, ($type$)e.NewValue)));
+
+public static readonly DependencyProperty $property$Property = $property$PropertyKey.DependencyProperty;
+
+public $type$ $property$
+{
+  get => ($type$)GetValue($property$Property);
+  private set => SetValue($property$PropertyKey, value);
+}
+
+protected virtual void On$property$PropertyChanged($type$ oldValue, $type$ newValue)
+{
+    $end$// TODO: Implement On$property$PropertyChanged Logic
+}
+]]>
+      </Code>
+    </Snippet>
+  </CodeSnippet>
+</CodeSnippets>

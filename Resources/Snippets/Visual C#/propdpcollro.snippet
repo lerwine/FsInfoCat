@@ -1,0 +1,69 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<CodeSnippets  xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <Title>Define a generic read-only collection DependencyProperty</Title>
+      <Shortcut>propdpcollro</Shortcut>
+      <Description>Code snippet for a generic read-only collection property using DependencyProperty as the backing store</Description>
+      <Author>Leonard T. Erwine</Author>
+      <SnippetTypes>
+        <SnippetType>Expansion</SnippetType>
+      </SnippetTypes>
+    </Header>
+    <Snippet>
+      <Declarations>
+        <Literal>
+          <ID>itemType</ID>
+          <ToolTip>Collection element type</ToolTip>
+          <Default>int</Default>
+        </Literal>
+        <Literal>
+          <ID>collType</ID>
+          <ToolTip>Generic collection type</ToolTip>
+          <Default>ObservableCollection</Default>
+        </Literal>
+        <Literal>
+          <ID>property</ID>
+          <ToolTip>Property Name</ToolTip>
+          <Default>MyProperty</Default>
+        </Literal>
+        <Literal>
+          <ID>ownerclass</ID>
+          <Function>ClassName()</Function>
+          <ToolTip>The owning class of this Property.  Typically the class that it is declared in.</ToolTip>
+        </Literal>
+      </Declarations>
+      <Code Language="csharp">
+        <![CDATA[
+#region $property$ Property Members
+        
+private static readonly DependencyPropertyKey Inner$property$PropertyKey = DependencyProperty.RegisterReadOnly(nameof(Inner$property$), typeof($collType$<$itemType$>), typeof($ownerclass$),
+        new PropertyMetadata(new $collType$<$itemType$>()));
+
+private static readonly DependencyPropertyKey $property$PropertyKey = DependencyProperty.RegisterReadOnly(nameof($property$), typeof(ReadOnly$collType$<$itemType$>), typeof($ownerclass$),
+        new PropertyMetadata(null));
+
+protected static readonly DependencyProperty Inner$property$Property = Inner$property$PropertyKey.DependencyProperty;
+
+public static readonly DependencyProperty $property$Property = $property$PropertyKey.DependencyProperty;
+
+protected $collType$<$itemType$> Inner$property$
+{
+    get => ($collType$<$itemType$>)GetValue(Inner$property$Property);
+    private set => SetValue(Inner$property$PropertyKey, value);
+}
+
+public ReadOnly$collType$<$itemType$> $property$
+{
+    get => (ReadOnly$collType$<$itemType$>)GetValue($property$Property);
+    private set => SetValue($property$PropertyKey, value);
+}
+
+// TODO: Add to Constructor: $end$$property$ = new($property$);
+
+#endregion
+]]>
+      </Code>
+    </Snippet>
+  </CodeSnippet>
+</CodeSnippets>

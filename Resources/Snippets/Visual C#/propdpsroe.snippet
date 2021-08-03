@@ -1,0 +1,61 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<CodeSnippets  xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <Title>Define a read-only string DependencyProperty with a &quot;DependencyPropertyChanged&quot; event.</Title>
+      <Shortcut>propdpsroe</Shortcut>
+      <Description>Code snippet for a read-only string property using DependencyProperty as the backing store  with a &quot;DependencyPropertyChanged&quot; event.</Description>
+      <Author>Leonard T. Erwine</Author>
+      <SnippetTypes>
+        <SnippetType>Expansion</SnippetType>
+      </SnippetTypes>
+    </Header>
+    <Snippet>
+      <Declarations>
+        <Literal>
+          <ID>property</ID>
+          <ToolTip>Property Name</ToolTip>
+          <Default>MyProperty</Default>
+        </Literal>
+        <Literal>
+          <ID>ownerclass</ID>
+          <Function>ClassName()</Function>
+          <ToolTip>The owning class of this Property.  Typically the class that it is declared in.</ToolTip>
+        </Literal>
+        <Literal>
+          <ID>defaultvalue</ID>
+          <ToolTip>The default value for this property.</ToolTip>
+          <Default>""</Default>
+        </Literal>
+      </Declarations>
+      <Code Language="csharp">
+        <![CDATA[
+public event DependencyPropertyChangedEventHandler $property$PropertyChanged;
+
+private static readonly DependencyPropertyKey $property$PropertyKey = DependencyProperty.RegisterReadOnly(nameof($property$), typeof(string), typeof($ownerclass$),
+        new PropertyMetadata($defaultvalue$, (DependencyObject d, DependencyPropertyChangedEventArgs e) => 
+            (d as $ownerclass$).On$property$PropertyChanged(e)));
+
+public static readonly DependencyProperty $property$Property = $property$PropertyKey.DependencyProperty;
+
+public string $property$
+{
+  get => GetValue($property$Property) as string;
+  private set => SetValue($property$PropertyKey, value);
+}
+
+protected virtual void On$property$PropertyChanged(DependencyPropertyChangedEventArgs args)
+{
+    try { On$property$PropertyChanged(args.OldValue as string, args.NewValue as string); }
+    finally { $property$PropertyChanged?.Invoke(this, args); }
+}
+
+protected virtual void On$property$PropertyChanged(string oldValue, string newValue)
+{
+    $end$// TODO: Implement On$property$PropertyChanged Logic
+}
+]]>
+      </Code>
+    </Snippet>
+  </CodeSnippet>
+</CodeSnippets>
