@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<CodeSnippets  xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <Title>Define a relay command property</Title>
+      <Shortcut>proprelaycmd</Shortcut>
+      <Description>Code snippet for a relay command property.</Description>
+      <Author>Leonard T. Erwine</Author>
+      <SnippetTypes>
+        <SnippetType>Expansion</SnippetType>
+      </SnippetTypes>
+    </Header>
+    <Snippet>
+      <Declarations>
+        <Literal>
+          <ID>command</ID>
+          <ToolTip>Command Name</ToolTip>
+          <Default>MyClick</Default>
+        </Literal>
+        <Literal>
+          <ID>ownerclass</ID>
+          <Function>ClassName()</Function>
+          <ToolTip>The owning class of this Property.  Typically the class that it is declared in.</ToolTip>
+        </Literal>
+      </Declarations>
+      <Code Language="csharp">
+<![CDATA[
+private static readonly DependencyPropertyKey $command$CommandPropertyKey = DependencyProperty.RegisterReadOnly(nameof($command$Command),
+    typeof(Commands.RelayCommand), typeof($ownerclass$), new PropertyMetadata(null));
+
+public static readonly DependencyProperty $command$CommandProperty = $command$CommandPropertyKey.DependencyProperty;
+
+public Commands.RelayCommand $command$Command => (Commands.RelayCommand)GetValue($command$CommandProperty);
+
+private void On$command$Execute(object parameter)
+{
+  // TODO: Implement On$command$Execute Logic
+}
+
+// TODO: Add to constructor: $end$SetValue($command$CommandPropertyKey, new Commands.RelayCommand(On$command$Execute));
+]]>
+      </Code>
+    </Snippet>
+  </CodeSnippet>
+</CodeSnippets>
