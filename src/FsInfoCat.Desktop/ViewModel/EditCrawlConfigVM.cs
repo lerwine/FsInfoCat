@@ -6,10 +6,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel
@@ -20,6 +17,42 @@ namespace FsInfoCat.Desktop.ViewModel
         private (Subdirectory Root, string Path)? _validatedPath;
 
         #region Properties
+
+        private static readonly DependencyPropertyKey SelectRootCommandPropertyKey = DependencyProperty.RegisterReadOnly(nameof(SelectRootCommand),
+            typeof(Commands.RelayCommand), typeof(EditCrawlConfigVM), new PropertyMetadata(null));
+
+        public static readonly DependencyProperty SelectRootCommandProperty = SelectRootCommandPropertyKey.DependencyProperty;
+
+        public Commands.RelayCommand SelectRootCommand => (Commands.RelayCommand)GetValue(SelectRootCommandProperty);
+
+        private void OnSelectRootExecute(object parameter)
+        {
+            // TODO: Implement OnSelectRootExecute Logic
+        }
+
+        private static readonly DependencyPropertyKey SaveCommandPropertyKey = DependencyProperty.RegisterReadOnly(nameof(SaveCommand),
+            typeof(Commands.RelayCommand), typeof(EditCrawlConfigVM), new PropertyMetadata(null));
+
+        public static readonly DependencyProperty SaveCommandProperty = SaveCommandPropertyKey.DependencyProperty;
+
+        public Commands.RelayCommand SaveCommand => (Commands.RelayCommand)GetValue(SaveCommandProperty);
+
+        private void OnSaveExecute(object parameter)
+        {
+            // TODO: Implement OnSaveExecute Logic
+        }
+
+        private static readonly DependencyPropertyKey CancelCommandPropertyKey = DependencyProperty.RegisterReadOnly(nameof(CancelCommand),
+            typeof(Commands.RelayCommand), typeof(EditCrawlConfigVM), new PropertyMetadata(null));
+
+        public static readonly DependencyProperty CancelCommandProperty = CancelCommandPropertyKey.DependencyProperty;
+
+        public Commands.RelayCommand CancelCommand => (Commands.RelayCommand)GetValue(CancelCommandProperty);
+
+        private void OnCancelExecute(object parameter)
+        {
+            // TODO: Implement OnCancelExecute Logic
+        }
 
         private static readonly DependencyPropertyKey WindowTitlePropertyKey = DependencyProperty.RegisterReadOnly(nameof(WindowTitle), typeof(string), typeof(EditCrawlConfigVM), new PropertyMetadata("Edit New Crawl Configuration"));
 
@@ -288,6 +321,10 @@ namespace FsInfoCat.Desktop.ViewModel
 
         protected virtual void OnTTLPropertyChanged(TimeSpan oldValue, TimeSpan newValue)
         {
+            TtlDays = newValue.Days;
+            TtlHours = newValue.Hours;
+            TtlMinutes = newValue.Minutes;
+            TtlSeconds = newValue.Seconds;
 #if DEBUG
             if (DesignerProperties.GetIsInDesignMode(this) || Model is null)
                 return;
@@ -295,10 +332,6 @@ namespace FsInfoCat.Desktop.ViewModel
             if (Model is null)
                 return;
 #endif
-            TtlDays = newValue.Days;
-            TtlHours = newValue.Hours;
-            TtlMinutes = newValue.Minutes;
-            TtlSeconds = newValue.Seconds;
             if (Model.TTL.HasValue ? LimitTTL && newValue == TimeSpan.FromSeconds(Model.TTL.Value) : !LimitTTL)
             {
                 if (_changedProperties.Remove(nameof(TTL)) && _changedProperties.Count == 0)
@@ -323,6 +356,10 @@ namespace FsInfoCat.Desktop.ViewModel
 
         protected virtual void OnTtlDaysPropertyChanged(int oldValue, int newValue)
         {
+#if DEBUG
+            if (DesignerProperties.GetIsInDesignMode(this))
+                return;
+#endif
             TimeSpan timeSpan = TTL;
             if (timeSpan.Days != newValue)
                 TTL = new TimeSpan(newValue, timeSpan.Hours, timeSpan.Minutes, timeSpan.Seconds);
@@ -340,6 +377,10 @@ namespace FsInfoCat.Desktop.ViewModel
 
         protected virtual void OnTtlHoursPropertyChanged(int oldValue, int newValue)
         {
+#if DEBUG
+            if (DesignerProperties.GetIsInDesignMode(this))
+                return;
+#endif
             TimeSpan timeSpan = TTL;
             if (timeSpan.Hours != newValue)
                 TTL = new TimeSpan(timeSpan.Days, newValue, timeSpan.Minutes, timeSpan.Seconds);
@@ -357,6 +398,10 @@ namespace FsInfoCat.Desktop.ViewModel
 
         protected virtual void OnTtlMinutesPropertyChanged(int oldValue, int newValue)
         {
+#if DEBUG
+            if (DesignerProperties.GetIsInDesignMode(this))
+                return;
+#endif
             TimeSpan timeSpan = TTL;
             if (timeSpan.Minutes != newValue)
                 TTL = new TimeSpan(timeSpan.Days, timeSpan.Hours, newValue, timeSpan.Seconds);
@@ -374,6 +419,10 @@ namespace FsInfoCat.Desktop.ViewModel
 
         protected virtual void OnTtlSecondsPropertyChanged(int oldValue, int newValue)
         {
+#if DEBUG
+            if (DesignerProperties.GetIsInDesignMode(this))
+                return;
+#endif
             TimeSpan timeSpan = TTL;
             if (timeSpan.Minutes != newValue)
                 TTL = new TimeSpan(timeSpan.Days, timeSpan.Hours, timeSpan.Minutes, newValue);
@@ -436,17 +485,6 @@ namespace FsInfoCat.Desktop.ViewModel
 
         protected virtual void OnIsEnabledPropertyChanged(bool oldValue, bool newValue) => StatusValue = newValue ? EnabledStatus : CrawlStatus.Disabled;
 
-        private static readonly DependencyPropertyKey LastCrawlEndPropertyKey = DependencyProperty.RegisterReadOnly(nameof(LastCrawlEnd), typeof(DateTime?), typeof(EditCrawlConfigVM),
-                new PropertyMetadata(null));
-
-        public static readonly DependencyProperty LastCrawlEndProperty = LastCrawlEndPropertyKey.DependencyProperty;
-
-        public DateTime? LastCrawlEnd
-        {
-            get => (DateTime?)GetValue(LastCrawlEndProperty);
-            private set => SetValue(LastCrawlEndPropertyKey, value);
-        }
-
         private static readonly DependencyPropertyKey LastCrawlStartPropertyKey = DependencyProperty.RegisterReadOnly(nameof(LastCrawlStart), typeof(DateTime?), typeof(EditCrawlConfigVM),
                 new PropertyMetadata(null));
 
@@ -456,6 +494,17 @@ namespace FsInfoCat.Desktop.ViewModel
         {
             get => (DateTime?)GetValue(LastCrawlStartProperty);
             private set => SetValue(LastCrawlStartPropertyKey, value);
+        }
+
+        private static readonly DependencyPropertyKey LastCrawlEndPropertyKey = DependencyProperty.RegisterReadOnly(nameof(LastCrawlEnd), typeof(DateTime?), typeof(EditCrawlConfigVM),
+                new PropertyMetadata(null));
+
+        public static readonly DependencyProperty LastCrawlEndProperty = LastCrawlEndPropertyKey.DependencyProperty;
+
+        public DateTime? LastCrawlEnd
+        {
+            get => (DateTime?)GetValue(LastCrawlEndProperty);
+            private set => SetValue(LastCrawlEndPropertyKey, value);
         }
 
         private static readonly DependencyPropertyKey NextScheduledStartPropertyKey = DependencyProperty.RegisterReadOnly(nameof(NextScheduledStart), typeof(DateTime?), typeof(EditCrawlConfigVM),
@@ -543,6 +592,10 @@ namespace FsInfoCat.Desktop.ViewModel
 
         private void OnRescheduleIntervalPropertyChanged(TimeSpan oldValue, TimeSpan newValue)
         {
+            RescheduleDays = newValue.Days;
+            RescheduleHours = newValue.Hours;
+            RescheduleMinutes = newValue.Minutes;
+            RescheduleSeconds = newValue.Seconds;
 #if DEBUG
             if (DesignerProperties.GetIsInDesignMode(this) || Model is null)
                 return;
@@ -560,6 +613,90 @@ namespace FsInfoCat.Desktop.ViewModel
                 _changedProperties.Add(nameof(RescheduleInterval));
                 HasChanges = true;
             }
+        }
+
+        public static readonly DependencyProperty RescheduleDaysProperty = DependencyProperty.Register(nameof(RescheduleDays), typeof(int), typeof(EditCrawlConfigVM),
+                new PropertyMetadata(0, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
+                    (d as EditCrawlConfigVM).OnRescheduleDaysPropertyChanged((int)e.OldValue, (int)e.NewValue)));
+
+        public int RescheduleDays
+        {
+            get => (int)GetValue(RescheduleDaysProperty);
+            set => SetValue(RescheduleDaysProperty, value);
+        }
+
+        protected virtual void OnRescheduleDaysPropertyChanged(int oldValue, int newValue)
+        {
+#if DEBUG
+            if (DesignerProperties.GetIsInDesignMode(this))
+                return;
+#endif
+            TimeSpan timeSpan = RescheduleInterval;
+            if (timeSpan.Days != newValue)
+                RescheduleInterval = new TimeSpan(newValue, timeSpan.Hours, timeSpan.Minutes, timeSpan.Seconds);
+        }
+
+        public static readonly DependencyProperty RescheduleHoursProperty = DependencyProperty.Register(nameof(RescheduleHours), typeof(int), typeof(EditCrawlConfigVM),
+                new PropertyMetadata(0, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
+                    (d as EditCrawlConfigVM).OnRescheduleHoursPropertyChanged((int)e.OldValue, (int)e.NewValue)));
+
+        public int RescheduleHours
+        {
+            get => (int)GetValue(RescheduleHoursProperty);
+            set => SetValue(RescheduleHoursProperty, value);
+        }
+
+        protected virtual void OnRescheduleHoursPropertyChanged(int oldValue, int newValue)
+        {
+#if DEBUG
+            if (DesignerProperties.GetIsInDesignMode(this))
+                return;
+#endif
+            TimeSpan timeSpan = RescheduleInterval;
+            if (timeSpan.Hours != newValue)
+                RescheduleInterval = new TimeSpan(timeSpan.Days, newValue, timeSpan.Minutes, timeSpan.Seconds);
+        }
+
+        public static readonly DependencyProperty RescheduleMinutesProperty = DependencyProperty.Register(nameof(RescheduleMinutes), typeof(int), typeof(EditCrawlConfigVM),
+                new PropertyMetadata(0, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
+                    (d as EditCrawlConfigVM).OnRescheduleMinutesPropertyChanged((int)e.OldValue, (int)e.NewValue)));
+
+        public int RescheduleMinutes
+        {
+            get => (int)GetValue(RescheduleMinutesProperty);
+            set => SetValue(RescheduleMinutesProperty, value);
+        }
+
+        protected virtual void OnRescheduleMinutesPropertyChanged(int oldValue, int newValue)
+        {
+#if DEBUG
+            if (DesignerProperties.GetIsInDesignMode(this))
+                return;
+#endif
+            TimeSpan timeSpan = RescheduleInterval;
+            if (timeSpan.Minutes != newValue)
+                RescheduleInterval = new TimeSpan(timeSpan.Days, timeSpan.Hours, newValue, timeSpan.Seconds);
+        }
+
+        public static readonly DependencyProperty RescheduleSecondsProperty = DependencyProperty.Register(nameof(RescheduleSeconds), typeof(int), typeof(EditCrawlConfigVM),
+                new PropertyMetadata(0, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
+                    (d as EditCrawlConfigVM).OnRescheduleSecondsPropertyChanged((int)e.OldValue, (int)e.NewValue)));
+
+        public int RescheduleSeconds
+        {
+            get => (int)GetValue(RescheduleSecondsProperty);
+            set => SetValue(RescheduleSecondsProperty, value);
+        }
+
+        protected virtual void OnRescheduleSecondsPropertyChanged(int oldValue, int newValue)
+        {
+#if DEBUG
+            if (DesignerProperties.GetIsInDesignMode(this))
+                return;
+#endif
+            TimeSpan timeSpan = RescheduleInterval;
+            if (timeSpan.Seconds != newValue)
+                RescheduleInterval = new TimeSpan(timeSpan.Days, timeSpan.Hours, timeSpan.Minutes, newValue);
         }
 
         public static readonly DependencyProperty RescheduleAfterFailProperty = DependencyProperty.Register(nameof(RescheduleAfterFail), typeof(bool), typeof(EditCrawlConfigVM),
@@ -657,7 +794,14 @@ namespace FsInfoCat.Desktop.ViewModel
             private set => SetValue(LastSynchronizedOnPropertyKey, value);
         }
 
-#endregion
+        #endregion
+
+        public EditCrawlConfigVM()
+        {
+            SetValue(SelectRootCommandPropertyKey, new Commands.RelayCommand(OnSelectRootExecute));
+            SetValue(SaveCommandPropertyKey, new Commands.RelayCommand(OnSaveExecute));
+            SetValue(CancelCommandPropertyKey, new Commands.RelayCommand(OnCancelExecute));
+        }
 
         internal static CrawlConfiguration Edit(DirectoryInfo crawlRoot)
         {
