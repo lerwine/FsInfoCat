@@ -22,6 +22,9 @@
         <cvt:TimeSpanToStringConverter x:Key="TimeSpanToString" NullSource="None"/>
         <cvt:CrawlConfigurationToAutoRescheduleString x:Key="CrawlConfigToAutoRescheduleString"/>
     </Page.Resources>
+    <Page.Background>
+        <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.WindowColorKey}}"/>
+    </Page.Background>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -31,7 +34,7 @@
             <ColumnDefinition/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <Label Content="Crawl Configurationa" HorizontalAlignment="Center" FontWeight="Bold" FontSize="{DynamicResource LargeFontSize}"/>
+        <Label Content="Crawl Configurations" HorizontalAlignment="Center" FontWeight="Bold" FontSize="{DynamicResource LargeFontSize}"/>
         <DataGrid ItemsSource="{Binding CrawlConfigurations, Mode=OneWay}" AutoGenerateColumns="False" Grid.Row="1" Margin="{DynamicResource DefaultSpacing}" IsReadOnly="True">
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding DisplayName, Mode=OneWay}" IsReadOnly="True" Header="Name" Width="*"/>
@@ -48,19 +51,17 @@
                 <Button Content="Edit" Width="{DynamicResource DefaultButtonWidth}" Height="{DynamicResource DefaultButtonHeight}" Margin="{DynamicResource DefaultSpacing}" Command="{Binding EditClickCommand, Mode=OneWay}"/>
                 <Button Content="Start Now" Width="{DynamicResource DefaultButtonWidth}" Height="{DynamicResource DefaultButtonHeight}" Margin="{DynamicResource DefaultSpacing}" Command="{Binding StartNowCommand, Mode=OneWay}"/>
             </WrapPanel>
-            <GroupBox Margin="{DynamicResource DefaultSpacingLeftRight}" Header="Path">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
-                    <TextBlock Padding="{DynamicResource DefaultSpacingTopLeft}" />
-                    <Button Content="..." Grid.Column="1" Margin="{DynamicResource DefaultSpacingTopRight}" Command="{Binding OpenRootCommand, Mode=OneWay}" ToolTip="Browse root folder"/>
-                </Grid>
-            </GroupBox>
-            <GroupBox Margin="{DynamicResource DefaultSpacingTopLeftRight}" Header="Display Name">
-                <TextBlock Padding="{DynamicResource DefaultSpacingTopLeftRight}" />
-            </GroupBox>
+            <Label Content="Display Name" Padding="{DynamicResource DefaultSpacingTopLeftRight}" FontWeight="Bold"/>
+            <TextBlock Padding="{DynamicResource DefaultSpacingLeftRight}" />
+            <Label Content="Path" Padding="{DynamicResource DefaultSpacingTopLeftRight}" FontWeight="Bold"/>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Padding="{DynamicResource DefaultSpacingLeft}" />
+                <Button Content="..." Grid.Column="1" Margin="{DynamicResource DefaultSpacingRight}" Command="{Binding OpenRootCommand, Mode=OneWay}" ToolTip="Browse root folder" Width="{DynamicResource DefaultTextBoxHeight}" Height="{DynamicResource DefaultTextBoxHeight}"/>
+            </Grid>
             <GroupBox Header="Limits">
                 <Grid>
                     <Grid.ColumnDefinitions>
