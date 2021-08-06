@@ -51,7 +51,6 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.DisplayName);
             Assert.IsNull(target.DefaultDriveType);
             Assert.AreEqual(255, target.MaxNameLength);
-            Assert.IsFalse(target.CaseSensitiveSearch);
             Assert.IsFalse(target.IsInactive);
             Assert.IsFalse(target.ReadOnly);
             Assert.AreEqual("", target.Notes);

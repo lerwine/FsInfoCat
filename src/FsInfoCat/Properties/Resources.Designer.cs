@@ -1267,15 +1267,6 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Case-sensitive Search.
-        /// </summary>
-        public static string DisplayName_CaseSensitiveSearch {
-            get {
-                return ResourceManager.GetString("DisplayName_CaseSensitiveSearch", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Channel Count.
         /// </summary>
         public static string DisplayName_ChannelCount {

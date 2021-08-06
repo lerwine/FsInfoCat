@@ -12,11 +12,6 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_DisplayName), ResourceType = typeof(Properties.Resources))]
         string DisplayName { get; }
 
-        /// <summary>Gets a value indicating whether file name searches are case-sensitive.</summary>
-        /// <value><see langword="true" /> if file name searches are case-sensitive; otherwise, <see langword="false" />.</value>
-        [Display(Name = nameof(Properties.Resources.DisplayName_CaseSensitiveSearch), ResourceType = typeof(Properties.Resources))]
-        bool CaseSensitiveSearch { get; }
-
         /// <summary>Gets a value indicating whether this is a read-only file system type.</summary>
         /// <value><see langword="true" /> if this is a read-only file system type; otherwise, <see langword="false" />.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_ReadOnly), ResourceType = typeof(Properties.Resources))]

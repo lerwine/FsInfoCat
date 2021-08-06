@@ -33,7 +33,6 @@ DROP TABLE IF EXISTS "FileSystems";
 CREATE TABLE IF NOT EXISTS "FileSystems" (
     "Id" UNIQUEIDENTIFIER NOT NULL COLLATE NOCASE,
     "DisplayName" NVARCHAR(1024) NOT NULL CHECK(length(trim("DisplayName"))=length("DisplayName") AND length("DisplayName")>0) COLLATE NOCASE,
-    "CaseSensitiveSearch" BIT NOT NULL DEFAULT 0,
     "ReadOnly" BIT NOT NULL DEFAULT 0,
     "MaxNameLength" UNSIGNED INT NOT NULL DEFAULT 255,
     "DefaultDriveType" UNSIGNED TINYINT CHECK("DefaultDriveType" IS NULL OR ("DefaultDriveType">=0 AND "DefaultDriveType"<7)) DEFAULT NULL,
@@ -77,7 +76,6 @@ CREATE TABLE IF NOT EXISTS "Volumes" (
     "DisplayName" NVARCHAR(1024) NOT NULL CHECK(length(trim("DisplayName"))=length("DisplayName") AND length("DisplayName")>0) COLLATE NOCASE,
     "VolumeName" NVARCHAR(128) NOT NULL CHECK(length(trim("VolumeName"))=length("VolumeName")) DEFAULT '' COLLATE NOCASE,
     "Identifier" NVARCHAR(1024) NOT NULL COLLATE NOCASE,
-    "CaseSensitiveSearch" BIT DEFAULT NULL,
     "ReadOnly" BIT DEFAULT NULL,
     "MaxNameLength" UNSIGNED INT DEFAULT NULL,
     "Type" UNSIGNED TINYINT NOT NULL CHECK("Type">=0 AND "Type"<7) DEFAULT 0, -- Unknown

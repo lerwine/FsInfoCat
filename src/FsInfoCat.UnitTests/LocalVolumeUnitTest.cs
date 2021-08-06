@@ -59,7 +59,6 @@ namespace FsInfoCat.UnitTests
             Assert.IsNotNull(target.FileSystem);
             Assert.AreEqual(fileSystem.Id, target.FileSystem.Id);
             Assert.AreEqual(DriveType.Unknown, target.Type);
-            Assert.IsNull(target.CaseSensitiveSearch);
             Assert.IsNull(target.ReadOnly);
             Assert.AreEqual(VolumeStatus.Unknown, target.Status);
             Assert.IsNull(target.MaxNameLength);

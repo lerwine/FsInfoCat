@@ -46,15 +46,6 @@ namespace FsInfoCat.Desktop.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool GenericNfsTypeCaseSensitiveSearch {
-            get {
-                return ((bool)(this["GenericNfsTypeCaseSensitiveSearch"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool GenericNfsTypeReadOnly {
             get {
                 return ((bool)(this["GenericNfsTypeReadOnly"]));

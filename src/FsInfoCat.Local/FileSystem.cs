@@ -14,7 +14,6 @@ namespace FsInfoCat.Local
 
         private readonly IPropertyChangeTracker<Guid> _id;
         private readonly IPropertyChangeTracker<string> _displayName;
-        private readonly IPropertyChangeTracker<bool> _caseSensitiveSearch;
         private readonly IPropertyChangeTracker<bool> _readOnly;
         private readonly IPropertyChangeTracker<uint> _maxNameLength;
         private readonly IPropertyChangeTracker<DriveType?> _defaultDriveType;
@@ -36,10 +35,6 @@ namespace FsInfoCat.Local
         [StringLength(DbConstants.DbColMaxLen_LongName, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_DisplayNameLength),
             ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual string DisplayName { get => _displayName.GetValue(); set => _displayName.SetValue(value); }
-
-        [Required]
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_CaseSensitiveSearch), ResourceType = typeof(FsInfoCat.Properties.Resources))]
-        public virtual bool CaseSensitiveSearch { get => _caseSensitiveSearch.GetValue(); set => _caseSensitiveSearch.SetValue(value); }
 
         [Required]
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_ReadOnly), ResourceType = typeof(FsInfoCat.Properties.Resources))]
@@ -94,7 +89,6 @@ namespace FsInfoCat.Local
         {
             _id = AddChangeTracker(nameof(Id), Guid.Empty);
             _displayName = AddChangeTracker(nameof(DisplayName), "", TrimmedNonNullStringCoersion.Default);
-            _caseSensitiveSearch = AddChangeTracker(nameof(CaseSensitiveSearch), false);
             _readOnly = AddChangeTracker(nameof(ReadOnly), false);
             _maxNameLength = AddChangeTracker(nameof(MaxNameLength), DbConstants.DbColDefaultValue_MaxNameLength);
             _defaultDriveType = AddChangeTracker<DriveType?>(nameof(DefaultDriveType), null);

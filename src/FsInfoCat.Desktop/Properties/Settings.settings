@@ -13,9 +13,6 @@
 &lt;/SerializableConnectionString&gt;</DesignTimeValue>
       <Value Profile="(Default)">Data Source=(localdb)\ProjectsV13;Initial Catalog=FsInfoCat;Integrated Security=True;MultipleActiveResultSets=True;Connect Timeout=30</Value>
     </Setting>
-    <Setting Name="GenericNfsTypeCaseSensitiveSearch" Type="System.Boolean" Scope="Application">
-      <Value Profile="(Default)">False</Value>
-    </Setting>
     <Setting Name="GenericNfsTypeReadOnly" Type="System.Boolean" Scope="Application">
       <Value Profile="(Default)">False</Value>
     </Setting>

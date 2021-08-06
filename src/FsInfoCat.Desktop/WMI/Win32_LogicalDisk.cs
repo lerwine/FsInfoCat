@@ -57,6 +57,10 @@ namespace FsInfoCat.Desktop.WMI
 
         IVolumeDirectory ILogicalDiskInfo.RootDirectory => RootDirectory;
 
+        public bool ErrorCleared { get; private set; }
+
+        public string ErrorDescription { get; private set; }
+
         internal Win32_LogicalDisk(ManagementObject obj)
         {
             Name = obj.GetString(nameof(Name));
@@ -72,6 +76,8 @@ namespace FsInfoCat.Desktop.WMI
             Size = obj.GetUInt64(nameof(Size));
             DriveType = (DriveType)obj.GetUInt32(nameof(DriveType));
             LastErrorCode = obj.GetUInt32(nameof(LastErrorCode));
+            ErrorCleared = obj.GetBoolean(nameof(ErrorCleared));
+            ErrorDescription = obj.GetString(nameof(ErrorDescription));
             MaximumComponentLength = obj.GetUInt32(nameof(MaximumComponentLength));
             Access = (CIMLogicalDiskAccess)obj.GetUInt16(nameof(Access));
             Availability = (CIMLogicalDiskAvailability?)obj.GetUInt16Opt(nameof(Availability));

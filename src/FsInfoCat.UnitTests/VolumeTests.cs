@@ -43,7 +43,6 @@ namespace FsInfoCat.UnitTests
             Assert.IsTrue(target.Identifier.IsEmpty());
             Assert.AreEqual(VolumeStatus.Unknown, target.Status);
             Assert.AreEqual(DriveType.Unknown, target.Type);
-            Assert.IsNull(target.CaseSensitiveSearch);
             Assert.IsNull(target.ReadOnly);
             Assert.IsNull(target.MaxNameLength);
             Assert.IsNotNull(target.Notes);
@@ -70,7 +69,6 @@ namespace FsInfoCat.UnitTests
             Assert.IsTrue(target.Identifier.IsEmpty());
             Assert.AreEqual(VolumeStatus.Unknown, target.Status);
             Assert.AreEqual(DriveType.Unknown, target.Type);
-            Assert.IsNull(target.CaseSensitiveSearch);
             Assert.IsNull(target.ReadOnly);
             Assert.IsNull(target.MaxNameLength);
             Assert.IsNotNull(target.Notes);
@@ -267,18 +265,6 @@ namespace FsInfoCat.UnitTests
                 Assert.IsFalse(validationResults[0].MemberNames.Skip(1).Any());
                 Assert.AreEqual(nameof(Volume.Type), actualMemberName);
             }
-        }
-
-        [DataTestMethod]
-        [DataRow(null, DisplayName = "bool? CaseSensitiveSearch = null")]
-        [DataRow(true, DisplayName = "bool? CaseSensitiveSearch = true")]
-        [DataRow(false, DisplayName = "bool? CaseSensitiveSearch = false")]
-        public void CaseSensitiveSearchTestMethod(bool? value)
-        {
-            Volume target = new() { DisplayName = "Test", FileSystem = new(), Identifier = new VolumeIdentifier(Guid.NewGuid()) };
-            target.CaseSensitiveSearch = value;
-            bool? actualValue = target.CaseSensitiveSearch;
-            Assert.AreEqual(value, actualValue);
         }
 
         [DataTestMethod]

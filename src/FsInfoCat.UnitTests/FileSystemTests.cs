@@ -35,7 +35,6 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(Guid.Empty, target.Id);
             Assert.IsNotNull(target.DisplayName);
             Assert.AreEqual("", target.DisplayName);
-            Assert.IsFalse(target.CaseSensitiveSearch);
             Assert.IsFalse(target.ReadOnly);
             Assert.AreEqual(255, target.MaxNameLength);
             Assert.IsNull(target.DefaultDriveType);
@@ -61,7 +60,6 @@ namespace FsInfoCat.UnitTests
             Assert.AreNotEqual(Guid.Empty, target.Id);
             Assert.IsNotNull(target.DisplayName);
             Assert.AreEqual("", target.DisplayName);
-            Assert.IsFalse(target.CaseSensitiveSearch);
             Assert.IsFalse(target.ReadOnly);
             Assert.AreEqual(255, target.MaxNameLength);
             Assert.IsNull(target.DefaultDriveType);
@@ -108,19 +106,6 @@ namespace FsInfoCat.UnitTests
             string actualValue = target.DisplayName;
             Assert.IsNotNull(actualValue);
             Assert.AreEqual(expected, actualValue);
-        }
-
-        [TestMethod("bool CaseSensitiveSearch")]
-        public void CaseSensitiveSearchTestMethod()
-        {
-            Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for bool CaseSensitiveSearch
-
-            FileSystem target = default; // TODO: Create and initialize FileSystem instance
-            bool expectedValue = default;
-            target.CaseSensitiveSearch = default;
-            bool actualValue = target.CaseSensitiveSearch;
-            Assert.AreEqual(expectedValue, actualValue);
         }
 
         [TestMethod("bool ReadOnly")]

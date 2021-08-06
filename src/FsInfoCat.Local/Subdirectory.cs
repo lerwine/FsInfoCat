@@ -577,7 +577,6 @@ namespace FsInfoCat.Local
                         if (path.EndsWith('/'))
                             path = path.Substring(0, path.Length - 1);
                         (IFileSystemProperties Properties, string SymbolicName) genericNetworkFsType = fileSystemDetailService.GetGenericNetworkShareFileSystem();
-                        parentVolume.CaseSensitiveSearch = genericNetworkFsType.Properties.CaseSensitiveSearch;
                         parentVolume.Identifier = volumeIdentifier;
                         parentVolume.MaxNameLength = genericNetworkFsType.Properties.MaxNameLength;
                         parentVolume.ModifiedOn = parentVolume.CreatedOn;
@@ -595,7 +594,6 @@ namespace FsInfoCat.Local
                                 CreatedOn = parentVolume.CreatedOn,
                                 ModifiedOn = parentVolume.ModifiedOn,
                                 DisplayName = "Network File System",
-                                CaseSensitiveSearch = genericNetworkFsType.Properties.CaseSensitiveSearch,
                                 DefaultDriveType = genericNetworkFsType.Properties.DefaultDriveType,
                                 MaxNameLength = genericNetworkFsType.Properties.MaxNameLength,
                                 ReadOnly = genericNetworkFsType.Properties.ReadOnly
@@ -619,20 +617,20 @@ namespace FsInfoCat.Local
                     }
                     else
                     {
-                        parentVolume.CaseSensitiveSearch = diskInfo.Compressed
-                        parentVolume.Identifier = volumeIdentifier;
-                        parentVolume.MaxNameLength = genericNetworkFsType.Properties.MaxNameLength;
-                        parentVolume.ModifiedOn = parentVolume.CreatedOn;
-                        parentVolume.ReadOnly = genericNetworkFsType.Properties.ReadOnly;
-                        parentVolume.Status = VolumeStatus.Unknown;
-                        parentVolume.Type = DriveType.Network;
-                        parentVolume.DisplayName = $"{(path.EndsWith('/') ? path.Substring(0, path.Length - 1) : path)} on {uri.Host}";
-                        string name = diskInfo.FileSystemName;
-                        SymbolicName symbolicName = (from sn in dbContext.SymbolicNames where sn.Name == name select sn).FirstOrDefault();
-                        if (symbolicName is null)
-                        {
-                            p
-                        }
+                        // TODO: Finish implementation
+                        //parentVolume.Identifier = volumeIdentifier;
+                        //parentVolume.MaxNameLength = parentVolume.MaxNameLength;
+                        //parentVolume.ModifiedOn = parentVolume.CreatedOn;
+                        //parentVolume.ReadOnly = parentVolume.Properties.ReadOnly;
+                        //parentVolume.Status = VolumeStatus.Unknown;
+                        //parentVolume.Type = DriveType.Network;
+                        //parentVolume.DisplayName = $"{(path.EndsWith('/') ? path.Substring(0, path.Length - 1) : path)} on {uri.Host}";
+                        //string name = diskInfo.FileSystemName;
+                        //SymbolicName symbolicName = (from sn in dbContext.SymbolicNames where sn.Name == name select sn).FirstOrDefault();
+                        //if (symbolicName is null)
+                        //{
+                        //    p
+                        //}
                         
                     }
                     await dbContext.SaveChangesAsync(true, CancellationToken.None);
@@ -705,7 +703,8 @@ namespace FsInfoCat.Local
                 }
                 await dbContext.SaveChangesAsync();
             }
-            return result;
+            throw new NotImplementedException();
+            //return result;
         }
     }
 }

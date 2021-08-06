@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
@@ -28,11 +28,6 @@ namespace FsInfoCat
         /// <value>The system-independent unique identifier, which identifies the volume.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_Identifier), ResourceType = typeof(Properties.Resources))]
         VolumeIdentifier Identifier { get; }
-
-        /// <summary>Gets a value indicating whether file name searches are case-sensitive.</summary>
-        /// <value><see langword="true" /> if file name searches are case-sensitive; <see langword="false" /> if they are case-insensitive; otherwise, <see langword="null" /> to assume the same value as defined by the <see cref="IFileSystem.CaseSensitiveSearch">file system type</see>.</value>
-        [Display(Name = nameof(Properties.Resources.DisplayName_CaseSensitiveSearch), ResourceType = typeof(Properties.Resources))]
-        bool? CaseSensitiveSearch { get; }
 
         /// <summary>Gets a value indicating whether the current volume is read-only.</summary>
         /// <value><see langword="true" /> if the current volume is read-only; <see langword="false" /> if it is read/write; otherwise, <see langword="null" /> to assume the same value as defined by the <see cref="IFileSystem.ReadOnly">file system type</see>.</value>

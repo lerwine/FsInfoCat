@@ -19,7 +19,6 @@ namespace FsInfoCat.Desktop
         public (IFileSystemProperties Properties, string SymbolicName) GetGenericNetworkShareFileSystem() => (new FileSystemRecord()
         {
             DisplayName = "Network File Share",
-            CaseSensitiveSearch = Properties.Settings.Default.GenericNfsTypeCaseSensitiveSearch,
             ReadOnly = Properties.Settings.Default.GenericNfsTypeReadOnly,
             MaxNameLength = Properties.Settings.Default.GenericNfsTypeMaxNameLength,
             DefaultDriveType = DriveType.Network

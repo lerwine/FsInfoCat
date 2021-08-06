@@ -123,9 +123,6 @@
   <data name="DisplayName_AudioProperties" xml:space="preserve">
     <value>Audio Properties</value>
   </data>
-  <data name="DisplayName_CaseSensitiveSearch" xml:space="preserve">
-    <value>Case-sensitive Search</value>
-  </data>
   <data name="DisplayName_BaselineComparisons" xml:space="preserve">
     <value>Baseline Comparisons</value>
   </data>

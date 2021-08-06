@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.IO;
 using System.Linq;
@@ -30,7 +30,7 @@ namespace FsInfoCat.Local
                 return false;
             }
 
-            if (logicalDiskInfo.DriveType == DriveType.Network && (Uri.TryCreate(logicalDiskInfo.ProviderName, UriKind.Absolute, out Uri uri) || Uri.TryCreate(logicalDiskInfo., UriKind.Absolute, out uri)) && uri.IsUnc)
+            if (logicalDiskInfo.DriveType == DriveType.Network && (Uri.TryCreate(logicalDiskInfo.ProviderName, UriKind.Absolute, out Uri uri) || Uri.TryCreate(logicalDiskInfo.GetRootPath(), UriKind.Absolute, out uri)) && uri.IsUnc)
             {
                 result = new VolumeIdentifier(uri);
                 return true;

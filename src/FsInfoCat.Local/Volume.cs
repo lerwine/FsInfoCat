@@ -23,7 +23,6 @@ namespace FsInfoCat.Local
         private readonly IPropertyChangeTracker<string> _volumeName;
         private readonly IPropertyChangeTracker<VolumeIdentifier> _identifier;
         private readonly IPropertyChangeTracker<DriveType> _type;
-        private readonly IPropertyChangeTracker<bool?> _caseSensitiveSearch;
         private readonly IPropertyChangeTracker<bool?> _readOnly;
         private readonly IPropertyChangeTracker<uint?> _maxNameLength;
         private readonly IPropertyChangeTracker<string> _notes;
@@ -68,9 +67,6 @@ namespace FsInfoCat.Local
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_DriveType), ResourceType = typeof(Properties.Resources))]
         [Required]
         public virtual DriveType Type { get => _type.GetValue(); set => _type.SetValue(value); }
-
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_CaseSensitiveSearch), ResourceType = typeof(FsInfoCat.Properties.Resources))]
-        public virtual bool? CaseSensitiveSearch { get => _caseSensitiveSearch.GetValue(); set => _caseSensitiveSearch.SetValue(value); }
 
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_ReadOnly), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual bool? ReadOnly { get => _readOnly.GetValue(); set => _readOnly.SetValue(value); }
@@ -151,7 +147,6 @@ namespace FsInfoCat.Local
             _displayName = AddChangeTracker(nameof(DisplayName), "", TrimmedNonNullStringCoersion.Default);
             _volumeName = AddChangeTracker(nameof(VolumeName), "", TrimmedNonNullStringCoersion.Default);
             _identifier = AddChangeTracker<VolumeIdentifier>(nameof(Identifier), default);
-            _caseSensitiveSearch = AddChangeTracker<bool?>(nameof(CaseSensitiveSearch), null);
             _readOnly = AddChangeTracker<bool?>(nameof(ReadOnly), null);
             _maxNameLength = AddChangeTracker<uint?>(nameof(MaxNameLength), null);
             _type = AddChangeTracker(nameof(Type), DriveType.Unknown);
