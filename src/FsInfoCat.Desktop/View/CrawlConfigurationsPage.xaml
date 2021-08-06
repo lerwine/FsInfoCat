@@ -6,10 +6,13 @@
       xmlns:local="clr-namespace:FsInfoCat.Desktop.View"
       xmlns:vm="clr-namespace:FsInfoCat.Desktop.ViewModel"
       xmlns:cvt="clr-namespace:FsInfoCat.Desktop.Converters"
+      xmlns:res="clr-namespace:FsInfoCat.Properties;assembly=FsInfoCat"
       mc:Ignorable="d" DataContext="{DynamicResource VM}"
       d:DesignHeight="768" d:DesignWidth="1024"
-      Title="Crawl Configurations">
+      Title="DisplayName_CrawlConfigurations">
     <Page.Resources>
+        <cvt:DependencyObjectToVisibilityConverter x:Key="DependencyObjectToVisibilityConverter"/>
+        <cvt:DependencyObjectToVisibilityConverter x:Key="InverseObjectToVisibilityConverter" NotNullSource="Collapsed" NullSource="Visible"/>
         <vm:CrawlConfigurationsPageVM x:Key="VM"/>
         <cvt:CrawlStatusToStringConverter x:Key="CrawlStatusToDescription" Display="Description" />
         <cvt:CrawlStatusToStringConverter x:Key="CrawlStatusToCol" Display="ShortName" />
@@ -19,48 +22,44 @@
         <cvt:DateTimeToStringConverter x:Key="CrawlStartToCol" NullSource="(never)" Format="HH:mm:ss M/d/yyyy"/>
         <cvt:DateTimeToStringConverter x:Key="NextCrawlToCol" NullSource="(none)" Format="HH:mm:ss M/d/yyyy"/>
         <cvt:DateTimeToStringConverter x:Key="LastSynchronizedToString" NullSource="(not synchronized)"/>
-        <cvt:TimeSpanToStringConverter x:Key="TimeSpanToString" NullSource="None"/>
-        <cvt:CrawlConfigurationToAutoRescheduleString x:Key="CrawlConfigToAutoRescheduleString"/>
+        <cvt:TimeSpanToStringConverter x:Key="TimeSpanToString" NullSource="(unlimited)"/>
+        <cvt:CrawlConfigurationToAutoRescheduleString x:Key="CrawlConfigToAutoRescheduleString" NullSource="(none)"/>
     </Page.Resources>
     <Page.Background>
         <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.WindowColorKey}}"/>
     </Page.Background>
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition/>
-        </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <Label Content="Crawl Configurations" HorizontalAlignment="Center" FontWeight="Bold" FontSize="{DynamicResource LargeFontSize}"/>
-        <DataGrid ItemsSource="{Binding CrawlConfigurations, Mode=OneWay}" AutoGenerateColumns="False" Grid.Row="1" Margin="{DynamicResource DefaultSpacing}" IsReadOnly="True">
+        <DataGrid ItemsSource="{Binding CrawlConfigurations, Mode=OneWay}" AutoGenerateColumns="False" Margin="{DynamicResource DefaultSpacing}" IsReadOnly="True" SelectedValue="{Binding SelectedCrawlConfig, Mode=TwoWay}">
             <DataGrid.Columns>
-                <DataGridTextColumn Binding="{Binding DisplayName, Mode=OneWay}" IsReadOnly="True" Header="Name" Width="*"/>
-                <DataGridTextColumn Binding="{Binding StatusValue, Converter={StaticResource CrawlStatusToCol}, Mode=OneWay}" IsReadOnly="True" Header="Status" CanUserResize="True" Width="*"/>
-                <DataGridTextColumn Binding="{Binding LastCrawlStart, Converter={StaticResource CrawlStartToCol}, Mode=OneWay}" IsReadOnly="True" Header="Last Start"/>
-                <DataGridTextColumn Binding="{Binding LastCrawlEnd, Converter={StaticResource DateTimeToCol}, Mode=OneWay}" IsReadOnly="True" Header="Last End"/>
-                <DataGridTextColumn Binding="{Binding NextScheduledStart, Converter={StaticResource NextCrawlToCol}, Mode=OneWay}" IsReadOnly="True" Header="Next Start"/>
+                <DataGridTextColumn Binding="{Binding DisplayName, Mode=OneWay}" IsReadOnly="True" Header="{x:Static res:Resources.DisplayName_Name}" Width="*"/>
+                <DataGridTextColumn Binding="{Binding StatusValue, Converter={StaticResource CrawlStatusToCol}, Mode=OneWay}" IsReadOnly="True" Header="{x:Static res:Resources.DisplayName_Status}" CanUserResize="True" Width="*"/>
+                <DataGridTextColumn Binding="{Binding LastCrawlStart, Converter={StaticResource CrawlStartToCol}, Mode=OneWay}" IsReadOnly="True" Header="{x:Static res:Resources.DisplayName_LastStart}"/>
+                <DataGridTextColumn Binding="{Binding LastCrawlEnd, Converter={StaticResource DateTimeToCol}, Mode=OneWay}" IsReadOnly="True" Header="{x:Static res:Resources.DisplayName_LastEnd}"/>
+                <DataGridTextColumn Binding="{Binding NextScheduledStart, Converter={StaticResource NextCrawlToCol}, Mode=OneWay}" IsReadOnly="True" Header="{x:Static res:Resources.DisplayName_NextStart}"/>
             </DataGrid.Columns>
         </DataGrid>
-        <StackPanel Grid.Column="1" Grid.RowSpan="2" Margin="{DynamicResource DefaultSpacingLeft}">
+        <TextBlock Grid.Column="1" Text="No crawl configuration to dispay" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding SelectedCrawlConfig, Converter={StaticResource InverseObjectToVisibilityConverter}}"/>
+        <StackPanel Grid.Column="1" Margin="{DynamicResource DefaultSpacingLeft}" DataContext="{Binding SelectedCrawlConfig}" Visibility="{Binding Converter={StaticResource DependencyObjectToVisibilityConverter}, Mode=OneWay}">
             <WrapPanel Grid.Row="1" FlowDirection="RightToLeft">
-                <Button Content="Delete" Width="{DynamicResource DefaultButtonWidth}" Height="{DynamicResource DefaultButtonHeight}" Margin="{DynamicResource DefaultSpacing}" Command="{Binding DeleteClickCommand}"/>
-                <Button Content="New" Command="{Binding NewClickCommand, Mode=OneWay}" Width="{DynamicResource DefaultButtonWidth}" Height="{DynamicResource DefaultButtonHeight}" Margin="{DynamicResource DefaultSpacing}"/>
-                <Button Content="Edit" Width="{DynamicResource DefaultButtonWidth}" Height="{DynamicResource DefaultButtonHeight}" Margin="{DynamicResource DefaultSpacing}" Command="{Binding EditClickCommand, Mode=OneWay}"/>
-                <Button Content="Start Now" Width="{DynamicResource DefaultButtonWidth}" Height="{DynamicResource DefaultButtonHeight}" Margin="{DynamicResource DefaultSpacing}" Command="{Binding StartNowCommand, Mode=OneWay}"/>
+                <Button Content="{x:Static res:Resources.DisplayName_Delete}" Width="{DynamicResource DefaultButtonWidth}" Height="{DynamicResource DefaultButtonHeight}" Margin="{DynamicResource DefaultSpacing}" Command="{Binding DeleteCommand, Mode=OneWay}" ToolTip="{x:Static res:Resources.Description_DeleteCurrentCrawlConfig}"/>
+                <Button Content="{x:Static res:Resources.DisplayName_New}" Command="{Binding NewClickCommand, Mode=OneWay, Source={StaticResource VM}}" Width="{DynamicResource DefaultButtonWidth}" Height="{DynamicResource DefaultButtonHeight}" Margin="{DynamicResource DefaultSpacing}" ToolTip="{x:Static res:Resources.Description_NewCurrentCrawlConfig}"/>
+                <Button Content="{x:Static res:Resources.DisplayName_Edit}" Width="{DynamicResource DefaultButtonWidth}" Height="{DynamicResource DefaultButtonHeight}" Margin="{DynamicResource DefaultSpacing}" Command="{Binding EditCommand, Mode=OneWay}" ToolTip="{x:Static res:Resources.Description_EditCurrentCrawlConfig}"/>
+                <Button Content="{x:Static res:Resources.DisplayName_StartNow}" Width="{DynamicResource DefaultButtonWidth}" Height="{DynamicResource DefaultButtonHeight}" Margin="{DynamicResource DefaultSpacing}" Command="{Binding StartCrawlNowCommand, Mode=OneWay}" ToolTip="{x:Static res:Resources.Description_StartCrawlNow}"/>
             </WrapPanel>
-            <Label Content="Display Name" Padding="{DynamicResource DefaultSpacingTopLeftRight}" FontWeight="Bold"/>
-            <TextBlock Padding="{DynamicResource DefaultSpacingLeftRight}" />
-            <Label Content="Path" Padding="{DynamicResource DefaultSpacingTopLeftRight}" FontWeight="Bold"/>
+            <Label Content="{x:Static res:Resources.DisplayName_DisplayName}" Padding="{DynamicResource DefaultSpacingTopLeftRight}" FontWeight="Bold"/>
+            <TextBlock Padding="{DynamicResource DefaultSpacingLeftRight}" Text="{Binding DisplayName, Mode=OneWay}" />
+            <Label Content="{x:Static res:Resources.DisplayName_RootPath}" Padding="{DynamicResource DefaultSpacingTopLeftRight}" FontWeight="Bold"/>
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <TextBlock Padding="{DynamicResource DefaultSpacingLeft}" />
-                <Button Content="..." Grid.Column="1" Margin="{DynamicResource DefaultSpacingRight}" Command="{Binding OpenRootCommand, Mode=OneWay}" ToolTip="Browse root folder" Width="{DynamicResource DefaultTextBoxHeight}" Height="{DynamicResource DefaultTextBoxHeight}"/>
+                <TextBlock Padding="{DynamicResource DefaultSpacingLeft}" Text="{Binding Path, Mode=OneWay}" />
+                <Button Content="..." Grid.Column="1" Margin="{DynamicResource DefaultSpacingRight}" Command="{Binding OpenRootFolderCommand, Mode=OneWay}" ToolTip="{x:Static res:Resources.Description_BrowseRootFolder}" Width="{DynamicResource DefaultTextBoxHeight}" Height="{DynamicResource DefaultTextBoxHeight}"/>
             </Grid>
             <GroupBox Header="Limits">
                 <Grid>
@@ -74,13 +73,13 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
-                    <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" Content="Max Recursion Depth" FontWeight="Bold"/>
-                    <TextBlock Padding="{DynamicResource DefaultSpacingLeftRight}" Grid.Row="1" />
-                    <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" Content="Max Total Items" Grid.Column="1" FontWeight="Bold"/>
-                    <TextBlock Padding="{DynamicResource DefaultSpacingLeftRight}" Grid.Row="1" Grid.Column="1" />
-                    <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" Content="Maximum Crawl Duration" Grid.Row="2" FontWeight="Bold"/>
-                    <TextBlock Padding="{DynamicResource DefaultSpacingLeftRight}" Grid.Row="3" />
-                    <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" Content="Auto-Reschedule" Grid.Column="1" Grid.Row="2" FontWeight="Bold"/>
+                    <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" Content="{x:Static res:Resources.DisplayName_MaxRecursionDepth}" FontWeight="Bold"/>
+                    <TextBlock Padding="{DynamicResource DefaultSpacingLeftRight}" Grid.Row="1" Text="{Binding MaxRecursionDepth, Mode=OneWay}" />
+                    <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" Content="{x:Static res:Resources.DisplayName_MaxTotalItems}" Grid.Column="1" FontWeight="Bold"/>
+                    <TextBlock Padding="{DynamicResource DefaultSpacingLeftRight}" Grid.Row="1" Grid.Column="1" Text="{Binding MaxTotalItems, Mode=OneWay, TargetNullValue=(unlimited)}" />
+                    <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" Content="{x:Static res:Resources.DisplayName_MaxCrawlDuration}" Grid.Row="2" FontWeight="Bold"/>
+                    <TextBlock Padding="{DynamicResource DefaultSpacingLeftRight}" Grid.Row="3" Text="{Binding TTL, Converter={StaticResource TimeSpanToString}, Mode=OneWay}" />
+                    <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" Content="{x:Static res:Resources.DisplayName_AutoReschedule}" Grid.Column="1" Grid.Row="2" FontWeight="Bold"/>
                     <TextBlock Padding="{DynamicResource DefaultSpacingLeftRight}" Grid.Row="3" Grid.Column="1" Text="{Binding Converter={StaticResource CrawlConfigToAutoRescheduleString}, Mode=OneWay}" />
                 </Grid>
             </GroupBox>
@@ -121,10 +120,10 @@
                 <TextBlock Padding="{DynamicResource DefaultSpacingTopLeftRight}" Text="{Binding Notes, Mode=OneWay}" />
             </GroupBox>
             <WrapPanel Grid.Row="1" FlowDirection="RightToLeft">
-                <Button Content="Delete" Width="{DynamicResource DefaultButtonWidth}" Height="{DynamicResource DefaultButtonHeight}" Margin="{DynamicResource DefaultSpacing}" Command="{Binding DeleteClickCommand, Mode=OneWay}"/>
-                <Button Content="New" Command="{Binding NewClickCommand, Mode=OneWay}" Width="{DynamicResource DefaultButtonWidth}" Height="{DynamicResource DefaultButtonHeight}" Margin="{DynamicResource DefaultSpacing}"/>
-                <Button Content="Edit" Width="{DynamicResource DefaultButtonWidth}" Height="{DynamicResource DefaultButtonHeight}" Margin="{DynamicResource DefaultSpacing}" Command="{Binding EditClickCommand, Mode=OneWay}"/>
-                <Button Content="Start Now" Width="{DynamicResource DefaultButtonWidth}" Height="{DynamicResource DefaultButtonHeight}" Margin="{DynamicResource DefaultSpacing}" Command="{Binding StartNowCommand, Mode=OneWay}"/>
+                <Button Content="{x:Static res:Resources.DisplayName_Delete}" Width="{DynamicResource DefaultButtonWidth}" Height="{DynamicResource DefaultButtonHeight}" Margin="{DynamicResource DefaultSpacing}" Command="{Binding DeleteCommand, Mode=OneWay}" ToolTip="{x:Static res:Resources.Description_DeleteCurrentCrawlConfig}"/>
+                <Button Content="{x:Static res:Resources.DisplayName_New}" Command="{Binding NewClickCommand, Mode=OneWay, Source={StaticResource VM}}" Width="{DynamicResource DefaultButtonWidth}" Height="{DynamicResource DefaultButtonHeight}" Margin="{DynamicResource DefaultSpacing}" ToolTip="{x:Static res:Resources.Description_NewCurrentCrawlConfig}"/>
+                <Button Content="{x:Static res:Resources.DisplayName_Edit}" Width="{DynamicResource DefaultButtonWidth}" Height="{DynamicResource DefaultButtonHeight}" Margin="{DynamicResource DefaultSpacing}" Command="{Binding EditCommand, Mode=OneWay}" ToolTip="{x:Static res:Resources.Description_EditCurrentCrawlConfig}"/>
+                <Button Content="{x:Static res:Resources.DisplayName_StartNow}" Width="{DynamicResource DefaultButtonWidth}" Height="{DynamicResource DefaultButtonHeight}" Margin="{DynamicResource DefaultSpacing}" Command="{Binding StartCrawlNowCommand, Mode=OneWay}" ToolTip="{x:Static res:Resources.Description_StartCrawlNow}"/>
             </WrapPanel>
         </StackPanel>
         <GridSplitter Grid.Column="1" HorizontalAlignment="Left" Width="5" Grid.RowSpan="2"/>

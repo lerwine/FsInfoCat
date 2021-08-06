@@ -16,7 +16,14 @@ namespace FsInfoCat.Desktop
 
         public IFileDetailProvider CreateFileDetailProvider(string filePath, bool doNotSaveChanges) => new FileDetailProvider(filePath, doNotSaveChanges);
 
-        public async Task<ILogicalDiskInfo> GetLogicalDiskAsync(DirectoryInfo directoryInfo, CancellationToken cancellationToken) => await WMI.Win32_LogicalDisk.GetLogicalDiskAsync(directoryInfo, cancellationToken);
+        public (IFileSystemProperties Properties, string SymbolicName) GetGenericNetworkShareFileSystem() => (new FileSystemRecord()
+        {
+            DisplayName = "Network File Share",
+            CaseSensitiveSearch = Properties.Settings.Default.GenericNfsTypeCaseSensitiveSearch,
+            ReadOnly = Properties.Settings.Default.GenericNfsTypeReadOnly,
+            MaxNameLength = Properties.Settings.Default.GenericNfsTypeMaxNameLength,
+            DefaultDriveType = DriveType.Network
+        }, Properties.Settings.Default.GenericNfsTypeSymboicName);
 
         public async Task<ILogicalDiskInfo[]> GetLogicalDisksAsync(CancellationToken cancellationToken) => (await WMI.Win32_LogicalDisk.GetLogicalDisksAsync(cancellationToken)).Cast<ILogicalDiskInfo>().ToArray();
     }

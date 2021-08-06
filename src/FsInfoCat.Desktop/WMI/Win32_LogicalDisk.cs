@@ -37,6 +37,8 @@ namespace FsInfoCat.Desktop.WMI
 
         public ulong Size { get; private set; }
 
+        public uint? LastErrorCode { get; private set; }
+
         public DriveType DriveType { get; private set; }
 
         public uint MaximumComponentLength { get; private set; }
@@ -45,13 +47,15 @@ namespace FsInfoCat.Desktop.WMI
 
         public CIMLogicalDiskAvailability? Availability { get; private set; }
 
-        internal Win32_Directory RootDirectory { get; }
+        public Win32_Directory RootDirectory { get; }
 
         string ILogicalDiskInfo.FileSystemName => FileSystem;
 
         uint ILogicalDiskInfo.MaxNameLength => MaximumComponentLength;
 
         bool ILogicalDiskInfo.IsReadOnly => IsReadOnly ?? false;
+
+        IVolumeDirectory ILogicalDiskInfo.RootDirectory => RootDirectory;
 
         internal Win32_LogicalDisk(ManagementObject obj)
         {
@@ -67,6 +71,7 @@ namespace FsInfoCat.Desktop.WMI
             FreeSpace = obj.GetUInt64(nameof(FreeSpace));
             Size = obj.GetUInt64(nameof(Size));
             DriveType = (DriveType)obj.GetUInt32(nameof(DriveType));
+            LastErrorCode = obj.GetUInt32(nameof(LastErrorCode));
             MaximumComponentLength = obj.GetUInt32(nameof(MaximumComponentLength));
             Access = (CIMLogicalDiskAccess)obj.GetUInt16(nameof(Access));
             Availability = (CIMLogicalDiskAvailability?)obj.GetUInt16Opt(nameof(Availability));

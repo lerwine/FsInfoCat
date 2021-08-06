@@ -66,5 +66,21 @@ namespace FsInfoCat.Local
         /// </summary>
         /// <value>The volume serial number.</value>
         string VolumeSerialNumber { get; }
+
+        bool ErrorCleared { get; }
+
+        string ErrorDescription { get; }
+
+        /// <summary>
+        /// Gets the last error code reported by the logical device.
+        /// </summary>
+        /// <value>The last error code reported by the logical device.</value>
+        uint? LastErrorCode { get; }
+
+        /// <summary>
+        /// Gets the root directory of the current volume.
+        /// </summary>
+        /// <value>The root directory of the current volume.</value>
+        IVolumeDirectory RootDirectory { get; }
     }
 }

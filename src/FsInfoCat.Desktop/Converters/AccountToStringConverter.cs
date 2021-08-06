@@ -1,9 +1,11 @@
 using FsInfoCat.Upstream;
 using System.Globalization;
 using System.Windows;
+using System.Windows.Data;
 
 namespace FsInfoCat.Desktop.Converters
 {
+    [ValueConversion(typeof(IUserProfile), typeof(string))]
     public class AccountToStringConverter : ToClassConverterBase<IUserProfile, string>
     {
 

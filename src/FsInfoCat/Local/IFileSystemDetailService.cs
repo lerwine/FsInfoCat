@@ -17,8 +17,17 @@ namespace FsInfoCat.Local
         /// <returns>A <see cref="IFileDetailProvider"/> instance for the specified file.</returns>
         IFileDetailProvider CreateFileDetailProvider(string filePath, bool doNotSaveChanges);
 
-        Task<ILogicalDiskInfo> GetLogicalDiskAsync(DirectoryInfo directoryInfo, CancellationToken cancellationToken);
-
+        /// <summary>
+        /// Gets the system logical disks asynchronously.
+        /// </summary>
+        /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <returns>Any array of <see cref="ILogicalDiskInfo"/> objects that represent the logical disks found on the current host system.</returns>
         Task<ILogicalDiskInfo[]> GetLogicalDisksAsync(CancellationToken cancellationToken);
+
+        /// <summary>
+        /// Gets the generic network share filesystem information.
+        /// </summary>
+        /// <returns>A <see cref="IVolume"/> object that represents the fallback network share file system type.</returns>
+        (IFileSystemProperties Properties, string SymbolicName) GetGenericNetworkShareFileSystem();
     }
 }

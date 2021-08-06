@@ -1,9 +1,10 @@
+using FsInfoCat.Local;
 using System;
 using System.Management;
 
 namespace FsInfoCat.Desktop.WMI
 {
-    public class Win32_Directory
+    public class Win32_Directory : IVolumeDirectory
     {
         internal Win32_Directory(ManagementObject obj)
         {

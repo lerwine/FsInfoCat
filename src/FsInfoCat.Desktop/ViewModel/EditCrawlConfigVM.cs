@@ -54,6 +54,17 @@ namespace FsInfoCat.Desktop.ViewModel
             // TODO: Implement OnCancelExecute Logic
         }
 
+        private static readonly DependencyPropertyKey IsNewPropertyKey = DependencyProperty.RegisterReadOnly(nameof(IsNew), typeof(bool), typeof(EditCrawlConfigVM),
+                new PropertyMetadata(true));
+
+        public static readonly DependencyProperty IsNewProperty = IsNewPropertyKey.DependencyProperty;
+
+        public bool IsNew
+        {
+            get => (bool)GetValue(IsNewProperty);
+            private set => SetValue(IsNewPropertyKey, value);
+        }
+
         private static readonly DependencyPropertyKey WindowTitlePropertyKey = DependencyProperty.RegisterReadOnly(nameof(WindowTitle), typeof(string), typeof(EditCrawlConfigVM), new PropertyMetadata("Edit New Crawl Configuration"));
 
         public static readonly DependencyProperty WindowTitleProperty = WindowTitlePropertyKey.DependencyProperty;
@@ -803,7 +814,7 @@ namespace FsInfoCat.Desktop.ViewModel
             SetValue(CancelCommandPropertyKey, new Commands.RelayCommand(OnCancelExecute));
         }
 
-        internal static CrawlConfiguration Edit(DirectoryInfo crawlRoot)
+        internal static bool Edit(DirectoryInfo crawlRoot, out CrawlConfiguration model, out bool isNew)
         {
             View.EditCrawlConfigWindow window = new();
             EditCrawlConfigVM vm = (EditCrawlConfigVM)window.DataContext;
@@ -815,20 +826,26 @@ namespace FsInfoCat.Desktop.ViewModel
             vm.Initialize(crawlRoot);
             if (window.ShowDialog() ?? false)
             {
-                CrawlConfiguration model = vm.Model;
-                if (model is null)
-                {
-                    // TODO: Initialize new model object
-                }
-                return model;
+                isNew = vm.IsNew;
+                model = vm.Model;
+                return true;
             }
-            return null;
+            model = null;
+            isNew = false;
+            return false;
         }
 
-        internal static void UpsertItem(CrawlConfiguration item, ReadOnlyObservableCollection<CrawlConfigurationVM> crawlConfigurations, List<CrawlConfigurationVM> allCrawlConfigurations, bool showActive, bool showInactive)
+        internal static bool Edit([DisallowNull] CrawlConfiguration model)
         {
-            // TODO: Add or update view model item
-            throw new NotImplementedException();
+            View.EditCrawlConfigWindow window = new();
+            EditCrawlConfigVM vm = (EditCrawlConfigVM)window.DataContext;
+            if (vm is null)
+            {
+                vm = new();
+                window.DataContext = vm;
+            }
+            vm.Initialize(model);
+            return window.ShowDialog() ?? false;
         }
 
         internal void Initialize([DisallowNull] DirectoryInfo directoryInfo)
@@ -848,6 +865,7 @@ namespace FsInfoCat.Desktop.ViewModel
                             Initialize(crawlConfiguration);
                         else
                         {
+                            IsNew = true;
                             Root = subdirectory;
                             CreatedOn = ModifiedOn = DateTime.Now;
                             MaxTotalItems = int.MaxValue;
@@ -866,6 +884,7 @@ namespace FsInfoCat.Desktop.ViewModel
 
         internal void Initialize([DisallowNull] CrawlConfiguration crawlConfiguration)
         {
+            IsNew = false;
             Model = crawlConfiguration;
             Root = crawlConfiguration.Root;
             CreatedOn = crawlConfiguration.CreatedOn;

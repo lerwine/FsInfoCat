@@ -55,144 +55,34 @@ namespace FsInfoCat.Desktop.ViewModel
 
         #endregion
 
-        private static readonly DependencyPropertyKey PathPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Path), typeof(string), typeof(CrawlConfigurationsPageVM), new PropertyMetadata(""));
+        public static readonly DependencyProperty SelectedCrawlConfigProperty = DependencyProperty.Register(nameof(SelectedCrawlConfig), typeof(CrawlConfigurationVM), typeof(CrawlConfigurationsPageVM),
+                new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
+                    (d as CrawlConfigurationsPageVM).OnSelectedCrawlConfigPropertyChanged((CrawlConfigurationVM)e.OldValue, (CrawlConfigurationVM)e.NewValue)));
 
-        public static readonly DependencyProperty PathProperty = PathPropertyKey.DependencyProperty;
-
-        public string Path
+        public CrawlConfigurationVM SelectedCrawlConfig
         {
-            get => GetValue(PathProperty) as string;
-            private set => SetValue(PathPropertyKey, value);
+            get => (CrawlConfigurationVM)GetValue(SelectedCrawlConfigProperty);
+            set => SetValue(SelectedCrawlConfigProperty, value);
         }
 
-        private static readonly DependencyPropertyKey DisplayNamePropertyKey = DependencyProperty.RegisterReadOnly(nameof(DisplayName), typeof(string), typeof(CrawlConfigurationsPageVM), new PropertyMetadata(""));
-
-        public static readonly DependencyProperty DisplayNameProperty = DisplayNamePropertyKey.DependencyProperty;
-
-        public string DisplayName
+        protected virtual void OnSelectedCrawlConfigPropertyChanged(CrawlConfigurationVM oldValue, CrawlConfigurationVM newValue)
         {
-            get => GetValue(DisplayNameProperty) as string;
-            private set => SetValue(DisplayNamePropertyKey, value);
-        }
-
-        private static readonly DependencyPropertyKey MaxRecursionDepthPropertyKey = DependencyProperty.RegisterReadOnly(nameof(MaxRecursionDepth), typeof(ushort), typeof(CrawlConfigurationsPageVM),
-                new PropertyMetadata(DbConstants.DbColDefaultValue_MaxRecursionDepth));
-
-        public static readonly DependencyProperty MaxRecursionDepthProperty = MaxRecursionDepthPropertyKey.DependencyProperty;
-
-        public ushort MaxRecursionDepth
-        {
-            get => (ushort)GetValue(MaxRecursionDepthProperty);
-            private set => SetValue(MaxRecursionDepthPropertyKey, value);
-        }
-
-        private static readonly DependencyPropertyKey MaxTotalItemsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(MaxTotalItems), typeof(ulong?), typeof(CrawlConfigurationsPageVM),
-                new PropertyMetadata(null));
-
-        public static readonly DependencyProperty MaxTotalItemsProperty = MaxTotalItemsPropertyKey.DependencyProperty;
-
-        public ulong? MaxTotalItems
-        {
-            get => (ulong?)GetValue(MaxTotalItemsProperty);
-            private set => SetValue(MaxTotalItemsPropertyKey, value);
-        }
-
-        private static readonly DependencyPropertyKey TTLPropertyKey = DependencyProperty.RegisterReadOnly(nameof(TTL), typeof(TimeSpan?), typeof(CrawlConfigurationsPageVM),
-                new PropertyMetadata(null));
-
-        public static readonly DependencyProperty TTLProperty = TTLPropertyKey.DependencyProperty;
-
-        public TimeSpan? TTL
-        {
-            get => (TimeSpan?)GetValue(TTLProperty);
-            private set => SetValue(TTLPropertyKey, value);
-        }
-
-        private static readonly DependencyPropertyKey StatusValuePropertyKey = DependencyProperty.RegisterReadOnly(nameof(StatusValue), typeof(CrawlStatus), typeof(CrawlConfigurationsPageVM),
-                new PropertyMetadata(CrawlStatus.NotRunning));
-
-        public static readonly DependencyProperty StatusValueProperty = StatusValuePropertyKey.DependencyProperty;
-
-        public CrawlStatus StatusValue
-        {
-            get => (CrawlStatus)GetValue(StatusValueProperty);
-            private set => SetValue(StatusValuePropertyKey, value);
-        }
-
-        private static readonly DependencyPropertyKey LastCrawlStartPropertyKey = DependencyProperty.RegisterReadOnly(nameof(LastCrawlStart), typeof(DateTime?), typeof(CrawlConfigurationsPageVM),
-                new PropertyMetadata(null));
-
-        public static readonly DependencyProperty LastCrawlStartProperty = LastCrawlStartPropertyKey.DependencyProperty;
-
-        public DateTime? LastCrawlStart
-        {
-            get => (DateTime?)GetValue(LastCrawlStartProperty);
-            private set => SetValue(LastCrawlStartPropertyKey, value);
-        }
-
-        private static readonly DependencyPropertyKey LastCrawlEndPropertyKey = DependencyProperty.RegisterReadOnly(nameof(LastCrawlEnd), typeof(DateTime?), typeof(CrawlConfigurationsPageVM),
-                new PropertyMetadata(null));
-
-        public static readonly DependencyProperty LastCrawlEndProperty = LastCrawlEndPropertyKey.DependencyProperty;
-
-        public DateTime? LastCrawlEnd
-        {
-            get => (DateTime?)GetValue(LastCrawlEndProperty);
-            private set => SetValue(LastCrawlEndPropertyKey, value);
-        }
-
-        private static readonly DependencyPropertyKey NextScheduledStartPropertyKey = DependencyProperty.RegisterReadOnly(nameof(NextScheduledStart), typeof(DateTime?), typeof(CrawlConfigurationsPageVM),
-                new PropertyMetadata(null));
-
-        public static readonly DependencyProperty NextScheduledStartProperty = NextScheduledStartPropertyKey.DependencyProperty;
-
-        public DateTime? NextScheduledStart
-        {
-            get => (DateTime?)GetValue(NextScheduledStartProperty);
-            private set => SetValue(NextScheduledStartPropertyKey, value);
-        }
-
-        private static readonly DependencyPropertyKey NotesPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Notes), typeof(string), typeof(CrawlConfigurationsPageVM), new PropertyMetadata(""));
-
-        public static readonly DependencyProperty NotesProperty = NotesPropertyKey.DependencyProperty;
-
-        public string Notes
-        {
-            get => GetValue(NotesProperty) as string;
-            private set => SetValue(NotesPropertyKey, value);
-        }
-
-        private static readonly DependencyPropertyKey CreatedOnPropertyKey = DependencyProperty.RegisterReadOnly(nameof(CreatedOn), typeof(DateTime), typeof(CrawlConfigurationsPageVM),
-                new PropertyMetadata(default));
-
-        public static readonly DependencyProperty CreatedOnProperty = CreatedOnPropertyKey.DependencyProperty;
-
-        public DateTime CreatedOn
-        {
-            get => (DateTime)GetValue(CreatedOnProperty);
-            private set => SetValue(CreatedOnPropertyKey, value);
-        }
-
-        private static readonly DependencyPropertyKey ModifiedOnPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ModifiedOn), typeof(DateTime), typeof(CrawlConfigurationsPageVM),
-                new PropertyMetadata(default));
-
-        public static readonly DependencyProperty ModifiedOnProperty = ModifiedOnPropertyKey.DependencyProperty;
-
-        public DateTime ModifiedOn
-        {
-            get => (DateTime)GetValue(ModifiedOnProperty);
-            private set => SetValue(ModifiedOnPropertyKey, value);
-        }
-
-        private static readonly DependencyPropertyKey LastSynchronizedOnPropertyKey = DependencyProperty.RegisterReadOnly(nameof(LastSynchronizedOn), typeof(DateTime?), typeof(CrawlConfigurationsPageVM),
-                new PropertyMetadata(null));
-
-        public static readonly DependencyProperty LastSynchronizedOnProperty = LastSynchronizedOnPropertyKey.DependencyProperty;
-
-        public DateTime? LastSynchronizedOn
-        {
-            get => (DateTime?)GetValue(LastSynchronizedOnProperty);
-            private set => SetValue(LastSynchronizedOnPropertyKey, value);
+            if (oldValue is not null)
+            {
+                oldValue.StartCrawlNow -= SelecteItem_StartCrawlNow;
+                oldValue.Edit -= SelecteItem_Edit;
+                oldValue.Delete -= SelecteItem_Delete;
+                oldValue.OpenRootFolder -= SelecteItem_OpenRootFolder;
+                oldValue.ShowLogs -= SelecteItem_ShowLogs;
+            }
+            if (newValue is not null)
+            {
+                newValue.StartCrawlNow += SelecteItem_StartCrawlNow;
+                newValue.Edit += SelecteItem_Edit;
+                newValue.Delete += SelecteItem_Delete;
+                newValue.OpenRootFolder += SelecteItem_OpenRootFolder;
+                newValue.ShowLogs += SelecteItem_ShowLogs;
+            }
         }
 
         public static readonly DependencyProperty ShowActiveCrawlConfigurationsOnlyProperty = DependencyProperty.Register(nameof(ShowActiveCrawlConfigurationsOnly), typeof(bool), typeof(CrawlConfigurationsPageVM),
@@ -210,6 +100,11 @@ namespace FsInfoCat.Desktop.ViewModel
             {
                 ShowInactiveCrawlConfigurationsOnly = false;
                 ShowAllCrawlConfigurations = false;
+                CrawlConfigurationVM selectedCrawlConfig = SelectedCrawlConfig;
+                InnerCrawlConfigurations.Clear();
+                foreach (CrawlConfigurationVM vm in _allCrawlConfigurations.Where(i => i.StatusValue != CrawlStatus.Disabled))
+                    InnerCrawlConfigurations.Add(vm);
+                SelectedCrawlConfig = (selectedCrawlConfig is null || selectedCrawlConfig.StatusValue == CrawlStatus.Disabled) ? InnerCrawlConfigurations.FirstOrDefault() : selectedCrawlConfig;
             }
             else if (!(ShowInactiveCrawlConfigurationsOnly || ShowAllCrawlConfigurations))
                 ShowInactiveCrawlConfigurationsOnly = true;
@@ -230,6 +125,11 @@ namespace FsInfoCat.Desktop.ViewModel
             {
                 ShowActiveCrawlConfigurationsOnly = false;
                 ShowAllCrawlConfigurations = false;
+                CrawlConfigurationVM selectedCrawlConfig = SelectedCrawlConfig;
+                InnerCrawlConfigurations.Clear();
+                foreach (CrawlConfigurationVM vm in _allCrawlConfigurations.Where(i => i.StatusValue == CrawlStatus.Disabled))
+                    InnerCrawlConfigurations.Add(vm);
+                SelectedCrawlConfig = (selectedCrawlConfig is null || selectedCrawlConfig.StatusValue != CrawlStatus.Disabled) ? InnerCrawlConfigurations.FirstOrDefault() : selectedCrawlConfig;
             }
             else if (!(ShowActiveCrawlConfigurationsOnly || ShowAllCrawlConfigurations))
                 ShowActiveCrawlConfigurationsOnly = true;
@@ -250,6 +150,11 @@ namespace FsInfoCat.Desktop.ViewModel
             {
                 ShowActiveCrawlConfigurationsOnly = false;
                 ShowInactiveCrawlConfigurationsOnly = false;
+                CrawlConfigurationVM selectedCrawlConfig = SelectedCrawlConfig;
+                InnerCrawlConfigurations.Clear();
+                foreach (CrawlConfigurationVM vm in _allCrawlConfigurations)
+                    InnerCrawlConfigurations.Add(vm);
+                SelectedCrawlConfig = selectedCrawlConfig ?? InnerCrawlConfigurations.FirstOrDefault();
             }
             else if (!(ShowActiveCrawlConfigurationsOnly || ShowInactiveCrawlConfigurationsOnly))
                 ShowActiveCrawlConfigurationsOnly = true;
@@ -263,80 +168,52 @@ namespace FsInfoCat.Desktop.ViewModel
 
         private void OnNewClickExecute(object parameter)
         {
-            DirectoryInfo crawlRoot = FolderBrowserVM.Prompt("Crawl Root Folder", "Select root folder for new crawl configuration.");
-            if (crawlRoot is not null)
+            DirectoryInfo crawlRoot = FolderBrowserVM.Prompt(FsInfoCat.Properties.Resources.DisplayName_CrawlRootFolder, FsInfoCat.Properties.Resources.Description_SelectCrawlRootFolder);
+            if (crawlRoot is null || !EditCrawlConfigVM.Edit(crawlRoot, out CrawlConfiguration model, out bool isNew))
+                return;
+            CrawlConfigurationVM item;
+            if (isNew || (item = _allCrawlConfigurations.FirstOrDefault(i => ReferenceEquals(i.Model, model))) is null)
             {
-                CrawlConfiguration item = EditCrawlConfigVM.Edit(crawlRoot);
-                if (item is not null)
-                {
-                    if (ShowAllCrawlConfigurations)
-                        EditCrawlConfigVM.UpsertItem(item, CrawlConfigurations, _allCrawlConfigurations, true, true);
-                    else if (ShowActiveCrawlConfigurationsOnly)
-                        EditCrawlConfigVM.UpsertItem(item, CrawlConfigurations, _allCrawlConfigurations, true, false);
-                    else
-                        EditCrawlConfigVM.UpsertItem(item, CrawlConfigurations, _allCrawlConfigurations, false, true);
-                }
+                if (ShowAllCrawlConfigurations)
+                    item = CrawlConfigurationVM.UpsertItem(model, CrawlConfigurations, _allCrawlConfigurations, true, true);
+                else if (ShowActiveCrawlConfigurationsOnly)
+                    item = CrawlConfigurationVM.UpsertItem(model, CrawlConfigurations, _allCrawlConfigurations, true, false);
+                else
+                    item = CrawlConfigurationVM.UpsertItem(model, CrawlConfigurations, _allCrawlConfigurations, false, true);
             }
+            if (item is not null)
+                SelectedCrawlConfig = item;
         }
 
-        private static readonly DependencyPropertyKey DeleteClickCommandPropertyKey = DependencyProperty.RegisterReadOnly(nameof(DeleteClickCommand),
-            typeof(Commands.RelayCommand), typeof(CrawlConfigurationsPageVM), new PropertyMetadata(null));
-
-        public static readonly DependencyProperty DeleteClickCommandProperty = DeleteClickCommandPropertyKey.DependencyProperty;
-
-        public Commands.RelayCommand DeleteClickCommand => (Commands.RelayCommand)GetValue(DeleteClickCommandProperty);
-
-        private void OnDeleteClickExecute(object parameter)
+        private void SelecteItem_StartCrawlNow(object sender, EventArgs e)
         {
-            // TODO: Implement OnDeleteClickExecute Logic
+            // TODO: Implement SelecteItem_StartCrawlNow
+            throw new NotImplementedException();
         }
 
-        private static readonly DependencyPropertyKey EditClickCommandPropertyKey = DependencyProperty.RegisterReadOnly(nameof(EditClickCommand),
-            typeof(Commands.RelayCommand), typeof(CrawlConfigurationsPageVM), new PropertyMetadata(null));
-
-        public static readonly DependencyProperty EditClickCommandProperty = EditClickCommandPropertyKey.DependencyProperty;
-
-        public Commands.RelayCommand EditClickCommand => (Commands.RelayCommand)GetValue(EditClickCommandProperty);
-
-        private void OnEditClickExecute(object parameter)
+        private void SelecteItem_Edit(object sender, EventArgs e)
         {
-            // TODO: Implement OnEditClickExecute Logic
+            CrawlConfiguration model = SelectedCrawlConfig?.Model;
+            if (model is not null)
+                EditCrawlConfigVM.Edit(model);
         }
 
-        private static readonly DependencyPropertyKey OpenRootCommandPropertyKey = DependencyProperty.RegisterReadOnly(nameof(OpenRootCommand),
-            typeof(Commands.RelayCommand), typeof(CrawlConfigurationsPageVM), new PropertyMetadata(null));
-
-        public static readonly DependencyProperty OpenRootCommandProperty = OpenRootCommandPropertyKey.DependencyProperty;
-
-        public Commands.RelayCommand OpenRootCommand => (Commands.RelayCommand)GetValue(OpenRootCommandProperty);
-
-        private void OnOpenRootExecute(object parameter)
+        private void SelecteItem_Delete(object sender, EventArgs e)
         {
-            // TODO: Implement OnOpenRootExecute Logic
+            // TODO: Implement SelecteItem_Delete
+            throw new NotImplementedException();
         }
 
-        private static readonly DependencyPropertyKey ViewLogsClickCommandPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ViewLogsClickCommand),
-            typeof(Commands.RelayCommand), typeof(CrawlConfigurationsPageVM), new PropertyMetadata(null));
-
-        public static readonly DependencyProperty ViewLogsClickCommandProperty = ViewLogsClickCommandPropertyKey.DependencyProperty;
-
-        public Commands.RelayCommand ViewLogsClickCommand => (Commands.RelayCommand)GetValue(ViewLogsClickCommandProperty);
-
-        private void OnViewLogsClickExecute(object parameter)
+        private void SelecteItem_OpenRootFolder(object sender, EventArgs e)
         {
-            // TODO: Implement OnViewLogsClickExecute Logic
+            // TODO: Implement SelecteItem_OpenRootFolder
+            throw new NotImplementedException();
         }
 
-        private static readonly DependencyPropertyKey StartNowCommandPropertyKey = DependencyProperty.RegisterReadOnly(nameof(StartNowCommand),
-            typeof(Commands.RelayCommand), typeof(CrawlConfigurationsPageVM), new PropertyMetadata(null));
-
-        public static readonly DependencyProperty StartNowCommandProperty = StartNowCommandPropertyKey.DependencyProperty;
-
-        public Commands.RelayCommand StartNowCommand => (Commands.RelayCommand)GetValue(StartNowCommandProperty);
-
-        private void OnStartNowExecute(object parameter)
+        private void SelecteItem_ShowLogs(object sender, EventArgs e)
         {
-            // TODO: Implement OnStartNowExecute Logic
+            // TODO: Implement SelecteItem_ShowLogs
+            throw new NotImplementedException();
         }
 
         public CrawlConfigurationsPageVM()
@@ -344,11 +221,6 @@ namespace FsInfoCat.Desktop.ViewModel
             InnerCrawlConfigurations = new();
             CrawlConfigurations = new(InnerCrawlConfigurations);
             SetValue(NewClickCommandPropertyKey, new Commands.RelayCommand(OnNewClickExecute));
-            SetValue(EditClickCommandPropertyKey, new Commands.RelayCommand(OnEditClickExecute));
-            SetValue(DeleteClickCommandPropertyKey, new Commands.RelayCommand(OnDeleteClickExecute));
-            SetValue(OpenRootCommandPropertyKey, new Commands.RelayCommand(OnOpenRootExecute));
-            SetValue(ViewLogsClickCommandPropertyKey, new Commands.RelayCommand(OnViewLogsClickExecute));
-            SetValue(StartNowCommandPropertyKey, new Commands.RelayCommand(OnStartNowExecute));
             _logger = App.GetLogger(this);
 #if DEBUG
             if (DesignerProperties.GetIsInDesignMode(this))
@@ -384,6 +256,7 @@ namespace FsInfoCat.Desktop.ViewModel
             foreach (CrawlConfigurationVM item in ShowAllCrawlConfigurations ? _allCrawlConfigurations :
                     (ShowInactiveCrawlConfigurationsOnly ? _allCrawlConfigurations.Where(i => i.StatusValue == CrawlStatus.Disabled) : _allCrawlConfigurations.Where(i => i.StatusValue != CrawlStatus.Disabled)))
                 InnerCrawlConfigurations.Add(item);
+            SelectedCrawlConfig = InnerCrawlConfigurations.FirstOrDefault();
         }
 
         private void OnInitialDataLoadError(AggregateException exception)
@@ -392,7 +265,7 @@ namespace FsInfoCat.Desktop.ViewModel
             InnerCrawlConfigurations.Clear();
             MainWindow mainWindow = Services.ServiceProvider.GetService<MainWindow>();
             if (mainWindow is not null)
-                MessageBox.Show(mainWindow, string.IsNullOrWhiteSpace(exception.Message) ? exception.ToString() : exception.Message, "Data Load Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(mainWindow, string.IsNullOrWhiteSpace(exception.Message) ? exception.ToString() : exception.Message, FsInfoCat.Properties.Resources.DisplayName_DataLoadError, MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
 }

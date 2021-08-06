@@ -31,12 +31,16 @@ namespace FsInfoCat.Desktop.Converters
         {
             if (value == null)
                 return NullSource;
-
             return (value is TSource source) ? Convert(source, parameter, culture) : value;
         }
 
+        protected virtual TSource ConvertBack(TTarget? target, object parameter, CultureInfo culture) => throw new NotSupportedException();
         object IValueConverter.ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
+            if (value is null)
+                return ConvertBack(null, parameter, culture);
+            if (value is TTarget target)
+                return ConvertBack(target, parameter, culture);
             throw new NotSupportedException();
         }
     }

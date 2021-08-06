@@ -1681,4 +1681,58 @@
   <data name="ErrorMessage_GetLogicalDisksFailure" xml:space="preserve">
     <value>Unexpected error while getting logical disks.</value>
   </data>
+  <data name="Description_BrowseRootFolder" xml:space="preserve">
+    <value>Click here to browse the root folder.</value>
+  </data>
+  <data name="Description_DeleteCurrentCrawlConfig" xml:space="preserve">
+    <value>Click here to delete the current crawl configuration.</value>
+  </data>
+  <data name="Description_EditCurrentCrawlConfig" xml:space="preserve">
+    <value>Click here to edit the current crawl configuration.</value>
+  </data>
+  <data name="Description_NewCurrentCrawlConfig" xml:space="preserve">
+    <value>Click here to add a new crawl configuration.</value>
+  </data>
+  <data name="Description_SelectCrawlRootFolder" xml:space="preserve">
+    <value>Click to view root crawl folder</value>
+  </data>
+  <data name="Description_StartCrawlNow" xml:space="preserve">
+    <value>Click here to start file system crawl now.</value>
+  </data>
+  <data name="DisplayName_AutoReschedule" xml:space="preserve">
+    <value>Auto-Reschedule</value>
+  </data>
+  <data name="DisplayName_CrawlConfigurations" xml:space="preserve">
+    <value>Crawl Configurations</value>
+  </data>
+  <data name="DisplayName_CrawlRootFolder" xml:space="preserve">
+    <value>Crawl Root Folder</value>
+  </data>
+  <data name="DisplayName_DataLoadError" xml:space="preserve">
+    <value>Data Load Error</value>
+  </data>
+  <data name="DisplayName_Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="DisplayName_Edit" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="DisplayName_LastEnd" xml:space="preserve">
+    <value>Last End</value>
+  </data>
+  <data name="DisplayName_LastStart" xml:space="preserve">
+    <value>Last Start</value>
+  </data>
+  <data name="DisplayName_MaxCrawlDuration" xml:space="preserve">
+    <value>Maximum Crawl Duration</value>
+  </data>
+  <data name="DisplayName_New" xml:space="preserve">
+    <value>New</value>
+  </data>
+  <data name="DisplayName_NextStart" xml:space="preserve">
+    <value>Next Start</value>
+  </data>
+  <data name="DisplayName_StartNow" xml:space="preserve">
+    <value>Start Now</value>
+  </data>
 </root>

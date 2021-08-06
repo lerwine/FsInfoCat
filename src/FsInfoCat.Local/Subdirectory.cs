@@ -531,51 +531,179 @@ namespace FsInfoCat.Local
                 results.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_InvalidDirectoryCrawlOption, new string[] { nameof(Options) }));
         }
 
-        public static async Task<Subdirectory> ImportBranchAsync(DirectoryInfo directoryInfo, LocalDbContext dbContext, bool markNewAsCompleted = false)
+        // DEFERRED: Should be passing a CancellationToken;
+        public static async Task<Subdirectory> ImportBranchAsync([DisallowNull] DirectoryInfo directoryInfo, [DisallowNull] LocalDbContext dbContext, bool markNewAsCompleted = false)
         {
+            if (directoryInfo is null)
+                throw new ArgumentNullException(nameof(directoryInfo));
+            if (dbContext is null)
+                throw new ArgumentNullException(nameof(dbContext));
+
             Subdirectory result;
             if (directoryInfo.Parent is null)
             {
-                throw new NotImplementedException();
-                //Volume volume = await Volume.ImportAsync(directoryInfo, dbContext);
-                //if ((result = volume.RootDirectory) is null)
-                //{
-                //    result = new Subdirectory
-                //    {
-                //        Id = Guid.NewGuid(),
-                //        CreationTime = directoryInfo.CreationTime,
-                //        LastWriteTime = directoryInfo.LastWriteTime,
-                //        Name = directoryInfo.Name,
-                //        Volume = volume,
-                //        VolumeId = volume.Id
-                //    };
-                //    if (markNewAsCompleted)
-                //        result.Status = DirectoryStatus.Complete;
-                //    dbContext.Subdirectories.Add(result);
-                //    volume.RootDirectory = result;
-                //    await dbContext.SaveChangesAsync();
-                //}
+                using IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
+                IFileSystemDetailService fileSystemDetailService = serviceScope.ServiceProvider.GetService<IFileSystemDetailService>();
+                string name = directoryInfo.Name;
+                ILogicalDiskInfo diskInfo = await fileSystemDetailService.GetLogicalDiskAsync(directoryInfo, CancellationToken.None);
+                VolumeIdentifier volumeIdentifier;
+                if (diskInfo is null)
+                {
+                    VolumeIdentifier? vid = await directoryInfo.TryGetVolumeIdentifierAsync(CancellationToken.None);
+                    if (!vid.HasValue)
+                    {
+                        // TOOD: Handle logical disk not found
+                    }
+                    volumeIdentifier = vid.Value;
+                }
+                else if (!diskInfo.TryGetVolumeIdentifier(out volumeIdentifier))
+                {
+                    // TOOD: Handle logical disk not found
+                }
+                Volume parentVolume = (from v in dbContext.Volumes where v.Identifier == volumeIdentifier select v).FirstOrDefault();
+                if (parentVolume is null)
+                {
+                    parentVolume = new()
+                    {
+                        Id = Guid.NewGuid(),
+                        CreatedOn = DateTime.Now,
+                        Identifier = volumeIdentifier
+                    };
+                    // TODO: parentVolume.RootDirectory
+                    if (diskInfo is null)
+                    {
+                        Uri uri = new(directoryInfo.FullName);
+                        string path = uri.Segments[1];
+                        if (path.EndsWith('/'))
+                            path = path.Substring(0, path.Length - 1);
+                        (IFileSystemProperties Properties, string SymbolicName) genericNetworkFsType = fileSystemDetailService.GetGenericNetworkShareFileSystem();
+                        parentVolume.CaseSensitiveSearch = genericNetworkFsType.Properties.CaseSensitiveSearch;
+                        parentVolume.Identifier = volumeIdentifier;
+                        parentVolume.MaxNameLength = genericNetworkFsType.Properties.MaxNameLength;
+                        parentVolume.ModifiedOn = parentVolume.CreatedOn;
+                        parentVolume.ReadOnly = genericNetworkFsType.Properties.ReadOnly;
+                        parentVolume.Status = VolumeStatus.Unknown;
+                        parentVolume.Type = DriveType.Network;
+                        parentVolume.DisplayName = $"{(path.EndsWith('/') ? path.Substring(0, path.Length - 1) : path)} on {uri.Host}";
+                        path = genericNetworkFsType.SymbolicName;
+                        SymbolicName symbolicName = (from sn in dbContext.SymbolicNames where sn.Name == path select sn).FirstOrDefault();
+                        if (symbolicName is null)
+                        {
+                            parentVolume.FileSystem = new()
+                            {
+                                Id = Guid.NewGuid(),
+                                CreatedOn = parentVolume.CreatedOn,
+                                ModifiedOn = parentVolume.ModifiedOn,
+                                DisplayName = "Network File System",
+                                CaseSensitiveSearch = genericNetworkFsType.Properties.CaseSensitiveSearch,
+                                DefaultDriveType = genericNetworkFsType.Properties.DefaultDriveType,
+                                MaxNameLength = genericNetworkFsType.Properties.MaxNameLength,
+                                ReadOnly = genericNetworkFsType.Properties.ReadOnly
+                            };
+                            dbContext.FileSystems.Add(parentVolume.FileSystem);
+                            await dbContext.SaveChangesAsync(true, CancellationToken.None);
+                            symbolicName = new()
+                            {
+                                Id = Guid.NewGuid(),
+                                CreatedOn = parentVolume.CreatedOn,
+                                ModifiedOn = parentVolume.ModifiedOn,
+                                Name = path,
+                                FileSystem = parentVolume.FileSystem,
+                                Priority = 0
+                            };
+                            dbContext.SymbolicNames.Add(symbolicName);
+                            await dbContext.SaveChangesAsync(true, CancellationToken.None);
+                        }
+                        else
+                            parentVolume.FileSystem = symbolicName.FileSystem;
+                    }
+                    else
+                    {
+                        parentVolume.CaseSensitiveSearch = diskInfo.Compressed
+                        parentVolume.Identifier = volumeIdentifier;
+                        parentVolume.MaxNameLength = genericNetworkFsType.Properties.MaxNameLength;
+                        parentVolume.ModifiedOn = parentVolume.CreatedOn;
+                        parentVolume.ReadOnly = genericNetworkFsType.Properties.ReadOnly;
+                        parentVolume.Status = VolumeStatus.Unknown;
+                        parentVolume.Type = DriveType.Network;
+                        parentVolume.DisplayName = $"{(path.EndsWith('/') ? path.Substring(0, path.Length - 1) : path)} on {uri.Host}";
+                        string name = diskInfo.FileSystemName;
+                        SymbolicName symbolicName = (from sn in dbContext.SymbolicNames where sn.Name == name select sn).FirstOrDefault();
+                        if (symbolicName is null)
+                        {
+                            p
+                        }
+                        
+                    }
+                    await dbContext.SaveChangesAsync(true, CancellationToken.None);
+                }
             }
             else
             {
                 Subdirectory parent = await ImportBranchAsync(directoryInfo.Parent, dbContext, true);
                 string name = directoryInfo.Name;
-                if ((result = parent.SubDirectories.FirstOrDefault(s => s.Name == name)) is null)
+                EntityEntry<Subdirectory> parentEntry = dbContext.Entry(parent);
+                Guid parentId = parent.Id;
+                DbFile[] files = (from f in dbContext.Files where f.ParentId == parentId && f.Name == name && f.Status != FileCorrelationStatus.Deleted select f).ToArray();
+                if (files.Length > 0)
                 {
-                    result = new Subdirectory
+                    string[] names = directoryInfo.GetFiles().Select(f => f.Name).ToArray();
+                    if(names.Length == 0 || (files = files.Where(f => !names.Contains(f.Name)).ToArray()).Length > 0)
+                    {
+                        foreach (DbFile f in files)
+                            f.Status = FileCorrelationStatus.Deleted;
+                        await dbContext.SaveChangesAsync();
+                    }
+                }
+                Subdirectory[] subdirectories = (from d in dbContext.Subdirectories where d.ParentId == parentId && d.Name == name select d).ToArray();
+                if (subdirectories.Length == 1)
+                {
+                    result = subdirectories[0];
+                    if (result.Name == name && result.CreationTime == directoryInfo.CreationTime && result.LastWriteTime == directoryInfo.LastWriteTime)
+                        return result;
+                    result.ModifiedOn = result.LastAccessed = DateTime.Now;
+                }
+                else if (subdirectories.Length > 1)
+                {
+                    string[] names = directoryInfo.GetFiles().Select(f => f.Name).ToArray();
+                    if ((result = subdirectories.FirstOrDefault(d => d.Name == name)) is not null)
+                    {
+                        if ((subdirectories = subdirectories.Where(d => d.Status != DirectoryStatus.Deleted && !(ReferenceEquals(d, result) || names.Contains(d.Name))).ToArray()).Length > 0)
+                        {
+                            foreach (Subdirectory d in subdirectories)
+                                await d.MarkBranchDeletedAsync(dbContext, CancellationToken.None);
+                        }
+                        if (result.Status == DirectoryStatus.Deleted)
+                            result.Status = markNewAsCompleted ? DirectoryStatus.Complete : DirectoryStatus.Incomplete;
+                        else if (result.CreationTime == directoryInfo.CreationTime && result.LastWriteTime == directoryInfo.LastWriteTime)
+                            return result;
+                        result.ModifiedOn = result.LastAccessed = DateTime.Now;
+                    }
+                }
+                else
+                    result = null;
+                if (result is null)
+                {
+                    result = new()
                     {
                         Id = Guid.NewGuid(),
+                        ParentId = parentId,
+                        Name = name,
                         CreationTime = directoryInfo.CreationTime,
                         LastWriteTime = directoryInfo.LastWriteTime,
-                        Name = directoryInfo.Name,
-                        Parent = parent,
-                        ParentId = parent.Id
+                        CreatedOn = DateTime.Now,
+                        Status = markNewAsCompleted ? DirectoryStatus.Complete : DirectoryStatus.Incomplete
                     };
-                    if (markNewAsCompleted)
-                        result.Status = DirectoryStatus.Complete;
+                    result.ModifiedOn = result.LastAccessed = result.CreatedOn;
                     dbContext.Subdirectories.Add(result);
-                    await dbContext.SaveChangesAsync();
                 }
+                else
+                {
+                    result.Name = name;
+                    result.CreationTime = directoryInfo.CreationTime;
+                    result.LastWriteTime = directoryInfo.LastWriteTime;
+                }
+                await dbContext.SaveChangesAsync();
             }
             return result;
         }

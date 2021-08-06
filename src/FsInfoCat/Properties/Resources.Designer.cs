@@ -61,6 +61,15 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Click here to browse the root folder..
+        /// </summary>
+        public static string Description_BrowseRootFolder {
+            get {
+                return ResourceManager.GetString("Description_BrowseRootFolder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to File system was stopped prior to completion because the alotted execution duration had been reached..
         /// </summary>
         public static string Description_CrawlStatus_AllottedTimeElapsed {
@@ -129,6 +138,15 @@ namespace FsInfoCat.Properties {
         public static string Description_CrawlStatus_NotRunning {
             get {
                 return ResourceManager.GetString("Description_CrawlStatus_NotRunning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Click here to delete the current crawl configuration..
+        /// </summary>
+        public static string Description_DeleteCurrentCrawlConfig {
+            get {
+                return ResourceManager.GetString("Description_DeleteCurrentCrawlConfig", resourceCulture);
             }
         }
         
@@ -291,6 +309,15 @@ namespace FsInfoCat.Properties {
         public static string Description_DriveType_Unknown {
             get {
                 return ResourceManager.GetString("Description_DriveType_Unknown", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Click here to edit the current crawl configuration..
+        /// </summary>
+        public static string Description_EditCurrentCrawlConfig {
+            get {
+                return ResourceManager.GetString("Description_EditCurrentCrawlConfig", resourceCulture);
             }
         }
         
@@ -610,6 +637,15 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Click here to add a new crawl configuration..
+        /// </summary>
+        public static string Description_NewCurrentCrawlConfig {
+            get {
+                return ResourceManager.GetString("Description_NewCurrentCrawlConfig", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The specified path was too long for the target operating system..
         /// </summary>
         public static string Description_PathTooLongError {
@@ -750,6 +786,24 @@ namespace FsInfoCat.Properties {
         public static string Description_SecurityException {
             get {
                 return ResourceManager.GetString("Description_SecurityException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Click to view root crawl folder.
+        /// </summary>
+        public static string Description_SelectCrawlRootFolder {
+            get {
+                return ResourceManager.GetString("Description_SelectCrawlRootFolder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Click here to start file system crawl now..
+        /// </summary>
+        public static string Description_StartCrawlNow {
+            get {
+                return ResourceManager.GetString("Description_StartCrawlNow", resourceCulture);
             }
         }
         
@@ -1132,6 +1186,15 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Auto-Reschedule.
+        /// </summary>
+        public static string DisplayName_AutoReschedule {
+            get {
+                return ResourceManager.GetString("DisplayName_AutoReschedule", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Baseline File.
         /// </summary>
         public static string DisplayName_Baseline {
@@ -1411,6 +1474,15 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Crawl Configurations.
+        /// </summary>
+        public static string DisplayName_CrawlConfigurations {
+            get {
+                return ResourceManager.GetString("DisplayName_CrawlConfigurations", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Crawl End.
         /// </summary>
         public static string DisplayName_CrawlEnd {
@@ -1434,6 +1506,15 @@ namespace FsInfoCat.Properties {
         public static string DisplayName_CrawlOperationFailed {
             get {
                 return ResourceManager.GetString("DisplayName_CrawlOperationFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Crawl Root Folder.
+        /// </summary>
+        public static string DisplayName_CrawlRootFolder {
+            get {
+                return ResourceManager.GetString("DisplayName_CrawlRootFolder", resourceCulture);
             }
         }
         
@@ -1564,6 +1645,15 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Data Load Error.
+        /// </summary>
+        public static string DisplayName_DataLoadError {
+            get {
+                return ResourceManager.GetString("DisplayName_DataLoadError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Date Created.
         /// </summary>
         public static string DisplayName_DateCreated {
@@ -1641,6 +1731,15 @@ namespace FsInfoCat.Properties {
         public static string DisplayName_Deferred {
             get {
                 return ResourceManager.GetString("DisplayName_Deferred", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete.
+        /// </summary>
+        public static string DisplayName_Delete {
+            get {
+                return ResourceManager.GetString("DisplayName_Delete", resourceCulture);
             }
         }
         
@@ -1929,6 +2028,15 @@ namespace FsInfoCat.Properties {
         public static string DisplayName_DVDID {
             get {
                 return ResourceManager.GetString("DisplayName_DVDID", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Edit.
+        /// </summary>
+        public static string DisplayName_Edit {
+            get {
+                return ResourceManager.GetString("DisplayName_Edit", resourceCulture);
             }
         }
         
@@ -2707,6 +2815,15 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Last End.
+        /// </summary>
+        public static string DisplayName_LastEnd {
+            get {
+                return ResourceManager.GetString("DisplayName_LastEnd", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Last Hash Calculation.
         /// </summary>
         public static string DisplayName_LastHashCalculation {
@@ -2721,6 +2838,15 @@ namespace FsInfoCat.Properties {
         public static string DisplayName_LastName {
             get {
                 return ResourceManager.GetString("DisplayName_LastName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Last Start.
+        /// </summary>
+        public static string DisplayName_LastStart {
+            get {
+                return ResourceManager.GetString("DisplayName_LastStart", resourceCulture);
             }
         }
         
@@ -2878,6 +3004,15 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Maximum Crawl Duration.
+        /// </summary>
+        public static string DisplayName_MaxCrawlDuration {
+            get {
+                return ResourceManager.GetString("DisplayName_MaxCrawlDuration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Maximum Name Length.
         /// </summary>
         public static string DisplayName_MaxNameLength {
@@ -3013,11 +3148,29 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to New.
+        /// </summary>
+        public static string DisplayName_New {
+            get {
+                return ResourceManager.GetString("DisplayName_New", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Next Scheduled Start.
         /// </summary>
         public static string DisplayName_NextScheduledStart {
             get {
                 return ResourceManager.GetString("DisplayName_NextScheduledStart", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Next Start.
+        /// </summary>
+        public static string DisplayName_NextStart {
+            get {
+                return ResourceManager.GetString("DisplayName_NextStart", resourceCulture);
             }
         }
         
@@ -3693,6 +3846,15 @@ namespace FsInfoCat.Properties {
         public static string DisplayName_Source {
             get {
                 return ResourceManager.GetString("DisplayName_Source", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Start Now.
+        /// </summary>
+        public static string DisplayName_StartNow {
+            get {
+                return ResourceManager.GetString("DisplayName_StartNow", resourceCulture);
             }
         }
         

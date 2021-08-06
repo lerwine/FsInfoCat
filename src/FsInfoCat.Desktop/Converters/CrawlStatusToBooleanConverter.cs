@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
 
@@ -7,7 +7,7 @@ namespace FsInfoCat.Desktop.Converters
     [ValueConversion(typeof(CrawlStatus), typeof(bool))]
     public sealed class CrawlStatusToBooleanConverter : ToValueConverterBase<CrawlStatus, bool>
     {
-        public static readonly DependencyProperty NullSourceProperty = DependencyProperty.Register(nameof(NullSource), typeof(bool?), typeof(CrawlStatusToCooleabConverter), new PropertyMetadata(null));
+        public static readonly DependencyProperty NullSourceProperty = DependencyProperty.Register(nameof(NullSource), typeof(bool?), typeof(CrawlStatusToBooleanConverter), new PropertyMetadata(null));
 
         public override bool? NullSource
         {
@@ -15,7 +15,7 @@ namespace FsInfoCat.Desktop.Converters
             set => SetValue(NullSourceProperty, value);
         }
 
-        public static readonly DependencyProperty NotRunningProperty = DependencyProperty.Register(nameof(NotRunning), typeof(bool?), typeof(CrawlStatusToCooleabConverter), new PropertyMetadata(true));
+        public static readonly DependencyProperty NotRunningProperty = DependencyProperty.Register(nameof(NotRunning), typeof(bool?), typeof(CrawlStatusToBooleanConverter), new PropertyMetadata(true));
 
         public bool? NotRunning
         {
@@ -23,7 +23,7 @@ namespace FsInfoCat.Desktop.Converters
             set => SetValue(NotRunningProperty, value);
         }
 
-        public static readonly DependencyProperty InProgressProperty = DependencyProperty.Register(nameof(InProgress), typeof(bool?), typeof(CrawlStatusToCooleabConverter), new PropertyMetadata(true));
+        public static readonly DependencyProperty InProgressProperty = DependencyProperty.Register(nameof(InProgress), typeof(bool?), typeof(CrawlStatusToBooleanConverter), new PropertyMetadata(true));
 
         public bool? InProgress
         {
@@ -31,7 +31,7 @@ namespace FsInfoCat.Desktop.Converters
             set => SetValue(InProgressProperty, value);
         }
 
-        public static readonly DependencyProperty CompletedProperty = DependencyProperty.Register(nameof(Completed), typeof(bool?), typeof(CrawlStatusToCooleabConverter), new PropertyMetadata(true));
+        public static readonly DependencyProperty CompletedProperty = DependencyProperty.Register(nameof(Completed), typeof(bool?), typeof(CrawlStatusToBooleanConverter), new PropertyMetadata(true));
 
         public bool? Completed
         {
@@ -39,7 +39,7 @@ namespace FsInfoCat.Desktop.Converters
             set => SetValue(CompletedProperty, value);
         }
 
-        public static readonly DependencyProperty AllottedTimeElapsedProperty = DependencyProperty.Register(nameof(AllottedTimeElapsed), typeof(bool?), typeof(CrawlStatusToCooleabConverter), new PropertyMetadata(true));
+        public static readonly DependencyProperty AllottedTimeElapsedProperty = DependencyProperty.Register(nameof(AllottedTimeElapsed), typeof(bool?), typeof(CrawlStatusToBooleanConverter), new PropertyMetadata(true));
 
         public bool? AllottedTimeElapsed
         {
@@ -47,7 +47,7 @@ namespace FsInfoCat.Desktop.Converters
             set => SetValue(AllottedTimeElapsedProperty, value);
         }
 
-        public static readonly DependencyProperty MaxItemCountReachedProperty = DependencyProperty.Register(nameof(MaxItemCountReached), typeof(bool?), typeof(CrawlStatusToCooleabConverter), new PropertyMetadata(true));
+        public static readonly DependencyProperty MaxItemCountReachedProperty = DependencyProperty.Register(nameof(MaxItemCountReached), typeof(bool?), typeof(CrawlStatusToBooleanConverter), new PropertyMetadata(true));
 
         public bool? MaxItemCountReached
         {
@@ -55,7 +55,7 @@ namespace FsInfoCat.Desktop.Converters
             set => SetValue(MaxItemCountReachedProperty, value);
         }
 
-        public static readonly DependencyProperty CanceledProperty = DependencyProperty.Register(nameof(Canceled), typeof(bool?), typeof(CrawlStatusToCooleabConverter), new PropertyMetadata(true));
+        public static readonly DependencyProperty CanceledProperty = DependencyProperty.Register(nameof(Canceled), typeof(bool?), typeof(CrawlStatusToBooleanConverter), new PropertyMetadata(true));
 
         public bool? Canceled
         {
@@ -63,7 +63,7 @@ namespace FsInfoCat.Desktop.Converters
             set => SetValue(CanceledProperty, value);
         }
 
-        public static readonly DependencyProperty FailedProperty = DependencyProperty.Register(nameof(Failed), typeof(bool?), typeof(CrawlStatusToCooleabConverter), new PropertyMetadata(true));
+        public static readonly DependencyProperty FailedProperty = DependencyProperty.Register(nameof(Failed), typeof(bool?), typeof(CrawlStatusToBooleanConverter), new PropertyMetadata(true));
 
         public bool? Failed
         {
@@ -71,7 +71,7 @@ namespace FsInfoCat.Desktop.Converters
             set => SetValue(FailedProperty, value);
         }
 
-        public static readonly DependencyProperty DisabledProperty = DependencyProperty.Register(nameof(Disabled), typeof(bool?), typeof(CrawlStatusToCooleabConverter), new PropertyMetadata(false));
+        public static readonly DependencyProperty DisabledProperty = DependencyProperty.Register(nameof(Disabled), typeof(bool?), typeof(CrawlStatusToBooleanConverter), new PropertyMetadata(false));
 
         public bool? Disabled
         {
