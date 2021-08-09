@@ -1,10 +1,15 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace FsInfoCat.Local
 {
@@ -143,6 +148,61 @@ namespace FsInfoCat.Local
                 if (dbContext.FileSystems.Any(fs => id != fs.Id && fs.DisplayName == displayName))
                     results.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_DuplicateDisplayName, new string[] { nameof(DisplayName) }));
             }
+        }
+
+        public static async Task<(EntityEntry<FileSystem> Entry, SymbolicName SymbolicName)> ImportFileSystemAsync([AllowNull] ILogicalDiskInfo diskInfo, VolumeIdentifier volumeIdentifier, [DisallowNull] LocalDbContext dbContext,
+            [DisallowNull] IFileSystemDetailService fileSystemDetailService, CancellationToken cancellationToken)
+        {
+            string name;
+            FileSystem fileSystem;
+            SymbolicName symbolicName;
+            if (diskInfo is null)
+            {
+                if (!volumeIdentifier.Location.IsUnc)
+                    throw new ArgumentOutOfRangeException(nameof(volumeIdentifier));
+                (IFileSystemProperties Properties, string SymbolicName) genericNetworkFsType = fileSystemDetailService.GetGenericNetworkShareFileSystem();
+                name = genericNetworkFsType.SymbolicName;
+
+                symbolicName = await (from sn in dbContext.SymbolicNames where sn.Name == name select sn).FirstOrDefaultAsync(cancellationToken);
+                if (symbolicName is not null)
+                    return (dbContext.Entry(symbolicName.FileSystem), symbolicName);
+                fileSystem = new()
+                {
+                    Id = Guid.NewGuid(),
+                    CreatedOn = DateTime.Now,
+                    DisplayName = "Network File System",
+                    DefaultDriveType = genericNetworkFsType.Properties.DefaultDriveType,
+                    MaxNameLength = genericNetworkFsType.Properties.MaxNameLength,
+                    ReadOnly = genericNetworkFsType.Properties.ReadOnly
+                };
+            }
+            else
+            {
+                name = diskInfo.FileSystemName;
+                symbolicName = await (from sn in dbContext.SymbolicNames where sn.Name == name select sn).FirstOrDefaultAsync(cancellationToken);
+                if (symbolicName is not null)
+                    return (dbContext.Entry(symbolicName.FileSystem), symbolicName);
+                fileSystem = new()
+                {
+                    Id = Guid.NewGuid(),
+                    CreatedOn = DateTime.Now,
+                    DisplayName = "Network File System",
+                    DefaultDriveType = diskInfo.DriveType,
+                    MaxNameLength = diskInfo.MaxNameLength,
+                    ReadOnly = diskInfo.IsReadOnly
+                };
+            }
+            fileSystem.ModifiedOn = fileSystem.CreatedOn;
+
+            return (dbContext.FileSystems.Add(fileSystem), new()
+            {
+                Id = Guid.NewGuid(),
+                CreatedOn = fileSystem.CreatedOn,
+                ModifiedOn = fileSystem.ModifiedOn,
+                Name = name,
+                FileSystem = fileSystem,
+                Priority = 0
+            });
         }
     }
 }

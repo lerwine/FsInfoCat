@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -244,6 +245,71 @@ namespace FsInfoCat.Local
         {
             if (!Enum.IsDefined(Type))
                 results.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_DriveTypeInvalid, new string[] { nameof(Type) }));
+        }
+
+        public static async Task<EntityEntry<Volume>> ImportVolumeAsync([DisallowNull] DirectoryInfo directoryInfo, [DisallowNull] LocalDbContext dbContext, CancellationToken cancellationToken)
+        {
+            if (directoryInfo is null)
+                throw new ArgumentNullException(nameof(directoryInfo));
+            if (dbContext is null)
+                throw new ArgumentNullException(nameof(dbContext));
+
+            if (directoryInfo.Parent is not null)
+                directoryInfo = directoryInfo.Root;
+
+            using IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
+            IFileSystemDetailService fileSystemDetailService = serviceScope.ServiceProvider.GetService<IFileSystemDetailService>();
+            string name = directoryInfo.Name;
+            ILogicalDiskInfo diskInfo = await fileSystemDetailService.GetLogicalDiskAsync(directoryInfo, cancellationToken);
+            VolumeIdentifier volumeIdentifier;
+            if (diskInfo is null)
+            {
+                Uri uri = new(((directoryInfo.Parent is null) ? directoryInfo : directoryInfo.Root).FullName, UriKind.Absolute);
+                if (uri.IsUnc)
+                    volumeIdentifier = new VolumeIdentifier(uri);
+                else
+                    throw new InvalidOperationException($"Logical disk \"{directoryInfo.FullName}\" not found.");
+            }
+            else if (!diskInfo.TryGetVolumeIdentifier(out volumeIdentifier))
+                throw new InvalidOperationException($"Logical disk \"{diskInfo.Name}\" does not specify a volume identifer.");
+
+            Volume result = await (from v in dbContext.Volumes where v.Identifier == volumeIdentifier select v).FirstOrDefaultAsync(cancellationToken);
+            if (result is not null)
+                return dbContext.Entry(result);
+            (EntityEntry<FileSystem> Entry, SymbolicName SymbolicName) fileSystem = await FileSystem.ImportFileSystemAsync(diskInfo, volumeIdentifier, dbContext, fileSystemDetailService, cancellationToken);
+            result = new()
+            {
+                Id = Guid.NewGuid(),
+                Identifier = volumeIdentifier,
+                FileSystem = fileSystem.Entry.Entity
+            };
+            if (diskInfo is null)
+            {
+                (IFileSystemProperties Properties, string SymbolicName) genericNetworkFsType = fileSystemDetailService.GetGenericNetworkShareFileSystem();
+                result.MaxNameLength = genericNetworkFsType.Properties.MaxNameLength;
+                result.ReadOnly = genericNetworkFsType.Properties.ReadOnly;
+                result.Status = VolumeStatus.Unknown;
+                result.Type = DriveType.Network;
+                result.DisplayName = $"{volumeIdentifier.Location.PathAndQuery[1..]} on {volumeIdentifier.Location.Host}";
+            }
+            else
+            {
+                result.MaxNameLength = diskInfo.MaxNameLength;
+                result.ReadOnly = diskInfo.IsReadOnly;
+                result.Status = VolumeStatus.Unknown;
+                result.Type = diskInfo.DriveType;
+                result.DisplayName = (diskInfo.DriveType == DriveType.Network && diskInfo.DisplayName == directoryInfo.FullName) ? $"{volumeIdentifier.Location.PathAndQuery[1..]} on {volumeIdentifier.Location.Host}" : diskInfo.DisplayName;
+            }
+            if (fileSystem.Entry.State == EntityState.Added)
+            {
+                result.ModifiedOn = result.CreatedOn = fileSystem.Entry.Entity.CreatedOn;
+                await dbContext.SaveChangesAsync(cancellationToken);
+                dbContext.SymbolicNames.Add(fileSystem.SymbolicName);
+                await dbContext.SaveChangesAsync(cancellationToken);
+            }
+            else
+                result.ModifiedOn = result.CreatedOn = DateTime.Now;
+            return dbContext.Volumes.Add(result);
         }
     }
 }

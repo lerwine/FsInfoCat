@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Threading;
 
 namespace FsInfoCat.Collections
 {
@@ -9,6 +11,63 @@ namespace FsInfoCat.Collections
     /// </summary>
     public static class CollectionExtensions
     {
+        private static IEnumerable<T> PrivateThrowWhenCancellationRequested<T>([DisallowNull] IEnumerable<T> source, CancellationToken token)
+        {
+            token.ThrowIfCancellationRequested();
+            if (source is not null)
+                foreach (T value in source)
+                {
+                    token.ThrowIfCancellationRequested();
+                    yield return value;
+                }
+        }
+
+        private static IEnumerable<T> PrivateTakeUntilCancellationRequested<T>([DisallowNull] IEnumerable<T> source, CancellationToken token)
+        {
+            if (!token.IsCancellationRequested)
+                foreach (T value in source)
+                {
+                    if (token.IsCancellationRequested)
+                        break;
+                    yield return value;
+                }
+        }
+
+        /// <summary>
+        /// Returns an <c><see cref="IEnumerable{T}"/>&lt;<typeparamref name="T"/>&gt;</c> that throws <see cref="OperationCanceledException"/> upon element enumeration if specified <see cref="CancellationToken"/> has had cancellation requested.
+        /// </summary>
+        /// <typeparam name="T">The type of object to enumerate.</typeparam>
+        /// <param name="source">The source <c><see cref="IEnumerable{T}"/>&lt;<typeparamref name="T"/>&gt;</c>.</param>
+        /// <param name="token">The cancellation token that is used by to receive notice of cancellation.</param>
+        /// <returns>An <c><see cref="IEnumerable{T}"/>&lt;<typeparamref name="T"/>&gt;</c> that throws <see cref="OperationCanceledException"/> upon element enumeration if specified <see cref="CancellationToken"/> has had cancellation requested.</returns>
+        /// <exception cref="OperationCanceledException">The <paramref name="token"/> has had cancellation requested.</exception>
+        /// <exception cref="ObjectDisposedException">The associated <see cref="CancellationTokenSource"/> has been disposed.</exception>
+        /// <remarks>If <paramref name="source"/> is <see langword="null"/> or <c><paramref name="token"/>.<see cref="CancellationToken.CanBeCanceled">CanBeCanceled</see></c> is <see langword="false"/>, then the
+        /// value of teh <paramref name="source"/> parameter is returned as-is.</remarks>
+        public static IEnumerable<T> ThrowWhenCancellationRequested<T>([AllowNull] this IEnumerable<T> source, CancellationToken token)
+        {
+            if (source is not null && token.CanBeCanceled)
+                return PrivateThrowWhenCancellationRequested(source, token);
+            return source;
+        }
+
+        /// <summary>
+        /// Returns an <c><see cref="IEnumerable{T}"/>&lt;<typeparamref name="T"/>&gt;</c> that enumerates through the source items until the specified <see cref="CancellationToken"/> has had cancellation requested..
+        /// </summary>
+        /// <typeparam name="T">The type of object to enumerate.</typeparam>
+        /// <param name="source">The source <c><see cref="IEnumerable{T}"/>&lt;<typeparamref name="T"/>&gt;</c>.</param>
+        /// <param name="token">The cancellation token that is used by to receive notice of cancellation.</param>
+        /// <returns>An <c><see cref="IEnumerable{T}"/>&lt;<typeparamref name="T"/>&gt;</c> that enumerates through the <paramref name="source"/> items until the <paramref name="token"/> has had cancellation requested or the
+        /// end of the <paramref name="source"/> enumeration has been reached.</returns>
+        /// <remarks>If <paramref name="source"/> is <see langword="null"/> or <c><paramref name="token"/>.<see cref="CancellationToken.CanBeCanceled">CanBeCanceled</see></c> is <see langword="false"/>, then the
+        /// value of teh <paramref name="source"/> parameter is returned as-is.</remarks>
+        public static IEnumerable<T> TakeUntilCancellationRequested<T>([AllowNull] this IEnumerable<T> source, CancellationToken token)
+        {
+            if (source is not null && token.CanBeCanceled)
+                return PrivateTakeUntilCancellationRequested(source, token);
+            return source;
+        }
+
         public static IEnumerable<T> NullIfNotAny<T>(this IEnumerable<T> source) => (source is null || !source.Any()) ? null : source;
 
         public static IEnumerable<T> NonNullElements<T>(this IEnumerable<T> source) where T : class => source?.Where(s => s is not null);

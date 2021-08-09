@@ -1,4 +1,6 @@
 using FsInfoCat.Local;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -852,21 +854,32 @@ namespace FsInfoCat.Desktop.ViewModel
         {
             IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
             LocalDbContext dbContext = serviceScope.ServiceProvider.GetService<LocalDbContext>();
-            Subdirectory.ImportBranchAsync(directoryInfo, dbContext).ContinueWith(async t =>
+
+            // DEFERRED: Should be passing a CancellationToken from a CancellationTokenSource
+            Subdirectory.ImportBranchAsync(directoryInfo, dbContext, CancellationToken.None).ContinueWith(async t =>
             {
                 if (!t.IsCanceled)
                 {
-                    Subdirectory subdirectory = t.Result;
-                    CrawlConfiguration crawlConfiguration = await dbContext.Entry(subdirectory).GetRelatedReferenceAsync(d => d.CrawlConfiguration, CancellationToken.None);
+                    EntityEntry<Subdirectory> subdirectory = t.Result;
+                    CrawlConfiguration crawlConfiguration;
+                    if (subdirectory.State == EntityState.Added)
+                    {
+                        // DEFERRED: Should be passing a CancellationToken from a CancellationTokenSource
+                        await dbContext.SaveChangesAsync();
+                        crawlConfiguration = null;
+                    }
+                    else
+                        // DEFERRED: Should be passing a CancellationToken from a CancellationTokenSource
+                        crawlConfiguration = await subdirectory.GetRelatedReferenceAsync(d => d.CrawlConfiguration, CancellationToken.None);
                     Dispatcher.Invoke(() =>
                     {
-                        _validatedPath = (subdirectory, directoryInfo.FullName);
+                        _validatedPath = (subdirectory.Entity, directoryInfo.FullName);
                         if (crawlConfiguration is not null)
                             Initialize(crawlConfiguration);
                         else
                         {
                             IsNew = true;
-                            Root = subdirectory;
+                            Root = subdirectory.Entity;
                             CreatedOn = ModifiedOn = DateTime.Now;
                             MaxTotalItems = int.MaxValue;
                             TTL = TimeSpan.FromDays(1.0);
