@@ -54,6 +54,12 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
             /// </summary>
             public event DependencyPropertyChangedEventHandler DurationPropertyChanged;
 
+            public event EventHandler OperationRanToCompletion;
+
+            public event EventHandler OperationCanceled;
+
+            public event EventHandler<OpFailedEventArgs> OperationFailed;
+
             private static readonly DependencyPropertyKey StatePropertyKey = DependencyProperty.RegisterReadOnly(nameof(State), typeof(TState), typeof(AsyncOpViewModel),
                     new PropertyMetadata(default, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as AsyncOpViewModel)?.StatePropertyChanged?.Invoke(d, e)));
 
@@ -186,6 +192,22 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
                         break;
                 }
             }
+
+            private void RaiseCompleted(TTask task)
+            {
+                if (task.IsCanceled)
+                    OnCanceled();
+                else if (task.IsFaulted)
+                    OnFaulted(task.Exception);
+                else
+                    OnRanToCompletion(task);
+            }
+
+            protected virtual void OnCanceled() => OperationCanceled?.Invoke(this, EventArgs.Empty);
+
+            protected virtual void OnFaulted(AggregateException exception) => OperationFailed?.Invoke(this, new OpFailedEventArgs(exception));
+
+            protected virtual void OnRanToCompletion(TTask task) => OperationRanToCompletion?.Invoke(this, EventArgs.Empty);
 
             /// <summary>
             /// Adds the specified specified <typeparamref name="TItem">item</typeparamref> to a <see cref="AsyncOpManagerViewModel{TState, TTask, TItem, TListener}"/> for tracking.

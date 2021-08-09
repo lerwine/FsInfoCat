@@ -463,7 +463,11 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
                             finally
                             {
                                 try { _item.AsyncOpStatusPropertyChanged -= owner.Item_AsyncOpStatusPropertyChanged; }
-                                finally { owner.RaiseOperationCompleted(_item, task); }
+                                finally
+                                {
+                                    try { _item.RaiseCompleted(task); }
+                                    finally { owner.RaiseOperationCompleted(_item, task); }
+                                }
                             }
                         }
                     });

@@ -1,3 +1,4 @@
+using FsInfoCat.Desktop.ViewModel.AsyncOps;
 using FsInfoCat.Local;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
@@ -9,11 +10,12 @@ using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel
 {
-    public class EditCrawlConfigVM : DependencyObject
+    public class EditCrawlConfigVM : AsyncActionOpManagerViewModel
     {
         private Collection<string> _changedProperties = new();
         private (Subdirectory Root, string Path)? _validatedPath;
@@ -816,27 +818,6 @@ namespace FsInfoCat.Desktop.ViewModel
             SetValue(CancelCommandPropertyKey, new Commands.RelayCommand(OnCancelExecute));
         }
 
-        internal static bool Edit(DirectoryInfo crawlRoot, out CrawlConfiguration model, out bool isNew)
-        {
-            View.EditCrawlConfigWindow window = new();
-            EditCrawlConfigVM vm = (EditCrawlConfigVM)window.DataContext;
-            if (vm is null)
-            {
-                vm = new();
-                window.DataContext = vm;
-            }
-            vm.Initialize(crawlRoot);
-            if (window.ShowDialog() ?? false)
-            {
-                isNew = vm.IsNew;
-                model = vm.Model;
-                return true;
-            }
-            model = null;
-            isNew = false;
-            return false;
-        }
-
         internal static bool Edit([DisallowNull] CrawlConfiguration model)
         {
             View.EditCrawlConfigWindow window = new();
@@ -850,49 +831,77 @@ namespace FsInfoCat.Desktop.ViewModel
             return window.ShowDialog() ?? false;
         }
 
-        internal void Initialize([DisallowNull] DirectoryInfo directoryInfo)
+        internal static bool Edit(DirectoryInfo crawlRoot, out CrawlConfiguration model, out bool isNew)
         {
-            IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
-            LocalDbContext dbContext = serviceScope.ServiceProvider.GetService<LocalDbContext>();
-
-            // DEFERRED: Should be passing a CancellationToken from a CancellationTokenSource
-            Subdirectory.ImportBranchAsync(directoryInfo, dbContext, CancellationToken.None).ContinueWith(async t =>
+            View.EditCrawlConfigWindow window = new();
+            EditCrawlConfigVM vm = (EditCrawlConfigVM)window.DataContext;
+            if (vm is null)
             {
-                if (!t.IsCanceled)
+                vm = new();
+                window.DataContext = vm;
+            }
+
+            window.Loaded += new RoutedEventHandler((sender, e) =>
+            {
+                AsyncActionOpViewModel initializeOpVm = vm.StartNewBgOperation(async listener =>
                 {
-                    EntityEntry<Subdirectory> subdirectory = t.Result;
+                    listener.SetMessage("Checking for existing directory information", StatusMessageLevel.Information);
+                    using IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
+                    using LocalDbContext dbContext = serviceScope.ServiceProvider.GetService<LocalDbContext>();
+                    EntityEntry<Subdirectory> subdirectory = await Subdirectory.ImportBranchAsync(crawlRoot, dbContext, listener.CancellationToken);
                     CrawlConfiguration crawlConfiguration;
                     if (subdirectory.State == EntityState.Added)
                     {
-                        // DEFERRED: Should be passing a CancellationToken from a CancellationTokenSource
-                        await dbContext.SaveChangesAsync();
+                        listener.SetMessage("Importing new path information");
+                        await dbContext.SaveChangesAsync(listener.CancellationToken);
                         crawlConfiguration = null;
                     }
                     else
-                        // DEFERRED: Should be passing a CancellationToken from a CancellationTokenSource
-                        crawlConfiguration = await subdirectory.GetRelatedReferenceAsync(d => d.CrawlConfiguration, CancellationToken.None);
-                    Dispatcher.Invoke(() =>
                     {
-                        _validatedPath = (subdirectory.Entity, directoryInfo.FullName);
-                        if (crawlConfiguration is not null)
-                            Initialize(crawlConfiguration);
-                        else
-                        {
-                            IsNew = true;
-                            Root = subdirectory.Entity;
-                            CreatedOn = ModifiedOn = DateTime.Now;
-                            MaxTotalItems = int.MaxValue;
-                            TTL = TimeSpan.FromDays(1.0);
-                            RescheduleInterval = TimeSpan.FromDays(1.0);
-                            HasChanges = true;
-                        }
-                    });
-                }
-            }).ContinueWith(t =>
-            {
-                try { dbContext.Dispose(); }
-                finally { serviceScope.Dispose(); }
+                        listener.SetMessage("Checking for existing configuration");
+                        crawlConfiguration = await subdirectory.GetRelatedReferenceAsync(d => d.CrawlConfiguration, listener.CancellationToken);
+                    }
+                    vm.Dispatcher.Invoke(() => vm.Initialize(crawlConfiguration, subdirectory.Entity, crawlRoot.FullName));
+                });
+                initializeOpVm.OperationRanToCompletion += new EventHandler((sender, e) => vm.RemoveOperation(initializeOpVm));
+                initializeOpVm.OperationFailed += new EventHandler<OpFailedEventArgs>((sender, e) =>
+                {
+                    // TODO: Alert user of failure.
+                    // TODO: Perhaps create a button that the user can click to close the window if in fail state.
+                    window.Close();
+                });
+                initializeOpVm.OperationCanceled += new EventHandler((sender, e) =>
+                {
+                    // TODO: Alert user of cancellation.
+                    window.Close();
+                });
             });
+            if (window.ShowDialog() ?? false)
+            {
+                isNew = vm.IsNew;
+                model = vm.Model;
+                return true;
+            }
+            model = null;
+            isNew = false;
+            return false;
+        }
+
+        private void Initialize(CrawlConfiguration crawlConfiguration, Subdirectory subdirectory, string fullPathName)
+        {
+            _validatedPath = (subdirectory, fullPathName);
+            if (crawlConfiguration is not null)
+                Initialize(crawlConfiguration);
+            else
+            {
+                IsNew = true;
+                Root = subdirectory;
+                CreatedOn = ModifiedOn = DateTime.Now;
+                MaxTotalItems = int.MaxValue;
+                TTL = TimeSpan.FromDays(1.0);
+                RescheduleInterval = TimeSpan.FromDays(1.0);
+                HasChanges = true;
+            }
         }
 
         internal void Initialize([DisallowNull] CrawlConfiguration crawlConfiguration)

@@ -414,6 +414,51 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
             VerifyAccess();
             OperationRanToCompletion?.Invoke(this, args);
         }
+
+        /// <summary>
+        /// Removes the operation item, canceling it if it is not completed.
+        /// </summary>
+        /// <param name="item">The item to remove.</param>
+        /// <returns><see langword="true"/> the item was removed; otherwise, <see langword="false"/>.</returns>
+        internal bool RemoveOperation(TItem item)
+        {
+            if (item is null || !_allOperations.Contains(item))
+                return false;
+            if (_completedOperations.Contains(item))
+            {
+                _completedOperations.Remove(item);
+                if (_successsfulOperations.Contains(item))
+                    _successsfulOperations.Remove(item);
+                else if (_failedOperations.Contains(item))
+                    _failedOperations.Remove(item);
+                else if (_canceledOperations.Contains(item))
+                    _canceledOperations.Remove(item);
+            }
+            else
+            {
+                item.Cancel(true);
+                if (_pendingOperations.Contains(item))
+                    _pendingOperations.Remove(item);
+                else
+                {
+                    item.GetTask().ContinueWith(t =>
+                    {
+                        if (_completedOperations.Contains(item))
+                            _completedOperations.Remove(item);
+                        if (_successsfulOperations.Contains(item))
+                            _successsfulOperations.Remove(item);
+                        else if (_failedOperations.Contains(item))
+                            _failedOperations.Remove(item);
+                        else if (_canceledOperations.Contains(item))
+                            _canceledOperations.Remove(item);
+                        _allOperations.Remove(item);
+                    });
+                    return true;
+                }
+            }
+            _allOperations.Remove(item);
+            return true;
+        }
     }
 
     public class AsyncOpManagerViewModel<TTask, TItem, TListener> : AsyncOpManagerViewModel<object, TTask, TItem, TListener>
