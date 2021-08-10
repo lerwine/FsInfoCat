@@ -19,8 +19,6 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
         where TListener : AsyncOpManagerViewModel<TState, Task<TResult>, TItem, TListener>.AsyncOpViewModel.StatusListener
         where TItem : AsyncFuncOpViewModelBase<TState, TResult, TListener, TItem>
     {
-        private readonly Task<TResult> _task;
-
         /// <summary>
         /// Occurs when the <see cref="Result"/> property has changed.
         /// </summary>
@@ -42,23 +40,16 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
             private set => SetValue(ResultPropertyKey, value);
         }
 
-        /// <summary>
-        /// Gets the task that implements the background operation.
-        /// </summary>
-        /// <returns>The <see cref="Task{TResult}"/> that implements the background operation.</returns>
-        internal override Task<TResult> GetTask() => _task;
+        protected AsyncFuncOpViewModelBase(FuncItemBuilder builder) : base(builder) { }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AsyncFuncOpViewModelBase{TState, TResult, TListener, TItem}"/> class.
-        /// </summary>
-        /// <param name="initialState">The initial value for the <see cref="AsyncOpManagerViewModel{TState, Task{TResult}, TItem, TListener}.AsyncOpViewModel.State"/> property.</param>
-        /// <param name="createTask">The <c><see cref="Func{T, TResult}"/>&lt;<typeparamref name="TListener"/>, <see cref="Task{TResult}"/>&gt;</c>
-        /// factory method creates the background <see cref="Task{TResult}"/>.</param>
-        protected AsyncFuncOpViewModelBase(TState initialState, Func<TListener, Task<TResult>> createTask)
-            : base(initialState)
+        protected abstract class FuncItemBuilder : AsyncOpManagerViewModel<TState, Task<TResult>, TItem, TListener>.ItemBuilder
         {
-            _task = createTask(GetStatusListener());
-            UpdateOpStatus(_task.Status);
+            private readonly Func<TListener, Task<TResult>> _createTask;
+            protected FuncItemBuilder(TState initialState, Func<TListener, Task<TResult>> createTask) : base(initialState)
+            {
+                _createTask = createTask;
+            }
+            protected internal override Task<TResult> GetTask(TState state, TListener listener, AsyncOpManagerViewModel<TState, Task<TResult>, TItem, TListener>.AsyncOpViewModel instance) => _createTask(listener);
         }
     }
 }

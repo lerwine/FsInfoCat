@@ -61,6 +61,15 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Background operation was canceled..
+        /// </summary>
+        public static string Description_Bg_Operation_Canceled {
+            get {
+                return ResourceManager.GetString("Description_Bg_Operation_Canceled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Click here to browse the root folder..
         /// </summary>
         public static string Description_BrowseRootFolder {
@@ -3243,6 +3252,15 @@ namespace FsInfoCat.Properties {
         public static string DisplayName_Offline {
             get {
                 return ResourceManager.GetString("DisplayName_Offline", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to OK.
+        /// </summary>
+        public static string DisplayName_OK {
+            get {
+                return ResourceManager.GetString("DisplayName_OK", resourceCulture);
             }
         }
         

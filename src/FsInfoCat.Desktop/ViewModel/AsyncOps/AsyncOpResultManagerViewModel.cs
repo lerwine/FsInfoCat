@@ -5,15 +5,15 @@ using System.Windows;
 namespace FsInfoCat.Desktop.ViewModel.AsyncOps
 {
     /// <summary>
-    /// Tracks <c><see cref="System.Func{T1, T2, TResult}"/>&lt;<typeparamref name="TState"/>, <see cref="System.Threading.CancellationToken"/>, <typeparamref name="TResult"/>&gt;</c> delegates asynchronously executed as background operations.
+    /// Tracks <see cref="Func{TState, TListener, TResult}"/> delegates asynchronously executed as background operations.
     /// <para>Extends <see cref="AsyncOpManagerViewModel{TState, Task{TResult}, TItem, TListener}" />.</para>
     /// </summary>
-    /// <typeparam name="TState">The type of the state object associated with the background <see cref="Task"/>.</typeparam>
+    /// <typeparam name="TState">The type of the state object associated with the background <see cref="Task{TResult}"/>.</typeparam>
     /// <typeparam name="TItem">The type of item that inherits from <see cref="AsyncOpManagerViewModel{TState, Task{TResult}, TItem, TListener}.AsyncOpViewModel"/>,
     /// containing the status and results of the background operation.</typeparam>
     /// <typeparam name="TListener">The type of listener that inherits from <see cref="AsyncOpManagerViewModel{TState, Task{TResult}, TItem, TListener}.AsyncOpViewModel.StatusListener" />
     /// and is used within the background <see cref="Task{TResult}"/> to update the associated <typeparamref name="TItem">Item</typeparamref>.</typeparam>
-    /// <typeparam name="TResult">The type of the result value of the <c><see cref="System.Func{T1, T2, TResult}"/>&lt;<typeparamref name="TState"/>, <see cref="System.Threading.CancellationToken"/>, <typeparamref name="TResult"/>&gt;</c> delegate.</typeparam>
+    /// <typeparam name="TResult">The type of the result value produced by the <see cref="Func{TListener, TResult}"/> delegate.</typeparam>
     /// <seealso cref="AsyncOpManagerViewModel{TState, Task{TResult}, TItem, TListener}" />
     public class AsyncOpResultManagerViewModel<TState, TItem, TListener, TResult> : AsyncOpManagerViewModel<TState, Task<TResult>, TItem, TListener>
         where TItem : AsyncOpResultManagerViewModel<TState, TItem, TListener, TResult>.AsyncOpViewModel
@@ -43,14 +43,14 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
     }
 
     /// <summary>
-    /// Tracks <c><see cref="System.Func{T, TResult}"/>&lt;<see cref="System.Threading.CancellationToken"/>, <typeparamref name="TResult"/>&gt;</c> delegates asynchronously executed as background operations.
+    /// Tracks <see cref="Func{TListener, TResult}"/> delegates asynchronously executed as background operations.
     /// <para>Extends <see cref="AsyncOpResultManagerViewModel{object, TItem, TListener, TResult}" />.</para>
     /// </summary>
     /// <typeparam name="TItem">The type of item that inherits from <see cref="AsyncOpManagerViewModel{object, Task{TResult}, TItem, TListener}.AsyncOpViewModel"/>,
     /// containing the status and results of the background operation.</typeparam>
     /// <typeparam name="TListener">The type of listener that inherits from <see cref="AsyncOpManagerViewModel{object, Task{TResult}, TItem, TListener}.AsyncOpViewModel.StatusListener" />
     /// and is used within the background <see cref="Task{TResult}"/> to update the associated <typeparamref name="TItem">Item</typeparamref>.</typeparam>
-    /// <typeparam name="TResult">The type of the result value of the <c><see cref="System.Func{T, TResult}"/>&lt;<see cref="System.Threading.CancellationToken"/>, <typeparamref name="TResult"/>&gt;</c> delegate.</typeparam>
+    /// <typeparam name="TResult">The type of the result value produced by the <see cref="Func{TListener, TResult}"/> delegate.</typeparam>
     /// <seealso cref="AsyncOpResultManagerViewModel{object, TItem, TListener, TResult}" />
     public class AsyncOpResultManagerViewModel<TItem, TListener, TResult> : AsyncOpResultManagerViewModel<object, TItem, TListener, TResult>
         where TItem : AsyncOpResultManagerViewModel<TItem, TListener, TResult>.AsyncOpViewModel
@@ -58,27 +58,125 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
     {
     }
 
+    /// <summary>
+    /// Tracks <see cref="Func{AsyncFuncOpViewModel{TState, TResult}.StatusListenerImpl, TResult}"/> delegates asynchronously executed as background operations.
+    /// <para>Extends <see cref="AsyncOpResultManagerViewModel{TState, AsyncFuncOpViewModel{TState, TResult}, AsyncFuncOpViewModel{TState, TResult}.StatusListenerImpl, TResult}" />.</para>
+    /// </summary>
+    /// <typeparam name="TState">The type of the state object associated with the background <see cref="Task{TResult}"/>.</typeparam>
+    /// <typeparam name="TResult">The type of the result value produced by the <see cref="Func{AsyncFuncOpViewModel{TState, TResult}.StatusListenerImpl, TResult}"/> delegate.</typeparam>
+    /// <seealso cref="AsyncOpResultManagerViewModel{TState, AsyncFuncOpViewModel{TState, TResult}, AsyncFuncOpViewModel{TState, TResult}.StatusListenerImpl, TResult}" />
     public class AsyncOpResultManagerViewModel<TState, TResult> : AsyncOpResultManagerViewModel<TState, AsyncFuncOpViewModel<TState, TResult>, AsyncFuncOpViewModel<TState, TResult>.StatusListenerImpl, TResult>
     {
+        /// <summary>
+        /// Starts a new background operation.
+        /// </summary>
+        /// <param name="initialState">The initial value of the <see cref="AsyncOpManagerViewModel{TState, Task{TResult}, AsyncFuncOpViewModel{TState, TResult}, AsyncFuncOpViewModel{TState, TResult}.StatusListenerImpl}.AsyncOpViewModel.State">AsyncOpResultManagerViewModel&lt;TState, TResult&gt;.AsyncOpViewModel.State</see> property.</param>
+        /// <param name="func">The delegate that will implement the background operation and produce the result value.</param>
+        /// <param name="creationOptions">The backround task creation options.</param>
+        /// <param name="scheduler">The optional scheduler to use. The default is the <see cref="TaskScheduler.Default">instance provided by the .NET framework</see>.</param>
+        /// <returns>A <see cref="AsyncFuncOpViewModel{TState, TResult}"/> object representing the status of the background operation.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="func"/> was null.</exception>
         public AsyncFuncOpViewModel<TState, TResult> StartNewBgOperation(TState initialState, Func<TState, AsyncFuncOpViewModel<TState, TResult>.StatusListenerImpl, TResult> func, TaskCreationOptions creationOptions, TaskScheduler scheduler = null) =>
             AsyncFuncOpViewModel<TState, TResult>.StartNew(initialState, this, func, creationOptions, scheduler);
+
+        /// <summary>
+        /// Starts a new background operation.
+        /// </summary>
+        /// <param name="initialState">The initial value of the <see cref="AsyncOpManagerViewModel{TState, Task{TResult}, AsyncFuncOpViewModel{TState, TResult}, AsyncFuncOpViewModel{TState, TResult}.StatusListenerImpl}.AsyncOpViewModel.State">AsyncOpResultManagerViewModel&lt;TState, TResult&gt;.AsyncOpViewModel.State</see> property.</param>
+        /// <param name="func">The delegate that will implement the background operation and produce the result value.</param>
+        /// <returns>A <see cref="AsyncFuncOpViewModel{TState, TResult}"/> object representing the status of the background operation.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="func"/> was null.</exception>
         public AsyncFuncOpViewModel<TState, TResult> StartNewBgOperation(TState initialState, Func<TState, AsyncFuncOpViewModel<TState, TResult>.StatusListenerImpl, TResult> func) =>
             AsyncFuncOpViewModel<TState, TResult>.StartNew(initialState, this, func);
+
+        /// <summary>
+        /// Starts a new background operation.
+        /// </summary>
+        /// <param name="initialState">The initial value of the <see cref="AsyncOpManagerViewModel{TState, Task{TResult}, AsyncFuncOpViewModel{TState, TResult}, AsyncFuncOpViewModel{TState, TResult}.StatusListenerImpl}.AsyncOpViewModel.State">AsyncOpResultManagerViewModel&lt;TState, TResult&gt;.AsyncOpViewModel.State</see> property.</param>
+        /// <param name="func">The asynchronous delegate that will implement the background operation and produce the result value.</param>
+        /// <returns>A <see cref="AsyncFuncOpViewModel{TState, TResult}"/> object representing the status of the background operation.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="func"/> was null.</exception>
+        public AsyncFuncOpViewModel<TState, TResult> StartBgOperationFromAsync(TState initialState,
+            Func<TState, AsyncFuncOpViewModel<TState, TResult>.StatusListenerImpl, Task<TResult>> func) =>
+            AsyncFuncOpViewModel<TState, TResult>.FromAsync(initialState, this, func);
+
+        /// <summary>
+        /// Adds a pending background operation.
+        /// </summary>
+        /// <param name="initialState">The initial value of the <see cref="AsyncOpManagerViewModel{TState, Task{TResult}, AsyncFuncOpViewModel{TState, TResult}, AsyncFuncOpViewModel{TState, TResult}.StatusListenerImpl}.AsyncOpViewModel.State">AsyncOpResultManagerViewModel&lt;TState, TResult&gt;.AsyncOpViewModel.State</see> property.</param>
+        /// <param name="func">The delegate that will implement the background operation and produce the result value.</param>
+        /// <param name="creationOptions">The backround task creation options.</param>
+        /// <returns>A <see cref="AsyncFuncOpViewModel{TState, TResult}"/> object representing the status of the background operation.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="func"/> was null.</exception>
         public AsyncFuncOpViewModel<TState, TResult> AddPendingBgOperation(TState initialState, Func<TState, AsyncFuncOpViewModel<TState, TResult>.StatusListenerImpl, TResult> func, TaskCreationOptions creationOptions) =>
-            AsyncFuncOpViewModel<TState, TResult>.AddNew(initialState, this, func, creationOptions);
+            AsyncFuncOpViewModel<TState, TResult>.AddPending(initialState, this, func, creationOptions);
+
+        /// <summary>
+        /// Adds a pending background operation.
+        /// </summary>
+        /// <param name="initialState">The initial value of the <see cref="AsyncOpManagerViewModel{TState, Task{TResult}, AsyncFuncOpViewModel{TState, TResult}, AsyncFuncOpViewModel{TState, TResult}.StatusListenerImpl}.AsyncOpViewModel.State">AsyncOpResultManagerViewModel&lt;TState, TResult&gt;.AsyncOpViewModel.State</see> property.</param>
+        /// <param name="func">The delegate that will implement the background operation and produce the result value.</param>
+        /// <returns>A <see cref="AsyncFuncOpViewModel{TState, TResult}"/> object representing the status of the background operation.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="func"/> was null.</exception>
         public AsyncFuncOpViewModel<TState, TResult> AddPendingBgOperation(TState initialState, Func<TState, AsyncFuncOpViewModel<TState, TResult>.StatusListenerImpl, TResult> func) =>
-            AsyncFuncOpViewModel<TState, TResult>.AddNew(initialState, this, func);
+            AsyncFuncOpViewModel<TState, TResult>.AddPending(initialState, this, func);
     }
 
+    /// <summary>
+    /// Tracks <see cref="Func{AsyncFuncOpViewModel{TResult}.StatusListenerImpl, TResult}"/> delegates asynchronously executed as background operations.
+    /// Class AsyncOpResultManagerViewModel.
+    /// Implements the <see cref="AsyncOpResultManagerViewModel{AsyncFuncOpViewModel{TResult}, AsyncFuncOpViewModel{TResult}.StatusListenerImpl, TResult}" />
+    /// </summary>
+    /// <typeparam name="TResult">The type of the result value produced by the <see cref="Func{AsyncFuncOpViewModel{TResult}.StatusListenerImpl, TResult}"/> delegate.</typeparam>
+    /// <seealso cref="AsyncOpResultManagerViewModel{AsyncFuncOpViewModel{TResult}, AsyncFuncOpViewModel{TResult}.StatusListenerImpl, TResult}" />
     public class AsyncOpResultManagerViewModel<TResult> : AsyncOpResultManagerViewModel<AsyncFuncOpViewModel<TResult>, AsyncFuncOpViewModel<TResult>.StatusListenerImpl, TResult>
     {
+        /// <summary>
+        /// Starts a new background operation.
+        /// </summary>
+        /// <param name="func">The delegate that will implement the background operation and produce the result value.</param>
+        /// <param name="creationOptions">The backround task creation options.</param>
+        /// <param name="scheduler">The optional scheduler to use. The default is the <see cref="TaskScheduler.Default">instance provided by the .NET framework</see>.</param>
+        /// <returns>A <see cref="AsyncFuncOpViewModel{TResult}"/> object representing the status of the background operation.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="func"/> was null.</exception>
         public AsyncFuncOpViewModel<TResult> StartNewBgOperation(Func<AsyncFuncOpViewModel<TResult>.StatusListenerImpl, TResult> func, TaskCreationOptions creationOptions, TaskScheduler scheduler = null) =>
             AsyncFuncOpViewModel<TResult>.StartNew(this, func, creationOptions, scheduler);
+
+        /// <summary>
+        /// Starts a new background operation.
+        /// </summary>
+        /// <param name="func">The delegate that will implement the background operation and produce the result value.</param>
+        /// <returns>A <see cref="AsyncFuncOpViewModel{TResult}"/> object representing the status of the background operation.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="func"/> was null.</exception>
         public AsyncFuncOpViewModel<TResult> StartNewBgOperation(Func<AsyncFuncOpViewModel<TResult>.StatusListenerImpl, TResult> func) =>
             AsyncFuncOpViewModel<TResult>.StartNew(this, func);
+
+        /// <summary>
+        /// Starts the bg operation from asynchronous.
+        /// </summary>
+        /// <param name="func">The asynchronous delegate that will implement the background operation and produce the result value.</param>
+        /// <returns>A <see cref="AsyncFuncOpViewModel{TResult}"/> object representing the status of the background operation.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="func"/> was null.</exception>
+        public AsyncFuncOpViewModel<TResult> StartBgOperationFromAsync(Func<AsyncFuncOpViewModel<TResult>.StatusListenerImpl, Task<TResult>> func) =>
+            AsyncFuncOpViewModel<TResult>.FromAsync(this, func);
+
+        /// <summary>
+        /// Adds a pending background operation.
+        /// </summary>
+        /// <param name="func">The delegate that will implement the background operation and produce the result value.</param>
+        /// <param name="creationOptions">The backround task creation options.</param>
+        /// <returns>A <see cref="AsyncFuncOpViewModel{TResult}"/> object representing the status of the background operation.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="func"/> was null.</exception>
         public AsyncFuncOpViewModel<TResult> AddPendingBgOperation(Func<AsyncFuncOpViewModel<TResult>.StatusListenerImpl, TResult> func, TaskCreationOptions creationOptions) =>
-            AsyncFuncOpViewModel<TResult>.AddNew(this, func, creationOptions);
+            AsyncFuncOpViewModel<TResult>.AddPending(this, func, creationOptions);
+
+        /// <summary>
+        /// Adds a pending background operation.
+        /// </summary>
+        /// <param name="func">The delegate that will implement the background operation and produce the result value.</param>
+        /// <returns>A <see cref="AsyncFuncOpViewModel{TResult}"/> object representing the status of the background operation.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="func"/> was null.</exception>
         public AsyncFuncOpViewModel<TResult> AddPendingBgOperation(Func<AsyncFuncOpViewModel<TResult>.StatusListenerImpl, TResult> func) =>
-            AsyncFuncOpViewModel<TResult>.AddNew(this, func);
+            AsyncFuncOpViewModel<TResult>.AddPending(this, func);
     }
 }

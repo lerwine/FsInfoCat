@@ -7,23 +7,35 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
     {
         public AsyncActionOpViewModel<TState> StartNewBgOperation(TState initialState, Action<TState, AsyncActionOpViewModel<TState>.StatusListenerImpl> action, TaskCreationOptions creationOptions, TaskScheduler scheduler = null) =>
             AsyncActionOpViewModel<TState>.StartNew(initialState, this, action, creationOptions, scheduler);
+
         public AsyncActionOpViewModel<TState> StartNewBgOperation(TState initialState, Action<TState, AsyncActionOpViewModel<TState>.StatusListenerImpl> action) =>
             AsyncActionOpViewModel<TState>.StartNew(initialState, this, action);
+
+        public AsyncActionOpViewModel<TState> StartBgOperationFromAsync(TState initialState, Func<TState, AsyncActionOpViewModel<TState>.StatusListenerImpl, Task> action) =>
+            AsyncActionOpViewModel<TState>.FromAsync(initialState, this, action);
+
         public AsyncActionOpViewModel<TState> AddPendingBgOperation(TState initialState, Action<TState, AsyncActionOpViewModel<TState>.StatusListenerImpl> action, TaskCreationOptions creationOptions) =>
-            AsyncActionOpViewModel<TState>.AddNew(initialState, this, action, creationOptions);
+            AsyncActionOpViewModel<TState>.AddPending(initialState, this, action, creationOptions);
+
         public AsyncActionOpViewModel<TState> AddPendingBgOperation(TState initialState, Action<TState, AsyncActionOpViewModel<TState>.StatusListenerImpl> action) =>
-            AsyncActionOpViewModel<TState>.AddNew(initialState, this, action);
+            AsyncActionOpViewModel<TState>.AddPending(initialState, this, action);
     }
 
     public class AsyncActionOpManagerViewModel : AsyncOpManagerViewModel<Task, AsyncActionOpViewModel, AsyncActionOpViewModel.StatusListenerImpl>
     {
         public AsyncActionOpViewModel StartNewBgOperation(Action<AsyncActionOpViewModel.StatusListenerImpl> action, TaskCreationOptions creationOptions, TaskScheduler scheduler = null) =>
             AsyncActionOpViewModel.StartNew(this, action, creationOptions, scheduler);
+
         public AsyncActionOpViewModel StartNewBgOperation(Action<AsyncActionOpViewModel.StatusListenerImpl> action) =>
             AsyncActionOpViewModel.StartNew(this, action);
+
+        public AsyncActionOpViewModel StartBgOperationFromAsync(Func<AsyncActionOpViewModel.StatusListenerImpl, Task> action) =>
+            AsyncActionOpViewModel.FromAsync(this, action);
+
         public AsyncActionOpViewModel AddPendingBgOperation(Action<AsyncActionOpViewModel.StatusListenerImpl> action, TaskCreationOptions creationOptions) =>
-            AsyncActionOpViewModel.AddNew(this, action, creationOptions);
+            AsyncActionOpViewModel.AddPending(this, action, creationOptions);
+
         public AsyncActionOpViewModel AddPendingBgOperation(Action<AsyncActionOpViewModel.StatusListenerImpl> action) =>
-            AsyncActionOpViewModel.AddNew(this, action);
+            AsyncActionOpViewModel.AddPending(this, action);
     }
 }

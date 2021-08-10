@@ -45,21 +45,25 @@
             </MultiTrigger>
         </Style.Triggers>
     </Style>
-    <!--<Style x:Key="InfoMessageTextBlock" TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
-        <Setter Property="Foreground" Value="{StaticResource InfoBrush}"/>
+    <Style x:Key="InfoMessageTextBlock" TargetType="TextBlock">
+        <Setter Property="Foreground" Value="{DynamicResource InfoDarkBrush}"/>
         <Setter Property="TextWrapping" Value="Wrap"/>
     </Style>
-    <Style x:Key="WarningMessageTextBlock" TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
-        <Setter Property="Foreground" Value="{StaticResource WarningBrush}"/>
+    <Style x:Key="SuccessMessageTextBlock" TargetType="TextBlock">
+        <Setter Property="Foreground" Value="{DynamicResource SuccessDarkBrush}"/>
         <Setter Property="TextWrapping" Value="Wrap"/>
     </Style>
-    <Style x:Key="ErrorMessageTextBlock" TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
-        <Setter Property="Foreground" Value="{StaticResource ErrorBrush}"/>
+    <Style x:Key="WarningMessageTextBlock" TargetType="TextBlock">
+        <Setter Property="Foreground" Value="{DynamicResource WarningDarkBrush}"/>
         <Setter Property="TextWrapping" Value="Wrap"/>
     </Style>
-    <Style TargetType="PasswordBox" BasedOn="{StaticResource {x:Type PasswordBox}}">
-        <Setter Property="Height" Value="{StaticResource DefaultTextBoxHeight}"/>
-    </Style>-->
+    <Style x:Key="ErrorMessageTextBlock" TargetType="TextBlock">
+        <Setter Property="Foreground" Value="{DynamicResource ErrorDarkBrush}"/>
+        <Setter Property="TextWrapping" Value="Wrap"/>
+    </Style>
+    <Style TargetType="PasswordBox">
+        <Setter Property="Height" Value="{DynamicResource DefaultTextBoxHeight}"/>
+    </Style>
     <ControlTemplate x:Key="DefaultGridSplitterControlTemplate" TargetType="{x:Type GridSplitter}">
         <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}"/>
     </ControlTemplate>
@@ -77,23 +81,43 @@
         </Setter>
         <Setter Property="Template" Value="{DynamicResource DefaultGridSplitterControlTemplate}"/>
     </Style>
-    <!--<Style x:Key="VerticalGridSplitterStyle" TargetType="{x:Type GridSplitter}" BasedOn="{StaticResource DefaultGridSplitterStyle}">
-        <Setter Property="Background" Value="{StaticResource VerticalSeparatorBrush}"/>
+    <Style x:Key="VerticalGridSplitterStyle" TargetType="{x:Type GridSplitter}">
+        <Setter Property="Background" Value="{DynamicResource VerticalSeparatorBrush}"/>
         <Setter Property="ResizeDirection" Value="Columns"/>
-        <Setter Property="Width" Value="{StaticResource NormalSpacing}"/>
+        <Setter Property="Width" Value="{DynamicResource DefaultSpacingValue}"/>
         <Setter Property="VerticalAlignment" Value="Stretch"/>
         <Setter Property="Cursor" Value="SizeWE"/>
     </Style>
-    <Style x:Key="HorizontalGridSplitterStyle" TargetType="{x:Type GridSplitter}" BasedOn="{StaticResource DefaultGridSplitterStyle}">
-        <Setter Property="Background" Value="{StaticResource HorizontalSeparatorBrush}"/>
+    <Style x:Key="HorizontalGridSplitterStyle" TargetType="{x:Type GridSplitter}">
+        <Setter Property="Background" Value="{DynamicResource HorizontalSeparatorBrush}"/>
         <Setter Property="ResizeDirection" Value="Rows"/>
-        <Setter Property="Height" Value="{StaticResource NormalSpacing}"/>
+        <Setter Property="Height" Value="{DynamicResource DefaultSpacingValue}"/>
         <Setter Property="HorizontalAlignment" Value="Stretch"/>
         <Setter Property="Cursor" Value="SizeNS"/>
     </Style>
-    <Style TargetType="GroupBox" BasedOn="{StaticResource DefaultGroupBoxStyle}"/>-->
-    <Style x:Key="DefaultGroupBoxStyle" TargetType="GroupBox">
-        <Setter Property="BorderBrush" Value="{StaticResource LightBorderBrush}"/>
+    <!--<Style TargetType="GroupBox" BasedOn="{StaticResource DefaultGroupBoxStyle}"/>-->
+    <Style x:Key="DefaultGroupBoxStyle" TargetType="{x:Type GroupBox}">
+        <Setter Property="BorderBrush" Value="{DynamicResource LightBorderBrush}"/>
         <Setter Property="BorderThickness" Value="1"/>
+    </Style>
+    <Style x:Key="PopupOuterBorder" TargetType="{x:Type Border}">
+        <Setter Property="BorderBrush" Value="{DynamicResource PopupBorderBrush}"/>
+        <Setter Property="BorderThickness" Value="{DynamicResource ThickBorderThickness}"/>
+        <Setter Property="CornerRadius" Value="{DynamicResource PopupOuterBortderCornerRadius}"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="Margin" Value="{DynamicResource ExtraWideSpacing}"/>
+    </Style>
+    <Style x:Key="PopupTitleBorder" TargetType="{x:Type Border}">
+        <Setter Property="CornerRadius" Value="{DynamicResource PopupTitleCornerRadius}"/>
+        <Setter Property="Padding" Value="{DynamicResource DefaultSpacing}"/>
+    </Style>
+    <Style x:Key="PopupContentBorder" TargetType="{x:Type Border}">
+        <Setter Property="CornerRadius" Value="{DynamicResource PopupContentCornerRadius}"/>
+        <Setter Property="Background" Value="White"/>
+    </Style>
+    <Style x:Key="DefaultButton" TargetType="{x:Type Button}">
+        <Setter Property="Background" Value="{DynamicResource ButtonBackgroundBrush}"/>
+        <Setter Property="BorderThickness" Value="{DynamicResource ThinBorderThickness}"/>
     </Style>
 </ResourceDictionary>

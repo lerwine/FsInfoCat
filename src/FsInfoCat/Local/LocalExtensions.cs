@@ -1,5 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -9,13 +10,22 @@ namespace FsInfoCat.Local
 {
     public static class LocalExtensions
     {
-        public static async Task<ILogicalDiskInfo> GetLogicalDiskAsync(this IFileSystemDetailService service, DirectoryInfo directoryInfo, CancellationToken cancellationToken)
+        public static async Task<ILogicalDiskInfo> GetLogicalDiskAsync([DisallowNull] this IFileSystemDetailService service, [DisallowNull] DirectoryInfo directoryInfo, CancellationToken cancellationToken)
         {
-            Uri uri = new Uri(((directoryInfo.Parent is null) ? directoryInfo : directoryInfo.Root).FullName);
-            string path = uri.AbsoluteUri;
-            path = (path.EndsWith('/') ? new Uri(path.Substring(0, path.Length - 1)) : uri).LocalPath;
+            if (service is null)
+                throw new ArgumentNullException(nameof(service));
+            if (directoryInfo is null)
+                throw new ArgumentNullException(nameof(directoryInfo));
+            string path = ((directoryInfo.Parent is null) ? directoryInfo : directoryInfo.Root).FullName;
+            while (string.IsNullOrWhiteSpace(Path.GetFileName(path)))
+            {
+                string p = Path.GetDirectoryName(path);
+                if (string.IsNullOrWhiteSpace(p))
+                    break;
+                path = p;
+            }
             StringComparer comparer = StringComparer.InvariantCultureIgnoreCase;
-            if (uri.IsUnc)
+            if (new Uri(path).IsUnc)
                 return (await service.GetLogicalDisksAsync(cancellationToken)).FirstOrDefault(d => comparer.Equals(d.ProviderName, path));
             return (await service.GetLogicalDisksAsync(cancellationToken)).FirstOrDefault(d => comparer.Equals(d.GetRootPath(), path));
         }

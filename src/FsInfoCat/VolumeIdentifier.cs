@@ -19,7 +19,7 @@ namespace FsInfoCat
         /// <remarks>This will also match surrounding whitespace and relative self-reference sequences (<c>/./<c>).. This does not match parent segment
         /// references (<c>/../</c>) unless they are at the beginning of the string.</remarks>
         public static readonly Regex PathSeparatorNormalize = new(@"^\s*(\.\.?/+|\s+)+|(?<!^\s*file:/?)/(?=/)|/\.(?=/|$)", RegexOptions.Compiled);
-        public static readonly Regex VsnRegex = new(@"^([a-f\d]{4})-([a-f\d]{4})$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+        public static readonly Regex VsnRegex = new(@"^([a-f\d]{4})-?([a-f\d]{4})$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
         public static readonly Regex UuidRegex = new(@"^[a-f\d]{8}(-[a-f\d]{4}){4}[a-f\d]{8}$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
         public static readonly VolumeIdentifier Empty = new(null);

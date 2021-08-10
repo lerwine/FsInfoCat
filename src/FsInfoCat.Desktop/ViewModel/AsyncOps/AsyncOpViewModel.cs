@@ -75,6 +75,8 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
                 private set => SetValue(StatePropertyKey, value);
             }
 
+            private readonly TListener _listener;
+            private readonly TTask _task;
             private static readonly DependencyPropertyKey AsyncOpStatusPropertyKey = DependencyProperty.RegisterReadOnly(nameof(AsyncOpStatus), typeof(AsyncOpStatusCode), typeof(AsyncOpViewModel),
                     new PropertyMetadata(AsyncOpStatusCode.NotStarted, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as AsyncOpViewModel)?.AsyncOpStatusPropertyChanged?.Invoke(d, e)));
 
@@ -203,9 +205,30 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
                     OnRanToCompletion(task);
             }
 
-            protected virtual void OnCanceled() => OperationCanceled?.Invoke(this, EventArgs.Empty);
+            /// <summary>
+            /// Called when the background operation was canceled.
+            /// </summary>
+            /// <remarks>This is invoked on the UI thread.</remarks>
+            protected virtual void OnCanceled()
+            {
+                if (MessageLevel == StatusMessageLevel.Information)
+                {
+                    MessageLevel = StatusMessageLevel.Warning;
+                    StatusMessage = StatusMessage = FsInfoCat.Properties.Resources.Description_Bg_Operation_Canceled;
+                }
+                OperationCanceled?.Invoke(this, EventArgs.Empty);
+            }
 
-            protected virtual void OnFaulted(AggregateException exception) => OperationFailed?.Invoke(this, new OpFailedEventArgs(exception));
+            protected virtual void OnFaulted(AggregateException exception)
+            {
+                OpFailedEventArgs args = new(exception);
+                MessageLevel = StatusMessageLevel.Error;
+                if (args.Exception is AsyncOperationFailureException asyncOperationFailure && !string.IsNullOrWhiteSpace(asyncOperationFailure.UserMessage))
+                    StatusMessage = asyncOperationFailure.UserMessage;
+                else
+                    StatusMessage = FsInfoCat.Properties.Resources.ErrorMessage_UnexpectedError;
+                OperationFailed?.Invoke(this, new OpFailedEventArgs(exception));
+            }
 
             protected virtual void OnRanToCompletion(TTask task) => OperationRanToCompletion?.Invoke(this, EventArgs.Empty);
 
@@ -255,20 +278,6 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
             }
 
             /// <summary>
-            /// Starts the background operation.
-            /// </summary>
-            /// <param name="owner">The <see cref="AsyncOpManagerViewModel{TState, TTask, TItem, TListener}"/> that is tracking the specified <typeparamref name="TItem"/>.</param>
-            /// <param name="scheduler">The optional scheduler to use. The default is the <see cref="TaskScheduler.Default">scheduler provided by the .NET framework</see>.</param>
-            /// <exception cref="System.InvalidOperationException">The current item is not in the <see cref="AsyncOpManagerViewModel{TState, TTask, TItem, TListener}.PendingOperations"/> collection
-            /// of the specified <paramref name="owner"/> object.</exception>
-            public void Start(AsyncOpManagerViewModel<TState, TTask, TItem, TListener> owner, TaskScheduler scheduler = null)
-            {
-                if (this is TItem item && !owner._pendingOperations.Contains(item))
-                    throw new InvalidOperationException();
-                GetTask().Start(scheduler ?? TaskScheduler.Default);
-            }
-
-            /// <summary>
             /// Cancels the current background operation.
             /// </summary>
             /// <param name="throwOnFirstException"><see langword="true"/> if exceptions should immediately propagate; otherwise, <see langword="false"/>.</param>
@@ -299,13 +308,13 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
             /// Gets the task for the background operation.
             /// </summary>
             /// <returns>The <typeparamref name="TTask"/> for the background operation.</returns>
-            internal abstract TTask GetTask();
+            internal TTask GetTask() => _task;
 
             /// <summary>
             /// Gets the listener that can be used to monitor for cancellation and to update the current view model item.
             /// </summary>
             /// <returns>The <typeparamref name="TListener"/> that can be used to monitor for cancellation and to update the current <see cref="AsyncOpViewModel"/>.</returns>
-            internal abstract TListener GetStatusListener();
+            internal TListener GetStatusListener() => _listener;
 
             /// <summary>
             /// Gets the cancellation token for the background operation.
@@ -313,14 +322,31 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
             /// <returns>The <see cref="CancellationToken"/> for the current background operation.</returns>
             internal CancellationToken GetCancellationToken() => _tokenSource.Token;
 
-            /// <summary>
-            /// Initializes a new instance of the <see cref="AsyncOpViewModel"/> class.
-            /// </summary>
-            /// <param name="initialState">The initial value for the <see cref="State"/> property.</param>
+            [Obsolete("Use AsyncOpViewModel(ItemBuilder), instead.")]
             protected AsyncOpViewModel(TState initialState)
             {
                 State = initialState;
             }
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="AsyncOpViewModel"/> class.
+            /// </summary>
+            /// <param name="builder">The <see cref="ItemBuilder"/> that is used to initialize the current object.</param>
+            protected AsyncOpViewModel(ItemBuilder builder)
+            {
+                State = builder.InitialState;
+                _listener = builder.GetStatusListener(this);
+                _task = builder.GetTask(State, _listener, this);
+                UpdateOpStatus(_task.Status);
+            }
+        }
+
+        public abstract class ItemBuilder
+        {
+            internal TState InitialState { get; }
+            protected ItemBuilder(TState initialState) { InitialState = initialState; }
+            protected internal abstract TListener GetStatusListener(AsyncOpViewModel instance);
+            protected internal abstract TTask GetTask(TState state, TListener listener, AsyncOpViewModel instance);
         }
     }
 }

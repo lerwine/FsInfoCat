@@ -5,21 +5,35 @@
     <System:Double x:Key="DefaultButtonWidth">75</System:Double>
     <System:Double x:Key="DefaultButtonHeight">25</System:Double>
     <System:Double x:Key="DefaultTextBoxHeight">23</System:Double>
-    <System:Double x:Key="NormalSpacing">5</System:Double>
-    <Thickness x:Key="DefaultSpacingBottom" Left="0" Top="0" Right="0" Bottom="{StaticResource NormalSpacing}"/>
-    <Thickness x:Key="DefaultSpacingRight" Left="0" Top="0" Right="{StaticResource NormalSpacing}" Bottom="0"/>
-    <Thickness x:Key="DefaultSpacingBottomRight" Left="0" Top="0" Right="{StaticResource NormalSpacing}" Bottom="{StaticResource NormalSpacing}"/>
-    <Thickness x:Key="DefaultSpacingTop" Left="0" Top="{StaticResource NormalSpacing}" Right="0" Bottom="0"/>
+    <System:Double x:Key="NarrowSpacingValue">3</System:Double>
+    <System:Double x:Key="DefaultSpacingValue">5</System:Double>
+    <System:Double x:Key="WideSpacingValue">10</System:Double>
+    <System:Double x:Key="ExtraWideSpacingValue">20</System:Double>
     <System:Double x:Key="LargeFontSize">16</System:Double>
-    <Thickness x:Key="DefaultSpacingTopBottom" Left="0" Top="{StaticResource NormalSpacing}" Right="0" Bottom="{StaticResource NormalSpacing}"/>
-    <Thickness x:Key="DefaultSpacingTopRight" Left="0" Top="{StaticResource NormalSpacing}" Right="{StaticResource NormalSpacing}" Bottom="0"/>
-    <Thickness x:Key="DefaultSpacingTopBottomRight" Left="0" Top="{StaticResource NormalSpacing}" Right="{StaticResource NormalSpacing}" Bottom="{StaticResource NormalSpacing}"/>
-    <Thickness x:Key="DefaultSpacingLeft" Left="{StaticResource NormalSpacing}" Top="0" Right="0" Bottom="0"/>
-    <Thickness x:Key="DefaultSpacingBottomLeft" Left="{StaticResource NormalSpacing}" Top="0" Right="0" Bottom="{StaticResource NormalSpacing}"/>
-    <Thickness x:Key="DefaultSpacingLeftRight" Left="{StaticResource NormalSpacing}" Top="0" Right="{StaticResource NormalSpacing}" Bottom="0"/>
-    <Thickness x:Key="DefaultSpacingBottomLeftRight" Left="{StaticResource NormalSpacing}" Top="0" Right="{StaticResource NormalSpacing}" Bottom="{StaticResource NormalSpacing}"/>
-    <Thickness x:Key="DefaultSpacingTopLeft" Left="{StaticResource NormalSpacing}" Top="{StaticResource NormalSpacing}" Right="0" Bottom="0"/>
-    <Thickness x:Key="DefaultSpacingTopBottomLeft" Left="{StaticResource NormalSpacing}" Top="{StaticResource NormalSpacing}" Right="0" Bottom="{StaticResource NormalSpacing}"/>
-    <Thickness x:Key="DefaultSpacingTopLeftRight" Left="{StaticResource NormalSpacing}" Top="{StaticResource NormalSpacing}" Right="{StaticResource NormalSpacing}" Bottom="0"/>
-    <Thickness x:Key="DefaultSpacing" Left="{StaticResource NormalSpacing}" Top="{StaticResource NormalSpacing}" Right="{StaticResource NormalSpacing}" Bottom="{StaticResource NormalSpacing}"/>
+    <System:Double x:Key="ThinBorderWidth">1</System:Double>
+    <System:Double x:Key="NormalBorderWidth">2</System:Double>
+    <System:Double x:Key="ThickBorderWidth">4</System:Double>
+    <Thickness x:Key="DefaultSpacingBottom" Left="0" Top="0" Right="0" Bottom="{StaticResource DefaultSpacingValue}"/>
+    <Thickness x:Key="DefaultSpacingRight" Left="0" Top="0" Right="{StaticResource DefaultSpacingValue}" Bottom="0"/>
+    <Thickness x:Key="DefaultSpacingBottomRight" Left="0" Top="0" Right="{StaticResource DefaultSpacingValue}" Bottom="{StaticResource DefaultSpacingValue}"/>
+    <Thickness x:Key="DefaultSpacingTop" Left="0" Top="{StaticResource DefaultSpacingValue}" Right="0" Bottom="0"/>
+    <Thickness x:Key="DefaultSpacingTopBottom" Left="0" Top="{StaticResource DefaultSpacingValue}" Right="0" Bottom="{StaticResource DefaultSpacingValue}"/>
+    <Thickness x:Key="DefaultSpacingTopRight" Left="0" Top="{StaticResource DefaultSpacingValue}" Right="{StaticResource DefaultSpacingValue}" Bottom="0"/>
+    <Thickness x:Key="DefaultSpacingTopBottomRight" Left="0" Top="{StaticResource DefaultSpacingValue}" Right="{StaticResource DefaultSpacingValue}" Bottom="{StaticResource DefaultSpacingValue}"/>
+    <Thickness x:Key="DefaultSpacingLeft" Left="{StaticResource DefaultSpacingValue}" Top="0" Right="0" Bottom="0"/>
+    <Thickness x:Key="DefaultSpacingBottomLeft" Left="{StaticResource DefaultSpacingValue}" Top="0" Right="0" Bottom="{StaticResource DefaultSpacingValue}"/>
+    <Thickness x:Key="DefaultSpacingLeftRight" Left="{StaticResource DefaultSpacingValue}" Top="0" Right="{StaticResource DefaultSpacingValue}" Bottom="0"/>
+    <Thickness x:Key="DefaultSpacingBottomLeftRight" Left="{StaticResource DefaultSpacingValue}" Top="0" Right="{StaticResource DefaultSpacingValue}" Bottom="{StaticResource DefaultSpacingValue}"/>
+    <Thickness x:Key="DefaultSpacingTopLeft" Left="{StaticResource DefaultSpacingValue}" Top="{StaticResource DefaultSpacingValue}" Right="0" Bottom="0"/>
+    <Thickness x:Key="DefaultSpacingTopBottomLeft" Left="{StaticResource DefaultSpacingValue}" Top="{StaticResource DefaultSpacingValue}" Right="0" Bottom="{StaticResource DefaultSpacingValue}"/>
+    <Thickness x:Key="DefaultSpacingTopLeftRight" Left="{StaticResource DefaultSpacingValue}" Top="{StaticResource DefaultSpacingValue}" Right="{StaticResource DefaultSpacingValue}" Bottom="0"/>
+    <Thickness x:Key="DefaultSpacing" Left="{StaticResource DefaultSpacingValue}" Top="{StaticResource DefaultSpacingValue}" Right="{StaticResource DefaultSpacingValue}" Bottom="{StaticResource DefaultSpacingValue}"/>
+    <Thickness x:Key="WideSpacing" Left="{StaticResource WideSpacingValue}" Top="{StaticResource WideSpacingValue}" Right="{StaticResource WideSpacingValue}" Bottom="{StaticResource WideSpacingValue}"/>
+    <Thickness x:Key="ExtraWideSpacing" Left="{StaticResource ExtraWideSpacingValue}" Top="{StaticResource ExtraWideSpacingValue}" Right="{StaticResource ExtraWideSpacingValue}" Bottom="{StaticResource ExtraWideSpacingValue}"/>
+    <Thickness x:Key="ThinBorderThickness" Left="{StaticResource ThinBorderWidth}" Top="{StaticResource ThinBorderWidth}" Right="{StaticResource ThinBorderWidth}" Bottom="{StaticResource ThinBorderWidth}"/>
+    <Thickness x:Key="NormalBorderThickness" Left="{StaticResource NormalBorderWidth}" Top="{StaticResource NormalBorderWidth}" Right="{StaticResource NormalBorderWidth}" Bottom="{StaticResource NormalBorderWidth}"/>
+    <Thickness x:Key="ThickBorderThickness" Left="{StaticResource ThickBorderWidth}" Top="{StaticResource ThickBorderWidth}" Right="{StaticResource ThickBorderWidth}" Bottom="{StaticResource ThickBorderWidth}"/>
+    <CornerRadius x:Key="PopupOuterBortderCornerRadius" TopLeft="{StaticResource DefaultSpacingValue}" TopRight="{StaticResource DefaultSpacingValue}" BottomLeft="{StaticResource DefaultSpacingValue}" BottomRight="{StaticResource DefaultSpacingValue}" />
+    <CornerRadius x:Key="PopupTitleCornerRadius" TopLeft="{StaticResource NarrowSpacingValue}" TopRight="{StaticResource NarrowSpacingValue}" BottomLeft="0" BottomRight="0" />
+    <CornerRadius x:Key="PopupContentCornerRadius" TopLeft="0" TopRight="0" BottomLeft="{StaticResource NarrowSpacingValue}" BottomRight="{StaticResource NarrowSpacingValue}" />
 </ResourceDictionary>

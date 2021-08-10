@@ -43,5 +43,10 @@ namespace FsInfoCat.Desktop.Converters
         /// <param name="culture">Culture specified through the binding source.</param>
         /// <returns><seealso cref="bool"/> value converted to its inverse value.</returns>
         public override bool? Convert(bool value, object parameter, CultureInfo culture) { return !value; }
+
+        protected override bool ConvertBack(bool? target, object parameter, CultureInfo culture)
+        {
+            return !(target ?? NullSource ?? true);
+        }
     }
 }

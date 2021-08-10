@@ -423,6 +423,7 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
                                 _item.AsyncOpStatus = AsyncOpStatusCode.Running;
                         }
                     }, DispatcherPriority.Background);
+                    CancellationToken.ThrowIfCancellationRequested();
                 }
 
                 private void UpdateElapsedTime(object state)

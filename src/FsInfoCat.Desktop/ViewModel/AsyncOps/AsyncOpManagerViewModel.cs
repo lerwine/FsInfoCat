@@ -1,13 +1,15 @@
 using System;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel.AsyncOps
 {
     /// <summary>
-    /// Base class that tracks background operations.
+    /// Base class for view models that track background operations, providing bindable status information properties.
     /// <para>Extends <see cref="DependencyObject" />.</para>
     /// </summary>
     /// <typeparam name="TState">The type of the state object associated with the background <see cref="Task"/>.</typeparam>
@@ -54,8 +56,12 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
         /// <remarks>This event is raised on the UI thread.</remarks>
         public event EventHandler<OpItemFailedEventArgs<TState, TTask, TItem, TListener>> OperationFailed;
 
+        #region Dependency Properties
+
+        #region IsBusy Property Members
+
         private static readonly DependencyPropertyKey IsBusyPropertyKey = DependencyProperty.RegisterReadOnly(nameof(IsBusy), typeof(bool), typeof(AsyncOpManagerViewModel<TState, TTask, TItem, TListener>),
-                new PropertyMetadata(0, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
+                new PropertyMetadata(false, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
                     (d as AsyncOpManagerViewModel<TState, TTask, TItem, TListener>)?.IsBusyPropertyChanged?.Invoke(d, e)));
 
         public static readonly DependencyProperty IsBusyProperty = IsBusyPropertyKey.DependencyProperty;
@@ -69,6 +75,8 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
             get => (bool)GetValue(IsBusyProperty);
             private set => SetValue(IsBusyPropertyKey, value);
         }
+
+        #endregion
 
         #region PendingOperations Property Members
 
@@ -203,6 +211,8 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
 
         #endregion
 
+        #endregion
+
         public AsyncOpManagerViewModel()
         {
             PendingOperations = new(_pendingOperations);
@@ -212,7 +222,42 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
             CanceledOperations = new(_canceledOperations);
             SuccessfulOperations = new(_successsfulOperations);
             AllOperations = new(_allOperations);
+#if DEBUG
+            if (DesignerProperties.GetIsInDesignMode(this))
+                return;
+#endif
             _activeOperations.CollectionChanged += ActiveOperations_CollectionChanged;
+        }
+
+        public void CancelAll(bool throwOnFirstException)
+        {
+            VerifyAccess();
+            foreach (TItem item in _pendingOperations.Concat(_activeOperations).ToArray())
+                item.Cancel(throwOnFirstException);
+        }
+
+        public void CancelAll()
+        {
+            VerifyAccess();
+            foreach (TItem item in _pendingOperations.Concat(_activeOperations).ToArray())
+                item.Cancel();
+        }
+
+        /// <summary>
+        /// Starts a pending background operation.
+        /// </summary>
+        /// <param name="item">The <typeparamref name="TItem"/> representing the background operation to start.</param>
+        /// <param name="scheduler">The optional scheduler to use. The default is the <see cref="TaskScheduler.Default">scheduler provided by the .NET framework</see>.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="item"/> is null.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">The specified <paramref name="item"/> is not in the <see cref="PendingOperations"/> collection.</exception>
+        public void StartPendingOperation(TItem item, TaskScheduler scheduler = null)
+        {
+            if (item is null)
+                throw new ArgumentNullException(nameof(item));
+            VerifyAccess();
+            if (!_pendingOperations.Contains(item))
+                throw new ArgumentOutOfRangeException(nameof(item));
+            item.GetTask().Start(scheduler ?? TaskScheduler.Default);
         }
 
         private void ActiveOperations_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e) => IsBusy = _activeOperations.Count > 0;
@@ -420,7 +465,7 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
         /// </summary>
         /// <param name="item">The item to remove.</param>
         /// <returns><see langword="true"/> the item was removed; otherwise, <see langword="false"/>.</returns>
-        internal bool RemoveOperation(TItem item)
+        public bool RemoveOperation(TItem item)
         {
             if (item is null || !_allOperations.Contains(item))
                 return false;
@@ -461,6 +506,16 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
         }
     }
 
+    /// <summary>
+    /// Base class for view models that track background operations, providing bindable status information properties.
+    /// <para>Extends <see cref="AsyncOpManagerViewModel{object, TTask, TItem, TListener}" /></para>
+    /// </summary>
+    /// <typeparam name="TTask">The type of <see cref="Task"/> executed as the background operation.</typeparam>
+    /// <typeparam name="TItem">The type of item that inherits from <see cref="AsyncOpManagerViewModel{object, TTask, TItem, TListener}.AsyncOpViewModel" />,
+    /// containing the status and results of the background operation.</typeparam>
+    /// <typeparam name="TListener">The type of listener that inherits from <see cref="AsyncOpManagerViewModel{object, TTask, TItem, TListener}.AsyncOpViewModel.StatusListener" />
+    /// and is used within the background <typeparamref name="TTask">Task</typeparamref> to update the associated <typeparamref name="TItem">Item</typeparamref>.</typeparam>
+    /// <seealso cref="AsyncOpManagerViewModel{object, TTask, TItem, TListener}" />
     public class AsyncOpManagerViewModel<TTask, TItem, TListener> : AsyncOpManagerViewModel<object, TTask, TItem, TListener>
         where TTask : Task
         where TItem : AsyncOpManagerViewModel<TTask, TItem, TListener>.AsyncOpViewModel

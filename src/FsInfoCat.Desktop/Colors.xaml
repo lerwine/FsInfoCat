@@ -1,23 +1,41 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <Color x:Key="ErrorColor">DarkRed</Color>
-    <Color x:Key="WarningColor">DarkOrange</Color>
-    <Color x:Key="InfoColor">MediumBlue</Color>
-    <Color x:Key="SuccessColor">ForestGreen</Color>
+    <Color x:Key="ErrorDarkColor">DarkRed</Color>
+    <Color x:Key="ErrorMediumColor">Red</Color>
+    <Color x:Key="ErrorLightColor">Tomato</Color>
+    <Color x:Key="WarningLightColor">Yellow</Color>
+    <Color x:Key="WarningMediumColor">Gold</Color>
+    <Color x:Key="WarningDarkColor">SaddleBrown</Color>
+    <Color x:Key="InfoDarkColor">DarkBlue</Color>
+    <Color x:Key="InfoMediumColor">Blue</Color>
+    <Color x:Key="InfoLightColor">DeepSkyBlue</Color>
+    <Color x:Key="SuccessLightColor">LightGreen</Color>
+    <Color x:Key="SuccessMediumColor">ForestGreen</Color>
+    <Color x:Key="SuccessDarkColor">DarkGreen</Color>
     <Color x:Key="ButtonBorderColor">DarkSlateBlue</Color>
+    <Color x:Key="PopupBorderColor">Black</Color>
     <Color x:Key="TextBoxBorderColor">DarkSlateGray</Color>
     <Color x:Key="LightBorderColor">SlateGray</Color>
     <Color x:Key="ControlLightColor">Lavender</Color>
     <Color x:Key="ControlFaceColor">LightSteelBlue</Color>
     <Color x:Key="ControlShadedColor">#FF627E95</Color>
     <Color x:Key="TranslucentBlack50pctColor">#80000000</Color>
-    <SolidColorBrush x:Key="ErrorBrush" Color="{StaticResource ErrorColor}"/>
-    <SolidColorBrush x:Key="WarningBrush" Color="{StaticResource WarningColor}"/>
-    <SolidColorBrush x:Key="SuccessBrush" Color="{StaticResource SuccessColor}"/>
-    <SolidColorBrush x:Key="InfoBrush" Color="{StaticResource InfoColor}"/>
+    <SolidColorBrush x:Key="ErrorDarkBrush" Color="{StaticResource ErrorDarkColor}"/>
+    <SolidColorBrush x:Key="ErrorMediumBrush" Color="{StaticResource ErrorMediumColor}"/>
+    <SolidColorBrush x:Key="ErrorLightBrush" Color="{StaticResource ErrorLightColor}"/>
+    <SolidColorBrush x:Key="WarningDarkBrush" Color="{StaticResource WarningDarkColor}"/>
+    <SolidColorBrush x:Key="WarningMediumBrush" Color="{StaticResource WarningMediumColor}"/>
+    <SolidColorBrush x:Key="WarningLightBrush" Color="{StaticResource WarningLightColor}"/>
+    <SolidColorBrush x:Key="SuccessDarkBrush" Color="{StaticResource SuccessDarkColor}"/>
+    <SolidColorBrush x:Key="SuccessMediumBrush" Color="{StaticResource SuccessMediumColor}"/>
+    <SolidColorBrush x:Key="SuccessLightBrush" Color="{StaticResource SuccessLightColor}"/>
+    <SolidColorBrush x:Key="InfoDarkBrush" Color="{StaticResource InfoDarkColor}"/>
+    <SolidColorBrush x:Key="InfoMediumBrush" Color="{StaticResource InfoMediumColor}"/>
+    <SolidColorBrush x:Key="InfoLightBrush" Color="{StaticResource InfoLightColor}"/>
     <SolidColorBrush x:Key="ButtonBorderBrush" Color="{StaticResource ButtonBorderColor}"/>
     <SolidColorBrush x:Key="TextBoxBorderBrush" Color="{StaticResource TextBoxBorderColor}"/>
     <SolidColorBrush x:Key="LightBorderBrush" Opacity="0.5" Color="{StaticResource LightBorderColor}"/>
+    <SolidColorBrush x:Key="PopupBorderBrush" Color="{StaticResource PopupBorderColor}"/>
     <SolidColorBrush x:Key="TranslucentBlack50pctBrush" Color="{StaticResource TranslucentBlack50pctColor}"/>
     <LinearGradientBrush x:Key="VerticalSeparatorBrush" EndPoint="1,0.5" StartPoint="0,0.5">
         <GradientStop Color="Black"/>
@@ -36,5 +54,29 @@
         <GradientStop Color="{StaticResource ControlLightColor}" Offset="0.45"/>
         <GradientStop Color="{StaticResource ControlFaceColor}" Offset="0.65"/>
         <GradientStop Color="{StaticResource ControlShadedColor}" Offset="1"/>
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="PopupTitleSuccessBackgroundBrush" EndPoint="0.5,1" StartPoint="0.5,0">
+        <GradientStop Color="White" Offset="0"/>
+        <GradientStop Color="{DynamicResource SuccessLightColor}" Offset="0.5"/>
+        <GradientStop Color="{DynamicResource SuccessMediumColor}" Offset="0.75"/>
+        <GradientStop Color="{DynamicResource SuccessDarkColor}" Offset="1"/>
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="PopupTitleInfoBackgroundBrush" EndPoint="0.5,1" StartPoint="0.5,0">
+        <GradientStop Color="White" Offset="0"/>
+        <GradientStop Color="{DynamicResource InfoLightColor}" Offset="0.5"/>
+        <GradientStop Color="{DynamicResource InfoMediumColor}" Offset="0.75"/>
+        <GradientStop Color="{DynamicResource InfoDarkColor}" Offset="1"/>
+</LinearGradientBrush>
+    <LinearGradientBrush x:Key="PopupTitleWarningBackgroundBrush" EndPoint="0.5,1" StartPoint="0.5,0">
+        <GradientStop Color="White" Offset="0"/>
+        <GradientStop Color="{DynamicResource WarningLightColor}" Offset="0.5"/>
+        <GradientStop Color="{DynamicResource WarningMediumColor}" Offset="0.75"/>
+        <GradientStop Color="{DynamicResource WarningDarkColor}" Offset="1"/>
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="PopupTitleErrorgBackgroundBrush" EndPoint="0.5,1" StartPoint="0.5,0">
+        <GradientStop Color="White" Offset="0"/>
+        <GradientStop Color="{DynamicResource ErrorLightColor}" Offset="0.5"/>
+        <GradientStop Color="{DynamicResource ErrorMediumColor}" Offset="0.75"/>
+        <GradientStop Color="{DynamicResource ErrorDarkColor}" Offset="1"/>
     </LinearGradientBrush>
 </ResourceDictionary>

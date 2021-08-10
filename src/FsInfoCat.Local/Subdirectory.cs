@@ -542,7 +542,7 @@ namespace FsInfoCat.Local
             if (directoryInfo.Parent is null)
             {
                 EntityEntry<Volume> parentVolume = await Volume.ImportVolumeAsync(directoryInfo, dbContext, cancellationToken);
-                result = parentVolume.Entity.RootDirectory;
+                result = await parentVolume.GetRelatedReferenceAsync(v => v.RootDirectory, cancellationToken);
                 if (parentVolume.State == EntityState.Added)
                 {
                     result = new Subdirectory

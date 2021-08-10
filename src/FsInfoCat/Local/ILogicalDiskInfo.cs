@@ -67,7 +67,7 @@ namespace FsInfoCat.Local
         /// <value>The volume serial number.</value>
         string VolumeSerialNumber { get; }
 
-        bool ErrorCleared { get; }
+        bool? ErrorCleared { get; }
 
         string ErrorDescription { get; }
 

@@ -11,7 +11,10 @@ namespace FsInfoCat.Desktop
     {
         [ServiceBuilderHandler]
 #pragma warning disable IDE0051 // Remove unused private members
-        private static void ConfigureServices(IServiceCollection services) => services.AddSingleton<FileSystemDetailService>();
+        private static void ConfigureServices(IServiceCollection services)
+        {
+            services.AddSingleton<IFileSystemDetailService, FileSystemDetailService>();
+        }
 #pragma warning restore IDE0051 // Remove unused private members
 
         public IFileDetailProvider CreateFileDetailProvider(string filePath, bool doNotSaveChanges) => new FileDetailProvider(filePath, doNotSaveChanges);

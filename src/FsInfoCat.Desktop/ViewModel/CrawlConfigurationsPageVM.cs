@@ -168,8 +168,17 @@ namespace FsInfoCat.Desktop.ViewModel
 
         private void OnNewClickExecute(object parameter)
         {
-            DirectoryInfo crawlRoot = FolderBrowserVM.Prompt(FsInfoCat.Properties.Resources.DisplayName_CrawlRootFolder, FsInfoCat.Properties.Resources.Description_SelectCrawlRootFolder);
-            if (crawlRoot is null || !EditCrawlConfigVM.Edit(crawlRoot, out CrawlConfiguration model, out bool isNew))
+            using System.Windows.Forms.FolderBrowserDialog dialog = new()
+            {
+                Description = FsInfoCat.Properties.Resources.Description_SelectCrawlRootFolder,
+                SelectedPath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)
+            };
+            if (dialog.ShowDialog(new WindowOwner()) != System.Windows.Forms.DialogResult.OK)
+                return;
+            //DirectoryInfo crawlRoot = FolderBrowserVM.Prompt(FsInfoCat.Properties.Resources.DisplayName_CrawlRootFolder, FsInfoCat.Properties.Resources.Description_SelectCrawlRootFolder);
+            //if (crawlRoot is null || !EditCrawlConfigVM.Edit(crawlRoot, out CrawlConfiguration model, out bool isNew))
+            //    return;
+            if (!EditCrawlConfigVM.Edit(dialog.SelectedPath, out CrawlConfiguration model, out bool isNew))
                 return;
             CrawlConfigurationVM item;
             if (isNew || (item = _allCrawlConfigurations.FirstOrDefault(i => ReferenceEquals(i.Model, model))) is null)
@@ -267,5 +276,12 @@ namespace FsInfoCat.Desktop.ViewModel
             if (mainWindow is not null)
                 MessageBox.Show(mainWindow, string.IsNullOrWhiteSpace(exception.Message) ? exception.ToString() : exception.Message, FsInfoCat.Properties.Resources.DisplayName_DataLoadError, MessageBoxButton.OK, MessageBoxImage.Error);
         }
+    }
+    public class WindowOwner : System.Windows.Forms.IWin32Window
+    {
+        private IntPtr _handle;
+        public WindowOwner() : this(System.Diagnostics.Process.GetCurrentProcess().MainWindowHandle) { }
+        public WindowOwner(IntPtr handle) { _handle = handle; }
+        public IntPtr Handle { get { return _handle; } }
     }
 }

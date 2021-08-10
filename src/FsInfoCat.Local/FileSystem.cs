@@ -163,7 +163,7 @@ namespace FsInfoCat.Local
                 (IFileSystemProperties Properties, string SymbolicName) genericNetworkFsType = fileSystemDetailService.GetGenericNetworkShareFileSystem();
                 name = genericNetworkFsType.SymbolicName;
 
-                symbolicName = await (from sn in dbContext.SymbolicNames where sn.Name == name select sn).FirstOrDefaultAsync(cancellationToken);
+                symbolicName = await (from sn in dbContext.SymbolicNames.Include(n => n.FileSystem) where sn.Name == name select sn).FirstOrDefaultAsync(cancellationToken);
                 if (symbolicName is not null)
                     return (dbContext.Entry(symbolicName.FileSystem), symbolicName);
                 fileSystem = new()
@@ -179,7 +179,7 @@ namespace FsInfoCat.Local
             else
             {
                 name = diskInfo.FileSystemName;
-                symbolicName = await (from sn in dbContext.SymbolicNames where sn.Name == name select sn).FirstOrDefaultAsync(cancellationToken);
+                symbolicName = await (from sn in dbContext.SymbolicNames.Include(n => n.FileSystem) where sn.Name == name select sn).FirstOrDefaultAsync(cancellationToken);
                 if (symbolicName is not null)
                     return (dbContext.Entry(symbolicName.FileSystem), symbolicName);
                 fileSystem = new()

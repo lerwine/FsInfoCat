@@ -25,5 +25,10 @@ namespace FsInfoCat.Desktop.Converters
         }
 
         public override string Convert(DateTime value, object parameter, CultureInfo culture) => string.IsNullOrWhiteSpace(Format) ? value.ToString() : value.ToString(Format);
+
+        protected override object ConvertBack(string target, object parameter, CultureInfo culture)
+        {
+            return (!string.IsNullOrWhiteSpace(target) && DateTime.TryParse(target, out DateTime result)) ? result : null;
+        }
     }
 }

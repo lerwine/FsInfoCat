@@ -3,7 +3,7 @@
         <Text Message="Creating table 'FileSystems'">
             <![CDATA[CREATE TABLE IF NOT EXISTS "FileSystems" (
     "Id" UNIQUEIDENTIFIER NOT NULL COLLATE NOCASE,
-    "DisplayName" NVARCHAR(1024) NOT NULL CHECK(length(trim("DisplayName"))=length("DisplayName") AND length("DisplayName")>0) COLLATE NOCASE,\
+    "DisplayName" NVARCHAR(1024) NOT NULL CHECK(length(trim("DisplayName"))=length("DisplayName") AND length("DisplayName")>0) COLLATE NOCASE,
     "ReadOnly" BIT NOT NULL DEFAULT 0,
     "MaxNameLength" UNSIGNED INT NOT NULL DEFAULT 255,
     "DefaultDriveType" UNSIGNED TINYINT CHECK("DefaultDriveType" IS NULL OR ("DefaultDriveType">=0 AND "DefaultDriveType"<7)) DEFAULT NULL,
@@ -48,7 +48,7 @@
     "Id" UNIQUEIDENTIFIER NOT NULL COLLATE NOCASE,
     "DisplayName" NVARCHAR(1024) NOT NULL CHECK(length(trim("DisplayName"))=length("DisplayName") AND length("DisplayName")>0) COLLATE NOCASE,
     "VolumeName" NVARCHAR(128) NOT NULL CHECK(length(trim("VolumeName"))=length("VolumeName")) DEFAULT '' COLLATE NOCASE,
-    "Identifier" NVARCHAR(1024) NOT NULL COLLATE NOCASE,\
+    "Identifier" NVARCHAR(1024) NOT NULL COLLATE NOCASE,
     "ReadOnly" BIT DEFAULT NULL,
     "MaxNameLength" UNSIGNED INT DEFAULT NULL,
     "Type" UNSIGNED TINYINT NOT NULL CHECK("Type">=0 AND "Type"<7) DEFAULT 0, -- Unknown
@@ -634,6 +634,74 @@ END]]>
 BEGIN
     SELECT RAISE (ABORT,'File does not have the same binary property set as the redundancy set.');
 END]]>
+        </Text>
+        <Text Message="Inserting FileSystem 'New Technology File System'">
+            <![CDATA[INSERT INTO "FileSystems" ("Id", "DisplayName")
+	VALUES ('bedb396b-2212-4149-9cad-7e437c47314c', 'New Technology File System')]]>
+        </Text>
+        <Text Message="Inserting SymbolicName 'NTFS'">
+            <![CDATA[INSERT INTO "SymbolicNames" ("Id", "Name", "FileSystemId", "Priority")
+	VALUES ('74381ccb-d56d-444d-890f-3a8051bc18e6', 'NTFS', 'bedb396b-2212-4149-9cad-7e437c47314c', 0)]]>
+        </Text>
+        <Text Message="Inserting FileSystem 'Ext4 Journaling Filesystem'">
+            <![CDATA[INSERT INTO "FileSystems" ("Id", "DisplayName")
+	VALUES ('02070ea8-a2ba-4240-9596-bb6d355dd366', 'Ext4 Journaling Filesystem')]]>
+        </Text>
+        <Text Message="Inserting SymbolicName 'ext4'">
+            <![CDATA[INSERT INTO "SymbolicNames" ("Id", "Name", "FileSystemId", "Priority")
+	VALUES ('e41dfef2-d6f1-4e8a-b81f-971a85b9be9b', 'ext4', '02070ea8-a2ba-4240-9596-bb6d355dd366', 0)]]>
+        </Text>
+        <Text Message="Inserting FileSystem 'Ext3 Journaling Filesystem'">
+            <![CDATA[INSERT INTO "FileSystems" ("Id", "DisplayName")
+	VALUES ('b885d49d-e805-48f7-804d-7d0637f4c05d', 'Ext3 Journaling Filesystem')]]>
+        </Text>
+        <Text Message="Inserting SymbolicName 'ext3'">
+            <![CDATA[INSERT INTO "SymbolicNames" ("Id", "Name", "FileSystemId", "Priority")
+	VALUES ('7b1489c3-d676-4baa-a4f3-6f4af4766376', 'ext3', 'b885d49d-e805-48f7-804d-7d0637f4c05d', 0)]]>
+        </Text>
+        <Text Message="Inserting FileSystem 'Virtual File Allocation Table'">
+        <![CDATA[INSERT INTO "FileSystems" ("Id", "DisplayName")
+	VALUES ('53a9e9a4-f5f0-4b4c-9f1e-4e3a80a93cfd', 'Virtual File Allocation Table')]]>
+        </Text>
+        <Text Message="Inserting SymbolicName 'vfat'">
+        <![CDATA[INSERT INTO "SymbolicNames" ("Id", "Name", "FileSystemId", "Priority")
+	VALUES ('bbb162e7-9477-49e3-acce-aee45d58bc34', 'vfat', '53a9e9a4-f5f0-4b4c-9f1e-4e3a80a93cfd', 0)]]>
+        </Text>
+        <Text Message="Inserting FileSystem 'File Allocation Table'">
+        <![CDATA[INSERT INTO "FileSystems" ("Id", "DisplayName")
+	VALUES ('17f0c19f-5f9e-4699-bf4c-cafd1de5ec54', 'File Allocation Table')]]>
+        </Text>
+        <Text Message="Inserting SymbolicName 'FAT32'">
+        <![CDATA[INSERT INTO "SymbolicNames" ("Id", "Name", "FileSystemId", "Priority")
+	VALUES ('cd6e27c8-7b28-4731-a3f0-358c75752702', 'FAT32', '17f0c19f-5f9e-4699-bf4c-cafd1de5ec54', 0)]]>
+        </Text>
+        <Text Message="Inserting FileSystem 'Common Internet Filesystem'">
+        <![CDATA[INSERT INTO "FileSystems" ("Id", "DisplayName")
+	VALUES ('bd64e811-2c25-4385-8b99-1494bbb24612', 'Common Internet Filesystem')]]>
+        </Text>
+        <Text Message="Inserting SymbolicName 'cifs'">
+        <![CDATA[INSERT INTO "SymbolicNames" ("Id", "Name", "FileSystemId", "Priority")
+	VALUES ('0f54c5a9-5e48-48a4-8056-b01f68d682a6', 'cifs', 'bd64e811-2c25-4385-8b99-1494bbb24612', 0)]]>
+        </Text>
+        <Text Message="Inserting FileSystem 'ISO 9660 optical disc media'">
+        <![CDATA[INSERT INTO "FileSystems" ("Id", "DisplayName", "ReadOnly")
+	VALUES ('88a3cdb9-ed66-4778-a33b-437675a5ae38', 'ISO 9660 optical disc media', 1)]]>
+        </Text>
+        <Text Message="Inserting SymbolicName 'CDFS'">
+        <![CDATA[INSERT INTO "SymbolicNames" ("Id", "Name", "FileSystemId", "Priority")
+	VALUES ('0989eb7a-d9db-4cef-9ac9-981fe11876b0', 'CDFS', '88a3cdb9-ed66-4778-a33b-437675a5ae38', 0)]]>
+        </Text>
+        <Text Message="Inserting SymbolicName 'iso9660'">
+        <![CDATA[INSERT INTO "SymbolicNames" ("Id", "Name", "FileSystemId", "Priority")
+	VALUES ('556bab7a-0605-4862-a757-26943d175471', 'iso9660', '88a3cdb9-ed66-4778-a33b-437675a5ae38', 1)]]>
+        </Text>
+        <Text Message="Inserting FileSystem 'Multi-volume Archive File System'">
+        <![CDATA[INSERT INTO "FileSystems" ("Id", "DisplayName")
+	VALUES ('0af7fe3e-3bc2-41ac-b6b1-310ad5fc46cd', 'Multi-volume Archive File System')]]>
+        </Text>
+        <Text Message="Inserting SymbolicName 'MAFS'">
+        <![CDATA[INSERT INTO "SymbolicNames" ("Id", "Name", "FileSystemId", "Priority")
+	VALUES ('e9717552-4286-4eeb-bea5-6a5267a2f223', 'MAFS', '0af7fe3e-3bc2-41ac-b6b1-310ad5fc46cd', 0)]]>
         </Text>
     </DbCreation>
     <DropTables>
