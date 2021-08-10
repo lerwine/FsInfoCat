@@ -28,14 +28,14 @@
                 <VisualState x:Name="OpNotActive">
                     <Storyboard>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="outerPopupBorder" Storyboard.TargetProperty="(UIElement.Visibility)">
-                            <DiscreteObjectKeyFrame KeyTime="00:00:00" Value="Collapsed"/>
+                            <DiscreteObjectKeyFrame KeyTime="00:00:00" Value="{x:Static Visibility.Collapsed}"/>
                         </ObjectAnimationUsingKeyFrames>
                     </Storyboard>
                 </VisualState>
                 <VisualState x:Name="OpActive">
                     <Storyboard>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="outerPopupBorder" Storyboard.TargetProperty="(UIElement.Visibility)">
-                            <DiscreteObjectKeyFrame KeyTime="00:00:00" Value="Visible"/>
+                            <DiscreteObjectKeyFrame KeyTime="00:00:00" Value="{x:Static Visibility.Visible}"/>
                         </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="popupButton" Storyboard.TargetProperty="(ContentControl.Content)">
                             <DiscreteObjectKeyFrame KeyTime="00:00:00" Value="Cancel"/>
@@ -45,7 +45,7 @@
                 <VisualState x:Name="OpAborted">
                     <Storyboard>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="outerPopupBorder" Storyboard.TargetProperty="(UIElement.Visibility)">
-                            <DiscreteObjectKeyFrame KeyTime="00:00:00" Value="Visible"/>
+                            <DiscreteObjectKeyFrame KeyTime="00:00:00" Value="{x:Static Visibility.Visible}"/>
                         </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="popupButton" Storyboard.TargetProperty="(ContentControl.Content)">
                             <DiscreteObjectKeyFrame KeyTime="00:00:00" Value="OK"/>
