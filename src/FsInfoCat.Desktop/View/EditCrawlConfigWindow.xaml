@@ -291,7 +291,7 @@
                     <Border Style="{DynamicResource PopupContentBorder}">
                         <StackPanel>
                             <TextBlock x:Name="popupMessageTextBlock" Text="Test Message" Margin="{DynamicResource DefaultSpacing}" Style="{DynamicResource InfoMessageTextBlock}" Foreground="{DynamicResource InfoDarkBrush}" />
-                            <Button x:Name="popupButton" Content="Cancel" Margin="{DynamicResource DefaultSpacing}" Style="{DynamicResource DefaultButton}"/>
+                            <Button x:Name="popupButton" Content="Cancel" Margin="{DynamicResource DefaultSpacing}" Style="{DynamicResource DefaultButton}" Command="{Binding PopupButtonClickCommand, Mode=OneWay}"/>
                         </StackPanel>
                     </Border>
                 </StackPanel>

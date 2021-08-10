@@ -70,6 +70,27 @@ namespace FsInfoCat.Desktop.ViewModel
 
         #endregion
 
+        private static readonly DependencyPropertyKey PopupButtonClickCommandPropertyKey = DependencyProperty.RegisterReadOnly(nameof(PopupButtonClickCommand),
+            typeof(Commands.RelayCommand), typeof(EditCrawlConfigVM), new PropertyMetadata(null));
+
+        public static readonly DependencyProperty PopupButtonClickCommandProperty = PopupButtonClickCommandPropertyKey.DependencyProperty;
+
+        public Commands.RelayCommand PopupButtonClickCommand => (Commands.RelayCommand)GetValue(PopupButtonClickCommandProperty);
+
+        private void OnPopupButtonClickExecute(object parameter)
+        {
+            switch (BgOpStatus)
+            {
+                case AsyncOpStatusCode.RanToCompletion:
+                    LookupCrawlConfigOpMgr.CancelAll();
+                    break;
+                case AsyncOpStatusCode.Faulted:
+                case AsyncOpStatusCode.Canceled:
+                    BgOpStatus = AsyncOpStatusCode.NotStarted;
+                    break;
+            }
+        }
+
         #region IsNew Property
 
         private static readonly DependencyPropertyKey IsNewPropertyKey = DependencyProperty.RegisterReadOnly(nameof(IsNew), typeof(bool), typeof(EditCrawlConfigVM),
@@ -1078,6 +1099,7 @@ namespace FsInfoCat.Desktop.ViewModel
             SetValue(SelectRootCommandPropertyKey, new Commands.RelayCommand(OnSelectRootExecute));
             SetValue(SaveCommandPropertyKey, new Commands.RelayCommand(OnSaveExecute));
             SetValue(CancelCommandPropertyKey, new Commands.RelayCommand(OnCancelExecute));
+            SetValue(PopupButtonClickCommandPropertyKey, new Commands.RelayCommand(OnPopupButtonClickExecute));
 #if DEBUG
             if (DesignerProperties.GetIsInDesignMode(this))
                 return;
