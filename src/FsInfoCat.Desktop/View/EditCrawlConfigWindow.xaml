@@ -220,11 +220,11 @@
                 <TextBox Margin="{DynamicResource DefaultSpacingTopLeftRight}" VerticalScrollBarVisibility="Auto" AcceptsReturn="True" AcceptsTab="True" TextWrapping="Wrap" Height="120" Text="{Binding Notes, Mode=TwoWay}" />
             </GroupBox>
             <WrapPanel FlowDirection="RightToLeft">
-                <Button Content="Cancel" Width="{DynamicResource DefaultButtonWidth}" Height="{DynamicResource DefaultButtonHeight}" Margin="{DynamicResource DefaultSpacingTopBottomLeft}" Command="{Binding SaveCommand, Mode=OneWay}"/>
-                <Button Content="Save" Width="{DynamicResource DefaultButtonWidth}" Height="{DynamicResource DefaultButtonHeight}" Margin="{DynamicResource DefaultSpacing}" Command="{Binding CancelCommand, Mode=OneWay}"/>
+                <Button Content="Cancel" Width="{DynamicResource DefaultButtonWidth}" Height="{DynamicResource DefaultButtonHeight}" Margin="{DynamicResource DefaultSpacingTopBottomLeft}" Command="{Binding CancelCommand, Mode=OneWay}" IsCancel="True"/>
+                <Button Content="Save" Width="{DynamicResource DefaultButtonWidth}" Height="{DynamicResource DefaultButtonHeight}" Margin="{DynamicResource DefaultSpacing}" Command="{Binding SaveCommand, Mode=OneWay}" IsDefault="True"/>
             </WrapPanel>
         </StackPanel>
-        <Border x:Name="outerPopupBorder" Background="{DynamicResource TranslucentBlack50pctBrush}">
+        <Border x:Name="outerPopupBorder" Background="{DynamicResource TranslucentBlack50pctBrush}" d:IsHidden="True">
             <b:Interaction.Triggers>
                 <b:DataTrigger Binding="{Binding BgOpStatus, Mode=OneWay}">
                     <b:DataTrigger.Value>

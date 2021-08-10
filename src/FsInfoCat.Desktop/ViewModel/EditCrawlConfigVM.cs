@@ -20,6 +20,10 @@ namespace FsInfoCat.Desktop.ViewModel
         private readonly Collection<string> _changedProperties = new();
         private (Subdirectory Root, string Path)? _validatedPath;
 
+        public event EventHandler CloseSuccess;
+        public event EventHandler CloseCancel;
+        public event EventHandler PopupButtonClick;
+
         #region Properties
 
         #region SelectRootCommand Property
@@ -63,10 +67,7 @@ namespace FsInfoCat.Desktop.ViewModel
 
         public Commands.RelayCommand CancelCommand => (Commands.RelayCommand)GetValue(CancelCommandProperty);
 
-        private void OnCancelExecute(object parameter)
-        {
-            // TODO: Implement OnCancelExecute Logic
-        }
+        private void OnCancelExecute(object parameter) => CloseCancel?.Invoke(this, EventArgs.Empty);
 
         #endregion
 
@@ -87,6 +88,7 @@ namespace FsInfoCat.Desktop.ViewModel
                 case AsyncOpStatusCode.Faulted:
                 case AsyncOpStatusCode.Canceled:
                     BgOpStatus = AsyncOpStatusCode.NotStarted;
+                    PopupButtonClick?.Invoke(this, EventArgs.Empty);
                     break;
             }
         }
@@ -1123,6 +1125,8 @@ namespace FsInfoCat.Desktop.ViewModel
                 window.DataContext = vm;
             }
             vm.Initialize(model);
+            vm.CloseCancel += new EventHandler((sender, e) => window.DialogResult = false);
+            vm.CloseSuccess += new EventHandler((sender, e) => window.DialogResult = true);
             return window.ShowDialog() ?? false;
         }
 
@@ -1136,6 +1140,10 @@ namespace FsInfoCat.Desktop.ViewModel
                 window.DataContext = vm;
             }
 
+            EventHandler closeCancelHandler = new EventHandler((sender, e) => window.DialogResult = false);
+            vm.CloseCancel += closeCancelHandler;
+            vm.PopupButtonClick += closeCancelHandler;
+            vm.CloseSuccess += new EventHandler((sender, e) => window.DialogResult = true);
             window.Loaded += new RoutedEventHandler((sender, e) =>
             {
                 // Task<(CrawlConfiguration Configuration, Subdirectory Root, string ValidatedPath)>
@@ -1161,18 +1169,15 @@ namespace FsInfoCat.Desktop.ViewModel
                         vm.BgOpStatus = lookupCrawlConfig.AsyncOpStatus;
                         if (task.IsCanceled)
                         {
-                            // TODO: Alert user of cancellation.
-                            // TODO: Perhaps create a button that the user can click to close the window if in canceled state.
-                            window.Close();
+                            // TODO: Log cancellation.
                         }
                         else if (task.IsFaulted)
                         {
-                            // TODO: Alert user of failure.
-                            // TODO: Perhaps create a button that the user can click to close the window if in fail state.
-                            window.Close();
+                            // TODO: Log failure.
                         }
                         else
                         {
+                            vm.PopupButtonClick -= closeCancelHandler;
                             vm.Initialize(task.Result.Configuration, task.Result.Root, task.Result.ValidatedPath);
                             vm.IsBgOperationActive = false;
                             vm.LookupCrawlConfigOpMgr.RemoveOperation(lookupCrawlConfig);
