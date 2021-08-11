@@ -1140,7 +1140,7 @@ namespace FsInfoCat.Desktop.ViewModel
                 window.DataContext = vm;
             }
 
-            EventHandler closeCancelHandler = new EventHandler((sender, e) => window.DialogResult = false);
+            EventHandler closeCancelHandler = new((sender, e) => window.DialogResult = false);
             vm.CloseCancel += closeCancelHandler;
             vm.PopupButtonClick += closeCancelHandler;
             vm.CloseSuccess += new EventHandler((sender, e) => window.DialogResult = true);
