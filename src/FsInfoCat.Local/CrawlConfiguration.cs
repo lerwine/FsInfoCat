@@ -57,17 +57,17 @@ namespace FsInfoCat.Local
         /// </value>
         [Required]
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_MaxNameLength), ResourceType = typeof(FsInfoCat.Properties.Resources))]
-        [Range(1, int.MaxValue, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_MaxNameLengthInvalid),
-            ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual ushort MaxRecursionDepth { get => _maxRecursionDepth.GetValue(); set => _maxRecursionDepth.SetValue(value); }
 
+        // DEFERRED: Not sure if Range would work here for a nullable value, but minimum value needs to be validated.
         /// <summary>Gets the maximum total items to crawl.</summary>
         /// <value>The maximum total items to crawl, including both files and subdirectories.</value>
         public virtual ulong? MaxTotalItems { get => _totalMaxItems.GetValue(); set => _totalMaxItems.SetValue(value); }
 
+        // DEFERRED: Not sure if Range would work here for a nullable value, but minimum value needs to be validated.
         /// <summary>Gets the maximum duration of the crawl.</summary>
-        /// <value>The maximum duration of the crawl, in seconds. This value should never be less than <c>1</c>.</value>
-        [Range(1, long.MaxValue, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_MaxNameLengthInvalid),
+        /// <value>The maximum duration of the crawl, in seconds. This value should never be less than <c>60</c>.</value>
+        [Range(DbConstants.DbColMinValue_TTL, long.MaxValue, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_TTLInvalid),
             ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual long? TTL { get => _ttl.GetValue(); set => _ttl.SetValue(value); }
 
@@ -102,6 +102,7 @@ namespace FsInfoCat.Local
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_NextScheduledStart), ResourceType = typeof(Properties.Resources))]
         public DateTime? NextScheduledStart { get => _nextScheduledStart.GetValue(); set => _nextScheduledStart.SetValue(value); }
 
+        // DEFERRED: Not sure if Range would work here for a nullable value, but minimum value needs to be validated.
         /// <summary>Gets the length of time between automatic crawl re-scheduling.</summary>
         /// <value>The length of time between automatic crawl re-scheduling, in seconds or <cref langword="null" /> to disable automatic re-scheduling.</value>
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_RescheduleInterval), ResourceType = typeof(Properties.Resources))]

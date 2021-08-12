@@ -107,7 +107,7 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
             if (func is null)
                 throw new ArgumentNullException(nameof(func));
 
-            TaskProxy tp = new TaskProxy(initialState, func);
+            TaskProxy tp = new(initialState, func);
             AsyncFuncOpViewModel<TState, TResult> item = new(initialState, tp.Handler);
 
             // BUG: Task is being excecuted immediately - not just created

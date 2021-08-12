@@ -1741,4 +1741,13 @@
   <data name="DisplayName_Required" xml:space="preserve">
     <value>Required</value>
   </data>
+  <data name="ErrorMessage_RootPathRequired" xml:space="preserve">
+    <value>Root path is required.</value>
+  </data>
+  <data name="ErrorMessage_RescheduleIntervalInvalid" xml:space="preserve">
+    <value>Reschedule interfal cannot be less than 15 minutes.</value>
+  </data>
+  <data name="ErrorMessage_TTLInvalid" xml:space="preserve">
+    <value>Maximum duration cannot be less than 1 minute.</value>
+  </data>
 </root>

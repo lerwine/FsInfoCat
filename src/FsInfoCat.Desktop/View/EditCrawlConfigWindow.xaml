@@ -91,30 +91,14 @@
         </VisualStateManager.VisualStateGroups>
         <StackPanel>
             <Label Content="Display Name" FontWeight="Bold" Padding="{DynamicResource DefaultSpacingTopLeftRight}"/>
-            <TextBox Margin="{DynamicResource DefaultSpacingLeftRight}" MaxLines="1">
-                <TextBox.Text>
-                    <Binding Path="DisplayName" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
-                        <Binding.ValidationRules>
-                            <v:NormalizedStringValidationRule IsRequired="True" MaxLengthValue="{x:Static f:DbConstants.DbColMaxLen_LongName}" RequiredErrorMessage="{x:Static res:Resources.ErrorMessage_DisplayNameRequired}" MaxLengthErrorMessage="{x:Static res:Resources.ErrorMessage_DisplayNameLength}"/>
-                        </Binding.ValidationRules>
-                    </Binding>
-                </TextBox.Text>
-            </TextBox>
+            <TextBox Margin="{DynamicResource DefaultSpacingLeftRight}" MaxLines="1" Text="{Binding DisplayName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}" />
             <Label Content="Path" FontWeight="Bold" Padding="{DynamicResource DefaultSpacingTopLeftRight}"/>
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <TextBox Margin="{DynamicResource DefaultSpacingLeft}" IsReadOnly="True" MaxLines="1">
-                    <TextBox.Text>
-                        <Binding Path="Path" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
-                            <Binding.ValidationRules>
-                                <v:NormalizedStringValidationRule IsRequired="True" MaxLengthValue="0" />
-                            </Binding.ValidationRules>
-                        </Binding>
-                    </TextBox.Text>
-                </TextBox>
+                <TextBox Margin="{DynamicResource DefaultSpacingLeft}" IsReadOnly="True" MaxLines="1" Text="{Binding Path, Mode=OneWay}" />
                 <Button Content="..." Grid.Column="1" Margin="{DynamicResource DefaultSpacingRight}" Command="{Binding SelectRootCommand, Mode=OneWay}" Height="{DynamicResource DefaultTextBoxHeight}" Width="{DynamicResource DefaultTextBoxHeight}" Padding="1,-5,1,1"/>
             </Grid>
             <Grid>

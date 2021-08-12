@@ -53,6 +53,8 @@ namespace FsInfoCat
 
         public static IEnumerable<string> AsNonNullTrimmedValues(this IEnumerable<string> text) => text?.Select(AsNonNullTrimmed);
 
+        public static IEnumerable<string> AsWsNormalizedOrEmptyValues(this IEnumerable<string> text) => text?.Select(AsWsNormalizedOrEmpty);
+
         public static IEnumerable<string> AsNonNullValues(this IEnumerable<string> text) => text?.Select(t => t ?? "");
 
         public static IEnumerable<string> AsOrderedDistinct(this IEnumerable<string> text) => text?.Select(t => t ?? "").Distinct().OrderBy(t => t);

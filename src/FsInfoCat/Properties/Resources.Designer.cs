@@ -4858,11 +4858,38 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Reschedule interfal cannot be less than 15 minutes..
+        /// </summary>
+        public static string ErrorMessage_RescheduleIntervalInvalid {
+            get {
+                return ResourceManager.GetString("ErrorMessage_RescheduleIntervalInvalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Root path is required..
+        /// </summary>
+        public static string ErrorMessage_RootPathRequired {
+            get {
+                return ResourceManager.GetString("ErrorMessage_RootPathRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to A security exception has occurred..
         /// </summary>
         public static string ErrorMessage_SecurityException {
             get {
                 return ResourceManager.GetString("ErrorMessage_SecurityException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Maximum duration cannot be less than 1 minute..
+        /// </summary>
+        public static string ErrorMessage_TTLInvalid {
+            get {
+                return ResourceManager.GetString("ErrorMessage_TTLInvalid", resourceCulture);
             }
         }
         

@@ -55,6 +55,8 @@ namespace FsInfoCat.Desktop.ViewModel
 
         #endregion
 
+        #region SelectedCrawlConfig Property Members
+
         public static readonly DependencyProperty SelectedCrawlConfigProperty = DependencyProperty.Register(nameof(SelectedCrawlConfig), typeof(CrawlConfigurationVM), typeof(CrawlConfigurationsPageVM),
                 new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
                     (d as CrawlConfigurationsPageVM).OnSelectedCrawlConfigPropertyChanged((CrawlConfigurationVM)e.OldValue, (CrawlConfigurationVM)e.NewValue)));
@@ -85,6 +87,10 @@ namespace FsInfoCat.Desktop.ViewModel
             }
         }
 
+        #endregion
+
+        #region ShowActiveCrawlConfigurationsOnly Property Members
+
         public static readonly DependencyProperty ShowActiveCrawlConfigurationsOnlyProperty = DependencyProperty.Register(nameof(ShowActiveCrawlConfigurationsOnly), typeof(bool), typeof(CrawlConfigurationsPageVM),
                 new PropertyMetadata(true, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as CrawlConfigurationsPageVM).OnShowActiveCrawlConfigurationsOnlyPropertyChanged((bool)e.OldValue, (bool)e.NewValue)));
 
@@ -109,6 +115,10 @@ namespace FsInfoCat.Desktop.ViewModel
             else if (!(ShowInactiveCrawlConfigurationsOnly || ShowAllCrawlConfigurations))
                 ShowInactiveCrawlConfigurationsOnly = true;
         }
+
+        #endregion
+
+        #region ShowInactiveCrawlConfigurationsOnly Property Members
 
         public static readonly DependencyProperty ShowInactiveCrawlConfigurationsOnlyProperty = DependencyProperty.Register(nameof(ShowInactiveCrawlConfigurationsOnly), typeof(bool), typeof(CrawlConfigurationsPageVM),
                 new PropertyMetadata(false, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as CrawlConfigurationsPageVM).OnShowInactiveCrawlConfigurationsOnlyPropertyChanged((bool)e.OldValue, (bool)e.NewValue)));
@@ -135,6 +145,10 @@ namespace FsInfoCat.Desktop.ViewModel
                 ShowActiveCrawlConfigurationsOnly = true;
         }
 
+        #endregion
+
+        #region ShowAllCrawlConfigurations Property Members
+
         public static readonly DependencyProperty ShowAllCrawlConfigurationsProperty = DependencyProperty.Register(nameof(ShowAllCrawlConfigurations), typeof(bool), typeof(CrawlConfigurationsPageVM),
                 new PropertyMetadata(false, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as CrawlConfigurationsPageVM).OnShowAllCrawlConfigurationsPropertyChanged((bool)e.OldValue, (bool)e.NewValue)));
 
@@ -159,6 +173,10 @@ namespace FsInfoCat.Desktop.ViewModel
             else if (!(ShowActiveCrawlConfigurationsOnly || ShowInactiveCrawlConfigurationsOnly))
                 ShowActiveCrawlConfigurationsOnly = true;
         }
+
+        #endregion
+
+        #region NewClickCommand Property Members
 
         private static readonly DependencyPropertyKey NewClickCommandPropertyKey = DependencyProperty.RegisterReadOnly(nameof(NewClickCommand), typeof(Commands.RelayCommand), typeof(CrawlConfigurationsPageVM), new PropertyMetadata(null));
 
@@ -193,6 +211,8 @@ namespace FsInfoCat.Desktop.ViewModel
             if (item is not null)
                 SelectedCrawlConfig = item;
         }
+
+        #endregion
 
         private void SelecteItem_StartCrawlNow(object sender, EventArgs e)
         {
@@ -276,12 +296,5 @@ namespace FsInfoCat.Desktop.ViewModel
             if (mainWindow is not null)
                 MessageBox.Show(mainWindow, string.IsNullOrWhiteSpace(exception.Message) ? exception.ToString() : exception.Message, FsInfoCat.Properties.Resources.DisplayName_DataLoadError, MessageBoxButton.OK, MessageBoxImage.Error);
         }
-    }
-    public class WindowOwner : System.Windows.Forms.IWin32Window
-    {
-        private IntPtr _handle;
-        public WindowOwner() : this(System.Diagnostics.Process.GetCurrentProcess().MainWindowHandle) { }
-        public WindowOwner(IntPtr handle) { _handle = handle; }
-        public IntPtr Handle { get { return _handle; } }
     }
 }

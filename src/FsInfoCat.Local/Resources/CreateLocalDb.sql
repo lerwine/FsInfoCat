@@ -134,13 +134,13 @@ CREATE TABLE IF NOT EXISTS "CrawlConfigurations" (
     "Id" UNIQUEIDENTIFIER NOT NULL COLLATE NOCASE,
     "DisplayName" NVARCHAR(1024) NOT NULL CHECK(length(trim("DisplayName"))=length("DisplayName") AND length("DisplayName")>0) COLLATE NOCASE,
     "MaxRecursionDepth" UNSIGNED SMALLINT NOT NULL DEFAULT 128,
-    "MaxTotalItems" UNSIGNED BIGINT DEFAULT NULL,
-    "TTL" BIGINT DEFAULT NULL,
-    "StatusValue" UNSIGNED TINYINT NOT NULL CHECK("StatusValue"<=7) DEFAULT 0, -- CrawlStatus.NotRunning
+    "MaxTotalItems" UNSIGNED BIGINT CHECK("MaxTotalItems" IS NULL OR "MaxTotalItems">0) DEFAULT NULL,
+    "TTL" BIGINT CHECK("TTL" IS NULL OR "TTL">59) DEFAULT NULL,
+    "StatusValue" UNSIGNED TINYINT NOT NULL CHECK("StatusValue"<8) DEFAULT 0, -- CrawlStatus.NotRunning
     "LastCrawlStart" DATETIME DEFAULT NULL,
     "LastCrawlEnd" DATETIME DEFAULT NULL,
     "NextScheduledStart" DATETIME DEFAULT NULL,
-    "RescheduleInterval" BIGINT DEFAULT NULL,
+    "RescheduleInterval" BIGINT CHECK("RescheduleInterval" IS NULL OR "RescheduleInterval">899) DEFAULT NULL,
     "RescheduleFromJobEnd" BIT NOT NULL DEFAULT 0,
     "RescheduleAfterFail" BIT NOT NULL DEFAULT 0,
     "Notes" TEXT NOT NULL DEFAULT '',
