@@ -1738,4 +1738,7 @@
   <data name="DisplayName_OK" xml:space="preserve">
     <value>OK</value>
   </data>
+  <data name="DisplayName_Required" xml:space="preserve">
+    <value>Required</value>
+  </data>
 </root>

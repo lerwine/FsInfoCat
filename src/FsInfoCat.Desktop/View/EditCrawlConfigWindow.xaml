@@ -5,8 +5,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="clr-namespace:FsInfoCat.Desktop.ViewModel"
         xmlns:cvt="clr-namespace:FsInfoCat.Desktop.Converters"
+        xmlns:f="clr-namespace:FsInfoCat;assembly=FsInfoCat"
         xmlns:local="clr-namespace:FsInfoCat.Desktop.View"
         xmlns:desktop="clr-namespace:FsInfoCat.Desktop"
+      xmlns:res="clr-namespace:FsInfoCat.Properties;assembly=FsInfoCat"
+        xmlns:v="clr-namespace:FsInfoCat.Desktop.Validation"
         xmlns:b="http://schemas.microsoft.com/xaml/behaviors" x:Class="FsInfoCat.Desktop.View.EditCrawlConfigWindow"
         mc:Ignorable="d" DataContext="{DynamicResource VM}"
         Title="{Binding WindowTitle, Mode=OneWay}" Height="600" Width="800">
@@ -88,14 +91,30 @@
         </VisualStateManager.VisualStateGroups>
         <StackPanel>
             <Label Content="Display Name" FontWeight="Bold" Padding="{DynamicResource DefaultSpacingTopLeftRight}"/>
-            <TextBox Margin="{DynamicResource DefaultSpacingLeftRight}" MaxLines="1" Text="{Binding DisplayName, Mode=TwoWay}" />
+            <TextBox Margin="{DynamicResource DefaultSpacingLeftRight}" MaxLines="1">
+                <TextBox.Text>
+                    <Binding Path="DisplayName" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
+                        <Binding.ValidationRules>
+                            <v:NormalizedStringValidationRule IsRequired="True" MaxLengthValue="{x:Static f:DbConstants.DbColMaxLen_LongName}" RequiredErrorMessage="{x:Static res:Resources.ErrorMessage_DisplayNameRequired}" MaxLengthErrorMessage="{x:Static res:Resources.ErrorMessage_DisplayNameLength}"/>
+                        </Binding.ValidationRules>
+                    </Binding>
+                </TextBox.Text>
+            </TextBox>
             <Label Content="Path" FontWeight="Bold" Padding="{DynamicResource DefaultSpacingTopLeftRight}"/>
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <TextBox Margin="{DynamicResource DefaultSpacingLeft}" IsReadOnly="True" MaxLines="1" Text="{Binding Path, Mode=OneWay}" />
+                <TextBox Margin="{DynamicResource DefaultSpacingLeft}" IsReadOnly="True" MaxLines="1">
+                    <TextBox.Text>
+                        <Binding Path="Path" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
+                            <Binding.ValidationRules>
+                                <v:NormalizedStringValidationRule IsRequired="True" MaxLengthValue="0" />
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox.Text>
+                </TextBox>
                 <Button Content="..." Grid.Column="1" Margin="{DynamicResource DefaultSpacingRight}" Command="{Binding SelectRootCommand, Mode=OneWay}" Height="{DynamicResource DefaultTextBoxHeight}" Width="{DynamicResource DefaultTextBoxHeight}" Padding="1,-5,1,1"/>
             </Grid>
             <Grid>

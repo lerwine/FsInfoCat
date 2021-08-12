@@ -3688,6 +3688,15 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Required.
+        /// </summary>
+        public static string DisplayName_Required {
+            get {
+                return ResourceManager.GetString("DisplayName_Required", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Re-scan.
         /// </summary>
         public static string DisplayName_Rescan {

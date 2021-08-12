@@ -1,3 +1,4 @@
+using FsInfoCat.Collections;
 using FsInfoCat.Desktop.ViewModel.AsyncOps;
 using FsInfoCat.Local;
 using Microsoft.EntityFrameworkCore;
@@ -18,6 +19,7 @@ namespace FsInfoCat.Desktop.ViewModel
     public class EditCrawlConfigVM : DependencyObject
     {
         private readonly Collection<string> _changedProperties = new();
+        private readonly ToggleSet<DependencyProperty> _validationTracker = new();
         private (Subdirectory Root, string Path)? _validatedPath;
 
         public event EventHandler CloseSuccess;
