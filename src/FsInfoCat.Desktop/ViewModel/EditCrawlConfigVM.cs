@@ -1097,7 +1097,6 @@ namespace FsInfoCat.Desktop.ViewModel
 
         public EditCrawlConfigVM()
         {
-            System.Windows.Controls.Border b;
             SetValue(SelectRootCommandPropertyKey, new Commands.RelayCommand(OnSelectRootExecute));
             SetValue(SaveCommandPropertyKey, new Commands.RelayCommand(OnSaveExecute));
             SetValue(CancelCommandPropertyKey, new Commands.RelayCommand(OnCancelExecute));
@@ -1264,12 +1263,12 @@ namespace FsInfoCat.Desktop.ViewModel
         }
 
         private AsyncFuncOpViewModel<string, (CrawlConfiguration Configuration, Subdirectory Root, string Path)> LookupCrawlConfigAsync(string path) =>
-            AsyncFuncOpViewModel<string, (CrawlConfiguration Configuration, Subdirectory Root, string Path)>.FromAsync(path, LookupCrawlConfigOpMgr, LookupCrawlConfigOpMgr.LookupCrawlConfig);
+            AsyncFuncOpViewModel<string, (CrawlConfiguration Configuration, Subdirectory Root, string Path)>.FromAsync(path, LookupCrawlConfigOpMgr, LookupCrawlConfigAsyncOpManager.LookupCrawlConfig);
     }
 
     public class LookupCrawlConfigAsyncOpManager : AsyncOpResultManagerViewModel<string, AsyncFuncOpViewModel<string, (CrawlConfiguration Configuration, Subdirectory Root, string Path)>, AsyncFuncOpViewModel<string, (CrawlConfiguration Configuration, Subdirectory Root, string Path)>.StatusListenerImpl, (CrawlConfiguration Configuration, Subdirectory Root, string Path)>
     {
-        internal async Task<(CrawlConfiguration Configuration, Subdirectory Root, string ValidatedPath)> LookupCrawlConfig(string path, AsyncFuncOpViewModel<string, (CrawlConfiguration Configuration, Subdirectory Root, string Path)>.StatusListenerImpl statusListener)
+        internal static async Task<(CrawlConfiguration Configuration, Subdirectory Root, string ValidatedPath)> LookupCrawlConfig(string path, AsyncFuncOpViewModel<string, (CrawlConfiguration Configuration, Subdirectory Root, string Path)>.StatusListenerImpl statusListener)
         {
             statusListener.CancellationToken.ThrowIfCancellationRequested();
             statusListener.SetMessage("Checking for existing directory information", StatusMessageLevel.Information);
