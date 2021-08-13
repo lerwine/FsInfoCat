@@ -1,4 +1,4 @@
-﻿using FsInfoCat.Desktop.ViewModel.AsyncOps;
+using FsInfoCat.Desktop.ViewModel.AsyncOps;
 using FsInfoCat.Local;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
@@ -7,7 +7,7 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 
-namespace FsInfoCat.Desktop.ViewModel
+namespace FsInfoCat.Desktop.ViewModel.Local
 {
     public class LookupCrawlConfigAsyncOpManager : AsyncOpResultManagerViewModel<string, AsyncFuncOpViewModel<string, (CrawlConfiguration Configuration, Subdirectory Root, string Path)>, AsyncFuncOpViewModel<string, (CrawlConfiguration Configuration, Subdirectory Root, string Path)>.StatusListenerImpl, (CrawlConfiguration Configuration, Subdirectory Root, string Path)>
     {

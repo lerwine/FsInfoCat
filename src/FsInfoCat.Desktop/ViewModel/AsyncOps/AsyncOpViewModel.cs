@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -322,20 +323,17 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
             /// <returns>The <see cref="CancellationToken"/> for the current background operation.</returns>
             internal CancellationToken GetCancellationToken() => _tokenSource.Token;
 
-            [Obsolete("Use AsyncOpViewModel(ItemBuilder), instead.")]
-            protected AsyncOpViewModel(TState initialState)
-            {
-                State = initialState;
-            }
-
             /// <summary>
             /// Initializes a new instance of the <see cref="AsyncOpViewModel"/> class.
             /// </summary>
             /// <param name="builder">The <see cref="ItemBuilder"/> that is used to initialize the current object.</param>
-            protected AsyncOpViewModel(ItemBuilder builder)
+            /// <param name="onListenerCreated">The delegate that will be invoked on the UI thread after the <typeparamref name="TListener">status listener</typeparamref> is created and
+            /// before the <see cref="Task"/> is created.</param>
+            protected AsyncOpViewModel([DisallowNull] ItemBuilder builder, [AllowNull] Action<TListener> onListenerCreated)
             {
-                State = builder.InitialState;
+                State = (builder ?? throw new ArgumentNullException(nameof(builder))).InitialState;
                 _listener = builder.GetStatusListener(this);
+                onListenerCreated?.Invoke(_listener);
                 _task = builder.GetTask(State, _listener, this);
                 UpdateOpStatus(_task.Status);
             }

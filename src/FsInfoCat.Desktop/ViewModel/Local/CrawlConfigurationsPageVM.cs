@@ -11,7 +11,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace FsInfoCat.Desktop.ViewModel
+namespace FsInfoCat.Desktop.ViewModel.Local
 {
     public class CrawlConfigurationsPageVM : DependencyObject
     {

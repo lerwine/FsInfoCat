@@ -1,26 +1,40 @@
-using FsInfoCat.Collections;
-using FsInfoCat.DeferredDelegation;
 using FsInfoCat.Desktop.ViewModel.AsyncOps;
 using FsInfoCat.Local;
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Threading;
 using System.Windows;
+using System.Windows.Threading;
+using System.Threading;
+using System.Threading.Tasks;
 
-namespace FsInfoCat.Desktop.ViewModel
+namespace FsInfoCat.Desktop.ViewModel.Local
 {
     public class EditCrawlConfigVM : DependencyObject, INotifyDataErrorInfo
     {
         private (Subdirectory Root, string Path)? _validatedPath;
 
+        /// <summary>
+        /// Occurs when the window should be closed by setting <see cref="Window.DialogResult"/> to <see langword="true"/>.
+        /// </summary>
         public event EventHandler CloseSuccess;
+
+        /// <summary>
+        /// Occurs when the window should be closed by setting <see cref="Window.DialogResult"/> to <see langword="false"/>.
+        /// </summary>
         public event EventHandler CloseCancel;
+
+        /// <summary>
+        /// Occurs when modal popup button is clicked, usually to cancel a background operation or acknowledge the results of a background operation.
+        /// </summary>
         public event EventHandler PopupButtonClick;
+
+        /// <summary>
+        /// Occurs when the validation errors have changed for a property or for the entire entity.
+        /// </summary>
         public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
 
         #region Initialization Members
@@ -44,16 +58,28 @@ namespace FsInfoCat.Desktop.ViewModel
             changeTracker.AnyInvalidPropertyChanged += OnValidationStateChanged;
             // DEFERRED: Figure out why this crashes designer
             SetValue(LookupCrawlConfigOpMgrPropertyKey, new LookupCrawlConfigAsyncOpManager());
+            SetValue(GetSubdirectoryFullNameOpMgrPropertyKey, new GetSubdirectoryFullNameAsyncOpManager());
         }
 
+        /// <summary>
+        /// Intented to be called from a XAML action when the <see cref="Window.Closing"/> event occurs.
+        /// </summary>
+        // TODO: Ensure there is an action for this in the XAML code.
         public void OnWindowClosing()
         {
-            LookupCrawlConfigOpMgr.CancelAll();
+            try { LookupCrawlConfigOpMgr.CancelAll(); }
+            finally { GetSubdirectoryFullNameOpMgr.CancelAll(); }
         }
 
+        /// <summary>
+        /// Instantiates a new <see cref="View.EditCrawlConfigWindow"/> to edit the properties of an existing <see cref="CrawlConfiguration"/>.
+        /// </summary>
+        /// <param name="model">The <see cref="CrawlConfiguration"/> to be modified.</param>
+        /// <returns><see langword="true"/> if modifications were successfully saved to the databaase; otherwise <see langword="false"/> to indicate the user cancelled or there was
+        /// an error that prohibited successful initialization.</returns>
         internal static bool Edit([DisallowNull] CrawlConfiguration model)
         {
-            View.EditCrawlConfigWindow window = new();
+            View.Local.EditCrawlConfigWindow window = new();
             EditCrawlConfigVM vm = (EditCrawlConfigVM)window.DataContext;
             if (vm is null)
             {
@@ -66,9 +92,18 @@ namespace FsInfoCat.Desktop.ViewModel
             return window.ShowDialog() ?? false;
         }
 
+        /// <summary>
+        /// Instantiates a new <see cref="View.EditCrawlConfigWindow"/> to edit the properties of an existing <see cref="CrawlConfiguration"/> for a specified path. If no configuration
+        /// exists for the specified path, a new entity will be created when the user saves changes.
+        /// </summary>
+        /// <param name="crawlRoot">The root path of the crawl configuration.</param>
+        /// <param name="model">Returns the <see cref="CrawlConfiguration"/> that was saved to the database.</param>
+        /// <param name="isNew">Returns <see langword="true"/> if a new entity was saved to the database; otherwise, <see langword="false"/>.</param>
+        /// <returns><see langword="true"/> if a new record or modifications to an existing one were successfully saved to the databaase;
+        /// otherwise <see langword="false"/> to indicate the user cancelled or there was an error that prohibited successful initialization.</returns>
         internal static bool Edit(string crawlRoot, out CrawlConfiguration model, out bool isNew)
         {
-            View.EditCrawlConfigWindow window = new();
+            View.Local.EditCrawlConfigWindow window = new();
             EditCrawlConfigVM vm = (EditCrawlConfigVM)window.DataContext;
             if (vm is null)
             {
@@ -76,27 +111,30 @@ namespace FsInfoCat.Desktop.ViewModel
                 window.DataContext = vm;
             }
 
-            EventHandler closeCancelHandler = new((sender, e) => window.DialogResult = false);
+            EventHandler closeCancelHandler = new((sender, e) =>
+            {
+                vm.LookupCrawlConfigOpMgr.CancelAll();
+                window.DialogResult = false;
+            });
             vm.CloseCancel += closeCancelHandler;
             vm.PopupButtonClick += closeCancelHandler;
             vm.CloseSuccess += new EventHandler((sender, e) => window.DialogResult = true);
             window.Loaded += new RoutedEventHandler((sender, e) =>
             {
                 AsyncFuncOpViewModel<string, (CrawlConfiguration Configuration, Subdirectory Root, string ValidatedPath)> lookupCrawlConfig = vm.LookupCrawlConfigAsync(crawlRoot);
-                lookupCrawlConfig.AsyncOpStatusPropertyChanged += vm.LookupCrawlConfig_AsyncOpStatusPropertyChanged;
-                lookupCrawlConfig.StatusMessagePropertyChanged += vm.LookupCrawlConfig_StatusMessagePropertyChanged;
-                lookupCrawlConfig.MessageLevelPropertyChanged += vm.LookupCrawlConfig_MessageLevelPropertyChanged;
-                lookupCrawlConfig.DurationPropertyChanged += vm.LookupCrawlConfig_DurationPropertyChanged;
+                lookupCrawlConfig.AsyncOpStatusPropertyChanged += vm.BgOp_AsyncOpStatusPropertyChanged;
+                lookupCrawlConfig.StatusMessagePropertyChanged += vm.BgOp_StatusMessagePropertyChanged;
+                lookupCrawlConfig.MessageLevelPropertyChanged += vm.BgOp_MessageLevelPropertyChanged;
+                lookupCrawlConfig.DurationPropertyChanged += vm.BgOp_DurationPropertyChanged;
                 vm.BgOpStatusMessage = lookupCrawlConfig.StatusMessage;
                 vm.BgOpMessageLevel = lookupCrawlConfig.MessageLevel;
                 vm.BgOpStatus = lookupCrawlConfig.AsyncOpStatus;
-
                 lookupCrawlConfig.GetTask().ContinueWith(task =>
                 {
-                    lookupCrawlConfig.AsyncOpStatusPropertyChanged -= vm.LookupCrawlConfig_AsyncOpStatusPropertyChanged;
-                    lookupCrawlConfig.StatusMessagePropertyChanged -= vm.LookupCrawlConfig_StatusMessagePropertyChanged;
-                    lookupCrawlConfig.MessageLevelPropertyChanged -= vm.LookupCrawlConfig_MessageLevelPropertyChanged;
-                    lookupCrawlConfig.DurationPropertyChanged -= vm.LookupCrawlConfig_DurationPropertyChanged;
+                    lookupCrawlConfig.AsyncOpStatusPropertyChanged -= vm.BgOp_AsyncOpStatusPropertyChanged;
+                    lookupCrawlConfig.StatusMessagePropertyChanged -= vm.BgOp_StatusMessagePropertyChanged;
+                    lookupCrawlConfig.MessageLevelPropertyChanged -= vm.BgOp_MessageLevelPropertyChanged;
+                    lookupCrawlConfig.DurationPropertyChanged -= vm.BgOp_DurationPropertyChanged;
                     vm.Dispatcher.Invoke(() =>
                     {
                         vm.BgOpStatusMessage = lookupCrawlConfig.StatusMessage;
@@ -187,6 +225,10 @@ namespace FsInfoCat.Desktop.ViewModel
 
         public static readonly DependencyProperty SelectRootCommandProperty = SelectRootCommandPropertyKey.DependencyProperty;
 
+        /// <summary>
+        /// Gets a bindable command for selecting the root path.
+        /// </summary>
+        /// <value>The bindable <see cref="Commands.RelayCommand">RelayCommand</see> for selecting a new root path for the crawl configuration..</value>
         public Commands.RelayCommand SelectRootCommand => (Commands.RelayCommand)GetValue(SelectRootCommandProperty);
 
         private void OnSelectRootExecute(object parameter)
@@ -203,6 +245,10 @@ namespace FsInfoCat.Desktop.ViewModel
 
         public static readonly DependencyProperty SaveCommandProperty = SaveCommandPropertyKey.DependencyProperty;
 
+        /// <summary>
+        /// Gets the bindable "Save" command.
+        /// </summary>
+        /// <value>The bindable command for saving changes and closing the edit window.</value>
         public Commands.RelayCommand SaveCommand => (Commands.RelayCommand)GetValue(SaveCommandProperty);
 
         private void OnSaveExecute(object parameter)
@@ -219,6 +265,10 @@ namespace FsInfoCat.Desktop.ViewModel
 
         public static readonly DependencyProperty CancelCommandProperty = CancelCommandPropertyKey.DependencyProperty;
 
+        /// <summary>
+        /// Gets the bindable "Cancel" command.
+        /// </summary>
+        /// <value>The bindable command for discarding changes and closing the edit window.</value>
         public Commands.RelayCommand CancelCommand => (Commands.RelayCommand)GetValue(CancelCommandProperty);
 
         private void OnCancelExecute(object parameter) => CloseCancel?.Invoke(this, EventArgs.Empty);
@@ -232,6 +282,10 @@ namespace FsInfoCat.Desktop.ViewModel
 
         public static readonly DependencyProperty PopupButtonClickCommandProperty = PopupButtonClickCommandPropertyKey.DependencyProperty;
 
+        /// <summary>
+        /// Gets the bindable modal popup cancel / confirmation command.
+        /// </summary>
+        /// <value>The bindable command for cancelling an active modal background operator or to confirm the results of a background operation.</value>
         public Commands.RelayCommand PopupButtonClickCommand => (Commands.RelayCommand)GetValue(PopupButtonClickCommandProperty);
 
         private void OnPopupButtonClickExecute(object parameter)
@@ -262,6 +316,10 @@ namespace FsInfoCat.Desktop.ViewModel
 
         public static readonly DependencyProperty BgOpStatusProperty = BgOpStatusPropertyKey.DependencyProperty;
 
+        /// <summary>
+        /// Gets the status of the current background operation.
+        /// </summary>
+        /// <value>The background operation status. If this is <see cref="AsyncOpStatusCode.NotStarted"/>, then that indicates that no modal popup should be visible.</value>
         public AsyncOpStatusCode BgOpStatus
         {
             get => (AsyncOpStatusCode)GetValue(BgOpStatusProperty);
@@ -321,6 +379,7 @@ namespace FsInfoCat.Desktop.ViewModel
 
         public static readonly DependencyProperty IsBgOperationActiveProperty = IsBgOperationActivePropertyKey.DependencyProperty;
 
+        [Obsolete("Don't use this - BgOpStatus gets reset to NotStarted when the modal popup can be hidden")]
         public bool IsBgOperationActive
         {
             get => (bool)GetValue(IsBgOperationActiveProperty);
@@ -338,15 +397,26 @@ namespace FsInfoCat.Desktop.ViewModel
 
         public LookupCrawlConfigAsyncOpManager LookupCrawlConfigOpMgr => (LookupCrawlConfigAsyncOpManager)GetValue(LookupCrawlConfigOpMgrProperty);
 
-        private void LookupCrawlConfig_DurationPropertyChanged(object sender, DependencyPropertyChangedEventArgs e) => BgOpDuration = (e.NewValue as TimeSpan?) ?? TimeSpan.Zero;
+        #endregion
 
-        private void LookupCrawlConfig_MessageLevelPropertyChanged(object sender, DependencyPropertyChangedEventArgs e) => BgOpMessageLevel = (StatusMessageLevel)e.NewValue;
+        #region GetSubdirectoryFullNameOpMgr Property
 
-        private void LookupCrawlConfig_StatusMessagePropertyChanged(object sender, DependencyPropertyChangedEventArgs e) => BgOpStatusMessage = (e.NewValue as string) ?? "";
+        private static readonly DependencyPropertyKey GetSubdirectoryFullNameOpMgrPropertyKey = DependencyProperty.RegisterReadOnly(nameof(GetSubdirectoryFullNameOpMgr), typeof(GetSubdirectoryFullNameAsyncOpManager), typeof(EditCrawlConfigVM),
+                new PropertyMetadata(null));
 
-        private void LookupCrawlConfig_AsyncOpStatusPropertyChanged(object sender, DependencyPropertyChangedEventArgs e) => BgOpStatus = (AsyncOpStatusCode)e.NewValue;
+        public static readonly DependencyProperty GetSubdirectoryFullNameOpMgrProperty = GetSubdirectoryFullNameOpMgrPropertyKey.DependencyProperty;
+
+        public GetSubdirectoryFullNameAsyncOpManager GetSubdirectoryFullNameOpMgr => (GetSubdirectoryFullNameAsyncOpManager)GetValue(GetSubdirectoryFullNameOpMgrProperty);
 
         #endregion
+
+        private void BgOp_DurationPropertyChanged(object sender, DependencyPropertyChangedEventArgs e) => BgOpDuration = (e.NewValue as TimeSpan?) ?? TimeSpan.Zero;
+
+        private void BgOp_MessageLevelPropertyChanged(object sender, DependencyPropertyChangedEventArgs e) => BgOpMessageLevel = (StatusMessageLevel)e.NewValue;
+
+        private void BgOp_StatusMessagePropertyChanged(object sender, DependencyPropertyChangedEventArgs e) => BgOpStatusMessage = (e.NewValue as string) ?? "";
+
+        private void BgOp_AsyncOpStatusPropertyChanged(object sender, DependencyPropertyChangedEventArgs e) => BgOpStatus = (AsyncOpStatusCode)e.NewValue;
 
         #endregion
 
@@ -562,21 +632,74 @@ namespace FsInfoCat.Desktop.ViewModel
                 if (_validatedPath.HasValue && ReferenceEquals(_validatedPath.Value.Root, newValue))
                     Path = _validatedPath.Value.Path;
                 else
-                    // TODO: Replace with async view model
-                    Subdirectory.LookupFullNameAsync(newValue).ContinueWith(r =>
+                {
+                    EventHandler clickHandler = new((sender, e) => GetSubdirectoryFullNameOpMgr.CancelAll());
+                    PopupButtonClick += clickHandler;
+                    IsBgOperationActive = true;
+                    AsyncFuncOpViewModel<Subdirectory, (CrawlConfiguration Configuration, Subdirectory Root, string ValidatedPath)> lookupCrawlConfig = GetSubdirectoryFullNameAsync(newValue);
+                    lookupCrawlConfig.AsyncOpStatusPropertyChanged += BgOp_AsyncOpStatusPropertyChanged;
+                    lookupCrawlConfig.StatusMessagePropertyChanged += BgOp_StatusMessagePropertyChanged;
+                    lookupCrawlConfig.MessageLevelPropertyChanged += BgOp_MessageLevelPropertyChanged;
+                    lookupCrawlConfig.DurationPropertyChanged += BgOp_DurationPropertyChanged;
+                    BgOpStatusMessage = lookupCrawlConfig.StatusMessage;
+                    BgOpMessageLevel = lookupCrawlConfig.MessageLevel;
+                    BgOpStatus = lookupCrawlConfig.AsyncOpStatus;
+                    lookupCrawlConfig.GetTask().ContinueWith(task =>
                     {
-                        if (r.IsCanceled)
+                        PopupButtonClick -= clickHandler;
+                        lookupCrawlConfig.AsyncOpStatusPropertyChanged -= BgOp_AsyncOpStatusPropertyChanged;
+                        lookupCrawlConfig.StatusMessagePropertyChanged -= BgOp_StatusMessagePropertyChanged;
+                        lookupCrawlConfig.MessageLevelPropertyChanged -= BgOp_MessageLevelPropertyChanged;
+                        lookupCrawlConfig.DurationPropertyChanged -= BgOp_DurationPropertyChanged;
+                        if (task.IsCanceled)
                         {
-                            if (errors is not null)
-                                Dispatcher.Invoke(() => Validation.SetErrorMessage(nameof(Path), errors.First(), errors.Skip(1).ToArray()));
+                            // TODO: Log cancellation.
+                        }
+                        else if (task.IsFaulted)
+                        {
+                            // TODO: Log failure.
                         }
                         else
                         {
-                            string path = r.Result;
-                            _validatedPath = (newValue, path);
-                            Dispatcher.Invoke(() => Path = path);
+                            if (task.Result.Configuration is null)
+                                _validatedPath = (newValue, task.Result.ValidatedPath);
                         }
+                        Dispatcher.Invoke(() =>
+                        {
+                            BgOpStatusMessage = lookupCrawlConfig.StatusMessage;
+                            BgOpMessageLevel = lookupCrawlConfig.MessageLevel;
+                            BgOpStatus = lookupCrawlConfig.AsyncOpStatus;
+                            GetSubdirectoryFullNameOpMgr.RemoveOperation(lookupCrawlConfig);
+                            if (task.IsCompletedSuccessfully)
+                            {
+                                if (task.Result.Configuration is null)
+                                {
+                                    if (!string.IsNullOrWhiteSpace(Path))
+                                    {
+                                        Path = task.Result.ValidatedPath;
+                                        BgOpStatus = AsyncOpStatusCode.NotStarted;
+                                        IsBgOperationActive = false;
+                                        return;
+                                    }
+                                }
+                                else
+                                {
+                                    BgOpStatusMessage = "That subdirectory already has a crawl configuration defined.";
+                                    BgOpMessageLevel = StatusMessageLevel.Error;
+                                    BgOpStatus = AsyncOpStatusCode.Faulted;
+                                }
+                            }
+                            else if (!task.IsCanceled)
+                            {
+                                BgOpStatusMessage = "An unexpected error has occurred. See logs for further details.";
+                                BgOpMessageLevel = StatusMessageLevel.Error;
+                            }
+                            if (errors is not null)
+                                Validation.SetErrorMessage(nameof(Path), errors.First(), errors.Skip(1).ToArray());
+                            IsBgOperationActive = false;
+                        });
                     });
+                }
             }
         }
 
@@ -598,6 +721,10 @@ namespace FsInfoCat.Desktop.ViewModel
 
         private AsyncFuncOpViewModel<string, (CrawlConfiguration Configuration, Subdirectory Root, string Path)> LookupCrawlConfigAsync(string path) =>
             AsyncFuncOpViewModel<string, (CrawlConfiguration Configuration, Subdirectory Root, string Path)>.FromAsync(path, LookupCrawlConfigOpMgr, LookupCrawlConfigAsyncOpManager.LookupCrawlConfig);
+
+        private AsyncFuncOpViewModel<Subdirectory, (CrawlConfiguration Configuration, Subdirectory Root, string Path)> GetSubdirectoryFullNameAsync(Subdirectory subdirectory) =>
+            AsyncFuncOpViewModel<Subdirectory, (CrawlConfiguration Configuration, Subdirectory Root, string Path)>.FromAsync(subdirectory, GetSubdirectoryFullNameOpMgr,
+                GetSubdirectoryFullNameOpMgr.LookupFullName);
 
         #endregion
 

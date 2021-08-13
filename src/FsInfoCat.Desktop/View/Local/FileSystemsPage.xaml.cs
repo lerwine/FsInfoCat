@@ -13,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace FsInfoCat.Desktop.View
+namespace FsInfoCat.Desktop.View.Local
 {
     /// <summary>
-    /// Interaction logic for CrawlConfigurationsPage.xaml
+    /// Interaction logic for FileSystemsPage.xaml
     /// </summary>
-    public partial class CrawlConfigurationsPage : Page
+    public partial class FileSystemsPage : Page
     {
-        public CrawlConfigurationsPage()
+        public FileSystemsPage()
         {
             InitializeComponent();
         }

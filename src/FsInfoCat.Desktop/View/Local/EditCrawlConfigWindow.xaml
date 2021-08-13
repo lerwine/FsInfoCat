@@ -3,14 +3,14 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:vm="clr-namespace:FsInfoCat.Desktop.ViewModel"
+        xmlns:vm="clr-namespace:FsInfoCat.Desktop.ViewModel.Local"
         xmlns:cvt="clr-namespace:FsInfoCat.Desktop.Converters"
         xmlns:f="clr-namespace:FsInfoCat;assembly=FsInfoCat"
-        xmlns:local="clr-namespace:FsInfoCat.Desktop.View"
+        xmlns:local="clr-namespace:FsInfoCat.Desktop.View.Local"
         xmlns:desktop="clr-namespace:FsInfoCat.Desktop"
       xmlns:res="clr-namespace:FsInfoCat.Properties;assembly=FsInfoCat"
         xmlns:v="clr-namespace:FsInfoCat.Desktop.Validation"
-        xmlns:b="http://schemas.microsoft.com/xaml/behaviors" x:Class="FsInfoCat.Desktop.View.EditCrawlConfigWindow"
+        xmlns:b="http://schemas.microsoft.com/xaml/behaviors" x:Class="FsInfoCat.Desktop.View.Local.EditCrawlConfigWindow"
         mc:Ignorable="d" DataContext="{DynamicResource VM}"
         Title="{Binding WindowTitle, Mode=OneWay}" Height="600" Width="800">
     <Window.Resources>

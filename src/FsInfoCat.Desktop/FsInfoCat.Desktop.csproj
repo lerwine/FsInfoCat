@@ -87,4 +87,9 @@
     </None>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="ViewModel\Upstream\" />
+    <Folder Include="View\Upstream\" />
+  </ItemGroup>
+
 </Project>

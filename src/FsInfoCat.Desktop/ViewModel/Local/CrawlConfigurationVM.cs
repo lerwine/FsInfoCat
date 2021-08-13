@@ -7,7 +7,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 using System.Windows.Threading;
 
-namespace FsInfoCat.Desktop.ViewModel
+namespace FsInfoCat.Desktop.ViewModel.Local
 {
     public class CrawlConfigurationVM : DependencyObject
     {

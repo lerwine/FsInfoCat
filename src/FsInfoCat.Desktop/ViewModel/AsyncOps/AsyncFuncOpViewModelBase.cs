@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -40,7 +41,7 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
             private set => SetValue(ResultPropertyKey, value);
         }
 
-        protected AsyncFuncOpViewModelBase(FuncItemBuilder builder) : base(builder) { }
+        protected AsyncFuncOpViewModelBase([DisallowNull] FuncItemBuilder builder, [AllowNull] Action<TListener> onListenerCreated) : base(builder, onListenerCreated) { }
 
         protected abstract class FuncItemBuilder : AsyncOpManagerViewModel<TState, Task<TResult>, TItem, TListener>.ItemBuilder
         {
@@ -49,7 +50,8 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
             {
                 _createTask = createTask;
             }
-            protected internal override Task<TResult> GetTask(TState state, TListener listener, AsyncOpManagerViewModel<TState, Task<TResult>, TItem, TListener>.AsyncOpViewModel instance) => _createTask(listener);
+            protected internal override Task<TResult> GetTask(TState state, TListener listener, AsyncOpManagerViewModel<TState, Task<TResult>, TItem, TListener>.AsyncOpViewModel instance) =>
+                _createTask(listener);
         }
     }
 }

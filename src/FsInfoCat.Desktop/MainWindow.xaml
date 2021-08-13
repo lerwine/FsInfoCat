@@ -30,7 +30,7 @@
             <Separator/>
             <MenuItem Header="Help" HorizontalAlignment="Right"/>
         </Menu>
-        <Frame Grid.Row="1" Source="/FsInfoCat.Desktop;component/View/CrawlConfigurationsPage.xaml"/>
+        <Frame Grid.Row="1" Source="/FsInfoCat.Desktop;component/View/Local/CrawlConfigurationsPage.xaml"/>
         <StatusBar Grid.Row="2">
             <StatusBarItem>
                 <StackPanel Orientation="Horizontal">

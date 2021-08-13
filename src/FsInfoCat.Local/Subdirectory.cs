@@ -396,6 +396,29 @@ namespace FsInfoCat.Local
             }).ToList();
         });
 
+        public static async Task<string> LookupFullNameAsync([DisallowNull] Subdirectory subdirectory, CancellationToken cancellation, LocalDbContext dbContext = null)
+        {
+            if (subdirectory is null)
+                throw new ArgumentNullException(nameof(subdirectory));
+            if (dbContext is null)
+            {
+                using IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
+                using LocalDbContext context = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+                return await LookupFullNameAsync(subdirectory, context);
+            }
+            Guid? parentId = subdirectory.ParentId;
+            string path = subdirectory.Name;
+            while (parentId.HasValue)
+            {
+                Subdirectory parent = subdirectory.Parent;
+                if (parent is null && (subdirectory.Parent = parent = await dbContext.Subdirectories.FindAsync(parentId.Value)) is null)
+                    break;
+                path = $"{parent.Name}/{path}";
+                parentId = (subdirectory = parent).ParentId;
+            }
+            return path;
+        }
+
         public static async Task<string> LookupFullNameAsync([DisallowNull] Subdirectory subdirectory, LocalDbContext dbContext = null)
         {
             if (subdirectory is null)

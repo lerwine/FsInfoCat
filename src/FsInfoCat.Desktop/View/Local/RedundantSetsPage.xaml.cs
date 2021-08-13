@@ -10,16 +10,17 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace FsInfoCat.Desktop.View
+namespace FsInfoCat.Desktop.View.Local
 {
     /// <summary>
-    /// Interaction logic for EditCrawlConfigWindow.xaml
+    /// Interaction logic for RedundantSetsPage.xaml
     /// </summary>
-    public partial class EditCrawlConfigWindow : Window
+    public partial class RedundantSetsPage : Page
     {
-        public EditCrawlConfigWindow()
+        public RedundantSetsPage()
         {
             InitializeComponent();
         }
