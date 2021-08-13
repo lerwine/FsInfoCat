@@ -24,6 +24,10 @@
                 <Setter Property="SelectionBrush" Value="{DynamicResource {x:Static SystemColors.InactiveSelectionHighlightBrushKey}}"/>
             </MultiTrigger>
         </Style.Triggers>
+        
+    </Style>
+    <Style TargetType="TextBox" x:Key="TwoDigitNumericTextBox">
+        <Setter Property="MinWidth" Value="{DynamicResource DefaultTextBoxHeight}"/>
     </Style>
     <Style x:Key="MultiLineTextBox" TargetType="TextBox">
         <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"/>

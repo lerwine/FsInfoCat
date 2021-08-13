@@ -67,7 +67,7 @@ namespace FsInfoCat.Local
         // DEFERRED: Not sure if Range would work here for a nullable value, but minimum value needs to be validated.
         /// <summary>Gets the maximum duration of the crawl.</summary>
         /// <value>The maximum duration of the crawl, in seconds. This value should never be less than <c>60</c>.</value>
-        [Range(DbConstants.DbColMinValue_TTL, long.MaxValue, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_TTLInvalid),
+        [Range(DbConstants.DbColMinValue_TTL_TotalSeconds, long.MaxValue, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_TTLInvalid),
             ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual long? TTL { get => _ttl.GetValue(); set => _ttl.SetValue(value); }
 
@@ -187,6 +187,18 @@ namespace FsInfoCat.Local
             _rescheduleAfterFail = AddChangeTracker(nameof(RescheduleAfterFail), false);
             _rootId = AddChangeTracker(nameof(RootId), Guid.Empty);
             _root = AddChangeTracker<Subdirectory>(nameof(Root), null);
+        }
+
+        public TimeSpan? GetTTLAsTimeSpan()
+        {
+            long? value = TTL;
+            return value.HasValue ? TimeSpan.FromSeconds(value.Value) : null;
+        }
+
+        public TimeSpan? GetRescheduleIntervalAsTimeSpan()
+        {
+            long? value = RescheduleInterval;
+            return value.HasValue ? TimeSpan.FromSeconds(value.Value) : null;
         }
 
         internal static void BuildEntity(EntityTypeBuilder<CrawlConfiguration> builder)

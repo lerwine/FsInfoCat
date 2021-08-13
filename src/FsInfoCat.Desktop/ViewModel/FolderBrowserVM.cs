@@ -94,7 +94,7 @@ namespace FsInfoCat.Desktop.ViewModel
                             PathError = string.IsNullOrWhiteSpace(exception.Message) ? exception.ToString() : exception.Message;
                             return;
                         }
-                        if (list is null) // DEFERRED: Figure out what to do if null was returned but path does exist (i.e. directory created or drive added after browser window was opened)
+                        if (list is null) // Figure out what to do if null was returned but path does exist (i.e. directory created or drive added after browser window was opened)
                             PathError = FsInfoCat.Properties.Resources.ErrorMessage_DirectoryNotFound;
                         else
                         {
@@ -218,7 +218,6 @@ namespace FsInfoCat.Desktop.ViewModel
                 SelectedFolder = folder;
             else if (parameter is null)
                 SelectedFolder = null;
-            // TODO: Implement OnValueSelectedExecute Logic
         }
 
         private static readonly DependencyPropertyKey OkClickCommandPropertyKey = DependencyProperty.RegisterReadOnly(nameof(OkClickCommand), typeof(Commands.RelayCommand), typeof(FolderBrowserVM), new PropertyMetadata(null));

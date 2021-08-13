@@ -115,7 +115,7 @@
     "DisplayName" NVARCHAR(1024) NOT NULL CHECK(length(trim("DisplayName"))=length("DisplayName") AND length("DisplayName")>0) COLLATE NOCASE,
     "MaxRecursionDepth" UNSIGNED SMALLINT NOT NULL DEFAULT 128,
     "MaxTotalItems" UNSIGNED BIGINT CHECK("MaxTotalItems" IS NULL OR "MaxTotalItems">0) DEFAULT NULL,
-    "TTL" BIGINT CHECK("TTL" IS NULL OR "TTL">59) DEFAULT NULL,
+    "TTL" BIGINT CHECK("TTL" IS NULL OR "TTL">299) DEFAULT NULL,
     "StatusValue" UNSIGNED TINYINT NOT NULL CHECK("StatusValue"<8) DEFAULT 0, -- CrawlStatus.NotRunning
     "LastCrawlStart" DATETIME DEFAULT NULL,
     "LastCrawlEnd" DATETIME DEFAULT NULL,

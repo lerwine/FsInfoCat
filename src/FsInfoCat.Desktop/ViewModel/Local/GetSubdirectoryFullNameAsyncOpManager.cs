@@ -10,9 +10,13 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat.Desktop.ViewModel.Local
 {
-    public class GetSubdirectoryFullNameAsyncOpManager : AsyncOpResultManagerViewModel<Subdirectory, AsyncFuncOpViewModel<Subdirectory, (CrawlConfiguration Configuration, Subdirectory Root, string Path)>, AsyncFuncOpViewModel<Subdirectory, (CrawlConfiguration Configuration, Subdirectory Root, string Path)>.StatusListenerImpl, (CrawlConfiguration Configuration, Subdirectory Root, string Path)>
+    public class GetSubdirectoryFullNameAsyncOpManager : AsyncOpResultManagerViewModel<Subdirectory,
+        AsyncFuncOpViewModel<Subdirectory, (CrawlConfiguration Configuration, Subdirectory Root, string Path)>,
+        AsyncFuncOpViewModel<Subdirectory, (CrawlConfiguration Configuration, Subdirectory Root, string Path)>.StatusListenerImpl,
+        (CrawlConfiguration Configuration, Subdirectory Root, string Path)>
     {
-        internal async Task<(CrawlConfiguration Configuration, Subdirectory Root, string Path)> LookupFullName(Subdirectory subdirectory, AsyncFuncOpViewModel<Subdirectory, (CrawlConfiguration Configuration, Subdirectory Root, string Path)>.StatusListenerImpl statusListener)
+        internal async Task<(CrawlConfiguration Configuration, Subdirectory Root, string Path)> LookupFullNameAsync(Subdirectory subdirectory,
+            AsyncFuncOpViewModel<Subdirectory, (CrawlConfiguration Configuration, Subdirectory Root, string Path)>.StatusListenerImpl statusListener)
         {
             if (subdirectory is null)
                 throw new ArgumentNullException(nameof(subdirectory));

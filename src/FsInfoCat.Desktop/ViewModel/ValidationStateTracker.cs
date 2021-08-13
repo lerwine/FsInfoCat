@@ -23,6 +23,8 @@ namespace FsInfoCat.Desktop.ViewModel
 
         protected virtual void OnAnyInvalidPropertyChanged(bool oldValue, bool newValue) => AnyInvalidPropertyChanged?.Invoke(this, EventArgs.Empty);
 
+        public bool IsValid(string propertyName) => propertyName is not null && !_invalidNames.Contains(propertyName);
+
         protected void SetValidationState(string propertyName, bool isValid)
         {
             VerifyAccess();

@@ -5,11 +5,8 @@ using System.Collections;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Windows;
 using System.Windows.Threading;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace FsInfoCat.Desktop.ViewModel.Local
 {
@@ -30,7 +27,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         /// <summary>
         /// Occurs when modal popup button is clicked, usually to cancel a background operation or acknowledge the results of a background operation.
         /// </summary>
-        public event EventHandler PopupButtonClick;
+        public event EventHandler ModalPopupConfirmClick;
 
         /// <summary>
         /// Occurs when the validation errors have changed for a property or for the entire entity.
@@ -59,16 +56,21 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             // DEFERRED: Figure out why this crashes designer
             SetValue(LookupCrawlConfigOpMgrPropertyKey, new LookupCrawlConfigAsyncOpManager());
             SetValue(GetSubdirectoryFullNameOpMgrPropertyKey, new GetSubdirectoryFullNameAsyncOpManager());
+            SetValue(SaveChangesOpMgrPropertyKey, new SaveCrawlConfigAsyncOpManager());
         }
 
         /// <summary>
-        /// Intented to be called from a XAML action when the <see cref="Window.Closing"/> event occurs.
+        /// This get invoked by a <see cref="Microsoft.Xaml.Behaviors.Core.CallMethodAction">CallMethodAction</see> from the <see cref="View.Local.EditCrawlConfigWindow">EditCrawlConfigWindow</see>
+        /// using an <see cref="Microsoft.Xaml.Behaviors.EventTrigger">EventTrigger</see> bound to the <see cref="Window.Closing"/> event.
         /// </summary>
-        // TODO: Ensure there is an action for this in the XAML code.
         public void OnWindowClosing()
         {
             try { LookupCrawlConfigOpMgr.CancelAll(); }
-            finally { GetSubdirectoryFullNameOpMgr.CancelAll(); }
+            finally
+            {
+                try { LookupCrawlConfigOpMgr.CancelAll(); }
+                finally { SaveChangesOpMgr.CancelAll(); }
+            }
         }
 
         /// <summary>
@@ -113,11 +115,10 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 
             EventHandler closeCancelHandler = new((sender, e) =>
             {
-                vm.LookupCrawlConfigOpMgr.CancelAll();
                 window.DialogResult = false;
             });
             vm.CloseCancel += closeCancelHandler;
-            vm.PopupButtonClick += closeCancelHandler;
+            vm.ModalPopupConfirmClick += closeCancelHandler;
             vm.CloseSuccess += new EventHandler((sender, e) => window.DialogResult = true);
             window.Loaded += new RoutedEventHandler((sender, e) =>
             {
@@ -150,9 +151,8 @@ namespace FsInfoCat.Desktop.ViewModel.Local
                         }
                         else
                         {
-                            vm.PopupButtonClick -= closeCancelHandler;
+                            vm.ModalPopupConfirmClick -= closeCancelHandler;
                             vm.Initialize(task.Result.Configuration, task.Result.Root, task.Result.ValidatedPath);
-                            vm.IsBgOperationActive = false;
                             vm.LookupCrawlConfigOpMgr.RemoveOperation(lookupCrawlConfig);
                         }
                     });
@@ -180,8 +180,18 @@ namespace FsInfoCat.Desktop.ViewModel.Local
                 Root = subdirectory;
                 CreatedOn = ModifiedOn = DateTime.Now;
                 MaxTotalItems = int.MaxValue;
-                TTL = TimeSpan.FromDays(1.0);
-                RescheduleInterval = TimeSpan.FromDays(1.0);
+                TimeSpan timeSpan = TimeSpan.FromDays(1.0);
+                TtlDays = timeSpan.Days;
+                TtlHours = timeSpan.Hours;
+                TtlMinutes = timeSpan.Minutes;
+                timeSpan = TimeSpan.FromDays(1.0);
+                RescheduleDays = timeSpan.Days;
+                RescheduleHours = timeSpan.Hours;
+                RescheduleMinutes = timeSpan.Minutes;
+                DateTime dateTime = DateTime.Now.AddHours(8.0);
+                NextScheduledStartDate = dateTime.Date;
+                NextScheduledStartHour = dateTime.Hour;
+                NextScheduledStartMinute = dateTime.Minute;
             }
         }
 
@@ -198,18 +208,38 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             LimitTotalItems = mti.HasValue;
             MaxTotalItems = mti ?? int.MaxValue;
             long? seconds = crawlConfiguration.TTL;
-            LimitTTL = seconds.HasValue;
-            TTL = seconds.HasValue ? TimeSpan.FromSeconds(seconds.Value) : TimeSpan.FromDays(1.0);
+            if (seconds.HasValue)
+            {
+                LimitTTL = true;
+                TimeSpan timeSpan = TimeSpan.FromSeconds(seconds.Value);
+                TtlDays = timeSpan.Days;
+                TtlHours = timeSpan.Hours;
+                TtlMinutes = timeSpan.Minutes;
+            }
+            else
+                LimitTTL = false;
             StatusValue = crawlConfiguration.StatusValue;
             LastCrawlEnd = crawlConfiguration.LastCrawlEnd;
             LastCrawlStart = crawlConfiguration.LastCrawlStart;
-            NextScheduledStart = crawlConfiguration.NextScheduledStart;
             Notes = crawlConfiguration.Notes;
             RescheduleAfterFail = crawlConfiguration.RescheduleAfterFail;
             RescheduleFromJobEnd = crawlConfiguration.RescheduleFromJobEnd;
             seconds = crawlConfiguration.RescheduleInterval;
-            AutoReschedule = seconds.HasValue;
-            RescheduleInterval = seconds.HasValue ? TimeSpan.FromSeconds(seconds.Value) : TimeSpan.FromDays(1.0);
+            DateTime? nextScheduledStart = crawlConfiguration.NextScheduledStart;
+            if (seconds.HasValue)
+            {
+                AutoReschedule = true;
+                TimeSpan timeSpan = TimeSpan.FromSeconds(seconds.Value);
+                RescheduleDays = timeSpan.Days;
+                RescheduleHours = timeSpan.Hours;
+                RescheduleMinutes = timeSpan.Minutes;
+            }
+            else
+                OneTimeSchedule = nextScheduledStart.HasValue;
+            DateTime dateTime = nextScheduledStart ?? DateTime.Now.AddHours(8.0);
+            NextScheduledStartDate = dateTime.Date;
+            NextScheduledStartHour = dateTime.Hour;
+            NextScheduledStartMinute = dateTime.Minute;
             LastSynchronizedOn = crawlConfiguration.LastSynchronizedOn;
             WindowTitle = "Edit Crawl Configuration";
         }
@@ -233,7 +263,69 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 
         private void OnSelectRootExecute(object parameter)
         {
-            // TODO: Implement OnSelectRootExecute Logic
+            string newPath;
+            using (System.Windows.Forms.FolderBrowserDialog dialog = new()
+            {
+                Description = FsInfoCat.Properties.Resources.Description_SelectCrawlRootFolder,
+                SelectedPath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)
+            })
+            {
+                if (dialog.ShowDialog(new WindowOwner()) != System.Windows.Forms.DialogResult.OK)
+                    return;
+                newPath = dialog.SelectedPath;
+            }
+
+            ReadOnlyCollection<string> errors = Validation.GetErrors(nameof(Path));
+            Validation.ClearErrorMessages(nameof(Path));
+            if (_validatedPath.HasValue && ReferenceEquals(_validatedPath.Value.Path, newPath))
+                Path = _validatedPath.Value.Path;
+            else
+            {
+                AsyncFuncOpViewModel<string, (CrawlConfiguration Configuration, Subdirectory Root, string ValidatedPath)> lookupCrawlConfig = LookupCrawlConfigAsync(newPath);
+                lookupCrawlConfig.AsyncOpStatusPropertyChanged += BgOp_AsyncOpStatusPropertyChanged;
+                lookupCrawlConfig.StatusMessagePropertyChanged += BgOp_StatusMessagePropertyChanged;
+                lookupCrawlConfig.MessageLevelPropertyChanged += BgOp_MessageLevelPropertyChanged;
+                lookupCrawlConfig.DurationPropertyChanged += BgOp_DurationPropertyChanged;
+                BgOpStatusMessage = lookupCrawlConfig.StatusMessage;
+                BgOpMessageLevel = lookupCrawlConfig.MessageLevel;
+                BgOpStatus = lookupCrawlConfig.AsyncOpStatus;
+                lookupCrawlConfig.GetTask().ContinueWith(task =>
+                {
+                    lookupCrawlConfig.AsyncOpStatusPropertyChanged -= BgOp_AsyncOpStatusPropertyChanged;
+                    lookupCrawlConfig.StatusMessagePropertyChanged -= BgOp_StatusMessagePropertyChanged;
+                    lookupCrawlConfig.MessageLevelPropertyChanged -= BgOp_MessageLevelPropertyChanged;
+                    lookupCrawlConfig.DurationPropertyChanged -= BgOp_DurationPropertyChanged;
+                    Dispatcher.Invoke(() =>
+                    {
+                        BgOpStatusMessage = lookupCrawlConfig.StatusMessage;
+                        BgOpMessageLevel = lookupCrawlConfig.MessageLevel;
+                        BgOpStatus = lookupCrawlConfig.AsyncOpStatus;
+                        LookupCrawlConfigOpMgr.RemoveOperation(lookupCrawlConfig);
+                        if (task.IsCanceled)
+                        {
+                            // TODO: Log cancellation.
+                        }
+                        else if (task.IsFaulted)
+                        {
+                            BgOpStatusMessage = "An unknown error has occurred. See logs for details.";
+                            BgOpMessageLevel = StatusMessageLevel.Error;
+                            BgOpStatus = AsyncOpStatusCode.Faulted;
+                        }
+                        else if (task.Result.Configuration is null)
+                        {
+                            _validatedPath = (task.Result.Root, task.Result.ValidatedPath);
+                            Path = task.Result.ValidatedPath;
+                            Root = task.Result.Root;
+                        }
+                        else if (Path != task.Result.ValidatedPath)
+                        {
+                            BgOpStatusMessage = "That path already has its own craw configuration.";
+                            BgOpMessageLevel = StatusMessageLevel.Error;
+                            BgOpStatus = AsyncOpStatusCode.Faulted;
+                        }
+                    });
+                });
+            }
         }
 
         #endregion
@@ -249,11 +341,96 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         /// Gets the bindable "Save" command.
         /// </summary>
         /// <value>The bindable command for saving changes and closing the edit window.</value>
+        // TODO: Make sure save command is disabled when there are validation errors or no changes.
         public Commands.RelayCommand SaveCommand => (Commands.RelayCommand)GetValue(SaveCommandProperty);
 
         private void OnSaveExecute(object parameter)
         {
-            // TODO: Implement OnSaveExecute Logic
+            CrawlConfiguration model = Model;
+            if (model is null)
+            {
+                model = new()
+                {
+                    Id = Guid.NewGuid(),
+                    CreatedOn = DateTime.Now,
+                    DisplayName = DisplayName,
+                    MaxRecursionDepth = MaxRecursionDepth,
+                    Notes = Notes,
+                    Root = Root,
+                    StatusValue = IsEnabled ? CrawlStatus.NotRunning : CrawlStatus.Disabled
+                };
+                model.ModifiedOn = model.CreatedOn;
+            }
+            else
+            {
+                model.ModifiedOn = DateTime.Now;
+                model.DisplayName = DisplayName;
+                model.MaxRecursionDepth = MaxRecursionDepth;
+                model.Notes = Notes;
+                model.Root = Root;
+                if (!IsEnabled)
+                    model.StatusValue = CrawlStatus.Disabled;
+            }
+            if (LimitTotalItems)
+                model.MaxTotalItems = MaxTotalItems;
+            else
+                model.MaxTotalItems = null;
+            if (LimitTTL)
+                model.TTL = ((((TtlDays.Value * 24L) + TtlHours.Value) * 60L) + TtlMinutes.Value) * 60L;
+            else
+                model.TTL = null;
+            if (AutoReschedule)
+            {
+                model.RescheduleAfterFail = RescheduleAfterFail;
+                model.RescheduleFromJobEnd = RescheduleFromJobEnd;
+                model.RescheduleInterval = ((((RescheduleDays.Value * 24L) + RescheduleHours.Value) * 60L) + RescheduleMinutes.Value) * 60L;
+            }
+            else
+            {
+                model.RescheduleAfterFail = false;
+                model.RescheduleFromJobEnd = false;
+                model.RescheduleInterval = null;
+            }
+            if (NoReschedule)
+                model.NextScheduledStart = null;
+            else
+                model.NextScheduledStart = new DateTime(NextScheduledStartDate.Value.Year, NextScheduledStartDate.Value.Month, NextScheduledStartDate.Value.Day,
+                    (NextScheduledStartHour.Value == 12) ? (NextScheduledStartIsPm ? 12 : 0) : (NextScheduledStartIsPm ? NextScheduledStartHour.Value + 12 :
+                        NextScheduledStartHour.Value), NextScheduledStartMinute.Value, 0, DateTimeKind.Local);
+            AsyncFuncOpViewModel<(CrawlConfiguration, EditCrawlConfigVM), (CrawlConfiguration Configuration, Subdirectory Root)> asyncOp = SaveChangesAsync(model);
+            asyncOp.AsyncOpStatusPropertyChanged += BgOp_AsyncOpStatusPropertyChanged;
+            asyncOp.StatusMessagePropertyChanged += BgOp_StatusMessagePropertyChanged;
+            asyncOp.MessageLevelPropertyChanged += BgOp_MessageLevelPropertyChanged;
+            asyncOp.DurationPropertyChanged += BgOp_DurationPropertyChanged;
+            BgOpStatusMessage = asyncOp.StatusMessage;
+            BgOpMessageLevel = asyncOp.MessageLevel;
+            BgOpStatus = asyncOp.AsyncOpStatus;
+            asyncOp.GetTask().ContinueWith(task =>
+            {
+                asyncOp.AsyncOpStatusPropertyChanged -= BgOp_AsyncOpStatusPropertyChanged;
+                asyncOp.StatusMessagePropertyChanged -= BgOp_StatusMessagePropertyChanged;
+                asyncOp.MessageLevelPropertyChanged -= BgOp_MessageLevelPropertyChanged;
+                asyncOp.DurationPropertyChanged -= BgOp_DurationPropertyChanged;
+                Dispatcher.Invoke(() =>
+                {
+                    BgOpStatusMessage = asyncOp.StatusMessage;
+                    BgOpMessageLevel = asyncOp.MessageLevel;
+                    BgOpStatus = asyncOp.AsyncOpStatus;
+                    SaveChangesOpMgr.RemoveOperation(asyncOp);
+                    if (task.IsCanceled)
+                    {
+                        // TODO: Log cancellation.
+                    }
+                    else if (task.IsFaulted)
+                    {
+                        BgOpStatusMessage = "An unknown error has occurred. See logs for details.";
+                        BgOpMessageLevel = StatusMessageLevel.Error;
+                        BgOpStatus = AsyncOpStatusCode.Faulted;
+                    }
+                    else
+                        CloseSuccess?.Invoke(this, EventArgs.Empty);
+                });
+            });
         }
 
         #endregion
@@ -293,12 +470,17 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             switch (BgOpStatus)
             {
                 case AsyncOpStatusCode.RanToCompletion:
-                    LookupCrawlConfigOpMgr.CancelAll();
+                case AsyncOpStatusCode.CancellationPending:
                     break;
                 case AsyncOpStatusCode.Faulted:
                 case AsyncOpStatusCode.Canceled:
                     BgOpStatus = AsyncOpStatusCode.NotStarted;
-                    PopupButtonClick?.Invoke(this, EventArgs.Empty);
+                    ModalPopupConfirmClick?.Invoke(this, EventArgs.Empty);
+                    break;
+                default:
+                    LookupCrawlConfigOpMgr.CancelAll();
+                    GetSubdirectoryFullNameOpMgr.CancelAll();
+                    SaveChangesOpMgr.CancelAll();
                     break;
             }
         }
@@ -311,8 +493,8 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 
         #region BgOpStatus Property Members
 
-        private static readonly DependencyPropertyKey BgOpStatusPropertyKey = DependencyProperty.RegisterReadOnly(nameof(BgOpStatus), typeof(AsyncOpStatusCode), typeof(EditCrawlConfigVM),
-                new PropertyMetadata(AsyncOpStatusCode.NotStarted));
+        private static readonly DependencyPropertyKey BgOpStatusPropertyKey = DependencyProperty.RegisterReadOnly(nameof(BgOpStatus), typeof(AsyncOpStatusCode),
+            typeof(EditCrawlConfigVM), new PropertyMetadata(AsyncOpStatusCode.NotStarted));
 
         public static readonly DependencyProperty BgOpStatusProperty = BgOpStatusPropertyKey.DependencyProperty;
 
@@ -330,8 +512,8 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 
         #region BgOpMessageLevel Property Members
 
-        private static readonly DependencyPropertyKey BgOpMessageLevelPropertyKey = DependencyProperty.RegisterReadOnly(nameof(BgOpMessageLevel), typeof(StatusMessageLevel), typeof(EditCrawlConfigVM),
-                new PropertyMetadata(StatusMessageLevel.Information));
+        private static readonly DependencyPropertyKey BgOpMessageLevelPropertyKey = DependencyProperty.RegisterReadOnly(nameof(BgOpMessageLevel), typeof(StatusMessageLevel),
+            typeof(EditCrawlConfigVM), new PropertyMetadata(StatusMessageLevel.Information));
 
         public static readonly DependencyProperty BgOpMessageLevelProperty = BgOpMessageLevelPropertyKey.DependencyProperty;
 
@@ -345,7 +527,8 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 
         #region BgOpStatusMessage Property Members
 
-        private static readonly DependencyPropertyKey BgOpStatusMessagePropertyKey = DependencyProperty.RegisterReadOnly(nameof(BgOpStatusMessage), typeof(string), typeof(EditCrawlConfigVM), new PropertyMetadata(""));
+        private static readonly DependencyPropertyKey BgOpStatusMessagePropertyKey = DependencyProperty.RegisterReadOnly(nameof(BgOpStatusMessage), typeof(string),
+            typeof(EditCrawlConfigVM), new PropertyMetadata(""));
 
         public static readonly DependencyProperty BgOpStatusMessageProperty = BgOpStatusMessagePropertyKey.DependencyProperty;
 
@@ -372,26 +555,10 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 
         #endregion
 
-        #region IsBgOperationActive Property
-
-        private static readonly DependencyPropertyKey IsBgOperationActivePropertyKey = DependencyProperty.RegisterReadOnly(nameof(IsBgOperationActive), typeof(bool), typeof(EditCrawlConfigVM),
-                new PropertyMetadata(false));
-
-        public static readonly DependencyProperty IsBgOperationActiveProperty = IsBgOperationActivePropertyKey.DependencyProperty;
-
-        [Obsolete("Don't use this - BgOpStatus gets reset to NotStarted when the modal popup can be hidden")]
-        public bool IsBgOperationActive
-        {
-            get => (bool)GetValue(IsBgOperationActiveProperty);
-            private set => SetValue(IsBgOperationActivePropertyKey, value);
-        }
-
-        #endregion
-
         #region LookupCrawlConfigOpMgr Property
 
-        private static readonly DependencyPropertyKey LookupCrawlConfigOpMgrPropertyKey = DependencyProperty.RegisterReadOnly(nameof(LookupCrawlConfigOpMgr), typeof(LookupCrawlConfigAsyncOpManager), typeof(EditCrawlConfigVM),
-                new PropertyMetadata(null));
+        private static readonly DependencyPropertyKey LookupCrawlConfigOpMgrPropertyKey = DependencyProperty.RegisterReadOnly(nameof(LookupCrawlConfigOpMgr),
+            typeof(LookupCrawlConfigAsyncOpManager), typeof(EditCrawlConfigVM), new PropertyMetadata(null));
 
         public static readonly DependencyProperty LookupCrawlConfigOpMgrProperty = LookupCrawlConfigOpMgrPropertyKey.DependencyProperty;
 
@@ -401,14 +568,21 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 
         #region GetSubdirectoryFullNameOpMgr Property
 
-        private static readonly DependencyPropertyKey GetSubdirectoryFullNameOpMgrPropertyKey = DependencyProperty.RegisterReadOnly(nameof(GetSubdirectoryFullNameOpMgr), typeof(GetSubdirectoryFullNameAsyncOpManager), typeof(EditCrawlConfigVM),
-                new PropertyMetadata(null));
+        private static readonly DependencyPropertyKey GetSubdirectoryFullNameOpMgrPropertyKey = DependencyProperty.RegisterReadOnly(nameof(GetSubdirectoryFullNameOpMgr),
+            typeof(GetSubdirectoryFullNameAsyncOpManager), typeof(EditCrawlConfigVM), new PropertyMetadata(null));
 
         public static readonly DependencyProperty GetSubdirectoryFullNameOpMgrProperty = GetSubdirectoryFullNameOpMgrPropertyKey.DependencyProperty;
 
         public GetSubdirectoryFullNameAsyncOpManager GetSubdirectoryFullNameOpMgr => (GetSubdirectoryFullNameAsyncOpManager)GetValue(GetSubdirectoryFullNameOpMgrProperty);
 
         #endregion
+
+        private static readonly DependencyPropertyKey SaveChangesOpMgrPropertyKey = DependencyProperty.RegisterReadOnly(nameof(SaveChangesOpMgr), typeof(SaveCrawlConfigAsyncOpManager), typeof(EditCrawlConfigVM),
+                new PropertyMetadata(null));
+
+        public static readonly DependencyProperty SaveChangesOpMgrProperty = SaveChangesOpMgrPropertyKey.DependencyProperty;
+
+        public SaveCrawlConfigAsyncOpManager SaveChangesOpMgr => (SaveCrawlConfigAsyncOpManager)GetValue(SaveChangesOpMgrProperty);
 
         private void BgOp_DurationPropertyChanged(object sender, DependencyPropertyChangedEventArgs e) => BgOpDuration = (e.NewValue as TimeSpan?) ?? TimeSpan.Zero;
 
@@ -486,6 +660,614 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         }
 
         public IEnumerable GetErrors(string propertyName) => Validation.GetErrors(propertyName);
+
+        #endregion
+
+        #region TTL Members
+
+        private void OnTtlChanged(int days, int hours, int minutes)
+        {
+            if (days == 0)
+            {
+                if (hours == 0 && minutes < DbConstants.DbColMinValue_TTL_TotalMinutes)
+                    Validation.SetErrorMessage(nameof(TtlMinutes), $"Crawl duration limit cannot be less than {DbConstants.DbColMinValue_TTL_TotalMinutes} minutes.");
+                else if (!Validation.IsValid(nameof(TtlMinutes)))
+                    CheckTtlMinutes(minutes);
+            }
+            else if (days == TimeSpan.MaxValue.Days)
+            {
+                if (hours > TimeSpan.MaxValue.Hours)
+                    Validation.SetErrorMessage(nameof(TtlHours), $"Hours cannot be greater than {TimeSpan.MaxValue.Hours} when days is set to {TimeSpan.MaxValue.Days}.");
+                else
+                {
+                    if (!Validation.IsValid(nameof(TtlHours)))
+                        CheckTtlHours(hours);
+                    if (hours == TimeSpan.MaxValue.Hours)
+                    {
+                        if (minutes > TimeSpan.MaxValue.Minutes)
+                            Validation.SetErrorMessage(nameof(TtlMinutes), $"Minutes cannot be greater than {TimeSpan.MaxValue.Minutes} when days is set to {TimeSpan.MaxValue.Days} and hours is set to {TimeSpan.MaxValue.Hours}.");
+                        else if (!Validation.IsValid(nameof(TtlMinutes)))
+                            CheckTtlMinutes(minutes);
+                    }
+                }
+            }
+        }
+
+        #region LimitTTL Property Members
+
+        public static readonly DependencyProperty LimitTTLProperty = DependencyProperty.Register(nameof(LimitTTL), typeof(bool), typeof(EditCrawlConfigVM),
+                new PropertyMetadata(false, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as EditCrawlConfigVM).OnLimitTTLPropertyChanged((bool)e.OldValue, (bool)e.NewValue)));
+
+        public bool LimitTTL
+        {
+            get => (bool)GetValue(LimitTTLProperty);
+            set => SetValue(LimitTTLProperty, value);
+        }
+
+        protected virtual void OnLimitTTLPropertyChanged(bool oldValue, bool newValue)
+        {
+            if (newValue)
+            {
+                int days = TtlDays ?? 0;
+                int hours = TtlHours ?? 0;
+                int minutes = TtlMinutes ?? 0;
+                bool isValid = CheckTtlDays(days);
+                if (!CheckTtlHours(hours))
+                    isValid = false;
+                if (CheckTtlMinutes(minutes) && isValid)
+                    OnTtlChanged(days, hours, minutes);
+            }
+            else
+            {
+                bool isChanged = Model?.GetTTLAsTimeSpan() is not null;
+                ChangeTracker.SetChangeState(nameof(TtlDays), isChanged);
+                ChangeTracker.SetChangeState(nameof(TtlHours), isChanged);
+                ChangeTracker.SetChangeState(nameof(TtlMinutes), isChanged);
+                Validation.ClearErrorMessages(nameof(TtlDays));
+                Validation.ClearErrorMessages(nameof(TtlHours));
+                Validation.ClearErrorMessages(nameof(TtlMinutes));
+            }
+        }
+
+        #endregion
+
+        #region TtlDays Property Members
+
+        public static readonly DependencyProperty TtlDaysProperty = DependencyProperty.Register(nameof(TtlDays), typeof(int?), typeof(EditCrawlConfigVM),
+                new PropertyMetadata(0, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
+                    (d as EditCrawlConfigVM).OnTtlDaysPropertyChanged((int?)e.OldValue, (int?)e.NewValue)));
+
+        public int? TtlDays
+        {
+            get => (int?)GetValue(TtlDaysProperty);
+            set => SetValue(TtlDaysProperty, value);
+        }
+
+        private bool CheckTtlDays(int days)
+        {
+            ChangeTracker.SetChangeState(nameof(TtlDays), days != Model?.GetTTLAsTimeSpan()?.Days);
+
+            if (days < 0)
+                Validation.SetErrorMessage(nameof(TtlDays), "Days cannot be negative");
+            else if (days > TimeSpan.MaxValue.Days)
+                Validation.SetErrorMessage(nameof(TtlDays), $"Days cannot be greater than {TimeSpan.MaxValue.Days}");
+            else
+            {
+                Validation.ClearErrorMessages(nameof(TtlDays));
+                return true;
+            }
+            return false;
+        }
+
+        protected virtual void OnTtlDaysPropertyChanged(int? oldValue, int? newValue)
+        {
+            if (!LimitTTL)
+                return;
+            int days = newValue ?? 0;
+            if (CheckTtlDays(days) && Validation.IsValid(nameof(TtlHours)) && Validation.IsValid(nameof(TtlMinutes)))
+                OnTtlChanged(days, TtlHours ?? 0, TtlMinutes ?? 0);
+        }
+
+        #endregion
+
+        #region TtlHours Property Members
+
+        public static readonly DependencyProperty TtlHoursProperty = DependencyProperty.Register(nameof(TtlHours), typeof(int?), typeof(EditCrawlConfigVM),
+                new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
+                    (d as EditCrawlConfigVM).OnTtlHoursPropertyChanged((int?)e.OldValue, (int?)e.NewValue)));
+
+        public int? TtlHours
+        {
+            get => (int?)GetValue(TtlHoursProperty);
+            set => SetValue(TtlHoursProperty, value);
+        }
+
+        private bool CheckTtlHours(int hours)
+        {
+            ChangeTracker.SetChangeState(nameof(TtlHours), hours != Model?.GetTTLAsTimeSpan()?.Hours);
+            if (hours < 0)
+                Validation.SetErrorMessage(nameof(TtlHours), "Hours cannot be negative");
+            else if (hours > 23)
+                Validation.SetErrorMessage(nameof(TtlHours), "Hours cannot be greater than 23");
+            else
+            {
+                Validation.ClearErrorMessages(nameof(TtlHours));
+                return true;
+            }
+            return false;
+        }
+
+        protected virtual void OnTtlHoursPropertyChanged(int? oldValue, int? newValue)
+        {
+            if (!LimitTTL)
+                return;
+            int hours = newValue ?? 0;
+            if (CheckTtlHours(hours) && Validation.IsValid(nameof(TtlDays)) && Validation.IsValid(nameof(TtlMinutes)))
+                OnTtlChanged(TtlDays ?? 0, hours, TtlMinutes ?? 0);
+        }
+
+        #endregion
+
+        #region TtlMinutes Property Members
+
+        public static readonly DependencyProperty TtlMinutesProperty = DependencyProperty.Register(nameof(TtlMinutes), typeof(int?), typeof(EditCrawlConfigVM),
+                new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
+                    (d as EditCrawlConfigVM).OnTtlMinutesPropertyChanged((int?)e.OldValue, (int?)e.NewValue)));
+
+        public int? TtlMinutes
+        {
+            get => (int?)GetValue(TtlMinutesProperty);
+            set => SetValue(TtlMinutesProperty, value);
+        }
+
+        private bool CheckTtlMinutes(int minutes)
+        {
+            ChangeTracker.SetChangeState(nameof(TtlMinutes), minutes != Model?.GetTTLAsTimeSpan()?.Minutes);
+            if (minutes < 0)
+                Validation.SetErrorMessage(nameof(TtlMinutes), "Minutes cannot be negative");
+            else if (minutes > 59)
+                Validation.SetErrorMessage(nameof(TtlMinutes), "Minutes cannot be greater than 59");
+            else
+            {
+                Validation.ClearErrorMessages(nameof(TtlMinutes));
+                return true;
+            }
+            return false;
+        }
+
+        protected virtual void OnTtlMinutesPropertyChanged(int? oldValue, int? newValue)
+        {
+            if (!LimitTTL)
+                return;
+            int minutes = newValue ?? 0;
+            if (CheckTtlMinutes(minutes) && Validation.IsValid(nameof(TtlDays)) && Validation.IsValid(nameof(TtlHours)))
+                OnTtlChanged(TtlDays ?? 0, TtlHours ?? 0, minutes);
+        }
+
+        #endregion
+
+        #endregion
+
+        #region Scheduling Members
+
+        #region AutoReschedule Property Members
+
+        public static readonly DependencyProperty AutoRescheduleProperty = DependencyProperty.Register(nameof(AutoReschedule), typeof(bool), typeof(EditCrawlConfigVM),
+                new PropertyMetadata(false, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
+                    (d as EditCrawlConfigVM).OnAutoReschedulePropertyChanged((bool)e.OldValue, (bool)e.NewValue)));
+
+        public bool AutoReschedule
+        {
+            get => (bool)GetValue(AutoRescheduleProperty);
+            set => SetValue(AutoRescheduleProperty, value);
+        }
+
+        private void OnAutoReschedulePropertyChanged(bool oldValue, bool newValue)
+        {
+            if (newValue)
+            {
+                OneTimeSchedule = false;
+                NoReschedule = false;
+                ChangeTracker.SetChangeState(nameof(RescheduleAfterFail), Model?.RescheduleAfterFail != RescheduleAfterFail);
+                ChangeTracker.SetChangeState(nameof(RescheduleFromJobEnd), Model?.RescheduleFromJobEnd != RescheduleFromJobEnd);
+                int days = TtlDays ?? 0;
+                int hours = TtlHours ?? 0;
+                int minutes = TtlMinutes ?? 0;
+                bool isValid = CheckTtlDays(days);
+                if (!CheckRescheduleHours(hours))
+                    isValid = false;
+                if (CheckRescheduleMinutes(minutes) && isValid)
+                    OnRescheduleIntervalChanged(days, hours, minutes);
+                if (!NextScheduledStartDate.HasValue)
+                    Validation.SetErrorMessage(nameof(NextScheduledStartDate), "No initial crawl start date selected.");
+                else
+                    Validation.ClearErrorMessages(nameof(NextScheduledStartDate));
+                OnNextScheduledStartHourPropertyChanged(null, NextScheduledStartHour);
+                OnNextScheduledStartMinutePropertyChanged(null, NextScheduledStartMinute);
+            }
+            else
+            {
+                bool isChanged = Model?.GetTTLAsTimeSpan() is not null;
+                ChangeTracker.SetChangeState(nameof(TtlDays), isChanged);
+                ChangeTracker.SetChangeState(nameof(TtlHours), isChanged);
+                ChangeTracker.SetChangeState(nameof(TtlMinutes), isChanged);
+                Validation.ClearErrorMessages(nameof(TtlDays));
+                Validation.ClearErrorMessages(nameof(TtlHours));
+                Validation.ClearErrorMessages(nameof(TtlMinutes));
+                ChangeTracker.SetChangeState(nameof(RescheduleAfterFail), false);
+                ChangeTracker.SetChangeState(nameof(RescheduleFromJobEnd), false);
+            }
+        }
+
+        #endregion
+
+        #region OneTimeSchedule Property Members
+
+        public static readonly DependencyProperty OneTimeScheduleProperty = DependencyProperty.Register(nameof(OneTimeSchedule), typeof(bool), typeof(EditCrawlConfigVM),
+                new PropertyMetadata(false, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as EditCrawlConfigVM).OnOneTimeSchedulePropertyChanged((bool)e.OldValue, (bool)e.NewValue)));
+
+        public bool OneTimeSchedule
+        {
+            get => (bool)GetValue(OneTimeScheduleProperty);
+            set => SetValue(OneTimeScheduleProperty, value);
+        }
+
+        protected virtual void OnOneTimeSchedulePropertyChanged(bool oldValue, bool newValue)
+        {
+            if (newValue)
+            {
+                AutoReschedule = false;
+                NoReschedule = false;
+                if (!NextScheduledStartDate.HasValue)
+                    Validation.SetErrorMessage(nameof(NextScheduledStartDate), "No crawl start date selected.");
+                OnNextScheduledStartHourPropertyChanged(null, NextScheduledStartHour);
+                OnNextScheduledStartMinutePropertyChanged(null, NextScheduledStartMinute);
+            }
+        }
+
+        #endregion
+
+        #region NoReschedule Property Members
+
+        public static readonly DependencyProperty NoRescheduleProperty = DependencyProperty.Register(nameof(NoReschedule), typeof(bool), typeof(EditCrawlConfigVM),
+                new PropertyMetadata(true, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
+                    (d as EditCrawlConfigVM).OnNoReschedulePropertyChanged((bool)e.OldValue, (bool)e.NewValue)));
+
+        public bool NoReschedule
+        {
+            get => (bool)GetValue(NoRescheduleProperty);
+            set => SetValue(NoRescheduleProperty, value);
+        }
+
+        protected virtual void OnNoReschedulePropertyChanged(bool oldValue, bool newValue)
+        {
+            if (newValue)
+            {
+                AutoReschedule = false;
+                OneTimeSchedule = false;
+                Validation.ClearErrorMessages(nameof(NextScheduledStartDate));
+                Validation.ClearErrorMessages(nameof(NextScheduledStartHour));
+                Validation.ClearErrorMessages(nameof(NextScheduledStartMinute));
+            }
+        }
+
+        #endregion
+
+        #region RescheduleInterval Members
+
+        private void OnRescheduleIntervalChanged(int days, int hours, int minutes)
+        {
+            if (days == 0)
+            {
+                if (hours == 0 && minutes < DbConstants.DbColMinValue_RescheduleInterval_TotalMinutes)
+                    Validation.SetErrorMessage(nameof(RescheduleMinutes), $"Re-schedule interval cannot be less than {DbConstants.DbColMinValue_RescheduleInterval_TotalMinutes} minutes.");
+                else if (!Validation.IsValid(nameof(RescheduleMinutes)))
+                    CheckRescheduleMinutes(minutes);
+            }
+            else if (days == TimeSpan.MaxValue.Days)
+            {
+                if (hours > TimeSpan.MaxValue.Hours)
+                    Validation.SetErrorMessage(nameof(RescheduleHours), $"Hours cannot be greater than {TimeSpan.MaxValue.Hours} when days is set to {TimeSpan.MaxValue.Days}.");
+                else
+                {
+                    if (!Validation.IsValid(nameof(RescheduleHours)))
+                        CheckRescheduleHours(hours);
+                    if (hours == TimeSpan.MaxValue.Hours)
+                    {
+                        if (minutes > TimeSpan.MaxValue.Minutes)
+                            Validation.SetErrorMessage(nameof(RescheduleMinutes), $"Minutes cannot be greater than {TimeSpan.MaxValue.Minutes} when days is set to {TimeSpan.MaxValue.Days} and hours is set to {TimeSpan.MaxValue.Hours}.");
+                        else if (!Validation.IsValid(nameof(RescheduleMinutes)))
+                            CheckRescheduleMinutes(minutes);
+                    }
+                }
+            }
+        }
+
+        #region RescheduleDays Property Members
+
+        public static readonly DependencyProperty RescheduleDaysProperty = DependencyProperty.Register(nameof(RescheduleDays), typeof(int?), typeof(EditCrawlConfigVM),
+                new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as EditCrawlConfigVM).OnRescheduleDaysPropertyChanged((int?)e.OldValue, (int?)e.NewValue)));
+
+        public int? RescheduleDays
+        {
+            get => (int?)GetValue(RescheduleDaysProperty);
+            set => SetValue(RescheduleDaysProperty, value);
+        }
+
+        private bool CheckRescheduleDays(int days)
+        {
+            ChangeTracker.SetChangeState(nameof(RescheduleDays), days != Model?.GetRescheduleIntervalAsTimeSpan()?.Days);
+
+            if (days < 0)
+                Validation.SetErrorMessage(nameof(RescheduleDays), "Days cannot be negative");
+            else if (days > TimeSpan.MaxValue.Days)
+                Validation.SetErrorMessage(nameof(RescheduleDays), $"Days cannot be greater than {TimeSpan.MaxValue.Days}");
+            else
+            {
+                Validation.ClearErrorMessages(nameof(RescheduleDays));
+                return true;
+            }
+            return false;
+        }
+
+        protected virtual void OnRescheduleDaysPropertyChanged(int? oldValue, int? newValue)
+        {
+            if (!AutoReschedule)
+                return;
+            int days = newValue ?? 0;
+            if (CheckRescheduleDays(days) && Validation.IsValid(nameof(RescheduleHours)) && Validation.IsValid(nameof(RescheduleMinutes)))
+                OnRescheduleIntervalChanged(days, RescheduleHours ?? 0, RescheduleMinutes ?? 0);
+        }
+
+        #endregion
+
+        #region RescheduleHours Property Members
+
+        public static readonly DependencyProperty RescheduleHoursProperty = DependencyProperty.Register(nameof(RescheduleHours), typeof(int?), typeof(EditCrawlConfigVM),
+                new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as EditCrawlConfigVM).OnRescheduleHoursPropertyChanged((int?)e.OldValue, (int?)e.NewValue)));
+
+        public int? RescheduleHours
+        {
+            get => (int?)GetValue(RescheduleHoursProperty);
+            set => SetValue(RescheduleHoursProperty, value);
+        }
+
+        private bool CheckRescheduleHours(int hours)
+        {
+            ChangeTracker.SetChangeState(nameof(RescheduleHours), hours != Model?.GetRescheduleIntervalAsTimeSpan()?.Hours);
+            if (hours < 0)
+                Validation.SetErrorMessage(nameof(RescheduleHours), "Hours cannot be negative");
+            else if (hours > 23)
+                Validation.SetErrorMessage(nameof(RescheduleHours), "Hours cannot be greater than 23");
+            else
+            {
+                Validation.ClearErrorMessages(nameof(RescheduleHours));
+                return true;
+            }
+            return false;
+        }
+
+        protected virtual void OnRescheduleHoursPropertyChanged(int? oldValue, int? newValue)
+        {
+            if (!AutoReschedule)
+                return;
+            int hours = newValue ?? 0;
+            if (CheckRescheduleHours(hours) && Validation.IsValid(nameof(RescheduleDays)) && Validation.IsValid(nameof(RescheduleMinutes)))
+                OnTtlChanged(RescheduleDays ?? 0, hours, RescheduleMinutes ?? 0);
+        }
+
+        #endregion
+
+        #region RescheduleMinutes Property Members
+
+        public static readonly DependencyProperty RescheduleMinutesProperty = DependencyProperty.Register(nameof(RescheduleMinutes), typeof(int?), typeof(EditCrawlConfigVM),
+                new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as EditCrawlConfigVM).OnRescheduleMinutesPropertyChanged((int?)e.OldValue, (int?)e.NewValue)));
+
+        public int? RescheduleMinutes
+        {
+            get => (int?)GetValue(RescheduleMinutesProperty);
+            set => SetValue(RescheduleMinutesProperty, value);
+        }
+
+        private bool CheckRescheduleMinutes(int minutes)
+        {
+            ChangeTracker.SetChangeState(nameof(RescheduleMinutes), minutes != Model?.GetRescheduleIntervalAsTimeSpan()?.Minutes);
+            if (minutes < 0)
+                Validation.SetErrorMessage(nameof(RescheduleMinutes), "Minutes cannot be negative");
+            else if (minutes > 59)
+                Validation.SetErrorMessage(nameof(RescheduleMinutes), "Minutes cannot be greater than 59");
+            else
+            {
+                Validation.ClearErrorMessages(nameof(RescheduleMinutes));
+                return true;
+            }
+            return false;
+        }
+
+        protected virtual void OnRescheduleMinutesPropertyChanged(int? oldValue, int? newValue)
+        {
+            if (!AutoReschedule)
+                return;
+            int minutes = newValue ?? 0;
+            if (CheckRescheduleMinutes(minutes) && Validation.IsValid(nameof(RescheduleDays)) && Validation.IsValid(nameof(RescheduleHours)))
+                OnTtlChanged(RescheduleDays ?? 0, RescheduleHours ?? 0, minutes);
+        }
+
+        #endregion
+
+        #region RescheduleAfterFail Property Members
+
+        public static readonly DependencyProperty RescheduleAfterFailProperty = DependencyProperty.Register(nameof(RescheduleAfterFail), typeof(bool), typeof(EditCrawlConfigVM),
+                new PropertyMetadata(false, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
+                    (d as EditCrawlConfigVM).OnRescheduleAfterFailPropertyChanged((bool)e.OldValue, (bool)e.NewValue)));
+
+        public bool RescheduleAfterFail
+        {
+            get => (bool)GetValue(RescheduleAfterFailProperty);
+            set => SetValue(RescheduleAfterFailProperty, value);
+        }
+
+        private void OnRescheduleAfterFailPropertyChanged(bool oldValue, bool newValue)
+        {
+#if DEBUG
+            if (DesignerProperties.GetIsInDesignMode(this) || Model is null)
+                return;
+#else
+            if (Model is null)
+                return;
+#endif
+            ChangeTracker.SetChangeState(nameof(RescheduleAfterFail), Model?.RescheduleAfterFail != newValue);
+        }
+
+        #endregion
+
+        #region RescheduleFromJobEnd Property Members
+
+        public static readonly DependencyProperty RescheduleFromJobEndProperty = DependencyProperty.Register(nameof(RescheduleFromJobEnd), typeof(bool), typeof(EditCrawlConfigVM),
+                new PropertyMetadata(false, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
+                    (d as EditCrawlConfigVM).OnRescheduleFromJobEndPropertyChanged((bool)e.OldValue, (bool)e.NewValue)));
+
+        public bool RescheduleFromJobEnd
+        {
+            get => (bool)GetValue(RescheduleFromJobEndProperty);
+            set => SetValue(RescheduleFromJobEndProperty, value);
+        }
+
+        private void OnRescheduleFromJobEndPropertyChanged(bool oldValue, bool newValue)
+        {
+#if DEBUG
+            if (DesignerProperties.GetIsInDesignMode(this) || Model is null)
+                return;
+#else
+            if (Model is null)
+                return;
+#endif
+            ChangeTracker.SetChangeState(nameof(RescheduleFromJobEnd), Model?.RescheduleFromJobEnd != newValue);
+        }
+
+        #endregion
+
+        #endregion
+
+        #region NextScheduledStart Members
+
+        #region NextScheduledStartDate Property Members
+
+        public static readonly DependencyProperty NextScheduledStartDateProperty = DependencyProperty.Register(nameof(NextScheduledStartDate), typeof(DateTime?), typeof(EditCrawlConfigVM),
+                new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
+                    (d as EditCrawlConfigVM).OnNextScheduledStartDatePropertyChanged((DateTime?)e.OldValue, (DateTime?)e.NewValue)));
+
+        public DateTime? NextScheduledStartDate
+        {
+            get => (DateTime?)GetValue(NextScheduledStartDateProperty);
+            set => SetValue(NextScheduledStartDateProperty, value);
+        }
+
+        protected virtual void OnNextScheduledStartDatePropertyChanged(DateTime? oldValue, DateTime? newValue)
+        {
+            if (!NoReschedule)
+            {
+                if (!NextScheduledStartDate.HasValue)
+                    Validation.SetErrorMessage(nameof(NextScheduledStartDate), "No initial crawl start date selected.");
+                else
+                    Validation.ClearErrorMessages(nameof(NextScheduledStartDate));
+            }
+        }
+
+        #endregion
+
+        #region NextScheduledStartHour Property Members
+
+        public static readonly DependencyProperty NextScheduledStartHourProperty = DependencyProperty.Register(nameof(NextScheduledStartHour), typeof(int?), typeof(EditCrawlConfigVM),
+                new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
+                    (d as EditCrawlConfigVM).OnNextScheduledStartHourPropertyChanged((int?)e.OldValue, (int?)e.NewValue)));
+
+        public int? NextScheduledStartHour
+        {
+            get => (int?)GetValue(NextScheduledStartHourProperty);
+            set => SetValue(NextScheduledStartHourProperty, value);
+        }
+
+        protected virtual void OnNextScheduledStartHourPropertyChanged(int? oldValue, int? newValue)
+        {
+            if (NoReschedule)
+                return;
+
+            OnNextScheduledStartHourChanged(newValue, NextScheduledStartIsPm);
+            if (newValue.HasValue)
+            {
+                if (newValue.Value < 1)
+                    Validation.SetErrorMessage(nameof(NextScheduledStartHour), "Hours cannot be less than 1");
+                else if (newValue.Value > 12)
+                    Validation.SetErrorMessage(nameof(NextScheduledStartHour), "Hours cannot be greater than 12");
+                else
+                    Validation.ClearErrorMessages(nameof(NextScheduledStartHour));
+            }
+            else
+                Validation.SetErrorMessage(nameof(NextScheduledStartHour), "Hours not specified");
+        }
+
+        private void OnNextScheduledStartHourChanged(int? newValue, bool isPm)
+        {
+            ChangeTracker.SetChangeState(nameof(NextScheduledStartHour), ((newValue.Value == 12) ? (isPm ? 12 : 0) : (isPm ? newValue.Value + 12 : newValue.Value)) != Model?.NextScheduledStart?.Hour);
+        }
+
+        #endregion
+
+        #region NextScheduledStartMinute Property Members
+
+        public static readonly DependencyProperty NextScheduledStartMinuteProperty = DependencyProperty.Register(nameof(NextScheduledStartMinute), typeof(int?), typeof(EditCrawlConfigVM),
+                new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
+                    (d as EditCrawlConfigVM).OnNextScheduledStartMinutePropertyChanged((int?)e.OldValue, (int?)e.NewValue)));
+
+        public int? NextScheduledStartMinute
+        {
+            get => (int?)GetValue(NextScheduledStartMinuteProperty);
+            set => SetValue(NextScheduledStartMinuteProperty, value);
+        }
+
+        protected virtual void OnNextScheduledStartMinutePropertyChanged(int? oldValue, int? newValue)
+        {
+            if (NoReschedule)
+                return;
+
+            ChangeTracker.SetChangeState(nameof(NextScheduledStartMinute), newValue != Model.NextScheduledStart?.Minute);
+            if (newValue.HasValue)
+            {
+                if (newValue.Value < 0)
+                    Validation.SetErrorMessage(nameof(NextScheduledStartMinute), "Minutes cannot be negative");
+                else if (newValue.Value > 59)
+                    Validation.SetErrorMessage(nameof(NextScheduledStartMinute), "Minutes cannot be greater than 59");
+                else
+                    Validation.ClearErrorMessages(nameof(NextScheduledStartMinute));
+            }
+            else
+                Validation.SetErrorMessage(nameof(NextScheduledStartMinute), "Minutes not specified");
+        }
+
+        #endregion
+
+        #region NextScheduledStartIsPm Property Members
+
+        public static readonly DependencyProperty NextScheduledStartIsPmProperty = DependencyProperty.Register(nameof(NextScheduledStartIsPm), typeof(bool), typeof(EditCrawlConfigVM),
+                new PropertyMetadata(false, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
+                    (d as EditCrawlConfigVM).OnNextScheduledStartIsPmPropertyChanged((bool)e.OldValue, (bool)e.NewValue)));
+
+        public bool NextScheduledStartIsPm
+        {
+            get => (bool)GetValue(NextScheduledStartIsPmProperty);
+            set => SetValue(NextScheduledStartIsPmProperty, value);
+        }
+
+        protected virtual void OnNextScheduledStartIsPmPropertyChanged(bool oldValue, bool newValue)
+        {
+            if (!NoReschedule)
+                OnNextScheduledStartHourChanged(NextScheduledStartHour, newValue);
+        }
+
+        #endregion
+
+        #endregion
 
         #endregion
 
@@ -580,7 +1362,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             if (isEnabled)
             {
                 ChangeTracker.SetChangeState(nameof(MaxTotalItems), Model?.MaxTotalItems != value);
-                if (value < DbConstants.DbColMinValue_TTL)
+                if (value < DbConstants.DbColMinValue_TTL_TotalSeconds)
                     Validation.SetErrorMessage(nameof(MaxTotalItems), FsInfoCat.Properties.Resources.ErrorMessage_TTLInvalid);
                 else
                     Validation.ClearErrorMessages(nameof(MaxTotalItems));
@@ -601,7 +1383,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         #region Root Property Members
 
         private static readonly DependencyPropertyKey RootPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Root), typeof(Subdirectory), typeof(EditCrawlConfigVM),
-                new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
+            new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
                     (d as EditCrawlConfigVM).OnRootPropertyChanged((Subdirectory)e.OldValue, (Subdirectory)e.NewValue)));
 
         public static readonly DependencyProperty RootProperty = RootPropertyKey.DependencyProperty;
@@ -618,89 +1400,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             if (DesignerProperties.GetIsInDesignMode(this))
                 return;
 #endif
-            if (newValue is null)
-            {
-                Path = "";
-                Validation.SetErrorMessage(nameof(Path), FsInfoCat.Properties.Resources.ErrorMessage_RootPathRequired);
-                ChangeTracker.SetChangeState(nameof(Path), (Model?.RootId ?? Guid.Empty) != Guid.Empty);
-            }
-            else
-            {
-                ReadOnlyCollection<string> errors = Validation.GetErrors(nameof(Path));
-                Validation.ClearErrorMessages(nameof(Path));
-                ChangeTracker.SetChangeState(nameof(Path), Model?.RootId != newValue.Id);
-                if (_validatedPath.HasValue && ReferenceEquals(_validatedPath.Value.Root, newValue))
-                    Path = _validatedPath.Value.Path;
-                else
-                {
-                    EventHandler clickHandler = new((sender, e) => GetSubdirectoryFullNameOpMgr.CancelAll());
-                    PopupButtonClick += clickHandler;
-                    IsBgOperationActive = true;
-                    AsyncFuncOpViewModel<Subdirectory, (CrawlConfiguration Configuration, Subdirectory Root, string ValidatedPath)> lookupCrawlConfig = GetSubdirectoryFullNameAsync(newValue);
-                    lookupCrawlConfig.AsyncOpStatusPropertyChanged += BgOp_AsyncOpStatusPropertyChanged;
-                    lookupCrawlConfig.StatusMessagePropertyChanged += BgOp_StatusMessagePropertyChanged;
-                    lookupCrawlConfig.MessageLevelPropertyChanged += BgOp_MessageLevelPropertyChanged;
-                    lookupCrawlConfig.DurationPropertyChanged += BgOp_DurationPropertyChanged;
-                    BgOpStatusMessage = lookupCrawlConfig.StatusMessage;
-                    BgOpMessageLevel = lookupCrawlConfig.MessageLevel;
-                    BgOpStatus = lookupCrawlConfig.AsyncOpStatus;
-                    lookupCrawlConfig.GetTask().ContinueWith(task =>
-                    {
-                        PopupButtonClick -= clickHandler;
-                        lookupCrawlConfig.AsyncOpStatusPropertyChanged -= BgOp_AsyncOpStatusPropertyChanged;
-                        lookupCrawlConfig.StatusMessagePropertyChanged -= BgOp_StatusMessagePropertyChanged;
-                        lookupCrawlConfig.MessageLevelPropertyChanged -= BgOp_MessageLevelPropertyChanged;
-                        lookupCrawlConfig.DurationPropertyChanged -= BgOp_DurationPropertyChanged;
-                        if (task.IsCanceled)
-                        {
-                            // TODO: Log cancellation.
-                        }
-                        else if (task.IsFaulted)
-                        {
-                            // TODO: Log failure.
-                        }
-                        else
-                        {
-                            if (task.Result.Configuration is null)
-                                _validatedPath = (newValue, task.Result.ValidatedPath);
-                        }
-                        Dispatcher.Invoke(() =>
-                        {
-                            BgOpStatusMessage = lookupCrawlConfig.StatusMessage;
-                            BgOpMessageLevel = lookupCrawlConfig.MessageLevel;
-                            BgOpStatus = lookupCrawlConfig.AsyncOpStatus;
-                            GetSubdirectoryFullNameOpMgr.RemoveOperation(lookupCrawlConfig);
-                            if (task.IsCompletedSuccessfully)
-                            {
-                                if (task.Result.Configuration is null)
-                                {
-                                    if (!string.IsNullOrWhiteSpace(Path))
-                                    {
-                                        Path = task.Result.ValidatedPath;
-                                        BgOpStatus = AsyncOpStatusCode.NotStarted;
-                                        IsBgOperationActive = false;
-                                        return;
-                                    }
-                                }
-                                else
-                                {
-                                    BgOpStatusMessage = "That subdirectory already has a crawl configuration defined.";
-                                    BgOpMessageLevel = StatusMessageLevel.Error;
-                                    BgOpStatus = AsyncOpStatusCode.Faulted;
-                                }
-                            }
-                            else if (!task.IsCanceled)
-                            {
-                                BgOpStatusMessage = "An unexpected error has occurred. See logs for further details.";
-                                BgOpMessageLevel = StatusMessageLevel.Error;
-                            }
-                            if (errors is not null)
-                                Validation.SetErrorMessage(nameof(Path), errors.First(), errors.Skip(1).ToArray());
-                            IsBgOperationActive = false;
-                        });
-                    });
-                }
-            }
+            ChangeTracker.SetChangeState(nameof(Path), Model?.RootId != newValue?.Id);
         }
 
         #endregion
@@ -720,11 +1420,14 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         #endregion
 
         private AsyncFuncOpViewModel<string, (CrawlConfiguration Configuration, Subdirectory Root, string Path)> LookupCrawlConfigAsync(string path) =>
-            AsyncFuncOpViewModel<string, (CrawlConfiguration Configuration, Subdirectory Root, string Path)>.FromAsync(path, LookupCrawlConfigOpMgr, LookupCrawlConfigAsyncOpManager.LookupCrawlConfig);
+            AsyncFuncOpViewModel<string, (CrawlConfiguration Configuration, Subdirectory Root, string Path)>.FromAsync(path, LookupCrawlConfigOpMgr, LookupCrawlConfigAsyncOpManager.LookupCrawlConfigAsync);
 
         private AsyncFuncOpViewModel<Subdirectory, (CrawlConfiguration Configuration, Subdirectory Root, string Path)> GetSubdirectoryFullNameAsync(Subdirectory subdirectory) =>
             AsyncFuncOpViewModel<Subdirectory, (CrawlConfiguration Configuration, Subdirectory Root, string Path)>.FromAsync(subdirectory, GetSubdirectoryFullNameOpMgr,
-                GetSubdirectoryFullNameOpMgr.LookupFullName);
+                GetSubdirectoryFullNameOpMgr.LookupFullNameAsync);
+
+        private AsyncFuncOpViewModel<(CrawlConfiguration, EditCrawlConfigVM), (CrawlConfiguration Configuration, Subdirectory Root)> SaveChangesAsync(CrawlConfiguration crawlConfiguration) =>
+            AsyncFuncOpViewModel<(CrawlConfiguration, EditCrawlConfigVM), (CrawlConfiguration Configuration, Subdirectory Root)>.FromAsync((crawlConfiguration, this), SaveChangesOpMgr, SaveChangesOpMgr.SaveChangesAsync);
 
         #endregion
 
@@ -765,182 +1468,6 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 #endif
             ChangeTracker.SetChangeState(nameof(MaxRecursionDepth), Model?.MaxRecursionDepth != newValue);
         }
-
-        #endregion
-
-        #region TTL Members
-
-        #region LimitTTL Property Members
-
-        public static readonly DependencyProperty LimitTTLProperty = DependencyProperty.Register(nameof(LimitTTL), typeof(bool), typeof(EditCrawlConfigVM),
-                new PropertyMetadata(false, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as EditCrawlConfigVM).OnLimitTTLPropertyChanged((bool)e.OldValue, (bool)e.NewValue)));
-
-        public bool LimitTTL
-        {
-            get => (bool)GetValue(LimitTTLProperty);
-            set => SetValue(LimitTTLProperty, value);
-        }
-
-        protected virtual void OnLimitTTLPropertyChanged(bool oldValue, bool newValue)
-        {
-#if DEBUG
-            if (DesignerProperties.GetIsInDesignMode(this) || Model is null)
-                return;
-#else
-            if (Model is null)
-                return;
-#endif
-            OnTTLChanged(TTL, newValue);
-        }
-
-        #endregion
-
-        #region TTL Property Members
-
-        public static readonly DependencyProperty TTLProperty = DependencyProperty.Register(nameof(TTL), typeof(TimeSpan), typeof(EditCrawlConfigVM), new PropertyMetadata(TimeSpan.Zero,
-            (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as EditCrawlConfigVM).OnTTLPropertyChanged((TimeSpan)e.OldValue, (TimeSpan)e.NewValue)));
-
-        public TimeSpan TTL
-        {
-            get => (TimeSpan)GetValue(TTLProperty);
-            set => SetValue(TTLProperty, value);
-        }
-
-        protected virtual void OnTTLPropertyChanged(TimeSpan oldValue, TimeSpan newValue)
-        {
-            TtlDays = newValue.Days;
-            TtlHours = newValue.Hours;
-            TtlMinutes = newValue.Minutes;
-            TtlSeconds = newValue.Seconds;
-#if DEBUG
-            if (DesignerProperties.GetIsInDesignMode(this) || Model is null)
-                return;
-#else
-            if (Model is null)
-                return;
-#endif
-            OnTTLChanged(newValue, LimitTTL);
-        }
-
-        private void OnTTLChanged(TimeSpan value, bool isEnabled)
-        {
-            long? originalValue = Model?.TTL;
-            if (isEnabled)
-            {
-                ChangeTracker.SetChangeState(nameof(TTL), !originalValue.HasValue || TimeSpan.FromSeconds(originalValue.Value) != value);
-                if (value < TimeSpan.FromSeconds(DbConstants.DbColMinValue_TTL))
-                    Validation.SetErrorMessage(nameof(TTL), FsInfoCat.Properties.Resources.ErrorMessage_TTLInvalid);
-                else
-                    Validation.ClearErrorMessages(nameof(TTL));
-            }
-            else
-            {
-                ChangeTracker.SetChangeState(nameof(TTL), originalValue.HasValue);
-                Validation.ClearErrorMessages(nameof(TTL));
-            }
-        }
-
-        #endregion
-
-        #region TtlDays Property Members
-
-        public static readonly DependencyProperty TtlDaysProperty = DependencyProperty.Register(nameof(TtlDays), typeof(int), typeof(EditCrawlConfigVM),
-                new PropertyMetadata(0, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                    (d as EditCrawlConfigVM).OnTtlDaysPropertyChanged((int)e.OldValue, (int)e.NewValue)));
-
-        public int TtlDays
-        {
-            get => (int)GetValue(TtlDaysProperty);
-            set => SetValue(TtlDaysProperty, value);
-        }
-
-        protected virtual void OnTtlDaysPropertyChanged(int oldValue, int newValue)
-        {
-#if DEBUG
-            if (DesignerProperties.GetIsInDesignMode(this))
-                return;
-#endif
-            TimeSpan timeSpan = TTL;
-            if (timeSpan.Days != newValue)
-                TTL = new TimeSpan(newValue, timeSpan.Hours, timeSpan.Minutes, timeSpan.Seconds);
-        }
-
-        #endregion
-
-        #region TtlHours Property Members
-
-        public static readonly DependencyProperty TtlHoursProperty = DependencyProperty.Register(nameof(TtlHours), typeof(int), typeof(EditCrawlConfigVM),
-                new PropertyMetadata(0, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                    (d as EditCrawlConfigVM).OnTtlHoursPropertyChanged((int)e.OldValue, (int)e.NewValue)));
-
-        public int TtlHours
-        {
-            get => (int)GetValue(TtlHoursProperty);
-            set => SetValue(TtlHoursProperty, value);
-        }
-
-        protected virtual void OnTtlHoursPropertyChanged(int oldValue, int newValue)
-        {
-#if DEBUG
-            if (DesignerProperties.GetIsInDesignMode(this))
-                return;
-#endif
-            TimeSpan timeSpan = TTL;
-            if (timeSpan.Hours != newValue)
-                TTL = new TimeSpan(timeSpan.Days, newValue, timeSpan.Minutes, timeSpan.Seconds);
-        }
-
-        #endregion
-
-        #region TtlMinutes Property Members
-
-        public static readonly DependencyProperty TtlMinutesProperty = DependencyProperty.Register(nameof(TtlMinutes), typeof(int), typeof(EditCrawlConfigVM),
-                new PropertyMetadata(0, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                    (d as EditCrawlConfigVM).OnTtlMinutesPropertyChanged((int)e.OldValue, (int)e.NewValue)));
-
-        public int TtlMinutes
-        {
-            get => (int)GetValue(TtlMinutesProperty);
-            set => SetValue(TtlMinutesProperty, value);
-        }
-
-        protected virtual void OnTtlMinutesPropertyChanged(int oldValue, int newValue)
-        {
-#if DEBUG
-            if (DesignerProperties.GetIsInDesignMode(this))
-                return;
-#endif
-            TimeSpan timeSpan = TTL;
-            if (timeSpan.Minutes != newValue)
-                TTL = new TimeSpan(timeSpan.Days, timeSpan.Hours, newValue, timeSpan.Seconds);
-        }
-
-        #endregion
-
-        #region TtlSeconds Property Members
-
-        public static readonly DependencyProperty TtlSecondsProperty = DependencyProperty.Register(nameof(TtlSeconds), typeof(int), typeof(EditCrawlConfigVM),
-                new PropertyMetadata(0, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                    (d as EditCrawlConfigVM).OnTtlSecondsPropertyChanged((int)e.OldValue, (int)e.NewValue)));
-
-        public int TtlSeconds
-        {
-            get => (int)GetValue(TtlSecondsProperty);
-            set => SetValue(TtlSecondsProperty, value);
-        }
-
-        protected virtual void OnTtlSecondsPropertyChanged(int oldValue, int newValue)
-        {
-#if DEBUG
-            if (DesignerProperties.GetIsInDesignMode(this))
-                return;
-#endif
-            TimeSpan timeSpan = TTL;
-            if (timeSpan.Minutes != newValue)
-                TTL = new TimeSpan(timeSpan.Days, timeSpan.Hours, timeSpan.Minutes, newValue);
-        }
-
-        #endregion
 
         #endregion
 
@@ -1038,21 +1565,6 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 
         #endregion
 
-        #region NextScheduledStart Property Members
-
-        private static readonly DependencyPropertyKey NextScheduledStartPropertyKey = DependencyProperty.RegisterReadOnly(nameof(NextScheduledStart), typeof(DateTime?), typeof(EditCrawlConfigVM),
-                new PropertyMetadata(null));
-
-        public static readonly DependencyProperty NextScheduledStartProperty = NextScheduledStartPropertyKey.DependencyProperty;
-
-        public DateTime? NextScheduledStart
-        {
-            get => (DateTime?)GetValue(NextScheduledStartProperty);
-            private set => SetValue(NextScheduledStartPropertyKey, value);
-        }
-
-        #endregion
-
         #region Notes Property Members
 
         public static readonly DependencyProperty NotesProperty = DependencyProperty.Register(nameof(Notes), typeof(string), typeof(EditCrawlConfigVM),
@@ -1076,246 +1588,6 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 #endif
             ChangeTracker.SetChangeState(nameof(Notes), Model?.Notes != newValue);
         }
-
-        #endregion
-
-        #region RescheduleInterval Members
-
-        #region AutoReschedule Property Members
-
-        public static readonly DependencyProperty AutoRescheduleProperty = DependencyProperty.Register(nameof(AutoReschedule), typeof(bool), typeof(EditCrawlConfigVM),
-                new PropertyMetadata(false, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                    (d as EditCrawlConfigVM).OnAutoReschedulePropertyChanged((bool)e.OldValue, (bool)e.NewValue)));
-
-        public bool AutoReschedule
-        {
-            get => (bool)GetValue(AutoRescheduleProperty);
-            set => SetValue(AutoRescheduleProperty, value);
-        }
-
-        private void OnAutoReschedulePropertyChanged(bool oldValue, bool newValue)
-        {
-#if DEBUG
-            if (DesignerProperties.GetIsInDesignMode(this) || Model is null)
-                return;
-#else
-            if (Model is null)
-                return;
-#endif
-            OnRescheduleIntervalChanged(RescheduleInterval, newValue);
-            if (newValue)
-            {
-                ChangeTracker.SetChangeState(nameof(RescheduleAfterFail), Model?.RescheduleAfterFail != RescheduleAfterFail);
-                ChangeTracker.SetChangeState(nameof(RescheduleFromJobEnd), Model?.RescheduleFromJobEnd != RescheduleFromJobEnd);
-            }
-            else
-            {
-                ChangeTracker.SetChangeState(nameof(RescheduleAfterFail), false);
-                ChangeTracker.SetChangeState(nameof(RescheduleFromJobEnd), false);
-            }
-        }
-
-        #endregion
-
-        #region RescheduleInterval Property Members
-
-        public static readonly DependencyProperty RescheduleIntervalProperty = DependencyProperty.Register(nameof(RescheduleInterval), typeof(TimeSpan), typeof(EditCrawlConfigVM),
-                new PropertyMetadata(TimeSpan.Zero, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                    (d as EditCrawlConfigVM).OnRescheduleIntervalPropertyChanged((TimeSpan)e.OldValue, (TimeSpan)e.NewValue)));
-
-        public TimeSpan RescheduleInterval
-        {
-            get => (TimeSpan)GetValue(RescheduleIntervalProperty);
-            set => SetValue(RescheduleIntervalProperty, value);
-        }
-
-        private void OnRescheduleIntervalPropertyChanged(TimeSpan oldValue, TimeSpan newValue)
-        {
-            RescheduleDays = newValue.Days;
-            RescheduleHours = newValue.Hours;
-            RescheduleMinutes = newValue.Minutes;
-            RescheduleSeconds = newValue.Seconds;
-#if DEBUG
-            if (DesignerProperties.GetIsInDesignMode(this) || Model is null)
-                return;
-#else
-            if (Model is null)
-                return;
-#endif
-            OnRescheduleIntervalChanged(newValue, AutoReschedule);
-        }
-
-        private void OnRescheduleIntervalChanged(TimeSpan value, bool isEnabled)
-        {
-            long? originalValue = Model?.RescheduleInterval;
-            if (isEnabled)
-            {
-                ChangeTracker.SetChangeState(nameof(RescheduleInterval), !originalValue.HasValue || TimeSpan.FromSeconds(originalValue.Value) != value);
-                if (value < TimeSpan.FromSeconds(DbConstants.DbColMinValue_RescheduleInterval))
-                    Validation.SetErrorMessage(nameof(RescheduleInterval), FsInfoCat.Properties.Resources.ErrorMessage_RescheduleIntervalInvalid);
-                else
-                    Validation.ClearErrorMessages(nameof(RescheduleInterval));
-            }
-            else
-            {
-                ChangeTracker.SetChangeState(nameof(RescheduleInterval), originalValue.HasValue);
-                Validation.ClearErrorMessages(nameof(RescheduleInterval));
-            }
-        }
-
-        #endregion
-
-        #region RescheduleDays Property Members
-
-        public static readonly DependencyProperty RescheduleDaysProperty = DependencyProperty.Register(nameof(RescheduleDays), typeof(int), typeof(EditCrawlConfigVM),
-                new PropertyMetadata(0, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                    (d as EditCrawlConfigVM).OnRescheduleDaysPropertyChanged((int)e.OldValue, (int)e.NewValue)));
-
-        public int RescheduleDays
-        {
-            get => (int)GetValue(RescheduleDaysProperty);
-            set => SetValue(RescheduleDaysProperty, value);
-        }
-
-        protected virtual void OnRescheduleDaysPropertyChanged(int oldValue, int newValue)
-        {
-#if DEBUG
-            if (DesignerProperties.GetIsInDesignMode(this))
-                return;
-#endif
-            TimeSpan timeSpan = RescheduleInterval;
-            if (timeSpan.Days != newValue)
-                RescheduleInterval = new TimeSpan(newValue, timeSpan.Hours, timeSpan.Minutes, timeSpan.Seconds);
-        }
-
-        #endregion
-
-        #region RescheduleHours Property Members
-
-        public static readonly DependencyProperty RescheduleHoursProperty = DependencyProperty.Register(nameof(RescheduleHours), typeof(int), typeof(EditCrawlConfigVM),
-                new PropertyMetadata(0, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                    (d as EditCrawlConfigVM).OnRescheduleHoursPropertyChanged((int)e.OldValue, (int)e.NewValue)));
-
-        public int RescheduleHours
-        {
-            get => (int)GetValue(RescheduleHoursProperty);
-            set => SetValue(RescheduleHoursProperty, value);
-        }
-
-        protected virtual void OnRescheduleHoursPropertyChanged(int oldValue, int newValue)
-        {
-#if DEBUG
-            if (DesignerProperties.GetIsInDesignMode(this))
-                return;
-#endif
-            TimeSpan timeSpan = RescheduleInterval;
-            if (timeSpan.Hours != newValue)
-                RescheduleInterval = new TimeSpan(timeSpan.Days, newValue, timeSpan.Minutes, timeSpan.Seconds);
-        }
-
-        #endregion
-
-        #region RescheduleMinutes Property Members
-
-        public static readonly DependencyProperty RescheduleMinutesProperty = DependencyProperty.Register(nameof(RescheduleMinutes), typeof(int), typeof(EditCrawlConfigVM),
-                new PropertyMetadata(0, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                    (d as EditCrawlConfigVM).OnRescheduleMinutesPropertyChanged((int)e.OldValue, (int)e.NewValue)));
-
-        public int RescheduleMinutes
-        {
-            get => (int)GetValue(RescheduleMinutesProperty);
-            set => SetValue(RescheduleMinutesProperty, value);
-        }
-
-        protected virtual void OnRescheduleMinutesPropertyChanged(int oldValue, int newValue)
-        {
-#if DEBUG
-            if (DesignerProperties.GetIsInDesignMode(this))
-                return;
-#endif
-            TimeSpan timeSpan = RescheduleInterval;
-            if (timeSpan.Minutes != newValue)
-                RescheduleInterval = new TimeSpan(timeSpan.Days, timeSpan.Hours, newValue, timeSpan.Seconds);
-        }
-
-        #endregion
-
-        #region RescheduleSeconds Property Members
-
-        public static readonly DependencyProperty RescheduleSecondsProperty = DependencyProperty.Register(nameof(RescheduleSeconds), typeof(int), typeof(EditCrawlConfigVM),
-                new PropertyMetadata(0, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                    (d as EditCrawlConfigVM).OnRescheduleSecondsPropertyChanged((int)e.OldValue, (int)e.NewValue)));
-
-        public int RescheduleSeconds
-        {
-            get => (int)GetValue(RescheduleSecondsProperty);
-            set => SetValue(RescheduleSecondsProperty, value);
-        }
-
-        protected virtual void OnRescheduleSecondsPropertyChanged(int oldValue, int newValue)
-        {
-#if DEBUG
-            if (DesignerProperties.GetIsInDesignMode(this))
-                return;
-#endif
-            TimeSpan timeSpan = RescheduleInterval;
-            if (timeSpan.Seconds != newValue)
-                RescheduleInterval = new TimeSpan(timeSpan.Days, timeSpan.Hours, timeSpan.Minutes, newValue);
-        }
-
-        #endregion
-
-        #region RescheduleAfterFail Property Members
-
-        public static readonly DependencyProperty RescheduleAfterFailProperty = DependencyProperty.Register(nameof(RescheduleAfterFail), typeof(bool), typeof(EditCrawlConfigVM),
-                new PropertyMetadata(false, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                    (d as EditCrawlConfigVM).OnRescheduleAfterFailPropertyChanged((bool)e.OldValue, (bool)e.NewValue)));
-
-        public bool RescheduleAfterFail
-        {
-            get => (bool)GetValue(RescheduleAfterFailProperty);
-            set => SetValue(RescheduleAfterFailProperty, value);
-        }
-
-        private void OnRescheduleAfterFailPropertyChanged(bool oldValue, bool newValue)
-        {
-#if DEBUG
-            if (DesignerProperties.GetIsInDesignMode(this) || Model is null)
-                return;
-#else
-            if (Model is null)
-                return;
-#endif
-            ChangeTracker.SetChangeState(nameof(RescheduleAfterFail), Model?.RescheduleAfterFail != newValue);
-        }
-
-        #endregion
-
-        #region RescheduleFromJobEnd Property Members
-
-        public static readonly DependencyProperty RescheduleFromJobEndProperty = DependencyProperty.Register(nameof(RescheduleFromJobEnd), typeof(bool), typeof(EditCrawlConfigVM),
-                new PropertyMetadata(false, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                    (d as EditCrawlConfigVM).OnRescheduleFromJobEndPropertyChanged((bool)e.OldValue, (bool)e.NewValue)));
-
-        public bool RescheduleFromJobEnd
-        {
-            get => (bool)GetValue(RescheduleFromJobEndProperty);
-            set => SetValue(RescheduleFromJobEndProperty, value);
-        }
-
-        private void OnRescheduleFromJobEndPropertyChanged(bool oldValue, bool newValue)
-        {
-#if DEBUG
-            if (DesignerProperties.GetIsInDesignMode(this) || Model is null)
-                return;
-#else
-            if (Model is null)
-                return;
-#endif
-            ChangeTracker.SetChangeState(nameof(RescheduleFromJobEnd), Model?.RescheduleFromJobEnd != newValue);
-        }
-
-        #endregion
 
         #endregion
 

@@ -11,7 +11,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 {
     public class LookupCrawlConfigAsyncOpManager : AsyncOpResultManagerViewModel<string, AsyncFuncOpViewModel<string, (CrawlConfiguration Configuration, Subdirectory Root, string Path)>, AsyncFuncOpViewModel<string, (CrawlConfiguration Configuration, Subdirectory Root, string Path)>.StatusListenerImpl, (CrawlConfiguration Configuration, Subdirectory Root, string Path)>
     {
-        internal static async Task<(CrawlConfiguration Configuration, Subdirectory Root, string ValidatedPath)> LookupCrawlConfig(string path, AsyncFuncOpViewModel<string, (CrawlConfiguration Configuration, Subdirectory Root, string Path)>.StatusListenerImpl statusListener)
+        internal static async Task<(CrawlConfiguration Configuration, Subdirectory Root, string ValidatedPath)> LookupCrawlConfigAsync(string path, AsyncFuncOpViewModel<string, (CrawlConfiguration Configuration, Subdirectory Root, string Path)>.StatusListenerImpl statusListener)
         {
             statusListener.CancellationToken.ThrowIfCancellationRequested();
             statusListener.SetMessage("Checking for existing directory information", StatusMessageLevel.Information);
