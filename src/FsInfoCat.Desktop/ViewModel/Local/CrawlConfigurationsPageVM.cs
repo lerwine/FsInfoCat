@@ -71,19 +71,19 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         {
             if (oldValue is not null)
             {
-                oldValue.StartCrawlNow -= SelecteItem_StartCrawlNow;
-                oldValue.Edit -= SelecteItem_Edit;
-                oldValue.Delete -= SelecteItem_Delete;
-                oldValue.OpenRootFolder -= SelecteItem_OpenRootFolder;
-                oldValue.ShowLogs -= SelecteItem_ShowLogs;
+                oldValue.StartCrawlNow -= SelectedCrawlConfig_StartCrawlNow;
+                oldValue.Edit -= SelectedCrawlConfig_Edit;
+                oldValue.Delete -= SelectedCrawlConfig_Delete;
+                oldValue.OpenRootFolder -= SelectedCrawlConfig_OpenRootFolder;
+                oldValue.ShowLogs -= SelectedCrawlConfig_ShowLogs;
             }
             if (newValue is not null)
             {
-                newValue.StartCrawlNow += SelecteItem_StartCrawlNow;
-                newValue.Edit += SelecteItem_Edit;
-                newValue.Delete += SelecteItem_Delete;
-                newValue.OpenRootFolder += SelecteItem_OpenRootFolder;
-                newValue.ShowLogs += SelecteItem_ShowLogs;
+                newValue.StartCrawlNow += SelectedCrawlConfig_StartCrawlNow;
+                newValue.Edit += SelectedCrawlConfig_Edit;
+                newValue.Delete += SelectedCrawlConfig_Delete;
+                newValue.OpenRootFolder += SelectedCrawlConfig_OpenRootFolder;
+                newValue.ShowLogs += SelectedCrawlConfig_ShowLogs;
             }
         }
 
@@ -214,32 +214,32 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 
         #endregion
 
-        private void SelecteItem_StartCrawlNow(object sender, EventArgs e)
+        private void SelectedCrawlConfig_StartCrawlNow(object sender, EventArgs e)
         {
             // TODO: Implement SelecteItem_StartCrawlNow
             throw new NotImplementedException();
         }
 
-        private void SelecteItem_Edit(object sender, EventArgs e)
+        private void SelectedCrawlConfig_Edit(object sender, EventArgs e)
         {
             CrawlConfiguration model = SelectedCrawlConfig?.Model;
             if (model is not null)
                 EditCrawlConfigVM.Edit(model);
         }
 
-        private void SelecteItem_Delete(object sender, EventArgs e)
+        private void SelectedCrawlConfig_Delete(object sender, EventArgs e)
         {
             // TODO: Implement SelecteItem_Delete
             throw new NotImplementedException();
         }
 
-        private void SelecteItem_OpenRootFolder(object sender, EventArgs e)
+        private void SelectedCrawlConfig_OpenRootFolder(object sender, EventArgs e)
         {
             // TODO: Implement SelecteItem_OpenRootFolder
             throw new NotImplementedException();
         }
 
-        private void SelecteItem_ShowLogs(object sender, EventArgs e)
+        private void SelectedCrawlConfig_ShowLogs(object sender, EventArgs e)
         {
             // TODO: Implement SelecteItem_ShowLogs
             throw new NotImplementedException();
