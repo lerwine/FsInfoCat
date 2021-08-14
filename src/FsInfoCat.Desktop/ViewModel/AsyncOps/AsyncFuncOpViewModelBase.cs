@@ -41,7 +41,8 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
             private set => SetValue(ResultPropertyKey, value);
         }
 
-        protected AsyncFuncOpViewModelBase(Guid concurrencyId, [DisallowNull] FuncItemBuilder builder, [AllowNull] Action<TListener> onListenerCreated) : base(concurrencyId, builder, onListenerCreated) { }
+        protected AsyncFuncOpViewModelBase(Guid concurrencyId, string initialMessage, [DisallowNull] FuncItemBuilder builder, [AllowNull] Action<TListener> onListenerCreated)
+            : base(concurrencyId, initialMessage, builder, onListenerCreated) { }
 
         protected abstract class FuncItemBuilder : AsyncOpManagerViewModel<TState, Task<TResult>, TItem, TListener>.ItemBuilder
         {

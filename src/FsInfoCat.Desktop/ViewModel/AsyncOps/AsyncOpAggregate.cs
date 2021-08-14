@@ -159,7 +159,7 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
             IDisposable loggerScope = _logger.BeginScope("Starting new background operation: Title = {Title}; Initial State = {InitialState}; Concurrency ID = {ConcurrencyId}", title, initialState, concurrencyId);
             Title = title;
             StatusMessage = initialMessage;
-            AsyncFuncOpViewModel<TState, TResult> op = AsyncFuncOpViewModel<TState, TResult>.FromAsync(initialState, operationManager, func, concurrencyId);
+            AsyncFuncOpViewModel<TState, TResult> op = AsyncFuncOpViewModel<TState, TResult>.FromAsync(initialState, initialMessage, operationManager, func, concurrencyId);
             _operations.Add(op);
             op.AsyncOpStatusPropertyChanged += Op_AsyncOpStatusPropertyChanged;
             op.StatusMessagePropertyChanged += Op_StatusMessagePropertyChanged;

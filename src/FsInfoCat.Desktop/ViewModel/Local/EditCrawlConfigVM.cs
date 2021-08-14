@@ -8,8 +8,6 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
@@ -29,11 +27,6 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         /// Occurs when the window should be closed by setting <see cref="Window.DialogResult"/> to <see langword="false"/>.
         /// </summary>
         public event EventHandler CloseCancel;
-
-        /// <summary>
-        /// Occurs when modal popup button is clicked, usually to cancel a background operation or acknowledge the results of a background operation.
-        /// </summary>
-        public event EventHandler ModalPopupConfirmClick;
 
         /// <summary>
         /// Occurs when the validation errors have changed for a property or for the entire entity.
@@ -60,7 +53,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             changeTracker.AnyInvalidPropertyChanged += OnValidationStateChanged;
             // DEFERRED: Figure out why this crashes designer
             SetValue(LookupCrawlConfigOpMgrPropertyKey, new AsyncOps.AsyncOpResultManagerViewModel<string, ConfigurationRootAndPath>());
-            SetValue(GetSubdirectoryFullNameOpMgrPropertyKey, new AsyncOps.AsyncOpResultManagerViewModel<Subdirectory, ConfigurationRootAndPath>());
+            //SetValue(GetSubdirectoryFullNameOpMgrPropertyKey, new AsyncOps.AsyncOpResultManagerViewModel<Subdirectory, ConfigurationRootAndPath>());
             SetValue(SaveChangesOpMgrPropertyKey, new AsyncOps.AsyncOpResultManagerViewModel<ModelViewModel, ConfigurationAndRoot>());
             SetValue(OpAggregatePropertyKey, new AsyncOps.AsyncOpAggregate());
         }
@@ -124,7 +117,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
                 window.DialogResult = false;
             });
             vm.CloseCancel += closeCancelHandler;
-            vm.ModalPopupConfirmClick += closeCancelHandler;
+            vm.OpAggregate.CancelOperation += closeCancelHandler;
             vm.CloseSuccess += new EventHandler((sender, e) => window.DialogResult = true);
             window.Loaded += new RoutedEventHandler((sender, e) =>
             {
@@ -135,7 +128,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
                     {
                         if (task.IsCompletedSuccessfully)
                         {
-                            vm.ModalPopupConfirmClick -= closeCancelHandler;
+                            vm.OpAggregate.CancelOperation -= closeCancelHandler;
                             vm.Initialize(task.Result.Configuration, task.Result.Root, task.Result.Path);
                             vm.LookupCrawlConfigOpMgr.RemoveOperation(lookupCrawlConfig);
                         }
@@ -472,41 +465,40 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         }
 
         #endregion
+        //#region GetSubdirectoryFullNameOpMgr Property
 
-        #region GetSubdirectoryFullNameOpMgr Property
+        //private static readonly DependencyPropertyKey GetSubdirectoryFullNameOpMgrPropertyKey = DependencyProperty.RegisterReadOnly(nameof(GetSubdirectoryFullNameOpMgr),
+        //    typeof(AsyncOps.AsyncOpResultManagerViewModel<Subdirectory, ConfigurationRootAndPath>), typeof(EditCrawlConfigVM), new PropertyMetadata(null));
 
-        private static readonly DependencyPropertyKey GetSubdirectoryFullNameOpMgrPropertyKey = DependencyProperty.RegisterReadOnly(nameof(GetSubdirectoryFullNameOpMgr),
-            typeof(AsyncOps.AsyncOpResultManagerViewModel<Subdirectory, ConfigurationRootAndPath>), typeof(EditCrawlConfigVM), new PropertyMetadata(null));
+        //public static readonly DependencyProperty GetSubdirectoryFullNameOpMgrProperty = GetSubdirectoryFullNameOpMgrPropertyKey.DependencyProperty;
 
-        public static readonly DependencyProperty GetSubdirectoryFullNameOpMgrProperty = GetSubdirectoryFullNameOpMgrPropertyKey.DependencyProperty;
+        //public AsyncOps.AsyncOpResultManagerViewModel<Subdirectory, ConfigurationRootAndPath> GetSubdirectoryFullNameOpMgr => (AsyncOps.AsyncOpResultManagerViewModel<Subdirectory, ConfigurationRootAndPath>)GetValue(GetSubdirectoryFullNameOpMgrProperty);
 
-        public AsyncOps.AsyncOpResultManagerViewModel<Subdirectory, ConfigurationRootAndPath> GetSubdirectoryFullNameOpMgr => (AsyncOps.AsyncOpResultManagerViewModel<Subdirectory, ConfigurationRootAndPath>)GetValue(GetSubdirectoryFullNameOpMgrProperty);
+        //private static async Task<ConfigurationRootAndPath> LookupFullNameAsync(Subdirectory subdirectory,
+        //    AsyncOps.AsyncFuncOpViewModel<Subdirectory, ConfigurationRootAndPath>.StatusListenerImpl statusListener)
+        //{
+        //    if (subdirectory is null)
+        //        throw new ArgumentNullException(nameof(subdirectory));
+        //    using IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
+        //    using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+        //    EntityEntry<Subdirectory> entry = dbContext.Entry(subdirectory);
+        //    Guid id = subdirectory.Id;
+        //    CrawlConfiguration crawlConfiguration = await (from c in dbContext.CrawlConfigurations where c.RootId == id select c).FirstOrDefaultAsync(statusListener.CancellationToken);
+        //    Subdirectory parent = subdirectory.ParentId.HasValue ? await entry.GetRelatedReferenceAsync(d => d.Parent, statusListener.CancellationToken) : null;
+        //    string path = subdirectory.Name;
+        //    if (parent is null)
+        //        return new(crawlConfiguration, subdirectory, path);
+        //    StringBuilder stringBuilder = new(path);
+        //    do
+        //    {
+        //        stringBuilder.Append('/').Append(parent.Name);
+        //        entry = dbContext.Entry(subdirectory);
+        //    }
+        //    while (parent.ParentId.HasValue && (parent = await entry.GetRelatedReferenceAsync(d => d.Parent, statusListener.CancellationToken)) is not null);
+        //    return new(crawlConfiguration, subdirectory, stringBuilder.ToString());
+        //}
 
-        private static async Task<ConfigurationRootAndPath> LookupFullNameAsync(Subdirectory subdirectory,
-            AsyncOps.AsyncFuncOpViewModel<Subdirectory, ConfigurationRootAndPath>.StatusListenerImpl statusListener)
-        {
-            if (subdirectory is null)
-                throw new ArgumentNullException(nameof(subdirectory));
-            using IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
-            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
-            EntityEntry<Subdirectory> entry = dbContext.Entry(subdirectory);
-            Guid id = subdirectory.Id;
-            CrawlConfiguration crawlConfiguration = await (from c in dbContext.CrawlConfigurations where c.RootId == id select c).FirstOrDefaultAsync(statusListener.CancellationToken);
-            Subdirectory parent = subdirectory.ParentId.HasValue ? await entry.GetRelatedReferenceAsync(d => d.Parent, statusListener.CancellationToken) : null;
-            string path = subdirectory.Name;
-            if (parent is null)
-                return new(crawlConfiguration, subdirectory, path);
-            StringBuilder stringBuilder = new(path);
-            do
-            {
-                stringBuilder.Append('/').Append(parent.Name);
-                entry = dbContext.Entry(subdirectory);
-            }
-            while (parent.ParentId.HasValue && (parent = await entry.GetRelatedReferenceAsync(d => d.Parent, statusListener.CancellationToken)) is not null);
-            return new(crawlConfiguration, subdirectory, stringBuilder.ToString());
-        }
-
-        #endregion
+        //#endregion
         #region SaveChangesOpMgr Property Members
 
         private static readonly DependencyPropertyKey SaveChangesOpMgrPropertyKey = DependencyProperty.RegisterReadOnly(nameof(SaveChangesOpMgr), typeof(AsyncOps.AsyncOpResultManagerViewModel<ModelViewModel, ConfigurationAndRoot>), typeof(EditCrawlConfigVM),
@@ -519,7 +511,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         private static async Task<ConfigurationAndRoot> SaveChangesAsync(ModelViewModel state,
             AsyncOps.AsyncFuncOpViewModel<ModelViewModel, ConfigurationAndRoot>.StatusListenerImpl statusListener)
         {
-            EditCrawlConfigVM vm = state.ViewModel ?? throw new ArgumentNullException(nameof(state.ViewModel));
+            EditCrawlConfigVM vm = state.ViewModel ?? throw new ArgumentException($"{nameof(state.ViewModel)} cannot be null.", nameof(state));
             using IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
             using LocalDbContext dbContext = serviceScope.ServiceProvider.GetService<LocalDbContext>();
             EntityEntry<CrawlConfiguration> entry;

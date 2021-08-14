@@ -386,13 +386,14 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
             /// <param name="builder">The <see cref="ItemBuilder"/> that is used to initialize the current object.</param>
             /// <param name="onListenerCreated">The delegate that will be invoked on the UI thread after the <typeparamref name="TListener">status listener</typeparamref> is created and
             /// before the <see cref="Task"/> is created.</param>
-            protected AsyncOpViewModel(Guid concurrencyId, [DisallowNull] ItemBuilder builder, [AllowNull] Action<TListener> onListenerCreated)
+            protected AsyncOpViewModel(Guid concurrencyId, string initialMessage, [DisallowNull] ItemBuilder builder, [AllowNull] Action<TListener> onListenerCreated)
             {
                 _concurrencyId = concurrencyId;
                 Logger = App.GetLogger(this);
                 using IDisposable loggerScope = Logger.BeginScope("new {ClassName}(concurrencyId: {concurrencyId}, {builder}, onListenerCreated: {onListenerCreated})",
                     nameof(AsyncOpViewModel), concurrencyId, nameof(ItemBuilder), onListenerCreated);
                 SetValue(ConcurrencyIdPropertyKey, concurrencyId);
+                StatusMessage = initialMessage;
                 State = (builder ?? throw new ArgumentNullException(nameof(builder))).InitialState;
                 _listener = builder.GetStatusListener(this);
                 onListenerCreated?.Invoke(_listener);

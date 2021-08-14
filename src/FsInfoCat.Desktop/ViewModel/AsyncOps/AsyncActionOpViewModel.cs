@@ -12,8 +12,8 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
     /// <seealso cref="AsyncOpManagerViewModel{TState, Task, AsyncActionOpViewModel{TState}, StatusListenerImpl}.AsyncOpViewModel" />
     public partial class AsyncActionOpViewModel<TState> : AsyncOpManagerViewModel<TState, Task, AsyncActionOpViewModel<TState>, AsyncActionOpViewModel<TState>.StatusListenerImpl>.AsyncOpViewModel
     {
-        private AsyncActionOpViewModel(Guid concurrencyId, TState initialState, [DisallowNull] Func<StatusListenerImpl, Task> createTask, [AllowNull] Action<StatusListenerImpl> onListenerCreated)
-            : base(concurrencyId, new Builder(initialState, createTask), onListenerCreated) { }
+        private AsyncActionOpViewModel(Guid concurrencyId, TState initialState, string initialMessage, [DisallowNull] Func<StatusListenerImpl, Task> createTask, [AllowNull] Action<StatusListenerImpl> onListenerCreated)
+            : base(concurrencyId, initialMessage, new Builder(initialState, createTask), onListenerCreated) { }
 
         /// <summary>
         /// Starts a new background operation.
@@ -27,14 +27,14 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
         /// <param name="scheduler">The optional scheduler to use. The default is the <see cref="TaskScheduler.Default">instance provided by the .NET framework</see>.</param>
         /// <returns>The <see cref="AsyncActionOpViewModel{TState}"/> object representing the status of the background operation.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="operationManager"/> or <paramref name="action"/> was null.</exception>
-        public static AsyncActionOpViewModel<TState> StartNew(TState initialState,
+        public static AsyncActionOpViewModel<TState> StartNew(TState initialState, string initialMessage,
             [DisallowNull] AsyncOpManagerViewModel<TState, Task, AsyncActionOpViewModel<TState>, StatusListenerImpl> operationManager,
             [DisallowNull] Action<StatusListenerImpl> onListenerCreated, [DisallowNull] Action<TState, StatusListenerImpl> action, TaskCreationOptions creationOptions, Guid? concurrencyId = null, TaskScheduler scheduler = null)
         {
             (operationManager ?? throw new ArgumentNullException(nameof(operationManager))).VerifyAccess();
             if (action is null)
                 throw new ArgumentNullException(nameof(action));
-            AsyncActionOpViewModel<TState> item = new(concurrencyId ?? Guid.NewGuid(), initialState, sl => Task.Factory.StartNew(s =>
+            AsyncActionOpViewModel<TState> item = new(concurrencyId ?? Guid.NewGuid(), initialState, initialMessage, sl => Task.Factory.StartNew(s =>
             {
                 sl.RaiseTaskStarted();
                 action((TState)s, sl);
@@ -53,10 +53,10 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
         /// <param name="scheduler">The optional scheduler to use. The default is the <see cref="TaskScheduler.Default">instance provided by the .NET framework</see>.</param>
         /// <returns>The <see cref="AsyncActionOpViewModel{TState}"/> object representing the status of the background operation.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="operationManager"/> or <paramref name="action"/> was null.</exception>
-        public static AsyncActionOpViewModel<TState> StartNew(TState initialState,
+        public static AsyncActionOpViewModel<TState> StartNew(TState initialState, string initialMessage,
             [DisallowNull] AsyncOpManagerViewModel<TState, Task, AsyncActionOpViewModel<TState>, StatusListenerImpl> operationManager,
             [DisallowNull] Action<TState, StatusListenerImpl> action, TaskCreationOptions creationOptions, Guid? concurrencyId = null, TaskScheduler scheduler = null) =>
-            StartNew(initialState, operationManager, null, action, creationOptions, concurrencyId, scheduler);
+            StartNew(initialState, initialMessage, operationManager, null, action, creationOptions, concurrencyId, scheduler);
 
         /// <summary>
         /// Starts a new background operation.
@@ -68,14 +68,14 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
         /// <param name="action">The delegate that will implement the background operation.</param>
         /// <returns>The <see cref="AsyncActionOpViewModel{TState}"/> object representing the status of the background operation.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="operationManager"/> or <paramref name="action"/> was null.</exception>
-        public static AsyncActionOpViewModel<TState> StartNew(TState initialState,
+        public static AsyncActionOpViewModel<TState> StartNew(TState initialState, string initialMessage,
             [DisallowNull] AsyncOpManagerViewModel<TState, Task, AsyncActionOpViewModel<TState>, StatusListenerImpl> operationManager,
            [DisallowNull] Action<StatusListenerImpl> onListenerCreated, [DisallowNull] Action<TState, StatusListenerImpl> action, Guid? concurrencyId = null)
         {
             (operationManager ?? throw new ArgumentNullException(nameof(operationManager))).VerifyAccess();
             if (action is null)
                 throw new ArgumentNullException(nameof(action));
-            AsyncActionOpViewModel<TState> item = new(concurrencyId ?? Guid.NewGuid(), initialState, sl => Task.Factory.StartNew(s =>
+            AsyncActionOpViewModel<TState> item = new(concurrencyId ?? Guid.NewGuid(), initialState, initialMessage, sl => Task.Factory.StartNew(s =>
             {
                 sl.RaiseTaskStarted();
                 action((TState)s, sl);
@@ -92,9 +92,9 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
         /// <param name="action">The delegate that will implement the background operation.</param>
         /// <returns>The <see cref="AsyncActionOpViewModel{TState}"/> object representing the status of the background operation.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="operationManager"/> or <paramref name="action"/> was null.</exception>
-        public static AsyncActionOpViewModel<TState> StartNew(TState initialState,
+        public static AsyncActionOpViewModel<TState> StartNew(TState initialState, string initialMessage,
             [DisallowNull] AsyncOpManagerViewModel<TState, Task, AsyncActionOpViewModel<TState>, StatusListenerImpl> operationManager,
-            [DisallowNull] Action<TState, StatusListenerImpl> action, Guid? concurrencyId = null) => StartNew(initialState, operationManager, null, action, concurrencyId);
+            [DisallowNull] Action<TState, StatusListenerImpl> action, Guid? concurrencyId = null) => StartNew(initialState, initialMessage, operationManager, null, action, concurrencyId);
 
         /// <summary>
         /// Starts a new background operation.
@@ -106,14 +106,14 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
         /// <param name="action">The asynchronous delegate that will implement the background operation.</param>
         /// <returns>The <see cref="AsyncActionOpViewModel{TState}"/> object representing the status of the background operation.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="operationManager"/> or <paramref name="action"/> was null.</exception>
-        public static AsyncActionOpViewModel<TState> FromAsync(TState initialState,
+        public static AsyncActionOpViewModel<TState> FromAsync(TState initialState, string initialMessage,
             [DisallowNull] AsyncOpManagerViewModel<TState, Task, AsyncActionOpViewModel<TState>, StatusListenerImpl> operationManager,
             [DisallowNull] Action<StatusListenerImpl> onListenerCreated, [DisallowNull] Func<TState, StatusListenerImpl, Task> action, Guid? concurrencyId = null)
         {
             (operationManager ?? throw new ArgumentNullException(nameof(operationManager))).VerifyAccess();
             if (action is null)
                 throw new ArgumentNullException(nameof(action));
-            AsyncActionOpViewModel<TState> item = new(concurrencyId ?? Guid.NewGuid(), initialState, async sl =>
+            AsyncActionOpViewModel<TState> item = new(concurrencyId ?? Guid.NewGuid(), initialState, initialMessage, async sl =>
             {
                 sl.RaiseTaskStarted();
                 await action(initialState, sl);
@@ -130,9 +130,9 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
         /// <param name="action">The asynchronous delegate that will implement the background operation.</param>
         /// <returns>The <see cref="AsyncActionOpViewModel{TState}"/> object representing the status of the background operation.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="operationManager"/> or <paramref name="action"/> was null.</exception>
-        public static AsyncActionOpViewModel<TState> FromAsync(TState initialState,
+        public static AsyncActionOpViewModel<TState> FromAsync(TState initialState, string initialMessage,
             [DisallowNull] AsyncOpManagerViewModel<TState, Task, AsyncActionOpViewModel<TState>, StatusListenerImpl> operationManager,
-            [DisallowNull] Func<TState, StatusListenerImpl, Task> action, Guid? concurrencyId = null) => FromAsync(initialState, operationManager, null, action, concurrencyId);
+            [DisallowNull] Func<TState, StatusListenerImpl, Task> action, Guid? concurrencyId = null) => FromAsync(initialState, initialMessage, operationManager, null, action, concurrencyId);
 
         /// <summary>
         /// Adds a new pending background operation.
@@ -145,14 +145,14 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
         /// <param name="creationOptions">The task creation options.</param>
         /// <returns>The <see cref="AsyncActionOpViewModel{TState}"/> object representing the status of the background operation.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="operationManager"/> or <paramref name="action"/> was null.</exception>
-        public static AsyncActionOpViewModel<TState> AddPending(TState initialState,
+        public static AsyncActionOpViewModel<TState> AddPending(TState initialState, string initialMessage,
             [DisallowNull] AsyncOpManagerViewModel<TState, Task, AsyncActionOpViewModel<TState>, StatusListenerImpl> operationManager,
             [DisallowNull] Action<StatusListenerImpl> onListenerCreated, [DisallowNull] Action<TState, StatusListenerImpl> action, TaskCreationOptions creationOptions, Guid? concurrencyId = null)
         {
             (operationManager ?? throw new ArgumentNullException(nameof(operationManager))).VerifyAccess();
             if (action is null)
                 throw new ArgumentNullException(nameof(action));
-            AsyncActionOpViewModel<TState> item = new(concurrencyId ?? Guid.NewGuid(), initialState, sl => new Task(s =>
+            AsyncActionOpViewModel<TState> item = new(concurrencyId ?? Guid.NewGuid(), initialState, initialMessage, sl => new Task(s =>
             {
                 sl.RaiseTaskStarted();
                 action((TState)s, sl);
@@ -170,9 +170,10 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
         /// <param name="creationOptions">The task creation options.</param>
         /// <returns>The <see cref="AsyncActionOpViewModel{TState}"/> object representing the status of the background operation.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="operationManager"/> or <paramref name="action"/> was null.</exception>
-        public static AsyncActionOpViewModel<TState> AddPending(TState initialState,
+        public static AsyncActionOpViewModel<TState> AddPending(TState initialState, string initialMessage,
             [DisallowNull] AsyncOpManagerViewModel<TState, Task, AsyncActionOpViewModel<TState>, StatusListenerImpl> operationManager,
-            [DisallowNull] Action<TState, StatusListenerImpl> action, TaskCreationOptions creationOptions, Guid? concurrencyId = null) => AddPending(initialState, operationManager, null, action, creationOptions, concurrencyId);
+            [DisallowNull] Action<TState, StatusListenerImpl> action, TaskCreationOptions creationOptions, Guid? concurrencyId = null) =>
+            AddPending(initialState, initialMessage, operationManager, null, action, creationOptions, concurrencyId);
 
         /// <summary>
         /// Adds a new pending background operation.
@@ -184,14 +185,14 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
         /// <param name="action">The delegate that will implement the background operation.</param>
         /// <returns>The <see cref="AsyncActionOpViewModel{TState}"/> object representing the status of the background operation.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="operationManager"/> or <paramref name="action"/> was null.</exception>
-        public static AsyncActionOpViewModel<TState> AddPending(TState initialState,
+        public static AsyncActionOpViewModel<TState> AddPending(TState initialState, string initialMessage,
             [DisallowNull] AsyncOpManagerViewModel<TState, Task, AsyncActionOpViewModel<TState>, StatusListenerImpl> operationManager,
             [DisallowNull] Action<StatusListenerImpl> onListenerCreated, [DisallowNull] Action<TState, StatusListenerImpl> action, Guid? concurrencyId = null)
         {
             (operationManager ?? throw new ArgumentNullException(nameof(operationManager))).VerifyAccess();
             if (action is null)
                 throw new ArgumentNullException(nameof(action));
-            AsyncActionOpViewModel<TState> item = new(concurrencyId ?? Guid.NewGuid(), initialState, sl => new Task(s =>
+            AsyncActionOpViewModel<TState> item = new(concurrencyId ?? Guid.NewGuid(), initialState, initialMessage, sl => new Task(s =>
             {
                 sl.RaiseTaskStarted();
                 action((TState)s, sl);
@@ -208,9 +209,10 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
         /// <param name="action">The delegate that will implement the background operation.</param>
         /// <returns>The <see cref="AsyncActionOpViewModel{TState}"/> object representing the status of the background operation.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="operationManager"/> or <paramref name="action"/> was null.</exception>
-        public static AsyncActionOpViewModel<TState> AddPending(TState initialState,
+        public static AsyncActionOpViewModel<TState> AddPending(TState initialState, string initialMessage,
             [DisallowNull] AsyncOpManagerViewModel<TState, Task, AsyncActionOpViewModel<TState>, StatusListenerImpl> operationManager,
-            [DisallowNull] Action<TState, StatusListenerImpl> action, Guid? concurrencyId = null) => AddPending(initialState, operationManager, null, action, concurrencyId);
+            [DisallowNull] Action<TState, StatusListenerImpl> action, Guid? concurrencyId = null) =>
+            AddPending(initialState, initialMessage, operationManager, null, action, concurrencyId);
     }
 
     /// <summary>
@@ -220,7 +222,7 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
     /// <seealso cref="AsyncOpManagerViewModel{object, Task, AsyncActionOpViewModel, StatusListenerImpl}.AsyncOpViewModel" />
     public partial class AsyncActionOpViewModel : AsyncOpManagerViewModel<object, Task, AsyncActionOpViewModel, AsyncActionOpViewModel.StatusListenerImpl>.AsyncOpViewModel
     {
-        private AsyncActionOpViewModel(Guid concurrencyId, [DisallowNull] Func<StatusListenerImpl, Task> createTask, [AllowNull] Action<StatusListenerImpl> onListenerCreated) : base(concurrencyId, new Builder(createTask), onListenerCreated) { }
+        private AsyncActionOpViewModel(Guid concurrencyId, string initialMessage, [DisallowNull] Func<StatusListenerImpl, Task> createTask, [AllowNull] Action<StatusListenerImpl> onListenerCreated) : base(concurrencyId, initialMessage, new Builder(createTask), onListenerCreated) { }
 
         /// <summary>
         /// Starts a new background operation.
@@ -233,13 +235,13 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
         /// <param name="scheduler">The optional scheduler to use. The default is the <see cref="TaskScheduler.Default">instance provided by the .NET framework</see>.</param>
         /// <returns>A <see cref="AsyncActionOpViewModel"/> representing the status of the background operation.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="operationManager"/> or <paramref name="action"/> was null.</exception>
-        public static AsyncActionOpViewModel StartNew([DisallowNull] AsyncOpManagerViewModel<Task, AsyncActionOpViewModel, StatusListenerImpl> operationManager,
+        public static AsyncActionOpViewModel StartNew(string initialMessage, [DisallowNull] AsyncOpManagerViewModel<Task, AsyncActionOpViewModel, StatusListenerImpl> operationManager,
             [DisallowNull] Action<StatusListenerImpl> onListenerCreated, [DisallowNull] Action<StatusListenerImpl> action, TaskCreationOptions creationOptions, Guid? concurrencyId = null, TaskScheduler scheduler = null)
         {
             (operationManager ?? throw new ArgumentNullException(nameof(operationManager))).VerifyAccess();
             if (action is null)
                 throw new ArgumentNullException(nameof(action));
-            AsyncActionOpViewModel item = new(concurrencyId ?? Guid.NewGuid(), sl => Task.Factory.StartNew(() =>
+            AsyncActionOpViewModel item = new(concurrencyId ?? Guid.NewGuid(), initialMessage, sl => Task.Factory.StartNew(() =>
             {
                 sl.RaiseTaskStarted();
                 action(sl);
@@ -257,9 +259,9 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
         /// <param name="scheduler">The optional scheduler to use. The default is the <see cref="TaskScheduler.Default">instance provided by the .NET framework</see>.</param>
         /// <returns>A <see cref="AsyncActionOpViewModel"/> representing the status of the background operation.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="operationManager"/> or <paramref name="action"/> was null.</exception>
-        public static AsyncActionOpViewModel StartNew([DisallowNull] AsyncOpManagerViewModel<Task, AsyncActionOpViewModel, StatusListenerImpl> operationManager,
+        public static AsyncActionOpViewModel StartNew(string initialMessage, [DisallowNull] AsyncOpManagerViewModel<Task, AsyncActionOpViewModel, StatusListenerImpl> operationManager,
             [DisallowNull] Action<StatusListenerImpl> action, TaskCreationOptions creationOptions, Guid? concurrencyId = null, TaskScheduler scheduler = null) =>
-            StartNew(operationManager, null, action, creationOptions, concurrencyId, scheduler);
+            StartNew(initialMessage, operationManager, null, action, creationOptions, concurrencyId, scheduler);
 
         /// <summary>
         /// Starts a new background operation.
@@ -270,13 +272,13 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
         /// <param name="action">The delegate that will implement the background operation.</param>
         /// <returns>A <see cref="AsyncActionOpViewModel"/> representing the status of the background operation.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="operationManager"/> or <paramref name="action"/> was null.</exception>
-        public static AsyncActionOpViewModel StartNew([DisallowNull] AsyncOpManagerViewModel<Task, AsyncActionOpViewModel, StatusListenerImpl> operationManager,
+        public static AsyncActionOpViewModel StartNew(string initialMessage, [DisallowNull] AsyncOpManagerViewModel<Task, AsyncActionOpViewModel, StatusListenerImpl> operationManager,
             [DisallowNull] Action<StatusListenerImpl> onListenerCreated, [DisallowNull] Action<StatusListenerImpl> action, Guid? concurrencyId = null)
         {
             (operationManager ?? throw new ArgumentNullException(nameof(operationManager))).VerifyAccess();
             if (action is null)
                 throw new ArgumentNullException(nameof(action));
-            AsyncActionOpViewModel item = new(concurrencyId ?? Guid.NewGuid(), sl => Task.Factory.StartNew(() =>
+            AsyncActionOpViewModel item = new(concurrencyId ?? Guid.NewGuid(), initialMessage, sl => Task.Factory.StartNew(() =>
             {
                 sl.RaiseTaskStarted();
                 action(sl);
@@ -292,8 +294,8 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
         /// <param name="action">The delegate that will implement the background operation.</param>
         /// <returns>A <see cref="AsyncActionOpViewModel"/> representing the status of the background operation.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="operationManager"/> or <paramref name="action"/> was null.</exception>
-        public static AsyncActionOpViewModel StartNew([DisallowNull] AsyncOpManagerViewModel<Task, AsyncActionOpViewModel, StatusListenerImpl> operationManager,
-            [DisallowNull] Action<StatusListenerImpl> action, Guid? concurrencyId = null) => StartNew(operationManager, null, action, concurrencyId);
+        public static AsyncActionOpViewModel StartNew(string initialMessage, [DisallowNull] AsyncOpManagerViewModel<Task, AsyncActionOpViewModel, StatusListenerImpl> operationManager,
+            [DisallowNull] Action<StatusListenerImpl> action, Guid? concurrencyId = null) => StartNew(initialMessage, operationManager, null, action, concurrencyId);
 
         /// <summary>
         /// Starts a new background operation.
@@ -304,13 +306,13 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
         /// <param name="action">The asynchronous delegate that will implement the background operation.</param>
         /// <returns>A <see cref="AsyncActionOpViewModel"/> representing the status of the background operation.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="operationManager"/> or <paramref name="action"/> was null.</exception>
-        public static AsyncActionOpViewModel FromAsync([DisallowNull] AsyncOpManagerViewModel<Task, AsyncActionOpViewModel, StatusListenerImpl> operationManager,
+        public static AsyncActionOpViewModel FromAsync(string initialMessage, [DisallowNull] AsyncOpManagerViewModel<Task, AsyncActionOpViewModel, StatusListenerImpl> operationManager,
             [DisallowNull] Action<StatusListenerImpl> onListenerCreated, [DisallowNull] Func<StatusListenerImpl, Task> action, Guid? concurrencyId = null)
         {
             (operationManager ?? throw new ArgumentNullException(nameof(operationManager))).VerifyAccess();
             if (action is null)
                 throw new ArgumentNullException(nameof(action));
-            AsyncActionOpViewModel item = new(concurrencyId ?? Guid.NewGuid(), async sl =>
+            AsyncActionOpViewModel item = new(concurrencyId ?? Guid.NewGuid(), initialMessage, async sl =>
             {
                 sl.RaiseTaskStarted();
                 await action(sl);
@@ -326,8 +328,8 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
         /// <param name="action">The asynchronous delegate that will implement the background operation.</param>
         /// <returns>A <see cref="AsyncActionOpViewModel"/> representing the status of the background operation.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="operationManager"/> or <paramref name="action"/> was null.</exception>
-        public static AsyncActionOpViewModel FromAsync([DisallowNull] AsyncOpManagerViewModel<Task, AsyncActionOpViewModel, StatusListenerImpl> operationManager,
-            [DisallowNull] Func<StatusListenerImpl, Task> action, Guid? concurrencyId = null) => FromAsync(operationManager, null, action, concurrencyId);
+        public static AsyncActionOpViewModel FromAsync(string initialMessage, [DisallowNull] AsyncOpManagerViewModel<Task, AsyncActionOpViewModel, StatusListenerImpl> operationManager,
+            [DisallowNull] Func<StatusListenerImpl, Task> action, Guid? concurrencyId = null) => FromAsync(initialMessage, operationManager, null, action, concurrencyId);
 
         /// <summary>
         /// Adds a new pending background operation.
@@ -339,13 +341,13 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
         /// <param name="creationOptions">The task creation options.</param>
         /// <returns>A <see cref="AsyncActionOpViewModel"/> representing the status of the background operation.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="operationManager"/> or <paramref name="action"/> was null.</exception>
-        public static AsyncActionOpViewModel AddPending([DisallowNull] AsyncOpManagerViewModel<Task, AsyncActionOpViewModel, StatusListenerImpl> operationManager,
+        public static AsyncActionOpViewModel AddPending(string initialMessage, [DisallowNull] AsyncOpManagerViewModel<Task, AsyncActionOpViewModel, StatusListenerImpl> operationManager,
             [DisallowNull] Action<StatusListenerImpl> onListenerCreated, [DisallowNull] Action<StatusListenerImpl> action, TaskCreationOptions creationOptions, Guid? concurrencyId = null)
         {
             (operationManager ?? throw new ArgumentNullException(nameof(operationManager))).VerifyAccess();
             if (action is null)
                 throw new ArgumentNullException(nameof(action));
-            AsyncActionOpViewModel item = new(concurrencyId ?? Guid.NewGuid(), sl => new Task(() =>
+            AsyncActionOpViewModel item = new(concurrencyId ?? Guid.NewGuid(), initialMessage, sl => new Task(() =>
             {
                 sl.RaiseTaskStarted();
                 action(sl);
@@ -362,8 +364,8 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
         /// <param name="creationOptions">The task creation options.</param>
         /// <returns>A <see cref="AsyncActionOpViewModel"/> representing the status of the background operation.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="operationManager"/> or <paramref name="action"/> was null.</exception>
-        public static AsyncActionOpViewModel AddPending([DisallowNull] AsyncOpManagerViewModel<Task, AsyncActionOpViewModel, StatusListenerImpl> operationManager,
-            [DisallowNull] Action<StatusListenerImpl> action, TaskCreationOptions creationOptions, Guid? concurrencyId = null) => AddPending(operationManager, null, action, creationOptions, concurrencyId);
+        public static AsyncActionOpViewModel AddPending(string initialMessage, [DisallowNull] AsyncOpManagerViewModel<Task, AsyncActionOpViewModel, StatusListenerImpl> operationManager,
+            [DisallowNull] Action<StatusListenerImpl> action, TaskCreationOptions creationOptions, Guid? concurrencyId = null) => AddPending(initialMessage, operationManager, null, action, creationOptions, concurrencyId);
 
         /// <summary>
         /// Adds a new pending background operation.
@@ -374,13 +376,13 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
         /// <param name="action">The delegate that will implement the background operation.</param>
         /// <returns>A <see cref="AsyncActionOpViewModel"/> representing the status of the background operation.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="operationManager"/> or <paramref name="action"/> was null.</exception>
-        public static AsyncActionOpViewModel AddPending([DisallowNull] AsyncOpManagerViewModel<Task, AsyncActionOpViewModel, StatusListenerImpl> operationManager,
+        public static AsyncActionOpViewModel AddPending(string initialMessage, [DisallowNull] AsyncOpManagerViewModel<Task, AsyncActionOpViewModel, StatusListenerImpl> operationManager,
             [DisallowNull] Action<StatusListenerImpl> onListenerCreated, [DisallowNull] Action<StatusListenerImpl> action, Guid? concurrencyId = null)
         {
             (operationManager ?? throw new ArgumentNullException(nameof(operationManager))).VerifyAccess();
             if (action is null)
                 throw new ArgumentNullException(nameof(action));
-            AsyncActionOpViewModel item = new(concurrencyId ?? Guid.NewGuid(), sl => new Task(() =>
+            AsyncActionOpViewModel item = new(concurrencyId ?? Guid.NewGuid(), initialMessage, sl => new Task(() =>
             {
                 sl.RaiseTaskStarted();
                 action(sl);
@@ -396,7 +398,7 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
         /// <param name="action">The delegate that will implement the background operation.</param>
         /// <returns>A <see cref="AsyncActionOpViewModel"/> representing the status of the background operation.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="operationManager"/> or <paramref name="action"/> was null.</exception>
-        public static AsyncActionOpViewModel AddPending([DisallowNull] AsyncOpManagerViewModel<Task, AsyncActionOpViewModel, StatusListenerImpl> operationManager,
-            [DisallowNull] Action<StatusListenerImpl> action, Guid? concurrencyId = null) => AddPending(operationManager, null, action, concurrencyId);
+        public static AsyncActionOpViewModel AddPending(string initialMessage, [DisallowNull] AsyncOpManagerViewModel<Task, AsyncActionOpViewModel, StatusListenerImpl> operationManager,
+            [DisallowNull] Action<StatusListenerImpl> action, Guid? concurrencyId = null) => AddPending(initialMessage, operationManager, null, action, concurrencyId);
     }
 }
