@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using System;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -14,11 +15,17 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
         /// <para>Extends <see cref="DependencyObject" />.</para>
         /// </summary>
         /// <seealso cref="DependencyObject" />
-        public abstract partial class AsyncOpViewModel : DependencyObject
+        public abstract partial class AsyncOpViewModel : DependencyObject, IAsyncOpViewModel
         {
+            private readonly Guid _concurrencyId;
+            protected readonly ILogger<AsyncOpViewModel> Logger;
             private readonly CancellationTokenSource _tokenSource = new();
             private readonly Stopwatch _stopWatch = new();
+            private readonly TListener _listener;
+            private readonly TTask _task;
             private Timer _timer;
+
+            #region Events
 
             /// <summary>
             /// Occurs when the <see cref="State"/> property has changed.
@@ -61,6 +68,18 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
 
             public event EventHandler<OpFailedEventArgs> OperationFailed;
 
+            #endregion
+            #region ConcurrencyId Property Members
+
+            private static readonly DependencyPropertyKey ConcurrencyIdPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ConcurrencyId), typeof(Guid), typeof(AsyncOpViewModel), new PropertyMetadata(default));
+
+            public static readonly DependencyProperty ConcurrencyIdProperty = ConcurrencyIdPropertyKey.DependencyProperty;
+
+            public Guid ConcurrencyId => (Guid)GetValue(ConcurrencyIdProperty);
+
+            #endregion
+            #region State property members
+
             private static readonly DependencyPropertyKey StatePropertyKey = DependencyProperty.RegisterReadOnly(nameof(State), typeof(TState), typeof(AsyncOpViewModel),
                     new PropertyMetadata(default, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as AsyncOpViewModel)?.StatePropertyChanged?.Invoke(d, e)));
 
@@ -76,8 +95,9 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
                 private set => SetValue(StatePropertyKey, value);
             }
 
-            private readonly TListener _listener;
-            private readonly TTask _task;
+            #endregion
+            #region AsyncOpStatus Property Members
+
             private static readonly DependencyPropertyKey AsyncOpStatusPropertyKey = DependencyProperty.RegisterReadOnly(nameof(AsyncOpStatus), typeof(AsyncOpStatusCode), typeof(AsyncOpViewModel),
                     new PropertyMetadata(AsyncOpStatusCode.NotStarted, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as AsyncOpViewModel)?.AsyncOpStatusPropertyChanged?.Invoke(d, e)));
 
@@ -92,6 +112,9 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
                 get => (AsyncOpStatusCode)GetValue(AsyncOpStatusProperty);
                 private set => SetValue(AsyncOpStatusPropertyKey, value);
             }
+
+            #endregion
+            #region MessageLevel Property Members
 
             private static readonly DependencyPropertyKey MessageLevelPropertyKey = DependencyProperty.RegisterReadOnly(nameof(MessageLevel), typeof(StatusMessageLevel), typeof(AsyncOpViewModel),
                     new PropertyMetadata(StatusMessageLevel.Information, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as AsyncOpViewModel)?.MessageLevelPropertyChanged?.Invoke(d, e)));
@@ -108,6 +131,9 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
                 private set => SetValue(MessageLevelPropertyKey, value);
             }
 
+            #endregion
+            #region StatusMessage Property Members
+
             private static readonly DependencyPropertyKey StatusMessagePropertyKey = DependencyProperty.RegisterReadOnly(nameof(StatusMessage), typeof(string), typeof(AsyncOpViewModel),
                     new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as AsyncOpViewModel)?.StatusMessagePropertyChanged?.Invoke(d, e)));
 
@@ -122,6 +148,9 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
                 get => GetValue(StatusMessageProperty) as string;
                 private set => SetValue(StatusMessagePropertyKey, value);
             }
+
+            #endregion
+            #region Started Property Members
 
             private static readonly DependencyPropertyKey StartedPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Started), typeof(DateTime?), typeof(AsyncOpViewModel),
                     new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as AsyncOpViewModel)?.StartedPropertyChanged?.Invoke(d, e)));
@@ -138,6 +167,9 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
                 private set => SetValue(StartedPropertyKey, value);
             }
 
+            #endregion
+            #region Stopped Property Members
+
             private static readonly DependencyPropertyKey StoppedPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Stopped), typeof(DateTime?), typeof(AsyncOpViewModel),
                     new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as AsyncOpViewModel)?.StoppedPropertyChanged?.Invoke(d, e)));
 
@@ -153,6 +185,9 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
                 private set => SetValue(StoppedPropertyKey, value);
             }
 
+            #endregion
+            #region Duration Property Members
+
             private static readonly DependencyPropertyKey DurationPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Duration), typeof(TimeSpan?), typeof(AsyncOpViewModel),
                     new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as AsyncOpViewModel)?.DurationPropertyChanged?.Invoke(d, e)));
 
@@ -167,6 +202,8 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
                 get => (TimeSpan?)GetValue(DurationProperty);
                 private set => SetValue(DurationPropertyKey, value);
             }
+
+            #endregion
 
             /// <summary>
             /// Updates the value of the <see cref="AsyncOpStatus"/> property according to a <see cref="TaskStatus"/> value.
@@ -198,6 +235,7 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
 
             private void RaiseCompleted(TTask task)
             {
+                Logger.LogDebug("Task completed: Concurrency ID = {ConcurrencyId}; Task Status = {TaskStatus}; Task ID = {TaskId}", _concurrencyId, _task.Id, _task.Status);
                 if (task.IsCanceled)
                     OnCanceled();
                 else if (task.IsFaulted)
@@ -286,10 +324,15 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
             /// <seealso cref="CancellationTokenSource.Cancel(bool)"/>
             public void Cancel(bool throwOnFirstException)
             {
-                VerifyAccess();
-                if (GetTask().IsCompleted || _tokenSource.IsCancellationRequested)
-                    return;
-                _tokenSource.Cancel(throwOnFirstException);
+                if (GetTask().IsCompleted)
+                    Logger.LogDebug("{MethodName}(throwOnFirstException: {throwOnFirstException}) invoked on a completed task: Concurrency ID = {ConcurrencyId}; Task ID = {TaskId}", throwOnFirstException, _concurrencyId, _task.Id);
+                else if (_tokenSource.IsCancellationRequested)
+                    Logger.LogDebug("{MethodName}(throwOnFirstException: {throwOnFirstException}) invoked on a task with a cancellation already in progress: Concurrency ID = {ConcurrencyId}; Task ID = {TaskId}", throwOnFirstException, _concurrencyId, _task.Id);
+                else
+                {
+                    Logger.LogDebug("{MethodName}(throwOnFirstException: {throwOnFirstException}) invoked: Concurrency ID = {ConcurrencyId}; Task ID = {TaskId}", throwOnFirstException, _concurrencyId, _task.Id);
+                    _tokenSource.Cancel(throwOnFirstException);
+                }
             }
 
             /// <summary>
@@ -299,10 +342,15 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
             /// <seealso cref="CancellationTokenSource.Cancel()"/>
             public void Cancel()
             {
-                VerifyAccess();
-                if (GetTask().IsCompleted || _tokenSource.IsCancellationRequested)
-                    return;
-                _tokenSource.Cancel();
+                if (GetTask().IsCompleted)
+                    Logger.LogDebug("{MethodName}() invoked on a completed task: Concurrency ID = {ConcurrencyId}; Task ID = {TaskId}", _concurrencyId, _task.Id);
+                else if (_tokenSource.IsCancellationRequested)
+                    Logger.LogDebug("{MethodName}() invoked on a task with a cancellation already in progress: Concurrency ID = {ConcurrencyId}; Task ID = {TaskId}", _concurrencyId, _task.Id);
+                else
+                {
+                    Logger.LogDebug("{MethodName}() invoked: Concurrency ID = {ConcurrencyId}; Task ID = {TaskId}", _concurrencyId, _task.Id);
+                    _tokenSource.Cancel();
+                }
             }
 
             /// <summary>
@@ -310,6 +358,8 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
             /// </summary>
             /// <returns>The <typeparamref name="TTask"/> for the background operation.</returns>
             internal TTask GetTask() => _task;
+
+            Task IAsyncOpViewModel.GetTask() => _task;
 
             /// <summary>
             /// Gets the listener that can be used to monitor for cancellation and to update the current view model item.
@@ -323,18 +373,27 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
             /// <returns>The <see cref="CancellationToken"/> for the current background operation.</returns>
             internal CancellationToken GetCancellationToken() => _tokenSource.Token;
 
+            public override string ToString() => $"[{GetType().FullName}] {{ ConcurrencyId = {_concurrencyId}; Task.Id = {_task.Id} }}";
+
             /// <summary>
             /// Initializes a new instance of the <see cref="AsyncOpViewModel"/> class.
             /// </summary>
+            /// <param name="concurrencyId">Uniquely identifies the background operation.</param>
             /// <param name="builder">The <see cref="ItemBuilder"/> that is used to initialize the current object.</param>
             /// <param name="onListenerCreated">The delegate that will be invoked on the UI thread after the <typeparamref name="TListener">status listener</typeparamref> is created and
             /// before the <see cref="Task"/> is created.</param>
-            protected AsyncOpViewModel([DisallowNull] ItemBuilder builder, [AllowNull] Action<TListener> onListenerCreated)
+            protected AsyncOpViewModel(Guid concurrencyId, [DisallowNull] ItemBuilder builder, [AllowNull] Action<TListener> onListenerCreated)
             {
+                _concurrencyId = concurrencyId;
+                Logger = App.GetLogger(this);
+                using IDisposable loggerScope = Logger.BeginScope("new {ClassName}(concurrencyId: {concurrencyId}, {builder}, onListenerCreated: {onListenerCreated})",
+                    nameof(AsyncOpViewModel), concurrencyId, nameof(ItemBuilder), onListenerCreated);
+                SetValue(ConcurrencyIdPropertyKey, concurrencyId);
                 State = (builder ?? throw new ArgumentNullException(nameof(builder))).InitialState;
                 _listener = builder.GetStatusListener(this);
                 onListenerCreated?.Invoke(_listener);
                 _task = builder.GetTask(State, _listener, this);
+                Logger.LogDebug("Background task created: Id = {Id}; Status = {Status}", _task.Id, _task.Status);
                 UpdateOpStatus(_task.Status);
             }
         }

@@ -41,7 +41,6 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             SetValue(SelectRootCommandPropertyKey, new Commands.RelayCommand(OnSelectRootExecute));
             SetValue(SaveCommandPropertyKey, new Commands.RelayCommand(OnSaveExecute));
             SetValue(CancelCommandPropertyKey, new Commands.RelayCommand(OnCancelExecute));
-            SetValue(PopupButtonClickCommandPropertyKey, new Commands.RelayCommand(OnPopupButtonClickExecute));
             ValidationMessageTracker validation = new();
             SetValue(ValidationPropertyKey, validation);
             ChangeStateTracker changeTracker = new();
@@ -57,6 +56,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             SetValue(LookupCrawlConfigOpMgrPropertyKey, new LookupCrawlConfigAsyncOpManager());
             SetValue(GetSubdirectoryFullNameOpMgrPropertyKey, new GetSubdirectoryFullNameAsyncOpManager());
             SetValue(SaveChangesOpMgrPropertyKey, new SaveCrawlConfigAsyncOpManager());
+            SetValue(OpAggregatePropertyKey, new AsyncOpAggregate());
         }
 
         /// <summary>
@@ -123,24 +123,24 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             window.Loaded += new RoutedEventHandler((sender, e) =>
             {
                 AsyncFuncOpViewModel<string, (CrawlConfiguration Configuration, Subdirectory Root, string ValidatedPath)> lookupCrawlConfig = vm.LookupCrawlConfigAsync(crawlRoot);
-                lookupCrawlConfig.AsyncOpStatusPropertyChanged += vm.BgOp_AsyncOpStatusPropertyChanged;
-                lookupCrawlConfig.StatusMessagePropertyChanged += vm.BgOp_StatusMessagePropertyChanged;
-                lookupCrawlConfig.MessageLevelPropertyChanged += vm.BgOp_MessageLevelPropertyChanged;
-                lookupCrawlConfig.DurationPropertyChanged += vm.BgOp_DurationPropertyChanged;
-                vm.BgOpStatusMessage = lookupCrawlConfig.StatusMessage;
-                vm.BgOpMessageLevel = lookupCrawlConfig.MessageLevel;
-                vm.BgOpStatus = lookupCrawlConfig.AsyncOpStatus;
+                //lookupCrawlConfig.AsyncOpStatusPropertyChanged += vm.BgOp_AsyncOpStatusPropertyChanged;
+                //lookupCrawlConfig.StatusMessagePropertyChanged += vm.BgOp_StatusMessagePropertyChanged;
+                //lookupCrawlConfig.MessageLevelPropertyChanged += vm.BgOp_MessageLevelPropertyChanged;
+                //lookupCrawlConfig.DurationPropertyChanged += vm.BgOp_DurationPropertyChanged;
+                //vm.BgOpStatusMessage = lookupCrawlConfig.StatusMessage;
+                //vm.BgOpMessageLevel = lookupCrawlConfig.MessageLevel;
+                //vm.BgOpStatus = lookupCrawlConfig.AsyncOpStatus;
                 lookupCrawlConfig.GetTask().ContinueWith(task =>
                 {
-                    lookupCrawlConfig.AsyncOpStatusPropertyChanged -= vm.BgOp_AsyncOpStatusPropertyChanged;
-                    lookupCrawlConfig.StatusMessagePropertyChanged -= vm.BgOp_StatusMessagePropertyChanged;
-                    lookupCrawlConfig.MessageLevelPropertyChanged -= vm.BgOp_MessageLevelPropertyChanged;
-                    lookupCrawlConfig.DurationPropertyChanged -= vm.BgOp_DurationPropertyChanged;
+                    //lookupCrawlConfig.AsyncOpStatusPropertyChanged -= vm.BgOp_AsyncOpStatusPropertyChanged;
+                    //lookupCrawlConfig.StatusMessagePropertyChanged -= vm.BgOp_StatusMessagePropertyChanged;
+                    //lookupCrawlConfig.MessageLevelPropertyChanged -= vm.BgOp_MessageLevelPropertyChanged;
+                    //lookupCrawlConfig.DurationPropertyChanged -= vm.BgOp_DurationPropertyChanged;
                     vm.Dispatcher.Invoke(() =>
                     {
-                        vm.BgOpStatusMessage = lookupCrawlConfig.StatusMessage;
-                        vm.BgOpMessageLevel = lookupCrawlConfig.MessageLevel;
-                        vm.BgOpStatus = lookupCrawlConfig.AsyncOpStatus;
+                        //vm.BgOpStatusMessage = lookupCrawlConfig.StatusMessage;
+                        //vm.BgOpMessageLevel = lookupCrawlConfig.MessageLevel;
+                        //vm.BgOpStatus = lookupCrawlConfig.AsyncOpStatus;
                         if (task.IsCanceled)
                         {
                             // TODO: Log cancellation.
@@ -282,34 +282,28 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             else
             {
                 AsyncFuncOpViewModel<string, (CrawlConfiguration Configuration, Subdirectory Root, string ValidatedPath)> lookupCrawlConfig = LookupCrawlConfigAsync(newPath);
-                lookupCrawlConfig.AsyncOpStatusPropertyChanged += BgOp_AsyncOpStatusPropertyChanged;
-                lookupCrawlConfig.StatusMessagePropertyChanged += BgOp_StatusMessagePropertyChanged;
-                lookupCrawlConfig.MessageLevelPropertyChanged += BgOp_MessageLevelPropertyChanged;
-                lookupCrawlConfig.DurationPropertyChanged += BgOp_DurationPropertyChanged;
-                BgOpStatusMessage = lookupCrawlConfig.StatusMessage;
-                BgOpMessageLevel = lookupCrawlConfig.MessageLevel;
-                BgOpStatus = lookupCrawlConfig.AsyncOpStatus;
+                //lookupCrawlConfig.AsyncOpStatusPropertyChanged += BgOp_AsyncOpStatusPropertyChanged;
+                //lookupCrawlConfig.StatusMessagePropertyChanged += BgOp_StatusMessagePropertyChanged;
+                //lookupCrawlConfig.MessageLevelPropertyChanged += BgOp_MessageLevelPropertyChanged;
+                //lookupCrawlConfig.DurationPropertyChanged += BgOp_DurationPropertyChanged;
+                //BgOpStatusMessage = lookupCrawlConfig.StatusMessage;
+                //BgOpMessageLevel = lookupCrawlConfig.MessageLevel;
+                //BgOpStatus = lookupCrawlConfig.AsyncOpStatus;
                 lookupCrawlConfig.GetTask().ContinueWith(task =>
                 {
-                    lookupCrawlConfig.AsyncOpStatusPropertyChanged -= BgOp_AsyncOpStatusPropertyChanged;
-                    lookupCrawlConfig.StatusMessagePropertyChanged -= BgOp_StatusMessagePropertyChanged;
-                    lookupCrawlConfig.MessageLevelPropertyChanged -= BgOp_MessageLevelPropertyChanged;
-                    lookupCrawlConfig.DurationPropertyChanged -= BgOp_DurationPropertyChanged;
+                    //lookupCrawlConfig.AsyncOpStatusPropertyChanged -= BgOp_AsyncOpStatusPropertyChanged;
+                    //lookupCrawlConfig.StatusMessagePropertyChanged -= BgOp_StatusMessagePropertyChanged;
+                    //lookupCrawlConfig.MessageLevelPropertyChanged -= BgOp_MessageLevelPropertyChanged;
+                    //lookupCrawlConfig.DurationPropertyChanged -= BgOp_DurationPropertyChanged;
                     Dispatcher.Invoke(() =>
                     {
-                        BgOpStatusMessage = lookupCrawlConfig.StatusMessage;
-                        BgOpMessageLevel = lookupCrawlConfig.MessageLevel;
-                        BgOpStatus = lookupCrawlConfig.AsyncOpStatus;
-                        LookupCrawlConfigOpMgr.RemoveOperation(lookupCrawlConfig);
                         if (task.IsCanceled)
                         {
                             // TODO: Log cancellation.
                         }
                         else if (task.IsFaulted)
                         {
-                            BgOpStatusMessage = "An unknown error has occurred. See logs for details.";
-                            BgOpMessageLevel = StatusMessageLevel.Error;
-                            BgOpStatus = AsyncOpStatusCode.Faulted;
+                            // TODO: Log error.
                         }
                         else if (task.Result.Configuration is null)
                         {
@@ -319,9 +313,10 @@ namespace FsInfoCat.Desktop.ViewModel.Local
                         }
                         else if (Path != task.Result.ValidatedPath)
                         {
-                            BgOpStatusMessage = "That path already has its own craw configuration.";
-                            BgOpMessageLevel = StatusMessageLevel.Error;
-                            BgOpStatus = AsyncOpStatusCode.Faulted;
+                            // TODO: Log error.
+                            //BgOpStatusMessage = "That path already has its own craw configuration.";
+                            //BgOpMessageLevel = StatusMessageLevel.Error;
+                            //BgOpStatus = AsyncOpStatusCode.Faulted;
                         }
                     });
                 });
@@ -398,34 +393,32 @@ namespace FsInfoCat.Desktop.ViewModel.Local
                     (NextScheduledStartHour.Value == 12) ? (NextScheduledStartIsPm ? 12 : 0) : (NextScheduledStartIsPm ? NextScheduledStartHour.Value + 12 :
                         NextScheduledStartHour.Value), NextScheduledStartMinute.Value, 0, DateTimeKind.Local);
             AsyncFuncOpViewModel<(CrawlConfiguration, EditCrawlConfigVM), (CrawlConfiguration Configuration, Subdirectory Root)> asyncOp = SaveChangesAsync(model);
-            asyncOp.AsyncOpStatusPropertyChanged += BgOp_AsyncOpStatusPropertyChanged;
-            asyncOp.StatusMessagePropertyChanged += BgOp_StatusMessagePropertyChanged;
-            asyncOp.MessageLevelPropertyChanged += BgOp_MessageLevelPropertyChanged;
-            asyncOp.DurationPropertyChanged += BgOp_DurationPropertyChanged;
-            BgOpStatusMessage = asyncOp.StatusMessage;
-            BgOpMessageLevel = asyncOp.MessageLevel;
-            BgOpStatus = asyncOp.AsyncOpStatus;
+            //asyncOp.AsyncOpStatusPropertyChanged += BgOp_AsyncOpStatusPropertyChanged;
+            //asyncOp.StatusMessagePropertyChanged += BgOp_StatusMessagePropertyChanged;
+            //asyncOp.MessageLevelPropertyChanged += BgOp_MessageLevelPropertyChanged;
+            //asyncOp.DurationPropertyChanged += BgOp_DurationPropertyChanged;
+            //BgOpStatusMessage = asyncOp.StatusMessage;
+            //BgOpMessageLevel = asyncOp.MessageLevel;
+            //BgOpStatus = asyncOp.AsyncOpStatus;
             asyncOp.GetTask().ContinueWith(task =>
             {
-                asyncOp.AsyncOpStatusPropertyChanged -= BgOp_AsyncOpStatusPropertyChanged;
-                asyncOp.StatusMessagePropertyChanged -= BgOp_StatusMessagePropertyChanged;
-                asyncOp.MessageLevelPropertyChanged -= BgOp_MessageLevelPropertyChanged;
-                asyncOp.DurationPropertyChanged -= BgOp_DurationPropertyChanged;
+                //asyncOp.AsyncOpStatusPropertyChanged -= BgOp_AsyncOpStatusPropertyChanged;
+                //asyncOp.StatusMessagePropertyChanged -= BgOp_StatusMessagePropertyChanged;
+                //asyncOp.MessageLevelPropertyChanged -= BgOp_MessageLevelPropertyChanged;
+                //asyncOp.DurationPropertyChanged -= BgOp_DurationPropertyChanged;
                 Dispatcher.Invoke(() =>
                 {
-                    BgOpStatusMessage = asyncOp.StatusMessage;
-                    BgOpMessageLevel = asyncOp.MessageLevel;
-                    BgOpStatus = asyncOp.AsyncOpStatus;
-                    SaveChangesOpMgr.RemoveOperation(asyncOp);
+                    //BgOpStatusMessage = asyncOp.StatusMessage;
+                    //BgOpMessageLevel = asyncOp.MessageLevel;
+                    //BgOpStatus = asyncOp.AsyncOpStatus;
+                    //SaveChangesOpMgr.RemoveOperation(asyncOp);
                     if (task.IsCanceled)
                     {
                         // TODO: Log cancellation.
                     }
                     else if (task.IsFaulted)
                     {
-                        BgOpStatusMessage = "An unknown error has occurred. See logs for details.";
-                        BgOpMessageLevel = StatusMessageLevel.Error;
-                        BgOpStatus = AsyncOpStatusCode.Faulted;
+                        // TODO: Log error.
                     }
                     else
                         CloseSuccess?.Invoke(this, EventArgs.Empty);
@@ -452,108 +445,115 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 
         #endregion
 
-        #region PopupButtonClickCommand Property Members
+        //#region PopupButtonClickCommand Property Members
 
-        private static readonly DependencyPropertyKey PopupButtonClickCommandPropertyKey = DependencyProperty.RegisterReadOnly(nameof(PopupButtonClickCommand),
-            typeof(Commands.RelayCommand), typeof(EditCrawlConfigVM), new PropertyMetadata(null));
+        //private static readonly DependencyPropertyKey PopupButtonClickCommandPropertyKey = DependencyProperty.RegisterReadOnly(nameof(PopupButtonClickCommand),
+        //    typeof(Commands.RelayCommand), typeof(EditCrawlConfigVM), new PropertyMetadata(null));
 
-        public static readonly DependencyProperty PopupButtonClickCommandProperty = PopupButtonClickCommandPropertyKey.DependencyProperty;
+        //public static readonly DependencyProperty PopupButtonClickCommandProperty = PopupButtonClickCommandPropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Gets the bindable modal popup cancel / confirmation command.
-        /// </summary>
-        /// <value>The bindable command for cancelling an active modal background operator or to confirm the results of a background operation.</value>
-        public Commands.RelayCommand PopupButtonClickCommand => (Commands.RelayCommand)GetValue(PopupButtonClickCommandProperty);
+        ///// <summary>
+        ///// Gets the bindable modal popup cancel / confirmation command.
+        ///// </summary>
+        ///// <value>The bindable command for cancelling an active modal background operator or to confirm the results of a background operation.</value>
+        //public Commands.RelayCommand PopupButtonClickCommand => (Commands.RelayCommand)GetValue(PopupButtonClickCommandProperty);
 
-        private void OnPopupButtonClickExecute(object parameter)
-        {
-            switch (BgOpStatus)
-            {
-                case AsyncOpStatusCode.RanToCompletion:
-                case AsyncOpStatusCode.CancellationPending:
-                    break;
-                case AsyncOpStatusCode.Faulted:
-                case AsyncOpStatusCode.Canceled:
-                    BgOpStatus = AsyncOpStatusCode.NotStarted;
-                    ModalPopupConfirmClick?.Invoke(this, EventArgs.Empty);
-                    break;
-                default:
-                    LookupCrawlConfigOpMgr.CancelAll();
-                    GetSubdirectoryFullNameOpMgr.CancelAll();
-                    SaveChangesOpMgr.CancelAll();
-                    break;
-            }
-        }
+        //private void OnPopupButtonClickExecute(object parameter)
+        //{
+        //    switch (BgOpStatus)
+        //    {
+        //        case AsyncOpStatusCode.RanToCompletion:
+        //        case AsyncOpStatusCode.CancellationPending:
+        //            break;
+        //        case AsyncOpStatusCode.Faulted:
+        //        case AsyncOpStatusCode.Canceled:
+        //            BgOpStatus = AsyncOpStatusCode.NotStarted;
+        //            ModalPopupConfirmClick?.Invoke(this, EventArgs.Empty);
+        //            break;
+        //        default:
+        //            LookupCrawlConfigOpMgr.CancelAll();
+        //            GetSubdirectoryFullNameOpMgr.CancelAll();
+        //            SaveChangesOpMgr.CancelAll();
+        //            break;
+        //    }
+        //}
 
-        #endregion
+        //#endregion
 
         #endregion
 
         #region Background Operation Properties
 
-        #region BgOpStatus Property Members
+        private static readonly DependencyPropertyKey OpAggregatePropertyKey = DependencyProperty.RegisterReadOnly(nameof(OpAggregate), typeof(AsyncOpAggregate), typeof(EditCrawlConfigVM),
+                new PropertyMetadata(null));
 
-        private static readonly DependencyPropertyKey BgOpStatusPropertyKey = DependencyProperty.RegisterReadOnly(nameof(BgOpStatus), typeof(AsyncOpStatusCode),
-            typeof(EditCrawlConfigVM), new PropertyMetadata(AsyncOpStatusCode.NotStarted));
+        public static readonly DependencyProperty OpAggregateProperty = OpAggregatePropertyKey.DependencyProperty;
 
-        public static readonly DependencyProperty BgOpStatusProperty = BgOpStatusPropertyKey.DependencyProperty;
+        public AsyncOpAggregate OpAggregate => (AsyncOpAggregate)GetValue(OpAggregateProperty);
 
-        /// <summary>
-        /// Gets the status of the current background operation.
-        /// </summary>
-        /// <value>The background operation status. If this is <see cref="AsyncOpStatusCode.NotStarted"/>, then that indicates that no modal popup should be visible.</value>
-        public AsyncOpStatusCode BgOpStatus
-        {
-            get => (AsyncOpStatusCode)GetValue(BgOpStatusProperty);
-            private set => SetValue(BgOpStatusPropertyKey, value);
-        }
+        //#region BgOpStatus Property Members
 
-        #endregion
+        //private static readonly DependencyPropertyKey BgOpStatusPropertyKey = DependencyProperty.RegisterReadOnly(nameof(BgOpStatus), typeof(AsyncOpStatusCode),
+        //    typeof(EditCrawlConfigVM), new PropertyMetadata(AsyncOpStatusCode.NotStarted));
 
-        #region BgOpMessageLevel Property Members
+        //public static readonly DependencyProperty BgOpStatusProperty = BgOpStatusPropertyKey.DependencyProperty;
 
-        private static readonly DependencyPropertyKey BgOpMessageLevelPropertyKey = DependencyProperty.RegisterReadOnly(nameof(BgOpMessageLevel), typeof(StatusMessageLevel),
-            typeof(EditCrawlConfigVM), new PropertyMetadata(StatusMessageLevel.Information));
+        ///// <summary>
+        ///// Gets the status of the current background operation.
+        ///// </summary>
+        ///// <value>The background operation status. If this is <see cref="AsyncOpStatusCode.NotStarted"/>, then that indicates that no modal popup should be visible.</value>
+        //public AsyncOpStatusCode BgOpStatus
+        //{
+        //    get => (AsyncOpStatusCode)GetValue(BgOpStatusProperty);
+        //    private set => SetValue(BgOpStatusPropertyKey, value);
+        //}
 
-        public static readonly DependencyProperty BgOpMessageLevelProperty = BgOpMessageLevelPropertyKey.DependencyProperty;
+        //#endregion
 
-        public StatusMessageLevel BgOpMessageLevel
-        {
-            get => (StatusMessageLevel)GetValue(BgOpMessageLevelProperty);
-            private set => SetValue(BgOpMessageLevelPropertyKey, value);
-        }
+        //#region BgOpMessageLevel Property Members
 
-        #endregion
+        //private static readonly DependencyPropertyKey BgOpMessageLevelPropertyKey = DependencyProperty.RegisterReadOnly(nameof(BgOpMessageLevel), typeof(StatusMessageLevel),
+        //    typeof(EditCrawlConfigVM), new PropertyMetadata(StatusMessageLevel.Information));
 
-        #region BgOpStatusMessage Property Members
+        //public static readonly DependencyProperty BgOpMessageLevelProperty = BgOpMessageLevelPropertyKey.DependencyProperty;
 
-        private static readonly DependencyPropertyKey BgOpStatusMessagePropertyKey = DependencyProperty.RegisterReadOnly(nameof(BgOpStatusMessage), typeof(string),
-            typeof(EditCrawlConfigVM), new PropertyMetadata(""));
+        //public StatusMessageLevel BgOpMessageLevel
+        //{
+        //    get => (StatusMessageLevel)GetValue(BgOpMessageLevelProperty);
+        //    private set => SetValue(BgOpMessageLevelPropertyKey, value);
+        //}
 
-        public static readonly DependencyProperty BgOpStatusMessageProperty = BgOpStatusMessagePropertyKey.DependencyProperty;
+        //#endregion
 
-        public string BgOpStatusMessage
-        {
-            get => GetValue(BgOpStatusMessageProperty) as string;
-            private set => SetValue(BgOpStatusMessagePropertyKey, value);
-        }
+        //#region BgOpStatusMessage Property Members
 
-        #endregion
+        //private static readonly DependencyPropertyKey BgOpStatusMessagePropertyKey = DependencyProperty.RegisterReadOnly(nameof(BgOpStatusMessage), typeof(string),
+        //    typeof(EditCrawlConfigVM), new PropertyMetadata(""));
 
-        #region BgOpDuration Property Members
+        //public static readonly DependencyProperty BgOpStatusMessageProperty = BgOpStatusMessagePropertyKey.DependencyProperty;
 
-        private static readonly DependencyPropertyKey BgOpDurationPropertyKey = DependencyProperty.RegisterReadOnly(nameof(BgOpDuration), typeof(TimeSpan), typeof(EditCrawlConfigVM),
-                new PropertyMetadata(TimeSpan.Zero));
+        //public string BgOpStatusMessage
+        //{
+        //    get => GetValue(BgOpStatusMessageProperty) as string;
+        //    private set => SetValue(BgOpStatusMessagePropertyKey, value);
+        //}
 
-        public static readonly DependencyProperty BgOpDurationProperty = BgOpDurationPropertyKey.DependencyProperty;
+        //#endregion
 
-        public TimeSpan BgOpDuration
-        {
-            get => (TimeSpan)GetValue(BgOpDurationProperty);
-            private set => SetValue(BgOpDurationPropertyKey, value);
-        }
+        //#region BgOpDuration Property Members
 
-        #endregion
+        //private static readonly DependencyPropertyKey BgOpDurationPropertyKey = DependencyProperty.RegisterReadOnly(nameof(BgOpDuration), typeof(TimeSpan), typeof(EditCrawlConfigVM),
+        //        new PropertyMetadata(TimeSpan.Zero));
+
+        //public static readonly DependencyProperty BgOpDurationProperty = BgOpDurationPropertyKey.DependencyProperty;
+
+        //public TimeSpan BgOpDuration
+        //{
+        //    get => (TimeSpan)GetValue(BgOpDurationProperty);
+        //    private set => SetValue(BgOpDurationPropertyKey, value);
+        //}
+
+        //#endregion
 
         #region LookupCrawlConfigOpMgr Property
 
@@ -584,13 +584,13 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 
         public SaveCrawlConfigAsyncOpManager SaveChangesOpMgr => (SaveCrawlConfigAsyncOpManager)GetValue(SaveChangesOpMgrProperty);
 
-        private void BgOp_DurationPropertyChanged(object sender, DependencyPropertyChangedEventArgs e) => BgOpDuration = (e.NewValue as TimeSpan?) ?? TimeSpan.Zero;
+        //private void BgOp_DurationPropertyChanged(object sender, DependencyPropertyChangedEventArgs e) => BgOpDuration = (e.NewValue as TimeSpan?) ?? TimeSpan.Zero;
 
-        private void BgOp_MessageLevelPropertyChanged(object sender, DependencyPropertyChangedEventArgs e) => BgOpMessageLevel = (StatusMessageLevel)e.NewValue;
+        //private void BgOp_MessageLevelPropertyChanged(object sender, DependencyPropertyChangedEventArgs e) => BgOpMessageLevel = (StatusMessageLevel)e.NewValue;
 
-        private void BgOp_StatusMessagePropertyChanged(object sender, DependencyPropertyChangedEventArgs e) => BgOpStatusMessage = (e.NewValue as string) ?? "";
+        //private void BgOp_StatusMessagePropertyChanged(object sender, DependencyPropertyChangedEventArgs e) => BgOpStatusMessage = (e.NewValue as string) ?? "";
 
-        private void BgOp_AsyncOpStatusPropertyChanged(object sender, DependencyPropertyChangedEventArgs e) => BgOpStatus = (AsyncOpStatusCode)e.NewValue;
+        //private void BgOp_AsyncOpStatusPropertyChanged(object sender, DependencyPropertyChangedEventArgs e) => BgOpStatus = (AsyncOpStatusCode)e.NewValue;
 
         #endregion
 
@@ -1420,14 +1420,20 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         #endregion
 
         private AsyncFuncOpViewModel<string, (CrawlConfiguration Configuration, Subdirectory Root, string Path)> LookupCrawlConfigAsync(string path) =>
-            AsyncFuncOpViewModel<string, (CrawlConfiguration Configuration, Subdirectory Root, string Path)>.FromAsync(path, LookupCrawlConfigOpMgr, LookupCrawlConfigAsyncOpManager.LookupCrawlConfigAsync);
+            OpAggregate.FromAsync("Getting Crawl Configuration", path, LookupCrawlConfigOpMgr, LookupCrawlConfigAsyncOpManager.LookupCrawlConfigAsync);
 
-        private AsyncFuncOpViewModel<Subdirectory, (CrawlConfiguration Configuration, Subdirectory Root, string Path)> GetSubdirectoryFullNameAsync(Subdirectory subdirectory) =>
-            AsyncFuncOpViewModel<Subdirectory, (CrawlConfiguration Configuration, Subdirectory Root, string Path)>.FromAsync(subdirectory, GetSubdirectoryFullNameOpMgr,
-                GetSubdirectoryFullNameOpMgr.LookupFullNameAsync);
+        //private AsyncFuncOpViewModel<string, (CrawlConfiguration Configuration, Subdirectory Root, string Path)> LookupCrawlConfigAsync2(string path) =>
+        //    AsyncFuncOpViewModel<string, (CrawlConfiguration Configuration, Subdirectory Root, string Path)>.FromAsync(path, LookupCrawlConfigOpMgr, LookupCrawlConfigAsyncOpManager.LookupCrawlConfigAsync);
+
+        //private AsyncFuncOpViewModel<Subdirectory, (CrawlConfiguration Configuration, Subdirectory Root, string Path)> GetSubdirectoryFullNameAsync(Subdirectory subdirectory) =>
+        //    AsyncFuncOpViewModel<Subdirectory, (CrawlConfiguration Configuration, Subdirectory Root, string Path)>.FromAsync(subdirectory, GetSubdirectoryFullNameOpMgr,
+        //        GetSubdirectoryFullNameOpMgr.LookupFullNameAsync);
 
         private AsyncFuncOpViewModel<(CrawlConfiguration, EditCrawlConfigVM), (CrawlConfiguration Configuration, Subdirectory Root)> SaveChangesAsync(CrawlConfiguration crawlConfiguration) =>
-            AsyncFuncOpViewModel<(CrawlConfiguration, EditCrawlConfigVM), (CrawlConfiguration Configuration, Subdirectory Root)>.FromAsync((crawlConfiguration, this), SaveChangesOpMgr, SaveChangesOpMgr.SaveChangesAsync);
+            OpAggregate.FromAsync("Saving Changes", (crawlConfiguration, this), SaveChangesOpMgr, SaveChangesOpMgr.SaveChangesAsync);
+
+        //private AsyncFuncOpViewModel<(CrawlConfiguration, EditCrawlConfigVM), (CrawlConfiguration Configuration, Subdirectory Root)> SaveChangesAsync2(CrawlConfiguration crawlConfiguration) =>
+        //    AsyncFuncOpViewModel<(CrawlConfiguration, EditCrawlConfigVM), (CrawlConfiguration Configuration, Subdirectory Root)>.FromAsync((crawlConfiguration, this), SaveChangesOpMgr, SaveChangesOpMgr.SaveChangesAsync);
 
         #endregion
 

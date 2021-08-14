@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
@@ -23,14 +24,20 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
                 /// <value>The cancellation token.</value>
                 public CancellationToken CancellationToken { get; }
 
+                public Guid ConcurrencyId { get; }
+
+                public ILogger<AsyncOpViewModel> Logger { get; }
+
                 /// <summary>
                 /// Initializes a new instance of the <see cref="StatusListener"/> class.
                 /// </summary>
-                /// <param name="item">The item.</param>
+                /// <param name="item">The item representing the background operation.</param>
                 protected StatusListener(TItem item)
                 {
                     _item = item;
                     CancellationToken = item.GetCancellationToken();
+                    ConcurrencyId = item.ConcurrencyId;
+                    Logger = item.Logger;
                 }
 
                 /// <summary>
@@ -405,6 +412,10 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
                 /// </summary>
                 internal void RaiseTaskStarted()
                 {
+                    if (_item.CheckAccess())
+                        Logger.LogWarning("Task started UI dispatcher thread: Concurrency ID = {ConcurrencyId}; Task.CurrentId = {TaskId}", nameof(RaiseTaskStarted), ConcurrencyId, Task.CurrentId);
+                    else
+                        Logger.LogDebug("{MethodName}() invoked: Concurrency ID = {ConcurrencyId}; Task.CurrentId = {TaskId}", nameof(RaiseTaskStarted), ConcurrencyId, Task.CurrentId);
                     DateTime started;
                     lock (_item._stopWatch)
                     {
@@ -439,6 +450,8 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
                 /// <param name="owner">The <see cref="AsyncOpManagerViewModel{TState, TTask, TItem, TListener}"/> that is tracking the background operation.</param>
                 protected internal virtual void RaiseTaskCompleted(TTask task, AsyncOpManagerViewModel<TState, TTask, TItem, TListener> owner)
                 {
+                    Logger.LogDebug("{MethodName}({task}, {owner}) invoked: Concurrency ID = {ConcurrencyId}; Task = {{ Id = {TaskId}; Status = {TaskStatus} }}", nameof(RaiseTaskCompleted), nameof(TTask),
+                        nameof(AsyncOpManagerViewModel<TState, TTask, TItem, TListener>), ConcurrencyId, task.Id, task.Status);
                     DateTime stopped;
                     Timer timer;
                     lock (_item._stopWatch)

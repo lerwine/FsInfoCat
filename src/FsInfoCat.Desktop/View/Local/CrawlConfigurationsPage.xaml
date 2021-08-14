@@ -8,6 +8,7 @@
       xmlns:cvt="clr-namespace:FsInfoCat.Desktop.Converters"
       xmlns:localCvt="clr-namespace:FsInfoCat.Desktop.Converters.Local"
       xmlns:res="clr-namespace:FsInfoCat.Properties;assembly=FsInfoCat"
+      xmlns:View="clr-namespace:FsInfoCat.Desktop.View"
       mc:Ignorable="d" DataContext="{DynamicResource VM}"
       d:DesignHeight="768" d:DesignWidth="1024"
       Title="DisplayName_CrawlConfigurations">
@@ -62,7 +63,7 @@
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <TextBlock Padding="{DynamicResource DefaultSpacingLeft}" Text="{Binding Path, Mode=OneWay}" />
+                <TextBlock Padding="{DynamicResource DefaultSpacingLeft}" Text="{Binding FullName, Mode=OneWay}" />
                 <Button Content="..." Grid.Column="1" Margin="{DynamicResource DefaultSpacingRight}" Command="{Binding OpenRootFolderCommand, Mode=OneWay}" ToolTip="{x:Static res:Resources.Description_BrowseRootFolder}" Width="{DynamicResource DefaultTextBoxHeight}" Height="{DynamicResource DefaultTextBoxHeight}"/>
             </Grid>
             <GroupBox Header="Limits">
@@ -131,5 +132,6 @@
             </WrapPanel>
         </StackPanel>
         <GridSplitter Grid.Column="1" HorizontalAlignment="Left" Grid.RowSpan="2" Style="{DynamicResource VerticalGridSplitterStyle}"/>
+        <View:AsyncBgModalControl Grid.ColumnSpan="2" d:IsHidden="True" DataContext="{Binding OpAggregate, Mode=OneWay}" />
     </Grid>
 </Page>

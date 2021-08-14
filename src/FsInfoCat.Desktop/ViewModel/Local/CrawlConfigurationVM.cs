@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
+using System.Threading;
 using System.Windows;
 using System.Windows.Threading;
 
@@ -254,13 +255,14 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             Subdirectory root = (Model = model ?? throw new ArgumentNullException(nameof(model))).Root;
             model.PropertyChanged += Model_PropertyChanged;
             if (root is not null && root.Id != rootId)
-                _ = Subdirectory.LookupFullNameAsync(root).ContinueWith(task =>
+                // DEFERRED: Replace with background job view model
+                _ = Subdirectory.LookupFullNameAsync(root, CancellationToken.None).ContinueWith(task =>
                   {
                       if (task.IsFaulted)
                           Dispatcher.Invoke(() => OnLookupFullNameError(task.Exception));
                       else if (!task.IsCanceled)
                           Dispatcher.Invoke(() => OnLookupFullNameComplete(task.Result ?? ""));
-                  });
+                  }, CancellationToken.None);
             DisplayName = model.DisplayName;
             MaxRecursionDepth = model.MaxRecursionDepth;
             MaxTotalItems = model.MaxTotalItems;
@@ -287,7 +289,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             FullName = result;
         }
 
-        private void OnLookupFullNameError(AggregateException exception)
+        private static void OnLookupFullNameError(AggregateException exception)
         {
             MessageBox.Show(Application.Current.MainWindow, string.IsNullOrWhiteSpace(exception.Message) ? exception.ToString() : exception.Message,
                 "Full Name Lookup Error", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -355,7 +357,8 @@ namespace FsInfoCat.Desktop.ViewModel.Local
                     if (root is null)
                         OnLookupFullNameComplete("");
                     else
-                        _ = Subdirectory.LookupFullNameAsync(root).ContinueWith(task =>
+                        // TODO: Replace with async view model job
+                        _ = Subdirectory.LookupFullNameAsync(root, CancellationToken.None).ContinueWith(task =>
                           {
                               if (task.IsFaulted)
                                   Dispatcher.Invoke(() => OnLookupFullNameError(task.Exception));

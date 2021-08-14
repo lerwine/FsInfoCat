@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -5,9 +6,11 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Threading;
 
 namespace FsInfoCat.Desktop.ViewModel.AsyncOps
 {
+
     /// <summary>
     /// Base class for view models that track background operations, providing bindable status information properties.
     /// <para>Extends <see cref="DependencyObject" />.</para>
@@ -19,11 +22,12 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
     /// <typeparam name="TListener">The type of listener that inherits from <see cref="AsyncOpManagerViewModel{TState, TTask, TItem, TListener}.AsyncOpViewModel.StatusListener" />
     /// and is used within the background <typeparamref name="TTask">Task</typeparamref> to update the associated <typeparamref name="TItem">Item</typeparamref>.</typeparam>
     /// <seealso cref="DependencyObject" />
-    public partial class AsyncOpManagerViewModel<TState, TTask, TItem, TListener> : DependencyObject
+    public partial class AsyncOpManagerViewModel<TState, TTask, TItem, TListener> : DependencyObject, IAsyncOpManagerViewModel
         where TTask : Task
         where TItem : AsyncOpManagerViewModel<TState, TTask, TItem, TListener>.AsyncOpViewModel
         where TListener : AsyncOpManagerViewModel<TState, TTask, TItem, TListener>.AsyncOpViewModel.StatusListener
     {
+        protected readonly ILogger<AsyncOpManagerViewModel<TState, TTask, TItem, TListener>> Logger;
         private readonly ObservableCollection<TItem> _pendingOperations = new();
         private readonly ObservableCollection<TItem> _activeOperations = new();
         private readonly ObservableCollection<TItem> _completedOperations = new();
@@ -31,6 +35,8 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
         private readonly ObservableCollection<TItem> _canceledOperations = new();
         private readonly ObservableCollection<TItem> _successsfulOperations = new();
         private readonly ObservableCollection<TItem> _allOperations = new();
+
+        #region Events
 
         /// <summary>
         /// Occurs when the the <see cref="IsBusy"/> property has changed.
@@ -56,13 +62,14 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
         /// <remarks>This event is raised on the UI thread.</remarks>
         public event EventHandler<OpItemFailedEventArgs<TState, TTask, TItem, TListener>> OperationFailed;
 
+        #endregion
         #region Dependency Properties
 
         #region IsBusy Property Members
 
         private static readonly DependencyPropertyKey IsBusyPropertyKey = DependencyProperty.RegisterReadOnly(nameof(IsBusy), typeof(bool), typeof(AsyncOpManagerViewModel<TState, TTask, TItem, TListener>),
                 new PropertyMetadata(false, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                    (d as AsyncOpManagerViewModel<TState, TTask, TItem, TListener>)?.IsBusyPropertyChanged?.Invoke(d, e)));
+                    (d as AsyncOpManagerViewModel<TState, TTask, TItem, TListener>)?.RaiseIsBusyPropertyChanged(e)));
 
         public static readonly DependencyProperty IsBusyProperty = IsBusyPropertyKey.DependencyProperty;
 
@@ -74,6 +81,12 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
         {
             get => (bool)GetValue(IsBusyProperty);
             private set => SetValue(IsBusyPropertyKey, value);
+        }
+
+        private void RaiseIsBusyPropertyChanged(DependencyPropertyChangedEventArgs args)
+        {
+            Logger.LogInformation("{PropertyName} changed from {OldValue} to {NewValue}", args.Property.Name, args.OldValue, args.NewValue);
+            IsBusyPropertyChanged?.Invoke(this, args);
         }
 
         #endregion
@@ -215,6 +228,7 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
 
         public AsyncOpManagerViewModel()
         {
+            Logger = App.GetLogger(this);
             PendingOperations = new(_pendingOperations);
             ActiveOperations = new(_activeOperations);
             CompletedOperations = new(_completedOperations);
@@ -231,16 +245,34 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
 
         public void CancelAll(bool throwOnFirstException)
         {
-            VerifyAccess();
-            foreach (TItem item in _pendingOperations.Concat(_activeOperations).ToArray())
-                item.Cancel(throwOnFirstException);
+            if (CheckAccess())
+            {
+                TItem[] items = _pendingOperations.Concat(_activeOperations).ToArray();
+                Logger.LogInformation("Cancelling {OperationCount} operation(s): throwOnFirstException = {throwOnFirstException}", items.Length, throwOnFirstException);
+                foreach (TItem item in items)
+                    item.Cancel(throwOnFirstException);
+            }
+            else
+            {
+                Logger.LogInformation("Queueing {MethodName} invocation on UI thread: throwOnFirstException = {throwOnFirstException}", nameof(CancelAll), throwOnFirstException);
+                Dispatcher.Invoke(() => CancelAll(throwOnFirstException));
+            }
         }
 
         public void CancelAll()
         {
-            VerifyAccess();
-            foreach (TItem item in _pendingOperations.Concat(_activeOperations).ToArray())
-                item.Cancel();
+            if (CheckAccess())
+            {
+                TItem[] items = _pendingOperations.Concat(_activeOperations).ToArray();
+                Logger.LogInformation("Cancelling {OperationCount} operation(s)", items.Length);
+                foreach (TItem item in items)
+                    item.Cancel();
+            }
+            else
+            {
+                Logger.LogInformation("Queueing {MethodName} invocation on UI thread", nameof(CancelAll));
+                Dispatcher.Invoke(() => CancelAll());
+            }
         }
 
         /// <summary>
@@ -467,6 +499,8 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
         /// <returns><see langword="true"/> the item was removed; otherwise, <see langword="false"/>.</returns>
         public bool RemoveOperation(TItem item)
         {
+            if (!CheckAccess())
+                return Dispatcher.Invoke(() => RemoveOperation(item));
             if (item is null || !_allOperations.Contains(item))
                 return false;
             if (_completedOperations.Contains(item))

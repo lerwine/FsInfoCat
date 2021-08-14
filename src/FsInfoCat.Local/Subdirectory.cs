@@ -371,32 +371,23 @@ namespace FsInfoCat.Local
         internal void SetUnspecifiedError([DisallowNull] LocalDbContext dbContext, [DisallowNull] Exception exception) =>
             SetError(dbContext, AccessErrorCode.Unspecified, exception);
 
-        /// <summary>
-        /// Asyncrhonously loads subdirectory full path names.
-        /// </summary>
-        /// <typeparam name="T">The input item type.</typeparam>
-        /// <param name="source">The input items.</param>
-        /// <param name="factory">Gets the <see cref="Subdirectory"/> from the associated item;</param>
-        /// <param name="dbContext">The database context to use.</param>
-        /// <returns>A list with the associated subdirecty full path names:
-        /// <list type="bullet">
-        ///<item><term>FullName</term><description>The full path of the associated subdirectory.</description></item>
-        ///<item><term>SubdirectoryId</term><description>The full path of the associated subdirectory.</description></item>
-        ///<item><term>Source</term><description>The orignal source item.</description></item>
-        /// </list></returns>
-        public static async Task<List<(string FullName, Guid SubdirectoryId, T Source)>> LoadFullNamesAsync<T>(IEnumerable<T> source, Func<T, Subdirectory> factory, LocalDbContext dbContext) => await Task.Run(() =>
+        public record CrawlConfigWithFullRootPath<T>(string FullName, Guid SubdirectoryId, T Source);
+
+        public static async Task<List<CrawlConfigWithFullRootPath<T>>> BuildFullNamesAsync<T>(IEnumerable<T> source, Func<T, Subdirectory> factory, LocalDbContext dbContext, CancellationToken cancellationToken)
         {
-            Dictionary<Guid, string> fullNames = new();
-            return source.Select(t =>
+            List<CrawlConfigWithFullRootPath<T>> result = new();
+            foreach (T t in source)
             {
                 Subdirectory subdirectory = factory(t);
                 if (subdirectory is null)
-                    return ((string)null, Guid.Empty, t);
-                return (LookupFullName(fullNames, subdirectory, dbContext), subdirectory.Id, t);
-            }).ToList();
-        });
+                    result.Add(new CrawlConfigWithFullRootPath<T>("", Guid.Empty, t));
+                else
+                    result.Add(new CrawlConfigWithFullRootPath<T>(await LookupFullNameAsync(subdirectory, cancellationToken, dbContext), subdirectory.Id, t));
+            }
+            return result;
+        }
 
-        public static async Task<string> LookupFullNameAsync([DisallowNull] Subdirectory subdirectory, CancellationToken cancellation, LocalDbContext dbContext = null)
+        public static async Task<string> LookupFullNameAsync([DisallowNull] Subdirectory subdirectory, CancellationToken cancellationToken, LocalDbContext dbContext = null)
         {
             if (subdirectory is null)
                 throw new ArgumentNullException(nameof(subdirectory));
@@ -404,61 +395,22 @@ namespace FsInfoCat.Local
             {
                 using IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
                 using LocalDbContext context = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
-                return await LookupFullNameAsync(subdirectory, context);
+                return await LookupFullNameAsync(subdirectory, cancellationToken, context);
             }
             Guid? parentId = subdirectory.ParentId;
-            string path = subdirectory.Name;
+            if (!parentId.HasValue)
+                return subdirectory.Name;
+            Stack<string> segments = new();
+            segments.Push(subdirectory.Name);
             while (parentId.HasValue)
             {
                 Subdirectory parent = subdirectory.Parent;
-                if (parent is null && (subdirectory.Parent = parent = await dbContext.Subdirectories.FindAsync(parentId.Value)) is null)
+                if (parent is null && (subdirectory.Parent = parent = await dbContext.Subdirectories.FindAsync(new object[] { parentId.Value }, cancellationToken)) is null)
                     break;
-                path = $"{parent.Name}/{path}";
+                segments.Push(parent.Name);
                 parentId = (subdirectory = parent).ParentId;
             }
-            return path;
-        }
-
-        public static async Task<string> LookupFullNameAsync([DisallowNull] Subdirectory subdirectory, LocalDbContext dbContext = null)
-        {
-            if (subdirectory is null)
-                throw new ArgumentNullException(nameof(subdirectory));
-            if (dbContext is null)
-            {
-                using IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
-                using LocalDbContext context = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
-                return await LookupFullNameAsync(subdirectory, context);
-            }
-            Guid? parentId = subdirectory.ParentId;
-            string path = subdirectory.Name;
-            while (parentId.HasValue)
-            {
-                Subdirectory parent = subdirectory.Parent;
-                if (parent is null && (subdirectory.Parent = parent = await dbContext.Subdirectories.FindAsync(parentId.Value)) is null)
-                    break;
-                path = $"{parent.Name}/{path}";
-                parentId = (subdirectory = parent).ParentId;
-            }
-            return path;
-        }
-
-        private static string LookupFullName(Dictionary<Guid, string> fullNames, Subdirectory subdirectory, LocalDbContext dbContext)
-        {
-            if (fullNames.ContainsKey(subdirectory.Id))
-                return fullNames[subdirectory.Id];
-            Guid? parentId = subdirectory.ParentId;
-            if (parentId.HasValue)
-            {
-                Subdirectory parent = subdirectory.Parent ?? dbContext.Find<Subdirectory>(parentId.Value);
-                if (parent is not null)
-                {
-                    string path = $"{LookupFullName(fullNames, parent, dbContext)}/{subdirectory.Name}";
-                    fullNames.Add(subdirectory.Id, path);
-                    return path;
-                }
-            }
-            fullNames.Add(subdirectory.Id, subdirectory.Name);
-            return subdirectory.Name;
+            return Path.Combine(segments.ToArray());
         }
 
         protected override void OnPropertyChanging(PropertyChangingEventArgs args)

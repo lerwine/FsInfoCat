@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -17,6 +16,10 @@ namespace FsInfoCat.Desktop.ViewModel.Local
     {
         private readonly ILogger<CrawlConfigurationsPageVM> _logger;
         private readonly List<CrawlConfigurationVM> _allCrawlConfigurations = new();
+        private Task _lastDataLoadTask;
+
+        //public record CrawlConfigWithFullRootPath(string FullName, Guid SubdirectoryId, CrawlConfiguration Source);
+        #region Crawl Configuration Items Members
 
         #region CrawlConfigurations Property Members
 
@@ -54,7 +57,6 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         }
 
         #endregion
-
         #region SelectedCrawlConfig Property Members
 
         public static readonly DependencyProperty SelectedCrawlConfigProperty = DependencyProperty.Register(nameof(SelectedCrawlConfig), typeof(CrawlConfigurationVM), typeof(CrawlConfigurationsPageVM),
@@ -74,20 +76,69 @@ namespace FsInfoCat.Desktop.ViewModel.Local
                 oldValue.StartCrawlNow -= SelectedCrawlConfig_StartCrawlNow;
                 oldValue.Edit -= SelectedCrawlConfig_Edit;
                 oldValue.Delete -= SelectedCrawlConfig_Delete;
-                oldValue.OpenRootFolder -= SelectedCrawlConfig_OpenRootFolder;
+                //oldValue.OpenRootFolder -= SelectedCrawlConfig_OpenRootFolder;
                 oldValue.ShowLogs -= SelectedCrawlConfig_ShowLogs;
             }
-            if (newValue is not null)
+            if (newValue is null)
+                SelectedCrawlConfigRootPath = "";
+            else
             {
                 newValue.StartCrawlNow += SelectedCrawlConfig_StartCrawlNow;
                 newValue.Edit += SelectedCrawlConfig_Edit;
                 newValue.Delete += SelectedCrawlConfig_Delete;
-                newValue.OpenRootFolder += SelectedCrawlConfig_OpenRootFolder;
+                //newValue.OpenRootFolder += SelectedCrawlConfig_OpenRootFolder;
                 newValue.ShowLogs += SelectedCrawlConfig_ShowLogs;
             }
         }
 
+        private void SelectedCrawlConfig_StartCrawlNow(object sender, EventArgs e)
+        {
+            // TODO: Implement SelecteItem_StartCrawlNow
+            throw new NotImplementedException();
+        }
+
+        private void SelectedCrawlConfig_Edit(object sender, EventArgs e)
+        {
+            CrawlConfiguration model = SelectedCrawlConfig?.Model;
+            if (model is not null)
+                EditCrawlConfigVM.Edit(model);
+        }
+
+        private void SelectedCrawlConfig_Delete(object sender, EventArgs e)
+        {
+            // TODO: Implement SelecteItem_Delete
+            throw new NotImplementedException();
+        }
+
+        private void SelectedCrawlConfig_OpenRootFolder(object sender, EventArgs e)
+        {
+            // TODO: Implement SelecteItem_OpenRootFolder
+            throw new NotImplementedException();
+        }
+
+        private void SelectedCrawlConfig_ShowLogs(object sender, EventArgs e)
+        {
+            // TODO: Implement SelecteItem_ShowLogs
+            throw new NotImplementedException();
+        }
+
         #endregion
+        #region SelectedCrawlConfigRootPath Property Members
+
+        private static readonly DependencyPropertyKey SelectedCrawlConfigRootPathPropertyKey = DependencyProperty.RegisterReadOnly(nameof(SelectedCrawlConfigRootPath), typeof(string), typeof(CrawlConfigurationsPageVM), new PropertyMetadata(""));
+
+        public static readonly DependencyProperty SelectedCrawlConfigRootPathProperty = SelectedCrawlConfigRootPathPropertyKey.DependencyProperty;
+
+        public string SelectedCrawlConfigRootPath
+        {
+            get => GetValue(SelectedCrawlConfigRootPathProperty) as string;
+            private set => SetValue(SelectedCrawlConfigRootPathPropertyKey, value);
+        }
+
+        #endregion
+
+        #endregion
+        #region Listing Options Members
 
         #region ShowActiveCrawlConfigurationsOnly Property Members
 
@@ -176,6 +227,29 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 
         #endregion
 
+        #endregion
+        #region Background Operations Members
+
+        private static readonly DependencyPropertyKey OpAggregatePropertyKey = DependencyProperty.RegisterReadOnly(nameof(OpAggregate), typeof(AsyncOps.AsyncOpAggregate), typeof(CrawlConfigurationsPageVM), new PropertyMetadata(null));
+
+        public static readonly DependencyProperty OpAggregateProperty = OpAggregatePropertyKey.DependencyProperty;
+
+        public AsyncOps.AsyncOpAggregate OpAggregate => (AsyncOps.AsyncOpAggregate)GetValue(OpAggregateProperty);
+
+        #region CrawlConfigsLoader Property Members
+
+        private static readonly DependencyPropertyKey CrawlConfigsLoaderPropertyKey = DependencyProperty.RegisterReadOnly(nameof(CrawlConfigsLoader),
+            typeof(AsyncOps.AsyncOpResultManagerViewModel<bool?, IList<Subdirectory.CrawlConfigWithFullRootPath<CrawlConfiguration>>>), typeof(CrawlConfigurationsPageVM),
+                new PropertyMetadata(null));
+
+        public static readonly DependencyProperty CrawlConfigsLoaderProperty = CrawlConfigsLoaderPropertyKey.DependencyProperty;
+
+        public AsyncOps.AsyncOpResultManagerViewModel<bool?, IList<Subdirectory.CrawlConfigWithFullRootPath<CrawlConfiguration>>> CrawlConfigsLoader =>
+            (AsyncOps.AsyncOpResultManagerViewModel<bool?, IList<Subdirectory.CrawlConfigWithFullRootPath<CrawlConfiguration>>>)GetValue(CrawlConfigsLoaderProperty);
+            
+        #endregion
+
+        #endregion
         #region NewClickCommand Property Members
 
         private static readonly DependencyPropertyKey NewClickCommandPropertyKey = DependencyProperty.RegisterReadOnly(nameof(NewClickCommand), typeof(Commands.RelayCommand), typeof(CrawlConfigurationsPageVM), new PropertyMetadata(null));
@@ -214,37 +288,11 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 
         #endregion
 
-        private void SelectedCrawlConfig_StartCrawlNow(object sender, EventArgs e)
-        {
-            // TODO: Implement SelecteItem_StartCrawlNow
-            throw new NotImplementedException();
-        }
+        public Task GetLastDataLoadTask() => _lastDataLoadTask;
 
-        private void SelectedCrawlConfig_Edit(object sender, EventArgs e)
-        {
-            CrawlConfiguration model = SelectedCrawlConfig?.Model;
-            if (model is not null)
-                EditCrawlConfigVM.Edit(model);
-        }
-
-        private void SelectedCrawlConfig_Delete(object sender, EventArgs e)
-        {
-            // TODO: Implement SelecteItem_Delete
-            throw new NotImplementedException();
-        }
-
-        private void SelectedCrawlConfig_OpenRootFolder(object sender, EventArgs e)
-        {
-            // TODO: Implement SelecteItem_OpenRootFolder
-            throw new NotImplementedException();
-        }
-
-        private void SelectedCrawlConfig_ShowLogs(object sender, EventArgs e)
-        {
-            // TODO: Implement SelecteItem_ShowLogs
-            throw new NotImplementedException();
-        }
-
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CrawlConfigurationsPageVM"/> class.
+        /// </summary>
         public CrawlConfigurationsPageVM()
         {
             InnerCrawlConfigurations = new();
@@ -255,30 +303,35 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             if (DesignerProperties.GetIsInDesignMode(this))
                 return;
 #endif
-            _ = LoadInitialDataAsync().ContinueWith(task =>
+            AsyncOps.AsyncOpAggregate opAggregate = new();
+            SetValue(OpAggregatePropertyKey, opAggregate);
+            AsyncOps.AsyncOpResultManagerViewModel<bool?, IList<Subdirectory.CrawlConfigWithFullRootPath<CrawlConfiguration>>> crawlConfigsLoader = new();
+            SetValue(CrawlConfigsLoaderPropertyKey, crawlConfigsLoader);
+            AsyncOps.AsyncFuncOpViewModel<bool?, IList<Subdirectory.CrawlConfigWithFullRootPath<CrawlConfiguration>>> asyncOp =
+                opAggregate.FromAsync("Loading crawl configurations", (bool?)null, crawlConfigsLoader, LoadCrawlConfigsAsync);
+            asyncOp.GetTask().ContinueWith(task =>
             {
-                if (task.IsFaulted)
-                {
-                    _logger.LogError(task.Exception, "Error executing LoadInitialDataAsync");
-                    Dispatcher.Invoke(() => OnInitialDataLoadError(task.Exception));
-                }
-                else if (task.IsCanceled)
-                    _logger.LogWarning("LoadInitialDataAsync canceled.");
-                else
+                if (task.IsCompletedSuccessfully)
                     Dispatcher.Invoke(() => OnInitialDataLoaded(task.Result));
             });
+            // TODO: Replace this will async view model
+            //_lastDataLoadTask = LoadInitialDataAsync().ContinueWith(task =>
+            //{
+            //    if (task.IsFaulted)
+            //    {
+            //        _logger.LogError(task.Exception, "Error executing LoadInitialDataAsync");
+            //        Dispatcher.Invoke(() => OnInitialDataLoadError(task.Exception));
+            //    }
+            //    else if (task.IsCanceled)
+            //        _logger.LogWarning("LoadInitialDataAsync canceled.");
+            //    else
+            //        Dispatcher.Invoke(() => OnInitialDataLoaded(task.Result));
+            //});
         }
 
-        private static async Task<List<(string FullName, Guid SubdirectoryId, CrawlConfiguration Source)>> LoadInitialDataAsync()
+        private void OnInitialDataLoaded(IList<Subdirectory.CrawlConfigWithFullRootPath<CrawlConfiguration>> items)
         {
-            using IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
-            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetService<LocalDbContext>();
-            List<CrawlConfiguration> configurations = await dbContext.CrawlConfigurations.Include(c => c.Root).ToListAsync();
-            return await Subdirectory.LoadFullNamesAsync(configurations, c => c.Root, dbContext);
-        }
-
-        private void OnInitialDataLoaded(IEnumerable<(string FullName, Guid SubdirectoryId, CrawlConfiguration Source)> items)
-        {
+            _logger.LogInformation("{Count} crawl configurations loaded from database", items.Count);
             _allCrawlConfigurations.Clear();
             InnerCrawlConfigurations.Clear();
             _allCrawlConfigurations.AddRange(items.Select(i => new CrawlConfigurationVM(i.Source, i.FullName, i.SubdirectoryId)));
@@ -288,13 +341,41 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             SelectedCrawlConfig = InnerCrawlConfigurations.FirstOrDefault();
         }
 
-        private void OnInitialDataLoadError(AggregateException exception)
+        private async Task<IList<Subdirectory.CrawlConfigWithFullRootPath<CrawlConfiguration>>> LoadCrawlConfigsAsync(bool? isActive, AsyncOps.AsyncFuncOpViewModel<bool?, IList<Subdirectory.CrawlConfigWithFullRootPath<CrawlConfiguration>>>.StatusListenerImpl statusListener)
         {
-            _allCrawlConfigurations.Clear();
-            InnerCrawlConfigurations.Clear();
-            MainWindow mainWindow = Services.ServiceProvider.GetService<MainWindow>();
-            if (mainWindow is not null)
-                MessageBox.Show(mainWindow, string.IsNullOrWhiteSpace(exception.Message) ? exception.ToString() : exception.Message, FsInfoCat.Properties.Resources.DisplayName_DataLoadError, MessageBoxButton.OK, MessageBoxImage.Error);
+            using IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetService<LocalDbContext>();
+            List<CrawlConfiguration> configurations;
+            if (isActive.HasValue)
+            {
+                if (isActive.Value)
+                    configurations = await (from cfg in dbContext.CrawlConfigurations.Include(c => c.Root) where cfg.StatusValue != CrawlStatus.Disabled select cfg).ToListAsync();
+                else
+                    configurations = await (from cfg in dbContext.CrawlConfigurations.Include(c => c.Root) where cfg.StatusValue == CrawlStatus.Disabled select cfg).ToListAsync();
+            }
+            else
+                configurations = await dbContext.CrawlConfigurations.Include(c => c.Root).ToListAsync();
+            return await Subdirectory.BuildFullNamesAsync(configurations, c => c.Root, dbContext, statusListener.CancellationToken);
         }
+
+        //private void OnInitialDataLoaded(IEnumerable<(string FullName, Guid SubdirectoryId, CrawlConfiguration Source)> items)
+        //{
+        //    _allCrawlConfigurations.Clear();
+        //    InnerCrawlConfigurations.Clear();
+        //    _allCrawlConfigurations.AddRange(items.Select(i => new CrawlConfigurationVM(i.Source, i.FullName, i.SubdirectoryId)));
+        //    foreach (CrawlConfigurationVM item in ShowAllCrawlConfigurations ? _allCrawlConfigurations :
+        //            (ShowInactiveCrawlConfigurationsOnly ? _allCrawlConfigurations.Where(i => i.StatusValue == CrawlStatus.Disabled) : _allCrawlConfigurations.Where(i => i.StatusValue != CrawlStatus.Disabled)))
+        //        InnerCrawlConfigurations.Add(item);
+        //    SelectedCrawlConfig = InnerCrawlConfigurations.FirstOrDefault();
+        //}
+
+        //private void OnInitialDataLoadError(AggregateException exception)
+        //{
+        //    _allCrawlConfigurations.Clear();
+        //    InnerCrawlConfigurations.Clear();
+        //    MainWindow mainWindow = Services.ServiceProvider.GetService<MainWindow>();
+        //    if (mainWindow is not null)
+        //        MessageBox.Show(mainWindow, string.IsNullOrWhiteSpace(exception.Message) ? exception.ToString() : exception.Message, FsInfoCat.Properties.Resources.DisplayName_DataLoadError, MessageBoxButton.OK, MessageBoxImage.Error);
+        //}
     }
 }

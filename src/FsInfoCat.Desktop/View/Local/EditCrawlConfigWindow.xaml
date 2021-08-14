@@ -8,7 +8,8 @@
         xmlns:f="clr-namespace:FsInfoCat;assembly=FsInfoCat"
         xmlns:local="clr-namespace:FsInfoCat.Desktop.View.Local"
         xmlns:desktop="clr-namespace:FsInfoCat.Desktop"
-      xmlns:res="clr-namespace:FsInfoCat.Properties;assembly=FsInfoCat"
+        xmlns:res="clr-namespace:FsInfoCat.Properties;assembly=FsInfoCat"
+        xmlns:View="clr-namespace:FsInfoCat.Desktop.View"
         xmlns:v="clr-namespace:FsInfoCat.Desktop.Validation"
         xmlns:b="http://schemas.microsoft.com/xaml/behaviors" x:Class="FsInfoCat.Desktop.View.Local.EditCrawlConfigWindow"
         mc:Ignorable="d" DataContext="{DynamicResource VM}"
@@ -28,69 +29,6 @@
         </b:EventTrigger>
     </b:Interaction.Triggers>
     <Grid>
-        <VisualStateManager.VisualStateGroups>
-            <VisualStateGroup x:Name="BgOpStatusStateGroup">
-                <VisualState x:Name="OpNotActive">
-                    <Storyboard>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="outerPopupBorder" Storyboard.TargetProperty="(UIElement.Visibility)">
-                            <DiscreteObjectKeyFrame KeyTime="00:00:00" Value="{x:Static Visibility.Collapsed}"/>
-                        </ObjectAnimationUsingKeyFrames>
-                    </Storyboard>
-                </VisualState>
-                <VisualState x:Name="OpActive">
-                    <Storyboard>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="outerPopupBorder" Storyboard.TargetProperty="(UIElement.Visibility)">
-                            <DiscreteObjectKeyFrame KeyTime="00:00:00" Value="{x:Static Visibility.Visible}"/>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="popupButton" Storyboard.TargetProperty="(ContentControl.Content)">
-                            <DiscreteObjectKeyFrame KeyTime="00:00:00" Value="Cancel"/>
-                        </ObjectAnimationUsingKeyFrames>
-                    </Storyboard>
-                </VisualState>
-                <VisualState x:Name="OpAborted">
-                    <Storyboard>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="outerPopupBorder" Storyboard.TargetProperty="(UIElement.Visibility)">
-                            <DiscreteObjectKeyFrame KeyTime="00:00:00" Value="{x:Static Visibility.Visible}"/>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="popupButton" Storyboard.TargetProperty="(ContentControl.Content)">
-                            <DiscreteObjectKeyFrame KeyTime="00:00:00" Value="OK"/>
-                        </ObjectAnimationUsingKeyFrames>
-                    </Storyboard>
-                </VisualState>
-            </VisualStateGroup>
-            <VisualStateGroup x:Name="MessageLevelStateGroup">
-                <VisualState x:Name="Warning">
-                    <Storyboard>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="innerPopupBorder" Storyboard.TargetProperty="(Border.Background)">
-                            <DiscreteObjectKeyFrame KeyTime="00:00:00" Value="{StaticResource PopupTitleWarningBackgroundBrush}"/>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="popupMessageTextBlock" Storyboard.TargetProperty="(TextBlock.Foreground)">
-                            <DiscreteObjectKeyFrame KeyTime="00:00:00" Value="{StaticResource WarningDarkBrush}"/>
-                        </ObjectAnimationUsingKeyFrames>
-                    </Storyboard>
-                </VisualState>
-                <VisualState x:Name="Error">
-                    <Storyboard>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="innerPopupBorder" Storyboard.TargetProperty="(Border.Background)">
-                            <DiscreteObjectKeyFrame KeyTime="00:00:00" Value="{StaticResource PopupTitleErrorgBackgroundBrush}"/>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="popupMessageTextBlock" Storyboard.TargetProperty="(TextBlock.Foreground)">
-                            <DiscreteObjectKeyFrame KeyTime="00:00:00" Value="{StaticResource ErrorDarkBrush}"/>
-                        </ObjectAnimationUsingKeyFrames>
-                    </Storyboard>
-                </VisualState>
-                <VisualState x:Name="Info">
-                    <Storyboard>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="innerPopupBorder" Storyboard.TargetProperty="(Border.Background)">
-                            <DiscreteObjectKeyFrame KeyTime="00:00:00" Value="{StaticResource PopupTitleInfoBackgroundBrush}"/>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="popupMessageTextBlock" Storyboard.TargetProperty="(TextBlock.Foreground)">
-                            <DiscreteObjectKeyFrame KeyTime="00:00:00" Value="{StaticResource InfoDarkBrush}"/>
-                        </ObjectAnimationUsingKeyFrames>
-                    </Storyboard>
-                </VisualState>
-            </VisualStateGroup>
-        </VisualStateManager.VisualStateGroups>
         <StackPanel>
             <Label Content="Display Name" FontWeight="Bold" Padding="{DynamicResource DefaultSpacingTopLeftRight}"/>
             <TextBox Margin="{DynamicResource DefaultSpacingLeftRight}" MaxLines="1" Text="{Binding DisplayName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
@@ -269,78 +207,6 @@
                 <Button Content="Save" Width="{DynamicResource DefaultButtonWidth}" Height="{DynamicResource DefaultButtonHeight}" Margin="{DynamicResource DefaultSpacing}" Command="{Binding SaveCommand, Mode=OneWay}" IsDefault="True"/>
             </WrapPanel>
         </StackPanel>
-        <Border x:Name="outerPopupBorder" Background="{DynamicResource TranslucentBlack50pctBrush}" d:IsHidden="True">
-            <b:Interaction.Triggers>
-                <b:DataTrigger Binding="{Binding BgOpStatus, Mode=OneWay}">
-                    <b:DataTrigger.Value>
-                        <desktop:AsyncOpStatusCode>NotStarted</desktop:AsyncOpStatusCode>
-                    </b:DataTrigger.Value>
-                    <b:GoToStateAction StateName="OpNotActive"/>
-                </b:DataTrigger>
-                <b:DataTrigger Binding="{Binding BgOpStatus, Mode=OneWay}">
-                    <b:DataTrigger.Value>
-                        <desktop:AsyncOpStatusCode>RanToCompletion</desktop:AsyncOpStatusCode>
-                    </b:DataTrigger.Value>
-                    <b:GoToStateAction StateName="OpNotActive"/>
-                </b:DataTrigger>
-                <b:DataTrigger Binding="{Binding BgOpStatus, Mode=OneWay}">
-                    <b:DataTrigger.Value>
-                        <desktop:AsyncOpStatusCode>Running</desktop:AsyncOpStatusCode>
-                    </b:DataTrigger.Value>
-                    <b:GoToStateAction StateName="OpActive"/>
-                </b:DataTrigger>
-                <b:DataTrigger Binding="{Binding BgOpStatus, Mode=OneWay}">
-                    <b:DataTrigger.Value>
-                        <desktop:AsyncOpStatusCode>CancellationPending</desktop:AsyncOpStatusCode>
-                    </b:DataTrigger.Value>
-                    <b:GoToStateAction StateName="OpActive"/>
-                </b:DataTrigger>
-                <b:DataTrigger Binding="{Binding BgOpStatus, Mode=OneWay}">
-                    <b:DataTrigger.Value>
-                        <desktop:AsyncOpStatusCode>Faulted</desktop:AsyncOpStatusCode>
-                    </b:DataTrigger.Value>
-                    <b:GoToStateAction StateName="OpAborted"/>
-                </b:DataTrigger>
-                <b:DataTrigger Binding="{Binding BgOpStatus, Mode=OneWay}">
-                    <b:DataTrigger.Value>
-                        <desktop:AsyncOpStatusCode>Canceled</desktop:AsyncOpStatusCode>
-                    </b:DataTrigger.Value>
-                    <b:GoToStateAction StateName="OpAborted"/>
-                </b:DataTrigger>
-            </b:Interaction.Triggers>
-            <Border Style="{DynamicResource PopupOuterBorder}">
-                <b:Interaction.Triggers>
-                    <b:DataTrigger Binding="{Binding BgOpMessageLevel, Mode=OneWay}">
-                        <b:DataTrigger.Value>
-                            <desktop:StatusMessageLevel>Information</desktop:StatusMessageLevel>
-                        </b:DataTrigger.Value>
-                        <b:GoToStateAction StateName="Info"/>
-                    </b:DataTrigger>
-                    <b:DataTrigger Binding="{Binding BgOpMessageLevel, Mode=OneWay}">
-                        <b:DataTrigger.Value>
-                            <desktop:StatusMessageLevel>Warning</desktop:StatusMessageLevel>
-                        </b:DataTrigger.Value>
-                        <b:GoToStateAction StateName="Warning"/>
-                    </b:DataTrigger>
-                    <b:DataTrigger Binding="{Binding BgOpMessageLevel, Mode=OneWay}">
-                        <b:DataTrigger.Value>
-                            <desktop:StatusMessageLevel>Error</desktop:StatusMessageLevel>
-                        </b:DataTrigger.Value>
-                        <b:GoToStateAction StateName="Error"/>
-                    </b:DataTrigger>
-                </b:Interaction.Triggers>
-                <StackPanel>
-                    <Border x:Name="innerPopupBorder" Background="{DynamicResource PopupTitleInfoBackgroundBrush}" Style="{DynamicResource PopupTitleBorder}">
-                        <TextBlock Text="Test Title" FontWeight="Bold"/>
-                    </Border>
-                    <Border Style="{DynamicResource PopupContentBorder}">
-                        <StackPanel>
-                            <TextBlock x:Name="popupMessageTextBlock" Text="Test Message" Margin="{DynamicResource DefaultSpacing}" Style="{DynamicResource InfoMessageTextBlock}" Foreground="{DynamicResource InfoDarkBrush}" />
-                            <Button x:Name="popupButton" Content="Cancel" Margin="{DynamicResource DefaultSpacing}" Style="{DynamicResource DefaultButton}" Command="{Binding PopupButtonClickCommand, Mode=OneWay}"/>
-                        </StackPanel>
-                    </Border>
-                </StackPanel>
-            </Border>
-        </Border>
+        <View:AsyncBgModalControl d:IsHidden="True" DataContext="{Binding OpAggregate, Mode=OneWay}" />
     </Grid>
 </Window>

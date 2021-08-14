@@ -99,7 +99,7 @@ namespace FsInfoCat.Local
             Subdirectory subdirectory = await dbContext.Entry(configuration).GetRelatedReferenceAsync(c => c.Root, cancellationToken);
             if (subdirectory is null)
                 throw new InvalidOperationException($"Unexpected error: {nameof(CrawlConfiguration)}.{nameof(CrawlConfiguration.Root)} was null.");
-            string fullName = await Subdirectory.LookupFullNameAsync(subdirectory, dbContext);
+            string fullName = await Subdirectory.LookupFullNameAsync(subdirectory, cancellationToken, dbContext);
             if (string.IsNullOrEmpty(fullName))
                 throw new InvalidOperationException($"Unexpected error: Could not build full path for {nameof(CrawlConfiguration)}.{nameof(CrawlConfiguration.Root)}.");
             await subdirectory.MarkBranchIncompleteAsync(dbContext, cancellationToken);

@@ -76,8 +76,8 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
         /// <param name="scheduler">The optional scheduler to use. The default is the <see cref="TaskScheduler.Default">instance provided by the .NET framework</see>.</param>
         /// <returns>A <see cref="AsyncFuncOpViewModel{TState, TResult}"/> object representing the status of the background operation.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="func"/> was null.</exception>
-        public AsyncFuncOpViewModel<TState, TResult> StartNewBgOperation(TState initialState, Func<TState, AsyncFuncOpViewModel<TState, TResult>.StatusListenerImpl, TResult> func, TaskCreationOptions creationOptions, TaskScheduler scheduler = null) =>
-            AsyncFuncOpViewModel<TState, TResult>.StartNew(initialState, this, func, creationOptions, scheduler);
+        public AsyncFuncOpViewModel<TState, TResult> StartNewBgOperation(TState initialState, Func<TState, AsyncFuncOpViewModel<TState, TResult>.StatusListenerImpl, TResult> func, TaskCreationOptions creationOptions, Guid? concurrencyId = null, TaskScheduler scheduler = null) =>
+            AsyncFuncOpViewModel<TState, TResult>.StartNew(initialState, this, func, creationOptions, concurrencyId, scheduler);
 
         /// <summary>
         /// Starts a new background operation.
@@ -86,8 +86,8 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
         /// <param name="func">The delegate that will implement the background operation and produce the result value.</param>
         /// <returns>A <see cref="AsyncFuncOpViewModel{TState, TResult}"/> object representing the status of the background operation.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="func"/> was null.</exception>
-        public AsyncFuncOpViewModel<TState, TResult> StartNewBgOperation(TState initialState, Func<TState, AsyncFuncOpViewModel<TState, TResult>.StatusListenerImpl, TResult> func) =>
-            AsyncFuncOpViewModel<TState, TResult>.StartNew(initialState, this, func);
+        public AsyncFuncOpViewModel<TState, TResult> StartNewBgOperation(TState initialState, Func<TState, AsyncFuncOpViewModel<TState, TResult>.StatusListenerImpl, TResult> func, Guid? concurrencyId = null) =>
+            AsyncFuncOpViewModel<TState, TResult>.StartNew(initialState, this, func, concurrencyId);
 
         /// <summary>
         /// Starts a new background operation.
@@ -96,9 +96,8 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
         /// <param name="func">The asynchronous delegate that will implement the background operation and produce the result value.</param>
         /// <returns>A <see cref="AsyncFuncOpViewModel{TState, TResult}"/> object representing the status of the background operation.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="func"/> was null.</exception>
-        public AsyncFuncOpViewModel<TState, TResult> StartBgOperationFromAsync(TState initialState,
-            Func<TState, AsyncFuncOpViewModel<TState, TResult>.StatusListenerImpl, Task<TResult>> func) =>
-            AsyncFuncOpViewModel<TState, TResult>.FromAsync(initialState, this, func);
+        public AsyncFuncOpViewModel<TState, TResult> StartBgOperationFromAsync(TState initialState, Func<TState, AsyncFuncOpViewModel<TState, TResult>.StatusListenerImpl, Task<TResult>> func, Guid? concurrencyId = null) =>
+            AsyncFuncOpViewModel<TState, TResult>.FromAsync(initialState, this, func, concurrencyId);
 
         /// <summary>
         /// Adds a pending background operation.
@@ -108,8 +107,8 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
         /// <param name="creationOptions">The backround task creation options.</param>
         /// <returns>A <see cref="AsyncFuncOpViewModel{TState, TResult}"/> object representing the status of the background operation.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="func"/> was null.</exception>
-        public AsyncFuncOpViewModel<TState, TResult> AddPendingBgOperation(TState initialState, Func<TState, AsyncFuncOpViewModel<TState, TResult>.StatusListenerImpl, TResult> func, TaskCreationOptions creationOptions) =>
-            AsyncFuncOpViewModel<TState, TResult>.AddPending(initialState, this, func, creationOptions);
+        public AsyncFuncOpViewModel<TState, TResult> AddPendingBgOperation(TState initialState, Func<TState, AsyncFuncOpViewModel<TState, TResult>.StatusListenerImpl, TResult> func, TaskCreationOptions creationOptions, Guid? concurrencyId = null) =>
+            AsyncFuncOpViewModel<TState, TResult>.AddPending(initialState, this, func, creationOptions, concurrencyId);
 
         /// <summary>
         /// Adds a pending background operation.
@@ -118,8 +117,8 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
         /// <param name="func">The delegate that will implement the background operation and produce the result value.</param>
         /// <returns>A <see cref="AsyncFuncOpViewModel{TState, TResult}"/> object representing the status of the background operation.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="func"/> was null.</exception>
-        public AsyncFuncOpViewModel<TState, TResult> AddPendingBgOperation(TState initialState, Func<TState, AsyncFuncOpViewModel<TState, TResult>.StatusListenerImpl, TResult> func) =>
-            AsyncFuncOpViewModel<TState, TResult>.AddPending(initialState, this, func);
+        public AsyncFuncOpViewModel<TState, TResult> AddPendingBgOperation(TState initialState, Func<TState, AsyncFuncOpViewModel<TState, TResult>.StatusListenerImpl, TResult> func, Guid? concurrencyId = null) =>
+            AsyncFuncOpViewModel<TState, TResult>.AddPending(initialState, this, func, concurrencyId);
     }
 
     /// <summary>
@@ -139,8 +138,8 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
         /// <param name="scheduler">The optional scheduler to use. The default is the <see cref="TaskScheduler.Default">instance provided by the .NET framework</see>.</param>
         /// <returns>A <see cref="AsyncFuncOpViewModel{TResult}"/> object representing the status of the background operation.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="func"/> was null.</exception>
-        public AsyncFuncOpViewModel<TResult> StartNewBgOperation(Func<AsyncFuncOpViewModel<TResult>.StatusListenerImpl, TResult> func, TaskCreationOptions creationOptions, TaskScheduler scheduler = null) =>
-            AsyncFuncOpViewModel<TResult>.StartNew(this, func, creationOptions, scheduler);
+        public AsyncFuncOpViewModel<TResult> StartNewBgOperation(Func<AsyncFuncOpViewModel<TResult>.StatusListenerImpl, TResult> func, TaskCreationOptions creationOptions, Guid? concurrencyId = null, TaskScheduler scheduler = null) =>
+            AsyncFuncOpViewModel<TResult>.StartNew(this, func, creationOptions, concurrencyId, scheduler);
 
         /// <summary>
         /// Starts a new background operation.
@@ -148,8 +147,7 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
         /// <param name="func">The delegate that will implement the background operation and produce the result value.</param>
         /// <returns>A <see cref="AsyncFuncOpViewModel{TResult}"/> object representing the status of the background operation.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="func"/> was null.</exception>
-        public AsyncFuncOpViewModel<TResult> StartNewBgOperation(Func<AsyncFuncOpViewModel<TResult>.StatusListenerImpl, TResult> func) =>
-            AsyncFuncOpViewModel<TResult>.StartNew(this, func);
+        public AsyncFuncOpViewModel<TResult> StartNewBgOperation(Func<AsyncFuncOpViewModel<TResult>.StatusListenerImpl, TResult> func, Guid? concurrencyId = null) => AsyncFuncOpViewModel<TResult>.StartNew(this, func, concurrencyId);
 
         /// <summary>
         /// Starts the bg operation from asynchronous.
@@ -157,8 +155,8 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
         /// <param name="func">The asynchronous delegate that will implement the background operation and produce the result value.</param>
         /// <returns>A <see cref="AsyncFuncOpViewModel{TResult}"/> object representing the status of the background operation.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="func"/> was null.</exception>
-        public AsyncFuncOpViewModel<TResult> StartBgOperationFromAsync(Func<AsyncFuncOpViewModel<TResult>.StatusListenerImpl, Task<TResult>> func) =>
-            AsyncFuncOpViewModel<TResult>.FromAsync(this, func);
+        public AsyncFuncOpViewModel<TResult> StartBgOperationFromAsync(Func<AsyncFuncOpViewModel<TResult>.StatusListenerImpl, Task<TResult>> func, Guid? concurrencyId = null) =>
+            AsyncFuncOpViewModel<TResult>.FromAsync(this, func, concurrencyId);
 
         /// <summary>
         /// Adds a pending background operation.
@@ -167,8 +165,8 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
         /// <param name="creationOptions">The backround task creation options.</param>
         /// <returns>A <see cref="AsyncFuncOpViewModel{TResult}"/> object representing the status of the background operation.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="func"/> was null.</exception>
-        public AsyncFuncOpViewModel<TResult> AddPendingBgOperation(Func<AsyncFuncOpViewModel<TResult>.StatusListenerImpl, TResult> func, TaskCreationOptions creationOptions) =>
-            AsyncFuncOpViewModel<TResult>.AddPending(this, func, creationOptions);
+        public AsyncFuncOpViewModel<TResult> AddPendingBgOperation(Func<AsyncFuncOpViewModel<TResult>.StatusListenerImpl, TResult> func, TaskCreationOptions creationOptions, Guid? concurrencyId = null) =>
+            AsyncFuncOpViewModel<TResult>.AddPending(this, func, creationOptions, concurrencyId);
 
         /// <summary>
         /// Adds a pending background operation.
@@ -176,7 +174,6 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
         /// <param name="func">The delegate that will implement the background operation and produce the result value.</param>
         /// <returns>A <see cref="AsyncFuncOpViewModel{TResult}"/> object representing the status of the background operation.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="func"/> was null.</exception>
-        public AsyncFuncOpViewModel<TResult> AddPendingBgOperation(Func<AsyncFuncOpViewModel<TResult>.StatusListenerImpl, TResult> func) =>
-            AsyncFuncOpViewModel<TResult>.AddPending(this, func);
+        public AsyncFuncOpViewModel<TResult> AddPendingBgOperation(Func<AsyncFuncOpViewModel<TResult>.StatusListenerImpl, TResult> func, Guid? concurrencyId = null) => AsyncFuncOpViewModel<TResult>.AddPending(this, func, concurrencyId);
     }
 }
