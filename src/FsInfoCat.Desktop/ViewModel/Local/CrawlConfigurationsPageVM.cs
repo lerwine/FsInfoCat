@@ -1,5 +1,6 @@
 using FsInfoCat.Local;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
@@ -9,6 +10,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Threading;
 
 namespace FsInfoCat.Desktop.ViewModel.Local
 {
@@ -18,16 +20,15 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         private readonly List<CrawlConfigurationVM> _allCrawlConfigurations = new();
         private Task _lastDataLoadTask;
 
-        //public record CrawlConfigWithFullRootPath(string FullName, Guid SubdirectoryId, CrawlConfiguration Source);
         #region Crawl Configuration Items Members
 
         #region CrawlConfigurations Property Members
 
-        private static readonly DependencyPropertyKey InnerCrawlConfigurationsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(InnerCrawlConfigurations), typeof(ObservableCollection<CrawlConfigurationVM>), typeof(CrawlConfigurationsPageVM),
-                new PropertyMetadata(null));
+        private static readonly DependencyPropertyKey InnerCrawlConfigurationsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(InnerCrawlConfigurations),
+            typeof(ObservableCollection<CrawlConfigurationVM>), typeof(CrawlConfigurationsPageVM), new PropertyMetadata(null));
 
-        private static readonly DependencyPropertyKey CrawlConfigurationsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(CrawlConfigurations), typeof(ReadOnlyObservableCollection<CrawlConfigurationVM>), typeof(CrawlConfigurationsPageVM),
-                new PropertyMetadata(null));
+        private static readonly DependencyPropertyKey CrawlConfigurationsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(CrawlConfigurations),
+            typeof(ReadOnlyObservableCollection<CrawlConfigurationVM>), typeof(CrawlConfigurationsPageVM), new PropertyMetadata(null));
 
         protected static readonly DependencyProperty InnerCrawlConfigurationsProperty = InnerCrawlConfigurationsPropertyKey.DependencyProperty;
 
@@ -246,7 +247,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 
         public AsyncOps.AsyncOpResultManagerViewModel<bool?, IList<Subdirectory.CrawlConfigWithFullRootPath<CrawlConfiguration>>> CrawlConfigsLoader =>
             (AsyncOps.AsyncOpResultManagerViewModel<bool?, IList<Subdirectory.CrawlConfigWithFullRootPath<CrawlConfiguration>>>)GetValue(CrawlConfigsLoaderProperty);
-            
+        
         #endregion
 
         #endregion
@@ -308,25 +309,12 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             AsyncOps.AsyncOpResultManagerViewModel<bool?, IList<Subdirectory.CrawlConfigWithFullRootPath<CrawlConfiguration>>> crawlConfigsLoader = new();
             SetValue(CrawlConfigsLoaderPropertyKey, crawlConfigsLoader);
             AsyncOps.AsyncFuncOpViewModel<bool?, IList<Subdirectory.CrawlConfigWithFullRootPath<CrawlConfiguration>>> asyncOp =
-                opAggregate.FromAsync("Loading crawl configurations", (bool?)null, crawlConfigsLoader, LoadCrawlConfigsAsync);
+                opAggregate.FromAsync("Loading crawl configurations", "Connecting to database", null, crawlConfigsLoader, LoadCrawlConfigsAsync);
             asyncOp.GetTask().ContinueWith(task =>
             {
                 if (task.IsCompletedSuccessfully)
                     Dispatcher.Invoke(() => OnInitialDataLoaded(task.Result));
             });
-            // TODO: Replace this will async view model
-            //_lastDataLoadTask = LoadInitialDataAsync().ContinueWith(task =>
-            //{
-            //    if (task.IsFaulted)
-            //    {
-            //        _logger.LogError(task.Exception, "Error executing LoadInitialDataAsync");
-            //        Dispatcher.Invoke(() => OnInitialDataLoadError(task.Exception));
-            //    }
-            //    else if (task.IsCanceled)
-            //        _logger.LogWarning("LoadInitialDataAsync canceled.");
-            //    else
-            //        Dispatcher.Invoke(() => OnInitialDataLoaded(task.Result));
-            //});
         }
 
         private void OnInitialDataLoaded(IList<Subdirectory.CrawlConfigWithFullRootPath<CrawlConfiguration>> items)
@@ -341,41 +329,34 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             SelectedCrawlConfig = InnerCrawlConfigurations.FirstOrDefault();
         }
 
-        private async Task<IList<Subdirectory.CrawlConfigWithFullRootPath<CrawlConfiguration>>> LoadCrawlConfigsAsync(bool? isActive, AsyncOps.AsyncFuncOpViewModel<bool?, IList<Subdirectory.CrawlConfigWithFullRootPath<CrawlConfiguration>>>.StatusListenerImpl statusListener)
+        private async Task<IList<Subdirectory.CrawlConfigWithFullRootPath<CrawlConfiguration>>> LoadCrawlConfigsAsync(bool? isActive,
+            AsyncOps.AsyncFuncOpViewModel<bool?, IList<Subdirectory.CrawlConfigWithFullRootPath<CrawlConfiguration>>>.StatusListenerImpl statusListener)
         {
             using IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
             using LocalDbContext dbContext = serviceScope.ServiceProvider.GetService<LocalDbContext>();
             List<CrawlConfiguration> configurations;
-            if (isActive.HasValue)
+            DispatcherOperation dispatcherOperation = statusListener.BeginSetMessage("Reading from database...");
+            try
             {
-                if (isActive.Value)
-                    configurations = await (from cfg in dbContext.CrawlConfigurations.Include(c => c.Root) where cfg.StatusValue != CrawlStatus.Disabled select cfg).ToListAsync();
+                if (isActive.HasValue)
+                {
+                    if (isActive.Value)
+                        configurations = await (from cfg in dbContext.CrawlConfigurations.Include(c => c.Root) where cfg.StatusValue != CrawlStatus.Disabled select cfg).ToListAsync();
+                    else
+                        configurations = await (from cfg in dbContext.CrawlConfigurations.Include(c => c.Root) where cfg.StatusValue == CrawlStatus.Disabled select cfg).ToListAsync();
+                }
                 else
-                    configurations = await (from cfg in dbContext.CrawlConfigurations.Include(c => c.Root) where cfg.StatusValue == CrawlStatus.Disabled select cfg).ToListAsync();
+                    configurations = await dbContext.CrawlConfigurations.Include(c => c.Root).ToListAsync();
             }
-            else
-                configurations = await dbContext.CrawlConfigurations.Include(c => c.Root).ToListAsync();
-            return await Subdirectory.BuildFullNamesAsync(configurations, c => c.Root, dbContext, statusListener.CancellationToken);
+            finally { await dispatcherOperation; }
+            List<Subdirectory.CrawlConfigWithFullRootPath<CrawlConfiguration>> result;
+            dispatcherOperation = statusListener.BeginSetMessage($"Calculating full paths of {configurations.Count} configuration items");
+            try
+            {
+                result = await Subdirectory.BuildFullNamesAsync(configurations, c => c.Root, dbContext, statusListener.CancellationToken);
+            }
+            finally { await dispatcherOperation; }
+            return result;
         }
-
-        //private void OnInitialDataLoaded(IEnumerable<(string FullName, Guid SubdirectoryId, CrawlConfiguration Source)> items)
-        //{
-        //    _allCrawlConfigurations.Clear();
-        //    InnerCrawlConfigurations.Clear();
-        //    _allCrawlConfigurations.AddRange(items.Select(i => new CrawlConfigurationVM(i.Source, i.FullName, i.SubdirectoryId)));
-        //    foreach (CrawlConfigurationVM item in ShowAllCrawlConfigurations ? _allCrawlConfigurations :
-        //            (ShowInactiveCrawlConfigurationsOnly ? _allCrawlConfigurations.Where(i => i.StatusValue == CrawlStatus.Disabled) : _allCrawlConfigurations.Where(i => i.StatusValue != CrawlStatus.Disabled)))
-        //        InnerCrawlConfigurations.Add(item);
-        //    SelectedCrawlConfig = InnerCrawlConfigurations.FirstOrDefault();
-        //}
-
-        //private void OnInitialDataLoadError(AggregateException exception)
-        //{
-        //    _allCrawlConfigurations.Clear();
-        //    InnerCrawlConfigurations.Clear();
-        //    MainWindow mainWindow = Services.ServiceProvider.GetService<MainWindow>();
-        //    if (mainWindow is not null)
-        //        MessageBox.Show(mainWindow, string.IsNullOrWhiteSpace(exception.Message) ? exception.ToString() : exception.Message, FsInfoCat.Properties.Resources.DisplayName_DataLoadError, MessageBoxButton.OK, MessageBoxImage.Error);
-        //}
     }
 }

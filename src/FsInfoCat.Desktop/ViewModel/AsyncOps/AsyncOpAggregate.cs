@@ -150,7 +150,7 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
             SetValue(CancelOperationCommandPropertyKey, new Commands.RelayCommand(OnCancelOperationExecute));
         }
 
-        public AsyncFuncOpViewModel<TState, TResult> FromAsync<TState, TResult>(string title, TState initialState,
+        public AsyncFuncOpViewModel<TState, TResult> FromAsync<TState, TResult>(string title, string initialMessage, TState initialState,
             [DisallowNull] AsyncOpResultManagerViewModel<TState, AsyncFuncOpViewModel<TState, TResult>, AsyncFuncOpViewModel<TState, TResult>.StatusListenerImpl, TResult> operationManager,
             [DisallowNull] Func<TState, AsyncFuncOpViewModel<TState, TResult>.StatusListenerImpl, Task<TResult>> func)
         {
@@ -158,6 +158,7 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
             Guid concurrencyId = Guid.NewGuid();
             IDisposable loggerScope = _logger.BeginScope("Starting new background operation: Title = {Title}; Initial State = {InitialState}; Concurrency ID = {ConcurrencyId}", title, initialState, concurrencyId);
             Title = title;
+            StatusMessage = initialMessage;
             AsyncFuncOpViewModel<TState, TResult> op = AsyncFuncOpViewModel<TState, TResult>.FromAsync(initialState, operationManager, func, concurrencyId);
             _operations.Add(op);
             op.AsyncOpStatusPropertyChanged += Op_AsyncOpStatusPropertyChanged;

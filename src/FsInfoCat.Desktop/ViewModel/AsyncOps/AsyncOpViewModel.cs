@@ -325,12 +325,14 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
             public void Cancel(bool throwOnFirstException)
             {
                 if (GetTask().IsCompleted)
-                    Logger.LogDebug("{MethodName}(throwOnFirstException: {throwOnFirstException}) invoked on a completed task: Concurrency ID = {ConcurrencyId}; Task ID = {TaskId}", throwOnFirstException, _concurrencyId, _task.Id);
+                    Logger.LogDebug("{MethodName}(throwOnFirstException: {throwOnFirstException}) invoked on a completed task: Concurrency ID = {ConcurrencyId}; Task ID = {TaskId}",
+                        nameof(Cancel), throwOnFirstException, _concurrencyId, _task.Id);
                 else if (_tokenSource.IsCancellationRequested)
                     Logger.LogDebug("{MethodName}(throwOnFirstException: {throwOnFirstException}) invoked on a task with a cancellation already in progress: Concurrency ID = {ConcurrencyId}; Task ID = {TaskId}", throwOnFirstException, _concurrencyId, _task.Id);
                 else
                 {
-                    Logger.LogDebug("{MethodName}(throwOnFirstException: {throwOnFirstException}) invoked: Concurrency ID = {ConcurrencyId}; Task ID = {TaskId}", throwOnFirstException, _concurrencyId, _task.Id);
+                    Logger.LogDebug("{MethodName}(throwOnFirstException: {throwOnFirstException}) invoked: Concurrency ID = {ConcurrencyId}; Task ID = {TaskId}",
+                        nameof(Cancel), throwOnFirstException, _concurrencyId, _task.Id);
                     _tokenSource.Cancel(throwOnFirstException);
                 }
             }
@@ -343,12 +345,14 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
             public void Cancel()
             {
                 if (GetTask().IsCompleted)
-                    Logger.LogDebug("{MethodName}() invoked on a completed task: Concurrency ID = {ConcurrencyId}; Task ID = {TaskId}", _concurrencyId, _task.Id);
+                    Logger.LogDebug("{MethodName}() invoked on a completed task: Concurrency ID = {ConcurrencyId}; Task ID = {TaskId}",
+                        nameof(Cancel), _concurrencyId, _task.Id);
                 else if (_tokenSource.IsCancellationRequested)
-                    Logger.LogDebug("{MethodName}() invoked on a task with a cancellation already in progress: Concurrency ID = {ConcurrencyId}; Task ID = {TaskId}", _concurrencyId, _task.Id);
+                    Logger.LogDebug("{MethodName}() invoked on a task with a cancellation already in progress: Concurrency ID = {ConcurrencyId}; Task ID = {TaskId}",
+                        nameof(Cancel), _concurrencyId, _task.Id);
                 else
                 {
-                    Logger.LogDebug("{MethodName}() invoked: Concurrency ID = {ConcurrencyId}; Task ID = {TaskId}", _concurrencyId, _task.Id);
+                    Logger.LogDebug("{MethodName}() invoked: Concurrency ID = {ConcurrencyId}; Task ID = {TaskId}", nameof(Cancel), _concurrencyId, _task.Id);
                     _tokenSource.Cancel();
                 }
             }
