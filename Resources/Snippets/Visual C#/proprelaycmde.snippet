@@ -71,7 +71,7 @@ public Commands.RelayCommand $command$Command => (Commands.RelayCommand)GetValue
 private void Raise$command$(object parameter)
 {
   try { On$command$(parameter); }
-  finally { $command$?.Invoke(this, EventArgs.Empty); }
+  finally { $command$?.Invoke(this, new(parameter)); }
 }
 
 /// <summary>
@@ -84,7 +84,7 @@ $methodAccess$ void On$command$(object parameter)
 }
 
 /* TODO: Add $command$Command to initialization code to constructor
-   SSetValue($command$CommandPropertyKey, new Commands.RelayCommand(On$command$));$end$ */
+   SetValue($command$CommandPropertyKey, new Commands.RelayCommand(Raise$command$));$end$ */
 
 #endregion]]></Code>
     </Snippet>
