@@ -15,7 +15,7 @@
         <Literal>
           <ID>type</ID>
           <ToolTip>Property Type</ToolTip>
-          <Default>int</Default>
+          <Default>/*PropertyType*/</Default>
         </Literal>
         <Literal>
           <ID>property</ID>
@@ -30,7 +30,7 @@
         <Literal>
           <ID>defaultvalue</ID>
           <ToolTip>The default value for this property.</ToolTip>
-          <Default>0</Default>
+          <Default>null</Default>
         </Literal>
         <Literal>
           <ID>summary</ID>
@@ -64,7 +64,7 @@ public static readonly DependencyProperty $property$Property = $property$Propert
 /// <summary>
 /// $summary$
 /// </summary>
-/// <value>$returnValue</value>
+/// <value>$returnValue$</value>
 public $type$ $property$ { get => ($type$)GetValue($property$Property); private set => SetValue($property$PropertyKey, value); }
 
 /// <summary>
