@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
@@ -14,7 +15,7 @@ using System.Windows.Threading;
 
 namespace FsInfoCat.Desktop.ViewModel.Local
 {
-    public class EditCrawlConfigVM : DependencyObject, INotifyDataErrorInfo
+    public class EditCrawlConfigVM : EditDbEntityVM<CrawlConfiguration>
     {
         private (Subdirectory Root, string Path)? _validatedPath;
 
@@ -121,7 +122,8 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             vm.CloseSuccess += new EventHandler((sender, e) => window.DialogResult = true);
             window.Loaded += new RoutedEventHandler((sender, e) =>
             {
-                AsyncOps.AsyncFuncOpViewModel<string, ConfigurationRootAndPath> lookupCrawlConfig = vm.LookupCrawlConfigAsync(crawlRoot);
+                AsyncOps.AsyncFuncOpViewModel<string, ConfigurationRootAndPath> lookupCrawlConfig = vm.OpAggregate.FromAsync("Getting Crawl Configuration", "Connecting to database", crawlRoot,
+                    vm.LookupCrawlConfigOpMgr, LookupCrawlConfigAsync);
                 lookupCrawlConfig.GetTask().ContinueWith(task =>
                 {
                     vm.Dispatcher.Invoke(() =>
@@ -252,48 +254,34 @@ namespace FsInfoCat.Desktop.ViewModel.Local
                 newPath = dialog.SelectedPath;
             }
 
-            ReadOnlyCollection<string> errors = Validation.GetErrors(nameof(Path));
+            IEnumerable<string> errors = Validation.GetErrors(nameof(Path));
             Validation.ClearErrorMessages(nameof(Path));
             if (_validatedPath.HasValue && ReferenceEquals(_validatedPath.Value.Path, newPath))
                 Path = _validatedPath.Value.Path;
             else
             {
-                AsyncOps.AsyncFuncOpViewModel<string, ConfigurationRootAndPath> lookupCrawlConfig = LookupCrawlConfigAsync(newPath);
-                //lookupCrawlConfig.AsyncOpStatusPropertyChanged += BgOp_AsyncOpStatusPropertyChanged;
-                //lookupCrawlConfig.StatusMessagePropertyChanged += BgOp_StatusMessagePropertyChanged;
-                //lookupCrawlConfig.MessageLevelPropertyChanged += BgOp_MessageLevelPropertyChanged;
-                //lookupCrawlConfig.DurationPropertyChanged += BgOp_DurationPropertyChanged;
-                //BgOpStatusMessage = lookupCrawlConfig.StatusMessage;
-                //BgOpMessageLevel = lookupCrawlConfig.MessageLevel;
-                //BgOpStatus = lookupCrawlConfig.AsyncOpStatus;
+                AsyncOps.AsyncFuncOpViewModel<string, ConfigurationRootAndPath> lookupCrawlConfig = OpAggregate.FromAsync("Loading Crawl Configuration", "Connecting to database", newPath, LookupCrawlConfigOpMgr, LookupCrawlConfigAsync);
                 lookupCrawlConfig.GetTask().ContinueWith(task =>
                 {
-                    //lookupCrawlConfig.AsyncOpStatusPropertyChanged -= BgOp_AsyncOpStatusPropertyChanged;
-                    //lookupCrawlConfig.StatusMessagePropertyChanged -= BgOp_StatusMessagePropertyChanged;
-                    //lookupCrawlConfig.MessageLevelPropertyChanged -= BgOp_MessageLevelPropertyChanged;
-                    //lookupCrawlConfig.DurationPropertyChanged -= BgOp_DurationPropertyChanged;
                     Dispatcher.Invoke(() =>
                     {
-                        if (task.IsCanceled)
+                        if (task.IsCompletedSuccessfully)
                         {
-                            // TODO: Log cancellation.
-                        }
-                        else if (task.IsFaulted)
-                        {
-                            // TODO: Log error.
-                        }
-                        else if (task.Result.Configuration is null)
-                        {
-                            _validatedPath = (task.Result.Root, task.Result.Path);
-                            Path = task.Result.Path;
-                            Root = task.Result.Root;
-                        }
-                        else if (Path != task.Result.Path)
-                        {
-                            // TODO: Log error.
-                            //BgOpStatusMessage = "That path already has its own craw configuration.";
-                            //BgOpMessageLevel = StatusMessageLevel.Error;
-                            //BgOpStatus = AsyncOpStatusCode.Faulted;
+                            if (task.Result.Configuration is null)
+                            {
+                                _validatedPath = (task.Result.Root, task.Result.Path);
+                                Path = task.Result.Path;
+                                Root = task.Result.Root;
+                            }
+                            else if (Path != task.Result.Path)
+                            {
+                                MessageBox.Show(Application.Current.MainWindow, "That path already has its own craw configuration.", "Path Already Configured",
+                                    MessageBoxButton.OK, MessageBoxImage.Hand);
+                                // TODO: Log error.
+                                //BgOpStatusMessage = "That path already has its own craw configuration.";
+                                //BgOpMessageLevel = StatusMessageLevel.Error;
+                                //BgOpStatus = AsyncOpStatusCode.Faulted;
+                            }
                         }
                     });
                 });
@@ -369,7 +357,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
                 model.NextScheduledStart = new DateTime(NextScheduledStartDate.Value.Year, NextScheduledStartDate.Value.Month, NextScheduledStartDate.Value.Day,
                     (NextScheduledStartHour.Value == 12) ? (NextScheduledStartIsPm ? 12 : 0) : (NextScheduledStartIsPm ? NextScheduledStartHour.Value + 12 :
                         NextScheduledStartHour.Value), NextScheduledStartMinute.Value, 0, DateTimeKind.Local);
-            AsyncOps.AsyncFuncOpViewModel<ModelViewModel, ConfigurationAndRoot> asyncOp = SaveChangesAsync(model);
+            AsyncOps.AsyncFuncOpViewModel<ModelViewModel, ConfigurationAndRoot> asyncOp = OpAggregate.FromAsync("Saving Changes", "Connecting to database", new(model, this), SaveChangesOpMgr, SaveChangesAsync);
             asyncOp.GetTask().ContinueWith(task =>
             {
                 Dispatcher.Invoke(() =>
@@ -403,6 +391,11 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 
         #region Background Operation Properties
 
+        //private AsyncOps.AsyncFuncOpViewModel<string, ConfigurationRootAndPath> LookupCrawlConfigAsync(string path) =>
+        //    OpAggregate.FromAsync("Getting Crawl Configuration", "Connecting to database", path, LookupCrawlConfigOpMgr, LookupCrawlConfigAsync);
+
+        #region OpAggregate Property Members
+
         private static readonly DependencyPropertyKey OpAggregatePropertyKey = DependencyProperty.RegisterReadOnly(nameof(OpAggregate),
             typeof(AsyncOps.AsyncOpAggregate), typeof(EditCrawlConfigVM), new PropertyMetadata(null));
 
@@ -410,7 +403,8 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 
         public AsyncOps.AsyncOpAggregate OpAggregate => (AsyncOps.AsyncOpAggregate)GetValue(OpAggregateProperty);
 
-        #region LookupCrawlConfigOpMgr Property
+        #endregion
+        #region LookupCrawlConfigOpMgr Property Members
 
         private static readonly DependencyPropertyKey LookupCrawlConfigOpMgrPropertyKey = DependencyProperty.RegisterReadOnly(nameof(LookupCrawlConfigOpMgr),
             typeof(AsyncOps.AsyncOpResultManagerViewModel<string, ConfigurationRootAndPath>), typeof(EditCrawlConfigVM), new PropertyMetadata(null));
@@ -419,7 +413,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 
         public AsyncOps.AsyncOpResultManagerViewModel<string, ConfigurationRootAndPath> LookupCrawlConfigOpMgr => (AsyncOps.AsyncOpResultManagerViewModel<string, ConfigurationRootAndPath>)GetValue(LookupCrawlConfigOpMgrProperty);
 
-        private static async Task<ConfigurationRootAndPath> LookupCrawlConfigAsync(string path, AsyncOps.AsyncFuncOpViewModel<string, ConfigurationRootAndPath>.StatusListenerImpl statusListener)
+        private static async Task<ConfigurationRootAndPath> LookupCrawlConfigAsync(string path, AsyncOps.IStatusListener<string> statusListener)
         {
             statusListener.CancellationToken.ThrowIfCancellationRequested();
             DispatcherOperation dispatcherOperation = statusListener.BeginSetMessage("Checking for existing directory information", StatusMessageLevel.Information);
@@ -508,8 +502,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 
         public AsyncOps.AsyncOpResultManagerViewModel<ModelViewModel, ConfigurationAndRoot> SaveChangesOpMgr => (AsyncOps.AsyncOpResultManagerViewModel<ModelViewModel, ConfigurationAndRoot>)GetValue(SaveChangesOpMgrProperty);
 
-        private static async Task<ConfigurationAndRoot> SaveChangesAsync(ModelViewModel state,
-            AsyncOps.AsyncFuncOpViewModel<ModelViewModel, ConfigurationAndRoot>.StatusListenerImpl statusListener)
+        private static async Task<ConfigurationAndRoot> SaveChangesAsync(ModelViewModel state, AsyncOps.IStatusListener<ModelViewModel> statusListener)
         {
             EditCrawlConfigVM vm = state.ViewModel ?? throw new ArgumentException($"{nameof(state.ViewModel)} cannot be null.", nameof(state));
             using IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
@@ -588,6 +581,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         }
 
         #endregion
+
         #endregion
 
         #region Change Tracking / Validation Members
@@ -1227,7 +1221,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             if (NoReschedule)
                 return;
 
-            ChangeTracker.SetChangeState(nameof(NextScheduledStartMinute), newValue != Model.NextScheduledStart?.Minute);
+            ChangeTracker.SetChangeState(nameof(NextScheduledStartMinute), newValue != Model?.NextScheduledStart?.Minute);
             if (newValue.HasValue)
             {
                 if (newValue.Value < 0)
@@ -1414,12 +1408,6 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         }
 
         #endregion
-
-        private AsyncOps.AsyncFuncOpViewModel<string, ConfigurationRootAndPath> LookupCrawlConfigAsync(string path) =>
-            OpAggregate.FromAsync("Getting Crawl Configuration", "Connecting to database", path, LookupCrawlConfigOpMgr, LookupCrawlConfigAsync);
-
-        private AsyncOps.AsyncFuncOpViewModel<ModelViewModel, ConfigurationAndRoot> SaveChangesAsync(CrawlConfiguration crawlConfiguration) =>
-            OpAggregate.FromAsync("Saving Changes", "Connecting to database", new(crawlConfiguration, this), SaveChangesOpMgr, SaveChangesAsync);
 
         #endregion
 

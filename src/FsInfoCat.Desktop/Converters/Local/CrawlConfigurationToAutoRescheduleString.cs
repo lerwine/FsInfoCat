@@ -4,8 +4,8 @@ using System.Windows.Data;
 
 namespace FsInfoCat.Desktop.Converters.Local
 {
-    [ValueConversion(typeof(ViewModel.Local.CrawlConfigurationVM), typeof(string))]
-    public class CrawlConfigurationToAutoRescheduleString : ToClassConverterBase<ViewModel.Local.CrawlConfigurationVM, string>
+    [ValueConversion(typeof(ViewModel.Local.CrawlConfigItemVM), typeof(string))]
+    public class CrawlConfigurationToAutoRescheduleString : ToClassConverterBase<ViewModel.Local.CrawlConfigItemVM, string>
     {
 
         public static readonly DependencyProperty NullSourceProperty = DependencyProperty.Register(nameof(NullSource), typeof(string), typeof(CrawlConfigurationToAutoRescheduleString), new PropertyMetadata(""));
@@ -24,7 +24,7 @@ namespace FsInfoCat.Desktop.Converters.Local
             set => SetValue(ShortProperty, value);
         }
 
-        public override string Convert(ViewModel.Local.CrawlConfigurationVM value, object parameter, CultureInfo culture)
+        public override string Convert(ViewModel.Local.CrawlConfigItemVM value, object parameter, CultureInfo culture)
         {
             if (value.RescheduleInterval.HasValue)
             {

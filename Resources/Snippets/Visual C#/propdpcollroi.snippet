@@ -1,10 +1,10 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
   <CodeSnippet Format="1.0.0">
     <Header>
-      <Title>Define a generic read-only collection DependencyProperty</Title>
-      <Shortcut>propdpcollro</Shortcut>
-      <Description>Code snippet for a generic read-only collection property using a read-only field as the backing store</Description>
+      <Title>Define an inheritable generic read-only collection DependencyProperty</Title>
+      <Shortcut>propdpcollroi</Shortcut>
+      <Description>Code snippet for a generic read-only collection, writable by inheriting classes, property using DependencyProperty as the backing store</Description>
       <Author>Leonard T. Erwine</Author>
       <SnippetTypes>
         <SnippetType>Expansion</SnippetType>
@@ -47,15 +47,27 @@
         <![CDATA[
 #region $property$ Property Members
 
-private readonly $collType$<$itemType$> _backing$property$ = new();
+private static readonly DependencyPropertyKey Backing$property$PropertyKey = DependencyProperty.RegisterReadOnly(nameof(Backing$property$), typeof($collType$<$itemType$>), typeof($ownerclass$),
+        new PropertyMetadata(new $collType$<$itemType$>()));
 
 private static readonly DependencyPropertyKey $property$PropertyKey = DependencyProperty.RegisterReadOnly(nameof($property$), typeof(ReadOnly$collType$<$itemType$>), typeof($ownerclass$),
         new PropertyMetadata(null));
 
 /// <summary>
+/// Identifies the <see cref="Backing$property$"/> dependency property.
+/// </summary>
+protected static readonly DependencyProperty Backing$property$Property = Backing$property$PropertyKey.DependencyProperty;
+
+/// <summary>
 /// Identifies the <see cref="$property$"/> dependency property.
 /// </summary>
 public static readonly DependencyProperty $property$Property = $property$PropertyKey.DependencyProperty;
+
+/// <summary>
+/// Allows read-write access to the backing <see cref="$collType$<$itemType$>"/> for <see cref="$property$"/>.
+/// </summary>
+/// <value>The backing <see cref="$collType$<$itemType$>"/> for <see cref="$property$"/>.</value>
+protected $collType$<$itemType$> Backing$property$ => ($collType$<$itemType$>)GetValue(Backing$property$Property);
 
 /// <summary>
 /// $summary$
@@ -65,7 +77,7 @@ public ReadOnly$collType$<$itemType$> $property$ => (ReadOnly$collType$<$itemTyp
 
 /*
 * TODO: Add $command$Command to initialization code to constructor
-* $end$SetValue($property$PropertyKey, new(_backing$property$));
+* $end$SetValue($property$PropertyKey, new(Backing$property$));
 */
 
 #endregion

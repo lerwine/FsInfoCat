@@ -32,9 +32,9 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
         /// or <see cref="AsyncOpManagerViewModel{TState, TTask, TItem, TListener}.AsyncOpViewModel.Cancel()">AsyncFuncOpViewModel{TState, TResult}.Cancel()</see> to cancel
         /// background operations.</remarks>
         /// <exception cref="ArgumentNullException"><paramref name="operationManager"/> or <paramref name="func"/> was null.</exception>
-        public static AsyncFuncOpViewModel<TState, TResult> StartNew(TState initialState, string initialMessage,
-            [DisallowNull] AsyncOpResultManagerViewModel<TState, AsyncFuncOpViewModel<TState, TResult>, StatusListenerImpl, TResult> operationManager,
-            [AllowNull] Action<StatusListenerImpl> onListenerCreated, [DisallowNull] Func<TState, StatusListenerImpl, TResult> func, TaskCreationOptions creationOptions, Guid? concurrencyId = null, TaskScheduler scheduler = null)
+        public static AsyncFuncOpViewModel<TState, TResult> StartNew(TState initialState, string initialMessage, [DisallowNull] AsyncOpResultManagerViewModel<TState, TResult> operationManager,
+            [AllowNull] Action<IStatusListener<TState>> onListenerCreated, [DisallowNull] Func<TState, IStatusListener<TState>, TResult> func, TaskCreationOptions creationOptions, Guid? concurrencyId = null,
+            TaskScheduler scheduler = null)
         {
             (operationManager ?? throw new ArgumentNullException(nameof(operationManager))).VerifyAccess();
             if (func is null)
@@ -62,9 +62,8 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
         /// or <see cref="AsyncOpManagerViewModel{TState, TTask, TItem, TListener}.AsyncOpViewModel.Cancel()">AsyncFuncOpViewModel{TState, TResult}.Cancel()</see> to cancel
         /// background operations.</remarks>
         /// <exception cref="ArgumentNullException"><paramref name="operationManager"/> or <paramref name="func"/> was null.</exception>
-        public static AsyncFuncOpViewModel<TState, TResult> StartNew(TState initialState, string initialMessage,
-            [DisallowNull] AsyncOpResultManagerViewModel<TState, AsyncFuncOpViewModel<TState, TResult>, StatusListenerImpl, TResult> operationManager,
-            [DisallowNull] Func<TState, StatusListenerImpl, TResult> func, TaskCreationOptions creationOptions, Guid? concurrencyId = null, TaskScheduler scheduler = null) =>
+        public static AsyncFuncOpViewModel<TState, TResult> StartNew(TState initialState, string initialMessage, [DisallowNull] AsyncOpResultManagerViewModel<TState, TResult> operationManager,
+            [DisallowNull] Func<TState, IStatusListener<TState>, TResult> func, TaskCreationOptions creationOptions, Guid? concurrencyId = null, TaskScheduler scheduler = null) =>
             StartNew(initialState, initialMessage, operationManager, null, func, creationOptions, concurrencyId, scheduler);
 
         /// <summary>
@@ -81,9 +80,8 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
         /// or <see cref="AsyncOpManagerViewModel{TState, TTask, TItem, TListener}.AsyncOpViewModel.Cancel()">AsyncFuncOpViewModel{TState, TResult}.Cancel()</see> to cancel
         /// background operations.</remarks>
         /// <exception cref="ArgumentNullException"><paramref name="operationManager"/> or <paramref name="func"/> was null.</exception>
-        public static AsyncFuncOpViewModel<TState, TResult> StartNew(TState initialState, string initialMessage,
-            [DisallowNull] AsyncOpResultManagerViewModel<TState, AsyncFuncOpViewModel<TState, TResult>, StatusListenerImpl, TResult> operationManager,
-            [AllowNull] Action<StatusListenerImpl> onListenerCreated, [DisallowNull] Func<TState, StatusListenerImpl, TResult> func, Guid? concurrencyId = null)
+        public static AsyncFuncOpViewModel<TState, TResult> StartNew(TState initialState, string initialMessage, [DisallowNull] AsyncOpResultManagerViewModel<TState, TResult> operationManager,
+            [AllowNull] Action<IStatusListener<TState>> onListenerCreated, [DisallowNull] Func<TState, IStatusListener<TState>, TResult> func, Guid? concurrencyId = null)
         {
             (operationManager ?? throw new ArgumentNullException(nameof(operationManager))).VerifyAccess();
             if (func is null)
@@ -109,9 +107,8 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
         /// or <see cref="AsyncOpManagerViewModel{TState, TTask, TItem, TListener}.AsyncOpViewModel.Cancel()">AsyncFuncOpViewModel{TState, TResult}.Cancel()</see> to cancel
         /// background operations.</remarks>
         /// <exception cref="ArgumentNullException"><paramref name="operationManager"/> or <paramref name="func"/> was null.</exception>
-        public static AsyncFuncOpViewModel<TState, TResult> StartNew(TState initialState, string initialMessage,
-            [DisallowNull] AsyncOpResultManagerViewModel<TState, AsyncFuncOpViewModel<TState, TResult>, StatusListenerImpl, TResult> operationManager,
-            [DisallowNull] Func<TState, StatusListenerImpl, TResult> func, Guid? concurrencyId = null) => StartNew(initialState, initialMessage, operationManager, null, func, concurrencyId);
+        public static AsyncFuncOpViewModel<TState, TResult> StartNew(TState initialState, string initialMessage, [DisallowNull] AsyncOpResultManagerViewModel<TState, TResult> operationManager,
+            [DisallowNull] Func<TState, IStatusListener<TState>, TResult> func, Guid? concurrencyId = null) => StartNew(initialState, initialMessage, operationManager, null, func, concurrencyId);
 
         /// <summary>
         /// Starts a new background operation.
@@ -127,9 +124,8 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
         /// <remarks>Use <see cref="AsyncOpManagerViewModel{TState, TTask, TItem, TListener}.AsyncOpViewModel.Cancel(bool)">AsyncFuncOpViewModel{TState, TResult}.Cancel(bool)</see>
         /// or <see cref="AsyncOpManagerViewModel{TState, TTask, TItem, TListener}.AsyncOpViewModel.Cancel()">AsyncFuncOpViewModel{TState, TResult}.Cancel()</see> to cancel
         /// background operations.</remarks>
-        public static AsyncFuncOpViewModel<TState, TResult> FromAsync(TState initialState, string initialMessage,
-            [DisallowNull] AsyncOpResultManagerViewModel<TState, AsyncFuncOpViewModel<TState, TResult>, StatusListenerImpl, TResult> operationManager,
-            [AllowNull] Action<StatusListenerImpl> onListenerCreated, [DisallowNull] Func<TState, StatusListenerImpl, Task<TResult>> func, Guid? concurrencyId = null)
+        public static AsyncFuncOpViewModel<TState, TResult> FromAsync(TState initialState, string initialMessage, [DisallowNull] AsyncOpResultManagerViewModel<TState, TResult> operationManager,
+            [AllowNull] Action<IStatusListener<TState>> onListenerCreated, [DisallowNull] Func<TState, IStatusListener<TState>, Task<TResult>> func, Guid? concurrencyId = null)
         {
             (operationManager ?? throw new ArgumentNullException(nameof(operationManager))).VerifyAccess();
             if (func is null)
@@ -153,9 +149,8 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
         /// <remarks>Use <see cref="AsyncOpManagerViewModel{TState, TTask, TItem, TListener}.AsyncOpViewModel.Cancel(bool)">AsyncFuncOpViewModel{TState, TResult}.Cancel(bool)</see>
         /// or <see cref="AsyncOpManagerViewModel{TState, TTask, TItem, TListener}.AsyncOpViewModel.Cancel()">AsyncFuncOpViewModel{TState, TResult}.Cancel()</see> to cancel
         /// background operations.</remarks>
-        public static AsyncFuncOpViewModel<TState, TResult> FromAsync(TState initialState, string initialMessage,
-            [DisallowNull] AsyncOpResultManagerViewModel<TState, AsyncFuncOpViewModel<TState, TResult>, StatusListenerImpl, TResult> operationManager,
-            [DisallowNull] Func<TState, StatusListenerImpl, Task<TResult>> func, Guid? concurrencyId = null) => FromAsync(initialState, initialMessage, operationManager, null, func, concurrencyId);
+        public static AsyncFuncOpViewModel<TState, TResult> FromAsync(TState initialState, string initialMessage, [DisallowNull] AsyncOpResultManagerViewModel<TState, TResult> operationManager,
+            [DisallowNull] Func<TState, IStatusListener<TState>, Task<TResult>> func, Guid? concurrencyId = null) => FromAsync(initialState, initialMessage, operationManager, null, func, concurrencyId);
 
 
         /// <summary>
@@ -175,9 +170,8 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
         /// or <see cref="AsyncOpManagerViewModel{TState, TTask, TItem, TListener}.AsyncOpViewModel.Cancel()">AsyncFuncOpViewModel{TState, TResult}.Cancel()</see> to cancel
         /// background operations.</para></remarks>
         /// <exception cref="ArgumentNullException"><paramref name="operationManager"/> or <paramref name="func"/> was null.</exception>
-        public static AsyncFuncOpViewModel<TState, TResult> AddPending(TState initialState, string initialMessage,
-            [DisallowNull] AsyncOpResultManagerViewModel<TState, AsyncFuncOpViewModel<TState, TResult>, StatusListenerImpl, TResult> operationManager,
-            [AllowNull] Action<StatusListenerImpl> onListenerCreated, [DisallowNull] Func<TState, StatusListenerImpl, TResult> func, TaskCreationOptions creationOptions, Guid? concurrencyId = null)
+        public static AsyncFuncOpViewModel<TState, TResult> AddPending(TState initialState, string initialMessage, [DisallowNull] AsyncOpResultManagerViewModel<TState, TResult> operationManager,
+            [AllowNull] Action<IStatusListener<TState>> onListenerCreated, [DisallowNull] Func<TState, IStatusListener<TState>, TResult> func, TaskCreationOptions creationOptions, Guid? concurrencyId = null)
         {
             (operationManager ?? throw new ArgumentNullException(nameof(operationManager))).VerifyAccess();
             if (func is null)
@@ -206,9 +200,8 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
         /// or <see cref="AsyncOpManagerViewModel{TState, TTask, TItem, TListener}.AsyncOpViewModel.Cancel()">AsyncFuncOpViewModel{TState, TResult}.Cancel()</see> to cancel
         /// background operations.</para></remarks>
         /// <exception cref="ArgumentNullException"><paramref name="operationManager"/> or <paramref name="func"/> was null.</exception>
-        public static AsyncFuncOpViewModel<TState, TResult> AddPending(TState initialState, string initialMessage,
-            [DisallowNull] AsyncOpResultManagerViewModel<TState, AsyncFuncOpViewModel<TState, TResult>, StatusListenerImpl, TResult> operationManager,
-            [DisallowNull] Func<TState, StatusListenerImpl, TResult> func, TaskCreationOptions creationOptions, Guid? concurrencyId = null) =>
+        public static AsyncFuncOpViewModel<TState, TResult> AddPending(TState initialState, string initialMessage, [DisallowNull] AsyncOpResultManagerViewModel<TState, TResult> operationManager,
+            [DisallowNull] Func<TState, IStatusListener<TState>, TResult> func, TaskCreationOptions creationOptions, Guid? concurrencyId = null) =>
             AddPending(initialState, initialMessage, operationManager, null, func, creationOptions, concurrencyId);
 
         /// <summary>
@@ -226,9 +219,8 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
         /// or <see cref="AsyncOpManagerViewModel{TState, TTask, TItem, TListener}.AsyncOpViewModel.Cancel()">AsyncFuncOpViewModel{TState, TResult}.Cancel()</see> to cancel
         /// background operations.</para></remarks>
         /// <exception cref="ArgumentNullException"><paramref name="operationManager"/> or <paramref name="func"/> was null.</exception>
-        public static AsyncFuncOpViewModel<TState, TResult> AddPending(TState initialState, string initialMessage,
-            [DisallowNull] AsyncOpResultManagerViewModel<TState, AsyncFuncOpViewModel<TState, TResult>, StatusListenerImpl, TResult> operationManager,
-            [AllowNull] Action<StatusListenerImpl> onListenerCreated, [DisallowNull] Func<TState, StatusListenerImpl, TResult> func, Guid? concurrencyId = null)
+        public static AsyncFuncOpViewModel<TState, TResult> AddPending(TState initialState, string initialMessage, [DisallowNull] AsyncOpResultManagerViewModel<TState, TResult> operationManager,
+            [AllowNull] Action<IStatusListener<TState>> onListenerCreated, [DisallowNull] Func<TState, IStatusListener<TState>, TResult> func, Guid? concurrencyId = null)
         {
             (operationManager ?? throw new ArgumentNullException(nameof(operationManager))).VerifyAccess();
             if (func is null)
@@ -255,9 +247,8 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
         /// or <see cref="AsyncOpManagerViewModel{TState, TTask, TItem, TListener}.AsyncOpViewModel.Cancel()">AsyncFuncOpViewModel{TState, TResult}.Cancel()</see> to cancel
         /// background operations.</para></remarks>
         /// <exception cref="ArgumentNullException"><paramref name="operationManager"/> or <paramref name="func"/> was null.</exception>
-        public static AsyncFuncOpViewModel<TState, TResult> AddPending(TState initialState, string initialMessage,
-            [DisallowNull] AsyncOpResultManagerViewModel<TState, AsyncFuncOpViewModel<TState, TResult>, StatusListenerImpl, TResult> operationManager,
-            [DisallowNull] Func<TState, StatusListenerImpl, TResult> func, Guid? concurrencyId = null) => AddPending(initialState, initialMessage, operationManager, null, func, concurrencyId);
+        public static AsyncFuncOpViewModel<TState, TResult> AddPending(TState initialState, string initialMessage, [DisallowNull] AsyncOpResultManagerViewModel<TState, TResult> operationManager,
+            [DisallowNull] Func<TState, IStatusListener<TState>, TResult> func, Guid? concurrencyId = null) => AddPending(initialState, initialMessage, operationManager, null, func, concurrencyId);
 
         class Builder : FuncItemBuilder
         {
@@ -310,8 +301,8 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
         /// or <see cref="AsyncOpManagerViewModel{object, TTask, TItem, TListener}.AsyncOpViewModel.Cancel()">AsyncFuncOpViewModel{TResult}.Cancel()</see> to cancel
         /// background operations.</remarks>
         /// <exception cref="ArgumentNullException"><paramref name="operationManager"/> or <paramref name="func"/> was null.</exception>
-        public static AsyncFuncOpViewModel<TResult> StartNew(string initialMessage, [DisallowNull] AsyncOpResultManagerViewModel<AsyncFuncOpViewModel<TResult>, StatusListenerImpl, TResult> operationManager,
-            [AllowNull] Action<StatusListenerImpl> onListenerCreated, [DisallowNull] Func<StatusListenerImpl, TResult> func, TaskCreationOptions creationOptions, Guid? concurrencyId = null, TaskScheduler scheduler = null)
+        public static AsyncFuncOpViewModel<TResult> StartNew(string initialMessage, [DisallowNull] AsyncOpResultManagerViewModel<TResult> operationManager,
+            [AllowNull] Action<IStatusListener> onListenerCreated, [DisallowNull] Func<IStatusListener, TResult> func, TaskCreationOptions creationOptions, Guid? concurrencyId = null, TaskScheduler scheduler = null)
         {
             (operationManager ?? throw new ArgumentNullException(nameof(operationManager))).VerifyAccess();
             if (func is null)
@@ -337,8 +328,8 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
         /// or <see cref="AsyncOpManagerViewModel{object, TTask, TItem, TListener}.AsyncOpViewModel.Cancel()">AsyncFuncOpViewModel{TResult}.Cancel()</see> to cancel
         /// background operations.</remarks>
         /// <exception cref="ArgumentNullException"><paramref name="operationManager"/> or <paramref name="func"/> was null.</exception>
-        public static AsyncFuncOpViewModel<TResult> StartNew(string initialMessage, [DisallowNull] AsyncOpResultManagerViewModel<AsyncFuncOpViewModel<TResult>, StatusListenerImpl, TResult> operationManager,
-            [DisallowNull] Func<StatusListenerImpl, TResult> func, TaskCreationOptions creationOptions, Guid? concurrencyId = null, TaskScheduler scheduler = null) =>
+        public static AsyncFuncOpViewModel<TResult> StartNew(string initialMessage, [DisallowNull] AsyncOpResultManagerViewModel<TResult> operationManager,
+            [DisallowNull] Func<IStatusListener, TResult> func, TaskCreationOptions creationOptions, Guid? concurrencyId = null, TaskScheduler scheduler = null) =>
             StartNew(initialMessage, operationManager, null, func, creationOptions, concurrencyId, scheduler);
 
         /// <summary>
@@ -353,8 +344,8 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
         /// or <see cref="AsyncOpManagerViewModel{object, TTask, TItem, TListener}.AsyncOpViewModel.Cancel()">AsyncFuncOpViewModel{TResult}.Cancel()</see> to cancel
         /// background operations.</remarks>
         /// <exception cref="ArgumentNullException"><paramref name="operationManager"/> or <paramref name="func"/> was null.</exception>
-        public static AsyncFuncOpViewModel<TResult> StartNew(string initialMessage, [DisallowNull] AsyncOpResultManagerViewModel<AsyncFuncOpViewModel<TResult>, StatusListenerImpl, TResult> operationManager,
-            [AllowNull] Action<StatusListenerImpl> onListenerCreated, [DisallowNull] Func<StatusListenerImpl, TResult> func, Guid? concurrencyId = null)
+        public static AsyncFuncOpViewModel<TResult> StartNew(string initialMessage, [DisallowNull] AsyncOpResultManagerViewModel<TResult> operationManager,
+            [AllowNull] Action<IStatusListener> onListenerCreated, [DisallowNull] Func<IStatusListener, TResult> func, Guid? concurrencyId = null)
         {
             (operationManager ?? throw new ArgumentNullException(nameof(operationManager))).VerifyAccess();
             if (func is null)
@@ -378,8 +369,8 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
         /// or <see cref="AsyncOpManagerViewModel{object, TTask, TItem, TListener}.AsyncOpViewModel.Cancel()">AsyncFuncOpViewModel{TResult}.Cancel()</see> to cancel
         /// background operations.</remarks>
         /// <exception cref="ArgumentNullException"><paramref name="operationManager"/> or <paramref name="func"/> was null.</exception>
-        public static AsyncFuncOpViewModel<TResult> StartNew(string initialMessage, [DisallowNull] AsyncOpResultManagerViewModel<AsyncFuncOpViewModel<TResult>, StatusListenerImpl, TResult> operationManager,
-            [DisallowNull] Func<StatusListenerImpl, TResult> func, Guid? concurrencyId = null) => StartNew(initialMessage, operationManager, null, func, concurrencyId);
+        public static AsyncFuncOpViewModel<TResult> StartNew(string initialMessage, [DisallowNull] AsyncOpResultManagerViewModel<TResult> operationManager,
+            [DisallowNull] Func<IStatusListener, TResult> func, Guid? concurrencyId = null) => StartNew(initialMessage, operationManager, null, func, concurrencyId);
 
         /// <summary>
         /// Starts a new background operation.
@@ -393,8 +384,8 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
         /// or <see cref="AsyncOpManagerViewModel{object, TTask, TItem, TListener}.AsyncOpViewModel.Cancel()">AsyncFuncOpViewModel{TResult}.Cancel()</see> to cancel
         /// background operations.</remarks>
         /// <exception cref="ArgumentNullException"><paramref name="operationManager"/> or <paramref name="func"/> was null.</exception>
-        public static AsyncFuncOpViewModel<TResult> FromAsync(string initialMessage, [DisallowNull] AsyncOpResultManagerViewModel<AsyncFuncOpViewModel<TResult>, StatusListenerImpl, TResult> operationManager,
-            [AllowNull] Action<StatusListenerImpl> onListenerCreated, [DisallowNull] Func<StatusListenerImpl, Task<TResult>> func, Guid? concurrencyId = null)
+        public static AsyncFuncOpViewModel<TResult> FromAsync(string initialMessage, [DisallowNull] AsyncOpResultManagerViewModel<TResult> operationManager,
+            [AllowNull] Action<IStatusListener> onListenerCreated, [DisallowNull] Func<IStatusListener, Task<TResult>> func, Guid? concurrencyId = null)
         {
             (operationManager ?? throw new ArgumentNullException(nameof(operationManager))).VerifyAccess();
             if (func is null)
@@ -418,8 +409,8 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
         /// or <see cref="AsyncOpManagerViewModel{object, TTask, TItem, TListener}.AsyncOpViewModel.Cancel()">AsyncFuncOpViewModel{TResult}.Cancel()</see> to cancel
         /// background operations.</remarks>
         /// <exception cref="ArgumentNullException"><paramref name="operationManager"/> or <paramref name="func"/> was null.</exception>
-        public static AsyncFuncOpViewModel<TResult> FromAsync(string initialMessage, [DisallowNull] AsyncOpResultManagerViewModel<AsyncFuncOpViewModel<TResult>, StatusListenerImpl, TResult> operationManager,
-            [DisallowNull] Func<StatusListenerImpl, Task<TResult>> func, Guid? concurrencyId = null) => FromAsync(initialMessage, operationManager, null, func, concurrencyId);
+        public static AsyncFuncOpViewModel<TResult> FromAsync(string initialMessage, [DisallowNull] AsyncOpResultManagerViewModel<TResult> operationManager,
+            [DisallowNull] Func<IStatusListener, Task<TResult>> func, Guid? concurrencyId = null) => FromAsync(initialMessage, operationManager, null, func, concurrencyId);
 
         /// <summary>
         /// Adds a new pending background operation.
@@ -435,8 +426,8 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
         /// or <see cref="AsyncOpManagerViewModel{object, TTask, TItem, TListener}.AsyncOpViewModel.Cancel()">AsyncFuncOpViewModel{TResult}.Cancel()</see> to cancel
         /// background operations.</para></remarks>
         /// <exception cref="ArgumentNullException"><paramref name="operationManager"/> or <paramref name="func"/> was null.</exception>
-        public static AsyncFuncOpViewModel<TResult> AddPending(string initialMessage, [DisallowNull] AsyncOpResultManagerViewModel<AsyncFuncOpViewModel<TResult>, StatusListenerImpl, TResult> operationManager,
-            [AllowNull] Action<StatusListenerImpl> onListenerCreated, [DisallowNull] Func<StatusListenerImpl, TResult> func, TaskCreationOptions creationOptions, Guid? concurrencyId = null)
+        public static AsyncFuncOpViewModel<TResult> AddPending(string initialMessage, [DisallowNull] AsyncOpResultManagerViewModel<TResult> operationManager,
+            [AllowNull] Action<IStatusListener> onListenerCreated, [DisallowNull] Func<IStatusListener, TResult> func, TaskCreationOptions creationOptions, Guid? concurrencyId = null)
         {
             (operationManager ?? throw new ArgumentNullException(nameof(operationManager))).VerifyAccess();
             if (func is null)
@@ -462,8 +453,8 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
         /// or <see cref="AsyncOpManagerViewModel{object, TTask, TItem, TListener}.AsyncOpViewModel.Cancel()">AsyncFuncOpViewModel{TResult}.Cancel()</see> to cancel
         /// background operations.</para></remarks>
         /// <exception cref="ArgumentNullException"><paramref name="operationManager"/> or <paramref name="func"/> was null.</exception>
-        public static AsyncFuncOpViewModel<TResult> AddPending(string initialMessage, [DisallowNull] AsyncOpResultManagerViewModel<AsyncFuncOpViewModel<TResult>, StatusListenerImpl, TResult> operationManager,
-            [DisallowNull] Func<StatusListenerImpl, TResult> func, TaskCreationOptions creationOptions, Guid? concurrencyId = null) => AddPending(initialMessage, operationManager, null, func, creationOptions, concurrencyId);
+        public static AsyncFuncOpViewModel<TResult> AddPending(string initialMessage, [DisallowNull] AsyncOpResultManagerViewModel<TResult> operationManager,
+            [DisallowNull] Func<IStatusListener, TResult> func, TaskCreationOptions creationOptions, Guid? concurrencyId = null) => AddPending(initialMessage, operationManager, null, func, creationOptions, concurrencyId);
 
         /// <summary>
         /// Adds a new pending background operation.
@@ -478,8 +469,8 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
         /// or <see cref="AsyncOpManagerViewModel{object, TTask, TItem, TListener}.AsyncOpViewModel.Cancel()">AsyncFuncOpViewModel{TResult}.Cancel()</see> to cancel
         /// background operations.</para></remarks>
         /// <exception cref="ArgumentNullException"><paramref name="operationManager"/> or <paramref name="func"/> was null.</exception>
-        public static AsyncFuncOpViewModel<TResult> AddPending(string initialMessage, [DisallowNull] AsyncOpResultManagerViewModel<AsyncFuncOpViewModel<TResult>, StatusListenerImpl, TResult> operationManager,
-            [AllowNull] Action<StatusListenerImpl> onListenerCreated, [DisallowNull] Func<StatusListenerImpl, TResult> func, Guid? concurrencyId = null)
+        public static AsyncFuncOpViewModel<TResult> AddPending(string initialMessage, [DisallowNull] AsyncOpResultManagerViewModel<TResult> operationManager, [AllowNull] Action<IStatusListener> onListenerCreated,
+            [DisallowNull] Func<IStatusListener, TResult> func, Guid? concurrencyId = null)
         {
             (operationManager ?? throw new ArgumentNullException(nameof(operationManager))).VerifyAccess();
             if (func is null)
@@ -504,8 +495,8 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
         /// or <see cref="AsyncOpManagerViewModel{object, TTask, TItem, TListener}.AsyncOpViewModel.Cancel()">AsyncFuncOpViewModel{TResult}.Cancel()</see> to cancel
         /// background operations.</para></remarks>
         /// <exception cref="ArgumentNullException"><paramref name="operationManager"/> or <paramref name="func"/> was null.</exception>
-        public static AsyncFuncOpViewModel<TResult> AddPending(string initialMessage, [DisallowNull] AsyncOpResultManagerViewModel<AsyncFuncOpViewModel<TResult>, StatusListenerImpl, TResult> operationManager,
-            [DisallowNull] Func<StatusListenerImpl, TResult> func, Guid? concurrencyId = null) => AddPending(initialMessage, operationManager, null, func, concurrencyId);
+        public static AsyncFuncOpViewModel<TResult> AddPending(string initialMessage, [DisallowNull] AsyncOpResultManagerViewModel<TResult> operationManager,
+            [DisallowNull] Func<IStatusListener, TResult> func, Guid? concurrencyId = null) => AddPending(initialMessage, operationManager, null, func, concurrencyId);
 
         class Builder : FuncItemBuilder
         {

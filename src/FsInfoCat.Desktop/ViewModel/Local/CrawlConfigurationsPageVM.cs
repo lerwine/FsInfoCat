@@ -14,10 +14,10 @@ using System.Windows.Threading;
 
 namespace FsInfoCat.Desktop.ViewModel.Local
 {
-    public class CrawlConfigurationsPageVM : DependencyObject
+    public class CrawlConfigurationsPageVM : DbEntityListingPageVM<CrawlConfiguration, CrawlConfigItemVM>
     {
         private readonly ILogger<CrawlConfigurationsPageVM> _logger;
-        private readonly List<CrawlConfigurationVM> _allCrawlConfigurations = new();
+        private readonly List<CrawlConfigItemVM> _allCrawlConfigurations = new();
         private Task _lastDataLoadTask;
 
         #region Crawl Configuration Items Members
@@ -25,30 +25,30 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         #region CrawlConfigurations Property Members
 
         private static readonly DependencyPropertyKey InnerCrawlConfigurationsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(InnerCrawlConfigurations),
-            typeof(ObservableCollection<CrawlConfigurationVM>), typeof(CrawlConfigurationsPageVM), new PropertyMetadata(null));
+            typeof(ObservableCollection<CrawlConfigItemVM>), typeof(CrawlConfigurationsPageVM), new PropertyMetadata(null));
 
         private static readonly DependencyPropertyKey CrawlConfigurationsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(CrawlConfigurations),
-            typeof(ReadOnlyObservableCollection<CrawlConfigurationVM>), typeof(CrawlConfigurationsPageVM), new PropertyMetadata(null));
+            typeof(ReadOnlyObservableCollection<CrawlConfigItemVM>), typeof(CrawlConfigurationsPageVM), new PropertyMetadata(null));
 
         protected static readonly DependencyProperty InnerCrawlConfigurationsProperty = InnerCrawlConfigurationsPropertyKey.DependencyProperty;
 
         public static readonly DependencyProperty CrawlConfigurationsProperty = CrawlConfigurationsPropertyKey.DependencyProperty;
 
-        protected ObservableCollection<CrawlConfigurationVM> InnerCrawlConfigurations
+        protected ObservableCollection<CrawlConfigItemVM> InnerCrawlConfigurations
         {
-            get => (ObservableCollection<CrawlConfigurationVM>)GetValue(InnerCrawlConfigurationsProperty);
+            get => (ObservableCollection<CrawlConfigItemVM>)GetValue(InnerCrawlConfigurationsProperty);
             private set => SetValue(InnerCrawlConfigurationsPropertyKey, value);
         }
 
-        public ReadOnlyObservableCollection<CrawlConfigurationVM> CrawlConfigurations
+        public ReadOnlyObservableCollection<CrawlConfigItemVM> CrawlConfigurations
         {
             get
             {
-                ReadOnlyObservableCollection<CrawlConfigurationVM> value = (ReadOnlyObservableCollection<CrawlConfigurationVM>)GetValue(CrawlConfigurationsProperty);
+                ReadOnlyObservableCollection<CrawlConfigItemVM> value = (ReadOnlyObservableCollection<CrawlConfigItemVM>)GetValue(CrawlConfigurationsProperty);
 
                 if (value == null)
                 {
-                    value = new ReadOnlyObservableCollection<CrawlConfigurationVM>(InnerCrawlConfigurations);
+                    value = new ReadOnlyObservableCollection<CrawlConfigItemVM>(InnerCrawlConfigurations);
                     SetValue(CrawlConfigurationsPropertyKey, value);
                 }
 
@@ -60,17 +60,17 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         #endregion
         #region SelectedCrawlConfig Property Members
 
-        public static readonly DependencyProperty SelectedCrawlConfigProperty = DependencyProperty.Register(nameof(SelectedCrawlConfig), typeof(CrawlConfigurationVM), typeof(CrawlConfigurationsPageVM),
+        public static readonly DependencyProperty SelectedCrawlConfigProperty = DependencyProperty.Register(nameof(SelectedCrawlConfig), typeof(CrawlConfigItemVM), typeof(CrawlConfigurationsPageVM),
                 new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                    (d as CrawlConfigurationsPageVM).OnSelectedCrawlConfigPropertyChanged((CrawlConfigurationVM)e.OldValue, (CrawlConfigurationVM)e.NewValue)));
+                    (d as CrawlConfigurationsPageVM).OnSelectedCrawlConfigPropertyChanged((CrawlConfigItemVM)e.OldValue, (CrawlConfigItemVM)e.NewValue)));
 
-        public CrawlConfigurationVM SelectedCrawlConfig
+        public CrawlConfigItemVM SelectedCrawlConfig
         {
-            get => (CrawlConfigurationVM)GetValue(SelectedCrawlConfigProperty);
+            get => (CrawlConfigItemVM)GetValue(SelectedCrawlConfigProperty);
             set => SetValue(SelectedCrawlConfigProperty, value);
         }
 
-        protected virtual void OnSelectedCrawlConfigPropertyChanged(CrawlConfigurationVM oldValue, CrawlConfigurationVM newValue)
+        protected virtual void OnSelectedCrawlConfigPropertyChanged(CrawlConfigItemVM oldValue, CrawlConfigItemVM newValue)
         {
             if (oldValue is not null)
             {
@@ -158,9 +158,9 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             {
                 ShowInactiveCrawlConfigurationsOnly = false;
                 ShowAllCrawlConfigurations = false;
-                CrawlConfigurationVM selectedCrawlConfig = SelectedCrawlConfig;
+                CrawlConfigItemVM selectedCrawlConfig = SelectedCrawlConfig;
                 InnerCrawlConfigurations.Clear();
-                foreach (CrawlConfigurationVM vm in _allCrawlConfigurations.Where(i => i.StatusValue != CrawlStatus.Disabled))
+                foreach (CrawlConfigItemVM vm in _allCrawlConfigurations.Where(i => i.StatusValue != CrawlStatus.Disabled))
                     InnerCrawlConfigurations.Add(vm);
                 SelectedCrawlConfig = (selectedCrawlConfig is null || selectedCrawlConfig.StatusValue == CrawlStatus.Disabled) ? InnerCrawlConfigurations.FirstOrDefault() : selectedCrawlConfig;
             }
@@ -187,9 +187,9 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             {
                 ShowActiveCrawlConfigurationsOnly = false;
                 ShowAllCrawlConfigurations = false;
-                CrawlConfigurationVM selectedCrawlConfig = SelectedCrawlConfig;
+                CrawlConfigItemVM selectedCrawlConfig = SelectedCrawlConfig;
                 InnerCrawlConfigurations.Clear();
-                foreach (CrawlConfigurationVM vm in _allCrawlConfigurations.Where(i => i.StatusValue == CrawlStatus.Disabled))
+                foreach (CrawlConfigItemVM vm in _allCrawlConfigurations.Where(i => i.StatusValue == CrawlStatus.Disabled))
                     InnerCrawlConfigurations.Add(vm);
                 SelectedCrawlConfig = (selectedCrawlConfig is null || selectedCrawlConfig.StatusValue != CrawlStatus.Disabled) ? InnerCrawlConfigurations.FirstOrDefault() : selectedCrawlConfig;
             }
@@ -216,9 +216,9 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             {
                 ShowActiveCrawlConfigurationsOnly = false;
                 ShowInactiveCrawlConfigurationsOnly = false;
-                CrawlConfigurationVM selectedCrawlConfig = SelectedCrawlConfig;
+                CrawlConfigItemVM selectedCrawlConfig = SelectedCrawlConfig;
                 InnerCrawlConfigurations.Clear();
-                foreach (CrawlConfigurationVM vm in _allCrawlConfigurations)
+                foreach (CrawlConfigItemVM vm in _allCrawlConfigurations)
                     InnerCrawlConfigurations.Add(vm);
                 SelectedCrawlConfig = selectedCrawlConfig ?? InnerCrawlConfigurations.FirstOrDefault();
             }
@@ -273,15 +273,15 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             //    return;
             if (!EditCrawlConfigVM.Edit(dialog.SelectedPath, out CrawlConfiguration model, out bool isNew))
                 return;
-            CrawlConfigurationVM item;
+            CrawlConfigItemVM item;
             if (isNew || (item = _allCrawlConfigurations.FirstOrDefault(i => ReferenceEquals(i.Model, model))) is null)
             {
                 if (ShowAllCrawlConfigurations)
-                    item = CrawlConfigurationVM.UpsertItem(model, CrawlConfigurations, _allCrawlConfigurations, true, true);
+                    item = CrawlConfigItemVM.UpsertItem(model, CrawlConfigurations, _allCrawlConfigurations, true, true);
                 else if (ShowActiveCrawlConfigurationsOnly)
-                    item = CrawlConfigurationVM.UpsertItem(model, CrawlConfigurations, _allCrawlConfigurations, true, false);
+                    item = CrawlConfigItemVM.UpsertItem(model, CrawlConfigurations, _allCrawlConfigurations, true, false);
                 else
-                    item = CrawlConfigurationVM.UpsertItem(model, CrawlConfigurations, _allCrawlConfigurations, false, true);
+                    item = CrawlConfigItemVM.UpsertItem(model, CrawlConfigurations, _allCrawlConfigurations, false, true);
             }
             if (item is not null)
                 SelectedCrawlConfig = item;
@@ -322,15 +322,14 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             _logger.LogInformation("{Count} crawl configurations loaded from database", items.Count);
             _allCrawlConfigurations.Clear();
             InnerCrawlConfigurations.Clear();
-            _allCrawlConfigurations.AddRange(items.Select(i => new CrawlConfigurationVM(i.Source, i.FullName, i.SubdirectoryId)));
-            foreach (CrawlConfigurationVM item in ShowAllCrawlConfigurations ? _allCrawlConfigurations :
+            _allCrawlConfigurations.AddRange(items.Select(i => new CrawlConfigItemVM(i.Source, i.FullName, i.SubdirectoryId)));
+            foreach (CrawlConfigItemVM item in ShowAllCrawlConfigurations ? _allCrawlConfigurations :
                     (ShowInactiveCrawlConfigurationsOnly ? _allCrawlConfigurations.Where(i => i.StatusValue == CrawlStatus.Disabled) : _allCrawlConfigurations.Where(i => i.StatusValue != CrawlStatus.Disabled)))
                 InnerCrawlConfigurations.Add(item);
             SelectedCrawlConfig = InnerCrawlConfigurations.FirstOrDefault();
         }
 
-        private async Task<IList<Subdirectory.CrawlConfigWithFullRootPath<CrawlConfiguration>>> LoadCrawlConfigsAsync(bool? isActive,
-            AsyncOps.AsyncFuncOpViewModel<bool?, IList<Subdirectory.CrawlConfigWithFullRootPath<CrawlConfiguration>>>.StatusListenerImpl statusListener)
+        private async Task<IList<Subdirectory.CrawlConfigWithFullRootPath<CrawlConfiguration>>> LoadCrawlConfigsAsync(bool? isActive, AsyncOps.IStatusListener<bool?> statusListener)
         {
             using IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
             using LocalDbContext dbContext = serviceScope.ServiceProvider.GetService<LocalDbContext>();

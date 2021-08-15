@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<CodeSnippets  xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
   <CodeSnippet Format="1.0.0">
     <Header>
       <Title>Define a relay command property with an event</Title>
@@ -20,32 +20,77 @@
         <Literal>
           <ID>ownerclass</ID>
           <Function>ClassName()</Function>
-          <ToolTip>The owning class of this Property.  Typically the class that it is declared in.</ToolTip>
+          <ToolTip>The owning class of this Property. Typically the class that it is declared in.</ToolTip>
+        </Literal>
+        <Literal>
+          <ID>summary</ID>
+          <ToolTip>The summary description of this property.</ToolTip>
+          <Default>Gets the $name$ command object.</Default>
+        </Literal>
+        <Literal>
+          <ID>returnValue</ID>
+          <ToolTip>Describes the value of this property.</ToolTip>
+          <Default>The &lt;see cref=&quot;System.Windows.Input.ICommand&quot;/&gt; that implements the $command$ command.</Default>
+        </Literal>
+        <Literal>
+          <ID>eventHandler</ID>
+          <ToolTip>Describes the value of this property.</ToolTip>
+          <Default><![CDATA[EventHandler<Commands.CommandEventArgs>]]></Default>
+        </Literal>
+        <Literal>
+          <ID>methodAccess</ID>
+          <ToolTip>Access of the event handler method.</ToolTip>
+          <Default>protected virtual</Default>
         </Literal>
       </Declarations>
       <Code Language="csharp">
 <![CDATA[
-public event EventHandler $command$;
+#region $property$ Property Members
+
+/// <summary>
+/// Occurs when the <see cref="$command$Command">$command$ Command</see> is invoked.
+/// </summary>
+public event $eventHandler$ $command$;
 
 private static readonly DependencyPropertyKey $command$CommandPropertyKey = DependencyProperty.RegisterReadOnly(nameof($command$Command),
     typeof(Commands.RelayCommand), typeof($ownerclass$), new PropertyMetadata(null));
 
+/// <summary>
+/// Identifies the <see cref="$property$"/> dependency property.
+/// </summary>
 public static readonly DependencyProperty $command$CommandProperty = $command$CommandPropertyKey.DependencyProperty;
 
+/// <summary>
+/// $summary$
+/// </summary>
+/// <value>$returnValue</value>
 public Commands.RelayCommand $command$Command => (Commands.RelayCommand)GetValue($command$CommandProperty);
 
-private void Invoke$command$Command(object parameter)
+/// <summary>
+/// Called when the $command$ event is raised by <see cref="$command$Command" />.
+/// </summary>
+/// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="$command$Command" />.</param>
+private void Raise$command$(object parameter)
 {
-  try { On$command$Execute(parameter); }
+  try { On$command$(parameter); }
   finally { $command$?.Invoke(this, EventArgs.Empty); }
 }
 
-private void On$command$Execute(object parameter)
+/// <summary>
+/// Called when the <see cref="$command$Command">$command$ Command</see> is invoked.
+/// </summary>
+/// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="$command$Command" />.</param>
+$methodAccess$ void On$command$(object parameter)
 {
-  // TODO: Implement On$command$Execute Logic
+  // TODO: Implement On$command$ Logic
 }
 
-// TODO: Add to constructor: $end$SetValue($command$CommandPropertyKey, new Commands.RelayCommand(On$command$Execute));
+/*
+* TODO: Add $command$Command to initialization code to constructor
+* $end$SetValue($command$CommandPropertyKey, new Commands.RelayCommand(On$command$));
+*/
+
+#endregion
 ]]>
       </Code>
     </Snippet>

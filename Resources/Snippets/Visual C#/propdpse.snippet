@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<CodeSnippets  xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
   <CodeSnippet Format="1.0.0">
     <Header>
       <Title>Define a string DependencyProperty with a &quot;DependencyPropertyChanged&quot; event.</Title>
       <Shortcut>propdpse</Shortcut>
-      <Description>Code snippet for a string property using DependencyProperty as the backing store  with a &quot;DependencyPropertyChanged&quot; event.</Description>
+      <Description>Code snippet for a string property using DependencyProperty as the backing store with a &quot;DependencyPropertyChanged&quot; event.</Description>
       <Author>Leonard T. Erwine</Author>
       <SnippetTypes>
         <SnippetType>Expansion</SnippetType>
@@ -20,37 +20,71 @@
         <Literal>
           <ID>ownerclass</ID>
           <Function>ClassName()</Function>
-          <ToolTip>The owning class of this Property.  Typically the class that it is declared in.</ToolTip>
+          <ToolTip>The owning class of this Property. Typically the class that it is declared in.</ToolTip>
         </Literal>
         <Literal>
           <ID>defaultvalue</ID>
           <ToolTip>The default value for this property.</ToolTip>
           <Default>""</Default>
         </Literal>
+        <Literal>
+          <ID>summary</ID>
+          <ToolTip>The summary description of this property.</ToolTip>
+          <Default>Gets or sets .</Default>
+        </Literal>
+        <Literal>
+          <ID>returnValue</ID>
+          <ToolTip>Describes the value of this property.</ToolTip>
+          <Default>The .</Default>
+        </Literal>
+        <Literal>
+          <ID>methodAccess</ID>
+          <ToolTip>Access of the event handler method.</ToolTip>
+          <Default>protected virtual</Default>
+        </Literal>
       </Declarations>
       <Code Language="csharp">
         <![CDATA[
+#region $property$ Property Members
+
+/// <summary>
+/// Occurs when the value of the <see cref="$property$"/> dependency property has changed.
+/// </summary>
 public event DependencyPropertyChangedEventHandler $property$PropertyChanged;
 
+/// <summary>
+/// Identifies the <see cref="$property$"/> dependency property.
+/// </summary>
 public static readonly DependencyProperty $property$Property = DependencyProperty.Register(nameof($property$), typeof(string), typeof($ownerclass$),
         new PropertyMetadata($defaultvalue$, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as $ownerclass$).On$property$PropertyChanged(e)));
 
-public string $property$
-{
-    get => GetValue($property$Property) as string;
-    set =? SetValue($property$Property, value);
-}
+/// <summary>
+/// $summary$
+/// </summary>
+/// <value>$returnValue</value>
+public string $property$ { get => GetValue($property$Property) as string; set => SetValue($property$Property, value); }
 
-protected virtual void On$property$PropertyChanged(DependencyPropertyChangedEventArgs args)
+/// <summary>
+/// Called when the <see cref="PropertyChangedCallback">PropertyChanged</see> event on <see cref="$property$Property"/> is raised.
+/// </summary>
+/// <param name="args">The Event data that is issued by the event on <see cref="$property$Property"/> that tracks changes to its effective value.</param>
+$methodAccess$ void On$property$PropertyChanged(DependencyPropertyChangedEventArgs args)
 {
     try { On$property$PropertyChanged(args.OldValue as string, args.NewValue as string); }
     finally { $property$PropertyChanged?.Invoke(this, args); }
 }
 
-protected virtual void On$property$PropertyChanged(string oldValue, string newValue)
+/// <summary>
+/// Called when the value of the <see cref="$property$"/> dependency property has changed.
+/// </summary>
+/// <param name="oldValue">The previous value of the <see cref="$property$"/> property.</param>
+/// <param name="newValue">The new value of the <see cref="$property$"/> property.</param>
+$methodAccess$ void On$property$PropertyChanged(string oldValue, string newValue)
 {
     $end$// TODO: Implement On$property$PropertyChanged Logic
 }
+
+#endregion
 ]]>
       </Code>
     </Snippet>

@@ -25,7 +25,22 @@ namespace FsInfoCat.Desktop.ViewModel
             private set => SetValue(HasErrorsPropertyKey, value);
         }
 
-        public ReadOnlyCollection<string> GetErrors(string propertyName) => _messages.TryGetValue(propertyName, out MessageCollection messages) ? messages : null;
+        public IEnumerable<string> GetErrors(string propertyName)
+        {
+            if (string.IsNullOrEmpty(propertyName))
+                return Dispatcher.CheckInvoke(() =>
+                {
+                    if (_messages.Count == 0)
+                        return null;
+                    return _messages.Select(kvp =>
+                    {
+                        if (kvp.Value.Count == 1)
+                            return $"{kvp.Key}: {kvp.Value[0]}";
+                        return $"{kvp.Key}: {string.Join("\n\t", kvp.Value)}";
+                    });
+                });
+            return _messages.TryGetValue(propertyName, out MessageCollection messages) ? messages : null;
+        }
 
         public bool ClearErrorMessage(string propertyName, string message)
         {

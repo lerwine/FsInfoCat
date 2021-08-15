@@ -1,10 +1,10 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
   <CodeSnippet Format="1.0.0">
     <Header>
-      <Title>Define a read-only string DependencyProperty with a &quot;DependencyPropertyChanged&quot; event.</Title>
-      <Shortcut>propdpsroe</Shortcut>
-      <Description>Code snippet for a read-only string property using DependencyProperty as the backing store with a &quot;DependencyPropertyChanged&quot; event.</Description>
+      <Title>Define a string DependencyProperty with a &quot;DependencyPropertyChanged&quot; event.</Title>
+      <Shortcut>propdpsei</Shortcut>
+      <Description>Code snippet for a string property using DependencyProperty as the backing store with a &quot;DependencyPropertyChanged&quot; event.</Description>
       <Author>Leonard T. Erwine</Author>
       <SnippetTypes>
         <SnippetType>Expansion</SnippetType>
@@ -30,7 +30,7 @@
         <Literal>
           <ID>summary</ID>
           <ToolTip>The summary description of this property.</ToolTip>
-          <Default>Gets .</Default>
+          <Default>Gets or sets .</Default>
         </Literal>
         <Literal>
           <ID>returnValue</ID>
@@ -52,20 +52,17 @@
 /// </summary>
 public event DependencyPropertyChangedEventHandler $property$PropertyChanged;
 
-private static readonly DependencyPropertyKey $property$PropertyKey = DependencyProperty.RegisterReadOnly(nameof($property$), typeof(string), typeof($ownerclass$),
-        new PropertyMetadata($defaultvalue$, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-            (d as $ownerclass$).On$property$PropertyChanged(e)));
-
 /// <summary>
 /// Identifies the <see cref="$property$"/> dependency property.
 /// </summary>
-public static readonly DependencyProperty $property$Property = $property$PropertyKey.DependencyProperty;
+public static readonly DependencyProperty $property$Property = DependencyProperty.Register(nameof($property$), typeof(string), typeof($ownerclass$),
+        new PropertyMetadata($defaultvalue$, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as $ownerclass$).On$property$PropertyChanged(e)));
 
 /// <summary>
 /// $summary$
 /// </summary>
 /// <value>$returnValue</value>
-public string $property$ { get => GetValue($property$Property) as string; private set => SetValue($property$PropertyKey, value); }
+public string $property$ { get => GetValue($property$Property) as string; set => SetValue($property$Property, value); }
 
 /// <summary>
 /// Called when the <see cref="PropertyChangedCallback">PropertyChanged</see> event on <see cref="$property$Property"/> is raised.

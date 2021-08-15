@@ -15,15 +15,16 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
         /// <para>Extends <see cref="DependencyObject" />.</para>
         /// </summary>
         /// <seealso cref="DependencyObject" />
-        public abstract partial class AsyncOpViewModel : DependencyObject, IAsyncOpViewModel
+        public abstract partial class AsyncOpViewModel : DependencyObject, IAsyncOpViewModel<TState>
         {
             private readonly Guid _concurrencyId;
-            protected readonly ILogger<AsyncOpViewModel> Logger;
             private readonly CancellationTokenSource _tokenSource = new();
             private readonly Stopwatch _stopWatch = new();
             private readonly TListener _listener;
             private readonly TTask _task;
             private Timer _timer;
+
+            protected readonly ILogger<AsyncOpViewModel> Logger;
 
             #region Events
 
@@ -266,7 +267,7 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
                     StatusMessage = asyncOperationFailure.UserMessage;
                 else
                     StatusMessage = FsInfoCat.Properties.Resources.ErrorMessage_UnexpectedError;
-                OperationFailed?.Invoke(this, new OpFailedEventArgs(exception));
+                OperationFailed?.Invoke(this, args);
             }
 
             protected virtual void OnRanToCompletion(TTask task) => OperationRanToCompletion?.Invoke(this, EventArgs.Empty);

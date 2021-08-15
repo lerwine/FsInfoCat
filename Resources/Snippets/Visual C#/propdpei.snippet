@@ -1,10 +1,10 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
   <CodeSnippet Format="1.0.0">
     <Header>
-      <Title>Define a read-only string DependencyProperty with a &quot;DependencyPropertyChanged&quot; event.</Title>
-      <Shortcut>propdpsroe</Shortcut>
-      <Description>Code snippet for a read-only string property using DependencyProperty as the backing store with a &quot;DependencyPropertyChanged&quot; event.</Description>
+      <Title>Define a DependencyProperty with a &quot;DependencyPropertyChanged&quot; event and an &quot;OnPropertyChanged&quot; method.</Title>
+      <Shortcut>propdpei</Shortcut>
+      <Description>Code snippet for a property using DependencyProperty as the backing store with a &quot;DependencyPropertyChanged&quot; event and an &quot;OnPropertyChanged&quot; method.</Description>
       <Author>Leonard T. Erwine</Author>
       <SnippetTypes>
         <SnippetType>Expansion</SnippetType>
@@ -12,6 +12,11 @@
     </Header>
     <Snippet>
       <Declarations>
+        <Literal>
+          <ID>type</ID>
+          <ToolTip>Property Type</ToolTip>
+          <Default>int</Default>
+        </Literal>
         <Literal>
           <ID>property</ID>
           <ToolTip>Property Name</ToolTip>
@@ -25,12 +30,12 @@
         <Literal>
           <ID>defaultvalue</ID>
           <ToolTip>The default value for this property.</ToolTip>
-          <Default>""</Default>
+          <Default>0</Default>
         </Literal>
         <Literal>
           <ID>summary</ID>
           <ToolTip>The summary description of this property.</ToolTip>
-          <Default>Gets .</Default>
+          <Default>Gets or sets .</Default>
         </Literal>
         <Literal>
           <ID>returnValue</ID>
@@ -52,20 +57,17 @@
 /// </summary>
 public event DependencyPropertyChangedEventHandler $property$PropertyChanged;
 
-private static readonly DependencyPropertyKey $property$PropertyKey = DependencyProperty.RegisterReadOnly(nameof($property$), typeof(string), typeof($ownerclass$),
-        new PropertyMetadata($defaultvalue$, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-            (d as $ownerclass$).On$property$PropertyChanged(e)));
-
 /// <summary>
 /// Identifies the <see cref="$property$"/> dependency property.
 /// </summary>
-public static readonly DependencyProperty $property$Property = $property$PropertyKey.DependencyProperty;
+public static readonly DependencyProperty $property$Property = DependencyProperty.Register(nameof($property$), typeof($type$), typeof($ownerclass$),
+        new PropertyMetadata($defaultvalue$, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as $ownerclass$).On$property$PropertyChanged(e)));
 
 /// <summary>
 /// $summary$
 /// </summary>
 /// <value>$returnValue</value>
-public string $property$ { get => GetValue($property$Property) as string; private set => SetValue($property$PropertyKey, value); }
+public $type$ $property$ { get => ($type$)GetValue($property$Property); set => SetValue($property$Property, value); }
 
 /// <summary>
 /// Called when the <see cref="PropertyChangedCallback">PropertyChanged</see> event on <see cref="$property$Property"/> is raised.
@@ -73,7 +75,7 @@ public string $property$ { get => GetValue($property$Property) as string; privat
 /// <param name="args">The Event data that is issued by the event on <see cref="$property$Property"/> that tracks changes to its effective value.</param>
 $methodAccess$ void On$property$PropertyChanged(DependencyPropertyChangedEventArgs args)
 {
-    try { On$property$PropertyChanged(args.OldValue as string, args.NewValue as string); }
+    try { On$property$PropertyChanged(($type$)args.OldValue, ($type$)args.NewValue); }
     finally { $property$PropertyChanged?.Invoke(this, args); }
 }
 
@@ -82,7 +84,7 @@ $methodAccess$ void On$property$PropertyChanged(DependencyPropertyChangedEventAr
 /// </summary>
 /// <param name="oldValue">The previous value of the <see cref="$property$"/> property.</param>
 /// <param name="newValue">The new value of the <see cref="$property$"/> property.</param>
-$methodAccess$ void On$property$PropertyChanged(string oldValue, string newValue)
+$methodAccess$ void On$property$PropertyChanged($type$ oldValue, $type$ newValue)
 {
     $end$// TODO: Implement On$property$PropertyChanged Logic
 }

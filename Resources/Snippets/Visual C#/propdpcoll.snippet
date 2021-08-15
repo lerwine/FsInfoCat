@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<CodeSnippets  xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
   <CodeSnippet Format="1.0.0">
     <Header>
       <Title>Define a generic collection DependencyProperty</Title>
@@ -30,21 +30,42 @@
         <Literal>
           <ID>ownerclass</ID>
           <Function>ClassName()</Function>
-          <ToolTip>The owning class of this Property.  Typically the class that it is declared in.</ToolTip>
+          <ToolTip>The owning class of this Property. Typically the class that it is declared in.</ToolTip>
+        </Literal>
+        <Literal>
+          <ID>summary</ID>
+          <ToolTip>The summary description of this property.</ToolTip>
+          <Default>Gets .</Default>
+        </Literal>
+        <Literal>
+          <ID>returnValue</ID>
+          <ToolTip>Describes the value of this property.</ToolTip>
+          <Default>The .</Default>
         </Literal>
       </Declarations>
       <Code Language="csharp">
 <![CDATA[
+#region $property$ Property Members
+
 private static readonly DependencyPropertyKey $property$PropertyKey = DependencyProperty.RegisterReadOnly(nameof($property$), typeof($collType$<$itemType$>), typeof($ownerclass$),
         new PropertyMetadata(new $collType$<$itemType$>()));
 
+/// <summary>
+/// Identifies the <see cref="$property$"/> dependency property.
+/// </summary>
 public static readonly DependencyProperty $property$Property = $property$PropertyKey.DependencyProperty;
 
+/// <summary>
+/// $summary$
+/// </summary>
+/// <value>$returnValue</value>
 public $collType$<$itemType$> $property$
 {
-    get => ($collType$<$itemType$>)this.GetValue($property$Property);
-    private set => this.SetValue($property$PropertyKey, value);
+    get => ($collType$<$itemType$>)GetValue($property$Property);
+    private set => SetValue($property$PropertyKey, value);
 }
+
+#endregion
 $end$]]>
       </Code>
     </Snippet>

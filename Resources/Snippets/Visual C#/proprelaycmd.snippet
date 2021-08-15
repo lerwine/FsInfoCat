@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<CodeSnippets  xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
   <CodeSnippet Format="1.0.0">
     <Header>
       <Title>Define a relay command property</Title>
@@ -20,24 +20,53 @@
         <Literal>
           <ID>ownerclass</ID>
           <Function>ClassName()</Function>
-          <ToolTip>The owning class of this Property.  Typically the class that it is declared in.</ToolTip>
+          <ToolTip>The owning class of this Property. Typically the class that it is declared in.</ToolTip>
+        </Literal>
+        <Literal>
+          <ID>summary</ID>
+          <ToolTip>The summary description of this property.</ToolTip>
+          <Default>Gets the $name$ command object.</Default>
+        </Literal>
+        <Literal>
+          <ID>returnValue</ID>
+          <ToolTip>Describes the value of this property.</ToolTip>
+          <Default>The &lt;see cref=&quot;System.Windows.Input.ICommand&quot;/&gt; that implements the $command$ command.</Default>
+        </Literal>
+        <Literal>
+          <ID>methodAccess</ID>
+          <ToolTip>Access of the event handler method.</ToolTip>
+          <Default>protected virtual</Default>
         </Literal>
       </Declarations>
       <Code Language="csharp">
 <![CDATA[
+#region $command$ Command Property Members
+
 private static readonly DependencyPropertyKey $command$CommandPropertyKey = DependencyProperty.RegisterReadOnly(nameof($command$Command),
     typeof(Commands.RelayCommand), typeof($ownerclass$), new PropertyMetadata(null));
 
+/// <summary>
+/// Identifies the <see cref="$command$Command"/> dependency property.
+/// </summary>
 public static readonly DependencyProperty $command$CommandProperty = $command$CommandPropertyKey.DependencyProperty;
 
+/// <summary>
+/// $summary$
+/// </summary>
+/// <value>$returnValue</value>
 public Commands.RelayCommand $command$Command => (Commands.RelayCommand)GetValue($command$CommandProperty);
 
-private void On$command$Execute(object parameter)
+$methodAccess$ void On$command$(object parameter)
 {
-  // TODO: Implement On$command$Execute Logic
+  // TODO: Implement On$command$ Logic
 }
 
-// TODO: Add to constructor: $end$SetValue($command$CommandPropertyKey, new Commands.RelayCommand(On$command$Execute));
+/*
+* TODO: Add $command$Command to initialization code to constructor
+* $end$SetValue($command$CommandPropertyKey, new Commands.RelayCommand(On$command$));
+*/
+
+#endregion
 ]]>
       </Code>
     </Snippet>

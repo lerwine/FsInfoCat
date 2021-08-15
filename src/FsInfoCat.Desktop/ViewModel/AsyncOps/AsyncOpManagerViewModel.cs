@@ -22,7 +22,7 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
     /// <typeparam name="TListener">The type of listener that inherits from <see cref="AsyncOpManagerViewModel{TState, TTask, TItem, TListener}.AsyncOpViewModel.StatusListener" />
     /// and is used within the background <typeparamref name="TTask">Task</typeparamref> to update the associated <typeparamref name="TItem">Item</typeparamref>.</typeparam>
     /// <seealso cref="DependencyObject" />
-    public partial class AsyncOpManagerViewModel<TState, TTask, TItem, TListener> : DependencyObject, IAsyncOpManagerViewModel
+    public partial class AsyncOpManagerViewModel<TState, TTask, TItem, TListener> : DependencyObject, IAsyncOpManagerViewModel<TState>
         where TTask : Task
         where TItem : AsyncOpManagerViewModel<TState, TTask, TItem, TListener>.AsyncOpViewModel
         where TListener : AsyncOpManagerViewModel<TState, TTask, TItem, TListener>.AsyncOpViewModel.StatusListener
@@ -538,6 +538,10 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
             _allOperations.Remove(item);
             return true;
         }
+
+        bool IAsyncOpManagerViewModel<TState>.RemoveOperation(IAsyncOpViewModel<TState> item) => item is TItem t && RemoveOperation(t);
+
+        bool IAsyncOpManagerViewModel.RemoveOperation(IAsyncOpViewModel item) => item is TItem t && RemoveOperation(t);
     }
 
     /// <summary>

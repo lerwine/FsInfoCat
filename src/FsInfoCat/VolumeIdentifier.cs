@@ -13,6 +13,8 @@ namespace FsInfoCat
             s => Parse(s)
         );
 
+        public static string ToVsnString(uint vsn, bool dash = false) => dash ? $"{vsn >> 16:x4}-{vsn & 0xffff:x4}" : vsn.ToString("x8");
+
         /// <summary>
         /// Matches consecutive and trailing URI path separators, allowing up to 3 consecutive path separator characters following the scheme separator.
         /// </summary>
