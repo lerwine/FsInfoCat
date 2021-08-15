@@ -15,7 +15,7 @@
         <Literal>
           <ID>type</ID>
           <ToolTip>Property Type</ToolTip>
-          <Default>/*PropertyType*/</Default>
+          <Default>PropertyType</Default>
         </Literal>
         <Literal>
           <ID>property</ID>
@@ -43,9 +43,7 @@
           <Default>The .</Default>
         </Literal>
       </Declarations>
-      <Code Language="csharp">
-        <![CDATA[
-#region $property$ Property Members
+      <Code Language="csharp"><![CDATA[#region $property$ Property Members
 
 private static readonly DependencyPropertyKey $property$PropertyKey = DependencyProperty.RegisterReadOnly(nameof($property$), typeof($type$), typeof($ownerclass$),
         new PropertyMetadata($defaultvalue$));
@@ -61,9 +59,7 @@ public static readonly DependencyProperty $property$Property = $property$Propert
 /// <value>$returnValue$</value>
 public $type$ $property$ { get => ($type$)GetValue($property$Property); private set => SetValue($property$PropertyKey, value); }
 
-#endregion
-$end$]]>
-      </Code>
+#endregion$end$]]></Code>
     </Snippet>
   </CodeSnippet>
 </CodeSnippets>

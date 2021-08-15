@@ -35,12 +35,10 @@
         <Literal>
           <ID>methodAccess</ID>
           <ToolTip>Access of the event handler method.</ToolTip>
-          <Default>protected virtual</Default>
+          <Default>private</Default>
         </Literal>
       </Declarations>
-      <Code Language="csharp">
-<![CDATA[
-#region $command$ Command Property Members
+      <Code Language="csharp"><![CDATA[#region $command$ Command Property Members
 
 private static readonly DependencyPropertyKey $command$CommandPropertyKey = DependencyProperty.RegisterReadOnly(nameof($command$Command),
     typeof(Commands.RelayCommand), typeof($ownerclass$), new PropertyMetadata(null));
@@ -66,9 +64,7 @@ $methodAccess$ void On$command$(object parameter)
 * $end$SetValue($command$CommandPropertyKey, new Commands.RelayCommand(On$command$));
 */
 
-#endregion
-]]>
-      </Code>
+#endregion]]></Code>
     </Snippet>
   </CodeSnippet>
 </CodeSnippets>

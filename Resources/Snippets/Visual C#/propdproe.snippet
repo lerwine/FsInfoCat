@@ -15,7 +15,7 @@
         <Literal>
           <ID>type</ID>
           <ToolTip>Property Type</ToolTip>
-          <Default>/*PropertyType*/</Default>
+          <Default>PropertyType</Default>
         </Literal>
         <Literal>
           <ID>property</ID>
@@ -48,9 +48,7 @@
           <Default>protected virtual</Default>
         </Literal>
       </Declarations>
-      <Code Language="csharp">
-        <![CDATA[
-#region $property$ Property Members
+      <Code Language="csharp"><![CDATA[#region $property$ Property Members
 
 /// <summary>
 /// Occurs when the value of the <see cref="$property$"/> dependency property has changed.
@@ -58,8 +56,7 @@
 public event DependencyPropertyChangedEventHandler $property$PropertyChanged;
 
 private static readonly DependencyPropertyKey $property$PropertyKey = DependencyProperty.RegisterReadOnly(nameof($property$), typeof($type$), typeof($ownerclass$),
-        new PropertyMetadata($defaultvalue$, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-            (d as $ownerclass$).On$property$PropertyChanged(e)));
+        new PropertyMetadata($defaultvalue$, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as $ownerclass$)?.$property$PropertyChanged?.Invoke(d, e)));
 
 /// <summary>
 /// Identifies the <see cref="$property$"/> dependency property.
@@ -72,29 +69,7 @@ public static readonly DependencyProperty $property$Property = $property$Propert
 /// <value>$returnValue$</value>
 public $type$ $property$ { get => ($type$)GetValue($property$Property); private set => SetValue($property$PropertyKey, value); }
 
-/// <summary>
-/// Called when the <see cref="PropertyChangedCallback">PropertyChanged</see> event on <see cref="$property$Property"/> is raised.
-/// </summary>
-/// <param name="args">The Event data that is issued by the event on <see cref="$property$Property"/> that tracks changes to its effective value.</param>
-$methodAccess$ void On$property$PropertyChanged(DependencyPropertyChangedEventArgs args)
-{
-    try { On$property$PropertyChanged(($type$)args.OldValue, ($type$)args.NewValue); }
-    finally { $property$PropertyChanged?.Invoke(this, args); }
-}
-
-/// <summary>
-/// Called when the value of the <see cref="$property$"/> dependency property has changed.
-/// </summary>
-/// <param name="oldValue">The previous value of the <see cref="$property$"/> property.</param>
-/// <param name="newValue">The new value of the <see cref="$property$"/> property.</param>
-$methodAccess$ void On$property$PropertyChanged($type$ oldValue, $type$ newValue)
-{
-    $end$// TODO: Implement On$property$PropertyChanged Logic
-}
-
-#endregion
-]]>
-      </Code>
+#endregion$end$]]></Code>
     </Snippet>
   </CodeSnippet>
 </CodeSnippets>

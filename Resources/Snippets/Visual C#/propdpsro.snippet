@@ -48,9 +48,7 @@
           <Default>The .</Default>
         </Literal>
       </Declarations>
-      <Code Language="csharp">
-        <![CDATA[
-#region $property$ Property Members
+      <Code Language="csharp"><![CDATA[#region $property$ Property Members
 
 private static readonly DependencyPropertyKey $property$PropertyKey = DependencyProperty.RegisterReadOnly(nameof($property$), typeof(string), typeof($ownerclass$), new PropertyMetadata($defaultvalue$));
 
@@ -65,9 +63,7 @@ public static readonly DependencyProperty $property$Property = $property$Propert
 /// <value>$returnValue$</value>
 public string $property$ { get => GetValue($property$Property) as string; private set => SetValue($property$PropertyKey, value); }
 
-#endregion
-$end$]]>
-      </Code>
+#endregion$end$]]></Code>
     </Snippet>
   </CodeSnippet>
 </CodeSnippets>

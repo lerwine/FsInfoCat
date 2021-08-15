@@ -2,9 +2,9 @@
 <CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
   <CodeSnippet Format="1.0.0">
     <Header>
-      <Title>Define a DependencyProperty with a &quot;DependencyPropertyChanged&quot; event and an &quot;OnPropertyChanged&quot; method.</Title>
-      <Shortcut>propdpei</Shortcut>
-      <Description>Code snippet for a property using DependencyProperty as the backing store with a &quot;DependencyPropertyChanged&quot; event and an &quot;OnPropertyChanged&quot; method.</Description>
+      <Title>Define a read-only DependencyProperty with a &quot;DependencyPropertyChanged&quot; event.</Title>
+      <Shortcut>propdproce</Shortcut>
+      <Description>Code snippet for a read-only property using DependencyProperty as the backing store with a &quot;DependencyPropertyChanged&quot; event.</Description>
       <Author>Leonard T. Erwine</Author>
       <SnippetTypes>
         <SnippetType>Expansion</SnippetType>
@@ -15,7 +15,7 @@
         <Literal>
           <ID>type</ID>
           <ToolTip>Property Type</ToolTip>
-          <Default>/*PropertyType*/</Default>
+          <Default>PropertyType</Default>
         </Literal>
         <Literal>
           <ID>property</ID>
@@ -48,26 +48,26 @@
           <Default>protected virtual</Default>
         </Literal>
       </Declarations>
-      <Code Language="csharp">
-        <![CDATA[
-#region $property$ Property Members
+      <Code Language="csharp"><![CDATA[#region $property$ Property Members
 
 /// <summary>
 /// Occurs when the value of the <see cref="$property$"/> dependency property has changed.
 /// </summary>
 public event DependencyPropertyChangedEventHandler $property$PropertyChanged;
 
+private static readonly DependencyPropertyKey $property$PropertyKey = DependencyProperty.RegisterReadOnly(nameof($property$), typeof($type$), typeof($ownerclass$),
+        new PropertyMetadata($defaultvalue$, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as $ownerclass$)?.On$property$PropertyChanged(e)));
+
 /// <summary>
 /// Identifies the <see cref="$property$"/> dependency property.
 /// </summary>
-public static readonly DependencyProperty $property$Property = DependencyProperty.Register(nameof($property$), typeof($type$), typeof($ownerclass$),
-        new PropertyMetadata($defaultvalue$, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as $ownerclass$).On$property$PropertyChanged(e)));
+public static readonly DependencyProperty $property$Property = $property$PropertyKey.DependencyProperty;
 
 /// <summary>
 /// $summary$
 /// </summary>
 /// <value>$returnValue$</value>
-public $type$ $property$ { get => ($type$)GetValue($property$Property); set => SetValue($property$Property, value); }
+public $type$ $property$ { get => ($type$)GetValue($property$Property); private set => SetValue($property$PropertyKey, value); }
 
 /// <summary>
 /// Called when the <see cref="PropertyChangedCallback">PropertyChanged</see> event on <see cref="$property$Property"/> is raised.
@@ -89,9 +89,7 @@ $methodAccess$ void On$property$PropertyChanged($type$ oldValue, $type$ newValue
     $end$// TODO: Implement On$property$PropertyChanged Logic
 }
 
-#endregion
-]]>
-      </Code>
+#endregion]]></Code>
     </Snippet>
   </CodeSnippet>
 </CodeSnippets>

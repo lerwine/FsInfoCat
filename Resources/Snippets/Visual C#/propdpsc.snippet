@@ -40,19 +40,16 @@
         <Literal>
           <ID>methodAccess</ID>
           <ToolTip>Access of the event handler method.</ToolTip>
-          <Default>protected virtual</Default>
+          <Default>private</Default>
         </Literal>
       </Declarations>
-      <Code Language="csharp">
-        <![CDATA[
-#region $property$ Property Members
+      <Code Language="csharp"><![CDATA[#region $property$ Property Members
 
 /// <summary>
 /// Identifies the <see cref="$property$"/> dependency property.
 /// </summary>
 public static readonly DependencyProperty $property$Property = DependencyProperty.Register(nameof($property$), typeof(string), typeof($ownerclass$),
-        new PropertyMetadata($defaultvalue$, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-            (d as $ownerclass$).On$property$PropertyChanged(e.OldValue as string, e.NewValue as string)));
+        new PropertyMetadata($defaultvalue$, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as $ownerclass$)?.On$property$PropertyChanged(e.OldValue as string, e.NewValue as string)));
 
 /// <summary>
 /// $summary$
@@ -70,9 +67,7 @@ $methodAccess$ void On$property$PropertyChanged(string oldValue, string newValue
     $end$// TODO: Implement On$property$PropertyChanged Logic
 }
 
-#endregion
-]]>
-      </Code>
+#endregion]]></Code>
     </Snippet>
   </CodeSnippet>
 </CodeSnippets>

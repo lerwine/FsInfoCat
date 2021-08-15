@@ -15,7 +15,7 @@
         <Literal>
           <ID>type</ID>
           <ToolTip>Property Type</ToolTip>
-          <Default>/*PropertyType*/</Default>
+          <Default>PropertyType</Default>
         </Literal>
         <Literal>
           <ID>property</ID>
@@ -43,9 +43,7 @@
           <Default>The .</Default>
         </Literal>
       </Declarations>
-      <Code Language="csharp">
-<![CDATA[
-#region $property$ Property Members
+      <Code Language="csharp"><![CDATA[#region $property$ Property Members
 
 /// <summary>
 /// Identifies the <see cref="$property$"/> dependency property.
@@ -57,10 +55,8 @@ public static readonly DependencyProperty $property$Property = DependencyPropert
 /// </summary>
 /// <value>$returnValue$</value>
 public $type$ $property$ { get => ($type$)GetValue($property$Property); set => SetValue($property$Property, value); }
-
-#endregion
-$end$]]>
-      </Code>
+  
+#endregion$end$]]></Code>
     </Snippet>
   </CodeSnippet>
 </CodeSnippets>

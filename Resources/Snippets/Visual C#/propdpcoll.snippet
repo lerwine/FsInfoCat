@@ -15,7 +15,7 @@
         <Literal>
           <ID>itemType</ID>
           <ToolTip>Collection element type</ToolTip>
-          <Default>/*ElementType*/</Default>
+          <Default>ElementType</Default>
         </Literal>
         <Literal>
           <ID>collType</ID>
@@ -43,9 +43,7 @@
           <Default>The .</Default>
         </Literal>
       </Declarations>
-      <Code Language="csharp">
-<![CDATA[
-#region $property$ Property Members
+      <Code Language="csharp"><![CDATA[#region $property$ Property Members
 
 private static readonly DependencyPropertyKey $property$PropertyKey = DependencyProperty.RegisterReadOnly(nameof($property$), typeof($collType$<$itemType$>), typeof($ownerclass$),
         new PropertyMetadata(new $collType$<$itemType$>()));
@@ -65,9 +63,7 @@ public $collType$<$itemType$> $property$
     private set => SetValue($property$PropertyKey, value);
 }
 
-#endregion
-$end$]]>
-      </Code>
+#endregion]]></Code>
     </Snippet>
   </CodeSnippet>
 </CodeSnippets>

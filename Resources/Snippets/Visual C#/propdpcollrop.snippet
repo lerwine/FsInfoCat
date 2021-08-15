@@ -3,7 +3,7 @@
   <CodeSnippet Format="1.0.0">
     <Header>
       <Title>Define an inheritable generic read-only collection DependencyProperty</Title>
-      <Shortcut>propdpcollroi</Shortcut>
+      <Shortcut>propdpcollrop</Shortcut>
       <Description>Code snippet for a generic read-only collection, writable by inheriting classes, property using DependencyProperty as the backing store</Description>
       <Author>Leonard T. Erwine</Author>
       <SnippetTypes>
@@ -15,7 +15,7 @@
         <Literal>
           <ID>itemType</ID>
           <ToolTip>Collection element type</ToolTip>
-          <Default>/*ElementType*/</Default>
+          <Default>ElementType</Default>
         </Literal>
         <Literal>
           <ID>collType</ID>
@@ -43,9 +43,7 @@
           <Default>The .</Default>
         </Literal>
       </Declarations>
-      <Code Language="csharp">
-        <![CDATA[
-#region $property$ Property Members
+      <Code Language="csharp"><![CDATA[#region $property$ Property Members
 
 private static readonly DependencyPropertyKey Backing$property$PropertyKey = DependencyProperty.RegisterReadOnly(nameof(Backing$property$), typeof($collType$<$itemType$>), typeof($ownerclass$),
         new PropertyMetadata(new $collType$<$itemType$>()));
@@ -80,9 +78,7 @@ public ReadOnly$collType$<$itemType$> $property$ => (ReadOnly$collType$<$itemTyp
 * $end$SetValue($property$PropertyKey, new(Backing$property$));
 */
 
-#endregion
-]]>
-      </Code>
+#endregion]]></Code>
     </Snippet>
   </CodeSnippet>
 </CodeSnippets>
