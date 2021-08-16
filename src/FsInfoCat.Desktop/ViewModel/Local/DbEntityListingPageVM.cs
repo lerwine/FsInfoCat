@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
@@ -163,14 +164,36 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         public AsyncOps.AsyncOpResultManagerViewModel<int> ListingLoader { get => (AsyncOps.AsyncOpResultManagerViewModel<int>)GetValue(ListingLoaderProperty); private set => SetValue(ListingLoaderPropertyKey, value); }
 
         #endregion
+        #region RelatedItemLoader Property Members
+
+        private static readonly DependencyPropertyKey RelatedItemLoaderPropertyKey = DependencyProperty.RegisterReadOnly(nameof(RelatedItemLoader), typeof(AsyncOps.AsyncOpResultManagerViewModel<Guid, int>), typeof(DbEntityListingPageVM<TDbEntity, TItemVM>),
+                new PropertyMetadata(null));
+
+        /// <summary>
+        /// Identifies the <see cref="RelatedItemLoader"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty RelatedItemLoaderProperty = RelatedItemLoaderPropertyKey.DependencyProperty;
+
+        /// <summary>
+        /// Gets .
+        /// </summary>
+        /// <value>The .</value>
+        public AsyncOps.AsyncOpResultManagerViewModel<Guid, int> RelatedItemLoader { get => (AsyncOps.AsyncOpResultManagerViewModel<Guid, int>)GetValue(RelatedItemLoaderProperty); private set => SetValue(RelatedItemLoaderPropertyKey, value); }
+
+        #endregion
         public DbEntityListingPageVM()
         {
+            SetValue(ItemsPropertyKey, new ReadOnlyObservableCollection<TItemVM>(_backingItems));
+            SetValue(NewItemClickCommandPropertyKey, new Commands.RelayCommand(OnNewItemClick));
+#if DEBUG
+            if (DesignerProperties.GetIsInDesignMode(this))
+                return;
+#endif
             Logger = App.GetLogger(this);
             SetValue(BgOpsPropertyKey, new AsyncOps.AsyncOpAggregate());
             SetValue(EntityDbOpPropertyKey, new AsyncOps.AsyncOpResultManagerViewModel<TDbEntity, bool?>());
             SetValue(ListingLoaderPropertyKey, new AsyncOps.AsyncOpResultManagerViewModel<int>());
-            SetValue(ItemsPropertyKey, new ReadOnlyObservableCollection<TItemVM>(_backingItems));
-            SetValue(NewItemClickCommandPropertyKey, new Commands.RelayCommand(OnNewItemClick));
+            SetValue(RelatedItemLoaderPropertyKey, new AsyncOps.AsyncOpResultManagerViewModel<Guid, int>());
         }
 
         internal Task<int> LoadItemsAsync()

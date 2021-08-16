@@ -1,5 +1,6 @@
 using FsInfoCat.Local;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Windows;
@@ -8,6 +9,47 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 {
     public class FileSystemItemVM : DbEntityItemVM<FileSystem>
     {
+        #region  Property Members
+
+        /// <summary>
+        /// Occurs when the <see cref="OpenVolumesCommand">OpenVolumes Command</see> is invoked.
+        /// </summary>
+        public event EventHandler<Commands.CommandEventArgs> OpenVolumes;
+
+        private static readonly DependencyPropertyKey OpenVolumesCommandPropertyKey = DependencyProperty.RegisterReadOnly(nameof(OpenVolumesCommand),
+            typeof(Commands.RelayCommand), typeof(FileSystemItemVM), new PropertyMetadata(null));
+
+        /// <summary>
+        /// Identifies the <see cref=""/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty OpenVolumesCommandProperty = OpenVolumesCommandPropertyKey.DependencyProperty;
+
+        /// <summary>
+        /// Gets the $name$ command object.
+        /// </summary>
+        /// <value>The <see cref="System.Windows.Input.ICommand"/> that implements the $command$ command.</value>
+        public Commands.RelayCommand OpenVolumesCommand => (Commands.RelayCommand)GetValue(OpenVolumesCommandProperty);
+
+        /// <summary>
+        /// Called when the OpenVolumes event is raised by <see cref="OpenVolumesCommand" />.
+        /// </summary>
+        /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="OpenVolumesCommand" />.</param>
+        private void RaiseOpenVolumes(object parameter)
+        {
+            try { OnOpenVolumes(parameter); }
+            finally { OpenVolumes?.Invoke(this, new(parameter)); }
+        }
+
+        /// <summary>
+        /// Called when the <see cref="OpenVolumesCommand">OpenVolumes Command</see> is invoked.
+        /// </summary>
+        /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="OpenVolumesCommand" />.</param>
+        protected virtual void OnOpenVolumes(object parameter)
+        {
+            // TODO: Implement OnOpenVolumes Logic
+        }
+
+        #endregion
         #region DefaultDriveType Property Members
 
         private static readonly DependencyPropertyKey DefaultDriveTypePropertyKey = DependencyProperty.RegisterReadOnly(nameof(DefaultDriveType), typeof(DriveType?), typeof(FileSystemItemVM),
@@ -149,7 +191,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         /// Gets .
         /// </summary>
         /// <value>The .</value>
-        public int SymbolicNameCount { get => (int)GetValue(SymbolicNameCountProperty); private set => SetValue(SymbolicNameCountPropertyKey, value); }
+        public int SymbolicNameCount { get => (int)GetValue(SymbolicNameCountProperty); internal set => SetValue(SymbolicNameCountPropertyKey, value); }
 
         /// <summary>
         /// Called when the value of the <see cref="SymbolicNameCount"/> dependency property has changed.
@@ -179,6 +221,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             MaxNameLength = model.MaxNameLength;
             Notes = model.Notes;
             IsReadOnly = model.ReadOnly;
+            SetValue(OpenVolumesCommandPropertyKey, new Commands.RelayCommand(RaiseOpenVolumes));
         }
 
         /// <summary>
