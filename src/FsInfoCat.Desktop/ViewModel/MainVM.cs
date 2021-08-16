@@ -25,19 +25,17 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         public event DependencyPropertyChangedEventHandler NavigatedContentPropertyChanged;
 
-        private static readonly DependencyPropertyKey NavigatedContentPropertyKey = DependencyProperty.RegisterReadOnly(nameof(NavigatedContent), typeof(object), typeof(MainVM),
-                new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as MainVM)?.OnNavigatedContentPropertyChanged(e)));
-
         /// <summary>
         /// Identifies the <see cref="NavigatedContent"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty NavigatedContentProperty = NavigatedContentPropertyKey.DependencyProperty;
+        public static readonly DependencyProperty NavigatedContentProperty = DependencyProperty.Register(nameof(NavigatedContent), typeof(object), typeof(MainVM),
+                new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as MainVM)?.OnNavigatedContentPropertyChanged(e)));
 
         /// <summary>
         /// Gets or sets .
         /// </summary>
         /// <value>The .</value>
-        public object NavigatedContent { get => (object)GetValue(NavigatedContentProperty); private set => SetValue(NavigatedContentPropertyKey, value); }
+        public object NavigatedContent { get => (object)GetValue(NavigatedContentProperty); set => SetValue(NavigatedContentProperty, value); }
 
         /// <summary>
         /// Called when the <see cref="PropertyChangedCallback">PropertyChanged</see> event on <see cref="NavigatedContentProperty"/> is raised.
@@ -63,6 +61,7 @@ namespace FsInfoCat.Desktop.ViewModel
         }
 
         #endregion
+
         public MainVM()
         {
         }

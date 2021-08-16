@@ -1,3 +1,4 @@
+using FsInfoCat.Desktop.ViewModel.AsyncOps;
 using FsInfoCat.Local;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
@@ -17,15 +18,13 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 {
     public class CrawlConfigurationsPageVM : DbEntityListingPageVM<CrawlConfiguration, CrawlConfigItemVM>
     {
-        private readonly List<CrawlConfigItemVM> _allCrawlConfigurations = new();
-        private Task _lastDataLoadTask;
-
         #region Listing Options Members
 
         #region ShowActiveCrawlConfigurationsOnly Property Members
 
-        public static readonly DependencyProperty ShowActiveCrawlConfigurationsOnlyProperty = DependencyProperty.Register(nameof(ShowActiveCrawlConfigurationsOnly), typeof(bool), typeof(CrawlConfigurationsPageVM),
-                new PropertyMetadata(true, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as CrawlConfigurationsPageVM).OnShowActiveCrawlConfigurationsOnlyPropertyChanged((bool)e.OldValue, (bool)e.NewValue)));
+        public static readonly DependencyProperty ShowActiveCrawlConfigurationsOnlyProperty = DependencyProperty.Register(nameof(ShowActiveCrawlConfigurationsOnly),
+            typeof(bool), typeof(CrawlConfigurationsPageVM), new PropertyMetadata(true, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
+            (d as CrawlConfigurationsPageVM).OnShowActiveCrawlConfigurationsOnlyPropertyChanged((bool)e.OldValue, (bool)e.NewValue)));
 
         public bool ShowActiveCrawlConfigurationsOnly
         {
@@ -40,7 +39,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
                 ShowInactiveCrawlConfigurationsOnly = false;
                 ShowAllCrawlConfigurations = false;
                 CrawlConfigItemVM selectedCrawlConfig = SelectedItem;
-                LoadAsync(true).ContinueWith(t => OnItemsReloaded(selectedCrawlConfig));
+                LoadItemsAsync().ContinueWith(t => OnItemsReloaded(selectedCrawlConfig));
             }
             else if (!(ShowInactiveCrawlConfigurationsOnly || ShowAllCrawlConfigurations))
                 ShowInactiveCrawlConfigurationsOnly = true;
@@ -50,8 +49,9 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 
         #region ShowInactiveCrawlConfigurationsOnly Property Members
 
-        public static readonly DependencyProperty ShowInactiveCrawlConfigurationsOnlyProperty = DependencyProperty.Register(nameof(ShowInactiveCrawlConfigurationsOnly), typeof(bool), typeof(CrawlConfigurationsPageVM),
-                new PropertyMetadata(false, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as CrawlConfigurationsPageVM).OnShowInactiveCrawlConfigurationsOnlyPropertyChanged((bool)e.OldValue, (bool)e.NewValue)));
+        public static readonly DependencyProperty ShowInactiveCrawlConfigurationsOnlyProperty = DependencyProperty.Register(nameof(ShowInactiveCrawlConfigurationsOnly),
+            typeof(bool), typeof(CrawlConfigurationsPageVM), new PropertyMetadata(false, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
+            (d as CrawlConfigurationsPageVM).OnShowInactiveCrawlConfigurationsOnlyPropertyChanged((bool)e.OldValue, (bool)e.NewValue)));
 
         public bool ShowInactiveCrawlConfigurationsOnly
         {
@@ -66,7 +66,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
                 ShowActiveCrawlConfigurationsOnly = false;
                 ShowAllCrawlConfigurations = false;
                 CrawlConfigItemVM selectedCrawlConfig = SelectedItem;
-                LoadAsync(false).ContinueWith(t => OnItemsReloaded(selectedCrawlConfig));
+                LoadItemsAsync().ContinueWith(t => OnItemsReloaded(selectedCrawlConfig));
             }
             else if (!(ShowActiveCrawlConfigurationsOnly || ShowAllCrawlConfigurations))
                 ShowActiveCrawlConfigurationsOnly = true;
@@ -76,8 +76,9 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 
         #region ShowAllCrawlConfigurations Property Members
 
-        public static readonly DependencyProperty ShowAllCrawlConfigurationsProperty = DependencyProperty.Register(nameof(ShowAllCrawlConfigurations), typeof(bool), typeof(CrawlConfigurationsPageVM),
-                new PropertyMetadata(false, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as CrawlConfigurationsPageVM).OnShowAllCrawlConfigurationsPropertyChanged((bool)e.OldValue, (bool)e.NewValue)));
+        public static readonly DependencyProperty ShowAllCrawlConfigurationsProperty = DependencyProperty.Register(nameof(ShowAllCrawlConfigurations), typeof(bool),
+            typeof(CrawlConfigurationsPageVM), new PropertyMetadata(false, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
+            (d as CrawlConfigurationsPageVM).OnShowAllCrawlConfigurationsPropertyChanged((bool)e.OldValue, (bool)e.NewValue)));
 
         public bool ShowAllCrawlConfigurations
         {
@@ -92,7 +93,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
                 ShowActiveCrawlConfigurationsOnly = false;
                 ShowInactiveCrawlConfigurationsOnly = false;
                 CrawlConfigItemVM selectedCrawlConfig = SelectedItem;
-                LoadAsync(null).ContinueWith(t => OnItemsReloaded(selectedCrawlConfig));
+                LoadItemsAsync().ContinueWith(t => OnItemsReloaded(selectedCrawlConfig));
             }
             else if (!(ShowActiveCrawlConfigurationsOnly || ShowInactiveCrawlConfigurationsOnly))
                 ShowActiveCrawlConfigurationsOnly = true;
@@ -101,23 +102,12 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         #endregion
 
         #endregion
-        #region ItemsLoadOp Property Members
 
-        private static readonly DependencyPropertyKey ItemsLoadOpPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ItemsLoadOp), typeof(AsyncOps.AsyncOpResultManagerViewModel<bool?, int>), typeof(CrawlConfigurationsPageVM),
-                new PropertyMetadata(new AsyncOps.AsyncOpResultManagerViewModel<bool?, int>()));
-
-        /// <summary>
-        /// Identifies the <see cref="ItemsLoadOp"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty ItemsLoadOpProperty = ItemsLoadOpPropertyKey.DependencyProperty;
-
-        /// <summary>
-        /// Gets .
-        /// </summary>
-        /// <value>The .</value>
-        public AsyncOps.AsyncOpResultManagerViewModel<bool?, int> ItemsLoadOp { get => (AsyncOps.AsyncOpResultManagerViewModel<bool?, int>)GetValue(ItemsLoadOpProperty); private set => SetValue(ItemsLoadOpPropertyKey, value); }
-
-        #endregion
+        protected override Func<IStatusListener, Task<int>> GetItemsLoaderFactory()
+        {
+            bool? loadOptions = ShowAllCrawlConfigurations ? null : ShowActiveCrawlConfigurationsOnly;
+            return listener => Task.Run(async () => await LoadItemsAsync(loadOptions, listener));
+        }
 
         private void OnItemsReloaded(CrawlConfigItemVM toSelect)
         {
@@ -136,14 +126,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             });
         }
 
-        internal Task<int> LoadAsync(bool? showActive)
-        {
-            AsyncOps.AsyncFuncOpViewModel<bool?, int> bgOp = BgOps.FromAsync("Loading items", "Connecting to database...",
-               showActive, ItemsLoadOp, LoadItemsAsync);
-            return bgOp.GetTask();
-        }
-
-        private async Task<int> LoadItemsAsync(bool? showActive, AsyncOps.IStatusListener<bool?> statusListener)
+        private async Task<int> LoadItemsAsync(bool? showActive, IStatusListener statusListener)
         {
             statusListener.CancellationToken.ThrowIfCancellationRequested();
             IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
@@ -207,18 +190,6 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         protected override bool PromptItemDeleting(CrawlConfigItemVM item, object parameter)
         {
             throw new NotImplementedException();
-        }
-
-        protected override void OnNavigatedTo(MainVM mainVM)
-        {
-            LoadAsync(ShowActiveCrawlConfigurationsOnly ? true : (ShowInactiveCrawlConfigurationsOnly ? false : null)).ContinueWith(t => OnItemsReloaded(null));
-            base.OnNavigatedTo(mainVM);
-        }
-
-        protected override void OnNavigatedFrom(MainVM mainVM)
-        {
-            ItemsLoadOp.CancelAll();
-            base.OnNavigatedFrom(mainVM);
         }
     }
 }

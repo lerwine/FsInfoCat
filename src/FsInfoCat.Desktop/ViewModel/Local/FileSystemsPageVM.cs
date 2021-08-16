@@ -1,3 +1,4 @@
+using FsInfoCat.Desktop.ViewModel.AsyncOps;
 using FsInfoCat.Local;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,42 +15,118 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 {
     public class FileSystemsPageVM : DbEntityListingPageVM<FileSystem, FileSystemItemVM>
     {
-        #region ItemsLoadOp Property Members
-
-        private static readonly DependencyPropertyKey ItemsLoadOpPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ItemsLoadOp), typeof(AsyncOps.AsyncOpResultManagerViewModel<bool?, int>), typeof(FileSystemsPageVM),
-                new PropertyMetadata(new AsyncOps.AsyncOpResultManagerViewModel<bool?, int>()));
+        #region ShowActiveOnly Property Members
 
         /// <summary>
-        /// Identifies the <see cref="ItemsLoadOp"/> dependency property.
+        /// Identifies the <see cref="ShowActiveOnly"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty ItemsLoadOpProperty = ItemsLoadOpPropertyKey.DependencyProperty;
+        public static readonly DependencyProperty ShowActiveOnlyProperty = DependencyProperty.Register(nameof(ShowActiveOnly), typeof(bool), typeof(FileSystemsPageVM),
+                new PropertyMetadata(true, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as FileSystemsPageVM)?.OnShowActiveOnlyPropertyChanged((bool)e.OldValue, (bool)e.NewValue)));
 
         /// <summary>
-        /// Gets .
+        /// Gets or sets .
         /// </summary>
         /// <value>The .</value>
-        public AsyncOps.AsyncOpResultManagerViewModel<bool?, int> ItemsLoadOp { get => (AsyncOps.AsyncOpResultManagerViewModel<bool?, int>)GetValue(ItemsLoadOpProperty); private set => SetValue(ItemsLoadOpPropertyKey, value); }
+        public bool ShowActiveOnly { get => (bool)GetValue(ShowActiveOnlyProperty); set => SetValue(ShowActiveOnlyProperty, value); }
+
+        /// <summary>
+        /// Called when the value of the <see cref="ShowActiveOnly"/> dependency property has changed.
+        /// </summary>
+        /// <param name="oldValue">The previous value of the <see cref="ShowActiveOnly"/> property.</param>
+        /// <param name="newValue">The new value of the <see cref="ShowActiveOnly"/> property.</param>
+        private void OnShowActiveOnlyPropertyChanged(bool oldValue, bool newValue)
+        {
+            if (newValue)
+            {
+                ShowInactiveOnly = ShowAllItems = false;
+                LoadItemsAsync();
+            }
+            else if (!(ShowInactiveOnly || ShowAllItems))
+                ShowInactiveOnly = true;
+        }
+
+        #endregion
+        #region ShowInactiveOnly Property Members
+
+        /// <summary>
+        /// Identifies the <see cref="ShowInactiveOnly"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ShowInactiveOnlyProperty = DependencyProperty.Register(nameof(ShowInactiveOnly), typeof(bool), typeof(FileSystemsPageVM),
+                new PropertyMetadata(false, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as FileSystemsPageVM)?.OnShowInactiveOnlyPropertyChanged((bool)e.OldValue, (bool)e.NewValue)));
+
+        /// <summary>
+        /// Gets or sets .
+        /// </summary>
+        /// <value>The .</value>
+        public bool ShowInactiveOnly { get => (bool)GetValue(ShowInactiveOnlyProperty); set => SetValue(ShowInactiveOnlyProperty, value); }
+
+        /// <summary>
+        /// Called when the value of the <see cref="ShowInactiveOnly"/> dependency property has changed.
+        /// </summary>
+        /// <param name="oldValue">The previous value of the <see cref="ShowInactiveOnly"/> property.</param>
+        /// <param name="newValue">The new value of the <see cref="ShowInactiveOnly"/> property.</param>
+        private void OnShowInactiveOnlyPropertyChanged(bool oldValue, bool newValue)
+        {
+            if (newValue)
+            {
+                ShowActiveOnly = ShowAllItems = false;
+                LoadItemsAsync();
+            }
+            else if (!(ShowActiveOnly || ShowAllItems))
+                ShowActiveOnly = true;
+        }
+
+        #endregion
+        #region ShowAllItems Property Members
+
+        /// <summary>
+        /// Identifies the <see cref="ShowAllItems"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ShowAllItemsProperty = DependencyProperty.Register(nameof(ShowAllItems), typeof(bool), typeof(FileSystemsPageVM),
+                new PropertyMetadata(false, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as FileSystemsPageVM)?.OnShowAllItemsPropertyChanged((bool)e.OldValue, (bool)e.NewValue)));
+
+        /// <summary>
+        /// Gets or sets .
+        /// </summary>
+        /// <value>The .</value>
+        public bool ShowAllItems { get => (bool)GetValue(ShowAllItemsProperty); set => SetValue(ShowAllItemsProperty, value); }
+
+        /// <summary>
+        /// Called when the value of the <see cref="ShowAllItems"/> dependency property has changed.
+        /// </summary>
+        /// <param name="oldValue">The previous value of the <see cref="ShowAllItems"/> property.</param>
+        /// <param name="newValue">The new value of the <see cref="ShowAllItems"/> property.</param>
+        private void OnShowAllItemsPropertyChanged(bool oldValue, bool newValue)
+        {
+            if (newValue)
+            {
+                ShowActiveOnly = ShowInactiveOnly = false;
+                LoadItemsAsync();
+            }
+            else if (!(ShowActiveOnly || ShowInactiveOnly))
+                ShowActiveOnly = true;
+        }
 
         #endregion
 
-        internal Task<int> LoadAsync(bool? isInactive)
+        protected override Func<IStatusListener, Task<int>> GetItemsLoaderFactory()
         {
-            AsyncOps.AsyncFuncOpViewModel<bool?, int> bgOp = BgOps.FromAsync("Loading items", "Connecting to database...", isInactive, ItemsLoadOp, LoadItemsAsync);
-            return bgOp.GetTask();
+            bool? showActive = ShowAllItems ? null : ShowActiveOnly;
+            return listener => Task.Run(async () => await LoadItemsAsync(showActive, listener));
         }
 
-        private async Task<int> LoadItemsAsync(bool? isInactive, AsyncOps.IStatusListener<bool?> statusListener)
+        private async Task<int> LoadItemsAsync(bool? showActive, IStatusListener statusListener)
         {
             statusListener.CancellationToken.ThrowIfCancellationRequested();
             IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
             LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             IQueryable<EntityAndCounts> items;
-            if (isInactive.HasValue)
+            if (showActive.HasValue)
             {
-                if (isInactive.Value)
-                    items = from f in dbContext.FileSystems where f.IsInactive select new EntityAndCounts(f, f.Volumes.Count(), f.SymbolicNames.Count());
-                else
+                if (showActive.Value)
                     items = from f in dbContext.FileSystems where !f.IsInactive select new EntityAndCounts(f, f.Volumes.Count(), f.SymbolicNames.Count());
+                else
+                    items = from f in dbContext.FileSystems where f.IsInactive select new EntityAndCounts(f, f.Volumes.Count(), f.SymbolicNames.Count());
             }
             else
                 items = from f in dbContext.FileSystems select new EntityAndCounts(f, f.Volumes.Count(), f.SymbolicNames.Count());

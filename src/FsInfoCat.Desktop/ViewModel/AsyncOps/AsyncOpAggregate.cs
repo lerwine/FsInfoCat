@@ -268,12 +268,14 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
             OnOperationCreated(op).ContinueWith(task =>
             {
                 if (task.IsCanceled)
-                    _logger.LogWarning("Background operation canceled: Title = {Title}; Initial State = {InitialState}; Concurrency ID = {ConcurrencyId}; Task ID = {TaskId}", title, concurrencyId, task.Id);
+                    _logger.LogWarning("Background operation canceled: Title = {Title}; Concurrency ID = {ConcurrencyId}; Task ID = {TaskId}",
+                        title, concurrencyId, task.Id);
                 else if (task.IsFaulted)
-                    _logger.LogError(task.Exception, "Background operation faulted: Message = {Message}; Operation Title = {Title}; Initial State = {InitialState}; Concurrency ID = {ConcurrencyId}; Task ID = {TaskId}",
+                    _logger.LogError(task.Exception, "Background operation faulted: Message = {Message}; Operation Title = {Title}; Concurrency ID = {ConcurrencyId}; Task ID = {TaskId}",
                         task.Exception.Message, title, concurrencyId, task.Id);
                 else
-                    _logger.LogDebug("Background operation ran to completion: Title = {Title}; Initial State = {InitialState}; Concurrency ID = {ConcurrencyId}; Task ID = {TaskId}", title, concurrencyId, task.Id);
+                    _logger.LogDebug("Background operation ran to completion: Title = {Title}; Concurrency ID = {ConcurrencyId}; Task ID = {TaskId}",
+                        title, concurrencyId, task.Id);
                 using (loggerScope)
                     OnOperationCompleted(operationManager, task, op);
             });

@@ -1,4 +1,4 @@
-﻿using FsInfoCat.Local;
+using FsInfoCat.Local;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.DependencyInjection;
@@ -311,7 +311,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         /// <param name="model">The <see cref="LocalDbEntity"/> of type <typeparamref name="TDbEntity"/> to be modified.</param>
         /// <returns><see langword="true"/> if modifications were successfully saved to the databaase; otherwise <see langword="false"/> to indicate the user cancelled or there was
         /// an error that prohibited successful initialization.</returns>
-        internal static bool Edit<TWindow, TVm>([DisallowNull] CrawlConfiguration model)
+        internal static bool EditObsolete<TWindow, TVm>([DisallowNull] CrawlConfiguration model)
             where TWindow : Window, new()
             where TVm : EditDbEntityVM<TDbEntity>, new()
         {
@@ -328,7 +328,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             return window.ShowDialog() ?? false;
         }
 
-        public static bool Edit<TWindow, TVm, TLoadResult>(IEntityLoader<TDbEntity, TVm, TLoadResult> entityLoader, out TDbEntity model, out bool isNew)
+        public static bool EditObsolete<TWindow, TVm, TLoadResult>(IEntityLoader<TDbEntity, TVm, TLoadResult> entityLoader, out TDbEntity model, out bool isNew)
             where TWindow : Window, new()
             where TVm : EditDbEntityVM<TDbEntity>, new()
         {
@@ -407,12 +407,12 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         /// <param name="isNew"><see langword="true"/> if a new entity was inserted into the database; otherwise, <see langword="false"/>.</param>
         /// <returns><see langword="true"/> if any changes were saved to the database or if a new entity was inserted into the database;
         /// otherwise <see langword="false"/> to indicate the user cancelled or there was an error that prohibited successful initialization.</returns>
-        public static bool Edit<TWindow, TVm>([DisallowNull] string loadingTitle, [DisallowNull] string initialLoadingMessage,
+        public static bool EditObsolete<TWindow, TVm>([DisallowNull] string loadingTitle, [DisallowNull] string initialLoadingMessage,
             [DisallowNull] Func<LocalDbContext, AsyncOps.IStatusListener, Task<TDbEntity>> getDbEntityOpAsync, out TDbEntity model, out bool isNew)
             where TWindow : Window, new()
             where TVm : EditDbEntityVM<TDbEntity>, new()
         {
-            return Edit<TWindow, TVm, TDbEntity>(new EntityLoader<TDbEntity, TVm>(loadingTitle, initialLoadingMessage, getDbEntityOpAsync),
+            return EditObsolete<TWindow, TVm, TDbEntity>(new EntityLoader<TDbEntity, TVm>(loadingTitle, initialLoadingMessage, getDbEntityOpAsync),
                 out model, out isNew);
         }
 

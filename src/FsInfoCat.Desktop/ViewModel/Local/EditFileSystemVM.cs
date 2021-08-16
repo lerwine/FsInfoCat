@@ -1,4 +1,4 @@
-﻿using FsInfoCat.Local;
+using FsInfoCat.Local;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.DependencyInjection;
@@ -130,7 +130,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         private static async Task<FileSystem> SaveChangesAsync(ModelViewModel state,
             AsyncOps.AsyncFuncOpViewModel<ModelViewModel, FileSystem>.StatusListenerImpl statusListener)
         {
-            EditFileSystemVM vm = state.ViewModel ?? throw new ArgumentException($"{nameof(state.ViewModel)} cannot be null.", nameof(state));
+            EditFileSystemVM vm = (state.ViewModel as EditFileSystemVM) ?? throw new ArgumentException($"{nameof(state.ViewModel)} cannot be null.", nameof(state));
             using IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
             using LocalDbContext dbContext = serviceScope.ServiceProvider.GetService<LocalDbContext>();
             EntityEntry<FileSystem> entry;
@@ -245,11 +245,11 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             Notes = model.Notes;
             SelectedDriveType = model.DefaultDriveType ?? DriveType.Unknown;
             HasDefaultDriveType = model.DefaultDriveType.HasValue;
-            Volumes = model.Volumes;
+            //Volumes = model.Volumes;
             IsInactive = model.IsInactive;
             MaxNameLength = model.MaxNameLength;
             ReadOnly = model.ReadOnly;
-            SymbolicNames = model.SymbolicNames;
+            //SymbolicNames = model.SymbolicNames;
             base.Initialize(model, state);
         }
 
@@ -259,8 +259,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         {
             model.DisplayName = DisplayName;
             model.Notes = Notes;
-            model.DefaultDriveType = DefaultDriveType;
-            throw new NotImplementedException();
+            model.DefaultDriveType = HasDefaultDriveType ? SelectedDriveType : null;
         }
     }
 }

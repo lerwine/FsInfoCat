@@ -115,7 +115,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         #region BgOps Property Members
 
         private static readonly DependencyPropertyKey BgOpsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(BgOps), typeof(AsyncOps.AsyncOpAggregate), typeof(DbEntityListingPageVM<TDbEntity, TItemVM>),
-                new PropertyMetadata(new AsyncOps.AsyncOpAggregate()));
+                new PropertyMetadata());
 
         /// <summary>
         /// Identifies the <see cref="BgOps"/> dependency property.
@@ -132,7 +132,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         #region EntityDbOp Property Members
 
         private static readonly DependencyPropertyKey EntityDbOpPropertyKey = DependencyProperty.RegisterReadOnly(nameof(EntityDbOp), typeof(AsyncOps.AsyncOpResultManagerViewModel<TDbEntity, bool?>), typeof(DbEntityListingPageVM<TDbEntity, TItemVM>),
-                new PropertyMetadata(new AsyncOps.AsyncOpResultManagerViewModel<TDbEntity, bool?>()));
+                new PropertyMetadata(null));
 
         /// <summary>
         /// Identifies the <see cref="EntityDbOp"/> dependency property.
@@ -146,12 +146,41 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         public AsyncOps.AsyncOpResultManagerViewModel<TDbEntity, bool?> EntityDbOp => (AsyncOps.AsyncOpResultManagerViewModel<TDbEntity, bool?>)GetValue(EntityDbOpProperty);
 
         #endregion
+        #region ListingLoader Property Members
+
+        private static readonly DependencyPropertyKey ListingLoaderPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ListingLoader), typeof(AsyncOps.AsyncOpResultManagerViewModel<int>), typeof(DbEntityListingPageVM<TDbEntity, TItemVM>),
+                new PropertyMetadata(null));
+
+        /// <summary>
+        /// Identifies the <see cref="ListingLoader"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ListingLoaderProperty = ListingLoaderPropertyKey.DependencyProperty;
+
+        /// <summary>
+        /// Gets .
+        /// </summary>
+        /// <value>The .</value>
+        public AsyncOps.AsyncOpResultManagerViewModel<int> ListingLoader { get => (AsyncOps.AsyncOpResultManagerViewModel<int>)GetValue(ListingLoaderProperty); private set => SetValue(ListingLoaderPropertyKey, value); }
+
+        #endregion
         public DbEntityListingPageVM()
         {
             Logger = App.GetLogger(this);
+            SetValue(BgOpsPropertyKey, new AsyncOps.AsyncOpAggregate());
+            SetValue(EntityDbOpPropertyKey, new AsyncOps.AsyncOpResultManagerViewModel<TDbEntity, bool?>());
+            SetValue(ListingLoaderPropertyKey, new AsyncOps.AsyncOpResultManagerViewModel<int>());
             SetValue(ItemsPropertyKey, new ReadOnlyObservableCollection<TItemVM>(_backingItems));
             SetValue(NewItemClickCommandPropertyKey, new Commands.RelayCommand(OnNewItemClick));
         }
+
+        internal Task<int> LoadItemsAsync()
+        {
+            ListingLoader.CancelAll();
+            AsyncOps.AsyncFuncOpViewModel<int> bgOp = BgOps.FromAsync("Loading items", "Connecting to database...", ListingLoader, GetItemsLoaderFactory());
+            return bgOp.GetTask();
+        }
+
+        protected abstract Func<AsyncOps.IStatusListener, Task<int>> GetItemsLoaderFactory();
 
         protected abstract TItemVM CreateItem(TDbEntity entity);
 
@@ -364,6 +393,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 
         protected virtual void OnNavigatedTo(MainVM mainVM)
         {
+            LoadItemsAsync();
             // TODO: Do initial load from DB
         }
 

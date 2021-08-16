@@ -1,3 +1,4 @@
+using FsInfoCat.Desktop.ViewModel.AsyncOps;
 using FsInfoCat.Local;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
@@ -101,6 +102,11 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         }
 
         protected override bool ShowModalItemEditWindow(VolumeItemVM item, object parameter)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override Func<IStatusListener, Task<int>> GetItemsLoaderFactory()
         {
             throw new NotImplementedException();
         }

@@ -132,6 +132,6 @@
             </WrapPanel>
         </StackPanel>
         <GridSplitter Grid.Column="1" HorizontalAlignment="Left" Grid.RowSpan="2" Style="{DynamicResource VerticalGridSplitterStyle}"/>
-        <View:AsyncBgModalControl Grid.ColumnSpan="2" d:IsHidden="True" DataContext="{Binding OpAggregate, Mode=OneWay}" />
+        <View:AsyncBgModalControl Grid.ColumnSpan="2" d:IsHidden="True" DataContext="{Binding BgOps, Mode=OneWay}" />
     </Grid>
 </Page>
