@@ -1750,4 +1750,13 @@
   <data name="ErrorMessage_TTLInvalid" xml:space="preserve">
     <value>Maximum duration cannot be less than 1 minute.</value>
   </data>
+  <data name="FormatMessage_AddingNewVolume" xml:space="preserve">
+    <value>Saving new Volume "{0}" ({1}).</value>
+  </data>
+  <data name="FormatMessage_DeletingVolume" xml:space="preserve">
+    <value>Deleting Volume "{0}" ({1}).</value>
+  </data>
+  <data name="FormatMessage_SavingVolumeChanges" xml:space="preserve">
+    <value>Saving changes to Volume "{0}" ({1}).</value>
+  </data>
 </root>

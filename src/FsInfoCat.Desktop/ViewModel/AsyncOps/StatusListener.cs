@@ -61,12 +61,13 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
                 /// The default value is <see cref="DispatcherPriority.Background"/>.</param>
                 /// <remarks>The current <see cref="CancellationToken"/> is passed to the <see cref="Dispatcher.Invoke(Action, DispatcherPriority, CancellationToken, TimeSpan)"/> method
                 /// that is used to update the properties in the UI thread.</remarks>
-                public void SetStateAndMessage(TState state, [AllowNull] string message, StatusMessageLevel level, TimeSpan timeout, DispatcherPriority priority = DispatcherPriority.Background) => _item.Dispatcher.Invoke(() =>
-                {
-                    _item.State = state;
-                    _item.MessageLevel = level;
-                    _item.StatusMessage = message ?? "";
-                }, priority, CancellationToken, timeout);
+                public void SetStateAndMessage(TState state, [AllowNull] string message, StatusMessageLevel level, TimeSpan timeout, DispatcherPriority priority = DispatcherPriority.Background) =>
+                    _item.Dispatcher.CheckInvoke(CancellationToken, timeout, () =>
+                    {
+                        _item.State = state;
+                        _item.MessageLevel = level;
+                        _item.StatusMessage = message ?? "";
+                    }, priority);
 
                 /// <summary>
                 /// Sets the current background operation state value along with a status message and level.
@@ -79,12 +80,12 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
                 /// <remarks>The current <see cref="CancellationToken"/> is passed to the <see cref="Dispatcher.Invoke(Action, DispatcherPriority, CancellationToken)"/> method
                 /// that is used to update the properties in the UI thread.</remarks>
                 public void SetStateAndMessage(TState state, [AllowNull] string message, StatusMessageLevel level, DispatcherPriority priority = DispatcherPriority.Background) =>
-                    _item.Dispatcher.Invoke(() =>
+                    _item.Dispatcher.CheckInvoke(CancellationToken, () =>
                     {
                         _item.State = state;
                         _item.MessageLevel = level;
                         _item.StatusMessage = message ?? "";
-                    }, priority, CancellationToken);
+                    }, priority);
 
                 /// <summary>
                 /// Sets the current background operation state value along with a status message using the current <see cref="MessageLevel"/>.
@@ -96,11 +97,12 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
                 /// The default value is <see cref="DispatcherPriority.Background"/>.</param>
                 /// <remarks>The current <see cref="CancellationToken"/> is passed to the <see cref="Dispatcher.Invoke(Action, DispatcherPriority, CancellationToken, TimeSpan)"/> method
                 /// that is used to update the properties in the UI thread.</remarks>
-                public void SetStateAndMessage(TState state, [AllowNull] string message, TimeSpan timeout, DispatcherPriority priority = DispatcherPriority.Background) => _item.Dispatcher.Invoke(() =>
+                public void SetStateAndMessage(TState state, [AllowNull] string message, TimeSpan timeout, DispatcherPriority priority = DispatcherPriority.Background) =>
+                    _item.Dispatcher.CheckInvoke(CancellationToken, timeout, () =>
                 {
                     _item.State = state;
                     _item.StatusMessage = message ?? "";
-                }, priority, CancellationToken, timeout);
+                }, priority);
 
                 /// <summary>
                 /// Sets the current background operation state value along with a status message using the current <see cref="MessageLevel"/>.
@@ -112,11 +114,11 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
                 /// <remarks>The current <see cref="CancellationToken"/> is passed to the <see cref="Dispatcher.Invoke(Action, DispatcherPriority, CancellationToken)"/> method
                 /// that is used to update the properties in the UI thread.</remarks>
                 public void SetStateAndMessage(TState state, [AllowNull] string message, DispatcherPriority priority = DispatcherPriority.Background) =>
-                    _item.Dispatcher.Invoke(() =>
+                    _item.Dispatcher.CheckInvoke(CancellationToken, () =>
                     {
                         _item.State = state;
                         _item.StatusMessage = message ?? "";
-                    }, priority, CancellationToken);
+                    }, priority);
 
                 /// <summary>
                 /// Asyncrhonously sets the current background operation state value along with a status message and level.
@@ -164,11 +166,11 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
                 /// <remarks>The current <see cref="CancellationToken"/> is passed to the <see cref="Dispatcher.Invoke(Action, DispatcherPriority, CancellationToken, TimeSpan)"/> method
                 /// that is used to update the properties in the UI thread.</remarks>
                 public void SetMessage([AllowNull] string message, StatusMessageLevel level, TimeSpan timeout, DispatcherPriority priority = DispatcherPriority.Background) =>
-                    _item.Dispatcher.Invoke(() =>
+                    _item.Dispatcher.CheckInvoke(CancellationToken, timeout, () =>
                     {
                         _item.MessageLevel = level;
                         _item.StatusMessage = message ?? "";
-                    }, priority, CancellationToken, timeout);
+                    }, priority);
 
                 /// <summary>
                 /// Sets the values of the <see cref="StatusMessage"/> and <see cref="MessageLevel"/> properties for the current background operation.
@@ -180,11 +182,11 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
                 /// <remarks>The current <see cref="CancellationToken"/> is passed to the <see cref="Dispatcher.Invoke(Action, DispatcherPriority, CancellationToken)"/> method
                 /// that is used to update the properties in the UI thread.</remarks>
                 public void SetMessage([AllowNull] string message, StatusMessageLevel level, DispatcherPriority priority = DispatcherPriority.Background) =>
-                    _item.Dispatcher.Invoke(() =>
+                    _item.Dispatcher.CheckInvoke(CancellationToken, () =>
                     {
                         _item.MessageLevel = level;
                         _item.StatusMessage = message ?? "";
-                    }, priority, CancellationToken);
+                    }, priority);
 
                 /// <summary>
                 /// Sets the value of the <see cref="StatusMessage"/> property for the current background operation.
@@ -196,7 +198,7 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
                 /// <remarks>The current <see cref="CancellationToken"/> is passed to the <see cref="Dispatcher.Invoke(Action, DispatcherPriority, CancellationToken, TimeSpan)"/> method
                 /// that is used to update the property in the UI thread.</remarks>
                 public void SetMessage([AllowNull] string message, TimeSpan timeout, DispatcherPriority priority = DispatcherPriority.Background) =>
-                    _item.Dispatcher.Invoke(() => _item.StatusMessage = message ?? "", priority, CancellationToken, timeout);
+                    _item.Dispatcher.CheckInvoke(CancellationToken, timeout, () => _item.StatusMessage = message ?? "", priority);
 
                 /// <summary>
                 /// Asynchronously sets the values of the <see cref="StatusMessage"/> and <see cref="MessageLevel"/> properties for the current background operation.
@@ -224,7 +226,7 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
                 /// <remarks>The current <see cref="CancellationToken"/> is passed to the <see cref="Dispatcher.Invoke(Action, DispatcherPriority, CancellationToken)"/> method
                 /// that is used to update the property in the UI thread.</remarks>
                 public void SetMessage([AllowNull] string message, DispatcherPriority priority = DispatcherPriority.Background) =>
-                    _item.Dispatcher.Invoke(() => _item.StatusMessage = message ?? "", priority, CancellationToken);
+                    _item.Dispatcher.CheckInvoke(CancellationToken, () => _item.StatusMessage = message ?? "", priority);
 
                 /// <summary>
                 /// Asynchronously sets the value of the <see cref="StatusMessage"/> property for the current background operation.
@@ -248,7 +250,7 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
                 /// <remarks>The current <see cref="CancellationToken"/> is passed to the <see cref="Dispatcher.Invoke(Action, DispatcherPriority, CancellationToken, TimeSpan)"/> method
                 /// that is used to update the property in the UI thread.</remarks>
                 public void SetState(TState state, TimeSpan timeout, DispatcherPriority priority = DispatcherPriority.Background) =>
-                    _item.Dispatcher.Invoke(() => _item.State = state, priority, CancellationToken, timeout);
+                    _item.Dispatcher.CheckInvoke(CancellationToken, timeout, () => _item.State = state, priority);
 
                 /// <summary>
                 /// Sets the value of the <see cref="State"/> property for the current background operation.
@@ -258,7 +260,8 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
                 /// The default value is <see cref="DispatcherPriority.Background"/>.</param>
                 /// <remarks>The current <see cref="CancellationToken"/> is passed to the <see cref="Dispatcher.Invoke(Action, DispatcherPriority, CancellationToken)"/> method
                 /// that is used to update the property in the UI thread.</remarks>
-                public void SetState(TState state, DispatcherPriority priority = DispatcherPriority.Background) => _item.Dispatcher.Invoke(() => _item.State = state, priority, CancellationToken);
+                public void SetState(TState state, DispatcherPriority priority = DispatcherPriority.Background) =>
+                    _item.Dispatcher.CheckInvoke(CancellationToken, () => _item.State = state, priority);
 
                 /// <summary>
                 /// Asynchronously sets the value of the <see cref="State"/> property for the current background operation.

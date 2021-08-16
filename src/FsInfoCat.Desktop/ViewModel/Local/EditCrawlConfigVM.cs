@@ -19,59 +19,26 @@ namespace FsInfoCat.Desktop.ViewModel.Local
     {
         private (Subdirectory Root, string Path)? _validatedPath;
 
-        /// <summary>
-        /// Occurs when the window should be closed by setting <see cref="Window.DialogResult"/> to <see langword="true"/>.
-        /// </summary>
-        public event EventHandler CloseSuccess;
-
-        /// <summary>
-        /// Occurs when the window should be closed by setting <see cref="Window.DialogResult"/> to <see langword="false"/>.
-        /// </summary>
-        public event EventHandler CloseCancel;
-
-        /// <summary>
-        /// Occurs when the validation errors have changed for a property or for the entire entity.
-        /// </summary>
-        public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
-
         #region Initialization Members
 
         public EditCrawlConfigVM()
         {
             SetValue(SelectRootCommandPropertyKey, new Commands.RelayCommand(OnSelectRootExecute));
-            SetValue(SaveCommandPropertyKey, new Commands.RelayCommand(OnSaveExecute));
-            SetValue(CancelCommandPropertyKey, new Commands.RelayCommand(OnCancelExecute));
-            ValidationMessageTracker validation = new();
-            SetValue(ValidationPropertyKey, validation);
-            ChangeStateTracker changeTracker = new();
-            SetValue(ChangeTrackerPropertyKey, changeTracker);
-#if DEBUG
-            if (DesignerProperties.GetIsInDesignMode(this))
-                return;
-#endif
-            validation.ErrorsChanged += Validation_ErrorsChanged;
-            validation.AnyInvalidPropertyChanged += OnValidationStateChanged;
-            changeTracker.AnyInvalidPropertyChanged += OnValidationStateChanged;
-            // DEFERRED: Figure out why this crashes designer
-            SetValue(LookupCrawlConfigOpMgrPropertyKey, new AsyncOps.AsyncOpResultManagerViewModel<string, ConfigurationRootAndPath>());
-            //SetValue(GetSubdirectoryFullNameOpMgrPropertyKey, new AsyncOps.AsyncOpResultManagerViewModel<Subdirectory, ConfigurationRootAndPath>());
-            SetValue(SaveChangesOpMgrPropertyKey, new AsyncOps.AsyncOpResultManagerViewModel<ModelViewModel, ConfigurationAndRoot>());
-            SetValue(OpAggregatePropertyKey, new AsyncOps.AsyncOpAggregate());
         }
 
-        /// <summary>
-        /// This get invoked by a <see cref="Microsoft.Xaml.Behaviors.Core.CallMethodAction">CallMethodAction</see> from the <see cref="View.Local.EditCrawlConfigWindow">EditCrawlConfigWindow</see>
-        /// using an <see cref="Microsoft.Xaml.Behaviors.EventTrigger">EventTrigger</see> bound to the <see cref="Window.Closing"/> event.
-        /// </summary>
-        public void OnWindowClosing()
-        {
-            try { LookupCrawlConfigOpMgr.CancelAll(); }
-            finally
-            {
-                try { LookupCrawlConfigOpMgr.CancelAll(); }
-                finally { SaveChangesOpMgr.CancelAll(); }
-            }
-        }
+        ///// <summary>
+        ///// This get invoked by a <see cref="Microsoft.Xaml.Behaviors.Core.CallMethodAction">CallMethodAction</see> from the <see cref="View.Local.EditCrawlConfigWindow">EditCrawlConfigWindow</see>
+        ///// using an <see cref="Microsoft.Xaml.Behaviors.EventTrigger">EventTrigger</see> bound to the <see cref="Window.Closing"/> event.
+        ///// </summary>
+        //public void OnWindowClosing()
+        //{
+        //    try { LookupCrawlConfigOpMgr.CancelAll(); }
+        //    finally
+        //    {
+        //        try { LookupCrawlConfigOpMgr.CancelAll(); }
+        //        finally { SaveChangesOpMgr.CancelAll(); }
+        //    }
+        //}
 
         /// <summary>
         /// Instantiates a new <see cref="View.EditCrawlConfigWindow"/> to edit the properties of an existing <see cref="CrawlConfiguration"/>.
@@ -122,20 +89,20 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             vm.CloseSuccess += new EventHandler((sender, e) => window.DialogResult = true);
             window.Loaded += new RoutedEventHandler((sender, e) =>
             {
-                AsyncOps.AsyncFuncOpViewModel<string, ConfigurationRootAndPath> lookupCrawlConfig = vm.OpAggregate.FromAsync("Getting Crawl Configuration", "Connecting to database", crawlRoot,
-                    vm.LookupCrawlConfigOpMgr, LookupCrawlConfigAsync);
-                lookupCrawlConfig.GetTask().ContinueWith(task =>
-                {
-                    vm.Dispatcher.Invoke(() =>
-                    {
-                        if (task.IsCompletedSuccessfully)
-                        {
-                            vm.OpAggregate.CancelOperation -= closeCancelHandler;
-                            vm.Initialize(task.Result.Configuration, task.Result.Root, task.Result.Path);
-                            vm.LookupCrawlConfigOpMgr.RemoveOperation(lookupCrawlConfig);
-                        }
-                    });
-                });
+                //AsyncOps.AsyncFuncOpViewModel<string, ConfigurationRootAndPath> lookupCrawlConfig = vm.OpAggregate.FromAsync("Getting Crawl Configuration", "Connecting to database", crawlRoot,
+                //    vm.LookupCrawlConfigOpMgr, LookupCrawlConfigAsync);
+                //lookupCrawlConfig.GetTask().ContinueWith(task =>
+                //{
+                //    vm.Dispatcher.Invoke(() =>
+                //    {
+                //        if (task.IsCompletedSuccessfully)
+                //        {
+                //            vm.OpAggregate.CancelOperation -= closeCancelHandler;
+                //            vm.Initialize(task.Result.Configuration, task.Result.Root, task.Result.Path);
+                //            vm.LookupCrawlConfigOpMgr.RemoveOperation(lookupCrawlConfig);
+                //        }
+                //    });
+                //});
             });
             if (window.ShowDialog() ?? false)
             {
@@ -155,7 +122,6 @@ namespace FsInfoCat.Desktop.ViewModel.Local
                 Initialize(crawlConfiguration);
             else
             {
-                IsNew = true;
                 Root = subdirectory;
                 CreatedOn = ModifiedOn = DateTime.Now;
                 MaxTotalItems = int.MaxValue;
@@ -176,8 +142,6 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 
         internal void Initialize([DisallowNull] CrawlConfiguration crawlConfiguration)
         {
-            IsNew = false;
-            Model = crawlConfiguration;
             Root = crawlConfiguration.Root;
             CreatedOn = crawlConfiguration.CreatedOn;
             ModifiedOn = crawlConfiguration.ModifiedOn;
@@ -258,398 +222,37 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             Validation.ClearErrorMessages(nameof(Path));
             if (_validatedPath.HasValue && ReferenceEquals(_validatedPath.Value.Path, newPath))
                 Path = _validatedPath.Value.Path;
-            else
-            {
-                AsyncOps.AsyncFuncOpViewModel<string, ConfigurationRootAndPath> lookupCrawlConfig = OpAggregate.FromAsync("Loading Crawl Configuration", "Connecting to database", newPath, LookupCrawlConfigOpMgr, LookupCrawlConfigAsync);
-                lookupCrawlConfig.GetTask().ContinueWith(task =>
-                {
-                    Dispatcher.Invoke(() =>
-                    {
-                        if (task.IsCompletedSuccessfully)
-                        {
-                            if (task.Result.Configuration is null)
-                            {
-                                _validatedPath = (task.Result.Root, task.Result.Path);
-                                Path = task.Result.Path;
-                                Root = task.Result.Root;
-                            }
-                            else if (Path != task.Result.Path)
-                            {
-                                MessageBox.Show(Application.Current.MainWindow, "That path already has its own craw configuration.", "Path Already Configured",
-                                    MessageBoxButton.OK, MessageBoxImage.Hand);
-                                // TODO: Log error.
-                                //BgOpStatusMessage = "That path already has its own craw configuration.";
-                                //BgOpMessageLevel = StatusMessageLevel.Error;
-                                //BgOpStatus = AsyncOpStatusCode.Faulted;
-                            }
-                        }
-                    });
-                });
-            }
+            //else
+            //{
+            //    AsyncOps.AsyncFuncOpViewModel<string, ConfigurationRootAndPath> lookupCrawlConfig = OpAggregate.FromAsync("Loading Crawl Configuration", "Connecting to database", newPath, LookupCrawlConfigOpMgr, LookupCrawlConfigAsync);
+            //    lookupCrawlConfig.GetTask().ContinueWith(task =>
+            //    {
+            //        Dispatcher.Invoke(() =>
+            //        {
+            //            if (task.IsCompletedSuccessfully)
+            //            {
+            //                if (task.Result.Configuration is null)
+            //                {
+            //                    _validatedPath = (task.Result.Root, task.Result.Path);
+            //                    Path = task.Result.Path;
+            //                    Root = task.Result.Root;
+            //                }
+            //                else if (Path != task.Result.Path)
+            //                {
+            //                    MessageBox.Show(Application.Current.MainWindow, "That path already has its own craw configuration.", "Path Already Configured",
+            //                        MessageBoxButton.OK, MessageBoxImage.Hand);
+            //                    // TODO: Log error.
+            //                    //BgOpStatusMessage = "That path already has its own craw configuration.";
+            //                    //BgOpMessageLevel = StatusMessageLevel.Error;
+            //                    //BgOpStatus = AsyncOpStatusCode.Faulted;
+            //                }
+            //            }
+            //        });
+            //    });
+            //}
         }
 
         #endregion
-
-        #region SaveCommand Property Members
-
-        private static readonly DependencyPropertyKey SaveCommandPropertyKey = DependencyProperty.RegisterReadOnly(nameof(SaveCommand),
-            typeof(Commands.RelayCommand), typeof(EditCrawlConfigVM), new PropertyMetadata(null));
-
-        public static readonly DependencyProperty SaveCommandProperty = SaveCommandPropertyKey.DependencyProperty;
-
-        /// <summary>
-        /// Gets the bindable "Save" command.
-        /// </summary>
-        /// <value>The bindable command for saving changes and closing the edit window.</value>
-        // TODO: Make sure save command is disabled when there are validation errors or no changes.
-        public Commands.RelayCommand SaveCommand => (Commands.RelayCommand)GetValue(SaveCommandProperty);
-
-        private void OnSaveExecute(object parameter)
-        {
-            CrawlConfiguration model = Model;
-            if (model is null)
-            {
-                model = new()
-                {
-                    Id = Guid.NewGuid(),
-                    CreatedOn = DateTime.Now,
-                    DisplayName = DisplayName,
-                    MaxRecursionDepth = MaxRecursionDepth,
-                    Notes = Notes,
-                    Root = Root,
-                    StatusValue = IsEnabled ? CrawlStatus.NotRunning : CrawlStatus.Disabled
-                };
-                model.ModifiedOn = model.CreatedOn;
-            }
-            else
-            {
-                model.ModifiedOn = DateTime.Now;
-                model.DisplayName = DisplayName;
-                model.MaxRecursionDepth = MaxRecursionDepth;
-                model.Notes = Notes;
-                model.Root = Root;
-                if (!IsEnabled)
-                    model.StatusValue = CrawlStatus.Disabled;
-            }
-            if (LimitTotalItems)
-                model.MaxTotalItems = MaxTotalItems;
-            else
-                model.MaxTotalItems = null;
-            if (LimitTTL)
-                model.TTL = ((((TtlDays.Value * 24L) + TtlHours.Value) * 60L) + TtlMinutes.Value) * 60L;
-            else
-                model.TTL = null;
-            if (AutoReschedule)
-            {
-                model.RescheduleAfterFail = RescheduleAfterFail;
-                model.RescheduleFromJobEnd = RescheduleFromJobEnd;
-                model.RescheduleInterval = ((((RescheduleDays.Value * 24L) + RescheduleHours.Value) * 60L) + RescheduleMinutes.Value) * 60L;
-            }
-            else
-            {
-                model.RescheduleAfterFail = false;
-                model.RescheduleFromJobEnd = false;
-                model.RescheduleInterval = null;
-            }
-            if (NoReschedule)
-                model.NextScheduledStart = null;
-            else
-                model.NextScheduledStart = new DateTime(NextScheduledStartDate.Value.Year, NextScheduledStartDate.Value.Month, NextScheduledStartDate.Value.Day,
-                    (NextScheduledStartHour.Value == 12) ? (NextScheduledStartIsPm ? 12 : 0) : (NextScheduledStartIsPm ? NextScheduledStartHour.Value + 12 :
-                        NextScheduledStartHour.Value), NextScheduledStartMinute.Value, 0, DateTimeKind.Local);
-            AsyncOps.AsyncFuncOpViewModel<ModelViewModel, ConfigurationAndRoot> asyncOp = OpAggregate.FromAsync("Saving Changes", "Connecting to database", new(model, this), SaveChangesOpMgr, SaveChangesAsync);
-            asyncOp.GetTask().ContinueWith(task =>
-            {
-                Dispatcher.Invoke(() =>
-                {
-                    if (task.IsCompletedSuccessfully)
-                        CloseSuccess?.Invoke(this, EventArgs.Empty);
-                });
-            });
-        }
-
-        #endregion
-
-        #region CancelCommand Property Members
-
-        private static readonly DependencyPropertyKey CancelCommandPropertyKey = DependencyProperty.RegisterReadOnly(nameof(CancelCommand),
-            typeof(Commands.RelayCommand), typeof(EditCrawlConfigVM), new PropertyMetadata(null));
-
-        public static readonly DependencyProperty CancelCommandProperty = CancelCommandPropertyKey.DependencyProperty;
-
-        /// <summary>
-        /// Gets the bindable "Cancel" command.
-        /// </summary>
-        /// <value>The bindable command for discarding changes and closing the edit window.</value>
-        public Commands.RelayCommand CancelCommand => (Commands.RelayCommand)GetValue(CancelCommandProperty);
-
-        private void OnCancelExecute(object parameter) => CloseCancel?.Invoke(this, EventArgs.Empty);
-
-        #endregion
-
-        #endregion
-
-        #region Background Operation Properties
-
-        //private AsyncOps.AsyncFuncOpViewModel<string, ConfigurationRootAndPath> LookupCrawlConfigAsync(string path) =>
-        //    OpAggregate.FromAsync("Getting Crawl Configuration", "Connecting to database", path, LookupCrawlConfigOpMgr, LookupCrawlConfigAsync);
-
-        #region OpAggregate Property Members
-
-        private static readonly DependencyPropertyKey OpAggregatePropertyKey = DependencyProperty.RegisterReadOnly(nameof(OpAggregate),
-            typeof(AsyncOps.AsyncOpAggregate), typeof(EditCrawlConfigVM), new PropertyMetadata(null));
-
-        public static readonly DependencyProperty OpAggregateProperty = OpAggregatePropertyKey.DependencyProperty;
-
-        public AsyncOps.AsyncOpAggregate OpAggregate => (AsyncOps.AsyncOpAggregate)GetValue(OpAggregateProperty);
-
-        #endregion
-        #region LookupCrawlConfigOpMgr Property Members
-
-        private static readonly DependencyPropertyKey LookupCrawlConfigOpMgrPropertyKey = DependencyProperty.RegisterReadOnly(nameof(LookupCrawlConfigOpMgr),
-            typeof(AsyncOps.AsyncOpResultManagerViewModel<string, ConfigurationRootAndPath>), typeof(EditCrawlConfigVM), new PropertyMetadata(null));
-
-        public static readonly DependencyProperty LookupCrawlConfigOpMgrProperty = LookupCrawlConfigOpMgrPropertyKey.DependencyProperty;
-
-        public AsyncOps.AsyncOpResultManagerViewModel<string, ConfigurationRootAndPath> LookupCrawlConfigOpMgr => (AsyncOps.AsyncOpResultManagerViewModel<string, ConfigurationRootAndPath>)GetValue(LookupCrawlConfigOpMgrProperty);
-
-        private static async Task<ConfigurationRootAndPath> LookupCrawlConfigAsync(string path, AsyncOps.IStatusListener<string> statusListener)
-        {
-            statusListener.CancellationToken.ThrowIfCancellationRequested();
-            DispatcherOperation dispatcherOperation = statusListener.BeginSetMessage("Checking for existing directory information", StatusMessageLevel.Information);
-            DirectoryInfo crawlRoot;
-            try { crawlRoot = new DirectoryInfo(path); }
-            catch (System.Security.SecurityException securityException)
-            {
-                throw new AsyncOps.AsyncOperationFailureException(securityException.Message, ErrorCode.SecurityException,
-                    FsInfoCat.Properties.Resources.ErrorMessage_SecurityException, securityException);
-            }
-            catch (PathTooLongException pathTooLongException)
-            {
-                throw new AsyncOps.AsyncOperationFailureException(pathTooLongException.Message, ErrorCode.PathTooLong,
-                    FsInfoCat.Properties.Resources.ErrorMessage_PathTooLongError, pathTooLongException);
-            }
-            catch (Exception exception)
-            {
-                throw new AsyncOps.AsyncOperationFailureException(exception.Message, ErrorCode.InvalidPath, FsInfoCat.Properties.Resources.ErrorMessage_InvalidPathError,
-                    exception);
-            }
-            finally { await dispatcherOperation; }
-            if (!crawlRoot.Exists)
-                throw new AsyncOps.AsyncOperationFailureException(FsInfoCat.Properties.Resources.ErrorMessage_DirectoryNotFound, ErrorCode.DirectoryNotFound);
-            using IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
-            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetService<LocalDbContext>();
-            EntityEntry<Subdirectory> subdirectory = await Subdirectory.ImportBranchAsync(crawlRoot, dbContext, statusListener.CancellationToken);
-            CrawlConfiguration crawlConfiguration;
-            if (subdirectory.State == EntityState.Added)
-            {
-                dispatcherOperation = statusListener.BeginSetMessage("Importing new path information");
-                try { await dbContext.SaveChangesAsync(statusListener.CancellationToken); }
-                finally { await dispatcherOperation; }
-                crawlConfiguration = null;
-            }
-            else
-            {
-                dispatcherOperation = statusListener.BeginSetMessage("Checking for existing configuration");
-                try { crawlConfiguration = await subdirectory.GetRelatedReferenceAsync(d => d.CrawlConfiguration, statusListener.CancellationToken); }
-                finally { await dispatcherOperation; }
-            }
-            return new(crawlConfiguration, subdirectory.Entity, crawlRoot.FullName);
-            //Dispatcher.Invoke(() => vm.Initialize(crawlConfiguration, subdirectory.Entity, crawlRoot.FullName));
-        }
-
-        #endregion
-        //#region GetSubdirectoryFullNameOpMgr Property
-
-        //private static readonly DependencyPropertyKey GetSubdirectoryFullNameOpMgrPropertyKey = DependencyProperty.RegisterReadOnly(nameof(GetSubdirectoryFullNameOpMgr),
-        //    typeof(AsyncOps.AsyncOpResultManagerViewModel<Subdirectory, ConfigurationRootAndPath>), typeof(EditCrawlConfigVM), new PropertyMetadata(null));
-
-        //public static readonly DependencyProperty GetSubdirectoryFullNameOpMgrProperty = GetSubdirectoryFullNameOpMgrPropertyKey.DependencyProperty;
-
-        //public AsyncOps.AsyncOpResultManagerViewModel<Subdirectory, ConfigurationRootAndPath> GetSubdirectoryFullNameOpMgr => (AsyncOps.AsyncOpResultManagerViewModel<Subdirectory, ConfigurationRootAndPath>)GetValue(GetSubdirectoryFullNameOpMgrProperty);
-
-        //private static async Task<ConfigurationRootAndPath> LookupFullNameAsync(Subdirectory subdirectory,
-        //    AsyncOps.AsyncFuncOpViewModel<Subdirectory, ConfigurationRootAndPath>.StatusListenerImpl statusListener)
-        //{
-        //    if (subdirectory is null)
-        //        throw new ArgumentNullException(nameof(subdirectory));
-        //    using IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
-        //    using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
-        //    EntityEntry<Subdirectory> entry = dbContext.Entry(subdirectory);
-        //    Guid id = subdirectory.Id;
-        //    CrawlConfiguration crawlConfiguration = await (from c in dbContext.CrawlConfigurations where c.RootId == id select c).FirstOrDefaultAsync(statusListener.CancellationToken);
-        //    Subdirectory parent = subdirectory.ParentId.HasValue ? await entry.GetRelatedReferenceAsync(d => d.Parent, statusListener.CancellationToken) : null;
-        //    string path = subdirectory.Name;
-        //    if (parent is null)
-        //        return new(crawlConfiguration, subdirectory, path);
-        //    StringBuilder stringBuilder = new(path);
-        //    do
-        //    {
-        //        stringBuilder.Append('/').Append(parent.Name);
-        //        entry = dbContext.Entry(subdirectory);
-        //    }
-        //    while (parent.ParentId.HasValue && (parent = await entry.GetRelatedReferenceAsync(d => d.Parent, statusListener.CancellationToken)) is not null);
-        //    return new(crawlConfiguration, subdirectory, stringBuilder.ToString());
-        //}
-
-        //#endregion
-        #region SaveChangesOpMgr Property Members
-
-        private static readonly DependencyPropertyKey SaveChangesOpMgrPropertyKey = DependencyProperty.RegisterReadOnly(nameof(SaveChangesOpMgr), typeof(AsyncOps.AsyncOpResultManagerViewModel<ModelViewModel, ConfigurationAndRoot>), typeof(EditCrawlConfigVM),
-                new PropertyMetadata(null));
-
-        public static readonly DependencyProperty SaveChangesOpMgrProperty = SaveChangesOpMgrPropertyKey.DependencyProperty;
-
-        public AsyncOps.AsyncOpResultManagerViewModel<ModelViewModel, ConfigurationAndRoot> SaveChangesOpMgr => (AsyncOps.AsyncOpResultManagerViewModel<ModelViewModel, ConfigurationAndRoot>)GetValue(SaveChangesOpMgrProperty);
-
-        private static async Task<ConfigurationAndRoot> SaveChangesAsync(ModelViewModel state, AsyncOps.IStatusListener<ModelViewModel> statusListener)
-        {
-            EditCrawlConfigVM vm = state.ViewModel ?? throw new ArgumentException($"{nameof(state.ViewModel)} cannot be null.", nameof(state));
-            using IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
-            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetService<LocalDbContext>();
-            EntityEntry<CrawlConfiguration> entry;
-            if (state.Entity is null)
-            {
-                CrawlConfiguration model = vm.Dispatcher.Invoke(() => new CrawlConfiguration()
-                {
-                    Id = Guid.NewGuid(),
-                    CreatedOn = DateTime.Now,
-                    DisplayName = vm.DisplayName,
-                    MaxRecursionDepth = vm.MaxRecursionDepth,
-                    Notes = vm.Notes,
-                    Root = vm.Root,
-                    StatusValue = vm.IsEnabled ? CrawlStatus.NotRunning : CrawlStatus.Disabled
-                });
-                model.ModifiedOn = model.CreatedOn;
-                entry = dbContext.CrawlConfigurations.Add(model);
-            }
-            else
-                entry = dbContext.Entry(state.Entity);
-            vm.Dispatcher.Invoke(() =>
-            {
-                CrawlConfiguration model = entry.Entity;
-                if (entry.State != EntityState.Added)
-                {
-                    model.ModifiedOn = DateTime.Now;
-                    model.DisplayName = vm.DisplayName;
-                    model.MaxRecursionDepth = vm.MaxRecursionDepth;
-                    model.Notes = vm.Notes;
-                    model.Root = vm.Root;
-                    if (!vm.IsEnabled)
-                        model.StatusValue = CrawlStatus.Disabled;
-                }
-                if (vm.LimitTotalItems)
-                    model.MaxTotalItems = vm.MaxTotalItems;
-                else
-                    model.MaxTotalItems = null;
-                if (vm.LimitTTL)
-                    model.TTL = ((((vm.TtlDays.Value * 24L) + vm.TtlHours.Value) * 60L) + vm.TtlMinutes.Value) * 60L;
-                else
-                    model.TTL = null;
-                if (vm.AutoReschedule)
-                {
-                    model.RescheduleAfterFail = vm.RescheduleAfterFail;
-                    model.RescheduleFromJobEnd = vm.RescheduleFromJobEnd;
-                    model.RescheduleInterval = ((((vm.RescheduleDays.Value * 24L) + vm.RescheduleHours.Value) * 60L) + vm.RescheduleMinutes.Value) * 60L;
-                }
-                else
-                {
-                    model.RescheduleAfterFail = false;
-                    model.RescheduleFromJobEnd = false;
-                    model.RescheduleInterval = null;
-                }
-                if (vm.NoReschedule)
-                    model.NextScheduledStart = null;
-                else
-                    model.NextScheduledStart = new DateTime(vm.NextScheduledStartDate.Value.Year, vm.NextScheduledStartDate.Value.Month, vm.NextScheduledStartDate.Value.Day,
-                        (vm.NextScheduledStartHour.Value == 12) ? (vm.NextScheduledStartIsPm ? 12 : 0) : (vm.NextScheduledStartIsPm ? vm.NextScheduledStartHour.Value + 12 : vm.NextScheduledStartHour.Value),
-                        vm.NextScheduledStartMinute.Value, 0, DateTimeKind.Local);
-            });
-            try
-            {
-                await dbContext.SaveChangesAsync(true, statusListener.CancellationToken);
-                if (entry.State != EntityState.Unchanged)
-                    throw new InvalidOperationException("Failed to save changes to the database.");
-            }
-            catch
-            {
-                if (state.Entity is not null)
-                    await entry.ReloadAsync(statusListener.CancellationToken);
-                throw;
-            }
-            return new(entry.Entity, await entry.GetRelatedReferenceAsync(e => e.Root, statusListener.CancellationToken));
-        }
-
-        #endregion
-
-        #endregion
-
-        #region Change Tracking / Validation Members
-
-        internal bool HasErrors => Validation.HasErrors;
-
-        bool INotifyDataErrorInfo.HasErrors => Validation.HasErrors;
-
-        #region IsNew Property Members
-
-        private static readonly DependencyPropertyKey IsNewPropertyKey = DependencyProperty.RegisterReadOnly(nameof(IsNew), typeof(bool), typeof(EditCrawlConfigVM),
-                new PropertyMetadata(true));
-
-        public static readonly DependencyProperty IsNewProperty = IsNewPropertyKey.DependencyProperty;
-
-        public bool IsNew
-        {
-            get => (bool)GetValue(IsNewProperty);
-            private set => SetValue(IsNewPropertyKey, value);
-        }
-
-        #endregion
-
-        #region Model Property Members
-
-        private static readonly DependencyPropertyKey ModelPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Model), typeof(CrawlConfiguration), typeof(EditCrawlConfigVM),
-                new PropertyMetadata(null));
-
-        public static readonly DependencyProperty ModelProperty = ModelPropertyKey.DependencyProperty;
-
-        public CrawlConfiguration Model
-        {
-            get => (CrawlConfiguration)GetValue(ModelProperty);
-            private set => SetValue(ModelPropertyKey, value);
-        }
-
-        #endregion
-
-        #region Validation ChangeTracker Members
-
-        private static readonly DependencyPropertyKey ChangeTrackerPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ChangeTracker), typeof(ChangeStateTracker), typeof(EditCrawlConfigVM),
-                new PropertyMetadata(null));
-
-        public static readonly DependencyProperty ChangeTrackerProperty = ChangeTrackerPropertyKey.DependencyProperty;
-
-        public ChangeStateTracker ChangeTracker => (ChangeStateTracker)GetValue(ChangeTrackerProperty);
-
-        #endregion
-
-        #region Validation Property Members
-
-        private static readonly DependencyPropertyKey ValidationPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Validation), typeof(ValidationMessageTracker), typeof(EditCrawlConfigVM),
-            new PropertyMetadata(null));
-
-        public static readonly DependencyProperty ValidationProperty = ValidationPropertyKey.DependencyProperty;
-
-        public ValidationMessageTracker Validation => (ValidationMessageTracker)GetValue(ValidationProperty);
-
-        private void Validation_ErrorsChanged(object sender, DataErrorsChangedEventArgs e) => ErrorsChanged?.Invoke(this, e);
-
-        #endregion
-
-        private void OnValidationStateChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        public IEnumerable GetErrors(string propertyName) => Validation.GetErrors(propertyName);
 
         #endregion
 
@@ -1619,7 +1222,14 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 
         #endregion
 
-        public record ModelViewModel(CrawlConfiguration Entity, EditCrawlConfigVM ViewModel);
+        protected override CrawlConfiguration InitializeNewModel() => new() { Id = Guid.NewGuid() };
+
+        protected override DbSet<CrawlConfiguration> GetDbSet(LocalDbContext dbContext) => dbContext.CrawlConfigurations;
+
+        protected override void UpdateModelForSave(CrawlConfiguration model, bool isNew)
+        {
+            throw new NotImplementedException();
+        }
 
         public record ConfigurationAndRoot(CrawlConfiguration Configuration, Subdirectory Root);
 

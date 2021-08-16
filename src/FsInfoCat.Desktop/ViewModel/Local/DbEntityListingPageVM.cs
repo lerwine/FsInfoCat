@@ -2,606 +2,378 @@ using FsInfoCat.Local;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Threading;
 
 namespace FsInfoCat.Desktop.ViewModel.Local
 {
-    public abstract class DbEntityListingPageVM<TDbEntity, TItemVM> : DependencyObject
+    public abstract class DbEntityListingPageVM<TDbEntity, TItemVM> : DependencyObject, INotifyNavigationContentChanged
         where TDbEntity : LocalDbEntity, new()
         where TItemVM : DbEntityItemVM<TDbEntity>
     {
-    }
-    public abstract class DbEntityItemVM<TDbEntity> : DependencyObject
-        where TDbEntity : LocalDbEntity, new()
-    {
-        public event EventHandler Edit;
-        public event EventHandler Delete;
+        protected readonly ILogger<DbEntityListingPageVM<TDbEntity, TItemVM>> Logger;
 
-        #region Command Members
+        #region Items Property Members
 
-        #region Edit Command Members
+        private readonly ObservableCollection<TItemVM> _backingItems = new();
 
-        private static readonly DependencyPropertyKey EditCommandPropertyKey = DependencyProperty.RegisterReadOnly(nameof(EditCommand),
-            typeof(Commands.RelayCommand), typeof(DbEntityItemVM<TDbEntity>), new PropertyMetadata(null));
-
-        public static readonly DependencyProperty EditCommandProperty = EditCommandPropertyKey.DependencyProperty;
-
-        public Commands.RelayCommand EditCommand => (Commands.RelayCommand)GetValue(EditCommandProperty);
-
-        #endregion
-        #region Delete Command Members
-
-        private static readonly DependencyPropertyKey DeleteCommandPropertyKey = DependencyProperty.RegisterReadOnly(nameof(DeleteCommand),
-            typeof(Commands.RelayCommand), typeof(DbEntityItemVM<TDbEntity>), new PropertyMetadata(null));
-
-        public static readonly DependencyProperty DeleteCommandProperty = DeleteCommandPropertyKey.DependencyProperty;
-
-        public Commands.RelayCommand DeleteCommand => (Commands.RelayCommand)GetValue(DeleteCommandProperty);
-
-        #endregion
-
-        #endregion
-        #region LastSynchronizedOn Property Members
-
-        private static readonly DependencyPropertyKey LastSynchronizedOnPropertyKey = DependencyProperty.RegisterReadOnly(nameof(LastSynchronizedOn), typeof(DateTime?), typeof(DbEntityItemVM<TDbEntity>),
+        private static readonly DependencyPropertyKey ItemsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Items), typeof(ReadOnlyObservableCollection<TItemVM>), typeof(DbEntityListingPageVM<TDbEntity, TItemVM>),
                 new PropertyMetadata(null));
 
-        public static readonly DependencyProperty LastSynchronizedOnProperty = LastSynchronizedOnPropertyKey.DependencyProperty;
-
-        public DateTime? LastSynchronizedOn
-        {
-            get => (DateTime?)GetValue(LastSynchronizedOnProperty);
-            private set => SetValue(LastSynchronizedOnPropertyKey, value);
-        }
-
-        #endregion
-        #region CreatedOn Property Members
-
-        private static readonly DependencyPropertyKey CreatedOnPropertyKey = DependencyProperty.RegisterReadOnly(nameof(CreatedOn), typeof(DateTime), typeof(DbEntityItemVM<TDbEntity>),
-                new PropertyMetadata(default));
-
-        public static readonly DependencyProperty CreatedOnProperty = CreatedOnPropertyKey.DependencyProperty;
-
-        public DateTime CreatedOn
-        {
-            get => (DateTime)GetValue(CreatedOnProperty);
-            private set => SetValue(CreatedOnPropertyKey, value);
-        }
-
-        #endregion
-        #region ModifiedOn Property Members
-
-        private static readonly DependencyPropertyKey ModifiedOnPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ModifiedOn), typeof(DateTime), typeof(DbEntityItemVM<TDbEntity>),
-                new PropertyMetadata(null));
-
-        public static readonly DependencyProperty ModifiedOnProperty = ModifiedOnPropertyKey.DependencyProperty;
-
-        public DateTime ModifiedOn
-        {
-            get => (DateTime)GetValue(ModifiedOnProperty);
-            private set => SetValue(ModifiedOnPropertyKey, value);
-        }
-
-        #endregion
-        #region Model Property Members
-
-        private static readonly DependencyPropertyKey ModelPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Model), typeof(TDbEntity), typeof(DbEntityItemVM<TDbEntity>),
-                new PropertyMetadata(null));
-
-        public static readonly DependencyProperty ModelProperty = ModelPropertyKey.DependencyProperty;
-
-        public TDbEntity Model
-        {
-            get => (TDbEntity)GetValue(ModelProperty);
-            private set => SetValue(ModelPropertyKey, value);
-        }
-
-        #endregion
-
-        protected DbEntityItemVM([DisallowNull] TDbEntity model)
-        {
-            SetValue(EditCommandPropertyKey, new Commands.RelayCommand(parameter => Edit?.Invoke(this, EventArgs.Empty)));
-            SetValue(DeleteCommandPropertyKey, new Commands.RelayCommand(parameter => Delete?.Invoke(this, EventArgs.Empty)));
-            Model = model ?? throw new ArgumentNullException(nameof(model));
-            model.PropertyChanged += Model_PropertyChanged;
-            LastSynchronizedOn = model.LastSynchronizedOn;
-            CreatedOn = model.CreatedOn;
-            ModifiedOn = model.ModifiedOn;
-        }
-
-        private void Model_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            switch (e.PropertyName)
-            {
-                case nameof(LocalDbEntity.LastSynchronizedOn):
-                    Dispatcher.Invoke(() => LastSynchronizedOn = Model.LastSynchronizedOn);
-                    break;
-                case nameof(LocalDbEntity.CreatedOn):
-                    Dispatcher.Invoke(() => CreatedOn = Model.CreatedOn);
-                    break;
-                case nameof(LocalDbEntity.ModifiedOn):
-                    Dispatcher.Invoke(() => ModifiedOn = Model.ModifiedOn);
-                    break;
-                default:
-                    OnModelPropertyChanged(e.PropertyName);
-                    break;
-            }
-        }
-
-        protected abstract void OnModelPropertyChanged(string propertyName);
-    }
-    public abstract class EditDbEntityVM<TDbEntity> : DependencyObject, INotifyDataErrorInfo
-        where TDbEntity : LocalDbEntity, new()
-    {
         /// <summary>
-        /// Occurs when the window should be closed by setting <see cref="Window.DialogResult"/> to <see langword="true"/>.
+        /// Identifies the <see cref="Items"/> dependency property.
         /// </summary>
-        public event EventHandler CloseSuccess;
+        public static readonly DependencyProperty ItemsProperty = ItemsPropertyKey.DependencyProperty;
 
         /// <summary>
-        /// Occurs when the window should be closed by setting <see cref="Window.DialogResult"/> to <see langword="false"/>.
+        /// Gets The items to be displayed.
         /// </summary>
-        public event EventHandler CloseCancel;
+        /// <value>The items to be displayed in the listing page.</value>
+        public ReadOnlyObservableCollection<TItemVM> Items => (ReadOnlyObservableCollection<TItemVM>)GetValue(ItemsProperty);
+
+        #endregion
+        #region SelectedItem Property Members
 
         /// <summary>
-        /// Occurs when the validation errors have changed for a property or for the entire entity.
+        /// Occurs when the value of the <see cref="SelectedItem"/> dependency property has changed.
         /// </summary>
-        public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
+        public event DependencyPropertyChangedEventHandler SelectedItemPropertyChanged;
 
-        protected abstract TDbEntity InitializeNewModel();
+        /// <summary>
+        /// Identifies the <see cref="SelectedItem"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty SelectedItemProperty = DependencyProperty.Register(nameof(SelectedItem), typeof(TItemVM), typeof(DbEntityListingPageVM<TDbEntity, TItemVM>),
+                new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as DbEntityListingPageVM<TDbEntity, TItemVM>)?.OnSelectedItemPropertyChanged(e)));
+
+        /// <summary>
+        /// Gets or sets .
+        /// </summary>
+        /// <value>The .</value>
+        public TItemVM SelectedItem { get => (TItemVM)GetValue(SelectedItemProperty); set => SetValue(SelectedItemProperty, value); }
+
+        /// <summary>
+        /// Called when the <see cref="PropertyChangedCallback">PropertyChanged</see> event on <see cref="SelectedItemProperty"/> is raised.
+        /// </summary>
+        /// <param name="args">The Event data that is issued by the event on <see cref="SelectedItemProperty"/> that tracks changes to its effective value.</param>
+        protected virtual void OnSelectedItemPropertyChanged(DependencyPropertyChangedEventArgs args)
+        {
+            try { OnSelectedItemPropertyChanged((TItemVM)args.OldValue, (TItemVM)args.NewValue); }
+            finally { SelectedItemPropertyChanged?.Invoke(this, args); }
+        }
+
+        /// <summary>
+        /// Called when the value of the <see cref="SelectedItem"/> dependency property has changed.
+        /// </summary>
+        /// <param name="oldValue">The previous value of the <see cref="SelectedItem"/> property.</param>
+        /// <param name="newValue">The new value of the <see cref="SelectedItem"/> property.</param>
+        protected virtual void OnSelectedItemPropertyChanged(TItemVM oldValue, TItemVM newValue)
+        {
+            // TODO: Implement OnSelectedItemPropertyChanged Logic
+        }
+
+        #endregion
+        #region NewItemClick Command Members
+
+        /// <summary>
+        /// Occurs when the <see cref="NewItemClickCommand">NewItemClick Command</see> is invoked.
+        /// </summary>
+        public event EventHandler<Commands.CommandEventArgs> NewItemClick;
+
+        private static readonly DependencyPropertyKey NewItemClickCommandPropertyKey = DependencyProperty.RegisterReadOnly(nameof(NewItemClickCommand),
+            typeof(Commands.RelayCommand), typeof(DbEntityListingPageVM<TDbEntity, TItemVM>), new PropertyMetadata(null));
+
+        /// <summary>
+        /// Identifies the <see cref=""/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty NewItemClickCommandProperty = NewItemClickCommandPropertyKey.DependencyProperty;
+
+        /// <summary>
+        /// Gets the $name$ command object.
+        /// </summary>
+        /// <value>The <see cref="System.Windows.Input.ICommand"/> that implements the $command$ command.</value>
+        public Commands.RelayCommand NewItemClickCommand => (Commands.RelayCommand)GetValue(NewItemClickCommandProperty);
+
+        /// <summary>
+        /// Called when the <see cref="NewItemClickCommand">NewItemClick Command</see> is invoked.
+        /// </summary>
+        /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="NewItemClickCommand" />.</param>
+        protected virtual void OnNewItemClick(object parameter)
+        {
+            // TODO: Implement OnNewItemClick Logic
+        }
+
+        #endregion
+        #region BgOps Property Members
+
+        private static readonly DependencyPropertyKey BgOpsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(BgOps), typeof(AsyncOps.AsyncOpAggregate), typeof(DbEntityListingPageVM<TDbEntity, TItemVM>),
+                new PropertyMetadata(new AsyncOps.AsyncOpAggregate()));
+
+        /// <summary>
+        /// Identifies the <see cref="BgOps"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty BgOpsProperty = BgOpsPropertyKey.DependencyProperty;
+
+        /// <summary>
+        /// Gets .
+        /// </summary>
+        /// <value>The .</value>
+        public AsyncOps.AsyncOpAggregate BgOps => (AsyncOps.AsyncOpAggregate)GetValue(BgOpsProperty);
+
+        #endregion
+        #region EntityDbOp Property Members
+
+        private static readonly DependencyPropertyKey EntityDbOpPropertyKey = DependencyProperty.RegisterReadOnly(nameof(EntityDbOp), typeof(AsyncOps.AsyncOpResultManagerViewModel<TDbEntity, bool?>), typeof(DbEntityListingPageVM<TDbEntity, TItemVM>),
+                new PropertyMetadata(new AsyncOps.AsyncOpResultManagerViewModel<TDbEntity, bool?>()));
+
+        /// <summary>
+        /// Identifies the <see cref="EntityDbOp"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty EntityDbOpProperty = EntityDbOpPropertyKey.DependencyProperty;
+
+        /// <summary>
+        /// Gets .
+        /// </summary>
+        /// <value>The .</value>
+        public AsyncOps.AsyncOpResultManagerViewModel<TDbEntity, bool?> EntityDbOp => (AsyncOps.AsyncOpResultManagerViewModel<TDbEntity, bool?>)GetValue(EntityDbOpProperty);
+
+        #endregion
+        public DbEntityListingPageVM()
+        {
+            Logger = App.GetLogger(this);
+            SetValue(ItemsPropertyKey, new ReadOnlyObservableCollection<TItemVM>(_backingItems));
+            SetValue(NewItemClickCommandPropertyKey, new Commands.RelayCommand(OnNewItemClick));
+        }
+
+        protected abstract TItemVM CreateItem(TDbEntity entity);
+
+        protected abstract TDbEntity InitializeNewEntity();
 
         protected abstract DbSet<TDbEntity> GetDbSet(LocalDbContext dbContext);
 
-        protected virtual void OnSavingModel(EntityEntry<TDbEntity> entityEntry, LocalDbContext dbContext, AsyncOps.IStatusListener<ModelViewModel> statusListener) { }
-
-        protected abstract void UpdateModelForSave(TDbEntity model, bool isNew);
-
-        #region Command Members
-
-        #region SaveCommand Property Members
-
-        private static readonly DependencyPropertyKey SaveCommandPropertyKey = DependencyProperty.RegisterReadOnly(nameof(SaveCommand),
-            typeof(Commands.RelayCommand), typeof(EditDbEntityVM<TDbEntity>), new PropertyMetadata(null));
-
-        public static readonly DependencyProperty SaveCommandProperty = SaveCommandPropertyKey.DependencyProperty;
-
-        /// <summary>
-        /// Gets the bindable "Save" command.
-        /// </summary>
-        /// <value>The bindable command for saving changes and closing the edit window.</value>
-        public Commands.RelayCommand SaveCommand => (Commands.RelayCommand)GetValue(SaveCommandProperty);
-
-        private void OnSaveExecute(object parameter)
+        protected async Task<int> OnEntitiesLoaded([DisallowNull] IEnumerable<TDbEntity> entities, AsyncOps.IStatusListener statusListener)
         {
-            AsyncOps.AsyncFuncOpViewModel<ModelViewModel, TDbEntity> asyncOp = OpAggregate.FromAsync("Saving Changes", "Connecting to database", new(Model, this), SaveChangesOpMgr, SaveChangesAsync);
-            asyncOp.GetTask().ContinueWith(task =>
+            if (entities is null)
+                throw new ArgumentNullException(nameof(entities));
+            (TItemVM[] oldItems, TItemVM[] newItems) = await Dispatcher.InvokeAsync(() =>
             {
-                Dispatcher.Invoke(() =>
-                {
-                    if (task.IsCompletedSuccessfully)
-                        CloseSuccess?.Invoke(this, EventArgs.Empty);
-                });
-            });
+                TItemVM[] old = _backingItems.ToArray();
+                _backingItems.Clear();
+                return (old, entities.Select(e => CreateItem(e)).ToArray());
+            }, DispatcherPriority.Background, statusListener.CancellationToken);
+            foreach (TItemVM item in oldItems)
+            {
+                item.Edit -= Item_Edit;
+                item.Delete -= Item_Delete;
+            }
+            foreach (TItemVM item in newItems)
+            {
+                item.Edit += Item_Edit;
+                item.Delete += Item_Delete;
+            }
+            return await Dispatcher.InvokeAsync(() =>
+            {
+                _backingItems.Clear();
+                foreach (TItemVM item in newItems)
+                    _backingItems.Add(item);
+                return _backingItems.Count;
+            }, DispatcherPriority.Background, statusListener.CancellationToken);
         }
 
-        #endregion
-
-        #region CancelCommand Property Members
-
-        private static readonly DependencyPropertyKey CancelCommandPropertyKey = DependencyProperty.RegisterReadOnly(nameof(CancelCommand),
-            typeof(Commands.RelayCommand), typeof(EditDbEntityVM<TDbEntity>), new PropertyMetadata(null));
-
-        public static readonly DependencyProperty CancelCommandProperty = CancelCommandPropertyKey.DependencyProperty;
-
-        /// <summary>
-        /// Gets the bindable "Cancel" command.
-        /// </summary>
-        /// <value>The bindable command for discarding changes and closing the edit window.</value>
-        public Commands.RelayCommand CancelCommand => (Commands.RelayCommand)GetValue(CancelCommandProperty);
-
-        private void OnCancelExecute(object parameter) => CloseCancel?.Invoke(this, EventArgs.Empty);
-
-        #endregion
-
-        #endregion
-
-        #region Background Operation Properties
-
-        #region OpAggregate Property Members
-
-        private static readonly DependencyPropertyKey OpAggregatePropertyKey = DependencyProperty.RegisterReadOnly(nameof(OpAggregate),
-            typeof(AsyncOps.AsyncOpAggregate), typeof(EditDbEntityVM<TDbEntity>), new PropertyMetadata(null));
-
-        public static readonly DependencyProperty OpAggregateProperty = OpAggregatePropertyKey.DependencyProperty;
-
-        public AsyncOps.AsyncOpAggregate OpAggregate => (AsyncOps.AsyncOpAggregate)GetValue(OpAggregateProperty);
-
-        #endregion
-        
-        #region SaveChangesOpMgr Property Members
-
-        private static readonly DependencyPropertyKey SaveChangesOpMgrPropertyKey = DependencyProperty.RegisterReadOnly(nameof(SaveChangesOpMgr), typeof(AsyncOps.AsyncOpResultManagerViewModel<ModelViewModel, TDbEntity>), typeof(EditDbEntityVM<TDbEntity>),
-                new PropertyMetadata(null));
-
-        public static readonly DependencyProperty SaveChangesOpMgrProperty = SaveChangesOpMgrPropertyKey.DependencyProperty;
-
-        public AsyncOps.AsyncOpResultManagerViewModel<ModelViewModel, TDbEntity> SaveChangesOpMgr => (AsyncOps.AsyncOpResultManagerViewModel<ModelViewModel, TDbEntity>)GetValue(SaveChangesOpMgrProperty);
-
-        private static async Task<TDbEntity> SaveChangesAsync(ModelViewModel state, AsyncOps.IStatusListener<ModelViewModel> statusListener)
+        protected async Task<int> OnEntitiesLoaded<TResultItem>([DisallowNull] IEnumerable<TResultItem> results, AsyncOps.IStatusListener statusListener, Func<TResultItem, TItemVM> createItem)
         {
-            EditDbEntityVM<TDbEntity> vm = state.ViewModel ?? throw new ArgumentException($"{nameof(state.ViewModel)} cannot be null.", nameof(state));
-            using IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
-            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetService<LocalDbContext>();
-            EntityEntry<TDbEntity> entry;
-            if (state.Entity is null)
+            if (results is null)
+                throw new ArgumentNullException(nameof(results));
+            if (createItem is null)
+                throw new ArgumentNullException(nameof(createItem));
+            (TItemVM[] oldItems, TItemVM[] newItems) = await Dispatcher.InvokeAsync(() =>
             {
-                TDbEntity model = vm.Dispatcher.Invoke(() => vm.InitializeNewModel());
-                model.ModifiedOn = model.CreatedOn;
-                entry = vm.GetDbSet(dbContext).Add(model);
+                TItemVM[] old = _backingItems.ToArray();
+                _backingItems.Clear();
+                return (old, results.Select(e => createItem(e)).ToArray());
+            }, DispatcherPriority.Background, statusListener.CancellationToken);
+            foreach (TItemVM item in oldItems)
+            {
+                item.Edit -= Item_Edit;
+                item.Delete -= Item_Delete;
+            }
+            foreach (TItemVM item in newItems)
+            {
+                item.Edit += Item_Edit;
+                item.Delete += Item_Delete;
+            }
+            return await Dispatcher.InvokeAsync(() =>
+            {
+                _backingItems.Clear();
+                foreach (TItemVM item in newItems)
+                    _backingItems.Add(item);
+                return _backingItems.Count;
+            }, DispatcherPriority.Background, statusListener.CancellationToken);
+        }
+
+        protected internal Task<(TItemVM, bool?)> SaveChangesAsync([DisallowNull] TDbEntity entity)
+        {
+            TItemVM item = _backingItems.FirstOrDefault(i => ReferenceEquals(i.Model, entity));
+            string title;
+            if (item is null)
+            {
+                item = CreateItem(entity);
+                title = GetSaveNewProgressTitle(item);
             }
             else
-                entry = dbContext.Entry(state.Entity);
-            vm.Dispatcher.Invoke(() =>
+                title = GetSaveExistingProgressTitle(item);
+            AsyncOps.AsyncFuncOpViewModel<TDbEntity, bool?> asyncFuncOpViewModel = BgOps.FromAsync(title, "Connecting to database...", entity, EntityDbOp, OnSaveChangesAsync);
+            return asyncFuncOpViewModel.GetTask().ContinueWith(task =>
             {
-                TDbEntity model = entry.Entity;
-                if (entry.State != EntityState.Added)
-                    model.ModifiedOn = DateTime.Now;
-                // TODO: Update model
-                vm.UpdateModelForSave(model, entry.State == EntityState.Added);
-            });
-            vm.OnSavingModel(entry, dbContext, statusListener);
-            try
+                if (!task.Result.HasValue)
+                    return (item, (bool?)null);
+                if (!task.Result.Value)
+                    return (item, false);
+                Dispatcher.Invoke(() =>
+                {
+                    if (!_backingItems.Contains(item))
+                        _backingItems.Add(item);
+                });
+                return (item, true);
+            }, TaskContinuationOptions.OnlyOnRanToCompletion);
+        }
+
+        private async Task<bool?> OnSaveChangesAsync([DisallowNull] TDbEntity entity, AsyncOps.IStatusListener<TDbEntity> statusListener)
+        {
+            statusListener.CancellationToken.ThrowIfCancellationRequested();
+            IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
+            LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+            EntityEntry<TDbEntity> entry = dbContext.Entry(entity);
+            bool isNew;
+            switch (entry.State)
             {
-                await dbContext.SaveChangesAsync(true, statusListener.CancellationToken);
-                if (entry.State != EntityState.Unchanged)
-                    throw new InvalidOperationException("Failed to save changes to the database.");
+                case EntityState.Detached:
+                    entry = GetDbSet(dbContext).Add(entity);
+                    isNew = true;
+                    break;
+                case EntityState.Deleted:
+                    statusListener.SetMessage("Item has been deleted from the database.", StatusMessageLevel.Error);
+                    return null;
+                case EntityState.Added:
+                    isNew = true;
+                    break;
+                default:
+                    isNew = false;
+                    break;
             }
-            catch
+
+            DispatcherOperation dispatcherOperation = statusListener.BeginSetMessage(isNew ? "Inserting record into database..." : "Updating database record...");
+            await dbContext.SaveChangesAsync(statusListener.CancellationToken);
+            await dispatcherOperation;
+            await Dispatcher.InvokeAsync(() =>
             {
-                if (state.Entity is not null)
-                    await entry.ReloadAsync(statusListener.CancellationToken);
-                throw;
+                statusListener.SetMessage(isNew ? "Record inserted into database." : "Database record updated.");
+                if (isNew || !_backingItems.Any(i => ReferenceEquals(i.Model, entity)))
+                    _backingItems.Add(CreateItem(entity));
+            }, DispatcherPriority.Background, statusListener.CancellationToken);
+            return isNew;
+        }
+
+        protected internal Task<TItemVM> DeleteItemAsync([DisallowNull] TDbEntity entity)
+        {
+            VerifyAccess();
+            TItemVM item = _backingItems.FirstOrDefault(i => ReferenceEquals(i.Model, entity));
+            if (item is null)
+                return Task.FromResult<TItemVM>(null);
+            string title = GetDeleteProgressTitle(item);
+            AsyncOps.AsyncFuncOpViewModel<TDbEntity, bool?> asyncFuncOpViewModel = BgOps.FromAsync(title, "Connecting to database...", entity, EntityDbOp, OnDeleteItemAsync);
+            return asyncFuncOpViewModel.GetTask().ContinueWith(task =>
+            {
+                if (!(task.Result ?? false))
+                    return null;
+                Dispatcher.Invoke(() => _backingItems.Remove(item));
+                return item;
+            }, TaskContinuationOptions.OnlyOnRanToCompletion);
+        }
+
+        private async Task<bool?> OnDeleteItemAsync([DisallowNull] TDbEntity entity, AsyncOps.IStatusListener<TDbEntity> statusListener)
+        {
+            statusListener.CancellationToken.ThrowIfCancellationRequested();
+            IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
+            LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+            DispatcherOperation dispatcherOperation;
+            EntityEntry<TDbEntity> entry = dbContext.Entry(entity);
+            switch (entry.State)
+            {
+                case EntityState.Added:
+                case EntityState.Detached:
+                    statusListener.SetMessage("Item does not exist in the database.", StatusMessageLevel.Error);
+                    return null;
+                case EntityState.Deleted:
+                    statusListener.SetMessage("Item was already deleted.", StatusMessageLevel.Warning);
+                    return false;
+                default:
+                    dispatcherOperation = statusListener.BeginSetMessage("Deleting from database...");
+                    GetDbSet(dbContext).Remove(entity);
+                    break;
             }
-            return entry.Entity;
+            await dbContext.SaveChangesAsync(statusListener.CancellationToken);
+            await dispatcherOperation;
+            statusListener.SetMessage("Item deleted.");
+            return true;
         }
 
-        #endregion
-
-        #endregion
-
-        #region Change Tracking / Validation Members
-
-        internal bool HasErrors => Validation.HasErrors;
-
-        bool INotifyDataErrorInfo.HasErrors => Validation.HasErrors;
-
-        #region IsNew Property Members
-
-        private static readonly DependencyPropertyKey IsNewPropertyKey = DependencyProperty.RegisterReadOnly(nameof(IsNew), typeof(bool), typeof(EditDbEntityVM<TDbEntity>),
-                new PropertyMetadata(true));
-
-        public static readonly DependencyProperty IsNewProperty = IsNewPropertyKey.DependencyProperty;
-
-        public bool IsNew
+        private void Item_Delete(object sender, Commands.CommandEventArgs e)
         {
-            get => (bool)GetValue(IsNewProperty);
-            private set => SetValue(IsNewPropertyKey, value);
+            if (sender is TItemVM item && PromptItemDeleting(item, e.Parameter))
+                DeleteItemAsync(item.Model);
         }
 
-        #endregion
-
-        #region Model Property Members
-
-        private static readonly DependencyPropertyKey ModelPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Model), typeof(TDbEntity), typeof(EditDbEntityVM<TDbEntity>),
-                new PropertyMetadata(null));
-
-        public static readonly DependencyProperty ModelProperty = ModelPropertyKey.DependencyProperty;
-
-        public TDbEntity Model
+        private void Item_Edit(object sender, Commands.CommandEventArgs e)
         {
-            get => (TDbEntity)GetValue(ModelProperty);
-            private set => SetValue(ModelPropertyKey, value);
+            if (sender is TItemVM item && ShowModalItemEditWindow(item, e.Parameter))
+                SaveChangesAsync(item.Model);
         }
 
-        #endregion
+        protected abstract string GetSaveNewProgressTitle(TItemVM item);
 
-        #region ChangeTracker Members
+        protected abstract string GetSaveExistingProgressTitle(TItemVM item);
 
-        private static readonly DependencyPropertyKey ChangeTrackerPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ChangeTracker), typeof(ChangeStateTracker), typeof(EditDbEntityVM<TDbEntity>),
-                new PropertyMetadata(null));
-
-        public static readonly DependencyProperty ChangeTrackerProperty = ChangeTrackerPropertyKey.DependencyProperty;
-
-        public ChangeStateTracker ChangeTracker => (ChangeStateTracker)GetValue(ChangeTrackerProperty);
-
-        #endregion
-
-        #region Validation Property Members
-
-        private static readonly DependencyPropertyKey ValidationPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Validation), typeof(ValidationMessageTracker), typeof(EditDbEntityVM<TDbEntity>),
-            new PropertyMetadata(null));
-
-        public static readonly DependencyProperty ValidationProperty = ValidationPropertyKey.DependencyProperty;
-
-        public ValidationMessageTracker Validation => (ValidationMessageTracker)GetValue(ValidationProperty);
-
-        private void Validation_ErrorsChanged(object sender, DataErrorsChangedEventArgs e) => ErrorsChanged?.Invoke(this, e);
-
-        #endregion
-
-        protected virtual void OnValidationStateChanged(object sender, EventArgs e)
-        {
-            SaveCommand.IsEnabled = ChangeTracker.AnyInvalid && !Validation.AnyInvalid;
-        }
-
-        public IEnumerable GetErrors(string propertyName) => Validation.GetErrors(propertyName);
-
-        #endregion
-
-        #region Other Property Members
-
-        #region WindowTitle Property Members
-
-        private static readonly DependencyPropertyKey WindowTitlePropertyKey = DependencyProperty.RegisterReadOnly(nameof(WindowTitle), typeof(string),
-            typeof(EditDbEntityVM<TDbEntity>), new PropertyMetadata("Edit New Crawl Configuration"));
-
-        public static readonly DependencyProperty WindowTitleProperty = WindowTitlePropertyKey.DependencyProperty;
-
-        public string WindowTitle
-        {
-            get { return GetValue(WindowTitleProperty) as string; }
-            private set { SetValue(WindowTitlePropertyKey, value); }
-        }
-
-        #endregion
-
-        #region CreatedOn Property Members
-
-        private static readonly DependencyPropertyKey CreatedOnPropertyKey = DependencyProperty.RegisterReadOnly(nameof(CreatedOn), typeof(DateTime), typeof(EditDbEntityVM<TDbEntity>),
-                new PropertyMetadata(default));
-
-        public static readonly DependencyProperty CreatedOnProperty = CreatedOnPropertyKey.DependencyProperty;
-
-        public DateTime CreatedOn
-        {
-            get => (DateTime)GetValue(CreatedOnProperty);
-            private set => SetValue(CreatedOnPropertyKey, value);
-        }
-
-        #endregion
-
-        #region ModifiedOn Property Members
-
-        private static readonly DependencyPropertyKey ModifiedOnPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ModifiedOn), typeof(DateTime), typeof(EditDbEntityVM<TDbEntity>),
-                new PropertyMetadata(default));
-
-        public static readonly DependencyProperty ModifiedOnProperty = ModifiedOnPropertyKey.DependencyProperty;
-
-        public DateTime ModifiedOn
-        {
-            get => (DateTime)GetValue(ModifiedOnProperty);
-            private set => SetValue(ModifiedOnPropertyKey, value);
-        }
-
-        #endregion
-
-        #region LastSynchronizedOn Property Members
-
-        private static readonly DependencyPropertyKey LastSynchronizedOnPropertyKey = DependencyProperty.RegisterReadOnly(nameof(LastSynchronizedOn), typeof(DateTime?), typeof(EditDbEntityVM<TDbEntity>),
-                new PropertyMetadata(null));
-
-        public static readonly DependencyProperty LastSynchronizedOnProperty = LastSynchronizedOnPropertyKey.DependencyProperty;
-
-        public DateTime? LastSynchronizedOn
-        {
-            get => (DateTime?)GetValue(LastSynchronizedOnProperty);
-            private set => SetValue(LastSynchronizedOnPropertyKey, value);
-        }
-
-        #endregion
-
-        #endregion
-
-        protected EditDbEntityVM()
-        {
-            SetValue(SaveCommandPropertyKey, new Commands.RelayCommand(OnSaveExecute));
-            SetValue(CancelCommandPropertyKey, new Commands.RelayCommand(OnCancelExecute));
-            ValidationMessageTracker validation = new();
-            SetValue(ValidationPropertyKey, validation);
-            ChangeStateTracker changeTracker = new();
-            SetValue(ChangeTrackerPropertyKey, changeTracker);
-#if DEBUG
-            if (DesignerProperties.GetIsInDesignMode(this))
-                return;
-#endif
-            validation.ErrorsChanged += Validation_ErrorsChanged;
-            validation.AnyInvalidPropertyChanged += OnValidationStateChanged;
-            changeTracker.AnyInvalidPropertyChanged += OnValidationStateChanged;
-            // DEFERRED: Figure out why this crashes designer
-            SetValue(SaveChangesOpMgrPropertyKey, new AsyncOps.AsyncOpResultManagerViewModel<ModelViewModel, TDbEntity>());
-            SetValue(OpAggregatePropertyKey, new AsyncOps.AsyncOpAggregate());
-        }
+        protected abstract string GetDeleteProgressTitle(TItemVM item);
 
         /// <summary>
-        /// Instantiates a new <see cref="View.EditCrawlConfigWindow"/> to edit the properties of an existing <see cref="CrawlConfiguration"/>.
+        /// Displays a modal item edit window
         /// </summary>
-        /// <typeparam name="TWindow">The type of window to use.</typeparam>
-        /// <typeparam name="TVm">The view model used by the window.</typeparam>
-        /// <param name="model">The <see cref="LocalDbEntity"/> of type <typeparamref name="TDbEntity"/> to be modified.</param>
-        /// <returns><see langword="true"/> if modifications were successfully saved to the databaase; otherwise <see langword="false"/> to indicate the user cancelled or there was
-        /// an error that prohibited successful initialization.</returns>
-        internal static bool Edit<TWindow, TVm>([DisallowNull] CrawlConfiguration model)
-            where TWindow : Window, new()
-            where TVm : EditDbEntityVM<TDbEntity>, new()
-        {
-            View.Local.EditCrawlConfigWindow window = new();
-            EditCrawlConfigVM vm = (EditCrawlConfigVM)window.DataContext;
-            if (vm is null)
-            {
-                vm = new();
-                window.DataContext = vm;
-            }
-            vm.Initialize(model);
-            vm.CloseCancel += new EventHandler((sender, e) => window.DialogResult = false);
-            vm.CloseSuccess += new EventHandler((sender, e) => window.DialogResult = true);
-            return window.ShowDialog() ?? false;
-        }
-
-        public static bool Edit<TWindow, TVm, TLoadResult>(IEntityLoader<TDbEntity, TVm, TLoadResult> entityLoader, out TDbEntity model, out bool isNew)
-            where TWindow : Window, new()
-            where TVm : EditDbEntityVM<TDbEntity>, new()
-        {
-            if (entityLoader is null)
-                throw new ArgumentNullException(nameof(entityLoader));
-            TWindow window = new();
-            TVm vm = (TVm)window.DataContext;
-            if (vm is null)
-            {
-                vm = new();
-                window.DataContext = vm;
-            }
-
-            EventHandler closeCancelHandler = new((sender, e) =>
-            {
-                window.DialogResult = false;
-            });
-
-            vm.CloseCancel += closeCancelHandler;
-            vm.OpAggregate.Faulted += closeCancelHandler;
-            vm.OpAggregate.CancelOperation += closeCancelHandler;
-            vm.CloseSuccess += new EventHandler((sender, e) => window.DialogResult = true);
-            window.Loaded += new RoutedEventHandler((sender, e) =>
-            {
-                AsyncOps.AsyncOpResultManagerViewModel<(TLoadResult, EntityState)> loader = new();
-                AsyncOps.AsyncFuncOpViewModel<(TLoadResult, EntityState)> op = vm.OpAggregate.FromAsync(entityLoader.LoadingTitle,
-                    entityLoader.InitialLoadingMessage, loader, async statusListener =>
-                {
-                    using IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
-                    using LocalDbContext dbContext = serviceScope.ServiceProvider.GetService<LocalDbContext>();
-                    TLoadResult loadResult = await entityLoader.LoadAsync(dbContext, statusListener);
-                    EntityEntry<TDbEntity> entry;
-                    TDbEntity entity = entityLoader.GetEntity(loadResult);
-                    if (entity is null)
-                    {
-                        entity = vm.InitializeNewModel();
-                        entry = vm.GetDbSet(dbContext).Add(entity);
-                    }
-                    else if ((entry = dbContext.Entry(entity)).State == EntityState.Detached)
-                        entry = vm.GetDbSet(dbContext).Add(entity);
-                    return (loadResult, entry.State);
-                });
-                op.GetTask().ContinueWith(task =>
-                {
-                    if (task.IsCompletedSuccessfully)
-                        vm.Dispatcher.Invoke(() =>
-                        {
-                            vm.OpAggregate.CancelOperation -= closeCancelHandler;
-                            vm.OpAggregate.Faulted -= closeCancelHandler;
-                            vm.Initialize(entityLoader.GetEntity(task.Result.Item1), task.Result.Item2);
-                            entityLoader.InitializeViewModel(vm, task.Result.Item1, task.Result.Item2);
-                        });
-                });
-            });
-            if (window.ShowDialog() ?? false)
-            {
-                isNew = vm.IsNew;
-                model = vm.Model;
-                return true;
-            }
-            model = null;
-            isNew = false;
-            return false;
-        }
+        /// <param name="item">The item to edit.</param>
+        /// <param name="parameter">The parameter passed to the edit command.</param>
+        /// <returns><see langword="true"/> if there are changes to be saved to the database; otherwise, <see langword="false"/>.</returns>
+        /// <remarks>If an item is to deleted from the database from the edit window, then the edit view model should call <see cref="DeleteItemAsync(TDbEntity)"/>
+        /// and then return <see langword="false"/>.</remarks>
+        protected abstract bool ShowModalItemEditWindow(TItemVM item, object parameter);
 
         /// <summary>
-        /// Instantiates a new <see cref="Window"/> to edit the properties of a <see cref="LocalDbEntity"/>.
+        /// Displays a modal dialog to confirm that they want to delete the item.
         /// </summary>
-        /// <typeparam name="TWindow">The type of window to use.</typeparam>
-        /// <typeparam name="TVm">The view model used by the window.</typeparam>
-        /// <param name="loadingTitle">The title to display in the <see cref="View.AsyncBgModalControl"/> while the entity is being loaded.</param>
-        /// <param name="initialLoadingMessage">The status message to initially display within the <see cref="View.AsyncBgModalControl"/>.</param>
-        /// <param name="getDbEntityOpAsync">A factory method that returns a <see cref="Task{TDbEntity}"/> that is presumably the return value
-        /// of an asynchronous method.</param>
-        /// <param name="model">Returns the <see cref="LocalDbEntity"/> that was edited or inserted into the database.</param>
-        /// <param name="isNew"><see langword="true"/> if a new entity was inserted into the database; otherwise, <see langword="false"/>.</param>
-        /// <returns><see langword="true"/> if any changes were saved to the database or if a new entity was inserted into the database;
-        /// otherwise <see langword="false"/> to indicate the user cancelled or there was an error that prohibited successful initialization.</returns>
-        public static bool Edit<TWindow, TVm>([DisallowNull] string loadingTitle, [DisallowNull] string initialLoadingMessage,
-            [DisallowNull] Func<LocalDbContext, AsyncOps.IStatusListener, Task<TDbEntity>> getDbEntityOpAsync, out TDbEntity model, out bool isNew)
-            where TWindow : Window, new()
-            where TVm : EditDbEntityVM<TDbEntity>, new()
+        /// <param name="item">The item to be deleted.</param>
+        /// <param name="parameter">The parameter passed to the delete command.</param>
+        /// <returns><see langword="true"/> if the item should be deleted from the database; otherwise, <see langword="false"/>.</returns>
+        protected abstract bool PromptItemDeleting(TItemVM item, object parameter);
+
+        protected virtual void OnNavigatedTo(MainVM mainVM)
         {
-            return Edit<TWindow, TVm, TDbEntity>(new EntityLoader<TDbEntity, TVm>(loadingTitle, initialLoadingMessage, getDbEntityOpAsync),
-                out model, out isNew);
+            // TODO: Do initial load from DB
         }
 
-        protected virtual void Initialize(TDbEntity model, EntityState state)
+        protected virtual void OnNavigatedFrom(MainVM mainVM)
         {
-            IsNew = state == EntityState.Added;
-            Model = model;
-            CreatedOn = model.CreatedOn;
-            ModifiedOn = model.ModifiedOn;
-            LastSynchronizedOn = model.LastSynchronizedOn;
+            EntityDbOp.CancelAll();
         }
 
-        public record ModelViewModel(TDbEntity Entity, EditDbEntityVM<TDbEntity> ViewModel);
-    }
+        void INotifyNavigationContentChanged.OnNavigatedTo(MainVM mainVM) => OnNavigatedTo(mainVM);
 
-    class EntityLoader<TDbEntity, TVm> : IEntityLoader<TDbEntity, TVm, TDbEntity>
-        where TDbEntity : LocalDbEntity, new()
-        where TVm : EditDbEntityVM<TDbEntity>, new()
-    {
-        public string LoadingTitle { get; }
-
-        public string InitialLoadingMessage { get; }
-
-        private readonly Func<LocalDbContext, AsyncOps.IStatusListener, Task<TDbEntity>> _getDbEntityOpAsync;
-
-        internal EntityLoader([DisallowNull] string loadingTitle, [DisallowNull] string initialLoadingMessage,
-            [DisallowNull] Func<LocalDbContext, AsyncOps.IStatusListener, Task<TDbEntity>> getDbEntityOpAsync)
-        {
-            if (string.IsNullOrWhiteSpace(loadingTitle))
-                throw new ArgumentException($"'{nameof(loadingTitle)}' cannot be null or whitespace.", nameof(loadingTitle));
-            if (string.IsNullOrWhiteSpace(initialLoadingMessage))
-                throw new ArgumentException($"'{nameof(initialLoadingMessage)}' cannot be null or whitespace.", nameof(initialLoadingMessage));
-            if (getDbEntityOpAsync is null)
-                throw new ArgumentNullException(nameof(getDbEntityOpAsync));
-            LoadingTitle = loadingTitle;
-            InitialLoadingMessage = initialLoadingMessage;
-            _getDbEntityOpAsync = getDbEntityOpAsync;
-        }
-
-        public TDbEntity GetEntity(TDbEntity loadResult) => loadResult;
-
-        public void InitializeViewModel(TVm viewModel, TDbEntity loadResult, EntityState entityState)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<TDbEntity> LoadAsync(LocalDbContext dbContext, AsyncOps.IStatusListener statusListener) => _getDbEntityOpAsync(dbContext, statusListener);
-    }
-    public interface IEntityLoader<TDbEntity, TVm, TLoadResult>
-        where TDbEntity : LocalDbEntity, new()
-        where TVm : EditDbEntityVM<TDbEntity>, new()
-    {
-        string LoadingTitle { get; }
-
-        string InitialLoadingMessage { get; }
-
-        TDbEntity GetEntity(TLoadResult loadResult);
-
-        Task<TLoadResult> LoadAsync(LocalDbContext dbContext, AsyncOps.IStatusListener statusListener);
-
-        void InitializeViewModel(TVm viewModel, TLoadResult loadResult, EntityState entityState);
+        void INotifyNavigationContentChanged.OnNavigatedFrom(MainVM mainVM) => OnNavigatedFrom(mainVM);
     }
 }

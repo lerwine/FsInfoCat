@@ -20,6 +20,7 @@ namespace FsInfoCat.Desktop
                 return DesignTimeLoggerFactory.GetLogger<T>();
             return Services.ServiceProvider.GetRequiredService<ILogger<T>>();
         }
+
         private async void Application_Startup(object sender, StartupEventArgs e)
         {
             await Services.Initialize(e.Args);

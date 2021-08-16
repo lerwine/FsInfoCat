@@ -2,21 +2,17 @@ using FsInfoCat.Local;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel.Local
 {
-    public class FileSystemsPageVM : DbEntityListingPageVM<FileSystem, FileSystemItemVM>
+    public class SymbolicNamesPageVM : DbEntityListingPageVM<SymbolicName, SymbolicNameItemVM>
     {
         #region ItemsLoadOp Property Members
 
-        private static readonly DependencyPropertyKey ItemsLoadOpPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ItemsLoadOp), typeof(AsyncOps.AsyncOpResultManagerViewModel<bool?, int>), typeof(FileSystemsPageVM),
+        private static readonly DependencyPropertyKey ItemsLoadOpPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ItemsLoadOp), typeof(AsyncOps.AsyncOpResultManagerViewModel<bool?, int>), typeof(SymbolicNamesPageVM),
                 new PropertyMetadata(new AsyncOps.AsyncOpResultManagerViewModel<bool?, int>()));
 
         /// <summary>
@@ -43,53 +39,51 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             statusListener.CancellationToken.ThrowIfCancellationRequested();
             IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
             LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
-            IQueryable<EntityAndCounts> items;
+            IQueryable<SymbolicName> items;
             if (isInactive.HasValue)
             {
                 if (isInactive.Value)
-                    items = from f in dbContext.FileSystems where f.IsInactive select new EntityAndCounts(f, f.Volumes.Count(), f.SymbolicNames.Count());
+                    items = from s in dbContext.SymbolicNames where s.IsInactive select s;
                 else
-                    items = from f in dbContext.FileSystems where !f.IsInactive select new EntityAndCounts(f, f.Volumes.Count(), f.SymbolicNames.Count());
+                    items = from s in dbContext.SymbolicNames where !s.IsInactive select s;
             }
             else
-                items = from f in dbContext.FileSystems select new EntityAndCounts(f, f.Volumes.Count(), f.SymbolicNames.Count());
-            return await OnEntitiesLoaded(items, statusListener, r => new FileSystemItemVM(r));
+                items = from s in dbContext.SymbolicNames select s;
+            return await OnEntitiesLoaded(items, statusListener);
         }
 
-        protected override FileSystemItemVM CreateItem(FileSystem entity) => new(entity);
+        protected override SymbolicNameItemVM CreateItem(SymbolicName entity) => new(entity);
 
-        protected override DbSet<FileSystem> GetDbSet(LocalDbContext dbContext) => dbContext.FileSystems;
+        protected override DbSet<SymbolicName> GetDbSet(LocalDbContext dbContext) => dbContext.SymbolicNames;
 
-        protected override string GetDeleteProgressTitle(FileSystemItemVM item)
+        protected override string GetDeleteProgressTitle(SymbolicNameItemVM item)
         {
             throw new NotImplementedException();
         }
 
-        protected override string GetSaveExistingProgressTitle(FileSystemItemVM item)
+        protected override string GetSaveExistingProgressTitle(SymbolicNameItemVM item)
         {
             throw new NotImplementedException();
         }
 
-        protected override string GetSaveNewProgressTitle(FileSystemItemVM item)
+        protected override string GetSaveNewProgressTitle(SymbolicNameItemVM item)
         {
             throw new NotImplementedException();
         }
 
-        protected override FileSystem InitializeNewEntity()
+        protected override SymbolicName InitializeNewEntity()
         {
             throw new NotImplementedException();
         }
 
-        protected override bool PromptItemDeleting(FileSystemItemVM item, object parameter)
+        protected override bool PromptItemDeleting(SymbolicNameItemVM item, object parameter)
         {
             throw new NotImplementedException();
         }
 
-        protected override bool ShowModalItemEditWindow(FileSystemItemVM item, object parameter)
+        protected override bool ShowModalItemEditWindow(SymbolicNameItemVM item, object parameter)
         {
             throw new NotImplementedException();
         }
-
-        public record EntityAndCounts(FileSystem Entity, int VolumeCount, int SymbolicNameCount);
     }
 }

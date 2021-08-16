@@ -6,7 +6,7 @@ namespace FsInfoCat.Desktop.Commands
     /// Event data for en event issued by a <see cref="RelayCommand"/>.
     /// <para>Extends <see cref="EventArgs" />.</para>
     /// </summary>
-    /// <seealso cref="System.EventArgs" />
+    /// <seealso cref="EventArgs" />
     public class CommandEventArgs : EventArgs
     {
         /// <summary>

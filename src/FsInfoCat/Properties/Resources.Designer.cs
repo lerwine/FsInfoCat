@@ -4948,6 +4948,33 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Saving new Volume &quot;{0}&quot; ({1})..
+        /// </summary>
+        public static string FormatMessage_AddingNewVolume {
+            get {
+                return ResourceManager.GetString("FormatMessage_AddingNewVolume", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Deleting Volume &quot;{0}&quot; ({1})..
+        /// </summary>
+        public static string FormatMessage_DeletingVolume {
+            get {
+                return ResourceManager.GetString("FormatMessage_DeletingVolume", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Saving changes to Volume &quot;{0}&quot; ({1})..
+        /// </summary>
+        public static string FormatMessage_SavingVolumeChanges {
+            get {
+                return ResourceManager.GetString("FormatMessage_SavingVolumeChanges", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to &lt;xs:schema xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; attributeFormDefault=&quot;unqualified&quot; elementFormDefault=&quot;qualified&quot;
         ///           xmlns:ex=&quot;http://git.erwinefamily.net/FsInfoCat/V1/FsInfoCatExport.xsd&quot; targetNamespace=&quot;http://git.erwinefamily.net/FsInfoCat/V1/FsInfoCatExport.xsd&quot;
         ///           xmlns:xs=&quot;http://www.w3.org/2001/XMLSchema&quot; xmlns=&quot;http://git.erwinefamily.net/FsInfoCat/V1/FsInfoCatExport.xsd&quot;&gt;

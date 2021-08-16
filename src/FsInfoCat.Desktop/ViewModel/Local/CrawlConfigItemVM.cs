@@ -1,8 +1,8 @@
 using FsInfoCat.Local;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Windows;
@@ -290,51 +290,51 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             switch (propertyName)
             {
                 case nameof(CrawlConfiguration.DisplayName):
-                    Dispatcher.Invoke(() => DisplayName = Model.DisplayName);
+                    Dispatcher.CheckInvoke(() => DisplayName = Model?.DisplayName);
                     break;
                 case nameof(CrawlConfiguration.MaxRecursionDepth):
-                    Dispatcher.Invoke(() => MaxRecursionDepth = Model.MaxRecursionDepth);
+                    Dispatcher.CheckInvoke(() => MaxRecursionDepth = Model?.MaxRecursionDepth ?? DbConstants.DbColDefaultValue_MaxRecursionDepth);
                     break;
                 case nameof(CrawlConfiguration.MaxTotalItems):
-                    Dispatcher.Invoke(() => MaxTotalItems = Model.MaxTotalItems);
+                    Dispatcher.CheckInvoke(() => MaxTotalItems = Model?.MaxTotalItems);
                     break;
                 case nameof(CrawlConfiguration.TTL):
-                    Dispatcher.Invoke(() =>
+                    Dispatcher.CheckInvoke(() =>
                     {
-                        long? seconds = Model.TTL;
+                        long? seconds = Model?.TTL;
                         TTL = seconds.HasValue ? TimeSpan.FromSeconds(seconds.Value) : null;
                     });
                     break;
                 case nameof(CrawlConfiguration.RescheduleInterval):
-                    Dispatcher.Invoke(() =>
+                    Dispatcher.CheckInvoke(() =>
                     {
-                        long? seconds = Model.RescheduleInterval;
+                        long? seconds = Model?.RescheduleInterval;
                         RescheduleInterval = seconds.HasValue ? TimeSpan.FromSeconds(seconds.Value) : null;
                     });
                     break;
                 case nameof(CrawlConfiguration.Notes):
-                    Dispatcher.Invoke(() => Notes = Model.Notes);
+                    Dispatcher.CheckInvoke(() => Notes = Model?.Notes);
                     break;
                 case nameof(CrawlConfiguration.StatusValue):
-                    Dispatcher.Invoke(() => StatusValue = Model.StatusValue);
+                    Dispatcher.CheckInvoke(() => StatusValue = Model?.StatusValue ?? CrawlStatus.NotRunning);
                     break;
                 case nameof(CrawlConfiguration.LastCrawlStart):
-                    Dispatcher.Invoke(() => LastCrawlStart = Model.LastCrawlStart);
+                    Dispatcher.CheckInvoke(() => LastCrawlStart = Model?.LastCrawlStart);
                     break;
                 case nameof(CrawlConfiguration.LastCrawlEnd):
-                    Dispatcher.Invoke(() => LastCrawlEnd = Model.LastCrawlEnd);
+                    Dispatcher.CheckInvoke(() => LastCrawlEnd = Model?.LastCrawlEnd);
                     break;
                 case nameof(CrawlConfiguration.NextScheduledStart):
-                    Dispatcher.Invoke(() => NextScheduledStart = Model.NextScheduledStart);
+                    Dispatcher.CheckInvoke(() => NextScheduledStart = Model?.NextScheduledStart);
                     break;
                 case nameof(CrawlConfiguration.RescheduleFromJobEnd):
-                    Dispatcher.Invoke(() => RescheduleFromJobEnd = Model.RescheduleFromJobEnd);
+                    Dispatcher.CheckInvoke(() => RescheduleFromJobEnd = Model?.RescheduleFromJobEnd ?? false);
                     break;
                 case nameof(CrawlConfiguration.RescheduleAfterFail):
-                    Dispatcher.Invoke(() => RescheduleAfterFail = Model.RescheduleAfterFail);
+                    Dispatcher.CheckInvoke(() => RescheduleAfterFail = Model?.RescheduleAfterFail ?? false);
                     break;
                 case nameof(CrawlConfiguration.Root):
-                    Subdirectory root = Model.Root;
+                    Subdirectory root = Model?.Root;
                     if (root is null)
                         OnLookupFullNameComplete("");
                     else
@@ -342,12 +342,14 @@ namespace FsInfoCat.Desktop.ViewModel.Local
                         _ = Subdirectory.LookupFullNameAsync(root, CancellationToken.None).ContinueWith(task =>
                         {
                             if (task.IsFaulted)
-                                Dispatcher.Invoke(() => OnLookupFullNameError(task.Exception));
+                                Dispatcher.CheckInvoke(() => OnLookupFullNameError(task.Exception));
                             else if (!task.IsCanceled)
-                                Dispatcher.Invoke(() => OnLookupFullNameComplete(task.Result ?? ""));
+                                Dispatcher.CheckInvoke(() => OnLookupFullNameComplete(task.Result ?? ""));
                         });
                     return;
             }
         }
+
+        protected override DbSet<CrawlConfiguration> GetDbSet(LocalDbContext dbContext) => dbContext.CrawlConfigurations;
     }
 }
