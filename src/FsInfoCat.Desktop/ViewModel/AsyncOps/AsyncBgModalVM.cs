@@ -5,13 +5,20 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace FsInfoCat.Desktop.ViewModel.AsyncOps
 {
-    public class AsyncOpAggregate : DependencyObject
+    /// <summary>
+    /// View model used by <see cref="View.AsyncBgModalControl"/> to display background operation status in a modal context.
+    /// </summary>
+    /// <seealso cref="DependencyObject" />
+    public class AsyncBgModalVM : DependencyObject
     {
         private Collection<IAsyncOpViewModel> _operations = new();
-        private readonly ILogger<AsyncOpAggregate> _logger;
+        private readonly ILogger<AsyncBgModalVM> _logger;
+        private Border _outerMessageBorder;
+        #region Events
 
         /// <summary>
         /// Occurs when the <see cref="AsyncOpStatus"/> has changed.
@@ -34,47 +41,48 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
         public event DependencyPropertyChangedEventHandler DurationPropertyChanged;
 
         /// <summary>
-        /// Occurs n the current <see cref="System.Windows.Threading.Dispatcher"/> thread when the <see cref="CancelOperationCommand"/> is invoked.
+        /// Occurs n the current <see cref="System.Windows.Threading.Dispatcher"/> thread when the <see cref="CancelOperation"/> is invoked.
         /// </summary>
-        public event EventHandler CancelOperation;
+        public event EventHandler OperationCancelRequested;
 
         /// <summary>
         /// Occurs n the current <see cref="System.Windows.Threading.Dispatcher"/> thread after the <see cref="Task"/> is completed with <see cref="Task.Status"/> of <see cref="TaskStatus.Faulted"/>
         /// or the final <see cref="IAsyncOpViewModel.MessageLevel"/> is <see cref="StatusMessageLevel.Error"/>.
         /// </summary>
-        public event EventHandler Faulted;
+        public event EventHandler OperationFaulted;
 
         /// <summary>
         /// Occurs on the current <see cref="System.Windows.Threading.Dispatcher"/> thread after the <see cref="Task"/> is completed with <see cref="Task.Status"/> of <see cref="TaskStatus.Canceled"/>.
         /// </summary>
-        public event EventHandler Canceled;
+        public event EventHandler OperationCanceled;
 
         /// <summary>
         /// Occurs n the current <see cref="System.Windows.Threading.Dispatcher"/> thread after the <see cref="Task"/> has run to completion without fault or cancellation.
         /// </summary>
-        public event EventHandler RanToCompletion;
+        public event EventHandler OperationRanToCompletion;
 
-        #region CancelOperation Property Members
+        #endregion
+        #region CancelOperation Command Members
 
-        private static readonly DependencyPropertyKey CancelOperationCommandPropertyKey = DependencyProperty.RegisterReadOnly(nameof(CancelOperationCommand),
-            typeof(Commands.RelayCommand), typeof(AsyncOpAggregate), new PropertyMetadata(null));
+        private static readonly DependencyPropertyKey CancelOperationPropertyKey = DependencyProperty.RegisterReadOnly(nameof(CancelOperation),
+            typeof(Commands.RelayCommand), typeof(AsyncBgModalVM), new PropertyMetadata(null));
 
-        public static readonly DependencyProperty CancelOperationCommandProperty = CancelOperationCommandPropertyKey.DependencyProperty;
+        public static readonly DependencyProperty CancelOperationProperty = CancelOperationPropertyKey.DependencyProperty;
 
         /// <summary>
         /// Gets the cancel operation command.
         /// </summary>
         /// <value>The bindable <see cref="System.Windows.Input.ICommand"/> that cancels the current background operation.</value>
-        public Commands.RelayCommand CancelOperationCommand => (Commands.RelayCommand)GetValue(CancelOperationCommandProperty);
+        public Commands.RelayCommand CancelOperation => (Commands.RelayCommand)GetValue(CancelOperationProperty);
 
-        private void InvokeCancelOperationCommand(object parameter)
+        private void RaiseOperationCancelRequested(object parameter)
         {
-            using IDisposable loggerScope = _logger.BeginScope("{EventName} event raised; parameter = {parameter}", nameof(CancelOperation), parameter);
-            try { OnCancelOperationExecute(parameter); }
-            finally { CancelOperation?.Invoke(this, EventArgs.Empty); }
+            using IDisposable loggerScope = _logger.BeginScope("{EventName} event raised; parameter = {parameter}", nameof(OperationCancelRequested), parameter);
+            try { OnOperationCancelRequested(parameter); }
+            finally { OperationCancelRequested?.Invoke(this, EventArgs.Empty); }
         }
 
-        private void OnCancelOperationExecute(object parameter)
+        private void OnOperationCancelRequested(object parameter)
         {
             if (_operations.Count > 0)
             {
@@ -90,10 +98,78 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
         }
 
         #endregion
+        #region NotifyOuterMessageBorderLoaded Command Property Members
+
+        private static readonly DependencyPropertyKey NotifyOuterMessageBorderLoadedPropertyKey = DependencyProperty.RegisterReadOnly(nameof(NotifyOuterMessageBorderLoaded),
+            typeof(Commands.RelayCommand), typeof(AsyncBgModalVM), new PropertyMetadata(null));
+
+        /// <summary>
+        /// Identifies the <see cref="NotifyOuterMessageBorderLoaded"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty NotifyOuterMessageBorderLoadedProperty = NotifyOuterMessageBorderLoadedPropertyKey.DependencyProperty;
+
+        /// <summary>
+        /// Gets the $name$ command object.
+        /// </summary>
+        /// <value>The <see cref="System.Windows.Input.ICommand"/> that implements the $command$ command.</value>
+        public Commands.RelayCommand NotifyOuterMessageBorderLoaded => (Commands.RelayCommand)GetValue(NotifyOuterMessageBorderLoadedProperty);
+
+        private void OnNotifyOuterMessageBorderLoaded(object parameter)
+        {
+            if (parameter is Border outerMessageBorder)
+            {
+                _outerMessageBorder = outerMessageBorder;
+                RecalculateOuterMessageBorderSize(outerMessageBorder);
+            }
+        }
+
+        #endregion
+        #region NotifyOuterMessageBorderUnloaded Command Property Members
+
+        private static readonly DependencyPropertyKey NotifyOuterMessageBorderUnloadedPropertyKey = DependencyProperty.RegisterReadOnly(nameof(NotifyOuterMessageBorderUnloaded),
+            typeof(Commands.RelayCommand), typeof(AsyncBgModalVM), new PropertyMetadata(null));
+
+        /// <summary>
+        /// Identifies the <see cref="NotifyOuterMessageBorderUnloaded"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty NotifyOuterMessageBorderUnloadedProperty = NotifyOuterMessageBorderUnloadedPropertyKey.DependencyProperty;
+
+        /// <summary>
+        /// Gets the $name$ command object.
+        /// </summary>
+        /// <value>The <see cref="System.Windows.Input.ICommand"/> that implements the $command$ command.</value>
+        public Commands.RelayCommand NotifyOuterMessageBorderUnloaded => (Commands.RelayCommand)GetValue(NotifyOuterMessageBorderUnloadedProperty);
+
+        private void OnNotifyOuterMessageBorderUnloaded(object parameter)
+        {
+            if (parameter is Border outerMessageBorder)
+                _outerMessageBorder = null;
+        }
+
+        #endregion
+        #region NotifyViewSizeChanged Command Property Members
+
+        private static readonly DependencyPropertyKey NotifyViewSizeChangedPropertyKey = DependencyProperty.RegisterReadOnly(nameof(NotifyViewSizeChanged),
+            typeof(Commands.RelayCommand), typeof(AsyncBgModalVM), new PropertyMetadata(null));
+
+        /// <summary>
+        /// Identifies the <see cref="NotifyViewSizeChanged"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty NotifyViewSizeChangedProperty = NotifyViewSizeChangedPropertyKey.DependencyProperty;
+
+        /// <summary>
+        /// Gets the $name$ command object.
+        /// </summary>
+        /// <value>The <see cref="System.Windows.Input.ICommand"/> that implements the $command$ command.</value>
+        public Commands.RelayCommand NotifyViewSizeChanged => (Commands.RelayCommand)GetValue(NotifyViewSizeChangedProperty);
+
+        private void OnNotifyViewSizeChanged(object parameter) => RecalculateOuterMessageBorderSize(_outerMessageBorder);
+
+        #endregion
         #region AsyncOpStatus Property Members
 
-        private static readonly DependencyPropertyKey AsyncOpStatusPropertyKey = DependencyProperty.RegisterReadOnly(nameof(AsyncOpStatus), typeof(AsyncOpStatusCode), typeof(AsyncOpAggregate),
-                new PropertyMetadata(AsyncOpStatusCode.NotStarted, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as AsyncOpAggregate)?.RaiseAsyncOpStatusPropertyChanged(e)));
+        private static readonly DependencyPropertyKey AsyncOpStatusPropertyKey = DependencyProperty.RegisterReadOnly(nameof(AsyncOpStatus), typeof(AsyncOpStatusCode), typeof(AsyncBgModalVM),
+                new PropertyMetadata(AsyncOpStatusCode.NotStarted, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as AsyncBgModalVM)?.RaiseAsyncOpStatusPropertyChanged(e)));
 
         public static readonly DependencyProperty AsyncOpStatusProperty = AsyncOpStatusPropertyKey.DependencyProperty;
 
@@ -111,12 +187,22 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
         {
             _logger.LogInformation("{PropertyName} changed from {OldValue} to {NewValue}", args.Property.Name, args.OldValue, args.NewValue);
             AsyncOpStatusPropertyChanged?.Invoke(this, args);
+            switch ((args.NewValue as AsyncOpStatusCode?) ?? AsyncOpStatusCode.NotStarted)
+            {
+                case AsyncOpStatusCode.CancellationPending:
+                case AsyncOpStatusCode.Running:
+                    ControlVisibility = Visibility.Visible;
+                    break;
+                default:
+                    ControlVisibility = Visibility.Collapsed;
+                    break;
+            }
         }
 
         #endregion
         #region Title Property Members
 
-        private static readonly DependencyPropertyKey TitlePropertyKey = DependencyProperty.RegisterReadOnly(nameof(Title), typeof(string), typeof(AsyncOpAggregate), new PropertyMetadata(""));
+        private static readonly DependencyPropertyKey TitlePropertyKey = DependencyProperty.RegisterReadOnly(nameof(Title), typeof(string), typeof(AsyncBgModalVM), new PropertyMetadata(""));
 
         public static readonly DependencyProperty TitleProperty = TitlePropertyKey.DependencyProperty;
 
@@ -133,8 +219,8 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
         #endregion
         #region StatusMessage Property Members
 
-        private static readonly DependencyPropertyKey StatusMessagePropertyKey = DependencyProperty.RegisterReadOnly(nameof(StatusMessage), typeof(string), typeof(AsyncOpAggregate),
-                new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as AsyncOpAggregate)?.RaiseStatusMessagePropertyChanged(e)));
+        private static readonly DependencyPropertyKey StatusMessagePropertyKey = DependencyProperty.RegisterReadOnly(nameof(StatusMessage), typeof(string), typeof(AsyncBgModalVM),
+                new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as AsyncBgModalVM)?.RaiseStatusMessagePropertyChanged(e)));
 
         public static readonly DependencyProperty StatusMessageProperty = StatusMessagePropertyKey.DependencyProperty;
 
@@ -155,10 +241,10 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
         }
 
         #endregion
-        #region MessageLevel
+        #region MessageLevel Property Members
 
-        private static readonly DependencyPropertyKey MessageLevelPropertyKey = DependencyProperty.RegisterReadOnly(nameof(MessageLevel), typeof(StatusMessageLevel), typeof(AsyncOpAggregate),
-                new PropertyMetadata(StatusMessageLevel.Information, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as AsyncOpAggregate)?.RaiseMessageLevelPropertyChanged(e)));
+        private static readonly DependencyPropertyKey MessageLevelPropertyKey = DependencyProperty.RegisterReadOnly(nameof(MessageLevel), typeof(StatusMessageLevel), typeof(AsyncBgModalVM),
+                new PropertyMetadata(StatusMessageLevel.Information, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as AsyncBgModalVM)?.RaiseMessageLevelPropertyChanged(e)));
 
         public static readonly DependencyProperty MessageLevelProperty = MessageLevelPropertyKey.DependencyProperty;
 
@@ -179,10 +265,10 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
         }
 
         #endregion
-        #region Duration
+        #region Duration Property Members
 
-        private static readonly DependencyPropertyKey DurationPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Duration), typeof(TimeSpan), typeof(AsyncOpAggregate),
-                new PropertyMetadata(TimeSpan.Zero, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as AsyncOpAggregate)?.RaiseDurationPropertyChanged(e)));
+        private static readonly DependencyPropertyKey DurationPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Duration), typeof(TimeSpan), typeof(AsyncBgModalVM),
+                new PropertyMetadata(TimeSpan.Zero, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as AsyncBgModalVM)?.RaiseDurationPropertyChanged(e)));
 
         public static readonly DependencyProperty DurationProperty = DurationPropertyKey.DependencyProperty;
 
@@ -203,12 +289,105 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
         }
 
         #endregion
+        #region PopupBorderWidth Property Members
 
-        public AsyncOpAggregate()
+        private static readonly DependencyPropertyKey PopupBorderWidthPropertyKey = DependencyProperty.RegisterReadOnly(nameof(PopupBorderWidth), typeof(double), typeof(AsyncBgModalVM),
+                new PropertyMetadata(200.0));
+
+        /// <summary>
+        /// Identifies the <see cref="PopupBorderWidth"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty PopupBorderWidthProperty = PopupBorderWidthPropertyKey.DependencyProperty;
+
+        /// <summary>
+        /// Gets the width of the inner popup border width.
+        /// </summary>
+        /// <value>The width of the inner popup border as calculated by the <see cref="RecalculatedPopupBorderSize(Border)"/> method.</value>
+        public double PopupBorderWidth { get => (double)GetValue(PopupBorderWidthProperty); private set => SetValue(PopupBorderWidthPropertyKey, value); }
+
+        #endregion
+        #region PopupBorderHeight Property Members
+
+        private static readonly DependencyPropertyKey PopupBorderHeightPropertyKey = DependencyProperty.RegisterReadOnly(nameof(PopupBorderHeight), typeof(double), typeof(AsyncBgModalVM),
+                new PropertyMetadata(100.0));
+
+        /// <summary>
+        /// Identifies the <see cref="PopupBorderHeight"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty PopupBorderHeightProperty = PopupBorderHeightPropertyKey.DependencyProperty;
+
+        /// <summary>
+        /// Gets the height of the inner popup border width.
+        /// </summary>
+        /// <value>The width of the inner popup border as calculated by the <see cref="RecalculatedPopupBorderSize(Border)"/> method.</value>
+        public double PopupBorderHeight { get => (double)GetValue(PopupBorderHeightProperty); private set => SetValue(PopupBorderHeightPropertyKey, value); }
+
+        #endregion
+        #region ControlVisibility Property Members
+
+        private static readonly DependencyPropertyKey ControlVisibilityPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ControlVisibility), typeof(Visibility), typeof(AsyncBgModalVM),
+                new PropertyMetadata(Visibility.Collapsed));
+
+        /// <summary>
+        /// Identifies the <see cref="ControlVisibility"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ControlVisibilityProperty = ControlVisibilityPropertyKey.DependencyProperty;
+
+        /// <summary>
+        /// Gets .
+        /// </summary>
+        /// <value>The .</value>
+        public Visibility ControlVisibility { get => (Visibility)GetValue(ControlVisibilityProperty); private set => SetValue(ControlVisibilityPropertyKey, value); }
+
+        #endregion
+
+        public AsyncBgModalVM()
         {
             _logger = App.GetLogger(this);
-            _logger.LogDebug("Instantiating new {TypeName}", nameof(AsyncOpAggregate));
-            SetValue(CancelOperationCommandPropertyKey, new Commands.RelayCommand(OnCancelOperationExecute));
+            _logger.LogDebug("Instantiating new {TypeName}", nameof(AsyncBgModalVM));
+            SetValue(CancelOperationPropertyKey, new Commands.RelayCommand(OnOperationCancelRequested));
+            SetValue(NotifyOuterMessageBorderLoadedPropertyKey, new Commands.RelayCommand(OnNotifyOuterMessageBorderLoaded));
+            SetValue(NotifyOuterMessageBorderUnloadedPropertyKey, new Commands.RelayCommand(OnNotifyOuterMessageBorderUnloaded));
+            SetValue(NotifyViewSizeChangedPropertyKey, new Commands.RelayCommand(OnNotifyViewSizeChanged));
+        }
+
+        private void RecalculateOuterMessageBorderSize(Border outerMessageBorder)
+        {
+            FrameworkElement parent = outerMessageBorder?.Parent as FrameworkElement;
+            double maxH, maxW;
+            if (parent is null)
+                return;
+
+            Thickness margin = outerMessageBorder.Margin;
+            if ((maxH = parent.ActualHeight - margin.Top - margin.Bottom) <= outerMessageBorder.MinHeight)
+                maxH = outerMessageBorder.MinHeight;
+            if ((maxW = parent.ActualWidth - margin.Left - margin.Right) <= outerMessageBorder.MinHeight)
+                maxW = outerMessageBorder.MinWidth;
+
+            if (maxH <= 0.0 || maxW <= 0.0)
+                return;
+
+            double w = parent.ActualWidth * 0.75;
+            double h = parent.ActualHeight * 0.75;
+            Size desired = outerMessageBorder.DesiredSize;
+            if (w < desired.Width)
+                w = desired.Width;
+            if (h < desired.Height)
+                h = desired.Height;
+
+            PopupBorderWidth = (w > maxW) ? maxW : w;
+            PopupBorderHeight = (h > maxH) ? maxH : h;
+        }
+
+        /// <summary>
+        /// Recalculates the <see cref="PopupBorderWidth"/> and <see cref="PopupBorderHeight"/> values.
+        /// </summary>
+        /// <param name="outerBorderControl">The <see cref="Border"/> control of <see cref="View.AsyncBgModalControl"/>
+        /// whose <see cref="FrameworkElement.Width"/> and <see cref="FrameworkElement.Height"/> are bound to the <see cref="PopupBorderWidth"/>
+        /// and <see cref="PopupBorderHeight"/> properties, respectively.</param>
+        /// <remarks>This method is invoked from the <see cref="FrameworkElement.Loaded"/> </remarks>
+        public void RecalculatedPopupBorderSize(Border outerBorderControl)
+        {
         }
 
         /// <summary>
@@ -309,17 +488,17 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
                     try
                     {
                         if (task.IsCanceled)
-                            Canceled?.Invoke(this, EventArgs.Empty);
+                            OperationCanceled?.Invoke(this, EventArgs.Empty);
                         else if (task.IsFaulted || op.MessageLevel == StatusMessageLevel.Error)
                         {
                             MessageBox.Show(Application.Current.MainWindow, op.StatusMessage, Title, MessageBoxButton.OK, MessageBoxImage.Error);
-                            Faulted?.Invoke(this, EventArgs.Empty);
+                            OperationFaulted?.Invoke(this, EventArgs.Empty);
                         }
                         else
                         {
                             if (op.MessageLevel == StatusMessageLevel.Warning)
                                 MessageBox.Show(Application.Current.MainWindow, op.StatusMessage, Title, MessageBoxButton.OK, MessageBoxImage.Warning);
-                            RanToCompletion?.Invoke(this, EventArgs.Empty);
+                            OperationRanToCompletion?.Invoke(this, EventArgs.Empty);
                         }
                     }
                     finally

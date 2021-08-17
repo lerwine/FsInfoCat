@@ -9,42 +9,83 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 {
     public class FileSystemItemVM : DbEntityItemVM<FileSystem>
     {
-        #region  Property Members
+        #region ToggleCurrentItemActivation Property Members
 
         /// <summary>
-        /// Occurs when the <see cref="OpenVolumesCommand">OpenVolumes Command</see> is invoked.
+        /// Occurs when the <see cref="ToggleCurrentItemActivation">ToggleCurrentItemActivation Command</see> is invoked.
         /// </summary>
-        public event EventHandler<Commands.CommandEventArgs> OpenVolumes;
+        public event EventHandler<Commands.CommandEventArgs> ToggleActivationRequest;
 
-        private static readonly DependencyPropertyKey OpenVolumesCommandPropertyKey = DependencyProperty.RegisterReadOnly(nameof(OpenVolumesCommand),
+        private static readonly DependencyPropertyKey ToggleCurrentItemActivationPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ToggleCurrentItemActivation),
             typeof(Commands.RelayCommand), typeof(FileSystemItemVM), new PropertyMetadata(null));
 
         /// <summary>
-        /// Identifies the <see cref=""/> dependency property.
+        /// Identifies the <see cref="ToggleCurrentItemActivation"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty OpenVolumesCommandProperty = OpenVolumesCommandPropertyKey.DependencyProperty;
+        public static readonly DependencyProperty ToggleCurrentItemActivationProperty = ToggleCurrentItemActivationPropertyKey.DependencyProperty;
 
         /// <summary>
         /// Gets the $name$ command object.
         /// </summary>
         /// <value>The <see cref="System.Windows.Input.ICommand"/> that implements the $command$ command.</value>
-        public Commands.RelayCommand OpenVolumesCommand => (Commands.RelayCommand)GetValue(OpenVolumesCommandProperty);
+        public Commands.RelayCommand ToggleCurrentItemActivation => (Commands.RelayCommand)GetValue(ToggleCurrentItemActivationProperty);
 
         /// <summary>
-        /// Called when the OpenVolumes event is raised by <see cref="OpenVolumesCommand" />.
+        /// Called when the ToggleCurrentItemActivation event is raised by <see cref="ToggleCurrentItemActivation" />.
         /// </summary>
-        /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="OpenVolumesCommand" />.</param>
-        private void RaiseOpenVolumes(object parameter)
+        /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="ToggleCurrentItemActivation" />.</param>
+        private void RaiseToggleActivationRequest(object parameter)
         {
-            try { OnOpenVolumes(parameter); }
-            finally { OpenVolumes?.Invoke(this, new(parameter)); }
+            try { OnToggleActivationRequest(parameter); }
+            finally { ToggleActivationRequest?.Invoke(this, new(parameter)); }
         }
 
         /// <summary>
-        /// Called when the <see cref="OpenVolumesCommand">OpenVolumes Command</see> is invoked.
+        /// Called when the <see cref="ToggleCurrentItemActivation">ToggleCurrentItemActivation Command</see> is invoked.
         /// </summary>
-        /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="OpenVolumesCommand" />.</param>
-        protected virtual void OnOpenVolumes(object parameter)
+        /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="ToggleCurrentItemActivation" />.</param>
+        protected virtual void OnToggleActivationRequest(object parameter)
+        {
+            // TODO: Implement OnToggleActivation Logic
+        }
+
+        #endregion
+        #region OpenVolumesWindow Command Members
+
+        /// <summary>
+        /// Occurs when the <see cref="OpenVolumesWindow">OpenVolumesWindow Command</see> is invoked.
+        /// </summary>
+        public event EventHandler<Commands.CommandEventArgs> ViewVolumesRequest;
+
+        private static readonly DependencyPropertyKey OpenVolumesWindowPropertyKey = DependencyProperty.RegisterReadOnly(nameof(OpenVolumesWindow),
+            typeof(Commands.RelayCommand), typeof(FileSystemItemVM), new PropertyMetadata(null));
+
+        /// <summary>
+        /// Identifies the <see cref=""/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty OpenVolumesWindowProperty = OpenVolumesWindowPropertyKey.DependencyProperty;
+
+        /// <summary>
+        /// Gets the $name$ command object.
+        /// </summary>
+        /// <value>The <see cref="System.Windows.Input.ICommand"/> that implements the $command$ command.</value>
+        public Commands.RelayCommand OpenVolumesWindow => (Commands.RelayCommand)GetValue(OpenVolumesWindowProperty);
+
+        /// <summary>
+        /// Called when the OpenVolumesWindow event is raised by <see cref="OpenVolumesWindow" />.
+        /// </summary>
+        /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="OpenVolumesWindow" />.</param>
+        private void RaiseViewVolumesRequest(object parameter)
+        {
+            try { OnViewVolumesRequest(parameter); }
+            finally { ViewVolumesRequest?.Invoke(this, new(parameter)); }
+        }
+
+        /// <summary>
+        /// Called when the <see cref="OpenVolumesWindow">OpenVolumesWindow Command</see> is invoked.
+        /// </summary>
+        /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="OpenVolumesWindow" />.</param>
+        protected virtual void OnViewVolumesRequest(object parameter)
         {
             // TODO: Implement OnOpenVolumes Logic
         }
@@ -173,7 +214,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         /// <param name="newValue">The new value of the <see cref="VolumeCount"/> property.</param>
         private void OnVolumeCountPropertyChanged(int oldValue, int newValue)
         {
-            DeleteCommand.IsEnabled = newValue == 0 && SymbolicNameCount == 0;
+            DeleteCurrentItem.IsEnabled = newValue == 0 && SymbolicNameCount == 0;
         }
 
         #endregion
@@ -200,7 +241,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         /// <param name="newValue">The new value of the <see cref="SymbolicNameCount"/> property.</param>
         private void OnSymbolicNameCountPropertyChanged(int oldValue, int newValue)
         {
-            DeleteCommand.IsEnabled = newValue == 0 && VolumeCount == 0;
+            DeleteCurrentItem.IsEnabled = newValue == 0 && VolumeCount == 0;
         }
 
         #endregion
@@ -221,7 +262,8 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             MaxNameLength = model.MaxNameLength;
             Notes = model.Notes;
             IsReadOnly = model.ReadOnly;
-            SetValue(OpenVolumesCommandPropertyKey, new Commands.RelayCommand(RaiseOpenVolumes));
+            SetValue(OpenVolumesWindowPropertyKey, new Commands.RelayCommand(RaiseViewVolumesRequest));
+            SetValue(ToggleCurrentItemActivationPropertyKey, new Commands.RelayCommand(RaiseToggleActivationRequest));
         }
 
         /// <summary>

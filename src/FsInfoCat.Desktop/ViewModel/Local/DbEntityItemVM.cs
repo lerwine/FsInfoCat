@@ -18,60 +18,60 @@ namespace FsInfoCat.Desktop.ViewModel.Local
     {
         #region Command Members
 
-        #region  Property Members
+        #region EditCurrentItem Property Members
 
         /// <summary>
-        /// Occurs when the <see cref="EditCommand">Edit Command</see> is invoked.
+        /// Occurs when the <see cref="EditCurrentItem"/> command is invoked.
         /// </summary>
-        public event EventHandler<Commands.CommandEventArgs> Edit;
+        public event EventHandler<Commands.CommandEventArgs> EditRequest;
 
-        private static readonly DependencyPropertyKey EditCommandPropertyKey = DependencyProperty.RegisterReadOnly(nameof(EditCommand),
+        private static readonly DependencyPropertyKey EditCurrentItemPropertyKey = DependencyProperty.RegisterReadOnly(nameof(EditCurrentItem),
             typeof(Commands.RelayCommand), typeof(DbEntityItemVM<TDbEntity>), new PropertyMetadata(null));
 
         /// <summary>
-        /// Identifies the <see cref=""/> dependency property.
+        /// Identifies the <see cref="EditCurrentItem"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty EditCommandProperty = EditCommandPropertyKey.DependencyProperty;
+        public static readonly DependencyProperty EditCurrentItemProperty = EditCurrentItemPropertyKey.DependencyProperty;
 
         /// <summary>
-        /// Gets the $name$ command object.
+        /// Gets the EditCurrentItem command object.
         /// </summary>
         /// <value>The <see cref="System.Windows.Input.ICommand"/> that implements the $command$ command.</value>
-        public Commands.RelayCommand EditCommand => (Commands.RelayCommand)GetValue(EditCommandProperty);
+        public Commands.RelayCommand EditCurrentItem => (Commands.RelayCommand)GetValue(EditCurrentItemProperty);
 
         /// <summary>
-        /// Called when the <see cref="EditCommand">Edit Command</see> is invoked.
+        /// Called when the <see cref="EditCurrentItem"/> command is invoked.
         /// </summary>
-        /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="EditCommand" />.</param>
-        protected virtual void OnEdit(object parameter) => Edit?.Invoke(this, new(parameter));
+        /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="EditCurrentItem" />.</param>
+        protected virtual void RaiseEditRequest(object parameter) => EditRequest?.Invoke(this, new(parameter));
 
         #endregion
-        #region  Property Members
+        #region DeleteCurrentItem Property Members
 
         /// <summary>
-        /// Occurs when the <see cref="DeleteCommand">Delete Command</see> is invoked.
+        /// Occurs when the <see cref="DeleteCurrentItem"/> command is invoked.
         /// </summary>
-        public event EventHandler<Commands.CommandEventArgs> Delete;
+        public event EventHandler<Commands.CommandEventArgs> DeleteRequest;
 
-        private static readonly DependencyPropertyKey DeleteCommandPropertyKey = DependencyProperty.RegisterReadOnly(nameof(DeleteCommand),
+        private static readonly DependencyPropertyKey DeleteCurrentItemPropertyKey = DependencyProperty.RegisterReadOnly(nameof(DeleteCurrentItem),
             typeof(Commands.RelayCommand), typeof(DbEntityItemVM<TDbEntity>), new PropertyMetadata(null));
 
         /// <summary>
         /// Identifies the <see cref=""/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty DeleteCommandProperty = DeleteCommandPropertyKey.DependencyProperty;
+        public static readonly DependencyProperty DeleteCurrentItemProperty = DeleteCurrentItemPropertyKey.DependencyProperty;
 
         /// <summary>
-        /// Gets the $name$ command object.
+        /// Gets the DeleteCurrentItem command object.
         /// </summary>
         /// <value>The <see cref="System.Windows.Input.ICommand"/> that implements the $command$ command.</value>
-        public Commands.RelayCommand DeleteCommand => (Commands.RelayCommand)GetValue(DeleteCommandProperty);
+        public Commands.RelayCommand DeleteCurrentItem => (Commands.RelayCommand)GetValue(DeleteCurrentItemProperty);
 
         /// <summary>
-        /// Called when the <see cref="DeleteCommand">Delete Command</see> is invoked.
+        /// Called when the <see cref="DeleteCurrentItem"/> command is invoked.
         /// </summary>
-        /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="DeleteCommand" />.</param>
-        protected virtual void OnDelete(object parameter) => Delete?.Invoke(this, new(parameter));
+        /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="DeleteCurrentItem" />.</param>
+        protected virtual void RaiseDeleteRequest(object parameter) => DeleteRequest?.Invoke(this, new(parameter));
 
         #endregion
 
@@ -140,8 +140,8 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             LastSynchronizedOn = model.LastSynchronizedOn;
             CreatedOn = model.CreatedOn;
             ModifiedOn = model.ModifiedOn;
-            SetValue(EditCommandPropertyKey, new Commands.RelayCommand(OnEdit));
-            SetValue(DeleteCommandPropertyKey, new Commands.RelayCommand(OnDelete));
+            SetValue(EditCurrentItemPropertyKey, new Commands.RelayCommand(RaiseEditRequest));
+            SetValue(DeleteCurrentItemPropertyKey, new Commands.RelayCommand(RaiseDeleteRequest));
         }
 
         private void Model_PropertyChanged(object sender, PropertyChangedEventArgs e)

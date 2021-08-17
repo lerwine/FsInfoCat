@@ -91,11 +91,11 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         #region OpAggregate Property Members
 
         private static readonly DependencyPropertyKey OpAggregatePropertyKey = DependencyProperty.RegisterReadOnly(nameof(OpAggregate),
-            typeof(AsyncOps.AsyncOpAggregate), typeof(EditDbEntityVM<TDbEntity>), new PropertyMetadata(null));
+            typeof(AsyncOps.AsyncBgModalVM), typeof(EditDbEntityVM<TDbEntity>), new PropertyMetadata(null));
 
         public static readonly DependencyProperty OpAggregateProperty = OpAggregatePropertyKey.DependencyProperty;
 
-        public AsyncOps.AsyncOpAggregate OpAggregate => (AsyncOps.AsyncOpAggregate)GetValue(OpAggregateProperty);
+        public AsyncOps.AsyncBgModalVM OpAggregate => (AsyncOps.AsyncBgModalVM)GetValue(OpAggregateProperty);
 
         #endregion
         
@@ -300,7 +300,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             changeTracker.AnyInvalidPropertyChanged += OnValidationStateChanged;
             // DEFERRED: Figure out why this crashes designer
             SetValue(SaveChangesOpMgrPropertyKey, new AsyncOps.AsyncOpResultManagerViewModel<ModelViewModel, TDbEntity>());
-            SetValue(OpAggregatePropertyKey, new AsyncOps.AsyncOpAggregate());
+            SetValue(OpAggregatePropertyKey, new AsyncOps.AsyncBgModalVM());
         }
 
         /// <summary>
@@ -348,8 +348,8 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             });
 
             vm.CloseCancel += closeCancelHandler;
-            vm.OpAggregate.Faulted += closeCancelHandler;
-            vm.OpAggregate.CancelOperation += closeCancelHandler;
+            vm.OpAggregate.OperationFaulted += closeCancelHandler;
+            vm.OpAggregate.OperationCancelRequested += closeCancelHandler;
             vm.CloseSuccess += new EventHandler((sender, e) => window.DialogResult = true);
             window.Loaded += new RoutedEventHandler((sender, e) =>
             {
@@ -376,8 +376,8 @@ namespace FsInfoCat.Desktop.ViewModel.Local
                     if (task.IsCompletedSuccessfully)
                         vm.Dispatcher.Invoke(() =>
                         {
-                            vm.OpAggregate.CancelOperation -= closeCancelHandler;
-                            vm.OpAggregate.Faulted -= closeCancelHandler;
+                            vm.OpAggregate.OperationCancelRequested -= closeCancelHandler;
+                            vm.OpAggregate.OperationFaulted -= closeCancelHandler;
                             vm.Initialize(entityLoader.GetEntity(task.Result.Item1), task.Result.Item2);
                             entityLoader.InitializeViewModel(vm, task.Result.Item1, task.Result.Item2);
                         });

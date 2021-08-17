@@ -85,7 +85,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
                 window.DialogResult = false;
             });
             vm.CloseCancel += closeCancelHandler;
-            vm.OpAggregate.CancelOperation += closeCancelHandler;
+            vm.OpAggregate.OperationCancelRequested += closeCancelHandler;
             vm.CloseSuccess += new EventHandler((sender, e) => window.DialogResult = true);
             window.Loaded += new RoutedEventHandler((sender, e) =>
             {
@@ -123,7 +123,6 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             else
             {
                 Root = subdirectory;
-                CreatedOn = ModifiedOn = DateTime.Now;
                 MaxTotalItems = int.MaxValue;
                 TimeSpan timeSpan = TimeSpan.FromDays(1.0);
                 TtlDays = timeSpan.Days;
@@ -143,8 +142,6 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         internal void Initialize([DisallowNull] CrawlConfiguration crawlConfiguration)
         {
             Root = crawlConfiguration.Root;
-            CreatedOn = crawlConfiguration.CreatedOn;
-            ModifiedOn = crawlConfiguration.ModifiedOn;
             DisplayName = crawlConfiguration.DisplayName;
             MaxRecursionDepth = crawlConfiguration.MaxRecursionDepth;
             ulong? mti = crawlConfiguration.MaxTotalItems;
@@ -183,8 +180,6 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             NextScheduledStartDate = dateTime.Date;
             NextScheduledStartHour = dateTime.Hour;
             NextScheduledStartMinute = dateTime.Minute;
-            LastSynchronizedOn = crawlConfiguration.LastSynchronizedOn;
-            WindowTitle = "Edit Crawl Configuration";
         }
 
         #endregion
@@ -1014,21 +1009,6 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 
         #endregion
 
-        #region WindowTitle Property Members
-
-        private static readonly DependencyPropertyKey WindowTitlePropertyKey = DependencyProperty.RegisterReadOnly(nameof(WindowTitle), typeof(string),
-            typeof(EditCrawlConfigVM), new PropertyMetadata("Edit New Crawl Configuration"));
-
-        public static readonly DependencyProperty WindowTitleProperty = WindowTitlePropertyKey.DependencyProperty;
-
-        public string WindowTitle
-        {
-            get { return GetValue(WindowTitleProperty) as string; }
-            private set { SetValue(WindowTitlePropertyKey, value); }
-        }
-
-        #endregion
-
         #region MaxRecursionDepth Property Members
 
         public static readonly DependencyProperty MaxRecursionDepthProperty = DependencyProperty.Register(nameof(MaxRecursionDepth), typeof(ushort), typeof(EditCrawlConfigVM),
@@ -1171,51 +1151,6 @@ namespace FsInfoCat.Desktop.ViewModel.Local
                 return;
 #endif
             ChangeTracker.SetChangeState(nameof(Notes), Model?.Notes != newValue);
-        }
-
-        #endregion
-
-        #region CreatedOn Property Members
-
-        private static readonly DependencyPropertyKey CreatedOnPropertyKey = DependencyProperty.RegisterReadOnly(nameof(CreatedOn), typeof(DateTime), typeof(EditCrawlConfigVM),
-                new PropertyMetadata(default));
-
-        public static readonly DependencyProperty CreatedOnProperty = CreatedOnPropertyKey.DependencyProperty;
-
-        public DateTime CreatedOn
-        {
-            get => (DateTime)GetValue(CreatedOnProperty);
-            private set => SetValue(CreatedOnPropertyKey, value);
-        }
-
-        #endregion
-
-        #region ModifiedOn Property Members
-
-        private static readonly DependencyPropertyKey ModifiedOnPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ModifiedOn), typeof(DateTime), typeof(EditCrawlConfigVM),
-                new PropertyMetadata(default));
-
-        public static readonly DependencyProperty ModifiedOnProperty = ModifiedOnPropertyKey.DependencyProperty;
-
-        public DateTime ModifiedOn
-        {
-            get => (DateTime)GetValue(ModifiedOnProperty);
-            private set => SetValue(ModifiedOnPropertyKey, value);
-        }
-
-        #endregion
-
-        #region LastSynchronizedOn Property Members
-
-        private static readonly DependencyPropertyKey LastSynchronizedOnPropertyKey = DependencyProperty.RegisterReadOnly(nameof(LastSynchronizedOn), typeof(DateTime?), typeof(EditCrawlConfigVM),
-                new PropertyMetadata(null));
-
-        public static readonly DependencyProperty LastSynchronizedOnProperty = LastSynchronizedOnPropertyKey.DependencyProperty;
-
-        public DateTime? LastSynchronizedOn
-        {
-            get => (DateTime?)GetValue(LastSynchronizedOnProperty);
-            private set => SetValue(LastSynchronizedOnPropertyKey, value);
         }
 
         #endregion

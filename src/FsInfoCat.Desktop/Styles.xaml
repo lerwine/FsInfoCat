@@ -1,7 +1,8 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:System="clr-namespace:System;assembly=mscorlib"
+        xmlns:View="clr-namespace:FsInfoCat.Desktop.View"
+        xmlns:System="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Style TargetType="TextBox">
@@ -26,23 +27,18 @@
         </Style.Triggers>
 
     </Style>
-    <Style TargetType="TextBox" x:Key="MultiLineTextBox">
-        <Setter Property="Height" Value="{DynamicResource DefaultMultiLineTextBoxHeight}"/>
-        <Setter Property="AcceptsReturn" Value="True"/>
-        <Setter Property="AcceptsTab" Value="True"/>
-        <Setter Property="HorizontalScrollBarVisibility" Value="Hidden"/>
-        <Setter Property="VerticalScrollBarVisibility" Value="Auto"/>
-        <Setter Property="TextWrapping" Value="Wrap"/>
-    </Style>
     <Style TargetType="TextBox" x:Key="TwoDigitNumericTextBox">
         <Setter Property="MinWidth" Value="{DynamicResource DefaultTextBoxHeight}"/>
     </Style>
     <Style x:Key="MultiLineTextBox" TargetType="TextBox">
+        <Setter Property="MinHeight" Value="{DynamicResource DefaultMultiLineTextBoxHeight}"/>
         <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"/>
         <Setter Property="BorderBrush" Value="{DynamicResource TextBoxBorderBrush}"/>
         <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="HorizontalContentAlignment" Value="Left"/>
+        <Setter Property="HorizontalScrollBarVisibility" Value="Hidden"/>
+        <Setter Property="VerticalScrollBarVisibility" Value="Auto"/>
         <Setter Property="Padding" Value="2"/>
         <Setter Property="AcceptsReturn" Value="True"/>
         <Setter Property="AcceptsTab" Value="True"/>

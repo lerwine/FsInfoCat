@@ -1,0 +1,115 @@
+<UserControl
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:FsInfoCat.Desktop.View.Local"
+             xmlns:vm="clr-namespace:FsInfoCat.Desktop.ViewModel.Local"
+             xmlns:Converters="clr-namespace:FsInfoCat.Desktop.Converters" x:Class="FsInfoCat.Desktop.View.Local.FileSystemDetailUserControl"
+             mc:Ignorable="d" d:DataContext="{x:Type vm:FileSystemItemDetailViewModel}"
+             d:DesignHeight="450" d:DesignWidth="400">
+    <UserControl.Resources>
+        <Converters:DriveTypeToStringConverter x:Key="DriveTypeToStringConverter" UseLongDescription="True" NullSource="(none)"/>
+        <Converters:BooleanToStringConverter x:Key="BooleanToActivationConverter" TrueValue="Activate" FalseValue="Deactivate"/>
+        <Converters:BooleanToStringConverter x:Key="BooleanToYesNoConverter" TrueValue="Yes" FalseValue="No"/>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Grid DataContext="{Binding CurrentItem}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <WrapPanel HorizontalAlignment="Right" Grid.ColumnSpan="2">
+                <Button Content="Edit" Style="{DynamicResource DefaultButton}" Margin="{DynamicResource DefaultSpacing}" Command="{Binding EditCurrentItem, Mode=OneWay}"/>
+                <Button Content="{Binding IsInactive, Converter={StaticResource BooleanToActivationConverter}, Mode=OneWay}" Command="{Binding ToggleCurrentItemActivation, Mode=OneWay}" Style="{DynamicResource DefaultButton}" Margin="{DynamicResource DefaultSpacing}"/>
+                <Button Content="Delete" Style="{DynamicResource DefaultButton}" Margin="{DynamicResource DefaultSpacing}" Command="{Binding DeleteCurrentItem, Mode=OneWay}"/>
+            </WrapPanel>
+            <Label  Grid.Row="1" Content="Display Name" Padding="{DynamicResource DefaultSpacingLeftRight}" FontWeight="Bold" />
+            <TextBox Grid.Row="2" IsReadOnly="True" Text="{Binding DisplayName, Mode=OneWay}" Margin="{DynamicResource DefaultSpacingBottomLeftRight}"/>
+            <Label  Grid.Row="1" Content="Default Drive Type" Grid.Column="1" Padding="{DynamicResource DefaultSpacingLeft}" FontWeight="Bold" />
+            <TextBox Grid.Column="1" Text="{Binding DefaultDriveType, Converter={StaticResource DriveTypeToStringConverter}, Mode=OneWay}" IsReadOnly="True" Grid.Row="2" Margin="{DynamicResource DefaultSpacingBottomLeftRight}" />
+            <WrapPanel Grid.Row="3" Grid.ColumnSpan="2">
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="Maximum Name Length: " Padding="{DynamicResource DefaultSpacingTopBottomLeft}" VerticalAlignment="Center" FontWeight="Bold"/>
+                    <TextBox Text="{Binding MaxNameLength, Mode=OneWay}" IsReadOnly="True" Margin="{DynamicResource DefaultSpacingTopBottomRight}" VerticalAlignment="Center" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="{DynamicResource DefaultSpacingLeftRight}">
+                    <Label Content="Is Read-Only: " Padding="{DynamicResource DefaultSpacingTopBottomLeft}" VerticalAlignment="Center" FontWeight="Bold"/>
+                    <Label Content="{Binding IsReadOnly, Converter={StaticResource BooleanToYesNoConverter}, Mode=OneWay}" Padding="{DynamicResource DefaultSpacingTopBottomRight}" VerticalAlignment="Center"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="Volume Count: " Padding="{DynamicResource DefaultSpacingTopBottomLeft}" VerticalAlignment="Center" FontWeight="Bold"/>
+                    <Label Content="0" Padding="{DynamicResource DefaultSpacingTopBottomRight}" VerticalAlignment="Center"/>
+                    <Button Content="View" Style="{DynamicResource DefaultButton}" Margin="{DynamicResource DefaultSpacing}" VerticalAlignment="Center" Command="{Binding OpenVolumesWindow, Mode=OneWay}"/>
+                </StackPanel>
+            </WrapPanel>
+        </Grid>
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Grid DataContext="{Binding CurrentItem}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Label Content="Notes" Padding="{DynamicResource DefaultSpacingLeftRight}" FontWeight="Bold" />
+                <TextBox Grid.Row="1" IsReadOnly="True" Style="{DynamicResource MultiLineTextBox}" Margin="{DynamicResource DefaultSpacingLeftRight}" />
+                <WrapPanel Grid.Row="2" HorizontalAlignment="Right">
+                    <Button Content="Edit" Style="{DynamicResource DefaultButton}" Margin="{DynamicResource DefaultSpacing}" Command="{Binding EditCurrentItem, Mode=OneWay}"/>
+                    <Button Content="{Binding IsInactive, Converter={StaticResource BooleanToActivationConverter}, Mode=OneWay}" Command="{Binding ToggleCurrentItemActivation, Mode=OneWay}" Style="{DynamicResource DefaultButton}" Margin="{DynamicResource DefaultSpacing}"/>
+                    <Button Content="Delete" Style="{DynamicResource DefaultButton}" Margin="{DynamicResource DefaultSpacing}" Command="{Binding DeleteCurrentItem, Mode=OneWay}"/>
+                </WrapPanel>
+            </Grid>
+            <GridSplitter Grid.Row="1" VerticalAlignment="Top" Style="{DynamicResource HorizontalGridSplitterStyle}" Height="5" />
+            <Grid Grid.Row="1" Margin="{DynamicResource DefaultSpacingTop}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Label Content="Symbolic Names" Padding="{DynamicResource DefaultSpacingTopLeftRight}" FontWeight="Bold" Grid.ColumnSpan="2" Margin="0,0,0,61" Grid.RowSpan="2" />
+                <DataGrid Grid.Row="1" AutoGenerateColumns="False" IsReadOnly="True" ItemsSource="{Binding SymbolicNames, Mode=OneWay}" Grid.ColumnSpan="2" Grid.RowSpan="2" Margin="{DynamicResource DefaultSpacingBottomLeftRight}">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Binding="{Binding Name, Mode=OneWay}" Header="Name" Width="*"/>
+                        <DataGridTextColumn Binding="{Binding Priority, Mode=OneWay}" Header="Priority"/>
+                        <DataGridTextColumn Binding="{Binding IsInactive, Mode=OneWay}" Header="Activated?"/>
+                        <DataGridTemplateColumn CanUserSort="False" CanUserResize="False">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Button Content="Edit" Command="{Binding EditCurrentItem, Mode=OneWay}"/>
+                                        <Button Content="Delete" Command="{Binding DeleteCurrentItem, Mode=OneWay}"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+                <WrapPanel Grid.Row="2" Grid.ColumnSpan="2" Grid.RowSpan="2" DataContext="{Binding ViewOptions, Mode=OneWay}">
+                    <RadioButton Content="Show Activated" Margin="{DynamicResource DefaultSpacingLeft}" IsChecked="{Binding IsTrue, Mode=OneWay}"/>
+                    <RadioButton Content="Show Deactivated" Margin="{DynamicResource DefaultSpacingLeft}" IsChecked="{Binding IsFalse, Mode=OneWay}"/>
+                    <RadioButton Content="Show All" Margin="{DynamicResource DefaultSpacingLeftRight}"/>
+                </WrapPanel>
+                <Button Content="New" Grid.Row="3" Command="{Binding NewSymbolicName, Mode=OneWay}" Style="{DynamicResource DefaultButton}" HorizontalAlignment="Left" Grid.Column="1" Margin="{DynamicResource DefaultSpacingBottomLeftRight}" />
+            </Grid>
+        </Grid>
+    </Grid>
+</UserControl>

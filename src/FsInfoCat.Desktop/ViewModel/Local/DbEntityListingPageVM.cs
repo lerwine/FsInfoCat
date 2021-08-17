@@ -18,8 +18,8 @@ using System.Windows.Threading;
 namespace FsInfoCat.Desktop.ViewModel.Local
 {
     public abstract class DbEntityListingPageVM<TDbEntity, TItemVM> : DependencyObject, INotifyNavigationContentChanged
-        where TDbEntity : LocalDbEntity, new()
-        where TItemVM : DbEntityItemVM<TDbEntity>
+           where TDbEntity : LocalDbEntity, new()
+           where TItemVM : DbEntityItemVM<TDbEntity>
     {
         protected readonly ILogger<DbEntityListingPageVM<TDbEntity, TItemVM>> Logger;
 
@@ -40,46 +40,6 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         /// </summary>
         /// <value>The items to be displayed in the listing page.</value>
         public ReadOnlyObservableCollection<TItemVM> Items => (ReadOnlyObservableCollection<TItemVM>)GetValue(ItemsProperty);
-
-        #endregion
-        #region SelectedItem Property Members
-
-        /// <summary>
-        /// Occurs when the value of the <see cref="SelectedItem"/> dependency property has changed.
-        /// </summary>
-        public event DependencyPropertyChangedEventHandler SelectedItemPropertyChanged;
-
-        /// <summary>
-        /// Identifies the <see cref="SelectedItem"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty SelectedItemProperty = DependencyProperty.Register(nameof(SelectedItem), typeof(TItemVM), typeof(DbEntityListingPageVM<TDbEntity, TItemVM>),
-                new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as DbEntityListingPageVM<TDbEntity, TItemVM>)?.OnSelectedItemPropertyChanged(e)));
-
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
-        public TItemVM SelectedItem { get => (TItemVM)GetValue(SelectedItemProperty); set => SetValue(SelectedItemProperty, value); }
-
-        /// <summary>
-        /// Called when the <see cref="PropertyChangedCallback">PropertyChanged</see> event on <see cref="SelectedItemProperty"/> is raised.
-        /// </summary>
-        /// <param name="args">The Event data that is issued by the event on <see cref="SelectedItemProperty"/> that tracks changes to its effective value.</param>
-        protected virtual void OnSelectedItemPropertyChanged(DependencyPropertyChangedEventArgs args)
-        {
-            try { OnSelectedItemPropertyChanged((TItemVM)args.OldValue, (TItemVM)args.NewValue); }
-            finally { SelectedItemPropertyChanged?.Invoke(this, args); }
-        }
-
-        /// <summary>
-        /// Called when the value of the <see cref="SelectedItem"/> dependency property has changed.
-        /// </summary>
-        /// <param name="oldValue">The previous value of the <see cref="SelectedItem"/> property.</param>
-        /// <param name="newValue">The new value of the <see cref="SelectedItem"/> property.</param>
-        protected virtual void OnSelectedItemPropertyChanged(TItemVM oldValue, TItemVM newValue)
-        {
-            // TODO: Implement OnSelectedItemPropertyChanged Logic
-        }
 
         #endregion
         #region NewItemClick Command Members
@@ -115,7 +75,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         #endregion
         #region BgOps Property Members
 
-        private static readonly DependencyPropertyKey BgOpsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(BgOps), typeof(AsyncOps.AsyncOpAggregate), typeof(DbEntityListingPageVM<TDbEntity, TItemVM>),
+        private static readonly DependencyPropertyKey BgOpsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(BgOps), typeof(AsyncOps.AsyncBgModalVM), typeof(DbEntityListingPageVM<TDbEntity, TItemVM>),
                 new PropertyMetadata());
 
         /// <summary>
@@ -127,7 +87,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         /// Gets .
         /// </summary>
         /// <value>The .</value>
-        public AsyncOps.AsyncOpAggregate BgOps => (AsyncOps.AsyncOpAggregate)GetValue(BgOpsProperty);
+        public AsyncOps.AsyncBgModalVM BgOps => (AsyncOps.AsyncBgModalVM)GetValue(BgOpsProperty);
 
         #endregion
         #region EntityDbOp Property Members
@@ -164,23 +124,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         public AsyncOps.AsyncOpResultManagerViewModel<int> ListingLoader { get => (AsyncOps.AsyncOpResultManagerViewModel<int>)GetValue(ListingLoaderProperty); private set => SetValue(ListingLoaderPropertyKey, value); }
 
         #endregion
-        #region RelatedItemLoader Property Members
 
-        private static readonly DependencyPropertyKey RelatedItemLoaderPropertyKey = DependencyProperty.RegisterReadOnly(nameof(RelatedItemLoader), typeof(AsyncOps.AsyncOpResultManagerViewModel<Guid, int>), typeof(DbEntityListingPageVM<TDbEntity, TItemVM>),
-                new PropertyMetadata(null));
-
-        /// <summary>
-        /// Identifies the <see cref="RelatedItemLoader"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty RelatedItemLoaderProperty = RelatedItemLoaderPropertyKey.DependencyProperty;
-
-        /// <summary>
-        /// Gets .
-        /// </summary>
-        /// <value>The .</value>
-        public AsyncOps.AsyncOpResultManagerViewModel<Guid, int> RelatedItemLoader { get => (AsyncOps.AsyncOpResultManagerViewModel<Guid, int>)GetValue(RelatedItemLoaderProperty); private set => SetValue(RelatedItemLoaderPropertyKey, value); }
-
-        #endregion
         public DbEntityListingPageVM()
         {
             SetValue(ItemsPropertyKey, new ReadOnlyObservableCollection<TItemVM>(_backingItems));
@@ -190,10 +134,9 @@ namespace FsInfoCat.Desktop.ViewModel.Local
                 return;
 #endif
             Logger = App.GetLogger(this);
-            SetValue(BgOpsPropertyKey, new AsyncOps.AsyncOpAggregate());
+            SetValue(BgOpsPropertyKey, new AsyncOps.AsyncBgModalVM());
             SetValue(EntityDbOpPropertyKey, new AsyncOps.AsyncOpResultManagerViewModel<TDbEntity, bool?>());
             SetValue(ListingLoaderPropertyKey, new AsyncOps.AsyncOpResultManagerViewModel<int>());
-            SetValue(RelatedItemLoaderPropertyKey, new AsyncOps.AsyncOpResultManagerViewModel<Guid, int>());
         }
 
         internal Task<int> LoadItemsAsync()
@@ -223,13 +166,13 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             }, DispatcherPriority.Background, statusListener.CancellationToken);
             foreach (TItemVM item in oldItems)
             {
-                item.Edit -= Item_Edit;
-                item.Delete -= Item_Delete;
+                item.EditRequest -= Item_Edit;
+                item.DeleteRequest -= Item_Delete;
             }
             foreach (TItemVM item in newItems)
             {
-                item.Edit += Item_Edit;
-                item.Delete += Item_Delete;
+                item.EditRequest += Item_Edit;
+                item.DeleteRequest += Item_Delete;
             }
             return await Dispatcher.InvokeAsync(() =>
             {
@@ -254,13 +197,13 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             }, DispatcherPriority.Background, statusListener.CancellationToken);
             foreach (TItemVM item in oldItems)
             {
-                item.Edit -= Item_Edit;
-                item.Delete -= Item_Delete;
+                item.EditRequest -= Item_Edit;
+                item.DeleteRequest -= Item_Delete;
             }
             foreach (TItemVM item in newItems)
             {
-                item.Edit += Item_Edit;
-                item.Delete += Item_Delete;
+                item.EditRequest += Item_Edit;
+                item.DeleteRequest += Item_Delete;
             }
             return await Dispatcher.InvokeAsync(() =>
             {
@@ -428,5 +371,43 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         void INotifyNavigationContentChanged.OnNavigatedTo(MainVM mainVM) => OnNavigatedTo(mainVM);
 
         void INotifyNavigationContentChanged.OnNavigatedFrom(MainVM mainVM) => OnNavigatedFrom(mainVM);
+    }
+
+    public abstract class DbEntityListingPageVM<TDbEntity, TItemVM, TSelectionVM> : DbEntityListingPageVM<TDbEntity, TItemVM>
+        where TDbEntity : LocalDbEntity, new()
+        where TItemVM : DbEntityItemVM<TDbEntity>
+        where TSelectionVM : DbEntityItemDetailViewModel<TDbEntity, TItemVM>, new()
+    {
+        #region ItemSelection Property Members
+
+        private static readonly DependencyPropertyKey ItemSelectionPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ItemSelection), typeof(TSelectionVM),
+            typeof(DbEntityListingPageVM<TDbEntity, TItemVM, TSelectionVM>), new PropertyMetadata(null));
+
+        /// <summary>
+        /// Identifies the <see cref="ItemSelection"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ItemSelectionProperty = ItemSelectionPropertyKey.DependencyProperty;
+
+        /// <summary>
+        /// Gets .
+        /// </summary>
+        /// <value>The .</value>
+        public TSelectionVM ItemSelection => (TSelectionVM)GetValue(ItemSelectionProperty);
+
+        #endregion
+
+        protected DbEntityListingPageVM()
+        {
+            SetValue(ItemSelectionPropertyKey, new TSelectionVM());
+        }
+
+        /// <summary>
+        /// Called when the <typeparamref name="TItemVM"/> has changed.
+        /// </summary>
+        /// <param name="oldValue">The previous <see cref="DbEntityItemDetailViewModel{TDbEntity, TItemVM}.CurrentItem"/> value on the <see cref="ItemSelection"/> property.</param>
+        /// <param name="newValue">The new <see cref="DbEntityItemDetailViewModel{TDbEntity, TItemVM}.CurrentItem"/> value on the <see cref="ItemSelection"/> property.</param>
+        /// <remarks><see cref="DbEntityItemDetailViewModel{TDbEntity, TItemVM}.CurrentItemPropertyChanged"/> should be used, instead</remarks>
+        [Obsolete("Use DbEntityItemDetailViewModel{TDbEntity, TItemVM}.CurrentItemPropertyChanged, instead")]
+        protected virtual void OnCurrentItemPropertyChanged(TItemVM oldValue, TItemVM newValue) { }
     }
 }

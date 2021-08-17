@@ -29,6 +29,11 @@
         </b:EventTrigger>
     </b:Interaction.Triggers>
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
         <StackPanel>
             <Label Content="Display Name" FontWeight="Bold" Padding="{DynamicResource DefaultSpacingTopLeftRight}"/>
             <TextBox Margin="{DynamicResource DefaultSpacingLeftRight}" MaxLines="1" Text="{Binding DisplayName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
@@ -196,17 +201,17 @@
                     </GroupBox>
                 </StackPanel>
             </Grid>
-            <GroupBox Margin="{DynamicResource DefaultSpacingTopLeftRight}">
-                <GroupBox.Header>
-                    <Label Content="Notes" FontWeight="Bold"/>
-                </GroupBox.Header>
-                <TextBox Margin="{DynamicResource DefaultSpacingTopLeftRight}" VerticalScrollBarVisibility="Auto" AcceptsReturn="True" AcceptsTab="True" TextWrapping="Wrap" Height="120" Text="{Binding Notes, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-            </GroupBox>
-            <WrapPanel FlowDirection="RightToLeft">
-                <Button Content="Cancel" Width="{DynamicResource DefaultButtonWidth}" Height="{DynamicResource DefaultButtonHeight}" Margin="{DynamicResource DefaultSpacingTopBottomLeft}" Command="{Binding CancelCommand, Mode=OneWay}" IsCancel="True"/>
-                <Button Content="Save" Width="{DynamicResource DefaultButtonWidth}" Height="{DynamicResource DefaultButtonHeight}" Margin="{DynamicResource DefaultSpacing}" Command="{Binding SaveCommand, Mode=OneWay}" IsDefault="True"/>
-            </WrapPanel>
         </StackPanel>
-        <View:AsyncBgModalControl d:IsHidden="True" DataContext="{Binding OpAggregate, Mode=OneWay}" />
+        <GroupBox Margin="{DynamicResource DefaultSpacingTopLeftRight}" Grid.Row="1">
+            <GroupBox.Header>
+                <Label Content="Notes" FontWeight="Bold"/>
+            </GroupBox.Header>
+            <TextBox Margin="{DynamicResource DefaultSpacingTopLeftRight}" VerticalScrollBarVisibility="Auto" AcceptsReturn="True" AcceptsTab="True" TextWrapping="Wrap" Text="{Binding Notes, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{DynamicResource MultiLineTextBox}" />
+        </GroupBox>
+        <WrapPanel FlowDirection="RightToLeft" Grid.Row="2">
+            <Button Content="Cancel" Width="{DynamicResource DefaultButtonWidth}" Height="{DynamicResource DefaultButtonHeight}" Margin="{DynamicResource DefaultSpacingTopBottomLeft}" Command="{Binding CancelCommand, Mode=OneWay}" IsCancel="True"/>
+            <Button Content="Save" Width="{DynamicResource DefaultButtonWidth}" Height="{DynamicResource DefaultButtonHeight}" Margin="{DynamicResource DefaultSpacing}" Command="{Binding SaveCommand, Mode=OneWay}" IsDefault="True"/>
+        </WrapPanel>
+        <View:AsyncBgModalControl d:IsHidden="True" DataContext="{Binding OpAggregate, Mode=OneWay}" Grid.RowSpan="3" />
     </Grid>
 </Window>

@@ -15,7 +15,12 @@
         <Literal>
           <ID>command</ID>
           <ToolTip>Command Name</ToolTip>
-          <Default>MyClick</Default>
+          <Default>MyButtonClick</Default>
+        </Literal>
+        <Literal>
+          <ID>event</ID>
+          <ToolTip>Event Name</ToolTip>
+          <Default>MyButtonClicked</Default>
         </Literal>
         <Literal>
           <ID>ownerclass</ID>
@@ -43,48 +48,48 @@
           <Default>protected virtual</Default>
         </Literal>
       </Declarations>
-      <Code Language="csharp"><![CDATA[#region $property$ Property Members
+      <Code Language="csharp"><![CDATA[#region $command$ Command Property Members
 
 /// <summary>
-/// Occurs when the <see cref="$command$Command">$command$ Command</see> is invoked.
+/// Occurs when the <see cref="$command$">$command$ Command</see> is invoked.
 /// </summary>
-public event $eventHandler$ $command$;
+public event $eventHandler$ $event$;
 
-private static readonly DependencyPropertyKey $command$CommandPropertyKey = DependencyProperty.RegisterReadOnly(nameof($command$Command),
+private static readonly DependencyPropertyKey $command$PropertyKey = DependencyProperty.RegisterReadOnly(nameof($command$),
     typeof(Commands.RelayCommand), typeof($ownerclass$), new PropertyMetadata(null));
 
 /// <summary>
-/// Identifies the <see cref="$property$"/> dependency property.
+/// Identifies the <see cref="$command$"/> dependency property.
 /// </summary>
-public static readonly DependencyProperty $command$CommandProperty = $command$CommandPropertyKey.DependencyProperty;
+public static readonly DependencyProperty $command$Property = $command$PropertyKey.DependencyProperty;
 
 /// <summary>
 /// $summary$
 /// </summary>
 /// <value>$returnValue$</value>
-public Commands.RelayCommand $command$Command => (Commands.RelayCommand)GetValue($command$CommandProperty);
+public Commands.RelayCommand $command$ => (Commands.RelayCommand)GetValue($command$Property);
 
 /// <summary>
-/// Called when the $command$ event is raised by <see cref="$command$Command" />.
+/// Called when the $command$ event is raised by <see cref="$command$" />.
 /// </summary>
-/// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="$command$Command" />.</param>
-private void Raise$command$(object parameter)
+/// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="$command$" />.</param>
+private void Raise$event$(object parameter)
 {
-  try { On$command$(parameter); }
-  finally { $command$?.Invoke(this, new(parameter)); }
+  try { On$event$(parameter); }
+  finally { $event$?.Invoke(this, new(parameter)); }
 }
 
 /// <summary>
-/// Called when the <see cref="$command$Command">$command$ Command</see> is invoked.
+/// Called when the <see cref="$command$">$command$ Command</see> is invoked.
 /// </summary>
-/// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="$command$Command" />.</param>
-$methodAccess$ void On$command$(object parameter)
+/// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="$command$" />.</param>
+$methodAccess$ void On$event$(object parameter)
 {
-  // TODO: Implement On$command$ Logic
+  // TODO: Implement On$event$ Logic
 }
 
-/* TODO: Add $command$Command to initialization code to constructor
-   SetValue($command$CommandPropertyKey, new Commands.RelayCommand(Raise$command$));$end$ */
+/* TODO: Add $command$ to initialization code to constructor
+   SetValue($command$PropertyKey, new Commands.RelayCommand(Raise$event$));$end$ */
 
 #endregion]]></Code>
     </Snippet>

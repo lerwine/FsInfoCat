@@ -17,32 +17,55 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 {
     public class VolumesPageVM : DbEntityListingPageVM<Volume, VolumeItemVM>
     {
-        #region ItemsLoadOp Property Members
+        #region StatusOptions Property Members
 
-        private static readonly DependencyPropertyKey ItemsLoadOpPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ItemsLoadOp), typeof(AsyncOps.AsyncOpResultManagerViewModel<ItemLoadParams, int>), typeof(VolumesPageVM),
-                new PropertyMetadata(new AsyncOps.AsyncOpResultManagerViewModel<ItemLoadParams, int>()));
+        private static readonly DependencyPropertyKey StatusOptionsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(StatusOptions), typeof(EnumValueSelectorVM<VolumeStatus>), typeof(VolumesPageVM),
+                new PropertyMetadata(null));
 
         /// <summary>
-        /// Identifies the <see cref="ItemsLoadOp"/> dependency property.
+        /// Identifies the <see cref="StatusOptions"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty ItemsLoadOpProperty = ItemsLoadOpPropertyKey.DependencyProperty;
+        public static readonly DependencyProperty StatusOptionsProperty = StatusOptionsPropertyKey.DependencyProperty;
 
         /// <summary>
         /// Gets .
         /// </summary>
         /// <value>The .</value>
-        public AsyncOps.AsyncOpResultManagerViewModel<ItemLoadParams, int> ItemsLoadOp { get => (AsyncOps.AsyncOpResultManagerViewModel<ItemLoadParams, int>)GetValue(ItemsLoadOpProperty); private set => SetValue(ItemsLoadOpPropertyKey, value); }
+        public EnumValueSelectorVM<VolumeStatus> StatusOptions => (EnumValueSelectorVM<VolumeStatus>)GetValue(StatusOptionsProperty);
+
+        #endregion
+        #region CurrentFileSystem Property Members
+
+        /// <summary>
+        /// Identifies the <see cref="CurrentFileSystem"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty CurrentFileSystemProperty = DependencyProperty.Register(nameof(CurrentFileSystem), typeof(FileSystem), typeof(VolumesPageVM),
+                new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as VolumesPageVM)?.OnCurrentFileSystemPropertyChanged((FileSystem)e.OldValue, (FileSystem)e.NewValue)));
+
+        /// <summary>
+        /// Gets or sets .
+        /// </summary>
+        /// <value>The .</value>
+        public FileSystem CurrentFileSystem { get => (FileSystem)GetValue(CurrentFileSystemProperty); set => SetValue(CurrentFileSystemProperty, value); }
+
+        /// <summary>
+        /// Called when the value of the <see cref="CurrentFileSystem"/> dependency property has changed.
+        /// </summary>
+        /// <param name="oldValue">The previous value of the <see cref="CurrentFileSystem"/> property.</param>
+        /// <param name="newValue">The new value of the <see cref="CurrentFileSystem"/> property.</param>
+        private void OnCurrentFileSystemPropertyChanged(FileSystem oldValue, FileSystem newValue)
+        {
+            // TODO: Implement OnCurrentFileSystemPropertyChanged Logic
+        }
 
         #endregion
 
-        internal Task<int> LoadAsync(Guid? fileSystemId, VolumeStatus? statusValue, bool statusNotEquals = false)
+        public VolumesPageVM()
         {
-            AsyncOps.AsyncFuncOpViewModel<ItemLoadParams, int> bgOp = BgOps.FromAsync("Loading items", "Connecting to database...",
-                new(fileSystemId, statusValue, statusNotEquals), ItemsLoadOp, LoadItemsAsync);
-            return bgOp.GetTask();
+            SetValue(StatusOptionsPropertyKey, new EnumValueSelectorVM<VolumeStatus>());
         }
 
-        private async Task<int> LoadItemsAsync(ItemLoadParams state, AsyncOps.IStatusListener<ItemLoadParams> statusListener)
+        private async Task<int> LoadItemsAsync(ItemLoadParams state, IStatusListener statusListener)
         {
             statusListener.CancellationToken.ThrowIfCancellationRequested();
             IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
@@ -53,24 +76,28 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             {
                 Guid id = state.FileSystemId.Value;
 
-                if (state.StatusValue.HasValue)
+                if (state.StatusValues.Length == 1)
                 {
-                    VolumeStatus status = state.StatusValue.Value;
-                    if (state.StatusNotEquals)
-                        items = from v in volumes where v.FileSystemId == id && v.Status != status select v;
-                    else
-                        items = from v in volumes where v.FileSystemId == id && v.Status == status select v;
+                    VolumeStatus status = state.StatusValues[0];
+                    items = from v in volumes where v.FileSystemId == id && v.Status == status select v;
+                }
+                else if (state.StatusValues.Length > 1)
+                {
+                    VolumeStatus[] sv = state.StatusValues;
+                    items = from v in volumes where v.FileSystemId == id && sv.Contains(v.Status) select v;
                 }
                 else
                     items = from v in volumes where v.FileSystemId == id select v;
             }
-            else if (state.StatusValue.HasValue)
+            else if (state.StatusValues.Length == 1)
             {
-                VolumeStatus status = state.StatusValue.Value;
-                if (state.StatusNotEquals)
-                    items = from v in volumes where v.Status != status select v;
-                else
-                    items = from v in volumes where v.Status == status select v;
+                VolumeStatus status = state.StatusValues[0];
+                items = from v in volumes where v.Status == status select v;
+            }
+            else if (state.StatusValues.Length > 1)
+            {
+                VolumeStatus[] sv = state.StatusValues;
+                items = from v in volumes where sv.Contains(v.Status) select v;
             }
             else
                 items = from v in volumes select v;
@@ -108,9 +135,10 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 
         protected override Func<IStatusListener, Task<int>> GetItemsLoaderFactory()
         {
-            throw new NotImplementedException();
+            ItemLoadParams loadParams = new(CurrentFileSystem?.Id, StatusOptions.SelectedItems.Select(e => e.Value).ToArray());
+            return listener => Task.Run(async () => await LoadItemsAsync(loadParams, listener));
         }
 
-        public record ItemLoadParams(Guid? FileSystemId, VolumeStatus? StatusValue, bool StatusNotEquals);
+        public record ItemLoadParams(Guid? FileSystemId, VolumeStatus[] StatusValues);
     }
 }

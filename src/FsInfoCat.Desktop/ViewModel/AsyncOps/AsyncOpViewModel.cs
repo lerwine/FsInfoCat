@@ -82,7 +82,7 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
             #region State property members
 
             private static readonly DependencyPropertyKey StatePropertyKey = DependencyProperty.RegisterReadOnly(nameof(State), typeof(TState), typeof(AsyncOpViewModel),
-                    new PropertyMetadata(default, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as AsyncOpViewModel)?.StatePropertyChanged?.Invoke(d, e)));
+                    new PropertyMetadata(default(TState), (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as AsyncOpViewModel)?.StatePropertyChanged?.Invoke(d, e)));
 
             public static readonly DependencyProperty StateProperty = StatePropertyKey.DependencyProperty;
 

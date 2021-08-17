@@ -1,8 +1,8 @@
 <Page x:Class="FsInfoCat.Desktop.View.Local.CrawlConfigurationsPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:local="clr-namespace:FsInfoCat.Desktop.View.Local"
       xmlns:vm="clr-namespace:FsInfoCat.Desktop.ViewModel.Local"
       xmlns:cvt="clr-namespace:FsInfoCat.Desktop.Converters"
@@ -11,7 +11,7 @@
       xmlns:View="clr-namespace:FsInfoCat.Desktop.View"
       mc:Ignorable="d" DataContext="{DynamicResource VM}"
       d:DesignHeight="768" d:DesignWidth="1024"
-      Title="DisplayName_CrawlConfigurations">
+      Title="Craw Configurations">
     <Page.Resources>
         <cvt:DependencyObjectToVisibilityConverter x:Key="DependencyObjectToVisibilityConverter"/>
         <cvt:DependencyObjectToVisibilityConverter x:Key="InverseObjectToVisibilityConverter" NotNullSource="Collapsed" NullSource="Visible"/>
@@ -35,24 +35,40 @@
             <ColumnDefinition/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <DataGrid ItemsSource="{Binding CrawlConfigurations, Mode=OneWay}" AutoGenerateColumns="False" Margin="{DynamicResource DefaultSpacing}" IsReadOnly="True" SelectedValue="{Binding SelectedCrawlConfig, Mode=TwoWay}">
-            <DataGrid.Columns>
-                <DataGridTextColumn Binding="{Binding DisplayName, Mode=OneWay}" IsReadOnly="True" Header="{x:Static res:Resources.DisplayName_Name}" Width="*"/>
-                <DataGridTextColumn Binding="{Binding StatusValue, Converter={StaticResource CrawlStatusToCol}, Mode=OneWay}" IsReadOnly="True" Header="{x:Static res:Resources.DisplayName_Status}" CanUserResize="True" Width="*"/>
-                <DataGridTextColumn Binding="{Binding LastCrawlStart, Converter={StaticResource CrawlStartToCol}, Mode=OneWay}" IsReadOnly="True" Header="{x:Static res:Resources.DisplayName_LastStart}"/>
-                <DataGridTextColumn Binding="{Binding LastCrawlEnd, Converter={StaticResource DateTimeToCol}, Mode=OneWay}" IsReadOnly="True" Header="{x:Static res:Resources.DisplayName_LastEnd}"/>
-                <DataGridTextColumn Binding="{Binding NextScheduledStart, Converter={StaticResource NextCrawlToCol}, Mode=OneWay}" IsReadOnly="True" Header="{x:Static res:Resources.DisplayName_NextStart}"/>
-            </DataGrid.Columns>
-        </DataGrid>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <DataGrid ItemsSource="{Binding CrawlConfigurations, Mode=OneWay}" Margin="{DynamicResource DefaultSpacing}" AutoGenerateColumns="False" IsReadOnly="True" SelectedValue="{Binding SelectedCrawlConfig, Mode=TwoWay}" Grid.ColumnSpan="2">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Binding="{Binding DisplayName, Mode=OneWay}" IsReadOnly="True" Header="{x:Static res:Resources.DisplayName_Name}" Width="*"/>
+                    <DataGridTextColumn Binding="{Binding StatusValue, Converter={StaticResource CrawlStatusToCol}, Mode=OneWay}" IsReadOnly="True" Header="{x:Static res:Resources.DisplayName_Status}" CanUserResize="True" Width="*"/>
+                    <DataGridTextColumn Binding="{Binding LastCrawlStart, Converter={StaticResource CrawlStartToCol}, Mode=OneWay}" IsReadOnly="True" Header="{x:Static res:Resources.DisplayName_LastStart}"/>
+                    <DataGridTextColumn Binding="{Binding LastCrawlEnd, Converter={StaticResource DateTimeToCol}, Mode=OneWay}" IsReadOnly="True" Header="{x:Static res:Resources.DisplayName_LastEnd}"/>
+                    <DataGridTextColumn Binding="{Binding NextScheduledStart, Converter={StaticResource NextCrawlToCol}, Mode=OneWay}" IsReadOnly="True" Header="{x:Static res:Resources.DisplayName_NextStart}"/>
+                </DataGrid.Columns>
+            </DataGrid>
+            <WrapPanel DataContext="{Binding ViewOptions, Mode=OneWay}" Grid.Row="1">
+                <RadioButton Content="Show Active" IsChecked="{Binding IsTrue, Mode=OneWay}" GroupName="ListingOptions" Margin="{DynamicResource DefaultSpacingBottomLeft}"/>
+                <RadioButton GroupName="ListingOptions" Content="Show Inactive" IsChecked="{Binding IsFalse, Mode=OneWay}" Margin="{DynamicResource DefaultSpacingBottomLeft}"/>
+                <RadioButton GroupName="ListingOptions" Content="Show All" IsChecked="{Binding IsNull, Mode=OneWay}" Margin="{DynamicResource DefaultSpacingBottomLeftRight}"/>
+            </WrapPanel>
+            <Button Grid.Row="1" Grid.Column="1" Content="Add New" Margin="{DynamicResource DefaultSpacingBottomLeftRight}"/>
+        </Grid>
         <StackPanel Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding SelectedCrawlConfig, Converter={StaticResource InverseObjectToVisibilityConverter}}">
             <TextBlock Text="No crawl configuration to dispay" HorizontalAlignment="Center" />
             <Button Content="{x:Static res:Resources.DisplayName_New}" HorizontalAlignment="Center" Command="{Binding NewClickCommand, Mode=OneWay, Source={StaticResource VM}}" Width="{DynamicResource DefaultButtonWidth}" Height="{DynamicResource DefaultButtonHeight}" Margin="{DynamicResource DefaultSpacing}" ToolTip="{x:Static res:Resources.Description_NewCurrentCrawlConfig}" Style="{DynamicResource DefaultButton}"/>
         </StackPanel>
         <StackPanel Grid.Column="1" Margin="{DynamicResource DefaultSpacingLeft}" DataContext="{Binding SelectedCrawlConfig}" Visibility="{Binding Converter={StaticResource DependencyObjectToVisibilityConverter}, Mode=OneWay}">
             <WrapPanel Grid.Row="1" FlowDirection="RightToLeft">
-                <Button Content="{x:Static res:Resources.DisplayName_Delete}" Width="{DynamicResource DefaultButtonWidth}" Height="{DynamicResource DefaultButtonHeight}" Margin="{DynamicResource DefaultSpacing}" Command="{Binding DeleteCommand, Mode=OneWay}" ToolTip="{x:Static res:Resources.Description_DeleteCurrentCrawlConfig}" Style="{DynamicResource DefaultButton}"/>
+                <Button Content="{x:Static res:Resources.DisplayName_Delete}" Width="{DynamicResource DefaultButtonWidth}" Height="{DynamicResource DefaultButtonHeight}" Margin="{DynamicResource DefaultSpacing}" Command="{Binding DeleteCurrentItem, Mode=OneWay}" ToolTip="{x:Static res:Resources.Description_DeleteCurrentCrawlConfig}" Style="{DynamicResource DefaultButton}"/>
                 <Button Content="{x:Static res:Resources.DisplayName_New}" Command="{Binding NewClickCommand, Mode=OneWay, Source={StaticResource VM}}" Width="{DynamicResource DefaultButtonWidth}" Height="{DynamicResource DefaultButtonHeight}" Margin="{DynamicResource DefaultSpacing}" ToolTip="{x:Static res:Resources.Description_NewCurrentCrawlConfig}" Style="{DynamicResource DefaultButton}"/>
-                <Button Content="{x:Static res:Resources.DisplayName_Edit}" Width="{DynamicResource DefaultButtonWidth}" Height="{DynamicResource DefaultButtonHeight}" Margin="{DynamicResource DefaultSpacing}" Command="{Binding EditCommand, Mode=OneWay}" ToolTip="{x:Static res:Resources.Description_EditCurrentCrawlConfig}" Style="{DynamicResource DefaultButton}"/>
+                <Button Content="{x:Static res:Resources.DisplayName_Edit}" Width="{DynamicResource DefaultButtonWidth}" Height="{DynamicResource DefaultButtonHeight}" Margin="{DynamicResource DefaultSpacing}" Command="{Binding EditCurrentItem, Mode=OneWay}" ToolTip="{x:Static res:Resources.Description_EditCurrentCrawlConfig}" Style="{DynamicResource DefaultButton}"/>
                 <Button Content="{x:Static res:Resources.DisplayName_StartNow}" Width="{DynamicResource DefaultButtonWidth}" Height="{DynamicResource DefaultButtonHeight}" Margin="{DynamicResource DefaultSpacing}" Command="{Binding StartCrawlNowCommand, Mode=OneWay}" ToolTip="{x:Static res:Resources.Description_StartCrawlNow}" Style="{DynamicResource DefaultButton}"/>
             </WrapPanel>
             <Label Content="{x:Static res:Resources.DisplayName_DisplayName}" Padding="{DynamicResource DefaultSpacingTopLeftRight}" FontWeight="Bold"/>
@@ -125,9 +141,9 @@
                 <TextBlock Padding="{DynamicResource DefaultSpacingTopLeftRight}" Text="{Binding Notes, Mode=OneWay}" />
             </GroupBox>
             <WrapPanel Grid.Row="1" FlowDirection="RightToLeft">
-                <Button Content="{x:Static res:Resources.DisplayName_Delete}" Width="{DynamicResource DefaultButtonWidth}" Height="{DynamicResource DefaultButtonHeight}" Margin="{DynamicResource DefaultSpacing}" Command="{Binding DeleteCommand, Mode=OneWay}" ToolTip="{x:Static res:Resources.Description_DeleteCurrentCrawlConfig}" Style="{DynamicResource DefaultButton}"/>
+                <Button Content="{x:Static res:Resources.DisplayName_Delete}" Width="{DynamicResource DefaultButtonWidth}" Height="{DynamicResource DefaultButtonHeight}" Margin="{DynamicResource DefaultSpacing}" Command="{Binding DeleteCurrentItem, Mode=OneWay}" ToolTip="{x:Static res:Resources.Description_DeleteCurrentCrawlConfig}" Style="{DynamicResource DefaultButton}"/>
                 <Button Content="{x:Static res:Resources.DisplayName_New}" Command="{Binding NewClickCommand, Mode=OneWay, Source={StaticResource VM}}" Width="{DynamicResource DefaultButtonWidth}" Height="{DynamicResource DefaultButtonHeight}" Margin="{DynamicResource DefaultSpacing}" ToolTip="{x:Static res:Resources.Description_NewCurrentCrawlConfig}" Style="{DynamicResource DefaultButton}"/>
-                <Button Content="{x:Static res:Resources.DisplayName_Edit}" Width="{DynamicResource DefaultButtonWidth}" Height="{DynamicResource DefaultButtonHeight}" Margin="{DynamicResource DefaultSpacing}" Command="{Binding EditCommand, Mode=OneWay}" ToolTip="{x:Static res:Resources.Description_EditCurrentCrawlConfig}" Style="{DynamicResource DefaultButton}"/>
+                <Button Content="{x:Static res:Resources.DisplayName_Edit}" Width="{DynamicResource DefaultButtonWidth}" Height="{DynamicResource DefaultButtonHeight}" Margin="{DynamicResource DefaultSpacing}" Command="{Binding EditCurrentItem, Mode=OneWay}" ToolTip="{x:Static res:Resources.Description_EditCurrentCrawlConfig}" Style="{DynamicResource DefaultButton}"/>
                 <Button Content="{x:Static res:Resources.DisplayName_StartNow}" Width="{DynamicResource DefaultButtonWidth}" Height="{DynamicResource DefaultButtonHeight}" Margin="{DynamicResource DefaultSpacing}" Command="{Binding StartCrawlNowCommand, Mode=OneWay}" ToolTip="{x:Static res:Resources.Description_StartCrawlNow}" Style="{DynamicResource DefaultButton}"/>
             </WrapPanel>
         </StackPanel>

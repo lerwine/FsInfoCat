@@ -18,95 +18,53 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 {
     public class CrawlConfigurationsPageVM : DbEntityListingPageVM<CrawlConfiguration, CrawlConfigItemVM>
     {
-        #region Listing Options Members
+        #region SelectedItem Property Members
 
-        #region ShowActiveCrawlConfigurationsOnly Property Members
+        /// <summary>
+        /// Identifies the <see cref="SelectedItem"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty SelectedItemProperty = DependencyProperty.Register(nameof(SelectedItem), typeof(CrawlConfigItemVM), typeof(CrawlConfigurationsPageVM), new PropertyMetadata(null));
 
-        public static readonly DependencyProperty ShowActiveCrawlConfigurationsOnlyProperty = DependencyProperty.Register(nameof(ShowActiveCrawlConfigurationsOnly),
-            typeof(bool), typeof(CrawlConfigurationsPageVM), new PropertyMetadata(true, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-            (d as CrawlConfigurationsPageVM).OnShowActiveCrawlConfigurationsOnlyPropertyChanged((bool)e.OldValue, (bool)e.NewValue)));
+        /// <summary>
+        /// Gets or sets .
+        /// </summary>
+        /// <value>The .</value>
+        public CrawlConfigItemVM SelectedItem { get => (CrawlConfigItemVM)GetValue(SelectedItemProperty); set => SetValue(SelectedItemProperty, value); }
 
-        public bool ShowActiveCrawlConfigurationsOnly
+        #endregion
+        #region ViewOptions Property Members
+
+        private static readonly DependencyPropertyKey ViewOptionsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ViewOptions), typeof(ThreeStateViewModel), typeof(CrawlConfigurationsPageVM),
+                new PropertyMetadata(null));
+
+        /// <summary>
+        /// Identifies the <see cref="ViewOptions"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ViewOptionsProperty = ViewOptionsPropertyKey.DependencyProperty;
+
+        /// <summary>
+        /// Gets .
+        /// </summary>
+        /// <value>The .</value>
+        public ThreeStateViewModel ViewOptions => (ThreeStateViewModel)GetValue(ViewOptionsProperty);
+
+        #endregion
+
+        public CrawlConfigurationsPageVM()
         {
-            get => (bool)GetValue(ShowActiveCrawlConfigurationsOnlyProperty);
-            set => SetValue(ShowActiveCrawlConfigurationsOnlyProperty, value);
-        }
-
-        protected virtual void OnShowActiveCrawlConfigurationsOnlyPropertyChanged(bool oldValue, bool newValue)
-        {
-            if (newValue)
+            ThreeStateViewModel viewOptions = new(true);
+            SetValue(ViewOptionsPropertyKey, viewOptions);
+            viewOptions.ValuePropertyChanged += (s, e) =>
             {
-                ShowInactiveCrawlConfigurationsOnly = false;
-                ShowAllCrawlConfigurations = false;
                 CrawlConfigItemVM selectedCrawlConfig = SelectedItem;
                 LoadItemsAsync().ContinueWith(t => OnItemsReloaded(selectedCrawlConfig));
-            }
-            else if (!(ShowInactiveCrawlConfigurationsOnly || ShowAllCrawlConfigurations))
-                ShowInactiveCrawlConfigurationsOnly = true;
+            };
         }
-
-        #endregion
-
-        #region ShowInactiveCrawlConfigurationsOnly Property Members
-
-        public static readonly DependencyProperty ShowInactiveCrawlConfigurationsOnlyProperty = DependencyProperty.Register(nameof(ShowInactiveCrawlConfigurationsOnly),
-            typeof(bool), typeof(CrawlConfigurationsPageVM), new PropertyMetadata(false, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-            (d as CrawlConfigurationsPageVM).OnShowInactiveCrawlConfigurationsOnlyPropertyChanged((bool)e.OldValue, (bool)e.NewValue)));
-
-        public bool ShowInactiveCrawlConfigurationsOnly
-        {
-            get => (bool)GetValue(ShowInactiveCrawlConfigurationsOnlyProperty);
-            set => SetValue(ShowInactiveCrawlConfigurationsOnlyProperty, value);
-        }
-
-        protected virtual void OnShowInactiveCrawlConfigurationsOnlyPropertyChanged(bool oldValue, bool newValue)
-        {
-            if (newValue)
-            {
-                ShowActiveCrawlConfigurationsOnly = false;
-                ShowAllCrawlConfigurations = false;
-                CrawlConfigItemVM selectedCrawlConfig = SelectedItem;
-                LoadItemsAsync().ContinueWith(t => OnItemsReloaded(selectedCrawlConfig));
-            }
-            else if (!(ShowActiveCrawlConfigurationsOnly || ShowAllCrawlConfigurations))
-                ShowActiveCrawlConfigurationsOnly = true;
-        }
-
-        #endregion
-
-        #region ShowAllCrawlConfigurations Property Members
-
-        public static readonly DependencyProperty ShowAllCrawlConfigurationsProperty = DependencyProperty.Register(nameof(ShowAllCrawlConfigurations), typeof(bool),
-            typeof(CrawlConfigurationsPageVM), new PropertyMetadata(false, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-            (d as CrawlConfigurationsPageVM).OnShowAllCrawlConfigurationsPropertyChanged((bool)e.OldValue, (bool)e.NewValue)));
-
-        public bool ShowAllCrawlConfigurations
-        {
-            get => (bool)GetValue(ShowAllCrawlConfigurationsProperty);
-            set => SetValue(ShowAllCrawlConfigurationsProperty, value);
-        }
-
-        protected virtual void OnShowAllCrawlConfigurationsPropertyChanged(bool oldValue, bool newValue)
-        {
-            if (newValue)
-            {
-                ShowActiveCrawlConfigurationsOnly = false;
-                ShowInactiveCrawlConfigurationsOnly = false;
-                CrawlConfigItemVM selectedCrawlConfig = SelectedItem;
-                LoadItemsAsync().ContinueWith(t => OnItemsReloaded(selectedCrawlConfig));
-            }
-            else if (!(ShowActiveCrawlConfigurationsOnly || ShowInactiveCrawlConfigurationsOnly))
-                ShowActiveCrawlConfigurationsOnly = true;
-        }
-
-        #endregion
-
-        #endregion
 
         protected override Func<IStatusListener, Task<int>> GetItemsLoaderFactory()
         {
-            bool? loadOptions = ShowAllCrawlConfigurations ? null : ShowActiveCrawlConfigurationsOnly;
-            return listener => Task.Run(async () => await LoadItemsAsync(loadOptions, listener));
+            bool? viewOptions = ViewOptions.Value;
+            return listener => Task.Run(async () => await LoadItemsAsync(viewOptions, listener));
         }
 
         private void OnItemsReloaded(CrawlConfigItemVM toSelect)

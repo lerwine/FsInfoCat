@@ -40,27 +40,27 @@
       </Declarations>
       <Code Language="csharp"><![CDATA[#region $command$ Command Property Members
 
-private static readonly DependencyPropertyKey $command$CommandPropertyKey = DependencyProperty.RegisterReadOnly(nameof($command$Command),
+private static readonly DependencyPropertyKey $command$PropertyKey = DependencyProperty.RegisterReadOnly(nameof($command$),
     typeof(Commands.RelayCommand), typeof($ownerclass$), new PropertyMetadata(null));
 
 /// <summary>
-/// Identifies the <see cref="$command$Command"/> dependency property.
+/// Identifies the <see cref="$command$"/> dependency property.
 /// </summary>
-public static readonly DependencyProperty $command$CommandProperty = $command$CommandPropertyKey.DependencyProperty;
+public static readonly DependencyProperty $command$Property = $command$PropertyKey.DependencyProperty;
 
 /// <summary>
 /// $summary$
 /// </summary>
 /// <value>$returnValue$</value>
-public Commands.RelayCommand $command$Command => (Commands.RelayCommand)GetValue($command$CommandProperty);
+public Commands.RelayCommand $command$ => (Commands.RelayCommand)GetValue($command$Property);
 
 $methodAccess$ void On$command$(object parameter)
 {
   // TODO: Implement On$command$ Logic
 }
 
-/* TODO: Add $command$Command to initialization code to constructor
-   SetValue($command$CommandPropertyKey, new Commands.RelayCommand(On$command$));$end$ */
+/* TODO: Add $command$ to initialization code to constructor
+   SetValue($command$PropertyKey, new Commands.RelayCommand(On$command$));$end$ */
 
 #endregion]]></Code>
     </Snippet>
