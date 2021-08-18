@@ -5,8 +5,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:async="clr-namespace:FsInfoCat.Desktop.ViewModel.AsyncOps"
              xmlns:local="clr-namespace:FsInfoCat.Desktop.View"
-        xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
-        xmlns:desktop="clr-namespace:FsInfoCat.Desktop"
+             xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:desktop="clr-namespace:FsInfoCat.Desktop"
              mc:Ignorable="d" d:DataContext="{x:Type async:AsyncBgModalVM}"
              d:DesignHeight="450" d:DesignWidth="800" Background="{DynamicResource TranslucentBlack50pctBrush}" Visibility="{Binding ControlVisibility, Mode=OneWay}">
     <b:Interaction.Triggers>

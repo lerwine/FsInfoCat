@@ -54,6 +54,8 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         {
             ThreeStateViewModel viewOptions = new(true);
             SetValue(ViewOptionsPropertyKey, viewOptions);
+            if (DesignerProperties.GetIsInDesignMode(this))
+                return;
             viewOptions.ValuePropertyChanged += (s, e) =>
             {
                 CrawlConfigItemVM selectedCrawlConfig = SelectedItem;

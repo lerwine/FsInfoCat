@@ -34,23 +34,6 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         public AsyncOps.AsyncBgModalVM BgOps => (AsyncOps.AsyncBgModalVM)GetValue(BgOpsProperty);
 
         #endregion
-        #region RelatedItemLoader Property Members
-
-        private static readonly DependencyPropertyKey RelatedItemLoaderPropertyKey = DependencyProperty.RegisterReadOnly(nameof(RelatedItemLoader), typeof(AsyncOps.AsyncOpResultManagerViewModel<Guid, int>), typeof(DbEntityItemDetailViewModel<TDbEntity, TItemVM>),
-                new PropertyMetadata(null));
-
-        /// <summary>
-        /// Identifies the <see cref="RelatedItemLoader"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty RelatedItemLoaderProperty = RelatedItemLoaderPropertyKey.DependencyProperty;
-
-        /// <summary>
-        /// Gets .
-        /// </summary>
-        /// <value>The .</value>
-        public AsyncOps.AsyncOpResultManagerViewModel<Guid, int> RelatedItemLoader { get => (AsyncOps.AsyncOpResultManagerViewModel<Guid, int>)GetValue(RelatedItemLoaderProperty); private set => SetValue(RelatedItemLoaderPropertyKey, value); }
-
-        #endregion
         #region CurrentItem Property Members
 
         /// <summary>
@@ -92,9 +75,9 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         public DbEntityItemDetailViewModel()
         {
             SetValue(BgOpsPropertyKey, new AsyncOps.AsyncBgModalVM());
-            SetValue(RelatedItemLoaderPropertyKey, new AsyncOps.AsyncOpResultManagerViewModel<Guid, int>());
         }
     }
+
     public class FileSystemItemDetailViewModel : DbEntityItemDetailViewModel<FileSystem, FileSystemItemVM>
     {
         #region NewSymbolicName Property Members
@@ -185,30 +168,29 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         {
             _backingSymbolicNames.Clear();
             if (fileSystemId.HasValue)
-                _ = BgOps.FromAsync("", "", fileSystemId.Value, RelatedItemLoader, new Func<Guid, IStatusListener<Guid>, Task<int>>((id, listener) =>
-                Task.Run(async () => await LoadSymbolicNamesAsync(id, showActive, listener))));
+                BgOps.FromAsync("", "", (fileSystemId.Value, showActive), LoadSymbolicNamesAsync);
         }
 
-        private async Task<int> LoadSymbolicNamesAsync(Guid fileSystemId, bool? showActive, IStatusListener statusListener)
+        private async Task<int> LoadSymbolicNamesAsync((Guid fileSystemId, bool? showActive) state, IStatusListener statusListener)
         {
             statusListener.CancellationToken.ThrowIfCancellationRequested();
             IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
             LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             SymbolicName[] items;
-            if (showActive.HasValue)
+            if (state.showActive.HasValue)
             {
-                if (showActive.Value)
-                    items = await (from s in dbContext.SymbolicNames where !s.IsInactive && s.FileSystemId == fileSystemId select s).ToArrayAsync(statusListener.CancellationToken);
+                if (state.showActive.Value)
+                    items = await (from s in dbContext.SymbolicNames where !s.IsInactive && s.FileSystemId == state.fileSystemId select s).ToArrayAsync(statusListener.CancellationToken);
                 else
-                    items = await (from s in dbContext.SymbolicNames where s.IsInactive && s.FileSystemId == fileSystemId select s).ToArrayAsync(statusListener.CancellationToken);
+                    items = await (from s in dbContext.SymbolicNames where s.IsInactive && s.FileSystemId == state.fileSystemId select s).ToArrayAsync(statusListener.CancellationToken);
             }
             else
-                items = await (from s in dbContext.SymbolicNames where s.FileSystemId == fileSystemId select s).ToArrayAsync(statusListener.CancellationToken);
+                items = await (from s in dbContext.SymbolicNames where s.FileSystemId == state.fileSystemId select s).ToArrayAsync(statusListener.CancellationToken);
 
             return await Dispatcher.InvokeAsync(() =>
             {
                 _backingSymbolicNames.Clear();
-                if (CurrentItem?.Model.Id == fileSystemId)
+                if (CurrentItem?.Model.Id == state.fileSystemId)
                 {
                     CurrentItem.SymbolicNameCount = items.Length;
                     foreach (SymbolicName item in items)

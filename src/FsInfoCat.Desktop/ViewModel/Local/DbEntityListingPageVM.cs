@@ -90,40 +90,6 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         public AsyncOps.AsyncBgModalVM BgOps => (AsyncOps.AsyncBgModalVM)GetValue(BgOpsProperty);
 
         #endregion
-        #region EntityDbOp Property Members
-
-        private static readonly DependencyPropertyKey EntityDbOpPropertyKey = DependencyProperty.RegisterReadOnly(nameof(EntityDbOp), typeof(AsyncOps.AsyncOpResultManagerViewModel<TDbEntity, bool?>), typeof(DbEntityListingPageVM<TDbEntity, TItemVM>),
-                new PropertyMetadata(null));
-
-        /// <summary>
-        /// Identifies the <see cref="EntityDbOp"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty EntityDbOpProperty = EntityDbOpPropertyKey.DependencyProperty;
-
-        /// <summary>
-        /// Gets .
-        /// </summary>
-        /// <value>The .</value>
-        public AsyncOps.AsyncOpResultManagerViewModel<TDbEntity, bool?> EntityDbOp => (AsyncOps.AsyncOpResultManagerViewModel<TDbEntity, bool?>)GetValue(EntityDbOpProperty);
-
-        #endregion
-        #region ListingLoader Property Members
-
-        private static readonly DependencyPropertyKey ListingLoaderPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ListingLoader), typeof(AsyncOps.AsyncOpResultManagerViewModel<int>), typeof(DbEntityListingPageVM<TDbEntity, TItemVM>),
-                new PropertyMetadata(null));
-
-        /// <summary>
-        /// Identifies the <see cref="ListingLoader"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty ListingLoaderProperty = ListingLoaderPropertyKey.DependencyProperty;
-
-        /// <summary>
-        /// Gets .
-        /// </summary>
-        /// <value>The .</value>
-        public AsyncOps.AsyncOpResultManagerViewModel<int> ListingLoader { get => (AsyncOps.AsyncOpResultManagerViewModel<int>)GetValue(ListingLoaderProperty); private set => SetValue(ListingLoaderPropertyKey, value); }
-
-        #endregion
 
         public DbEntityListingPageVM()
         {
@@ -135,15 +101,11 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 #endif
             Logger = App.GetLogger(this);
             SetValue(BgOpsPropertyKey, new AsyncOps.AsyncBgModalVM());
-            SetValue(EntityDbOpPropertyKey, new AsyncOps.AsyncOpResultManagerViewModel<TDbEntity, bool?>());
-            SetValue(ListingLoaderPropertyKey, new AsyncOps.AsyncOpResultManagerViewModel<int>());
         }
 
         internal Task<int> LoadItemsAsync()
         {
-            ListingLoader.CancelAll();
-            AsyncOps.AsyncFuncOpViewModel<int> bgOp = BgOps.FromAsync("Loading items", "Connecting to database...", ListingLoader, GetItemsLoaderFactory());
-            return bgOp.GetTask();
+            return BgOps.FromAsync("Loading items", "Connecting to database...", GetItemsLoaderFactory());
         }
 
         protected abstract Func<AsyncOps.IStatusListener, Task<int>> GetItemsLoaderFactory();
@@ -225,8 +187,8 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             }
             else
                 title = GetSaveExistingProgressTitle(item);
-            AsyncOps.AsyncFuncOpViewModel<TDbEntity, bool?> asyncFuncOpViewModel = BgOps.FromAsync(title, "Connecting to database...", entity, EntityDbOp, OnSaveChangesAsync);
-            return asyncFuncOpViewModel.GetTask().ContinueWith(task =>
+            Task<bool?> task = BgOps.FromAsync(title, "Connecting to database...", entity, OnSaveChangesAsync);
+            return task.ContinueWith(task =>
             {
                 if (!task.Result.HasValue)
                     return (item, (bool?)null);
@@ -241,7 +203,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             }, TaskContinuationOptions.OnlyOnRanToCompletion);
         }
 
-        private async Task<bool?> OnSaveChangesAsync([DisallowNull] TDbEntity entity, AsyncOps.IStatusListener<TDbEntity> statusListener)
+        private async Task<bool?> OnSaveChangesAsync([DisallowNull] TDbEntity entity, AsyncOps.IStatusListener statusListener)
         {
             statusListener.CancellationToken.ThrowIfCancellationRequested();
             IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
@@ -284,8 +246,8 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             if (item is null)
                 return Task.FromResult<TItemVM>(null);
             string title = GetDeleteProgressTitle(item);
-            AsyncOps.AsyncFuncOpViewModel<TDbEntity, bool?> asyncFuncOpViewModel = BgOps.FromAsync(title, "Connecting to database...", entity, EntityDbOp, OnDeleteItemAsync);
-            return asyncFuncOpViewModel.GetTask().ContinueWith(task =>
+            Task<bool?> task = BgOps.FromAsync(title, "Connecting to database...", entity, OnDeleteItemAsync);
+            return task.ContinueWith(task =>
             {
                 if (!(task.Result ?? false))
                     return null;
@@ -294,7 +256,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             }, TaskContinuationOptions.OnlyOnRanToCompletion);
         }
 
-        private async Task<bool?> OnDeleteItemAsync([DisallowNull] TDbEntity entity, AsyncOps.IStatusListener<TDbEntity> statusListener)
+        private async Task<bool?> OnDeleteItemAsync([DisallowNull] TDbEntity entity, AsyncOps.IStatusListener statusListener)
         {
             statusListener.CancellationToken.ThrowIfCancellationRequested();
             IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
@@ -365,7 +327,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 
         protected virtual void OnNavigatedFrom(MainVM mainVM)
         {
-            EntityDbOp.CancelAll();
+            BgOps.RaiseOperationCancelRequested(null);
         }
 
         void INotifyNavigationContentChanged.OnNavigatedTo(MainVM mainVM) => OnNavigatedTo(mainVM);

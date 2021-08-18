@@ -17,32 +17,12 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 {
     public class RedundantSetsPageVM : DbEntityListingPageVM<RedundantSet, RedundantSetItemVM>
     {
-        #region ItemsLoadOp Property Members
-
-        private static readonly DependencyPropertyKey ItemsLoadOpPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ItemsLoadOp), typeof(AsyncOps.AsyncOpResultManagerViewModel<ItemLoadParams, int>), typeof(RedundantSetsPageVM),
-                new PropertyMetadata(new AsyncOps.AsyncOpResultManagerViewModel<ItemLoadParams, int>()));
-
-        /// <summary>
-        /// Identifies the <see cref="ItemsLoadOp"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty ItemsLoadOpProperty = ItemsLoadOpPropertyKey.DependencyProperty;
-
-        /// <summary>
-        /// Gets .
-        /// </summary>
-        /// <value>The .</value>
-        public AsyncOps.AsyncOpResultManagerViewModel<ItemLoadParams, int> ItemsLoadOp { get => (AsyncOps.AsyncOpResultManagerViewModel<ItemLoadParams, int>)GetValue(ItemsLoadOpProperty); private set => SetValue(ItemsLoadOpPropertyKey, value); }
-
-        #endregion
-
         internal Task<int> LoadAsync(Guid? binaryPropertiesId, string reference = null)
         {
-            AsyncOps.AsyncFuncOpViewModel<ItemLoadParams, int> bgOp = BgOps.FromAsync("Loading items", "Connecting to database...",
-                new(binaryPropertiesId, reference), ItemsLoadOp, LoadItemsAsync);
-            return bgOp.GetTask();
+            return BgOps.FromAsync("Loading items", "Connecting to database...", new ItemLoadParams(binaryPropertiesId, reference), LoadItemsAsync);
         }
 
-        private async Task<int> LoadItemsAsync(ItemLoadParams state, AsyncOps.IStatusListener<ItemLoadParams> statusListener)
+        private async Task<int> LoadItemsAsync(ItemLoadParams state, IStatusListener statusListener)
         {
             statusListener.CancellationToken.ThrowIfCancellationRequested();
             IServiceScope serviceScope = Services.ServiceProvider.CreateScope();

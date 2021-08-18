@@ -127,12 +127,11 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 
         #region SaveChangesOpMgr Property Members
 
-        private static async Task<FileSystem> SaveChangesAsync(ModelViewModel state,
-            AsyncOps.AsyncFuncOpViewModel<ModelViewModel, FileSystem>.StatusListenerImpl statusListener)
+        private static async Task<FileSystem> SaveChangesAsync(ModelViewModel state, AsyncOps.IStatusListener statusListener)
         {
             EditFileSystemVM vm = (state.ViewModel as EditFileSystemVM) ?? throw new ArgumentException($"{nameof(state.ViewModel)} cannot be null.", nameof(state));
             using IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
-            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetService<LocalDbContext>();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             EntityEntry<FileSystem> entry;
             if (state.Entity is null)
             {

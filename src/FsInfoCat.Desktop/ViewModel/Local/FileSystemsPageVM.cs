@@ -39,7 +39,8 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         {
             ThreeStateViewModel viewOptions = new(true);
             SetValue(ViewOptionsPropertyKey, viewOptions);
-            viewOptions.ValuePropertyChanged += (s, e) => LoadItemsAsync();
+            if (!DesignerProperties.GetIsInDesignMode(this))
+                viewOptions.ValuePropertyChanged += (s, e) => LoadItemsAsync();
         }
 
         protected override Func<IStatusListener, Task<int>> GetItemsLoaderFactory()

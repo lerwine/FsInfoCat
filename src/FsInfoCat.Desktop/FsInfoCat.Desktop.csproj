@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
@@ -90,6 +90,7 @@
   <ItemGroup>
     <Folder Include="ViewModel\Upstream\" />
     <Folder Include="View\Upstream\" />
+    <Folder Include="Themes\" />
   </ItemGroup>
 
 </Project>

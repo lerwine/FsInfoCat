@@ -33,7 +33,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 
         protected abstract DbSet<TDbEntity> GetDbSet(LocalDbContext dbContext);
 
-        protected virtual void OnSavingModel(EntityEntry<TDbEntity> entityEntry, LocalDbContext dbContext, AsyncOps.IStatusListener<ModelViewModel> statusListener) { }
+        protected virtual void OnSavingModel(EntityEntry<TDbEntity> entityEntry, LocalDbContext dbContext, AsyncOps.IStatusListener statusListener) { }
 
         protected abstract void UpdateModelForSave(TDbEntity model, bool isNew);
 
@@ -54,8 +54,8 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 
         private void OnSaveExecute(object parameter)
         {
-            AsyncOps.AsyncFuncOpViewModel<ModelViewModel, TDbEntity> asyncOp = OpAggregate.FromAsync("Saving Changes", "Connecting to database", new(Model, this), SaveChangesOpMgr, SaveChangesAsync);
-            asyncOp.GetTask().ContinueWith(task =>
+            Task<TDbEntity> task = OpAggregate.FromAsync("Saving Changes", "Connecting to database", new ModelViewModel(Model, this), SaveChangesAsync);
+            task.ContinueWith(task =>
             {
                 Dispatcher.Invoke(() =>
                 {
@@ -65,54 +65,11 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             });
         }
 
-        #endregion
-
-        #region CancelCommand Property Members
-
-        private static readonly DependencyPropertyKey CancelCommandPropertyKey = DependencyProperty.RegisterReadOnly(nameof(CancelCommand),
-            typeof(Commands.RelayCommand), typeof(EditDbEntityVM<TDbEntity>), new PropertyMetadata(null));
-
-        public static readonly DependencyProperty CancelCommandProperty = CancelCommandPropertyKey.DependencyProperty;
-
-        /// <summary>
-        /// Gets the bindable "Cancel" command.
-        /// </summary>
-        /// <value>The bindable command for discarding changes and closing the edit window.</value>
-        public Commands.RelayCommand CancelCommand => (Commands.RelayCommand)GetValue(CancelCommandProperty);
-
-        private void OnCancelExecute(object parameter) => CloseCancel?.Invoke(this, EventArgs.Empty);
-
-        #endregion
-
-        #endregion
-
-        #region Background Operation Properties
-
-        #region OpAggregate Property Members
-
-        private static readonly DependencyPropertyKey OpAggregatePropertyKey = DependencyProperty.RegisterReadOnly(nameof(OpAggregate),
-            typeof(AsyncOps.AsyncBgModalVM), typeof(EditDbEntityVM<TDbEntity>), new PropertyMetadata(null));
-
-        public static readonly DependencyProperty OpAggregateProperty = OpAggregatePropertyKey.DependencyProperty;
-
-        public AsyncOps.AsyncBgModalVM OpAggregate => (AsyncOps.AsyncBgModalVM)GetValue(OpAggregateProperty);
-
-        #endregion
-        
-        #region SaveChangesOpMgr Property Members
-
-        private static readonly DependencyPropertyKey SaveChangesOpMgrPropertyKey = DependencyProperty.RegisterReadOnly(nameof(SaveChangesOpMgr), typeof(AsyncOps.AsyncOpResultManagerViewModel<ModelViewModel, TDbEntity>), typeof(EditDbEntityVM<TDbEntity>),
-                new PropertyMetadata(null));
-
-        public static readonly DependencyProperty SaveChangesOpMgrProperty = SaveChangesOpMgrPropertyKey.DependencyProperty;
-
-        public AsyncOps.AsyncOpResultManagerViewModel<ModelViewModel, TDbEntity> SaveChangesOpMgr => (AsyncOps.AsyncOpResultManagerViewModel<ModelViewModel, TDbEntity>)GetValue(SaveChangesOpMgrProperty);
-
-        private static async Task<TDbEntity> SaveChangesAsync(ModelViewModel state, AsyncOps.IStatusListener<ModelViewModel> statusListener)
+        private static async Task<TDbEntity> SaveChangesAsync(ModelViewModel state, AsyncOps.IStatusListener statusListener)
         {
             EditDbEntityVM<TDbEntity> vm = state.ViewModel ?? throw new ArgumentException($"{nameof(state.ViewModel)} cannot be null.", nameof(state));
             using IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
-            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetService<LocalDbContext>();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             EntityEntry<TDbEntity> entry;
             if (state.Entity is null)
             {
@@ -147,6 +104,34 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         }
 
         #endregion
+
+        #region CancelCommand Property Members
+
+        private static readonly DependencyPropertyKey CancelCommandPropertyKey = DependencyProperty.RegisterReadOnly(nameof(CancelCommand),
+            typeof(Commands.RelayCommand), typeof(EditDbEntityVM<TDbEntity>), new PropertyMetadata(null));
+
+        public static readonly DependencyProperty CancelCommandProperty = CancelCommandPropertyKey.DependencyProperty;
+
+        /// <summary>
+        /// Gets the bindable "Cancel" command.
+        /// </summary>
+        /// <value>The bindable command for discarding changes and closing the edit window.</value>
+        public Commands.RelayCommand CancelCommand => (Commands.RelayCommand)GetValue(CancelCommandProperty);
+
+        private void OnCancelExecute(object parameter) => CloseCancel?.Invoke(this, EventArgs.Empty);
+
+        #endregion
+
+        #endregion
+
+        #region OpAggregate Property Members
+
+        private static readonly DependencyPropertyKey OpAggregatePropertyKey = DependencyProperty.RegisterReadOnly(nameof(OpAggregate),
+            typeof(AsyncOps.AsyncBgModalVM), typeof(EditDbEntityVM<TDbEntity>), new PropertyMetadata(null));
+
+        public static readonly DependencyProperty OpAggregateProperty = OpAggregatePropertyKey.DependencyProperty;
+
+        public AsyncOps.AsyncBgModalVM OpAggregate => (AsyncOps.AsyncBgModalVM)GetValue(OpAggregateProperty);
 
         #endregion
 
@@ -291,6 +276,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             SetValue(ValidationPropertyKey, validation);
             ChangeStateTracker changeTracker = new();
             SetValue(ChangeTrackerPropertyKey, changeTracker);
+            SetValue(OpAggregatePropertyKey, new AsyncOps.AsyncBgModalVM());
 #if DEBUG
             if (DesignerProperties.GetIsInDesignMode(this))
                 return;
@@ -298,9 +284,6 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             validation.ErrorsChanged += Validation_ErrorsChanged;
             validation.AnyInvalidPropertyChanged += OnValidationStateChanged;
             changeTracker.AnyInvalidPropertyChanged += OnValidationStateChanged;
-            // DEFERRED: Figure out why this crashes designer
-            SetValue(SaveChangesOpMgrPropertyKey, new AsyncOps.AsyncOpResultManagerViewModel<ModelViewModel, TDbEntity>());
-            SetValue(OpAggregatePropertyKey, new AsyncOps.AsyncBgModalVM());
         }
 
         /// <summary>
@@ -353,25 +336,24 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             vm.CloseSuccess += new EventHandler((sender, e) => window.DialogResult = true);
             window.Loaded += new RoutedEventHandler((sender, e) =>
             {
-                AsyncOps.AsyncOpResultManagerViewModel<(TLoadResult, EntityState)> loader = new();
-                AsyncOps.AsyncFuncOpViewModel<(TLoadResult, EntityState)> op = vm.OpAggregate.FromAsync(entityLoader.LoadingTitle,
-                    entityLoader.InitialLoadingMessage, loader, async statusListener =>
-                {
-                    using IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
-                    using LocalDbContext dbContext = serviceScope.ServiceProvider.GetService<LocalDbContext>();
-                    TLoadResult loadResult = await entityLoader.LoadAsync(dbContext, statusListener);
-                    EntityEntry<TDbEntity> entry;
-                    TDbEntity entity = entityLoader.GetEntity(loadResult);
-                    if (entity is null)
+                Task<(TLoadResult loadResult, EntityState State)> task = vm.OpAggregate.FromAsync(entityLoader.LoadingTitle,
+                    entityLoader.InitialLoadingMessage, async statusListener =>
                     {
-                        entity = vm.InitializeNewModel();
-                        entry = vm.GetDbSet(dbContext).Add(entity);
-                    }
-                    else if ((entry = dbContext.Entry(entity)).State == EntityState.Detached)
-                        entry = vm.GetDbSet(dbContext).Add(entity);
-                    return (loadResult, entry.State);
-                });
-                op.GetTask().ContinueWith(task =>
+                        using IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
+                        using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+                        TLoadResult loadResult = await entityLoader.LoadAsync(dbContext, statusListener);
+                        EntityEntry<TDbEntity> entry;
+                        TDbEntity entity = entityLoader.GetEntity(loadResult);
+                        if (entity is null)
+                        {
+                            entity = vm.InitializeNewModel();
+                            entry = vm.GetDbSet(dbContext).Add(entity);
+                        }
+                        else if ((entry = dbContext.Entry(entity)).State == EntityState.Detached)
+                            entry = vm.GetDbSet(dbContext).Add(entity);
+                        return (loadResult, entry.State);
+                    });
+                task.ContinueWith(task =>
                 {
                     if (task.IsCompletedSuccessfully)
                         vm.Dispatcher.Invoke(() =>

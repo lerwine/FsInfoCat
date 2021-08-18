@@ -3,9 +3,11 @@ using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Threading;
 
 namespace FsInfoCat.Desktop.ViewModel.AsyncOps
 {
@@ -15,9 +17,11 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
     /// <seealso cref="DependencyObject" />
     public class AsyncBgModalVM : DependencyObject
     {
-        private Collection<IAsyncOpViewModel> _operations = new();
+        private readonly object _syncRoot = new();
+        private ListenerImpl _currentListener;
         private readonly ILogger<AsyncBgModalVM> _logger;
         private Border _outerMessageBorder;
+
         #region Events
 
         /// <summary>
@@ -41,23 +45,23 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
         public event DependencyPropertyChangedEventHandler DurationPropertyChanged;
 
         /// <summary>
-        /// Occurs n the current <see cref="System.Windows.Threading.Dispatcher"/> thread when the <see cref="CancelOperation"/> is invoked.
+        /// Occurs n the current <see cref="Dispatcher"/> thread when the <see cref="CancelOperation"/> is invoked.
         /// </summary>
         public event EventHandler OperationCancelRequested;
 
         /// <summary>
-        /// Occurs n the current <see cref="System.Windows.Threading.Dispatcher"/> thread after the <see cref="Task"/> is completed with <see cref="Task.Status"/> of <see cref="TaskStatus.Faulted"/>
+        /// Occurs n the current <see cref="Dispatcher"/> thread after the <see cref="Task"/> is completed with <see cref="Task.Status"/> of <see cref="TaskStatus.Faulted"/>
         /// or the final <see cref="IAsyncOpViewModel.MessageLevel"/> is <see cref="StatusMessageLevel.Error"/>.
         /// </summary>
         public event EventHandler OperationFaulted;
 
         /// <summary>
-        /// Occurs on the current <see cref="System.Windows.Threading.Dispatcher"/> thread after the <see cref="Task"/> is completed with <see cref="Task.Status"/> of <see cref="TaskStatus.Canceled"/>.
+        /// Occurs on the current <see cref="Dispatcher"/> thread after the <see cref="Task"/> is completed with <see cref="Task.Status"/> of <see cref="TaskStatus.Canceled"/>.
         /// </summary>
         public event EventHandler OperationCanceled;
 
         /// <summary>
-        /// Occurs n the current <see cref="System.Windows.Threading.Dispatcher"/> thread after the <see cref="Task"/> has run to completion without fault or cancellation.
+        /// Occurs n the current <see cref="Dispatcher"/> thread after the <see cref="Task"/> has run to completion without fault or cancellation.
         /// </summary>
         public event EventHandler OperationRanToCompletion;
 
@@ -75,7 +79,7 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
         /// <value>The bindable <see cref="System.Windows.Input.ICommand"/> that cancels the current background operation.</value>
         public Commands.RelayCommand CancelOperation => (Commands.RelayCommand)GetValue(CancelOperationProperty);
 
-        private void RaiseOperationCancelRequested(object parameter)
+        internal void RaiseOperationCancelRequested(object parameter)
         {
             using IDisposable loggerScope = _logger.BeginScope("{EventName} event raised; parameter = {parameter}", nameof(OperationCancelRequested), parameter);
             try { OnOperationCancelRequested(parameter); }
@@ -84,16 +88,21 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
 
         private void OnOperationCancelRequested(object parameter)
         {
-            if (_operations.Count > 0)
+            ListenerImpl item;
+            lock (_syncRoot)
             {
-                _logger.LogInformation("Cancelling {OperationCount} operations", _operations.Count);
-                foreach (IAsyncOpViewModel item in _operations.ToArray())
-                    item.Cancel(true);
+                item = _currentListener;
+                _currentListener = null;
             }
-            else
+            if (item is null)
             {
                 _logger.LogDebug("Resetting background operation status");
                 AsyncOpStatus = AsyncOpStatusCode.NotStarted;
+            }
+            else
+            {
+                _logger.LogInformation("Cancelling background operation: ConcurrencyId = {ConcurrencyId}", item.ConcurrencyId);
+                item.Cancel();
             }
         }
 
@@ -351,7 +360,14 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
             SetValue(NotifyViewSizeChangedPropertyKey, new Commands.RelayCommand(OnNotifyViewSizeChanged));
         }
 
-        private void RecalculateOuterMessageBorderSize(Border outerMessageBorder)
+        /// <summary>
+        /// Recalculates the <see cref="PopupBorderWidth"/> and <see cref="PopupBorderHeight"/> values.
+        /// </summary>
+        /// <param name="outerBorderControl">The <see cref="Border"/> control of <see cref="View.AsyncBgModalControl"/>
+        /// whose <see cref="FrameworkElement.Width"/> and <see cref="FrameworkElement.Height"/> are bound to the <see cref="PopupBorderWidth"/>
+        /// and <see cref="PopupBorderHeight"/> properties, respectively.</param>
+        /// <remarks>This method is invoked from the <see cref="FrameworkElement.Loaded"/> </remarks>
+        public void RecalculateOuterMessageBorderSize(Border outerMessageBorder)
         {
             FrameworkElement parent = outerMessageBorder?.Parent as FrameworkElement;
             double maxH, maxW;
@@ -379,15 +395,123 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
             PopupBorderHeight = (h > maxH) ? maxH : h;
         }
 
-        /// <summary>
-        /// Recalculates the <see cref="PopupBorderWidth"/> and <see cref="PopupBorderHeight"/> values.
-        /// </summary>
-        /// <param name="outerBorderControl">The <see cref="Border"/> control of <see cref="View.AsyncBgModalControl"/>
-        /// whose <see cref="FrameworkElement.Width"/> and <see cref="FrameworkElement.Height"/> are bound to the <see cref="PopupBorderWidth"/>
-        /// and <see cref="PopupBorderHeight"/> properties, respectively.</param>
-        /// <remarks>This method is invoked from the <see cref="FrameworkElement.Loaded"/> </remarks>
-        public void RecalculatedPopupBorderSize(Border outerBorderControl)
+        class ListenerImpl : IStatusListener, IDisposable
         {
+            private readonly CancellationTokenSource _tokenSource = new();
+            private readonly AsyncBgModalVM _owner;
+            private bool _isDisposed;
+
+            internal ListenerImpl(AsyncBgModalVM owner, Guid concurrencyId)
+            {
+                _owner = owner ?? throw new ArgumentNullException();
+                CancellationToken = _tokenSource.Token;
+                ConcurrencyId = concurrencyId;
+            }
+
+            public CancellationToken CancellationToken { get; }
+
+            public Guid ConcurrencyId { get; }
+
+            public ILogger Logger => _owner._logger;
+
+            public DispatcherOperation BeginSetMessage([AllowNull] string message, StatusMessageLevel level, DispatcherPriority
+                priority = DispatcherPriority.Background) => _owner.Dispatcher.InvokeAsync(() =>
+                {
+                    _owner.StatusMessage = message;
+                    _owner.MessageLevel = level;
+                }, priority, CancellationToken);
+
+            public DispatcherOperation BeginSetMessage([AllowNull] string message, DispatcherPriority priority = DispatcherPriority.Background) =>
+                _owner.Dispatcher.InvokeAsync(() => _owner.StatusMessage = message, priority, CancellationToken);
+
+
+            public void SetMessage([AllowNull] string message, StatusMessageLevel level, TimeSpan timeout, DispatcherPriority priority = DispatcherPriority.Background) =>
+                _owner.Dispatcher.Invoke(() =>
+                {
+                    _owner.StatusMessage = message;
+                    _owner.MessageLevel = level;
+                }, priority, CancellationToken, timeout);
+
+            public void SetMessage([AllowNull] string message, StatusMessageLevel level, DispatcherPriority priority = DispatcherPriority.Background) =>
+                _owner.Dispatcher.Invoke(() =>
+                {
+                    _owner.StatusMessage = message;
+                    _owner.MessageLevel = level;
+                }, priority, CancellationToken);
+
+            public void SetMessage([AllowNull] string message, TimeSpan timeout, DispatcherPriority priority = DispatcherPriority.Background) =>
+                _owner.Dispatcher.Invoke(() => _owner.StatusMessage = message, priority, CancellationToken, timeout);
+
+            public void SetMessage([AllowNull] string message, DispatcherPriority priority = DispatcherPriority.Background) =>
+                _owner.Dispatcher.Invoke(() => _owner.StatusMessage = message, priority, CancellationToken);
+
+            internal Task<TResult> FromAsync<TState, TResult>([DisallowNull] IDisposable loggerScope, TState state, [DisallowNull] Func<TState, IStatusListener, Task<TResult>> func)
+            {
+                Task<TResult> task = Task.Run(async () =>
+                {
+                    await _owner.Dispatcher.InvokeAsync(() => _owner.AsyncOpStatus = AsyncOpStatusCode.Running, DispatcherPriority.Normal, CancellationToken);
+                    return await func(state, this);
+                }, CancellationToken);
+                task.ContinueWith(task => _owner.RaiseTaskCompleted(this, loggerScope, task));
+                return task;
+            }
+
+            internal Task<TResult> FromAsync<TResult>([DisallowNull] IDisposable loggerScope, [DisallowNull] Func<IStatusListener, Task<TResult>> func)
+            {
+                Task<TResult> task = Task.Run(async () =>
+                {
+                    await _owner.Dispatcher.InvokeAsync(() => _owner.AsyncOpStatus = AsyncOpStatusCode.Running, DispatcherPriority.Normal, CancellationToken);
+                    return await func(this);
+                }, CancellationToken);
+                task.ContinueWith(task => _owner.RaiseTaskCompleted(this, loggerScope, task));
+                return task;
+            }
+
+            internal Task FromAsync<TState>([DisallowNull] IDisposable loggerScope, TState state, [DisallowNull] Func<TState, IStatusListener, Task> func)
+            {
+                Task task = Task.Run(async () =>
+                {
+                    await _owner.Dispatcher.InvokeAsync(() => _owner.AsyncOpStatus = AsyncOpStatusCode.Running, DispatcherPriority.Normal, CancellationToken);
+                    await func(state, this);
+                }, CancellationToken);
+                task.ContinueWith(task => _owner.RaiseTaskCompleted(this, loggerScope, task));
+                return task;
+            }
+
+            internal Task FromAsync([DisallowNull] IDisposable loggerScope, [DisallowNull] Func<IStatusListener, Task> func)
+            {
+                Task task = Task.Run(async () =>
+                {
+                    Logger.LogInformation("Background operation started: ConcurrencyId = {ConcurrencyId}", ConcurrencyId);
+                    await _owner.Dispatcher.InvokeAsync(() => _owner.AsyncOpStatus = AsyncOpStatusCode.Running, DispatcherPriority.Normal, CancellationToken);
+                    await func(this);
+                }, CancellationToken);
+                task.ContinueWith(task => _owner.RaiseTaskCompleted(this, loggerScope, task));
+                return task;
+            }
+
+            internal void Cancel()
+            {
+                if (!_tokenSource.IsCancellationRequested)
+                    _tokenSource.Cancel(true);
+            }
+
+            protected virtual void Dispose(bool disposing)
+            {
+                if (!_isDisposed)
+                {
+                    if (disposing)
+                        _tokenSource.Dispose();
+                    _isDisposed = true;
+                }
+            }
+
+            public void Dispose()
+            {
+                // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+                Dispose(disposing: true);
+                GC.SuppressFinalize(this);
+            }
         }
 
         /// <summary>
@@ -397,33 +521,21 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
         /// <typeparam name="TResult">The type of value produced by the background operation.</typeparam>
         /// <param name="title">The title of the background operation. This is intended be shown within the title border of the <see cref="View.AsyncBgModalControl"/>.</param>
         /// <param name="initialMessage">The initial message to display in the <see cref="View.AsyncBgModalControl"/>.</param>
-        /// <param name="initialState">The value that is passed to the background operation.</param>
-        /// <param name="operationManager">The background operation manager.</param>
+        /// <param name="state">The value that is passed to the background operation.</param>
         /// <param name="func">The function that returns a <see cref="Task{TResult}"/> presumably by invoking an asynchronous method.</param>
-        /// <returns>A <see cref="AsyncFuncOpViewModel{TState, TResult}"/> object that contains status information of the background task.</returns>
-        public AsyncFuncOpViewModel<TState, TResult> FromAsync<TState, TResult>(string title, string initialMessage, TState initialState,
-            [DisallowNull] AsyncOpResultManagerViewModel<TState, TResult> operationManager,
-            [DisallowNull] Func<TState, IStatusListener<TState>, Task<TResult>> func)
+        /// <returns>A <see cref="Task{TResult}"/> object that contains status information of the background task.</returns>
+        public Task<TResult> FromAsync<TState, TResult>(string title, string initialMessage, TState state,
+            [DisallowNull] Func<TState, IStatusListener, Task<TResult>> func)
         {
-            VerifyAccess();
-            Guid concurrencyId = Guid.NewGuid();
-            IDisposable loggerScope = _logger.BeginScope("Starting new background operation: Title = {Title}; Initial State = {InitialState}; Concurrency ID = {ConcurrencyId}", title, initialState, concurrencyId);
-            Title = title;
-            StatusMessage = initialMessage;
-            AsyncFuncOpViewModel<TState, TResult> op = AsyncFuncOpViewModel<TState, TResult>.FromAsync(initialState, initialMessage, operationManager, func, concurrencyId);
-            OnOperationCreated(op).ContinueWith(task =>
+            ListenerImpl item = CreateNewListener(title, initialMessage, Guid.NewGuid());
+            IDisposable loggerScope = _logger.BeginScope("Starting new background operation: Title = {Title}; State = {State}; Concurrency ID = {ConcurrencyId}",
+                title, state, item.ConcurrencyId);
+            lock (_syncRoot)
             {
-                if (task.IsCanceled)
-                    _logger.LogWarning("Background operation canceled: Title = {Title}; Initial State = {InitialState}; Concurrency ID = {ConcurrencyId}; Task ID = {TaskId}", title, initialState, concurrencyId, task.Id);
-                else if (task.IsFaulted)
-                    _logger.LogError(task.Exception, "Background operation faulted: Message = {Message}; Operation Title = {Title}; Initial State = {InitialState}; Concurrency ID = {ConcurrencyId}; Task ID = {TaskId}",
-                        task.Exception.Message, title, initialState, concurrencyId, task.Id);
-                else
-                    _logger.LogDebug("Background operation ran to completion: Title = {Title}; Initial State = {InitialState}; Concurrency ID = {ConcurrencyId}; Task ID = {TaskId}", title, initialState, concurrencyId, task.Id);
-                using (loggerScope)
-                    OnOperationCompleted(operationManager, task, op);
-            });
-            return op;
+                if (_currentListener is not null)
+                    _currentListener.Cancel();
+                return (_currentListener = item).FromAsync(loggerScope, state, func); ;
+            }
         }
 
         /// <summary>
@@ -432,114 +544,103 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
         /// <typeparam name="TResult">The type of value produced by the background operation.</typeparam>
         /// <param name="title">The title of the background operation. This is intended be shown within the title border of the <see cref="View.AsyncBgModalControl"/>.</param>
         /// <param name="initialMessage">The initial message to display in the <see cref="View.AsyncBgModalControl"/>.</param>
-        /// <param name="operationManager">The background operation manager.</param>
         /// <param name="func">The function that returns a <see cref="Task{TResult}"/> presumably by invoking an asynchronous method.</param>
-        /// <returns>A <see cref="AsyncFuncOpViewModel{TResult}"/> object that contains status information of the background task.</returns>
-        public AsyncFuncOpViewModel<TResult> FromAsync<TResult>(string title, string initialMessage, [DisallowNull] AsyncOpResultManagerViewModel<TResult> operationManager,
-            [DisallowNull] Func<IStatusListener, Task<TResult>> func)
+        /// <returns>A <see cref="Task{TResult}"/> object that contains status information of the background task.</returns>
+        public Task<TResult> FromAsync<TResult>(string title, string initialMessage, [DisallowNull] Func<IStatusListener, Task<TResult>> func)
+        {
+            Guid concurrencyId = Guid.NewGuid();
+            ListenerImpl item = CreateNewListener(title, initialMessage, Guid.NewGuid());
+            IDisposable loggerScope = _logger.BeginScope("Starting new background operation: Title = {Title}; Concurrency ID = {ConcurrencyId}",
+                title, item.ConcurrencyId);
+            lock (_syncRoot)
+            {
+                if (_currentListener is not null)
+                    _currentListener.Cancel();
+                return (_currentListener = item).FromAsync(loggerScope, func); ;
+            }
+        }
+
+        public Task FromAsync<TState>(string title, string initialMessage, TState state, [DisallowNull] Func<TState, IStatusListener, Task> func)
+        {
+            Guid concurrencyId = Guid.NewGuid();
+            ListenerImpl item = CreateNewListener(title, initialMessage, Guid.NewGuid());
+            IDisposable loggerScope = _logger.BeginScope("Starting new background operation: Title = {Title}; State = {State}; Concurrency ID = {ConcurrencyId}",
+                title, state, item.ConcurrencyId);
+            lock (_syncRoot)
+            {
+                if (_currentListener is not null)
+                    _currentListener.Cancel();
+                return (_currentListener = item).FromAsync(loggerScope, state, func); ;
+            }
+        }
+
+        public Task FromAsync(string title, string initialMessage, [DisallowNull] Func<IStatusListener, Task> func)
+        {
+            Guid concurrencyId = Guid.NewGuid();
+            ListenerImpl item = CreateNewListener(title, initialMessage, Guid.NewGuid());
+            IDisposable loggerScope = _logger.BeginScope("Starting new background operation: Title = {Title}; Concurrency ID = {ConcurrencyId}",
+                title, item.ConcurrencyId);
+            lock (_syncRoot)
+            {
+                if (_currentListener is not null)
+                    _currentListener.Cancel();
+                return (_currentListener = item).FromAsync(loggerScope, func); ;
+            }
+        }
+
+        private ListenerImpl CreateNewListener(string title, string initialMessage, Guid concurrencyId)
         {
             VerifyAccess();
-            Guid concurrencyId = Guid.NewGuid();
-            IDisposable loggerScope = _logger.BeginScope("Starting new background operation: Title = {Title}; Concurrency ID = {ConcurrencyId}", title, concurrencyId);
             Title = title;
             StatusMessage = initialMessage;
-            AsyncFuncOpViewModel<TResult> op = AsyncFuncOpViewModel<TResult>.FromAsync(initialMessage, operationManager, func, concurrencyId);
-            OnOperationCreated(op).ContinueWith(task =>
+            return new(this, concurrencyId);
+        }
+
+        private void RaiseTaskCompleted(ListenerImpl item, [DisallowNull] IDisposable loggerScope, Task task)
+        {
+            bool notSuperceded;
+            lock (_syncRoot)
             {
-                if (task.IsCanceled)
-                    _logger.LogWarning("Background operation canceled: Title = {Title}; Concurrency ID = {ConcurrencyId}; Task ID = {TaskId}",
-                        title, concurrencyId, task.Id);
-                else if (task.IsFaulted)
-                    _logger.LogError(task.Exception, "Background operation faulted: Message = {Message}; Operation Title = {Title}; Concurrency ID = {ConcurrencyId}; Task ID = {TaskId}",
-                        task.Exception.Message, title, concurrencyId, task.Id);
-                else
-                    _logger.LogDebug("Background operation ran to completion: Title = {Title}; Concurrency ID = {ConcurrencyId}; Task ID = {TaskId}",
-                        title, concurrencyId, task.Id);
-                using (loggerScope)
-                    OnOperationCompleted(operationManager, task, op);
-            });
-            return op;
-        }
-
-        private Task OnOperationCreated(IAsyncOpViewModel op)
-        {
-            _operations.Add(op);
-            op.AsyncOpStatusPropertyChanged += Op_AsyncOpStatusPropertyChanged;
-            op.StatusMessagePropertyChanged += Op_StatusMessagePropertyChanged;
-            op.MessageLevelPropertyChanged += Op_MessageLevelPropertyChanged;
-            op.DurationPropertyChanged += Op_DurationPropertyChanged;
-            StatusMessage = op.StatusMessage;
-            MessageLevel = op.MessageLevel;
-            AsyncOpStatus = op.AsyncOpStatus;
-            return op.GetTask();
-        }
-
-        private void OnOperationCompleted(IAsyncOpManagerViewModel operationManager, Task task, IAsyncOpViewModel op)
-        {
-            op.AsyncOpStatusPropertyChanged -= Op_AsyncOpStatusPropertyChanged;
-            op.StatusMessagePropertyChanged -= Op_StatusMessagePropertyChanged;
-            op.MessageLevelPropertyChanged -= Op_MessageLevelPropertyChanged;
-            op.DurationPropertyChanged -= Op_DurationPropertyChanged;
+                notSuperceded = ReferenceEquals(_currentListener, item);
+                if (notSuperceded)
+                    _currentListener = null;
+            }
             Dispatcher.Invoke(() =>
             {
-                try { _operations.Remove(op); }
-                finally
+                using (loggerScope)
                 {
                     try
                     {
-                        if (task.IsCanceled)
-                            OperationCanceled?.Invoke(this, EventArgs.Empty);
-                        else if (task.IsFaulted || op.MessageLevel == StatusMessageLevel.Error)
+                        try
                         {
-                            MessageBox.Show(Application.Current.MainWindow, op.StatusMessage, Title, MessageBoxButton.OK, MessageBoxImage.Error);
-                            OperationFaulted?.Invoke(this, EventArgs.Empty);
+                            if (task.IsCanceled)
+                            {
+                                _logger.LogWarning("Background operation canceled: ConcurrencyId = {ConcurrencyId}", item.ConcurrencyId);
+                                OperationCanceled?.Invoke(this, EventArgs.Empty);
+                            }
+                            else if (task.IsFaulted || MessageLevel == StatusMessageLevel.Error)
+                            {
+                                if (task.IsFaulted)
+                                    _logger.LogError(task.Exception, "Background operation faulted: ConcurrencyId = {ConcurrencyId}", item.ConcurrencyId);
+                                else
+                                    _logger.LogError("Background operation ended with error: ConcurrencyId = {ConcurrencyId}", item.ConcurrencyId);
+                                if (notSuperceded)
+                                    MessageBox.Show(Application.Current.MainWindow, StatusMessage, Title, MessageBoxButton.OK, MessageBoxImage.Error);
+                                OperationFaulted?.Invoke(this, EventArgs.Empty);
+                            }
+                            else
+                            {
+                                _logger.LogInformation("Background operation ran to completion: ConcurrencyId = {ConcurrencyId}", item.ConcurrencyId);
+                                if (notSuperceded && MessageLevel == StatusMessageLevel.Warning)
+                                    MessageBox.Show(Application.Current.MainWindow, StatusMessage, Title, MessageBoxButton.OK, MessageBoxImage.Warning);
+                                OperationRanToCompletion?.Invoke(this, EventArgs.Empty);
+                            }
                         }
-                        else
-                        {
-                            if (op.MessageLevel == StatusMessageLevel.Warning)
-                                MessageBox.Show(Application.Current.MainWindow, op.StatusMessage, Title, MessageBoxButton.OK, MessageBoxImage.Warning);
-                            OperationRanToCompletion?.Invoke(this, EventArgs.Empty);
-                        }
+                        finally { AsyncOpStatus = AsyncOpStatusCode.NotStarted; }
                     }
-                    finally
-                    {
-                        try { AsyncOpStatus = AsyncOpStatusCode.NotStarted; }
-                        finally { operationManager.RemoveOperation(op); }
-                    }
+                    finally { item.Dispose(); }
                 }
             });
-        }
-
-        private void Op_DurationPropertyChanged(object sender, DependencyPropertyChangedEventArgs e)
-        {
-            _logger.LogDebug("{MethodName} invoked: sender = {sender}; EventArgs = {{ Property = {{ Name = {Name}; OwnwerType = {OwnerType} }}; OldValue = {OldValue}; NewValue = {NewValue} }}",
-                nameof(Op_DurationPropertyChanged), sender, e.Property.Name, e.Property.OwnerType, e.OldValue, e.NewValue);
-            if (e.NewValue is TimeSpan timeSpan)
-                Duration = timeSpan;
-        }
-
-        private void Op_MessageLevelPropertyChanged(object sender, DependencyPropertyChangedEventArgs e)
-        {
-            _logger.LogDebug("{MethodName} invoked: sender = {sender}; EventArgs = {{ Property = {{ Name = {Name}; OwnwerType = {OwnerType} }}; OldValue = {OldValue}; NewValue = {NewValue} }}",
-                nameof(Op_MessageLevelPropertyChanged), sender, e.Property.Name, e.Property.OwnerType, e.OldValue, e.NewValue);
-            if (e.NewValue is StatusMessageLevel messageLevel)
-                MessageLevel = messageLevel;
-        }
-
-        private void Op_StatusMessagePropertyChanged(object sender, DependencyPropertyChangedEventArgs e)
-        {
-            _logger.LogDebug("{MethodName} invoked: sender = {sender}; EventArgs = {{ Property = {{ Name = {Name}; OwnwerType = {OwnerType} }}; OldValue = {OldValue}; NewValue = {NewValue} }}",
-                nameof(Op_StatusMessagePropertyChanged), sender, e.Property.Name, e.Property.OwnerType, e.OldValue, e.NewValue);
-            if (e.NewValue is string statusMessage)
-                StatusMessage = statusMessage;
-        }
-
-        private void Op_AsyncOpStatusPropertyChanged(object sender, DependencyPropertyChangedEventArgs e)
-        {
-            _logger.LogDebug("{MethodName} invoked: sender = {sender}; EventArgs = {{ Property = {{ Name = {Name}; OwnwerType = {OwnerType} }}; OldValue = {OldValue}; NewValue = {NewValue} }}",
-                nameof(Op_AsyncOpStatusPropertyChanged), sender, e.Property.Name, e.Property.OwnerType, e.OldValue, e.NewValue);
-            if (e.NewValue is AsyncOpStatusCode statusCode)
-                AsyncOpStatus = statusCode;
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using FsInfoCat.Desktop.ViewModel.AsyncOps;
+using FsInfoCat.Desktop.ViewModel.AsyncOps;
 using FsInfoCat.Local;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
@@ -124,9 +124,9 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             {
                 ShowInactiveFileSystemsOnly = ShowAllFileSystems = false;
                 Guid id = SelectedFileSystem?.Model?.Id ?? Guid.Empty;
-                AsyncFuncOpViewModel<FileSystemLookupOptions, FileSystem[]> op = OpAggregate.FromAsync("Loading file systems", "Connecting to the database",
-                    new FileSystemLookupOptions(SelectedFileSystem, id, true), FileSystemsLoader, LoadFileSystemsAsync);
-                op.GetTask().ContinueWith(OnFileSystemsLoaded, id);
+                Task<FileSystem[]> task = OpAggregate.FromAsync("Loading file systems", "Connecting to the database",
+                    new FileSystemLookupOptions(SelectedFileSystem, id, true), LoadFileSystemsAsync);
+                task.ContinueWith(OnFileSystemsLoaded, id);
             }
         }
 
@@ -146,9 +146,9 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             {
                 ShowActiveFileSystemsOnly = ShowAllFileSystems = false;
                 Guid id = SelectedFileSystem?.Model?.Id ?? Guid.Empty;
-                AsyncFuncOpViewModel<FileSystemLookupOptions, FileSystem[]> op = OpAggregate.FromAsync("Loading file systems", "Connecting to the database",
-                    new FileSystemLookupOptions(SelectedFileSystem, id, false), FileSystemsLoader, LoadFileSystemsAsync);
-                op.GetTask().ContinueWith(OnFileSystemsLoaded, id);
+                Task<FileSystem[]> task = OpAggregate.FromAsync("Loading file systems", "Connecting to the database",
+                    new FileSystemLookupOptions(SelectedFileSystem, id, false), LoadFileSystemsAsync);
+                task.ContinueWith(OnFileSystemsLoaded, id);
             }
         }
 
@@ -168,23 +168,15 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             {
                 ShowActiveFileSystemsOnly = ShowInactiveFileSystemsOnly = false;
                 Guid id = SelectedFileSystem?.Model?.Id ?? Guid.Empty;
-                AsyncFuncOpViewModel<FileSystemLookupOptions, FileSystem[]> op = OpAggregate.FromAsync("Loading file systems", "Connecting to the database",
-                    new FileSystemLookupOptions(SelectedFileSystem, id, null), FileSystemsLoader, LoadFileSystemsAsync);
-                op.GetTask().ContinueWith(OnFileSystemsLoaded, id);
+                Task<FileSystem[]> task = OpAggregate.FromAsync("Loading file systems", "Connecting to the database",
+                    new FileSystemLookupOptions(SelectedFileSystem, id, null), LoadFileSystemsAsync);
+                task.ContinueWith(OnFileSystemsLoaded, id);
             }
         }
-
-        private static readonly DependencyPropertyKey FileSystemsLoaderPropertyKey = DependencyProperty.RegisterReadOnly(nameof(FileSystemsLoader), typeof(AsyncOpResultManagerViewModel<FileSystemLookupOptions, FileSystem[]>), typeof(EditSymbolicNameVM),
-                new PropertyMetadata(null));
-
-        public static readonly DependencyProperty FileSystemsLoaderProperty = FileSystemsLoaderPropertyKey.DependencyProperty;
-
-        public AsyncOpResultManagerViewModel<FileSystemLookupOptions, FileSystem[]> FileSystemsLoader => (AsyncOpResultManagerViewModel<FileSystemLookupOptions, FileSystem[]>)GetValue(FileSystemsLoaderProperty);
 
         public EditSymbolicNameVM()
         {
             SetValue(FileSystemOptionsPropertyKey, new ReadOnlyObservableCollection<FileSystemItemVM>(_fileSystemOptions));
-            SetValue(FileSystemsLoaderPropertyKey, new AsyncOpResultManagerViewModel<FileSystemLookupOptions, FileSystem[]>());
         }
 
         protected override void Initialize(SymbolicName model, EntityState state)
@@ -195,9 +187,9 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             Notes = model.Notes;
             Priority = model.Priority;
             Guid id = model.FileSystemId;
-            AsyncFuncOpViewModel<FileSystemLookupOptions, FileSystem[]> op = OpAggregate.FromAsync("Loading file systems", "Connecting to the database",
-                new FileSystemLookupOptions(null, id, ShowAllFileSystems ? null : ShowActiveFileSystemsOnly), FileSystemsLoader, LoadFileSystemsAsync);
-            op.GetTask().ContinueWith(OnFileSystemsLoaded, id);
+            Task<FileSystem[]> task = OpAggregate.FromAsync("Loading file systems", "Connecting to the database",
+                new FileSystemLookupOptions(null, id, ShowAllFileSystems ? null : ShowActiveFileSystemsOnly), LoadFileSystemsAsync);
+            task.ContinueWith(OnFileSystemsLoaded, id);
         }
 
         private void OnFileSystemsLoaded(Task<FileSystem[]> task, object state)
@@ -228,7 +220,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             model.Priority = Priority;
         }
 
-        protected override void OnSavingModel(EntityEntry<SymbolicName> entityEntry, LocalDbContext dbContext, IStatusListener<ModelViewModel> statusListener)
+        protected override void OnSavingModel(EntityEntry<SymbolicName> entityEntry, LocalDbContext dbContext, IStatusListener statusListener)
         {
             string name = entityEntry.Entity.Name;
             SymbolicName existing = (from sn in dbContext.SymbolicNames where sn.Name == name select sn).FirstOrDefaultAsync(statusListener.CancellationToken).Result;
@@ -237,10 +229,10 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             base.OnSavingModel(entityEntry, dbContext, statusListener);
         }
 
-        private static async Task<FileSystem[]> LoadFileSystemsAsync(FileSystemLookupOptions state, IStatusListener<FileSystemLookupOptions> statusListener)
+        private static async Task<FileSystem[]> LoadFileSystemsAsync(FileSystemLookupOptions state, IStatusListener statusListener)
         {
             using IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
-            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetService<LocalDbContext>();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             FileSystem[] fileSystems;
             if (state.ShowActiveOnly.HasValue)
             {

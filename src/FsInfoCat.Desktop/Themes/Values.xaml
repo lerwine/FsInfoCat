@@ -5,7 +5,7 @@
     <System:Double x:Key="DefaultButtonWidth">75</System:Double>
     <System:Double x:Key="DefaultButtonHeight">25</System:Double>
     <System:Double x:Key="DefaultTextBoxHeight">23</System:Double>
-    <System:Double x:Key="DefaultMultiLineTextBoxHeight">115</System:Double>
+    <System:Double x:Key="DefaultMultiLineTextBoxHeight">46</System:Double>
     <System:Double x:Key="NarrowSpacingValue">3</System:Double>
     <System:Double x:Key="DefaultSpacingValue">5</System:Double>
     <System:Double x:Key="WideSpacingValue">10</System:Double>

@@ -11,31 +11,12 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 {
     public class SymbolicNamesPageVM : DbEntityListingPageVM<SymbolicName, SymbolicNameItemVM>
     {
-        #region ItemsLoadOp Property Members
-
-        private static readonly DependencyPropertyKey ItemsLoadOpPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ItemsLoadOp), typeof(AsyncOps.AsyncOpResultManagerViewModel<bool?, int>), typeof(SymbolicNamesPageVM),
-                new PropertyMetadata(new AsyncOps.AsyncOpResultManagerViewModel<bool?, int>()));
-
-        /// <summary>
-        /// Identifies the <see cref="ItemsLoadOp"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty ItemsLoadOpProperty = ItemsLoadOpPropertyKey.DependencyProperty;
-
-        /// <summary>
-        /// Gets .
-        /// </summary>
-        /// <value>The .</value>
-        public AsyncOps.AsyncOpResultManagerViewModel<bool?, int> ItemsLoadOp { get => (AsyncOps.AsyncOpResultManagerViewModel<bool?, int>)GetValue(ItemsLoadOpProperty); private set => SetValue(ItemsLoadOpPropertyKey, value); }
-
-        #endregion
-
         internal Task<int> LoadAsync(bool? isInactive)
         {
-            AsyncOps.AsyncFuncOpViewModel<bool?, int> bgOp = BgOps.FromAsync("Loading items", "Connecting to database...", isInactive, ItemsLoadOp, LoadItemsAsync);
-            return bgOp.GetTask();
+            return BgOps.FromAsync("Loading items", "Connecting to database...", isInactive, LoadItemsAsync);
         }
 
-        private async Task<int> LoadItemsAsync(bool? isInactive, AsyncOps.IStatusListener<bool?> statusListener)
+        private async Task<int> LoadItemsAsync(bool? isInactive, AsyncOps.IStatusListener statusListener)
         {
             statusListener.CancellationToken.ThrowIfCancellationRequested();
             IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
