@@ -5,15 +5,13 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:local="clr-namespace:FsInfoCat.Desktop.View.Local"
       mc:Ignorable="d"
-      xmlns:Local="clr-namespace:FsInfoCat.Desktop.ViewModel.Local"
       xmlns:res="clr-namespace:FsInfoCat.Properties;assembly=FsInfoCat"
       xmlns:cvt="clr-namespace:FsInfoCat.Desktop.Converters"
       xmlns:localCvt="clr-namespace:FsInfoCat.Desktop.Converters.Local"
       xmlns:View="clr-namespace:FsInfoCat.Desktop.View"
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="File System Types" DataContext="{DynamicResource VM}">
+      Title="File System Types" DataContext="{DynamicResource FileSystemsViewModel}">
     <Page.Resources>
-        <Local:FileSystemsPageVM x:Key="VM"/>
         <cvt:DependencyObjectToVisibilityConverter x:Key="DependencyObjectToVisibilityConverter"/>
         <cvt:DependencyObjectToVisibilityConverter x:Key="InverseObjectToVisibilityConverter" NotNullSource="Collapsed" NullSource="Visible"/>
         <cvt:CrawlStatusToStringConverter x:Key="CrawlStatusToDescription" Display="Description" />
@@ -26,7 +24,6 @@
         <cvt:DateTimeToStringConverter x:Key="LastSynchronizedToString" NullSource="(not synchronized)"/>
         <cvt:TimeSpanToStringConverter x:Key="TimeSpanToString" NullSource="(unlimited)"/>
         <localCvt:CrawlConfigurationToAutoRescheduleString x:Key="CrawlConfigToAutoRescheduleString" NullSource="(none)"/>
-
     </Page.Resources>
     <Page.Background>
         <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.WindowColorKey}}"/>
@@ -42,6 +39,32 @@
                 <RowDefinition/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Label Content="File Systems" Padding="{DynamicResource DefaultSpacing}" />
+                <Button Grid.Column="1" Margin="{DynamicResource DefaultSpacingTopLeftRight}" Style="{DynamicResource CommandButton}">
+                    <Button.Content>
+                        <Image>
+                            <Image.Source>
+                                <DrawingImage>
+                                    <DrawingImage.Drawing>
+                                        <DrawingGroup>
+                                            <DrawingGroup.Children>
+                                                <GeometryDrawing Brush="#00FFFFFF" Geometry="F1M16,16L0,16 0,0 16,0z" />
+                                                <GeometryDrawing Brush="#FFF6F6F6" Geometry="F1M0.0081,1.9996L6.0001,10.0446 6.0001,15.9996 10.0001,15.9996 10.0001,10.0446 15.9911,1.9996z" />
+                                                <GeometryDrawing Brush="#FF424242" Geometry="F1M14,3L9,9.714 9,15 7,15 7,9.714 2,3z" />
+                                            </DrawingGroup.Children>
+                                        </DrawingGroup>
+                                    </DrawingImage.Drawing>
+                                </DrawingImage>
+                            </Image.Source>
+                        </Image>
+                    </Button.Content>
+                </Button>
+            </Grid>
             <DataGrid ItemsSource="{Binding Items, Mode=OneWay}" AutoGenerateColumns="False" Margin="{DynamicResource DefaultSpacingLeftRight}" IsReadOnly="True"
                   SelectedValue="{Binding ItemSelection.CurrentItem}" Grid.Row="1">
                 <DataGrid.Columns>
@@ -72,32 +95,6 @@
                     </Image>
                 </Button.Content>
             </Button>
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
-                <Label Content="File Systems" Padding="{DynamicResource DefaultSpacing}" />
-                <Button Grid.Column="1" Style="{DynamicResource CommandButton}" Margin="{DynamicResource DefaultSpacingTopLeftRight}">
-                    <Button.Content>
-                        <Image>
-                            <Image.Source>
-                                <DrawingImage>
-                                    <DrawingImage.Drawing>
-                                        <DrawingGroup>
-                                            <DrawingGroup.Children>
-                                                <GeometryDrawing Brush="#00FFFFFF" Geometry="F1M16,16L0,16 0,0 16,0z" />
-                                                <GeometryDrawing Brush="#FFF6F6F6" Geometry="F1M0.0081,1.9996L6.0001,10.0446 6.0001,15.9996 10.0001,15.9996 10.0001,10.0446 15.9911,1.9996z" />
-                                                <GeometryDrawing Brush="#FF424242" Geometry="F1M14,3L9,9.714 9,15 7,15 7,9.714 2,3z" />
-                                            </DrawingGroup.Children>
-                                        </DrawingGroup>
-                                    </DrawingImage.Drawing>
-                                </DrawingImage>
-                            </Image.Source>
-                        </Image>
-                    </Button.Content>
-                </Button>
-            </Grid>
         </Grid>
         <StackPanel Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"
                     Visibility="{Binding ItemSelection.CurrentItem, Converter={StaticResource InverseObjectToVisibilityConverter}}" Margin="{DynamicResource DefaultSpacingLeft}" d:IsHidden="True">

@@ -18,6 +18,95 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 {
     public class CrawlConfigurationsPageVM : DbEntityListingPageVM<CrawlConfiguration, CrawlConfigItemVM>
     {
+        #region ShowLogs Command Property Members
+
+        private static readonly DependencyPropertyKey ShowLogsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ShowLogs),
+            typeof(Commands.RelayCommand), typeof(CrawlConfigurationsPageVM), new PropertyMetadata(null));
+
+        /// <summary>
+        /// Identifies the <see cref="ShowLogs"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ShowLogsProperty = ShowLogsPropertyKey.DependencyProperty;
+
+        /// <summary>
+        /// Gets the $name$ command object.
+        /// </summary>
+        /// <value>The <see cref="System.Windows.Input.ICommand"/> that implements the $command$ command.</value>
+        public Commands.RelayCommand ShowLogs => (Commands.RelayCommand)GetValue(ShowLogsProperty);
+
+        private void OnShowLogs(object parameter)
+        {
+            // TODO: Implement OnShowLogs Logic
+        }
+
+        #endregion
+        #region ShowViewOptions Command Property Members
+
+        private static readonly DependencyPropertyKey ShowViewOptionsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ShowViewOptions), typeof(Commands.RelayCommand), typeof(CrawlConfigurationsPageVM), new PropertyMetadata(null));
+
+        /// <summary>
+        /// Identifies the <see cref="ShowViewOptions"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ShowViewOptionsProperty = ShowViewOptionsPropertyKey.DependencyProperty;
+
+        /// <summary>
+        /// Gets the $name$ command object.
+        /// </summary>
+        /// <value>The <see cref="System.Windows.Input.ICommand"/> that implements the $command$ command.</value>
+        public Commands.RelayCommand ShowViewOptions => (Commands.RelayCommand)GetValue(ShowViewOptionsProperty);
+
+        #endregion
+        #region IsEditingViewOptions Property Members
+
+        private static readonly DependencyPropertyKey IsEditingViewOptionsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(IsEditingViewOptions), typeof(bool), typeof(CrawlConfigurationsPageVM),
+                new PropertyMetadata(false));
+
+        /// <summary>
+        /// Identifies the <see cref="IsEditingViewOptions"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty IsEditingViewOptionsProperty = IsEditingViewOptionsPropertyKey.DependencyProperty;
+
+        /// <summary>
+        /// Gets .
+        /// </summary>
+        /// <value>The .</value>
+        public bool IsEditingViewOptions { get => (bool)GetValue(IsEditingViewOptionsProperty); private set => SetValue(IsEditingViewOptionsPropertyKey, value); }
+
+        #endregion
+        #region ViewOptionsOkClick Command Property Members
+
+        private static readonly DependencyPropertyKey ViewOptionsOkClickPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ViewOptionsOkClick),
+            typeof(Commands.RelayCommand), typeof(CrawlConfigurationsPageVM), new PropertyMetadata(null));
+
+        /// <summary>
+        /// Identifies the <see cref="ViewOptionsOkClick"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ViewOptionsOkClickProperty = ViewOptionsOkClickPropertyKey.DependencyProperty;
+
+        /// <summary>
+        /// Gets the $name$ command object.
+        /// </summary>
+        /// <value>The <see cref="System.Windows.Input.ICommand"/> that implements the $command$ command.</value>
+        public Commands.RelayCommand ViewOptionsOkClick => (Commands.RelayCommand)GetValue(ViewOptionsOkClickProperty);
+
+        #endregion
+        #region ViewOptionCancelClick Command Property Members
+
+        private static readonly DependencyPropertyKey ViewOptionCancelClickPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ViewOptionCancelClick),
+            typeof(Commands.RelayCommand), typeof(CrawlConfigurationsPageVM), new PropertyMetadata(null));
+
+        /// <summary>
+        /// Identifies the <see cref="ViewOptionCancelClick"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ViewOptionCancelClickProperty = ViewOptionCancelClickPropertyKey.DependencyProperty;
+
+        /// <summary>
+        /// Gets the $name$ command object.
+        /// </summary>
+        /// <value>The <see cref="System.Windows.Input.ICommand"/> that implements the $command$ command.</value>
+        public Commands.RelayCommand ViewOptionCancelClick => (Commands.RelayCommand)GetValue(ViewOptionCancelClickProperty);
+
+        #endregion
         #region SelectedItem Property Members
 
         /// <summary>
@@ -30,6 +119,23 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         /// </summary>
         /// <value>The .</value>
         public CrawlConfigItemVM SelectedItem { get => (CrawlConfigItemVM)GetValue(SelectedItemProperty); set => SetValue(SelectedItemProperty, value); }
+
+        #endregion
+        #region EditingViewOptions Property Members
+
+        private static readonly DependencyPropertyKey EditingViewOptionsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(EditingViewOptions), typeof(ThreeStateViewModel), typeof(CrawlConfigurationsPageVM),
+                new PropertyMetadata(null));
+
+        /// <summary>
+        /// Identifies the <see cref="EditingViewOptions"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty EditingViewOptionsProperty = EditingViewOptionsPropertyKey.DependencyProperty;
+
+        /// <summary>
+        /// Gets .
+        /// </summary>
+        /// <value>The .</value>
+        public ThreeStateViewModel EditingViewOptions => (ThreeStateViewModel)GetValue(EditingViewOptionsProperty);
 
         #endregion
         #region ViewOptions Property Members
@@ -54,10 +160,24 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         {
             ThreeStateViewModel viewOptions = new(true);
             SetValue(ViewOptionsPropertyKey, viewOptions);
+            SetValue(EditingViewOptionsPropertyKey, new ThreeStateViewModel(viewOptions.Value));
+            SetValue(ShowViewOptionsPropertyKey, new Commands.RelayCommand(() => IsEditingViewOptions = true));
+            SetValue(ShowLogsPropertyKey, new Commands.RelayCommand(OnShowLogs));
+            SetValue(ViewOptionsOkClickPropertyKey, new Commands.RelayCommand(() =>
+            {
+                IsEditingViewOptions = false;
+                ViewOptions.Value = EditingViewOptions.Value;
+            }));
+            SetValue(ViewOptionCancelClickPropertyKey, new Commands.RelayCommand(() =>
+            {
+                EditingViewOptions.Value = ViewOptions.Value;
+                IsEditingViewOptions = false;
+            }));
             if (DesignerProperties.GetIsInDesignMode(this))
                 return;
             viewOptions.ValuePropertyChanged += (s, e) =>
             {
+                EditingViewOptions.Value = ViewOptions.Value;
                 CrawlConfigItemVM selectedCrawlConfig = SelectedItem;
                 LoadItemsAsync().ContinueWith(t => OnItemsReloaded(selectedCrawlConfig));
             };
