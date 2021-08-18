@@ -17,6 +17,27 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 {
     public class FileSystemsPageVM : DbEntityListingPageVM<FileSystem, FileSystemItemVM, FileSystemItemDetailViewModel>
     {
+        #region ShowViewOptions Command Property Members
+
+        private static readonly DependencyPropertyKey ShowViewOptionsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ShowViewOptions), typeof(Commands.RelayCommand), typeof(FileSystemsPageVM), new PropertyMetadata(null));
+
+        /// <summary>
+        /// Identifies the <see cref="ShowViewOptions"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ShowViewOptionsProperty = ShowViewOptionsPropertyKey.DependencyProperty;
+
+        /// <summary>
+        /// Gets the $name$ command object.
+        /// </summary>
+        /// <value>The <see cref="System.Windows.Input.ICommand"/> that implements the $command$ command.</value>
+        public Commands.RelayCommand ShowViewOptions => (Commands.RelayCommand)GetValue(ShowViewOptionsProperty);
+
+        private void OnShowViewOptions(object parameter)
+        {
+            // TODO: Implement OnShowViewOptions Logic
+        }
+
+        #endregion
         #region ViewOptions Property Members
 
         private static readonly DependencyPropertyKey ViewOptionsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ViewOptions), typeof(ThreeStateViewModel), typeof(FileSystemsPageVM),
