@@ -31,12 +31,7 @@
             <ColumnDefinition/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
-        <Grid Grid.RowSpan="3">
+        <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition/>
@@ -58,111 +53,122 @@
                     <DataGridTextColumn Binding="{Binding NextScheduledStart, Converter={StaticResource NextCrawlToCol}, Mode=OneWay}" IsReadOnly="True" Header="{x:Static res:Resources.DisplayName_NextStart}"/>
                 </DataGrid.Columns>
             </DataGrid>
-            <Border Visibility="{Binding IsEditingViewOptions, Converter={StaticResource VisibleIfTrueConverter}, Mode=OneWay}" Grid.RowSpan="2" Grid.ColumnSpan="3">
-                <Border>
+            <Border Visibility="{Binding IsEditingViewOptions, Converter={StaticResource VisibleIfTrueConverter}, Mode=OneWay}" Grid.RowSpan="2" Grid.ColumnSpan="3" Background="{DynamicResource TranslucentBlack50pctBrush}">
+                <Border HorizontalAlignment="Center" VerticalAlignment="Center" Style="{DynamicResource PopupOuterBorder}">
                     <StackPanel>
-                        <RadioButton IsChecked="{Binding EditingViewOptions.IsTrue}" GroupName="ViewOptions" Content="Show Activated Items"/>
-                        <RadioButton IsChecked="{Binding EditingViewOptions.IsFalse, Mode=OneWay}" GroupName="ViewOptions" Content="Show Deactivated Items"/>
-                        <RadioButton IsChecked="{Binding EditingViewOptions.IsNull, Mode=OneWay}" GroupName="ViewOptions" Content="Show All Items"/>
-                        <StackPanel Orientation="Horizontal">
-                            <Button Content="OK" Command="{Binding ViewOptionsOkClick, Mode=OneWay}" />
-                            <Button Content="Cancel" Command="{Binding ViewOptionCancelClick, Mode=OneWay}" />
-                        </StackPanel>
+                        <Border Style="{DynamicResource PopupContentBorder}">
+                            <StackPanel>
+                                <RadioButton IsChecked="{Binding EditingViewOptions.IsTrue}" GroupName="ViewOptions" Content="Show Activated Items" Margin="{DynamicResource DefaultSpacingTopLeftRight}"/>
+                                <RadioButton IsChecked="{Binding EditingViewOptions.IsFalse, Mode=OneWay}" GroupName="ViewOptions" Content="Show Deactivated Items" Margin="{DynamicResource DefaultSpacingLeftRight}"/>
+                                <RadioButton IsChecked="{Binding EditingViewOptions.IsNull, Mode=OneWay}" GroupName="ViewOptions" Content="Show All Items" Margin="{DynamicResource DefaultSpacingLeftRight}"/>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                    <Button Content="OK" Command="{Binding ViewOptionsOkClick, Mode=OneWay}" Style="{DynamicResource DefaultButton}" Margin="{DynamicResource DefaultSpacingTopBottomLeft}" />
+                                    <Button Content="Cancel" Command="{Binding ViewOptionCancelClick, Mode=OneWay}" Style="{DynamicResource DefaultButton}" Margin="{DynamicResource DefaultSpacing}" />
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
                     </StackPanel>
                 </Border>
             </Border>
         </Grid>
-        <StackPanel Grid.Column="1" Grid.RowSpan="3" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding SelectedItem, Converter={StaticResource InverseObjectToVisibilityConverter}}">
+        <StackPanel Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding SelectedItem, Converter={StaticResource InverseObjectToVisibilityConverter}}">
             <TextBlock Text="No crawl configuration to dispay" HorizontalAlignment="Center" />
             <Button Content="Add New" HorizontalAlignment="Center" Command="{Binding NewClickCommand, Mode=OneWay, Source={StaticResource CrawlConfigurationsViewModel}}" Margin="{DynamicResource DefaultSpacing}" ToolTip="{x:Static res:Resources.Description_NewCurrentCrawlConfig}" Style="{DynamicResource DefaultButton}"/>
         </StackPanel>
-        <StackPanel Grid.Column="1" Margin="{DynamicResource DefaultSpacingLeft}" DataContext="{Binding SelectedCrawlConfig}" Tag="{Binding Converter={StaticResource DependencyObjectToVisibilityConverter}, Mode=OneWay}">
-            <Grid Grid.Row="1">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
-                <Label Content="{x:Static res:Resources.DisplayName_DisplayName}" Padding="{DynamicResource DefaultSpacingTopLeftRight}" FontWeight="Bold" VerticalAlignment="Bottom"/>
-                <Button Margin="{DynamicResource DefaultSpacingTopBottomLeft}" Command="{Binding EditCurrentItem, Mode=OneWay}" ToolTip="{x:Static res:Resources.Description_EditCurrentCrawlConfig}" Style="{DynamicResource EditButton}" Grid.Column="1"/>
-                <Button Margin="{DynamicResource DefaultSpacing}" Command="{Binding DeleteCurrentItem, Mode=OneWay}" ToolTip="{x:Static res:Resources.Description_DeleteCurrentCrawlConfig}" Style="{DynamicResource DeleteButton}" Grid.Column="2"/>
-            </Grid>
-            <TextBox IsReadOnly="True" Margin="{DynamicResource DefaultSpacingLeftRight}" Text="{Binding DisplayName, Mode=OneWay}" />
-            <Label Content="{x:Static res:Resources.DisplayName_RootPath}" Padding="{DynamicResource DefaultSpacingTopLeftRight}" FontWeight="Bold"/>
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
-                <TextBox IsReadOnly="True" Margin="{DynamicResource DefaultSpacingLeft}" Text="{Binding FullName, Mode=OneWay}" />
-                <Button Grid.Column="1" Margin="{DynamicResource DefaultSpacingRight}" Command="{Binding OpenRootFolderCommand, Mode=OneWay}" ToolTip="{x:Static res:Resources.Description_BrowseRootFolder}" Style="{DynamicResource OpenButton}" />
-            </Grid>
-            <GroupBox Header="Limits">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-                    <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" Content="{x:Static res:Resources.DisplayName_MaxRecursionDepth}" FontWeight="Bold"/>
-                    <TextBox IsReadOnly="True" Margin="{DynamicResource DefaultSpacingLeftRight}" Grid.Row="1" Text="{Binding MaxRecursionDepth, Mode=OneWay}" />
-                    <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" Content="{x:Static res:Resources.DisplayName_MaxTotalItems}" Grid.Column="1" FontWeight="Bold"/>
-                    <TextBox IsReadOnly="True" Margin="{DynamicResource DefaultSpacingLeftRight}" Grid.Row="1" Grid.Column="1" Text="{Binding MaxTotalItems, Mode=OneWay, TargetNullValue=(unlimited)}" />
-                    <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" Content="{x:Static res:Resources.DisplayName_MaxCrawlDuration}" Grid.Row="2" FontWeight="Bold"/>
-                    <TextBox IsReadOnly="True" Margin="{DynamicResource DefaultSpacingLeftRight}" Grid.Row="3" Text="{Binding TTL, Converter={StaticResource TimeSpanToString}, Mode=OneWay}" />
-                    <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" Content="{x:Static res:Resources.DisplayName_AutoReschedule}" Grid.Column="1" Grid.Row="2" FontWeight="Bold"/>
-                    <TextBox IsReadOnly="True" Margin="{DynamicResource DefaultSpacingLeftRight}" Grid.Row="3" Grid.Column="1" Text="{Binding Converter={StaticResource CrawlConfigToAutoRescheduleString}, Mode=OneWay}" />
-                </Grid>
-            </GroupBox>
-            <GroupBox Margin="{DynamicResource DefaultSpacingTopLeftRight}" Header="Status">
-                <Grid>
+        <Grid Grid.Column="1" Margin="{DynamicResource DefaultSpacingLeft}" DataContext="{Binding SelectedCrawlConfig}" Visibility="{Binding Converter={StaticResource DependencyObjectToVisibilityConverter}, Mode=OneWay}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <StackPanel>
+                <Grid Grid.Row="1">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
                         <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition/>
+                        <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-                    <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" Content="Last Crawl Start" FontWeight="Bold" />
-                    <TextBox IsReadOnly="True" Grid.Row="1" Text="{Binding LastCrawlStart, Converter={StaticResource CrawlStartToString}, Mode=OneWay}" Margin="{DynamicResource DefaultSpacingLeftRight}" />
-                    <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" Content="Last Crawl End" FontWeight="Bold" Grid.Column="1" Grid.ColumnSpan="2"/>
-                    <TextBox IsReadOnly="True" Grid.Row="1" Grid.Column="2" Text="{Binding LastCrawlEnd, Converter={StaticResource DateTimeToString}, Mode=OneWay}" Margin="{DynamicResource DefaultSpacingRight}" />
-                    <Button Grid.Column="1" Grid.Row="1" Style="{DynamicResource LogButton}" Margin="{DynamicResource DefaultSpacingLeft}"/>
-                    <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" Content="Next Crawl Start" Grid.Row="2" FontWeight="Bold"/>
-                    <TextBox IsReadOnly="True" Grid.Row="3" Text="{Binding NextScheduledStart, Converter={StaticResource DateTimeToString}, Mode=OneWay}" Margin="{DynamicResource DefaultSpacingLeftRight}"  />
-                    <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" Content="Current Status" Grid.Row="2" FontWeight="Bold" Grid.Column="1" Grid.ColumnSpan="2"/>
-                    <Button Grid.Row="3" Grid.Column="1" Style="{DynamicResource StartButton}" Margin="{DynamicResource DefaultSpacingLeft}"/>
-                    <TextBox IsReadOnly="True" Grid.Row="3" Grid.Column="2" Text="{Binding StatusValue, Converter={StaticResource CrawlStatusToDescription}, Mode=OneWay}" Margin="{DynamicResource DefaultSpacingRight}"  />
-                    <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" Content="Created On" Grid.Row="4" FontWeight="Bold"/>
-                    <TextBox IsReadOnly="True" Grid.Row="5" Text="{Binding CreatedOn, Converter={StaticResource DateTimeToString}, Mode=OneWay}" Margin="{DynamicResource DefaultSpacingLeftRight}"  />
-                    <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" Content="Modified On" Grid.Row="4" FontWeight="Bold" Grid.ColumnSpan="2" Grid.Column="1"/>
-                    <TextBox IsReadOnly="True" Grid.Row="5" Grid.Column="1" Text="{Binding ModifiedOn, Converter={StaticResource DateTimeToString}, Mode=OneWay}" Margin="{DynamicResource DefaultSpacingLeftRight}" Grid.ColumnSpan="2"  />
-                    <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" Content="Last Synchronized" Grid.Row="6" FontWeight="Bold"/>
-                    <TextBox IsReadOnly="True" Grid.Row="7" Text="{Binding LastSynchronizedOn, Converter={StaticResource LastSynchronizedToString}, Mode=OneWay}" Margin="{DynamicResource DefaultSpacingLeftRight}" />
+                    <Label Content="{x:Static res:Resources.DisplayName_DisplayName}" Padding="{DynamicResource DefaultSpacingTopLeftRight}" FontWeight="Bold" VerticalAlignment="Bottom"/>
+                    <Button Margin="{DynamicResource DefaultSpacingTopBottomLeft}" Command="{Binding EditCurrentItem, Mode=OneWay}" ToolTip="{x:Static res:Resources.Description_EditCurrentCrawlConfig}" Style="{DynamicResource EditButton}" Grid.Column="1"/>
+                    <Button Margin="{DynamicResource DefaultSpacing}" Command="{Binding DeleteCurrentItem, Mode=OneWay}" ToolTip="{x:Static res:Resources.Description_DeleteCurrentCrawlConfig}" Style="{DynamicResource DeleteButton}" Grid.Column="2"/>
                 </Grid>
+                <TextBox IsReadOnly="True" Margin="{DynamicResource DefaultSpacingLeftRight}" Text="{Binding DisplayName, Mode=OneWay}" />
+                <Label Content="{x:Static res:Resources.DisplayName_RootPath}" Padding="{DynamicResource DefaultSpacingTopLeftRight}" FontWeight="Bold"/>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBox IsReadOnly="True" Margin="{DynamicResource DefaultSpacingLeft}" Text="{Binding FullName, Mode=OneWay}" />
+                    <Button Grid.Column="1" Margin="{DynamicResource DefaultSpacingRight}" Command="{Binding OpenRootFolderCommand, Mode=OneWay}" ToolTip="{x:Static res:Resources.Description_BrowseRootFolder}" Style="{DynamicResource OpenButton}" />
+                </Grid>
+                <GroupBox Header="Limits">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" Content="{x:Static res:Resources.DisplayName_MaxRecursionDepth}" FontWeight="Bold"/>
+                        <TextBox IsReadOnly="True" Margin="{DynamicResource DefaultSpacingLeftRight}" Grid.Row="1" Text="{Binding MaxRecursionDepth, Mode=OneWay}" />
+                        <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" Content="{x:Static res:Resources.DisplayName_MaxTotalItems}" Grid.Column="1" FontWeight="Bold"/>
+                        <TextBox IsReadOnly="True" Margin="{DynamicResource DefaultSpacingLeftRight}" Grid.Row="1" Grid.Column="1" Text="{Binding MaxTotalItems, Mode=OneWay, TargetNullValue=(unlimited)}" />
+                        <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" Content="{x:Static res:Resources.DisplayName_MaxCrawlDuration}" Grid.Row="2" FontWeight="Bold"/>
+                        <TextBox IsReadOnly="True" Margin="{DynamicResource DefaultSpacingLeftRight}" Grid.Row="3" Text="{Binding TTL, Converter={StaticResource TimeSpanToString}, Mode=OneWay}" />
+                        <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" Content="{x:Static res:Resources.DisplayName_AutoReschedule}" Grid.Column="1" Grid.Row="2" FontWeight="Bold"/>
+                        <TextBox IsReadOnly="True" Margin="{DynamicResource DefaultSpacingLeftRight}" Grid.Row="3" Grid.Column="1" Text="{Binding Converter={StaticResource CrawlConfigToAutoRescheduleString}, Mode=OneWay}" />
+                    </Grid>
+                </GroupBox>
+                <GroupBox Margin="{DynamicResource DefaultSpacingTopLeftRight}" Header="Status">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" Content="Last Crawl Start" FontWeight="Bold" />
+                        <TextBox IsReadOnly="True" Grid.Row="1" Text="{Binding LastCrawlStart, Converter={StaticResource CrawlStartToString}, Mode=OneWay}" Margin="{DynamicResource DefaultSpacingLeftRight}" />
+                        <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" Content="Last Crawl End" FontWeight="Bold" Grid.Column="1" Grid.ColumnSpan="2"/>
+                        <TextBox IsReadOnly="True" Grid.Row="1" Grid.Column="2" Text="{Binding LastCrawlEnd, Converter={StaticResource DateTimeToString}, Mode=OneWay}" Margin="{DynamicResource DefaultSpacingRight}" />
+                        <Button Grid.Column="1" Grid.Row="1" Style="{DynamicResource LogButton}" Margin="{DynamicResource DefaultSpacingLeft}"/>
+                        <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" Content="Next Crawl Start" Grid.Row="2" FontWeight="Bold"/>
+                        <TextBox IsReadOnly="True" Grid.Row="3" Text="{Binding NextScheduledStart, Converter={StaticResource DateTimeToString}, Mode=OneWay}" Margin="{DynamicResource DefaultSpacingLeftRight}"  />
+                        <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" Content="Current Status" Grid.Row="2" FontWeight="Bold" Grid.Column="1" Grid.ColumnSpan="2"/>
+                        <Button Grid.Row="3" Grid.Column="1" Style="{DynamicResource StartButton}" Margin="{DynamicResource DefaultSpacingLeft}"/>
+                        <TextBox IsReadOnly="True" Grid.Row="3" Grid.Column="2" Text="{Binding StatusValue, Converter={StaticResource CrawlStatusToDescription}, Mode=OneWay}" Margin="{DynamicResource DefaultSpacingRight}"  />
+                        <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" Content="Created On" Grid.Row="4" FontWeight="Bold"/>
+                        <TextBox IsReadOnly="True" Grid.Row="5" Text="{Binding CreatedOn, Converter={StaticResource DateTimeToString}, Mode=OneWay}" Margin="{DynamicResource DefaultSpacingLeftRight}"  />
+                        <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" Content="Modified On" Grid.Row="4" FontWeight="Bold" Grid.ColumnSpan="2" Grid.Column="1"/>
+                        <TextBox IsReadOnly="True" Grid.Row="5" Grid.Column="1" Text="{Binding ModifiedOn, Converter={StaticResource DateTimeToString}, Mode=OneWay}" Margin="{DynamicResource DefaultSpacingLeftRight}" Grid.ColumnSpan="2"  />
+                        <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" Content="Last Synchronized" Grid.Row="6" FontWeight="Bold"/>
+                        <TextBox IsReadOnly="True" Grid.Row="7" Text="{Binding LastSynchronizedOn, Converter={StaticResource LastSynchronizedToString}, Mode=OneWay}" Margin="{DynamicResource DefaultSpacingLeftRight}" />
+                    </Grid>
+                </GroupBox>
+            </StackPanel>
+            <GroupBox Grid.Row="1" Margin="{DynamicResource DefaultSpacing}" Header="Notes" Visibility="{Binding Converter={StaticResource DependencyObjectToVisibilityConverter}, Mode=OneWay}">
+                <TextBox IsReadOnly="True" Margin="{DynamicResource DefaultSpacingTopLeftRight}" Text="{Binding Notes, Mode=OneWay}" Style="{DynamicResource MultiLineTextBox}" />
             </GroupBox>
-        </StackPanel>
-        <GroupBox Grid.Row="1" Grid.Column="1" Margin="{DynamicResource DefaultSpacing}" Header="Notes">
-            <TextBox IsReadOnly="True" Margin="{DynamicResource DefaultSpacingTopLeftRight}" Text="{Binding Notes, Mode=OneWay}" Style="{DynamicResource MultiLineTextBox}" />
-        </GroupBox>
-        <WrapPanel Grid.Column="1" Grid.Row="2" HorizontalAlignment="Right">
-            <Button Margin="{DynamicResource DefaultSpacingTopBottomLeft}" Command="{Binding EditCurrentItem, Mode=OneWay}" ToolTip="{x:Static res:Resources.Description_EditCurrentCrawlConfig}" Style="{DynamicResource EditButton}"/>
-            <Button Margin="{DynamicResource DefaultSpacing}" Command="{Binding DeleteCurrentItem, Mode=OneWay}" ToolTip="{x:Static res:Resources.Description_DeleteCurrentCrawlConfig}" Style="{DynamicResource DeleteButton}"/>
-        </WrapPanel>
-        <GridSplitter Grid.Column="1" HorizontalAlignment="Left" Grid.RowSpan="3" Style="{DynamicResource VerticalGridSplitterStyle}"/>
+            <WrapPanel Grid.Row="2" HorizontalAlignment="Right" Visibility="{Binding Converter={StaticResource DependencyObjectToVisibilityConverter}, Mode=OneWay}">
+                <Button Margin="{DynamicResource DefaultSpacingTopBottomLeft}" Command="{Binding EditCurrentItem, Mode=OneWay}" ToolTip="{x:Static res:Resources.Description_EditCurrentCrawlConfig}" Style="{DynamicResource EditButton}"/>
+                <Button Margin="{DynamicResource DefaultSpacing}" Command="{Binding DeleteCurrentItem, Mode=OneWay}" ToolTip="{x:Static res:Resources.Description_DeleteCurrentCrawlConfig}" Style="{DynamicResource DeleteButton}"/>
+            </WrapPanel>
+        </Grid>
+        <GridSplitter Grid.Column="1" HorizontalAlignment="Left" Style="{DynamicResource VerticalGridSplitterStyle}"/>
         <View:AsyncBgModalControl Grid.ColumnSpan="2" d:IsHidden="True" DataContext="{Binding BgOps, Mode=OneWay}" />
     </Grid>
 </Page>

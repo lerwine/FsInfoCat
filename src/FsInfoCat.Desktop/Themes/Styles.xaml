@@ -5,17 +5,13 @@
         xmlns:System="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <Style TargetType="TextBox">
+    <Style x:Key="DefaultTextBoxBase" TargetType="TextBox">
         <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"/>
         <Setter Property="BorderBrush" Value="{DynamicResource TextBoxBorderBrush}"/>
         <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="HorizontalContentAlignment" Value="Left"/>
         <Setter Property="Padding" Value="2"/>
-        <Setter Property="Height" Value="{DynamicResource DefaultTextBoxHeight}"/>
-        <Setter Property="AcceptsReturn" Value="False"/>
-        <Setter Property="AcceptsTab" Value="False"/>
-        <Setter Property="TextWrapping" Value="NoWrap"/>
         <Style.Triggers>
             <MultiTrigger>
                 <MultiTrigger.Conditions>
@@ -25,9 +21,14 @@
                 <Setter Property="SelectionBrush" Value="{DynamicResource {x:Static SystemColors.InactiveSelectionHighlightBrushKey}}"/>
             </MultiTrigger>
         </Style.Triggers>
-
     </Style>
-    <Style TargetType="GroupBox">
+    <Style x:Key="SingleLineTextBox" TargetType="TextBox" BasedOn="{StaticResource DefaultTextBoxBase}">
+        <Setter Property="Height" Value="{DynamicResource DefaultTextBoxHeight}"/>
+        <Setter Property="AcceptsReturn" Value="False"/>
+        <Setter Property="AcceptsTab" Value="False"/>
+        <Setter Property="TextWrapping" Value="NoWrap"/>
+    </Style>
+    <Style x:Key="DefaultGroupBoxBase" TargetType="GroupBox">
         <Setter Property="BorderBrush" Value="#D5DFE5"/>
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="Template">
@@ -71,7 +72,7 @@
             </Setter.Value>
         </Setter>
     </Style>
-    <Style TargetType="Button">
+    <Style x:Key="DefaultButtonBase" TargetType="{x:Type Button}">
         <Setter Property="Background" Value="{DynamicResource ButtonBackgroundBrush}"/>
         <Setter Property="BorderThickness" Value="{DynamicResource ThinBorderThickness}"/>
         <Setter Property="Height" Value="{DynamicResource DefaultButtonHeight}"/>
@@ -103,11 +104,16 @@
             </Setter.Value>
         </Setter>
     </Style>
-    <Style TargetType="PasswordBox">
+    <Style x:Key="DefaultPasswordBoxBase" TargetType="PasswordBox">
         <Setter Property="Height" Value="{DynamicResource DefaultTextBoxHeight}"/>
     </Style>
-    <Style TargetType="TextBox" x:Key="TwoDigitNumericTextBox">
-        <Setter Property="MinWidth" Value="{DynamicResource DefaultTextBoxHeight}"/>
+    <Style TargetType="Button" BasedOn="{StaticResource DefaultButtonBase}">
+    </Style>
+    <Style TargetType="TextBox" BasedOn="{StaticResource DefaultTextBoxBase}">
+    </Style>
+    <Style TargetType="GroupBox" BasedOn="{StaticResource DefaultGroupBoxBase}">
+    </Style>
+    <Style TargetType="PasswordBox" BasedOn="{StaticResource DefaultPasswordBoxBase}">
     </Style>
     <Style TargetType="GridSplitter">
         <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.ControlBrushKey}}"/>
@@ -132,7 +138,10 @@
             </Setter.Value>
         </Setter>
     </Style>
-    <Style x:Key="MultiLineTextBox" TargetType="TextBox">
+    <Style TargetType="TextBox" x:Key="TwoDigitNumericTextBox" BasedOn="{StaticResource SingleLineTextBox}">
+        <Setter Property="MinWidth" Value="{DynamicResource DefaultTextBoxHeight}"/>
+    </Style>
+    <Style x:Key="MultiLineTextBox" TargetType="TextBox" BasedOn="{StaticResource DefaultTextBoxBase}">
         <Setter Property="MinHeight" Value="{DynamicResource DefaultMultiLineTextBoxHeight}"/>
         <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"/>
         <Setter Property="BorderBrush" Value="{DynamicResource TextBoxBorderBrush}"/>
@@ -195,7 +204,7 @@
         <Setter Property="Cursor" Value="SizeNS"/>
     </Style>
     <!--<Style TargetType="GroupBox" BasedOn="{StaticResource DefaultGroupBoxStyle}"/>-->
-    <Style x:Key="DefaultGroupBoxStyle" TargetType="{x:Type GroupBox}">
+    <Style x:Key="DefaultGroupBoxStyle" TargetType="{x:Type GroupBox}" BasedOn="{StaticResource DefaultGroupBoxBase}">
         <Setter Property="BorderBrush" Value="{DynamicResource LightBorderBrush}"/>
         <Setter Property="BorderThickness" Value="1"/>
     </Style>
@@ -205,7 +214,7 @@
         <Setter Property="CornerRadius" Value="{DynamicResource PopupOuterBortderCornerRadius}"/>
         <Setter Property="HorizontalAlignment" Value="Center"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
-        <Setter Property="Margin" Value="{DynamicResource ExtraWideSpacing}"/>
+        <Setter Property="Margin" Value="{DynamicResource DefaultSpacing}"/>
     </Style>
     <Style x:Key="PopupTitleBorder" TargetType="{x:Type Border}">
         <Setter Property="CornerRadius" Value="{DynamicResource PopupTitleCornerRadius}"/>
@@ -215,14 +224,14 @@
         <Setter Property="CornerRadius" Value="{DynamicResource PopupContentCornerRadius}"/>
         <Setter Property="Background" Value="White"/>
     </Style>
-    <Style x:Key="DefaultButton" TargetType="{x:Type Button}">
+    <Style x:Key="DefaultButton" TargetType="{x:Type Button}" BasedOn="{StaticResource DefaultButtonBase}">
         <Setter Property="Width" Value="{DynamicResource DefaultButtonWidth}"/>
     </Style>
-    <Style x:Key="SquareButton" TargetType="{x:Type Button}" BasedOn="{StaticResource DefaultButton}">
+    <Style x:Key="SquareButton" TargetType="{x:Type Button}" BasedOn="{StaticResource DefaultButtonBase}">
         <Setter Property="Height" Value="{DynamicResource DefaultButtonHeight}"/>
         <Setter Property="Width" Value="{DynamicResource DefaultButtonHeight}"/>
     </Style>
-    <Style x:Key="CommandButton" TargetType="{x:Type Button}">
+    <Style x:Key="CommandButton" TargetType="{x:Type Button}" BasedOn="{StaticResource DefaultButtonBase}">
         <Setter Property="Height" Value="{DynamicResource DefaultTextBoxHeight}"/>
         <Setter Property="Width" Value="{DynamicResource DefaultTextBoxHeight}"/>
         <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>

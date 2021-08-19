@@ -161,6 +161,8 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             ThreeStateViewModel viewOptions = new(true);
             SetValue(ViewOptionsPropertyKey, viewOptions);
             SetValue(EditingViewOptionsPropertyKey, new ThreeStateViewModel(viewOptions.Value));
+            if (DesignerProperties.GetIsInDesignMode(this))
+                return;
             SetValue(ShowViewOptionsPropertyKey, new Commands.RelayCommand(() => IsEditingViewOptions = true));
             SetValue(ShowLogsPropertyKey, new Commands.RelayCommand(OnShowLogs));
             SetValue(ViewOptionsOkClickPropertyKey, new Commands.RelayCommand(() =>
@@ -173,8 +175,6 @@ namespace FsInfoCat.Desktop.ViewModel.Local
                 EditingViewOptions.Value = ViewOptions.Value;
                 IsEditingViewOptions = false;
             }));
-            if (DesignerProperties.GetIsInDesignMode(this))
-                return;
             viewOptions.ValuePropertyChanged += (s, e) =>
             {
                 EditingViewOptions.Value = ViewOptions.Value;

@@ -9,6 +9,7 @@
              mc:Ignorable="d" d:DataContext="{x:Type vm:FileSystemItemDetailViewModel}"
              d:DesignHeight="450" d:DesignWidth="400">
     <UserControl.Resources>
+        <Converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" NullSource="Collapsed"/>
         <Converters:DriveTypeToStringConverter x:Key="DriveTypeToStringConverter" UseLongDescription="True" NullSource="(none)"/>
         <Converters:BooleanToStringConverter x:Key="BooleanToActivationConverter" TrueValue="Activate" FalseValue="Deactivate"/>
         <Converters:BooleanToStringConverter x:Key="BooleanToYesNoConverter" TrueValue="Yes" FalseValue="No"/>
@@ -29,28 +30,38 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
-            <WrapPanel HorizontalAlignment="Right" Grid.ColumnSpan="2">
-                <Button Content="Edit" Style="{DynamicResource DefaultButton}" Margin="{DynamicResource DefaultSpacing}" Command="{Binding EditCurrentItem, Mode=OneWay}"/>
-                <Button Content="{Binding IsInactive, Converter={StaticResource BooleanToActivationConverter}, Mode=OneWay}" Command="{Binding ToggleCurrentItemActivation, Mode=OneWay}" Style="{DynamicResource DefaultButton}" Margin="{DynamicResource DefaultSpacing}"/>
-                <Button Content="Delete" Style="{DynamicResource DefaultButton}" Margin="{DynamicResource DefaultSpacing}" Command="{Binding DeleteCurrentItem, Mode=OneWay}"/>
-            </WrapPanel>
-            <Label  Grid.Row="1" Content="Display Name" Padding="{DynamicResource DefaultSpacingLeftRight}" FontWeight="Bold" />
-            <TextBox Grid.Row="2" IsReadOnly="True" Text="{Binding DisplayName, Mode=OneWay}" Margin="{DynamicResource DefaultSpacingBottomLeftRight}"/>
-            <Label  Grid.Row="1" Content="Default Drive Type" Grid.Column="1" Padding="{DynamicResource DefaultSpacingLeft}" FontWeight="Bold" />
-            <TextBox Grid.Column="1" Text="{Binding DefaultDriveType, Converter={StaticResource DriveTypeToStringConverter}, Mode=OneWay}" IsReadOnly="True" Grid.Row="2" Margin="{DynamicResource DefaultSpacingBottomLeftRight}" />
+            <Grid Grid.ColumnSpan="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Label Content="Display Name" Padding="{DynamicResource DefaultSpacingTopLeftRight}" FontWeight="Bold" VerticalAlignment="Bottom" />
+                <Button Grid.Column="1" Style="{DynamicResource EditButton}" Margin="{DynamicResource DefaultSpacingTopBottomLeft}" Command="{Binding EditCurrentItem, Mode=OneWay}"/>
+                <Button Grid.Column="2" Command="{Binding ToggleCurrentItemActivation, Mode=OneWay}" Style="{DynamicResource DeactivateButton}" Margin="{DynamicResource DefaultSpacingTopBottomLeft}"/>
+                <Button Grid.Column="3" Style="{DynamicResource DeleteButton}" Margin="{DynamicResource DefaultSpacing}" Command="{Binding DeleteCurrentItem, Mode=OneWay}"/>
+            </Grid>
+            <TextBox Grid.Row="2" IsReadOnly="True" Text="{Binding DisplayName, Mode=OneWay}" Margin="{DynamicResource DefaultSpacingLeftRight}" Style="{DynamicResource SingleLineTextBox}"/>
             <WrapPanel Grid.Row="3" Grid.ColumnSpan="2">
-                <StackPanel Orientation="Horizontal">
-                    <Label Content="Maximum Name Length: " Padding="{DynamicResource DefaultSpacingTopBottomLeft}" VerticalAlignment="Center" FontWeight="Bold"/>
-                    <TextBox Text="{Binding MaxNameLength, Mode=OneWay}" IsReadOnly="True" Margin="{DynamicResource DefaultSpacingTopBottomRight}" VerticalAlignment="Center" />
+                <StackPanel Orientation="Vertical">
+                    <Label Content="Default Drive Type" Grid.Column="1" Padding="{DynamicResource DefaultSpacingTopLeft}" FontWeight="Bold" />
+                    <TextBox Text="{Binding DefaultDriveType, Converter={StaticResource DriveTypeToStringConverter}, Mode=OneWay}" IsReadOnly="True" Grid.Row="2" Margin="{DynamicResource DefaultSpacingLeft}" Style="{DynamicResource SingleLineTextBox}"/>
                 </StackPanel>
-                <StackPanel Orientation="Horizontal" Margin="{DynamicResource DefaultSpacingLeftRight}">
-                    <Label Content="Is Read-Only: " Padding="{DynamicResource DefaultSpacingTopBottomLeft}" VerticalAlignment="Center" FontWeight="Bold"/>
-                    <Label Content="{Binding IsReadOnly, Converter={StaticResource BooleanToYesNoConverter}, Mode=OneWay}" Padding="{DynamicResource DefaultSpacingTopBottomRight}" VerticalAlignment="Center"/>
+                <StackPanel Orientation="Vertical">
+                    <Label Content="Maximum Name Length" Padding="{DynamicResource DefaultSpacingTopLeft}" VerticalAlignment="Center" FontWeight="Bold"/>
+                    <TextBox Text="{Binding MaxNameLength, Mode=OneWay}" IsReadOnly="True" Margin="{DynamicResource DefaultSpacingLeft}" VerticalAlignment="Center" MinWidth="{DynamicResource DefaultTextBoxHeight}" Style="{DynamicResource SingleLineTextBox}"/>
                 </StackPanel>
-                <StackPanel Orientation="Horizontal">
-                    <Label Content="Volume Count: " Padding="{DynamicResource DefaultSpacingTopBottomLeft}" VerticalAlignment="Center" FontWeight="Bold"/>
-                    <Label Content="0" Padding="{DynamicResource DefaultSpacingTopBottomRight}" VerticalAlignment="Center"/>
-                    <Button Content="View" Style="{DynamicResource DefaultButton}" Margin="{DynamicResource DefaultSpacing}" VerticalAlignment="Center" Command="{Binding OpenVolumesWindow, Mode=OneWay}"/>
+                <StackPanel Orientation="Vertical" Margin="{DynamicResource DefaultSpacingLeftRight}">
+                    <Label Content="Is Read-Only" Padding="{DynamicResource DefaultSpacingTopLeft}" VerticalAlignment="Center" FontWeight="Bold"/>
+                    <TextBox IsReadOnly="True" Text="{Binding IsReadOnly, Converter={StaticResource BooleanToYesNoConverter}, Mode=OneWay}" Margin="{DynamicResource DefaultSpacingBottomLeft}" VerticalAlignment="Center" MinWidth="{DynamicResource DefaultTextBoxHeight}" Style="{DynamicResource SingleLineTextBox}"/>
+                </StackPanel>
+                <StackPanel Orientation="Vertical">
+                    <Label Content="Volume Count" Padding="{DynamicResource DefaultSpacingTopLeft}" VerticalAlignment="Center" FontWeight="Bold"/>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBox IsReadOnly="True" Text="{Binding VolumeCount, Mode=OneWay}" Margin="{DynamicResource DefaultSpacingBottomLeft}" VerticalAlignment="Center" MinWidth="{DynamicResource DefaultTextBoxHeight}" Style="{DynamicResource SingleLineTextBox}"/>
+                        <Button Style="{DynamicResource OpenButton}" Margin="{DynamicResource DefaultSpacingBottomRight}" VerticalAlignment="Center" Command="{Binding OpenVolumesWindow, Mode=OneWay}"/>
+                    </StackPanel>
                 </StackPanel>
             </WrapPanel>
         </Grid>
@@ -66,27 +77,28 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <Label Content="Notes" Padding="{DynamicResource DefaultSpacingLeftRight}" FontWeight="Bold" />
-                <TextBox Grid.Row="1" IsReadOnly="True" Style="{DynamicResource MultiLineTextBox}" Margin="{DynamicResource DefaultSpacingLeftRight}" />
+                <TextBox Grid.Row="1" IsReadOnly="True" Style="{DynamicResource MultiLineTextBox}" Margin="{DynamicResource DefaultSpacingBottom}" Text="{Binding Notes, Mode=OneWay}"/>
                 <WrapPanel Grid.Row="2" HorizontalAlignment="Right">
-                    <Button Content="Edit" Style="{DynamicResource DefaultButton}" Margin="{DynamicResource DefaultSpacing}" Command="{Binding EditCurrentItem, Mode=OneWay}"/>
-                    <Button Content="{Binding IsInactive, Converter={StaticResource BooleanToActivationConverter}, Mode=OneWay}" Command="{Binding ToggleCurrentItemActivation, Mode=OneWay}" Style="{DynamicResource DefaultButton}" Margin="{DynamicResource DefaultSpacing}"/>
-                    <Button Content="Delete" Style="{DynamicResource DefaultButton}" Margin="{DynamicResource DefaultSpacing}" Command="{Binding DeleteCurrentItem, Mode=OneWay}"/>
+                    <Button Style="{DynamicResource EditButton}" Margin="{DynamicResource DefaultSpacingBottomLeft}" Command="{Binding EditCurrentItem, Mode=OneWay}"/>
+                    <Button ToolTip="{Binding IsInactive, Converter={StaticResource BooleanToActivationConverter}, Mode=OneWay}" Command="{Binding ToggleCurrentItemActivation, Mode=OneWay}" Style="{DynamicResource DeactivateButton}" Margin="{DynamicResource DefaultSpacingBottomLeft}"/>
+                    <Button Margin="{DynamicResource DefaultSpacingBottomLeftRight}" Command="{Binding DeleteCurrentItem, Mode=OneWay}" Style="{DynamicResource DeleteButton}"/>
                 </WrapPanel>
             </Grid>
-            <GridSplitter Grid.Row="1" VerticalAlignment="Top" Style="{DynamicResource HorizontalGridSplitterStyle}" Height="5" />
+            <GridSplitter Grid.Row="1" VerticalAlignment="Top" Style="{DynamicResource HorizontalGridSplitterStyle}" />
             <Grid Grid.Row="1" Margin="{DynamicResource DefaultSpacingTop}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
+                    <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
-                <Label Content="Symbolic Names" Padding="{DynamicResource DefaultSpacingTopLeftRight}" FontWeight="Bold" Grid.ColumnSpan="2" Margin="0,0,0,61" Grid.RowSpan="2" />
-                <DataGrid Grid.Row="1" AutoGenerateColumns="False" IsReadOnly="True" ItemsSource="{Binding SymbolicNames, Mode=OneWay}" Grid.ColumnSpan="2" Grid.RowSpan="2" Margin="{DynamicResource DefaultSpacingBottomLeftRight}">
+                <Label Content="Symbolic Names" Padding="{DynamicResource DefaultSpacingTopLeftRight}" FontWeight="Bold" />
+                <Button Grid.Column="1" Style="{DynamicResource FilterButton}" Margin="{DynamicResource DefaultSpacingTopLeft}" Command="{Binding ShowViewOptions, Mode=OneWay}"/>
+                <Button Grid.Column="2" Style="{DynamicResource AddNewButton}" Margin="{DynamicResource DefaultSpacingTopLeftRight}" Command="{Binding NewSymbolicName, Mode=OneWay}"/>
+                <DataGrid Grid.Row="1" AutoGenerateColumns="False" IsReadOnly="True" ItemsSource="{Binding SymbolicNames, Mode=OneWay}" Grid.ColumnSpan="3" Margin="{DynamicResource DefaultSpacingBottomLeftRight}">
                     <DataGrid.Columns>
                         <DataGridTextColumn Binding="{Binding Name, Mode=OneWay}" Header="Name" Width="*"/>
                         <DataGridTextColumn Binding="{Binding Priority, Mode=OneWay}" Header="Priority"/>
@@ -103,12 +115,23 @@
                         </DataGridTemplateColumn>
                     </DataGrid.Columns>
                 </DataGrid>
-                <WrapPanel Grid.Row="2" Grid.ColumnSpan="2" Grid.RowSpan="2" DataContext="{Binding ViewOptions, Mode=OneWay}">
-                    <RadioButton Content="Show Activated" Margin="{DynamicResource DefaultSpacingLeft}" IsChecked="{Binding IsTrue, Mode=OneWay}"/>
-                    <RadioButton Content="Show Deactivated" Margin="{DynamicResource DefaultSpacingLeft}" IsChecked="{Binding IsFalse, Mode=OneWay}"/>
-                    <RadioButton Content="Show All" Margin="{DynamicResource DefaultSpacingLeftRight}"/>
-                </WrapPanel>
-                <Button Content="New" Grid.Row="3" Command="{Binding NewSymbolicName, Mode=OneWay}" Style="{DynamicResource DefaultButton}" HorizontalAlignment="Left" Grid.Column="1" Margin="{DynamicResource DefaultSpacingBottomLeftRight}" />
+                <Border Grid.ColumnSpan="3" Grid.RowSpan="2" Background="{DynamicResource TranslucentBlack50pctBrush}" Visibility="{Binding IsEditingViewOptions, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}">
+                    <Border HorizontalAlignment="Center" VerticalAlignment="Center" Style="{DynamicResource PopupOuterBorder}">
+                        <StackPanel>
+                            <Border Style="{DynamicResource PopupContentBorder}">
+                                <StackPanel>
+                                    <RadioButton IsChecked="{Binding EditingViewOptions.IsTrue}" GroupName="ViewOptions" Content="Show Activated Items" Margin="{DynamicResource DefaultSpacingTopLeftRight}"/>
+                                    <RadioButton IsChecked="{Binding EditingViewOptions.IsFalse, Mode=OneWay}" GroupName="ViewOptions" Content="Show Deactivated Items" Margin="{DynamicResource DefaultSpacingLeftRight}"/>
+                                    <RadioButton IsChecked="{Binding EditingViewOptions.IsNull, Mode=OneWay}" GroupName="ViewOptions" Content="Show All Items" Margin="{DynamicResource DefaultSpacingLeftRight}"/>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                        <Button Content="OK" Command="{Binding ViewOptionsOkClick, Mode=OneWay}" Style="{DynamicResource DefaultButton}" Margin="{DynamicResource DefaultSpacingTopBottomLeft}" />
+                                        <Button Content="Cancel" Command="{Binding ViewOptionCancelClick, Mode=OneWay}" Style="{DynamicResource DefaultButton}" Margin="{DynamicResource DefaultSpacing}" />
+                                    </StackPanel>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                    </Border>
+                </Border>
             </Grid>
         </Grid>
     </Grid>
