@@ -4,8 +4,9 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FsInfoCat.Desktop"
-        mc:Ignorable="d"
-        xmlns:converters="clr-namespace:FsInfoCat.Desktop.Converters"
+        xmlns:vm="clr-namespace:FsInfoCat.Desktop.ViewModel"
+        mc:Ignorable="d" xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:converters="clr-namespace:FsInfoCat.Desktop.Converters" vm:MainVM.AttachedBindings="{Binding CommandBindings}"
         Title="FS InfoCat" Height="600" Width="800" DataContext="{DynamicResource MainViewModel}" WindowState="Maximized">
     <Window.Resources>
         <!--<converters:AccountToStringConverter x:Key="AccountConverter" NullSource="(not logged in)"/>-->
@@ -24,8 +25,20 @@
                 </ItemsPanelTemplate>
             </Menu.ItemsPanel>
             <MenuItem Header="File">
+                <MenuItem Header="View File Systems" />
+                <MenuItem Header="View Volumes" />
                 <Separator/>
-                <MenuItem Header="Exit" />
+                <MenuItem Header="Exit" Command="ApplicationCommands.Close" />
+            </MenuItem>
+            <MenuItem Header="Crawl Configurations">
+                <Separator/>
+                <MenuItem Header="New Crawl" />
+                <MenuItem Header="Open Listing" />
+            </MenuItem>
+            <MenuItem Header="Groupings">
+                <Separator/>
+                <MenuItem Header="Redundancy Sets" />
+                <MenuItem Header="Tag Definitions" />
             </MenuItem>
             <Separator/>
             <MenuItem Header="Help" HorizontalAlignment="Right"/>
