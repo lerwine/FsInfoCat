@@ -42,34 +42,44 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         public ReadOnlyObservableCollection<TItemVM> Items => (ReadOnlyObservableCollection<TItemVM>)GetValue(ItemsProperty);
 
         #endregion
-        #region NewItemClick Command Members
+        #region NewItemClick Property Members
 
         /// <summary>
-        /// Occurs when the <see cref="NewItemClickCommand">NewItemClick Command</see> is invoked.
+        /// Occurs when the <see cref="NewItemClick">NewItemClick Command</see> is invoked.
         /// </summary>
-        public event EventHandler<Commands.CommandEventArgs> NewItemClick;
+        public event EventHandler<Commands.CommandEventArgs> NewItem;
 
-        private static readonly DependencyPropertyKey NewItemClickCommandPropertyKey = DependencyProperty.RegisterReadOnly(nameof(NewItemClickCommand),
+        private static readonly DependencyPropertyKey NewItemClickPropertyKey = DependencyProperty.RegisterReadOnly(nameof(NewItemClick),
             typeof(Commands.RelayCommand), typeof(DbEntityListingPageVM<TDbEntity, TItemVM>), new PropertyMetadata(null));
 
         /// <summary>
-        /// Identifies the <see cref=""/> dependency property.
+        /// Identifies the <see cref="NewItemClick"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty NewItemClickCommandProperty = NewItemClickCommandPropertyKey.DependencyProperty;
+        public static readonly DependencyProperty NewItemClickProperty = NewItemClickPropertyKey.DependencyProperty;
 
         /// <summary>
         /// Gets the $name$ command object.
         /// </summary>
         /// <value>The <see cref="System.Windows.Input.ICommand"/> that implements the $command$ command.</value>
-        public Commands.RelayCommand NewItemClickCommand => (Commands.RelayCommand)GetValue(NewItemClickCommandProperty);
+        public Commands.RelayCommand NewItemClick => (Commands.RelayCommand)GetValue(NewItemClickProperty);
 
         /// <summary>
-        /// Called when the <see cref="NewItemClickCommand">NewItemClick Command</see> is invoked.
+        /// Called when the NewItemClick event is raised by <see cref="NewItemClick" />.
         /// </summary>
-        /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="NewItemClickCommand" />.</param>
-        protected virtual void OnNewItemClick(object parameter)
+        /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="NewItemClick" />.</param>
+        internal void RaiseNewItem(object parameter)
         {
-            // TODO: Implement OnNewItemClick Logic
+            try { OnNewItem(parameter); }
+            finally { NewItem?.Invoke(this, new(parameter)); }
+        }
+
+        /// <summary>
+        /// Called when the <see cref="NewItemClick">NewItemClick Command</see> is invoked.
+        /// </summary>
+        /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="NewItemClick" />.</param>
+        protected virtual void OnNewItem(object parameter)
+        {
+            TDbEntity entity = InitializeNewEntity();
         }
 
         #endregion
@@ -94,7 +104,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         public DbEntityListingPageVM()
         {
             SetValue(ItemsPropertyKey, new ReadOnlyObservableCollection<TItemVM>(_backingItems));
-            SetValue(NewItemClickCommandPropertyKey, new Commands.RelayCommand(OnNewItemClick));
+            SetValue(NewItemClickPropertyKey, new Commands.RelayCommand(RaiseNewItem));
 #if DEBUG
             if (DesignerProperties.GetIsInDesignMode(this))
                 return;
@@ -110,13 +120,11 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 
         protected abstract Func<AsyncOps.IStatusListener, Task<int>> GetItemsLoaderFactory();
 
-        protected abstract TItemVM CreateItem(TDbEntity entity);
-
-        protected abstract TDbEntity InitializeNewEntity();
+        protected virtual TDbEntity InitializeNewEntity() => new TDbEntity();
 
         protected abstract DbSet<TDbEntity> GetDbSet(LocalDbContext dbContext);
 
-        protected async Task<int> OnEntitiesLoaded([DisallowNull] IEnumerable<TDbEntity> entities, AsyncOps.IStatusListener statusListener)
+        protected async Task<int> OnEntitiesLoaded([DisallowNull] IEnumerable<TDbEntity> entities, AsyncOps.IStatusListener statusListener, Func<TDbEntity, TItemVM> createItem)
         {
             if (entities is null)
                 throw new ArgumentNullException(nameof(entities));
@@ -124,7 +132,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             {
                 TItemVM[] old = _backingItems.ToArray();
                 _backingItems.Clear();
-                return (old, entities.Select(e => CreateItem(e)).ToArray());
+                return (old, entities.Select(createItem).ToArray());
             }, DispatcherPriority.Background, statusListener.CancellationToken);
             foreach (TItemVM item in oldItems)
             {
@@ -176,18 +184,10 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             }, DispatcherPriority.Background, statusListener.CancellationToken);
         }
 
-        protected internal Task<(TItemVM, bool?)> SaveChangesAsync([DisallowNull] TDbEntity entity)
+        protected internal Task<(TItemVM, bool?)> SaveChangesAsync([DisallowNull] TItemVM item, bool isNew)
         {
-            TItemVM item = _backingItems.FirstOrDefault(i => ReferenceEquals(i.Model, entity));
-            string title;
-            if (item is null)
-            {
-                item = CreateItem(entity);
-                title = GetSaveNewProgressTitle(item);
-            }
-            else
-                title = GetSaveExistingProgressTitle(item);
-            Task<bool?> task = BgOps.FromAsync(title, "Connecting to database...", entity, OnSaveChangesAsync);
+            string title = isNew ? GetSaveNewProgressTitle(item) : GetSaveExistingProgressTitle(item);
+            Task<bool?> task = BgOps.FromAsync(title, "Connecting to database...", item.Model, OnSaveChangesAsync);
             return task.ContinueWith(task =>
             {
                 if (!task.Result.HasValue)
@@ -230,12 +230,6 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             DispatcherOperation dispatcherOperation = statusListener.BeginSetMessage(isNew ? "Inserting record into database..." : "Updating database record...");
             await dbContext.SaveChangesAsync(statusListener.CancellationToken);
             await dispatcherOperation;
-            await Dispatcher.InvokeAsync(() =>
-            {
-                statusListener.SetMessage(isNew ? "Record inserted into database." : "Database record updated.");
-                if (isNew || !_backingItems.Any(i => ReferenceEquals(i.Model, entity)))
-                    _backingItems.Add(CreateItem(entity));
-            }, DispatcherPriority.Background, statusListener.CancellationToken);
             return isNew;
         }
 
@@ -292,7 +286,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         private void Item_Edit(object sender, Commands.CommandEventArgs e)
         {
             if (sender is TItemVM item && ShowModalItemEditWindow(item, e.Parameter))
-                SaveChangesAsync(item.Model);
+                SaveChangesAsync(item, false);
         }
 
         protected abstract string GetSaveNewProgressTitle(TItemVM item);

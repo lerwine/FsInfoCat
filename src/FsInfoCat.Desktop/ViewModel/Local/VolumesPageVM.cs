@@ -101,10 +101,8 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             }
             else
                 items = from v in volumes select v;
-            return await OnEntitiesLoaded(items, statusListener);
+            return await OnEntitiesLoaded(items, statusListener, entity => new VolumeItemVM(entity));
         }
-
-        protected override VolumeItemVM CreateItem(Volume entity) => new(entity);
 
         protected override DbSet<Volume> GetDbSet(LocalDbContext dbContext) => dbContext.Volumes;
 
@@ -117,11 +115,15 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         protected override string GetDeleteProgressTitle(VolumeItemVM item) =>
             string.Format(FsInfoCat.Properties.Resources.FormatMessage_DeletingVolume, item.DisplayName);
 
-        protected override Volume InitializeNewEntity() => new()
+        protected override Volume InitializeNewEntity()
         {
-            Id = Guid.NewGuid(),
-            CreatedOn = DateTime.Now
-        };
+            Volume volume = base.InitializeNewEntity();
+            volume.FileSystem = CurrentFileSystem;
+            VolumeStatus[] value = StatusOptions.SelectedItems.Select(i => i.Value).ToArray();
+            if (value.Length == 1)
+                volume.Status = value[0];
+            return volume;
+        }
 
         protected override bool PromptItemDeleting(VolumeItemVM item, object parameter)
         {

@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using FsInfoCat.Local;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -18,6 +17,15 @@ namespace FsInfoCat.Desktop.ViewModel
     public class MainVM : DependencyObject
     {
         private ILogger<MainVM> _logger;
+
+        public const string Page_Uri_Local_CrawlConfigurations = "/View/Local/CrawlConfigurationsPage.xaml";
+        public const string Page_Uri_Local_FileSystems = "/View/Local/FileSystemsPage.xaml";
+        public const string Page_Uri_Local_RedundantSets = "/View/Local/RedundantSetsPage.xaml";
+        public const string Page_Uri_Local_SymbolicNames = "/View/Local/SymbolicNamesPage.xaml";
+        public const string Page_Uri_Local_Volumes = "/View/Local/VolumesPage.xaml";
+        public const string Page_Uri_Local_PersonalTagDefinitions = "/View/Local/PersonalTagDefinitionsPage.xaml";
+        public const string Page_Uri_Local_SharedTagDefinitions = "/View/Local/SharedTagDefinitionsPage.xaml";
+
         #region ViewFileSystems Command Property Members
 
         private static readonly DependencyPropertyKey ViewFileSystemsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ViewFileSystems),
@@ -31,12 +39,12 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Gets the $name$ command object.
         /// </summary>
-        /// <value>The <see cref="System.Windows.Input.ICommand"/> that implements the $command$ command.</value>
+        /// <value>The <see cref="ICommand"/> that implements the $command$ command.</value>
         public Commands.RelayCommand ViewFileSystems => (Commands.RelayCommand)GetValue(ViewFileSystemsProperty);
 
         private void OnViewFileSystems(object parameter)
         {
-            Source = new Uri(Properties.Resources.Page_Uri_FileSystems, UriKind.Relative);
+            Source = new Uri(Page_Uri_Local_FileSystems, UriKind.Relative);
         }
 
         #endregion
@@ -53,12 +61,12 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Gets the $name$ command object.
         /// </summary>
-        /// <value>The <see cref="System.Windows.Input.ICommand"/> that implements the $command$ command.</value>
+        /// <value>The <see cref="ICommand"/> that implements the $command$ command.</value>
         public Commands.RelayCommand ViewCrawlConfigurations => (Commands.RelayCommand)GetValue(ViewCrawlConfigurationsProperty);
 
         private void OnViewCrawlConfigurations(object parameter)
         {
-            Source = new Uri(Properties.Resources.Page_Uri_CrawlConfigurations, UriKind.Relative);
+            Source = new Uri(Page_Uri_Local_CrawlConfigurations, UriKind.Relative);
         }
 
         #endregion
@@ -75,12 +83,17 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Gets the $name$ command object.
         /// </summary>
-        /// <value>The <see cref="System.Windows.Input.ICommand"/> that implements the $command$ command.</value>
+        /// <value>The <see cref="ICommand"/> that implements the $command$ command.</value>
         public Commands.RelayCommand NewCrawl => (Commands.RelayCommand)GetValue(NewCrawlProperty);
 
         private void OnNewCrawl(object parameter)
         {
-            // TODO: Implement OnNewCrawl Logic
+            if (NavigatedContent is View.Local.CrawlConfigurationsPage crawlConfigurationsPage && crawlConfigurationsPage.DataContext is Local.CrawlConfigurationsPageVM crawlConfigurationsVM)
+                crawlConfigurationsVM.RaiseNewItem(parameter);
+            else
+            {
+                View.Local.EditCrawlConfigWindow window = new();
+            }
         }
 
         #endregion
@@ -97,12 +110,12 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Gets the $name$ command object.
         /// </summary>
-        /// <value>The <see cref="System.Windows.Input.ICommand"/> that implements the $command$ command.</value>
+        /// <value>The <see cref="ICommand"/> that implements the $command$ command.</value>
         public Commands.RelayCommand ViewVolumes => (Commands.RelayCommand)GetValue(ViewVolumesProperty);
 
         private void OnViewVolumes(object parameter)
         {
-            Source = new Uri(Properties.Resources.Page_Uri_Volumes, UriKind.Relative);
+            Source = new Uri(Page_Uri_Local_Volumes, UriKind.Relative);
         }
 
         #endregion
@@ -119,12 +132,12 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Gets the $name$ command object.
         /// </summary>
-        /// <value>The <see cref="System.Windows.Input.ICommand"/> that implements the $command$ command.</value>
+        /// <value>The <see cref="ICommand"/> that implements the $command$ command.</value>
         public Commands.RelayCommand ViewSymbolicNames => (Commands.RelayCommand)GetValue(ViewSymbolicNamesProperty);
 
         private void OnViewSymbolicNames(object parameter)
         {
-            Source = new Uri(Properties.Resources.Page_Uri_SymbolicNames, UriKind.Relative);
+            Source = new Uri(Page_Uri_Local_SymbolicNames, UriKind.Relative);
         }
 
         #endregion
@@ -141,12 +154,12 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Gets the $name$ command object.
         /// </summary>
-        /// <value>The <see cref="System.Windows.Input.ICommand"/> that implements the $command$ command.</value>
+        /// <value>The <see cref="ICommand"/> that implements the $command$ command.</value>
         public Commands.RelayCommand ViewRedundancySets => (Commands.RelayCommand)GetValue(ViewRedundancySetsProperty);
 
         private void OnViewRedundancySets(object parameter)
         {
-            Source = new Uri(Properties.Resources.Page_Uri_RedundantSets, UriKind.Relative);
+            Source = new Uri(Page_Uri_Local_RedundantSets, UriKind.Relative);
         }
 
         #endregion
@@ -163,12 +176,12 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Gets the $name$ command object.
         /// </summary>
-        /// <value>The <see cref="System.Windows.Input.ICommand"/> that implements the $command$ command.</value>
+        /// <value>The <see cref="ICommand"/> that implements the $command$ command.</value>
         public Commands.RelayCommand ViewPersonalTagDefinitions => (Commands.RelayCommand)GetValue(ViewPersonalTagDefinitionsProperty);
 
         private void OnViewPersonalTagDefinitions(object parameter)
         {
-            // TODO: Implement OnViewPersonalTagDefinitions Logic
+            Source = new Uri(Page_Uri_Local_PersonalTagDefinitions, UriKind.Relative);
         }
 
         #endregion
@@ -185,12 +198,12 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Gets the $name$ command object.
         /// </summary>
-        /// <value>The <see cref="System.Windows.Input.ICommand"/> that implements the $command$ command.</value>
+        /// <value>The <see cref="ICommand"/> that implements the $command$ command.</value>
         public Commands.RelayCommand ViewSharedTagDefinitions => (Commands.RelayCommand)GetValue(ViewSharedTagDefinitionsProperty);
 
         private void OnViewSharedTagDefinitions(object parameter)
         {
-            // TODO: Implement OnViewSharedTagDefinitions Logic
+            Source = new Uri(Page_Uri_Local_SharedTagDefinitions, UriKind.Relative);
         }
 
         #endregion
@@ -315,7 +328,7 @@ namespace FsInfoCat.Desktop.ViewModel
             SetValue(ViewRedundancySetsPropertyKey, new Commands.RelayCommand(OnViewRedundancySets));
             SetValue(ViewPersonalTagDefinitionsPropertyKey, new Commands.RelayCommand(OnViewPersonalTagDefinitions));
             SetValue(ViewSharedTagDefinitionsPropertyKey, new Commands.RelayCommand(OnViewSharedTagDefinitions));
-            Source = new Uri(Properties.Resources.Page_Uri_CrawlConfigurations, UriKind.Relative);
+            Source = new Uri(Page_Uri_Local_CrawlConfigurations, UriKind.Relative);
         }
 
         private void OnClose(object sender, ExecutedRoutedEventArgs e) => Application.Current.MainWindow?.Close();

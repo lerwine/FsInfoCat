@@ -232,14 +232,13 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             return await OnEntitiesLoaded(result, statusListener, r => new CrawlConfigItemVM(r.Source, r.FullName, r.SubdirectoryId));
         }
 
-        protected override CrawlConfigItemVM CreateItem(CrawlConfiguration entity)
-        {
-            throw new NotImplementedException();
-        }
-
         protected override CrawlConfiguration InitializeNewEntity()
         {
-            throw new NotImplementedException();
+            CrawlConfiguration entity = base.InitializeNewEntity();
+            bool? isInactive = ViewOptions.Value;
+            if (isInactive.HasValue)
+                entity.StatusValue = isInactive.Value ? CrawlStatus.Disabled : CrawlStatus.NotRunning;
+            return entity;
         }
 
         protected override DbSet<CrawlConfiguration> GetDbSet(LocalDbContext dbContext)

@@ -159,7 +159,14 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             return await OnEntitiesLoaded(items, statusListener, r => new FileSystemItemVM(r));
         }
 
-        protected override FileSystemItemVM CreateItem(FileSystem entity) => new(entity);
+        protected override FileSystem InitializeNewEntity()
+        {
+            FileSystem entity = base.InitializeNewEntity();
+            bool? isInactive = ViewOptions.Value;
+            if (isInactive.HasValue)
+                entity.IsInactive = isInactive.Value;
+            return entity;
+        }
 
         protected override DbSet<FileSystem> GetDbSet(LocalDbContext dbContext) => dbContext.FileSystems;
 
@@ -168,8 +175,6 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         protected override string GetSaveExistingProgressTitle(FileSystemItemVM item) => $"Saving File System Definition \"{item.DisplayName}\"";
 
         protected override string GetSaveNewProgressTitle(FileSystemItemVM item) => $"Adding new File System Definition \"{item.DisplayName}\"";
-
-        protected override FileSystem InitializeNewEntity() => new() { CreatedOn = DateTime.Now };
 
         protected override bool PromptItemDeleting(FileSystemItemVM item, object parameter)
         {

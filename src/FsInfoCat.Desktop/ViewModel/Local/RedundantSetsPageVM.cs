@@ -42,10 +42,8 @@ namespace FsInfoCat.Desktop.ViewModel.Local
                 items = from r in redundantSets where r.Reference == reference select r;
             else
                 items = from r in redundantSets select r;
-            return await OnEntitiesLoaded(items, statusListener);
+            return await OnEntitiesLoaded(items, statusListener, entity => new RedundantSetItemVM(entity));
         }
-
-        protected override RedundantSetItemVM CreateItem(RedundantSet entity) => new(entity);
 
         protected override DbSet<RedundantSet> GetDbSet(LocalDbContext dbContext) => dbContext.RedundantSets;
 
@@ -60,11 +58,6 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         }
 
         protected override string GetSaveNewProgressTitle(RedundantSetItemVM item)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override RedundantSet InitializeNewEntity()
         {
             throw new NotImplementedException();
         }

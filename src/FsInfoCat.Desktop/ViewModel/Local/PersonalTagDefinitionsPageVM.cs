@@ -160,8 +160,6 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             }));
         }
 
-        protected override PersonalTagDefinitionItemVM CreateItem(PersonalTagDefinition entity) => new(entity);
-
         protected override DbSet<PersonalTagDefinition> GetDbSet(LocalDbContext dbContext) => dbContext.PersonalTagDefinitions;
 
         protected override string GetDeleteProgressTitle(PersonalTagDefinitionItemVM item) => $"Deleting Personal Tag Definition \"{item.Name}\"";
@@ -194,7 +192,14 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 
         protected override string GetSaveNewProgressTitle(PersonalTagDefinitionItemVM item) => $"Adding new Personal Tag Definition \"{item.Name}\"";
 
-        protected override PersonalTagDefinition InitializeNewEntity() => new() { CreatedOn = DateTime.Now };
+        protected override PersonalTagDefinition InitializeNewEntity()
+        {
+            PersonalTagDefinition entity = base.InitializeNewEntity();
+            bool? isInactive = ViewOptions.Value;
+            if (isInactive.HasValue)
+                entity.IsInactive = isInactive.Value;
+            return entity;
+        }
 
         protected override bool PromptItemDeleting(PersonalTagDefinitionItemVM item, object parameter)
         {

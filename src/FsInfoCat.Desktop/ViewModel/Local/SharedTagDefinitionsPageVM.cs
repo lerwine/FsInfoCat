@@ -160,8 +160,6 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             }));
         }
 
-        protected override SharedTagDefinitionItemVM CreateItem(SharedTagDefinition entity) => new(entity);
-
         protected override DbSet<SharedTagDefinition> GetDbSet(LocalDbContext dbContext) => dbContext.SharedTagDefinitions;
 
         protected override string GetDeleteProgressTitle(SharedTagDefinitionItemVM item) => $"Deleting Shared Tag Definition \"{item.Name}\"";
@@ -194,7 +192,14 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 
         protected override string GetSaveNewProgressTitle(SharedTagDefinitionItemVM item) => $"Adding new Shared Tag Definition \"{item.Name}\"";
 
-        protected override SharedTagDefinition InitializeNewEntity() => new() { CreatedOn = DateTime.Now };
+        protected override SharedTagDefinition InitializeNewEntity()
+        {
+            SharedTagDefinition entity = base.InitializeNewEntity();
+            bool? isInactive = ViewOptions.Value;
+            if (isInactive.HasValue)
+                entity.IsInactive = isInactive.Value;
+            return entity;
+        }
 
         protected override bool PromptItemDeleting(SharedTagDefinitionItemVM item, object parameter)
         {
