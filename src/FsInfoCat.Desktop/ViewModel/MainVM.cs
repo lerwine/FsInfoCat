@@ -89,7 +89,7 @@ namespace FsInfoCat.Desktop.ViewModel
         private void OnNewCrawl(object parameter)
         {
             if (NavigatedContent is View.Local.CrawlConfigurationsPage crawlConfigurationsPage && crawlConfigurationsPage.DataContext is Local.CrawlConfigurationsPageVM crawlConfigurationsVM)
-                crawlConfigurationsVM.RaiseNewItem(parameter);
+                crawlConfigurationsVM.RaiseAddNewItem(parameter);
             else
             {
                 View.Local.EditCrawlConfigWindow window = new();

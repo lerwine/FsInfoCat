@@ -162,8 +162,6 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 
         protected override DbSet<PersonalTagDefinition> GetDbSet(LocalDbContext dbContext) => dbContext.PersonalTagDefinitions;
 
-        protected override string GetDeleteProgressTitle(PersonalTagDefinitionItemVM item) => $"Deleting Personal Tag Definition \"{item.Name}\"";
-
         protected override Func<IStatusListener, Task<int>> GetItemsLoaderFactory()
         {
             bool? viewOptions = ViewOptions.Value;
@@ -188,26 +186,24 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             return await OnEntitiesLoaded(items, statusListener, r => new PersonalTagDefinitionItemVM(r));
         }
 
-        protected override string GetSaveExistingProgressTitle(PersonalTagDefinitionItemVM item) => $"Saving Personal Tag Definition \"{item.Name}\"";
-
-        protected override string GetSaveNewProgressTitle(PersonalTagDefinitionItemVM item) => $"Adding new Personal Tag Definition \"{item.Name}\"";
-
-        protected override PersonalTagDefinition InitializeNewEntity()
+        protected override void OnAddNewItem(object parameter)
         {
-            PersonalTagDefinition entity = base.InitializeNewEntity();
+            PersonalTagDefinition entity = new();
             bool? isInactive = ViewOptions.Value;
             if (isInactive.HasValue)
                 entity.IsInactive = isInactive.Value;
-            return entity;
-        }
-
-        protected override bool PromptItemDeleting(PersonalTagDefinitionItemVM item, object parameter)
-        {
             throw new NotImplementedException();
         }
 
-        protected override bool ShowModalItemEditWindow(PersonalTagDefinitionItemVM item, object parameter)
+        protected override bool ShowModalItemEditWindow(PersonalTagDefinitionItemVM item, object parameter, out string saveProgressTitle)
         {
+            saveProgressTitle = $"Saving Personal Tag Definition \"{item.Name}\"";
+            throw new NotImplementedException();
+        }
+
+        protected override bool PromptItemDeleting(PersonalTagDefinitionItemVM item, object parameter, out string deleteProgressTitle)
+        {
+            deleteProgressTitle = $"Deleting Personal Tag Definition \"{item.Name}\"";
             throw new NotImplementedException();
         }
 

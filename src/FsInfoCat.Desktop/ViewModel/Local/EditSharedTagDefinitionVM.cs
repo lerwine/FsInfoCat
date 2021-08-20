@@ -1,6 +1,7 @@
 using FsInfoCat.Local;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel.Local
@@ -83,15 +84,32 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 
         #endregion
 
-        protected override DbSet<SharedTagDefinition> GetDbSet(LocalDbContext dbContext) => dbContext.SharedTagDefinitions;
+        protected override DbSet<SharedTagDefinition> GetDbSet([DisallowNull] LocalDbContext dbContext) => dbContext.SharedTagDefinitions;
 
-        protected override SharedTagDefinition InitializeNewModel() => new() { CreatedOn = DateTime.Now };
-
-        protected override void UpdateModelForSave(SharedTagDefinition model, bool isNew)
+        protected override void OnModelPropertyChanged(SharedTagDefinition oldValue, SharedTagDefinition newValue)
         {
+            if (newValue is null)
+            {
+                Name = Description = "";
+                IsInactive = false;
+            }
+            else
+            {
+                Name = newValue.Name;
+                Description = newValue.Description;
+                IsInactive = newValue.IsInactive;
+            }
+        }
+
+        protected override bool OnBeforeSave()
+        {
+            SharedTagDefinition model = Model;
+            if (model is null)
+                return false;
             model.Name = Name;
             model.Description = Description;
             model.IsInactive = IsInactive;
+            return true;
         }
     }
 }

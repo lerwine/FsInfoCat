@@ -1,3 +1,4 @@
+using FsInfoCat.Desktop.ViewModel.AsyncOps;
 using FsInfoCat.Local;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
@@ -9,6 +10,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
@@ -17,28 +19,12 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 {
     public class EditCrawlConfigVM : EditDbEntityVM<CrawlConfiguration>
     {
-        private (Subdirectory Root, string Path)? _validatedPath;
-
         #region Initialization Members
 
         public EditCrawlConfigVM()
         {
             SetValue(SelectRootCommandPropertyKey, new Commands.RelayCommand(OnSelectRootExecute));
         }
-
-        ///// <summary>
-        ///// This get invoked by a <see cref="Microsoft.Xaml.Behaviors.Core.CallMethodAction">CallMethodAction</see> from the <see cref="View.Local.EditCrawlConfigWindow">EditCrawlConfigWindow</see>
-        ///// using an <see cref="Microsoft.Xaml.Behaviors.EventTrigger">EventTrigger</see> bound to the <see cref="Window.Closing"/> event.
-        ///// </summary>
-        //public void OnWindowClosing()
-        //{
-        //    try { LookupCrawlConfigOpMgr.CancelAll(); }
-        //    finally
-        //    {
-        //        try { LookupCrawlConfigOpMgr.CancelAll(); }
-        //        finally { SaveChangesOpMgr.CancelAll(); }
-        //    }
-        //}
 
         /// <summary>
         /// Instantiates a new <see cref="View.EditCrawlConfigWindow"/> to edit the properties of an existing <see cref="CrawlConfiguration"/>.
@@ -115,30 +101,6 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             return false;
         }
 
-        private void Initialize(CrawlConfiguration crawlConfiguration, Subdirectory subdirectory, string fullPathName)
-        {
-            _validatedPath = (subdirectory, fullPathName);
-            if (crawlConfiguration is not null)
-                Initialize(crawlConfiguration);
-            else
-            {
-                Root = subdirectory;
-                MaxTotalItems = int.MaxValue;
-                TimeSpan timeSpan = TimeSpan.FromDays(1.0);
-                TtlDays = timeSpan.Days;
-                TtlHours = timeSpan.Hours;
-                TtlMinutes = timeSpan.Minutes;
-                timeSpan = TimeSpan.FromDays(1.0);
-                RescheduleDays = timeSpan.Days;
-                RescheduleHours = timeSpan.Hours;
-                RescheduleMinutes = timeSpan.Minutes;
-                DateTime dateTime = DateTime.Now.AddHours(8.0);
-                NextScheduledStartDate = dateTime.Date;
-                NextScheduledStartHour = dateTime.Hour;
-                NextScheduledStartMinute = dateTime.Minute;
-            }
-        }
-
         internal void Initialize([DisallowNull] CrawlConfiguration crawlConfiguration)
         {
             Root = crawlConfiguration.Root;
@@ -183,9 +145,6 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         }
 
         #endregion
-
-        #region Command Members
-
         #region SelectRootCommand Property Members
 
         private static readonly DependencyPropertyKey SelectRootCommandPropertyKey = DependencyProperty.RegisterReadOnly(nameof(SelectRootCommand),
@@ -199,13 +158,41 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         /// <value>The bindable <see cref="Commands.RelayCommand">RelayCommand</see> for selecting a new root path for the crawl configuration..</value>
         public Commands.RelayCommand SelectRootCommand => (Commands.RelayCommand)GetValue(SelectRootCommandProperty);
 
+        private static Task<DirectoryInfo> GetDirectoryAsync(string path, AsyncOps.IStatusListener listener) => string.IsNullOrEmpty(path) ? Task.FromResult<DirectoryInfo>(null) :
+            Task.Run(() =>
+            {
+                listener.CancellationToken.ThrowIfCancellationRequested();
+                if (System.IO.Path.IsPathFullyQualified(path))
+                {
+                    DirectoryInfo directoryInfo = new(path);
+                    if (directoryInfo.Exists)
+                        return directoryInfo;
+                }
+                return null;
+            });
+
         private void OnSelectRootExecute(object parameter)
         {
-            string newPath;
+            OpAggregate.FromAsync("Initializing", "Getting start directory", Path, GetDirectoryAsync).ContinueWith(task => Dispatcher.Invoke(() =>
+                ShowFolderBrowserDialog((task.IsCompletedSuccessfully && task.Result is not null) ? task.Result.FullName : Environment.GetFolderPath(Environment.SpecialFolder.UserProfile))));
+        }
+
+        private async Task<Subdirectory> CheckPathAsync(string path, AsyncOps.IStatusListener listener)
+        {
+            using IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+            Subdirectory subdirectory = await Subdirectory.FindByFullNameAsync(path, listener.CancellationToken, dbContext);
+            if (subdirectory is not null && subdirectory.CrawlConfiguration is null)
+                subdirectory.CrawlConfiguration = await dbContext.Entry(subdirectory).GetRelatedReferenceAsync(d => d.CrawlConfiguration, listener.CancellationToken);
+            return subdirectory;
+        }
+
+        private void ShowFolderBrowserDialog(string newPath)
+        {
             using (System.Windows.Forms.FolderBrowserDialog dialog = new()
             {
                 Description = FsInfoCat.Properties.Resources.Description_SelectCrawlRootFolder,
-                SelectedPath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)
+                SelectedPath = newPath
             })
             {
                 if (dialog.ShowDialog(new WindowOwner()) != System.Windows.Forms.DialogResult.OK)
@@ -215,42 +202,25 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 
             IEnumerable<string> errors = Validation.GetErrors(nameof(Path));
             Validation.ClearErrorMessages(nameof(Path));
-            if (_validatedPath.HasValue && ReferenceEquals(_validatedPath.Value.Path, newPath))
-                Path = _validatedPath.Value.Path;
-            //else
-            //{
-            //    AsyncOps.AsyncFuncOpViewModel<string, ConfigurationRootAndPath> lookupCrawlConfig = OpAggregate.FromAsync("Loading Crawl Configuration", "Connecting to database", newPath, LookupCrawlConfigOpMgr, LookupCrawlConfigAsync);
-            //    lookupCrawlConfig.GetTask().ContinueWith(task =>
-            //    {
-            //        Dispatcher.Invoke(() =>
-            //        {
-            //            if (task.IsCompletedSuccessfully)
-            //            {
-            //                if (task.Result.Configuration is null)
-            //                {
-            //                    _validatedPath = (task.Result.Root, task.Result.Path);
-            //                    Path = task.Result.Path;
-            //                    Root = task.Result.Root;
-            //                }
-            //                else if (Path != task.Result.Path)
-            //                {
-            //                    MessageBox.Show(Application.Current.MainWindow, "That path already has its own craw configuration.", "Path Already Configured",
-            //                        MessageBoxButton.OK, MessageBoxImage.Hand);
-            //                    // TODO: Log error.
-            //                    //BgOpStatusMessage = "That path already has its own craw configuration.";
-            //                    //BgOpMessageLevel = StatusMessageLevel.Error;
-            //                    //BgOpStatus = AsyncOpStatusCode.Faulted;
-            //                }
-            //            }
-            //        });
-            //    });
-            //}
+            OpAggregate.FromAsync("Checking Availability", "Checking whether selected subdirectory is already configured", newPath, CheckPathAsync).ContinueWith(task =>
+            {
+                if (task.Result?.CrawlConfiguration is null)
+                    Dispatcher.Invoke(() =>
+                    {
+                        Path = newPath;
+                        Root = task.Result;
+                    });
+                else
+                    Dispatcher.Invoke(() =>
+                    {
+                        MessageBox.Show("Not Available", "That subdirectory already has a crawl configuration.", MessageBoxButton.OK, MessageBoxImage.Error);
+                        if (errors?.Any() ?? false)
+                            Validation.SetErrorMessage(nameof(Path), errors.First(), errors.Skip(1).ToArray());
+                    });
+            }, TaskContinuationOptions.OnlyOnRanToCompletion);
         }
 
         #endregion
-
-        #endregion
-
         #region TTL Members
 
         private void OnTtlChanged(int days, int hours, int minutes)
@@ -318,7 +288,6 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         }
 
         #endregion
-
         #region TtlDays Property Members
 
         public static readonly DependencyProperty TtlDaysProperty = DependencyProperty.Register(nameof(TtlDays), typeof(int?), typeof(EditCrawlConfigVM),
@@ -357,7 +326,6 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         }
 
         #endregion
-
         #region TtlHours Property Members
 
         public static readonly DependencyProperty TtlHoursProperty = DependencyProperty.Register(nameof(TtlHours), typeof(int?), typeof(EditCrawlConfigVM),
@@ -395,7 +363,6 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         }
 
         #endregion
-
         #region TtlMinutes Property Members
 
         public static readonly DependencyProperty TtlMinutesProperty = DependencyProperty.Register(nameof(TtlMinutes), typeof(int?), typeof(EditCrawlConfigVM),
@@ -435,7 +402,6 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         #endregion
 
         #endregion
-
         #region Scheduling Members
 
         #region AutoReschedule Property Members
@@ -488,7 +454,6 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         }
 
         #endregion
-
         #region OneTimeSchedule Property Members
 
         public static readonly DependencyProperty OneTimeScheduleProperty = DependencyProperty.Register(nameof(OneTimeSchedule), typeof(bool), typeof(EditCrawlConfigVM),
@@ -514,7 +479,6 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         }
 
         #endregion
-
         #region NoReschedule Property Members
 
         public static readonly DependencyProperty NoRescheduleProperty = DependencyProperty.Register(nameof(NoReschedule), typeof(bool), typeof(EditCrawlConfigVM),
@@ -540,7 +504,6 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         }
 
         #endregion
-
         #region RescheduleInterval Members
 
         private void OnRescheduleIntervalChanged(int days, int hours, int minutes)
@@ -608,7 +571,6 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         }
 
         #endregion
-
         #region RescheduleHours Property Members
 
         public static readonly DependencyProperty RescheduleHoursProperty = DependencyProperty.Register(nameof(RescheduleHours), typeof(int?), typeof(EditCrawlConfigVM),
@@ -645,7 +607,6 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         }
 
         #endregion
-
         #region RescheduleMinutes Property Members
 
         public static readonly DependencyProperty RescheduleMinutesProperty = DependencyProperty.Register(nameof(RescheduleMinutes), typeof(int?), typeof(EditCrawlConfigVM),
@@ -682,7 +643,6 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         }
 
         #endregion
-
         #region RescheduleAfterFail Property Members
 
         public static readonly DependencyProperty RescheduleAfterFailProperty = DependencyProperty.Register(nameof(RescheduleAfterFail), typeof(bool), typeof(EditCrawlConfigVM),
@@ -708,7 +668,6 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         }
 
         #endregion
-
         #region RescheduleFromJobEnd Property Members
 
         public static readonly DependencyProperty RescheduleFromJobEndProperty = DependencyProperty.Register(nameof(RescheduleFromJobEnd), typeof(bool), typeof(EditCrawlConfigVM),
@@ -736,7 +695,6 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         #endregion
 
         #endregion
-
         #region NextScheduledStart Members
 
         #region NextScheduledStartDate Property Members
@@ -763,7 +721,6 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         }
 
         #endregion
-
         #region NextScheduledStartHour Property Members
 
         public static readonly DependencyProperty NextScheduledStartHourProperty = DependencyProperty.Register(nameof(NextScheduledStartHour), typeof(int?), typeof(EditCrawlConfigVM),
@@ -801,7 +758,6 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         }
 
         #endregion
-
         #region NextScheduledStartMinute Property Members
 
         public static readonly DependencyProperty NextScheduledStartMinuteProperty = DependencyProperty.Register(nameof(NextScheduledStartMinute), typeof(int?), typeof(EditCrawlConfigVM),
@@ -834,7 +790,6 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         }
 
         #endregion
-
         #region NextScheduledStartIsPm Property Members
 
         public static readonly DependencyProperty NextScheduledStartIsPmProperty = DependencyProperty.Register(nameof(NextScheduledStartIsPm), typeof(bool), typeof(EditCrawlConfigVM),
@@ -858,9 +813,6 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         #endregion
 
         #endregion
-
-        #region Other Property Members
-
         #region DisplayName Property Members
 
         public static readonly DependencyProperty DisplayNameProperty = DependencyProperty.Register(nameof(DisplayName), typeof(string), typeof(EditCrawlConfigVM),
@@ -892,7 +844,6 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         }
 
         #endregion
-
         #region MaxTotalItems Members
 
         #region LimitTotalItems Property Members
@@ -920,7 +871,6 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         }
 
         #endregion
-
         #region MaxTotalItems Property Members
 
         public static readonly DependencyProperty MaxTotalItemsProperty = DependencyProperty.Register(nameof(MaxTotalItems), typeof(ulong), typeof(EditCrawlConfigVM),
@@ -965,7 +915,6 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         #endregion
 
         #endregion
-
         #region Root Directory Members
 
         #region Root Property Members
@@ -992,7 +941,6 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         }
 
         #endregion
-
         #region Path Property Members
 
         private static readonly DependencyPropertyKey PathPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Path), typeof(string), typeof(EditCrawlConfigVM), new PropertyMetadata(""));
@@ -1008,7 +956,6 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         #endregion
 
         #endregion
-
         #region MaxRecursionDepth Property Members
 
         public static readonly DependencyProperty MaxRecursionDepthProperty = DependencyProperty.Register(nameof(MaxRecursionDepth), typeof(ushort), typeof(EditCrawlConfigVM),
@@ -1034,7 +981,6 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         }
 
         #endregion
-
         #region Status Members
 
         #region StatusValue Property Members
@@ -1065,7 +1011,6 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         }
 
         #endregion
-
         #region EnabledStatus Property Members
 
         private static readonly DependencyPropertyKey EnabledStatusPropertyKey = DependencyProperty.RegisterReadOnly(nameof(EnabledStatus), typeof(CrawlStatus), typeof(EditCrawlConfigVM),
@@ -1080,7 +1025,6 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         }
 
         #endregion
-
         #region IsEnabled Property Members
 
         public static readonly DependencyProperty IsEnabledProperty = DependencyProperty.Register(nameof(IsEnabled), typeof(bool), typeof(EditCrawlConfigVM),
@@ -1098,7 +1042,6 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         #endregion
 
         #endregion
-
         #region LastCrawlStart Property Members
 
         private static readonly DependencyPropertyKey LastCrawlStartPropertyKey = DependencyProperty.RegisterReadOnly(nameof(LastCrawlStart), typeof(DateTime?), typeof(EditCrawlConfigVM),
@@ -1113,7 +1056,6 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         }
 
         #endregion
-
         #region LastCrawlEnd Property Members
 
         private static readonly DependencyPropertyKey LastCrawlEndPropertyKey = DependencyProperty.RegisterReadOnly(nameof(LastCrawlEnd), typeof(DateTime?), typeof(EditCrawlConfigVM),
@@ -1128,7 +1070,6 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         }
 
         #endregion
-
         #region Notes Property Members
 
         public static readonly DependencyProperty NotesProperty = DependencyProperty.Register(nameof(Notes), typeof(string), typeof(EditCrawlConfigVM),
@@ -1155,15 +1096,138 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 
         #endregion
 
-        #endregion
+        protected override DbSet<CrawlConfiguration> GetDbSet([DisallowNull] LocalDbContext dbContext) => dbContext.CrawlConfigurations;
 
-        protected override CrawlConfiguration InitializeNewModel() => new() { Id = Guid.NewGuid() };
-
-        protected override DbSet<CrawlConfiguration> GetDbSet(LocalDbContext dbContext) => dbContext.CrawlConfigurations;
-
-        protected override void UpdateModelForSave(CrawlConfiguration model, bool isNew)
+        protected override void OnModelPropertyChanged(CrawlConfiguration oldValue, CrawlConfiguration newValue)
         {
-            throw new NotImplementedException();
+            if (newValue is null)
+            {
+                DisplayName = Notes = "";
+                LimitTotalItems = LimitTTL = NextScheduledStartIsPm = RescheduleAfterFail = RescheduleFromJobEnd = false;
+                MaxTotalItems = 0UL;
+                MaxRecursionDepth = DbConstants.DbColDefaultValue_MaxRecursionDepth;
+                StatusValue = CrawlStatus.NotRunning;
+                LastCrawlStart = LastCrawlEnd = NextScheduledStartDate = null;
+                TtlDays = TtlHours = TtlMinutes = RescheduleDays = RescheduleHours = RescheduleMinutes = null;
+                NoReschedule = true;
+                NextScheduledStartHour = NextScheduledStartMinute = null;
+                return;
+            }
+
+            DisplayName = newValue.DisplayName;
+            LimitTotalItems = newValue.MaxTotalItems.HasValue;
+            MaxTotalItems = newValue.MaxTotalItems ?? 0UL;
+            MaxRecursionDepth = newValue.MaxRecursionDepth;
+            StatusValue = newValue.StatusValue;
+            LastCrawlStart = newValue.LastCrawlStart;
+            LastCrawlEnd = newValue.LastCrawlEnd;
+            Notes = newValue.Notes;
+            RescheduleAfterFail = newValue.RescheduleAfterFail;
+            RescheduleFromJobEnd = newValue.RescheduleFromJobEnd;
+            TimeSpan? timeSpan = newValue.GetTTLAsTimeSpan();
+            if (timeSpan.HasValue)
+            {
+                LimitTTL = true;
+                TtlDays = timeSpan.Value.Days;
+                TtlHours = timeSpan.Value.Hours;
+                TtlMinutes = timeSpan.Value.Minutes;
+            }
+            else
+            {
+                LimitTTL = false;
+                TtlDays = TtlHours = TtlMinutes = null;
+            }
+            DateTime? dateTime = newValue.NextScheduledStart;
+            NextScheduledStartDate = dateTime?.Date;
+            timeSpan = newValue.GetRescheduleIntervalAsTimeSpan();
+            if (timeSpan.HasValue)
+            {
+                AutoReschedule = true;
+                RescheduleDays = timeSpan.Value.Days;
+                RescheduleHours = timeSpan.Value.Hours;
+                RescheduleMinutes = timeSpan.Value.Minutes;
+            }
+            else
+            {
+                RescheduleDays = RescheduleHours = RescheduleMinutes = null;
+                if (dateTime.HasValue)
+                    OneTimeSchedule = true;
+                else
+                    NoReschedule = true;
+            }
+            if (dateTime.HasValue)
+            {
+                NextScheduledStartMinute = dateTime.Value.Minute;
+                switch (dateTime.Value.Hour)
+                {
+                    case 0:
+                        NextScheduledStartHour = 12;
+                        NextScheduledStartIsPm = false;
+                        break;
+                    case 12:
+                        NextScheduledStartHour = 12;
+                        NextScheduledStartIsPm = true;
+                        break;
+                    default:
+                        if (dateTime.Value.Hour < 12)
+                        {
+                            NextScheduledStartHour = dateTime.Value.Hour;
+                            NextScheduledStartIsPm = false;
+                        }
+                        else
+                        {
+                            NextScheduledStartHour = dateTime.Value.Hour - 12;
+                            NextScheduledStartIsPm = true;
+                        }
+                        break;
+                }
+            }
+            else
+            {
+                NextScheduledStartHour = NextScheduledStartMinute = null;
+                NextScheduledStartIsPm = false;
+            }
+        }
+
+        protected override bool OnBeforeSave()
+        {
+            CrawlConfiguration model = Model;
+            model.Root = Root;
+            model.DisplayName = DisplayName.AsWsNormalizedOrEmpty();
+            if (LimitTotalItems)
+                model.MaxTotalItems = MaxTotalItems;
+            else
+                model.MaxTotalItems = null;
+            model.MaxRecursionDepth = MaxRecursionDepth;
+            model.StatusValue = StatusValue;
+            model.Notes = Notes.EmptyIfNullOrWhiteSpace();
+            model.RescheduleAfterFail = RescheduleAfterFail;
+            model.RescheduleFromJobEnd = RescheduleFromJobEnd;
+            if (LimitTTL)
+                model.TTL = Convert.ToInt64(new TimeSpan(TtlDays ?? 0, TtlHours ?? 0, TtlMinutes ?? 0, 0).TotalSeconds);
+            else
+                model.TTL = null;
+            DateTime? dateTime = model.NextScheduledStart;
+            model.NextScheduledStart = dateTime;
+            if (dateTime.HasValue && AutoReschedule)
+                model.RescheduleInterval = Convert.ToInt64(new TimeSpan(RescheduleDays ?? 0, RescheduleHours ?? 0, RescheduleMinutes ?? 0, 0).TotalSeconds);
+            else
+                model.RescheduleInterval = null;
+            return true;
+        }
+
+        protected override async Task<bool> OnSaveChangesAsync([DisallowNull] EntityEntry<CrawlConfiguration> entry, [DisallowNull] LocalDbContext dbContext, [DisallowNull] IStatusListener statusListener, bool force = false)
+        {
+            if (entry.Entity.Root is null)
+            {
+                entry.Entity.Root = (await Subdirectory.ImportBranchAsync(new DirectoryInfo(Dispatcher.Invoke(() => Path)), dbContext, statusListener.CancellationToken, true))?.Entity;
+                if (entry.Entity.Root is null)
+                {
+                    Dispatcher.Invoke(() => MessageBox.Show("Import Failure", "Unable to import teh subdirectory specified.", MessageBoxButton.OK, MessageBoxImage.Error));
+                    return false;
+                }
+            }
+            return await base.OnSaveChangesAsync(entry, dbContext, statusListener, force);
         }
 
         public record ConfigurationAndRoot(CrawlConfiguration Configuration, Subdirectory Root);

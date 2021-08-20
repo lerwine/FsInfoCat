@@ -159,30 +159,26 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             return await OnEntitiesLoaded(items, statusListener, r => new FileSystemItemVM(r));
         }
 
-        protected override FileSystem InitializeNewEntity()
+        protected override DbSet<FileSystem> GetDbSet(LocalDbContext dbContext) => dbContext.FileSystems;
+
+        protected override void OnAddNewItem(object parameter)
         {
-            FileSystem entity = base.InitializeNewEntity();
+            FileSystem entity = new();
             bool? isInactive = ViewOptions.Value;
             if (isInactive.HasValue)
                 entity.IsInactive = isInactive.Value;
-            return entity;
-        }
-
-        protected override DbSet<FileSystem> GetDbSet(LocalDbContext dbContext) => dbContext.FileSystems;
-
-        protected override string GetDeleteProgressTitle(FileSystemItemVM item) => $"Deleting File System Definition \"{item.DisplayName}\"";
-
-        protected override string GetSaveExistingProgressTitle(FileSystemItemVM item) => $"Saving File System Definition \"{item.DisplayName}\"";
-
-        protected override string GetSaveNewProgressTitle(FileSystemItemVM item) => $"Adding new File System Definition \"{item.DisplayName}\"";
-
-        protected override bool PromptItemDeleting(FileSystemItemVM item, object parameter)
-        {
             throw new NotImplementedException();
         }
 
-        protected override bool ShowModalItemEditWindow(FileSystemItemVM item, object parameter)
+        protected override bool ShowModalItemEditWindow(FileSystemItemVM item, object parameter, out string saveProgressTitle)
         {
+            saveProgressTitle = $"Saving File System Definition \"{item.DisplayName}\"";
+            throw new NotImplementedException();
+        }
+
+        protected override bool PromptItemDeleting(FileSystemItemVM item, object parameter, out string deleteProgressTitle)
+        {
+            deleteProgressTitle = $"Deleting File System Definition \"{item.DisplayName}\"";
             throw new NotImplementedException();
         }
 

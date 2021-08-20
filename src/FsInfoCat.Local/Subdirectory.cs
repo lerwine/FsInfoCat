@@ -231,6 +231,204 @@ namespace FsInfoCat.Local
             _crawlConfiguration = AddChangeTracker<CrawlConfiguration>(nameof(CrawlConfiguration), null);
         }
 
+        public static Task<Subdirectory> FindByFullNameAsync(string path, CancellationToken cancellationToken, Action<LocalDbContext, Subdirectory, CancellationToken> onMatchSuccess = null)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            if (string.IsNullOrEmpty(path))
+                return Task.FromResult<Subdirectory>(null);
+            return FindByFullNameAsync(null, path, cancellationToken, onMatchSuccess);
+        }
+
+        public static Task<Subdirectory> FindByFullNameAsync(string path, CancellationToken cancellationToken, [DisallowNull] LocalDbContext dbContext)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            if (dbContext is null)
+                throw new ArgumentNullException(nameof(dbContext));
+            if (string.IsNullOrEmpty(path))
+                return Task.FromResult<Subdirectory>(null);
+            return FindByFullNameAsync(dbContext, path, cancellationToken);
+        }
+
+        private static async Task<Subdirectory> FindByFullNameAsync(LocalDbContext dbContext, string path, CancellationToken cancellationToken,
+            Action<LocalDbContext, Subdirectory, CancellationToken> onMatchSuccess = null)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            if (!Path.IsPathFullyQualified(path))
+                return null;
+            using IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
+            IFileSystemDetailService fileSystemDetailService = serviceScope.ServiceProvider.GetRequiredService<IFileSystemDetailService>();
+            Subdirectory result;
+            if (dbContext is null)
+            {
+                using LocalDbContext context = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+                result = await FindByFullNameAsync(context, fileSystemDetailService, path, cancellationToken);
+                if (result is not null)
+                    onMatchSuccess?.Invoke(context, result, cancellationToken);
+            }
+            else if ((result = await FindByFullNameAsync(dbContext, fileSystemDetailService, path, cancellationToken)) is not null)
+                onMatchSuccess?.Invoke(dbContext, result, cancellationToken);
+            return result;
+        }
+
+        private static async Task<Subdirectory> FindByFullNameAsync(LocalDbContext dbContext, IFileSystemDetailService fileSystemDetailService, string path, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            string leaf = Path.GetFileName(path);
+            string directoryName = Path.GetDirectoryName(path);
+            while (string.IsNullOrEmpty(leaf))
+            {
+                if (string.IsNullOrEmpty(directoryName))
+                    break;
+                path = directoryName;
+                leaf = Path.GetFileName(path);
+                directoryName = Path.GetDirectoryName(path);
+            }
+            Subdirectory subdirectory;
+            if (string.IsNullOrEmpty(directoryName) || string.IsNullOrEmpty(leaf))
+            {
+                if (fileSystemDetailService is not null)
+                {
+                    ILogicalDiskInfo logicalDisk = (await fileSystemDetailService.GetLogicalDisksAsync(cancellationToken))
+                        .FirstOrDefault(d => string.Equals(d.Name, path, StringComparison.InvariantCultureIgnoreCase));
+                    if (logicalDisk is not null && logicalDisk.DriveType == DriveType.Network && !string.IsNullOrEmpty(logicalDisk.ProviderName))
+                        return await FindByFullNameAsync(dbContext, null, logicalDisk.ProviderName, cancellationToken);
+                }
+                return await (from d in dbContext.Subdirectories where d.VolumeId != null && d.Name == path select d).FirstOrDefaultAsync(cancellationToken);
+            }
+            subdirectory = await FindByFullNameAsync(dbContext, fileSystemDetailService, directoryName, cancellationToken);
+            if (subdirectory is null)
+                return null;
+            Guid id = subdirectory.Id;
+            return await (from d in dbContext.Subdirectories where d.ParentId == id && d.Name == leaf select d).FirstOrDefaultAsync(cancellationToken);
+        }
+
+        public static async Task<EntityEntry<Subdirectory>> ImportBranchAsync([DisallowNull] DirectoryInfo directoryInfo, [DisallowNull] LocalDbContext dbContext, CancellationToken cancellationToken, bool markNewAsCompleted = false)
+        {
+            if (directoryInfo is null)
+                throw new ArgumentNullException(nameof(directoryInfo));
+            if (dbContext is null)
+                throw new ArgumentNullException(nameof(dbContext));
+
+            Subdirectory result;
+            if (directoryInfo.Parent is null)
+            {
+                EntityEntry<Volume> parentVolume = await Volume.ImportVolumeAsync(directoryInfo, dbContext, cancellationToken);
+                result = await parentVolume.GetRelatedReferenceAsync(v => v.RootDirectory, cancellationToken);
+                if (parentVolume.State == EntityState.Added)
+                {
+                    result = new Subdirectory
+                    {
+                        Id = Guid.NewGuid(),
+                        Name = directoryInfo.Name,
+                        CreatedOn = parentVolume.Entity.CreatedOn,
+                        LastWriteTime = directoryInfo.LastWriteTime,
+                        CreationTime = directoryInfo.CreationTime,
+                        Volume = parentVolume.Entity,
+                        Status = markNewAsCompleted ? DirectoryStatus.Complete : DirectoryStatus.Incomplete
+                    };
+                    await dbContext.SaveChangesAsync(cancellationToken);
+                }
+                else
+                {
+                    if (result is not null)
+                        return dbContext.Entry(result);
+                    result = new Subdirectory
+                    {
+                        Id = Guid.NewGuid(),
+                        Name = directoryInfo.Name,
+                        CreatedOn = DateTime.Now,
+                        LastWriteTime = directoryInfo.LastWriteTime,
+                        CreationTime = directoryInfo.CreationTime,
+                        Volume = parentVolume.Entity,
+                        Status = markNewAsCompleted ? DirectoryStatus.Complete : DirectoryStatus.Incomplete
+                    };
+                }
+            }
+            else
+            {
+                EntityEntry<Subdirectory> parent = await ImportBranchAsync(directoryInfo.Parent, dbContext, cancellationToken, true);
+                if (parent.State == EntityState.Added)
+                {
+                    result = new Subdirectory
+                    {
+                        Id = Guid.NewGuid(),
+                        Parent = parent.Entity,
+                        Name = directoryInfo.Name,
+                        CreatedOn = parent.Entity.CreatedOn,
+                        LastWriteTime = directoryInfo.LastWriteTime,
+                        CreationTime = directoryInfo.CreationTime,
+                        Status = markNewAsCompleted ? DirectoryStatus.Complete : DirectoryStatus.Incomplete
+                    };
+                    await dbContext.SaveChangesAsync(cancellationToken);
+                }
+                else
+                {
+                    string name = directoryInfo.Name;
+                    Guid parentId = parent.Entity.Id;
+                    DbFile[] files = await (from f in dbContext.Files where f.ParentId == parentId && f.Name == name && f.Status != FileCorrelationStatus.Deleted select f).ToArrayAsync(cancellationToken);
+                    if (files.Length > 0)
+                    {
+                        string[] names = directoryInfo.GetFiles().Select(f => f.Name).ToArray();
+                        if (names.Length == 0 || (files = files.Where(f => !names.Contains(f.Name)).ToArray()).Length > 0)
+                        {
+                            foreach (DbFile f in files)
+                                f.Status = FileCorrelationStatus.Deleted;
+                            await dbContext.SaveChangesAsync(cancellationToken);
+                        }
+                    }
+                    Subdirectory[] subdirectories = await (from d in dbContext.Subdirectories where d.ParentId == parentId && d.Name == name select d).ToArrayAsync(cancellationToken);
+                    if (subdirectories.Length == 1)
+                    {
+                        result = subdirectories[0];
+                        if (result.Name == name && result.CreationTime == directoryInfo.CreationTime && result.LastWriteTime == directoryInfo.LastWriteTime)
+                            return dbContext.Entry(result);
+                        result.ModifiedOn = result.LastAccessed = DateTime.Now;
+                    }
+                    else if (subdirectories.Length > 1)
+                    {
+                        string[] names = directoryInfo.GetFiles().Select(f => f.Name).ToArray();
+                        if ((result = subdirectories.FirstOrDefault(d => d.Name == name)) is not null)
+                        {
+                            if ((subdirectories = subdirectories.Where(d => d.Status != DirectoryStatus.Deleted && !(ReferenceEquals(d, result) || names.Contains(d.Name))).ToArray()).Length > 0)
+                            {
+                                foreach (Subdirectory d in subdirectories)
+                                    await d.MarkBranchDeletedAsync(dbContext, cancellationToken);
+                                await dbContext.SaveChangesAsync(cancellationToken);
+                            }
+                            if (result.Status == DirectoryStatus.Deleted)
+                                result.Status = markNewAsCompleted ? DirectoryStatus.Complete : DirectoryStatus.Incomplete;
+                            else if (result.CreationTime == directoryInfo.CreationTime && result.LastWriteTime == directoryInfo.LastWriteTime)
+                                return dbContext.Entry(result);
+                            result.ModifiedOn = result.LastAccessed = DateTime.Now;
+                        }
+                    }
+                    else
+                        result = null;
+                    if (result is null)
+                        result = new()
+                        {
+                            Id = Guid.NewGuid(),
+                            Parent = parent.Entity,
+                            Name = name,
+                            CreationTime = directoryInfo.CreationTime,
+                            LastWriteTime = directoryInfo.LastWriteTime,
+                            CreatedOn = DateTime.Now,
+                            Status = markNewAsCompleted ? DirectoryStatus.Complete : DirectoryStatus.Incomplete
+                        };
+                    else
+                    {
+                        result.Name = name;
+                        result.CreationTime = directoryInfo.CreationTime;
+                        result.LastWriteTime = directoryInfo.LastWriteTime;
+                        result.ModifiedOn = result.LastAccessed = DateTime.Now;
+                        return dbContext.Update(result);
+                    }
+                }
+            }
+            result.ModifiedOn = result.LastAccessed = result.CreatedOn;
+            return dbContext.Subdirectories.Add(result);
+        }
+
         public static async Task MarkBranchIncompleteAsync(EntityEntry<Subdirectory> dbEntry, CancellationToken cancellationToken)
         {
             if (dbEntry.Context is not LocalDbContext dbContext)
@@ -534,133 +732,6 @@ namespace FsInfoCat.Local
         {
             if (!Enum.IsDefined(Options))
                 results.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_InvalidDirectoryCrawlOption, new string[] { nameof(Options) }));
-        }
-
-        public static async Task<EntityEntry<Subdirectory>> ImportBranchAsync([DisallowNull] DirectoryInfo directoryInfo, [DisallowNull] LocalDbContext dbContext, CancellationToken cancellationToken, bool markNewAsCompleted = false)
-        {
-            if (directoryInfo is null)
-                throw new ArgumentNullException(nameof(directoryInfo));
-            if (dbContext is null)
-                throw new ArgumentNullException(nameof(dbContext));
-
-            Subdirectory result;
-            if (directoryInfo.Parent is null)
-            {
-                EntityEntry<Volume> parentVolume = await Volume.ImportVolumeAsync(directoryInfo, dbContext, cancellationToken);
-                result = await parentVolume.GetRelatedReferenceAsync(v => v.RootDirectory, cancellationToken);
-                if (parentVolume.State == EntityState.Added)
-                {
-                    result = new Subdirectory
-                    {
-                        Id = Guid.NewGuid(),
-                        Name = directoryInfo.Name,
-                        CreatedOn = parentVolume.Entity.CreatedOn,
-                        LastWriteTime = directoryInfo.LastWriteTime,
-                        CreationTime = directoryInfo.CreationTime,
-                        Volume = parentVolume.Entity,
-                        Status = markNewAsCompleted ? DirectoryStatus.Complete : DirectoryStatus.Incomplete
-                    };
-                    await dbContext.SaveChangesAsync(cancellationToken);
-                }
-                else
-                {
-                    if (result is not null)
-                        return dbContext.Entry(result);
-                    result = new Subdirectory
-                    {
-                        Id = Guid.NewGuid(),
-                        Name = directoryInfo.Name,
-                        CreatedOn = DateTime.Now,
-                        LastWriteTime = directoryInfo.LastWriteTime,
-                        CreationTime = directoryInfo.CreationTime,
-                        Volume = parentVolume.Entity,
-                        Status = markNewAsCompleted ? DirectoryStatus.Complete : DirectoryStatus.Incomplete
-                    };
-                }
-            }
-            else
-            {
-                EntityEntry<Subdirectory> parent = await ImportBranchAsync(directoryInfo.Parent, dbContext, cancellationToken, true);
-                if (parent.State == EntityState.Added)
-                {
-                    result = new Subdirectory
-                    {
-                        Id = Guid.NewGuid(),
-                        Parent = parent.Entity,
-                        Name = directoryInfo.Name,
-                        CreatedOn = parent.Entity.CreatedOn,
-                        LastWriteTime = directoryInfo.LastWriteTime,
-                        CreationTime = directoryInfo.CreationTime,
-                        Status = markNewAsCompleted ? DirectoryStatus.Complete : DirectoryStatus.Incomplete
-                    };
-                    await dbContext.SaveChangesAsync(cancellationToken);
-                }
-                else
-                {
-                    string name = directoryInfo.Name;
-                    Guid parentId = parent.Entity.Id;
-                    DbFile[] files = await (from f in dbContext.Files where f.ParentId == parentId && f.Name == name && f.Status != FileCorrelationStatus.Deleted select f).ToArrayAsync(cancellationToken);
-                    if (files.Length > 0)
-                    {
-                        string[] names = directoryInfo.GetFiles().Select(f => f.Name).ToArray();
-                        if (names.Length == 0 || (files = files.Where(f => !names.Contains(f.Name)).ToArray()).Length > 0)
-                        {
-                            foreach (DbFile f in files)
-                                f.Status = FileCorrelationStatus.Deleted;
-                            await dbContext.SaveChangesAsync(cancellationToken);
-                        }
-                    }
-                    Subdirectory[] subdirectories = await (from d in dbContext.Subdirectories where d.ParentId == parentId && d.Name == name select d).ToArrayAsync(cancellationToken);
-                    if (subdirectories.Length == 1)
-                    {
-                        result = subdirectories[0];
-                        if (result.Name == name && result.CreationTime == directoryInfo.CreationTime && result.LastWriteTime == directoryInfo.LastWriteTime)
-                            return dbContext.Entry(result);
-                        result.ModifiedOn = result.LastAccessed = DateTime.Now;
-                    }
-                    else if (subdirectories.Length > 1)
-                    {
-                        string[] names = directoryInfo.GetFiles().Select(f => f.Name).ToArray();
-                        if ((result = subdirectories.FirstOrDefault(d => d.Name == name)) is not null)
-                        {
-                            if ((subdirectories = subdirectories.Where(d => d.Status != DirectoryStatus.Deleted && !(ReferenceEquals(d, result) || names.Contains(d.Name))).ToArray()).Length > 0)
-                            {
-                                foreach (Subdirectory d in subdirectories)
-                                    await d.MarkBranchDeletedAsync(dbContext, cancellationToken);
-                                await dbContext.SaveChangesAsync(cancellationToken);
-                            }
-                            if (result.Status == DirectoryStatus.Deleted)
-                                result.Status = markNewAsCompleted ? DirectoryStatus.Complete : DirectoryStatus.Incomplete;
-                            else if (result.CreationTime == directoryInfo.CreationTime && result.LastWriteTime == directoryInfo.LastWriteTime)
-                                return dbContext.Entry(result);
-                            result.ModifiedOn = result.LastAccessed = DateTime.Now;
-                        }
-                    }
-                    else
-                        result = null;
-                    if (result is null)
-                        result = new()
-                        {
-                            Id = Guid.NewGuid(),
-                            Parent = parent.Entity,
-                            Name = name,
-                            CreationTime = directoryInfo.CreationTime,
-                            LastWriteTime = directoryInfo.LastWriteTime,
-                            CreatedOn = DateTime.Now,
-                            Status = markNewAsCompleted ? DirectoryStatus.Complete : DirectoryStatus.Incomplete
-                        };
-                    else
-                    {
-                        result.Name = name;
-                        result.CreationTime = directoryInfo.CreationTime;
-                        result.LastWriteTime = directoryInfo.LastWriteTime;
-                        result.ModifiedOn = result.LastAccessed = DateTime.Now;
-                        return dbContext.Update(result);
-                    }
-                }
-            }
-            result.ModifiedOn = result.LastAccessed = result.CreatedOn;
-            return dbContext.Subdirectories.Add(result);
         }
     }
 }

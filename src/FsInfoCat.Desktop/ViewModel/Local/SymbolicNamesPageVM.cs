@@ -138,40 +138,26 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 
         protected override DbSet<SymbolicName> GetDbSet(LocalDbContext dbContext) => dbContext.SymbolicNames;
 
-        protected override SymbolicName InitializeNewEntity()
+        protected override Func<IStatusListener, Task<int>> GetItemsLoaderFactory()
         {
-            SymbolicName entity = base.InitializeNewEntity();
+            throw new NotImplementedException();
+        }
+
+        protected override void OnAddNewItem(object parameter)
+        {
+            SymbolicName entity = new();
             bool? isInactive = ViewOptions.Value;
             if (isInactive.HasValue)
                 entity.IsInactive = isInactive.Value;
-            return entity;
+            throw new NotImplementedException();
         }
-        protected override string GetDeleteProgressTitle(SymbolicNameItemVM item)
+
+        protected override bool ShowModalItemEditWindow(SymbolicNameItemVM item, object parameter, out string saveProgressTitle)
         {
             throw new NotImplementedException();
         }
 
-        protected override string GetSaveExistingProgressTitle(SymbolicNameItemVM item)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override string GetSaveNewProgressTitle(SymbolicNameItemVM item)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override bool PromptItemDeleting(SymbolicNameItemVM item, object parameter)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override bool ShowModalItemEditWindow(SymbolicNameItemVM item, object parameter)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override Func<IStatusListener, Task<int>> GetItemsLoaderFactory()
+        protected override bool PromptItemDeleting(SymbolicNameItemVM item, object parameter, out string deleteProgressTitle)
         {
             throw new NotImplementedException();
         }

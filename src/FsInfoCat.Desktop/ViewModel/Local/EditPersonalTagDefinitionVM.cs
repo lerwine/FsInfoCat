@@ -1,6 +1,7 @@
 using FsInfoCat.Local;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel.Local
@@ -83,15 +84,32 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 
         #endregion
 
-        protected override DbSet<PersonalTagDefinition> GetDbSet(LocalDbContext dbContext) => dbContext.PersonalTagDefinitions;
+        protected override DbSet<PersonalTagDefinition> GetDbSet([DisallowNull] LocalDbContext dbContext) => dbContext.PersonalTagDefinitions;
 
-        protected override PersonalTagDefinition InitializeNewModel() => new() { CreatedOn = DateTime.Now };
-
-        protected override void UpdateModelForSave(PersonalTagDefinition model, bool isNew)
+        protected override void OnModelPropertyChanged(PersonalTagDefinition oldValue, PersonalTagDefinition newValue)
         {
+            if (newValue is null)
+            {
+                Name = Description = "";
+                IsInactive = false;
+            }
+            else
+            {
+                Name = newValue.Name;
+                Description = newValue.Description;
+                IsInactive = newValue.IsInactive;
+            }
+        }
+
+        protected override bool OnBeforeSave()
+        {
+            PersonalTagDefinition model = Model;
+            if (model is null)
+                return false;
             model.Name = Name;
             model.Description = Description;
             model.IsInactive = IsInactive;
+            return true;
         }
     }
 }

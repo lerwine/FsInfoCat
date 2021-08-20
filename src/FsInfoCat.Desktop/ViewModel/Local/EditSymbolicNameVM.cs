@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -179,19 +180,6 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             SetValue(FileSystemOptionsPropertyKey, new ReadOnlyObservableCollection<FileSystemItemVM>(_fileSystemOptions));
         }
 
-        protected override void Initialize(SymbolicName model, EntityState state)
-        {
-            base.Initialize(model, state);
-            Name = model.Name;
-            IsInactive = model.IsInactive;
-            Notes = model.Notes;
-            Priority = model.Priority;
-            Guid id = model.FileSystemId;
-            Task<FileSystem[]> task = OpAggregate.FromAsync("Loading file systems", "Connecting to the database",
-                new FileSystemLookupOptions(null, id, ShowAllFileSystems ? null : ShowActiveFileSystemsOnly), LoadFileSystemsAsync);
-            task.ContinueWith(OnFileSystemsLoaded, id);
-        }
-
         private void OnFileSystemsLoaded(Task<FileSystem[]> task, object state)
         {
             if (task.IsCompletedSuccessfully)
@@ -204,29 +192,16 @@ namespace FsInfoCat.Desktop.ViewModel.Local
                 });
         }
 
-        protected override DbSet<SymbolicName> GetDbSet(LocalDbContext dbContext) => dbContext.SymbolicNames;
+        protected override DbSet<SymbolicName> GetDbSet([DisallowNull] LocalDbContext dbContext) => dbContext.SymbolicNames;
 
-        protected override SymbolicName InitializeNewModel() => new SymbolicName()
+        protected override Task<bool> OnSaveChangesAsync([DisallowNull] EntityEntry<SymbolicName> entry, [DisallowNull] LocalDbContext dbContext, [DisallowNull] IStatusListener statusListener, bool force = false)
         {
-            Id = Guid.NewGuid(),
-            CreatedOn = DateTime.Now
-        };
-
-        protected override void UpdateModelForSave(SymbolicName model, bool isNew)
-        {
-            model.Name = Name.AsWsNormalizedOrEmpty();
-            model.IsInactive = IsInactive;
-            model.Notes = Notes.EmptyIfNullOrWhiteSpace();
-            model.Priority = Priority;
-        }
-
-        protected override void OnSavingModel(EntityEntry<SymbolicName> entityEntry, LocalDbContext dbContext, IStatusListener statusListener)
-        {
-            string name = entityEntry.Entity.Name;
+            string name = entry.Entity.Name;
             SymbolicName existing = (from sn in dbContext.SymbolicNames where sn.Name == name select sn).FirstOrDefaultAsync(statusListener.CancellationToken).Result;
-            if (existing is not null && (entityEntry.State == EntityState.Added || existing.Id != entityEntry.Entity.Id))
+            // TODO: Determine whether it's better to throw AsyncOperationFailureException or to Dispatcher.Invoke and return boolean
+            if (existing is not null && (entry.State == EntityState.Added || existing.Id != entry.Entity.Id))
                 throw new AsyncOperationFailureException("Name already used", "That name is already being used.");
-            base.OnSavingModel(entityEntry, dbContext, statusListener);
+            return base.OnSaveChangesAsync(entry, dbContext, statusListener, force);
         }
 
         private static async Task<FileSystem[]> LoadFileSystemsAsync(FileSystemLookupOptions state, IStatusListener statusListener)
@@ -253,6 +228,35 @@ namespace FsInfoCat.Desktop.ViewModel.Local
                     return fileSystems.Concat(new FileSystem[] { item }).ToArray();
             }
             return fileSystems;
+        }
+
+        protected override void OnModelPropertyChanged(SymbolicName oldValue, SymbolicName newValue)
+        {
+            if (newValue is null)
+            {
+                // TODO: Initialize to default values
+                return;
+            }
+            Name = newValue.Name;
+            IsInactive = newValue.IsInactive;
+            Notes = newValue.Notes;
+            Priority = newValue.Priority;
+            Guid id = newValue.FileSystemId;
+            Task<FileSystem[]> task = OpAggregate.FromAsync("Loading file systems", "Connecting to the database",
+                new FileSystemLookupOptions(null, id, ShowAllFileSystems ? null : ShowActiveFileSystemsOnly), LoadFileSystemsAsync);
+            task.ContinueWith(OnFileSystemsLoaded, id);
+        }
+
+        protected override bool OnBeforeSave()
+        {
+            SymbolicName model = Model;
+            if (model is null)
+                return false;
+            model.Name = Name.AsWsNormalizedOrEmpty();
+            model.IsInactive = IsInactive;
+            model.Notes = Notes.EmptyIfNullOrWhiteSpace();
+            model.Priority = Priority;
+            return true;
         }
 
         public record FileSystemLookupOptions(FileSystemItemVM SelectedItem, Guid FileSystemId, bool? ShowActiveOnly);

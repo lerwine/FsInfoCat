@@ -1,7 +1,8 @@
-﻿using FsInfoCat.Local;
+using FsInfoCat.Local;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Windows;
 
@@ -9,8 +10,6 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 {
     public class EditVolumeVM : EditDbEntityVM<Volume>
     {
-        #region Other Property Members
-
         #region DisplayName Property Members
 
         public static readonly DependencyProperty DisplayNameProperty = DependencyProperty.Register(nameof(DisplayName), typeof(string), typeof(EditVolumeVM),
@@ -35,7 +34,6 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         }
 
         #endregion
-
         #region Notes Property Members
 
         public static readonly DependencyProperty NotesProperty = DependencyProperty.Register(nameof(Notes), typeof(string), typeof(EditVolumeVM),
@@ -54,7 +52,6 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         }
 
         #endregion
-
         #region VolumeIdentifierTypeOptions Property Members
 
         private static readonly DependencyPropertyKey VolumeIdentifierTypeOptionsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(VolumeIdentifierTypeOptions), typeof(ReadOnlyObservableCollection<VolumeIdType>), typeof(EditVolumeVM),
@@ -65,6 +62,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         public ReadOnlyObservableCollection<VolumeIdType> VolumeIdentifierTypeOptions => (ReadOnlyObservableCollection<VolumeIdType>)GetValue(VolumeIdentifierTypeOptionsProperty);
 
         #endregion
+        #region SelectedVolumeIdType Property Members
 
         public static readonly DependencyProperty SelectedVolumeIdTypeProperty = DependencyProperty.Register(nameof(SelectedVolumeIdType), typeof(VolumeIdType), typeof(EditVolumeVM),
                 new PropertyMetadata(VolumeIdType.VSN, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
@@ -137,6 +135,9 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             }
         }
 
+        #endregion
+        #region VolumeId Property Members
+
         public static readonly DependencyProperty VolumeIdProperty = DependencyProperty.Register(nameof(VolumeId), typeof(string), typeof(EditVolumeVM),
                 new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
                     (d as EditVolumeVM).OnVolumeIdPropertyChanged(e.OldValue as string, e.NewValue as string)));
@@ -181,6 +182,9 @@ namespace FsInfoCat.Desktop.ViewModel.Local
                 }
         }
 
+        #endregion
+        #region MaxNameLengthValue Property Members
+
         private static readonly DependencyPropertyKey MaxNameLengthValuePropertyKey = DependencyProperty.RegisterReadOnly(nameof(MaxNameLengthValue), typeof(uint), typeof(EditVolumeVM),
                 new PropertyMetadata(DbConstants.DbColDefaultValue_MaxNameLength, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
                     (d as EditVolumeVM).OnMaxNameLengthValuePropertyChanged((uint)e.OldValue, (uint)e.NewValue)));
@@ -197,6 +201,9 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         {
             // TODO: Implement OnMaxNameLengthValuePropertyChanged Logic
         }
+
+        #endregion
+        #region ExplicitMaxNameLength Property Members
 
         private static readonly DependencyPropertyKey ExplicitMaxNameLengthPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ExplicitMaxNameLength), typeof(bool), typeof(EditVolumeVM),
                 new PropertyMetadata(false, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
@@ -215,6 +222,9 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             // TODO: Implement OnExplicitMaxNameLengthPropertyChanged Logic
         }
 
+        #endregion
+        #region ReadOnly Property Members
+
         public static readonly DependencyProperty ReadOnlyProperty = DependencyProperty.Register(nameof(ReadOnly), typeof(bool), typeof(EditVolumeVM),
                 new PropertyMetadata(false, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
                     (d as EditVolumeVM).OnReadOnlyPropertyChanged((bool)e.OldValue, (bool)e.NewValue)));
@@ -229,6 +239,9 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         {
             // TODO: Implement OnReadOnlyPropertyChanged Logic
         }
+
+        #endregion
+        #region ReadWrite Property Members
 
         public static readonly DependencyProperty ReadWriteProperty = DependencyProperty.Register(nameof(ReadWrite), typeof(bool), typeof(EditVolumeVM),
                 new PropertyMetadata(false, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
@@ -245,6 +258,9 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             // TODO: Implement OnReadWritePropertyChanged Logic
         }
 
+        #endregion
+        #region RwFileSystemDefault Property Members
+
         public static readonly DependencyProperty RwFileSystemDefaultProperty = DependencyProperty.Register(nameof(RwFileSystemDefault), typeof(bool), typeof(EditVolumeVM),
                 new PropertyMetadata(true, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
                     (d as EditVolumeVM).OnRwFileSystemDefaultPropertyChanged((bool)e.OldValue, (bool)e.NewValue)));
@@ -260,6 +276,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             // TODO: Implement OnRwFileSystemDefaultPropertyChanged Logic
         }
 
+        #endregion
         #region VolumeStatusOptions Property Members
 
         private static readonly DependencyPropertyKey VolumeStatusOptionsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(VolumeStatusOptions), typeof(ReadOnlyObservableCollection<VolumeStatus>), typeof(EditVolumeVM),
@@ -270,6 +287,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         public ReadOnlyObservableCollection<VolumeStatus> VolumeStatusOptions => (ReadOnlyObservableCollection<VolumeStatus>)GetValue(VolumeStatusOptionsProperty);
 
         #endregion
+        #region SelectedVolumeStatus Property Members
 
         public static readonly DependencyProperty SelectedVolumeStatusProperty = DependencyProperty.Register(nameof(SelectedVolumeStatus), typeof(VolumeStatus), typeof(EditVolumeVM),
                 new PropertyMetadata(VolumeStatus.Unknown, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
@@ -286,6 +304,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             // TODO: Implement OnSelectedVolumeStatusPropertyChanged Logic
         }
 
+        #endregion
         #region DriveTypeOptions Property Members
 
         private static readonly DependencyPropertyKey DriveTypeOptionsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(DriveTypeOptions),
@@ -296,6 +315,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         public ReadOnlyObservableCollection<DriveType> DriveTypeOptions => (ReadOnlyObservableCollection<DriveType>)GetValue(DriveTypeOptionsProperty);
 
         #endregion
+        #region SelectedDriveType Property Members
 
         public static readonly DependencyProperty SelectedDriveTypeProperty = DependencyProperty.Register(nameof(SelectedDriveType), typeof(DriveType), typeof(EditVolumeVM),
                 new PropertyMetadata(DriveType.Unknown, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
@@ -311,6 +331,9 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         {
             // TODO: Implement OnSelectedDriveTypePropertyChanged Logic
         }
+
+        #endregion
+        #region VolumeName Property Members
 
         public static readonly DependencyProperty VolumeNameProperty = DependencyProperty.Register(nameof(VolumeName), typeof(string), typeof(EditVolumeVM),
                 new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
@@ -328,18 +351,24 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         }
 
         #endregion
-
+        
         public EditVolumeVM()
         {
             SetValue(VolumeIdentifierTypeOptionsPropertyKey, new ReadOnlyObservableCollection<VolumeIdType>(new(Enum.GetValues<VolumeIdType>())));
             SetValue(VolumeStatusOptionsPropertyKey, new ReadOnlyObservableCollection<VolumeStatus>(new(Enum.GetValues<VolumeStatus>())));
         }
 
-        protected override void Initialize(Volume model, EntityState state)
+        protected override DbSet<Volume> GetDbSet([DisallowNull] LocalDbContext dbContext) => dbContext.Volumes;
+
+        protected override void OnModelPropertyChanged(Volume oldValue, Volume newValue)
         {
-            base.Initialize(model, state);
-            DisplayName = model.DisplayName.AsWsNormalizedOrEmpty();
-            VolumeIdentifier vid = model.Identifier;
+            if (newValue is null)
+            {
+                // TODO: Initialize to default values
+                return;
+            }
+            DisplayName = newValue.DisplayName.AsWsNormalizedOrEmpty();
+            VolumeIdentifier vid = newValue.Identifier;
             if (vid.SerialNumber.HasValue)
             {
                 SelectedVolumeIdType = VolumeIdType.VSN;
@@ -355,10 +384,10 @@ namespace FsInfoCat.Desktop.ViewModel.Local
                 SelectedVolumeIdType = VolumeIdType.UncPath;
                 VolumeId = vid.Location.LocalPath;
             }
-            MaxNameLengthValue = model.MaxNameLength ?? DbConstants.DbColDefaultValue_MaxNameLength;
-            ExplicitMaxNameLength = model.MaxNameLength.HasValue;
-            Notes = model.Notes.EmptyIfNullOrWhiteSpace();
-            bool? b = model.ReadOnly;
+            MaxNameLengthValue = newValue.MaxNameLength ?? DbConstants.DbColDefaultValue_MaxNameLength;
+            ExplicitMaxNameLength = newValue.MaxNameLength.HasValue;
+            Notes = newValue.Notes.EmptyIfNullOrWhiteSpace();
+            bool? b = newValue.ReadOnly;
             if (b.HasValue)
             {
                 if (b.Value)
@@ -368,25 +397,20 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             }
             else
                 RwFileSystemDefault = true;
-            SelectedVolumeStatus = model.Status;
-            SelectedDriveType = model.Type;
-            VolumeName = model.VolumeName.AsWsNormalizedOrEmpty();
+            SelectedVolumeStatus = newValue.Status;
+            SelectedDriveType = newValue.Type;
+            VolumeName = newValue.VolumeName.AsWsNormalizedOrEmpty();
             // TODO: Load related
             //RootDirectory = model.RootDirectory;
             //AccessErrors = model.AccessErrors;
             //FileSystem = model.FileSystem;
         }
 
-        protected override Volume InitializeNewModel() => new Volume
+        protected override bool OnBeforeSave()
         {
-            Id = Guid.NewGuid(),
-            CreatedOn = DateTime.Now
-        };
-
-        protected override DbSet<Volume> GetDbSet(LocalDbContext dbContext) => dbContext.Volumes;
-
-        protected override void UpdateModelForSave(Volume model, bool isNew)
-        {
+            Volume model = Model;
+            if (model is null)
+                return false;
             model.DisplayName = DisplayName.AsWsNormalizedOrEmpty();
             VolumeIdentifier.TryParse(VolumeId, out VolumeIdentifier volumeIdentifier);
             model.Identifier = volumeIdentifier;
@@ -400,6 +424,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             //model.RootDirectory = RootDirectory;
             //model.AccessErrors = AccessErrors;
             //model.FileSystem = FileSystem;
+            throw new NotImplementedException();
         }
     }
 }

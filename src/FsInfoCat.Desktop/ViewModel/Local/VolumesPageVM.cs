@@ -106,39 +106,33 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 
         protected override DbSet<Volume> GetDbSet(LocalDbContext dbContext) => dbContext.Volumes;
 
-        protected override string GetSaveNewProgressTitle(VolumeItemVM item) =>
-            string.Format(FsInfoCat.Properties.Resources.FormatMessage_AddingNewVolume, item.DisplayName);
-
-        protected override string GetSaveExistingProgressTitle(VolumeItemVM item) =>
-            string.Format(FsInfoCat.Properties.Resources.FormatMessage_SavingVolumeChanges, item.DisplayName);
-
-        protected override string GetDeleteProgressTitle(VolumeItemVM item) =>
-            string.Format(FsInfoCat.Properties.Resources.FormatMessage_DeletingVolume, item.DisplayName);
-
-        protected override Volume InitializeNewEntity()
-        {
-            Volume volume = base.InitializeNewEntity();
-            volume.FileSystem = CurrentFileSystem;
-            VolumeStatus[] value = StatusOptions.SelectedItems.Select(i => i.Value).ToArray();
-            if (value.Length == 1)
-                volume.Status = value[0];
-            return volume;
-        }
-
-        protected override bool PromptItemDeleting(VolumeItemVM item, object parameter)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override bool ShowModalItemEditWindow(VolumeItemVM item, object parameter)
-        {
-            throw new NotImplementedException();
-        }
-
         protected override Func<IStatusListener, Task<int>> GetItemsLoaderFactory()
         {
             ItemLoadParams loadParams = new(CurrentFileSystem?.Id, StatusOptions.SelectedItems.Select(e => e.Value).ToArray());
             return listener => Task.Run(async () => await LoadItemsAsync(loadParams, listener));
+        }
+
+        protected override void OnAddNewItem(object parameter)
+        {
+            Volume volume = new() { FileSystem = CurrentFileSystem };
+            VolumeStatus[] value = StatusOptions.SelectedItems.Select(i => i.Value).ToArray();
+            if (value.Length == 1)
+                volume.Status = value[0];
+            throw new NotImplementedException();
+            //string progressTitle = string.Format(FsInfoCat.Properties.Resources.FormatMessage_AddingNewVolume, item.DisplayName);
+            throw new NotImplementedException();
+        }
+
+        protected override bool ShowModalItemEditWindow(VolumeItemVM item, object parameter, out string saveProgressTitle)
+        {
+            saveProgressTitle = string.Format(FsInfoCat.Properties.Resources.FormatMessage_SavingVolumeChanges, item.DisplayName);
+            throw new NotImplementedException();
+        }
+
+        protected override bool PromptItemDeleting(VolumeItemVM item, object parameter, out string deleteProgressTitle)
+        {
+            deleteProgressTitle = string.Format(FsInfoCat.Properties.Resources.FormatMessage_DeletingVolume, item.DisplayName);
+            throw new NotImplementedException();
         }
 
         public record ItemLoadParams(Guid? FileSystemId, VolumeStatus[] StatusValues);

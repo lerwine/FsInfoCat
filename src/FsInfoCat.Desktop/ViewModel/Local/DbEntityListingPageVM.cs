@@ -47,7 +47,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         /// <summary>
         /// Occurs when the <see cref="NewItemClick">NewItemClick Command</see> is invoked.
         /// </summary>
-        public event EventHandler<Commands.CommandEventArgs> NewItem;
+        public event EventHandler<Commands.CommandEventArgs> AddNewItem;
 
         private static readonly DependencyPropertyKey NewItemClickPropertyKey = DependencyProperty.RegisterReadOnly(nameof(NewItemClick),
             typeof(Commands.RelayCommand), typeof(DbEntityListingPageVM<TDbEntity, TItemVM>), new PropertyMetadata(null));
@@ -67,20 +67,17 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         /// Called when the NewItemClick event is raised by <see cref="NewItemClick" />.
         /// </summary>
         /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="NewItemClick" />.</param>
-        internal void RaiseNewItem(object parameter)
+        internal void RaiseAddNewItem(object parameter)
         {
-            try { OnNewItem(parameter); }
-            finally { NewItem?.Invoke(this, new(parameter)); }
+            try { OnAddNewItem(parameter); }
+            finally { AddNewItem?.Invoke(this, new(parameter)); }
         }
 
         /// <summary>
         /// Called when the <see cref="NewItemClick">NewItemClick Command</see> is invoked.
         /// </summary>
         /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="NewItemClick" />.</param>
-        protected virtual void OnNewItem(object parameter)
-        {
-            TDbEntity entity = InitializeNewEntity();
-        }
+        protected abstract void OnAddNewItem(object parameter);
 
         #endregion
         #region BgOps Property Members
@@ -104,7 +101,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         public DbEntityListingPageVM()
         {
             SetValue(ItemsPropertyKey, new ReadOnlyObservableCollection<TItemVM>(_backingItems));
-            SetValue(NewItemClickPropertyKey, new Commands.RelayCommand(RaiseNewItem));
+            SetValue(NewItemClickPropertyKey, new Commands.RelayCommand(RaiseAddNewItem));
 #if DEBUG
             if (DesignerProperties.GetIsInDesignMode(this))
                 return;
@@ -119,8 +116,6 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         }
 
         protected abstract Func<AsyncOps.IStatusListener, Task<int>> GetItemsLoaderFactory();
-
-        protected virtual TDbEntity InitializeNewEntity() => new TDbEntity();
 
         protected abstract DbSet<TDbEntity> GetDbSet(LocalDbContext dbContext);
 
@@ -184,26 +179,18 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             }, DispatcherPriority.Background, statusListener.CancellationToken);
         }
 
-        protected internal Task<(TItemVM, bool?)> SaveChangesAsync([DisallowNull] TItemVM item, bool isNew)
+        /// <summary>
+        /// Removes an item from the <see cref="Items"/> collection without deleting it from the database.
+        /// </summary>
+        /// <param name="item">The <typeparamref name="TItemVM"/> to remove.</param>
+        /// <returns><see langword="true"/> if an item was removed; otherwise, <see langword="false"/>.</returns>
+        protected bool RemoveItem(TItemVM item)
         {
-            string title = isNew ? GetSaveNewProgressTitle(item) : GetSaveExistingProgressTitle(item);
-            Task<bool?> task = BgOps.FromAsync(title, "Connecting to database...", item.Model, OnSaveChangesAsync);
-            return task.ContinueWith(task =>
-            {
-                if (!task.Result.HasValue)
-                    return (item, (bool?)null);
-                if (!task.Result.Value)
-                    return (item, false);
-                Dispatcher.Invoke(() =>
-                {
-                    if (!_backingItems.Contains(item))
-                        _backingItems.Add(item);
-                });
-                return (item, true);
-            }, TaskContinuationOptions.OnlyOnRanToCompletion);
+            VerifyAccess();
+            return item is not null && _backingItems.Remove(item);
         }
 
-        private async Task<bool?> OnSaveChangesAsync([DisallowNull] TDbEntity entity, AsyncOps.IStatusListener statusListener)
+        private async Task<bool?> SaveEntityAsync([DisallowNull] TDbEntity entity, AsyncOps.IStatusListener statusListener)
         {
             statusListener.CancellationToken.ThrowIfCancellationRequested();
             IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
@@ -233,24 +220,43 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             return isNew;
         }
 
-        protected internal Task<TItemVM> DeleteItemAsync([DisallowNull] TDbEntity entity)
+        /// <summary>
+        /// This gets called after <see cref="SaveChangesAsync(TItemVM, bool)"/> is successful, which inserts the <typeparamref name="TItemVM"/> into the <see cref="Items"/>
+        /// collection if it was a newly inserted record.
+        /// </summary>
+        /// <param name="item">The <typeparamref name="TItemVM"/> of the <typeparamref name="TDbEntity"/> to was saved.</param>
+        /// <param name="isNew"><see langword="true"/> if a new entity was inserted into the database;
+        /// Otherwise, <see langword="false"/> if changes to an existing item were saved.</param>
+        /// <remarks>Overriding methods can prevent items from being inserted into the <see cref="Items"/> collection by refraining from invoking the base implementation.
+        /// <para>Items which no longer match the current listing filter conditions can be removed without deleting it from the database by
+        /// using the <see cref="RemoveItem(TItemVM)"/> method.</para></remarks>
+        protected virtual void OnChangesSaved(TItemVM item, bool isNew)
         {
-            VerifyAccess();
-            TItemVM item = _backingItems.FirstOrDefault(i => ReferenceEquals(i.Model, entity));
-            if (item is null)
-                return Task.FromResult<TItemVM>(null);
-            string title = GetDeleteProgressTitle(item);
-            Task<bool?> task = BgOps.FromAsync(title, "Connecting to database...", entity, OnDeleteItemAsync);
-            return task.ContinueWith(task =>
-            {
-                if (!(task.Result ?? false))
-                    return null;
-                Dispatcher.Invoke(() => _backingItems.Remove(item));
-                return item;
-            }, TaskContinuationOptions.OnlyOnRanToCompletion);
+            if (!_backingItems.Contains(item))
+                _backingItems.Add(item);
         }
 
-        private async Task<bool?> OnDeleteItemAsync([DisallowNull] TDbEntity entity, AsyncOps.IStatusListener statusListener)
+        /// <summary>
+        /// Asynchronously saves changes to the underlying <typeparamref name="TDbEntity"/>.
+        /// </summary>
+        /// <param name="item">The <typeparamref name="TItemVM"/> of the <typeparamref name="TDbEntity"/> to be saved.</param>
+        /// <param name="saveProgressTitle">The title to display in the modal popup control that is presented while the operation is in progress.</param>
+        /// <returns><see langword="true"/> if a new item was inserted into the database, <see langword="false"/> if changes
+        /// to an existing item were saved; otherwise, <see langword="null"/> of no changes were saved.</returns>
+        /// <remarks><see cref="OnChangesSaved(TItemVM, bool)"/> will be invoked if operation is successful.</remarks>
+        protected internal Task<bool?> SaveChangesAsync([DisallowNull] TItemVM item, string saveProgressTitle)
+        {
+            Task<bool?> task = BgOps.FromAsync(saveProgressTitle, "Connecting to database...", item.Model, SaveEntityAsync);
+            task.ContinueWith(task =>
+            {
+                bool? isNew = task.Result;
+                if (isNew.HasValue)
+                    Dispatcher.Invoke(() => OnChangesSaved(item, isNew.Value));
+            }, TaskContinuationOptions.OnlyOnRanToCompletion);
+            return task;
+        }
+
+        private async Task<bool?> DeleteEntityAsync([DisallowNull] TDbEntity entity, AsyncOps.IStatusListener statusListener)
         {
             statusListener.CancellationToken.ThrowIfCancellationRequested();
             IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
@@ -262,10 +268,10 @@ namespace FsInfoCat.Desktop.ViewModel.Local
                 case EntityState.Added:
                 case EntityState.Detached:
                     statusListener.SetMessage("Item does not exist in the database.", StatusMessageLevel.Error);
-                    return null;
+                    return false;
                 case EntityState.Deleted:
                     statusListener.SetMessage("Item was already deleted.", StatusMessageLevel.Warning);
-                    return false;
+                    return null;
                 default:
                     dispatcherOperation = statusListener.BeginSetMessage("Deleting from database...");
                     GetDbSet(dbContext).Remove(entity);
@@ -277,41 +283,69 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             return true;
         }
 
+        /// <summary>
+        /// This gets automatically called to delete the <typeparamref name="TItemVM"/> from the <see cref="Items"/> collection after <see cref="DeleteItemAsync(TItemVM)"/> is successful.
+        /// </summary>
+        /// <param name="item">The <typeparamref name="TItemVM"/> of the <typeparamref name="TDbEntity"/> that was deleted.</param>
+        protected virtual void OnItemDeleted(TItemVM item) => _backingItems.Remove(item);
+
+        /// <summary>
+        /// Deletes an item from the database.
+        /// </summary>
+        /// <param name="item">The <typeparamref name="TItemVM"/> of the <typeparamref name="TDbEntity"/> to be deleted.</param>
+        /// <param name="deleteProgressTitle">The title to display in the modal popup control that is presented while the operation is in progress.</param>
+        /// <returns><see langword="true"/> if an item was deleted from the database, <see langword="false"/> if the item does not exist;
+        /// otherwise, <see langword="null"/> the item was already deleted.</returns>
+        /// <remarks><see cref="OnChangesSaved(TItemVM, bool)"/> will be invoked if operation is successful.</remarks>
+        protected internal virtual Task<bool?> DeleteItemAsync([DisallowNull] TItemVM item, string deleteProgressTitle)
+        {
+            VerifyAccess();
+            Task<bool?> task = BgOps.FromAsync(deleteProgressTitle, "Connecting to database...", item.Model, DeleteEntityAsync);
+            task.ContinueWith(t =>
+            {
+                if (t.Result ?? false)
+                    Dispatcher.Invoke(() => OnItemDeleted(item));
+            }, TaskContinuationOptions.OnlyOnRanToCompletion);
+            return task;
+        }
+
         private void Item_Delete(object sender, Commands.CommandEventArgs e)
         {
-            if (sender is TItemVM item && PromptItemDeleting(item, e.Parameter))
-                DeleteItemAsync(item.Model);
+            if (sender is TItemVM item && PromptItemDeleting(item, e.Parameter, out string deleteProgressTitle))
+                DeleteItemAsync(item, deleteProgressTitle);
         }
 
         private void Item_Edit(object sender, Commands.CommandEventArgs e)
         {
-            if (sender is TItemVM item && ShowModalItemEditWindow(item, e.Parameter))
-                SaveChangesAsync(item, false);
+            if (sender is TItemVM item && ShowModalItemEditWindow(item, e.Parameter, out string saveProgressTitle))
+                SaveChangesAsync(item, saveProgressTitle);
         }
 
-        protected abstract string GetSaveNewProgressTitle(TItemVM item);
+        //protected abstract string GetSaveNewProgressTitle(TItemVM item);
 
-        protected abstract string GetSaveExistingProgressTitle(TItemVM item);
+        //protected abstract string GetSaveExistingProgressTitle(TItemVM item);
 
-        protected abstract string GetDeleteProgressTitle(TItemVM item);
+        //protected abstract string GetDeleteProgressTitle(TItemVM item);
 
         /// <summary>
         /// Displays a modal item edit window
         /// </summary>
         /// <param name="item">The item to edit.</param>
         /// <param name="parameter">The parameter passed to the edit command.</param>
+        /// <param name="saveProgressTitle">The title to display in the modal popup control that is presented while the operation is in progress.</param>
         /// <returns><see langword="true"/> if there are changes to be saved to the database; otherwise, <see langword="false"/>.</returns>
         /// <remarks>If an item is to deleted from the database from the edit window, then the edit view model should call <see cref="DeleteItemAsync(TDbEntity)"/>
         /// and then return <see langword="false"/>.</remarks>
-        protected abstract bool ShowModalItemEditWindow(TItemVM item, object parameter);
+        protected abstract bool ShowModalItemEditWindow(TItemVM item, object parameter, out string saveProgressTitle);
 
         /// <summary>
         /// Displays a modal dialog to confirm that they want to delete the item.
         /// </summary>
         /// <param name="item">The item to be deleted.</param>
         /// <param name="parameter">The parameter passed to the delete command.</param>
+        /// <param name="deleteProgressTitle">The title to display in the modal popup control that is presented while the operation is in progress.</param>
         /// <returns><see langword="true"/> if the item should be deleted from the database; otherwise, <see langword="false"/>.</returns>
-        protected abstract bool PromptItemDeleting(TItemVM item, object parameter);
+        protected abstract bool PromptItemDeleting(TItemVM item, object parameter, out string deleteProgressTitle);
 
         protected virtual void OnNavigatedTo(MainVM mainVM)
         {

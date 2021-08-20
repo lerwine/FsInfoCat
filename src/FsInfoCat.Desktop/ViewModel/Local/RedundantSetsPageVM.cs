@@ -47,32 +47,22 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 
         protected override DbSet<RedundantSet> GetDbSet(LocalDbContext dbContext) => dbContext.RedundantSets;
 
-        protected override string GetDeleteProgressTitle(RedundantSetItemVM item)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override string GetSaveExistingProgressTitle(RedundantSetItemVM item)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override string GetSaveNewProgressTitle(RedundantSetItemVM item)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override bool PromptItemDeleting(RedundantSetItemVM item, object parameter)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override bool ShowModalItemEditWindow(RedundantSetItemVM item, object parameter)
-        {
-            throw new NotImplementedException();
-        }
-
         protected override Func<IStatusListener, Task<int>> GetItemsLoaderFactory()
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override void OnAddNewItem(object parameter)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override bool ShowModalItemEditWindow(RedundantSetItemVM item, object parameter, out string saveProgressTitle)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override bool PromptItemDeleting(RedundantSetItemVM item, object parameter, out string deleteProgressTitle)
         {
             throw new NotImplementedException();
         }

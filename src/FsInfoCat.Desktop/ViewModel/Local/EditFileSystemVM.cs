@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
@@ -239,36 +240,38 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             SetValue(DriveTypeOptionsPropertyKey, new ReadOnlyObservableCollection<DriveType>(new ObservableCollection<DriveType>(Enum.GetValues<DriveType>())));
         }
 
-        protected override FileSystem InitializeNewModel() => new()
-        {
-            Id = Guid.NewGuid(),
-            CreatedOn = DateTime.Now
-        };
+        protected override DbSet<FileSystem> GetDbSet([DisallowNull] LocalDbContext dbContext) => dbContext.FileSystems;
 
-        protected override void Initialize(FileSystem model, EntityState state)
+        protected override void OnModelPropertyChanged(FileSystem oldValue, FileSystem newValue)
         {
-            DisplayName = model.DisplayName;
-            Notes = model.Notes;
-            SelectedDriveType = model.DefaultDriveType ?? DriveType.Unknown;
-            HasDefaultDriveType = model.DefaultDriveType.HasValue;
+            if (newValue is null)
+            {
+                // TODO: Initialize to defaults
+                return;
+            }
+            DisplayName = newValue.DisplayName;
+            Notes = newValue.Notes;
+            SelectedDriveType = newValue.DefaultDriveType ?? DriveType.Unknown;
+            HasDefaultDriveType = newValue.DefaultDriveType.HasValue;
             // TODO: Initialize Volumes? Are these used in edit window?
-            IsInactive = model.IsInactive;
-            MaxNameLength = model.MaxNameLength;
-            ReadOnly = model.ReadOnly;
+            IsInactive = newValue.IsInactive;
+            MaxNameLength = newValue.MaxNameLength;
+            ReadOnly = newValue.ReadOnly;
             // TODO: Initialize SymbolicNames? Are these used in edit window?
-            base.Initialize(model, state);
         }
 
-        protected override DbSet<FileSystem> GetDbSet(LocalDbContext dbContext) => dbContext.FileSystems;
-
-        protected override void UpdateModelForSave(FileSystem model, bool isNew)
+        protected override bool OnBeforeSave()
         {
+            FileSystem model = Model;
+            if (model is null)
+                return false;
             model.DisplayName = DisplayName;
             model.Notes = Notes;
             model.DefaultDriveType = HasDefaultDriveType ? SelectedDriveType : null;
             model.IsInactive = IsInactive;
             model.MaxNameLength = MaxNameLength;
             model.ReadOnly = ReadOnly;
+            return true;
         }
     }
 }

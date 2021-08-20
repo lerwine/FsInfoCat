@@ -232,41 +232,23 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             return await OnEntitiesLoaded(result, statusListener, r => new CrawlConfigItemVM(r.Source, r.FullName, r.SubdirectoryId));
         }
 
-        protected override CrawlConfiguration InitializeNewEntity()
+        protected override DbSet<CrawlConfiguration> GetDbSet(LocalDbContext dbContext) => dbContext.CrawlConfigurations;
+
+        protected override void OnAddNewItem(object parameter)
         {
-            CrawlConfiguration entity = base.InitializeNewEntity();
+            CrawlConfiguration entity = new();
             bool? isInactive = ViewOptions.Value;
             if (isInactive.HasValue)
                 entity.StatusValue = isInactive.Value ? CrawlStatus.Disabled : CrawlStatus.NotRunning;
-            return entity;
+            throw new NotImplementedException();
         }
 
-        protected override DbSet<CrawlConfiguration> GetDbSet(LocalDbContext dbContext)
+        protected override bool ShowModalItemEditWindow(CrawlConfigItemVM item, object parameter, out string saveProgressTitle)
         {
             throw new NotImplementedException();
         }
 
-        protected override string GetSaveNewProgressTitle(CrawlConfigItemVM item)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override string GetSaveExistingProgressTitle(CrawlConfigItemVM item)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override string GetDeleteProgressTitle(CrawlConfigItemVM item)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override bool ShowModalItemEditWindow(CrawlConfigItemVM item, object parameter)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override bool PromptItemDeleting(CrawlConfigItemVM item, object parameter)
+        protected override bool PromptItemDeleting(CrawlConfigItemVM item, object parameter, out string deleteProgressTitle)
         {
             throw new NotImplementedException();
         }

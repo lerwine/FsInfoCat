@@ -162,8 +162,6 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 
         protected override DbSet<SharedTagDefinition> GetDbSet(LocalDbContext dbContext) => dbContext.SharedTagDefinitions;
 
-        protected override string GetDeleteProgressTitle(SharedTagDefinitionItemVM item) => $"Deleting Shared Tag Definition \"{item.Name}\"";
-
         protected override Func<IStatusListener, Task<int>> GetItemsLoaderFactory()
         {
             bool? viewOptions = ViewOptions.Value;
@@ -188,26 +186,24 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             return await OnEntitiesLoaded(items, statusListener, r => new SharedTagDefinitionItemVM(r));
         }
 
-        protected override string GetSaveExistingProgressTitle(SharedTagDefinitionItemVM item) => $"Saving Shared Tag Definition \"{item.Name}\"";
-
-        protected override string GetSaveNewProgressTitle(SharedTagDefinitionItemVM item) => $"Adding new Shared Tag Definition \"{item.Name}\"";
-
-        protected override SharedTagDefinition InitializeNewEntity()
+        protected override void OnAddNewItem(object parameter)
         {
-            SharedTagDefinition entity = base.InitializeNewEntity();
+            SharedTagDefinition entity = new();
             bool? isInactive = ViewOptions.Value;
             if (isInactive.HasValue)
                 entity.IsInactive = isInactive.Value;
-            return entity;
-        }
-
-        protected override bool PromptItemDeleting(SharedTagDefinitionItemVM item, object parameter)
-        {
             throw new NotImplementedException();
         }
 
-        protected override bool ShowModalItemEditWindow(SharedTagDefinitionItemVM item, object parameter)
+        protected override bool ShowModalItemEditWindow(SharedTagDefinitionItemVM item, object parameter, out string saveProgressTitle)
         {
+            saveProgressTitle = $"Saving Shared Tag Definition \"{item.Name}\"";
+            throw new NotImplementedException();
+        }
+
+        protected override bool PromptItemDeleting(SharedTagDefinitionItemVM item, object parameter, out string deleteProgressTitle)
+        {
+            deleteProgressTitle = $"Deleting Shared Tag Definition \"{item.Name}\"";
             throw new NotImplementedException();
         }
 

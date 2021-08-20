@@ -1,7 +1,8 @@
-﻿using FsInfoCat.Local;
+using FsInfoCat.Local;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel.Local
@@ -77,7 +78,6 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         }
 
         #endregion
-
         #region Redundancies Property Members
 
         private static readonly DependencyPropertyKey RedundanciesPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Redundancies), typeof(ObservableCollection<RedundancyItemVM>), typeof(EditRedundantSetVM),
@@ -130,17 +130,14 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             SetValue(BinaryPropertiesOptionsPropertyKey, new ReadOnlyObservableCollection<BinaryPropertySetItemVM>(_backingBinaryPropertiesOptions));
         }
 
-        protected override DbSet<Volume> GetDbSet(LocalDbContext dbContext)
+        protected override DbSet<Volume> GetDbSet([DisallowNull] LocalDbContext dbContext) => dbContext.Volumes;
+
+        protected override void OnModelPropertyChanged(Volume oldValue, Volume newValue)
         {
             throw new NotImplementedException();
         }
 
-        protected override Volume InitializeNewModel()
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override void UpdateModelForSave(Volume model, bool isNew)
+        protected override bool OnBeforeSave()
         {
             throw new NotImplementedException();
         }
