@@ -213,7 +213,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
                 else
                     Dispatcher.Invoke(() =>
                     {
-                        MessageBox.Show("Not Available", "That subdirectory already has a crawl configuration.", MessageBoxButton.OK, MessageBoxImage.Error);
+                        MessageBox.Show(Application.Current.MainWindow, "Not Available", "That subdirectory already has a crawl configuration.", MessageBoxButton.OK, MessageBoxImage.Error);
                         if (errors?.Any() ?? false)
                             Validation.SetErrorMessage(nameof(Path), errors.First(), errors.Skip(1).ToArray());
                     });
@@ -1223,7 +1223,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
                 entry.Entity.Root = (await Subdirectory.ImportBranchAsync(new DirectoryInfo(Dispatcher.Invoke(() => Path)), dbContext, statusListener.CancellationToken, true))?.Entity;
                 if (entry.Entity.Root is null)
                 {
-                    Dispatcher.Invoke(() => MessageBox.Show("Import Failure", "Unable to import teh subdirectory specified.", MessageBoxButton.OK, MessageBoxImage.Error));
+                    Dispatcher.Invoke(() => MessageBox.Show(Application.Current.MainWindow, "Import Failure", "Unable to import teh subdirectory specified.", MessageBoxButton.OK, MessageBoxImage.Error));
                     return false;
                 }
             }

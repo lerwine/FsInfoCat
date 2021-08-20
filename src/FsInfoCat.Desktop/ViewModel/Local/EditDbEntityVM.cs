@@ -14,6 +14,8 @@ namespace FsInfoCat.Desktop.ViewModel.Local
     public abstract class EditDbEntityVM<TDbEntity> : DependencyObject, INotifyDataErrorInfo
         where TDbEntity : LocalDbEntity, new()
     {
+        #region Events
+
         /// <summary>
         /// Occurs when the window should be closed by setting <see cref="Window.DialogResult"/> to <see langword="true"/>.
         /// </summary>
@@ -29,6 +31,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         /// </summary>
         public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
 
+        #endregion
         #region SaveCommand Property Members
 
         private static readonly DependencyPropertyKey SaveCommandPropertyKey = DependencyProperty.RegisterReadOnly(nameof(SaveCommand),
@@ -258,7 +261,18 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             LastSynchronizedOn = entity.LastSynchronizedOn;
             window.DataContext = this;
             // DEFERRED: Need to put something in here that is going to catch it if the user closes the window during a save operation
-            EventHandler closeCancel = new((sender, e) => window.DialogResult = false);
+            EventHandler closeCancel = new((sender, e) =>window.DialogResult = false);
+            CancelEventHandler windowClosing = (object sender, CancelEventArgs e) =>
+            {
+                if (e.Cancel)
+                    return;
+                if ((IsNew || ChangeTracker.AnyInvalid) && MessageBox.Show(Application.Current.MainWindow, "Discard Changes?", "Any unsaved schanges will be lost!\n\nAre you sure you want to continue?",
+                        MessageBoxButton.YesNo, MessageBoxImage.Exclamation) != MessageBoxResult.Yes)
+                    e.Cancel = true;
+                else
+                    OpAggregate.RaiseOperationCancelRequested(null);
+            };
+            window.Closing += windowClosing;
             EventHandler closeSuccess = new((sender, e) => window.DialogResult = true);
             CloseCancel += closeCancel;
             CloseSuccess += closeSuccess;
@@ -269,6 +283,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             {
                 CloseCancel -= closeCancel;
                 CloseSuccess -= closeSuccess;
+                window.Closing -= windowClosing;
             }
         }
 
