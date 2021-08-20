@@ -76,7 +76,7 @@ namespace FsInfoCat.Local
             _verticalAspectRatio = AddChangeTracker<uint?>(nameof(VerticalAspectRatio), null);
         }
 
-        internal static void BuildEntity([DisallowNull] EntityTypeBuilder<VideoPropertySet> builder) =>
+        internal static void OnBuildEntity([DisallowNull] EntityTypeBuilder<VideoPropertySet> builder) =>
             (builder ?? throw new ArgumentOutOfRangeException(nameof(builder))).Property(nameof(Director)).HasConversion(MultiStringValue.Converter);
 
         internal static async Task RefreshAsync([DisallowNull] EntityEntry<DbFile> entry, [DisallowNull] IFileDetailProvider fileDetailProvider,

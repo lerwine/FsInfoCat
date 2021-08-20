@@ -150,28 +150,50 @@ namespace FsInfoCat.Desktop.ViewModel
         }
 
         #endregion
-        #region ViewTagDefinitions Command Property Members
+        #region ViewPersonalTagDefinitions Command Property Members
 
-        private static readonly DependencyPropertyKey ViewTagDefinitionsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ViewTagDefinitions),
+        private static readonly DependencyPropertyKey ViewPersonalTagDefinitionsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ViewPersonalTagDefinitions),
             typeof(Commands.RelayCommand), typeof(MainVM), new PropertyMetadata(null));
 
         /// <summary>
-        /// Identifies the <see cref="ViewTagDefinitions"/> dependency property.
+        /// Identifies the <see cref="ViewPersonalTagDefinitions"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty ViewTagDefinitionsProperty = ViewTagDefinitionsPropertyKey.DependencyProperty;
+        public static readonly DependencyProperty ViewPersonalTagDefinitionsProperty = ViewPersonalTagDefinitionsPropertyKey.DependencyProperty;
 
         /// <summary>
         /// Gets the $name$ command object.
         /// </summary>
         /// <value>The <see cref="System.Windows.Input.ICommand"/> that implements the $command$ command.</value>
-        public Commands.RelayCommand ViewTagDefinitions => (Commands.RelayCommand)GetValue(ViewTagDefinitionsProperty);
+        public Commands.RelayCommand ViewPersonalTagDefinitions => (Commands.RelayCommand)GetValue(ViewPersonalTagDefinitionsProperty);
 
-        private void OnViewTagDefinitions(object parameter)
+        private void OnViewPersonalTagDefinitions(object parameter)
         {
-            // TODO: Implement OnViewTagDefinitions Logic
+            // TODO: Implement OnViewPersonalTagDefinitions Logic
         }
 
-#       endregion
+        #endregion
+        #region ViewSharedTagDefinitions Command Property Members
+
+        private static readonly DependencyPropertyKey ViewSharedTagDefinitionsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ViewSharedTagDefinitions),
+            typeof(Commands.RelayCommand), typeof(MainVM), new PropertyMetadata(null));
+
+        /// <summary>
+        /// Identifies the <see cref="ViewSharedTagDefinitions"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ViewSharedTagDefinitionsProperty = ViewSharedTagDefinitionsPropertyKey.DependencyProperty;
+
+        /// <summary>
+        /// Gets the $name$ command object.
+        /// </summary>
+        /// <value>The <see cref="System.Windows.Input.ICommand"/> that implements the $command$ command.</value>
+        public Commands.RelayCommand ViewSharedTagDefinitions => (Commands.RelayCommand)GetValue(ViewSharedTagDefinitionsProperty);
+
+        private void OnViewSharedTagDefinitions(object parameter)
+        {
+            // TODO: Implement OnViewSharedTagDefinitions Logic
+        }
+
+        #endregion
         #region CommandBindings Property Members
 
         public static CommandBindingCollection GetAttachedBindings(DependencyObject obj)
@@ -291,7 +313,8 @@ namespace FsInfoCat.Desktop.ViewModel
             SetValue(ViewVolumesPropertyKey, new Commands.RelayCommand(OnViewVolumes));
             SetValue(ViewSymbolicNamesPropertyKey, new Commands.RelayCommand(OnViewSymbolicNames));
             SetValue(ViewRedundancySetsPropertyKey, new Commands.RelayCommand(OnViewRedundancySets));
-            SetValue(ViewTagDefinitionsPropertyKey, new Commands.RelayCommand(OnViewTagDefinitions));
+            SetValue(ViewPersonalTagDefinitionsPropertyKey, new Commands.RelayCommand(OnViewPersonalTagDefinitions));
+            SetValue(ViewSharedTagDefinitionsPropertyKey, new Commands.RelayCommand(OnViewSharedTagDefinitions));
             Source = new Uri(Properties.Resources.Page_Uri_CrawlConfigurations, UriKind.Relative);
         }
 

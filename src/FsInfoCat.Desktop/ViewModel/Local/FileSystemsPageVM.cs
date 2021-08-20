@@ -3,15 +3,10 @@ using FsInfoCat.Local;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Threading;
 
 namespace FsInfoCat.Desktop.ViewModel.Local
 {
@@ -50,11 +45,6 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         /// <value>The <see cref="System.Windows.Input.ICommand"/> that implements the $command$ command.</value>
         public Commands.RelayCommand ViewOptionsOkClick => (Commands.RelayCommand)GetValue(ViewOptionsOkClickProperty);
 
-        private void OnViewOptionsOkClick(object parameter)
-        {
-            // TODO: Implement OnViewOptionsOkClick Logic
-        }
-
         #endregion
         #region ViewOptionCancelClick Command Property Members
 
@@ -72,11 +62,6 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         /// <value>The <see cref="System.Windows.Input.ICommand"/> that implements the $command$ command.</value>
         public Commands.RelayCommand ViewOptionCancelClick => (Commands.RelayCommand)GetValue(ViewOptionCancelClickProperty);
 
-        private void OnViewOptionCancelClick(object parameter)
-        {
-            // TODO: Implement OnViewOptionCancelClick Logic
-        }
-
         #endregion
         #region ShowViewOptions Command Property Members
 
@@ -92,11 +77,6 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         /// </summary>
         /// <value>The <see cref="System.Windows.Input.ICommand"/> that implements the $command$ command.</value>
         public Commands.RelayCommand ShowViewOptions => (Commands.RelayCommand)GetValue(ShowViewOptionsProperty);
-
-        private void OnShowViewOptions(object parameter)
-        {
-            // TODO: Implement OnShowViewOptions Logic
-        }
 
         #endregion
         #region ViewOptions Property Members
@@ -136,7 +116,6 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 
         public FileSystemsPageVM()
         {
-
             ThreeStateViewModel viewOptions = new(true);
             SetValue(ViewOptionsPropertyKey, viewOptions);
             SetValue(EditingViewOptionsPropertyKey, new ThreeStateViewModel(viewOptions.Value));
@@ -184,25 +163,13 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 
         protected override DbSet<FileSystem> GetDbSet(LocalDbContext dbContext) => dbContext.FileSystems;
 
-        protected override string GetDeleteProgressTitle(FileSystemItemVM item)
-        {
-            throw new NotImplementedException();
-        }
+        protected override string GetDeleteProgressTitle(FileSystemItemVM item) => $"Deleting File System Definition \"{item.DisplayName}\"";
 
-        protected override string GetSaveExistingProgressTitle(FileSystemItemVM item)
-        {
-            throw new NotImplementedException();
-        }
+        protected override string GetSaveExistingProgressTitle(FileSystemItemVM item) => $"Saving File System Definition \"{item.DisplayName}\"";
 
-        protected override string GetSaveNewProgressTitle(FileSystemItemVM item)
-        {
-            throw new NotImplementedException();
-        }
+        protected override string GetSaveNewProgressTitle(FileSystemItemVM item) => $"Adding new File System Definition \"{item.DisplayName}\"";
 
-        protected override FileSystem InitializeNewEntity()
-        {
-            throw new NotImplementedException();
-        }
+        protected override FileSystem InitializeNewEntity() => new() { CreatedOn = DateTime.Now };
 
         protected override bool PromptItemDeleting(FileSystemItemVM item, object parameter)
         {

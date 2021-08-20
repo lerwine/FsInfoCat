@@ -82,7 +82,7 @@ namespace FsInfoCat
         /// <summary>
         /// Enumerates generic file access error entities.
         /// </summary>
-        IEnumerable<IAccessError<IFile>> FileAccessErrors { get; }
+        IEnumerable<IFileAccessError> FileAccessErrors { get; }
 
         /// <summary>
         /// Enumerates generic file entities.
@@ -112,7 +112,7 @@ namespace FsInfoCat
         /// <summary>
         /// Enumerates generic sub-directory access error entities.
         /// </summary>
-        IEnumerable<IAccessError<ISubdirectory>> SubdirectoryAccessErrors { get; }
+        IEnumerable<ISubdirectoryAccessError> SubdirectoryAccessErrors { get; }
 
         /// <summary>
         /// Enumerates generic symbolic name entities.
@@ -122,12 +122,28 @@ namespace FsInfoCat
         /// <summary>
         /// Enumerates generic volume access error entities.
         /// </summary>
-        IEnumerable<IAccessError<IVolume>> VolumeAccessErrors { get; }
+        IEnumerable<IVolumeAccessError> VolumeAccessErrors { get; }
 
         /// <summary>
         /// Enumerates generic volume entities.
         /// </summary>
         IEnumerable<IVolume> Volumes { get; }
+
+        IEnumerable<IPersonalTagDefinition> PersonalTagDefinitions { get; }
+
+        IEnumerable<IPersonalFileTag> PersonalFileTags { get; }
+
+        IEnumerable<IPersonalSubdirectoryTag> PersonalSubdirectoryTags { get; }
+
+        IEnumerable<IPersonalVolumeTag> PersonalVolumeTags { get; }
+
+        IEnumerable<ISharedTagDefinition> SharedTagDefinitions { get; }
+
+        IEnumerable<ISharedFileTag> SharedFileTags { get; }
+
+        IEnumerable<ISharedSubdirectoryTag> SharedSubdirectoryTags { get; }
+
+        IEnumerable<ISharedVolumeTag> SharedVolumeTags { get; }
 
         /// <summary>
         /// Enumerates generic crawl configuration entities.

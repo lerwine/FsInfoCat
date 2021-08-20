@@ -79,7 +79,7 @@ namespace FsInfoCat.Local
         /// <summary>
         /// Enumerates generic file access error entities from the local database.
         /// </summary>
-        new IEnumerable<IAccessError<ILocalFile>> FileAccessErrors { get; }
+        new IEnumerable<ILocalFileAccessError> FileAccessErrors { get; }
 
         /// <summary>
         /// Enumerates generic file entities from the local database.
@@ -109,7 +109,7 @@ namespace FsInfoCat.Local
         /// <summary>
         /// Enumerates generic sub-directory access error entities from the local database.
         /// </summary>
-        new IEnumerable<IAccessError<ILocalSubdirectory>> SubdirectoryAccessErrors { get; }
+        new IEnumerable<ILocalSubdirectoryAccessError> SubdirectoryAccessErrors { get; }
 
         /// <summary>
         /// Enumerates generic symbolic name entities from the local database.
@@ -119,12 +119,28 @@ namespace FsInfoCat.Local
         /// <summary>
         /// Enumerates generic volume access error entities from the local database.
         /// </summary>
-        new IEnumerable<IAccessError<ILocalVolume>> VolumeAccessErrors { get; }
+        new IEnumerable<ILocalVolumeAccessError> VolumeAccessErrors { get; }
 
         /// <summary>
         /// Enumerates generic volume entities from the local database.
         /// </summary>
         new IEnumerable<ILocalVolume> Volumes { get; }
+
+        new IEnumerable<ILocalPersonalTagDefinition> PersonalTagDefinitions { get; }
+
+        new IEnumerable<ILocalPersonalFileTag> PersonalFileTags { get; }
+
+        new IEnumerable<ILocalPersonalSubdirectoryTag> PersonalSubdirectoryTags { get; }
+
+        new IEnumerable<ILocalPersonalVolumeTag> PersonalVolumeTags { get; }
+
+        new IEnumerable<ILocalSharedTagDefinition> SharedTagDefinitions { get; }
+
+        new IEnumerable<ILocalSharedFileTag> SharedFileTags { get; }
+
+        new IEnumerable<ILocalSharedSubdirectoryTag> SharedSubdirectoryTags { get; }
+
+        new IEnumerable<ILocalSharedVolumeTag> SharedVolumeTags { get; }
 
         /// <summary>
         /// Enumerates generic crawl configuration entities from the local database.

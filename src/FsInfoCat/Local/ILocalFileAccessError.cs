@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.Local
 {
@@ -6,8 +6,7 @@ namespace FsInfoCat.Local
     /// <typeparam name="TTarget">The target entity type.</typeparam>
     /// <seealso cref="ILocalAccessError" />
     /// <seealso cref="IFileAccessError" />
-    /// <seealso cref="IAccessError&lt;ILocalFile&gt;" />
-    public interface ILocalFileAccessError : ILocalAccessError, IFileAccessError, IAccessError<ILocalFile>
+    public interface ILocalFileAccessError : ILocalAccessError, IFileAccessError
     {
         /// <summary>Gets the target file to which the access error applies.</summary>
         /// <value>The <typeparamref name="ILocalFile" /> entity that this error applies to.</value>

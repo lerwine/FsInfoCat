@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat
@@ -47,6 +47,10 @@ namespace FsInfoCat
         /// <value>The access errors for the current file system item.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_AccessErrors), ResourceType = typeof(Properties.Resources))]
         new IEnumerable<ISubdirectoryAccessError> AccessErrors { get; }
+
+        new IEnumerable<IPersonalSubdirectoryTag> PersonalTags { get; }
+
+        new IEnumerable<ISharedSubdirectoryTag> SharedTags { get; }
     }
 
 }

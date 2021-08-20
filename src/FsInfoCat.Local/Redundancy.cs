@@ -124,7 +124,7 @@ namespace FsInfoCat.Local
             _redundantSet = AddChangeTracker<RedundantSet>(nameof(RedundantSet), null);
         }
 
-        internal static void BuildEntity(EntityTypeBuilder<Redundancy> builder)
+        internal static void OnBuildEntity(EntityTypeBuilder<Redundancy> builder)
         {
             builder.HasKey(nameof(FileId), nameof(RedundantSetId));
             builder.HasOne(sn => sn.File).WithOne(d => d.Redundancy).HasForeignKey<Redundancy>(nameof(FileId)).IsRequired().OnDelete(DeleteBehavior.Restrict);

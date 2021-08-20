@@ -78,7 +78,7 @@ namespace FsInfoCat.Upstream
         /// <summary>
         /// Enumerates generic file access error entities from the upstream (remote) database.
         /// </summary>
-        new IEnumerable<IAccessError<IUpstreamFile>> FileAccessErrors { get; }
+        new IEnumerable<IUpstreamFileAccessError> FileAccessErrors { get; }
 
         /// <summary>
         /// Enumerates generic file entities from the upstream (remote) database.
@@ -108,7 +108,7 @@ namespace FsInfoCat.Upstream
         /// <summary>
         /// Enumerates generic sub-directory access error entities from the upstream (remote) database.
         /// </summary>
-        new IEnumerable<IAccessError<IUpstreamSubdirectory>> SubdirectoryAccessErrors { get; }
+        new IEnumerable<IUpstreamSubdirectoryAccessError> SubdirectoryAccessErrors { get; }
 
         /// <summary>
         /// Enumerates generic symbolic name entities from the upstream (remote) database.
@@ -118,12 +118,28 @@ namespace FsInfoCat.Upstream
         /// <summary>
         /// Enumerates generic volume access error entities from the upstream (remote) database.
         /// </summary>
-        new IEnumerable<IAccessError<IUpstreamVolume>> VolumeAccessErrors { get; }
+        new IEnumerable<IUpstreamVolumeAccessError> VolumeAccessErrors { get; }
 
         /// <summary>
         /// Enumerates generic volume entities from the upstream (remote) database.
         /// </summary>
-        new IEnumerable<IVolume> Volumes { get; }
+        new IEnumerable<IUpstreamVolume> Volumes { get; }
+
+        new IEnumerable<IUpstreamPersonalTagDefinition> PersonalTagDefinitions { get; }
+
+        new IEnumerable<IUpstreamPersonalFileTag> PersonalFileTags { get; }
+
+        new IEnumerable<IUpstreamPersonalSubdirectoryTag> PersonalSubdirectoryTags { get; }
+
+        new IEnumerable<IUpstreamPersonalVolumeTag> PersonalVolumeTags { get; }
+
+        new IEnumerable<IUpstreamSharedTagDefinition> SharedTagDefinitions { get; }
+
+        new IEnumerable<IUpstreamSharedFileTag> SharedFileTags { get; }
+
+        new IEnumerable<IUpstreamSharedSubdirectoryTag> SharedSubdirectoryTags { get; }
+
+        new IEnumerable<IUpstreamSharedVolumeTag> SharedVolumeTags { get; }
 
         /// <summary>
         /// Enumerates generic crawl configuration entities from the upstream (remote) database.

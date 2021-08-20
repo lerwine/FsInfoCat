@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.Upstream
 {
@@ -6,8 +6,7 @@ namespace FsInfoCat.Upstream
     /// <typeparam name="TTarget">The target entity type.</typeparam>
     /// <seealso cref="IUpstreamAccessError" />
     /// <seealso cref="ISubdirectoryAccessError" />
-    /// <seealso cref="IAccessError&lt;IUpstreamSubdirectory&gt;" />
-    public interface IUpstreamSubdirectoryAccessError : IUpstreamAccessError, ISubdirectoryAccessError, IAccessError<IUpstreamSubdirectory>
+    public interface IUpstreamSubdirectoryAccessError : IUpstreamAccessError, ISubdirectoryAccessError
     {
         /// <summary>Gets the target subdirectory to which the access error applies.</summary>
         /// <value>The <typeparamref name="IUpstreamSubdirectory" /> entity that this error applies to.</value>

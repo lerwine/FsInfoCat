@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
@@ -11,7 +13,7 @@ using System.Xml.Linq;
 
 namespace FsInfoCat.Local
 {
-    public class SubdirectoryAccessError : DbEntity, IAccessError<Subdirectory>, ILocalSubdirectoryAccessError
+    public class SubdirectoryAccessError : DbEntity, ILocalSubdirectoryAccessError
     {
         #region Fields
 
@@ -78,19 +80,11 @@ namespace FsInfoCat.Local
 
         IDbEntity IAccessError.Target => Target;
 
-        IDbEntity IAccessError<Subdirectory>.Target => Target;
-
-        IDbEntity IAccessError<ISubdirectory>.Target => Target;
-
         ILocalSubdirectory ILocalSubdirectoryAccessError.Target => Target;
 
         ILocalDbEntity ILocalAccessError.Target => Target;
 
-        IDbEntity IAccessError<ILocalDbEntity>.Target => Target;
-
         ISubdirectory ISubdirectoryAccessError.Target => Target;
-
-        IDbEntity IAccessError<ILocalSubdirectory>.Target => Target;
 
         #endregion
 
@@ -162,6 +156,11 @@ namespace FsInfoCat.Local
             if (Details.Trim().Length > 0)
                 result.Add(new XCData(Details));
             return result;
+        }
+
+        internal static void OnBuildEntity(EntityTypeBuilder<SubdirectoryAccessError> builder)
+        {
+            builder.HasOne(e => e.Target).WithMany(d => d.AccessErrors).HasForeignKey(nameof(TargetId)).IsRequired().OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

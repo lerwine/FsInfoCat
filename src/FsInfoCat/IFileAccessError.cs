@@ -1,11 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat
 {
     /// <summary>Generic interface for file access error entities.</summary>
     /// <typeparam name="TTarget">The target entity type.</typeparam>
-    /// <seealso cref="IAccessError&lt;IFile&gt;" />
-    public interface IFileAccessError : IAccessError<IFile>
+    /// <seealso cref="IAccessError" />
+    public interface IFileAccessError : IAccessError
     {
         /// <summary>Gets the target file to which the access error applies.</summary>
         /// <value>The <typeparamref name="IFile" /> entity that this error applies to.</value>

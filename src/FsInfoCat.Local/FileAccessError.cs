@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
@@ -11,7 +13,7 @@ using System.Xml.Linq;
 
 namespace FsInfoCat.Local
 {
-    public class FileAccessError : DbEntity, IAccessError<DbFile>, ILocalFileAccessError
+    public class FileAccessError : DbEntity, ILocalFileAccessError
     {
         #region Fields
 
@@ -78,19 +80,11 @@ namespace FsInfoCat.Local
 
         IDbEntity IAccessError.Target => Target;
 
-        IDbEntity IAccessError<DbFile>.Target => Target;
-
-        IDbEntity IAccessError<IFile>.Target => Target;
-
         ILocalFile ILocalFileAccessError.Target => Target;
 
         ILocalDbEntity ILocalAccessError.Target => Target;
 
-        IDbEntity IAccessError<ILocalDbEntity>.Target => Target;
-
         IFile IFileAccessError.Target => Target;
-
-        IDbEntity IAccessError<ILocalFile>.Target => Target;
 
         #endregion
 
@@ -162,6 +156,11 @@ namespace FsInfoCat.Local
             if (Details.Trim().Length > 0)
                 result.Add(new XCData(Details));
             return result;
+        }
+
+        internal static void OnBuildEntity(EntityTypeBuilder<FileAccessError> builder)
+        {
+            builder.HasOne(e => e.Target).WithMany(d => d.AccessErrors).HasForeignKey(nameof(TargetId)).IsRequired().OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

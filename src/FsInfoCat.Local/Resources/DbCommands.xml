@@ -499,6 +499,126 @@
     CHECK("CreatedOn"<="ModifiedOn")
 )]]>
         </Text>
+        <Text Message="Creating table 'PersonalTagDefinitions'">
+    <![CDATA[CREATE TABLE IF NOT EXISTS "PersonalTagDefinitions" (
+    "Id" UNIQUEIDENTIFIER NOT NULL COLLATE NOCASE,
+    "Name" NVARCHAR(256) NOT NULL CHECK(length(trim("Name"))=length("Name")) COLLATE NOCASE,
+    "Description" TEXT NOT NULL DEFAULT '',
+    "IsInactive" BIT NOT NULL DEFAULT 0,
+    "CreatedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+    "ModifiedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+    "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL COLLATE NOCASE,
+    "LastSynchronizedOn" DATETIME DEFAULT NULL,
+    CONSTRAINT "PK_PersonalTagDefinitions" PRIMARY KEY("Id"),
+    CONSTRAINT "UK_PersonalTagDefinition_Name" UNIQUE("Name"),
+    CHECK((("UpstreamId" IS NULL AND "LastSynchronizedOn" IS NULL) OR ("UpstreamId" IS NOT NULL AND "LastSynchronizedOn" IS NOT NULL)) AND "CreatedOn"<="ModifiedOn")
+)]]>
+        </Text>
+        <Text Message="Creating index 'IDX_PersonalTagDefinition_Name'">
+            <![CDATA[CREATE INDEX "IDX_PersonalTagDefinition_Name" ON "PersonalTagDefinitions" ("Name")]]>
+        </Text>
+        <Text Message="Creating table 'PersonalFileTags'">
+    <![CDATA[CREATE TABLE IF NOT EXISTS "PersonalFileTags" (
+    "FileId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_PersonalFileTag_File" REFERENCES "Files"("Id") ON DELETE RESTRICT COLLATE NOCASE,
+    "PersonalTagDefinitionId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_PersonalFileTag_TagDefinition" REFERENCES "PersonalTagDefinitions"("Id") ON DELETE RESTRICT COLLATE NOCASE,
+    "Notes" TEXT NOT NULL DEFAULT '',
+    "IsInactive" BIT NOT NULL DEFAULT 0,
+    "CreatedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+    "ModifiedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+    "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL COLLATE NOCASE,
+    "LastSynchronizedOn" DATETIME DEFAULT NULL,
+    CONSTRAINT "PK_PersonalFileTags" PRIMARY KEY("FileId", "PersonalTagDefinitionId"),
+    CHECK((("UpstreamId" IS NULL AND "LastSynchronizedOn" IS NULL) OR ("UpstreamId" IS NOT NULL AND "LastSynchronizedOn" IS NOT NULL)) AND "CreatedOn"<="ModifiedOn")
+)]]>
+        </Text>
+        <Text Message="Creating table 'PersonalSubdirectoryTags'">
+    <![CDATA[CREATE TABLE IF NOT EXISTS "PersonalSubdirectoryTags" (
+    "SubdirectoryId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_PersonalSubdirectoryTag_Subdirectory" REFERENCES "Subdirectories"("Id") ON DELETE RESTRICT COLLATE NOCASE,
+    "PersonalTagDefinitionId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_PersonalSubdirectoryTag_TagDefinition" REFERENCES "PersonalTagDefinitions"("Id") ON DELETE RESTRICT COLLATE NOCASE,
+    "Notes" TEXT NOT NULL DEFAULT '',
+    "IsInactive" BIT NOT NULL DEFAULT 0,
+    "CreatedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+    "ModifiedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+    "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL COLLATE NOCASE,
+    "LastSynchronizedOn" DATETIME DEFAULT NULL,
+    CONSTRAINT "PK_PersonalSubdirectoryTags" PRIMARY KEY("SubdirectoryId", "PersonalTagDefinitionId"),
+    CHECK((("UpstreamId" IS NULL AND "LastSynchronizedOn" IS NULL) OR ("UpstreamId" IS NOT NULL AND "LastSynchronizedOn" IS NOT NULL)) AND "CreatedOn"<="ModifiedOn")
+)]]>
+        </Text>
+        <Text Message="Creating table 'PersonalVolumeTags'">
+    <![CDATA[CREATE TABLE IF NOT EXISTS "PersonalVolumeTags" (
+    "VolumeId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_PersonalVolumeTag_Volume" REFERENCES "Volumes"("Id") ON DELETE RESTRICT COLLATE NOCASE,
+    "PersonalTagDefinitionId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_PersonalVolumeTag_TagDefinition" REFERENCES "PersonalTagDefinitions"("Id") ON DELETE RESTRICT COLLATE NOCASE,
+    "Notes" TEXT NOT NULL DEFAULT '',
+    "IsInactive" BIT NOT NULL DEFAULT 0,
+    "CreatedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+    "ModifiedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+    "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL COLLATE NOCASE,
+    "LastSynchronizedOn" DATETIME DEFAULT NULL,
+    CONSTRAINT "PK_PersonalVolumeTags" PRIMARY KEY("VolumeId", "PersonalTagDefinitionId"),
+    CHECK((("UpstreamId" IS NULL AND "LastSynchronizedOn" IS NULL) OR ("UpstreamId" IS NOT NULL AND "LastSynchronizedOn" IS NOT NULL)) AND "CreatedOn"<="ModifiedOn")
+)]]>
+        </Text>
+        <Text Message="Creating table 'SharedTagDefinitions'">
+    <![CDATA[CREATE TABLE IF NOT EXISTS "SharedTagDefinitions" (
+    "Id" UNIQUEIDENTIFIER NOT NULL COLLATE NOCASE,
+    "Name" NVARCHAR(256) NOT NULL CHECK(length(trim("Name"))=length("Name")) COLLATE NOCASE,
+    "Description" TEXT NOT NULL DEFAULT '',
+    "IsInactive" BIT NOT NULL DEFAULT 0,
+    "CreatedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+    "ModifiedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+    "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL COLLATE NOCASE,
+    "LastSynchronizedOn" DATETIME DEFAULT NULL,
+    CONSTRAINT "PK_SharedTagDefinitions" PRIMARY KEY("Id"),
+    CONSTRAINT "UK_SharedTagDefinition_Name" UNIQUE("Name"),
+    CHECK((("UpstreamId" IS NULL AND "LastSynchronizedOn" IS NULL) OR ("UpstreamId" IS NOT NULL AND "LastSynchronizedOn" IS NOT NULL)) AND "CreatedOn"<="ModifiedOn")
+)]]>
+        </Text>
+        <Text Message="Creating index 'IDX_SharedTagDefinition_Name'">
+            <![CDATA[CREATE INDEX "IDX_SharedTagDefinition_Name" ON "SharedTagDefinitions" ("Name")]]>
+        </Text>
+        <Text Message="Creating table 'SharedFileTags'">
+    <![CDATA[CREATE TABLE IF NOT EXISTS "SharedFileTags" (
+    "FileId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_SharedFileTag_File" REFERENCES "Files"("Id") ON DELETE RESTRICT COLLATE NOCASE,
+    "SharedTagDefinitionId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_SharedFileTag_TagDefinition" REFERENCES "SharedTagDefinitions"("Id") ON DELETE RESTRICT COLLATE NOCASE,
+    "Notes" TEXT NOT NULL DEFAULT '',
+    "IsInactive" BIT NOT NULL DEFAULT 0,
+    "CreatedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+    "ModifiedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+    "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL COLLATE NOCASE,
+    "LastSynchronizedOn" DATETIME DEFAULT NULL,
+    CONSTRAINT "PK_SharedFileTags" PRIMARY KEY("FileId", "SharedTagDefinitionId"),
+    CHECK((("UpstreamId" IS NULL AND "LastSynchronizedOn" IS NULL) OR ("UpstreamId" IS NOT NULL AND "LastSynchronizedOn" IS NOT NULL)) AND "CreatedOn"<="ModifiedOn")
+)]]>
+        </Text>
+        <Text Message="Creating table 'SharedSubdirectoryTags'">
+    <![CDATA[CREATE TABLE IF NOT EXISTS "SharedSubdirectoryTags" (
+    "SubdirectoryId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_SharedSubdirectoryTag_Subdirectory" REFERENCES "Subdirectories"("Id") ON DELETE RESTRICT COLLATE NOCASE,
+    "SharedTagDefinitionId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_SharedSubdirectoryTag_TagDefinition" REFERENCES "SharedTagDefinitions"("Id") ON DELETE RESTRICT COLLATE NOCASE,
+    "Notes" TEXT NOT NULL DEFAULT '',
+    "IsInactive" BIT NOT NULL DEFAULT 0,
+    "CreatedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+    "ModifiedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+    "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL COLLATE NOCASE,
+    "LastSynchronizedOn" DATETIME DEFAULT NULL,
+    CONSTRAINT "PK_SharedSubdirectoryTags" PRIMARY KEY("SubdirectoryId", "SharedTagDefinitionId"),
+    CHECK((("UpstreamId" IS NULL AND "LastSynchronizedOn" IS NULL) OR ("UpstreamId" IS NOT NULL AND "LastSynchronizedOn" IS NOT NULL)) AND "CreatedOn"<="ModifiedOn")
+)]]>
+        </Text>
+        <Text Message="Creating table 'SharedVolumeTags'">
+    <![CDATA[CREATE TABLE IF NOT EXISTS "SharedVolumeTags" (
+    "VolumeId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_SharedVolumeTag_Volume" REFERENCES "Volumes"("Id") ON DELETE RESTRICT COLLATE NOCASE,
+    "SharedTagDefinitionId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_SharedVolumeTag_TagDefinition" REFERENCES "SharedTagDefinitions"("Id") ON DELETE RESTRICT COLLATE NOCASE,
+    "Notes" TEXT NOT NULL DEFAULT '',
+    "IsInactive" BIT NOT NULL DEFAULT 0,
+    "CreatedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+    "ModifiedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+    "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL COLLATE NOCASE,
+    "LastSynchronizedOn" DATETIME DEFAULT NULL,
+    CONSTRAINT "PK_SharedVolumeTags" PRIMARY KEY("VolumeId", "SharedTagDefinitionId"),
+    CHECK((("UpstreamId" IS NULL AND "LastSynchronizedOn" IS NULL) OR ("UpstreamId" IS NOT NULL AND "LastSynchronizedOn" IS NOT NULL)) AND "CreatedOn"<="ModifiedOn")
+)]]>
+        </Text>
         <Text Message="Creating table 'Redundancies'">
             <![CDATA[CREATE TABLE IF NOT EXISTS "Redundancies" (
     "FileId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_Redundancy_File" REFERENCES "Files"("Id") ON DELETE RESTRICT COLLATE NOCASE,
@@ -707,6 +827,30 @@ END]]>
     <DropTables>
         <Text Message="Dropping table 'Comparisons'">
             <![CDATA[DROP TABLE IF EXISTS "Comparisons"]]>
+        </Text>
+        <Text Message="Dropping table 'SharedVolumeTags'">
+            <![CDATA[DROP TABLE IF EXISTS "SharedFileTags"]]>
+        </Text>
+        <Text Message="Dropping table 'SharedSubdirectoryTags'">
+            <![CDATA[DROP TABLE IF EXISTS "SharedFileTags"]]>
+        </Text>
+        <Text Message="Dropping table 'SharedFileTags'">
+            <![CDATA[DROP TABLE IF EXISTS "SharedFileTags"]]>
+        </Text>
+        <Text Message="Dropping table 'SharedTagDefinitions'">
+            <![CDATA[DROP TABLE IF EXISTS "SharedTagDefinitions"]]>
+        </Text>
+        <Text Message="Dropping table 'PersonalVolumeTag'">
+            <![CDATA[DROP TABLE IF EXISTS "PersonalFileTag"]]>
+        </Text>
+        <Text Message="Dropping table 'PersonalSubdirectoryTag'">
+            <![CDATA[DROP TABLE IF EXISTS "PersonalFileTag"]]>
+        </Text>
+        <Text Message="Dropping table 'PersonalFileTag'">
+            <![CDATA[DROP TABLE IF EXISTS "PersonalFileTag"]]>
+        </Text>
+        <Text Message="Dropping table 'PersonalTagDefinitions'">
+            <![CDATA[DROP TABLE IF EXISTS "PersonalTagDefinitions"]]>
         </Text>
         <Text Message="Dropping table 'Redundancies'">
             <![CDATA[DROP TABLE IF EXISTS "Redundancies"]]>

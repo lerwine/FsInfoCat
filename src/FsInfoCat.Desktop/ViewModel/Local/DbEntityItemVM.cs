@@ -1,13 +1,8 @@
-using FsInfoCat.Desktop.ViewModel.AsyncOps;
 using FsInfoCat.Local;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using System;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
 

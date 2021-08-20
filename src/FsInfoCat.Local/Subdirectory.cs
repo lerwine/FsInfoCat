@@ -36,6 +36,8 @@ namespace FsInfoCat.Local
         private HashSet<DbFile> _files = new();
         private HashSet<Subdirectory> _subDirectories = new();
         private HashSet<SubdirectoryAccessError> _accessErrors = new();
+        private HashSet<PersonalSubdirectoryTag> _personalTags = new();
+        private HashSet<SharedSubdirectoryTag> _sharedTags = new();
 
         #endregion
 
@@ -148,6 +150,18 @@ namespace FsInfoCat.Local
             set => CheckHashSetChanged(_accessErrors, value, h => _accessErrors = h);
         }
 
+        public HashSet<PersonalSubdirectoryTag> PersonalTags
+        {
+            get => _personalTags;
+            set => CheckHashSetChanged(_personalTags, value, h => _personalTags = h);
+        }
+
+        public HashSet<SharedSubdirectoryTag> SharedTags
+        {
+            get => _sharedTags;
+            set => CheckHashSetChanged(_sharedTags, value, h => _sharedTags = h);
+        }
+
         #endregion
 
         #region Explicit Members
@@ -181,6 +195,22 @@ namespace FsInfoCat.Local
         IEnumerable<IAccessError> IDbFsItem.AccessErrors => AccessErrors.Cast<IAccessError>();
 
         ISubdirectory ISubdirectory.Parent => Parent;
+
+        IEnumerable<ILocalPersonalSubdirectoryTag> ILocalSubdirectory.PersonalTags => PersonalTags.Cast<ILocalPersonalSubdirectoryTag>();
+
+        IEnumerable<ILocalPersonalTag> ILocalDbFsItem.PersonalTags => PersonalTags.Cast<ILocalPersonalTag>();
+
+        IEnumerable<IPersonalSubdirectoryTag> ISubdirectory.PersonalTags => PersonalTags.Cast<IPersonalSubdirectoryTag>();
+
+        IEnumerable<IPersonalTag> IDbFsItem.PersonalTags => PersonalTags.Cast<IPersonalTag>();
+
+        IEnumerable<ILocalSharedSubdirectoryTag> ILocalSubdirectory.SharedTags => SharedTags.Cast<ILocalSharedSubdirectoryTag>();
+
+        IEnumerable<ILocalSharedTag> ILocalDbFsItem.SharedTags => SharedTags.Cast<ILocalSharedTag>();
+
+        IEnumerable<ISharedSubdirectoryTag> ISubdirectory.SharedTags => SharedTags.Cast<ISharedSubdirectoryTag>();
+
+        IEnumerable<ISharedTag> IDbFsItem.SharedTags => SharedTags.Cast<ISharedTag>();
 
         #endregion
 
@@ -420,7 +450,7 @@ namespace FsInfoCat.Local
             base.OnPropertyChanging(args);
         }
 
-        internal static void BuildEntity(EntityTypeBuilder<Subdirectory> builder)
+        internal static void OnBuildEntity(EntityTypeBuilder<Subdirectory> builder)
         {
             builder.HasOne(sn => sn.Parent).WithMany(d => d.SubDirectories).HasForeignKey(nameof(ParentId)).OnDelete(DeleteBehavior.Restrict);
             builder.HasOne(sn => sn.Volume).WithOne(d => d.RootDirectory).HasForeignKey<Subdirectory>(nameof(VolumeId)).OnDelete(DeleteBehavior.Restrict);//.HasPrincipalKey<Volume>(nameof(Local.Volume.Id));

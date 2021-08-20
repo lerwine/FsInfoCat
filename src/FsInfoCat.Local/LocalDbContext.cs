@@ -39,29 +39,45 @@ namespace FsInfoCat.Local
 
         public virtual DbSet<FileAccessError> FileAccessErrors { get; set; }
 
-        public virtual DbSet<SummaryPropertySet> SummaryPropertySets { get; }
+        public virtual DbSet<SummaryPropertySet> SummaryPropertySets { get; set; }
 
-        public virtual DbSet<DocumentPropertySet> DocumentPropertySets { get; }
+        public virtual DbSet<DocumentPropertySet> DocumentPropertySets { get; set; }
 
-        public virtual DbSet<AudioPropertySet> AudioPropertySets { get; }
+        public virtual DbSet<AudioPropertySet> AudioPropertySets { get; set; }
 
-        public virtual DbSet<DRMPropertySet> DRMPropertySets { get; }
+        public virtual DbSet<DRMPropertySet> DRMPropertySets { get; set; }
 
-        public virtual DbSet<GPSPropertySet> GPSPropertySets { get; }
+        public virtual DbSet<GPSPropertySet> GPSPropertySets { get; set; }
 
-        public virtual DbSet<ImagePropertySet> ImagePropertySets { get; }
+        public virtual DbSet<ImagePropertySet> ImagePropertySets { get; set; }
 
-        public virtual DbSet<MediaPropertySet> MediaPropertySets { get; }
+        public virtual DbSet<MediaPropertySet> MediaPropertySets { get; set; }
 
-        public virtual DbSet<MusicPropertySet> MusicPropertySets { get; }
+        public virtual DbSet<MusicPropertySet> MusicPropertySets { get; set; }
 
-        public virtual DbSet<PhotoPropertySet> PhotoPropertySets { get; }
+        public virtual DbSet<PhotoPropertySet> PhotoPropertySets { get; set; }
 
-        public virtual DbSet<RecordedTVPropertySet> RecordedTVPropertySets { get; }
+        public virtual DbSet<RecordedTVPropertySet> RecordedTVPropertySets { get; set; }
 
-        public virtual DbSet<VideoPropertySet> VideoPropertySets { get; }
+        public virtual DbSet<VideoPropertySet> VideoPropertySets { get; set; }
 
         public virtual DbSet<BinaryPropertySet> BinaryPropertySets { get; set; }
+
+        public virtual DbSet<PersonalTagDefinition> PersonalTagDefinitions { get; set; }
+
+        public virtual DbSet<PersonalFileTag> PersonalFileTags { get; set; }
+
+        public virtual DbSet<PersonalSubdirectoryTag> PersonalSubdirectoryTags { get; set; }
+
+        public virtual DbSet<PersonalVolumeTag> PersonalVolumeTags { get; set; }
+
+        public virtual DbSet<SharedTagDefinition> SharedTagDefinitions { get; set; }
+
+        public virtual DbSet<SharedFileTag> SharedFileTags { get; set; }
+
+        public virtual DbSet<SharedSubdirectoryTag> SharedSubdirectoryTags { get; set; }
+
+        public virtual DbSet<SharedVolumeTag> SharedVolumeTags { get; set; }
 
         public virtual DbSet<FileComparison> Comparisons { get; set; }
 
@@ -73,7 +89,6 @@ namespace FsInfoCat.Local
 
         public LocalDbContext(DbContextOptions<LocalDbContext> options)
             : base(options)
-        //: base(Services.ServiceProvider.GetRequiredService<ILogger<LocalDbContext>>(), options)
         {
             _logger = Services.ServiceProvider.GetRequiredService<ILogger<LocalDbContext>>();
             lock (_syncRoot)
@@ -120,23 +135,32 @@ namespace FsInfoCat.Local
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasDefaultSchema("dbo")
-                .Entity<SymbolicName>(SymbolicName.BuildEntity)
-                .Entity<Volume>(Volume.BuildEntity)
-                .Entity<Subdirectory>(Subdirectory.BuildEntity)
-                .Entity<CrawlConfiguration>(CrawlConfiguration.BuildEntity)
-                .Entity<CrawlJobLog>(CrawlJobLog.BuildEntity)
-                .Entity<DbFile>(DbFile.BuildEntity)
-                .Entity<BinaryPropertySet>(BinaryPropertySet.BuildEntity)
-                .Entity<FileComparison>(FileComparison.BuildEntity)
-                .Entity<RedundantSet>(RedundantSet.BuildEntity)
-                .Entity<Redundancy>(Redundancy.BuildEntity)
-                .Entity<SummaryPropertySet>(SummaryPropertySet.BuildEntity)
-                .Entity<DocumentPropertySet>(DocumentPropertySet.BuildEntity)
-                .Entity<GPSPropertySet>(GPSPropertySet.BuildEntity)
-                .Entity<MediaPropertySet>(MediaPropertySet.BuildEntity)
-                .Entity<MusicPropertySet>(MusicPropertySet.BuildEntity)
-                .Entity<PhotoPropertySet>(PhotoPropertySet.BuildEntity)
-                .Entity<VideoPropertySet>(VideoPropertySet.BuildEntity);
+                .Entity<SymbolicName>(SymbolicName.OnBuildEntity)
+                .Entity<Volume>(Volume.OnBuildEntity)
+                .Entity<Subdirectory>(Subdirectory.OnBuildEntity)
+                .Entity<CrawlConfiguration>(CrawlConfiguration.OnBuildEntity)
+                .Entity<CrawlJobLog>(CrawlJobLog.OnBuildEntity)
+                .Entity<DbFile>(DbFile.OnBuildEntity)
+                .Entity<BinaryPropertySet>(BinaryPropertySet.OnBuildEntity)
+                .Entity<FileComparison>(FileComparison.OnBuildEntity)
+                .Entity<RedundantSet>(RedundantSet.OnBuildEntity)
+                .Entity<Redundancy>(Redundancy.OnBuildEntity)
+                .Entity<SummaryPropertySet>(SummaryPropertySet.OnBuildEntity)
+                .Entity<DocumentPropertySet>(DocumentPropertySet.OnBuildEntity)
+                .Entity<GPSPropertySet>(GPSPropertySet.OnBuildEntity)
+                .Entity<MediaPropertySet>(MediaPropertySet.OnBuildEntity)
+                .Entity<MusicPropertySet>(MusicPropertySet.OnBuildEntity)
+                .Entity<PhotoPropertySet>(PhotoPropertySet.OnBuildEntity)
+                .Entity<VideoPropertySet>(VideoPropertySet.OnBuildEntity)
+                .Entity<PersonalFileTag>(PersonalFileTag.OnBuildEntity)
+                .Entity<PersonalSubdirectoryTag>(PersonalSubdirectoryTag.OnBuildEntity)
+                .Entity<PersonalVolumeTag>(PersonalVolumeTag.OnBuildEntity)
+                .Entity<SharedFileTag>(SharedFileTag.OnBuildEntity)
+                .Entity<SharedSubdirectoryTag>(SharedSubdirectoryTag.OnBuildEntity)
+                .Entity<SharedVolumeTag>(SharedVolumeTag.OnBuildEntity)
+                .Entity<FileAccessError>(FileAccessError.OnBuildEntity)
+                .Entity<SubdirectoryAccessError>(SubdirectoryAccessError.OnBuildEntity)
+                .Entity<VolumeAccessError>(VolumeAccessError.OnBuildEntity);
         }
 
         public static void AddDbContextPool(IServiceCollection services, Assembly assembly, string dbFileName) => AddDbContextPool(services, GetDbFilePath(assembly, dbFileName));
@@ -145,7 +169,6 @@ namespace FsInfoCat.Local
         {
             string connectionString = GetConnectionString(dbPath);
             services.AddDbContextPool<LocalDbContext>(options => options.AddInterceptors(new Interceptor()).UseSqlite(connectionString));
-            // this.Model.GetDefaultSchema();
         }
 
         public static string GetConnectionString(Assembly assembly, string dbFileName) => GetConnectionString(GetDbFilePath(assembly, dbFileName));
@@ -564,7 +587,7 @@ namespace FsInfoCat.Local
 
         protected override IEnumerable<IVideoPropertySet> GetGenericVideoPropertySets() => VideoPropertySets;
 
-        protected override IEnumerable<IAccessError<IFile>> GetGenericFileAccessErrors() => FileAccessErrors;
+        protected override IEnumerable<IFileAccessError> GetGenericFileAccessErrors() => FileAccessErrors;
 
         protected override IEnumerable<IFile> GetGenericFiles() => Files;
 
@@ -576,15 +599,37 @@ namespace FsInfoCat.Local
 
         protected override IEnumerable<ISubdirectory> GetGenericSubdirectories() => Subdirectories;
 
-        protected override IEnumerable<IAccessError<ISubdirectory>> GetGenericSubdirectoryAccessErrors() => SubdirectoryAccessErrors;
+        protected override IEnumerable<ISubdirectoryAccessError> GetGenericSubdirectoryAccessErrors() => SubdirectoryAccessErrors;
 
         protected override IEnumerable<ISymbolicName> GetGenericSymbolicNames() => SymbolicNames;
 
-        protected override IEnumerable<IAccessError<IVolume>> GetGenericVolumeAccessErrors() => VolumeAccessErrors;
+        protected override IEnumerable<IVolumeAccessError> GetGenericVolumeAccessErrors() => VolumeAccessErrors;
 
         protected override IEnumerable<IVolume> GetGenericVolumes() => Volumes;
 
         protected override IEnumerable<ICrawlConfiguration> GetGenericCrawlConfigurations() => CrawlConfigurations;
+
+        protected override IEnumerable<IFileAccessError> GetFileAccessErrors() => FileAccessErrors;
+
+        protected override IEnumerable<ISubdirectoryAccessError> GetSubdirectoryAccessErrors() => SubdirectoryAccessErrors;
+
+        protected override IEnumerable<IVolumeAccessError> GetVolumeAccessErrors() => VolumeAccessErrors;
+
+        protected override IEnumerable<IPersonalTagDefinition> GetPersonalTagDefinitions() => PersonalTagDefinitions;
+
+        protected override IEnumerable<IPersonalFileTag> GetPersonalFileTags() => PersonalFileTags;
+
+        protected override IEnumerable<IPersonalSubdirectoryTag> GetPersonalSubdirectoryTags() => PersonalSubdirectoryTags;
+
+        protected override IEnumerable<IPersonalVolumeTag> GetPersonalVolumeTags() => PersonalVolumeTags;
+
+        protected override IEnumerable<ISharedTagDefinition> GetSharedTagDefinitions() => SharedTagDefinitions;
+
+        protected override IEnumerable<ISharedFileTag> GetSharedFileTags() => SharedFileTags;
+
+        protected override IEnumerable<ISharedSubdirectoryTag> GetSharedSubdirectoryTags() => SharedSubdirectoryTags;
+
+        protected override IEnumerable<ISharedVolumeTag> GetSharedVolumeTags() => SharedVolumeTags;
 
         protected async override Task<IGPSPropertySet> FindGenericMatchingAsync(IGPSProperties properties, CancellationToken cancellationToken) =>
             await FindMatchingAsync(properties, cancellationToken);
@@ -649,7 +694,7 @@ namespace FsInfoCat.Local
 
         IEnumerable<ILocalVideoPropertySet> ILocalDbContext.VideoPropertySets => VideoPropertySets;
 
-        IEnumerable<IAccessError<ILocalFile>> ILocalDbContext.FileAccessErrors => FileAccessErrors;
+        IEnumerable<ILocalFileAccessError> ILocalDbContext.FileAccessErrors => FileAccessErrors;
 
         IEnumerable<ILocalFile> ILocalDbContext.Files => Files;
 
@@ -661,15 +706,31 @@ namespace FsInfoCat.Local
 
         IEnumerable<ILocalSubdirectory> ILocalDbContext.Subdirectories => Subdirectories;
 
-        IEnumerable<IAccessError<ILocalSubdirectory>> ILocalDbContext.SubdirectoryAccessErrors => SubdirectoryAccessErrors;
+        IEnumerable<ILocalSubdirectoryAccessError> ILocalDbContext.SubdirectoryAccessErrors => SubdirectoryAccessErrors;
 
         IEnumerable<ILocalSymbolicName> ILocalDbContext.SymbolicNames => SymbolicNames;
 
-        IEnumerable<IAccessError<ILocalVolume>> ILocalDbContext.VolumeAccessErrors => VolumeAccessErrors;
+        IEnumerable<ILocalVolumeAccessError> ILocalDbContext.VolumeAccessErrors => VolumeAccessErrors;
 
         IEnumerable<ILocalVolume> ILocalDbContext.Volumes => Volumes;
 
         IEnumerable<ILocalCrawlConfiguration> ILocalDbContext.CrawlConfigurations => CrawlConfigurations;
+
+        IEnumerable<ILocalPersonalTagDefinition> ILocalDbContext.PersonalTagDefinitions => PersonalTagDefinitions;
+
+        IEnumerable<ILocalPersonalFileTag> ILocalDbContext.PersonalFileTags => PersonalFileTags;
+
+        IEnumerable<ILocalPersonalSubdirectoryTag> ILocalDbContext.PersonalSubdirectoryTags => PersonalSubdirectoryTags;
+
+        IEnumerable<ILocalPersonalVolumeTag> ILocalDbContext.PersonalVolumeTags => PersonalVolumeTags;
+
+        IEnumerable<ILocalSharedTagDefinition> ILocalDbContext.SharedTagDefinitions => SharedTagDefinitions;
+
+        IEnumerable<ILocalSharedFileTag> ILocalDbContext.SharedFileTags => SharedFileTags;
+
+        IEnumerable<ILocalSharedSubdirectoryTag> ILocalDbContext.SharedSubdirectoryTags => SharedSubdirectoryTags;
+
+        IEnumerable<ILocalSharedVolumeTag> ILocalDbContext.SharedVolumeTags => SharedVolumeTags;
 
         async Task<ILocalSummaryPropertySet> ILocalDbContext.FindMatchingAsync(ISummaryProperties properties, CancellationToken cancellationToken) =>
             await FindMatchingAsync(properties, cancellationToken);

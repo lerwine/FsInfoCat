@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.Upstream
@@ -22,5 +22,9 @@ namespace FsInfoCat.Upstream
         /// <value>The access errors for the current file system item.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_AccessErrors), ResourceType = typeof(Properties.Resources))]
         new IEnumerable<IUpstreamAccessError> AccessErrors { get; }
+
+        new IEnumerable<IUpstreamPersonalTag> PersonalTags { get; }
+
+        new IEnumerable<IUpstreamSharedTag> SharedTags { get; }
     }
 }

@@ -25,20 +25,21 @@
                 </ItemsPanelTemplate>
             </Menu.ItemsPanel>
             <MenuItem Header="File">
-                <MenuItem Header="View File Systems" />
-                <MenuItem Header="View Volumes" />
+                <MenuItem Header="View File Systems" Command="{Binding ViewFileSystems, Mode=OneWay}" />
+                <MenuItem Header="View Volumes" Command="{Binding ViewVolumes, Mode=OneWay}" />
                 <Separator/>
                 <MenuItem Header="Exit" Command="ApplicationCommands.Close" />
             </MenuItem>
             <MenuItem Header="Crawl Configurations">
                 <Separator/>
-                <MenuItem Header="New Crawl" />
-                <MenuItem Header="Open Listing" />
+                <MenuItem Header="New Crawl" Command="{Binding NewCrawl, Mode=OneWay}" />
+                <MenuItem Header="Open Listing" Command="{Binding ViewCrawlConfigurations, Mode=OneWay}" />
             </MenuItem>
             <MenuItem Header="Groupings">
                 <Separator/>
-                <MenuItem Header="Redundancy Sets" />
-                <MenuItem Header="Tag Definitions" />
+                <MenuItem Header="Redundancy Sets" Command="{Binding ViewRedundancySets, Mode=OneWay}" />
+                <MenuItem Header="Personal Tag Definitions" Command="{Binding ViewPersonalTagDefinitions, Mode=OneWay}" />
+                <MenuItem Header="Shared Tag Definitions" Command="{Binding ViewSharedTagDefinitions, Mode=OneWay}" />
             </MenuItem>
             <Separator/>
             <MenuItem Header="Help" HorizontalAlignment="Right"/>

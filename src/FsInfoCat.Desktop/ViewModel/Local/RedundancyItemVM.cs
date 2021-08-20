@@ -72,6 +72,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         public string Reference { get => GetValue(ReferenceProperty) as string; private set => SetValue(ReferencePropertyKey, value); }
 
         #endregion
+
         public RedundancyItemVM(Redundancy model)
             : base(model)
         {

@@ -201,7 +201,7 @@ namespace FsInfoCat.Local
             return value.HasValue ? TimeSpan.FromSeconds(value.Value) : null;
         }
 
-        internal static void BuildEntity(EntityTypeBuilder<CrawlConfiguration> builder)
+        internal static void OnBuildEntity(EntityTypeBuilder<CrawlConfiguration> builder)
         {
             builder.HasOne(s => s.Root).WithOne(c => c.CrawlConfiguration).HasForeignKey<CrawlConfiguration>(nameof(RootId)).OnDelete(DeleteBehavior.Restrict);
         }

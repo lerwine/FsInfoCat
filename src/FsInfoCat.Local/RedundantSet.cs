@@ -119,7 +119,7 @@ namespace FsInfoCat.Local
             base.OnPropertyChanging(args);
         }
 
-        internal static void BuildEntity(EntityTypeBuilder<RedundantSet> builder)
+        internal static void OnBuildEntity(EntityTypeBuilder<RedundantSet> builder)
         {
             builder.HasOne(sn => sn.BinaryProperties).WithMany(d => d.RedundantSets).HasForeignKey(nameof(BinaryPropertiesId)).IsRequired().OnDelete(DeleteBehavior.Restrict);
         }

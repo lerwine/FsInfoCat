@@ -144,7 +144,7 @@ namespace FsInfoCat.Local
 
         }
 
-        internal static void BuildEntity(EntityTypeBuilder<CrawlJobLog> builder)
+        internal static void OnBuildEntity(EntityTypeBuilder<CrawlJobLog> builder)
         {
             builder.HasOne(sn => sn.Configuration).WithMany(d => d.Logs).HasForeignKey(nameof(ConfigurationId)).IsRequired().OnDelete(DeleteBehavior.Restrict);
         }

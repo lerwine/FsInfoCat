@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.Upstream
 {
@@ -6,8 +6,7 @@ namespace FsInfoCat.Upstream
     /// <typeparam name="TTarget">The target entity type.</typeparam>
     /// <seealso cref="IUpstreamAccessError" />
     /// <seealso cref="IFileAccessError" />
-    /// <seealso cref="IAccessError&lt;IUpstreamFile&gt;" />
-    public interface IUpstreamFileAccessError : IUpstreamAccessError, IFileAccessError, IAccessError<IUpstreamFile>
+    public interface IUpstreamFileAccessError : IUpstreamAccessError, IFileAccessError
     {
         /// <summary>Gets the target file to which the access error applies.</summary>
         /// <value>The <typeparamref name="IUpstreamFile" /> entity that this error applies to.</value>

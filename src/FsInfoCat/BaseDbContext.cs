@@ -244,7 +244,7 @@ namespace FsInfoCat
 
         protected abstract IEnumerable<IVideoPropertySet> GetGenericVideoPropertySets();
 
-        protected abstract IEnumerable<IAccessError<IFile>> GetGenericFileAccessErrors();
+        protected abstract IEnumerable<IFileAccessError> GetGenericFileAccessErrors();
 
         protected abstract IEnumerable<IFile> GetGenericFiles();
 
@@ -256,15 +256,37 @@ namespace FsInfoCat
 
         protected abstract IEnumerable<ISubdirectory> GetGenericSubdirectories();
 
-        protected abstract IEnumerable<IAccessError<ISubdirectory>> GetGenericSubdirectoryAccessErrors();
+        protected abstract IEnumerable<ISubdirectoryAccessError> GetGenericSubdirectoryAccessErrors();
 
         protected abstract IEnumerable<ISymbolicName> GetGenericSymbolicNames();
 
-        protected abstract IEnumerable<IAccessError<IVolume>> GetGenericVolumeAccessErrors();
+        protected abstract IEnumerable<IVolumeAccessError> GetGenericVolumeAccessErrors();
 
         protected abstract IEnumerable<IVolume> GetGenericVolumes();
 
         protected abstract IEnumerable<ICrawlConfiguration> GetGenericCrawlConfigurations();
+
+        protected abstract IEnumerable<IFileAccessError> GetFileAccessErrors();
+
+        protected abstract IEnumerable<ISubdirectoryAccessError> GetSubdirectoryAccessErrors();
+
+        protected abstract IEnumerable<IVolumeAccessError> GetVolumeAccessErrors();
+
+        protected abstract IEnumerable<IPersonalTagDefinition> GetPersonalTagDefinitions();
+
+        protected abstract IEnumerable<IPersonalFileTag> GetPersonalFileTags();
+
+        protected abstract IEnumerable<IPersonalSubdirectoryTag> GetPersonalSubdirectoryTags();
+
+        protected abstract IEnumerable<IPersonalVolumeTag> GetPersonalVolumeTags();
+
+        protected abstract IEnumerable<ISharedTagDefinition> GetSharedTagDefinitions();
+
+        protected abstract IEnumerable<ISharedFileTag> GetSharedFileTags();
+
+        protected abstract IEnumerable<ISharedSubdirectoryTag> GetSharedSubdirectoryTags();
+
+        protected abstract IEnumerable<ISharedVolumeTag> GetSharedVolumeTags();
 
         protected abstract Task<IGPSPropertySet> FindGenericMatchingAsync(IGPSProperties properties, CancellationToken cancellationToken);
 
@@ -303,48 +325,45 @@ namespace FsInfoCat
         IEnumerable<IPhotoPropertySet> IDbContext.PhotoPropertySets => GetGenericPhotoPropertySets();
         IEnumerable<IRecordedTVPropertySet> IDbContext.RecordedTVPropertySets => GetGenericRecordedTVPropertySets();
         IEnumerable<IVideoPropertySet> IDbContext.VideoPropertySets => GetGenericVideoPropertySets();
-        IEnumerable<IAccessError<IFile>> IDbContext.FileAccessErrors => GetGenericFileAccessErrors();
         IEnumerable<IFile> IDbContext.Files => GetGenericFiles();
         IEnumerable<IFileSystem> IDbContext.FileSystems => GetGenericFileSystems();
         IEnumerable<IRedundancy> IDbContext.Redundancies => GetGenericRedundancies();
         IEnumerable<IRedundantSet> IDbContext.RedundantSets => GetGenericRedundantSets();
         IEnumerable<ISubdirectory> IDbContext.Subdirectories => GetGenericSubdirectories();
-        IEnumerable<IAccessError<ISubdirectory>> IDbContext.SubdirectoryAccessErrors => GetGenericSubdirectoryAccessErrors();
         IEnumerable<ISymbolicName> IDbContext.SymbolicNames => GetGenericSymbolicNames();
-        IEnumerable<IAccessError<IVolume>> IDbContext.VolumeAccessErrors => GetGenericVolumeAccessErrors();
         IEnumerable<IVolume> IDbContext.Volumes => GetGenericVolumes();
         IEnumerable<ICrawlConfiguration> IDbContext.CrawlConfigurations => GetGenericCrawlConfigurations();
-
+        IEnumerable<IFileAccessError> IDbContext.FileAccessErrors => GetFileAccessErrors();
+        IEnumerable<ISubdirectoryAccessError> IDbContext.SubdirectoryAccessErrors => GetSubdirectoryAccessErrors();
+        IEnumerable<IVolumeAccessError> IDbContext.VolumeAccessErrors => GetVolumeAccessErrors();
+        IEnumerable<IPersonalTagDefinition> IDbContext.PersonalTagDefinitions => GetPersonalTagDefinitions();
+        IEnumerable<IPersonalFileTag> IDbContext.PersonalFileTags => GetPersonalFileTags();
+        IEnumerable<IPersonalSubdirectoryTag> IDbContext.PersonalSubdirectoryTags => GetPersonalSubdirectoryTags();
+        IEnumerable<IPersonalVolumeTag> IDbContext.PersonalVolumeTags => GetPersonalVolumeTags();
+        IEnumerable<ISharedTagDefinition> IDbContext.SharedTagDefinitions => GetSharedTagDefinitions();
+        IEnumerable<ISharedFileTag> IDbContext.SharedFileTags => GetSharedFileTags();
+        IEnumerable<ISharedSubdirectoryTag> IDbContext.SharedSubdirectoryTags => GetSharedSubdirectoryTags();
+        IEnumerable<ISharedVolumeTag> IDbContext.SharedVolumeTags => GetSharedVolumeTags();
         Task<ISummaryPropertySet> IDbContext.FindMatchingAsync(ISummaryProperties properties, CancellationToken cancellationToken)
             => FindGenericMatchingAsync(properties, cancellationToken);
-
         Task<IDocumentPropertySet> IDbContext.FindMatchingAsync(IDocumentProperties properties, CancellationToken cancellationToken)
             => FindGenericMatchingAsync(properties, cancellationToken);
-
         Task<IAudioPropertySet> IDbContext.FindMatchingAsync(IAudioProperties properties, CancellationToken cancellationToken)
             => FindGenericMatchingAsync(properties, cancellationToken);
-
         Task<IDRMPropertySet> IDbContext.FindMatchingAsync(IDRMProperties properties, CancellationToken cancellationToken)
             => FindGenericMatchingAsync(properties, cancellationToken);
-
         Task<IGPSPropertySet> IDbContext.FindMatchingAsync(IGPSProperties properties, CancellationToken cancellationToken)
             => FindGenericMatchingAsync(properties, cancellationToken);
-
         Task<IImagePropertySet> IDbContext.FindMatchingAsync(IImageProperties properties, CancellationToken cancellationToken)
             => FindGenericMatchingAsync(properties, cancellationToken);
-
         Task<IMediaPropertySet> IDbContext.FindMatchingAsync(IMediaProperties properties, CancellationToken cancellationToken)
             => FindGenericMatchingAsync(properties, cancellationToken);
-
         Task<IMusicPropertySet> IDbContext.FindMatchingAsync(IMusicProperties properties, CancellationToken cancellationToken)
             => FindGenericMatchingAsync(properties, cancellationToken);
-
         Task<IPhotoPropertySet> IDbContext.FindMatchingAsync(IPhotoProperties properties, CancellationToken cancellationToken)
             => FindGenericMatchingAsync(properties, cancellationToken);
-
         Task<IRecordedTVPropertySet> IDbContext.FindMatchingAsync(IRecordedTVProperties properties, CancellationToken cancellationToken)
             => FindGenericMatchingAsync(properties, cancellationToken);
-
         Task<IVideoPropertySet> IDbContext.FindMatchingAsync(IVideoProperties properties, CancellationToken cancellationToken)
             => FindGenericMatchingAsync(properties, cancellationToken);
 

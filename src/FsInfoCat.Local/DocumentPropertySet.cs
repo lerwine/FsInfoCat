@@ -86,7 +86,7 @@ namespace FsInfoCat.Local
             _version = AddChangeTracker(nameof(Version), null, FilePropertiesComparer.NormalizedStringValueCoersion);
         }
 
-        internal static void BuildEntity([DisallowNull] EntityTypeBuilder<DocumentPropertySet> builder) =>
+        internal static void OnBuildEntity([DisallowNull] EntityTypeBuilder<DocumentPropertySet> builder) =>
             (builder ?? throw new ArgumentOutOfRangeException(nameof(builder))).Property(nameof(Contributor)).HasConversion(MultiStringValue.Converter);
 
         internal static async Task RefreshAsync([DisallowNull] EntityEntry<DbFile> entry, [DisallowNull] IFileDetailProvider fileDetailProvider, CancellationToken cancellationToken)

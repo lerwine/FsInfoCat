@@ -156,7 +156,7 @@ namespace FsInfoCat.Local
             _correlative = AddChangeTracker<DbFile>(nameof(Correlative), null);
         }
 
-        internal static void BuildEntity(EntityTypeBuilder<FileComparison> builder)
+        internal static void OnBuildEntity(EntityTypeBuilder<FileComparison> builder)
         {
             builder.HasKey(nameof(BaselineId), nameof(CorrelativeId));
             builder.HasOne(sn => sn.Baseline).WithMany(d => d.BaselineComparisons).HasForeignKey(nameof(BaselineId)).IsRequired().OnDelete(DeleteBehavior.Restrict);

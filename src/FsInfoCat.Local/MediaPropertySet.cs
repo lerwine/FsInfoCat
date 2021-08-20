@@ -98,7 +98,7 @@ namespace FsInfoCat.Local
             _year = AddChangeTracker<uint?>(nameof(Year), null);
         }
 
-        internal static void BuildEntity([DisallowNull] EntityTypeBuilder<MediaPropertySet> builder)
+        internal static void OnBuildEntity([DisallowNull] EntityTypeBuilder<MediaPropertySet> builder)
         {
             if (builder is null)
                 throw new ArgumentOutOfRangeException(nameof(builder));

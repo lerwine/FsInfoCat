@@ -77,7 +77,7 @@ namespace FsInfoCat.Local
             _peopleNames = AddChangeTracker<MultiStringValue>(nameof(PeopleNames), null);
         }
 
-        internal static void BuildEntity([DisallowNull] EntityTypeBuilder<PhotoPropertySet> builder)
+        internal static void OnBuildEntity([DisallowNull] EntityTypeBuilder<PhotoPropertySet> builder)
         {
             if (builder is null)
                 throw new ArgumentOutOfRangeException(nameof(builder));

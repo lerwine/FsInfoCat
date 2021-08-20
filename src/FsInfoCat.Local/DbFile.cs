@@ -60,6 +60,8 @@ namespace FsInfoCat.Local
         private HashSet<FileAccessError> _accessErrors = new();
         private HashSet<FileComparison> _baselineComparisons = new();
         private HashSet<FileComparison> _correlativeComparisons = new();
+        private HashSet<PersonalFileTag> _personalTags = new();
+        private HashSet<SharedFileTag> _sharedTags = new();
 
         #endregion
 
@@ -559,6 +561,18 @@ namespace FsInfoCat.Local
             set => CheckHashSetChanged(_correlativeComparisons, value, h => _correlativeComparisons = h);
         }
 
+        public HashSet<PersonalFileTag> PersonalTags
+        {
+            get => _personalTags;
+            set => CheckHashSetChanged(_personalTags, value, h => _personalTags = h);
+        }
+
+        public HashSet<SharedFileTag> SharedTags
+        {
+            get => _sharedTags;
+            set => CheckHashSetChanged(_sharedTags, value, h => _sharedTags = h);
+        }
+
         #endregion
 
         #region Explicit Members
@@ -603,16 +617,19 @@ namespace FsInfoCat.Local
         IPhotoPropertySet IFile.PhotoProperties { get => PhotoProperties; }
         IRecordedTVPropertySet IFile.RecordedTVProperties { get => RecordedTVProperties; }
         IVideoPropertySet IFile.VideoProperties { get => VideoProperties; }
-
         IEnumerable<ILocalFileAccessError> ILocalFile.AccessErrors => AccessErrors.Cast<ILocalFileAccessError>();
-
         ILocalSubdirectory ILocalDbFsItem.Parent => Parent;
-
         IEnumerable<ILocalAccessError> ILocalDbFsItem.AccessErrors => AccessErrors.Cast<ILocalFileAccessError>();
-
         IEnumerable<IFileAccessError> IFile.AccessErrors => AccessErrors.Cast<ILocalFileAccessError>();
-
         IEnumerable<IAccessError> IDbFsItem.AccessErrors => AccessErrors.Cast<IAccessError>();
+        IEnumerable<ILocalPersonalFileTag> ILocalFile.PersonalTags => SharedTags.Cast<ILocalPersonalFileTag>();
+        IEnumerable<ILocalPersonalTag> ILocalDbFsItem.PersonalTags => SharedTags.Cast<ILocalPersonalTag>();
+        IEnumerable<IPersonalFileTag> IFile.PersonalTags => SharedTags.Cast<IPersonalFileTag>();
+        IEnumerable<IPersonalTag> IDbFsItem.PersonalTags => SharedTags.Cast<IPersonalTag>();
+        IEnumerable<ILocalSharedFileTag> ILocalFile.SharedTags => SharedTags.Cast<ILocalSharedFileTag>();
+        IEnumerable<ILocalSharedTag> ILocalDbFsItem.SharedTags => SharedTags.Cast<ILocalSharedTag>();
+        IEnumerable<ISharedFileTag> IFile.SharedTags => SharedTags.Cast<ISharedFileTag>();
+        IEnumerable<ISharedTag> IDbFsItem.SharedTags => SharedTags.Cast<ISharedTag>();
 
         #endregion
 
@@ -691,7 +708,7 @@ namespace FsInfoCat.Local
             base.OnPropertyChanging(args);
         }
 
-        internal static void BuildEntity(EntityTypeBuilder<DbFile> builder)
+        internal static void OnBuildEntity(EntityTypeBuilder<DbFile> builder)
         {
             builder.HasOne(sn => sn.Parent).WithMany(d => d.Files).HasForeignKey(nameof(ParentId)).IsRequired().OnDelete(DeleteBehavior.Restrict);
             builder.HasOne(sn => sn.BinaryProperties).WithMany(d => d.Files).HasForeignKey(nameof(BinaryPropertySetId)).IsRequired().OnDelete(DeleteBehavior.Restrict);
@@ -881,170 +898,6 @@ namespace FsInfoCat.Local
             // TODO: Need to add code later to see where comparisons need to be made
             return entry;
         }
-
-        //private static async Task MarkDissociatedAsync(EntityEntry<DbFile> dbEntry, CancellationToken cancellationToken)
-        //{
-        //    if (dbEntry.Context is not LocalDbContext dbContext)
-        //        throw new InvalidOperationException();
-        //    Redundancy oldRedundancy = await dbEntry.GetRelatedReferenceAsync(f => f.Redundancy, cancellationToken);
-        //    EntityEntry<RedundantSet> oldRedundantSet;
-        //    if (oldRedundancy is null)
-        //        oldRedundantSet = null;
-        //    else
-        //    {
-        //        oldRedundantSet = await dbContext.Entry(oldRedundancy).GetRelatedTargetEntryAsync(r => r.RedundantSet, cancellationToken);
-        //        cancellationToken.ThrowIfCancellationRequested();
-        //        dbContext.Redundancies.Remove(oldRedundancy);
-        //        await dbContext.SaveChangesAsync(cancellationToken);
-        //        dbEntry.Entity.Redundancy = null;
-        //    }
-        //    EntityEntry<BinaryPropertySet> oldBinaryPropertySet = await dbEntry.GetRelatedTargetEntryAsync(f => f.BinaryProperties, cancellationToken);
-        //    if (oldBinaryPropertySet.Entity.Hash.HasValue || oldBinaryPropertySet.Entity.Length > 0)
-        //    {
-        //        BinaryPropertySet newBinaryPropertySet = await dbContext.BinaryPropertySets.FirstOrDefaultAsync(p => p.Length == 0L && p.Hash == null, cancellationToken);
-        //        if (newBinaryPropertySet is null)
-        //        {
-        //            newBinaryPropertySet = new() { Length = 0L };
-        //            cancellationToken.ThrowIfCancellationRequested();
-        //            dbContext.BinaryPropertySets.Add(newBinaryPropertySet);
-        //            await dbContext.SaveChangesAsync(cancellationToken);
-        //        }
-        //        dbEntry.Entity.BinaryProperties = newBinaryPropertySet;
-        //    }
-        //    FileAccessError[] accessErrors = (await dbEntry.GetRelatedCollectionAsync(f => f.AccessErrors, cancellationToken)).ToArray();
-        //    cancellationToken.ThrowIfCancellationRequested();
-        //    if (accessErrors.Length > 0)
-        //        dbContext.FileAccessErrors.RemoveRange(accessErrors);
-        //    FileComparison[] comparisons = (await dbEntry.GetRelatedCollectionAsync(f => f.BaselineComparisons, cancellationToken))
-        //        .Concat(await dbEntry.GetRelatedCollectionAsync(f => f.CorrelativeComparisons, cancellationToken)).ToArray();
-        //    cancellationToken.ThrowIfCancellationRequested();
-        //    if (comparisons.Length > 0)
-        //        dbContext.Comparisons.RemoveRange(comparisons);
-        //    EntityEntry<SummaryPropertySet> oldSummaryPropertySet = await dbEntry.GetRelatedTargetEntryAsync(f => f.SummaryProperties, cancellationToken);
-        //    dbEntry.Entity.SummaryProperties = null;
-        //    EntityEntry<AudioPropertySet> oldAudioPropertySet = await dbEntry.GetRelatedTargetEntryAsync(f => f.AudioProperties, cancellationToken);
-        //    dbEntry.Entity.AudioProperties = null;
-        //    EntityEntry<DocumentPropertySet> oldDocumentPropertySet = await dbEntry.GetRelatedTargetEntryAsync(f => f.DocumentProperties, cancellationToken);
-        //    dbEntry.Entity.DocumentProperties = null;
-        //    EntityEntry<DRMPropertySet> oldDRMPropertySet = await dbEntry.GetRelatedTargetEntryAsync(f => f.DRMProperties, cancellationToken);
-        //    dbEntry.Entity.DRMProperties = null;
-        //    EntityEntry<GPSPropertySet> oldGPSPropertySet = await dbEntry.GetRelatedTargetEntryAsync(f => f.GPSProperties, cancellationToken);
-        //    dbEntry.Entity.GPSProperties = null;
-        //    EntityEntry<ImagePropertySet> oldImagePropertySet = await dbEntry.GetRelatedTargetEntryAsync(f => f.ImageProperties, cancellationToken);
-        //    dbEntry.Entity.ImageProperties = null;
-        //    EntityEntry<MediaPropertySet> oldMediaPropertySet = await dbEntry.GetRelatedTargetEntryAsync(f => f.MediaProperties, cancellationToken);
-        //    dbEntry.Entity.MediaProperties = null;
-        //    EntityEntry<MusicPropertySet> oldMusicPropertySet = await dbEntry.GetRelatedTargetEntryAsync(f => f.MusicProperties, cancellationToken);
-        //    dbEntry.Entity.MusicProperties = null;
-        //    EntityEntry<PhotoPropertySet> oldPhotoPropertySet = await dbEntry.GetRelatedTargetEntryAsync(f => f.PhotoProperties, cancellationToken);
-        //    dbEntry.Entity.PhotoProperties = null;
-        //    EntityEntry<RecordedTVPropertySet> oldRecordedTVPropertySet = await dbEntry.GetRelatedTargetEntryAsync(f => f.RecordedTVProperties, cancellationToken);
-        //    dbEntry.Entity.RecordedTVProperties = null;
-        //    EntityEntry<VideoPropertySet> oldVideoPropertySet = await dbEntry.GetRelatedTargetEntryAsync(f => f.VideoProperties, cancellationToken);
-        //    dbEntry.Entity.SummaryProperties = null;
-        //    dbEntry.Entity.Status = FileCorrelationStatus.Deleted;
-        //    switch (dbEntry.Entity.Options)
-        //    {
-        //        case FileCrawlOptions.FlaggedForDeletion:
-        //        case FileCrawlOptions.FlaggedForRescan:
-        //            dbEntry.Entity.Options = FileCrawlOptions.None;
-        //            break;
-        //    }
-        //    Guid id = dbEntry.Entity.Id;
-        //    cancellationToken.ThrowIfCancellationRequested();
-        //    await dbContext.SaveChangesAsync(cancellationToken);
-        //    bool shouldSaveChanges = oldRedundantSet.ExistsInDb() && !(await oldRedundantSet.GetRelatedCollectionAsync(r => r.Redundancies, cancellationToken)).Any(r => r.FileId != id);
-        //    if (shouldSaveChanges)
-        //        dbContext.RedundantSets.Remove(oldRedundantSet.Entity);
-        //    if (oldBinaryPropertySet.ExistsInDb() && oldBinaryPropertySet.Entity.Hash.HasValue || oldBinaryPropertySet.Entity.Length > 0 &&
-        //        !(await oldBinaryPropertySet.GetRelatedCollectionAsync(p => p.Files, cancellationToken)).Any(f => f.Id != id))
-        //    {
-        //        shouldSaveChanges = true;
-        //        dbContext.BinaryPropertySets.Remove(oldBinaryPropertySet.Entity);
-        //    }
-        //    if (oldSummaryPropertySet.ExistsInDb() && (await oldSummaryPropertySet.GetRelatedCollectionAsync(p => p.Files, cancellationToken)).Any(f => f.Id != id))
-        //    {
-        //        shouldSaveChanges = true;
-        //        dbContext.SummaryPropertySets.Remove(oldSummaryPropertySet.Entity);
-        //    }
-        //    if (oldAudioPropertySet.ExistsInDb() && (await oldAudioPropertySet.GetRelatedCollectionAsync(p => p.Files, cancellationToken)).Any(f => f.Id != id))
-        //    {
-        //        shouldSaveChanges = true;
-        //        dbContext.AudioPropertySets.Remove(oldAudioPropertySet.Entity);
-        //    }
-        //    if (oldDocumentPropertySet.ExistsInDb() && (await oldDocumentPropertySet.GetRelatedCollectionAsync(p => p.Files, cancellationToken)).Any(f => f.Id != id))
-        //    {
-        //        shouldSaveChanges = true;
-        //        dbContext.DocumentPropertySets.Remove(oldDocumentPropertySet.Entity);
-        //    }
-        //    if (oldDRMPropertySet.ExistsInDb() && (await oldDRMPropertySet.GetRelatedCollectionAsync(p => p.Files, cancellationToken)).Any(f => f.Id != id))
-        //    {
-        //        shouldSaveChanges = true;
-        //        dbContext.DRMPropertySets.Remove(oldDRMPropertySet.Entity);
-        //    }
-        //    if (oldGPSPropertySet.ExistsInDb() && (await oldGPSPropertySet.GetRelatedCollectionAsync(p => p.Files, cancellationToken)).Any(f => f.Id != id))
-        //    {
-        //        shouldSaveChanges = true;
-        //        dbContext.GPSPropertySets.Remove(oldGPSPropertySet.Entity);
-        //    }
-        //    if (oldImagePropertySet.ExistsInDb() && (await oldImagePropertySet.GetRelatedCollectionAsync(p => p.Files, cancellationToken)).Any(f => f.Id != id))
-        //    {
-        //        shouldSaveChanges = true;
-        //        dbContext.ImagePropertySets.Remove(oldImagePropertySet.Entity);
-        //    }
-        //    if (oldMediaPropertySet.ExistsInDb() && (await oldMediaPropertySet.GetRelatedCollectionAsync(p => p.Files, cancellationToken)).Any(f => f.Id != id))
-        //    {
-        //        shouldSaveChanges = true;
-        //        dbContext.MediaPropertySets.Remove(oldMediaPropertySet.Entity);
-        //    }
-        //    if (oldMusicPropertySet.ExistsInDb() && (await oldMusicPropertySet.GetRelatedCollectionAsync(p => p.Files, cancellationToken)).Any(f => f.Id != id))
-        //    {
-        //        shouldSaveChanges = true;
-        //        dbContext.MusicPropertySets.Remove(oldMusicPropertySet.Entity);
-        //    }
-        //    if (oldPhotoPropertySet.ExistsInDb() && (await oldPhotoPropertySet.GetRelatedCollectionAsync(p => p.Files, cancellationToken)).Any(f => f.Id != id))
-        //    {
-        //        shouldSaveChanges = true;
-        //        dbContext.PhotoPropertySets.Remove(oldPhotoPropertySet.Entity);
-        //    }
-        //    if (oldRecordedTVPropertySet.ExistsInDb() && (await oldRecordedTVPropertySet.GetRelatedCollectionAsync(p => p.Files, cancellationToken)).Any(f => f.Id != id))
-        //    {
-        //        shouldSaveChanges = true;
-        //        dbContext.RecordedTVPropertySets.Remove(oldRecordedTVPropertySet.Entity);
-        //    }
-        //    if (oldVideoPropertySet.ExistsInDb() && (await oldVideoPropertySet.GetRelatedCollectionAsync(p => p.Files, cancellationToken)).Any(f => f.Id != id))
-        //    {
-        //        shouldSaveChanges = true;
-        //        dbContext.VideoPropertySets.Remove(oldVideoPropertySet.Entity);
-        //    }
-        //    cancellationToken.ThrowIfCancellationRequested();
-        //    if (shouldSaveChanges)
-        //        await dbContext.SaveChangesAsync(cancellationToken);
-        //}
-
-        //public async Task MarkDissociatedAsync(LocalDbContext dbContext, CancellationToken cancellationToken)
-        //{
-        //    cancellationToken.ThrowIfCancellationRequested();
-        //    EntityEntry<DbFile> dbEntry = dbContext.Entry(this);
-        //    switch (dbEntry.State)
-        //    {
-        //        case EntityState.Detached:
-        //        case EntityState.Deleted:
-        //            throw new InvalidOperationException();
-        //    }
-        //    if (Status == FileCorrelationStatus.Dissociated)
-        //        return;
-        //    if (dbContext.Database.CurrentTransaction is null)
-        //    {
-        //        IDbContextTransaction transaction = await dbContext.Database.BeginTransactionAsync(cancellationToken);
-        //        cancellationToken.ThrowIfCancellationRequested();
-        //        await MarkDissociatedAsync(dbEntry, cancellationToken);
-        //        cancellationToken.ThrowIfCancellationRequested();
-        //        await transaction.CommitAsync(cancellationToken);
-        //    }
-        //    else
-        //        await MarkDissociatedAsync(dbEntry, cancellationToken);
-        //}
 
         private static async Task SetStatusDeleted(EntityEntry<DbFile> dbEntry, CancellationToken cancellationToken)
         {
@@ -1236,6 +1089,7 @@ namespace FsInfoCat.Local
             cancellationToken.ThrowIfCancellationRequested();
             if (comparisons.Length > 0)
                 dbContext.Comparisons.RemoveRange(comparisons);
+
             EntityEntry<SummaryPropertySet> oldSummaryPropertySet = await dbEntry.GetRelatedTargetEntryAsync(f => f.SummaryProperties, cancellationToken);
             EntityEntry<AudioPropertySet> oldAudioPropertySet = await dbEntry.GetRelatedTargetEntryAsync(f => f.AudioProperties, cancellationToken);
             EntityEntry<DocumentPropertySet> oldDocumentPropertySet = await dbEntry.GetRelatedTargetEntryAsync(f => f.DocumentProperties, cancellationToken);

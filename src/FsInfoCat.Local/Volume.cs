@@ -32,6 +32,8 @@ namespace FsInfoCat.Local
         private readonly IPropertyChangeTracker<FileSystem> _fileSystem;
         private readonly IPropertyChangeTracker<Subdirectory> _rootDirectory;
         private HashSet<VolumeAccessError> _accessErrors = new();
+        private HashSet<PersonalVolumeTag> _personalTags = new();
+        private HashSet<SharedVolumeTag> _sharedTags = new();
 
         #endregion
 
@@ -124,6 +126,18 @@ namespace FsInfoCat.Local
             set => CheckHashSetChanged(_accessErrors, value, h => _accessErrors = h);
         }
 
+        public HashSet<PersonalVolumeTag> PersonalTags
+        {
+            get => _personalTags;
+            set => CheckHashSetChanged(_personalTags, value, h => _personalTags = h);
+        }
+
+        public HashSet<SharedVolumeTag> SharedTags
+        {
+            get => _sharedTags;
+            set => CheckHashSetChanged(_sharedTags, value, h => _sharedTags = h);
+        }
+
         #endregion
 
         #region Explicit Members
@@ -136,9 +150,17 @@ namespace FsInfoCat.Local
 
         ISubdirectory IVolume.RootDirectory => RootDirectory;
 
-        IEnumerable<ILocalVolumeAccessError> ILocalVolume.AccessErrors => throw new NotImplementedException();
+        IEnumerable<ILocalVolumeAccessError> ILocalVolume.AccessErrors => AccessErrors.Cast<ILocalVolumeAccessError>();
 
-        IEnumerable<IVolumeAccessError> IVolume.AccessErrors => throw new NotImplementedException();
+        IEnumerable<IVolumeAccessError> IVolume.AccessErrors => AccessErrors.Cast<IVolumeAccessError>();
+
+        IEnumerable<ILocalPersonalVolumeTag> ILocalVolume.PersonalTags => PersonalTags.Cast<ILocalPersonalVolumeTag>();
+
+        IEnumerable<IPersonalVolumeTag> IVolume.PersonalTags => PersonalTags.Cast<IPersonalVolumeTag>();
+
+        IEnumerable<ILocalSharedVolumeTag> ILocalVolume.SharedTags => SharedTags.Cast<ILocalSharedVolumeTag>();
+
+        IEnumerable<ISharedVolumeTag> IVolume.SharedTags => SharedTags.Cast<ISharedVolumeTag>();
 
         #endregion
 
@@ -188,7 +210,7 @@ namespace FsInfoCat.Local
             base.OnPropertyChanging(args);
         }
 
-        internal static void BuildEntity(EntityTypeBuilder<Volume> builder)
+        internal static void OnBuildEntity(EntityTypeBuilder<Volume> builder)
         {
             builder.HasOne(sn => sn.FileSystem).WithMany(d => d.Volumes).HasForeignKey(nameof(FileSystemId)).IsRequired().OnDelete(DeleteBehavior.Restrict);
             builder.Property(nameof(Identifier)).HasConversion(VolumeIdentifier.Converter);

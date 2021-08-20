@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
@@ -11,7 +13,7 @@ using System.Xml.Linq;
 
 namespace FsInfoCat.Local
 {
-    public class VolumeAccessError : DbEntity, IAccessError<Volume>, ILocalVolumeAccessError
+    public class VolumeAccessError : DbEntity, ILocalVolumeAccessError
     {
         #region Fields
 
@@ -78,19 +80,11 @@ namespace FsInfoCat.Local
 
         IDbEntity IAccessError.Target => Target;
 
-        IDbEntity IAccessError<Volume>.Target => Target;
-
         ILocalVolume ILocalVolumeAccessError.Target => Target;
 
         ILocalDbEntity ILocalAccessError.Target => Target;
 
-        IDbEntity IAccessError<ILocalDbEntity>.Target => Target;
-
         IVolume IVolumeAccessError.Target => Target;
-
-        IDbEntity IAccessError<IVolume>.Target => Target;
-
-        IDbEntity IAccessError<ILocalVolume>.Target => Target;
 
         #endregion
 
@@ -162,6 +156,11 @@ namespace FsInfoCat.Local
             if (Details.Trim().Length > 0)
                 result.Add(new XCData(Details));
             return result;
+        }
+
+        internal static void OnBuildEntity(EntityTypeBuilder<VolumeAccessError> builder)
+        {
+            builder.HasOne(e => e.Target).WithMany(d => d.AccessErrors).HasForeignKey(nameof(TargetId)).IsRequired().OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

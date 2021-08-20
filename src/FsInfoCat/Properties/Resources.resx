@@ -1759,4 +1759,25 @@
   <data name="FormatMessage_SavingVolumeChanges" xml:space="preserve">
     <value>Saving changes to Volume "{0}" ({1}).</value>
   </data>
+  <data name="DisplayName_TagDefinition" xml:space="preserve">
+    <value>Tag Definition</value>
+  </data>
+  <data name="DisplayName_Tagged_File" xml:space="preserve">
+    <value>Tagged File</value>
+  </data>
+  <data name="DisplayName_Tagged_Subdirectory" xml:space="preserve">
+    <value>Tagged Subdirectory</value>
+  </data>
+  <data name="DisplayName_Tagged_Volume" xml:space="preserve">
+    <value>Tagged Volume</value>
+  </data>
+  <data name="ErrorMessage_SubdirectoryRequired" xml:space="preserve">
+    <value>Subdirectory must be selected.</value>
+  </data>
+  <data name="ErrorMessage_TagDefinitionRequired" xml:space="preserve">
+    <value>Tag Definition must be selected.</value>
+  </data>
+  <data name="ErrorMessage_VolumeRequired" xml:space="preserve">
+    <value>Volume must be selected.</value>
+  </data>
 </root>

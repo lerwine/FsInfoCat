@@ -12,6 +12,48 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 {
     public class EditFileSystemVM : EditDbEntityVM<FileSystem>
     {
+        #region DisplayName Property Members
+
+        public static readonly DependencyProperty DisplayNameProperty = DependencyProperty.Register(nameof(DisplayName), typeof(string), typeof(EditFileSystemVM),
+                new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
+                    (d as EditFileSystemVM).OnDisplayNamePropertyChanged(e.OldValue as string, e.NewValue as string)));
+
+        public string DisplayName
+        {
+            get => GetValue(DisplayNameProperty) as string;
+            set => SetValue(DisplayNameProperty, value);
+        }
+
+        protected virtual void OnDisplayNamePropertyChanged(string oldValue, string newValue)
+        {
+            ChangeTracker.SetChangeState(nameof(DisplayName), (newValue = newValue.AsWsNormalizedOrEmpty()) == Model?.DisplayName);
+            if (newValue.Length == 0)
+                Validation.SetErrorMessage(nameof(DisplayName), FsInfoCat.Properties.Resources.ErrorMessage_DisplayNameRequired);
+            else if (newValue.Length > DbConstants.DbColMaxLen_LongName)
+                Validation.SetErrorMessage(nameof(DisplayName), FsInfoCat.Properties.Resources.ErrorMessage_DisplayNameLength);
+            else
+                Validation.ClearErrorMessages(nameof(DisplayName));
+        }
+
+        #endregion
+        #region Notes Property Members
+
+        public static readonly DependencyProperty NotesProperty = DependencyProperty.Register(nameof(Notes), typeof(string), typeof(EditFileSystemVM),
+                new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
+                    (d as EditFileSystemVM).OnNotesPropertyChanged(e.OldValue as string, e.NewValue as string)));
+
+        public string Notes
+        {
+            get => GetValue(NotesProperty) as string;
+            set => SetValue(NotesProperty, value);
+        }
+
+        protected virtual void OnNotesPropertyChanged(string oldValue, string newValue)
+        {
+            ChangeTracker.SetChangeState(nameof(Notes), Model?.Notes != newValue);
+        }
+
+        #endregion
         #region DriveTypeOptions Property Members
 
         private static readonly DependencyPropertyKey DriveTypeOptionsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(DriveTypeOptions),
@@ -22,6 +64,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         public ReadOnlyObservableCollection<DriveType> DriveTypeOptions => (ReadOnlyObservableCollection<DriveType>)GetValue(DriveTypeOptionsProperty);
 
         #endregion
+        #region SelectedDriveType Property Members
 
         public static readonly DependencyProperty SelectedDriveTypeProperty = DependencyProperty.Register(nameof(SelectedDriveType), typeof(DriveType), typeof(EditFileSystemVM),
                 new PropertyMetadata(DriveType.Unknown, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
@@ -38,6 +81,9 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             // TODO: Implement OnSelectedDriveTypePropertyChanged Logic
         }
 
+        #endregion
+        #region HasDefaultDriveType Property Members
+
         public static readonly DependencyProperty HasDefaultDriveTypeProperty = DependencyProperty.Register(nameof(HasDefaultDriveType), typeof(bool), typeof(EditFileSystemVM),
                 new PropertyMetadata(false, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
                     (d as EditFileSystemVM).OnHasDefaultDriveTypePropertyChanged((bool)e.OldValue, (bool)e.NewValue)));
@@ -52,6 +98,9 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         {
             // TODO: Implement OnHasDefaultDriveTypePropertyChanged Logic
         }
+
+        #endregion
+        #region IsInactive Property Members
 
         public static readonly DependencyProperty IsInactiveProperty = DependencyProperty.Register(nameof(IsInactive), typeof(bool), typeof(EditFileSystemVM),
                 new PropertyMetadata(false, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
@@ -68,20 +117,26 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             // TODO: Implement OnIsInactivePropertyChanged Logic
         }
 
-        public static readonly DependencyProperty MaxNameLengthProperty = DependencyProperty.Register(nameof(MaxNameLength), typeof(long), typeof(EditFileSystemVM),
-                new PropertyMetadata((long)DbConstants.DbColDefaultValue_MaxNameLength, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                    (d as EditFileSystemVM).OnMaxNameLengthPropertyChanged((long)e.OldValue, (long)e.NewValue)));
+        #endregion
+        #region MaxNameLength Property Members
 
-        public long MaxNameLength
+        public static readonly DependencyProperty MaxNameLengthProperty = DependencyProperty.Register(nameof(MaxNameLength), typeof(uint), typeof(EditFileSystemVM),
+                new PropertyMetadata((uint)DbConstants.DbColDefaultValue_MaxNameLength, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
+                    (d as EditFileSystemVM).OnMaxNameLengthPropertyChanged((uint)e.OldValue, (uint)e.NewValue)));
+
+        public uint MaxNameLength
         {
-            get => (long)GetValue(MaxNameLengthProperty);
+            get => (uint)GetValue(MaxNameLengthProperty);
             set => SetValue(MaxNameLengthProperty, value);
         }
 
-        protected virtual void OnMaxNameLengthPropertyChanged(long oldValue, long newValue)
+        protected virtual void OnMaxNameLengthPropertyChanged(uint oldValue, uint newValue)
         {
             // TODO: Implement OnMaxNameLengthPropertyChanged Logic
         }
+
+        #endregion
+        #region ReadOnly Property Members
 
         public static readonly DependencyProperty ReadOnlyProperty = DependencyProperty.Register(nameof(ReadOnly), typeof(bool), typeof(EditFileSystemVM),
                 new PropertyMetadata(false, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
@@ -98,6 +153,9 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             // TODO: Implement OnReadOnlyPropertyChanged Logic
         }
 
+        #endregion
+        #region Volumes Property Members
+
         private static readonly DependencyPropertyKey VolumesPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Volumes), typeof(ObservableCollection<VolumeItemVM>), typeof(EditFileSystemVM),
                 new PropertyMetadata(new ObservableCollection<VolumeItemVM>()));
 
@@ -108,6 +166,9 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             get => (ObservableCollection<VolumeItemVM>)this.GetValue(VolumesProperty);
             private set => this.SetValue(VolumesPropertyKey, value);
         }
+
+        #endregion
+        #region SymbolicNames Property Members
 
         private static readonly DependencyPropertyKey SymbolicNamesPropertyKey = DependencyProperty.RegisterReadOnly(nameof(SymbolicNames), typeof(ObservableCollection<SymbolicNameItemVM>), typeof(EditFileSystemVM),
                 new PropertyMetadata(new ObservableCollection<SymbolicNameItemVM>()));
@@ -120,11 +181,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             private set => this.SetValue(SymbolicNamesPropertyKey, value);
         }
 
-        #region Background Operation Properties
-
-        //private AsyncOps.AsyncFuncOpViewModel<ModelViewModel, FileSystem> SaveChangesAsync(FileSystem fileSystem) =>
-        //    OpAggregate.FromAsync("Saving Changes", "Connecting to database", new(fileSystem, this), SaveChangesOpMgr, SaveChangesAsync);
-
+        #endregion
         #region SaveChangesOpMgr Property Members
 
         private static async Task<FileSystem> SaveChangesAsync(ModelViewModel state, AsyncOps.IStatusListener statusListener)
@@ -177,62 +234,12 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 
         #endregion
 
-        #endregion
-        
-        #region Other Property Members
-
-        #region DisplayName Property Members
-
-        public static readonly DependencyProperty DisplayNameProperty = DependencyProperty.Register(nameof(DisplayName), typeof(string), typeof(EditFileSystemVM),
-                new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                    (d as EditFileSystemVM).OnDisplayNamePropertyChanged(e.OldValue as string, e.NewValue as string)));
-
-        public string DisplayName
-        {
-            get => GetValue(DisplayNameProperty) as string;
-            set => SetValue(DisplayNameProperty, value);
-        }
-
-        protected virtual void OnDisplayNamePropertyChanged(string oldValue, string newValue)
-        {
-            ChangeTracker.SetChangeState(nameof(DisplayName), (newValue = newValue.AsWsNormalizedOrEmpty()) == Model?.DisplayName);
-            if (newValue.Length == 0)
-                Validation.SetErrorMessage(nameof(DisplayName), FsInfoCat.Properties.Resources.ErrorMessage_DisplayNameRequired);
-            else if (newValue.Length > DbConstants.DbColMaxLen_LongName)
-                Validation.SetErrorMessage(nameof(DisplayName), FsInfoCat.Properties.Resources.ErrorMessage_DisplayNameLength);
-            else
-                Validation.ClearErrorMessages(nameof(DisplayName));
-        }
-
-        #endregion
-
-        #region Notes Property Members
-
-        public static readonly DependencyProperty NotesProperty = DependencyProperty.Register(nameof(Notes), typeof(string), typeof(EditFileSystemVM),
-                new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                    (d as EditFileSystemVM).OnNotesPropertyChanged(e.OldValue as string, e.NewValue as string)));
-
-        public string Notes
-        {
-            get => GetValue(NotesProperty) as string;
-            set => SetValue(NotesProperty, value);
-        }
-
-        protected virtual void OnNotesPropertyChanged(string oldValue, string newValue)
-        {
-            ChangeTracker.SetChangeState(nameof(Notes), Model?.Notes != newValue);
-        }
-
-        #endregion
-
-        #endregion
-
         public EditFileSystemVM()
         {
             SetValue(DriveTypeOptionsPropertyKey, new ReadOnlyObservableCollection<DriveType>(new ObservableCollection<DriveType>(Enum.GetValues<DriveType>())));
         }
 
-        protected override FileSystem InitializeNewModel() => new FileSystem()
+        protected override FileSystem InitializeNewModel() => new()
         {
             Id = Guid.NewGuid(),
             CreatedOn = DateTime.Now
@@ -244,11 +251,11 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             Notes = model.Notes;
             SelectedDriveType = model.DefaultDriveType ?? DriveType.Unknown;
             HasDefaultDriveType = model.DefaultDriveType.HasValue;
-            //Volumes = model.Volumes;
+            // TODO: Initialize Volumes? Are these used in edit window?
             IsInactive = model.IsInactive;
             MaxNameLength = model.MaxNameLength;
             ReadOnly = model.ReadOnly;
-            //SymbolicNames = model.SymbolicNames;
+            // TODO: Initialize SymbolicNames? Are these used in edit window?
             base.Initialize(model, state);
         }
 
@@ -259,6 +266,9 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             model.DisplayName = DisplayName;
             model.Notes = Notes;
             model.DefaultDriveType = HasDefaultDriveType ? SelectedDriveType : null;
+            model.IsInactive = IsInactive;
+            model.MaxNameLength = MaxNameLength;
+            model.ReadOnly = ReadOnly;
         }
     }
 }

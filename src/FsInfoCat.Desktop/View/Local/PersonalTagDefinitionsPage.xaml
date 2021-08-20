@@ -1,0 +1,120 @@
+<Page
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:FsInfoCat.Desktop.View.Local"
+      xmlns:vm="clr-namespace:FsInfoCat.Desktop.ViewModel.Local"
+      xmlns:res="clr-namespace:FsInfoCat.Properties;assembly=FsInfoCat"
+      xmlns:cvt="clr-namespace:FsInfoCat.Desktop.Converters" x:Class="FsInfoCat.Desktop.View.Local.PersonalTagDefinitionsPage"
+      xmlns:View="clr-namespace:FsInfoCat.Desktop.View"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      DataContext="{DynamicResource VM}"
+      Title="Personal Tag Definitions">
+    <Page.Resources>
+        <cvt:BooleanToVisibilityConverter x:Key="VisibleIfTrueConverter" NullSource="Collapsed"/>
+        <cvt:DependencyObjectToVisibilityConverter x:Key="DependencyObjectToVisibilityConverter"/>
+        <cvt:DependencyObjectToVisibilityConverter x:Key="InverseObjectToVisibilityConverter" NotNullSource="Collapsed" NullSource="Visible"/>
+        <cvt:BooleanToStringConverter x:Key="BooleanToStatusConverter" FalseValue="Activated" TrueValue="Deactivated"/>
+        <cvt:DateTimeToStringConverter x:Key="DateTimeToString"/>
+        <cvt:DateTimeToStringConverter x:Key="LastSynchronizedToString" NullSource="(not synchronized)"/>
+        <vm:PersonalTagDefinitionsPageVM x:Key="VM"/>
+    </Page.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Label Content="Personal Tag Definitions" Padding="{DynamicResource DefaultSpacing}" FontWeight="Bold" />
+            <Button Grid.Column="1" Margin="{DynamicResource DefaultSpacingTopLeft}" Style="{DynamicResource FilterButton}" Command="{Binding ShowViewOptions, Mode=OneWay}"/>
+            <Button Grid.Column="2" Margin="{DynamicResource DefaultSpacingTopLeftRight}" Style="{DynamicResource AddNewButton}" Command="{Binding NewItemClickCommand, Mode=OneWay}" />
+            <DataGrid Grid.Row="1" ItemsSource="{Binding Items, Mode=OneWay}" Margin="{DynamicResource DefaultSpacingLeftRight}" AutoGenerateColumns="False" IsReadOnly="True" SelectedValue="{Binding SelectedItem, Mode=TwoWay}" Grid.ColumnSpan="3">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Binding="{Binding Name, Mode=OneWay}" IsReadOnly="True" Header="{x:Static res:Resources.DisplayName_Name}" Width="*"/>
+                    <DataGridTextColumn Binding="{Binding IsInactive, Converter={StaticResource BooleanToStatusConverter}, Mode=OneWay}" IsReadOnly="True" Header="{x:Static res:Resources.DisplayName_Status}" Width="Auto"/>
+                </DataGrid.Columns>
+            </DataGrid>
+            <Border Visibility="{Binding IsEditingViewOptions, Converter={StaticResource VisibleIfTrueConverter}, Mode=OneWay}" Grid.RowSpan="2" Grid.ColumnSpan="3" Background="{DynamicResource TranslucentBlack50pctBrush}">
+                <Border HorizontalAlignment="Center" VerticalAlignment="Center" Style="{DynamicResource PopupOuterBorder}">
+                    <StackPanel>
+                        <Border Style="{DynamicResource PopupContentBorder}">
+                            <StackPanel>
+                                <RadioButton IsChecked="{Binding EditingViewOptions.IsTrue}" GroupName="ViewOptions" Content="Show Activated Items" Margin="{DynamicResource DefaultSpacingTopLeftRight}"/>
+                                <RadioButton IsChecked="{Binding EditingViewOptions.IsFalse, Mode=OneWay}" GroupName="ViewOptions" Content="Show Deactivated Items" Margin="{DynamicResource DefaultSpacingLeftRight}"/>
+                                <RadioButton IsChecked="{Binding EditingViewOptions.IsNull, Mode=OneWay}" GroupName="ViewOptions" Content="Show All Items" Margin="{DynamicResource DefaultSpacingLeftRight}"/>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                    <Button Content="OK" Command="{Binding ViewOptionsOkClick, Mode=OneWay}" Style="{DynamicResource DefaultButton}" Margin="{DynamicResource DefaultSpacingTopBottomLeft}" />
+                                    <Button Content="Cancel" Command="{Binding ViewOptionCancelClick, Mode=OneWay}" Style="{DynamicResource DefaultButton}" Margin="{DynamicResource DefaultSpacing}" />
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </Border>
+            </Border>
+        </Grid>
+        <StackPanel Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding SelectedItem, Converter={StaticResource InverseObjectToVisibilityConverter}}">
+            <TextBlock Text="shared tag definitions to dispay" HorizontalAlignment="Center" />
+            <Button Content="Add New" HorizontalAlignment="Center" Command="{Binding NewClickCommand, Mode=OneWay, Source={StaticResource CrawlConfigurationsViewModel}}" Margin="{DynamicResource DefaultSpacing}" ToolTip="{x:Static res:Resources.Description_NewCurrentCrawlConfig}" Style="{DynamicResource DefaultButton}"/>
+        </StackPanel>
+        <Grid Grid.Column="1" Margin="{DynamicResource DefaultSpacingLeft}" DataContext="{Binding SelectedItem}" Visibility="{Binding Converter={StaticResource DependencyObjectToVisibilityConverter}, Mode=OneWay}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <StackPanel>
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Label Content="{x:Static res:Resources.DisplayName_Name}" Padding="{DynamicResource DefaultSpacingTopLeftRight}" FontWeight="Bold" VerticalAlignment="Bottom"/>
+                    <Button Margin="{DynamicResource DefaultSpacingTopBottomLeft}" Command="{Binding EditCurrentItem, Mode=OneWay}" ToolTip="Edit Shared Tag" Style="{DynamicResource EditButton}" Grid.Column="1"/>
+                    <Button Margin="{DynamicResource DefaultSpacing}" Command="{Binding DeleteCurrentItem, Mode=OneWay}" ToolTip="Delete Shared Tag" Style="{DynamicResource DeleteButton}" Grid.Column="2"/>
+                </Grid>
+                <TextBox IsReadOnly="True" Margin="{DynamicResource DefaultSpacingLeftRight}" Text="{Binding Name, Mode=OneWay}" />
+                <Label Content="{x:Static res:Resources.DisplayName_Status}" Padding="{DynamicResource DefaultSpacingTopLeftRight}" FontWeight="Bold"/>
+                <TextBox IsReadOnly="True" Margin="{DynamicResource DefaultSpacingLeftRight}" Text="{Binding IsInactive, Converter={StaticResource BooleanToStatusConverter}, Mode=OneWay}" />
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" Content="Created On" FontWeight="Bold"/>
+                    <TextBox IsReadOnly="True" Grid.Row="1" Text="{Binding CreatedOn, Converter={StaticResource DateTimeToString}, Mode=OneWay}" Margin="{DynamicResource DefaultSpacingLeftRight}"  />
+                    <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" Content="Modified On" FontWeight="Bold" Grid.ColumnSpan="2" Grid.Column="1"/>
+                    <TextBox IsReadOnly="True" Grid.Row="1" Grid.Column="1" Text="{Binding ModifiedOn, Converter={StaticResource DateTimeToString}, Mode=OneWay}" Margin="{DynamicResource DefaultSpacingLeftRight}"  />
+                    <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" Content="Last Synchronized" Grid.Row="2" FontWeight="Bold"/>
+                    <TextBox IsReadOnly="True" Grid.Row="3" Text="{Binding LastSynchronizedOn, Converter={StaticResource LastSynchronizedToString}, Mode=OneWay}" Margin="{DynamicResource DefaultSpacingLeftRight}" />
+                </Grid>
+            </StackPanel>
+            <GroupBox Grid.Row="1" Margin="{DynamicResource DefaultSpacing}" Header="Description" Visibility="{Binding Converter={StaticResource DependencyObjectToVisibilityConverter}, Mode=OneWay}">
+                <TextBox IsReadOnly="True" Margin="{DynamicResource DefaultSpacingTopLeftRight}" Text="{Binding Description, Mode=OneWay}" Style="{DynamicResource MultiLineTextBox}" />
+            </GroupBox>
+            <WrapPanel Grid.Row="2" HorizontalAlignment="Right" Visibility="{Binding Converter={StaticResource DependencyObjectToVisibilityConverter}, Mode=OneWay}">
+                <Button Margin="{DynamicResource DefaultSpacingTopBottomLeft}" Command="{Binding EditCurrentItem, Mode=OneWay}" ToolTip="Edit Personal Tag" Style="{DynamicResource EditButton}"/>
+                <Button Margin="{DynamicResource DefaultSpacing}" Command="{Binding DeleteCurrentItem, Mode=OneWay}" ToolTip="Delete Personal Tag" Style="{DynamicResource DeleteButton}"/>
+            </WrapPanel>
+        </Grid>
+        <GridSplitter Grid.Column="1" HorizontalAlignment="Left" Style="{DynamicResource VerticalGridSplitterStyle}"/>
+        <View:AsyncBgModalControl Grid.ColumnSpan="2" d:IsHidden="True" DataContext="{Binding BgOps, Mode=OneWay}" />
+    </Grid>
+</Page>

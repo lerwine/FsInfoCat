@@ -86,7 +86,7 @@ namespace FsInfoCat.Local
             _trackNumber = AddChangeTracker<uint?>(nameof(TrackNumber), null);
         }
 
-        internal static void BuildEntity([DisallowNull] EntityTypeBuilder<MusicPropertySet> builder)
+        internal static void OnBuildEntity([DisallowNull] EntityTypeBuilder<MusicPropertySet> builder)
         {
             if (builder is null)
                 throw new ArgumentOutOfRangeException(nameof(builder));

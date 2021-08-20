@@ -1,6 +1,14 @@
 -- Deleting tables
 
 DROP TABLE IF EXISTS "Comparisons";
+DROP TABLE IF EXISTS "SharedVolumeTags";
+DROP TABLE IF EXISTS "SharedSubdirectoryTags";
+DROP TABLE IF EXISTS "SharedFileTags";
+DROP TABLE IF EXISTS "SharedTagDefinitions";
+DROP TABLE IF EXISTS "PersonalVolumeTags";
+DROP TABLE IF EXISTS "PersonalSubdirectoryTags";
+DROP TABLE IF EXISTS "PersonalFileTags";
+DROP TABLE IF EXISTS "PersonalTagDefinitions";
 DROP TABLE IF EXISTS "Redundancies";
 DROP TABLE IF EXISTS "FileAccessErrors";
 DROP TABLE IF EXISTS "Files";
@@ -495,6 +503,116 @@ CREATE TABLE IF NOT EXISTS "FileAccessErrors" (
     "TargetId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_AccessError_File" REFERENCES "Files"("Id") ON DELETE RESTRICT COLLATE NOCASE,
     CONSTRAINT "PK_FileAccessErrors" PRIMARY KEY("Id"),
     CHECK("CreatedOn"<="ModifiedOn")
+);
+
+CREATE TABLE IF NOT EXISTS "PersonalTagDefinitions" (
+    "Id" UNIQUEIDENTIFIER NOT NULL COLLATE NOCASE,
+    "Name" NVARCHAR(256) NOT NULL CHECK(length(trim("Name"))=length("Name")) COLLATE NOCASE,
+    "Description" TEXT NOT NULL DEFAULT '',
+    "IsInactive" BIT NOT NULL DEFAULT 0,
+    "CreatedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+    "ModifiedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+    "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL COLLATE NOCASE,
+    "LastSynchronizedOn" DATETIME DEFAULT NULL,
+    CONSTRAINT "PK_PersonalTagDefinitions" PRIMARY KEY("Id"),
+    CONSTRAINT "UK_PersonalTagDefinition_Name" UNIQUE("Name"),
+    CHECK((("UpstreamId" IS NULL AND "LastSynchronizedOn" IS NULL) OR ("UpstreamId" IS NOT NULL AND "LastSynchronizedOn" IS NOT NULL)) AND "CreatedOn"<="ModifiedOn")
+);
+
+CREATE INDEX "IDX_PersonalTagDefinition_Name" ON "PersonalTagDefinitions" ("Name");
+
+CREATE TABLE IF NOT EXISTS "PersonalFileTags" (
+    "FileId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_PersonalFileTag_File" REFERENCES "Files"("Id") ON DELETE RESTRICT COLLATE NOCASE,
+    "PersonalTagDefinitionId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_PersonalFileTag_TagDefinition" REFERENCES "PersonalTagDefinitions"("Id") ON DELETE RESTRICT COLLATE NOCASE,
+    "Notes" TEXT NOT NULL DEFAULT '',
+    "IsInactive" BIT NOT NULL DEFAULT 0,
+    "CreatedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+    "ModifiedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+    "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL COLLATE NOCASE,
+    "LastSynchronizedOn" DATETIME DEFAULT NULL,
+    CONSTRAINT "PK_PersonalFileTags" PRIMARY KEY("FileId", "PersonalTagDefinitionId"),
+    CHECK((("UpstreamId" IS NULL AND "LastSynchronizedOn" IS NULL) OR ("UpstreamId" IS NOT NULL AND "LastSynchronizedOn" IS NOT NULL)) AND "CreatedOn"<="ModifiedOn")
+);
+
+CREATE TABLE IF NOT EXISTS "PersonalSubdirectoryTags" (
+    "SubdirectoryId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_PersonalSubdirectoryTag_Subdirectory" REFERENCES "Subdirectories"("Id") ON DELETE RESTRICT COLLATE NOCASE,
+    "PersonalTagDefinitionId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_PersonalSubdirectoryTag_TagDefinition" REFERENCES "PersonalTagDefinitions"("Id") ON DELETE RESTRICT COLLATE NOCASE,
+    "Notes" TEXT NOT NULL DEFAULT '',
+    "IsInactive" BIT NOT NULL DEFAULT 0,
+    "CreatedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+    "ModifiedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+    "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL COLLATE NOCASE,
+    "LastSynchronizedOn" DATETIME DEFAULT NULL,
+    CONSTRAINT "PK_PersonalSubdirectoryTags" PRIMARY KEY("SubdirectoryId", "PersonalTagDefinitionId"),
+    CHECK((("UpstreamId" IS NULL AND "LastSynchronizedOn" IS NULL) OR ("UpstreamId" IS NOT NULL AND "LastSynchronizedOn" IS NOT NULL)) AND "CreatedOn"<="ModifiedOn")
+);
+
+CREATE TABLE IF NOT EXISTS "PersonalVolumeTags" (
+    "VolumeId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_PersonalVolumeTag_Volume" REFERENCES "Volumes"("Id") ON DELETE RESTRICT COLLATE NOCASE,
+    "PersonalTagDefinitionId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_PersonalVolumeTag_TagDefinition" REFERENCES "PersonalTagDefinitions"("Id") ON DELETE RESTRICT COLLATE NOCASE,
+    "Notes" TEXT NOT NULL DEFAULT '',
+    "IsInactive" BIT NOT NULL DEFAULT 0,
+    "CreatedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+    "ModifiedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+    "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL COLLATE NOCASE,
+    "LastSynchronizedOn" DATETIME DEFAULT NULL,
+    CONSTRAINT "PK_PersonalVolumeTags" PRIMARY KEY("VolumeId", "PersonalTagDefinitionId"),
+    CHECK((("UpstreamId" IS NULL AND "LastSynchronizedOn" IS NULL) OR ("UpstreamId" IS NOT NULL AND "LastSynchronizedOn" IS NOT NULL)) AND "CreatedOn"<="ModifiedOn")
+);
+
+CREATE TABLE IF NOT EXISTS "SharedTagDefinitions" (
+    "Id" UNIQUEIDENTIFIER NOT NULL COLLATE NOCASE,
+    "Name" NVARCHAR(256) NOT NULL CHECK(length(trim("Name"))=length("Name")) COLLATE NOCASE,
+    "Description" TEXT NOT NULL DEFAULT '',
+    "IsInactive" BIT NOT NULL DEFAULT 0,
+    "CreatedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+    "ModifiedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+    "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL COLLATE NOCASE,
+    "LastSynchronizedOn" DATETIME DEFAULT NULL,
+    CONSTRAINT "PK_SharedTagDefinitions" PRIMARY KEY("Id"),
+    CONSTRAINT "UK_SharedTagDefinition_Name" UNIQUE("Name"),
+    CHECK((("UpstreamId" IS NULL AND "LastSynchronizedOn" IS NULL) OR ("UpstreamId" IS NOT NULL AND "LastSynchronizedOn" IS NOT NULL)) AND "CreatedOn"<="ModifiedOn")
+);
+
+CREATE INDEX "IDX_SharedTagDefinition_Name" ON "SharedTagDefinitions" ("Name");
+
+CREATE TABLE IF NOT EXISTS "SharedFileTags" (
+    "FileId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_SharedFileTag_File" REFERENCES "Files"("Id") ON DELETE RESTRICT COLLATE NOCASE,
+    "SharedTagDefinitionId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_SharedFileTag_TagDefinition" REFERENCES "SharedTagDefinitions"("Id") ON DELETE RESTRICT COLLATE NOCASE,
+    "Notes" TEXT NOT NULL DEFAULT '',
+    "IsInactive" BIT NOT NULL DEFAULT 0,
+    "CreatedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+    "ModifiedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+    "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL COLLATE NOCASE,
+    "LastSynchronizedOn" DATETIME DEFAULT NULL,
+    CONSTRAINT "PK_SharedFileTags" PRIMARY KEY("FileId", "SharedTagDefinitionId"),
+    CHECK((("UpstreamId" IS NULL AND "LastSynchronizedOn" IS NULL) OR ("UpstreamId" IS NOT NULL AND "LastSynchronizedOn" IS NOT NULL)) AND "CreatedOn"<="ModifiedOn")
+);
+
+CREATE TABLE IF NOT EXISTS "SharedSubdirectoryTags" (
+    "SubdirectoryId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_SharedSubdirectoryTag_Subdirectory" REFERENCES "Subdirectories"("Id") ON DELETE RESTRICT COLLATE NOCASE,
+    "SharedTagDefinitionId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_SharedSubdirectoryTag_TagDefinition" REFERENCES "SharedTagDefinitions"("Id") ON DELETE RESTRICT COLLATE NOCASE,
+    "Notes" TEXT NOT NULL DEFAULT '',
+    "IsInactive" BIT NOT NULL DEFAULT 0,
+    "CreatedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+    "ModifiedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+    "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL COLLATE NOCASE,
+    "LastSynchronizedOn" DATETIME DEFAULT NULL,
+    CONSTRAINT "PK_SharedSubdirectoryTags" PRIMARY KEY("SubdirectoryId", "SharedTagDefinitionId"),
+    CHECK((("UpstreamId" IS NULL AND "LastSynchronizedOn" IS NULL) OR ("UpstreamId" IS NOT NULL AND "LastSynchronizedOn" IS NOT NULL)) AND "CreatedOn"<="ModifiedOn")
+);
+
+CREATE TABLE IF NOT EXISTS "SharedVolumeTags" (
+    "VolumeId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_SharedVolumeTag_Volume" REFERENCES "Volumes"("Id") ON DELETE RESTRICT COLLATE NOCASE,
+    "SharedTagDefinitionId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_SharedVolumeTag_TagDefinition" REFERENCES "SharedTagDefinitions"("Id") ON DELETE RESTRICT COLLATE NOCASE,
+    "Notes" TEXT NOT NULL DEFAULT '',
+    "IsInactive" BIT NOT NULL DEFAULT 0,
+    "CreatedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+    "ModifiedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
+    "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL COLLATE NOCASE,
+    "LastSynchronizedOn" DATETIME DEFAULT NULL,
+    CONSTRAINT "PK_SharedVolumeTags" PRIMARY KEY("VolumeId", "SharedTagDefinitionId"),
+    CHECK((("UpstreamId" IS NULL AND "LastSynchronizedOn" IS NULL) OR ("UpstreamId" IS NOT NULL AND "LastSynchronizedOn" IS NOT NULL)) AND "CreatedOn"<="ModifiedOn")
 );
 
 CREATE TABLE IF NOT EXISTS "Redundancies" (

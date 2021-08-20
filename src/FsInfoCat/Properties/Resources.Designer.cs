@@ -4030,6 +4030,42 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Tag Definition.
+        /// </summary>
+        public static string DisplayName_TagDefinition {
+            get {
+                return ResourceManager.GetString("DisplayName_TagDefinition", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tagged File.
+        /// </summary>
+        public static string DisplayName_Tagged_File {
+            get {
+                return ResourceManager.GetString("DisplayName_Tagged_File", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tagged Subdirectory.
+        /// </summary>
+        public static string DisplayName_Tagged_Subdirectory {
+            get {
+                return ResourceManager.GetString("DisplayName_Tagged_Subdirectory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tagged Volume.
+        /// </summary>
+        public static string DisplayName_Tagged_Volume {
+            get {
+                return ResourceManager.GetString("DisplayName_Tagged_Volume", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Target.
         /// </summary>
         public static string DisplayName_Target {
@@ -4885,6 +4921,24 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Subdirectory must be selected..
+        /// </summary>
+        public static string ErrorMessage_SubdirectoryRequired {
+            get {
+                return ResourceManager.GetString("ErrorMessage_SubdirectoryRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tag Definition must be selected..
+        /// </summary>
+        public static string ErrorMessage_TagDefinitionRequired {
+            get {
+                return ResourceManager.GetString("ErrorMessage_TagDefinitionRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Maximum duration cannot be less than 1 minute..
         /// </summary>
         public static string ErrorMessage_TTLInvalid {
@@ -4944,6 +4998,15 @@ namespace FsInfoCat.Properties {
         public static string ErrorMessage_VolumeOrParentRequired {
             get {
                 return ResourceManager.GetString("ErrorMessage_VolumeOrParentRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Volume must be selected..
+        /// </summary>
+        public static string ErrorMessage_VolumeRequired {
+            get {
+                return ResourceManager.GetString("ErrorMessage_VolumeRequired", resourceCulture);
             }
         }
         

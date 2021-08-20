@@ -68,6 +68,10 @@ namespace FsInfoCat
         /// <value>The access errors for the current file system item.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_AccessErrors), ResourceType = typeof(Properties.Resources))]
         IEnumerable<IVolumeAccessError> AccessErrors { get; }
+
+        IEnumerable<IPersonalVolumeTag> PersonalTags { get; }
+
+        IEnumerable<ISharedVolumeTag> SharedTags { get; }
     }
 
 }

@@ -89,7 +89,7 @@ namespace FsInfoCat.Local
             _versionID = AddChangeTracker<ByteValues>(nameof(VersionID), null);
         }
 
-        internal static void BuildEntity([DisallowNull] EntityTypeBuilder<GPSPropertySet> builder) =>
+        internal static void OnBuildEntity([DisallowNull] EntityTypeBuilder<GPSPropertySet> builder) =>
             (builder ?? throw new ArgumentOutOfRangeException(nameof(builder))).Property(nameof(VersionID)).HasConversion(ByteValues.Converter);
 
         internal static async Task RefreshAsync([DisallowNull] EntityEntry<DbFile> entry, [DisallowNull] IFileDetailProvider fileDetailProvider,

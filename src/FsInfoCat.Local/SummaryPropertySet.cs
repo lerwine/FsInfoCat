@@ -122,7 +122,7 @@ namespace FsInfoCat.Local
             _productName = AddChangeTracker(nameof(ProductName), null, FilePropertiesComparer.NormalizedStringValueCoersion);
         }
 
-        internal static void BuildEntity([DisallowNull] EntityTypeBuilder<SummaryPropertySet> builder)
+        internal static void OnBuildEntity([DisallowNull] EntityTypeBuilder<SummaryPropertySet> builder)
         {
             if (builder is null)
                 throw new ArgumentOutOfRangeException(nameof(builder));

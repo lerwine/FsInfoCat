@@ -1,12 +1,12 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.Local
 {
     /// <summary>Generic interface for access error entities that occur on the local host system.</summary>
     /// <typeparam name="TTarget">The target entity type.</typeparam>
-    /// <seealso cref="IAccessError&lt;ILocalDbEntity&gt;" />
+    /// <seealso cref="IAccessError" />
     /// <seealso cref="IDbEntity" />
-    public interface ILocalAccessError : IAccessError<ILocalDbEntity>, IDbEntity
+    public interface ILocalAccessError : IAccessError, IDbEntity
     {
         /// <summary>Gets the target entity to which the access error applies.</summary>
         /// <value>The <see cref="ILocalDbEntity" /> object that this error applies to.</value>

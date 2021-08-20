@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.Local
 {
@@ -6,8 +6,7 @@ namespace FsInfoCat.Local
     /// <typeparam name="TTarget">The target entity type.</typeparam>
     /// <seealso cref="ILocalAccessError" />
     /// <seealso cref="ISubdirectoryAccessError" />
-    /// <seealso cref="IAccessError&lt;ILocalSubdirectory&gt;" />
-    public interface ILocalSubdirectoryAccessError : ILocalAccessError, ISubdirectoryAccessError, IAccessError<ILocalSubdirectory>
+    public interface ILocalSubdirectoryAccessError : ILocalAccessError, ISubdirectoryAccessError
     {
         /// <summary>Gets the target subdirectory to which the access error applies.</summary>
         /// <value>The <typeparamref name="ISubdirectory" /> entity that this error applies to.</value>
