@@ -65,7 +65,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             SetValue(StatusOptionsPropertyKey, new EnumValueSelectorVM<VolumeStatus>());
         }
 
-        private async Task<int> LoadItemsAsync(ItemLoadParams state, IStatusListener statusListener)
+        private async Task<int> LoadItemsAsync(ItemLoadParams state, IWindowsStatusListener statusListener)
         {
             statusListener.CancellationToken.ThrowIfCancellationRequested();
             IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
@@ -106,7 +106,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 
         protected override DbSet<Volume> GetDbSet(LocalDbContext dbContext) => dbContext.Volumes;
 
-        protected override Func<IStatusListener, Task<int>> GetItemsLoaderFactory()
+        protected override Func<IWindowsStatusListener, Task<int>> GetItemsLoaderFactory()
         {
             ItemLoadParams loadParams = new(CurrentFileSystem?.Id, StatusOptions.SelectedItems.Select(e => e.Value).ToArray());
             return listener => Task.Run(async () => await LoadItemsAsync(loadParams, listener));

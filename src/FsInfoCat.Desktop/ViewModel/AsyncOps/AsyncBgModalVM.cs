@@ -1,8 +1,6 @@
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -15,7 +13,7 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
     /// View model used by <see cref="View.AsyncBgModalControl"/> to display background operation status in a modal context.
     /// </summary>
     /// <seealso cref="DependencyObject" />
-    public class AsyncBgModalVM : DependencyObject
+    public class AsyncBgModalVM : DependencyObject, IAsyncWindowsBackgroundOperationManager
     {
         private readonly object _syncRoot = new();
         private ListenerImpl _currentListener;
@@ -79,7 +77,7 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
         /// <value>The bindable <see cref="System.Windows.Input.ICommand"/> that cancels the current background operation.</value>
         public Commands.RelayCommand CancelOperation => (Commands.RelayCommand)GetValue(CancelOperationProperty);
 
-        internal void RaiseOperationCancelRequested(object parameter)
+        private void RaiseOperationCancelRequested(object parameter)
         {
             using IDisposable loggerScope = _logger.BeginScope("{EventName} event raised; parameter = {parameter}", nameof(OperationCancelRequested), parameter);
             try { OnOperationCancelRequested(parameter); }
@@ -395,125 +393,6 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
             PopupBorderHeight = (h > maxH) ? maxH : h;
         }
 
-        class ListenerImpl : IStatusListener, IDisposable
-        {
-            private readonly CancellationTokenSource _tokenSource = new();
-            private readonly AsyncBgModalVM _owner;
-            private bool _isDisposed;
-
-            internal ListenerImpl(AsyncBgModalVM owner, Guid concurrencyId)
-            {
-                _owner = owner ?? throw new ArgumentNullException();
-                CancellationToken = _tokenSource.Token;
-                ConcurrencyId = concurrencyId;
-            }
-
-            public CancellationToken CancellationToken { get; }
-
-            public Guid ConcurrencyId { get; }
-
-            public ILogger Logger => _owner._logger;
-
-            public DispatcherOperation BeginSetMessage([AllowNull] string message, StatusMessageLevel level, DispatcherPriority
-                priority = DispatcherPriority.Background) => _owner.Dispatcher.InvokeAsync(() =>
-                {
-                    _owner.StatusMessage = message;
-                    _owner.MessageLevel = level;
-                }, priority, CancellationToken);
-
-            public DispatcherOperation BeginSetMessage([AllowNull] string message, DispatcherPriority priority = DispatcherPriority.Background) =>
-                _owner.Dispatcher.InvokeAsync(() => _owner.StatusMessage = message, priority, CancellationToken);
-
-
-            public void SetMessage([AllowNull] string message, StatusMessageLevel level, TimeSpan timeout, DispatcherPriority priority = DispatcherPriority.Background) =>
-                _owner.Dispatcher.Invoke(() =>
-                {
-                    _owner.StatusMessage = message;
-                    _owner.MessageLevel = level;
-                }, priority, CancellationToken, timeout);
-
-            public void SetMessage([AllowNull] string message, StatusMessageLevel level, DispatcherPriority priority = DispatcherPriority.Background) =>
-                _owner.Dispatcher.Invoke(() =>
-                {
-                    _owner.StatusMessage = message;
-                    _owner.MessageLevel = level;
-                }, priority, CancellationToken);
-
-            public void SetMessage([AllowNull] string message, TimeSpan timeout, DispatcherPriority priority = DispatcherPriority.Background) =>
-                _owner.Dispatcher.Invoke(() => _owner.StatusMessage = message, priority, CancellationToken, timeout);
-
-            public void SetMessage([AllowNull] string message, DispatcherPriority priority = DispatcherPriority.Background) =>
-                _owner.Dispatcher.Invoke(() => _owner.StatusMessage = message, priority, CancellationToken);
-
-            internal Task<TResult> FromAsync<TState, TResult>([DisallowNull] IDisposable loggerScope, TState state, [DisallowNull] Func<TState, IStatusListener, Task<TResult>> func)
-            {
-                Task<TResult> task = Task.Run(async () =>
-                {
-                    await _owner.Dispatcher.InvokeAsync(() => _owner.AsyncOpStatus = AsyncOpStatusCode.Running, DispatcherPriority.Normal, CancellationToken);
-                    return await func(state, this);
-                }, CancellationToken);
-                task.ContinueWith(task => _owner.RaiseTaskCompleted(this, loggerScope, task));
-                return task;
-            }
-
-            internal Task<TResult> FromAsync<TResult>([DisallowNull] IDisposable loggerScope, [DisallowNull] Func<IStatusListener, Task<TResult>> func)
-            {
-                Task<TResult> task = Task.Run(async () =>
-                {
-                    await _owner.Dispatcher.InvokeAsync(() => _owner.AsyncOpStatus = AsyncOpStatusCode.Running, DispatcherPriority.Normal, CancellationToken);
-                    return await func(this);
-                }, CancellationToken);
-                task.ContinueWith(task => _owner.RaiseTaskCompleted(this, loggerScope, task));
-                return task;
-            }
-
-            internal Task FromAsync<TState>([DisallowNull] IDisposable loggerScope, TState state, [DisallowNull] Func<TState, IStatusListener, Task> func)
-            {
-                Task task = Task.Run(async () =>
-                {
-                    await _owner.Dispatcher.InvokeAsync(() => _owner.AsyncOpStatus = AsyncOpStatusCode.Running, DispatcherPriority.Normal, CancellationToken);
-                    await func(state, this);
-                }, CancellationToken);
-                task.ContinueWith(task => _owner.RaiseTaskCompleted(this, loggerScope, task));
-                return task;
-            }
-
-            internal Task FromAsync([DisallowNull] IDisposable loggerScope, [DisallowNull] Func<IStatusListener, Task> func)
-            {
-                Task task = Task.Run(async () =>
-                {
-                    Logger.LogInformation("Background operation started: ConcurrencyId = {ConcurrencyId}", ConcurrencyId);
-                    await _owner.Dispatcher.InvokeAsync(() => _owner.AsyncOpStatus = AsyncOpStatusCode.Running, DispatcherPriority.Normal, CancellationToken);
-                    await func(this);
-                }, CancellationToken);
-                task.ContinueWith(task => _owner.RaiseTaskCompleted(this, loggerScope, task));
-                return task;
-            }
-
-            internal void Cancel()
-            {
-                if (!_tokenSource.IsCancellationRequested)
-                    _tokenSource.Cancel(true);
-            }
-
-            protected virtual void Dispose(bool disposing)
-            {
-                if (!_isDisposed)
-                {
-                    if (disposing)
-                        _tokenSource.Dispose();
-                    _isDisposed = true;
-                }
-            }
-
-            public void Dispose()
-            {
-                // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
-                Dispose(disposing: true);
-                GC.SuppressFinalize(this);
-            }
-        }
-
         /// <summary>
         /// Starts a new background operation from an asynchronous method.
         /// </summary>
@@ -525,7 +404,7 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
         /// <param name="func">The function that returns a <see cref="Task{TResult}"/> presumably by invoking an asynchronous method.</param>
         /// <returns>A <see cref="Task{TResult}"/> object that contains status information of the background task.</returns>
         public Task<TResult> FromAsync<TState, TResult>(string title, string initialMessage, TState state,
-            [DisallowNull] Func<TState, IStatusListener, Task<TResult>> func)
+            [DisallowNull] Func<TState, IWindowsStatusListener, Task<TResult>> func)
         {
             ListenerImpl item = CreateNewListener(title, initialMessage, Guid.NewGuid());
             IDisposable loggerScope = _logger.BeginScope("Starting new background operation: Title = {Title}; State = {State}; Concurrency ID = {ConcurrencyId}",
@@ -534,9 +413,12 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
             {
                 if (_currentListener is not null)
                     _currentListener.Cancel();
-                return (_currentListener = item).FromAsync(loggerScope, state, func); ;
+                return (_currentListener = item).FromAsync(loggerScope, state, func);
             }
         }
+
+        Task<TResult> IAsyncBackgroundOperationManager.FromAsync<TState, TResult>(string title, string initialMessage, TState state,
+            [DisallowNull] Func<TState, IStatusListener, Task<TResult>> func) => FromAsync(title, initialMessage, state, func);
 
         /// <summary>
         /// Starts a new background operation from an asynchronous method.
@@ -546,7 +428,7 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
         /// <param name="initialMessage">The initial message to display in the <see cref="View.AsyncBgModalControl"/>.</param>
         /// <param name="func">The function that returns a <see cref="Task{TResult}"/> presumably by invoking an asynchronous method.</param>
         /// <returns>A <see cref="Task{TResult}"/> object that contains status information of the background task.</returns>
-        public Task<TResult> FromAsync<TResult>(string title, string initialMessage, [DisallowNull] Func<IStatusListener, Task<TResult>> func)
+        public Task<TResult> FromAsync<TResult>(string title, string initialMessage, [DisallowNull] Func<IWindowsStatusListener, Task<TResult>> func)
         {
             Guid concurrencyId = Guid.NewGuid();
             ListenerImpl item = CreateNewListener(title, initialMessage, Guid.NewGuid());
@@ -556,11 +438,14 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
             {
                 if (_currentListener is not null)
                     _currentListener.Cancel();
-                return (_currentListener = item).FromAsync(loggerScope, func); ;
+                return (_currentListener = item).FromAsync(loggerScope, func);
             }
         }
 
-        public Task FromAsync<TState>(string title, string initialMessage, TState state, [DisallowNull] Func<TState, IStatusListener, Task> func)
+        Task<TResult> IAsyncBackgroundOperationManager.FromAsync<TResult>(string title, string initialMessage, [DisallowNull] Func<IStatusListener, Task<TResult>> func) =>
+            FromAsync(title, initialMessage, func);
+
+        public Task FromAsync<TState>(string title, string initialMessage, TState state, [DisallowNull] Func<TState, IWindowsStatusListener, Task> func)
         {
             Guid concurrencyId = Guid.NewGuid();
             ListenerImpl item = CreateNewListener(title, initialMessage, Guid.NewGuid());
@@ -570,11 +455,14 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
             {
                 if (_currentListener is not null)
                     _currentListener.Cancel();
-                return (_currentListener = item).FromAsync(loggerScope, state, func); ;
+                return (_currentListener = item).FromAsync(loggerScope, state, func);
             }
         }
 
-        public Task FromAsync(string title, string initialMessage, [DisallowNull] Func<IStatusListener, Task> func)
+        Task IAsyncBackgroundOperationManager.FromAsync<TState>(string title, string initialMessage, TState state, [DisallowNull] Func<TState, IStatusListener, Task> func) =>
+            FromAsync(title, initialMessage, state, func);
+
+        public Task FromAsync(string title, string initialMessage, [DisallowNull] Func<IWindowsStatusListener, Task> func)
         {
             Guid concurrencyId = Guid.NewGuid();
             ListenerImpl item = CreateNewListener(title, initialMessage, Guid.NewGuid());
@@ -584,9 +472,12 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
             {
                 if (_currentListener is not null)
                     _currentListener.Cancel();
-                return (_currentListener = item).FromAsync(loggerScope, func); ;
+                return (_currentListener = item).FromAsync(loggerScope, func);
             }
         }
+
+        Task IAsyncBackgroundOperationManager.FromAsync(string title, string initialMessage, [DisallowNull] Func<IStatusListener, Task> func) =>
+            FromAsync(title, initialMessage, func);
 
         private ListenerImpl CreateNewListener(string title, string initialMessage, Guid concurrencyId)
         {
@@ -641,6 +532,136 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
                     finally { item.Dispose(); }
                 }
             });
+        }
+
+        public void CancelAll() => RaiseOperationCancelRequested(null);
+
+        class ListenerImpl : IWindowsStatusListener, IDisposable
+        {
+            private readonly CancellationTokenSource _tokenSource = new();
+            private readonly AsyncBgModalVM _owner;
+            private bool _isDisposed;
+
+            internal ListenerImpl(AsyncBgModalVM owner, Guid concurrencyId)
+            {
+                _owner = owner ?? throw new ArgumentNullException();
+                CancellationToken = _tokenSource.Token;
+                ConcurrencyId = concurrencyId;
+            }
+
+            public CancellationToken CancellationToken { get; }
+
+            public Guid ConcurrencyId { get; }
+
+            public ILogger Logger => _owner._logger;
+
+            public DispatcherOperation BeginSetMessage([AllowNull] string message, StatusMessageLevel level, DispatcherPriority
+                priority = DispatcherPriority.Background) => _owner.Dispatcher.InvokeAsync(() =>
+                {
+                    _owner.StatusMessage = message;
+                    _owner.MessageLevel = level;
+                }, priority, CancellationToken);
+
+            public DispatcherOperation BeginSetMessage([AllowNull] string message, DispatcherPriority priority = DispatcherPriority.Background) =>
+                _owner.Dispatcher.InvokeAsync(() => _owner.StatusMessage = message, priority, CancellationToken);
+
+
+            public void SetMessage([AllowNull] string message, StatusMessageLevel level, TimeSpan timeout, DispatcherPriority priority = DispatcherPriority.Background) =>
+                _owner.Dispatcher.Invoke(() =>
+                {
+                    _owner.StatusMessage = message;
+                    _owner.MessageLevel = level;
+                }, priority, CancellationToken, timeout);
+
+            public void SetMessage([AllowNull] string message, StatusMessageLevel level, DispatcherPriority priority = DispatcherPriority.Background) =>
+                _owner.Dispatcher.Invoke(() =>
+                {
+                    _owner.StatusMessage = message;
+                    _owner.MessageLevel = level;
+                }, priority, CancellationToken);
+
+            public void SetMessage([AllowNull] string message, TimeSpan timeout, DispatcherPriority priority = DispatcherPriority.Background) =>
+                _owner.Dispatcher.Invoke(() => _owner.StatusMessage = message, priority, CancellationToken, timeout);
+
+            public void SetMessage([AllowNull] string message, DispatcherPriority priority = DispatcherPriority.Background) =>
+                _owner.Dispatcher.Invoke(() => _owner.StatusMessage = message, priority, CancellationToken);
+
+            internal Task<TResult> FromAsync<TState, TResult>([DisallowNull] IDisposable loggerScope, TState state, [DisallowNull] Func<TState, IWindowsStatusListener, Task<TResult>> func)
+            {
+                Task<TResult> task = Task.Run(async () =>
+                {
+                    await _owner.Dispatcher.InvokeAsync(() => _owner.AsyncOpStatus = AsyncOpStatusCode.Running, DispatcherPriority.Normal, CancellationToken);
+                    return await func(state, this);
+                }, CancellationToken);
+                task.ContinueWith(task => _owner.RaiseTaskCompleted(this, loggerScope, task));
+                return task;
+            }
+
+            internal Task<TResult> FromAsync<TResult>([DisallowNull] IDisposable loggerScope, [DisallowNull] Func<IWindowsStatusListener, Task<TResult>> func)
+            {
+                Task<TResult> task = Task.Run(async () =>
+                {
+                    await _owner.Dispatcher.InvokeAsync(() => _owner.AsyncOpStatus = AsyncOpStatusCode.Running, DispatcherPriority.Normal, CancellationToken);
+                    return await func(this);
+                }, CancellationToken);
+                task.ContinueWith(task => _owner.RaiseTaskCompleted(this, loggerScope, task));
+                return task;
+            }
+
+            internal Task FromAsync<TState>([DisallowNull] IDisposable loggerScope, TState state, [DisallowNull] Func<TState, IWindowsStatusListener, Task> func)
+            {
+                Task task = Task.Run(async () =>
+                {
+                    await _owner.Dispatcher.InvokeAsync(() => _owner.AsyncOpStatus = AsyncOpStatusCode.Running, DispatcherPriority.Normal, CancellationToken);
+                    await func(state, this);
+                }, CancellationToken);
+                task.ContinueWith(task => _owner.RaiseTaskCompleted(this, loggerScope, task));
+                return task;
+            }
+
+            internal Task FromAsync([DisallowNull] IDisposable loggerScope, [DisallowNull] Func<IWindowsStatusListener, Task> func)
+            {
+                Task task = Task.Run(async () =>
+                {
+                    Logger.LogInformation("Background operation started: ConcurrencyId = {ConcurrencyId}", ConcurrencyId);
+                    await _owner.Dispatcher.InvokeAsync(() => _owner.AsyncOpStatus = AsyncOpStatusCode.Running, DispatcherPriority.Normal, CancellationToken);
+                    await func(this);
+                }, CancellationToken);
+                task.ContinueWith(task => _owner.RaiseTaskCompleted(this, loggerScope, task));
+                return task;
+            }
+
+            internal void Cancel()
+            {
+                if (!_tokenSource.IsCancellationRequested)
+                    _tokenSource.Cancel(true);
+            }
+
+            protected virtual void Dispose(bool disposing)
+            {
+                if (!_isDisposed)
+                {
+                    if (disposing)
+                        _tokenSource.Dispose();
+                    _isDisposed = true;
+                }
+            }
+
+            public void Dispose()
+            {
+                // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+                Dispose(disposing: true);
+                GC.SuppressFinalize(this);
+            }
+
+            void IStatusListener.SetMessage([AllowNull] string message, StatusMessageLevel level, TimeSpan timeout) => SetMessage(message, level, timeout);
+            void IStatusListener.SetMessage([AllowNull] string message, StatusMessageLevel level) => SetMessage(message, level);
+            void IStatusListener.SetMessage([AllowNull] string message, TimeSpan timeout) => SetMessage(message, timeout);
+            Task IStatusListener.BeginSetMessage([AllowNull] string message, StatusMessageLevel level) => BeginSetMessage(message, level).Task;
+            void IStatusListener.SetMessage([AllowNull] string message) => SetMessage(message);
+            Task IStatusListener.BeginSetMessage([AllowNull] string message) => BeginSetMessage(message).Task;
+            DispatcherOperation IWindowsStatusListener.BeginSetMessage([AllowNull] string message, StatusMessageLevel level) => BeginSetMessage(message, level);
+            DispatcherOperation IWindowsStatusListener.BeginSetMessage([AllowNull] string message) => BeginSetMessage(message);
         }
     }
 }

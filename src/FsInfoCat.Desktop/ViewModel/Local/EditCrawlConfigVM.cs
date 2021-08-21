@@ -1,4 +1,3 @@
-using FsInfoCat.Desktop.ViewModel.AsyncOps;
 using FsInfoCat.Local;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
@@ -158,7 +157,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         /// <value>The bindable <see cref="Commands.RelayCommand">RelayCommand</see> for selecting a new root path for the crawl configuration..</value>
         public Commands.RelayCommand SelectRootCommand => (Commands.RelayCommand)GetValue(SelectRootCommandProperty);
 
-        private static Task<DirectoryInfo> GetDirectoryAsync(string path, AsyncOps.IStatusListener listener) => string.IsNullOrEmpty(path) ? Task.FromResult<DirectoryInfo>(null) :
+        private static Task<DirectoryInfo> GetDirectoryAsync(string path, IWindowsStatusListener listener) => string.IsNullOrEmpty(path) ? Task.FromResult<DirectoryInfo>(null) :
             Task.Run(() =>
             {
                 listener.CancellationToken.ThrowIfCancellationRequested();
@@ -177,7 +176,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
                 ShowFolderBrowserDialog((task.IsCompletedSuccessfully && task.Result is not null) ? task.Result.FullName : Environment.GetFolderPath(Environment.SpecialFolder.UserProfile))));
         }
 
-        private async Task<Subdirectory> CheckPathAsync(string path, AsyncOps.IStatusListener listener)
+        private static async Task<Subdirectory> CheckPathAsync(string path, IWindowsStatusListener listener)
         {
             using IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
             using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
@@ -187,7 +186,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             return subdirectory;
         }
 
-        private void ShowFolderBrowserDialog(string newPath)
+        internal static Task<(string, Subdirectory)?> BrowseForFolderAsync(string newPath, AsyncOps.AsyncBgModalVM bgOpManager)
         {
             using (System.Windows.Forms.FolderBrowserDialog dialog = new()
             {
@@ -196,28 +195,43 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             })
             {
                 if (dialog.ShowDialog(new WindowOwner()) != System.Windows.Forms.DialogResult.OK)
-                    return;
+                    return null;
                 newPath = dialog.SelectedPath;
             }
 
+            return bgOpManager.FromAsync("Checking Availability", "Checking whether selected subdirectory is already configured", newPath, CheckPathAsync).ContinueWith<(string, Subdirectory)?>(task =>
+                (newPath, task.Result), TaskContinuationOptions.OnlyOnRanToCompletion);
+        }
+
+        private void ShowFolderBrowserDialog(string newPath)
+        {
             IEnumerable<string> errors = Validation.GetErrors(nameof(Path));
             Validation.ClearErrorMessages(nameof(Path));
-            OpAggregate.FromAsync("Checking Availability", "Checking whether selected subdirectory is already configured", newPath, CheckPathAsync).ContinueWith(task =>
+            BrowseForFolderAsync(newPath, OpAggregate).ContinueWith(task =>
             {
-                if (task.Result?.CrawlConfiguration is null)
-                    Dispatcher.Invoke(() =>
-                    {
-                        Path = newPath;
-                        Root = task.Result;
-                    });
+                if (task.IsCompletedSuccessfully)
+                {
+                    if (task.Result?.Item2?.CrawlConfiguration is null)
+                        Dispatcher.Invoke(() =>
+                        {
+                            Path = newPath;
+                            Root = task.Result?.Item2;
+                        });
+                    else
+                        Dispatcher.Invoke(() =>
+                        {
+                            MessageBox.Show(Application.Current.MainWindow, "Not Available", "That subdirectory already has a crawl configuration.", MessageBoxButton.OK, MessageBoxImage.Error);
+                            if (errors?.Any() ?? false)
+                                Validation.SetErrorMessage(nameof(Path), errors.First(), errors.Skip(1).ToArray());
+                        });
+                }
                 else
                     Dispatcher.Invoke(() =>
                     {
-                        MessageBox.Show(Application.Current.MainWindow, "Not Available", "That subdirectory already has a crawl configuration.", MessageBoxButton.OK, MessageBoxImage.Error);
                         if (errors?.Any() ?? false)
                             Validation.SetErrorMessage(nameof(Path), errors.First(), errors.Skip(1).ToArray());
                     });
-            }, TaskContinuationOptions.OnlyOnRanToCompletion);
+            });
         }
 
         #endregion
@@ -950,7 +964,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         public string Path
         {
             get => GetValue(PathProperty) as string;
-            private set => SetValue(PathPropertyKey, value);
+            internal set => SetValue(PathPropertyKey, value);
         }
 
         #endregion
@@ -1114,6 +1128,10 @@ namespace FsInfoCat.Desktop.ViewModel.Local
                 return;
             }
 
+            if ((Root = newValue.Root) is null || AttachedProperties.GetFullNameId(this) == newValue.Root.Id)
+                Path = AttachedProperties.GetFullName(this) ?? "";
+            else
+                AttachedProperties.GetFullName(this, OpAggregate, p => Path = p ?? "");
             DisplayName = newValue.DisplayName;
             LimitTotalItems = newValue.MaxTotalItems.HasValue;
             MaxTotalItems = newValue.MaxTotalItems ?? 0UL;
@@ -1216,7 +1234,8 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             return true;
         }
 
-        protected override async Task<bool> OnSaveChangesAsync([DisallowNull] EntityEntry<CrawlConfiguration> entry, [DisallowNull] LocalDbContext dbContext, [DisallowNull] IStatusListener statusListener, bool force = false)
+        protected override async Task<bool> OnSaveChangesAsync([DisallowNull] EntityEntry<CrawlConfiguration> entry, [DisallowNull] LocalDbContext dbContext,
+            [DisallowNull] IWindowsStatusListener statusListener, bool force = false)
         {
             if (entry.Entity.Root is null)
             {

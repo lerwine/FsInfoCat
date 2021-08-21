@@ -6,6 +6,7 @@
              xmlns:async="clr-namespace:FsInfoCat.Desktop.ViewModel.AsyncOps"
              xmlns:local="clr-namespace:FsInfoCat.Desktop.View"
              xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:fsi="clr-namespace:FsInfoCat;assembly=FsInfoCat"
              xmlns:desktop="clr-namespace:FsInfoCat.Desktop"
              mc:Ignorable="d" d:DataContext="{x:Type async:AsyncBgModalVM}"
              d:DesignHeight="450" d:DesignWidth="800" Background="{DynamicResource TranslucentBlack50pctBrush}" Visibility="{Binding ControlVisibility, Mode=OneWay}">
@@ -58,19 +59,19 @@
             </b:EventTrigger>
             <b:DataTrigger Binding="{Binding MessageLevel, Mode=OneWay}">
                 <b:DataTrigger.Value>
-                    <desktop:StatusMessageLevel>Information</desktop:StatusMessageLevel>
+                    <fsi:StatusMessageLevel>Information</fsi:StatusMessageLevel>
                 </b:DataTrigger.Value>
                 <b:GoToStateAction StateName="Info"/>
             </b:DataTrigger>
             <b:DataTrigger Binding="{Binding MessageLevel, Mode=OneWay}">
                 <b:DataTrigger.Value>
-                    <desktop:StatusMessageLevel>Warning</desktop:StatusMessageLevel>
+                    <fsi:StatusMessageLevel>Warning</fsi:StatusMessageLevel>
                 </b:DataTrigger.Value>
                 <b:GoToStateAction StateName="Warning"/>
             </b:DataTrigger>
             <b:DataTrigger Binding="{Binding MessageLevel, Mode=OneWay}">
                 <b:DataTrigger.Value>
-                    <desktop:StatusMessageLevel>Error</desktop:StatusMessageLevel>
+                    <fsi:StatusMessageLevel>Error</fsi:StatusMessageLevel>
                 </b:DataTrigger.Value>
                 <b:GoToStateAction StateName="Error"/>
             </b:DataTrigger>

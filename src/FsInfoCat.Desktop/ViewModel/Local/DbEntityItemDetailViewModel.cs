@@ -3,7 +3,7 @@ using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel.Local
 {
-    public abstract class DbEntityItemDetailViewModel<TDbEntity, TItemVM> : DependencyObject
+    public abstract class DbEntityItemDetailViewModel<TDbEntity, TItemVM> : DependencyObject, IHasAsyncWindowsBackgroundOperationManager
         where TDbEntity : LocalDbEntity, new()
         where TItemVM : DbEntityItemVM<TDbEntity>
     {
@@ -65,6 +65,20 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         public DbEntityItemDetailViewModel()
         {
             SetValue(BgOpsPropertyKey, new AsyncOps.AsyncBgModalVM());
+        }
+
+        IAsyncWindowsBackgroundOperationManager IHasAsyncWindowsBackgroundOperationManager.GetAsyncBackgroundOperationManager()
+        {
+            if (CheckAccess())
+                return BgOps;
+            return Dispatcher.Invoke(() => BgOps);
+        }
+
+        IAsyncBackgroundOperationManager IHasAsyncBackgroundOperationManager.GetAsyncBackgroundOperationManager()
+        {
+            if (CheckAccess())
+                return BgOps;
+            return Dispatcher.Invoke(() => BgOps);
         }
     }
 }

@@ -205,7 +205,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
                 BgOps.FromAsync("", "", (fileSystemId.Value, showActive), LoadSymbolicNamesAsync);
         }
 
-        private async Task<int> LoadSymbolicNamesAsync((Guid fileSystemId, bool? showActive) state, IStatusListener statusListener)
+        private async Task<int> LoadSymbolicNamesAsync((Guid fileSystemId, bool? showActive) state, IWindowsStatusListener statusListener)
         {
             statusListener.CancellationToken.ThrowIfCancellationRequested();
             IServiceScope serviceScope = Services.ServiceProvider.CreateScope();

@@ -17,7 +17,7 @@ using System.Windows.Threading;
 
 namespace FsInfoCat.Desktop.ViewModel.Local
 {
-    public abstract class DbEntityListingPageVM<TDbEntity, TItemVM> : DependencyObject, INotifyNavigationContentChanged
+    public abstract class DbEntityListingPageVM<TDbEntity, TItemVM> : DependencyObject, INotifyNavigationContentChanged, IHasAsyncWindowsBackgroundOperationManager
            where TDbEntity : LocalDbEntity, new()
            where TItemVM : DbEntityItemVM<TDbEntity>
     {
@@ -115,11 +115,11 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             return BgOps.FromAsync("Loading items", "Connecting to database...", GetItemsLoaderFactory());
         }
 
-        protected abstract Func<AsyncOps.IStatusListener, Task<int>> GetItemsLoaderFactory();
+        protected abstract Func<IWindowsStatusListener, Task<int>> GetItemsLoaderFactory();
 
         protected abstract DbSet<TDbEntity> GetDbSet(LocalDbContext dbContext);
 
-        protected async Task<int> OnEntitiesLoaded([DisallowNull] IEnumerable<TDbEntity> entities, AsyncOps.IStatusListener statusListener, Func<TDbEntity, TItemVM> createItem)
+        protected async Task<int> OnEntitiesLoaded([DisallowNull] IEnumerable<TDbEntity> entities, IWindowsStatusListener statusListener, Func<TDbEntity, TItemVM> createItem)
         {
             if (entities is null)
                 throw new ArgumentNullException(nameof(entities));
@@ -148,7 +148,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             }, DispatcherPriority.Background, statusListener.CancellationToken);
         }
 
-        protected async Task<int> OnEntitiesLoaded<TResultItem>([DisallowNull] IEnumerable<TResultItem> results, AsyncOps.IStatusListener statusListener, Func<TResultItem, TItemVM> createItem)
+        protected async Task<int> OnEntitiesLoaded<TResultItem>([DisallowNull] IEnumerable<TResultItem> results, IWindowsStatusListener statusListener, Func<TResultItem, TItemVM> createItem)
         {
             if (results is null)
                 throw new ArgumentNullException(nameof(results));
@@ -190,7 +190,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             return item is not null && _backingItems.Remove(item);
         }
 
-        private async Task<bool?> SaveEntityAsync([DisallowNull] TDbEntity entity, AsyncOps.IStatusListener statusListener)
+        private async Task<bool?> SaveEntityAsync([DisallowNull] TDbEntity entity, IWindowsStatusListener statusListener)
         {
             statusListener.CancellationToken.ThrowIfCancellationRequested();
             IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
@@ -256,7 +256,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             return task;
         }
 
-        private async Task<bool?> DeleteEntityAsync([DisallowNull] TDbEntity entity, AsyncOps.IStatusListener statusListener)
+        private async Task<bool?> DeleteEntityAsync([DisallowNull] TDbEntity entity, IWindowsStatusListener statusListener)
         {
             statusListener.CancellationToken.ThrowIfCancellationRequested();
             IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
@@ -355,12 +355,26 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 
         protected virtual void OnNavigatedFrom(MainVM mainVM)
         {
-            BgOps.RaiseOperationCancelRequested(null);
+            BgOps.CancelAll();
         }
 
         void INotifyNavigationContentChanged.OnNavigatedTo(MainVM mainVM) => OnNavigatedTo(mainVM);
 
         void INotifyNavigationContentChanged.OnNavigatedFrom(MainVM mainVM) => OnNavigatedFrom(mainVM);
+
+        IAsyncWindowsBackgroundOperationManager IHasAsyncWindowsBackgroundOperationManager.GetAsyncBackgroundOperationManager()
+        {
+            if (CheckAccess())
+                return BgOps;
+            return Dispatcher.Invoke(() => BgOps);
+        }
+
+        IAsyncBackgroundOperationManager IHasAsyncBackgroundOperationManager.GetAsyncBackgroundOperationManager()
+        {
+            if (CheckAccess())
+                return BgOps;
+            return Dispatcher.Invoke(() => BgOps);
+        }
     }
 
     public abstract class DbEntityListingPageVM<TDbEntity, TItemVM, TSelectionVM> : DbEntityListingPageVM<TDbEntity, TItemVM>

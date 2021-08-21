@@ -11,7 +11,7 @@ using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel.Local
 {
-    public abstract class EditDbEntityVM<TDbEntity> : DependencyObject, INotifyDataErrorInfo
+    public abstract class EditDbEntityVM<TDbEntity> : DependencyObject, INotifyDataErrorInfo, IHasAsyncWindowsBackgroundOperationManager
         where TDbEntity : LocalDbEntity, new()
     {
         #region Events
@@ -56,7 +56,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             }
         }
 
-        private static async Task<bool> SaveChangesAsync(ModelViewModel state, AsyncOps.IStatusListener statusListener)
+        private static async Task<bool> SaveChangesAsync(ModelViewModel state, IWindowsStatusListener statusListener)
         {
             EditDbEntityVM<TDbEntity> vm = state.ViewModel ?? throw new ArgumentException($"{nameof(state.ViewModel)} cannot be null.", nameof(state));
             using IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
@@ -248,6 +248,46 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             changeTracker.AnyInvalidPropertyChanged += OnValidationStateChanged;
         }
 
+        IAsyncWindowsBackgroundOperationManager IHasAsyncWindowsBackgroundOperationManager.GetAsyncBackgroundOperationManager()
+        {
+            if (CheckAccess())
+                return OpAggregate;
+            return Dispatcher.Invoke(() => OpAggregate);
+        }
+
+        IAsyncBackgroundOperationManager IHasAsyncBackgroundOperationManager.GetAsyncBackgroundOperationManager()
+        {
+            if (CheckAccess())
+                return OpAggregate;
+            return Dispatcher.Invoke(() => OpAggregate);
+        }
+
+        public record AsyncDialogArgs(Func<AsyncInitArgs, Task> OnInitializeAsync, TDbEntity Entity, bool IsNew);
+
+        public record AsyncInitArgs(TDbEntity Entity, bool IsNew, LocalDbContext DbContext, IWindowsStatusListener StatusListener);
+
+        internal Task<bool?> ShowDialogAsync(string asyncOpTitle, string asyncOpInitialMessage, [DisallowNull] AsyncOps.AsyncBgModalVM bgOpManager, [DisallowNull] Window window,
+            [DisallowNull] TDbEntity entity, bool isNew, [DisallowNull] Func<AsyncInitArgs, Task> onInitializeAsync)
+        {
+            if (bgOpManager is null)
+                throw new ArgumentNullException(nameof(bgOpManager));
+            if (window is null)
+                throw new ArgumentNullException(nameof(window));
+            if (entity is null)
+                throw new ArgumentNullException(nameof(entity));
+            if (onInitializeAsync is null)
+                throw new ArgumentNullException(nameof(onInitializeAsync));
+            return bgOpManager.FromAsync(asyncOpTitle, asyncOpInitialMessage, new AsyncDialogArgs(onInitializeAsync, entity, isNew), ShowDialogAsync)
+                .ContinueWith(task => Dispatcher.Invoke(() => ShowDialog(window, entity, isNew), System.Windows.Threading.DispatcherPriority.Background), TaskContinuationOptions.OnlyOnRanToCompletion);
+        }
+
+        private async Task ShowDialogAsync(AsyncDialogArgs state, IWindowsStatusListener statusListener)
+        {
+            using IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+            await state.OnInitializeAsync(new AsyncInitArgs(state.Entity, state.IsNew, dbContext, statusListener));
+        }
+
         internal bool? ShowDialog([DisallowNull] Window window, [DisallowNull] TDbEntity entity, bool isNew)
         {
             if (window is null)
@@ -270,7 +310,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
                         MessageBoxButton.YesNo, MessageBoxImage.Exclamation) != MessageBoxResult.Yes)
                     e.Cancel = true;
                 else
-                    OpAggregate.RaiseOperationCancelRequested(null);
+                    OpAggregate.CancelAll();
             };
             window.Closing += windowClosing;
             EventHandler closeSuccess = new((sender, e) => window.DialogResult = true);
@@ -323,7 +363,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         /// otherwise, <see langword="false"/></param>
         /// <returns><see langword="true"/> if changes were successfully saved to the database; otherwise, <see langword="false"/>.</returns>
         /// <exception cref="InvalidOperationException">Failed to save changes to the database.</exception>
-        protected virtual async Task<bool> OnSaveChangesAsync([DisallowNull] EntityEntry<TDbEntity> entry, [DisallowNull] LocalDbContext dbContext, [DisallowNull] AsyncOps.IStatusListener statusListener, bool force = false)
+        protected virtual async Task<bool> OnSaveChangesAsync([DisallowNull] EntityEntry<TDbEntity> entry, [DisallowNull] LocalDbContext dbContext, [DisallowNull] IWindowsStatusListener statusListener, bool force = false)
         {
             if (!(force || IsNew) && entry.State == EntityState.Unchanged)
                 return false;
@@ -427,7 +467,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         //}
 
         //public static bool EditObsolete<TWindow, TVm>([DisallowNull] string loadingTitle, [DisallowNull] string initialLoadingMessage,
-        //    [DisallowNull] Func<LocalDbContext, AsyncOps.IStatusListener, Task<TDbEntity>> getDbEntityOpAsync, out TDbEntity model, out bool isNew)
+        //    [DisallowNull] Func<LocalDbContext, IStatusListener, Task<TDbEntity>> getDbEntityOpAsync, out TDbEntity model, out bool isNew)
         //    where TWindow : Window, new()
         //    where TVm : EditDbEntityVM<TDbEntity>, new()
         //{

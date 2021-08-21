@@ -314,6 +314,7 @@ namespace FsInfoCat.Desktop.ViewModel
         }
 
         #endregion
+
         public MainVM()
         {
             SetValue(CommandBindingsPropertyKey, new CommandBindingCollection

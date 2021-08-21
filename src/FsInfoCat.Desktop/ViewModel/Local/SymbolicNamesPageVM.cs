@@ -118,7 +118,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             return BgOps.FromAsync("Loading items", "Connecting to database...", isInactive, LoadItemsAsync);
         }
 
-        private async Task<int> LoadItemsAsync(bool? isInactive, AsyncOps.IStatusListener statusListener)
+        private async Task<int> LoadItemsAsync(bool? isInactive, IWindowsStatusListener statusListener)
         {
             statusListener.CancellationToken.ThrowIfCancellationRequested();
             IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
@@ -138,7 +138,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 
         protected override DbSet<SymbolicName> GetDbSet(LocalDbContext dbContext) => dbContext.SymbolicNames;
 
-        protected override Func<IStatusListener, Task<int>> GetItemsLoaderFactory()
+        protected override Func<IWindowsStatusListener, Task<int>> GetItemsLoaderFactory()
         {
             throw new NotImplementedException();
         }

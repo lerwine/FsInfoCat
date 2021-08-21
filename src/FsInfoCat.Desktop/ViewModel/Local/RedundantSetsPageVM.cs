@@ -22,7 +22,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             return BgOps.FromAsync("Loading items", "Connecting to database...", new ItemLoadParams(binaryPropertiesId, reference), LoadItemsAsync);
         }
 
-        private async Task<int> LoadItemsAsync(ItemLoadParams state, IStatusListener statusListener)
+        private async Task<int> LoadItemsAsync(ItemLoadParams state, IWindowsStatusListener statusListener)
         {
             statusListener.CancellationToken.ThrowIfCancellationRequested();
             IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
@@ -47,7 +47,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 
         protected override DbSet<RedundantSet> GetDbSet(LocalDbContext dbContext) => dbContext.RedundantSets;
 
-        protected override Func<IStatusListener, Task<int>> GetItemsLoaderFactory()
+        protected override Func<IWindowsStatusListener, Task<int>> GetItemsLoaderFactory()
         {
             throw new NotImplementedException();
         }

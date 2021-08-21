@@ -155,7 +155,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         public ThreeStateViewModel ViewOptions => (ThreeStateViewModel)GetValue(ViewOptionsProperty);
 
         #endregion
-
+        
         public CrawlConfigurationsPageVM()
         {
             ThreeStateViewModel viewOptions = new(true);
@@ -183,7 +183,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             };
         }
 
-        protected override Func<IStatusListener, Task<int>> GetItemsLoaderFactory()
+        protected override Func<IWindowsStatusListener, Task<int>> GetItemsLoaderFactory()
         {
             bool? viewOptions = ViewOptions.Value;
             return listener => Task.Run(async () => await LoadItemsAsync(viewOptions, listener));
@@ -206,11 +206,11 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             });
         }
 
-        private async Task<int> LoadItemsAsync(bool? showActive, IStatusListener statusListener)
+        private async Task<int> LoadItemsAsync(bool? showActive, IWindowsStatusListener statusListener)
         {
             statusListener.CancellationToken.ThrowIfCancellationRequested();
-            IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
-            LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+            using IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             IIncludableQueryable<CrawlConfiguration, Subdirectory> crawlConfigurations = dbContext.CrawlConfigurations.Include(c => c.Root);
             IQueryable<CrawlConfiguration> items;
             if (showActive.HasValue)
@@ -234,13 +234,31 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 
         protected override DbSet<CrawlConfiguration> GetDbSet(LocalDbContext dbContext) => dbContext.CrawlConfigurations;
 
-        protected override void OnAddNewItem(object parameter)
+        protected async Task<CrawlConfiguration> AddNewItemAsync(object parameter)
+        {
+            (string, Subdirectory)? result = await Dispatcher.Invoke(() => EditCrawlConfigVM.BrowseForFolderAsync(null, BgOps));
+            while (result?.Item2.CrawlConfiguration is not null)
+            {
+                Dispatcher.Invoke(() => MessageBox.Show(Application.Current.MainWindow, "Not Available", "That subdirectory already has a crawl configuration.", MessageBoxButton.OK, MessageBoxImage.Error));
+                result = await Dispatcher.Invoke(() => EditCrawlConfigVM.BrowseForFolderAsync(null, BgOps));
+            }
+            string path = result?.Item1;
+            return string.IsNullOrEmpty(path) ? null : await Dispatcher.InvokeAsync(() => ShowEditNewDialog(result?.Item1), DispatcherPriority.Background);
+        }
+
+        protected override void OnAddNewItem(object parameter) => AddNewItemAsync(parameter).Wait();
+
+        private CrawlConfiguration ShowEditNewDialog(string rootPath)
         {
             CrawlConfiguration entity = new();
             bool? isInactive = ViewOptions.Value;
             if (isInactive.HasValue)
                 entity.StatusValue = isInactive.Value ? CrawlStatus.Disabled : CrawlStatus.NotRunning;
-            throw new NotImplementedException();
+            EditCrawlConfigVM viewModel = new();
+            AttachedProperties.SetFullName(viewModel, rootPath);
+            if (viewModel.ShowDialog(new View.Local.EditCrawlConfigWindow(), entity, true) ?? false)
+                return entity;
+            return null;
         }
 
         protected override bool ShowModalItemEditWindow(CrawlConfigItemVM item, object parameter, out string saveProgressTitle)

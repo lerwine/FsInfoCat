@@ -1,7 +1,7 @@
-using System;
+﻿using System;
 using System.Runtime.Serialization;
 
-namespace FsInfoCat.Desktop.ViewModel.AsyncOps
+namespace FsInfoCat
 {
     [Serializable]
     public class AsyncOperationFailureException : Exception

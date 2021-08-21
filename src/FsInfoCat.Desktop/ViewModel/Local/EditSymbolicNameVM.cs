@@ -194,7 +194,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 
         protected override DbSet<SymbolicName> GetDbSet([DisallowNull] LocalDbContext dbContext) => dbContext.SymbolicNames;
 
-        protected override Task<bool> OnSaveChangesAsync([DisallowNull] EntityEntry<SymbolicName> entry, [DisallowNull] LocalDbContext dbContext, [DisallowNull] IStatusListener statusListener, bool force = false)
+        protected override Task<bool> OnSaveChangesAsync([DisallowNull] EntityEntry<SymbolicName> entry, [DisallowNull] LocalDbContext dbContext, [DisallowNull] IWindowsStatusListener statusListener, bool force = false)
         {
             string name = entry.Entity.Name;
             SymbolicName existing = (from sn in dbContext.SymbolicNames where sn.Name == name select sn).FirstOrDefaultAsync(statusListener.CancellationToken).Result;
@@ -204,7 +204,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             return base.OnSaveChangesAsync(entry, dbContext, statusListener, force);
         }
 
-        private static async Task<FileSystem[]> LoadFileSystemsAsync(FileSystemLookupOptions state, IStatusListener statusListener)
+        private static async Task<FileSystem[]> LoadFileSystemsAsync(FileSystemLookupOptions state, IWindowsStatusListener statusListener)
         {
             using IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
             using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();

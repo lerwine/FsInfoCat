@@ -1,4 +1,4 @@
-﻿using FsInfoCat.Local;
+using FsInfoCat.Local;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 
@@ -14,7 +14,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 
         TDbEntity GetEntity(TLoadResult loadResult);
 
-        Task<TLoadResult> LoadAsync(LocalDbContext dbContext, AsyncOps.IStatusListener statusListener);
+        Task<TLoadResult> LoadAsync(LocalDbContext dbContext, IWindowsStatusListener statusListener);
 
         void InitializeViewModel(TVm viewModel, TLoadResult loadResult, EntityState entityState);
     }

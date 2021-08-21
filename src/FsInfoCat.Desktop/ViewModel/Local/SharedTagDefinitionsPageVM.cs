@@ -162,13 +162,13 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 
         protected override DbSet<SharedTagDefinition> GetDbSet(LocalDbContext dbContext) => dbContext.SharedTagDefinitions;
 
-        protected override Func<IStatusListener, Task<int>> GetItemsLoaderFactory()
+        protected override Func<IWindowsStatusListener, Task<int>> GetItemsLoaderFactory()
         {
             bool? viewOptions = ViewOptions.Value;
             return listener => Task.Run(async () => await LoadItemsAsync(viewOptions, listener));
         }
 
-        private async Task<int> LoadItemsAsync(bool? showActive, IStatusListener statusListener)
+        private async Task<int> LoadItemsAsync(bool? showActive, IWindowsStatusListener statusListener)
         {
             statusListener.CancellationToken.ThrowIfCancellationRequested();
             IServiceScope serviceScope = Services.ServiceProvider.CreateScope();

@@ -1,4 +1,4 @@
-namespace FsInfoCat.Desktop
+﻿namespace FsInfoCat
 {
     public enum StatusMessageLevel
     {
