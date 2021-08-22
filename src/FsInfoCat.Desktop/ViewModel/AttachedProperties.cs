@@ -58,7 +58,7 @@ namespace FsInfoCat.Desktop.ViewModel
                 using FsInfoCat.Local.LocalDbContext context = serviceScope.ServiceProvider.GetRequiredService<FsInfoCat.Local.LocalDbContext>();
                 return await PGetFullNameAsync(subdirectory, context, statusListener);
             }
-            return await FsInfoCat.Local.Subdirectory.LookupFullNameAsync(subdirectory, statusListener.CancellationToken, dbContext);
+            return await subdirectory.GetFullNameAsync(dbContext, statusListener.CancellationToken);
         }
 
         private static async Task<string> PGetFullNameAsync(FsInfoCat.Local.CrawlConfiguration crawlConfiguration, FsInfoCat.Local.LocalDbContext dbContext, IWindowsStatusListener statusListener)
@@ -76,7 +76,7 @@ namespace FsInfoCat.Desktop.ViewModel
                 if (root is null)
                     return null;
             }
-            return await FsInfoCat.Local.Subdirectory.LookupFullNameAsync(root, statusListener.CancellationToken, dbContext);
+            return await root.GetFullNameAsync(dbContext, statusListener.CancellationToken);
         }
 
         private static string OnGetFullName(DependencyObject item, Guid rootId, string path, Action<string> onCompleted)

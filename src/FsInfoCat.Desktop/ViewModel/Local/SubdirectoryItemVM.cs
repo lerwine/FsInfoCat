@@ -89,7 +89,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 
         private async Task<string> LookupFullNameAsync(Subdirectory root, IWindowsStatusListener statusListener)
         {
-            string fullName = await Subdirectory.LookupFullNameAsync(root, statusListener.CancellationToken);
+            string fullName = await root.GetFullNameAsync(statusListener.CancellationToken);
             Dispatcher.Invoke(() => OnLookupFullNameComplete(fullName ?? ""));
             return fullName;
         }

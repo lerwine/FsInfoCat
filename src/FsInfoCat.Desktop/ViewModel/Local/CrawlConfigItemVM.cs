@@ -261,7 +261,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             SetValue(OpenRootFolderCommandPropertyKey, new Commands.RelayCommand(parameter => OpenRootFolder?.Invoke(this, EventArgs.Empty)));
             Subdirectory root = Model.Root;
             if (root is not null)
-                (bgOpMgr ?? BgOps).FromAsync("", "", root, LookupFullNameAsync);
+                (bgOpMgr ?? BgOps).FromAsync("Loading data", "Getting full path", root, LookupFullNameAsync);
             DisplayName = model.DisplayName;
             MaxRecursionDepth = model.MaxRecursionDepth;
             MaxTotalItems = model.MaxTotalItems;
@@ -288,7 +288,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             FullName = fullName;
             Subdirectory root = Model.Root;
             if (root is not null && root.Id != rootId)
-                (bgOpMgr ?? BgOps).FromAsync("", "", root, LookupFullNameAsync);
+                (bgOpMgr ?? BgOps).FromAsync("Loading data", "Getting full path", root, LookupFullNameAsync);
             DisplayName = model.DisplayName;
             MaxRecursionDepth = model.MaxRecursionDepth;
             MaxTotalItems = model.MaxTotalItems;
@@ -307,7 +307,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 
         private async Task<string> LookupFullNameAsync(Subdirectory root, IWindowsStatusListener statusListener)
         {
-            string fullName = await Subdirectory.LookupFullNameAsync(root, statusListener.CancellationToken);
+            string fullName = await root.GetFullNameAsync(statusListener.CancellationToken);
             Dispatcher.Invoke(() => OnLookupFullNameComplete(fullName ?? ""));
             return fullName;
         }
@@ -318,13 +318,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
                 return;
             FullName = result;
         }
-
-        private static void OnLookupFullNameError(AggregateException exception)
-        {
-            MessageBox.Show(Application.Current.MainWindow, string.IsNullOrWhiteSpace(exception.Message) ? exception.ToString() : exception.Message,
-                "Full Name Lookup Error", MessageBoxButton.OK, MessageBoxImage.Error);
-        }
-
+        
         internal static CrawlConfigItemVM UpsertItem(CrawlConfiguration item, ReadOnlyObservableCollection<CrawlConfigItemVM> crawlConfigurations, List<CrawlConfigItemVM> allCrawlConfigurations, bool showActive, bool showInactive)
         {
             // TODO: Add or update view model item
@@ -384,14 +378,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
                     if (root is null)
                         OnLookupFullNameComplete("");
                     else
-                        // TODO: Replace with async view model job
-                        _ = Subdirectory.LookupFullNameAsync(root, CancellationToken.None).ContinueWith(task =>
-                        {
-                            if (task.IsFaulted)
-                                Dispatcher.CheckInvoke(() => OnLookupFullNameError(task.Exception));
-                            else if (!task.IsCanceled)
-                                Dispatcher.CheckInvoke(() => OnLookupFullNameComplete(task.Result ?? ""));
-                        });
+                        BgOps.FromAsync("Loading data", "Getting full path", root, LookupFullNameAsync);
                     return;
             }
         }

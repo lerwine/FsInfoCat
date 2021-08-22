@@ -38,6 +38,7 @@ namespace FsInfoCat.Local
         private HashSet<SubdirectoryAccessError> _accessErrors = new();
         private HashSet<PersonalSubdirectoryTag> _personalTags = new();
         private HashSet<SharedSubdirectoryTag> _sharedTags = new();
+        private string _fullName;
 
         #endregion
 
@@ -48,7 +49,20 @@ namespace FsInfoCat.Local
 
         [StringLength(DbConstants.DbColMaxLen_FileName, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_NameLength),
             ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
-        public virtual string Name { get => _name.GetValue(); set => _name.SetValue(value); }
+        public virtual string Name
+        {
+            get => _name.GetValue();
+            set
+            {
+                Monitor.Enter(_parent);
+                try
+                {
+                    if (_name.SetValue(value))
+                        _fullName = null;
+                }
+                finally { Monitor.Exit(_parent); }
+            }
+        }
 
         [Required]
         public virtual DirectoryCrawlOptions Options { get => _options.GetValue(); set => _options.SetValue(value); }
@@ -71,12 +85,18 @@ namespace FsInfoCat.Local
             get => _parentId.GetValue();
             set
             {
-                if (_parentId.SetValue(value))
+                Monitor.Enter(_parent);
+                try
                 {
-                    Subdirectory nav = _parent.GetValue();
-                    if (!(nav is null || (value.HasValue && nav.Id.Equals(value.Value))))
-                        _parent.SetValue(null);
+                    if (_parentId.SetValue(value))
+                    {
+                        Subdirectory nav = _parent.GetValue();
+                        if (!(nav is null || (value.HasValue && nav.Id.Equals(value.Value))))
+                            _parent.SetValue(null);
+
+                    }
                 }
+                finally { Monitor.Exit(_parent); }
             }
         }
 
@@ -85,12 +105,18 @@ namespace FsInfoCat.Local
             get => _volumeId.GetValue();
             set
             {
-                if (_volumeId.SetValue(value))
+                Monitor.Enter(_parent);
+                try
                 {
-                    Volume nav = _volume.GetValue();
-                    if (!(nav is null || (value.HasValue && nav.Id.Equals(value.Value))))
-                        _volume.SetValue(null);
+                    if (_volumeId.SetValue(value))
+                    {
+                        _fullName = null;
+                        Volume nav = _volume.GetValue();
+                        if (!(nav is null || (value.HasValue && nav.Id.Equals(value.Value))))
+                            _volume.SetValue(null);
+                    }
                 }
+                finally { Monitor.Exit(_parent); }
             }
         }
 
@@ -101,6 +127,7 @@ namespace FsInfoCat.Local
             {
                 if (_parent.SetValue(value))
                 {
+                    _fullName = null;
                     if (value is null)
                         _parentId.SetValue(null);
                     else
@@ -233,6 +260,76 @@ namespace FsInfoCat.Local
             _parent = AddChangeTracker<Subdirectory>(nameof(Parent), null);
             _volume = AddChangeTracker<Volume>(nameof(Volume), null);
             _crawlConfiguration = AddChangeTracker<CrawlConfiguration>(nameof(CrawlConfiguration), null);
+        }
+
+        public string GetFullName()
+        {
+            Monitor.Enter(_parent);
+            try
+            {
+                if (_fullName is null)
+                {
+                    if (_volumeId.GetValue().HasValue)
+                        _fullName = _name.GetValue();
+                    else
+                    {
+                        string path = _parent.GetValue()?.GetFullName();
+                        if (path is not null)
+                            _fullName = Path.Combine(path, _name.GetValue());
+                    }
+                }
+            }
+            finally { Monitor.Exit(_parent); }
+            return _fullName;
+        }
+
+        public async Task<string> GetFullNameAsync(CancellationToken cancellationToken)
+        {
+            using IServiceScope scope = Services.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = scope.ServiceProvider.GetRequiredService<LocalDbContext>();
+            return await GetFullNameAsync(dbContext, cancellationToken);
+        }
+
+        public async Task<string> GetFullNameAsync([DisallowNull] LocalDbContext dbContext, CancellationToken cancellationToken)
+        {
+            Monitor.Enter(_parent);
+            try
+            {
+                if (_fullName is not null)
+                    return _fullName;
+                if (_volumeId.GetValue().HasValue)
+                {
+                    _fullName = _name.GetValue();
+                    return _fullName;
+                }
+                else
+                {
+                    string path = _parent.GetValue()?.GetFullName();
+                    if (path is not null)
+                    {
+                        _fullName = Path.Combine(path, _name.GetValue());
+                        return _fullName;
+                    }
+                }
+                if (!ParentId.HasValue)
+                    return Name;
+                Subdirectory parent = Parent;
+                if (parent is null)
+                {
+                    EntityEntry<Subdirectory> entry = dbContext.Entry(this);
+                    switch (entry.State)
+                    {
+                        case EntityState.Detached:
+                        case EntityState.Deleted:
+                        case EntityState.Added:
+                            return Name;
+                    }
+                    if ((parent = await entry.GetRelatedReferenceAsync(d => d.Parent, cancellationToken)) is null)
+                        return Name;
+                }
+                return Path.Combine(await parent.GetFullNameAsync(dbContext, cancellationToken), Name);
+            }
+            finally { Monitor.Exit(_parent); }
         }
 
         public static Task<Subdirectory> FindByFullNameAsync(string path, CancellationToken cancellationToken, Action<LocalDbContext, Subdirectory, CancellationToken> onMatchSuccess = null)
@@ -614,35 +711,9 @@ namespace FsInfoCat.Local
                 if (subdirectory is null)
                     result.Add(new CrawlConfigWithFullRootPath<T>("", Guid.Empty, t));
                 else
-                    result.Add(new CrawlConfigWithFullRootPath<T>(await LookupFullNameAsync(subdirectory, cancellationToken, dbContext), subdirectory.Id, t));
+                    result.Add(new CrawlConfigWithFullRootPath<T>(await subdirectory.GetFullNameAsync(dbContext, cancellationToken), subdirectory.Id, t));
             }
             return result;
-        }
-
-        public static async Task<string> LookupFullNameAsync([DisallowNull] Subdirectory subdirectory, CancellationToken cancellationToken, LocalDbContext dbContext = null)
-        {
-            if (subdirectory is null)
-                throw new ArgumentNullException(nameof(subdirectory));
-            if (dbContext is null)
-            {
-                using IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
-                using LocalDbContext context = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
-                return await LookupFullNameAsync(subdirectory, cancellationToken, context);
-            }
-            Guid? parentId = subdirectory.ParentId;
-            if (!parentId.HasValue)
-                return subdirectory.Name;
-            Stack<string> segments = new();
-            segments.Push(subdirectory.Name);
-            while (parentId.HasValue)
-            {
-                Subdirectory parent = subdirectory.Parent;
-                if (parent is null && (subdirectory.Parent = parent = await dbContext.Subdirectories.FindAsync(new object[] { parentId.Value }, cancellationToken)) is null)
-                    break;
-                segments.Push(parent.Name);
-                parentId = (subdirectory = parent).ParentId;
-            }
-            return Path.Combine(segments.ToArray());
         }
 
         protected override void OnPropertyChanging(PropertyChangingEventArgs args)
