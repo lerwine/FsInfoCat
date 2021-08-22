@@ -1,5 +1,18 @@
 -- Deleting tables
 
+DROP VIEW IF EXISTS "vFilesWithAncestorNames";
+DROP VIEW IF EXISTS "vFilesWithBinaryProperties";
+DROP VIEW IF EXISTS "vFilesWithBinaryPropertiesAndAncestorNames";
+DROP VIEW IF EXISTS "vSubdirectoryListing";
+DROP VIEW IF EXISTS "vSubdirectoryAncestorNames";
+DROP VIEW IF EXISTS "vSubdirectoryListingWithAncestorNames";
+DROP VIEW IF EXISTS "vVolumeListingWithFileSystem";
+DROP VIEW IF EXISTS "vVolumeListing";
+DROP VIEW IF EXISTS "vRedundantSetListing";
+DROP VIEW IF EXISTS "vSharedTagDefinitionListing";
+DROP VIEW IF EXISTS "vPersonalTagDefinitionListing";
+DROP VIEW IF EXISTS "vFileSystemListing";
+DROP VIEW IF EXISTS "vSymbolicNameListing";
 DROP TABLE IF EXISTS "Comparisons";
 DROP TABLE IF EXISTS "SharedVolumeTags";
 DROP TABLE IF EXISTS "SharedSubdirectoryTags";
@@ -463,7 +476,7 @@ CREATE TABLE IF NOT EXISTS "RedundantSets" (
 CREATE TABLE IF NOT EXISTS "Files" (
     "Id" UNIQUEIDENTIFIER NOT NULL COLLATE NOCASE,
     "Name" NVARCHAR(1024) NOT NULL COLLATE NOCASE,
-    "LastAccessed" DATETIME NOT NULL,
+    "LastAccessed" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
     "Options" UNSIGNED TINYINT NOT NULL CHECK("Options"<=8) DEFAULT 0, -- FileCrawlOptions.None
     "Status" UNSIGNED TINYINT NOT NULL CHECK("Status"<=9) DEFAULT 0, -- FileCorrelationStatus.Dissociated
     "LastHashCalculation" DATETIME DEFAULT NULL,
@@ -476,17 +489,17 @@ CREATE TABLE IF NOT EXISTS "Files" (
     "LastSynchronizedOn" DATETIME DEFAULT NULL,
     "ParentId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_File_Parent" REFERENCES "Subdirectories"("Id") ON DELETE RESTRICT COLLATE NOCASE,
     "BinaryPropertySetId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_File_BinaryPropertySet" REFERENCES "BinaryPropertySets"("Id") ON DELETE RESTRICT COLLATE NOCASE,
-    "SummaryPropertySetId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_File_SummaryPropertySet" REFERENCES "SummaryPropertySets"("Id") ON DELETE RESTRICT COLLATE NOCASE,
-    "DocumentPropertySetId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_File_DocumentPropertySet" REFERENCES "DocumentPropertySets"("Id") ON DELETE RESTRICT COLLATE NOCASE,
-    "AudioPropertySetId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_File_AudioPropertySet" REFERENCES "AudioPropertySets"("Id") ON DELETE RESTRICT COLLATE NOCASE,
-    "DRMPropertySetId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_File_DRMPropertySet" REFERENCES "DRMPropertySets"("Id") ON DELETE RESTRICT COLLATE NOCASE,
-    "GPSPropertySetId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_File_GPSPropertySet" REFERENCES "GPSPropertySets"("Id") ON DELETE RESTRICT COLLATE NOCASE,
-    "ImagePropertySetId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_File_ImagePropertySet" REFERENCES "ImagePropertySets"("Id") ON DELETE RESTRICT COLLATE NOCASE,
-    "MediaPropertySetId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_File_MediaPropertySet" REFERENCES "MediaPropertySets"("Id") ON DELETE RESTRICT COLLATE NOCASE,
-    "MusicPropertySetId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_File_MusicPropertySet" REFERENCES "MusicPropertySets"("Id") ON DELETE RESTRICT COLLATE NOCASE,
-    "PhotoPropertySetId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_File_PhotoPropertySet" REFERENCES "PhotoPropertySets"("Id") ON DELETE RESTRICT COLLATE NOCASE,
-    "RecordedTVPropertySetId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_File_RecordedTVPropertySet" REFERENCES "RecordedTVPropertySets"("Id") ON DELETE RESTRICT COLLATE NOCASE,
-    "VideoPropertySetId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_File_VideoPropertySet" REFERENCES "VideoPropertySets"("Id") ON DELETE RESTRICT COLLATE NOCASE,
+    "SummaryPropertySetId" UNIQUEIDENTIFIER CONSTRAINT "FK_File_SummaryPropertySet" REFERENCES "SummaryPropertySets"("Id") ON DELETE RESTRICT DEFAULT NULL COLLATE NOCASE,
+    "DocumentPropertySetId" UNIQUEIDENTIFIER CONSTRAINT "FK_File_DocumentPropertySet" REFERENCES "DocumentPropertySets"("Id") ON DELETE RESTRICT DEFAULT NULL COLLATE NOCASE,
+    "AudioPropertySetId" UNIQUEIDENTIFIER CONSTRAINT "FK_File_AudioPropertySet" REFERENCES "AudioPropertySets"("Id") ON DELETE RESTRICT DEFAULT NULL COLLATE NOCASE,
+    "DRMPropertySetId" UNIQUEIDENTIFIER CONSTRAINT "FK_File_DRMPropertySet" REFERENCES "DRMPropertySets"("Id") ON DELETE RESTRICT DEFAULT NULL COLLATE NOCASE,
+    "GPSPropertySetId" UNIQUEIDENTIFIER CONSTRAINT "FK_File_GPSPropertySet" REFERENCES "GPSPropertySets"("Id") ON DELETE RESTRICT DEFAULT NULL COLLATE NOCASE,
+    "ImagePropertySetId" UNIQUEIDENTIFIER CONSTRAINT "FK_File_ImagePropertySet" REFERENCES "ImagePropertySets"("Id") ON DELETE RESTRICT DEFAULT NULL COLLATE NOCASE,
+    "MediaPropertySetId" UNIQUEIDENTIFIER CONSTRAINT "FK_File_MediaPropertySet" REFERENCES "MediaPropertySets"("Id") ON DELETE RESTRICT DEFAULT NULL COLLATE NOCASE,
+    "MusicPropertySetId" UNIQUEIDENTIFIER CONSTRAINT "FK_File_MusicPropertySet" REFERENCES "MusicPropertySets"("Id") ON DELETE RESTRICT DEFAULT NULL COLLATE NOCASE,
+    "PhotoPropertySetId" UNIQUEIDENTIFIER CONSTRAINT "FK_File_PhotoPropertySet" REFERENCES "PhotoPropertySets"("Id") ON DELETE RESTRICT DEFAULT NULL COLLATE NOCASE,
+    "RecordedTVPropertySetId" UNIQUEIDENTIFIER CONSTRAINT "FK_File_RecordedTVPropertySet" REFERENCES "RecordedTVPropertySets"("Id") ON DELETE RESTRICT DEFAULT NULL COLLATE NOCASE,
+    "VideoPropertySetId" UNIQUEIDENTIFIER CONSTRAINT "FK_File_VideoPropertySet" REFERENCES "VideoPropertySets"("Id") ON DELETE RESTRICT DEFAULT NULL COLLATE NOCASE,
     CONSTRAINT "PK_Files" PRIMARY KEY("Id"),
     CHECK((("UpstreamId" IS NULL AND "LastSynchronizedOn" IS NULL) OR ("UpstreamId" IS NOT NULL AND "LastSynchronizedOn" IS NOT NULL)) AND "CreatedOn"<="ModifiedOn")
 );
@@ -736,6 +749,104 @@ CREATE TRIGGER IF NOT EXISTS validate_redundancy_change
 BEGIN
     SELECT RAISE (ABORT,'File does not have the same binary property set as the redundancy set.');
 END;
+
+CREATE VIEW IF NOT EXISTS "vSymbolicNameListing" AS SELECT "SymbolicNames".*, "FileSystems"."DisplayName" AS "FileSystemDisplayName" FROM "SymbolicNames"
+	LEFT JOIN "FileSystems" ON "SymbolicNames"."FileSystemId"="FileSystems"."Id";
+
+CREATE VIEW IF NOT EXISTS "vFileSystemListing" AS SELECT "FileSystems".*, "SymbolicNames"."Name" AS "PrimarySymbolicName",
+	(SELECT "SymbolicNames"."Id" FROM "SymbolicNames" WHERE "SymbolicNames"."FileSystemId"="FileSystems"."Id" AND "SymbolicNames"."IsInactive"=0 ORDER BY "SymbolicNames"."Priority", "SymbolicNames"."CreatedOn" LIMIT 1) AS "PrimarySymbolicNameId",
+	(SELECT count("SymbolicNames"."Id") FROM "SymbolicNames" WHERE "SymbolicNames"."FileSystemId"="FileSystems"."Id") AS "SymbolicNameCount"
+	FROM "FileSystems"
+	LEFT JOIN "SymbolicNames" ON "PrimarySymbolicNameId"="SymbolicNames"."Id";
+
+CREATE VIEW IF NOT EXISTS "vPersonalTagDefinitionListing" AS SELECT "PersonalTagDefinitions".*,
+	(SELECT count("PersonalSubdirectoryTags"."SubdirectoryId") FROM "PersonalSubdirectoryTags" WHERE "PersonalSubdirectoryTags"."PersonalTagDefinitionId"="PersonalTagDefinitions"."Id") AS "SubdirectoryTagCount",
+	(SELECT count("PersonalFileTags"."FileId") FROM "PersonalFileTags" WHERE "PersonalFileTags"."PersonalTagDefinitionId"="PersonalTagDefinitions"."Id") AS "FileTagCount"
+	FROM "PersonalTagDefinitions";
+
+CREATE VIEW IF NOT EXISTS "vSharedTagDefinitionListing" AS SELECT "SharedTagDefinitions".*,
+	(SELECT count("SharedSubdirectoryTags"."SubdirectoryId") FROM "SharedSubdirectoryTags" WHERE "SharedSubdirectoryTags"."SharedTagDefinitionId"="SharedTagDefinitions"."Id") AS "SubdirectoryTagCount",
+	(SELECT count("SharedFileTags"."FileId") FROM "SharedFileTags" WHERE "SharedFileTags"."SharedTagDefinitionId"="SharedTagDefinitions"."Id") AS "FileTagCount"
+	FROM "SharedTagDefinitions";
+
+CREATE VIEW IF NOT EXISTS "vRedundantSetListing" AS SELECT "RedundantSets".*, "BinaryPropertySets"."Length", "BinaryPropertySets"."Hash",
+	(SELECT count("Redundancies"."FileId") FROM "Redundancies" WHERE "Redundancies"."RedundantSetId"="RedundantSets"."Id") AS "RedundancyCount"
+	FROM "RedundantSets"
+	LEFT JOIN "BinaryPropertySets" ON "RedundantSets"."BinaryPropertySetId"="BinaryPropertySets"."Id";
+
+CREATE VIEW IF NOT EXISTS "vVolumeListing" AS SELECT "Volumes".*, "Subdirectories"."Name" AS "RootPath",
+	(SELECT count("VolumeAccessErrors"."Id") FROM "VolumeAccessErrors" WHERE "VolumeAccessErrors"."TargetId"="Volumes"."Id") AS "AccessErrorCount",
+	(SELECT count("SharedVolumeTags"."SharedTagDefinitionId") FROM "SharedVolumeTags" WHERE "SharedVolumeTags"."VolumeId"="Volumes"."Id") AS "SharedTagCount",
+	(SELECT count("PersonalVolumeTags"."PersonalTagDefinitionId") FROM "PersonalVolumeTags" WHERE "PersonalVolumeTags"."VolumeId"="Volumes"."Id") AS "PersonalTagCount"
+	FROM "Volumes"
+	LEFT JOIN "Subdirectories" ON "Volumes"."Id"="Subdirectories"."VolumeId";
+
+CREATE VIEW IF NOT EXISTS "vVolumeListingWithFileSystem" AS SELECT "Volumes".*, "Subdirectories"."Name" AS "RootPath",
+	"FileSystems"."DisplayName" AS "FileSystemDisplayName", ifnull("Volumes"."ReadOnly", "FileSystems"."ReadOnly") AS "EffectiveReadOnly",
+	ifnull("Volumes"."MaxNameLength", "FileSystems"."MaxNameLength") AS "EffectiveMaxNameLength",
+	(SELECT count("VolumeAccessErrors"."Id") FROM "VolumeAccessErrors" WHERE "VolumeAccessErrors"."TargetId"="Volumes"."Id") AS "AccessErrorCount",
+	(SELECT count("SharedVolumeTags"."SharedTagDefinitionId") FROM "SharedVolumeTags" WHERE "SharedVolumeTags"."VolumeId"="Volumes"."Id") AS "SharedTagCount",
+	(SELECT count("PersonalVolumeTags"."PersonalTagDefinitionId") FROM "PersonalVolumeTags" WHERE "PersonalVolumeTags"."VolumeId"="Volumes"."Id") AS "PersonalTagCount"
+	FROM "Volumes"
+	LEFT JOIN "Subdirectories" ON "Volumes"."Id"="Subdirectories"."VolumeId"
+	LEFT JOIN "FileSystems" ON "Volumes"."FileSystemId"="FileSystems"."Id";
+
+CREATE VIEW IF NOT EXISTS "vSubdirectoryListing" AS SELECT "Subdirectories".*, (SELECT count("s"."Id") FROM "Subdirectories" "s" WHERE "s"."ParentId"="Subdirectories"."Id") AS "SubdirectoryCount",
+	(SELECT count("Files"."Id") FROM "Files" WHERE "Files"."ParentId"="Subdirectories"."Id") AS "FileCount",
+	(SELECT count("SubdirectoryAccessErrors"."Id") FROM "SubdirectoryAccessErrors" WHERE "SubdirectoryAccessErrors"."TargetId"="Subdirectories"."Id") AS "AccessErrorCount",
+	(SELECT count("SharedSubdirectoryTags"."SharedTagDefinitionId") FROM "SharedSubdirectoryTags" WHERE "SharedSubdirectoryTags"."SubdirectoryId"="Subdirectories"."Id") AS "SharedTagCount",
+	(SELECT count("PersonalSubdirectoryTags"."PersonalTagDefinitionId") FROM "PersonalSubdirectoryTags" WHERE "PersonalSubdirectoryTags"."SubdirectoryId"="Subdirectories"."Id") AS "PersonalTagCount"
+    FROM "Subdirectories";
+    
+CREATE VIEW IF NOT EXISTS "vSubdirectoryListingWithAncestorNames" AS SELECT "Subdirectories".*, (SELECT count("s"."Id") FROM "Subdirectories" "s" WHERE "s"."ParentId"="Subdirectories"."Id") AS "SubdirectoryCount",
+	(SELECT count("Files"."Id") FROM "Files" WHERE "Files"."ParentId"="Subdirectories"."Id") AS "FileCount",
+	(SELECT count("SubdirectoryAccessErrors"."Id") FROM "SubdirectoryAccessErrors" WHERE "SubdirectoryAccessErrors"."TargetId"="Subdirectories"."Id") AS "AccessErrorCount",
+	(SELECT count("SharedSubdirectoryTags"."SharedTagDefinitionId") FROM "SharedSubdirectoryTags" WHERE "SharedSubdirectoryTags"."SubdirectoryId"="Subdirectories"."Id") AS "SharedTagCount",
+	(SELECT count("PersonalSubdirectoryTags"."PersonalTagDefinitionId") FROM "PersonalSubdirectoryTags" WHERE "PersonalSubdirectoryTags"."SubdirectoryId"="Subdirectories"."Id") AS "PersonalTagCount",
+    (WITH RECURSIVE
+        directlyContains("ChildId", "ParentId") AS (SELECT "Id", "ParentId" FROM "Subdirectories"),
+        containerOf("ChildId") AS (SELECT "ParentId" FROM directlyContains WHERE "ChildId"="Subdirectories"."Id" UNION ALL SELECT "ParentId" FROM directlyContains JOIN containerOf USING("ChildId"))
+        SELECT group_concat("ParentSubdir"."Name", '/') FROM containerOf, "Subdirectories" AS "ParentSubdir" WHERE containerOf."ChildId"="ParentSubdir"."Id"
+    ) AS "AncestorNames" FROM "Subdirectories";
+    
+CREATE VIEW IF NOT EXISTS "vSubdirectoryListingWithAncestorNames" AS SELECT "Subdirectories".*, (SELECT count("s"."Id") FROM "Subdirectories" "s" WHERE "s"."ParentId"="Subdirectories"."Id") AS "SubdirectoryCount",
+	(SELECT count("Files"."Id") FROM "Files" WHERE "Files"."ParentId"="Subdirectories"."Id") AS "FileCount",
+	(SELECT count("SubdirectoryAccessErrors"."Id") FROM "SubdirectoryAccessErrors" WHERE "SubdirectoryAccessErrors"."TargetId"="Subdirectories"."Id") AS "AccessErrorCount",
+	(SELECT count("SharedSubdirectoryTags"."SharedTagDefinitionId") FROM "SharedSubdirectoryTags" WHERE "SharedSubdirectoryTags"."SubdirectoryId"="Subdirectories"."Id") AS "SharedTagCount",
+	(SELECT count("PersonalSubdirectoryTags"."PersonalTagDefinitionId") FROM "PersonalSubdirectoryTags" WHERE "PersonalSubdirectoryTags"."SubdirectoryId"="Subdirectories"."Id") AS "PersonalTagCount",
+    (WITH RECURSIVE
+        directlyContains("ChildId", "ParentId") AS (SELECT "Id", "ParentId" FROM "Subdirectories"),
+        containerOf("ChildId") AS (SELECT "ParentId" FROM directlyContains WHERE "ChildId"="Subdirectories"."Id" UNION ALL SELECT "ParentId" FROM directlyContains JOIN containerOf USING("ChildId"))
+        SELECT group_concat("ParentSubdir"."Name", '/') FROM containerOf, "Subdirectories" AS "ParentSubdir" WHERE containerOf."ChildId"="ParentSubdir"."Id"
+    ) AS "AncestorNames",
+    ifnull("Subdirectories"."VolumeId", (WITH RECURSIVE
+        directlyContains("ChildId", "ParentId") AS (SELECT "Id", "ParentId" FROM "Subdirectories"),
+        containerOf("ChildId") AS (SELECT "ParentId" FROM directlyContains WHERE "ChildId"="Subdirectories"."Id" UNION ALL SELECT "ParentId" FROM directlyContains JOIN containerOf USING("ChildId"))
+        SELECT "ParentSubdir"."VolumeId" FROM containerOf, "Subdirectories" AS "ParentSubdir" WHERE containerOf."ChildId"="ParentSubdir"."Id" AND "ParentSubdir"."VolumeId" IS NOT NULL
+    )) AS "EffectiveVolumeId", "Volumes"."DisplayName" AS "VolumeDisplayName", "Volumes"."VolumeName", "Volumes"."Identifier" AS "VolumeIdentifier" FROM "Subdirectories"
+	LEFT JOIN "Volumes" ON "EffectiveVolumeId"="Volumes"."Id";
+
+CREATE VIEW IF NOT EXISTS "vSubdirectoryAncestorNames" AS SELECT "Subdirectories"."Id", "Subdirectories"."ParentId", "Subdirectories"."Name",(WITH RECURSIVE
+    directlyContains("ChildId", "ParentId") AS (SELECT "Id", "ParentId" FROM "Subdirectories"),
+    containerOf("ChildId") AS (SELECT "ParentId" FROM directlyContains WHERE "ChildId"="Subdirectories"."Id" UNION ALL SELECT "ParentId" FROM directlyContains JOIN containerOf USING("ChildId"))
+    SELECT group_concat("ParentSubdir"."Name", '/') FROM containerOf, "Subdirectories" AS "ParentSubdir" WHERE containerOf."ChildId"="ParentSubdir"."Id") AS "AncestorNames" FROM "Subdirectories";
+
+CREATE VIEW IF NOT EXISTS "vFilesWithAncestorNames" AS SELECT "Files".*, "vSubdirectoryAncestorNames"."AncestorNames" FROM "Files"
+	LEFT JOIN "vSubdirectoryAncestorNames" ON "Files"."ParentId"="vSubdirectoryAncestorNames"."Id";
+    
+CREATE VIEW IF NOT EXISTS "vFilesWithBinaryProperties" AS SELECT "Files".*, "BinaryPropertySets"."Length", "BinaryPropertySets"."Hash",
+	(SELECT count("Redundancies"."RedundantSetId") FROM "Redundancies" WHERE "Redundancies"."FileId"="Files"."Id") AS "RedundancyCount",
+	(SELECT count("Comparisons"."AreEqual") FROM "Comparisons" WHERE "Comparisons"."BaselineId"="Files"."Id" OR "Comparisons"."CorrelativeId"="Files"."Id") AS "ComparisonCount",
+	(SELECT count("FileAccessErrors"."Id") FROM "FileAccessErrors" WHERE "FileAccessErrors"."TargetId"="Files"."Id") AS "AccessErrorCount",
+	(SELECT count("SharedFileTags"."SharedTagDefinitionId") FROM "SharedFileTags" WHERE "SharedFileTags"."FileId"="Files"."Id") AS "SharedTagCount",
+	(SELECT count("PersonalFileTags"."PersonalTagDefinitionId") FROM "PersonalFileTags" WHERE "PersonalFileTags"."FileId"="Files"."Id") AS "PersonalTagCount" FROM "Files"
+	LEFT JOIN "BinaryPropertySets" ON "Files"."BinaryPropertySetId"="BinaryPropertySets"."Id";
+
+CREATE VIEW IF NOT EXISTS "vFilesWithBinaryPropertiesAndAncestorNames" AS SELECT "Files".*, "BinaryPropertySets"."Length", "BinaryPropertySets"."Hash",
+    "vSubdirectoryAncestorNames"."AncestorNames" FROM "Files"
+	LEFT JOIN "BinaryPropertySets" ON "Files"."BinaryPropertySetId"="BinaryPropertySets"."Id"
+	LEFT JOIN "vSubdirectoryAncestorNames" ON "Files"."ParentId"="vSubdirectoryAncestorNames"."Id";
+
 INSERT INTO "FileSystems" ("Id", "DisplayName", "CreatedOn", "ModifiedOn")
 	VALUES ('bedb396b-2212-4149-9cad-7e437c47314c', 'New Technology File System', '2004-08-19 14:51:06', '2004-08-19 14:51:06');
 INSERT INTO "SymbolicNames" ("Id", "Name", "FileSystemId", "Priority", "CreatedOn", "ModifiedOn")
@@ -786,3 +897,25 @@ INSERT INTO "Subdirectories" ("Id", "Name", "LastAccessed", "CreationTime", "Las
     VALUES ('3dfc92c9-8af0-4ab6-bcc3-9104fdcdc35a', 'Videos', '2021-06-05 00:58:34', '2019-11-23 20:30:23', '2021-05-16 18:54:50', '38a40fde-acf0-4cc5-9302-d37ec2cbb631', NULL, '2021-06-05 00:58:34', '2021-06-05 00:58:34');
 INSERT INTO "main"."CrawlConfigurations" ("Id", "DisplayName", "RootId", "CreatedOn", "ModifiedOn")
     VALUES ('9c91ba89-6ab5-4d4e-9798-0d926b405f41', 'Lenny''s Laptop Videos', '3dfc92c9-8af0-4ab6-bcc3-9104fdcdc35a', '2021-07-31 15:28:18', '2021-07-31 15:28:18');
+INSERT INTO "BinaryPropertySets" ("Id", "Length", "CreatedOn", "ModifiedOn")
+    VALUES('82d46e21-5eba-4f1b-8c99-78cb94689316', 25057982, '2021-08-22 14:32:22', '2021-08-22 14:32:2s');
+INSERT INTO "Files" ("Id", "Name", "CreationTime", "LastWriteTime", "CreatedOn", "ParentId", "BinaryPropertySetId")
+    VALUES ('5f7b7beb-5aae-496a-925c-b3a43666c742', 'the move down on the bay - YouTube.webm', '2020-07-19 00:02:07', '2020-07-19 00:04:35', '2021-08-22 14:32:22', '3dfc92c9-8af0-4ab6-bcc3-9104fdcdc35a', '82d46e21-5eba-4f1b-8c99-78cb94689316');
+
+SELECT Subdirectories.*, (SELECT count(s.Id) FROM Subdirectories s WHERE s.ParentId=Subdirectories.Id) AS SubdirectoryCount,
+	(SELECT count(Files.Id) FROM Files WHERE Files.ParentId=Subdirectories.Id) AS FileCount,
+	(SELECT count(SubdirectoryAccessErrors.Id) FROM SubdirectoryAccessErrors WHERE SubdirectoryAccessErrors.TargetId=Subdirectories.Id) AS AccessErrorCount,
+	(SELECT count(SharedSubdirectoryTags.SharedTagDefinitionId) FROM SharedSubdirectoryTags WHERE SharedSubdirectoryTags.SubdirectoryId=Subdirectories.Id) AS SharedTagCount,
+	(SELECT count(PersonalSubdirectoryTags.PersonalTagDefinitionId) FROM PersonalSubdirectoryTags WHERE PersonalSubdirectoryTags.SubdirectoryId=Subdirectories.Id) AS PersonalTagCount, (WITH RECURSIVE
+    directlyContains(ChildId, ParentId) AS (SELECT Id, ParentId FROM Subdirectories),
+    containerOf(ChildId) AS (SELECT ParentId FROM directlyContains WHERE ChildId=Subdirectories.Id UNION ALL SELECT ParentId FROM directlyContains JOIN containerOf USING(ChildId))
+    SELECT group_concat(ParentSubdir.Name, '/') FROM containerOf, Subdirectories AS ParentSubdir WHERE containerOf.ChildId=ParentSubdir.Id) AS AncestorNames FROM Subdirectories;
+
+SELECT "Files".*,
+	(SELECT count("Redundancies"."RedundantSetId") FROM "Redundancies" WHERE "Redundancies"."FileId"="Files"."Id") AS "RedundancyCount",
+	(SELECT count("Comparisons"."AreEqual") FROM "Comparisons" WHERE "Comparisons"."BaselineId"="Files"."Id" OR "Comparisons"."CorrelativeId"="Files"."Id") AS "ComparisonCount",
+	(SELECT count("FileAccessErrors"."Id") FROM "FileAccessErrors" WHERE "FileAccessErrors"."TargetId"="Files"."Id") AS "AccessErrorCount",
+	(SELECT count("SharedFileTags"."SharedTagDefinitionId") FROM "SharedFileTags" WHERE "SharedFileTags"."FileId"="Files"."Id") AS "SharedTagCount",
+	(SELECT count("PersonalFileTags"."PersonalTagDefinitionId") FROM "PersonalFileTags" WHERE "PersonalFileTags"."FileId"="Files"."Id") AS "PersonalTagCount",
+	"vSubdirectoryAncestorNames"."AncestorNames" FROM "Files"
+	LEFT JOIN "vSubdirectoryAncestorNames" ON "Files"."ParentId"="vSubdirectoryAncestorNames"."Id";
