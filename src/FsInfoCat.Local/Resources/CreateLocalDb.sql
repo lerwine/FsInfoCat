@@ -760,11 +760,13 @@ CREATE VIEW IF NOT EXISTS "vFileSystemListing" AS SELECT "FileSystems".*, "Symbo
 	LEFT JOIN "SymbolicNames" ON "PrimarySymbolicNameId"="SymbolicNames"."Id";
 
 CREATE VIEW IF NOT EXISTS "vPersonalTagDefinitionListing" AS SELECT "PersonalTagDefinitions".*,
+	(SELECT count("PersonalVolumeTags"."VolumeId") FROM "PersonalVolumeTags" WHERE "PersonalVolumeTags"."PersonalTagDefinitionId"="PersonalTagDefinitions"."Id") AS "VolumeTagCount",
 	(SELECT count("PersonalSubdirectoryTags"."SubdirectoryId") FROM "PersonalSubdirectoryTags" WHERE "PersonalSubdirectoryTags"."PersonalTagDefinitionId"="PersonalTagDefinitions"."Id") AS "SubdirectoryTagCount",
 	(SELECT count("PersonalFileTags"."FileId") FROM "PersonalFileTags" WHERE "PersonalFileTags"."PersonalTagDefinitionId"="PersonalTagDefinitions"."Id") AS "FileTagCount"
 	FROM "PersonalTagDefinitions";
 
 CREATE VIEW IF NOT EXISTS "vSharedTagDefinitionListing" AS SELECT "SharedTagDefinitions".*,
+	(SELECT count("SharedVolumeTags"."VolumeId") FROM "SharedVolumeTags" WHERE "SharedVolumeTags"."SharedTagDefinitionId"="SharedTagDefinitions"."Id") AS "VolumeTagCount",
 	(SELECT count("SharedSubdirectoryTags"."SubdirectoryId") FROM "SharedSubdirectoryTags" WHERE "SharedSubdirectoryTags"."SharedTagDefinitionId"="SharedTagDefinitions"."Id") AS "SubdirectoryTagCount",
 	(SELECT count("SharedFileTags"."FileId") FROM "SharedFileTags" WHERE "SharedFileTags"."SharedTagDefinitionId"="SharedTagDefinitions"."Id") AS "FileTagCount"
 	FROM "SharedTagDefinitions";
