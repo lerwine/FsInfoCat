@@ -155,86 +155,6 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         }
 
         #endregion
-        #region Volumes Property Members
-
-        private static readonly DependencyPropertyKey VolumesPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Volumes), typeof(ObservableCollection<VolumeItemVM>), typeof(EditFileSystemVM),
-                new PropertyMetadata(new ObservableCollection<VolumeItemVM>()));
-
-        public static readonly DependencyProperty VolumesProperty = VolumesPropertyKey.DependencyProperty;
-
-        public ObservableCollection<VolumeItemVM> Volumes
-        {
-            get => (ObservableCollection<VolumeItemVM>)this.GetValue(VolumesProperty);
-            private set => this.SetValue(VolumesPropertyKey, value);
-        }
-
-        #endregion
-        #region SymbolicNames Property Members
-
-        private static readonly DependencyPropertyKey SymbolicNamesPropertyKey = DependencyProperty.RegisterReadOnly(nameof(SymbolicNames), typeof(ObservableCollection<SymbolicNameItemVM>), typeof(EditFileSystemVM),
-                new PropertyMetadata(new ObservableCollection<SymbolicNameItemVM>()));
-
-        public static readonly DependencyProperty SymbolicNamesProperty = SymbolicNamesPropertyKey.DependencyProperty;
-
-        public ObservableCollection<SymbolicNameItemVM> SymbolicNames
-        {
-            get => (ObservableCollection<SymbolicNameItemVM>)this.GetValue(SymbolicNamesProperty);
-            private set => this.SetValue(SymbolicNamesPropertyKey, value);
-        }
-
-        #endregion
-        #region SaveChangesOpMgr Property Members
-
-        private static async Task<FileSystem> SaveChangesAsync(ModelViewModel state, IWindowsStatusListener statusListener)
-        {
-            EditFileSystemVM vm = (state.ViewModel as EditFileSystemVM) ?? throw new ArgumentException($"{nameof(state.ViewModel)} cannot be null.", nameof(state));
-            using IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
-            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
-            EntityEntry<FileSystem> entry;
-            if (state.Entity is null)
-            {
-                FileSystem model = vm.Dispatcher.Invoke(() => new FileSystem()
-                {
-                    Id = Guid.NewGuid(),
-                    CreatedOn = DateTime.Now,
-                    DisplayName = vm.DisplayName,
-                    Notes = vm.Notes
-                    // TODO: Initialize model
-                });
-                model.ModifiedOn = model.CreatedOn;
-                entry = dbContext.FileSystems.Add(model);
-            }
-            else
-                entry = dbContext.Entry(state.Entity);
-            vm.Dispatcher.Invoke(() =>
-            {
-                FileSystem model = entry.Entity;
-                if (entry.State != EntityState.Added)
-                {
-                    model.ModifiedOn = DateTime.Now;
-                    model.DisplayName = vm.DisplayName;
-                    model.Notes = vm.Notes;
-                    // TODO: Update model
-                }
-                // TODO: Update model
-            });
-            try
-            {
-                await dbContext.SaveChangesAsync(true, statusListener.CancellationToken);
-                if (entry.State != EntityState.Unchanged)
-                    throw new InvalidOperationException("Failed to save changes to the database.");
-            }
-            catch
-            {
-                if (state.Entity is not null)
-                    await entry.ReloadAsync(statusListener.CancellationToken);
-                throw;
-            }
-            return entry.Entity;
-        }
-
-        #endregion
-
         public EditFileSystemVM()
         {
             SetValue(DriveTypeOptionsPropertyKey, new ReadOnlyObservableCollection<DriveType>(new ObservableCollection<DriveType>(Enum.GetValues<DriveType>())));
@@ -246,18 +166,21 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         {
             if (newValue is null)
             {
-                // TODO: Initialize to defaults
-                return;
+                Notes = DisplayName = "";
+                SelectedDriveType = DriveType.Unknown;
+                ReadOnly = IsInactive = HasDefaultDriveType = false;
+                MaxNameLength = DbConstants.DbColDefaultValue_MaxNameLength;
             }
-            DisplayName = newValue.DisplayName;
-            Notes = newValue.Notes;
-            SelectedDriveType = newValue.DefaultDriveType ?? DriveType.Unknown;
-            HasDefaultDriveType = newValue.DefaultDriveType.HasValue;
-            // TODO: Initialize Volumes? Are these used in edit window?
-            IsInactive = newValue.IsInactive;
-            MaxNameLength = newValue.MaxNameLength;
-            ReadOnly = newValue.ReadOnly;
-            // TODO: Initialize SymbolicNames? Are these used in edit window?
+            else
+            {
+                DisplayName = newValue.DisplayName;
+                Notes = newValue.Notes;
+                SelectedDriveType = newValue.DefaultDriveType ?? DriveType.Unknown;
+                HasDefaultDriveType = newValue.DefaultDriveType.HasValue;
+                IsInactive = newValue.IsInactive;
+                MaxNameLength = newValue.MaxNameLength;
+                ReadOnly = newValue.ReadOnly;
+            }
         }
 
         protected override bool OnBeforeSave()

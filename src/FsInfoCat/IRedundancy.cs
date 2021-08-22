@@ -1,11 +1,11 @@
-﻿using System;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat
 {
     /// <summary>.</summary>
     /// <seealso cref="IDbEntity" />
-    public interface IRedundancy : IDbEntity
+    public interface IRedundancy : IDbEntity, IHasIdentifierPair
     {
         /// <summary>Gets the custom reference value.</summary>
         /// <value>The custom reference value which can be used to refer to external information regarding redundancy remediation, such as a ticket number.</value>

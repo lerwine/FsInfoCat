@@ -1,16 +1,19 @@
 using FsInfoCat.Local;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
 
 namespace FsInfoCat.Desktop.ViewModel.Local
 {
-    public class CrawlConfigItemVM : DbEntityItemVM<CrawlConfiguration>
+    public class CrawlConfigItemVM : DbEntityItemVM<CrawlConfiguration>, IHasSubdirectoryEntity
     {
         public event EventHandler StartCrawlNow;
         public event EventHandler OpenRootFolder;
@@ -351,5 +354,13 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         }
 
         protected override DbSet<CrawlConfiguration> GetDbSet(LocalDbContext dbContext) => dbContext.CrawlConfigurations;
+
+        ISimpleIdentityReference<Subdirectory> IHasSubdirectoryEntity.GetSubdirectoryEntity() => CheckAccess() ? Model?.Root : Dispatcher.Invoke(() => Model?.Root);
+
+        public async Task<ISimpleIdentityReference<Subdirectory>> GetSubdirectoryEntityAsync([DisallowNull] IWindowsStatusListener statusListener)
+        {
+            CrawlConfiguration model = await Dispatcher.InvokeAsync(() => Model);
+            return model.Root ?? IdentityReference<Subdirectory>.FromId(model.RootId);
+        }
     }
 }

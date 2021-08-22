@@ -12,7 +12,7 @@ using System.Xml.Linq;
 
 namespace FsInfoCat.Local
 {
-    public class Redundancy : LocalDbEntity, ILocalRedundancy
+    public class Redundancy : LocalDbEntity, ILocalRedundancy, IIdentityPairReference<Redundancy>
     {
         #region Fields
 
@@ -111,6 +111,31 @@ namespace FsInfoCat.Local
         ILocalRedundantSet ILocalRedundancy.RedundantSet { get => RedundantSet; }
 
         IRedundantSet IRedundancy.RedundantSet { get => RedundantSet; }
+
+        IEnumerable<Guid> IHasCompoundIdentifier.Id
+        {
+            get
+            {
+                ValueTuple<Guid, Guid> id = Id;
+                yield return id.Item1;
+                yield return id.Item2;
+            }
+        }
+
+        private ValueTuple<Guid, Guid> Id => (RedundantSetId, FileId);
+
+        (Guid, Guid) IHasIdentifierPair.Id => (RedundantSetId, FileId);
+
+        IEnumerable<Guid> IIdentityReference.GetIdentifiers()
+        {
+            ValueTuple<Guid, Guid> id = Id;
+            yield return id.Item1;
+            yield return id.Item2;
+        }
+
+        Redundancy IIdentityReference<Redundancy>.Entity => this;
+
+        IDbEntity IIdentityReference.Entity => this;
 
         #endregion
 

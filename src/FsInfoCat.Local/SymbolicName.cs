@@ -14,7 +14,7 @@ using System.Xml.Linq;
 
 namespace FsInfoCat.Local
 {
-    public class SymbolicName : LocalDbEntity, ILocalSymbolicName
+    public class SymbolicName : LocalDbEntity, ILocalSymbolicName, ISimpleIdentityReference<LocalDbEntity>
     {
         #region Fields
 
@@ -94,6 +94,10 @@ namespace FsInfoCat.Local
 
         IFileSystem ISymbolicName.FileSystem { get => FileSystem; }
 
+        LocalDbEntity IIdentityReference<LocalDbEntity>.Entity => this;
+
+        IDbEntity IIdentityReference.Entity => this;
+
         #endregion
 
         public SymbolicName()
@@ -162,6 +166,11 @@ namespace FsInfoCat.Local
                 result.SetAttributeValue(nameof(Priority), Priority);
             AddExportAttributes(result);
             return result;
+        }
+
+        IEnumerable<Guid> IIdentityReference.GetIdentifiers()
+        {
+            yield return Id;
         }
     }
 }

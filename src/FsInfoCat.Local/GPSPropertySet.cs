@@ -18,7 +18,7 @@ namespace FsInfoCat.Local
     /// </summary>
     /// <seealso cref="LocalDbEntity" />
     /// <seealso cref="ILocalGPSPropertySet" />
-    public class GPSPropertySet : LocalDbEntity, ILocalGPSPropertySet
+    public class GPSPropertySet : LocalDbEntity, ILocalGPSPropertySet, ISimpleIdentityReference<GPSPropertySet>
     {
         #region Fields
 
@@ -69,6 +69,10 @@ namespace FsInfoCat.Local
         IEnumerable<ILocalFile> ILocalPropertySet.Files => Files.Cast<ILocalFile>();
 
         IEnumerable<IFile> IPropertySet.Files => Files.Cast<IFile>();
+
+        GPSPropertySet IIdentityReference<GPSPropertySet>.Entity => this;
+
+        IDbEntity IIdentityReference.Entity => this;
 
         #endregion
 
@@ -132,6 +136,11 @@ namespace FsInfoCat.Local
                     cancellationToken.ThrowIfCancellationRequested();
                     break;
             }
+        }
+
+        IEnumerable<Guid> IIdentityReference.GetIdentifiers()
+        {
+            yield return Id;
         }
     }
 }

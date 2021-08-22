@@ -141,21 +141,24 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 
         private void Model_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            switch (e.PropertyName)
-            {
-                case nameof(LocalDbEntity.LastSynchronizedOn):
-                    Dispatcher.CheckInvoke(() => LastSynchronizedOn = Model?.LastSynchronizedOn);
-                    break;
-                case nameof(LocalDbEntity.CreatedOn):
-                    Dispatcher.CheckInvoke(() => CreatedOn = Model?.CreatedOn ?? DateTime.Now);
-                    break;
-                case nameof(LocalDbEntity.ModifiedOn):
-                    Dispatcher.CheckInvoke(() => ModifiedOn = Model?.ModifiedOn ?? DateTime.Now);
-                    break;
-                default:
-                    OnModelPropertyChanged(e.PropertyName);
-                    break;
-            }
+            if (CheckAccess())
+                switch (e.PropertyName)
+                {
+                    case nameof(LocalDbEntity.LastSynchronizedOn):
+                        Dispatcher.CheckInvoke(() => LastSynchronizedOn = Model?.LastSynchronizedOn);
+                        break;
+                    case nameof(LocalDbEntity.CreatedOn):
+                        Dispatcher.CheckInvoke(() => CreatedOn = Model?.CreatedOn ?? DateTime.Now);
+                        break;
+                    case nameof(LocalDbEntity.ModifiedOn):
+                        Dispatcher.CheckInvoke(() => ModifiedOn = Model?.ModifiedOn ?? DateTime.Now);
+                        break;
+                    default:
+                        OnModelPropertyChanged(e.PropertyName);
+                        break;
+                }
+            else
+                Dispatcher.Invoke(() => Model_PropertyChanged(sender, e));
         }
 
         protected abstract void OnModelPropertyChanged(string propertyName);

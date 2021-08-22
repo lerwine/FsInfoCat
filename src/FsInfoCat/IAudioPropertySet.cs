@@ -4,6 +4,5 @@ namespace FsInfoCat
     /// <seealso cref="IPropertySet" />
     /// <seealso cref="IAudioProperties" />
     public interface IAudioPropertySet : IPropertySet, IAudioProperties { }
-
 }
 

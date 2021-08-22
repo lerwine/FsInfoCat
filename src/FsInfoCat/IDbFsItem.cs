@@ -6,13 +6,8 @@ namespace FsInfoCat
 {
     /// <summary>Base interface for a database entity that represents a file system node.</summary>
     /// <seealso cref="IDbEntity" />
-    public interface IDbFsItem : IDbEntity
+    public interface IDbFsItem : IDbEntity, IHasSimpleIdentifier
     {
-        /// <summary>Gets the primary key value.</summary>
-        /// <value>The <see cref="Guid">unique identifier</see> used as the current entity's primary key the database.</value>
-        [Display(Name = nameof(Properties.Resources.DisplayName_Id), ResourceType = typeof(Properties.Resources))]
-        Guid Id { get; }
-
         /// <summary>Gets the name of the current file system item.</summary>
         /// <value>The name of the current file system item.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_Name), ResourceType = typeof(Properties.Resources))]

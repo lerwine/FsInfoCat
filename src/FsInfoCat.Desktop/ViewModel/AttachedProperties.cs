@@ -134,9 +134,23 @@ namespace FsInfoCat.Desktop.ViewModel
 
         public static async Task<string> GetFullNameAsync(this Local.EditCrawlConfigVM item, IWindowsStatusListener statusListener, FsInfoCat.Local.LocalDbContext dbContext = null)
         {
-            FsInfoCat.Local.Subdirectory model;
-            if (item is null || (model = await item.Dispatcher.InvokeAsync(() => item.Root, DispatcherPriority.Background, statusListener.CancellationToken)) is null)
+            ISimpleIdentityReference<FsInfoCat.Local.Subdirectory> root;
+            if (item is null || (root = await item.Dispatcher.InvokeAsync(() => item.Root, DispatcherPriority.Background, statusListener.CancellationToken)) is null)
                 return null;
+            if (root is not FsInfoCat.Local.Subdirectory model)
+            {
+                FsInfoCat.Local.CrawlConfiguration source = item.Dispatcher.Invoke(() => item.Model);
+                if (dbContext is null)
+                {
+                    using IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
+                    using FsInfoCat.Local.LocalDbContext context = serviceScope.ServiceProvider.GetRequiredService<FsInfoCat.Local.LocalDbContext>();
+                    model = await context.Entry(source).GetRelatedReferenceAsync(c => c.Root, statusListener.CancellationToken);
+                }
+                else
+                    model = await dbContext.Entry(source).GetRelatedReferenceAsync(c => c.Root, statusListener.CancellationToken);
+                if (model is null)
+                    return null;
+            }
             string fullName = await item.Dispatcher.InvokeAsync(() =>
             {
                 string n = GetFullName(item);
@@ -170,7 +184,7 @@ namespace FsInfoCat.Desktop.ViewModel
                 onCompleted(null);
             else
             {
-                FsInfoCat.Local.Subdirectory root = item.Root;
+                FsInfoCat.Local.Subdirectory root = item.Root as FsInfoCat.Local.Subdirectory;
                 string fullName = GetFullName(item);
                 if (root is null)
                     onCompleted(null);

@@ -9,47 +9,28 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 {
     public class EditRedundantSetVM : EditDbEntityVM<Volume>
     {
-        #region BinaryPropertiesOptions Property Members
-
-        private readonly ObservableCollection<BinaryPropertySetItemVM> _backingBinaryPropertiesOptions = new();
-
-        private static readonly DependencyPropertyKey BinaryPropertiesOptionsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(BinaryPropertiesOptions), typeof(ReadOnlyObservableCollection<BinaryPropertySetItemVM>), typeof(EditRedundantSetVM),
-                new PropertyMetadata(null));
+        #region BinaryProperties Property Members
 
         /// <summary>
-        /// Identifies the <see cref="BinaryPropertiesOptions"/> dependency property.
+        /// Identifies the <see cref="BinaryProperties"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty BinaryPropertiesOptionsProperty = BinaryPropertiesOptionsPropertyKey.DependencyProperty;
-
-        /// <summary>
-        /// Gets .
-        /// </summary>
-        /// <value>The .</value>
-        public ReadOnlyObservableCollection<BinaryPropertySetItemVM> BinaryPropertiesOptions => (ReadOnlyObservableCollection<BinaryPropertySetItemVM>)GetValue(BinaryPropertiesOptionsProperty);
-
-        #endregion
-        #region SelectedBinaryProperties Property Members
-
-        /// <summary>
-        /// Identifies the <see cref="SelectedBinaryProperties"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty SelectedBinaryPropertiesProperty = DependencyProperty.Register(nameof(SelectedBinaryProperties), typeof(BinaryPropertySetItemVM), typeof(EditRedundantSetVM),
-                new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as EditRedundantSetVM)?.OnSelectedBinaryPropertiesPropertyChanged((BinaryPropertySetItemVM)e.OldValue, (BinaryPropertySetItemVM)e.NewValue)));
+        public static readonly DependencyProperty BinaryPropertiesProperty = DependencyProperty.Register(nameof(BinaryProperties), typeof(BinaryPropertySetItemVM), typeof(EditRedundantSetVM),
+                new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as EditRedundantSetVM)?.OnBinaryPropertiesPropertyChanged((BinaryPropertySetItemVM)e.OldValue, (BinaryPropertySetItemVM)e.NewValue)));
 
         /// <summary>
         /// Gets or sets .
         /// </summary>
         /// <value>The .</value>
-        public BinaryPropertySetItemVM SelectedBinaryProperties { get => (BinaryPropertySetItemVM)GetValue(SelectedBinaryPropertiesProperty); set => SetValue(SelectedBinaryPropertiesProperty, value); }
+        public BinaryPropertySetItemVM BinaryProperties { get => (BinaryPropertySetItemVM)GetValue(BinaryPropertiesProperty); set => SetValue(BinaryPropertiesProperty, value); }
 
         /// <summary>
-        /// Called when the value of the <see cref="SelectedBinaryProperties"/> dependency property has changed.
+        /// Called when the value of the <see cref="BinaryProperties"/> dependency property has changed.
         /// </summary>
-        /// <param name="oldValue">The previous value of the <see cref="SelectedBinaryProperties"/> property.</param>
-        /// <param name="newValue">The new value of the <see cref="SelectedBinaryProperties"/> property.</param>
-        private void OnSelectedBinaryPropertiesPropertyChanged(BinaryPropertySetItemVM oldValue, BinaryPropertySetItemVM newValue)
+        /// <param name="oldValue">The previous value of the <see cref="BinaryProperties"/> property.</param>
+        /// <param name="newValue">The new value of the <see cref="BinaryProperties"/> property.</param>
+        private void OnBinaryPropertiesPropertyChanged(BinaryPropertySetItemVM oldValue, BinaryPropertySetItemVM newValue)
         {
-            // TODO: Implement OnSelectedBinaryPropertiesPropertyChanged Logic
+            // TODO: Implement OnBinaryPropertiesPropertyChanged Logic
         }
 
         #endregion
@@ -78,6 +59,28 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         }
 
         #endregion
+        #region FileOptions Property Members
+
+        private readonly ObservableCollection<FileItemVM> _backingFileOptions = new();
+
+        private static readonly DependencyPropertyKey FileOptionsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(FileOptions), typeof(ReadOnlyObservableCollection<FileItemVM>), typeof(EditRedundantSetVM),
+                new PropertyMetadata(null));
+
+        /// <summary>
+        /// Identifies the <see cref="FileOptions"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty FileOptionsProperty = FileOptionsPropertyKey.DependencyProperty;
+
+        /// <summary>
+        /// Gets .
+        /// </summary>
+        /// <value>The .</value>
+        public ReadOnlyObservableCollection<FileItemVM> FileOptions => (ReadOnlyObservableCollection<FileItemVM>)GetValue(FileOptionsProperty);
+
+/* TODO: Add Command to initialization code to constructor
+   SetValue(FileOptionsPropertyKey, new ReadOnlyObservableCollection<FileItemVM>(_backingFileOptions)); */
+
+#endregion
         #region Redundancies Property Members
 
         private static readonly DependencyPropertyKey RedundanciesPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Redundancies), typeof(ObservableCollection<RedundancyItemVM>), typeof(EditRedundantSetVM),
@@ -127,7 +130,6 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 
         public EditRedundantSetVM()
         {
-            SetValue(BinaryPropertiesOptionsPropertyKey, new ReadOnlyObservableCollection<BinaryPropertySetItemVM>(_backingBinaryPropertiesOptions));
         }
 
         protected override DbSet<Volume> GetDbSet([DisallowNull] LocalDbContext dbContext) => dbContext.Volumes;

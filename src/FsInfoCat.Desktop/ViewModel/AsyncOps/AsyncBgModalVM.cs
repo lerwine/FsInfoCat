@@ -64,6 +64,44 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
         public event EventHandler OperationRanToCompletion;
 
         #endregion
+        #region FullPath Attached Property Members
+
+        private const string PropertyName_FullPath = "FullPath";
+
+        public static string GetFullPath(DependencyObject obj)
+        {
+            return (string)obj.GetValue(FullPathProperty);
+        }
+
+        private static void SetFullPath(DependencyObject obj, string value)
+        {
+            obj.SetValue(FullPathPropertyKey, value);
+        }
+
+        private static readonly DependencyPropertyKey FullPathPropertyKey = DependencyProperty.RegisterAttachedReadOnly(PropertyName_FullPath, typeof(string), typeof(AsyncBgModalVM), new PropertyMetadata(null));
+
+        public static readonly DependencyProperty FullPathProperty = FullPathPropertyKey.DependencyProperty;
+
+        #endregion
+        #region FullPathId Attached Property Members
+
+        private const string PropertyName_FullPathId = "FullPathId";
+
+        public static Guid? GetFullPathId(DependencyObject obj)
+        {
+            return (Guid?)obj.GetValue(FullPathIdProperty);
+        }
+
+        private static void SetFullPathId(DependencyObject obj, Guid? value)
+        {
+            obj.SetValue(FullPathIdPropertyKey, value);
+        }
+
+        private static readonly DependencyPropertyKey FullPathIdPropertyKey = DependencyProperty.RegisterAttachedReadOnly(PropertyName_FullPathId, typeof(Guid?), typeof(AsyncBgModalVM), new PropertyMetadata(null));
+
+        public static readonly DependencyProperty FullPathIdProperty = FullPathIdPropertyKey.DependencyProperty;
+
+        #endregion
         #region CancelOperation Command Members
 
         private static readonly DependencyPropertyKey CancelOperationPropertyKey = DependencyProperty.RegisterReadOnly(nameof(CancelOperation),

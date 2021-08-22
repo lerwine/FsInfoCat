@@ -18,7 +18,7 @@ namespace FsInfoCat.Local
     /// </summary>
     /// <seealso cref="LocalDbEntity" />
     /// <seealso cref="ILocalMediaPropertySet" />
-    public class MediaPropertySet : LocalDbEntity, ILocalMediaPropertySet
+    public class MediaPropertySet : LocalDbEntity, ILocalMediaPropertySet, ISimpleIdentityReference<MediaPropertySet>
     {
         #region Fields
 
@@ -75,6 +75,10 @@ namespace FsInfoCat.Local
         IEnumerable<ILocalFile> ILocalPropertySet.Files => Files.Cast<ILocalFile>();
 
         IEnumerable<IFile> IPropertySet.Files => Files.Cast<IFile>();
+
+        MediaPropertySet IIdentityReference<MediaPropertySet>.Entity => this;
+
+        IDbEntity IIdentityReference.Entity => this;
 
         #endregion
 
@@ -146,6 +150,11 @@ namespace FsInfoCat.Local
                     cancellationToken.ThrowIfCancellationRequested();
                     break;
             }
+        }
+
+        IEnumerable<Guid> IIdentityReference.GetIdentifiers()
+        {
+            yield return Id;
         }
     }
 }

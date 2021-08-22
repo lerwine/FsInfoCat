@@ -5,13 +5,8 @@ namespace FsInfoCat
 {
     /// <summary>Generic interface for access error entities.</summary>
     /// <seealso cref="IDbEntity" />
-    public interface IAccessError : IDbEntity
+    public interface IAccessError : IDbEntity, IHasSimpleIdentifier
     {
-        /// <summary>Gets the primary key value.</summary>
-        /// <value>The <see cref="Guid">unique identifier</see> used as the current entity's primary key the database.</value>
-        [Display(Name = nameof(Properties.Resources.DisplayName_Id), ResourceType = typeof(Properties.Resources))]
-        Guid Id { get; }
-
         /// <summary>Gets the error code.</summary>
         /// <value>The <see cref="AccessErrorCode" /> value that represents the numeric error code.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_ErrorCode), ResourceType = typeof(Properties.Resources))]

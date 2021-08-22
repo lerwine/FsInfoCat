@@ -13,7 +13,7 @@ using System.Xml.Linq;
 
 namespace FsInfoCat.Local
 {
-    public class VolumeAccessError : DbEntity, ILocalVolumeAccessError
+    public class VolumeAccessError : DbEntity, ILocalVolumeAccessError, ISimpleIdentityReference<VolumeAccessError>
     {
         #region Fields
 
@@ -85,6 +85,10 @@ namespace FsInfoCat.Local
         ILocalDbEntity ILocalAccessError.Target => Target;
 
         IVolume IVolumeAccessError.Target => Target;
+
+        VolumeAccessError IIdentityReference<VolumeAccessError>.Entity => this;
+
+        IDbEntity IIdentityReference.Entity => this;
 
         #endregion
 
@@ -161,6 +165,11 @@ namespace FsInfoCat.Local
         internal static void OnBuildEntity(EntityTypeBuilder<VolumeAccessError> builder)
         {
             builder.HasOne(e => e.Target).WithMany(d => d.AccessErrors).HasForeignKey(nameof(TargetId)).IsRequired().OnDelete(DeleteBehavior.Restrict);
+        }
+
+        IEnumerable<Guid> IIdentityReference.GetIdentifiers()
+        {
+            yield return Id;
         }
     }
 }

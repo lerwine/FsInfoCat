@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat
@@ -6,13 +6,8 @@ namespace FsInfoCat
     /// <summary>Log of crawl job results.</summary>
     /// <seealso cref="IDbEntity" />
     /// <seealso cref="ICrawlSettings" />
-    public interface ICrawlJobLog : IDbEntity, ICrawlSettings
+    public interface ICrawlJobLog : IDbEntity, ICrawlSettings, IHasSimpleIdentifier
     {
-        /// <summary>Gets the primary key value.</summary>
-        /// <value>The <see cref="Guid">unique identifier</see> used as the current entity's primary key the database.</value>
-        [Display(Name = nameof(Properties.Resources.DisplayName_Id), ResourceType = typeof(Properties.Resources))]
-        Guid Id { get; }
-
         /// <summary>Gets root path of the crawl.</summary>
         /// <value>The root path of the crawl.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_RootPath), ResourceType = typeof(Properties.Resources))]

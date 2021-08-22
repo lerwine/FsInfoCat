@@ -4,13 +4,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat
 {
-    public interface ITagDefinition : IDbEntity
+    public interface ITagDefinition : IDbEntity, IHasSimpleIdentifier
     {
-        /// <summary>Gets the primary key value.</summary>
-        /// <value>The <see cref="Guid">unique identifier</see> used as the current entity's primary key the database.</value>
-        [Display(Name = nameof(Properties.Resources.DisplayName_Id), ResourceType = typeof(Properties.Resources))]
-        Guid Id { get; }
-
         /// <summary>Gets the name of item tag.</summary>
         /// <value>The name of the current file system item.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_Name), ResourceType = typeof(Properties.Resources))]

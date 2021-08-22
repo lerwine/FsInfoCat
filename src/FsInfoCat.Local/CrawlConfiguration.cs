@@ -10,7 +10,7 @@ namespace FsInfoCat.Local
     /// <summary>Specifies the configuration of a file system crawl.</summary>
     /// <seealso cref="LocalDbEntity" />
     /// <seealso cref="ILocalCrawlConfiguration" />
-    public class CrawlConfiguration : LocalDbEntity, ILocalCrawlConfiguration
+    public class CrawlConfiguration : LocalDbEntity, ILocalCrawlConfiguration, ISimpleIdentityReference<CrawlConfiguration>
     {
         #region Fields
 
@@ -170,6 +170,10 @@ namespace FsInfoCat.Local
 
         IEnumerable<ILocalCrawlJobLog> ILocalCrawlConfiguration.Logs => Logs.Cast<ILocalCrawlJobLog>();
 
+        CrawlConfiguration IIdentityReference<CrawlConfiguration>.Entity => this;
+
+        IDbEntity IIdentityReference.Entity => this;
+
         public CrawlConfiguration()
         {
             _id = AddChangeTracker(nameof(Id), Guid.Empty);
@@ -204,6 +208,25 @@ namespace FsInfoCat.Local
         internal static void OnBuildEntity(EntityTypeBuilder<CrawlConfiguration> builder)
         {
             builder.HasOne(s => s.Root).WithOne(c => c.CrawlConfiguration).HasForeignKey<CrawlConfiguration>(nameof(RootId)).OnDelete(DeleteBehavior.Restrict);
+        }
+
+        IEnumerable<Guid> IIdentityReference.GetIdentifiers()
+        {
+            yield return Id;
+        }
+
+        public void SetRoot(ISimpleIdentityReference<Subdirectory> root)
+        {
+
+            if (root is not null)
+            {
+                if (root.Entity is null)
+                    RootId = root.Id;
+                else
+                    Root = root.Entity;
+            }
+            else
+                Root = null;
         }
     }
 }

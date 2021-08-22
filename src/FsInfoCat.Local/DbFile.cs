@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 namespace FsInfoCat.Local
 {
     [Table(TABLE_NAME)]
-    public class DbFile : LocalDbEntity, ILocalFile
+    public class DbFile : LocalDbEntity, ILocalFile, ISimpleIdentityReference<DbFile>
     {
         #region Fields
 
@@ -631,6 +631,10 @@ namespace FsInfoCat.Local
         IEnumerable<ISharedFileTag> IFile.SharedTags => SharedTags.Cast<ISharedFileTag>();
         IEnumerable<ISharedTag> IDbFsItem.SharedTags => SharedTags.Cast<ISharedTag>();
 
+        DbFile IIdentityReference<DbFile>.Entity => this;
+
+        IDbEntity IIdentityReference.Entity => this;
+
         #endregion
 
         public DbFile()
@@ -1171,6 +1175,16 @@ namespace FsInfoCat.Local
             if (shouldSaveChanges)
                 await dbContext.SaveChangesAsync(cancellationToken);
             return true;
+        }
+
+        IEnumerable<Guid> IIdentityReference.GetIdentifiers()
+        {
+            yield return Id;
+        }
+
+        public ISimpleIdentityReference<BinaryPropertySet> GetBinaryPropertySetReference()
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -16,7 +16,7 @@ namespace FsInfoCat.Local
     /// </summary>
     /// <seealso cref="LocalDbEntity" />
     /// <seealso cref="ILocalDRMPropertySet" />
-    public class DRMPropertySet : LocalDbEntity, ILocalDRMPropertySet
+    public class DRMPropertySet : LocalDbEntity, ILocalDRMPropertySet, ISimpleIdentityReference<DRMPropertySet>
     {
         #region Fields
 
@@ -53,6 +53,10 @@ namespace FsInfoCat.Local
         IEnumerable<ILocalFile> ILocalPropertySet.Files => Files.Cast<ILocalFile>();
 
         IEnumerable<IFile> IPropertySet.Files => Files.Cast<IFile>();
+
+        DRMPropertySet IIdentityReference<DRMPropertySet>.Entity => this;
+
+        IDbEntity IIdentityReference.Entity => this;
 
         #endregion
 
@@ -106,6 +110,11 @@ namespace FsInfoCat.Local
                     cancellationToken.ThrowIfCancellationRequested();
                     break;
             }
+        }
+
+        IEnumerable<Guid> IIdentityReference.GetIdentifiers()
+        {
+            yield return Id;
         }
     }
 }

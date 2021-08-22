@@ -19,7 +19,7 @@ namespace FsInfoCat.Local
     /// </summary>
     /// <seealso cref="LocalDbEntity" />
     /// <seealso cref="ILocalBinaryPropertySet" />
-    public class BinaryPropertySet : LocalDbEntity, ILocalBinaryPropertySet
+    public class BinaryPropertySet : LocalDbEntity, ILocalBinaryPropertySet, ISimpleIdentityReference<BinaryPropertySet>
     {
         #region Fields
 
@@ -64,6 +64,10 @@ namespace FsInfoCat.Local
         IEnumerable<ILocalRedundantSet> ILocalBinaryPropertySet.RedundantSets => RedundantSets.Cast<ILocalRedundantSet>();
 
         IEnumerable<IRedundantSet> IBinaryPropertySet.RedundantSets => RedundantSets.Cast<IRedundantSet>();
+
+        BinaryPropertySet IIdentityReference<BinaryPropertySet>.Entity => this;
+
+        IDbEntity IIdentityReference.Entity => this;
 
         #endregion
 
@@ -134,6 +138,11 @@ namespace FsInfoCat.Local
                 await dbContext.SaveChangesAsync(cancellationToken);
             }
             return bps;
+        }
+
+        IEnumerable<Guid> IIdentityReference.GetIdentifiers()
+        {
+            yield return Id;
         }
     }
 }

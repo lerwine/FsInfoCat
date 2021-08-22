@@ -4,9 +4,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -14,7 +16,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 {
     public class EditSymbolicNameVM : EditDbEntityVM<SymbolicName>
     {
-        private readonly ObservableCollection<FileSystemItemVM> _fileSystemOptions = new();
+        #region Name Property Members
 
         public static readonly DependencyProperty NameProperty = DependencyProperty.Register(nameof(Name), typeof(string), typeof(EditSymbolicNameVM),
                 new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
@@ -38,6 +40,9 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             ChangeTracker.SetChangeState(nameof(Name), newValue != Model?.Name);
         }
 
+        #endregion
+        #region Priority Property Members
+
         public static readonly DependencyProperty PriorityProperty = DependencyProperty.Register(nameof(Priority), typeof(int), typeof(EditSymbolicNameVM),
                 new PropertyMetadata(0, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
                     (d as EditSymbolicNameVM).OnPriorityPropertyChanged((int)e.OldValue, (int)e.NewValue)));
@@ -53,7 +58,10 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             ChangeTracker.SetChangeState(nameof(Priority), newValue != Model?.Priority);
         }
 
+        #endregion
         #region FileSystemOptions Property Members
+
+        private readonly ObservableCollection<FileSystemItemVM> _backingFileSystemOptions = new();
 
         private static readonly DependencyPropertyKey FileSystemOptionsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(FileSystemOptions), typeof(ReadOnlyObservableCollection<FileSystemItemVM>), typeof(EditSymbolicNameVM),
                 new PropertyMetadata(null));
@@ -63,6 +71,58 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         public ReadOnlyObservableCollection<FileSystemItemVM> FileSystemOptions => (ReadOnlyObservableCollection<FileSystemItemVM>)GetValue(FileSystemOptionsProperty);
 
         #endregion
+        #region PickFromActiveFileSystems Property Members
+
+        private int _ignoreFileSystemOptionsChange = 0;
+
+        private static readonly DependencyPropertyKey PickFromActiveFileSystemsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(PickFromActiveFileSystems), typeof(ThreeStateViewModel), typeof(EditSymbolicNameVM),
+                new PropertyMetadata(null));
+
+        /// <summary>
+        /// Identifies the <see cref="PickFromActiveFileSystems"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty PickFromActiveFileSystemsProperty = PickFromActiveFileSystemsPropertyKey.DependencyProperty;
+
+        /// <summary>
+        /// Gets .
+        /// </summary>
+        /// <value>The .</value>
+        public ThreeStateViewModel PickFromActiveFileSystems => (ThreeStateViewModel)GetValue(PickFromActiveFileSystemsProperty);
+
+        private void PickFromActiveFileSystems_ValuePropertyChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            if (_ignoreFileSystemOptionsChange > 0)
+                return;
+            bool? newvalue = e.NewValue as bool?;
+            FileSystemItemVM current = SelectedFileSystem;
+            if (newvalue.HasValue && e.OldValue is null)
+            {
+                bool isActive = newvalue.Value;
+                foreach (FileSystemItemVM item in _backingFileSystemOptions.Where(item => item.IsInactive != isActive).ToArray())
+                    _backingFileSystemOptions.Remove(item);
+                if (current?.IsInactive == isActive)
+                    SelectedFileSystem = null;
+                return;
+            }
+            BgOps.FromAsync("Loading data", "Getting file system options", PickFromActiveFileSystems.Value, ReloadFileSystemsAsync).ContinueWith(task => Dispatcher.Invoke(() =>
+            {
+                _backingFileSystemOptions.Clear();
+                foreach (FileSystem entity in task.Result)
+                    _backingFileSystemOptions.Add(new(entity));
+                if (current is null)
+                    return;
+                if (newvalue.HasValue && current?.IsInactive == newvalue.Value)
+                    SelectedFileSystem = null;
+                else
+                {
+                    Guid id = current.Model.Id;
+                    SelectedFileSystem = _backingFileSystemOptions.FirstOrDefault(v => v.Model.Id == id);
+                }
+            }), TaskContinuationOptions.OnlyOnRanToCompletion);
+        }
+
+        #endregion
+        #region SelectedFileSystem Property Members
 
         public static readonly DependencyProperty SelectedFileSystemProperty = DependencyProperty.Register(nameof(SelectedFileSystem), typeof(FileSystemItemVM), typeof(EditSymbolicNameVM),
                 new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
@@ -79,6 +139,9 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             ChangeTracker.SetChangeState(nameof(SelectedFileSystem), newValue?.Model.Id != Model?.FileSystemId);
         }
 
+        #endregion
+        #region IsInactive Property Members
+
         public static readonly DependencyProperty IsInactiveProperty = DependencyProperty.Register(nameof(IsInactive), typeof(bool), typeof(EditSymbolicNameVM),
                 new PropertyMetadata(false, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
                     (d as EditSymbolicNameVM).OnIsInactivePropertyChanged((bool)e.OldValue, (bool)e.NewValue)));
@@ -93,6 +156,9 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         {
             ChangeTracker.SetChangeState(nameof(IsInactive), newValue != Model?.IsInactive);
         }
+
+        #endregion
+        #region Notes Property Members
 
         public static readonly DependencyProperty NotesProperty = DependencyProperty.Register(nameof(Notes), typeof(string), typeof(EditSymbolicNameVM),
                 new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
@@ -109,87 +175,14 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             ChangeTracker.SetChangeState(nameof(Notes), newValue.EmptyIfNullOrWhiteSpace() != Model?.Notes);
         }
 
-        public static readonly DependencyProperty ShowActiveFileSystemsOnlyProperty = DependencyProperty.Register(nameof(ShowActiveFileSystemsOnly), typeof(bool), typeof(EditSymbolicNameVM),
-                new PropertyMetadata(true, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                    (d as EditSymbolicNameVM).OnShowActiveFileSystemsOnlyPropertyChanged((bool)e.OldValue, (bool)e.NewValue)));
-
-        public bool ShowActiveFileSystemsOnly
-        {
-            get => (bool)GetValue(ShowActiveFileSystemsOnlyProperty);
-            set => SetValue(ShowActiveFileSystemsOnlyProperty, value);
-        }
-
-        protected virtual void OnShowActiveFileSystemsOnlyPropertyChanged(bool oldValue, bool newValue)
-        {
-            if (newValue)
-            {
-                ShowInactiveFileSystemsOnly = ShowAllFileSystems = false;
-                Guid id = SelectedFileSystem?.Model?.Id ?? Guid.Empty;
-                Task<FileSystem[]> task = OpAggregate.FromAsync("Loading file systems", "Connecting to the database",
-                    new FileSystemLookupOptions(SelectedFileSystem, id, true), LoadFileSystemsAsync);
-                task.ContinueWith(OnFileSystemsLoaded, id);
-            }
-        }
-
-        public static readonly DependencyProperty ShowInactiveFileSystemsOnlyProperty = DependencyProperty.Register(nameof(ShowInactiveFileSystemsOnly), typeof(bool), typeof(EditSymbolicNameVM),
-                new PropertyMetadata(false, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                    (d as EditSymbolicNameVM).OnShowInactiveFileSystemsOnlyPropertyChanged((bool)e.OldValue, (bool)e.NewValue)));
-
-        public bool ShowInactiveFileSystemsOnly
-        {
-            get => (bool)GetValue(ShowInactiveFileSystemsOnlyProperty);
-            set => SetValue(ShowInactiveFileSystemsOnlyProperty, value);
-        }
-
-        protected virtual void OnShowInactiveFileSystemsOnlyPropertyChanged(bool oldValue, bool newValue)
-        {
-            if (newValue)
-            {
-                ShowActiveFileSystemsOnly = ShowAllFileSystems = false;
-                Guid id = SelectedFileSystem?.Model?.Id ?? Guid.Empty;
-                Task<FileSystem[]> task = OpAggregate.FromAsync("Loading file systems", "Connecting to the database",
-                    new FileSystemLookupOptions(SelectedFileSystem, id, false), LoadFileSystemsAsync);
-                task.ContinueWith(OnFileSystemsLoaded, id);
-            }
-        }
-
-        public static readonly DependencyProperty ShowAllFileSystemsProperty = DependencyProperty.Register(nameof(ShowAllFileSystems), typeof(bool), typeof(EditSymbolicNameVM),
-                new PropertyMetadata(false, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                    (d as EditSymbolicNameVM).OnShowAllFileSystemsPropertyChanged((bool)e.OldValue, (bool)e.NewValue)));
-
-        public bool ShowAllFileSystems
-        {
-            get => (bool)GetValue(ShowAllFileSystemsProperty);
-            set => SetValue(ShowAllFileSystemsProperty, value);
-        }
-
-        protected virtual void OnShowAllFileSystemsPropertyChanged(bool oldValue, bool newValue)
-        {
-            if (newValue)
-            {
-                ShowActiveFileSystemsOnly = ShowInactiveFileSystemsOnly = false;
-                Guid id = SelectedFileSystem?.Model?.Id ?? Guid.Empty;
-                Task<FileSystem[]> task = OpAggregate.FromAsync("Loading file systems", "Connecting to the database",
-                    new FileSystemLookupOptions(SelectedFileSystem, id, null), LoadFileSystemsAsync);
-                task.ContinueWith(OnFileSystemsLoaded, id);
-            }
-        }
+        #endregion
 
         public EditSymbolicNameVM()
         {
-            SetValue(FileSystemOptionsPropertyKey, new ReadOnlyObservableCollection<FileSystemItemVM>(_fileSystemOptions));
-        }
-
-        private void OnFileSystemsLoaded(Task<FileSystem[]> task, object state)
-        {
-            if (task.IsCompletedSuccessfully)
-                Dispatcher.Invoke(() =>
-                {
-                    foreach (FileSystem fs in task.Result)
-                        _fileSystemOptions.Add(new(fs));
-                    Guid id = (Guid)state;
-                    SelectedFileSystem = _fileSystemOptions.FirstOrDefault(f => f.Model.Id == id);
-                });
+            ThreeStateViewModel fileSystemDisplayOptions = new(true);
+            SetValue(FileSystemOptionsPropertyKey, new ReadOnlyObservableCollection<FileSystemItemVM>(_backingFileSystemOptions));
+            SetValue(PickFromActiveFileSystemsPropertyKey, fileSystemDisplayOptions);
+            fileSystemDisplayOptions.ValuePropertyChanged += PickFromActiveFileSystems_ValuePropertyChanged;
         }
 
         protected override DbSet<SymbolicName> GetDbSet([DisallowNull] LocalDbContext dbContext) => dbContext.SymbolicNames;
@@ -204,47 +197,101 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             return base.OnSaveChangesAsync(entry, dbContext, statusListener, force);
         }
 
-        private static async Task<FileSystem[]> LoadFileSystemsAsync(FileSystemLookupOptions state, IWindowsStatusListener statusListener)
+        private static async Task<ICollection<FileSystem>> ReloadFileSystemsAsync(bool? selectActive, IWindowsStatusListener statusListener)
         {
-            using IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
-            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
-            FileSystem[] fileSystems;
-            if (state.ShowActiveOnly.HasValue)
+            using IServiceScope scope = Services.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = scope.ServiceProvider.GetRequiredService<LocalDbContext>();
+            if (selectActive.HasValue)
             {
-                if (state.ShowActiveOnly.Value)
-                    fileSystems = await (from fs in dbContext.FileSystems where !fs.IsInactive select fs).ToArrayAsync(statusListener.CancellationToken);
-                else
-                    fileSystems = await (from fs in dbContext.FileSystems where fs.IsInactive select fs).ToArrayAsync(statusListener.CancellationToken);
+                if (selectActive.Value)
+                    return await (from f in dbContext.FileSystems where f.IsInactive == false select f).ToArrayAsync(statusListener.CancellationToken);
+                return await (from f in dbContext.FileSystems where f.IsInactive == true select f).ToArrayAsync(statusListener.CancellationToken);
             }
-            else
-                fileSystems = await dbContext.FileSystems.ToArrayAsync();
-            Guid id = state.FileSystemId;
-            if (!fileSystems.Any(f => f.Id == id))
-            {
-                if (state.SelectedItem?.Model is not null)
-                    return fileSystems.Concat(new FileSystem[] { state.SelectedItem.Model }).ToArray();
-                FileSystem item = await dbContext.FileSystems.FindAsync(new object[] { id }, statusListener.CancellationToken);
-                if (item is not null)
-                    return fileSystems.Concat(new FileSystem[] { item }).ToArray();
-            }
-            return fileSystems;
+            return await dbContext.FileSystems.ToArrayAsync(statusListener.CancellationToken);
         }
 
         protected override void OnModelPropertyChanged(SymbolicName oldValue, SymbolicName newValue)
         {
             if (newValue is null)
             {
-                // TODO: Initialize to default values
+                SetSelectedFileSystemAsync(null);
+                Notes = Name = "";
+                IsInactive = false;
+                Priority = 0;
                 return;
             }
+            SetSelectedFileSystemAsync(newValue.FileSystem);
             Name = newValue.Name;
             IsInactive = newValue.IsInactive;
             Notes = newValue.Notes;
             Priority = newValue.Priority;
-            Guid id = newValue.FileSystemId;
-            Task<FileSystem[]> task = OpAggregate.FromAsync("Loading file systems", "Connecting to the database",
-                new FileSystemLookupOptions(null, id, ShowAllFileSystems ? null : ShowActiveFileSystemsOnly), LoadFileSystemsAsync);
-            task.ContinueWith(OnFileSystemsLoaded, id);
+        }
+
+        private void SetSelectedFileSystemAsync(FileSystem fileSystem)
+        {
+            Task<ICollection<FileSystem>> result;
+            if (fileSystem is null)
+            {
+                if (Dispatcher.CheckInvoke(() =>
+                {
+                    SelectedFileSystem = null;
+                    return _backingFileSystemOptions.Count > 0;
+                }))
+                    return;
+                result = BgOps.FromAsync("Loading data", "Getting file system options", Dispatcher.CheckInvoke(() => PickFromActiveFileSystems.Value), ReloadFileSystemsAsync);
+            }
+            else
+            {
+                Guid id = fileSystem.Id;
+                if (Dispatcher.CheckInvoke(() =>
+                {
+                    if (SelectedFileSystem?.Model?.Id == id)
+                        return true;
+                    FileSystemItemVM current = _backingFileSystemOptions.FirstOrDefault(o => o.Model?.Id == id);
+                    if (current is null)
+                        return false;
+                    SelectedFileSystem = current;
+                    return true;
+                }))
+                    return;
+
+                bool? displayOptions;
+                Interlocked.Increment(ref _ignoreFileSystemOptionsChange);
+                try
+                {
+                    displayOptions = Dispatcher.CheckInvoke(() =>
+                    {
+                        if (fileSystem.IsInactive)
+                        {
+                            if (PickFromActiveFileSystems.IsTrue)
+                                PickFromActiveFileSystems.IsNull = true;
+                        }
+                        else if (PickFromActiveFileSystems.IsFalse)
+                            PickFromActiveFileSystems.IsTrue = true;
+                        return PickFromActiveFileSystems.Value;
+                    });
+                }
+                finally { Interlocked.Decrement(ref _ignoreFileSystemOptionsChange); }
+                result = BgOps.FromAsync("Loading data", "Getting file system options", displayOptions, ReloadFileSystemsAsync);
+            }
+
+            result.ContinueWith(task => Dispatcher.Invoke(() =>
+            {
+                _backingFileSystemOptions.Clear();
+                foreach (FileSystem entity in task.Result)
+                    _backingFileSystemOptions.Add(new(entity));
+                if (fileSystem is null)
+                    return null;
+                Guid id = fileSystem.Id;
+                FileSystemItemVM vm = _backingFileSystemOptions.FirstOrDefault(v => v.Model.Id == id);
+                if (vm is null)
+                {
+                    vm = new(fileSystem);
+                    _backingFileSystemOptions.Add(vm);
+                }
+                SelectedFileSystem = vm;
+                return vm;
+            }), TaskContinuationOptions.OnlyOnRanToCompletion);
         }
 
         protected override bool OnBeforeSave()
@@ -256,9 +303,8 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             model.IsInactive = IsInactive;
             model.Notes = Notes.EmptyIfNullOrWhiteSpace();
             model.Priority = Priority;
+            model.FileSystem = SelectedFileSystem.Model;
             return true;
         }
-
-        public record FileSystemLookupOptions(FileSystemItemVM SelectedItem, Guid FileSystemId, bool? ShowActiveOnly);
     }
 }

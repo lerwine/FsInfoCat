@@ -16,7 +16,7 @@ namespace FsInfoCat.Local
     /// </summary>
     /// <seealso cref="LocalDbEntity" />
     /// <seealso cref="ILocalRecordedTVPropertySet" />
-    public class RecordedTVPropertySet : LocalDbEntity, ILocalRecordedTVPropertySet
+    public class RecordedTVPropertySet : LocalDbEntity, ILocalRecordedTVPropertySet, ISimpleIdentityReference<RecordedTVPropertySet>
     {
         #region Fields
 
@@ -61,6 +61,10 @@ namespace FsInfoCat.Local
         IEnumerable<ILocalFile> ILocalPropertySet.Files => Files.Cast<ILocalFile>();
 
         IEnumerable<IFile> IPropertySet.Files => Files.Cast<IFile>();
+
+        RecordedTVPropertySet IIdentityReference<RecordedTVPropertySet>.Entity => this;
+
+        IDbEntity IIdentityReference.Entity => this;
 
         #endregion
 
@@ -117,6 +121,11 @@ namespace FsInfoCat.Local
                     cancellationToken.ThrowIfCancellationRequested();
                     break;
             }
+        }
+
+        IEnumerable<Guid> IIdentityReference.GetIdentifiers()
+        {
+            yield return Id;
         }
     }
 }

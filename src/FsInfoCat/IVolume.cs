@@ -7,13 +7,8 @@ namespace FsInfoCat
 {
     /// <summary>Interface for entities which represent a logical file system volume.</summary>
     /// <seealso cref="IDbEntity" />
-    public interface IVolume : IDbEntity
+    public interface IVolume : IDbEntity, IHasSimpleIdentifier
     {
-        /// <summary>Gets the primary key value.</summary>
-        /// <value>The <see cref="Guid">unique identifier</see> used as the current entity's primary key the database.</value>
-        [Display(Name = nameof(Properties.Resources.DisplayName_Id), ResourceType = typeof(Properties.Resources))]
-        Guid Id { get; }
-
         /// <summary>Gets the display name of the volume.</summary>
         /// <value>The display name of the volume.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_DisplayName), ResourceType = typeof(Properties.Resources))]

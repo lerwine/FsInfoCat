@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -6,13 +6,8 @@ namespace FsInfoCat
 {
     /// <summary>Represents a set of files that have the same file size and cryptographic hash.</summary>
     /// <seealso cref="IDbEntity" />
-    public interface IBinaryPropertySet : IDbEntity
+    public interface IBinaryPropertySet : IDbEntity, IHasSimpleIdentifier
     {
-        /// <summary>Gets the primary key value.</summary>
-        /// <value>The <see cref="Guid">unique identifier</see> used as the current entity's primary key the database.</value>
-        [Display(Name = nameof(Properties.Resources.DisplayName_Id), ResourceType = typeof(Properties.Resources))]
-        Guid Id { get; }
-
         /// <summary>Gets the file length.</summary>
         /// <value>The file length in bytes.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_Length), ResourceType = typeof(Properties.Resources))]

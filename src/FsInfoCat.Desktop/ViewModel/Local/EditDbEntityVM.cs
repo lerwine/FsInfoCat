@@ -82,14 +82,14 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         private void OnCancelExecute(object parameter) => CloseCancel?.Invoke(this, EventArgs.Empty);
 
         #endregion
-        #region OpAggregate Property Members
+        #region BgOps Property Members
 
-        private static readonly DependencyPropertyKey OpAggregatePropertyKey = DependencyProperty.RegisterReadOnly(nameof(OpAggregate),
+        private static readonly DependencyPropertyKey BgOpsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(BgOps),
             typeof(AsyncOps.AsyncBgModalVM), typeof(EditDbEntityVM<TDbEntity>), new PropertyMetadata(null));
 
-        public static readonly DependencyProperty OpAggregateProperty = OpAggregatePropertyKey.DependencyProperty;
+        public static readonly DependencyProperty BgOpsProperty = BgOpsPropertyKey.DependencyProperty;
 
-        public AsyncOps.AsyncBgModalVM OpAggregate => (AsyncOps.AsyncBgModalVM)GetValue(OpAggregateProperty);
+        public AsyncOps.AsyncBgModalVM BgOps => (AsyncOps.AsyncBgModalVM)GetValue(BgOpsProperty);
 
         #endregion
         #region Change Tracking / Validation Members
@@ -238,7 +238,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             SetValue(ValidationPropertyKey, validation);
             ChangeStateTracker changeTracker = new();
             SetValue(ChangeTrackerPropertyKey, changeTracker);
-            SetValue(OpAggregatePropertyKey, new AsyncOps.AsyncBgModalVM());
+            SetValue(BgOpsPropertyKey, new AsyncOps.AsyncBgModalVM());
 #if DEBUG
             if (DesignerProperties.GetIsInDesignMode(this))
                 return;
@@ -251,15 +251,15 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         IAsyncWindowsBackgroundOperationManager IHasAsyncWindowsBackgroundOperationManager.GetAsyncBackgroundOperationManager()
         {
             if (CheckAccess())
-                return OpAggregate;
-            return Dispatcher.Invoke(() => OpAggregate);
+                return BgOps;
+            return Dispatcher.Invoke(() => BgOps);
         }
 
         IAsyncBackgroundOperationManager IHasAsyncBackgroundOperationManager.GetAsyncBackgroundOperationManager()
         {
             if (CheckAccess())
-                return OpAggregate;
-            return Dispatcher.Invoke(() => OpAggregate);
+                return BgOps;
+            return Dispatcher.Invoke(() => BgOps);
         }
 
         public record AsyncDialogArgs(Func<AsyncInitArgs, Task> OnInitializeAsync, TDbEntity Entity, bool IsNew);
@@ -310,7 +310,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
                         MessageBoxButton.YesNo, MessageBoxImage.Exclamation) != MessageBoxResult.Yes)
                     e.Cancel = true;
                 else
-                    OpAggregate.CancelAll();
+                    BgOps.CancelAll();
             };
             window.Closing += windowClosing;
             EventHandler closeSuccess = new((sender, e) => window.DialogResult = true);
@@ -344,7 +344,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         /// <returns>A <see cref="Task{bool}"/> that <see langword="true"/> if changes were successfully saved to the database; otherwise, <see langword="false"/>.</returns>
         protected virtual Task<bool> SaveChangesAsync(bool forceSave = false)
         {
-            Task<bool> task = OpAggregate.FromAsync("Saving Changes", "Connecting to database", new ModelViewModel(Model, this, forceSave), SaveChangesAsync);
+            Task<bool> task = BgOps.FromAsync("Saving Changes", "Connecting to database", new ModelViewModel(Model, this, forceSave), SaveChangesAsync);
             task.ContinueWith(task =>
             {
                 if (task.IsCompletedSuccessfully)
@@ -421,12 +421,12 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         //    });
 
         //    vm.CloseCancel += closeCancelHandler;
-        //    vm.OpAggregate.OperationFaulted += closeCancelHandler;
-        //    vm.OpAggregate.OperationCancelRequested += closeCancelHandler;
+        //    vm.BgOps.OperationFaulted += closeCancelHandler;
+        //    vm.BgOps.OperationCancelRequested += closeCancelHandler;
         //    vm.CloseSuccess += new EventHandler((sender, e) => window.DialogResult = true);
         //    window.Loaded += new RoutedEventHandler((sender, e) =>
         //    {
-        //        Task<(TLoadResult loadResult, EntityState State)> task = vm.OpAggregate.FromAsync(entityLoader.LoadingTitle,
+        //        Task<(TLoadResult loadResult, EntityState State)> task = vm.BgOps.FromAsync(entityLoader.LoadingTitle,
         //            entityLoader.InitialLoadingMessage, async statusListener =>
         //            {
         //                using IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
@@ -448,8 +448,8 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         //            if (task.IsCompletedSuccessfully)
         //                vm.Dispatcher.Invoke(() =>
         //                {
-        //                    vm.OpAggregate.OperationCancelRequested -= closeCancelHandler;
-        //                    vm.OpAggregate.OperationFaulted -= closeCancelHandler;
+        //                    vm.BgOps.OperationCancelRequested -= closeCancelHandler;
+        //                    vm.BgOps.OperationFaulted -= closeCancelHandler;
         //                    //vm.Initialize(entityLoader.GetEntity(task.Result.Item1), task.Result.Item2);
         //                    entityLoader.InitializeViewModel(vm, task.Result.Item1, task.Result.Item2);
         //                });

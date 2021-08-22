@@ -12,7 +12,7 @@ using System.Xml.Linq;
 
 namespace FsInfoCat.Local
 {
-    public class RedundantSet : LocalDbEntity, ILocalRedundantSet
+    public class RedundantSet : LocalDbEntity, ILocalRedundantSet, ISimpleIdentityReference<RedundantSet>
     {
         #region Fields
 
@@ -101,6 +101,10 @@ namespace FsInfoCat.Local
 
         IEnumerable<IRedundancy> IRedundantSet.Redundancies => Redundancies.Cast<IRedundancy>();
 
+        RedundantSet IIdentityReference<RedundantSet>.Entity => this;
+
+        IDbEntity IIdentityReference.Entity => this;
+
         #endregion
 
         public RedundantSet()
@@ -133,6 +137,11 @@ namespace FsInfoCat.Local
                 .AppendString(nameof(Reference)).AppendElementString(nameof(Notes)).AppendDateTime(nameof(CreatedOn)).AppendDateTime(nameof(ModifiedOn))
                 .AppendDateTime(nameof(LastSynchronizedOn)).AppendGuid(nameof(UpstreamId)).ExecuteSqlAsync(dbContext.Database);
             return (redundantSetId, redundantSetElement.Elements(nameof(Redundancy)).ToArray());
+        }
+
+        IEnumerable<Guid> IIdentityReference.GetIdentifiers()
+        {
+            yield return Id;
         }
     }
 }

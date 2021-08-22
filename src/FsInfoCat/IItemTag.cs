@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat
 {
-    public interface IItemTag : IDbEntity
+    public interface IItemTag : IDbEntity, IHasIdentifierPair
     {
         /// <summary>Gets the primary key value that references the <see cref="Tagged"/> entity.</summary>
         /// <value>The <see cref="Guid">unique identifier</see> used as part of the current entity's primary key the database.</value>

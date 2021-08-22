@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat.Local
 {
-    public class Subdirectory : LocalDbEntity, ILocalSubdirectory
+    public class Subdirectory : LocalDbEntity, ILocalSubdirectory, ISimpleIdentityReference<Subdirectory>
     {
         #region Fields
 
@@ -211,6 +211,10 @@ namespace FsInfoCat.Local
         IEnumerable<ISharedSubdirectoryTag> ISubdirectory.SharedTags => SharedTags.Cast<ISharedSubdirectoryTag>();
 
         IEnumerable<ISharedTag> IDbFsItem.SharedTags => SharedTags.Cast<ISharedTag>();
+
+        Subdirectory IIdentityReference<Subdirectory>.Entity => this;
+
+        IDbEntity IIdentityReference.Entity => this;
 
         #endregion
 
@@ -732,6 +736,11 @@ namespace FsInfoCat.Local
         {
             if (!Enum.IsDefined(Options))
                 results.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_InvalidDirectoryCrawlOption, new string[] { nameof(Options) }));
+        }
+
+        IEnumerable<Guid> IIdentityReference.GetIdentifiers()
+        {
+            yield return Id;
         }
     }
 }

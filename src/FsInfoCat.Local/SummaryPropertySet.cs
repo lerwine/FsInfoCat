@@ -18,7 +18,7 @@ namespace FsInfoCat.Local
     /// </summary>
     /// <seealso cref="LocalDbEntity" />
     /// <seealso cref="ILocalSummaryPropertySet" />
-    public class SummaryPropertySet : LocalDbEntity, ILocalSummaryPropertySet
+    public class SummaryPropertySet : LocalDbEntity, ILocalSummaryPropertySet, ISimpleIdentityReference<SummaryPropertySet>
     {
         #region Fields
 
@@ -91,6 +91,10 @@ namespace FsInfoCat.Local
         IEnumerable<ILocalFile> ILocalPropertySet.Files => Files.Cast<ILocalFile>();
 
         IEnumerable<IFile> IPropertySet.Files => Files.Cast<IFile>();
+
+        SummaryPropertySet IIdentityReference<SummaryPropertySet>.Entity => this;
+
+        IDbEntity IIdentityReference.Entity => this;
 
         #endregion
 
@@ -172,6 +176,11 @@ namespace FsInfoCat.Local
                     cancellationToken.ThrowIfCancellationRequested();
                     break;
             }
+        }
+
+        IEnumerable<Guid> IIdentityReference.GetIdentifiers()
+        {
+            yield return Id;
         }
     }
 }

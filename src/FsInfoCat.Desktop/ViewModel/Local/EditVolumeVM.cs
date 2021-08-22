@@ -1,14 +1,22 @@
 using FsInfoCat.Local;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Threading;
 
 namespace FsInfoCat.Desktop.ViewModel.Local
 {
-    public class EditVolumeVM : EditDbEntityVM<Volume>
+    public class EditVolumeVM : EditDbEntityVM<Volume>, IHasSubdirectoryEntity
     {
         #region DisplayName Property Members
 
@@ -351,11 +359,134 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         }
 
         #endregion
-        
+        #region RootDirectory Property Members
+
+        private static readonly DependencyPropertyKey RootDirectoryPropertyKey = DependencyProperty.RegisterReadOnly(nameof(RootDirectory), typeof(Subdirectory), typeof(EditVolumeVM),
+            new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
+                    (d as EditVolumeVM).OnRootDirectoryPropertyChanged((Subdirectory)e.OldValue, (Subdirectory)e.NewValue)));
+
+        public static readonly DependencyProperty RootDirectoryProperty = RootDirectoryPropertyKey.DependencyProperty;
+
+        public Subdirectory RootDirectory
+        {
+            get => (Subdirectory)GetValue(RootDirectoryProperty);
+            private set => SetValue(RootDirectoryPropertyKey, value);
+        }
+
+        protected virtual void OnRootDirectoryPropertyChanged(Subdirectory oldValue, Subdirectory newValue)
+        {
+#if DEBUG
+            if (DesignerProperties.GetIsInDesignMode(this))
+                return;
+#endif
+            ChangeTracker.SetChangeState(nameof(Path), Model?.RootDirectory?.Id != newValue?.Id);
+        }
+
+        #endregion
+        #region FileSystemOptions Property Members
+
+        private readonly ObservableCollection<FileSystemItemVM> _backingFileSystemOptions = new();
+
+        private static readonly DependencyPropertyKey FileSystemOptionsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(FileSystemOptions), typeof(ReadOnlyObservableCollection<FileSystemItemVM>), typeof(EditVolumeVM),
+                new PropertyMetadata(null));
+
+        /// <summary>
+        /// Identifies the <see cref="FileSystemOptions"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty FileSystemOptionsProperty = FileSystemOptionsPropertyKey.DependencyProperty;
+
+        /// <summary>
+        /// Gets .
+        /// </summary>
+        /// <value>The .</value>
+        public ReadOnlyObservableCollection<FileSystemItemVM> FileSystemOptions => (ReadOnlyObservableCollection<FileSystemItemVM>)GetValue(FileSystemOptionsProperty);
+
+        #endregion
+        #region PickFromActiveFileSystems Property Members
+
+        private int _ignoreFileSystemOptionsChange = 0;
+
+        private static readonly DependencyPropertyKey PickFromActiveFileSystemsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(PickFromActiveFileSystems), typeof(ThreeStateViewModel), typeof(EditVolumeVM),
+                new PropertyMetadata(null));
+
+        /// <summary>
+        /// Identifies the <see cref="PickFromActiveFileSystems"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty PickFromActiveFileSystemsProperty = PickFromActiveFileSystemsPropertyKey.DependencyProperty;
+
+        /// <summary>
+        /// Gets .
+        /// </summary>
+        /// <value>The .</value>
+        public ThreeStateViewModel PickFromActiveFileSystems => (ThreeStateViewModel)GetValue(PickFromActiveFileSystemsProperty);
+
+        private void PickFromActiveFileSystems_ValuePropertyChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            if (_ignoreFileSystemOptionsChange > 0)
+                return;
+            bool? newvalue = e.NewValue as bool?;
+            FileSystemItemVM current = SelectedFileSystem;
+            if (newvalue.HasValue && e.OldValue is null)
+            {
+                bool isActive = newvalue.Value;
+                foreach (FileSystemItemVM item in _backingFileSystemOptions.Where(item => item.IsInactive != isActive).ToArray())
+                    _backingFileSystemOptions.Remove(item);
+                if (current?.IsInactive == isActive)
+                    SelectedFileSystem = null;
+                return;
+            }
+            BgOps.FromAsync("Loading data", "Getting file system options", PickFromActiveFileSystems.Value, ReloadFileSystemsAsync).ContinueWith(task => Dispatcher.Invoke(() =>
+            {
+                _backingFileSystemOptions.Clear();
+                foreach (FileSystem entity in task.Result)
+                    _backingFileSystemOptions.Add(new(entity));
+                if (current is null)
+                    return;
+                if (newvalue.HasValue && current?.IsInactive == newvalue.Value)
+                    SelectedFileSystem = null;
+                else
+                {
+                    Guid id = current.Model.Id;
+                    SelectedFileSystem = _backingFileSystemOptions.FirstOrDefault(v => v.Model.Id == id);
+                }
+            }), TaskContinuationOptions.OnlyOnRanToCompletion);
+        }
+
+        #endregion
+        #region SelectedFileSystem Property Members
+
+        /// <summary>
+        /// Identifies the <see cref="SelectedFileSystem"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty SelectedFileSystemProperty = DependencyProperty.Register(nameof(SelectedFileSystem), typeof(FileSystemItemVM), typeof(EditVolumeVM),
+                new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as EditVolumeVM)?.OnSelectedFileSystemPropertyChanged((FileSystemItemVM)e.OldValue, (FileSystemItemVM)e.NewValue)));
+
+        /// <summary>
+        /// Gets or sets .
+        /// </summary>
+        /// <value>The .</value>
+        public FileSystemItemVM SelectedFileSystem { get => (FileSystemItemVM)GetValue(SelectedFileSystemProperty); set => SetValue(SelectedFileSystemProperty, value); }
+
+        /// <summary>
+        /// Called when the value of the <see cref="SelectedFileSystem"/> dependency property has changed.
+        /// </summary>
+        /// <param name="oldValue">The previous value of the <see cref="SelectedFileSystem"/> property.</param>
+        /// <param name="newValue">The new value of the <see cref="SelectedFileSystem"/> property.</param>
+        private void OnSelectedFileSystemPropertyChanged(FileSystemItemVM oldValue, FileSystemItemVM newValue)
+        {
+            // TODO: Implement OnSelectedFileSystemPropertyChanged Logic
+        }
+
+        #endregion
+
         public EditVolumeVM()
         {
+            ThreeStateViewModel fileSystemDisplayOptions = new(true);
+            SetValue(FileSystemOptionsPropertyKey, new ReadOnlyObservableCollection<FileSystemItemVM>(_backingFileSystemOptions));
+            SetValue(PickFromActiveFileSystemsPropertyKey, fileSystemDisplayOptions);
             SetValue(VolumeIdentifierTypeOptionsPropertyKey, new ReadOnlyObservableCollection<VolumeIdType>(new(Enum.GetValues<VolumeIdType>())));
             SetValue(VolumeStatusOptionsPropertyKey, new ReadOnlyObservableCollection<VolumeStatus>(new(Enum.GetValues<VolumeStatus>())));
+            fileSystemDisplayOptions.ValuePropertyChanged += PickFromActiveFileSystems_ValuePropertyChanged;
         }
 
         protected override DbSet<Volume> GetDbSet([DisallowNull] LocalDbContext dbContext) => dbContext.Volumes;
@@ -364,9 +495,21 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         {
             if (newValue is null)
             {
-                // TODO: Initialize to default values
+                SetSelectedFileSystemAsync(null);
+                VolumeName = Notes = DisplayName = "";
+                SelectedVolumeIdType = VolumeIdType.VSN;
+                VolumeId = VolumeIdentifier.Empty;
+                MaxNameLengthValue = DbConstants.DbColDefaultValue_MaxNameLength;
+                ExplicitMaxNameLength =false;
+                newValue.Notes.EmptyIfNullOrWhiteSpace();
+                RwFileSystemDefault = true;
+                SelectedVolumeStatus = VolumeStatus.Unknown;
+                SelectedDriveType = DriveType.Unknown;
+                newValue.VolumeName.AsWsNormalizedOrEmpty();
+                RootDirectory = null;
                 return;
             }
+            SetSelectedFileSystemAsync(newValue.FileSystem);
             DisplayName = newValue.DisplayName.AsWsNormalizedOrEmpty();
             VolumeIdentifier vid = newValue.Identifier;
             if (vid.SerialNumber.HasValue)
@@ -400,10 +543,87 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             SelectedVolumeStatus = newValue.Status;
             SelectedDriveType = newValue.Type;
             VolumeName = newValue.VolumeName.AsWsNormalizedOrEmpty();
-            // TODO: Load related
-            //RootDirectory = model.RootDirectory;
-            //AccessErrors = model.AccessErrors;
-            //FileSystem = model.FileSystem;
+            RootDirectory = newValue.RootDirectory;
+        }
+
+        private void SetSelectedFileSystemAsync(FileSystem fileSystem)
+        {
+            Task<ICollection<FileSystem>> result;
+            if (fileSystem is null)
+            {
+                if (Dispatcher.CheckInvoke(() =>
+                {
+                    SelectedFileSystem = null;
+                    return _backingFileSystemOptions.Count > 0;
+                }))
+                    return;
+                result = BgOps.FromAsync("Loading data", "Getting file system options", Dispatcher.CheckInvoke(() => PickFromActiveFileSystems.Value), ReloadFileSystemsAsync);
+            }
+            else
+            {
+                Guid id = fileSystem.Id;
+                if (Dispatcher.CheckInvoke(() =>
+                {
+                    if (SelectedFileSystem?.Model?.Id == id)
+                        return true;
+                    FileSystemItemVM current = _backingFileSystemOptions.FirstOrDefault(o => o.Model?.Id == id);
+                    if (current is null)
+                        return false;
+                    SelectedFileSystem = current;
+                    return true;
+                }))
+                    return;
+
+                bool? displayOptions;
+                Interlocked.Increment(ref _ignoreFileSystemOptionsChange);
+                try
+                {
+                    displayOptions = Dispatcher.CheckInvoke(() =>
+                    {
+                        if (fileSystem.IsInactive)
+                        {
+                            if (PickFromActiveFileSystems.IsTrue)
+                                PickFromActiveFileSystems.IsNull = true;
+                        }
+                        else if (PickFromActiveFileSystems.IsFalse)
+                            PickFromActiveFileSystems.IsTrue = true;
+                        return PickFromActiveFileSystems.Value;
+                    });
+                }
+                finally { Interlocked.Decrement(ref _ignoreFileSystemOptionsChange); }
+                result = BgOps.FromAsync("Loading data", "Getting file system options", displayOptions, ReloadFileSystemsAsync);
+            }
+
+            result.ContinueWith(task => Dispatcher.Invoke(() =>
+            {
+                _backingFileSystemOptions.Clear();
+                foreach (FileSystem entity in task.Result)
+                    _backingFileSystemOptions.Add(new(entity));
+                if (fileSystem is null)
+                    return null;
+                Guid id = fileSystem.Id;
+                FileSystemItemVM vm = _backingFileSystemOptions.FirstOrDefault(v => v.Model.Id == id);
+                if (vm is null)
+                {
+                    vm = new(fileSystem);
+                    _backingFileSystemOptions.Add(vm);
+                }
+                SelectedFileSystem = vm;
+                return vm;
+            }), TaskContinuationOptions.OnlyOnRanToCompletion);
+        }
+
+        private static async Task<ICollection<FileSystem>> ReloadFileSystemsAsync(bool? selectActive, IWindowsStatusListener statusListener)
+        {
+            using IServiceScope scope = Services.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = scope.ServiceProvider.GetRequiredService<LocalDbContext>();
+            if (selectActive.HasValue)
+            {
+                if (selectActive.Value)
+                    return await (from f in dbContext.FileSystems where f.IsInactive == false select f).ToArrayAsync(statusListener.CancellationToken);
+                return await (from f in dbContext.FileSystems where f.IsInactive == true select f).ToArrayAsync(statusListener.CancellationToken);
+            }
+            return await dbContext.FileSystems.ToArrayAsync(statusListener.CancellationToken);
         }
 
         protected override bool OnBeforeSave()
@@ -420,11 +640,15 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             model.Status = SelectedVolumeStatus;
             model.Type = SelectedDriveType;
             model.VolumeName = VolumeName.AsWsNormalizedOrEmpty();
-            // TODO: Apply related
-            //model.RootDirectory = RootDirectory;
-            //model.AccessErrors = AccessErrors;
-            //model.FileSystem = FileSystem;
-            throw new NotImplementedException();
+            model.FileSystem = SelectedFileSystem?.Model;
+            return true;
+        }
+
+        ISimpleIdentityReference<Subdirectory> IHasSubdirectoryEntity.GetSubdirectoryEntity() => Dispatcher.CheckInvoke(() => RootDirectory);
+
+        public async Task<ISimpleIdentityReference<Subdirectory>> GetSubdirectoryEntityAsync([DisallowNull] IWindowsStatusListener statusListener)
+        {
+            return await Dispatcher.InvokeAsync(() => RootDirectory);
         }
     }
 }

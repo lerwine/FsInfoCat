@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat.Local
 {
-    public class FileSystem : LocalDbEntity, ILocalFileSystem
+    public class FileSystem : LocalDbEntity, ILocalFileSystem, ISimpleIdentityReference<FileSystem>
     {
         #region Fields
 
@@ -87,6 +87,10 @@ namespace FsInfoCat.Local
         IEnumerable<IVolume> IFileSystem.Volumes => _volumes.Cast<IVolume>();
 
         IEnumerable<ISymbolicName> IFileSystem.SymbolicNames => _volumes.Cast<ISymbolicName>();
+
+        FileSystem IIdentityReference<FileSystem>.Entity => this;
+
+        IDbEntity IIdentityReference.Entity => this;
 
         #endregion
 
@@ -203,6 +207,11 @@ namespace FsInfoCat.Local
                 FileSystem = fileSystem,
                 Priority = 0
             });
+        }
+
+        IEnumerable<Guid> IIdentityReference.GetIdentifiers()
+        {
+            yield return Id;
         }
     }
 }

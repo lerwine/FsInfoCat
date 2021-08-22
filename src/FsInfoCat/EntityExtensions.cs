@@ -13,6 +13,9 @@ namespace FsInfoCat
 {
     public static class EntityExtensions
     {
+        public static ISimpleIdentityReference<TEntity> ToIdentityReference<TEntity>(this Guid? id) where TEntity : class, IDbEntity =>
+            id.HasValue ? IdentityReference<TEntity>.FromId(id.Value) : null;
+
         public static async Task<IEnumerable<TProperty>> GetRelatedCollectionAsync<TEntity, TProperty>([DisallowNull] this EntityEntry<TEntity> entry,
             [DisallowNull] Expression<Func<TEntity, IEnumerable<TProperty>>> propertyExpression, CancellationToken cancellationToken)
             where TEntity : class

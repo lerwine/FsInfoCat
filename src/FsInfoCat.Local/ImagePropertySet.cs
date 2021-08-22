@@ -16,7 +16,7 @@ namespace FsInfoCat.Local
     /// </summary>
     /// <seealso cref="LocalDbEntity" />
     /// <seealso cref="ILocalImagePropertySet" />
-    public class ImagePropertySet : LocalDbEntity, ILocalImagePropertySet
+    public class ImagePropertySet : LocalDbEntity, ILocalImagePropertySet, ISimpleIdentityReference<ImagePropertySet>
     {
         #region Fields
 
@@ -65,6 +65,10 @@ namespace FsInfoCat.Local
         IEnumerable<ILocalFile> ILocalPropertySet.Files => Files.Cast<ILocalFile>();
 
         IEnumerable<IFile> IPropertySet.Files => Files.Cast<IFile>();
+
+        ImagePropertySet IIdentityReference<ImagePropertySet>.Entity => this;
+
+        IDbEntity IIdentityReference.Entity => this;
 
         #endregion
 
@@ -124,6 +128,11 @@ namespace FsInfoCat.Local
                     cancellationToken.ThrowIfCancellationRequested();
                     break;
             }
+        }
+
+        IEnumerable<Guid> IIdentityReference.GetIdentifiers()
+        {
+            yield return Id;
         }
     }
 }

@@ -7,13 +7,8 @@ namespace FsInfoCat
 
     /// <summary>Interface for entities which represent a specific file system type.</summary>
     /// <seealso cref="IDbEntity" />
-    public interface IFileSystem : IFileSystemProperties, IDbEntity
+    public interface IFileSystem : IFileSystemProperties, IDbEntity, IHasSimpleIdentifier
     {
-        /// <summary>Gets the primary key value.</summary>
-        /// <value>The <see cref="Guid">unique identifier</see> used as the current entity's primary key the database.</value>
-        [Display(Name = nameof(Properties.Resources.DisplayName_Id), ResourceType = typeof(Properties.Resources))]
-        Guid Id { get; }
-
         /// <summary>Gets the custom notes for this file system type.</summary>
         /// <value>The custom notes to associate with this file system type.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_Notes), ResourceType = typeof(Properties.Resources))]

@@ -7,13 +7,8 @@ namespace FsInfoCat
     /// <summary>Specifies the configuration of a file system crawl.</summary>
     /// <seealso cref="IDbEntity" />
     /// <seealso cref="ICrawlSettings" />
-    public interface ICrawlConfiguration : IDbEntity, ICrawlSettings
+    public interface ICrawlConfiguration : IDbEntity, ICrawlSettings, IHasSimpleIdentifier
     {
-        /// <summary>Gets the primary key value.</summary>
-        /// <value>The <see cref="Guid">unique identifier</see> used as the current entity's primary key the database.</value>
-        [Display(Name = nameof(Properties.Resources.DisplayName_Id), ResourceType = typeof(Properties.Resources))]
-        Guid Id { get; }
-
         /// <summary>Gets the display name.</summary>
         /// <value>The display name for the current crawl configuration.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_DisplayName), ResourceType = typeof(Properties.Resources))]

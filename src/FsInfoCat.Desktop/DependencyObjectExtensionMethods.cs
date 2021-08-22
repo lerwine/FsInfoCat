@@ -8,7 +8,7 @@ using System.Windows.Threading;
 
 namespace FsInfoCat.Desktop
 {
-    public static class FsInfoCatWpfExtensionMethods
+    public static class DependencyObjectExtensionMethods
     {
         public static void CheckInvoke<TArg1, TArg2, TArg3>(this Dispatcher dispatcher, TArg1 arg1, TArg2 arg2, TArg3 arg3, Action<TArg1, TArg2, TArg3> callback, DispatcherPriority priority = DispatcherPriority.Background)
         {

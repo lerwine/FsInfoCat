@@ -2,11 +2,12 @@ using FsInfoCat.Local;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel.Local
 {
-    public class VolumeItemVM : DbEntityItemVM<Volume>
+    public class VolumeItemVM : DbEntityItemVM<Volume>, IHasSubdirectoryEntity
     {
         #region DisplayName Property Members
 
@@ -228,6 +229,13 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             }
         }
 
+        ISimpleIdentityReference<Subdirectory> IHasSubdirectoryEntity.GetSubdirectoryEntity() => CheckAccess() ? Model?.RootDirectory : Dispatcher.Invoke(() => Model?.RootDirectory);
+
         protected override DbSet<Volume> GetDbSet(LocalDbContext dbContext) => dbContext.Volumes;
+
+        public async Task<ISimpleIdentityReference<Subdirectory>> GetSubdirectoryEntityAsync([DisallowNull] IWindowsStatusListener statusListener)
+        {
+            return (await Dispatcher.InvokeAsync(() => Model))?.RootDirectory;
+        }
     }
 }

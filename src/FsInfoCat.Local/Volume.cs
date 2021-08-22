@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat.Local
 {
-    public class Volume : LocalDbEntity, ILocalVolume
+    public class Volume : LocalDbEntity, ILocalVolume, ISimpleIdentityReference<Volume>
     {
         #region Fields
 
@@ -161,6 +161,10 @@ namespace FsInfoCat.Local
         IEnumerable<ILocalSharedVolumeTag> ILocalVolume.SharedTags => SharedTags.Cast<ILocalSharedVolumeTag>();
 
         IEnumerable<ISharedVolumeTag> IVolume.SharedTags => SharedTags.Cast<ISharedVolumeTag>();
+
+        Volume IIdentityReference<Volume>.Entity => this;
+
+        IDbEntity IIdentityReference.Entity => this;
 
         #endregion
 
@@ -332,6 +336,11 @@ namespace FsInfoCat.Local
             else
                 result.ModifiedOn = result.CreatedOn = DateTime.Now;
             return dbContext.Volumes.Add(result);
+        }
+
+        IEnumerable<Guid> IIdentityReference.GetIdentifiers()
+        {
+            yield return Id;
         }
     }
 }

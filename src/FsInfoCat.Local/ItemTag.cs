@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.Local
@@ -45,6 +46,17 @@ namespace FsInfoCat.Local
         ILocalDbEntity ILocalItemTag.Tagged => GetTagged();
 
         ILocalTagDefinition ILocalItemTag.Definition => GetDefinition();
+
+        IEnumerable<Guid> IHasCompoundIdentifier.Id
+        {
+            get
+            {
+                yield return DefinitionId;
+                yield return TaggedId;
+            }
+        }
+
+        (Guid , Guid) IHasIdentifierPair.Id => (DefinitionId, TaggedId);
 
         protected abstract void OnTaggedIdChanged(Guid value);
 

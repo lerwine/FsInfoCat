@@ -1,17 +1,12 @@
-﻿using System;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat
 {
     /// <summary>Interface for entities that represent a symbolic name for a file system type.</summary>
     /// <seealso cref="IDbEntity" />
-    public interface ISymbolicName : IDbEntity
+    public interface ISymbolicName : IDbEntity, IHasSimpleIdentifier
     {
-        /// <summary>Gets the primary key value.</summary>
-        /// <value>The <see cref="Guid">unique identifier</see> used as the current entity's primary key the database.</value>
-        [Display(Name = nameof(Properties.Resources.DisplayName_Id), ResourceType = typeof(Properties.Resources))]
-        Guid Id { get; }
-
         /// <summary>Gets the symbolic name.</summary>
         /// <value>The symbolic name which refers to a file system type..</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_Name), ResourceType = typeof(Properties.Resources))]
