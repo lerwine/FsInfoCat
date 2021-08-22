@@ -5,9 +5,7 @@ using System.IO;
 
 namespace FsInfoCat
 {
-    /// <summary>Interface for entities which represent a logical file system volume.</summary>
-    /// <seealso cref="IDbEntity" />
-    public interface IVolume : IDbEntity, IHasSimpleIdentifier
+    public interface IVolumeRow : IDbEntity, IHasSimpleIdentifier
     {
         /// <summary>Gets the display name of the volume.</summary>
         /// <value>The display name of the volume.</value>
@@ -49,15 +47,22 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_Status), ResourceType = typeof(Properties.Resources))]
         VolumeStatus Status { get; }
 
-        /// <summary>Gets the root directory of this volume.</summary>
-        /// <value>The root directory of this volume.</value>
-        [Display(Name = nameof(Properties.Resources.DisplayName_RootDirectory), ResourceType = typeof(Properties.Resources))]
-        ISubdirectory RootDirectory { get; }
+        Guid FileSystemId { get; }
+    }
 
+    /// <summary>Interface for entities which represent a logical file system volume.</summary>
+    /// <seealso cref="IDbEntity" />
+    public interface IVolume : IVolumeRow
+    {
         /// <summary>Gets the file system type.</summary>
         /// <value>The file system type for this volume.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_FileSystem), ResourceType = typeof(Properties.Resources))]
         IFileSystem FileSystem { get; }
+
+        /// <summary>Gets the root directory of this volume.</summary>
+        /// <value>The root directory of this volume.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_RootDirectory), ResourceType = typeof(Properties.Resources))]
+        ISubdirectory RootDirectory { get; }
 
         /// <summary>Gets the access errors for the current file system item.</summary>
         /// <value>The access errors for the current file system item.</value>
@@ -69,5 +74,24 @@ namespace FsInfoCat
         IEnumerable<ISharedVolumeTag> SharedTags { get; }
     }
 
+    public interface IVolumeListItem : IVolumeRow
+    {
+        string RootPath { get; }
+
+        int AccessErrorCount { get; }
+
+        int SharedTagCount { get; }
+
+        int PersonalTagCount { get; }
+    }
+
+    public interface IVolumeListItemWithFileSystem : IVolumeListItem
+    {
+        string FileSystemDisplayName { get; }
+
+        bool EffectiveReadOnly { get; }
+
+        bool EffectiveMaxNameLength { get; }
+    }
 }
 

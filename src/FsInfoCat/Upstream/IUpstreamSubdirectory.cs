@@ -3,6 +3,12 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.Upstream
 {
+    public interface IUpstreamSubdirectoryRow : IUpstreamDbFsItemRow, ISubdirectoryRow { }
+
+    public interface IUpstreamSubdirectoryListItem : ISubdirectoryListItem, IUpstreamSubdirectoryRow { }
+
+    public interface IUpstreamSubdirectoryListItemWithAncestorNames : ISubdirectoryListItemWithAncestorNames, IUpstreamSubdirectoryRow { }
+
     /// <summary>Interface for entities that represent a subdirectory node within a file system.</summary>
     /// <seealso cref="IUpstreamDbFsItem" />
     /// <seealso cref="ISubdirectory" />

@@ -6,7 +6,7 @@ namespace FsInfoCat
 {
     /// <summary>Represents a structural instance of file.</summary>
     /// <seealso cref="IDbFsItem" />
-    public interface IFile : IDbFsItem
+    public interface IFileRow : IDbFsItemRow
     {
         /// <summary>Gets the visibility and crawl options for the current file.</summary>
         /// <value>A <see cref="FileCrawlOptions" /> value that contains the crawl options for the current file.</value>
@@ -23,6 +23,58 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_LastHashCalculation), ResourceType = typeof(Properties.Resources))]
         DateTime? LastHashCalculation { get; }
 
+        Guid BinaryPropertySetId { get; }
+
+        Guid? SummaryPropertySetId { get; }
+
+        Guid? DocumentPropertySetId { get; }
+
+        Guid? AudioPropertySetId { get; }
+
+        Guid? DRMPropertySetId { get; }
+
+        Guid? GPSPropertySetId { get; }
+
+        Guid? ImagePropertySetId { get; }
+
+        Guid? MediaPropertySetId { get; }
+
+        Guid? MusicPropertySetId { get; }
+
+        Guid? PhotoPropertySetId { get; }
+
+        Guid? RecordedTVPropertySetId { get; }
+
+        Guid? VideoPropertySetId { get; }
+    }
+    public interface IFileAncestorName : IDbFsItemAncestorName
+    {
+        Guid ParentId { get; }
+    }
+    public interface IFileListItemWithAncestorNames : IDbFsItemListItem, IFileRow, IFileAncestorName { }
+
+    public interface IFileListItemWithBinaryProperties : IDbFsItemListItem, IFileRow
+    {
+        long Length { get; }
+
+        MD5Hash? Hash { get; }
+
+        int RedundancyCount { get; }
+
+        int ComparisonCount { get; }
+    }
+
+    public interface IFileListItemWithBinaryPropertiesAndAncestorNames : IFileListItemWithAncestorNames
+    {
+        long Length { get; }
+
+        MD5Hash? Hash { get; }
+    }
+
+    /// <summary>Represents a structural instance of file.</summary>
+    /// <seealso cref="IDbFsItem" />
+    public interface IFile : IDbFsItem, IFileRow
+    {
         /// <summary>Gets the binary properties for the current file.</summary>
         /// <value>The generic <see cref="IBinaryPropertySet" /> that contains the file size and optionally, the <see cref="MD5Hash">MD5 hash</see> value of its binary contents.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_BinaryProperties), ResourceType = typeof(Properties.Resources))]

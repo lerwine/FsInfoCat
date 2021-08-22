@@ -3,10 +3,16 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.Local
 {
+    public interface ILocalSubdirectoryRow : ILocalDbFsItemRow, ISubdirectoryRow { }
+
+    public interface ILocalSubdirectoryListItem : ISubdirectoryListItem, ILocalSubdirectoryRow { }
+
+    public interface ILocalSubdirectoryListItemWithAncestorNames : ISubdirectoryListItemWithAncestorNames, ILocalSubdirectoryRow { }
+
     /// <summary>Interface for entities that represent a subdirectory node within a file system on the local host machine.</summary>
     /// <seealso cref="ILocalDbFsItem" />
     /// <seealso cref="ISubdirectory" />
-    public interface ILocalSubdirectory : ILocalDbFsItem, ISubdirectory
+    public interface ILocalSubdirectory : ILocalDbFsItem, ISubdirectory, ILocalSubdirectoryRow
     {
         /// <summary>Gets the parent volume.</summary>
         /// <value>The parent volume (if this is the root subdirectory or <see langword="null" /> if this is a subdirectory.</value>

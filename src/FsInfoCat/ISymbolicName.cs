@@ -3,9 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat
 {
-    /// <summary>Interface for entities that represent a symbolic name for a file system type.</summary>
-    /// <seealso cref="IDbEntity" />
-    public interface ISymbolicName : IDbEntity, IHasSimpleIdentifier
+    public interface ISymbolicNameRow : IDbEntity, IHasSimpleIdentifier
     {
         /// <summary>Gets the symbolic name.</summary>
         /// <value>The symbolic name which refers to a file system type..</value>
@@ -27,6 +25,16 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_IsInactive), ResourceType = typeof(Properties.Resources))]
         bool IsInactive { get; }
 
+        Guid FileSystemId { get; }
+    }
+    public interface ISymbolicNameListItem : ISymbolicNameRow
+    {
+        string FileSystemDisplayName { get; }
+    }
+    /// <summary>Interface for entities that represent a symbolic name for a file system type.</summary>
+    /// <seealso cref="IDbEntity" />
+    public interface ISymbolicName : ISymbolicNameRow
+    {
         /// <summary>Gets the file system that this symbolic name refers to.</summary>
         /// <value>The file system entity that represents the file system type that this symbolic name refers to.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_FileSystem), ResourceType = typeof(Properties.Resources))]

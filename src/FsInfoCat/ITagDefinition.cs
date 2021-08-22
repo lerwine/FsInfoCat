@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat
 {
-    public interface ITagDefinition : IDbEntity, IHasSimpleIdentifier
+    public interface ITagDefinitionRow : IDbEntity, IHasSimpleIdentifier
     {
         /// <summary>Gets the name of item tag.</summary>
         /// <value>The name of the current file system item.</value>
@@ -21,10 +21,21 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_Description), ResourceType = typeof(Properties.Resources))]
         bool IsInactive { get; }
 
+    }
+    public interface ITagDefinition : ITagDefinitionRow
+    {
         IEnumerable<IFileTag> FileTags { get; }
 
         IEnumerable<ISubdirectoryTag> SubdirectoryTags { get; }
 
         IEnumerable<IVolumeTag> VolumeTags { get; }
+    }
+    public interface ITagDefinitionListItem : ITagDefinitionRow
+    {
+        int FileTagCount { get; }
+
+        int SubdirectoryTagCount { get; }
+
+        int VolumeTagCount { get; }
     }
 }

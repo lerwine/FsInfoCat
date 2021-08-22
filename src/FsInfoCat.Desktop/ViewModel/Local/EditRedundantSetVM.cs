@@ -115,7 +115,8 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         {
             BinaryProperties = newValue.BinaryProperties;
             Notes = newValue.Notes;
-            Redundancies = new ReadOnlyCollection<Redundancy>(new Collection<Redundancy>(newValue.Redundancies));
+            // TODO: Initialize Redundancies
+            //Redundancies = new ReadOnlyCollection<Redundancy>(new Collection<Redundancy>(newValue.Redundancies));
             Reference = newValue.Reference;
         }
     }

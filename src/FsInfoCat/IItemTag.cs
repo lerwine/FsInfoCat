@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat
 {
-    public interface IItemTag : IDbEntity, IHasIdentifierPair
+    public interface IItemTagRow : IDbEntity, IHasIdentifierPair
     {
         /// <summary>Gets the primary key value that references the <see cref="Tagged"/> entity.</summary>
         /// <value>The <see cref="Guid">unique identifier</see> used as part of the current entity's primary key the database.</value>
@@ -17,9 +17,15 @@ namespace FsInfoCat
         /// <value>The custom notes to associate with the current file system item.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_Notes), ResourceType = typeof(Properties.Resources))]
         string Notes { get; }
-
+    }
+    public interface IItemTag : IItemTagRow
+    {
         IDbEntity Tagged { get; }
 
         ITagDefinition Definition { get; }
+    }
+    public interface IItemTagListItem : IItemTagRow
+    {
+        string Name { get;  }
     }
 }

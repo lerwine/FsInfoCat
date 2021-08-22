@@ -1,8 +1,12 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
 namespace FsInfoCat.Local
 {
-    public interface ILocalTagDefinition : ILocalDbEntity, ITagDefinition
+    public interface ILocalTagDefinitionRow : ILocalDbEntity, ITagDefinitionRow { }
+
+    public interface ILocalTagDefinitionListItem : ITagDefinitionListItem, ILocalTagDefinitionRow { }
+
+    public interface ILocalTagDefinition : ILocalTagDefinitionRow, ITagDefinition
     {
         new IEnumerable<ILocalFileTag> FileTags { get; }
 

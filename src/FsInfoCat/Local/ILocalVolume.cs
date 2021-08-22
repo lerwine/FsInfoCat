@@ -3,10 +3,16 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.Local
 {
+    public interface ILocalVolumeRow : ILocalDbEntity, IVolumeRow { }
+
+    public interface ILocalVolumeListItem : ILocalVolumeRow, IVolumeListItem { }
+
+    public interface ILocalVolumeListItemWithFileSystem : ILocalVolumeListItem, IVolumeListItemWithFileSystem { }
+
     /// <summary>Interface for entities which represent a logical file system volume on the local host machine.</summary>
     /// <seealso cref="ILocalDbEntity" />
     /// <seealso cref="IVolume" />
-    public interface ILocalVolume : ILocalDbEntity, IVolume
+    public interface ILocalVolume : ILocalVolumeRow, IVolume
     {
         /// <summary>Gets the root directory of this volume.</summary>
         /// <value>The root directory of this volume.</value>

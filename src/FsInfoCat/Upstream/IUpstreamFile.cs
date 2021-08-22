@@ -3,6 +3,14 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.Upstream
 {
+    public interface IUpstreamFileRow : IUpstreamDbFsItemRow, IFileRow { }
+
+    public interface IUpstreamFileListItemWithAncestorNames : IUpstreamDbFsItemListItem, IFileListItemWithAncestorNames, IUpstreamFileRow { }
+
+    public interface IUpstreamFileListItemWithBinaryProperties : IUpstreamDbFsItemListItem, IFileListItemWithBinaryProperties, IUpstreamFileRow { }
+
+    public interface IUpstreamFileListItemWithBinaryPropertiesAndAncestorNames : IFileListItemWithBinaryPropertiesAndAncestorNames, IUpstreamFileListItemWithAncestorNames { }
+
     /// <summary>Represents a structural instance of file.</summary>
     /// <seealso cref="IUpstreamDbFsItem" />
     /// <seealso cref="IFile" />

@@ -1,6 +1,10 @@
-﻿namespace FsInfoCat.Upstream
+namespace FsInfoCat.Upstream
 {
-    public interface IUpstreamItemTag : IUpstreamDbEntity, IItemTag
+    public interface IUpstreamItemTagRow : IUpstreamDbEntity, IItemTagRow { }
+
+    public interface IUpstreamItemTagListItem : IItemTagListItem, IUpstreamItemTagRow { }
+
+    public interface IUpstreamItemTag : IUpstreamItemTagRow, IItemTag
     {
         new IUpstreamDbEntity Tagged { get; }
 

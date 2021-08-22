@@ -177,9 +177,10 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 
         #endregion
 
-        internal VolumeItemVM([DisallowNull] Volume model)
+        internal VolumeItemVM([DisallowNull] Volume model, AsyncOps.AsyncBgModalVM bgOpMgr = null)
             : base(model)
         {
+            // TODO: Use bgOpMgr to initialize or remove it
             DisplayName = model.DisplayName;
             FileSystem = model.FileSystem;
             Identifier = model.Identifier;

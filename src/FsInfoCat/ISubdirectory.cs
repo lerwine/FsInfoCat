@@ -1,11 +1,10 @@
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat
 {
-    /// <summary>Interface for entities that represent a subdirectory node within a file system.</summary>
-    /// <seealso cref="IDbFsItem" />
-    public interface ISubdirectory : IDbFsItem
+    public interface ISubdirectoryRow : IDbFsItemRow
     {
         /// <summary>Gets the crawl options for the current subdirectory.</summary>
         /// <value>The crawl options for the current subdirectory.</value>
@@ -17,6 +16,25 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_Status), ResourceType = typeof(Properties.Resources))]
         DirectoryStatus Status { get; }
 
+        Guid? ParentId { get; }
+
+        Guid? VolumeId { get; }
+    }
+    public interface ISubdirectoryAncestorName : IDbFsItemAncestorName
+    {
+        Guid? ParentId { get; }
+    }
+    public interface ISubdirectoryListItem : IDbFsItemListItem, ISubdirectoryRow
+    {
+        int SubdirectoryCount { get; }
+
+        int FileCount { get; }
+    }
+    public interface ISubdirectoryListItemWithAncestorNames : IDbFsItemListItemWithAncestorNames, ISubdirectoryRow, ISubdirectoryAncestorName { }
+    /// <summary>Interface for entities that represent a subdirectory node within a file system.</summary>
+    /// <seealso cref="IDbFsItem" />
+    public interface ISubdirectory : ISubdirectoryRow, IDbFsItem
+    {
         /// <summary>Gets the parent subdirectory of the current file system item.</summary>
         /// <value>The parent <see cref="ISubdirectory" /> of the current file system item or <see langword="null" /> if this is the root subdirectory.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_Parent), ResourceType = typeof(Properties.Resources))]

@@ -3,10 +3,18 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.Local
 {
+    public interface ILocalFileRow : ILocalDbFsItemRow, IFileRow { }
+
+    public interface ILocalFileListItemWithAncestorNames : ILocalDbFsItemListItem, IFileListItemWithAncestorNames, ILocalFileRow { }
+
+    public interface ILocalFileListItemWithBinaryProperties : ILocalDbFsItemListItem, IFileListItemWithBinaryProperties, ILocalFileRow { }
+
+    public interface ILocalFileListItemWithBinaryPropertiesAndAncestorNames : IFileListItemWithBinaryPropertiesAndAncestorNames, ILocalFileListItemWithAncestorNames { }
+
     /// <summary>Represents a structural instance of file on a local host file system.</summary>
     /// <seealso cref="ILocalDbFsItem" />
     /// <seealso cref="IFile" />
-    public interface ILocalFile : ILocalDbFsItem, IFile
+    public interface ILocalFile : ILocalDbFsItem, IFile, ILocalFileRow
     {
         /// <summary>Gets the binary properties for the current file.</summary>
         /// <value>The generic <see cref="ILocalBinaryPropertySet" /> that contains the file size and optionally, the <see cref="MD5Hash">MD5 hash</see> value of its binary contents.</value>

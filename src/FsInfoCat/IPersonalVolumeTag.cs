@@ -1,4 +1,4 @@
-﻿namespace FsInfoCat
+namespace FsInfoCat
 {
     public interface IPersonalVolumeTag : IPersonalTag, IVolumeTag { }
 }

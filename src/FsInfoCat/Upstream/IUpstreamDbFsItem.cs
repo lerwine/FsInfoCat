@@ -3,10 +3,16 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.Upstream
 {
+    public interface IUpstreamDbFsItemRow : IUpstreamDbEntity, IDbFsItemRow { }
+
+    public interface IUpstreamDbFsItemListItem : IDbFsItemListItem, IUpstreamDbFsItemRow { }
+
+    public interface IUpstreamDbFsItemListItemWithAncestorNames : IDbFsItemListItemWithAncestorNames, IUpstreamDbFsItemListItem { }
+
     /// <summary>Base interface for a database entity that represents a file system node.</summary>
     /// <seealso cref="IUpstreamDbEntity" />
     /// <seealso cref="IDbFsItem" />
-    public interface IUpstreamDbFsItem : IUpstreamDbEntity, IDbFsItem
+    public interface IUpstreamDbFsItem : IUpstreamDbFsItemRow, IDbFsItem
     {
         /// <summary>Gets the parent subdirectory.</summary>
         /// <value>The parent <see cref="IUpstreamSubdirectory" /> or <see langword="null" /> if this is the root <see cref="IUpstreamSubdirectory" />.</value>

@@ -1,8 +1,12 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.Upstream
 {
+    public interface IUpstreamFileSystemRow : IUpstreamDbEntity, IFileSystemRow { }
+
+    public interface IUpstreamFileSystemListItem : IUpstreamFileSystemRow, IFileSystemListItem { }
+
     /// <summary>Interface for entities which represent a specific file system type.</summary>
     /// <seealso cref="IUpstreamDbEntity" />
     /// <seealso cref="IFileSystem" />

@@ -1,8 +1,12 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
 namespace FsInfoCat.Upstream
 {
-    public interface IUpstreamTagDefinition : IUpstreamDbEntity, ITagDefinition
+    public interface IUpstreamTagDefinitionRow : IUpstreamDbEntity, ITagDefinitionRow { }
+
+    public interface IUpstreamTagDefinitionListItem : ITagDefinitionListItem, IUpstreamTagDefinitionRow { }
+
+    public interface IUpstreamTagDefinition : IUpstreamTagDefinitionRow, ITagDefinition
     {
         new IEnumerable<IUpstreamFileTag> FileTags { get; }
 
