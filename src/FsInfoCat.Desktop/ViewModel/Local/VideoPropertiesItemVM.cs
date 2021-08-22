@@ -18,7 +18,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 
         protected override DbSet<VideoPropertySet> GetDbSet(LocalDbContext dbContext) => dbContext.VideoPropertySets;
 
-        protected override void OnModelPropertyChanged(string propertyName)
+        protected override void OnNestedModelPropertyChanged(string propertyName)
         {
             throw new NotImplementedException();
         }

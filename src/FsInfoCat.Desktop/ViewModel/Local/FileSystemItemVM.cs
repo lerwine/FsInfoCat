@@ -270,7 +270,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         /// Called when the value of the <see cref="Notes"/> dependency property changes.
         /// </summary>
         /// <param name="propertyName">The previous value of the <see cref="Notes"/>.</param>
-        protected override void OnModelPropertyChanged(string propertyName)
+        protected override void OnNestedModelPropertyChanged(string propertyName)
         {
             switch (propertyName)
             {

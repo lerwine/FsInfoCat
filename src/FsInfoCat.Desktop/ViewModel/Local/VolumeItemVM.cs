@@ -111,7 +111,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         #endregion
         #region RootDirectory Property Members
 
-        private static readonly DependencyPropertyKey RootDirectoryPropertyKey = DependencyProperty.RegisterReadOnly(nameof(RootDirectory), typeof(Subdirectory), typeof(VolumeItemVM),
+        private static readonly DependencyPropertyKey RootDirectoryPropertyKey = DependencyProperty.RegisterReadOnly(nameof(RootDirectory), typeof(SubdirectoryItemVM), typeof(VolumeItemVM),
                 new PropertyMetadata(null));
 
         /// <summary>
@@ -123,7 +123,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         /// Gets .
         /// </summary>
         /// <value>The .</value>
-        public Subdirectory RootDirectory { get => (Subdirectory)GetValue(RootDirectoryProperty); private set => SetValue(RootDirectoryPropertyKey, value); }
+        public SubdirectoryItemVM RootDirectory { get => (SubdirectoryItemVM)GetValue(RootDirectoryProperty); private set => SetValue(RootDirectoryPropertyKey, value); }
 
         #endregion
         #region Status Property Members
@@ -186,13 +186,13 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             MaxNameLength = model.MaxNameLength;
             Notes = model.Notes;
             IsReadOnly = model.ReadOnly;
-            RootDirectory = model.RootDirectory;
+            RootDirectory = model.RootDirectory.ToItemViewModel();
             Status = model.Status;
             Type = model.Type;
             VolumeName = model.VolumeName;
         }
 
-        protected override void OnModelPropertyChanged(string propertyName)
+        protected override void OnNestedModelPropertyChanged(string propertyName)
         {
             switch (propertyName)
             {
@@ -215,7 +215,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
                     Dispatcher.CheckInvoke(() => IsReadOnly = Model?.ReadOnly);
                     break;
                 case nameof(Volume.RootDirectory):
-                    Dispatcher.CheckInvoke(() => RootDirectory = Model?.RootDirectory);
+                    Dispatcher.CheckInvoke(() => RootDirectory = Model?.RootDirectory?.ToItemViewModel());
                     break;
                 case nameof(Volume.Status):
                     Dispatcher.CheckInvoke(() => Status = Model?.Status ?? VolumeStatus.Unknown);

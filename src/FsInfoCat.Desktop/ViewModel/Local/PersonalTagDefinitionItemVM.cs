@@ -328,18 +328,18 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 
         protected override DbSet<PersonalTagDefinition> GetDbSet(LocalDbContext dbContext) => dbContext.PersonalTagDefinitions;
 
-        protected override void OnModelPropertyChanged(string propertyName)
+        protected override void OnNestedModelPropertyChanged(string propertyName)
         {
             switch (propertyName)
             {
                 case nameof(PersonalTagDefinition.Description):
-                    Description = Model?.Description;
+                    Dispatcher.CheckInvoke(() => Description = Model?.Description ?? "");
                     break;
                 case nameof(PersonalTagDefinition.IsInactive):
-                    IsInactive = Model?.IsInactive ?? false;
+                    Dispatcher.CheckInvoke(() => IsInactive = Model?.IsInactive ?? false);
                     break;
                 case nameof(PersonalTagDefinition.Name):
-                    Name = Model?.Name;
+                    Dispatcher.CheckInvoke(() => Name = Model?.Name ?? "");
                     break;
             }
         }

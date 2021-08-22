@@ -1,4 +1,4 @@
-﻿using FsInfoCat.Local;
+using FsInfoCat.Local;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.ObjectModel;
@@ -506,76 +506,76 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         }
 
         protected override DbSet<DbFile> GetDbSet(LocalDbContext dbContext) => dbContext.Files;
-
-        protected override void OnModelPropertyChanged(string propertyName)
+        
+        protected override void OnNestedModelPropertyChanged(string propertyName)
         {
             switch(propertyName)
             {
                 case nameof(IFile.BinaryProperties):
-                    BinaryProperties = Model.BinaryProperties.ToItemViewModel();
+                    Dispatcher.CheckInvoke(() => BinaryProperties = Model.BinaryProperties.ToItemViewModel());
                     break;
                 case nameof(IFile.LastAccessed):
-                    LastAccessed = Model.LastAccessed;
+                    Dispatcher.CheckInvoke(() => LastAccessed = Model.LastAccessed);
                     break;
                 case nameof(IFile.LastHashCalculation):
-                    LastHashCalculation = Model.LastHashCalculation;
+                    Dispatcher.CheckInvoke(() => LastHashCalculation = Model.LastHashCalculation);
                     break;
                 case nameof(IFile.LastWriteTime):
-                    LastWriteTime = Model.LastWriteTime;
+                    Dispatcher.CheckInvoke(() => LastWriteTime = Model.LastWriteTime);
                     break;
                 case nameof(IFile.Name):
-                    Name = Model.Name;
+                    Dispatcher.CheckInvoke(() => Name = Model.Name);
                     break;
                 case nameof(IFile.Notes):
-                    Notes = Model.Notes;
+                    Dispatcher.CheckInvoke(() => Notes = Model.Notes);
                     break;
                 case nameof(IFile.CreationTime):
-                    CreationTime = Model.CreationTime;
+                    Dispatcher.CheckInvoke(() => CreationTime = Model.CreationTime);
                     break;
                 case nameof(IFile.Options):
-                    Options = Model.Options;
+                    Dispatcher.CheckInvoke(() => Options = Model.Options);
                     break;
                 case nameof(IFile.Parent):
-                    Parent = Model.Parent.ToItemViewModel();
+                    Dispatcher.CheckInvoke(() => Parent = Model.Parent.ToItemViewModel());
                     break;
                 case nameof(IFile.Redundancy):
-                    Redundancy = Model.Redundancy.ToItemViewModel();
+                    Dispatcher.CheckInvoke(() => Redundancy = Model.Redundancy.ToItemViewModel());
                     break;
                 case nameof(IFile.Status):
-                    Status = Model.Status;
+                    Dispatcher.CheckInvoke(() => Status = Model.Status);
                     break;
                 case nameof(IFile.AudioProperties):
-                    AudioProperties = Model.AudioProperties.ToItemViewModel();
+                    Dispatcher.CheckInvoke(() => AudioProperties = Model.AudioProperties.ToItemViewModel());
                     break;
                 case nameof(IFile.DocumentProperties):
-                    DocumentProperties = Model.DocumentProperties.ToItemViewModel();
+                    Dispatcher.CheckInvoke(() => DocumentProperties = Model.DocumentProperties.ToItemViewModel());
                     break;
                 case nameof(IFile.SummaryProperties):
-                    SummaryProperties = Model.SummaryProperties.ToItemViewModel();
+                    Dispatcher.CheckInvoke(() => SummaryProperties = Model.SummaryProperties.ToItemViewModel());
                     break;
                 case nameof(IFile.DRMProperties):
-                    DRMProperties = Model.DRMProperties.ToItemViewModel();
+                    Dispatcher.CheckInvoke(() => DRMProperties = Model.DRMProperties.ToItemViewModel());
                     break;
                 case nameof(IFile.GPSProperties):
-                    GPSProperties = Model.GPSProperties.ToItemViewModel();
+                    Dispatcher.CheckInvoke(() => GPSProperties = Model.GPSProperties.ToItemViewModel());
                     break;
                 case nameof(IFile.ImageProperties):
-                    ImageProperties = Model.ImageProperties.ToItemViewModel();
+                    Dispatcher.CheckInvoke(() => ImageProperties = Model.ImageProperties.ToItemViewModel());
                     break;
                 case nameof(IFile.MediaProperties):
-                    MediaProperties = Model.MediaProperties.ToItemViewModel();
+                    Dispatcher.CheckInvoke(() => MediaProperties = Model.MediaProperties.ToItemViewModel());
                     break;
                 case nameof(IFile.MusicProperties):
-                    MusicProperties = Model.MusicProperties.ToItemViewModel();
+                    Dispatcher.CheckInvoke(() => MusicProperties = Model.MusicProperties.ToItemViewModel());
                     break;
                 case nameof(IFile.PhotoProperties):
-                    PhotoProperties = Model.PhotoProperties.ToItemViewModel();
+                    Dispatcher.CheckInvoke(() => PhotoProperties = Model.PhotoProperties.ToItemViewModel());
                     break;
                 case nameof(IFile.RecordedTVProperties):
-                    RecordedTVProperties = Model.RecordedTVProperties.ToItemViewModel();
+                    Dispatcher.CheckInvoke(() => RecordedTVProperties = Model.RecordedTVProperties.ToItemViewModel());
                     break;
                 case nameof(IFile.VideoProperties):
-                    VideoProperties = Model.VideoProperties.ToItemViewModel();
+                    Dispatcher.CheckInvoke(() => VideoProperties = Model.VideoProperties.ToItemViewModel());
                     break;
             }
         }

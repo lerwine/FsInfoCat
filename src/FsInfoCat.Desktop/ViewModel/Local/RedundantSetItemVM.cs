@@ -64,7 +64,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             // TODO: Initialize properties
         }
 
-        protected override void OnModelPropertyChanged(string propertyName)
+        protected override void OnNestedModelPropertyChanged(string propertyName)
         {
             switch (propertyName)
             {

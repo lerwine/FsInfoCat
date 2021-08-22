@@ -19,7 +19,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 
         protected override DbSet<DocumentPropertySet> GetDbSet(LocalDbContext dbContext) => dbContext.DocumentPropertySets;
 
-        protected override void OnModelPropertyChanged(string propertyName)
+        protected override void OnNestedModelPropertyChanged(string propertyName)
         {
             throw new NotImplementedException();
         }

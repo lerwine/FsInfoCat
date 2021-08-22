@@ -7,30 +7,47 @@ using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel.Local
 {
-    public class EditRedundantSetVM : EditDbEntityVM<Volume>
+    public class EditRedundantSetVM : EditDbEntityVM<RedundantSet>
     {
         #region BinaryProperties Property Members
+
+        private static readonly DependencyPropertyKey BinaryPropertiesPropertyKey = DependencyProperty.RegisterReadOnly(nameof(BinaryProperties), typeof(BinaryPropertySet), typeof(EditRedundantSetVM),
+                new PropertyMetadata(null));
 
         /// <summary>
         /// Identifies the <see cref="BinaryProperties"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty BinaryPropertiesProperty = DependencyProperty.Register(nameof(BinaryProperties), typeof(BinaryPropertySetItemVM), typeof(EditRedundantSetVM),
-                new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as EditRedundantSetVM)?.OnBinaryPropertiesPropertyChanged((BinaryPropertySetItemVM)e.OldValue, (BinaryPropertySetItemVM)e.NewValue)));
+        public static readonly DependencyProperty BinaryPropertiesProperty = BinaryPropertiesPropertyKey.DependencyProperty;
+
+        /// <summary>
+        /// Gets .
+        /// </summary>
+        /// <value>The .</value>
+        public BinaryPropertySet BinaryProperties { get => (BinaryPropertySet)GetValue(BinaryPropertiesProperty); private set => SetValue(BinaryPropertiesPropertyKey, value); }
+
+        #endregion
+        #region Reference Property Members
+
+        /// <summary>
+        /// Identifies the <see cref="Reference"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ReferenceProperty = DependencyProperty.Register(nameof(Reference), typeof(string), typeof(EditRedundantSetVM),
+                new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as EditRedundantSetVM)?.OnReferencePropertyChanged(e.OldValue as string, e.NewValue as string)));
 
         /// <summary>
         /// Gets or sets .
         /// </summary>
         /// <value>The .</value>
-        public BinaryPropertySetItemVM BinaryProperties { get => (BinaryPropertySetItemVM)GetValue(BinaryPropertiesProperty); set => SetValue(BinaryPropertiesProperty, value); }
+        public string Reference { get => GetValue(ReferenceProperty) as string; set => SetValue(ReferenceProperty, value); }
 
         /// <summary>
-        /// Called when the value of the <see cref="BinaryProperties"/> dependency property has changed.
+        /// Called when the value of the <see cref="Reference"/> dependency property has changed.
         /// </summary>
-        /// <param name="oldValue">The previous value of the <see cref="BinaryProperties"/> property.</param>
-        /// <param name="newValue">The new value of the <see cref="BinaryProperties"/> property.</param>
-        private void OnBinaryPropertiesPropertyChanged(BinaryPropertySetItemVM oldValue, BinaryPropertySetItemVM newValue)
+        /// <param name="oldValue">The previous value of the <see cref="Reference"/> property.</param>
+        /// <param name="newValue">The new value of the <see cref="Reference"/> property.</param>
+        private void OnReferencePropertyChanged(string oldValue, string newValue)
         {
-            // TODO: Implement OnBinaryPropertiesPropertyChanged Logic
+            // TODO: Implement OnReferencePropertyChanged Logic
         }
 
         #endregion
@@ -59,32 +76,12 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         }
 
         #endregion
-        #region FileOptions Property Members
-
-        private readonly ObservableCollection<FileItemVM> _backingFileOptions = new();
-
-        private static readonly DependencyPropertyKey FileOptionsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(FileOptions), typeof(ReadOnlyObservableCollection<FileItemVM>), typeof(EditRedundantSetVM),
-                new PropertyMetadata(null));
-
-        /// <summary>
-        /// Identifies the <see cref="FileOptions"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty FileOptionsProperty = FileOptionsPropertyKey.DependencyProperty;
-
-        /// <summary>
-        /// Gets .
-        /// </summary>
-        /// <value>The .</value>
-        public ReadOnlyObservableCollection<FileItemVM> FileOptions => (ReadOnlyObservableCollection<FileItemVM>)GetValue(FileOptionsProperty);
-
-/* TODO: Add Command to initialization code to constructor
-   SetValue(FileOptionsPropertyKey, new ReadOnlyObservableCollection<FileItemVM>(_backingFileOptions)); */
-
-#endregion
         #region Redundancies Property Members
 
-        private static readonly DependencyPropertyKey RedundanciesPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Redundancies), typeof(ObservableCollection<RedundancyItemVM>), typeof(EditRedundantSetVM),
-                new PropertyMetadata(new ObservableCollection<RedundancyItemVM>()));
+        private readonly ObservableCollection<Redundancy> _backingRedundancies = new();
+
+        private static readonly DependencyPropertyKey RedundanciesPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Redundancies), typeof(ReadOnlyObservableCollection<Redundancy>), typeof(EditRedundantSetVM),
+                new PropertyMetadata(null));
 
         /// <summary>
         /// Identifies the <see cref="Redundancies"/> dependency property.
@@ -95,46 +92,16 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         /// Gets .
         /// </summary>
         /// <value>The .</value>
-        public ObservableCollection<RedundancyItemVM> Redundancies
-        {
-            get => (ObservableCollection<RedundancyItemVM>)GetValue(RedundanciesProperty);
-            private set => SetValue(RedundanciesPropertyKey, value);
-        }
+        public ReadOnlyObservableCollection<Redundancy> Redundancies => (ReadOnlyObservableCollection<Redundancy>)GetValue(RedundanciesProperty);
 
         #endregion
-        #region Reference Property Members
-
-        /// <summary>
-        /// Identifies the <see cref="Reference"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty ReferenceProperty = DependencyProperty.Register(nameof(Reference), typeof(string), typeof(EditRedundantSetVM),
-                new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as EditRedundantSetVM)?.OnReferencePropertyChanged(e.OldValue as string, e.NewValue as string)));
-
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
-        public string Reference { get => GetValue(ReferenceProperty) as string; set => SetValue(ReferenceProperty, value); }
-
-        /// <summary>
-        /// Called when the value of the <see cref="Reference"/> dependency property has changed.
-        /// </summary>
-        /// <param name="oldValue">The previous value of the <see cref="Reference"/> property.</param>
-        /// <param name="newValue">The new value of the <see cref="Reference"/> property.</param>
-        private void OnReferencePropertyChanged(string oldValue, string newValue)
-        {
-            // TODO: Implement OnReferencePropertyChanged Logic
-        }
-
-        #endregion
-
+        
         public EditRedundantSetVM()
         {
+            SetValue(RedundanciesPropertyKey, new ReadOnlyObservableCollection<Redundancy>(_backingRedundancies));
         }
 
-        protected override DbSet<Volume> GetDbSet([DisallowNull] LocalDbContext dbContext) => dbContext.Volumes;
-
-        protected override void OnModelPropertyChanged(Volume oldValue, Volume newValue)
+        protected override DbSet<RedundantSet> GetDbSet([DisallowNull] LocalDbContext dbContext)
         {
             throw new NotImplementedException();
         }
@@ -142,6 +109,14 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         protected override bool OnBeforeSave()
         {
             throw new NotImplementedException();
+        }
+
+        protected override void OnModelPropertyChanged(RedundantSet oldValue, RedundantSet newValue)
+        {
+            BinaryProperties = newValue.BinaryProperties;
+            Notes = newValue.Notes;
+            Redundancies = new ReadOnlyCollection<Redundancy>(new Collection<Redundancy>(newValue.Redundancies));
+            Reference = newValue.Reference;
         }
     }
 }

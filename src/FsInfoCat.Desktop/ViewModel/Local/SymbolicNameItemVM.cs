@@ -9,7 +9,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
     {
         #region FileSystem Property Members
 
-        private static readonly DependencyPropertyKey FileSystemPropertyKey = DependencyProperty.RegisterReadOnly(nameof(FileSystem), typeof(FileSystem), typeof(SymbolicNameItemVM),
+        private static readonly DependencyPropertyKey FileSystemPropertyKey = DependencyProperty.RegisterReadOnly(nameof(FileSystem), typeof(FileSystemItemVM), typeof(SymbolicNameItemVM),
                 new PropertyMetadata(null));
 
         /// <summary>
@@ -21,7 +21,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         /// Gets .
         /// </summary>
         /// <value>The .</value>
-        public FileSystem FileSystem { get => (FileSystem)GetValue(FileSystemProperty); private set => SetValue(FileSystemPropertyKey, value); }
+        public FileSystemItemVM FileSystem { get => (FileSystemItemVM)GetValue(FileSystemProperty); private set => SetValue(FileSystemPropertyKey, value); }
 
         #endregion
         #region IsInactive Property Members
@@ -96,15 +96,15 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             IsInactive = model.IsInactive;
             Notes = model.Notes;
             Priority = model.Priority;
-            FileSystem = model.FileSystem;
+            FileSystem = model.FileSystem.ToItemViewModel();
         }
 
-        protected override void OnModelPropertyChanged(string propertyName)
+        protected override void OnNestedModelPropertyChanged(string propertyName)
         {
             switch (propertyName)
             {
                 case nameof(SymbolicName.FileSystem):
-                    Dispatcher.CheckInvoke(() => FileSystem = Model?.FileSystem);
+                    Dispatcher.CheckInvoke(() => FileSystem = Model?.FileSystem.ToItemViewModel());
                     break;
                 case nameof(SymbolicName.IsInactive):
                     Dispatcher.CheckInvoke(() => IsInactive = Model?.IsInactive ?? false);

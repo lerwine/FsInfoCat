@@ -49,15 +49,15 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             Length = model.Length;
         }
 
-        protected override void OnModelPropertyChanged(string propertyName)
+        protected override void OnNestedModelPropertyChanged(string propertyName)
         {
             switch (propertyName)
             {
                 case nameof(BinaryPropertySet.Hash):
-                    Hash = Model?.Hash;
+                    Dispatcher.CheckInvoke(() => Hash = Model?.Hash);
                     break;
                 case nameof(BinaryPropertySet.Length):
-                    Length = Model?.Length ?? 0L;
+                    Dispatcher.CheckInvoke(() => Length = Model?.Length ?? 0L);
                     break;
             }
         }

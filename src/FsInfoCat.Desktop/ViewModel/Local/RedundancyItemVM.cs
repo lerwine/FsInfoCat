@@ -8,7 +8,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
     {
         #region File Property Members
 
-        private static readonly DependencyPropertyKey FilePropertyKey = DependencyProperty.RegisterReadOnly(nameof(File), typeof(DbFile), typeof(RedundancyItemVM),
+        private static readonly DependencyPropertyKey FilePropertyKey = DependencyProperty.RegisterReadOnly(nameof(File), typeof(FileItemVM), typeof(RedundancyItemVM),
                 new PropertyMetadata(null));
 
         /// <summary>
@@ -20,7 +20,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         /// Gets .
         /// </summary>
         /// <value>The .</value>
-        public DbFile File { get => (DbFile)GetValue(FileProperty); private set => SetValue(FilePropertyKey, value); }
+        public FileItemVM File { get => (FileItemVM)GetValue(FileProperty); private set => SetValue(FilePropertyKey, value); }
 
         #endregion
         #region Notes Property Members
@@ -41,7 +41,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         #endregion
         #region RedundantSet Property Members
 
-        private static readonly DependencyPropertyKey RedundantSetPropertyKey = DependencyProperty.RegisterReadOnly(nameof(RedundantSet), typeof(RedundantSet), typeof(RedundancyItemVM),
+        private static readonly DependencyPropertyKey RedundantSetPropertyKey = DependencyProperty.RegisterReadOnly(nameof(RedundantSet), typeof(RedundantSetItemVM), typeof(RedundancyItemVM),
                 new PropertyMetadata(null));
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         /// Gets .
         /// </summary>
         /// <value>The .</value>
-        public RedundantSet RedundantSet { get => (RedundantSet)GetValue(RedundantSetProperty); private set => SetValue(RedundantSetPropertyKey, value); }
+        public RedundantSetItemVM RedundantSet { get => (RedundantSetItemVM)GetValue(RedundantSetProperty); private set => SetValue(RedundantSetPropertyKey, value); }
 
         #endregion
         #region Reference Property Members
@@ -76,27 +76,27 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         public RedundancyItemVM(Redundancy model)
             : base(model)
         {
-            File = model.File;
+            File = model.File.ToItemViewModel();
             Notes = model.Notes;
-            RedundantSet = model.RedundantSet;
+            RedundantSet = model.RedundantSet.ToItemViewModel();
             Reference = model.Reference;
         }
 
-        protected override void OnModelPropertyChanged(string propertyName)
+        protected override void OnNestedModelPropertyChanged(string propertyName)
         {
             switch (propertyName)
             {
                 case nameof(Redundancy.File):
-                    File = Model?.File;
+                    Dispatcher.CheckInvoke(() => File = Model?.File.ToItemViewModel());
                     break;
                 case nameof(Redundancy.Notes):
-                    Notes = Model?.Notes;
+                    Dispatcher.CheckInvoke(() => Notes = Model?.Notes ?? "");
                     break;
                 case nameof(Redundancy.RedundantSet):
-                    RedundantSet = Model?.RedundantSet;
+                    Dispatcher.CheckInvoke(() => RedundantSet = Model?.RedundantSet.ToItemViewModel());
                     break;
                 case nameof(Redundancy.Reference):
-                    Reference = Model?.Reference;
+                    Dispatcher.CheckInvoke(() => Reference = Model?.Reference);
                     break;
             }
         }

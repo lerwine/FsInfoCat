@@ -154,14 +154,14 @@ namespace FsInfoCat.Desktop.ViewModel.Local
                         Dispatcher.CheckInvoke(() => ModifiedOn = Model?.ModifiedOn ?? DateTime.Now);
                         break;
                     default:
-                        OnModelPropertyChanged(e.PropertyName);
+                        OnNestedModelPropertyChanged(e.PropertyName);
                         break;
                 }
             else
                 Dispatcher.Invoke(() => Model_PropertyChanged(sender, e));
         }
 
-        protected abstract void OnModelPropertyChanged(string propertyName);
+        protected abstract void OnNestedModelPropertyChanged(string propertyName);
 
         protected abstract DbSet<TDbEntity> GetDbSet(LocalDbContext dbContext);
     }

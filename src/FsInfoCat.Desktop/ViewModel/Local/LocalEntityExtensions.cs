@@ -10,6 +10,9 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 {
     public static class LocalEntityExtensions
     {
+        public static CrawlConfigItemVM ToItemViewModel([AllowNull] this CrawlConfiguration entity, AsyncOps.AsyncBgModalVM bgOpMgr = null) =>
+            (entity is null) ? null : new CrawlConfigItemVM(entity, bgOpMgr);
+
         public static SharedTagDefinitionItemVM ToItemViewModel([AllowNull] this SharedTagDefinition entity) => (entity is null) ? null : new SharedTagDefinitionItemVM(entity);
 
         public static RedundantSetItemVM ToItemViewModel([AllowNull] this RedundantSet entity) => (entity is null) ? null : new RedundantSetItemVM(entity);
@@ -24,11 +27,11 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 
         public static SymbolicNameItemVM ToItemViewModel([AllowNull] this SymbolicName entity) => (entity is null) ? null : new SymbolicNameItemVM(entity);
 
-        public static VolumeItemVM ToItemViewModel([AllowNull] this Volume entity) => (entity is null) ? null : new VolumeItemVM(entity);
+        public static VolumeItemVM ToItemViewModel([AllowNull] this Volume entity, AsyncOps.AsyncBgModalVM bgOpMgr = null) => (entity is null) ? null : new VolumeItemVM(entity, bgOpMgr);
 
         public static FileItemVM ToItemViewModel([AllowNull] this DbFile entity) => (entity is null) ? null : new FileItemVM(entity);
 
-        public static SubdirectoryItemVM ToItemViewModel([AllowNull] this Subdirectory entity) => (entity is null) ? null : new SubdirectoryItemVM(entity);
+        public static SubdirectoryItemVM ToItemViewModel([AllowNull] this Subdirectory entity, AsyncOps.AsyncBgModalVM bgOpMgr = null) => (entity is null) ? null : new SubdirectoryItemVM(entity, bgOpMgr);
 
         public static AudioPropertiesItemVM ToItemViewModel([AllowNull] this AudioPropertySet entity) => (entity is null) ? null : new AudioPropertiesItemVM(entity);
 

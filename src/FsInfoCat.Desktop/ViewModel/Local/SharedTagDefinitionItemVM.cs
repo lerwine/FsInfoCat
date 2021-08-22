@@ -324,18 +324,18 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 
         protected override DbSet<SharedTagDefinition> GetDbSet(LocalDbContext dbContext) => dbContext.SharedTagDefinitions;
 
-        protected override void OnModelPropertyChanged(string propertyName)
+        protected override void OnNestedModelPropertyChanged(string propertyName)
         {
             switch (propertyName)
             {
                 case nameof(SharedTagDefinition.Description):
-                    Description = Model?.Description;
+                    Dispatcher.CheckInvoke(() => Description = Model?.Description ?? "");
                     break;
                 case nameof(SharedTagDefinition.IsInactive):
-                    IsInactive = Model?.IsInactive ?? false;
+                    Dispatcher.CheckInvoke(() => IsInactive = Model?.IsInactive ?? false);
                     break;
                 case nameof(SharedTagDefinition.Name):
-                    Name = Model?.Name;
+                    Dispatcher.CheckInvoke(() => Name = Model?.Name ?? "");
                     break;
             }
         }

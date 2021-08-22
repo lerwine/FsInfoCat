@@ -235,24 +235,33 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         }
 
         #endregion
+        #region BgOps Property Members
 
-        internal CrawlConfigItemVM([DisallowNull] CrawlConfiguration model, string fullName, Guid rootId)
+        private static readonly DependencyPropertyKey BgOpsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(BgOps), typeof(AsyncOps.AsyncBgModalVM), typeof(CrawlConfigItemVM),
+                new PropertyMetadata(null));
+
+        /// <summary>
+        /// Identifies the <see cref="BgOps"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty BgOpsProperty = BgOpsPropertyKey.DependencyProperty;
+
+        /// <summary>
+        /// Gets .
+        /// </summary>
+        /// <value>The .</value>
+        public AsyncOps.AsyncBgModalVM BgOps => (AsyncOps.AsyncBgModalVM)GetValue(BgOpsProperty);
+
+        #endregion
+        internal CrawlConfigItemVM([DisallowNull] CrawlConfiguration model, AsyncOps.AsyncBgModalVM bgOpMgr = null)
             : base(model)
         {
+            SetValue(BgOpsPropertyKey, new AsyncOps.AsyncBgModalVM());
             SetValue(StartCrawlNowCommandPropertyKey, new Commands.RelayCommand(parameter => StartCrawlNow?.Invoke(this, EventArgs.Empty)));
             SetValue(OpenRootFolderCommandPropertyKey, new Commands.RelayCommand(parameter => ShowLogs?.Invoke(this, EventArgs.Empty)));
             SetValue(OpenRootFolderCommandPropertyKey, new Commands.RelayCommand(parameter => OpenRootFolder?.Invoke(this, EventArgs.Empty)));
-            FullName = fullName;
             Subdirectory root = Model.Root;
-            if (root is not null && root.Id != rootId)
-                // DEFERRED: Replace with background job view model
-                _ = Subdirectory.LookupFullNameAsync(root, CancellationToken.None).ContinueWith(task =>
-                  {
-                      if (task.IsFaulted)
-                          Dispatcher.Invoke(() => OnLookupFullNameError(task.Exception));
-                      else if (!task.IsCanceled)
-                          Dispatcher.Invoke(() => OnLookupFullNameComplete(task.Result ?? ""));
-                  }, CancellationToken.None);
+            if (root is not null)
+                (bgOpMgr ?? BgOps).FromAsync("", "", root, LookupFullNameAsync);
             DisplayName = model.DisplayName;
             MaxRecursionDepth = model.MaxRecursionDepth;
             MaxTotalItems = model.MaxTotalItems;
@@ -267,6 +276,40 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             NextScheduledStart = model.NextScheduledStart;
             RescheduleFromJobEnd = model.RescheduleFromJobEnd;
             RescheduleAfterFail = model.RescheduleAfterFail;
+        }
+
+        internal CrawlConfigItemVM([DisallowNull] CrawlConfiguration model, string fullName, Guid rootId, AsyncOps.AsyncBgModalVM bgOpMgr = null)
+            : base(model)
+        {
+            SetValue(BgOpsPropertyKey, new AsyncOps.AsyncBgModalVM());
+            SetValue(StartCrawlNowCommandPropertyKey, new Commands.RelayCommand(parameter => StartCrawlNow?.Invoke(this, EventArgs.Empty)));
+            SetValue(OpenRootFolderCommandPropertyKey, new Commands.RelayCommand(parameter => ShowLogs?.Invoke(this, EventArgs.Empty)));
+            SetValue(OpenRootFolderCommandPropertyKey, new Commands.RelayCommand(parameter => OpenRootFolder?.Invoke(this, EventArgs.Empty)));
+            FullName = fullName;
+            Subdirectory root = Model.Root;
+            if (root is not null && root.Id != rootId)
+                (bgOpMgr ?? BgOps).FromAsync("", "", root, LookupFullNameAsync);
+            DisplayName = model.DisplayName;
+            MaxRecursionDepth = model.MaxRecursionDepth;
+            MaxTotalItems = model.MaxTotalItems;
+            long? seconds = model.TTL;
+            TTL = seconds.HasValue ? TimeSpan.FromSeconds(seconds.Value) : null;
+            seconds = model.RescheduleInterval;
+            RescheduleInterval = seconds.HasValue ? TimeSpan.FromSeconds(seconds.Value) : null;
+            Notes = model.Notes;
+            StatusValue = model.StatusValue;
+            LastCrawlStart = model.LastCrawlStart;
+            LastCrawlEnd = model.LastCrawlEnd;
+            NextScheduledStart = model.NextScheduledStart;
+            RescheduleFromJobEnd = model.RescheduleFromJobEnd;
+            RescheduleAfterFail = model.RescheduleAfterFail;
+        }
+
+        private async Task<string> LookupFullNameAsync(Subdirectory root, IWindowsStatusListener statusListener)
+        {
+            string fullName = await Subdirectory.LookupFullNameAsync(root, statusListener.CancellationToken);
+            Dispatcher.Invoke(() => OnLookupFullNameComplete(fullName ?? ""));
+            return fullName;
         }
 
         private void OnLookupFullNameComplete(string result)
@@ -288,7 +331,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             throw new NotImplementedException();
         }
 
-        protected override void OnModelPropertyChanged(string propertyName)
+        protected override void OnNestedModelPropertyChanged(string propertyName)
         {
             switch (propertyName)
             {
