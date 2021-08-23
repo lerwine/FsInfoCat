@@ -832,7 +832,7 @@ CREATE VIEW IF NOT EXISTS "vCrawlConfigListing" AS SELECT "CrawlConfigurations".
 		"vSubdirectoryListingWithAncestorNames"."Name",
 		printf('%s/%s', "vSubdirectoryListingWithAncestorNames"."Name", "vSubdirectoryListingWithAncestorNames"."AncestorNames")
 	) AS "AncestorNames",
-    "vSubdirectoryListingWithAncestorNames"."VolumeId", "vSubdirectoryListingWithAncestorNames"."VolumeDisplayName",
+    "vSubdirectoryListingWithAncestorNames"."EffectiveVolumeId" AS "VolumeId", "vSubdirectoryListingWithAncestorNames"."VolumeDisplayName",
 	"vSubdirectoryListingWithAncestorNames"."VolumeName", "vSubdirectoryListingWithAncestorNames"."VolumeIdentifier" FROM "CrawlConfigurations"
 	LEFT JOIN "vSubdirectoryListingWithAncestorNames" ON "CrawlConfigurations"."RootId"="vSubdirectoryListingWithAncestorNames"."Id";
     
