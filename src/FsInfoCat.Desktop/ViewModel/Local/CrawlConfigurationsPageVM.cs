@@ -16,7 +16,7 @@ using System.Windows.Threading;
 
 namespace FsInfoCat.Desktop.ViewModel.Local
 {
-    public class CrawlConfigurationsPageVM : DbEntityListingPageVM<CrawlConfiguration, CrawlConfigItemVM>
+    public class CrawlConfigurationsPageVM : DbEntityListingPageVM<CrawlConfigListItem, CrawlConfigItemVM>
     {
         #region ShowLogs Command Property Members
 
@@ -211,28 +211,20 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             statusListener.CancellationToken.ThrowIfCancellationRequested();
             using IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
             using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
-            IIncludableQueryable<CrawlConfiguration, Subdirectory> crawlConfigurations = dbContext.CrawlConfigurations.Include(c => c.Root);
-            IQueryable<CrawlConfiguration> items;
+            IQueryable<CrawlConfigListItem> items;
             if (showActive.HasValue)
             {
                 if (showActive.Value)
-                    items = from v in crawlConfigurations where v.StatusValue !=  CrawlStatus.Disabled select v;
+                    items = from v in dbContext.CrawlConfigListing where v.StatusValue !=  CrawlStatus.Disabled select v;
                 else
-                    items = from v in crawlConfigurations where v.StatusValue == CrawlStatus.Disabled select v;
+                    items = from v in dbContext.CrawlConfigListing where v.StatusValue == CrawlStatus.Disabled select v;
             }
             else
-                items = from v in crawlConfigurations select v;
-            List<Subdirectory.CrawlConfigWithFullRootPath<CrawlConfiguration>> result;
-            DispatcherOperation dispatcherOperation = statusListener.BeginSetMessage($"Calculating full paths of configuration items");
-            try
-            {
-                result = await Subdirectory.BuildFullNamesAsync(items, c => c.Root, dbContext, statusListener.CancellationToken);
-            }
-            finally { await dispatcherOperation; }
-            return await OnEntitiesLoaded(result, statusListener, r => new CrawlConfigItemVM(r.Source, r.FullName, r.SubdirectoryId));
+                items = from v in dbContext.CrawlConfigListing select v;
+            return await OnEntitiesLoaded(items, statusListener, r => new CrawlConfigItemVM(r));
         }
 
-        protected override DbSet<CrawlConfiguration> GetDbSet(LocalDbContext dbContext) => dbContext.CrawlConfigurations;
+        protected override DbSet<CrawlConfigListItem> GetDbSet(LocalDbContext dbContext) => dbContext.CrawlConfigListing;
 
         protected async Task<CrawlConfiguration> AddNewItemAsync(object parameter)
         {
@@ -243,7 +235,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
                 result = await Dispatcher.Invoke(() => EditCrawlConfigVM.BrowseForFolderAsync(null, BgOps));
             }
             string path = result?.Item1;
-            return string.IsNullOrEmpty(path) ? null : await Dispatcher.InvokeAsync(() => ShowEditNewDialog(result?.Item1), DispatcherPriority.Background);
+            return string.IsNullOrEmpty(path) ? null : await Dispatcher.InvokeAsync(() => ShowEditNewDialog(path), DispatcherPriority.Background);
         }
 
         protected override void OnAddNewItem(object parameter) => AddNewItemAsync(parameter).Wait();

@@ -1,8 +1,12 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.Upstream
 {
+    public interface IUpstreamCrawlConfigurationRow : IUpstreamDbEntity, ICrawlConfigurationRow { }
+
+    public interface IUpstreamCrawlConfigurationListItem : IUpstreamDbEntity, ICrawlConfigurationListItem { }
+
     /// <summary>Specifies the configuration of a file system crawl.</summary>
     /// <seealso cref="IUpstreamDbEntity" />
     /// <seealso cref="ICrawlConfiguration" />

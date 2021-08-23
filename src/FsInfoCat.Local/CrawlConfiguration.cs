@@ -7,10 +7,7 @@ using System.Linq;
 
 namespace FsInfoCat.Local
 {
-    /// <summary>Specifies the configuration of a file system crawl.</summary>
-    /// <seealso cref="LocalDbEntity" />
-    /// <seealso cref="ILocalCrawlConfiguration" />
-    public class CrawlConfiguration : LocalDbEntity, ILocalCrawlConfiguration, ISimpleIdentityReference<CrawlConfiguration>
+    public abstract class CrawlConfigurationRow : LocalDbEntity, ILocalCrawlConfigurationRow, ISimpleIdentityReference<CrawlConfigurationRow>
     {
         #region Fields
 
@@ -28,8 +25,6 @@ namespace FsInfoCat.Local
         private readonly IPropertyChangeTracker<bool> _rescheduleFromJobEnd;
         private readonly IPropertyChangeTracker<bool> _rescheduleAfterFail;
         private readonly IPropertyChangeTracker<Guid> _rootId;
-        private readonly IPropertyChangeTracker<Subdirectory> _root;
-        private HashSet<CrawlJobLog> _logs = new();
 
         #endregion
 
@@ -131,13 +126,101 @@ namespace FsInfoCat.Local
             set
             {
                 if (_rootId.SetValue(value))
-                {
-                    Subdirectory nav = _root.GetValue();
-                    if (!(nav is null || nav.Id.Equals(value)))
-                        _root.SetValue(null);
-                }
+                    OnRootIdChanged(value);
             }
         }
+
+        CrawlConfigurationRow IIdentityReference<CrawlConfigurationRow>.Entity => throw new NotImplementedException();
+
+        IDbEntity IIdentityReference.Entity => throw new NotImplementedException();
+
+        protected virtual void OnRootIdChanged(Guid value) { }
+
+        #endregion
+
+        public CrawlConfigurationRow()
+        {
+            _id = AddChangeTracker(nameof(Id), Guid.Empty);
+            _displayName = AddChangeTracker(nameof(DisplayName), "", TrimmedNonNullStringCoersion.Default);
+            _maxRecursionDepth = AddChangeTracker(nameof(MaxRecursionDepth), DbConstants.DbColDefaultValue_MaxRecursionDepth);
+            _totalMaxItems = AddChangeTracker<ulong?>(nameof(MaxTotalItems), null);
+            _ttl = AddChangeTracker<long?>(nameof(TTL), null);
+            _notes = AddChangeTracker(nameof(Notes), "", NonWhiteSpaceOrEmptyStringCoersion.Default);
+            _statusValue = AddChangeTracker(nameof(StatusValue), CrawlStatus.NotRunning);
+            _lastCrawlStart = AddChangeTracker<DateTime?>(nameof(LastCrawlStart), null);
+            _lastCrawlEnd = AddChangeTracker<DateTime?>(nameof(LastCrawlEnd), null);
+            _nextScheduledStart = AddChangeTracker<DateTime?>(nameof(NextScheduledStart), null);
+            _rescheduleInterval = AddChangeTracker<long?>(nameof(RescheduleInterval), null);
+            _rescheduleFromJobEnd = AddChangeTracker(nameof(RescheduleFromJobEnd), false);
+            _rescheduleAfterFail = AddChangeTracker(nameof(RescheduleAfterFail), false);
+            _rootId = AddChangeTracker(nameof(RootId), Guid.Empty);
+        }
+
+        public TimeSpan? GetTTLAsTimeSpan()
+        {
+            long? value = TTL;
+            return value.HasValue ? TimeSpan.FromSeconds(value.Value) : null;
+        }
+
+        public TimeSpan? GetRescheduleIntervalAsTimeSpan()
+        {
+            long? value = RescheduleInterval;
+            return value.HasValue ? TimeSpan.FromSeconds(value.Value) : null;
+        }
+
+        IEnumerable<Guid> IIdentityReference.GetIdentifiers()
+        {
+            yield return Id;
+        }
+    }
+    public class CrawlConfigListItem : CrawlConfigurationRow, ILocalCrawlConfigurationListItem
+    {
+        private const string VIEW_NAME = "vCrawlConfigListing";
+
+        private readonly IPropertyChangeTracker<string> _ancestorNames;
+        private readonly IPropertyChangeTracker<Guid> _volumeId;
+        private readonly IPropertyChangeTracker<string> _volumeDisplayName;
+        private readonly IPropertyChangeTracker<string> _volumeName;
+        private readonly IPropertyChangeTracker<VolumeIdentifier> _volumeIdentifier;
+
+        public string AncestorNames { get => _ancestorNames.GetValue(); set => _ancestorNames.SetValue(value); }
+
+        public Guid VolumeId { get => _volumeId.GetValue(); set => _volumeId.SetValue(value); }
+
+        public string VolumeDisplayName { get => _volumeDisplayName.GetValue(); set => _volumeDisplayName.SetValue(value); }
+
+        public string VolumeName { get => _volumeName.GetValue(); set => _volumeName.SetValue(value); }
+
+        public VolumeIdentifier VolumeIdentifier { get => _volumeIdentifier.GetValue(); set => _volumeIdentifier.SetValue(value); }
+
+        internal static void OnBuildEntity(EntityTypeBuilder<CrawlConfigListItem> builder)
+        {
+            builder.ToView(VIEW_NAME);
+            builder.Property(nameof(VolumeIdentifier)).HasConversion(VolumeIdentifier.Converter);
+        }
+
+        public CrawlConfigListItem()
+        {
+            _ancestorNames = AddChangeTracker(nameof(AncestorNames), "", NonNullStringCoersion.Default);
+            _volumeId = AddChangeTracker(nameof(VolumeId), Guid.Empty);
+            _volumeDisplayName = AddChangeTracker(nameof(VolumeDisplayName), "", NonNullStringCoersion.Default);
+            _volumeName = AddChangeTracker(nameof(VolumeName), "", NonNullStringCoersion.Default);
+            _volumeIdentifier = AddChangeTracker(nameof(VolumeIdentifier), VolumeIdentifier.Empty);
+        }
+    }
+    /// <summary>Specifies the configuration of a file system crawl.</summary>
+    /// <seealso cref="LocalDbEntity" />
+    /// <seealso cref="ILocalCrawlConfiguration" />
+    public class CrawlConfiguration : CrawlConfigurationRow, ILocalCrawlConfiguration, ISimpleIdentityReference<CrawlConfiguration>
+    {
+        #region Fields
+
+        private readonly IPropertyChangeTracker<Subdirectory> _root;
+        private HashSet<CrawlJobLog> _logs = new();
+
+        #endregion
+
+        #region Properties
 
         /// <summary>Gets the starting subdirectory for the configured subdirectory crawl.</summary>
         /// <value>The root subdirectory of the configured subdirectory crawl.</value>
@@ -147,7 +230,7 @@ namespace FsInfoCat.Local
             get => _root.GetValue(); set
             {
                 if (_root.SetValue(value))
-                    _rootId.SetValue((value is null) ? Guid.Empty : value.Id);
+                    RootId = value?.Id ?? Guid.Empty;
             }
         }
 
@@ -172,37 +255,9 @@ namespace FsInfoCat.Local
 
         CrawlConfiguration IIdentityReference<CrawlConfiguration>.Entity => this;
 
-        IDbEntity IIdentityReference.Entity => this;
-
         public CrawlConfiguration()
         {
-            _id = AddChangeTracker(nameof(Id), Guid.Empty);
-            _displayName = AddChangeTracker(nameof(DisplayName), "", TrimmedNonNullStringCoersion.Default);
-            _maxRecursionDepth = AddChangeTracker(nameof(MaxRecursionDepth), DbConstants.DbColDefaultValue_MaxRecursionDepth);
-            _totalMaxItems = AddChangeTracker<ulong?>(nameof(MaxTotalItems), null);
-            _ttl = AddChangeTracker<long?>(nameof(TTL), null);
-            _notes = AddChangeTracker(nameof(Notes), "", NonWhiteSpaceOrEmptyStringCoersion.Default);
-            _statusValue = AddChangeTracker(nameof(StatusValue), CrawlStatus.NotRunning);
-            _lastCrawlStart = AddChangeTracker<DateTime?>(nameof(LastCrawlStart), null);
-            _lastCrawlEnd = AddChangeTracker<DateTime?>(nameof(LastCrawlEnd), null);
-            _nextScheduledStart = AddChangeTracker<DateTime?>(nameof(NextScheduledStart), null);
-            _rescheduleInterval = AddChangeTracker<long?>(nameof(RescheduleInterval), null);
-            _rescheduleFromJobEnd = AddChangeTracker(nameof(RescheduleFromJobEnd), false);
-            _rescheduleAfterFail = AddChangeTracker(nameof(RescheduleAfterFail), false);
-            _rootId = AddChangeTracker(nameof(RootId), Guid.Empty);
             _root = AddChangeTracker<Subdirectory>(nameof(Root), null);
-        }
-
-        public TimeSpan? GetTTLAsTimeSpan()
-        {
-            long? value = TTL;
-            return value.HasValue ? TimeSpan.FromSeconds(value.Value) : null;
-        }
-
-        public TimeSpan? GetRescheduleIntervalAsTimeSpan()
-        {
-            long? value = RescheduleInterval;
-            return value.HasValue ? TimeSpan.FromSeconds(value.Value) : null;
         }
 
         internal static void OnBuildEntity(EntityTypeBuilder<CrawlConfiguration> builder)
@@ -210,23 +265,11 @@ namespace FsInfoCat.Local
             builder.HasOne(s => s.Root).WithOne(c => c.CrawlConfiguration).HasForeignKey<CrawlConfiguration>(nameof(RootId)).OnDelete(DeleteBehavior.Restrict);
         }
 
-        IEnumerable<Guid> IIdentityReference.GetIdentifiers()
+        protected override void OnRootIdChanged(Guid value)
         {
-            yield return Id;
-        }
-
-        public void SetRoot(ISimpleIdentityReference<Subdirectory> root)
-        {
-
-            if (root is not null)
-            {
-                if (root.Entity is null)
-                    RootId = root.Id;
-                else
-                    Root = root.Entity;
-            }
-            else
-                Root = null;
+            Subdirectory nav = _root.GetValue();
+            if (!(nav is null || nav.Id.Equals(value)))
+                _root.SetValue(null);
         }
     }
 }

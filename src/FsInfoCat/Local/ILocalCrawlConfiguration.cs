@@ -1,8 +1,12 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.Local
 {
+    public interface ILocalCrawlConfigurationRow : ILocalDbEntity, ICrawlConfigurationRow { }
+
+    public interface ILocalCrawlConfigurationListItem : ILocalDbEntity, ICrawlConfigurationListItem { }
+
     /// <summary>Specifies the configuration of a file system crawl.</summary>
     /// <seealso cref="ILocalDbEntity" />
     /// <seealso cref="ICrawlConfiguration" />

@@ -1125,10 +1125,11 @@ namespace FsInfoCat.Desktop.ViewModel.Local
                 return;
             }
 
-            if ((Root = newValue.Root) is null || AttachedProperties.GetFullNameId(this) == newValue.Root.Id)
-                Path = AttachedProperties.GetFullName(this) ?? "";
-            else
-                AttachedProperties.GetFullName(this, BgOps, p => Path = p ?? "");
+            //if ((Root = newValue.Root) is null || AttachedProperties.GetFullNameId(this) == newValue.Root.Id)
+            //    Path = AttachedProperties.GetFullName(this) ?? "";
+            //else
+            //    AttachedProperties.GetFullName(this, BgOps, p => Path = p ?? "");
+            // TODO: Calculate full name
             DisplayName = newValue.DisplayName;
             LimitTotalItems = newValue.MaxTotalItems.HasValue;
             MaxTotalItems = newValue.MaxTotalItems ?? 0UL;
@@ -1207,7 +1208,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         protected override bool OnBeforeSave()
         {
             CrawlConfiguration model = Model;
-            model.SetRoot(Root);
+            model.RootId = Root.Id;
             model.DisplayName = DisplayName.AsWsNormalizedOrEmpty();
             if (LimitTotalItems)
                 model.MaxTotalItems = MaxTotalItems;

@@ -113,6 +113,8 @@ namespace FsInfoCat.Local
 
         public virtual DbSet<FileWithBinaryPropertiesAndAncestorNames> FileListingWithBinaryPropertiesAndAncestorNames { get; set; }
 
+        public virtual DbSet<CrawlConfigListItem> CrawlConfigListing { get; set; }
+
         public LocalDbContext(DbContextOptions<LocalDbContext> options)
             : base(options)
         {
@@ -174,6 +176,7 @@ namespace FsInfoCat.Local
                 .Entity<SubdirectoryListItemWithAncestorNames>(SubdirectoryListItemWithAncestorNames.OnBuildEntity)
                 .Entity<SubdirectoryAncestorNames>(Local.SubdirectoryAncestorNames.OnBuildEntity)
                 .Entity<CrawlConfiguration>(CrawlConfiguration.OnBuildEntity)
+                .Entity<CrawlConfigListItem>(CrawlConfigListItem.OnBuildEntity)
                 .Entity<CrawlJobLog>(CrawlJobLog.OnBuildEntity)
                 .Entity<DbFile>(DbFile.OnBuildEntity)
                 .Entity<FileWithAncestorNames>(FileWithAncestorNames.OnBuildEntity)

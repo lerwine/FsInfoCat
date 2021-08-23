@@ -826,7 +826,16 @@ CREATE VIEW IF NOT EXISTS "vSubdirectoryAncestorNames" AS SELECT "Subdirectories
     directlyContains("ChildId", "ParentId") AS (SELECT "Id", "ParentId" FROM "Subdirectories"),
     containerOf("ChildId") AS (SELECT "ParentId" FROM directlyContains WHERE "ChildId"="Subdirectories"."Id" UNION ALL SELECT "ParentId" FROM directlyContains JOIN containerOf USING("ChildId"))
     SELECT group_concat("ParentSubdir"."Name", '/') FROM containerOf, "Subdirectories" AS "ParentSubdir" WHERE containerOf."ChildId"="ParentSubdir"."Id") AS "AncestorNames" FROM "Subdirectories";
-
+    
+CREATE VIEW IF NOT EXISTS "vCrawlConfigListing" AS SELECT "CrawlConfigurations".*,
+	iif("vSubdirectoryListingWithAncestorNames"."AncestorNames" IS NULL,
+		"vSubdirectoryListingWithAncestorNames"."Name",
+		printf('%s/%s', "vSubdirectoryListingWithAncestorNames"."Name", "vSubdirectoryListingWithAncestorNames"."AncestorNames")
+	) AS "AncestorNames",
+    "vSubdirectoryListingWithAncestorNames"."VolumeId", "vSubdirectoryListingWithAncestorNames"."VolumeDisplayName",
+	"vSubdirectoryListingWithAncestorNames"."VolumeName", "vSubdirectoryListingWithAncestorNames"."VolumeIdentifier" FROM "CrawlConfigurations"
+	LEFT JOIN "vSubdirectoryListingWithAncestorNames" ON "CrawlConfigurations"."RootId"="vSubdirectoryListingWithAncestorNames"."Id";
+    
 CREATE VIEW IF NOT EXISTS "vFileListingWithAncestorNames" AS SELECT "Files".*,
 	iif("vSubdirectoryListingWithAncestorNames"."AncestorNames" IS NULL,
 		"vSubdirectoryListingWithAncestorNames"."Name",

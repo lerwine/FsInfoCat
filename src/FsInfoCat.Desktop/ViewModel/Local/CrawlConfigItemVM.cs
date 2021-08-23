@@ -13,7 +13,7 @@ using System.Windows.Threading;
 
 namespace FsInfoCat.Desktop.ViewModel.Local
 {
-    public class CrawlConfigItemVM : DbEntityItemVM<CrawlConfiguration>, IHasSubdirectoryEntity
+    public class CrawlConfigItemVM : DbEntityItemVM<CrawlConfigListItem>
     {
         public event EventHandler StartCrawlNow;
         public event EventHandler OpenRootFolder;
@@ -64,6 +64,55 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             get => GetValue(DisplayNameProperty) as string;
             private set => SetValue(DisplayNamePropertyKey, value);
         }
+
+        #endregion
+        #region VolumeDisplayName Property Members
+
+        private static readonly DependencyPropertyKey VolumeDisplayNamePropertyKey = DependencyProperty.RegisterReadOnly(nameof(VolumeDisplayName), typeof(string), typeof(CrawlConfigItemVM), new PropertyMetadata(""));
+
+        /// <summary>
+        /// Identifies the <see cref="VolumeDisplayName"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty VolumeDisplayNameProperty = VolumeDisplayNamePropertyKey.DependencyProperty;
+
+        /// <summary>
+        /// Gets or sets .
+        /// </summary>
+        /// <value>The .</value>
+        public string VolumeDisplayName { get => GetValue(VolumeDisplayNameProperty) as string; private set => SetValue(VolumeDisplayNamePropertyKey, value); }
+
+        #endregion
+        #region VolumeName Property Members
+
+        private static readonly DependencyPropertyKey VolumeNamePropertyKey = DependencyProperty.RegisterReadOnly(nameof(VolumeName), typeof(string), typeof(CrawlConfigItemVM), new PropertyMetadata(""));
+
+        /// <summary>
+        /// Identifies the <see cref="VolumeName"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty VolumeNameProperty = VolumeNamePropertyKey.DependencyProperty;
+
+        /// <summary>
+        /// Gets or sets .
+        /// </summary>
+        /// <value>The .</value>
+        public string VolumeName { get => GetValue(VolumeNameProperty) as string; private set => SetValue(VolumeNamePropertyKey, value); }
+
+        #endregion
+        #region VolumeIdentifier Property Members
+
+        private static readonly DependencyPropertyKey VolumeIdentifierPropertyKey = DependencyProperty.RegisterReadOnly(nameof(VolumeIdentifier), typeof(VolumeIdentifier), typeof(CrawlConfigItemVM),
+                new PropertyMetadata(VolumeIdentifier.Empty));
+
+        /// <summary>
+        /// Identifies the <see cref="VolumeIdentifier"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty VolumeIdentifierProperty = VolumeIdentifierPropertyKey.DependencyProperty;
+
+        /// <summary>
+        /// Gets .
+        /// </summary>
+        /// <value>The .</value>
+        public VolumeIdentifier VolumeIdentifier { get => (VolumeIdentifier)GetValue(VolumeIdentifierProperty); private set => SetValue(VolumeIdentifierPropertyKey, value); }
 
         #endregion
         #region LastCrawlEnd Property Members
@@ -252,17 +301,19 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         public AsyncOps.AsyncBgModalVM BgOps => (AsyncOps.AsyncBgModalVM)GetValue(BgOpsProperty);
 
         #endregion
-        internal CrawlConfigItemVM([DisallowNull] CrawlConfiguration model, AsyncOps.AsyncBgModalVM bgOpMgr = null)
+
+        internal CrawlConfigItemVM([DisallowNull] CrawlConfigListItem model)
             : base(model)
         {
             SetValue(BgOpsPropertyKey, new AsyncOps.AsyncBgModalVM());
             SetValue(StartCrawlNowCommandPropertyKey, new Commands.RelayCommand(parameter => StartCrawlNow?.Invoke(this, EventArgs.Empty)));
             SetValue(OpenRootFolderCommandPropertyKey, new Commands.RelayCommand(parameter => ShowLogs?.Invoke(this, EventArgs.Empty)));
             SetValue(OpenRootFolderCommandPropertyKey, new Commands.RelayCommand(parameter => OpenRootFolder?.Invoke(this, EventArgs.Empty)));
-            Subdirectory root = Model.Root;
-            if (root is not null)
-                (bgOpMgr ?? BgOps).FromAsync("Loading data", "Getting full path", root, LookupFullNameAsync);
+            FullName = SubdirectoryItemVM.FromAncestorNames(model.AncestorNames);
             DisplayName = model.DisplayName;
+            VolumeDisplayName = model.VolumeDisplayName;
+            VolumeName = model.VolumeName;
+            VolumeIdentifier = model.VolumeIdentifier;
             MaxRecursionDepth = model.MaxRecursionDepth;
             MaxTotalItems = model.MaxTotalItems;
             long? seconds = model.TTL;
@@ -276,40 +327,6 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             NextScheduledStart = model.NextScheduledStart;
             RescheduleFromJobEnd = model.RescheduleFromJobEnd;
             RescheduleAfterFail = model.RescheduleAfterFail;
-        }
-
-        internal CrawlConfigItemVM([DisallowNull] CrawlConfiguration model, string fullName, Guid rootId, AsyncOps.AsyncBgModalVM bgOpMgr = null)
-            : base(model)
-        {
-            SetValue(BgOpsPropertyKey, new AsyncOps.AsyncBgModalVM());
-            SetValue(StartCrawlNowCommandPropertyKey, new Commands.RelayCommand(parameter => StartCrawlNow?.Invoke(this, EventArgs.Empty)));
-            SetValue(OpenRootFolderCommandPropertyKey, new Commands.RelayCommand(parameter => ShowLogs?.Invoke(this, EventArgs.Empty)));
-            SetValue(OpenRootFolderCommandPropertyKey, new Commands.RelayCommand(parameter => OpenRootFolder?.Invoke(this, EventArgs.Empty)));
-            FullName = fullName;
-            Subdirectory root = Model.Root;
-            if (root is not null && root.Id != rootId)
-                (bgOpMgr ?? BgOps).FromAsync("Loading data", "Getting full path", root, LookupFullNameAsync);
-            DisplayName = model.DisplayName;
-            MaxRecursionDepth = model.MaxRecursionDepth;
-            MaxTotalItems = model.MaxTotalItems;
-            long? seconds = model.TTL;
-            TTL = seconds.HasValue ? TimeSpan.FromSeconds(seconds.Value) : null;
-            seconds = model.RescheduleInterval;
-            RescheduleInterval = seconds.HasValue ? TimeSpan.FromSeconds(seconds.Value) : null;
-            Notes = model.Notes;
-            StatusValue = model.StatusValue;
-            LastCrawlStart = model.LastCrawlStart;
-            LastCrawlEnd = model.LastCrawlEnd;
-            NextScheduledStart = model.NextScheduledStart;
-            RescheduleFromJobEnd = model.RescheduleFromJobEnd;
-            RescheduleAfterFail = model.RescheduleAfterFail;
-        }
-
-        private async Task<string> LookupFullNameAsync(Subdirectory root, IWindowsStatusListener statusListener)
-        {
-            string fullName = await root.GetFullNameAsync(statusListener.CancellationToken);
-            Dispatcher.Invoke(() => OnLookupFullNameComplete(fullName ?? ""));
-            return fullName;
         }
 
         private void OnLookupFullNameComplete(string result)
@@ -319,78 +336,69 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             FullName = result;
         }
         
-        internal static CrawlConfigItemVM UpsertItem(CrawlConfiguration item, ReadOnlyObservableCollection<CrawlConfigItemVM> crawlConfigurations, List<CrawlConfigItemVM> allCrawlConfigurations, bool showActive, bool showInactive)
-        {
-            // TODO: Add or update view model item
-            throw new NotImplementedException();
-        }
-
         protected override void OnNestedModelPropertyChanged(string propertyName)
         {
             switch (propertyName)
             {
-                case nameof(CrawlConfiguration.DisplayName):
+                case nameof(CrawlConfigListItem.DisplayName):
                     Dispatcher.CheckInvoke(() => DisplayName = Model?.DisplayName);
                     break;
-                case nameof(CrawlConfiguration.MaxRecursionDepth):
+                case nameof(CrawlConfigListItem.MaxRecursionDepth):
                     Dispatcher.CheckInvoke(() => MaxRecursionDepth = Model?.MaxRecursionDepth ?? DbConstants.DbColDefaultValue_MaxRecursionDepth);
                     break;
-                case nameof(CrawlConfiguration.MaxTotalItems):
+                case nameof(CrawlConfigListItem.MaxTotalItems):
                     Dispatcher.CheckInvoke(() => MaxTotalItems = Model?.MaxTotalItems);
                     break;
-                case nameof(CrawlConfiguration.TTL):
+                case nameof(CrawlConfigListItem.TTL):
                     Dispatcher.CheckInvoke(() =>
                     {
                         long? seconds = Model?.TTL;
                         TTL = seconds.HasValue ? TimeSpan.FromSeconds(seconds.Value) : null;
                     });
                     break;
-                case nameof(CrawlConfiguration.RescheduleInterval):
+                case nameof(CrawlConfigListItem.RescheduleInterval):
                     Dispatcher.CheckInvoke(() =>
                     {
                         long? seconds = Model?.RescheduleInterval;
                         RescheduleInterval = seconds.HasValue ? TimeSpan.FromSeconds(seconds.Value) : null;
                     });
                     break;
-                case nameof(CrawlConfiguration.Notes):
+                case nameof(CrawlConfigListItem.Notes):
                     Dispatcher.CheckInvoke(() => Notes = Model?.Notes);
                     break;
-                case nameof(CrawlConfiguration.StatusValue):
+                case nameof(CrawlConfigListItem.StatusValue):
                     Dispatcher.CheckInvoke(() => StatusValue = Model?.StatusValue ?? CrawlStatus.NotRunning);
                     break;
-                case nameof(CrawlConfiguration.LastCrawlStart):
+                case nameof(CrawlConfigListItem.LastCrawlStart):
                     Dispatcher.CheckInvoke(() => LastCrawlStart = Model?.LastCrawlStart);
                     break;
-                case nameof(CrawlConfiguration.LastCrawlEnd):
+                case nameof(CrawlConfigListItem.LastCrawlEnd):
                     Dispatcher.CheckInvoke(() => LastCrawlEnd = Model?.LastCrawlEnd);
                     break;
-                case nameof(CrawlConfiguration.NextScheduledStart):
+                case nameof(CrawlConfigListItem.NextScheduledStart):
                     Dispatcher.CheckInvoke(() => NextScheduledStart = Model?.NextScheduledStart);
                     break;
-                case nameof(CrawlConfiguration.RescheduleFromJobEnd):
+                case nameof(CrawlConfigListItem.RescheduleFromJobEnd):
                     Dispatcher.CheckInvoke(() => RescheduleFromJobEnd = Model?.RescheduleFromJobEnd ?? false);
                     break;
-                case nameof(CrawlConfiguration.RescheduleAfterFail):
+                case nameof(CrawlConfigListItem.RescheduleAfterFail):
                     Dispatcher.CheckInvoke(() => RescheduleAfterFail = Model?.RescheduleAfterFail ?? false);
                     break;
-                case nameof(CrawlConfiguration.Root):
-                    Subdirectory root = Model?.Root;
-                    if (root is null)
-                        OnLookupFullNameComplete("");
-                    else
-                        BgOps.FromAsync("Loading data", "Getting full path", root, LookupFullNameAsync);
+                case nameof(CrawlConfigListItem.AncestorNames):
+                    FullName = SubdirectoryItemVM.FromAncestorNames(Model?.AncestorNames);
                     return;
+                case nameof(CrawlConfigListItem.VolumeDisplayName):
+                    VolumeDisplayName = Model?.VolumeDisplayName ?? "";
+                    break;
+                case nameof(CrawlConfigListItem.VolumeName):
+                    VolumeName = Model?.VolumeName ?? "";
+                    break;
+                case nameof(CrawlConfigListItem.VolumeIdentifier):
+                    VolumeIdentifier = Model?.VolumeIdentifier ?? VolumeIdentifier.Empty;
+                    break;
             }
         }
 
-        protected override DbSet<CrawlConfiguration> GetDbSet(LocalDbContext dbContext) => dbContext.CrawlConfigurations;
-
-        ISimpleIdentityReference<Subdirectory> IHasSubdirectoryEntity.GetSubdirectoryEntity() => CheckAccess() ? Model?.Root : Dispatcher.Invoke(() => Model?.Root);
-
-        public async Task<ISimpleIdentityReference<Subdirectory>> GetSubdirectoryEntityAsync([DisallowNull] IWindowsStatusListener statusListener)
-        {
-            CrawlConfiguration model = await Dispatcher.InvokeAsync(() => Model);
-            return model.Root ?? IdentityReference<Subdirectory>.FromId(model.RootId);
-        }
+        protected override DbSet<CrawlConfigListItem> GetDbSet(LocalDbContext dbContext) => dbContext.CrawlConfigListing;
     }
 }

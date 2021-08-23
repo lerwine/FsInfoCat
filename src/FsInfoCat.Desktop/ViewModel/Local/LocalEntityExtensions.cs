@@ -10,8 +10,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 {
     public static class LocalEntityExtensions
     {
-        public static CrawlConfigItemVM ToItemViewModel([AllowNull] this CrawlConfiguration entity, AsyncOps.AsyncBgModalVM bgOpMgr = null) =>
-            (entity is null) ? null : new CrawlConfigItemVM(entity, bgOpMgr);
+        public static CrawlConfigItemVM ToItemViewModel([AllowNull] this CrawlConfigListItem entity) => (entity is null) ? null : new CrawlConfigItemVM(entity);
 
         public static SharedTagDefinitionItemVM ToItemViewModel([AllowNull] this SharedTagDefinitionListItem entity) => (entity is null) ? null : new SharedTagDefinitionItemVM(entity);
 

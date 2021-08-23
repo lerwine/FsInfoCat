@@ -75,7 +75,7 @@
             <TextBlock Text="No crawl configuration to dispay" HorizontalAlignment="Center" />
             <Button Content="Add New" HorizontalAlignment="Center" Command="{Binding NewClickCommand, Mode=OneWay, Source={StaticResource CrawlConfigurationsViewModel}}" Margin="{DynamicResource DefaultSpacing}" ToolTip="{x:Static res:Resources.Description_NewCurrentCrawlConfig}" Style="{DynamicResource DefaultButton}"/>
         </StackPanel>
-        <Grid Grid.Column="1" Margin="{DynamicResource DefaultSpacingLeft}" DataContext="{Binding SelectedCrawlConfig}" Visibility="{Binding Converter={StaticResource DependencyObjectToVisibilityConverter}, Mode=OneWay}">
+        <Grid Grid.Column="1" Margin="{DynamicResource DefaultSpacingLeft}" DataContext="{Binding SelectedItem}" Visibility="{Binding Converter={StaticResource DependencyObjectToVisibilityConverter}, Mode=OneWay}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition/>

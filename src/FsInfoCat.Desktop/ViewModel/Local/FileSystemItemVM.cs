@@ -50,31 +50,31 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         }
 
         #endregion
-        #region OpenVolumesWindow Command Members
+        #region GoToVolumesPage Command Members
 
         /// <summary>
-        /// Occurs when the <see cref="OpenVolumesWindow">OpenVolumesWindow Command</see> is invoked.
+        /// Occurs when the <see cref="GoToVolumesPage">GoToVolumesPage Command</see> is invoked.
         /// </summary>
         public event EventHandler<Commands.CommandEventArgs> ViewVolumesRequest;
 
-        private static readonly DependencyPropertyKey OpenVolumesWindowPropertyKey = DependencyProperty.RegisterReadOnly(nameof(OpenVolumesWindow),
+        private static readonly DependencyPropertyKey GoToVolumesPagePropertyKey = DependencyProperty.RegisterReadOnly(nameof(GoToVolumesPage),
             typeof(Commands.RelayCommand), typeof(FileSystemItemVM), new PropertyMetadata(null));
 
         /// <summary>
-        /// Identifies the <see cref=""/> dependency property.
+        /// Identifies the <see cref="GoToVolumesPage"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty OpenVolumesWindowProperty = OpenVolumesWindowPropertyKey.DependencyProperty;
+        public static readonly DependencyProperty GoToVolumesPageProperty = GoToVolumesPagePropertyKey.DependencyProperty;
 
         /// <summary>
-        /// Gets the $name$ command object.
+        /// Gets the command object for viewing the volume listing page.
         /// </summary>
-        /// <value>The <see cref="System.Windows.Input.ICommand"/> that implements the $command$ command.</value>
-        public Commands.RelayCommand OpenVolumesWindow => (Commands.RelayCommand)GetValue(OpenVolumesWindowProperty);
+        /// <value>The <see cref="System.Windows.Input.ICommand"/> that implements the <see cref="ViewVolumesRequest"/> command.</value>
+        public Commands.RelayCommand GoToVolumesPage => (Commands.RelayCommand)GetValue(GoToVolumesPageProperty);
 
         /// <summary>
-        /// Called when the OpenVolumesWindow event is raised by <see cref="OpenVolumesWindow" />.
+        /// Called when the <see cref="ViewVolumesRequest"/> event is raised by <see cref="GoToVolumesPage" />.
         /// </summary>
-        /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="OpenVolumesWindow" />.</param>
+        /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="GoToVolumesPage" />.</param>
         private void RaiseViewVolumesRequest(object parameter)
         {
             try { OnViewVolumesRequest(parameter); }
@@ -82,9 +82,9 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         }
 
         /// <summary>
-        /// Called when the <see cref="OpenVolumesWindow">OpenVolumesWindow Command</see> is invoked.
+        /// Called when the <see cref="GoToVolumesPage">GoToVolumesPage Command</see> is invoked.
         /// </summary>
-        /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="OpenVolumesWindow" />.</param>
+        /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="GoToVolumesPage" />.</param>
         protected virtual void OnViewVolumesRequest(object parameter)
         {
             // TODO: Implement OnOpenVolumes Logic
@@ -246,13 +246,6 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 
         #endregion
 
-        //internal FileSystemItemVM([DisallowNull] FileSystemsPageVM.EntityAndCounts result)
-        //    : this(result.Entity)
-        //{
-        //    SymbolicNameCount = result.SymbolicNameCount;
-        //    VolumeCount = result.VolumeCount;
-        //}
-
         internal FileSystemItemVM([DisallowNull] FileSystemListItem model)
             : base(model)
         {
@@ -264,7 +257,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             MaxNameLength = model.MaxNameLength;
             Notes = model.Notes;
             IsReadOnly = model.ReadOnly;
-            SetValue(OpenVolumesWindowPropertyKey, new Commands.RelayCommand(RaiseViewVolumesRequest));
+            SetValue(GoToVolumesPagePropertyKey, new Commands.RelayCommand(RaiseViewVolumesRequest));
             SetValue(ToggleCurrentItemActivationPropertyKey, new Commands.RelayCommand(RaiseToggleActivationRequest));
         }
 

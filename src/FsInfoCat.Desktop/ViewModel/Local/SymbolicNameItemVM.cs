@@ -89,6 +89,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         public string FileSystemDisplayName { get => GetValue(FileSystemDisplayNameProperty) as string; private set => SetValue(FileSystemDisplayNamePropertyKey, value); }
 
         #endregion
+
         public SymbolicNameItemVM([DisallowNull] SymbolicNameListItem model) : base(model)
         {
             Name = model.Name;

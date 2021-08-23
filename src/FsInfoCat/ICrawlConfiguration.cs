@@ -4,10 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat
 {
-    /// <summary>Specifies the configuration of a file system crawl.</summary>
-    /// <seealso cref="IDbEntity" />
-    /// <seealso cref="ICrawlSettings" />
-    public interface ICrawlConfiguration : IDbEntity, ICrawlSettings, IHasSimpleIdentifier
+    public interface ICrawlConfigurationRow : IDbEntity, ICrawlSettings, IHasSimpleIdentifier
     {
         /// <summary>Gets the display name.</summary>
         /// <value>The display name for the current crawl configuration.</value>
@@ -65,7 +62,12 @@ namespace FsInfoCat
         /// </value>
         [Display(Name = nameof(Properties.Resources.DisplayName_RescheduleAfterFail), ResourceType = typeof(Properties.Resources))]
         bool RescheduleAfterFail { get; }
-
+    }
+    /// <summary>Specifies the configuration of a file system crawl.</summary>
+    /// <seealso cref="IDbEntity" />
+    /// <seealso cref="ICrawlSettings" />
+    public interface ICrawlConfiguration : ICrawlConfigurationRow
+    {
         /// <summary>Gets the starting subdirectory for the configured subdirectory crawl.</summary>
         /// <value>The root subdirectory of the configured subdirectory crawl.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_Root), ResourceType = typeof(Properties.Resources))]
@@ -76,6 +78,17 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_Logs), ResourceType = typeof(Properties.Resources))]
         IEnumerable<ICrawlJobLog> Logs { get; }
     }
+    public interface ICrawlConfigurationListItem : ICrawlConfigurationRow
+    {
+        string AncestorNames { get; }
 
+        Guid VolumeId { get; }
+
+        string VolumeDisplayName { get; }
+
+        string VolumeName { get; }
+
+        VolumeIdentifier VolumeIdentifier { get; }
+    }
 }
 
