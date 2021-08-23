@@ -905,21 +905,3 @@ INSERT INTO "BinaryPropertySets" ("Id", "Length", "CreatedOn", "ModifiedOn")
     VALUES('82d46e21-5eba-4f1b-8c99-78cb94689316', 25057982, '2021-08-22 14:32:22', '2021-08-22 14:32:2s');
 INSERT INTO "Files" ("Id", "Name", "CreationTime", "LastWriteTime", "CreatedOn", "ParentId", "BinaryPropertySetId")
     VALUES ('5f7b7beb-5aae-496a-925c-b3a43666c742', 'the move down on the bay - YouTube.webm', '2020-07-19 00:02:07', '2020-07-19 00:04:35', '2021-08-22 14:32:22', '3dfc92c9-8af0-4ab6-bcc3-9104fdcdc35a', '82d46e21-5eba-4f1b-8c99-78cb94689316');
-
-SELECT Subdirectories.*, (SELECT count(s.Id) FROM Subdirectories s WHERE s.ParentId=Subdirectories.Id) AS SubdirectoryCount,
-	(SELECT count(Files.Id) FROM Files WHERE Files.ParentId=Subdirectories.Id) AS FileCount,
-	(SELECT count(SubdirectoryAccessErrors.Id) FROM SubdirectoryAccessErrors WHERE SubdirectoryAccessErrors.TargetId=Subdirectories.Id) AS AccessErrorCount,
-	(SELECT count(SharedSubdirectoryTags.SharedTagDefinitionId) FROM SharedSubdirectoryTags WHERE SharedSubdirectoryTags.SubdirectoryId=Subdirectories.Id) AS SharedTagCount,
-	(SELECT count(PersonalSubdirectoryTags.PersonalTagDefinitionId) FROM PersonalSubdirectoryTags WHERE PersonalSubdirectoryTags.SubdirectoryId=Subdirectories.Id) AS PersonalTagCount, (WITH RECURSIVE
-    directlyContains(ChildId, ParentId) AS (SELECT Id, ParentId FROM Subdirectories),
-    containerOf(ChildId) AS (SELECT ParentId FROM directlyContains WHERE ChildId=Subdirectories.Id UNION ALL SELECT ParentId FROM directlyContains JOIN containerOf USING(ChildId))
-    SELECT group_concat(ParentSubdir.Name, '/') FROM containerOf, Subdirectories AS ParentSubdir WHERE containerOf.ChildId=ParentSubdir.Id) AS AncestorNames FROM Subdirectories;
-
-SELECT "Files".*,
-	(SELECT count("Redundancies"."RedundantSetId") FROM "Redundancies" WHERE "Redundancies"."FileId"="Files"."Id") AS "RedundancyCount",
-	(SELECT count("Comparisons"."AreEqual") FROM "Comparisons" WHERE "Comparisons"."BaselineId"="Files"."Id" OR "Comparisons"."CorrelativeId"="Files"."Id") AS "ComparisonCount",
-	(SELECT count("FileAccessErrors"."Id") FROM "FileAccessErrors" WHERE "FileAccessErrors"."TargetId"="Files"."Id") AS "AccessErrorCount",
-	(SELECT count("SharedFileTags"."SharedTagDefinitionId") FROM "SharedFileTags" WHERE "SharedFileTags"."FileId"="Files"."Id") AS "SharedTagCount",
-	(SELECT count("PersonalFileTags"."PersonalTagDefinitionId") FROM "PersonalFileTags" WHERE "PersonalFileTags"."FileId"="Files"."Id") AS "PersonalTagCount",
-	"vSubdirectoryAncestorNames"."AncestorNames" FROM "Files"
-	LEFT JOIN "vSubdirectoryAncestorNames" ON "Files"."ParentId"="vSubdirectoryAncestorNames"."Id";

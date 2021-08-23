@@ -1,7 +1,12 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
 namespace FsInfoCat.Local
 {
     public class FileWithBinaryProperties : DbFileRow, ILocalFileListItemWithBinaryProperties
     {
+        private const string VIEW_NAME = "vFileListingWithBinaryProperties";
+
         private readonly IPropertyChangeTracker<long> _length;
         private readonly IPropertyChangeTracker<MD5Hash?> _hash;
         private readonly IPropertyChangeTracker<long> _redundancyCount;
@@ -23,6 +28,12 @@ namespace FsInfoCat.Local
         public long PersonalTagCount { get => _personalTagCount.GetValue(); set => _personalTagCount.SetValue(value); }
 
         public long SharedTagCount { get => _sharedTagCount.GetValue(); set => _sharedTagCount.SetValue(value); }
+
+        internal static void OnBuildEntity(EntityTypeBuilder<FileWithBinaryProperties> builder)
+        {
+            builder.ToView(VIEW_NAME);
+            builder.Property(nameof(Hash)).HasConversion(MD5Hash.Converter);
+        }
 
         public FileWithBinaryProperties()
         {

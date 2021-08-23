@@ -3,19 +3,16 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace FsInfoCat.Local
 {
-    public class SubdirectoryListItem : SubdirectoryRow, ILocalSubdirectoryListItem
+    public class VolumeListItem : VolumeRow, ILocalVolumeListItem
     {
-        public const string VIEW_NAME = "vSubdirectoryListing";
+        public const string VIEW_NAME = "vVolumeListing";
 
-        private readonly IPropertyChangeTracker<long> _subdirectoryCount;
-        private readonly IPropertyChangeTracker<long> _fileCount;
         private readonly IPropertyChangeTracker<long> _accessErrorCount;
         private readonly IPropertyChangeTracker<long> _personalTagCount;
         private readonly IPropertyChangeTracker<long> _sharedTagCount;
+        private readonly IPropertyChangeTracker<string> _rootPath;
 
-        public long SubdirectoryCount { get => _subdirectoryCount.GetValue(); set => _subdirectoryCount.SetValue(value); }
-
-        public long FileCount { get => _fileCount.GetValue(); set => _fileCount.SetValue(value); }
+        public string RootPath { get => _rootPath.GetValue(); set => _rootPath.SetValue(value); }
 
         public long AccessErrorCount { get => _accessErrorCount.GetValue(); set => _accessErrorCount.SetValue(value); }
 
@@ -23,12 +20,15 @@ namespace FsInfoCat.Local
 
         public long SharedTagCount { get => _sharedTagCount.GetValue(); set => _sharedTagCount.SetValue(value); }
 
-        internal static void OnBuildEntity(EntityTypeBuilder<SubdirectoryListItem> builder) => builder.ToView(VIEW_NAME);
-
-        public SubdirectoryListItem()
+        internal static void OnBuildEntity(EntityTypeBuilder<VolumeListItem> builder)
         {
-            _subdirectoryCount = AddChangeTracker(nameof(SubdirectoryCount), 0L);
-            _fileCount = AddChangeTracker(nameof(FileCount), 0L);
+            builder.ToView(VIEW_NAME);
+            builder.Property(nameof(Identifier)).HasConversion(VolumeIdentifier.Converter);
+        }
+
+        public VolumeListItem()
+        {
+            _rootPath = AddChangeTracker(nameof(RootPath), "", NonNullStringCoersion.Default);
             _accessErrorCount = AddChangeTracker(nameof(AccessErrorCount), 0L);
             _personalTagCount = AddChangeTracker(nameof(PersonalTagCount), 0L);
             _sharedTagCount = AddChangeTracker(nameof(SharedTagCount), 0L);

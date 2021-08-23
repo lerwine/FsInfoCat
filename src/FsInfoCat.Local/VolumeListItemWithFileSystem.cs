@@ -1,7 +1,12 @@
-﻿namespace FsInfoCat.Local
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
+namespace FsInfoCat.Local
 {
     public class VolumeListItemWithFileSystem : VolumeListItem, ILocalVolumeListItemWithFileSystem
     {
+        public const string VIEW_NAME_WITH_FILESYSTEM = "vVolumeListingWithFileSystem";
+
         private readonly IPropertyChangeTracker<string> _fileSystemDisplayName;
         private readonly IPropertyChangeTracker<bool> _effectiveReadOnly;
         private readonly IPropertyChangeTracker<uint> _effectiveMaxNameLength;
@@ -11,6 +16,12 @@
         public bool EffectiveReadOnly { get => _effectiveReadOnly.GetValue(); set => _effectiveReadOnly.SetValue(value); }
 
         public uint EffectiveMaxNameLength { get => _effectiveMaxNameLength.GetValue(); set => _effectiveMaxNameLength.SetValue(value); }
+
+        internal static void OnBuildEntity(EntityTypeBuilder<VolumeListItemWithFileSystem> builder)
+        {
+            builder.ToView(VIEW_NAME_WITH_FILESYSTEM);
+            builder.Property(nameof(Identifier)).HasConversion(VolumeIdentifier.Converter);
+        }
 
         public VolumeListItemWithFileSystem()
         {

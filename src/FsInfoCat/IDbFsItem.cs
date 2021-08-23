@@ -67,6 +67,15 @@ namespace FsInfoCat
         long SharedTagCount { get; }
     }
 
-    public interface IDbFsItemListItemWithAncestorNames : IDbFsItemListItem, IDbFsItemAncestorName { }
+    public interface IDbFsItemListItemWithAncestorNames : IDbFsItemListItem, IDbFsItemAncestorName
+    {
+        Guid EffectiveVolumeId { get; }
+
+        string VolumeDisplayName { get; }
+
+        string VolumeName { get; }
+
+        VolumeIdentifier VolumeIdentifier { get; }
+    }
 }
 

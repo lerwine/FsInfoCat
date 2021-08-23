@@ -14,7 +14,7 @@ namespace FsInfoCat.Local
 
         protected abstract ILocalTagDefinition GetDefinition();
 
-        [Key]
+        [Required]
         public virtual Guid TaggedId
         {
             get => _taggedId.GetValue();
@@ -25,7 +25,7 @@ namespace FsInfoCat.Local
             }
         }
 
-        [Key]
+        [Required]
         public virtual Guid DefinitionId
         {
             get => _definitionId.GetValue();

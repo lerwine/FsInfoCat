@@ -53,7 +53,7 @@ namespace FsInfoCat
     {
         Guid ParentId { get; }
     }
-    public interface IFileListItemWithAncestorNames : IDbFsItemListItem, IFileRow, IFileAncestorName { }
+    public interface IFileListItemWithAncestorNames : IDbFsItemListItemWithAncestorNames, IFileRow, IFileAncestorName { }
 
     public interface IFileListItemWithBinaryProperties : IDbFsItemListItem, IFileRow
     {
