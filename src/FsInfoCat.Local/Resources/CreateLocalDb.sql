@@ -1,8 +1,8 @@
 -- Deleting tables
 
-DROP VIEW IF EXISTS "vFilesWithAncestorNames";
-DROP VIEW IF EXISTS "vFilesWithBinaryProperties";
-DROP VIEW IF EXISTS "vFilesWithBinaryPropertiesAndAncestorNames";
+DROP VIEW IF EXISTS "vFileListingWithAncestorNames";
+DROP VIEW IF EXISTS "vFileListingWithBinaryProperties";
+DROP VIEW IF EXISTS "vFileListingWithBinaryPropertiesAndAncestorNames";
 DROP VIEW IF EXISTS "vSubdirectoryListing";
 DROP VIEW IF EXISTS "vSubdirectoryAncestorNames";
 DROP VIEW IF EXISTS "vSubdirectoryListingWithAncestorNames";
@@ -809,17 +809,6 @@ CREATE VIEW IF NOT EXISTS "vSubdirectoryListingWithAncestorNames" AS SELECT "Sub
         directlyContains("ChildId", "ParentId") AS (SELECT "Id", "ParentId" FROM "Subdirectories"),
         containerOf("ChildId") AS (SELECT "ParentId" FROM directlyContains WHERE "ChildId"="Subdirectories"."Id" UNION ALL SELECT "ParentId" FROM directlyContains JOIN containerOf USING("ChildId"))
         SELECT group_concat("ParentSubdir"."Name", '/') FROM containerOf, "Subdirectories" AS "ParentSubdir" WHERE containerOf."ChildId"="ParentSubdir"."Id"
-    ) AS "AncestorNames" FROM "Subdirectories";
-    
-CREATE VIEW IF NOT EXISTS "vSubdirectoryListingWithAncestorNames" AS SELECT "Subdirectories".*, (SELECT count("s"."Id") FROM "Subdirectories" "s" WHERE "s"."ParentId"="Subdirectories"."Id") AS "SubdirectoryCount",
-	(SELECT count("Files"."Id") FROM "Files" WHERE "Files"."ParentId"="Subdirectories"."Id") AS "FileCount",
-	(SELECT count("SubdirectoryAccessErrors"."Id") FROM "SubdirectoryAccessErrors" WHERE "SubdirectoryAccessErrors"."TargetId"="Subdirectories"."Id") AS "AccessErrorCount",
-	(SELECT count("SharedSubdirectoryTags"."SharedTagDefinitionId") FROM "SharedSubdirectoryTags" WHERE "SharedSubdirectoryTags"."SubdirectoryId"="Subdirectories"."Id") AS "SharedTagCount",
-	(SELECT count("PersonalSubdirectoryTags"."PersonalTagDefinitionId") FROM "PersonalSubdirectoryTags" WHERE "PersonalSubdirectoryTags"."SubdirectoryId"="Subdirectories"."Id") AS "PersonalTagCount",
-    (WITH RECURSIVE
-        directlyContains("ChildId", "ParentId") AS (SELECT "Id", "ParentId" FROM "Subdirectories"),
-        containerOf("ChildId") AS (SELECT "ParentId" FROM directlyContains WHERE "ChildId"="Subdirectories"."Id" UNION ALL SELECT "ParentId" FROM directlyContains JOIN containerOf USING("ChildId"))
-        SELECT group_concat("ParentSubdir"."Name", '/') FROM containerOf, "Subdirectories" AS "ParentSubdir" WHERE containerOf."ChildId"="ParentSubdir"."Id"
     ) AS "AncestorNames",
     ifnull("Subdirectories"."VolumeId", (WITH RECURSIVE
         directlyContains("ChildId", "ParentId") AS (SELECT "Id", "ParentId" FROM "Subdirectories"),
@@ -833,10 +822,17 @@ CREATE VIEW IF NOT EXISTS "vSubdirectoryAncestorNames" AS SELECT "Subdirectories
     containerOf("ChildId") AS (SELECT "ParentId" FROM directlyContains WHERE "ChildId"="Subdirectories"."Id" UNION ALL SELECT "ParentId" FROM directlyContains JOIN containerOf USING("ChildId"))
     SELECT group_concat("ParentSubdir"."Name", '/') FROM containerOf, "Subdirectories" AS "ParentSubdir" WHERE containerOf."ChildId"="ParentSubdir"."Id") AS "AncestorNames" FROM "Subdirectories";
 
-CREATE VIEW IF NOT EXISTS "vFilesWithAncestorNames" AS SELECT "Files".*, "vSubdirectoryAncestorNames"."AncestorNames" FROM "Files"
-	LEFT JOIN "vSubdirectoryAncestorNames" ON "Files"."ParentId"="vSubdirectoryAncestorNames"."Id";
+CREATE VIEW IF NOT EXISTS "vFileListingWithAncestorNames" AS SELECT "Files".*,
+	iif("vSubdirectoryListingWithAncestorNames"."AncestorNames" IS NULL,
+		"vSubdirectoryListingWithAncestorNames"."Name",
+		printf('%s/%s', "vSubdirectoryListingWithAncestorNames"."Name", "vSubdirectoryListingWithAncestorNames"."AncestorNames")
+	) AS "AncestorNames",
+    "vSubdirectoryListingWithAncestorNames"."EffectiveVolumeId", "vSubdirectoryListingWithAncestorNames"."VolumeDisplayName",
+	"vSubdirectoryListingWithAncestorNames"."VolumeName", "vSubdirectoryListingWithAncestorNames"."VolumeIdentifier"
+	FROM "Files"
+	LEFT JOIN "vSubdirectoryListingWithAncestorNames" ON "Files"."ParentId"="vSubdirectoryListingWithAncestorNames"."Id";
     
-CREATE VIEW IF NOT EXISTS "vFilesWithBinaryProperties" AS SELECT "Files".*, "BinaryPropertySets"."Length", "BinaryPropertySets"."Hash",
+CREATE VIEW IF NOT EXISTS "vFileListingWithBinaryProperties" AS SELECT "Files".*, "BinaryPropertySets"."Length", "BinaryPropertySets"."Hash",
 	(SELECT count("Redundancies"."RedundantSetId") FROM "Redundancies" WHERE "Redundancies"."FileId"="Files"."Id") AS "RedundancyCount",
 	(SELECT count("Comparisons"."AreEqual") FROM "Comparisons" WHERE "Comparisons"."BaselineId"="Files"."Id" OR "Comparisons"."CorrelativeId"="Files"."Id") AS "ComparisonCount",
 	(SELECT count("FileAccessErrors"."Id") FROM "FileAccessErrors" WHERE "FileAccessErrors"."TargetId"="Files"."Id") AS "AccessErrorCount",
@@ -844,10 +840,16 @@ CREATE VIEW IF NOT EXISTS "vFilesWithBinaryProperties" AS SELECT "Files".*, "Bin
 	(SELECT count("PersonalFileTags"."PersonalTagDefinitionId") FROM "PersonalFileTags" WHERE "PersonalFileTags"."FileId"="Files"."Id") AS "PersonalTagCount" FROM "Files"
 	LEFT JOIN "BinaryPropertySets" ON "Files"."BinaryPropertySetId"="BinaryPropertySets"."Id";
 
-CREATE VIEW IF NOT EXISTS "vFilesWithBinaryPropertiesAndAncestorNames" AS SELECT "Files".*, "BinaryPropertySets"."Length", "BinaryPropertySets"."Hash",
-    "vSubdirectoryAncestorNames"."AncestorNames" FROM "Files"
+CREATE VIEW IF NOT EXISTS "vFileListingWithBinaryPropertiesAndAncestorNames" AS SELECT "Files".*, "BinaryPropertySets"."Length", "BinaryPropertySets"."Hash",
+	iif("vSubdirectoryListingWithAncestorNames"."AncestorNames" IS NULL,
+		"vSubdirectoryListingWithAncestorNames"."Name",
+		printf('%s/%s', "vSubdirectoryListingWithAncestorNames"."Name", "vSubdirectoryListingWithAncestorNames"."AncestorNames")
+	) AS "AncestorNames",
+    "vSubdirectoryListingWithAncestorNames"."EffectiveVolumeId", "vSubdirectoryListingWithAncestorNames"."VolumeDisplayName",
+	"vSubdirectoryListingWithAncestorNames"."VolumeName", "vSubdirectoryListingWithAncestorNames"."VolumeIdentifier"
+	FROM "Files"
 	LEFT JOIN "BinaryPropertySets" ON "Files"."BinaryPropertySetId"="BinaryPropertySets"."Id"
-	LEFT JOIN "vSubdirectoryAncestorNames" ON "Files"."ParentId"="vSubdirectoryAncestorNames"."Id";
+	LEFT JOIN "vSubdirectoryListingWithAncestorNames" ON "Files"."ParentId"="vSubdirectoryListingWithAncestorNames"."Id";
 
 INSERT INTO "FileSystems" ("Id", "DisplayName", "CreatedOn", "ModifiedOn")
 	VALUES ('bedb396b-2212-4149-9cad-7e437c47314c', 'New Technology File System', '2004-08-19 14:51:06', '2004-08-19 14:51:06');
