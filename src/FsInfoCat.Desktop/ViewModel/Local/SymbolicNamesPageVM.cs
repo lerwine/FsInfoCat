@@ -9,7 +9,7 @@ using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel.Local
 {
-    public class SymbolicNamesPageVM : DbEntityListingPageVM<SymbolicName, SymbolicNameItemVM>
+    public class SymbolicNamesPageVM : DbEntityListingPageVM<SymbolicNameListItem, SymbolicNameItemVM>
     {
         #region IsEditingViewOptions Property Members
 
@@ -123,20 +123,20 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             statusListener.CancellationToken.ThrowIfCancellationRequested();
             IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
             LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
-            IQueryable<SymbolicName> items;
+            IQueryable<SymbolicNameListItem> items;
             if (isInactive.HasValue)
             {
                 if (isInactive.Value)
-                    items = from s in dbContext.SymbolicNames where s.IsInactive select s;
+                    items = from s in dbContext.SymbolicNameListing where s.IsInactive select s;
                 else
-                    items = from s in dbContext.SymbolicNames where !s.IsInactive select s;
+                    items = from s in dbContext.SymbolicNameListing where !s.IsInactive select s;
             }
             else
-                items = from s in dbContext.SymbolicNames select s;
+                items = from s in dbContext.SymbolicNameListing select s;
             return await OnEntitiesLoaded(items, statusListener, entity => new SymbolicNameItemVM(entity));
         }
 
-        protected override DbSet<SymbolicName> GetDbSet(LocalDbContext dbContext) => dbContext.SymbolicNames;
+        protected override DbSet<SymbolicNameListItem> GetDbSet(LocalDbContext dbContext) => dbContext.SymbolicNameListing;
 
         protected override Func<IWindowsStatusListener, Task<int>> GetItemsLoaderFactory()
         {

@@ -107,7 +107,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             BgOps.FromAsync("Loading data", "Getting file system options", PickFromActiveFileSystems.Value, ReloadFileSystemsAsync).ContinueWith(task => Dispatcher.Invoke(() =>
             {
                 _backingFileSystemOptions.Clear();
-                foreach (FileSystem entity in task.Result)
+                foreach (FileSystemListItem entity in task.Result)
                     _backingFileSystemOptions.Add(new(entity));
                 if (current is null)
                     return;
@@ -197,52 +197,47 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             return base.OnSaveChangesAsync(entry, dbContext, statusListener, force);
         }
 
-        private static async Task<ICollection<FileSystem>> ReloadFileSystemsAsync(bool? selectActive, IWindowsStatusListener statusListener)
+        private static async Task<ICollection<FileSystemListItem>> ReloadFileSystemsAsync(bool? selectActive, IWindowsStatusListener statusListener)
         {
             using IServiceScope scope = Services.ServiceProvider.CreateScope();
             using LocalDbContext dbContext = scope.ServiceProvider.GetRequiredService<LocalDbContext>();
             if (selectActive.HasValue)
             {
                 if (selectActive.Value)
-                    return await (from f in dbContext.FileSystems where f.IsInactive == false select f).ToArrayAsync(statusListener.CancellationToken);
-                return await (from f in dbContext.FileSystems where f.IsInactive == true select f).ToArrayAsync(statusListener.CancellationToken);
+                    return await (from f in dbContext.FileSystemListing where f.IsInactive == false select f).ToArrayAsync(statusListener.CancellationToken);
+                return await (from f in dbContext.FileSystemListing where f.IsInactive == true select f).ToArrayAsync(statusListener.CancellationToken);
             }
-            return await dbContext.FileSystems.ToArrayAsync(statusListener.CancellationToken);
+            return await dbContext.FileSystemListing.ToArrayAsync(statusListener.CancellationToken);
         }
 
         protected override void OnModelPropertyChanged(SymbolicName oldValue, SymbolicName newValue)
         {
+            FileSystemListItem previouslySelected = (oldValue is null) ? null : Dispatcher.CheckInvoke(() =>
+            {
+                Guid id = oldValue.FileSystemId;
+                return _backingFileSystemOptions.FirstOrDefault(o => o.Model?.Id == id)?.Model;
+            });
             if (newValue is null)
             {
-                SetSelectedFileSystemAsync(null);
+                SetSelectedFileSystemAsync(null, previouslySelected);
                 Notes = Name = "";
                 IsInactive = false;
                 Priority = 0;
                 return;
             }
-            SetSelectedFileSystemAsync(newValue.FileSystem);
+            SetSelectedFileSystemAsync(newValue.FileSystemId, previouslySelected);
             Name = newValue.Name;
             IsInactive = newValue.IsInactive;
             Notes = newValue.Notes;
             Priority = newValue.Priority;
         }
 
-        private void SetSelectedFileSystemAsync(FileSystem fileSystem)
+        private void SetSelectedFileSystemAsync(Guid? fileSystemId, FileSystemListItem previouslySelected)
         {
-            Task<ICollection<FileSystem>> result;
-            if (fileSystem is null)
+            Task<ICollection<FileSystemListItem>> result;
+            if (fileSystemId.HasValue)
             {
-                if (Dispatcher.CheckInvoke(() =>
-                {
-                    SelectedFileSystem = null;
-                    return _backingFileSystemOptions.Count > 0;
-                }))
-                    return;
-                result = BgOps.FromAsync("Loading data", "Getting file system options", Dispatcher.CheckInvoke(() => PickFromActiveFileSystems.Value), ReloadFileSystemsAsync);
-            }
-            else
-            {
-                Guid id = fileSystem.Id;
+                Guid id = fileSystemId.Value;
                 if (Dispatcher.CheckInvoke(() =>
                 {
                     if (SelectedFileSystem?.Model?.Id == id)
@@ -261,36 +256,53 @@ namespace FsInfoCat.Desktop.ViewModel.Local
                 {
                     displayOptions = Dispatcher.CheckInvoke(() =>
                     {
-                        if (fileSystem.IsInactive)
+                        if (previouslySelected is not null)
                         {
-                            if (PickFromActiveFileSystems.IsTrue)
-                                PickFromActiveFileSystems.IsNull = true;
+                            if (previouslySelected.IsInactive)
+                            {
+                                if (PickFromActiveFileSystems.IsTrue)
+                                    PickFromActiveFileSystems.IsNull = true;
+                            }
+                            else if (PickFromActiveFileSystems.IsFalse)
+                                PickFromActiveFileSystems.IsTrue = true;
                         }
-                        else if (PickFromActiveFileSystems.IsFalse)
-                            PickFromActiveFileSystems.IsTrue = true;
                         return PickFromActiveFileSystems.Value;
                     });
                 }
                 finally { Interlocked.Decrement(ref _ignoreFileSystemOptionsChange); }
                 result = BgOps.FromAsync("Loading data", "Getting file system options", displayOptions, ReloadFileSystemsAsync);
             }
+            else
+            {
+                if (Dispatcher.CheckInvoke(() =>
+                {
+                    SelectedFileSystem = null;
+                    return _backingFileSystemOptions.Count > 0;
+                }))
+                    return;
+                result = BgOps.FromAsync("Loading data", "Getting file system options", Dispatcher.CheckInvoke(() => PickFromActiveFileSystems.Value), ReloadFileSystemsAsync);
+            }
 
             result.ContinueWith(task => Dispatcher.Invoke(() =>
             {
                 _backingFileSystemOptions.Clear();
-                foreach (FileSystem entity in task.Result)
+                foreach (FileSystemListItem entity in task.Result)
                     _backingFileSystemOptions.Add(new(entity));
-                if (fileSystem is null)
-                    return null;
-                Guid id = fileSystem.Id;
-                FileSystemItemVM vm = _backingFileSystemOptions.FirstOrDefault(v => v.Model.Id == id);
-                if (vm is null)
+                if (fileSystemId.HasValue)
                 {
-                    vm = new(fileSystem);
-                    _backingFileSystemOptions.Add(vm);
+                    Guid id = fileSystemId.Value;
+                    FileSystemItemVM vm = _backingFileSystemOptions.FirstOrDefault(v => v.Model.Id == id);
+                    if (vm is null)
+                    {
+                        if (previouslySelected is null)
+                            return null;
+                        vm = new(previouslySelected);
+                        _backingFileSystemOptions.Add(vm);
+                    }
+                    SelectedFileSystem = vm;
+                    return vm;
                 }
-                SelectedFileSystem = vm;
-                return vm;
+                return null;
             }), TaskContinuationOptions.OnlyOnRanToCompletion);
         }
 
@@ -303,7 +315,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             model.IsInactive = IsInactive;
             model.Notes = Notes.EmptyIfNullOrWhiteSpace();
             model.Priority = Priority;
-            model.FileSystem = SelectedFileSystem.Model;
+            model.FileSystemId = SelectedFileSystem.Model.Id;
             return true;
         }
     }

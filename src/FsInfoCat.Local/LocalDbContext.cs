@@ -87,6 +87,32 @@ namespace FsInfoCat.Local
 
         public virtual DbSet<CrawlConfiguration> CrawlConfigurations { get; set; }
 
+        public virtual DbSet<SymbolicNameListItem> SymbolicNameListing { get; set; }
+
+        public virtual DbSet<FileSystemListItem> FileSystemListing { get; set; }
+
+        public virtual DbSet<PersonalTagDefinitionListItem> PersonalTagDefinitionListing { get; set; }
+
+        public virtual DbSet<SharedTagDefinitionListItem> SharedTagDefinitionListing { get; set; }
+
+        public virtual DbSet<RedundantSetListItem> RedundantSetListing { get; set; }
+
+        public virtual DbSet<VolumeListItem> VolumeListing { get; set; }
+
+        public virtual DbSet<VolumeListItemWithFileSystem> VolumeListingWithFileSystem { get; set; }
+
+        public virtual DbSet<SubdirectoryListItem> SubdirectoryListing { get; set; }
+
+        public virtual DbSet<SubdirectoryListItemWithAncestorNames> SubdirectoryListingWithAncestorNames { get; set; }
+
+        public virtual DbSet<SubdirectoryAncestorNames> SubdirectoryAncestorNames { get; set; }
+
+        public virtual DbSet<FileWithAncestorNames> FileListingWithAncestorNames { get; set; }
+
+        public virtual DbSet<FileWithBinaryProperties> FileListingWithBinaryProperties { get; set; }
+
+        public virtual DbSet<FileWithBinaryPropertiesAndAncestorNames> FileListingWithBinaryPropertiesAndAncestorNames { get; set; }
+
         public LocalDbContext(DbContextOptions<LocalDbContext> options)
             : base(options)
         {
@@ -146,7 +172,7 @@ namespace FsInfoCat.Local
                 .Entity<Subdirectory>(Subdirectory.OnBuildEntity)
                 .Entity<SubdirectoryListItem>(SubdirectoryListItem.OnBuildEntity)
                 .Entity<SubdirectoryListItemWithAncestorNames>(SubdirectoryListItemWithAncestorNames.OnBuildEntity)
-                .Entity<SubdirectoryAncestorNames>(SubdirectoryAncestorNames.OnBuildEntity)
+                .Entity<SubdirectoryAncestorNames>(Local.SubdirectoryAncestorNames.OnBuildEntity)
                 .Entity<CrawlConfiguration>(CrawlConfiguration.OnBuildEntity)
                 .Entity<CrawlJobLog>(CrawlJobLog.OnBuildEntity)
                 .Entity<DbFile>(DbFile.OnBuildEntity)

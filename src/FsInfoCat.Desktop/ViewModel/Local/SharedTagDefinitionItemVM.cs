@@ -6,7 +6,7 @@ using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel.Local
 {
-    public class SharedTagDefinitionItemVM : DbEntityItemVM<SharedTagDefinition>
+    public class SharedTagDefinitionItemVM : DbEntityItemVM<SharedTagDefinitionListItem>
     {
         #region ToggleCurrentItemActivation Property Members
 
@@ -221,108 +221,103 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         public string Description { get => GetValue(DescriptionProperty) as string; private set => SetValue(DescriptionPropertyKey, value); }
 
         #endregion
-        #region VolumeCount Property Members
+        #region VolumeTagCount Property Members
 
-        private static readonly DependencyPropertyKey VolumeCountPropertyKey = DependencyProperty.RegisterReadOnly(nameof(VolumeCount), typeof(int), typeof(SharedTagDefinitionItemVM),
-                new PropertyMetadata(0, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as SharedTagDefinitionItemVM).OnVolumeCountPropertyChanged((int)e.OldValue, (int)e.NewValue)));
-
-        /// <summary>
-        /// Identifies the <see cref="VolumeCount"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty VolumeCountProperty = VolumeCountPropertyKey.DependencyProperty;
+        private static readonly DependencyPropertyKey VolumeTagCountPropertyKey = DependencyProperty.RegisterReadOnly(nameof(VolumeTagCount), typeof(long), typeof(SharedTagDefinitionItemVM),
+                new PropertyMetadata(0, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as SharedTagDefinitionItemVM).OnVolumeTagCountPropertyChanged((long)e.OldValue, (long)e.NewValue)));
 
         /// <summary>
-        /// Gets .
+        /// Identifies the <see cref="VolumeTagCount"/> dependency property.
         /// </summary>
-        /// <value>The .</value>
-        public int VolumeCount { get => (int)GetValue(VolumeCountProperty); private set => SetValue(VolumeCountPropertyKey, value); }
-
-        /// <summary>
-        /// Called when the value of the <see cref="VolumeCount"/> dependency property has changed.
-        /// </summary>
-        /// <param name="oldValue">The previous value of the <see cref="VolumeCount"/> property.</param>
-        /// <param name="newValue">The new value of the <see cref="VolumeCount"/> property.</param>
-        private void OnVolumeCountPropertyChanged(int oldValue, int newValue)
-        {
-            DeleteCurrentItem.IsEnabled = newValue == 0 && FileCount == 0;
-        }
-
-        #endregion
-        #region SubdirectoryCount Property Members
-
-        private static readonly DependencyPropertyKey SubdirectoryCountPropertyKey = DependencyProperty.RegisterReadOnly(nameof(SubdirectoryCount), typeof(int), typeof(SharedTagDefinitionItemVM),
-                new PropertyMetadata(0, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as SharedTagDefinitionItemVM).OnSubdirectoryCountPropertyChanged((int)e.OldValue, (int)e.NewValue)));
-
-        /// <summary>
-        /// Identifies the <see cref="SubdirectoryCount"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty SubdirectoryCountProperty = SubdirectoryCountPropertyKey.DependencyProperty;
+        public static readonly DependencyProperty VolumeTagCountProperty = VolumeTagCountPropertyKey.DependencyProperty;
 
         /// <summary>
         /// Gets .
         /// </summary>
         /// <value>The .</value>
-        public int SubdirectoryCount { get => (int)GetValue(SubdirectoryCountProperty); private set => SetValue(SubdirectoryCountPropertyKey, value); }
+        public long VolumeTagCount { get => (long)GetValue(VolumeTagCountProperty); private set => SetValue(VolumeTagCountPropertyKey, value); }
 
         /// <summary>
-        /// Called when the value of the <see cref="SubdirectoryCount"/> dependency property has changed.
+        /// Called when the value of the <see cref="VolumeTagCount"/> dependency property has changed.
         /// </summary>
-        /// <param name="oldValue">The previous value of the <see cref="SubdirectoryCount"/> property.</param>
-        /// <param name="newValue">The new value of the <see cref="SubdirectoryCount"/> property.</param>
-        private void OnSubdirectoryCountPropertyChanged(int oldValue, int newValue)
+        /// <param name="oldValue">The previous value of the <see cref="VolumeTagCount"/> property.</param>
+        /// <param name="newValue">The new value of the <see cref="VolumeTagCount"/> property.</param>
+        private void OnVolumeTagCountPropertyChanged(long oldValue, long newValue)
         {
-            // TODO: Implement OnSubdirectoryCountPropertyChanged Logic
+            DeleteCurrentItem.IsEnabled = newValue == 0 && FileTagCount == 0;
         }
 
         #endregion
-        #region FileCount Property Members
+        #region SubdirectoryTagCount Property Members
 
-        private static readonly DependencyPropertyKey FileCountPropertyKey = DependencyProperty.RegisterReadOnly(nameof(FileCount), typeof(int), typeof(SharedTagDefinitionItemVM),
-                new PropertyMetadata(0, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as SharedTagDefinitionItemVM).OnFileCountPropertyChanged((int)e.OldValue, (int)e.NewValue)));
+        private static readonly DependencyPropertyKey SubdirectoryTagCountPropertyKey = DependencyProperty.RegisterReadOnly(nameof(SubdirectoryTagCount), typeof(long), typeof(SharedTagDefinitionItemVM),
+                new PropertyMetadata(0, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as SharedTagDefinitionItemVM).OnSubdirectoryTagCountPropertyChanged((long)e.OldValue, (long)e.NewValue)));
 
         /// <summary>
-        /// Identifies the <see cref="FileCount"/> dependency property.
+        /// Identifies the <see cref="SubdirectoryTagCount"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty FileCountProperty = FileCountPropertyKey.DependencyProperty;
+        public static readonly DependencyProperty SubdirectoryTagCountProperty = SubdirectoryTagCountPropertyKey.DependencyProperty;
 
         /// <summary>
         /// Gets .
         /// </summary>
         /// <value>The .</value>
-        public int FileCount { get => (int)GetValue(FileCountProperty); internal set => SetValue(FileCountPropertyKey, value); }
+        public long SubdirectoryTagCount { get => (long)GetValue(SubdirectoryTagCountProperty); private set => SetValue(SubdirectoryTagCountPropertyKey, value); }
 
         /// <summary>
-        /// Called when the value of the <see cref="FileCount"/> dependency property has changed.
+        /// Called when the value of the <see cref="SubdirectoryTagCount"/> dependency property has changed.
         /// </summary>
-        /// <param name="oldValue">The previous value of the <see cref="FileCount"/> property.</param>
-        /// <param name="newValue">The new value of the <see cref="FileCount"/> property.</param>
-        private void OnFileCountPropertyChanged(int oldValue, int newValue)
+        /// <param name="oldValue">The previous value of the <see cref="SubdirectoryTagCount"/> property.</param>
+        /// <param name="newValue">The new value of the <see cref="SubdirectoryTagCount"/> property.</param>
+        private void OnSubdirectoryTagCountPropertyChanged(long oldValue, long newValue)
         {
-            DeleteCurrentItem.IsEnabled = newValue == 0 && VolumeCount == 0;
+            // TODO: Implement OnSubdirectoryTagCountPropertyChanged Logic
+        }
+
+        #endregion
+        #region FileTagCount Property Members
+
+        private static readonly DependencyPropertyKey FileTagCountPropertyKey = DependencyProperty.RegisterReadOnly(nameof(FileTagCount), typeof(long), typeof(SharedTagDefinitionItemVM),
+                new PropertyMetadata(0, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as SharedTagDefinitionItemVM).OnFileTagCountPropertyChanged((long)e.OldValue, (long)e.NewValue)));
+
+        /// <summary>
+        /// Identifies the <see cref="FileTagCount"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty FileTagCountProperty = FileTagCountPropertyKey.DependencyProperty;
+
+        /// <summary>
+        /// Gets .
+        /// </summary>
+        /// <value>The .</value>
+        public long FileTagCount { get => (long)GetValue(FileTagCountProperty); internal set => SetValue(FileTagCountPropertyKey, value); }
+
+        /// <summary>
+        /// Called when the value of the <see cref="FileTagCount"/> dependency property has changed.
+        /// </summary>
+        /// <param name="oldValue">The previous value of the <see cref="FileTagCount"/> property.</param>
+        /// <param name="newValue">The new value of the <see cref="FileTagCount"/> property.</param>
+        private void OnFileTagCountPropertyChanged(long oldValue, long newValue)
+        {
+            DeleteCurrentItem.IsEnabled = newValue == 0 && VolumeTagCount == 0;
         }
 
         #endregion
 
-        internal SharedTagDefinitionItemVM([DisallowNull] SharedTagDefinitionsPageVM.EntityAndCounts result)
-            : this(result.Entity)
+        internal SharedTagDefinitionItemVM([DisallowNull] SharedTagDefinitionListItem model) : base(model)
         {
-            VolumeCount = result.VolumeCount;
-            SubdirectoryCount = result.SubdirectoryCount;
-            FileCount = result.FileCount;
-        }
-
-        internal SharedTagDefinitionItemVM([DisallowNull] SharedTagDefinition model) : base(model)
-        {
-            Name = model.Name;
-            Description = model.Description;
-            IsInactive = model.IsInactive;
             SetValue(OpenVolumesWindowPropertyKey, new Commands.RelayCommand(RaiseViewVolumesRequest));
             SetValue(OpenSubdirectoriesWindowPropertyKey, new Commands.RelayCommand(RaiseViewSubdirectoriesRequest));
             SetValue(OpenFilesWindowPropertyKey, new Commands.RelayCommand(RaiseViewFilesRequest));
             SetValue(ToggleCurrentItemActivationPropertyKey, new Commands.RelayCommand(RaiseToggleActivationRequest));
+            Name = model.Name;
+            Description = model.Description;
+            IsInactive = model.IsInactive;
+            VolumeTagCount = model.VolumeTagCount;
+            SubdirectoryTagCount = model.SubdirectoryTagCount;
+            FileTagCount = model.FileTagCount;
         }
 
-        protected override DbSet<SharedTagDefinition> GetDbSet(LocalDbContext dbContext) => dbContext.SharedTagDefinitions;
+        protected override DbSet<SharedTagDefinitionListItem> GetDbSet(LocalDbContext dbContext) => dbContext.SharedTagDefinitionListing;
 
         protected override void OnNestedModelPropertyChanged(string propertyName)
         {

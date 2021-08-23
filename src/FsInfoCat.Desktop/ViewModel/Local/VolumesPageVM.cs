@@ -1,21 +1,15 @@
-using FsInfoCat.Desktop.ViewModel.AsyncOps;
 using FsInfoCat.Local;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel.Local
 {
-    public class VolumesPageVM : DbEntityListingPageVM<Volume, VolumeItemVM>
+    public class VolumesPageVM : DbEntityListingPageVM<VolumeListItem, VolumeItemVM>
     {
         #region StatusOptions Property Members
 
@@ -70,8 +64,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             statusListener.CancellationToken.ThrowIfCancellationRequested();
             IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
             LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
-            IIncludableQueryable<Volume, FileSystem> volumes = dbContext.Volumes.Include(v => v.FileSystem);
-            IQueryable<Volume> items;
+            IQueryable<VolumeListItem> items;
             if (state.FileSystemId.HasValue)
             {
                 Guid id = state.FileSystemId.Value;
@@ -79,32 +72,32 @@ namespace FsInfoCat.Desktop.ViewModel.Local
                 if (state.StatusValues.Length == 1)
                 {
                     VolumeStatus status = state.StatusValues[0];
-                    items = from v in volumes where v.FileSystemId == id && v.Status == status select v;
+                    items = from v in dbContext.VolumeListing where v.FileSystemId == id && v.Status == status select v;
                 }
                 else if (state.StatusValues.Length > 1)
                 {
                     VolumeStatus[] sv = state.StatusValues;
-                    items = from v in volumes where v.FileSystemId == id && sv.Contains(v.Status) select v;
+                    items = from v in dbContext.VolumeListing where v.FileSystemId == id && sv.Contains(v.Status) select v;
                 }
                 else
-                    items = from v in volumes where v.FileSystemId == id select v;
+                    items = from v in dbContext.VolumeListing where v.FileSystemId == id select v;
             }
             else if (state.StatusValues.Length == 1)
             {
                 VolumeStatus status = state.StatusValues[0];
-                items = from v in volumes where v.Status == status select v;
+                items = from v in dbContext.VolumeListing where v.Status == status select v;
             }
             else if (state.StatusValues.Length > 1)
             {
                 VolumeStatus[] sv = state.StatusValues;
-                items = from v in volumes where sv.Contains(v.Status) select v;
+                items = from v in dbContext.VolumeListing where sv.Contains(v.Status) select v;
             }
             else
-                items = from v in volumes select v;
+                items = from v in dbContext.VolumeListing select v;
             return await OnEntitiesLoaded(items, statusListener, entity => new VolumeItemVM(entity));
         }
 
-        protected override DbSet<Volume> GetDbSet(LocalDbContext dbContext) => dbContext.Volumes;
+        protected override DbSet<VolumeListItem> GetDbSet(LocalDbContext dbContext) => dbContext.VolumeListing;
 
         protected override Func<IWindowsStatusListener, Task<int>> GetItemsLoaderFactory()
         {

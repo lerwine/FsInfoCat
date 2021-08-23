@@ -10,7 +10,7 @@ using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel.Local
 {
-    public class SharedTagDefinitionsPageVM : DbEntityListingPageVM<SharedTagDefinition, SharedTagDefinitionItemVM>
+    public class SharedTagDefinitionsPageVM : DbEntityListingPageVM<SharedTagDefinitionListItem, SharedTagDefinitionItemVM>
     {
         #region IsEditingViewOptions Property Members
 
@@ -160,7 +160,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             }));
         }
 
-        protected override DbSet<SharedTagDefinition> GetDbSet(LocalDbContext dbContext) => dbContext.SharedTagDefinitions;
+        protected override DbSet<SharedTagDefinitionListItem> GetDbSet(LocalDbContext dbContext) => dbContext.SharedTagDefinitionListing;
 
         protected override Func<IWindowsStatusListener, Task<int>> GetItemsLoaderFactory()
         {
@@ -173,16 +173,16 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             statusListener.CancellationToken.ThrowIfCancellationRequested();
             IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
             LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
-            IQueryable<EntityAndCounts> items;
+            IQueryable<SharedTagDefinitionListItem> items;
             if (showActive.HasValue)
             {
                 if (showActive.Value)
-                    items = from f in dbContext.SharedTagDefinitions where !f.IsInactive select new EntityAndCounts(f, f.VolumeTags.Count(), f.SubdirectoryTags.Count(), f.FileTags.Count());
+                    items = from f in dbContext.SharedTagDefinitionListing where !f.IsInactive select f;
                 else
-                    items = from f in dbContext.SharedTagDefinitions where f.IsInactive select new EntityAndCounts(f, f.VolumeTags.Count(), f.SubdirectoryTags.Count(), f.FileTags.Count());
+                    items = from f in dbContext.SharedTagDefinitionListing where f.IsInactive select f;
             }
             else
-                items = from f in dbContext.SharedTagDefinitions select new EntityAndCounts(f, f.VolumeTags.Count(), f.SubdirectoryTags.Count(), f.FileTags.Count());
+                items = from f in dbContext.SharedTagDefinitionListing select f;
             return await OnEntitiesLoaded(items, statusListener, r => new SharedTagDefinitionItemVM(r));
         }
 
@@ -206,7 +206,5 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             deleteProgressTitle = $"Deleting Shared Tag Definition \"{item.Name}\"";
             throw new NotImplementedException();
         }
-
-        public record EntityAndCounts(SharedTagDefinition Entity, int VolumeCount, int SubdirectoryCount, int FileCount);
     }
 }

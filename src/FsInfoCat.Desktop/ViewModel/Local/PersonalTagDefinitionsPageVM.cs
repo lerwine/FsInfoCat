@@ -10,7 +10,7 @@ using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel.Local
 {
-    public class PersonalTagDefinitionsPageVM : DbEntityListingPageVM<PersonalTagDefinition, PersonalTagDefinitionItemVM>
+    public class PersonalTagDefinitionsPageVM : DbEntityListingPageVM<PersonalTagDefinitionListItem, PersonalTagDefinitionItemVM>
     {
         #region IsEditingViewOptions Property Members
 
@@ -160,7 +160,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             }));
         }
 
-        protected override DbSet<PersonalTagDefinition> GetDbSet(LocalDbContext dbContext) => dbContext.PersonalTagDefinitions;
+        protected override DbSet<PersonalTagDefinitionListItem> GetDbSet(LocalDbContext dbContext) => dbContext.PersonalTagDefinitionListing;
 
         protected override Func<IWindowsStatusListener, Task<int>> GetItemsLoaderFactory()
         {
@@ -173,16 +173,16 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             statusListener.CancellationToken.ThrowIfCancellationRequested();
             IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
             LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
-            IQueryable<EntityAndCounts> items;
+            IQueryable<PersonalTagDefinitionListItem> items;
             if (showActive.HasValue)
             {
                 if (showActive.Value)
-                    items = from f in dbContext.PersonalTagDefinitions where !f.IsInactive select new EntityAndCounts(f, f.VolumeTags.Count(), f.SubdirectoryTags.Count(), f.FileTags.Count());
+                    items = from f in dbContext.PersonalTagDefinitionListing where !f.IsInactive select f;
                 else
-                    items = from f in dbContext.PersonalTagDefinitions where f.IsInactive select new EntityAndCounts(f, f.VolumeTags.Count(), f.SubdirectoryTags.Count(), f.FileTags.Count());
+                    items = from f in dbContext.PersonalTagDefinitionListing where f.IsInactive select f;
             }
             else
-                items = from f in dbContext.PersonalTagDefinitions select new EntityAndCounts(f, f.VolumeTags.Count(), f.SubdirectoryTags.Count(), f.FileTags.Count());
+                items = from f in dbContext.PersonalTagDefinitionListing select f;
             return await OnEntitiesLoaded(items, statusListener, r => new PersonalTagDefinitionItemVM(r));
         }
 
@@ -206,7 +206,5 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             deleteProgressTitle = $"Deleting Personal Tag Definition \"{item.Name}\"";
             throw new NotImplementedException();
         }
-
-        public record EntityAndCounts(PersonalTagDefinition Entity, int VolumeCount, int SubdirectoryCount, int FileCount);
     }
 }

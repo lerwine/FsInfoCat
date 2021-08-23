@@ -15,7 +15,7 @@ using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel.Local
 {
-    public class RedundantSetsPageVM : DbEntityListingPageVM<RedundantSet, RedundantSetItemVM>
+    public class RedundantSetsPageVM : DbEntityListingPageVM<RedundantSetListItem, RedundantSetItemVM>
     {
         internal Task<int> LoadAsync(Guid? binaryPropertiesId, string reference = null)
         {
@@ -27,25 +27,24 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             statusListener.CancellationToken.ThrowIfCancellationRequested();
             IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
             LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
-            IIncludableQueryable<RedundantSet, BinaryPropertySet> redundantSets = dbContext.RedundantSets.Include(v => v.BinaryProperties);
-            IQueryable<RedundantSet> items;
+            IQueryable<RedundantSetListItem> items;
             string reference = state.Reference.AsWsNormalizedOrEmpty();
             if (state.BinaryPropertiesId.HasValue)
             {
                 Guid id = state.BinaryPropertiesId.Value;
                 if (reference.Length > 0)
-                    items = from r in redundantSets where r.BinaryPropertiesId == id && r.Reference == reference select r;
+                    items = from r in dbContext.RedundantSetListing where r.BinaryPropertiesId == id && r.Reference == reference select r;
                 else
-                    items = from r in redundantSets where r.BinaryPropertiesId == id select r;
+                    items = from r in dbContext.RedundantSetListing where r.BinaryPropertiesId == id select r;
             }
             else if (reference.Length > 0)
-                items = from r in redundantSets where r.Reference == reference select r;
+                items = from r in dbContext.RedundantSetListing where r.Reference == reference select r;
             else
-                items = from r in redundantSets select r;
+                items = from r in dbContext.RedundantSetListing select r;
             return await OnEntitiesLoaded(items, statusListener, entity => new RedundantSetItemVM(entity));
         }
 
-        protected override DbSet<RedundantSet> GetDbSet(LocalDbContext dbContext) => dbContext.RedundantSets;
+        protected override DbSet<RedundantSetListItem> GetDbSet(LocalDbContext dbContext) => dbContext.RedundantSetListing;
 
         protected override Func<IWindowsStatusListener, Task<int>> GetItemsLoaderFactory()
         {

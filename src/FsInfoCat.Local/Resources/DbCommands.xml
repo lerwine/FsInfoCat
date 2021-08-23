@@ -762,7 +762,8 @@ END]]>
         <Text Message="Creating View 'vFileSystemListing'">
             <![CDATA[CREATE VIEW IF NOT EXISTS "vFileSystemListing" AS SELECT "FileSystems".*, "SymbolicNames"."Name" AS "PrimarySymbolicName",
 	(SELECT "SymbolicNames"."Id" FROM "SymbolicNames" WHERE "SymbolicNames"."FileSystemId"="FileSystems"."Id" AND "SymbolicNames"."IsInactive"=0 ORDER BY "SymbolicNames"."Priority", "SymbolicNames"."CreatedOn" LIMIT 1) AS "PrimarySymbolicNameId",
-	(SELECT count("SymbolicNames"."Id") FROM "SymbolicNames" WHERE "SymbolicNames"."FileSystemId"="FileSystems"."Id") AS "SymbolicNameCount"
+	(SELECT count("SymbolicNames"."Id") FROM "SymbolicNames" WHERE "SymbolicNames"."FileSystemId"="FileSystems"."Id") AS "SymbolicNameCount",
+	(SELECT count("Volumes"."Id") FROM "Volumes" WHERE "Volumes"."FileSystemId"="FileSystems"."Id") AS "VolumeCount"
 	FROM "FileSystems"
 	LEFT JOIN "SymbolicNames" ON "PrimarySymbolicNameId"="SymbolicNames"."Id"]]>
         </Text>

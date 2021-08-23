@@ -755,7 +755,8 @@ CREATE VIEW IF NOT EXISTS "vSymbolicNameListing" AS SELECT "SymbolicNames".*, "F
 
 CREATE VIEW IF NOT EXISTS "vFileSystemListing" AS SELECT "FileSystems".*, "SymbolicNames"."Name" AS "PrimarySymbolicName",
 	(SELECT "SymbolicNames"."Id" FROM "SymbolicNames" WHERE "SymbolicNames"."FileSystemId"="FileSystems"."Id" AND "SymbolicNames"."IsInactive"=0 ORDER BY "SymbolicNames"."Priority", "SymbolicNames"."CreatedOn" LIMIT 1) AS "PrimarySymbolicNameId",
-	(SELECT count("SymbolicNames"."Id") FROM "SymbolicNames" WHERE "SymbolicNames"."FileSystemId"="FileSystems"."Id") AS "SymbolicNameCount"
+	(SELECT count("SymbolicNames"."Id") FROM "SymbolicNames" WHERE "SymbolicNames"."FileSystemId"="FileSystems"."Id") AS "SymbolicNameCount",
+	(SELECT count("Volumes"."Id") FROM "Volumes" WHERE "Volumes"."FileSystemId"="FileSystems"."Id") AS "VolumeCount"
 	FROM "FileSystems"
 	LEFT JOIN "SymbolicNames" ON "PrimarySymbolicNameId"="SymbolicNames"."Id";
 
@@ -793,14 +794,17 @@ CREATE VIEW IF NOT EXISTS "vVolumeListingWithFileSystem" AS SELECT "Volumes".*, 
 	LEFT JOIN "Subdirectories" ON "Volumes"."Id"="Subdirectories"."VolumeId"
 	LEFT JOIN "FileSystems" ON "Volumes"."FileSystemId"="FileSystems"."Id";
 
-CREATE VIEW IF NOT EXISTS "vSubdirectoryListing" AS SELECT "Subdirectories".*, (SELECT count("s"."Id") FROM "Subdirectories" "s" WHERE "s"."ParentId"="Subdirectories"."Id") AS "SubdirectoryCount",
+CREATE VIEW IF NOT EXISTS "vSubdirectoryListing" AS SELECT "Subdirectories".*, "CrawlConfigurations"."DisplayName" AS "CrawlConfigDisplayName",
+    (SELECT count("s"."Id") FROM "Subdirectories" "s" WHERE "s"."ParentId"="Subdirectories"."Id") AS "SubdirectoryCount",
 	(SELECT count("Files"."Id") FROM "Files" WHERE "Files"."ParentId"="Subdirectories"."Id") AS "FileCount",
 	(SELECT count("SubdirectoryAccessErrors"."Id") FROM "SubdirectoryAccessErrors" WHERE "SubdirectoryAccessErrors"."TargetId"="Subdirectories"."Id") AS "AccessErrorCount",
 	(SELECT count("SharedSubdirectoryTags"."SharedTagDefinitionId") FROM "SharedSubdirectoryTags" WHERE "SharedSubdirectoryTags"."SubdirectoryId"="Subdirectories"."Id") AS "SharedTagCount",
 	(SELECT count("PersonalSubdirectoryTags"."PersonalTagDefinitionId") FROM "PersonalSubdirectoryTags" WHERE "PersonalSubdirectoryTags"."SubdirectoryId"="Subdirectories"."Id") AS "PersonalTagCount"
-    FROM "Subdirectories";
+    FROM "Subdirectories"
+    LEFT JOIN "CrawlConfigurations" ON "Subdirectories"."Id"="CrawlConfigurations"."RootId";
     
-CREATE VIEW IF NOT EXISTS "vSubdirectoryListingWithAncestorNames" AS SELECT "Subdirectories".*, (SELECT count("s"."Id") FROM "Subdirectories" "s" WHERE "s"."ParentId"="Subdirectories"."Id") AS "SubdirectoryCount",
+CREATE VIEW IF NOT EXISTS "vSubdirectoryListingWithAncestorNames" AS SELECT "Subdirectories".*, "CrawlConfigurations"."DisplayName" AS "CrawlConfigDisplayName",
+    (SELECT count("s"."Id") FROM "Subdirectories" "s" WHERE "s"."ParentId"="Subdirectories"."Id") AS "SubdirectoryCount",
 	(SELECT count("Files"."Id") FROM "Files" WHERE "Files"."ParentId"="Subdirectories"."Id") AS "FileCount",
 	(SELECT count("SubdirectoryAccessErrors"."Id") FROM "SubdirectoryAccessErrors" WHERE "SubdirectoryAccessErrors"."TargetId"="Subdirectories"."Id") AS "AccessErrorCount",
 	(SELECT count("SharedSubdirectoryTags"."SharedTagDefinitionId") FROM "SharedSubdirectoryTags" WHERE "SharedSubdirectoryTags"."SubdirectoryId"="Subdirectories"."Id") AS "SharedTagCount",
@@ -815,6 +819,7 @@ CREATE VIEW IF NOT EXISTS "vSubdirectoryListingWithAncestorNames" AS SELECT "Sub
         containerOf("ChildId") AS (SELECT "ParentId" FROM directlyContains WHERE "ChildId"="Subdirectories"."Id" UNION ALL SELECT "ParentId" FROM directlyContains JOIN containerOf USING("ChildId"))
         SELECT "ParentSubdir"."VolumeId" FROM containerOf, "Subdirectories" AS "ParentSubdir" WHERE containerOf."ChildId"="ParentSubdir"."Id" AND "ParentSubdir"."VolumeId" IS NOT NULL
     )) AS "EffectiveVolumeId", "Volumes"."DisplayName" AS "VolumeDisplayName", "Volumes"."VolumeName", "Volumes"."Identifier" AS "VolumeIdentifier" FROM "Subdirectories"
+    LEFT JOIN "CrawlConfigurations" ON "Subdirectories"."Id"="CrawlConfigurations"."RootId"
 	LEFT JOIN "Volumes" ON "EffectiveVolumeId"="Volumes"."Id";
 
 CREATE VIEW IF NOT EXISTS "vSubdirectoryAncestorNames" AS SELECT "Subdirectories"."Id", "Subdirectories"."ParentId", "Subdirectories"."Name",(WITH RECURSIVE

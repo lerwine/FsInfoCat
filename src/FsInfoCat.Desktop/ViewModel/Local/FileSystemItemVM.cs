@@ -7,7 +7,7 @@ using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel.Local
 {
-    public class FileSystemItemVM : DbEntityItemVM<FileSystem>
+    public class FileSystemItemVM : DbEntityItemVM<FileSystemListItem>
     {
         #region ToggleCurrentItemActivation Property Members
 
@@ -193,8 +193,8 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         #endregion
         #region VolumeCount Property Members
 
-        private static readonly DependencyPropertyKey VolumeCountPropertyKey = DependencyProperty.RegisterReadOnly(nameof(VolumeCount), typeof(int), typeof(FileSystemItemVM),
-                new PropertyMetadata(0, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as FileSystemItemVM).OnVolumeCountPropertyChanged((int)e.OldValue, (int)e.NewValue)));
+        private static readonly DependencyPropertyKey VolumeCountPropertyKey = DependencyProperty.RegisterReadOnly(nameof(VolumeCount), typeof(long), typeof(FileSystemItemVM),
+                new PropertyMetadata(0L, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as FileSystemItemVM).OnVolumeCountPropertyChanged((long)e.OldValue, (long)e.NewValue)));
 
         /// <summary>
         /// Identifies the <see cref="VolumeCount"/> dependency property.
@@ -205,23 +205,23 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         /// Gets .
         /// </summary>
         /// <value>The .</value>
-        public int VolumeCount { get => (int)GetValue(VolumeCountProperty); private set => SetValue(VolumeCountPropertyKey, value); }
+        public long VolumeCount { get => (long)GetValue(VolumeCountProperty); private set => SetValue(VolumeCountPropertyKey, value); }
 
         /// <summary>
         /// Called when the value of the <see cref="VolumeCount"/> dependency property has changed.
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="VolumeCount"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="VolumeCount"/> property.</param>
-        private void OnVolumeCountPropertyChanged(int oldValue, int newValue)
+        private void OnVolumeCountPropertyChanged(long oldValue, long newValue)
         {
-            DeleteCurrentItem.IsEnabled = newValue == 0 && SymbolicNameCount == 0;
+            DeleteCurrentItem.IsEnabled = newValue == 0L && SymbolicNameCount == 0L;
         }
 
         #endregion
         #region SymbolicNameCount Property Members
 
-        private static readonly DependencyPropertyKey SymbolicNameCountPropertyKey = DependencyProperty.RegisterReadOnly(nameof(SymbolicNameCount), typeof(int), typeof(FileSystemItemVM),
-                new PropertyMetadata(0, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as FileSystemItemVM).OnSymbolicNameCountPropertyChanged((int)e.OldValue, (int)e.NewValue)));
+        private static readonly DependencyPropertyKey SymbolicNameCountPropertyKey = DependencyProperty.RegisterReadOnly(nameof(SymbolicNameCount), typeof(long), typeof(FileSystemItemVM),
+                new PropertyMetadata(0L, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as FileSystemItemVM).OnSymbolicNameCountPropertyChanged((long)e.OldValue, (long)e.NewValue)));
 
         /// <summary>
         /// Identifies the <see cref="SymbolicNameCount"/> dependency property.
@@ -232,30 +232,32 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         /// Gets .
         /// </summary>
         /// <value>The .</value>
-        public int SymbolicNameCount { get => (int)GetValue(SymbolicNameCountProperty); internal set => SetValue(SymbolicNameCountPropertyKey, value); }
+        public long SymbolicNameCount { get => (long)GetValue(SymbolicNameCountProperty); internal set => SetValue(SymbolicNameCountPropertyKey, value); }
 
         /// <summary>
         /// Called when the value of the <see cref="SymbolicNameCount"/> dependency property has changed.
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="SymbolicNameCount"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="SymbolicNameCount"/> property.</param>
-        private void OnSymbolicNameCountPropertyChanged(int oldValue, int newValue)
+        private void OnSymbolicNameCountPropertyChanged(long oldValue, long newValue)
         {
-            DeleteCurrentItem.IsEnabled = newValue == 0 && VolumeCount == 0;
+            DeleteCurrentItem.IsEnabled = newValue == 0L && VolumeCount == 0L;
         }
 
         #endregion
 
-        internal FileSystemItemVM([DisallowNull] FileSystemsPageVM.EntityAndCounts result)
-            : this(result.Entity)
-        {
-            SymbolicNameCount = result.SymbolicNameCount;
-            VolumeCount = result.VolumeCount;
-        }
+        //internal FileSystemItemVM([DisallowNull] FileSystemsPageVM.EntityAndCounts result)
+        //    : this(result.Entity)
+        //{
+        //    SymbolicNameCount = result.SymbolicNameCount;
+        //    VolumeCount = result.VolumeCount;
+        //}
 
-        internal FileSystemItemVM([DisallowNull] FileSystem model)
+        internal FileSystemItemVM([DisallowNull] FileSystemListItem model)
             : base(model)
         {
+            SymbolicNameCount = model.SymbolicNameCount;
+            VolumeCount = model.VolumeCount;
             DefaultDriveType = model.DefaultDriveType;
             DisplayName = model.DisplayName;
             IsInactive = model.IsInactive;
@@ -274,27 +276,36 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         {
             switch (propertyName)
             {
-                case nameof(FileSystem.DisplayName):
+                case nameof(FileSystemListItem.DisplayName):
                     Dispatcher.CheckInvoke(() => DisplayName = Model?.DisplayName);
                     break;
-                case nameof(FileSystem.DefaultDriveType):
+                case nameof(FileSystemListItem.DefaultDriveType):
                     Dispatcher.CheckInvoke(() => DefaultDriveType = Model?.DefaultDriveType);
                     break;
-                case nameof(FileSystem.IsInactive):
+                case nameof(FileSystemListItem.IsInactive):
                     Dispatcher.CheckInvoke(() => IsInactive = Model?.IsInactive ?? false);
                     break;
-                case nameof(FileSystem.MaxNameLength):
+                case nameof(FileSystemListItem.MaxNameLength):
                     Dispatcher.CheckInvoke(() => MaxNameLength = Model?.MaxNameLength ?? DbConstants.DbColDefaultValue_MaxNameLength);
                     break;
-                case nameof(FileSystem.Notes):
+                case nameof(FileSystemListItem.Notes):
                     Dispatcher.CheckInvoke(() => Notes = Model?.Notes);
                     break;
-                case nameof(FileSystem.ReadOnly):
+                case nameof(FileSystemListItem.ReadOnly):
                     Dispatcher.CheckInvoke(() => IsReadOnly = Model?.ReadOnly ?? false);
+                    break;
+                case nameof(FileSystemListItem.PrimarySymbolicName):
+                    Dispatcher.CheckInvoke(() => IsReadOnly = Model?.ReadOnly ?? false);
+                    break;
+                case nameof(FileSystemListItem.SymbolicNameCount):
+                    Dispatcher.CheckInvoke(() => SymbolicNameCount = Model?.SymbolicNameCount ?? 0L);
+                    break;
+                case nameof(FileSystemListItem.VolumeCount):
+                    Dispatcher.CheckInvoke(() => VolumeCount = Model?.VolumeCount ?? 0L);
                     break;
             }
         }
 
-        protected override DbSet<FileSystem> GetDbSet(LocalDbContext dbContext) => dbContext.FileSystems;
+        protected override DbSet<FileSystemListItem> GetDbSet(LocalDbContext dbContext) => dbContext.FileSystemListing;
     }
 }

@@ -12,7 +12,7 @@ using System.Windows.Threading;
 
 namespace FsInfoCat.Desktop.ViewModel.Local
 {
-    public class FileSystemItemDetailViewModel : DbEntityItemDetailViewModel<FileSystem, FileSystemItemVM>
+    public class FileSystemItemDetailViewModel : DbEntityItemDetailViewModel<FileSystemListItem, FileSystemItemVM>
     {
         #region NewSymbolicName Property Members
 
@@ -210,16 +210,16 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             statusListener.CancellationToken.ThrowIfCancellationRequested();
             IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
             LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
-            SymbolicName[] items;
+            SymbolicNameListItem[] items;
             if (state.showActive.HasValue)
             {
                 if (state.showActive.Value)
-                    items = await (from s in dbContext.SymbolicNames where !s.IsInactive && s.FileSystemId == state.fileSystemId select s).ToArrayAsync(statusListener.CancellationToken);
+                    items = await (from s in dbContext.SymbolicNameListing where !s.IsInactive && s.FileSystemId == state.fileSystemId select s).ToArrayAsync(statusListener.CancellationToken);
                 else
-                    items = await (from s in dbContext.SymbolicNames where s.IsInactive && s.FileSystemId == state.fileSystemId select s).ToArrayAsync(statusListener.CancellationToken);
+                    items = await (from s in dbContext.SymbolicNameListing where s.IsInactive && s.FileSystemId == state.fileSystemId select s).ToArrayAsync(statusListener.CancellationToken);
             }
             else
-                items = await (from s in dbContext.SymbolicNames where s.FileSystemId == state.fileSystemId select s).ToArrayAsync(statusListener.CancellationToken);
+                items = await (from s in dbContext.SymbolicNameListing where s.FileSystemId == state.fileSystemId select s).ToArrayAsync(statusListener.CancellationToken);
 
             return await Dispatcher.InvokeAsync(() =>
             {
@@ -227,7 +227,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
                 if (CurrentItem?.Model.Id == state.fileSystemId)
                 {
                     CurrentItem.SymbolicNameCount = items.Length;
-                    foreach (SymbolicName item in items)
+                    foreach (SymbolicNameListItem item in items)
                         _backingSymbolicNames.Add(new SymbolicNameItemVM(item));
                     return items.Length;
                 }

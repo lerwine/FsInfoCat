@@ -10,7 +10,7 @@ using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel.Local
 {
-    public class FileSystemsPageVM : DbEntityListingPageVM<FileSystem, FileSystemItemVM, FileSystemItemDetailViewModel>
+    public class FileSystemsPageVM : DbEntityListingPageVM<FileSystemListItem, FileSystemItemVM, FileSystemItemDetailViewModel>
     {
         #region IsEditingViewOptions Property Members
 
@@ -146,20 +146,20 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             statusListener.CancellationToken.ThrowIfCancellationRequested();
             IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
             LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
-            IQueryable<EntityAndCounts> items;
+            IQueryable<FileSystemListItem> items;
             if (showActive.HasValue)
             {
                 if (showActive.Value)
-                    items = from f in dbContext.FileSystems where !f.IsInactive select new EntityAndCounts(f, f.Volumes.Count(), f.SymbolicNames.Count());
+                    items = from f in dbContext.FileSystemListing where !f.IsInactive select f;
                 else
-                    items = from f in dbContext.FileSystems where f.IsInactive select new EntityAndCounts(f, f.Volumes.Count(), f.SymbolicNames.Count());
+                    items = from f in dbContext.FileSystemListing where f.IsInactive select f;
             }
             else
-                items = from f in dbContext.FileSystems select new EntityAndCounts(f, f.Volumes.Count(), f.SymbolicNames.Count());
+                items = from f in dbContext.FileSystemListing select f;
             return await OnEntitiesLoaded(items, statusListener, r => new FileSystemItemVM(r));
         }
 
-        protected override DbSet<FileSystem> GetDbSet(LocalDbContext dbContext) => dbContext.FileSystems;
+        protected override DbSet<FileSystemListItem> GetDbSet(LocalDbContext dbContext) => dbContext.FileSystemListing;
 
         protected override void OnAddNewItem(object parameter)
         {
@@ -182,6 +182,6 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             throw new NotImplementedException();
         }
 
-        public record EntityAndCounts(FileSystem Entity, int VolumeCount, int SymbolicNameCount);
+        //public record EntityAndCounts(FileSystemListItem Entity, int VolumeCount, int SymbolicNameCount);
     }
 }

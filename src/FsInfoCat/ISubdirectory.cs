@@ -29,6 +29,8 @@ namespace FsInfoCat
         long SubdirectoryCount { get; }
 
         long FileCount { get; }
+
+        string CrawlConfigDisplayName { get; }
     }
     public interface ISubdirectoryListItemWithAncestorNames : IDbFsItemListItemWithAncestorNames, ISubdirectoryRow, ISubdirectoryAncestorName { }
     /// <summary>Interface for entities that represent a subdirectory node within a file system.</summary>

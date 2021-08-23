@@ -195,62 +195,6 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         public FileCorrelationStatus Status { get => (FileCorrelationStatus)GetValue(StatusProperty); private set => SetValue(StatusPropertyKey, value); }
 
         #endregion
-        #region PersonalTags Property Members
-
-        private readonly ObservableCollection<PersonalFileTag> _backingPersonalTags = new();
-
-        private static readonly DependencyPropertyKey PersonalTagsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(PersonalTags), typeof(ReadOnlyObservableCollection<PersonalFileTag>), typeof(FileItemVM),
-                new PropertyMetadata(null));
-
-        /// <summary>
-        /// Identifies the <see cref="PersonalTags"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty PersonalTagsProperty = PersonalTagsPropertyKey.DependencyProperty;
-
-        /// <summary>
-        /// Gets .
-        /// </summary>
-        /// <value>The .</value>
-        public ReadOnlyObservableCollection<PersonalFileTag> PersonalTags => (ReadOnlyObservableCollection<PersonalFileTag>)GetValue(PersonalTagsProperty);
-
-        #endregion
-        #region SharedTags Property Members
-
-        private readonly ObservableCollection<SharedFileTag> _backingSharedTags = new();
-
-        private static readonly DependencyPropertyKey SharedTagsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(SharedTags), typeof(ReadOnlyObservableCollection<SharedFileTag>), typeof(FileItemVM),
-                new PropertyMetadata(null));
-
-        /// <summary>
-        /// Identifies the <see cref="SharedTags"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty SharedTagsProperty = SharedTagsPropertyKey.DependencyProperty;
-
-        /// <summary>
-        /// Gets .
-        /// </summary>
-        /// <value>The .</value>
-        public ReadOnlyObservableCollection<SharedFileTag> SharedTags => (ReadOnlyObservableCollection<SharedFileTag>)GetValue(SharedTagsProperty);
-
-        #endregion
-
-        #region Redundancy Property Members
-
-        private static readonly DependencyPropertyKey RedundancyPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Redundancy), typeof(RedundancyItemVM), typeof(FileItemVM),
-                new PropertyMetadata(null));
-
-        /// <summary>
-        /// Identifies the <see cref="Redundancy"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty RedundancyProperty = RedundancyPropertyKey.DependencyProperty;
-
-        /// <summary>
-        /// Gets .
-        /// </summary>
-        /// <value>The .</value>
-        public RedundancyItemVM Redundancy { get => (RedundancyItemVM)GetValue(RedundancyProperty); private set => SetValue(RedundancyPropertyKey, value); }
-
-        #endregion
         #region BinaryProperties Property Members
 
         private static readonly DependencyPropertyKey BinaryPropertiesPropertyKey = DependencyProperty.RegisterReadOnly(nameof(BinaryProperties), typeof(BinaryPropertySetItemVM), typeof(FileItemVM),
@@ -475,8 +419,6 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 
         public FileItemVM([DisallowNull] DbFile model) : base(model)
         {
-            SetValue(PersonalTagsPropertyKey, new ReadOnlyObservableCollection<PersonalFileTag>(_backingPersonalTags));
-            SetValue(SharedTagsPropertyKey, new ReadOnlyObservableCollection<SharedFileTag>(_backingSharedTags));
             // TODO: Populate tags
             BinaryProperties = model.BinaryProperties.ToItemViewModel();
             AccessErrorCount = model.AccessErrors.Count();
@@ -489,8 +431,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             Notes = model.Notes;
             CreationTime = model.CreationTime;
             Options = model.Options;
-            Parent = model.Parent.ToItemViewModel();
-            Redundancy = model.Redundancy.ToItemViewModel();
+            //Parent = model.Parent.ToItemViewModel();
             Status = model.Status;
             AudioProperties = model.AudioProperties.ToItemViewModel();
             DocumentProperties = model.DocumentProperties.ToItemViewModel();
@@ -535,12 +476,9 @@ namespace FsInfoCat.Desktop.ViewModel.Local
                 case nameof(IFile.Options):
                     Dispatcher.CheckInvoke(() => Options = Model.Options);
                     break;
-                case nameof(IFile.Parent):
-                    Dispatcher.CheckInvoke(() => Parent = Model.Parent.ToItemViewModel());
-                    break;
-                case nameof(IFile.Redundancy):
-                    Dispatcher.CheckInvoke(() => Redundancy = Model.Redundancy.ToItemViewModel());
-                    break;
+                //case nameof(IFile.Parent):
+                //    Dispatcher.CheckInvoke(() => Parent = Model.Parent.ToItemViewModel());
+                //    break;
                 case nameof(IFile.Status):
                     Dispatcher.CheckInvoke(() => Status = Model.Status);
                     break;

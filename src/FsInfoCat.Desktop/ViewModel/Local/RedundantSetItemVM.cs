@@ -5,7 +5,7 @@ using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel.Local
 {
-    public class RedundantSetItemVM : DbEntityItemVM<RedundantSet>
+    public class RedundantSetItemVM : DbEntityItemVM<RedundantSetListItem>
     {
         #region Notes Property Members
 
@@ -56,30 +56,90 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         public BinaryPropertySet BinaryProperties { get => (BinaryPropertySet)GetValue(BinaryPropertiesProperty); private set => SetValue(BinaryPropertiesPropertyKey, value); }
 
         #endregion
+        #region Hash Property Members
 
-        internal RedundantSetItemVM([DisallowNull] RedundantSet model)
+        private static readonly DependencyPropertyKey HashPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Hash), typeof(MD5Hash?), typeof(RedundantSetItemVM),
+                new PropertyMetadata(null));
+
+        /// <summary>
+        /// Identifies the <see cref="Hash"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty HashProperty = HashPropertyKey.DependencyProperty;
+
+        /// <summary>
+        /// Gets .
+        /// </summary>
+        /// <value>The .</value>
+        public MD5Hash? Hash { get => (MD5Hash?)GetValue(HashProperty); private set => SetValue(HashPropertyKey, value); }
+
+        #endregion
+        #region Length Property Members
+
+        private static readonly DependencyPropertyKey LengthPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Length), typeof(long), typeof(RedundantSetItemVM),
+                new PropertyMetadata(0L));
+
+        /// <summary>
+        /// Identifies the <see cref="Length"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty LengthProperty = LengthPropertyKey.DependencyProperty;
+
+        /// <summary>
+        /// Gets .
+        /// </summary>
+        /// <value>The .</value>
+        public long Length { get => (long)GetValue(LengthProperty); private set => SetValue(LengthPropertyKey, value); }
+
+        #endregion
+        #region RedundancyCount Property Members
+
+        private static readonly DependencyPropertyKey RedundancyCountPropertyKey = DependencyProperty.RegisterReadOnly(nameof(RedundancyCount), typeof(long), typeof(RedundantSetItemVM),
+                new PropertyMetadata(0L));
+
+        /// <summary>
+        /// Identifies the <see cref="RedundancyCount"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty RedundancyCountProperty = RedundancyCountPropertyKey.DependencyProperty;
+
+        /// <summary>
+        /// Gets .
+        /// </summary>
+        /// <value>The .</value>
+        public long RedundancyCount { get => (long)GetValue(RedundancyCountProperty); private set => SetValue(RedundancyCountPropertyKey, value); }
+
+        #endregion
+
+        internal RedundantSetItemVM([DisallowNull] RedundantSetListItem model)
             : base(model)
         {
             Notes = model.Notes;
-            // TODO: Initialize properties
+            Hash = model.Hash;
+            Length = model.Length;
+            RedundancyCount = model.RedundancyCount;
+            Reference = model.Reference;
         }
 
         protected override void OnNestedModelPropertyChanged(string propertyName)
         {
             switch (propertyName)
             {
-                case nameof(RedundantSet.BinaryProperties):
-                    Dispatcher.CheckInvoke(() => BinaryProperties = Model?.BinaryProperties);
-                    break;
-                case nameof(RedundantSet.Notes):
-                    Dispatcher.CheckInvoke(() => Notes = Model?.Notes);
-                    break;
-                case nameof(RedundantSet.Reference):
+                case nameof(RedundantSetListItem.Reference):
                     Dispatcher.CheckInvoke(() => Reference = Model?.Reference);
+                    break;
+                case nameof(RedundantSetListItem.Hash):
+                    Dispatcher.CheckInvoke(() => Hash = Model?.Hash);
+                    break;
+                case nameof(RedundantSetListItem.Length):
+                    Dispatcher.CheckInvoke(() => Length = Model?.Length ?? 0L);
+                    break;
+                case nameof(RedundantSetListItem.RedundancyCount):
+                    Dispatcher.CheckInvoke(() => RedundancyCount = Model?.RedundancyCount ?? 0L);
+                    break;
+                case nameof(RedundantSetListItem.Notes):
+                    Dispatcher.CheckInvoke(() => Notes = Model?.Notes);
                     break;
             }
         }
 
-        protected override DbSet<RedundantSet> GetDbSet(LocalDbContext dbContext) => dbContext.RedundantSets;
+        protected override DbSet<RedundantSetListItem> GetDbSet(LocalDbContext dbContext) => dbContext.RedundantSetListing;
     }
 }

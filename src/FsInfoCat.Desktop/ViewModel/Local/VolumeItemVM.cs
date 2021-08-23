@@ -7,7 +7,7 @@ using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel.Local
 {
-    public class VolumeItemVM : DbEntityItemVM<Volume>, IHasSubdirectoryEntity
+    public class VolumeItemVM : DbEntityItemVM<VolumeListItem>
     {
         #region DisplayName Property Members
 
@@ -23,23 +23,6 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         /// </summary>
         /// <value>The .</value>
         public string DisplayName { get => GetValue(DisplayNameProperty) as string; private set => SetValue(DisplayNamePropertyKey, value); }
-
-        #endregion
-        #region FileSystem Property Members
-
-        private static readonly DependencyPropertyKey FileSystemPropertyKey = DependencyProperty.RegisterReadOnly(nameof(FileSystem), typeof(FileSystem), typeof(VolumeItemVM),
-                new PropertyMetadata(null));
-
-        /// <summary>
-        /// Identifies the <see cref="FileSystem"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty FileSystemProperty = FileSystemPropertyKey.DependencyProperty;
-
-        /// <summary>
-        /// Gets .
-        /// </summary>
-        /// <value>The .</value>
-        public FileSystem FileSystem { get => (FileSystem)GetValue(FileSystemProperty); private set => SetValue(FileSystemPropertyKey, value); }
 
         #endregion
         #region Identifier Property Members
@@ -109,23 +92,6 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         public bool? IsReadOnly { get => (bool?)GetValue(IsReadOnlyProperty); private set => SetValue(IsReadOnlyPropertyKey, value); }
 
         #endregion
-        #region RootDirectory Property Members
-
-        private static readonly DependencyPropertyKey RootDirectoryPropertyKey = DependencyProperty.RegisterReadOnly(nameof(RootDirectory), typeof(SubdirectoryItemVM), typeof(VolumeItemVM),
-                new PropertyMetadata(null));
-
-        /// <summary>
-        /// Identifies the <see cref="RootDirectory"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty RootDirectoryProperty = RootDirectoryPropertyKey.DependencyProperty;
-
-        /// <summary>
-        /// Gets .
-        /// </summary>
-        /// <value>The .</value>
-        public SubdirectoryItemVM RootDirectory { get => (SubdirectoryItemVM)GetValue(RootDirectoryProperty); private set => SetValue(RootDirectoryPropertyKey, value); }
-
-        #endregion
         #region Status Property Members
 
         private static readonly DependencyPropertyKey StatusPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Status), typeof(VolumeStatus), typeof(VolumeItemVM),
@@ -176,18 +142,87 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         public string VolumeName { get => GetValue(VolumeNameProperty) as string; private set => SetValue(VolumeNamePropertyKey, value); }
 
         #endregion
+        #region RootPath Property Members
 
-        internal VolumeItemVM([DisallowNull] Volume model, AsyncOps.AsyncBgModalVM bgOpMgr = null)
+        private static readonly DependencyPropertyKey RootPathPropertyKey = DependencyProperty.RegisterReadOnly(nameof(RootPath), typeof(string), typeof(VolumeItemVM), new PropertyMetadata(""));
+
+        /// <summary>
+        /// Identifies the <see cref="RootPath"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty RootPathProperty = RootPathPropertyKey.DependencyProperty;
+
+        /// <summary>
+        /// Gets or sets .
+        /// </summary>
+        /// <value>The .</value>
+        public string RootPath { get => GetValue(RootPathProperty) as string; private set => SetValue(RootPathPropertyKey, value); }
+
+        #endregion
+        #region AccessErrorCount Property Members
+
+        private static readonly DependencyPropertyKey AccessErrorCountPropertyKey = DependencyProperty.RegisterReadOnly(nameof(AccessErrorCount), typeof(long), typeof(VolumeItemVM),
+                new PropertyMetadata(0L));
+
+        /// <summary>
+        /// Identifies the <see cref="AccessErrorCount"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty AccessErrorCountProperty = AccessErrorCountPropertyKey.DependencyProperty;
+
+        /// <summary>
+        /// Gets .
+        /// </summary>
+        /// <value>The .</value>
+        public long AccessErrorCount { get => (long)GetValue(AccessErrorCountProperty); private set => SetValue(AccessErrorCountPropertyKey, value); }
+
+        #endregion
+        #region PersonalTagCount Property Members
+
+        private static readonly DependencyPropertyKey PersonalTagCountPropertyKey = DependencyProperty.RegisterReadOnly(nameof(PersonalTagCount), typeof(long), typeof(VolumeItemVM),
+                new PropertyMetadata(0L));
+
+        /// <summary>
+        /// Identifies the <see cref="PersonalTagCount"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty PersonalTagCountProperty = PersonalTagCountPropertyKey.DependencyProperty;
+
+        /// <summary>
+        /// Gets .
+        /// </summary>
+        /// <value>The .</value>
+        public long PersonalTagCount { get => (long)GetValue(PersonalTagCountProperty); private set => SetValue(PersonalTagCountPropertyKey, value); }
+
+        #endregion
+        #region SharedTagCount Property Members
+
+        private static readonly DependencyPropertyKey SharedTagCountPropertyKey = DependencyProperty.RegisterReadOnly(nameof(SharedTagCount), typeof(long), typeof(VolumeItemVM),
+                new PropertyMetadata(0L));
+
+        /// <summary>
+        /// Identifies the <see cref="SharedTagCount"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty SharedTagCountProperty = SharedTagCountPropertyKey.DependencyProperty;
+
+        /// <summary>
+        /// Gets .
+        /// </summary>
+        /// <value>The .</value>
+        public long SharedTagCount { get => (long)GetValue(SharedTagCountProperty); private set => SetValue(SharedTagCountPropertyKey, value); }
+
+        #endregion
+
+        internal VolumeItemVM([DisallowNull] VolumeListItem model)
             : base(model)
         {
             // TODO: Use bgOpMgr to initialize or remove it
             DisplayName = model.DisplayName;
-            FileSystem = model.FileSystem;
             Identifier = model.Identifier;
             MaxNameLength = model.MaxNameLength;
             Notes = model.Notes;
             IsReadOnly = model.ReadOnly;
-            RootDirectory = model.RootDirectory.ToItemViewModel();
+            RootPath = model.RootPath;
+            AccessErrorCount = model.AccessErrorCount;
+            PersonalTagCount = model.PersonalTagCount;
+            SharedTagCount = model.SharedTagCount;
             Status = model.Status;
             Type = model.Type;
             VolumeName = model.VolumeName;
@@ -197,46 +232,45 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         {
             switch (propertyName)
             {
-                case nameof(Volume.DisplayName):
+                case nameof(VolumeListItem.DisplayName):
                     Dispatcher.CheckInvoke(() => DisplayName = Model?.DisplayName);
                     break;
-                case nameof(Volume.FileSystem):
-                    Dispatcher.CheckInvoke(() => FileSystem = Model?.FileSystem);
-                    break;
-                case nameof(Volume.Identifier):
+                case nameof(VolumeListItem.Identifier):
                     Dispatcher.CheckInvoke(() => Identifier = Model?.Identifier ?? VolumeIdentifier.Empty);
                     break;
-                case nameof(Volume.MaxNameLength):
+                case nameof(VolumeListItem.MaxNameLength):
                     Dispatcher.CheckInvoke(() => MaxNameLength = Model?.MaxNameLength);
                     break;
-                case nameof(Volume.Notes):
+                case nameof(VolumeListItem.Notes):
                     Dispatcher.CheckInvoke(() => Notes = Model?.Notes);
                     break;
-                case nameof(Volume.ReadOnly):
+                case nameof(VolumeListItem.ReadOnly):
                     Dispatcher.CheckInvoke(() => IsReadOnly = Model?.ReadOnly);
                     break;
-                case nameof(Volume.RootDirectory):
-                    Dispatcher.CheckInvoke(() => RootDirectory = Model?.RootDirectory?.ToItemViewModel());
+                case nameof(VolumeListItem.RootPath):
+                    Dispatcher.CheckInvoke(() => RootPath = Model?.RootPath ?? "");
                     break;
-                case nameof(Volume.Status):
+                case nameof(VolumeListItem.AccessErrorCount):
+                    Dispatcher.CheckInvoke(() => AccessErrorCount = Model?.AccessErrorCount ?? 0L);
+                    break;
+                case nameof(VolumeListItem.PersonalTagCount):
+                    Dispatcher.CheckInvoke(() => PersonalTagCount = Model?.PersonalTagCount ?? 0L);
+                    break;
+                case nameof(VolumeListItem.SharedTagCount):
+                    Dispatcher.CheckInvoke(() => SharedTagCount = Model?.SharedTagCount ?? 0L);
+                    break;
+                case nameof(VolumeListItem.Status):
                     Dispatcher.CheckInvoke(() => Status = Model?.Status ?? VolumeStatus.Unknown);
                     break;
-                case nameof(Volume.Type):
+                case nameof(VolumeListItem.Type):
                     Dispatcher.CheckInvoke(() => Type = Model?.Type ?? DriveType.Unknown);
                     break;
-                case nameof(Volume.VolumeName):
+                case nameof(VolumeListItem.VolumeName):
                     Dispatcher.CheckInvoke(() => VolumeName = Model?.VolumeName);
                     break;
             }
         }
 
-        ISimpleIdentityReference<Subdirectory> IHasSubdirectoryEntity.GetSubdirectoryEntity() => CheckAccess() ? Model?.RootDirectory : Dispatcher.Invoke(() => Model?.RootDirectory);
-
-        protected override DbSet<Volume> GetDbSet(LocalDbContext dbContext) => dbContext.Volumes;
-
-        public async Task<ISimpleIdentityReference<Subdirectory>> GetSubdirectoryEntityAsync([DisallowNull] IWindowsStatusListener statusListener)
-        {
-            return (await Dispatcher.InvokeAsync(() => Model))?.RootDirectory;
-        }
+        protected override DbSet<VolumeListItem> GetDbSet(LocalDbContext dbContext) => dbContext.VolumeListing;
     }
 }

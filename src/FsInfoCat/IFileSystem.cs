@@ -38,6 +38,8 @@ namespace FsInfoCat
         string PrimarySymbolicName { get; }
 
         long SymbolicNameCount { get; }
+
+        long VolumeCount { get; }
     }
 
 }

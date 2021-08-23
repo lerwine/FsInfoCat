@@ -10,7 +10,7 @@ using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel.Local
 {
-    public class SubdirectoryItemVM : DbEntityItemVM<Subdirectory>
+    public class SubdirectoryItemVM : DbEntityItemVM<SubdirectoryListItemWithAncestorNames>
     {
         #region BgOps Property Members
 
@@ -43,23 +43,6 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         /// </summary>
         /// <value>The .</value>
         public string FullName { get => GetValue(FullNameProperty) as string; private set => SetValue(FullNamePropertyKey, value); }
-
-        #endregion
-        #region CrawlConfig Property Members
-
-        private static readonly DependencyPropertyKey CrawlConfigPropertyKey = DependencyProperty.RegisterReadOnly(nameof(CrawlConfig), typeof(CrawlConfigItemVM), typeof(SubdirectoryItemVM),
-                new PropertyMetadata(null));
-
-        /// <summary>
-        /// Identifies the <see cref="CrawlConfig"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty CrawlConfigProperty = CrawlConfigPropertyKey.DependencyProperty;
-
-        /// <summary>
-        /// Gets .
-        /// </summary>
-        /// <value>The .</value>
-        public CrawlConfigItemVM CrawlConfig { get => (CrawlConfigItemVM)GetValue(CrawlConfigProperty); private set => SetValue(CrawlConfigPropertyKey, value); }
 
         #endregion
         #region Parent Property Members
@@ -215,8 +198,8 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         #endregion
         #region SharedTagCount Property Members
 
-        private static readonly DependencyPropertyKey SharedTagCountPropertyKey = DependencyProperty.RegisterReadOnly(nameof(SharedTagCount), typeof(int), typeof(SubdirectoryItemVM),
-                new PropertyMetadata(0));
+        private static readonly DependencyPropertyKey SharedTagCountPropertyKey = DependencyProperty.RegisterReadOnly(nameof(SharedTagCount), typeof(long), typeof(SubdirectoryItemVM),
+                new PropertyMetadata(0L));
 
         /// <summary>
         /// Identifies the <see cref="SharedTagCount"/> dependency property.
@@ -227,13 +210,13 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         /// Gets .
         /// </summary>
         /// <value>The .</value>
-        public int SharedTagCount { get => (int)GetValue(SharedTagCountProperty); private set => SetValue(SharedTagCountPropertyKey, value); }
+        public long SharedTagCount { get => (long)GetValue(SharedTagCountProperty); private set => SetValue(SharedTagCountPropertyKey, value); }
 
         #endregion
         #region PersonalTagCount Property Members
 
-        private static readonly DependencyPropertyKey PersonalTagCountPropertyKey = DependencyProperty.RegisterReadOnly(nameof(PersonalTagCount), typeof(int), typeof(SubdirectoryItemVM),
-                new PropertyMetadata(0));
+        private static readonly DependencyPropertyKey PersonalTagCountPropertyKey = DependencyProperty.RegisterReadOnly(nameof(PersonalTagCount), typeof(long), typeof(SubdirectoryItemVM),
+                new PropertyMetadata(0L));
 
         /// <summary>
         /// Identifies the <see cref="PersonalTagCount"/> dependency property.
@@ -244,13 +227,13 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         /// Gets .
         /// </summary>
         /// <value>The .</value>
-        public int PersonalTagCount { get => (int)GetValue(PersonalTagCountProperty); private set => SetValue(PersonalTagCountPropertyKey, value); }
+        public long PersonalTagCount { get => (long)GetValue(PersonalTagCountProperty); private set => SetValue(PersonalTagCountPropertyKey, value); }
 
         #endregion
         #region AccessErrorCount Property Members
 
-        private static readonly DependencyPropertyKey AccessErrorCountPropertyKey = DependencyProperty.RegisterReadOnly(nameof(AccessErrorCount), typeof(int), typeof(SubdirectoryItemVM),
-                new PropertyMetadata(0));
+        private static readonly DependencyPropertyKey AccessErrorCountPropertyKey = DependencyProperty.RegisterReadOnly(nameof(AccessErrorCount), typeof(long), typeof(SubdirectoryItemVM),
+                new PropertyMetadata(0L));
 
         /// <summary>
         /// Identifies the <see cref="AccessErrorCount"/> dependency property.
@@ -261,30 +244,30 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         /// Gets .
         /// </summary>
         /// <value>The .</value>
-        public int AccessErrorCount { get => (int)GetValue(AccessErrorCountProperty); private set => SetValue(AccessErrorCountPropertyKey, value); }
+        public long AccessErrorCount { get => (long)GetValue(AccessErrorCountProperty); private set => SetValue(AccessErrorCountPropertyKey, value); }
 
         #endregion
-        #region SubDirectoryCount Property Members
+        #region SubdirectoryCount Property Members
 
-        private static readonly DependencyPropertyKey SubDirectoryCountPropertyKey = DependencyProperty.RegisterReadOnly(nameof(SubDirectoryCount), typeof(int), typeof(SubdirectoryItemVM),
-                new PropertyMetadata(0));
+        private static readonly DependencyPropertyKey SubdirectoryCountPropertyKey = DependencyProperty.RegisterReadOnly(nameof(SubdirectoryCount), typeof(long), typeof(SubdirectoryItemVM),
+                new PropertyMetadata(0L));
 
         /// <summary>
-        /// Identifies the <see cref="SubDirectoryCount"/> dependency property.
+        /// Identifies the <see cref="SubdirectoryCount"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty SubDirectoryCountProperty = SubDirectoryCountPropertyKey.DependencyProperty;
+        public static readonly DependencyProperty SubdirectoryCountProperty = SubdirectoryCountPropertyKey.DependencyProperty;
 
         /// <summary>
         /// Gets .
         /// </summary>
         /// <value>The .</value>
-        public int SubDirectoryCount { get => (int)GetValue(SubDirectoryCountProperty); private set => SetValue(SubDirectoryCountPropertyKey, value); }
+        public long SubdirectoryCount { get => (long)GetValue(SubdirectoryCountProperty); private set => SetValue(SubdirectoryCountPropertyKey, value); }
 
         #endregion
         #region FileCount Property Members
 
-        private static readonly DependencyPropertyKey FileCountPropertyKey = DependencyProperty.RegisterReadOnly(nameof(FileCount), typeof(int), typeof(SubdirectoryItemVM),
-                new PropertyMetadata(0));
+        private static readonly DependencyPropertyKey FileCountPropertyKey = DependencyProperty.RegisterReadOnly(nameof(FileCount), typeof(long), typeof(SubdirectoryItemVM),
+                new PropertyMetadata(0L));
 
         /// <summary>
         /// Identifies the <see cref="FileCount"/> dependency property.
@@ -295,22 +278,78 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         /// Gets .
         /// </summary>
         /// <value>The .</value>
-        public int FileCount { get => (int)GetValue(FileCountProperty); private set => SetValue(FileCountPropertyKey, value); }
+        public long FileCount { get => (long)GetValue(FileCountProperty); private set => SetValue(FileCountPropertyKey, value); }
+
+        #endregion
+        #region VolumeDisplayName Property Members
+
+        private static readonly DependencyPropertyKey VolumeDisplayNamePropertyKey = DependencyProperty.RegisterReadOnly(nameof(VolumeDisplayName), typeof(string), typeof(SubdirectoryItemVM), new PropertyMetadata(""));
+
+        /// <summary>
+        /// Identifies the <see cref="VolumeDisplayName"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty VolumeDisplayNameProperty = VolumeDisplayNamePropertyKey.DependencyProperty;
+
+        /// <summary>
+        /// Gets or sets .
+        /// </summary>
+        /// <value>The .</value>
+        public string VolumeDisplayName { get => GetValue(VolumeDisplayNameProperty) as string; private set => SetValue(VolumeDisplayNamePropertyKey, value); }
+
+        #endregion
+        #region VolumeName Property Members
+
+        private static readonly DependencyPropertyKey VolumeNamePropertyKey = DependencyProperty.RegisterReadOnly(nameof(VolumeName), typeof(string), typeof(SubdirectoryItemVM), new PropertyMetadata(""));
+
+        /// <summary>
+        /// Identifies the <see cref="VolumeName"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty VolumeNameProperty = VolumeNamePropertyKey.DependencyProperty;
+
+        /// <summary>
+        /// Gets or sets .
+        /// </summary>
+        /// <value>The .</value>
+        public string VolumeName { get => GetValue(VolumeNameProperty) as string; private set => SetValue(VolumeNamePropertyKey, value); }
+
+        #endregion
+        #region VolumeIdentifier Property Members
+
+        private static readonly DependencyPropertyKey VolumeIdentifierPropertyKey = DependencyProperty.RegisterReadOnly(nameof(VolumeIdentifier), typeof(VolumeIdentifier), typeof(SubdirectoryItemVM),
+                new PropertyMetadata(VolumeIdentifier.Empty));
+
+        /// <summary>
+        /// Identifies the <see cref="VolumeIdentifier"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty VolumeIdentifierProperty = VolumeIdentifierPropertyKey.DependencyProperty;
+
+        /// <summary>
+        /// Gets .
+        /// </summary>
+        /// <value>The .</value>
+        public VolumeIdentifier VolumeIdentifier { get => (VolumeIdentifier)GetValue(VolumeIdentifierProperty); private set => SetValue(VolumeIdentifierPropertyKey, value); }
+
+        #endregion
+        #region CrawlConfigDisplayName Property Members
+
+        private static readonly DependencyPropertyKey CrawlConfigDisplayNamePropertyKey = DependencyProperty.RegisterReadOnly(nameof(CrawlConfigDisplayName), typeof(string), typeof(SubdirectoryItemVM), new PropertyMetadata(""));
+
+        /// <summary>
+        /// Identifies the <see cref="CrawlConfigDisplayName"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty CrawlConfigDisplayNameProperty = CrawlConfigDisplayNamePropertyKey.DependencyProperty;
+
+        /// <summary>
+        /// Gets or sets .
+        /// </summary>
+        /// <value>The .</value>
+        public string CrawlConfigDisplayName { get => GetValue(CrawlConfigDisplayNameProperty) as string; private set => SetValue(CrawlConfigDisplayNamePropertyKey, value); }
 
         #endregion
 
-        public SubdirectoryItemVM(Subdirectory entity, AsyncOps.AsyncBgModalVM bgOpMgr = null) : base(entity)
+        public SubdirectoryItemVM(SubdirectoryListItemWithAncestorNames entity) : base(entity)
         {
             SetValue(BgOpsPropertyKey, new AsyncOps.AsyncBgModalVM());
-            (bgOpMgr ?? BgOps).FromAsync("", "", entity, LookupFullNameAsync).ContinueWith(task => CrawlConfig = entity.CrawlConfiguration.ToItemViewModel(bgOpMgr ?? BgOps))
-                .ContinueWith(task =>
-                {
-                    Subdirectory parent = entity.Parent;
-                    if (parent is null)
-                        Volume = entity.Volume?.ToItemViewModel(bgOpMgr ?? BgOps);
-                    else
-                        Parent = entity.Parent.ToItemViewModel(bgOpMgr ?? BgOps);
-                });
             Name = entity.Name;
             CreationTime = entity.CreationTime;
             LastAccessed = entity.LastAccessed;
@@ -318,11 +357,12 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             Notes = entity.Notes;
             Options = entity.Options;
             Status = entity.Status;
-            SharedTagCount = entity.SharedTags.Count();
-            PersonalTagCount = entity.PersonalTags.Count();
-            AccessErrorCount = entity.AccessErrors.Count();
-            SubDirectoryCount = entity.SubDirectories.Count();
-            FileCount = entity.Files.Count();
+            SharedTagCount = entity.SharedTagCount;
+            PersonalTagCount = entity.PersonalTagCount;
+            AccessErrorCount = entity.AccessErrorCount;
+            SubdirectoryCount = entity.SubdirectoryCount;
+            FileCount = entity.FileCount;
+            CrawlConfigDisplayName = entity.CrawlConfigDisplayName;
         }
 
         private async Task<string> LookupFullNameAsync(Subdirectory root, IWindowsStatusListener statusListener)
@@ -339,53 +379,78 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             FullName = result;
         }
 
-        protected override DbSet<Subdirectory> GetDbSet(LocalDbContext dbContext) => dbContext.Subdirectories;
+        protected override DbSet<SubdirectoryListItemWithAncestorNames> GetDbSet(LocalDbContext dbContext) => dbContext.SubdirectoryListingWithAncestorNames;
+
+        public static string FromAncestorNames(string ancestorNames)
+        {
+            if (string.IsNullOrEmpty(ancestorNames))
+                return "";
+            string[] segments = ancestorNames.Split("/").Where(n => n.Length > 0).Reverse().ToArray();
+            if (segments.Length > 0)
+            {
+                if (segments[0].EndsWith("\"") || segments[0].EndsWith("/"))
+                    segments[0] = segments[0][0..^1];
+                return string.Join('\\', segments);
+            }
+            return segments[0];
+        }
 
         protected override void OnNestedModelPropertyChanged(string propertyName)
         {
             switch (propertyName)
             {
-                case nameof(ISubdirectory.CrawlConfiguration):
-                    CrawlConfig = Model?.CrawlConfiguration.ToItemViewModel(BgOps);
+                case nameof(SubdirectoryListItemWithAncestorNames.AccessErrorCount):
+                    AccessErrorCount = Model?.AccessErrorCount ?? 0L;
                     break;
-                case nameof(ISubdirectory.Parent):
-                    if (Model?.Parent is not null)
-                    {
-                        Parent = Model?.Parent?.ToItemViewModel(BgOps);
-                        Volume = null;
-                    }
+                case nameof(SubdirectoryListItemWithAncestorNames.FileCount):
+                    FileCount = Model?.FileCount ?? 0L;
                     break;
-                case nameof(ISubdirectory.Volume):
-                    if (Model?.Volume is not null)
-                    {
-                        Volume = Model?.Volume?.ToItemViewModel(BgOps);
-                        Parent = null;
-                    }
+                case nameof(SubdirectoryListItemWithAncestorNames.PersonalTagCount):
+                    PersonalTagCount = Model?.PersonalTagCount ?? 0L;
                     break;
-
-            }    
-            //(bgOpMgr ?? BgOps).FromAsync("", "", entity, LookupFullNameAsync).ContinueWith(task => CrawlConfig = entity.CrawlConfiguration.ToItemViewModel(bgOpMgr ?? BgOps))
-            //    .ContinueWith(task =>
-            //    {
-            //        Subdirectory parent = entity.Parent;
-            //        if (parent is null)
-            //            Volume = entity.Volume?.ToItemViewModel(bgOpMgr ?? BgOps);
-            //        else
-            //            Parent = entity.Parent.ToItemViewModel(bgOpMgr ?? BgOps);
-            //    });
-            //Name = entity.Name;
-            //CreationTime = entity.CreationTime;
-            //LastAccessed = entity.LastAccessed;
-            //LastWriteTime = entity.LastWriteTime;
-            //Notes = entity.Notes;
-            //Options = entity.Options;
-            //Status = entity.Status;
-            //SharedTagCount = entity.SharedTags.Count();
-            //PersonalTagCount = entity.PersonalTags.Count();
-            //AccessErrorCount = entity.AccessErrors.Count();
-            //SubDirectoryCount = entity.SubDirectories.Count();
-            //FileCount = entity.Files.Count();
-            throw new NotImplementedException();
+                case nameof(SubdirectoryListItemWithAncestorNames.SharedTagCount):
+                    SharedTagCount = Model?.SharedTagCount ?? 0L;
+                    break;
+                case nameof(SubdirectoryListItemWithAncestorNames.SubdirectoryCount):
+                    AccessErrorCount = Model?.AccessErrorCount ?? 0L;
+                    break;
+                case nameof(SubdirectoryListItemWithAncestorNames.AncestorNames):
+                    FullName = FromAncestorNames(Model?.AncestorNames);
+                    break;
+                case nameof(SubdirectoryListItemWithAncestorNames.CreationTime):
+                    CreationTime = Model?.CreationTime ?? DateTime.Now;
+                    break;
+                case nameof(SubdirectoryListItemWithAncestorNames.LastAccessed):
+                    CreationTime = Model?.CreationTime ?? DateTime.Now;
+                    break;
+                case nameof(SubdirectoryListItemWithAncestorNames.LastWriteTime):
+                    CreationTime = Model?.CreationTime ?? DateTime.Now;
+                    break;
+                case nameof(SubdirectoryListItemWithAncestorNames.Name):
+                    Name = Model?.Name ?? "";
+                    break;
+                case nameof(SubdirectoryListItemWithAncestorNames.Notes):
+                    Notes = Model?.Notes ?? "";
+                    break;
+                case nameof(SubdirectoryListItemWithAncestorNames.Options):
+                    Options = Model?.Options ?? DirectoryCrawlOptions.None;
+                    break;
+                case nameof(SubdirectoryListItemWithAncestorNames.Status):
+                    Status = Model?.Status ?? DirectoryStatus.Incomplete;
+                    break;
+                case nameof(SubdirectoryListItemWithAncestorNames.VolumeDisplayName):
+                    VolumeDisplayName = Model?.VolumeDisplayName ?? "";
+                    break;
+                case nameof(SubdirectoryListItemWithAncestorNames.VolumeIdentifier):
+                    VolumeIdentifier = Model?.VolumeIdentifier ?? VolumeIdentifier.Empty;
+                    break;
+                case nameof(SubdirectoryListItemWithAncestorNames.VolumeName):
+                    VolumeName = Model?.VolumeName ?? "";
+                    break;
+                case nameof(SubdirectoryListItemWithAncestorNames.CrawlConfigDisplayName):
+                    CrawlConfigDisplayName = Model?.CrawlConfigDisplayName ?? "";
+                    break;
+            }
         }
     }
 }
