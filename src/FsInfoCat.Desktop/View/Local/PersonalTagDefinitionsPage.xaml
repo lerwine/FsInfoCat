@@ -38,7 +38,7 @@
             </Grid.ColumnDefinitions>
             <Label Content="Personal Tag Definitions" Padding="{DynamicResource DefaultSpacing}" FontWeight="Bold" />
             <Button Grid.Column="1" Margin="{DynamicResource DefaultSpacingTopLeft}" Style="{DynamicResource FilterButton}" Command="{Binding ShowViewOptions, Mode=OneWay}"/>
-            <Button Grid.Column="2" Margin="{DynamicResource DefaultSpacingTopLeftRight}" Style="{DynamicResource AddNewButton}" Command="{Binding NewItemClickCommand, Mode=OneWay}" />
+            <Button Grid.Column="2" Margin="{DynamicResource DefaultSpacingTopLeftRight}" Style="{DynamicResource AddNewButton}" Command="{Binding NewItemClick, Mode=OneWay}" />
             <DataGrid Grid.Row="1" ItemsSource="{Binding Items, Mode=OneWay}" Margin="{DynamicResource DefaultSpacingLeftRight}" AutoGenerateColumns="False" IsReadOnly="True" SelectedValue="{Binding SelectedItem, Mode=TwoWay}" Grid.ColumnSpan="3">
                 <DataGrid.Columns>
                     <DataGridTextColumn Binding="{Binding Name, Mode=OneWay}" IsReadOnly="True" Header="{x:Static res:Resources.DisplayName_Name}" Width="*"/>

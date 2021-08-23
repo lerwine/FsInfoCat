@@ -42,7 +42,7 @@
             </Grid.ColumnDefinitions>
             <Label Content="File Systems" Padding="{DynamicResource DefaultSpacingTopLeftRight}" FontWeight="Bold" VerticalAlignment="Bottom" />
             <Button Grid.Column="1" Margin="{DynamicResource DefaultSpacingTopLeft}" Style="{DynamicResource FilterButton}" Command="{Binding ShowViewOptions, Mode=OneWay}"/>
-            <Button Grid.Column="2" Margin="{DynamicResource DefaultSpacingTopLeftRight}" Style="{DynamicResource AddNewButton}" Command="{Binding NewItemClickCommand, Mode=OneWay}"/>
+            <Button Grid.Column="2" Margin="{DynamicResource DefaultSpacingTopLeftRight}" Style="{DynamicResource AddNewButton}" Command="{Binding NewItemClick, Mode=OneWay}"/>
             <DataGrid ItemsSource="{Binding Items, Mode=OneWay}" AutoGenerateColumns="False" Margin="{DynamicResource DefaultSpacingLeftRight}" IsReadOnly="True"
                   SelectedValue="{Binding ItemSelection.CurrentItem}" Grid.Row="1" Grid.ColumnSpan="3">
                 <DataGrid.Columns>
