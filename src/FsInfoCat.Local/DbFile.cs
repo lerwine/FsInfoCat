@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -15,34 +14,12 @@ using System.Threading.Tasks;
 namespace FsInfoCat.Local
 {
     [Table(TABLE_NAME)]
-    public class DbFile : LocalDbEntity, ILocalFile, ISimpleIdentityReference<DbFile>
+    public class DbFile : DbFileRow, ILocalFile, ISimpleIdentityReference<DbFile>
     {
         #region Fields
 
         public const string TABLE_NAME = "Files";
 
-        private readonly IPropertyChangeTracker<Guid> _id;
-        private readonly IPropertyChangeTracker<string> _name;
-        private readonly IPropertyChangeTracker<FileCorrelationStatus> _status;
-        private readonly IPropertyChangeTracker<FileCrawlOptions> _options;
-        private readonly IPropertyChangeTracker<DateTime> _lastAccessed;
-        private readonly IPropertyChangeTracker<DateTime?> _lastHashCalculation;
-        private readonly IPropertyChangeTracker<string> _notes;
-        private readonly IPropertyChangeTracker<DateTime> _creationTime;
-        private readonly IPropertyChangeTracker<DateTime> _lastWriteTime;
-        private readonly IPropertyChangeTracker<Guid> _parentId;
-        private readonly IPropertyChangeTracker<Guid> _binaryPropertySetId;
-        private readonly IPropertyChangeTracker<Guid?> _summaryPropertySetId;
-        private readonly IPropertyChangeTracker<Guid?> _documentPropertySetId;
-        private readonly IPropertyChangeTracker<Guid?> _audioPropertySetId;
-        private readonly IPropertyChangeTracker<Guid?> _drmPropertySetId;
-        private readonly IPropertyChangeTracker<Guid?> _gpsPropertySetId;
-        private readonly IPropertyChangeTracker<Guid?> _imagePropertySetId;
-        private readonly IPropertyChangeTracker<Guid?> _mediaPropertySetId;
-        private readonly IPropertyChangeTracker<Guid?> _musicPropertySetId;
-        private readonly IPropertyChangeTracker<Guid?> _photoPropertySetId;
-        private readonly IPropertyChangeTracker<Guid?> _recordedTVPropertySetId;
-        private readonly IPropertyChangeTracker<Guid?> _videoPropertySetId;
         private readonly IPropertyChangeTracker<Subdirectory> _parent;
         private readonly IPropertyChangeTracker<BinaryPropertySet> _binaryProperties;
         private readonly IPropertyChangeTracker<Redundancy> _redundancy;
@@ -67,283 +44,13 @@ namespace FsInfoCat.Local
 
         #region Properties
 
-        [Key]
-        public virtual Guid Id { get => _id.GetValue(); set => _id.SetValue(value); }
-
-        [Required(AllowEmptyStrings = false, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_NameRequired),
-            ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
-        [StringLength(DbConstants.DbColMaxLen_FileName, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_NameLength),
-            ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
-        public virtual string Name { get => _name.GetValue(); set => _name.SetValue(value); }
-
-        [Required]
-        public virtual FileCorrelationStatus Status { get => _status.GetValue(); set => _status.SetValue(value); }
-
-        [Required]
-        public virtual FileCrawlOptions Options { get => _options.GetValue(); set => _options.SetValue(value); }
-
-        [Required]
-        public virtual DateTime LastAccessed { get => _lastAccessed.GetValue(); set => _lastAccessed.SetValue(value); }
-
-        public virtual DateTime? LastHashCalculation { get => _lastHashCalculation.GetValue(); set => _lastHashCalculation.SetValue(value); }
-
-        [Required(AllowEmptyStrings = true)]
-        public virtual string Notes { get => _notes.GetValue(); set => _notes.SetValue(value); }
-
-        public DateTime CreationTime { get => _creationTime.GetValue(); set => _creationTime.SetValue(value); }
-
-        public DateTime LastWriteTime { get => _lastWriteTime.GetValue(); set => _lastWriteTime.SetValue(value); }
-
-        public virtual Guid ParentId
-        {
-            get => _parentId.GetValue();
-            set
-            {
-                if (_parentId.SetValue(value))
-                {
-                    Subdirectory nav = _parent.GetValue();
-                    if (!(nav is null || nav.Id.Equals(value)))
-                        _parent.SetValue(null);
-                }
-            }
-        }
-
-        public virtual Guid BinaryPropertySetId
-        {
-            get => _binaryPropertySetId.GetValue();
-            set
-            {
-                if (_binaryPropertySetId.SetValue(value))
-                {
-                    BinaryPropertySet nav = _binaryProperties.GetValue();
-                    if (!(nav is null || nav.Id.Equals(value)))
-                        _binaryProperties.SetValue(null);
-                }
-            }
-        }
-
-        public virtual Guid? SummaryPropertySetId
-        {
-            get => _summaryPropertySetId.GetValue();
-            set
-            {
-                if (_summaryPropertySetId.SetValue(value))
-                {
-                    SummaryPropertySet nav = _summaryProperties.GetValue();
-                    if (value.HasValue)
-                    {
-                        if (!(nav is null || nav.Id.Equals(value.Value)))
-                            _binaryProperties.SetValue(null);
-                    }
-                    else if (!(nav is null))
-                        _binaryProperties.SetValue(null);
-                }
-            }
-        }
-
-        public virtual Guid? DocumentPropertySetId
-        {
-            get => _documentPropertySetId.GetValue();
-            set
-            {
-                if (_documentPropertySetId.SetValue(value))
-                {
-                    DocumentPropertySet nav = _documentProperties.GetValue();
-                    if (value.HasValue)
-                    {
-                        if (!(nav is null || nav.Id.Equals(value.Value)))
-                            _binaryProperties.SetValue(null);
-                    }
-                    else if (!(nav is null))
-                        _binaryProperties.SetValue(null);
-                }
-            }
-        }
-
-        public virtual Guid? AudioPropertySetId
-        {
-            get => _audioPropertySetId.GetValue();
-            set
-            {
-                if (_audioPropertySetId.SetValue(value))
-                {
-                    AudioPropertySet nav = _audioProperties.GetValue();
-                    if (value.HasValue)
-                    {
-                        if (!(nav is null || nav.Id.Equals(value.Value)))
-                            _binaryProperties.SetValue(null);
-                    }
-                    else if (!(nav is null))
-                        _binaryProperties.SetValue(null);
-                }
-            }
-        }
-
-        public virtual Guid? DRMPropertySetId
-        {
-            get => _drmPropertySetId.GetValue();
-            set
-            {
-                if (_drmPropertySetId.SetValue(value))
-                {
-                    DRMPropertySet nav = _drmProperties.GetValue();
-                    if (value.HasValue)
-                    {
-                        if (!(nav is null || nav.Id.Equals(value.Value)))
-                            _binaryProperties.SetValue(null);
-                    }
-                    else if (!(nav is null))
-                        _binaryProperties.SetValue(null);
-                }
-            }
-        }
-
-        public virtual Guid? GPSPropertySetId
-        {
-            get => _gpsPropertySetId.GetValue();
-            set
-            {
-                if (_gpsPropertySetId.SetValue(value))
-                {
-                    GPSPropertySet nav = _gpsProperties.GetValue();
-                    if (value.HasValue)
-                    {
-                        if (!(nav is null || nav.Id.Equals(value.Value)))
-                            _binaryProperties.SetValue(null);
-                    }
-                    else if (!(nav is null))
-                        _binaryProperties.SetValue(null);
-                }
-            }
-        }
-
-        public virtual Guid? ImagePropertySetId
-        {
-            get => _imagePropertySetId.GetValue();
-            set
-            {
-                if (_imagePropertySetId.SetValue(value))
-                {
-                    ImagePropertySet nav = _imageProperties.GetValue();
-                    if (value.HasValue)
-                    {
-                        if (!(nav is null || nav.Id.Equals(value.Value)))
-                            _binaryProperties.SetValue(null);
-                    }
-                    else if (!(nav is null))
-                        _binaryProperties.SetValue(null);
-                }
-            }
-        }
-
-        public virtual Guid? MediaPropertySetId
-        {
-            get => _mediaPropertySetId.GetValue();
-            set
-            {
-                if (_mediaPropertySetId.SetValue(value))
-                {
-                    MediaPropertySet nav = _mediaProperties.GetValue();
-                    if (value.HasValue)
-                    {
-                        if (!(nav is null || nav.Id.Equals(value.Value)))
-                            _binaryProperties.SetValue(null);
-                    }
-                    else if (!(nav is null))
-                        _binaryProperties.SetValue(null);
-                }
-            }
-        }
-
-        public virtual Guid? MusicPropertySetId
-        {
-            get => _musicPropertySetId.GetValue();
-            set
-            {
-                if (_musicPropertySetId.SetValue(value))
-                {
-                    MusicPropertySet nav = _musicProperties.GetValue();
-                    if (value.HasValue)
-                    {
-                        if (!(nav is null || nav.Id.Equals(value.Value)))
-                            _binaryProperties.SetValue(null);
-                    }
-                    else if (!(nav is null))
-                        _binaryProperties.SetValue(null);
-                }
-            }
-        }
-
-        public virtual Guid? PhotoPropertySetId
-        {
-            get => _photoPropertySetId.GetValue();
-            set
-            {
-                if (_photoPropertySetId.SetValue(value))
-                {
-                    PhotoPropertySet nav = _photoProperties.GetValue();
-                    if (value.HasValue)
-                    {
-                        if (!(nav is null || nav.Id.Equals(value.Value)))
-                            _binaryProperties.SetValue(null);
-                    }
-                    else if (!(nav is null))
-                        _binaryProperties.SetValue(null);
-                }
-            }
-        }
-
-        public virtual Guid? RecordedTVPropertySetId
-        {
-            get => _recordedTVPropertySetId.GetValue();
-            set
-            {
-                if (_recordedTVPropertySetId.SetValue(value))
-                {
-                    RecordedTVPropertySet nav = _recordedTVProperties.GetValue();
-                    if (value.HasValue)
-                    {
-                        if (!(nav is null || nav.Id.Equals(value.Value)))
-                            _binaryProperties.SetValue(null);
-                    }
-                    else if (!(nav is null))
-                        _binaryProperties.SetValue(null);
-                }
-            }
-        }
-
-        public virtual Guid? VideoPropertySetId
-        {
-            get => _videoPropertySetId.GetValue();
-            set
-            {
-                if (_videoPropertySetId.SetValue(value))
-                {
-                    VideoPropertySet nav = _videoProperties.GetValue();
-                    if (value.HasValue)
-                    {
-                        if (!(nav is null || nav.Id.Equals(value.Value)))
-                            _binaryProperties.SetValue(null);
-                    }
-                    else if (!(nav is null))
-                        _binaryProperties.SetValue(null);
-                }
-            }
-        }
-
-
         public virtual BinaryPropertySet BinaryProperties
         {
             get => _binaryProperties.GetValue();
             set
             {
                 if (_binaryProperties.SetValue(value))
-                {
-                    if (value is null)
-                        _binaryPropertySetId.SetValue(Guid.Empty);
-                    else
-                        _binaryPropertySetId.SetValue(value.Id);
-                }
+                    BinaryPropertySetId = value?.Id ?? Guid.Empty;
             }
         }
 
@@ -353,12 +60,7 @@ namespace FsInfoCat.Local
             set
             {
                 if (_parent.SetValue(value))
-                {
-                    if (value is null)
-                        _parentId.SetValue(Guid.Empty);
-                    else
-                        _parentId.SetValue(value.Id);
-                }
+                    ParentId = value?.Id ?? Guid.Empty;
             }
         }
 
@@ -371,12 +73,7 @@ namespace FsInfoCat.Local
             set
             {
                 if (_summaryProperties.SetValue(value))
-                {
-                    if (value is null)
-                        _summaryPropertySetId.SetValue(null);
-                    else
-                        _summaryPropertySetId.SetValue(value.Id);
-                }
+                    SummaryPropertySetId = value?.Id;
             }
         }
 
@@ -387,12 +84,7 @@ namespace FsInfoCat.Local
             set
             {
                 if (_documentProperties.SetValue(value))
-                {
-                    if (value is null)
-                        _documentPropertySetId.SetValue(null);
-                    else
-                        _documentPropertySetId.SetValue(value.Id);
-                }
+                    DocumentPropertySetId = value?.Id;
             }
         }
 
@@ -403,12 +95,7 @@ namespace FsInfoCat.Local
             set
             {
                 if (_audioProperties.SetValue(value))
-                {
-                    if (value is null)
-                        _audioPropertySetId.SetValue(null);
-                    else
-                        _audioPropertySetId.SetValue(value.Id);
-                }
+                    AudioPropertySetId = value?.Id;
             }
         }
 
@@ -419,12 +106,7 @@ namespace FsInfoCat.Local
             set
             {
                 if (_drmProperties.SetValue(value))
-                {
-                    if (value is null)
-                        _drmPropertySetId.SetValue(null);
-                    else
-                        _drmPropertySetId.SetValue(value.Id);
-                }
+                    DRMPropertySetId = value?.Id;
             }
         }
 
@@ -435,12 +117,7 @@ namespace FsInfoCat.Local
             set
             {
                 if (_gpsProperties.SetValue(value))
-                {
-                    if (value is null)
-                        _gpsPropertySetId.SetValue(null);
-                    else
-                        _gpsPropertySetId.SetValue(value.Id);
-                }
+                    GPSPropertySetId = value?.Id;
             }
         }
 
@@ -451,12 +128,7 @@ namespace FsInfoCat.Local
             set
             {
                 if (_imageProperties.SetValue(value))
-                {
-                    if (value is null)
-                        _imagePropertySetId.SetValue(null);
-                    else
-                        _imagePropertySetId.SetValue(value.Id);
-                }
+                    ImagePropertySetId = value?.Id;
             }
         }
 
@@ -467,12 +139,7 @@ namespace FsInfoCat.Local
             set
             {
                 if (_mediaProperties.SetValue(value))
-                {
-                    if (value is null)
-                        _mediaPropertySetId.SetValue(null);
-                    else
-                        _mediaPropertySetId.SetValue(value.Id);
-                }
+                    MediaPropertySetId = value?.Id;
             }
         }
 
@@ -483,12 +150,7 @@ namespace FsInfoCat.Local
             set
             {
                 if (_musicProperties.SetValue(value))
-                {
-                    if (value is null)
-                        _musicPropertySetId.SetValue(null);
-                    else
-                        _musicPropertySetId.SetValue(value.Id);
-                }
+                    MusicPropertySetId = value?.Id;
             }
         }
 
@@ -499,12 +161,7 @@ namespace FsInfoCat.Local
             set
             {
                 if (_photoProperties.SetValue(value))
-                {
-                    if (value is null)
-                        _photoPropertySetId.SetValue(null);
-                    else
-                        _photoPropertySetId.SetValue(value.Id);
-                }
+                    PhotoPropertySetId = value?.Id;
             }
         }
 
@@ -515,12 +172,7 @@ namespace FsInfoCat.Local
             set
             {
                 if (_recordedTVProperties.SetValue(value))
-                {
-                    if (value is null)
-                        _recordedTVPropertySetId.SetValue(null);
-                    else
-                        _recordedTVPropertySetId.SetValue(value.Id);
-                }
+                    RecordedTVPropertySetId = value?.Id;
             }
         }
 
@@ -531,12 +183,7 @@ namespace FsInfoCat.Local
             set
             {
                 if (_videoProperties.SetValue(value))
-                {
-                    if (value is null)
-                        _videoPropertySetId.SetValue(null);
-                    else
-                        _videoPropertySetId.SetValue(value.Id);
-                }
+                    VideoPropertySetId = value?.Id;
             }
         }
 
@@ -578,23 +225,14 @@ namespace FsInfoCat.Local
         #region Explicit Members
 
         ILocalBinaryPropertySet ILocalFile.BinaryProperties { get => BinaryProperties; }
-
         IBinaryPropertySet IFile.BinaryProperties { get => BinaryProperties; }
-
         ISubdirectory IDbFsItem.Parent { get => Parent; }
-
         ILocalRedundancy ILocalFile.Redundancy => Redundancy;
-
         IRedundancy IFile.Redundancy => Redundancy;
-
         IEnumerable<ILocalComparison> ILocalFile.BaselineComparisons => BaselineComparisons.Cast<ILocalComparison>();
-
         IEnumerable<IComparison> IFile.BaselineComparisons => BaselineComparisons.Cast<IComparison>();
-
         IEnumerable<ILocalComparison> ILocalFile.CorrelativeComparisons => CorrelativeComparisons.Cast<ILocalComparison>();
-
         IEnumerable<IComparison> IFile.CorrelativeComparisons => CorrelativeComparisons.Cast<IComparison>();
-
         ILocalSummaryPropertySet ILocalFile.SummaryProperties { get => SummaryProperties; }
         ILocalDocumentPropertySet ILocalFile.DocumentProperties { get => DocumentProperties; }
         ILocalAudioPropertySet ILocalFile.AudioProperties { get => AudioProperties; }
@@ -630,37 +268,12 @@ namespace FsInfoCat.Local
         IEnumerable<ILocalSharedTag> ILocalDbFsItem.SharedTags => SharedTags.Cast<ILocalSharedTag>();
         IEnumerable<ISharedFileTag> IFile.SharedTags => SharedTags.Cast<ISharedFileTag>();
         IEnumerable<ISharedTag> IDbFsItem.SharedTags => SharedTags.Cast<ISharedTag>();
-
         DbFile IIdentityReference<DbFile>.Entity => this;
-
-        IDbEntity IIdentityReference.Entity => this;
 
         #endregion
 
         public DbFile()
         {
-            _id = AddChangeTracker(nameof(Id), Guid.Empty);
-            _name = AddChangeTracker(nameof(Name), "", NonNullStringCoersion.Default);
-            _status = AddChangeTracker(nameof(FileCorrelationStatus), FileCorrelationStatus.Dissociated);
-            _options = AddChangeTracker(nameof(FileCrawlOptions), FileCrawlOptions.None);
-            _lastAccessed = AddChangeTracker(nameof(LastAccessed), CreatedOn);
-            _lastHashCalculation = AddChangeTracker<DateTime?>(nameof(LastHashCalculation), null);
-            _notes = AddChangeTracker(nameof(Notes), "", NonWhiteSpaceOrEmptyStringCoersion.Default);
-            _creationTime = AddChangeTracker(nameof(CreationTime), CreatedOn);
-            _lastWriteTime = AddChangeTracker(nameof(LastWriteTime), CreatedOn);
-            _parentId = AddChangeTracker(nameof(ParentId), Guid.Empty);
-            _binaryPropertySetId = AddChangeTracker(nameof(BinaryPropertySetId), Guid.Empty);
-            _summaryPropertySetId = AddChangeTracker<Guid?>(nameof(SummaryPropertySetId), null);
-            _documentPropertySetId = AddChangeTracker<Guid?>(nameof(DocumentPropertySetId), null);
-            _audioPropertySetId = AddChangeTracker<Guid?>(nameof(AudioPropertySetId), null);
-            _drmPropertySetId = AddChangeTracker<Guid?>(nameof(DRMPropertySetId), null);
-            _gpsPropertySetId = AddChangeTracker<Guid?>(nameof(GPSPropertySetId), null);
-            _imagePropertySetId = AddChangeTracker<Guid?>(nameof(ImagePropertySetId), null);
-            _mediaPropertySetId = AddChangeTracker<Guid?>(nameof(MediaPropertySetId), null);
-            _musicPropertySetId = AddChangeTracker<Guid?>(nameof(MusicPropertySetId), null);
-            _photoPropertySetId = AddChangeTracker<Guid?>(nameof(PhotoPropertySetId), null);
-            _recordedTVPropertySetId = AddChangeTracker<Guid?>(nameof(RecordedTVPropertySetId), null);
-            _videoPropertySetId = AddChangeTracker<Guid?>(nameof(VideoPropertySetId), null);
             _parent = AddChangeTracker<Subdirectory>(nameof(Parent), null);
             _binaryProperties = AddChangeTracker<BinaryPropertySet>(nameof(BinaryProperties), null);
             _redundancy = AddChangeTracker<Redundancy>(nameof(Redundancy), null);
@@ -703,13 +316,6 @@ namespace FsInfoCat.Local
             if (Status != FileCorrelationStatus.Deleted || UpstreamId.HasValue || !dbEntry.ExistsInDb())
                 return false;
             return await ExpungeAsync(dbEntry, cancellationToken);
-        }
-
-        protected override void OnPropertyChanging(PropertyChangingEventArgs args)
-        {
-            if (args.PropertyName == nameof(Id) && _id.IsChanged)
-                throw new InvalidOperationException();
-            base.OnPropertyChanging(args);
         }
 
         internal static void OnBuildEntity(EntityTypeBuilder<DbFile> builder)
@@ -1185,6 +791,152 @@ namespace FsInfoCat.Local
         public ISimpleIdentityReference<BinaryPropertySet> GetBinaryPropertySetReference()
         {
             throw new NotImplementedException();
+        }
+
+        protected override void OnParentIdChanged(Guid value)
+        {
+            Subdirectory nav = _parent.GetValue();
+            if (!(nav is null || nav.Id.Equals(value)))
+                _parent.SetValue(null);
+        }
+
+        protected override void RaiseBinaryPropertySetIdChanged(Guid value)
+        {
+            BinaryPropertySet nav = _binaryProperties.GetValue();
+            if (!(nav is null || nav.Id.Equals(value)))
+                _binaryProperties.SetValue(null);
+        }
+
+        protected override void OnSummaryPropertySetIdChanged(Guid? value)
+        {
+            SummaryPropertySet nav = _summaryProperties.GetValue();
+            if (value.HasValue)
+            {
+                if (!(nav is null || nav.Id.Equals(value.Value)))
+                    _binaryProperties.SetValue(null);
+            }
+            else if (!(nav is null))
+                _binaryProperties.SetValue(null);
+        }
+
+        protected override void OnDocumentPropertySetIdChanged(Guid? value)
+        {
+            DocumentPropertySet nav = _documentProperties.GetValue();
+            if (value.HasValue)
+            {
+                if (!(nav is null || nav.Id.Equals(value.Value)))
+                    _binaryProperties.SetValue(null);
+            }
+            else if (!(nav is null))
+                _binaryProperties.SetValue(null);
+        }
+
+        protected override void OnAudioPropertySetIdChanged(Guid? value)
+        {
+            AudioPropertySet nav = _audioProperties.GetValue();
+            if (value.HasValue)
+            {
+                if (!(nav is null || nav.Id.Equals(value.Value)))
+                    _binaryProperties.SetValue(null);
+            }
+            else if (!(nav is null))
+                _binaryProperties.SetValue(null);
+        }
+
+        protected override void OnDRMPropertySetIdChanged(Guid? value)
+        {
+            DRMPropertySet nav = _drmProperties.GetValue();
+            if (value.HasValue)
+            {
+                if (!(nav is null || nav.Id.Equals(value.Value)))
+                    _binaryProperties.SetValue(null);
+            }
+            else if (!(nav is null))
+                _binaryProperties.SetValue(null);
+        }
+
+        protected override void OnGPSPropertySetIdChanged(Guid? value)
+        {
+            GPSPropertySet nav = _gpsProperties.GetValue();
+            if (value.HasValue)
+            {
+                if (!(nav is null || nav.Id.Equals(value.Value)))
+                    _binaryProperties.SetValue(null);
+            }
+            else if (!(nav is null))
+                _binaryProperties.SetValue(null);
+        }
+
+        protected override void OnImagePropertySetIdChanged(Guid? value)
+        {
+            ImagePropertySet nav = _imageProperties.GetValue();
+            if (value.HasValue)
+            {
+                if (!(nav is null || nav.Id.Equals(value.Value)))
+                    _binaryProperties.SetValue(null);
+            }
+            else if (!(nav is null))
+                _binaryProperties.SetValue(null);
+        }
+
+        protected override void OnMediaPropertySetIdChanged(Guid? value)
+        {
+            MediaPropertySet nav = _mediaProperties.GetValue();
+            if (value.HasValue)
+            {
+                if (!(nav is null || nav.Id.Equals(value.Value)))
+                    _binaryProperties.SetValue(null);
+            }
+            else if (!(nav is null))
+                _binaryProperties.SetValue(null);
+        }
+
+        protected override void OnMusicPropertySetIdChanged(Guid? value)
+        {
+            MusicPropertySet nav = _musicProperties.GetValue();
+            if (value.HasValue)
+            {
+                if (!(nav is null || nav.Id.Equals(value.Value)))
+                    _binaryProperties.SetValue(null);
+            }
+            else if (!(nav is null))
+                _binaryProperties.SetValue(null);
+        }
+
+        protected override void OnPhotoPropertySetIdChanged(Guid? value)
+        {
+            PhotoPropertySet nav = _photoProperties.GetValue();
+            if (value.HasValue)
+            {
+                if (!(nav is null || nav.Id.Equals(value.Value)))
+                    _binaryProperties.SetValue(null);
+            }
+            else if (!(nav is null))
+                _binaryProperties.SetValue(null);
+        }
+
+        protected override void OnRecordedTVPropertySetIdChanged(Guid? value)
+        {
+            RecordedTVPropertySet nav = _recordedTVProperties.GetValue();
+            if (value.HasValue)
+            {
+                if (!(nav is null || nav.Id.Equals(value.Value)))
+                    _binaryProperties.SetValue(null);
+            }
+            else if (!(nav is null))
+                _binaryProperties.SetValue(null);
+        }
+
+        protected override void OnVideoPropertySetIdChanged(Guid? value)
+        {
+            VideoPropertySet nav = _videoProperties.GetValue();
+            if (value.HasValue)
+            {
+                if (!(nav is null || nav.Id.Equals(value.Value)))
+                    _binaryProperties.SetValue(null);
+            }
+            else if (!(nav is null))
+                _binaryProperties.SetValue(null);
         }
     }
 }

@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
@@ -16,20 +15,10 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat.Local
 {
-    public class Subdirectory : LocalDbEntity, ILocalSubdirectory, ISimpleIdentityReference<Subdirectory>
+    public class Subdirectory : SubdirectoryRow, ILocalSubdirectory, ISimpleIdentityReference<Subdirectory>
     {
         #region Fields
 
-        private readonly IPropertyChangeTracker<Guid> _id;
-        private readonly IPropertyChangeTracker<string> _name;
-        private readonly IPropertyChangeTracker<DirectoryCrawlOptions> _options;
-        private readonly IPropertyChangeTracker<DirectoryStatus> _status;
-        private readonly IPropertyChangeTracker<DateTime> _lastAccessed;
-        private readonly IPropertyChangeTracker<string> _notes;
-        private readonly IPropertyChangeTracker<DateTime> _creationTime;
-        private readonly IPropertyChangeTracker<DateTime> _lastWriteTime;
-        private readonly IPropertyChangeTracker<Guid?> _parentId;
-        private readonly IPropertyChangeTracker<Guid?> _volumeId;
         private readonly IPropertyChangeTracker<Subdirectory> _parent;
         private readonly IPropertyChangeTracker<CrawlConfiguration> _crawlConfiguration;
         private readonly IPropertyChangeTracker<Volume> _volume;
@@ -38,87 +27,10 @@ namespace FsInfoCat.Local
         private HashSet<SubdirectoryAccessError> _accessErrors = new();
         private HashSet<PersonalSubdirectoryTag> _personalTags = new();
         private HashSet<SharedSubdirectoryTag> _sharedTags = new();
-        private string _fullName;
 
         #endregion
 
         #region Properties
-
-        [Key]
-        public virtual Guid Id { get => _id.GetValue(); set => _id.SetValue(value); }
-
-        [StringLength(DbConstants.DbColMaxLen_FileName, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_NameLength),
-            ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
-        public virtual string Name
-        {
-            get => _name.GetValue();
-            set
-            {
-                Monitor.Enter(_parent);
-                try
-                {
-                    if (_name.SetValue(value))
-                        _fullName = null;
-                }
-                finally { Monitor.Exit(_parent); }
-            }
-        }
-
-        [Required]
-        public virtual DirectoryCrawlOptions Options { get => _options.GetValue(); set => _options.SetValue(value); }
-
-        [Required]
-        public virtual DateTime LastAccessed { get => _lastAccessed.GetValue(); set => _lastAccessed.SetValue(value); }
-
-        [Required(AllowEmptyStrings = true)]
-        public virtual string Notes { get => _notes.GetValue(); set => _notes.SetValue(value); }
-
-        [Required]
-        public DirectoryStatus Status { get => _status.GetValue(); set => _status.SetValue(value); }
-
-        public DateTime CreationTime { get => _creationTime.GetValue(); set => _creationTime.SetValue(value); }
-
-        public DateTime LastWriteTime { get => _lastWriteTime.GetValue(); set => _lastWriteTime.SetValue(value); }
-
-        public virtual Guid? ParentId
-        {
-            get => _parentId.GetValue();
-            set
-            {
-                Monitor.Enter(_parent);
-                try
-                {
-                    if (_parentId.SetValue(value))
-                    {
-                        Subdirectory nav = _parent.GetValue();
-                        if (!(nav is null || (value.HasValue && nav.Id.Equals(value.Value))))
-                            _parent.SetValue(null);
-
-                    }
-                }
-                finally { Monitor.Exit(_parent); }
-            }
-        }
-
-        public virtual Guid? VolumeId
-        {
-            get => _volumeId.GetValue();
-            set
-            {
-                Monitor.Enter(_parent);
-                try
-                {
-                    if (_volumeId.SetValue(value))
-                    {
-                        _fullName = null;
-                        Volume nav = _volume.GetValue();
-                        if (!(nav is null || (value.HasValue && nav.Id.Equals(value.Value))))
-                            _volume.SetValue(null);
-                    }
-                }
-                finally { Monitor.Exit(_parent); }
-            }
-        }
 
         public virtual Subdirectory Parent
         {
@@ -126,13 +38,7 @@ namespace FsInfoCat.Local
             set
             {
                 if (_parent.SetValue(value))
-                {
-                    _fullName = null;
-                    if (value is null)
-                        _parentId.SetValue(null);
-                    else
-                        _parentId.SetValue(value.Id);
-                }
+                    ParentId = value?.Id;
             }
         }
 
@@ -142,12 +48,7 @@ namespace FsInfoCat.Local
             set
             {
                 if (_volume.SetValue(value))
-                {
-                    if (value is null)
-                        _volumeId.SetValue(null);
-                    else
-                        _volumeId.SetValue(value.Id);
-                }
+                    VolumeId = value?.Id;
             }
         }
 
@@ -247,16 +148,6 @@ namespace FsInfoCat.Local
 
         public Subdirectory()
         {
-            _id = AddChangeTracker(nameof(Id), Guid.Empty);
-            _name = AddChangeTracker(nameof(Name), "", NonNullStringCoersion.Default);
-            _options = AddChangeTracker(nameof(Options), DirectoryCrawlOptions.None);
-            _status = AddChangeTracker(nameof(Status), DirectoryStatus.Incomplete);
-            _notes = AddChangeTracker(nameof(Notes), "", NonWhiteSpaceOrEmptyStringCoersion.Default);
-            _creationTime = AddChangeTracker(nameof(CreationTime), CreatedOn);
-            _lastWriteTime = AddChangeTracker(nameof(LastWriteTime), CreatedOn);
-            _parentId = AddChangeTracker<Guid?>(nameof(ParentId), null);
-            _volumeId = AddChangeTracker<Guid?>(nameof(VolumeId), null);
-            _lastAccessed = AddChangeTracker(nameof(LastAccessed), CreatedOn);
             _parent = AddChangeTracker<Subdirectory>(nameof(Parent), null);
             _volume = AddChangeTracker<Volume>(nameof(Volume), null);
             _crawlConfiguration = AddChangeTracker<CrawlConfiguration>(nameof(CrawlConfiguration), null);
@@ -264,23 +155,24 @@ namespace FsInfoCat.Local
 
         public string GetFullName()
         {
-            Monitor.Enter(_parent);
-            try
-            {
-                if (_fullName is null)
-                {
-                    if (_volumeId.GetValue().HasValue)
-                        _fullName = _name.GetValue();
-                    else
-                    {
-                        string path = _parent.GetValue()?.GetFullName();
-                        if (path is not null)
-                            _fullName = Path.Combine(path, _name.GetValue());
-                    }
-                }
-            }
-            finally { Monitor.Exit(_parent); }
-            return _fullName;
+            //Monitor.Enter(_parent);
+            //try
+            //{
+            //    if (_fullName is null)
+            //    {
+            //        if (_volumeId.GetValue().HasValue)
+            //            _fullName = _name.GetValue();
+            //        else
+            //        {
+            //            string path = _parent.GetValue()?.GetFullName();
+            //            if (path is not null)
+            //                _fullName = Path.Combine(path, _name.GetValue());
+            //        }
+            //    }
+            //}
+            //finally { Monitor.Exit(_parent); }
+            //return _fullName;
+            throw new NotImplementedException();
         }
 
         public async Task<string> GetFullNameAsync(CancellationToken cancellationToken)
@@ -292,44 +184,45 @@ namespace FsInfoCat.Local
 
         public async Task<string> GetFullNameAsync([DisallowNull] LocalDbContext dbContext, CancellationToken cancellationToken)
         {
-            Monitor.Enter(_parent);
-            try
-            {
-                if (_fullName is not null)
-                    return _fullName;
-                if (_volumeId.GetValue().HasValue)
-                {
-                    _fullName = _name.GetValue();
-                    return _fullName;
-                }
-                else
-                {
-                    string path = _parent.GetValue()?.GetFullName();
-                    if (path is not null)
-                    {
-                        _fullName = Path.Combine(path, _name.GetValue());
-                        return _fullName;
-                    }
-                }
-                if (!ParentId.HasValue)
-                    return Name;
-                Subdirectory parent = Parent;
-                if (parent is null)
-                {
-                    EntityEntry<Subdirectory> entry = dbContext.Entry(this);
-                    switch (entry.State)
-                    {
-                        case EntityState.Detached:
-                        case EntityState.Deleted:
-                        case EntityState.Added:
-                            return Name;
-                    }
-                    if ((parent = await entry.GetRelatedReferenceAsync(d => d.Parent, cancellationToken)) is null)
-                        return Name;
-                }
-                return Path.Combine(await parent.GetFullNameAsync(dbContext, cancellationToken), Name);
-            }
-            finally { Monitor.Exit(_parent); }
+            //Monitor.Enter(_parent);
+            //try
+            //{
+            //    if (_fullName is not null)
+            //        return _fullName;
+            //    if (_volumeId.GetValue().HasValue)
+            //    {
+            //        _fullName = _name.GetValue();
+            //        return _fullName;
+            //    }
+            //    else
+            //    {
+            //        string path = _parent.GetValue()?.GetFullName();
+            //        if (path is not null)
+            //        {
+            //            _fullName = Path.Combine(path, _name.GetValue());
+            //            return _fullName;
+            //        }
+            //    }
+            //    if (!ParentId.HasValue)
+            //        return Name;
+            //    Subdirectory parent = Parent;
+            //    if (parent is null)
+            //    {
+            //        EntityEntry<Subdirectory> entry = dbContext.Entry(this);
+            //        switch (entry.State)
+            //        {
+            //            case EntityState.Detached:
+            //            case EntityState.Deleted:
+            //            case EntityState.Added:
+            //                return Name;
+            //        }
+            //        if ((parent = await entry.GetRelatedReferenceAsync(d => d.Parent, cancellationToken)) is null)
+            //            return Name;
+            //    }
+            //    return Path.Combine(await parent.GetFullNameAsync(dbContext, cancellationToken), Name);
+            //}
+            //finally { Monitor.Exit(_parent); }
+            throw new NotImplementedException();
         }
 
         public static Task<Subdirectory> FindByFullNameAsync(string path, CancellationToken cancellationToken, Action<LocalDbContext, Subdirectory, CancellationToken> onMatchSuccess = null)
@@ -716,13 +609,6 @@ namespace FsInfoCat.Local
             return result;
         }
 
-        protected override void OnPropertyChanging(PropertyChangingEventArgs args)
-        {
-            if (args.PropertyName == nameof(Id) && _id.IsChanged)
-                throw new InvalidOperationException();
-            base.OnPropertyChanging(args);
-        }
-
         internal static void OnBuildEntity(EntityTypeBuilder<Subdirectory> builder)
         {
             builder.HasOne(sn => sn.Parent).WithMany(d => d.SubDirectories).HasForeignKey(nameof(ParentId)).OnDelete(DeleteBehavior.Restrict);
@@ -734,15 +620,32 @@ namespace FsInfoCat.Local
             base.OnValidate(validationContext, results);
             if (string.IsNullOrWhiteSpace(validationContext.MemberName))
             {
-                ValidateOptions(results);
-                ValidateParentAndVolume(validationContext, results);
+                ValidationResult vr = results.FirstOrDefault(r => r.MemberNames.Contains(nameof(ParentId)));
+                if (vr is not null)
+                {
+                    int index = results.IndexOf(vr);
+                    results.Remove(vr);
+                    vr = new ValidationResult(vr.ErrorMessage, vr.MemberNames.Select(m => m == nameof(ParentId) ? nameof(Parent) : m).ToArray());
+                    if (index < results.Count - 1)
+                        results.Insert(index, vr);
+                    else
+                        results.Add(vr);
+                }
+                vr = results.FirstOrDefault(r => r.MemberNames.Contains(nameof(VolumeId)));
+                if (vr is not null)
+                {
+                    int index = results.IndexOf(vr);
+                    results.Remove(vr);
+                    vr = new ValidationResult(vr.ErrorMessage, vr.MemberNames.Select(m => m == nameof(VolumeId) ? nameof(Volume) : m).ToArray());
+                    if (index < results.Count - 1)
+                        results.Insert(index, vr);
+                    else
+                        results.Add(vr);
+                }
             }
             else
                 switch (validationContext.MemberName)
                 {
-                    case nameof(Options):
-                        ValidateOptions(results);
-                        break;
                     case nameof(Parent):
                     case nameof(Volume):
                     case nameof(Name):
@@ -803,15 +706,18 @@ namespace FsInfoCat.Local
                 results.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_VolumeAndParent, new string[] { nameof(Volume) }));
         }
 
-        private void ValidateOptions(List<ValidationResult> results)
+        protected override void OnParentIdChanged(Guid? value)
         {
-            if (!Enum.IsDefined(Options))
-                results.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_InvalidDirectoryCrawlOption, new string[] { nameof(Options) }));
+            Subdirectory nav = _parent.GetValue();
+            if (!(nav is null || (value.HasValue && nav.Id.Equals(value.Value))))
+                _parent.SetValue(null);
         }
 
-        IEnumerable<Guid> IIdentityReference.GetIdentifiers()
+        protected override void OnVolumeIdChanged(Guid? value)
         {
-            yield return Id;
+            Volume nav = _volume.GetValue();
+            if (!(nav is null || (value.HasValue && nav.Id.Equals(value.Value))))
+                _volume.SetValue(null);
         }
     }
 }

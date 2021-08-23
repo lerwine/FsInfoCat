@@ -60,11 +60,11 @@ namespace FsInfoCat
     }
     public interface IDbFsItemListItem : IDbFsItemRow
     {
-        int AccessErrorCount { get; }
+        long AccessErrorCount { get; }
 
-        int PersonalTagCount { get; }
+        long PersonalTagCount { get; }
 
-        int SharedTagCount { get; }
+        long SharedTagCount { get; }
     }
 
     public interface IDbFsItemListItemWithAncestorNames : IDbFsItemListItem, IDbFsItemAncestorName { }

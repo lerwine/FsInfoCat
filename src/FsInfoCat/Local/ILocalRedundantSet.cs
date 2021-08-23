@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.Local
 {
+    public interface ILocalRedundantSetListItem : IRedundantSetListItem, ILocalDbEntity { }
+
     /// <summary>Represents a set of files that have the same size, Hash and remediation status.</summary>
     /// <seealso cref="ILocalDbEntity" />
     /// <seealso cref="IRedundantSet" />

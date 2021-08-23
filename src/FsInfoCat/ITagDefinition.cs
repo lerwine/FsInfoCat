@@ -32,10 +32,10 @@ namespace FsInfoCat
     }
     public interface ITagDefinitionListItem : ITagDefinitionRow
     {
-        int FileTagCount { get; }
+        long FileTagCount { get; }
 
-        int SubdirectoryTagCount { get; }
+        long SubdirectoryTagCount { get; }
 
-        int VolumeTagCount { get; }
+        long VolumeTagCount { get; }
     }
 }

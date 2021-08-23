@@ -37,7 +37,7 @@ namespace FsInfoCat
 
         string PrimarySymbolicName { get; }
 
-        int SymbolicNameCount { get; }
+        long SymbolicNameCount { get; }
     }
 
 }

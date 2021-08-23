@@ -23,6 +23,8 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_LastHashCalculation), ResourceType = typeof(Properties.Resources))]
         DateTime? LastHashCalculation { get; }
 
+        Guid ParentId { get; }
+
         Guid BinaryPropertySetId { get; }
 
         Guid? SummaryPropertySetId { get; }
@@ -59,9 +61,9 @@ namespace FsInfoCat
 
         MD5Hash? Hash { get; }
 
-        int RedundancyCount { get; }
+        long RedundancyCount { get; }
 
-        int ComparisonCount { get; }
+        long ComparisonCount { get; }
     }
 
     public interface IFileListItemWithBinaryPropertiesAndAncestorNames : IFileListItemWithAncestorNames

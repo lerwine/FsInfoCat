@@ -78,11 +78,11 @@ namespace FsInfoCat
     {
         string RootPath { get; }
 
-        int AccessErrorCount { get; }
+        long AccessErrorCount { get; }
 
-        int SharedTagCount { get; }
+        long SharedTagCount { get; }
 
-        int PersonalTagCount { get; }
+        long PersonalTagCount { get; }
     }
 
     public interface IVolumeListItemWithFileSystem : IVolumeListItem
@@ -91,7 +91,7 @@ namespace FsInfoCat
 
         bool EffectiveReadOnly { get; }
 
-        bool EffectiveMaxNameLength { get; }
+        uint EffectiveMaxNameLength { get; }
     }
 }
 

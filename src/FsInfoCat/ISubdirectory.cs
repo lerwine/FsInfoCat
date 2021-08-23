@@ -26,9 +26,9 @@ namespace FsInfoCat
     }
     public interface ISubdirectoryListItem : IDbFsItemListItem, ISubdirectoryRow
     {
-        int SubdirectoryCount { get; }
+        long SubdirectoryCount { get; }
 
-        int FileCount { get; }
+        long FileCount { get; }
     }
     public interface ISubdirectoryListItemWithAncestorNames : IDbFsItemListItemWithAncestorNames, ISubdirectoryRow, ISubdirectoryAncestorName { }
     /// <summary>Interface for entities that represent a subdirectory node within a file system.</summary>
