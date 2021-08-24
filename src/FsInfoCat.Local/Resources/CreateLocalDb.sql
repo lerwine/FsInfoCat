@@ -818,9 +818,11 @@ CREATE VIEW IF NOT EXISTS "vSubdirectoryListingWithAncestorNames" AS SELECT "Sub
         directlyContains("ChildId", "ParentId") AS (SELECT "Id", "ParentId" FROM "Subdirectories"),
         containerOf("ChildId") AS (SELECT "ParentId" FROM directlyContains WHERE "ChildId"="Subdirectories"."Id" UNION ALL SELECT "ParentId" FROM directlyContains JOIN containerOf USING("ChildId"))
         SELECT "ParentSubdir"."VolumeId" FROM containerOf, "Subdirectories" AS "ParentSubdir" WHERE containerOf."ChildId"="ParentSubdir"."Id" AND "ParentSubdir"."VolumeId" IS NOT NULL
-    )) AS "EffectiveVolumeId", "Volumes"."DisplayName" AS "VolumeDisplayName", "Volumes"."VolumeName", "Volumes"."Identifier" AS "VolumeIdentifier" FROM "Subdirectories"
+    )) AS "EffectiveVolumeId", "Volumes"."DisplayName" AS "VolumeDisplayName", "Volumes"."VolumeName", "Volumes"."Identifier" AS "VolumeIdentifier",
+	"vFileSystemListing"."DisplayName" AS "FileSystemDisplayName", "vFileSystemListing"."PrimarySymbolicName" AS "FileSystemSymbolicName" FROM "Subdirectories"
     LEFT JOIN "CrawlConfigurations" ON "Subdirectories"."Id"="CrawlConfigurations"."RootId"
-	LEFT JOIN "Volumes" ON "EffectiveVolumeId"="Volumes"."Id";
+	LEFT JOIN "Volumes" ON "EffectiveVolumeId"="Volumes"."Id"
+	LEFT JOIN "vFileSystemListing" ON "Volumes"."FileSystemId"="vFileSystemListing"."Id";
 
 CREATE VIEW IF NOT EXISTS "vSubdirectoryAncestorNames" AS SELECT "Subdirectories"."Id", "Subdirectories"."ParentId", "Subdirectories"."Name",(WITH RECURSIVE
     directlyContains("ChildId", "ParentId") AS (SELECT "Id", "ParentId" FROM "Subdirectories"),
@@ -833,7 +835,8 @@ CREATE VIEW IF NOT EXISTS "vCrawlConfigListing" AS SELECT "CrawlConfigurations".
 		printf('%s/%s', "vSubdirectoryListingWithAncestorNames"."Name", "vSubdirectoryListingWithAncestorNames"."AncestorNames")
 	) AS "AncestorNames",
     "vSubdirectoryListingWithAncestorNames"."EffectiveVolumeId" AS "VolumeId", "vSubdirectoryListingWithAncestorNames"."VolumeDisplayName",
-	"vSubdirectoryListingWithAncestorNames"."VolumeName", "vSubdirectoryListingWithAncestorNames"."VolumeIdentifier" FROM "CrawlConfigurations"
+	"vSubdirectoryListingWithAncestorNames"."VolumeName", "vSubdirectoryListingWithAncestorNames"."VolumeIdentifier",
+	"vSubdirectoryListingWithAncestorNames"."FileSystemDisplayName", "vSubdirectoryListingWithAncestorNames"."FileSystemSymbolicName" FROM "CrawlConfigurations"
 	LEFT JOIN "vSubdirectoryListingWithAncestorNames" ON "CrawlConfigurations"."RootId"="vSubdirectoryListingWithAncestorNames"."Id";
     
 CREATE VIEW IF NOT EXISTS "vFileListingWithAncestorNames" AS SELECT "Files".*,
@@ -842,7 +845,8 @@ CREATE VIEW IF NOT EXISTS "vFileListingWithAncestorNames" AS SELECT "Files".*,
 		printf('%s/%s', "vSubdirectoryListingWithAncestorNames"."Name", "vSubdirectoryListingWithAncestorNames"."AncestorNames")
 	) AS "AncestorNames",
     "vSubdirectoryListingWithAncestorNames"."EffectiveVolumeId", "vSubdirectoryListingWithAncestorNames"."VolumeDisplayName",
-	"vSubdirectoryListingWithAncestorNames"."VolumeName", "vSubdirectoryListingWithAncestorNames"."VolumeIdentifier"
+	"vSubdirectoryListingWithAncestorNames"."VolumeName", "vSubdirectoryListingWithAncestorNames"."VolumeIdentifier",
+	"vSubdirectoryListingWithAncestorNames"."FileSystemDisplayName", "vSubdirectoryListingWithAncestorNames"."FileSystemSymbolicName"
 	FROM "Files"
 	LEFT JOIN "vSubdirectoryListingWithAncestorNames" ON "Files"."ParentId"="vSubdirectoryListingWithAncestorNames"."Id";
     
@@ -860,7 +864,8 @@ CREATE VIEW IF NOT EXISTS "vFileListingWithBinaryPropertiesAndAncestorNames" AS 
 		printf('%s/%s', "vSubdirectoryListingWithAncestorNames"."Name", "vSubdirectoryListingWithAncestorNames"."AncestorNames")
 	) AS "AncestorNames",
     "vSubdirectoryListingWithAncestorNames"."EffectiveVolumeId", "vSubdirectoryListingWithAncestorNames"."VolumeDisplayName",
-	"vSubdirectoryListingWithAncestorNames"."VolumeName", "vSubdirectoryListingWithAncestorNames"."VolumeIdentifier"
+	"vSubdirectoryListingWithAncestorNames"."VolumeName", "vSubdirectoryListingWithAncestorNames"."VolumeIdentifier",
+	"vSubdirectoryListingWithAncestorNames"."FileSystemDisplayName", "vSubdirectoryListingWithAncestorNames"."FileSystemSymbolicName"
 	FROM "Files"
 	LEFT JOIN "BinaryPropertySets" ON "Files"."BinaryPropertySetId"="BinaryPropertySets"."Id"
 	LEFT JOIN "vSubdirectoryListingWithAncestorNames" ON "Files"."ParentId"="vSubdirectoryListingWithAncestorNames"."Id";

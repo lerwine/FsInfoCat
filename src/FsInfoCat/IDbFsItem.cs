@@ -76,6 +76,10 @@ namespace FsInfoCat
         string VolumeName { get; }
 
         VolumeIdentifier VolumeIdentifier { get; }
+
+        string FileSystemDisplayName { get; }
+
+        string FileSystemSymbolicName { get; }
     }
 }
 

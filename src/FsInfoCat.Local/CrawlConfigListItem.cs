@@ -1,15 +1,15 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 
 namespace FsInfoCat.Local
 {
-    public class FileWithBinaryPropertiesAndAncestorNames : FileWithBinaryProperties, ILocalFileListItemWithBinaryPropertiesAndAncestorNames
+    public class CrawlConfigListItem : CrawlConfigurationRow, ILocalCrawlConfigurationListItem
     {
-        private const string VIEW_NAME = "vFileListingWithBinaryPropertiesAndAncestorNames";
+        private const string VIEW_NAME = "vCrawlConfigListing";
 
         private readonly IPropertyChangeTracker<string> _ancestorNames;
-        private readonly IPropertyChangeTracker<Guid> _effectiveVolumeId;
+        private readonly IPropertyChangeTracker<Guid> _volumeId;
         private readonly IPropertyChangeTracker<string> _volumeDisplayName;
         private readonly IPropertyChangeTracker<string> _volumeName;
         private readonly IPropertyChangeTracker<VolumeIdentifier> _volumeIdentifier;
@@ -18,7 +18,7 @@ namespace FsInfoCat.Local
 
         public string AncestorNames { get => _ancestorNames.GetValue(); set => _ancestorNames.SetValue(value); }
 
-        public Guid EffectiveVolumeId { get => _effectiveVolumeId.GetValue(); set => _effectiveVolumeId.SetValue(value); }
+        public Guid VolumeId { get => _volumeId.GetValue(); set => _volumeId.SetValue(value); }
 
         public string VolumeDisplayName { get => _volumeDisplayName.GetValue(); set => _volumeDisplayName.SetValue(value); }
 
@@ -30,17 +30,16 @@ namespace FsInfoCat.Local
 
         public string FileSystemSymbolicName { get => _fileSystemSymbolicName.GetValue(); set => _fileSystemSymbolicName.SetValue(value); }
 
-        internal static void OnBuildEntity(EntityTypeBuilder<FileWithBinaryPropertiesAndAncestorNames> builder)
+        internal static void OnBuildEntity(EntityTypeBuilder<CrawlConfigListItem> builder)
         {
             builder.ToView(VIEW_NAME);
-            builder.Property(nameof(Hash)).HasConversion(MD5Hash.Converter);
             builder.Property(nameof(VolumeIdentifier)).HasConversion(VolumeIdentifier.Converter);
         }
 
-        public FileWithBinaryPropertiesAndAncestorNames()
+        public CrawlConfigListItem()
         {
             _ancestorNames = AddChangeTracker(nameof(AncestorNames), "", NonNullStringCoersion.Default);
-            _effectiveVolumeId = AddChangeTracker(nameof(EffectiveVolumeId), Guid.Empty);
+            _volumeId = AddChangeTracker(nameof(VolumeId), Guid.Empty);
             _volumeDisplayName = AddChangeTracker(nameof(VolumeDisplayName), "", NonNullStringCoersion.Default);
             _volumeName = AddChangeTracker(nameof(VolumeName), "", NonNullStringCoersion.Default);
             _volumeIdentifier = AddChangeTracker(nameof(VolumeIdentifier), VolumeIdentifier.Empty);
