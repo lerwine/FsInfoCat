@@ -65,7 +65,7 @@
         </Grid>
         <StackPanel Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding SelectedItem, Converter={StaticResource InverseObjectToVisibilityConverter}}">
             <TextBlock Text="shared tag definitions to dispay" HorizontalAlignment="Center" />
-            <Button Content="Add New" HorizontalAlignment="Center" Command="{Binding NewClickCommand, Mode=OneWay, Source={StaticResource CrawlConfigurationsViewModel}}" Margin="{DynamicResource DefaultSpacing}" ToolTip="{x:Static res:Resources.Description_NewCurrentCrawlConfig}" Style="{DynamicResource DefaultButton}"/>
+            <Button Content="Add New" HorizontalAlignment="Center" Command="{Binding NewItemClick, Mode=OneWay, Source={StaticResource CrawlConfigurationsViewModel}}" Margin="{DynamicResource DefaultSpacing}" ToolTip="{x:Static res:Resources.Description_NewCurrentCrawlConfig}" Style="{DynamicResource DefaultButton}"/>
         </StackPanel>
         <Grid Grid.Column="1" Margin="{DynamicResource DefaultSpacingLeft}" DataContext="{Binding SelectedItem}" Visibility="{Binding Converter={StaticResource DependencyObjectToVisibilityConverter}, Mode=OneWay}">
             <Grid.RowDefinitions>

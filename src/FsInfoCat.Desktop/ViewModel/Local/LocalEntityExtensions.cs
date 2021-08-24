@@ -24,7 +24,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 
         public static SymbolicNameItemVM ToItemViewModel([AllowNull] this SymbolicNameListItem entity) => (entity is null) ? null : new SymbolicNameItemVM(entity);
 
-        public static VolumeItemVM ToItemViewModel([AllowNull] this VolumeListItem entity) => (entity is null) ? null : new VolumeItemVM(entity);
+        public static VolumeItemVM ToItemViewModel([AllowNull] this VolumeListItemWithFileSystem entity) => (entity is null) ? null : new VolumeItemVM(entity);
 
         public static FileItemVM ToItemViewModel([AllowNull] this DbFile entity) => (entity is null) ? null : new FileItemVM(entity);
 

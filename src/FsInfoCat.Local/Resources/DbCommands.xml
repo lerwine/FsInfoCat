@@ -788,12 +788,13 @@ END]]>
 	LEFT JOIN "BinaryPropertySets" ON "RedundantSets"."BinaryPropertySetId"="BinaryPropertySets"."Id"]]>
         </Text>
         <Text Message="Creating View 'vVolumeListing'">
-            <![CDATA[CREATE VIEW IF NOT EXISTS "vVolumeListing" AS SELECT "Volumes".*, "Subdirectories"."Name" AS "RootPath",
+            <![CDATA[CREATE VIEW IF NOT EXISTS "vVolumeListing" AS SELECT "Volumes".*, "Subdirectories"."Name" AS "RootPath", "FileSystems"."DisplayName" as "FileSystemDisplayName",
 	(SELECT count("VolumeAccessErrors"."Id") FROM "VolumeAccessErrors" WHERE "VolumeAccessErrors"."TargetId"="Volumes"."Id") AS "AccessErrorCount",
 	(SELECT count("SharedVolumeTags"."SharedTagDefinitionId") FROM "SharedVolumeTags" WHERE "SharedVolumeTags"."VolumeId"="Volumes"."Id") AS "SharedTagCount",
 	(SELECT count("PersonalVolumeTags"."PersonalTagDefinitionId") FROM "PersonalVolumeTags" WHERE "PersonalVolumeTags"."VolumeId"="Volumes"."Id") AS "PersonalTagCount"
 	FROM "Volumes"
-	LEFT JOIN "Subdirectories" ON "Volumes"."Id"="Subdirectories"."VolumeId"]]>
+	LEFT JOIN "Subdirectories" ON "Volumes"."Id"="Subdirectories"."VolumeId"
+	LEFT JOIN "FileSystems" ON "Volumes"."FileSystemId"="FileSystems"."Id"]]>
         </Text>
         <Text Message="Creating View 'vVolumeListingWithFileSystem'">
             <![CDATA[CREATE VIEW IF NOT EXISTS "vVolumeListingWithFileSystem" AS SELECT "Volumes".*, "Subdirectories"."Name" AS "RootPath",
@@ -944,14 +945,56 @@ END]]>
         </Text>
     </DbCreation>
     <DropTables>
+        <Text Message="Dropping view 'vFileListingWithAncestorNames'">
+            <![CDATA[DROP VIEW IF EXISTS "vFileListingWithAncestorNames"]]>
+        </Text>
+        <Text Message="Dropping view 'vFileListingWithBinaryProperties'">
+            <![CDATA[DROP VIEW IF EXISTS "vFileListingWithBinaryProperties"]]>
+        </Text>
+        <Text Message="Dropping view 'vFileListingWithBinaryPropertiesAndAncestorNames'">
+            <![CDATA[DROP VIEW IF EXISTS "vFileListingWithBinaryPropertiesAndAncestorNames"]]>
+        </Text>
+        <Text Message="Dropping view 'vSubdirectoryListing'">
+            <![CDATA[DROP VIEW IF EXISTS "vSubdirectoryListing"]]>
+        </Text>
+        <Text Message="Dropping view 'vSubdirectoryAncestorNames'">
+            <![CDATA[DROP VIEW IF EXISTS "vSubdirectoryAncestorNames"]]>
+        </Text>
+        <Text Message="Dropping view 'vSubdirectoryListingWithAncestorNames'">
+            <![CDATA[DROP VIEW IF EXISTS "vSubdirectoryListingWithAncestorNames"]]>
+        </Text>
+        <Text Message="Dropping view 'vVolumeListingWithFileSystem'">
+            <![CDATA[DROP VIEW IF EXISTS "vVolumeListingWithFileSystem"]]>
+        </Text>
+        <Text Message="Dropping view 'vVolumeListing'">
+            <![CDATA[DROP VIEW IF EXISTS "vVolumeListing"]]>
+        </Text>
+        <Text Message="Dropping view 'vRedundantSetListing'">
+            <![CDATA[DROP VIEW IF EXISTS "vRedundantSetListing"]]>
+        </Text>
+        <Text Message="Dropping view 'vSharedTagDefinitionListing'">
+            <![CDATA[DROP VIEW IF EXISTS "vSharedTagDefinitionListing"]]>
+        </Text>
+        <Text Message="Dropping view 'vPersonalTagDefinitionListing'">
+            <![CDATA[DROP VIEW IF EXISTS "vPersonalTagDefinitionListing"]]>
+        </Text>
+        <Text Message="Dropping view 'vFileSystemListing'">
+            <![CDATA[DROP VIEW IF EXISTS "vFileSystemListing"]]>
+        </Text>
+        <Text Message="Dropping view 'vSymbolicNameListing'">
+            <![CDATA[DROP VIEW IF EXISTS "vSymbolicNameListing"]]>
+        </Text>
+        <Text Message="Dropping table 'SharedFileTags'">
+            <![CDATA[DROP VIEW IF EXISTS SharedFileTags]]>
+        </Text>
         <Text Message="Dropping table 'Comparisons'">
             <![CDATA[DROP TABLE IF EXISTS "Comparisons"]]>
         </Text>
         <Text Message="Dropping table 'SharedVolumeTags'">
-            <![CDATA[DROP TABLE IF EXISTS "SharedFileTags"]]>
+            <![CDATA[DROP TABLE IF EXISTS "SharedVolumeTags"]]>
         </Text>
         <Text Message="Dropping table 'SharedSubdirectoryTags'">
-            <![CDATA[DROP TABLE IF EXISTS "SharedFileTags"]]>
+            <![CDATA[DROP TABLE IF EXISTS "SharedSubdirectoryTags"]]>
         </Text>
         <Text Message="Dropping table 'SharedFileTags'">
             <![CDATA[DROP TABLE IF EXISTS "SharedFileTags"]]>
@@ -959,14 +1002,14 @@ END]]>
         <Text Message="Dropping table 'SharedTagDefinitions'">
             <![CDATA[DROP TABLE IF EXISTS "SharedTagDefinitions"]]>
         </Text>
-        <Text Message="Dropping table 'PersonalVolumeTag'">
-            <![CDATA[DROP TABLE IF EXISTS "PersonalFileTag"]]>
+        <Text Message="Dropping table 'PersonalVolumeTags'">
+            <![CDATA[DROP TABLE IF EXISTS "PersonalVolumeTags"]]>
         </Text>
-        <Text Message="Dropping table 'PersonalSubdirectoryTag'">
-            <![CDATA[DROP TABLE IF EXISTS "PersonalFileTag"]]>
+        <Text Message="Dropping table 'PersonalSubdirectoryTags'">
+            <![CDATA[DROP TABLE IF EXISTS "PersonalSubdirectoryTags"]]>
         </Text>
-        <Text Message="Dropping table 'PersonalFileTag'">
-            <![CDATA[DROP TABLE IF EXISTS "PersonalFileTag"]]>
+        <Text Message="Dropping table 'PersonalFileTags'">
+            <![CDATA[DROP TABLE IF EXISTS "PersonalFileTags"]]>
         </Text>
         <Text Message="Dropping table 'PersonalTagDefinitions'">
             <![CDATA[DROP TABLE IF EXISTS "PersonalTagDefinitions"]]>
@@ -1029,13 +1072,13 @@ END]]>
             <![CDATA[DROP TABLE IF EXISTS "CrawlConfigurations"]]>
         </Text>
         <Text Message="Dropping table 'Subdirectories'">
-            <![CDATA[PRAGMA foreign_keys=off"]]>
+            <![CDATA[PRAGMA foreign_keys=off]]>
         </Text>
         <Text Message="Dropping table 'Subdirectories'">
             <![CDATA[DROP TABLE IF EXISTS "Subdirectories"]]>
         </Text>
         <Text Message="Dropping table 'Subdirectories'">
-            <![CDATA[PRAGMA foreign_keys=on"]]>
+            <![CDATA[PRAGMA foreign_keys=on]]>
         </Text>
         <Text Message="Dropping table 'VolumeAccessErrors'">
             <![CDATA[DROP TABLE IF EXISTS "VolumeAccessErrors"]]>

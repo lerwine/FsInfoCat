@@ -2,11 +2,15 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows.Controls;
 
 namespace FsInfoCat.UnitTests
 {
@@ -33,7 +37,7 @@ namespace FsInfoCat.UnitTests
 #pragma warning restore IDE0051 // Remove unused private members
         {
             Console.WriteLine($"Initializing services: LocalDb Path=\"{DbPath}\"");
-            Local.LocalDbContext.AddDbContextPool(services, DbPath);
+            Local.LocalDbContext.AddDbContextPool(services.AddSingleton<IApplicationNavigation, ApplicationNavigationFake>(), DbPath);
 
         }
 
@@ -72,6 +76,272 @@ namespace FsInfoCat.UnitTests
             }
         }
 
+        internal class ApplicationNavigationFake : IApplicationNavigation
+        {
+            private Stack<(Uri Source, object Content, object NavigationState, bool? SandboxExternalContent)> _backwardHistory = new();
+            private Stack<(Uri Source, object Content, object NavigationState, bool? SandboxExternalContent)> _forwardHistory = new();
+
+            public IEnumerable<(Uri Source, object Content, object NavigationState, bool? SandboxExternalContent)> GetBackwardHistory() => _backwardHistory.AsEnumerable();
+
+            public IEnumerable<(Uri Source, object Content, object NavigationState, bool? SandboxExternalContent)> GetForwardHistory() => _forwardHistory.AsEnumerable();
+
+            public CancellationToken CancellationToken { get; set; }
+
+            public Uri Source { get; private set; }
+
+            public Uri CurrentSource { get; private set; }
+
+            public object Content { get; private set; }
+
+            public object NavigationState { get; private set; }
+
+            public bool? SandboxExternalContent { get; private set; }
+
+            public bool CanGoForward => _forwardHistory.Count > 0;
+
+            public bool CanGoBack => _backwardHistory.Count > 0;
+
+            public bool GoBack()
+            {
+                CancellationToken token = CancellationToken;
+                Monitor.Enter(_backwardHistory);
+                (Uri Source, object Content, object NavigationState, bool? SandboxExternalContent) current = (Source, Content, NavigationState, SandboxExternalContent);
+                Task<bool> result = Task.Factory.StartNew(() =>
+                {
+                    token.ThrowIfCancellationRequested();
+                    if (_backwardHistory.TryPop(out (Uri Source, object Content, object NavigationState, bool? SandboxExternalContent) prev))
+                    {
+                        if (Source is not null || Content is not null)
+                            _forwardHistory.Push((Source, Content, NavigationState, SandboxExternalContent));
+                        (CurrentSource, _, NavigationState, SandboxExternalContent) = prev;
+                        Thread.Sleep(100);
+                        token.ThrowIfCancellationRequested();
+                        return true;
+                    }
+                    return false;
+                }, token).ContinueWith(task =>
+                {
+                    if (task.IsCompletedSuccessfully)
+                    {
+                        if (task.Result)
+                        {
+                            Source = CurrentSource;
+                            return true;
+                        }
+                    }
+                    else
+                    {
+                        (Source, Content, NavigationState, SandboxExternalContent) = current;
+                        _backwardHistory.Push((Source, Content, NavigationState, SandboxExternalContent));
+                        if (Source is not null || Content is not null)
+                            _forwardHistory.Pop();
+                    }
+                    return false;
+                });
+                result.ContinueWith(task => Monitor.Exit(_backwardHistory));
+                return result.Result;
+            }
+
+            public bool GoForward()
+            {
+                CancellationToken token = CancellationToken;
+                Monitor.Enter(_backwardHistory);
+                (Uri Source, object Content, object NavigationState, bool? SandboxExternalContent) current = (Source, Content, NavigationState, SandboxExternalContent);
+                Task<bool> result = Task.Factory.StartNew(() =>
+                {
+                    token.ThrowIfCancellationRequested();
+                    if (_forwardHistory.TryPop(out (Uri Source, object Content, object NavigationState, bool? SandboxExternalContent) next))
+                    {
+                        if (Source is not null || Content is not null)
+                            _backwardHistory.Push((Source, Content, NavigationState, SandboxExternalContent));
+                        (CurrentSource, _, NavigationState, SandboxExternalContent) = next;
+                        Thread.Sleep(100);
+                        token.ThrowIfCancellationRequested();
+                        return true;
+                    }
+                    return false;
+                }, token).ContinueWith(task =>
+                {
+                    if (task.IsCompletedSuccessfully)
+                    {
+                        if (task.Result)
+                        {
+                            Source = CurrentSource;
+                            return true;
+                        }
+                    }
+                    else
+                    {
+                        (Source, Content, NavigationState, SandboxExternalContent) = current;
+                        _forwardHistory.Push((Source, Content, NavigationState, SandboxExternalContent));
+                        if (Source is not null || Content is not null)
+                            _backwardHistory.Pop();
+                    }
+                    return false;
+                });
+                result.ContinueWith(task => Monitor.Exit(_backwardHistory));
+                return result.Result;
+            }
+
+            public bool Navigate(Uri source, object navigationState, bool sandboxExternalContent)
+            {
+                if (source is null)
+                    throw new ArgumentNullException(nameof(source));
+                CancellationToken token = CancellationToken;
+                Monitor.Enter(_backwardHistory);
+                (Uri Source, object Content, object NavigationState, bool? SandboxExternalContent) current = (Source, Content, NavigationState, SandboxExternalContent);
+                Task<bool> result = Task.Factory.StartNew(() =>
+                {
+                    token.ThrowIfCancellationRequested();
+                    CurrentSource = source;
+                    NavigationState = navigationState;
+                    SandboxExternalContent = sandboxExternalContent;
+                    Thread.Sleep(100);
+                    token.ThrowIfCancellationRequested();
+                }, token).ContinueWith(task =>
+                {
+                    if (task.IsCompletedSuccessfully)
+                    {
+                        _backwardHistory.Push(current);
+                        _forwardHistory.Clear();
+                        Source = source;
+                        return true;
+                    }
+                    (Source, Content, NavigationState, SandboxExternalContent) = current;
+                    return false;
+                });
+                result.ContinueWith(task => Monitor.Exit(_backwardHistory));
+                return result.Result;
+            }
+
+            public bool Navigate(Uri source, object navigationState)
+            {
+                if (source is null)
+                    throw new ArgumentNullException(nameof(source));
+                CancellationToken token = CancellationToken;
+                Monitor.Enter(_backwardHistory);
+                (Uri Source, object Content, object NavigationState, bool? SandboxExternalContent) current = (Source, Content, NavigationState, SandboxExternalContent);
+                Task<bool> result = Task.Factory.StartNew(() =>
+                {
+                    token.ThrowIfCancellationRequested();
+                    CurrentSource = source;
+                    NavigationState = navigationState;
+                    SandboxExternalContent = null;
+                    Thread.Sleep(100);
+                    token.ThrowIfCancellationRequested();
+                }, token).ContinueWith(task =>
+                {
+                    if (task.IsCompletedSuccessfully)
+                    {
+                        _backwardHistory.Push(current);
+                        _forwardHistory.Clear();
+                        Source = source;
+                        return true;
+                    }
+                    (Source, Content, NavigationState, SandboxExternalContent) = current;
+                    return false;
+                });
+                result.ContinueWith(task => Monitor.Exit(_backwardHistory));
+                return result.Result;
+            }
+
+            public bool Navigate(Uri source)
+            {
+                if (source is null)
+                    throw new ArgumentNullException(nameof(source));
+                CancellationToken token = CancellationToken;
+                Monitor.Enter(_backwardHistory);
+                (Uri Source, object Content, object NavigationState, bool? SandboxExternalContent) current = (Source, Content, NavigationState, SandboxExternalContent);
+                Task<bool> result = Task.Factory.StartNew(() =>
+                {
+                    token.ThrowIfCancellationRequested();
+                    CurrentSource = source;
+                    NavigationState = null;
+                    SandboxExternalContent = null;
+                    Thread.Sleep(100);
+                    token.ThrowIfCancellationRequested();
+                }, token).ContinueWith(task =>
+                {
+                    if (task.IsCompletedSuccessfully)
+                    {
+                        _backwardHistory.Push(current);
+                        _forwardHistory.Clear();
+                        Source = source;
+                        return true;
+                    }
+                    (Source, Content, NavigationState, SandboxExternalContent) = current;
+                    return false;
+                });
+                result.ContinueWith(task => Monitor.Exit(_backwardHistory));
+                return result.Result;
+            }
+
+            public bool Navigate(object root, object navigationState)
+            {
+                if (root is null)
+                    throw new ArgumentNullException(nameof(root));
+                CancellationToken token = CancellationToken;
+                Monitor.Enter(_backwardHistory);
+                (Uri Source, object Content, object NavigationState, bool? SandboxExternalContent) current = (Source, Content, NavigationState, SandboxExternalContent);
+                Task<bool> result = Task.Factory.StartNew(() =>
+                {
+                    token.ThrowIfCancellationRequested();
+                    CurrentSource = null;
+                    Content = root;
+                    NavigationState = navigationState;
+                    SandboxExternalContent = null;
+                    Thread.Sleep(100);
+                    token.ThrowIfCancellationRequested();
+                }, token).ContinueWith(task =>
+                {
+                    if (task.IsCompletedSuccessfully)
+                    {
+                        _backwardHistory.Push(current);
+                        _forwardHistory.Clear();
+                        Source = null;
+                        return true;
+                    }
+                    (Source, Content, NavigationState, SandboxExternalContent) = current;
+                    return false;
+                });
+                result.ContinueWith(task => Monitor.Exit(_backwardHistory));
+                return result.Result;
+            }
+
+            public bool Navigate(object root)
+            {
+                if (root is null)
+                    throw new ArgumentNullException(nameof(root));
+                CancellationToken token = CancellationToken;
+                Monitor.Enter(_backwardHistory);
+                (Uri Source, object Content, object NavigationState, bool? SandboxExternalContent) current = (Source, Content, NavigationState, SandboxExternalContent);
+                Task<bool> result = Task.Factory.StartNew(() =>
+                {
+                    token.ThrowIfCancellationRequested();
+                    CurrentSource = null;
+                    Content = root;
+                    NavigationState = null;
+                    SandboxExternalContent = null;
+                    Thread.Sleep(100);
+                    token.ThrowIfCancellationRequested();
+                }, token).ContinueWith(task =>
+                {
+                    if (task.IsCompletedSuccessfully)
+                    {
+                        _backwardHistory.Push(current);
+                        _forwardHistory.Clear();
+                        Source = null;
+                        return true;
+                    }
+                    (Source, Content, NavigationState, SandboxExternalContent) = current;
+                    return false;
+                });
+                result.ContinueWith(task => Monitor.Exit(_backwardHistory));
+                return result.Result;
+            }
+
+            public void Refresh() { }
+        }
         internal sealed class SubstituteDrive : IDisposable
         {
             private readonly string _destinationDirectoryName;

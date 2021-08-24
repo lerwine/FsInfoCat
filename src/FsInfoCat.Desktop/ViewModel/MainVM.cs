@@ -11,10 +11,11 @@ using System.Windows;
 using Microsoft.Win32;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Navigation;
 
 namespace FsInfoCat.Desktop.ViewModel
 {
-    public class MainVM : DependencyObject
+    public class MainVM : DependencyObject, IApplicationNavigation
     {
         private ILogger<MainVM> _logger;
 
@@ -42,10 +43,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <value>The <see cref="ICommand"/> that implements the $command$ command.</value>
         public Commands.RelayCommand ViewFileSystems => (Commands.RelayCommand)GetValue(ViewFileSystemsProperty);
 
-        private void OnViewFileSystems(object parameter)
-        {
-            Source = new Uri(Page_Uri_Local_FileSystems, UriKind.Relative);
-        }
+        private void OnViewFileSystems(object parameter) => NavigateTo(Page_Uri_Local_FileSystems);
 
         #endregion
         #region ViewCrawlConfigurations Command Property Members
@@ -64,10 +62,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <value>The <see cref="ICommand"/> that implements the $command$ command.</value>
         public Commands.RelayCommand ViewCrawlConfigurations => (Commands.RelayCommand)GetValue(ViewCrawlConfigurationsProperty);
 
-        private void OnViewCrawlConfigurations(object parameter)
-        {
-            Source = new Uri(Page_Uri_Local_CrawlConfigurations, UriKind.Relative);
-        }
+        private void OnViewCrawlConfigurations(object parameter) => NavigateTo(Page_Uri_Local_CrawlConfigurations);
 
         #endregion
         #region NewCrawl Command Property Members
@@ -93,6 +88,7 @@ namespace FsInfoCat.Desktop.ViewModel
             else
             {
                 View.Local.EditCrawlConfigWindow window = new();
+                window.ShowDialog();
             }
         }
 
@@ -113,10 +109,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <value>The <see cref="ICommand"/> that implements the $command$ command.</value>
         public Commands.RelayCommand ViewVolumes => (Commands.RelayCommand)GetValue(ViewVolumesProperty);
 
-        private void OnViewVolumes(object parameter)
-        {
-            Source = new Uri(Page_Uri_Local_Volumes, UriKind.Relative);
-        }
+        private void OnViewVolumes(object parameter) => NavigateTo(Page_Uri_Local_Volumes);
 
         #endregion
         #region ViewSymbolicNames Command Property Members
@@ -135,10 +128,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <value>The <see cref="ICommand"/> that implements the $command$ command.</value>
         public Commands.RelayCommand ViewSymbolicNames => (Commands.RelayCommand)GetValue(ViewSymbolicNamesProperty);
 
-        private void OnViewSymbolicNames(object parameter)
-        {
-            Source = new Uri(Page_Uri_Local_SymbolicNames, UriKind.Relative);
-        }
+        private void OnViewSymbolicNames(object parameter) => NavigateTo(Page_Uri_Local_SymbolicNames);
 
         #endregion
         #region ViewRedundancySets Command Property Members
@@ -157,10 +147,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <value>The <see cref="ICommand"/> that implements the $command$ command.</value>
         public Commands.RelayCommand ViewRedundancySets => (Commands.RelayCommand)GetValue(ViewRedundancySetsProperty);
 
-        private void OnViewRedundancySets(object parameter)
-        {
-            Source = new Uri(Page_Uri_Local_RedundantSets, UriKind.Relative);
-        }
+        private void OnViewRedundancySets(object parameter) => NavigateTo(Page_Uri_Local_RedundantSets);
 
         #endregion
         #region ViewPersonalTagDefinitions Command Property Members
@@ -179,10 +166,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <value>The <see cref="ICommand"/> that implements the $command$ command.</value>
         public Commands.RelayCommand ViewPersonalTagDefinitions => (Commands.RelayCommand)GetValue(ViewPersonalTagDefinitionsProperty);
 
-        private void OnViewPersonalTagDefinitions(object parameter)
-        {
-            Source = new Uri(Page_Uri_Local_PersonalTagDefinitions, UriKind.Relative);
-        }
+        private void OnViewPersonalTagDefinitions(object parameter) => NavigateTo(Page_Uri_Local_PersonalTagDefinitions);
 
         #endregion
         #region ViewSharedTagDefinitions Command Property Members
@@ -201,10 +185,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <value>The <see cref="ICommand"/> that implements the $command$ command.</value>
         public Commands.RelayCommand ViewSharedTagDefinitions => (Commands.RelayCommand)GetValue(ViewSharedTagDefinitionsProperty);
 
-        private void OnViewSharedTagDefinitions(object parameter)
-        {
-            Source = new Uri(Page_Uri_Local_SharedTagDefinitions, UriKind.Relative);
-        }
+        private void OnViewSharedTagDefinitions(object parameter) => NavigateTo(Page_Uri_Local_SharedTagDefinitions);
 
         #endregion
         #region CommandBindings Property Members
@@ -289,34 +270,10 @@ namespace FsInfoCat.Desktop.ViewModel
         }
 
         #endregion
-        #region Source Property Members
 
-        /// <summary>
-        /// Identifies the <see cref="Source"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty SourceProperty = DependencyProperty.Register(nameof(Source), typeof(Uri), typeof(MainVM),
-                new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as MainVM)?.OnSourcePropertyChanged((Uri)e.OldValue, (Uri)e.NewValue)));
-
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
-        public Uri Source { get => (Uri)GetValue(SourceProperty); set => SetValue(SourceProperty, value); }
-
-        /// <summary>
-        /// Called when the value of the <see cref="Source"/> dependency property has changed.
-        /// </summary>
-        /// <param name="oldValue">The previous value of the <see cref="Source"/> property.</param>
-        /// <param name="newValue">The new value of the <see cref="Source"/> property.</param>
-        private void OnSourcePropertyChanged(Uri oldValue, Uri newValue)
+        public MainVM(ILogger<MainVM> logger)
         {
-            // TODO: Implement OnSourcePropertyChanged Logic
-        }
-
-        #endregion
-
-        public MainVM()
-        {
+            _logger = logger;
             SetValue(CommandBindingsPropertyKey, new CommandBindingCollection
             {
                 new CommandBinding(ApplicationCommands.Close, OnClose)
@@ -329,9 +286,122 @@ namespace FsInfoCat.Desktop.ViewModel
             SetValue(ViewRedundancySetsPropertyKey, new Commands.RelayCommand(OnViewRedundancySets));
             SetValue(ViewPersonalTagDefinitionsPropertyKey, new Commands.RelayCommand(OnViewPersonalTagDefinitions));
             SetValue(ViewSharedTagDefinitionsPropertyKey, new Commands.RelayCommand(OnViewSharedTagDefinitions));
-            Source = new Uri(Page_Uri_Local_CrawlConfigurations, UriKind.Relative);
         }
 
-        private void OnClose(object sender, ExecutedRoutedEventArgs e) => Application.Current.MainWindow?.Close();
+        private void OnClose(object sender, ExecutedRoutedEventArgs e)
+        {
+            _logger.LogInformation("{EventName} event raise: sender = {Sender}; EventArgs= {EventArgs}", nameof(OnClose), sender, e);
+            Application.Current.MainWindow?.Close();
+        }
+
+        private void NavigateTo(string pageUri)
+        {
+            _logger.LogInformation("Navigating to {PageUri}", pageUri);
+            Navigate(new Uri(pageUri, UriKind.Relative));
+        }
+
+        private bool P_TryGetNavigationService(out NavigationService navigationService)
+        {
+            if (NavigatedContent is DependencyObject navigatedContent)
+                return (navigationService = NavigationService.GetNavigationService(navigatedContent)) is not null;
+            navigationService = null;
+            return false;
+        }
+
+        private NavigationService P_GetNavigationService() => (NavigatedContent is DependencyObject navigatedContent) ? NavigationService.GetNavigationService(navigatedContent) : null;
+
+        internal bool TryGetNavigationService(out NavigationService navigationService)
+        {
+            VerifyAccess();
+            return (navigationService = P_GetNavigationService()) is not null;
+        }
+
+        internal NavigationService GetNavigationService()
+        {
+            VerifyAccess();
+            return P_GetNavigationService();
+        }
+
+        internal Uri GetSource() => Dispatcher.CheckInvoke(() => P_GetNavigationService()?.Source);
+
+        internal Uri GetCurrentSource() => Dispatcher.CheckInvoke(() => P_GetNavigationService()?.CurrentSource);
+
+        internal object GetContent() => Dispatcher.CheckInvoke(() => P_GetNavigationService()?.Content);
+
+        internal bool CanGoForward() => Dispatcher.CheckInvoke(() => P_GetNavigationService()?.CanGoForward ?? false);
+
+        internal bool CanGoBack() => Dispatcher.CheckInvoke(() => P_GetNavigationService()?.CanGoBack ?? false);
+
+        Uri IApplicationNavigation.Source => GetSource();
+
+        Uri IApplicationNavigation.CurrentSource => GetCurrentSource();
+
+        object IApplicationNavigation.Content => GetContent();
+
+        bool IApplicationNavigation.CanGoForward => CanGoForward();
+
+        bool IApplicationNavigation.CanGoBack => CanGoBack();
+
+        public bool GoBack() => Dispatcher.CheckInvoke(() =>
+        {
+            if (P_TryGetNavigationService(out NavigationService navigationService) && navigationService.CanGoBack)
+            {
+                _logger.LogInformation("Navigating back");
+                navigationService.GoBack();
+                return true;
+            }
+            return false;
+        });
+
+        public bool GoForward() => Dispatcher.CheckInvoke(() =>
+        {
+            if (P_TryGetNavigationService(out NavigationService navigationService) && navigationService.CanGoForward)
+            {
+                _logger.LogInformation("Navigating forward");
+                navigationService.GoForward();
+                return true;
+            }
+            return false;
+        });
+
+        public bool Navigate(Uri source, object navigationState, bool sandboxExternalContent)
+        {
+            _logger.LogInformation("Navigating to URI {source} (navigationState: {navigationState}, sandboxExternalContent: {sandboxExternalContent})",
+                source, navigationState, sandboxExternalContent);
+            return Dispatcher.CheckInvoke(() =>
+                P_TryGetNavigationService(out NavigationService navigationService) && navigationService.Navigate(source, navigationState, sandboxExternalContent));
+        }
+
+        public bool Navigate(Uri source, object navigationState)
+        {
+            _logger.LogInformation("Navigating to URI {source} (navigationState: {navigationState})", source, navigationState);
+            return Dispatcher.CheckInvoke(() =>
+                P_TryGetNavigationService(out NavigationService navigationService) && navigationService.Navigate(source, navigationState));
+        }
+
+        public bool Navigate(Uri source)
+        {
+            _logger.LogInformation("Navigating to URI {source}", source);
+            return Dispatcher.CheckInvoke(() => P_TryGetNavigationService(out NavigationService navigationService) && navigationService.Navigate(source));
+        }
+
+        public bool Navigate(object root, object navigationState)
+        {
+            _logger.LogInformation("Navigating to Content {root} (navigationState: {navigationState})", root, navigationState);
+            return Dispatcher.CheckInvoke(() =>
+                P_TryGetNavigationService(out NavigationService navigationService) && navigationService.Navigate(root, navigationState));
+        }
+
+        public bool Navigate(object root)
+        {
+            _logger.LogInformation("Navigating to Content {root}", root);
+            return Dispatcher.CheckInvoke(() => P_TryGetNavigationService(out NavigationService navigationService) && navigationService.Navigate(root));
+        }
+
+        public void Refresh()
+        {
+            _logger.LogInformation("Refreshing current content");
+            Dispatcher.CheckInvoke(() => P_GetNavigationService()?.Refresh());
+        }
     }
 }

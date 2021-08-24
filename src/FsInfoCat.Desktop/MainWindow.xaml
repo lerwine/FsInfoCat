@@ -6,8 +6,8 @@
         xmlns:local="clr-namespace:FsInfoCat.Desktop"
         xmlns:vm="clr-namespace:FsInfoCat.Desktop.ViewModel"
         mc:Ignorable="d" xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
-        xmlns:converters="clr-namespace:FsInfoCat.Desktop.Converters" vm:MainVM.AttachedBindings="{Binding CommandBindings}"
-        Title="FS InfoCat" Height="600" Width="800" DataContext="{DynamicResource MainViewModel}" WindowState="Maximized">
+        xmlns:converters="clr-namespace:FsInfoCat.Desktop.Converters" d:DataContext="{x:Type vm:MainVM}"
+        Title="FS InfoCat" Height="600" Width="800" WindowState="Maximized">
     <Window.Resources>
         <!--<converters:AccountToStringConverter x:Key="AccountConverter" NullSource="(not logged in)"/>-->
         <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>

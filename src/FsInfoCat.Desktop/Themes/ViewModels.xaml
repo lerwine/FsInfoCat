@@ -2,7 +2,6 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="clr-namespace:FsInfoCat.Desktop.ViewModel"
                     xmlns:Local="clr-namespace:FsInfoCat.Desktop.ViewModel.Local">
-    <vm:MainVM x:Key="MainViewModel"/>
     <Local:CrawlConfigurationsPageVM x:Key="CrawlConfigurationsViewModel"/>
     <Local:FileSystemsPageVM x:Key="FileSystemsViewModel"/>
     <Local:RedundantSetsPageVM x:Key="RedundantSetsViewModel"/>

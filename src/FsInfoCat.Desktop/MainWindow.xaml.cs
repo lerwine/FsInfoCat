@@ -18,7 +18,7 @@ namespace FsInfoCat.Desktop
     /// </summary>
     public partial class MainWindow : Window
     {
-        public MainWindow(ViewModel.MainVM dataContext)
+        public MainWindow(IApplicationNavigation dataContext)
         {
             InitializeComponent();
             DataContext = dataContext;

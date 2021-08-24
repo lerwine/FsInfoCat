@@ -7,7 +7,7 @@ using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel.Local
 {
-    public class VolumeItemVM : DbEntityItemVM<VolumeListItem>
+    public class VolumeItemVM : DbEntityItemVM<VolumeListItemWithFileSystem>
     {
         #region DisplayName Property Members
 
@@ -209,11 +209,60 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         public long SharedTagCount { get => (long)GetValue(SharedTagCountProperty); private set => SetValue(SharedTagCountPropertyKey, value); }
 
         #endregion
+        #region FileSystemDisplayName Property Members
 
-        internal VolumeItemVM([DisallowNull] VolumeListItem model)
+        private static readonly DependencyPropertyKey FileSystemDisplayNamePropertyKey = DependencyProperty.RegisterReadOnly(nameof(FileSystemDisplayName), typeof(string), typeof(VolumeItemVM), new PropertyMetadata(""));
+
+        /// <summary>
+        /// Identifies the <see cref="FileSystemDisplayName"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty FileSystemDisplayNameProperty = FileSystemDisplayNamePropertyKey.DependencyProperty;
+
+        /// <summary>
+        /// Gets or sets .
+        /// </summary>
+        /// <value>The .</value>
+        public string FileSystemDisplayName { get => GetValue(FileSystemDisplayNameProperty) as string; private set => SetValue(FileSystemDisplayNamePropertyKey, value); }
+
+        #endregion
+        #region EffectiveReadOnly Property Members
+
+        private static readonly DependencyPropertyKey EffectiveReadOnlyPropertyKey = DependencyProperty.RegisterReadOnly(nameof(EffectiveReadOnly), typeof(bool), typeof(VolumeItemVM),
+                new PropertyMetadata(false));
+
+        /// <summary>
+        /// Identifies the <see cref="EffectiveReadOnly"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty EffectiveReadOnlyProperty = EffectiveReadOnlyPropertyKey.DependencyProperty;
+
+        /// <summary>
+        /// Gets .
+        /// </summary>
+        /// <value>The .</value>
+        public bool EffectiveReadOnly { get => (bool)GetValue(EffectiveReadOnlyProperty); private set => SetValue(EffectiveReadOnlyPropertyKey, value); }
+
+        #endregion
+        #region EffectiveMaxNameLength Property Members
+
+        private static readonly DependencyPropertyKey EffectiveMaxNameLengthPropertyKey = DependencyProperty.RegisterReadOnly(nameof(EffectiveMaxNameLength), typeof(uint), typeof(VolumeItemVM),
+                new PropertyMetadata(0u));
+
+        /// <summary>
+        /// Identifies the <see cref="EffectiveMaxNameLength"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty EffectiveMaxNameLengthProperty = EffectiveMaxNameLengthPropertyKey.DependencyProperty;
+
+        /// <summary>
+        /// Gets .
+        /// </summary>
+        /// <value>The .</value>
+        public uint EffectiveMaxNameLength { get => (uint)GetValue(EffectiveMaxNameLengthProperty); private set => SetValue(EffectiveMaxNameLengthPropertyKey, value); }
+
+        #endregion
+
+        internal VolumeItemVM([DisallowNull] VolumeListItemWithFileSystem model)
             : base(model)
         {
-            // TODO: Use bgOpMgr to initialize or remove it
             DisplayName = model.DisplayName;
             Identifier = model.Identifier;
             MaxNameLength = model.MaxNameLength;
@@ -226,51 +275,63 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             Status = model.Status;
             Type = model.Type;
             VolumeName = model.VolumeName;
+            FileSystemDisplayName = model.FileSystemDisplayName;
+            EffectiveReadOnly = model.EffectiveReadOnly;
+            EffectiveMaxNameLength = model.EffectiveMaxNameLength;
         }
 
         protected override void OnNestedModelPropertyChanged(string propertyName)
         {
             switch (propertyName)
             {
-                case nameof(VolumeListItem.DisplayName):
-                    Dispatcher.CheckInvoke(() => DisplayName = Model?.DisplayName);
+                case nameof(VolumeListItemWithFileSystem.FileSystemDisplayName):
+                    Dispatcher.CheckInvoke(() => FileSystemDisplayName = Model?.FileSystemDisplayName ?? "");
                     break;
-                case nameof(VolumeListItem.Identifier):
+                case nameof(VolumeListItemWithFileSystem.EffectiveReadOnly):
+                    Dispatcher.CheckInvoke(() => EffectiveReadOnly = Model?.EffectiveReadOnly ?? false);
+                    break;
+                case nameof(VolumeListItemWithFileSystem.EffectiveMaxNameLength):
+                    Dispatcher.CheckInvoke(() => EffectiveMaxNameLength = Model?.EffectiveMaxNameLength ?? 0u);
+                    break;
+                case nameof(VolumeListItemWithFileSystem.DisplayName):
+                    Dispatcher.CheckInvoke(() => DisplayName = Model?.DisplayName ?? "");
+                    break;
+                case nameof(VolumeListItemWithFileSystem.Identifier):
                     Dispatcher.CheckInvoke(() => Identifier = Model?.Identifier ?? VolumeIdentifier.Empty);
                     break;
-                case nameof(VolumeListItem.MaxNameLength):
+                case nameof(VolumeListItemWithFileSystem.MaxNameLength):
                     Dispatcher.CheckInvoke(() => MaxNameLength = Model?.MaxNameLength);
                     break;
-                case nameof(VolumeListItem.Notes):
-                    Dispatcher.CheckInvoke(() => Notes = Model?.Notes);
+                case nameof(VolumeListItemWithFileSystem.Notes):
+                    Dispatcher.CheckInvoke(() => Notes = Model?.Notes ?? "");
                     break;
-                case nameof(VolumeListItem.ReadOnly):
+                case nameof(VolumeListItemWithFileSystem.ReadOnly):
                     Dispatcher.CheckInvoke(() => IsReadOnly = Model?.ReadOnly);
                     break;
-                case nameof(VolumeListItem.RootPath):
+                case nameof(VolumeListItemWithFileSystem.RootPath):
                     Dispatcher.CheckInvoke(() => RootPath = Model?.RootPath ?? "");
                     break;
-                case nameof(VolumeListItem.AccessErrorCount):
+                case nameof(VolumeListItemWithFileSystem.AccessErrorCount):
                     Dispatcher.CheckInvoke(() => AccessErrorCount = Model?.AccessErrorCount ?? 0L);
                     break;
-                case nameof(VolumeListItem.PersonalTagCount):
+                case nameof(VolumeListItemWithFileSystem.PersonalTagCount):
                     Dispatcher.CheckInvoke(() => PersonalTagCount = Model?.PersonalTagCount ?? 0L);
                     break;
-                case nameof(VolumeListItem.SharedTagCount):
+                case nameof(VolumeListItemWithFileSystem.SharedTagCount):
                     Dispatcher.CheckInvoke(() => SharedTagCount = Model?.SharedTagCount ?? 0L);
                     break;
-                case nameof(VolumeListItem.Status):
+                case nameof(VolumeListItemWithFileSystem.Status):
                     Dispatcher.CheckInvoke(() => Status = Model?.Status ?? VolumeStatus.Unknown);
                     break;
-                case nameof(VolumeListItem.Type):
+                case nameof(VolumeListItemWithFileSystem.Type):
                     Dispatcher.CheckInvoke(() => Type = Model?.Type ?? DriveType.Unknown);
                     break;
-                case nameof(VolumeListItem.VolumeName):
-                    Dispatcher.CheckInvoke(() => VolumeName = Model?.VolumeName);
+                case nameof(VolumeListItemWithFileSystem.VolumeName):
+                    Dispatcher.CheckInvoke(() => VolumeName = Model?.VolumeName ?? "");
                     break;
             }
         }
 
-        protected override DbSet<VolumeListItem> GetDbSet(LocalDbContext dbContext) => dbContext.VolumeListing;
+        protected override DbSet<VolumeListItemWithFileSystem> GetDbSet(LocalDbContext dbContext) => dbContext.VolumeListingWithFileSystem;
     }
 }
