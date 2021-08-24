@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Windows;
@@ -14,7 +14,7 @@ namespace FsInfoCat.Desktop.ViewModel
 
         public static EnumValueSelectorVM<TEnum> GetEnumValueSelectorVM(DependencyObject obj) => (EnumValueSelectorVM<TEnum>)obj.GetValue(EnumValueSelectorVMProperty);
 
-        private static void SetEnumValueSelectorVM(DependencyObject obj, EnumValueSelectorVM<TEnum> value) => obj.SetValue(EnumValueSelectorVMProperty, value);
+        private static void SetEnumValueSelectorVM(DependencyObject obj, EnumValueSelectorVM<TEnum> value) => obj.SetValue(EnumValueSelectorVMPropertyKey, value);
 
         private static readonly DependencyPropertyKey EnumValueSelectorVMPropertyKey = DependencyProperty.RegisterAttachedReadOnly(nameof(EnumValueSelectorVM<TEnum>),
             typeof(EnumValueSelectorVM<TEnum>), typeof(EnumValueSelectorVM<TEnum>), new PropertyMetadata(null));

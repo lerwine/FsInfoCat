@@ -96,4 +96,8 @@ namespace FsInfoCat
             return await _initializeTask;
         }
     }
+    public interface IMainBgOpManagerService : IAsyncBackgroundOperationManager
+    {
+
+    }
 }

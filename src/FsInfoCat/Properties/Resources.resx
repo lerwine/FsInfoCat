@@ -1588,9 +1588,6 @@
   <data name="DisplayName_Display" xml:space="preserve">
     <value>Display</value>
   </data>
-  <data name="DisplayName_Identifer" xml:space="preserve">
-    <value>Identifer</value>
-  </data>
   <data name="DisplayName_Inactive" xml:space="preserve">
     <value>Inactive</value>
   </data>
@@ -1779,5 +1776,17 @@
   </data>
   <data name="ErrorMessage_VolumeRequired" xml:space="preserve">
     <value>Volume must be selected.</value>
+  </data>
+  <data name="DisplayName_MaxNameLength_Effective" xml:space="preserve">
+    <value>Maximum Name Length (effective value)</value>
+  </data>
+  <data name="DisplayName_PersonalTags" xml:space="preserve">
+    <value>Personal Tags</value>
+  </data>
+  <data name="DisplayName_ReadOnly_Effective" xml:space="preserve">
+    <value>Read-Only (effective value)</value>
+  </data>
+  <data name="DisplayName_SharedTags" xml:space="preserve">
+    <value>Shared Tags</value>
   </data>
 </root>

@@ -1,6 +1,5 @@
 using FsInfoCat.Local;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Linq;
@@ -9,6 +8,7 @@ using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel.Local
 {
+
     public class VolumesPageVM : DbEntityListingPageVM<VolumeListItemWithFileSystem, VolumeItemVM>
     {
         #region StatusOptions Property Members
@@ -53,10 +53,27 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         }
 
         #endregion
+        #region ColumnVisibilities Property Members
 
+        private static readonly DependencyPropertyKey ColumnVisibilitiesPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ColumnVisibilities), typeof(VolumesWithFileSystemColumnVisibilitiesViewModel), typeof(VolumesPageVM),
+                new PropertyMetadata(null));
+
+        /// <summary>
+        /// Identifies the <see cref="ColumnVisibilities"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ColumnVisibilitiesProperty = ColumnVisibilitiesPropertyKey.DependencyProperty;
+
+        /// <summary>
+        /// Gets .
+        /// </summary>
+        /// <value>The .</value>
+        public VolumesWithFileSystemColumnVisibilitiesViewModel ColumnVisibilities => (VolumesWithFileSystemColumnVisibilitiesViewModel)GetValue(ColumnVisibilitiesProperty);
+
+        #endregion
         public VolumesPageVM()
         {
             SetValue(StatusOptionsPropertyKey, new EnumValueSelectorVM<VolumeStatus>());
+            SetValue(ColumnVisibilitiesPropertyKey, new VolumesWithFileSystemColumnVisibilitiesViewModel());
         }
 
         private async Task<int> LoadItemsAsync(ItemLoadParams state, IWindowsStatusListener statusListener)

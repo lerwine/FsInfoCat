@@ -2590,15 +2590,6 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Identifer.
-        /// </summary>
-        public static string DisplayName_Identifer {
-            get {
-                return ResourceManager.GetString("DisplayName_Identifer", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Volume Identifier.
         /// </summary>
         public static string DisplayName_Identifier {
@@ -3022,6 +3013,15 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Maximum Name Length (effective value).
+        /// </summary>
+        public static string DisplayName_MaxNameLength_Effective {
+            get {
+                return ResourceManager.GetString("DisplayName_MaxNameLength_Effective", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Maximum Recursion Depth.
         /// </summary>
         public static string DisplayName_MaxRecursionDepth {
@@ -3373,6 +3373,15 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Personal Tags.
+        /// </summary>
+        public static string DisplayName_PersonalTags {
+            get {
+                return ResourceManager.GetString("DisplayName_PersonalTags", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Photo Properties.
         /// </summary>
         public static string DisplayName_PhotoProperties {
@@ -3616,6 +3625,15 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Read-Only (effective value).
+        /// </summary>
+        public static string DisplayName_ReadOnly_Effective {
+            get {
+                return ResourceManager.GetString("DisplayName_ReadOnly_Effective", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Recorded TV Properties.
         /// </summary>
         public static string DisplayName_RecordedTVProperties {
@@ -3828,6 +3846,15 @@ namespace FsInfoCat.Properties {
         public static string DisplayName_Sensitivity {
             get {
                 return ResourceManager.GetString("DisplayName_Sensitivity", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Shared Tags.
+        /// </summary>
+        public static string DisplayName_SharedTags {
+            get {
+                return ResourceManager.GetString("DisplayName_SharedTags", resourceCulture);
             }
         }
         

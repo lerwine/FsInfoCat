@@ -15,7 +15,7 @@ namespace FsInfoCat.Upstream
 
         /// <summary>Gets the machine identifier.</summary>
         /// <value>The programmatic host machine identifier string.</value>
-        [Display(Name = nameof(Properties.Resources.DisplayName_MachineIdentifer), ShortName = nameof(Properties.Resources.DisplayName_Identifer), Description = nameof(Properties.Resources.Description_HostDevice_MachineIdentifer),
+        [Display(Name = nameof(Properties.Resources.DisplayName_MachineIdentifer), ShortName = nameof(Properties.Resources.DisplayName_Identifier), Description = nameof(Properties.Resources.Description_HostDevice_MachineIdentifer),
             ResourceType = typeof(Properties.Resources))]
         string MachineIdentifer { get; }
 
