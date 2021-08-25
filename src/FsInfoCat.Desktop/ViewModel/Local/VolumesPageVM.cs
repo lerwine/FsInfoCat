@@ -136,13 +136,30 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         protected override bool ShowModalItemEditWindow(VolumeItemVM item, object parameter, out string saveProgressTitle)
         {
             saveProgressTitle = string.Format(FsInfoCat.Properties.Resources.FormatMessage_SavingVolumeChanges, item.DisplayName);
-            throw new NotImplementedException();
+            return BgOps.FromAsync("Loading Details", "Connecting to database", item.Model.Id, LoadItemAsync).ContinueWith(task => Dispatcher.Invoke(() =>
+            {
+                Volume entity = task.Result;
+                if (entity is null)
+                    return false;
+                EditVolumeVM viewModel = new();
+                return viewModel.ShowDialog(new View.Local.EditVolumeWindow(), entity, false) ?? false;
+            }), TaskContinuationOptions.OnlyOnRanToCompletion).Result;
+        }
+
+        private async Task<Volume> LoadItemAsync(Guid id, IWindowsStatusListener arg)
+        {
+            using IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+            return await dbContext.Volumes.FindAsync(id);
         }
 
         protected override bool PromptItemDeleting(VolumeItemVM item, object parameter, out string deleteProgressTitle)
         {
+            using IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
             deleteProgressTitle = string.Format(FsInfoCat.Properties.Resources.FormatMessage_DeletingVolume, item.DisplayName);
-            throw new NotImplementedException();
+            return MessageBox.Show(serviceScope.ServiceProvider.GetRequiredService<MainWindow>(),
+                "This cannot be undone.\n\nAre you sure you want to delete this Volume?", "Delete Volume", MessageBoxButton.YesNo,
+                MessageBoxImage.Warning) == MessageBoxResult.Yes;
         }
 
         public record ItemLoadParams(Guid? FileSystemId, VolumeStatus[] StatusValues);

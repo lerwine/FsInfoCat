@@ -173,13 +173,30 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         protected override bool ShowModalItemEditWindow(FileSystemItemVM item, object parameter, out string saveProgressTitle)
         {
             saveProgressTitle = $"Saving File System Definition \"{item.DisplayName}\"";
-            throw new NotImplementedException();
+            return BgOps.FromAsync("Loading Details", "Connecting to database", item.Model.Id, LoadItemAsync).ContinueWith(task => Dispatcher.Invoke(() =>
+            {
+                FileSystem entity = task.Result;
+                if (entity is null)
+                    return false;
+                EditFileSystemVM viewModel = new();
+                return viewModel.ShowDialog(new View.Local.EditFileSystemWindow(), entity, false) ?? false;
+            }), TaskContinuationOptions.OnlyOnRanToCompletion).Result;
+        }
+
+        private async Task<FileSystem> LoadItemAsync(Guid id, IWindowsStatusListener arg)
+        {
+            using IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+            return await dbContext.FileSystems.FindAsync(id);
         }
 
         protected override bool PromptItemDeleting(FileSystemItemVM item, object parameter, out string deleteProgressTitle)
         {
+            using IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
             deleteProgressTitle = $"Deleting File System Definition \"{item.DisplayName}\"";
-            throw new NotImplementedException();
+            return MessageBox.Show(serviceScope.ServiceProvider.GetRequiredService<MainWindow>(),
+                "This cannot be undone.\n\nAre you sure you want to delete this File System?", "Delete File System", MessageBoxButton.YesNo,
+                MessageBoxImage.Warning) == MessageBoxResult.Yes;
         }
 
         //public record EntityAndCounts(FileSystemListItem Entity, int VolumeCount, int SymbolicNameCount);

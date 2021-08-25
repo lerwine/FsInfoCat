@@ -58,12 +58,31 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 
         protected override bool ShowModalItemEditWindow(RedundantSetItemVM item, object parameter, out string saveProgressTitle)
         {
-            throw new NotImplementedException();
+            saveProgressTitle = "Saving Redundancy Set";
+            return BgOps.FromAsync("Loading Details", "Connecting to database", item.Model.Id, LoadItemAsync).ContinueWith(task => Dispatcher.Invoke(() =>
+            {
+                RedundantSet entity = task.Result;
+                if (entity is null)
+                    return false;
+                EditRedundantSetVM viewModel = new();
+                return viewModel.ShowDialog(new View.Local.EditRedundantSetWindow(), entity, false) ?? false;
+            }), TaskContinuationOptions.OnlyOnRanToCompletion).Result;
+        }
+
+        private async Task<RedundantSet> LoadItemAsync(Guid id, IWindowsStatusListener arg)
+        {
+            using IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+            return await dbContext.RedundantSets.FindAsync(id);
         }
 
         protected override bool PromptItemDeleting(RedundantSetItemVM item, object parameter, out string deleteProgressTitle)
         {
-            throw new NotImplementedException();
+            using IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
+            deleteProgressTitle = "Deleting Redundancy Set";
+            return MessageBox.Show(serviceScope.ServiceProvider.GetRequiredService<MainWindow>(),
+                "This cannot be undone.\n\nAre you sure you want to delete this Redundancy Set?", "Delete Redundancy Set", MessageBoxButton.YesNo,
+                MessageBoxImage.Warning) == MessageBoxResult.Yes;
         }
 
         public record ItemLoadParams(Guid? BinaryPropertiesId, string Reference);

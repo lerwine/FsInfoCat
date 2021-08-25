@@ -245,7 +245,11 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 
         protected override bool PromptItemDeleting(CrawlConfigItemVM item, object parameter, out string deleteProgressTitle)
         {
-            throw new NotImplementedException();
+            using IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
+            deleteProgressTitle = "Deleting Crawl Configuration";
+            return MessageBox.Show(serviceScope.ServiceProvider.GetRequiredService<MainWindow>(),
+                "This cannot be undone.\n\nAre you sure you want to delete this crawl configuration?", "Delete Crawl Configuration", MessageBoxButton.YesNo,
+                MessageBoxImage.Warning) == MessageBoxResult.Yes;
         }
     }
 }
