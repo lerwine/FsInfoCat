@@ -14,8 +14,8 @@
         <cvt:DriveTypeToStringConverter x:Key="DriveTypeToStringConverter"/>
         <vm:VolumesPageVM x:Key="VM"/>
         <cvt:BooleanToVisibilityConverter x:Key="VisibleIfTrueConverter" NullSource="Collapsed"/>
-        <cvt:DependencyObjectToVisibilityConverter x:Key="DependencyObjectToVisibilityConverter"/>
-        <cvt:DependencyObjectToVisibilityConverter x:Key="InverseObjectToVisibilityConverter" NotNullSource="Collapsed" NullSource="Visible"/>
+        <cvt:ObjectToVisibilityConverter x:Key="ObjectToVisibilityConverter"/>
+        <cvt:ObjectToVisibilityConverter x:Key="InverseObjectToVisibilityConverter" NotNullSource="Collapsed" NullSource="Visible"/>
     </Page.Resources>
     <Grid>
         <Grid.ColumnDefinitions>

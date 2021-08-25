@@ -14,8 +14,8 @@
       Title="Personal Tag Definitions">
     <Page.Resources>
         <cvt:BooleanToVisibilityConverter x:Key="VisibleIfTrueConverter" NullSource="Collapsed"/>
-        <cvt:DependencyObjectToVisibilityConverter x:Key="DependencyObjectToVisibilityConverter"/>
-        <cvt:DependencyObjectToVisibilityConverter x:Key="InverseObjectToVisibilityConverter" NotNullSource="Collapsed" NullSource="Visible"/>
+        <cvt:ObjectToVisibilityConverter x:Key="ObjectToVisibilityConverter"/>
+        <cvt:ObjectToVisibilityConverter x:Key="InverseObjectToVisibilityConverter" NotNullSource="Collapsed" NullSource="Visible"/>
         <cvt:BooleanToStringConverter x:Key="BooleanToStatusConverter" FalseValue="Activated" TrueValue="Deactivated"/>
         <cvt:DateTimeToStringConverter x:Key="DateTimeToString"/>
         <cvt:DateTimeToStringConverter x:Key="LastSynchronizedToString" NullSource="(not synchronized)"/>
@@ -67,7 +67,7 @@
             <TextBlock Text="shared tag definitions to dispay" HorizontalAlignment="Center" />
             <Button Content="Add New" HorizontalAlignment="Center" Command="{Binding NewItemClick, Mode=OneWay, Source={StaticResource CrawlConfigurationsViewModel}}" Margin="{DynamicResource DefaultSpacing}" ToolTip="{x:Static res:Resources.Description_NewCurrentCrawlConfig}" Style="{DynamicResource DefaultButton}"/>
         </StackPanel>
-        <Grid Grid.Column="1" Margin="{DynamicResource DefaultSpacingLeft}" DataContext="{Binding SelectedItem}" Visibility="{Binding Converter={StaticResource DependencyObjectToVisibilityConverter}, Mode=OneWay}">
+        <Grid Grid.Column="1" Margin="{DynamicResource DefaultSpacingLeft}" DataContext="{Binding SelectedItem}" Visibility="{Binding Converter={StaticResource ObjectToVisibilityConverter}, Mode=OneWay}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition/>
@@ -106,10 +106,10 @@
                     <TextBox IsReadOnly="True" Grid.Row="3" Text="{Binding LastSynchronizedOn, Converter={StaticResource LastSynchronizedToString}, Mode=OneWay}" Margin="{DynamicResource DefaultSpacingLeftRight}" />
                 </Grid>
             </StackPanel>
-            <GroupBox Grid.Row="1" Margin="{DynamicResource DefaultSpacing}" Header="Description" Visibility="{Binding Converter={StaticResource DependencyObjectToVisibilityConverter}, Mode=OneWay}">
+            <GroupBox Grid.Row="1" Margin="{DynamicResource DefaultSpacing}" Header="Description" Visibility="{Binding Converter={StaticResource ObjectToVisibilityConverter}, Mode=OneWay}">
                 <TextBox IsReadOnly="True" Margin="{DynamicResource DefaultSpacingTopLeftRight}" Text="{Binding Description, Mode=OneWay}" Style="{DynamicResource MultiLineTextBox}" />
             </GroupBox>
-            <WrapPanel Grid.Row="2" HorizontalAlignment="Right" Visibility="{Binding Converter={StaticResource DependencyObjectToVisibilityConverter}, Mode=OneWay}">
+            <WrapPanel Grid.Row="2" HorizontalAlignment="Right" Visibility="{Binding Converter={StaticResource ObjectToVisibilityConverter}, Mode=OneWay}">
                 <Button Margin="{DynamicResource DefaultSpacingTopBottomLeft}" Command="{Binding EditCurrentItem, Mode=OneWay}" ToolTip="Edit Personal Tag" Style="{DynamicResource EditButton}"/>
                 <Button Margin="{DynamicResource DefaultSpacing}" Command="{Binding DeleteCurrentItem, Mode=OneWay}" ToolTip="Delete Personal Tag" Style="{DynamicResource DeleteButton}"/>
             </WrapPanel>

@@ -1,7 +1,9 @@
 using FsInfoCat.Local;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
@@ -43,40 +45,6 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         /// </summary>
         /// <value>The .</value>
         public string FullName { get => GetValue(FullNameProperty) as string; private set => SetValue(FullNamePropertyKey, value); }
-
-        #endregion
-        #region Parent Property Members
-
-        private static readonly DependencyPropertyKey ParentPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Parent), typeof(SubdirectoryItemVM), typeof(SubdirectoryItemVM),
-                new PropertyMetadata(null));
-
-        /// <summary>
-        /// Identifies the <see cref="Parent"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty ParentProperty = ParentPropertyKey.DependencyProperty;
-
-        /// <summary>
-        /// Gets .
-        /// </summary>
-        /// <value>The .</value>
-        public SubdirectoryItemVM Parent { get => (SubdirectoryItemVM)GetValue(ParentProperty); private set => SetValue(ParentPropertyKey, value); }
-
-        #endregion
-        #region Volume Property Members
-
-        private static readonly DependencyPropertyKey VolumePropertyKey = DependencyProperty.RegisterReadOnly(nameof(Volume), typeof(VolumeItemVM), typeof(SubdirectoryItemVM),
-                new PropertyMetadata(null));
-
-        /// <summary>
-        /// Identifies the <see cref="Volume"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty VolumeProperty = VolumePropertyKey.DependencyProperty;
-
-        /// <summary>
-        /// Gets .
-        /// </summary>
-        /// <value>The .</value>
-        public VolumeItemVM Volume { get => (VolumeItemVM)GetValue(VolumeProperty); private set => SetValue(VolumePropertyKey, value); }
 
         #endregion
         #region Name Property Members
@@ -346,6 +314,80 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         public string CrawlConfigDisplayName { get => GetValue(CrawlConfigDisplayNameProperty) as string; private set => SetValue(CrawlConfigDisplayNamePropertyKey, value); }
 
         #endregion
+        #region FileSystemDisplayName Property Members
+
+        private static readonly DependencyPropertyKey FileSystemDisplayNamePropertyKey = DependencyProperty.RegisterReadOnly(nameof(FileSystemDisplayName), typeof(string), typeof(SubdirectoryItemVM),
+                new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as SubdirectoryItemVM)?.OnFileSystemDisplayNamePropertyChanged(e.OldValue as string, e.NewValue as string)));
+
+        /// <summary>
+        /// Identifies the <see cref="FileSystemDisplayName"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty FileSystemDisplayNameProperty = FileSystemDisplayNamePropertyKey.DependencyProperty;
+
+        /// <summary>
+        /// Gets .
+        /// </summary>
+        /// <value>The .</value>
+        public string FileSystemDisplayName { get => GetValue(FileSystemDisplayNameProperty) as string; private set => SetValue(FileSystemDisplayNamePropertyKey, value); }
+
+        /// <summary>
+        /// Called when the value of the <see cref="FileSystemDisplayName"/> dependency property has changed.
+        /// </summary>
+        /// <param name="oldValue">The previous value of the <see cref="FileSystemDisplayName"/> property.</param>
+        /// <param name="newValue">The new value of the <see cref="FileSystemDisplayName"/> property.</param>
+        private void OnFileSystemDisplayNamePropertyChanged(string oldValue, string newValue)
+        {
+            FileSystemDetailText = string.IsNullOrWhiteSpace(newValue) ? FileSystemSymbolicName :
+                (string.IsNullOrWhiteSpace(FileSystemSymbolicName) ? newValue :
+                $"{oldValue.AsWsNormalizedOrEmpty()} ({FileSystemDisplayName.AsWsNormalizedOrEmpty()})");
+        }
+
+        #endregion
+        #region FileSystemSymbolicName Property Members
+
+        private static readonly DependencyPropertyKey FileSystemSymbolicNamePropertyKey = DependencyProperty.RegisterReadOnly(nameof(FileSystemSymbolicName), typeof(string), typeof(SubdirectoryItemVM),
+                new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as SubdirectoryItemVM)?.OnFileSystemSymbolicNamePropertyChanged(e.OldValue as string, e.NewValue as string)));
+
+        /// <summary>
+        /// Identifies the <see cref="FileSystemSymbolicName"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty FileSystemSymbolicNameProperty = FileSystemSymbolicNamePropertyKey.DependencyProperty;
+
+        /// <summary>
+        /// Gets .
+        /// </summary>
+        /// <value>The .</value>
+        public string FileSystemSymbolicName { get => GetValue(FileSystemSymbolicNameProperty) as string; private set => SetValue(FileSystemSymbolicNamePropertyKey, value); }
+
+        /// <summary>
+        /// Called when the value of the <see cref="FileSystemSymbolicName"/> dependency property has changed.
+        /// </summary>
+        /// <param name="oldValue">The previous value of the <see cref="FileSystemSymbolicName"/> property.</param>
+        /// <param name="newValue">The new value of the <see cref="FileSystemSymbolicName"/> property.</param>
+        private void OnFileSystemSymbolicNamePropertyChanged(string oldValue, string newValue)
+        {
+            FileSystemDetailText = string.IsNullOrWhiteSpace(newValue) ? FileSystemDisplayName :
+                (string.IsNullOrWhiteSpace(FileSystemDisplayName) ? newValue :
+                $"{oldValue.AsWsNormalizedOrEmpty()} ({FileSystemDisplayName.AsWsNormalizedOrEmpty()})");
+        }
+
+        #endregion
+        #region FileSystemDetailText Property Members
+
+        private static readonly DependencyPropertyKey FileSystemDetailTextPropertyKey = DependencyProperty.RegisterReadOnly(nameof(FileSystemDetailText), typeof(string), typeof(SubdirectoryItemVM), new PropertyMetadata(""));
+
+        /// <summary>
+        /// Identifies the <see cref="FileSystemDetailText"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty FileSystemDetailTextProperty = FileSystemDetailTextPropertyKey.DependencyProperty;
+
+        /// <summary>
+        /// Gets or sets .
+        /// </summary>
+        /// <value>The .</value>
+        public string FileSystemDetailText { get => GetValue(FileSystemDetailTextProperty) as string; private set => SetValue(FileSystemDetailTextPropertyKey, value); }
+
+        #endregion
 
         public SubdirectoryItemVM(SubdirectoryListItemWithAncestorNames entity) : base(entity)
         {
@@ -363,6 +405,8 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             SubdirectoryCount = entity.SubdirectoryCount;
             FileCount = entity.FileCount;
             CrawlConfigDisplayName = entity.CrawlConfigDisplayName;
+            FileSystemDisplayName = entity.FileSystemDisplayName;
+            FileSystemSymbolicName = entity.FileSystemSymbolicName;
         }
 
         private async Task<string> LookupFullNameAsync(Subdirectory root, IWindowsStatusListener statusListener)
@@ -449,6 +493,12 @@ namespace FsInfoCat.Desktop.ViewModel.Local
                     break;
                 case nameof(SubdirectoryListItemWithAncestorNames.CrawlConfigDisplayName):
                     CrawlConfigDisplayName = Model?.CrawlConfigDisplayName ?? "";
+                    break;
+                case nameof(SubdirectoryListItemWithAncestorNames.FileSystemDisplayName):
+                    FileSystemDisplayName = Model?.FileSystemDisplayName ?? "";
+                    break;
+                case nameof(SubdirectoryListItemWithAncestorNames.FileSystemSymbolicName):
+                    FileSystemSymbolicName = Model?.FileSystemSymbolicName ?? "";
                     break;
             }
         }

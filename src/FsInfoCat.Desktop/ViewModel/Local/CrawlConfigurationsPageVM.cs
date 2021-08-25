@@ -107,20 +107,6 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         public Commands.RelayCommand ViewOptionCancelClick => (Commands.RelayCommand)GetValue(ViewOptionCancelClickProperty);
 
         #endregion
-        #region SelectedItem Property Members
-
-        /// <summary>
-        /// Identifies the <see cref="SelectedItem"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty SelectedItemProperty = DependencyProperty.Register(nameof(SelectedItem), typeof(CrawlConfigItemVM), typeof(CrawlConfigurationsPageVM), new PropertyMetadata(null));
-
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
-        public CrawlConfigItemVM SelectedItem { get => (CrawlConfigItemVM)GetValue(SelectedItemProperty); set => SetValue(SelectedItemProperty, value); }
-
-        #endregion
         #region EditingViewOptions Property Members
 
         private static readonly DependencyPropertyKey EditingViewOptionsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(EditingViewOptions), typeof(ThreeStateViewModel), typeof(CrawlConfigurationsPageVM),
@@ -178,8 +164,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             viewOptions.ValuePropertyChanged += (s, e) =>
             {
                 EditingViewOptions.Value = ViewOptions.Value;
-                CrawlConfigItemVM selectedCrawlConfig = SelectedItem;
-                LoadItemsAsync().ContinueWith(t => OnItemsReloaded(selectedCrawlConfig));
+                LoadItemsAsync();
             };
         }
 
@@ -187,23 +172,6 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         {
             bool? viewOptions = ViewOptions.Value;
             return listener => Task.Run(async () => await LoadItemsAsync(viewOptions, listener));
-        }
-
-        private void OnItemsReloaded(CrawlConfigItemVM toSelect)
-        {
-            Dispatcher.Invoke(() =>
-            {
-                if (toSelect is null)
-                {
-                    if (SelectedItem is null && Items.Count > 0)
-                        SelectedItem = Items.FirstOrDefault();
-                }
-                {
-                    Guid id = toSelect.Model.Id;
-                    if ((toSelect = Items.FirstOrDefault(i => i.Model.Id == id)) is not null)
-                        SelectedItem = toSelect;
-                }
-            });
         }
 
         private async Task<int> LoadItemsAsync(bool? showActive, IWindowsStatusListener statusListener)
@@ -231,7 +199,8 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             (string, Subdirectory)? result = await Dispatcher.Invoke(() => EditCrawlConfigVM.BrowseForFolderAsync(null, BgOps));
             while (result?.Item2.CrawlConfiguration is not null)
             {
-                Dispatcher.Invoke(() => MessageBox.Show(Application.Current.MainWindow, "Not Available", "That subdirectory already has a crawl configuration.", MessageBoxButton.OK, MessageBoxImage.Error));
+                Dispatcher.Invoke(() => MessageBox.Show(Application.Current.MainWindow, "Not Available", "That subdirectory already has a crawl configuration.",
+                    MessageBoxButton.OK, MessageBoxImage.Error));
                 result = await Dispatcher.Invoke(() => EditCrawlConfigVM.BrowseForFolderAsync(null, BgOps));
             }
             string path = result?.Item1;
@@ -255,7 +224,23 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 
         protected override bool ShowModalItemEditWindow(CrawlConfigItemVM item, object parameter, out string saveProgressTitle)
         {
-            throw new NotImplementedException();
+            saveProgressTitle = "Saving crawl configuration";
+            return BgOps.FromAsync("Loading Details", "Connecting to database", item.Model.Id, LoadItemAsync).ContinueWith(task => Dispatcher.Invoke(() =>
+            {
+                CrawlConfiguration entity = task.Result;
+                if (entity is null)
+                    return false;
+                EditCrawlConfigVM viewModel = new();
+                AttachedProperties.SetFullName(viewModel, item.FullName);
+                return viewModel.ShowDialog(new View.Local.EditCrawlConfigWindow(), entity, false) ?? false;
+            }), TaskContinuationOptions.OnlyOnRanToCompletion).Result;
+        }
+
+        private async Task<CrawlConfiguration> LoadItemAsync(Guid id, IWindowsStatusListener arg)
+        {
+            using IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+            return await dbContext.CrawlConfigurations.FindAsync(id);
         }
 
         protected override bool PromptItemDeleting(CrawlConfigItemVM item, object parameter, out string deleteProgressTitle)

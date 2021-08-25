@@ -15,6 +15,7 @@
     <Color x:Key="ButtonBorderColor">DarkSlateBlue</Color>
     <Color x:Key="PopupBorderColor">Black</Color>
     <Color x:Key="TextBoxBorderColor">DarkSlateGray</Color>
+    <Color x:Key="ValueTextBoxBorderColor">#7F95C5C5</Color>
     <Color x:Key="LightBorderColor">SlateGray</Color>
     <Color x:Key="ControlLightColor">Lavender</Color>
     <Color x:Key="ControlFaceColor">LightSteelBlue</Color>
@@ -43,6 +44,7 @@
     <SolidColorBrush x:Key="InfoLightBrush" Color="{StaticResource InfoLightColor}"/>
     <SolidColorBrush x:Key="ButtonBorderBrush" Color="{StaticResource ButtonBorderColor}"/>
     <SolidColorBrush x:Key="TextBoxBorderBrush" Color="{StaticResource TextBoxBorderColor}"/>
+    <SolidColorBrush x:Key="ValueTextBoxBorderBrush" Color="{StaticResource ValueTextBoxBorderColor}"/>
     <SolidColorBrush x:Key="LightBorderBrush" Opacity="0.5" Color="{StaticResource LightBorderColor}"/>
     <SolidColorBrush x:Key="PopupBorderBrush" Color="{StaticResource PopupBorderColor}"/>
     <SolidColorBrush x:Key="TranslucentBlack50pctBrush" Color="{StaticResource TranslucentBlack50pctColor}"/>

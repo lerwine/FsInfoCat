@@ -12,8 +12,8 @@
       d:DesignHeight="450" d:DesignWidth="800"
       Title="File System Types" DataContext="{DynamicResource FileSystemsViewModel}">
     <Page.Resources>
-        <cvt:DependencyObjectToVisibilityConverter x:Key="DependencyObjectToVisibilityConverter"/>
-        <cvt:DependencyObjectToVisibilityConverter x:Key="InverseObjectToVisibilityConverter" NotNullSource="Collapsed" NullSource="Visible"/>
+        <cvt:ObjectToVisibilityConverter x:Key="ObjectToVisibilityConverter"/>
+        <cvt:ObjectToVisibilityConverter x:Key="InverseObjectToVisibilityConverter" NotNullSource="Collapsed" NullSource="Visible"/>
         <cvt:CrawlStatusToStringConverter x:Key="CrawlStatusToDescription" Display="Description" />
         <cvt:CrawlStatusToStringConverter x:Key="CrawlStatusToCol" Display="ShortName" />
         <cvt:DateTimeToStringConverter x:Key="DateTimeToString"/>

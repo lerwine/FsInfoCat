@@ -1,13 +1,7 @@
 using FsInfoCat.Local;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
 
@@ -64,55 +58,6 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             get => GetValue(DisplayNameProperty) as string;
             private set => SetValue(DisplayNamePropertyKey, value);
         }
-
-        #endregion
-        #region VolumeDisplayName Property Members
-
-        private static readonly DependencyPropertyKey VolumeDisplayNamePropertyKey = DependencyProperty.RegisterReadOnly(nameof(VolumeDisplayName), typeof(string), typeof(CrawlConfigItemVM), new PropertyMetadata(""));
-
-        /// <summary>
-        /// Identifies the <see cref="VolumeDisplayName"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty VolumeDisplayNameProperty = VolumeDisplayNamePropertyKey.DependencyProperty;
-
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
-        public string VolumeDisplayName { get => GetValue(VolumeDisplayNameProperty) as string; private set => SetValue(VolumeDisplayNamePropertyKey, value); }
-
-        #endregion
-        #region VolumeName Property Members
-
-        private static readonly DependencyPropertyKey VolumeNamePropertyKey = DependencyProperty.RegisterReadOnly(nameof(VolumeName), typeof(string), typeof(CrawlConfigItemVM), new PropertyMetadata(""));
-
-        /// <summary>
-        /// Identifies the <see cref="VolumeName"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty VolumeNameProperty = VolumeNamePropertyKey.DependencyProperty;
-
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
-        public string VolumeName { get => GetValue(VolumeNameProperty) as string; private set => SetValue(VolumeNamePropertyKey, value); }
-
-        #endregion
-        #region VolumeIdentifier Property Members
-
-        private static readonly DependencyPropertyKey VolumeIdentifierPropertyKey = DependencyProperty.RegisterReadOnly(nameof(VolumeIdentifier), typeof(VolumeIdentifier), typeof(CrawlConfigItemVM),
-                new PropertyMetadata(VolumeIdentifier.Empty));
-
-        /// <summary>
-        /// Identifies the <see cref="VolumeIdentifier"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty VolumeIdentifierProperty = VolumeIdentifierPropertyKey.DependencyProperty;
-
-        /// <summary>
-        /// Gets .
-        /// </summary>
-        /// <value>The .</value>
-        public VolumeIdentifier VolumeIdentifier { get => (VolumeIdentifier)GetValue(VolumeIdentifierProperty); private set => SetValue(VolumeIdentifierPropertyKey, value); }
 
         #endregion
         #region LastCrawlEnd Property Members
@@ -284,6 +229,55 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         }
 
         #endregion
+        #region VolumeDisplayName Property Members
+
+        private static readonly DependencyPropertyKey VolumeDisplayNamePropertyKey = DependencyProperty.RegisterReadOnly(nameof(VolumeDisplayName), typeof(string), typeof(CrawlConfigItemVM), new PropertyMetadata(""));
+
+        /// <summary>
+        /// Identifies the <see cref="VolumeDisplayName"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty VolumeDisplayNameProperty = VolumeDisplayNamePropertyKey.DependencyProperty;
+
+        /// <summary>
+        /// Gets or sets .
+        /// </summary>
+        /// <value>The .</value>
+        public string VolumeDisplayName { get => GetValue(VolumeDisplayNameProperty) as string; private set => SetValue(VolumeDisplayNamePropertyKey, value); }
+
+        #endregion
+        #region VolumeName Property Members
+
+        private static readonly DependencyPropertyKey VolumeNamePropertyKey = DependencyProperty.RegisterReadOnly(nameof(VolumeName), typeof(string), typeof(CrawlConfigItemVM), new PropertyMetadata(""));
+
+        /// <summary>
+        /// Identifies the <see cref="VolumeName"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty VolumeNameProperty = VolumeNamePropertyKey.DependencyProperty;
+
+        /// <summary>
+        /// Gets or sets .
+        /// </summary>
+        /// <value>The .</value>
+        public string VolumeName { get => GetValue(VolumeNameProperty) as string; private set => SetValue(VolumeNamePropertyKey, value); }
+
+        #endregion
+        #region VolumeIdentifier Property Members
+
+        private static readonly DependencyPropertyKey VolumeIdentifierPropertyKey = DependencyProperty.RegisterReadOnly(nameof(VolumeIdentifier), typeof(VolumeIdentifier), typeof(CrawlConfigItemVM),
+                new PropertyMetadata(VolumeIdentifier.Empty));
+
+        /// <summary>
+        /// Identifies the <see cref="VolumeIdentifier"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty VolumeIdentifierProperty = VolumeIdentifierPropertyKey.DependencyProperty;
+
+        /// <summary>
+        /// Gets .
+        /// </summary>
+        /// <value>The .</value>
+        public VolumeIdentifier VolumeIdentifier { get => (VolumeIdentifier)GetValue(VolumeIdentifierProperty); private set => SetValue(VolumeIdentifierPropertyKey, value); }
+
+        #endregion
         #region BgOps Property Members
 
         private static readonly DependencyPropertyKey BgOpsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(BgOps), typeof(AsyncOps.AsyncBgModalVM), typeof(CrawlConfigItemVM),
@@ -299,6 +293,80 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         /// </summary>
         /// <value>The .</value>
         public AsyncOps.AsyncBgModalVM BgOps => (AsyncOps.AsyncBgModalVM)GetValue(BgOpsProperty);
+
+        #endregion
+        #region FileSystemDisplayName Property Members
+
+        private static readonly DependencyPropertyKey FileSystemDisplayNamePropertyKey = DependencyProperty.RegisterReadOnly(nameof(FileSystemDisplayName), typeof(string), typeof(CrawlConfigItemVM),
+                new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as CrawlConfigItemVM)?.OnFileSystemDisplayNamePropertyChanged(e.OldValue as string, e.NewValue as string)));
+
+        /// <summary>
+        /// Identifies the <see cref="FileSystemDisplayName"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty FileSystemDisplayNameProperty = FileSystemDisplayNamePropertyKey.DependencyProperty;
+
+        /// <summary>
+        /// Gets .
+        /// </summary>
+        /// <value>The .</value>
+        public string FileSystemDisplayName { get => GetValue(FileSystemDisplayNameProperty) as string; private set => SetValue(FileSystemDisplayNamePropertyKey, value); }
+
+        /// <summary>
+        /// Called when the value of the <see cref="FileSystemDisplayName"/> dependency property has changed.
+        /// </summary>
+        /// <param name="oldValue">The previous value of the <see cref="FileSystemDisplayName"/> property.</param>
+        /// <param name="newValue">The new value of the <see cref="FileSystemDisplayName"/> property.</param>
+        private void OnFileSystemDisplayNamePropertyChanged(string oldValue, string newValue)
+        {
+            FileSystemDetailText = string.IsNullOrWhiteSpace(newValue) ? FileSystemSymbolicName :
+                (string.IsNullOrWhiteSpace(FileSystemSymbolicName) ? newValue :
+                $"{oldValue.AsWsNormalizedOrEmpty()} ({FileSystemDisplayName.AsWsNormalizedOrEmpty()})");
+        }
+
+        #endregion
+        #region FileSystemSymbolicName Property Members
+
+        private static readonly DependencyPropertyKey FileSystemSymbolicNamePropertyKey = DependencyProperty.RegisterReadOnly(nameof(FileSystemSymbolicName), typeof(string), typeof(CrawlConfigItemVM),
+                new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as CrawlConfigItemVM)?.OnFileSystemSymbolicNamePropertyChanged(e.OldValue as string, e.NewValue as string)));
+
+        /// <summary>
+        /// Identifies the <see cref="FileSystemSymbolicName"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty FileSystemSymbolicNameProperty = FileSystemSymbolicNamePropertyKey.DependencyProperty;
+
+        /// <summary>
+        /// Gets .
+        /// </summary>
+        /// <value>The .</value>
+        public string FileSystemSymbolicName { get => GetValue(FileSystemSymbolicNameProperty) as string; private set => SetValue(FileSystemSymbolicNamePropertyKey, value); }
+
+        /// <summary>
+        /// Called when the value of the <see cref="FileSystemSymbolicName"/> dependency property has changed.
+        /// </summary>
+        /// <param name="oldValue">The previous value of the <see cref="FileSystemSymbolicName"/> property.</param>
+        /// <param name="newValue">The new value of the <see cref="FileSystemSymbolicName"/> property.</param>
+        private void OnFileSystemSymbolicNamePropertyChanged(string oldValue, string newValue)
+        {
+            FileSystemDetailText = string.IsNullOrWhiteSpace(newValue) ? FileSystemDisplayName :
+                (string.IsNullOrWhiteSpace(FileSystemDisplayName) ? newValue :
+                $"{oldValue.AsWsNormalizedOrEmpty()} ({FileSystemDisplayName.AsWsNormalizedOrEmpty()})");
+        }
+
+        #endregion
+        #region FileSystemDetailText Property Members
+
+        private static readonly DependencyPropertyKey FileSystemDetailTextPropertyKey = DependencyProperty.RegisterReadOnly(nameof(FileSystemDetailText), typeof(string), typeof(CrawlConfigItemVM), new PropertyMetadata(""));
+
+        /// <summary>
+        /// Identifies the <see cref="FileSystemDetailText"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty FileSystemDetailTextProperty = FileSystemDetailTextPropertyKey.DependencyProperty;
+
+        /// <summary>
+        /// Gets or sets .
+        /// </summary>
+        /// <value>The .</value>
+        public string FileSystemDetailText { get => GetValue(FileSystemDetailTextProperty) as string; private set => SetValue(FileSystemDetailTextPropertyKey, value); }
 
         #endregion
 
@@ -327,15 +395,10 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             NextScheduledStart = model.NextScheduledStart;
             RescheduleFromJobEnd = model.RescheduleFromJobEnd;
             RescheduleAfterFail = model.RescheduleAfterFail;
+            FileSystemDisplayName = model.FileSystemDisplayName;
+            FileSystemSymbolicName = model.FileSystemSymbolicName;
         }
 
-        private void OnLookupFullNameComplete(string result)
-        {
-            if (FullName.Equals(result))
-                return;
-            FullName = result;
-        }
-        
         protected override void OnNestedModelPropertyChanged(string propertyName)
         {
             switch (propertyName)
@@ -395,6 +458,12 @@ namespace FsInfoCat.Desktop.ViewModel.Local
                     break;
                 case nameof(CrawlConfigListItem.VolumeIdentifier):
                     VolumeIdentifier = Model?.VolumeIdentifier ?? VolumeIdentifier.Empty;
+                    break;
+                case nameof(CrawlConfigListItem.FileSystemDisplayName):
+                    FileSystemDisplayName = Model?.FileSystemDisplayName ?? "";
+                    break;
+                case nameof(CrawlConfigListItem.FileSystemSymbolicName):
+                    FileSystemSymbolicName = Model?.FileSystemSymbolicName ?? "";
                     break;
             }
         }

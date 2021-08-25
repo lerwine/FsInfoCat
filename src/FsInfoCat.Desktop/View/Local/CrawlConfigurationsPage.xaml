@@ -13,8 +13,8 @@
       Title="Craw Configurations">
     <Page.Resources>
         <cvt:BooleanToVisibilityConverter x:Key="VisibleIfTrueConverter" NullSource="Collapsed"/>
-        <cvt:DependencyObjectToVisibilityConverter x:Key="DependencyObjectToVisibilityConverter"/>
-        <cvt:DependencyObjectToVisibilityConverter x:Key="InverseObjectToVisibilityConverter" NotNullSource="Collapsed" NullSource="Visible"/>
+        <cvt:ObjectToVisibilityConverter x:Key="ObjectToVisibilityConverter"/>
+        <cvt:ObjectToVisibilityConverter x:Key="InverseObjectToVisibilityConverter" NotNullSource="Collapsed" NullSource="Visible"/>
         <cvt:CrawlStatusToStringConverter x:Key="CrawlStatusToDescription" Display="Description" />
         <cvt:CrawlStatusToStringConverter x:Key="CrawlStatusToCol" Display="ShortName" />
         <cvt:DateTimeToStringConverter x:Key="DateTimeToString"/>
@@ -36,10 +36,10 @@
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
-        <Label Content="File Systems" Padding="{DynamicResource DefaultSpacing}" FontWeight="Bold" />
-        <Button Grid.Column="1" Margin="{DynamicResource DefaultSpacingTopLeft}" Style="{DynamicResource FilterButton}" Command="{Binding ShowViewOptions, Mode=OneWay}"/>
-        <Button Grid.Column="2" Margin="{DynamicResource DefaultSpacingTopLeftRight}" Style="{DynamicResource AddNewButton}" Command="{Binding NewItemClick, Mode=OneWay}" />
-        <DataGrid Grid.Row="1" ItemsSource="{Binding Items, Mode=OneWay}" Margin="{DynamicResource DefaultSpacingLeftRight}" AutoGenerateColumns="False" IsReadOnly="True" SelectedValue="{Binding SelectedItem, Mode=TwoWay}" Grid.ColumnSpan="3">
+        <Label Content="Crawl Configurations" Padding="{DynamicResource DefaultSpacing}" FontWeight="Bold" />
+        <Button Grid.Column="1" Margin="{DynamicResource DefaultSpacingTopLeft}" Style="{DynamicResource FilterButton}" Command="{Binding ShowViewOptions, Mode=OneWay}" ToolTip="Modify Listing Filter"/>
+        <Button Grid.Column="2" Margin="{DynamicResource DefaultSpacingTopLeftRight}" Style="{DynamicResource AddNewButton}" Command="{Binding NewItemClick, Mode=OneWay}" ToolTip="Add New Crawl Configuration" />
+        <DataGrid Grid.Row="1" ItemsSource="{Binding Items, Mode=OneWay}" Margin="{DynamicResource DefaultSpacingLeftRight}" AutoGenerateColumns="False" IsReadOnly="True" SelectedValue="{Binding SelectedItem, Mode=TwoWay}" Grid.ColumnSpan="3" SelectionMode="Single">
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding DisplayName, Mode=OneWay}" IsReadOnly="True" Header="{x:Static res:Resources.DisplayName_Name}" Width="*"/>
                 <DataGridTextColumn Binding="{Binding StatusValue, Converter={StaticResource CrawlStatusToCol}, Mode=OneWay}" IsReadOnly="True" Header="{x:Static res:Resources.DisplayName_Status}" CanUserResize="True" Width="*"/>
@@ -49,7 +49,7 @@
             </DataGrid.Columns>
             <DataGrid.RowDetailsTemplate>
                 <DataTemplate>
-
+                    <local:CrawlConfigRowDetail/>
                 </DataTemplate>
             </DataGrid.RowDetailsTemplate>
         </DataGrid>
@@ -70,6 +70,6 @@
                 </StackPanel>
             </Border>
         </Border>
-        <View:AsyncBgModalControl Grid.ColumnSpan="2" d:IsHidden="True" DataContext="{Binding BgOps, Mode=OneWay}" />
+        <View:AsyncBgModalControl Grid.ColumnSpan="3" Grid.RowSpan="2" d:IsHidden="True" DataContext="{Binding BgOps, Mode=OneWay}" />
     </Grid>
 </Page>

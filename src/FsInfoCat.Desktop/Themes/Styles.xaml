@@ -28,6 +28,12 @@
         <Setter Property="AcceptsTab" Value="False"/>
         <Setter Property="TextWrapping" Value="NoWrap"/>
     </Style>
+    <Style x:Key="SingleLineReadOnlyValueTextBox" TargetType="TextBox" BasedOn="{StaticResource SingleLineTextBox}">
+        <Setter Property="IsReadOnly"  Value="True"/>
+        <Setter Property="BorderThickness" Value="0.5"/>
+        <Setter Property="Padding" Value="1"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource ValueTextBoxBorderBrush}"/>
+    </Style>
     <Style x:Key="DefaultGroupBoxBase" TargetType="GroupBox">
         <Setter Property="BorderBrush" Value="#D5DFE5"/>
         <Setter Property="BorderThickness" Value="1"/>
@@ -163,6 +169,12 @@
                 <Setter Property="SelectionBrush" Value="{DynamicResource {x:Static SystemColors.InactiveSelectionHighlightBrushKey}}"/>
             </MultiTrigger>
         </Style.Triggers>
+    </Style>
+    <Style x:Key="MultiLineReadOnlyValueTextBox" TargetType="TextBox" BasedOn="{StaticResource MultiLineTextBox}">
+        <Setter Property="IsReadOnly"  Value="True"/>
+        <Setter Property="BorderThickness" Value="0.5"/>
+        <Setter Property="Padding" Value="1"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource ValueTextBoxBorderBrush}"/>
     </Style>
     <Style x:Key="InfoMessageTextBlock" TargetType="TextBlock">
         <Setter Property="Foreground" Value="{DynamicResource InfoDarkBrush}"/>
