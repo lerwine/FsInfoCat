@@ -15,11 +15,14 @@ using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel.Local
 {
+    /// <summary>
+    /// View Model for <see cref="View.Local.RedundantSetsPage"/>.
+    /// </summary>
     public class RedundantSetsPageVM : DbEntityListingPageVM<RedundantSetListItem, RedundantSetItemVM>
     {
         internal Task<int> LoadAsync(Guid? binaryPropertiesId, string reference = null)
         {
-            return BgOps.FromAsync("Loading items", "Connecting to database...", new ItemLoadParams(binaryPropertiesId, reference), LoadItemsAsync);
+            return MainVM.BgOpFromAsync("Loading items", "Connecting to database...", new ItemLoadParams(binaryPropertiesId, reference), LoadItemsAsync);
         }
 
         private async Task<int> LoadItemsAsync(ItemLoadParams state, IWindowsStatusListener statusListener)
@@ -59,7 +62,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         protected override bool ShowModalItemEditWindow(RedundantSetItemVM item, object parameter, out string saveProgressTitle)
         {
             saveProgressTitle = "Saving Redundancy Set";
-            return BgOps.FromAsync("Loading Details", "Connecting to database", item.Model.Id, LoadItemAsync).ContinueWith(task => Dispatcher.Invoke(() =>
+            return MainVM.BgOpFromAsync("Loading Details", "Connecting to database", item.Model.Id, LoadItemAsync).ContinueWith(task => Dispatcher.Invoke(() =>
             {
                 RedundantSet entity = task.Result;
                 if (entity is null)

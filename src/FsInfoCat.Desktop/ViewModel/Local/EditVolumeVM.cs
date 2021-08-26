@@ -16,6 +16,9 @@ using System.Windows.Threading;
 
 namespace FsInfoCat.Desktop.ViewModel.Local
 {
+    /// <summary>
+    /// View Model for <see cref="View.Local.EditVolumeWindow"/>.
+    /// </summary>
     public class EditVolumeVM : EditDbEntityVM<Volume>, IHasSubdirectoryEntity
     {
         #region DisplayName Property Members

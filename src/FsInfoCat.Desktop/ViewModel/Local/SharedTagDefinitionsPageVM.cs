@@ -10,6 +10,9 @@ using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel.Local
 {
+    /// <summary>
+    /// View Model for <see cref="View.Local.SharedTagDefinitionsPage"/>.
+    /// </summary>
     public class SharedTagDefinitionsPageVM : DbEntityListingPageVM<SharedTagDefinitionListItem, SharedTagDefinitionItemVM>
     {
         #region IsEditingViewOptions Property Members
@@ -198,7 +201,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         protected override bool ShowModalItemEditWindow(SharedTagDefinitionItemVM item, object parameter, out string saveProgressTitle)
         {
             saveProgressTitle = $"Saving Shared Tag Definition \"{item.Name}\"";
-            return BgOps.FromAsync("Loading Details", "Connecting to database", item.Model.Id, LoadItemAsync).ContinueWith(task => Dispatcher.Invoke(() =>
+            return MainVM.BgOpFromAsync("Loading Details", "Connecting to database", item.Model.Id, LoadItemAsync).ContinueWith(task => Dispatcher.Invoke(() =>
             {
                 SharedTagDefinition entity = task.Result;
                 if (entity is null)

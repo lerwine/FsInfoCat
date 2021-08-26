@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FsInfoCat.Desktop"
+        xmlns:View="clr-namespace:FsInfoCat.Desktop.View"
         xmlns:vm="clr-namespace:FsInfoCat.Desktop.ViewModel"
         mc:Ignorable="d" xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:converters="clr-namespace:FsInfoCat.Desktop.Converters" d:DataContext="{x:Type vm:MainVM}"
@@ -11,6 +12,15 @@
     <Window.Resources>
         <!--<converters:AccountToStringConverter x:Key="AccountConverter" NullSource="(not logged in)"/>-->
         <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
+        <Style x:Key="ListViewItemContainerStyle1" TargetType="{x:Type ListViewItem}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ListViewItem}">
+                        <Grid/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -45,6 +55,36 @@
             <MenuItem Header="Help" HorizontalAlignment="Right"/>
         </Menu>
         <Frame Grid.Row="1" Source="/View/Local/FileSystemsPage.xaml" Content="{Binding NavigatedContent, Mode=TwoWay}" />
+
+            <Border Grid.RowSpan="2" Background="{DynamicResource TranslucentBlack50pctBrush}">
+        <Viewbox Stretch="Uniform">
+                <ListView Background="{x:Null}" BorderBrush="{x:Null}">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Border>
+                                <Grid Width="200" Height="100">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+                                    <Border>
+                                        <TextBlock Text="Title"/>
+                                    </Border>
+                                    <Border>
+                                        <TextBlock Text="Message"/>
+                                    </Border>
+                                    <Border>
+                                        <Button Content="Cancel"/>
+                                    </Border>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+        </Viewbox>
+            </Border>
+        <View:AsyncBgModalControl Grid.RowSpan="2" d:IsHidden="True" DataContext="{Binding BgOps, Mode=OneWay}" />
         <StatusBar Grid.Row="2">
             <StatusBarItem>
                 <StackPanel Orientation="Horizontal">

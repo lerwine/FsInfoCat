@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:FsInfoCat.Desktop.View.Local"
              xmlns:vm="clr-namespace:FsInfoCat.Desktop.ViewModel.Local"
              xmlns:Converters="clr-namespace:FsInfoCat.Desktop.Converters" x:Class="FsInfoCat.Desktop.View.Local.FileSystemDetailUserControl"
-             mc:Ignorable="d" d:DataContext="{x:Type vm:FileSystemItemDetailViewModel}"
+             mc:Ignorable="d" d:DataContext="{x:Type vm:FileSystemItemVM}"
              d:DesignHeight="450" d:DesignWidth="400">
     <UserControl.Resources>
         <Converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" NullSource="Collapsed"/>
@@ -19,7 +19,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition />
         </Grid.RowDefinitions>
-        <Grid DataContext="{Binding CurrentItem}">
+        <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
                 <ColumnDefinition Width="Auto"/>

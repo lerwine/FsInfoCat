@@ -6,6 +6,9 @@ using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel.Local
 {
+    /// <summary>
+    /// View Model for <see cref="View.Local.EditPersonalTagDefinitionWindow"/>.
+    /// </summary>
     public class EditPersonalTagDefinitionVM : EditDbEntityVM<PersonalTagDefinition>
     {
         #region IsInactive Property Members

@@ -4,6 +4,9 @@ using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel.Local
 {
+    /// <summary>
+    /// View model for <see cref="DbEntityListingPageVM{TDbEntity, TItemVM}.Items"/> in the <see cref="VolumesPageVM"/> view model.
+    /// </summary>
     public class VolumesWithFileSystemColumnVisibilitiesViewModel : VolumesColumnVisibilitiesViewModel
     {
         #region FileSystemDisplayName Property Members

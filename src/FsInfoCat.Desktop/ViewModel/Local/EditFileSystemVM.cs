@@ -11,6 +11,9 @@ using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel.Local
 {
+    /// <summary>
+    /// View Model for <see cref="View.Local.EditFileSystemWindow"/>.
+    /// </summary>
     public class EditFileSystemVM : EditDbEntityVM<FileSystem>
     {
         #region DisplayName Property Members

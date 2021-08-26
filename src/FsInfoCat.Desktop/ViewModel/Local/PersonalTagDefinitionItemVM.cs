@@ -6,6 +6,9 @@ using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel.Local
 {
+    /// <summary>
+    /// View model for <see cref="DbEntityListingPageVM{TDbEntity, TItemVM}.Items"/> in the <see cref="PersonalTagDefinitionsPageVM"/> view model.
+    /// </summary>
     public class PersonalTagDefinitionItemVM : DbEntityItemVM<PersonalTagDefinitionListItem>
     {
         #region ToggleCurrentItemActivation Property Members

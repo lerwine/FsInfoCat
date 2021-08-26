@@ -1,4 +1,3 @@
-using FsInfoCat.Desktop.ViewModel.AsyncOps;
 using FsInfoCat.Local;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,6 +11,9 @@ using System.Windows.Threading;
 
 namespace FsInfoCat.Desktop.ViewModel.Local
 {
+    /// <summary>
+    /// View Model for <see cref="View.Local.FileSystemDetailUserControl"/> and items in the <see cref=""/>.
+    /// </summary>
     public class FileSystemItemDetailViewModel : DbEntityItemDetailViewModel<FileSystemListItem, FileSystemItemVM>
     {
         #region NewSymbolicName Property Members
@@ -174,9 +176,9 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         #endregion
         #region SymbolicNames Property Members
 
-        private readonly ObservableCollection<SymbolicNameItemVM> _backingSymbolicNames = new();
+        private readonly ObservableCollection<SymbolicNameWithFileSystemItemVM> _backingSymbolicNames = new();
 
-        private static readonly DependencyPropertyKey SymbolicNamesPropertyKey = DependencyProperty.RegisterReadOnly(nameof(SymbolicNames), typeof(ReadOnlyObservableCollection<SymbolicNameItemVM>), typeof(FileSystemItemDetailViewModel),
+        private static readonly DependencyPropertyKey SymbolicNamesPropertyKey = DependencyProperty.RegisterReadOnly(nameof(SymbolicNames), typeof(ReadOnlyObservableCollection<SymbolicNameWithFileSystemItemVM>), typeof(FileSystemItemDetailViewModel),
                 new PropertyMetadata(null));
 
         /// <summary>
@@ -188,7 +190,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         /// Gets the symbolic names.
         /// </summary>
         /// <value>The symbolic names for the <see cref="DbEntityItemDetailViewModel{FileSystem, FileSystemItemVM}.CurrentItem"/>.</value>
-        public ReadOnlyObservableCollection<SymbolicNameItemVM> SymbolicNames => (ReadOnlyObservableCollection<SymbolicNameItemVM>)GetValue(SymbolicNamesProperty);
+        public ReadOnlyObservableCollection<SymbolicNameWithFileSystemItemVM> SymbolicNames => (ReadOnlyObservableCollection<SymbolicNameWithFileSystemItemVM>)GetValue(SymbolicNamesProperty);
 
         #endregion
 
@@ -202,7 +204,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         {
             _backingSymbolicNames.Clear();
             if (fileSystemId.HasValue)
-                BgOps.FromAsync("", "", (fileSystemId.Value, showActive), LoadSymbolicNamesAsync);
+                MainVM.BgOpFromAsync("", "", (fileSystemId.Value, showActive), LoadSymbolicNamesAsync);
         }
 
         private async Task<int> LoadSymbolicNamesAsync((Guid fileSystemId, bool? showActive) state, IWindowsStatusListener statusListener)
@@ -228,7 +230,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
                 {
                     CurrentItem.SymbolicNameCount = items.Length;
                     foreach (SymbolicNameListItem item in items)
-                        _backingSymbolicNames.Add(new SymbolicNameItemVM(item));
+                        _backingSymbolicNames.Add(new SymbolicNameWithFileSystemItemVM(item));
                     return items.Length;
                 }
                 return 0;
@@ -237,7 +239,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 
         public FileSystemItemDetailViewModel()
         {
-            SetValue(SymbolicNamesPropertyKey, new ReadOnlyObservableCollection<SymbolicNameItemVM>(_backingSymbolicNames));
+            SetValue(SymbolicNamesPropertyKey, new ReadOnlyObservableCollection<SymbolicNameWithFileSystemItemVM>(_backingSymbolicNames));
             ThreeStateViewModel viewOptions = new(true);
             SetValue(ViewOptionsPropertyKey, viewOptions);
             SetValue(EditingViewOptionsPropertyKey, new ThreeStateViewModel());

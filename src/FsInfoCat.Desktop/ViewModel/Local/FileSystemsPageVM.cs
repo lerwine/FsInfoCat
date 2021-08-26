@@ -3,6 +3,7 @@ using FsInfoCat.Local;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,7 +11,10 @@ using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel.Local
 {
-    public class FileSystemsPageVM : DbEntityListingPageVM<FileSystemListItem, FileSystemItemVM, FileSystemItemDetailViewModel>
+    /// <summary>
+    /// View Model for <see cref="View.Local.FileSystemsPage"/>.
+    /// </summary>
+    public class FileSystemsPageVM : DbEntityListingPageVM<FileSystemListItem, FileSystemItemVM>
     {
         #region IsEditingViewOptions Property Members
 
@@ -113,12 +117,102 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         public ThreeStateViewModel EditingViewOptions => (ThreeStateViewModel)GetValue(EditingViewOptionsProperty);
 
         #endregion
+        #region SelectedItem Property Members
+
+        /// <summary>
+        /// Identifies the <see cref="SelectedItem"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty SelectedItemProperty = DependencyProperty.Register(nameof(SelectedItem), typeof(FileSystemItemVM), typeof(FileSystemsPageVM),
+                new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as FileSystemsPageVM)?.OnSelectedItemPropertyChanged((FileSystemItemVM)e.OldValue, (FileSystemItemVM)e.NewValue)));
+
+        /// <summary>
+        /// Gets or sets .
+        /// </summary>
+        /// <value>The .</value>
+        public FileSystemItemVM SelectedItem { get => (FileSystemItemVM)GetValue(SelectedItemProperty); set => SetValue(SelectedItemProperty, value); }
+
+        /// <summary>
+        /// Called when the value of the <see cref="SelectedItem"/> dependency property has changed.
+        /// </summary>
+        /// <param name="oldValue">The previous value of the <see cref="SelectedItem"/> property.</param>
+        /// <param name="newValue">The new value of the <see cref="SelectedItem"/> property.</param>
+        private void OnSelectedItemPropertyChanged(FileSystemItemVM oldValue, FileSystemItemVM newValue)
+        {
+            if (newValue is null)
+            {
+                _backingSymbolicNames.Clear();
+                _backingVolumes.Clear();
+            }
+            else
+                MainVM.BgOpFromAsync("Reading Data", "Loading related items", newValue.LoadRelatedItemsAsync).ContinueWith(task =>
+                {
+                    if (task.IsCompletedSuccessfully)
+                        Dispatcher.Invoke(() =>
+                        {
+                            _backingSymbolicNames.Clear();
+                            _backingVolumes.Clear();
+                            (SymbolicName[] symbolicNames, VolumeListItem[] volumes) = task.Result;
+                            foreach (SymbolicName sn in symbolicNames)
+                                _backingSymbolicNames.Add(new SymbolicNameItemVM(sn));
+                            foreach (VolumeListItem v in volumes)
+                                _backingVolumes.Add(new VolumeItemVM(v));
+                        });
+                    else
+                        Dispatcher.Invoke(() =>
+                        {
+                            _backingSymbolicNames.Clear();
+                            _backingVolumes.Clear();
+                        });
+                });
+        }
+
+        #endregion
+        #region SymbolicNames Property Members
+
+        private readonly ObservableCollection<SymbolicNameItemVM> _backingSymbolicNames = new();
+
+        private static readonly DependencyPropertyKey SymbolicNamesPropertyKey = DependencyProperty.RegisterReadOnly(nameof(SymbolicNames), typeof(ReadOnlyObservableCollection<SymbolicNameItemVM>), typeof(FileSystemsPageVM),
+                new PropertyMetadata(null));
+
+        /// <summary>
+        /// Identifies the <see cref="SymbolicNames"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty SymbolicNamesProperty = SymbolicNamesPropertyKey.DependencyProperty;
+
+        /// <summary>
+        /// Gets .
+        /// </summary>
+        /// <value>The .</value>
+        public ReadOnlyObservableCollection<SymbolicNameItemVM> SymbolicNames => (ReadOnlyObservableCollection<SymbolicNameItemVM>)GetValue(SymbolicNamesProperty);
+
+        #endregion
+        #region Volumes Property Members
+
+        private readonly ObservableCollection<VolumeItemVM> _backingVolumes = new();
+
+        private static readonly DependencyPropertyKey VolumesPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Volumes), typeof(ReadOnlyObservableCollection<VolumeItemVM>), typeof(FileSystemsPageVM),
+                new PropertyMetadata(null));
+
+        /// <summary>
+        /// Identifies the <see cref="Volumes"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty VolumesProperty = VolumesPropertyKey.DependencyProperty;
+
+        /// <summary>
+        /// Gets .
+        /// </summary>
+        /// <value>The .</value>
+        public ReadOnlyObservableCollection<VolumeItemVM> Volumes => (ReadOnlyObservableCollection<VolumeItemVM>)GetValue(VolumesProperty);
+
+        #endregion
 
         public FileSystemsPageVM()
         {
             ThreeStateViewModel viewOptions = new(true);
             SetValue(ViewOptionsPropertyKey, viewOptions);
             SetValue(EditingViewOptionsPropertyKey, new ThreeStateViewModel(viewOptions.Value));
+            SetValue(SymbolicNamesPropertyKey, new ReadOnlyObservableCollection<SymbolicNameItemVM>(_backingSymbolicNames));
+            SetValue(VolumesPropertyKey, new ReadOnlyObservableCollection<VolumeItemVM>(_backingVolumes));
             if (DesignerProperties.GetIsInDesignMode(this))
                 return;
             viewOptions.ValuePropertyChanged += (s, e) => LoadItemsAsync();
@@ -173,7 +267,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         protected override bool ShowModalItemEditWindow(FileSystemItemVM item, object parameter, out string saveProgressTitle)
         {
             saveProgressTitle = $"Saving File System Definition \"{item.DisplayName}\"";
-            return BgOps.FromAsync("Loading Details", "Connecting to database", item.Model.Id, LoadItemAsync).ContinueWith(task => Dispatcher.Invoke(() =>
+            return MainVM.BgOpFromAsync("Loading Details", "Connecting to database", item.Model.Id, LoadItemAsync).ContinueWith(task => Dispatcher.Invoke(() =>
             {
                 FileSystem entity = task.Result;
                 if (entity is null)

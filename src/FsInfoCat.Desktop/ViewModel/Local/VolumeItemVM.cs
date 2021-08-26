@@ -2,16 +2,16 @@ using FsInfoCat.Local;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel.Local
 {
-    public class VolumeItemVM : DbEntityItemVM<VolumeListItemWithFileSystem>
+    public abstract class VolumeItemVM<TDbEntity> : DbEntityItemVM<TDbEntity>
+        where TDbEntity : VolumeRow, new()
     {
         #region DisplayName Property Members
 
-        private static readonly DependencyPropertyKey DisplayNamePropertyKey = DependencyProperty.RegisterReadOnly(nameof(DisplayName), typeof(string), typeof(VolumeItemVM), new PropertyMetadata(""));
+        private static readonly DependencyPropertyKey DisplayNamePropertyKey = DependencyProperty.RegisterReadOnly(nameof(DisplayName), typeof(string), typeof(VolumeItemVM<TDbEntity>), new PropertyMetadata(""));
 
         /// <summary>
         /// Identifies the <see cref="DisplayName"/> dependency property.
@@ -27,7 +27,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         #endregion
         #region VolumeName Property Members
 
-        private static readonly DependencyPropertyKey VolumeNamePropertyKey = DependencyProperty.RegisterReadOnly(nameof(VolumeName), typeof(string), typeof(VolumeItemVM), new PropertyMetadata(""));
+        private static readonly DependencyPropertyKey VolumeNamePropertyKey = DependencyProperty.RegisterReadOnly(nameof(VolumeName), typeof(string), typeof(VolumeItemVM<TDbEntity>), new PropertyMetadata(""));
 
         /// <summary>
         /// Identifies the <see cref="VolumeName"/> dependency property.
@@ -41,25 +41,9 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         public string VolumeName { get => GetValue(VolumeNameProperty) as string; private set => SetValue(VolumeNamePropertyKey, value); }
 
         #endregion
-        #region RootPath Property Members
-
-        private static readonly DependencyPropertyKey RootPathPropertyKey = DependencyProperty.RegisterReadOnly(nameof(RootPath), typeof(string), typeof(VolumeItemVM), new PropertyMetadata(""));
-
-        /// <summary>
-        /// Identifies the <see cref="RootPath"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty RootPathProperty = RootPathPropertyKey.DependencyProperty;
-
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
-        public string RootPath { get => GetValue(RootPathProperty) as string; private set => SetValue(RootPathPropertyKey, value); }
-
-        #endregion
         #region Identifier Property Members
 
-        private static readonly DependencyPropertyKey IdentifierPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Identifier), typeof(VolumeIdentifier), typeof(VolumeItemVM),
+        private static readonly DependencyPropertyKey IdentifierPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Identifier), typeof(VolumeIdentifier), typeof(VolumeItemVM<TDbEntity>),
                 new PropertyMetadata(VolumeIdentifier.Empty));
 
         /// <summary>
@@ -76,7 +60,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         #endregion
         #region Type Property Members
 
-        private static readonly DependencyPropertyKey TypePropertyKey = DependencyProperty.RegisterReadOnly(nameof(Type), typeof(DriveType), typeof(VolumeItemVM),
+        private static readonly DependencyPropertyKey TypePropertyKey = DependencyProperty.RegisterReadOnly(nameof(Type), typeof(DriveType), typeof(VolumeItemVM<TDbEntity>),
                 new PropertyMetadata(DriveType.Unknown));
 
         /// <summary>
@@ -91,25 +75,9 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         public DriveType Type { get => (DriveType)GetValue(TypeProperty); private set => SetValue(TypePropertyKey, value); }
 
         #endregion
-        #region FileSystemDisplayName Property Members
-
-        private static readonly DependencyPropertyKey FileSystemDisplayNamePropertyKey = DependencyProperty.RegisterReadOnly(nameof(FileSystemDisplayName), typeof(string), typeof(VolumeItemVM), new PropertyMetadata(""));
-
-        /// <summary>
-        /// Identifies the <see cref="FileSystemDisplayName"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty FileSystemDisplayNameProperty = FileSystemDisplayNamePropertyKey.DependencyProperty;
-
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
-        public string FileSystemDisplayName { get => GetValue(FileSystemDisplayNameProperty) as string; private set => SetValue(FileSystemDisplayNamePropertyKey, value); }
-
-        #endregion
         #region Status Property Members
 
-        private static readonly DependencyPropertyKey StatusPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Status), typeof(VolumeStatus), typeof(VolumeItemVM),
+        private static readonly DependencyPropertyKey StatusPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Status), typeof(VolumeStatus), typeof(VolumeItemVM<TDbEntity>),
                 new PropertyMetadata(VolumeStatus.Unknown));
 
         /// <summary>
@@ -126,7 +94,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         #endregion
         #region IsReadOnly Property Members
 
-        private static readonly DependencyPropertyKey IsReadOnlyPropertyKey = DependencyProperty.RegisterReadOnly(nameof(IsReadOnly), typeof(bool?), typeof(VolumeItemVM),
+        private static readonly DependencyPropertyKey IsReadOnlyPropertyKey = DependencyProperty.RegisterReadOnly(nameof(IsReadOnly), typeof(bool?), typeof(VolumeItemVM<TDbEntity>),
                 new PropertyMetadata(null));
 
         /// <summary>
@@ -141,26 +109,9 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         public bool? IsReadOnly { get => (bool?)GetValue(IsReadOnlyProperty); private set => SetValue(IsReadOnlyPropertyKey, value); }
 
         #endregion
-        #region EffectiveReadOnly Property Members
-
-        private static readonly DependencyPropertyKey EffectiveReadOnlyPropertyKey = DependencyProperty.RegisterReadOnly(nameof(EffectiveReadOnly), typeof(bool), typeof(VolumeItemVM),
-                new PropertyMetadata(false));
-
-        /// <summary>
-        /// Identifies the <see cref="EffectiveReadOnly"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty EffectiveReadOnlyProperty = EffectiveReadOnlyPropertyKey.DependencyProperty;
-
-        /// <summary>
-        /// Gets .
-        /// </summary>
-        /// <value>The .</value>
-        public bool EffectiveReadOnly { get => (bool)GetValue(EffectiveReadOnlyProperty); private set => SetValue(EffectiveReadOnlyPropertyKey, value); }
-
-        #endregion
         #region MaxNameLength Property Members
 
-        private static readonly DependencyPropertyKey MaxNameLengthPropertyKey = DependencyProperty.RegisterReadOnly(nameof(MaxNameLength), typeof(uint?), typeof(VolumeItemVM),
+        private static readonly DependencyPropertyKey MaxNameLengthPropertyKey = DependencyProperty.RegisterReadOnly(nameof(MaxNameLength), typeof(uint?), typeof(VolumeItemVM<TDbEntity>),
                 new PropertyMetadata(null));
 
         /// <summary>
@@ -175,21 +126,87 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         public uint? MaxNameLength { get => (uint?)GetValue(MaxNameLengthProperty); private set => SetValue(MaxNameLengthPropertyKey, value); }
 
         #endregion
-        #region EffectiveMaxNameLength Property Members
+        #region Notes Property Members
 
-        private static readonly DependencyPropertyKey EffectiveMaxNameLengthPropertyKey = DependencyProperty.RegisterReadOnly(nameof(EffectiveMaxNameLength), typeof(uint), typeof(VolumeItemVM),
-                new PropertyMetadata(0u));
+        private static readonly DependencyPropertyKey NotesPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Notes), typeof(string), typeof(VolumeItemVM<TDbEntity>), new PropertyMetadata(""));
 
         /// <summary>
-        /// Identifies the <see cref="EffectiveMaxNameLength"/> dependency property.
+        /// Identifies the <see cref="Notes"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty EffectiveMaxNameLengthProperty = EffectiveMaxNameLengthPropertyKey.DependencyProperty;
+        public static readonly DependencyProperty NotesProperty = NotesPropertyKey.DependencyProperty;
 
         /// <summary>
-        /// Gets .
+        /// Gets or sets .
         /// </summary>
         /// <value>The .</value>
-        public uint EffectiveMaxNameLength { get => (uint)GetValue(EffectiveMaxNameLengthProperty); private set => SetValue(EffectiveMaxNameLengthPropertyKey, value); }
+        public string Notes { get => GetValue(NotesProperty) as string; private set => SetValue(NotesPropertyKey, value); }
+
+        #endregion
+
+        protected VolumeItemVM([DisallowNull] TDbEntity model)
+            : base(model)
+        {
+            DisplayName = model.DisplayName;
+            Identifier = model.Identifier;
+            MaxNameLength = model.MaxNameLength;
+            Notes = model.Notes;
+            IsReadOnly = model.ReadOnly;
+            Status = model.Status;
+            Type = model.Type;
+            VolumeName = model.VolumeName;
+        }
+
+        protected override void OnNestedModelPropertyChanged(string propertyName)
+        {
+            switch (propertyName)
+            {
+                case nameof(VolumeListItemWithFileSystem.DisplayName):
+                    Dispatcher.CheckInvoke(() => DisplayName = Model?.DisplayName ?? "");
+                    break;
+                case nameof(VolumeListItemWithFileSystem.Identifier):
+                    Dispatcher.CheckInvoke(() => Identifier = Model?.Identifier ?? VolumeIdentifier.Empty);
+                    break;
+                case nameof(VolumeListItemWithFileSystem.MaxNameLength):
+                    Dispatcher.CheckInvoke(() => MaxNameLength = Model?.MaxNameLength);
+                    break;
+                case nameof(VolumeListItemWithFileSystem.Notes):
+                    Dispatcher.CheckInvoke(() => Notes = Model?.Notes ?? "");
+                    break;
+                case nameof(VolumeListItemWithFileSystem.ReadOnly):
+                    Dispatcher.CheckInvoke(() => IsReadOnly = Model?.ReadOnly);
+                    break;
+                case nameof(VolumeListItemWithFileSystem.Status):
+                    Dispatcher.CheckInvoke(() => Status = Model?.Status ?? VolumeStatus.Unknown);
+                    break;
+                case nameof(VolumeListItemWithFileSystem.Type):
+                    Dispatcher.CheckInvoke(() => Type = Model?.Type ?? DriveType.Unknown);
+                    break;
+                case nameof(VolumeListItemWithFileSystem.VolumeName):
+                    Dispatcher.CheckInvoke(() => VolumeName = Model?.VolumeName ?? "");
+                    break;
+            }
+        }
+    }
+
+    /// <summary>
+    /// View Model for the <see cref="FileSystemsPageVM.Volumes"/> listing in the <see cref="FileSystemsPageVM"/> view model.
+    /// </summary>
+    public sealed class VolumeItemVM : VolumeItemVM<VolumeListItem>
+    {
+        #region RootPath Property Members
+
+        private static readonly DependencyPropertyKey RootPathPropertyKey = DependencyProperty.RegisterReadOnly(nameof(RootPath), typeof(string), typeof(VolumeItemVM), new PropertyMetadata(""));
+
+        /// <summary>
+        /// Identifies the <see cref="RootPath"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty RootPathProperty = RootPathPropertyKey.DependencyProperty;
+
+        /// <summary>
+        /// Gets or sets .
+        /// </summary>
+        /// <value>The .</value>
+        public string RootPath { get => GetValue(RootPathProperty) as string; private set => SetValue(RootPathPropertyKey, value); }
 
         #endregion
         #region PersonalTagCount Property Members
@@ -243,71 +260,19 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         public long AccessErrorCount { get => (long)GetValue(AccessErrorCountProperty); private set => SetValue(AccessErrorCountPropertyKey, value); }
 
         #endregion
-        #region Notes Property Members
 
-        private static readonly DependencyPropertyKey NotesPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Notes), typeof(string), typeof(VolumeItemVM), new PropertyMetadata(""));
-
-        /// <summary>
-        /// Identifies the <see cref="Notes"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty NotesProperty = NotesPropertyKey.DependencyProperty;
-
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
-        public string Notes { get => GetValue(NotesProperty) as string; private set => SetValue(NotesPropertyKey, value); }
-
-        #endregion
-
-        internal VolumeItemVM([DisallowNull] VolumeListItemWithFileSystem model)
-            : base(model)
+        public VolumeItemVM(VolumeListItem model) : base(model)
         {
-            DisplayName = model.DisplayName;
-            Identifier = model.Identifier;
-            MaxNameLength = model.MaxNameLength;
-            Notes = model.Notes;
-            IsReadOnly = model.ReadOnly;
             RootPath = model.RootPath;
             AccessErrorCount = model.AccessErrorCount;
             PersonalTagCount = model.PersonalTagCount;
             SharedTagCount = model.SharedTagCount;
-            Status = model.Status;
-            Type = model.Type;
-            VolumeName = model.VolumeName;
-            FileSystemDisplayName = model.FileSystemDisplayName;
-            EffectiveReadOnly = model.EffectiveReadOnly;
-            EffectiveMaxNameLength = model.EffectiveMaxNameLength;
         }
 
         protected override void OnNestedModelPropertyChanged(string propertyName)
         {
             switch (propertyName)
             {
-                case nameof(VolumeListItemWithFileSystem.FileSystemDisplayName):
-                    Dispatcher.CheckInvoke(() => FileSystemDisplayName = Model?.FileSystemDisplayName ?? "");
-                    break;
-                case nameof(VolumeListItemWithFileSystem.EffectiveReadOnly):
-                    Dispatcher.CheckInvoke(() => EffectiveReadOnly = Model?.EffectiveReadOnly ?? false);
-                    break;
-                case nameof(VolumeListItemWithFileSystem.EffectiveMaxNameLength):
-                    Dispatcher.CheckInvoke(() => EffectiveMaxNameLength = Model?.EffectiveMaxNameLength ?? 0u);
-                    break;
-                case nameof(VolumeListItemWithFileSystem.DisplayName):
-                    Dispatcher.CheckInvoke(() => DisplayName = Model?.DisplayName ?? "");
-                    break;
-                case nameof(VolumeListItemWithFileSystem.Identifier):
-                    Dispatcher.CheckInvoke(() => Identifier = Model?.Identifier ?? VolumeIdentifier.Empty);
-                    break;
-                case nameof(VolumeListItemWithFileSystem.MaxNameLength):
-                    Dispatcher.CheckInvoke(() => MaxNameLength = Model?.MaxNameLength);
-                    break;
-                case nameof(VolumeListItemWithFileSystem.Notes):
-                    Dispatcher.CheckInvoke(() => Notes = Model?.Notes ?? "");
-                    break;
-                case nameof(VolumeListItemWithFileSystem.ReadOnly):
-                    Dispatcher.CheckInvoke(() => IsReadOnly = Model?.ReadOnly);
-                    break;
                 case nameof(VolumeListItemWithFileSystem.RootPath):
                     Dispatcher.CheckInvoke(() => RootPath = Model?.RootPath ?? "");
                     break;
@@ -320,18 +285,12 @@ namespace FsInfoCat.Desktop.ViewModel.Local
                 case nameof(VolumeListItemWithFileSystem.SharedTagCount):
                     Dispatcher.CheckInvoke(() => SharedTagCount = Model?.SharedTagCount ?? 0L);
                     break;
-                case nameof(VolumeListItemWithFileSystem.Status):
-                    Dispatcher.CheckInvoke(() => Status = Model?.Status ?? VolumeStatus.Unknown);
-                    break;
-                case nameof(VolumeListItemWithFileSystem.Type):
-                    Dispatcher.CheckInvoke(() => Type = Model?.Type ?? DriveType.Unknown);
-                    break;
-                case nameof(VolumeListItemWithFileSystem.VolumeName):
-                    Dispatcher.CheckInvoke(() => VolumeName = Model?.VolumeName ?? "");
+                default:
+                    base.OnNestedModelPropertyChanged(propertyName);
                     break;
             }
         }
 
-        protected override DbSet<VolumeListItemWithFileSystem> GetDbSet(LocalDbContext dbContext) => dbContext.VolumeListingWithFileSystem;
+        protected override DbSet<VolumeListItem> GetDbSet(LocalDbContext dbContext) => dbContext.VolumeListing;
     }
 }

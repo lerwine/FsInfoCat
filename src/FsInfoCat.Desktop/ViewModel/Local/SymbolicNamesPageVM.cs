@@ -9,7 +9,10 @@ using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel.Local
 {
-    public class SymbolicNamesPageVM : DbEntityListingPageVM<SymbolicNameListItem, SymbolicNameItemVM>
+    /// <summary>
+    /// View Model for <see cref="View.Local.SymbolicNamesPage"/>.
+    /// </summary>
+    public class SymbolicNamesPageVM : DbEntityListingPageVM<SymbolicNameListItem, SymbolicNameWithFileSystemItemVM>
     {
         #region IsEditingViewOptions Property Members
 
@@ -115,7 +118,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 
         internal Task<int> LoadAsync(bool? isInactive)
         {
-            return BgOps.FromAsync("Loading items", "Connecting to database...", isInactive, LoadItemsAsync);
+            return MainVM.BgOpFromAsync("Loading items", "Connecting to database...", isInactive, LoadItemsAsync);
         }
 
         private async Task<int> LoadItemsAsync(bool? isInactive, IWindowsStatusListener statusListener)
@@ -133,7 +136,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             }
             else
                 items = from s in dbContext.SymbolicNameListing select s;
-            return await OnEntitiesLoaded(items, statusListener, entity => new SymbolicNameItemVM(entity));
+            return await OnEntitiesLoaded(items, statusListener, entity => new SymbolicNameWithFileSystemItemVM(entity));
         }
 
         protected override DbSet<SymbolicNameListItem> GetDbSet(LocalDbContext dbContext) => dbContext.SymbolicNameListing;
@@ -152,12 +155,12 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             throw new NotImplementedException();
         }
 
-        protected override bool ShowModalItemEditWindow(SymbolicNameItemVM item, object parameter, out string saveProgressTitle)
+        protected override bool ShowModalItemEditWindow(SymbolicNameWithFileSystemItemVM item, object parameter, out string saveProgressTitle)
         {
             throw new NotImplementedException();
         }
 
-        protected override bool PromptItemDeleting(SymbolicNameItemVM item, object parameter, out string deleteProgressTitle)
+        protected override bool PromptItemDeleting(SymbolicNameWithFileSystemItemVM item, object parameter, out string deleteProgressTitle)
         {
             throw new NotImplementedException();
         }

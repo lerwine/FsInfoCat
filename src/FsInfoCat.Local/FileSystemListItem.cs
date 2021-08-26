@@ -1,6 +1,9 @@
 using System;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace FsInfoCat.Local
 {
@@ -29,6 +32,18 @@ namespace FsInfoCat.Local
             _primarySymbolicName = AddChangeTracker(nameof(PrimarySymbolicName), "", TrimmedNonNullStringCoersion.Default);
             _symbolicNameCount = AddChangeTracker(nameof(SymbolicNameCount), 0L);
             _volumeCount = AddChangeTracker(nameof(VolumeCount), 0L);
+        }
+
+        public async Task<(SymbolicName[], VolumeListItem[])> LoadRelatedItemsAsync(IStatusListener statusListener)
+        {
+            Guid id = Id;
+            using IServiceScope scope = Services.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = scope.ServiceProvider.GetRequiredService<LocalDbContext>();
+            SymbolicName[] symbolicNames = await dbContext.SymbolicNames.Where(n => n.FileSystemId == id).ToArrayAsync(statusListener.CancellationToken);
+            VolumeListItem[] volumes = await dbContext.VolumeListing.Where(v => v.FileSystemId == id).ToArrayAsync(statusListener.CancellationToken);
+            SymbolicNameCount = symbolicNames.LongLength;
+            VolumeCount = volumes.LongLength;
+            return (symbolicNames, volumes);
         }
     }
 }

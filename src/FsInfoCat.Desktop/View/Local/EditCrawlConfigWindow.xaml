@@ -212,6 +212,6 @@
             <Button Content="Cancel" Width="{DynamicResource DefaultButtonWidth}" Height="{DynamicResource DefaultButtonHeight}" Margin="{DynamicResource DefaultSpacingTopBottomLeft}" Command="{Binding CancelCommand, Mode=OneWay}" IsCancel="True"/>
             <Button Content="Save" Width="{DynamicResource DefaultButtonWidth}" Height="{DynamicResource DefaultButtonHeight}" Margin="{DynamicResource DefaultSpacing}" Command="{Binding SaveCommand, Mode=OneWay}" IsDefault="True"/>
         </WrapPanel>
-        <View:AsyncBgModalControl d:IsHidden="True" DataContext="{Binding OpAggregate, Mode=OneWay}" Grid.RowSpan="3" />
+        <View:AsyncBgModalControl d:IsHidden="True" DataContext="{Binding BgOps, Mode=OneWay}" Grid.RowSpan="3" />
     </Grid>
 </Window>

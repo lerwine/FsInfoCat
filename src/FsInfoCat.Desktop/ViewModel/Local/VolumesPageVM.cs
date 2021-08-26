@@ -8,8 +8,10 @@ using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel.Local
 {
-
-    public class VolumesPageVM : DbEntityListingPageVM<VolumeListItemWithFileSystem, VolumeItemVM>
+    /// <summary>
+    /// View Model for <see cref="View.Local.VolumesPage"/>.
+    /// </summary>
+    public class VolumesPageVM : DbEntityListingPageVM<VolumeListItemWithFileSystem, VolumeItemWithFileSystemVM>
     {
         #region StatusOptions Property Members
 
@@ -111,7 +113,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             }
             else
                 items = from v in dbContext.VolumeListingWithFileSystem select v;
-            return await OnEntitiesLoaded(items, statusListener, entity => new VolumeItemVM(entity));
+            return await OnEntitiesLoaded(items, statusListener, entity => new VolumeItemWithFileSystemVM(entity));
         }
 
         protected override DbSet<VolumeListItemWithFileSystem> GetDbSet(LocalDbContext dbContext) => dbContext.VolumeListingWithFileSystem;
@@ -133,10 +135,10 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             throw new NotImplementedException();
         }
 
-        protected override bool ShowModalItemEditWindow(VolumeItemVM item, object parameter, out string saveProgressTitle)
+        protected override bool ShowModalItemEditWindow(VolumeItemWithFileSystemVM item, object parameter, out string saveProgressTitle)
         {
             saveProgressTitle = string.Format(FsInfoCat.Properties.Resources.FormatMessage_SavingVolumeChanges, item.DisplayName);
-            return BgOps.FromAsync("Loading Details", "Connecting to database", item.Model.Id, LoadItemAsync).ContinueWith(task => Dispatcher.Invoke(() =>
+            return MainVM.BgOpFromAsync("Loading Details", "Connecting to database", item.Model.Id, LoadItemAsync).ContinueWith(task => Dispatcher.Invoke(() =>
             {
                 Volume entity = task.Result;
                 if (entity is null)
@@ -153,7 +155,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             return await dbContext.Volumes.FindAsync(id);
         }
 
-        protected override bool PromptItemDeleting(VolumeItemVM item, object parameter, out string deleteProgressTitle)
+        protected override bool PromptItemDeleting(VolumeItemWithFileSystemVM item, object parameter, out string deleteProgressTitle)
         {
             using IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
             deleteProgressTitle = string.Format(FsInfoCat.Properties.Resources.FormatMessage_DeletingVolume, item.DisplayName);

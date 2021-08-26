@@ -1,29 +1,13 @@
 using FsInfoCat.Local;
+using System;
 using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel.Local
 {
-    public abstract class DbEntityItemDetailViewModel<TDbEntity, TItemVM> : DependencyObject, IHasAsyncWindowsBackgroundOperationManager
+    public abstract class DbEntityItemDetailViewModel<TDbEntity, TItemVM> : DependencyObject
         where TDbEntity : LocalDbEntity, new()
         where TItemVM : DbEntityItemVM<TDbEntity>
     {
-        #region BgOps Property Members
-
-        private static readonly DependencyPropertyKey BgOpsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(BgOps), typeof(AsyncOps.AsyncBgModalVM), typeof(DbEntityItemDetailViewModel<TDbEntity, TItemVM>),
-                new PropertyMetadata(null));
-
-        /// <summary>
-        /// Identifies the <see cref="BgOps"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty BgOpsProperty = BgOpsPropertyKey.DependencyProperty;
-
-        /// <summary>
-        /// Gets the asynchronous operation view model.
-        /// </summary>
-        /// <value>The view model to be bound to the <see cref="View.AsyncBgModalControl"/>.</value>
-        public AsyncOps.AsyncBgModalVM BgOps => (AsyncOps.AsyncBgModalVM)GetValue(BgOpsProperty);
-
-        #endregion
         #region CurrentItem Property Members
 
         /// <summary>
@@ -61,24 +45,5 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         protected abstract void OnCurrentItemPropertyChanged(TItemVM oldValue, TItemVM newValue);
 
         #endregion
-
-        public DbEntityItemDetailViewModel()
-        {
-            SetValue(BgOpsPropertyKey, new AsyncOps.AsyncBgModalVM());
-        }
-
-        IAsyncWindowsBackgroundOperationManager IHasAsyncWindowsBackgroundOperationManager.GetAsyncBackgroundOperationManager()
-        {
-            if (CheckAccess())
-                return BgOps;
-            return Dispatcher.Invoke(() => BgOps);
-        }
-
-        IAsyncBackgroundOperationManager IHasAsyncBackgroundOperationManager.GetAsyncBackgroundOperationManager()
-        {
-            if (CheckAccess())
-                return BgOps;
-            return Dispatcher.Invoke(() => BgOps);
-        }
     }
 }

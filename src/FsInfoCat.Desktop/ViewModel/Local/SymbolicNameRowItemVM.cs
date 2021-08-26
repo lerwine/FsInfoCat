@@ -1,15 +1,15 @@
-using FsInfoCat.Local;
-using Microsoft.EntityFrameworkCore;
+﻿using FsInfoCat.Local;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel.Local
 {
-    public class SymbolicNameItemVM : DbEntityItemVM<SymbolicNameListItem>
+    public abstract class SymbolicNameRowItemVM<TDbEntity> : DbEntityItemVM<TDbEntity>
+        where TDbEntity : SymbolicNameRow, new()
     {
         #region IsInactive Property Members
 
-        private static readonly DependencyPropertyKey IsInactivePropertyKey = DependencyProperty.RegisterReadOnly(nameof(IsInactive), typeof(bool), typeof(SymbolicNameItemVM),
+        private static readonly DependencyPropertyKey IsInactivePropertyKey = DependencyProperty.RegisterReadOnly(nameof(IsInactive), typeof(bool), typeof(SymbolicNameRowItemVM<TDbEntity>),
                 new PropertyMetadata(false));
 
         /// <summary>
@@ -26,7 +26,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         #endregion
         #region Name Property Members
 
-        private static readonly DependencyPropertyKey NamePropertyKey = DependencyProperty.RegisterReadOnly(nameof(Name), typeof(string), typeof(SymbolicNameItemVM), new PropertyMetadata(""));
+        private static readonly DependencyPropertyKey NamePropertyKey = DependencyProperty.RegisterReadOnly(nameof(Name), typeof(string), typeof(SymbolicNameRowItemVM<TDbEntity>), new PropertyMetadata(""));
 
         /// <summary>
         /// Identifies the <see cref="Name"/> dependency property.
@@ -42,7 +42,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         #endregion
         #region Notes Property Members
 
-        private static readonly DependencyPropertyKey NotesPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Notes), typeof(string), typeof(SymbolicNameItemVM), new PropertyMetadata(""));
+        private static readonly DependencyPropertyKey NotesPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Notes), typeof(string), typeof(SymbolicNameRowItemVM<TDbEntity>), new PropertyMetadata(""));
 
         /// <summary>
         /// Identifies the <see cref="Notes"/> dependency property.
@@ -58,7 +58,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         #endregion
         #region Priority Property Members
 
-        private static readonly DependencyPropertyKey PriorityPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Priority), typeof(int), typeof(SymbolicNameItemVM),
+        private static readonly DependencyPropertyKey PriorityPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Priority), typeof(int), typeof(SymbolicNameRowItemVM<TDbEntity>),
                 new PropertyMetadata(0));
 
         /// <summary>
@@ -73,39 +73,18 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         public int Priority { get => (int)GetValue(PriorityProperty); private set => SetValue(PriorityPropertyKey, value); }
 
         #endregion
-        #region FileSystemDisplayName Property Members
-
-        private static readonly DependencyPropertyKey FileSystemDisplayNamePropertyKey = DependencyProperty.RegisterReadOnly(nameof(FileSystemDisplayName), typeof(string), typeof(SymbolicNameItemVM), new PropertyMetadata(""));
-
-        /// <summary>
-        /// Identifies the <see cref="FileSystemDisplayName"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty FileSystemDisplayNameProperty = FileSystemDisplayNamePropertyKey.DependencyProperty;
-
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
-        public string FileSystemDisplayName { get => GetValue(FileSystemDisplayNameProperty) as string; private set => SetValue(FileSystemDisplayNamePropertyKey, value); }
-
-        #endregion
-
-        public SymbolicNameItemVM([DisallowNull] SymbolicNameListItem model) : base(model)
+        protected SymbolicNameRowItemVM([DisallowNull] TDbEntity model) : base(model)
         {
             Name = model.Name;
             IsInactive = model.IsInactive;
             Notes = model.Notes;
             Priority = model.Priority;
-            FileSystemDisplayName = model.FileSystemDisplayName;
         }
 
         protected override void OnNestedModelPropertyChanged(string propertyName)
         {
             switch (propertyName)
             {
-                case nameof(SymbolicNameListItem.FileSystemDisplayName):
-                    Dispatcher.CheckInvoke(() => FileSystemDisplayName = Model?.FileSystemDisplayName ?? "");
-                    break;
                 case nameof(SymbolicNameListItem.IsInactive):
                     Dispatcher.CheckInvoke(() => IsInactive = Model?.IsInactive ?? false);
                     break;
@@ -120,7 +99,5 @@ namespace FsInfoCat.Desktop.ViewModel.Local
                     break;
             }
         }
-
-        protected override DbSet<SymbolicNameListItem> GetDbSet(LocalDbContext dbContext) => dbContext.SymbolicNameListing;
     }
 }

@@ -14,6 +14,9 @@ using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel.Local
 {
+    /// <summary>
+    /// View model for <see cref="View.Local.EditSymbolicNameWindow"/>
+    /// </summary>
     public class EditSymbolicNameVM : EditDbEntityVM<SymbolicName>
     {
         #region Name Property Members

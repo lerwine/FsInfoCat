@@ -44,19 +44,47 @@
             <Button Grid.Column="1" Margin="{DynamicResource DefaultSpacingTopLeft}" Style="{DynamicResource FilterButton}" Command="{Binding ShowViewOptions, Mode=OneWay}"/>
             <Button Grid.Column="2" Margin="{DynamicResource DefaultSpacingTopLeftRight}" Style="{DynamicResource AddNewButton}" Command="{Binding NewItemClick, Mode=OneWay}"/>
             <DataGrid ItemsSource="{Binding Items, Mode=OneWay}" AutoGenerateColumns="False" Margin="{DynamicResource DefaultSpacingLeftRight}" IsReadOnly="True"
-                  SelectedValue="{Binding ItemSelection.CurrentItem}" Grid.Row="1" Grid.ColumnSpan="3">
+                  SelectedValue="{Binding SelectedItem}" Grid.Row="1" Grid.ColumnSpan="3" SelectionMode="Single">
                 <DataGrid.Columns>
                     <DataGridTextColumn Binding="{Binding DisplayName, Mode=OneWay}" IsReadOnly="True" Header="{x:Static res:Resources.DisplayName_Name}" Width="*"/>
                     <DataGridTextColumn Binding="{Binding DefaultDriveType, Mode=OneWay}" IsReadOnly="True" Header="{x:Static res:Resources.DisplayName_DefaultDriveType}"/>
                 </DataGrid.Columns>
+                <DataGrid.RowDetailsTemplate>
+                    <DataTemplate>
+                        <local:FileSystemDetailUserControl/>
+                    </DataTemplate>
+                </DataGrid.RowDetailsTemplate>
             </DataGrid>
         </Grid>
-        <StackPanel Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"
-                    Visibility="{Binding ItemSelection.CurrentItem, Converter={StaticResource InverseObjectToVisibilityConverter}}" Margin="{DynamicResource DefaultSpacingLeft}" d:IsHidden="True">
-            <TextBlock Text="No file system type to dispay" HorizontalAlignment="Center" />
-        </StackPanel>
-        <local:FileSystemDetailUserControl Grid.Column="1" Margin="{DynamicResource DefaultSpacingLeft}" DataContext="{Binding ItemSelection, Mode=OneWay}"/>
-        <GridSplitter Grid.Column="1" HorizontalAlignment="Left" Grid.RowSpan="2" Style="{DynamicResource VerticalGridSplitterStyle}"/>
-        <View:AsyncBgModalControl Grid.ColumnSpan="2" DataContext="{Binding BgOps, Mode=OneWay}" d:IsHidden="True" />
+        <Grid Grid.Column="1" Margin="{DynamicResource DefaultSpacingLeft}">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Label Content="Symbolic Names"/>
+                <Button Grid.Column="1" Style="{DynamicResource AddNewButton}" ToolTip="Add new Symbolic Name"/>
+                <DataGrid Grid.Row="1" Grid.ColumnSpan="2"></DataGrid>
+            </Grid>
+            <Grid Grid.Row="1" Margin="{DynamicResource DefaultSpacingTop}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Label Content="Volumes"/>
+                <Button Grid.Column="1" Style="{DynamicResource AddNewButton}" ToolTip="Add new Volume Record"/>
+                <DataGrid Grid.Row="1" Grid.ColumnSpan="2"></DataGrid>
+            </Grid>
+            <GridSplitter Grid.Row="1" VerticalAlignment="Top" Style="{DynamicResource HorizontalGridSplitterStyle}"/>
+        </Grid>
+        <GridSplitter Grid.Column="1" HorizontalAlignment="Left" Style="{DynamicResource VerticalGridSplitterStyle}"/>
     </Grid>
 </Page>

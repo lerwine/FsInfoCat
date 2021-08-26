@@ -16,6 +16,9 @@ using System.Windows.Threading;
 
 namespace FsInfoCat.Desktop.ViewModel.Local
 {
+    /// <summary>
+    /// View Model for <see cref="View.Local.CrawlConfigurationsPage"/>.
+    /// </summary>
     public class CrawlConfigurationsPageVM : DbEntityListingPageVM<CrawlConfigListItem, CrawlConfigItemVM>
     {
         #region ShowLogs Command Property Members
@@ -196,12 +199,12 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 
         protected async Task<CrawlConfiguration> AddNewItemAsync(object parameter)
         {
-            (string, Subdirectory)? result = await Dispatcher.Invoke(() => EditCrawlConfigVM.BrowseForFolderAsync(null, BgOps));
+            (string, Subdirectory)? result = await Dispatcher.Invoke(() => EditCrawlConfigVM.BrowseForFolderAsync(null, MainVM.GetAsyncBgModalVM()));
             while (result?.Item2.CrawlConfiguration is not null)
             {
                 Dispatcher.Invoke(() => MessageBox.Show(Application.Current.MainWindow, "Not Available", "That subdirectory already has a crawl configuration.",
                     MessageBoxButton.OK, MessageBoxImage.Error));
-                result = await Dispatcher.Invoke(() => EditCrawlConfigVM.BrowseForFolderAsync(null, BgOps));
+                result = await Dispatcher.Invoke(() => EditCrawlConfigVM.BrowseForFolderAsync(null, MainVM.GetAsyncBgModalVM()));
             }
             string path = result?.Item1;
             return string.IsNullOrEmpty(path) ? null : await Dispatcher.InvokeAsync(() => ShowEditNewDialog(path), DispatcherPriority.Background);
@@ -225,13 +228,13 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         protected override bool ShowModalItemEditWindow(CrawlConfigItemVM item, object parameter, out string saveProgressTitle)
         {
             saveProgressTitle = "Saving crawl configuration";
-            return BgOps.FromAsync("Loading Details", "Connecting to database", item.Model.Id, LoadItemAsync).ContinueWith(task => Dispatcher.Invoke(() =>
+            return MainVM.BgOpFromAsync("Loading Details", "Connecting to database", item.Model.Id, LoadItemAsync).ContinueWith(task => Dispatcher.Invoke(() =>
             {
                 CrawlConfiguration entity = task.Result;
                 if (entity is null)
                     return false;
                 EditCrawlConfigVM viewModel = new();
-                AttachedProperties.SetFullName(viewModel, item.FullName);
+                AttachedProperties.SetFullName(viewModel, item.RootPath);
                 return viewModel.ShowDialog(new View.Local.EditCrawlConfigWindow(), entity, false) ?? false;
             }), TaskContinuationOptions.OnlyOnRanToCompletion).Result;
         }

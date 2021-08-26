@@ -17,7 +17,7 @@ using System.Windows.Threading;
 
 namespace FsInfoCat.Desktop.ViewModel.Local
 {
-    public abstract class DbEntityListingPageVM<TDbEntity, TItemVM> : DependencyObject, INotifyNavigationContentChanged, IHasAsyncWindowsBackgroundOperationManager
+    public abstract class DbEntityListingPageVM<TDbEntity, TItemVM> : DependencyObject, INotifyNavigationContentChanged
            where TDbEntity : LocalDbEntity, new()
            where TItemVM : DbEntityItemVM<TDbEntity>
     {
@@ -80,23 +80,6 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         protected abstract void OnAddNewItem(object parameter);
 
         #endregion
-        #region BgOps Property Members
-
-        private static readonly DependencyPropertyKey BgOpsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(BgOps), typeof(AsyncOps.AsyncBgModalVM), typeof(DbEntityListingPageVM<TDbEntity, TItemVM>),
-                new PropertyMetadata());
-
-        /// <summary>
-        /// Identifies the <see cref="BgOps"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty BgOpsProperty = BgOpsPropertyKey.DependencyProperty;
-
-        /// <summary>
-        /// Gets .
-        /// </summary>
-        /// <value>The .</value>
-        public AsyncOps.AsyncBgModalVM BgOps => (AsyncOps.AsyncBgModalVM)GetValue(BgOpsProperty);
-
-        #endregion
 
         public DbEntityListingPageVM()
         {
@@ -107,12 +90,11 @@ namespace FsInfoCat.Desktop.ViewModel.Local
                 return;
 #endif
             Logger = App.GetLogger(this);
-            SetValue(BgOpsPropertyKey, new AsyncOps.AsyncBgModalVM());
         }
 
         internal Task<int> LoadItemsAsync()
         {
-            return BgOps.FromAsync("Loading items", "Connecting to database...", GetItemsLoaderFactory());
+            return MainVM.BgOpFromAsync("Loading items", "Connecting to database...", GetItemsLoaderFactory());
         }
 
         protected abstract Func<IWindowsStatusListener, Task<int>> GetItemsLoaderFactory();
@@ -246,7 +228,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         /// <remarks><see cref="OnChangesSaved(TItemVM, bool)"/> will be invoked if operation is successful.</remarks>
         protected internal Task<bool?> SaveChangesAsync([DisallowNull] TItemVM item, string saveProgressTitle)
         {
-            Task<bool?> task = BgOps.FromAsync(saveProgressTitle, "Connecting to database...", item.Model, SaveEntityAsync);
+            Task<bool?> task = MainVM.BgOpFromAsync(saveProgressTitle, "Connecting to database...", item.Model, SaveEntityAsync);
             task.ContinueWith(task =>
             {
                 bool? isNew = task.Result;
@@ -300,7 +282,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         protected internal virtual Task<bool?> DeleteItemAsync([DisallowNull] TItemVM item, string deleteProgressTitle)
         {
             VerifyAccess();
-            Task<bool?> task = BgOps.FromAsync(deleteProgressTitle, "Connecting to database...", item.Model, DeleteEntityAsync);
+            Task<bool?> task = MainVM.BgOpFromAsync(deleteProgressTitle, "Connecting to database...", item.Model, DeleteEntityAsync);
             task.ContinueWith(t =>
             {
                 if (t.Result ?? false)
@@ -355,26 +337,12 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 
         protected virtual void OnNavigatedFrom(MainVM mainVM)
         {
-            BgOps.CancelAll();
+            MainVM.GetAsyncBgModalVM().CancelAll();
         }
 
         void INotifyNavigationContentChanged.OnNavigatedTo(MainVM mainVM) => OnNavigatedTo(mainVM);
 
         void INotifyNavigationContentChanged.OnNavigatedFrom(MainVM mainVM) => OnNavigatedFrom(mainVM);
-
-        IAsyncWindowsBackgroundOperationManager IHasAsyncWindowsBackgroundOperationManager.GetAsyncBackgroundOperationManager()
-        {
-            if (CheckAccess())
-                return BgOps;
-            return Dispatcher.Invoke(() => BgOps);
-        }
-
-        IAsyncBackgroundOperationManager IHasAsyncBackgroundOperationManager.GetAsyncBackgroundOperationManager()
-        {
-            if (CheckAccess())
-                return BgOps;
-            return Dispatcher.Invoke(() => BgOps);
-        }
     }
 
     public abstract class DbEntityListingPageVM<TDbEntity, TItemVM, TSelectionVM> : DbEntityListingPageVM<TDbEntity, TItemVM>

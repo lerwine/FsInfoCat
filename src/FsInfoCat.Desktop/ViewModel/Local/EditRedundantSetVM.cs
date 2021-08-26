@@ -7,6 +7,9 @@ using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel.Local
 {
+    /// <summary>
+    /// View Model for <see cref="View.Local.EditRedundantSetWindow"/>.
+    /// </summary>
     public class EditRedundantSetVM : EditDbEntityVM<RedundantSet>
     {
         #region BinaryProperties Property Members

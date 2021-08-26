@@ -16,6 +16,9 @@ using System.Windows.Threading;
 
 namespace FsInfoCat.Desktop.ViewModel.Local
 {
+    /// <summary>
+    /// View Model for <see cref="View.Local.EditCrawlConfigWindow"/>.
+    /// </summary>
     public class EditCrawlConfigVM : EditDbEntityVM<CrawlConfiguration>, IHasSubdirectoryEntity
     {
         ///// <summary>

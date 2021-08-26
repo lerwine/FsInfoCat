@@ -5,6 +5,9 @@ using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel.Local
 {
+    /// <summary>
+    /// View model for <see cref="DbEntityListingPageVM{TDbEntity, TItemVM}.Items"/> in the <see cref="RedundantSetsPageVM"/> view model.
+    /// </summary>
     public class RedundantSetItemVM : DbEntityItemVM<RedundantSetListItem>
     {
         #region Notes Property Members

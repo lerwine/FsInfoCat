@@ -1,12 +1,21 @@
 using FsInfoCat.Local;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Threading;
 
 namespace FsInfoCat.Desktop.ViewModel.Local
 {
+    /// <summary>
+    /// View model for <see cref="View.Local.FileSystemDetailUserControl"/> and <see cref="DbEntityListingPageVM{TDbEntity, TItemVM}.Items"/>
+    /// in the <see cref="FileSystemsPageVM"/> view model.
+    /// </summary>
     public class FileSystemItemVM : DbEntityItemVM<FileSystemListItem>
     {
         #region ToggleCurrentItemActivation Property Members
@@ -245,11 +254,28 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         }
 
         #endregion
+        #region PrimarySymbolicName Property Members
+
+        private static readonly DependencyPropertyKey PrimarySymbolicNamePropertyKey = DependencyProperty.RegisterReadOnly(nameof(PrimarySymbolicName), typeof(string), typeof(FileSystemItemVM), new PropertyMetadata(""));
+
+        /// <summary>
+        /// Identifies the <see cref="PrimarySymbolicName"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty PrimarySymbolicNameProperty = PrimarySymbolicNamePropertyKey.DependencyProperty;
+
+        /// <summary>
+        /// Gets or sets .
+        /// </summary>
+        /// <value>The .</value>
+        public string PrimarySymbolicName { get => GetValue(PrimarySymbolicNameProperty) as string; private set => SetValue(PrimarySymbolicNamePropertyKey, value); }
+
+        #endregion
 
         internal FileSystemItemVM([DisallowNull] FileSystemListItem model)
             : base(model)
         {
             SymbolicNameCount = model.SymbolicNameCount;
+            PrimarySymbolicName = model.PrimarySymbolicName;
             VolumeCount = model.VolumeCount;
             DefaultDriveType = model.DefaultDriveType;
             DisplayName = model.DisplayName;
@@ -288,7 +314,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
                     Dispatcher.CheckInvoke(() => IsReadOnly = Model?.ReadOnly ?? false);
                     break;
                 case nameof(FileSystemListItem.PrimarySymbolicName):
-                    Dispatcher.CheckInvoke(() => IsReadOnly = Model?.ReadOnly ?? false);
+                    Dispatcher.CheckInvoke(() => PrimarySymbolicName = Model?.PrimarySymbolicName ?? "");
                     break;
                 case nameof(FileSystemListItem.SymbolicNameCount):
                     Dispatcher.CheckInvoke(() => SymbolicNameCount = Model?.SymbolicNameCount ?? 0L);
@@ -300,5 +326,13 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         }
 
         protected override DbSet<FileSystemListItem> GetDbSet(LocalDbContext dbContext) => dbContext.FileSystemListing;
+
+        public async Task<(SymbolicName[], VolumeListItem[])> LoadRelatedItemsAsync(IStatusListener statusListener)
+        {
+            FileSystemListItem item = await Dispatcher.InvokeAsync(() => Model, DispatcherPriority.Background, statusListener.CancellationToken);
+            if (item is null)
+                return (Array.Empty<SymbolicName>(), Array.Empty<VolumeListItem>());
+            return await item.LoadRelatedItemsAsync(statusListener);
+        }
     }
 }

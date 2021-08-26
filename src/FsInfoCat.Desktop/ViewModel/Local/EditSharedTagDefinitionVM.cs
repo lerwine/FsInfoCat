@@ -6,6 +6,9 @@ using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel.Local
 {
+    /// <summary>
+    /// View Model for <see cref="View.Local.EditSharedTagDefinitionWindow"/>.
+    /// </summary>
     public class EditSharedTagDefinitionVM : EditDbEntityVM<SharedTagDefinition>
     {
         #region IsInactive Property Members

@@ -6,6 +6,9 @@ using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel.Local
 {
+    /// <summary>
+    /// View model for <see cref="DbEntityListingPageVM{TDbEntity, TItemVM}.Items"/> in the <see cref="SharedTagDefinitionsPageVM"/> view model.
+    /// </summary>
     public class SharedTagDefinitionItemVM : DbEntityItemVM<SharedTagDefinitionListItem>
     {
         #region ToggleCurrentItemActivation Property Members
@@ -224,7 +227,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         #region VolumeTagCount Property Members
 
         private static readonly DependencyPropertyKey VolumeTagCountPropertyKey = DependencyProperty.RegisterReadOnly(nameof(VolumeTagCount), typeof(long), typeof(SharedTagDefinitionItemVM),
-                new PropertyMetadata(0, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as SharedTagDefinitionItemVM).OnVolumeTagCountPropertyChanged((long)e.OldValue, (long)e.NewValue)));
+                new PropertyMetadata(0L, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as SharedTagDefinitionItemVM).OnVolumeTagCountPropertyChanged((long)e.OldValue, (long)e.NewValue)));
 
         /// <summary>
         /// Identifies the <see cref="VolumeTagCount"/> dependency property.
@@ -251,7 +254,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         #region SubdirectoryTagCount Property Members
 
         private static readonly DependencyPropertyKey SubdirectoryTagCountPropertyKey = DependencyProperty.RegisterReadOnly(nameof(SubdirectoryTagCount), typeof(long), typeof(SharedTagDefinitionItemVM),
-                new PropertyMetadata(0, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as SharedTagDefinitionItemVM).OnSubdirectoryTagCountPropertyChanged((long)e.OldValue, (long)e.NewValue)));
+                new PropertyMetadata(0L, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as SharedTagDefinitionItemVM).OnSubdirectoryTagCountPropertyChanged((long)e.OldValue, (long)e.NewValue)));
 
         /// <summary>
         /// Identifies the <see cref="SubdirectoryTagCount"/> dependency property.
@@ -278,7 +281,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         #region FileTagCount Property Members
 
         private static readonly DependencyPropertyKey FileTagCountPropertyKey = DependencyProperty.RegisterReadOnly(nameof(FileTagCount), typeof(long), typeof(SharedTagDefinitionItemVM),
-                new PropertyMetadata(0, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as SharedTagDefinitionItemVM).OnFileTagCountPropertyChanged((long)e.OldValue, (long)e.NewValue)));
+                new PropertyMetadata(0L, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as SharedTagDefinitionItemVM).OnFileTagCountPropertyChanged((long)e.OldValue, (long)e.NewValue)));
 
         /// <summary>
         /// Identifies the <see cref="FileTagCount"/> dependency property.

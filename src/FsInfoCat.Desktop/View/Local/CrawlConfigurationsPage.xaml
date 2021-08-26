@@ -13,18 +13,12 @@
       Title="Craw Configurations">
     <Page.Resources>
         <cvt:BooleanToVisibilityConverter x:Key="VisibleIfTrueConverter" NullSource="Collapsed"/>
-        <cvt:ObjectToVisibilityConverter x:Key="ObjectToVisibilityConverter"/>
-        <cvt:ObjectToVisibilityConverter x:Key="InverseObjectToVisibilityConverter" NotNullSource="Collapsed" NullSource="Visible"/>
-        <cvt:CrawlStatusToStringConverter x:Key="CrawlStatusToDescription" Display="Description" />
         <cvt:CrawlStatusToStringConverter x:Key="CrawlStatusToCol" Display="ShortName" />
-        <cvt:DateTimeToStringConverter x:Key="DateTimeToString"/>
+        <cvt:CrawlStatusToStringConverter x:Key="CrawlStatusToClipboard" />
         <cvt:DateTimeToStringConverter x:Key="DateTimeToCol" Format="HH:mm:ss M/d/yyyy"/>
-        <cvt:DateTimeToStringConverter x:Key="CrawlStartToString" NullSource="(never started)"/>
         <cvt:DateTimeToStringConverter x:Key="CrawlStartToCol" NullSource="(never)" Format="HH:mm:ss M/d/yyyy"/>
         <cvt:DateTimeToStringConverter x:Key="NextCrawlToCol" NullSource="(none)" Format="HH:mm:ss M/d/yyyy"/>
-        <cvt:DateTimeToStringConverter x:Key="LastSynchronizedToString" NullSource="(not synchronized)"/>
-        <cvt:TimeSpanToStringConverter x:Key="TimeSpanToString" NullSource="(unlimited)"/>
-        <localCvt:CrawlConfigurationToAutoRescheduleString x:Key="CrawlConfigToAutoRescheduleString" NullSource="(none)"/>
+        <cvt:DateTimeToStringConverter x:Key="DateTimeToClipboard" Format="yyyy-MM-ddTHH:mm:ss"/>
     </Page.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -39,13 +33,13 @@
         <Label Content="Crawl Configurations" Padding="{DynamicResource DefaultSpacing}" FontWeight="Bold" />
         <Button Grid.Column="1" Margin="{DynamicResource DefaultSpacingTopLeft}" Style="{DynamicResource FilterButton}" Command="{Binding ShowViewOptions, Mode=OneWay}" ToolTip="Modify Listing Filter"/>
         <Button Grid.Column="2" Margin="{DynamicResource DefaultSpacingTopLeftRight}" Style="{DynamicResource AddNewButton}" Command="{Binding NewItemClick, Mode=OneWay}" ToolTip="Add New Crawl Configuration" />
-        <DataGrid Grid.Row="1" ItemsSource="{Binding Items, Mode=OneWay}" Margin="{DynamicResource DefaultSpacingLeftRight}" AutoGenerateColumns="False" IsReadOnly="True" SelectedValue="{Binding SelectedItem, Mode=TwoWay}" Grid.ColumnSpan="3" SelectionMode="Single">
+        <DataGrid Grid.Row="1" ItemsSource="{Binding Items, Mode=OneWay}" Margin="{DynamicResource DefaultSpacingLeftRight}" AutoGenerateColumns="False" IsReadOnly="True" Grid.ColumnSpan="3" SelectionMode="Single">
             <DataGrid.Columns>
-                <DataGridTextColumn Binding="{Binding DisplayName, Mode=OneWay}" IsReadOnly="True" Header="{x:Static res:Resources.DisplayName_Name}" Width="*"/>
-                <DataGridTextColumn Binding="{Binding StatusValue, Converter={StaticResource CrawlStatusToCol}, Mode=OneWay}" IsReadOnly="True" Header="{x:Static res:Resources.DisplayName_Status}" CanUserResize="True" Width="*"/>
-                <DataGridTextColumn Binding="{Binding LastCrawlStart, Converter={StaticResource CrawlStartToCol}, Mode=OneWay}" IsReadOnly="True" Header="{x:Static res:Resources.DisplayName_LastStart}"/>
-                <DataGridTextColumn Binding="{Binding LastCrawlEnd, Converter={StaticResource DateTimeToCol}, Mode=OneWay}" IsReadOnly="True" Header="{x:Static res:Resources.DisplayName_LastEnd}"/>
-                <DataGridTextColumn Binding="{Binding NextScheduledStart, Converter={StaticResource NextCrawlToCol}, Mode=OneWay}" IsReadOnly="True" Header="{x:Static res:Resources.DisplayName_NextStart}"/>
+                <DataGridTextColumn Binding="{Binding DisplayName, Mode=OneWay}" ClipboardContentBinding="{Binding DisplayName, Mode=OneWay}" IsReadOnly="True" Header="{x:Static res:Resources.DisplayName_Name}" Width="*"/>
+                <DataGridTextColumn Binding="{Binding StatusValue, Converter={StaticResource CrawlStatusToCol}, Mode=OneWay}" ClipboardContentBinding="{Binding StatusValue, Converter={StaticResource CrawlStatusToClipboard}, Mode=OneWay}" IsReadOnly="True" Header="{x:Static res:Resources.DisplayName_Status}" CanUserResize="True" Width="*"/>
+                <DataGridTextColumn Binding="{Binding LastCrawlStart, Converter={StaticResource CrawlStartToCol}, Mode=OneWay}" ClipboardContentBinding="{Binding LastCrawlStart, Converter={StaticResource DateTimeToClipboard}, Mode=OneWay}" IsReadOnly="True" Header="{x:Static res:Resources.DisplayName_LastStart}"/>
+                <DataGridTextColumn Binding="{Binding LastCrawlEnd, Converter={StaticResource DateTimeToCol}, Mode=OneWay}" ClipboardContentBinding="{Binding LastCrawlEnd, Converter={StaticResource DateTimeToClipboard}, Mode=OneWay}" IsReadOnly="True" Header="{x:Static res:Resources.DisplayName_LastEnd}"/>
+                <DataGridTextColumn Binding="{Binding NextScheduledStart, Converter={StaticResource NextCrawlToCol}, Mode=OneWay}" ClipboardContentBinding="{Binding NextScheduledStart, Converter={StaticResource DateTimeToClipboard}, Mode=OneWay}" IsReadOnly="True" Header="{x:Static res:Resources.DisplayName_NextStart}"/>
             </DataGrid.Columns>
             <DataGrid.RowDetailsTemplate>
                 <DataTemplate>
@@ -70,6 +64,5 @@
                 </StackPanel>
             </Border>
         </Border>
-        <View:AsyncBgModalControl Grid.ColumnSpan="3" Grid.RowSpan="2" d:IsHidden="True" DataContext="{Binding BgOps, Mode=OneWay}" />
     </Grid>
 </Page>
