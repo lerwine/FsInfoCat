@@ -30,6 +30,8 @@ namespace FsInfoCat
 
         public static IServiceScope CreateScope() => Host.Services.CreateScope();
 
+        public static T GetRequiredService<T>() => Host.Services.GetRequiredService<T>();
+
         private static string GetAppDataPath(string path, CultureInfo cultureInfo)
         {
             string name;

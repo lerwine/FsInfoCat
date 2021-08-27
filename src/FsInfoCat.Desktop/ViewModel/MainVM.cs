@@ -256,10 +256,20 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <param name="newValue">The new value of the <see cref="NavigatedContent"/> property.</param>
         protected virtual void OnNavigatedContentPropertyChanged(object oldValue, object newValue)
         {
-            if (oldValue is Page oldPage && oldPage.DataContext is INotifyNavigationContentChanged oldNavigated)
-                oldNavigated.OnNavigatedFrom(this);
-            if (newValue is Page newPage && newPage.DataContext is INotifyNavigationContentChanged newNavigated)
-                newNavigated.OnNavigatedTo(this);
+            if (oldValue is FrameworkElement oldContent)
+            {
+                if (oldContent.DataContext is INotifyNavigatedFrom navigatedFrom)
+                    navigatedFrom.OnNavigatedFrom();
+                if (oldContent.DataContext is INotifyNavigationContentChanged navigated)
+                    navigated.OnNavigatedFrom(this);
+            }
+            if (newValue is FrameworkElement newContent)
+            {
+                if (newContent.DataContext is INotifyNavigatedTo navigatedTo)
+                    navigatedTo.OnNavigatedTo();
+                if (newContent.DataContext is INotifyNavigationContentChanged navigated)
+                    navigated.OnNavigatedFrom(this);
+            }
         }
 
         #endregion

@@ -13,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace FsInfoCat.Desktop.View
+namespace FsInfoCat.Desktop.Local.FileSystems
 {
     /// <summary>
-    /// Interaction logic for AsyncBgModalControl.xaml
+    /// Interaction logic for ListingPage.xaml
     /// </summary>
-    public partial class AsyncBgModalControl : UserControl
+    public partial class ListingPage : Page
     {
-        public AsyncBgModalControl()
+        public ListingPage()
         {
             InitializeComponent();
         }
