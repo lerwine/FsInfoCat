@@ -56,20 +56,19 @@
             <MenuItem Header="Help" HorizontalAlignment="Right"/>
         </Menu>
         <Frame Grid.Row="1" Source="/View/Local/FileSystemsPage.xaml" Content="{Binding NavigatedContent, Mode=TwoWay}" />
-
         <Border DataContext="{DynamicResource AsyncJobFactoryService}" Grid.RowSpan="2" Background="{DynamicResource TranslucentBlack50pctBrush}" Visibility="{Binding IsBusy, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}">
-            <Viewbox Stretch="Uniform">
+            <Viewbox Stretch="Uniform" StretchDirection="DownOnly">
                 <ListView Background="{x:Null}" BorderBrush="{x:Null}" ItemsSource="{Binding Items, Mode=OneWay}">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <Border>
+                                <View:JobStatusControl/>
                             </Border>
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>
             </Viewbox>
         </Border>
-        <View:AsyncBgModalControl Grid.RowSpan="2" d:IsHidden="True" DataContext="{Binding BgOps, Mode=OneWay}" />
         <StatusBar Grid.Row="2">
             <StatusBarItem>
                 <StackPanel Orientation="Horizontal">

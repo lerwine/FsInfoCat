@@ -14,7 +14,7 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
             private readonly ConcurrentStack<JobFactoryServiceViewModel> _viewModels = new();
             private JobFactoryServiceViewModel _viewModel;
 
-            internal AsyncJobService()
+            public AsyncJobService()
             {
                 _viewModel = (JobFactoryServiceViewModel)Application.Current.FindResource("AsyncJobFactoryService");
             }
