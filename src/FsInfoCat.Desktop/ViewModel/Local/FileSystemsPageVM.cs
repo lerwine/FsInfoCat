@@ -144,7 +144,9 @@ namespace FsInfoCat.Desktop.ViewModel.Local
                 _backingVolumes.Clear();
             }
             else
-                MainVM.BgOpFromAsync("Reading Data", "Loading related items", newValue.LoadRelatedItemsAsync).ContinueWith(task =>
+            {
+                IWindowsAsyncJobFactoryService service = Services.ServiceProvider.GetRequiredService<IWindowsAsyncJobFactoryService>();
+                service.RunAsync("Reading Data", "Loading related items", newValue.LoadRelatedItemsAsync).ContinueWith(task =>
                 {
                     if (task.IsCompletedSuccessfully)
                         Dispatcher.Invoke(() =>
@@ -164,6 +166,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
                             _backingVolumes.Clear();
                         });
                 });
+            }
         }
 
         #endregion
@@ -267,7 +270,8 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         protected override bool ShowModalItemEditWindow(FileSystemItemVM item, object parameter, out string saveProgressTitle)
         {
             saveProgressTitle = $"Saving File System Definition \"{item.DisplayName}\"";
-            return MainVM.BgOpFromAsync("Loading Details", "Connecting to database", item.Model.Id, LoadItemAsync).ContinueWith(task => Dispatcher.Invoke(() =>
+            IWindowsAsyncJobFactoryService service = Services.ServiceProvider.GetRequiredService<IWindowsAsyncJobFactoryService>();
+            return service.RunAsync("Loading Details", "Connecting to database", item.Model.Id, LoadItemAsync).ContinueWith(task => Dispatcher.Invoke(() =>
             {
                 FileSystem entity = task.Result;
                 if (entity is null)

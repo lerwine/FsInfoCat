@@ -44,79 +44,78 @@ namespace FsInfoCat.Collections
 
             class Accessor : Node.AccessorBase, ICollection<Node>
             {
-                private readonly StateSet _target;
 
                 internal Accessor(StateSet target) : base(target) { }
 
-                public int Count => _target.Count;
+                public int Count => Target.Count;
 
                 bool ICollection<Node>.IsReadOnly => false;
 
                 public void Add(Node item)
                 {
-                    Node previous = _target.Last;
+                    Node previous = Target.Last;
                     if (previous is null)
                     {
-                        _target.First = _target.Last = item;
-                        _target.Count = 1;
+                        Target.First = Target.Last = item;
+                        Target.Count = 1;
                     }
                     else
                     {
-                        _target.Count++;
+                        Target.Count++;
                         InsertOfState(item, previous);
-                        _target.Last = item;
+                        Target.Last = item;
                     }
                 }
 
                 public void Clear()
                 {
-                    if (_target.First is not null)
-                        ClearOfState(_target.First);
-                    _target.First = _target.Last = null;
-                    _target.Count = 0;
+                    if (Target.First is not null)
+                        ClearOfState(Target.First);
+                    Target.First = Target.Last = null;
+                    Target.Count = 0;
                 }
 
-                public bool Contains(Node item) => GetNodesOfState(_target.First).Contains(item);
+                public bool Contains(Node item) => GetNodesOfState(Target.First).Contains(item);
 
-                public void CopyTo(Node[] array, int arrayIndex) => GetNodesOfState(_target.First).ToList().CopyTo(array, arrayIndex);
+                public void CopyTo(Node[] array, int arrayIndex) => GetNodesOfState(Target.First).ToList().CopyTo(array, arrayIndex);
 
-                public IEnumerator<Node> GetEnumerator() => GetNodesOfState(_target.First).GetEnumerator();
+                public IEnumerator<Node> GetEnumerator() => GetNodesOfState(Target.First).GetEnumerator();
 
                 public bool Remove(Node item)
                 {
-                    if (item is null || _target.First is null)
+                    if (item is null || Target.First is null)
                         return false;
                     if (item.NextOfState is null)
                     {
-                        if (!ReferenceEquals(item, _target.Last))
+                        if (!ReferenceEquals(item, Target.Last))
                             return false;
-                        if ((_target.Last = item.PreviousOfState) is null)
+                        if ((Target.Last = item.PreviousOfState) is null)
                         {
-                            _target.First = null;
-                            _target.Count = 0;
+                            Target.First = null;
+                            Target.Count = 0;
                             return true;
                         }
                         RemoveOfState(item);
                     }
                     else if (item.PreviousOfState is null)
                     {
-                        if (!ReferenceEquals(item, _target.First))
+                        if (!ReferenceEquals(item, Target.First))
                             return false;
-                        _target.First = item.NextOfState;
+                        Target.First = item.NextOfState;
                     }
                     else
                     {
                         Node f = item;
                         while (f.PreviousOfState is not null)
                             f = f.PreviousOfState;
-                        if (!ReferenceEquals(f, _target.First))
+                        if (!ReferenceEquals(f, Target.First))
                             return false;
                     }
                     RemoveOfState(item);
                     return true;
                 }
 
-                IEnumerator IEnumerable.GetEnumerator() => GetNodesOfState(_target.First).ToArray().GetEnumerator();
+                IEnumerator IEnumerable.GetEnumerator() => GetNodesOfState(Target.First).ToArray().GetEnumerator();
             }
 
             public bool Contains(T item) => GetNodesInSet(First).Select(n => n.Value).Contains(item, _comparer);

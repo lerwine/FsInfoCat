@@ -10,6 +10,7 @@
         xmlns:converters="clr-namespace:FsInfoCat.Desktop.Converters" d:DataContext="{x:Type vm:MainVM}"
         Title="FS InfoCat" Height="600" Width="800" WindowState="Maximized">
     <Window.Resources>
+        <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
         <!--<converters:AccountToStringConverter x:Key="AccountConverter" NullSource="(not logged in)"/>-->
         <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
         <Style x:Key="ListViewItemContainerStyle1" TargetType="{x:Type ListViewItem}">
@@ -56,34 +57,18 @@
         </Menu>
         <Frame Grid.Row="1" Source="/View/Local/FileSystemsPage.xaml" Content="{Binding NavigatedContent, Mode=TwoWay}" />
 
-            <Border Grid.RowSpan="2" Background="{DynamicResource TranslucentBlack50pctBrush}">
-        <Viewbox Stretch="Uniform">
-                <ListView Background="{x:Null}" BorderBrush="{x:Null}">
+        <Border DataContext="{DynamicResource AsyncJobFactoryService}" Grid.RowSpan="2" Background="{DynamicResource TranslucentBlack50pctBrush}" Visibility="{Binding IsBusy, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}">
+            <Viewbox Stretch="Uniform">
+                <ListView Background="{x:Null}" BorderBrush="{x:Null}" ItemsSource="{Binding Items, Mode=OneWay}">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <Border>
-                                <Grid Width="200" Height="100">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto"/>
-                                        <RowDefinition/>
-                                        <RowDefinition Height="Auto"/>
-                                    </Grid.RowDefinitions>
-                                    <Border>
-                                        <TextBlock Text="Title"/>
-                                    </Border>
-                                    <Border>
-                                        <TextBlock Text="Message"/>
-                                    </Border>
-                                    <Border>
-                                        <Button Content="Cancel"/>
-                                    </Border>
-                                </Grid>
                             </Border>
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>
-        </Viewbox>
-            </Border>
+            </Viewbox>
+        </Border>
         <View:AsyncBgModalControl Grid.RowSpan="2" d:IsHidden="True" DataContext="{Binding BgOps, Mode=OneWay}" />
         <StatusBar Grid.Row="2">
             <StatusBarItem>

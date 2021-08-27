@@ -14,23 +14,6 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 {
     public class SubdirectoryItemVM : DbEntityItemVM<SubdirectoryListItemWithAncestorNames>
     {
-        #region BgOps Property Members
-
-        private static readonly DependencyPropertyKey BgOpsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(BgOps), typeof(AsyncOps.AsyncBgModalVM), typeof(SubdirectoryItemVM),
-                new PropertyMetadata(null));
-
-        /// <summary>
-        /// Identifies the <see cref="BgOps"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty BgOpsProperty = BgOpsPropertyKey.DependencyProperty;
-
-        /// <summary>
-        /// Gets .
-        /// </summary>
-        /// <value>The .</value>
-        public AsyncOps.AsyncBgModalVM BgOps => (AsyncOps.AsyncBgModalVM)GetValue(BgOpsProperty);
-
-        #endregion
         #region FullName Property Members
 
         private static readonly DependencyPropertyKey FullNamePropertyKey = DependencyProperty.RegisterReadOnly(nameof(FullName), typeof(string), typeof(SubdirectoryItemVM), new PropertyMetadata(""));
@@ -391,7 +374,6 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 
         public SubdirectoryItemVM(SubdirectoryListItemWithAncestorNames entity) : base(entity)
         {
-            SetValue(BgOpsPropertyKey, new AsyncOps.AsyncBgModalVM());
             Name = entity.Name;
             CreationTime = entity.CreationTime;
             LastAccessed = entity.LastAccessed;

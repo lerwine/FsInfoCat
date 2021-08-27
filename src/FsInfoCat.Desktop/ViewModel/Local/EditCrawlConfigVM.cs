@@ -3,9 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
@@ -19,7 +17,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
     /// <summary>
     /// View Model for <see cref="View.Local.EditCrawlConfigWindow"/>.
     /// </summary>
-    public class EditCrawlConfigVM : EditDbEntityVM<CrawlConfiguration>, IHasSubdirectoryEntity
+    public class EditCrawlConfigVM : EditDbEntityVM<CrawlConfiguration>
     {
         ///// <summary>
         ///// Instantiates a new <see cref="View.EditCrawlConfigWindow"/> to edit the properties of an existing <see cref="CrawlConfiguration"/>.
@@ -167,7 +165,8 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 
         private void OnSelectRootExecute(object parameter)
         {
-            BgOps.FromAsync("Initializing", "Getting start directory", Path, GetDirectoryAsync).ContinueWith(task => Dispatcher.Invoke(() =>
+            IWindowsAsyncJobFactoryService service = Services.ServiceProvider.GetRequiredService<IWindowsAsyncJobFactoryService>();
+            service.RunAsync("Initializing", "Getting start directory", Path, GetDirectoryAsync).ContinueWith(task => Dispatcher.Invoke(() =>
                 ShowFolderBrowserDialog((task.IsCompletedSuccessfully && task.Result is not null) ? task.Result.FullName : Environment.GetFolderPath(Environment.SpecialFolder.UserProfile))));
         }
 
@@ -175,13 +174,13 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         {
             using IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
             using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
-            Subdirectory subdirectory = await Subdirectory.FindByFullNameAsync(path, listener.CancellationToken, dbContext);
+            Subdirectory subdirectory = await Subdirectory.FindByFullNameAsync(path, dbContext, listener.CancellationToken);
             if (subdirectory is not null && subdirectory.CrawlConfiguration is null)
                 subdirectory.CrawlConfiguration = await dbContext.Entry(subdirectory).GetRelatedReferenceAsync(d => d.CrawlConfiguration, listener.CancellationToken);
             return subdirectory;
         }
 
-        internal static Task<(string, Subdirectory)?> BrowseForFolderAsync(string newPath, AsyncOps.AsyncBgModalVM bgOpManager)
+        internal static Task<(string, Subdirectory)?> BrowseForFolderAsync(string newPath)
         {
             using (System.Windows.Forms.FolderBrowserDialog dialog = new()
             {
@@ -194,15 +193,16 @@ namespace FsInfoCat.Desktop.ViewModel.Local
                 newPath = dialog.SelectedPath;
             }
 
-            return bgOpManager.FromAsync("Checking Availability", "Checking whether selected subdirectory is already configured", newPath, CheckPathAsync).ContinueWith<(string, Subdirectory)?>(task =>
-                (newPath, task.Result), TaskContinuationOptions.OnlyOnRanToCompletion);
+            IWindowsAsyncJobFactoryService service = Services.ServiceProvider.GetRequiredService<IWindowsAsyncJobFactoryService>();
+            return service.RunAsync("Checking Availability", "Checking whether selected subdirectory is already configured", newPath, CheckPathAsync)
+                .ContinueWith<(string, Subdirectory)?>(task => (newPath, task.Result), TaskContinuationOptions.OnlyOnRanToCompletion);
         }
 
         private void ShowFolderBrowserDialog(string newPath)
         {
             IEnumerable<string> errors = Validation.GetErrors(nameof(Path));
             Validation.ClearErrorMessages(nameof(Path));
-            BrowseForFolderAsync(newPath, BgOps).ContinueWith(task =>
+            BrowseForFolderAsync(newPath).ContinueWith(task =>
             {
                 if (task.IsCompletedSuccessfully)
                 {
@@ -1248,13 +1248,6 @@ namespace FsInfoCat.Desktop.ViewModel.Local
                 }
             }
             return await base.OnSaveChangesAsync(entry, dbContext, statusListener, force);
-        }
-
-        ISimpleIdentityReference<Subdirectory> IHasSubdirectoryEntity.GetSubdirectoryEntity() => CheckAccess() ? Root : Dispatcher.Invoke(() => Root);
-
-        public async Task<ISimpleIdentityReference<Subdirectory>> GetSubdirectoryEntityAsync([DisallowNull] IWindowsStatusListener statusListener)
-        {
-            return await Dispatcher.InvokeAsync(() => Root);
         }
 
         public record ConfigurationAndRoot(CrawlConfiguration Configuration, Subdirectory Root);

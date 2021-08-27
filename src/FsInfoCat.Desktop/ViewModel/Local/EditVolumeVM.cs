@@ -1,7 +1,6 @@
 using FsInfoCat.Local;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -19,7 +18,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
     /// <summary>
     /// View Model for <see cref="View.Local.EditVolumeWindow"/>.
     /// </summary>
-    public class EditVolumeVM : EditDbEntityVM<Volume>, IHasSubdirectoryEntity
+    public class EditVolumeVM : EditDbEntityVM<Volume>
     {
         #region DisplayName Property Members
 
@@ -438,7 +437,8 @@ namespace FsInfoCat.Desktop.ViewModel.Local
                     SelectedFileSystem = null;
                 return;
             }
-            BgOps.FromAsync("Loading data", "Getting file system options", PickFromActiveFileSystems.Value, ReloadFileSystemsAsync).ContinueWith(task => Dispatcher.Invoke(() =>
+            IWindowsAsyncJobFactoryService service = Services.ServiceProvider.GetRequiredService<IWindowsAsyncJobFactoryService>();
+            service.RunAsync("Loading data", "Getting file system options", PickFromActiveFileSystems.Value, ReloadFileSystemsAsync).ContinueWith(task => Dispatcher.Invoke(() =>
             {
                 _backingFileSystemOptions.Clear();
                 foreach (FileSystemListItem entity in task.Result)
@@ -508,7 +508,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
                 SelectedVolumeIdType = VolumeIdType.VSN;
                 VolumeId = VolumeIdentifier.Empty;
                 MaxNameLengthValue = DbConstants.DbColDefaultValue_MaxNameLength;
-                ExplicitMaxNameLength =false;
+                ExplicitMaxNameLength = false;
                 newValue.Notes.EmptyIfNullOrWhiteSpace();
                 RwFileSystemDefault = true;
                 SelectedVolumeStatus = VolumeStatus.Unknown;
@@ -592,7 +592,8 @@ namespace FsInfoCat.Desktop.ViewModel.Local
                     });
                 }
                 finally { Interlocked.Decrement(ref _ignoreFileSystemOptionsChange); }
-                result = BgOps.FromAsync("Loading data", "Getting file system options", displayOptions, ReloadFileSystemsAsync);
+                IWindowsAsyncJobFactoryService service = Services.ServiceProvider.GetRequiredService<IWindowsAsyncJobFactoryService>();
+                result = service.RunAsync("Loading data", "Getting file system options", displayOptions, ReloadFileSystemsAsync);
             }
             else
             {
@@ -602,7 +603,8 @@ namespace FsInfoCat.Desktop.ViewModel.Local
                     return _backingFileSystemOptions.Count > 0;
                 }))
                     return;
-                result = BgOps.FromAsync("Loading data", "Getting file system options", Dispatcher.CheckInvoke(() => PickFromActiveFileSystems.Value), ReloadFileSystemsAsync);
+                IWindowsAsyncJobFactoryService service = Services.ServiceProvider.GetRequiredService<IWindowsAsyncJobFactoryService>();
+                result = service.RunAsync("Loading data", "Getting file system options", Dispatcher.CheckInvoke(() => PickFromActiveFileSystems.Value), ReloadFileSystemsAsync);
             }
 
             result.ContinueWith(task => Dispatcher.Invoke(() =>
@@ -657,13 +659,6 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             model.VolumeName = VolumeName.AsWsNormalizedOrEmpty();
             model.FileSystemId = SelectedFileSystem.Model.Id;
             return true;
-        }
-
-        ISimpleIdentityReference<Subdirectory> IHasSubdirectoryEntity.GetSubdirectoryEntity() => Dispatcher.CheckInvoke(() => RootDirectory);
-
-        public async Task<ISimpleIdentityReference<Subdirectory>> GetSubdirectoryEntityAsync([DisallowNull] IWindowsStatusListener statusListener)
-        {
-            return await Dispatcher.InvokeAsync(() => RootDirectory);
         }
     }
 }

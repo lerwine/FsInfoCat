@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
@@ -7,20 +7,20 @@ using System.Windows.Threading;
 
 namespace FsInfoCat.Desktop.ViewModel.AsyncOps
 {
-    public class StatusListener : IStatusListener
+    public class StatusListener : IWindowsStatusListener
     {
-        private BackgroundJobVM backgroundJobVM;
-        private CancellationToken token;
+        private readonly BackgroundJobVM _viewModel;
 
-        public StatusListener(BackgroundJobVM backgroundJobVM, CancellationToken token)
+        internal StatusListener(BackgroundJobVM viewModel, Guid concurrencyId, CancellationToken token)
         {
-            this.backgroundJobVM = backgroundJobVM;
-            this.token = token;
+            _viewModel = viewModel;
+            CancellationToken = token;
+            ConcurrencyId = concurrencyId;
         }
 
-        public CancellationToken CancellationToken => throw new NotImplementedException();
+        public CancellationToken CancellationToken { get; }
 
-        public Guid ConcurrencyId => throw new NotImplementedException();
+        public Guid ConcurrencyId { get; }
 
         public ILogger Logger => throw new NotImplementedException();
 

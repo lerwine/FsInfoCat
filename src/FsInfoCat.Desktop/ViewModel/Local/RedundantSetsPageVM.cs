@@ -22,7 +22,8 @@ namespace FsInfoCat.Desktop.ViewModel.Local
     {
         internal Task<int> LoadAsync(Guid? binaryPropertiesId, string reference = null)
         {
-            return MainVM.BgOpFromAsync("Loading items", "Connecting to database...", new ItemLoadParams(binaryPropertiesId, reference), LoadItemsAsync);
+            IWindowsAsyncJobFactoryService service = Services.ServiceProvider.GetRequiredService<IWindowsAsyncJobFactoryService>();
+            return service.RunAsync("Loading items", "Connecting to database...", new ItemLoadParams(binaryPropertiesId, reference), LoadItemsAsync);
         }
 
         private async Task<int> LoadItemsAsync(ItemLoadParams state, IWindowsStatusListener statusListener)
@@ -62,7 +63,8 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         protected override bool ShowModalItemEditWindow(RedundantSetItemVM item, object parameter, out string saveProgressTitle)
         {
             saveProgressTitle = "Saving Redundancy Set";
-            return MainVM.BgOpFromAsync("Loading Details", "Connecting to database", item.Model.Id, LoadItemAsync).ContinueWith(task => Dispatcher.Invoke(() =>
+            IWindowsAsyncJobFactoryService service = Services.ServiceProvider.GetRequiredService<IWindowsAsyncJobFactoryService>();
+            return service.RunAsync("Loading Details", "Connecting to database", item.Model.Id, LoadItemAsync).ContinueWith(task => Dispatcher.Invoke(() =>
             {
                 RedundantSet entity = task.Result;
                 if (entity is null)

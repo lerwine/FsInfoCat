@@ -94,7 +94,8 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 
         internal Task<int> LoadItemsAsync()
         {
-            return MainVM.BgOpFromAsync("Loading items", "Connecting to database...", GetItemsLoaderFactory());
+            IWindowsAsyncJobFactoryService service = Services.ServiceProvider.GetRequiredService<IWindowsAsyncJobFactoryService>();
+            return service.RunAsync("Loading items", "Connecting to database...", GetItemsLoaderFactory());
         }
 
         protected abstract Func<IWindowsStatusListener, Task<int>> GetItemsLoaderFactory();
@@ -228,7 +229,8 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         /// <remarks><see cref="OnChangesSaved(TItemVM, bool)"/> will be invoked if operation is successful.</remarks>
         protected internal Task<bool?> SaveChangesAsync([DisallowNull] TItemVM item, string saveProgressTitle)
         {
-            Task<bool?> task = MainVM.BgOpFromAsync(saveProgressTitle, "Connecting to database...", item.Model, SaveEntityAsync);
+            IWindowsAsyncJobFactoryService service = Services.ServiceProvider.GetRequiredService<IWindowsAsyncJobFactoryService>();
+            Task<bool?> task = service.RunAsync(saveProgressTitle, "Connecting to database...", item.Model, SaveEntityAsync);
             task.ContinueWith(task =>
             {
                 bool? isNew = task.Result;
@@ -282,7 +284,8 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         protected internal virtual Task<bool?> DeleteItemAsync([DisallowNull] TItemVM item, string deleteProgressTitle)
         {
             VerifyAccess();
-            Task<bool?> task = MainVM.BgOpFromAsync(deleteProgressTitle, "Connecting to database...", item.Model, DeleteEntityAsync);
+            IWindowsAsyncJobFactoryService service = Services.ServiceProvider.GetRequiredService<IWindowsAsyncJobFactoryService>();
+            Task<bool?> task = service.RunAsync(deleteProgressTitle, "Connecting to database...", item.Model, DeleteEntityAsync);
             task.ContinueWith(t =>
             {
                 if (t.Result ?? false)
@@ -337,7 +340,6 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 
         protected virtual void OnNavigatedFrom(MainVM mainVM)
         {
-            MainVM.GetAsyncBgModalVM().CancelAll();
         }
 
         void INotifyNavigationContentChanged.OnNavigatedTo(MainVM mainVM) => OnNavigatedTo(mainVM);

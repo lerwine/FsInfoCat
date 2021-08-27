@@ -201,7 +201,8 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         protected override bool ShowModalItemEditWindow(PersonalTagDefinitionItemVM item, object parameter, out string saveProgressTitle)
         {
             saveProgressTitle = $"Saving Personal Tag Definition \"{item.Name}\"";
-            return MainVM.BgOpFromAsync("Loading Details", "Connecting to database", item.Model.Id, LoadItemAsync).ContinueWith(task => Dispatcher.Invoke(() =>
+            IWindowsAsyncJobFactoryService service = Services.ServiceProvider.GetRequiredService<IWindowsAsyncJobFactoryService>();
+            return service.RunAsync("Loading Details", "Connecting to database", item.Model.Id, LoadItemAsync).ContinueWith(task => Dispatcher.Invoke(() =>
             {
                 PersonalTagDefinition entity = task.Result;
                 if (entity is null)

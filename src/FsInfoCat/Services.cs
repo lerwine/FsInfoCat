@@ -28,6 +28,8 @@ namespace FsInfoCat
 
         public static IServiceProvider ServiceProvider => Host.Services;
 
+        public static IServiceScope CreateScope() => Host.Services.CreateScope();
+
         private static string GetAppDataPath(string path, CultureInfo cultureInfo)
         {
             string name;
@@ -95,9 +97,5 @@ namespace FsInfoCat
             Thread.EndCriticalRegion();
             return await _initializeTask;
         }
-    }
-    public interface IMainBgOpManagerService : IAsyncBackgroundOperationManager
-    {
-
     }
 }

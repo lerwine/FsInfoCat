@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat
 {
+    [Obsolete("Use IAsyncJobFactoryService")]
     public interface IAsyncBackgroundOperationManager
     {
         Task<TResult> FromAsync<TState, TResult>(string title, string initialMessage, TState state, [DisallowNull] Func<TState, IStatusListener, Task<TResult>> func);

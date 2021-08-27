@@ -199,12 +199,12 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 
         protected async Task<CrawlConfiguration> AddNewItemAsync(object parameter)
         {
-            (string, Subdirectory)? result = await Dispatcher.Invoke(() => EditCrawlConfigVM.BrowseForFolderAsync(null, MainVM.GetAsyncBgModalVM()));
+            (string, Subdirectory)? result = await Dispatcher.Invoke(() => EditCrawlConfigVM.BrowseForFolderAsync(null));
             while (result?.Item2.CrawlConfiguration is not null)
             {
                 Dispatcher.Invoke(() => MessageBox.Show(Application.Current.MainWindow, "Not Available", "That subdirectory already has a crawl configuration.",
                     MessageBoxButton.OK, MessageBoxImage.Error));
-                result = await Dispatcher.Invoke(() => EditCrawlConfigVM.BrowseForFolderAsync(null, MainVM.GetAsyncBgModalVM()));
+                result = await Dispatcher.Invoke(() => EditCrawlConfigVM.BrowseForFolderAsync(null));
             }
             string path = result?.Item1;
             return string.IsNullOrEmpty(path) ? null : await Dispatcher.InvokeAsync(() => ShowEditNewDialog(path), DispatcherPriority.Background);
@@ -228,7 +228,8 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         protected override bool ShowModalItemEditWindow(CrawlConfigItemVM item, object parameter, out string saveProgressTitle)
         {
             saveProgressTitle = "Saving crawl configuration";
-            return MainVM.BgOpFromAsync("Loading Details", "Connecting to database", item.Model.Id, LoadItemAsync).ContinueWith(task => Dispatcher.Invoke(() =>
+            IWindowsAsyncJobFactoryService service = Services.ServiceProvider.GetRequiredService<IWindowsAsyncJobFactoryService>();
+            return service.RunAsync("Loading Details", "Connecting to database", item.Model.Id, LoadItemAsync).ContinueWith(task => Dispatcher.Invoke(() =>
             {
                 CrawlConfiguration entity = task.Result;
                 if (entity is null)

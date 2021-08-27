@@ -225,7 +225,8 @@ namespace FsInfoCat.Local
             throw new NotImplementedException();
         }
 
-        public static Task<Subdirectory> FindByFullNameAsync(string path, CancellationToken cancellationToken, Action<LocalDbContext, Subdirectory, CancellationToken> onMatchSuccess = null)
+        public static Task<Subdirectory> FindByFullNameAsync(string path, CancellationToken cancellationToken, Action<LocalDbContext, Subdirectory,
+            CancellationToken> onMatchSuccess = null)
         {
             cancellationToken.ThrowIfCancellationRequested();
             if (string.IsNullOrEmpty(path))
@@ -233,7 +234,7 @@ namespace FsInfoCat.Local
             return FindByFullNameAsync(null, path, cancellationToken, onMatchSuccess);
         }
 
-        public static Task<Subdirectory> FindByFullNameAsync(string path, CancellationToken cancellationToken, [DisallowNull] LocalDbContext dbContext)
+        public static Task<Subdirectory> FindByFullNameAsync(string path, [DisallowNull] LocalDbContext dbContext, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
             if (dbContext is null)
@@ -264,7 +265,8 @@ namespace FsInfoCat.Local
             return result;
         }
 
-        private static async Task<Subdirectory> FindByFullNameAsync(LocalDbContext dbContext, IFileSystemDetailService fileSystemDetailService, string path, CancellationToken cancellationToken)
+        private static async Task<Subdirectory> FindByFullNameAsync(LocalDbContext dbContext, IFileSystemDetailService fileSystemDetailService, string path,
+            CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
             string leaf = Path.GetFileName(path);
@@ -296,7 +298,8 @@ namespace FsInfoCat.Local
             return await (from d in dbContext.Subdirectories where d.ParentId == id && d.Name == leaf select d).FirstOrDefaultAsync(cancellationToken);
         }
 
-        public static async Task<EntityEntry<Subdirectory>> ImportBranchAsync([DisallowNull] DirectoryInfo directoryInfo, [DisallowNull] LocalDbContext dbContext, CancellationToken cancellationToken, bool markNewAsCompleted = false)
+        public static async Task<EntityEntry<Subdirectory>> ImportBranchAsync([DisallowNull] DirectoryInfo directoryInfo, [DisallowNull] LocalDbContext dbContext,
+            CancellationToken cancellationToken, bool markNewAsCompleted = false)
         {
             if (directoryInfo is null)
                 throw new ArgumentNullException(nameof(directoryInfo));
@@ -595,7 +598,8 @@ namespace FsInfoCat.Local
 
         public record CrawlConfigWithFullRootPath<T>(string FullName, Guid SubdirectoryId, T Source);
 
-        public static async Task<List<CrawlConfigWithFullRootPath<T>>> BuildFullNamesAsync<T>(IEnumerable<T> source, Func<T, Subdirectory> factory, LocalDbContext dbContext, CancellationToken cancellationToken)
+        public static async Task<List<CrawlConfigWithFullRootPath<T>>> BuildFullNamesAsync<T>(IEnumerable<T> source, Func<T, Subdirectory> factory,
+            LocalDbContext dbContext, CancellationToken cancellationToken)
         {
             List<CrawlConfigWithFullRootPath<T>> result = new();
             foreach (T t in source)

@@ -138,7 +138,8 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         protected override bool ShowModalItemEditWindow(VolumeItemWithFileSystemVM item, object parameter, out string saveProgressTitle)
         {
             saveProgressTitle = string.Format(FsInfoCat.Properties.Resources.FormatMessage_SavingVolumeChanges, item.DisplayName);
-            return MainVM.BgOpFromAsync("Loading Details", "Connecting to database", item.Model.Id, LoadItemAsync).ContinueWith(task => Dispatcher.Invoke(() =>
+            IWindowsAsyncJobFactoryService service = Services.ServiceProvider.GetRequiredService<IWindowsAsyncJobFactoryService>();
+            return service.RunAsync("Loading Details", "Connecting to database", item.Model.Id, LoadItemAsync).ContinueWith(task => Dispatcher.Invoke(() =>
             {
                 Volume entity = task.Result;
                 if (entity is null)

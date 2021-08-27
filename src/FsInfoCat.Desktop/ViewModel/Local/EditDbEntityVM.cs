@@ -11,7 +11,7 @@ using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel.Local
 {
-    public abstract class EditDbEntityVM<TDbEntity> : DependencyObject, INotifyDataErrorInfo, IHasAsyncWindowsBackgroundOperationManager
+    public abstract class EditDbEntityVM<TDbEntity> : DependencyObject, INotifyDataErrorInfo
         where TDbEntity : LocalDbEntity, new()
     {
         #region Events
@@ -85,11 +85,11 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         #region BgOps Property Members
 
         private static readonly DependencyPropertyKey BgOpsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(BgOps),
-            typeof(AsyncOps.AsyncBgModalVM), typeof(EditDbEntityVM<TDbEntity>), new PropertyMetadata(null));
+            typeof(AsyncOps.JobFactoryServiceViewModel), typeof(EditDbEntityVM<TDbEntity>), new PropertyMetadata(null));
 
         public static readonly DependencyProperty BgOpsProperty = BgOpsPropertyKey.DependencyProperty;
 
-        public AsyncOps.AsyncBgModalVM BgOps => (AsyncOps.AsyncBgModalVM)GetValue(BgOpsProperty);
+        public AsyncOps.JobFactoryServiceViewModel BgOps => (AsyncOps.JobFactoryServiceViewModel)GetValue(BgOpsProperty);
 
         #endregion
         #region Change Tracking / Validation Members
@@ -238,7 +238,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             SetValue(ValidationPropertyKey, validation);
             ChangeStateTracker changeTracker = new();
             SetValue(ChangeTrackerPropertyKey, changeTracker);
-            SetValue(BgOpsPropertyKey, new AsyncOps.AsyncBgModalVM());
+            SetValue(BgOpsPropertyKey, new AsyncOps.JobFactoryServiceViewModel());
 #if DEBUG
             if (DesignerProperties.GetIsInDesignMode(this))
                 return;
@@ -248,36 +248,21 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             changeTracker.AnyInvalidPropertyChanged += OnValidationStateChanged;
         }
 
-        IAsyncWindowsBackgroundOperationManager IHasAsyncWindowsBackgroundOperationManager.GetAsyncBackgroundOperationManager()
-        {
-            if (CheckAccess())
-                return BgOps;
-            return Dispatcher.Invoke(() => BgOps);
-        }
-
-        IAsyncBackgroundOperationManager IHasAsyncBackgroundOperationManager.GetAsyncBackgroundOperationManager()
-        {
-            if (CheckAccess())
-                return BgOps;
-            return Dispatcher.Invoke(() => BgOps);
-        }
-
         public record AsyncDialogArgs(Func<AsyncInitArgs, Task> OnInitializeAsync, TDbEntity Entity, bool IsNew);
 
         public record AsyncInitArgs(TDbEntity Entity, bool IsNew, LocalDbContext DbContext, IWindowsStatusListener StatusListener);
 
-        internal Task<bool?> ShowDialogAsync(string asyncOpTitle, string asyncOpInitialMessage, [DisallowNull] AsyncOps.AsyncBgModalVM bgOpManager, [DisallowNull] Window window,
+        internal Task<bool?> ShowDialogAsync(string asyncOpTitle, string asyncOpInitialMessage, [DisallowNull] Window window,
             [DisallowNull] TDbEntity entity, bool isNew, [DisallowNull] Func<AsyncInitArgs, Task> onInitializeAsync)
         {
-            if (bgOpManager is null)
-                throw new ArgumentNullException(nameof(bgOpManager));
             if (window is null)
                 throw new ArgumentNullException(nameof(window));
             if (entity is null)
                 throw new ArgumentNullException(nameof(entity));
             if (onInitializeAsync is null)
                 throw new ArgumentNullException(nameof(onInitializeAsync));
-            return bgOpManager.FromAsync(asyncOpTitle, asyncOpInitialMessage, new AsyncDialogArgs(onInitializeAsync, entity, isNew), ShowDialogAsync)
+            IWindowsAsyncJobFactoryService service = Services.ServiceProvider.GetRequiredService<IWindowsAsyncJobFactoryService>();
+            return service.RunAsync(asyncOpTitle, asyncOpInitialMessage, new AsyncDialogArgs(onInitializeAsync, entity, isNew), ShowDialogAsync)
                 .ContinueWith(task => Dispatcher.Invoke(() => ShowDialog(window, entity, isNew), System.Windows.Threading.DispatcherPriority.Background), TaskContinuationOptions.OnlyOnRanToCompletion);
         }
 
@@ -344,7 +329,8 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         /// <returns>A <see cref="Task{bool}"/> that <see langword="true"/> if changes were successfully saved to the database; otherwise, <see langword="false"/>.</returns>
         protected virtual Task<bool> SaveChangesAsync(bool forceSave = false)
         {
-            Task<bool> task = BgOps.FromAsync("Saving Changes", "Connecting to database", new ModelViewModel(Model, this, forceSave), SaveChangesAsync);
+            IWindowsAsyncJobFactoryService service = Services.ServiceProvider.GetRequiredService<IWindowsAsyncJobFactoryService>();
+            Task<bool> task = service.RunAsync("Saving Changes", "Connecting to database", new ModelViewModel(Model, this, forceSave), SaveChangesAsync);
             task.ContinueWith(task =>
             {
                 if (task.IsCompletedSuccessfully)

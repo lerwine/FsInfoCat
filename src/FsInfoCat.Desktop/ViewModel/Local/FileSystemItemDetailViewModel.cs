@@ -204,7 +204,10 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         {
             _backingSymbolicNames.Clear();
             if (fileSystemId.HasValue)
-                MainVM.BgOpFromAsync("", "", (fileSystemId.Value, showActive), LoadSymbolicNamesAsync);
+            {
+                IWindowsAsyncJobFactoryService service = Services.ServiceProvider.GetRequiredService<IWindowsAsyncJobFactoryService>();
+                service.RunAsync("", "", (fileSystemId.Value, showActive), LoadSymbolicNamesAsync);
+            }
         }
 
         private async Task<int> LoadSymbolicNamesAsync((Guid fileSystemId, bool? showActive) state, IWindowsStatusListener statusListener)

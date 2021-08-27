@@ -1,19 +1,9 @@
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using Microsoft.Win32;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Navigation;
-using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat.Desktop.ViewModel
 {
@@ -273,45 +263,10 @@ namespace FsInfoCat.Desktop.ViewModel
         }
 
         #endregion
-        #region BgOps Property Members
 
-        private static readonly DependencyPropertyKey BgOpsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(BgOps), typeof(AsyncOps.AsyncBgModalVM), typeof(MainVM),
-                new PropertyMetadata(null));
-
-        /// <summary>
-        /// Identifies the <see cref="BgOps"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty BgOpsProperty = BgOpsPropertyKey.DependencyProperty;
-
-        /// <summary>
-        /// Gets .
-        /// </summary>
-        /// <value>The .</value>
-        public AsyncOps.AsyncBgModalVM BgOps => (AsyncOps.AsyncBgModalVM)GetValue(BgOpsProperty);
-
-        #endregion
-        #region BackgroundJobService Property Members
-
-        private static readonly DependencyPropertyKey BackgroundJobServicePropertyKey = DependencyProperty.RegisterReadOnly(nameof(BackgroundJobService), typeof(AsyncOps.BackgroundJobServiceVM), typeof(MainVM),
-                new PropertyMetadata(null));
-
-        /// <summary>
-        /// Identifies the <see cref="BackgroundJobService"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty BackgroundJobServiceProperty = BackgroundJobServicePropertyKey.DependencyProperty;
-
-        /// <summary>
-        /// Gets .
-        /// </summary>
-        /// <value>The .</value>
-        public AsyncOps.BackgroundJobServiceVM BackgroundJobService => (AsyncOps.BackgroundJobServiceVM)GetValue(BackgroundJobServiceProperty);
-
-        #endregion
         public MainVM(ILogger<MainVM> logger)
         {
             _logger = logger;
-            SetValue(BackgroundJobServicePropertyKey, new AsyncOps.BackgroundJobServiceVM());
-            SetValue(BgOpsPropertyKey, new AsyncOps.AsyncBgModalVM());
             SetValue(CommandBindingsPropertyKey, new CommandBindingCollection
             {
                 new CommandBinding(ApplicationCommands.Close, OnClose)
@@ -324,37 +279,6 @@ namespace FsInfoCat.Desktop.ViewModel
             SetValue(ViewRedundancySetsPropertyKey, new Commands.RelayCommand(OnViewRedundancySets));
             SetValue(ViewPersonalTagDefinitionsPropertyKey, new Commands.RelayCommand(OnViewPersonalTagDefinitions));
             SetValue(ViewSharedTagDefinitionsPropertyKey, new Commands.RelayCommand(OnViewSharedTagDefinitions));
-        }
-
-        public static AsyncOps.AsyncBgModalVM GetAsyncBgModalVM()
-        {
-            using IServiceScope scope = Services.ServiceProvider.CreateScope();
-            return ((MainVM)scope.ServiceProvider.GetRequiredService<IApplicationNavigation>()).BgOps;
-        }
-
-        public static Task<TResult> BgOpFromAsync<TState, TResult>(string title, string initialMessage, TState state,
-            [DisallowNull] Func<TState, IWindowsStatusListener, Task<TResult>> func)
-        {
-            using IServiceScope scope = Services.ServiceProvider.CreateScope();
-            return ((MainVM)scope.ServiceProvider.GetRequiredService<IApplicationNavigation>()).BgOps.FromAsync(title, initialMessage, state, func);
-        }
-
-        public static Task<TResult> BgOpFromAsync<TResult>(string title, string initialMessage, [DisallowNull] Func<IWindowsStatusListener, Task<TResult>> func)
-        {
-            using IServiceScope scope = Services.ServiceProvider.CreateScope();
-            return ((MainVM)scope.ServiceProvider.GetRequiredService<IApplicationNavigation>()).BgOps.FromAsync(title, initialMessage, func);
-        }
-
-        public static Task BgOpFromAsync<TState>(string title, string initialMessage, TState state, [DisallowNull] Func<TState, IWindowsStatusListener, Task> func)
-        {
-            using IServiceScope scope = Services.ServiceProvider.CreateScope();
-            return ((MainVM)scope.ServiceProvider.GetRequiredService<IApplicationNavigation>()).BgOps.FromAsync(title, initialMessage, state, func);
-        }
-
-        public static Task BgOpFromAsync(string title, string initialMessage, [DisallowNull] Func<IWindowsStatusListener, Task> func)
-        {
-            using IServiceScope scope = Services.ServiceProvider.CreateScope();
-            return ((MainVM)scope.ServiceProvider.GetRequiredService<IApplicationNavigation>()).BgOps.FromAsync(title, initialMessage, func);
         }
 
         private void OnClose(object sender, ExecutedRoutedEventArgs e)

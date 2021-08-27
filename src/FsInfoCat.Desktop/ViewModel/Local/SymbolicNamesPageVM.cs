@@ -118,7 +118,8 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 
         internal Task<int> LoadAsync(bool? isInactive)
         {
-            return MainVM.BgOpFromAsync("Loading items", "Connecting to database...", isInactive, LoadItemsAsync);
+            IWindowsAsyncJobFactoryService service = Services.ServiceProvider.GetRequiredService<IWindowsAsyncJobFactoryService>();
+            return service.RunAsync("Loading items", "Connecting to database...", isInactive, LoadItemsAsync);
         }
 
         private async Task<int> LoadItemsAsync(bool? isInactive, IWindowsStatusListener statusListener)

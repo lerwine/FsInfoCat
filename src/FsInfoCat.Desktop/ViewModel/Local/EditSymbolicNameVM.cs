@@ -107,7 +107,9 @@ namespace FsInfoCat.Desktop.ViewModel.Local
                     SelectedFileSystem = null;
                 return;
             }
-            BgOps.FromAsync("Loading data", "Getting file system options", PickFromActiveFileSystems.Value, ReloadFileSystemsAsync).ContinueWith(task => Dispatcher.Invoke(() =>
+            IWindowsAsyncJobFactoryService service = Services.ServiceProvider.GetRequiredService<IWindowsAsyncJobFactoryService>();
+            service.RunAsync("Loading data", "Getting file system options", PickFromActiveFileSystems.Value, ReloadFileSystemsAsync)
+                .ContinueWith(task => Dispatcher.Invoke(() =>
             {
                 _backingFileSystemOptions.Clear();
                 foreach (FileSystemListItem entity in task.Result)
@@ -273,7 +275,8 @@ namespace FsInfoCat.Desktop.ViewModel.Local
                     });
                 }
                 finally { Interlocked.Decrement(ref _ignoreFileSystemOptionsChange); }
-                result = BgOps.FromAsync("Loading data", "Getting file system options", displayOptions, ReloadFileSystemsAsync);
+                IWindowsAsyncJobFactoryService service = Services.ServiceProvider.GetRequiredService<IWindowsAsyncJobFactoryService>();
+                result = service.RunAsync("Loading data", "Getting file system options", displayOptions, ReloadFileSystemsAsync);
             }
             else
             {
@@ -283,7 +286,9 @@ namespace FsInfoCat.Desktop.ViewModel.Local
                     return _backingFileSystemOptions.Count > 0;
                 }))
                     return;
-                result = BgOps.FromAsync("Loading data", "Getting file system options", Dispatcher.CheckInvoke(() => PickFromActiveFileSystems.Value), ReloadFileSystemsAsync);
+                IWindowsAsyncJobFactoryService service = Services.ServiceProvider.GetRequiredService<IWindowsAsyncJobFactoryService>();
+                result = service.RunAsync("Loading data", "Getting file system options", Dispatcher.CheckInvoke(() => PickFromActiveFileSystems.Value),
+                    ReloadFileSystemsAsync);
             }
 
             result.ContinueWith(task => Dispatcher.Invoke(() =>
