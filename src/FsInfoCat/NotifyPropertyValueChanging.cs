@@ -7,6 +7,7 @@ namespace FsInfoCat
 {
     public class NotifyPropertyValueChanging : NotifyPropertyValueChanged, INotifyPropertyChanging
     {
+
         public event PropertyChangingEventHandler PropertyChanging;
 
         protected override bool CheckHashSetChanged<T>(HashSet<T> oldValue, HashSet<T> newValue, Action<HashSet<T>> setter, [CallerMemberName] string propertyName = null)

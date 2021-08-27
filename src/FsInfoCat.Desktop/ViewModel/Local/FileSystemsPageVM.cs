@@ -296,7 +296,5 @@ namespace FsInfoCat.Desktop.ViewModel.Local
                 "This cannot be undone.\n\nAre you sure you want to delete this File System?", "Delete File System", MessageBoxButton.YesNo,
                 MessageBoxImage.Warning) == MessageBoxResult.Yes;
         }
-
-        //public record EntityAndCounts(FileSystemListItem Entity, int VolumeCount, int SymbolicNameCount);
     }
 }
