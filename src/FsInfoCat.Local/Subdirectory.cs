@@ -153,69 +153,44 @@ namespace FsInfoCat.Local
             _crawlConfiguration = AddChangeTracker<CrawlConfiguration>(nameof(CrawlConfiguration), null);
         }
 
-        public string GetFullName()
-        {
-            //Monitor.Enter(_parent);
-            //try
-            //{
-            //    if (_fullName is null)
-            //    {
-            //        if (_volumeId.GetValue().HasValue)
-            //            _fullName = _name.GetValue();
-            //        else
-            //        {
-            //            string path = _parent.GetValue()?.GetFullName();
-            //            if (path is not null)
-            //                _fullName = Path.Combine(path, _name.GetValue());
-            //        }
-            //    }
-            //}
-            //finally { Monitor.Exit(_parent); }
-            //return _fullName;
-            throw new NotImplementedException();
-        }
-
         public async Task<string> GetFullNameAsync([DisallowNull] LocalDbContext dbContext, CancellationToken cancellationToken)
         {
-            //Monitor.Enter(_parent);
-            //try
-            //{
-            //    if (_fullName is not null)
-            //        return _fullName;
-            //    if (_volumeId.GetValue().HasValue)
-            //    {
-            //        _fullName = _name.GetValue();
-            //        return _fullName;
-            //    }
-            //    else
-            //    {
-            //        string path = _parent.GetValue()?.GetFullName();
-            //        if (path is not null)
-            //        {
-            //            _fullName = Path.Combine(path, _name.GetValue());
-            //            return _fullName;
-            //        }
-            //    }
-            //    if (!ParentId.HasValue)
-            //        return Name;
-            //    Subdirectory parent = Parent;
-            //    if (parent is null)
-            //    {
-            //        EntityEntry<Subdirectory> entry = dbContext.Entry(this);
-            //        switch (entry.State)
-            //        {
-            //            case EntityState.Detached:
-            //            case EntityState.Deleted:
-            //            case EntityState.Added:
-            //                return Name;
-            //        }
-            //        if ((parent = await entry.GetRelatedReferenceAsync(d => d.Parent, cancellationToken)) is null)
-            //            return Name;
-            //    }
-            //    return Path.Combine(await parent.GetFullNameAsync(dbContext, cancellationToken), Name);
-            //}
-            //finally { Monitor.Exit(_parent); }
-            throw new NotImplementedException();
+            EntityEntry<Subdirectory> entry = dbContext.Entry(this);
+            Subdirectory parent = Parent;
+            switch (entry.State)
+            {
+                case EntityState.Detached:
+                case EntityState.Added:
+                    if (parent is null)
+                    {
+                        Guid? parentId = ParentId;
+                        if (!parentId.HasValue || (parent = await dbContext.Subdirectories.Where(d => d.Id == parentId).FirstOrDefaultAsync(cancellationToken)) is null)
+                            throw new InvalidOperationException();
+                        Parent = parent;
+                    }
+                    break;
+                case EntityState.Deleted:
+                    throw new InvalidOperationException();
+                default:
+                    if (parent is null)
+                    {
+                        if (ParentId.HasValue)
+                        {
+                            if ((parent = await entry.GetRelatedReferenceAsync(d => d.Parent, cancellationToken)) is null)
+                                throw new InvalidOperationException();
+                        }
+                        else if (Volume is null)
+                        {
+                            Guid? volumeId = VolumeId;
+                            if (!volumeId.HasValue || await entry.GetRelatedReferenceAsync(d => d.Volume, cancellationToken) is null)
+                                throw new InvalidOperationException();
+                        }
+                    }
+                    break;
+            }
+            if (parent is null)
+                return Name;
+            return Path.Combine(await parent.GetFullNameAsync(dbContext, cancellationToken), Name);
         }
 
         public static Task<Subdirectory> FindByFullNameAsync(string path, CancellationToken cancellationToken, Action<LocalDbContext, Subdirectory,
