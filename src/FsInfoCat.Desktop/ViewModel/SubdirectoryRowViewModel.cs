@@ -5,6 +5,7 @@ namespace FsInfoCat.Desktop.ViewModel
     public class SubdirectoryRowViewModel<TEntity> : FsItemRowViewModel<TEntity>
         where TEntity : DbEntity, ISubdirectoryRow
     {
+#pragma warning disable IDE0060 // Remove unused parameter
         #region Options Property Members
 
         /// <summary>
@@ -25,7 +26,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Options"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Options"/> property.</param>
-        private void OnOptionsPropertyChanged(DirectoryCrawlOptions oldValue, DirectoryCrawlOptions newValue)
+        protected void OnOptionsPropertyChanged(DirectoryCrawlOptions oldValue, DirectoryCrawlOptions newValue)
         {
             // TODO: Implement OnOptionsPropertyChanged Logic
         }
@@ -51,12 +52,13 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Status"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Status"/> property.</param>
-        private void OnStatusPropertyChanged(DirectoryStatus oldValue, DirectoryStatus newValue)
+        protected void OnStatusPropertyChanged(DirectoryStatus oldValue, DirectoryStatus newValue)
         {
             // TODO: Implement OnStatusPropertyChanged Logic
         }
 
         #endregion
+#pragma warning restore IDE0060 // Remove unused parameter
 
         public SubdirectoryRowViewModel(TEntity entity) : base(entity)
         {

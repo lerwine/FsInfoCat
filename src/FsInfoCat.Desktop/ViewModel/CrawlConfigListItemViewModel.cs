@@ -200,7 +200,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="FileSystemDisplayName"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="FileSystemDisplayName"/> property.</param>
-        private void OnFileSystemDisplayNamePropertyChanged(string oldValue, string newValue) => SetFileSystemShortDescription(newValue, FileSystemSymbolicName);
+        protected void OnFileSystemDisplayNamePropertyChanged(string oldValue, string newValue) => SetFileSystemShortDescription(newValue, FileSystemSymbolicName);
 
         #endregion
         #region FileSystemSymbolicName Property Members
@@ -225,7 +225,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="FileSystemSymbolicName"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="FileSystemSymbolicName"/> property.</param>
-        private void OnFileSystemSymbolicNamePropertyChanged(string oldValue, string newValue) => SetFileSystemShortDescription(FileSystemDisplayName, newValue);
+        protected void OnFileSystemSymbolicNamePropertyChanged(string oldValue, string newValue) => SetFileSystemShortDescription(FileSystemDisplayName, newValue);
 
         #endregion
         #region FileSystemShortDescription Property Members

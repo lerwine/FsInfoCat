@@ -5,6 +5,7 @@ namespace FsInfoCat.Desktop.ViewModel
     public class RedundantSetRowViewModel<TEntity> : DbEntityRowViewModel<TEntity>
         where TEntity : DbEntity, IRedundantSetRow
     {
+#pragma warning disable IDE0060 // Remove unused parameter
         #region Reference Property Members
 
         /// <summary>
@@ -25,7 +26,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Reference"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Reference"/> property.</param>
-        private void OnReferencePropertyChanged(string oldValue, string newValue)
+        protected void OnReferencePropertyChanged(string oldValue, string newValue)
         {
             // TODO: Implement OnReferencePropertyChanged Logic
         }
@@ -51,7 +52,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Notes"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Notes"/> property.</param>
-        private void OnNotesPropertyChanged(string oldValue, string newValue)
+        protected void OnNotesPropertyChanged(string oldValue, string newValue)
         {
             // TODO: Implement OnNotesPropertyChanged Logic
         }

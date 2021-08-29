@@ -6,6 +6,7 @@ namespace FsInfoCat.Desktop.ViewModel
     public class DRMPropertiesRowViewModel<TEntity> : DbEntityRowViewModel<TEntity>
         where TEntity : DbEntity, IDRMProperties
     {
+#pragma warning disable IDE0060 // Remove unused parameter
         #region DatePlayExpires Property Members
 
         /// <summary>
@@ -26,7 +27,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="DatePlayExpires"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="DatePlayExpires"/> property.</param>
-        private void OnDatePlayExpiresPropertyChanged(DateTime? oldValue, DateTime? newValue)
+        protected void OnDatePlayExpiresPropertyChanged(DateTime? oldValue, DateTime? newValue)
         {
             // TODO: Implement OnDatePlayExpiresPropertyChanged Logic
         }
@@ -52,7 +53,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="DatePlayStarts"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="DatePlayStarts"/> property.</param>
-        private void OnDatePlayStartsPropertyChanged(DateTime? oldValue, DateTime? newValue)
+        protected void OnDatePlayStartsPropertyChanged(DateTime? oldValue, DateTime? newValue)
         {
             // TODO: Implement OnDatePlayStartsPropertyChanged Logic
         }
@@ -78,7 +79,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Description"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Description"/> property.</param>
-        private void OnDescriptionPropertyChanged(string oldValue, string newValue)
+        protected void OnDescriptionPropertyChanged(string oldValue, string newValue)
         {
             // TODO: Implement OnDescriptionPropertyChanged Logic
         }
@@ -104,7 +105,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="IsProtected"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="IsProtected"/> property.</param>
-        private void OnIsProtectedPropertyChanged(bool? oldValue, bool? newValue)
+        protected void OnIsProtectedPropertyChanged(bool? oldValue, bool? newValue)
         {
             // TODO: Implement OnIsProtectedPropertyChanged Logic
         }
@@ -130,12 +131,13 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="PlayCount"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="PlayCount"/> property.</param>
-        private void OnPlayCountPropertyChanged(uint? oldValue, uint? newValue)
+        protected void OnPlayCountPropertyChanged(uint? oldValue, uint? newValue)
         {
             // TODO: Implement OnPlayCountPropertyChanged Logic
         }
 
         #endregion
+#pragma warning restore IDE0060 // Remove unused parameter
 
         public DRMPropertiesRowViewModel(TEntity entity) : base(entity)
         {

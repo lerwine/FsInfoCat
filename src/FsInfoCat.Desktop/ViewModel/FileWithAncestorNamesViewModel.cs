@@ -6,6 +6,7 @@ namespace FsInfoCat.Desktop.ViewModel
     public class FileWithAncestorNamesViewModel<TEntity> : FileRowViewModel<TEntity>
         where TEntity : DbEntity, IFileListItemWithAncestorNames
     {
+#pragma warning disable IDE0060 // Remove unused parameter
         #region VolumeDisplayName Property Members
 
         private static readonly DependencyPropertyKey VolumeDisplayNamePropertyKey = DependencyProperty.RegisterReadOnly(nameof(VolumeDisplayName), typeof(string),
@@ -28,7 +29,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="VolumeDisplayName"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="VolumeDisplayName"/> property.</param>
-        private void OnVolumeDisplayNamePropertyChanged(string oldValue, string newValue)
+        protected void OnVolumeDisplayNamePropertyChanged(string oldValue, string newValue)
         {
             SetVolumeShortDescription(newValue, VolumeName, VolumeIdentifier);
         }
@@ -56,7 +57,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="VolumeName"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="VolumeName"/> property.</param>
-        private void OnVolumeNamePropertyChanged(string oldValue, string newValue)
+        protected void OnVolumeNamePropertyChanged(string oldValue, string newValue)
         {
             SetVolumeShortDescription(VolumeDisplayName, newValue, VolumeIdentifier);
         }
@@ -84,7 +85,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="VolumeIdentifier"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="VolumeIdentifier"/> property.</param>
-        private void OnVolumeIdentifierPropertyChanged(VolumeIdentifier oldValue, VolumeIdentifier newValue)
+        protected void OnVolumeIdentifierPropertyChanged(VolumeIdentifier oldValue, VolumeIdentifier newValue)
         {
             SetVolumeShortDescription(VolumeDisplayName, VolumeName, newValue);
         }
@@ -112,7 +113,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="FileSystemDisplayName"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="FileSystemDisplayName"/> property.</param>
-        private void OnFileSystemDisplayNamePropertyChanged(string oldValue, string newValue) => SetFileSystemShortDescription(newValue, FileSystemSymbolicName);
+        protected void OnFileSystemDisplayNamePropertyChanged(string oldValue, string newValue) => SetFileSystemShortDescription(newValue, FileSystemSymbolicName);
 
         #endregion
         #region FileSystemSymbolicName Property Members
@@ -137,7 +138,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="FileSystemSymbolicName"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="FileSystemSymbolicName"/> property.</param>
-        private void OnFileSystemSymbolicNamePropertyChanged(string oldValue, string newValue) => SetFileSystemShortDescription(FileSystemDisplayName, newValue);
+        protected void OnFileSystemSymbolicNamePropertyChanged(string oldValue, string newValue) => SetFileSystemShortDescription(FileSystemDisplayName, newValue);
 
         #endregion
         #region AccessErrorCount Property Members
@@ -266,6 +267,7 @@ namespace FsInfoCat.Desktop.ViewModel
         }
 
         #endregion
+#pragma warning restore IDE0060 // Remove unused parameter
 
         public FileWithAncestorNamesViewModel(TEntity entity) : base(entity)
         {

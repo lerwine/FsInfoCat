@@ -5,6 +5,7 @@ namespace FsInfoCat.Desktop.ViewModel
     public class GPSPropertiesRowViewModel<TEntity> : DbEntityRowViewModel<TEntity>
         where TEntity : DbEntity, IGPSProperties
     {
+#pragma warning disable IDE0060 // Remove unused parameter
         #region AreaInformation Property Members
 
         /// <summary>
@@ -25,7 +26,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="AreaInformation"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="AreaInformation"/> property.</param>
-        private void OnAreaInformationPropertyChanged(string oldValue, string newValue)
+        protected void OnAreaInformationPropertyChanged(string oldValue, string newValue)
         {
             // TODO: Implement OnAreaInformationPropertyChanged Logic
         }
@@ -51,7 +52,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="LatitudeDegrees"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="LatitudeDegrees"/> property.</param>
-        private void OnLatitudeDegreesPropertyChanged(double? oldValue, double? newValue)
+        protected void OnLatitudeDegreesPropertyChanged(double? oldValue, double? newValue)
         {
             // TODO: Implement OnLatitudeDegreesPropertyChanged Logic
         }
@@ -77,7 +78,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="LatitudeMinutes"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="LatitudeMinutes"/> property.</param>
-        private void OnLatitudeMinutesPropertyChanged(double? oldValue, double? newValue)
+        protected void OnLatitudeMinutesPropertyChanged(double? oldValue, double? newValue)
         {
             // TODO: Implement OnLatitudeMinutesPropertyChanged Logic
         }
@@ -103,7 +104,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="LatitudeSeconds"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="LatitudeSeconds"/> property.</param>
-        private void OnLatitudeSecondsPropertyChanged(double? oldValue, double? newValue)
+        protected void OnLatitudeSecondsPropertyChanged(double? oldValue, double? newValue)
         {
             // TODO: Implement OnLatitudeSecondsPropertyChanged Logic
         }
@@ -129,7 +130,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="LatitudeRef"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="LatitudeRef"/> property.</param>
-        private void OnLatitudeRefPropertyChanged(string oldValue, string newValue)
+        protected void OnLatitudeRefPropertyChanged(string oldValue, string newValue)
         {
             // TODO: Implement OnLatitudeRefPropertyChanged Logic
         }
@@ -155,7 +156,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="LongitudeDegrees"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="LongitudeDegrees"/> property.</param>
-        private void OnLongitudeDegreesPropertyChanged(double? oldValue, double? newValue)
+        protected void OnLongitudeDegreesPropertyChanged(double? oldValue, double? newValue)
         {
             // TODO: Implement OnLongitudeDegreesPropertyChanged Logic
         }
@@ -181,7 +182,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="LongitudeMinutes"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="LongitudeMinutes"/> property.</param>
-        private void OnLongitudeMinutesPropertyChanged(double? oldValue, double? newValue)
+        protected void OnLongitudeMinutesPropertyChanged(double? oldValue, double? newValue)
         {
             // TODO: Implement OnLongitudeMinutesPropertyChanged Logic
         }
@@ -207,7 +208,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="LongitudeSeconds"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="LongitudeSeconds"/> property.</param>
-        private void OnLongitudeSecondsPropertyChanged(double? oldValue, double? newValue)
+        protected void OnLongitudeSecondsPropertyChanged(double? oldValue, double? newValue)
         {
             // TODO: Implement OnLongitudeSecondsPropertyChanged Logic
         }
@@ -233,7 +234,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="LongitudeRef"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="LongitudeRef"/> property.</param>
-        private void OnLongitudeRefPropertyChanged(string oldValue, string newValue)
+        protected void OnLongitudeRefPropertyChanged(string oldValue, string newValue)
         {
             // TODO: Implement OnLongitudeRefPropertyChanged Logic
         }
@@ -259,7 +260,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="MeasureMode"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="MeasureMode"/> property.</param>
-        private void OnMeasureModePropertyChanged(string oldValue, string newValue)
+        protected void OnMeasureModePropertyChanged(string oldValue, string newValue)
         {
             // TODO: Implement OnMeasureModePropertyChanged Logic
         }
@@ -285,12 +286,13 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="ProcessingMethod"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="ProcessingMethod"/> property.</param>
-        private void OnProcessingMethodPropertyChanged(string oldValue, string newValue)
+        protected void OnProcessingMethodPropertyChanged(string oldValue, string newValue)
         {
             // TODO: Implement OnProcessingMethodPropertyChanged Logic
         }
 
         #endregion
+#pragma warning restore IDE0060 // Remove unused parameter
 
         public GPSPropertiesRowViewModel(TEntity entity) : base(entity)
         {

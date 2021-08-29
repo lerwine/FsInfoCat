@@ -59,7 +59,7 @@ namespace FsInfoCat.Desktop.ViewModel
             WeakPropertyChangedEventRelay.Attach(entity, OnEntityPropertyChanged);
         }
 
-        private void OnEntityPropertyChanged(object sender, PropertyChangedEventArgs args) => OnEntityPropertyChanged(args.PropertyName ?? "");
+        protected void OnEntityPropertyChanged(object sender, PropertyChangedEventArgs args) => OnEntityPropertyChanged(args.PropertyName ?? "");
 
         protected virtual void OnEntityPropertyChanged(string propertyName)
         {

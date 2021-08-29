@@ -5,6 +5,7 @@ namespace FsInfoCat.Desktop.ViewModel
     public class MusicPropertiesRowViewModel<TEntity> : DbEntityRowViewModel<TEntity>
         where TEntity : DbEntity, IMusicProperties
     {
+#pragma warning disable IDE0060 // Remove unused parameter
         #region AlbumArtist Property Members
 
         /// <summary>
@@ -25,7 +26,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="AlbumArtist"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="AlbumArtist"/> property.</param>
-        private void OnAlbumArtistPropertyChanged(string oldValue, string newValue) { }
+        protected void OnAlbumArtistPropertyChanged(string oldValue, string newValue) { }
 
         #endregion
         #region AlbumTitle Property Members
@@ -48,7 +49,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="AlbumTitle"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="AlbumTitle"/> property.</param>
-        private void OnAlbumTitlePropertyChanged(string oldValue, string newValue) { }
+        protected void OnAlbumTitlePropertyChanged(string oldValue, string newValue) { }
 
         #endregion
         #region ChannelCount Property Members
@@ -71,7 +72,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="ChannelCount"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="ChannelCount"/> property.</param>
-        private void OnChannelCountPropertyChanged(uint? oldValue, uint? newValue) { }
+        protected void OnChannelCountPropertyChanged(uint? oldValue, uint? newValue) { }
 
         #endregion
         #region DisplayArtist Property Members
@@ -94,7 +95,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="DisplayArtist"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="DisplayArtist"/> property.</param>
-        private void OnDisplayArtistPropertyChanged(string oldValue, string newValue) { }
+        protected void OnDisplayArtistPropertyChanged(string oldValue, string newValue) { }
 
         #endregion
         #region PartOfSet Property Members
@@ -118,7 +119,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="PartOfSet"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="PartOfSet"/> property.</param>
-        private void OnPartOfSetPropertyChanged(string oldValue, string newValue) { }
+        protected void OnPartOfSetPropertyChanged(string oldValue, string newValue) { }
 
         #endregion
         #region Period Property Members
@@ -141,7 +142,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Period"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Period"/> property.</param>
-        private void OnPeriodPropertyChanged(string oldValue, string newValue) { }
+        protected void OnPeriodPropertyChanged(string oldValue, string newValue) { }
 
         #endregion
         #region TrackNumber Property Members
@@ -164,9 +165,10 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="TrackNumber"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="TrackNumber"/> property.</param>
-        private void OnTrackNumberPropertyChanged(uint? oldValue, uint? newValue) { }
+        protected void OnTrackNumberPropertyChanged(uint? oldValue, uint? newValue) { }
 
         #endregion
+#pragma warning restore IDE0060 // Remove unused parameter
 
         public MusicPropertiesRowViewModel(TEntity entity) : base(entity)
         {

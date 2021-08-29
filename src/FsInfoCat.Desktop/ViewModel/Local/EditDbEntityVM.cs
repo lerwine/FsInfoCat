@@ -45,7 +45,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         /// <value>The bindable command for saving changes and closing the edit window.</value>
         public Commands.RelayCommand SaveCommand => (Commands.RelayCommand)GetValue(SaveCommandProperty);
 
-        private void OnSaveExecute(object parameter)
+        protected void OnSaveExecute(object parameter)
         {
             if (OnBeforeSave())
             {
@@ -79,7 +79,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         /// <value>The bindable command for discarding changes and closing the edit window.</value>
         public Commands.RelayCommand CancelCommand => (Commands.RelayCommand)GetValue(CancelCommandProperty);
 
-        private void OnCancelExecute(object parameter) => CloseCancel?.Invoke(this, EventArgs.Empty);
+        protected void OnCancelExecute(object parameter) => CloseCancel?.Invoke(this, EventArgs.Empty);
 
         #endregion
         #region BgOps Property Members

@@ -5,6 +5,7 @@ namespace FsInfoCat.Desktop.ViewModel
     public class MediaPropertiesRowViewModel<TEntity> : DbEntityRowViewModel<TEntity>
         where TEntity : DbEntity, IMediaProperties
     {
+#pragma warning disable IDE0060 // Remove unused parameter
         #region ContentDistributor Property Members
 
         /// <summary>
@@ -25,7 +26,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="ContentDistributor"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="ContentDistributor"/> property.</param>
-        private void OnContentDistributorPropertyChanged(string oldValue, string newValue) { }
+        protected void OnContentDistributorPropertyChanged(string oldValue, string newValue) { }
 
         #endregion
         #region CreatorApplication Property Members
@@ -48,7 +49,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="CreatorApplication"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="CreatorApplication"/> property.</param>
-        private void OnCreatorApplicationPropertyChanged(string oldValue, string newValue) { }
+        protected void OnCreatorApplicationPropertyChanged(string oldValue, string newValue) { }
 
         #endregion
         #region CreatorApplicationVersion Property Members
@@ -71,7 +72,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="CreatorApplicationVersion"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="CreatorApplicationVersion"/> property.</param>
-        private void OnCreatorApplicationVersionPropertyChanged(string oldValue, string newValue) { }
+        protected void OnCreatorApplicationVersionPropertyChanged(string oldValue, string newValue) { }
 
         #endregion
         #region DateReleased Property Members
@@ -94,7 +95,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="DateReleased"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="DateReleased"/> property.</param>
-        private void OnDateReleasedPropertyChanged(string oldValue, string newValue) { }
+        protected void OnDateReleasedPropertyChanged(string oldValue, string newValue) { }
 
         #endregion
         #region Duration Property Members
@@ -117,7 +118,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Duration"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Duration"/> property.</param>
-        private void OnDurationPropertyChanged(ulong? oldValue, ulong? newValue) { }
+        protected void OnDurationPropertyChanged(ulong? oldValue, ulong? newValue) { }
 
         #endregion
         #region DVDID Property Members
@@ -140,7 +141,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="DVDID"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="DVDID"/> property.</param>
-        private void OnDVDIDPropertyChanged(string oldValue, string newValue) { }
+        protected void OnDVDIDPropertyChanged(string oldValue, string newValue) { }
 
         #endregion
         #region FrameCount Property Members
@@ -163,7 +164,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="FrameCount"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="FrameCount"/> property.</param>
-        private void OnFrameCountPropertyChanged(uint? oldValue, uint? newValue) { }
+        protected void OnFrameCountPropertyChanged(uint? oldValue, uint? newValue) { }
 
         #endregion
         #region ProtectionType Property Members
@@ -186,7 +187,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="ProtectionType"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="ProtectionType"/> property.</param>
-        private void OnProtectionTypePropertyChanged(string oldValue, string newValue) { }
+        protected void OnProtectionTypePropertyChanged(string oldValue, string newValue) { }
 
         #endregion
         #region ProviderRating Property Members
@@ -209,7 +210,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="ProviderRating"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="ProviderRating"/> property.</param>
-        private void OnProviderRatingPropertyChanged(string oldValue, string newValue) { }
+        protected void OnProviderRatingPropertyChanged(string oldValue, string newValue) { }
 
         #endregion
         #region ProviderStyle Property Members
@@ -232,7 +233,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="ProviderStyle"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="ProviderStyle"/> property.</param>
-        private void OnProviderStylePropertyChanged(string oldValue, string newValue) { }
+        protected void OnProviderStylePropertyChanged(string oldValue, string newValue) { }
 
         #endregion
         #region Publisher Property Members
@@ -255,7 +256,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Publisher"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Publisher"/> property.</param>
-        private void OnPublisherPropertyChanged(string oldValue, string newValue) { }
+        protected void OnPublisherPropertyChanged(string oldValue, string newValue) { }
 
         #endregion
         #region Subtitle Property Members
@@ -278,7 +279,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Subtitle"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Subtitle"/> property.</param>
-        private void OnSubtitlePropertyChanged(string oldValue, string newValue) { }
+        protected void OnSubtitlePropertyChanged(string oldValue, string newValue) { }
 
         #endregion
         #region Year Property Members
@@ -301,9 +302,10 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Year"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Year"/> property.</param>
-        private void OnYearPropertyChanged(uint? oldValue, uint? newValue) { }
+        protected void OnYearPropertyChanged(uint? oldValue, uint? newValue) { }
 
         #endregion
+#pragma warning restore IDE0060 // Remove unused parameter
 
         public MediaPropertiesRowViewModel(TEntity entity) : base(entity)
         {

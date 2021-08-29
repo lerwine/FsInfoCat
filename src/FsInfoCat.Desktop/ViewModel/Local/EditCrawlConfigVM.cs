@@ -163,7 +163,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
                 return null;
             });
 
-        private void OnSelectRootExecute(object parameter)
+        protected void OnSelectRootExecute(object parameter)
         {
             IWindowsAsyncJobFactoryService service = Services.ServiceProvider.GetRequiredService<IWindowsAsyncJobFactoryService>();
             service.RunAsync("Initializing", "Getting start directory", Path, GetDirectoryAsync).ContinueWith(task => Dispatcher.Invoke(() =>
@@ -232,7 +232,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         #endregion
         #region TTL Members
 
-        private void OnTtlChanged(int days, int hours, int minutes)
+        protected void OnTtlChanged(int days, int hours, int minutes)
         {
             if (days == 0)
             {
@@ -425,7 +425,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             set => SetValue(AutoRescheduleProperty, value);
         }
 
-        private void OnAutoReschedulePropertyChanged(bool oldValue, bool newValue)
+        protected void OnAutoReschedulePropertyChanged(bool oldValue, bool newValue)
         {
             if (newValue)
             {
@@ -515,7 +515,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         #endregion
         #region RescheduleInterval Members
 
-        private void OnRescheduleIntervalChanged(int days, int hours, int minutes)
+        protected void OnRescheduleIntervalChanged(int days, int hours, int minutes)
         {
             if (days == 0)
             {
@@ -664,7 +664,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             set => SetValue(RescheduleAfterFailProperty, value);
         }
 
-        private void OnRescheduleAfterFailPropertyChanged(bool oldValue, bool newValue)
+        protected void OnRescheduleAfterFailPropertyChanged(bool oldValue, bool newValue)
         {
 #if DEBUG
             if (DesignerProperties.GetIsInDesignMode(this) || Model is null)
@@ -689,7 +689,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             set => SetValue(RescheduleFromJobEndProperty, value);
         }
 
-        private void OnRescheduleFromJobEndPropertyChanged(bool oldValue, bool newValue)
+        protected void OnRescheduleFromJobEndPropertyChanged(bool oldValue, bool newValue)
         {
 #if DEBUG
             if (DesignerProperties.GetIsInDesignMode(this) || Model is null)
@@ -761,7 +761,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
                 Validation.SetErrorMessage(nameof(NextScheduledStartHour), "Hours not specified");
         }
 
-        private void OnNextScheduledStartHourChanged(int? newValue, bool isPm)
+        protected void OnNextScheduledStartHourChanged(int? newValue, bool isPm)
         {
             ChangeTracker.SetChangeState(nameof(NextScheduledStartHour), ((newValue.Value == 12) ? (isPm ? 12 : 0) : (isPm ? newValue.Value + 12 : newValue.Value)) != Model?.NextScheduledStart?.Hour);
         }
@@ -904,7 +904,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             OnMaxTotalItemsChanged(newValue, LimitTotalItems);
         }
 
-        private void OnMaxTotalItemsChanged(ulong value, bool isEnabled)
+        protected void OnMaxTotalItemsChanged(ulong value, bool isEnabled)
         {
             if (isEnabled)
             {

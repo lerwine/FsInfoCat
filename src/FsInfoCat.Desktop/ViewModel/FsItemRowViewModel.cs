@@ -6,6 +6,7 @@ namespace FsInfoCat.Desktop.ViewModel
     public class FsItemRowViewModel<TEntity> : DbEntityRowViewModel<TEntity>
         where TEntity : DbEntity, IDbFsItemRow
     {
+#pragma warning disable IDE0060 // Remove unused parameter
         #region Name Property Members
 
         /// <summary>
@@ -26,7 +27,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Name"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Name"/> property.</param>
-        private void OnNamePropertyChanged(string oldValue, string newValue)
+        protected void OnNamePropertyChanged(string oldValue, string newValue)
         {
             // TODO: Implement OnNamePropertyChanged Logic
         }
@@ -52,7 +53,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="LastAccessed"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="LastAccessed"/> property.</param>
-        private void OnLastAccessedPropertyChanged(DateTime oldValue, DateTime newValue)
+        protected void OnLastAccessedPropertyChanged(DateTime oldValue, DateTime newValue)
         {
             // TODO: Implement OnLastAccessedPropertyChanged Logic
         }
@@ -78,7 +79,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Notes"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Notes"/> property.</param>
-        private void OnNotesPropertyChanged(string oldValue, string newValue)
+        protected void OnNotesPropertyChanged(string oldValue, string newValue)
         {
             // TODO: Implement OnNotesPropertyChanged Logic
         }
@@ -104,7 +105,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="CreationTime"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="CreationTime"/> property.</param>
-        private void OnCreationTimePropertyChanged(DateTime oldValue, DateTime newValue)
+        protected void OnCreationTimePropertyChanged(DateTime oldValue, DateTime newValue)
         {
             // TODO: Implement OnCreationTimePropertyChanged Logic
         }
@@ -130,12 +131,13 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="LastWriteTime"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="LastWriteTime"/> property.</param>
-        private void OnLastWriteTimePropertyChanged(DateTime oldValue, DateTime newValue)
+        protected void OnLastWriteTimePropertyChanged(DateTime oldValue, DateTime newValue)
         {
             // TODO: Implement OnLastWriteTimePropertyChanged Logic
         }
 
         #endregion
+#pragma warning restore IDE0060 // Remove unused parameter
 
         public FsItemRowViewModel(TEntity entity) : base(entity)
         {

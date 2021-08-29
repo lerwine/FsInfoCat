@@ -136,7 +136,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="SelectedItem"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="SelectedItem"/> property.</param>
-        private void OnSelectedItemPropertyChanged(FileSystemItemVM oldValue, FileSystemItemVM newValue)
+        protected void OnSelectedItemPropertyChanged(FileSystemItemVM oldValue, FileSystemItemVM newValue)
         {
             if (newValue is null)
             {

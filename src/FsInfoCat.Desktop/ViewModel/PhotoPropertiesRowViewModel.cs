@@ -6,6 +6,7 @@ namespace FsInfoCat.Desktop.ViewModel
     public class PhotoPropertiesRowViewModel<TEntity> : DbEntityRowViewModel<TEntity>
         where TEntity : DbEntity, IPhotoProperties
     {
+#pragma warning disable IDE0060 // Remove unused parameter
         #region CameraManufacturer Property Members
 
         /// <summary>
@@ -26,7 +27,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="CameraManufacturer"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="CameraManufacturer"/> property.</param>
-        private void OnCameraManufacturerPropertyChanged(string oldValue, string newValue)
+        protected void OnCameraManufacturerPropertyChanged(string oldValue, string newValue)
         {
             // TODO: Implement OnCameraManufacturerPropertyChanged Logic
         }
@@ -52,7 +53,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="CameraModel"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="CameraModel"/> property.</param>
-        private void OnCameraModelPropertyChanged(string oldValue, string newValue)
+        protected void OnCameraModelPropertyChanged(string oldValue, string newValue)
         {
             // TODO: Implement OnCameraModelPropertyChanged Logic
         }
@@ -78,7 +79,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="DateTaken"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="DateTaken"/> property.</param>
-        private void OnDateTakenPropertyChanged(DateTime? oldValue, DateTime? newValue)
+        protected void OnDateTakenPropertyChanged(DateTime? oldValue, DateTime? newValue)
         {
             // TODO: Implement OnDateTakenPropertyChanged Logic
         }
@@ -104,7 +105,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="EXIFVersion"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="EXIFVersion"/> property.</param>
-        private void OnEXIFVersionPropertyChanged(string oldValue, string newValue)
+        protected void OnEXIFVersionPropertyChanged(string oldValue, string newValue)
         {
             // TODO: Implement OnEXIFVersionPropertyChanged Logic
         }
@@ -130,7 +131,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Orientation"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Orientation"/> property.</param>
-        private void OnOrientationPropertyChanged(ushort? oldValue, ushort? newValue)
+        protected void OnOrientationPropertyChanged(ushort? oldValue, ushort? newValue)
         {
             // TODO: Implement OnOrientationPropertyChanged Logic
         }
@@ -156,12 +157,13 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="OrientationText"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="OrientationText"/> property.</param>
-        private void OnOrientationTextPropertyChanged(string oldValue, string newValue)
+        protected void OnOrientationTextPropertyChanged(string oldValue, string newValue)
         {
             // TODO: Implement OnOrientationTextPropertyChanged Logic
         }
 
         #endregion
+#pragma warning restore IDE0060 // Remove unused parameter
 
         public PhotoPropertiesRowViewModel(TEntity entity) : base(entity)
         {

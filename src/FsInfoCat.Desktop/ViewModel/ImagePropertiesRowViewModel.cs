@@ -5,6 +5,7 @@ namespace FsInfoCat.Desktop.ViewModel
     public class ImagePropertiesRowViewModel<TEntity> : DbEntityRowViewModel<TEntity>
         where TEntity : DbEntity, IImageProperties
     {
+#pragma warning disable IDE0060 // Remove unused parameter
         #region BitDepth Property Members
 
         /// <summary>
@@ -25,7 +26,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="BitDepth"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="BitDepth"/> property.</param>
-        private void OnBitDepthPropertyChanged(uint? oldValue, uint? newValue)
+        protected void OnBitDepthPropertyChanged(uint? oldValue, uint? newValue)
         {
             // TODO: Implement OnBitDepthPropertyChanged Logic
         }
@@ -51,7 +52,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="ColorSpace"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="ColorSpace"/> property.</param>
-        private void OnColorSpacePropertyChanged(uint? oldValue, uint? newValue)
+        protected void OnColorSpacePropertyChanged(uint? oldValue, uint? newValue)
         {
             // TODO: Implement OnColorSpacePropertyChanged Logic
         }
@@ -77,7 +78,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="CompressedBitsPerPixel"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="CompressedBitsPerPixel"/> property.</param>
-        private void OnCompressedBitsPerPixelPropertyChanged(double? oldValue, double? newValue)
+        protected void OnCompressedBitsPerPixelPropertyChanged(double? oldValue, double? newValue)
         {
             // TODO: Implement OnCompressedBitsPerPixelPropertyChanged Logic
         }
@@ -103,7 +104,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Compression"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Compression"/> property.</param>
-        private void OnCompressionPropertyChanged(ushort? oldValue, ushort? newValue)
+        protected void OnCompressionPropertyChanged(ushort? oldValue, ushort? newValue)
         {
             // TODO: Implement OnCompressionPropertyChanged Logic
         }
@@ -129,7 +130,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="CompressionText"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="CompressionText"/> property.</param>
-        private void OnCompressionTextPropertyChanged(string oldValue, string newValue)
+        protected void OnCompressionTextPropertyChanged(string oldValue, string newValue)
         {
             // TODO: Implement OnCompressionTextPropertyChanged Logic
         }
@@ -155,7 +156,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="HorizontalResolution"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="HorizontalResolution"/> property.</param>
-        private void OnHorizontalResolutionPropertyChanged(double? oldValue, double? newValue)
+        protected void OnHorizontalResolutionPropertyChanged(double? oldValue, double? newValue)
         {
             // TODO: Implement OnHorizontalResolutionPropertyChanged Logic
         }
@@ -181,7 +182,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="HorizontalSize"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="HorizontalSize"/> property.</param>
-        private void OnHorizontalSizePropertyChanged(uint? oldValue, uint? newValue)
+        protected void OnHorizontalSizePropertyChanged(uint? oldValue, uint? newValue)
         {
             // TODO: Implement OnHorizontalSizePropertyChanged Logic
         }
@@ -207,7 +208,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="ImageID"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="ImageID"/> property.</param>
-        private void OnImageIDPropertyChanged(string oldValue, string newValue)
+        protected void OnImageIDPropertyChanged(string oldValue, string newValue)
         {
             // TODO: Implement OnImageIDPropertyChanged Logic
         }
@@ -233,7 +234,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="ResolutionUnit"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="ResolutionUnit"/> property.</param>
-        private void OnResolutionUnitPropertyChanged(short? oldValue, short? newValue)
+        protected void OnResolutionUnitPropertyChanged(short? oldValue, short? newValue)
         {
             // TODO: Implement OnResolutionUnitPropertyChanged Logic
         }
@@ -259,7 +260,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="VerticalResolution"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="VerticalResolution"/> property.</param>
-        private void OnVerticalResolutionPropertyChanged(double? oldValue, double? newValue)
+        protected void OnVerticalResolutionPropertyChanged(double? oldValue, double? newValue)
         {
             // TODO: Implement OnVerticalResolutionPropertyChanged Logic
         }
@@ -285,12 +286,13 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="VerticalSize"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="VerticalSize"/> property.</param>
-        private void OnVerticalSizePropertyChanged(uint? oldValue, uint? newValue)
+        protected void OnVerticalSizePropertyChanged(uint? oldValue, uint? newValue)
         {
             // TODO: Implement OnVerticalSizePropertyChanged Logic
         }
 
         #endregion
+#pragma warning restore IDE0060 // Remove unused parameter
 
         public ImagePropertiesRowViewModel(TEntity entity) : base(entity)
         {

@@ -5,6 +5,7 @@ namespace FsInfoCat.Desktop.ViewModel
     public class AccessErrorRowViewModel<TEntity> : DbEntityRowViewModel<TEntity>
         where TEntity : DbEntity, IAccessError
     {
+#pragma warning disable IDE0060 // Remove unused parameter
         #region ErrorCode Property Members
 
         /// <summary>
@@ -25,10 +26,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="ErrorCode"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="ErrorCode"/> property.</param>
-        private void OnErrorCodePropertyChanged(AccessErrorCode oldValue, AccessErrorCode newValue)
-        {
-            // TODO: Implement OnErrorCodePropertyChanged Logic
-        }
+        protected void OnErrorCodePropertyChanged(AccessErrorCode oldValue, AccessErrorCode newValue) { }
 
         #endregion
         #region Details Property Members
@@ -51,12 +49,13 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Details"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Details"/> property.</param>
-        private void OnDetailsPropertyChanged(string oldValue, string newValue)
+        protected void OnDetailsPropertyChanged(string oldValue, string newValue)
         {
             // TODO: Implement OnDetailsPropertyChanged Logic
         }
 
         #endregion
+#pragma warning restore IDE0060 // Remove unused parameter
 
         public AccessErrorRowViewModel(TEntity entity) : base(entity)
         {

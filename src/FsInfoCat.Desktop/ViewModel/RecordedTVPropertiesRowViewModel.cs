@@ -6,6 +6,7 @@ namespace FsInfoCat.Desktop.ViewModel
     public class RecordedTVPropertiesRowViewModel<TEntity> : DbEntityRowViewModel<TEntity>
         where TEntity : DbEntity, IRecordedTVProperties
     {
+#pragma warning disable IDE0060 // Remove unused parameter
         #region ChannelNumber Property Members
 
         /// <summary>
@@ -26,7 +27,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="ChannelNumber"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="ChannelNumber"/> property.</param>
-        private void OnChannelNumberPropertyChanged(uint? oldValue, uint? newValue)
+        protected void OnChannelNumberPropertyChanged(uint? oldValue, uint? newValue)
         {
             // TODO: Implement OnChannelNumberPropertyChanged Logic
         }
@@ -52,7 +53,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="EpisodeName"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="EpisodeName"/> property.</param>
-        private void OnEpisodeNamePropertyChanged(string oldValue, string newValue)
+        protected void OnEpisodeNamePropertyChanged(string oldValue, string newValue)
         {
             // TODO: Implement OnEpisodeNamePropertyChanged Logic
         }
@@ -78,7 +79,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="IsDTVContent"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="IsDTVContent"/> property.</param>
-        private void OnIsDTVContentPropertyChanged(bool? oldValue, bool? newValue)
+        protected void OnIsDTVContentPropertyChanged(bool? oldValue, bool? newValue)
         {
             // TODO: Implement OnIsDTVContentPropertyChanged Logic
         }
@@ -104,7 +105,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="IsHDContent"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="IsHDContent"/> property.</param>
-        private void OnIsHDContentPropertyChanged(bool? oldValue, bool? newValue)
+        protected void OnIsHDContentPropertyChanged(bool? oldValue, bool? newValue)
         {
             // TODO: Implement OnIsHDContentPropertyChanged Logic
         }
@@ -130,7 +131,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="NetworkAffiliation"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="NetworkAffiliation"/> property.</param>
-        private void OnNetworkAffiliationPropertyChanged(string oldValue, string newValue)
+        protected void OnNetworkAffiliationPropertyChanged(string oldValue, string newValue)
         {
             // TODO: Implement OnNetworkAffiliationPropertyChanged Logic
         }
@@ -156,7 +157,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="OriginalBroadcastDate"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="OriginalBroadcastDate"/> property.</param>
-        private void OnOriginalBroadcastDatePropertyChanged(DateTime? oldValue, DateTime? newValue)
+        protected void OnOriginalBroadcastDatePropertyChanged(DateTime? oldValue, DateTime? newValue)
         {
             // TODO: Implement OnOriginalBroadcastDatePropertyChanged Logic
         }
@@ -182,7 +183,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="ProgramDescription"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="ProgramDescription"/> property.</param>
-        private void OnProgramDescriptionPropertyChanged(string oldValue, string newValue)
+        protected void OnProgramDescriptionPropertyChanged(string oldValue, string newValue)
         {
             // TODO: Implement OnProgramDescriptionPropertyChanged Logic
         }
@@ -208,7 +209,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="StationCallSign"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="StationCallSign"/> property.</param>
-        private void OnStationCallSignPropertyChanged(string oldValue, string newValue)
+        protected void OnStationCallSignPropertyChanged(string oldValue, string newValue)
         {
             // TODO: Implement OnStationCallSignPropertyChanged Logic
         }
@@ -234,12 +235,13 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="StationName"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="StationName"/> property.</param>
-        private void OnStationNamePropertyChanged(string oldValue, string newValue)
+        protected void OnStationNamePropertyChanged(string oldValue, string newValue)
         {
             // TODO: Implement OnStationNamePropertyChanged Logic
         }
 
         #endregion
+#pragma warning restore IDE0060 // Remove unused parameter
 
         public RecordedTVPropertiesRowViewModel(TEntity entity) : base(entity)
         {

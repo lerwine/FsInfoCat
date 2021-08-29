@@ -318,7 +318,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="FileSystemDisplayName"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="FileSystemDisplayName"/> property.</param>
-        private void OnFileSystemDisplayNamePropertyChanged(string oldValue, string newValue)
+        protected void OnFileSystemDisplayNamePropertyChanged(string oldValue, string newValue)
         {
             FileSystemDetailText = string.IsNullOrWhiteSpace(newValue) ? FileSystemSymbolicName :
                 (string.IsNullOrWhiteSpace(FileSystemSymbolicName) ? newValue :
@@ -347,7 +347,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="FileSystemSymbolicName"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="FileSystemSymbolicName"/> property.</param>
-        private void OnFileSystemSymbolicNamePropertyChanged(string oldValue, string newValue)
+        protected void OnFileSystemSymbolicNamePropertyChanged(string oldValue, string newValue)
         {
             FileSystemDetailText = string.IsNullOrWhiteSpace(newValue) ? FileSystemDisplayName :
                 (string.IsNullOrWhiteSpace(FileSystemDisplayName) ? newValue :

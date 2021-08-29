@@ -26,7 +26,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Options"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Options"/> property.</param>
-        private void OnOptionsPropertyChanged(FileCrawlOptions oldValue, FileCrawlOptions newValue)
+        protected void OnOptionsPropertyChanged(FileCrawlOptions oldValue, FileCrawlOptions newValue)
         {
             // TODO: Implement OnOptionsPropertyChanged Logic
         }
@@ -52,7 +52,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Status"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Status"/> property.</param>
-        private void OnStatusPropertyChanged(FileCorrelationStatus oldValue, FileCorrelationStatus newValue)
+        protected void OnStatusPropertyChanged(FileCorrelationStatus oldValue, FileCorrelationStatus newValue)
         {
             // TODO: Implement OnStatusPropertyChanged Logic
         }
@@ -78,7 +78,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="LastHashCalculation"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="LastHashCalculation"/> property.</param>
-        private void OnLastHashCalculationPropertyChanged(DateTime? oldValue, DateTime? newValue)
+        protected void OnLastHashCalculationPropertyChanged(DateTime? oldValue, DateTime? newValue)
         {
             // TODO: Implement OnLastHashCalculationPropertyChanged Logic
         }

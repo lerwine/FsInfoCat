@@ -2,6 +2,7 @@ using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel
 {
+#pragma warning disable IDE0060 // Remove unused parameter
     public class SymbolicNameRowViewModel<TEntity> : DbEntityRowViewModel<TEntity>
         where TEntity : DbEntity, ISymbolicNameRow
     {
@@ -25,7 +26,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Name"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Name"/> property.</param>
-        private void OnNamePropertyChanged(string oldValue, string newValue)
+        protected void OnNamePropertyChanged(string oldValue, string newValue)
         {
             // TODO: Implement OnNamePropertyChanged Logic
         }
@@ -51,7 +52,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Notes"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Notes"/> property.</param>
-        private void OnNotesPropertyChanged(string oldValue, string newValue)
+        protected void OnNotesPropertyChanged(string oldValue, string newValue)
         {
             // TODO: Implement OnNotesPropertyChanged Logic
         }
@@ -77,7 +78,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Priority"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Priority"/> property.</param>
-        private void OnPriorityPropertyChanged(int oldValue, int newValue)
+        protected void OnPriorityPropertyChanged(int oldValue, int newValue)
         {
             // TODO: Implement OnPriorityPropertyChanged Logic
         }
@@ -103,12 +104,13 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="IsInactive"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="IsInactive"/> property.</param>
-        private void OnIsInactivePropertyChanged(bool oldValue, bool newValue)
+        protected void OnIsInactivePropertyChanged(bool oldValue, bool newValue)
         {
             // TODO: Implement OnIsInactivePropertyChanged Logic
         }
 
         #endregion
+#pragma warning restore IDE0060 // Remove unused parameter
 
         public SymbolicNameRowViewModel(TEntity entity) : base(entity)
         {

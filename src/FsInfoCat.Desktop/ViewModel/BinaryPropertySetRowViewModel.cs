@@ -25,7 +25,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Hash"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Hash"/> property.</param>
-        private void OnHashPropertyChanged(MD5Hash? oldValue, MD5Hash? newValue) { }
+        protected void OnHashPropertyChanged(MD5Hash? oldValue, MD5Hash? newValue) { }
 
         #endregion
         #region Length Property Members
@@ -48,7 +48,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Length"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Length"/> property.</param>
-        private void OnLengthPropertyChanged(long oldValue, long newValue) { }
+        protected void OnLengthPropertyChanged(long oldValue, long newValue) { }
 
         #endregion
 

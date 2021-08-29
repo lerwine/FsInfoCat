@@ -475,7 +475,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="SelectedFileSystem"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="SelectedFileSystem"/> property.</param>
-        private void OnSelectedFileSystemPropertyChanged(FileSystemItemVM oldValue, FileSystemItemVM newValue)
+        protected void OnSelectedFileSystemPropertyChanged(FileSystemItemVM oldValue, FileSystemItemVM newValue)
         {
             // TODO: Implement OnSelectedFileSystemPropertyChanged Logic
         }

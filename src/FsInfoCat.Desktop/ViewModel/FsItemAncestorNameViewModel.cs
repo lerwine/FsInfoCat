@@ -9,6 +9,7 @@ namespace FsInfoCat.Desktop.ViewModel
     {
         protected internal TEntity Entity { get; }
 
+#pragma warning disable IDE0060 // Remove unused parameter
         #region Name Property Members
 
         /// <summary>
@@ -28,7 +29,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Name"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Name"/> property.</param>
-        private void OnNamePropertyChanged(string oldValue, string newValue)
+        protected void OnNamePropertyChanged(string oldValue, string newValue)
         {
             // TODO: Implement OnNamePropertyChanged Logic
         }
@@ -51,6 +52,7 @@ namespace FsInfoCat.Desktop.ViewModel
         public string Path { get => GetValue(PathProperty) as string; private set => SetValue(PathPropertyKey, value); }
 
         #endregion
+#pragma warning restore IDE0060 // Remove unused parameter
 
         public FsItemAncestorNameViewModel(TEntity entity)
         {
@@ -60,7 +62,7 @@ namespace FsInfoCat.Desktop.ViewModel
             Name = Entity.Name;
         }
 
-        private void OnEntityPropertyChanged(object sender, PropertyChangedEventArgs args) => OnEntityPropertyChanged(args.PropertyName ?? "");
+        protected void OnEntityPropertyChanged(object sender, PropertyChangedEventArgs args) => OnEntityPropertyChanged(args.PropertyName ?? "");
 
         protected virtual void OnEntityPropertyChanged(string propertyName)
         {

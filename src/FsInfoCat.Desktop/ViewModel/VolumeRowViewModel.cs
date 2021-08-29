@@ -6,6 +6,7 @@ namespace FsInfoCat.Desktop.ViewModel
     public class VolumeRowViewModel<TEntity> : DbEntityRowViewModel<TEntity>
         where TEntity : DbEntity, IVolumeRow
     {
+#pragma warning disable IDE0060 // Remove unused parameter
         #region DisplayName Property Members
 
         /// <summary>
@@ -26,7 +27,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="DisplayName"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="DisplayName"/> property.</param>
-        private void OnDisplayNamePropertyChanged(string oldValue, string newValue)
+        protected void OnDisplayNamePropertyChanged(string oldValue, string newValue)
         {
             // TODO: Implement OnDisplayNamePropertyChanged Logic
         }
@@ -52,7 +53,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="VolumeName"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="VolumeName"/> property.</param>
-        private void OnVolumeNamePropertyChanged(string oldValue, string newValue)
+        protected void OnVolumeNamePropertyChanged(string oldValue, string newValue)
         {
             // TODO: Implement OnVolumeNamePropertyChanged Logic
         }
@@ -78,7 +79,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Identifier"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Identifier"/> property.</param>
-        private void OnIdentifierPropertyChanged(VolumeIdentifier oldValue, VolumeIdentifier newValue)
+        protected void OnIdentifierPropertyChanged(VolumeIdentifier oldValue, VolumeIdentifier newValue)
         {
             // TODO: Implement OnIdentifierPropertyChanged Logic
         }
@@ -104,7 +105,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="ReadOnly"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="ReadOnly"/> property.</param>
-        private void OnReadOnlyPropertyChanged(bool? oldValue, bool? newValue)
+        protected void OnReadOnlyPropertyChanged(bool? oldValue, bool? newValue)
         {
             // TODO: Implement OnReadOnlyPropertyChanged Logic
         }
@@ -130,7 +131,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="MaxNameLength"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="MaxNameLength"/> property.</param>
-        private void OnMaxNameLengthPropertyChanged(uint? oldValue, uint? newValue)
+        protected void OnMaxNameLengthPropertyChanged(uint? oldValue, uint? newValue)
         {
             // TODO: Implement OnMaxNameLengthPropertyChanged Logic
         }
@@ -156,7 +157,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Type"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Type"/> property.</param>
-        private void OnTypePropertyChanged(DriveType oldValue, DriveType newValue)
+        protected void OnTypePropertyChanged(DriveType oldValue, DriveType newValue)
         {
             // TODO: Implement OnTypePropertyChanged Logic
         }
@@ -182,7 +183,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Notes"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Notes"/> property.</param>
-        private void OnNotesPropertyChanged(string oldValue, string newValue)
+        protected void OnNotesPropertyChanged(string oldValue, string newValue)
         {
             // TODO: Implement OnNotesPropertyChanged Logic
         }
@@ -208,12 +209,13 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Status"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Status"/> property.</param>
-        private void OnStatusPropertyChanged(VolumeStatus oldValue, VolumeStatus newValue)
+        protected void OnStatusPropertyChanged(VolumeStatus oldValue, VolumeStatus newValue)
         {
             // TODO: Implement OnStatusPropertyChanged Logic
         }
 
         #endregion
+#pragma warning restore IDE0060 // Remove unused parameter
 
         public VolumeRowViewModel(TEntity entity) : base(entity)
         {

@@ -6,6 +6,7 @@ namespace FsInfoCat.Desktop.ViewModel
     public class ComparisonRowViewModel<TEntity> : DbEntityRowViewModel<TEntity>
         where TEntity : DbEntity, IComparison
     {
+#pragma warning disable IDE0060 // Remove unused parameter
         #region AreEqual Property Members
 
         /// <summary>
@@ -26,7 +27,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="AreEqual"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="AreEqual"/> property.</param>
-        private void OnAreEqualPropertyChanged(bool oldValue, bool newValue) { }
+        protected void OnAreEqualPropertyChanged(bool oldValue, bool newValue) { }
 
         #endregion
         #region ComparedOn Property Members
@@ -49,9 +50,10 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="ComparedOn"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="ComparedOn"/> property.</param>
-        private void OnComparedOnPropertyChanged(DateTime oldValue, DateTime newValue) { }
+        protected void OnComparedOnPropertyChanged(DateTime oldValue, DateTime newValue) { }
 
         #endregion
+#pragma warning restore IDE0060 // Remove unused parameter
 
         public ComparisonRowViewModel(TEntity entity) : base(entity)
         {

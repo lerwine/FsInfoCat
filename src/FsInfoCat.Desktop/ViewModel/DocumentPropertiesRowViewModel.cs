@@ -6,6 +6,7 @@ namespace FsInfoCat.Desktop.ViewModel
     public class DocumentPropertiesRowViewModel<TEntity> : DbEntityRowViewModel<TEntity>
         where TEntity : DbEntity, IDocumentProperties
     {
+#pragma warning disable IDE0060 // Remove unused parameter
         #region ClientID Property Members
 
         /// <summary>
@@ -26,7 +27,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="ClientID"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="ClientID"/> property.</param>
-        private void OnClientIDPropertyChanged(string oldValue, string newValue)
+        protected void OnClientIDPropertyChanged(string oldValue, string newValue)
         {
             // TODO: Implement OnClientIDPropertyChanged Logic
         }
@@ -52,7 +53,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="DateCreated"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="DateCreated"/> property.</param>
-        private void OnDateCreatedPropertyChanged(DateTime? oldValue, DateTime? newValue)
+        protected void OnDateCreatedPropertyChanged(DateTime? oldValue, DateTime? newValue)
         {
             // TODO: Implement OnDateCreatedPropertyChanged Logic
         }
@@ -78,7 +79,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="LastAuthor"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="LastAuthor"/> property.</param>
-        private void OnLastAuthorPropertyChanged(string oldValue, string newValue)
+        protected void OnLastAuthorPropertyChanged(string oldValue, string newValue)
         {
             // TODO: Implement OnLastAuthorPropertyChanged Logic
         }
@@ -104,7 +105,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="RevisionNumber"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="RevisionNumber"/> property.</param>
-        private void OnRevisionNumberPropertyChanged(string oldValue, string newValue)
+        protected void OnRevisionNumberPropertyChanged(string oldValue, string newValue)
         {
             // TODO: Implement OnRevisionNumberPropertyChanged Logic
         }
@@ -130,7 +131,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Security"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Security"/> property.</param>
-        private void OnSecurityPropertyChanged(int? oldValue, int? newValue)
+        protected void OnSecurityPropertyChanged(int? oldValue, int? newValue)
         {
             // TODO: Implement OnSecurityPropertyChanged Logic
         }
@@ -156,7 +157,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Division"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Division"/> property.</param>
-        private void OnDivisionPropertyChanged(string oldValue, string newValue)
+        protected void OnDivisionPropertyChanged(string oldValue, string newValue)
         {
             // TODO: Implement OnDivisionPropertyChanged Logic
         }
@@ -182,7 +183,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="DocumentID"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="DocumentID"/> property.</param>
-        private void OnDocumentIDPropertyChanged(string oldValue, string newValue)
+        protected void OnDocumentIDPropertyChanged(string oldValue, string newValue)
         {
             // TODO: Implement OnDocumentIDPropertyChanged Logic
         }
@@ -208,7 +209,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Manager"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Manager"/> property.</param>
-        private void OnManagerPropertyChanged(string oldValue, string newValue)
+        protected void OnManagerPropertyChanged(string oldValue, string newValue)
         {
             // TODO: Implement OnManagerPropertyChanged Logic
         }
@@ -234,7 +235,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="PresentationFormat"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="PresentationFormat"/> property.</param>
-        private void OnPresentationFormatPropertyChanged(string oldValue, string newValue)
+        protected void OnPresentationFormatPropertyChanged(string oldValue, string newValue)
         {
             // TODO: Implement OnPresentationFormatPropertyChanged Logic
         }
@@ -260,12 +261,13 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Version"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Version"/> property.</param>
-        private void OnVersionPropertyChanged(string oldValue, string newValue)
+        protected void OnVersionPropertyChanged(string oldValue, string newValue)
         {
             // TODO: Implement OnVersionPropertyChanged Logic
         }
 
         #endregion
+#pragma warning restore IDE0060 // Remove unused parameter
 
         public DocumentPropertiesRowViewModel(TEntity entity) : base(entity)
         {

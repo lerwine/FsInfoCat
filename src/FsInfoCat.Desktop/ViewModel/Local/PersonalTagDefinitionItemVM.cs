@@ -245,7 +245,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="VolumeTagCount"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="VolumeTagCount"/> property.</param>
-        private void OnVolumeTagCountPropertyChanged(long oldValue, long newValue)
+        protected void OnVolumeTagCountPropertyChanged(long oldValue, long newValue)
         {
             DeleteCurrentItem.IsEnabled = newValue == 0 && FileTagCount == 0;
         }
@@ -272,7 +272,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="SubdirectoryTagCount"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="SubdirectoryTagCount"/> property.</param>
-        private void OnSubdirectoryTagCountPropertyChanged(long oldValue, long newValue)
+        protected void OnSubdirectoryTagCountPropertyChanged(long oldValue, long newValue)
         {
             // TODO: Implement OnSubdirectoryTagCountPropertyChanged Logic
         }
@@ -299,7 +299,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="FileTagCount"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="FileTagCount"/> property.</param>
-        private void OnFileTagCountPropertyChanged(long oldValue, long newValue)
+        protected void OnFileTagCountPropertyChanged(long oldValue, long newValue)
         {
             DeleteCurrentItem.IsEnabled = newValue == 0 && VolumeTagCount == 0;
         }

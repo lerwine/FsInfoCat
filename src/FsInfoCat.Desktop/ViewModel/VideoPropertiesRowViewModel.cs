@@ -5,6 +5,7 @@ namespace FsInfoCat.Desktop.ViewModel
     public class VideoPropertiesRowViewModel<TEntity> : DbEntityRowViewModel<TEntity>
         where TEntity : DbEntity, IVideoProperties
     {
+#pragma warning disable IDE0060 // Remove unused parameter
         #region Compression Property Members
 
         /// <summary>
@@ -25,7 +26,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Compression"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Compression"/> property.</param>
-        private void OnCompressionPropertyChanged(string oldValue, string newValue)
+        protected void OnCompressionPropertyChanged(string oldValue, string newValue)
         {
             // TODO: Implement OnCompressionPropertyChanged Logic
         }
@@ -51,7 +52,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="EncodingBitrate"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="EncodingBitrate"/> property.</param>
-        private void OnEncodingBitratePropertyChanged(uint? oldValue, uint? newValue)
+        protected void OnEncodingBitratePropertyChanged(uint? oldValue, uint? newValue)
         {
             // TODO: Implement OnEncodingBitratePropertyChanged Logic
         }
@@ -77,7 +78,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="FrameHeight"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="FrameHeight"/> property.</param>
-        private void OnFrameHeightPropertyChanged(uint? oldValue, uint? newValue)
+        protected void OnFrameHeightPropertyChanged(uint? oldValue, uint? newValue)
         {
             // TODO: Implement OnFrameHeightPropertyChanged Logic
         }
@@ -103,7 +104,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="FrameRate"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="FrameRate"/> property.</param>
-        private void OnFrameRatePropertyChanged(uint? oldValue, uint? newValue)
+        protected void OnFrameRatePropertyChanged(uint? oldValue, uint? newValue)
         {
             // TODO: Implement OnFrameRatePropertyChanged Logic
         }
@@ -129,7 +130,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="FrameWidth"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="FrameWidth"/> property.</param>
-        private void OnFrameWidthPropertyChanged(uint? oldValue, uint? newValue)
+        protected void OnFrameWidthPropertyChanged(uint? oldValue, uint? newValue)
         {
             // TODO: Implement OnFrameWidthPropertyChanged Logic
         }
@@ -155,7 +156,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="HorizontalAspectRatio"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="HorizontalAspectRatio"/> property.</param>
-        private void OnHorizontalAspectRatioPropertyChanged(uint? oldValue, uint? newValue)
+        protected void OnHorizontalAspectRatioPropertyChanged(uint? oldValue, uint? newValue)
         {
             // TODO: Implement OnHorizontalAspectRatioPropertyChanged Logic
         }
@@ -181,7 +182,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="StreamNumber"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="StreamNumber"/> property.</param>
-        private void OnStreamNumberPropertyChanged(ushort? oldValue, ushort? newValue)
+        protected void OnStreamNumberPropertyChanged(ushort? oldValue, ushort? newValue)
         {
             // TODO: Implement OnStreamNumberPropertyChanged Logic
         }
@@ -207,7 +208,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="StreamName"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="StreamName"/> property.</param>
-        private void OnStreamNamePropertyChanged(string oldValue, string newValue)
+        protected void OnStreamNamePropertyChanged(string oldValue, string newValue)
         {
             // TODO: Implement OnStreamNamePropertyChanged Logic
         }
@@ -233,12 +234,13 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="VerticalAspectRatio"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="VerticalAspectRatio"/> property.</param>
-        private void OnVerticalAspectRatioPropertyChanged(uint? oldValue, uint? newValue)
+        protected void OnVerticalAspectRatioPropertyChanged(uint? oldValue, uint? newValue)
         {
             // TODO: Implement OnVerticalAspectRatioPropertyChanged Logic
         }
 
         #endregion
+#pragma warning restore IDE0060 // Remove unused parameter
 
         public VideoPropertiesRowViewModel(TEntity entity) : base(entity)
         {

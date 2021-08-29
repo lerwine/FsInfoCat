@@ -6,6 +6,7 @@ namespace FsInfoCat.Desktop.ViewModel
     public class SubdirectoryListItemViewModel<TEntity> : SubdirectoryRowViewModel<TEntity>
         where TEntity : DbEntity, ISubdirectoryListItem
     {
+#pragma warning disable IDE0060 // Remove unused parameter
         #region SubdirectoryCount Property Members
 
         private static readonly DependencyPropertyKey SubdirectoryCountPropertyKey = DependencyProperty.RegisterReadOnly(nameof(SubdirectoryCount), typeof(long), typeof(SubdirectoryListItemViewModel<TEntity>),
@@ -27,7 +28,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="SubdirectoryCount"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="SubdirectoryCount"/> property.</param>
-        private void OnSubdirectoryCountPropertyChanged(long oldValue, long newValue) => SetHasDependentItems(newValue, FileCount, HasCrawlConfig);
+        protected void OnSubdirectoryCountPropertyChanged(long oldValue, long newValue) => SetHasDependentItems(newValue, FileCount, HasCrawlConfig);
 
         #endregion
         #region FileCount Property Members
@@ -51,7 +52,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="FileCount"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="FileCount"/> property.</param>
-        private void OnFileCountPropertyChanged(long oldValue, long newValue) => SetHasDependentItems(SubdirectoryCount, newValue, HasCrawlConfig);
+        protected void OnFileCountPropertyChanged(long oldValue, long newValue) => SetHasDependentItems(SubdirectoryCount, newValue, HasCrawlConfig);
 
         #endregion
         #region CrawlConfigDisplayName Property Members
@@ -143,7 +144,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="HasCrawlConfig"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="HasCrawlConfig"/> property.</param>
-        private void OnHasCrawlConfigPropertyChanged(bool oldValue, bool newValue) => SetHasDependentItems(SubdirectoryCount, FileCount, newValue);
+        protected void OnHasCrawlConfigPropertyChanged(bool oldValue, bool newValue) => SetHasDependentItems(SubdirectoryCount, FileCount, newValue);
 
         #endregion
         #region HasDependentItems Property Members
@@ -165,6 +166,7 @@ namespace FsInfoCat.Desktop.ViewModel
         private void SetHasDependentItems(long subdirectoryCount, long fileCount, bool hasCrawlConfig) => HasDependentItems = hasCrawlConfig || subdirectoryCount > 0L || fileCount > 0L;
 
         #endregion
+#pragma warning restore IDE0060 // Remove unused parameter
 
         public SubdirectoryListItemViewModel(TEntity entity) : base(entity)
         {

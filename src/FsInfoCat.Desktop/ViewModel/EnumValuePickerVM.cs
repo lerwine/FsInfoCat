@@ -73,7 +73,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="SelectedItem"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="SelectedItem"/> property.</param>
-        private void OnSelectedItemPropertyChanged(EnumChoiceItem<TEnum> oldValue, EnumChoiceItem<TEnum> newValue)
+        protected void OnSelectedItemPropertyChanged(EnumChoiceItem<TEnum> oldValue, EnumChoiceItem<TEnum> newValue)
         {
             if (oldValue is not null)
                 oldValue.IsSelected = false;
@@ -110,7 +110,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="SelectedValue"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="SelectedValue"/> property.</param>
-        private void OnSelectedValuePropertyChanged(TEnum? oldValue, TEnum? newValue)
+        protected void OnSelectedValuePropertyChanged(TEnum? oldValue, TEnum? newValue)
         {
             TEnum? currentValue = SelectedItem?.Value;
             if (newValue.HasValue)
@@ -151,7 +151,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="SelectedIndex"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="SelectedIndex"/> property.</param>
-        private void OnSelectedIndexPropertyChanged(int oldValue, int newValue)
+        protected void OnSelectedIndexPropertyChanged(int oldValue, int newValue)
         {
             SelectedItem = (newValue < 0 || newValue >= _backingChoices.Count) ? null : _backingChoices[newValue];
         }

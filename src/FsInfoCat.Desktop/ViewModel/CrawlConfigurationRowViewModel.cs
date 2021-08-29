@@ -26,7 +26,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="DisplayName"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="DisplayName"/> property.</param>
-        private void OnDisplayNamePropertyChanged(string oldValue, string newValue)
+        protected void OnDisplayNamePropertyChanged(string oldValue, string newValue)
         {
             // TODO: Implement OnDisplayNamePropertyChanged Logic
         }
@@ -52,7 +52,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Notes"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Notes"/> property.</param>
-        private void OnNotesPropertyChanged(string oldValue, string newValue)
+        protected void OnNotesPropertyChanged(string oldValue, string newValue)
         {
             // TODO: Implement OnNotesPropertyChanged Logic
         }
@@ -83,7 +83,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="RescheduleFromJobEnd"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="RescheduleFromJobEnd"/> property.</param>
-        private void OnRescheduleFromJobEndPropertyChanged(bool oldValue, bool newValue)
+        protected void OnRescheduleFromJobEndPropertyChanged(bool oldValue, bool newValue)
         {
             // TODO: Implement OnRescheduleFromJobEndPropertyChanged Logic
         }
@@ -109,7 +109,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="RescheduleAfterFail"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="RescheduleAfterFail"/> property.</param>
-        private void OnRescheduleAfterFailPropertyChanged(bool oldValue, bool newValue)
+        protected void OnRescheduleAfterFailPropertyChanged(bool oldValue, bool newValue)
         {
             // TODO: Implement OnRescheduleAfterFailPropertyChanged Logic
         }
@@ -136,7 +136,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="MaxRecursionDepth"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="MaxRecursionDepth"/> property.</param>
-        private void OnMaxRecursionDepthPropertyChanged(ushort oldValue, ushort newValue)
+        protected void OnMaxRecursionDepthPropertyChanged(ushort oldValue, ushort newValue)
         {
             // TODO: Implement OnMaxRecursionDepthPropertyChanged Logic
         }
@@ -162,7 +162,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="MaxTotalItems"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="MaxTotalItems"/> property.</param>
-        private void OnMaxTotalItemsPropertyChanged(ulong? oldValue, ulong? newValue)
+        protected void OnMaxTotalItemsPropertyChanged(ulong? oldValue, ulong? newValue)
         {
             // TODO: Implement OnMaxTotalItemsPropertyChanged Logic
         }

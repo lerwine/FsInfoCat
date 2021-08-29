@@ -5,6 +5,7 @@ namespace FsInfoCat.Desktop.ViewModel
     public class SummaryPropertiesRowViewModel<TEntity> : DbEntityRowViewModel<TEntity>
         where TEntity : DbEntity, ISummaryProperties
     {
+#pragma warning disable IDE0060 // Remove unused parameter
         #region ApplicationName Property Members
 
         /// <summary>
@@ -25,7 +26,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="ApplicationName"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="ApplicationName"/> property.</param>
-        private void OnApplicationNamePropertyChanged(string oldValue, string newValue)
+        protected void OnApplicationNamePropertyChanged(string oldValue, string newValue)
         {
             // TODO: Implement OnApplicationNamePropertyChanged Logic
         }
@@ -51,7 +52,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Comment"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Comment"/> property.</param>
-        private void OnCommentPropertyChanged(string oldValue, string newValue)
+        protected void OnCommentPropertyChanged(string oldValue, string newValue)
         {
             // TODO: Implement OnCommentPropertyChanged Logic
         }
@@ -77,7 +78,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Subject"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Subject"/> property.</param>
-        private void OnSubjectPropertyChanged(string oldValue, string newValue)
+        protected void OnSubjectPropertyChanged(string oldValue, string newValue)
         {
             // TODO: Implement OnSubjectPropertyChanged Logic
         }
@@ -103,7 +104,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Title"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Title"/> property.</param>
-        private void OnTitlePropertyChanged(string oldValue, string newValue)
+        protected void OnTitlePropertyChanged(string oldValue, string newValue)
         {
             // TODO: Implement OnTitlePropertyChanged Logic
         }
@@ -129,7 +130,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Company"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Company"/> property.</param>
-        private void OnCompanyPropertyChanged(string oldValue, string newValue)
+        protected void OnCompanyPropertyChanged(string oldValue, string newValue)
         {
             // TODO: Implement OnCompanyPropertyChanged Logic
         }
@@ -155,7 +156,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="ContentType"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="ContentType"/> property.</param>
-        private void OnContentTypePropertyChanged(string oldValue, string newValue)
+        protected void OnContentTypePropertyChanged(string oldValue, string newValue)
         {
             // TODO: Implement OnContentTypePropertyChanged Logic
         }
@@ -181,7 +182,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Copyright"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Copyright"/> property.</param>
-        private void OnCopyrightPropertyChanged(string oldValue, string newValue)
+        protected void OnCopyrightPropertyChanged(string oldValue, string newValue)
         {
             // TODO: Implement OnCopyrightPropertyChanged Logic
         }
@@ -207,7 +208,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="ParentalRating"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="ParentalRating"/> property.</param>
-        private void OnParentalRatingPropertyChanged(string oldValue, string newValue)
+        protected void OnParentalRatingPropertyChanged(string oldValue, string newValue)
         {
             // TODO: Implement OnParentalRatingPropertyChanged Logic
         }
@@ -232,7 +233,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Rating"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Rating"/> property.</param>
-        private void OnRatingPropertyChanged(uint? oldValue, uint? newValue)
+        protected void OnRatingPropertyChanged(uint? oldValue, uint? newValue)
         {
             // TODO: Implement OnRatingPropertyChanged Logic
         }
@@ -258,7 +259,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="ItemType"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="ItemType"/> property.</param>
-        private void OnItemTypePropertyChanged(string oldValue, string newValue)
+        protected void OnItemTypePropertyChanged(string oldValue, string newValue)
         {
             // TODO: Implement OnItemTypePropertyChanged Logic
         }
@@ -284,7 +285,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="ItemTypeText"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="ItemTypeText"/> property.</param>
-        private void OnItemTypeTextPropertyChanged(string oldValue, string newValue)
+        protected void OnItemTypeTextPropertyChanged(string oldValue, string newValue)
         {
             // TODO: Implement OnItemTypeTextPropertyChanged Logic
         }
@@ -310,7 +311,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="MIMEType"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="MIMEType"/> property.</param>
-        private void OnMIMETypePropertyChanged(string oldValue, string newValue)
+        protected void OnMIMETypePropertyChanged(string oldValue, string newValue)
         {
             // TODO: Implement OnMIMETypePropertyChanged Logic
         }
@@ -336,7 +337,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="ParentalRatingReason"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="ParentalRatingReason"/> property.</param>
-        private void OnParentalRatingReasonPropertyChanged(string oldValue, string newValue)
+        protected void OnParentalRatingReasonPropertyChanged(string oldValue, string newValue)
         {
             // TODO: Implement OnParentalRatingReasonPropertyChanged Logic
         }
@@ -362,7 +363,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="ParentalRatingsOrganization"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="ParentalRatingsOrganization"/> property.</param>
-        private void OnParentalRatingsOrganizationPropertyChanged(string oldValue, string newValue)
+        protected void OnParentalRatingsOrganizationPropertyChanged(string oldValue, string newValue)
         {
             // TODO: Implement OnParentalRatingsOrganizationPropertyChanged Logic
         }
@@ -387,7 +388,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Sensitivity"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Sensitivity"/> property.</param>
-        private void OnSensitivityPropertyChanged(ushort? oldValue, ushort? newValue)
+        protected void OnSensitivityPropertyChanged(ushort? oldValue, ushort? newValue)
         {
             // TODO: Implement OnSensitivityPropertyChanged Logic
         }
@@ -413,7 +414,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="SensitivityText"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="SensitivityText"/> property.</param>
-        private void OnSensitivityTextPropertyChanged(string oldValue, string newValue)
+        protected void OnSensitivityTextPropertyChanged(string oldValue, string newValue)
         {
             // TODO: Implement OnSensitivityTextPropertyChanged Logic
         }
@@ -439,7 +440,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="SimpleRating"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="SimpleRating"/> property.</param>
-        private void OnSimpleRatingPropertyChanged(uint? oldValue, uint? newValue)
+        protected void OnSimpleRatingPropertyChanged(uint? oldValue, uint? newValue)
         {
             // TODO: Implement OnSimpleRatingPropertyChanged Logic
         }
@@ -465,7 +466,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Trademarks"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Trademarks"/> property.</param>
-        private void OnTrademarksPropertyChanged(string oldValue, string newValue)
+        protected void OnTrademarksPropertyChanged(string oldValue, string newValue)
         {
             // TODO: Implement OnTrademarksPropertyChanged Logic
         }
@@ -491,12 +492,13 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="ProductName"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="ProductName"/> property.</param>
-        private void OnProductNamePropertyChanged(string oldValue, string newValue)
+        protected void OnProductNamePropertyChanged(string oldValue, string newValue)
         {
             // TODO: Implement OnProductNamePropertyChanged Logic
         }
 
         #endregion
+#pragma warning restore IDE0060 // Remove unused parameter
 
         public SummaryPropertiesRowViewModel(TEntity entity) : base(entity)
         {

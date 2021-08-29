@@ -25,10 +25,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Compression"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Compression"/> property.</param>
-        private void OnCompressionPropertyChanged(string oldValue, string newValue)
-        {
-            // TODO: Implement OnCompressionPropertyChanged Logic
-        }
+        protected void OnCompressionPropertyChanged(string oldValue, string newValue) { }
 
         #endregion
         #region EncodingBitrate Property Members
@@ -51,7 +48,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="EncodingBitrate"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="EncodingBitrate"/> property.</param>
-        private void OnEncodingBitratePropertyChanged(uint? oldValue, uint? newValue)
+        protected void OnEncodingBitratePropertyChanged(uint? oldValue, uint? newValue)
         {
             // TODO: Implement OnEncodingBitratePropertyChanged Logic
         }
@@ -77,7 +74,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Format"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Format"/> property.</param>
-        private void OnFormatPropertyChanged(string oldValue, string newValue)
+        protected void OnFormatPropertyChanged(string oldValue, string newValue)
         {
             // TODO: Implement OnFormatPropertyChanged Logic
         }
@@ -103,7 +100,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="IsVariableBitrate"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="IsVariableBitrate"/> property.</param>
-        private void OnIsVariableBitratePropertyChanged(bool? oldValue, bool? newValue)
+        protected void OnIsVariableBitratePropertyChanged(bool? oldValue, bool? newValue)
         {
             // TODO: Implement OnIsVariableBitratePropertyChanged Logic
         }
@@ -129,7 +126,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="SampleRate"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="SampleRate"/> property.</param>
-        private void OnSampleRatePropertyChanged(uint? oldValue, uint? newValue)
+        protected void OnSampleRatePropertyChanged(uint? oldValue, uint? newValue)
         {
             // TODO: Implement OnSampleRatePropertyChanged Logic
         }
@@ -155,7 +152,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="SampleSize"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="SampleSize"/> property.</param>
-        private void OnSampleSizePropertyChanged(uint? oldValue, uint? newValue)
+        protected void OnSampleSizePropertyChanged(uint? oldValue, uint? newValue)
         {
             // TODO: Implement OnSampleSizePropertyChanged Logic
         }
@@ -181,7 +178,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="StreamName"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="StreamName"/> property.</param>
-        private void OnStreamNamePropertyChanged(string oldValue, string newValue)
+        protected void OnStreamNamePropertyChanged(string oldValue, string newValue)
         {
             // TODO: Implement OnStreamNamePropertyChanged Logic
         }
@@ -207,7 +204,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="StreamNumber"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="StreamNumber"/> property.</param>
-        private void OnStreamNumberPropertyChanged(ushort? oldValue, ushort? newValue)
+        protected void OnStreamNumberPropertyChanged(ushort? oldValue, ushort? newValue)
         {
             // TODO: Implement OnStreamNumberPropertyChanged Logic
         }

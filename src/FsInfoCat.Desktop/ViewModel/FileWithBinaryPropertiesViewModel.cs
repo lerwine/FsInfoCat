@@ -5,6 +5,7 @@ namespace FsInfoCat.Desktop.ViewModel
     public class FileWithBinaryPropertiesViewModel<TEntity> : FileRowViewModel<TEntity>
         where TEntity : DbEntity, IFileListItemWithBinaryProperties
     {
+#pragma warning disable IDE0060 // Remove unused parameter
         #region Length Property Members
 
         private static readonly DependencyPropertyKey LengthPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Length), typeof(long), typeof(FileWithBinaryPropertiesViewModel<TEntity>),
@@ -61,7 +62,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="RedundancyCount"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="RedundancyCount"/> property.</param>
-        private void OnRedundancyCountPropertyChanged(long oldValue, long newValue)
+        protected void OnRedundancyCountPropertyChanged(long oldValue, long newValue)
         {
             // TODO: Implement OnRedundancyCountPropertyChanged Logic
         }
@@ -89,7 +90,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="ComparisonCount"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="ComparisonCount"/> property.</param>
-        private void OnComparisonCountPropertyChanged(long oldValue, long newValue)
+        protected void OnComparisonCountPropertyChanged(long oldValue, long newValue)
         {
             // TODO: Implement OnComparisonCountPropertyChanged Logic
         }
@@ -117,7 +118,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="AccessErrorCount"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="AccessErrorCount"/> property.</param>
-        private void OnAccessErrorCountPropertyChanged(long oldValue, long newValue)
+        protected void OnAccessErrorCountPropertyChanged(long oldValue, long newValue)
         {
             // TODO: Implement OnAccessErrorCountPropertyChanged Logic
         }
@@ -145,7 +146,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="PersonalTagCount"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="PersonalTagCount"/> property.</param>
-        private void OnPersonalTagCountPropertyChanged(long oldValue, long newValue)
+        protected void OnPersonalTagCountPropertyChanged(long oldValue, long newValue)
         {
             // TODO: Implement OnPersonalTagCountPropertyChanged Logic
         }
@@ -173,12 +174,13 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="SharedTagCount"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="SharedTagCount"/> property.</param>
-        private void OnSharedTagCountPropertyChanged(long oldValue, long newValue)
+        protected void OnSharedTagCountPropertyChanged(long oldValue, long newValue)
         {
             // TODO: Implement OnSharedTagCountPropertyChanged Logic
         }
 
         #endregion
+#pragma warning restore IDE0060 // Remove unused parameter
 
         public FileWithBinaryPropertiesViewModel(TEntity entity) : base(entity)
         {

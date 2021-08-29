@@ -16,6 +16,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
     /// </summary>
     public class FileSystemItemDetailViewModel : DbEntityItemDetailViewModel<FileSystemListItem, FileSystemItemVM>
     {
+#pragma warning disable IDE0060 // Remove unused parameter
         #region NewSymbolicName Property Members
 
         /// <summary>
@@ -73,7 +74,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         /// <value>The <see cref="System.Windows.Input.ICommand"/> that implements the $command$ command.</value>
         public Commands.RelayCommand ShowViewOptions => (Commands.RelayCommand)GetValue(ShowViewOptionsProperty);
 
-        private void OnShowViewOptions(object parameter)
+        protected void OnShowViewOptions(object parameter)
         {
             // TODO: Implement OnShowViewOptions Logic
         }
@@ -112,7 +113,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         /// <value>The <see cref="System.Windows.Input.ICommand"/> that implements the $command$ command.</value>
         public Commands.RelayCommand ViewOptionsOkClick => (Commands.RelayCommand)GetValue(ViewOptionsOkClickProperty);
 
-        private void OnViewOptionsOkClick(object parameter)
+        protected void OnViewOptionsOkClick(object parameter)
         {
             // TODO: Implement OnViewOptionsOkClick Logic
         }
@@ -134,7 +135,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         /// <value>The <see cref="System.Windows.Input.ICommand"/> that implements the $command$ command.</value>
         public Commands.RelayCommand ViewOptionCancelClick => (Commands.RelayCommand)GetValue(ViewOptionCancelClickProperty);
 
-        private void OnViewOptionCancelClick(object parameter)
+        protected void OnViewOptionCancelClick(object parameter)
         {
             // TODO: Implement OnViewOptionCancelClick Logic
         }
@@ -193,6 +194,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         public ReadOnlyObservableCollection<SymbolicNameWithFileSystemItemVM> SymbolicNames => (ReadOnlyObservableCollection<SymbolicNameWithFileSystemItemVM>)GetValue(SymbolicNamesProperty);
 
         #endregion
+#pragma warning restore IDE0060 // Remove unused parameter
 
         protected override void OnCurrentItemPropertyChanged(FileSystemItemVM oldValue, FileSystemItemVM newValue)
         {

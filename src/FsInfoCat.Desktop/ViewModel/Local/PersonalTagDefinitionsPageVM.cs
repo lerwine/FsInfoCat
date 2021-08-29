@@ -15,6 +15,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
     /// </summary>
     public class PersonalTagDefinitionsPageVM : DbEntityListingPageVM<PersonalTagDefinitionListItem, PersonalTagDefinitionItemVM>
     {
+#pragma warning disable IDE0060 // Remove unused parameter
         #region IsEditingViewOptions Property Members
 
         private static readonly DependencyPropertyKey IsEditingViewOptionsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(IsEditingViewOptions), typeof(bool), typeof(PersonalTagDefinitionsPageVM),
@@ -135,12 +136,13 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="SelectedItem"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="SelectedItem"/> property.</param>
-        private void OnSelectedItemPropertyChanged(PersonalTagDefinitionItemVM oldValue, PersonalTagDefinitionItemVM newValue)
+        protected void OnSelectedItemPropertyChanged(PersonalTagDefinitionItemVM oldValue, PersonalTagDefinitionItemVM newValue)
         {
             // TODO: Implement OnSelectedItemPropertyChanged Logic
         }
 
         #endregion
+#pragma warning restore IDE0060 // Remove unused parameter
 
         public PersonalTagDefinitionsPageVM()
         {

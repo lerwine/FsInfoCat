@@ -5,6 +5,7 @@ namespace FsInfoCat.Desktop.ViewModel
     public class TagDefinitionRowViewModel<TEntity> : DbEntityRowViewModel<TEntity>
         where TEntity : DbEntity, ITagDefinitionRow
     {
+#pragma warning disable IDE0060 // Remove unused parameter
         #region Name Property Members
 
         /// <summary>
@@ -25,7 +26,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Name"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Name"/> property.</param>
-        private void OnNamePropertyChanged(string oldValue, string newValue)
+        protected void OnNamePropertyChanged(string oldValue, string newValue)
         {
             // TODO: Implement OnNamePropertyChanged Logic
         }
@@ -51,7 +52,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Description"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Description"/> property.</param>
-        private void OnDescriptionPropertyChanged(string oldValue, string newValue)
+        protected void OnDescriptionPropertyChanged(string oldValue, string newValue)
         {
             // TODO: Implement OnDescriptionPropertyChanged Logic
         }
@@ -77,12 +78,13 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="IsInactive"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="IsInactive"/> property.</param>
-        private void OnIsInactivePropertyChanged(bool oldValue, bool newValue)
+        protected void OnIsInactivePropertyChanged(bool oldValue, bool newValue)
         {
             // TODO: Implement OnIsInactivePropertyChanged Logic
         }
 
         #endregion
+#pragma warning restore IDE0060 // Remove unused parameter
 
         public TagDefinitionRowViewModel(TEntity entity) : base(entity)
         {
