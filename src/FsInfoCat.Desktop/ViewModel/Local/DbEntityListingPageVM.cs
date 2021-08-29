@@ -17,7 +17,7 @@ using System.Windows.Threading;
 
 namespace FsInfoCat.Desktop.ViewModel.Local
 {
-    public abstract class DbEntityListingPageVM<TDbEntity, TItemVM> : DependencyObject, INotifyNavigationContentChanged
+    public abstract class DbEntityListingPageVM<TDbEntity, TItemVM> : DependencyObject, INotifyNavigatedTo
            where TDbEntity : LocalDbEntity, new()
            where TItemVM : DbEntityItemVM<TDbEntity>
     {
@@ -332,19 +332,13 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         /// <returns><see langword="true"/> if the item should be deleted from the database; otherwise, <see langword="false"/>.</returns>
         protected abstract bool PromptItemDeleting(TItemVM item, object parameter, out string deleteProgressTitle);
 
-        protected virtual void OnNavigatedTo(MainVM mainVM)
+        protected virtual void OnNavigatedTo()
         {
             LoadItemsAsync();
             // TODO: Do initial load from DB
         }
 
-        protected virtual void OnNavigatedFrom(MainVM mainVM)
-        {
-        }
-
-        void INotifyNavigationContentChanged.OnNavigatedTo(MainVM mainVM) => OnNavigatedTo(mainVM);
-
-        void INotifyNavigationContentChanged.OnNavigatedFrom(MainVM mainVM) => OnNavigatedFrom(mainVM);
+        void INotifyNavigatedTo.OnNavigatedTo() => OnNavigatedTo();
     }
 
     public abstract class DbEntityListingPageVM<TDbEntity, TItemVM, TSelectionVM> : DbEntityListingPageVM<TDbEntity, TItemVM>

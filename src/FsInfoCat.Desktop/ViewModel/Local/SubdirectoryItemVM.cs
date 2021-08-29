@@ -391,20 +391,6 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             FileSystemSymbolicName = entity.FileSystemSymbolicName;
         }
 
-        private async Task<string> LookupFullNameAsync(Subdirectory root, IWindowsStatusListener statusListener)
-        {
-            string fullName = await root.GetFullNameAsync(statusListener.CancellationToken);
-            Dispatcher.Invoke(() => OnLookupFullNameComplete(fullName ?? ""));
-            return fullName;
-        }
-
-        private void OnLookupFullNameComplete(string result)
-        {
-            if (FullName.Equals(result))
-                return;
-            FullName = result;
-        }
-
         protected override DbSet<SubdirectoryListItemWithAncestorNames> GetDbSet(LocalDbContext dbContext) => dbContext.SubdirectoryListingWithAncestorNames;
 
         public static string FromAncestorNames(string ancestorNames)

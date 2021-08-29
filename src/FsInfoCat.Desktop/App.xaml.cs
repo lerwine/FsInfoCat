@@ -44,7 +44,7 @@ namespace FsInfoCat.Desktop
         private static void ConfigureServices(IServiceCollection services)
 #pragma warning restore IDE0051 // Remove unused private members
         {
-            Local.LocalDbContext.AddDbContextPool(services
+            FsInfoCat.Local.LocalDbContext.AddDbContextPool(services
                     .AddSingleton<MainWindow>()
                     .AddSingleton<IApplicationNavigation, ViewModel.MainVM>(),
                 typeof(App).Assembly, Desktop.Properties.Settings.Default.LocalDbfileName);

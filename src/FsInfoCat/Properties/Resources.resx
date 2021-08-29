@@ -1749,12 +1749,15 @@
   </data>
   <data name="FormatMessage_AddingNewVolume" xml:space="preserve">
     <value>Saving new Volume "{0}" ({1}).</value>
+    <comment>Parameter 0 : string = Display Name; Parameter 1: string = System Name</comment>
   </data>
   <data name="FormatMessage_DeletingVolume" xml:space="preserve">
     <value>Deleting Volume "{0}" ({1}).</value>
+    <comment>Parameter 0 : string = Display Name; Parameter 1: string = System Name</comment>
   </data>
   <data name="FormatMessage_SavingVolumeChanges" xml:space="preserve">
     <value>Saving changes to Volume "{0}" ({1}).</value>
+    <comment>Parameter 0 : string = Display Name; Parameter 1: string = System Name</comment>
   </data>
   <data name="DisplayName_TagDefinition" xml:space="preserve">
     <value>Tag Definition</value>
@@ -1788,5 +1791,50 @@
   </data>
   <data name="DisplayName_SharedTags" xml:space="preserve">
     <value>Shared Tags</value>
+  </data>
+  <data name="ErrorMessage_InvalidDays" xml:space="preserve">
+    <value>Invalid duration days value.</value>
+  </data>
+  <data name="ErrorMessage_InvalidDuration" xml:space="preserve">
+    <value>Invalid duration value.</value>
+  </data>
+  <data name="ErrorMessage_InvalidHours" xml:space="preserve">
+    <value>Invlid hours value.</value>
+  </data>
+  <data name="ErrorMessage_InvalidMinutes" xml:space="preserve">
+    <value>Invalid minutes value.</value>
+  </data>
+  <data name="ErrorMessage_MaxDurationRequired" xml:space="preserve">
+    <value>Maximum duration required</value>
+  </data>
+  <data name="ErrorMessage_Required" xml:space="preserve">
+    <value>* Required</value>
+  </data>
+  <data name="FormatMessage_InvalidDays" xml:space="preserve">
+    <value>Days value error: {0} </value>
+    <comment>Parameter 0: string = Validation message</comment>
+  </data>
+  <data name="FormatMessage_InvalidHour" xml:space="preserve">
+    <value>Hour value error: {0}</value>
+    <comment>Parameter 0: string = Validation message</comment>
+  </data>
+  <data name="FormatMessage_InvalidHours" xml:space="preserve">
+    <value>Hours value error: {0}</value>
+    <comment>Parameter 0: string = Validation message</comment>
+  </data>
+  <data name="FormatMessage_InvalidMinutes" xml:space="preserve">
+    <value>Minutes value error: {0}</value>
+    <comment>Parameter 0: string = Validation message</comment>
+  </data>
+  <data name="ErrorMessage_InvalidTime" xml:space="preserve">
+    <value>Invalid time</value>
+  </data>
+  <data name="Format_InvalidDate" xml:space="preserve">
+    <value>Invalid date: {0}</value>
+    <comment>Parameter 0: string = Validation message</comment>
+  </data>
+  <data name="Format_InvalidTime" xml:space="preserve">
+    <value>Invalid time: {0}</value>
+    <comment>Parameter 0: string = Validation message</comment>
   </data>
 </root>

@@ -4732,11 +4732,29 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Invalid duration days value..
+        /// </summary>
+        public static string ErrorMessage_InvalidDays {
+            get {
+                return ResourceManager.GetString("ErrorMessage_InvalidDays", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Directory Crawl Option is invalid..
         /// </summary>
         public static string ErrorMessage_InvalidDirectoryCrawlOption {
             get {
                 return ResourceManager.GetString("ErrorMessage_InvalidDirectoryCrawlOption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid duration value..
+        /// </summary>
+        public static string ErrorMessage_InvalidDuration {
+            get {
+                return ResourceManager.GetString("ErrorMessage_InvalidDuration", resourceCulture);
             }
         }
         
@@ -4777,11 +4795,38 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Invlid hours value..
+        /// </summary>
+        public static string ErrorMessage_InvalidHours {
+            get {
+                return ResourceManager.GetString("ErrorMessage_InvalidHours", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid minutes value..
+        /// </summary>
+        public static string ErrorMessage_InvalidMinutes {
+            get {
+                return ResourceManager.GetString("ErrorMessage_InvalidMinutes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to A path validation error has occurred..
         /// </summary>
         public static string ErrorMessage_InvalidPathError {
             get {
                 return ResourceManager.GetString("ErrorMessage_InvalidPathError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid time.
+        /// </summary>
+        public static string ErrorMessage_InvalidTime {
+            get {
+                return ResourceManager.GetString("ErrorMessage_InvalidTime", resourceCulture);
             }
         }
         
@@ -4858,6 +4903,15 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Maximum duration required.
+        /// </summary>
+        public static string ErrorMessage_MaxDurationRequired {
+            get {
+                return ResourceManager.GetString("ErrorMessage_MaxDurationRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Maximum Name Length must be greater than zero..
         /// </summary>
         public static string ErrorMessage_MaxNameLengthInvalid {
@@ -4917,6 +4971,15 @@ namespace FsInfoCat.Properties {
         public static string ErrorMessage_ReferenceLength {
             get {
                 return ResourceManager.GetString("ErrorMessage_ReferenceLength", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to * Required.
+        /// </summary>
+        public static string ErrorMessage_Required {
+            get {
+                return ResourceManager.GetString("ErrorMessage_Required", resourceCulture);
             }
         }
         
@@ -5038,6 +5101,24 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Invalid date: {0}.
+        /// </summary>
+        public static string Format_InvalidDate {
+            get {
+                return ResourceManager.GetString("Format_InvalidDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid time: {0}.
+        /// </summary>
+        public static string Format_InvalidTime {
+            get {
+                return ResourceManager.GetString("Format_InvalidTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Saving new Volume &quot;{0}&quot; ({1})..
         /// </summary>
         public static string FormatMessage_AddingNewVolume {
@@ -5052,6 +5133,42 @@ namespace FsInfoCat.Properties {
         public static string FormatMessage_DeletingVolume {
             get {
                 return ResourceManager.GetString("FormatMessage_DeletingVolume", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Days value error: {0} .
+        /// </summary>
+        public static string FormatMessage_InvalidDays {
+            get {
+                return ResourceManager.GetString("FormatMessage_InvalidDays", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hour value error: {0}.
+        /// </summary>
+        public static string FormatMessage_InvalidHour {
+            get {
+                return ResourceManager.GetString("FormatMessage_InvalidHour", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hours value error: {0}.
+        /// </summary>
+        public static string FormatMessage_InvalidHours {
+            get {
+                return ResourceManager.GetString("FormatMessage_InvalidHours", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Minutes value error: {0}.
+        /// </summary>
+        public static string FormatMessage_InvalidMinutes {
+            get {
+                return ResourceManager.GetString("FormatMessage_InvalidMinutes", resourceCulture);
             }
         }
         

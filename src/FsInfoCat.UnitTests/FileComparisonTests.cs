@@ -42,7 +42,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(target.CreatedOn, target.ComparedOn);
 
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for new FileComparison()
+            // DEFERRED: Implement test for new FileComparison()
 
             dbContext.Comparisons.Add(target);
             Assert.AreEqual(EntityState.Added, entry.State);
@@ -61,7 +61,7 @@ namespace FsInfoCat.UnitTests
         public void BaselineIdTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for Guid BaselineId
+            // DEFERRED: Implement test for Guid BaselineId
 
             FileComparison target = default; // TODO: Create and initialize FileComparison instance
             Guid expectedValue = default;
@@ -74,7 +74,7 @@ namespace FsInfoCat.UnitTests
         public void CorrelativeIdTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for Guid CorrelativeId
+            // DEFERRED: Implement test for Guid CorrelativeId
 
             FileComparison target = default; // TODO: Create and initialize FileComparison instance
             Guid expectedValue = default;
@@ -87,7 +87,7 @@ namespace FsInfoCat.UnitTests
         public void AreEqualTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for bool AreEqual
+            // DEFERRED: Implement test for bool AreEqual
 
             FileComparison target = default; // TODO: Create and initialize FileComparison instance
             bool expectedValue = default;
@@ -100,7 +100,7 @@ namespace FsInfoCat.UnitTests
         public void ComparedOnTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for DateTime ComparedOn
+            // DEFERRED: Implement test for DateTime ComparedOn
 
             FileComparison target = default; // TODO: Create and initialize FileComparison instance
             DateTime expectedValue = default;
@@ -113,7 +113,7 @@ namespace FsInfoCat.UnitTests
         public void BaselineTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for DbFile Baseline
+            // DEFERRED: Implement test for DbFile Baseline
 
             FileComparison target = default; // TODO: Create and initialize FileComparison instance
             DbFile expectedValue = default;
@@ -126,7 +126,7 @@ namespace FsInfoCat.UnitTests
         public void CorrelativeTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for DbFile Correlative
+            // DEFERRED: Implement test for DbFile Correlative
 
             FileComparison target = default; // TODO: Create and initialize FileComparison instance
             DbFile expectedValue = default;
@@ -139,7 +139,7 @@ namespace FsInfoCat.UnitTests
         public void UpstreamIdTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for Guid? UpstreamId
+            // DEFERRED: Implement test for Guid? UpstreamId
 
             FileComparison target = default; // TODO: Create and initialize FileComparison instance
             Guid? expectedValue = default;
@@ -154,7 +154,7 @@ namespace FsInfoCat.UnitTests
         public void LastSynchronizedOnTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for DateTime? LastSynchronizedOn
+            // DEFERRED: Implement test for DateTime? LastSynchronizedOn
 
             FileComparison target = default; // TODO: Create and initialize FileComparison instance
             DateTime? expectedValue = default;
@@ -168,7 +168,7 @@ namespace FsInfoCat.UnitTests
         public void CreatedOnTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for DateTime CreatedOn
+            // DEFERRED: Implement test for DateTime CreatedOn
 
             FileComparison target = default; // TODO: Create and initialize FileComparison instance
             DateTime expectedValue = default;
@@ -181,7 +181,7 @@ namespace FsInfoCat.UnitTests
         public void ModifiedOnTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for DateTime ModifiedOn
+            // DEFERRED: Implement test for DateTime ModifiedOn
 
             FileComparison target = default; // TODO: Create and initialize FileComparison instance
             DateTime expectedValue = default;
@@ -194,7 +194,7 @@ namespace FsInfoCat.UnitTests
         public void ItemColumnNameTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for string Item[string]
+            // DEFERRED: Implement test for string Item[string]
 
             string columnNameIndex = default;
             FileComparison target = default; // TODO: Create and initialize FileComparison instance
@@ -207,7 +207,7 @@ namespace FsInfoCat.UnitTests
         public void ValidateValidationContextTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for IEnumerable<ValidationResult> Validate(ValidationContext)
+            // DEFERRED: Implement test for IEnumerable<ValidationResult> Validate(ValidationContext)
 
             ValidationContext validationContextArg = default;
             FileComparison target = default; // TODO: Create and initialize FileComparison instance
@@ -220,7 +220,7 @@ namespace FsInfoCat.UnitTests
         public void HasErrorsTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for bool HasErrors()
+            // DEFERRED: Implement test for bool HasErrors()
 
             FileComparison target = default; // TODO: Create and initialize FileComparison instance
             bool expectedReturnValue = default;
@@ -232,7 +232,7 @@ namespace FsInfoCat.UnitTests
         public void AcceptChangesTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for void AcceptChanges()
+            // DEFERRED: Implement test for void AcceptChanges()
 
             FileComparison target = default; // TODO: Create and initialize FileComparison instance
             target.AcceptChanges();
@@ -242,7 +242,7 @@ namespace FsInfoCat.UnitTests
         public void IsChangedTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for bool IsChanged()
+            // DEFERRED: Implement test for bool IsChanged()
 
             FileComparison target = default; // TODO: Create and initialize FileComparison instance
             bool expectedReturnValue = default;
@@ -254,7 +254,7 @@ namespace FsInfoCat.UnitTests
         public void RejectChangesTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for void RejectChanges()
+            // DEFERRED: Implement test for void RejectChanges()
 
             FileComparison target = default; // TODO: Create and initialize FileComparison instance
             target.RejectChanges();
@@ -264,7 +264,7 @@ namespace FsInfoCat.UnitTests
         public void GetTypeTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for Type GetType()
+            // DEFERRED: Implement test for Type GetType()
 
             FileComparison target = default; // TODO: Create and initialize FileComparison instance
             Type expectedReturnValue = default;
@@ -276,7 +276,7 @@ namespace FsInfoCat.UnitTests
         public void ToStringTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for string ToString()
+            // DEFERRED: Implement test for string ToString()
 
             FileComparison target = default; // TODO: Create and initialize FileComparison instance
             string expectedReturnValue = default;
@@ -288,7 +288,7 @@ namespace FsInfoCat.UnitTests
         public void EqualsObjectTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for bool Equals(object)
+            // DEFERRED: Implement test for bool Equals(object)
 
             object objArg = default;
             FileComparison target = default; // TODO: Create and initialize FileComparison instance
@@ -301,7 +301,7 @@ namespace FsInfoCat.UnitTests
         public void GetHashCodeTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for int GetHashCode()
+            // DEFERRED: Implement test for int GetHashCode()
 
             FileComparison target = default; // TODO: Create and initialize FileComparison instance
             int expectedReturnValue = default;

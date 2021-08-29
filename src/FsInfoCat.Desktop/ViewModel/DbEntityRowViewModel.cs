@@ -1,21 +1,24 @@
+using FsInfoCat.Collections;
 using FsInfoCat.Local;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace FsInfoCat.Desktop
+namespace FsInfoCat.Desktop.ViewModel
 {
-    public abstract class DbEntityViewModel<TEntity> : DependencyObject, IObserver<PropertyValueChangedEventArgs>
+    public class DbEntityRowViewModel<TEntity> : DependencyObject
         where TEntity : DbEntity
     {
         protected internal TEntity Entity { get; }
         #region CreatedOn Property Members
 
-        private static readonly DependencyPropertyKey CreatedOnPropertyKey = DependencyProperty.RegisterReadOnly(nameof(CreatedOn), typeof(DateTime), typeof(DbEntityViewModel<TEntity>),
+        private static readonly DependencyPropertyKey CreatedOnPropertyKey = DependencyProperty.RegisterReadOnly(nameof(CreatedOn), typeof(DateTime), typeof(DbEntityRowViewModel<TEntity>),
                 new PropertyMetadata(default(DateTime)));
 
         /// <summary>
@@ -32,7 +35,7 @@ namespace FsInfoCat.Desktop
         #endregion
         #region ModifiedOn Property Members
 
-        private static readonly DependencyPropertyKey ModifiedOnPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ModifiedOn), typeof(DateTime), typeof(DbEntityViewModel<TEntity>),
+        private static readonly DependencyPropertyKey ModifiedOnPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ModifiedOn), typeof(DateTime), typeof(DbEntityRowViewModel<TEntity>),
                 new PropertyMetadata(default(DateTime)));
 
         /// <summary>
@@ -48,30 +51,27 @@ namespace FsInfoCat.Desktop
 
         #endregion
 
-        protected DbEntityViewModel(TEntity entity)
+        protected DbEntityRowViewModel(TEntity entity)
         {
             Entity = entity ?? throw new ArgumentNullException(nameof(entity));
             CreatedOn = entity.CreatedOn;
             ModifiedOn = entity.ModifiedOn;
-            entity.Subscribe(this);
+            WeakPropertyChangedEventRelay.Attach(entity, OnEntityPropertyChanged);
         }
 
-        public void OnCompleted()
-        {
-            // TODO: Implement push notification
-            throw new NotImplementedException();
-        }
+        private void OnEntityPropertyChanged(object sender, PropertyChangedEventArgs args) => OnEntityPropertyChanged(args.PropertyName ?? "");
 
-        public void OnError(Exception error)
+        protected virtual void OnEntityPropertyChanged(string propertyName)
         {
-            // TODO: Implement push notification
-            throw new NotImplementedException();
-        }
-
-        public void OnNext(PropertyValueChangedEventArgs value)
-        {
-            // TODO: Implement push notification
-            throw new NotImplementedException();
+            switch (propertyName)
+            {
+                case nameof(CreatedOn):
+                    Dispatcher.CheckInvoke(() => CreatedOn = Entity.CreatedOn);
+                    break;
+                case nameof(ModifiedOn):
+                    Dispatcher.CheckInvoke(() => ModifiedOn = Entity.ModifiedOn);
+                    break;
+            }
         }
     }
 }

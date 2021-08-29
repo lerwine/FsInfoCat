@@ -32,7 +32,7 @@ namespace FsInfoCat
 
         string CrawlConfigDisplayName { get; }
     }
-    public interface ISubdirectoryListItemWithAncestorNames : IDbFsItemListItemWithAncestorNames, ISubdirectoryRow, ISubdirectoryAncestorName { }
+    public interface ISubdirectoryListItemWithAncestorNames : IDbFsItemListItemWithAncestorNames, ISubdirectoryListItem, ISubdirectoryRow, ISubdirectoryAncestorName { }
     /// <summary>Interface for entities that represent a subdirectory node within a file system.</summary>
     /// <seealso cref="IDbFsItem" />
     public interface ISubdirectory : ISubdirectoryRow, IDbFsItem

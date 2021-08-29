@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace FsInfoCat
 {
-    internal class ValueCoersion<T> : Coersion<T>
+    public class ValueCoersion<T> : Coersion<T>
         where T : struct
     {
         private static readonly EqualityComparer<T> _comparer = EqualityComparer<T>.Default;
@@ -22,5 +22,4 @@ namespace FsInfoCat
             return false;
         }
     }
-
 }

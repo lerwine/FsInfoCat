@@ -13,6 +13,23 @@ namespace FsInfoCat
 {
     public static class EntityExtensions
     {
+        public static string ToVersionString(this Collections.ByteValues value)
+        {
+            if (value is null || value.Count == 0)
+                return "";
+            return string.Join('.', value.Select(b => b.ToString()));
+        }
+
+        public static string AncestorNamesToPath(string ancestorNames)
+        {
+            if (string.IsNullOrWhiteSpace(ancestorNames))
+                return "";
+            string[] segments = ancestorNames.Split('/').Where(s => s.Length > 0).ToArray();
+            if (segments.Length < 2)
+                return ancestorNames;
+            return System.IO.Path.Combine(segments.Reverse().ToArray());
+        }
+
         public static ISimpleIdentityReference<TEntity> ToIdentityReference<TEntity>(this Guid? id) where TEntity : class, IDbEntity =>
             id.HasValue ? IdentityReference<TEntity>.FromId(id.Value) : null;
 

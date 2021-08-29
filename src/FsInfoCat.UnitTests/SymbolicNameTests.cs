@@ -45,7 +45,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(target.CreatedOn, target.ModifiedOn);
 
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for new SymbolicName()
+            // DEFERRED: Implement test for new SymbolicName()
 
             dbContext.SymbolicNames.Add(target);
             Assert.AreNotEqual(Guid.Empty, target.Id);
@@ -112,7 +112,7 @@ namespace FsInfoCat.UnitTests
         public void IsInactiveTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for bool IsInactive
+            // DEFERRED: Implement test for bool IsInactive
 
             SymbolicName target = default; // TODO: Create and initialize SymbolicName instance
             bool expectedValue = default;
@@ -125,7 +125,7 @@ namespace FsInfoCat.UnitTests
         public void PriorityTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for int Priority
+            // DEFERRED: Implement test for int Priority
 
             SymbolicName target = default; // TODO: Create and initialize SymbolicName instance
             int expectedValue = default;
@@ -138,7 +138,7 @@ namespace FsInfoCat.UnitTests
         public void FileSystemIdTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for Guid FileSystemId
+            // DEFERRED: Implement test for Guid FileSystemId
 
             SymbolicName target = default; // TODO: Create and initialize SymbolicName instance
             Guid expectedValue = default;
@@ -151,7 +151,7 @@ namespace FsInfoCat.UnitTests
         public void FileSystemTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for FileSystem FileSystem
+            // DEFERRED: Implement test for FileSystem FileSystem
 
             SymbolicName target = default; // TODO: Create and initialize SymbolicName instance
             FileSystem expectedValue = default;
@@ -164,7 +164,7 @@ namespace FsInfoCat.UnitTests
         public void UpstreamIdTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for Guid? UpstreamId
+            // DEFERRED: Implement test for Guid? UpstreamId
 
             SymbolicName target = default; // TODO: Create and initialize SymbolicName instance
             Guid? expectedValue = default;
@@ -179,7 +179,7 @@ namespace FsInfoCat.UnitTests
         public void LastSynchronizedOnTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for DateTime? LastSynchronizedOn
+            // DEFERRED: Implement test for DateTime? LastSynchronizedOn
 
             SymbolicName target = default; // TODO: Create and initialize SymbolicName instance
             DateTime? expectedValue = default;
@@ -193,7 +193,7 @@ namespace FsInfoCat.UnitTests
         public void CreatedOnTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for DateTime CreatedOn
+            // DEFERRED: Implement test for DateTime CreatedOn
 
             SymbolicName target = default; // TODO: Create and initialize SymbolicName instance
             DateTime expectedValue = default;
@@ -206,7 +206,7 @@ namespace FsInfoCat.UnitTests
         public void ModifiedOnTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for DateTime ModifiedOn
+            // DEFERRED: Implement test for DateTime ModifiedOn
 
             SymbolicName target = default; // TODO: Create and initialize SymbolicName instance
             DateTime expectedValue = default;
@@ -219,7 +219,7 @@ namespace FsInfoCat.UnitTests
         public void ItemColumnNameTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for string Item[string]
+            // DEFERRED: Implement test for string Item[string]
 
             string columnNameIndex = default;
             SymbolicName target = default; // TODO: Create and initialize SymbolicName instance
@@ -232,7 +232,7 @@ namespace FsInfoCat.UnitTests
         public void ValidateValidationContextTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for IEnumerable<ValidationResult> Validate(ValidationContext)
+            // DEFERRED: Implement test for IEnumerable<ValidationResult> Validate(ValidationContext)
 
             ValidationContext validationContextArg = default;
             SymbolicName target = default; // TODO: Create and initialize SymbolicName instance
@@ -245,7 +245,7 @@ namespace FsInfoCat.UnitTests
         public void HasErrorsTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for bool HasErrors()
+            // DEFERRED: Implement test for bool HasErrors()
 
             SymbolicName target = default; // TODO: Create and initialize SymbolicName instance
             bool expectedReturnValue = default;
@@ -257,7 +257,7 @@ namespace FsInfoCat.UnitTests
         public void AcceptChangesTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for void AcceptChanges()
+            // DEFERRED: Implement test for void AcceptChanges()
 
             SymbolicName target = default; // TODO: Create and initialize SymbolicName instance
             target.AcceptChanges();
@@ -267,7 +267,7 @@ namespace FsInfoCat.UnitTests
         public void IsChangedTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for bool IsChanged()
+            // DEFERRED: Implement test for bool IsChanged()
 
             SymbolicName target = default; // TODO: Create and initialize SymbolicName instance
             bool expectedReturnValue = default;
@@ -279,7 +279,7 @@ namespace FsInfoCat.UnitTests
         public void RejectChangesTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for void RejectChanges()
+            // DEFERRED: Implement test for void RejectChanges()
 
             SymbolicName target = default; // TODO: Create and initialize SymbolicName instance
             target.RejectChanges();
@@ -289,7 +289,7 @@ namespace FsInfoCat.UnitTests
         public void GetTypeTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for Type GetType()
+            // DEFERRED: Implement test for Type GetType()
 
             SymbolicName target = default; // TODO: Create and initialize SymbolicName instance
             Type expectedReturnValue = default;
@@ -301,7 +301,7 @@ namespace FsInfoCat.UnitTests
         public void ToStringTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for string ToString()
+            // DEFERRED: Implement test for string ToString()
 
             SymbolicName target = default; // TODO: Create and initialize SymbolicName instance
             string expectedReturnValue = default;
@@ -313,7 +313,7 @@ namespace FsInfoCat.UnitTests
         public void EqualsObjectTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for bool Equals(object)
+            // DEFERRED: Implement test for bool Equals(object)
 
             object objArg = default;
             SymbolicName target = default; // TODO: Create and initialize SymbolicName instance
@@ -326,7 +326,7 @@ namespace FsInfoCat.UnitTests
         public void GetHashCodeTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for int GetHashCode()
+            // DEFERRED: Implement test for int GetHashCode()
 
             SymbolicName target = default; // TODO: Create and initialize SymbolicName instance
             int expectedReturnValue = default;

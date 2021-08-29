@@ -260,15 +260,11 @@ namespace FsInfoCat.Desktop.ViewModel
             {
                 if (oldContent.DataContext is INotifyNavigatedFrom navigatedFrom)
                     navigatedFrom.OnNavigatedFrom();
-                if (oldContent.DataContext is INotifyNavigationContentChanged navigated)
-                    navigated.OnNavigatedFrom(this);
             }
             if (newValue is FrameworkElement newContent)
             {
                 if (newContent.DataContext is INotifyNavigatedTo navigatedTo)
                     navigatedTo.OnNavigatedTo();
-                if (newContent.DataContext is INotifyNavigationContentChanged navigated)
-                    navigated.OnNavigatedFrom(this);
             }
         }
 

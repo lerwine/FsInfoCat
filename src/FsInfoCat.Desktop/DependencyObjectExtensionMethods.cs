@@ -4,12 +4,16 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Threading;
 
 namespace FsInfoCat.Desktop
 {
     public static class DependencyObjectExtensionMethods
     {
+        public static CoerceValueCallback ToCoerceValueCallback<T>(this ICoersion<T> coersion) => (coersion is null) ? null :
+            (DependencyObject d, object baseValue) => coersion.Coerce(baseValue);
+
         public static void CheckInvoke<TArg1, TArg2, TArg3>(this Dispatcher dispatcher, TArg1 arg1, TArg2 arg2, TArg3 arg3, Action<TArg1, TArg2, TArg3> callback, DispatcherPriority priority = DispatcherPriority.Background)
         {
             if (dispatcher.CheckAccess())

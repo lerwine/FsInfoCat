@@ -42,7 +42,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(target.CreatedOn, target.ModifiedOn);
 
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for new BinaryProperties()
+            // DEFERRED: Implement test for new BinaryProperties()
 
             dbContext.BinaryPropertySets.Add(target);
             Assert.AreEqual(EntityState.Added, entry.State);
@@ -78,7 +78,7 @@ namespace FsInfoCat.UnitTests
         public void LengthTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for long Length
+            // DEFERRED: Implement test for long Length
 
             BinaryPropertySet target = default; // TODO: Create and initialize BinaryProperties instance
             long expectedValue = default;
@@ -92,7 +92,7 @@ namespace FsInfoCat.UnitTests
         public void HashTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for MD5Hash? Hash
+            // DEFERRED: Implement test for MD5Hash? Hash
 
             BinaryPropertySet target = default; // TODO: Create and initialize BinaryProperties instance
             MD5Hash? expectedValue = default;
@@ -105,7 +105,7 @@ namespace FsInfoCat.UnitTests
         public void FilesTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for HashSet<DbFile> Files
+            // DEFERRED: Implement test for HashSet<DbFile> Files
 
             BinaryPropertySet target = default; // TODO: Create and initialize BinaryProperties instance
             HashSet<DbFile> expectedValue = default;
@@ -118,7 +118,7 @@ namespace FsInfoCat.UnitTests
         public void RedundantSetsTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for HashSet<RedundantSet> RedundantSets
+            // DEFERRED: Implement test for HashSet<RedundantSet> RedundantSets
 
             BinaryPropertySet target = default; // TODO: Create and initialize BinaryProperties instance
             HashSet<RedundantSet> expectedValue = default;
@@ -131,7 +131,7 @@ namespace FsInfoCat.UnitTests
         public void UpstreamIdTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for Guid? UpstreamId
+            // DEFERRED: Implement test for Guid? UpstreamId
 
             BinaryPropertySet target = default; // TODO: Create and initialize BinaryProperties instance
             Guid? expectedValue = default;
@@ -146,7 +146,7 @@ namespace FsInfoCat.UnitTests
         public void LastSynchronizedOnTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for DateTime? LastSynchronizedOn
+            // DEFERRED: Implement test for DateTime? LastSynchronizedOn
 
             BinaryPropertySet target = default; // TODO: Create and initialize BinaryProperties instance
             DateTime? expectedValue = default;
@@ -160,7 +160,7 @@ namespace FsInfoCat.UnitTests
         public void CreatedOnTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for DateTime CreatedOn
+            // DEFERRED: Implement test for DateTime CreatedOn
 
             BinaryPropertySet target = default; // TODO: Create and initialize BinaryProperties instance
             DateTime expectedValue = default;
@@ -173,7 +173,7 @@ namespace FsInfoCat.UnitTests
         public void ModifiedOnTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for DateTime ModifiedOn
+            // DEFERRED: Implement test for DateTime ModifiedOn
 
             BinaryPropertySet target = default; // TODO: Create and initialize BinaryProperties instance
             DateTime expectedValue = default;
@@ -186,7 +186,7 @@ namespace FsInfoCat.UnitTests
         public void ItemColumnNameTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for string Item[string]
+            // DEFERRED: Implement test for string Item[string]
 
             string columnNameIndex = default;
             BinaryPropertySet target = default; // TODO: Create and initialize BinaryProperties instance
@@ -199,7 +199,7 @@ namespace FsInfoCat.UnitTests
         public void ValidateValidationContextTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for IEnumerable<ValidationResult> Validate(ValidationContext)
+            // DEFERRED: Implement test for IEnumerable<ValidationResult> Validate(ValidationContext)
 
             ValidationContext validationContextArg = default;
             BinaryPropertySet target = default; // TODO: Create and initialize BinaryProperties instance
@@ -212,7 +212,7 @@ namespace FsInfoCat.UnitTests
         public void HasErrorsTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for bool HasErrors()
+            // DEFERRED: Implement test for bool HasErrors()
 
             BinaryPropertySet target = default; // TODO: Create and initialize BinaryProperties instance
             bool expectedReturnValue = default;
@@ -224,7 +224,7 @@ namespace FsInfoCat.UnitTests
         public void AcceptChangesTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for void AcceptChanges()
+            // DEFERRED: Implement test for void AcceptChanges()
 
             BinaryPropertySet target = default; // TODO: Create and initialize BinaryProperties instance
             target.AcceptChanges();
@@ -234,7 +234,7 @@ namespace FsInfoCat.UnitTests
         public void IsChangedTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for bool IsChanged()
+            // DEFERRED: Implement test for bool IsChanged()
 
             BinaryPropertySet target = default; // TODO: Create and initialize BinaryProperties instance
             bool expectedReturnValue = default;
@@ -246,7 +246,7 @@ namespace FsInfoCat.UnitTests
         public void RejectChangesTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for void RejectChanges()
+            // DEFERRED: Implement test for void RejectChanges()
 
             BinaryPropertySet target = default; // TODO: Create and initialize BinaryProperties instance
             target.RejectChanges();
@@ -256,7 +256,7 @@ namespace FsInfoCat.UnitTests
         public void GetTypeTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for Type GetType()
+            // DEFERRED: Implement test for Type GetType()
 
             BinaryPropertySet target = default; // TODO: Create and initialize BinaryProperties instance
             Type expectedReturnValue = default;
@@ -268,7 +268,7 @@ namespace FsInfoCat.UnitTests
         public void ToStringTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for string ToString()
+            // DEFERRED: Implement test for string ToString()
 
             BinaryPropertySet target = default; // TODO: Create and initialize BinaryProperties instance
             string expectedReturnValue = default;
@@ -280,7 +280,7 @@ namespace FsInfoCat.UnitTests
         public void EqualsObjectTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for bool Equals(object)
+            // DEFERRED: Implement test for bool Equals(object)
 
             object objArg = default;
             BinaryPropertySet target = default; // TODO: Create and initialize BinaryProperties instance
@@ -293,7 +293,7 @@ namespace FsInfoCat.UnitTests
         public void GetHashCodeTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for int GetHashCode()
+            // DEFERRED: Implement test for int GetHashCode()
 
             BinaryPropertySet target = default; // TODO: Create and initialize BinaryProperties instance
             int expectedReturnValue = default;

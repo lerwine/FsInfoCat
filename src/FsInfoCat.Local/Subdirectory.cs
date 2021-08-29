@@ -175,13 +175,6 @@ namespace FsInfoCat.Local
             throw new NotImplementedException();
         }
 
-        public async Task<string> GetFullNameAsync(CancellationToken cancellationToken)
-        {
-            using IServiceScope scope = Services.ServiceProvider.CreateScope();
-            using LocalDbContext dbContext = scope.ServiceProvider.GetRequiredService<LocalDbContext>();
-            return await GetFullNameAsync(dbContext, cancellationToken);
-        }
-
         public async Task<string> GetFullNameAsync([DisallowNull] LocalDbContext dbContext, CancellationToken cancellationToken)
         {
             //Monitor.Enter(_parent);
@@ -597,21 +590,6 @@ namespace FsInfoCat.Local
             SetError(dbContext, AccessErrorCode.Unspecified, exception);
 
         public record CrawlConfigWithFullRootPath<T>(string FullName, Guid SubdirectoryId, T Source);
-
-        public static async Task<List<CrawlConfigWithFullRootPath<T>>> BuildFullNamesAsync<T>(IEnumerable<T> source, Func<T, Subdirectory> factory,
-            LocalDbContext dbContext, CancellationToken cancellationToken)
-        {
-            List<CrawlConfigWithFullRootPath<T>> result = new();
-            foreach (T t in source)
-            {
-                Subdirectory subdirectory = factory(t);
-                if (subdirectory is null)
-                    result.Add(new CrawlConfigWithFullRootPath<T>("", Guid.Empty, t));
-                else
-                    result.Add(new CrawlConfigWithFullRootPath<T>(await subdirectory.GetFullNameAsync(dbContext, cancellationToken), subdirectory.Id, t));
-            }
-            return result;
-        }
 
         internal static void OnBuildEntity(EntityTypeBuilder<Subdirectory> builder)
         {

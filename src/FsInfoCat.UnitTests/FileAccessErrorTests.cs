@@ -42,7 +42,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(target.CreatedOn, target.ModifiedOn);
 
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for new FileAccessError()
+            // DEFERRED: Implement test for new FileAccessError()
 
             dbContext.FileAccessErrors.Add(target);
             Assert.AreNotEqual(Guid.Empty, target.Id);
@@ -106,7 +106,7 @@ namespace FsInfoCat.UnitTests
         public void ErrorCodeTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for AccessErrorCode ErrorCode
+            // DEFERRED: Implement test for AccessErrorCode ErrorCode
 
             FileAccessError target = default; // TODO: Create and initialize FileAccessError instance
             AccessErrorCode expectedValue = default;
@@ -119,7 +119,7 @@ namespace FsInfoCat.UnitTests
         public void TargetIdTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for Guid TargetId
+            // DEFERRED: Implement test for Guid TargetId
 
             FileAccessError target = default; // TODO: Create and initialize FileAccessError instance
             Guid expectedValue = default;
@@ -132,7 +132,7 @@ namespace FsInfoCat.UnitTests
         public void TargetTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for DbFile Target
+            // DEFERRED: Implement test for DbFile Target
 
             FileAccessError target = default; // TODO: Create and initialize FileAccessError instance
             DbFile expectedValue = default;
@@ -146,7 +146,7 @@ namespace FsInfoCat.UnitTests
         public void CreatedOnTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for DateTime CreatedOn
+            // DEFERRED: Implement test for DateTime CreatedOn
 
             FileAccessError target = default; // TODO: Create and initialize FileAccessError instance
             DateTime expectedValue = default;
@@ -159,7 +159,7 @@ namespace FsInfoCat.UnitTests
         public void ModifiedOnTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for DateTime ModifiedOn
+            // DEFERRED: Implement test for DateTime ModifiedOn
 
             FileAccessError target = default; // TODO: Create and initialize FileAccessError instance
             DateTime expectedValue = default;
@@ -172,7 +172,7 @@ namespace FsInfoCat.UnitTests
         public void ItemColumnNameTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for string Item[string]
+            // DEFERRED: Implement test for string Item[string]
 
             string columnNameIndex = default;
             FileAccessError target = default; // TODO: Create and initialize FileAccessError instance
@@ -185,7 +185,7 @@ namespace FsInfoCat.UnitTests
         public void ValidateValidationContextTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for IEnumerable<ValidationResult> Validate(ValidationContext)
+            // DEFERRED: Implement test for IEnumerable<ValidationResult> Validate(ValidationContext)
 
             ValidationContext validationContextArg = default;
             FileAccessError target = default; // TODO: Create and initialize FileAccessError instance
@@ -198,7 +198,7 @@ namespace FsInfoCat.UnitTests
         public void HasErrorsTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for bool HasErrors()
+            // DEFERRED: Implement test for bool HasErrors()
 
             FileAccessError target = default; // TODO: Create and initialize FileAccessError instance
             bool expectedReturnValue = default;
@@ -210,7 +210,7 @@ namespace FsInfoCat.UnitTests
         public void AcceptChangesTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for void AcceptChanges()
+            // DEFERRED: Implement test for void AcceptChanges()
 
             FileAccessError target = default; // TODO: Create and initialize FileAccessError instance
             target.AcceptChanges();
@@ -220,7 +220,7 @@ namespace FsInfoCat.UnitTests
         public void IsChangedTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for bool IsChanged()
+            // DEFERRED: Implement test for bool IsChanged()
 
             FileAccessError target = default; // TODO: Create and initialize FileAccessError instance
             bool expectedReturnValue = default;
@@ -232,7 +232,7 @@ namespace FsInfoCat.UnitTests
         public void RejectChangesTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for void RejectChanges()
+            // DEFERRED: Implement test for void RejectChanges()
 
             FileAccessError target = default; // TODO: Create and initialize FileAccessError instance
             target.RejectChanges();
@@ -242,7 +242,7 @@ namespace FsInfoCat.UnitTests
         public void GetTypeTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for Type GetType()
+            // DEFERRED: Implement test for Type GetType()
 
             FileAccessError target = default; // TODO: Create and initialize FileAccessError instance
             Type expectedReturnValue = default;
@@ -254,7 +254,7 @@ namespace FsInfoCat.UnitTests
         public void ToStringTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for string ToString()
+            // DEFERRED: Implement test for string ToString()
 
             FileAccessError target = default; // TODO: Create and initialize FileAccessError instance
             string expectedReturnValue = default;
@@ -266,7 +266,7 @@ namespace FsInfoCat.UnitTests
         public void EqualsObjectTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for bool Equals(object)
+            // DEFERRED: Implement test for bool Equals(object)
 
             object objArg = default;
             FileAccessError target = default; // TODO: Create and initialize FileAccessError instance
@@ -279,7 +279,7 @@ namespace FsInfoCat.UnitTests
         public void GetHashCodeTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // TODO: Implement test for int GetHashCode()
+            // DEFERRED: Implement test for int GetHashCode()
 
             FileAccessError target = default; // TODO: Create and initialize FileAccessError instance
             int expectedReturnValue = default;

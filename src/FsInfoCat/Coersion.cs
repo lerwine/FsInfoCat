@@ -10,7 +10,7 @@ namespace FsInfoCat
     /// </summary>
     /// <typeparam name="T">The coersion targetoutput type.</typeparam>
     /// <seealso cref="ICoersion{T}" />
-    internal abstract class Coersion<T> : ICoersion<T>
+    public abstract class Coersion<T> : ICoersion<T>
     {
         /// <summary>
         /// Gets the <see cref="TypeConverter"/> for type <typeparamref name="T"/>.
@@ -117,8 +117,10 @@ namespace FsInfoCat
         {
             if (TryCast(obj, out T result))
                 return result;
-            return (T)Converter.ConvertFrom(obj);
+            return OnConvert(obj);
         }
+
+        protected virtual T OnConvert(object obj) => (T)Converter.ConvertFrom(obj);
 
         object ICoersion.Coerce(object obj) => Coerce(obj);
 

@@ -1,4 +1,4 @@
-﻿using FsInfoCat.Collections;
+using FsInfoCat.Collections;
 using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat
@@ -326,6 +326,5 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_VersionID), ResourceType = typeof(Properties.Resources))]
         ByteValues VersionID { get; }
     }
-
 }
 

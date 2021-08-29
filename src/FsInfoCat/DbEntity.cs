@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 using System.Xml;
 using System.Xml.Linq;
 
@@ -55,7 +56,7 @@ namespace FsInfoCat
             _modifiedOn = AddChangeTracker(nameof(ModifiedOn), (_createdOn = AddChangeTracker(nameof(CreatedOn), DateTime.Now)).GetValue());
         }
 
-        protected virtual void AddExportAttributes(XElement element)
+        protected virtual void AddExportAttributes([DisallowNull] XElement element)
         {
             element.SetAttributeValue(nameof(CreatedOn), XmlConvert.ToString(CreatedOn, XmlDateTimeSerializationMode.RoundtripKind));
             element.SetAttributeValue(nameof(ModifiedOn), XmlConvert.ToString(ModifiedOn, XmlDateTimeSerializationMode.RoundtripKind));
@@ -66,14 +67,14 @@ namespace FsInfoCat
         /// </summary>
         /// <param name="validationContext">The validation context.</param>
         /// <returns>A collection that holds failed-validation information.</returns>
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        public IEnumerable<ValidationResult> Validate([DisallowNull] ValidationContext validationContext)
         {
             List<ValidationResult> results = new();
             OnValidate(validationContext, results);
             return results.ToArray();
         }
 
-        protected virtual void OnValidate(ValidationContext validationContext, List<ValidationResult> results)
+        protected virtual void OnValidate([DisallowNull] ValidationContext validationContext, [DisallowNull] List<ValidationResult> results)
         {
             if (!string.IsNullOrWhiteSpace(validationContext.MemberName))
                 switch (validationContext.MemberName)

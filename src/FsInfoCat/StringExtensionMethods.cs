@@ -55,6 +55,15 @@ namespace FsInfoCat
 
         public static IEnumerable<string> AsWsNormalizedOrEmptyValues(this IEnumerable<string> text) => text?.Select(AsWsNormalizedOrEmpty);
 
+        public static string ToNormalizedDelimitedText(this IEnumerable<string> source, bool includeEmpty = false, string delimiter = "; ")
+        {
+            if (source is null || !(source = includeEmpty ? source.AsWsNormalizedOrEmptyValues(): source.AsWsNormalizedOrEmptyValues().Where(s => s.Length > 0)).Any())
+                return "";
+            return string.Join(delimiter ?? "", source);
+        }
+
+        public static string ToNormalizedDelimitedText(this IEnumerable<string> source, string delimiter) => ToNormalizedDelimitedText(source, false, delimiter);
+
         public static IEnumerable<string> AsNonNullValues(this IEnumerable<string> text) => text?.Select(t => t ?? "");
 
         public static IEnumerable<string> AsOrderedDistinct(this IEnumerable<string> text) => text?.Select(t => t ?? "").Distinct().OrderBy(t => t);

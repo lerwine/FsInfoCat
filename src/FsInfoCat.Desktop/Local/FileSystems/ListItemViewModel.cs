@@ -1,3 +1,4 @@
+using FsInfoCat.Desktop.ViewModel;
 using FsInfoCat.Local;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,7 @@ using System.Windows;
 
 namespace FsInfoCat.Desktop.Local.FileSystems
 {
-    public class ListItemViewModel : DbEntityViewModel<FileSystemListItem>
+    public class ListItemViewModel : DbEntityRowViewModel<FileSystemListItem>
     {
         public ListItemViewModel([DisallowNull] FileSystemListItem entity)
             : base(entity)
@@ -18,7 +19,7 @@ namespace FsInfoCat.Desktop.Local.FileSystems
             // TODO: Initialize property values
         }
     }
-    public class RowItemViewModel<TEntity> : DbEntityViewModel<TEntity>
+    public class RowItemViewModel<TEntity> : DbEntityRowViewModel<TEntity>
         where TEntity : FileSystemRow
     {
         public RowItemViewModel([DisallowNull] TEntity entity)
