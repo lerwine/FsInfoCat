@@ -15,7 +15,9 @@
         <DataGrid ItemsSource="{Binding Items}" AutoGenerateColumns="False">
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding Name}" Header="Name" Width="*"/>
-                <DataGridTextColumn Binding="{Binding Priority}" Header="Priority"/>
+                <DataGridTextColumn Binding="{Binding FileTagCount, Mode=OneWay}" Header="Files" MinWidth="36"/>
+                <DataGridTextColumn Binding="{Binding SubdirectoryTagCount, Mode=OneWay}" Header="Subdirectories" MinWidth="86"/>
+                <DataGridTextColumn Binding="{Binding VolumeTagCount, Mode=OneWay}" Header="Volumes" MinWidth="56"/>
                 <DataGridTextColumn Binding="{Binding IsInactive, Converter={StaticResource BooleanToStatusConverter}}" MinWidth="100">
                     <DataGridTextColumn.Header>
                         <StackPanel Orientation="Horizontal">
