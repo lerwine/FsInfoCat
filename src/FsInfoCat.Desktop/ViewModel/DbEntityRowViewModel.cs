@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,7 +16,32 @@ namespace FsInfoCat.Desktop.ViewModel
     public class DbEntityRowViewModel<TEntity> : DependencyObject
         where TEntity : DbEntity
     {
-        protected internal TEntity Entity { get; }
+        private TEntity _entity;
+        protected internal TEntity Entity
+        {
+            get => _entity;
+            set
+            {
+                if (value is null)
+                    throw new ArgumentNullException(nameof(value));
+                Dispatcher.CheckInvoke(() =>
+                {
+                    TEntity oldValue = _entity;
+                    _entity = value;
+                    if (ReferenceEquals(_entity, value))
+                        return;
+                    _propertyChangedEventRelay.Attach(value, true);
+                    OnEntityObjectChanged(oldValue, value);
+                });
+            }
+        }
+
+        protected virtual void OnEntityObjectChanged([DisallowNull] TEntity oldValue, [DisallowNull] TEntity newValue)
+        {
+            foreach (string n in RevertibleChangeTracking.GetDifferences(oldValue, newValue).ToArray())
+                OnEntityPropertyChanged(n);
+        }
+
         #region CreatedOn Property Members
 
         private static readonly DependencyPropertyKey CreatedOnPropertyKey = DependencyProperty.RegisterReadOnly(nameof(CreatedOn), typeof(DateTime), typeof(DbEntityRowViewModel<TEntity>),
@@ -51,12 +77,13 @@ namespace FsInfoCat.Desktop.ViewModel
 
         #endregion
 
+        private readonly WeakPropertyChangedEventRelay _propertyChangedEventRelay;
         protected DbEntityRowViewModel(TEntity entity)
         {
-            Entity = entity ?? throw new ArgumentNullException(nameof(entity));
+            _entity = entity ?? throw new ArgumentNullException(nameof(entity));
             CreatedOn = entity.CreatedOn;
             ModifiedOn = entity.ModifiedOn;
-            WeakPropertyChangedEventRelay.Attach(entity, OnEntityPropertyChanged);
+            _propertyChangedEventRelay = WeakPropertyChangedEventRelay.Attach(entity, OnEntityPropertyChanged);
         }
 
         protected void OnEntityPropertyChanged(object sender, PropertyChangedEventArgs args) => OnEntityPropertyChanged(args.PropertyName ?? "");

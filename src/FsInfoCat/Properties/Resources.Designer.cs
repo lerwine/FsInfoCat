@@ -1078,6 +1078,15 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Active Items.
+        /// </summary>
+        public static string DisplayName_ActiveItems {
+            get {
+                return ResourceManager.GetString("DisplayName_ActiveItems", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Admin.
         /// </summary>
         public static string DisplayName_Admin {
@@ -1101,6 +1110,15 @@ namespace FsInfoCat.Properties {
         public static string DisplayName_AlbumTitle {
             get {
                 return ResourceManager.GetString("DisplayName_AlbumTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to All Items.
+        /// </summary>
+        public static string DisplayName_AllItems {
+            get {
+                return ResourceManager.GetString("DisplayName_AllItems", resourceCulture);
             }
         }
         
@@ -2631,6 +2649,15 @@ namespace FsInfoCat.Properties {
         public static string DisplayName_Inactive {
             get {
                 return ResourceManager.GetString("DisplayName_Inactive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Inactive Items.
+        /// </summary>
+        public static string DisplayName_InctiveItems {
+            get {
+                return ResourceManager.GetString("DisplayName_InctiveItems", resourceCulture);
             }
         }
         

@@ -1,17 +1,11 @@
-using FsInfoCat.Desktop.ViewModel;
+﻿using FsInfoCat.Desktop.ViewModel;
 using FsInfoCat.Local;
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 
-namespace FsInfoCat.Desktop.Local.FileSystems
+namespace FsInfoCat.Desktop.Local.PersonalTagDefinitions
 {
-    public class ListItemViewModel : FileSystemListItemViewModel<FileSystemListItem>
+    public class ListItemViewModel : TagDefinitionListItemViewModel<PersonalTagDefinitionListItem>
     {
         #region UpstreamId Property Members
 
@@ -24,6 +18,18 @@ namespace FsInfoCat.Desktop.Local.FileSystems
         public static readonly DependencyProperty UpstreamIdProperty = UpstreamIdPropertyKey.DependencyProperty;
 
         /// <summary>
+        /// Gets .
+        /// </summary>
+        /// <value>The .</value>
+        public Guid? UpstreamId { get => (Guid?)GetValue(UpstreamIdProperty); private set => SetValue(UpstreamIdPropertyKey, value); }
+
+        #endregion
+        #region LastSynchronizedOn Property Members
+
+        private static readonly DependencyPropertyKey LastSynchronizedOnPropertyKey = DependencyProperty.RegisterReadOnly(nameof(LastSynchronizedOn), typeof(DateTime?),
+            typeof(ListItemViewModel), new PropertyMetadata(null));
+
+        /// <summary>
         /// Gets the value of the primary key for the corresponding <see cref="Upstream.IUpstreamDbEntity">upstream (remote) database entity</see>.
         /// </summary>
         /// <value>
@@ -34,17 +40,6 @@ namespace FsInfoCat.Desktop.Local.FileSystems
         /// If this value is <see langword="null" />, then <see cref="LastSynchronizedOn" /> should also be <see langword="null" />.
         /// Likewise, if this is not <see langword="null" />, then <see cref="LastSynchronizedOn" /> should not be <see langword="null" />, either.
         /// </remarks>
-        public Guid? UpstreamId { get => (Guid?)GetValue(UpstreamIdProperty); private set => SetValue(UpstreamIdPropertyKey, value); }
-
-        #endregion
-        #region LastSynchronizedOn Property Members
-
-        private static readonly DependencyPropertyKey LastSynchronizedOnPropertyKey = DependencyProperty.RegisterReadOnly(nameof(LastSynchronizedOn), typeof(DateTime?),
-            typeof(ListItemViewModel), new PropertyMetadata(null));
-
-        /// <summary>
-        /// Identifies the <see cref="LastSynchronizedOn"/> dependency property.
-        /// </summary>
         public static readonly DependencyProperty LastSynchronizedOnProperty = LastSynchronizedOnPropertyKey.DependencyProperty;
 
         /// <summary>
@@ -62,8 +57,7 @@ namespace FsInfoCat.Desktop.Local.FileSystems
 
         #endregion
 
-        public ListItemViewModel([DisallowNull] FileSystemListItem entity)
-            : base(entity)
+        public ListItemViewModel(PersonalTagDefinitionListItem entity) : base(entity)
         {
             UpstreamId = entity.UpstreamId;
             LastSynchronizedOn = entity.LastSynchronizedOn;

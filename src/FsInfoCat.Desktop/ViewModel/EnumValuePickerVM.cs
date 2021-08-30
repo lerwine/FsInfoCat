@@ -5,6 +5,11 @@ using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel
 {
+    /// <summary>
+    /// View model for selecting a single <see cref="Enum"/> value.
+    /// </summary>
+    /// <typeparam name="TEnum">The type of the <see cref="Enum"/> value.</typeparam>
+    /// <seealso cref="DependencyObject" />
     public class EnumValuePickerVM<TEnum> : DependencyObject
         where TEnum : struct, Enum
     {
@@ -12,7 +17,7 @@ namespace FsInfoCat.Desktop.ViewModel
 
         public static EnumValuePickerVM<TEnum> GetEnumValuePickerVM(DependencyObject obj) => (EnumValuePickerVM<TEnum>)obj.GetValue(EnumValuePickerVMProperty);
 
-        private static void SetEnumValuePickerVM(DependencyObject obj, EnumValuePickerVM<TEnum> value) => obj.SetValue(EnumValuePickerVMProperty, value);
+        private static void SetEnumValuePickerVM(DependencyObject obj, EnumValuePickerVM<TEnum> value) => obj.SetValue(EnumValuePickerVMPropertyKey, value);
 
         private static readonly DependencyPropertyKey EnumValuePickerVMPropertyKey = DependencyProperty.RegisterAttachedReadOnly(nameof(EnumValuePickerVM<TEnum>),
             typeof(EnumValuePickerVM<TEnum>), typeof(EnumValuePickerVM<TEnum>), new PropertyMetadata(null));
@@ -157,15 +162,21 @@ namespace FsInfoCat.Desktop.ViewModel
         }
 
         #endregion
-        public EnumValuePickerVM()
+
+        public EnumValuePickerVM(params string[] noValueDisplayNames)
         {
             SetValue(ChoicesPropertyKey, new ReadOnlyObservableCollection<EnumChoiceItem<TEnum>>(_backingChoices));
+            if (noValueDisplayNames is not null && noValueDisplayNames.Length > 0)
+                _backingChoices.Add(new(noValueDisplayNames[0]));
             foreach (TEnum value in Enum.GetValues<TEnum>())
             {
                 EnumChoiceItem<TEnum> item = new(value);
                 SetEnumValuePickerVM(item, this);
                 _backingChoices.Add(new(value));
             }
+            if (noValueDisplayNames is not null && noValueDisplayNames.Length > 1)
+                foreach (string name in noValueDisplayNames.Skip(1))
+                    _backingChoices.Add(new(name));
             SelectedItem = _backingChoices.First();
         }
     }

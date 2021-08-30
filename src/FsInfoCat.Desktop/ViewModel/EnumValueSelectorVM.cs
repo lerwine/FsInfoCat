@@ -5,6 +5,11 @@ using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel
 {
+    /// <summary>
+    /// View model to select multiple <see cref="Enum"/> values.
+    /// </summary>
+    /// <typeparam name="TEnum">The type of the <see cref="Enum"/> value.</typeparam>
+    /// <seealso cref="DependencyObject" />
     public class EnumValueSelectorVM<TEnum> : DependencyObject
         where TEnum : struct, Enum
     {

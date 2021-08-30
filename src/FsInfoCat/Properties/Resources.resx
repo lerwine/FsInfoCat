@@ -1837,4 +1837,13 @@
     <value>Invalid time: {0}</value>
     <comment>Parameter 0: string = Validation message</comment>
   </data>
+  <data name="DisplayName_ActiveItems" xml:space="preserve">
+    <value>Active Items</value>
+  </data>
+  <data name="DisplayName_AllItems" xml:space="preserve">
+    <value>All Items</value>
+  </data>
+  <data name="DisplayName_InctiveItems" xml:space="preserve">
+    <value>Inactive Items</value>
+  </data>
 </root>

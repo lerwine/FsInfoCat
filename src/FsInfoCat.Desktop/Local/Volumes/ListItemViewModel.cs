@@ -1,17 +1,11 @@
-using FsInfoCat.Desktop.ViewModel;
+﻿using FsInfoCat.Desktop.ViewModel;
 using FsInfoCat.Local;
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 
-namespace FsInfoCat.Desktop.Local.FileSystems
+namespace FsInfoCat.Desktop.Local.Volumes
 {
-    public class ListItemViewModel : FileSystemListItemViewModel<FileSystemListItem>
+    public class ListItemViewModel : VolumeListItemWithFileSystemViewModel<VolumeListItemWithFileSystem>
     {
         #region UpstreamId Property Members
 
@@ -62,8 +56,7 @@ namespace FsInfoCat.Desktop.Local.FileSystems
 
         #endregion
 
-        public ListItemViewModel([DisallowNull] FileSystemListItem entity)
-            : base(entity)
+        public ListItemViewModel(VolumeListItemWithFileSystem entity) : base(entity)
         {
             UpstreamId = entity.UpstreamId;
             LastSynchronizedOn = entity.LastSynchronizedOn;

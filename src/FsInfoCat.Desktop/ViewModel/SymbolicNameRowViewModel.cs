@@ -1,11 +1,14 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel
 {
-#pragma warning disable IDE0060 // Remove unused parameter
     public class SymbolicNameRowViewModel<TEntity> : DbEntityRowViewModel<TEntity>
         where TEntity : DbEntity, ISymbolicNameRow
     {
+#pragma warning disable IDE0060 // Remove unused parameter
         #region Name Property Members
 
         /// <summary>

@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
 
-namespace FsInfoCat.Desktop.Local.FileSystems
+namespace FsInfoCat.Desktop.Local.SharedTagDefinitions
 {
     public class ListingViewModel : DependencyObject, INotifyNavigatedTo
     {
@@ -55,16 +55,14 @@ namespace FsInfoCat.Desktop.Local.FileSystems
 
         public ListingViewModel()
         {
-            ThreeStateViewModel viewOptions = new(true);
-            SetValue(ViewOptionsPropertyKey, viewOptions);
+            SetValue(ViewOptionsPropertyKey, new ThreeStateViewModel());
             SetValue(ItemsPropertyKey, new ReadOnlyObservableCollection<ListItemViewModel>(_backingItems));
-            viewOptions.ValuePropertyChanged += (sender, e) => ReloadAsync(e.NewValue as bool?);
         }
 
         private IAsyncJob ReloadAsync(bool? showActiveOnly)
         {
             IWindowsAsyncJobFactoryService jobFactory = Services.GetRequiredService<IWindowsAsyncJobFactoryService>();
-            return jobFactory.StartNew("Loading file systems", "Opening database", showActiveOnly, LoadItemsAsync);
+            return jobFactory.StartNew("Loading shared tags", "Opening database", showActiveOnly, LoadItemsAsync);
         }
 
         void INotifyNavigatedTo.OnNavigatedTo() => ReloadAsync(ViewOptions.Value);
@@ -73,16 +71,23 @@ namespace FsInfoCat.Desktop.Local.FileSystems
         {
             using IServiceScope scope = Services.CreateScope();
             using LocalDbContext dbContext = scope.ServiceProvider.GetRequiredService<LocalDbContext>();
-            IQueryable<FileSystemListItem> items = showActiveOnly.HasValue ?
-                (showActiveOnly.Value ? dbContext.FileSystemListing.Where(f => !f.IsInactive) : dbContext.FileSystemListing.Where(f => f.IsInactive)) :
-                dbContext.FileSystemListing;
+            IQueryable<SharedTagDefinitionListItem> items = showActiveOnly.HasValue ?
+                (showActiveOnly.Value ? dbContext.SharedTagDefinitionListing.Where(f => !f.IsInactive) :
+                dbContext.SharedTagDefinitionListing.Where(f => f.IsInactive)) : dbContext.SharedTagDefinitionListing;
             await items.ForEachAsync(async item => await AddItemAsync(item, statusListener), statusListener.CancellationToken);
         }
 
-        private DispatcherOperation AddItemAsync(FileSystemListItem model, IWindowsStatusListener statusListener) => Dispatcher.InvokeAsync(() =>
+        private DispatcherOperation AddItemAsync(SharedTagDefinitionListItem model, IWindowsStatusListener statusListener) => Dispatcher.InvokeAsync(() =>
         {
             ListItemViewModel item = new ListItemViewModel(model);
             _backingItems.Add(item);
         }, DispatcherPriority.Background, statusListener.CancellationToken);
+    }
+    public class DetailsViewModel : DependencyObject
+    {
+    }
+    public class EditViewModel : DependencyObject
+    {
+
     }
 }
