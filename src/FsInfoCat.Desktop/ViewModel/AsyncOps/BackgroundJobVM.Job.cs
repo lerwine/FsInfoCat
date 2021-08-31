@@ -32,6 +32,14 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
 
             public TimeSpan Duration => _stopwatch.Elapsed;
 
+            public object AsyncState => Task.AsyncState;
+
+            public WaitHandle AsyncWaitHandle => ((IAsyncResult)Task).AsyncWaitHandle;
+
+            public bool CompletedSynchronously => ((IAsyncResult)Task).CompletedSynchronously;
+
+            public bool IsCompleted => Task.IsCompleted;
+
             protected internal Job([DisallowNull] string title, [DisallowNull] string initialMessage, [DisallowNull] BackgroundJobVM viewModel,
                 [DisallowNull] Func<StatusListener, IBackgroundJob, Task> createTask)
             {

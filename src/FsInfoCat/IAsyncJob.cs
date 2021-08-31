@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace FsInfoCat
@@ -6,7 +7,7 @@ namespace FsInfoCat
     /// <summary>
     /// Represents an asynchronous background job.
     /// </summary>
-    public interface IAsyncJob
+    public interface IAsyncJob : IAsyncResult
     {
         /// <summary>
         /// Gets the title of the background job.
