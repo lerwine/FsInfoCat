@@ -888,6 +888,10 @@ END]]>
 	LEFT JOIN "BinaryPropertySets" ON "Files"."BinaryPropertySetId"="BinaryPropertySets"."Id"
 	LEFT JOIN "vSubdirectoryListingWithAncestorNames" ON "Files"."ParentId"="vSubdirectoryListingWithAncestorNames"."Id"]]>
         </Text>
+        <Text Message="Creating View 'vCrawlJobListing'">
+            <![CDATA[CREATE VIEW IF NOT EXISTS "vCrawlJobListing" AS SELECT "CrawlJobLogs".*, "CrawlConfigurations"."DisplayName" AS "ConfigurationDisplayName" FROM "CrawlJobLogs"
+	LEFT JOIN "CrawlConfigurations" ON "CrawlJobLogs"."ConfigurationId" = "CrawlConfigurations"."Id"]]>
+        </Text>
         <Text Message="Inserting FileSystem 'New Technology File System'">
             <![CDATA[INSERT INTO "FileSystems" ("Id", "DisplayName")
 	VALUES ('bedb396b-2212-4149-9cad-7e437c47314c', 'New Technology File System')]]>

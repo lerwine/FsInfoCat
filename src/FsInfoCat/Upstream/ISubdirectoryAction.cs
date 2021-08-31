@@ -2,9 +2,10 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.Upstream
 {
+    public interface ISubdirectoryActionRow : IUpstreamDbEntity { }
     /// <summary>Describes an action to be taken on a sub-directory.</summary>
     /// <seealso cref="IUpstreamDbEntity" />
-    public interface ISubdirectoryAction : IUpstreamDbEntity
+    public interface ISubdirectoryAction : ISubdirectoryActionRow
     {
         /// <summary>Gets the parent mitigation task.</summary>
         /// <value>The parent <see cref="IMitigationTask">mitigation task</see>.</value>

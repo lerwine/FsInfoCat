@@ -288,6 +288,38 @@ namespace FsInfoCat
 
         protected abstract IEnumerable<ISharedVolumeTag> GetSharedVolumeTags();
 
+        protected abstract IEnumerable<ICrawlJobLog> GetCrawlJobLogs();
+
+        protected abstract IEnumerable<ISymbolicNameListItem> GetSymbolicNameListing();
+
+        protected abstract IEnumerable<IFileSystemListItem> GetFileSystemListing();
+
+        protected abstract IEnumerable<ITagDefinitionListItem> GetPersonalTagDefinitionListing();
+
+        protected abstract IEnumerable<ITagDefinitionListItem> GetSharedTagDefinitionListing();
+
+        protected abstract IEnumerable<IRedundantSetListItem> GetRedundantSetListing();
+
+        protected abstract IEnumerable<IVolumeListItem> GetVolumeListing();
+
+        protected abstract IEnumerable<IVolumeListItemWithFileSystem> GetVolumeListingWithFileSystem();
+
+        protected abstract IEnumerable<ISubdirectoryListItem> GetSubdirectoryListing();
+
+        protected abstract IEnumerable<ISubdirectoryListItemWithAncestorNames> GetSubdirectoryListingWithAncestorNames();
+
+        protected abstract IEnumerable<ISubdirectoryAncestorName> GetSubdirectoryAncestorNames();
+
+        protected abstract IEnumerable<IFileListItemWithAncestorNames> GetFileListingWithAncestorNames();
+
+        protected abstract IEnumerable<IFileListItemWithBinaryProperties> GetFileListingWithBinaryProperties();
+
+        protected abstract IEnumerable<IFileListItemWithBinaryPropertiesAndAncestorNames> GetFileListingWithBinaryPropertiesAndAncestorNames();
+
+        protected abstract IEnumerable<ICrawlConfigurationListItem> GetCrawlConfigListing();
+
+        protected abstract IEnumerable<ICrawlJobListItem> GetCrawlJobListing();
+
         protected abstract Task<IGPSPropertySet> FindGenericMatchingAsync(IGPSProperties properties, CancellationToken cancellationToken);
 
         protected abstract Task<IImagePropertySet> FindGenericMatchingAsync(IImageProperties properties, CancellationToken cancellationToken);
@@ -344,6 +376,39 @@ namespace FsInfoCat
         IEnumerable<ISharedFileTag> IDbContext.SharedFileTags => GetSharedFileTags();
         IEnumerable<ISharedSubdirectoryTag> IDbContext.SharedSubdirectoryTags => GetSharedSubdirectoryTags();
         IEnumerable<ISharedVolumeTag> IDbContext.SharedVolumeTags => GetSharedVolumeTags();
+
+        IEnumerable<ICrawlJobLog> IDbContext.CrawlJobLogs => GetCrawlJobLogs();
+
+        IEnumerable<ISymbolicNameListItem> IDbContext.SymbolicNameListing => GetSymbolicNameListing();
+
+        IEnumerable<IFileSystemListItem> IDbContext.FileSystemListing => GetFileSystemListing();
+
+        IEnumerable<ITagDefinitionListItem> IDbContext.PersonalTagDefinitionListing => GetPersonalTagDefinitionListing();
+
+        IEnumerable<ITagDefinitionListItem> IDbContext.SharedTagDefinitionListing => GetSharedTagDefinitionListing();
+
+        IEnumerable<IRedundantSetListItem> IDbContext.RedundantSetListing => GetRedundantSetListing();
+
+        IEnumerable<IVolumeListItem> IDbContext.VolumeListing => GetVolumeListing();
+
+        IEnumerable<IVolumeListItemWithFileSystem> IDbContext.VolumeListingWithFileSystem => GetVolumeListingWithFileSystem();
+
+        IEnumerable<ISubdirectoryListItem> IDbContext.SubdirectoryListing => GetSubdirectoryListing();
+
+        IEnumerable<ISubdirectoryListItemWithAncestorNames> IDbContext.SubdirectoryListingWithAncestorNames => GetSubdirectoryListingWithAncestorNames();
+
+        IEnumerable<ISubdirectoryAncestorName> IDbContext.SubdirectoryAncestorNames => GetSubdirectoryAncestorNames();
+
+        IEnumerable<IFileListItemWithAncestorNames> IDbContext.FileListingWithAncestorNames => GetFileListingWithAncestorNames();
+
+        IEnumerable<IFileListItemWithBinaryProperties> IDbContext.FileListingWithBinaryProperties => GetFileListingWithBinaryProperties();
+
+        IEnumerable<IFileListItemWithBinaryPropertiesAndAncestorNames> IDbContext.FileListingWithBinaryPropertiesAndAncestorNames => GetFileListingWithBinaryPropertiesAndAncestorNames();
+
+        IEnumerable<ICrawlConfigurationListItem> IDbContext.CrawlConfigListing => GetCrawlConfigListing();
+
+        IEnumerable<ICrawlJobListItem> IDbContext.CrawlJobListing => GetCrawlJobListing();
+
         Task<ISummaryPropertySet> IDbContext.FindMatchingAsync(ISummaryProperties properties, CancellationToken cancellationToken)
             => FindGenericMatchingAsync(properties, cancellationToken);
         Task<IDocumentPropertySet> IDbContext.FindMatchingAsync(IDocumentProperties properties, CancellationToken cancellationToken)

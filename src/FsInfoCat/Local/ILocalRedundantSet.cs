@@ -3,12 +3,12 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.Local
 {
-    public interface ILocalRedundantSetListItem : IRedundantSetListItem, ILocalDbEntity { }
+    public interface ILocalRedundantSetRow : ILocalDbEntity, IRedundantSetRow { }
 
     /// <summary>Represents a set of files that have the same size, Hash and remediation status.</summary>
     /// <seealso cref="ILocalDbEntity" />
     /// <seealso cref="IRedundantSet" />
-    public interface ILocalRedundantSet : ILocalDbEntity, IRedundantSet
+    public interface ILocalRedundantSet : ILocalRedundantSetRow, IRedundantSet
     {
         /// <summary>Gets the binary properties in common with all files in the current redundant set.</summary>
         /// <value>The binary properties in common with all files in the current redundant set.</value>
@@ -20,4 +20,6 @@ namespace FsInfoCat.Local
         [Display(Name = nameof(Properties.Resources.DisplayName_Redundancies), ResourceType = typeof(Properties.Resources))]
         new IEnumerable<ILocalRedundancy> Redundancies { get; }
     }
+
+    public interface ILocalRedundantSetListItem : IRedundantSetListItem, ILocalRedundantSetRow { }
 }

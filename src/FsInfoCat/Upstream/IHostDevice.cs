@@ -3,9 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.Upstream
 {
-    /// <summary>Identifies a device that hosts one or more <see cref="IUpstreamVolume">volumes</see>.</summary>
-    /// <seealso cref="IUpstreamDbEntity" />
-    public interface IHostDevice : IUpstreamDbEntity
+    public interface IHostDeviceRow : IUpstreamDbEntity
     {
         /// <summary>Gets the display name of the host device.</summary>
         /// <value>The user-friendly display name of the host device.</value>
@@ -36,7 +34,11 @@ namespace FsInfoCat.Upstream
         [Display(Name = nameof(Properties.Resources.DisplayName_IsInactive), ShortName = nameof(Properties.Resources.DisplayName_Inactive), Description = nameof(Properties.Resources.Description_HostDevice_IsInactive),
             ResourceType = typeof(Properties.Resources))]
         bool IsInactive { get; }
-
+    }
+    /// <summary>Identifies a device that hosts one or more <see cref="IUpstreamVolume">volumes</see>.</summary>
+    /// <seealso cref="IUpstreamDbEntity" />
+    public interface IHostDevice : IHostDeviceRow
+    {
         /// <summary>Gets the host platform type.</summary>
         /// <value>The <see cref="IHostPlatform"/> that describes the host's platform type.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_Platform), ShortName = nameof(Properties.Resources.DisplayName_Platform), Description = nameof(Properties.Resources.Description_HostDevice_Platform),
@@ -48,5 +50,13 @@ namespace FsInfoCat.Upstream
         [Display(Name = nameof(Properties.Resources.DisplayName_Volumes), ShortName = nameof(Properties.Resources.DisplayName_Volumes), Description = nameof(Properties.Resources.Description_HostDevice_Volumes),
             ResourceType = typeof(Properties.Resources))]
         IEnumerable<IUpstreamVolume> Volumes { get; }
+    }
+    public interface IHostDeviceListItem : IHostDeviceRow
+    {
+        string PlatformDisplayName { get; }
+
+        PlatformType PlatformType { get; }
+
+        long VolumeCount { get; }
     }
 }

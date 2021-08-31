@@ -3,9 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.Upstream
 {
-    /// <summary>Describes a host platform.</summary>
-    /// <seealso cref="IUpstreamDbEntity" />
-    public interface IHostPlatform : IUpstreamDbEntity
+    public interface IHostPlatformRow : IUpstreamDbEntity
     {
         /// <summary>Gets the display name of the platform.</summary>
         /// <value>The user-friendly display name of the platform.</value>
@@ -30,7 +28,11 @@ namespace FsInfoCat.Upstream
         [Display(Name = nameof(Properties.Resources.DisplayName_IsInactive), ShortName = nameof(Properties.Resources.DisplayName_Inactive), Description = nameof(Properties.Resources.Description_HostPlatform_IsInactive),
             ResourceType = typeof(Properties.Resources))]
         bool IsInactive { get; }
-
+    }
+    /// <summary>Describes a host platform.</summary>
+    /// <seealso cref="IUpstreamDbEntity" />
+    public interface IHostPlatform : IHostPlatformRow
+    {
         /// <summary>Gets teh default file system type.</summary>
         /// <value>The default file system type for the current platform or <see langword="null"/> if there is no clear default fie system type.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_HostPlatform_DefaultFsType), ShortName = nameof(Properties.Resources.DisplayName_DefaultFsType),
@@ -42,5 +44,11 @@ namespace FsInfoCat.Upstream
         [Display(Name = nameof(Properties.Resources.DisplayName_HostDevices), ShortName = nameof(Properties.Resources.DisplayName_HostDevices), Description = nameof(Properties.Resources.Description_HostPlatform_HostDevices),
             ResourceType = typeof(Properties.Resources))]
         IEnumerable<IHostDevice> HostDevices { get; }
+    }
+    public interface IHostPlatformListItem : IHostPlatformRow
+    {
+        string FileSystemDisplayName { get; }
+
+        long HostDeviceCount { get; }
     }
 }

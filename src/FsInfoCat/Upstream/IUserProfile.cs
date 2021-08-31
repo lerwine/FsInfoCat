@@ -1,12 +1,10 @@
-﻿using FsInfoCat.Collections;
+using FsInfoCat.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.Upstream
 {
-    /// <summary>Base interface for user profile database entities.</summary>
-    /// <seealso cref="IUpstreamDbEntity" />
-    public interface IUserProfile : IUpstreamDbEntity
+    public interface IUserProfileRow : IUpstreamDbEntity
     {
         /// <summary>Gets the user's display name</summary>
         /// <value>The user's display name</value>
@@ -57,7 +55,11 @@ namespace FsInfoCat.Upstream
         /// <value><see langword="true" /> if the current user is inactive; otherwise, <see langword="false" />.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_IsInactive), ResourceType = typeof(Properties.Resources))]
         bool IsInactive { get; }
-
+    }
+    /// <summary>Base interface for user profile database entities.</summary>
+    /// <seealso cref="IUpstreamDbEntity" />
+    public interface IUserProfile : IUserProfileRow
+    {
         /// <summary>Gets the membership objects that determine what groups the current user belongs to.</summary>
         /// <value>The <see cref="IGroupMembership">membership objects</see> that determine what groups the current user belongs to.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_MemberOf), ResourceType = typeof(Properties.Resources))]
@@ -67,5 +69,11 @@ namespace FsInfoCat.Upstream
         /// <value>The <see cref="IMitigationTask">tasks</see> that are assigned to the current user.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_Tasks), ResourceType = typeof(Properties.Resources))]
         IEnumerable<IMitigationTask> Tasks { get; }
+    }
+    public interface IUserProfileListItem : IUserProfileRow
+    {
+        long MemberOfCount { get; }
+
+        long TaskCount { get; }
     }
 }

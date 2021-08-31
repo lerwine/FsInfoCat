@@ -151,6 +151,133 @@ namespace FsInfoCat
         IEnumerable<ICrawlConfiguration> CrawlConfigurations { get; }
 
         /// <summary>
+        /// Enumerates generic crawl log entities from the upstream (remote) database.
+        /// </summary>
+        IEnumerable<ICrawlJobLog> CrawlJobLogs { get; }
+
+        /// <summary>
+        /// Enumerates entites from the symblic name listing view.
+        /// </summary>
+        /// <value>
+        /// Result entities from a view of <see cref="SymbolicNames"/> joined with <see cref="FileSystems"/>.
+        /// </value>
+        IEnumerable<ISymbolicNameListItem> SymbolicNameListing { get; }
+
+        /// <summary>
+        /// Enumerates entites from the file system listing view.
+        /// </summary>
+        /// <value>
+        /// Result entities from a view of <see cref="FileSystems"/> joined with <see cref="SymbolicNames"/> and <see cref="Volumes"/>.
+        /// </value>
+        IEnumerable<IFileSystemListItem> FileSystemListing { get; }
+
+        /// <summary>
+        /// Enumerates entites from the personal tag definition listing view.
+        /// </summary>
+        /// <value>
+        /// Result entities from a view of <see cref="PersonalTagDefinitions"/> joined with <see cref="Files"/>, <see cref="Subdirectories"/> and <see cref="Volumes"/>.
+        /// </value>
+        IEnumerable<ITagDefinitionListItem> PersonalTagDefinitionListing { get; }
+
+        /// <summary>
+        /// Enumerates entites from the shared tag definition listing view.
+        /// </summary>
+        /// <value>
+        /// Result entities from a view of <see cref="SharedTagDefinitions"/> joined with <see cref="Files"/>, <see cref="Subdirectories"/> and <see cref="Volumes"/>.
+        /// </value>
+        IEnumerable<ITagDefinitionListItem> SharedTagDefinitionListing { get; }
+
+        /// <summary>
+        /// Enumerates entites from the redundant set listing view.
+        /// </summary>
+        /// <value>
+        /// Result entities from a view of <see cref="RedundantSets"/> joined with <see cref="BinaryPropertySets"/> and <see cref="Redundancies"/>.
+        /// </value>
+        IEnumerable<IRedundantSetListItem> RedundantSetListing { get; }
+
+        /// <summary>
+        /// Enumerates entites from the volume listing view intended for display listings of a specific file system.
+        /// </summary>
+        /// <value>
+        /// Result entities from a view of <see cref="Volumes"/> joined with <see cref="Subdirectories"/>, <see cref="VolumeAccessErrors"/>, <see cref="SharedVolumeTags"/>
+        /// and <see cref="PersonalVolumeTags"/>.
+        /// </value>
+        IEnumerable<IVolumeListItem> VolumeListing { get; }
+
+        /// <summary>
+        /// Enumerates entites from the volume listing view.
+        /// </summary>
+        /// <value>
+        /// Result entities from a view of <see cref="Volumes"/> joined with <see cref="FileSystems"/>, <see cref="Subdirectories"/>, <see cref="VolumeAccessErrors"/>, <see cref="SharedVolumeTags"/>
+        /// and <see cref="PersonalVolumeTags"/>.
+        /// </value>
+        IEnumerable<IVolumeListItemWithFileSystem> VolumeListingWithFileSystem { get; }
+
+        /// <summary>
+        /// Enumerates entites from the subdirectory listing view.
+        /// </summary>
+        /// <value>
+        /// Result entities from a view of <see cref="Subdirectories"/> joined with <see cref="Files"/>, <see cref="Subdirectories"/> and <see cref="CrawlConfigurations"/>.
+        /// </value>
+        IEnumerable<ISubdirectoryListItem> SubdirectoryListing { get; }
+
+        /// <summary>
+        /// Enumerates entites from the subdirectory listing view that includes ancestor path element names.
+        /// </summary>
+        /// <value>
+        /// Result entities from a view of <see cref="Subdirectories"/> joined with <see cref="Files"/>, <see cref="Subdirectories"/> and <see cref="CrawlConfigurations"/>.
+        /// </value>
+        IEnumerable<ISubdirectoryListItemWithAncestorNames> SubdirectoryListingWithAncestorNames { get; }
+
+        /// <summary>
+        /// Enumerates entites from a simplified subdirectory listing view that includes ancestor path element names.
+        /// </summary>
+        /// <value>
+        /// Result entities from a view of <see cref="Subdirectories"/> joined with <see cref="Subdirectories"/> and <see cref="CrawlConfigurations"/>.
+        /// </value>
+        IEnumerable<ISubdirectoryAncestorName> SubdirectoryAncestorNames { get; }
+
+        /// <summary>
+        /// Enumerates entites from the file listing view that includes ancestor path element names.
+        /// </summary>
+        /// <value>
+        /// Result entities from a view of <see cref="Files"/> joined with <see cref="Subdirectories"/>.
+        /// </value>
+        IEnumerable<IFileListItemWithAncestorNames> FileListingWithAncestorNames { get; }
+
+        /// <summary>
+        /// Enumerates entites from the file listing view that includes size and hash.
+        /// </summary>
+        /// <value>
+        /// Result entities from a view of <see cref="Files"/> joined with <see cref="BinaryPropertySets"/>.
+        /// </value>
+        IEnumerable<IFileListItemWithBinaryProperties> FileListingWithBinaryProperties { get; }
+
+        /// <summary>
+        /// Enumerates entites from the file listing view that includes size, hash and ancestor path element names.
+        /// </summary>
+        /// <value>
+        /// Result entities from a view of <see cref="Files"/> joined with <see cref="Subdirectories"/> and <see cref="BinaryPropertySets"/>.
+        /// </value>
+        IEnumerable<IFileListItemWithBinaryPropertiesAndAncestorNames> FileListingWithBinaryPropertiesAndAncestorNames { get; }
+
+        /// <summary>
+        /// Enumerates entites from the file listing view that includes size and hash.
+        /// </summary>
+        /// <value>
+        /// Result entities from a view of <see cref="CrawlConfigurations"/> joined with <see cref="Subdirectories"/>, <see cref="Volumes"/>,  and <see cref="FileSystems"/>.
+        /// </value>
+        IEnumerable<ICrawlConfigurationListItem> CrawlConfigListing { get; }
+
+        /// <summary>
+        /// Enumerates entites from the file listing view that includes size and hash.
+        /// </summary>
+        /// <value>
+        /// Result entities from a view of <see cref="CrawlJobLogs"/> joined with <see cref="CrawlConfigurations"/>.
+        /// </value>
+        IEnumerable<ICrawlJobListItem> CrawlJobListing { get; }
+
+        /// <summary>
         /// Finds the generic <see cref="ISummaryPropertySet"/> that matches the specified summary properties.
         /// </summary>
         /// <param name="properties">The <see cref="ISummaryProperties"/> object containing the property values to match.</param>

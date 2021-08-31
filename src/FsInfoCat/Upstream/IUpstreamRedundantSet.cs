@@ -1,12 +1,14 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.Upstream
 {
+    public interface IUpstreamRedundantSetRow : IUpstreamDbEntity, IRedundantSetRow { }
+
     /// <summary>Represents a set of files that have the same size, Hash and remediation status.</summary>
     /// <seealso cref="IUpstreamDbEntity" />
     /// <seealso cref="IRedundantSet" />
-    public interface IUpstreamRedundantSet : IUpstreamDbEntity, IRedundantSet
+    public interface IUpstreamRedundantSet : IUpstreamRedundantSetRow, IRedundantSet
     {
         /// <summary>Gets the binary properties in common with all files in the current redundant set.</summary>
         /// <value>The binary properties in common with all files in the current redundant set.</value>
@@ -18,4 +20,6 @@ namespace FsInfoCat.Upstream
         [Display(Name = nameof(Properties.Resources.DisplayName_Redundancies), ResourceType = typeof(Properties.Resources))]
         new IEnumerable<IUpstreamRedundancy> Redundancies { get; }
     }
+
+    public interface IUpstreamRedundantSetListItem : IRedundantSetListItem, IUpstreamRedundantSetRow { }
 }

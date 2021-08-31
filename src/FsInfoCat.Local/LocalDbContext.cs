@@ -87,6 +87,8 @@ namespace FsInfoCat.Local
 
         public virtual DbSet<CrawlConfiguration> CrawlConfigurations { get; set; }
 
+        public virtual DbSet<CrawlJobLog> CrawlJobLogs { get; set; }
+
         public virtual DbSet<SymbolicNameListItem> SymbolicNameListing { get; set; }
 
         public virtual DbSet<FileSystemListItem> FileSystemListing { get; set; }
@@ -114,6 +116,8 @@ namespace FsInfoCat.Local
         public virtual DbSet<FileWithBinaryPropertiesAndAncestorNames> FileListingWithBinaryPropertiesAndAncestorNames { get; set; }
 
         public virtual DbSet<CrawlConfigListItem> CrawlConfigListing { get; set; }
+
+        public virtual DbSet<CrawlJobLogListItem> CrawlJobListing { get; set; }
 
         public LocalDbContext(DbContextOptions<LocalDbContext> options)
             : base(options)
@@ -673,6 +677,38 @@ namespace FsInfoCat.Local
 
         protected override IEnumerable<ISharedVolumeTag> GetSharedVolumeTags() => SharedVolumeTags;
 
+        protected override IEnumerable<ICrawlJobLog> GetCrawlJobLogs() => CrawlJobLogs;
+
+        protected override IEnumerable<ISymbolicNameListItem> GetSymbolicNameListing() => SymbolicNameListing;
+
+        protected override IEnumerable<IFileSystemListItem> GetFileSystemListing() => FileSystemListing;
+
+        protected override IEnumerable<ITagDefinitionListItem> GetPersonalTagDefinitionListing() => PersonalTagDefinitionListing;
+
+        protected override IEnumerable<ITagDefinitionListItem> GetSharedTagDefinitionListing() => SharedTagDefinitionListing;
+
+        protected override IEnumerable<IRedundantSetListItem> GetRedundantSetListing() => RedundantSetListing;
+
+        protected override IEnumerable<IVolumeListItem> GetVolumeListing() => VolumeListing;
+
+        protected override IEnumerable<IVolumeListItemWithFileSystem> GetVolumeListingWithFileSystem() => VolumeListingWithFileSystem;
+
+        protected override IEnumerable<ISubdirectoryListItem> GetSubdirectoryListing() => SubdirectoryListing;
+
+        protected override IEnumerable<ISubdirectoryListItemWithAncestorNames> GetSubdirectoryListingWithAncestorNames() => SubdirectoryListingWithAncestorNames;
+
+        protected override IEnumerable<ISubdirectoryAncestorName> GetSubdirectoryAncestorNames() => SubdirectoryAncestorNames;
+
+        protected override IEnumerable<IFileListItemWithAncestorNames> GetFileListingWithAncestorNames() => FileListingWithAncestorNames;
+
+        protected override IEnumerable<IFileListItemWithBinaryProperties> GetFileListingWithBinaryProperties() => FileListingWithBinaryProperties;
+
+        protected override IEnumerable<IFileListItemWithBinaryPropertiesAndAncestorNames> GetFileListingWithBinaryPropertiesAndAncestorNames() => FileListingWithBinaryPropertiesAndAncestorNames;
+
+        protected override IEnumerable<ICrawlConfigurationListItem> GetCrawlConfigListing() => CrawlConfigListing;
+
+        protected override IEnumerable<ICrawlJobListItem> GetCrawlJobListing() => CrawlJobListing;
+
         protected async override Task<IGPSPropertySet> FindGenericMatchingAsync(IGPSProperties properties, CancellationToken cancellationToken) =>
             await FindMatchingAsync(properties, cancellationToken);
 
@@ -773,6 +809,36 @@ namespace FsInfoCat.Local
         IEnumerable<ILocalSharedSubdirectoryTag> ILocalDbContext.SharedSubdirectoryTags => SharedSubdirectoryTags;
 
         IEnumerable<ILocalSharedVolumeTag> ILocalDbContext.SharedVolumeTags => SharedVolumeTags;
+
+        IEnumerable<ILocalCrawlJobLog> ILocalDbContext.CrawlJobLogs => CrawlJobLogs;
+
+        IEnumerable<ICrawlJobLog> IDbContext.CrawlJobLogs => CrawlJobLogs;
+
+        IEnumerable<ILocalFileSystemListItem> ILocalDbContext.FileSystemListing => FileSystemListing;
+
+        IEnumerable<ILocalTagDefinitionListItem> ILocalDbContext.PersonalTagDefinitionListing => PersonalTagDefinitionListing;
+
+        IEnumerable<ILocalTagDefinitionListItem> ILocalDbContext.SharedTagDefinitionListing => SharedTagDefinitionListing;
+
+        IEnumerable<ILocalRedundantSetListItem> ILocalDbContext.RedundantSetListing => RedundantSetListing;
+
+        IEnumerable<ILocalVolumeListItem> ILocalDbContext.VolumeListing => VolumeListing;
+
+        IEnumerable<ILocalVolumeListItemWithFileSystem> ILocalDbContext.VolumeListingWithFileSystem => VolumeListingWithFileSystem;
+
+        IEnumerable<ILocalSubdirectoryListItem> ILocalDbContext.SubdirectoryListing => SubdirectoryListing;
+
+        IEnumerable<ILocalSubdirectoryListItemWithAncestorNames> ILocalDbContext.SubdirectoryListingWithAncestorNames => SubdirectoryListingWithAncestorNames;
+
+        IEnumerable<ILocalFileListItemWithAncestorNames> ILocalDbContext.FileListingWithAncestorNames => FileListingWithAncestorNames;
+
+        IEnumerable<ILocalFileListItemWithBinaryProperties> ILocalDbContext.FileListingWithBinaryProperties => FileListingWithBinaryProperties;
+
+        IEnumerable<ILocalFileListItemWithBinaryPropertiesAndAncestorNames> ILocalDbContext.FileListingWithBinaryPropertiesAndAncestorNames => FileListingWithBinaryPropertiesAndAncestorNames;
+
+        IEnumerable<ILocalCrawlConfigurationListItem> ILocalDbContext.CrawlConfigListing => CrawlConfigListing;
+
+        IEnumerable<ILocalCrawlJobListItem> ILocalDbContext.CrawlJobListing => CrawlJobListing;
 
         async Task<ILocalSummaryPropertySet> ILocalDbContext.FindMatchingAsync(ISummaryProperties properties, CancellationToken cancellationToken) =>
             await FindMatchingAsync(properties, cancellationToken);

@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 
 namespace FsInfoCat.Local
 {
-    public abstract class RedundantSetRow : LocalDbEntity, IRedundantSetRow, ISimpleIdentityReference<RedundantSetRow>
+    public abstract class RedundantSetRow : LocalDbEntity, ILocalRedundantSetRow, ISimpleIdentityReference<RedundantSetRow>
     {
         #region Fields
 

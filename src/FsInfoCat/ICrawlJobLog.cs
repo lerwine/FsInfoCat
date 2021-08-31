@@ -3,10 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat
 {
-    /// <summary>Log of crawl job results.</summary>
-    /// <seealso cref="IDbEntity" />
-    /// <seealso cref="ICrawlSettings" />
-    public interface ICrawlJobLog : IDbEntity, ICrawlSettings, IHasSimpleIdentifier
+    public interface ICrawlJobLogRow : IDbEntity, ICrawlSettings, IHasSimpleIdentifier
     {
         /// <summary>Gets root path of the crawl.</summary>
         /// <value>The root path of the crawl.</value>
@@ -40,12 +37,22 @@ namespace FsInfoCat
         /// <value>The status details.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_Details), ResourceType = typeof(Properties.Resources))]
         string StatusDetail { get; }
-
+    }
+    /// <summary>Log of crawl job results.</summary>
+    /// <seealso cref="IDbEntity" />
+    /// <seealso cref="ICrawlSettings" />
+    public interface ICrawlJobLog : ICrawlJobLogRow
+    {
         /// <summary>Gets the configuration source for the file system crawl.</summary>
         /// <value>The configuration for the file system crawl.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_Configuration), ResourceType = typeof(Properties.Resources))]
         ICrawlConfiguration Configuration { get; }
     }
+    public interface ICrawlJobListItem : ICrawlJobLogRow
+    {
+        Guid ConfigurationId { get; }
 
+        string ConfigurationDisplayName { get; }
+    }
 }
 

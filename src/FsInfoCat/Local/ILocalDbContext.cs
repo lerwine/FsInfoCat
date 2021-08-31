@@ -148,6 +148,37 @@ namespace FsInfoCat.Local
         new IEnumerable<ILocalCrawlConfiguration> CrawlConfigurations { get; }
 
         /// <summary>
+        /// Enumerates generic crawl log entities from the local database.
+        /// </summary>
+        new IEnumerable<ILocalCrawlJobLog> CrawlJobLogs { get; }
+
+        new IEnumerable<ILocalFileSystemListItem> FileSystemListing { get; }
+
+        new IEnumerable<ILocalTagDefinitionListItem> PersonalTagDefinitionListing { get; }
+
+        new IEnumerable<ILocalTagDefinitionListItem> SharedTagDefinitionListing { get; }
+
+        new IEnumerable<ILocalRedundantSetListItem> RedundantSetListing { get; }
+
+        new IEnumerable<ILocalVolumeListItem> VolumeListing { get; }
+
+        new IEnumerable<ILocalVolumeListItemWithFileSystem> VolumeListingWithFileSystem { get; }
+
+        new IEnumerable<ILocalSubdirectoryListItem> SubdirectoryListing { get; }
+
+        new IEnumerable<ILocalSubdirectoryListItemWithAncestorNames> SubdirectoryListingWithAncestorNames { get; }
+
+        new IEnumerable<ILocalFileListItemWithAncestorNames> FileListingWithAncestorNames { get; }
+
+        new IEnumerable<ILocalFileListItemWithBinaryProperties> FileListingWithBinaryProperties { get; }
+
+        new IEnumerable<ILocalFileListItemWithBinaryPropertiesAndAncestorNames> FileListingWithBinaryPropertiesAndAncestorNames { get; }
+
+        new IEnumerable<ILocalCrawlConfigurationListItem> CrawlConfigListing { get; }
+
+        new IEnumerable<ILocalCrawlJobListItem> CrawlJobListing { get; }
+
+        /// <summary>
         /// Finds the generic <see cref="ILocalSummaryPropertySet"/> in the local database that matches the specified summary properties.
         /// </summary>
         /// <param name="properties">The <see cref="ISummaryProperties"/> object containing the property values to match.</param>

@@ -1,11 +1,11 @@
+using FsInfoCat.Collections;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.Upstream
 {
-    /// <summary>Compliance/Redundancy mitigation task.</summary>
-    /// <seealso cref="IUpstreamDbEntity" />
-    public interface IMitigationTask : IUpstreamDbEntity
+    public interface IMitigationTaskRow : IUpstreamDbEntity
     {
         /// <summary>Gets the task's short description.</summary>
         /// <value>The short description of task.</value>
@@ -26,7 +26,11 @@ namespace FsInfoCat.Upstream
         /// <value>The priority value for the current task.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_Priority), ResourceType = typeof(Properties.Resources))]
         PriorityLevel Priority { get; }
-
+    }
+    /// <summary>Compliance/Redundancy mitigation task.</summary>
+    /// <seealso cref="IUpstreamDbEntity" />
+    public interface IMitigationTask : IMitigationTaskRow
+    {
         /// <summary>Gets the task's assignment group.</summary>
         /// <value>The <see cref="IUserGroup"/> responsible for task mitigation.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_AssignmentGroup), ResourceType = typeof(Properties.Resources))]
@@ -46,5 +50,27 @@ namespace FsInfoCat.Upstream
         /// <value>The list of actions to be carried out on entire subdirectories.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_SubdirectoryActions), ResourceType = typeof(Properties.Resources))]
         IEnumerable<ISubdirectoryAction> SubdirectoryActions { get; }
+    }
+    public interface IMitigationTaskListItem : IMitigationTaskRow
+    {
+        Guid? AssignmentGroupId { get; }
+
+        string AssignmentGroupName { get; }
+
+        Guid? AssignedToId { get; }
+
+        string AssignedToDisplayName { get; }
+
+        string AssignedToFirstName { get; }
+
+        string AssignedToLastName { get; }
+
+        int? AssignedToDbPrincipalId { get; }
+
+        ByteValues AssignedToSID { get; }
+
+        long FileActionCount { get; }
+
+        long SubdirectoryActionCount { get; }
     }
 }

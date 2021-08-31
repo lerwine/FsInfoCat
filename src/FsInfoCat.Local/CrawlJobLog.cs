@@ -5,10 +5,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.Local
 {
-    /// <summary>Log of crawl job results.</summary>
-    /// <seealso cref="LocalDbEntity" />
-    /// <seealso cref="ILocalCrawlJobLog" />
-    public class CrawlJobLog : LocalDbEntity, ILocalCrawlJobLog
+    public class CrawlJobLogRow : LocalDbEntity, ILocalCrawlJobLogRow
     {
         #region Fields
 
@@ -23,7 +20,6 @@ namespace FsInfoCat.Local
         private readonly IPropertyChangeTracker<ulong?> _totalMaxItems;
         private readonly IPropertyChangeTracker<long?> _ttl;
         private readonly IPropertyChangeTracker<Guid> _configurationId;
-        private readonly IPropertyChangeTracker<CrawlConfiguration> _configuration;
 
         #endregion
 
@@ -95,39 +91,18 @@ namespace FsInfoCat.Local
             set
             {
                 if (_configurationId.SetValue(value))
-                {
-                    CrawlConfiguration nav = _configuration.GetValue();
-                    if (!(nav is null || nav.Id.Equals(value)))
-                        _configuration.SetValue(null);
-                }
-            }
-        }
-
-        /// <summary>Gets the configuration source for the file system crawl.</summary>
-        /// <value>The configuration for the file system crawl.</value>
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_Configuration), ResourceType = typeof(Properties.Resources))]
-        public CrawlConfiguration Configuration
-        {
-            get => _configuration.GetValue();
-            set
-            {
-                if (_configuration.SetValue(value))
-                {
-                    if (value is null)
-                        _configurationId.SetValue(Guid.Empty);
-                    else
-                        _configurationId.SetValue(value.Id);
-                }
+                    OnConfigurationIdChanged(value);
+                //{
+                //    CrawlConfiguration nav = _configuration.GetValue();
+                //    if (!(nav is null || nav.Id.Equals(value)))
+                //        _configuration.SetValue(null);
+                //}
             }
         }
 
         #endregion
 
-        ICrawlConfiguration ICrawlJobLog.Configuration => throw new NotImplementedException();
-
-        ILocalCrawlConfiguration ILocalCrawlJobLog.Configuration => throw new NotImplementedException();
-
-        public CrawlJobLog()
+        public CrawlJobLogRow()
         {
             _id = AddChangeTracker(nameof(Id), Guid.Empty);
             _rootPath = AddChangeTracker(nameof(RootPath), "", TrimmedNonNullStringCoersion.Default);
@@ -139,14 +114,60 @@ namespace FsInfoCat.Local
             _maxRecursionDepth = AddChangeTracker(nameof(MaxRecursionDepth), DbConstants.DbColDefaultValue_MaxRecursionDepth);
             _totalMaxItems = AddChangeTracker<ulong?>(nameof(MaxTotalItems), null);
             _ttl = AddChangeTracker<long?>(nameof(TTL), null);
-            _configuration = AddChangeTracker<CrawlConfiguration>(nameof(Configuration), null);
             _configurationId = AddChangeTracker(nameof(ConfigurationId), Guid.Empty);
+        }
 
+        protected virtual void OnConfigurationIdChanged(Guid value) { }
+
+    }
+
+    /// <summary>Log of crawl job results.</summary>
+    /// <seealso cref="LocalDbEntity" />
+    /// <seealso cref="ILocalCrawlJobLog" />
+    public class CrawlJobLog : CrawlJobLogRow, ILocalCrawlJobLog
+    {
+        private readonly IPropertyChangeTracker<CrawlConfiguration> _configuration;
+
+        /// <summary>
+        /// Gets the configuration source for the file system crawl.
+        /// </summary>
+        /// <value>
+        /// The configuration for the file system crawl.
+        /// </value>
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_Configuration), ResourceType = typeof(Properties.Resources))]
+        public CrawlConfiguration Configuration
+        {
+            get => _configuration.GetValue();
+            set
+            {
+                if (_configuration.SetValue(value))
+                    ConfigurationId = value?.Id ?? Guid.Empty;
+            }
+        }
+
+        ICrawlConfiguration ICrawlJobLog.Configuration => Configuration;
+
+        ILocalCrawlConfiguration ILocalCrawlJobLog.Configuration => Configuration;
+
+        public CrawlJobLog()
+        {
+            _configuration = AddChangeTracker<CrawlConfiguration>(nameof(Configuration), null);
         }
 
         internal static void OnBuildEntity(EntityTypeBuilder<CrawlJobLog> builder)
         {
             builder.HasOne(sn => sn.Configuration).WithMany(d => d.Logs).HasForeignKey(nameof(ConfigurationId)).IsRequired().OnDelete(DeleteBehavior.Restrict);
+        }
+    }
+    public class CrawlJobLogListItem : CrawlJobLogRow, ILocalCrawlJobListItem
+    {
+        private readonly IPropertyChangeTracker<string> _configurationDisplayName;
+
+        public string ConfigurationDisplayName { get => _configurationDisplayName.GetValue(); set => _configurationDisplayName.SetValue(value); }
+
+        public CrawlJobLogListItem()
+        {
+            _configurationDisplayName = AddChangeTracker(nameof(RootPath), "", TrimmedNonNullStringCoersion.Default);
         }
     }
 }

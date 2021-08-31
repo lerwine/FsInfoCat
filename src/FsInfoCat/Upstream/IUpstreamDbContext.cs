@@ -147,6 +147,11 @@ namespace FsInfoCat.Upstream
         new IEnumerable<IUpstreamCrawlConfiguration> CrawlConfigurations { get; }
 
         /// <summary>
+        /// Enumerates generic crawl log entities from the upstream (remote) database.
+        /// </summary>
+        new IEnumerable<IUpstreamCrawlJobLog> CrawlJobLogs { get; }
+
+        /// <summary>
         /// Enumerates generic file action entities from the upstream (remote) database.
         /// </summary>
         IEnumerable<IFileAction> FileActions { get; }
@@ -185,6 +190,46 @@ namespace FsInfoCat.Upstream
         /// Enumerates generic user profile entities from the upstream (remote) database.
         /// </summary>
         IEnumerable<IUserProfile> UserProfiles { get; }
+
+        new IEnumerable<IUpstreamFileSystemListItem> FileSystemListing { get; }
+
+        new IEnumerable<IUpstreamTagDefinitionListItem> PersonalTagDefinitionListing { get; }
+
+        new IEnumerable<IUpstreamTagDefinitionListItem> SharedTagDefinitionListing { get; }
+
+        new IEnumerable<IUpstreamRedundantSetListItem> RedundantSetListing { get; }
+
+        new IEnumerable<IUpstreamVolumeListItem> VolumeListing { get; }
+
+        new IEnumerable<IUpstreamVolumeListItemWithFileSystem> VolumeListingWithFileSystem { get; }
+
+        new IEnumerable<IUpstreamSubdirectoryListItem> SubdirectoryListing { get; }
+
+        new IEnumerable<IUpstreamSubdirectoryListItemWithAncestorNames> SubdirectoryListingWithAncestorNames { get; }
+
+        new IEnumerable<IUpstreamFileListItemWithAncestorNames> FileListingWithAncestorNames { get; }
+
+        new IEnumerable<IUpstreamFileListItemWithBinaryProperties> FileListingWithBinaryProperties { get; }
+
+        new IEnumerable<IUpstreamFileListItemWithBinaryPropertiesAndAncestorNames> FileListingWithBinaryPropertiesAndAncestorNames { get; }
+
+        new IEnumerable<IUpstreamCrawlConfigurationListItem> CrawlConfigListing { get; }
+
+        new IEnumerable<IUpstreamCrawlJobListItem> CrawlJobListing { get; }
+
+        IEnumerable<IGroupMemberOfListItem> GroupMemberOfListing { get; }
+
+        IEnumerable<IGroupMemberListItem> GroupMemberListing { get; }
+
+        IEnumerable<IHostDeviceListItem> HostDeviceListing { get; }
+
+        IEnumerable<IHostPlatformListItem> HostPlatformListing { get; }
+
+        IEnumerable<IMitigationTaskListItem> MitigationTaskListing { get; }
+
+        IEnumerable<IUserGroupListItem> UserGroupListing { get; }
+
+        IEnumerable<IUserProfileListItem> UserProfileListing { get; }
 
         /// <summary>
         /// Finds the generic <see cref="IUpstreamSummaryPropertySet"/> in the upstream (remote) database that matches the specified summary properties.

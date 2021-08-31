@@ -1,7 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.Upstream
 {
+    public interface IUpstreamCrawlJobLogRow : ICrawlJobLogRow, IUpstreamDbEntity { }
+
     /// <summary>Log of crawl job results.</summary>
     /// <seealso cref="IUpstreamDbEntity" />
     /// <seealso cref="ICrawlJobLog" />
@@ -12,4 +14,6 @@ namespace FsInfoCat.Upstream
         [Display(Name = nameof(Properties.Resources.DisplayName_Configuration), ResourceType = typeof(Properties.Resources))]
         new IUpstreamCrawlConfiguration Configuration { get; }
     }
+
+    public interface IUpstreamCrawlJobListItem : IUpstreamCrawlJobLogRow, ICrawlJobListItem { }
 }

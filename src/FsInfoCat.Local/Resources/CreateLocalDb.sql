@@ -869,6 +869,9 @@ CREATE VIEW IF NOT EXISTS "vFileListingWithBinaryPropertiesAndAncestorNames" AS 
 	FROM "Files"
 	LEFT JOIN "BinaryPropertySets" ON "Files"."BinaryPropertySetId"="BinaryPropertySets"."Id"
 	LEFT JOIN "vSubdirectoryListingWithAncestorNames" ON "Files"."ParentId"="vSubdirectoryListingWithAncestorNames"."Id";
+    
+CREATE VIEW IF NOT EXISTS "vCrawlJobListing" AS SELECT "CrawlJobLogs".*, "CrawlConfigurations"."DisplayName" AS "ConfigurationDisplayName" FROM "CrawlJobLogs"
+	LEFT JOIN "CrawlConfigurations" ON "CrawlJobLogs"."ConfigurationId" = "CrawlConfigurations"."Id";
 
 INSERT INTO "FileSystems" ("Id", "DisplayName", "CreatedOn", "ModifiedOn")
 	VALUES ('bedb396b-2212-4149-9cad-7e437c47314c', 'New Technology File System', '2004-08-19 14:51:06', '2004-08-19 14:51:06');
