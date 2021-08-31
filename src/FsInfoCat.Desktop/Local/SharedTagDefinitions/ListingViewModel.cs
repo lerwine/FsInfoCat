@@ -1,13 +1,9 @@
 using FsInfoCat.Desktop.ViewModel;
 using FsInfoCat.Local;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Threading;
 
 namespace FsInfoCat.Desktop.Local.SharedTagDefinitions
 {
@@ -86,7 +82,7 @@ namespace FsInfoCat.Desktop.Local.SharedTagDefinitions
             throw new System.NotImplementedException();
         }
 
-        protected override Task<int> DeleteEntityFromDbContextAsync([DisallowNull] SharedTagDefinitionListItem entity, [DisallowNull] LocalDbContext dbContext, [DisallowNull] IWindowsStatusListener statusListener)
+        protected override async Task<int> DeleteEntityFromDbContextAsync([DisallowNull] SharedTagDefinitionListItem entity, [DisallowNull] LocalDbContext dbContext, [DisallowNull] IWindowsStatusListener statusListener)
         {
             throw new System.NotImplementedException();
         }
