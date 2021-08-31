@@ -172,11 +172,15 @@ namespace FsInfoCat.Desktop.ViewModel
             {
                 EnumChoiceItem<TEnum> item = new(value);
                 SetEnumValuePickerVM(item, this);
-                _backingChoices.Add(new(value));
+                _backingChoices.Add(item);
             }
             if (noValueDisplayNames is not null && noValueDisplayNames.Length > 1)
                 foreach (string name in noValueDisplayNames.Skip(1))
-                    _backingChoices.Add(new(name));
+                {
+                    EnumChoiceItem<TEnum> item = new(name);
+                    SetEnumValuePickerVM(item, this);
+                    _backingChoices.Add(item);
+                }
             SelectedItem = _backingChoices.First();
         }
     }

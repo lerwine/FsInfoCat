@@ -58,11 +58,12 @@ namespace FsInfoCat.Desktop.ViewModel
         }
 
         #endregion
-        public abstract CrawlStatus StatusValue { get; set; }
-        public abstract DateTime? LastCrawlStart { get; set; }
-        public abstract DateTime? LastCrawlEnd { get; set; }
-        public abstract DateTime? NextScheduledStart { get; set; }
-        public abstract TimeSpan? RescheduleInterval { get; set; }
+        //public abstract CrawlStatus StatusValue { get; set; }
+        //public abstract DateTime? LastCrawlStart { get; set; }
+        //public abstract DateTime? LastCrawlEnd { get; set; }
+        //public abstract DateTime? NextScheduledStart { get; set; }
+        //public abstract TimeSpan? RescheduleInterval { get; set; }
+
         #region RescheduleFromJobEnd Property Members
 
         /// <summary>
@@ -168,7 +169,7 @@ namespace FsInfoCat.Desktop.ViewModel
         }
 
         #endregion
-        public abstract TimeSpan? TTL { get; set; }
+        //public abstract TimeSpan? TTL { get; set; }
         #region MaxDuration Property Members
 
         private static readonly DependencyPropertyKey MaxDurationPropertyKey = DependencyProperty.RegisterReadOnly(nameof(MaxDuration), typeof(TimeSpanViewModel),
@@ -184,6 +185,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Gets .
         /// </summary>
         /// <value>The .</value>
+        // BUG: This is not acceptable for listing views. Needs to be TimeSpan?
         public TimeSpanViewModel MaxDuration => (TimeSpanViewModel)GetValue(MaxDurationProperty);
 
         #endregion
@@ -192,17 +194,17 @@ namespace FsInfoCat.Desktop.ViewModel
         {
             DisplayName = entity.DisplayName;
             Notes = entity.Notes;
-            StatusValue = entity.StatusValue;
-            LastCrawlStart = entity.LastCrawlStart;
-            LastCrawlEnd = entity.LastCrawlEnd;
-            NextScheduledStart = entity.NextScheduledStart;
-            long? seconds = entity.RescheduleInterval;
-            RescheduleInterval = seconds.HasValue ? TimeSpan.FromSeconds(seconds.Value) : null;
-            RescheduleFromJobEnd = entity.RescheduleFromJobEnd;
+            //StatusValue = entity.StatusValue;
+            //LastCrawlStart = entity.LastCrawlStart;
+            //LastCrawlEnd = entity.LastCrawlEnd;
+            //NextScheduledStart = entity.NextScheduledStart;
+            //long? seconds = entity.RescheduleInterval;
+            //RescheduleInterval = seconds.HasValue ? TimeSpan.FromSeconds(seconds.Value) : null;
+            //RescheduleFromJobEnd = entity.RescheduleFromJobEnd;
             RescheduleAfterFail = entity.RescheduleAfterFail;
             MaxRecursionDepth = entity.MaxRecursionDepth;
             MaxTotalItems = entity.MaxTotalItems;
-            seconds = entity.TTL;
+            long? seconds = entity.TTL;
             SetValue(MaxDurationPropertyKey, new TimeSpanViewModel(seconds.HasValue ? TimeSpan.FromSeconds(seconds.Value) : null));
         }
 
@@ -216,22 +218,22 @@ namespace FsInfoCat.Desktop.ViewModel
                 case nameof(ICrawlConfigurationRow.Notes):
                     Dispatcher.CheckInvoke(() => Notes = Entity.Notes);
                     break;
-                case nameof(ICrawlConfigurationRow.StatusValue):
-                    Dispatcher.CheckInvoke(() => StatusValue = Entity.StatusValue);
-                    break;
-                case nameof(ICrawlConfigurationRow.LastCrawlStart):
-                    Dispatcher.CheckInvoke(() => LastCrawlStart = Entity.LastCrawlStart);
-                    break;
-                case nameof(ICrawlConfigurationRow.LastCrawlEnd):
-                    Dispatcher.CheckInvoke(() => LastCrawlEnd = Entity.LastCrawlEnd);
-                    break;
-                case nameof(ICrawlConfigurationRow.NextScheduledStart):
-                    Dispatcher.CheckInvoke(() => NextScheduledStart = Entity.NextScheduledStart);
-                    break;
-                case nameof(ICrawlConfigurationRow.RescheduleInterval):
-                    long? seconds = Entity.RescheduleInterval;
-                    RescheduleInterval = seconds.HasValue ? TimeSpan.FromSeconds(seconds.Value) : null;
-                    break;
+                //case nameof(ICrawlConfigurationRow.StatusValue):
+                //    Dispatcher.CheckInvoke(() => StatusValue = Entity.StatusValue);
+                //    break;
+                //case nameof(ICrawlConfigurationRow.LastCrawlStart):
+                //    Dispatcher.CheckInvoke(() => LastCrawlStart = Entity.LastCrawlStart);
+                //    break;
+                //case nameof(ICrawlConfigurationRow.LastCrawlEnd):
+                //    Dispatcher.CheckInvoke(() => LastCrawlEnd = Entity.LastCrawlEnd);
+                //    break;
+                //case nameof(ICrawlConfigurationRow.NextScheduledStart):
+                //    Dispatcher.CheckInvoke(() => NextScheduledStart = Entity.NextScheduledStart);
+                //    break;
+                //case nameof(ICrawlConfigurationRow.RescheduleInterval):
+                //    long? seconds = Entity.RescheduleInterval;
+                //    RescheduleInterval = seconds.HasValue ? TimeSpan.FromSeconds(seconds.Value) : null;
+                //    break;
                 case nameof(ICrawlConfigurationRow.RescheduleFromJobEnd):
                     Dispatcher.CheckInvoke(() => RescheduleFromJobEnd = Entity.RescheduleFromJobEnd);
                     break;
@@ -244,10 +246,10 @@ namespace FsInfoCat.Desktop.ViewModel
                 case nameof(ICrawlConfigurationRow.MaxTotalItems):
                     Dispatcher.CheckInvoke(() => MaxTotalItems = Entity.MaxTotalItems);
                     break;
-                case nameof(ICrawlConfigurationRow.TTL):
-                    long? ttl = Entity.TTL;
-                    Dispatcher.CheckInvoke(() => TTL = ttl.HasValue ? TimeSpan.FromSeconds(ttl.Value) : null);
-                    break;
+                //case nameof(ICrawlConfigurationRow.TTL):
+                //    long? ttl = Entity.TTL;
+                //    Dispatcher.CheckInvoke(() => TTL = ttl.HasValue ? TimeSpan.FromSeconds(ttl.Value) : null);
+                //    break;
                 default:
                     base.OnEntityPropertyChanged(propertyName);
                     return false;

@@ -1,23 +1,10 @@
 using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel
 {
-    public class CrawlConfigEditViewModel<TEntity> : CrawlConfigurationRowViewModel<TEntity>
-        where TEntity : DbEntity, ICrawlConfiguration
-    {
-        public override CrawlStatus StatusValue { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public override DateTime? LastCrawlStart { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public override DateTime? LastCrawlEnd { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public override DateTime? NextScheduledStart { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public override TimeSpan? RescheduleInterval { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public override TimeSpan? TTL { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-
-        public CrawlConfigEditViewModel(TEntity entity) : base(entity)
-        {
-
-        }
-    }
     public class CrawlConfigListItemViewModel<TEntity> : CrawlConfigurationRowViewModel<TEntity>
         where TEntity : DbEntity, ICrawlConfigurationListItem
     {
@@ -49,7 +36,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Gets or sets .
         /// </summary>
         /// <value>The .</value>
-        public override DateTime? LastCrawlEnd { get => (DateTime?)GetValue(LastCrawlEndProperty); set => SetValue(LastCrawlEndProperty, value); }
+        public DateTime? LastCrawlEnd { get => (DateTime?)GetValue(LastCrawlEndProperty); set => SetValue(LastCrawlEndProperty, value); }
 
         #endregion
         #region LastCrawlStart Property Members
@@ -64,7 +51,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Gets or sets .
         /// </summary>
         /// <value>The .</value>
-        public override DateTime? LastCrawlStart { get => (DateTime?)GetValue(LastCrawlStartProperty); set => SetValue(LastCrawlStartProperty, value); }
+        public DateTime? LastCrawlStart { get => (DateTime?)GetValue(LastCrawlStartProperty); set => SetValue(LastCrawlStartProperty, value); }
 
         #endregion
         #region NextScheduledStart Property Members
@@ -79,7 +66,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Gets or sets .
         /// </summary>
         /// <value>The .</value>
-        public override DateTime? NextScheduledStart { get => (DateTime?)GetValue(NextScheduledStartProperty); set => SetValue(NextScheduledStartProperty, value); }
+        public DateTime? NextScheduledStart { get => (DateTime?)GetValue(NextScheduledStartProperty); set => SetValue(NextScheduledStartProperty, value); }
 
         #endregion
         #region RescheduleInterval Property Members
@@ -94,7 +81,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Gets or sets .
         /// </summary>
         /// <value>The .</value>
-        public override TimeSpan? RescheduleInterval { get => (TimeSpan?)GetValue(RescheduleIntervalProperty); set => SetValue(RescheduleIntervalProperty, value); }
+        public TimeSpan? RescheduleInterval { get => (TimeSpan?)GetValue(RescheduleIntervalProperty); set => SetValue(RescheduleIntervalProperty, value); }
 
         #endregion
         #region StatusValue Property Members
@@ -109,7 +96,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Gets or sets .
         /// </summary>
         /// <value>The .</value>
-        public override CrawlStatus StatusValue { get => (CrawlStatus)GetValue(StatusValueProperty); set => SetValue(StatusValueProperty, value); }
+        public CrawlStatus StatusValue { get => (CrawlStatus)GetValue(StatusValueProperty); set => SetValue(StatusValueProperty, value); }
 
         #endregion
         #region TTL Property Members
@@ -124,7 +111,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Gets or sets .
         /// </summary>
         /// <value>The .</value>
-        public override TimeSpan? TTL { get => (TimeSpan?)GetValue(TTLProperty); set => SetValue(TTLProperty, value); }
+        public TimeSpan? TTL { get => (TimeSpan?)GetValue(TTLProperty); set => SetValue(TTLProperty, value); }
 
         #endregion
         #region VolumeDisplayName Property Members

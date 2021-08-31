@@ -14,6 +14,8 @@ namespace FsInfoCat.Desktop.ViewModel
         protected override void OnIsSelectedPropertyChanged(bool oldValue, bool newValue)
         {
             EnumValuePickerVM<TEnum> valuePicker = EnumValuePickerVM<TEnum>.GetEnumValuePickerVM(this);
+            if (valuePicker is null)
+                return;
             if (newValue)
                 valuePicker.SelectedItem = this;
             else if (ReferenceEquals(valuePicker.SelectedItem, this))

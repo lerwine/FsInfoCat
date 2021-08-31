@@ -9,16 +9,16 @@ namespace FsInfoCat.Desktop.ViewModel
 {
     public class MainVM : DependencyObject, IApplicationNavigation
     {
-        private ILogger<MainVM> _logger;
+        private readonly ILogger<MainVM> _logger;
 
-        public const string Page_Uri_Local_CrawlConfigurations = "/View/Local/CrawlConfigurationsPage.xaml";
-        public const string Page_Uri_Local_FileSystems = "/View/Local/FileSystemsPage.xaml";
-        public const string Page_Uri_Local_RedundantSets = "/View/Local/RedundantSetsPage.xaml";
-        public const string Page_Uri_Local_SymbolicNames = "/View/Local/SymbolicNamesPage.xaml";
-        public const string Page_Uri_Local_Volumes = "/View/Local/VolumesPage.xaml";
-        public const string Page_Uri_Local_PersonalTagDefinitions = "/View/Local/PersonalTagDefinitionsPage.xaml";
-        public const string Page_Uri_Local_SharedTagDefinitions = "/View/Local/SharedTagDefinitionsPage.xaml";
-        public const string Page_Uri_Local_CrawlLogs = "/View/Local/CrawlLogsPage.xaml";
+        public const string Page_Uri_Local_CrawlConfigurations = "/Local/CrawlConfigurations/ListingPage.xaml";
+        public const string Page_Uri_Local_FileSystems = "/Local/FileSystems/ListingPage.xaml";
+        public const string Page_Uri_Local_RedundantSets = "/Local/RedundantSets/ListingPage.xaml";
+        public const string Page_Uri_Local_SymbolicNames = "/Local/SymbolicNames/ListingPage.xaml";
+        public const string Page_Uri_Local_Volumes = "/Local/Volumes/ListingPage.xaml";
+        public const string Page_Uri_Local_PersonalTagDefinitions = "/Local/PersonalTagDefinitions/ListingPage.xaml";
+        public const string Page_Uri_Local_SharedTagDefinitions = "/Local/SharedTagDefinitions/ListingPage.xaml";
+        public const string Page_Uri_Local_CrawlLogs = "/Local/CrawlLogs/ListingPage.xaml";
 
         #region ViewFileSystems Command Property Members
 
