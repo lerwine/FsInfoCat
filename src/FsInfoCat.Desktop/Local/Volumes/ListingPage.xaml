@@ -8,6 +8,7 @@
       xmlns:Converters="clr-namespace:FsInfoCat.Desktop.Converters" d:DesignHeight="768" d:DesignWidth="1024"
       Title="Explore Volumes">
     <Page.Resources>
+        <Converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
         <Converters:VolumeIdentifierToStringConverter x:Key="VolumeIdentifierToStringConverter"/>
         <Converters:VolumeStatusToStringConverter x:Key="VolumeStatusToStringConverter"/>
         <local:ListingViewModel x:Key="ViewModel"/>
@@ -24,12 +25,43 @@
                     <DataGridTextColumn.Header>
                         <StackPanel Orientation="Horizontal">
                             <Label Content="State"/>
-                            <Button Grid.Column="1" Style="{DynamicResource AddNewButton}"/>
-                            <Button Grid.Column="2" Style="{DynamicResource FilterButton}"/>
+                            <Button Grid.Column="1" Style="{DynamicResource AddNewButton}" Command="{Binding AddNewItemButtonClick, Mode=OneWay}"/>
+                            <Button Grid.Column="2" Style="{DynamicResource FilterButton}" Command="{Binding ShowFilterOptionsButtonClick, Mode=OneWay}"/>
                         </StackPanel>
                     </DataGridTextColumn.Header>
                 </DataGridTextColumn>
             </DataGrid.Columns>
         </DataGrid>
+        <Border Background="{DynamicResource TranslucentBlack50pctBrush}" Visibility="{Binding ViewOptionsVisible, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}">
+            <Border HorizontalAlignment="Center" VerticalAlignment="Center" Style="{DynamicResource PopupOuterBorder}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Border Style="{DynamicResource PopupTitleBorder}">
+                        <TextBlock Text="Listing Display Options" FontWeight="Bold"/>
+                    </Border>
+                    <Border Grid.Row="1" Style="{DynamicResource PopupContentBorder}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Label Content="Show:" Padding="{DynamicResource DefaultSpacing}"/>
+                            <ComboBox Grid.Column="1"/>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="1" Grid.ColumnSpan="2">
+                                <Button Style="{DynamicResource AcceptButton}" ToolTip="Apply Filter" Margin="{DynamicResource DefaultSpacingBottomLeftRight}" Command="{Binding SaveFilterOptionsButtonClick, Mode=OneWay}"/>
+                                <Button Style="{DynamicResource CancelButton}" ToolTip="Discard Filter Changes" Margin="{DynamicResource DefaultSpacingBottomRight}" Command="{Binding CancelFilterOptionsButtonClick, Mode=OneWay}"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                </Grid>
+            </Border>
+        </Border>
     </Grid>
 </Page>

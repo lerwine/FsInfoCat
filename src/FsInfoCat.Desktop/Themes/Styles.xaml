@@ -240,6 +240,16 @@
     <Style x:Key="PopupTitleBorder" TargetType="{x:Type Border}">
         <Setter Property="CornerRadius" Value="{DynamicResource PopupTitleCornerRadius}"/>
         <Setter Property="Padding" Value="{DynamicResource DefaultSpacing}"/>
+        <Setter Property="Background" Value="{DynamicResource PopupTitleInfoBackgroundBrush}"/>
+    </Style>
+    <Style x:Key="ErrorPopupTitleBorder" TargetType="{x:Type Border}" BasedOn="{StaticResource PopupTitleBorder}">
+        <Setter Property="Background" Value="{DynamicResource PopupTitleErrorBackgroundBrush}"/>
+    </Style>
+    <Style x:Key="WarningPopupTitleBorder" TargetType="{x:Type Border}" BasedOn="{StaticResource PopupTitleBorder}">
+        <Setter Property="Background" Value="{DynamicResource PopupTitleWarningBackgroundBrush}"/>
+    </Style>
+    <Style x:Key="SuccessPopupTitleBorder" TargetType="{x:Type Border}" BasedOn="{StaticResource PopupTitleBorder}">
+        <Setter Property="Background" Value="{DynamicResource PopupTitleSuccessBackgroundBrush}"/>
     </Style>
     <Style x:Key="PopupContentBorder" TargetType="{x:Type Border}">
         <Setter Property="CornerRadius" Value="{DynamicResource PopupContentCornerRadius}"/>
@@ -433,6 +443,57 @@
             </Setter.Value>
         </Setter>
     </Style>
+    <Style x:Key="OpenListingButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
+        <Setter Property="ContentTemplate">
+            <Setter.Value>
+                <DataTemplate>
+                    <Image>
+                        <Image.Source>
+                            <DrawingImage>
+                                <DrawingImage.Drawing>
+                                    <DrawingGroup>
+                                        <DrawingGroup.Children>
+                                            <GeometryDrawing Brush="#00FFFFFF" Geometry="F1M16,16L0,16 0,0 16,0z" />
+                                            <GeometryDrawing Brush="#FFF6F6F6" Geometry="F1M16,4L16,16 6.021,16 6.021,7 5,7 5,9 3.5,9C1.57,9 0,7.43 0,5.5 0,3.57 1.57,2 3.5,2L3.709,2 2,0 7,0 10,3.52 9.586,4z" />
+                                            <GeometryDrawing Brush="#FF414141" Geometry="F1M9,5L8,6 14,6 14,14 8,14 8,6 7,7 7,15 15,15 15,5z" />
+                                            <GeometryDrawing Brush="#FF414141" Geometry="F1M9,10L13,10 13,9 9,9z" />
+                                            <GeometryDrawing Brush="#FF414141" Geometry="F1M10,8L13,8 13,7 10,7z" />
+                                            <GeometryDrawing Brush="#FF414141" Geometry="F1M9,12L12,12 12,10.999 9,10.999z" />
+                                            <GeometryDrawing Brush="#FF00529C" Geometry="F1M8.5,3.5156L6,5.9996 4,5.9996 6.013,3.9996 3.5,3.9996C2.673,3.9996 2,4.6726 2,5.4996 2,6.3276 2.673,6.9996 3.5,6.9996L4,6.9996 4,7.9996 3.5,7.9996C2.119,7.9996 1,6.8806 1,5.4996 1,4.1196 2.119,2.9996 3.5,2.9996L5.988,2.9996 4,0.999599999999999 6,0.999599999999999z" />
+                                            <GeometryDrawing Brush="#FFF0EFF1" Geometry="F1M13,8L10,8 10,7 13,7z M13,10L9,10 9,9 13,9z M12,12L9,12 9,11 12,11z M8,6L8,7 8,13 8,14 13,14 14,14 14,7 14,6z" />
+                                        </DrawingGroup.Children>
+                                    </DrawingGroup>
+                                </DrawingImage.Drawing>
+                            </DrawingImage>
+                        </Image.Source>
+                    </Image>
+                </DataTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="SyncButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
+        <Setter Property="ContentTemplate">
+            <Setter.Value>
+                <DataTemplate>
+                    <Image>
+                        <Image.Source>
+                            <DrawingImage>
+                                <DrawingImage.Drawing>
+                                    <DrawingGroup>
+                                        <DrawingGroup.Children>
+                                            <GeometryDrawing Brush="#00FFFFFF" Geometry="F1M16,16L0,16 0,0 16,0z" />
+                                            <GeometryDrawing Brush="#FFF6F6F6" Geometry="F1M0.7992,5.3584L2.9132,7.4724 3.9972,6.3894 3.9972,12.9994 6.9972,12.9994 6.9972,11.8604 10.4972,15.4274 15.1962,10.6394 13.0822,8.5244 11.9982,9.6094 11.9982,2.9974 8.9982,2.9974 8.9982,4.1374 5.4982,0.570399999999999z M6.9972,6.3884L8.0822,7.4724 8.9982,6.5564 8.9982,9.6094 7.9132,8.5244 6.9972,9.4404z" />
+                                            <GeometryDrawing Brush="#FF424242" Geometry="F1M5.498,1.9985L8.789,5.3525 8.082,6.0595 5.997,3.9755 5.997,11.9995 4.997,11.9995 4.997,3.9755 2.913,6.0595 2.206,5.3525z M10.497,13.9995L7.206,10.6465 7.913,9.9395 9.998,12.0235 9.998,3.9985 10.998,3.9985 10.998,12.0235 13.082,9.9395 13.789,10.6465z" />
+                                        </DrawingGroup.Children>
+                                    </DrawingGroup>
+                                </DrawingImage.Drawing>
+                            </DrawingImage>
+                        </Image.Source>
+                    </Image>
+                </DataTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
     <Style x:Key="FilterButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
         <Setter Property="ContentTemplate">
         <Setter.Value>
@@ -522,6 +583,54 @@
                                                 <GeometryDrawing Brush="#FFF6F6F6" Geometry="F1M1,15L15,15 15,0 1,0z" />
                                                 <GeometryDrawing Brush="#FFEFEFF0" Geometry="F1M11,5L11,6 6,6 6,5 6,4 11,4z M4,13L13,13 13,2 4,2z" />
                                                 <GeometryDrawing Brush="#FF424242" Geometry="F1M11,4L11,5 11,6 6,6 6,5 6,4z M13,13L4,13 4,2 13,2z M2,1L2,2 3,2 3,3 2,3 2,4 3,4 3,5 2,5 2,6 3,6 3,7 2,7 2,8 3,8 3,9 2,9 2,10 3,10 3,11 2,11 2,12 3,12 3,13 2,13 2,14 14,14 14,1z" />
+                                            </DrawingGroup.Children>
+                                        </DrawingGroup>
+                                    </DrawingGroup>
+                                </DrawingImage.Drawing>
+                            </DrawingImage>
+                        </Image.Source>
+                    </Image>
+                </DataTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="AcceptButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
+        <Setter Property="ContentTemplate">
+            <Setter.Value>
+                <DataTemplate>
+                    <Image>
+                        <Image.Source>
+                            <DrawingImage>
+                                <DrawingImage.Drawing>
+                                    <DrawingGroup>
+                                        <DrawingGroup.Children>
+                                                <GeometryDrawing Brush="#00FFFFFF" Geometry="F1M16,16L0,16 0,0 16,0z" />
+                                                <GeometryDrawing Brush="#FFF6F6F6" Geometry="F1M6.0003,9.1717L2.7073,5.8787 0.000300000000000189,8.5857 0.000300000000000189,8.8277 6.0003,14.8277 16.0003,4.8287 16.0003,4.5857 13.2933,1.8787z" />
+                                                <GeometryDrawing Brush="#FF388A34" Geometry="F1M14.707,4.707L6,13.414 1.293,8.707 2.707,7.293 6,10.586 13.293,3.293z" />
+                                            </DrawingGroup.Children>
+                                        </DrawingGroup>
+                                </DrawingImage.Drawing>
+                            </DrawingImage>
+                        </Image.Source>
+                    </Image>
+                </DataTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="CancelButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
+        <Setter Property="ContentTemplate">
+            <Setter.Value>
+                <DataTemplate>
+                    <Image>
+                        <Image.Source>
+                            <DrawingImage>
+                                <DrawingImage.Drawing>
+                                    <DrawingGroup>
+                                        <DrawingGroup>
+                                            <DrawingGroup.Children>
+                                                <GeometryDrawing Brush="#00FFFFFF" Geometry="F1M16,16L0,16 0,0 16,0z" />
+                                                <GeometryDrawing Brush="#FFF6F6F6" Geometry="F1M8.0001,5.1721L3.4571,0.6291 0.629099999999999,3.4571 5.1721,8.0001 0.629099999999999,12.5431 3.4571,15.3711 8.0001,10.8281 12.5431,15.3711 15.3711,12.5431 10.8281,8.0001 15.3711,3.4571 12.5431,0.6291z" />
+                                                <GeometryDrawing Brush="#FFA1260C" Geometry="F1M9.4141,8L13.9571,12.543 12.5431,13.957 8.0001,9.414 3.4571,13.957 2.0431,12.543 6.5861,8 2.0431,3.457 3.4571,2.043 8.0001,6.586 12.5431,2.043 13.9571,3.457z" />
                                             </DrawingGroup.Children>
                                         </DrawingGroup>
                                     </DrawingGroup>

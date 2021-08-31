@@ -84,7 +84,7 @@
         <GradientStop Color="{DynamicResource WarningMediumColor}" Offset="0.75"/>
         <GradientStop Color="{DynamicResource WarningDarkColor}" Offset="1"/>
     </LinearGradientBrush>
-    <LinearGradientBrush x:Key="PopupTitleErrorgBackgroundBrush" EndPoint="0.5,1" StartPoint="0.5,0">
+    <LinearGradientBrush x:Key="PopupTitleErrorBackgroundBrush" EndPoint="0.5,1" StartPoint="0.5,0">
         <GradientStop Color="White" Offset="0"/>
         <GradientStop Color="{DynamicResource ErrorLightColor}" Offset="0.5"/>
         <GradientStop Color="{DynamicResource ErrorMediumColor}" Offset="0.75"/>
