@@ -1,11 +1,8 @@
 using FsInfoCat.Desktop.ViewModel;
 using FsInfoCat.Local;
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -87,7 +84,7 @@ namespace FsInfoCat.Desktop.Local.CrawlConfigurations
         {
             string[] names = new[] { FsInfoCat.Properties.Resources.DisplayName_AllItems, FsInfoCat.Properties.Resources.DisplayName_AllFailedItems };
             EnumValuePickerVM<CrawlStatus> viewOptions = new(names);
-            _allOption = viewOptions.Choices.First(o => o.DisplayName == FsInfoCat.Properties.Resources.DisplayName_AllItems);;
+            _allOption = viewOptions.Choices.First(o => o.DisplayName == FsInfoCat.Properties.Resources.DisplayName_AllItems); ;
             SetValue(CurrentStatusOptionsPropertyKey, viewOptions);
             SetValue(EditingStatusOptionsPropertyKey, new EnumValuePickerVM<CrawlStatus>(names) { SelectedIndex = viewOptions.SelectedIndex });
             ThreeStateViewModel isScheduledOption = new(null);
@@ -102,7 +99,7 @@ namespace FsInfoCat.Desktop.Local.CrawlConfigurations
 
         protected override ListItemViewModel CreateItemViewModel([DisallowNull] CrawlConfigListItem entity) => new ListItemViewModel(entity);
 
-        protected override Task<int> DeleteEntityFromDbContextAsync([DisallowNull] CrawlConfigListItem entity, [DisallowNull] LocalDbContext dbContext, [DisallowNull] IWindowsStatusListener statusListener)
+        protected override async Task<int> DeleteEntityFromDbContextAsync([DisallowNull] CrawlConfigListItem entity, [DisallowNull] LocalDbContext dbContext, [DisallowNull] IWindowsStatusListener statusListener)
         {
             throw new NotImplementedException();
         }
