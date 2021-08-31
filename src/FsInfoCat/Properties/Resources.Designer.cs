@@ -1114,6 +1114,15 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to All Failed Items.
+        /// </summary>
+        public static string DisplayName_AllFailedItems {
+            get {
+                return ResourceManager.GetString("DisplayName_AllFailedItems", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to All Items.
         /// </summary>
         public static string DisplayName_AllItems {
@@ -2655,9 +2664,9 @@ namespace FsInfoCat.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Inactive Items.
         /// </summary>
-        public static string DisplayName_InctiveItems {
+        public static string DisplayName_InactiveItems {
             get {
-                return ResourceManager.GetString("DisplayName_InctiveItems", resourceCulture);
+                return ResourceManager.GetString("DisplayName_InactiveItems", resourceCulture);
             }
         }
         

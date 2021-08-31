@@ -5,7 +5,7 @@ using System.Windows;
 
 namespace FsInfoCat.Desktop.Local.SharedTagDefinitions
 {
-    public class ListItemViewModel : TagDefinitionListItemViewModel<SharedTagDefinitionListItem>
+    public class ListItemViewModel : TagDefinitionListItemViewModel<SharedTagDefinitionListItem>, ILocalCrudEntityRowViewModel<SharedTagDefinitionListItem>
     {
         #region EditButtonClick Property Members
 
