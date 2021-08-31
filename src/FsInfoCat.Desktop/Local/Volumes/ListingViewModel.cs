@@ -57,12 +57,10 @@ namespace FsInfoCat.Desktop.Local.Volumes
 
         public ListingViewModel()
         {
-            //SetValue(ItemsPropertyKey, new ReadOnlyObservableCollection<ListItemViewModel>(_backingItems));
-            string[] names = new[] {FsInfoCat.Properties.Resources.DisplayName_AllItems,
-                FsInfoCat.Properties.Resources.DisplayName_ActiveItems, FsInfoCat.Properties.Resources.DisplayName_InctiveItems};
+            string[] names = new[] { FsInfoCat.Properties.Resources.DisplayName_AllItems, FsInfoCat.Properties.Resources.DisplayName_ActiveItems, FsInfoCat.Properties.Resources.DisplayName_InactiveItems };
             EnumValuePickerVM<VolumeStatus> viewOptions = new(names);
             _allOption = viewOptions.Choices.First(o => o.DisplayName == FsInfoCat.Properties.Resources.DisplayName_AllItems);
-            _inactiveOption = viewOptions.Choices.First(o => o.DisplayName == FsInfoCat.Properties.Resources.DisplayName_InctiveItems);
+            _inactiveOption = viewOptions.Choices.First(o => o.DisplayName == FsInfoCat.Properties.Resources.DisplayName_InactiveItems);
             SetValue(ViewOptionsPropertyKey, viewOptions);
             viewOptions.SelectedItemPropertyChanged += (object sender, DependencyPropertyChangedEventArgs e) => ReloadAsync(e.NewValue as EnumChoiceItem<VolumeStatus>);
             SetValue(EditingOptionsPropertyKey, new EnumValuePickerVM<VolumeStatus>(names) { SelectedIndex = viewOptions.SelectedIndex });

@@ -11,7 +11,7 @@ using System.Windows;
 
 namespace FsInfoCat.Desktop.Local.FileSystems
 {
-    public class ListItemViewModel : FileSystemListItemViewModel<FileSystemListItem>
+    public class ListItemViewModel : FileSystemListItemViewModel<FileSystemListItem>, ILocalCrudEntityRowViewModel<FileSystemListItem>
     {
         #region EditButtonClick Property Members
 

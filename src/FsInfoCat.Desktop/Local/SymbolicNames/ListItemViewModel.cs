@@ -10,7 +10,7 @@ using System.Windows;
 
 namespace FsInfoCat.Desktop.Local.SymbolicNames
 {
-    public class ListItemViewModel : SymbolicNameRowViewModel<SymbolicNameListItem>
+    public class ListItemViewModel : SymbolicNameRowViewModel<SymbolicNameListItem>, ILocalCrudEntityRowViewModel<SymbolicNameListItem>
     {
         #region EditButtonClick Property Members
 

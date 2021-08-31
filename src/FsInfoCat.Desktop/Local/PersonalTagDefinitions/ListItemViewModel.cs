@@ -5,7 +5,7 @@ using System.Windows;
 
 namespace FsInfoCat.Desktop.Local.PersonalTagDefinitions
 {
-    public class ListItemViewModel : TagDefinitionListItemViewModel<PersonalTagDefinitionListItem>
+    public class ListItemViewModel : TagDefinitionListItemViewModel<PersonalTagDefinitionListItem>, ILocalCrudEntityRowViewModel<PersonalTagDefinitionListItem>
     {
         #region EditButtonClick Property Members
 

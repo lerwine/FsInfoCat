@@ -1843,7 +1843,10 @@
   <data name="DisplayName_AllItems" xml:space="preserve">
     <value>All Items</value>
   </data>
-  <data name="DisplayName_InctiveItems" xml:space="preserve">
+  <data name="DisplayName_InactiveItems" xml:space="preserve">
     <value>Inactive Items</value>
+  </data>
+  <data name="DisplayName_AllFailedItems" xml:space="preserve">
+    <value>All Failed Items</value>
   </data>
 </root>
