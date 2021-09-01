@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -189,6 +190,39 @@ namespace FsInfoCat.Local
             else
                 result.ModifiedOn = result.CreatedOn = DateTime.Now;
             return dbContext.Volumes.Add(result);
+        }
+
+        public static async Task<int> DeleteAsync([DisallowNull] Volume target, [DisallowNull] LocalDbContext dbContext, [DisallowNull] IStatusListener statusListener)
+        {
+            if (target is null)
+                throw new ArgumentNullException(nameof(target));
+            if (dbContext is null)
+                throw new ArgumentNullException(nameof(dbContext));
+            if (statusListener is null)
+                throw new ArgumentNullException(nameof(statusListener));
+            using IDbContextTransaction transaction = dbContext.Database.BeginTransaction();
+            using IDisposable loggerScope = statusListener.Logger.BeginScope(target.Id);
+            statusListener.SetMessage($"Removing volume record: {target.Identifier}");
+            EntityEntry<Volume> entry = dbContext.Entry(target);
+            statusListener.Logger.LogDebug("Removing dependant records for Subdirectory {{ Id = {Id}; Identifier = {Identifier} }}", target.Id, target.Identifier);
+            Subdirectory subdirectory = await entry.GetRelatedReferenceAsync(e => e.RootDirectory, statusListener.CancellationToken);
+            int result = (subdirectory is null) ? 0 : await Subdirectory.DeleteAsync(subdirectory, dbContext, statusListener);
+            PersonalVolumeTag[] pvt = (await entry.GetRelatedCollectionAsync(e => e.PersonalTags, statusListener.CancellationToken)).ToArray();
+            if (pvt.Length > 0)
+                dbContext.PersonalVolumeTags.RemoveRange(pvt);
+            SharedVolumeTag[] svt = (await entry.GetRelatedCollectionAsync(e => e.SharedTags, statusListener.CancellationToken)).ToArray();
+            if (svt.Length > 0)
+                dbContext.SharedVolumeTags.RemoveRange(svt);
+            VolumeAccessError[] ve = (await entry.GetRelatedCollectionAsync(e => e.AccessErrors, statusListener.CancellationToken)).ToArray();
+            if (ve.Length > 0)
+                dbContext.VolumeAccessErrors.RemoveRange(ve);
+            if (dbContext.ChangeTracker.HasChanges())
+                result += await dbContext.SaveChangesAsync(statusListener.CancellationToken);
+            statusListener.Logger.LogInformation("Removing Volume {{ Id = {Id}; Identifier = {Identifier} }}", target.Id, target.Identifier);
+            dbContext.Volumes.Remove(target);
+            result += await dbContext.SaveChangesAsync(statusListener.CancellationToken);
+            await transaction.CommitAsync();
+            return result;
         }
 
         protected override void OnFileSystemIdChanged(Guid value)

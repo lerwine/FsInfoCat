@@ -13,6 +13,7 @@ namespace FsInfoCat.Local
 {
     public class SummaryPropertiesListItem : SummaryPropertiesRow, ILocalSummaryPropertiesListItem
     {
+        public const string VIEW_NAME = "vSummaryPropertiesListing";
         private readonly IPropertyChangeTracker<long> _existingFileCount;
         private readonly IPropertyChangeTracker<long> _totalFileCount;
 
@@ -25,6 +26,8 @@ namespace FsInfoCat.Local
             _existingFileCount = AddChangeTracker(nameof(ExistingFileCount), 0L);
             _totalFileCount = AddChangeTracker(nameof(TotalFileCount), 0L);
         }
+
+        internal static void OnBuildEntity(EntityTypeBuilder<SummaryPropertiesListItem> builder) => builder.ToView(VIEW_NAME);
     }
     public class SummaryPropertiesRow : PropertiesRow, ISummaryProperties
     {

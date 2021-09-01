@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -11,6 +12,8 @@ namespace FsInfoCat.Local
 {
     public class AudioPropertiesListItem : AudioPropertiesRow, ILocalAudioPropertiesListItem
     {
+        public const string VIEW_NAME = "vAudioPropertiesListing";
+
         private readonly IPropertyChangeTracker<long> _existingFileCount;
         private readonly IPropertyChangeTracker<long> _totalFileCount;
 
@@ -23,6 +26,20 @@ namespace FsInfoCat.Local
             _existingFileCount = AddChangeTracker(nameof(ExistingFileCount), 0L);
             _totalFileCount = AddChangeTracker(nameof(TotalFileCount), 0L);
         }
+
+        internal static void OnBuildEntity(EntityTypeBuilder<AudioPropertiesListItem> builder) => builder.ToView(VIEW_NAME);
+
+        internal SummaryPropertiesListItem SummaryPropertiesListing { get; }
+        internal DocumentPropertiesListItem DocumentPropertiesListing { get; }
+        internal AudioPropertiesListItem AudioPropertiesListing { get; }
+        internal DRMPropertiesListItem DRMPropertiesListing { get; }
+        internal GPSPropertiesListItem GPSPropertiesListing { get; }
+        internal ImagePropertiesListItem ImagePropertiesListing { get; }
+        internal MediaPropertiesListItem MediaPropertiesListing { get; }
+        internal MusicPropertiesListItem MusicPropertiesListing { get; }
+        internal PhotoPropertiesListItem PhotoPropertiesListing { get; }
+        internal RecordedTVPropertiesListItem RecordedTVPropertiesListing { get; }
+        internal VideoPropertiesListItem VideoPropertiesListing { get; }
     }
     public class AudioPropertiesRow : PropertiesRow, IAudioProperties
     {

@@ -13,6 +13,8 @@ namespace FsInfoCat.Local
 {
     public class VideoPropertiesListItem : VideoPropertiesRow, ILocalVideoPropertiesListItem
     {
+        public const string VIEW_NAME = "vVideoPropertiesListing";
+
         private readonly IPropertyChangeTracker<long> _existingFileCount;
         private readonly IPropertyChangeTracker<long> _totalFileCount;
 
@@ -25,6 +27,8 @@ namespace FsInfoCat.Local
             _existingFileCount = AddChangeTracker(nameof(ExistingFileCount), 0L);
             _totalFileCount = AddChangeTracker(nameof(TotalFileCount), 0L);
         }
+
+        internal static void OnBuildEntity(EntityTypeBuilder<VideoPropertiesListItem> builder) => builder.ToView(VIEW_NAME);
     }
     public class VideoPropertiesRow : PropertiesRow, IVideoProperties
     {

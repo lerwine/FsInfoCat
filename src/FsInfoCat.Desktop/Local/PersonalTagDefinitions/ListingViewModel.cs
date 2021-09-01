@@ -54,9 +54,13 @@ namespace FsInfoCat.Desktop.Local.PersonalTagDefinitions
 
         void INotifyNavigatedTo.OnNavigatedTo() => ReloadAsync(ViewOptions.Value);
 
-        protected override IQueryable<PersonalTagDefinitionListItem> GetQueryableListing(bool? options, [DisallowNull] LocalDbContext dbContext, [DisallowNull] IWindowsStatusListener statusListener) =>
-            options.HasValue ? (options.Value ? dbContext.PersonalTagDefinitionListing.Where(f => !f.IsInactive) :
+        protected override IQueryable<PersonalTagDefinitionListItem> GetQueryableListing(bool? options, [DisallowNull] LocalDbContext dbContext,
+            [DisallowNull] IWindowsStatusListener statusListener)
+        {
+            statusListener.SetMessage("Reading personal tags from database");
+            return options.HasValue ? (options.Value ? dbContext.PersonalTagDefinitionListing.Where(f => !f.IsInactive) :
                 dbContext.PersonalTagDefinitionListing.Where(f => f.IsInactive)) : dbContext.PersonalTagDefinitionListing;
+        }
 
         protected override ListItemViewModel CreateItemViewModel([DisallowNull] PersonalTagDefinitionListItem entity) => new ListItemViewModel(entity);
 
@@ -78,14 +82,108 @@ namespace FsInfoCat.Desktop.Local.PersonalTagDefinitions
             throw new System.NotImplementedException();
         }
 
-        protected override bool ConfirmItemDelete([DisallowNull] ListItemViewModel item, object parameter)
+        protected override bool ConfirmItemDelete(ListItemViewModel item, object parameter)
         {
-            throw new System.NotImplementedException();
+            string message;
+            switch (item.FileTagCount)
+            {
+                case 0:
+                    switch (item.SubdirectoryTagCount)
+                    {
+                        case 0:
+                            message = item.VolumeTagCount switch
+                            {
+                                0 => $" ",
+                                1 => $", including 1 volume tag, ",
+                                _ => $", including all {item.VolumeTagCount} volume tags, ",
+                            };
+                            break;
+                        case 1:
+                            message = item.VolumeTagCount switch
+                            {
+                                0 => $", including 1 sub-directory tag, ",
+                                1 => $", including 1 sub-directory tag and 1 volume tag, ",
+                                _ => $", including 1 sub-directory tag and all {item.VolumeTagCount} volume tags, ",
+                            };
+                            break;
+                        default:
+                            message = item.VolumeTagCount switch
+                            {
+                                0 => $", including all {item.SubdirectoryTagCount} sub-directory tags, ",
+                                1 => $", including all {item.SubdirectoryTagCount} sub-directory tags and 1 volume tag, ",
+                                _ => $", including all {item.SubdirectoryTagCount} sub-directory and {item.VolumeTagCount} volume tags, ",
+                            };
+                            break;
+                    }
+                    break;
+                case 1:
+                    switch (item.SubdirectoryTagCount)
+                    {
+                        case 0:
+                            message = item.VolumeTagCount switch
+                            {
+                                0 => $", including 1 file tag, ",
+                                1 => $", including 1 file tag and 1 volume tag, ",
+                                _ => $", including 1 file tag and all {item.VolumeTagCount} volume tags, ",
+                            };
+                            break;
+                        case 1:
+                            message = item.VolumeTagCount switch
+                            {
+                                0 => $", including 1 file tag and 1 sub-directory tag, ",
+                                1 => $", including 1 file tag, 1 sub-directory tag and 1 volume tag, ",
+                                _ => $", including 1 file tag, 1 sub-directory tag and all {item.VolumeTagCount} volume tags, ",
+                            };
+                            break;
+                        default:
+                            message = item.VolumeTagCount switch
+                            {
+                                0 => $", including 1 file tag and all {item.SubdirectoryTagCount} sub-directory tags, ",
+                                1 => $", including 1 file tag and all {item.SubdirectoryTagCount} sub-directory tags and 1 volume tag, ",
+                                _ => $", including 1 file tag and all {item.SubdirectoryTagCount} sub-directory and {item.VolumeTagCount} volume tags, ",
+                            };
+                            break;
+                    }
+                    break;
+                default:
+                    switch (item.SubdirectoryTagCount)
+                    {
+                        case 0:
+                            message = item.VolumeTagCount switch
+                            {
+                                0 => $", including all {item.FileTagCount} file tags, ",
+                                1 => $", including all {item.FileTagCount} file tags and 1 volume tag, ",
+                                _ => $", including all {item.FileTagCount} file tags and {item.VolumeTagCount} volume tags, ",
+                            };
+                            break;
+                        case 1:
+                            message = item.VolumeTagCount switch
+                            {
+                                0 => $", including all {item.FileTagCount} file tags and 1 sub-directory tag, ",
+                                1 => $", including all {item.FileTagCount} file tags, 1 sub-directory tag and 1 volume tag, ",
+                                _ => $", including all {item.FileTagCount} file tags, 1 sub-directory tag and {item.VolumeTagCount} volume tags, ",
+                            };
+                            break;
+                        default:
+                            message = item.VolumeTagCount switch
+                            {
+                                0 => $", including all {item.FileTagCount} file and {item.SubdirectoryTagCount} sub-directory tags, ",
+                                1 => $", including all {item.FileTagCount} file tags, {item.SubdirectoryTagCount} sub-directory tags and 1 volume tag, ",
+                                _ => $", including all {item.FileTagCount} file tags, {item.SubdirectoryTagCount} sub-directory tags and {item.VolumeTagCount} volume tags, ",
+                            };
+                            break;
+                    }
+                    break;
+            }
+            return MessageBox.Show(App.Current.MainWindow, $"This action cannot be undone!\n\nAre you sure you want to remove this personal tag{message}from the database?",
+                "Delete Personal Tag", MessageBoxButton.YesNo, MessageBoxImage.Exclamation) == MessageBoxResult.Yes;
         }
 
-        protected override async Task<int> DeleteEntityFromDbContextAsync([DisallowNull] PersonalTagDefinitionListItem entity, [DisallowNull] LocalDbContext dbContext, [DisallowNull] IWindowsStatusListener statusListener)
+        protected override async Task<int> DeleteEntityFromDbContextAsync([DisallowNull] PersonalTagDefinitionListItem entity, [DisallowNull] LocalDbContext dbContext,
+            [DisallowNull] IWindowsStatusListener statusListener)
         {
-            throw new System.NotImplementedException();
+            PersonalTagDefinition target = await dbContext.PersonalTagDefinitions.FindAsync(new object[] { entity.Id }, statusListener.CancellationToken);
+            return (target is null) ? 0 : await PersonalTagDefinition.DeleteAsync(target, dbContext, statusListener);
         }
 
         protected override void OnAddNewItemCommand(object parameter)

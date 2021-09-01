@@ -13,6 +13,8 @@ namespace FsInfoCat.Local
 {
     public class GPSPropertiesListItem : GPSPropertiesRow, ILocalGPSPropertiesListItem
     {
+        public const string VIEW_NAME = "vGPSPropertiesListing";
+
         private readonly IPropertyChangeTracker<long> _existingFileCount;
         private readonly IPropertyChangeTracker<long> _totalFileCount;
 
@@ -25,6 +27,8 @@ namespace FsInfoCat.Local
             _existingFileCount = AddChangeTracker(nameof(ExistingFileCount), 0L);
             _totalFileCount = AddChangeTracker(nameof(TotalFileCount), 0L);
         }
+
+        internal static void OnBuildEntity(EntityTypeBuilder<GPSPropertiesListItem> builder) => builder.ToView(VIEW_NAME);
     }
     public class GPSPropertiesRow : PropertiesRow, IGPSProperties
     {

@@ -132,8 +132,9 @@ namespace FsInfoCat.Desktop.ViewModel
         #endregion
         #region ExistingFileCount Property Members
 
-        private static readonly DependencyPropertyKey ExistingFileCountPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ExistingFileCount), typeof(long), typeof(SummaryPropertiesListItemViewModel<TEntity>),
-                new PropertyMetadata(0L));
+        private static readonly DependencyPropertyKey ExistingFileCountPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ExistingFileCount), typeof(long),
+            typeof(SummaryPropertiesListItemViewModel<TEntity>), new PropertyMetadata(0L, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
+            (d as SummaryPropertiesListItemViewModel<TEntity>).OnExistingFileCountPropertyChanged((long)e.OldValue, (long)e.NewValue)));
 
         /// <summary>
         /// Identifies the <see cref="ExistingFileCount"/> dependency property.
@@ -146,11 +147,18 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <value>The .</value>
         public long ExistingFileCount { get => (long)GetValue(ExistingFileCountProperty); private set => SetValue(ExistingFileCountPropertyKey, value); }
 
+        /// <summary>
+        /// Called when the value of the <see cref="ExistingFileCount"/> dependency property has changed.
+        /// </summary>
+        /// <param name="oldValue">The previous value of the <see cref="ExistingFileCount"/> property.</param>
+        /// <param name="newValue">The new value of the <see cref="ExistingFileCount"/> property.</param>
+        private void OnExistingFileCountPropertyChanged(long oldValue, long newValue) => Delete.IsEnabled = newValue == 0L;
+
         #endregion
         #region TotalFileCount Property Members
 
-        private static readonly DependencyPropertyKey TotalFileCountPropertyKey = DependencyProperty.RegisterReadOnly(nameof(TotalFileCount), typeof(long), typeof(SummaryPropertiesListItemViewModel<TEntity>),
-                new PropertyMetadata(0L));
+        private static readonly DependencyPropertyKey TotalFileCountPropertyKey = DependencyProperty.RegisterReadOnly(nameof(TotalFileCount), typeof(long),
+            typeof(SummaryPropertiesListItemViewModel<TEntity>), new PropertyMetadata(0L));
 
         /// <summary>
         /// Identifies the <see cref="TotalFileCount"/> dependency property.

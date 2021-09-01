@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
@@ -7,6 +8,8 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
 {
     public partial class BackgroundJobVM : DependencyObject
     {
+        private readonly ILogger<BackgroundJobVM> _logger;
+
         #region Title Property Members
 
         /// <summary>
@@ -149,6 +152,7 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
         #endregion
         public BackgroundJobVM()
         {
+            _logger = App.GetLogger(this);
             SetValue(CancelPropertyKey, new Commands.RelayCommand(parameter => CancelInvoked?.Invoke(this, new(parameter))));
         }
 

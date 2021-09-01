@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -11,6 +12,8 @@ namespace FsInfoCat.Local
 {
     public class ImagePropertiesListItem : ImagePropertiesRow, ILocalImagePropertiesListItem
     {
+        public const string VIEW_NAME = "vImagePropertiesListing";
+
         private readonly IPropertyChangeTracker<long> _existingFileCount;
         private readonly IPropertyChangeTracker<long> _totalFileCount;
 
@@ -23,6 +26,8 @@ namespace FsInfoCat.Local
             _existingFileCount = AddChangeTracker(nameof(ExistingFileCount), 0L);
             _totalFileCount = AddChangeTracker(nameof(TotalFileCount), 0L);
         }
+
+        internal static void OnBuildEntity(EntityTypeBuilder<ImagePropertiesListItem> builder) => builder.ToView(VIEW_NAME);
     }
     public class ImagePropertiesRow : PropertiesRow, IImageProperties
     {

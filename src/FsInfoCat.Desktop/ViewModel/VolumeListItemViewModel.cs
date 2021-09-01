@@ -64,7 +64,8 @@ namespace FsInfoCat.Desktop.ViewModel
         #endregion
         #region RootPath Property Members
 
-        private static readonly DependencyPropertyKey RootPathPropertyKey = DependencyProperty.RegisterReadOnly(nameof(RootPath), typeof(string), typeof(VolumeListItemViewModel<TEntity>), new PropertyMetadata(""));
+        private static readonly DependencyPropertyKey RootPathPropertyKey = DependencyProperty.RegisterReadOnly(nameof(RootPath), typeof(string), typeof(VolumeListItemViewModel<TEntity>),
+            new PropertyMetadata(""));
 
         /// <summary>
         /// Identifies the <see cref="RootPath"/> dependency property.
@@ -76,6 +77,40 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <value>The .</value>
         public string RootPath { get => GetValue(RootPathProperty) as string; private set => SetValue(RootPathPropertyKey, value); }
+
+        #endregion
+        #region RootSubdirectoryCount Property Members
+
+        private static readonly DependencyPropertyKey RootSubdirectoryCountPropertyKey = DependencyProperty.RegisterReadOnly(nameof(RootSubdirectoryCount), typeof(long),
+            typeof(VolumeListItemViewModel<TEntity>), new PropertyMetadata(0L));
+
+        /// <summary>
+        /// Identifies the <see cref="RootSubdirectoryCount"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty RootSubdirectoryCountProperty = RootSubdirectoryCountPropertyKey.DependencyProperty;
+
+        /// <summary>
+        /// Gets .
+        /// </summary>
+        /// <value>The .</value>
+        public long RootSubdirectoryCount { get => (long)GetValue(RootSubdirectoryCountProperty); private set => SetValue(RootSubdirectoryCountPropertyKey, value); }
+
+        #endregion
+        #region RootFileCount Property Members
+
+        private static readonly DependencyPropertyKey RootFileCountPropertyKey = DependencyProperty.RegisterReadOnly(nameof(RootFileCount), typeof(long),
+            typeof(VolumeListItemViewModel<TEntity>), new PropertyMetadata(0L));
+
+        /// <summary>
+        /// Identifies the <see cref="RootFileCount"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty RootFileCountProperty = RootFileCountPropertyKey.DependencyProperty;
+
+        /// <summary>
+        /// Gets .
+        /// </summary>
+        /// <value>The .</value>
+        public long RootFileCount { get => (long)GetValue(RootFileCountProperty); private set => SetValue(RootFileCountPropertyKey, value); }
 
         #endregion
         #region AccessErrorCount Property Members
@@ -133,6 +168,8 @@ namespace FsInfoCat.Desktop.ViewModel
         public VolumeListItemViewModel(TEntity entity) : base(entity)
         {
             RootPath = entity.RootPath;
+            RootSubdirectoryCount = entity.RootSubdirectoryCount;
+            RootFileCount = entity.RootFileCount;
             AccessErrorCount = entity.AccessErrorCount;
             SharedTagCount = entity.SharedTagCount;
             PersonalTagCount = entity.PersonalTagCount;
@@ -146,6 +183,12 @@ namespace FsInfoCat.Desktop.ViewModel
             {
                 case nameof(IVolumeListItem.RootPath):
                     Dispatcher.CheckInvoke(() => RootPath = Entity.RootPath);
+                    break;
+                case nameof(IVolumeListItem.RootSubdirectoryCount):
+                    Dispatcher.CheckInvoke(() => RootSubdirectoryCount = Entity.RootSubdirectoryCount);
+                    break;
+                case nameof(IVolumeListItem.RootFileCount):
+                    Dispatcher.CheckInvoke(() => RootFileCount = Entity.RootFileCount);
                     break;
                 case nameof(IVolumeListItem.AccessErrorCount):
                     Dispatcher.CheckInvoke(() => AccessErrorCount = Entity.AccessErrorCount);

@@ -788,21 +788,25 @@ CREATE VIEW IF NOT EXISTS "vRedundantSetListing" AS SELECT "RedundantSets".*, "B
 	FROM "RedundantSets"
 	LEFT JOIN "BinaryPropertySets" ON "RedundantSets"."BinaryPropertySetId"="BinaryPropertySets"."Id";
 
-CREATE VIEW IF NOT EXISTS "vVolumeListing" AS SELECT "Volumes".*, "Subdirectories"."Name" AS "RootPath",
+CREATE VIEW IF NOT EXISTS "vVolumeListing" AS SELECT "Volumes".*, "r"."Name" AS "RootPath",
+	(SELECT count("s"."Id") FROM "Subdirectories" "s" WHERE "s"."ParentId"="r"."Id") AS "RootSubdirectoryCount",
+	(SELECT count("Files"."Id") FROM "Files" WHERE "Files"."ParentId"="r"."Id") AS "RootFileCount",
 	(SELECT count("VolumeAccessErrors"."Id") FROM "VolumeAccessErrors" WHERE "VolumeAccessErrors"."TargetId"="Volumes"."Id") AS "AccessErrorCount",
 	(SELECT count("SharedVolumeTags"."SharedTagDefinitionId") FROM "SharedVolumeTags" WHERE "SharedVolumeTags"."VolumeId"="Volumes"."Id") AS "SharedTagCount",
 	(SELECT count("PersonalVolumeTags"."PersonalTagDefinitionId") FROM "PersonalVolumeTags" WHERE "PersonalVolumeTags"."VolumeId"="Volumes"."Id") AS "PersonalTagCount"
 	FROM "Volumes"
-	LEFT JOIN "Subdirectories" ON "Volumes"."Id"="Subdirectories"."VolumeId";
+	LEFT JOIN "Subdirectories" "r" ON "Volumes"."Id"="r"."VolumeId";
 
-CREATE VIEW IF NOT EXISTS "vVolumeListingWithFileSystem" AS SELECT "Volumes".*, "Subdirectories"."Name" AS "RootPath",
+CREATE VIEW IF NOT EXISTS "vVolumeListingWithFileSystem" AS SELECT "Volumes".*, "r"."Name" AS "RootPath",
 	"FileSystems"."DisplayName" AS "FileSystemDisplayName", ifnull("Volumes"."ReadOnly", "FileSystems"."ReadOnly") AS "EffectiveReadOnly",
 	ifnull("Volumes"."MaxNameLength", "FileSystems"."MaxNameLength") AS "EffectiveMaxNameLength",
+	(SELECT count("s"."Id") FROM "Subdirectories" "s" WHERE "s"."ParentId"="r"."Id") AS "RootSubdirectoryCount",
+	(SELECT count("Files"."Id") FROM "Files" WHERE "Files"."ParentId"="r"."Id") AS "RootFileCount",
 	(SELECT count("VolumeAccessErrors"."Id") FROM "VolumeAccessErrors" WHERE "VolumeAccessErrors"."TargetId"="Volumes"."Id") AS "AccessErrorCount",
 	(SELECT count("SharedVolumeTags"."SharedTagDefinitionId") FROM "SharedVolumeTags" WHERE "SharedVolumeTags"."VolumeId"="Volumes"."Id") AS "SharedTagCount",
 	(SELECT count("PersonalVolumeTags"."PersonalTagDefinitionId") FROM "PersonalVolumeTags" WHERE "PersonalVolumeTags"."VolumeId"="Volumes"."Id") AS "PersonalTagCount"
 	FROM "Volumes"
-	LEFT JOIN "Subdirectories" ON "Volumes"."Id"="Subdirectories"."VolumeId"
+	LEFT JOIN "Subdirectories" "r" ON "Volumes"."Id"="r"."VolumeId"
 	LEFT JOIN "FileSystems" ON "Volumes"."FileSystemId"="FileSystems"."Id";
 
 CREATE VIEW IF NOT EXISTS "vSubdirectoryListing" AS SELECT "Subdirectories".*, "CrawlConfigurations"."DisplayName" AS "CrawlConfigDisplayName",

@@ -179,7 +179,8 @@ namespace FsInfoCat.Desktop.Local
 
         protected abstract bool ConfirmItemDelete([DisallowNull] TItem item, object parameter);
 
-        protected abstract Task<int> DeleteEntityFromDbContextAsync([DisallowNull] TEntity entity, [DisallowNull] LocalDbContext dbContext, [DisallowNull] IWindowsStatusListener statusListener);
+        protected abstract Task<int> DeleteEntityFromDbContextAsync([DisallowNull] TEntity entity, [DisallowNull] LocalDbContext dbContext,
+            [DisallowNull] IWindowsStatusListener statusListener);
 
         protected abstract void OnAddNewItemCommand(object parameter);
 

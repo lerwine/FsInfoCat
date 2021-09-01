@@ -51,6 +51,7 @@ namespace FsInfoCat.Desktop.Local.RedundantSets
 
         protected override IQueryable<RedundantSetListItem> GetQueryableListing(ListingOptions options, [DisallowNull] LocalDbContext dbContext, [DisallowNull] IWindowsStatusListener statusListener)
         {
+            statusListener.SetMessage("Reading redundancy sets from database");
             if (options.MinRange.HasValue)
             {
                 long minimum = options.MinRange.Value;
@@ -91,14 +92,18 @@ namespace FsInfoCat.Desktop.Local.RedundantSets
             throw new NotImplementedException();
         }
 
-        protected override bool ConfirmItemDelete([DisallowNull] ListItemViewModel item, object parameter)
-        {
-            throw new NotImplementedException();
-        }
+        protected override bool ConfirmItemDelete(ListItemViewModel item, object parameter) => MessageBox.Show(App.Current.MainWindow,
+            "This action cannot be undone!\n\nAre you sure you want to remove this redundancy set from the database?",
+            "Delete Redundancy Set", MessageBoxButton.YesNo, MessageBoxImage.Exclamation) == MessageBoxResult.Yes;
 
-        protected override async Task<int> DeleteEntityFromDbContextAsync([DisallowNull] RedundantSetListItem entity, [DisallowNull] LocalDbContext dbContext, [DisallowNull] IWindowsStatusListener statusListener)
+        protected override async Task<int> DeleteEntityFromDbContextAsync([DisallowNull] RedundantSetListItem entity, [DisallowNull] LocalDbContext dbContext,
+            [DisallowNull] IWindowsStatusListener statusListener)
         {
-            throw new NotImplementedException();
+            RedundantSet target = await dbContext.RedundantSets.FindAsync(new object[] { entity.Id }, statusListener.CancellationToken);
+            if (target is null)
+                return 0;
+            dbContext.RedundantSets.Remove(target);
+            return await dbContext.SaveChangesAsync(statusListener.CancellationToken);
         }
 
         protected override void OnAddNewItemCommand(object parameter)

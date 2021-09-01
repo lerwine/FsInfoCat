@@ -3,10 +3,13 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -269,6 +272,80 @@ namespace FsInfoCat.Local
         IEnumerable<ISharedFileTag> IFile.SharedTags => SharedTags.Cast<ISharedFileTag>();
         IEnumerable<ISharedTag> IDbFsItem.SharedTags => SharedTags.Cast<ISharedTag>();
         DbFile IIdentityReference<DbFile>.Entity => this;
+
+        public static async Task<int> DeleteAsync([DisallowNull] DbFile target, [DisallowNull] LocalDbContext dbContext, [DisallowNull] IStatusListener statusListener, string parentPath = null)
+        {
+            if (target is null)
+                throw new ArgumentNullException(nameof(target));
+            if (dbContext is null)
+                throw new ArgumentNullException(nameof(dbContext));
+            if (statusListener is null)
+                throw new ArgumentNullException(nameof(statusListener));
+            string path = string.IsNullOrEmpty(parentPath) ? target.Name : Path.Combine(parentPath, target.Name);
+            using IDisposable loggerScope = statusListener.Logger.BeginScope(target.Id);
+            statusListener.Logger.LogDebug("Removing dependant records for DbFile {{ Id = {Id}; Path = \"{Path}\" }}", target.Id, path);
+            statusListener.SetMessage($"Removing file record: {path}");
+            using IDbContextTransaction transaction = dbContext.Database.BeginTransaction();
+            EntityEntry<DbFile> entry = dbContext.Entry(target);
+            EntityEntry<BinaryPropertySet> binaryProperties = await entry.GetRelatedTargetEntryAsync(e => e.BinaryProperties, statusListener.CancellationToken);
+            EntityEntry<SummaryPropertySet> summaryProperties = await entry.GetRelatedTargetEntryAsync(e => e.SummaryProperties, statusListener.CancellationToken);
+            EntityEntry<DocumentPropertySet> documentProperties = await entry.GetRelatedTargetEntryAsync(e => e.DocumentProperties, statusListener.CancellationToken);
+            EntityEntry<AudioPropertySet> audioProperties = await entry.GetRelatedTargetEntryAsync(e => e.AudioProperties, statusListener.CancellationToken);
+            EntityEntry<DRMPropertySet> drmProperties = await entry.GetRelatedTargetEntryAsync(e => e.DRMProperties, statusListener.CancellationToken);
+            EntityEntry<GPSPropertySet> gpsProperties = await entry.GetRelatedTargetEntryAsync(e => e.GPSProperties, statusListener.CancellationToken);
+            EntityEntry<ImagePropertySet> imageProperties = await entry.GetRelatedTargetEntryAsync(e => e.ImageProperties, statusListener.CancellationToken);
+            EntityEntry<MediaPropertySet> mediaProperties = await entry.GetRelatedTargetEntryAsync(e => e.MediaProperties, statusListener.CancellationToken);
+            EntityEntry<MusicPropertySet> musicProperties = await entry.GetRelatedTargetEntryAsync(e => e.MusicProperties, statusListener.CancellationToken);
+            EntityEntry<PhotoPropertySet> photoProperties = await entry.GetRelatedTargetEntryAsync(e => e.PhotoProperties, statusListener.CancellationToken);
+            EntityEntry<RecordedTVPropertySet> recordedTVProperties = await entry.GetRelatedTargetEntryAsync(e => e.RecordedTVProperties, statusListener.CancellationToken);
+            EntityEntry<VideoPropertySet> videoProperties = await entry.GetRelatedTargetEntryAsync(e => e.VideoProperties, statusListener.CancellationToken);
+            Redundancy redundancy = await entry.GetRelatedReferenceAsync(e => e.Redundancy, statusListener.CancellationToken);
+            int result = (redundancy is null) ? 0 : await Redundancy.DeleteAsync(redundancy, dbContext, statusListener.CancellationToken);
+            FileComparison[] fileComparisons = (await entry.GetRelatedCollectionAsync(e => e.BaselineComparisons, statusListener.CancellationToken))
+                .Concat(await entry.GetRelatedCollectionAsync(e => e.BaselineComparisons, statusListener.CancellationToken)).ToArray();
+            if (fileComparisons.Length > 0)
+                dbContext.Comparisons.RemoveRange(fileComparisons);
+            FileAccessError[] accessErrors = (await entry.GetRelatedCollectionAsync(e => e.AccessErrors, statusListener.CancellationToken)).ToArray();
+            if (accessErrors.Length > 0)
+                dbContext.FileAccessErrors.RemoveRange(accessErrors);
+            PersonalFileTag[] personalFileTags = (await entry.GetRelatedCollectionAsync(e => e.PersonalTags, statusListener.CancellationToken)).ToArray();
+            if (personalFileTags.Length > 0)
+                dbContext.PersonalFileTags.RemoveRange(personalFileTags);
+            SharedFileTag[] sharedFileTags = (await entry.GetRelatedCollectionAsync(e => e.SharedTags, statusListener.CancellationToken)).ToArray();
+            if (sharedFileTags.Length > 0)
+                dbContext.SharedFileTags.RemoveRange(sharedFileTags);
+            if (dbContext.ChangeTracker.HasChanges())
+                result += await dbContext.SaveChangesAsync(statusListener.CancellationToken);
+            statusListener.Logger.LogInformation("Removing DbFile {{ Id = {Id}; Path = \"{Path}\" }}", target.Id, path);
+            dbContext.Files.Remove(target);
+            result += await dbContext.SaveChangesAsync(statusListener.CancellationToken);
+            statusListener.Logger.LogDebug("Removing unused former dependencies of DbFile {{ Id = {Id}; Path = \"{Path}\" }}", target.Id, path);
+            if ((await binaryProperties.GetRelatedCollectionAsync(p => p.Files, statusListener.CancellationToken)).Count() == 0)
+                dbContext.BinaryPropertySets.Remove(binaryProperties.Entity);
+            if (summaryProperties is not null && (await summaryProperties.GetRelatedCollectionAsync(p => p.Files, statusListener.CancellationToken)).Count() == 0)
+                dbContext.SummaryPropertySets.Remove(summaryProperties.Entity);
+            if (documentProperties is not null && (await documentProperties.GetRelatedCollectionAsync(p => p.Files, statusListener.CancellationToken)).Count() == 0)
+                dbContext.DocumentPropertySets.Remove(documentProperties.Entity);
+            if (audioProperties is not null && (await audioProperties.GetRelatedCollectionAsync(p => p.Files, statusListener.CancellationToken)).Count() == 0)
+                dbContext.AudioPropertySets.Remove(audioProperties.Entity);
+            if (drmProperties is not null && (await drmProperties.GetRelatedCollectionAsync(p => p.Files, statusListener.CancellationToken)).Count() == 0)
+                dbContext.DRMPropertySets.Remove(drmProperties.Entity);
+            if (gpsProperties is not null && (await gpsProperties.GetRelatedCollectionAsync(p => p.Files, statusListener.CancellationToken)).Count() == 0)
+                dbContext.GPSPropertySets.Remove(gpsProperties.Entity);
+            if (imageProperties is not null && (await imageProperties.GetRelatedCollectionAsync(p => p.Files, statusListener.CancellationToken)).Count() == 0)
+                dbContext.ImagePropertySets.Remove(imageProperties.Entity);
+            if (mediaProperties is not null && (await mediaProperties.GetRelatedCollectionAsync(p => p.Files, statusListener.CancellationToken)).Count() == 0)
+                dbContext.MediaPropertySets.Remove(mediaProperties.Entity);
+            if (musicProperties is not null && (await musicProperties.GetRelatedCollectionAsync(p => p.Files, statusListener.CancellationToken)).Count() == 0)
+                dbContext.MusicPropertySets.Remove(musicProperties.Entity);
+            if (photoProperties is not null && (await photoProperties.GetRelatedCollectionAsync(p => p.Files, statusListener.CancellationToken)).Count() == 0)
+                dbContext.PhotoPropertySets.Remove(photoProperties.Entity);
+            if (recordedTVProperties is not null && (await recordedTVProperties.GetRelatedCollectionAsync(p => p.Files, statusListener.CancellationToken)).Count() == 0)
+                dbContext.RecordedTVPropertySets.Remove(recordedTVProperties.Entity);
+            if (videoProperties is not null && (await videoProperties.GetRelatedCollectionAsync(p => p.Files, statusListener.CancellationToken)).Count() == 0)
+                dbContext.VideoPropertySets.Remove(videoProperties.Entity);
+            return dbContext.ChangeTracker.HasChanges() ? result + await dbContext.SaveChangesAsync(statusListener.CancellationToken) : result;
+        }
 
         #endregion
 

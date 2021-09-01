@@ -27,6 +27,7 @@ namespace FsInfoCat
         /// Gets the application logger.
         /// </summary>
         /// <value>The <see cref="ILogger"/> that writes to the application log.</value>
+        [NotNull]
         ILogger Logger { get; }
 
         /// <summary>

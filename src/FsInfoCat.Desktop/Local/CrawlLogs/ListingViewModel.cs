@@ -59,7 +59,7 @@ namespace FsInfoCat.Desktop.Local.CrawlLogs
         protected override IQueryable<CrawlJobLogListItem> GetQueryableListing((CrawlStatus? Status, bool ShowAll) options, [DisallowNull] LocalDbContext dbContext,
             [DisallowNull] IWindowsStatusListener statusListener)
         {
-            statusListener.BeginSetMessage("Get crawl log items");
+            statusListener.SetMessage("Reading crawl result log entries from database");
             if (options.Status.HasValue)
             {
                 CrawlStatus status = options.Status.Value;
@@ -92,14 +92,18 @@ namespace FsInfoCat.Desktop.Local.CrawlLogs
             throw new NotImplementedException();
         }
 
-        protected override bool ConfirmItemDelete([DisallowNull] ListItemViewModel item, object parameter)
-        {
-            throw new NotImplementedException();
-        }
+        protected override bool ConfirmItemDelete(ListItemViewModel item, object parameter) => MessageBox.Show(App.Current.MainWindow,
+            "This action cannot be undone!\n\nAre you sure you want to remove this crawl result log entry from the database?",
+            "Delete Crawl Result Log Entry", MessageBoxButton.YesNo, MessageBoxImage.Exclamation) == MessageBoxResult.Yes;
 
-        protected override async Task<int> DeleteEntityFromDbContextAsync([DisallowNull] CrawlJobLogListItem entity, [DisallowNull] LocalDbContext dbContext, [DisallowNull] IWindowsStatusListener statusListener)
+        protected override async Task<int> DeleteEntityFromDbContextAsync([DisallowNull] CrawlJobLogListItem entity, [DisallowNull] LocalDbContext dbContext,
+            [DisallowNull] IWindowsStatusListener statusListener)
         {
-            throw new NotImplementedException();
+            CrawlJobLog target = await dbContext.CrawlJobLogs.FindAsync(new object[] { entity.Id }, statusListener.CancellationToken);
+            if (target is null)
+                return 0;
+            dbContext.CrawlJobLogs.Remove(target);
+            return await dbContext.SaveChangesAsync(statusListener.CancellationToken);
         }
 
         protected override void OnAddNewItemCommand(object parameter)

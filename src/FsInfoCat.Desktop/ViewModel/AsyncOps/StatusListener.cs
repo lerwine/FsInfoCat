@@ -11,8 +11,9 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
     {
         private readonly BackgroundJobVM _viewModel;
 
-        internal StatusListener(BackgroundJobVM viewModel, Guid concurrencyId, CancellationToken token)
+        internal StatusListener([DisallowNull] BackgroundJobVM viewModel, Guid concurrencyId, [DisallowNull] ILogger logger, CancellationToken token)
         {
+            Logger = logger;
             _viewModel = viewModel;
             CancellationToken = token;
             ConcurrencyId = concurrencyId;
@@ -22,46 +23,35 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
 
         public Guid ConcurrencyId { get; }
 
-        public ILogger Logger => throw new NotImplementedException();
+        [NotNull]
+        public ILogger Logger { get; }
 
-        public DispatcherOperation BeginSetMessage([AllowNull] string message, StatusMessageLevel level)
+        public DispatcherOperation BeginSetMessage([AllowNull] string message, StatusMessageLevel level) => _viewModel.Dispatcher.BeginInvoke(() =>
         {
-            throw new NotImplementedException();
-        }
+            _viewModel.MessageLevel = level;
+            _viewModel.Message = message;
+        }, DispatcherPriority.Background);
 
-        public DispatcherOperation BeginSetMessage([AllowNull] string message)
-        {
-            throw new NotImplementedException();
-        }
+        public DispatcherOperation BeginSetMessage([AllowNull] string message) => _viewModel.Dispatcher.BeginInvoke(() => _viewModel.Message = message);
 
-        public void SetMessage([AllowNull] string message, StatusMessageLevel level, TimeSpan timeout)
+        public void SetMessage([AllowNull] string message, StatusMessageLevel level, TimeSpan timeout) => _viewModel.Dispatcher.CheckInvoke(CancellationToken, timeout, () =>
         {
-            throw new NotImplementedException();
-        }
+            _viewModel.MessageLevel = level;
+            _viewModel.Message = message;
+        });
 
-        public void SetMessage([AllowNull] string message, StatusMessageLevel level)
+        public void SetMessage([AllowNull] string message, StatusMessageLevel level) => _viewModel.Dispatcher.CheckInvoke(CancellationToken, () =>
         {
-            throw new NotImplementedException();
-        }
+            _viewModel.MessageLevel = level;
+            _viewModel.Message = message;
+        });
 
-        public void SetMessage([AllowNull] string message, TimeSpan timeout)
-        {
-            throw new NotImplementedException();
-        }
+        public void SetMessage([AllowNull] string message, TimeSpan timeout) => _viewModel.Dispatcher.CheckInvoke(CancellationToken, timeout, () => _viewModel.Message = message);
 
-        public void SetMessage([AllowNull] string message)
-        {
-            throw new NotImplementedException();
-        }
+        public void SetMessage([AllowNull] string message) => _viewModel.Dispatcher.CheckInvoke(CancellationToken, () => _viewModel.Message = message);
 
-        Task IStatusListener.BeginSetMessage(string message, StatusMessageLevel level)
-        {
-            throw new NotImplementedException();
-        }
+        Task IStatusListener.BeginSetMessage(string message, StatusMessageLevel level) => BeginSetMessage(message, level).Task;
 
-        Task IStatusListener.BeginSetMessage(string message)
-        {
-            throw new NotImplementedException();
-        }
+        Task IStatusListener.BeginSetMessage(string message) => BeginSetMessage(message).Task;
     }
 }

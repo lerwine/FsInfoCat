@@ -99,7 +99,8 @@ namespace FsInfoCat.Desktop.ViewModel
         #region RedundancyCount Property Members
 
         private static readonly DependencyPropertyKey RedundancyCountPropertyKey = DependencyProperty.RegisterReadOnly(nameof(RedundancyCount), typeof(long),
-            typeof(RedundantSetListItemViewModel<TEntity>), new PropertyMetadata(0L));
+            typeof(RedundantSetListItemViewModel<TEntity>), new PropertyMetadata(0L, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
+            (d as RedundantSetListItemViewModel<TEntity>).OnRedundancyCountPropertyChanged((long)e.OldValue, (long)e.NewValue)));
 
         /// <summary>
         /// Identifies the <see cref="RedundancyCount"/> dependency property.
@@ -111,6 +112,13 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <value>The .</value>
         public long RedundancyCount { get => (long)GetValue(RedundancyCountProperty); private set => SetValue(RedundancyCountPropertyKey, value); }
+
+        /// <summary>
+        /// Called when the value of the <see cref="RedundancyCount"/> dependency property has changed.
+        /// </summary>
+        /// <param name="oldValue">The previous value of the <see cref="RedundancyCount"/> property.</param>
+        /// <param name="newValue">The new value of the <see cref="RedundancyCount"/> property.</param>
+        private void OnRedundancyCountPropertyChanged(long oldValue, long newValue) => Delete.IsEnabled = newValue > 0L;
 
         #endregion
 

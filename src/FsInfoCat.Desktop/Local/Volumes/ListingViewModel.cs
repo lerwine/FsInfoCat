@@ -1,6 +1,7 @@
 using FsInfoCat.Desktop.ViewModel;
 using FsInfoCat.Local;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -77,6 +78,7 @@ namespace FsInfoCat.Desktop.Local.Volumes
         protected override IQueryable<VolumeListItemWithFileSystem> GetQueryableListing((VolumeStatus? Status, bool? ShowActiveOnly) options, [DisallowNull] LocalDbContext dbContext,
             [DisallowNull] IWindowsStatusListener statusListener)
         {
+            statusListener.SetMessage("Reading volume information records from database");
             if (options.Status.HasValue)
             {
                 VolumeStatus s = options.Status.Value;
@@ -110,24 +112,20 @@ namespace FsInfoCat.Desktop.Local.Volumes
             throw new NotImplementedException();
         }
 
-        protected override bool ConfirmItemDelete(ListItemViewModel item, object parameter)
-        {
-            throw new NotImplementedException();
-        }
+        protected override bool ConfirmItemDelete(ListItemViewModel item, object parameter) => MessageBox.Show(App.Current.MainWindow,
+            "This action cannot be undone!\n\nAre you sure you want to remove this volume record from the database?",
+            "Delete Volume Record", MessageBoxButton.YesNo, MessageBoxImage.Exclamation) == MessageBoxResult.Yes;
 
         protected override void OnAddNewItemCommand(object parameter)
         {
             throw new NotImplementedException();
         }
 
-        protected override async Task<int> DeleteEntityFromDbContextAsync([DisallowNull] VolumeListItemWithFileSystem entity, [DisallowNull] LocalDbContext dbContext, [DisallowNull] IWindowsStatusListener statusListener)
+        protected override async Task<int> DeleteEntityFromDbContextAsync([DisallowNull] VolumeListItemWithFileSystem entity, [DisallowNull] LocalDbContext dbContext,
+            [DisallowNull] IWindowsStatusListener statusListener)
         {
-            Guid id = entity.Id;
-            Volume volume = await dbContext.Volumes.FirstOrDefaultAsync(e => e.Id == id);
-            if (volume is null)
-                return 0;
-            dbContext.Volumes.Remove(volume);
-            return await dbContext.SaveChangesAsync(statusListener.CancellationToken);
+            Volume target = await dbContext.Volumes.FindAsync(new object[] { entity.Id }, statusListener.CancellationToken);
+            return (target is null) ? 0 : await Volume.DeleteAsync(target, dbContext, statusListener);
         }
     }
 }

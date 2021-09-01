@@ -1,5 +1,10 @@
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace FsInfoCat.Local
 {
@@ -50,5 +55,28 @@ namespace FsInfoCat.Local
         IEnumerable<IVolumeTag> ITagDefinition.VolumeTags => VolumeTags.Cast<IVolumeTag>();
 
         IEnumerable<ILocalSharedVolumeTag> ILocalSharedTagDefinition.VolumeTags => VolumeTags.Cast<ILocalSharedVolumeTag>();
+
+        public static async Task<int> DeleteAsync(SharedTagDefinition target, LocalDbContext dbContext, IStatusListener statusListener)
+        {
+            using IDbContextTransaction transaction = dbContext.Database.BeginTransaction();
+            using IDisposable loggerScope = statusListener.Logger.BeginScope(target.Id);
+            statusListener.Logger.LogInformation("Removing SharedTagDefinition {{ Id = {Id}; Name = \"{Name}\" }}", target.Id, target.Name);
+            statusListener.SetMessage($"Removing shared tag definition: {target.Name}");
+            EntityEntry<SharedTagDefinition> entry = dbContext.Entry(target);
+            SharedFileTag[] fileTags = (await entry.GetRelatedCollectionAsync(e => e.FileTags, statusListener.CancellationToken)).ToArray();
+            SharedSubdirectoryTag[] subdirectoryTags = (await entry.GetRelatedCollectionAsync(e => e.SubdirectoryTags, statusListener.CancellationToken)).ToArray();
+            SharedVolumeTag[] volumeTags = (await entry.GetRelatedCollectionAsync(e => e.VolumeTags, statusListener.CancellationToken)).ToArray();
+            if (fileTags.Length > 0)
+                dbContext.SharedFileTags.RemoveRange(fileTags);
+            if (subdirectoryTags.Length > 0)
+                dbContext.SharedSubdirectoryTags.RemoveRange(subdirectoryTags);
+            if (volumeTags.Length > 0)
+                dbContext.SharedVolumeTags.RemoveRange(volumeTags);
+            int result = dbContext.ChangeTracker.HasChanges() ? await dbContext.SaveChangesAsync(statusListener.CancellationToken) : 0;
+            dbContext.SharedTagDefinitions.Remove(target);
+            result += await dbContext.SaveChangesAsync(statusListener.CancellationToken);
+            await transaction.CommitAsync(statusListener.CancellationToken);
+            return result;
+        }
     }
 }

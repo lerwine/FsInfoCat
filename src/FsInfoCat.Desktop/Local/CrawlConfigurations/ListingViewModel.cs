@@ -92,22 +92,23 @@ namespace FsInfoCat.Desktop.Local.CrawlConfigurations
             SetValue(EditingIsScheduledOptionPropertyKey, new ThreeStateViewModel(isScheduledOption.Value));
         }
 
-        protected override bool ConfirmItemDelete([DisallowNull] ListItemViewModel item, object parameter)
-        {
-            throw new NotImplementedException();
-        }
+        protected override bool ConfirmItemDelete(ListItemViewModel item, object parameter) => MessageBox.Show(App.Current.MainWindow,
+            "This action cannot be undone!\n\nAre you sure you want to remove this crawl configuration from the database?",
+            "Delete Crawl Configuration", MessageBoxButton.YesNo, MessageBoxImage.Exclamation) == MessageBoxResult.Yes;
 
         protected override ListItemViewModel CreateItemViewModel([DisallowNull] CrawlConfigListItem entity) => new ListItemViewModel(entity);
 
-        protected override async Task<int> DeleteEntityFromDbContextAsync([DisallowNull] CrawlConfigListItem entity, [DisallowNull] LocalDbContext dbContext, [DisallowNull] IWindowsStatusListener statusListener)
+        protected override async Task<int> DeleteEntityFromDbContextAsync([DisallowNull] CrawlConfigListItem entity, [DisallowNull] LocalDbContext dbContext,
+            [DisallowNull] IWindowsStatusListener statusListener)
         {
-            throw new NotImplementedException();
+            CrawlConfiguration target = await dbContext.CrawlConfigurations.FindAsync(new object[] { entity.Id }, statusListener.CancellationToken);
+            return (target is null) ? 0 : await CrawlConfiguration.DeleteAsync(target, dbContext, statusListener);
         }
 
         protected override IQueryable<CrawlConfigListItem> GetQueryableListing((CrawlStatus? Status, bool ShowAll, bool? IsScheduled) options, [DisallowNull] LocalDbContext dbContext,
             [DisallowNull] IWindowsStatusListener statusListener)
         {
-            statusListener.BeginSetMessage("Get crawl listing items");
+            statusListener.SetMessage("Reading crawl configurations from database");
             if (options.Status.HasValue)
             {
                 CrawlStatus status = options.Status.Value;

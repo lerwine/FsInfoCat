@@ -46,32 +46,36 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
                 Title = title;
                 Message = initialMessage;
                 _viewModel = viewModel;
-
                 viewModel.TitlePropertyChanged += ViewModel_TitlePropertyChanged;
                 viewModel.MessagePropertyChanged += ViewModel_MessagePropertyChanged;
                 viewModel.MessageLevelPropertyChanged += ViewModel_MessageLevelPropertyChanged;
                 viewModel.CancelInvoked += ViewModel_CancelInvoked;
-                StatusListener statusListener = new StatusListener(viewModel, ConcurrencyId, _tokenSource.Token);
+                StatusListener statusListener = new StatusListener(viewModel, ConcurrencyId, viewModel._logger, _tokenSource.Token);
+                IDisposable loggerScope = viewModel._logger.BeginScope(ConcurrencyId);
                 Task = createTask(statusListener, this);
                 _stopwatch = new Stopwatch();
                 _stopwatch.Start();
                 Timer timer = new Timer(TimerTick, null, 1000, 1000);
                 Task.ContinueWith(async t =>
                 {
-                    try { await timer.DisposeAsync(); }
+                    try { loggerScope.Dispose(); }
                     finally
                     {
-                        try { _stopwatch.Stop(); }
+                        try { await timer.DisposeAsync(); }
                         finally
                         {
-                            if (SetJobStatus(out AsyncJobStatus newValue))
-                                await _viewModel.Dispatcher.InvokeAsync(() =>
-                                {
-                                    try { _viewModel.Duration = _stopwatch.Elapsed; }
-                                    finally { _viewModel.JobStatus = JobStatus; }
-                                }, DispatcherPriority.Background);
-                            else
-                                await _viewModel.Dispatcher.InvokeAsync(() => _viewModel.Duration = _stopwatch.Elapsed, DispatcherPriority.Background);
+                            try { _stopwatch.Stop(); }
+                            finally
+                            {
+                                if (SetJobStatus(out AsyncJobStatus newValue))
+                                    await _viewModel.Dispatcher.InvokeAsync(() =>
+                                    {
+                                        try { _viewModel.Duration = _stopwatch.Elapsed; }
+                                        finally { _viewModel.JobStatus = JobStatus; }
+                                    }, DispatcherPriority.Background);
+                                else
+                                    await _viewModel.Dispatcher.InvokeAsync(() => _viewModel.Duration = _stopwatch.Elapsed, DispatcherPriority.Background);
+                            }
                         }
                     }
                 });

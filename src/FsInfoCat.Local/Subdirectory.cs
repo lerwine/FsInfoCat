@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -264,6 +265,54 @@ namespace FsInfoCat.Local
                 return null;
             Guid id = subdirectory.Id;
             return await (from d in dbContext.Subdirectories where d.ParentId == id && d.Name == leaf select d).FirstOrDefaultAsync(cancellationToken);
+        }
+
+        internal static async Task<int> DeleteAsync([DisallowNull] Subdirectory target, [DisallowNull] LocalDbContext dbContext, [DisallowNull] IStatusListener statusListener,
+            string parentPath = null, bool recursive = false)
+        {
+            if (target is null)
+                throw new ArgumentNullException(nameof(target));
+            if (dbContext is null)
+                throw new ArgumentNullException(nameof(dbContext));
+            if (statusListener is null)
+                throw new ArgumentNullException(nameof(statusListener));
+            using IDbContextTransaction transaction = dbContext.Database.BeginTransaction();
+            string path = string.IsNullOrEmpty(parentPath) ? target.Name : Path.Combine(parentPath, target.Name);
+            using IDisposable loggerScope = statusListener.Logger.BeginScope(target.Id);
+            statusListener.SetMessage($"Removing subdirectory record: {path}");
+            EntityEntry<Subdirectory> entry = dbContext.Entry(target);
+            statusListener.Logger.LogDebug("Removing dependant records for Subdirectory {{ Id = {Id}; Path = \"{Path}\" }}", target.Id, path);
+            Subdirectory[] subdirectories = (await entry.GetRelatedCollectionAsync(e => e.SubDirectories, statusListener.CancellationToken)).ToArray();
+            DbFile[] files = (await entry.GetRelatedCollectionAsync(e => e.Files, statusListener.CancellationToken)).ToArray();
+            int result = 0;
+            if (recursive)
+            {
+                foreach (Subdirectory d in subdirectories)
+                    result += await DeleteAsync(d, dbContext, statusListener, path, true);
+                foreach (DbFile f in files)
+                    result += await DbFile.DeleteAsync(f, dbContext, statusListener, path);
+            }
+            else if (subdirectories.Length > 0 || files.Length > 0)
+                throw new AsyncOperationFailureException("Subdirectory not empty", "Cannot delete non-empty subdirectory.");
+            CrawlConfiguration crawlConfiguration = await entry.GetRelatedReferenceAsync(e => e.CrawlConfiguration, statusListener.CancellationToken);
+            if (crawlConfiguration is not null)
+                result += await CrawlConfiguration.DeleteAsync(crawlConfiguration, dbContext, statusListener);
+            PersonalSubdirectoryTag[] pst = (await entry.GetRelatedCollectionAsync(e => e.PersonalTags, statusListener.CancellationToken)).ToArray();
+            if (pst.Length > 0)
+                dbContext.PersonalSubdirectoryTags.RemoveRange(pst);
+            SharedSubdirectoryTag[] sst = (await entry.GetRelatedCollectionAsync(e => e.SharedTags, statusListener.CancellationToken)).ToArray();
+            if (sst.Length > 0)
+                dbContext.SharedSubdirectoryTags.RemoveRange(sst);
+            SubdirectoryAccessError[] se = (await entry.GetRelatedCollectionAsync(e => e.AccessErrors, statusListener.CancellationToken)).ToArray();
+            if (se.Length > 0)
+                dbContext.SubdirectoryAccessErrors.RemoveRange(se);
+            if (dbContext.ChangeTracker.HasChanges())
+                result += await dbContext.SaveChangesAsync(statusListener.CancellationToken);
+            statusListener.Logger.LogInformation("Removing Subdirectory {{ Id = {Id}; Path = \"{Path}\" }}", target.Id, path);
+            dbContext.Subdirectories.Remove(target);
+            result += await dbContext.SaveChangesAsync(statusListener.CancellationToken);
+            await transaction.CommitAsync(statusListener.CancellationToken);
+            return result;
         }
 
         public static async Task<EntityEntry<Subdirectory>> ImportBranchAsync([DisallowNull] DirectoryInfo directoryInfo, [DisallowNull] LocalDbContext dbContext,

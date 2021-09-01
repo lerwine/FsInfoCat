@@ -39,6 +39,7 @@ namespace FsInfoCat.Desktop.Local.VideoPropertySets
 
         protected override IQueryable<VideoPropertiesListItem> GetQueryableListing(bool? options, [DisallowNull] LocalDbContext dbContext, [DisallowNull] IWindowsStatusListener statusListener)
         {
+            statusListener.SetMessage("Reading video property sets from database");
             if (options.HasValue)
             {
                 if (options.Value)
@@ -69,14 +70,18 @@ namespace FsInfoCat.Desktop.Local.VideoPropertySets
             throw new NotImplementedException();
         }
 
-        protected override bool ConfirmItemDelete([DisallowNull] ListItemViewModel item, object parameter)
-        {
-            throw new NotImplementedException();
-        }
+        protected override bool ConfirmItemDelete(ListItemViewModel item, object parameter) => MessageBox.Show(App.Current.MainWindow,
+            "This action cannot be undone!\n\nAre you sure you want to remove this video property set from the database?",
+            "Delete Video Property Set", MessageBoxButton.YesNo, MessageBoxImage.Exclamation) == MessageBoxResult.Yes;
 
-        protected override async Task<int> DeleteEntityFromDbContextAsync([DisallowNull] VideoPropertiesListItem entity, [DisallowNull] LocalDbContext dbContext, [DisallowNull] IWindowsStatusListener statusListener)
+        protected override async Task<int> DeleteEntityFromDbContextAsync([DisallowNull] VideoPropertiesListItem entity, [DisallowNull] LocalDbContext dbContext,
+            [DisallowNull] IWindowsStatusListener statusListener)
         {
-            throw new NotImplementedException();
+            VideoPropertySet target = await dbContext.VideoPropertySets.FindAsync(new object[] { entity.Id }, statusListener.CancellationToken);
+            if (target is null)
+                return 0;
+            dbContext.VideoPropertySets.Remove(target);
+            return await dbContext.SaveChangesAsync(statusListener.CancellationToken);
         }
 
         protected override void OnAddNewItemCommand(object parameter)

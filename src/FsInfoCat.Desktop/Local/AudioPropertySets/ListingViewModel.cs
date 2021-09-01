@@ -5,6 +5,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Threading;
 
 namespace FsInfoCat.Desktop.Local.AudioPropertySets
 {
@@ -37,8 +38,10 @@ namespace FsInfoCat.Desktop.Local.AudioPropertySets
 
         void INotifyNavigatedTo.OnNavigatedTo() => ReloadAsync(_currentOptions);
 
-        protected override IQueryable<AudioPropertiesListItem> GetQueryableListing(bool? options, [DisallowNull] LocalDbContext dbContext, [DisallowNull] IWindowsStatusListener statusListener)
+        protected override IQueryable<AudioPropertiesListItem> GetQueryableListing(bool? options, [DisallowNull] LocalDbContext dbContext,
+            [DisallowNull] IWindowsStatusListener statusListener)
         {
+            statusListener.SetMessage("Reading audio property sets from database");
             if (options.HasValue)
             {
                 if (options.Value)
@@ -69,14 +72,18 @@ namespace FsInfoCat.Desktop.Local.AudioPropertySets
             throw new NotImplementedException();
         }
 
-        protected override bool ConfirmItemDelete([DisallowNull] ListItemViewModel item, object parameter)
-        {
-            throw new NotImplementedException();
-        }
+        protected override bool ConfirmItemDelete(ListItemViewModel item, object parameter) => MessageBox.Show(App.Current.MainWindow,
+            "This action cannot be undone!\n\nAre you sure you want to remove this audio property set from the database?",
+            "Delete Audio Property Set", MessageBoxButton.YesNo, MessageBoxImage.Exclamation) == MessageBoxResult.Yes;
 
-        protected override async Task<int> DeleteEntityFromDbContextAsync([DisallowNull] AudioPropertiesListItem entity, [DisallowNull] LocalDbContext dbContext, [DisallowNull] IWindowsStatusListener statusListener)
+        protected override async Task<int> DeleteEntityFromDbContextAsync([DisallowNull] AudioPropertiesListItem entity, [DisallowNull] LocalDbContext dbContext,
+            [DisallowNull] IWindowsStatusListener statusListener)
         {
-            throw new NotImplementedException();
+            AudioPropertySet target = await dbContext.AudioPropertySets.FindAsync(new object[] { entity.Id }, statusListener.CancellationToken);
+            if (target is null)
+                return 0;
+            dbContext.AudioPropertySets.Remove(target);
+            return await dbContext.SaveChangesAsync(statusListener.CancellationToken);
         }
 
         protected override void OnAddNewItemCommand(object parameter)

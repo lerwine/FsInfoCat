@@ -37,8 +37,10 @@ namespace FsInfoCat.Desktop.Local.GPSPropertySets
 
         void INotifyNavigatedTo.OnNavigatedTo() => ReloadAsync(_currentOptions);
 
-        protected override IQueryable<GPSPropertiesListItem> GetQueryableListing(bool? options, [DisallowNull] LocalDbContext dbContext, [DisallowNull] IWindowsStatusListener statusListener)
+        protected override IQueryable<GPSPropertiesListItem> GetQueryableListing(bool? options, [DisallowNull] LocalDbContext dbContext,
+            [DisallowNull] IWindowsStatusListener statusListener)
         {
+            statusListener.SetMessage("Reading GPS proeprty sets from database");
             if (options.HasValue)
             {
                 if (options.Value)
@@ -69,14 +71,18 @@ namespace FsInfoCat.Desktop.Local.GPSPropertySets
             throw new NotImplementedException();
         }
 
-        protected override bool ConfirmItemDelete([DisallowNull] ListItemViewModel item, object parameter)
+        protected override bool ConfirmItemDelete(ListItemViewModel item, object parameter) => MessageBox.Show(App.Current.MainWindow,
+            "This action cannot be undone!\n\nAre you sure you want to remove this GPS property set from the database?",
+            "Delete GPS Property Set", MessageBoxButton.YesNo, MessageBoxImage.Exclamation) == MessageBoxResult.Yes;
+        
+        protected override async Task<int> DeleteEntityFromDbContextAsync([DisallowNull] GPSPropertiesListItem entity, [DisallowNull] LocalDbContext dbContext,
+            [DisallowNull] IWindowsStatusListener statusListener)
         {
-            throw new NotImplementedException();
-        }
-
-        protected override async Task<int> DeleteEntityFromDbContextAsync([DisallowNull] GPSPropertiesListItem entity, [DisallowNull] LocalDbContext dbContext, [DisallowNull] IWindowsStatusListener statusListener)
-        {
-            throw new NotImplementedException();
+            GPSPropertySet target = await dbContext.GPSPropertySets.FindAsync(new object[] { entity.Id }, statusListener.CancellationToken);
+            if (target is null)
+                return 0;
+            dbContext.GPSPropertySets.Remove(target);
+            return await dbContext.SaveChangesAsync(statusListener.CancellationToken);
         }
 
         protected override void OnAddNewItemCommand(object parameter)

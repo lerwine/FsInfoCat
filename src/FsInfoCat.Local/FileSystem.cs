@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -104,6 +106,34 @@ namespace FsInfoCat.Local
                 FileSystem = fileSystem,
                 Priority = 0
             });
+        }
+
+        public static async Task<int> DeleteAsync(FileSystem target, LocalDbContext dbContext, IStatusListener statusListener)
+        {
+            if (target is null)
+                throw new ArgumentNullException(nameof(target));
+            if (dbContext is null)
+                throw new ArgumentNullException(nameof(dbContext));
+            if (statusListener is null)
+                throw new ArgumentNullException(nameof(statusListener));
+            using IDbContextTransaction transaction = dbContext.Database.BeginTransaction();
+            using IDisposable loggerScope = statusListener.Logger.BeginScope(target.Id);
+            statusListener.SetMessage($"Removing file system definition: {target.DisplayName}");
+            EntityEntry<FileSystem> entry = dbContext.Entry(target);
+            statusListener.Logger.LogDebug("Removing dependant records for Subdirectory {{ Id = {Id}; DisplayName = \"{DisplayName}\" }}", target.Id, target.DisplayName);
+            SymbolicName[] symbolicNames = (await entry.GetRelatedCollectionAsync(e => e.SymbolicNames, statusListener.CancellationToken)).ToArray();
+            int result;
+            if (symbolicNames.Length > 0)
+            {
+                dbContext.RemoveRange(symbolicNames);
+                result = await dbContext.SaveChangesAsync(statusListener.CancellationToken);
+            }
+            else
+                result = 0;
+            dbContext.FileSystems.Remove(target);
+            result += await dbContext.SaveChangesAsync(statusListener.CancellationToken);
+            await transaction.CommitAsync(statusListener.CancellationToken);
+            return result;
         }
     }
 }

@@ -228,7 +228,18 @@ namespace FsInfoCat.Local
                 .Entity<SharedVolumeTag>(SharedVolumeTag.OnBuildEntity)
                 .Entity<FileAccessError>(FileAccessError.OnBuildEntity)
                 .Entity<SubdirectoryAccessError>(SubdirectoryAccessError.OnBuildEntity)
-                .Entity<VolumeAccessError>(VolumeAccessError.OnBuildEntity);
+                .Entity<VolumeAccessError>(VolumeAccessError.OnBuildEntity)
+                .Entity<SummaryPropertiesListItem>(SummaryPropertiesListItem.OnBuildEntity)
+                .Entity<DocumentPropertiesListItem>(DocumentPropertiesListItem.OnBuildEntity)
+                .Entity<AudioPropertiesListItem>(AudioPropertiesListItem.OnBuildEntity)
+                .Entity<DRMPropertiesListItem>(DRMPropertiesListItem.OnBuildEntity)
+                .Entity<GPSPropertiesListItem>(GPSPropertiesListItem.OnBuildEntity)
+                .Entity<ImagePropertiesListItem>(ImagePropertiesListItem.OnBuildEntity)
+                .Entity<MediaPropertiesListItem>(MediaPropertiesListItem.OnBuildEntity)
+                .Entity<MusicPropertiesListItem>(MusicPropertiesListItem.OnBuildEntity)
+                .Entity<PhotoPropertiesListItem>(PhotoPropertiesListItem.OnBuildEntity)
+                .Entity<RecordedTVPropertiesListItem>(RecordedTVPropertiesListItem.OnBuildEntity)
+                .Entity<VideoPropertiesListItem>(VideoPropertiesListItem.OnBuildEntity);
         }
 
         public static void AddDbContextPool(IServiceCollection services, Assembly assembly, string dbFileName) => AddDbContextPool(services, GetDbFilePath(assembly, dbFileName));

@@ -209,6 +209,71 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         public string RootPath { get => GetValue(RootPathProperty) as string; private set => SetValue(RootPathPropertyKey, value); }
 
         #endregion
+        #region RootSubdirectoryCount Property Members
+
+        private static readonly DependencyPropertyKey RootSubdirectoryCountPropertyKey = DependencyProperty.RegisterReadOnly(nameof(RootSubdirectoryCount), typeof(long), typeof(VolumeItemVM),
+                new PropertyMetadata(0L, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as VolumeItemVM).OnRootSubdirectoryCountPropertyChanged((long)e.OldValue, (long)e.NewValue)));
+
+        /// <summary>
+        /// Identifies the <see cref="RootSubdirectoryCount"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty RootSubdirectoryCountProperty = RootSubdirectoryCountPropertyKey.DependencyProperty;
+
+        /// <summary>
+        /// Gets .
+        /// </summary>
+        /// <value>The .</value>
+        public long RootSubdirectoryCount { get => (long)GetValue(RootSubdirectoryCountProperty); private set => SetValue(RootSubdirectoryCountPropertyKey, value); }
+
+        /// <summary>
+        /// Called when the value of the <see cref="RootSubdirectoryCount"/> dependency property has changed.
+        /// </summary>
+        /// <param name="oldValue">The previous value of the <see cref="RootSubdirectoryCount"/> property.</param>
+        /// <param name="newValue">The new value of the <see cref="RootSubdirectoryCount"/> property.</param>
+        private void OnRootSubdirectoryCountPropertyChanged(long oldValue, long newValue) => CanDelete = newValue == 0L && RootFileCount == 0L;
+
+        #endregion
+        #region RootFileCount Property Members
+
+        private static readonly DependencyPropertyKey RootFileCountPropertyKey = DependencyProperty.RegisterReadOnly(nameof(RootFileCount), typeof(long), typeof(VolumeItemVM),
+                new PropertyMetadata(0L, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as VolumeItemVM).OnRootFileCountPropertyChanged((long)e.OldValue, (long)e.NewValue)));
+
+        /// <summary>
+        /// Identifies the <see cref="RootFileCount"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty RootFileCountProperty = RootFileCountPropertyKey.DependencyProperty;
+
+        /// <summary>
+        /// Gets .
+        /// </summary>
+        /// <value>The .</value>
+        public long RootFileCount { get => (long)GetValue(RootFileCountProperty); private set => SetValue(RootFileCountPropertyKey, value); }
+
+        /// <summary>
+        /// Called when the value of the <see cref="RootFileCount"/> dependency property has changed.
+        /// </summary>
+        /// <param name="oldValue">The previous value of the <see cref="RootFileCount"/> property.</param>
+        /// <param name="newValue">The new value of the <see cref="RootFileCount"/> property.</param>
+        private void OnRootFileCountPropertyChanged(long oldValue, long newValue) => CanDelete = RootSubdirectoryCount == 0L && newValue == 0L;
+
+        #endregion
+        #region CanDelete Property Members
+
+        private static readonly DependencyPropertyKey CanDeletePropertyKey = DependencyProperty.RegisterReadOnly(nameof(CanDelete), typeof(bool), typeof(VolumeItemVM),
+                new PropertyMetadata(true));
+
+        /// <summary>
+        /// Identifies the <see cref="CanDelete"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty CanDeleteProperty = CanDeletePropertyKey.DependencyProperty;
+
+        /// <summary>
+        /// Gets .
+        /// </summary>
+        /// <value>The .</value>
+        public bool CanDelete { get => (bool)GetValue(CanDeleteProperty); private set => SetValue(CanDeletePropertyKey, value); }
+
+        #endregion
         #region PersonalTagCount Property Members
 
         private static readonly DependencyPropertyKey PersonalTagCountPropertyKey = DependencyProperty.RegisterReadOnly(nameof(PersonalTagCount), typeof(long), typeof(VolumeItemVM),

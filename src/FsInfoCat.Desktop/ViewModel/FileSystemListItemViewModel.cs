@@ -98,8 +98,9 @@ namespace FsInfoCat.Desktop.ViewModel
         #endregion
         #region VolumeCount Property Members
 
-        private static readonly DependencyPropertyKey VolumeCountPropertyKey = DependencyProperty.RegisterReadOnly(nameof(VolumeCount), typeof(long), typeof(FileSystemListItemViewModel<TEntity>),
-                new PropertyMetadata(0L));
+        private static readonly DependencyPropertyKey VolumeCountPropertyKey = DependencyProperty.RegisterReadOnly(nameof(VolumeCount), typeof(long),
+            typeof(FileSystemListItemViewModel<TEntity>), new PropertyMetadata(0L, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
+            (d as FileSystemListItemViewModel<TEntity>).OnVolumeCountPropertyChanged((long)e.OldValue, (long)e.NewValue)));
 
         /// <summary>
         /// Identifies the <see cref="VolumeCount"/> dependency property.
@@ -111,6 +112,13 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <value>The .</value>
         public long VolumeCount { get => (long)GetValue(VolumeCountProperty); private set => SetValue(VolumeCountPropertyKey, value); }
+
+        /// <summary>
+        /// Called when the value of the <see cref="VolumeCount"/> dependency property has changed.
+        /// </summary>
+        /// <param name="oldValue">The previous value of the <see cref="VolumeCount"/> property.</param>
+        /// <param name="newValue">The new value of the <see cref="VolumeCount"/> property.</param>
+        private void OnVolumeCountPropertyChanged(long oldValue, long newValue) => Delete.IsEnabled = newValue > 0L;
 
         #endregion
 

@@ -40,6 +40,7 @@ namespace FsInfoCat.Desktop.Local.DocumentPropertySets
         protected override IQueryable<DocumentPropertiesListItem> GetQueryableListing(bool? options, [DisallowNull] LocalDbContext dbContext,
             [DisallowNull] IWindowsStatusListener statusListener)
         {
+            statusListener.SetMessage("Reading document property sets from database");
             if (options.HasValue)
             {
                 if (options.Value)
@@ -70,14 +71,18 @@ namespace FsInfoCat.Desktop.Local.DocumentPropertySets
             throw new NotImplementedException();
         }
 
-        protected override bool ConfirmItemDelete([DisallowNull] ListItemViewModel item, object parameter)
-        {
-            throw new NotImplementedException();
-        }
+        protected override bool ConfirmItemDelete(ListItemViewModel item, object parameter) => MessageBox.Show(App.Current.MainWindow,
+            "This action cannot be undone!\n\nAre you sure you want to remove this document property set from the database?",
+            "Delete Document Property Set", MessageBoxButton.YesNo, MessageBoxImage.Exclamation) == MessageBoxResult.Yes;
 
-        protected override async Task<int> DeleteEntityFromDbContextAsync([DisallowNull] DocumentPropertiesListItem entity, [DisallowNull] LocalDbContext dbContext, [DisallowNull] IWindowsStatusListener statusListener)
+        protected override async Task<int> DeleteEntityFromDbContextAsync([DisallowNull] DocumentPropertiesListItem entity, [DisallowNull] LocalDbContext dbContext,
+            [DisallowNull] IWindowsStatusListener statusListener)
         {
-            throw new NotImplementedException();
+            DocumentPropertySet target = await dbContext.DocumentPropertySets.FindAsync(new object[] { entity.Id }, statusListener.CancellationToken);
+            if (target is null)
+                return 0;
+            dbContext.DocumentPropertySets.Remove(target);
+            return await dbContext.SaveChangesAsync(statusListener.CancellationToken);
         }
 
         protected override void OnAddNewItemCommand(object parameter)

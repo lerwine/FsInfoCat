@@ -54,8 +54,13 @@ namespace FsInfoCat.Desktop.Local.FileSystems
 
         void INotifyNavigatedTo.OnNavigatedTo() => ReloadAsync(ViewOptions.Value);
 
-        protected override IQueryable<FileSystemListItem> GetQueryableListing(bool? options, [DisallowNull] LocalDbContext dbContext, [DisallowNull] IWindowsStatusListener statusListener) =>
-            options.HasValue ? (options.Value ? dbContext.FileSystemListing.Where(f => !f.IsInactive) : dbContext.FileSystemListing.Where(f => f.IsInactive)) : dbContext.FileSystemListing;
+        protected override IQueryable<FileSystemListItem> GetQueryableListing(bool? options, [DisallowNull] LocalDbContext dbContext,
+            [DisallowNull] IWindowsStatusListener statusListener)
+        {
+            statusListener.SetMessage("Reading file system definitions from database");
+            return options.HasValue ? (options.Value ? dbContext.FileSystemListing.Where(f => !f.IsInactive) :
+                dbContext.FileSystemListing.Where(f => f.IsInactive)) : dbContext.FileSystemListing;
+        }
 
         protected override ListItemViewModel CreateItemViewModel([DisallowNull] FileSystemListItem entity) => new ListItemViewModel(entity);
 
@@ -77,14 +82,15 @@ namespace FsInfoCat.Desktop.Local.FileSystems
             throw new System.NotImplementedException();
         }
 
-        protected override bool ConfirmItemDelete([DisallowNull] ListItemViewModel item, object parameter)
-        {
-            throw new System.NotImplementedException();
-        }
+        protected override bool ConfirmItemDelete(ListItemViewModel item, object parameter) => MessageBox.Show(App.Current.MainWindow,
+            "This action cannot be undone!\n\nAre you sure you want to remove this file system definition from the database?",
+            "Delete File System Definition", MessageBoxButton.YesNo, MessageBoxImage.Exclamation) == MessageBoxResult.Yes;
 
-        protected override async Task<int> DeleteEntityFromDbContextAsync([DisallowNull] FileSystemListItem entity, [DisallowNull] LocalDbContext dbContext, [DisallowNull] IWindowsStatusListener statusListener)
+        protected override async Task<int> DeleteEntityFromDbContextAsync([DisallowNull] FileSystemListItem entity, [DisallowNull] LocalDbContext dbContext,
+            [DisallowNull] IWindowsStatusListener statusListener)
         {
-            throw new System.NotImplementedException();
+            FileSystem target = await dbContext.FileSystems.FindAsync(new object[] { entity.Id }, statusListener.CancellationToken);
+            return (target is null) ? 0 : await FileSystem.DeleteAsync(target, dbContext, statusListener);
         }
 
         protected override void OnAddNewItemCommand(object parameter)

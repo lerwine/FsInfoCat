@@ -78,6 +78,10 @@ namespace FsInfoCat
     {
         string RootPath { get; }
 
+        long RootSubdirectoryCount { get; }
+
+        long RootFileCount { get; }
+
         long AccessErrorCount { get; }
 
         long SharedTagCount { get; }
