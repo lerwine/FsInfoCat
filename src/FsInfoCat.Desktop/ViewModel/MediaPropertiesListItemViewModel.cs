@@ -96,21 +96,38 @@ namespace FsInfoCat.Desktop.ViewModel
         public string Writer { get => GetValue(WriterProperty) as string; private set => SetValue(WriterPropertyKey, value); }
 
         #endregion
-        #region FileCount Property Members
+        #region ExistingFileCount Property Members
 
-        private static readonly DependencyPropertyKey FileCountPropertyKey = DependencyProperty.RegisterReadOnly(nameof(FileCount), typeof(long), typeof(MediaPropertiesListItemViewModel<TEntity>),
+        private static readonly DependencyPropertyKey ExistingFileCountPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ExistingFileCount), typeof(long), typeof(MediaPropertiesListItemViewModel<TEntity>),
                 new PropertyMetadata(0L));
 
         /// <summary>
-        /// Identifies the <see cref="FileCount"/> dependency property.
+        /// Identifies the <see cref="ExistingFileCount"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty FileCountProperty = FileCountPropertyKey.DependencyProperty;
+        public static readonly DependencyProperty ExistingFileCountProperty = ExistingFileCountPropertyKey.DependencyProperty;
 
         /// <summary>
         /// Gets .
         /// </summary>
         /// <value>The .</value>
-        public long FileCount { get => (long)GetValue(FileCountProperty); private set => SetValue(FileCountPropertyKey, value); }
+        public long ExistingFileCount { get => (long)GetValue(ExistingFileCountProperty); private set => SetValue(ExistingFileCountPropertyKey, value); }
+
+        #endregion
+        #region TotalFileCount Property Members
+
+        private static readonly DependencyPropertyKey TotalFileCountPropertyKey = DependencyProperty.RegisterReadOnly(nameof(TotalFileCount), typeof(long), typeof(MediaPropertiesListItemViewModel<TEntity>),
+                new PropertyMetadata(0L));
+
+        /// <summary>
+        /// Identifies the <see cref="TotalFileCount"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty TotalFileCountProperty = TotalFileCountPropertyKey.DependencyProperty;
+
+        /// <summary>
+        /// Gets .
+        /// </summary>
+        /// <value>The .</value>
+        public long TotalFileCount { get => (long)GetValue(TotalFileCountProperty); private set => SetValue(TotalFileCountPropertyKey, value); }
 
         #endregion
 
@@ -118,7 +135,8 @@ namespace FsInfoCat.Desktop.ViewModel
         {
             Writer = entity.Writer.ToNormalizedDelimitedText();
             Producer = entity.Producer.ToNormalizedDelimitedText();
-            FileCount = entity.FileCount;
+            ExistingFileCount = entity.ExistingFileCount;
+            TotalFileCount = entity.TotalFileCount;
         }
 
         protected override void OnEntityPropertyChanged(string propertyName)
@@ -131,8 +149,11 @@ namespace FsInfoCat.Desktop.ViewModel
                 case nameof(IMediaProperties.Writer):
                     Dispatcher.CheckInvoke(() => Writer = Entity.Writer.ToNormalizedDelimitedText());
                     break;
-                case nameof(FileCount):
-                    Dispatcher.CheckInvoke(() => FileCount = Entity.FileCount);
+                case nameof(ExistingFileCount):
+                    Dispatcher.CheckInvoke(() => ExistingFileCount = Entity.ExistingFileCount);
+                    break;
+                case nameof(TotalFileCount):
+                    Dispatcher.CheckInvoke(() => ExistingFileCount = Entity.ExistingFileCount);
                     break;
                 default:
                     base.OnEntityPropertyChanged(propertyName);

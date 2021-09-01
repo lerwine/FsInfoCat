@@ -130,12 +130,4 @@ namespace FsInfoCat.Desktop.Local.Volumes
             return await dbContext.SaveChangesAsync(statusListener.CancellationToken);
         }
     }
-    public class DetailsViewModel : DependencyObject
-    {
-
-    }
-    public class EditViewModel : DependencyObject
-    {
-
-    }
 }

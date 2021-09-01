@@ -92,11 +92,4 @@ namespace FsInfoCat.Desktop.Local.SharedTagDefinitions
             throw new System.NotImplementedException();
         }
     }
-    public class DetailsViewModel : DependencyObject
-    {
-    }
-    public class EditViewModel : DependencyObject
-    {
-
-    }
 }

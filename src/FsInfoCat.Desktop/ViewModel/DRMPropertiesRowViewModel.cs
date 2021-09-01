@@ -62,35 +62,63 @@ namespace FsInfoCat.Desktop.ViewModel
         protected virtual void RaiseDeleteCommand(object parameter) => DeleteCommand?.Invoke(this, new(parameter));
 
         #endregion
-        #region FileCount Property Members
+        #region ExistingFileCount Property Members
 
-        private static readonly DependencyPropertyKey FileCountPropertyKey = DependencyProperty.RegisterReadOnly(nameof(FileCount), typeof(long), typeof(DRMPropertiesListItemViewModel<TEntity>),
+        private static readonly DependencyPropertyKey ExistingFileCountPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ExistingFileCount), typeof(long), typeof(DRMPropertiesListItemViewModel<TEntity>),
                 new PropertyMetadata(0L));
 
         /// <summary>
-        /// Identifies the <see cref="FileCount"/> dependency property.
+        /// Identifies the <see cref="ExistingFileCount"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty FileCountProperty = FileCountPropertyKey.DependencyProperty;
+        public static readonly DependencyProperty ExistingFileCountProperty = ExistingFileCountPropertyKey.DependencyProperty;
 
         /// <summary>
         /// Gets .
         /// </summary>
         /// <value>The .</value>
-        public long FileCount { get => (long)GetValue(FileCountProperty); private set => SetValue(FileCountPropertyKey, value); }
+        public long ExistingFileCount { get => (long)GetValue(ExistingFileCountProperty); private set => SetValue(ExistingFileCountPropertyKey, value); }
+
+        #endregion
+        #region TotalFileCount Property Members
+
+        private static readonly DependencyPropertyKey TotalFileCountPropertyKey = DependencyProperty.RegisterReadOnly(nameof(TotalFileCount), typeof(long), typeof(DRMPropertiesListItemViewModel<TEntity>),
+                new PropertyMetadata(0L));
+
+        /// <summary>
+        /// Identifies the <see cref="TotalFileCount"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty TotalFileCountProperty = TotalFileCountPropertyKey.DependencyProperty;
+
+        /// <summary>
+        /// Gets .
+        /// </summary>
+        /// <value>The .</value>
+        public long TotalFileCount { get => (long)GetValue(TotalFileCountProperty); private set => SetValue(TotalFileCountPropertyKey, value); }
 
         #endregion
 
         public DRMPropertiesListItemViewModel(TEntity entity) : base(entity)
         {
-            FileCount = entity.FileCount;
+            ExistingFileCount = entity.ExistingFileCount;
+            TotalFileCount = entity.TotalFileCount;
             SetValue(EditPropertyKey, new Commands.RelayCommand(RaiseEditCommand));
             SetValue(DeletePropertyKey, new Commands.RelayCommand(RaiseDeleteCommand));
         }
 
         protected override void OnEntityPropertyChanged(string propertyName)
         {
-            if (propertyName == nameof(FileCount))
-                Dispatcher.CheckInvoke(() => FileCount = Entity.FileCount);
+            switch (propertyName)
+            {
+                case nameof(ExistingFileCount):
+                    Dispatcher.CheckInvoke(() => ExistingFileCount = Entity.ExistingFileCount);
+                    break;
+                case nameof(TotalFileCount):
+                    Dispatcher.CheckInvoke(() => ExistingFileCount = Entity.ExistingFileCount);
+                    break;
+                default:
+                    base.OnEntityPropertyChanged(propertyName);
+                    break;
+            }
         }
     }
 

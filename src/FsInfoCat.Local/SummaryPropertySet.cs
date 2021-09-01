@@ -13,13 +13,17 @@ namespace FsInfoCat.Local
 {
     public class SummaryPropertiesListItem : SummaryPropertiesRow, ILocalSummaryPropertiesListItem
     {
-        private readonly IPropertyChangeTracker<long> _fileCount;
+        private readonly IPropertyChangeTracker<long> _existingFileCount;
+        private readonly IPropertyChangeTracker<long> _totalFileCount;
 
-        public long FileCount { get => _fileCount.GetValue(); set => _fileCount.SetValue(value); }
+        public long ExistingFileCount { get => _existingFileCount.GetValue(); set => _existingFileCount.SetValue(value); }
+
+        public long TotalFileCount { get => _totalFileCount.GetValue(); set => _totalFileCount.SetValue(value); }
 
         public SummaryPropertiesListItem()
         {
-            _fileCount = AddChangeTracker(nameof(FileCount), 0L);
+            _existingFileCount = AddChangeTracker(nameof(ExistingFileCount), 0L);
+            _totalFileCount = AddChangeTracker(nameof(TotalFileCount), 0L);
         }
     }
     public class SummaryPropertiesRow : PropertiesRow, ISummaryProperties

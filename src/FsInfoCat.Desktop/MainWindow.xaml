@@ -39,6 +39,18 @@
                 <MenuItem Header="View File Systems" Command="{Binding ViewFileSystems, Mode=OneWay}" />
                 <MenuItem Header="View Volumes" Command="{Binding ViewVolumes, Mode=OneWay}" />
                 <Separator/>
+                <MenuItem Header="View Summary Property Sets" Command="{Binding ViewSummaryPropertySets, Mode=OneWay}" />
+                <MenuItem Header="View Document Property Sets" Command="{Binding ViewDocumentPropertySets, Mode=OneWay}" />
+                <MenuItem Header="View Audio Property Sets" Command="{Binding ViewAudioPropertySets, Mode=OneWay}" />
+                <MenuItem Header="View DRM Property Sets" Command="{Binding ViewDRMPropertySets, Mode=OneWay}" />
+                <MenuItem Header="View GPS Property Sets" Command="{Binding ViewGPSPropertySets, Mode=OneWay}" />
+                <MenuItem Header="View Image Property Sets" Command="{Binding ViewImagePropertySets, Mode=OneWay}" />
+                <MenuItem Header="View Media Property Sets" Command="{Binding ViewMediaPropertySets, Mode=OneWay}" />
+                <MenuItem Header="View Music Property Sets" Command="{Binding ViewMusicPropertySets, Mode=OneWay}" />
+                <MenuItem Header="View Photo Property Sets" Command="{Binding ViewPhotoPropertySets, Mode=OneWay}" />
+                <MenuItem Header="View Recorded TV Property Sets" Command="{Binding ViewRecordedTVPropertySets, Mode=OneWay}" />
+                <MenuItem Header="View Video Property Sets" Command="{Binding ViewVideoPropertySets, Mode=OneWay}" />
+                <Separator/>
                 <MenuItem Header="Exit" Command="ApplicationCommands.Close" />
             </MenuItem>
             <MenuItem Header="Crawl Configurations">

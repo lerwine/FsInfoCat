@@ -4,7 +4,6 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows;
 
 namespace FsInfoCat.Desktop.Local.SummaryPropertySets
 {
@@ -20,20 +19,14 @@ namespace FsInfoCat.Desktop.Local.SummaryPropertySets
             throw new NotImplementedException();
         }
 
-        protected override ListItemViewModel CreateItemViewModel([DisallowNull] SummaryPropertiesListItem entity)
-        {
-            throw new NotImplementedException();
-        }
+        protected override ListItemViewModel CreateItemViewModel([DisallowNull] SummaryPropertiesListItem entity) => new(entity);
 
         protected override void OnSaveFilterOptionsCommand(object parameter)
         {
             throw new NotImplementedException();
         }
 
-        protected override void OnRefreshCommand(object parameter)
-        {
-            throw new NotImplementedException();
-        }
+        protected override void OnRefreshCommand(object parameter) => ReloadAsync(_currentOptions);
 
         protected override void OnItemEditCommand([DisallowNull] ListItemViewModel item, object parameter)
         {
@@ -45,7 +38,7 @@ namespace FsInfoCat.Desktop.Local.SummaryPropertySets
             throw new NotImplementedException();
         }
 
-        protected override Task<int> DeleteEntityFromDbContextAsync([DisallowNull] SummaryPropertiesListItem entity, [DisallowNull] LocalDbContext dbContext, [DisallowNull] IWindowsStatusListener statusListener)
+        protected override async Task<int> DeleteEntityFromDbContextAsync([DisallowNull] SummaryPropertiesListItem entity, [DisallowNull] LocalDbContext dbContext, [DisallowNull] IWindowsStatusListener statusListener)
         {
             throw new NotImplementedException();
         }

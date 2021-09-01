@@ -19,6 +19,17 @@ namespace FsInfoCat.Desktop.ViewModel
         public const string Page_Uri_Local_PersonalTagDefinitions = "/Local/PersonalTagDefinitions/ListingPage.xaml";
         public const string Page_Uri_Local_SharedTagDefinitions = "/Local/SharedTagDefinitions/ListingPage.xaml";
         public const string Page_Uri_Local_CrawlLogs = "/Local/CrawlLogs/ListingPage.xaml";
+        public const string Page_Uri_Local_SummaryPropertySets = "/Local/SummaryPropertySets/ListingPage.xaml";
+        public const string Page_Uri_Local_DocumentPropertySets = "/Local/DocumentPropertySets/ListingPage.xaml";
+        public const string Page_Uri_Local_AudioPropertySets = "/Local/AudioPropertySets/ListingPage.xaml";
+        public const string Page_Uri_Local_DRMPropertySets = "/Local/DRMPropertySets/ListingPage.xaml";
+        public const string Page_Uri_Local_GPSPropertySets = "/Local/GPSPropertySets/ListingPage.xaml";
+        public const string Page_Uri_Local_ImagePropertySets = "/Local/ImagePropertySets/ListingPage.xaml";
+        public const string Page_Uri_Local_MediaPropertySets = "/Local/MediaPropertySets/ListingPage.xaml";
+        public const string Page_Uri_Local_MusicPropertySets = "/Local/MusicPropertySets/ListingPage.xaml";
+        public const string Page_Uri_Local_PhotoPropertySets = "/Local/PhotoPropertySets/ListingPage.xaml";
+        public const string Page_Uri_Local_RecordedTVPropertySets = "/Local/RecordedTVPropertySets/ListingPage.xaml";
+        public const string Page_Uri_Local_VideoPropertySets = "/Local/VideoPropertySets/ListingPage.xaml";
 
         #region ViewFileSystems Command Property Members
 
@@ -181,6 +192,306 @@ namespace FsInfoCat.Desktop.ViewModel
         private void OnViewSharedTagDefinitions(object parameter) => NavigateTo(Page_Uri_Local_SharedTagDefinitions);
 
         #endregion
+        #region ViewSummaryPropertySets Command Property Members
+
+        private static readonly DependencyPropertyKey ViewSummaryPropertySetsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ViewSummaryPropertySets),
+            typeof(Commands.RelayCommand), typeof(MainVM), new PropertyMetadata(null));
+
+        /// <summary>
+        /// Identifies the <see cref="ViewSummaryPropertySets"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ViewSummaryPropertySetsProperty = ViewSummaryPropertySetsPropertyKey.DependencyProperty;
+
+        /// <summary>
+        /// Gets the $name$ command object.
+        /// </summary>
+        /// <value>The <see cref="System.Windows.Input.ICommand"/> that implements the $command$ command.</value>
+        public Commands.RelayCommand ViewSummaryPropertySets => (Commands.RelayCommand)GetValue(ViewSummaryPropertySetsProperty);
+
+        private void OnViewSummaryPropertySets(object parameter)
+        {
+            // TODO: Implement OnViewSummaryPropertySets Logic
+        }
+
+        /* TODO: Add ViewSummaryPropertySets to initialization code to constructor
+           SetValue(ViewSummaryPropertySetsPropertyKey, new Commands.RelayCommand(OnViewSummaryPropertySets)); */
+
+        #endregion
+        #region ViewCrawlLogs Command Property Members
+
+        private static readonly DependencyPropertyKey ViewCrawlLogsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ViewCrawlLogs),
+            typeof(Commands.RelayCommand), typeof(MainVM), new PropertyMetadata(null));
+
+        /// <summary>
+        /// Identifies the <see cref="ViewCrawlLogs"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ViewCrawlLogsProperty = ViewCrawlLogsPropertyKey.DependencyProperty;
+
+        /// <summary>
+        /// Gets the $name$ command object.
+        /// </summary>
+        /// <value>The <see cref="System.Windows.Input.ICommand"/> that implements the $command$ command.</value>
+        public Commands.RelayCommand ViewCrawlLogs => (Commands.RelayCommand)GetValue(ViewCrawlLogsProperty);
+
+        private void OnViewCrawlLogs(object parameter)
+        {
+            // TODO: Implement OnViewCrawlLogs Logic
+        }
+
+/* TODO: Add ViewCrawlLogs to initialization code to constructor
+   SetValue(ViewCrawlLogsPropertyKey, new Commands.RelayCommand(OnViewCrawlLogs)); */
+
+#endregion
+        #region ViewDocumentPropertySets Command Property Members
+
+        private static readonly DependencyPropertyKey ViewDocumentPropertySetsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ViewDocumentPropertySets),
+            typeof(Commands.RelayCommand), typeof(MainVM), new PropertyMetadata(null));
+
+        /// <summary>
+        /// Identifies the <see cref="ViewDocumentPropertySets"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ViewDocumentPropertySetsProperty = ViewDocumentPropertySetsPropertyKey.DependencyProperty;
+
+        /// <summary>
+        /// Gets the $name$ command object.
+        /// </summary>
+        /// <value>The <see cref="System.Windows.Input.ICommand"/> that implements the $command$ command.</value>
+        public Commands.RelayCommand ViewDocumentPropertySets => (Commands.RelayCommand)GetValue(ViewDocumentPropertySetsProperty);
+
+        private void OnViewDocumentPropertySets(object parameter)
+        {
+            // TODO: Implement OnViewDocumentPropertySets Logic
+        }
+
+/* TODO: Add ViewDocumentPropertySets to initialization code to constructor
+   SetValue(ViewDocumentPropertySetsPropertyKey, new Commands.RelayCommand(OnViewDocumentPropertySets)); */
+
+#endregion
+        #region ViewAudioPropertySets Command Property Members
+
+        private static readonly DependencyPropertyKey ViewAudioPropertySetsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ViewAudioPropertySets),
+            typeof(Commands.RelayCommand), typeof(MainVM), new PropertyMetadata(null));
+
+        /// <summary>
+        /// Identifies the <see cref="ViewAudioPropertySets"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ViewAudioPropertySetsProperty = ViewAudioPropertySetsPropertyKey.DependencyProperty;
+
+        /// <summary>
+        /// Gets the $name$ command object.
+        /// </summary>
+        /// <value>The <see cref="System.Windows.Input.ICommand"/> that implements the $command$ command.</value>
+        public Commands.RelayCommand ViewAudioPropertySets => (Commands.RelayCommand)GetValue(ViewAudioPropertySetsProperty);
+
+        private void OnViewAudioPropertySets(object parameter)
+        {
+            // TODO: Implement OnViewAudioPropertySets Logic
+        }
+
+/* TODO: Add ViewAudioPropertySets to initialization code to constructor
+   SetValue(ViewAudioPropertySetsPropertyKey, new Commands.RelayCommand(OnViewAudioPropertySets)); */
+
+#endregion
+        #region ViewDRMPropertySets Command Property Members
+
+        private static readonly DependencyPropertyKey ViewDRMPropertySetsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ViewDRMPropertySets),
+            typeof(Commands.RelayCommand), typeof(MainVM), new PropertyMetadata(null));
+
+        /// <summary>
+        /// Identifies the <see cref="ViewDRMPropertySets"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ViewDRMPropertySetsProperty = ViewDRMPropertySetsPropertyKey.DependencyProperty;
+
+        /// <summary>
+        /// Gets the $name$ command object.
+        /// </summary>
+        /// <value>The <see cref="System.Windows.Input.ICommand"/> that implements the $command$ command.</value>
+        public Commands.RelayCommand ViewDRMPropertySets => (Commands.RelayCommand)GetValue(ViewDRMPropertySetsProperty);
+
+        private void OnViewDRMPropertySets(object parameter)
+        {
+            // TODO: Implement OnViewDRMPropertySets Logic
+        }
+
+/* TODO: Add ViewDRMPropertySets to initialization code to constructor
+   SetValue(ViewDRMPropertySetsPropertyKey, new Commands.RelayCommand(OnViewDRMPropertySets)); */
+
+#endregion
+        #region ViewGPSPropertySets Command Property Members
+
+        private static readonly DependencyPropertyKey ViewGPSPropertySetsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ViewGPSPropertySets),
+            typeof(Commands.RelayCommand), typeof(MainVM), new PropertyMetadata(null));
+
+        /// <summary>
+        /// Identifies the <see cref="ViewGPSPropertySets"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ViewGPSPropertySetsProperty = ViewGPSPropertySetsPropertyKey.DependencyProperty;
+
+        /// <summary>
+        /// Gets the $name$ command object.
+        /// </summary>
+        /// <value>The <see cref="System.Windows.Input.ICommand"/> that implements the $command$ command.</value>
+        public Commands.RelayCommand ViewGPSPropertySets => (Commands.RelayCommand)GetValue(ViewGPSPropertySetsProperty);
+
+        private void OnViewGPSPropertySets(object parameter)
+        {
+            // TODO: Implement OnViewGPSPropertySets Logic
+        }
+
+/* TODO: Add ViewGPSPropertySets to initialization code to constructor
+   SetValue(ViewGPSPropertySetsPropertyKey, new Commands.RelayCommand(OnViewGPSPropertySets)); */
+
+#endregion
+        #region ViewImagePropertySets Command Property Members
+
+        private static readonly DependencyPropertyKey ViewImagePropertySetsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ViewImagePropertySets),
+            typeof(Commands.RelayCommand), typeof(MainVM), new PropertyMetadata(null));
+
+        /// <summary>
+        /// Identifies the <see cref="ViewImagePropertySets"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ViewImagePropertySetsProperty = ViewImagePropertySetsPropertyKey.DependencyProperty;
+
+        /// <summary>
+        /// Gets the $name$ command object.
+        /// </summary>
+        /// <value>The <see cref="System.Windows.Input.ICommand"/> that implements the $command$ command.</value>
+        public Commands.RelayCommand ViewImagePropertySets => (Commands.RelayCommand)GetValue(ViewImagePropertySetsProperty);
+
+        private void OnViewImagePropertySets(object parameter)
+        {
+            // TODO: Implement OnViewImagePropertySets Logic
+        }
+
+/* TODO: Add ViewImagePropertySets to initialization code to constructor
+   SetValue(ViewImagePropertySetsPropertyKey, new Commands.RelayCommand(OnViewImagePropertySets)); */
+
+#endregion
+        #region ViewMediaPropertySets Command Property Members
+
+        private static readonly DependencyPropertyKey ViewMediaPropertySetsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ViewMediaPropertySets),
+            typeof(Commands.RelayCommand), typeof(MainVM), new PropertyMetadata(null));
+
+        /// <summary>
+        /// Identifies the <see cref="ViewMediaPropertySets"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ViewMediaPropertySetsProperty = ViewMediaPropertySetsPropertyKey.DependencyProperty;
+
+        /// <summary>
+        /// Gets the $name$ command object.
+        /// </summary>
+        /// <value>The <see cref="System.Windows.Input.ICommand"/> that implements the $command$ command.</value>
+        public Commands.RelayCommand ViewMediaPropertySets => (Commands.RelayCommand)GetValue(ViewMediaPropertySetsProperty);
+
+        private void OnViewMediaPropertySets(object parameter)
+        {
+            // TODO: Implement OnViewMediaPropertySets Logic
+        }
+
+/* TODO: Add ViewMediaPropertySets to initialization code to constructor
+   SetValue(ViewMediaPropertySetsPropertyKey, new Commands.RelayCommand(OnViewMediaPropertySets)); */
+
+#endregion
+        #region ViewMusicPropertySets Command Property Members
+
+        private static readonly DependencyPropertyKey ViewMusicPropertySetsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ViewMusicPropertySets),
+            typeof(Commands.RelayCommand), typeof(MainVM), new PropertyMetadata(null));
+
+        /// <summary>
+        /// Identifies the <see cref="ViewMusicPropertySets"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ViewMusicPropertySetsProperty = ViewMusicPropertySetsPropertyKey.DependencyProperty;
+
+        /// <summary>
+        /// Gets the $name$ command object.
+        /// </summary>
+        /// <value>The <see cref="System.Windows.Input.ICommand"/> that implements the $command$ command.</value>
+        public Commands.RelayCommand ViewMusicPropertySets => (Commands.RelayCommand)GetValue(ViewMusicPropertySetsProperty);
+
+        private void OnViewMusicPropertySets(object parameter)
+        {
+            // TODO: Implement OnViewMusicPropertySets Logic
+        }
+
+/* TODO: Add ViewMusicPropertySets to initialization code to constructor
+   SetValue(ViewMusicPropertySetsPropertyKey, new Commands.RelayCommand(OnViewMusicPropertySets)); */
+
+#endregion
+        #region ViewPhotoPropertySets Command Property Members
+
+        private static readonly DependencyPropertyKey ViewPhotoPropertySetsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ViewPhotoPropertySets),
+            typeof(Commands.RelayCommand), typeof(MainVM), new PropertyMetadata(null));
+
+        /// <summary>
+        /// Identifies the <see cref="ViewPhotoPropertySets"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ViewPhotoPropertySetsProperty = ViewPhotoPropertySetsPropertyKey.DependencyProperty;
+
+        /// <summary>
+        /// Gets the $name$ command object.
+        /// </summary>
+        /// <value>The <see cref="System.Windows.Input.ICommand"/> that implements the $command$ command.</value>
+        public Commands.RelayCommand ViewPhotoPropertySets => (Commands.RelayCommand)GetValue(ViewPhotoPropertySetsProperty);
+
+        private void OnViewPhotoPropertySets(object parameter)
+        {
+            // TODO: Implement OnViewPhotoPropertySets Logic
+        }
+
+/* TODO: Add ViewPhotoPropertySets to initialization code to constructor
+   SetValue(ViewPhotoPropertySetsPropertyKey, new Commands.RelayCommand(OnViewPhotoPropertySets)); */
+
+#endregion
+        #region ViewRecordedTVPropertySets Command Property Members
+
+        private static readonly DependencyPropertyKey ViewRecordedTVPropertySetsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ViewRecordedTVPropertySets),
+            typeof(Commands.RelayCommand), typeof(MainVM), new PropertyMetadata(null));
+
+        /// <summary>
+        /// Identifies the <see cref="ViewRecordedTVPropertySets"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ViewRecordedTVPropertySetsProperty = ViewRecordedTVPropertySetsPropertyKey.DependencyProperty;
+
+        /// <summary>
+        /// Gets the $name$ command object.
+        /// </summary>
+        /// <value>The <see cref="System.Windows.Input.ICommand"/> that implements the $command$ command.</value>
+        public Commands.RelayCommand ViewRecordedTVPropertySets => (Commands.RelayCommand)GetValue(ViewRecordedTVPropertySetsProperty);
+
+        private void OnViewRecordedTVPropertySets(object parameter)
+        {
+            // TODO: Implement OnViewRecordedTVPropertySets Logic
+        }
+
+/* TODO: Add ViewRecordedTVPropertySets to initialization code to constructor
+   SetValue(ViewRecordedTVPropertySetsPropertyKey, new Commands.RelayCommand(OnViewRecordedTVPropertySets)); */
+
+#endregion
+        #region ViewVideoPropertySets Command Property Members
+
+        private static readonly DependencyPropertyKey ViewVideoPropertySetsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ViewVideoPropertySets),
+            typeof(Commands.RelayCommand), typeof(MainVM), new PropertyMetadata(null));
+
+        /// <summary>
+        /// Identifies the <see cref="ViewVideoPropertySets"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ViewVideoPropertySetsProperty = ViewVideoPropertySetsPropertyKey.DependencyProperty;
+
+        /// <summary>
+        /// Gets the $name$ command object.
+        /// </summary>
+        /// <value>The <see cref="System.Windows.Input.ICommand"/> that implements the $command$ command.</value>
+        public Commands.RelayCommand ViewVideoPropertySets => (Commands.RelayCommand)GetValue(ViewVideoPropertySetsProperty);
+
+        private void OnViewVideoPropertySets(object parameter)
+        {
+            // TODO: Implement OnViewVideoPropertySets Logic
+        }
+
+/* TODO: Add ViewVideoPropertySets to initialization code to constructor
+   SetValue(ViewVideoPropertySetsPropertyKey, new Commands.RelayCommand(OnViewVideoPropertySets)); */
+
+#endregion
         #region CommandBindings Property Members
 
         public static CommandBindingCollection GetAttachedBindings(DependencyObject obj)

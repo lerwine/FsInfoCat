@@ -93,11 +93,4 @@ namespace FsInfoCat.Desktop.Local.PersonalTagDefinitions
             throw new System.NotImplementedException();
         }
     }
-    public class DetailsViewModel : DependencyObject
-    {
-    }
-    public class EditViewModel : DependencyObject
-    {
-
-    }
 }

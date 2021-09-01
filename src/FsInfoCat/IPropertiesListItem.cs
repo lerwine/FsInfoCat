@@ -2,7 +2,9 @@ namespace FsInfoCat
 {
     public interface IPropertiesListItem : IDbEntity, IHasSimpleIdentifier
     {
-        long FileCount { get; }
+        long ExistingFileCount { get; }
+
+        long TotalFileCount { get; }
     }
 
     public interface ISummaryPropertiesListItem : IPropertiesListItem, ISummaryProperties { }
