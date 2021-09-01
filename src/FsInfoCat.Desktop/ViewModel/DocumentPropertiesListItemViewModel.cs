@@ -134,7 +134,7 @@ namespace FsInfoCat.Desktop.ViewModel
                     Dispatcher.CheckInvoke(() => ExistingFileCount = Entity.ExistingFileCount);
                     break;
                 case nameof(TotalFileCount):
-                    Dispatcher.CheckInvoke(() => ExistingFileCount = Entity.ExistingFileCount);
+                    Dispatcher.CheckInvoke(() => TotalFileCount = Entity.TotalFileCount);
                     break;
                 default:
                     base.OnEntityPropertyChanged(propertyName);
