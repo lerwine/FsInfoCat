@@ -12,86 +12,60 @@ namespace FsInfoCat.Desktop.Local.SymbolicNames
 {
     public class ListItemViewModel : SymbolicNameRowViewModel<SymbolicNameListItem>, ILocalCrudEntityRowViewModel<SymbolicNameListItem>
     {
-        #region EditButtonClick Property Members
+        #region Edit Property Members
 
         /// <summary>
-        /// Occurs when the <see cref="EditButtonClick">EditButtonClick Command</see> is invoked.
+        /// Occurs when the <see cref="Edit">Edit Command</see> is invoked.
         /// </summary>
-        public event EventHandler<Commands.CommandEventArgs> EditButtonClicked;
+        public event EventHandler<Commands.CommandEventArgs> EditCommand;
 
-        private static readonly DependencyPropertyKey EditButtonClickPropertyKey = DependencyProperty.RegisterReadOnly(nameof(EditButtonClick),
+        private static readonly DependencyPropertyKey EditPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Edit),
             typeof(Commands.RelayCommand), typeof(ListItemViewModel), new PropertyMetadata(null));
 
         /// <summary>
-        /// Identifies the <see cref="EditButtonClick"/> dependency property.
+        /// Identifies the <see cref="Edit"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty EditButtonClickProperty = EditButtonClickPropertyKey.DependencyProperty;
+        public static readonly DependencyProperty EditProperty = EditPropertyKey.DependencyProperty;
 
         /// <summary>
         /// Gets the $name$ command object.
         /// </summary>
         /// <value>The <see cref="System.Windows.Input.ICommand"/> that implements the $command$ command.</value>
-        public Commands.RelayCommand EditButtonClick => (Commands.RelayCommand)GetValue(EditButtonClickProperty);
+        public Commands.RelayCommand Edit => (Commands.RelayCommand)GetValue(EditProperty);
 
         /// <summary>
-        /// Called when the EditButtonClick event is raised by <see cref="EditButtonClick" />.
+        /// Called when the Edit event is raised by <see cref="Edit" />.
         /// </summary>
-        /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="EditButtonClick" />.</param>
-        private void RaiseEditButtonClicked(object parameter)
-        {
-            try { OnEditButtonClicked(parameter); }
-            finally { EditButtonClicked?.Invoke(this, new(parameter)); }
-        }
-
-        /// <summary>
-        /// Called when the <see cref="EditButtonClick">EditButtonClick Command</see> is invoked.
-        /// </summary>
-        /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="EditButtonClick" />.</param>
-        protected virtual void OnEditButtonClicked(object parameter)
-        {
-            // TODO: Implement OnEditButtonClicked Logic
-        }
+        /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="Edit" />.</param>
+        protected virtual void RaiseEditCommand(object parameter) => EditCommand?.Invoke(this, new(parameter));
 
         #endregion
-        #region DeleteButtonClick Property Members
+        #region Delete Property Members
 
         /// <summary>
-        /// Occurs when the <see cref="DeleteButtonClick">DeleteButtonClick Command</see> is invoked.
+        /// Occurs when the <see cref="Delete">Delete Command</see> is invoked.
         /// </summary>
-        public event EventHandler<Commands.CommandEventArgs> DeleteButtonClicked;
+        public event EventHandler<Commands.CommandEventArgs> DeleteCommand;
 
-        private static readonly DependencyPropertyKey DeleteButtonClickPropertyKey = DependencyProperty.RegisterReadOnly(nameof(DeleteButtonClick),
+        private static readonly DependencyPropertyKey DeletePropertyKey = DependencyProperty.RegisterReadOnly(nameof(Delete),
             typeof(Commands.RelayCommand), typeof(ListItemViewModel), new PropertyMetadata(null));
 
         /// <summary>
-        /// Identifies the <see cref="DeleteButtonClick"/> dependency property.
+        /// Identifies the <see cref="Delete"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty DeleteButtonClickProperty = DeleteButtonClickPropertyKey.DependencyProperty;
+        public static readonly DependencyProperty DeleteProperty = DeletePropertyKey.DependencyProperty;
 
         /// <summary>
         /// Gets the $name$ command object.
         /// </summary>
         /// <value>The <see cref="System.Windows.Input.ICommand"/> that implements the $command$ command.</value>
-        public Commands.RelayCommand DeleteButtonClick => (Commands.RelayCommand)GetValue(DeleteButtonClickProperty);
+        public Commands.RelayCommand Delete => (Commands.RelayCommand)GetValue(DeleteProperty);
 
         /// <summary>
-        /// Called when the DeleteButtonClick event is raised by <see cref="DeleteButtonClick" />.
+        /// Called when the Delete event is raised by <see cref="Delete" />.
         /// </summary>
-        /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="DeleteButtonClick" />.</param>
-        private void RaiseDeleteButtonClicked(object parameter)
-        {
-            try { OnDeleteButtonClicked(parameter); }
-            finally { DeleteButtonClicked?.Invoke(this, new(parameter)); }
-        }
-
-        /// <summary>
-        /// Called when the <see cref="DeleteButtonClick">DeleteButtonClick Command</see> is invoked.
-        /// </summary>
-        /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="DeleteButtonClick" />.</param>
-        protected virtual void OnDeleteButtonClicked(object parameter)
-        {
-            // TODO: Implement OnDeleteButtonClicked Logic
-        }
+        /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="Delete" />.</param>
+        protected virtual void RaiseDeleteCommand(object parameter) => DeleteCommand?.Invoke(this, new(parameter));
 
         #endregion
         #region UpstreamId Property Members
@@ -145,8 +119,8 @@ namespace FsInfoCat.Desktop.Local.SymbolicNames
 
         public ListItemViewModel(SymbolicNameListItem entity) : base(entity)
         {
-            SetValue(EditButtonClickPropertyKey, new Commands.RelayCommand(RaiseEditButtonClicked));
-            SetValue(DeleteButtonClickPropertyKey, new Commands.RelayCommand(RaiseDeleteButtonClicked));
+            SetValue(EditPropertyKey, new Commands.RelayCommand(RaiseEditCommand));
+            SetValue(DeletePropertyKey, new Commands.RelayCommand(RaiseDeleteCommand));
             UpstreamId = entity.UpstreamId;
             LastSynchronizedOn = entity.LastSynchronizedOn;
         }

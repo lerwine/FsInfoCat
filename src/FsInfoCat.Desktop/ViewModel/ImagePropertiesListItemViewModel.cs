@@ -3,8 +3,8 @@ using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel
 {
-    public class GPSPropertiesListItemViewModel<TEntity> : GPSPropertiesRowViewModel<TEntity>, ICrudEntityRowViewModel<TEntity>
-        where TEntity : DbEntity, IGPSPropertiesListItem
+    public class ImagePropertiesListItemViewModel<TEntity> : ImagePropertiesRowViewModel<TEntity>, ICrudEntityRowViewModel<TEntity>
+        where TEntity : DbEntity, IImagePropertiesListItem
     {
         #region Edit Property Members
 
@@ -14,7 +14,7 @@ namespace FsInfoCat.Desktop.ViewModel
         public event EventHandler<Commands.CommandEventArgs> EditCommand;
 
         private static readonly DependencyPropertyKey EditPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Edit),
-            typeof(Commands.RelayCommand), typeof(GPSPropertiesListItemViewModel<TEntity>), new PropertyMetadata(null));
+            typeof(Commands.RelayCommand), typeof(DbEntityRowViewModel<TEntity>), new PropertyMetadata(null));
 
         /// <summary>
         /// Identifies the <see cref="Edit"/> dependency property.
@@ -42,7 +42,7 @@ namespace FsInfoCat.Desktop.ViewModel
         public event EventHandler<Commands.CommandEventArgs> DeleteCommand;
 
         private static readonly DependencyPropertyKey DeletePropertyKey = DependencyProperty.RegisterReadOnly(nameof(Delete),
-            typeof(Commands.RelayCommand), typeof(GPSPropertiesListItemViewModel<TEntity>), new PropertyMetadata(null));
+            typeof(Commands.RelayCommand), typeof(DbEntityRowViewModel<TEntity>), new PropertyMetadata(null));
 
         /// <summary>
         /// Identifies the <see cref="Delete"/> dependency property.
@@ -62,26 +62,9 @@ namespace FsInfoCat.Desktop.ViewModel
         protected virtual void RaiseDeleteCommand(object parameter) => DeleteCommand?.Invoke(this, new(parameter));
 
         #endregion
-        #region VersionID Property Members
-
-        private static readonly DependencyPropertyKey VersionIDPropertyKey = DependencyProperty.RegisterReadOnly(nameof(VersionID), typeof(string),
-            typeof(GPSPropertiesListItemViewModel<TEntity>), new PropertyMetadata(""));
-
-        /// <summary>
-        /// Identifies the <see cref="VersionID"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty VersionIDProperty = VersionIDPropertyKey.DependencyProperty;
-
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
-        public string VersionID { get => GetValue(VersionIDProperty) as string; private set => SetValue(VersionIDPropertyKey, value); }
-
-        #endregion
         #region FileCount Property Members
 
-        private static readonly DependencyPropertyKey FileCountPropertyKey = DependencyProperty.RegisterReadOnly(nameof(FileCount), typeof(long), typeof(GPSPropertiesListItemViewModel<TEntity>),
+        private static readonly DependencyPropertyKey FileCountPropertyKey = DependencyProperty.RegisterReadOnly(nameof(FileCount), typeof(long), typeof(ImagePropertiesListItemViewModel<TEntity>),
                 new PropertyMetadata(0L));
 
         /// <summary>
@@ -97,26 +80,15 @@ namespace FsInfoCat.Desktop.ViewModel
 
         #endregion
 
-        public GPSPropertiesListItemViewModel(TEntity entity) : base(entity)
+        public ImagePropertiesListItemViewModel(TEntity entity) : base(entity)
         {
-            VersionID = entity.VersionID.ToVersionString();
             FileCount = entity.FileCount;
         }
 
         protected override void OnEntityPropertyChanged(string propertyName)
         {
-            switch (propertyName)
-            {
-                case nameof(IGPSProperties.VersionID):
-                    Dispatcher.CheckInvoke(() => VersionID = Entity.VersionID.ToVersionString());
-                    break;
-                case nameof(IGPSPropertiesListItem.FileCount):
-                    Dispatcher.CheckInvoke(() => FileCount = Entity.FileCount);
-                    break;
-                default:
-                    base.OnEntityPropertyChanged(propertyName);
-                    break;
-            }
+            if (propertyName == nameof(FileCount))
+                Dispatcher.CheckInvoke(() => FileCount = Entity.FileCount);
         }
     }
 }

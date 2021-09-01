@@ -1,10 +1,67 @@
+using System;
 using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel
 {
-    public class MusicPropertiesListItemViewModel<TEntity> : MusicPropertiesRowViewModel<TEntity>
-        where TEntity : DbEntity, IMusicProperties
+    public class MusicPropertiesListItemViewModel<TEntity> : MusicPropertiesRowViewModel<TEntity>, ICrudEntityRowViewModel<TEntity>
+        where TEntity : DbEntity, IMusicPropertiesListItem
     {
+        #region Edit Property Members
+
+        /// <summary>
+        /// Occurs when the <see cref="Edit">Edit Command</see> is invoked.
+        /// </summary>
+        public event EventHandler<Commands.CommandEventArgs> EditCommand;
+
+        private static readonly DependencyPropertyKey EditPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Edit),
+            typeof(Commands.RelayCommand), typeof(MusicPropertiesListItemViewModel<TEntity>), new PropertyMetadata(null));
+
+        /// <summary>
+        /// Identifies the <see cref="Edit"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty EditProperty = EditPropertyKey.DependencyProperty;
+
+        /// <summary>
+        /// Gets the $name$ command object.
+        /// </summary>
+        /// <value>The <see cref="System.Windows.Input.ICommand"/> that implements the $command$ command.</value>
+        public Commands.RelayCommand Edit => (Commands.RelayCommand)GetValue(EditProperty);
+
+        /// <summary>
+        /// Called when the Edit event is raised by <see cref="Edit" />.
+        /// </summary>
+        /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="Edit" />.</param>
+        protected virtual void RaiseEditCommand(object parameter) => EditCommand?.Invoke(this, new(parameter));
+
+        #endregion
+        #region Delete Property Members
+
+        /// <summary>
+        /// Occurs when the <see cref="Delete">Delete Command</see> is invoked.
+        /// </summary>
+        public event EventHandler<Commands.CommandEventArgs> DeleteCommand;
+
+        private static readonly DependencyPropertyKey DeletePropertyKey = DependencyProperty.RegisterReadOnly(nameof(Delete),
+            typeof(Commands.RelayCommand), typeof(MusicPropertiesListItemViewModel<TEntity>), new PropertyMetadata(null));
+
+        /// <summary>
+        /// Identifies the <see cref="Delete"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty DeleteProperty = DeletePropertyKey.DependencyProperty;
+
+        /// <summary>
+        /// Gets the $name$ command object.
+        /// </summary>
+        /// <value>The <see cref="System.Windows.Input.ICommand"/> that implements the $command$ command.</value>
+        public Commands.RelayCommand Delete => (Commands.RelayCommand)GetValue(DeleteProperty);
+
+        /// <summary>
+        /// Called when the Delete event is raised by <see cref="Delete" />.
+        /// </summary>
+        /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="Delete" />.</param>
+        protected virtual void RaiseDeleteCommand(object parameter) => DeleteCommand?.Invoke(this, new(parameter));
+
+        #endregion
         #region Artist Property Members
 
         private static readonly DependencyPropertyKey ArtistPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Artist), typeof(string), typeof(MusicPropertiesListItemViewModel<TEntity>),
@@ -73,6 +130,23 @@ namespace FsInfoCat.Desktop.ViewModel
         public string Genre { get => GetValue(GenreProperty) as string; private set => SetValue(GenrePropertyKey, value); }
 
         #endregion
+        #region FileCount Property Members
+
+        private static readonly DependencyPropertyKey FileCountPropertyKey = DependencyProperty.RegisterReadOnly(nameof(FileCount), typeof(long), typeof(MusicPropertiesListItemViewModel<TEntity>),
+                new PropertyMetadata(0L));
+
+        /// <summary>
+        /// Identifies the <see cref="FileCount"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty FileCountProperty = FileCountPropertyKey.DependencyProperty;
+
+        /// <summary>
+        /// Gets .
+        /// </summary>
+        /// <value>The .</value>
+        public long FileCount { get => (long)GetValue(FileCountProperty); private set => SetValue(FileCountPropertyKey, value); }
+
+        #endregion
 
         public MusicPropertiesListItemViewModel(TEntity entity) : base(entity)
         {
@@ -80,6 +154,7 @@ namespace FsInfoCat.Desktop.ViewModel
             Composer = entity.Composer.ToNormalizedDelimitedText();
             Conductor = entity.Conductor.ToNormalizedDelimitedText();
             Genre = entity.Genre.ToNormalizedDelimitedText();
+            FileCount = Entity.FileCount;
         }
 
         protected override void OnEntityPropertyChanged(string propertyName)
@@ -97,6 +172,9 @@ namespace FsInfoCat.Desktop.ViewModel
                     break;
                 case nameof(IMusicProperties.Genre):
                     Dispatcher.CheckInvoke(() => Genre = Entity.Genre.ToNormalizedDelimitedText());
+                    break;
+                case nameof(FileCount):
+                    Dispatcher.CheckInvoke(() => FileCount = Entity.FileCount);
                     break;
                 default:
                     base.OnEntityPropertyChanged(propertyName);
