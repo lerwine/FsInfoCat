@@ -1,6 +1,6 @@
 using System;
 
-namespace FsInfoCat.Fractions
+namespace FsInfoCat.Numerics
 {
     public interface IFraction : IEquatable<IFraction>, IComparable<IFraction>, IComparable, IConvertible
     {

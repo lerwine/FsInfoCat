@@ -2,7 +2,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
 
-namespace FsInfoCat.Fractions
+namespace FsInfoCat.Numerics
 {
     public static class FractionExtensions
     {
@@ -369,21 +369,39 @@ namespace FsInfoCat.Fractions
 
         public static long OneIfZero(this long value) => (value == 0L) ? 1L : value;
 
+        public static ulong OneIfZero(this ulong value) => (value == 0UL) ? 1UL : value;
+
         public static long Parse64([DisallowNull] string s, out long n, out long d) { return Parse(ValueHelper64.Instance, s, out n, out d); }
+
+        public static ulong ParseU64([DisallowNull] string s, out ulong n, out ulong d) { return Parse(ValueHelperU64.Instance, s, out n, out d); }
 
         public static bool TryParse64([DisallowNull] string s, out long w, out long n, out long d) { return TryParse(ValueHelper64.Instance, s, out w, out n, out d); }
 
+        public static bool TryParseU64([DisallowNull] string s, out ulong w, out ulong n, out ulong d) { return TryParse(ValueHelperU64.Instance, s, out w, out n, out d); }
+
         public static long GetGCD64(long d1, params long[] denominators) { return GetGCD(ValueHelper64.Instance, d1, denominators); }
+
+        public static ulong GetGCDU64(ulong d1, params ulong[] denominators) { return GetGCD(ValueHelperU64.Instance, d1, denominators); }
 
         public static long GetLCM64(long d1, long d2, out long secondMultiplier) { return GetLCM(ValueHelper64.Instance, d1, d2, out secondMultiplier); }
 
+        public static ulong GetLCMU64(ulong d1, ulong d2, out ulong secondMultiplier) { return GetLCM(ValueHelperU64.Instance, d1, d2, out secondMultiplier); }
+
         public static long GetSimplifiedRational64(long n, long d, out long denominator) { return GetSimplifiedRational(ValueHelper64.Instance, n, d, out denominator); }
+
+        public static ulong GetSimplifiedRationalU64(ulong n, ulong d, out ulong denominator) { return GetSimplifiedRational(ValueHelperU64.Instance, n, d, out denominator); }
 
         public static long GetInvertedRational64(long w, long n, long d, out long numerator, out long denominator) { return GetInvertedRational(ValueHelper64.Instance, w, n, d, out numerator, out denominator); }
 
+        public static ulong GetInvertedRationalU64(ulong w, ulong n, ulong d, out ulong numerator, out ulong denominator) { return GetInvertedRational(ValueHelperU64.Instance, w, n, d, out numerator, out denominator); }
+
         public static void ToCommonDenominator64(ref long n1, ref long d1, ref long n2, ref long d2) { ToCommonDenominator(ValueHelper64.Instance, ref n1, ref d1, ref n2, ref d2); }
 
+        public static void ToCommonDenominatorU64(ref ulong n1, ref ulong d1, ref ulong n2, ref ulong d2) { ToCommonDenominator(ValueHelperU64.Instance, ref n1, ref d1, ref n2, ref d2); }
+
         public static long GetNormalizedRational64(long w, long n, long d, out long numerator, out long denominator) { return GetNormalizedRational(ValueHelper64.Instance, w, n, d, out numerator, out denominator); }
+
+        public static ulong GetNormalizedRationalU64(ulong w, ulong n, ulong d, out ulong numerator, out ulong denominator) { return GetNormalizedRational(ValueHelperU64.Instance, w, n, d, out numerator, out denominator); }
 
         #endregion
 
@@ -678,6 +696,41 @@ namespace FsInfoCat.Fractions
             public long Modulus(long x, long y) => x % y;
 
             public long Multiply(long x, long y) => x * y;
+        }
+
+        class ValueHelperU64 : IValueHelper<ulong>
+        {
+            public static readonly ValueHelperU64 Instance = new();
+
+            private ValueHelperU64() { }
+
+            public ulong Zero => 0UL;
+
+            public ulong PositiveOne => 1UL;
+
+            public bool IsZero(ulong value) => value == 0UL;
+
+            public bool IsNegative(ulong value) => false;
+
+            public bool IsPositiveNonZero(ulong value) => value > 0UL;
+
+            public ulong InvertSigned(ulong value) => value;
+
+            public ulong Parse(string s) => ulong.Parse(s);
+
+            public bool TryParse(string s, out ulong value) => ulong.TryParse(s, out value);
+
+            public ulong Abs(ulong value) => value;
+
+            public ulong Add(ulong x, ulong y) => x + y;
+
+            public ulong Subtract(ulong x, ulong y) => x - y;
+
+            public ulong Divide(ulong x, ulong y) => x / y;
+
+            public ulong Modulus(ulong x, ulong y) => x % y;
+
+            public ulong Multiply(ulong x, ulong y) => x * y;
         }
 
         #endregion

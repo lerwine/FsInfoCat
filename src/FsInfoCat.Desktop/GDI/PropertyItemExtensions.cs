@@ -1,4 +1,4 @@
-﻿using FsInfoCat.Fractions;
+﻿using FsInfoCat.Numerics;
 using System;
 using System.Drawing.Imaging;
 
