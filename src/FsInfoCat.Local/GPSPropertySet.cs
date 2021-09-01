@@ -11,18 +11,21 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat.Local
 {
-    /// <summary>
-    /// Class GPSPropertySet.
-    /// Implements the <see cref="LocalDbEntity" />
-    /// Implements the <see cref="ILocalGPSPropertySet" />
-    /// </summary>
-    /// <seealso cref="LocalDbEntity" />
-    /// <seealso cref="ILocalGPSPropertySet" />
-    public class GPSPropertySet : LocalDbEntity, ILocalGPSPropertySet, ISimpleIdentityReference<GPSPropertySet>
+    public class GPSPropertiesListItem : GPSPropertiesRow, ILocalGPSPropertiesListItem
+    {
+        private readonly IPropertyChangeTracker<long> _fileCount;
+
+        public long FileCount { get => _fileCount.GetValue(); set => _fileCount.SetValue(value); }
+
+        public GPSPropertiesListItem()
+        {
+            _fileCount = AddChangeTracker(nameof(FileCount), 0L);
+        }
+    }
+    public class GPSPropertiesRow : PropertiesRow, IGPSProperties
     {
         #region Fields
 
-        private readonly IPropertyChangeTracker<Guid> _id;
         private readonly IPropertyChangeTracker<string> _areaInformation;
         private readonly IPropertyChangeTracker<double?> _latitudeDegrees;
         private readonly IPropertyChangeTracker<double?> _latitudeMinutes;
@@ -35,13 +38,10 @@ namespace FsInfoCat.Local
         private readonly IPropertyChangeTracker<string> _measureMode;
         private readonly IPropertyChangeTracker<string> _processingMethod;
         private readonly IPropertyChangeTracker<ByteValues> _versionID;
-        private HashSet<DbFile> _files = new();
 
         #endregion
 
         #region Properties
-
-        public Guid Id { get => _id.GetValue(); set => _id.SetValue(value); }
 
         public string AreaInformation { get => _areaInformation.GetValue(); set => _areaInformation.SetValue(value); }
         public double? LatitudeDegrees { get => _latitudeDegrees.GetValue(); set => _latitudeDegrees.SetValue(value); }
@@ -56,29 +56,10 @@ namespace FsInfoCat.Local
         public string ProcessingMethod { get => _processingMethod.GetValue(); set => _processingMethod.SetValue(value); }
         public ByteValues VersionID { get => _versionID.GetValue(); set => _versionID.SetValue(value); }
 
-        public HashSet<DbFile> Files
-        {
-            get => _files;
-            set => CheckHashSetChanged(_files, value, h => _files = h);
-        }
-
         #endregion
 
-        #region Explicit Members
-
-        IEnumerable<ILocalFile> ILocalPropertySet.Files => Files.Cast<ILocalFile>();
-
-        IEnumerable<IFile> IPropertySet.Files => Files.Cast<IFile>();
-
-        GPSPropertySet IIdentityReference<GPSPropertySet>.Entity => this;
-
-        IDbEntity IIdentityReference.Entity => this;
-
-        #endregion
-
-        public GPSPropertySet()
+        public GPSPropertiesRow()
         {
-            _id = AddChangeTracker(nameof(Id), Guid.Empty);
             _areaInformation = AddChangeTracker(nameof(AreaInformation), null, FilePropertiesComparer.NormalizedStringValueCoersion);
             _latitudeDegrees = AddChangeTracker<double?>(nameof(LatitudeDegrees), null);
             _latitudeMinutes = AddChangeTracker<double?>(nameof(LatitudeMinutes), null);
@@ -92,6 +73,36 @@ namespace FsInfoCat.Local
             _processingMethod = AddChangeTracker(nameof(ProcessingMethod), null, FilePropertiesComparer.NormalizedStringValueCoersion);
             _versionID = AddChangeTracker<ByteValues>(nameof(VersionID), null);
         }
+    }
+
+    /// <summary>
+    /// Class GPSPropertySet.
+    /// Implements the <see cref="LocalDbEntity" />
+    /// Implements the <see cref="ILocalGPSPropertySet" />
+    /// </summary>
+    /// <seealso cref="LocalDbEntity" />
+    /// <seealso cref="ILocalGPSPropertySet" />
+    public class GPSPropertySet : GPSPropertiesRow, ILocalGPSPropertySet, ISimpleIdentityReference<GPSPropertySet>
+    {
+        private HashSet<DbFile> _files = new();
+
+        public HashSet<DbFile> Files
+        {
+            get => _files;
+            set => CheckHashSetChanged(_files, value, h => _files = h);
+        }
+
+        #region Explicit Members
+
+        IEnumerable<ILocalFile> ILocalPropertySet.Files => Files.Cast<ILocalFile>();
+
+        IEnumerable<IFile> IPropertySet.Files => Files.Cast<IFile>();
+
+        GPSPropertySet IIdentityReference<GPSPropertySet>.Entity => this;
+
+        IDbEntity IIdentityReference.Entity => this;
+
+        #endregion
 
         internal static void OnBuildEntity([DisallowNull] EntityTypeBuilder<GPSPropertySet> builder) =>
             (builder ?? throw new ArgumentOutOfRangeException(nameof(builder))).Property(nameof(VersionID)).HasConversion(ByteValues.Converter);

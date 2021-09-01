@@ -277,6 +277,28 @@ namespace FsInfoCat
         /// </value>
         IEnumerable<ICrawlJobListItem> CrawlJobListing { get; }
 
+        IEnumerable<ISummaryPropertiesListItem> SummaryPropertiesListing { get; }
+
+        IEnumerable<IDocumentPropertiesListItem> DocumentPropertiesListing { get; }
+
+        IEnumerable<IAudioPropertiesListItem> AudioPropertiesListing { get; }
+
+        IEnumerable<IDRMPropertiesListItem> DRMPropertiesListing { get; }
+
+        IEnumerable<IGPSPropertiesListItem> GPSPropertiesListing { get; }
+
+        IEnumerable<IImagePropertiesListItem> ImagePropertiesListing { get; }
+
+        IEnumerable<IMediaPropertiesListItem> MediaPropertiesListing { get; }
+
+        IEnumerable<IMusicPropertiesListItem> MusicPropertiesListing { get; }
+
+        IEnumerable<IPhotoPropertiesListItem> PhotoPropertiesListing { get; }
+
+        IEnumerable<IRecordedTVPropertiesListItem> RecordedTVPropertiesListing { get; }
+
+        IEnumerable<IVideoPropertiesListItem> VideoPropertiesListing { get; }
+
         /// <summary>
         /// Finds the generic <see cref="ISummaryPropertySet"/> that matches the specified summary properties.
         /// </summary>

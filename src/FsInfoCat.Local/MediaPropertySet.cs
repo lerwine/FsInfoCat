@@ -11,18 +11,21 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat.Local
 {
-    /// <summary>
-    /// Class MediaPropertySet.
-    /// Implements the <see cref="LocalDbEntity" />
-    /// Implements the <see cref="ILocalMediaPropertySet" />
-    /// </summary>
-    /// <seealso cref="LocalDbEntity" />
-    /// <seealso cref="ILocalMediaPropertySet" />
-    public class MediaPropertySet : LocalDbEntity, ILocalMediaPropertySet, ISimpleIdentityReference<MediaPropertySet>
+    public class MediaPropertiesListItem : MediaPropertiesRow, ILocalMediaPropertiesListItem
+    {
+        private readonly IPropertyChangeTracker<long> _fileCount;
+
+        public long FileCount { get => _fileCount.GetValue(); set => _fileCount.SetValue(value); }
+
+        public MediaPropertiesListItem()
+        {
+            _fileCount = AddChangeTracker(nameof(FileCount), 0L);
+        }
+    }
+    public class MediaPropertiesRow : PropertiesRow, IMediaProperties
     {
         #region Fields
 
-        private readonly IPropertyChangeTracker<Guid> _id;
         private readonly IPropertyChangeTracker<string> _contentDistributor;
         private readonly IPropertyChangeTracker<string> _creatorApplication;
         private readonly IPropertyChangeTracker<string> _creatorApplicationVersion;
@@ -38,13 +41,10 @@ namespace FsInfoCat.Local
         private readonly IPropertyChangeTracker<string> _subtitle;
         private readonly IPropertyChangeTracker<MultiStringValue> _writer;
         private readonly IPropertyChangeTracker<uint?> _year;
-        private HashSet<DbFile> _files = new();
 
         #endregion
 
         #region Properties
-
-        public Guid Id { get => _id.GetValue(); set => _id.SetValue(value); }
 
         public string ContentDistributor { get => _contentDistributor.GetValue(); set => _contentDistributor.SetValue(value); }
         public string CreatorApplication { get => _creatorApplication.GetValue(); set => _creatorApplication.SetValue(value); }
@@ -62,29 +62,10 @@ namespace FsInfoCat.Local
         public MultiStringValue Writer { get => _writer.GetValue(); set => _writer.SetValue(value); }
         public uint? Year { get => _year.GetValue(); set => _year.SetValue(value); }
 
-        public HashSet<DbFile> Files
-        {
-            get => _files;
-            set => CheckHashSetChanged(_files, value, h => _files = h);
-        }
-
         #endregion
 
-        #region Explicit Members
-
-        IEnumerable<ILocalFile> ILocalPropertySet.Files => Files.Cast<ILocalFile>();
-
-        IEnumerable<IFile> IPropertySet.Files => Files.Cast<IFile>();
-
-        MediaPropertySet IIdentityReference<MediaPropertySet>.Entity => this;
-
-        IDbEntity IIdentityReference.Entity => this;
-
-        #endregion
-
-        public MediaPropertySet()
+        public MediaPropertiesRow()
         {
-            _id = AddChangeTracker(nameof(Id), Guid.Empty);
             _contentDistributor = AddChangeTracker(nameof(ContentDistributor), null, FilePropertiesComparer.NormalizedStringValueCoersion);
             _creatorApplication = AddChangeTracker(nameof(CreatorApplication), null, FilePropertiesComparer.NormalizedStringValueCoersion);
             _creatorApplicationVersion = AddChangeTracker(nameof(CreatorApplicationVersion), null, FilePropertiesComparer.NormalizedStringValueCoersion);
@@ -101,6 +82,36 @@ namespace FsInfoCat.Local
             _writer = AddChangeTracker<MultiStringValue>(nameof(Writer), null);
             _year = AddChangeTracker<uint?>(nameof(Year), null);
         }
+    }
+
+    /// <summary>
+    /// Class MediaPropertySet.
+    /// Implements the <see cref="LocalDbEntity" />
+    /// Implements the <see cref="ILocalMediaPropertySet" />
+    /// </summary>
+    /// <seealso cref="LocalDbEntity" />
+    /// <seealso cref="ILocalMediaPropertySet" />
+    public class MediaPropertySet : MediaPropertiesRow, ILocalMediaPropertySet, ISimpleIdentityReference<MediaPropertySet>
+    {
+        private HashSet<DbFile> _files = new();
+
+        public HashSet<DbFile> Files
+        {
+            get => _files;
+            set => CheckHashSetChanged(_files, value, h => _files = h);
+        }
+
+        #region Explicit Members
+
+        IEnumerable<ILocalFile> ILocalPropertySet.Files => Files.Cast<ILocalFile>();
+
+        IEnumerable<IFile> IPropertySet.Files => Files.Cast<IFile>();
+
+        MediaPropertySet IIdentityReference<MediaPropertySet>.Entity => this;
+
+        IDbEntity IIdentityReference.Entity => this;
+
+        #endregion
 
         internal static void OnBuildEntity([DisallowNull] EntityTypeBuilder<MediaPropertySet> builder)
         {

@@ -11,18 +11,21 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat.Local
 {
-    /// <summary>
-    /// Class PhotoPropertySet.
-    /// Implements the <see cref="LocalDbEntity" />
-    /// Implements the <see cref="ILocalPhotoPropertySet" />
-    /// </summary>
-    /// <seealso cref="LocalDbEntity" />
-    /// <seealso cref="ILocalPhotoPropertySet" />
-    public class PhotoPropertySet : LocalDbEntity, ILocalPhotoPropertySet, ISimpleIdentityReference<PhotoPropertySet>
+    public class PhotoPropertiesListItem : PhotoPropertiesRow, ILocalPhotoPropertiesListItem
+    {
+        private readonly IPropertyChangeTracker<long> _fileCount;
+
+        public long FileCount { get => _fileCount.GetValue(); set => _fileCount.SetValue(value); }
+
+        public PhotoPropertiesListItem()
+        {
+            _fileCount = AddChangeTracker(nameof(FileCount), 0L);
+        }
+    }
+    public class PhotoPropertiesRow : PropertiesRow, IPhotoProperties
     {
         #region Fields
 
-        private readonly IPropertyChangeTracker<Guid> _id;
         private readonly IPropertyChangeTracker<string> _cameraManufacturer;
         private readonly IPropertyChangeTracker<string> _cameraModel;
         private readonly IPropertyChangeTracker<DateTime?> _dateTaken;
@@ -31,13 +34,10 @@ namespace FsInfoCat.Local
         private readonly IPropertyChangeTracker<ushort?> _orientation;
         private readonly IPropertyChangeTracker<string> _orientationText;
         private readonly IPropertyChangeTracker<MultiStringValue> _peopleNames;
-        private HashSet<DbFile> _files = new();
 
         #endregion
 
         #region Properties
-
-        public Guid Id { get => _id.GetValue(); set => _id.SetValue(value); }
 
         public string CameraManufacturer { get => _cameraManufacturer.GetValue(); set => _cameraManufacturer.SetValue(value); }
         public string CameraModel { get => _cameraModel.GetValue(); set => _cameraModel.SetValue(value); }
@@ -48,13 +48,36 @@ namespace FsInfoCat.Local
         public string OrientationText { get => _orientationText.GetValue(); set => _orientationText.SetValue(value); }
         public MultiStringValue PeopleNames { get => _peopleNames.GetValue(); set => _peopleNames.SetValue(value); }
 
+        #endregion
+
+        public PhotoPropertiesRow()
+        {
+            _cameraManufacturer = AddChangeTracker(nameof(CameraManufacturer), null, FilePropertiesComparer.NormalizedStringValueCoersion);
+            _cameraModel = AddChangeTracker(nameof(CameraModel), null, FilePropertiesComparer.NormalizedStringValueCoersion);
+            _dateTaken = AddChangeTracker<DateTime?>(nameof(DateTaken), null);
+            _event = AddChangeTracker<MultiStringValue>(nameof(Event), null);
+            _exifVersion = AddChangeTracker(nameof(EXIFVersion), null, FilePropertiesComparer.NormalizedStringValueCoersion);
+            _orientation = AddChangeTracker<ushort?>(nameof(Orientation), null);
+            _orientationText = AddChangeTracker(nameof(OrientationText), null, FilePropertiesComparer.StringValueCoersion);
+            _peopleNames = AddChangeTracker<MultiStringValue>(nameof(PeopleNames), null);
+        }
+    }
+    /// <summary>
+    /// Class PhotoPropertySet.
+    /// Implements the <see cref="LocalDbEntity" />
+    /// Implements the <see cref="ILocalPhotoPropertySet" />
+    /// </summary>
+    /// <seealso cref="LocalDbEntity" />
+    /// <seealso cref="ILocalPhotoPropertySet" />
+    public class PhotoPropertySet : PhotoPropertiesRow, ILocalPhotoPropertySet, ISimpleIdentityReference<PhotoPropertySet>
+    {
+        private HashSet<DbFile> _files = new();
+
         public HashSet<DbFile> Files
         {
             get => _files;
             set => CheckHashSetChanged(_files, value, h => _files = h);
         }
-
-        #endregion
 
         #region Explicit Members
 
@@ -67,19 +90,6 @@ namespace FsInfoCat.Local
         IDbEntity IIdentityReference.Entity => this;
 
         #endregion
-
-        public PhotoPropertySet()
-        {
-            _id = AddChangeTracker(nameof(Id), Guid.Empty);
-            _cameraManufacturer = AddChangeTracker(nameof(CameraManufacturer), null, FilePropertiesComparer.NormalizedStringValueCoersion);
-            _cameraModel = AddChangeTracker(nameof(CameraModel), null, FilePropertiesComparer.NormalizedStringValueCoersion);
-            _dateTaken = AddChangeTracker<DateTime?>(nameof(DateTaken), null);
-            _event = AddChangeTracker<MultiStringValue>(nameof(Event), null);
-            _exifVersion = AddChangeTracker(nameof(EXIFVersion), null, FilePropertiesComparer.NormalizedStringValueCoersion);
-            _orientation = AddChangeTracker<ushort?>(nameof(Orientation), null);
-            _orientationText = AddChangeTracker(nameof(OrientationText), null, FilePropertiesComparer.StringValueCoersion);
-            _peopleNames = AddChangeTracker<MultiStringValue>(nameof(PeopleNames), null);
-        }
 
         internal static void OnBuildEntity([DisallowNull] EntityTypeBuilder<PhotoPropertySet> builder)
         {

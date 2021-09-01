@@ -13,6 +13,5 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_Files), ResourceType = typeof(Properties.Resources))]
         IEnumerable<IFile> Files { get; }
     }
-
 }
 

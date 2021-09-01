@@ -892,6 +892,54 @@ END]]>
             <![CDATA[CREATE VIEW IF NOT EXISTS "vCrawlJobListing" AS SELECT "CrawlJobLogs".*, "CrawlConfigurations"."DisplayName" AS "ConfigurationDisplayName" FROM "CrawlJobLogs"
 	LEFT JOIN "CrawlConfigurations" ON "CrawlJobLogs"."ConfigurationId" = "CrawlConfigurations"."Id"]]>
         </Text>
+        <Text Message="Creating View 'vSummaryPropertiesListing'">
+            <![CDATA[CREATE VIEW IF NOT EXISTS "vSummaryPropertiesListing" AS SELECT "SummaryPropertySets".*, Count("Files"."Id") FROM "SummaryPropertySets"
+    LEFT JOIN "Files" ON "SummaryPropertySets"."Id" = "Files"."SummaryPropertySetId"]]>
+        </Text>
+        <Text Message="Creating View 'vDocumentPropertiesListing'">
+            <![CDATA[CREATE VIEW IF NOT EXISTS "vDocumentPropertiesListing" AS SELECT "DocumentPropertySets".*, Count("Files"."Id") FROM "DocumentPropertySets"
+    LEFT JOIN "Files" ON "DocumentPropertySets"."Id" = "Files"."DocumentPropertySetId"]]>
+        </Text>
+        <Text Message="Creating View 'vAudioPropertiesListing'">
+            <![CDATA[CREATE VIEW IF NOT EXISTS "vAudioPropertiesListing" AS SELECT "AudioPropertySets".*, Count("Files"."Id") FROM "AudioPropertySets"
+    LEFT JOIN "Files" ON "AudioPropertySets"."Id" = "Files"."AudioPropertySetId"]]>
+        </Text>
+        <Text Message="Creating View 'vDRMPropertiesListing'">
+            <![CDATA[CREATE VIEW IF NOT EXISTS "vDRMPropertiesListing" AS SELECT "DRMPropertySets".*, Count("Files"."Id") FROM "DRMPropertySets"
+    LEFT JOIN "Files" ON "DRMPropertySets"."Id" = "Files"."DRMPropertySetId"]]>
+        </Text>
+        <Text Message="Creating View 'vGPSPropertiesListing'">
+            <![CDATA[CREATE VIEW IF NOT EXISTS "vGPSPropertiesListing" AS SELECT "GPSPropertySets".*, Count("Files"."Id") FROM "GPSPropertySets"
+    LEFT JOIN "Files" ON "GPSPropertySets"."Id" = "Files"."GPSPropertySetId"]]>
+        </Text>
+        <Text Message="Creating View 'vImagePropertiesListing'">
+            <![CDATA[CREATE VIEW IF NOT EXISTS "vImagePropertiesListing" AS SELECT "ImagePropertySets".*, Count("Files"."Id") FROM "ImagePropertySets"
+    LEFT JOIN "Files" ON "ImagePropertySets"."Id" = "Files"."ImagePropertySetId"]]>
+        </Text>
+        <Text Message="Creating View 'vMediaPropertiesListing'">
+            <![CDATA[CREATE VIEW IF NOT EXISTS "vMediaPropertiesListing" AS SELECT "MediaPropertySets".*, Count("Files"."Id") FROM "MediaPropertySets"
+    LEFT JOIN "Files" ON "MediaPropertySets"."Id" = "Files"."MediaPropertySetId"]]>
+        </Text>
+        <Text Message="Creating View 'vMusicPropertiesListing'">
+            <![CDATA[CREATE VIEW IF NOT EXISTS "vMusicPropertiesListing" AS SELECT "MusicPropertySets".*, Count("Files"."Id") FROM "MusicPropertySets"
+    LEFT JOIN "Files" ON "MusicPropertySets"."Id" = "Files"."MusicPropertySetId"]]>
+        </Text>
+        <Text Message="Creating View 'vPhotoPropertiesListing'">
+            <![CDATA[CREATE VIEW IF NOT EXISTS "vPhotoPropertiesListing" AS SELECT "PhotoPropertySets".*, Count("Files"."Id") FROM "PhotoPropertySets"
+    LEFT JOIN "Files" ON "PhotoPropertySets"."Id" = "Files"."PhotoPropertySetId"]]>
+        </Text>
+        <Text Message="Creating View 'vRecordedTVPropertiesListing'">
+            <![CDATA[CREATE VIEW IF NOT EXISTS "vRecordedTVPropertiesListing" AS SELECT "RecordedTVPropertySets".*, Count("Files"."Id") FROM "RecordedTVPropertySets"
+    LEFT JOIN "Files" ON "RecordedTVPropertySets"."Id" = "Files"."RecordedTVPropertySetId"]]>
+        </Text>
+        <Text Message="Creating View 'vVideoPropertiesListing'">
+            <![CDATA[CREATE VIEW IF NOT EXISTS "vVideoPropertiesListing" AS SELECT "VideoPropertySets".*, Count("Files"."Id") FROM "VideoPropertySets"
+    LEFT JOIN "Files" ON "VideoPropertySets"."Id" = "Files"."VideoPropertySetId"]]>
+        </Text>
+        <Text Message="Creating View 'vCrawlJobListing'">
+            <![CDATA[CREATE VIEW IF NOT EXISTS "vCrawlJobListing" AS SELECT "CrawlJobLogs".*, "CrawlConfigurations"."DisplayName" AS "ConfigurationDisplayName" FROM "CrawlJobLogs"
+	LEFT JOIN "CrawlConfigurations" ON "CrawlJobLogs"."ConfigurationId" = "CrawlConfigurations"."Id"]]>
+        </Text>
         <Text Message="Inserting FileSystem 'New Technology File System'">
             <![CDATA[INSERT INTO "FileSystems" ("Id", "DisplayName")
 	VALUES ('bedb396b-2212-4149-9cad-7e437c47314c', 'New Technology File System')]]>

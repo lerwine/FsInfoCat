@@ -11,18 +11,21 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat.Local
 {
-    /// <summary>
-    /// Class DocumentPropertySet.
-    /// Implements the <see cref="LocalDbEntity" />
-    /// Implements the <see cref="ILocalDocumentPropertySet" />
-    /// </summary>
-    /// <seealso cref="LocalDbEntity" />
-    /// <seealso cref="ILocalDocumentPropertySet" />
-    public class DocumentPropertySet : LocalDbEntity, ILocalDocumentPropertySet, ISimpleIdentityReference<DocumentPropertySet>
+    public class DocumentPropertiesListItem : DocumentPropertiesRow, ILocalDocumentPropertiesListItem
+    {
+        private readonly IPropertyChangeTracker<long> _fileCount;
+
+        public long FileCount { get => _fileCount.GetValue(); set => _fileCount.SetValue(value); }
+
+        public DocumentPropertiesListItem()
+        {
+            _fileCount = AddChangeTracker(nameof(FileCount), 0L);
+        }
+    }
+    public class DocumentPropertiesRow : PropertiesRow, IDocumentProperties
     {
         #region Fields
 
-        private readonly IPropertyChangeTracker<Guid> _id;
         private readonly IPropertyChangeTracker<string> _clientID;
         private readonly IPropertyChangeTracker<MultiStringValue> _contributor;
         private readonly IPropertyChangeTracker<DateTime?> _dateCreated;
@@ -34,13 +37,10 @@ namespace FsInfoCat.Local
         private readonly IPropertyChangeTracker<string> _manager;
         private readonly IPropertyChangeTracker<string> _presentationFormat;
         private readonly IPropertyChangeTracker<string> _version;
-        private HashSet<DbFile> _files = new();
 
         #endregion
 
         #region Properties
-
-        public Guid Id { get => _id.GetValue(); set => _id.SetValue(value); }
 
         public string ClientID { get => _clientID.GetValue(); set => _clientID.SetValue(value); }
         public MultiStringValue Contributor { get => _contributor.GetValue(); set => _contributor.SetValue(value); }
@@ -54,29 +54,10 @@ namespace FsInfoCat.Local
         public string PresentationFormat { get => _presentationFormat.GetValue(); set => _presentationFormat.SetValue(value); }
         public string Version { get => _version.GetValue(); set => _version.SetValue(value); }
 
-        public HashSet<DbFile> Files
-        {
-            get => _files;
-            set => CheckHashSetChanged(_files, value, h => _files = h);
-        }
-
         #endregion
 
-        #region Explicit Members
-
-        IEnumerable<ILocalFile> ILocalPropertySet.Files => Files.Cast<ILocalFile>();
-
-        IEnumerable<IFile> IPropertySet.Files => Files.Cast<IFile>();
-
-        DocumentPropertySet IIdentityReference<DocumentPropertySet>.Entity => this;
-
-        IDbEntity IIdentityReference.Entity => this;
-
-        #endregion
-
-        public DocumentPropertySet()
+        public DocumentPropertiesRow()
         {
-            _id = AddChangeTracker(nameof(Id), Guid.Empty);
             _clientID = AddChangeTracker(nameof(ClientID), null, FilePropertiesComparer.NormalizedStringValueCoersion);
             _contributor = AddChangeTracker<MultiStringValue>(nameof(Contributor), null);
             _dateCreated = AddChangeTracker<DateTime?>(nameof(DateCreated), null);
@@ -89,6 +70,35 @@ namespace FsInfoCat.Local
             _presentationFormat = AddChangeTracker(nameof(PresentationFormat), null, FilePropertiesComparer.NormalizedStringValueCoersion);
             _version = AddChangeTracker(nameof(Version), null, FilePropertiesComparer.NormalizedStringValueCoersion);
         }
+    }
+    /// <summary>
+    /// Class DocumentPropertySet.
+    /// Implements the <see cref="LocalDbEntity" />
+    /// Implements the <see cref="ILocalDocumentPropertySet" />
+    /// </summary>
+    /// <seealso cref="LocalDbEntity" />
+    /// <seealso cref="ILocalDocumentPropertySet" />
+    public class DocumentPropertySet : DocumentPropertiesRow, ILocalDocumentPropertySet, ISimpleIdentityReference<DocumentPropertySet>
+    {
+        private HashSet<DbFile> _files = new();
+
+        public HashSet<DbFile> Files
+        {
+            get => _files;
+            set => CheckHashSetChanged(_files, value, h => _files = h);
+        }
+
+        #region Explicit Members
+
+        IEnumerable<ILocalFile> ILocalPropertySet.Files => Files.Cast<ILocalFile>();
+
+        IEnumerable<IFile> IPropertySet.Files => Files.Cast<IFile>();
+
+        DocumentPropertySet IIdentityReference<DocumentPropertySet>.Entity => this;
+
+        IDbEntity IIdentityReference.Entity => this;
+
+        #endregion
 
         internal static void OnBuildEntity([DisallowNull] EntityTypeBuilder<DocumentPropertySet> builder) =>
             (builder ?? throw new ArgumentOutOfRangeException(nameof(builder))).Property(nameof(Contributor)).HasConversion(MultiStringValue.Converter);

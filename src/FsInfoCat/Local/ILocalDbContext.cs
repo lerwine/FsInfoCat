@@ -178,6 +178,28 @@ namespace FsInfoCat.Local
 
         new IEnumerable<ILocalCrawlJobListItem> CrawlJobListing { get; }
 
+        new IEnumerable<ILocalSummaryPropertiesListItem> SummaryPropertiesListing { get; }
+
+        new IEnumerable<ILocalDocumentPropertiesListItem> DocumentPropertiesListing { get; }
+
+        new IEnumerable<ILocalAudioPropertiesListItem> AudioPropertiesListing { get; }
+
+        new IEnumerable<ILocalDRMPropertiesListItem> DRMPropertiesListing { get; }
+
+        new IEnumerable<ILocalGPSPropertiesListItem> GPSPropertiesListing { get; }
+
+        new IEnumerable<ILocalImagePropertiesListItem> ImagePropertiesListing { get; }
+
+        new IEnumerable<ILocalMediaPropertiesListItem> MediaPropertiesListing { get; }
+
+        new IEnumerable<ILocalMusicPropertiesListItem> MusicPropertiesListing { get; }
+
+        new IEnumerable<ILocalPhotoPropertiesListItem> PhotoPropertiesListing { get; }
+
+        new IEnumerable<ILocalRecordedTVPropertiesListItem> RecordedTVPropertiesListing { get; }
+
+        new IEnumerable<ILocalVideoPropertiesListItem> VideoPropertiesListing { get; }
+
         /// <summary>
         /// Finds the generic <see cref="ILocalSummaryPropertySet"/> in the local database that matches the specified summary properties.
         /// </summary>

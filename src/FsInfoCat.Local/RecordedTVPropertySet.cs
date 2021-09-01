@@ -9,18 +9,21 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat.Local
 {
-    /// <summary>
-    /// Class RecordedTVPropertySet.
-    /// Implements the <see cref="LocalDbEntity" />
-    /// Implements the <see cref="ILocalRecordedTVPropertySet" />
-    /// </summary>
-    /// <seealso cref="LocalDbEntity" />
-    /// <seealso cref="ILocalRecordedTVPropertySet" />
-    public class RecordedTVPropertySet : LocalDbEntity, ILocalRecordedTVPropertySet, ISimpleIdentityReference<RecordedTVPropertySet>
+    public class RecordedTVPropertiesListItem : RecordedTVPropertiesRow, ILocalRecordedTVPropertiesListItem
+    {
+        private readonly IPropertyChangeTracker<long> _fileCount;
+
+        public long FileCount { get => _fileCount.GetValue(); set => _fileCount.SetValue(value); }
+
+        public RecordedTVPropertiesListItem()
+        {
+            _fileCount = AddChangeTracker(nameof(FileCount), 0L);
+        }
+    }
+    public class RecordedTVPropertiesRow : PropertiesRow, IRecordedTVProperties
     {
         #region Fields
 
-        private readonly IPropertyChangeTracker<Guid> _id;
         private readonly IPropertyChangeTracker<uint?> _channelNumber;
         private readonly IPropertyChangeTracker<string> _episodeName;
         private readonly IPropertyChangeTracker<bool?> _isDTVContent;
@@ -30,13 +33,10 @@ namespace FsInfoCat.Local
         private readonly IPropertyChangeTracker<string> _programDescription;
         private readonly IPropertyChangeTracker<string> _stationCallSign;
         private readonly IPropertyChangeTracker<string> _stationName;
-        private HashSet<DbFile> _files = new();
 
         #endregion
 
         #region Properties
-
-        public Guid Id { get => _id.GetValue(); set => _id.SetValue(value); }
 
         public uint? ChannelNumber { get => _channelNumber.GetValue(); set => _channelNumber.SetValue(value); }
         public string EpisodeName { get => _episodeName.GetValue(); set => _episodeName.SetValue(value); }
@@ -48,13 +48,37 @@ namespace FsInfoCat.Local
         public string StationCallSign { get => _stationCallSign.GetValue(); set => _stationCallSign.SetValue(value); }
         public string StationName { get => _stationName.GetValue(); set => _stationName.SetValue(value); }
 
+        #endregion
+
+        public RecordedTVPropertiesRow()
+        {
+            _channelNumber = AddChangeTracker<uint?>(nameof(ChannelNumber), null);
+            _episodeName = AddChangeTracker(nameof(EpisodeName), null, FilePropertiesComparer.NormalizedStringValueCoersion);
+            _isDTVContent = AddChangeTracker<bool?>(nameof(IsDTVContent), null);
+            _isHDContent = AddChangeTracker<bool?>(nameof(IsHDContent), null);
+            _networkAffiliation = AddChangeTracker(nameof(NetworkAffiliation), null, FilePropertiesComparer.NormalizedStringValueCoersion);
+            _originalBroadcastDate = AddChangeTracker<DateTime?>(nameof(OriginalBroadcastDate), null);
+            _programDescription = AddChangeTracker(nameof(ProgramDescription), null, FilePropertiesComparer.StringValueCoersion);
+            _stationCallSign = AddChangeTracker(nameof(StationCallSign), null, FilePropertiesComparer.NormalizedStringValueCoersion);
+            _stationName = AddChangeTracker(nameof(StationName), null, FilePropertiesComparer.NormalizedStringValueCoersion);
+        }
+    }
+    /// <summary>
+    /// Class RecordedTVPropertySet.
+    /// Implements the <see cref="LocalDbEntity" />
+    /// Implements the <see cref="ILocalRecordedTVPropertySet" />
+    /// </summary>
+    /// <seealso cref="LocalDbEntity" />
+    /// <seealso cref="ILocalRecordedTVPropertySet" />
+    public class RecordedTVPropertySet : RecordedTVPropertiesRow, ILocalRecordedTVPropertySet, ISimpleIdentityReference<RecordedTVPropertySet>
+    {
+        private HashSet<DbFile> _files = new();
+
         public HashSet<DbFile> Files
         {
             get => _files;
             set => CheckHashSetChanged(_files, value, h => _files = h);
         }
-
-        #endregion
 
         #region Explicit Members
 
@@ -67,20 +91,6 @@ namespace FsInfoCat.Local
         IDbEntity IIdentityReference.Entity => this;
 
         #endregion
-
-        public RecordedTVPropertySet()
-        {
-            _id = AddChangeTracker(nameof(Id), Guid.Empty);
-            _channelNumber = AddChangeTracker<uint?>(nameof(ChannelNumber), null);
-            _episodeName = AddChangeTracker(nameof(EpisodeName), null, FilePropertiesComparer.NormalizedStringValueCoersion);
-            _isDTVContent = AddChangeTracker<bool?>(nameof(IsDTVContent), null);
-            _isHDContent = AddChangeTracker<bool?>(nameof(IsHDContent), null);
-            _networkAffiliation = AddChangeTracker(nameof(NetworkAffiliation), null, FilePropertiesComparer.NormalizedStringValueCoersion);
-            _originalBroadcastDate = AddChangeTracker<DateTime?>(nameof(OriginalBroadcastDate), null);
-            _programDescription = AddChangeTracker(nameof(ProgramDescription), null, FilePropertiesComparer.StringValueCoersion);
-            _stationCallSign = AddChangeTracker(nameof(StationCallSign), null, FilePropertiesComparer.NormalizedStringValueCoersion);
-            _stationName = AddChangeTracker(nameof(StationName), null, FilePropertiesComparer.NormalizedStringValueCoersion);
-        }
 
         internal static async Task RefreshAsync([DisallowNull] EntityEntry<DbFile> entry, [DisallowNull] IFileDetailProvider fileDetailProvider, CancellationToken cancellationToken)
         {

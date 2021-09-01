@@ -4,6 +4,5 @@ namespace FsInfoCat
     /// <seealso cref="IPropertySet" />
     /// <seealso cref="ISummaryProperties" />
     public interface ISummaryPropertySet : IPropertySet, ISummaryProperties { }
-
 }
 

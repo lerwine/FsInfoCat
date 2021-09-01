@@ -9,18 +9,21 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat.Local
 {
-    /// <summary>
-    /// Class ImagePropertySet.
-    /// Implements the <see cref="LocalDbEntity" />
-    /// Implements the <see cref="ILocalImagePropertySet" />
-    /// </summary>
-    /// <seealso cref="LocalDbEntity" />
-    /// <seealso cref="ILocalImagePropertySet" />
-    public class ImagePropertySet : LocalDbEntity, ILocalImagePropertySet, ISimpleIdentityReference<ImagePropertySet>
+    public class ImagePropertiesListItem : ImagePropertiesRow, ILocalImagePropertiesListItem
+    {
+        private readonly IPropertyChangeTracker<long> _fileCount;
+
+        public long FileCount { get => _fileCount.GetValue(); set => _fileCount.SetValue(value); }
+
+        public ImagePropertiesListItem()
+        {
+            _fileCount = AddChangeTracker(nameof(FileCount), 0L);
+        }
+    }
+    public class ImagePropertiesRow : PropertiesRow, IImageProperties
     {
         #region Fields
 
-        private readonly IPropertyChangeTracker<Guid> _id;
         private readonly IPropertyChangeTracker<uint?> _bitDepth;
         private readonly IPropertyChangeTracker<ushort?> _colorSpace;
         private readonly IPropertyChangeTracker<double?> _compressedBitsPerPixel;
@@ -32,13 +35,10 @@ namespace FsInfoCat.Local
         private readonly IPropertyChangeTracker<short?> _resolutionUnit;
         private readonly IPropertyChangeTracker<double?> _verticalResolution;
         private readonly IPropertyChangeTracker<uint?> _verticalSize;
-        private HashSet<DbFile> _files = new();
 
         #endregion
 
         #region Properties
-
-        public Guid Id { get => _id.GetValue(); set => _id.SetValue(value); }
 
         public uint? BitDepth { get => _bitDepth.GetValue(); set => _bitDepth.SetValue(value); }
         public ushort? ColorSpace { get => _colorSpace.GetValue(); set => _colorSpace.SetValue(value); }
@@ -52,29 +52,10 @@ namespace FsInfoCat.Local
         public double? VerticalResolution { get => _verticalResolution.GetValue(); set => _verticalResolution.SetValue(value); }
         public uint? VerticalSize { get => _verticalSize.GetValue(); set => _verticalSize.SetValue(value); }
 
-        public HashSet<DbFile> Files
-        {
-            get => _files;
-            set => CheckHashSetChanged(_files, value, h => _files = h);
-        }
-
         #endregion
 
-        #region Explicit Members
-
-        IEnumerable<ILocalFile> ILocalPropertySet.Files => Files.Cast<ILocalFile>();
-
-        IEnumerable<IFile> IPropertySet.Files => Files.Cast<IFile>();
-
-        ImagePropertySet IIdentityReference<ImagePropertySet>.Entity => this;
-
-        IDbEntity IIdentityReference.Entity => this;
-
-        #endregion
-
-        public ImagePropertySet()
+        public ImagePropertiesRow()
         {
-            _id = AddChangeTracker(nameof(Id), Guid.Empty);
             _bitDepth = AddChangeTracker<uint?>(nameof(BitDepth), null);
             _colorSpace = AddChangeTracker<ushort?>(nameof(ColorSpace), null);
             _compressedBitsPerPixel = AddChangeTracker<double?>(nameof(CompressedBitsPerPixel), null);
@@ -87,6 +68,35 @@ namespace FsInfoCat.Local
             _verticalResolution = AddChangeTracker<double?>(nameof(VerticalResolution), null);
             _verticalSize = AddChangeTracker<uint?>(nameof(VerticalSize), null);
         }
+    }
+    /// <summary>
+    /// Class ImagePropertySet.
+    /// Implements the <see cref="LocalDbEntity" />
+    /// Implements the <see cref="ILocalImagePropertySet" />
+    /// </summary>
+    /// <seealso cref="LocalDbEntity" />
+    /// <seealso cref="ILocalImagePropertySet" />
+    public class ImagePropertySet : ImagePropertiesRow, ILocalImagePropertySet, ISimpleIdentityReference<ImagePropertySet>
+    {
+        private HashSet<DbFile> _files = new();
+
+        public HashSet<DbFile> Files
+        {
+            get => _files;
+            set => CheckHashSetChanged(_files, value, h => _files = h);
+        }
+
+        #region Explicit Members
+
+        IEnumerable<ILocalFile> ILocalPropertySet.Files => Files.Cast<ILocalFile>();
+
+        IEnumerable<IFile> IPropertySet.Files => Files.Cast<IFile>();
+
+        ImagePropertySet IIdentityReference<ImagePropertySet>.Entity => this;
+
+        IDbEntity IIdentityReference.Entity => this;
+
+        #endregion
 
         internal static async Task RefreshAsync([DisallowNull] EntityEntry<DbFile> entry, [DisallowNull] IFileDetailProvider fileDetailProvider,
             CancellationToken cancellationToken)

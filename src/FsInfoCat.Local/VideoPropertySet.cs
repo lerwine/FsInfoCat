@@ -11,11 +11,21 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat.Local
 {
-    public class VideoPropertySet : LocalDbEntity, ILocalVideoPropertySet, ISimpleIdentityReference<VideoPropertySet>
+    public class VideoPropertiesListItem : VideoPropertiesRow, ILocalVideoPropertiesListItem
+    {
+        private readonly IPropertyChangeTracker<long> _fileCount;
+
+        public long FileCount { get => _fileCount.GetValue(); set => _fileCount.SetValue(value); }
+
+        public VideoPropertiesListItem()
+        {
+            _fileCount = AddChangeTracker(nameof(FileCount), 0L);
+        }
+    }
+    public class VideoPropertiesRow : PropertiesRow, IVideoProperties
     {
         #region Fields
 
-        private readonly IPropertyChangeTracker<Guid> _id;
         private readonly IPropertyChangeTracker<string> _compression;
         private readonly IPropertyChangeTracker<MultiStringValue> _director;
         private readonly IPropertyChangeTracker<uint?> _encodingBitrate;
@@ -26,13 +36,10 @@ namespace FsInfoCat.Local
         private readonly IPropertyChangeTracker<string> _streamName;
         private readonly IPropertyChangeTracker<ushort?> _streamNumber;
         private readonly IPropertyChangeTracker<uint?> _verticalAspectRatio;
-        private HashSet<DbFile> _files = new();
 
         #endregion
 
         #region Properties
-
-        public Guid Id { get => _id.GetValue(); set => _id.SetValue(value); }
 
         public string Compression { get => _compression.GetValue(); set => _compression.SetValue(value); }
         public MultiStringValue Director { get => _director.GetValue(); set => _director.SetValue(value); }
@@ -45,13 +52,31 @@ namespace FsInfoCat.Local
         public ushort? StreamNumber { get => _streamNumber.GetValue(); set => _streamNumber.SetValue(value); }
         public uint? VerticalAspectRatio { get => _verticalAspectRatio.GetValue(); set => _verticalAspectRatio.SetValue(value); }
 
+        #endregion
+
+        public VideoPropertiesRow()
+        {
+            _compression = AddChangeTracker(nameof(Compression), null, FilePropertiesComparer.NormalizedStringValueCoersion);
+            _director = AddChangeTracker<MultiStringValue>(nameof(Director), null);
+            _encodingBitrate = AddChangeTracker<uint?>(nameof(EncodingBitrate), null);
+            _frameHeight = AddChangeTracker<uint?>(nameof(FrameHeight), null);
+            _frameRate = AddChangeTracker<uint?>(nameof(FrameRate), null);
+            _frameWidth = AddChangeTracker<uint?>(nameof(FrameWidth), null);
+            _horizontalAspectRatio = AddChangeTracker<uint?>(nameof(HorizontalAspectRatio), null);
+            _streamName = AddChangeTracker(nameof(StreamName), null, FilePropertiesComparer.NormalizedStringValueCoersion);
+            _streamNumber = AddChangeTracker<ushort?>(nameof(StreamNumber), null);
+            _verticalAspectRatio = AddChangeTracker<uint?>(nameof(VerticalAspectRatio), null);
+        }
+    }
+    public class VideoPropertySet : VideoPropertiesRow, ILocalVideoPropertySet, ISimpleIdentityReference<VideoPropertySet>
+    {
+        private HashSet<DbFile> _files = new();
+
         public HashSet<DbFile> Files
         {
             get => _files;
             set => CheckHashSetChanged(_files, value, h => _files = h);
         }
-
-        #endregion
 
         #region Explicit Members
 
@@ -64,21 +89,6 @@ namespace FsInfoCat.Local
         IDbEntity IIdentityReference.Entity => this;
 
         #endregion
-
-        public VideoPropertySet()
-        {
-            _id = AddChangeTracker(nameof(Id), Guid.Empty);
-            _compression = AddChangeTracker(nameof(Compression), null, FilePropertiesComparer.NormalizedStringValueCoersion);
-            _director = AddChangeTracker<MultiStringValue>(nameof(Director), null);
-            _encodingBitrate = AddChangeTracker<uint?>(nameof(EncodingBitrate), null);
-            _frameHeight = AddChangeTracker<uint?>(nameof(FrameHeight), null);
-            _frameRate = AddChangeTracker<uint?>(nameof(FrameRate), null);
-            _frameWidth = AddChangeTracker<uint?>(nameof(FrameWidth), null);
-            _horizontalAspectRatio = AddChangeTracker<uint?>(nameof(HorizontalAspectRatio), null);
-            _streamName = AddChangeTracker(nameof(StreamName), null, FilePropertiesComparer.NormalizedStringValueCoersion);
-            _streamNumber = AddChangeTracker<ushort?>(nameof(StreamNumber), null);
-            _verticalAspectRatio = AddChangeTracker<uint?>(nameof(VerticalAspectRatio), null);
-        }
 
         internal static void OnBuildEntity([DisallowNull] EntityTypeBuilder<VideoPropertySet> builder) =>
             (builder ?? throw new ArgumentOutOfRangeException(nameof(builder))).Property(nameof(Director)).HasConversion(MultiStringValue.Converter);

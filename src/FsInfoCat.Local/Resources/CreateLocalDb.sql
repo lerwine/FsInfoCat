@@ -13,6 +13,17 @@ DROP VIEW IF EXISTS "vSharedTagDefinitionListing";
 DROP VIEW IF EXISTS "vPersonalTagDefinitionListing";
 DROP VIEW IF EXISTS "vFileSystemListing";
 DROP VIEW IF EXISTS "vSymbolicNameListing";
+DROP VIEW IF EXISTS "vSummaryPropertiesListing";
+DROP VIEW IF EXISTS "vDocumentPropertiesListing";
+DROP VIEW IF EXISTS "vAudioPropertiesListing";
+DROP VIEW IF EXISTS "vDRMPropertiesListing";
+DROP VIEW IF EXISTS "vGPSPropertiesListing";
+DROP VIEW IF EXISTS "vImagePropertiesListing";
+DROP VIEW IF EXISTS "vMediaPropertiesListing";
+DROP VIEW IF EXISTS "vMusicPropertiesListing";
+DROP VIEW IF EXISTS "vPhotoPropertiesListing";
+DROP VIEW IF EXISTS "vRecordedTVPropertiesListing";
+DROP VIEW IF EXISTS "vVideoPropertiesListing";
 DROP TABLE IF EXISTS "Comparisons";
 DROP TABLE IF EXISTS "SharedVolumeTags";
 DROP TABLE IF EXISTS "SharedSubdirectoryTags";
@@ -872,6 +883,39 @@ CREATE VIEW IF NOT EXISTS "vFileListingWithBinaryPropertiesAndAncestorNames" AS 
     
 CREATE VIEW IF NOT EXISTS "vCrawlJobListing" AS SELECT "CrawlJobLogs".*, "CrawlConfigurations"."DisplayName" AS "ConfigurationDisplayName" FROM "CrawlJobLogs"
 	LEFT JOIN "CrawlConfigurations" ON "CrawlJobLogs"."ConfigurationId" = "CrawlConfigurations"."Id";
+    
+CREATE VIEW IF NOT EXISTS "vSummaryPropertiesListing" AS SELECT "SummaryPropertySets".*, Count("Files"."Id") FROM "SummaryPropertySets"
+    LEFT JOIN "Files" ON "SummaryPropertySets"."Id" = "Files"."SummaryPropertySetId";
+
+CREATE VIEW IF NOT EXISTS "vDocumentPropertiesListing" AS SELECT "DocumentPropertySets".*, Count("Files"."Id") FROM "DocumentPropertySets"
+    LEFT JOIN "Files" ON "DocumentPropertySets"."Id" = "Files"."DocumentPropertySetId";
+
+CREATE VIEW IF NOT EXISTS "vAudioPropertiesListing" AS SELECT "AudioPropertySets".*, Count("Files"."Id") FROM "AudioPropertySets"
+    LEFT JOIN "Files" ON "AudioPropertySets"."Id" = "Files"."AudioPropertySetId";
+
+CREATE VIEW IF NOT EXISTS "vDRMPropertiesListing" AS SELECT "DRMPropertySets".*, Count("Files"."Id") FROM "DRMPropertySets"
+    LEFT JOIN "Files" ON "DRMPropertySets"."Id" = "Files"."DRMPropertySetId";
+
+CREATE VIEW IF NOT EXISTS "vGPSPropertiesListing" AS SELECT "GPSPropertySets".*, Count("Files"."Id") FROM "GPSPropertySets"
+    LEFT JOIN "Files" ON "GPSPropertySets"."Id" = "Files"."GPSPropertySetId";
+
+CREATE VIEW IF NOT EXISTS "vImagePropertiesListing" AS SELECT "ImagePropertySets".*, Count("Files"."Id") FROM "ImagePropertySets"
+    LEFT JOIN "Files" ON "ImagePropertySets"."Id" = "Files"."ImagePropertySetId";
+
+CREATE VIEW IF NOT EXISTS "vMediaPropertiesListing" AS SELECT "MediaPropertySets".*, Count("Files"."Id") FROM "MediaPropertySets"
+    LEFT JOIN "Files" ON "MediaPropertySets"."Id" = "Files"."MediaPropertySetId";
+
+CREATE VIEW IF NOT EXISTS "vMusicPropertiesListing" AS SELECT "MusicPropertySets".*, Count("Files"."Id") FROM "MusicPropertySets"
+    LEFT JOIN "Files" ON "MusicPropertySets"."Id" = "Files"."MusicPropertySetId";
+
+CREATE VIEW IF NOT EXISTS "vPhotoPropertiesListing" AS SELECT "PhotoPropertySets".*, Count("Files"."Id") FROM "PhotoPropertySets"
+    LEFT JOIN "Files" ON "PhotoPropertySets"."Id" = "Files"."PhotoPropertySetId";
+
+CREATE VIEW IF NOT EXISTS "vRecordedTVPropertiesListing" AS SELECT "RecordedTVPropertySets".*, Count("Files"."Id") FROM "RecordedTVPropertySets"
+    LEFT JOIN "Files" ON "RecordedTVPropertySets"."Id" = "Files"."RecordedTVPropertySetId";
+
+CREATE VIEW IF NOT EXISTS "vVideoPropertiesListing" AS SELECT "VideoPropertySets".*, Count("Files"."Id") FROM "VideoPropertySets"
+    LEFT JOIN "Files" ON "VideoPropertySets"."Id" = "Files"."VideoPropertySetId";
 
 INSERT INTO "FileSystems" ("Id", "DisplayName", "CreatedOn", "ModifiedOn")
 	VALUES ('bedb396b-2212-4149-9cad-7e437c47314c', 'New Technology File System', '2004-08-19 14:51:06', '2004-08-19 14:51:06');

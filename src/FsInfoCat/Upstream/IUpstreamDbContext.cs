@@ -217,6 +217,28 @@ namespace FsInfoCat.Upstream
 
         new IEnumerable<IUpstreamCrawlJobListItem> CrawlJobListing { get; }
 
+        new IEnumerable<IUpstreamSummaryPropertiesListItem> SummaryPropertiesListing { get; }
+
+        new IEnumerable<IUpstreamDocumentPropertiesListItem> DocumentPropertiesListing { get; }
+
+        new IEnumerable<IUpstreamAudioPropertiesListItem> AudioPropertiesListing { get; }
+
+        new IEnumerable<IUpstreamDRMPropertiesListItem> DRMPropertiesListing { get; }
+
+        new IEnumerable<IUpstreamGPSPropertiesListItem> GPSPropertiesListing { get; }
+
+        new IEnumerable<IUpstreamImagePropertiesListItem> ImagePropertiesListing { get; }
+
+        new IEnumerable<IUpstreamMediaPropertiesListItem> MediaPropertiesListing { get; }
+
+        new IEnumerable<IUpstreamMusicPropertiesListItem> MusicPropertiesListing { get; }
+
+        new IEnumerable<IUpstreamPhotoPropertiesListItem> PhotoPropertiesListing { get; }
+
+        new IEnumerable<IUpstreamRecordedTVPropertiesListItem> RecordedTVPropertiesListing { get; }
+
+        new IEnumerable<IUpstreamVideoPropertiesListItem> VideoPropertiesListing { get; }
+
         IEnumerable<IGroupMemberOfListItem> GroupMemberOfListing { get; }
 
         IEnumerable<IGroupMemberListItem> GroupMemberListing { get; }

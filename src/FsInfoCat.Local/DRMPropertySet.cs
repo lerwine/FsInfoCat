@@ -9,30 +9,30 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat.Local
 {
-    /// <summary>
-    /// Class DRMPropertySet.
-    /// Implements the <see cref="LocalDbEntity" />
-    /// Implements the <see cref="ILocalDRMPropertySet" />
-    /// </summary>
-    /// <seealso cref="LocalDbEntity" />
-    /// <seealso cref="ILocalDRMPropertySet" />
-    public class DRMPropertySet : LocalDbEntity, ILocalDRMPropertySet, ISimpleIdentityReference<DRMPropertySet>
+    public class DRMPropertiesListItem : DRMPropertiesRow, ILocalDRMPropertiesListItem
+    {
+        private readonly IPropertyChangeTracker<long> _fileCount;
+
+        public long FileCount { get => _fileCount.GetValue(); set => _fileCount.SetValue(value); }
+
+        public DRMPropertiesListItem()
+        {
+            _fileCount = AddChangeTracker(nameof(FileCount), 0L);
+        }
+    }
+    public class DRMPropertiesRow : PropertiesRow, IDRMProperties
     {
         #region Fields
 
-        private readonly IPropertyChangeTracker<Guid> _id;
         private readonly IPropertyChangeTracker<DateTime?> _datePlayExpires;
         private readonly IPropertyChangeTracker<DateTime?> _datePlayStarts;
         private readonly IPropertyChangeTracker<string> _description;
         private readonly IPropertyChangeTracker<bool?> _isProtected;
         private readonly IPropertyChangeTracker<uint?> _playCount;
-        private HashSet<DbFile> _files = new();
 
         #endregion
 
         #region Properties
-
-        public Guid Id { get => _id.GetValue(); set => _id.SetValue(value); }
 
         public DateTime? DatePlayExpires { get => _datePlayExpires.GetValue(); set => _datePlayExpires.SetValue(value); }
         public DateTime? DatePlayStarts { get => _datePlayStarts.GetValue(); set => _datePlayStarts.SetValue(value); }
@@ -40,13 +40,33 @@ namespace FsInfoCat.Local
         public bool? IsProtected { get => _isProtected.GetValue(); set => _isProtected.SetValue(value); }
         public uint? PlayCount { get => _playCount.GetValue(); set => _playCount.SetValue(value); }
 
+        #endregion
+
+        public DRMPropertiesRow()
+        {
+            _datePlayExpires = AddChangeTracker<DateTime?>(nameof(DatePlayExpires), null);
+            _datePlayStarts = AddChangeTracker<DateTime?>(nameof(DatePlayStarts), null);
+            _description = AddChangeTracker(nameof(Description), null, FilePropertiesComparer.StringValueCoersion);
+            _isProtected = AddChangeTracker<bool?>(nameof(IsProtected), null);
+            _playCount = AddChangeTracker<uint?>(nameof(PlayCount), null);
+        }
+    }
+    /// <summary>
+    /// Class DRMPropertySet.
+    /// Implements the <see cref="LocalDbEntity" />
+    /// Implements the <see cref="ILocalDRMPropertySet" />
+    /// </summary>
+    /// <seealso cref="LocalDbEntity" />
+    /// <seealso cref="ILocalDRMPropertySet" />
+    public class DRMPropertySet : DRMPropertiesRow, ILocalDRMPropertySet, ISimpleIdentityReference<DRMPropertySet>
+    {
+        private HashSet<DbFile> _files = new();
+
         public HashSet<DbFile> Files
         {
             get => _files;
             set => CheckHashSetChanged(_files, value, h => _files = h);
         }
-
-        #endregion
 
         #region Explicit Members
 
@@ -59,16 +79,6 @@ namespace FsInfoCat.Local
         IDbEntity IIdentityReference.Entity => this;
 
         #endregion
-
-        public DRMPropertySet()
-        {
-            _id = AddChangeTracker(nameof(Id), Guid.Empty);
-            _datePlayExpires = AddChangeTracker<DateTime?>(nameof(DatePlayExpires), null);
-            _datePlayStarts = AddChangeTracker<DateTime?>(nameof(DatePlayStarts), null);
-            _description = AddChangeTracker(nameof(Description), null, FilePropertiesComparer.StringValueCoersion);
-            _isProtected = AddChangeTracker<bool?>(nameof(IsProtected), null);
-            _playCount = AddChangeTracker<uint?>(nameof(PlayCount), null);
-        }
 
         internal static async Task RefreshAsync([DisallowNull] EntityEntry<DbFile> entry, [DisallowNull] IFileDetailProvider fileDetailProvider,
             CancellationToken cancellationToken)

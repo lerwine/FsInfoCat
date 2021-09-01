@@ -320,6 +320,28 @@ namespace FsInfoCat
 
         protected abstract IEnumerable<ICrawlJobListItem> GetCrawlJobListing();
 
+        protected abstract IEnumerable<ISummaryPropertiesListItem> GetSummaryPropertiesListing();
+
+        protected abstract IEnumerable<IDocumentPropertiesListItem> GetDocumentPropertiesListing();
+
+        protected abstract IEnumerable<IAudioPropertiesListItem> GetAudioPropertiesListing();
+
+        protected abstract IEnumerable<IDRMPropertiesListItem> GetDRMPropertiesListing();
+
+        protected abstract IEnumerable<IGPSPropertiesListItem> GetGPSPropertiesListing();
+
+        protected abstract IEnumerable<IImagePropertiesListItem> GetImagePropertiesListing();
+
+        protected abstract IEnumerable<IMediaPropertiesListItem> GetMediaPropertiesListing();
+
+        protected abstract IEnumerable<IMusicPropertiesListItem> GetMusicPropertiesListing();
+
+        protected abstract IEnumerable<IPhotoPropertiesListItem> GetPhotoPropertiesListing();
+
+        protected abstract IEnumerable<IRecordedTVPropertiesListItem> GetRecordedTVPropertiesListing();
+
+        protected abstract IEnumerable<IVideoPropertiesListItem> GetVideoPropertiesListing();
+
         protected abstract Task<IGPSPropertySet> FindGenericMatchingAsync(IGPSProperties properties, CancellationToken cancellationToken);
 
         protected abstract Task<IImagePropertySet> FindGenericMatchingAsync(IImageProperties properties, CancellationToken cancellationToken);
@@ -408,6 +430,28 @@ namespace FsInfoCat
         IEnumerable<ICrawlConfigurationListItem> IDbContext.CrawlConfigListing => GetCrawlConfigListing();
 
         IEnumerable<ICrawlJobListItem> IDbContext.CrawlJobListing => GetCrawlJobListing();
+
+        IEnumerable<ISummaryPropertiesListItem> IDbContext.SummaryPropertiesListing => GetSummaryPropertiesListing();
+
+        IEnumerable<IDocumentPropertiesListItem> IDbContext.DocumentPropertiesListing => GetDocumentPropertiesListing();
+
+        IEnumerable<IAudioPropertiesListItem> IDbContext.AudioPropertiesListing => GetAudioPropertiesListing();
+
+        IEnumerable<IDRMPropertiesListItem> IDbContext.DRMPropertiesListing => GetDRMPropertiesListing();
+
+        IEnumerable<IGPSPropertiesListItem> IDbContext.GPSPropertiesListing => GetGPSPropertiesListing();
+
+        IEnumerable<IImagePropertiesListItem> IDbContext.ImagePropertiesListing => GetImagePropertiesListing();
+
+        IEnumerable<IMediaPropertiesListItem> IDbContext.MediaPropertiesListing => GetMediaPropertiesListing();
+
+        IEnumerable<IMusicPropertiesListItem> IDbContext.MusicPropertiesListing => GetMusicPropertiesListing();
+
+        IEnumerable<IPhotoPropertiesListItem> IDbContext.PhotoPropertiesListing => GetPhotoPropertiesListing();
+
+        IEnumerable<IRecordedTVPropertiesListItem> IDbContext.RecordedTVPropertiesListing => GetRecordedTVPropertiesListing();
+
+        IEnumerable<IVideoPropertiesListItem> IDbContext.VideoPropertiesListing => GetVideoPropertiesListing();
 
         Task<ISummaryPropertySet> IDbContext.FindMatchingAsync(ISummaryProperties properties, CancellationToken cancellationToken)
             => FindGenericMatchingAsync(properties, cancellationToken);

@@ -119,6 +119,28 @@ namespace FsInfoCat.Local
 
         public virtual DbSet<CrawlJobLogListItem> CrawlJobListing { get; set; }
 
+        public virtual DbSet<SummaryPropertiesListItem> SummaryPropertiesListing { get; set; }
+
+        public virtual DbSet<DocumentPropertiesListItem> DocumentPropertiesListing { get; set; }
+
+        public virtual DbSet<AudioPropertiesListItem> AudioPropertiesListing { get; set; }
+
+        public virtual DbSet<DRMPropertiesListItem> DRMPropertiesListing { get; set; }
+
+        public virtual DbSet<GPSPropertiesListItem> GPSPropertiesListing { get; set; }
+
+        public virtual DbSet<ImagePropertiesListItem> ImagePropertiesListing { get; set; }
+
+        public virtual DbSet<MediaPropertiesListItem> MediaPropertiesListing { get; set; }
+
+        public virtual DbSet<MusicPropertiesListItem> MusicPropertiesListing { get; set; }
+
+        public virtual DbSet<PhotoPropertiesListItem> PhotoPropertiesListing { get; set; }
+
+        public virtual DbSet<RecordedTVPropertiesListItem> RecordedTVPropertiesListing { get; set; }
+
+        public virtual DbSet<VideoPropertiesListItem> VideoPropertiesListing { get; set; }
+
         public LocalDbContext(DbContextOptions<LocalDbContext> options)
             : base(options)
         {
@@ -709,6 +731,28 @@ namespace FsInfoCat.Local
 
         protected override IEnumerable<ICrawlJobListItem> GetCrawlJobListing() => CrawlJobListing;
 
+        protected override IEnumerable<ISummaryPropertiesListItem> GetSummaryPropertiesListing() => SummaryPropertiesListing;
+
+        protected override IEnumerable<IDocumentPropertiesListItem> GetDocumentPropertiesListing() => DocumentPropertiesListing;
+
+        protected override IEnumerable<IAudioPropertiesListItem> GetAudioPropertiesListing() => AudioPropertiesListing;
+
+        protected override IEnumerable<IDRMPropertiesListItem> GetDRMPropertiesListing() => DRMPropertiesListing;
+
+        protected override IEnumerable<IGPSPropertiesListItem> GetGPSPropertiesListing() => GPSPropertiesListing;
+
+        protected override IEnumerable<IImagePropertiesListItem> GetImagePropertiesListing() => ImagePropertiesListing;
+
+        protected override IEnumerable<IMediaPropertiesListItem> GetMediaPropertiesListing() => MediaPropertiesListing;
+
+        protected override IEnumerable<IMusicPropertiesListItem> GetMusicPropertiesListing() => MusicPropertiesListing;
+
+        protected override IEnumerable<IPhotoPropertiesListItem> GetPhotoPropertiesListing() => PhotoPropertiesListing;
+
+        protected override IEnumerable<IRecordedTVPropertiesListItem> GetRecordedTVPropertiesListing() => RecordedTVPropertiesListing;
+
+        protected override IEnumerable<IVideoPropertiesListItem> GetVideoPropertiesListing() => VideoPropertiesListing;
+
         protected async override Task<IGPSPropertySet> FindGenericMatchingAsync(IGPSProperties properties, CancellationToken cancellationToken) =>
             await FindMatchingAsync(properties, cancellationToken);
 
@@ -839,6 +883,28 @@ namespace FsInfoCat.Local
         IEnumerable<ILocalCrawlConfigurationListItem> ILocalDbContext.CrawlConfigListing => CrawlConfigListing;
 
         IEnumerable<ILocalCrawlJobListItem> ILocalDbContext.CrawlJobListing => CrawlJobListing;
+
+        IEnumerable<ILocalSummaryPropertiesListItem> ILocalDbContext.SummaryPropertiesListing => SummaryPropertiesListing;
+
+        IEnumerable<ILocalDocumentPropertiesListItem> ILocalDbContext.DocumentPropertiesListing => DocumentPropertiesListing;
+
+        IEnumerable<ILocalAudioPropertiesListItem> ILocalDbContext.AudioPropertiesListing => AudioPropertiesListing;
+
+        IEnumerable<ILocalDRMPropertiesListItem> ILocalDbContext.DRMPropertiesListing => DRMPropertiesListing;
+
+        IEnumerable<ILocalGPSPropertiesListItem> ILocalDbContext.GPSPropertiesListing => GPSPropertiesListing;
+
+        IEnumerable<ILocalImagePropertiesListItem> ILocalDbContext.ImagePropertiesListing => ImagePropertiesListing;
+
+        IEnumerable<ILocalMediaPropertiesListItem> ILocalDbContext.MediaPropertiesListing => MediaPropertiesListing;
+
+        IEnumerable<ILocalMusicPropertiesListItem> ILocalDbContext.MusicPropertiesListing => MusicPropertiesListing;
+
+        IEnumerable<ILocalPhotoPropertiesListItem> ILocalDbContext.PhotoPropertiesListing => PhotoPropertiesListing;
+
+        IEnumerable<ILocalRecordedTVPropertiesListItem> ILocalDbContext.RecordedTVPropertiesListing => RecordedTVPropertiesListing;
+
+        IEnumerable<ILocalVideoPropertiesListItem> ILocalDbContext.VideoPropertiesListing => VideoPropertiesListing;
 
         async Task<ILocalSummaryPropertySet> ILocalDbContext.FindMatchingAsync(ISummaryProperties properties, CancellationToken cancellationToken) =>
             await FindMatchingAsync(properties, cancellationToken);

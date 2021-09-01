@@ -9,11 +9,21 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat.Local
 {
-    public class AudioPropertySet : LocalDbEntity, ILocalAudioPropertySet, ISimpleIdentityReference<AudioPropertySet>
+    public class AudioPropertiesListItem : AudioPropertiesRow, ILocalAudioPropertiesListItem
+    {
+        private readonly IPropertyChangeTracker<long> _fileCount;
+
+        public long FileCount { get => _fileCount.GetValue(); set => _fileCount.SetValue(value); }
+
+        public AudioPropertiesListItem()
+        {
+            _fileCount = AddChangeTracker(nameof(FileCount), 0L);
+        }
+    }
+    public class AudioPropertiesRow : PropertiesRow, IAudioProperties
     {
         #region Fields
 
-        private readonly IPropertyChangeTracker<Guid> _id;
         private readonly IPropertyChangeTracker<string> _compression;
         private readonly IPropertyChangeTracker<uint?> _encodingBitrate;
         private readonly IPropertyChangeTracker<string> _format;
@@ -22,13 +32,10 @@ namespace FsInfoCat.Local
         private readonly IPropertyChangeTracker<uint?> _sampleSize;
         private readonly IPropertyChangeTracker<string> _streamName;
         private readonly IPropertyChangeTracker<ushort?> _streamNumber;
-        private HashSet<DbFile> _files = new();
 
         #endregion
 
         #region Properties
-
-        public Guid Id { get => _id.GetValue(); set => _id.SetValue(value); }
 
         public string Compression { get => _compression.GetValue(); set => _compression.SetValue(value); }
         public uint? EncodingBitrate { get => _encodingBitrate.GetValue(); set => _encodingBitrate.SetValue(value); }
@@ -39,13 +46,29 @@ namespace FsInfoCat.Local
         public string StreamName { get => _streamName.GetValue(); set => _streamName.SetValue(value); }
         public ushort? StreamNumber { get => _streamNumber.GetValue(); set => _streamNumber.SetValue(value); }
 
+        #endregion
+
+        public AudioPropertiesRow()
+        {
+            _compression = AddChangeTracker(nameof(Compression), null, FilePropertiesComparer.NormalizedStringValueCoersion);
+            _encodingBitrate = AddChangeTracker<uint?>(nameof(EncodingBitrate), null);
+            _format = AddChangeTracker(nameof(Format), null, FilePropertiesComparer.NormalizedStringValueCoersion);
+            _isVariableBitrate = AddChangeTracker<bool?>(nameof(IsVariableBitrate), null);
+            _sampleRate = AddChangeTracker<uint?>(nameof(SampleRate), null);
+            _sampleSize = AddChangeTracker<uint?>(nameof(SampleSize), null);
+            _streamName = AddChangeTracker(nameof(StreamName), null, FilePropertiesComparer.NormalizedStringValueCoersion);
+            _streamNumber = AddChangeTracker<ushort?>(nameof(StreamNumber), null);
+        }
+    }
+    public class AudioPropertySet : AudioPropertiesRow, ILocalAudioPropertySet, ISimpleIdentityReference<AudioPropertySet>
+    {
+        private HashSet<DbFile> _files = new();
+
         public HashSet<DbFile> Files
         {
             get => _files;
             set => CheckHashSetChanged(_files, value, h => _files = h);
         }
-
-        #endregion
 
         #region Explicit Members
 
@@ -58,19 +81,6 @@ namespace FsInfoCat.Local
         IDbEntity IIdentityReference.Entity => this;
 
         #endregion
-
-        public AudioPropertySet()
-        {
-            _id = AddChangeTracker(nameof(Id), Guid.Empty);
-            _compression = AddChangeTracker(nameof(Compression), null, FilePropertiesComparer.NormalizedStringValueCoersion);
-            _encodingBitrate = AddChangeTracker<uint?>(nameof(EncodingBitrate), null);
-            _format = AddChangeTracker(nameof(Format), null, FilePropertiesComparer.NormalizedStringValueCoersion);
-            _isVariableBitrate = AddChangeTracker<bool?>(nameof(IsVariableBitrate), null);
-            _sampleRate = AddChangeTracker<uint?>(nameof(SampleRate), null);
-            _sampleSize = AddChangeTracker<uint?>(nameof(SampleSize), null);
-            _streamName = AddChangeTracker(nameof(StreamName), null, FilePropertiesComparer.NormalizedStringValueCoersion);
-            _streamNumber = AddChangeTracker<ushort?>(nameof(StreamNumber), null);
-        }
 
         internal static async Task RefreshAsync([DisallowNull] EntityEntry<DbFile> entry, [DisallowNull] IFileDetailProvider fileDetailProvider, CancellationToken cancellationToken)
         {

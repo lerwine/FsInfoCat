@@ -11,18 +11,21 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat.Local
 {
-    /// <summary>
-    /// Class SummaryPropertySet.
-    /// Implements the <see cref="LocalDbEntity" />
-    /// Implements the <see cref="ILocalSummaryPropertySet" />
-    /// </summary>
-    /// <seealso cref="LocalDbEntity" />
-    /// <seealso cref="ILocalSummaryPropertySet" />
-    public class SummaryPropertySet : LocalDbEntity, ILocalSummaryPropertySet, ISimpleIdentityReference<SummaryPropertySet>
+    public class SummaryPropertiesListItem : SummaryPropertiesRow, ILocalSummaryPropertiesListItem
+    {
+        private readonly IPropertyChangeTracker<long> _fileCount;
+
+        public long FileCount { get => _fileCount.GetValue(); set => _fileCount.SetValue(value); }
+
+        public SummaryPropertiesListItem()
+        {
+            _fileCount = AddChangeTracker(nameof(FileCount), 0L);
+        }
+    }
+    public class SummaryPropertiesRow : PropertiesRow, ISummaryProperties
     {
         #region Fields
 
-        private readonly IPropertyChangeTracker<Guid> _id;
         private readonly IPropertyChangeTracker<string> _applicationName;
         private readonly IPropertyChangeTracker<MultiStringValue> _author;
         private readonly IPropertyChangeTracker<string> _comment;
@@ -46,13 +49,10 @@ namespace FsInfoCat.Local
         private readonly IPropertyChangeTracker<uint?> _simpleRating;
         private readonly IPropertyChangeTracker<string> _trademarks;
         private readonly IPropertyChangeTracker<string> _productName;
-        private HashSet<DbFile> _files = new();
 
         #endregion
 
         #region Properties
-
-        public Guid Id { get => _id.GetValue(); set => _id.SetValue(value); }
 
         public string ApplicationName { get => _applicationName.GetValue(); set => _applicationName.SetValue(value); }
         public MultiStringValue Author { get => _author.GetValue(); set => _author.SetValue(value); }
@@ -78,29 +78,10 @@ namespace FsInfoCat.Local
         public string Trademarks { get => _trademarks.GetValue(); set => _trademarks.SetValue(value); }
         public string ProductName { get => _productName.GetValue(); set => _productName.SetValue(value); }
 
-        public HashSet<DbFile> Files
-        {
-            get => _files;
-            set => CheckHashSetChanged(_files, value, h => _files = h);
-        }
-
         #endregion
 
-        #region Explicit Members
-
-        IEnumerable<ILocalFile> ILocalPropertySet.Files => Files.Cast<ILocalFile>();
-
-        IEnumerable<IFile> IPropertySet.Files => Files.Cast<IFile>();
-
-        SummaryPropertySet IIdentityReference<SummaryPropertySet>.Entity => this;
-
-        IDbEntity IIdentityReference.Entity => this;
-
-        #endregion
-
-        public SummaryPropertySet()
+        public SummaryPropertiesRow()
         {
-            _id = AddChangeTracker(nameof(Id), Guid.Empty);
             _applicationName = AddChangeTracker(nameof(ApplicationName), null, FilePropertiesComparer.NormalizedStringValueCoersion);
             _author = AddChangeTracker<MultiStringValue>(nameof(Author), null);
             _comment = AddChangeTracker(nameof(Comment), null, FilePropertiesComparer.StringValueCoersion);
@@ -125,6 +106,35 @@ namespace FsInfoCat.Local
             _trademarks = AddChangeTracker(nameof(Trademarks), null, FilePropertiesComparer.StringValueCoersion);
             _productName = AddChangeTracker(nameof(ProductName), null, FilePropertiesComparer.NormalizedStringValueCoersion);
         }
+    }
+    /// <summary>
+    /// Class SummaryPropertySet.
+    /// Implements the <see cref="LocalDbEntity" />
+    /// Implements the <see cref="ILocalSummaryPropertySet" />
+    /// </summary>
+    /// <seealso cref="LocalDbEntity" />
+    /// <seealso cref="ILocalSummaryPropertySet" />
+    public class SummaryPropertySet : SummaryPropertiesRow, ILocalSummaryPropertySet, ISimpleIdentityReference<SummaryPropertySet>
+    {
+        private HashSet<DbFile> _files = new();
+
+        public HashSet<DbFile> Files
+        {
+            get => _files;
+            set => CheckHashSetChanged(_files, value, h => _files = h);
+        }
+
+        #region Explicit Members
+
+        IEnumerable<ILocalFile> ILocalPropertySet.Files => Files.Cast<ILocalFile>();
+
+        IEnumerable<IFile> IPropertySet.Files => Files.Cast<IFile>();
+
+        SummaryPropertySet IIdentityReference<SummaryPropertySet>.Entity => this;
+
+        IDbEntity IIdentityReference.Entity => this;
+
+        #endregion
 
         internal static void OnBuildEntity([DisallowNull] EntityTypeBuilder<SummaryPropertySet> builder)
         {

@@ -11,18 +11,21 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat.Local
 {
-    /// <summary>
-    /// Class MusicPropertySet.
-    /// Implements the <see cref="LocalDbEntity" />
-    /// Implements the <see cref="ILocalMusicPropertySet" />
-    /// </summary>
-    /// <seealso cref="LocalDbEntity" />
-    /// <seealso cref="ILocalMusicPropertySet" />
-    public class MusicPropertySet : LocalDbEntity, ILocalMusicPropertySet, ISimpleIdentityReference<MusicPropertySet>
+    public class MusicPropertiesListItem : MusicPropertiesRow, ILocalMusicPropertiesListItem
+    {
+        private readonly IPropertyChangeTracker<long> _fileCount;
+
+        public long FileCount { get => _fileCount.GetValue(); set => _fileCount.SetValue(value); }
+
+        public MusicPropertiesListItem()
+        {
+            _fileCount = AddChangeTracker(nameof(FileCount), 0L);
+        }
+    }
+    public class MusicPropertiesRow : PropertiesRow, IMusicProperties
     {
         #region Fields
 
-        private readonly IPropertyChangeTracker<Guid> _id;
         private readonly IPropertyChangeTracker<string> _albumArtist;
         private readonly IPropertyChangeTracker<string> _albumTitle;
         private readonly IPropertyChangeTracker<MultiStringValue> _artist;
@@ -34,13 +37,10 @@ namespace FsInfoCat.Local
         private readonly IPropertyChangeTracker<string> _partOfSet;
         private readonly IPropertyChangeTracker<string> _period;
         private readonly IPropertyChangeTracker<uint?> _trackNumber;
-        private HashSet<DbFile> _files = new();
 
         #endregion
 
         #region Properties
-
-        public Guid Id { get => _id.GetValue(); set => _id.SetValue(value); }
 
         public string AlbumArtist { get => _albumArtist.GetValue(); set => _albumArtist.SetValue(value); }
         public string AlbumTitle { get => _albumTitle.GetValue(); set => _albumTitle.SetValue(value); }
@@ -54,29 +54,10 @@ namespace FsInfoCat.Local
         public string Period { get => _period.GetValue(); set => _period.SetValue(value); }
         public uint? TrackNumber { get => _trackNumber.GetValue(); set => _trackNumber.SetValue(value); }
 
-        public HashSet<DbFile> Files
-        {
-            get => _files;
-            set => CheckHashSetChanged(_files, value, h => _files = h);
-        }
-
         #endregion
-
-        #region Explicit Members
-
-        IEnumerable<ILocalFile> ILocalPropertySet.Files => Files.Cast<ILocalFile>();
-
-        IEnumerable<IFile> IPropertySet.Files => Files.Cast<IFile>();
-
-        MusicPropertySet IIdentityReference<MusicPropertySet>.Entity => this;
-
-        IDbEntity IIdentityReference.Entity => this;
-
-        #endregion
-
-        public MusicPropertySet()
+        
+        public MusicPropertiesRow()
         {
-            _id = AddChangeTracker(nameof(Id), Guid.Empty);
             _albumArtist = AddChangeTracker(nameof(AlbumArtist), null, FilePropertiesComparer.NormalizedStringValueCoersion);
             _albumTitle = AddChangeTracker(nameof(AlbumTitle), null, FilePropertiesComparer.NormalizedStringValueCoersion);
             _artist = AddChangeTracker<MultiStringValue>(nameof(Artist), null);
@@ -89,6 +70,35 @@ namespace FsInfoCat.Local
             _period = AddChangeTracker(nameof(Period), null, FilePropertiesComparer.NormalizedStringValueCoersion);
             _trackNumber = AddChangeTracker<uint?>(nameof(TrackNumber), null);
         }
+    }
+    /// <summary>
+    /// Class MusicPropertySet.
+    /// Implements the <see cref="LocalDbEntity" />
+    /// Implements the <see cref="ILocalMusicPropertySet" />
+    /// </summary>
+    /// <seealso cref="LocalDbEntity" />
+    /// <seealso cref="ILocalMusicPropertySet" />
+    public class MusicPropertySet : MusicPropertiesRow, ILocalMusicPropertySet, ISimpleIdentityReference<MusicPropertySet>
+    {
+        private HashSet<DbFile> _files = new();
+
+        public HashSet<DbFile> Files
+        {
+            get => _files;
+            set => CheckHashSetChanged(_files, value, h => _files = h);
+        }
+
+        #region Explicit Members
+
+        IEnumerable<ILocalFile> ILocalPropertySet.Files => Files.Cast<ILocalFile>();
+
+        IEnumerable<IFile> IPropertySet.Files => Files.Cast<IFile>();
+
+        MusicPropertySet IIdentityReference<MusicPropertySet>.Entity => this;
+
+        IDbEntity IIdentityReference.Entity => this;
+
+        #endregion
 
         internal static void OnBuildEntity([DisallowNull] EntityTypeBuilder<MusicPropertySet> builder)
         {
