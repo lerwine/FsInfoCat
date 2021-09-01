@@ -4,26 +4,62 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace FsInfoCat.Desktop.Local.RecordedTVPropertySets
 {
-    public class ListingViewModel : ListingViewModel<RecordedTVPropertiesListItem, ListItemViewModel, ListingViewModel.ListOptions>, INotifyNavigatedTo
+    public class ListingViewModel : ListingViewModel<RecordedTVPropertiesListItem, ListItemViewModel, bool?>, INotifyNavigatedTo
     {
-        private ListOptions _currentOptions;
-        private ListOptions _editingOptions;
+        private bool? _currentOptions;
+
+        #region ListingOptions Property Members
+
+        private static readonly DependencyPropertyKey ListingOptionsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ListingOptions), typeof(ThreeStateViewModel), typeof(ListingViewModel),
+                new PropertyMetadata(null));
+
+        /// <summary>
+        /// Identifies the <see cref="ListingOptions"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ListingOptionsProperty = ListingOptionsPropertyKey.DependencyProperty;
+
+        /// <summary>
+        /// Gets .
+        /// </summary>
+        /// <value>The .</value>
+        public ThreeStateViewModel ListingOptions { get => (ThreeStateViewModel)GetValue(ListingOptionsProperty); private set => SetValue(ListingOptionsPropertyKey, value); }
+
+        #endregion
+
+        public ListingViewModel()
+        {
+            SetValue(ListingOptionsPropertyKey, new ThreeStateViewModel(true));
+        }
 
         void INotifyNavigatedTo.OnNavigatedTo() => ReloadAsync(_currentOptions);
 
-        protected override IQueryable<RecordedTVPropertiesListItem> GetQueryableListing(ListOptions options, [DisallowNull] LocalDbContext dbContext, [DisallowNull] IWindowsStatusListener statusListener)
+        protected override IQueryable<RecordedTVPropertiesListItem> GetQueryableListing(bool? options, [DisallowNull] LocalDbContext dbContext, [DisallowNull] IWindowsStatusListener statusListener)
         {
-            throw new NotImplementedException();
+            if (options.HasValue)
+            {
+                if (options.Value)
+                    return dbContext.RecordedTVPropertiesListing.Where(p => p.ExistingFileCount > 0L);
+                return dbContext.RecordedTVPropertiesListing.Where(p => p.ExistingFileCount == 0L);
+            }
+            return dbContext.RecordedTVPropertiesListing;
         }
 
         protected override ListItemViewModel CreateItemViewModel([DisallowNull] RecordedTVPropertiesListItem entity) => new(entity);
 
-        protected override void OnSaveFilterOptionsCommand(object parameter)
+        protected override void OnCancelFilterOptionsCommand(object parameter)
         {
-            throw new NotImplementedException();
+            ListingOptions.Value = _currentOptions;
+            base.OnCancelFilterOptionsCommand(parameter);
+        }
+
+        protected override void OnApplyFilterOptionsCommand(object parameter)
+        {
+            _currentOptions = ListingOptions.Value;
+            ReloadAsync(_currentOptions);
         }
 
         protected override void OnRefreshCommand(object parameter) => ReloadAsync(_currentOptions);
@@ -47,7 +83,5 @@ namespace FsInfoCat.Desktop.Local.RecordedTVPropertySets
         {
             throw new NotImplementedException();
         }
-
-        public record ListOptions(string Name);
     }
 }

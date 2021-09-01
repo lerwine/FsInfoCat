@@ -71,7 +71,7 @@ namespace FsInfoCat.Desktop.Local.RedundantSets
 
         protected override ListItemViewModel CreateItemViewModel([DisallowNull] RedundantSetListItem entity) => new(entity);
 
-        protected override void OnSaveFilterOptionsCommand(object parameter)
+        protected override void OnApplyFilterOptionsCommand(object parameter)
         {
             _currentRange = _editingRange;
         }

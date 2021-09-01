@@ -137,7 +137,7 @@ namespace FsInfoCat.Desktop.Local.CrawlConfigurations
 
         protected override void OnRefreshCommand(object parameter) => ReloadAsync(CurrentStatusOptions.SelectedItem, CurrentIsScheduledOption.Value);
 
-        protected override void OnSaveFilterOptionsCommand(object parameter)
+        protected override void OnApplyFilterOptionsCommand(object parameter)
         {
             CurrentIsScheduledOption.Value = EditingIsScheduledOption.Value;
             CurrentStatusOptions.SelectedIndex = EditingStatusOptions.SelectedIndex;

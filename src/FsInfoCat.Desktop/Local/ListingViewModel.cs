@@ -62,7 +62,7 @@ namespace FsInfoCat.Desktop.Local
         private void RaiseSaveFilterOptionsCommand(object parameter)
         {
             ViewOptionsVisible = false;
-            OnSaveFilterOptionsCommand(parameter);
+            OnApplyFilterOptionsCommand(parameter);
         }
 
         #endregion
@@ -171,7 +171,7 @@ namespace FsInfoCat.Desktop.Local
 
         protected abstract TItem CreateItemViewModel([DisallowNull] TEntity entity);
 
-        protected abstract void OnSaveFilterOptionsCommand(object parameter);
+        protected abstract void OnApplyFilterOptionsCommand(object parameter);
 
         protected abstract void OnRefreshCommand(object parameter);
 

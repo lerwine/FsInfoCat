@@ -60,7 +60,7 @@ namespace FsInfoCat.Desktop.Local.PersonalTagDefinitions
 
         protected override ListItemViewModel CreateItemViewModel([DisallowNull] PersonalTagDefinitionListItem entity) => new ListItemViewModel(entity);
 
-        protected override void OnSaveFilterOptionsCommand(object parameter)
+        protected override void OnApplyFilterOptionsCommand(object parameter)
         {
             ViewOptions.Value = EditingOptions.Value;
         }

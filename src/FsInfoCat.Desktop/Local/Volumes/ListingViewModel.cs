@@ -93,7 +93,7 @@ namespace FsInfoCat.Desktop.Local.Volumes
 
         protected override ListItemViewModel CreateItemViewModel([DisallowNull] VolumeListItemWithFileSystem entity) => new(entity);
 
-        protected override void OnSaveFilterOptionsCommand(object parameter)
+        protected override void OnApplyFilterOptionsCommand(object parameter)
         {
             ViewOptions.SelectedIndex = EditingOptions.SelectedIndex;
         }

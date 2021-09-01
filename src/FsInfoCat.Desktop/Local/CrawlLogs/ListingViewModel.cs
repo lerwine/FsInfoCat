@@ -73,7 +73,7 @@ namespace FsInfoCat.Desktop.Local.CrawlLogs
 
         protected override ListItemViewModel CreateItemViewModel([DisallowNull] CrawlJobLogListItem entity) => new ListItemViewModel(entity);
 
-        protected override void OnSaveFilterOptionsCommand(object parameter)
+        protected override void OnApplyFilterOptionsCommand(object parameter)
         {
             CurrentStatusOptions.SelectedIndex = EditingStatusOptions.SelectedIndex;
             ReloadAsync(CurrentStatusOptions.SelectedItem);
