@@ -1,5 +1,6 @@
 using FsInfoCat.Desktop.ViewModel;
 using FsInfoCat.Local;
+using FsInfoCat.Numerics;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -8,186 +9,47 @@ using System.Windows;
 
 namespace FsInfoCat.Desktop.Local.RedundantSets
 {
-    public class ListingViewModel : ListingViewModel<RedundantSetListItem, ListItemViewModel, (long? MinRange, long? MaxRange)>, INotifyNavigatedTo
+    public class ListingViewModel : ListingViewModel<RedundantSetListItem, ListItemViewModel, ListingViewModel.ListingOptions>, INotifyNavigatedTo
     {
         private ListingOptions _currentRange;
         private ListingOptions _editingRange;
 
-        public const long KB_MAX = 0x40000000000000L;
-        public const long KB_DIV = 0x00000000400L;
-        public const long MB_MAX = 0x00100000000000L;
-        public const long MB_DIV = 0x00000100000L;
-        public const long GB_MAX = 0x00000400000000L;
-        public const long GB_DIV = 0x00040000000L;
-        public const long TB_MAX = 0x00000001000000L;
-        public const long TB_DIV = 0x10000000000L;
-
         #region MinimumRange Property Members
+
+        private static readonly DependencyPropertyKey MinimumRangePropertyKey = DependencyProperty.RegisterReadOnly(nameof(MinimumRange), typeof(DenominatedLengthViewModel), typeof(ListingViewModel),
+                new PropertyMetadata(null));
 
         /// <summary>
         /// Identifies the <see cref="MinimumRange"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty MinimumRangeProperty = DependencyProperty.Register(nameof(MinimumRange), typeof(long?), typeof(ListingViewModel),
-                new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as ListingViewModel)?.OnMinimumRangePropertyChanged((long?)e.OldValue, (long?)e.NewValue)));
-
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
-        public long? MinimumRange { get => (long?)GetValue(MinimumRangeProperty); set => SetValue(MinimumRangeProperty, value); }
-
-        /// <summary>
-        /// Called when the value of the <see cref="MinimumRange"/> dependency property has changed.
-        /// </summary>
-        /// <param name="oldValue">The previous value of the <see cref="MinimumRange"/> property.</param>
-        /// <param name="newValue">The new value of the <see cref="MinimumRange"/> property.</param>
-        private void OnMinimumRangePropertyChanged(long? oldValue, long? newValue)
-        {
-            if (HasMinimum)
-                _editingRange = _editingRange with { Minimum = newValue };
-        }
-
-        #endregion
-        #region HasMinimum Property Members
-
-        /// <summary>
-        /// Identifies the <see cref="HasMinimum"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty HasMinimumProperty = DependencyProperty.Register(nameof(HasMinimum), typeof(bool), typeof(ListingViewModel),
-                new PropertyMetadata(false, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as ListingViewModel)?.OnHasMinimumPropertyChanged((bool)e.OldValue, (bool)e.NewValue)));
-
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
-        public bool HasMinimum { get => (bool)GetValue(HasMinimumProperty); set => SetValue(HasMinimumProperty, value); }
-
-        /// <summary>
-        /// Called when the value of the <see cref="HasMinimum"/> dependency property has changed.
-        /// </summary>
-        /// <param name="oldValue">The previous value of the <see cref="HasMinimum"/> property.</param>
-        /// <param name="newValue">The new value of the <see cref="HasMinimum"/> property.</param>
-        private void OnHasMinimumPropertyChanged(bool oldValue, bool newValue) => _editingRange = _editingRange with { Minimum = (newValue) ? MinimumRange : null };
-
-        #endregion
-        #region MaximumRange Property Members
-
-        /// <summary>
-        /// Identifies the <see cref="MaximumRange"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty MaximumRangeProperty = DependencyProperty.Register(nameof(MaximumRange), typeof(long?), typeof(ListingViewModel),
-                new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as ListingViewModel)?.OnMaximumRangePropertyChanged((long?)e.OldValue, (long?)e.NewValue)));
-
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
-        public long? MaximumRange { get => (long?)GetValue(MaximumRangeProperty); set => SetValue(MaximumRangeProperty, value); }
-
-        /// <summary>
-        /// Called when the value of the <see cref="MaximumRange"/> dependency property has changed.
-        /// </summary>
-        /// <param name="oldValue">The previous value of the <see cref="MaximumRange"/> property.</param>
-        /// <param name="newValue">The new value of the <see cref="MaximumRange"/> property.</param>
-        private void OnMaximumRangePropertyChanged(long? oldValue, long? newValue)
-        {
-            if (HasMaximum)
-                _editingRange = _editingRange with { Maximum = newValue };
-        }
-
-        #endregion
-        #region HasMaximum Property Members
-
-        /// <summary>
-        /// Identifies the <see cref="HasMaximum"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty HasMaximumProperty = DependencyProperty.Register(nameof(HasMaximum), typeof(bool), typeof(ListingViewModel),
-                new PropertyMetadata(false, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as ListingViewModel)?.OnHasMaximumPropertyChanged((bool)e.OldValue, (bool)e.NewValue)));
-
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
-        public bool HasMaximum { get => (bool)GetValue(HasMaximumProperty); set => SetValue(HasMaximumProperty, value); }
-
-        /// <summary>
-        /// Called when the value of the <see cref="HasMaximum"/> dependency property has changed.
-        /// </summary>
-        /// <param name="oldValue">The previous value of the <see cref="HasMaximum"/> property.</param>
-        /// <param name="newValue">The new value of the <see cref="HasMaximum"/> property.</param>
-        private void OnHasMaximumPropertyChanged(bool oldValue, bool newValue) => _editingRange = _editingRange with { Maximum = (newValue) ? MaximumRange : null };
-
-        #endregion
-        #region Denomination Property Members
-
-        private static readonly DependencyPropertyKey DenominationPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Denomination), typeof(EnumValuePickerVM<RangeDenomination>), typeof(ListingViewModel),
-                new PropertyMetadata(null));
-
-        /// <summary>
-        /// Identifies the <see cref="Denomination"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty DenominationProperty = DenominationPropertyKey.DependencyProperty;
+        public static readonly DependencyProperty MinimumRangeProperty = MinimumRangePropertyKey.DependencyProperty;
 
         /// <summary>
         /// Gets .
         /// </summary>
         /// <value>The .</value>
-        public EnumValuePickerVM<RangeDenomination> Denomination => (EnumValuePickerVM<RangeDenomination>)GetValue(DenominationProperty);
+        public DenominatedLengthViewModel MinimumRange { get => (DenominatedLengthViewModel)GetValue(MinimumRangeProperty); private set => SetValue(MinimumRangePropertyKey, value); }
 
-        private void Denomination_SelectedItemPropertyChanged(object sender, DependencyPropertyChangedEventArgs e) =>
-            _editingRange = _editingRange with { Denomination = Denomination.SelectedValue ?? RangeDenomination.Megabytes };
+        #endregion
+        #region MaximumRange Property Members
+
+        private static readonly DependencyPropertyKey MaximumRangePropertyKey = DependencyProperty.RegisterReadOnly(nameof(MaximumRange), typeof(DenominatedLengthViewModel), typeof(ListingViewModel),
+                new PropertyMetadata(null));
+
+        /// <summary>
+        /// Identifies the <see cref="MaximumRange"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty MaximumRangeProperty = MaximumRangePropertyKey.DependencyProperty;
+
+        /// <summary>
+        /// Gets .
+        /// </summary>
+        /// <value>The .</value>
+        public DenominatedLengthViewModel MaximumRange => (DenominatedLengthViewModel)GetValue(MaximumRangeProperty);
 
         #endregion
 
-        public static bool TryConvertToDenomination(long value, RangeDenomination denomination, out long result)
-        {
-            if (value < 0L)
-            {
-                result = value;
-                return false;
-            }
-            switch (denomination)
-            {
-                case RangeDenomination.Kilobytes:
-                    if (value > KB_MAX)
-                    {
-                        result = value;
-                        return false;
-                    }
-                    result = value / KB_DIV;
-                    break;
-                case RangeDenomination.Megabytes:
-                    if (value > MB_MAX)
-                    {
-                        result = value;
-                        return false;
-                    }
-                    result = value / MB_DIV;
-                    break;
-                case RangeDenomination.Gigabytes:
-                    if (value > GB_MAX)
-                    {
-                        result = value;
-                        return false;
-                    }
-                    result = value / GB_DIV;
-                    break;
-                case RangeDenomination.Terabytes:
-                    if (value > TB_MAX)
-                    {
-                        result = value;
-                        return false;
-                    }
-                    result = value / TB_DIV;
-                    break;
-                default:
-                    result = value;
-                    break;
-            }
-            return true;
-        }
-
-        protected override IQueryable<RedundantSetListItem> GetQueryableListing((long? MinRange, long? MaxRange) options, [DisallowNull] LocalDbContext dbContext, [DisallowNull] IWindowsStatusListener statusListener)
+        protected override IQueryable<RedundantSetListItem> GetQueryableListing(ListingOptions options, [DisallowNull] LocalDbContext dbContext, [DisallowNull] IWindowsStatusListener statusListener)
         {
             if (options.MinRange.HasValue)
             {
@@ -217,51 +79,12 @@ namespace FsInfoCat.Desktop.Local.RedundantSets
         protected override void OnCancelFilterOptionsCommand(object parameter)
         {
             _editingRange = _currentRange;
-            if (_currentRange.Minimum.HasValue)
-            {
-                HasMinimum = true;
-                MinimumRange = _currentRange.Minimum.Value;
-            }
-            else
-            {
-                HasMinimum = false;
-                MinimumRange = null;
-            }
-            if (_currentRange.Maximum.HasValue)
-            {
-                HasMaximum = true;
-                MaximumRange = _currentRange.Maximum.Value;
-            }
-            else
-            {
-                HasMaximum = false;
-                MaximumRange = null;
-            }
-            Denomination.SelectedValue = _currentRange.Denomination;
+            MinimumRange.DenominatedValue = _currentRange.MinRange;
+            MaximumRange.DenominatedValue = _currentRange.MaxRange;
             base.OnCancelFilterOptionsCommand(parameter);
         }
 
         protected override void OnRefreshCommand(object parameter) => ReloadAsync(_currentRange);
-
-        private IAsyncJob ReloadAsync(ListingOptions currentRange)
-        {
-            if (currentRange.Minimum.HasValue)
-            {
-                TryConvertToDenomination(currentRange.Minimum.Value, currentRange.Denomination, out long minimum);
-                if (currentRange.Maximum.HasValue)
-                {
-                    TryConvertToDenomination(currentRange.Maximum.Value, currentRange.Denomination, out long maximum);
-                    return ReloadAsync((minimum, maximum));
-                }
-                return ReloadAsync((minimum, null));
-            }
-            if (currentRange.Maximum.HasValue)
-            {
-                TryConvertToDenomination(currentRange.Maximum.Value, currentRange.Denomination, out long maximum);
-                return ReloadAsync((null, maximum));
-            }
-            return ReloadAsync((null, null));
-        }
 
         protected override void OnItemEditCommand([DisallowNull] ListItemViewModel item, object parameter)
         {
@@ -287,13 +110,26 @@ namespace FsInfoCat.Desktop.Local.RedundantSets
 
         public ListingViewModel()
         {
-            EnumValuePickerVM<RangeDenomination> denomination = new() { SelectedValue = RangeDenomination.Megabytes };
-            SetValue(DenominationPropertyKey, denomination);
-            denomination.SelectedItemPropertyChanged += Denomination_SelectedItemPropertyChanged;
-            _currentRange = new(HasMinimum ? MinimumRange : null, HasMinimum ? MaximumRange : null, Denomination.SelectedValue ?? RangeDenomination.Megabytes);
+            DenominatedLengthViewModel minRange = new();
+            SetValue(MinimumRangePropertyKey, minRange);
+            DenominatedLengthViewModel maxRange = new();
+            SetValue(MaximumRangePropertyKey, maxRange);
+            minRange.DenominatedValuePropertyChanged += MinimumRange_DenominatedValuePropertyChanged;
+            maxRange.DenominatedValuePropertyChanged += MaximumRange_DenominatedValuePropertyChanged;
+            _currentRange = new(minRange.DenominatedValue, maxRange.DenominatedValue);
             _editingRange = _currentRange;
         }
 
-        public record ListingOptions(long? Minimum, long? Maximum, RangeDenomination Denomination);
+        private void MinimumRange_DenominatedValuePropertyChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void MaximumRange_DenominatedValuePropertyChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        public record ListingOptions(BinaryDenominatedInt64? MinRange, BinaryDenominatedInt64? MaxRange);
     }
 }
