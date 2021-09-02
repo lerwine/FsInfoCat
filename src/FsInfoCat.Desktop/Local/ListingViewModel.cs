@@ -15,11 +15,6 @@ using System.Windows.Threading;
 
 namespace FsInfoCat.Desktop.Local
 {
-    //public abstract class ListItemViewModel<TEntity> : DependencyObject
-    //    where TEntity : LocalDbEntity
-    //{
-
-    //}
     public abstract class ListingViewModel<TEntity, TItem, TOptions> : DependencyObject
         where TEntity : LocalDbEntity
         where TItem : DbEntityRowViewModel<TEntity>, ILocalCrudEntityRowViewModel<TEntity>

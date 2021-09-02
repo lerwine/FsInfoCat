@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel
@@ -53,7 +54,7 @@ namespace FsInfoCat.Desktop.ViewModel
         #endregion
 #pragma warning restore IDE0060 // Remove unused parameter
 
-        public FileSystemDetailsViewModel(TEntity entity) : base(entity)
+        public FileSystemDetailsViewModel([DisallowNull] TEntity entity) : base(entity)
         {
             SetValue(VolumesPropertyKey, new ReadOnlyObservableCollection<TVolumeItem>(BackingVolumes));
             SetValue(SymbolicNamesPropertyKey, new ReadOnlyObservableCollection<TSymbolicNameItem>(BackingSymbolicNames));

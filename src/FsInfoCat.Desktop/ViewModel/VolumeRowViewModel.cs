@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Windows;
 
@@ -217,7 +218,7 @@ namespace FsInfoCat.Desktop.ViewModel
         #endregion
 #pragma warning restore IDE0060 // Remove unused parameter
 
-        public VolumeRowViewModel(TEntity entity) : base(entity)
+        public VolumeRowViewModel([DisallowNull] TEntity entity) : base(entity)
         {
             DisplayName = entity.DisplayName;
             VolumeName = entity.VolumeName;

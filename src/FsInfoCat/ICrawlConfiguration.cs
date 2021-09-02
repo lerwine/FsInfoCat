@@ -68,7 +68,9 @@ namespace FsInfoCat
     /// <seealso cref="ICrawlSettings" />
     public interface ICrawlConfiguration : ICrawlConfigurationRow
     {
-        /// <summary>Gets the starting subdirectory for the configured subdirectory crawl.</summary>
+        /// <summary>
+        /// Gets the starting subdirectory for the configured subdirectory crawl.
+        /// </summary>
         /// <value>The root subdirectory of the configured subdirectory crawl.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_Root), ResourceType = typeof(Properties.Resources))]
         ISubdirectory Root { get; }

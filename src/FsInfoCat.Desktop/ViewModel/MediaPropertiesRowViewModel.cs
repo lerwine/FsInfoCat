@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel
@@ -307,7 +308,7 @@ namespace FsInfoCat.Desktop.ViewModel
         #endregion
 #pragma warning restore IDE0060 // Remove unused parameter
 
-        public MediaPropertiesRowViewModel(TEntity entity) : base(entity)
+        public MediaPropertiesRowViewModel([DisallowNull] TEntity entity) : base(entity)
         {
             ContentDistributor = entity.ContentDistributor;
             CreatorApplication = entity.CreatorApplication;

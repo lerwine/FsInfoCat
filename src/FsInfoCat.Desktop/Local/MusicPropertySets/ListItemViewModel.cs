@@ -1,6 +1,7 @@
 using FsInfoCat.Desktop.ViewModel;
 using FsInfoCat.Local;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 
 namespace FsInfoCat.Desktop.Local.MusicPropertySets
@@ -25,7 +26,7 @@ namespace FsInfoCat.Desktop.Local.MusicPropertySets
 
         #endregion
 
-        public ListItemViewModel(MusicPropertiesListItem entity) : base(entity)
+        public ListItemViewModel([DisallowNull] MusicPropertiesListItem entity) : base(entity)
         {
             LastSynchronizedOn = entity.LastSynchronizedOn;
         }

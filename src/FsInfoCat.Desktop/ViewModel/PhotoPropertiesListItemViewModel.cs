@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel
@@ -139,7 +140,7 @@ namespace FsInfoCat.Desktop.ViewModel
 
         #endregion
 
-        public PhotoPropertiesListItemViewModel(TEntity entity) : base(entity)
+        public PhotoPropertiesListItemViewModel([DisallowNull] TEntity entity) : base(entity)
         {
             Event = entity.Event.ToNormalizedDelimitedText();
             PeopleNames = entity.PeopleNames.ToNormalizedDelimitedText();

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel
@@ -330,7 +331,7 @@ namespace FsInfoCat.Desktop.ViewModel
 
         #endregion
 
-        public CrawlConfigListItemViewModel(TEntity entity) : base(entity)
+        public CrawlConfigListItemViewModel([DisallowNull] TEntity entity) : base(entity)
         {
             Path = EntityExtensions.AncestorNamesToPath(Entity.AncestorNames);
             VolumeDisplayName = entity.VolumeDisplayName;

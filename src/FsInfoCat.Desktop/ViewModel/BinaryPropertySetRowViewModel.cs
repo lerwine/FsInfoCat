@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel
@@ -52,7 +53,7 @@ namespace FsInfoCat.Desktop.ViewModel
 
         #endregion
 
-        public BinaryPropertySetRowViewModel(TEntity entity) : base(entity)
+        public BinaryPropertySetRowViewModel([DisallowNull] TEntity entity) : base(entity)
         {
             Hash = entity.Hash;
             Length = entity.Length;

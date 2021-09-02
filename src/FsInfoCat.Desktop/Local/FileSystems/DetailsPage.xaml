@@ -5,8 +5,8 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:FsInfoCat.Desktop.Local.FileSystems"
       mc:Ignorable="d" d:DataContext="{x:Type local:DetailsViewModel}"
-      d:DesignHeight="450" d:DesignWidth="800"
-      Title="DetailsPage">
+      d:DesignHeight="768" d:DesignWidth="1024"
+      Title="File System Type Details">
 
     <Grid>
         

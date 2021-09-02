@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel
@@ -185,7 +186,7 @@ namespace FsInfoCat.Desktop.ViewModel
         #endregion
 #pragma warning restore IDE0060 // Remove unused parameter
 
-        public SubdirectoryListItemWithAncestorNamesViewModel(TEntity entity) : base(entity)
+        public SubdirectoryListItemWithAncestorNamesViewModel([DisallowNull] TEntity entity) : base(entity)
         {
             VolumeDisplayName = entity.VolumeDisplayName;
             VolumeName = entity.VolumeName;

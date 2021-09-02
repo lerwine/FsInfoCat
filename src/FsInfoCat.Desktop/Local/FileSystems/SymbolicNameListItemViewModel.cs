@@ -1,6 +1,7 @@
-﻿using FsInfoCat.Desktop.ViewModel;
+using FsInfoCat.Desktop.ViewModel;
 using FsInfoCat.Local;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 
 namespace FsInfoCat.Desktop.Local.FileSystems
@@ -41,7 +42,8 @@ namespace FsInfoCat.Desktop.Local.FileSystems
         public DateTime? LastSynchronizedOn { get => (DateTime?)GetValue(LastSynchronizedOnProperty); private set => SetValue(LastSynchronizedOnPropertyKey, value); }
 
         #endregion
-        public SymbolicNameListItemViewModel(SymbolicNameRow entity) : base(entity)
+
+        public SymbolicNameListItemViewModel([DisallowNull] SymbolicNameRow entity) : base(entity)
         {
             UpstreamId = entity.UpstreamId;
             LastSynchronizedOn = entity.LastSynchronizedOn;

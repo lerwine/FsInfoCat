@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel
@@ -60,7 +61,7 @@ namespace FsInfoCat.Desktop.ViewModel
         #endregion
 #pragma warning restore IDE0060 // Remove unused parameter
 
-        public SubdirectoryRowViewModel(TEntity entity) : base(entity)
+        public SubdirectoryRowViewModel([DisallowNull] TEntity entity) : base(entity)
         {
             Options = entity.Options;
             Status = entity.Status;

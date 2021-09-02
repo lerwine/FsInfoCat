@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel
@@ -105,7 +106,7 @@ namespace FsInfoCat.Desktop.ViewModel
 
         #endregion
 
-        public DRMPropertiesListItemViewModel(TEntity entity) : base(entity)
+        public DRMPropertiesListItemViewModel([DisallowNull] TEntity entity) : base(entity)
         {
             ExistingFileCount = entity.ExistingFileCount;
             TotalFileCount = entity.TotalFileCount;
@@ -266,7 +267,7 @@ namespace FsInfoCat.Desktop.ViewModel
         #endregion
 #pragma warning restore IDE0060 // Remove unused parameter
 
-        public DRMPropertiesRowViewModel(TEntity entity) : base(entity)
+        public DRMPropertiesRowViewModel([DisallowNull] TEntity entity) : base(entity)
         {
             DatePlayExpires = entity.DatePlayExpires;
             DatePlayStarts = entity.DatePlayStarts;

@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel
@@ -59,7 +60,7 @@ namespace FsInfoCat.Desktop.ViewModel
 
         #endregion
 
-        public RedundantSetRowViewModel(TEntity entity) : base(entity)
+        public RedundantSetRowViewModel([DisallowNull] TEntity entity) : base(entity)
         {
             Reference = entity.Reference;
             Notes = entity.Notes;

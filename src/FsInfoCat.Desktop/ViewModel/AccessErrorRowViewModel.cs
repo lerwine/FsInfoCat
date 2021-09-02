@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel
@@ -57,7 +58,7 @@ namespace FsInfoCat.Desktop.ViewModel
         #endregion
 #pragma warning restore IDE0060 // Remove unused parameter
 
-        public AccessErrorRowViewModel(TEntity entity) : base(entity)
+        public AccessErrorRowViewModel([DisallowNull] TEntity entity) : base(entity)
         {
             ErrorCode = entity.ErrorCode;
             Details = entity.Details;

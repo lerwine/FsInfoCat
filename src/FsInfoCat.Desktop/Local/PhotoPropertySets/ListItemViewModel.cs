@@ -1,6 +1,7 @@
 using FsInfoCat.Desktop.ViewModel;
 using FsInfoCat.Local;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 
 namespace FsInfoCat.Desktop.Local.PhotoPropertySets
@@ -25,7 +26,7 @@ namespace FsInfoCat.Desktop.Local.PhotoPropertySets
 
         #endregion
 
-        public ListItemViewModel(PhotoPropertiesListItem entity) : base(entity)
+        public ListItemViewModel([DisallowNull] PhotoPropertiesListItem entity) : base(entity)
         {
             LastSynchronizedOn = entity.LastSynchronizedOn;
         }

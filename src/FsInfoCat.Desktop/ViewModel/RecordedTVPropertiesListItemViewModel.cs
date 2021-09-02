@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel
@@ -105,7 +106,7 @@ namespace FsInfoCat.Desktop.ViewModel
 
         #endregion
 
-        public RecordedTVPropertiesListItemViewModel(TEntity entity) : base(entity)
+        public RecordedTVPropertiesListItemViewModel([DisallowNull] TEntity entity) : base(entity)
         {
             ExistingFileCount = entity.ExistingFileCount;
             TotalFileCount = entity.TotalFileCount;

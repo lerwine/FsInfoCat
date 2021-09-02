@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel
@@ -173,7 +174,7 @@ namespace FsInfoCat.Desktop.ViewModel
 
         #endregion
 
-        public SummaryPropertiesListItemViewModel(TEntity entity) : base(entity)
+        public SummaryPropertiesListItemViewModel([DisallowNull] TEntity entity) : base(entity)
         {
             Author = entity.Author.ToNormalizedDelimitedText();
             Keywords = entity.Keywords.ToNormalizedDelimitedText();

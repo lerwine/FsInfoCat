@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel
@@ -239,7 +240,7 @@ namespace FsInfoCat.Desktop.ViewModel
         #endregion
 #pragma warning restore IDE0060 // Remove unused parameter
 
-        public FileWithBinaryPropertiesViewModel(TEntity entity) : base(entity)
+        public FileWithBinaryPropertiesViewModel([DisallowNull] TEntity entity) : base(entity)
         {
             Length = entity.Length;
             Hash = entity.Hash;

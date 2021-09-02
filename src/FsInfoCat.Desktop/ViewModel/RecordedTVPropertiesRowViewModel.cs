@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel
@@ -243,7 +244,7 @@ namespace FsInfoCat.Desktop.ViewModel
         #endregion
 #pragma warning restore IDE0060 // Remove unused parameter
 
-        public RecordedTVPropertiesRowViewModel(TEntity entity) : base(entity)
+        public RecordedTVPropertiesRowViewModel([DisallowNull] TEntity entity) : base(entity)
         {
             ChannelNumber = entity.ChannelNumber;
             EpisodeName = entity.EpisodeName;

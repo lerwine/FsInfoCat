@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel
@@ -173,7 +174,7 @@ namespace FsInfoCat.Desktop.ViewModel
 
         #endregion
 
-        public MusicPropertiesListItemViewModel(TEntity entity) : base(entity)
+        public MusicPropertiesListItemViewModel([DisallowNull] TEntity entity) : base(entity)
         {
             Artist = entity.Artist.ToNormalizedDelimitedText();
             Composer = entity.Composer.ToNormalizedDelimitedText();

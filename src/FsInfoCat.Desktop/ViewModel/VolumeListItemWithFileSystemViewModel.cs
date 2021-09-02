@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel
@@ -57,7 +58,7 @@ namespace FsInfoCat.Desktop.ViewModel
 
         #endregion
 
-        public VolumeListItemWithFileSystemViewModel(TEntity entity) : base(entity)
+        public VolumeListItemWithFileSystemViewModel([DisallowNull] TEntity entity) : base(entity)
         {
             FileSystemDisplayName = entity.FileSystemDisplayName;
             EffectiveReadOnly = entity.EffectiveReadOnly;

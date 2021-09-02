@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel
@@ -122,7 +123,7 @@ namespace FsInfoCat.Desktop.ViewModel
 
         #endregion
 
-        public DocumentPropertiesListItemViewModel(TEntity entity) : base(entity)
+        public DocumentPropertiesListItemViewModel([DisallowNull] TEntity entity) : base(entity)
         {
             Contributor = Entity.Contributor.ToNormalizedDelimitedText();
             ExistingFileCount = entity.ExistingFileCount;

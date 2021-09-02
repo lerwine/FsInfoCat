@@ -1,6 +1,7 @@
 using FsInfoCat.Desktop.ViewModel;
 using FsInfoCat.Local;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 
 namespace FsInfoCat.Desktop.Local.PersonalTagDefinitions
@@ -180,7 +181,7 @@ namespace FsInfoCat.Desktop.Local.PersonalTagDefinitions
 
         #endregion
 
-        public ListItemViewModel(PersonalTagDefinitionListItem entity) : base(entity)
+        public ListItemViewModel([DisallowNull] PersonalTagDefinitionListItem entity) : base(entity)
         {
             SetValue(ShowTaggedVolumesButtonClickPropertyKey, new Commands.RelayCommand(RaiseShowTaggedVolumesButtonClicked));
             SetValue(ShowTaggedFoldersButtonClickPropertyKey, new Commands.RelayCommand(RaiseShowTaggedFoldersButtonClicked));

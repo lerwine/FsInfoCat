@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel
@@ -114,7 +115,7 @@ namespace FsInfoCat.Desktop.ViewModel
 
         #endregion
 
-        public TagDefinitionListItemViewModel(TEntity entity) : base(entity)
+        public TagDefinitionListItemViewModel([DisallowNull] TEntity entity) : base(entity)
         {
             FileTagCount = entity.FileTagCount;
             SubdirectoryTagCount = entity.SubdirectoryTagCount;

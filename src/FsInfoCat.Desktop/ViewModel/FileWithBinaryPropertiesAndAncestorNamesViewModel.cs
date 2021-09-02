@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel
@@ -40,7 +41,7 @@ namespace FsInfoCat.Desktop.ViewModel
 
         #endregion
 
-        public FileWithBinaryPropertiesAndAncestorNamesViewModel(TEntity entity) : base(entity)
+        public FileWithBinaryPropertiesAndAncestorNamesViewModel([DisallowNull] TEntity entity) : base(entity)
         {
             Length = entity.Length;
             Hash = entity.Hash;

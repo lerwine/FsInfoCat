@@ -1,6 +1,7 @@
 using FsInfoCat.Desktop.ViewModel;
 using FsInfoCat.Local;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 
 namespace FsInfoCat.Desktop.Local.Volumes
@@ -56,7 +57,7 @@ namespace FsInfoCat.Desktop.Local.Volumes
 
         #endregion
 
-        public ListItemViewModel(VolumeListItemWithFileSystem entity) : base(entity)
+        public ListItemViewModel([DisallowNull] VolumeListItemWithFileSystem entity) : base(entity)
         {
             UpstreamId = entity.UpstreamId;
             LastSynchronizedOn = entity.LastSynchronizedOn;

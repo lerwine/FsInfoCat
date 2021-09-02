@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel
@@ -294,7 +295,7 @@ namespace FsInfoCat.Desktop.ViewModel
         #endregion
 #pragma warning restore IDE0060 // Remove unused parameter
 
-        public ImagePropertiesRowViewModel(TEntity entity) : base(entity)
+        public ImagePropertiesRowViewModel([DisallowNull] TEntity entity) : base(entity)
         {
             BitDepth = entity.BitDepth;
             ColorSpace = entity.ColorSpace;

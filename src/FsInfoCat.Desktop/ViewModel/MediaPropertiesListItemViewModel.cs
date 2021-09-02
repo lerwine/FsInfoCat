@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel
@@ -139,7 +140,7 @@ namespace FsInfoCat.Desktop.ViewModel
 
         #endregion
 
-        public MediaPropertiesListItemViewModel(TEntity entity) : base(entity)
+        public MediaPropertiesListItemViewModel([DisallowNull] TEntity entity) : base(entity)
         {
             Writer = entity.Writer.ToNormalizedDelimitedText();
             Producer = entity.Producer.ToNormalizedDelimitedText();

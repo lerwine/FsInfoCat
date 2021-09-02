@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel
@@ -242,7 +243,7 @@ namespace FsInfoCat.Desktop.ViewModel
         #endregion
 #pragma warning restore IDE0060 // Remove unused parameter
 
-        public VideoPropertiesRowViewModel(TEntity entity) : base(entity)
+        public VideoPropertiesRowViewModel([DisallowNull] TEntity entity) : base(entity)
         {
             Compression = entity.Compression;
             EncodingBitrate = entity.EncodingBitrate;

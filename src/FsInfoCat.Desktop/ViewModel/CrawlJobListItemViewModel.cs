@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel
@@ -80,7 +81,7 @@ namespace FsInfoCat.Desktop.ViewModel
 
         #endregion
 
-        public CrawlJobListItemViewModel(TEntity entity) : base(entity)
+        public CrawlJobListItemViewModel([DisallowNull] TEntity entity) : base(entity)
         {
             SetValue(EditPropertyKey, new Commands.RelayCommand(RaiseEditCommand));
             SetValue(DeletePropertyKey, new Commands.RelayCommand(RaiseDeleteCommand));
