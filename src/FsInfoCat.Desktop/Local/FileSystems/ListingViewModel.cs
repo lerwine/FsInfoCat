@@ -9,50 +9,32 @@ namespace FsInfoCat.Desktop.Local.FileSystems
 {
     public class ListingViewModel : ListingViewModel<FileSystemListItem, ListItemViewModel, bool?>, INotifyNavigatedTo
     {
-        #region ViewOptions Property Members
+        bool? _currentListingOption = true;
 
-        private static readonly DependencyPropertyKey ViewOptionsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ViewOptions), typeof(ThreeStateViewModel), typeof(ListingViewModel),
+        #region ListingOption Property Members
+
+        private static readonly DependencyPropertyKey ListingOptionPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ListingOption), typeof(ThreeStateViewModel), typeof(ListingViewModel),
                 new PropertyMetadata(null));
 
         /// <summary>
-        /// Identifies the <see cref="ViewOptions"/> dependency property.
+        /// Identifies the <see cref="ListingOption"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty ViewOptionsProperty = ViewOptionsPropertyKey.DependencyProperty;
+        public static readonly DependencyProperty ListingOptionProperty = ListingOptionPropertyKey.DependencyProperty;
 
         /// <summary>
         /// Gets the view model for the listing view options.
         /// </summary>
         /// <value>The view model that indicates what items to load into the <see cref="Items"/> collection.</value>
-        public ThreeStateViewModel ViewOptions => (ThreeStateViewModel)GetValue(ViewOptionsProperty);
-
-        #endregion
-        #region EditingOptions Property Members
-
-        private static readonly DependencyPropertyKey EditingOptionsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(EditingOptions), typeof(ThreeStateViewModel), typeof(ListingViewModel),
-                new PropertyMetadata(null));
-
-        /// <summary>
-        /// Identifies the <see cref="EditingOptions"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty EditingOptionsProperty = EditingOptionsPropertyKey.DependencyProperty;
-
-        /// <summary>
-        /// Gets .
-        /// </summary>
-        /// <value>The .</value>
-        public ThreeStateViewModel EditingOptions => (ThreeStateViewModel)GetValue(EditingOptionsProperty);
+        public ThreeStateViewModel ListingOption => (ThreeStateViewModel)GetValue(ListingOptionProperty);
 
         #endregion
 
         public ListingViewModel()
         {
-            ThreeStateViewModel viewOptions = new(true);
-            SetValue(ViewOptionsPropertyKey, viewOptions);
-            viewOptions.ValuePropertyChanged += (sender, e) => ReloadAsync(e.NewValue as bool?);
-            SetValue(EditingOptionsPropertyKey, new ThreeStateViewModel(viewOptions.Value));
+            SetValue(ListingOptionPropertyKey, new ThreeStateViewModel(_currentListingOption));
         }
 
-        void INotifyNavigatedTo.OnNavigatedTo() => ReloadAsync(ViewOptions.Value);
+        void INotifyNavigatedTo.OnNavigatedTo() => ReloadAsync(_currentListingOption);
 
         protected override IQueryable<FileSystemListItem> GetQueryableListing(bool? options, [DisallowNull] LocalDbContext dbContext,
             [DisallowNull] IWindowsStatusListener statusListener)
@@ -66,20 +48,28 @@ namespace FsInfoCat.Desktop.Local.FileSystems
 
         protected override void OnApplyFilterOptionsCommand(object parameter)
         {
-            ViewOptions.Value = EditingOptions.Value;
+            if (_currentListingOption.HasValue)
+            {
+                if (ListingOption.Value.HasValue && _currentListingOption.Value == ListingOption.Value)
+                    return;
+            }
+            else if (!ListingOption.Value.HasValue)
+                return;
+            _currentListingOption = ListingOption.Value;
+            ReloadAsync(_currentListingOption);
         }
 
         protected override void OnCancelFilterOptionsCommand(object parameter)
         {
-            EditingOptions.Value = ViewOptions.Value;
+            ListingOption.Value = _currentListingOption;
             base.OnCancelFilterOptionsCommand(parameter);
         }
 
-        protected override void OnRefreshCommand(object parameter) => ReloadAsync(ViewOptions.Value);
+        protected override void OnRefreshCommand(object parameter) => ReloadAsync(_currentListingOption);
 
         protected override void OnItemEditCommand([DisallowNull] ListItemViewModel item, object parameter)
         {
-            throw new System.NotImplementedException();
+            // TODO: Implement OnItemEditCommand(object);
         }
 
         protected override bool ConfirmItemDelete(ListItemViewModel item, object parameter) => MessageBox.Show(App.Current.MainWindow,
@@ -95,7 +85,7 @@ namespace FsInfoCat.Desktop.Local.FileSystems
 
         protected override void OnAddNewItemCommand(object parameter)
         {
-            throw new System.NotImplementedException();
+            // TODO: Implement OnAddNewItemCommand(object);
         }
     }
 }

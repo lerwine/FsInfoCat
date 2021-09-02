@@ -9,50 +9,32 @@ namespace FsInfoCat.Desktop.Local.PersonalTagDefinitions
 {
     public class ListingViewModel : ListingViewModel<PersonalTagDefinitionListItem, ListItemViewModel, bool?>, INotifyNavigatedTo
     {
-        #region ViewOptions Property Members
+        private bool? _currentOptions = true;
 
-        private static readonly DependencyPropertyKey ViewOptionsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ViewOptions), typeof(ThreeStateViewModel), typeof(ListingViewModel),
+        #region ListingOptions Property Members
+
+        private static readonly DependencyPropertyKey ListingOptionsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ListingOptions), typeof(ThreeStateViewModel), typeof(ListingViewModel),
                 new PropertyMetadata(null));
 
         /// <summary>
-        /// Identifies the <see cref="ViewOptions"/> dependency property.
+        /// Identifies the <see cref="ListingOptions"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty ViewOptionsProperty = ViewOptionsPropertyKey.DependencyProperty;
+        public static readonly DependencyProperty ListingOptionsProperty = ListingOptionsPropertyKey.DependencyProperty;
 
         /// <summary>
         /// Gets the view model for the listing view options.
         /// </summary>
         /// <value>The view model that indicates what items to load into the <see cref="Items"/> collection.</value>
-        public ThreeStateViewModel ViewOptions => (ThreeStateViewModel)GetValue(ViewOptionsProperty);
-
-        #endregion
-        #region EditingOptions Property Members
-
-        private static readonly DependencyPropertyKey EditingOptionsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(EditingOptions), typeof(ThreeStateViewModel), typeof(ListingViewModel),
-                new PropertyMetadata(null));
-
-        /// <summary>
-        /// Identifies the <see cref="EditingOptions"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty EditingOptionsProperty = EditingOptionsPropertyKey.DependencyProperty;
-
-        /// <summary>
-        /// Gets .
-        /// </summary>
-        /// <value>The .</value>
-        public ThreeStateViewModel EditingOptions => (ThreeStateViewModel)GetValue(EditingOptionsProperty);
+        public ThreeStateViewModel ListingOptions => (ThreeStateViewModel)GetValue(ListingOptionsProperty);
 
         #endregion
 
         public ListingViewModel()
         {
-            ThreeStateViewModel viewOptions = new(true);
-            SetValue(ViewOptionsPropertyKey, viewOptions);
-            viewOptions.ValuePropertyChanged += (sender, e) => ReloadAsync(e.NewValue as bool?);
-            SetValue(EditingOptionsPropertyKey, new ThreeStateViewModel(viewOptions.Value));
+            SetValue(ListingOptionsPropertyKey, new ThreeStateViewModel(_currentOptions));
         }
 
-        void INotifyNavigatedTo.OnNavigatedTo() => ReloadAsync(ViewOptions.Value);
+        void INotifyNavigatedTo.OnNavigatedTo() => ReloadAsync(_currentOptions);
 
         protected override IQueryable<PersonalTagDefinitionListItem> GetQueryableListing(bool? options, [DisallowNull] LocalDbContext dbContext,
             [DisallowNull] IWindowsStatusListener statusListener)
@@ -66,20 +48,23 @@ namespace FsInfoCat.Desktop.Local.PersonalTagDefinitions
 
         protected override void OnApplyFilterOptionsCommand(object parameter)
         {
-            ViewOptions.Value = EditingOptions.Value;
+            if (_currentOptions.HasValue ? (ListingOptions.Value.HasValue && _currentOptions.Value == ListingOptions.Value.Value) : !ListingOptions.Value.HasValue)
+                return;
+            _currentOptions = ListingOptions.Value;
+            ReloadAsync(_currentOptions);
         }
 
         protected override void OnCancelFilterOptionsCommand(object parameter)
         {
-            EditingOptions.Value = ViewOptions.Value;
+            ListingOptions.Value = _currentOptions;
             base.OnCancelFilterOptionsCommand(parameter);
         }
 
-        protected override void OnRefreshCommand(object parameter) => ReloadAsync(ViewOptions.Value);
+        protected override void OnRefreshCommand(object parameter) => ReloadAsync(_currentOptions);
 
         protected override void OnItemEditCommand([DisallowNull] ListItemViewModel item, object parameter)
         {
-            throw new System.NotImplementedException();
+            // TODO: Implement OnItemEditCommand(object);
         }
 
         protected override bool ConfirmItemDelete(ListItemViewModel item, object parameter)
@@ -188,7 +173,7 @@ namespace FsInfoCat.Desktop.Local.PersonalTagDefinitions
 
         protected override void OnAddNewItemCommand(object parameter)
         {
-            throw new System.NotImplementedException();
+            // TODO: Implement OnAddNewItemCommand(object);
         }
     }
 }

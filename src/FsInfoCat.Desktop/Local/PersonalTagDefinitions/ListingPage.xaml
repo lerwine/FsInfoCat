@@ -23,35 +23,15 @@
                     <DataGridTextColumn.Header>
                         <StackPanel Orientation="Horizontal">
                             <Label Content="State"/>
-                            <Button Grid.Column="1" Style="{DynamicResource AddNewButton}" Command="{Binding AddNewItemButtonClick, Mode=OneWay}"/>
-                            <Button Grid.Column="2" Style="{DynamicResource FilterButton}" Command="{Binding ShowFilterOptionsButtonClick, Mode=OneWay}"/>
+                            <Button Style="{DynamicResource AddNewButton}" Margin="{DynamicResource DefaultSpacingLeft}" Command="{Binding AddNewItem, Mode=OneWay}"/>
+                            <Button Style="{DynamicResource FilterButton}" Margin="{DynamicResource DefaultSpacingLeft}" Command="{Binding ShowFilterOptions, Mode=OneWay}"/>
                         </StackPanel>
                     </DataGridTextColumn.Header>
                 </DataGridTextColumn>
             </DataGrid.Columns>
             <DataGrid.RowDetailsTemplate>
                 <DataTemplate>
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition/>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition/>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
-                        <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" Content="Description"/>
-                        <Button Margin="{DynamicResource DefaultSpacingRight}" Style="{DynamicResource EditButton}" ToolTip="Edit Symbolic Name" Grid.Column="1"/>
-                        <Button Style="{DynamicResource DeleteButton}" ToolTip="Delete Symbolic Name" Grid.Column="2"/>
-                        <TextBox Padding="{DynamicResource DefaultSpacingBottomLeftRight}" Text="{Binding Description}" Grid.ColumnSpan="3" Grid.Row="1"/>
-                        <WrapPanel Grid.Row="2" HorizontalAlignment="Right">
-                            <Button Content="Show Tagged Volumes" Style="{DynamicResource DefaultButton}" Margin="{DynamicResource DefaultSpacingBottomLeftRight}"/>
-                            <Button Content="Show Tagged Subdirectories" Margin="{DynamicResource DefaultSpacingBottomRight}"/>
-                            <Button Content="Show Tagged Files" Margin="{DynamicResource DefaultSpacingBottomRight}"/>
-                        </WrapPanel>
-                    </Grid>
+                    <local:ListItemControl/>
                 </DataTemplate>
             </DataGrid.RowDetailsTemplate>
         </DataGrid>
@@ -71,7 +51,7 @@
                                 <RowDefinition/>
                                 <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
-                            <WrapPanel DataContext="{Binding EditingOptions, Mode=OneWay}">
+                            <WrapPanel DataContext="{Binding ListingOptions, Mode=OneWay}">
                                 <Label Content="Show:" Padding="{DynamicResource DefaultSpacing}"/>
                                 <RadioButton Content="Active Only" Margin="{DynamicResource DefaultSpacingTopBottomRight}" GroupName="ViewOptions" IsChecked="{Binding IsTrue}"/>
                                 <RadioButton Content="Inactive Only" Margin="{DynamicResource DefaultSpacingTopBottomRight}" GroupName="ViewOptions" IsChecked="{Binding IsFalse}"/>

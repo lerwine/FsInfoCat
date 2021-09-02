@@ -10,21 +10,25 @@ namespace FsInfoCat.Desktop.Local.CrawlConfigurations
 {
     public class ListingViewModel : ListingViewModel<CrawlConfigListItem, ListItemViewModel, (CrawlStatus? Status, bool ShowAll, bool? IsScheduled)>, INotifyNavigatedTo
     {
-        #region CurrentStatusOptions Property Members
+        private readonly EnumChoiceItem<CrawlStatus> _allOption;
+        private readonly EnumChoiceItem<CrawlStatus> _allFailedOption;
+        private (CrawlStatus? Status, bool ShowAll, bool? IsScheduled) _currentStatusOptions = new(null, true, false);
 
-        private static readonly DependencyPropertyKey CurrentStatusOptionsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(CurrentStatusOptions), typeof(EnumValuePickerVM<CrawlStatus>), typeof(ListingViewModel),
+        #region StatusOptions Property Members
+
+        private static readonly DependencyPropertyKey StatusOptionsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(StatusOptions), typeof(EnumValuePickerVM<CrawlStatus>), typeof(ListingViewModel),
                 new PropertyMetadata(null));
 
         /// <summary>
-        /// Identifies the <see cref="CurrentStatusOptions"/> dependency property.
+        /// Identifies the <see cref="StatusOptions"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty CurrentStatusOptionsProperty = CurrentStatusOptionsPropertyKey.DependencyProperty;
+        public static readonly DependencyProperty StatusOptionsProperty = StatusOptionsPropertyKey.DependencyProperty;
 
         /// <summary>
         /// Gets .
         /// </summary>
         /// <value>The .</value>
-        public EnumValuePickerVM<CrawlStatus> CurrentStatusOptions => (EnumValuePickerVM<CrawlStatus>)GetValue(CurrentStatusOptionsProperty);
+        public EnumValuePickerVM<CrawlStatus> StatusOptions => (EnumValuePickerVM<CrawlStatus>)GetValue(StatusOptionsProperty);
 
         #endregion
         #region EditingStatusOptions Property Members
@@ -44,39 +48,21 @@ namespace FsInfoCat.Desktop.Local.CrawlConfigurations
         public EnumValuePickerVM<CrawlStatus> EditingStatusOptions => (EnumValuePickerVM<CrawlStatus>)GetValue(EditingStatusOptionsProperty);
 
         #endregion
-        #region CurrentIsScheduledOption Property Members
+        #region SchedulingOptions Property Members
 
-        private static readonly DependencyPropertyKey CurrentIsScheduledOptionPropertyKey = DependencyProperty.RegisterReadOnly(nameof(CurrentIsScheduledOption), typeof(ThreeStateViewModel), typeof(ListingViewModel),
+        private static readonly DependencyPropertyKey SchedulingOptionsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(SchedulingOptions), typeof(ThreeStateViewModel), typeof(ListingViewModel),
                 new PropertyMetadata(null));
 
         /// <summary>
-        /// Identifies the <see cref="CurrentIsScheduledOption"/> dependency property.
+        /// Identifies the <see cref="SchedulingOptions"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty CurrentIsScheduledOptionProperty = CurrentIsScheduledOptionPropertyKey.DependencyProperty;
+        public static readonly DependencyProperty SchedulingOptionsProperty = SchedulingOptionsPropertyKey.DependencyProperty;
 
         /// <summary>
         /// Gets .
         /// </summary>
         /// <value>The .</value>
-        public ThreeStateViewModel CurrentIsScheduledOption => (ThreeStateViewModel)GetValue(CurrentIsScheduledOptionProperty);
-
-        #endregion
-        #region EditingIsScheduledOption Property Members
-
-        private static readonly DependencyPropertyKey EditingIsScheduledOptionPropertyKey = DependencyProperty.RegisterReadOnly(nameof(EditingIsScheduledOption), typeof(ThreeStateViewModel), typeof(ListingViewModel),
-                new PropertyMetadata(null));
-
-        /// <summary>
-        /// Identifies the <see cref="EditingIsScheduledOption"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty EditingIsScheduledOptionProperty = EditingIsScheduledOptionPropertyKey.DependencyProperty;
-        private readonly EnumChoiceItem<CrawlStatus> _allOption;
-
-        /// <summary>
-        /// Gets .
-        /// </summary>
-        /// <value>The .</value>
-        public ThreeStateViewModel EditingIsScheduledOption => (ThreeStateViewModel)GetValue(EditingIsScheduledOptionProperty);
+        public ThreeStateViewModel SchedulingOptions => (ThreeStateViewModel)GetValue(SchedulingOptionsProperty);
 
         #endregion
 
@@ -84,12 +70,15 @@ namespace FsInfoCat.Desktop.Local.CrawlConfigurations
         {
             string[] names = new[] { FsInfoCat.Properties.Resources.DisplayName_AllItems, FsInfoCat.Properties.Resources.DisplayName_AllFailedItems };
             EnumValuePickerVM<CrawlStatus> viewOptions = new(names);
-            _allOption = viewOptions.Choices.First(o => o.DisplayName == FsInfoCat.Properties.Resources.DisplayName_AllItems); ;
-            SetValue(CurrentStatusOptionsPropertyKey, viewOptions);
+            _allOption = viewOptions.Choices.First(o => o.DisplayName == FsInfoCat.Properties.Resources.DisplayName_AllItems);
+            _allFailedOption = viewOptions.Choices.First(o => o.DisplayName == FsInfoCat.Properties.Resources.DisplayName_AllFailedItems);
+            SetValue(StatusOptionsPropertyKey, viewOptions);
             SetValue(EditingStatusOptionsPropertyKey, new EnumValuePickerVM<CrawlStatus>(names) { SelectedIndex = viewOptions.SelectedIndex });
-            ThreeStateViewModel isScheduledOption = new(null);
-            SetValue(CurrentIsScheduledOptionPropertyKey, isScheduledOption);
-            SetValue(EditingIsScheduledOptionPropertyKey, new ThreeStateViewModel(isScheduledOption.Value));
+            SetValue(SchedulingOptionsPropertyKey, new ThreeStateViewModel(_currentStatusOptions.IsScheduled));
+            if (_currentStatusOptions.Status.HasValue)
+                StatusOptions.SelectedValue = _currentStatusOptions.Status.Value;
+            else
+                StatusOptions.SelectedItem = _currentStatusOptions.ShowAll ? _allOption : _allFailedOption;
         }
 
         protected override bool ConfirmItemDelete(ListItemViewModel item, object parameter) => MessageBox.Show(App.Current.MainWindow,
@@ -128,37 +117,52 @@ namespace FsInfoCat.Desktop.Local.CrawlConfigurations
 
         protected override void OnAddNewItemCommand(object parameter)
         {
-            throw new NotImplementedException();
+            // TODO: Implement OnAddNewItemCommand(object);
         }
 
         protected override void OnItemEditCommand([DisallowNull] ListItemViewModel item, object parameter)
         {
-            throw new NotImplementedException();
+            // TODO: Implement OnItemEditCommand(object);
         }
 
-        protected override void OnRefreshCommand(object parameter) => ReloadAsync(CurrentStatusOptions.SelectedItem, CurrentIsScheduledOption.Value);
+        protected override void OnRefreshCommand(object parameter) => ReloadAsync(_currentStatusOptions);
 
         protected override void OnApplyFilterOptionsCommand(object parameter)
         {
-            CurrentIsScheduledOption.Value = EditingIsScheduledOption.Value;
-            CurrentStatusOptions.SelectedIndex = EditingStatusOptions.SelectedIndex;
-            ReloadAsync(CurrentStatusOptions.SelectedItem, CurrentIsScheduledOption.Value);
+            (CrawlStatus? Status, bool ShowAll, bool? IsScheduled) newStatusOptions = (StatusOptions.SelectedValue, ReferenceEquals(StatusOptions.SelectedItem, _allOption), SchedulingOptions.Value);
+            if (newStatusOptions.ShowAll == _currentStatusOptions.ShowAll)
+            {
+                if (newStatusOptions.Status.HasValue)
+                {
+                    if (_currentStatusOptions.Status.HasValue && _currentStatusOptions.Status.Value == newStatusOptions.Status.Value)
+                    {
+                        if (newStatusOptions.IsScheduled.HasValue ? (_currentStatusOptions.IsScheduled.HasValue && _currentStatusOptions.IsScheduled.Value == newStatusOptions.IsScheduled.Value) : !_currentStatusOptions.IsScheduled.HasValue)
+                        {
+                            if (_currentStatusOptions.IsScheduled.HasValue && _currentStatusOptions.IsScheduled.Value == newStatusOptions.IsScheduled.Value)
+                                return;
+                        }
+                        else if (!_currentStatusOptions.IsScheduled.HasValue)
+                            return;
+                    }
+                }
+                else if (!_currentStatusOptions.Status.HasValue)
+                    return;
+            }
+            _currentStatusOptions = newStatusOptions;
+            ReloadAsync(_currentStatusOptions);
         }
 
         protected override void OnCancelFilterOptionsCommand(object parameter)
         {
-            EditingIsScheduledOption.Value = CurrentIsScheduledOption.Value;
-            EditingStatusOptions.SelectedIndex = CurrentStatusOptions.SelectedIndex;
+            CrawlStatus? status = _currentStatusOptions.Status;
+            if (status.HasValue)
+                StatusOptions.SelectedValue = status.Value;
+            else
+                StatusOptions.SelectedItem = _currentStatusOptions.ShowAll ? _allOption : _allFailedOption;
+            SchedulingOptions.Value = _currentStatusOptions.IsScheduled;
             base.OnCancelFilterOptionsCommand(parameter);
         }
 
-        void INotifyNavigatedTo.OnNavigatedTo() => ReloadAsync(CurrentStatusOptions.SelectedItem, CurrentIsScheduledOption.Value);
-
-        private IAsyncJob ReloadAsync(EnumChoiceItem<CrawlStatus> selectedItem, bool? isScheduledOption)
-        {
-            if (selectedItem.Value.HasValue)
-                return ReloadAsync((selectedItem.Value, false, isScheduledOption));
-            return ReloadAsync((null, ReferenceEquals(selectedItem, _allOption), isScheduledOption));
-        }
+        void INotifyNavigatedTo.OnNavigatedTo() => ReloadAsync(_currentStatusOptions);
     }
 }

@@ -89,7 +89,7 @@ namespace FsInfoCat.Desktop.Local.CrawlLogs
 
         protected override void OnItemEditCommand([DisallowNull] ListItemViewModel item, object parameter)
         {
-            throw new NotImplementedException();
+            // TODO: Implement OnItemEditCommand(object);
         }
 
         protected override bool ConfirmItemDelete(ListItemViewModel item, object parameter) => MessageBox.Show(App.Current.MainWindow,
@@ -108,7 +108,7 @@ namespace FsInfoCat.Desktop.Local.CrawlLogs
 
         protected override void OnAddNewItemCommand(object parameter)
         {
-            throw new NotImplementedException();
+            // TODO: Implement OnAddNewItemCommand(object);
         }
 
         void INotifyNavigatedTo.OnNavigatedTo() => ReloadAsync(CurrentStatusOptions.SelectedItem);

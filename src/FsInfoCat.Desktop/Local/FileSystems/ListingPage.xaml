@@ -23,12 +23,17 @@
                     <DataGridTextColumn.Header>
                         <StackPanel Orientation="Horizontal">
                             <Label Content="State"/>
-                            <Button Grid.Column="1" Style="{DynamicResource AddNewButton}" Command="{Binding AddNewItemButtonClick, Mode=OneWay}"/>
-                            <Button Grid.Column="2" Style="{DynamicResource FilterButton}" Command="{Binding ShowFilterOptionsButtonClick, Mode=OneWay}"/>
+                            <Button Style="{DynamicResource AddNewButton}" Margin="{DynamicResource DefaultSpacingLeft}" Command="{Binding AddNewItem, Mode=OneWay}"/>
+                            <Button Style="{DynamicResource FilterButton}" Margin="{DynamicResource DefaultSpacingLeft}" Command="{Binding ShowFilterOptions, Mode=OneWay}"/>
                         </StackPanel>
                     </DataGridTextColumn.Header>
                 </DataGridTextColumn>
             </DataGrid.Columns>
+            <DataGrid.RowDetailsTemplate>
+                <DataTemplate>
+                    <local:ListItemControl/>
+                </DataTemplate>
+            </DataGrid.RowDetailsTemplate>
         </DataGrid>
         <Border Background="{DynamicResource TranslucentBlack50pctBrush}" Visibility="{Binding ViewOptionsVisible, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}">
             <Border HorizontalAlignment="Center" VerticalAlignment="Center" Style="{DynamicResource PopupOuterBorder}">
@@ -46,15 +51,15 @@
                                 <RowDefinition/>
                                 <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
-                            <WrapPanel DataContext="{Binding EditingOptions, Mode=OneWay}">
+                            <WrapPanel DataContext="{Binding ListingOption, Mode=OneWay}">
                                 <Label Content="Show:" Padding="{DynamicResource DefaultSpacing}"/>
                                 <RadioButton Content="Active Only" Margin="{DynamicResource DefaultSpacingTopBottomRight}" GroupName="ViewOptions" IsChecked="{Binding IsTrue}"/>
                                 <RadioButton Content="Inactive Only" Margin="{DynamicResource DefaultSpacingTopBottomRight}" GroupName="ViewOptions" IsChecked="{Binding IsFalse}"/>
                                 <RadioButton Content="All Items" Margin="{DynamicResource DefaultSpacingTopBottomRight}" GroupName="ViewOptions" IsChecked="{Binding IsNull}"/>
                             </WrapPanel>
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="1">
-                                <Button Style="{DynamicResource AcceptButton}" ToolTip="Apply Filter" Margin="{DynamicResource DefaultSpacingBottomLeftRight}" Command="{Binding SaveFilterOptionsButtonClick, Mode=OneWay}"/>
-                                <Button Style="{DynamicResource CancelButton}" ToolTip="Discard Filter Changes" Margin="{DynamicResource DefaultSpacingBottomRight}" Command="{Binding CancelFilterOptionsButtonClick, Mode=OneWay}"/>
+                                <Button Style="{DynamicResource AcceptButton}" ToolTip="Apply Filter" Margin="{DynamicResource DefaultSpacingBottomLeftRight}" Command="{Binding SaveFilterOptions, Mode=OneWay}"/>
+                                <Button Style="{DynamicResource CancelButton}" ToolTip="Discard Filter Changes" Margin="{DynamicResource DefaultSpacingBottomRight}" Command="{Binding CancelFilterOptions, Mode=OneWay}"/>
                             </StackPanel>
                         </Grid>
                     </Border>

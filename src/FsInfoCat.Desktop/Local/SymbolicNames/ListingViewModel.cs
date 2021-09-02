@@ -66,6 +66,7 @@ namespace FsInfoCat.Desktop.Local.SymbolicNames
 
         protected override void OnApplyFilterOptionsCommand(object parameter)
         {
+            // BUG: Need to fix logic
             ViewOptions.Value = EditingOptions.Value;
         }
 
@@ -79,7 +80,7 @@ namespace FsInfoCat.Desktop.Local.SymbolicNames
 
         protected override void OnItemEditCommand([DisallowNull] ListItemViewModel item, object parameter)
         {
-            throw new System.NotImplementedException();
+            // TODO: Implement OnItemEditCommand(object);
         }
 
         protected override bool ConfirmItemDelete(ListItemViewModel item, object parameter) => MessageBox.Show(App.Current.MainWindow,
@@ -98,7 +99,7 @@ namespace FsInfoCat.Desktop.Local.SymbolicNames
 
         protected override void OnAddNewItemCommand(object parameter)
         {
-            throw new System.NotImplementedException();
+            // TODO: Implement OnAddNewItemCommand(object);
         }
     }
 }

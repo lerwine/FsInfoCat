@@ -22,12 +22,17 @@
                     <DataGridTextColumn.Header>
                         <StackPanel Orientation="Horizontal">
                             <Label Content="State"/>
-                            <Button Grid.Column="1" Style="{DynamicResource AddNewButton}" Command="{Binding AddNewItemButtonClick, Mode=OneWay}"/>
-                            <Button Grid.Column="2" Style="{DynamicResource FilterButton}" Command="{Binding ShowFilterOptionsButtonClick, Mode=OneWay}"/>
+                            <Button Style="{DynamicResource AddNewButton}" Margin="{DynamicResource DefaultSpacingLeft}" Command="{Binding AddNewItem, Mode=OneWay}"/>
+                            <Button Style="{DynamicResource FilterButton}" Margin="{DynamicResource DefaultSpacingLeft}" Command="{Binding ShowFilterOptions, Mode=OneWay}"/>
                         </StackPanel>
                     </DataGridTextColumn.Header>
                 </DataGridTextColumn>
             </DataGrid.Columns>
+            <DataGrid.RowDetailsTemplate>
+                <DataTemplate>
+                    <local:ListItemControl/>
+                </DataTemplate>
+            </DataGrid.RowDetailsTemplate>
         </DataGrid>
         <Border Background="{DynamicResource TranslucentBlack50pctBrush}" Visibility="{Binding ViewOptionsVisible, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}">
             <Border HorizontalAlignment="Center" VerticalAlignment="Center" Style="{DynamicResource PopupOuterBorder}">

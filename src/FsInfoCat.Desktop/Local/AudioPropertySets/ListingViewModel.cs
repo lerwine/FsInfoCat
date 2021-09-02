@@ -61,6 +61,8 @@ namespace FsInfoCat.Desktop.Local.AudioPropertySets
 
         protected override void OnApplyFilterOptionsCommand(object parameter)
         {
+            if (_currentOptions.HasValue ? (ListingOptions.Value.HasValue && _currentOptions.Value == ListingOptions.Value.Value) : !ListingOptions.Value.HasValue)
+                return;
             _currentOptions = ListingOptions.Value;
             ReloadAsync(_currentOptions);
         }
@@ -69,7 +71,7 @@ namespace FsInfoCat.Desktop.Local.AudioPropertySets
 
         protected override void OnItemEditCommand([DisallowNull] ListItemViewModel item, object parameter)
         {
-            throw new NotImplementedException();
+            // TODO: Implement OnItemEditCommand(object);
         }
 
         protected override bool ConfirmItemDelete(ListItemViewModel item, object parameter) => MessageBox.Show(App.Current.MainWindow,
@@ -88,7 +90,7 @@ namespace FsInfoCat.Desktop.Local.AudioPropertySets
 
         protected override void OnAddNewItemCommand(object parameter)
         {
-            throw new NotImplementedException();
+            // TODO: Implement OnAddNewItemCommand(object);
         }
     }
 }
