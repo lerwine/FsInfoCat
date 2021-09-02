@@ -68,7 +68,7 @@ namespace FsInfoCat.Desktop.ViewModel
 
         #endregion
 
-        protected DbEntityRowViewModel(TEntity entity)
+        protected DbEntityRowViewModel([DisallowNull] TEntity entity)
         {
             _entity = entity ?? throw new ArgumentNullException(nameof(entity));
             CreatedOn = entity.CreatedOn;

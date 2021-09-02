@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat.Desktop.ViewModel
 {
@@ -13,7 +14,7 @@ namespace FsInfoCat.Desktop.ViewModel
         public TimeSpanViewModel RescheduleInterval { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
         public TimeSpanViewModel TTL { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
-        public CrawlConfigEditViewModel(TEntity entity) : base(entity)
+        public CrawlConfigEditViewModel([DisallowNull] TEntity entity) : base(entity)
         {
 
         }

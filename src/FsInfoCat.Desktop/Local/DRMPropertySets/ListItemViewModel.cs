@@ -1,6 +1,7 @@
 using FsInfoCat.Desktop.ViewModel;
 using FsInfoCat.Local;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 
 namespace FsInfoCat.Desktop.Local.DRMPropertySets
@@ -25,7 +26,7 @@ namespace FsInfoCat.Desktop.Local.DRMPropertySets
 
         #endregion
 
-        public ListItemViewModel(DRMPropertiesListItem entity) : base(entity)
+        public ListItemViewModel([DisallowNull] DRMPropertiesListItem entity) : base(entity)
         {
             LastSynchronizedOn = entity.LastSynchronizedOn;
         }

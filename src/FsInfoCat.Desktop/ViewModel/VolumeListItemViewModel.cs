@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel
@@ -165,7 +166,7 @@ namespace FsInfoCat.Desktop.ViewModel
 
         #endregion
 
-        public VolumeListItemViewModel(TEntity entity) : base(entity)
+        public VolumeListItemViewModel([DisallowNull] TEntity entity) : base(entity)
         {
             RootPath = entity.RootPath;
             RootSubdirectoryCount = entity.RootSubdirectoryCount;

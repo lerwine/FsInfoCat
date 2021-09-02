@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat.Desktop.ViewModel
 {
@@ -6,7 +7,7 @@ namespace FsInfoCat.Desktop.ViewModel
         where TEntity : DbEntity, ICrawlJobLog
         where TCrawlConfiguration : ICrawlConfiguration
     {
-        public CrawlJobLogEditViewModel(TEntity entity, TCrawlConfiguration crawlConfiguration) : base(entity)
+        public CrawlJobLogEditViewModel([DisallowNull] TEntity entity, TCrawlConfiguration crawlConfiguration) : base(entity)
         {
             // TODO: Implement CrawlJobLogEditViewModel
         }

@@ -1,6 +1,7 @@
 using FsInfoCat.Desktop.ViewModel;
 using FsInfoCat.Local;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 
 namespace FsInfoCat.Desktop.Local.SharedTagDefinitions
@@ -138,7 +139,7 @@ namespace FsInfoCat.Desktop.Local.SharedTagDefinitions
 
         #endregion
 
-        public ListItemViewModel(SharedTagDefinitionListItem entity) : base(entity)
+        public ListItemViewModel([DisallowNull] SharedTagDefinitionListItem entity) : base(entity)
         {
             SetValue(EditButtonClickPropertyKey, new Commands.RelayCommand(RaiseEditButtonClicked));
             SetValue(DeleteButtonClickPropertyKey, new Commands.RelayCommand(RaiseDeleteButtonClicked));

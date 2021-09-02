@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel
@@ -122,7 +123,7 @@ namespace FsInfoCat.Desktop.ViewModel
 
         #endregion
 
-        public RedundantSetListItemViewModel(TEntity entity) : base(entity)
+        public RedundantSetListItemViewModel([DisallowNull] TEntity entity) : base(entity)
         {
             Length = entity.Length;
             Hash = entity.Hash;

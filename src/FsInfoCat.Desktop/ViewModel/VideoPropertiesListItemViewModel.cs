@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel
@@ -122,7 +123,7 @@ namespace FsInfoCat.Desktop.ViewModel
 
         #endregion
 
-        public VideoPropertiesListItemViewModel(TEntity entity) : base(entity)
+        public VideoPropertiesListItemViewModel([DisallowNull] TEntity entity) : base(entity)
         {
             Director = entity.Director.ToNormalizedDelimitedText();
             ExistingFileCount = entity.ExistingFileCount;

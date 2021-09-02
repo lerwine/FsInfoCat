@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel
@@ -269,7 +270,7 @@ namespace FsInfoCat.Desktop.ViewModel
         #endregion
 #pragma warning restore IDE0060 // Remove unused parameter
 
-        public DocumentPropertiesRowViewModel(TEntity entity) : base(entity)
+        public DocumentPropertiesRowViewModel([DisallowNull] TEntity entity) : base(entity)
         {
             ClientID = entity.ClientID;
             DateCreated = entity.DateCreated;

@@ -1,6 +1,7 @@
 using FsInfoCat.Desktop.ViewModel;
 using FsInfoCat.Local;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 
 namespace FsInfoCat.Desktop.Local.MediaPropertySets
@@ -25,7 +26,7 @@ namespace FsInfoCat.Desktop.Local.MediaPropertySets
 
         #endregion
 
-        public ListItemViewModel(MediaPropertiesListItem entity) : base(entity)
+        public ListItemViewModel([DisallowNull] MediaPropertiesListItem entity) : base(entity)
         {
             LastSynchronizedOn = entity.LastSynchronizedOn;
         }

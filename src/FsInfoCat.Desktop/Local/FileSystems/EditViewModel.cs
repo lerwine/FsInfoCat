@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -69,7 +70,7 @@ namespace FsInfoCat.Desktop.Local.FileSystems
 
         #endregion
 
-        public EditViewModel(FileSystem entity) : base(entity)
+        public EditViewModel([DisallowNull] FileSystem entity) : base(entity)
         {
             UpstreamId = entity.UpstreamId;
             LastSynchronizedOn = entity.LastSynchronizedOn;
@@ -77,6 +78,7 @@ namespace FsInfoCat.Desktop.Local.FileSystems
 
         void INotifyNavigatedTo.OnNavigatedTo()
         {
+            // TODO: Load option lists from database
             throw new NotImplementedException();
         }
     }

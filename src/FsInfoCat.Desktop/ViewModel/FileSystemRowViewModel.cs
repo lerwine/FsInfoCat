@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Windows;
@@ -169,7 +170,7 @@ namespace FsInfoCat.Desktop.ViewModel
         #endregion
 #pragma warning restore IDE0060 // Remove unused parameter
 
-        public FileSystemRowViewModel(TEntity entity) : base(entity)
+        public FileSystemRowViewModel([DisallowNull] TEntity entity) : base(entity)
         {
             Notes = entity.Notes;
             IsInactive = entity.IsInactive;

@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -36,7 +37,7 @@ namespace FsInfoCat.Desktop.ViewModel
         #endregion
 #pragma warning restore IDE0060 // Remove unused parameter
 
-        public SymbolicNameDetailsViewModel(TEntity entity, TFileSystemModel fileSystem) : base(entity)
+        public SymbolicNameDetailsViewModel([DisallowNull] TEntity entity, TFileSystemModel fileSystem) : base(entity)
         {
             FileSystem = fileSystem;
         }

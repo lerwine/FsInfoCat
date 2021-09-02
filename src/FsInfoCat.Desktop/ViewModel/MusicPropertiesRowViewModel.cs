@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel
@@ -170,7 +171,7 @@ namespace FsInfoCat.Desktop.ViewModel
         #endregion
 #pragma warning restore IDE0060 // Remove unused parameter
 
-        public MusicPropertiesRowViewModel(TEntity entity) : base(entity)
+        public MusicPropertiesRowViewModel([DisallowNull] TEntity entity) : base(entity)
         {
             AlbumArtist = entity.AlbumArtist;
             AlbumTitle = entity.AlbumTitle;

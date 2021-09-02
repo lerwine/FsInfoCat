@@ -1,6 +1,7 @@
 using FsInfoCat.Desktop.ViewModel;
 using FsInfoCat.Local;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 
 namespace FsInfoCat.Desktop.Local.RedundantSets
@@ -25,7 +26,7 @@ namespace FsInfoCat.Desktop.Local.RedundantSets
 
         #endregion
 
-        public ListItemViewModel(RedundantSetListItem entity)
+        public ListItemViewModel([DisallowNull] RedundantSetListItem entity)
             : base(entity)
         {
             // TODO: Implement ListItemViewModel

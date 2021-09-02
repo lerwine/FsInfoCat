@@ -3,6 +3,7 @@ using FsInfoCat.Local;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -117,7 +118,7 @@ namespace FsInfoCat.Desktop.Local.SymbolicNames
 
         #endregion
 
-        public ListItemViewModel(SymbolicNameListItem entity) : base(entity)
+        public ListItemViewModel([DisallowNull] SymbolicNameListItem entity) : base(entity)
         {
             SetValue(EditPropertyKey, new Commands.RelayCommand(RaiseEditCommand));
             SetValue(DeletePropertyKey, new Commands.RelayCommand(RaiseDeleteCommand));

@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel
@@ -190,7 +191,7 @@ namespace FsInfoCat.Desktop.ViewModel
 
         #endregion
 
-        public CrawlConfigurationRowViewModel(TEntity entity) : base(entity)
+        public CrawlConfigurationRowViewModel([DisallowNull] TEntity entity) : base(entity)
         {
             DisplayName = entity.DisplayName;
             Notes = entity.Notes;

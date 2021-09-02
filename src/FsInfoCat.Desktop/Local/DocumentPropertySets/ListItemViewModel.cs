@@ -1,6 +1,7 @@
 using FsInfoCat.Desktop.ViewModel;
 using FsInfoCat.Local;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 
 namespace FsInfoCat.Desktop.Local.DocumentPropertySets
@@ -25,7 +26,7 @@ namespace FsInfoCat.Desktop.Local.DocumentPropertySets
 
         #endregion
 
-        public ListItemViewModel(DocumentPropertiesListItem entity) : base(entity)
+        public ListItemViewModel([DisallowNull] DocumentPropertiesListItem entity) : base(entity)
         {
             LastSynchronizedOn = entity.LastSynchronizedOn;
         }

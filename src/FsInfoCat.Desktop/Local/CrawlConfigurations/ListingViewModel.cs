@@ -85,7 +85,7 @@ namespace FsInfoCat.Desktop.Local.CrawlConfigurations
             "This action cannot be undone!\n\nAre you sure you want to remove this crawl configuration from the database?",
             "Delete Crawl Configuration", MessageBoxButton.YesNo, MessageBoxImage.Exclamation) == MessageBoxResult.Yes;
 
-        protected override ListItemViewModel CreateItemViewModel([DisallowNull] CrawlConfigListItem entity) => new ListItemViewModel(entity);
+        protected override ListItemViewModel CreateItemViewModel([DisallowNull] CrawlConfigListItem entity) => new(entity);
 
         protected override async Task<int> DeleteEntityFromDbContextAsync([DisallowNull] CrawlConfigListItem entity, [DisallowNull] LocalDbContext dbContext,
             [DisallowNull] IWindowsStatusListener statusListener)

@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel
@@ -122,7 +123,7 @@ namespace FsInfoCat.Desktop.ViewModel
 
         #endregion
 
-        public FileSystemListItemViewModel(TEntity entity) : base(entity)
+        public FileSystemListItemViewModel([DisallowNull] TEntity entity) : base(entity)
         {
             PrimarySymbolicName = entity.PrimarySymbolicName;
             SymbolicNameCount = entity.SymbolicNameCount;

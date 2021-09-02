@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel
@@ -139,7 +140,7 @@ namespace FsInfoCat.Desktop.ViewModel
         #endregion
 #pragma warning restore IDE0060 // Remove unused parameter
 
-        public FsItemRowViewModel(TEntity entity) : base(entity)
+        public FsItemRowViewModel([DisallowNull] TEntity entity) : base(entity)
         {
             Name = entity.Name;
             LastAccessed = entity.LastAccessed;
