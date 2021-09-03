@@ -176,6 +176,12 @@ namespace FsInfoCat.Desktop.ViewModel
             OrientationText = entity.OrientationText;
         }
 
+        internal string CalculateDisplayText()
+        {
+            // TODO: Calculate value for ListingViewModel<TEntity, TItem, TOptions>.SetItemDisplayText(string)
+            throw new NotImplementedException();
+        }
+
         protected override void OnEntityPropertyChanged(string propertyName)
         {
             switch (propertyName)

@@ -150,6 +150,7 @@ namespace FsInfoCat.Desktop.ViewModel
 
         protected override void OnEntityPropertyChanged(string propertyName)
         {
+            // TODO: Ensure OrientationText is set to Orientation if it is empty
             switch (propertyName)
             {
                 case nameof(IPhotoProperties.Event):

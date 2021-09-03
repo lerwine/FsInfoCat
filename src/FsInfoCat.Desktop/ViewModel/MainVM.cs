@@ -1,7 +1,6 @@
 using Microsoft.Extensions.Logging;
 using System;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Navigation;
 
@@ -208,13 +207,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <value>The <see cref="System.Windows.Input.ICommand"/> that implements the $command$ command.</value>
         public Commands.RelayCommand ViewSummaryPropertySets => (Commands.RelayCommand)GetValue(ViewSummaryPropertySetsProperty);
 
-        private void OnViewSummaryPropertySets(object parameter)
-        {
-            // TODO: Implement OnViewSummaryPropertySets Logic
-        }
-
-        /* TODO: Add ViewSummaryPropertySets to initialization code to constructor
-           SetValue(ViewSummaryPropertySetsPropertyKey, new Commands.RelayCommand(OnViewSummaryPropertySets)); */
+        private void OnViewSummaryPropertySets(object parameter) => NavigateTo(Page_Uri_Local_SummaryPropertySets);
 
         #endregion
         #region ViewCrawlLogs Command Property Members
@@ -233,15 +226,9 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <value>The <see cref="System.Windows.Input.ICommand"/> that implements the $command$ command.</value>
         public Commands.RelayCommand ViewCrawlLogs => (Commands.RelayCommand)GetValue(ViewCrawlLogsProperty);
 
-        private void OnViewCrawlLogs(object parameter)
-        {
-            // TODO: Implement OnViewCrawlLogs Logic
-        }
+        private void OnViewCrawlLogs(object parameter) => NavigateTo(Page_Uri_Local_CrawlLogs);
 
-/* TODO: Add ViewCrawlLogs to initialization code to constructor
-   SetValue(ViewCrawlLogsPropertyKey, new Commands.RelayCommand(OnViewCrawlLogs)); */
-
-#endregion
+        #endregion
         #region ViewDocumentPropertySets Command Property Members
 
         private static readonly DependencyPropertyKey ViewDocumentPropertySetsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ViewDocumentPropertySets),
@@ -258,15 +245,9 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <value>The <see cref="System.Windows.Input.ICommand"/> that implements the $command$ command.</value>
         public Commands.RelayCommand ViewDocumentPropertySets => (Commands.RelayCommand)GetValue(ViewDocumentPropertySetsProperty);
 
-        private void OnViewDocumentPropertySets(object parameter)
-        {
-            // TODO: Implement OnViewDocumentPropertySets Logic
-        }
+        private void OnViewDocumentPropertySets(object parameter) => NavigateTo(Page_Uri_Local_DocumentPropertySets);
 
-/* TODO: Add ViewDocumentPropertySets to initialization code to constructor
-   SetValue(ViewDocumentPropertySetsPropertyKey, new Commands.RelayCommand(OnViewDocumentPropertySets)); */
-
-#endregion
+        #endregion
         #region ViewAudioPropertySets Command Property Members
 
         private static readonly DependencyPropertyKey ViewAudioPropertySetsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ViewAudioPropertySets),
@@ -283,15 +264,9 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <value>The <see cref="System.Windows.Input.ICommand"/> that implements the $command$ command.</value>
         public Commands.RelayCommand ViewAudioPropertySets => (Commands.RelayCommand)GetValue(ViewAudioPropertySetsProperty);
 
-        private void OnViewAudioPropertySets(object parameter)
-        {
-            // TODO: Implement OnViewAudioPropertySets Logic
-        }
+        private void OnViewAudioPropertySets(object parameter) => NavigateTo(Page_Uri_Local_AudioPropertySets);
 
-/* TODO: Add ViewAudioPropertySets to initialization code to constructor
-   SetValue(ViewAudioPropertySetsPropertyKey, new Commands.RelayCommand(OnViewAudioPropertySets)); */
-
-#endregion
+        #endregion
         #region ViewDRMPropertySets Command Property Members
 
         private static readonly DependencyPropertyKey ViewDRMPropertySetsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ViewDRMPropertySets),
@@ -308,15 +283,9 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <value>The <see cref="System.Windows.Input.ICommand"/> that implements the $command$ command.</value>
         public Commands.RelayCommand ViewDRMPropertySets => (Commands.RelayCommand)GetValue(ViewDRMPropertySetsProperty);
 
-        private void OnViewDRMPropertySets(object parameter)
-        {
-            // TODO: Implement OnViewDRMPropertySets Logic
-        }
+        private void OnViewDRMPropertySets(object parameter) => NavigateTo(Page_Uri_Local_DRMPropertySets);
 
-/* TODO: Add ViewDRMPropertySets to initialization code to constructor
-   SetValue(ViewDRMPropertySetsPropertyKey, new Commands.RelayCommand(OnViewDRMPropertySets)); */
-
-#endregion
+        #endregion
         #region ViewGPSPropertySets Command Property Members
 
         private static readonly DependencyPropertyKey ViewGPSPropertySetsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ViewGPSPropertySets),
@@ -333,15 +302,9 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <value>The <see cref="System.Windows.Input.ICommand"/> that implements the $command$ command.</value>
         public Commands.RelayCommand ViewGPSPropertySets => (Commands.RelayCommand)GetValue(ViewGPSPropertySetsProperty);
 
-        private void OnViewGPSPropertySets(object parameter)
-        {
-            // TODO: Implement OnViewGPSPropertySets Logic
-        }
+        private void OnViewGPSPropertySets(object parameter) => NavigateTo(Page_Uri_Local_GPSPropertySets);
 
-/* TODO: Add ViewGPSPropertySets to initialization code to constructor
-   SetValue(ViewGPSPropertySetsPropertyKey, new Commands.RelayCommand(OnViewGPSPropertySets)); */
-
-#endregion
+        #endregion
         #region ViewImagePropertySets Command Property Members
 
         private static readonly DependencyPropertyKey ViewImagePropertySetsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ViewImagePropertySets),
@@ -358,15 +321,9 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <value>The <see cref="System.Windows.Input.ICommand"/> that implements the $command$ command.</value>
         public Commands.RelayCommand ViewImagePropertySets => (Commands.RelayCommand)GetValue(ViewImagePropertySetsProperty);
 
-        private void OnViewImagePropertySets(object parameter)
-        {
-            // TODO: Implement OnViewImagePropertySets Logic
-        }
+        private void OnViewImagePropertySets(object parameter) => NavigateTo(Page_Uri_Local_ImagePropertySets);
 
-/* TODO: Add ViewImagePropertySets to initialization code to constructor
-   SetValue(ViewImagePropertySetsPropertyKey, new Commands.RelayCommand(OnViewImagePropertySets)); */
-
-#endregion
+        #endregion
         #region ViewMediaPropertySets Command Property Members
 
         private static readonly DependencyPropertyKey ViewMediaPropertySetsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ViewMediaPropertySets),
@@ -383,15 +340,9 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <value>The <see cref="System.Windows.Input.ICommand"/> that implements the $command$ command.</value>
         public Commands.RelayCommand ViewMediaPropertySets => (Commands.RelayCommand)GetValue(ViewMediaPropertySetsProperty);
 
-        private void OnViewMediaPropertySets(object parameter)
-        {
-            // TODO: Implement OnViewMediaPropertySets Logic
-        }
+        private void OnViewMediaPropertySets(object parameter) => NavigateTo(Page_Uri_Local_MediaPropertySets);
 
-/* TODO: Add ViewMediaPropertySets to initialization code to constructor
-   SetValue(ViewMediaPropertySetsPropertyKey, new Commands.RelayCommand(OnViewMediaPropertySets)); */
-
-#endregion
+        #endregion
         #region ViewMusicPropertySets Command Property Members
 
         private static readonly DependencyPropertyKey ViewMusicPropertySetsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ViewMusicPropertySets),
@@ -408,15 +359,9 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <value>The <see cref="System.Windows.Input.ICommand"/> that implements the $command$ command.</value>
         public Commands.RelayCommand ViewMusicPropertySets => (Commands.RelayCommand)GetValue(ViewMusicPropertySetsProperty);
 
-        private void OnViewMusicPropertySets(object parameter)
-        {
-            // TODO: Implement OnViewMusicPropertySets Logic
-        }
+        private void OnViewMusicPropertySets(object parameter) => NavigateTo(Page_Uri_Local_MusicPropertySets);
 
-/* TODO: Add ViewMusicPropertySets to initialization code to constructor
-   SetValue(ViewMusicPropertySetsPropertyKey, new Commands.RelayCommand(OnViewMusicPropertySets)); */
-
-#endregion
+        #endregion
         #region ViewPhotoPropertySets Command Property Members
 
         private static readonly DependencyPropertyKey ViewPhotoPropertySetsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ViewPhotoPropertySets),
@@ -433,15 +378,9 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <value>The <see cref="System.Windows.Input.ICommand"/> that implements the $command$ command.</value>
         public Commands.RelayCommand ViewPhotoPropertySets => (Commands.RelayCommand)GetValue(ViewPhotoPropertySetsProperty);
 
-        private void OnViewPhotoPropertySets(object parameter)
-        {
-            // TODO: Implement OnViewPhotoPropertySets Logic
-        }
+        private void OnViewPhotoPropertySets(object parameter) => NavigateTo(Page_Uri_Local_PhotoPropertySets);
 
-/* TODO: Add ViewPhotoPropertySets to initialization code to constructor
-   SetValue(ViewPhotoPropertySetsPropertyKey, new Commands.RelayCommand(OnViewPhotoPropertySets)); */
-
-#endregion
+        #endregion
         #region ViewRecordedTVPropertySets Command Property Members
 
         private static readonly DependencyPropertyKey ViewRecordedTVPropertySetsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ViewRecordedTVPropertySets),
@@ -458,15 +397,9 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <value>The <see cref="System.Windows.Input.ICommand"/> that implements the $command$ command.</value>
         public Commands.RelayCommand ViewRecordedTVPropertySets => (Commands.RelayCommand)GetValue(ViewRecordedTVPropertySetsProperty);
 
-        private void OnViewRecordedTVPropertySets(object parameter)
-        {
-            // TODO: Implement OnViewRecordedTVPropertySets Logic
-        }
+        private void OnViewRecordedTVPropertySets(object parameter) => NavigateTo(Page_Uri_Local_RecordedTVPropertySets);
 
-/* TODO: Add ViewRecordedTVPropertySets to initialization code to constructor
-   SetValue(ViewRecordedTVPropertySetsPropertyKey, new Commands.RelayCommand(OnViewRecordedTVPropertySets)); */
-
-#endregion
+        #endregion
         #region ViewVideoPropertySets Command Property Members
 
         private static readonly DependencyPropertyKey ViewVideoPropertySetsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ViewVideoPropertySets),
@@ -483,15 +416,9 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <value>The <see cref="System.Windows.Input.ICommand"/> that implements the $command$ command.</value>
         public Commands.RelayCommand ViewVideoPropertySets => (Commands.RelayCommand)GetValue(ViewVideoPropertySetsProperty);
 
-        private void OnViewVideoPropertySets(object parameter)
-        {
-            // TODO: Implement OnViewVideoPropertySets Logic
-        }
+        private void OnViewVideoPropertySets(object parameter) => NavigateTo(Page_Uri_Local_VideoPropertySets);
 
-/* TODO: Add ViewVideoPropertySets to initialization code to constructor
-   SetValue(ViewVideoPropertySetsPropertyKey, new Commands.RelayCommand(OnViewVideoPropertySets)); */
-
-#endregion
+        #endregion
         #region CommandBindings Property Members
 
         public static CommandBindingCollection GetAttachedBindings(DependencyObject obj)
@@ -596,6 +523,18 @@ namespace FsInfoCat.Desktop.ViewModel
             SetValue(ViewRedundancySetsPropertyKey, new Commands.RelayCommand(OnViewRedundancySets));
             SetValue(ViewPersonalTagDefinitionsPropertyKey, new Commands.RelayCommand(OnViewPersonalTagDefinitions));
             SetValue(ViewSharedTagDefinitionsPropertyKey, new Commands.RelayCommand(OnViewSharedTagDefinitions));
+            SetValue(ViewSummaryPropertySetsPropertyKey, new Commands.RelayCommand(OnViewSummaryPropertySets));
+            SetValue(ViewDocumentPropertySetsPropertyKey, new Commands.RelayCommand(OnViewDocumentPropertySets));
+            SetValue(ViewAudioPropertySetsPropertyKey, new Commands.RelayCommand(OnViewAudioPropertySets));
+            SetValue(ViewCrawlLogsPropertyKey, new Commands.RelayCommand(OnViewCrawlLogs));
+            SetValue(ViewDRMPropertySetsPropertyKey, new Commands.RelayCommand(OnViewDRMPropertySets));
+            SetValue(ViewGPSPropertySetsPropertyKey, new Commands.RelayCommand(OnViewGPSPropertySets));
+            SetValue(ViewImagePropertySetsPropertyKey, new Commands.RelayCommand(OnViewImagePropertySets));
+            SetValue(ViewMediaPropertySetsPropertyKey, new Commands.RelayCommand(OnViewMediaPropertySets));
+            SetValue(ViewMusicPropertySetsPropertyKey, new Commands.RelayCommand(OnViewMusicPropertySets));
+            SetValue(ViewPhotoPropertySetsPropertyKey, new Commands.RelayCommand(OnViewPhotoPropertySets));
+            SetValue(ViewRecordedTVPropertySetsPropertyKey, new Commands.RelayCommand(OnViewRecordedTVPropertySets));
+            SetValue(ViewVideoPropertySetsPropertyKey, new Commands.RelayCommand(OnViewVideoPropertySets));
         }
 
         private void OnClose(object sender, ExecutedRoutedEventArgs e)

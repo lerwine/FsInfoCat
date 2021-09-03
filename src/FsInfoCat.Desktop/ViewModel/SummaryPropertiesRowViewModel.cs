@@ -534,6 +534,12 @@ namespace FsInfoCat.Desktop.ViewModel
             ProductName = entity.ProductName;
         }
 
+        internal string CalculateDisplayText()
+        {
+            // TODO: Calculate value for ListingViewModel<TEntity, TItem, TOptions>.SetItemDisplayText(string)
+            throw new System.NotImplementedException();
+        }
+
         protected override void OnEntityPropertyChanged(string propertyName)
         {
             switch (propertyName)

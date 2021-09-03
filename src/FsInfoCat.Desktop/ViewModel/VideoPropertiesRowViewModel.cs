@@ -256,6 +256,12 @@ namespace FsInfoCat.Desktop.ViewModel
             VerticalAspectRatio = entity.VerticalAspectRatio;
         }
 
+        internal string CalculateDisplayText()
+        {
+            // TODO: Calculate value for ListingViewModel<TEntity, TItem, TOptions>.SetItemDisplayText(string)
+            throw new System.NotImplementedException();
+        }
+
         protected override void OnEntityPropertyChanged(string propertyName)
         {
             switch (propertyName)

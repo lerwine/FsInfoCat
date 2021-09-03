@@ -16,10 +16,13 @@
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
-        <Label Padding="{DynamicResource DefaultSpacingTopLeft}" ToolTip="" VerticalAlignment="Bottom" Content="Name"/>
+        <Label Padding="{DynamicResource DefaultSpacingTopLeft}" ToolTip="" VerticalAlignment="Bottom" Content="Notes"/>
         <Button Style="{DynamicResource EditButton}" Grid.Column="1" Margin="{DynamicResource DefaultSpacingTopLeft}" ToolTip="Edit the current item." Command="{Binding Edit, Mode=OneWay}"/>
         <Button Style="{DynamicResource DeleteButton}" Grid.Column="2" Margin="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="Delete the item." Command="{Binding Delete, Mode=OneWay}"/>
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding Notes}" Grid.Row="1" Grid.ColumnSpan="2"/>
 
-        <Label Content="CreatedOn, IsInactive, LastSynchronizedOn, ModifiedOn, Name, Notes, Priority, UpstreamId"/>
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding CreatedOn}"/>
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding ModifiedOn}"/>
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding LastSynchronizedOn}"/>
     </Grid>
 </UserControl>

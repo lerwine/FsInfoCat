@@ -18,10 +18,10 @@
     <Grid>
         <DataGrid ItemsSource="{Binding Items}" AutoGenerateColumns="False">
             <DataGrid.Columns>
-                <DataGridTextColumn Binding="{Binding ConfigurationDisplayName, Mode=OneWay}" Header="Configuration" Width="*" />
+                <DataGridTextColumn Binding="{Binding ConfigurationDisplayName, Mode=OneWay}" Header="Configuration" />
                 <DataGridTextColumn Binding="{Binding CrawlStart}" Header="Start" />
                 <DataGridTextColumn Binding="{Binding CrawlEnd}" Header="End" />
-                <DataGridTextColumn Binding="{Binding StatusMessage}" Header="Message" />
+                <DataGridTextColumn Binding="{Binding StatusMessage}" Header="Message" Width="*" />
                 <DataGridTextColumn MinWidth="100" Binding="{Binding StatusCode}">
                     <DataGridTextColumn.Header>
                         <StackPanel Orientation="Horizontal">

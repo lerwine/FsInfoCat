@@ -18,8 +18,8 @@
     <Grid>
         <DataGrid ItemsSource="{Binding Items}" AutoGenerateColumns="False">
             <DataGrid.Columns>
-                <DataGridTextColumn Binding="{Binding Name, Mode=OneWay}" Header="AlbumArtist, AlbumTitle, Artist, ChannelCount, Composer, Conductor, CreatedOn, DisplayArtist, ExistingFileCount, Genre, LastSynchronizedOn, ModifiedOn, PartOfSet, Period, TotalFileCount, TrackNumber" Width="*"/>
-                <DataGridTextColumn Binding="{Binding ExistingFileCount, Converter={StaticResource BooleanToStatusConverter}}" MinWidth="100">
+                <DataGridTextColumn Binding="{Binding Path=(ViewModel:FilteredItemsViewModel.ItemDisplayText), Mode=OneWay}" Header="Values" Width="*"/>
+                <DataGridTextColumn Binding="{Binding ExistingFileCount}" MinWidth="100">
                     <DataGridTextColumn.Header>
                         <StackPanel Orientation="Horizontal">
                             <Label Content="Files"/>

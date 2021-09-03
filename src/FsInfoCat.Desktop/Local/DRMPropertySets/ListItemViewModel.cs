@@ -29,6 +29,13 @@ namespace FsInfoCat.Desktop.Local.DRMPropertySets
         public ListItemViewModel([DisallowNull] DRMPropertiesListItem entity) : base(entity)
         {
             LastSynchronizedOn = entity.LastSynchronizedOn;
+            FilteredItemsViewModel.SetItemDisplayText(this, CalculateDisplayText());
+        }
+
+        protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
+        {
+            base.OnPropertyChanged(e);
+            FilteredItemsViewModel.SetItemDisplayText(this, CalculateDisplayText());
         }
     }
 }

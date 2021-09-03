@@ -310,6 +310,12 @@ namespace FsInfoCat.Desktop.ViewModel
             ProcessingMethod = entity.ProcessingMethod;
         }
 
+        internal string CalculateDisplayText()
+        {
+            // TODO: Calculate value for ListingViewModel<TEntity, TItem, TOptions>.SetItemDisplayText(string)
+            throw new System.NotImplementedException();
+        }
+
         protected override void OnEntityPropertyChanged(string propertyName)
         {
             switch (propertyName)

@@ -10,16 +10,25 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
-        <Label Padding="{DynamicResource DefaultSpacingTopLeft}" ToolTip="" VerticalAlignment="Bottom" Content="Name"/>
-        <Button Style="{DynamicResource EditButton}" Grid.Column="1" Margin="{DynamicResource DefaultSpacingTopLeft}" ToolTip="Edit the current item." Command="{Binding Edit, Mode=OneWay}"/>
-        <Button Style="{DynamicResource DeleteButton}" Grid.Column="2" Margin="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="Delete the item." Command="{Binding Delete, Mode=OneWay}"/>
+        <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" Content="Description"/>
+        <Button Style="{DynamicResource EditButton}" Grid.Column="1" Margin="{DynamicResource DefaultSpacingTopLeft}" ToolTip="Edit Symbolic Name." Command="{Binding Edit, Mode=OneWay}"/>
+        <Button Style="{DynamicResource DeleteButton}" Grid.Column="2" Margin="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="Delete Symbolic Name." Command="{Binding Delete, Mode=OneWay}"/>
+        <TextBox Padding="{DynamicResource DefaultSpacingBottomLeftRight}" Text="{Binding Description}" Grid.ColumnSpan="3" Grid.Row="1"/>
+        <WrapPanel Grid.Row="2" HorizontalAlignment="Right">
+            <Button Content="Show Tagged Volumes" Style="{DynamicResource DefaultButton}" Margin="{DynamicResource DefaultSpacingBottomLeftRight}"/>
+            <Button Content="Show Tagged Subdirectories" Margin="{DynamicResource DefaultSpacingBottomRight}"/>
+            <Button Content="Show Tagged Files" Margin="{DynamicResource DefaultSpacingBottomRight}"/>
+        </WrapPanel>
 
-        <Label Content="CreatedOn, Description FileTagCount, IsInactive, LastSynchronizedOn, ModifiedOn, Name, SubdirectoryTagCount UpstreamId, VolumeTagCount"/>
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding CreatedOn}"/>
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding ModifiedOn}"/>
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding LastSynchronizedOn}"/>
     </Grid>
 </UserControl>

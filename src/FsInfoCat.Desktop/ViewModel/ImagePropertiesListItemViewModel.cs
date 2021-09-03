@@ -114,6 +114,7 @@ namespace FsInfoCat.Desktop.ViewModel
 
         protected override void OnEntityPropertyChanged(string propertyName)
         {
+            // Ensure CompressionText is set to Compression if it is empty
             switch (propertyName)
             {
                 case nameof(ExistingFileCount):

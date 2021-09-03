@@ -16,9 +16,23 @@
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
-        <Label Padding="{DynamicResource DefaultSpacingTopLeft}" ToolTip="" VerticalAlignment="Bottom" Content="Name"/>
+        <Label Padding="{DynamicResource DefaultSpacingTopLeft}" ToolTip="" VerticalAlignment="Bottom" Content="Program Description"/>
         <Button Style="{DynamicResource EditButton}" Grid.Column="1" Margin="{DynamicResource DefaultSpacingTopLeft}" ToolTip="Edit the current item." Command="{Binding Edit, Mode=OneWay}"/>
         <Button Style="{DynamicResource DeleteButton}" Grid.Column="2" Margin="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="Delete the item." Command="{Binding Delete, Mode=OneWay}"/>
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding ProgramDescription}" Grid.Row="1" Grid.ColumnSpan="2"/>
 
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding ChannelNumber}"/>
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding EpisodeName}"/>
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding IsDTVContent}"/>
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding IsHDContent}"/>
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding NetworkAffiliation}"/>
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding OriginalBroadcastDate}"/>
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding StationCallSign}"/>
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding StationName}"/>
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding TotalFileCount}"/>
+
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding CreatedOn}"/>
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding ModifiedOn}"/>
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding LastSynchronizedOn}"/>
     </Grid>
 </UserControl>

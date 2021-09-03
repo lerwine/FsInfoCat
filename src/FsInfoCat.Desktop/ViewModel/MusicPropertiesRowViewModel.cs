@@ -73,7 +73,30 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="ChannelCount"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="ChannelCount"/> property.</param>
-        protected void OnChannelCountPropertyChanged(uint? oldValue, uint? newValue) { }
+        protected void OnChannelCountPropertyChanged(uint? oldValue, uint? newValue)
+        {
+            if (newValue.HasValue)
+                IsStereo = newValue.Value > 1;
+            else
+                IsStereo = null;
+        }
+
+        #endregion
+        #region IsStereo Property Members
+
+        private static readonly DependencyPropertyKey IsStereoPropertyKey = DependencyProperty.RegisterReadOnly(nameof(IsStereo), typeof(bool?), typeof(MusicPropertiesRowViewModel<TEntity>),
+                new PropertyMetadata(null));
+
+        /// <summary>
+        /// Identifies the <see cref="IsStereo"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty IsStereoProperty = IsStereoPropertyKey.DependencyProperty;
+
+        /// <summary>
+        /// Gets .
+        /// </summary>
+        /// <value>The .</value>
+        public bool? IsStereo { get => (bool?)GetValue(IsStereoProperty); private set => SetValue(IsStereoPropertyKey, value); }
 
         #endregion
         #region DisplayArtist Property Members
@@ -180,6 +203,12 @@ namespace FsInfoCat.Desktop.ViewModel
             PartOfSet = entity.PartOfSet;
             Period = entity.Period;
             TrackNumber = entity.TrackNumber;
+        }
+
+        internal string CalculateDisplayText()
+        {
+            // TODO: Calculate value for ListingViewModel<TEntity, TItem, TOptions>.SetItemDisplayText(string)
+            throw new System.NotImplementedException();
         }
 
         protected override void OnEntityPropertyChanged(string propertyName)

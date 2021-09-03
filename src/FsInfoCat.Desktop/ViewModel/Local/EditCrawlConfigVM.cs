@@ -1132,7 +1132,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
             //    Path = AttachedProperties.GetFullName(this) ?? "";
             //else
             //    AttachedProperties.GetFullName(this, BgOps, p => Path = p ?? "");
-            // TODO: Calculate full name
+            // DEFERRED: Calculate full name
             DisplayName = newValue.DisplayName;
             LimitTotalItems = newValue.MaxTotalItems.HasValue;
             MaxTotalItems = newValue.MaxTotalItems ?? 0UL;

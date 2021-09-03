@@ -19,6 +19,27 @@
         <Label Padding="{DynamicResource DefaultSpacingTopLeft}" ToolTip="" VerticalAlignment="Bottom" Content="Name"/>
         <Button Style="{DynamicResource EditButton}" Grid.Column="1" Margin="{DynamicResource DefaultSpacingTopLeft}" ToolTip="Edit the current item." Command="{Binding Edit, Mode=OneWay}"/>
         <Button Style="{DynamicResource DeleteButton}" Grid.Column="2" Margin="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="Delete the item." Command="{Binding Delete, Mode=OneWay}"/>
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding Notes}" Grid.Row="1" Grid.ColumnSpan="2"/>
 
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding AccessErrorCount}"/>
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding DisplayName}"/>
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding EffectiveMaxNameLength}"/>
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding EffectiveReadOnly}"/>
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding FileSystemDisplayName}"/>
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding Identifier}"/>
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding MaxNameLength}"/>
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding PersonalTagCount}"/>
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding ReadOnly}"/>
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding RootFileCount}"/>
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding RootPath}"/>
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding RootSubdirectoryCount}"/>
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding SharedTagCount}"/>
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding Status}"/>
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding Type}"/>
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding VolumeName}"/>
+
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding CreatedOn}"/>
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding ModifiedOn}"/>
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding LastSynchronizedOn}"/>
     </Grid>
 </UserControl>
