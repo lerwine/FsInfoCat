@@ -1,4 +1,4 @@
-﻿using System.Windows;
+using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel
 {
@@ -131,7 +131,7 @@ namespace FsInfoCat.Desktop.ViewModel
         }
 
         protected internal static readonly DependencyPropertyKey ItemDisplayTextPropertyKey = DependencyProperty.RegisterAttachedReadOnly(PropertyName_ItemDisplayText, typeof(string),
-            typeof(FilteredItemsViewModel), new PropertyMetadata(0));
+            typeof(FilteredItemsViewModel), new PropertyMetadata(null));
 
         public static readonly DependencyProperty ItemDisplayTextProperty = ItemDisplayTextPropertyKey.DependencyProperty;
 
