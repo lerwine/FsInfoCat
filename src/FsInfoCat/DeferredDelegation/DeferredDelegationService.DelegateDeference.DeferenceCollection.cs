@@ -90,21 +90,25 @@ namespace FsInfoCat.DeferredDelegation
 
                 public void DeferPropertyChangedEvent([DisallowNull] INotifyPropertyChanged sender, [DisallowNull] PropertyChangedEventArgs eventArgs, [DisallowNull] PropertyChangedEventHandler eventHandler, DeferredEventErrorHandler<PropertyChangedEventArgs> onError = null)
                 {
+                    // TODO: Implement DeferPropertyChangedEvent(INotifyPropertyChanged, PropertyChangedEventArg, PropertyChangedEventHandler, DeferredEventErrorHandler<PropertyChangedEventArgs>)
                     throw new NotImplementedException();
                 }
 
                 public void DeferCollectionChangedEvent([DisallowNull] INotifyCollectionChanged sender, [DisallowNull] NotifyCollectionChangedEventArgs eventArgs, [DisallowNull] NotifyCollectionChangedEventHandler eventHandler, DeferredEventErrorHandler<NotifyCollectionChangedEventArgs> onError = null)
                 {
+                    // TODO: Implement DeferPropertyChangedEvent(INotifyPropertyChanged, NotifyCollectionChangedEventArgs, NotifyCollectionChangedEventHandler, DeferredEventErrorHandler<NotifyCollectionChangedEventArgs>)
                     throw new NotImplementedException();
                 }
 
                 public void DeferUnhandledExceptionEvent([DisallowNull] object sender, [DisallowNull] UnhandledExceptionEventArgs eventArgs, [DisallowNull] UnhandledExceptionEventHandler eventHandler)
                 {
+                    // TODO: Implement DeferUnhandledExceptionEvent(object, UnhandledExceptionEventArgs, UnhandledExceptionEventHandler)
                     throw new NotImplementedException();
                 }
 
                 public void DeferEvent([DisallowNull] object sender, [DisallowNull] EventHandler eventHandler, DeferredEventErrorHandler<EventArgs> onError = null)
                 {
+                    // TODO: Implement DeferEvent([DisallowNull] object, EventHandler, DeferredEventErrorHandler<EventArgs>)
                     throw new NotImplementedException();
                 }
 

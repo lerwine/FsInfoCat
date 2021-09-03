@@ -14,10 +14,13 @@ namespace FsInfoCat.PS
         private readonly CrawlTaskManager _crawlWorker;
         private readonly bool _disposeWorker;
 
+        // DEFERRED: Implement HasMoreData
         public override bool HasMoreData => throw new NotImplementedException();
 
+        // DEFERRED: Implement Location
         public override string Location => throw new NotImplementedException();
 
+        // DEFERRED: Implement StatusMessage
         public override string StatusMessage => throw new NotImplementedException();
 
         internal CrawlJob([DisallowNull] Local.CrawlTaskManager crawlWorker, bool doNotDisposeWorker = false)
@@ -28,6 +31,7 @@ namespace FsInfoCat.PS
 
         public override void StopJob()
         {
+            // DEFERRED: Implement StopJob()
             throw new NotImplementedException();
         }
 

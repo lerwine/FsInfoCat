@@ -7,6 +7,7 @@ namespace FsInfoCat.Desktop.Converters
     [ValueConversion(typeof(CrawlStatus), typeof(Visibility))]
     public sealed class CrawlStatusToVisibilityConverter : ToValueConverterBase<CrawlStatus, Visibility>
     {
+        // TODO: Implement NullSource { get; set; }
         public override Visibility? NullSource { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
 
 
@@ -84,6 +85,7 @@ namespace FsInfoCat.Desktop.Converters
 
         public override Visibility? Convert(CrawlStatus value, object parameter, CultureInfo culture)
         {
+            // TODO: Implement Convert(CrawlStatus, object, CultureInfo)
             throw new System.NotImplementedException();
         }
     }
