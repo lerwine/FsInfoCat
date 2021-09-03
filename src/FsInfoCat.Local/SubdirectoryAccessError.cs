@@ -142,7 +142,7 @@ namespace FsInfoCat.Local
                 .AppendEnum<AccessErrorCode>(nameof(ErrorCode)).AppendDateTime(nameof(CreatedOn)).AppendDateTime(nameof(ModifiedOn)).ExecuteSqlAsync(dbContext.Database);
         }
 
-        // TODO: Change to async with LocalDbContext
+        // DEFERRED: Change to async with LocalDbContext
         internal XElement Export(bool includeTargetId = false)
         {
             XElement result = new(LocalDbEntity.ElementName_AccessError,

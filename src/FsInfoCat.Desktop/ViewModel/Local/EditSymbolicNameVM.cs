@@ -196,7 +196,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         {
             string name = entry.Entity.Name;
             SymbolicName existing = (from sn in dbContext.SymbolicNames where sn.Name == name select sn).FirstOrDefaultAsync(statusListener.CancellationToken).Result;
-            // TODO: Determine whether it's better to throw AsyncOperationFailureException or to Dispatcher.Invoke and return boolean
+            // DEFERRED: Determine whether it's better to throw AsyncOperationFailureException or to Dispatcher.Invoke and return boolean
             if (existing is not null && (entry.State == EntityState.Added || existing.Id != entry.Entity.Id))
                 throw new AsyncOperationFailureException("Name already used", "That name is already being used.");
             return base.OnSaveChangesAsync(entry, dbContext, statusListener, force);

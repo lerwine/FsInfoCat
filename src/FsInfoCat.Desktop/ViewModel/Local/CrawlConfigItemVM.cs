@@ -55,7 +55,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="StartCrawl" />.</param>
         private void OnStartCrawlInvoked(object parameter)
         {
-            // TODO: Implement OnStartCrawlInvoked Logic
+            // DEFERRED: Implement OnStartCrawlInvoked Logic
         }
 
         #endregion
@@ -96,7 +96,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="StopCrawl" />.</param>
         private void OnStopCrawlInvoked(object parameter)
         {
-            // TODO: Implement OnStopCrawlInvoked Logic
+            // DEFERRED: Implement OnStopCrawlInvoked Logic
         }
 
         #endregion
@@ -137,7 +137,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="OpenRootSubdirectory" />.</param>
         private void OnOpenRootSubdirectoryInvoked(object parameter)
         {
-            // TODO: Implement OnOpenRootSubdirectoryInvoked Logic
+            // DEFERRED: Implement OnOpenRootSubdirectoryInvoked Logic
         }
 
         #endregion

@@ -122,6 +122,7 @@ namespace FsInfoCat.Desktop.ViewModel
 
         private void Denomination_SelectedItemPropertyChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
+            // TODO: Implement Denomination_SelectedItemPropertyChanged(object, e)
             throw new NotImplementedException();
         }
     }

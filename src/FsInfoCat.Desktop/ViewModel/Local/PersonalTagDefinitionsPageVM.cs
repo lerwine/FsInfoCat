@@ -138,7 +138,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         /// <param name="newValue">The new value of the <see cref="SelectedItem"/> property.</param>
         protected void OnSelectedItemPropertyChanged(PersonalTagDefinitionItemVM oldValue, PersonalTagDefinitionItemVM newValue)
         {
-            // TODO: Implement OnSelectedItemPropertyChanged Logic
+            // DEFERRED: Implement OnSelectedItemPropertyChanged Logic
         }
 
         #endregion

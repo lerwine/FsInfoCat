@@ -419,7 +419,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 
         public FileItemVM([DisallowNull] DbFile model) : base(model)
         {
-            // TODO: Populate tags
+            // DEFERRED: Populate tags
             BinaryProperties = model.BinaryProperties.ToItemViewModel();
             AccessErrorCount = model.AccessErrors.Count();
             BaselineComparisonCount = model.BaselineComparisons.Count();

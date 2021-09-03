@@ -19,6 +19,7 @@ namespace FsInfoCat.Desktop.Converters
             set { SetValue(NullSourceProperty, value); }
         }
 
+        // TODO: Implement Convert(IUserProfile, object, CultureInfo
         public override string Convert(IUserProfile value, object parameter, CultureInfo culture) => throw new System.NotImplementedException();//value.DisplayName
     }
 }

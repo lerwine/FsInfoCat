@@ -48,7 +48,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="ToggleCurrentItemActivation" />.</param>
         protected virtual void OnToggleActivationRequest(object parameter)
         {
-            // TODO: Implement OnToggleActivation Logic
+            // DEFERRED: Implement OnToggleActivation Logic
         }
 
         #endregion
@@ -89,7 +89,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="OpenVolumesWindow" />.</param>
         protected virtual void OnViewVolumesRequest(object parameter)
         {
-            // TODO: Implement OnOpenVolumes Logic
+            // DEFERRED: Implement OnOpenVolumes Logic
         }
 
         #endregion
@@ -130,7 +130,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="OpenSubdirectoriesWindow" />.</param>
         protected virtual void OnViewSubdirectoriesRequest(object parameter)
         {
-            // TODO: Implement OnViewSubdirectoriesRequest Logic
+            // DEFERRED: Implement OnViewSubdirectoriesRequest Logic
         }
 
         #endregion
@@ -171,7 +171,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="OpenFilesWindow" />.</param>
         protected virtual void OnViewFilesRequest(object parameter)
         {
-            // TODO: Implement OnViewFilesRequest Logic
+            // DEFERRED: Implement OnViewFilesRequest Logic
         }
 
         #endregion
@@ -274,7 +274,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         /// <param name="newValue">The new value of the <see cref="SubdirectoryTagCount"/> property.</param>
         protected void OnSubdirectoryTagCountPropertyChanged(long oldValue, long newValue)
         {
-            // TODO: Implement OnSubdirectoryTagCountPropertyChanged Logic
+            // DEFERRED: Implement OnSubdirectoryTagCountPropertyChanged Logic
         }
 
         #endregion

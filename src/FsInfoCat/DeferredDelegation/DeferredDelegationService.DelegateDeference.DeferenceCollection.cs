@@ -88,25 +88,19 @@ namespace FsInfoCat.DeferredDelegation
                 public void DeferEvent([DisallowNull] object sender, [DisallowNull] EventArgs eventArgs, [DisallowNull] EventHandler eventHandler, DeferredEventErrorHandler<EventArgs> onError = null) =>
                     EnqueueDelegateInvocation(eventHandler, onError, sender, eventArgs);
 
-                public void DeferPropertyChangedEvent([DisallowNull] INotifyPropertyChanged sender, [DisallowNull] PropertyChangedEventArgs eventArgs, [DisallowNull] PropertyChangedEventHandler eventHandler, DeferredEventErrorHandler<PropertyChangedEventArgs> onError = null)
-                {
-                    throw new NotImplementedException();
-                }
+                public void DeferPropertyChangedEvent([DisallowNull] INotifyPropertyChanged sender, [DisallowNull] PropertyChangedEventArgs eventArgs,
+                    [DisallowNull] PropertyChangedEventHandler eventHandler, DeferredEventErrorHandler<PropertyChangedEventArgs> onError = null) =>
+                    EnqueueDelegateInvocation(eventHandler, onError, sender, eventArgs);
 
-                public void DeferCollectionChangedEvent([DisallowNull] INotifyCollectionChanged sender, [DisallowNull] NotifyCollectionChangedEventArgs eventArgs, [DisallowNull] NotifyCollectionChangedEventHandler eventHandler, DeferredEventErrorHandler<NotifyCollectionChangedEventArgs> onError = null)
-                {
-                    throw new NotImplementedException();
-                }
+                public void DeferCollectionChangedEvent([DisallowNull] INotifyCollectionChanged sender, [DisallowNull] NotifyCollectionChangedEventArgs eventArgs,
+                    [DisallowNull] NotifyCollectionChangedEventHandler eventHandler, DeferredEventErrorHandler<NotifyCollectionChangedEventArgs> onError = null) =>
+                    EnqueueDelegateInvocation(eventHandler, onError, sender, eventArgs);
 
-                public void DeferUnhandledExceptionEvent([DisallowNull] object sender, [DisallowNull] UnhandledExceptionEventArgs eventArgs, [DisallowNull] UnhandledExceptionEventHandler eventHandler)
-                {
-                    throw new NotImplementedException();
-                }
+                public void DeferUnhandledExceptionEvent([DisallowNull] object sender, [DisallowNull] UnhandledExceptionEventArgs eventArgs, [DisallowNull] UnhandledExceptionEventHandler eventHandler) =>
+                    EnqueueDelegateInvocation(eventHandler, null, sender, eventArgs);
 
-                public void DeferEvent([DisallowNull] object sender, [DisallowNull] EventHandler eventHandler, DeferredEventErrorHandler<EventArgs> onError = null)
-                {
-                    throw new NotImplementedException();
-                }
+                public void DeferEvent([DisallowNull] object sender, [DisallowNull] EventHandler eventHandler, DeferredEventErrorHandler<EventArgs> onError = null) =>
+                    EnqueueDelegateInvocation(eventHandler, onError, sender, EventArgs.Empty);
 
                 private static DelegateDeference<TTarget> AddFirstDeference([DisallowNull] DeferredDelegationService service, [DisallowNull] TTarget target, [DisallowNull] object syncRoot)
                 {

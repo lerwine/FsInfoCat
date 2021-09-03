@@ -867,6 +867,7 @@ namespace FsInfoCat.Local
 
         public ISimpleIdentityReference<BinaryPropertySet> GetBinaryPropertySetReference()
         {
+            // TODO: Implement GetBinaryPropertySetReference()
             throw new NotImplementedException();
         }
 

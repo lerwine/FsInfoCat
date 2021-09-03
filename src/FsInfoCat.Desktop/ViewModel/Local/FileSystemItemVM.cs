@@ -55,7 +55,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="ToggleCurrentItemActivation" />.</param>
         protected virtual void OnToggleActivationRequest(object parameter)
         {
-            // TODO: Implement OnToggleActivation Logic
+            // TODODEFERRED Implement OnToggleActivation Logic
         }
 
         #endregion
@@ -96,7 +96,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="GoToVolumesPage" />.</param>
         protected virtual void OnViewVolumesRequest(object parameter)
         {
-            // TODO: Implement OnOpenVolumes Logic
+            // DEFERRED: Implement OnOpenVolumes Logic
         }
 
         #endregion

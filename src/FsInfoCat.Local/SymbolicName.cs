@@ -55,7 +55,7 @@ namespace FsInfoCat.Local
                 .AppendGuid(nameof(UpstreamId)).ExecuteSqlAsync(dbContext.Database);
         }
 
-        // TODO: Change to async with LocalDbContext
+        // DEFERRED: Change to async with LocalDbContext
         internal XElement Export(bool includeFileSystemId = false)
         {
             XElement result = new(nameof(FileSystem),

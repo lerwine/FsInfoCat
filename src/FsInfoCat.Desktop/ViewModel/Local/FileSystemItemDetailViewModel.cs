@@ -54,7 +54,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="NewSymbolicName" />.</param>
         protected virtual void OnAddNewSymbolicName(object parameter)
         {
-            // TODO: Implement OnAddNewSymbolicName Logic
+            // DEFERRED: Implement OnAddNewSymbolicName Logic
         }
 
         #endregion
@@ -76,7 +76,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 
         protected void OnShowViewOptions(object parameter)
         {
-            // TODO: Implement OnShowViewOptions Logic
+            // DEFERRED: Implement OnShowViewOptions Logic
         }
 
         #endregion
@@ -115,7 +115,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 
         protected void OnViewOptionsOkClick(object parameter)
         {
-            // TODO: Implement OnViewOptionsOkClick Logic
+            // DEFERRED: Implement OnViewOptionsOkClick Logic
         }
 
         #endregion
@@ -137,7 +137,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 
         protected void OnViewOptionCancelClick(object parameter)
         {
-            // TODO: Implement OnViewOptionCancelClick Logic
+            // DEFERRED: Implement OnViewOptionCancelClick Logic
         }
 
         #endregion

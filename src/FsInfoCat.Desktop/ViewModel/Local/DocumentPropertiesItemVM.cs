@@ -14,7 +14,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
     {
         public DocumentPropertiesItemVM(DocumentPropertySet entity) : base(entity)
         {
-            // TODO: Implement item view model
+            // DEFERRED: Implement item view model
         }
 
         protected override DbSet<DocumentPropertySet> GetDbSet(LocalDbContext dbContext) => dbContext.DocumentPropertySets;

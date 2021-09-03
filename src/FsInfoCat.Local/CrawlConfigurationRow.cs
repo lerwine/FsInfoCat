@@ -127,9 +127,9 @@ namespace FsInfoCat.Local
             }
         }
 
-        CrawlConfigurationRow IIdentityReference<CrawlConfigurationRow>.Entity => throw new NotImplementedException();
+        CrawlConfigurationRow IIdentityReference<CrawlConfigurationRow>.Entity => this;
 
-        IDbEntity IIdentityReference.Entity => throw new NotImplementedException();
+        IDbEntity IIdentityReference.Entity => this;
 
         protected virtual void OnRootIdChanged(Guid value) { }
 

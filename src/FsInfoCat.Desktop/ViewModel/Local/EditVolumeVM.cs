@@ -209,7 +209,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 
         protected virtual void OnMaxNameLengthValuePropertyChanged(uint oldValue, uint newValue)
         {
-            // TODO: Implement OnMaxNameLengthValuePropertyChanged Logic
+            // DEFERRED: Implement OnMaxNameLengthValuePropertyChanged Logic
         }
 
         #endregion
@@ -229,7 +229,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 
         protected virtual void OnExplicitMaxNameLengthPropertyChanged(bool oldValue, bool newValue)
         {
-            // TODO: Implement OnExplicitMaxNameLengthPropertyChanged Logic
+            // DEFERRED: Implement OnExplicitMaxNameLengthPropertyChanged Logic
         }
 
         #endregion
@@ -247,7 +247,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 
         protected virtual void OnReadOnlyPropertyChanged(bool oldValue, bool newValue)
         {
-            // TODO: Implement OnReadOnlyPropertyChanged Logic
+            // DEFERRED: Implement OnReadOnlyPropertyChanged Logic
         }
 
         #endregion
@@ -265,7 +265,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 
         protected virtual void OnReadWritePropertyChanged(bool oldValue, bool newValue)
         {
-            // TODO: Implement OnReadWritePropertyChanged Logic
+            // DEFERRED: Implement OnReadWritePropertyChanged Logic
         }
 
         #endregion
@@ -283,7 +283,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 
         protected virtual void OnRwFileSystemDefaultPropertyChanged(bool oldValue, bool newValue)
         {
-            // TODO: Implement OnRwFileSystemDefaultPropertyChanged Logic
+            // DEFERRED: Implement OnRwFileSystemDefaultPropertyChanged Logic
         }
 
         #endregion
@@ -311,7 +311,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 
         protected virtual void OnSelectedVolumeStatusPropertyChanged(VolumeStatus oldValue, VolumeStatus newValue)
         {
-            // TODO: Implement OnSelectedVolumeStatusPropertyChanged Logic
+            // DEFERRED: Implement OnSelectedVolumeStatusPropertyChanged Logic
         }
 
         #endregion
@@ -339,7 +339,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 
         protected virtual void OnSelectedDriveTypePropertyChanged(DriveType oldValue, DriveType newValue)
         {
-            // TODO: Implement OnSelectedDriveTypePropertyChanged Logic
+            // DEFERRED: Implement OnSelectedDriveTypePropertyChanged Logic
         }
 
         #endregion
@@ -357,7 +357,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 
         protected virtual void OnVolumeNamePropertyChanged(string oldValue, string newValue)
         {
-            // TODO: Implement OnVolumeNamePropertyChanged Logic
+            // DEFERRED: Implement OnVolumeNamePropertyChanged Logic
         }
 
         #endregion
@@ -477,7 +477,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         /// <param name="newValue">The new value of the <see cref="SelectedFileSystem"/> property.</param>
         protected void OnSelectedFileSystemPropertyChanged(FileSystemItemVM oldValue, FileSystemItemVM newValue)
         {
-            // TODO: Implement OnSelectedFileSystemPropertyChanged Logic
+            // DEFERRED: Implement OnSelectedFileSystemPropertyChanged Logic
         }
 
         #endregion

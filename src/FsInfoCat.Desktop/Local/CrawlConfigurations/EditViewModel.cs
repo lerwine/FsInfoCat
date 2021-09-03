@@ -47,36 +47,43 @@ namespace FsInfoCat.Desktop.Local.CrawlConfigurations
 
         protected override void OnRefreshCrawlJobLogsCommand(object parameter)
         {
+            // TODO: Implement OnRefreshCrawlJobLogsCommand(parameter)
             throw new NotImplementedException();
         }
 
         protected override void OnAddNewCrawlJobLogCommand(object parameter)
         {
+            // TODO: Implement OnAddNewCrawlJobLogCommand(parameter)
             throw new NotImplementedException();
         }
 
         protected override void OnCrawlJobLogEditCommand([DisallowNull] CrawlJobListItemViewModel item, object parameter)
         {
+            // TODO: Implement GetQueryableCrawlJobLogListing(CrawlJobListItemViewModel, parameter)
             throw new NotImplementedException();
         }
 
         protected override bool ConfirmCrawlJobLogDelete([DisallowNull] CrawlJobListItemViewModel item, object parameter)
         {
+            // TODO: Implement GetQueryableCrawlJobLogListing(CrawlJobListItemViewModel, parameter)
             throw new NotImplementedException();
         }
 
         protected override IQueryable<CrawlJobLogListItem> GetQueryableCrawlJobLogListing([DisallowNull] LocalDbContext dbContext, [DisallowNull] IWindowsStatusListener statusListener)
         {
+            // TODO: Implement GetQueryableCrawlJobLogListing(LocalDbContext, IWindowsStatusListener)
             throw new NotImplementedException();
         }
 
         protected override CrawlJobListItemViewModel CreateCrawlJobLogViewModel([DisallowNull] CrawlJobLogListItem entity)
         {
+            // TODO: Implement CreateCrawlJobLogViewModel(CrawlJobLogListItem)
             throw new NotImplementedException();
         }
 
         protected override Task<int> DeleteCrawlJobLogFromDbContextAsync([DisallowNull] CrawlJobLogListItem entity, [DisallowNull] LocalDbContext dbContext, [DisallowNull] IWindowsStatusListener statusListener)
         {
+            // TODO: Implement DeleteCrawlJobLogFromDbContextAsync(CrawlJobLogListItem, LocalDbContext, IWindowsStatusListener)
             throw new NotImplementedException();
         }
     }

@@ -14,7 +14,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
     {
         public AudioPropertiesItemVM(AudioPropertySet entity) : base(entity)
         {
-            // TODO: Implement item view model
+            // DEFERRED: Implement item view model
         }
 
         protected override DbSet<AudioPropertySet> GetDbSet(LocalDbContext dbContext) => dbContext.AudioPropertySets;

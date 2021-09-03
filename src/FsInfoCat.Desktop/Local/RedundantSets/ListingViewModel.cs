@@ -128,11 +128,13 @@ namespace FsInfoCat.Desktop.Local.RedundantSets
 
         private void MinimumRange_DenominatedValuePropertyChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
+            // TODO: Implement MinimumRange_DenominatedValuePropertyChanged(object, e)
             throw new NotImplementedException();
         }
 
         private void MaximumRange_DenominatedValuePropertyChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
+            // TODO: Implement MaximumRange_DenominatedValuePropertyChanged(object, e)
             throw new NotImplementedException();
         }
 

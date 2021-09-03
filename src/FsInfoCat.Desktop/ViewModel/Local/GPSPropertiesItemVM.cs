@@ -14,7 +14,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
     {
         public GPSPropertiesItemVM(GPSPropertySet entity) : base(entity)
         {
-            // TODO: Implement item view model
+            // DEFERRED: Implement item view model
         }
 
         protected override DbSet<GPSPropertySet> GetDbSet(LocalDbContext dbContext) => dbContext.GPSPropertySets;
