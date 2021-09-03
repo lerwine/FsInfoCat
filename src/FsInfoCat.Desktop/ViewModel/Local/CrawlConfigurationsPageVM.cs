@@ -39,7 +39,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 
         protected void OnShowLogs(object parameter)
         {
-            // TODO: Implement OnShowLogs Logic
+            // DEFERRED: Implement OnShowLogs Logic
         }
 
         #endregion

@@ -34,7 +34,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 
         public void InitializeViewModel(TVm viewModel, TDbEntity loadResult, EntityState entityState)
         {
-            // TODO: Implement InitializeViewModel(TVm)
+            // DEFERRED: Implement InitializeViewModel(TVm)
             throw new NotImplementedException();
         }
 

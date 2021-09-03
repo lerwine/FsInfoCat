@@ -14,7 +14,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
     {
         public MediaPropertiesItemVM(MediaPropertySet entity) : base(entity)
         {
-            // TODO: Implement item view model
+            // DEFERRED: Implement item view model
         }
 
         protected override DbSet<MediaPropertySet> GetDbSet(LocalDbContext dbContext) => dbContext.MediaPropertySets;

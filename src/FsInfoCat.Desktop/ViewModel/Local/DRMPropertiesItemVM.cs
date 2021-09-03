@@ -14,7 +14,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
     {
         public DRMPropertiesItemVM(DRMPropertySet entity) : base(entity)
         {
-            // TODO: Implement item view model
+            // DEFERRED: Implement item view model
         }
 
         protected override DbSet<DRMPropertySet> GetDbSet(LocalDbContext dbContext) => dbContext.DRMPropertySets;

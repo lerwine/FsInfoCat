@@ -14,7 +14,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
     {
         public MusicPropertiesItemVM(MusicPropertySet entity) : base(entity)
         {
-            // TODO: Implement item view model
+            // DEFERRED: Implement item view model
         }
 
         protected override DbSet<MusicPropertySet> GetDbSet(LocalDbContext dbContext) => dbContext.MusicPropertySets;

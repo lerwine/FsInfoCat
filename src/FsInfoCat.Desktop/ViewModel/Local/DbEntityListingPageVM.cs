@@ -335,7 +335,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         protected virtual void OnNavigatedTo()
         {
             LoadItemsAsync();
-            // TODO: Do initial load from DB
+            // DEFERRED: Do initial load from DB
         }
 
         void INotifyNavigatedTo.OnNavigatedTo() => OnNavigatedTo();

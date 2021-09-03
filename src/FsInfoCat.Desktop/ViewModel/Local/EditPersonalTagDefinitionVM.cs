@@ -32,7 +32,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         /// <param name="newValue">The new value of the <see cref="IsInactive"/> property.</param>
         protected void OnIsInactivePropertyChanged(bool oldValue, bool newValue)
         {
-            // TODO: Implement OnIsInactivePropertyChanged Logic
+            // DEFERRED: Implement OnIsInactivePropertyChanged Logic
         }
 
         #endregion
@@ -57,7 +57,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         /// <param name="newValue">The new value of the <see cref="Name"/> property.</param>
         protected void OnNamePropertyChanged(string oldValue, string newValue)
         {
-            // TODO: Implement OnNamePropertyChanged Logic
+            // DEFERRED: Implement OnNamePropertyChanged Logic
         }
 
         #endregion
@@ -82,7 +82,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         /// <param name="newValue">The new value of the <see cref="Description"/> property.</param>
         protected void OnDescriptionPropertyChanged(string oldValue, string newValue)
         {
-            // TODO: Implement OnDescriptionPropertyChanged Logic
+            // DEFERRED: Implement OnDescriptionPropertyChanged Logic
         }
 
         #endregion

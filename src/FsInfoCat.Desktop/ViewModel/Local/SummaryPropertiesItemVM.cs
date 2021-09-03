@@ -14,7 +14,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
     {
         public SummaryPropertiesItemVM(SummaryPropertySet entity) : base(entity)
         {
-            // TODO: Implement item view model
+            // DEFERRED: Implement item view model
         }
 
         protected override DbSet<SummaryPropertySet> GetDbSet(LocalDbContext dbContext) => dbContext.SummaryPropertySets;

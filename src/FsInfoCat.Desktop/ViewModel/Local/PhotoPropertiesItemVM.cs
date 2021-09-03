@@ -14,7 +14,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
     {
         public PhotoPropertiesItemVM(PhotoPropertySet entity) : base(entity)
         {
-            // TODO: Implement item view model
+            // DEFERRED: Implement item view model
         }
 
         protected override DbSet<PhotoPropertySet> GetDbSet(LocalDbContext dbContext) => dbContext.PhotoPropertySets;

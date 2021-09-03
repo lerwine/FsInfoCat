@@ -50,7 +50,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         /// <param name="newValue">The new value of the <see cref="Reference"/> property.</param>
         protected void OnReferencePropertyChanged(string oldValue, string newValue)
         {
-            // TODO: Implement OnReferencePropertyChanged Logic
+            // DEFERRED: Implement OnReferencePropertyChanged Logic
         }
 
         #endregion
@@ -75,7 +75,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         /// <param name="newValue">The new value of the <see cref="Notes"/> property.</param>
         protected void OnNotesPropertyChanged(string oldValue, string newValue)
         {
-            // TODO: Implement OnNotesPropertyChanged Logic
+            // DEFERRED: Implement OnNotesPropertyChanged Logic
         }
 
         #endregion
@@ -118,7 +118,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         {
             BinaryProperties = newValue.BinaryProperties;
             Notes = newValue.Notes;
-            // TODO: Initialize Redundancies
+            // DEFERRED: Initialize Redundancies
             //Redundancies = new ReadOnlyCollection<Redundancy>(new Collection<Redundancy>(newValue.Redundancies));
             Reference = newValue.Reference;
         }

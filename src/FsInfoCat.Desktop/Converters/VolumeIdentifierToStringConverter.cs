@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
 
@@ -31,8 +31,6 @@ namespace FsInfoCat.Desktop.Converters
             if (value.UUID.HasValue)
                 return value.UUID.Value.ToString("d");
             return (value.Location.IsUnc) ? value.Location.LocalPath : value.Location.AbsoluteUri;
-            // TODO: Implement Convert(VolumeIdentifier, object, CultureInfo)
-            throw new System.NotImplementedException();
         }
     }
 }

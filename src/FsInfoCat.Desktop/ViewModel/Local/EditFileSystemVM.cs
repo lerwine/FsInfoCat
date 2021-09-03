@@ -82,7 +82,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 
         protected virtual void OnSelectedDriveTypePropertyChanged(DriveType oldValue, DriveType newValue)
         {
-            // TODO: Implement OnSelectedDriveTypePropertyChanged Logic
+            // DEFERRED: Implement OnSelectedDriveTypePropertyChanged Logic
         }
 
         #endregion
@@ -100,7 +100,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 
         protected virtual void OnHasDefaultDriveTypePropertyChanged(bool oldValue, bool newValue)
         {
-            // TODO: Implement OnHasDefaultDriveTypePropertyChanged Logic
+            // DEFERRED: Implement OnHasDefaultDriveTypePropertyChanged Logic
         }
 
         #endregion
@@ -118,7 +118,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 
         protected virtual void OnIsInactivePropertyChanged(bool oldValue, bool newValue)
         {
-            // TODO: Implement OnIsInactivePropertyChanged Logic
+            // DEFERRED: Implement OnIsInactivePropertyChanged Logic
         }
 
         #endregion
@@ -136,7 +136,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 
         protected virtual void OnMaxNameLengthPropertyChanged(uint oldValue, uint newValue)
         {
-            // TODO: Implement OnMaxNameLengthPropertyChanged Logic
+            // DEFERRED: Implement OnMaxNameLengthPropertyChanged Logic
         }
 
         #endregion
@@ -154,7 +154,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
 
         protected virtual void OnReadOnlyPropertyChanged(bool oldValue, bool newValue)
         {
-            // TODO: Implement OnReadOnlyPropertyChanged Logic
+            // DEFERRED: Implement OnReadOnlyPropertyChanged Logic
         }
 
         #endregion
