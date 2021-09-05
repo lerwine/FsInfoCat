@@ -22,10 +22,6 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         public static readonly DependencyProperty EditProperty = EditPropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Gets the $name$ command object.
-        /// </summary>
-        /// <value>The <see cref="System.Windows.Input.ICommand"/> that implements the $command$ command.</value>
         public Commands.RelayCommand Edit => (Commands.RelayCommand)GetValue(EditProperty);
 
         /// <summary>
@@ -50,10 +46,6 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         public static readonly DependencyProperty DeleteProperty = DeletePropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Gets the $name$ command object.
-        /// </summary>
-        /// <value>The <see cref="System.Windows.Input.ICommand"/> that implements the $command$ command.</value>
         public Commands.RelayCommand Delete => (Commands.RelayCommand)GetValue(DeleteProperty);
 
         /// <summary>
@@ -75,10 +67,6 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         public static readonly DependencyProperty FileTagCountProperty = FileTagCountPropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Gets .
-        /// </summary>
-        /// <value>The .</value>
         public long FileTagCount { get => (long)GetValue(FileTagCountProperty); private set => SetValue(FileTagCountPropertyKey, value); }
 
         #endregion
@@ -94,10 +82,6 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         public static readonly DependencyProperty SubdirectoryTagCountProperty = SubdirectoryTagCountPropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Gets .
-        /// </summary>
-        /// <value>The .</value>
         public long SubdirectoryTagCount { get => (long)GetValue(SubdirectoryTagCountProperty); private set => SetValue(SubdirectoryTagCountPropertyKey, value); }
 
         #endregion
@@ -113,10 +97,6 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         public static readonly DependencyProperty VolumeTagCountProperty = VolumeTagCountPropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Gets .
-        /// </summary>
-        /// <value>The .</value>
         public long VolumeTagCount { get => (long)GetValue(VolumeTagCountProperty); private set => SetValue(VolumeTagCountPropertyKey, value); }
 
         #endregion

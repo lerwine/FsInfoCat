@@ -183,10 +183,6 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         public static readonly DependencyProperty MaxDurationProperty = MaxDurationPropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Gets .
-        /// </summary>
-        /// <value>The .</value>
         // BUG: This is not acceptable for listing views. Needs to be TimeSpan?
         public TimeSpanViewModel MaxDuration => (TimeSpanViewModel)GetValue(MaxDurationProperty);
 

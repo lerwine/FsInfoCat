@@ -22,10 +22,6 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         public static readonly DependencyProperty EditProperty = EditPropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Gets the $name$ command object.
-        /// </summary>
-        /// <value>The <see cref="System.Windows.Input.ICommand"/> that implements the $command$ command.</value>
         public Commands.RelayCommand Edit => (Commands.RelayCommand)GetValue(EditProperty);
 
         /// <summary>
@@ -50,10 +46,6 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         public static readonly DependencyProperty DeleteProperty = DeletePropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Gets the $name$ command object.
-        /// </summary>
-        /// <value>The <see cref="System.Windows.Input.ICommand"/> that implements the $command$ command.</value>
         public Commands.RelayCommand Delete => (Commands.RelayCommand)GetValue(DeleteProperty);
 
         /// <summary>
@@ -94,10 +86,6 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         public static readonly DependencyProperty RootSubdirectoryCountProperty = RootSubdirectoryCountPropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Gets .
-        /// </summary>
-        /// <value>The .</value>
         public long RootSubdirectoryCount { get => (long)GetValue(RootSubdirectoryCountProperty); private set => SetValue(RootSubdirectoryCountPropertyKey, value); }
 
         #endregion
@@ -113,10 +101,6 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         public static readonly DependencyProperty RootFileCountProperty = RootFileCountPropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Gets .
-        /// </summary>
-        /// <value>The .</value>
         public long RootFileCount { get => (long)GetValue(RootFileCountProperty); private set => SetValue(RootFileCountPropertyKey, value); }
 
         #endregion
@@ -132,10 +116,6 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         public static readonly DependencyProperty AccessErrorCountProperty = AccessErrorCountPropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Gets .
-        /// </summary>
-        /// <value>The .</value>
         public long AccessErrorCount { get => (long)GetValue(AccessErrorCountProperty); private set => SetValue(AccessErrorCountPropertyKey, value); }
 
         #endregion
@@ -151,10 +131,6 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         public static readonly DependencyProperty SharedTagCountProperty = SharedTagCountPropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Gets .
-        /// </summary>
-        /// <value>The .</value>
         public long SharedTagCount { get => (long)GetValue(SharedTagCountProperty); private set => SetValue(SharedTagCountPropertyKey, value); }
 
         #endregion
@@ -170,10 +146,6 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         public static readonly DependencyProperty PersonalTagCountProperty = PersonalTagCountPropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Gets .
-        /// </summary>
-        /// <value>The .</value>
         public long PersonalTagCount { get => (long)GetValue(PersonalTagCountProperty); private set => SetValue(PersonalTagCountPropertyKey, value); }
 
         #endregion

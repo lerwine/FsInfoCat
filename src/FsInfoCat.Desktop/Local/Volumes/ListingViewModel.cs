@@ -25,10 +25,6 @@ namespace FsInfoCat.Desktop.Local.Volumes
         /// </summary>
         public static readonly DependencyProperty ViewOptionsProperty = ViewOptionsPropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Gets .
-        /// </summary>
-        /// <value>The .</value>
         public EnumValuePickerVM<VolumeStatus> ViewOptions => (EnumValuePickerVM<VolumeStatus>)GetValue(ViewOptionsProperty);
 
         #endregion
@@ -42,10 +38,6 @@ namespace FsInfoCat.Desktop.Local.Volumes
         /// </summary>
         public static readonly DependencyProperty EditingOptionsProperty = EditingOptionsPropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Gets .
-        /// </summary>
-        /// <value>The .</value>
         public EnumValuePickerVM<VolumeStatus> EditingOptions => (EnumValuePickerVM<VolumeStatus>)GetValue(EditingOptionsProperty);
 
         #endregion

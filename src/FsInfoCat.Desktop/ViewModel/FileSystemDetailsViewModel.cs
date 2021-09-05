@@ -25,10 +25,6 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         public static readonly DependencyProperty VolumesProperty = VolumesPropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Gets .
-        /// </summary>
-        /// <value>The .</value>
         public ReadOnlyObservableCollection<TVolumeItem> Volumes => (ReadOnlyObservableCollection<TVolumeItem>)GetValue(VolumesProperty);
 
         #endregion
@@ -45,10 +41,6 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         public static readonly DependencyProperty SymbolicNamesProperty = SymbolicNamesPropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Gets .
-        /// </summary>
-        /// <value>The .</value>
         public ReadOnlyObservableCollection<TSymbolicNameItem> SymbolicNames => (ReadOnlyObservableCollection<TSymbolicNameItem>)GetValue(SymbolicNamesProperty);
 
         #endregion

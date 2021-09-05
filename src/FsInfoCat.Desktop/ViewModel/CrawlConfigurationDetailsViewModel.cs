@@ -26,10 +26,6 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         public static readonly DependencyProperty AddNewCrawlJobLogProperty = AddNewCrawlJobLogPropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Gets the $name$ command object.
-        /// </summary>
-        /// <value>The <see cref="System.Windows.Input.ICommand"/> that implements the $command$ command.</value>
         public Commands.RelayCommand AddNewCrawlJobLog => (Commands.RelayCommand)GetValue(AddNewCrawlJobLogProperty);
 
         #endregion
@@ -44,10 +40,6 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         public static readonly DependencyProperty RefreshCrawlJobLogsProperty = RefreshCrawlJobLogsPropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Gets the $name$ command object.
-        /// </summary>
-        /// <value>The <see cref="System.Windows.Input.ICommand"/> that implements the $command$ command.</value>
         public Commands.RelayCommand RefreshCrawlJobLogs => (Commands.RelayCommand)GetValue(RefreshCrawlJobLogsProperty);
 
         #endregion
@@ -89,10 +81,6 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         public static readonly DependencyProperty LogsProperty = LogsPropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Gets .
-        /// </summary>
-        /// <value>The .</value>
         public ReadOnlyObservableCollection<TCrawlJobLogItem> Logs => (ReadOnlyObservableCollection<TCrawlJobLogItem>)GetValue(LogsProperty);
 
         #endregion

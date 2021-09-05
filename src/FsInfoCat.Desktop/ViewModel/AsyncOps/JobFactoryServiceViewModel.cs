@@ -29,10 +29,6 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
         /// </summary>
         public static readonly DependencyProperty ItemsProperty = ItemsPropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Gets .
-        /// </summary>
-        /// <value>The .</value>
         public ReadOnlyObservableCollection<BackgroundJobVM> Items => (ReadOnlyObservableCollection<BackgroundJobVM>)GetValue(ItemsProperty);
 
         #endregion
@@ -46,10 +42,6 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
         /// </summary>
         public static readonly DependencyProperty IsBusyProperty = IsBusyPropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Gets .
-        /// </summary>
-        /// <value>The .</value>
         public bool IsBusy { get => (bool)GetValue(IsBusyProperty); private set => SetValue(IsBusyPropertyKey, value); }
 
         #endregion

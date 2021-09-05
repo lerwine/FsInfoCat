@@ -17,10 +17,6 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         public static readonly DependencyProperty ValueProperty = ValuePropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Gets .
-        /// </summary>
-        /// <value>The .</value>
         public TEnum? Value { get => (TEnum?)GetValue(ValueProperty); private set => SetValue(ValuePropertyKey, value); }
 
         #endregion

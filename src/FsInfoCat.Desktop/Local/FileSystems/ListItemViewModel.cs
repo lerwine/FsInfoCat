@@ -28,10 +28,6 @@ namespace FsInfoCat.Desktop.Local.FileSystems
         /// </summary>
         public static readonly DependencyProperty EditButtonClickProperty = EditButtonClickPropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Gets the $name$ command object.
-        /// </summary>
-        /// <value>The <see cref="System.Windows.Input.ICommand"/> that implements the $command$ command.</value>
         public Commands.RelayCommand EditButtonClick => (Commands.RelayCommand)GetValue(EditButtonClickProperty);
 
         /// <summary>
@@ -69,10 +65,6 @@ namespace FsInfoCat.Desktop.Local.FileSystems
         /// </summary>
         public static readonly DependencyProperty DeleteButtonClickProperty = DeleteButtonClickPropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Gets the $name$ command object.
-        /// </summary>
-        /// <value>The <see cref="System.Windows.Input.ICommand"/> that implements the $command$ command.</value>
         public Commands.RelayCommand DeleteButtonClick => (Commands.RelayCommand)GetValue(DeleteButtonClickProperty);
 
         /// <summary>
@@ -110,10 +102,6 @@ namespace FsInfoCat.Desktop.Local.FileSystems
         /// </summary>
         public static readonly DependencyProperty OpenListingButtonClickProperty = OpenListingButtonClickPropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Gets the $name$ command object.
-        /// </summary>
-        /// <value>The <see cref="System.Windows.Input.ICommand"/> that implements the $command$ command.</value>
         public Commands.RelayCommand OpenListingButtonClick => (Commands.RelayCommand)GetValue(OpenListingButtonClickProperty);
 
         /// <summary>
@@ -151,10 +139,6 @@ namespace FsInfoCat.Desktop.Local.FileSystems
         /// </summary>
         public static readonly DependencyProperty SynchronizeNowButtonClickProperty = SynchronizeNowButtonClickPropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Gets the $name$ command object.
-        /// </summary>
-        /// <value>The <see cref="System.Windows.Input.ICommand"/> that implements the $command$ command.</value>
         public Commands.RelayCommand SynchronizeNowButtonClick => (Commands.RelayCommand)GetValue(SynchronizeNowButtonClickProperty);
 
         /// <summary>

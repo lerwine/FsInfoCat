@@ -36,10 +36,6 @@ namespace FsInfoCat.Desktop.Local.SymbolicNames
         /// </summary>
         public static readonly DependencyProperty EditingOptionsProperty = EditingOptionsPropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Gets .
-        /// </summary>
-        /// <value>The .</value>
         public ThreeStateViewModel EditingOptions => (ThreeStateViewModel)GetValue(EditingOptionsProperty);
 
         #endregion

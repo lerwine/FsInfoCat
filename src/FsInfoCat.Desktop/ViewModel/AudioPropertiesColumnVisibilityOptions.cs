@@ -9,22 +9,7 @@ namespace FsInfoCat.Desktop.ViewModel
 {
     public class AudioPropertiesColumnVisibilityOptions : ColumnVisibilityOptionsViewModel
     {
-        #region MyProperty Property Members
-
-        /// <summary>
-        /// Identifies the <see cref="MyProperty"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty MyPropertyProperty = DependencyProperty.Register(nameof(MyProperty), typeof(bool),
-            typeof(AudioPropertiesColumnVisibilityOptions), new PropertyMetadata(false, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-            (d as AudioPropertiesColumnVisibilityOptions)?.RaiseColumnVisibilityPropertyChanged(e)));
-
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
-        public bool MyProperty { get => (bool)GetValue(MyPropertyProperty); set => SetValue(MyPropertyProperty, value); }
-
-        #endregion
+        //Compression CreatedOn DependencyObjectType Dispatcher EncodingBitrate Format IsSealed IsVariableBitrate ModifiedOn SampleRate SampleSize StreamName StreamNumber
 
         private AudioPropertiesColumnVisibilityOptions(IEnumerable<ColumnProperty> columnProperties) : base(columnProperties) { }
     }

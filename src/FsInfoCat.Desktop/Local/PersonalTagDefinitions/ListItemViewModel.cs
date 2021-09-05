@@ -23,10 +23,6 @@ namespace FsInfoCat.Desktop.Local.PersonalTagDefinitions
         /// </summary>
         public static readonly DependencyProperty ShowTaggedVolumesButtonClickProperty = ShowTaggedVolumesButtonClickPropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Gets the $name$ command object.
-        /// </summary>
-        /// <value>The <see cref="System.Windows.Input.ICommand"/> that implements the $command$ command.</value>
         public Commands.RelayCommand ShowTaggedVolumesButtonClick => (Commands.RelayCommand)GetValue(ShowTaggedVolumesButtonClickProperty);
 
         /// <summary>
@@ -64,10 +60,6 @@ namespace FsInfoCat.Desktop.Local.PersonalTagDefinitions
         /// </summary>
         public static readonly DependencyProperty ShowTaggedFoldersButtonClickProperty = ShowTaggedFoldersButtonClickPropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Gets the $name$ command object.
-        /// </summary>
-        /// <value>The <see cref="System.Windows.Input.ICommand"/> that implements the $command$ command.</value>
         public Commands.RelayCommand ShowTaggedFoldersButtonClick => (Commands.RelayCommand)GetValue(ShowTaggedFoldersButtonClickProperty);
 
         /// <summary>
@@ -105,10 +97,6 @@ namespace FsInfoCat.Desktop.Local.PersonalTagDefinitions
         /// </summary>
         public static readonly DependencyProperty ShowTaggedFilesButtonClickProperty = ShowTaggedFilesButtonClickPropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Gets the $name$ command object.
-        /// </summary>
-        /// <value>The <see cref="System.Windows.Input.ICommand"/> that implements the $command$ command.</value>
         public Commands.RelayCommand ShowTaggedFilesButtonClick => (Commands.RelayCommand)GetValue(ShowTaggedFilesButtonClickProperty);
 
         /// <summary>
@@ -141,10 +129,6 @@ namespace FsInfoCat.Desktop.Local.PersonalTagDefinitions
         /// </summary>
         public static readonly DependencyProperty UpstreamIdProperty = UpstreamIdPropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Gets .
-        /// </summary>
-        /// <value>The .</value>
         public Guid? UpstreamId { get => (Guid?)GetValue(UpstreamIdProperty); private set => SetValue(UpstreamIdPropertyKey, value); }
 
         #endregion

@@ -60,10 +60,6 @@ namespace FsInfoCat.Desktop.ViewModel
             typeof(VideoPropertiesColumnVisibilityOptions), new PropertyMetadata(false, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
             (d as VideoPropertiesColumnVisibilityOptions)?.RaiseColumnVisibilityPropertyChanged(e)));
 
-        /// <summary>
-        /// Gets .
-        /// </summary>
-        /// <value>The .</value>
         public bool FrameRate { get => (bool)GetValue(FrameRateProperty); set => SetValue(FrameRateProperty, value); }
 
         #endregion

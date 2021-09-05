@@ -20,10 +20,6 @@ namespace FsInfoCat.Desktop.Local.CrawlLogs
         /// </summary>
         public static readonly DependencyProperty CurrentStatusOptionsProperty = CurrentStatusOptionsPropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Gets .
-        /// </summary>
-        /// <value>The .</value>
         public EnumValuePickerVM<CrawlStatus> CurrentStatusOptions => (EnumValuePickerVM<CrawlStatus>)GetValue(CurrentStatusOptionsProperty);
 
         #endregion
@@ -38,10 +34,6 @@ namespace FsInfoCat.Desktop.Local.CrawlLogs
         public static readonly DependencyProperty EditingStatusOptionsProperty = EditingStatusOptionsPropertyKey.DependencyProperty;
         private readonly EnumChoiceItem<CrawlStatus> _allOption;
 
-        /// <summary>
-        /// Gets .
-        /// </summary>
-        /// <value>The .</value>
         public EnumValuePickerVM<CrawlStatus> EditingStatusOptions => (EnumValuePickerVM<CrawlStatus>)GetValue(EditingStatusOptionsProperty);
 
         #endregion

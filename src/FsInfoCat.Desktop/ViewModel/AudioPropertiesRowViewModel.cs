@@ -9,6 +9,7 @@ namespace FsInfoCat.Desktop.ViewModel
     public class AudioPropertiesRowViewModel<TEntity> : DbEntityRowViewModel<TEntity>
         where TEntity : DbEntity, IAudioProperties
     {
+        #endregion
         #region Compression Property Members
 
         /// <summary>

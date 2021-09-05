@@ -22,10 +22,6 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         public static readonly DependencyProperty HasErrorsProperty = HasErrorsPropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Gets .
-        /// </summary>
-        /// <value>The .</value>
         public bool HasErrors { get => (bool)GetValue(HasErrorsProperty); private set => SetValue(HasErrorsPropertyKey, value); }
 
         #endregion
@@ -146,10 +142,6 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         public static readonly DependencyProperty AggregateValidationMessageProperty = AggregateValidationMessagePropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Gets .
-        /// </summary>
-        /// <value>The .</value>
         public string AggregateValidationMessage { get => GetValue(AggregateValidationMessageProperty) as string; private set => SetValue(AggregateValidationMessagePropertyKey, value); }
 
         /// <summary>
@@ -302,10 +294,6 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         public static readonly DependencyProperty TimeProperty = TimePropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Gets .
-        /// </summary>
-        /// <value>The .</value>
         public TimeSpanViewModel Time => (TimeSpanViewModel)GetValue(TimeProperty);
 
         private void Time_ValuePropertyChanged(object sender, DependencyPropertyChangedEventArgs e)
@@ -369,10 +357,6 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         public static readonly DependencyProperty TimeValidationMesageProperty = TimeValidationMesagePropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Gets .
-        /// </summary>
-        /// <value>The .</value>
         public string TimeValidationMesage { get => GetValue(TimeValidationMesageProperty) as string; private set => SetValue(TimeValidationMesagePropertyKey, value); }
 
         /// <summary>

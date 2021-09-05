@@ -49,10 +49,6 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         public static readonly DependencyProperty IsRequiredProperty = IsRequiredPropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Gets .
-        /// </summary>
-        /// <value>The .</value>
         public bool IsRequired { get => (bool)GetValue(IsRequiredProperty); private set => SetValue(IsRequiredPropertyKey, value); }
 
         /// <summary>
@@ -651,10 +647,6 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         public static readonly DependencyProperty HoursValidationMessageProperty = HoursValidationMessagePropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Gets .
-        /// </summary>
-        /// <value>The .</value>
         public string HoursValidationMessage { get => GetValue(HoursValidationMessageProperty) as string; private set => SetValue(HoursValidationMessagePropertyKey, value); }
 
         /// <summary>

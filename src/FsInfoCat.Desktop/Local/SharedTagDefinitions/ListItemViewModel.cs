@@ -23,10 +23,6 @@ namespace FsInfoCat.Desktop.Local.SharedTagDefinitions
         /// </summary>
         public static readonly DependencyProperty EditButtonClickProperty = EditButtonClickPropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Gets the $name$ command object.
-        /// </summary>
-        /// <value>The <see cref="System.Windows.Input.ICommand"/> that implements the $command$ command.</value>
         public Commands.RelayCommand EditButtonClick => (Commands.RelayCommand)GetValue(EditButtonClickProperty);
 
         /// <summary>
@@ -64,10 +60,6 @@ namespace FsInfoCat.Desktop.Local.SharedTagDefinitions
         /// </summary>
         public static readonly DependencyProperty DeleteButtonClickProperty = DeleteButtonClickPropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Gets the $name$ command object.
-        /// </summary>
-        /// <value>The <see cref="System.Windows.Input.ICommand"/> that implements the $command$ command.</value>
         public Commands.RelayCommand DeleteButtonClick => (Commands.RelayCommand)GetValue(DeleteButtonClickProperty);
 
         /// <summary>

@@ -86,10 +86,6 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
         /// </summary>
         public static readonly DependencyProperty CancelProperty = CancelPropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Gets the $name$ command object.
-        /// </summary>
-        /// <value>The <see cref="System.Windows.Input.ICommand"/> that implements the $command$ command.</value>
         public Commands.RelayCommand Cancel => (Commands.RelayCommand)GetValue(CancelProperty);
 
         #endregion
@@ -103,10 +99,6 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
         /// </summary>
         public static readonly DependencyProperty IsCompletedProperty = IsCompletedPropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Gets .
-        /// </summary>
-        /// <value>The .</value>
         public bool IsCompleted { get => (bool)GetValue(IsCompletedProperty); private set => SetValue(IsCompletedPropertyKey, value); }
 
         #endregion
@@ -143,10 +135,6 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
         /// </summary>
         public static readonly DependencyProperty DurationProperty = DurationPropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Gets .
-        /// </summary>
-        /// <value>The .</value>
         public TimeSpan Duration { get => (TimeSpan)GetValue(DurationProperty); private set => SetValue(DurationPropertyKey, value); }
 
         #endregion

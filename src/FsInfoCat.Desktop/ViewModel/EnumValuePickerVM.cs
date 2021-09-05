@@ -37,10 +37,6 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         public static readonly DependencyProperty ChoicesProperty = ChoicesPropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Gets .
-        /// </summary>
-        /// <value>The .</value>
         public ReadOnlyObservableCollection<EnumChoiceItem<TEnum>> Choices => (ReadOnlyObservableCollection<EnumChoiceItem<TEnum>>)GetValue(ChoicesProperty);
 
         #endregion

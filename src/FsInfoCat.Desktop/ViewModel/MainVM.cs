@@ -40,10 +40,6 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         public static readonly DependencyProperty ViewFileSystemsProperty = ViewFileSystemsPropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Gets the $name$ command object.
-        /// </summary>
-        /// <value>The <see cref="ICommand"/> that implements the $command$ command.</value>
         public Commands.RelayCommand ViewFileSystems => (Commands.RelayCommand)GetValue(ViewFileSystemsProperty);
 
         private void OnViewFileSystems(object parameter) => NavigateTo(Page_Uri_Local_FileSystems);
@@ -59,10 +55,6 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         public static readonly DependencyProperty ViewCrawlConfigurationsProperty = ViewCrawlConfigurationsPropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Gets the $name$ command object.
-        /// </summary>
-        /// <value>The <see cref="ICommand"/> that implements the $command$ command.</value>
         public Commands.RelayCommand ViewCrawlConfigurations => (Commands.RelayCommand)GetValue(ViewCrawlConfigurationsProperty);
 
         private void OnViewCrawlConfigurations(object parameter) => NavigateTo(Page_Uri_Local_CrawlConfigurations);
@@ -78,10 +70,6 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         public static readonly DependencyProperty NewCrawlProperty = NewCrawlPropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Gets the $name$ command object.
-        /// </summary>
-        /// <value>The <see cref="ICommand"/> that implements the $command$ command.</value>
         public Commands.RelayCommand NewCrawl => (Commands.RelayCommand)GetValue(NewCrawlProperty);
 
         private void OnNewCrawl(object parameter)
@@ -108,10 +96,6 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         public static readonly DependencyProperty ViewVolumesProperty = ViewVolumesPropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Gets the $name$ command object.
-        /// </summary>
-        /// <value>The <see cref="ICommand"/> that implements the $command$ command.</value>
         public Commands.RelayCommand ViewVolumes => (Commands.RelayCommand)GetValue(ViewVolumesProperty);
 
         private void OnViewVolumes(object parameter) => NavigateTo(Page_Uri_Local_Volumes);
@@ -127,10 +111,6 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         public static readonly DependencyProperty ViewSymbolicNamesProperty = ViewSymbolicNamesPropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Gets the $name$ command object.
-        /// </summary>
-        /// <value>The <see cref="ICommand"/> that implements the $command$ command.</value>
         public Commands.RelayCommand ViewSymbolicNames => (Commands.RelayCommand)GetValue(ViewSymbolicNamesProperty);
 
         private void OnViewSymbolicNames(object parameter) => NavigateTo(Page_Uri_Local_SymbolicNames);
@@ -146,10 +126,6 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         public static readonly DependencyProperty ViewRedundancySetsProperty = ViewRedundancySetsPropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Gets the $name$ command object.
-        /// </summary>
-        /// <value>The <see cref="ICommand"/> that implements the $command$ command.</value>
         public Commands.RelayCommand ViewRedundancySets => (Commands.RelayCommand)GetValue(ViewRedundancySetsProperty);
 
         private void OnViewRedundancySets(object parameter) => NavigateTo(Page_Uri_Local_RedundantSets);
@@ -165,10 +141,6 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         public static readonly DependencyProperty ViewPersonalTagDefinitionsProperty = ViewPersonalTagDefinitionsPropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Gets the $name$ command object.
-        /// </summary>
-        /// <value>The <see cref="ICommand"/> that implements the $command$ command.</value>
         public Commands.RelayCommand ViewPersonalTagDefinitions => (Commands.RelayCommand)GetValue(ViewPersonalTagDefinitionsProperty);
 
         private void OnViewPersonalTagDefinitions(object parameter) => NavigateTo(Page_Uri_Local_PersonalTagDefinitions);
@@ -184,10 +156,6 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         public static readonly DependencyProperty ViewSharedTagDefinitionsProperty = ViewSharedTagDefinitionsPropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Gets the $name$ command object.
-        /// </summary>
-        /// <value>The <see cref="ICommand"/> that implements the $command$ command.</value>
         public Commands.RelayCommand ViewSharedTagDefinitions => (Commands.RelayCommand)GetValue(ViewSharedTagDefinitionsProperty);
 
         private void OnViewSharedTagDefinitions(object parameter) => NavigateTo(Page_Uri_Local_SharedTagDefinitions);
@@ -203,10 +171,6 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         public static readonly DependencyProperty ViewSummaryPropertySetsProperty = ViewSummaryPropertySetsPropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Gets the $name$ command object.
-        /// </summary>
-        /// <value>The <see cref="System.Windows.Input.ICommand"/> that implements the $command$ command.</value>
         public Commands.RelayCommand ViewSummaryPropertySets => (Commands.RelayCommand)GetValue(ViewSummaryPropertySetsProperty);
 
         private void OnViewSummaryPropertySets(object parameter) => NavigateTo(Page_Uri_Local_SummaryPropertySets);
@@ -222,10 +186,6 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         public static readonly DependencyProperty ViewCrawlLogsProperty = ViewCrawlLogsPropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Gets the $name$ command object.
-        /// </summary>
-        /// <value>The <see cref="System.Windows.Input.ICommand"/> that implements the $command$ command.</value>
         public Commands.RelayCommand ViewCrawlLogs => (Commands.RelayCommand)GetValue(ViewCrawlLogsProperty);
 
         private void OnViewCrawlLogs(object parameter) => NavigateTo(Page_Uri_Local_CrawlLogs);
@@ -241,10 +201,6 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         public static readonly DependencyProperty ViewDocumentPropertySetsProperty = ViewDocumentPropertySetsPropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Gets the $name$ command object.
-        /// </summary>
-        /// <value>The <see cref="System.Windows.Input.ICommand"/> that implements the $command$ command.</value>
         public Commands.RelayCommand ViewDocumentPropertySets => (Commands.RelayCommand)GetValue(ViewDocumentPropertySetsProperty);
 
         private void OnViewDocumentPropertySets(object parameter) => NavigateTo(Page_Uri_Local_DocumentPropertySets);
@@ -260,10 +216,6 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         public static readonly DependencyProperty ViewAudioPropertySetsProperty = ViewAudioPropertySetsPropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Gets the $name$ command object.
-        /// </summary>
-        /// <value>The <see cref="System.Windows.Input.ICommand"/> that implements the $command$ command.</value>
         public Commands.RelayCommand ViewAudioPropertySets => (Commands.RelayCommand)GetValue(ViewAudioPropertySetsProperty);
 
         private void OnViewAudioPropertySets(object parameter) => NavigateTo(Page_Uri_Local_AudioPropertySets);
@@ -279,10 +231,6 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         public static readonly DependencyProperty ViewDRMPropertySetsProperty = ViewDRMPropertySetsPropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Gets the $name$ command object.
-        /// </summary>
-        /// <value>The <see cref="System.Windows.Input.ICommand"/> that implements the $command$ command.</value>
         public Commands.RelayCommand ViewDRMPropertySets => (Commands.RelayCommand)GetValue(ViewDRMPropertySetsProperty);
 
         private void OnViewDRMPropertySets(object parameter) => NavigateTo(Page_Uri_Local_DRMPropertySets);
@@ -298,10 +246,6 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         public static readonly DependencyProperty ViewGPSPropertySetsProperty = ViewGPSPropertySetsPropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Gets the $name$ command object.
-        /// </summary>
-        /// <value>The <see cref="System.Windows.Input.ICommand"/> that implements the $command$ command.</value>
         public Commands.RelayCommand ViewGPSPropertySets => (Commands.RelayCommand)GetValue(ViewGPSPropertySetsProperty);
 
         private void OnViewGPSPropertySets(object parameter) => NavigateTo(Page_Uri_Local_GPSPropertySets);
@@ -317,10 +261,6 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         public static readonly DependencyProperty ViewImagePropertySetsProperty = ViewImagePropertySetsPropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Gets the $name$ command object.
-        /// </summary>
-        /// <value>The <see cref="System.Windows.Input.ICommand"/> that implements the $command$ command.</value>
         public Commands.RelayCommand ViewImagePropertySets => (Commands.RelayCommand)GetValue(ViewImagePropertySetsProperty);
 
         private void OnViewImagePropertySets(object parameter) => NavigateTo(Page_Uri_Local_ImagePropertySets);
@@ -336,10 +276,6 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         public static readonly DependencyProperty ViewMediaPropertySetsProperty = ViewMediaPropertySetsPropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Gets the $name$ command object.
-        /// </summary>
-        /// <value>The <see cref="System.Windows.Input.ICommand"/> that implements the $command$ command.</value>
         public Commands.RelayCommand ViewMediaPropertySets => (Commands.RelayCommand)GetValue(ViewMediaPropertySetsProperty);
 
         private void OnViewMediaPropertySets(object parameter) => NavigateTo(Page_Uri_Local_MediaPropertySets);
@@ -355,10 +291,6 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         public static readonly DependencyProperty ViewMusicPropertySetsProperty = ViewMusicPropertySetsPropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Gets the $name$ command object.
-        /// </summary>
-        /// <value>The <see cref="System.Windows.Input.ICommand"/> that implements the $command$ command.</value>
         public Commands.RelayCommand ViewMusicPropertySets => (Commands.RelayCommand)GetValue(ViewMusicPropertySetsProperty);
 
         private void OnViewMusicPropertySets(object parameter) => NavigateTo(Page_Uri_Local_MusicPropertySets);
@@ -374,10 +306,6 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         public static readonly DependencyProperty ViewPhotoPropertySetsProperty = ViewPhotoPropertySetsPropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Gets the $name$ command object.
-        /// </summary>
-        /// <value>The <see cref="System.Windows.Input.ICommand"/> that implements the $command$ command.</value>
         public Commands.RelayCommand ViewPhotoPropertySets => (Commands.RelayCommand)GetValue(ViewPhotoPropertySetsProperty);
 
         private void OnViewPhotoPropertySets(object parameter) => NavigateTo(Page_Uri_Local_PhotoPropertySets);
@@ -393,10 +321,6 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         public static readonly DependencyProperty ViewRecordedTVPropertySetsProperty = ViewRecordedTVPropertySetsPropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Gets the $name$ command object.
-        /// </summary>
-        /// <value>The <see cref="System.Windows.Input.ICommand"/> that implements the $command$ command.</value>
         public Commands.RelayCommand ViewRecordedTVPropertySets => (Commands.RelayCommand)GetValue(ViewRecordedTVPropertySetsProperty);
 
         private void OnViewRecordedTVPropertySets(object parameter) => NavigateTo(Page_Uri_Local_RecordedTVPropertySets);
@@ -412,10 +336,6 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         public static readonly DependencyProperty ViewVideoPropertySetsProperty = ViewVideoPropertySetsPropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Gets the $name$ command object.
-        /// </summary>
-        /// <value>The <see cref="System.Windows.Input.ICommand"/> that implements the $command$ command.</value>
         public Commands.RelayCommand ViewVideoPropertySets => (Commands.RelayCommand)GetValue(ViewVideoPropertySetsProperty);
 
         private void OnViewVideoPropertySets(object parameter) => NavigateTo(Page_Uri_Local_VideoPropertySets);
@@ -453,10 +373,6 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         public static readonly DependencyProperty CommandBindingsProperty = CommandBindingsPropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Gets .
-        /// </summary>
-        /// <value>The .</value>
         public CommandBindingCollection CommandBindings => (CommandBindingCollection)GetValue(CommandBindingsProperty);
 
         #endregion

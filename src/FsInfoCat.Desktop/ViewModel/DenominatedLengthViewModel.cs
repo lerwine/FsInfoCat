@@ -75,10 +75,6 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         public static readonly DependencyProperty DenominationProperty = DenominationPropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Gets .
-        /// </summary>
-        /// <value>The .</value>
         public EnumValuePickerVM<RangeDenomination> Denomination => (EnumValuePickerVM<RangeDenomination>)GetValue(DenominationProperty);
 
         #endregion

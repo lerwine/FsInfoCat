@@ -24,10 +24,6 @@ namespace FsInfoCat.Desktop.Local.RedundantSets
         /// </summary>
         public static readonly DependencyProperty MinimumRangeProperty = MinimumRangePropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Gets .
-        /// </summary>
-        /// <value>The .</value>
         public DenominatedLengthViewModel MinimumRange { get => (DenominatedLengthViewModel)GetValue(MinimumRangeProperty); private set => SetValue(MinimumRangePropertyKey, value); }
 
         #endregion
@@ -41,10 +37,6 @@ namespace FsInfoCat.Desktop.Local.RedundantSets
         /// </summary>
         public static readonly DependencyProperty MaximumRangeProperty = MaximumRangePropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Gets .
-        /// </summary>
-        /// <value>The .</value>
         public DenominatedLengthViewModel MaximumRange => (DenominatedLengthViewModel)GetValue(MaximumRangeProperty);
 
         #endregion

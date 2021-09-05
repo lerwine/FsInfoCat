@@ -14,10 +14,6 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         public static readonly DependencyProperty ShowFilterOptionsProperty = ShowFilterOptionsPropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Gets the $name$ command object.
-        /// </summary>
-        /// <value>The <see cref="System.Windows.Input.ICommand"/> that implements the $command$ command.</value>
         public Commands.RelayCommand ShowFilterOptions => (Commands.RelayCommand)GetValue(ShowFilterOptionsProperty);
 
         protected virtual void OnShowFilterOptionsCommand(object parameter) => ViewOptionsVisible = true;
@@ -33,10 +29,6 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         public static readonly DependencyProperty SaveFilterOptionsProperty = SaveFilterOptionsPropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Gets the $name$ command object.
-        /// </summary>
-        /// <value>The <see cref="System.Windows.Input.ICommand"/> that implements the $command$ command.</value>
         public Commands.RelayCommand SaveFilterOptions => (Commands.RelayCommand)GetValue(SaveFilterOptionsProperty);
 
         private void RaiseSaveFilterOptionsCommand(object parameter)
@@ -56,10 +48,6 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         public static readonly DependencyProperty CancelFilterOptionsProperty = CancelFilterOptionsPropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Gets the $name$ command object.
-        /// </summary>
-        /// <value>The <see cref="System.Windows.Input.ICommand"/> that implements the $command$ command.</value>
         public Commands.RelayCommand CancelFilterOptions => (Commands.RelayCommand)GetValue(CancelFilterOptionsProperty);
 
         protected virtual void OnCancelFilterOptionsCommand(object parameter) => ViewOptionsVisible = false;
@@ -75,10 +63,6 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         public static readonly DependencyProperty ViewOptionsVisibleProperty = ViewOptionsVisiblePropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Gets .
-        /// </summary>
-        /// <value>The .</value>
         public bool ViewOptionsVisible { get => (bool)GetValue(ViewOptionsVisibleProperty); private set => SetValue(ViewOptionsVisiblePropertyKey, value); }
 
         #endregion
@@ -92,10 +76,6 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         public static readonly DependencyProperty AddNewItemProperty = AddNewItemPropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Gets the $name$ command object.
-        /// </summary>
-        /// <value>The <see cref="System.Windows.Input.ICommand"/> that implements the $command$ command.</value>
         public Commands.RelayCommand AddNewItem => (Commands.RelayCommand)GetValue(AddNewItemProperty);
 
         #endregion
@@ -109,10 +89,6 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         public static readonly DependencyProperty RefreshProperty = RefreshPropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Gets the $name$ command object.
-        /// </summary>
-        /// <value>The <see cref="System.Windows.Input.ICommand"/> that implements the $command$ command.</value>
         public Commands.RelayCommand Refresh => (Commands.RelayCommand)GetValue(RefreshProperty);
 
         #endregion

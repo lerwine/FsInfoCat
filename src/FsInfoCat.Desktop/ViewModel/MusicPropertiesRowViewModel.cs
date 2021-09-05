@@ -103,10 +103,6 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         public static readonly DependencyProperty IsStereoProperty = IsStereoPropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Gets .
-        /// </summary>
-        /// <value>The .</value>
         public bool? IsStereo { get => (bool?)GetValue(IsStereoProperty); private set => SetValue(IsStereoPropertyKey, value); }
 
         #endregion
