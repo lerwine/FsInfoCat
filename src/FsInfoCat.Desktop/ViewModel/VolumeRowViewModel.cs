@@ -13,9 +13,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="DisplayName"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty DisplayNameProperty = DependencyProperty.Register(nameof(DisplayName), typeof(string),
-            typeof(VolumeRowViewModel<TEntity>), new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as VolumeRowViewModel<TEntity>)?.OnDisplayNamePropertyChanged(e.OldValue as string, e.NewValue as string)));
+        public static readonly DependencyProperty DisplayNameProperty = ColumnPropertyBuilder<string, VolumeRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IVolumeRow.DisplayName))
+            .DefaultValue("")
+            .OnChanged((d, oldValue, newValue) => (d as VolumeRowViewModel<TEntity>)?.OnDisplayNamePropertyChanged(oldValue, newValue))
+            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -28,10 +30,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="DisplayName"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="DisplayName"/> property.</param>
-        protected void OnDisplayNamePropertyChanged(string oldValue, string newValue)
-        {
-            // TODO: Implement OnDisplayNamePropertyChanged Logic
-        }
+        protected virtual void OnDisplayNamePropertyChanged(string oldValue, string newValue) { }
 
         #endregion
         #region VolumeName Property Members
@@ -39,9 +38,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="VolumeName"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty VolumeNameProperty = DependencyProperty.Register(nameof(VolumeName), typeof(string),
-            typeof(VolumeRowViewModel<TEntity>), new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as VolumeRowViewModel<TEntity>)?.OnVolumeNamePropertyChanged(e.OldValue as string, e.NewValue as string)));
+        public static readonly DependencyProperty VolumeNameProperty = ColumnPropertyBuilder<string, VolumeRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IVolumeRow.VolumeName))
+            .DefaultValue("")
+            .OnChanged((d, oldValue, newValue) => (d as VolumeRowViewModel<TEntity>)?.OnVolumeNamePropertyChanged(oldValue, newValue))
+            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -54,10 +55,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="VolumeName"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="VolumeName"/> property.</param>
-        protected void OnVolumeNamePropertyChanged(string oldValue, string newValue)
-        {
-            // TODO: Implement OnVolumeNamePropertyChanged Logic
-        }
+        protected virtual void OnVolumeNamePropertyChanged(string oldValue, string newValue) { }
 
         #endregion
         #region Identifier Property Members
@@ -65,9 +63,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="Identifier"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty IdentifierProperty = DependencyProperty.Register(nameof(Identifier), typeof(VolumeIdentifier),
-            typeof(VolumeRowViewModel<TEntity>), new PropertyMetadata(VolumeIdentifier.Empty, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as VolumeRowViewModel<TEntity>)?.OnIdentifierPropertyChanged((VolumeIdentifier)e.OldValue, (VolumeIdentifier)e.NewValue)));
+        public static readonly DependencyProperty IdentifierProperty = ColumnPropertyBuilder<VolumeIdentifier, VolumeRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IVolumeRow.Identifier))
+            .DefaultValue(VolumeIdentifier.Empty)
+            .OnChanged((d, oldValue, newValue) => (d as VolumeRowViewModel<TEntity>)?.OnIdentifierPropertyChanged(oldValue, newValue))
+            .AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -80,10 +80,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Identifier"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Identifier"/> property.</param>
-        protected void OnIdentifierPropertyChanged(VolumeIdentifier oldValue, VolumeIdentifier newValue)
-        {
-            // TODO: Implement OnIdentifierPropertyChanged Logic
-        }
+        protected virtual void OnIdentifierPropertyChanged(VolumeIdentifier oldValue, VolumeIdentifier newValue) { }
 
         #endregion
         #region ReadOnly Property Members
@@ -91,9 +88,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="ReadOnly"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty ReadOnlyProperty = DependencyProperty.Register(nameof(ReadOnly), typeof(bool?), typeof(VolumeRowViewModel<TEntity>),
-                new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as VolumeRowViewModel<TEntity>)?.OnReadOnlyPropertyChanged((bool?)e.OldValue, (bool?)e.NewValue)));
+        public static readonly DependencyProperty ReadOnlyProperty = ColumnPropertyBuilder<bool?, VolumeRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IVolumeRow.ReadOnly))
+            .DefaultValue(null)
+            .OnChanged((d, oldValue, newValue) => (d as VolumeRowViewModel<TEntity>)?.OnReadOnlyPropertyChanged(oldValue, newValue))
+            .AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -106,10 +105,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="ReadOnly"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="ReadOnly"/> property.</param>
-        protected void OnReadOnlyPropertyChanged(bool? oldValue, bool? newValue)
-        {
-            // TODO: Implement OnReadOnlyPropertyChanged Logic
-        }
+        protected virtual void OnReadOnlyPropertyChanged(bool? oldValue, bool? newValue) { }
 
         #endregion
         #region MaxNameLength Property Members
@@ -117,9 +113,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="MaxNameLength"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty MaxNameLengthProperty = DependencyProperty.Register(nameof(MaxNameLength), typeof(uint?),
-            typeof(VolumeRowViewModel<TEntity>), new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as VolumeRowViewModel<TEntity>)?.OnMaxNameLengthPropertyChanged((uint?)e.OldValue, (uint?)e.NewValue)));
+        public static readonly DependencyProperty MaxNameLengthProperty = ColumnPropertyBuilder<uint?, VolumeRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IVolumeRow.MaxNameLength))
+            .DefaultValue(null)
+            .OnChanged((d, oldValue, newValue) => (d as VolumeRowViewModel<TEntity>)?.OnMaxNameLengthPropertyChanged(oldValue, newValue))
+            .AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -132,10 +130,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="MaxNameLength"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="MaxNameLength"/> property.</param>
-        protected void OnMaxNameLengthPropertyChanged(uint? oldValue, uint? newValue)
-        {
-            // TODO: Implement OnMaxNameLengthPropertyChanged Logic
-        }
+        protected virtual void OnMaxNameLengthPropertyChanged(uint? oldValue, uint? newValue) { }
 
         #endregion
         #region Type Property Members
@@ -143,9 +138,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="Type"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty TypeProperty = DependencyProperty.Register(nameof(Type), typeof(DriveType), typeof(VolumeRowViewModel<TEntity>),
-                new PropertyMetadata(DriveType.Unknown, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as VolumeRowViewModel<TEntity>)?.OnTypePropertyChanged((DriveType)e.OldValue, (DriveType)e.NewValue)));
+        public static readonly DependencyProperty TypeProperty = ColumnPropertyBuilder<DriveType, VolumeRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IVolumeRow.Type))
+            .DefaultValue(DriveType.Unknown)
+            .OnChanged((d, oldValue, newValue) => (d as VolumeRowViewModel<TEntity>)?.OnTypePropertyChanged(oldValue, newValue))
+            .AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -158,10 +155,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Type"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Type"/> property.</param>
-        protected void OnTypePropertyChanged(DriveType oldValue, DriveType newValue)
-        {
-            // TODO: Implement OnTypePropertyChanged Logic
-        }
+        protected virtual void OnTypePropertyChanged(DriveType oldValue, DriveType newValue) { }
 
         #endregion
         #region Notes Property Members
@@ -169,9 +163,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="Notes"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty NotesProperty = DependencyProperty.Register(nameof(Notes), typeof(string), typeof(VolumeRowViewModel<TEntity>),
-                new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as VolumeRowViewModel<TEntity>)?.OnNotesPropertyChanged(e.OldValue as string, e.NewValue as string)));
+        public static readonly DependencyProperty NotesProperty = ColumnPropertyBuilder<string, VolumeRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IVolumeRow.Notes))
+            .DefaultValue("")
+            .OnChanged((d, oldValue, newValue) => (d as VolumeRowViewModel<TEntity>)?.OnNotesPropertyChanged(oldValue, newValue))
+            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -184,10 +180,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Notes"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Notes"/> property.</param>
-        protected void OnNotesPropertyChanged(string oldValue, string newValue)
-        {
-            // TODO: Implement OnNotesPropertyChanged Logic
-        }
+        protected virtual void OnNotesPropertyChanged(string oldValue, string newValue) { }
 
         #endregion
         #region Status Property Members
@@ -195,9 +188,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="Status"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty StatusProperty = DependencyProperty.Register(nameof(Status), typeof(VolumeStatus), typeof(VolumeRowViewModel<TEntity>),
-                new PropertyMetadata(VolumeStatus.Unknown, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as VolumeRowViewModel<TEntity>)?.OnStatusPropertyChanged((VolumeStatus)e.OldValue, (VolumeStatus)e.NewValue)));
+        public static readonly DependencyProperty StatusProperty = ColumnPropertyBuilder<VolumeStatus, VolumeRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IVolumeRow.Status))
+            .DefaultValue(VolumeStatus.Unknown)
+            .OnChanged((d, oldValue, newValue) => (d as VolumeRowViewModel<TEntity>)?.OnStatusPropertyChanged(oldValue, newValue))
+            .AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -210,10 +205,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Status"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Status"/> property.</param>
-        protected void OnStatusPropertyChanged(VolumeStatus oldValue, VolumeStatus newValue)
-        {
-            // TODO: Implement OnStatusPropertyChanged Logic
-        }
+        protected virtual void OnStatusPropertyChanged(VolumeStatus oldValue, VolumeStatus newValue) { }
 
         #endregion
 #pragma warning restore IDE0060 // Remove unused parameter

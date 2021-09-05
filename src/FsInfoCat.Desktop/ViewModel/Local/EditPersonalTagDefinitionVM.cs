@@ -30,7 +30,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="IsInactive"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="IsInactive"/> property.</param>
-        protected void OnIsInactivePropertyChanged(bool oldValue, bool newValue)
+        protected virtual void OnIsInactivePropertyChanged(bool oldValue, bool newValue)
         {
             // DEFERRED: Implement OnIsInactivePropertyChanged Logic
         }
@@ -55,7 +55,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Name"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Name"/> property.</param>
-        protected void OnNamePropertyChanged(string oldValue, string newValue)
+        protected virtual void OnNamePropertyChanged(string oldValue, string newValue)
         {
             // DEFERRED: Implement OnNamePropertyChanged Logic
         }
@@ -80,7 +80,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Description"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Description"/> property.</param>
-        protected void OnDescriptionPropertyChanged(string oldValue, string newValue)
+        protected virtual void OnDescriptionPropertyChanged(string oldValue, string newValue)
         {
             // DEFERRED: Implement OnDescriptionPropertyChanged Logic
         }

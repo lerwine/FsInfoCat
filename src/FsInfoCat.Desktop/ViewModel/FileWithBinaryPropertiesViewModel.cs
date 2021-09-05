@@ -66,8 +66,10 @@ namespace FsInfoCat.Desktop.ViewModel
         #endregion
         #region Length Property Members
 
-        private static readonly DependencyPropertyKey LengthPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Length), typeof(long), typeof(FileWithBinaryPropertiesViewModel<TEntity>),
-                new PropertyMetadata(0L));
+        private static readonly DependencyPropertyKey LengthPropertyKey = ColumnPropertyBuilder<long, FileWithBinaryPropertiesViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IFileListItemWithBinaryProperties.Length))
+            .DefaultValue(0L)
+            .AsReadOnly();
 
         /// <summary>
         /// Identifies the <see cref="Length"/> dependency property.
@@ -83,8 +85,10 @@ namespace FsInfoCat.Desktop.ViewModel
         #endregion
         #region Hash Property Members
 
-        private static readonly DependencyPropertyKey HashPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Hash), typeof(MD5Hash?), typeof(FileWithBinaryPropertiesViewModel<TEntity>),
-                new PropertyMetadata(null));
+        private static readonly DependencyPropertyKey HashPropertyKey = ColumnPropertyBuilder<MD5Hash?, FileWithBinaryPropertiesViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IFileListItemWithBinaryProperties.Hash))
+            .DefaultValue(null)
+            .AsReadOnly();
 
         /// <summary>
         /// Identifies the <see cref="Hash"/> dependency property.
@@ -100,9 +104,11 @@ namespace FsInfoCat.Desktop.ViewModel
         #endregion
         #region RedundancyCount Property Members
 
-        private static readonly DependencyPropertyKey RedundancyCountPropertyKey = DependencyProperty.RegisterReadOnly(nameof(RedundancyCount), typeof(long),
-            typeof(FileWithBinaryPropertiesViewModel<TEntity>), new PropertyMetadata(0L, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-            (d as FileWithBinaryPropertiesViewModel<TEntity>).OnRedundancyCountPropertyChanged((long)e.OldValue, (long)e.NewValue)));
+        private static readonly DependencyPropertyKey RedundancyCountPropertyKey = ColumnPropertyBuilder<long, FileWithBinaryPropertiesViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IFileListItemWithBinaryProperties.RedundancyCount))
+            .DefaultValue(0L)
+            .OnChanged((d, oldValue, newValue) => (d as FileWithBinaryPropertiesViewModel<TEntity>)?.OnRedundancyCountPropertyChanged(oldValue, newValue))
+            .AsReadOnly();
 
         /// <summary>
         /// Identifies the <see cref="RedundancyCount"/> dependency property.
@@ -120,17 +126,16 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="RedundancyCount"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="RedundancyCount"/> property.</param>
-        protected void OnRedundancyCountPropertyChanged(long oldValue, long newValue)
-        {
-            // TODO: Implement OnRedundancyCountPropertyChanged Logic
-        }
+        protected virtual void OnRedundancyCountPropertyChanged(long oldValue, long newValue) { }
 
         #endregion
         #region ComparisonCount Property Members
 
-        private static readonly DependencyPropertyKey ComparisonCountPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ComparisonCount), typeof(long),
-            typeof(FileWithBinaryPropertiesViewModel<TEntity>), new PropertyMetadata(0L, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-            (d as FileWithBinaryPropertiesViewModel<TEntity>).OnComparisonCountPropertyChanged((long)e.OldValue, (long)e.NewValue)));
+        private static readonly DependencyPropertyKey ComparisonCountPropertyKey = ColumnPropertyBuilder<long, FileWithBinaryPropertiesViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IFileListItemWithBinaryProperties.ComparisonCount))
+            .DefaultValue(0L)
+            .OnChanged((d, oldValue, newValue) => (d as FileWithBinaryPropertiesViewModel<TEntity>)?.OnComparisonCountPropertyChanged(oldValue, newValue))
+            .AsReadOnly();
 
         /// <summary>
         /// Identifies the <see cref="ComparisonCount"/> dependency property.
@@ -148,17 +153,16 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="ComparisonCount"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="ComparisonCount"/> property.</param>
-        protected void OnComparisonCountPropertyChanged(long oldValue, long newValue)
-        {
-            // TODO: Implement OnComparisonCountPropertyChanged Logic
-        }
+        protected virtual void OnComparisonCountPropertyChanged(long oldValue, long newValue) { }
 
         #endregion
         #region AccessErrorCount Property Members
 
-        private static readonly DependencyPropertyKey AccessErrorCountPropertyKey = DependencyProperty.RegisterReadOnly(nameof(AccessErrorCount), typeof(long),
-            typeof(FileWithBinaryPropertiesViewModel<TEntity>), new PropertyMetadata(0L, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-            (d as FileWithBinaryPropertiesViewModel<TEntity>).OnAccessErrorCountPropertyChanged((long)e.OldValue, (long)e.NewValue)));
+        private static readonly DependencyPropertyKey AccessErrorCountPropertyKey = ColumnPropertyBuilder<long, FileWithBinaryPropertiesViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IFileListItemWithBinaryProperties.AccessErrorCount))
+            .DefaultValue(0L)
+            .OnChanged((d, oldValue, newValue) => (d as FileWithBinaryPropertiesViewModel<TEntity>)?.OnAccessErrorCountPropertyChanged(oldValue, newValue))
+            .AsReadOnly();
 
         /// <summary>
         /// Identifies the <see cref="AccessErrorCount"/> dependency property.
@@ -176,17 +180,16 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="AccessErrorCount"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="AccessErrorCount"/> property.</param>
-        protected void OnAccessErrorCountPropertyChanged(long oldValue, long newValue)
-        {
-            // TODO: Implement OnAccessErrorCountPropertyChanged Logic
-        }
+        protected virtual void OnAccessErrorCountPropertyChanged(long oldValue, long newValue) { }
 
         #endregion
         #region PersonalTagCount Property Members
 
-        private static readonly DependencyPropertyKey PersonalTagCountPropertyKey = DependencyProperty.RegisterReadOnly(nameof(PersonalTagCount), typeof(long),
-            typeof(FileWithBinaryPropertiesViewModel<TEntity>), new PropertyMetadata(0L, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-            (d as FileWithBinaryPropertiesViewModel<TEntity>).OnPersonalTagCountPropertyChanged((long)e.OldValue, (long)e.NewValue)));
+        private static readonly DependencyPropertyKey PersonalTagCountPropertyKey = ColumnPropertyBuilder<long, FileWithBinaryPropertiesViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IFileListItemWithBinaryProperties.PersonalTagCount))
+            .DefaultValue(0L)
+            .OnChanged((d, oldValue, newValue) => (d as FileWithBinaryPropertiesViewModel<TEntity>)?.OnPersonalTagCountPropertyChanged(oldValue, newValue))
+            .AsReadOnly();
 
         /// <summary>
         /// Identifies the <see cref="PersonalTagCount"/> dependency property.
@@ -204,17 +207,16 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="PersonalTagCount"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="PersonalTagCount"/> property.</param>
-        protected void OnPersonalTagCountPropertyChanged(long oldValue, long newValue)
-        {
-            // TODO: Implement OnPersonalTagCountPropertyChanged Logic
-        }
+        protected virtual void OnPersonalTagCountPropertyChanged(long oldValue, long newValue) { }
 
         #endregion
         #region SharedTagCount Property Members
 
-        private static readonly DependencyPropertyKey SharedTagCountPropertyKey = DependencyProperty.RegisterReadOnly(nameof(SharedTagCount), typeof(long),
-            typeof(FileWithBinaryPropertiesViewModel<TEntity>), new PropertyMetadata(0L, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-            (d as FileWithBinaryPropertiesViewModel<TEntity>).OnSharedTagCountPropertyChanged((long)e.OldValue, (long)e.NewValue)));
+        private static readonly DependencyPropertyKey SharedTagCountPropertyKey = ColumnPropertyBuilder<long, FileWithBinaryPropertiesViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IFileListItemWithBinaryProperties.SharedTagCount))
+            .DefaultValue(0L)
+            .OnChanged((d, oldValue, newValue) => (d as FileWithBinaryPropertiesViewModel<TEntity>)?.OnSharedTagCountPropertyChanged(oldValue, newValue))
+            .AsReadOnly();
 
         /// <summary>
         /// Identifies the <see cref="SharedTagCount"/> dependency property.
@@ -232,10 +234,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="SharedTagCount"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="SharedTagCount"/> property.</param>
-        protected void OnSharedTagCountPropertyChanged(long oldValue, long newValue)
-        {
-            // TODO: Implement OnSharedTagCountPropertyChanged Logic
-        }
+        protected virtual void OnSharedTagCountPropertyChanged(long oldValue, long newValue) { }
 
         #endregion
 #pragma warning restore IDE0060 // Remove unused parameter

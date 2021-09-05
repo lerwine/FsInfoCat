@@ -13,9 +13,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="Name"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty NameProperty = DependencyProperty.Register(nameof(Name), typeof(string), typeof(FsItemRowViewModel<TEntity>),
-                new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as FsItemRowViewModel<TEntity>)?.OnNamePropertyChanged(e.OldValue as string, e.NewValue as string)));
+        public static readonly DependencyProperty NameProperty = ColumnPropertyBuilder<string, FsItemRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IDbFsItem.Name))
+            .DefaultValue("")
+            .OnChanged((d, oldValue, newValue) =>(d as FsItemRowViewModel<TEntity>)?.OnNamePropertyChanged(oldValue, newValue))
+            .AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -28,10 +30,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Name"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Name"/> property.</param>
-        protected void OnNamePropertyChanged(string oldValue, string newValue)
-        {
-            // TODO: Implement OnNamePropertyChanged Logic
-        }
+        protected virtual void OnNamePropertyChanged(string oldValue, string newValue) { }
 
         #endregion
         #region LastAccessed Property Members
@@ -39,9 +38,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="LastAccessed"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty LastAccessedProperty = DependencyProperty.Register(nameof(LastAccessed), typeof(DateTime),
-            typeof(FsItemRowViewModel<TEntity>), new PropertyMetadata(default(DateTime), (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as FsItemRowViewModel<TEntity>)?.OnLastAccessedPropertyChanged((DateTime)e.OldValue, (DateTime)e.NewValue)));
+        public static readonly DependencyProperty LastAccessedProperty = ColumnPropertyBuilder<DateTime, FsItemRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IDbFsItemRow.LastAccessed))
+            .DefaultValue(default(DateTime))
+            .OnChanged((d, oldValue, newValue) => (d as FsItemRowViewModel<TEntity>)?.OnLastAccessedPropertyChanged(oldValue, newValue))
+            .AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -54,10 +55,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="LastAccessed"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="LastAccessed"/> property.</param>
-        protected void OnLastAccessedPropertyChanged(DateTime oldValue, DateTime newValue)
-        {
-            // TODO: Implement OnLastAccessedPropertyChanged Logic
-        }
+        protected virtual void OnLastAccessedPropertyChanged(DateTime oldValue, DateTime newValue) { }
 
         #endregion
         #region Notes Property Members
@@ -65,9 +63,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="Notes"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty NotesProperty = DependencyProperty.Register(nameof(Notes), typeof(string), typeof(FsItemRowViewModel<TEntity>),
-                new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as FsItemRowViewModel<TEntity>)?.OnNotesPropertyChanged(e.OldValue as string, e.NewValue as string)));
+        public static readonly DependencyProperty NotesProperty = ColumnPropertyBuilder<string, FsItemRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IDbFsItem.Notes))
+            .DefaultValue("")
+            .OnChanged((d, oldValue, newValue) => (d as FsItemRowViewModel<TEntity>)?.OnNotesPropertyChanged(oldValue, newValue))
+            .AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -80,10 +80,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Notes"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Notes"/> property.</param>
-        protected void OnNotesPropertyChanged(string oldValue, string newValue)
-        {
-            // TODO: Implement OnNotesPropertyChanged Logic
-        }
+        protected virtual void OnNotesPropertyChanged(string oldValue, string newValue) { }
 
         #endregion
         #region CreationTime Property Members
@@ -91,9 +88,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="CreationTime"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty CreationTimeProperty = DependencyProperty.Register(nameof(CreationTime), typeof(DateTime),
-            typeof(FsItemRowViewModel<TEntity>), new PropertyMetadata(default(DateTime), (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as FsItemRowViewModel<TEntity>)?.OnCreationTimePropertyChanged((DateTime)e.OldValue, (DateTime)e.NewValue)));
+        public static readonly DependencyProperty CreationTimeProperty = ColumnPropertyBuilder<DateTime, FsItemRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IDbFsItemRow.CreationTime))
+            .DefaultValue(default(DateTime))
+            .OnChanged((d, oldValue, newValue) => (d as FsItemRowViewModel<TEntity>)?.OnCreationTimePropertyChanged(oldValue, newValue))
+            .AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -106,10 +105,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="CreationTime"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="CreationTime"/> property.</param>
-        protected void OnCreationTimePropertyChanged(DateTime oldValue, DateTime newValue)
-        {
-            // TODO: Implement OnCreationTimePropertyChanged Logic
-        }
+        protected virtual void OnCreationTimePropertyChanged(DateTime oldValue, DateTime newValue) { }
 
         #endregion
         #region LastWriteTime Property Members
@@ -117,9 +113,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="LastWriteTime"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty LastWriteTimeProperty = DependencyProperty.Register(nameof(LastWriteTime), typeof(DateTime),
-            typeof(FsItemRowViewModel<TEntity>), new PropertyMetadata(default(DateTime), (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as FsItemRowViewModel<TEntity>)?.OnLastWriteTimePropertyChanged((DateTime)e.OldValue, (DateTime)e.NewValue)));
+        public static readonly DependencyProperty LastWriteTimeProperty = ColumnPropertyBuilder<DateTime, FsItemRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IDbFsItemRow.LastWriteTime))
+            .DefaultValue(default(DateTime))
+            .OnChanged((d, oldValue, newValue) => (d as FsItemRowViewModel<TEntity>)?.OnLastWriteTimePropertyChanged(oldValue, newValue))
+            .AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -132,10 +130,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="LastWriteTime"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="LastWriteTime"/> property.</param>
-        protected void OnLastWriteTimePropertyChanged(DateTime oldValue, DateTime newValue)
-        {
-            // TODO: Implement OnLastWriteTimePropertyChanged Logic
-        }
+        protected virtual void OnLastWriteTimePropertyChanged(DateTime oldValue, DateTime newValue) { }
 
         #endregion
 #pragma warning restore IDE0060 // Remove unused parameter

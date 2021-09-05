@@ -12,9 +12,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="Reference"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty ReferenceProperty = DependencyProperty.Register(nameof(Reference), typeof(string),
-            typeof(RedundantSetRowViewModel<TEntity>), new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as RedundantSetRowViewModel<TEntity>)?.OnReferencePropertyChanged(e.OldValue as string, e.NewValue as string)));
+        public static readonly DependencyProperty ReferenceProperty = ColumnPropertyBuilder<string, RedundantSetRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IRedundantSetRow.Reference))
+            .DefaultValue("")
+            .OnChanged((d, oldValue, newValue) => (d as RedundantSetRowViewModel<TEntity>)?.OnReferencePropertyChanged(oldValue, newValue))
+            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -27,10 +29,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Reference"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Reference"/> property.</param>
-        protected void OnReferencePropertyChanged(string oldValue, string newValue)
-        {
-            // TODO: Implement OnReferencePropertyChanged Logic
-        }
+        protected virtual void OnReferencePropertyChanged(string oldValue, string newValue) { }
 
         #endregion
         #region Notes Property Members
@@ -38,9 +37,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="Notes"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty NotesProperty = DependencyProperty.Register(nameof(Notes), typeof(string), typeof(RedundantSetRowViewModel<TEntity>),
-                new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as RedundantSetRowViewModel<TEntity>)?.OnNotesPropertyChanged(e.OldValue as string, e.NewValue as string)));
+        public static readonly DependencyProperty NotesProperty = ColumnPropertyBuilder<string, RedundantSetRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IRedundantSetRow.Notes))
+            .DefaultValue("")
+            .OnChanged((d, oldValue, newValue) => (d as RedundantSetRowViewModel<TEntity>)?.OnNotesPropertyChanged(oldValue, newValue))
+            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -53,10 +54,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Notes"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Notes"/> property.</param>
-        protected void OnNotesPropertyChanged(string oldValue, string newValue)
-        {
-            // TODO: Implement OnNotesPropertyChanged Logic
-        }
+        protected virtual void OnNotesPropertyChanged(string oldValue, string newValue) { }
 
         #endregion
 

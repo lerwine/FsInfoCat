@@ -1,4 +1,7 @@
+using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel
@@ -11,9 +14,12 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="Compression"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty CompressionProperty = DependencyProperty.Register(nameof(Compression), typeof(string),
-            typeof(AudioPropertiesRowViewModel<TEntity>), new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as AudioPropertiesRowViewModel<TEntity>)?.OnCompressionPropertyChanged(e.OldValue as string, e.NewValue as string)));
+        public static readonly DependencyProperty CompressionProperty = ColumnPropertyBuilder<string, AudioPropertiesRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IAudioProperties.Compression))
+            .DefaultValue("")
+            .OnChanged((d, oldValue, newValue) => (d as AudioPropertiesRowViewModel<TEntity>)?.OnCompressionPropertyChanged(oldValue, newValue))
+            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default)
+            .AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -26,7 +32,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Compression"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Compression"/> property.</param>
-        protected void OnCompressionPropertyChanged(string oldValue, string newValue) { }
+        protected virtual void OnCompressionPropertyChanged(string oldValue, string newValue) { }
 
         #endregion
         #region EncodingBitrate Property Members
@@ -34,9 +40,10 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="EncodingBitrate"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty EncodingBitrateProperty = DependencyProperty.Register(nameof(EncodingBitrate), typeof(uint?),
-            typeof(AudioPropertiesRowViewModel<TEntity>), new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as AudioPropertiesRowViewModel<TEntity>)?.OnEncodingBitratePropertyChanged((uint?)e.OldValue, (uint?)e.NewValue)));
+        public static readonly DependencyProperty EncodingBitrateProperty = ColumnPropertyBuilder<uint?, AudioPropertiesRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IAudioProperties.EncodingBitrate))
+            .OnChanged((d, oldValue, newValue) => (d as AudioPropertiesRowViewModel<TEntity>)?.OnEncodingBitratePropertyChanged(oldValue, newValue))
+            .AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -49,10 +56,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="EncodingBitrate"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="EncodingBitrate"/> property.</param>
-        protected void OnEncodingBitratePropertyChanged(uint? oldValue, uint? newValue)
-        {
-            // TODO: Implement OnEncodingBitratePropertyChanged Logic
-        }
+        protected virtual void OnEncodingBitratePropertyChanged(uint? oldValue, uint? newValue) { }
 
         #endregion
         #region Format Property Members
@@ -60,9 +64,12 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="Format"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty FormatProperty = DependencyProperty.Register(nameof(Format), typeof(string), typeof(AudioPropertiesRowViewModel<TEntity>),
-                new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as AudioPropertiesRowViewModel<TEntity>)?.OnFormatPropertyChanged(e.OldValue as string, e.NewValue as string)));
+        public static readonly DependencyProperty FormatProperty = ColumnPropertyBuilder<string, AudioPropertiesRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IAudioProperties.Format))
+            .DefaultValue("")
+            .OnChanged((d, oldValue, newValue) => (d as AudioPropertiesRowViewModel<TEntity>)?.OnFormatPropertyChanged(oldValue, newValue))
+            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default)
+            .AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -75,10 +82,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Format"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Format"/> property.</param>
-        protected void OnFormatPropertyChanged(string oldValue, string newValue)
-        {
-            // TODO: Implement OnFormatPropertyChanged Logic
-        }
+        protected virtual void OnFormatPropertyChanged(string oldValue, string newValue) { }
 
         #endregion
         #region IsVariableBitrate Property Members
@@ -86,9 +90,10 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="IsVariableBitrate"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty IsVariableBitrateProperty = DependencyProperty.Register(nameof(IsVariableBitrate), typeof(bool?),
-            typeof(AudioPropertiesRowViewModel<TEntity>), new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as AudioPropertiesRowViewModel<TEntity>)?.OnIsVariableBitratePropertyChanged((bool?)e.OldValue, (bool?)e.NewValue)));
+        public static readonly DependencyProperty IsVariableBitrateProperty = ColumnPropertyBuilder<bool?, AudioPropertiesRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IAudioProperties.IsVariableBitrate))
+            .OnChanged((d, oldValue, newValue) => (d as AudioPropertiesRowViewModel<TEntity>)?.OnIsVariableBitratePropertyChanged(oldValue, newValue))
+            .AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -101,10 +106,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="IsVariableBitrate"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="IsVariableBitrate"/> property.</param>
-        protected void OnIsVariableBitratePropertyChanged(bool? oldValue, bool? newValue)
-        {
-            // TODO: Implement OnIsVariableBitratePropertyChanged Logic
-        }
+        protected virtual void OnIsVariableBitratePropertyChanged(bool? oldValue, bool? newValue) { }
 
         #endregion
         #region SampleRate Property Members
@@ -112,9 +114,10 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="SampleRate"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty SampleRateProperty = DependencyProperty.Register(nameof(SampleRate), typeof(uint?),
-            typeof(AudioPropertiesRowViewModel<TEntity>), new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as AudioPropertiesRowViewModel<TEntity>)?.OnSampleRatePropertyChanged((uint?)e.OldValue, (uint?)e.NewValue)));
+        public static readonly DependencyProperty SampleRateProperty = ColumnPropertyBuilder<uint?, AudioPropertiesRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IAudioProperties.SampleRate))
+            .OnChanged((d, oldValue, newValue) => (d as AudioPropertiesRowViewModel<TEntity>)?.OnSampleRatePropertyChanged(oldValue, newValue))
+            .AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -127,10 +130,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="SampleRate"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="SampleRate"/> property.</param>
-        protected void OnSampleRatePropertyChanged(uint? oldValue, uint? newValue)
-        {
-            // TODO: Implement OnSampleRatePropertyChanged Logic
-        }
+        protected virtual void OnSampleRatePropertyChanged(uint? oldValue, uint? newValue) { }
 
         #endregion
         #region SampleSize Property Members
@@ -138,9 +138,10 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="SampleSize"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty SampleSizeProperty = DependencyProperty.Register(nameof(SampleSize), typeof(uint?),
-            typeof(AudioPropertiesRowViewModel<TEntity>), new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as AudioPropertiesRowViewModel<TEntity>)?.OnSampleSizePropertyChanged((uint?)e.OldValue, (uint?)e.NewValue)));
+        public static readonly DependencyProperty SampleSizeProperty = ColumnPropertyBuilder<uint?, AudioPropertiesRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IAudioProperties.SampleSize))
+            .OnChanged((d, oldValue, newValue) => (d as AudioPropertiesRowViewModel<TEntity>)?.OnSampleSizePropertyChanged(oldValue, newValue))
+            .AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -153,10 +154,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="SampleSize"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="SampleSize"/> property.</param>
-        protected void OnSampleSizePropertyChanged(uint? oldValue, uint? newValue)
-        {
-            // TODO: Implement OnSampleSizePropertyChanged Logic
-        }
+        protected virtual void OnSampleSizePropertyChanged(uint? oldValue, uint? newValue) { }
 
         #endregion
         #region StreamName Property Members
@@ -164,9 +162,12 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="StreamName"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty StreamNameProperty = DependencyProperty.Register(nameof(StreamName), typeof(string),
-            typeof(AudioPropertiesRowViewModel<TEntity>), new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as AudioPropertiesRowViewModel<TEntity>)?.OnStreamNamePropertyChanged(e.OldValue as string, e.NewValue as string)));
+        public static readonly DependencyProperty StreamNameProperty = ColumnPropertyBuilder<string, AudioPropertiesRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IAudioProperties.StreamName))
+            .DefaultValue("")
+            .OnChanged((d, oldValue, newValue) => (d as AudioPropertiesRowViewModel<TEntity>)?.OnStreamNamePropertyChanged(oldValue, newValue))
+            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default)
+            .AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -179,10 +180,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="StreamName"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="StreamName"/> property.</param>
-        protected void OnStreamNamePropertyChanged(string oldValue, string newValue)
-        {
-            // TODO: Implement OnStreamNamePropertyChanged Logic
-        }
+        protected virtual void OnStreamNamePropertyChanged(string oldValue, string newValue) { }
 
         #endregion
         #region StreamNumber Property Members
@@ -190,9 +188,10 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="StreamNumber"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty StreamNumberProperty = DependencyProperty.Register(nameof(StreamNumber), typeof(ushort?),
-            typeof(AudioPropertiesRowViewModel<TEntity>), new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as AudioPropertiesRowViewModel<TEntity>)?.OnStreamNumberPropertyChanged((ushort?)e.OldValue, (ushort?)e.NewValue)));
+        public static readonly DependencyProperty StreamNumberProperty = ColumnPropertyBuilder<ushort?, AudioPropertiesRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IAudioProperties.StreamNumber))
+            .OnChanged((d, oldValue, newValue) => (d as AudioPropertiesRowViewModel<TEntity>)?.OnStreamNumberPropertyChanged(oldValue, newValue))
+            .AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -205,10 +204,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="StreamNumber"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="StreamNumber"/> property.</param>
-        protected void OnStreamNumberPropertyChanged(ushort? oldValue, ushort? newValue)
-        {
-            // TODO: Implement OnStreamNumberPropertyChanged Logic
-        }
+        protected virtual void OnStreamNumberPropertyChanged(ushort? oldValue, ushort? newValue) { }
 
         #endregion
 
@@ -224,11 +220,25 @@ namespace FsInfoCat.Desktop.ViewModel
             StreamNumber = entity.StreamNumber;
         }
 
-        internal string CalculateDisplayText()
+        public IEnumerable<(string DisplayName, string Value)> GetNameValuePairs()
         {
-            // TODO: Calculate value for ListingViewModel<TEntity, TItem, TOptions>.SetItemDisplayText(string)
-            throw new System.NotImplementedException();
+            yield return (FsInfoCat.Properties.Resources.DisplayName_Compression, Compression.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.DisplayName_EncodingBitrate, EncodingBitrate?.ToString());
+            yield return (FsInfoCat.Properties.Resources.DisplayName_Format, Format.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.DisplayName_IsVariableBitrate, Converters.BooleanToStringConverter.Convert(IsVariableBitrate));
+            yield return (FsInfoCat.Properties.Resources.DisplayName_SampleRate, SampleRate?.ToString());
+            yield return (FsInfoCat.Properties.Resources.DisplayName_SampleSize, SampleSize?.ToString());
+            yield return (FsInfoCat.Properties.Resources.DisplayName_StreamName, StreamName.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.DisplayName_StreamNumber, StreamNumber?.ToString());
         }
+
+        /// <summary>
+        /// Calculates the display text.
+        /// </summary>
+        /// <param name="filter">The filter.</param>
+        /// <returns></returns>
+        internal string CalculateDisplayText(Func<(string DisplayName, string Value), bool> filter = null) => (filter is null) ?
+            StringExtensionMethods.ToKeyValueListString(GetNameValuePairs()) : StringExtensionMethods.ToKeyValueListString(GetNameValuePairs().Where(filter));
 
         protected override void OnEntityPropertyChanged(string propertyName)
         {

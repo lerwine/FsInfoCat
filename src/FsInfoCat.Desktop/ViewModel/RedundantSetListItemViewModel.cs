@@ -65,8 +65,10 @@ namespace FsInfoCat.Desktop.ViewModel
         #endregion
         #region Length Property Members
 
-        private static readonly DependencyPropertyKey LengthPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Length), typeof(long), typeof(RedundantSetListItemViewModel<TEntity>),
-                new PropertyMetadata(0L));
+        private static readonly DependencyPropertyKey LengthPropertyKey = ColumnPropertyBuilder<long, RedundantSetListItemViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IRedundantSetListItem.Length))
+            .DefaultValue(0L)
+            .AsReadOnly();
 
         /// <summary>
         /// Identifies the <see cref="Length"/> dependency property.
@@ -82,8 +84,10 @@ namespace FsInfoCat.Desktop.ViewModel
         #endregion
         #region Hash Property Members
 
-        private static readonly DependencyPropertyKey HashPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Hash), typeof(MD5Hash?), typeof(RedundantSetListItemViewModel<TEntity>),
-                new PropertyMetadata(null));
+        private static readonly DependencyPropertyKey HashPropertyKey = ColumnPropertyBuilder<MD5Hash?, RedundantSetListItemViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IRedundantSetListItem.Hash))
+            .DefaultValue(null)
+            .AsReadOnly();
 
         /// <summary>
         /// Identifies the <see cref="Hash"/> dependency property.
@@ -99,9 +103,11 @@ namespace FsInfoCat.Desktop.ViewModel
         #endregion
         #region RedundancyCount Property Members
 
-        private static readonly DependencyPropertyKey RedundancyCountPropertyKey = DependencyProperty.RegisterReadOnly(nameof(RedundancyCount), typeof(long),
-            typeof(RedundantSetListItemViewModel<TEntity>), new PropertyMetadata(0L, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-            (d as RedundantSetListItemViewModel<TEntity>).OnRedundancyCountPropertyChanged((long)e.OldValue, (long)e.NewValue)));
+        private static readonly DependencyPropertyKey RedundancyCountPropertyKey = ColumnPropertyBuilder<long, RedundantSetListItemViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IRedundantSetListItem.RedundancyCount))
+            .DefaultValue(0L)
+            .OnChanged((d, oldValue, newValue) => (d as RedundantSetListItemViewModel<TEntity>)?.OnRedundancyCountPropertyChanged(oldValue, newValue))
+            .AsReadOnly();
 
         /// <summary>
         /// Identifies the <see cref="RedundancyCount"/> dependency property.

@@ -65,8 +65,10 @@ namespace FsInfoCat.Desktop.ViewModel
         #endregion
         #region Artist Property Members
 
-        private static readonly DependencyPropertyKey ArtistPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Artist), typeof(string), typeof(MusicPropertiesListItemViewModel<TEntity>),
-            new PropertyMetadata(""));
+        private static readonly DependencyPropertyKey ArtistPropertyKey = ColumnPropertyBuilder<string, MusicPropertiesListItemViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IMusicPropertiesListItem.Artist))
+            .DefaultValue("")
+            .AsReadOnly();
 
         /// <summary>
         /// Identifies the <see cref="Artist"/> dependency property.
@@ -82,8 +84,10 @@ namespace FsInfoCat.Desktop.ViewModel
         #endregion
         #region Composer Property Members
 
-        private static readonly DependencyPropertyKey ComposerPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Composer), typeof(string), typeof(MusicPropertiesListItemViewModel<TEntity>),
-            new PropertyMetadata(""));
+        private static readonly DependencyPropertyKey ComposerPropertyKey = ColumnPropertyBuilder<string, MusicPropertiesListItemViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IMusicPropertiesListItem.Composer))
+            .DefaultValue("")
+            .AsReadOnly();
 
         /// <summary>
         /// Identifies the <see cref="Composer"/> dependency property.
@@ -99,8 +103,10 @@ namespace FsInfoCat.Desktop.ViewModel
         #endregion
         #region Conductor Property Members
 
-        private static readonly DependencyPropertyKey ConductorPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Conductor), typeof(string), typeof(MusicPropertiesListItemViewModel<TEntity>),
-            new PropertyMetadata(""));
+        private static readonly DependencyPropertyKey ConductorPropertyKey = ColumnPropertyBuilder<string, MusicPropertiesListItemViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IMusicPropertiesListItem.Conductor))
+            .DefaultValue("")
+            .AsReadOnly();
 
         /// <summary>
         /// Identifies the <see cref="Conductor"/> dependency property.
@@ -116,8 +122,10 @@ namespace FsInfoCat.Desktop.ViewModel
         #endregion
         #region Genre Property Members
 
-        private static readonly DependencyPropertyKey GenrePropertyKey = DependencyProperty.RegisterReadOnly(nameof(Genre), typeof(string), typeof(MusicPropertiesListItemViewModel<TEntity>),
-            new PropertyMetadata(""));
+        private static readonly DependencyPropertyKey GenrePropertyKey = ColumnPropertyBuilder<string, MusicPropertiesListItemViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IMusicPropertiesListItem.Genre))
+            .DefaultValue("")
+            .AsReadOnly();
 
         /// <summary>
         /// Identifies the <see cref="Genre"/> dependency property.
@@ -133,9 +141,12 @@ namespace FsInfoCat.Desktop.ViewModel
         #endregion
         #region ExistingFileCount Property Members
 
-        private static readonly DependencyPropertyKey ExistingFileCountPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ExistingFileCount), typeof(long),
-            typeof(MusicPropertiesListItemViewModel<TEntity>), new PropertyMetadata(0L, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-            (d as MusicPropertiesListItemViewModel<TEntity>).OnExistingFileCountPropertyChanged((long)e.OldValue, (long)e.NewValue)));
+        private static readonly DependencyPropertyKey ExistingFileCountPropertyKey = ColumnPropertyBuilder<long, MusicPropertiesListItemViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IMusicPropertiesListItem.ExistingFileCount))
+            .DefaultValue(0L)
+            .OnChanged((DependencyObject d, long oldValue, long newValue) =>
+                (d as MusicPropertiesListItemViewModel<TEntity>).OnExistingFileCountPropertyChanged(oldValue, newValue))
+            .AsReadOnly();
 
         /// <summary>
         /// Identifies the <see cref="ExistingFileCount"/> dependency property.
@@ -158,8 +169,10 @@ namespace FsInfoCat.Desktop.ViewModel
         #endregion
         #region TotalFileCount Property Members
 
-        private static readonly DependencyPropertyKey TotalFileCountPropertyKey = DependencyProperty.RegisterReadOnly(nameof(TotalFileCount), typeof(long), typeof(MusicPropertiesListItemViewModel<TEntity>),
-                new PropertyMetadata(0L));
+        private static readonly DependencyPropertyKey TotalFileCountPropertyKey = ColumnPropertyBuilder<long, MusicPropertiesListItemViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IMusicPropertiesListItem.TotalFileCount))
+            .DefaultValue(0L)
+            .AsReadOnly();
 
         /// <summary>
         /// Identifies the <see cref="TotalFileCount"/> dependency property.
@@ -182,6 +195,13 @@ namespace FsInfoCat.Desktop.ViewModel
             Genre = entity.Genre.ToNormalizedDelimitedText();
             ExistingFileCount = entity.ExistingFileCount;
             TotalFileCount = entity.TotalFileCount;
+            CommonAttached.SetListItemTitle(this, CalculateDisplayText());
+        }
+
+        protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
+        {
+            base.OnPropertyChanged(e);
+            CommonAttached.SetListItemTitle(this, CalculateDisplayText());
         }
 
         protected override void OnEntityPropertyChanged(string propertyName)

@@ -2743,6 +2743,15 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Is Stereo.
+        /// </summary>
+        public static string DisplayName_IsStereo {
+            get {
+                return ResourceManager.GetString("DisplayName_IsStereo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Is Variable Bitrate.
         /// </summary>
         public static string DisplayName_IsVariableBitrate {

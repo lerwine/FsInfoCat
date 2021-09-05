@@ -1849,4 +1849,7 @@
   <data name="DisplayName_AllFailedItems" xml:space="preserve">
     <value>All Failed Items</value>
   </data>
+  <data name="DisplayName_IsStereo" xml:space="preserve">
+    <value>Is Stereo</value>
+  </data>
 </root>

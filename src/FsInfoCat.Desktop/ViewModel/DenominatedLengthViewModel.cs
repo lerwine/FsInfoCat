@@ -40,10 +40,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="DenominatedValue"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="DenominatedValue"/> property.</param>
-        protected virtual void OnDenominatedValuePropertyChanged(BinaryDenominatedInt64? oldValue, BinaryDenominatedInt64? newValue)
-        {
-            // TODO: Implement OnDenominatedValuePropertyChanged Logic
-        }
+        protected virtual void OnDenominatedValuePropertyChanged(BinaryDenominatedInt64? oldValue, BinaryDenominatedInt64? newValue) { }
 
         #endregion
         #region HasValue Property Members
@@ -65,10 +62,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="HasValue"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="HasValue"/> property.</param>
-        private void OnHasValuePropertyChanged(bool oldValue, bool newValue)
-        {
-            // TODO: Implement OnHasValuePropertyChanged Logic
-        }
+        private void OnHasValuePropertyChanged(bool oldValue, bool newValue) { }
 
         #endregion
         #region Denomination Property Members
@@ -107,10 +101,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Value"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Value"/> property.</param>
-        private void OnValuePropertyChanged(double? oldValue, double? newValue)
-        {
-            // TODO: Implement OnValuePropertyChanged Logic
-        }
+        private void OnValuePropertyChanged(double? oldValue, double? newValue) { }
 
         #endregion
         public DenominatedLengthViewModel()

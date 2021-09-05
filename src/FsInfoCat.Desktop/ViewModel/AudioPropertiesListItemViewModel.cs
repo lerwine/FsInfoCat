@@ -65,9 +65,12 @@ namespace FsInfoCat.Desktop.ViewModel
         #endregion
         #region ExistingFileCount Property Members
 
-        private static readonly DependencyPropertyKey ExistingFileCountPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ExistingFileCount), typeof(long),
-            typeof(AudioPropertiesListItemViewModel<TEntity>), new PropertyMetadata(0L, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-            (d as AudioPropertiesListItemViewModel<TEntity>).OnExistingFileCountPropertyChanged((long)e.OldValue, (long)e.NewValue)));
+        private static readonly DependencyPropertyKey ExistingFileCountPropertyKey = ColumnPropertyBuilder<long, AudioPropertiesListItemViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IAudioPropertiesListItem.ExistingFileCount))
+            .DefaultValue(0L)
+            .OnChanged((DependencyObject d, long oldValue, long newValue) =>
+                (d as AudioPropertiesListItemViewModel<TEntity>).OnExistingFileCountPropertyChanged(oldValue, newValue))
+            .AsReadOnly();
 
         /// <summary>
         /// Identifies the <see cref="ExistingFileCount"/> dependency property.
@@ -90,8 +93,10 @@ namespace FsInfoCat.Desktop.ViewModel
         #endregion
         #region TotalFileCount Property Members
 
-        private static readonly DependencyPropertyKey TotalFileCountPropertyKey = DependencyProperty.RegisterReadOnly(nameof(TotalFileCount), typeof(long), typeof(AudioPropertiesListItemViewModel<TEntity>),
-                new PropertyMetadata(0L));
+        private static readonly DependencyPropertyKey TotalFileCountPropertyKey = ColumnPropertyBuilder<long, AudioPropertiesListItemViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IAudioPropertiesListItem.TotalFileCount))
+            .DefaultValue(0L)
+            .AsReadOnly();
 
         /// <summary>
         /// Identifies the <see cref="TotalFileCount"/> dependency property.
@@ -112,6 +117,13 @@ namespace FsInfoCat.Desktop.ViewModel
             TotalFileCount = entity.TotalFileCount;
             SetValue(EditPropertyKey, new Commands.RelayCommand(RaiseEditCommand));
             SetValue(DeletePropertyKey, new Commands.RelayCommand(RaiseDeleteCommand));
+            CommonAttached.SetListItemTitle(this, CalculateDisplayText());
+        }
+
+        protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
+        {
+            base.OnPropertyChanged(e);
+            CommonAttached.SetListItemTitle(this, CalculateDisplayText());
         }
 
         protected override void OnEntityPropertyChanged(string propertyName)

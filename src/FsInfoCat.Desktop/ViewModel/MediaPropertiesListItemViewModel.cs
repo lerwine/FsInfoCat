@@ -65,8 +65,10 @@ namespace FsInfoCat.Desktop.ViewModel
         #endregion
         #region Producer Property Members
 
-        private static readonly DependencyPropertyKey ProducerPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Producer), typeof(string), typeof(MediaPropertiesListItemViewModel<TEntity>),
-            new PropertyMetadata(""));
+        private static readonly DependencyPropertyKey ProducerPropertyKey = ColumnPropertyBuilder<string, MediaPropertiesListItemViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IMediaPropertiesListItem.Producer))
+            .DefaultValue("")
+            .AsReadOnly();
 
         /// <summary>
         /// Identifies the <see cref="Producer"/> dependency property.
@@ -82,8 +84,10 @@ namespace FsInfoCat.Desktop.ViewModel
         #endregion
         #region Writer Property Members
 
-        private static readonly DependencyPropertyKey WriterPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Writer), typeof(string), typeof(MediaPropertiesListItemViewModel<TEntity>),
-            new PropertyMetadata(""));
+        private static readonly DependencyPropertyKey WriterPropertyKey = ColumnPropertyBuilder<string, MediaPropertiesListItemViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IMediaPropertiesListItem.Writer))
+            .DefaultValue("")
+            .AsReadOnly();
 
         /// <summary>
         /// Identifies the <see cref="Writer"/> dependency property.
@@ -99,9 +103,12 @@ namespace FsInfoCat.Desktop.ViewModel
         #endregion
         #region ExistingFileCount Property Members
 
-        private static readonly DependencyPropertyKey ExistingFileCountPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ExistingFileCount), typeof(long),
-            typeof(MediaPropertiesListItemViewModel<TEntity>), new PropertyMetadata(0L, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-            (d as MediaPropertiesListItemViewModel<TEntity>).OnExistingFileCountPropertyChanged((long)e.OldValue, (long)e.NewValue)));
+        private static readonly DependencyPropertyKey ExistingFileCountPropertyKey = ColumnPropertyBuilder<long, MediaPropertiesListItemViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IMediaPropertiesListItem.ExistingFileCount))
+            .DefaultValue(0L)
+            .OnChanged((DependencyObject d, long oldValue, long newValue) =>
+                (d as MediaPropertiesListItemViewModel<TEntity>).OnExistingFileCountPropertyChanged(oldValue, newValue))
+            .AsReadOnly();
 
         /// <summary>
         /// Identifies the <see cref="ExistingFileCount"/> dependency property.
@@ -124,8 +131,10 @@ namespace FsInfoCat.Desktop.ViewModel
         #endregion
         #region TotalFileCount Property Members
 
-        private static readonly DependencyPropertyKey TotalFileCountPropertyKey = DependencyProperty.RegisterReadOnly(nameof(TotalFileCount), typeof(long), typeof(MediaPropertiesListItemViewModel<TEntity>),
-                new PropertyMetadata(0L));
+        private static readonly DependencyPropertyKey TotalFileCountPropertyKey = ColumnPropertyBuilder<long, MediaPropertiesListItemViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IMediaPropertiesListItem.TotalFileCount))
+            .DefaultValue(0L)
+            .AsReadOnly();
 
         /// <summary>
         /// Identifies the <see cref="TotalFileCount"/> dependency property.
@@ -146,6 +155,13 @@ namespace FsInfoCat.Desktop.ViewModel
             Producer = entity.Producer.ToNormalizedDelimitedText();
             ExistingFileCount = entity.ExistingFileCount;
             TotalFileCount = entity.TotalFileCount;
+            CommonAttached.SetListItemTitle(this, CalculateDisplayText());
+        }
+
+        protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
+        {
+            base.OnPropertyChanged(e);
+            CommonAttached.SetListItemTitle(this, CalculateDisplayText());
         }
 
         protected override void OnEntityPropertyChanged(string propertyName)

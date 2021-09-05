@@ -15,8 +15,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="Name"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty NameProperty = DependencyProperty.Register(nameof(Name), typeof(string), typeof(FsItemAncestorNameViewModel<TEntity>),
-                new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as FsItemAncestorNameViewModel<TEntity>)?.OnNamePropertyChanged(e.OldValue as string, e.NewValue as string)));
+        public static readonly DependencyProperty NameProperty = ColumnPropertyBuilder<string, FsItemAncestorNameViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IDbFsItemAncestorName.Name))
+            .DefaultValue("")
+            .OnChanged((d, oldValue, newValue) => (d as FsItemAncestorNameViewModel<TEntity>)?.OnNamePropertyChanged(oldValue, newValue))
+            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -29,16 +32,15 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Name"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Name"/> property.</param>
-        protected void OnNamePropertyChanged(string oldValue, string newValue)
-        {
-            // TODO: Implement OnNamePropertyChanged Logic
-        }
+        protected virtual void OnNamePropertyChanged(string oldValue, string newValue) { }
 
         #endregion
         #region Path Property Members
 
-        private static readonly DependencyPropertyKey PathPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Path), typeof(string), typeof(FsItemAncestorNameViewModel<TEntity>),
-            new PropertyMetadata(""));
+        private static readonly DependencyPropertyKey PathPropertyKey = ColumnPropertyBuilder<string, FsItemAncestorNameViewModel<TEntity>>
+            .Register(nameof(Path))
+            .DefaultValue("")
+            .AsReadOnly();
 
         /// <summary>
         /// Identifies the <see cref="Path"/> dependency property.
@@ -62,7 +64,7 @@ namespace FsInfoCat.Desktop.ViewModel
             Name = Entity.Name;
         }
 
-        protected void OnEntityPropertyChanged(object sender, PropertyChangedEventArgs args) => OnEntityPropertyChanged(args.PropertyName ?? "");
+        protected virtual void OnEntityPropertyChanged(object sender, PropertyChangedEventArgs args) => OnEntityPropertyChanged(args.PropertyName ?? "");
 
         protected virtual void OnEntityPropertyChanged(string propertyName)
         {

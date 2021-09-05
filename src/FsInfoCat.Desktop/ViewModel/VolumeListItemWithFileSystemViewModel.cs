@@ -8,8 +8,10 @@ namespace FsInfoCat.Desktop.ViewModel
     {
         #region FileSystemDisplayName Property Members
 
-        private static readonly DependencyPropertyKey FileSystemDisplayNamePropertyKey = DependencyProperty.RegisterReadOnly(nameof(FileSystemDisplayName), typeof(string),
-            typeof(VolumeListItemWithFileSystemViewModel<TEntity>), new PropertyMetadata(""));
+        private static readonly DependencyPropertyKey FileSystemDisplayNamePropertyKey = ColumnPropertyBuilder<string, VolumeListItemWithFileSystemViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IVolumeListItemWithFileSystem.FileSystemDisplayName))
+            .DefaultValue("")
+            .AsReadOnly();
 
         /// <summary>
         /// Identifies the <see cref="FileSystemDisplayName"/> dependency property.
@@ -25,8 +27,10 @@ namespace FsInfoCat.Desktop.ViewModel
         #endregion
         #region EffectiveReadOnly Property Members
 
-        private static readonly DependencyPropertyKey EffectiveReadOnlyPropertyKey = DependencyProperty.RegisterReadOnly(nameof(EffectiveReadOnly), typeof(bool),
-            typeof(VolumeListItemWithFileSystemViewModel<TEntity>), new PropertyMetadata(false));
+        private static readonly DependencyPropertyKey EffectiveReadOnlyPropertyKey = ColumnPropertyBuilder<bool, VolumeListItemWithFileSystemViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IVolumeListItemWithFileSystem.EffectiveReadOnly))
+            .DefaultValue(false)
+            .AsReadOnly();
 
         /// <summary>
         /// Identifies the <see cref="EffectiveReadOnly"/> dependency property.
@@ -42,8 +46,10 @@ namespace FsInfoCat.Desktop.ViewModel
         #endregion
         #region EffectiveMaxNameLength Property Members
 
-        private static readonly DependencyPropertyKey EffectiveMaxNameLengthPropertyKey = DependencyProperty.RegisterReadOnly(nameof(EffectiveMaxNameLength), typeof(uint),
-            typeof(VolumeListItemWithFileSystemViewModel<TEntity>), new PropertyMetadata(DbConstants.DbColDefaultValue_MaxNameLength));
+        private static readonly DependencyPropertyKey EffectiveMaxNameLengthPropertyKey = ColumnPropertyBuilder<uint, VolumeListItemWithFileSystemViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IVolumeListItemWithFileSystem.EffectiveMaxNameLength))
+            .DefaultValue(DbConstants.DbColDefaultValue_MaxNameLength)
+            .AsReadOnly();
 
         /// <summary>
         /// Identifies the <see cref="EffectiveMaxNameLength"/> dependency property.

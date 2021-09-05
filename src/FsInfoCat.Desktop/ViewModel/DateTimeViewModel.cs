@@ -48,7 +48,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="IsRequired"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="IsRequired"/> property.</param>
-        protected void OnIsRequiredPropertyChanged(bool oldValue, bool newValue)
+        protected virtual void OnIsRequiredPropertyChanged(bool oldValue, bool newValue)
         {
 
             if (!(Value.HasValue || SelectedDate.HasValue))
@@ -132,7 +132,7 @@ namespace FsInfoCat.Desktop.ViewModel
             ValueValidationMessage = args.ValidationMessage;
         }
 
-        protected void OnValidateValue(PropertyValidatingEventArgs<DateTime?, (string SelectedValueMessage, string TimeMessage)> args) =>
+        protected virtual void OnValidateValue(PropertyValidatingEventArgs<DateTime?, (string SelectedValueMessage, string TimeMessage)> args) =>
             ValidateValue?.Invoke(this, args);
 
         #endregion
@@ -157,10 +157,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="AggregateValidationMessage"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="AggregateValidationMessage"/> property.</param>
-        protected void OnAggregateValidationMessagePropertyChanged(string oldValue, string newValue)
-        {
-            // TODO: Implement OnAggregateValidationMessagePropertyChanged Logic
-        }
+        protected virtual void OnAggregateValidationMessagePropertyChanged(string oldValue, string newValue) { }
 
         private void UpdateAggregateValidationMessage(string valueMessage, string seletedDateMessage, string timeMessage)
         {
@@ -198,7 +195,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="ValueValidationMessage"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="ValueValidationMessage"/> property.</param>
-        protected void OnValueValidationMessagePropertyChanged(string oldValue, string newValue)
+        protected virtual void OnValueValidationMessagePropertyChanged(string oldValue, string newValue)
         {
             try { UpdateAggregateValidationMessage(newValue, SelectedValidationMessage, TimeValidationMesage); }
             finally { RaiseDataErrorsChanged(nameof(Value)); }
@@ -231,7 +228,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="SelectedDate"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="SelectedDate"/> property.</param>
-        protected void OnSelectedDatePropertyChanged(DateTime? oldValue, DateTime? newValue)
+        protected virtual void OnSelectedDatePropertyChanged(DateTime? oldValue, DateTime? newValue)
         {
             PropertyValidatingEventArgs<DateTime?, TimeSpan?> args = new(newValue, nameof(SelectedDate), Time.Value);
             if (IsRequired && !newValue.HasValue)
@@ -283,7 +280,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="SelectedValidationMessage"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="SelectedValidationMessage"/> property.</param>
-        protected void OnSelectedValidationMessagePropertyChanged(string oldValue, string newValue)
+        protected virtual void OnSelectedValidationMessagePropertyChanged(string oldValue, string newValue)
         {
             try { UpdateAggregateValidationMessage(ValueValidationMessage, newValue, TimeValidationMesage); }
             finally { RaiseDataErrorsChanged(nameof(SelectedDate)); }
@@ -383,7 +380,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="TimeValidationMesage"/> property.</param>
         /// <param name="timeMessage">The new value of the <see cref="TimeValidationMesage"/> property.</param>
-        protected void OnTimeValidationMesagePropertyChanged(string oldValue, string newValue)
+        protected virtual void OnTimeValidationMesagePropertyChanged(string oldValue, string newValue)
         {
             try { UpdateAggregateValidationMessage(ValueValidationMessage, SelectedValidationMessage, newValue); }
             finally { RaiseDataErrorsChanged(nameof(Time)); }

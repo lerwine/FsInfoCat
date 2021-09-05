@@ -8,8 +8,10 @@ namespace FsInfoCat.Desktop.ViewModel
     {
         #region Length Property Members
 
-        private static readonly DependencyPropertyKey LengthPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Length), typeof(long),
-            typeof(FileWithBinaryPropertiesAndAncestorNamesViewModel<TEntity>), new PropertyMetadata(0L));
+        private static readonly DependencyPropertyKey LengthPropertyKey = ColumnPropertyBuilder<long, FileWithBinaryPropertiesAndAncestorNamesViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IFileListItemWithBinaryPropertiesAndAncestorNames.Length))
+            .DefaultValue(0L)
+            .AsReadOnly();
 
         /// <summary>
         /// Identifies the <see cref="Length"/> dependency property.
@@ -25,8 +27,10 @@ namespace FsInfoCat.Desktop.ViewModel
         #endregion
         #region Hash Property Members
 
-        private static readonly DependencyPropertyKey HashPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Hash), typeof(MD5Hash?),
-            typeof(FileWithBinaryPropertiesAndAncestorNamesViewModel<TEntity>), new PropertyMetadata(null));
+        private static readonly DependencyPropertyKey HashPropertyKey = ColumnPropertyBuilder<MD5Hash?, FileWithBinaryPropertiesAndAncestorNamesViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IFileListItemWithBinaryPropertiesAndAncestorNames.Hash))
+            .DefaultValue(null)
+            .AsReadOnly();
 
         /// <summary>
         /// Identifies the <see cref="Hash"/> dependency property.

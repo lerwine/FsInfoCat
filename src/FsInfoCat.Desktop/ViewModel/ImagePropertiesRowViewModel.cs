@@ -1,4 +1,7 @@
+using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel
@@ -12,9 +15,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="BitDepth"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty BitDepthProperty = DependencyProperty.Register(nameof(BitDepth), typeof(uint?),
-            typeof(ImagePropertiesRowViewModel<TEntity>), new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as ImagePropertiesRowViewModel<TEntity>)?.OnBitDepthPropertyChanged((uint?)e.OldValue, (uint?)e.NewValue)));
+        public static readonly DependencyProperty BitDepthProperty = ColumnPropertyBuilder<uint?, ImagePropertiesRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IImageProperties.BitDepth))
+            .DefaultValue(null)
+            .OnChanged((d, oldValue, newValue) => (d as ImagePropertiesRowViewModel<TEntity>)?.OnBitDepthPropertyChanged(oldValue, newValue))
+            .AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -27,10 +32,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="BitDepth"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="BitDepth"/> property.</param>
-        protected void OnBitDepthPropertyChanged(uint? oldValue, uint? newValue)
-        {
-            // TODO: Implement OnBitDepthPropertyChanged Logic
-        }
+        protected virtual void OnBitDepthPropertyChanged(uint? oldValue, uint? newValue) { }
 
         #endregion
         #region ColorSpace Property Members
@@ -38,9 +40,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="ColorSpace"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty ColorSpaceProperty = DependencyProperty.Register(nameof(ColorSpace), typeof(uint?),
-            typeof(ImagePropertiesRowViewModel<TEntity>), new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as ImagePropertiesRowViewModel<TEntity>)?.OnColorSpacePropertyChanged((uint?)e.OldValue, (uint?)e.NewValue)));
+        public static readonly DependencyProperty ColorSpaceProperty = ColumnPropertyBuilder<uint?, ImagePropertiesRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IImageProperties.ColorSpace))
+            .DefaultValue(null)
+            .OnChanged((d, oldValue, newValue) => (d as ImagePropertiesRowViewModel<TEntity>)?.OnColorSpacePropertyChanged(oldValue, newValue))
+            .AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -53,10 +57,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="ColorSpace"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="ColorSpace"/> property.</param>
-        protected void OnColorSpacePropertyChanged(uint? oldValue, uint? newValue)
-        {
-            // TODO: Implement OnColorSpacePropertyChanged Logic
-        }
+        protected virtual void OnColorSpacePropertyChanged(uint? oldValue, uint? newValue) { }
 
         #endregion
         #region CompressedBitsPerPixel Property Members
@@ -64,9 +65,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="CompressedBitsPerPixel"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty CompressedBitsPerPixelProperty = DependencyProperty.Register(nameof(CompressedBitsPerPixel), typeof(double?),
-            typeof(ImagePropertiesRowViewModel<TEntity>), new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as ImagePropertiesRowViewModel<TEntity>)?.OnCompressedBitsPerPixelPropertyChanged((double?)e.OldValue, (double?)e.NewValue)));
+        public static readonly DependencyProperty CompressedBitsPerPixelProperty = ColumnPropertyBuilder<double?, ImagePropertiesRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IImageProperties.CompressedBitsPerPixel))
+            .DefaultValue(null)
+            .OnChanged((d, oldValue, newValue) => (d as ImagePropertiesRowViewModel<TEntity>)?.OnCompressedBitsPerPixelPropertyChanged(oldValue, newValue))
+            .AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -79,10 +82,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="CompressedBitsPerPixel"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="CompressedBitsPerPixel"/> property.</param>
-        protected void OnCompressedBitsPerPixelPropertyChanged(double? oldValue, double? newValue)
-        {
-            // TODO: Implement OnCompressedBitsPerPixelPropertyChanged Logic
-        }
+        protected virtual void OnCompressedBitsPerPixelPropertyChanged(double? oldValue, double? newValue) { }
 
         #endregion
         #region Compression Property Members
@@ -90,9 +90,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="Compression"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty CompressionProperty = DependencyProperty.Register(nameof(Compression), typeof(ushort?),
-            typeof(ImagePropertiesRowViewModel<TEntity>), new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as ImagePropertiesRowViewModel<TEntity>)?.OnCompressionPropertyChanged((ushort?)e.OldValue, (ushort?)e.NewValue)));
+        public static readonly DependencyProperty CompressionProperty = ColumnPropertyBuilder<ushort?, ImagePropertiesRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IImageProperties.Compression))
+            .DefaultValue(null)
+            .OnChanged((d, oldValue, newValue) => (d as ImagePropertiesRowViewModel<TEntity>)?.OnCompressionPropertyChanged(oldValue, newValue))
+            .AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -105,10 +107,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Compression"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Compression"/> property.</param>
-        protected void OnCompressionPropertyChanged(ushort? oldValue, ushort? newValue)
-        {
-            // TODO: Implement OnCompressionPropertyChanged Logic
-        }
+        protected virtual void OnCompressionPropertyChanged(ushort? oldValue, ushort? newValue) { }
 
         #endregion
         #region CompressionText Property Members
@@ -116,9 +115,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="CompressionText"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty CompressionTextProperty = DependencyProperty.Register(nameof(CompressionText), typeof(string),
-            typeof(ImagePropertiesRowViewModel<TEntity>), new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as ImagePropertiesRowViewModel<TEntity>)?.OnCompressionTextPropertyChanged(e.OldValue as string, e.NewValue as string)));
+        public static readonly DependencyProperty CompressionTextProperty = ColumnPropertyBuilder<string, ImagePropertiesRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IImageProperties.CompressionText))
+            .DefaultValue("")
+            .OnChanged((d, oldValue, newValue) => (d as ImagePropertiesRowViewModel<TEntity>)?.OnCompressionTextPropertyChanged(oldValue, newValue))
+            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -131,10 +132,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="CompressionText"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="CompressionText"/> property.</param>
-        protected void OnCompressionTextPropertyChanged(string oldValue, string newValue)
-        {
-            // TODO: Implement OnCompressionTextPropertyChanged Logic
-        }
+        protected virtual void OnCompressionTextPropertyChanged(string oldValue, string newValue) { }
 
         #endregion
         #region HorizontalResolution Property Members
@@ -142,9 +140,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="HorizontalResolution"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty HorizontalResolutionProperty = DependencyProperty.Register(nameof(HorizontalResolution), typeof(double?),
-            typeof(ImagePropertiesRowViewModel<TEntity>), new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as ImagePropertiesRowViewModel<TEntity>)?.OnHorizontalResolutionPropertyChanged((double?)e.OldValue, (double?)e.NewValue)));
+        public static readonly DependencyProperty HorizontalResolutionProperty = ColumnPropertyBuilder<double?, ImagePropertiesRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IImageProperties.HorizontalResolution))
+            .DefaultValue(null)
+            .OnChanged((d, oldValue, newValue) => (d as ImagePropertiesRowViewModel<TEntity>)?.OnHorizontalResolutionPropertyChanged(oldValue, newValue))
+            .AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -157,10 +157,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="HorizontalResolution"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="HorizontalResolution"/> property.</param>
-        protected void OnHorizontalResolutionPropertyChanged(double? oldValue, double? newValue)
-        {
-            // TODO: Implement OnHorizontalResolutionPropertyChanged Logic
-        }
+        protected virtual void OnHorizontalResolutionPropertyChanged(double? oldValue, double? newValue) { }
 
         #endregion
         #region HorizontalSize Property Members
@@ -168,9 +165,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="HorizontalSize"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty HorizontalSizeProperty = DependencyProperty.Register(nameof(HorizontalSize), typeof(uint?),
-            typeof(ImagePropertiesRowViewModel<TEntity>), new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as ImagePropertiesRowViewModel<TEntity>)?.OnHorizontalSizePropertyChanged((uint?)e.OldValue, (uint?)e.NewValue)));
+        public static readonly DependencyProperty HorizontalSizeProperty = ColumnPropertyBuilder<uint?, ImagePropertiesRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IImageProperties.HorizontalSize))
+            .DefaultValue(null)
+            .OnChanged((d, oldValue, newValue) => (d as ImagePropertiesRowViewModel<TEntity>)?.OnHorizontalSizePropertyChanged(oldValue, newValue))
+            .AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -183,10 +182,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="HorizontalSize"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="HorizontalSize"/> property.</param>
-        protected void OnHorizontalSizePropertyChanged(uint? oldValue, uint? newValue)
-        {
-            // TODO: Implement OnHorizontalSizePropertyChanged Logic
-        }
+        protected virtual void OnHorizontalSizePropertyChanged(uint? oldValue, uint? newValue) { }
 
         #endregion
         #region ImageID Property Members
@@ -194,9 +190,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="ImageID"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty ImageIDProperty = DependencyProperty.Register(nameof(ImageID), typeof(string),
-            typeof(ImagePropertiesRowViewModel<TEntity>), new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-            (d as ImagePropertiesRowViewModel<TEntity>)?.OnImageIDPropertyChanged(e.OldValue as string, e.NewValue as string)));
+        public static readonly DependencyProperty ImageIDProperty = ColumnPropertyBuilder<string, ImagePropertiesRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IImageProperties.ImageID))
+            .DefaultValue("")
+            .OnChanged((d, oldValue, newValue) => (d as ImagePropertiesRowViewModel<TEntity>)?.OnImageIDPropertyChanged(oldValue, newValue))
+            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -209,10 +207,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="ImageID"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="ImageID"/> property.</param>
-        protected void OnImageIDPropertyChanged(string oldValue, string newValue)
-        {
-            // TODO: Implement OnImageIDPropertyChanged Logic
-        }
+        protected virtual void OnImageIDPropertyChanged(string oldValue, string newValue) { }
 
         #endregion
         #region ResolutionUnit Property Members
@@ -220,9 +215,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="ResolutionUnit"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty ResolutionUnitProperty = DependencyProperty.Register(nameof(ResolutionUnit), typeof(short?),
-            typeof(ImagePropertiesRowViewModel<TEntity>), new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as ImagePropertiesRowViewModel<TEntity>)?.OnResolutionUnitPropertyChanged((short?)e.OldValue, (short?)e.NewValue)));
+        public static readonly DependencyProperty ResolutionUnitProperty = ColumnPropertyBuilder<short?, ImagePropertiesRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IImageProperties.ResolutionUnit))
+            .DefaultValue(null)
+            .OnChanged((d, oldValue, newValue) => (d as ImagePropertiesRowViewModel<TEntity>)?.OnResolutionUnitPropertyChanged(oldValue, newValue))
+            .AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -235,10 +232,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="ResolutionUnit"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="ResolutionUnit"/> property.</param>
-        protected void OnResolutionUnitPropertyChanged(short? oldValue, short? newValue)
-        {
-            // TODO: Implement OnResolutionUnitPropertyChanged Logic
-        }
+        protected virtual void OnResolutionUnitPropertyChanged(short? oldValue, short? newValue) { }
 
         #endregion
         #region VerticalResolution Property Members
@@ -246,9 +240,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="VerticalResolution"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty VerticalResolutionProperty = DependencyProperty.Register(nameof(VerticalResolution), typeof(double?),
-            typeof(ImagePropertiesRowViewModel<TEntity>), new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as ImagePropertiesRowViewModel<TEntity>)?.OnVerticalResolutionPropertyChanged((double?)e.OldValue, (double?)e.NewValue)));
+        public static readonly DependencyProperty VerticalResolutionProperty = ColumnPropertyBuilder<double?, ImagePropertiesRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IImageProperties.VerticalResolution))
+            .DefaultValue(null)
+            .OnChanged((d, oldValue, newValue) => (d as ImagePropertiesRowViewModel<TEntity>)?.OnVerticalResolutionPropertyChanged(oldValue, newValue))
+            .AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -261,10 +257,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="VerticalResolution"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="VerticalResolution"/> property.</param>
-        protected void OnVerticalResolutionPropertyChanged(double? oldValue, double? newValue)
-        {
-            // TODO: Implement OnVerticalResolutionPropertyChanged Logic
-        }
+        protected virtual void OnVerticalResolutionPropertyChanged(double? oldValue, double? newValue) { }
 
         #endregion
         #region VerticalSize Property Members
@@ -272,9 +265,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="VerticalSize"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty VerticalSizeProperty = DependencyProperty.Register(nameof(VerticalSize), typeof(uint?),
-            typeof(ImagePropertiesRowViewModel<TEntity>), new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as ImagePropertiesRowViewModel<TEntity>)?.OnVerticalSizePropertyChanged((uint?)e.OldValue, (uint?)e.NewValue)));
+        public static readonly DependencyProperty VerticalSizeProperty = ColumnPropertyBuilder<uint?, ImagePropertiesRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IImageProperties.VerticalSize))
+            .DefaultValue(null)
+            .OnChanged((d, oldValue, newValue) => (d as ImagePropertiesRowViewModel<TEntity>)?.OnVerticalSizePropertyChanged(oldValue, newValue))
+            .AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -287,10 +282,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="VerticalSize"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="VerticalSize"/> property.</param>
-        protected void OnVerticalSizePropertyChanged(uint? oldValue, uint? newValue)
-        {
-            // TODO: Implement OnVerticalSizePropertyChanged Logic
-        }
+        protected virtual void OnVerticalSizePropertyChanged(uint? oldValue, uint? newValue) { }
 
         #endregion
 #pragma warning restore IDE0060 // Remove unused parameter
@@ -310,11 +302,23 @@ namespace FsInfoCat.Desktop.ViewModel
             VerticalSize = entity.VerticalSize;
         }
 
-        internal string CalculateDisplayText()
+        public IEnumerable<(string DisplayName, string Value)> GetNameValuePairs()
         {
-            // TODO: Calculate value for ListingViewModel<TEntity, TItem, TOptions>.SetItemDisplayText(string)
-            throw new System.NotImplementedException();
+            yield return (FsInfoCat.Properties.Resources.DisplayName_BitDepth, BitDepth?.ToString());
+            yield return (FsInfoCat.Properties.Resources.DisplayName_ColorSpace, ColorSpace?.ToString());
+            yield return (FsInfoCat.Properties.Resources.DisplayName_CompressedBitsPerPixel, CompressedBitsPerPixel?.ToString());
+            string compression = CompressionText.AsWsNormalizedOrEmpty().TruncateWithElipses(256);
+            yield return (FsInfoCat.Properties.Resources.DisplayName_Compression, (compression.Length > 0) ? compression : Compression?.ToString());
+            yield return (FsInfoCat.Properties.Resources.DisplayName_HorizontalResolution, HorizontalResolution?.ToString());
+            yield return (FsInfoCat.Properties.Resources.DisplayName_HorizontalSize, HorizontalSize?.ToString());
+            yield return (FsInfoCat.Properties.Resources.DisplayName_VerticalResolution, VerticalResolution?.ToString());
+            yield return (FsInfoCat.Properties.Resources.DisplayName_VerticalSize, VerticalSize?.ToString());
+            yield return (FsInfoCat.Properties.Resources.DisplayName_ResolutionUnit, ResolutionUnit?.ToString());
+            yield return (FsInfoCat.Properties.Resources.DisplayName_ImageID, ImageID.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
         }
+
+        internal string CalculateDisplayText(Func<(string DisplayName, string Value), bool> filter = null) => (filter is null) ?
+            StringExtensionMethods.ToKeyValueListString(GetNameValuePairs()) : StringExtensionMethods.ToKeyValueListString(GetNameValuePairs().Where(filter));
 
         protected override void OnEntityPropertyChanged(string propertyName)
         {

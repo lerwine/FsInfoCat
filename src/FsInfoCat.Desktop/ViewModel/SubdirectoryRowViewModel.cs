@@ -12,9 +12,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="Options"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty OptionsProperty = DependencyProperty.Register(nameof(Options), typeof(DirectoryCrawlOptions),
-            typeof(SubdirectoryRowViewModel<TEntity>), new PropertyMetadata(DirectoryCrawlOptions.None, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as SubdirectoryRowViewModel<TEntity>)?.OnOptionsPropertyChanged((DirectoryCrawlOptions)e.OldValue, (DirectoryCrawlOptions)e.NewValue)));
+        public static readonly DependencyProperty OptionsProperty = ColumnPropertyBuilder<DirectoryCrawlOptions, SubdirectoryRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(ISubdirectoryRow.Options))
+            .DefaultValue(DirectoryCrawlOptions.None)
+            .OnChanged((d, oldValue, newValue) => (d as SubdirectoryRowViewModel<TEntity>)?.OnOptionsPropertyChanged(oldValue, newValue))
+            .AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -27,10 +29,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Options"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Options"/> property.</param>
-        protected void OnOptionsPropertyChanged(DirectoryCrawlOptions oldValue, DirectoryCrawlOptions newValue)
-        {
-            // TODO: Implement OnOptionsPropertyChanged Logic
-        }
+        protected virtual void OnOptionsPropertyChanged(DirectoryCrawlOptions oldValue, DirectoryCrawlOptions newValue) { }
 
         #endregion
         #region Status Property Members
@@ -38,9 +37,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="Status"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty StatusProperty = DependencyProperty.Register(nameof(Status), typeof(DirectoryStatus),
-            typeof(SubdirectoryRowViewModel<TEntity>), new PropertyMetadata(DirectoryStatus.Incomplete, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as SubdirectoryRowViewModel<TEntity>)?.OnStatusPropertyChanged((DirectoryStatus)e.OldValue, (DirectoryStatus)e.NewValue)));
+        public static readonly DependencyProperty StatusProperty = ColumnPropertyBuilder<DirectoryStatus, SubdirectoryRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(ISubdirectoryRow.Status))
+            .DefaultValue(DirectoryStatus.Incomplete)
+            .OnChanged((d, oldValue, newValue) => (d as SubdirectoryRowViewModel<TEntity>)?.OnStatusPropertyChanged(oldValue, newValue))
+            .AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -53,10 +54,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Status"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Status"/> property.</param>
-        protected void OnStatusPropertyChanged(DirectoryStatus oldValue, DirectoryStatus newValue)
-        {
-            // TODO: Implement OnStatusPropertyChanged Logic
-        }
+        protected virtual void OnStatusPropertyChanged(DirectoryStatus oldValue, DirectoryStatus newValue) { }
 
         #endregion
 #pragma warning restore IDE0060 // Remove unused parameter

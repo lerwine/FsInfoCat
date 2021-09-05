@@ -65,8 +65,10 @@ namespace FsInfoCat.Desktop.ViewModel
         #endregion
         #region Author Property Members
 
-        private static readonly DependencyPropertyKey AuthorPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Author), typeof(string),
-            typeof(SummaryPropertiesListItemViewModel<TEntity>), new PropertyMetadata(""));
+        private static readonly DependencyPropertyKey AuthorPropertyKey = ColumnPropertyBuilder<string, SummaryPropertiesListItemViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(ISummaryPropertiesListItem.Author))
+            .DefaultValue("")
+            .AsReadOnly();
 
         /// <summary>
         /// Identifies the <see cref="Author"/> dependency property.
@@ -82,8 +84,10 @@ namespace FsInfoCat.Desktop.ViewModel
         #endregion
         #region Keywords Property Members
 
-        private static readonly DependencyPropertyKey KeywordsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Keywords), typeof(string),
-            typeof(SummaryPropertiesListItemViewModel<TEntity>), new PropertyMetadata(""));
+        private static readonly DependencyPropertyKey KeywordsPropertyKey = ColumnPropertyBuilder<string, SummaryPropertiesListItemViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(ISummaryPropertiesListItem.Keywords))
+            .DefaultValue("")
+            .AsReadOnly();
 
         /// <summary>
         /// Identifies the <see cref="Keywords"/> dependency property.
@@ -99,8 +103,10 @@ namespace FsInfoCat.Desktop.ViewModel
         #endregion
         #region ItemAuthors Property Members
 
-        private static readonly DependencyPropertyKey ItemAuthorsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ItemAuthors), typeof(string),
-            typeof(SummaryPropertiesListItemViewModel<TEntity>), new PropertyMetadata(""));
+        private static readonly DependencyPropertyKey ItemAuthorsPropertyKey = ColumnPropertyBuilder<string, SummaryPropertiesListItemViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(ISummaryPropertiesListItem.ItemAuthors))
+            .DefaultValue("")
+            .AsReadOnly();
 
         /// <summary>
         /// Identifies the <see cref="ItemAuthors"/> dependency property.
@@ -116,8 +122,10 @@ namespace FsInfoCat.Desktop.ViewModel
         #endregion
         #region Kind Property Members
 
-        private static readonly DependencyPropertyKey KindPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Kind), typeof(string),
-            typeof(SummaryPropertiesListItemViewModel<TEntity>), new PropertyMetadata(""));
+        private static readonly DependencyPropertyKey KindPropertyKey = ColumnPropertyBuilder<string, SummaryPropertiesListItemViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(ISummaryPropertiesListItem.Kind))
+            .DefaultValue("")
+            .AsReadOnly();
 
         /// <summary>
         /// Identifies the <see cref="Kind"/> dependency property.
@@ -133,9 +141,12 @@ namespace FsInfoCat.Desktop.ViewModel
         #endregion
         #region ExistingFileCount Property Members
 
-        private static readonly DependencyPropertyKey ExistingFileCountPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ExistingFileCount), typeof(long),
-            typeof(SummaryPropertiesListItemViewModel<TEntity>), new PropertyMetadata(0L, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-            (d as SummaryPropertiesListItemViewModel<TEntity>).OnExistingFileCountPropertyChanged((long)e.OldValue, (long)e.NewValue)));
+        private static readonly DependencyPropertyKey ExistingFileCountPropertyKey = ColumnPropertyBuilder<long, SummaryPropertiesListItemViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(ISummaryPropertiesListItem.ExistingFileCount))
+            .DefaultValue(0L)
+            .OnChanged((DependencyObject d, long oldValue, long newValue) =>
+                (d as SummaryPropertiesListItemViewModel<TEntity>).OnExistingFileCountPropertyChanged(oldValue, newValue))
+            .AsReadOnly();
 
         /// <summary>
         /// Identifies the <see cref="ExistingFileCount"/> dependency property.
@@ -158,10 +169,11 @@ namespace FsInfoCat.Desktop.ViewModel
         #endregion
         #region TotalFileCount Property Members
 
-        private static readonly DependencyPropertyKey TotalFileCountPropertyKey = DependencyProperty.RegisterReadOnly(nameof(TotalFileCount), typeof(long),
-            typeof(SummaryPropertiesListItemViewModel<TEntity>), new PropertyMetadata(0L));
+        private static readonly DependencyPropertyKey TotalFileCountPropertyKey = ColumnPropertyBuilder<long, SummaryPropertiesListItemViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(ISummaryPropertiesListItem.TotalFileCount))
+            .DefaultValue(0L)
+            .AsReadOnly();
 
-        /// <summary>
         /// Identifies the <see cref="TotalFileCount"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty TotalFileCountProperty = TotalFileCountPropertyKey.DependencyProperty;
@@ -184,6 +196,13 @@ namespace FsInfoCat.Desktop.ViewModel
             TotalFileCount = entity.TotalFileCount;
             SetValue(EditPropertyKey, new Commands.RelayCommand(RaiseEditCommand));
             SetValue(DeletePropertyKey, new Commands.RelayCommand(RaiseDeleteCommand));
+            CommonAttached.SetListItemTitle(this, CalculateDisplayText());
+        }
+
+        protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
+        {
+            base.OnPropertyChanged(e);
+            CommonAttached.SetListItemTitle(this, CalculateDisplayText());
         }
 
         protected override void OnEntityPropertyChanged(string propertyName)

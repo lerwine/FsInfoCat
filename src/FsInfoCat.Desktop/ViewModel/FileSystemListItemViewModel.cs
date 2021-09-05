@@ -65,8 +65,10 @@ namespace FsInfoCat.Desktop.ViewModel
         #endregion
         #region PrimarySymbolicName Property Members
 
-        private static readonly DependencyPropertyKey PrimarySymbolicNamePropertyKey = DependencyProperty.RegisterReadOnly(nameof(PrimarySymbolicName), typeof(string),
-            typeof(FileSystemListItemViewModel<TEntity>), new PropertyMetadata(""));
+        private static readonly DependencyPropertyKey PrimarySymbolicNamePropertyKey = ColumnPropertyBuilder<string, FileSystemListItemViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IFileSystemListItem.PrimarySymbolicName))
+            .DefaultValue("")
+            .AsReadOnly();
 
         /// <summary>
         /// Identifies the <see cref="PrimarySymbolicName"/> dependency property.
@@ -82,8 +84,10 @@ namespace FsInfoCat.Desktop.ViewModel
         #endregion
         #region SymbolicNameCount Property Members
 
-        private static readonly DependencyPropertyKey SymbolicNameCountPropertyKey = DependencyProperty.RegisterReadOnly(nameof(SymbolicNameCount), typeof(long),
-            typeof(FileSystemListItemViewModel<TEntity>), new PropertyMetadata(0L));
+        private static readonly DependencyPropertyKey SymbolicNameCountPropertyKey = ColumnPropertyBuilder<long, FileSystemListItemViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IFileSystemListItem.SymbolicNameCount))
+            .DefaultValue(0L)
+            .AsReadOnly();
 
         /// <summary>
         /// Identifies the <see cref="SymbolicNameCount"/> dependency property.
@@ -99,9 +103,11 @@ namespace FsInfoCat.Desktop.ViewModel
         #endregion
         #region VolumeCount Property Members
 
-        private static readonly DependencyPropertyKey VolumeCountPropertyKey = DependencyProperty.RegisterReadOnly(nameof(VolumeCount), typeof(long),
-            typeof(FileSystemListItemViewModel<TEntity>), new PropertyMetadata(0L, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-            (d as FileSystemListItemViewModel<TEntity>).OnVolumeCountPropertyChanged((long)e.OldValue, (long)e.NewValue)));
+        private static readonly DependencyPropertyKey VolumeCountPropertyKey = ColumnPropertyBuilder<long, FileSystemListItemViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IFileSystemListItem.VolumeCount))
+            .DefaultValue(0L)
+            .OnChanged((d, oldValue, newValue) => (d as FileSystemListItemViewModel<TEntity>)?.OnVolumeCountPropertyChanged(oldValue, newValue))
+            .AsReadOnly();
 
         /// <summary>
         /// Identifies the <see cref="VolumeCount"/> dependency property.

@@ -1,4 +1,7 @@
+using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel
@@ -12,9 +15,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="ApplicationName"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty ApplicationNameProperty = DependencyProperty.Register(nameof(ApplicationName), typeof(string),
-            typeof(SummaryPropertiesRowViewModel<TEntity>), new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as SummaryPropertiesRowViewModel<TEntity>)?.OnApplicationNamePropertyChanged(e.OldValue as string, e.NewValue as string)));
+        public static readonly DependencyProperty ApplicationNameProperty = ColumnPropertyBuilder<string, SummaryPropertiesRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(ISummaryProperties.ApplicationName))
+            .DefaultValue("")
+            .OnChanged((d, oldValue, newValue) => (d as SummaryPropertiesRowViewModel<TEntity>)?.OnApplicationNamePropertyChanged(oldValue, newValue))
+            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -27,10 +32,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="ApplicationName"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="ApplicationName"/> property.</param>
-        protected void OnApplicationNamePropertyChanged(string oldValue, string newValue)
-        {
-            // TODO: Implement OnApplicationNamePropertyChanged Logic
-        }
+        protected virtual void OnApplicationNamePropertyChanged(string oldValue, string newValue) { }
 
         #endregion
         #region Comment Property Members
@@ -38,9 +40,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="Comment"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty CommentProperty = DependencyProperty.Register(nameof(Comment), typeof(string),
-            typeof(SummaryPropertiesRowViewModel<TEntity>), new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as SummaryPropertiesRowViewModel<TEntity>)?.OnCommentPropertyChanged(e.OldValue as string, e.NewValue as string)));
+        public static readonly DependencyProperty CommentProperty = ColumnPropertyBuilder<string, SummaryPropertiesRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(ISummaryProperties.Comment))
+            .DefaultValue("")
+            .OnChanged((d, oldValue, newValue) => (d as SummaryPropertiesRowViewModel<TEntity>)?.OnCommentPropertyChanged(oldValue, newValue))
+            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -53,10 +57,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Comment"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Comment"/> property.</param>
-        protected void OnCommentPropertyChanged(string oldValue, string newValue)
-        {
-            // TODO: Implement OnCommentPropertyChanged Logic
-        }
+        protected virtual void OnCommentPropertyChanged(string oldValue, string newValue) { }
 
         #endregion
         #region Subject Property Members
@@ -64,9 +65,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="Subject"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty SubjectProperty = DependencyProperty.Register(nameof(Subject), typeof(string),
-            typeof(SummaryPropertiesRowViewModel<TEntity>), new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as SummaryPropertiesRowViewModel<TEntity>)?.OnSubjectPropertyChanged(e.OldValue as string, e.NewValue as string)));
+        public static readonly DependencyProperty SubjectProperty = ColumnPropertyBuilder<string, SummaryPropertiesRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(ISummaryProperties.Subject))
+            .DefaultValue("")
+            .OnChanged((d, oldValue, newValue) => (d as SummaryPropertiesRowViewModel<TEntity>)?.OnSubjectPropertyChanged(oldValue, newValue))
+            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -79,10 +82,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Subject"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Subject"/> property.</param>
-        protected void OnSubjectPropertyChanged(string oldValue, string newValue)
-        {
-            // TODO: Implement OnSubjectPropertyChanged Logic
-        }
+        protected virtual void OnSubjectPropertyChanged(string oldValue, string newValue) { }
 
         #endregion
         #region Title Property Members
@@ -90,9 +90,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="Title"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty TitleProperty = DependencyProperty.Register(nameof(Title), typeof(string), typeof(SummaryPropertiesRowViewModel<TEntity>),
-                new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as SummaryPropertiesRowViewModel<TEntity>)?.OnTitlePropertyChanged(e.OldValue as string, e.NewValue as string)));
+        public static readonly DependencyProperty TitleProperty = ColumnPropertyBuilder<string, SummaryPropertiesRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(ISummaryProperties.Title))
+            .DefaultValue("")
+            .OnChanged((d, oldValue, newValue) => (d as SummaryPropertiesRowViewModel<TEntity>)?.OnTitlePropertyChanged(oldValue, newValue))
+            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -105,10 +107,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Title"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Title"/> property.</param>
-        protected void OnTitlePropertyChanged(string oldValue, string newValue)
-        {
-            // TODO: Implement OnTitlePropertyChanged Logic
-        }
+        protected virtual void OnTitlePropertyChanged(string oldValue, string newValue) { }
 
         #endregion
         #region Company Property Members
@@ -116,9 +115,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="Company"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty CompanyProperty = DependencyProperty.Register(nameof(Company), typeof(string),
-            typeof(SummaryPropertiesRowViewModel<TEntity>), new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as SummaryPropertiesRowViewModel<TEntity>)?.OnCompanyPropertyChanged(e.OldValue as string, e.NewValue as string)));
+        public static readonly DependencyProperty CompanyProperty = ColumnPropertyBuilder<string, SummaryPropertiesRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(ISummaryProperties.Company))
+            .DefaultValue("")
+            .OnChanged((d, oldValue, newValue) => (d as SummaryPropertiesRowViewModel<TEntity>)?.OnCompanyPropertyChanged(oldValue, newValue))
+            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -131,10 +132,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Company"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Company"/> property.</param>
-        protected void OnCompanyPropertyChanged(string oldValue, string newValue)
-        {
-            // TODO: Implement OnCompanyPropertyChanged Logic
-        }
+        protected virtual void OnCompanyPropertyChanged(string oldValue, string newValue) { }
 
         #endregion
         #region ContentType Property Members
@@ -142,9 +140,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="ContentType"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty ContentTypeProperty = DependencyProperty.Register(nameof(ContentType), typeof(string),
-            typeof(SummaryPropertiesRowViewModel<TEntity>), new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as SummaryPropertiesRowViewModel<TEntity>)?.OnContentTypePropertyChanged(e.OldValue as string, e.NewValue as string)));
+        public static readonly DependencyProperty ContentTypeProperty = ColumnPropertyBuilder<string, SummaryPropertiesRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(ISummaryProperties.ContentType))
+            .DefaultValue("")
+            .OnChanged((d, oldValue, newValue) => (d as SummaryPropertiesRowViewModel<TEntity>)?.OnContentTypePropertyChanged(oldValue, newValue))
+            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -157,10 +157,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="ContentType"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="ContentType"/> property.</param>
-        protected void OnContentTypePropertyChanged(string oldValue, string newValue)
-        {
-            // TODO: Implement OnContentTypePropertyChanged Logic
-        }
+        protected virtual void OnContentTypePropertyChanged(string oldValue, string newValue) { }
 
         #endregion
         #region Copyright Property Members
@@ -168,9 +165,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="Copyright"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty CopyrightProperty = DependencyProperty.Register(nameof(Copyright), typeof(string),
-            typeof(SummaryPropertiesRowViewModel<TEntity>), new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as SummaryPropertiesRowViewModel<TEntity>)?.OnCopyrightPropertyChanged(e.OldValue as string, e.NewValue as string)));
+        public static readonly DependencyProperty CopyrightProperty = ColumnPropertyBuilder<string, SummaryPropertiesRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(ISummaryProperties.Copyright))
+            .DefaultValue("")
+            .OnChanged((d, oldValue, newValue) => (d as SummaryPropertiesRowViewModel<TEntity>)?.OnCopyrightPropertyChanged(oldValue, newValue))
+            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -183,10 +182,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Copyright"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Copyright"/> property.</param>
-        protected void OnCopyrightPropertyChanged(string oldValue, string newValue)
-        {
-            // TODO: Implement OnCopyrightPropertyChanged Logic
-        }
+        protected virtual void OnCopyrightPropertyChanged(string oldValue, string newValue) { }
 
         #endregion
         #region ParentalRating Property Members
@@ -194,9 +190,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="ParentalRating"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty ParentalRatingProperty = DependencyProperty.Register(nameof(ParentalRating), typeof(string),
-            typeof(SummaryPropertiesRowViewModel<TEntity>), new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as SummaryPropertiesRowViewModel<TEntity>)?.OnParentalRatingPropertyChanged(e.OldValue as string, e.NewValue as string)));
+        public static readonly DependencyProperty ParentalRatingProperty = ColumnPropertyBuilder<string, SummaryPropertiesRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(ISummaryProperties.ParentalRating))
+            .DefaultValue("")
+            .OnChanged((d, oldValue, newValue) => (d as SummaryPropertiesRowViewModel<TEntity>)?.OnParentalRatingPropertyChanged(oldValue, newValue))
+            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -209,10 +207,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="ParentalRating"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="ParentalRating"/> property.</param>
-        protected void OnParentalRatingPropertyChanged(string oldValue, string newValue)
-        {
-            // TODO: Implement OnParentalRatingPropertyChanged Logic
-        }
+        protected virtual void OnParentalRatingPropertyChanged(string oldValue, string newValue) { }
 
         #endregion
         #region Rating Property Members
@@ -220,8 +215,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="Rating"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty RatingProperty = DependencyProperty.Register(nameof(Rating), typeof(uint?), typeof(SummaryPropertiesRowViewModel<TEntity>),
-                new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as SummaryPropertiesRowViewModel<TEntity>)?.OnRatingPropertyChanged((uint?)e.OldValue, (uint?)e.NewValue)));
+        public static readonly DependencyProperty RatingProperty = ColumnPropertyBuilder<uint?, SummaryPropertiesRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(ISummaryProperties.Rating))
+            .DefaultValue(null)
+            .OnChanged((d, oldValue, newValue) => (d as SummaryPropertiesRowViewModel<TEntity>)?.OnRatingPropertyChanged(oldValue, newValue))
+            .AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -234,10 +232,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Rating"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Rating"/> property.</param>
-        protected void OnRatingPropertyChanged(uint? oldValue, uint? newValue)
-        {
-            // TODO: Implement OnRatingPropertyChanged Logic
-        }
+        protected virtual void OnRatingPropertyChanged(uint? oldValue, uint? newValue) { }
 
         #endregion
         #region ItemType Property Members
@@ -245,9 +240,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="ItemType"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty ItemTypeProperty = DependencyProperty.Register(nameof(ItemType), typeof(string),
-            typeof(SummaryPropertiesRowViewModel<TEntity>), new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as SummaryPropertiesRowViewModel<TEntity>)?.OnItemTypePropertyChanged(e.OldValue as string, e.NewValue as string)));
+        public static readonly DependencyProperty ItemTypeProperty = ColumnPropertyBuilder<string, SummaryPropertiesRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(ISummaryProperties.ItemType))
+            .DefaultValue("")
+            .OnChanged((d, oldValue, newValue) => (d as SummaryPropertiesRowViewModel<TEntity>)?.OnItemTypePropertyChanged(oldValue, newValue))
+            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -260,10 +257,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="ItemType"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="ItemType"/> property.</param>
-        protected void OnItemTypePropertyChanged(string oldValue, string newValue)
-        {
-            // TODO: Implement OnItemTypePropertyChanged Logic
-        }
+        protected virtual void OnItemTypePropertyChanged(string oldValue, string newValue) { }
 
         #endregion
         #region ItemTypeText Property Members
@@ -271,9 +265,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="ItemTypeText"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty ItemTypeTextProperty = DependencyProperty.Register(nameof(ItemTypeText), typeof(string),
-            typeof(SummaryPropertiesRowViewModel<TEntity>), new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as SummaryPropertiesRowViewModel<TEntity>)?.OnItemTypeTextPropertyChanged(e.OldValue as string, e.NewValue as string)));
+        public static readonly DependencyProperty ItemTypeTextProperty = ColumnPropertyBuilder<string, SummaryPropertiesRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(ISummaryProperties.ItemTypeText))
+            .DefaultValue("")
+            .OnChanged((d, oldValue, newValue) => (d as SummaryPropertiesRowViewModel<TEntity>)?.OnItemTypeTextPropertyChanged(oldValue, newValue))
+            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -286,10 +282,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="ItemTypeText"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="ItemTypeText"/> property.</param>
-        protected void OnItemTypeTextPropertyChanged(string oldValue, string newValue)
-        {
-            // TODO: Implement OnItemTypeTextPropertyChanged Logic
-        }
+        protected virtual void OnItemTypeTextPropertyChanged(string oldValue, string newValue) { }
 
         #endregion
         #region MIMEType Property Members
@@ -297,9 +290,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="MIMEType"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty MIMETypeProperty = DependencyProperty.Register(nameof(MIMEType), typeof(string),
-            typeof(SummaryPropertiesRowViewModel<TEntity>), new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as SummaryPropertiesRowViewModel<TEntity>)?.OnMIMETypePropertyChanged(e.OldValue as string, e.NewValue as string)));
+        public static readonly DependencyProperty MIMETypeProperty = ColumnPropertyBuilder<string, SummaryPropertiesRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(ISummaryProperties.MIMEType))
+            .DefaultValue("")
+            .OnChanged((d, oldValue, newValue) => (d as SummaryPropertiesRowViewModel<TEntity>)?.OnMIMETypePropertyChanged(oldValue, newValue))
+            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -312,10 +307,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="MIMEType"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="MIMEType"/> property.</param>
-        protected void OnMIMETypePropertyChanged(string oldValue, string newValue)
-        {
-            // TODO: Implement OnMIMETypePropertyChanged Logic
-        }
+        protected virtual void OnMIMETypePropertyChanged(string oldValue, string newValue) { }
 
         #endregion
         #region ParentalRatingReason Property Members
@@ -323,9 +315,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="ParentalRatingReason"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty ParentalRatingReasonProperty = DependencyProperty.Register(nameof(ParentalRatingReason), typeof(string),
-            typeof(SummaryPropertiesRowViewModel<TEntity>), new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as SummaryPropertiesRowViewModel<TEntity>)?.OnParentalRatingReasonPropertyChanged(e.OldValue as string, e.NewValue as string)));
+        public static readonly DependencyProperty ParentalRatingReasonProperty = ColumnPropertyBuilder<string, SummaryPropertiesRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(ISummaryProperties.ParentalRatingReason))
+            .DefaultValue("")
+            .OnChanged((d, oldValue, newValue) => (d as SummaryPropertiesRowViewModel<TEntity>)?.OnParentalRatingReasonPropertyChanged(oldValue, newValue))
+            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -338,10 +332,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="ParentalRatingReason"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="ParentalRatingReason"/> property.</param>
-        protected void OnParentalRatingReasonPropertyChanged(string oldValue, string newValue)
-        {
-            // TODO: Implement OnParentalRatingReasonPropertyChanged Logic
-        }
+        protected virtual void OnParentalRatingReasonPropertyChanged(string oldValue, string newValue) { }
 
         #endregion
         #region ParentalRatingsOrganization Property Members
@@ -349,9 +340,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="ParentalRatingsOrganization"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty ParentalRatingsOrganizationProperty = DependencyProperty.Register(nameof(ParentalRatingsOrganization), typeof(string),
-            typeof(SummaryPropertiesRowViewModel<TEntity>), new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as SummaryPropertiesRowViewModel<TEntity>)?.OnParentalRatingsOrganizationPropertyChanged(e.OldValue as string, e.NewValue as string)));
+        public static readonly DependencyProperty ParentalRatingsOrganizationProperty = ColumnPropertyBuilder<string, SummaryPropertiesRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(ISummaryProperties.ParentalRatingsOrganization))
+            .DefaultValue("")
+            .OnChanged((d, oldValue, newValue) => (d as SummaryPropertiesRowViewModel<TEntity>)?.OnParentalRatingsOrganizationPropertyChanged(oldValue, newValue))
+            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -364,10 +357,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="ParentalRatingsOrganization"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="ParentalRatingsOrganization"/> property.</param>
-        protected void OnParentalRatingsOrganizationPropertyChanged(string oldValue, string newValue)
-        {
-            // TODO: Implement OnParentalRatingsOrganizationPropertyChanged Logic
-        }
+        protected virtual void OnParentalRatingsOrganizationPropertyChanged(string oldValue, string newValue) { }
 
         #endregion
         #region Sensitivity Property Members
@@ -375,8 +365,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="Sensitivity"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty SensitivityProperty = DependencyProperty.Register(nameof(Sensitivity), typeof(ushort?), typeof(SummaryPropertiesRowViewModel<TEntity>),
-                new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as SummaryPropertiesRowViewModel<TEntity>)?.OnSensitivityPropertyChanged((ushort?)e.OldValue, (ushort?)e.NewValue)));
+        public static readonly DependencyProperty SensitivityProperty = ColumnPropertyBuilder<ushort?, SummaryPropertiesRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(ISummaryProperties.Sensitivity))
+            .DefaultValue(null)
+            .OnChanged((d, oldValue, newValue) => (d as SummaryPropertiesRowViewModel<TEntity>)?.OnSensitivityPropertyChanged(oldValue, newValue))
+            .AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -389,10 +382,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Sensitivity"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Sensitivity"/> property.</param>
-        protected void OnSensitivityPropertyChanged(ushort? oldValue, ushort? newValue)
-        {
-            // TODO: Implement OnSensitivityPropertyChanged Logic
-        }
+        protected virtual void OnSensitivityPropertyChanged(ushort? oldValue, ushort? newValue) { }
 
         #endregion
         #region SensitivityText Property Members
@@ -400,9 +390,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="SensitivityText"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty SensitivityTextProperty = DependencyProperty.Register(nameof(SensitivityText), typeof(string),
-            typeof(SummaryPropertiesRowViewModel<TEntity>), new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as SummaryPropertiesRowViewModel<TEntity>)?.OnSensitivityTextPropertyChanged(e.OldValue as string, e.NewValue as string)));
+        public static readonly DependencyProperty SensitivityTextProperty = ColumnPropertyBuilder<string, SummaryPropertiesRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(ISummaryProperties.SensitivityText))
+            .DefaultValue("")
+            .OnChanged((d, oldValue, newValue) => (d as SummaryPropertiesRowViewModel<TEntity>)?.OnSensitivityTextPropertyChanged(oldValue, newValue))
+            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -415,10 +407,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="SensitivityText"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="SensitivityText"/> property.</param>
-        protected void OnSensitivityTextPropertyChanged(string oldValue, string newValue)
-        {
-            // TODO: Implement OnSensitivityTextPropertyChanged Logic
-        }
+        protected virtual void OnSensitivityTextPropertyChanged(string oldValue, string newValue) { }
 
         #endregion
         #region SimpleRating Property Members
@@ -426,9 +415,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="SimpleRating"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty SimpleRatingProperty = DependencyProperty.Register(nameof(SimpleRating), typeof(uint?),
-            typeof(SummaryPropertiesRowViewModel<TEntity>), new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-            (d as SummaryPropertiesRowViewModel<TEntity>)?.OnSimpleRatingPropertyChanged((uint?)e.OldValue, (uint?)e.NewValue)));
+        public static readonly DependencyProperty SimpleRatingProperty = ColumnPropertyBuilder<uint?, SummaryPropertiesRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(ISummaryProperties.SimpleRating))
+            .DefaultValue(null)
+            .OnChanged((d, oldValue, newValue) => (d as SummaryPropertiesRowViewModel<TEntity>)?.OnSimpleRatingPropertyChanged(oldValue, newValue))
+            .AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -441,10 +432,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="SimpleRating"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="SimpleRating"/> property.</param>
-        protected void OnSimpleRatingPropertyChanged(uint? oldValue, uint? newValue)
-        {
-            // TODO: Implement OnSimpleRatingPropertyChanged Logic
-        }
+        protected virtual void OnSimpleRatingPropertyChanged(uint? oldValue, uint? newValue) { }
 
         #endregion
         #region Trademarks Property Members
@@ -452,9 +440,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="Trademarks"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty TrademarksProperty = DependencyProperty.Register(nameof(Trademarks), typeof(string),
-            typeof(SummaryPropertiesRowViewModel<TEntity>), new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as SummaryPropertiesRowViewModel<TEntity>)?.OnTrademarksPropertyChanged(e.OldValue as string, e.NewValue as string)));
+        public static readonly DependencyProperty TrademarksProperty = ColumnPropertyBuilder<string, SummaryPropertiesRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(ISummaryProperties.Trademarks))
+            .DefaultValue("")
+            .OnChanged((d, oldValue, newValue) => (d as SummaryPropertiesRowViewModel<TEntity>)?.OnTrademarksPropertyChanged(oldValue, newValue))
+            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -467,10 +457,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Trademarks"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Trademarks"/> property.</param>
-        protected void OnTrademarksPropertyChanged(string oldValue, string newValue)
-        {
-            // TODO: Implement OnTrademarksPropertyChanged Logic
-        }
+        protected virtual void OnTrademarksPropertyChanged(string oldValue, string newValue) { }
 
         #endregion
         #region ProductName Property Members
@@ -478,9 +465,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="ProductName"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty ProductNameProperty = DependencyProperty.Register(nameof(ProductName), typeof(string),
-            typeof(SummaryPropertiesRowViewModel<TEntity>), new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as SummaryPropertiesRowViewModel<TEntity>)?.OnProductNamePropertyChanged(e.OldValue as string, e.NewValue as string)));
+        public static readonly DependencyProperty ProductNameProperty = ColumnPropertyBuilder<string, SummaryPropertiesRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(ISummaryProperties.ProductName))
+            .DefaultValue("")
+            .OnChanged((d, oldValue, newValue) => (d as SummaryPropertiesRowViewModel<TEntity>)?.OnProductNamePropertyChanged(oldValue, newValue))
+            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -493,10 +482,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="ProductName"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="ProductName"/> property.</param>
-        protected void OnProductNamePropertyChanged(string oldValue, string newValue)
-        {
-            // TODO: Implement OnProductNamePropertyChanged Logic
-        }
+        protected virtual void OnProductNamePropertyChanged(string oldValue, string newValue) { }
 
         #endregion
 #pragma warning restore IDE0060 // Remove unused parameter
@@ -522,23 +508,33 @@ namespace FsInfoCat.Desktop.ViewModel
             SimpleRating = entity.SimpleRating;
             Trademarks = entity.Trademarks;
             ProductName = entity.ProductName;
-            ItemType = entity.ItemType;
-            ItemTypeText = entity.ItemTypeText;
-            MIMEType = entity.MIMEType;
-            ParentalRatingReason = entity.ParentalRatingReason;
-            ParentalRatingsOrganization = entity.ParentalRatingsOrganization;
-            Sensitivity = entity.Sensitivity;
-            SensitivityText = entity.SensitivityText;
-            SimpleRating = entity.SimpleRating;
-            Trademarks = entity.Trademarks;
-            ProductName = entity.ProductName;
         }
 
-        internal string CalculateDisplayText()
+        public IEnumerable<(string DisplayName, string Value)> GetNameValuePairs()
         {
-            // TODO: Calculate value for ListingViewModel<TEntity, TItem, TOptions>.SetItemDisplayText(string)
-            throw new System.NotImplementedException();
+            yield return (FsInfoCat.Properties.Resources.DisplayName_Title, Title.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.DisplayName_Subject, Subject.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.DisplayName_ContentType, ContentType.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            string itemType = ItemTypeText.AsWsNormalizedOrEmpty().TruncateWithElipses(256);
+            yield return (FsInfoCat.Properties.Resources.DisplayName_ItemType, (itemType.Length > 0) ? itemType : ItemType.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.DisplayName_MIMEType, MIMEType.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.DisplayName_SimpleRating, SimpleRating?.ToString());
+            yield return (FsInfoCat.Properties.Resources.DisplayName_Rating, Rating?.ToString());
+            yield return (FsInfoCat.Properties.Resources.DisplayName_ParentalRating, ParentalRating.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.DisplayName_ParentalRatingReason, ParentalRatingReason.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.DisplayName_ParentalRatingsOrganization, ParentalRatingsOrganization.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.DisplayName_ApplicationName, ApplicationName.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.DisplayName_ProductName, ProductName.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.DisplayName_Company, Company.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.DisplayName_Trademarks, Trademarks.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.DisplayName_Copyright, Copyright.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            string sensitivity = SensitivityText.AsWsNormalizedOrEmpty().TruncateWithElipses(256);
+            yield return (FsInfoCat.Properties.Resources.DisplayName_Sensitivity, (sensitivity.Length > 0) ? sensitivity : Sensitivity?.ToString());
+            yield return (FsInfoCat.Properties.Resources.DisplayName_Comment, Comment.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
         }
+
+        internal string CalculateDisplayText(Func<(string DisplayName, string Value), bool> filter = null) => (filter is null) ?
+            StringExtensionMethods.ToKeyValueListString(GetNameValuePairs()) : StringExtensionMethods.ToKeyValueListString(GetNameValuePairs().Where(filter));
 
         protected override void OnEntityPropertyChanged(string propertyName)
         {

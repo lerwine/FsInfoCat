@@ -76,6 +76,24 @@ namespace FsInfoCat
             return (result = memberInfo.GetCustomAttributes<DisplayNameAttribute>(true).Select(a => a.DisplayName.NullIfWhiteSpace()).FirstOrDefault(d => d is not null)) is not null;
         }
 
+        public static bool TryGetShortName(this MemberDescriptor descriptor, out string result)
+        {
+            if (descriptor is null)
+            {
+                result = null;
+                return false;
+            }
+            DisplayAttribute attribute = descriptor.Attributes.OfType<DisplayAttribute>().FirstOrDefault();
+            if (attribute is not null && (result = attribute.GetShortName().NullIfWhiteSpace()) is not null)
+                return true;
+            if ((result = descriptor.Attributes.OfType<DisplayNameAttribute>().Select(a => a.DisplayName.NullIfWhiteSpace()).FirstOrDefault(d => d is not null)) is null)
+            {
+                result = descriptor.Name;
+                return false;
+            }
+            return true;
+        }
+
         public static bool TryGetShortName(this MemberInfo memberInfo, out string result)
         {
             if (memberInfo is null)
@@ -86,7 +104,159 @@ namespace FsInfoCat
             DisplayAttribute attribute = memberInfo.GetCustomAttributes<DisplayAttribute>(true).FirstOrDefault();
             if (attribute is not null && (result = attribute.GetShortName().NullIfWhiteSpace()) is not null)
                 return true;
-            return (result = memberInfo.GetCustomAttributes<DisplayNameAttribute>(true).Select(a => a.DisplayName.NullIfWhiteSpace()).FirstOrDefault(d => d is not null)) is not null;
+            if ((result = memberInfo.GetCustomAttributes<DisplayNameAttribute>(true).Select(a => a.DisplayName.NullIfWhiteSpace()).FirstOrDefault(d => d is not null)) is null)
+            {
+                result = memberInfo.Name;
+                return false;
+            }
+            return true;
+        }
+
+        public static bool TryGetOrder(this MemberDescriptor descriptor, out int result)
+        {
+            if (descriptor is not null)
+            {
+                DisplayAttribute attribute = descriptor.Attributes.OfType<DisplayAttribute>().FirstOrDefault();
+                int? order;
+                if (attribute is not null && (order = attribute.GetOrder()).HasValue)
+                {
+                    result = order.Value;
+                    return true;
+                }
+            }
+            result = default;
+            return false;
+        }
+
+        public static bool TryGetOrder(this MemberInfo memberInfo, out int result)
+        {
+            if (memberInfo is not null)
+            {
+                DisplayAttribute attribute = memberInfo.GetCustomAttributes<DisplayAttribute>(true).FirstOrDefault();
+                int? order;
+                if (attribute is not null && (order = attribute.GetOrder()).HasValue)
+                {
+                    result = order.Value;
+                    return true;
+                }
+            }
+            result = default;
+            return false;
+        }
+
+        public static string GetDisplay(this MemberInfo memberInfo, out string shortName, out string prompt, out string groupName, out string description, out int? order)
+        {
+            if (memberInfo is null)
+            {
+                shortName = prompt = groupName = description = null;
+                order = null;
+                return null;
+            }
+            string displayName;
+            DisplayAttribute attribute = memberInfo.GetCustomAttributes<DisplayAttribute>(true).FirstOrDefault();
+            if (attribute is null)
+            {
+                shortName = memberInfo.Name;
+                groupName = memberInfo.GetCustomAttributes<CategoryAttribute>(true).Select(a => a.Category).Where(n => !string.IsNullOrWhiteSpace(n)).DefaultIfEmpty("").First();
+                description = memberInfo.GetCustomAttributes<DescriptionAttribute>(true).Select(a => a.Description).Where(n => !string.IsNullOrWhiteSpace(n)).DefaultIfEmpty("").First();
+                order = null;
+                displayName = memberInfo.GetCustomAttributes<DisplayNameAttribute>(true).Select(a => a.DisplayName).Where(n => !string.IsNullOrWhiteSpace(n)).DefaultIfEmpty(shortName).First();
+                prompt = $"{displayName}: ";
+                return displayName;
+            }
+
+            order = attribute.GetOrder();
+            displayName = attribute.GetName();
+            shortName = attribute.GetShortName();
+            description = attribute.GetDescription();
+            prompt = attribute.GetPrompt();
+            groupName = attribute.GetGroupName();
+            if (string.IsNullOrWhiteSpace(displayName) || displayName == memberInfo.Name)
+            {
+                displayName = memberInfo.GetCustomAttributes<DisplayNameAttribute>(true).Select(a => a.DisplayName).Where(n => !string.IsNullOrWhiteSpace(n))
+                    .DefaultIfEmpty(string.IsNullOrWhiteSpace(shortName) ? memberInfo.Name : shortName).First();
+                if (string.IsNullOrWhiteSpace(shortName))
+                    shortName = memberInfo.Name;
+            }
+            else if (string.IsNullOrWhiteSpace(shortName))
+                shortName = displayName;
+            if (string.IsNullOrWhiteSpace(prompt))
+                prompt = $"{displayName}: ";
+            if (string.IsNullOrWhiteSpace(groupName))
+                groupName = memberInfo.GetCustomAttributes<CategoryAttribute>(true).Select(a => a.Category).Where(n => !string.IsNullOrWhiteSpace(n)).DefaultIfEmpty("").First();
+            if (string.IsNullOrWhiteSpace(description))
+                description = memberInfo.GetCustomAttributes<DescriptionAttribute>(true).Select(a => a.Description).Where(n => !string.IsNullOrWhiteSpace(n)).DefaultIfEmpty("").First();
+            return displayName;
+        }
+
+        public static string GetDisplay(this MemberDescriptor descriptor, out string shortName, out string prompt, out string groupName, out string description, out int? order)
+        {
+            if (descriptor is null)
+            {
+                shortName = prompt = groupName = description = null;
+                order = null;
+                return null;
+            }
+            string displayName;
+            DisplayAttribute attribute = descriptor.Attributes.OfType<DisplayAttribute>().FirstOrDefault();
+            if (attribute is null)
+            {
+                shortName = descriptor.Name;
+                groupName = descriptor.Category ?? "";
+                description = descriptor.Description ?? "";
+                order = null;
+                displayName = descriptor.DisplayName;
+                if (string.IsNullOrWhiteSpace(displayName))
+                    displayName = shortName;
+                prompt = $"{displayName}: ";
+                return displayName;
+            }
+
+            order = attribute.GetOrder();
+            displayName = attribute.GetName();
+            shortName = attribute.GetShortName();
+            description = attribute.GetDescription();
+            prompt = attribute.GetPrompt();
+            groupName = attribute.GetGroupName();
+            if (string.IsNullOrWhiteSpace(displayName) || displayName == descriptor.Name)
+            {
+                displayName = string.IsNullOrWhiteSpace(descriptor.DisplayName) ? descriptor.Name : descriptor.DisplayName;
+                if (string.IsNullOrWhiteSpace(shortName))
+                    shortName = descriptor.Name;
+            }
+            else if (string.IsNullOrWhiteSpace(shortName))
+                shortName = displayName;
+            if (string.IsNullOrWhiteSpace(prompt))
+                prompt = $"{displayName}: ";
+            if (string.IsNullOrWhiteSpace(groupName))
+                groupName = descriptor.Category ?? "";
+            if (string.IsNullOrWhiteSpace(description))
+                description = descriptor.Description ?? "";
+            return displayName;
+        }
+
+        public static bool TryGetDefaultValue(this MemberDescriptor descriptor, out object defaultValue)
+        {
+            DefaultValueAttribute attribute = descriptor?.Attributes.OfType<DefaultValueAttribute>().FirstOrDefault();
+            if (attribute is null)
+            {
+                defaultValue = null;
+                return false;
+            }
+            defaultValue = attribute.Value;
+            return true;
+        }
+
+        public static bool TryGetDefaultValue(this MemberInfo memberInfo, out object defaultValue)
+        {
+            DefaultValueAttribute attribute = memberInfo?.GetCustomAttributes<DefaultValueAttribute>(true).FirstOrDefault();
+            if (attribute is null)
+            {
+                defaultValue = null;
+                return false;
+            }
+            defaultValue = attribute.Value;
+            return true;
         }
 
         public static string GetDisplayName<TEnum>(this TEnum value) where TEnum : struct, Enum

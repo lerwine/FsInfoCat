@@ -66,8 +66,11 @@ namespace FsInfoCat.Desktop.ViewModel
         #endregion
         #region SubdirectoryCount Property Members
 
-        private static readonly DependencyPropertyKey SubdirectoryCountPropertyKey = DependencyProperty.RegisterReadOnly(nameof(SubdirectoryCount), typeof(long), typeof(SubdirectoryListItemViewModel<TEntity>),
-                new PropertyMetadata(0L, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as SubdirectoryListItemViewModel<TEntity>).OnSubdirectoryCountPropertyChanged((long)e.OldValue, (long)e.NewValue)));
+        private static readonly DependencyPropertyKey SubdirectoryCountPropertyKey = ColumnPropertyBuilder<long, SubdirectoryListItemViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(ISubdirectoryListItem.SubdirectoryCount))
+            .DefaultValue(0L)
+            .OnChanged((d, oldValue, newValue) => (d as SubdirectoryListItemViewModel<TEntity>)?.OnSubdirectoryCountPropertyChanged(oldValue, newValue))
+            .AsReadOnly();
 
         /// <summary>
         /// Identifies the <see cref="SubdirectoryCount"/> dependency property.
@@ -85,13 +88,16 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="SubdirectoryCount"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="SubdirectoryCount"/> property.</param>
-        protected void OnSubdirectoryCountPropertyChanged(long oldValue, long newValue) => SetHasDependentItems(newValue, FileCount, HasCrawlConfig);
+        protected virtual void OnSubdirectoryCountPropertyChanged(long oldValue, long newValue) => SetHasDependentItems(newValue, FileCount, HasCrawlConfig);
 
         #endregion
         #region FileCount Property Members
 
-        private static readonly DependencyPropertyKey FileCountPropertyKey = DependencyProperty.RegisterReadOnly(nameof(FileCount), typeof(long), typeof(SubdirectoryListItemViewModel<TEntity>),
-                new PropertyMetadata(0L, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as SubdirectoryListItemViewModel<TEntity>).OnFileCountPropertyChanged((long)e.OldValue, (long)e.NewValue)));
+        private static readonly DependencyPropertyKey FileCountPropertyKey = ColumnPropertyBuilder<long, SubdirectoryListItemViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(ISubdirectoryListItem.FileCount))
+            .DefaultValue(0L)
+            .OnChanged((d, oldValue, newValue) => (d as SubdirectoryListItemViewModel<TEntity>)?.OnFileCountPropertyChanged(oldValue, newValue))
+            .AsReadOnly();
 
         /// <summary>
         /// Identifies the <see cref="FileCount"/> dependency property.
@@ -109,13 +115,15 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="FileCount"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="FileCount"/> property.</param>
-        protected void OnFileCountPropertyChanged(long oldValue, long newValue) => SetHasDependentItems(SubdirectoryCount, newValue, HasCrawlConfig);
+        protected virtual void OnFileCountPropertyChanged(long oldValue, long newValue) => SetHasDependentItems(SubdirectoryCount, newValue, HasCrawlConfig);
 
         #endregion
         #region CrawlConfigDisplayName Property Members
 
-        private static readonly DependencyPropertyKey CrawlConfigDisplayNamePropertyKey = DependencyProperty.RegisterReadOnly(nameof(CrawlConfigDisplayName), typeof(string),
-            typeof(SubdirectoryListItemViewModel<TEntity>), new PropertyMetadata(""));
+        private static readonly DependencyPropertyKey CrawlConfigDisplayNamePropertyKey = ColumnPropertyBuilder<string, SubdirectoryListItemViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(ISubdirectoryListItem.CrawlConfigDisplayName))
+            .DefaultValue("")
+            .AsReadOnly();
 
         /// <summary>
         /// Identifies the <see cref="CrawlConfigDisplayName"/> dependency property.
@@ -131,8 +139,10 @@ namespace FsInfoCat.Desktop.ViewModel
         #endregion
         #region AccessErrorCount Property Members
 
-        private static readonly DependencyPropertyKey AccessErrorCountPropertyKey = DependencyProperty.RegisterReadOnly(nameof(AccessErrorCount), typeof(long),
-            typeof(SubdirectoryListItemViewModel<TEntity>), new PropertyMetadata(0L));
+        private static readonly DependencyPropertyKey AccessErrorCountPropertyKey = ColumnPropertyBuilder<long, SubdirectoryListItemViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(ISubdirectoryListItem.AccessErrorCount))
+            .DefaultValue(0L)
+            .AsReadOnly();
 
         /// <summary>
         /// Identifies the <see cref="AccessErrorCount"/> dependency property.
@@ -148,8 +158,10 @@ namespace FsInfoCat.Desktop.ViewModel
         #endregion
         #region PersonalTagCount Property Members
 
-        private static readonly DependencyPropertyKey PersonalTagCountPropertyKey = DependencyProperty.RegisterReadOnly(nameof(PersonalTagCount), typeof(long),
-            typeof(SubdirectoryListItemViewModel<TEntity>), new PropertyMetadata(0L));
+        private static readonly DependencyPropertyKey PersonalTagCountPropertyKey = ColumnPropertyBuilder<long, SubdirectoryListItemViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(ISubdirectoryListItem.PersonalTagCount))
+            .DefaultValue(0L)
+            .AsReadOnly();
 
         /// <summary>
         /// Identifies the <see cref="PersonalTagCount"/> dependency property.
@@ -165,8 +177,10 @@ namespace FsInfoCat.Desktop.ViewModel
         #endregion
         #region SharedTagCount Property Members
 
-        private static readonly DependencyPropertyKey SharedTagCountPropertyKey = DependencyProperty.RegisterReadOnly(nameof(SharedTagCount), typeof(long), typeof(SubdirectoryListItemViewModel<TEntity>),
-                new PropertyMetadata(0L));
+        private static readonly DependencyPropertyKey SharedTagCountPropertyKey = ColumnPropertyBuilder<long, SubdirectoryListItemViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(ISubdirectoryListItem.SharedTagCount))
+            .DefaultValue(0L)
+            .AsReadOnly();
 
         /// <summary>
         /// Identifies the <see cref="SharedTagCount"/> dependency property.
@@ -182,8 +196,11 @@ namespace FsInfoCat.Desktop.ViewModel
         #endregion
         #region HasCrawlConfig Property Members
 
-        private static readonly DependencyPropertyKey HasCrawlConfigPropertyKey = DependencyProperty.RegisterReadOnly(nameof(HasCrawlConfig), typeof(bool), typeof(SubdirectoryListItemViewModel<TEntity>),
-                new PropertyMetadata(false, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as SubdirectoryListItemViewModel<TEntity>).OnHasCrawlConfigPropertyChanged((bool)e.OldValue, (bool)e.NewValue)));
+        private static readonly DependencyPropertyKey HasCrawlConfigPropertyKey = ColumnPropertyBuilder<bool, SubdirectoryListItemViewModel<TEntity>>
+            .Register(nameof(HasCrawlConfig))
+            .DefaultValue(false)
+            .OnChanged((d, oldValue, newValue) => (d as SubdirectoryListItemViewModel<TEntity>)?.OnHasCrawlConfigPropertyChanged(oldValue, newValue))
+            .AsReadOnly();
 
         /// <summary>
         /// Identifies the <see cref="HasCrawlConfig"/> dependency property.
@@ -201,13 +218,15 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="HasCrawlConfig"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="HasCrawlConfig"/> property.</param>
-        protected void OnHasCrawlConfigPropertyChanged(bool oldValue, bool newValue) => SetHasDependentItems(SubdirectoryCount, FileCount, newValue);
+        protected virtual void OnHasCrawlConfigPropertyChanged(bool oldValue, bool newValue) => SetHasDependentItems(SubdirectoryCount, FileCount, newValue);
 
         #endregion
         #region HasDependentItems Property Members
 
-        private static readonly DependencyPropertyKey HasDependentItemsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(HasDependentItems), typeof(bool), typeof(SubdirectoryListItemViewModel<TEntity>),
-                new PropertyMetadata(false));
+        private static readonly DependencyPropertyKey HasDependentItemsPropertyKey = ColumnPropertyBuilder<bool, SubdirectoryListItemViewModel<TEntity>>
+            .Register(nameof(HasDependentItems))
+            .DefaultValue(false)
+            .AsReadOnly();
 
         /// <summary>
         /// Identifies the <see cref="HasDependentItems"/> dependency property.

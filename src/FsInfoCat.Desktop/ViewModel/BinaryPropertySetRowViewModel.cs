@@ -11,9 +11,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="Hash"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty HashProperty = DependencyProperty.Register(nameof(Hash), typeof(MD5Hash?), typeof(BinaryPropertySetRowViewModel<TEntity>),
-                new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as BinaryPropertySetRowViewModel<TEntity>)?.OnHashPropertyChanged((MD5Hash?)e.OldValue, (MD5Hash?)e.NewValue)));
+        public static readonly DependencyProperty HashProperty = ColumnPropertyBuilder<MD5Hash?, BinaryPropertySetRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IBinaryPropertySet.Hash))
+            .OnChanged((DependencyObject d, MD5Hash? oldValue, MD5Hash? newValue) =>
+                (d as BinaryPropertySetRowViewModel<TEntity>).OnHashPropertyChanged(oldValue, newValue))
+            .AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -26,7 +28,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Hash"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Hash"/> property.</param>
-        protected void OnHashPropertyChanged(MD5Hash? oldValue, MD5Hash? newValue) { }
+        protected virtual void OnHashPropertyChanged(MD5Hash? oldValue, MD5Hash? newValue) { }
 
         #endregion
         #region Length Property Members
@@ -34,9 +36,12 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="Length"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty LengthProperty = DependencyProperty.Register(nameof(Length), typeof(long), typeof(BinaryPropertySetRowViewModel<TEntity>),
-                new PropertyMetadata(0L, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as BinaryPropertySetRowViewModel<TEntity>)?.OnLengthPropertyChanged((long)e.OldValue, (long)e.NewValue)));
+        public static readonly DependencyProperty LengthProperty = ColumnPropertyBuilder<long, BinaryPropertySetRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IBinaryPropertySet.Length))
+            .DefaultValue(0L)
+            .OnChanged((DependencyObject d, long oldValue, long newValue) =>
+                (d as BinaryPropertySetRowViewModel<TEntity>).OnLengthPropertyChanged(oldValue, newValue))
+            .AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -49,7 +54,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Length"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Length"/> property.</param>
-        protected void OnLengthPropertyChanged(long oldValue, long newValue) { }
+        protected virtual void OnLengthPropertyChanged(long oldValue, long newValue) { }
 
         #endregion
 

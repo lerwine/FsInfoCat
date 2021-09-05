@@ -65,8 +65,10 @@ namespace FsInfoCat.Desktop.ViewModel
         #endregion
         #region RootPath Property Members
 
-        private static readonly DependencyPropertyKey RootPathPropertyKey = DependencyProperty.RegisterReadOnly(nameof(RootPath), typeof(string), typeof(VolumeListItemViewModel<TEntity>),
-            new PropertyMetadata(""));
+        private static readonly DependencyPropertyKey RootPathPropertyKey = ColumnPropertyBuilder<string, VolumeListItemViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IVolumeListItem.RootPath))
+            .DefaultValue("")
+            .AsReadOnly();
 
         /// <summary>
         /// Identifies the <see cref="RootPath"/> dependency property.
@@ -82,8 +84,10 @@ namespace FsInfoCat.Desktop.ViewModel
         #endregion
         #region RootSubdirectoryCount Property Members
 
-        private static readonly DependencyPropertyKey RootSubdirectoryCountPropertyKey = DependencyProperty.RegisterReadOnly(nameof(RootSubdirectoryCount), typeof(long),
-            typeof(VolumeListItemViewModel<TEntity>), new PropertyMetadata(0L));
+        private static readonly DependencyPropertyKey RootSubdirectoryCountPropertyKey = ColumnPropertyBuilder<long, VolumeListItemViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IVolumeListItem.RootSubdirectoryCount))
+            .DefaultValue(0L)
+            .AsReadOnly();
 
         /// <summary>
         /// Identifies the <see cref="RootSubdirectoryCount"/> dependency property.
@@ -99,8 +103,10 @@ namespace FsInfoCat.Desktop.ViewModel
         #endregion
         #region RootFileCount Property Members
 
-        private static readonly DependencyPropertyKey RootFileCountPropertyKey = DependencyProperty.RegisterReadOnly(nameof(RootFileCount), typeof(long),
-            typeof(VolumeListItemViewModel<TEntity>), new PropertyMetadata(0L));
+        private static readonly DependencyPropertyKey RootFileCountPropertyKey = ColumnPropertyBuilder<long, VolumeListItemViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IVolumeListItem.RootFileCount))
+            .DefaultValue(0L)
+            .AsReadOnly();
 
         /// <summary>
         /// Identifies the <see cref="RootFileCount"/> dependency property.
@@ -116,8 +122,10 @@ namespace FsInfoCat.Desktop.ViewModel
         #endregion
         #region AccessErrorCount Property Members
 
-        private static readonly DependencyPropertyKey AccessErrorCountPropertyKey = DependencyProperty.RegisterReadOnly(nameof(AccessErrorCount), typeof(long), typeof(VolumeListItemViewModel<TEntity>),
-                new PropertyMetadata(0L));
+        private static readonly DependencyPropertyKey AccessErrorCountPropertyKey = ColumnPropertyBuilder<long, VolumeListItemViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IVolumeListItem.AccessErrorCount))
+            .DefaultValue(0L)
+            .AsReadOnly();
 
         /// <summary>
         /// Identifies the <see cref="AccessErrorCount"/> dependency property.
@@ -133,8 +141,10 @@ namespace FsInfoCat.Desktop.ViewModel
         #endregion
         #region SharedTagCount Property Members
 
-        private static readonly DependencyPropertyKey SharedTagCountPropertyKey = DependencyProperty.RegisterReadOnly(nameof(SharedTagCount), typeof(long), typeof(VolumeListItemViewModel<TEntity>),
-                new PropertyMetadata(0L));
+        private static readonly DependencyPropertyKey SharedTagCountPropertyKey = ColumnPropertyBuilder<long, VolumeListItemViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IVolumeListItem.SharedTagCount))
+            .DefaultValue(0L)
+            .AsReadOnly();
 
         /// <summary>
         /// Identifies the <see cref="SharedTagCount"/> dependency property.
@@ -150,8 +160,10 @@ namespace FsInfoCat.Desktop.ViewModel
         #endregion
         #region PersonalTagCount Property Members
 
-        private static readonly DependencyPropertyKey PersonalTagCountPropertyKey = DependencyProperty.RegisterReadOnly(nameof(PersonalTagCount), typeof(long), typeof(VolumeListItemViewModel<TEntity>),
-                new PropertyMetadata(0L));
+        private static readonly DependencyPropertyKey PersonalTagCountPropertyKey = ColumnPropertyBuilder<long, VolumeListItemViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IVolumeListItem.PersonalTagCount))
+            .DefaultValue(0L)
+            .AsReadOnly();
 
         /// <summary>
         /// Identifies the <see cref="PersonalTagCount"/> dependency property.

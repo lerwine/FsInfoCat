@@ -49,7 +49,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="CurrentFileSystem"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="CurrentFileSystem"/> property.</param>
-        protected void OnCurrentFileSystemPropertyChanged(FileSystem oldValue, FileSystem newValue)
+        protected virtual void OnCurrentFileSystemPropertyChanged(FileSystem oldValue, FileSystem newValue)
         {
             // DEFERRED: Implement OnCurrentFileSystemPropertyChanged Logic
         }

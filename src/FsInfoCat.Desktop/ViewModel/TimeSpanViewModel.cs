@@ -60,7 +60,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="IsRequired"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="IsRequired"/> property.</param>
-        protected void OnIsRequiredPropertyChanged(bool oldValue, bool newValue)
+        protected virtual void OnIsRequiredPropertyChanged(bool oldValue, bool newValue)
         {
             if (!(Value.HasValue || DaysValue.HasValue || Hours24Value.HasValue || MinutesValue.HasValue))
             {
@@ -160,7 +160,7 @@ namespace FsInfoCat.Desktop.ViewModel
             ValidationMessage = args.ValidationMessage;
         }
 
-        protected void OnValidateValue(PropertyValidatingEventArgs<TimeSpan?, (string DaysMessage, string HoursMessage, string MinutesMessage)> args) =>
+        protected virtual void OnValidateValue(PropertyValidatingEventArgs<TimeSpan?, (string DaysMessage, string HoursMessage, string MinutesMessage)> args) =>
             ValidateValue?.Invoke(this, args);
 
         #endregion
@@ -191,7 +191,7 @@ namespace FsInfoCat.Desktop.ViewModel
             private set => SetValue(AggregateValidationMessagePropertyKey, value);
         }
 
-        protected void OnAggregateValidationMessagePropertyChanged(DependencyPropertyChangedEventArgs args)
+        protected virtual void OnAggregateValidationMessagePropertyChanged(DependencyPropertyChangedEventArgs args)
         {
             try { AggregateValidationMessagePropertyChanged?.Invoke(this, args); }
             finally { HasErrors = !string.IsNullOrWhiteSpace(args.NewValue as string); }
@@ -271,7 +271,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="ValidationMessage"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="ValidationMessage"/> property.</param>
-        protected void OnValidationMessagePropertyChanged(string oldValue, string newValue)
+        protected virtual void OnValidationMessagePropertyChanged(string oldValue, string newValue)
         {
             try { UpdateAggregateValidationMessage(MinutesValidationMessage, HoursValidationMessage, DaysValidationMessage, newValue); }
             finally { RaiseDataErrorsChanged(nameof(Value)); }
@@ -302,7 +302,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="DaysValue"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="DaysValue"/> property.</param>
-        protected void OnDaysValuePropertyChanged(int? oldValue, int? newValue)
+        protected virtual void OnDaysValuePropertyChanged(int? oldValue, int? newValue)
         {
             PropertyValidatingEventArgs<int?, (int? Hours, int? Minutes)> args = new(newValue, nameof(DaysValue), (Hours24Value, MinutesValue));
             if (newValue.HasValue)
@@ -365,7 +365,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="DaysValidationMessage"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="DaysValidationMessage"/> property.</param>
-        protected void OnDaysValidationMessagePropertyChanged(string oldValue, string newValue)
+        protected virtual void OnDaysValidationMessagePropertyChanged(string oldValue, string newValue)
         {
             try { UpdateAggregateValidationMessage(MinutesValidationMessage, HoursValidationMessage, newValue, ValidationMessage); }
             finally { RaiseDataErrorsChanged(nameof(DaysValue)); }
@@ -396,7 +396,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Hours24Value"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Hours24Value"/> property.</param>
-        protected void OnHours24ValuePropertyChanged(int? oldValue, int? newValue)
+        protected virtual void OnHours24ValuePropertyChanged(int? oldValue, int? newValue)
         {
             PropertyValidatingEventArgs<int?, (int? Days, int? Minutes)> args = new(newValue, nameof(Hours24Value), (DaysValue, MinutesValue));
             if (newValue.HasValue)
@@ -486,7 +486,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Hours24ValidationMessage"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Hours24ValidationMessage"/> property.</param>
-        protected void OnHours24ValidationMessagePropertyChanged(string oldValue, string newValue)
+        protected virtual void OnHours24ValidationMessagePropertyChanged(string oldValue, string newValue)
         {
             try { HoursValidationMessage = string.IsNullOrEmpty(newValue) ? Hours12ValidationMessage : newValue; }
             finally { RaiseDataErrorsChanged(nameof(Hours24Value)); }
@@ -512,7 +512,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="IsPm"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="IsPm"/> property.</param>
-        protected void OnIsPmPropertyChanged(bool oldValue, bool newValue)
+        protected virtual void OnIsPmPropertyChanged(bool oldValue, bool newValue)
         {
             bool ignoreChange = Interlocked.Increment(ref _valueChanging) != 1;
             try
@@ -567,7 +567,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Hours12Value"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Hours12Value"/> property.</param>
-        protected void OnHours12ValuePropertyChanged(int? oldValue, int? newValue)
+        protected virtual void OnHours12ValuePropertyChanged(int? oldValue, int? newValue)
         {
             PropertyValidatingEventArgs<int?, (int? Days, int? Minutes, bool IsPm)> args = new(newValue, nameof(Hours12Value), (DaysValue, MinutesValue, IsPm));
             if (newValue.HasValue)
@@ -634,7 +634,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Hours12ValidationMessage"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Hours12ValidationMessage"/> property.</param>
-        protected void OnHours12ValidationMessagePropertyChanged(string oldValue, string newValue)
+        protected virtual void OnHours12ValidationMessagePropertyChanged(string oldValue, string newValue)
         {
             try { HoursValidationMessage = string.IsNullOrEmpty(newValue) ? Hours24ValidationMessage : newValue; }
             finally { RaiseDataErrorsChanged(nameof(Hours12Value)); }
@@ -662,7 +662,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="HoursValidationMessage"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="HoursValidationMessage"/> property.</param>
-        protected void OnHoursValidationMessagePropertyChanged(string oldValue, string newValue) =>
+        protected virtual void OnHoursValidationMessagePropertyChanged(string oldValue, string newValue) =>
             UpdateAggregateValidationMessage(MinutesValidationMessage, newValue, DaysValidationMessage, ValidationMessage);
 
         #endregion
@@ -690,7 +690,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="MinutesValue"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="MinutesValue"/> property.</param>
-        protected void OnMinutesValuePropertyChanged(int? oldValue, int? newValue)
+        protected virtual void OnMinutesValuePropertyChanged(int? oldValue, int? newValue)
         {
             PropertyValidatingEventArgs<int?, (int? Days, int? Hours)> args = new(newValue, nameof(MinutesValue), (DaysValue, Hours24Value));
             if (newValue.HasValue)
@@ -753,7 +753,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="MinutesValidationMessage"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="MinutesValidationMessage"/> property.</param>
-        protected void OnMinutesValidationMessagePropertyChanged(string oldValue, string newValue)
+        protected virtual void OnMinutesValidationMessagePropertyChanged(string oldValue, string newValue)
         {
             try { UpdateAggregateValidationMessage(newValue, HoursValidationMessage, DaysValidationMessage, ValidationMessage); }
             finally { RaiseDataErrorsChanged(nameof(MinutesValue)); }

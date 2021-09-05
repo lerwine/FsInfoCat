@@ -73,7 +73,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Root"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Root"/> property.</param>
-        protected void OnRootPropertyChanged(TSubdirectoryItem oldValue, TSubdirectoryItem newValue) { }
+        protected virtual void OnRootPropertyChanged(TSubdirectoryItem oldValue, TSubdirectoryItem newValue) { }
 
         #endregion
         #region Logs Property Members

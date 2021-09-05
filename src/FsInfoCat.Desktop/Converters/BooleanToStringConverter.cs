@@ -40,6 +40,13 @@ namespace FsInfoCat.Desktop.Converters
             set => SetValue(FalseValueProperty, value);
         }
 
+        public static string Convert(bool? value, string trueValue = null, string falseValue = null, string nullValue = "")
+        {
+            if (value.HasValue)
+                return value.Value ? (trueValue ?? FsInfoCat.Properties.Resources.DisplayName_Yes) : (falseValue ?? FsInfoCat.Properties.Resources.DisplayName_No);
+            return nullValue;
+        }
+
         public override string Convert(bool value, object parameter, CultureInfo culture) => value ? TrueValue : FalseValue;
 
         protected override object ConvertBack(string target, object parameter, CultureInfo culture) => (target == NullSource) ? null : target == TrueValue ? true : target == FalseValue ? false : target;

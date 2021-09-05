@@ -12,9 +12,13 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="DisplayName"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty DisplayNameProperty = DependencyProperty.Register(nameof(DisplayName), typeof(string),
-            typeof(CrawlConfigurationRowViewModel<TEntity>), new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as CrawlConfigurationRowViewModel<TEntity>)?.OnDisplayNamePropertyChanged(e.OldValue as string, e.NewValue as string)));
+        public static readonly DependencyProperty DisplayNameProperty = ColumnPropertyBuilder<string, CrawlConfigurationRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(ICrawlConfigurationRow.DisplayName))
+            .DefaultValue("")
+            .OnChanged((DependencyObject d, string oldValue, string newValue) =>
+                (d as CrawlConfigurationRowViewModel<TEntity>).OnDisplayNamePropertyChanged(oldValue, newValue))
+            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default)
+            .AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -27,10 +31,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="DisplayName"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="DisplayName"/> property.</param>
-        protected void OnDisplayNamePropertyChanged(string oldValue, string newValue)
-        {
-            // TODO: Implement OnDisplayNamePropertyChanged Logic
-        }
+        protected virtual void OnDisplayNamePropertyChanged(string oldValue, string newValue) { }
 
         #endregion
         #region Notes Property Members
@@ -38,9 +39,13 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="Notes"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty NotesProperty = DependencyProperty.Register(nameof(Notes), typeof(string),
-            typeof(CrawlConfigurationRowViewModel<TEntity>), new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as CrawlConfigurationRowViewModel<TEntity>)?.OnNotesPropertyChanged(e.OldValue as string, e.NewValue as string)));
+        public static readonly DependencyProperty NotesProperty = ColumnPropertyBuilder<string, CrawlConfigurationRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(ICrawlConfigurationRow.Notes))
+            .DefaultValue("")
+            .OnChanged((DependencyObject d, string oldValue, string newValue) =>
+                (d as CrawlConfigurationRowViewModel<TEntity>).OnNotesPropertyChanged(oldValue, newValue))
+            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default)
+            .AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -53,10 +58,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Notes"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Notes"/> property.</param>
-        protected void OnNotesPropertyChanged(string oldValue, string newValue)
-        {
-            // TODO: Implement OnNotesPropertyChanged Logic
-        }
+        protected virtual void OnNotesPropertyChanged(string oldValue, string newValue) { }
 
         #endregion
         //public abstract CrawlStatus StatusValue { get; set; }
@@ -70,9 +72,12 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="RescheduleFromJobEnd"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty RescheduleFromJobEndProperty = DependencyProperty.Register(nameof(RescheduleFromJobEnd), typeof(bool),
-            typeof(CrawlConfigurationRowViewModel<TEntity>), new PropertyMetadata(false, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as CrawlConfigurationRowViewModel<TEntity>)?.OnRescheduleFromJobEndPropertyChanged((bool)e.OldValue, (bool)e.NewValue)));
+        public static readonly DependencyProperty RescheduleFromJobEndProperty = ColumnPropertyBuilder<bool, CrawlConfigurationRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(ICrawlConfigurationRow.RescheduleFromJobEnd))
+            .DefaultValue(false)
+            .OnChanged((DependencyObject d, bool oldValue, bool newValue) =>
+                (d as CrawlConfigurationRowViewModel<TEntity>).OnRescheduleFromJobEndPropertyChanged(oldValue, newValue))
+            .AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -85,10 +90,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="RescheduleFromJobEnd"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="RescheduleFromJobEnd"/> property.</param>
-        protected void OnRescheduleFromJobEndPropertyChanged(bool oldValue, bool newValue)
-        {
-            // TODO: Implement OnRescheduleFromJobEndPropertyChanged Logic
-        }
+        protected virtual void OnRescheduleFromJobEndPropertyChanged(bool oldValue, bool newValue) { }
 
         #endregion
         #region RescheduleAfterFail Property Members
@@ -96,9 +98,12 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="RescheduleAfterFail"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty RescheduleAfterFailProperty = DependencyProperty.Register(nameof(RescheduleAfterFail), typeof(bool),
-            typeof(CrawlConfigurationRowViewModel<TEntity>), new PropertyMetadata(false, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as CrawlConfigurationRowViewModel<TEntity>)?.OnRescheduleAfterFailPropertyChanged((bool)e.OldValue, (bool)e.NewValue)));
+        public static readonly DependencyProperty RescheduleAfterFailProperty = ColumnPropertyBuilder<bool, CrawlConfigurationRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(ICrawlConfigurationRow.RescheduleAfterFail))
+            .DefaultValue(false)
+            .OnChanged((DependencyObject d, bool oldValue, bool newValue) =>
+                (d as CrawlConfigurationRowViewModel<TEntity>).OnRescheduleAfterFailPropertyChanged(oldValue, newValue))
+            .AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -111,10 +116,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="RescheduleAfterFail"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="RescheduleAfterFail"/> property.</param>
-        protected void OnRescheduleAfterFailPropertyChanged(bool oldValue, bool newValue)
-        {
-            // TODO: Implement OnRescheduleAfterFailPropertyChanged Logic
-        }
+        protected virtual void OnRescheduleAfterFailPropertyChanged(bool oldValue, bool newValue) { }
 
         #endregion
         #region MaxRecursionDepth Property Members
@@ -122,10 +124,12 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="MaxRecursionDepth"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty MaxRecursionDepthProperty = DependencyProperty.Register(nameof(MaxRecursionDepth), typeof(ushort),
-            typeof(CrawlConfigurationRowViewModel<TEntity>), new PropertyMetadata(DbConstants.DbColDefaultValue_MaxRecursionDepth,
-                (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                    (d as CrawlConfigurationRowViewModel<TEntity>)?.OnMaxRecursionDepthPropertyChanged((ushort)e.OldValue, (ushort)e.NewValue)));
+        public static readonly DependencyProperty MaxRecursionDepthProperty = ColumnPropertyBuilder<ushort, CrawlConfigurationRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(ICrawlConfigurationRow.MaxRecursionDepth))
+            .DefaultValue(0)
+            .OnChanged((DependencyObject d, ushort oldValue, ushort newValue) =>
+                (d as CrawlConfigurationRowViewModel<TEntity>).OnMaxRecursionDepthPropertyChanged(oldValue, newValue))
+            .AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -138,10 +142,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="MaxRecursionDepth"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="MaxRecursionDepth"/> property.</param>
-        protected void OnMaxRecursionDepthPropertyChanged(ushort oldValue, ushort newValue)
-        {
-            // TODO: Implement OnMaxRecursionDepthPropertyChanged Logic
-        }
+        protected virtual void OnMaxRecursionDepthPropertyChanged(ushort oldValue, ushort newValue) { }
 
         #endregion
         #region MaxTotalItems Property Members
@@ -149,9 +150,12 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="MaxTotalItems"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty MaxTotalItemsProperty = DependencyProperty.Register(nameof(MaxTotalItems), typeof(ulong?),
-            typeof(CrawlConfigurationRowViewModel<TEntity>), new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as CrawlConfigurationRowViewModel<TEntity>)?.OnMaxTotalItemsPropertyChanged((ulong?)e.OldValue, (ulong?)e.NewValue)));
+        public static readonly DependencyProperty MaxTotalItemsProperty = ColumnPropertyBuilder<ulong?, CrawlConfigurationRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(ICrawlConfigurationRow.MaxTotalItems))
+            .DefaultValue(0)
+            .OnChanged((DependencyObject d, ulong? oldValue, ulong? newValue) =>
+                (d as CrawlConfigurationRowViewModel<TEntity>).OnMaxTotalItemsPropertyChanged(oldValue, newValue))
+            .AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -164,18 +168,15 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="MaxTotalItems"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="MaxTotalItems"/> property.</param>
-        protected void OnMaxTotalItemsPropertyChanged(ulong? oldValue, ulong? newValue)
-        {
-            // TODO: Implement OnMaxTotalItemsPropertyChanged Logic
-        }
+        protected virtual void OnMaxTotalItemsPropertyChanged(ulong? oldValue, ulong? newValue) { }
 
         #endregion
         //public abstract TimeSpan? TTL { get; set; }
         #region MaxDuration Property Members
 
-        private static readonly DependencyPropertyKey MaxDurationPropertyKey = DependencyProperty.RegisterReadOnly(nameof(MaxDuration), typeof(TimeSpanViewModel),
-            typeof(CrawlConfigurationRowViewModel<TEntity>),
-                new PropertyMetadata(null));
+        private static readonly DependencyPropertyKey MaxDurationPropertyKey = ColumnPropertyBuilder<TimeSpanViewModel, CrawlConfigurationRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(MaxDuration), nameof(ICrawlConfigurationRow.TTL))
+            .AsReadOnly();
 
         /// <summary>
         /// Identifies the <see cref="MaxDuration"/> dependency property.

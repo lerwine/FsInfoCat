@@ -24,6 +24,20 @@ namespace FsInfoCat.Desktop.Converters
             set => SetValue(ShortProperty, value);
         }
 
+        public static TimeSpan? FromMediaDuration(ulong? value)
+        {
+            if (value.HasValue)
+                return TimeSpan.FromMilliseconds((long)(value.Value / 10UL));
+            return null;
+        }
+
+        public static ulong? ToMediaDuration(TimeSpan? value)
+        {
+            if (value.HasValue)
+                return System.Convert.ToUInt64(value.Value.TotalMilliseconds) * 10UL;
+            return null;
+        }
+
         public static string ToLongTimeSpanString(TimeSpan value)
         {
             if (value.Days == 0)

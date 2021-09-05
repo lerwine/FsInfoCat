@@ -208,7 +208,7 @@ namespace FsInfoCat.Desktop.ViewModel
 
         public Commands.RelayCommand ValueSelectedCommand => (Commands.RelayCommand)GetValue(ValueSelectedCommandProperty);
 
-        protected void OnValueSelectedExecute(object parameter)
+        protected virtual void OnValueSelectedExecute(object parameter)
         {
 #if DEBUG
             if (DesignerProperties.GetIsInDesignMode(this))

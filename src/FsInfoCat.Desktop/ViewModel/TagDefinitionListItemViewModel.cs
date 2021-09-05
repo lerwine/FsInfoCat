@@ -65,8 +65,10 @@ namespace FsInfoCat.Desktop.ViewModel
         #endregion
         #region FileTagCount Property Members
 
-        private static readonly DependencyPropertyKey FileTagCountPropertyKey = DependencyProperty.RegisterReadOnly(nameof(FileTagCount), typeof(long), typeof(TagDefinitionListItemViewModel<TEntity>),
-                new PropertyMetadata(0L));
+        private static readonly DependencyPropertyKey FileTagCountPropertyKey = ColumnPropertyBuilder<long, TagDefinitionListItemViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(ITagDefinitionListItem.FileTagCount))
+            .DefaultValue(0L)
+            .AsReadOnly();
 
         /// <summary>
         /// Identifies the <see cref="FileTagCount"/> dependency property.
@@ -82,8 +84,10 @@ namespace FsInfoCat.Desktop.ViewModel
         #endregion
         #region SubdirectoryTagCount Property Members
 
-        private static readonly DependencyPropertyKey SubdirectoryTagCountPropertyKey = DependencyProperty.RegisterReadOnly(nameof(SubdirectoryTagCount), typeof(long),
-            typeof(TagDefinitionListItemViewModel<TEntity>), new PropertyMetadata(0L));
+        private static readonly DependencyPropertyKey SubdirectoryTagCountPropertyKey = ColumnPropertyBuilder<long, TagDefinitionListItemViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(ITagDefinitionListItem.SubdirectoryTagCount))
+            .DefaultValue(0L)
+            .AsReadOnly();
 
         /// <summary>
         /// Identifies the <see cref="SubdirectoryTagCount"/> dependency property.
@@ -99,8 +103,10 @@ namespace FsInfoCat.Desktop.ViewModel
         #endregion
         #region VolumeTagCount Property Members
 
-        private static readonly DependencyPropertyKey VolumeTagCountPropertyKey = DependencyProperty.RegisterReadOnly(nameof(VolumeTagCount), typeof(long),
-            typeof(TagDefinitionListItemViewModel<TEntity>), new PropertyMetadata(0L));
+        private static readonly DependencyPropertyKey VolumeTagCountPropertyKey = ColumnPropertyBuilder<long, TagDefinitionListItemViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(ITagDefinitionListItem.VolumeTagCount))
+            .DefaultValue(0L)
+            .AsReadOnly();
 
         /// <summary>
         /// Identifies the <see cref="VolumeTagCount"/> dependency property.

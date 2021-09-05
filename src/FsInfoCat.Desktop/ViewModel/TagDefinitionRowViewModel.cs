@@ -12,9 +12,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="Name"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty NameProperty = DependencyProperty.Register(nameof(Name), typeof(string), typeof(TagDefinitionRowViewModel<TEntity>),
-                new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as TagDefinitionRowViewModel<TEntity>)?.OnNamePropertyChanged(e.OldValue as string, e.NewValue as string)));
+        public static readonly DependencyProperty NameProperty = ColumnPropertyBuilder<string, TagDefinitionRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(ITagDefinitionRow.Name))
+            .DefaultValue("")
+            .OnChanged((d, oldValue, newValue) => (d as TagDefinitionRowViewModel<TEntity>)?.OnNamePropertyChanged(oldValue, newValue))
+            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -27,10 +29,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Name"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Name"/> property.</param>
-        protected void OnNamePropertyChanged(string oldValue, string newValue)
-        {
-            // TODO: Implement OnNamePropertyChanged Logic
-        }
+        protected virtual void OnNamePropertyChanged(string oldValue, string newValue) { }
 
         #endregion
         #region Description Property Members
@@ -38,9 +37,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="Description"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty DescriptionProperty = DependencyProperty.Register(nameof(Description), typeof(string),
-            typeof(TagDefinitionRowViewModel<TEntity>), new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as TagDefinitionRowViewModel<TEntity>)?.OnDescriptionPropertyChanged(e.OldValue as string, e.NewValue as string)));
+        public static readonly DependencyProperty DescriptionProperty = ColumnPropertyBuilder<string, TagDefinitionRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(ITagDefinitionRow.Description))
+            .DefaultValue("")
+            .OnChanged((d, oldValue, newValue) => (d as TagDefinitionRowViewModel<TEntity>)?.OnDescriptionPropertyChanged(oldValue, newValue))
+            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -53,10 +54,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Description"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Description"/> property.</param>
-        protected void OnDescriptionPropertyChanged(string oldValue, string newValue)
-        {
-            // TODO: Implement OnDescriptionPropertyChanged Logic
-        }
+        protected virtual void OnDescriptionPropertyChanged(string oldValue, string newValue) { }
 
         #endregion
         #region IsInactive Property Members
@@ -64,9 +62,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="IsInactive"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty IsInactiveProperty = DependencyProperty.Register(nameof(IsInactive), typeof(bool),
-            typeof(TagDefinitionRowViewModel<TEntity>), new PropertyMetadata(false, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as TagDefinitionRowViewModel<TEntity>)?.OnIsInactivePropertyChanged((bool)e.OldValue, (bool)e.NewValue)));
+        public static readonly DependencyProperty IsInactiveProperty = ColumnPropertyBuilder<bool, TagDefinitionRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(ITagDefinitionRow.IsInactive))
+            .DefaultValue(false)
+            .OnChanged((d, oldValue, newValue) => (d as TagDefinitionRowViewModel<TEntity>)?.OnIsInactivePropertyChanged(oldValue, newValue))
+            .AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -79,10 +79,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="IsInactive"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="IsInactive"/> property.</param>
-        protected void OnIsInactivePropertyChanged(bool oldValue, bool newValue)
-        {
-            // TODO: Implement OnIsInactivePropertyChanged Logic
-        }
+        protected virtual void OnIsInactivePropertyChanged(bool oldValue, bool newValue) { }
 
         #endregion
 #pragma warning restore IDE0060 // Remove unused parameter

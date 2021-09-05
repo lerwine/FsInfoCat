@@ -65,8 +65,10 @@ namespace FsInfoCat.Desktop.ViewModel
         #endregion
         #region Event Property Members
 
-        private static readonly DependencyPropertyKey EventPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Event), typeof(string),
-            typeof(PhotoPropertiesListItemViewModel<TEntity>), new PropertyMetadata(""));
+        private static readonly DependencyPropertyKey EventPropertyKey = ColumnPropertyBuilder<string, PhotoPropertiesListItemViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IPhotoPropertiesListItem.Event))
+            .DefaultValue("")
+            .AsReadOnly();
 
         /// <summary>
         /// Identifies the <see cref="Event"/> dependency property.
@@ -82,8 +84,10 @@ namespace FsInfoCat.Desktop.ViewModel
         #endregion
         #region PeopleNames Property Members
 
-        private static readonly DependencyPropertyKey PeopleNamesPropertyKey = DependencyProperty.RegisterReadOnly(nameof(PeopleNames), typeof(string),
-            typeof(PhotoPropertiesListItemViewModel<TEntity>), new PropertyMetadata(""));
+        private static readonly DependencyPropertyKey PeopleNamesPropertyKey = ColumnPropertyBuilder<string, PhotoPropertiesListItemViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IPhotoPropertiesListItem.PeopleNames))
+            .DefaultValue("")
+            .AsReadOnly();
 
         /// <summary>
         /// Identifies the <see cref="PeopleNames"/> dependency property.
@@ -99,9 +103,12 @@ namespace FsInfoCat.Desktop.ViewModel
         #endregion
         #region ExistingFileCount Property Members
 
-        private static readonly DependencyPropertyKey ExistingFileCountPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ExistingFileCount), typeof(long),
-            typeof(PhotoPropertiesListItemViewModel<TEntity>), new PropertyMetadata(0L, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-            (d as PhotoPropertiesListItemViewModel<TEntity>).OnExistingFileCountPropertyChanged((long)e.OldValue, (long)e.NewValue)));
+        private static readonly DependencyPropertyKey ExistingFileCountPropertyKey = ColumnPropertyBuilder<long, PhotoPropertiesListItemViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IPhotoPropertiesListItem.ExistingFileCount))
+            .DefaultValue(0L)
+            .OnChanged((DependencyObject d, long oldValue, long newValue) =>
+                (d as PhotoPropertiesListItemViewModel<TEntity>).OnExistingFileCountPropertyChanged(oldValue, newValue))
+            .AsReadOnly();
 
         /// <summary>
         /// Identifies the <see cref="ExistingFileCount"/> dependency property.
@@ -124,8 +131,10 @@ namespace FsInfoCat.Desktop.ViewModel
         #endregion
         #region TotalFileCount Property Members
 
-        private static readonly DependencyPropertyKey TotalFileCountPropertyKey = DependencyProperty.RegisterReadOnly(nameof(TotalFileCount), typeof(long), typeof(PhotoPropertiesListItemViewModel<TEntity>),
-                new PropertyMetadata(0L));
+        private static readonly DependencyPropertyKey TotalFileCountPropertyKey = ColumnPropertyBuilder<long, PhotoPropertiesListItemViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IPhotoPropertiesListItem.TotalFileCount))
+            .DefaultValue(0L)
+            .AsReadOnly();
 
         /// <summary>
         /// Identifies the <see cref="TotalFileCount"/> dependency property.
@@ -146,6 +155,13 @@ namespace FsInfoCat.Desktop.ViewModel
             PeopleNames = entity.PeopleNames.ToNormalizedDelimitedText();
             ExistingFileCount = entity.ExistingFileCount;
             TotalFileCount = entity.TotalFileCount;
+            CommonAttached.SetListItemTitle(this, CalculateDisplayText());
+        }
+
+        protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
+        {
+            base.OnPropertyChanged(e);
+            CommonAttached.SetListItemTitle(this, CalculateDisplayText());
         }
 
         protected override void OnEntityPropertyChanged(string propertyName)

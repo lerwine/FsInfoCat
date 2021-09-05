@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel
@@ -14,9 +16,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="DatePlayExpires"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty DatePlayExpiresProperty = DependencyProperty.Register(nameof(DatePlayExpires), typeof(DateTime?),
-            typeof(DRMPropertiesRowViewModel<TEntity>), new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as DRMPropertiesRowViewModel<TEntity>)?.OnDatePlayExpiresPropertyChanged((DateTime?)e.OldValue, (DateTime?)e.NewValue)));
+        public static readonly DependencyProperty DatePlayExpiresProperty = ColumnPropertyBuilder<DateTime?, DRMPropertiesRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IDRMProperties.DatePlayExpires))
+            .DefaultValue(null)
+            .OnChanged((d, oldValue, newValue) => (d as DRMPropertiesRowViewModel<TEntity>)?.OnDatePlayExpiresPropertyChanged(oldValue, newValue))
+            .AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -29,10 +33,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="DatePlayExpires"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="DatePlayExpires"/> property.</param>
-        protected void OnDatePlayExpiresPropertyChanged(DateTime? oldValue, DateTime? newValue)
-        {
-            // TODO: Implement OnDatePlayExpiresPropertyChanged Logic
-        }
+        protected virtual void OnDatePlayExpiresPropertyChanged(DateTime? oldValue, DateTime? newValue) { }
 
         #endregion
         #region DatePlayStarts Property Members
@@ -40,9 +41,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="DatePlayStarts"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty DatePlayStartsProperty = DependencyProperty.Register(nameof(DatePlayStarts), typeof(DateTime?),
-            typeof(DRMPropertiesRowViewModel<TEntity>), new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as DRMPropertiesRowViewModel<TEntity>)?.OnDatePlayStartsPropertyChanged((DateTime?)e.OldValue, (DateTime?)e.NewValue)));
+        public static readonly DependencyProperty DatePlayStartsProperty = ColumnPropertyBuilder<DateTime?, DRMPropertiesRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IDRMProperties.DatePlayStarts))
+            .DefaultValue(null)
+            .OnChanged((d, oldValue, newValue) => (d as DRMPropertiesRowViewModel<TEntity>)?.OnDatePlayStartsPropertyChanged(oldValue, newValue))
+            .AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -55,10 +58,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="DatePlayStarts"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="DatePlayStarts"/> property.</param>
-        protected void OnDatePlayStartsPropertyChanged(DateTime? oldValue, DateTime? newValue)
-        {
-            // TODO: Implement OnDatePlayStartsPropertyChanged Logic
-        }
+        protected virtual void OnDatePlayStartsPropertyChanged(DateTime? oldValue, DateTime? newValue) { }
 
         #endregion
         #region Description Property Members
@@ -66,9 +66,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="Description"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty DescriptionProperty = DependencyProperty.Register(nameof(Description), typeof(string),
-            typeof(DRMPropertiesRowViewModel<TEntity>), new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as DRMPropertiesRowViewModel<TEntity>)?.OnDescriptionPropertyChanged(e.OldValue as string, e.NewValue as string)));
+        public static readonly DependencyProperty DescriptionProperty = ColumnPropertyBuilder<string, DRMPropertiesRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IDRMProperties.Description))
+            .DefaultValue("")
+            .OnChanged((d, oldValue, newValue) => (d as DRMPropertiesRowViewModel<TEntity>)?.OnDescriptionPropertyChanged(oldValue, newValue))
+            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -81,10 +83,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Description"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Description"/> property.</param>
-        protected void OnDescriptionPropertyChanged(string oldValue, string newValue)
-        {
-            // TODO: Implement OnDescriptionPropertyChanged Logic
-        }
+        protected virtual void OnDescriptionPropertyChanged(string oldValue, string newValue) { }
 
         #endregion
         #region IsProtected Property Members
@@ -92,9 +91,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="IsProtected"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty IsProtectedProperty = DependencyProperty.Register(nameof(IsProtected), typeof(bool?),
-            typeof(DRMPropertiesRowViewModel<TEntity>), new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as DRMPropertiesRowViewModel<TEntity>)?.OnIsProtectedPropertyChanged((bool?)e.OldValue, (bool?)e.NewValue)));
+        public static readonly DependencyProperty IsProtectedProperty = ColumnPropertyBuilder<bool?, DRMPropertiesRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IDRMProperties.IsProtected))
+            .DefaultValue(null)
+            .OnChanged((d, oldValue, newValue) => (d as DRMPropertiesRowViewModel<TEntity>)?.OnIsProtectedPropertyChanged(oldValue, newValue))
+            .AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -107,10 +108,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="IsProtected"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="IsProtected"/> property.</param>
-        protected void OnIsProtectedPropertyChanged(bool? oldValue, bool? newValue)
-        {
-            // TODO: Implement OnIsProtectedPropertyChanged Logic
-        }
+        protected virtual void OnIsProtectedPropertyChanged(bool? oldValue, bool? newValue) { }
 
         #endregion
         #region PlayCount Property Members
@@ -118,9 +116,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="PlayCount"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty PlayCountProperty = DependencyProperty.Register(nameof(PlayCount), typeof(uint?),
-            typeof(DRMPropertiesRowViewModel<TEntity>), new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as DRMPropertiesRowViewModel<TEntity>)?.OnPlayCountPropertyChanged((uint?)e.OldValue, (uint?)e.NewValue)));
+        public static readonly DependencyProperty PlayCountProperty = ColumnPropertyBuilder<uint?, DRMPropertiesRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IDRMProperties.PlayCount))
+            .DefaultValue(null)
+            .OnChanged((d, oldValue, newValue) => (d as DRMPropertiesRowViewModel<TEntity>)?.OnPlayCountPropertyChanged(oldValue, newValue))
+            .AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -133,10 +133,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="PlayCount"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="PlayCount"/> property.</param>
-        protected void OnPlayCountPropertyChanged(uint? oldValue, uint? newValue)
-        {
-            // TODO: Implement OnPlayCountPropertyChanged Logic
-        }
+        protected virtual void OnPlayCountPropertyChanged(uint? oldValue, uint? newValue) { }
 
         #endregion
 #pragma warning restore IDE0060 // Remove unused parameter
@@ -150,11 +147,17 @@ namespace FsInfoCat.Desktop.ViewModel
             PlayCount = entity.PlayCount;
         }
 
-        internal string CalculateDisplayText()
+        public IEnumerable<(string DisplayName, string Value)> GetNameValuePairs()
         {
-            // TODO: Calculate value for ListingViewModel<TEntity, TItem, TOptions>.SetItemDisplayText(string)
-            throw new NotImplementedException();
+            yield return (FsInfoCat.Properties.Resources.DisplayName_DatePlayStarts, DatePlayStarts?.ToString());
+            yield return (FsInfoCat.Properties.Resources.DisplayName_DatePlayExpires, DatePlayExpires?.ToString());
+            yield return (FsInfoCat.Properties.Resources.DisplayName_PlayCount, PlayCount?.ToString());
+            yield return (FsInfoCat.Properties.Resources.DisplayName_IsProtected, Converters.BooleanToStringConverter.Convert(IsProtected));
+            yield return (FsInfoCat.Properties.Resources.DisplayName_Description, Description.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
         }
+
+        internal string CalculateDisplayText(Func<(string DisplayName, string Value), bool> filter = null) => (filter is null) ?
+            StringExtensionMethods.ToKeyValueListString(GetNameValuePairs()) : StringExtensionMethods.ToKeyValueListString(GetNameValuePairs().Where(filter));
 
         protected override void OnEntityPropertyChanged(string propertyName)
         {

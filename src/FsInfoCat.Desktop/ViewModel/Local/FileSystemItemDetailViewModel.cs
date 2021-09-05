@@ -74,7 +74,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         /// <value>The <see cref="System.Windows.Input.ICommand"/> that implements the $command$ command.</value>
         public Commands.RelayCommand ShowViewOptions => (Commands.RelayCommand)GetValue(ShowViewOptionsProperty);
 
-        protected void OnShowViewOptions(object parameter)
+        protected virtual void OnShowViewOptions(object parameter)
         {
             // DEFERRED: Implement OnShowViewOptions Logic
         }
@@ -113,7 +113,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         /// <value>The <see cref="System.Windows.Input.ICommand"/> that implements the $command$ command.</value>
         public Commands.RelayCommand ViewOptionsOkClick => (Commands.RelayCommand)GetValue(ViewOptionsOkClickProperty);
 
-        protected void OnViewOptionsOkClick(object parameter)
+        protected virtual void OnViewOptionsOkClick(object parameter)
         {
             // DEFERRED: Implement OnViewOptionsOkClick Logic
         }
@@ -135,7 +135,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         /// <value>The <see cref="System.Windows.Input.ICommand"/> that implements the $command$ command.</value>
         public Commands.RelayCommand ViewOptionCancelClick => (Commands.RelayCommand)GetValue(ViewOptionCancelClickProperty);
 
-        protected void OnViewOptionCancelClick(object parameter)
+        protected virtual void OnViewOptionCancelClick(object parameter)
         {
             // DEFERRED: Implement OnViewOptionCancelClick Logic
         }

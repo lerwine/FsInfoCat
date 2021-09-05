@@ -29,13 +29,6 @@ namespace FsInfoCat.Desktop.Local.RecordedTVPropertySets
         public ListItemViewModel([DisallowNull] RecordedTVPropertiesListItem entity) : base(entity)
         {
             LastSynchronizedOn = entity.LastSynchronizedOn;
-            FilteredItemsViewModel.SetItemDisplayText(this, CalculateDisplayText());
-        }
-
-        protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
-        {
-            base.OnPropertyChanged(e);
-            FilteredItemsViewModel.SetItemDisplayText(this, CalculateDisplayText());
         }
     }
 }

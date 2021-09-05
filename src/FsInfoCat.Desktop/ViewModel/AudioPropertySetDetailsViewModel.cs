@@ -13,9 +13,9 @@ namespace FsInfoCat.Desktop.ViewModel
 
         protected ObservableCollection<TFileItem> BackingFiles { get; } = new();
 
-        private static readonly DependencyPropertyKey FilesPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Files),
-            typeof(ReadOnlyObservableCollection<TFileItem>),
-            typeof(AudioPropertySetDetailsViewModel<TEntity, TFileEntity, TFileItem>), new PropertyMetadata(null));
+        private static readonly DependencyPropertyKey FilesPropertyKey = ColumnPropertyBuilder<ObservableCollection<TFileItem>, AudioPropertySetDetailsViewModel<TEntity, TFileEntity, TFileItem>>
+            .RegisterEntityMapped<TEntity>(nameof(IAudioPropertySet.Files))
+            .AsReadOnly();
 
         /// <summary>
         /// Identifies the <see cref="Files"/> dependency property.

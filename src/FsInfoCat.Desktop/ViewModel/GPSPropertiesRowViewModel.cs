@@ -1,4 +1,7 @@
+using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel
@@ -12,9 +15,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="AreaInformation"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty AreaInformationProperty = DependencyProperty.Register(nameof(AreaInformation), typeof(string),
-            typeof(GPSPropertiesRowViewModel<TEntity>), new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as GPSPropertiesRowViewModel<TEntity>)?.OnAreaInformationPropertyChanged(e.OldValue as string, e.NewValue as string)));
+        public static readonly DependencyProperty AreaInformationProperty = ColumnPropertyBuilder<string, GPSPropertiesRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IGPSProperties.AreaInformation))
+            .DefaultValue("")
+            .OnChanged((d, oldValue, newValue) => (d as GPSPropertiesRowViewModel<TEntity>)?.OnAreaInformationPropertyChanged(oldValue, newValue))
+            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -27,10 +32,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="AreaInformation"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="AreaInformation"/> property.</param>
-        protected void OnAreaInformationPropertyChanged(string oldValue, string newValue)
-        {
-            // TODO: Implement OnAreaInformationPropertyChanged Logic
-        }
+        protected virtual void OnAreaInformationPropertyChanged(string oldValue, string newValue) { }
 
         #endregion
         #region LatitudeDegrees Property Members
@@ -38,9 +40,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="LatitudeDegrees"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty LatitudeDegreesProperty = DependencyProperty.Register(nameof(LatitudeDegrees), typeof(double?),
-            typeof(GPSPropertiesRowViewModel<TEntity>), new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as GPSPropertiesRowViewModel<TEntity>)?.OnLatitudeDegreesPropertyChanged((double?)e.OldValue, (double?)e.NewValue)));
+        public static readonly DependencyProperty LatitudeDegreesProperty = ColumnPropertyBuilder<double?, GPSPropertiesRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IGPSProperties.LatitudeDegrees))
+            .DefaultValue(null)
+            .OnChanged((d, oldValue, newValue) => (d as GPSPropertiesRowViewModel<TEntity>)?.OnLatitudeDegreesPropertyChanged(oldValue, newValue))
+            .AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -53,10 +57,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="LatitudeDegrees"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="LatitudeDegrees"/> property.</param>
-        protected void OnLatitudeDegreesPropertyChanged(double? oldValue, double? newValue)
-        {
-            // TODO: Implement OnLatitudeDegreesPropertyChanged Logic
-        }
+        protected virtual void OnLatitudeDegreesPropertyChanged(double? oldValue, double? newValue) { }
 
         #endregion
         #region LatitudeMinutes Property Members
@@ -64,9 +65,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="LatitudeMinutes"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty LatitudeMinutesProperty = DependencyProperty.Register(nameof(LatitudeMinutes), typeof(double?),
-            typeof(GPSPropertiesRowViewModel<TEntity>), new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as GPSPropertiesRowViewModel<TEntity>)?.OnLatitudeMinutesPropertyChanged((double?)e.OldValue, (double?)e.NewValue)));
+        public static readonly DependencyProperty LatitudeMinutesProperty = ColumnPropertyBuilder<double?, GPSPropertiesRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IGPSProperties.LatitudeMinutes))
+            .DefaultValue(null)
+            .OnChanged((d, oldValue, newValue) => (d as GPSPropertiesRowViewModel<TEntity>)?.OnLatitudeMinutesPropertyChanged(oldValue, newValue))
+            .AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -79,10 +82,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="LatitudeMinutes"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="LatitudeMinutes"/> property.</param>
-        protected void OnLatitudeMinutesPropertyChanged(double? oldValue, double? newValue)
-        {
-            // TODO: Implement OnLatitudeMinutesPropertyChanged Logic
-        }
+        protected virtual void OnLatitudeMinutesPropertyChanged(double? oldValue, double? newValue) { }
 
         #endregion
         #region LatitudeSeconds Property Members
@@ -90,9 +90,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="LatitudeSeconds"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty LatitudeSecondsProperty = DependencyProperty.Register(nameof(LatitudeSeconds), typeof(double?),
-            typeof(GPSPropertiesRowViewModel<TEntity>), new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as GPSPropertiesRowViewModel<TEntity>)?.OnLatitudeSecondsPropertyChanged((double?)e.OldValue, (double?)e.NewValue)));
+        public static readonly DependencyProperty LatitudeSecondsProperty = ColumnPropertyBuilder<double?, GPSPropertiesRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IGPSProperties.LatitudeSeconds))
+            .DefaultValue(null)
+            .OnChanged((d, oldValue, newValue) => (d as GPSPropertiesRowViewModel<TEntity>)?.OnLatitudeSecondsPropertyChanged(oldValue, newValue))
+            .AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -105,10 +107,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="LatitudeSeconds"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="LatitudeSeconds"/> property.</param>
-        protected void OnLatitudeSecondsPropertyChanged(double? oldValue, double? newValue)
-        {
-            // TODO: Implement OnLatitudeSecondsPropertyChanged Logic
-        }
+        protected virtual void OnLatitudeSecondsPropertyChanged(double? oldValue, double? newValue) { }
 
         #endregion
         #region LatitudeRef Property Members
@@ -116,9 +115,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="LatitudeRef"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty LatitudeRefProperty = DependencyProperty.Register(nameof(LatitudeRef), typeof(string),
-            typeof(GPSPropertiesRowViewModel<TEntity>), new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as GPSPropertiesRowViewModel<TEntity>)?.OnLatitudeRefPropertyChanged(e.OldValue as string, e.NewValue as string)));
+        public static readonly DependencyProperty LatitudeRefProperty = ColumnPropertyBuilder<string, GPSPropertiesRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IGPSProperties.LatitudeRef))
+            .DefaultValue("")
+            .OnChanged((d, oldValue, newValue) => (d as GPSPropertiesRowViewModel<TEntity>)?.OnLatitudeRefPropertyChanged(oldValue, newValue))
+            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -131,10 +132,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="LatitudeRef"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="LatitudeRef"/> property.</param>
-        protected void OnLatitudeRefPropertyChanged(string oldValue, string newValue)
-        {
-            // TODO: Implement OnLatitudeRefPropertyChanged Logic
-        }
+        protected virtual void OnLatitudeRefPropertyChanged(string oldValue, string newValue) { }
 
         #endregion
         #region LongitudeDegrees Property Members
@@ -142,9 +140,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="LongitudeDegrees"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty LongitudeDegreesProperty = DependencyProperty.Register(nameof(LongitudeDegrees), typeof(double?),
-            typeof(GPSPropertiesRowViewModel<TEntity>), new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as GPSPropertiesRowViewModel<TEntity>)?.OnLongitudeDegreesPropertyChanged((double?)e.OldValue, (double?)e.NewValue)));
+        public static readonly DependencyProperty LongitudeDegreesProperty = ColumnPropertyBuilder<double?, GPSPropertiesRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IGPSProperties.LongitudeDegrees))
+            .DefaultValue(null)
+            .OnChanged((d, oldValue, newValue) => (d as GPSPropertiesRowViewModel<TEntity>)?.OnLongitudeDegreesPropertyChanged(oldValue, newValue))
+            .AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -157,10 +157,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="LongitudeDegrees"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="LongitudeDegrees"/> property.</param>
-        protected void OnLongitudeDegreesPropertyChanged(double? oldValue, double? newValue)
-        {
-            // TODO: Implement OnLongitudeDegreesPropertyChanged Logic
-        }
+        protected virtual void OnLongitudeDegreesPropertyChanged(double? oldValue, double? newValue) { }
 
         #endregion
         #region LongitudeMinutes Property Members
@@ -168,9 +165,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="LongitudeMinutes"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty LongitudeMinutesProperty = DependencyProperty.Register(nameof(LongitudeMinutes), typeof(double?),
-            typeof(GPSPropertiesRowViewModel<TEntity>), new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as GPSPropertiesRowViewModel<TEntity>)?.OnLongitudeMinutesPropertyChanged((double?)e.OldValue, (double?)e.NewValue)));
+        public static readonly DependencyProperty LongitudeMinutesProperty = ColumnPropertyBuilder<double?, GPSPropertiesRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IGPSProperties.LongitudeMinutes))
+            .DefaultValue(null)
+            .OnChanged((d, oldValue, newValue) => (d as GPSPropertiesRowViewModel<TEntity>)?.OnLongitudeMinutesPropertyChanged(oldValue, newValue))
+            .AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -183,10 +182,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="LongitudeMinutes"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="LongitudeMinutes"/> property.</param>
-        protected void OnLongitudeMinutesPropertyChanged(double? oldValue, double? newValue)
-        {
-            // TODO: Implement OnLongitudeMinutesPropertyChanged Logic
-        }
+        protected virtual void OnLongitudeMinutesPropertyChanged(double? oldValue, double? newValue) { }
 
         #endregion
         #region LongitudeSeconds Property Members
@@ -194,9 +190,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="LongitudeSeconds"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty LongitudeSecondsProperty = DependencyProperty.Register(nameof(LongitudeSeconds), typeof(double?),
-            typeof(GPSPropertiesRowViewModel<TEntity>), new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as GPSPropertiesRowViewModel<TEntity>)?.OnLongitudeSecondsPropertyChanged((double?)e.OldValue, (double?)e.NewValue)));
+        public static readonly DependencyProperty LongitudeSecondsProperty = ColumnPropertyBuilder<double?, GPSPropertiesRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IGPSProperties.LongitudeSeconds))
+            .DefaultValue(null)
+            .OnChanged((d, oldValue, newValue) => (d as GPSPropertiesRowViewModel<TEntity>)?.OnLongitudeSecondsPropertyChanged(oldValue, newValue))
+            .AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -209,10 +207,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="LongitudeSeconds"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="LongitudeSeconds"/> property.</param>
-        protected void OnLongitudeSecondsPropertyChanged(double? oldValue, double? newValue)
-        {
-            // TODO: Implement OnLongitudeSecondsPropertyChanged Logic
-        }
+        protected virtual void OnLongitudeSecondsPropertyChanged(double? oldValue, double? newValue) { }
 
         #endregion
         #region LongitudeRef Property Members
@@ -220,9 +215,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="LongitudeRef"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty LongitudeRefProperty = DependencyProperty.Register(nameof(LongitudeRef), typeof(string),
-            typeof(GPSPropertiesRowViewModel<TEntity>), new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as GPSPropertiesRowViewModel<TEntity>)?.OnLongitudeRefPropertyChanged(e.OldValue as string, e.NewValue as string)));
+        public static readonly DependencyProperty LongitudeRefProperty = ColumnPropertyBuilder<string, GPSPropertiesRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IGPSProperties.LongitudeRef))
+            .DefaultValue("")
+            .OnChanged((d, oldValue, newValue) => (d as GPSPropertiesRowViewModel<TEntity>)?.OnLongitudeRefPropertyChanged(oldValue, newValue))
+            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -235,10 +232,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="LongitudeRef"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="LongitudeRef"/> property.</param>
-        protected void OnLongitudeRefPropertyChanged(string oldValue, string newValue)
-        {
-            // TODO: Implement OnLongitudeRefPropertyChanged Logic
-        }
+        protected virtual void OnLongitudeRefPropertyChanged(string oldValue, string newValue) { }
 
         #endregion
         #region MeasureMode Property Members
@@ -246,9 +240,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="MeasureMode"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty MeasureModeProperty = DependencyProperty.Register(nameof(MeasureMode), typeof(string),
-            typeof(GPSPropertiesRowViewModel<TEntity>), new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as GPSPropertiesRowViewModel<TEntity>)?.OnMeasureModePropertyChanged(e.OldValue as string, e.NewValue as string)));
+        public static readonly DependencyProperty MeasureModeProperty = ColumnPropertyBuilder<string, GPSPropertiesRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IGPSProperties.MeasureMode))
+            .DefaultValue("")
+            .OnChanged((d, oldValue, newValue) => (d as GPSPropertiesRowViewModel<TEntity>)?.OnMeasureModePropertyChanged(oldValue, newValue))
+            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -261,10 +257,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="MeasureMode"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="MeasureMode"/> property.</param>
-        protected void OnMeasureModePropertyChanged(string oldValue, string newValue)
-        {
-            // TODO: Implement OnMeasureModePropertyChanged Logic
-        }
+        protected virtual void OnMeasureModePropertyChanged(string oldValue, string newValue) { }
 
         #endregion
         #region ProcessingMethod Property Members
@@ -272,9 +265,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="ProcessingMethod"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty ProcessingMethodProperty = DependencyProperty.Register(nameof(ProcessingMethod), typeof(string),
-            typeof(GPSPropertiesRowViewModel<TEntity>), new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as GPSPropertiesRowViewModel<TEntity>)?.OnProcessingMethodPropertyChanged(e.OldValue as string, e.NewValue as string)));
+        public static readonly DependencyProperty ProcessingMethodProperty = ColumnPropertyBuilder<string, GPSPropertiesRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IGPSProperties.ProcessingMethod))
+            .DefaultValue("")
+            .OnChanged((d, oldValue, newValue) => (d as GPSPropertiesRowViewModel<TEntity>)?.OnProcessingMethodPropertyChanged(oldValue, newValue))
+            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -287,10 +282,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="ProcessingMethod"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="ProcessingMethod"/> property.</param>
-        protected void OnProcessingMethodPropertyChanged(string oldValue, string newValue)
-        {
-            // TODO: Implement OnProcessingMethodPropertyChanged Logic
-        }
+        protected virtual void OnProcessingMethodPropertyChanged(string oldValue, string newValue) { }
 
         #endregion
 #pragma warning restore IDE0060 // Remove unused parameter
@@ -310,11 +302,23 @@ namespace FsInfoCat.Desktop.ViewModel
             ProcessingMethod = entity.ProcessingMethod;
         }
 
-        internal string CalculateDisplayText()
+        public IEnumerable<(string DisplayName, string Value)> GetNameValuePairs()
         {
-            // TODO: Calculate value for ListingViewModel<TEntity, TItem, TOptions>.SetItemDisplayText(string)
-            throw new System.NotImplementedException();
+            yield return (FsInfoCat.Properties.Resources.DisplayName_LatitudeDegrees, LatitudeDegrees?.ToString());
+            yield return (FsInfoCat.Properties.Resources.DisplayName_LatitudeMinutes, LatitudeMinutes?.ToString());
+            yield return (FsInfoCat.Properties.Resources.DisplayName_LatitudeSeconds, LatitudeSeconds?.ToString());
+            yield return (FsInfoCat.Properties.Resources.DisplayName_LatitudeRef, LatitudeRef.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.DisplayName_LongitudeDegrees, LongitudeDegrees?.ToString());
+            yield return (FsInfoCat.Properties.Resources.DisplayName_LongitudeMinutes, LongitudeMinutes?.ToString());
+            yield return (FsInfoCat.Properties.Resources.DisplayName_LongitudeSeconds, LongitudeSeconds?.ToString());
+            yield return (FsInfoCat.Properties.Resources.DisplayName_LongitudeRef, LongitudeRef.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.DisplayName_MeasureMode, MeasureMode.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.DisplayName_ProcessingMethod, ProcessingMethod.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.DisplayName_AreaInformation, AreaInformation.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
         }
+
+        internal string CalculateDisplayText(Func<(string DisplayName, string Value), bool> filter = null) => (filter is null) ?
+            StringExtensionMethods.ToKeyValueListString(GetNameValuePairs()) : StringExtensionMethods.ToKeyValueListString(GetNameValuePairs().Where(filter));
 
         protected override void OnEntityPropertyChanged(string propertyName)
         {

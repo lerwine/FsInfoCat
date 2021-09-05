@@ -10,8 +10,10 @@ namespace FsInfoCat.Desktop.ViewModel
 #pragma warning disable IDE0060 // Remove unused parameter
         #region VolumeDisplayName Property Members
 
-        private static readonly DependencyPropertyKey VolumeDisplayNamePropertyKey = DependencyProperty.RegisterReadOnly(nameof(VolumeDisplayName), typeof(string),
-            typeof(SubdirectoryListItemWithAncestorNamesViewModel<TEntity>), new PropertyMetadata(""));
+        private static readonly DependencyPropertyKey VolumeDisplayNamePropertyKey = ColumnPropertyBuilder<string, SubdirectoryListItemWithAncestorNamesViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(ISubdirectoryListItemWithAncestorNames.VolumeDisplayName))
+            .DefaultValue("")
+            .AsReadOnly();
 
         /// <summary>
         /// Identifies the <see cref="VolumeDisplayName"/> dependency property.
@@ -27,8 +29,10 @@ namespace FsInfoCat.Desktop.ViewModel
         #endregion
         #region VolumeName Property Members
 
-        private static readonly DependencyPropertyKey VolumeNamePropertyKey = DependencyProperty.RegisterReadOnly(nameof(VolumeName), typeof(string),
-            typeof(SubdirectoryListItemWithAncestorNamesViewModel<TEntity>), new PropertyMetadata(""));
+        private static readonly DependencyPropertyKey VolumeNamePropertyKey = ColumnPropertyBuilder<string, SubdirectoryListItemWithAncestorNamesViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(ISubdirectoryListItemWithAncestorNames.VolumeName))
+            .DefaultValue("")
+            .AsReadOnly();
 
         /// <summary>
         /// Identifies the <see cref="VolumeName"/> dependency property.
@@ -44,8 +48,10 @@ namespace FsInfoCat.Desktop.ViewModel
         #endregion
         #region VolumeIdentifier Property Members
 
-        private static readonly DependencyPropertyKey VolumeIdentifierPropertyKey = DependencyProperty.RegisterReadOnly(nameof(VolumeIdentifier), typeof(VolumeIdentifier),
-            typeof(SubdirectoryListItemWithAncestorNamesViewModel<TEntity>), new PropertyMetadata(VolumeIdentifier.Empty));
+        private static readonly DependencyPropertyKey VolumeIdentifierPropertyKey = ColumnPropertyBuilder<VolumeIdentifier, SubdirectoryListItemWithAncestorNamesViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(ISubdirectoryListItemWithAncestorNames.VolumeIdentifier))
+            .DefaultValue(VolumeIdentifier.Empty)
+            .AsReadOnly();
 
         /// <summary>
         /// Identifies the <see cref="VolumeIdentifier"/> dependency property.
@@ -61,9 +67,11 @@ namespace FsInfoCat.Desktop.ViewModel
         #endregion
         #region FileSystemDisplayName Property Members
 
-        private static readonly DependencyPropertyKey FileSystemDisplayNamePropertyKey = DependencyProperty.RegisterReadOnly(nameof(FileSystemDisplayName), typeof(string),
-            typeof(SubdirectoryListItemWithAncestorNamesViewModel<TEntity>), new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-            (d as SubdirectoryListItemWithAncestorNamesViewModel<TEntity>)?.OnFileSystemDisplayNamePropertyChanged(e.OldValue as string, e.NewValue as string)));
+        private static readonly DependencyPropertyKey FileSystemDisplayNamePropertyKey = ColumnPropertyBuilder<string, SubdirectoryListItemWithAncestorNamesViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(ISubdirectoryListItemWithAncestorNames.FileSystemDisplayName))
+            .DefaultValue("")
+            .OnChanged((d, oldValue, newValue) => (d as SubdirectoryListItemWithAncestorNamesViewModel<TEntity>)?.OnFileSystemDisplayNamePropertyChanged(oldValue, newValue))
+            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadOnly();
 
         /// <summary>
         /// Identifies the <see cref="FileSystemDisplayName"/> dependency property.
@@ -81,14 +89,16 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="FileSystemDisplayName"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="FileSystemDisplayName"/> property.</param>
-        protected void OnFileSystemDisplayNamePropertyChanged(string oldValue, string newValue) => SetFileSystemShortDescription(newValue, FileSystemSymbolicName);
+        protected virtual void OnFileSystemDisplayNamePropertyChanged(string oldValue, string newValue) => SetFileSystemShortDescription(newValue, FileSystemSymbolicName);
 
         #endregion
         #region FileSystemSymbolicName Property Members
 
-        private static readonly DependencyPropertyKey FileSystemSymbolicNamePropertyKey = DependencyProperty.RegisterReadOnly(nameof(FileSystemSymbolicName), typeof(string),
-            typeof(SubdirectoryListItemWithAncestorNamesViewModel<TEntity>), new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-            (d as SubdirectoryListItemWithAncestorNamesViewModel<TEntity>)?.OnFileSystemSymbolicNamePropertyChanged(e.OldValue as string, e.NewValue as string)));
+        private static readonly DependencyPropertyKey FileSystemSymbolicNamePropertyKey = ColumnPropertyBuilder<string, SubdirectoryListItemWithAncestorNamesViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(ISubdirectoryListItemWithAncestorNames.FileSystemSymbolicName))
+            .DefaultValue("")
+            .OnChanged((d, oldValue, newValue) => (d as SubdirectoryListItemWithAncestorNamesViewModel<TEntity>)?.OnFileSystemSymbolicNamePropertyChanged(oldValue, newValue))
+            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadOnly();
 
         /// <summary>
         /// Identifies the <see cref="FileSystemSymbolicName"/> dependency property.
@@ -106,13 +116,15 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="FileSystemSymbolicName"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="FileSystemSymbolicName"/> property.</param>
-        protected void OnFileSystemSymbolicNamePropertyChanged(string oldValue, string newValue) => SetFileSystemShortDescription(FileSystemDisplayName, newValue);
+        protected virtual void OnFileSystemSymbolicNamePropertyChanged(string oldValue, string newValue) => SetFileSystemShortDescription(FileSystemDisplayName, newValue);
 
         #endregion
         #region Path Property Members
 
-        private static readonly DependencyPropertyKey PathPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Path), typeof(string), typeof(SubdirectoryListItemWithAncestorNamesViewModel<TEntity>),
-            new PropertyMetadata(""));
+        private static readonly DependencyPropertyKey PathPropertyKey = ColumnPropertyBuilder<string, SubdirectoryListItemWithAncestorNamesViewModel<TEntity>>
+            .Register(nameof(Path))
+            .DefaultValue("")
+            .AsReadOnly();
 
         /// <summary>
         /// Identifies the <see cref="Path"/> dependency property.
@@ -128,8 +140,10 @@ namespace FsInfoCat.Desktop.ViewModel
         #endregion
         #region FileSystemShortDescription Property Members
 
-        private static readonly DependencyPropertyKey FileSystemShortDescriptionPropertyKey = DependencyProperty.RegisterReadOnly(nameof(FileSystemShortDescription), typeof(string),
-            typeof(SubdirectoryListItemWithAncestorNamesViewModel<TEntity>), new PropertyMetadata(""));
+        private static readonly DependencyPropertyKey FileSystemShortDescriptionPropertyKey = ColumnPropertyBuilder<string, SubdirectoryListItemWithAncestorNamesViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(FileSystemShortDescription), nameof(ISubdirectoryListItemWithAncestorNames.FileSystemDisplayName))
+            .DefaultValue("")
+            .AsReadOnly();
 
         /// <summary>
         /// Identifies the <see cref="FileSystemShortDescription"/> dependency property.
@@ -148,8 +162,10 @@ namespace FsInfoCat.Desktop.ViewModel
         #endregion
         #region VolumeShortDescription Property Members
 
-        private static readonly DependencyPropertyKey VolumeShortDescriptionPropertyKey = DependencyProperty.RegisterReadOnly(nameof(VolumeShortDescription), typeof(string),
-            typeof(SubdirectoryListItemWithAncestorNamesViewModel<TEntity>), new PropertyMetadata(""));
+        private static readonly DependencyPropertyKey VolumeShortDescriptionPropertyKey = ColumnPropertyBuilder<string, SubdirectoryListItemWithAncestorNamesViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(VolumeShortDescription), nameof(ISubdirectoryListItemWithAncestorNames.VolumeDisplayName))
+            .DefaultValue("")
+            .AsReadOnly();
 
         /// <summary>
         /// Identifies the <see cref="VolumeShortDescription"/> dependency property.

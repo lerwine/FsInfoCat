@@ -13,6 +13,27 @@ namespace FsInfoCat
 
         public static readonly Regex OuterWsRegex = new(@"^[\s\p{Z}\p{C}]+|[\s\p{Z}\p{C}]+$", RegexOptions.Compiled);
 
+        public static readonly Regex SafeBreakRegex = new(@"^[\s\p{Z}\p{C}]*[^\s\p{Z}\p{C}]+(?=[\s\p{Z}\p{C}])([\s\p{Z}\p{C}]+[^\s\p{Z}\p{C}]+(?=[\s\p{Z}\p{C}]))*|^[\s\p{Z}\p{C}\p{P}\p{M}]*[^\s\p{Z}\p{C}\p{P}\p{M}]+(?=[\p{P}\p{M}])([\p{P}\p{M}]+[^\p{P}\p{M}]+(?=\p{P}))*[\p{P}\p{M}](?=.)|[\s\p{Z}\p{C}\p{P}\p{M}\p{S}]*[^\s\p{Z}\p{C}\p{S}]+(?=\p{S})(\p{S}+\P{S}+(?=\p{S}))*", RegexOptions.Compiled);
+
+        public static string ToKeyValueListString(this IEnumerable<ValueTuple<string, string>> source, bool includeEmpty = false)
+        {
+            if (source is null)
+                return null;
+            return string.Join("; ", (includeEmpty ? source : source.Where(t => !string.IsNullOrWhiteSpace(t.Item2))).Select(t => $"{t.Item1}: {t.Item2}"));
+        }
+
+        public static string TruncateWithElipses(this string text, int maxLength)
+        {
+            if (maxLength < 2)
+                throw new ArgumentOutOfRangeException(nameof(maxLength));
+            if (text is null || text.Length <= maxLength)
+                return text;
+            Match match = SafeBreakRegex.Match(text, 0, maxLength);
+            if (match.Success)
+                return $"{match.Value}…";
+            return $"{text[0..(maxLength-1)]}…";
+        }
+
         public static string AsWsNormalizedOrEmpty(this string text) => (text is null || text.Length == 0 || (text = OuterWsRegex.Replace(text, "")).Length == 0) ? "" :
             (AbnormalWsRegex.IsMatch(text) ? AbnormalWsRegex.Replace(text, " ") : text);
 

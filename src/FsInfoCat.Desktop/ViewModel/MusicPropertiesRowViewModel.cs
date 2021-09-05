@@ -1,4 +1,7 @@
+using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel
@@ -12,9 +15,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="AlbumArtist"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty AlbumArtistProperty = DependencyProperty.Register(nameof(AlbumArtist), typeof(string),
-            typeof(MusicPropertiesRowViewModel<TEntity>), new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as MusicPropertiesRowViewModel<TEntity>)?.OnAlbumArtistPropertyChanged(e.OldValue as string, e.NewValue as string)));
+        public static readonly DependencyProperty AlbumArtistProperty = ColumnPropertyBuilder<string, MusicPropertiesRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IMusicProperties.AlbumArtist))
+            .DefaultValue("")
+            .OnChanged((d, oldValue, newValue) => (d as MusicPropertiesRowViewModel<TEntity>)?.OnAlbumArtistPropertyChanged(oldValue, newValue))
+            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -27,7 +32,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="AlbumArtist"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="AlbumArtist"/> property.</param>
-        protected void OnAlbumArtistPropertyChanged(string oldValue, string newValue) { }
+        protected virtual void OnAlbumArtistPropertyChanged(string oldValue, string newValue) { }
 
         #endregion
         #region AlbumTitle Property Members
@@ -35,9 +40,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="AlbumTitle"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty AlbumTitleProperty = DependencyProperty.Register(nameof(AlbumTitle), typeof(string),
-            typeof(MusicPropertiesRowViewModel<TEntity>), new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as MusicPropertiesRowViewModel<TEntity>)?.OnAlbumTitlePropertyChanged(e.OldValue as string, e.NewValue as string)));
+        public static readonly DependencyProperty AlbumTitleProperty = ColumnPropertyBuilder<string, MusicPropertiesRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IMusicProperties.AlbumTitle))
+            .DefaultValue("")
+            .OnChanged((d, oldValue, newValue) => (d as MusicPropertiesRowViewModel<TEntity>)?.OnAlbumTitlePropertyChanged(oldValue, newValue))
+            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -50,7 +57,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="AlbumTitle"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="AlbumTitle"/> property.</param>
-        protected void OnAlbumTitlePropertyChanged(string oldValue, string newValue) { }
+        protected virtual void OnAlbumTitlePropertyChanged(string oldValue, string newValue) { }
 
         #endregion
         #region ChannelCount Property Members
@@ -58,9 +65,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="ChannelCount"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty ChannelCountProperty = DependencyProperty.Register(nameof(ChannelCount), typeof(uint?), typeof(MusicPropertiesRowViewModel<TEntity>),
-                new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as MusicPropertiesRowViewModel<TEntity>)?.OnChannelCountPropertyChanged((uint?)e.OldValue, (uint?)e.NewValue)));
+        public static readonly DependencyProperty ChannelCountProperty = ColumnPropertyBuilder<uint?, MusicPropertiesRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IMusicProperties.ChannelCount))
+            .DefaultValue(null)
+            .OnChanged((d, oldValue, newValue) => (d as MusicPropertiesRowViewModel<TEntity>)?.OnChannelCountPropertyChanged(oldValue, newValue))
+            .AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -73,7 +82,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="ChannelCount"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="ChannelCount"/> property.</param>
-        protected void OnChannelCountPropertyChanged(uint? oldValue, uint? newValue)
+        protected virtual void OnChannelCountPropertyChanged(uint? oldValue, uint? newValue)
         {
             if (newValue.HasValue)
                 IsStereo = newValue.Value > 1;
@@ -84,8 +93,10 @@ namespace FsInfoCat.Desktop.ViewModel
         #endregion
         #region IsStereo Property Members
 
-        private static readonly DependencyPropertyKey IsStereoPropertyKey = DependencyProperty.RegisterReadOnly(nameof(IsStereo), typeof(bool?), typeof(MusicPropertiesRowViewModel<TEntity>),
-                new PropertyMetadata(null));
+        private static readonly DependencyPropertyKey IsStereoPropertyKey = ColumnPropertyBuilder<bool?, MusicPropertiesRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IsStereo), nameof(IMusicProperties.ChannelCount))
+            .DefaultValue(null)
+            .AsReadOnly();
 
         /// <summary>
         /// Identifies the <see cref="IsStereo"/> dependency property.
@@ -104,9 +115,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="DisplayArtist"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty DisplayArtistProperty = DependencyProperty.Register(nameof(DisplayArtist), typeof(string),
-            typeof(MusicPropertiesRowViewModel<TEntity>), new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as MusicPropertiesRowViewModel<TEntity>)?.OnDisplayArtistPropertyChanged(e.OldValue as string, e.NewValue as string)));
+        public static readonly DependencyProperty DisplayArtistProperty = ColumnPropertyBuilder<string, MusicPropertiesRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IMusicProperties.DisplayArtist))
+            .DefaultValue("")
+            .OnChanged((d, oldValue, newValue) => (d as MusicPropertiesRowViewModel<TEntity>)?.OnDisplayArtistPropertyChanged(oldValue, newValue))
+            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -119,7 +132,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="DisplayArtist"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="DisplayArtist"/> property.</param>
-        protected void OnDisplayArtistPropertyChanged(string oldValue, string newValue) { }
+        protected virtual void OnDisplayArtistPropertyChanged(string oldValue, string newValue) { }
 
         #endregion
         #region PartOfSet Property Members
@@ -127,10 +140,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="PartOfSet"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty PartOfSetProperty = DependencyProperty.Register(nameof(PartOfSet), typeof(string),
-            typeof(MusicPropertiesRowViewModel<TEntity>),
-                new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as MusicPropertiesRowViewModel<TEntity>)?.OnPartOfSetPropertyChanged(e.OldValue as string, e.NewValue as string)));
+        public static readonly DependencyProperty PartOfSetProperty = ColumnPropertyBuilder<string, MusicPropertiesRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IMusicProperties.PartOfSet))
+            .DefaultValue("")
+            .OnChanged((d, oldValue, newValue) => (d as MusicPropertiesRowViewModel<TEntity>)?.OnPartOfSetPropertyChanged(oldValue, newValue))
+            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -143,7 +157,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="PartOfSet"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="PartOfSet"/> property.</param>
-        protected void OnPartOfSetPropertyChanged(string oldValue, string newValue) { }
+        protected virtual void OnPartOfSetPropertyChanged(string oldValue, string newValue) { }
 
         #endregion
         #region Period Property Members
@@ -151,9 +165,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="Period"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty PeriodProperty = DependencyProperty.Register(nameof(Period), typeof(string),
-            typeof(MusicPropertiesRowViewModel<TEntity>), new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as MusicPropertiesRowViewModel<TEntity>)?.OnPeriodPropertyChanged(e.OldValue as string, e.NewValue as string)));
+        public static readonly DependencyProperty PeriodProperty = ColumnPropertyBuilder<string, MusicPropertiesRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IMusicProperties.Period))
+            .DefaultValue("")
+            .OnChanged((d, oldValue, newValue) => (d as MusicPropertiesRowViewModel<TEntity>)?.OnPeriodPropertyChanged(oldValue, newValue))
+            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -166,7 +182,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Period"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Period"/> property.</param>
-        protected void OnPeriodPropertyChanged(string oldValue, string newValue) { }
+        protected virtual void OnPeriodPropertyChanged(string oldValue, string newValue) { }
 
         #endregion
         #region TrackNumber Property Members
@@ -174,9 +190,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="TrackNumber"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty TrackNumberProperty = DependencyProperty.Register(nameof(TrackNumber), typeof(uint?), typeof(MusicPropertiesRowViewModel<TEntity>),
-                new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as MusicPropertiesRowViewModel<TEntity>)?.OnTrackNumberPropertyChanged((uint?)e.OldValue, (uint?)e.NewValue)));
+        public static readonly DependencyProperty TrackNumberProperty = ColumnPropertyBuilder<uint?, MusicPropertiesRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IMusicProperties.TrackNumber))
+            .DefaultValue(null)
+            .OnChanged((d, oldValue, newValue) => (d as MusicPropertiesRowViewModel<TEntity>)?.OnTrackNumberPropertyChanged(oldValue, newValue))
+            .AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -189,7 +207,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="TrackNumber"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="TrackNumber"/> property.</param>
-        protected void OnTrackNumberPropertyChanged(uint? oldValue, uint? newValue) { }
+        protected virtual void OnTrackNumberPropertyChanged(uint? oldValue, uint? newValue) { }
 
         #endregion
 #pragma warning restore IDE0060 // Remove unused parameter
@@ -205,11 +223,19 @@ namespace FsInfoCat.Desktop.ViewModel
             TrackNumber = entity.TrackNumber;
         }
 
-        internal string CalculateDisplayText()
+        public IEnumerable<(string DisplayName, string Value)> GetNameValuePairs()
         {
-            // TODO: Calculate value for ListingViewModel<TEntity, TItem, TOptions>.SetItemDisplayText(string)
-            throw new System.NotImplementedException();
+            yield return (FsInfoCat.Properties.Resources.DisplayName_DisplayArtist, DisplayArtist.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.DisplayName_AlbumArtist, AlbumArtist.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.DisplayName_AlbumTitle, AlbumTitle.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.DisplayName_PartOfSet, PartOfSet.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.DisplayName_TrackNumber, TrackNumber?.ToString());
+            yield return (FsInfoCat.Properties.Resources.DisplayName_Period, Period.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.DisplayName_IsStereo, Converters.BooleanToStringConverter.Convert(IsStereo));
         }
+
+        internal string CalculateDisplayText(Func<(string DisplayName, string Value), bool> filter = null) => (filter is null) ?
+            StringExtensionMethods.ToKeyValueListString(GetNameValuePairs()) : StringExtensionMethods.ToKeyValueListString(GetNameValuePairs().Where(filter));
 
         protected override void OnEntityPropertyChanged(string propertyName)
         {

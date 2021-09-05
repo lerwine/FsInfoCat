@@ -48,7 +48,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Reference"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Reference"/> property.</param>
-        protected void OnReferencePropertyChanged(string oldValue, string newValue)
+        protected virtual void OnReferencePropertyChanged(string oldValue, string newValue)
         {
             // DEFERRED: Implement OnReferencePropertyChanged Logic
         }
@@ -73,7 +73,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Notes"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Notes"/> property.</param>
-        protected void OnNotesPropertyChanged(string oldValue, string newValue)
+        protected virtual void OnNotesPropertyChanged(string oldValue, string newValue)
         {
             // DEFERRED: Implement OnNotesPropertyChanged Logic
         }

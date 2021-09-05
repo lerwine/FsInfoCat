@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel
@@ -13,9 +15,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="CameraManufacturer"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty CameraManufacturerProperty = DependencyProperty.Register(nameof(CameraManufacturer), typeof(string),
-            typeof(PhotoPropertiesRowViewModel<TEntity>), new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as PhotoPropertiesRowViewModel<TEntity>)?.OnCameraManufacturerPropertyChanged(e.OldValue as string, e.NewValue as string)));
+        public static readonly DependencyProperty CameraManufacturerProperty = ColumnPropertyBuilder<string, PhotoPropertiesRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IPhotoProperties.CameraManufacturer))
+            .DefaultValue("")
+            .OnChanged((d, oldValue, newValue) => (d as PhotoPropertiesRowViewModel<TEntity>)?.OnCameraManufacturerPropertyChanged(oldValue, newValue))
+            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -28,10 +32,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="CameraManufacturer"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="CameraManufacturer"/> property.</param>
-        protected void OnCameraManufacturerPropertyChanged(string oldValue, string newValue)
-        {
-            // TODO: Implement OnCameraManufacturerPropertyChanged Logic
-        }
+        protected virtual void OnCameraManufacturerPropertyChanged(string oldValue, string newValue) { }
 
         #endregion
         #region CameraModel Property Members
@@ -39,9 +40,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="CameraModel"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty CameraModelProperty = DependencyProperty.Register(nameof(CameraModel), typeof(string),
-            typeof(PhotoPropertiesRowViewModel<TEntity>), new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as PhotoPropertiesRowViewModel<TEntity>)?.OnCameraModelPropertyChanged(e.OldValue as string, e.NewValue as string)));
+        public static readonly DependencyProperty CameraModelProperty = ColumnPropertyBuilder<string, PhotoPropertiesRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IPhotoProperties.CameraModel))
+            .DefaultValue("")
+            .OnChanged((d, oldValue, newValue) => (d as PhotoPropertiesRowViewModel<TEntity>)?.OnCameraModelPropertyChanged(oldValue, newValue))
+            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -54,10 +57,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="CameraModel"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="CameraModel"/> property.</param>
-        protected void OnCameraModelPropertyChanged(string oldValue, string newValue)
-        {
-            // TODO: Implement OnCameraModelPropertyChanged Logic
-        }
+        protected virtual void OnCameraModelPropertyChanged(string oldValue, string newValue) { }
 
         #endregion
         #region DateTaken Property Members
@@ -65,9 +65,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="DateTaken"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty DateTakenProperty = DependencyProperty.Register(nameof(DateTaken), typeof(DateTime?),
-            typeof(PhotoPropertiesRowViewModel<TEntity>), new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as PhotoPropertiesRowViewModel<TEntity>)?.OnDateTakenPropertyChanged((DateTime?)e.OldValue, (DateTime?)e.NewValue)));
+        public static readonly DependencyProperty DateTakenProperty = ColumnPropertyBuilder<DateTime?, PhotoPropertiesRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IPhotoProperties.DateTaken))
+            .DefaultValue(null)
+            .OnChanged((d, oldValue, newValue) => (d as PhotoPropertiesRowViewModel<TEntity>)?.OnDateTakenPropertyChanged(oldValue, newValue))
+            .AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -80,10 +82,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="DateTaken"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="DateTaken"/> property.</param>
-        protected void OnDateTakenPropertyChanged(DateTime? oldValue, DateTime? newValue)
-        {
-            // TODO: Implement OnDateTakenPropertyChanged Logic
-        }
+        protected virtual void OnDateTakenPropertyChanged(DateTime? oldValue, DateTime? newValue) { }
 
         #endregion
         #region EXIFVersion Property Members
@@ -91,9 +90,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="EXIFVersion"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty EXIFVersionProperty = DependencyProperty.Register(nameof(EXIFVersion), typeof(string),
-            typeof(PhotoPropertiesRowViewModel<TEntity>), new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as PhotoPropertiesRowViewModel<TEntity>)?.OnEXIFVersionPropertyChanged(e.OldValue as string, e.NewValue as string)));
+        public static readonly DependencyProperty EXIFVersionProperty = ColumnPropertyBuilder<string, PhotoPropertiesRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IPhotoProperties.EXIFVersion))
+            .DefaultValue("")
+            .OnChanged((d, oldValue, newValue) => (d as PhotoPropertiesRowViewModel<TEntity>)?.OnEXIFVersionPropertyChanged(oldValue, newValue))
+            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -106,10 +107,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="EXIFVersion"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="EXIFVersion"/> property.</param>
-        protected void OnEXIFVersionPropertyChanged(string oldValue, string newValue)
-        {
-            // TODO: Implement OnEXIFVersionPropertyChanged Logic
-        }
+        protected virtual void OnEXIFVersionPropertyChanged(string oldValue, string newValue) { }
 
         #endregion
         #region Orientation Property Members
@@ -117,9 +115,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="Orientation"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty OrientationProperty = DependencyProperty.Register(nameof(Orientation), typeof(ushort?),
-            typeof(PhotoPropertiesRowViewModel<TEntity>), new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as PhotoPropertiesRowViewModel<TEntity>)?.OnOrientationPropertyChanged((ushort?)e.OldValue, (ushort?)e.NewValue)));
+        public static readonly DependencyProperty OrientationProperty = ColumnPropertyBuilder<ushort?, PhotoPropertiesRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IPhotoProperties.Orientation))
+            .DefaultValue(null)
+            .OnChanged((d, oldValue, newValue) => (d as PhotoPropertiesRowViewModel<TEntity>)?.OnOrientationPropertyChanged(oldValue, newValue))
+            .AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -132,10 +132,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Orientation"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Orientation"/> property.</param>
-        protected void OnOrientationPropertyChanged(ushort? oldValue, ushort? newValue)
-        {
-            // TODO: Implement OnOrientationPropertyChanged Logic
-        }
+        protected virtual void OnOrientationPropertyChanged(ushort? oldValue, ushort? newValue) { }
 
         #endregion
         #region OrientationText Property Members
@@ -143,9 +140,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="OrientationText"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty OrientationTextProperty = DependencyProperty.Register(nameof(OrientationText), typeof(string),
-            typeof(PhotoPropertiesRowViewModel<TEntity>), new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as PhotoPropertiesRowViewModel<TEntity>)?.OnOrientationTextPropertyChanged(e.OldValue as string, e.NewValue as string)));
+        public static readonly DependencyProperty OrientationTextProperty = ColumnPropertyBuilder<string, PhotoPropertiesRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IPhotoProperties.OrientationText))
+            .DefaultValue("")
+            .OnChanged((d, oldValue, newValue) => (d as PhotoPropertiesRowViewModel<TEntity>)?.OnOrientationTextPropertyChanged(oldValue, newValue))
+            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -158,10 +157,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="OrientationText"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="OrientationText"/> property.</param>
-        protected void OnOrientationTextPropertyChanged(string oldValue, string newValue)
-        {
-            // TODO: Implement OnOrientationTextPropertyChanged Logic
-        }
+        protected virtual void OnOrientationTextPropertyChanged(string oldValue, string newValue) { }
 
         #endregion
 #pragma warning restore IDE0060 // Remove unused parameter
@@ -176,11 +172,18 @@ namespace FsInfoCat.Desktop.ViewModel
             OrientationText = entity.OrientationText;
         }
 
-        internal string CalculateDisplayText()
+        public IEnumerable<(string DisplayName, string Value)> GetNameValuePairs()
         {
-            // TODO: Calculate value for ListingViewModel<TEntity, TItem, TOptions>.SetItemDisplayText(string)
-            throw new NotImplementedException();
+            yield return (FsInfoCat.Properties.Resources.DisplayName_DateTaken, DateTaken?.ToString());
+            string orientation = OrientationText.AsWsNormalizedOrEmpty().TruncateWithElipses(256);
+            yield return (FsInfoCat.Properties.Resources.DisplayName_Orientation, (orientation.Length > 0) ? orientation : Orientation?.ToString());
+            yield return (FsInfoCat.Properties.Resources.DisplayName_EXIFVersion, EXIFVersion.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.DisplayName_CameraManufacturer, CameraManufacturer.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.DisplayName_CameraModel, CameraModel.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
         }
+
+        internal string CalculateDisplayText(Func<(string DisplayName, string Value), bool> filter = null) => (filter is null) ?
+            StringExtensionMethods.ToKeyValueListString(GetNameValuePairs()) : StringExtensionMethods.ToKeyValueListString(GetNameValuePairs().Where(filter));
 
         protected override void OnEntityPropertyChanged(string propertyName)
         {

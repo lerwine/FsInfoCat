@@ -1,9 +1,11 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
 using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel
 {
+
     public class DocumentPropertiesListItemViewModel<TEntity> : DocumentPropertiesRowViewModel<TEntity>, ICrudEntityRowViewModel<TEntity>
         where TEntity : DbEntity, IDocumentPropertiesListItem
     {
@@ -65,8 +67,10 @@ namespace FsInfoCat.Desktop.ViewModel
         #endregion
         #region Contributor Property Members
 
-        private static readonly DependencyPropertyKey ContributorPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Contributor), typeof(string),
-            typeof(DocumentPropertiesListItemViewModel<TEntity>), new PropertyMetadata(""));
+        private static readonly DependencyPropertyKey ContributorPropertyKey = ColumnPropertyBuilder<string, DocumentPropertiesListItemViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IDocumentPropertiesListItem.Contributor))
+            .DefaultValue("")
+            .AsReadOnly();
 
         /// <summary>
         /// Identifies the <see cref="Contributor"/> dependency property.
@@ -81,10 +85,13 @@ namespace FsInfoCat.Desktop.ViewModel
 
         #endregion
         #region ExistingFileCount Property Members
-
-        private static readonly DependencyPropertyKey ExistingFileCountPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ExistingFileCount), typeof(long),
-            typeof(DocumentPropertiesListItemViewModel<TEntity>), new PropertyMetadata(0L, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-            (d as DocumentPropertiesListItemViewModel<TEntity>).OnExistingFileCountPropertyChanged((long)e.OldValue, (long)e.NewValue)));
+        
+        private static readonly DependencyPropertyKey ExistingFileCountPropertyKey = ColumnPropertyBuilder<long,DocumentPropertiesListItemViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IDocumentPropertiesListItem.ExistingFileCount))
+            .DefaultValue(0L)
+            .OnChanged((DependencyObject d, long oldValue, long newValue) =>
+                (d as DocumentPropertiesListItemViewModel<TEntity>).OnExistingFileCountPropertyChanged(oldValue, newValue))
+            .AsReadOnly();
 
         /// <summary>
         /// Identifies the <see cref="ExistingFileCount"/> dependency property.
@@ -107,8 +114,10 @@ namespace FsInfoCat.Desktop.ViewModel
         #endregion
         #region TotalFileCount Property Members
 
-        private static readonly DependencyPropertyKey TotalFileCountPropertyKey = DependencyProperty.RegisterReadOnly(nameof(TotalFileCount), typeof(long), typeof(DocumentPropertiesListItemViewModel<TEntity>),
-                new PropertyMetadata(0L));
+        private static readonly DependencyPropertyKey TotalFileCountPropertyKey = ColumnPropertyBuilder<long, DocumentPropertiesListItemViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IDocumentPropertiesListItem.TotalFileCount))
+            .DefaultValue(0L)
+            .AsReadOnly();
 
         /// <summary>
         /// Identifies the <see cref="TotalFileCount"/> dependency property.
@@ -130,6 +139,13 @@ namespace FsInfoCat.Desktop.ViewModel
             TotalFileCount = entity.TotalFileCount;
             SetValue(EditPropertyKey, new Commands.RelayCommand(RaiseEditCommand));
             SetValue(DeletePropertyKey, new Commands.RelayCommand(RaiseDeleteCommand));
+            CommonAttached.SetListItemTitle(this, CalculateDisplayText());
+        }
+
+        protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
+        {
+            base.OnPropertyChanged(e);
+            CommonAttached.SetListItemTitle(this, CalculateDisplayText());
         }
 
         protected override void OnEntityPropertyChanged(string propertyName)

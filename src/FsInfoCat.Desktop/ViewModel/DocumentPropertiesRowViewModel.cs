@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel
@@ -13,9 +15,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="ClientID"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty ClientIDProperty = DependencyProperty.Register(nameof(ClientID), typeof(string),
-            typeof(DocumentPropertiesRowViewModel<TEntity>), new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as DocumentPropertiesRowViewModel<TEntity>)?.OnClientIDPropertyChanged(e.OldValue as string, e.NewValue as string)));
+        public static readonly DependencyProperty ClientIDProperty = ColumnPropertyBuilder<string, DocumentPropertiesRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IDocumentProperties.ClientID))
+            .DefaultValue("")
+            .OnChanged((d, oldValue, newValue) => (d as DocumentPropertiesRowViewModel<TEntity>)?.OnClientIDPropertyChanged(oldValue, newValue))
+            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -28,10 +32,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="ClientID"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="ClientID"/> property.</param>
-        protected void OnClientIDPropertyChanged(string oldValue, string newValue)
-        {
-            // TODO: Implement OnClientIDPropertyChanged Logic
-        }
+        protected virtual void OnClientIDPropertyChanged(string oldValue, string newValue) { }
 
         #endregion
         #region DateCreated Property Members
@@ -39,9 +40,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="DateCreated"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty DateCreatedProperty = DependencyProperty.Register(nameof(DateCreated), typeof(DateTime?),
-            typeof(DocumentPropertiesRowViewModel<TEntity>), new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as DocumentPropertiesRowViewModel<TEntity>)?.OnDateCreatedPropertyChanged((DateTime?)e.OldValue, (DateTime?)e.NewValue)));
+        public static readonly DependencyProperty DateCreatedProperty = ColumnPropertyBuilder<DateTime?, DocumentPropertiesRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IDocumentProperties.DateCreated))
+            .DefaultValue(null)
+            .OnChanged((d, oldValue, newValue) => (d as DocumentPropertiesRowViewModel<TEntity>)?.OnDateCreatedPropertyChanged(oldValue, newValue))
+            .AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -54,10 +57,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="DateCreated"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="DateCreated"/> property.</param>
-        protected void OnDateCreatedPropertyChanged(DateTime? oldValue, DateTime? newValue)
-        {
-            // TODO: Implement OnDateCreatedPropertyChanged Logic
-        }
+        protected virtual void OnDateCreatedPropertyChanged(DateTime? oldValue, DateTime? newValue) { }
 
         #endregion
         #region LastAuthor Property Members
@@ -65,9 +65,12 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="LastAuthor"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty LastAuthorProperty = DependencyProperty.Register(nameof(LastAuthor), typeof(string),
-            typeof(DocumentPropertiesRowViewModel<TEntity>), new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as DocumentPropertiesRowViewModel<TEntity>)?.OnLastAuthorPropertyChanged(e.OldValue as string, e.NewValue as string)));
+        public static readonly DependencyProperty LastAuthorProperty = ColumnPropertyBuilder<string, DocumentPropertiesRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IDocumentProperties.LastAuthor))
+            .DefaultValue("")
+            .OnChanged((d, oldValue, newValue) => (d as DocumentPropertiesRowViewModel<TEntity>)?.OnLastAuthorPropertyChanged(oldValue, newValue))
+            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default)
+            .AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -80,10 +83,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="LastAuthor"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="LastAuthor"/> property.</param>
-        protected void OnLastAuthorPropertyChanged(string oldValue, string newValue)
-        {
-            // TODO: Implement OnLastAuthorPropertyChanged Logic
-        }
+        protected virtual void OnLastAuthorPropertyChanged(string oldValue, string newValue) { }
 
         #endregion
         #region RevisionNumber Property Members
@@ -91,9 +91,12 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="RevisionNumber"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty RevisionNumberProperty = DependencyProperty.Register(nameof(RevisionNumber), typeof(string),
-            typeof(DocumentPropertiesRowViewModel<TEntity>), new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as DocumentPropertiesRowViewModel<TEntity>)?.OnRevisionNumberPropertyChanged(e.OldValue as string, e.NewValue as string)));
+        public static readonly DependencyProperty RevisionNumberProperty = ColumnPropertyBuilder<string, DocumentPropertiesRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IDocumentProperties.RevisionNumber))
+            .DefaultValue("")
+            .OnChanged((d, oldValue, newValue) => (d as DocumentPropertiesRowViewModel<TEntity>)?.OnRevisionNumberPropertyChanged(oldValue, newValue))
+            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default)
+            .AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -106,10 +109,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="RevisionNumber"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="RevisionNumber"/> property.</param>
-        protected void OnRevisionNumberPropertyChanged(string oldValue, string newValue)
-        {
-            // TODO: Implement OnRevisionNumberPropertyChanged Logic
-        }
+        protected virtual void OnRevisionNumberPropertyChanged(string oldValue, string newValue) { }
 
         #endregion
         #region Security Property Members
@@ -117,9 +117,10 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="Security"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty SecurityProperty = DependencyProperty.Register(nameof(Security), typeof(int?), typeof(DocumentPropertiesRowViewModel<TEntity>),
-                new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as DocumentPropertiesRowViewModel<TEntity>)?.OnSecurityPropertyChanged((int?)e.OldValue, (int?)e.NewValue)));
+        public static readonly DependencyProperty SecurityProperty = ColumnPropertyBuilder<int?, DocumentPropertiesRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IDocumentProperties.Security))
+            .OnChanged((d, oldValue, newValue) => (d as DocumentPropertiesRowViewModel<TEntity>)?.OnSecurityPropertyChanged(oldValue, newValue))
+            .AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -132,10 +133,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Security"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Security"/> property.</param>
-        protected void OnSecurityPropertyChanged(int? oldValue, int? newValue)
-        {
-            // TODO: Implement OnSecurityPropertyChanged Logic
-        }
+        protected virtual void OnSecurityPropertyChanged(int? oldValue, int? newValue) { }
 
         #endregion
         #region Division Property Members
@@ -143,9 +141,12 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="Division"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty DivisionProperty = DependencyProperty.Register(nameof(Division), typeof(string),
-            typeof(DocumentPropertiesRowViewModel<TEntity>), new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as DocumentPropertiesRowViewModel<TEntity>)?.OnDivisionPropertyChanged(e.OldValue as string, e.NewValue as string)));
+        public static readonly DependencyProperty DivisionProperty = ColumnPropertyBuilder<string, DocumentPropertiesRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IDocumentProperties.Division))
+            .DefaultValue("")
+            .OnChanged((d, oldValue, newValue) => (d as DocumentPropertiesRowViewModel<TEntity>)?.OnDivisionPropertyChanged(oldValue, newValue))
+            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default)
+            .AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -158,10 +159,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Division"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Division"/> property.</param>
-        protected void OnDivisionPropertyChanged(string oldValue, string newValue)
-        {
-            // TODO: Implement OnDivisionPropertyChanged Logic
-        }
+        protected virtual void OnDivisionPropertyChanged(string oldValue, string newValue) { }
 
         #endregion
         #region DocumentID Property Members
@@ -169,9 +167,12 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="DocumentID"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty DocumentIDProperty = DependencyProperty.Register(nameof(DocumentID), typeof(string),
-            typeof(DocumentPropertiesRowViewModel<TEntity>), new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as DocumentPropertiesRowViewModel<TEntity>)?.OnDocumentIDPropertyChanged(e.OldValue as string, e.NewValue as string)));
+        public static readonly DependencyProperty DocumentIDProperty = ColumnPropertyBuilder<string, DocumentPropertiesRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IDocumentProperties.DocumentID))
+            .DefaultValue("")
+            .OnChanged((d, oldValue, newValue) => (d as DocumentPropertiesRowViewModel<TEntity>)?.OnDocumentIDPropertyChanged(oldValue, newValue))
+            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default)
+            .AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -184,10 +185,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="DocumentID"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="DocumentID"/> property.</param>
-        protected void OnDocumentIDPropertyChanged(string oldValue, string newValue)
-        {
-            // TODO: Implement OnDocumentIDPropertyChanged Logic
-        }
+        protected virtual void OnDocumentIDPropertyChanged(string oldValue, string newValue) { }
 
         #endregion
         #region Manager Property Members
@@ -195,9 +193,12 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="Manager"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty ManagerProperty = DependencyProperty.Register(nameof(Manager), typeof(string),
-            typeof(DocumentPropertiesRowViewModel<TEntity>), new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as DocumentPropertiesRowViewModel<TEntity>)?.OnManagerPropertyChanged(e.OldValue as string, e.NewValue as string)));
+        public static readonly DependencyProperty ManagerProperty = ColumnPropertyBuilder<string, DocumentPropertiesRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IDocumentProperties.Manager))
+            .DefaultValue("")
+            .OnChanged((d, oldValue, newValue) => (d as DocumentPropertiesRowViewModel<TEntity>)?.OnManagerPropertyChanged(oldValue, newValue))
+            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default)
+            .AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -210,10 +211,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Manager"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Manager"/> property.</param>
-        protected void OnManagerPropertyChanged(string oldValue, string newValue)
-        {
-            // TODO: Implement OnManagerPropertyChanged Logic
-        }
+        protected virtual void OnManagerPropertyChanged(string oldValue, string newValue) { }
 
         #endregion
         #region PresentationFormat Property Members
@@ -221,9 +219,12 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="PresentationFormat"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty PresentationFormatProperty = DependencyProperty.Register(nameof(PresentationFormat), typeof(string),
-            typeof(DocumentPropertiesRowViewModel<TEntity>), new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as DocumentPropertiesRowViewModel<TEntity>)?.OnPresentationFormatPropertyChanged(e.OldValue as string, e.NewValue as string)));
+        public static readonly DependencyProperty PresentationFormatProperty = ColumnPropertyBuilder<string, DocumentPropertiesRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IDocumentProperties.PresentationFormat))
+            .DefaultValue("")
+            .OnChanged((d, oldValue, newValue) => (d as DocumentPropertiesRowViewModel<TEntity>)?.OnPresentationFormatPropertyChanged(oldValue, newValue))
+            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default)
+            .AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -236,10 +237,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="PresentationFormat"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="PresentationFormat"/> property.</param>
-        protected void OnPresentationFormatPropertyChanged(string oldValue, string newValue)
-        {
-            // TODO: Implement OnPresentationFormatPropertyChanged Logic
-        }
+        protected virtual void OnPresentationFormatPropertyChanged(string oldValue, string newValue) { }
 
         #endregion
         #region Version Property Members
@@ -247,9 +245,12 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="Version"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty VersionProperty = DependencyProperty.Register(nameof(Version), typeof(string),
-            typeof(DocumentPropertiesRowViewModel<TEntity>), new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as DocumentPropertiesRowViewModel<TEntity>)?.OnVersionPropertyChanged(e.OldValue as string, e.NewValue as string)));
+        public static readonly DependencyProperty VersionProperty = ColumnPropertyBuilder<string, DocumentPropertiesRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IDocumentProperties.Version))
+            .DefaultValue("")
+            .OnChanged((d, oldValue, newValue) => (d as DocumentPropertiesRowViewModel<TEntity>)?.OnVersionPropertyChanged(oldValue, newValue))
+            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default)
+            .AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -262,10 +263,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Version"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Version"/> property.</param>
-        protected void OnVersionPropertyChanged(string oldValue, string newValue)
-        {
-            // TODO: Implement OnVersionPropertyChanged Logic
-        }
+        protected virtual void OnVersionPropertyChanged(string oldValue, string newValue) { }
 
         #endregion
 #pragma warning restore IDE0060 // Remove unused parameter
@@ -284,11 +282,22 @@ namespace FsInfoCat.Desktop.ViewModel
             Version = entity.Version;
         }
 
-        internal string CalculateDisplayText()
+        public IEnumerable<(string DisplayName, string Value)> GetNameValuePairs()
         {
-            // TODO: Calculate value for ListingViewModel<TEntity, TItem, TOptions>.SetItemDisplayText(string)
-            throw new NotImplementedException();
+            yield return (FsInfoCat.Properties.Resources.DisplayName_DocumentID, DocumentID.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.DisplayName_ClientID, ClientID.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.DisplayName_LastAuthor, LastAuthor.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.DisplayName_Manager, Manager.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.DisplayName_Division, Division.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.DisplayName_DateCreated, DateCreated?.ToString());
+            yield return (FsInfoCat.Properties.Resources.DisplayName_PresentationFormat, PresentationFormat.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.DisplayName_Security, Security?.ToString());
+            yield return (FsInfoCat.Properties.Resources.DisplayName_RevisionNumber, RevisionNumber.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.DisplayName_Version, Version.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
         }
+
+        internal string CalculateDisplayText(Func<(string DisplayName, string Value), bool> filter = null) => (filter is null) ?
+            StringExtensionMethods.ToKeyValueListString(GetNameValuePairs()) : StringExtensionMethods.ToKeyValueListString(GetNameValuePairs().Where(filter));
 
         protected override void OnEntityPropertyChanged(string propertyName)
         {

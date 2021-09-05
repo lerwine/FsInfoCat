@@ -12,8 +12,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="RootPath"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty RootPathProperty = DependencyProperty.Register(nameof(RootPath), typeof(string), typeof(CrawlJobRowViewModel<TEntity>),
-                new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as CrawlJobRowViewModel<TEntity>)?.OnRootPathPropertyChanged(e.OldValue as string, e.NewValue as string)));
+        public static readonly DependencyProperty RootPathProperty = ColumnPropertyBuilder<string, CrawlJobRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(ICrawlJobLogRow.RootPath))
+            .DefaultValue("")
+            .OnChanged((d, oldValue, newValue) => (d as CrawlJobRowViewModel<TEntity>)?.OnRootPathPropertyChanged(oldValue, newValue))
+            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -26,10 +29,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="RootPath"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="RootPath"/> property.</param>
-        private void OnRootPathPropertyChanged(string oldValue, string newValue)
-        {
-            // TODO: Implement OnRootPathPropertyChanged Logic
-        }
+        private void OnRootPathPropertyChanged(string oldValue, string newValue) { }
 
         #endregion
         #region StatusCode Property Members
@@ -37,9 +37,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="StatusCode"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty StatusCodeProperty = DependencyProperty.Register(nameof(StatusCode), typeof(CrawlStatus), typeof(CrawlJobRowViewModel<TEntity>),
-                new PropertyMetadata(CrawlStatus.NotRunning, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as CrawlJobRowViewModel<TEntity>)?.OnStatusCodePropertyChanged((CrawlStatus)e.OldValue, (CrawlStatus)e.NewValue)));
+        public static readonly DependencyProperty StatusCodeProperty = ColumnPropertyBuilder<CrawlStatus, CrawlJobRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(ICrawlJobLogRow.StatusCode))
+            .DefaultValue(CrawlStatus.NotRunning)
+            .OnChanged((d, oldValue, newValue) => (d as CrawlJobRowViewModel<TEntity>)?.OnStatusCodePropertyChanged(oldValue, newValue))
+            .AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -52,10 +54,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="StatusCode"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="StatusCode"/> property.</param>
-        private void OnStatusCodePropertyChanged(CrawlStatus oldValue, CrawlStatus newValue)
-        {
-            // TODO: Implement OnStatusCodePropertyChanged Logic
-        }
+        private void OnStatusCodePropertyChanged(CrawlStatus oldValue, CrawlStatus newValue) { }
 
         #endregion
         #region CrawlStart Property Members
@@ -63,9 +62,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="CrawlStart"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty CrawlStartProperty = DependencyProperty.Register(nameof(CrawlStart), typeof(DateTime), typeof(CrawlJobRowViewModel<TEntity>),
-                new PropertyMetadata(default(DateTime), (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as CrawlJobRowViewModel<TEntity>)?.OnCrawlStartPropertyChanged((DateTime)e.OldValue, (DateTime)e.NewValue)));
+        public static readonly DependencyProperty CrawlStartProperty = ColumnPropertyBuilder<DateTime, CrawlJobRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(ICrawlJobLogRow.CrawlStart))
+            .DefaultValue(default(DateTime))
+            .OnChanged((d, oldValue, newValue) => (d as CrawlJobRowViewModel<TEntity>)?.OnCrawlStartPropertyChanged(oldValue, newValue))
+            .AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -78,10 +79,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="CrawlStart"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="CrawlStart"/> property.</param>
-        private void OnCrawlStartPropertyChanged(DateTime oldValue, DateTime newValue)
-        {
-            // TODO: Implement OnCrawlStartPropertyChanged Logic
-        }
+        private void OnCrawlStartPropertyChanged(DateTime oldValue, DateTime newValue) { }
 
         #endregion
         #region CrawlEnd Property Members
@@ -89,9 +87,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="CrawlEnd"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty CrawlEndProperty = DependencyProperty.Register(nameof(CrawlEnd), typeof(DateTime?), typeof(CrawlJobRowViewModel<TEntity>),
-                new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as CrawlJobRowViewModel<TEntity>)?.OnCrawlEndPropertyChanged((DateTime?)e.OldValue, (DateTime?)e.NewValue)));
+        public static readonly DependencyProperty CrawlEndProperty = ColumnPropertyBuilder<DateTime?, CrawlJobRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(ICrawlJobLogRow.CrawlEnd))
+            .DefaultValue(null)
+            .OnChanged((d, oldValue, newValue) => (d as CrawlJobRowViewModel<TEntity>)?.OnCrawlEndPropertyChanged(oldValue, newValue))
+            .AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -104,10 +104,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="CrawlEnd"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="CrawlEnd"/> property.</param>
-        private void OnCrawlEndPropertyChanged(DateTime? oldValue, DateTime? newValue)
-        {
-            // TODO: Implement OnCrawlEndPropertyChanged Logic
-        }
+        private void OnCrawlEndPropertyChanged(DateTime? oldValue, DateTime? newValue) { }
 
         #endregion
         #region StatusMessage Property Members
@@ -115,9 +112,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="StatusMessage"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty StatusMessageProperty = DependencyProperty.Register(nameof(StatusMessage), typeof(string), typeof(CrawlJobRowViewModel<TEntity>),
-                new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as CrawlJobRowViewModel<TEntity>)?.OnStatusMessagePropertyChanged(e.OldValue as string, e.NewValue as string)));
+        public static readonly DependencyProperty StatusMessageProperty = ColumnPropertyBuilder<string, CrawlJobRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(ICrawlJobLogRow.StatusMessage))
+            .DefaultValue("")
+            .OnChanged((d, oldValue, newValue) => (d as CrawlJobRowViewModel<TEntity>)?.OnStatusMessagePropertyChanged(oldValue, newValue))
+            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -130,10 +129,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="StatusMessage"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="StatusMessage"/> property.</param>
-        private void OnStatusMessagePropertyChanged(string oldValue, string newValue)
-        {
-            // TODO: Implement OnStatusMessagePropertyChanged Logic
-        }
+        private void OnStatusMessagePropertyChanged(string oldValue, string newValue) { }
 
         #endregion
         #region StatusDetail Property Members
@@ -141,9 +137,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="StatusDetail"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty StatusDetailProperty = DependencyProperty.Register(nameof(StatusDetail), typeof(string), typeof(CrawlJobRowViewModel<TEntity>),
-                new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as CrawlJobRowViewModel<TEntity>)?.OnStatusDetailPropertyChanged(e.OldValue as string, e.NewValue as string)));
+        public static readonly DependencyProperty StatusDetailProperty = ColumnPropertyBuilder<string, CrawlJobRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(ICrawlJobLogRow.StatusDetail))
+            .DefaultValue("")
+            .OnChanged((d, oldValue, newValue) => (d as CrawlJobRowViewModel<TEntity>)?.OnStatusDetailPropertyChanged(oldValue, newValue))
+            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -156,10 +154,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="StatusDetail"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="StatusDetail"/> property.</param>
-        private void OnStatusDetailPropertyChanged(string oldValue, string newValue)
-        {
-            // TODO: Implement OnStatusDetailPropertyChanged Logic
-        }
+        private void OnStatusDetailPropertyChanged(string oldValue, string newValue) { }
 
         #endregion
 

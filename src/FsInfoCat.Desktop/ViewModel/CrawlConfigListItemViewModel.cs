@@ -67,7 +67,10 @@ namespace FsInfoCat.Desktop.ViewModel
         #endregion
         #region Path Property Members
 
-        private static readonly DependencyPropertyKey PathPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Path), typeof(string), typeof(CrawlConfigListItemViewModel<TEntity>), new PropertyMetadata(""));
+        private static readonly DependencyPropertyKey PathPropertyKey = ColumnPropertyBuilder<string, CrawlConfigListItemViewModel<TEntity>>
+            .Register(nameof(Path))
+            .DefaultValue("")
+            .AsReadOnly();
 
         /// <summary>
         /// Identifies the <see cref="Path"/> dependency property.
@@ -86,8 +89,10 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="LastCrawlEnd"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty LastCrawlEndProperty = DependencyProperty.Register(nameof(LastCrawlEnd), typeof(DateTime?),
-            typeof(CrawlConfigListItemViewModel<TEntity>), new PropertyMetadata(null));
+        public static readonly DependencyProperty LastCrawlEndProperty = ColumnPropertyBuilder<DateTime?, CrawlConfigListItemViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(ICrawlConfigurationListItem.LastCrawlEnd))
+            .DefaultValue(null)
+            .AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -101,8 +106,10 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="LastCrawlStart"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty LastCrawlStartProperty = DependencyProperty.Register(nameof(LastCrawlStart), typeof(DateTime?),
-            typeof(CrawlConfigListItemViewModel<TEntity>), new PropertyMetadata(null));
+        public static readonly DependencyProperty LastCrawlStartProperty = ColumnPropertyBuilder<DateTime?, CrawlConfigListItemViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(ICrawlConfigurationListItem.LastCrawlStart))
+            .DefaultValue(null)
+            .AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -116,8 +123,10 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="NextScheduledStart"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty NextScheduledStartProperty = DependencyProperty.Register(nameof(NextScheduledStart), typeof(DateTime?),
-            typeof(CrawlConfigListItemViewModel<TEntity>), new PropertyMetadata(null));
+        public static readonly DependencyProperty NextScheduledStartProperty = ColumnPropertyBuilder<DateTime?, CrawlConfigListItemViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(ICrawlConfigurationListItem.NextScheduledStart))
+            .DefaultValue(null)
+            .AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -131,8 +140,10 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="RescheduleInterval"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty RescheduleIntervalProperty = DependencyProperty.Register(nameof(RescheduleInterval), typeof(TimeSpan?),
-            typeof(CrawlConfigListItemViewModel<TEntity>), new PropertyMetadata(null));
+        public static readonly DependencyProperty RescheduleIntervalProperty = ColumnPropertyBuilder<TimeSpan?, CrawlConfigListItemViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(ICrawlConfigurationListItem.RescheduleInterval))
+            .DefaultValue(null)
+            .AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -146,8 +157,10 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="StatusValue"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty StatusValueProperty = DependencyProperty.Register(nameof(StatusValue), typeof(CrawlStatus),
-            typeof(CrawlConfigListItemViewModel<TEntity>), new PropertyMetadata(CrawlStatus.NotRunning));
+        public static readonly DependencyProperty StatusValueProperty = ColumnPropertyBuilder<CrawlStatus, CrawlConfigListItemViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(ICrawlConfigurationListItem.StatusValue))
+            .DefaultValue(CrawlStatus.NotRunning)
+            .AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -161,8 +174,10 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="TTL"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty TTLProperty = DependencyProperty.Register(nameof(TTL), typeof(TimeSpan?),
-            typeof(CrawlConfigListItemViewModel<TEntity>), new PropertyMetadata(null));
+        public static readonly DependencyProperty TTLProperty = ColumnPropertyBuilder<TimeSpan?, CrawlConfigListItemViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(ICrawlConfigurationListItem.TTL))
+            .DefaultValue(null)
+            .AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -173,8 +188,10 @@ namespace FsInfoCat.Desktop.ViewModel
         #endregion
         #region VolumeDisplayName Property Members
 
-        private static readonly DependencyPropertyKey VolumeDisplayNamePropertyKey = DependencyProperty.RegisterReadOnly(nameof(VolumeDisplayName), typeof(string),
-            typeof(CrawlConfigListItemViewModel<TEntity>), new PropertyMetadata(""));
+        private static readonly DependencyPropertyKey VolumeDisplayNamePropertyKey = ColumnPropertyBuilder<string, CrawlConfigListItemViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(ICrawlConfigurationListItem.VolumeDisplayName))
+            .DefaultValue("")
+            .AsReadOnly();
 
         /// <summary>
         /// Identifies the <see cref="VolumeDisplayName"/> dependency property.
@@ -190,8 +207,10 @@ namespace FsInfoCat.Desktop.ViewModel
         #endregion
         #region VolumeName Property Members
 
-        private static readonly DependencyPropertyKey VolumeNamePropertyKey = DependencyProperty.RegisterReadOnly(nameof(VolumeName), typeof(string),
-            typeof(CrawlConfigListItemViewModel<TEntity>), new PropertyMetadata(""));
+        private static readonly DependencyPropertyKey VolumeNamePropertyKey = ColumnPropertyBuilder<string, CrawlConfigListItemViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(ICrawlConfigurationListItem.VolumeName))
+            .DefaultValue("")
+            .AsReadOnly();
 
         /// <summary>
         /// Identifies the <see cref="VolumeName"/> dependency property.
@@ -207,8 +226,10 @@ namespace FsInfoCat.Desktop.ViewModel
         #endregion
         #region VolumeIdentifier Property Members
 
-        private static readonly DependencyPropertyKey VolumeIdentifierPropertyKey = DependencyProperty.RegisterReadOnly(nameof(VolumeIdentifier), typeof(VolumeIdentifier),
-            typeof(CrawlConfigListItemViewModel<TEntity>), new PropertyMetadata(VolumeIdentifier.Empty));
+        private static readonly DependencyPropertyKey VolumeIdentifierPropertyKey = ColumnPropertyBuilder<VolumeIdentifier, CrawlConfigListItemViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(ICrawlConfigurationListItem.VolumeIdentifier))
+            .DefaultValue(VolumeIdentifier.Empty)
+            .AsReadOnly();
 
         /// <summary>
         /// Identifies the <see cref="VolumeIdentifier"/> dependency property.
@@ -224,9 +245,11 @@ namespace FsInfoCat.Desktop.ViewModel
         #endregion
         #region FileSystemDisplayName Property Members
 
-        private static readonly DependencyPropertyKey FileSystemDisplayNamePropertyKey = DependencyProperty.RegisterReadOnly(nameof(FileSystemDisplayName), typeof(string),
-            typeof(CrawlConfigListItemViewModel<TEntity>), new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-            (d as CrawlConfigListItemViewModel<TEntity>)?.OnFileSystemDisplayNamePropertyChanged(e.OldValue as string, e.NewValue as string)));
+        private static readonly DependencyPropertyKey FileSystemDisplayNamePropertyKey = ColumnPropertyBuilder<string, CrawlConfigListItemViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(ICrawlConfigurationListItem.FileSystemDisplayName))
+            .DefaultValue("")
+            .OnChanged((d, oldValue, newValue) => (d as CrawlConfigListItemViewModel<TEntity>)?.OnFileSystemDisplayNamePropertyChanged(oldValue, newValue))
+            .AsReadOnly();
 
         /// <summary>
         /// Identifies the <see cref="FileSystemDisplayName"/> dependency property.
@@ -244,14 +267,16 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="FileSystemDisplayName"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="FileSystemDisplayName"/> property.</param>
-        protected void OnFileSystemDisplayNamePropertyChanged(string oldValue, string newValue) => SetFileSystemShortDescription(newValue, FileSystemSymbolicName);
+        protected virtual void OnFileSystemDisplayNamePropertyChanged(string oldValue, string newValue) => SetFileSystemShortDescription(newValue, FileSystemSymbolicName);
 
         #endregion
         #region FileSystemSymbolicName Property Members
 
-        private static readonly DependencyPropertyKey FileSystemSymbolicNamePropertyKey = DependencyProperty.RegisterReadOnly(nameof(FileSystemSymbolicName), typeof(string),
-            typeof(CrawlConfigListItemViewModel<TEntity>), new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-            (d as CrawlConfigListItemViewModel<TEntity>)?.OnFileSystemSymbolicNamePropertyChanged(e.OldValue as string, e.NewValue as string)));
+        private static readonly DependencyPropertyKey FileSystemSymbolicNamePropertyKey = ColumnPropertyBuilder<string, CrawlConfigListItemViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(ICrawlConfigurationListItem.FileSystemSymbolicName))
+            .DefaultValue("")
+            .OnChanged((d, oldValue, newValue) => (d as CrawlConfigListItemViewModel<TEntity>)?.OnFileSystemSymbolicNamePropertyChanged(oldValue, newValue))
+            .AsReadOnly();
 
         /// <summary>
         /// Identifies the <see cref="FileSystemSymbolicName"/> dependency property.
@@ -269,13 +294,15 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="FileSystemSymbolicName"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="FileSystemSymbolicName"/> property.</param>
-        protected void OnFileSystemSymbolicNamePropertyChanged(string oldValue, string newValue) => SetFileSystemShortDescription(FileSystemDisplayName, newValue);
+        protected virtual void OnFileSystemSymbolicNamePropertyChanged(string oldValue, string newValue) => SetFileSystemShortDescription(FileSystemDisplayName, newValue);
 
         #endregion
         #region FileSystemShortDescription Property Members
 
-        private static readonly DependencyPropertyKey FileSystemShortDescriptionPropertyKey = DependencyProperty.RegisterReadOnly(nameof(FileSystemShortDescription), typeof(string),
-            typeof(CrawlConfigListItemViewModel<TEntity>), new PropertyMetadata(""));
+        private static readonly DependencyPropertyKey FileSystemShortDescriptionPropertyKey = ColumnPropertyBuilder<string, CrawlConfigListItemViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(FileSystemShortDescription), nameof(ICrawlConfigurationListItem.FileSystemDisplayName))
+            .DefaultValue("")
+            .AsReadOnly();
 
         /// <summary>
         /// Identifies the <see cref="FileSystemShortDescription"/> dependency property.
@@ -294,8 +321,10 @@ namespace FsInfoCat.Desktop.ViewModel
         #endregion
         #region VolumeShortDescription Property Members
 
-        private static readonly DependencyPropertyKey VolumeShortDescriptionPropertyKey = DependencyProperty.RegisterReadOnly(nameof(VolumeShortDescription), typeof(string),
-            typeof(CrawlConfigListItemViewModel<TEntity>), new PropertyMetadata(""));
+        private static readonly DependencyPropertyKey VolumeShortDescriptionPropertyKey = ColumnPropertyBuilder<string, CrawlConfigListItemViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(VolumeShortDescription), nameof(ICrawlConfigurationListItem.VolumeDisplayName))
+            .DefaultValue("")
+            .AsReadOnly();
 
         /// <summary>
         /// Identifies the <see cref="VolumeShortDescription"/> dependency property.

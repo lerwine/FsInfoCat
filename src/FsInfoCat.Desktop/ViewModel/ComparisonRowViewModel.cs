@@ -13,9 +13,12 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="AreEqual"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty AreEqualProperty = DependencyProperty.Register(nameof(AreEqual), typeof(bool), typeof(ComparisonRowViewModel<TEntity>),
-                new PropertyMetadata(false, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as ComparisonRowViewModel<TEntity>)?.OnAreEqualPropertyChanged((bool)e.OldValue, (bool)e.NewValue)));
+        public static readonly DependencyProperty AreEqualProperty = ColumnPropertyBuilder<bool, ComparisonRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IComparison.AreEqual))
+            .DefaultValue(false)
+            .OnChanged((DependencyObject d, bool oldValue, bool newValue) =>
+                (d as ComparisonRowViewModel<TEntity>).OnAreEqualPropertyChanged(oldValue, newValue))
+            .AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -28,7 +31,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="AreEqual"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="AreEqual"/> property.</param>
-        protected void OnAreEqualPropertyChanged(bool oldValue, bool newValue) { }
+        protected virtual void OnAreEqualPropertyChanged(bool oldValue, bool newValue) { }
 
         #endregion
         #region ComparedOn Property Members
@@ -36,9 +39,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="ComparedOn"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty ComparedOnProperty = DependencyProperty.Register(nameof(ComparedOn), typeof(DateTime), typeof(ComparisonRowViewModel<TEntity>),
-                new PropertyMetadata(default(DateTime), (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as ComparisonRowViewModel<TEntity>)?.OnComparedOnPropertyChanged((DateTime)e.OldValue, (DateTime)e.NewValue)));
+        public static readonly DependencyProperty ComparedOnProperty = ColumnPropertyBuilder<DateTime, ComparisonRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IComparison.ComparedOn))
+            .OnChanged((DependencyObject d, DateTime oldValue, DateTime newValue) =>
+                (d as ComparisonRowViewModel<TEntity>).OnComparedOnPropertyChanged(oldValue, newValue))
+            .AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -51,7 +56,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="ComparedOn"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="ComparedOn"/> property.</param>
-        protected void OnComparedOnPropertyChanged(DateTime oldValue, DateTime newValue) { }
+        protected virtual void OnComparedOnPropertyChanged(DateTime oldValue, DateTime newValue) { }
 
         #endregion
 #pragma warning restore IDE0060 // Remove unused parameter

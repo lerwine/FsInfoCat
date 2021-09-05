@@ -1,4 +1,7 @@
+using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel
@@ -12,9 +15,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="ContentDistributor"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty ContentDistributorProperty = DependencyProperty.Register(nameof(ContentDistributor), typeof(string),
-            typeof(MediaPropertiesRowViewModel<TEntity>), new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as MediaPropertiesRowViewModel<TEntity>)?.OnContentDistributorPropertyChanged(e.OldValue as string, e.NewValue as string)));
+        public static readonly DependencyProperty ContentDistributorProperty = ColumnPropertyBuilder<string, MediaPropertiesRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IMediaProperties.ContentDistributor))
+            .DefaultValue("")
+            .OnChanged((d, oldValue, newValue) => (d as MediaPropertiesRowViewModel<TEntity>)?.OnContentDistributorPropertyChanged(oldValue, newValue))
+            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -27,7 +32,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="ContentDistributor"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="ContentDistributor"/> property.</param>
-        protected void OnContentDistributorPropertyChanged(string oldValue, string newValue) { }
+        protected virtual void OnContentDistributorPropertyChanged(string oldValue, string newValue) { }
 
         #endregion
         #region CreatorApplication Property Members
@@ -35,9 +40,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="CreatorApplication"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty CreatorApplicationProperty = DependencyProperty.Register(nameof(CreatorApplication), typeof(string),
-            typeof(MediaPropertiesRowViewModel<TEntity>), new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as MediaPropertiesRowViewModel<TEntity>)?.OnCreatorApplicationPropertyChanged(e.OldValue as string, e.NewValue as string)));
+        public static readonly DependencyProperty CreatorApplicationProperty = ColumnPropertyBuilder<string, MediaPropertiesRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IMediaProperties.CreatorApplication))
+            .DefaultValue("")
+            .OnChanged((d, oldValue, newValue) => (d as MediaPropertiesRowViewModel<TEntity>)?.OnCreatorApplicationPropertyChanged(oldValue, newValue))
+            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -50,7 +57,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="CreatorApplication"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="CreatorApplication"/> property.</param>
-        protected void OnCreatorApplicationPropertyChanged(string oldValue, string newValue) { }
+        protected virtual void OnCreatorApplicationPropertyChanged(string oldValue, string newValue) { }
 
         #endregion
         #region CreatorApplicationVersion Property Members
@@ -58,9 +65,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="CreatorApplicationVersion"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty CreatorApplicationVersionProperty = DependencyProperty.Register(nameof(CreatorApplicationVersion), typeof(string),
-            typeof(MediaPropertiesRowViewModel<TEntity>), new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as MediaPropertiesRowViewModel<TEntity>)?.OnCreatorApplicationVersionPropertyChanged(e.OldValue as string, e.NewValue as string)));
+        public static readonly DependencyProperty CreatorApplicationVersionProperty = ColumnPropertyBuilder<string, MediaPropertiesRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IMediaProperties.CreatorApplicationVersion))
+            .DefaultValue("")
+            .OnChanged((d, oldValue, newValue) => (d as MediaPropertiesRowViewModel<TEntity>)?.OnCreatorApplicationVersionPropertyChanged(oldValue, newValue))
+            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -73,7 +82,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="CreatorApplicationVersion"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="CreatorApplicationVersion"/> property.</param>
-        protected void OnCreatorApplicationVersionPropertyChanged(string oldValue, string newValue) { }
+        protected virtual void OnCreatorApplicationVersionPropertyChanged(string oldValue, string newValue) { }
 
         #endregion
         #region DateReleased Property Members
@@ -81,9 +90,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="DateReleased"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty DateReleasedProperty = DependencyProperty.Register(nameof(DateReleased), typeof(string),
-            typeof(MediaPropertiesRowViewModel<TEntity>), new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as MediaPropertiesRowViewModel<TEntity>)?.OnDateReleasedPropertyChanged(e.OldValue as string, e.NewValue as string)));
+        public static readonly DependencyProperty DateReleasedProperty = ColumnPropertyBuilder<string, MediaPropertiesRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IMediaProperties.DateReleased))
+            .DefaultValue("")
+            .OnChanged((d, oldValue, newValue) => (d as MediaPropertiesRowViewModel<TEntity>)?.OnDateReleasedPropertyChanged(oldValue, newValue))
+            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -96,7 +107,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="DateReleased"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="DateReleased"/> property.</param>
-        protected void OnDateReleasedPropertyChanged(string oldValue, string newValue) { }
+        protected virtual void OnDateReleasedPropertyChanged(string oldValue, string newValue) { }
 
         #endregion
         #region Duration Property Members
@@ -104,22 +115,24 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="Duration"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty DurationProperty = DependencyProperty.Register(nameof(Duration), typeof(ulong?),
-            typeof(MediaPropertiesRowViewModel<TEntity>), new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as MediaPropertiesRowViewModel<TEntity>)?.OnDurationPropertyChanged((ulong?)e.OldValue, (ulong?)e.NewValue)));
+        public static readonly DependencyProperty DurationProperty = ColumnPropertyBuilder<TimeSpan?, MediaPropertiesRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IMediaProperties.Duration))
+            .DefaultValue(null)
+            .OnChanged((d, oldValue, newValue) => (d as MediaPropertiesRowViewModel<TEntity>)?.OnDurationPropertyChanged(oldValue, newValue))
+            .AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
         /// </summary>
         /// <value>The .</value>
-        public ulong? Duration { get => (ulong?)GetValue(DurationProperty); set => SetValue(DurationProperty, value); }
+        public TimeSpan? Duration { get => (TimeSpan?)GetValue(DurationProperty); set => SetValue(DurationProperty, value); }
 
         /// <summary>
         /// Called when the value of the <see cref="Duration"/> dependency property has changed.
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Duration"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Duration"/> property.</param>
-        protected void OnDurationPropertyChanged(ulong? oldValue, ulong? newValue) { }
+        protected virtual void OnDurationPropertyChanged(TimeSpan? oldValue, TimeSpan? newValue) { }
 
         #endregion
         #region DVDID Property Members
@@ -127,9 +140,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="DVDID"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty DVDIDProperty = DependencyProperty.Register(nameof(DVDID), typeof(string), typeof(MediaPropertiesRowViewModel<TEntity>),
-                new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as MediaPropertiesRowViewModel<TEntity>)?.OnDVDIDPropertyChanged(e.OldValue as string, e.NewValue as string)));
+        public static readonly DependencyProperty DVDIDProperty = ColumnPropertyBuilder<string, MediaPropertiesRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IMediaProperties.DVDID))
+            .DefaultValue("")
+            .OnChanged((d, oldValue, newValue) => (d as MediaPropertiesRowViewModel<TEntity>)?.OnDVDIDPropertyChanged(oldValue, newValue))
+            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -142,7 +157,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="DVDID"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="DVDID"/> property.</param>
-        protected void OnDVDIDPropertyChanged(string oldValue, string newValue) { }
+        protected virtual void OnDVDIDPropertyChanged(string oldValue, string newValue) { }
 
         #endregion
         #region FrameCount Property Members
@@ -150,9 +165,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="FrameCount"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty FrameCountProperty = DependencyProperty.Register(nameof(FrameCount), typeof(uint?),
-            typeof(MediaPropertiesRowViewModel<TEntity>), new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as MediaPropertiesRowViewModel<TEntity>)?.OnFrameCountPropertyChanged((uint?)e.OldValue, (uint?)e.NewValue)));
+        public static readonly DependencyProperty FrameCountProperty = ColumnPropertyBuilder<uint?, MediaPropertiesRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IMediaProperties.FrameCount))
+            .DefaultValue(null)
+            .OnChanged((d, oldValue, newValue) => (d as MediaPropertiesRowViewModel<TEntity>)?.OnFrameCountPropertyChanged(oldValue, newValue))
+            .AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -165,7 +182,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="FrameCount"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="FrameCount"/> property.</param>
-        protected void OnFrameCountPropertyChanged(uint? oldValue, uint? newValue) { }
+        protected virtual void OnFrameCountPropertyChanged(uint? oldValue, uint? newValue) { }
 
         #endregion
         #region ProtectionType Property Members
@@ -173,9 +190,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="ProtectionType"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty ProtectionTypeProperty = DependencyProperty.Register(nameof(ProtectionType), typeof(string),
-            typeof(MediaPropertiesRowViewModel<TEntity>), new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as MediaPropertiesRowViewModel<TEntity>)?.OnProtectionTypePropertyChanged(e.OldValue as string, e.NewValue as string)));
+        public static readonly DependencyProperty ProtectionTypeProperty = ColumnPropertyBuilder<string, MediaPropertiesRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IMediaProperties.ProtectionType))
+            .DefaultValue("")
+            .OnChanged((d, oldValue, newValue) => (d as MediaPropertiesRowViewModel<TEntity>)?.OnProtectionTypePropertyChanged(oldValue, newValue))
+            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -188,7 +207,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="ProtectionType"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="ProtectionType"/> property.</param>
-        protected void OnProtectionTypePropertyChanged(string oldValue, string newValue) { }
+        protected virtual void OnProtectionTypePropertyChanged(string oldValue, string newValue) { }
 
         #endregion
         #region ProviderRating Property Members
@@ -196,9 +215,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="ProviderRating"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty ProviderRatingProperty = DependencyProperty.Register(nameof(ProviderRating), typeof(string),
-            typeof(MediaPropertiesRowViewModel<TEntity>), new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as MediaPropertiesRowViewModel<TEntity>)?.OnProviderRatingPropertyChanged(e.OldValue as string, e.NewValue as string)));
+        public static readonly DependencyProperty ProviderRatingProperty = ColumnPropertyBuilder<string, MediaPropertiesRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IMediaProperties.ProviderRating))
+            .DefaultValue("")
+            .OnChanged((d, oldValue, newValue) => (d as MediaPropertiesRowViewModel<TEntity>)?.OnProviderRatingPropertyChanged(oldValue, newValue))
+            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -211,7 +232,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="ProviderRating"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="ProviderRating"/> property.</param>
-        protected void OnProviderRatingPropertyChanged(string oldValue, string newValue) { }
+        protected virtual void OnProviderRatingPropertyChanged(string oldValue, string newValue) { }
 
         #endregion
         #region ProviderStyle Property Members
@@ -219,9 +240,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="ProviderStyle"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty ProviderStyleProperty = DependencyProperty.Register(nameof(ProviderStyle), typeof(string),
-            typeof(MediaPropertiesRowViewModel<TEntity>), new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as MediaPropertiesRowViewModel<TEntity>)?.OnProviderStylePropertyChanged(e.OldValue as string, e.NewValue as string)));
+        public static readonly DependencyProperty ProviderStyleProperty = ColumnPropertyBuilder<string, MediaPropertiesRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IMediaProperties.ProviderStyle))
+            .DefaultValue("")
+            .OnChanged((d, oldValue, newValue) => (d as MediaPropertiesRowViewModel<TEntity>)?.OnProviderStylePropertyChanged(oldValue, newValue))
+            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -234,7 +257,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="ProviderStyle"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="ProviderStyle"/> property.</param>
-        protected void OnProviderStylePropertyChanged(string oldValue, string newValue) { }
+        protected virtual void OnProviderStylePropertyChanged(string oldValue, string newValue) { }
 
         #endregion
         #region Publisher Property Members
@@ -242,9 +265,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="Publisher"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty PublisherProperty = DependencyProperty.Register(nameof(Publisher), typeof(string),
-            typeof(MediaPropertiesRowViewModel<TEntity>), new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as MediaPropertiesRowViewModel<TEntity>)?.OnPublisherPropertyChanged(e.OldValue as string, e.NewValue as string)));
+        public static readonly DependencyProperty PublisherProperty = ColumnPropertyBuilder<string, MediaPropertiesRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IMediaProperties.Publisher))
+            .DefaultValue("")
+            .OnChanged((d, oldValue, newValue) => (d as MediaPropertiesRowViewModel<TEntity>)?.OnPublisherPropertyChanged(oldValue, newValue))
+            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -257,7 +282,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Publisher"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Publisher"/> property.</param>
-        protected void OnPublisherPropertyChanged(string oldValue, string newValue) { }
+        protected virtual void OnPublisherPropertyChanged(string oldValue, string newValue) { }
 
         #endregion
         #region Subtitle Property Members
@@ -265,9 +290,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="Subtitle"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty SubtitleProperty = DependencyProperty.Register(nameof(Subtitle), typeof(string),
-            typeof(MediaPropertiesRowViewModel<TEntity>), new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as MediaPropertiesRowViewModel<TEntity>)?.OnSubtitlePropertyChanged(e.OldValue as string, e.NewValue as string)));
+        public static readonly DependencyProperty SubtitleProperty = ColumnPropertyBuilder<string, MediaPropertiesRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IMediaProperties.Subtitle))
+            .DefaultValue("")
+            .OnChanged((d, oldValue, newValue) => (d as MediaPropertiesRowViewModel<TEntity>)?.OnSubtitlePropertyChanged(oldValue, newValue))
+            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -280,7 +307,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Subtitle"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Subtitle"/> property.</param>
-        protected void OnSubtitlePropertyChanged(string oldValue, string newValue) { }
+        protected virtual void OnSubtitlePropertyChanged(string oldValue, string newValue) { }
 
         #endregion
         #region Year Property Members
@@ -288,9 +315,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="Year"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty YearProperty = DependencyProperty.Register(nameof(Year), typeof(uint?), typeof(MediaPropertiesRowViewModel<TEntity>),
-                new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as MediaPropertiesRowViewModel<TEntity>)?.OnYearPropertyChanged((uint?)e.OldValue, (uint?)e.NewValue)));
+        public static readonly DependencyProperty YearProperty = ColumnPropertyBuilder<uint?, MediaPropertiesRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IMediaProperties.Year))
+            .DefaultValue(null)
+            .OnChanged((d, oldValue, newValue) => (d as MediaPropertiesRowViewModel<TEntity>)?.OnYearPropertyChanged(oldValue, newValue))
+            .AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -303,7 +332,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Year"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Year"/> property.</param>
-        protected void OnYearPropertyChanged(uint? oldValue, uint? newValue) { }
+        protected virtual void OnYearPropertyChanged(uint? oldValue, uint? newValue) { }
 
         #endregion
 #pragma warning restore IDE0060 // Remove unused parameter
@@ -314,7 +343,7 @@ namespace FsInfoCat.Desktop.ViewModel
             CreatorApplication = entity.CreatorApplication;
             CreatorApplicationVersion = entity.CreatorApplicationVersion;
             DateReleased = entity.DateReleased;
-            Duration = entity.Duration;
+            Duration = Converters.TimeSpanToStringConverter.FromMediaDuration(entity.Duration);
             DVDID = entity.DVDID;
             FrameCount = entity.FrameCount;
             ProtectionType = entity.ProtectionType;
@@ -325,11 +354,25 @@ namespace FsInfoCat.Desktop.ViewModel
             Year = entity.Year;
         }
 
-        internal string CalculateDisplayText()
+        public IEnumerable<(string DisplayName, string Value)> GetNameValuePairs()
         {
-            // TODO: Calculate value for ListingViewModel<TEntity, TItem, TOptions>.SetItemDisplayText(string)
-            throw new System.NotImplementedException();
+            yield return (FsInfoCat.Properties.Resources.DisplayName_Subtitle, Subtitle.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.DisplayName_Publisher, Publisher.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.DisplayName_Year, Year?.ToString());
+            yield return (FsInfoCat.Properties.Resources.DisplayName_FrameCount, FrameCount?.ToString());
+            yield return (FsInfoCat.Properties.Resources.DisplayName_Duration, Duration?.ToString("g"));
+            yield return (FsInfoCat.Properties.Resources.DisplayName_DateReleased, DateReleased.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.DisplayName_ProtectionType, ProtectionType.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.DisplayName_ProviderRating, ProviderRating.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.DisplayName_ProviderStyle, ProviderStyle.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.DisplayName_ContentDistributor, ContentDistributor.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.DisplayName_CreatorApplication, CreatorApplication.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.DisplayName_CreatorApplicationVersion, CreatorApplicationVersion.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.DisplayName_DVDID, DVDID.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
         }
+
+        internal string CalculateDisplayText(Func<(string DisplayName, string Value), bool> filter = null) => (filter is null) ?
+            StringExtensionMethods.ToKeyValueListString(GetNameValuePairs()) : StringExtensionMethods.ToKeyValueListString(GetNameValuePairs().Where(filter));
 
         protected override void OnEntityPropertyChanged(string propertyName)
         {
@@ -348,7 +391,7 @@ namespace FsInfoCat.Desktop.ViewModel
                     Dispatcher.CheckInvoke(() => DateReleased = Entity.DateReleased);
                     break;
                 case nameof(IMediaProperties.Duration):
-                    Dispatcher.CheckInvoke(() => Duration = Entity.Duration);
+                    Dispatcher.CheckInvoke(() => Duration = Converters.TimeSpanToStringConverter.FromMediaDuration(Entity.Duration));
                     break;
                 case nameof(IMediaProperties.DVDID):
                     Dispatcher.CheckInvoke(() => DVDID = Entity.DVDID);

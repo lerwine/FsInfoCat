@@ -12,9 +12,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="ErrorCode"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty ErrorCodeProperty = DependencyProperty.Register(nameof(ErrorCode), typeof(AccessErrorCode),
-            typeof(AccessErrorRowViewModel<TEntity>), new PropertyMetadata(AccessErrorCode.Unspecified, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as AccessErrorRowViewModel<TEntity>)?.OnErrorCodePropertyChanged((AccessErrorCode)e.OldValue, (AccessErrorCode)e.NewValue)));
+        public static readonly DependencyProperty ErrorCodeProperty = ColumnPropertyBuilder<AccessErrorCode, AccessErrorRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IAccessError.ErrorCode))
+            .DefaultValue(AccessErrorCode.Unspecified)
+            .OnChanged((d, oldValue, newValue) => (d as AccessErrorRowViewModel<TEntity>)?.OnErrorCodePropertyChanged(oldValue, newValue))
+            .AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -27,7 +29,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="ErrorCode"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="ErrorCode"/> property.</param>
-        protected void OnErrorCodePropertyChanged(AccessErrorCode oldValue, AccessErrorCode newValue) { }
+        protected virtual void OnErrorCodePropertyChanged(AccessErrorCode oldValue, AccessErrorCode newValue) { }
 
         #endregion
         #region Details Property Members
@@ -35,9 +37,12 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="Details"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty DetailsProperty = DependencyProperty.Register(nameof(Details), typeof(string), typeof(AccessErrorRowViewModel<TEntity>),
-                new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as AccessErrorRowViewModel<TEntity>)?.OnDetailsPropertyChanged(e.OldValue as string, e.NewValue as string)));
+        public static readonly DependencyProperty DetailsProperty = ColumnPropertyBuilder<string, AccessErrorRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IAccessError.Details))
+            .DefaultValue("")
+            .OnChanged((d, oldValue, newValue) => (d as AccessErrorRowViewModel<TEntity>)?.OnDetailsPropertyChanged(oldValue, newValue))
+            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default)
+            .AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -50,10 +55,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Details"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Details"/> property.</param>
-        protected void OnDetailsPropertyChanged(string oldValue, string newValue)
-        {
-            // TODO: Implement OnDetailsPropertyChanged Logic
-        }
+        protected virtual void OnDetailsPropertyChanged(string oldValue, string newValue) { }
 
         #endregion
 #pragma warning restore IDE0060 // Remove unused parameter

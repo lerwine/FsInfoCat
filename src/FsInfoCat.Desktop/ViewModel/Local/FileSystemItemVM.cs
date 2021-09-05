@@ -221,7 +221,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="VolumeCount"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="VolumeCount"/> property.</param>
-        protected void OnVolumeCountPropertyChanged(long oldValue, long newValue)
+        protected virtual void OnVolumeCountPropertyChanged(long oldValue, long newValue)
         {
             DeleteCurrentItem.IsEnabled = newValue == 0L && SymbolicNameCount == 0L;
         }
@@ -248,7 +248,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="SymbolicNameCount"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="SymbolicNameCount"/> property.</param>
-        protected void OnSymbolicNameCountPropertyChanged(long oldValue, long newValue)
+        protected virtual void OnSymbolicNameCountPropertyChanged(long oldValue, long newValue)
         {
             DeleteCurrentItem.IsEnabled = newValue == 0L && VolumeCount == 0L;
         }

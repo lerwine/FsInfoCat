@@ -18,7 +18,7 @@
     <Grid>
         <DataGrid ItemsSource="{Binding Items}" AutoGenerateColumns="False">
             <DataGrid.Columns>
-                <DataGridTextColumn Binding="{Binding Path=(ViewModel:FilteredItemsViewModel.ItemDisplayText), Mode=OneWay}" Header="Values" Width="*"/>
+                <DataGridTextColumn Binding="{Binding Path=(ViewModel:CommonAttached.ListItemTitle), Mode=OneWay}" Header="Values" Width="*"/>
                 <DataGridTextColumn Binding="{Binding ExistingFileCount}" MinWidth="100">
                     <DataGridTextColumn.Header>
                         <StackPanel Orientation="Horizontal">

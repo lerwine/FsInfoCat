@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Windows;
@@ -35,8 +36,10 @@ namespace FsInfoCat.Desktop.ViewModel
 
         #region CreatedOn Property Members
 
-        private static readonly DependencyPropertyKey CreatedOnPropertyKey = DependencyProperty.RegisterReadOnly(nameof(CreatedOn), typeof(DateTime), typeof(DbEntityRowViewModel<TEntity>),
-                new PropertyMetadata(default(DateTime)));
+        private static readonly DependencyPropertyKey CreatedOnPropertyKey = ColumnPropertyBuilder<DateTime, DbEntityRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(DbEntity.CreatedOn))
+            .DefaultValue(default)
+            .AsReadOnly();
 
         /// <summary>
         /// Identifies the <see cref="CreatedOn"/> dependency property.
@@ -52,8 +55,10 @@ namespace FsInfoCat.Desktop.ViewModel
         #endregion
         #region ModifiedOn Property Members
 
-        private static readonly DependencyPropertyKey ModifiedOnPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ModifiedOn), typeof(DateTime), typeof(DbEntityRowViewModel<TEntity>),
-                new PropertyMetadata(default(DateTime)));
+        private static readonly DependencyPropertyKey ModifiedOnPropertyKey = ColumnPropertyBuilder<DateTime, DbEntityRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(DbEntity.ModifiedOn))
+            .DefaultValue(default)
+            .AsReadOnly();
 
         /// <summary>
         /// Identifies the <see cref="ModifiedOn"/> dependency property.
@@ -82,7 +87,7 @@ namespace FsInfoCat.Desktop.ViewModel
                 OnEntityPropertyChanged(n);
         }
 
-        protected void OnEntityPropertyChanged(object sender, PropertyChangedEventArgs args) => OnEntityPropertyChanged(args.PropertyName ?? "");
+        protected virtual void OnEntityPropertyChanged(object sender, PropertyChangedEventArgs args) => OnEntityPropertyChanged(args.PropertyName ?? "");
 
         protected virtual void OnEntityPropertyChanged(string propertyName)
         {

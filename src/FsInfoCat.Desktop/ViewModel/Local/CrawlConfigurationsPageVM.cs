@@ -37,7 +37,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         /// <value>The <see cref="System.Windows.Input.ICommand"/> that implements the $command$ command.</value>
         public Commands.RelayCommand ShowLogs => (Commands.RelayCommand)GetValue(ShowLogsProperty);
 
-        protected void OnShowLogs(object parameter)
+        protected virtual void OnShowLogs(object parameter)
         {
             // DEFERRED: Implement OnShowLogs Logic
         }

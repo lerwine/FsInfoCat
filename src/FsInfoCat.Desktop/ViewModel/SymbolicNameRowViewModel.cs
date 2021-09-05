@@ -15,9 +15,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="Name"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty NameProperty = DependencyProperty.Register(nameof(Name), typeof(string), typeof(SymbolicNameRowViewModel<TEntity>),
-                new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as SymbolicNameRowViewModel<TEntity>)?.OnNamePropertyChanged(e.OldValue as string, e.NewValue as string)));
+        public static readonly DependencyProperty NameProperty = ColumnPropertyBuilder<string, SymbolicNameRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(ISymbolicNameRow.Name))
+            .DefaultValue("")
+            .OnChanged((d, oldValue, newValue) => (d as SymbolicNameRowViewModel<TEntity>)?.OnNamePropertyChanged(oldValue, newValue))
+            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -30,10 +32,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Name"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Name"/> property.</param>
-        protected void OnNamePropertyChanged(string oldValue, string newValue)
-        {
-            // TODO: Implement OnNamePropertyChanged Logic
-        }
+        protected virtual void OnNamePropertyChanged(string oldValue, string newValue) { }
 
         #endregion
         #region Notes Property Members
@@ -41,9 +40,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="Notes"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty NotesProperty = DependencyProperty.Register(nameof(Notes), typeof(string), typeof(SymbolicNameRowViewModel<TEntity>),
-                new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as SymbolicNameRowViewModel<TEntity>)?.OnNotesPropertyChanged(e.OldValue as string, e.NewValue as string)));
+        public static readonly DependencyProperty NotesProperty = ColumnPropertyBuilder<string, SymbolicNameRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(ISymbolicNameRow.Notes))
+            .DefaultValue("")
+            .OnChanged((d, oldValue, newValue) => (d as SymbolicNameRowViewModel<TEntity>)?.OnNotesPropertyChanged(oldValue, newValue))
+            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -56,10 +57,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Notes"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Notes"/> property.</param>
-        protected void OnNotesPropertyChanged(string oldValue, string newValue)
-        {
-            // TODO: Implement OnNotesPropertyChanged Logic
-        }
+        protected virtual void OnNotesPropertyChanged(string oldValue, string newValue) { }
 
         #endregion
         #region Priority Property Members
@@ -67,9 +65,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="Priority"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty PriorityProperty = DependencyProperty.Register(nameof(Priority), typeof(int), typeof(SymbolicNameRowViewModel<TEntity>),
-                new PropertyMetadata(0, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as SymbolicNameRowViewModel<TEntity>)?.OnPriorityPropertyChanged((int)e.OldValue, (int)e.NewValue)));
+        public static readonly DependencyProperty PriorityProperty = ColumnPropertyBuilder<int, SymbolicNameRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(ISymbolicNameRow.Priority))
+            .DefaultValue(0)
+            .OnChanged((d, oldValue, newValue) => (d as SymbolicNameRowViewModel<TEntity>)?.OnPriorityPropertyChanged(oldValue, newValue))
+            .AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -82,10 +82,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Priority"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Priority"/> property.</param>
-        protected void OnPriorityPropertyChanged(int oldValue, int newValue)
-        {
-            // TODO: Implement OnPriorityPropertyChanged Logic
-        }
+        protected virtual void OnPriorityPropertyChanged(int oldValue, int newValue) { }
 
         #endregion
         #region IsInactive Property Members
@@ -93,9 +90,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="IsInactive"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty IsInactiveProperty = DependencyProperty.Register(nameof(IsInactive), typeof(bool),
-            typeof(SymbolicNameRowViewModel<TEntity>), new PropertyMetadata(false, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as SymbolicNameRowViewModel<TEntity>)?.OnIsInactivePropertyChanged((bool)e.OldValue, (bool)e.NewValue)));
+        public static readonly DependencyProperty IsInactiveProperty = ColumnPropertyBuilder<bool, SymbolicNameRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(ISymbolicNameRow.IsInactive))
+            .DefaultValue(false)
+            .OnChanged((d, oldValue, newValue) => (d as SymbolicNameRowViewModel<TEntity>)?.OnIsInactivePropertyChanged(oldValue, newValue))
+            .AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -108,10 +107,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="IsInactive"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="IsInactive"/> property.</param>
-        protected void OnIsInactivePropertyChanged(bool oldValue, bool newValue)
-        {
-            // TODO: Implement OnIsInactivePropertyChanged Logic
-        }
+        protected virtual void OnIsInactivePropertyChanged(bool oldValue, bool newValue) { }
 
         #endregion
 #pragma warning restore IDE0060 // Remove unused parameter

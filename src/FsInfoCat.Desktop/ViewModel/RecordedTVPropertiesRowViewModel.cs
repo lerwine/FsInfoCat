@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel
@@ -13,9 +15,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="ChannelNumber"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty ChannelNumberProperty = DependencyProperty.Register(nameof(ChannelNumber), typeof(uint?),
-            typeof(RecordedTVPropertiesRowViewModel<TEntity>), new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as RecordedTVPropertiesRowViewModel<TEntity>)?.OnChannelNumberPropertyChanged((uint?)e.OldValue, (uint?)e.NewValue)));
+        public static readonly DependencyProperty ChannelNumberProperty = ColumnPropertyBuilder<uint?, RecordedTVPropertiesRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IRecordedTVProperties.ChannelNumber))
+            .DefaultValue(null)
+            .OnChanged((d, oldValue, newValue) => (d as RecordedTVPropertiesRowViewModel<TEntity>)?.OnChannelNumberPropertyChanged(oldValue, newValue))
+            .AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -28,10 +32,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="ChannelNumber"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="ChannelNumber"/> property.</param>
-        protected void OnChannelNumberPropertyChanged(uint? oldValue, uint? newValue)
-        {
-            // TODO: Implement OnChannelNumberPropertyChanged Logic
-        }
+        protected virtual void OnChannelNumberPropertyChanged(uint? oldValue, uint? newValue) { }
 
         #endregion
         #region EpisodeName Property Members
@@ -39,9 +40,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="EpisodeName"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty EpisodeNameProperty = DependencyProperty.Register(nameof(EpisodeName), typeof(string),
-            typeof(RecordedTVPropertiesRowViewModel<TEntity>), new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as RecordedTVPropertiesRowViewModel<TEntity>)?.OnEpisodeNamePropertyChanged(e.OldValue as string, e.NewValue as string)));
+        public static readonly DependencyProperty EpisodeNameProperty = ColumnPropertyBuilder<string, RecordedTVPropertiesRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IRecordedTVProperties.EpisodeName))
+            .DefaultValue("")
+            .OnChanged((d, oldValue, newValue) => (d as RecordedTVPropertiesRowViewModel<TEntity>)?.OnEpisodeNamePropertyChanged(oldValue, newValue))
+            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -54,10 +57,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="EpisodeName"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="EpisodeName"/> property.</param>
-        protected void OnEpisodeNamePropertyChanged(string oldValue, string newValue)
-        {
-            // TODO: Implement OnEpisodeNamePropertyChanged Logic
-        }
+        protected virtual void OnEpisodeNamePropertyChanged(string oldValue, string newValue) { }
 
         #endregion
         #region IsDTVContent Property Members
@@ -65,9 +65,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="IsDTVContent"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty IsDTVContentProperty = DependencyProperty.Register(nameof(IsDTVContent), typeof(bool?),
-            typeof(RecordedTVPropertiesRowViewModel<TEntity>), new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as RecordedTVPropertiesRowViewModel<TEntity>)?.OnIsDTVContentPropertyChanged((bool?)e.OldValue, (bool?)e.NewValue)));
+        public static readonly DependencyProperty IsDTVContentProperty = ColumnPropertyBuilder<bool?, RecordedTVPropertiesRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IRecordedTVProperties.IsDTVContent))
+            .DefaultValue(null)
+            .OnChanged((d, oldValue, newValue) => (d as RecordedTVPropertiesRowViewModel<TEntity>)?.OnIsDTVContentPropertyChanged(oldValue, newValue))
+            .AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -80,10 +82,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="IsDTVContent"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="IsDTVContent"/> property.</param>
-        protected void OnIsDTVContentPropertyChanged(bool? oldValue, bool? newValue)
-        {
-            // TODO: Implement OnIsDTVContentPropertyChanged Logic
-        }
+        protected virtual void OnIsDTVContentPropertyChanged(bool? oldValue, bool? newValue) { }
 
         #endregion
         #region IsHDContent Property Members
@@ -91,9 +90,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="IsHDContent"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty IsHDContentProperty = DependencyProperty.Register(nameof(IsHDContent), typeof(bool?),
-            typeof(RecordedTVPropertiesRowViewModel<TEntity>), new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as RecordedTVPropertiesRowViewModel<TEntity>)?.OnIsHDContentPropertyChanged((bool?)e.OldValue, (bool?)e.NewValue)));
+        public static readonly DependencyProperty IsHDContentProperty = ColumnPropertyBuilder<bool?, RecordedTVPropertiesRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IRecordedTVProperties.IsHDContent))
+            .DefaultValue(null)
+            .OnChanged((d, oldValue, newValue) => (d as RecordedTVPropertiesRowViewModel<TEntity>)?.OnIsHDContentPropertyChanged(oldValue, newValue))
+            .AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -106,10 +107,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="IsHDContent"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="IsHDContent"/> property.</param>
-        protected void OnIsHDContentPropertyChanged(bool? oldValue, bool? newValue)
-        {
-            // TODO: Implement OnIsHDContentPropertyChanged Logic
-        }
+        protected virtual void OnIsHDContentPropertyChanged(bool? oldValue, bool? newValue) { }
 
         #endregion
         #region NetworkAffiliation Property Members
@@ -117,9 +115,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="NetworkAffiliation"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty NetworkAffiliationProperty = DependencyProperty.Register(nameof(NetworkAffiliation), typeof(string),
-            typeof(RecordedTVPropertiesRowViewModel<TEntity>), new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as RecordedTVPropertiesRowViewModel<TEntity>)?.OnNetworkAffiliationPropertyChanged(e.OldValue as string, e.NewValue as string)));
+        public static readonly DependencyProperty NetworkAffiliationProperty = ColumnPropertyBuilder<string, RecordedTVPropertiesRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IRecordedTVProperties.NetworkAffiliation))
+            .DefaultValue("")
+            .OnChanged((d, oldValue, newValue) => (d as RecordedTVPropertiesRowViewModel<TEntity>)?.OnNetworkAffiliationPropertyChanged(oldValue, newValue))
+            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -132,10 +132,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="NetworkAffiliation"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="NetworkAffiliation"/> property.</param>
-        protected void OnNetworkAffiliationPropertyChanged(string oldValue, string newValue)
-        {
-            // TODO: Implement OnNetworkAffiliationPropertyChanged Logic
-        }
+        protected virtual void OnNetworkAffiliationPropertyChanged(string oldValue, string newValue) { }
 
         #endregion
         #region OriginalBroadcastDate Property Members
@@ -143,9 +140,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="OriginalBroadcastDate"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty OriginalBroadcastDateProperty = DependencyProperty.Register(nameof(OriginalBroadcastDate), typeof(DateTime?),
-            typeof(RecordedTVPropertiesRowViewModel<TEntity>), new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as RecordedTVPropertiesRowViewModel<TEntity>)?.OnOriginalBroadcastDatePropertyChanged((DateTime?)e.OldValue, (DateTime?)e.NewValue)));
+        public static readonly DependencyProperty OriginalBroadcastDateProperty = ColumnPropertyBuilder<DateTime?, RecordedTVPropertiesRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IRecordedTVProperties.OriginalBroadcastDate))
+            .DefaultValue(null)
+            .OnChanged((d, oldValue, newValue) => (d as RecordedTVPropertiesRowViewModel<TEntity>)?.OnOriginalBroadcastDatePropertyChanged(oldValue, newValue))
+            .AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -158,10 +157,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="OriginalBroadcastDate"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="OriginalBroadcastDate"/> property.</param>
-        protected void OnOriginalBroadcastDatePropertyChanged(DateTime? oldValue, DateTime? newValue)
-        {
-            // TODO: Implement OnOriginalBroadcastDatePropertyChanged Logic
-        }
+        protected virtual void OnOriginalBroadcastDatePropertyChanged(DateTime? oldValue, DateTime? newValue) { }
 
         #endregion
         #region ProgramDescription Property Members
@@ -169,9 +165,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="ProgramDescription"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty ProgramDescriptionProperty = DependencyProperty.Register(nameof(ProgramDescription), typeof(string),
-            typeof(RecordedTVPropertiesRowViewModel<TEntity>), new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as RecordedTVPropertiesRowViewModel<TEntity>)?.OnProgramDescriptionPropertyChanged(e.OldValue as string, e.NewValue as string)));
+        public static readonly DependencyProperty ProgramDescriptionProperty = ColumnPropertyBuilder<string, RecordedTVPropertiesRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IRecordedTVProperties.ProgramDescription))
+            .DefaultValue("")
+            .OnChanged((d, oldValue, newValue) => (d as RecordedTVPropertiesRowViewModel<TEntity>)?.OnProgramDescriptionPropertyChanged(oldValue, newValue))
+            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -184,10 +182,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="ProgramDescription"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="ProgramDescription"/> property.</param>
-        protected void OnProgramDescriptionPropertyChanged(string oldValue, string newValue)
-        {
-            // TODO: Implement OnProgramDescriptionPropertyChanged Logic
-        }
+        protected virtual void OnProgramDescriptionPropertyChanged(string oldValue, string newValue) { }
 
         #endregion
         #region StationCallSign Property Members
@@ -195,9 +190,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="StationCallSign"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty StationCallSignProperty = DependencyProperty.Register(nameof(StationCallSign), typeof(string),
-            typeof(RecordedTVPropertiesRowViewModel<TEntity>), new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as RecordedTVPropertiesRowViewModel<TEntity>)?.OnStationCallSignPropertyChanged(e.OldValue as string, e.NewValue as string)));
+        public static readonly DependencyProperty StationCallSignProperty = ColumnPropertyBuilder<string, RecordedTVPropertiesRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IRecordedTVProperties.StationCallSign))
+            .DefaultValue("")
+            .OnChanged((d, oldValue, newValue) => (d as RecordedTVPropertiesRowViewModel<TEntity>)?.OnStationCallSignPropertyChanged(oldValue, newValue))
+            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -210,10 +207,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="StationCallSign"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="StationCallSign"/> property.</param>
-        protected void OnStationCallSignPropertyChanged(string oldValue, string newValue)
-        {
-            // TODO: Implement OnStationCallSignPropertyChanged Logic
-        }
+        protected virtual void OnStationCallSignPropertyChanged(string oldValue, string newValue) { }
 
         #endregion
         #region StationName Property Members
@@ -221,9 +215,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="StationName"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty StationNameProperty = DependencyProperty.Register(nameof(StationName), typeof(string),
-            typeof(RecordedTVPropertiesRowViewModel<TEntity>), new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-            (d as RecordedTVPropertiesRowViewModel<TEntity>)?.OnStationNamePropertyChanged(e.OldValue as string, e.NewValue as string)));
+        public static readonly DependencyProperty StationNameProperty = ColumnPropertyBuilder<string, RecordedTVPropertiesRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IRecordedTVProperties.StationName))
+            .DefaultValue("")
+            .OnChanged((d, oldValue, newValue) => (d as RecordedTVPropertiesRowViewModel<TEntity>)?.OnStationNamePropertyChanged(oldValue, newValue))
+            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -236,10 +232,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="StationName"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="StationName"/> property.</param>
-        protected void OnStationNamePropertyChanged(string oldValue, string newValue)
-        {
-            // TODO: Implement OnStationNamePropertyChanged Logic
-        }
+        protected virtual void OnStationNamePropertyChanged(string oldValue, string newValue) { }
 
         #endregion
 #pragma warning restore IDE0060 // Remove unused parameter
@@ -257,11 +250,21 @@ namespace FsInfoCat.Desktop.ViewModel
             StationName = entity.StationName;
         }
 
-        internal string CalculateDisplayText()
+        public IEnumerable<(string DisplayName, string Value)> GetNameValuePairs()
         {
-            // TODO: Calculate value for ListingViewModel<TEntity, TItem, TOptions>.SetItemDisplayText(string)
-            throw new NotImplementedException();
+            yield return (FsInfoCat.Properties.Resources.DisplayName_EpisodeName, EpisodeName.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.DisplayName_ProgramDescription, ProgramDescription.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.DisplayName_OriginalBroadcastDate, OriginalBroadcastDate?.ToString());
+            yield return (FsInfoCat.Properties.Resources.DisplayName_StationCallSign, StationCallSign.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.DisplayName_StationName, StationName.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.DisplayName_NetworkAffiliation, NetworkAffiliation.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.DisplayName_ChannelNumber, ChannelNumber?.ToString());
+            yield return (FsInfoCat.Properties.Resources.DisplayName_IsDTVContent, Converters.BooleanToStringConverter.Convert(IsDTVContent));
+            yield return (FsInfoCat.Properties.Resources.DisplayName_IsHDContent, Converters.BooleanToStringConverter.Convert(IsHDContent));
         }
+
+        internal string CalculateDisplayText(Func<(string DisplayName, string Value), bool> filter = null) => (filter is null) ?
+            StringExtensionMethods.ToKeyValueListString(GetNameValuePairs()) : StringExtensionMethods.ToKeyValueListString(GetNameValuePairs().Where(filter));
 
         protected override void OnEntityPropertyChanged(string propertyName)
         {

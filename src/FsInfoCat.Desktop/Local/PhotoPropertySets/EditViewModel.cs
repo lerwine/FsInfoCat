@@ -39,10 +39,7 @@ namespace FsInfoCat.Desktop.Local.PhotoPropertySets
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="UpstreamId"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="UpstreamId"/> property.</param>
-        private void OnUpstreamIdPropertyChanged(Guid? oldValue, Guid? newValue)
-        {
-            // TODO: Implement OnUpstreamIdPropertyChanged Logic
-        }
+        private void OnUpstreamIdPropertyChanged(Guid? oldValue, Guid? newValue) { }
 
         #endregion
         #region LastSynchronizedOn Property Members
@@ -66,10 +63,7 @@ namespace FsInfoCat.Desktop.Local.PhotoPropertySets
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="LastSynchronizedOn"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="LastSynchronizedOn"/> property.</param>
-        private void OnLastSynchronizedOnPropertyChanged(DateTime? oldValue, DateTime? newValue)
-        {
-            // TODO: Implement OnLastSynchronizedOnPropertyChanged Logic
-        }
+        private void OnLastSynchronizedOnPropertyChanged(DateTime? oldValue, DateTime? newValue) { }
 
         #endregion
 

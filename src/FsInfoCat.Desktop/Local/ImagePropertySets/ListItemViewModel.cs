@@ -29,13 +29,6 @@ namespace FsInfoCat.Desktop.Local.ImagePropertySets
         public ListItemViewModel([DisallowNull] ImagePropertiesListItem entity) : base(entity)
         {
             LastSynchronizedOn = entity.LastSynchronizedOn;
-            FilteredItemsViewModel.SetItemDisplayText(this, CalculateDisplayText());
-        }
-
-        protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
-        {
-            base.OnPropertyChanged(e);
-            FilteredItemsViewModel.SetItemDisplayText(this, CalculateDisplayText());
         }
     }
 }

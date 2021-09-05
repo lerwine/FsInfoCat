@@ -135,7 +135,7 @@ namespace FsInfoCat.Desktop.ViewModel.Local
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="SelectedItem"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="SelectedItem"/> property.</param>
-        protected void OnSelectedItemPropertyChanged(SharedTagDefinitionItemVM oldValue, SharedTagDefinitionItemVM newValue)
+        protected virtual void OnSelectedItemPropertyChanged(SharedTagDefinitionItemVM oldValue, SharedTagDefinitionItemVM newValue)
         {
             // DEFERRED: Implement OnSelectedItemPropertyChanged Logic
         }

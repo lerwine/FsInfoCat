@@ -17,9 +17,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="Notes"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty NotesProperty = DependencyProperty.Register(nameof(Notes), typeof(string), typeof(FileSystemRowViewModel<TEntity>),
-                new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as FileSystemRowViewModel<TEntity>)?.OnNotesPropertyChanged(e.OldValue as string, e.NewValue as string)));
+        public static readonly DependencyProperty NotesProperty = ColumnPropertyBuilder<string, FileSystemRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IFileSystemRow.Notes))
+            .DefaultValue("")
+            .OnChanged((d, oldValue, newValue) => (d as FileSystemRowViewModel<TEntity>)?.OnNotesPropertyChanged(oldValue, newValue))
+            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -32,10 +34,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Notes"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Notes"/> property.</param>
-        protected void OnNotesPropertyChanged(string oldValue, string newValue)
-        {
-            // TODO: Implement OnNotesPropertyChanged Logic
-        }
+        protected virtual void OnNotesPropertyChanged(string oldValue, string newValue) { }
 
         #endregion
         #region IsInactive Property Members
@@ -43,9 +42,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="IsInactive"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty IsInactiveProperty = DependencyProperty.Register(nameof(IsInactive), typeof(bool),
-            typeof(FileSystemRowViewModel<TEntity>), new PropertyMetadata(false, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as FileSystemRowViewModel<TEntity>)?.OnIsInactivePropertyChanged((bool)e.OldValue, (bool)e.NewValue)));
+        public static readonly DependencyProperty IsInactiveProperty = ColumnPropertyBuilder<bool, FileSystemRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IFileSystemRow.IsInactive))
+            .DefaultValue(false)
+            .OnChanged((d, oldValue, newValue) => (d as FileSystemRowViewModel<TEntity>)?.OnIsInactivePropertyChanged(oldValue, newValue))
+            .AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -58,10 +59,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="IsInactive"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="IsInactive"/> property.</param>
-        protected void OnIsInactivePropertyChanged(bool oldValue, bool newValue)
-        {
-            // TODO: Implement OnIsInactivePropertyChanged Logic
-        }
+        protected virtual void OnIsInactivePropertyChanged(bool oldValue, bool newValue) { }
 
         #endregion
         #region DisplayName Property Members
@@ -69,9 +67,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="DisplayName"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty DisplayNameProperty = DependencyProperty.Register(nameof(DisplayName), typeof(string),
-            typeof(FileSystemRowViewModel<TEntity>), new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as FileSystemRowViewModel<TEntity>)?.OnDisplayNamePropertyChanged(e.OldValue as string, e.NewValue as string)));
+        public static readonly DependencyProperty DisplayNameProperty = ColumnPropertyBuilder<string, FileSystemRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IFileSystemRow.DisplayName))
+            .DefaultValue("")
+            .OnChanged((d, oldValue, newValue) => (d as FileSystemRowViewModel<TEntity>)?.OnDisplayNamePropertyChanged(oldValue, newValue))
+            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -84,10 +84,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="DisplayName"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="DisplayName"/> property.</param>
-        protected void OnDisplayNamePropertyChanged(string oldValue, string newValue)
-        {
-            // TODO: Implement OnDisplayNamePropertyChanged Logic
-        }
+        protected virtual void OnDisplayNamePropertyChanged(string oldValue, string newValue) { }
 
         #endregion
         #region ReadOnly Property Members
@@ -95,9 +92,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="ReadOnly"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty ReadOnlyProperty = DependencyProperty.Register(nameof(ReadOnly), typeof(bool),
-            typeof(FileSystemRowViewModel<TEntity>), new PropertyMetadata(false, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as FileSystemRowViewModel<TEntity>)?.OnReadOnlyPropertyChanged((bool)e.OldValue, (bool)e.NewValue)));
+        public static readonly DependencyProperty ReadOnlyProperty = ColumnPropertyBuilder<bool, FileSystemRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IFileSystemRow.ReadOnly))
+            .DefaultValue(false)
+            .OnChanged((d, oldValue, newValue) => (d as FileSystemRowViewModel<TEntity>)?.OnReadOnlyPropertyChanged(oldValue, newValue))
+            .AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -110,10 +109,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="ReadOnly"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="ReadOnly"/> property.</param>
-        protected void OnReadOnlyPropertyChanged(bool oldValue, bool newValue)
-        {
-            // TODO: Implement OnReadOnlyPropertyChanged Logic
-        }
+        protected virtual void OnReadOnlyPropertyChanged(bool oldValue, bool newValue) { }
 
         #endregion
         #region MaxNameLength Property Members
@@ -121,9 +117,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="MaxNameLength"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty MaxNameLengthProperty = DependencyProperty.Register(nameof(MaxNameLength), typeof(uint),
-            typeof(FileSystemRowViewModel<TEntity>), new PropertyMetadata(DbConstants.DbColDefaultValue_MaxNameLength, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as FileSystemRowViewModel<TEntity>)?.OnMaxNameLengthPropertyChanged((uint)e.OldValue, (uint)e.NewValue)));
+        public static readonly DependencyProperty MaxNameLengthProperty = ColumnPropertyBuilder<uint, FileSystemRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IFileSystemRow.MaxNameLength))
+            .DefaultValue(DbConstants.DbColDefaultValue_MaxNameLength)
+            .OnChanged((d, oldValue, newValue) => (d as FileSystemRowViewModel<TEntity>)?.OnMaxNameLengthPropertyChanged(oldValue, newValue))
+            .AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -136,10 +134,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="MaxNameLength"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="MaxNameLength"/> property.</param>
-        protected void OnMaxNameLengthPropertyChanged(uint oldValue, uint newValue)
-        {
-            // TODO: Implement OnMaxNameLengthPropertyChanged Logic
-        }
+        protected virtual void OnMaxNameLengthPropertyChanged(uint oldValue, uint newValue) { }
 
         #endregion
         #region DefaultDriveType Property Members
@@ -147,9 +142,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="DefaultDriveType"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty DefaultDriveTypeProperty = DependencyProperty.Register(nameof(DefaultDriveType), typeof(DriveType?),
-            typeof(FileSystemRowViewModel<TEntity>), new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as FileSystemRowViewModel<TEntity>)?.OnDefaultDriveTypePropertyChanged((DriveType?)e.OldValue, (DriveType?)e.NewValue)));
+        public static readonly DependencyProperty DefaultDriveTypeProperty = ColumnPropertyBuilder<DriveType?, FileSystemRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(IFileSystemRow.DefaultDriveType))
+            .DefaultValue(null)
+            .OnChanged((d, oldValue, newValue) => (d as FileSystemRowViewModel<TEntity>)?.OnDefaultDriveTypePropertyChanged(oldValue, newValue))
+            .AsReadWrite();
 
         /// <summary>
         /// Gets or sets .
@@ -162,10 +159,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="DefaultDriveType"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="DefaultDriveType"/> property.</param>
-        protected void OnDefaultDriveTypePropertyChanged(DriveType? oldValue, DriveType? newValue)
-        {
-            // TODO: Implement OnDefaultDriveTypePropertyChanged Logic
-        }
+        protected virtual void OnDefaultDriveTypePropertyChanged(DriveType? oldValue, DriveType? newValue) { }
 
         #endregion
 #pragma warning restore IDE0060 // Remove unused parameter
