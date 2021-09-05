@@ -86,13 +86,15 @@ namespace FsInfoCat.Desktop.ViewModel
 
         private void OnNewCrawl(object parameter)
         {
-            if (NavigatedContent is View.Local.CrawlConfigurationsPage crawlConfigurationsPage && crawlConfigurationsPage.DataContext is Local.CrawlConfigurationsPageVM crawlConfigurationsVM)
-                crawlConfigurationsVM.RaiseAddNewItem(parameter);
-            else
-            {
-                View.Local.EditCrawlConfigWindow window = new();
-                window.ShowDialog();
-            }
+            // TODO: Implement OnNewCrawl(object)
+            throw new NotImplementedException();
+            //if (NavigatedContent is View.Local.CrawlConfigurationsPage crawlConfigurationsPage && crawlConfigurationsPage.DataContext is Local.CrawlConfigurationsPageVM crawlConfigurationsVM)
+            //    crawlConfigurationsVM.RaiseAddNewItem(parameter);
+            //else
+            //{
+            //    View.Local.EditCrawlConfigWindow window = new();
+            //    window.ShowDialog();
+            //}
         }
 
         #endregion

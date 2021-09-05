@@ -88,8 +88,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="ViewModel\Upstream\" />
-    <Folder Include="View\Upstream\" />
     <Folder Include="Themes\" />
   </ItemGroup>
 
