@@ -38,21 +38,21 @@ namespace FsInfoCat.Numerics
 
         public FractionU32(uint wholeNumber, uint numerator, uint denominator)
         {
-            _wholeNumber = FractionExtensions.GetNormalizedRational(wholeNumber, numerator, denominator, out numerator, out denominator);
+            _wholeNumber = NumericsExtensions.GetNormalizedRational(wholeNumber, numerator, denominator, out numerator, out denominator);
             _numerator = numerator;
             _denominator = denominator;
         }
 
         public FractionU32(uint numerator, uint denominator)
         {
-            _wholeNumber = FractionExtensions.GetNormalizedRational(0, numerator, denominator, out numerator, out denominator);
+            _wholeNumber = NumericsExtensions.GetNormalizedRational(0, numerator, denominator, out numerator, out denominator);
             _numerator = numerator;
             _denominator = denominator;
         }
 
         public FractionU32(IFraction fraction)
         {
-            _wholeNumber = FractionExtensions.GetNormalizedRational(_coersion.Coerce(fraction.WholeNumber), _coersion.Coerce(fraction.Numerator),
+            _wholeNumber = NumericsExtensions.GetNormalizedRational(_coersion.Coerce(fraction.WholeNumber), _coersion.Coerce(fraction.Numerator),
                 _coersion.Coerce(fraction.Denominator).OneIfZero(), out uint numerator, out uint denominator);
             _numerator = numerator;
             _denominator = denominator;
@@ -71,14 +71,14 @@ namespace FsInfoCat.Numerics
 
         public static FractionU32 Parse(string s)
         {
-            uint wholeNumber = FractionExtensions.ParseU32(s, out uint numerator, out uint denominator);
+            uint wholeNumber = NumericsExtensions.ParseU32(s, out uint numerator, out uint denominator);
             return new FractionU32(wholeNumber, numerator, denominator);
 
         }
 
         public static bool TryParse(string s, out FractionU32 value)
         {
-            if (FractionExtensions.TryParseU32(s, out uint wholeNumber, out uint numerator, out uint denominator))
+            if (NumericsExtensions.TryParseU32(s, out uint wholeNumber, out uint numerator, out uint denominator))
             {
                 value = new FractionU32(wholeNumber, numerator, denominator);
                 return true;
@@ -125,9 +125,9 @@ namespace FsInfoCat.Numerics
                 return (_denominator == 0) ? Zero : this;
 
             long w1 = _wholeNumber, n1 = _numerator, d1 = _denominator, w2;
-            w2 = FractionExtensions.GetNormalizedRational64(wholeNumber, numerator, denominator, out long n2, out long d2);
-            FractionExtensions.ToCommonDenominator64(ref n1, ref d1, ref n2, ref d2);
-            w1 = FractionExtensions.GetNormalizedRational64(w1 + w2, n1 + n2, d1, out n1, out d1);
+            w2 = NumericsExtensions.GetNormalizedRational64(wholeNumber, numerator, denominator, out long n2, out long d2);
+            NumericsExtensions.ToCommonDenominator64(ref n1, ref d1, ref n2, ref d2);
+            w1 = NumericsExtensions.GetNormalizedRational64(w1 + w2, n1 + n2, d1, out n1, out d1);
             return new FractionU32((uint)w1, (uint)n1, (uint)d1);
         }
 
@@ -146,8 +146,8 @@ namespace FsInfoCat.Numerics
                 return (_denominator == 0) ? Zero : this;
 
             long w1 = _wholeNumber, n1 = _numerator, d1 = _denominator, w2 = other._wholeNumber, n2 = other._numerator, d2 = other._denominator;
-            FractionExtensions.ToCommonDenominator64(ref n1, ref d1, ref n2, ref d2);
-            w1 = FractionExtensions.GetNormalizedRational64(w1 + w2, n1 + n2, d1, out n1, out d1);
+            NumericsExtensions.ToCommonDenominator64(ref n1, ref d1, ref n2, ref d2);
+            w1 = NumericsExtensions.GetNormalizedRational64(w1 + w2, n1 + n2, d1, out n1, out d1);
             return new FractionU32((uint)w1, (uint)n1, (uint)d1);
         }
 
@@ -240,7 +240,7 @@ namespace FsInfoCat.Numerics
             }
 
             long n1 = _numerator, d1 = _denominator, n2 = other._numerator, d2 = other._denominator;
-            FractionExtensions.ToCommonDenominator64(ref n1, ref d1, ref n2, ref d2);
+            NumericsExtensions.ToCommonDenominator64(ref n1, ref d1, ref n2, ref d2);
             return n1.CompareTo(n2);
         }
 
@@ -252,7 +252,7 @@ namespace FsInfoCat.Numerics
             if (other is FractionU32 f)
                 return CompareTo(f);
 
-            uint w = FractionExtensions.GetNormalizedRational(other.WholeNumber, other.Numerator, other.Denominator, out uint n, out uint d);
+            uint w = NumericsExtensions.GetNormalizedRational(other.WholeNumber, other.Numerator, other.Denominator, out uint n, out uint d);
 
             int i = _wholeNumber.CompareTo(w);
             if (i != 0)
@@ -273,7 +273,7 @@ namespace FsInfoCat.Numerics
             }
 
             long n1 = _numerator, d1 = _denominator, n2 = n, d2 = d;
-            FractionExtensions.ToCommonDenominator64(ref n1, ref d1, ref n2, ref d2);
+            NumericsExtensions.ToCommonDenominator64(ref n1, ref d1, ref n2, ref d2);
             return n1.CompareTo(n2);
         }
 
@@ -293,7 +293,7 @@ namespace FsInfoCat.Numerics
             return (new Fraction64(this)).CompareTo(other);
         }
 
-        public int CompareTo(object obj) { return FractionExtensions.Compare(this, obj); }
+        public int CompareTo(object obj) { return NumericsExtensions.Compare(this, obj); }
 
         #endregion
 
@@ -308,12 +308,12 @@ namespace FsInfoCat.Numerics
                 throw new DivideByZeroException();
 
             long w1 = _wholeNumber, n1 = _numerator, d1 = _denominator, w2;
-            w2 = FractionExtensions.GetInvertedRational64(wholeNumber, numerator, denominator, out long n2, out long d2);
+            w2 = NumericsExtensions.GetInvertedRational64(wholeNumber, numerator, denominator, out long n2, out long d2);
 
             if (n2 == 0 && w2 == 0)
                 throw new DivideByZeroException();
 
-            w1 = FractionExtensions.GetNormalizedRational64(w1 * w2, n1 * n2, d1 * d2, out n1, out d1);
+            w1 = NumericsExtensions.GetNormalizedRational64(w1 * w2, n1 * n2, d1 * d2, out n1, out d1);
             return new FractionU32((uint)w1, (uint)n1, (uint)d1);
         }
 
@@ -389,7 +389,7 @@ namespace FsInfoCat.Numerics
             if (other is FractionU32 f)
                 return Equals(f);
 
-            uint w = FractionExtensions.GetNormalizedRational(other.WholeNumber, other.Numerator, other.Denominator, out uint n, out uint d);
+            uint w = NumericsExtensions.GetNormalizedRational(other.WholeNumber, other.Numerator, other.Denominator, out uint n, out uint d);
 
             if (_numerator == 0)
                 return n == 0 && _wholeNumber == w;
@@ -413,7 +413,7 @@ namespace FsInfoCat.Numerics
             return (new Fraction64(this)).Equals(other);
         }
 
-        public override bool Equals(object obj) { return FractionExtensions.EqualTo(this, obj); }
+        public override bool Equals(object obj) { return NumericsExtensions.EqualTo(this, obj); }
 
         #endregion
 
@@ -433,12 +433,12 @@ namespace FsInfoCat.Numerics
                 return Zero;
 
             long w1 = _wholeNumber, n1 = _numerator, d1 = _denominator, w2;
-            w2 = FractionExtensions.GetNormalizedRational64(wholeNumber, numerator, denominator, out long n2, out long d2);
+            w2 = NumericsExtensions.GetNormalizedRational64(wholeNumber, numerator, denominator, out long n2, out long d2);
 
             if (numerator == 0 && wholeNumber == 0)
                 return Zero;
 
-            w1 = FractionExtensions.GetNormalizedRational64(w1 * w2, n1 * n2, d1 * d2, out n1, out d1);
+            w1 = NumericsExtensions.GetNormalizedRational64(w1 * w2, n1 * n2, d1 * d2, out n1, out d1);
             return new FractionU32((uint)w1, (uint)n1, (uint)d1);
         }
 
@@ -455,7 +455,7 @@ namespace FsInfoCat.Numerics
 
             long w1 = _wholeNumber, n1 = _numerator, d1 = _denominator, w2 = other._wholeNumber, n2 = other._numerator, d2 = other._denominator;
 
-            w1 = FractionExtensions.GetNormalizedRational64(w1 * w2, n1 * n2, d1 * d2, out n1, out d1);
+            w1 = NumericsExtensions.GetNormalizedRational64(w1 * w2, n1 * n2, d1 * d2, out n1, out d1);
             return new FractionU32((uint)w1, (uint)n1, (uint)d1);
         }
 
@@ -504,9 +504,9 @@ namespace FsInfoCat.Numerics
                 return (_denominator == 0) ? Zero : this;
 
             long w1 = _wholeNumber, n1 = _numerator, d1 = _denominator, w2;
-            w2 = FractionExtensions.GetNormalizedRational64(wholeNumber, numerator, denominator, out long n2, out long d2);
-            FractionExtensions.ToCommonDenominator64(ref n1, ref d1, ref n2, ref d2);
-            w1 = FractionExtensions.GetNormalizedRational64(w1 + w2, n1 + n2, d1, out n1, out d1);
+            w2 = NumericsExtensions.GetNormalizedRational64(wholeNumber, numerator, denominator, out long n2, out long d2);
+            NumericsExtensions.ToCommonDenominator64(ref n1, ref d1, ref n2, ref d2);
+            w1 = NumericsExtensions.GetNormalizedRational64(w1 + w2, n1 + n2, d1, out n1, out d1);
             return new FractionU32((uint)w1, (uint)n1, (uint)d1);
         }
 

@@ -4,7 +4,7 @@ using System.Text.RegularExpressions;
 
 namespace FsInfoCat.Numerics
 {
-    public static class FractionExtensions
+    public static class NumericsExtensions
     {
         private static readonly Regex FractionParseRegex = new(@"^(?(?=-?\d+(\s|$))(?<w>-?\d+)(\s+(?<n>-?\d+)/(?<d>-?\d+))?|(?<n>-?\d+)/(?<d>-?\d+))$", RegexOptions.Compiled);
 

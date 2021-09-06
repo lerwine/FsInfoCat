@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 
 namespace FsInfoCat.Numerics
 {
@@ -37,6 +38,8 @@ namespace FsInfoCat.Numerics
         private readonly long _value;
         private readonly double _numerator;
         private readonly BinaryDenomination _denominator;
+
+        public long BinaryValue => _value;
 
         public double Numerator => _numerator;
 
@@ -147,25 +150,24 @@ namespace FsInfoCat.Numerics
 
         public override int GetHashCode() => _value.GetHashCode();
 
-        public override string ToString()
+        public string ToString(IFormatProvider provider) => _denominator switch
         {
-            return _denominator switch
-            {
-                BinaryDenomination.Terabytes => $"{_numerator} {TB_SUFFIX}",
-                BinaryDenomination.Gigabytes => $"{_numerator} {GB_SUFFIX}",
-                BinaryDenomination.Megabytes => $"{_numerator} {MB_SUFFIX}",
-                BinaryDenomination.Kilobytes => $"{_numerator} {KB_SUFFIX}",
-                _ => $"{_numerator} {B_SUFFIX}",
-            };
-        }
+            BinaryDenomination.Terabytes => $"{_numerator.ToString(provider ?? CultureInfo.CurrentUICulture)} {TB_SUFFIX}",
+            BinaryDenomination.Gigabytes => $"{_numerator.ToString(provider ?? CultureInfo.CurrentUICulture)} {GB_SUFFIX}",
+            BinaryDenomination.Megabytes => $"{_numerator.ToString(provider ?? CultureInfo.CurrentUICulture)} {MB_SUFFIX}",
+            BinaryDenomination.Kilobytes => $"{_numerator.ToString(provider ?? CultureInfo.CurrentUICulture)} {KB_SUFFIX}",
+            _ => $"{_numerator.ToString(provider ?? CultureInfo.CurrentUICulture)} {B_SUFFIX}",
+        };
 
-        public static BinaryDenominatedInt64F Parse(string s)
+        public override string ToString() => ToString(CultureInfo.InvariantCulture);
+
+        public static BinaryDenominatedInt64F Parse(string s, IFormatProvider provider)
         {
             if (s is null || (s = s.Trim()).Length == 0)
                 throw new ArgumentException($"'{nameof(s)}' cannot be null or whitespace.", nameof(s));
             if (s.Length > 3)
             {
-                double numerator = double.Parse(s[0..^2].Trim());
+                double numerator = double.Parse(s[0..^2].Trim(), provider ?? CultureInfo.CurrentUICulture);
                 switch (s[^2..].ToUpper())
                 {
                     case TB_SUFFIX:
@@ -190,16 +192,18 @@ namespace FsInfoCat.Numerics
                         return new(numerator, BinaryDenomination.Bytes);
                 }
             }
-            return new(Convert.ToInt64(double.Parse(s)));
+            return new(Convert.ToInt64(double.Parse(s, provider ?? CultureInfo.CurrentUICulture)));
         }
 
-        public static bool TryParse(string s, out BinaryDenominatedInt64F result)
+        public static BinaryDenominatedInt64F Parse(string s) => Parse(s, CultureInfo.InvariantCulture);
+
+        public static bool TryParse(string s, IFormatProvider provider, out BinaryDenominatedInt64F result)
         {
             if (s is not null && (s = s.Trim()).Length > 0)
             {
                 if (s.Length > 3)
                 {
-                    if (double.TryParse(s[0..^2].Trim(), out double numerator))
+                    if (double.TryParse(s[0..^2].Trim(), NumberStyles.Any, provider ?? CultureInfo.CurrentUICulture, out double numerator))
                         switch (s[^2..].ToUpper())
                         {
                             case TB_SUFFIX:
@@ -235,7 +239,7 @@ namespace FsInfoCat.Numerics
                                 return true;
                         }
                 }
-                else if (double.TryParse(s, out double numerator))
+                else if (double.TryParse(s, NumberStyles.Any, provider ?? CultureInfo.CurrentUICulture, out double numerator))
                 {
                     result = new(Convert.ToInt64(Math.Floor(numerator)));
                     return true;
@@ -244,6 +248,8 @@ namespace FsInfoCat.Numerics
             result = default;
             return false;
         }
+
+        public static bool TryParse(string s, out BinaryDenominatedInt64F result) => TryParse(s, CultureInfo.InvariantCulture, out result);
 
         TypeCode IConvertible.GetTypeCode() => TypeCode.Int64;
         bool IConvertible.ToBoolean(IFormatProvider provider) => Convert.ToBoolean(_value, provider);
@@ -257,7 +263,6 @@ namespace FsInfoCat.Numerics
         long IConvertible.ToInt64(IFormatProvider provider) => _value;
         sbyte IConvertible.ToSByte(IFormatProvider provider) => Convert.ToSByte(_value, provider);
         float IConvertible.ToSingle(IFormatProvider provider) => Convert.ToSingle(_value, provider);
-        string IConvertible.ToString(IFormatProvider provider) => (provider is null) ? ToString() : Convert.ToString(_value, provider);
         object IConvertible.ToType(Type conversionType, IFormatProvider provider) => Convert.ChangeType(_value, conversionType, provider);
         ushort IConvertible.ToUInt16(IFormatProvider provider) => Convert.ToUInt16(_value, provider);
         uint IConvertible.ToUInt32(IFormatProvider provider) => Convert.ToUInt32(_value, provider);
