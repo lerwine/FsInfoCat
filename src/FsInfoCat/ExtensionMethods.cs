@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
@@ -507,29 +508,29 @@ namespace FsInfoCat
             if (obj is bool bv)
                 return bv ? "true" : "false";
             if (obj is byte bn)
-                return bn.ToString("X2");
+                return bn.ToString("X2", CultureInfo.InvariantCulture);
             if (obj is sbyte sb)
-                return $"(sbyte){sb:X2}";
+                return $"(sbyte){sb.ToString("X2", CultureInfo.InvariantCulture)}";
             if (obj is short sv)
-                return sv.ToString("X4");
+                return sv.ToString("X4", CultureInfo.InvariantCulture);
             if (obj is ushort us)
-                return $"(ushort){us:X4}";
+                return $"(ushort){us.ToString("X4", CultureInfo.InvariantCulture)}";
             if (obj is int i)
-                return i.ToString("X8");
+                return i.ToString("X8", CultureInfo.InvariantCulture);
             if (obj is uint ui)
-                return $"{ui:X8}U";
+                return $"{ui.ToString("X8", CultureInfo.InvariantCulture)}U";
             if (obj is long l)
-                return l.ToString("X16");
+                return l.ToString("X16", CultureInfo.InvariantCulture);
             if (obj is ulong ul)
-                return $"{ul:16}UL";
+                return $"{ul.ToString("X16", CultureInfo.InvariantCulture)}UL";
             if (obj is float fv)
-                return $"{fv}f";
+                return $"{fv.ToString(CultureInfo.InvariantCulture)}f";
             if (obj is double d)
-                return d.ToString();
+                return d.ToString(CultureInfo.InvariantCulture);
             if (obj is decimal m)
-                return $"{m}m";
+                return $"{m.ToString(CultureInfo.InvariantCulture)}m";
             if (obj is DateTime dt)
-                return dt.ToString();
+                return dt.ToString(CultureInfo.InvariantCulture);
             if (obj is DBNull)
                 return "DBNull";
             if (obj is Type t)
@@ -541,37 +542,37 @@ namespace FsInfoCat
                 switch (cv.GetTypeCode())
                 {
                     case TypeCode.Boolean:
-                        return ToPseudoCsText(cv.ToBoolean(null));
+                        return ToPseudoCsText(cv.ToBoolean(CultureInfo.InvariantCulture));
                     case TypeCode.Byte:
-                        return ToPseudoCsText(cv.ToByte(null));
+                        return ToPseudoCsText(cv.ToByte(CultureInfo.InvariantCulture));
                     case TypeCode.Char:
-                        return ToPseudoCsText(cv.ToChar(null));
+                        return ToPseudoCsText(cv.ToChar(CultureInfo.InvariantCulture));
                     case TypeCode.DateTime:
-                        return ToPseudoCsText(cv.ToDateTime(null));
+                        return ToPseudoCsText(cv.ToDateTime(CultureInfo.InvariantCulture));
                     case TypeCode.DBNull:
                         return "DBNull";
                     case TypeCode.Decimal:
-                        return ToPseudoCsText(cv.ToDecimal(null));
+                        return ToPseudoCsText(cv.ToDecimal(CultureInfo.InvariantCulture));
                     case TypeCode.Double:
-                        return ToPseudoCsText(cv.ToDouble(null));
+                        return ToPseudoCsText(cv.ToDouble(CultureInfo.InvariantCulture));
                     case TypeCode.Int16:
-                        return ToPseudoCsText(cv.ToInt16(null));
+                        return ToPseudoCsText(cv.ToInt16(CultureInfo.InvariantCulture));
                     case TypeCode.Int32:
-                        return ToPseudoCsText(cv.ToInt32(null));
+                        return ToPseudoCsText(cv.ToInt32(CultureInfo.InvariantCulture));
                     case TypeCode.Int64:
-                        return ToPseudoCsText(cv.ToInt64(null));
+                        return ToPseudoCsText(cv.ToInt64(CultureInfo.InvariantCulture));
                     case TypeCode.SByte:
-                        return ToPseudoCsText(cv.ToSByte(null));
+                        return ToPseudoCsText(cv.ToSByte(CultureInfo.InvariantCulture));
                     case TypeCode.Single:
-                        return ToPseudoCsText(cv.ToSingle(null));
+                        return ToPseudoCsText(cv.ToSingle(CultureInfo.InvariantCulture));
                     case TypeCode.String:
-                        return ToPseudoCsText(cv.ToString(null));
+                        return ToPseudoCsText(cv.ToString(CultureInfo.InvariantCulture));
                     case TypeCode.UInt16:
-                        return ToPseudoCsText(cv.ToUInt16(null));
+                        return ToPseudoCsText(cv.ToUInt16(CultureInfo.InvariantCulture));
                     case TypeCode.UInt32:
-                        return ToPseudoCsText(cv.ToUInt32(null));
+                        return ToPseudoCsText(cv.ToUInt32(CultureInfo.InvariantCulture));
                     case TypeCode.UInt64:
-                        return ToPseudoCsText(cv.ToUInt64(null));
+                        return ToPseudoCsText(cv.ToUInt64(CultureInfo.InvariantCulture));
                 }
             }
             return obj.ToString();
