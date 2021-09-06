@@ -1,0 +1,53 @@
+<UserControl
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:FsInfoCat.Desktop.LocalVM.FileSystems"
+             xmlns:Converters="clr-namespace:FsInfoCat.Desktop.Converters" x:Class="FsInfoCat.Desktop.LocalVM.FileSystems.ListItemControl"
+             mc:Ignorable="d" d:DataContext="{x:Type local:ListItemViewModel}"
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <Converters:DateTimeToStringConverter x:Key="DateTimeToStringConverter"/>
+        <Converters:DateTimeToStringConverter x:Key="LastSyncrhonizedToStringConverter" NullSource="(never synchronized)"/>
+        <Converters:DriveTypeToStringConverter x:Key="DriveTypeToStringConverter"/>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Label Content="Maximum Name Length" Padding="{DynamicResource DefaultSpacingTopLeftRight}" VerticalAlignment="Bottom"/>
+        <TextBox Grid.Row="1" Style="{DynamicResource SingleLineReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingLeftRight}" Text="{Binding MaxNameLength}"/>
+        <Label Content="Default Drive Type" Grid.Column="1" Padding="{DynamicResource DefaultSpacingTopRight}" VerticalAlignment="Bottom"/>
+        <TextBox Grid.Row="1" Grid.Column="1" Style="{DynamicResource ReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingRight}" Text="{Binding DefaultDriveType, Converter={StaticResource DriveTypeToStringConverter}}"/>
+        <Label Content="Symbolic Name Count" Grid.Column="2" Padding="{DynamicResource DefaultSpacingTopRight}" VerticalAlignment="Bottom"/>
+        <TextBox Grid.Row="1" Grid.Column="2" Style="{DynamicResource SingleLineReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingRight}" Text="{Binding SymbolicNameCount, Mode=OneWay}"/>
+        <Label Content="Volume Count" Grid.Column="3" Padding="{DynamicResource DefaultSpacingTopRight}" VerticalAlignment="Bottom"/>
+        <TextBox Grid.Row="1" Grid.Column="3" Grid.ColumnSpan="2" Style="{DynamicResource SingleLineReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingRight}" Text="{Binding VolumeCount, Mode=OneWay}"/>
+        <Button Style="{DynamicResource EditButton}" Grid.Column="4" ToolTip="Edit File System Defintion"/>
+        <Button Style="{DynamicResource DeleteButton}" Grid.Column="5" ToolTip="Delete System Defintion"/>
+        <Button Grid.Column="5" Grid.Row="1" Style="{DynamicResource OpenListingButton}" ToolTip="Open System Defintion Listing" Margin="{DynamicResource DefaultSpacingRight}"/>
+        <Label Content="Record Created On" Grid.Row="2" Padding="{DynamicResource DefaultSpacingTopLeftRight}"/>
+        <TextBox Grid.Row="3" Style="{DynamicResource ReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingLeftRight}" Text="{Binding CreatedOn, Converter={StaticResource DateTimeToStringConverter}, Mode=OneWay}"/>
+        <Label Content="Record Modified On" Grid.Row="2" Grid.Column="1" Padding="{DynamicResource DefaultSpacingTopRight}"/>
+        <TextBox Grid.Row="3" Grid.Column="1" Style="{DynamicResource ReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingRight}" Text="{Binding ModifiedOn, Converter={StaticResource DateTimeToStringConverter}, Mode=OneWay}"/>
+        <Label Content="Last Synchronized" Grid.Row="2" Grid.Column="2" Padding="{DynamicResource DefaultSpacingTopRight}"/>
+        <TextBox Grid.Row="3" Grid.ColumnSpan="3" Grid.Column="2" Style="{DynamicResource ReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingRight}" Text="{Binding LastSynchronizedOn, Converter={StaticResource DateTimeToStringConverter}, Mode=OneWay}"/>
+        <Button Grid.Column="5" Grid.Row="3" Style="{DynamicResource SyncButton}" ToolTip="Synchronize Now" Margin="{DynamicResource DefaultSpacingRight}"/>
+        <Label Grid.Row="4" Content="Notes" Grid.ColumnSpan="6" Padding="{DynamicResource DefaultSpacingTopLeftRight}"/>
+        <TextBox Grid.Row="5" Grid.ColumnSpan="6" Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingBottomLeftRight}" Text="{Binding Notes}"/>
+    </Grid>
+</UserControl>

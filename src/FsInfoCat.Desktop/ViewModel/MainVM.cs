@@ -11,25 +11,25 @@ namespace FsInfoCat.Desktop.ViewModel
     {
         private readonly ILogger<MainVM> _logger;
 
-        public const string Page_Uri_Local_CrawlConfigurations = "/Local/CrawlConfigurations/ListingPage.xaml";
-        public const string Page_Uri_Local_FileSystems = "/Local/FileSystems/ListingPage.xaml";
-        public const string Page_Uri_Local_RedundantSets = "/Local/RedundantSets/ListingPage.xaml";
-        public const string Page_Uri_Local_SymbolicNames = "/Local/SymbolicNames/ListingPage.xaml";
-        public const string Page_Uri_Local_Volumes = "/Local/Volumes/ListingPage.xaml";
-        public const string Page_Uri_Local_PersonalTagDefinitions = "/Local/PersonalTagDefinitions/ListingPage.xaml";
-        public const string Page_Uri_Local_SharedTagDefinitions = "/Local/SharedTagDefinitions/ListingPage.xaml";
-        public const string Page_Uri_Local_CrawlLogs = "/Local/CrawlLogs/ListingPage.xaml";
-        public const string Page_Uri_Local_SummaryPropertySets = "/Local/SummaryPropertySets/ListingPage.xaml";
-        public const string Page_Uri_Local_DocumentPropertySets = "/Local/DocumentPropertySets/ListingPage.xaml";
-        public const string Page_Uri_Local_AudioPropertySets = "/Local/AudioPropertySets/ListingPage.xaml";
-        public const string Page_Uri_Local_DRMPropertySets = "/Local/DRMPropertySets/ListingPage.xaml";
-        public const string Page_Uri_Local_GPSPropertySets = "/Local/GPSPropertySets/ListingPage.xaml";
-        public const string Page_Uri_Local_ImagePropertySets = "/Local/ImagePropertySets/ListingPage.xaml";
-        public const string Page_Uri_Local_MediaPropertySets = "/Local/MediaPropertySets/ListingPage.xaml";
-        public const string Page_Uri_Local_MusicPropertySets = "/Local/MusicPropertySets/ListingPage.xaml";
-        public const string Page_Uri_Local_PhotoPropertySets = "/Local/PhotoPropertySets/ListingPage.xaml";
-        public const string Page_Uri_Local_RecordedTVPropertySets = "/Local/RecordedTVPropertySets/ListingPage.xaml";
-        public const string Page_Uri_Local_VideoPropertySets = "/Local/VideoPropertySets/ListingPage.xaml";
+        public const string Page_Uri_Local_CrawlConfigurations = "/LocalVM/CrawlConfigurations/ListingPage.xaml";
+        public const string Page_Uri_Local_FileSystems = "/LocalVM/FileSystems/ListingPage.xaml";
+        public const string Page_Uri_Local_RedundantSets = "/LocalVM/RedundantSets/ListingPage.xaml";
+        public const string Page_Uri_Local_SymbolicNames = "/LocalVM/SymbolicNames/ListingPage.xaml";
+        public const string Page_Uri_Local_Volumes = "/LocalVM/Volumes/ListingPage.xaml";
+        public const string Page_Uri_Local_PersonalTagDefinitions = "/LocalVM/PersonalTagDefinitions/ListingPage.xaml";
+        public const string Page_Uri_Local_SharedTagDefinitions = "/LocalVM/SharedTagDefinitions/ListingPage.xaml";
+        public const string Page_Uri_Local_CrawlLogs = "/LocalVM/CrawlLogs/ListingPage.xaml";
+        public const string Page_Uri_Local_SummaryPropertySets = "/LocalVM/SummaryPropertySets/ListingPage.xaml";
+        public const string Page_Uri_Local_DocumentPropertySets = "/LocalVM/DocumentPropertySets/ListingPage.xaml";
+        public const string Page_Uri_Local_AudioPropertySets = "/LocalVM/AudioPropertySets/ListingPage.xaml";
+        public const string Page_Uri_Local_DRMPropertySets = "/LocalVM/DRMPropertySets/ListingPage.xaml";
+        public const string Page_Uri_Local_GPSPropertySets = "/LocalVM/GPSPropertySets/ListingPage.xaml";
+        public const string Page_Uri_Local_ImagePropertySets = "/LocalVM/ImagePropertySets/ListingPage.xaml";
+        public const string Page_Uri_Local_MediaPropertySets = "/LocalVM/MediaPropertySets/ListingPage.xaml";
+        public const string Page_Uri_Local_MusicPropertySets = "/LocalVM/MusicPropertySets/ListingPage.xaml";
+        public const string Page_Uri_Local_PhotoPropertySets = "/LocalVM/PhotoPropertySets/ListingPage.xaml";
+        public const string Page_Uri_Local_RecordedTVPropertySets = "/LocalVM/RecordedTVPropertySets/ListingPage.xaml";
+        public const string Page_Uri_Local_VideoPropertySets = "/LocalVM/VideoPropertySets/ListingPage.xaml";
 
         #region WindowTitle Property Members
 
