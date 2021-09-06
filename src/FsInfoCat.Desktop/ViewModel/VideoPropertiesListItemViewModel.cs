@@ -97,10 +97,10 @@ namespace FsInfoCat.Desktop.ViewModel
 
         public VideoPropertiesListItemViewModel([DisallowNull] TEntity entity) : base(entity)
         {
-            ExistingFileCount = entity.ExistingFileCount;
-            TotalFileCount = entity.TotalFileCount;
             SetValue(EditPropertyKey, new Commands.RelayCommand(RaiseEditCommand));
             SetValue(DeletePropertyKey, new Commands.RelayCommand(RaiseDeleteCommand));
+            ExistingFileCount = entity.ExistingFileCount;
+            TotalFileCount = entity.TotalFileCount;
             CommonAttached.SetListItemTitle(this, CalculateDisplayText());
         }
 

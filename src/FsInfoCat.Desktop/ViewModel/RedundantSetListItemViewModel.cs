@@ -111,11 +111,11 @@ namespace FsInfoCat.Desktop.ViewModel
 
         public RedundantSetListItemViewModel([DisallowNull] TEntity entity) : base(entity)
         {
+            SetValue(EditPropertyKey, new Commands.RelayCommand(RaiseEditCommand));
+            SetValue(DeletePropertyKey, new Commands.RelayCommand(RaiseDeleteCommand));
             Length = entity.Length;
             Hash = entity.Hash;
             RedundancyCount = entity.RedundancyCount;
-            SetValue(EditPropertyKey, new Commands.RelayCommand(RaiseEditCommand));
-            SetValue(DeletePropertyKey, new Commands.RelayCommand(RaiseDeleteCommand));
         }
 
         protected override void OnEntityPropertyChanged(string propertyName)

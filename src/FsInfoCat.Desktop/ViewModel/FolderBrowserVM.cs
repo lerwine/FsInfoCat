@@ -246,12 +246,12 @@ namespace FsInfoCat.Desktop.ViewModel
 
         public FolderBrowserVM()
         {
+            _logger = App.GetLogger(this);
             InnerLogicalDisks = new();
             LogicalDisks = new(InnerLogicalDisks);
             SetValue(ValueSelectedCommandPropertyKey, new Commands.RelayCommand(OnValueSelectedExecute));
             SetValue(OkClickCommandPropertyKey, new Commands.RelayCommand(InvokeOkClickCommand, false, SelectedFolder is null));
             SetValue(CancelClickCommandPropertyKey, new Commands.RelayCommand(InvokeCancelClickCommand));
-            _logger = App.GetLogger(this);
 #if DEBUG
             if (DesignerProperties.GetIsInDesignMode(this))
                 return;

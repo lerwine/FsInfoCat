@@ -203,6 +203,8 @@ namespace FsInfoCat.Desktop.ViewModel
 
         public FileWithBinaryPropertiesViewModel([DisallowNull] TEntity entity) : base(entity)
         {
+            SetValue(EditPropertyKey, new Commands.RelayCommand(RaiseEditCommand));
+            SetValue(DeletePropertyKey, new Commands.RelayCommand(RaiseDeleteCommand));
             Length = entity.Length;
             Hash = entity.Hash;
             RedundancyCount = entity.RedundancyCount;
@@ -210,8 +212,6 @@ namespace FsInfoCat.Desktop.ViewModel
             AccessErrorCount = entity.AccessErrorCount;
             PersonalTagCount = entity.PersonalTagCount;
             SharedTagCount = entity.SharedTagCount;
-            SetValue(EditPropertyKey, new Commands.RelayCommand(RaiseEditCommand));
-            SetValue(DeletePropertyKey, new Commands.RelayCommand(RaiseDeleteCommand));
         }
 
         protected override void OnEntityPropertyChanged(string propertyName)

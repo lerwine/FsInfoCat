@@ -156,14 +156,14 @@ namespace FsInfoCat.Desktop.ViewModel
 
         public SummaryPropertiesListItemViewModel([DisallowNull] TEntity entity) : base(entity)
         {
+            SetValue(EditPropertyKey, new Commands.RelayCommand(RaiseEditCommand));
+            SetValue(DeletePropertyKey, new Commands.RelayCommand(RaiseDeleteCommand));
             Author = entity.Author.ToNormalizedDelimitedText();
             Keywords = entity.Keywords.ToNormalizedDelimitedText();
             ItemAuthors = entity.ItemAuthors.ToNormalizedDelimitedText();
             Kind = entity.Kind.ToNormalizedDelimitedText();
             ExistingFileCount = entity.ExistingFileCount;
             TotalFileCount = entity.TotalFileCount;
-            SetValue(EditPropertyKey, new Commands.RelayCommand(RaiseEditCommand));
-            SetValue(DeletePropertyKey, new Commands.RelayCommand(RaiseDeleteCommand));
             CommonAttached.SetListItemTitle(this, CalculateDisplayText());
         }
 

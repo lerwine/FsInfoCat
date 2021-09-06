@@ -296,6 +296,8 @@ namespace FsInfoCat.Desktop.ViewModel
 
         public FileWithAncestorNamesViewModel([DisallowNull] TEntity entity) : base(entity)
         {
+            SetValue(EditPropertyKey, new Commands.RelayCommand(RaiseEditCommand));
+            SetValue(DeletePropertyKey, new Commands.RelayCommand(RaiseDeleteCommand));
             VolumeDisplayName = entity.VolumeDisplayName;
             VolumeName = entity.VolumeName;
             VolumeIdentifier = entity.VolumeIdentifier;
@@ -305,8 +307,6 @@ namespace FsInfoCat.Desktop.ViewModel
             PersonalTagCount = entity.PersonalTagCount;
             SharedTagCount = entity.SharedTagCount;
             Path = EntityExtensions.AncestorNamesToPath(Entity.AncestorNames);
-            SetValue(EditPropertyKey, new Commands.RelayCommand(RaiseEditCommand));
-            SetValue(DeletePropertyKey, new Commands.RelayCommand(RaiseDeleteCommand));
         }
 
         protected override void OnEntityPropertyChanged(string propertyName)

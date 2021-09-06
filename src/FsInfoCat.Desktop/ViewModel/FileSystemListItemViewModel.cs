@@ -111,11 +111,11 @@ namespace FsInfoCat.Desktop.ViewModel
 
         public FileSystemListItemViewModel([DisallowNull] TEntity entity) : base(entity)
         {
+            SetValue(EditPropertyKey, new Commands.RelayCommand(RaiseEditCommand));
+            SetValue(DeletePropertyKey, new Commands.RelayCommand(RaiseDeleteCommand));
             PrimarySymbolicName = entity.PrimarySymbolicName;
             SymbolicNameCount = entity.SymbolicNameCount;
             VolumeCount = entity.VolumeCount;
-            SetValue(EditPropertyKey, new Commands.RelayCommand(RaiseEditCommand));
-            SetValue(DeletePropertyKey, new Commands.RelayCommand(RaiseDeleteCommand));
         }
 
         protected override void OnEntityPropertyChanged(string propertyName)

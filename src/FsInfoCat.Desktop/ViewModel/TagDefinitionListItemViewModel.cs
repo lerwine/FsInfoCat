@@ -103,11 +103,11 @@ namespace FsInfoCat.Desktop.ViewModel
 
         public TagDefinitionListItemViewModel([DisallowNull] TEntity entity) : base(entity)
         {
+            SetValue(EditPropertyKey, new Commands.RelayCommand(RaiseEditCommand));
+            SetValue(DeletePropertyKey, new Commands.RelayCommand(RaiseDeleteCommand));
             FileTagCount = entity.FileTagCount;
             SubdirectoryTagCount = entity.SubdirectoryTagCount;
             VolumeTagCount = entity.VolumeTagCount;
-            SetValue(EditPropertyKey, new Commands.RelayCommand(RaiseEditCommand));
-            SetValue(DeletePropertyKey, new Commands.RelayCommand(RaiseDeleteCommand));
         }
 
         protected override void OnEntityPropertyChanged(string propertyName)

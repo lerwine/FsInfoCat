@@ -204,6 +204,8 @@ namespace FsInfoCat.Desktop.ViewModel
 
         public SubdirectoryListItemViewModel([DisallowNull] TEntity entity) : base(entity)
         {
+            SetValue(EditPropertyKey, new Commands.RelayCommand(RaiseEditCommand));
+            SetValue(DeletePropertyKey, new Commands.RelayCommand(RaiseDeleteCommand));
             SubdirectoryCount = entity.SubdirectoryCount;
             FileCount = entity.FileCount;
             CrawlConfigDisplayName = entity.CrawlConfigDisplayName;
@@ -221,8 +223,6 @@ namespace FsInfoCat.Desktop.ViewModel
                 HasCrawlConfig = true;
                 CrawlConfigDisplayName = name;
             }
-            SetValue(EditPropertyKey, new Commands.RelayCommand(RaiseEditCommand));
-            SetValue(DeletePropertyKey, new Commands.RelayCommand(RaiseDeleteCommand));
         }
 
         protected override void OnEntityPropertyChanged(string propertyName)

@@ -112,12 +112,12 @@ namespace FsInfoCat.Desktop.ViewModel
 
         public GPSPropertiesListItemViewModel([DisallowNull] TEntity entity) : base(entity)
         {
+            SetValue(EditPropertyKey, new Commands.RelayCommand(RaiseEditCommand));
+            SetValue(DeletePropertyKey, new Commands.RelayCommand(RaiseDeleteCommand));
             VersionID = entity.VersionID.ToVersionString();
             ExistingFileCount = entity.ExistingFileCount;
             TotalFileCount = entity.TotalFileCount;
             CommonAttached.SetListItemTitle(this, CalculateDisplayText());
-            SetValue(EditPropertyKey, new Commands.RelayCommand(RaiseEditCommand));
-            SetValue(DeletePropertyKey, new Commands.RelayCommand(RaiseDeleteCommand));
         }
 
         protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)

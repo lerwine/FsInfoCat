@@ -98,10 +98,10 @@ namespace FsInfoCat.Desktop.ViewModel
 
         public AudioPropertiesListItemViewModel([DisallowNull] TEntity entity) : base(entity)
         {
-            ExistingFileCount = entity.ExistingFileCount;
-            TotalFileCount = entity.TotalFileCount;
             SetValue(EditPropertyKey, new Commands.RelayCommand(RaiseEditCommand));
             SetValue(DeletePropertyKey, new Commands.RelayCommand(RaiseDeleteCommand));
+            ExistingFileCount = entity.ExistingFileCount;
+            TotalFileCount = entity.TotalFileCount;
         }
 
         protected override void OnEntityPropertyChanged(string propertyName)

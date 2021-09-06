@@ -87,9 +87,9 @@ namespace FsInfoCat.Desktop.ViewModel
 
         public CrawlConfigurationDetailsViewModel([DisallowNull] TEntity entity, [AllowNull] TSubdirectoryItem root) : base(entity)
         {
-            SetValue(LogsPropertyKey, new ReadOnlyObservableCollection<TCrawlJobLogItem>(_backingLogs));
             SetValue(AddNewCrawlJobLogPropertyKey, new Commands.RelayCommand(OnAddNewCrawlJobLogCommand));
             SetValue(RefreshCrawlJobLogsPropertyKey, new Commands.RelayCommand(OnRefreshCrawlJobLogsCommand));
+            SetValue(LogsPropertyKey, new ReadOnlyObservableCollection<TCrawlJobLogItem>(_backingLogs));
             Root = root;
         }
 

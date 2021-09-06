@@ -127,13 +127,13 @@ namespace FsInfoCat.Desktop.ViewModel
 
         public PhotoPropertiesListItemViewModel([DisallowNull] TEntity entity) : base(entity)
         {
+            SetValue(EditPropertyKey, new Commands.RelayCommand(RaiseEditCommand));
+            SetValue(DeletePropertyKey, new Commands.RelayCommand(RaiseDeleteCommand));
             Event = entity.Event.ToNormalizedDelimitedText();
             PeopleNames = entity.PeopleNames.ToNormalizedDelimitedText();
             ExistingFileCount = entity.ExistingFileCount;
             TotalFileCount = entity.TotalFileCount;
             CommonAttached.SetListItemTitle(this, CalculateDisplayText());
-            SetValue(EditPropertyKey, new Commands.RelayCommand(RaiseEditCommand));
-            SetValue(DeletePropertyKey, new Commands.RelayCommand(RaiseDeleteCommand));
         }
 
         protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)

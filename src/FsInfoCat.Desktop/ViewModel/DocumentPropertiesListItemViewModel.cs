@@ -113,11 +113,11 @@ namespace FsInfoCat.Desktop.ViewModel
 
         public DocumentPropertiesListItemViewModel([DisallowNull] TEntity entity) : base(entity)
         {
+            SetValue(EditPropertyKey, new Commands.RelayCommand(RaiseEditCommand));
+            SetValue(DeletePropertyKey, new Commands.RelayCommand(RaiseDeleteCommand));
             Contributor = Entity.Contributor.ToNormalizedDelimitedText();
             ExistingFileCount = entity.ExistingFileCount;
             TotalFileCount = entity.TotalFileCount;
-            SetValue(EditPropertyKey, new Commands.RelayCommand(RaiseEditCommand));
-            SetValue(DeletePropertyKey, new Commands.RelayCommand(RaiseDeleteCommand));
             CommonAttached.SetListItemTitle(this, CalculateDisplayText());
         }
 

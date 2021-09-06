@@ -148,14 +148,14 @@ namespace FsInfoCat.Desktop.ViewModel
 
         public VolumeListItemViewModel([DisallowNull] TEntity entity) : base(entity)
         {
+            SetValue(EditPropertyKey, new Commands.RelayCommand(RaiseEditCommand));
+            SetValue(DeletePropertyKey, new Commands.RelayCommand(RaiseDeleteCommand));
             RootPath = entity.RootPath;
             RootSubdirectoryCount = entity.RootSubdirectoryCount;
             RootFileCount = entity.RootFileCount;
             AccessErrorCount = entity.AccessErrorCount;
             SharedTagCount = entity.SharedTagCount;
             PersonalTagCount = entity.PersonalTagCount;
-            SetValue(EditPropertyKey, new Commands.RelayCommand(RaiseEditCommand));
-            SetValue(DeletePropertyKey, new Commands.RelayCommand(RaiseDeleteCommand));
         }
 
         protected override void OnEntityPropertyChanged(string propertyName)
