@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel
@@ -101,13 +103,6 @@ namespace FsInfoCat.Desktop.ViewModel
             TotalFileCount = entity.TotalFileCount;
             SetValue(EditPropertyKey, new Commands.RelayCommand(RaiseEditCommand));
             SetValue(DeletePropertyKey, new Commands.RelayCommand(RaiseDeleteCommand));
-            CommonAttached.SetListItemTitle(this, CalculateDisplayText());
-        }
-
-        protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
-        {
-            base.OnPropertyChanged(e);
-            CommonAttached.SetListItemTitle(this, CalculateDisplayText());
         }
 
         protected override void OnEntityPropertyChanged(string propertyName)

@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat.Local
 {
@@ -30,11 +31,9 @@ namespace FsInfoCat.Local
 
         public string FileSystemSymbolicName { get => _fileSystemSymbolicName.GetValue(); set => _fileSystemSymbolicName.SetValue(value); }
 
-        internal static void OnBuildEntity(EntityTypeBuilder<CrawlConfigListItem> builder)
-        {
-            builder.ToView(VIEW_NAME);
-            builder.Property(nameof(VolumeIdentifier)).HasConversion(VolumeIdentifier.Converter);
-        }
+        internal static void OnBuildEntity([DisallowNull] EntityTypeBuilder<CrawlConfigListItem> builder) => (builder ?? throw new ArgumentOutOfRangeException(nameof(builder)))
+            .ToView(VIEW_NAME)
+            .Property(nameof(VolumeIdentifier)).HasConversion(VolumeIdentifier.Converter);
 
         public CrawlConfigListItem()
         {

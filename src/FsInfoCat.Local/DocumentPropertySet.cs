@@ -11,25 +11,6 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat.Local
 {
-    public class DocumentPropertiesListItem : DocumentPropertiesRow, ILocalDocumentPropertiesListItem
-    {
-        public const string VIEW_NAME = "vDocumentPropertiesListing";
-
-        private readonly IPropertyChangeTracker<long> _existingFileCount;
-        private readonly IPropertyChangeTracker<long> _totalFileCount;
-
-        public long ExistingFileCount { get => _existingFileCount.GetValue(); set => _existingFileCount.SetValue(value); }
-
-        public long TotalFileCount { get => _totalFileCount.GetValue(); set => _totalFileCount.SetValue(value); }
-
-        public DocumentPropertiesListItem()
-        {
-            _existingFileCount = AddChangeTracker(nameof(ExistingFileCount), 0L);
-            _totalFileCount = AddChangeTracker(nameof(TotalFileCount), 0L);
-        }
-
-        internal static void OnBuildEntity(EntityTypeBuilder<DocumentPropertiesListItem> builder) => builder.ToView(VIEW_NAME);
-    }
     public class DocumentPropertiesRow : PropertiesRow, IDocumentProperties
     {
         #region Fields
@@ -51,15 +32,25 @@ namespace FsInfoCat.Local
         #region Properties
 
         public string ClientID { get => _clientID.GetValue(); set => _clientID.SetValue(value); }
+
         public MultiStringValue Contributor { get => _contributor.GetValue(); set => _contributor.SetValue(value); }
+
         public DateTime? DateCreated { get => _dateCreated.GetValue(); set => _dateCreated.SetValue(value); }
+
         public string LastAuthor { get => _lastAuthor.GetValue(); set => _lastAuthor.SetValue(value); }
+
         public string RevisionNumber { get => _revisionNumber.GetValue(); set => _revisionNumber.SetValue(value); }
+
         public int? Security { get => _security.GetValue(); set => _security.SetValue(value); }
+
         public string Division { get => _division.GetValue(); set => _division.SetValue(value); }
+
         public string DocumentID { get => _documentID.GetValue(); set => _documentID.SetValue(value); }
+
         public string Manager { get => _manager.GetValue(); set => _manager.SetValue(value); }
+
         public string PresentationFormat { get => _presentationFormat.GetValue(); set => _presentationFormat.SetValue(value); }
+
         public string Version { get => _version.GetValue(); set => _version.SetValue(value); }
 
         #endregion

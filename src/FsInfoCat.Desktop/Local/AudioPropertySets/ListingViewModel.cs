@@ -1,6 +1,7 @@
 using FsInfoCat.Desktop.ViewModel;
 using FsInfoCat.Local;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
@@ -15,8 +16,9 @@ namespace FsInfoCat.Desktop.Local.AudioPropertySets
 
         #region ListingOptions Property Members
 
-        private static readonly DependencyPropertyKey ListingOptionsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ListingOptions), typeof(ThreeStateViewModel), typeof(ListingViewModel),
-                new PropertyMetadata(null));
+        private static readonly DependencyPropertyKey ListingOptionsPropertyKey = DependencyPropertyBuilder<ListingViewModel, ThreeStateViewModel>
+            .Register(nameof(ListingOptions))
+            .AsReadOnly();
 
         /// <summary>
         /// Identifies the <see cref="ListingOptions"/> dependency property.
@@ -47,7 +49,12 @@ namespace FsInfoCat.Desktop.Local.AudioPropertySets
             return dbContext.AudioPropertiesListing;
         }
 
-        protected override ListItemViewModel CreateItemViewModel([DisallowNull] AudioPropertiesListItem entity) => new(entity);
+        protected override ListItemViewModel CreateItemViewModel([DisallowNull] AudioPropertiesListItem entity)
+        {
+            ListItemViewModel listItemViewModel = new(entity);
+            CommonAttached.SetListItemTitle(listItemViewModel, listItemViewModel.CalculateSummaryText());
+            return listItemViewModel;
+        }
 
         protected override void OnCancelFilterOptionsCommand(object parameter)
         {

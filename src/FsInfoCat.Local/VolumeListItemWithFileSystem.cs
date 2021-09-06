@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System;
 
 namespace FsInfoCat.Local
 {
@@ -17,11 +18,8 @@ namespace FsInfoCat.Local
 
         public uint EffectiveMaxNameLength { get => _effectiveMaxNameLength.GetValue(); set => _effectiveMaxNameLength.SetValue(value); }
 
-        internal static void OnBuildEntity(EntityTypeBuilder<VolumeListItemWithFileSystem> builder)
-        {
-            builder.ToView(VIEW_NAME_WITH_FILESYSTEM);
-            builder.Property(nameof(Identifier)).HasConversion(VolumeIdentifier.Converter);
-        }
+        internal static void OnBuildEntity(EntityTypeBuilder<VolumeListItemWithFileSystem> builder) => (builder ?? throw new ArgumentOutOfRangeException(nameof(builder)))
+            .ToView(VIEW_NAME_WITH_FILESYSTEM).Property(nameof(Identifier)).HasConversion(VolumeIdentifier.Converter);
 
         public VolumeListItemWithFileSystem()
         {

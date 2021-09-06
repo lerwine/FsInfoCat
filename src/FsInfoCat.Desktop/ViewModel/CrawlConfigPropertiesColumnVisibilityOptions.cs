@@ -2,54 +2,137 @@ using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel
 {
-    public class CrawlConfigPropertiesColumnVisibilityOptions : ColumnVisibilityOptionsViewModel
+    public abstract class CrawlConfigPropertiesColumnVisibilityOptions<TEntity, TViewModel> : ColumnVisibilityOptionsViewModel<TEntity, TViewModel>
+        where TEntity : DbEntity, ICrawlConfigurationListItem
+        where TViewModel : CrawlConfigListItemViewModel<TEntity>
     {
-        #region MyProperty Property Members
+        #region TotalFileCount Property Members
 
         /// <summary>
-        /// Identifies the <see cref="MyProperty"/> dependency property.
+        /// Identifies the <see cref="TotalFileCount"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty MyPropertyProperty = DependencyProperty.Register(nameof(MyProperty), typeof(bool),
-            typeof(CrawlConfigPropertiesColumnVisibilityOptions), new PropertyMetadata(false, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-            (d as CrawlConfigPropertiesColumnVisibilityOptions)?.RaiseColumnVisibilityPropertyChanged(e)));
+        public static readonly DependencyProperty TotalFileCountProperty = DependencyPropertyBuilder<CrawlConfigPropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
+            .Register(nameof(TotalFileCount))
+            .DefaultValue(false)
+            .OnChanged((d, e) => (d as CrawlConfigPropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
+            .AsReadWrite();
+
+        public bool TotalFileCount { get => (bool)GetValue(TotalFileCountProperty); set => SetValue(TotalFileCountProperty, value); }
+
+        #endregion
+        #region Compression Property Members
 
         /// <summary>
-        /// Gets or sets .
+        /// Identifies the <see cref="Compression"/> dependency property.
         /// </summary>
-        /// <value>The .</value>
-        public bool MyProperty { get => (bool)GetValue(MyPropertyProperty); set => SetValue(MyPropertyProperty, value); }
+        public static readonly DependencyProperty CompressionProperty = DependencyPropertyBuilder<CrawlConfigPropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
+            .Register(nameof(Compression))
+            .DefaultValue(false)
+            .OnChanged((d, e) => (d as CrawlConfigPropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
+            .AsReadWrite();
+
+        public bool Compression { get => (bool)GetValue(CompressionProperty); set => SetValue(CompressionProperty, value); }
+
+        #endregion
+        #region EncodingBitrate Property Members
+
+        /// <summary>
+        /// Identifies the <see cref="EncodingBitrate"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty EncodingBitrateProperty = DependencyPropertyBuilder<CrawlConfigPropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
+            .Register(nameof(EncodingBitrate))
+            .DefaultValue(false)
+            .OnChanged((d, e) => (d as CrawlConfigPropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
+            .AsReadWrite();
+
+        public bool EncodingBitrate { get => (bool)GetValue(EncodingBitrateProperty); set => SetValue(EncodingBitrateProperty, value); }
+
+        #endregion
+        #region Format Property Members
+
+        /// <summary>
+        /// Identifies the <see cref="Format"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty FormatProperty = DependencyPropertyBuilder<CrawlConfigPropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
+            .Register(nameof(Format))
+            .DefaultValue(false)
+            .OnChanged((d, e) => (d as CrawlConfigPropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
+            .AsReadWrite();
+
+        public bool Format { get => (bool)GetValue(FormatProperty); set => SetValue(FormatProperty, value); }
+
+        #endregion
+        #region IsVariableBitrate Property Members
+
+        /// <summary>
+        /// Identifies the <see cref="IsVariableBitrate"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty IsVariableBitrateProperty = DependencyPropertyBuilder<CrawlConfigPropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
+            .Register(nameof(IsVariableBitrate))
+            .DefaultValue(false)
+            .OnChanged((d, e) => (d as CrawlConfigPropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
+            .AsReadWrite();
+
+        public bool IsVariableBitrate { get => (bool)GetValue(IsVariableBitrateProperty); set => SetValue(IsVariableBitrateProperty, value); }
+
+        #endregion
+        #region SampleRate Property Members
+
+        /// <summary>
+        /// Identifies the <see cref="SampleRate"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty SampleRateProperty = DependencyPropertyBuilder<CrawlConfigPropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
+            .Register(nameof(SampleRate))
+            .DefaultValue(false)
+            .OnChanged((d, e) => (d as CrawlConfigPropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
+            .AsReadWrite();
+
+        public bool SampleRate { get => (bool)GetValue(SampleRateProperty); set => SetValue(SampleRateProperty, value); }
+
+        #endregion
+        #region SampleSize Property Members
+
+        /// <summary>
+        /// Identifies the <see cref="SampleSize"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty SampleSizeProperty = DependencyPropertyBuilder<CrawlConfigPropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
+            .Register(nameof(SampleSize))
+            .DefaultValue(false)
+            .OnChanged((d, e) => (d as CrawlConfigPropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
+            .AsReadWrite();
+
+        public bool SampleSize { get => (bool)GetValue(SampleSizeProperty); set => SetValue(SampleSizeProperty, value); }
+
+        #endregion
+        #region StreamName Property Members
+
+        /// <summary>
+        /// Identifies the <see cref="StreamName"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty StreamNameProperty = DependencyPropertyBuilder<CrawlConfigPropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
+            .Register(nameof(StreamName))
+            .DefaultValue(false)
+            .OnChanged((d, e) => (d as CrawlConfigPropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
+            .AsReadWrite();
+
+        public bool StreamName { get => (bool)GetValue(StreamNameProperty); set => SetValue(StreamNameProperty, value); }
+
+        #endregion
+        #region StreamNumber Property Members
+
+        /// <summary>
+        /// Identifies the <see cref="StreamNumber"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty StreamNumberProperty = DependencyPropertyBuilder<CrawlConfigPropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
+            .Register(nameof(StreamNumber))
+            .DefaultValue(false)
+            .OnChanged((d, e) => (d as CrawlConfigPropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
+            .AsReadWrite();
+
+        public bool StreamNumber { get => (bool)GetValue(StreamNumberProperty); set => SetValue(StreamNumberProperty, value); }
 
         #endregion
 
-        /*
-         * DbEntityRowViewModel<TEntity>.CreatedOn 
-         * CrawlConfigListItemViewModel<TEntity>.Delete 
-         * DependencyObject.DependencyObjectType 
-         * DispatcherObject.Dispatcher 
-         * CrawlConfigurationRowViewModel<TEntity>.DisplayName 
-         * CrawlConfigListItemViewModel<TEntity>.Edit 
-         * CrawlConfigListItemViewModel<TEntity>.FileSystemDisplayName 
-         * CrawlConfigListItemViewModel<TEntity>.FileSystemShortDescription 
-         * CrawlConfigListItemViewModel<TEntity>.FileSystemSymbolicName 
-         * DependencyObject.IsSealed CrawlConfigListItemViewModel<TEntity>.LastCrawlEnd 
-         * CrawlConfigListItemViewModel<TEntity>.LastCrawlStart
-         * CrawlConfigurationRowViewModel<TEntity>.MaxDuration
-         * CrawlConfigurationRowViewModel<TEntity>.MaxRecursionDepth 
-         * CrawlConfigurationRowViewModel<TEntity>.MaxTotalItems 
-         * DbEntityRowViewModel<TEntity>.ModifiedOn
-         * CrawlConfigListItemViewModel<TEntity>.NextScheduledStart
-         * CrawlConfigurationRowViewModel<TEntity>.Notes 
-         * CrawlConfigListItemViewModel<TEntity>.Path 
-         * CrawlConfigurationRowViewModel<TEntity>.RescheduleAfterFail 
-         * CrawlConfigurationRowViewModel<TEntity>.RescheduleFromJobEnd 
-         * CrawlConfigListItemViewModel<TEntity>.RescheduleInterval
-         * CrawlConfigListItemViewModel<TEntity>.StatusValue 
-         * CrawlConfigListItemViewModel<TEntity>.TTL 
-         * CrawlConfigListItemViewModel<TEntity>.VolumeDisplayName 
-         * CrawlConfigListItemViewModel<TEntity>.VolumeIdentifier 
-         * CrawlConfigListItemViewModel<TEntity>.VolumeName 
-         * CrawlConfigListItemViewModel<TEntity>.VolumeShortDescription
-         */
-
+        protected CrawlConfigPropertiesColumnVisibilityOptions() : base() { }
     }
 }

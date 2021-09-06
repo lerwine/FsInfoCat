@@ -4,6 +4,7 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:FsInfoCat.Desktop.Local.SymbolicNames"
+      xmlns:ViewModel="clr-namespace:FsInfoCat.Desktop.ViewModel"
       xmlns:Converters="clr-namespace:FsInfoCat.Desktop.Converters" x:Class="FsInfoCat.Desktop.Local.SymbolicNames.ListingPage"
       mc:Ignorable="d" DataContext="{DynamicResource ResourceKey=ViewModel}"
       d:DesignHeight="768" d:DesignWidth="1024"

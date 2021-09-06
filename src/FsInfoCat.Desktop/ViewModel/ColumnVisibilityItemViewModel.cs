@@ -4,40 +4,50 @@ using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel
 {
-    public class ColumnVisibilityItemViewModel : DependencyObject
+    public sealed class ColumnVisibilityItemViewModel : DependencyObject
     {
-        private readonly DependencyProperty _property;
+        private readonly ColumnProperty _property;
 
-        #region Name Property Members
+        #region PropertyName Property Members
 
-        private static readonly DependencyPropertyKey NamePropertyKey = DependencyPropertyBuilder<ColumnVisibilityItemViewModel, string>
-            .Register(nameof(Name))
-            .DefaultValue("")
-            .CoerseWith(NormalizedOrEmptyStringCoersion.Default)
+        private static readonly DependencyPropertyKey PropertyNamePropertyKey = DependencyPropertyBuilder<ColumnVisibilityItemViewModel, string>
+            .Register(nameof(PropertyName))
             .AsReadOnly();
 
         /// <summary>
-        /// Identifies the <see cref="Name"/> dependency property.
+        /// Identifies the <see cref="PropertyName"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty NameProperty = NamePropertyKey.DependencyProperty;
+        public static readonly DependencyProperty PropertyNameProperty = PropertyNamePropertyKey.DependencyProperty;
+
+        public string PropertyName { get => GetValue(PropertyNameProperty) as string; private set => SetValue(PropertyNamePropertyKey, value); }
+
+        #endregion
+        #region ShortName Property Members
+
+        private static readonly DependencyPropertyKey ShortNamePropertyKey = DependencyPropertyBuilder<ColumnVisibilityItemViewModel, string>
+            .Register(nameof(ShortName))
+            .AsReadOnly();
 
         /// <summary>
-        /// Gets or sets .
+        /// Identifies the <see cref="ShortName"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ShortNameProperty = ShortNamePropertyKey.DependencyProperty;
+
+        /// <summary>
+        /// Gets or sets property name of the column.
         /// </summary>
         /// <value>The .</value>
-        public string Name { get => GetValue(NameProperty) as string; private set => SetValue(NamePropertyKey, value); }
+        public string ShortName { get => GetValue(ShortNameProperty) as string; private set => SetValue(ShortNamePropertyKey, value); }
 
         #endregion
         #region DisplayName Property Members
 
         private static readonly DependencyPropertyKey DisplayNamePropertyKey = DependencyPropertyBuilder<ColumnVisibilityItemViewModel, string>
             .Register(nameof(DisplayName))
-            .DefaultValue("")
-            .CoerseWith(NormalizedOrEmptyStringCoersion.Default)
             .AsReadOnly();
 
         /// <summary>
-        /// Identifies the <see cref="Name"/> dependency property.
+        /// Identifies the <see cref="DisplayName"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty DisplayNameProperty = DisplayNamePropertyKey.DependencyProperty;
 
@@ -52,12 +62,10 @@ namespace FsInfoCat.Desktop.ViewModel
 
         private static readonly DependencyPropertyKey DescriptionPropertyKey = DependencyPropertyBuilder<ColumnVisibilityItemViewModel, string>
             .Register(nameof(Description))
-            .DefaultValue("")
-            .CoerseWith(NormalizedOrEmptyStringCoersion.Default)
             .AsReadOnly();
 
         /// <summary>
-        /// Identifies the <see cref="Name"/> dependency property.
+        /// Identifies the <see cref="ShortName"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty DescriptionProperty = DescriptionPropertyKey.DependencyProperty;
 
@@ -70,13 +78,15 @@ namespace FsInfoCat.Desktop.ViewModel
         #endregion
         #region IsVisible Property Members
 
+        public event DependencyPropertyChangedEventHandler IsVisiblePropertyChanged;
+
         /// <summary>
         /// Identifies the <see cref="IsVisible"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty IsVisibleProperty = DependencyPropertyBuilder<ColumnVisibilityItemViewModel, bool>
-            .Register(nameof(Name))
+            .Register(nameof(IsVisible))
             .DefaultValue(false)
-            .OnChanged((d, oldValue, newValue) => (d as ColumnVisibilityItemViewModel)?.OnIsVisiblePropertyChanged(oldValue, newValue))
+            .OnChanged((d, e) => (d as ColumnVisibilityItemViewModel)?.IsVisiblePropertyChanged?.Invoke(d, e))
             .AsReadWrite();
 
         /// <summary>
@@ -86,36 +96,34 @@ namespace FsInfoCat.Desktop.ViewModel
         public bool IsVisible { get => (bool)GetValue(IsVisibleProperty); set => SetValue(IsVisibleProperty, value); }
 
         /// <summary>
-        /// Called when the value of the <see cref="IsVisible"/> dependency property has changed.
+        /// Called when a property on the parent <see cref="ColumnVisibilityOptionsViewModel{TEntity, TViewModel}"/>, which represents a column's visibility, has changed.
         /// </summary>
-        /// <param name="oldValue">The previous value of the <see cref="IsVisible"/> property.</param>
-        /// <param name="newValue">The new value of the <see cref="IsVisible"/> property.</param>
-        private void OnIsVisiblePropertyChanged(bool oldValue, bool newValue) => SetValue(_property, newValue);
-
-        internal static void NotifyPropertyChanged(ReadOnlyObservableCollection<ColumnVisibilityItemViewModel> columns, DependencyPropertyChangedEventArgs e)
+        /// <param name="columns">The columns from the parent <see cref="ColumnVisibilityOptionsViewModel{TEntity, TViewModel}"/>.</param>
+        /// <param name="e">The <see cref="DependencyPropertyChangedEventArgs"/> instance containing the event data.</param>
+        /// <returns>THe matching <see cref="ColumnProperty"/> or <see langword="null"/> if not match was found.</returns>
+        internal static ColumnProperty NotifyBooleanPropertyChanged(ReadOnlyObservableCollection<ColumnVisibilityItemViewModel> columns, string name, bool value)
         {
-            ColumnVisibilityItemViewModel item = columns.FirstOrDefault(c => ReferenceEquals(c._property, e.Property));
-            if (item is not null)
-                item.IsVisible = (bool)e.NewValue;
+            ColumnVisibilityItemViewModel item = columns.FirstOrDefault(c => c.PropertyName == name);
+            if (item is null)
+                return null;
+            item.IsVisible = value;
+            return item._property;
         }
 
         #endregion
 
-        [System.Obsolete("Use ColumnProperty constructor")]
-        public ColumnVisibilityItemViewModel(DependencyProperty property)
-        {
-            _property = property;
-            Name = _property.Name;
-            IsVisible = (bool)GetValue(_property);
-        }
-
         public ColumnVisibilityItemViewModel(ColumnProperty property)
         {
-            _property = property.DependencyProperty;
-            Name = property.ShortName;
-            DisplayName = property.DisplayName;
+            _property = property;
+            PropertyName = property.Name;
+            if (string.IsNullOrWhiteSpace(property.ShortName))
+                ShortName = DisplayName = string.IsNullOrWhiteSpace(property.DisplayName) ? property.Name : property.DisplayName;
+            else
+                DisplayName = string.IsNullOrWhiteSpace(property.DisplayName) ? property.ShortName : property.DisplayName;
             Description = property.Description;
-            IsVisible = (bool)GetValue(_property);
+            IsVisible = (bool)GetValue(_property.DependencyProperty);
         }
+
+        internal ColumnProperty GetProperty() => _property;
     }
 }

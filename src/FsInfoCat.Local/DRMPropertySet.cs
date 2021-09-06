@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -10,56 +9,6 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat.Local
 {
-    public class DRMPropertiesListItem : DRMPropertiesRow, ILocalDRMPropertiesListItem
-    {
-        public const string VIEW_NAME = "vDRMPropertiesListing";
-
-        private readonly IPropertyChangeTracker<long> _existingFileCount;
-        private readonly IPropertyChangeTracker<long> _totalFileCount;
-
-        public long ExistingFileCount { get => _existingFileCount.GetValue(); set => _existingFileCount.SetValue(value); }
-
-        public long TotalFileCount { get => _totalFileCount.GetValue(); set => _totalFileCount.SetValue(value); }
-
-        public DRMPropertiesListItem()
-        {
-            _existingFileCount = AddChangeTracker(nameof(ExistingFileCount), 0L);
-            _totalFileCount = AddChangeTracker(nameof(TotalFileCount), 0L);
-        }
-
-        internal static void OnBuildEntity(EntityTypeBuilder<DRMPropertiesListItem> builder) => builder.ToView(VIEW_NAME);
-    }
-    public class DRMPropertiesRow : PropertiesRow, IDRMProperties
-    {
-        #region Fields
-
-        private readonly IPropertyChangeTracker<DateTime?> _datePlayExpires;
-        private readonly IPropertyChangeTracker<DateTime?> _datePlayStarts;
-        private readonly IPropertyChangeTracker<string> _description;
-        private readonly IPropertyChangeTracker<bool?> _isProtected;
-        private readonly IPropertyChangeTracker<uint?> _playCount;
-
-        #endregion
-
-        #region Properties
-
-        public DateTime? DatePlayExpires { get => _datePlayExpires.GetValue(); set => _datePlayExpires.SetValue(value); }
-        public DateTime? DatePlayStarts { get => _datePlayStarts.GetValue(); set => _datePlayStarts.SetValue(value); }
-        public string Description { get => _description.GetValue(); set => _description.SetValue(value); }
-        public bool? IsProtected { get => _isProtected.GetValue(); set => _isProtected.SetValue(value); }
-        public uint? PlayCount { get => _playCount.GetValue(); set => _playCount.SetValue(value); }
-
-        #endregion
-
-        public DRMPropertiesRow()
-        {
-            _datePlayExpires = AddChangeTracker<DateTime?>(nameof(DatePlayExpires), null);
-            _datePlayStarts = AddChangeTracker<DateTime?>(nameof(DatePlayStarts), null);
-            _description = AddChangeTracker(nameof(Description), null, FilePropertiesComparer.StringValueCoersion);
-            _isProtected = AddChangeTracker<bool?>(nameof(IsProtected), null);
-            _playCount = AddChangeTracker<uint?>(nameof(PlayCount), null);
-        }
-    }
     /// <summary>
     /// Class DRMPropertySet.
     /// Implements the <see cref="LocalDbEntity" />

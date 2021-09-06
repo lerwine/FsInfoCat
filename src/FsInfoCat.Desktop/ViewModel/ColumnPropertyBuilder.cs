@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Immutable;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel
@@ -27,21 +29,27 @@ namespace FsInfoCat.Desktop.ViewModel
         private ColumnPropertyBuilder(IDependencyPropertyBuilder<TProperty> backingBuilder)
         {
             _backingBuilder = backingBuilder;
-            PropertyDescriptor sourceDescriptor = backingBuilder.EntityProperty ?? backingBuilder.TargetProperty;
-            if (sourceDescriptor is null)
+            (string DisplayName, string ShortName, string Prompt, string GroupName, string Description, int? Order)[] names = ImmutableArray.Create(backingBuilder.TargetProperty,
+                backingBuilder.EntityProperty).Where(p => p is not null)
+                    .Select(p => (p.TryGetDisplayName(out string DisplayName) ? DisplayName : "", p.TryGetShortName(out string ShortName) ? ShortName : null,
+                    p.TryGetPrompt(out string Prompt) ? Prompt : "",
+                    p.TryGroupName(out string GroupName) ? GroupName : "",
+                    p.TryGetDescription(out string Description) ? Description : "",
+                    p.TryGetOrder(out int Order) ? Order : (int?)null)).ToArray();
+            if (names.Length > 0)
+            {
+                _shortName = names.Select(n => n.ShortName).Where(n => !string.IsNullOrWhiteSpace(n)).DefaultIfEmpty(backingBuilder.PropertyName).First();
+                _displayName = names.Select(n => n.DisplayName).Where(n => !string.IsNullOrWhiteSpace(n)).DefaultIfEmpty(_shortName).First();
+                _prompt = names.Select(n => n.Prompt).Where(n => !string.IsNullOrWhiteSpace(n)).FirstOrDefault() ?? $"{_displayName}: ";
+                _groupName = names.Select(n => n.GroupName).Where(n => !string.IsNullOrWhiteSpace(n)).FirstOrDefault() ?? "";
+                _description = names.Select(n => n.Description).Where(n => !string.IsNullOrWhiteSpace(n)).FirstOrDefault() ?? "";
+                _order = names.Select(n => n.Order).Where(n => n.HasValue).FirstOrDefault();
+            }
+            else
             {
                 _displayName = _shortName = backingBuilder.PropertyName;
                 _prompt = $"{backingBuilder.PropertyName}: ";
                 _groupName = _description = "";
-            }
-            else
-            {
-                _displayName = sourceDescriptor.GetDisplay(out string shortName, out string prompt, out string groupName, out string description, out int? order);
-                _shortName = shortName;
-                _prompt = prompt;
-                _groupName = groupName;
-                _description = description;
-                _order = order;
             }
         }
 
@@ -129,7 +137,14 @@ namespace FsInfoCat.Desktop.ViewModel
             _backingBuilder.DefaultValue(defaultValue);
             return this;
         }
+
         public ColumnPropertyBuilder<TProperty, TTarget> OnChanged([DisallowNull] Action<DependencyObject, TProperty, TProperty> propertyChangedCallback)
+        {
+            _backingBuilder.OnChanged(propertyChangedCallback);
+            return this;
+        }
+
+        public ColumnPropertyBuilder<TProperty, TTarget> OnChanged([DisallowNull] PropertyChangedCallback propertyChangedCallback)
         {
             _backingBuilder.OnChanged(propertyChangedCallback);
             return this;
@@ -170,6 +185,8 @@ namespace FsInfoCat.Desktop.ViewModel
         IDependencyPropertyBuilder<TProperty> IDependencyPropertyBuilder<TProperty>.DefaultValue(TProperty defaultValue) => DefaultValue(defaultValue);
 
         IDependencyPropertyBuilder<TProperty> IDependencyPropertyBuilder<TProperty>.OnChanged(Action<DependencyObject, TProperty, TProperty> propertyChangedCallback) => OnChanged(propertyChangedCallback);
+
+        IDependencyPropertyBuilder<TProperty> IDependencyPropertyBuilder<TProperty>.OnChanged(PropertyChangedCallback propertyChangedCallback) => OnChanged(propertyChangedCallback);
 
         IDependencyPropertyBuilder<TProperty> IDependencyPropertyBuilder<TProperty>.CoerseWith(ICoersion<TProperty> coersion) => CoerseWith(coersion);
 

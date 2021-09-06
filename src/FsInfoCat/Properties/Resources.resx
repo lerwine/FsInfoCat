@@ -1749,15 +1749,15 @@
   </data>
   <data name="FormatMessage_AddingNewVolume" xml:space="preserve">
     <value>Saving new Volume "{0}" ({1}).</value>
-    <comment>Parameter 0 : string = Display Name; Parameter 1: string = System Name</comment>
+    <comment>Parameter 0: string = Display Name; Parameter 1: string = System Name</comment>
   </data>
   <data name="FormatMessage_DeletingVolume" xml:space="preserve">
     <value>Deleting Volume "{0}" ({1}).</value>
-    <comment>Parameter 0 : string = Display Name; Parameter 1: string = System Name</comment>
+    <comment>Parameter 0: string = Display Name; Parameter 1: string = System Name</comment>
   </data>
   <data name="FormatMessage_SavingVolumeChanges" xml:space="preserve">
     <value>Saving changes to Volume "{0}" ({1}).</value>
-    <comment>Parameter 0 : string = Display Name; Parameter 1: string = System Name</comment>
+    <comment>Parameter 0: string = Display Name; Parameter 1: string = System Name</comment>
   </data>
   <data name="DisplayName_TagDefinition" xml:space="preserve">
     <value>Tag Definition</value>
@@ -1851,5 +1851,15 @@
   </data>
   <data name="DisplayName_IsStereo" xml:space="preserve">
     <value>Is Stereo</value>
+  </data>
+  <data name="DisplayName_AllFiles" xml:space="preserve">
+    <value>All Files</value>
+  </data>
+  <data name="DisplayName_FSInfoCat" xml:space="preserve">
+    <value>FS InfoCat</value>
+  </data>
+  <data name="FormatDisplayName_FSInfoCatTitle" xml:space="preserve">
+    <value>FS InfoCat: {0}</value>
+    <comment>Window title: Paramter 0: string = Page Title</comment>
   </data>
 </root>

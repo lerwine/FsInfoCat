@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Logging;
 using System;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Navigation;
 
@@ -30,6 +31,22 @@ namespace FsInfoCat.Desktop.ViewModel
         public const string Page_Uri_Local_RecordedTVPropertySets = "/Local/RecordedTVPropertySets/ListingPage.xaml";
         public const string Page_Uri_Local_VideoPropertySets = "/Local/VideoPropertySets/ListingPage.xaml";
 
+        #region WindowTitle Property Members
+
+        private static readonly DependencyPropertyKey WindowTitlePropertyKey = DependencyPropertyBuilder<MainVM, string>
+            .Register(nameof(WindowTitle))
+            .DefaultValue("")
+            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default)
+            .AsReadOnly();
+
+        /// <summary>
+        /// Identifies the <see cref="WindowTitle"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty WindowTitleProperty = WindowTitlePropertyKey.DependencyProperty;
+
+        public string WindowTitle { get => GetValue(WindowTitleProperty) as string; private set => SetValue(WindowTitlePropertyKey, value); }
+
+        #endregion
         #region ViewFileSystems Command Property Members
 
         private static readonly DependencyPropertyKey ViewFileSystemsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ViewFileSystems),
@@ -419,6 +436,12 @@ namespace FsInfoCat.Desktop.ViewModel
             }
             if (newValue is FrameworkElement newContent)
             {
+                if (newContent is Page page)
+                {
+                    string title = page.Title;
+                    WindowTitle = string.IsNullOrWhiteSpace(title) ? FsInfoCat.Properties.Resources.DisplayName_FSInfoCat :
+                        string.Format(FsInfoCat.Properties.Resources.FormatDisplayName_FSInfoCatTitle, title);
+                }
                 if (newContent.DataContext is INotifyNavigatedTo navigatedTo)
                     navigatedTo.OnNavigatedTo();
             }

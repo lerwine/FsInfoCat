@@ -9,7 +9,6 @@ namespace FsInfoCat.Desktop.ViewModel
     public class AudioPropertiesRowViewModel<TEntity> : DbEntityRowViewModel<TEntity>
         where TEntity : DbEntity, IAudioProperties
     {
-        #endregion
         #region Compression Property Members
 
         /// <summary>
@@ -221,25 +220,33 @@ namespace FsInfoCat.Desktop.ViewModel
             StreamNumber = entity.StreamNumber;
         }
 
-        public IEnumerable<(string DisplayName, string Value)> GetNameValuePairs()
+        public virtual IEnumerable<(string PropertyName, string Value)> GetNameValuePairs()
         {
-            yield return (FsInfoCat.Properties.Resources.DisplayName_Compression, Compression.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
-            yield return (FsInfoCat.Properties.Resources.DisplayName_EncodingBitrate, EncodingBitrate?.ToString());
-            yield return (FsInfoCat.Properties.Resources.DisplayName_Format, Format.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
-            yield return (FsInfoCat.Properties.Resources.DisplayName_IsVariableBitrate, Converters.BooleanToStringConverter.Convert(IsVariableBitrate));
-            yield return (FsInfoCat.Properties.Resources.DisplayName_SampleRate, SampleRate?.ToString());
-            yield return (FsInfoCat.Properties.Resources.DisplayName_SampleSize, SampleSize?.ToString());
-            yield return (FsInfoCat.Properties.Resources.DisplayName_StreamName, StreamName.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
-            yield return (FsInfoCat.Properties.Resources.DisplayName_StreamNumber, StreamNumber?.ToString());
+            yield return (nameof(Compression), Compression.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (nameof(EncodingBitrate), EncodingBitrate?.ToString());
+            yield return (nameof(Format), Format.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (nameof(IsVariableBitrate), Converters.BooleanToStringConverter.Convert(IsVariableBitrate));
+            yield return (nameof(SampleRate), SampleRate?.ToString());
+            yield return (nameof(SampleSize), SampleSize?.ToString());
+            yield return (nameof(StreamName), StreamName.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (nameof(StreamNumber), StreamNumber?.ToString());
         }
+
+        //internal string CalculateDisplayText(Func<(string PropertyName, string Value), bool> filter = null) => (filter is null) ?
+        //    StringExtensionMethods.ToKeyValueListString(GetNameValuePairs()) : StringExtensionMethods.ToKeyValueListString(GetNameValuePairs().Where(filter));
 
         /// <summary>
         /// Calculates the display text.
         /// </summary>
-        /// <param name="filter">The filter.</param>
-        /// <returns></returns>
-        internal string CalculateDisplayText(Func<(string DisplayName, string Value), bool> filter = null) => (filter is null) ?
-            StringExtensionMethods.ToKeyValueListString(GetNameValuePairs()) : StringExtensionMethods.ToKeyValueListString(GetNameValuePairs().Where(filter));
+        /// <param name="columns">The columns to be included.</param>
+        /// <returns>The display text.</returns>
+        internal string CalculateSummaryText()
+        {
+            IEnumerable<ColumnProperty> columns = ColumnProperty.GetOrderedProperties(GetType());
+            Dictionary<string, string> nvp = GetNameValuePairs().ToDictionary(k => k.PropertyName, v => v.Value);
+            return StringExtensionMethods.ToKeyValueListString(columns.Select(Col => (Col, Success: nvp.TryGetValue(Col.Name, out string Value), Value)).Where(t => t.Success).Select(t =>
+                (string.IsNullOrWhiteSpace(t.Col.ShortName) ? (string.IsNullOrWhiteSpace(t.Col.DisplayName) ? t.Col.Name : t.Col.DisplayName) : t.Col.ShortName, t.Value)));
+        }
 
         protected override void OnEntityPropertyChanged(string propertyName)
         {

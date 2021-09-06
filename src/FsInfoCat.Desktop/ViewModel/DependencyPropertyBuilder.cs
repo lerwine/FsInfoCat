@@ -119,6 +119,14 @@ namespace FsInfoCat.Desktop.ViewModel
             return this;
         }
 
+        public DependencyPropertyBuilder<TOwner, TProperty> OnChanged([DisallowNull] PropertyChangedCallback propertyChangedCallback)
+        {
+            if (propertyChangedCallback is null)
+                throw new ArgumentNullException(nameof(propertyChangedCallback));
+            _propertyChangedCallback = propertyChangedCallback;
+            return this;
+        }
+
         public DependencyPropertyBuilder<TOwner, TProperty> CoerseWith([DisallowNull] ICoersion<TProperty> coersion)
         {
             if (coersion is null)
@@ -193,6 +201,8 @@ namespace FsInfoCat.Desktop.ViewModel
         IDependencyPropertyBuilder<TProperty> IDependencyPropertyBuilder<TProperty>.DefaultValue(TProperty defaultValue) => DefaultValue(defaultValue);
 
         IDependencyPropertyBuilder<TProperty> IDependencyPropertyBuilder<TProperty>.OnChanged(Action<DependencyObject, TProperty, TProperty> propertyChangedCallback) => OnChanged(propertyChangedCallback);
+
+        IDependencyPropertyBuilder<TProperty> IDependencyPropertyBuilder<TProperty>.OnChanged(PropertyChangedCallback propertyChangedCallback) => OnChanged(propertyChangedCallback);
 
         IDependencyPropertyBuilder<TProperty> IDependencyPropertyBuilder<TProperty>.CoerseWith(ICoersion<TProperty> coersion) => CoerseWith(coersion);
 

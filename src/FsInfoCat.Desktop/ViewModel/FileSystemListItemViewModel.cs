@@ -118,6 +118,8 @@ namespace FsInfoCat.Desktop.ViewModel
             PrimarySymbolicName = entity.PrimarySymbolicName;
             SymbolicNameCount = entity.SymbolicNameCount;
             VolumeCount = entity.VolumeCount;
+            SetValue(EditPropertyKey, new Commands.RelayCommand(RaiseEditCommand));
+            SetValue(DeletePropertyKey, new Commands.RelayCommand(RaiseDeleteCommand));
         }
 
         protected override void OnEntityPropertyChanged(string propertyName)

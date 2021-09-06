@@ -63,6 +63,32 @@ namespace FsInfoCat
             return (result = memberInfo.GetCustomAttributes<DescriptionAttribute>(true).Select(a => a.Description.NullIfWhiteSpace()).FirstOrDefault(d => d is not null)) is not null;
         }
 
+        public static bool TryGetDescription(this MemberDescriptor descriptor, out string result)
+        {
+            if (descriptor is null)
+            {
+                result = null;
+                return false;
+            }
+            DisplayAttribute attribute = descriptor.Attributes.OfType<DisplayAttribute>().FirstOrDefault();
+            if (attribute is not null && (result = attribute.GetDescription().NullIfWhiteSpace()) is not null)
+                return true;
+            return (result = descriptor.Attributes.OfType<DescriptionAttribute>().Select(a => a.Description.NullIfWhiteSpace()).FirstOrDefault(d => d is not null)) is not null;
+        }
+
+        public static bool TryGetDisplayName(this MemberDescriptor descriptor, out string result)
+        {
+            if (descriptor is null)
+            {
+                result = null;
+                return false;
+            }
+            DisplayAttribute attribute = descriptor.Attributes.OfType<DisplayAttribute>().FirstOrDefault();
+            if (attribute is not null && (result = attribute.GetName().NullIfWhiteSpace()) is not null)
+                return true;
+            return (result = descriptor.Attributes.OfType<DisplayNameAttribute>().Select(a => a.DisplayName.NullIfWhiteSpace()).FirstOrDefault(d => d is not null)) is not null;
+        }
+
         public static bool TryGetDisplayName(this MemberInfo memberInfo, out string result)
         {
             if (memberInfo is null)
@@ -78,38 +104,80 @@ namespace FsInfoCat
 
         public static bool TryGetShortName(this MemberDescriptor descriptor, out string result)
         {
-            if (descriptor is null)
+            if (descriptor is not null)
             {
-                result = null;
-                return false;
+                DisplayAttribute attribute = descriptor.Attributes.OfType<DisplayAttribute>().FirstOrDefault();
+                if (attribute is not null && (result = attribute.GetShortName().NullIfWhiteSpace()) is not null)
+                    return true;
             }
-            DisplayAttribute attribute = descriptor.Attributes.OfType<DisplayAttribute>().FirstOrDefault();
-            if (attribute is not null && (result = attribute.GetShortName().NullIfWhiteSpace()) is not null)
-                return true;
-            if ((result = descriptor.Attributes.OfType<DisplayNameAttribute>().Select(a => a.DisplayName.NullIfWhiteSpace()).FirstOrDefault(d => d is not null)) is null)
-            {
-                result = descriptor.Name;
-                return false;
-            }
-            return true;
+            result = null;
+            return false;
         }
 
         public static bool TryGetShortName(this MemberInfo memberInfo, out string result)
         {
-            if (memberInfo is null)
+            if (memberInfo is not null)
             {
-                result = null;
-                return false;
+                DisplayAttribute attribute = memberInfo.GetCustomAttributes<DisplayAttribute>(true).FirstOrDefault();
+                if (attribute is not null && (result = attribute.GetShortName().NullIfWhiteSpace()) is not null)
+                    return true;
             }
-            DisplayAttribute attribute = memberInfo.GetCustomAttributes<DisplayAttribute>(true).FirstOrDefault();
-            if (attribute is not null && (result = attribute.GetShortName().NullIfWhiteSpace()) is not null)
-                return true;
-            if ((result = memberInfo.GetCustomAttributes<DisplayNameAttribute>(true).Select(a => a.DisplayName.NullIfWhiteSpace()).FirstOrDefault(d => d is not null)) is null)
+            result = null;
+            return false;
+        }
+
+        public static bool TryGetPrompt(this MemberInfo memberInfo, out string result)
+        {
+            if (memberInfo is not null)
             {
-                result = memberInfo.Name;
-                return false;
+                DisplayAttribute attribute = memberInfo.GetCustomAttributes<DisplayAttribute>(true).FirstOrDefault();
+                if (attribute is not null && (result = attribute.GetPrompt().NullIfWhiteSpace()) is not null)
+                    return true;
             }
-            return true;
+            result = null;
+            return false;
+        }
+
+        public static bool TryGetPrompt(this MemberDescriptor descriptor, out string result)
+        {
+            if (descriptor is not null)
+            {
+                DisplayAttribute attribute = descriptor.Attributes.OfType<DisplayAttribute>().FirstOrDefault();
+                if (attribute is not null && (result = attribute.GetPrompt().NullIfWhiteSpace()) is not null)
+                    return true;
+            }
+            result = null;
+            return false;
+        }
+
+        public static bool TryGroupName(this MemberInfo memberInfo, out string result)
+        {
+            if (memberInfo is not null)
+            {
+                DisplayAttribute attribute = memberInfo.GetCustomAttributes<DisplayAttribute>(true).FirstOrDefault();
+                if (attribute is not null && (result = attribute.GetGroupName().NullIfWhiteSpace()) is not null)
+                    return true;
+                result = memberInfo.GetCustomAttributes<CategoryAttribute>(true).Select(c => c.Category).FirstOrDefault();
+                if (!string.IsNullOrWhiteSpace(result))
+                    return true;
+            }
+            result = null;
+            return false;
+        }
+
+        public static bool TryGroupName(this MemberDescriptor descriptor, out string result)
+        {
+            if (descriptor is not null)
+            {
+                DisplayAttribute attribute = descriptor.Attributes.OfType<DisplayAttribute>().FirstOrDefault();
+                if (attribute is not null && (result = attribute.GetGroupName().NullIfWhiteSpace()) is not null)
+                    return true;
+                result = descriptor.Category;
+                if (!string.IsNullOrWhiteSpace(result))
+                    return true;
+            }
+            result = null;
+            return false;
         }
 
         public static bool TryGetOrder(this MemberDescriptor descriptor, out int result)

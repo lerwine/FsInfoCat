@@ -33,6 +33,12 @@ namespace FsInfoCat.Desktop.ViewModel
 
         public int? Order { get; }
 
+        /// <summary>
+        /// Gets the registered dependency property that corresponds to a column value.
+        /// </summary>
+        /// <value>
+        /// The registered view model dependency property that corresponds to a column value.
+        /// </value>
         public DependencyProperty DependencyProperty { get; }
 
         private ColumnProperty([DisallowNull] DependencyProperty dependencyProperty, [DisallowNull] string displayName, [DisallowNull] string shortName, [DisallowNull] string prompt,
@@ -61,10 +67,8 @@ namespace FsInfoCat.Desktop.ViewModel
             }
         }
 
-        public static IEnumerable<ColumnProperty> GetProperties<TTarget>()
-            where TTarget : DependencyObject
+        private static IEnumerable<ColumnProperty> PrivateGetProperties(Type type)
         {
-            Type type = typeof(TTarget);
             Stack<Type> types = new();
             while (type != typeof(DependencyObject))
             {
@@ -74,5 +78,23 @@ namespace FsInfoCat.Desktop.ViewModel
             }
             return types.SelectMany(t => _columnProperties.TryGetValue(t, out Collection<ColumnProperty> collection) ? collection : Enumerable.Empty<ColumnProperty>());
         }
+
+        private static IEnumerable<ColumnProperty> GetOrdered(IEnumerable<ColumnProperty> source) => source.Select((Item, OrginalIndex) =>
+            (Item, OrginalIndex, Order: Item.Order ?? int.MaxValue)).OrderBy(t => t.Order).ThenBy(t => t.OrginalIndex).Select(t => t.Item);
+
+        public static IEnumerable<ColumnProperty> GetProperties(Type type)
+        {
+            if (type is null)
+                throw new ArgumentNullException(nameof(type));
+            if (!typeof(DependencyObject).IsAssignableFrom(type))
+                throw new ArgumentOutOfRangeException(nameof(type));
+            return PrivateGetProperties(type);
+        }
+
+        public static IEnumerable<ColumnProperty> GetProperties<TTarget>() where TTarget : DependencyObject => PrivateGetProperties(typeof(TTarget));
+
+        public static IEnumerable<ColumnProperty> GetOrderedProperties<TTarget>() where TTarget : DependencyObject => GetOrdered(GetProperties<TTarget>());
+
+        public static IEnumerable<ColumnProperty> GetOrderedProperties(Type type) => GetOrdered(GetProperties(type));
     }
 }

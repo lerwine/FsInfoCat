@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using System;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -56,6 +57,15 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
                 _stopwatch = new Stopwatch();
                 _stopwatch.Start();
                 Timer timer = new Timer(TimerTick, null, 1000, 1000);
+                Task.ContinueWith(t =>
+                {
+                    if (t.IsCanceled)
+                        statusListener.Logger.LogWarning("Task canceled: Title = \"{Title}\"; ConcurrencyId = {ConcurrencyId}", Title, statusListener.ConcurrencyId);
+                    else if (t.IsFaulted)
+                        statusListener.Logger.LogError(t.Exception, "Task Faulted: Title = \"{Title}\"; ConcurrencyId = {ConcurrencyId}", Title, statusListener.ConcurrencyId);
+                    else
+                        statusListener.Logger.LogDebug("Task completed: Title = \"{Title}\"; ConcurrencyId = {ConcurrencyId}", Title, statusListener.ConcurrencyId);
+                });
                 Task.ContinueWith(async t =>
                 {
                     try { loggerScope.Dispose(); }

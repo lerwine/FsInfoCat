@@ -1123,6 +1123,15 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to All Files.
+        /// </summary>
+        public static string DisplayName_AllFiles {
+            get {
+                return ResourceManager.GetString("DisplayName_AllFiles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to All Items.
         /// </summary>
         public static string DisplayName_AllItems {
@@ -2478,6 +2487,15 @@ namespace FsInfoCat.Properties {
         public static string DisplayName_FrameWidth {
             get {
                 return ResourceManager.GetString("DisplayName_FrameWidth", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to FS InfoCat.
+        /// </summary>
+        public static string DisplayName_FSInfoCat {
+            get {
+                return ResourceManager.GetString("DisplayName_FSInfoCat", resourceCulture);
             }
         }
         
@@ -5160,6 +5178,15 @@ namespace FsInfoCat.Properties {
         public static string Format_InvalidTime {
             get {
                 return ResourceManager.GetString("Format_InvalidTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to FS InfoCat: {0}.
+        /// </summary>
+        public static string FormatDisplayName_FSInfoCatTitle {
+            get {
+                return ResourceManager.GetString("FormatDisplayName_FSInfoCatTitle", resourceCulture);
             }
         }
         

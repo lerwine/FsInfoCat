@@ -5,6 +5,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:FsInfoCat.Desktop.Local.RedundantSets"
       xmlns:Converters="clr-namespace:FsInfoCat.Desktop.Converters"
+      xmlns:ViewModel="clr-namespace:FsInfoCat.Desktop.ViewModel"
       mc:Ignorable="d"
       d:DesignHeight="768" d:DesignWidth="1024"
       DataContext="{DynamicResource ViewModel}"

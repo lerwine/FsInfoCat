@@ -48,11 +48,11 @@ namespace FsInfoCat.Local
             ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual VolumeIdentifier Identifier { get => _identifier.GetValue(); set => _identifier.SetValue(value); }
 
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_VolumeStatus), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_VolumeStatus), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         [Required]
         public virtual VolumeStatus Status { get => _status.GetValue(); set => _status.SetValue(value); }
 
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_DriveType), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_DriveType), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         [Required]
         public virtual DriveType Type { get => _type.GetValue(); set => _type.SetValue(value); }
 
@@ -64,7 +64,7 @@ namespace FsInfoCat.Local
             ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual uint? MaxNameLength { get => _maxNameLength.GetValue(); set => _maxNameLength.SetValue(value); }
 
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_Notes), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_Notes), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         [Required(AllowEmptyStrings = true)]
         public virtual string Notes { get => _notes.GetValue(); set => _notes.SetValue(value); }
 

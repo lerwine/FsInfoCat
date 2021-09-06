@@ -1,26 +1,38 @@
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel
 {
-    public abstract class ColumnVisibilityOptionsViewModel : DependencyObject
+    public abstract class ColumnVisibilityOptionsViewModel<TEntity, TViewModel> : DependencyObject
+        where TEntity : DbEntity
+        where TViewModel : DbEntityRowViewModel<TEntity>
     {
         public event DependencyPropertyChangedEventHandler ColumnVisibilityPropertyChanged;
+
+        /// <summary>
+        /// Occurs when <see cref="SetSummaryColumnText(DependencyObject, string)"/> needs to be invoked on all <see cref="DbEntityRowViewModel{TEntity}"/> items.
+        /// </summary>
+        public event EventHandler<ResummarizeRowsEventArgs> ResummarizeRows;
+
+        /// <summary>
+        /// Occurs when the clear summary text for all <see cref="DbEntityRowViewModel{TEntity}"/> items needs to be cleared by invoking <see cref="SetSummaryColumnText(DependencyObject, string)"/>.
+        /// </summary>
+        public event EventHandler ClearRowSummaries;
 
         #region CreatedOn Property Members
 
         /// <summary>
         /// Identifies the <see cref="CreatedOn"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty CreatedOnProperty = DependencyProperty.Register(nameof(CreatedOn), typeof(bool), typeof(ColumnVisibilityOptionsViewModel),
-                new PropertyMetadata(false, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as ColumnVisibilityOptionsViewModel)?.RaiseColumnVisibilityPropertyChanged(e)));
+        public static readonly DependencyProperty CreatedOnProperty = DependencyPropertyBuilder<ColumnVisibilityOptionsViewModel<TEntity, TViewModel>, bool>
+            .Register(nameof(CreatedOn))
+            .DefaultValue(false)
+            .AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public bool CreatedOn { get => (bool)GetValue(CreatedOnProperty); set => SetValue(CreatedOnProperty, value); }
 
         #endregion
@@ -29,19 +41,18 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="ModifiedOn"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty ModifiedOnProperty = DependencyProperty.Register(nameof(ModifiedOn), typeof(bool), typeof(ColumnVisibilityOptionsViewModel),
-                new PropertyMetadata(false, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as ColumnVisibilityOptionsViewModel)?.RaiseColumnVisibilityPropertyChanged(e)));
+        public static readonly DependencyProperty ModifiedOnProperty = DependencyPropertyBuilder<ColumnVisibilityOptionsViewModel<TEntity, TViewModel>, bool>
+            .Register(nameof(ModifiedOn))
+            .DefaultValue(false)
+            .AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public bool ModifiedOn { get => (bool)GetValue(ModifiedOnProperty); set => SetValue(ModifiedOnProperty, value); }
 
         #endregion
+
         #region Columns Property Members
 
-        private static readonly DependencyPropertyKey ColumnsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Columns), typeof(ReadOnlyObservableCollection<ColumnVisibilityItemViewModel>), typeof(ColumnVisibilityOptionsViewModel),
+        private static readonly DependencyPropertyKey ColumnsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Columns), typeof(ReadOnlyObservableCollection<ColumnVisibilityItemViewModel>), typeof(ColumnVisibilityOptionsViewModel<TEntity, TViewModel>),
                 new PropertyMetadata(null));
 
         public static readonly DependencyProperty ColumnsProperty = ColumnsPropertyKey.DependencyProperty;
@@ -49,45 +60,72 @@ namespace FsInfoCat.Desktop.ViewModel
         public ReadOnlyObservableCollection<ColumnVisibilityItemViewModel> Columns => (ReadOnlyObservableCollection<ColumnVisibilityItemViewModel>)GetValue(ColumnsProperty);
 
         #endregion
+        #region ShowSummaryColumn Property Members
 
-        [System.Obsolete("Use constructor with ColumnProperty elements")]
-        protected ColumnVisibilityOptionsViewModel(IEnumerable<DependencyProperty> columnProperties)
+        private static readonly DependencyPropertyKey ShowSummaryColumnPropertyKey = DependencyPropertyBuilder<ColumnVisibilityOptionsViewModel<TEntity, TViewModel>, bool>
+            .Register(nameof(ShowSummaryColumn))
+            .DefaultValue(true)
+            .AsReadOnly();
+
+        /// <summary>
+        /// Identifies the <see cref="ShowSummaryColumn"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ShowSummaryColumnProperty = ShowSummaryColumnPropertyKey.DependencyProperty;
+
+        public bool ShowSummaryColumn { get => (bool)GetValue(ShowSummaryColumnProperty); private set => SetValue(ShowSummaryColumnPropertyKey, value); }
+
+        #endregion
+        protected ColumnVisibilityOptionsViewModel()
         {
             ObservableCollection<ColumnVisibilityItemViewModel> backingColumns = new();
-            foreach (ColumnVisibilityItemViewModel item in columnProperties.Concat(new DependencyProperty[] { CreatedOnProperty, ModifiedOnProperty }).Distinct()
-                .Select(t => new ColumnVisibilityItemViewModel(t)))
+            foreach (ColumnVisibilityItemViewModel item in ColumnProperty.GetProperties<TViewModel>().Select((Column, OriginalIndex) => (Column, OriginalIndex, Order: Column.Order ?? int.MaxValue))
+                .OrderBy(a => a.Order).ThenBy(a => a.OriginalIndex).Select(t => new ColumnVisibilityItemViewModel(t.Column)))
             {
                 backingColumns.Add(item);
+                item.IsVisiblePropertyChanged += Item_IsVisiblePropertyChanged;
             }
             SetValue(ColumnsPropertyKey, new ReadOnlyObservableCollection<ColumnVisibilityItemViewModel>(backingColumns));
         }
 
-        protected ColumnVisibilityOptionsViewModel(IEnumerable<ColumnProperty> columnProperties)
+        public IReadOnlyList<ColumnProperty> GetSummaryColumns()
         {
-            ObservableCollection<ColumnVisibilityItemViewModel> backingColumns = new();
-            foreach (ColumnVisibilityItemViewModel item in columnProperties.Distinct().Select((Column, OriginalIndex) => (Column, OriginalIndex, Order: Column.Order ?? int.MaxValue))
-                .OrderBy(a => a.Order).ThenBy(a => a.OriginalIndex).Select(t => new ColumnVisibilityItemViewModel(t.Column)))
+            ColumnProperty[] toSummarize = Columns.Where(c => !c.IsVisible).Select(c => c.GetProperty()).ToArray();
+            if (toSummarize.Length > 1)
+                return toSummarize;
+            return Array.Empty<ColumnProperty>();
+        }
+
+        private void Item_IsVisiblePropertyChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            ColumnProperty[] toSummarize = Columns.Where(c => !c.IsVisible).Select(c => c.GetProperty()).ToArray();
+            if (!(bool)e.NewValue && toSummarize.Length == 1)
             {
-                backingColumns.Add(item);
+                ShowSummaryColumn = false;
+                ClearRowSummaries?.Invoke(this, EventArgs.Empty);
             }
-            SetValue(ColumnsPropertyKey, new ReadOnlyObservableCollection<ColumnVisibilityItemViewModel>(backingColumns));
+            if (toSummarize.Length > 1)
+            {
+                ResummarizeRows?.Invoke(this, new(toSummarize));
+                ShowSummaryColumn = true;
+            }
         }
 
         protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
         {
             base.OnPropertyChanged(e);
-            ColumnVisibilityItemViewModel.NotifyPropertyChanged(Columns, e);
+            if (e.NewValue is bool isVisible)
+                ColumnVisibilityItemViewModel.NotifyBooleanPropertyChanged(Columns, e.Property.Name, isVisible);
         }
 
-        protected ColumnVisibilityOptionsViewModel(params DependencyProperty[] columnProperties) : this(columnProperties.AsEnumerable()) { }
+        [Obsolete("This is handled by OnPropertyChanged override in the base object")]
+        protected void RaiseColumnVisibilityPropertyChanged(DependencyPropertyChangedEventArgs args) { }
 
-        protected void RaiseColumnVisibilityPropertyChanged(DependencyPropertyChangedEventArgs args) => ColumnVisibilityPropertyChanged?.Invoke(this, args);
-        public virtual bool IsColumnHidden(string name) => Columns.Where(c => c.Name == name).Any(c => !c.IsVisible);
+        public virtual bool IsColumnHidden(string name) => Columns.Where(c => c.ShortName == name).Any(c => !c.IsVisible);
 
-        public virtual IEnumerable<string> GetHiddenColumns() => Columns.Where(c => !c.IsVisible).Select(c => c.Name);
+        public virtual IEnumerable<string> GetHiddenColumns() => Columns.Where(c => !c.IsVisible).Select(c => c.ShortName);
 
-        public virtual IEnumerable<string> GetVisibleColumns() => Columns.Where(c => c.IsVisible).Select(c => c.Name);
+        public virtual IEnumerable<string> GetVisibleColumns() => Columns.Where(c => c.IsVisible).Select(c => c.ShortName);
 
-        public virtual IEnumerable<(string Name, bool IsVisible)> GetColumnVisibilities() => Columns.Select(c => (c.Name, c.IsVisible));
+        public virtual IEnumerable<(string Name, bool IsVisible)> GetColumnVisibilities() => Columns.Select(c => (c.ShortName, c.IsVisible));
     }
 }

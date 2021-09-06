@@ -28,12 +28,12 @@ namespace FsInfoCat.Local
         /// <summary>Gets the primary key value.</summary>
         /// <value>The <see cref="Guid">unique identifier</see> used as the current entity's primary key the database.</value>
         [Key]
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_Id), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_Id), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual Guid Id { get => _id.GetValue(); set => _id.SetValue(value); }
 
         /// <summary>Gets root path of the crawl.</summary>
         /// <value>The root path of the crawl.</value>
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_RootPath), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_RootPath), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public string RootPath { get => _rootPath.GetValue(); set => _rootPath.SetValue(value); }
 
         /// <summary>Gets a value indicating whether the current crawl configuration has been deactivated.</summary>
@@ -41,27 +41,27 @@ namespace FsInfoCat.Local
         /// <see langword="true" /> if the current crawl configuration has been deactivated; otherwise, <see langword="false" /> to indicate that is
         /// available for use.
         /// </value>
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_StatusCode), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_StatusCode), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public CrawlStatus StatusCode { get => _statusCode.GetValue(); set => _statusCode.SetValue(value); }
 
         /// <summary>Gets the date and time when the crawl was started.</summary>
         /// <value>The date and time when the crawl was started.</value>
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_CrawlStart), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_CrawlStart), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public DateTime CrawlStart { get => _crawlStart.GetValue(); set => _crawlStart.SetValue(value); }
 
         /// <summary>Gets the date and time when the crawl was finshed.</summary>
         /// <value>The date and time when the crawl was finshed or <see langword="null" /> if the current crawl is still active.</value>
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_CrawlEnd), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_CrawlEnd), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public DateTime? CrawlEnd { get => _crawlEnd.GetValue(); set => _crawlEnd.SetValue(value); }
 
         /// <summary>Gets the status message.</summary>
         /// <value>The crawl status message.</value>
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_Message), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_Message), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public string StatusMessage { get => _statusMessage.GetValue(); set => _statusMessage.SetValue(value); }
 
         /// <summary>Gets the status details.</summary>
         /// <value>The status details.</value>
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_Details), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_Details), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public string StatusDetail { get => _statusDetail.GetValue(); set => _statusDetail.SetValue(value); }
 
         /// <summary>Gets the maximum recursion depth.</summary>
@@ -134,7 +134,7 @@ namespace FsInfoCat.Local
         /// <value>
         /// The configuration for the file system crawl.
         /// </value>
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_Configuration), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_Configuration), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public CrawlConfiguration Configuration
         {
             get => _configuration.GetValue();

@@ -5,6 +5,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:FsInfoCat.Desktop.Local.MusicPropertySets"
       xmlns:Converters="clr-namespace:FsInfoCat.Desktop.Converters"
+      xmlns:ViewModel="clr-namespace:FsInfoCat.Desktop.ViewModel"
       mc:Ignorable="d"
       d:DesignHeight="768" d:DesignWidth="1024"
       DataContext="{DynamicResource ViewModel}"
@@ -18,7 +19,7 @@
     <Grid>
         <DataGrid ItemsSource="{Binding Items}" AutoGenerateColumns="False">
             <DataGrid.Columns>
-                <DataGridTextColumn Binding="{Binding Path=(ViewModel:CommonAttached.ListItemTitle), Mode=OneWay}" Header="Values" Width="*"/>
+                <DataGridTextColumn Binding="{Binding (ViewModel:CommonAttached.ListItemTitle), Mode=OneWay}" Header="Values" Width="*"/>
                 <DataGridTextColumn Binding="{Binding ExistingFileCount}" MinWidth="100">
                     <DataGridTextColumn.Header>
                         <StackPanel Orientation="Horizontal">

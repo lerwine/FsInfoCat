@@ -23,7 +23,7 @@ namespace FsInfoCat.Local
 
         #region Properties
 
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_Volumes), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_Volumes), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual HashSet<Volume> Volumes
         {
             get => _volumes;

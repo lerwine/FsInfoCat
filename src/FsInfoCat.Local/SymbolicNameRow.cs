@@ -26,14 +26,14 @@ namespace FsInfoCat.Local
         [Key]
         public virtual Guid Id { get => _id.GetValue(); set => _id.SetValue(value); }
 
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_Name), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_Name), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         [Required(AllowEmptyStrings = false, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_NameRequired),
             ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
         [StringLength(DbConstants.DbColMaxLen_SimpleName, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_NameLength),
             ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual string Name { get => _name.GetValue(); set => _name.SetValue(value); }
 
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_Notes), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_Notes), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         [Required(AllowEmptyStrings = true)]
         public virtual string Notes { get => _notes.GetValue(); set => _notes.SetValue(value); }
 
@@ -41,7 +41,7 @@ namespace FsInfoCat.Local
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_IsInactive), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual bool IsInactive { get => _isInactive.GetValue(); set => _isInactive.SetValue(value); }
 
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_Priority), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_Priority), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         [Required]
         public virtual int Priority { get => _priority.GetValue(); set => _priority.SetValue(value); }
 

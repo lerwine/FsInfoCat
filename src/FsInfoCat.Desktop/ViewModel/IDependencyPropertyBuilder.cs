@@ -13,6 +13,7 @@ namespace FsInfoCat.Desktop.ViewModel
         PropertyDescriptor TargetProperty { get; }
         IDependencyPropertyBuilder<TProperty> DefaultValue(TProperty defaultValue);
         IDependencyPropertyBuilder<TProperty> OnChanged([DisallowNull] Action<DependencyObject, TProperty, TProperty> propertyChangedCallback);
+        IDependencyPropertyBuilder<TProperty> OnChanged([DisallowNull] PropertyChangedCallback propertyChangedCallback);
         IDependencyPropertyBuilder<TProperty> CoerseWith([DisallowNull] ICoersion<TProperty> coersion);
         IDependencyPropertyBuilder<TProperty> CoerseWith([DisallowNull] Func<DependencyObject, object, TProperty> coersion);
         IDependencyPropertyBuilder<TProperty> ValidateWith([DisallowNull] Func<TProperty, bool> func);

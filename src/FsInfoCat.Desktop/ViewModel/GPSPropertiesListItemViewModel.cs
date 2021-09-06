@@ -120,6 +120,8 @@ namespace FsInfoCat.Desktop.ViewModel
             ExistingFileCount = entity.ExistingFileCount;
             TotalFileCount = entity.TotalFileCount;
             CommonAttached.SetListItemTitle(this, CalculateDisplayText());
+            SetValue(EditPropertyKey, new Commands.RelayCommand(RaiseEditCommand));
+            SetValue(DeletePropertyKey, new Commands.RelayCommand(RaiseDeleteCommand));
         }
 
         protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)

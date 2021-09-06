@@ -1,5 +1,6 @@
 using FsInfoCat.Desktop.ViewModel;
 using FsInfoCat.Local;
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
@@ -34,7 +35,22 @@ namespace FsInfoCat.Desktop.Local.FileSystems
             SetValue(ListingOptionPropertyKey, new ThreeStateViewModel(_currentListingOption));
         }
 
-        void INotifyNavigatedTo.OnNavigatedTo() => ReloadAsync(_currentListingOption);
+        void INotifyNavigatedTo.OnNavigatedTo()
+        {
+            IAsyncJob asyncJob = ReloadAsync(_currentListingOption);
+            asyncJob.Task.ContinueWith(task => OnReloadComplete(task, asyncJob));
+        }
+
+        private void OnReloadComplete(Task task, IAsyncJob asyncJob)
+        {
+            if (task.IsCanceled || !task.IsFaulted)
+                return;
+            string userMessage = task.Exception.InnerExceptions.OfType<AsyncOperationFailureException>().Select(e => e.UserMessage)
+                .Where(m => !string.IsNullOrWhiteSpace(m)).FirstOrDefault();
+            if (userMessage is null)
+                userMessage = "An unexpected error has occurred. See logs for details.";
+            MessageBox.Show(App.Current.MainWindow, userMessage, asyncJob.Title, MessageBoxButton.OK, MessageBoxImage.Error);
+        }
 
         protected override IQueryable<FileSystemListItem> GetQueryableListing(bool? options, [DisallowNull] LocalDbContext dbContext,
             [DisallowNull] IWindowsStatusListener statusListener)
@@ -56,7 +72,8 @@ namespace FsInfoCat.Desktop.Local.FileSystems
             else if (!ListingOption.Value.HasValue)
                 return;
             _currentListingOption = ListingOption.Value;
-            ReloadAsync(_currentListingOption);
+            IAsyncJob asyncJob = ReloadAsync(_currentListingOption);
+            asyncJob.Task.ContinueWith(task => OnReloadComplete(task, asyncJob));
         }
 
         protected override void OnCancelFilterOptionsCommand(object parameter)

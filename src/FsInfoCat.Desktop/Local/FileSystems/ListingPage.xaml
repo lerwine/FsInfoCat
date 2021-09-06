@@ -4,6 +4,7 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:FsInfoCat.Desktop.Local.FileSystems"
+      xmlns:ViewModel="clr-namespace:FsInfoCat.Desktop.ViewModel"
       mc:Ignorable="d" DataContext="{DynamicResource ViewModel}"
       xmlns:Converters="clr-namespace:FsInfoCat.Desktop.Converters" d:DesignHeight="768" d:DesignWidth="1024"
       Title="File System Types">
@@ -21,7 +22,7 @@
                 <DataGridTextColumn Binding="{Binding ReadOnly}" Header="Priority"/>
                 <DataGridTextColumn Binding="{Binding IsInactive, Converter={StaticResource BooleanToStatusConverter}}" MinWidth="100">
                     <DataGridTextColumn.Header>
-                        <StackPanel Orientation="Horizontal">
+                        <StackPanel Orientation="Horizontal" DataContext="{DynamicResource ViewModel}">
                             <Label Content="State"/>
                             <Button Style="{DynamicResource AddNewButton}" Margin="{DynamicResource DefaultSpacingLeft}" Command="{Binding AddNewItem, Mode=OneWay}"/>
                             <Button Style="{DynamicResource FilterButton}" Margin="{DynamicResource DefaultSpacingLeft}" Command="{Binding ShowFilterOptions, Mode=OneWay}"/>

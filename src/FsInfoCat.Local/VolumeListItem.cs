@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat.Local
 {
@@ -26,11 +28,8 @@ namespace FsInfoCat.Local
 
         public long RootFileCount { get => _rootFileCount.GetValue(); set => _rootFileCount.SetValue(value); }
 
-        internal static void OnBuildEntity(EntityTypeBuilder<VolumeListItem> builder)
-        {
-            builder.ToView(VIEW_NAME);
-            builder.Property(nameof(Identifier)).HasConversion(VolumeIdentifier.Converter);
-        }
+        internal static void OnBuildEntity([DisallowNull] EntityTypeBuilder<VolumeListItem> builder) => (builder ?? throw new ArgumentOutOfRangeException(nameof(builder)))
+            .ToView(VIEW_NAME).Property(nameof(Identifier)).HasConversion(VolumeIdentifier.Converter);
 
         public VolumeListItem()
         {

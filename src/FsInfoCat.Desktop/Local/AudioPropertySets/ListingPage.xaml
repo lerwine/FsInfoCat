@@ -11,7 +11,7 @@
       DataContext="{DynamicResource ViewModel}"
       Title="Audio Property Sets">
     <Page.Resources>
-        <Converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        <Converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" NullSource="Collapsed"/>
         <Converters:BooleanToStringConverter x:Key="BooleanToStatusConverter" FalseValue="Active" TrueValue="Inactive"/>
         <Converters:BooleanToStringConverter x:Key="BooleanToYesNoConverter" FalseValue="No" TrueValue="Yes"/>
         <local:ListingViewModel x:Key="ViewModel"/>
@@ -19,10 +19,10 @@
     <Grid>
         <DataGrid ItemsSource="{Binding Items}" AutoGenerateColumns="False">
             <DataGrid.Columns>
-                <DataGridTextColumn Binding="{Binding Path=(ViewModel:CommonAttached.ListItemTitle), Mode=OneWay}" Header="Values" Width="*"/>
+                <DataGridTextColumn Binding="{Binding (ViewModel:CommonAttached.ListItemTitle), Mode=OneWay}" Header="Values" Width="*"/>
                 <DataGridTextColumn Binding="{Binding ExistingFileCount}" MinWidth="100">
                     <DataGridTextColumn.Header>
-                        <StackPanel Orientation="Horizontal">
+                        <StackPanel Orientation="Horizontal" DataContext="{DynamicResource ViewModel}">
                             <Label Content="Files"/>
                             <Button Style="{DynamicResource AddNewButton}" Margin="{DynamicResource DefaultSpacingLeft}" Command="{Binding AddNewItem, Mode=OneWay}"/>
                             <Button Style="{DynamicResource FilterButton}" Margin="{DynamicResource DefaultSpacingLeft}" Command="{Binding ShowFilterOptions, Mode=OneWay}"/>

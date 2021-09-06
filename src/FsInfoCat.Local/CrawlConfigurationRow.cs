@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -30,7 +30,7 @@ namespace FsInfoCat.Local
         /// <summary>Gets the primary key value.</summary>
         /// <value>The <see cref="Guid">unique identifier</see> used as the current entity's primary key the database.</value>
         [Key]
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_Id), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_Id), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual Guid Id { get => _id.GetValue(); set => _id.SetValue(value); }
 
         /// <summary>Gets the display name.</summary>
@@ -73,12 +73,12 @@ namespace FsInfoCat.Local
         /// The <see cref="CrawlStatus" /> value that indicates the current status.
         /// </value>
         [Required]
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_Status), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_Status), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public CrawlStatus StatusValue { get => _statusValue.GetValue(); set => _statusValue.SetValue(value); }
 
         /// <summary>Gets the date and time when the last crawl was started.</summary>
         /// <value>The date and time when the last crawl was started or <see langword="null" /> if no crawl hhas ever been started for this configuration.</value>
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_LastCrawlStart), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_LastCrawlStart), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public DateTime? LastCrawlStart { get => _lastCrawlStart.GetValue(); set => _lastCrawlStart.SetValue(value); }
 
         /// <summary>Gets the date and time when the last crawl was finshed.</summary>
@@ -86,18 +86,18 @@ namespace FsInfoCat.Local
         /// The date and time when the last crawl was finshed; otherwise, <see langword="null" /> if the current crawl is still active or if
         /// no crawl has ever been started for this configuration.
         /// </value>
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_LastCrawlEnd), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_LastCrawlEnd), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public DateTime? LastCrawlEnd { get => _lastCrawlEnd.GetValue(); set => _lastCrawlEnd.SetValue(value); }
 
         /// <summary>Gets the date and time when the next true is to begin.</summary>
         /// <value>The date and time when the next crawl is to begin or <see langword="null" /> if there is no scheduled crawl.</value>
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_NextScheduledStart), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_NextScheduledStart), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public DateTime? NextScheduledStart { get => _nextScheduledStart.GetValue(); set => _nextScheduledStart.SetValue(value); }
 
         // DEFERRED: Not sure if Range would work here for a nullable value, but minimum value needs to be validated.
         /// <summary>Gets the length of time between automatic crawl re-scheduling.</summary>
         /// <value>The length of time between automatic crawl re-scheduling, in seconds or <cref langword="null" /> to disable automatic re-scheduling.</value>
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_RescheduleInterval), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_RescheduleInterval), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public long? RescheduleInterval { get => _rescheduleInterval.GetValue(); set => _rescheduleInterval.SetValue(value); }
 
         /// <summary>Gets a value indicating whether automatic rescheduling is calculated from the completion time of the previous job, versus the start time.</summary>
@@ -106,7 +106,7 @@ namespace FsInfoCat.Local
         /// otherwise, <see langword="false" /> if crawl jobs are automatically scheduled <see cref="RescheduleInterval" /> seconds from the value
         /// of <see cref="NextScheduledStart" /> at the time the job is started.
         /// </value>
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_RescheduleFromJobEnd), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_RescheduleFromJobEnd), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public bool RescheduleFromJobEnd { get => _rescheduleFromJobEnd.GetValue(); set => _rescheduleFromJobEnd.SetValue(value); }
 
         /// <summary>Gets a value indicating whether crawl jobs are automatically rescheduled even if the previous job failed.</summary>
@@ -114,7 +114,7 @@ namespace FsInfoCat.Local
         /// <see langword="true" /> if crawl jobs are always automatically re-scheduled; otherwise, <see langword="false" /> if crawl jobs are automatically
         /// re-scheduled only if the preceding job did not fail.
         /// </value>
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_RescheduleAfterFail), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_RescheduleAfterFail), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public bool RescheduleAfterFail { get => _rescheduleAfterFail.GetValue(); set => _rescheduleAfterFail.SetValue(value); }
 
         public Guid RootId

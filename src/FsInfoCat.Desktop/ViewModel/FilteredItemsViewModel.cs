@@ -92,26 +92,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public Commands.RelayCommand Refresh => (Commands.RelayCommand)GetValue(RefreshProperty);
 
         #endregion
-        #region ItemDisplayText Attached Property Members
-
-        public const string PropertyName_ItemDisplayText = "ItemDisplayText";
-
-        public static string GetItemDisplayText(DependencyObject obj)
-        {
-            return (string)obj.GetValue(ItemDisplayTextProperty);
-        }
-
-        protected internal static void SetItemDisplayText(DependencyObject obj, string value)
-        {
-            obj.SetValue(ItemDisplayTextProperty, value);
-        }
-
-        protected internal static readonly DependencyPropertyKey ItemDisplayTextPropertyKey = DependencyProperty.RegisterAttachedReadOnly(PropertyName_ItemDisplayText, typeof(string),
-            typeof(FilteredItemsViewModel), new PropertyMetadata(null));
-
-        public static readonly DependencyProperty ItemDisplayTextProperty = ItemDisplayTextPropertyKey.DependencyProperty;
-
-        #endregion
 
         protected FilteredItemsViewModel()
         {
