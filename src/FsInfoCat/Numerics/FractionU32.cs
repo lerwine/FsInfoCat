@@ -615,33 +615,33 @@ namespace FsInfoCat.Numerics
                 return ToDouble();
             IConvertible c = this;
             if (conversionType.AssemblyQualifiedName == (typeof(float)).AssemblyQualifiedName)
-                c.ToSingle(provider);
+                return c.ToSingle(provider);
             if (conversionType.AssemblyQualifiedName == (typeof(int)).AssemblyQualifiedName)
-                c.ToInt32(provider);
+                return c.ToInt32(provider);
             if (conversionType.AssemblyQualifiedName == (typeof(string)).AssemblyQualifiedName)
-                c.ToString(provider);
+                return c.ToString(provider);
             if (conversionType.AssemblyQualifiedName == (typeof(long)).AssemblyQualifiedName)
-                c.ToInt64(provider);
+                return c.ToInt64(provider);
             if (conversionType.AssemblyQualifiedName == (typeof(decimal)).AssemblyQualifiedName)
-                c.ToDecimal(provider);
+                return c.ToDecimal(provider);
             if (conversionType.AssemblyQualifiedName == (typeof(uint)).AssemblyQualifiedName)
-                c.ToUInt32(provider);
+                return c.ToUInt32(provider);
             if (conversionType.AssemblyQualifiedName == (typeof(ulong)).AssemblyQualifiedName)
-                c.ToUInt64(provider);
+                return c.ToUInt64(provider);
             if (conversionType.AssemblyQualifiedName == (typeof(short)).AssemblyQualifiedName)
-                c.ToInt16(provider);
+                return c.ToInt16(provider);
             if (conversionType.AssemblyQualifiedName == (typeof(ushort)).AssemblyQualifiedName)
-                c.ToUInt16(provider);
+                return c.ToUInt16(provider);
             if (conversionType.AssemblyQualifiedName == (typeof(sbyte)).AssemblyQualifiedName)
-                c.ToSByte(provider);
+                return c.ToSByte(provider);
             if (conversionType.AssemblyQualifiedName == (typeof(byte)).AssemblyQualifiedName)
-                c.ToByte(provider);
+                return c.ToByte(provider);
             if (conversionType.AssemblyQualifiedName == (typeof(DateTime)).AssemblyQualifiedName)
-                c.ToDateTime(provider);
+                return c.ToDateTime(provider);
             if (conversionType.AssemblyQualifiedName == (typeof(bool)).AssemblyQualifiedName)
-                c.ToBoolean(provider);
+                return c.ToBoolean(provider);
             if (conversionType.AssemblyQualifiedName == (typeof(char)).AssemblyQualifiedName)
-                c.ToChar(provider);
+                return c.ToChar(provider);
             return Convert.ChangeType(ToDouble(), conversionType);
         }
 
