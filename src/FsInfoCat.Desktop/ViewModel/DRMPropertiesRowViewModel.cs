@@ -10,7 +10,6 @@ namespace FsInfoCat.Desktop.ViewModel
     public class DRMPropertiesRowViewModel<TEntity> : DbEntityRowViewModel<TEntity>
         where TEntity : DbEntity, IDRMProperties
     {
-#pragma warning disable IDE0060 // Remove unused parameter
         #region DatePlayExpires Property Members
 
         /// <summary>
@@ -22,10 +21,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as DRMPropertiesRowViewModel<TEntity>)?.OnDatePlayExpiresPropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public DateTime? DatePlayExpires { get => (DateTime?)GetValue(DatePlayExpiresProperty); set => SetValue(DatePlayExpiresProperty, value); }
 
         /// <summary>
@@ -47,10 +42,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as DRMPropertiesRowViewModel<TEntity>)?.OnDatePlayStartsPropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public DateTime? DatePlayStarts { get => (DateTime?)GetValue(DatePlayStartsProperty); set => SetValue(DatePlayStartsProperty, value); }
 
         /// <summary>
@@ -72,10 +63,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as DRMPropertiesRowViewModel<TEntity>)?.OnDescriptionPropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string Description { get => GetValue(DescriptionProperty) as string; set => SetValue(DescriptionProperty, value); }
 
         /// <summary>
@@ -97,10 +84,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as DRMPropertiesRowViewModel<TEntity>)?.OnIsProtectedPropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public bool? IsProtected { get => (bool?)GetValue(IsProtectedProperty); set => SetValue(IsProtectedProperty, value); }
 
         /// <summary>
@@ -122,10 +105,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as DRMPropertiesRowViewModel<TEntity>)?.OnPlayCountPropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public uint? PlayCount { get => (uint?)GetValue(PlayCountProperty); set => SetValue(PlayCountProperty, value); }
 
         /// <summary>
@@ -136,7 +115,6 @@ namespace FsInfoCat.Desktop.ViewModel
         protected virtual void OnPlayCountPropertyChanged(uint? oldValue, uint? newValue) { }
 
         #endregion
-#pragma warning restore IDE0060 // Remove unused parameter
 
         public DRMPropertiesRowViewModel([DisallowNull] TEntity entity) : base(entity)
         {

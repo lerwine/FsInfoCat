@@ -6,7 +6,6 @@ namespace FsInfoCat.Desktop.ViewModel
     public class RedundantSetRowViewModel<TEntity> : DbEntityRowViewModel<TEntity>
         where TEntity : DbEntity, IRedundantSetRow
     {
-#pragma warning disable IDE0060 // Remove unused parameter
         #region Reference Property Members
 
         /// <summary>
@@ -18,10 +17,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as RedundantSetRowViewModel<TEntity>)?.OnReferencePropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string Reference { get => GetValue(ReferenceProperty) as string; set => SetValue(ReferenceProperty, value); }
 
         /// <summary>
@@ -43,10 +38,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as RedundantSetRowViewModel<TEntity>)?.OnNotesPropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string Notes { get => GetValue(NotesProperty) as string; set => SetValue(NotesProperty, value); }
 
         /// <summary>

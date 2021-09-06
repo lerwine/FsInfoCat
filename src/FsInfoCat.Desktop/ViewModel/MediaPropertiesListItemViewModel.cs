@@ -67,10 +67,6 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         public static readonly DependencyProperty ProducerProperty = ProducerPropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string Producer { get => GetValue(ProducerProperty) as string; private set => SetValue(ProducerPropertyKey, value); }
 
         #endregion
@@ -86,10 +82,6 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         public static readonly DependencyProperty WriterProperty = WriterPropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string Writer { get => GetValue(WriterProperty) as string; private set => SetValue(WriterPropertyKey, value); }
 
         #endregion
@@ -99,7 +91,7 @@ namespace FsInfoCat.Desktop.ViewModel
             .RegisterEntityMapped<TEntity>(nameof(IMediaPropertiesListItem.ExistingFileCount))
             .DefaultValue(0L)
             .OnChanged((DependencyObject d, long oldValue, long newValue) =>
-                (d as MediaPropertiesListItemViewModel<TEntity>).OnExistingFileCountPropertyChanged(oldValue, newValue))
+                (d as MediaPropertiesListItemViewModel<TEntity>).OnExistingFileCountPropertyChanged(newValue))
             .AsReadOnly();
 
         /// <summary>
@@ -112,9 +104,9 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Called when the value of the <see cref="ExistingFileCount"/> dependency property has changed.
         /// </summary>
-        /// <param name="oldValue">The previous value of the <see cref="ExistingFileCount"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="ExistingFileCount"/> property.</param>
-        private void OnExistingFileCountPropertyChanged(long oldValue, long newValue) => Delete.IsEnabled = newValue == 0L;
+        /// 
+        private void OnExistingFileCountPropertyChanged(long newValue) => Delete.IsEnabled = newValue == 0L;
 
         #endregion
         #region TotalFileCount Property Members

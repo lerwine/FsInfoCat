@@ -11,7 +11,6 @@ namespace FsInfoCat.Desktop.ViewModel
     public class FileSystemRowViewModel<TEntity> : DbEntityRowViewModel<TEntity>
         where TEntity : DbEntity, IFileSystemRow
     {
-#pragma warning disable IDE0060 // Remove unused parameter
         #region Notes Property Members
 
         /// <summary>
@@ -23,10 +22,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as FileSystemRowViewModel<TEntity>)?.OnNotesPropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string Notes { get => GetValue(NotesProperty) as string; set => SetValue(NotesProperty, value); }
 
         /// <summary>
@@ -48,10 +43,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as FileSystemRowViewModel<TEntity>)?.OnIsInactivePropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public bool IsInactive { get => (bool)GetValue(IsInactiveProperty); set => SetValue(IsInactiveProperty, value); }
 
         /// <summary>
@@ -73,10 +64,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as FileSystemRowViewModel<TEntity>)?.OnDisplayNamePropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string DisplayName { get => GetValue(DisplayNameProperty) as string; set => SetValue(DisplayNameProperty, value); }
 
         /// <summary>
@@ -98,10 +85,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as FileSystemRowViewModel<TEntity>)?.OnReadOnlyPropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public bool ReadOnly { get => (bool)GetValue(ReadOnlyProperty); set => SetValue(ReadOnlyProperty, value); }
 
         /// <summary>
@@ -123,10 +106,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as FileSystemRowViewModel<TEntity>)?.OnMaxNameLengthPropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public uint MaxNameLength { get => (uint)GetValue(MaxNameLengthProperty); set => SetValue(MaxNameLengthProperty, value); }
 
         /// <summary>
@@ -148,10 +127,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as FileSystemRowViewModel<TEntity>)?.OnDefaultDriveTypePropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public DriveType? DefaultDriveType { get => (DriveType?)GetValue(DefaultDriveTypeProperty); set => SetValue(DefaultDriveTypeProperty, value); }
 
         /// <summary>
@@ -162,7 +137,6 @@ namespace FsInfoCat.Desktop.ViewModel
         protected virtual void OnDefaultDriveTypePropertyChanged(DriveType? oldValue, DriveType? newValue) { }
 
         #endregion
-#pragma warning restore IDE0060 // Remove unused parameter
 
         public FileSystemRowViewModel([DisallowNull] TEntity entity) : base(entity)
         {

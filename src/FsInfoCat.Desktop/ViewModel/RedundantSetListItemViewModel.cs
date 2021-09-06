@@ -90,7 +90,7 @@ namespace FsInfoCat.Desktop.ViewModel
         private static readonly DependencyPropertyKey RedundancyCountPropertyKey = ColumnPropertyBuilder<long, RedundantSetListItemViewModel<TEntity>>
             .RegisterEntityMapped<TEntity>(nameof(IRedundantSetListItem.RedundancyCount))
             .DefaultValue(0L)
-            .OnChanged((d, oldValue, newValue) => (d as RedundantSetListItemViewModel<TEntity>)?.OnRedundancyCountPropertyChanged(oldValue, newValue))
+            .OnChanged((d, oldValue, newValue) => (d as RedundantSetListItemViewModel<TEntity>)?.OnRedundancyCountPropertyChanged(newValue))
             .AsReadOnly();
 
         /// <summary>
@@ -103,9 +103,9 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Called when the value of the <see cref="RedundancyCount"/> dependency property has changed.
         /// </summary>
-        /// <param name="oldValue">The previous value of the <see cref="RedundancyCount"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="RedundancyCount"/> property.</param>
-        private void OnRedundancyCountPropertyChanged(long oldValue, long newValue) => Delete.IsEnabled = newValue > 0L;
+        /// 
+        private void OnRedundancyCountPropertyChanged(long newValue) => Delete.IsEnabled = newValue > 0L;
 
         #endregion
 

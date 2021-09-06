@@ -9,7 +9,6 @@ namespace FsInfoCat.Desktop.ViewModel
     public class GPSPropertiesRowViewModel<TEntity> : DbEntityRowViewModel<TEntity>
         where TEntity : DbEntity, IGPSProperties
     {
-#pragma warning disable IDE0060 // Remove unused parameter
         #region AreaInformation Property Members
 
         /// <summary>
@@ -21,10 +20,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as GPSPropertiesRowViewModel<TEntity>)?.OnAreaInformationPropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string AreaInformation { get => GetValue(AreaInformationProperty) as string; set => SetValue(AreaInformationProperty, value); }
 
         /// <summary>
@@ -46,10 +41,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as GPSPropertiesRowViewModel<TEntity>)?.OnLatitudeDegreesPropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public double? LatitudeDegrees { get => (double?)GetValue(LatitudeDegreesProperty); set => SetValue(LatitudeDegreesProperty, value); }
 
         /// <summary>
@@ -71,10 +62,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as GPSPropertiesRowViewModel<TEntity>)?.OnLatitudeMinutesPropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public double? LatitudeMinutes { get => (double?)GetValue(LatitudeMinutesProperty); set => SetValue(LatitudeMinutesProperty, value); }
 
         /// <summary>
@@ -96,10 +83,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as GPSPropertiesRowViewModel<TEntity>)?.OnLatitudeSecondsPropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public double? LatitudeSeconds { get => (double?)GetValue(LatitudeSecondsProperty); set => SetValue(LatitudeSecondsProperty, value); }
 
         /// <summary>
@@ -121,10 +104,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as GPSPropertiesRowViewModel<TEntity>)?.OnLatitudeRefPropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string LatitudeRef { get => GetValue(LatitudeRefProperty) as string; set => SetValue(LatitudeRefProperty, value); }
 
         /// <summary>
@@ -146,10 +125,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as GPSPropertiesRowViewModel<TEntity>)?.OnLongitudeDegreesPropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public double? LongitudeDegrees { get => (double?)GetValue(LongitudeDegreesProperty); set => SetValue(LongitudeDegreesProperty, value); }
 
         /// <summary>
@@ -171,10 +146,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as GPSPropertiesRowViewModel<TEntity>)?.OnLongitudeMinutesPropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public double? LongitudeMinutes { get => (double?)GetValue(LongitudeMinutesProperty); set => SetValue(LongitudeMinutesProperty, value); }
 
         /// <summary>
@@ -196,10 +167,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as GPSPropertiesRowViewModel<TEntity>)?.OnLongitudeSecondsPropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public double? LongitudeSeconds { get => (double?)GetValue(LongitudeSecondsProperty); set => SetValue(LongitudeSecondsProperty, value); }
 
         /// <summary>
@@ -221,10 +188,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as GPSPropertiesRowViewModel<TEntity>)?.OnLongitudeRefPropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string LongitudeRef { get => GetValue(LongitudeRefProperty) as string; set => SetValue(LongitudeRefProperty, value); }
 
         /// <summary>
@@ -246,10 +209,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as GPSPropertiesRowViewModel<TEntity>)?.OnMeasureModePropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string MeasureMode { get => GetValue(MeasureModeProperty) as string; set => SetValue(MeasureModeProperty, value); }
 
         /// <summary>
@@ -271,10 +230,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as GPSPropertiesRowViewModel<TEntity>)?.OnProcessingMethodPropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string ProcessingMethod { get => GetValue(ProcessingMethodProperty) as string; set => SetValue(ProcessingMethodProperty, value); }
 
         /// <summary>
@@ -285,7 +240,6 @@ namespace FsInfoCat.Desktop.ViewModel
         protected virtual void OnProcessingMethodPropertyChanged(string oldValue, string newValue) { }
 
         #endregion
-#pragma warning restore IDE0060 // Remove unused parameter
 
         public GPSPropertiesRowViewModel([DisallowNull] TEntity entity) : base(entity)
         {

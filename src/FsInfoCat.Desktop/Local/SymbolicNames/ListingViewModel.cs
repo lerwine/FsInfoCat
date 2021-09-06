@@ -58,7 +58,7 @@ namespace FsInfoCat.Desktop.Local.SymbolicNames
                 dbContext.SymbolicNameListing;
         }
 
-        protected override ListItemViewModel CreateItemViewModel([DisallowNull] SymbolicNameListItem entity) => new ListItemViewModel(entity);
+        protected override ListItemViewModel CreateItemViewModel([DisallowNull] SymbolicNameListItem entity) => new(entity);
 
         protected override void OnApplyFilterOptionsCommand(object parameter)
         {

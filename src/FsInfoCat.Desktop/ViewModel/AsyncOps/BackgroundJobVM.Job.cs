@@ -51,12 +51,12 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
                 viewModel.MessagePropertyChanged += ViewModel_MessagePropertyChanged;
                 viewModel.MessageLevelPropertyChanged += ViewModel_MessageLevelPropertyChanged;
                 viewModel.CancelInvoked += ViewModel_CancelInvoked;
-                StatusListener statusListener = new StatusListener(viewModel, ConcurrencyId, viewModel._logger, _tokenSource.Token);
+                StatusListener statusListener = new(viewModel, ConcurrencyId, viewModel._logger, _tokenSource.Token);
                 IDisposable loggerScope = viewModel._logger.BeginScope(ConcurrencyId);
                 Task = createTask(statusListener, this);
                 _stopwatch = new Stopwatch();
                 _stopwatch.Start();
-                Timer timer = new Timer(TimerTick, null, 1000, 1000);
+                Timer timer = new(TimerTick, null, 1000, 1000);
                 Task.ContinueWith(t =>
                 {
                     if (t.IsCanceled)
@@ -107,25 +107,14 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
             {
                 lock (_syncRoot)
                 {
-                    switch (Task.Status)
+                    newValue = Task.Status switch
                     {
-                        case TaskStatus.Running:
-                        case TaskStatus.WaitingForChildrenToComplete:
-                            newValue = _tokenSource.IsCancellationRequested ? AsyncJobStatus.Cancelling : AsyncJobStatus.Running;
-                            break;
-                        case TaskStatus.RanToCompletion:
-                            newValue = AsyncJobStatus.Succeeded;
-                            break;
-                        case TaskStatus.Canceled:
-                            newValue = AsyncJobStatus.Canceled;
-                            break;
-                        case TaskStatus.Faulted:
-                            newValue = AsyncJobStatus.Faulted;
-                            break;
-                        default:
-                            newValue = _tokenSource.IsCancellationRequested ? AsyncJobStatus.Cancelling : AsyncJobStatus.WaitingToRun;
-                            break;
-                    }
+                        TaskStatus.Running or TaskStatus.WaitingForChildrenToComplete => _tokenSource.IsCancellationRequested ? AsyncJobStatus.Cancelling : AsyncJobStatus.Running,
+                        TaskStatus.RanToCompletion => AsyncJobStatus.Succeeded,
+                        TaskStatus.Canceled => AsyncJobStatus.Canceled,
+                        TaskStatus.Faulted => AsyncJobStatus.Faulted,
+                        _ => _tokenSource.IsCancellationRequested ? AsyncJobStatus.Cancelling : AsyncJobStatus.WaitingToRun,
+                    };
                     if (newValue == JobStatus)
                         return false;
                     JobStatus = newValue;

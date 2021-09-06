@@ -9,7 +9,6 @@ namespace FsInfoCat.Desktop.ViewModel
     public class SymbolicNameRowViewModel<TEntity> : DbEntityRowViewModel<TEntity>
         where TEntity : DbEntity, ISymbolicNameRow
     {
-#pragma warning disable IDE0060 // Remove unused parameter
         #region Name Property Members
 
         /// <summary>
@@ -21,10 +20,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as SymbolicNameRowViewModel<TEntity>)?.OnNamePropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string Name { get => GetValue(NameProperty) as string; set => SetValue(NameProperty, value); }
 
         /// <summary>
@@ -46,10 +41,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as SymbolicNameRowViewModel<TEntity>)?.OnNotesPropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string Notes { get => GetValue(NotesProperty) as string; set => SetValue(NotesProperty, value); }
 
         /// <summary>
@@ -71,10 +62,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as SymbolicNameRowViewModel<TEntity>)?.OnPriorityPropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public int Priority { get => (int)GetValue(PriorityProperty); set => SetValue(PriorityProperty, value); }
 
         /// <summary>
@@ -96,10 +83,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as SymbolicNameRowViewModel<TEntity>)?.OnIsInactivePropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public bool IsInactive { get => (bool)GetValue(IsInactiveProperty); set => SetValue(IsInactiveProperty, value); }
 
         /// <summary>
@@ -110,7 +93,6 @@ namespace FsInfoCat.Desktop.ViewModel
         protected virtual void OnIsInactivePropertyChanged(bool oldValue, bool newValue) { }
 
         #endregion
-#pragma warning restore IDE0060 // Remove unused parameter
 
         public SymbolicNameRowViewModel([DisallowNull] TEntity entity) : base(entity)
         {

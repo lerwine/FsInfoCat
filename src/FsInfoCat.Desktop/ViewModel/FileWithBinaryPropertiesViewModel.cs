@@ -7,7 +7,6 @@ namespace FsInfoCat.Desktop.ViewModel
     public class FileWithBinaryPropertiesViewModel<TEntity> : FileRowViewModel<TEntity>, ICrudEntityRowViewModel<TEntity>
         where TEntity : DbEntity, IFileListItemWithBinaryProperties
     {
-#pragma warning disable IDE0060 // Remove unused parameter
         #region Edit Property Members
 
         /// <summary>
@@ -201,7 +200,6 @@ namespace FsInfoCat.Desktop.ViewModel
         protected virtual void OnSharedTagCountPropertyChanged(long oldValue, long newValue) { }
 
         #endregion
-#pragma warning restore IDE0060 // Remove unused parameter
 
         public FileWithBinaryPropertiesViewModel([DisallowNull] TEntity entity) : base(entity)
         {

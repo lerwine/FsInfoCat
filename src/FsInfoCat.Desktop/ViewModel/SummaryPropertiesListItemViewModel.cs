@@ -67,10 +67,6 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         public static readonly DependencyProperty AuthorProperty = AuthorPropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string Author { get => GetValue(AuthorProperty) as string; private set => SetValue(AuthorPropertyKey, value); }
 
         #endregion
@@ -86,10 +82,6 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         public static readonly DependencyProperty KeywordsProperty = KeywordsPropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string Keywords { get => GetValue(KeywordsProperty) as string; private set => SetValue(KeywordsPropertyKey, value); }
 
         #endregion
@@ -105,10 +97,6 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         public static readonly DependencyProperty ItemAuthorsProperty = ItemAuthorsPropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string ItemAuthors { get => GetValue(ItemAuthorsProperty) as string; private set => SetValue(ItemAuthorsPropertyKey, value); }
 
         #endregion
@@ -124,10 +112,6 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         public static readonly DependencyProperty KindProperty = KindPropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string Kind { get => GetValue(KindProperty) as string; private set => SetValue(KindPropertyKey, value); }
 
         #endregion
@@ -137,7 +121,7 @@ namespace FsInfoCat.Desktop.ViewModel
             .RegisterEntityMapped<TEntity>(nameof(ISummaryPropertiesListItem.ExistingFileCount))
             .DefaultValue(0L)
             .OnChanged((DependencyObject d, long oldValue, long newValue) =>
-                (d as SummaryPropertiesListItemViewModel<TEntity>).OnExistingFileCountPropertyChanged(oldValue, newValue))
+                (d as SummaryPropertiesListItemViewModel<TEntity>).OnExistingFileCountPropertyChanged(newValue))
             .AsReadOnly();
 
         /// <summary>
@@ -150,9 +134,9 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Called when the value of the <see cref="ExistingFileCount"/> dependency property has changed.
         /// </summary>
-        /// <param name="oldValue">The previous value of the <see cref="ExistingFileCount"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="ExistingFileCount"/> property.</param>
-        private void OnExistingFileCountPropertyChanged(long oldValue, long newValue) => Delete.IsEnabled = newValue == 0L;
+        /// 
+        private void OnExistingFileCountPropertyChanged(long newValue) => Delete.IsEnabled = newValue == 0L;
 
         #endregion
         #region TotalFileCount Property Members

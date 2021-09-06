@@ -6,7 +6,6 @@ namespace FsInfoCat.Desktop.ViewModel
     public class TagDefinitionRowViewModel<TEntity> : DbEntityRowViewModel<TEntity>
         where TEntity : DbEntity, ITagDefinitionRow
     {
-#pragma warning disable IDE0060 // Remove unused parameter
         #region Name Property Members
 
         /// <summary>
@@ -18,10 +17,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as TagDefinitionRowViewModel<TEntity>)?.OnNamePropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string Name { get => GetValue(NameProperty) as string; set => SetValue(NameProperty, value); }
 
         /// <summary>
@@ -43,10 +38,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as TagDefinitionRowViewModel<TEntity>)?.OnDescriptionPropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string Description { get => GetValue(DescriptionProperty) as string; set => SetValue(DescriptionProperty, value); }
 
         /// <summary>
@@ -68,10 +59,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as TagDefinitionRowViewModel<TEntity>)?.OnIsInactivePropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public bool IsInactive { get => (bool)GetValue(IsInactiveProperty); set => SetValue(IsInactiveProperty, value); }
 
         /// <summary>
@@ -82,7 +69,6 @@ namespace FsInfoCat.Desktop.ViewModel
         protected virtual void OnIsInactivePropertyChanged(bool oldValue, bool newValue) { }
 
         #endregion
-#pragma warning restore IDE0060 // Remove unused parameter
 
         public TagDefinitionRowViewModel([DisallowNull] TEntity entity) : base(entity)
         {

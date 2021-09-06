@@ -160,9 +160,8 @@ Function Get-ColumnVisibilityOptionsProperties {
 }
 
 #$Code = Get-ColumnVisibilityOptionsProperties -Interface ([FsInfoCat.ICrawlConfigurationListItem]) -ClassName 'CrawlConfigPropertiesColumnVisibilityOptions<TEntity, TViewModel>';
-#[System.Windows.Clipboard]::SetText($Code);
 
-((Get-PropertyDefinitions -Types ([FsInfoCat.Local.DbFile])) | ForEach-Object {
+$Code = ((Get-PropertyDefinitions -Types ([FsInfoCat.Local.ILocalAudioPropertySet])) | ForEach-Object {
     if ($_.Name -ne 'IsChanged') {
         $DisplayAttribute = [System.Reflection.CustomAttributeExtensions]::GetCustomAttribute($_, [System.ComponentModel.DataAnnotations.DisplayAttribute]);
         $ShortName = $null;
@@ -192,10 +191,7 @@ Function Get-ColumnVisibilityOptionsProperties {
         if ($_.PropertyType.IsValueType -and $_.PropertyType.IsGenericType -and [Nullable`1].Equals($_.PropertyType.GetGenericTypeDefinition())) {
             $UnderlyingType = [Nullable]::GetUnderlyingType($_.PropertyType);
         }
-
-        "$TypeName $($_.Name); // $ShortName : $DisplayName ($Description)"
+        "                <DataGridTextColumn Binding=""{Binding $($_.Name), Mode=OneWay}"" Header=""$DisplayName""/>"
     }
 })
-
-#$GpsNames = 'AreaInformation LatitudeDegrees LatitudeMinutes LatitudeRef LatitudeSeconds LongitudeDegrees LongitudeMinutes LongitudeRef LongitudeSeconds MeasureMode ProcessingMethod TotalFileCount VersionID' -split '\s+';
-$ClassName = 'AudioPropertiesColumnVisibilityOptions<TEntity, TViewModel>';
+[System.Windows.Clipboard]::SetText($Code);

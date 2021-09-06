@@ -23,10 +23,6 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
         public static readonly DependencyProperty TitleProperty = DependencyProperty.Register(nameof(Title), typeof(string), typeof(BackgroundJobVM),
                 new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as BackgroundJobVM).TitlePropertyChanged?.Invoke(d, e)));
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string Title { get => GetValue(TitleProperty) as string; set => SetValue(TitleProperty, value); }
 
         #endregion
@@ -43,10 +39,6 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
         public static readonly DependencyProperty MessageProperty = DependencyProperty.Register(nameof(Message), typeof(string), typeof(BackgroundJobVM),
                 new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as BackgroundJobVM).MessagePropertyChanged?.Invoke(d, e)));
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string Message { get => GetValue(MessageProperty) as string; set => SetValue(MessageProperty, value); }
 
         #endregion
@@ -64,10 +56,6 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
             typeof(BackgroundJobVM), new PropertyMetadata(StatusMessageLevel.Information,
                 (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as BackgroundJobVM)?.MessageLevelPropertyChanged?.Invoke(d, e)));
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public StatusMessageLevel MessageLevel { get => (StatusMessageLevel)GetValue(MessageLevelProperty); set => SetValue(MessageLevelProperty, value); }
 
         #endregion
@@ -118,10 +106,6 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
         /// </summary>
         public static readonly DependencyProperty JobStatusProperty = JobStatusPropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public AsyncJobStatus JobStatus { get => (AsyncJobStatus)GetValue(JobStatusProperty); private set => SetValue(JobStatusPropertyKey, value); }
 
         #endregion

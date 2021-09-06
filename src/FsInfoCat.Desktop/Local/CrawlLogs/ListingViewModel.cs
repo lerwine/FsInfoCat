@@ -63,7 +63,7 @@ namespace FsInfoCat.Desktop.Local.CrawlLogs
                 c.StatusCode != CrawlStatus.NotRunning);
         }
 
-        protected override ListItemViewModel CreateItemViewModel([DisallowNull] CrawlJobLogListItem entity) => new ListItemViewModel(entity);
+        protected override ListItemViewModel CreateItemViewModel([DisallowNull] CrawlJobLogListItem entity) => new(entity);
 
         protected override void OnApplyFilterOptionsCommand(object parameter)
         {

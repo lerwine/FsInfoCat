@@ -7,7 +7,6 @@ namespace FsInfoCat.Desktop.ViewModel
     public class SubdirectoryListItemWithAncestorNamesViewModel<TEntity> : SubdirectoryListItemViewModel<TEntity>
         where TEntity : DbEntity, ISubdirectoryListItemWithAncestorNames
     {
-#pragma warning disable IDE0060 // Remove unused parameter
         #region VolumeDisplayName Property Members
 
         private static readonly DependencyPropertyKey VolumeDisplayNamePropertyKey = ColumnPropertyBuilder<string, SubdirectoryListItemWithAncestorNamesViewModel<TEntity>>
@@ -20,10 +19,6 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         public static readonly DependencyProperty VolumeDisplayNameProperty = VolumeDisplayNamePropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string VolumeDisplayName { get => GetValue(VolumeDisplayNameProperty) as string; private set => SetValue(VolumeDisplayNamePropertyKey, value); }
 
         #endregion
@@ -39,10 +34,6 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         public static readonly DependencyProperty VolumeNameProperty = VolumeNamePropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string VolumeName { get => GetValue(VolumeNameProperty) as string; private set => SetValue(VolumeNamePropertyKey, value); }
 
         #endregion
@@ -119,10 +110,6 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         public static readonly DependencyProperty PathProperty = PathPropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string Path { get => GetValue(PathProperty) as string; private set => SetValue(PathPropertyKey, value); }
 
         #endregion
@@ -138,10 +125,6 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         public static readonly DependencyProperty FileSystemShortDescriptionProperty = FileSystemShortDescriptionPropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string FileSystemShortDescription { get => GetValue(FileSystemShortDescriptionProperty) as string; private set => SetValue(FileSystemShortDescriptionPropertyKey, value); }
 
         private void SetFileSystemShortDescription(string displayName, string symbolicName) => FileSystemShortDescription = string.IsNullOrWhiteSpace(displayName) ? symbolicName :
@@ -160,10 +143,6 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         public static readonly DependencyProperty VolumeShortDescriptionProperty = VolumeShortDescriptionPropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string VolumeShortDescription { get => GetValue(VolumeShortDescriptionProperty) as string; private set => SetValue(VolumeShortDescriptionPropertyKey, value); }
 
         private void SetVolumeShortDescription(string displayName, string name, VolumeIdentifier identifier)
@@ -188,7 +167,6 @@ namespace FsInfoCat.Desktop.ViewModel
         }
 
         #endregion
-#pragma warning restore IDE0060 // Remove unused parameter
 
         public SubdirectoryListItemWithAncestorNamesViewModel([DisallowNull] TEntity entity) : base(entity)
         {

@@ -7,7 +7,6 @@ namespace FsInfoCat.Desktop.ViewModel
     public class VolumeRowViewModel<TEntity> : DbEntityRowViewModel<TEntity>
         where TEntity : DbEntity, IVolumeRow
     {
-#pragma warning disable IDE0060 // Remove unused parameter
         #region DisplayName Property Members
 
         /// <summary>
@@ -19,10 +18,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as VolumeRowViewModel<TEntity>)?.OnDisplayNamePropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string DisplayName { get => GetValue(DisplayNameProperty) as string; set => SetValue(DisplayNameProperty, value); }
 
         /// <summary>
@@ -44,10 +39,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as VolumeRowViewModel<TEntity>)?.OnVolumeNamePropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string VolumeName { get => GetValue(VolumeNameProperty) as string; set => SetValue(VolumeNameProperty, value); }
 
         /// <summary>
@@ -69,10 +60,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as VolumeRowViewModel<TEntity>)?.OnIdentifierPropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public VolumeIdentifier Identifier { get => (VolumeIdentifier)GetValue(IdentifierProperty); set => SetValue(IdentifierProperty, value); }
 
         /// <summary>
@@ -94,10 +81,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as VolumeRowViewModel<TEntity>)?.OnReadOnlyPropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public bool? ReadOnly { get => (bool?)GetValue(ReadOnlyProperty); set => SetValue(ReadOnlyProperty, value); }
 
         /// <summary>
@@ -119,10 +102,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as VolumeRowViewModel<TEntity>)?.OnMaxNameLengthPropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public uint? MaxNameLength { get => (uint?)GetValue(MaxNameLengthProperty); set => SetValue(MaxNameLengthProperty, value); }
 
         /// <summary>
@@ -144,10 +123,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as VolumeRowViewModel<TEntity>)?.OnTypePropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public DriveType Type { get => (DriveType)GetValue(TypeProperty); set => SetValue(TypeProperty, value); }
 
         /// <summary>
@@ -169,10 +144,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as VolumeRowViewModel<TEntity>)?.OnNotesPropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string Notes { get => GetValue(NotesProperty) as string; set => SetValue(NotesProperty, value); }
 
         /// <summary>
@@ -194,10 +165,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as VolumeRowViewModel<TEntity>)?.OnStatusPropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public VolumeStatus Status { get => (VolumeStatus)GetValue(StatusProperty); set => SetValue(StatusProperty, value); }
 
         /// <summary>
@@ -208,7 +175,6 @@ namespace FsInfoCat.Desktop.ViewModel
         protected virtual void OnStatusPropertyChanged(VolumeStatus oldValue, VolumeStatus newValue) { }
 
         #endregion
-#pragma warning restore IDE0060 // Remove unused parameter
 
         public VolumeRowViewModel([DisallowNull] TEntity entity) : base(entity)
         {

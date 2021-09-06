@@ -14,10 +14,6 @@ namespace FsInfoCat.Desktop.Converters
         /// </summary>
         public static readonly DependencyProperty NullSourceProperty = DependencyProperty.Register(nameof(NullSource), typeof(string), typeof(VolumeIdentifierToStringConverter), new PropertyMetadata(""));
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public override string NullSource { get => GetValue(NullSourceProperty) as string; set => SetValue(NullSourceProperty, value); }
 
         #endregion

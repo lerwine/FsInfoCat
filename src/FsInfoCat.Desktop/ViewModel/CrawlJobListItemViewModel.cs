@@ -66,10 +66,6 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         public static readonly DependencyProperty ConfigurationDisplayNameProperty = ConfigurationDisplayNamePropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string ConfigurationDisplayName { get => GetValue(ConfigurationDisplayNameProperty) as string; private set => SetValue(ConfigurationDisplayNamePropertyKey, value); }
 
         #endregion

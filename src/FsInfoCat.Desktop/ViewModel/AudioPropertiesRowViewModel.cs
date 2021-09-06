@@ -21,10 +21,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default)
             .AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string Compression { get => GetValue(CompressionProperty) as string; set => SetValue(CompressionProperty, value); }
 
         /// <summary>
@@ -45,10 +41,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as AudioPropertiesRowViewModel<TEntity>)?.OnEncodingBitratePropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public uint? EncodingBitrate { get => (uint?)GetValue(EncodingBitrateProperty); set => SetValue(EncodingBitrateProperty, value); }
 
         /// <summary>
@@ -71,10 +63,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default)
             .AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string Format { get => GetValue(FormatProperty) as string; set => SetValue(FormatProperty, value); }
 
         /// <summary>
@@ -95,10 +83,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as AudioPropertiesRowViewModel<TEntity>)?.OnIsVariableBitratePropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public bool? IsVariableBitrate { get => (bool?)GetValue(IsVariableBitrateProperty); set => SetValue(IsVariableBitrateProperty, value); }
 
         /// <summary>
@@ -119,10 +103,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as AudioPropertiesRowViewModel<TEntity>)?.OnSampleRatePropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public uint? SampleRate { get => (uint?)GetValue(SampleRateProperty); set => SetValue(SampleRateProperty, value); }
 
         /// <summary>
@@ -143,10 +123,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as AudioPropertiesRowViewModel<TEntity>)?.OnSampleSizePropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public uint? SampleSize { get => (uint?)GetValue(SampleSizeProperty); set => SetValue(SampleSizeProperty, value); }
 
         /// <summary>
@@ -169,10 +145,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default)
             .AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string StreamName { get => GetValue(StreamNameProperty) as string; set => SetValue(StreamNameProperty, value); }
 
         /// <summary>
@@ -193,10 +165,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as AudioPropertiesRowViewModel<TEntity>)?.OnStreamNumberPropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public ushort? StreamNumber { get => (ushort?)GetValue(StreamNumberProperty); set => SetValue(StreamNumberProperty, value); }
 
         /// <summary>

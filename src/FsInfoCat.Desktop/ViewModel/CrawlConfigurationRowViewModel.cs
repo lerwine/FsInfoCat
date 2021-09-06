@@ -20,10 +20,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default)
             .AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string DisplayName { get => GetValue(DisplayNameProperty) as string; set => SetValue(DisplayNameProperty, value); }
 
         /// <summary>
@@ -47,10 +43,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default)
             .AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string Notes { get => GetValue(NotesProperty) as string; set => SetValue(NotesProperty, value); }
 
         /// <summary>
@@ -79,10 +71,6 @@ namespace FsInfoCat.Desktop.ViewModel
                 (d as CrawlConfigurationRowViewModel<TEntity>).OnRescheduleFromJobEndPropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public bool RescheduleFromJobEnd { get => (bool)GetValue(RescheduleFromJobEndProperty); set => SetValue(RescheduleFromJobEndProperty, value); }
 
         /// <summary>
@@ -105,10 +93,6 @@ namespace FsInfoCat.Desktop.ViewModel
                 (d as CrawlConfigurationRowViewModel<TEntity>).OnRescheduleAfterFailPropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public bool RescheduleAfterFail { get => (bool)GetValue(RescheduleAfterFailProperty); set => SetValue(RescheduleAfterFailProperty, value); }
 
         /// <summary>
@@ -131,10 +115,6 @@ namespace FsInfoCat.Desktop.ViewModel
                 (d as CrawlConfigurationRowViewModel<TEntity>).OnMaxRecursionDepthPropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public ushort MaxRecursionDepth { get => (ushort)GetValue(MaxRecursionDepthProperty); set => SetValue(MaxRecursionDepthProperty, value); }
 
         /// <summary>
@@ -157,10 +137,6 @@ namespace FsInfoCat.Desktop.ViewModel
                 (d as CrawlConfigurationRowViewModel<TEntity>).OnMaxTotalItemsPropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public ulong? MaxTotalItems { get => (ulong?)GetValue(MaxTotalItemsProperty); set => SetValue(MaxTotalItemsProperty, value); }
 
         /// <summary>

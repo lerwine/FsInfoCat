@@ -9,7 +9,6 @@ namespace FsInfoCat.Desktop.ViewModel
     public class SummaryPropertiesRowViewModel<TEntity> : DbEntityRowViewModel<TEntity>
         where TEntity : DbEntity, ISummaryProperties
     {
-#pragma warning disable IDE0060 // Remove unused parameter
         #region ApplicationName Property Members
 
         /// <summary>
@@ -21,10 +20,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as SummaryPropertiesRowViewModel<TEntity>)?.OnApplicationNamePropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string ApplicationName { get => GetValue(ApplicationNameProperty) as string; set => SetValue(ApplicationNameProperty, value); }
 
         /// <summary>
@@ -46,10 +41,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as SummaryPropertiesRowViewModel<TEntity>)?.OnCommentPropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string Comment { get => GetValue(CommentProperty) as string; set => SetValue(CommentProperty, value); }
 
         /// <summary>
@@ -71,10 +62,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as SummaryPropertiesRowViewModel<TEntity>)?.OnSubjectPropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string Subject { get => GetValue(SubjectProperty) as string; set => SetValue(SubjectProperty, value); }
 
         /// <summary>
@@ -96,10 +83,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as SummaryPropertiesRowViewModel<TEntity>)?.OnTitlePropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string Title { get => GetValue(TitleProperty) as string; set => SetValue(TitleProperty, value); }
 
         /// <summary>
@@ -121,10 +104,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as SummaryPropertiesRowViewModel<TEntity>)?.OnCompanyPropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string Company { get => GetValue(CompanyProperty) as string; set => SetValue(CompanyProperty, value); }
 
         /// <summary>
@@ -146,10 +125,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as SummaryPropertiesRowViewModel<TEntity>)?.OnContentTypePropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string ContentType { get => GetValue(ContentTypeProperty) as string; set => SetValue(ContentTypeProperty, value); }
 
         /// <summary>
@@ -171,10 +146,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as SummaryPropertiesRowViewModel<TEntity>)?.OnCopyrightPropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string Copyright { get => GetValue(CopyrightProperty) as string; set => SetValue(CopyrightProperty, value); }
 
         /// <summary>
@@ -196,10 +167,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as SummaryPropertiesRowViewModel<TEntity>)?.OnParentalRatingPropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string ParentalRating { get => GetValue(ParentalRatingProperty) as string; set => SetValue(ParentalRatingProperty, value); }
 
         /// <summary>
@@ -221,10 +188,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as SummaryPropertiesRowViewModel<TEntity>)?.OnRatingPropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public uint? Rating { get => (uint?)GetValue(RatingProperty); set => SetValue(RatingProperty, value); }
 
         /// <summary>
@@ -246,10 +209,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as SummaryPropertiesRowViewModel<TEntity>)?.OnItemTypePropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string ItemType { get => GetValue(ItemTypeProperty) as string; set => SetValue(ItemTypeProperty, value); }
 
         /// <summary>
@@ -271,10 +230,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as SummaryPropertiesRowViewModel<TEntity>)?.OnItemTypeTextPropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string ItemTypeText { get => GetValue(ItemTypeTextProperty) as string; set => SetValue(ItemTypeTextProperty, value); }
 
         /// <summary>
@@ -296,10 +251,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as SummaryPropertiesRowViewModel<TEntity>)?.OnMIMETypePropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string MIMEType { get => GetValue(MIMETypeProperty) as string; set => SetValue(MIMETypeProperty, value); }
 
         /// <summary>
@@ -321,10 +272,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as SummaryPropertiesRowViewModel<TEntity>)?.OnParentalRatingReasonPropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string ParentalRatingReason { get => GetValue(ParentalRatingReasonProperty) as string; set => SetValue(ParentalRatingReasonProperty, value); }
 
         /// <summary>
@@ -346,10 +293,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as SummaryPropertiesRowViewModel<TEntity>)?.OnParentalRatingsOrganizationPropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string ParentalRatingsOrganization { get => GetValue(ParentalRatingsOrganizationProperty) as string; set => SetValue(ParentalRatingsOrganizationProperty, value); }
 
         /// <summary>
@@ -371,10 +314,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as SummaryPropertiesRowViewModel<TEntity>)?.OnSensitivityPropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public ushort? Sensitivity { get => (ushort?)GetValue(SensitivityProperty); set => SetValue(SensitivityProperty, value); }
 
         /// <summary>
@@ -396,10 +335,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as SummaryPropertiesRowViewModel<TEntity>)?.OnSensitivityTextPropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string SensitivityText { get => GetValue(SensitivityTextProperty) as string; set => SetValue(SensitivityTextProperty, value); }
 
         /// <summary>
@@ -421,10 +356,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as SummaryPropertiesRowViewModel<TEntity>)?.OnSimpleRatingPropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public uint? SimpleRating { get => (uint?)GetValue(SimpleRatingProperty); set => SetValue(SimpleRatingProperty, value); }
 
         /// <summary>
@@ -446,10 +377,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as SummaryPropertiesRowViewModel<TEntity>)?.OnTrademarksPropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string Trademarks { get => GetValue(TrademarksProperty) as string; set => SetValue(TrademarksProperty, value); }
 
         /// <summary>
@@ -471,10 +398,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as SummaryPropertiesRowViewModel<TEntity>)?.OnProductNamePropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string ProductName { get => GetValue(ProductNameProperty) as string; set => SetValue(ProductNameProperty, value); }
 
         /// <summary>
@@ -485,7 +408,6 @@ namespace FsInfoCat.Desktop.ViewModel
         protected virtual void OnProductNamePropertyChanged(string oldValue, string newValue) { }
 
         #endregion
-#pragma warning restore IDE0060 // Remove unused parameter
 
         public SummaryPropertiesRowViewModel([DisallowNull] TEntity entity) : base(entity)
         {

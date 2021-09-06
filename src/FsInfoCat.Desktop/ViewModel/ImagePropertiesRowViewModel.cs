@@ -9,7 +9,6 @@ namespace FsInfoCat.Desktop.ViewModel
     public class ImagePropertiesRowViewModel<TEntity> : DbEntityRowViewModel<TEntity>
         where TEntity : DbEntity, IImageProperties
     {
-#pragma warning disable IDE0060 // Remove unused parameter
         #region BitDepth Property Members
 
         /// <summary>
@@ -21,10 +20,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as ImagePropertiesRowViewModel<TEntity>)?.OnBitDepthPropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public uint? BitDepth { get => (uint?)GetValue(BitDepthProperty); set => SetValue(BitDepthProperty, value); }
 
         /// <summary>
@@ -46,10 +41,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as ImagePropertiesRowViewModel<TEntity>)?.OnColorSpacePropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public uint? ColorSpace { get => (uint?)GetValue(ColorSpaceProperty); set => SetValue(ColorSpaceProperty, value); }
 
         /// <summary>
@@ -71,10 +62,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as ImagePropertiesRowViewModel<TEntity>)?.OnCompressedBitsPerPixelPropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public double? CompressedBitsPerPixel { get => (double?)GetValue(CompressedBitsPerPixelProperty); set => SetValue(CompressedBitsPerPixelProperty, value); }
 
         /// <summary>
@@ -96,10 +83,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as ImagePropertiesRowViewModel<TEntity>)?.OnCompressionPropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public ushort? Compression { get => (ushort?)GetValue(CompressionProperty); set => SetValue(CompressionProperty, value); }
 
         /// <summary>
@@ -121,10 +104,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as ImagePropertiesRowViewModel<TEntity>)?.OnCompressionTextPropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string CompressionText { get => GetValue(CompressionTextProperty) as string; set => SetValue(CompressionTextProperty, value); }
 
         /// <summary>
@@ -146,10 +125,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as ImagePropertiesRowViewModel<TEntity>)?.OnHorizontalResolutionPropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public double? HorizontalResolution { get => (double?)GetValue(HorizontalResolutionProperty); set => SetValue(HorizontalResolutionProperty, value); }
 
         /// <summary>
@@ -171,10 +146,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as ImagePropertiesRowViewModel<TEntity>)?.OnHorizontalSizePropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public uint? HorizontalSize { get => (uint?)GetValue(HorizontalSizeProperty); set => SetValue(HorizontalSizeProperty, value); }
 
         /// <summary>
@@ -196,10 +167,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as ImagePropertiesRowViewModel<TEntity>)?.OnImageIDPropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string ImageID { get => GetValue(ImageIDProperty) as string; set => SetValue(ImageIDProperty, value); }
 
         /// <summary>
@@ -221,10 +188,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as ImagePropertiesRowViewModel<TEntity>)?.OnResolutionUnitPropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public short? ResolutionUnit { get => (short?)GetValue(ResolutionUnitProperty); set => SetValue(ResolutionUnitProperty, value); }
 
         /// <summary>
@@ -246,10 +209,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as ImagePropertiesRowViewModel<TEntity>)?.OnVerticalResolutionPropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public double? VerticalResolution { get => (double?)GetValue(VerticalResolutionProperty); set => SetValue(VerticalResolutionProperty, value); }
 
         /// <summary>
@@ -271,10 +230,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as ImagePropertiesRowViewModel<TEntity>)?.OnVerticalSizePropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public uint? VerticalSize { get => (uint?)GetValue(VerticalSizeProperty); set => SetValue(VerticalSizeProperty, value); }
 
         /// <summary>
@@ -285,7 +240,6 @@ namespace FsInfoCat.Desktop.ViewModel
         protected virtual void OnVerticalSizePropertyChanged(uint? oldValue, uint? newValue) { }
 
         #endregion
-#pragma warning restore IDE0060 // Remove unused parameter
 
         public ImagePropertiesRowViewModel([DisallowNull] TEntity entity) : base(entity)
         {

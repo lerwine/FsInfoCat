@@ -11,7 +11,6 @@ namespace FsInfoCat.Desktop.ViewModel
         where TSymbolicNameEntity : DbEntity, ISymbolicNameRow
         where TSymbolicNameItem : SymbolicNameRowViewModel<TSymbolicNameEntity>
     {
-#pragma warning disable IDE0060 // Remove unused parameter
         #region Volumes Property Members
 
         protected ObservableCollection<TVolumeItem> BackingVolumes { get; } = new();
@@ -44,7 +43,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public ReadOnlyObservableCollection<TSymbolicNameItem> SymbolicNames => (ReadOnlyObservableCollection<TSymbolicNameItem>)GetValue(SymbolicNamesProperty);
 
         #endregion
-#pragma warning restore IDE0060 // Remove unused parameter
 
         public FileSystemDetailsViewModel([DisallowNull] TEntity entity) : base(entity)
         {

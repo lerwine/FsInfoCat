@@ -90,25 +90,17 @@ namespace FsInfoCat.Desktop.Converters
 
         public override bool? Convert(CrawlStatus value, object parameter, CultureInfo culture)
         {
-            switch (value)
+            return value switch
             {
-                case CrawlStatus.InProgress:
-                    return InProgress;
-                case CrawlStatus.Completed:
-                    return Completed;
-                case CrawlStatus.AllottedTimeElapsed:
-                    return AllottedTimeElapsed;
-                case CrawlStatus.MaxItemCountReached:
-                    return MaxItemCountReached;
-                case CrawlStatus.Canceled:
-                    return Canceled;
-                case CrawlStatus.Failed:
-                    return Failed;
-                case CrawlStatus.Disabled:
-                    return Disabled;
-                default:
-                    return NotRunning;
-            }
+                CrawlStatus.InProgress => InProgress,
+                CrawlStatus.Completed => Completed,
+                CrawlStatus.AllottedTimeElapsed => AllottedTimeElapsed,
+                CrawlStatus.MaxItemCountReached => MaxItemCountReached,
+                CrawlStatus.Canceled => Canceled,
+                CrawlStatus.Failed => Failed,
+                CrawlStatus.Disabled => Disabled,
+                _ => NotRunning,
+            };
         }
     }
 }

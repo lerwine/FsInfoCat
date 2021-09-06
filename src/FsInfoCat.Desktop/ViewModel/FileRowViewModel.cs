@@ -18,10 +18,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as FileRowViewModel<TEntity>)?.OnOptionsPropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public FileCrawlOptions Options { get => (FileCrawlOptions)GetValue(OptionsProperty); set => SetValue(OptionsProperty, value); }
 
         /// <summary>
@@ -43,10 +39,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as FileRowViewModel<TEntity>)?.OnStatusPropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public FileCorrelationStatus Status { get => (FileCorrelationStatus)GetValue(StatusProperty); set => SetValue(StatusProperty, value); }
 
         /// <summary>
@@ -68,10 +60,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as FileRowViewModel<TEntity>)?.OnLastHashCalculationPropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public DateTime? LastHashCalculation { get => (DateTime?)GetValue(LastHashCalculationProperty); set => SetValue(LastHashCalculationProperty, value); }
 
         /// <summary>

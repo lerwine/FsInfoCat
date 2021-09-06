@@ -17,10 +17,6 @@ namespace FsInfoCat.Desktop.ViewModel
                 (d as BinaryPropertySetRowViewModel<TEntity>).OnHashPropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public MD5Hash? Hash { get => (MD5Hash?)GetValue(HashProperty); set => SetValue(HashProperty, value); }
 
         /// <summary>
@@ -43,10 +39,6 @@ namespace FsInfoCat.Desktop.ViewModel
                 (d as BinaryPropertySetRowViewModel<TEntity>).OnLengthPropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public long Length { get => (long)GetValue(LengthProperty); set => SetValue(LengthProperty, value); }
 
         /// <summary>

@@ -33,10 +33,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty IsSelectedProperty = DependencyProperty.Register(nameof(IsSelected), typeof(bool), typeof(EnumChoiceItem<TEnum>),
                 new PropertyMetadata(false, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as EnumChoiceItem<TEnum>)?.OnIsSelectedPropertyChanged(e)));
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public bool IsSelected { get => (bool)GetValue(IsSelectedProperty); set => SetValue(IsSelectedProperty, value); }
 
         /// <summary>
@@ -66,10 +62,6 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         public static readonly DependencyProperty DisplayNameProperty = DisplayNamePropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string DisplayName { get => GetValue(DisplayNameProperty) as string; private set => SetValue(DisplayNamePropertyKey, value); }
 
         #endregion

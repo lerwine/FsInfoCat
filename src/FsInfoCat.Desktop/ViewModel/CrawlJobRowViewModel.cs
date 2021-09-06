@@ -18,10 +18,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as CrawlJobRowViewModel<TEntity>)?.OnRootPathPropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string RootPath { get => GetValue(RootPathProperty) as string; set => SetValue(RootPathProperty, value); }
 
         /// <summary>
@@ -29,7 +25,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="RootPath"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="RootPath"/> property.</param>
-        private void OnRootPathPropertyChanged(string oldValue, string newValue) { }
+        protected virtual void OnRootPathPropertyChanged(string oldValue, string newValue) { }
 
         #endregion
         #region StatusCode Property Members
@@ -43,10 +39,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as CrawlJobRowViewModel<TEntity>)?.OnStatusCodePropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public CrawlStatus StatusCode { get => (CrawlStatus)GetValue(StatusCodeProperty); set => SetValue(StatusCodeProperty, value); }
 
         /// <summary>
@@ -54,7 +46,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="StatusCode"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="StatusCode"/> property.</param>
-        private void OnStatusCodePropertyChanged(CrawlStatus oldValue, CrawlStatus newValue) { }
+        protected virtual void OnStatusCodePropertyChanged(CrawlStatus oldValue, CrawlStatus newValue) { }
 
         #endregion
         #region CrawlStart Property Members
@@ -64,14 +56,10 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         public static readonly DependencyProperty CrawlStartProperty = ColumnPropertyBuilder<DateTime, CrawlJobRowViewModel<TEntity>>
             .RegisterEntityMapped<TEntity>(nameof(ICrawlJobLogRow.CrawlStart))
-            .DefaultValue(default(DateTime))
+            .DefaultValue(default)
             .OnChanged((d, oldValue, newValue) => (d as CrawlJobRowViewModel<TEntity>)?.OnCrawlStartPropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public DateTime CrawlStart { get => (DateTime)GetValue(CrawlStartProperty); set => SetValue(CrawlStartProperty, value); }
 
         /// <summary>
@@ -79,7 +67,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="CrawlStart"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="CrawlStart"/> property.</param>
-        private void OnCrawlStartPropertyChanged(DateTime oldValue, DateTime newValue) { }
+        protected virtual void OnCrawlStartPropertyChanged(DateTime oldValue, DateTime newValue) { }
 
         #endregion
         #region CrawlEnd Property Members
@@ -93,10 +81,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as CrawlJobRowViewModel<TEntity>)?.OnCrawlEndPropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public DateTime? CrawlEnd { get => (DateTime?)GetValue(CrawlEndProperty); set => SetValue(CrawlEndProperty, value); }
 
         /// <summary>
@@ -104,7 +88,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="CrawlEnd"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="CrawlEnd"/> property.</param>
-        private void OnCrawlEndPropertyChanged(DateTime? oldValue, DateTime? newValue) { }
+        protected virtual void OnCrawlEndPropertyChanged(DateTime? oldValue, DateTime? newValue) { }
 
         #endregion
         #region StatusMessage Property Members
@@ -118,10 +102,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as CrawlJobRowViewModel<TEntity>)?.OnStatusMessagePropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string StatusMessage { get => GetValue(StatusMessageProperty) as string; set => SetValue(StatusMessageProperty, value); }
 
         /// <summary>
@@ -143,10 +123,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as CrawlJobRowViewModel<TEntity>)?.OnStatusDetailPropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string StatusDetail { get => GetValue(StatusDetailProperty) as string; set => SetValue(StatusDetailProperty, value); }
 
         /// <summary>
@@ -154,7 +130,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="StatusDetail"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="StatusDetail"/> property.</param>
-        private void OnStatusDetailPropertyChanged(string oldValue, string newValue) { }
+        protected virtual void OnStatusDetailPropertyChanged(string oldValue, string newValue) { }
 
         #endregion
 

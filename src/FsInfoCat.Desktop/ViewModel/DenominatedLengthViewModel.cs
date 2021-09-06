@@ -19,10 +19,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty DenominatedValueProperty = DependencyProperty.Register(nameof(DenominatedValue), typeof(BinaryDenominatedInt64?), typeof(DenominatedLengthViewModel),
                 new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as DenominatedLengthViewModel)?.OnDenominatedValuePropertyChanged(e)));
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public BinaryDenominatedInt64? DenominatedValue { get => (BinaryDenominatedInt64?)GetValue(DenominatedValueProperty); set => SetValue(DenominatedValueProperty, value); }
 
         /// <summary>
@@ -51,10 +47,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty HasValueProperty = DependencyProperty.Register(nameof(HasValue), typeof(bool), typeof(DenominatedLengthViewModel),
                 new PropertyMetadata(false, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as DenominatedLengthViewModel)?.OnHasValuePropertyChanged((bool)e.OldValue, (bool)e.NewValue)));
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public bool HasValue { get => (bool)GetValue(HasValueProperty); set => SetValue(HasValueProperty, value); }
 
         /// <summary>
@@ -62,7 +54,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="HasValue"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="HasValue"/> property.</param>
-        private void OnHasValuePropertyChanged(bool oldValue, bool newValue) { }
+        protected virtual void OnHasValuePropertyChanged(bool oldValue, bool newValue) { }
 
         #endregion
         #region Denomination Property Members
@@ -86,10 +78,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty ValueProperty = DependencyProperty.Register(nameof(Value), typeof(double?), typeof(DenominatedLengthViewModel),
                 new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as DenominatedLengthViewModel)?.OnValuePropertyChanged((double?)e.OldValue, (double?)e.NewValue)));
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public double? Value { get => (double?)GetValue(ValueProperty); set => SetValue(ValueProperty, value); }
 
         /// <summary>
@@ -97,7 +85,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Value"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Value"/> property.</param>
-        private void OnValuePropertyChanged(double? oldValue, double? newValue) { }
+        protected virtual void OnValuePropertyChanged(double? oldValue, double? newValue) { }
 
         #endregion
         public DenominatedLengthViewModel()

@@ -44,7 +44,7 @@ namespace FsInfoCat.Desktop.Local.SharedTagDefinitions
                 dbContext.SharedTagDefinitionListing.Where(f => f.IsInactive)) : dbContext.SharedTagDefinitionListing;
         }
 
-        protected override ListItemViewModel CreateItemViewModel([DisallowNull] SharedTagDefinitionListItem entity) => new ListItemViewModel(entity);
+        protected override ListItemViewModel CreateItemViewModel([DisallowNull] SharedTagDefinitionListItem entity) => new(entity);
 
         protected override void OnApplyFilterOptionsCommand(object parameter)
         {
@@ -69,97 +69,72 @@ namespace FsInfoCat.Desktop.Local.SharedTagDefinitions
 
         protected override bool ConfirmItemDelete(ListItemViewModel item, object parameter)
         {
-            string message;
-            switch (item.FileTagCount)
+            string message = item.FileTagCount switch
             {
-                case 0:
-                    switch (item.SubdirectoryTagCount)
+                0 => item.SubdirectoryTagCount switch
+                {
+                    0 => item.VolumeTagCount switch
                     {
-                        case 0:
-                            message = item.VolumeTagCount switch
-                            {
-                                0 => $" ",
-                                1 => $", including 1 volume tag, ",
-                                _ => $", including all {item.VolumeTagCount} volume tags, ",
-                            };
-                            break;
-                        case 1:
-                            message = item.VolumeTagCount switch
-                            {
-                                0 => $", including 1 sub-directory tag, ",
-                                1 => $", including 1 sub-directory tag and 1 volume tag, ",
-                                _ => $", including 1 sub-directory tag and all {item.VolumeTagCount} volume tags, ",
-                            };
-                            break;
-                        default:
-                            message = item.VolumeTagCount switch
-                            {
-                                0 => $", including all {item.SubdirectoryTagCount} sub-directory tags, ",
-                                1 => $", including all {item.SubdirectoryTagCount} sub-directory tags and 1 volume tag, ",
-                                _ => $", including all {item.SubdirectoryTagCount} sub-directory and {item.VolumeTagCount} volume tags, ",
-                            };
-                            break;
-                    }
-                    break;
-                case 1:
-                    switch (item.SubdirectoryTagCount)
+                        0 => $" ",
+                        1 => $", including 1 volume tag, ",
+                        _ => $", including all {item.VolumeTagCount} volume tags, ",
+                    },
+                    1 => item.VolumeTagCount switch
                     {
-                        case 0:
-                            message = item.VolumeTagCount switch
-                            {
-                                0 => $", including 1 file tag, ",
-                                1 => $", including 1 file tag and 1 volume tag, ",
-                                _ => $", including 1 file tag and all {item.VolumeTagCount} volume tags, ",
-                            };
-                            break;
-                        case 1:
-                            message = item.VolumeTagCount switch
-                            {
-                                0 => $", including 1 file tag and 1 sub-directory tag, ",
-                                1 => $", including 1 file tag, 1 sub-directory tag and 1 volume tag, ",
-                                _ => $", including 1 file tag, 1 sub-directory tag and all {item.VolumeTagCount} volume tags, ",
-                            };
-                            break;
-                        default:
-                            message = item.VolumeTagCount switch
-                            {
-                                0 => $", including 1 file tag and all {item.SubdirectoryTagCount} sub-directory tags, ",
-                                1 => $", including 1 file tag and all {item.SubdirectoryTagCount} sub-directory tags and 1 volume tag, ",
-                                _ => $", including 1 file tag and all {item.SubdirectoryTagCount} sub-directory and {item.VolumeTagCount} volume tags, ",
-                            };
-                            break;
-                    }
-                    break;
-                default:
-                    switch (item.SubdirectoryTagCount)
+                        0 => $", including 1 sub-directory tag, ",
+                        1 => $", including 1 sub-directory tag and 1 volume tag, ",
+                        _ => $", including 1 sub-directory tag and all {item.VolumeTagCount} volume tags, ",
+                    },
+                    _ => item.VolumeTagCount switch
                     {
-                        case 0:
-                            message = item.VolumeTagCount switch
-                            {
-                                0 => $", including all {item.FileTagCount} file tags, ",
-                                1 => $", including all {item.FileTagCount} file tags and 1 volume tag, ",
-                                _ => $", including all {item.FileTagCount} file tags and {item.VolumeTagCount} volume tags, ",
-                            };
-                            break;
-                        case 1:
-                            message = item.VolumeTagCount switch
-                            {
-                                0 => $", including all {item.FileTagCount} file tags and 1 sub-directory tag, ",
-                                1 => $", including all {item.FileTagCount} file tags, 1 sub-directory tag and 1 volume tag, ",
-                                _ => $", including all {item.FileTagCount} file tags, 1 sub-directory tag and {item.VolumeTagCount} volume tags, ",
-                            };
-                            break;
-                        default:
-                            message = item.VolumeTagCount switch
-                            {
-                                0 => $", including all {item.FileTagCount} file and {item.SubdirectoryTagCount} sub-directory tags, ",
-                                1 => $", including all {item.FileTagCount} file tags, {item.SubdirectoryTagCount} sub-directory tags and 1 volume tag, ",
-                                _ => $", including all {item.FileTagCount} file tags, {item.SubdirectoryTagCount} sub-directory tags and {item.VolumeTagCount} volume tags, ",
-                            };
-                            break;
-                    }
-                    break;
-            }
+                        0 => $", including all {item.SubdirectoryTagCount} sub-directory tags, ",
+                        1 => $", including all {item.SubdirectoryTagCount} sub-directory tags and 1 volume tag, ",
+                        _ => $", including all {item.SubdirectoryTagCount} sub-directory and {item.VolumeTagCount} volume tags, ",
+                    },
+                },
+                1 => item.SubdirectoryTagCount switch
+                {
+                    0 => item.VolumeTagCount switch
+                    {
+                        0 => $", including 1 file tag, ",
+                        1 => $", including 1 file tag and 1 volume tag, ",
+                        _ => $", including 1 file tag and all {item.VolumeTagCount} volume tags, ",
+                    },
+                    1 => item.VolumeTagCount switch
+                    {
+                        0 => $", including 1 file tag and 1 sub-directory tag, ",
+                        1 => $", including 1 file tag, 1 sub-directory tag and 1 volume tag, ",
+                        _ => $", including 1 file tag, 1 sub-directory tag and all {item.VolumeTagCount} volume tags, ",
+                    },
+                    _ => item.VolumeTagCount switch
+                    {
+                        0 => $", including 1 file tag and all {item.SubdirectoryTagCount} sub-directory tags, ",
+                        1 => $", including 1 file tag and all {item.SubdirectoryTagCount} sub-directory tags and 1 volume tag, ",
+                        _ => $", including 1 file tag and all {item.SubdirectoryTagCount} sub-directory and {item.VolumeTagCount} volume tags, ",
+                    },
+                },
+                _ => item.SubdirectoryTagCount switch
+                {
+                    0 => item.VolumeTagCount switch
+                    {
+                        0 => $", including all {item.FileTagCount} file tags, ",
+                        1 => $", including all {item.FileTagCount} file tags and 1 volume tag, ",
+                        _ => $", including all {item.FileTagCount} file tags and {item.VolumeTagCount} volume tags, ",
+                    },
+                    1 => item.VolumeTagCount switch
+                    {
+                        0 => $", including all {item.FileTagCount} file tags and 1 sub-directory tag, ",
+                        1 => $", including all {item.FileTagCount} file tags, 1 sub-directory tag and 1 volume tag, ",
+                        _ => $", including all {item.FileTagCount} file tags, 1 sub-directory tag and {item.VolumeTagCount} volume tags, ",
+                    },
+                    _ => item.VolumeTagCount switch
+                    {
+                        0 => $", including all {item.FileTagCount} file and {item.SubdirectoryTagCount} sub-directory tags, ",
+                        1 => $", including all {item.FileTagCount} file tags, {item.SubdirectoryTagCount} sub-directory tags and 1 volume tag, ",
+                        _ => $", including all {item.FileTagCount} file tags, {item.SubdirectoryTagCount} sub-directory tags and {item.VolumeTagCount} volume tags, ",
+                    },
+                },
+            };
             return MessageBox.Show(App.Current.MainWindow, "This action cannot be undone!\n\nAre you sure you want to remove this shared tag{message}from the database?",
                 "Delete Shared Tag", MessageBoxButton.YesNo, MessageBoxImage.Exclamation) == MessageBoxResult.Yes;
         }

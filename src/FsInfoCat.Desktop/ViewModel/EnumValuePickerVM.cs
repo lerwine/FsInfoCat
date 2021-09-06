@@ -53,10 +53,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty SelectedItemProperty = DependencyProperty.Register(nameof(SelectedItem), typeof(EnumChoiceItem<TEnum>), typeof(EnumValuePickerVM<TEnum>),
                 new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as EnumValuePickerVM<TEnum>)?.OnSelectedItemPropertyChanged(e)));
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public EnumChoiceItem<TEnum> SelectedItem { get => (EnumChoiceItem<TEnum>)GetValue(SelectedItemProperty); set => SetValue(SelectedItemProperty, value); }
 
         /// <summary>
@@ -100,10 +96,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty SelectedValueProperty = DependencyProperty.Register(nameof(SelectedValue), typeof(TEnum?), typeof(EnumValuePickerVM<TEnum>),
                 new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as EnumValuePickerVM<TEnum>)?.OnSelectedValuePropertyChanged((TEnum?)e.OldValue, (TEnum?)e.NewValue)));
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public TEnum? SelectedValue { get => (TEnum?)GetValue(SelectedValueProperty); set => SetValue(SelectedValueProperty, value); }
 
         /// <summary>
@@ -141,10 +133,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty SelectedIndexProperty = DependencyProperty.Register(nameof(SelectedIndex), typeof(int), typeof(EnumValuePickerVM<TEnum>),
                 new PropertyMetadata(-1, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as EnumValuePickerVM<TEnum>)?.OnSelectedIndexPropertyChanged((int)e.OldValue, (int)e.NewValue)));
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public int SelectedIndex { get => (int)GetValue(SelectedIndexProperty); set => SetValue(SelectedIndexProperty, value); }
 
         /// <summary>

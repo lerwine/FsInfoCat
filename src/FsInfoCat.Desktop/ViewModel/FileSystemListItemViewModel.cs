@@ -67,10 +67,6 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         public static readonly DependencyProperty PrimarySymbolicNameProperty = PrimarySymbolicNamePropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string PrimarySymbolicName { get => GetValue(PrimarySymbolicNameProperty) as string; private set => SetValue(PrimarySymbolicNamePropertyKey, value); }
 
         #endregion
@@ -94,7 +90,7 @@ namespace FsInfoCat.Desktop.ViewModel
         private static readonly DependencyPropertyKey VolumeCountPropertyKey = ColumnPropertyBuilder<long, FileSystemListItemViewModel<TEntity>>
             .RegisterEntityMapped<TEntity>(nameof(IFileSystemListItem.VolumeCount))
             .DefaultValue(0L)
-            .OnChanged((d, oldValue, newValue) => (d as FileSystemListItemViewModel<TEntity>)?.OnVolumeCountPropertyChanged(oldValue, newValue))
+            .OnChanged((d, oldValue, newValue) => (d as FileSystemListItemViewModel<TEntity>)?.OnVolumeCountPropertyChanged(newValue))
             .AsReadOnly();
 
         /// <summary>
@@ -107,9 +103,9 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Called when the value of the <see cref="VolumeCount"/> dependency property has changed.
         /// </summary>
-        /// <param name="oldValue">The previous value of the <see cref="VolumeCount"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="VolumeCount"/> property.</param>
-        private void OnVolumeCountPropertyChanged(long oldValue, long newValue) => Delete.IsEnabled = newValue > 0L;
+        /// 
+        private void OnVolumeCountPropertyChanged(long newValue) => Delete.IsEnabled = newValue > 0L;
 
         #endregion
 

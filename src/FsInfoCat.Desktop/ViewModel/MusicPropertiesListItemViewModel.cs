@@ -67,10 +67,6 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         public static readonly DependencyProperty ArtistProperty = ArtistPropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string Artist { get => GetValue(ArtistProperty) as string; private set => SetValue(ArtistPropertyKey, value); }
 
         #endregion
@@ -86,10 +82,6 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         public static readonly DependencyProperty ComposerProperty = ComposerPropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string Composer { get => GetValue(ComposerProperty) as string; private set => SetValue(ComposerPropertyKey, value); }
 
         #endregion
@@ -105,10 +97,6 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         public static readonly DependencyProperty ConductorProperty = ConductorPropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string Conductor { get => GetValue(ConductorProperty) as string; private set => SetValue(ConductorPropertyKey, value); }
 
         #endregion
@@ -124,10 +112,6 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         public static readonly DependencyProperty GenreProperty = GenrePropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string Genre { get => GetValue(GenreProperty) as string; private set => SetValue(GenrePropertyKey, value); }
 
         #endregion
@@ -137,7 +121,7 @@ namespace FsInfoCat.Desktop.ViewModel
             .RegisterEntityMapped<TEntity>(nameof(IMusicPropertiesListItem.ExistingFileCount))
             .DefaultValue(0L)
             .OnChanged((DependencyObject d, long oldValue, long newValue) =>
-                (d as MusicPropertiesListItemViewModel<TEntity>).OnExistingFileCountPropertyChanged(oldValue, newValue))
+                (d as MusicPropertiesListItemViewModel<TEntity>).OnExistingFileCountPropertyChanged(newValue))
             .AsReadOnly();
 
         /// <summary>
@@ -150,9 +134,9 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Called when the value of the <see cref="ExistingFileCount"/> dependency property has changed.
         /// </summary>
-        /// <param name="oldValue">The previous value of the <see cref="ExistingFileCount"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="ExistingFileCount"/> property.</param>
-        private void OnExistingFileCountPropertyChanged(long oldValue, long newValue) => Delete.IsEnabled = newValue == 0L;
+        /// 
+        private void OnExistingFileCountPropertyChanged(long newValue) => Delete.IsEnabled = newValue == 0L;
 
         #endregion
         #region TotalFileCount Property Members

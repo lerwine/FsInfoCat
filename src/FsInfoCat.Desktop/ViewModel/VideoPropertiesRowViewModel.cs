@@ -21,10 +21,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as VideoPropertiesRowViewModel<TEntity>)?.OnDirectorPropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string Director { get => GetValue(DirectorProperty) as string; set => SetValue(DirectorProperty, value); }
 
         /// <summary>
@@ -46,10 +42,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as VideoPropertiesRowViewModel<TEntity>)?.OnCompressionPropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string Compression { get => GetValue(CompressionProperty) as string; set => SetValue(CompressionProperty, value); }
 
         /// <summary>
@@ -71,10 +63,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as VideoPropertiesRowViewModel<TEntity>)?.OnEncodingBitratePropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public uint? EncodingBitrate { get => (uint?)GetValue(EncodingBitrateProperty); set => SetValue(EncodingBitrateProperty, value); }
 
         /// <summary>
@@ -96,10 +84,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as VideoPropertiesRowViewModel<TEntity>)?.OnFrameHeightPropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public uint? FrameHeight { get => (uint?)GetValue(FrameHeightProperty); set => SetValue(FrameHeightProperty, value); }
 
         /// <summary>
@@ -121,10 +105,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as VideoPropertiesRowViewModel<TEntity>)?.OnFrameRatePropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public uint? FrameRate { get => (uint?)GetValue(FrameRateProperty); set => SetValue(FrameRateProperty, value); }
 
         /// <summary>
@@ -146,10 +126,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as VideoPropertiesRowViewModel<TEntity>)?.OnFrameWidthPropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public uint? FrameWidth { get => (uint?)GetValue(FrameWidthProperty); set => SetValue(FrameWidthProperty, value); }
 
         /// <summary>
@@ -171,10 +147,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as VideoPropertiesRowViewModel<TEntity>)?.OnHorizontalAspectRatioPropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public uint? HorizontalAspectRatio { get => (uint?)GetValue(HorizontalAspectRatioProperty); set => SetValue(HorizontalAspectRatioProperty, value); }
 
         /// <summary>
@@ -196,10 +168,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as VideoPropertiesRowViewModel<TEntity>)?.OnStreamNumberPropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public ushort? StreamNumber { get => (ushort?)GetValue(StreamNumberProperty); set => SetValue(StreamNumberProperty, value); }
 
         /// <summary>
@@ -221,10 +189,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as VideoPropertiesRowViewModel<TEntity>)?.OnStreamNamePropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string StreamName { get => GetValue(StreamNameProperty) as string; set => SetValue(StreamNameProperty, value); }
 
         /// <summary>
@@ -246,10 +210,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as VideoPropertiesRowViewModel<TEntity>)?.OnVerticalAspectRatioPropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public uint? VerticalAspectRatio { get => (uint?)GetValue(VerticalAspectRatioProperty); set => SetValue(VerticalAspectRatioProperty, value); }
 
         /// <summary>

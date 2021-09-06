@@ -67,10 +67,6 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         public static readonly DependencyProperty VersionIDProperty = VersionIDPropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string VersionID { get => GetValue(VersionIDProperty) as string; private set => SetValue(VersionIDPropertyKey, value); }
 
         #endregion
@@ -80,7 +76,7 @@ namespace FsInfoCat.Desktop.ViewModel
             .RegisterEntityMapped<TEntity>(nameof(IGPSPropertiesListItem.ExistingFileCount))
             .DefaultValue(0L)
             .OnChanged((DependencyObject d, long oldValue, long newValue) =>
-                (d as GPSPropertiesListItemViewModel<TEntity>).OnExistingFileCountPropertyChanged(oldValue, newValue))
+                (d as GPSPropertiesListItemViewModel<TEntity>).OnExistingFileCountPropertyChanged(newValue))
             .AsReadOnly();
 
         /// <summary>
@@ -93,9 +89,9 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Called when the value of the <see cref="ExistingFileCount"/> dependency property has changed.
         /// </summary>
-        /// <param name="oldValue">The previous value of the <see cref="ExistingFileCount"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="ExistingFileCount"/> property.</param>
-        private void OnExistingFileCountPropertyChanged(long oldValue, long newValue) => Delete.IsEnabled = newValue == 0L;
+        /// 
+        private void OnExistingFileCountPropertyChanged(long newValue) => Delete.IsEnabled = newValue == 0L;
 
         #endregion
         #region TotalFileCount Property Members

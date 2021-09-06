@@ -7,7 +7,6 @@ namespace FsInfoCat.Desktop.ViewModel
     public class FsItemRowViewModel<TEntity> : DbEntityRowViewModel<TEntity>
         where TEntity : DbEntity, IDbFsItemRow
     {
-#pragma warning disable IDE0060 // Remove unused parameter
         #region Name Property Members
 
         /// <summary>
@@ -19,10 +18,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) =>(d as FsItemRowViewModel<TEntity>)?.OnNamePropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string Name { get => GetValue(NameProperty) as string; set => SetValue(NameProperty, value); }
 
         /// <summary>
@@ -40,14 +35,10 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         public static readonly DependencyProperty LastAccessedProperty = ColumnPropertyBuilder<DateTime, FsItemRowViewModel<TEntity>>
             .RegisterEntityMapped<TEntity>(nameof(IDbFsItemRow.LastAccessed))
-            .DefaultValue(default(DateTime))
+            .DefaultValue(default)
             .OnChanged((d, oldValue, newValue) => (d as FsItemRowViewModel<TEntity>)?.OnLastAccessedPropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public DateTime LastAccessed { get => (DateTime)GetValue(LastAccessedProperty); set => SetValue(LastAccessedProperty, value); }
 
         /// <summary>
@@ -69,10 +60,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as FsItemRowViewModel<TEntity>)?.OnNotesPropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string Notes { get => GetValue(NotesProperty) as string; set => SetValue(NotesProperty, value); }
 
         /// <summary>
@@ -90,14 +77,10 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         public static readonly DependencyProperty CreationTimeProperty = ColumnPropertyBuilder<DateTime, FsItemRowViewModel<TEntity>>
             .RegisterEntityMapped<TEntity>(nameof(IDbFsItemRow.CreationTime))
-            .DefaultValue(default(DateTime))
+            .DefaultValue(default)
             .OnChanged((d, oldValue, newValue) => (d as FsItemRowViewModel<TEntity>)?.OnCreationTimePropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public DateTime CreationTime { get => (DateTime)GetValue(CreationTimeProperty); set => SetValue(CreationTimeProperty, value); }
 
         /// <summary>
@@ -115,14 +98,10 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         public static readonly DependencyProperty LastWriteTimeProperty = ColumnPropertyBuilder<DateTime, FsItemRowViewModel<TEntity>>
             .RegisterEntityMapped<TEntity>(nameof(IDbFsItemRow.LastWriteTime))
-            .DefaultValue(default(DateTime))
+            .DefaultValue(default)
             .OnChanged((d, oldValue, newValue) => (d as FsItemRowViewModel<TEntity>)?.OnLastWriteTimePropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public DateTime LastWriteTime { get => (DateTime)GetValue(LastWriteTimeProperty); set => SetValue(LastWriteTimeProperty, value); }
 
         /// <summary>
@@ -133,7 +112,6 @@ namespace FsInfoCat.Desktop.ViewModel
         protected virtual void OnLastWriteTimePropertyChanged(DateTime oldValue, DateTime newValue) { }
 
         #endregion
-#pragma warning restore IDE0060 // Remove unused parameter
 
         public FsItemRowViewModel([DisallowNull] TEntity entity) : base(entity)
         {

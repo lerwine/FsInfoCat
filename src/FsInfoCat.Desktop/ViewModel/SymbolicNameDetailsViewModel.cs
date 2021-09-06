@@ -21,10 +21,6 @@ namespace FsInfoCat.Desktop.ViewModel
                 (d as SymbolicNameDetailsViewModel<TEntity, TFileSystemEntity, TFileSystemModel>)?.OnFileSystemPropertyChanged((TFileSystemModel)e.OldValue,
                     (TFileSystemModel)e.NewValue)));
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public TFileSystemModel FileSystem { get => (TFileSystemModel)GetValue(FileSystemProperty); set => SetValue(FileSystemProperty, value); }
 
         /// <summary>

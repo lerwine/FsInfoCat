@@ -7,7 +7,6 @@ namespace FsInfoCat.Desktop.ViewModel
     public class SubdirectoryListItemViewModel<TEntity> : SubdirectoryRowViewModel<TEntity>, ICrudEntityRowViewModel<TEntity>
         where TEntity : DbEntity, ISubdirectoryListItem
     {
-#pragma warning disable IDE0060 // Remove unused parameter
         #region Edit Property Members
 
         /// <summary>
@@ -114,10 +113,6 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         public static readonly DependencyProperty CrawlConfigDisplayNameProperty = CrawlConfigDisplayNamePropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string CrawlConfigDisplayName { get => GetValue(CrawlConfigDisplayNameProperty) as string; private set => SetValue(CrawlConfigDisplayNamePropertyKey, value); }
 
         #endregion
@@ -206,7 +201,6 @@ namespace FsInfoCat.Desktop.ViewModel
         private void SetHasDependentItems(long subdirectoryCount, long fileCount, bool hasCrawlConfig) => HasDependentItems = hasCrawlConfig || subdirectoryCount > 0L || fileCount > 0L;
 
         #endregion
-#pragma warning restore IDE0060 // Remove unused parameter
 
         public SubdirectoryListItemViewModel([DisallowNull] TEntity entity) : base(entity)
         {

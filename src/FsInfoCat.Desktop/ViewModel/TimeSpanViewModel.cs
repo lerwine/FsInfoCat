@@ -15,7 +15,6 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
 
-#pragma warning disable IDE0060 // Remove unused parameter
         #region HasErrors Property Members
 
         /// <summary>
@@ -32,10 +31,6 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         public static readonly DependencyProperty HasErrorsProperty = HasErrorsPropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public bool HasErrors { get => (bool)GetValue(HasErrorsProperty); private set => SetValue(HasErrorsPropertyKey, value); }
 
         #endregion
@@ -256,10 +251,6 @@ namespace FsInfoCat.Desktop.ViewModel
             (d as TimeSpanViewModel)?.OnValidationMessagePropertyChanged(e.OldValue as string, e.NewValue as string),
                 NormalizedOrEmptyStringCoersion.Default.ToCoerceValueCallback()));
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string ValidationMessage { get => GetValue(ValidationMessageProperty) as string; set => SetValue(ValidationMessageProperty, value); }
 
         /// <summary>
@@ -287,10 +278,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty DaysValueProperty = DependencyProperty.Register(nameof(DaysValue), typeof(int?), typeof(TimeSpanViewModel),
                 new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as TimeSpanViewModel)?.OnDaysValuePropertyChanged((int?)e.OldValue, (int?)e.NewValue)));
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public int? DaysValue { get => (int?)GetValue(DaysValueProperty); set => SetValue(DaysValueProperty, value); }
 
         /// <summary>
@@ -350,10 +337,6 @@ namespace FsInfoCat.Desktop.ViewModel
             (d as TimeSpanViewModel)?.OnDaysValidationMessagePropertyChanged(e.OldValue as string, e.NewValue as string),
                 NormalizedOrEmptyStringCoersion.Default.ToCoerceValueCallback()));
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string DaysValidationMessage { get => GetValue(DaysValidationMessageProperty) as string; set => SetValue(DaysValidationMessageProperty, value); }
 
         /// <summary>
@@ -381,10 +364,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty Hours24ValueProperty = DependencyProperty.Register(nameof(Hours24Value), typeof(int?), typeof(TimeSpanViewModel),
                 new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as TimeSpanViewModel)?.OnHours24ValuePropertyChanged((int?)e.OldValue, (int?)e.NewValue)));
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public int? Hours24Value { get => (int?)GetValue(Hours24ValueProperty); set => SetValue(Hours24ValueProperty, value); }
 
         /// <summary>
@@ -471,10 +450,6 @@ namespace FsInfoCat.Desktop.ViewModel
             (d as TimeSpanViewModel)?.OnHours24ValidationMessagePropertyChanged(e.OldValue as string, e.NewValue as string),
                 NormalizedOrEmptyStringCoersion.Default.ToCoerceValueCallback()));
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string Hours24ValidationMessage { get => GetValue(Hours24ValidationMessageProperty) as string; set => SetValue(Hours24ValidationMessageProperty, value); }
 
         /// <summary>
@@ -497,10 +472,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty IsPmProperty = DependencyProperty.Register(nameof(IsPm), typeof(bool), typeof(TimeSpanViewModel),
                 new PropertyMetadata(false, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as TimeSpanViewModel)?.OnIsPmPropertyChanged((bool)e.OldValue, (bool)e.NewValue)));
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public bool IsPm { get => (bool)GetValue(IsPmProperty); set => SetValue(IsPmProperty, value); }
 
         /// <summary>
@@ -552,10 +523,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty Hours12ValueProperty = DependencyProperty.Register(nameof(Hours12Value), typeof(int?), typeof(TimeSpanViewModel),
                 new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as TimeSpanViewModel)?.OnHours12ValuePropertyChanged((int?)e.OldValue, (int?)e.NewValue)));
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public int? Hours12Value { get => (int?)GetValue(Hours12ValueProperty); set => SetValue(Hours12ValueProperty, value); }
 
         /// <summary>
@@ -619,10 +586,6 @@ namespace FsInfoCat.Desktop.ViewModel
             (d as TimeSpanViewModel)?.OnHours12ValidationMessagePropertyChanged(e.OldValue as string, e.NewValue as string),
                 NormalizedOrEmptyStringCoersion.Default.ToCoerceValueCallback()));
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string Hours12ValidationMessage { get => GetValue(Hours12ValidationMessageProperty) as string; set => SetValue(Hours12ValidationMessageProperty, value); }
 
         /// <summary>
@@ -671,10 +634,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty MinutesValueProperty = DependencyProperty.Register(nameof(MinutesValue), typeof(int?), typeof(TimeSpanViewModel),
                 new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as TimeSpanViewModel)?.OnMinutesValuePropertyChanged((int?)e.OldValue, (int?)e.NewValue)));
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public int? MinutesValue { get => (int?)GetValue(MinutesValueProperty); set => SetValue(MinutesValueProperty, value); }
 
         /// <summary>
@@ -734,10 +693,6 @@ namespace FsInfoCat.Desktop.ViewModel
             (d as TimeSpanViewModel)?.OnMinutesValidationMessagePropertyChanged(e.OldValue as string, e.NewValue as string),
                 NormalizedOrEmptyStringCoersion.Default.ToCoerceValueCallback()));
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string MinutesValidationMessage { get => GetValue(MinutesValidationMessageProperty) as string; set => SetValue(MinutesValidationMessageProperty, value); }
 
         /// <summary>
@@ -752,7 +707,6 @@ namespace FsInfoCat.Desktop.ViewModel
         }
 
         #endregion
-#pragma warning restore IDE0060 // Remove unused parameter
 
         private void RaiseDataErrorsChanged(string propertyName) => ErrorsChanged?.Invoke(this, new(propertyName));
 

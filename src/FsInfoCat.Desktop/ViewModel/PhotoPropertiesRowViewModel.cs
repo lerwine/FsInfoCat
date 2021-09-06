@@ -9,7 +9,6 @@ namespace FsInfoCat.Desktop.ViewModel
     public class PhotoPropertiesRowViewModel<TEntity> : DbEntityRowViewModel<TEntity>
         where TEntity : DbEntity, IPhotoProperties
     {
-#pragma warning disable IDE0060 // Remove unused parameter
         #region CameraManufacturer Property Members
 
         /// <summary>
@@ -21,10 +20,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as PhotoPropertiesRowViewModel<TEntity>)?.OnCameraManufacturerPropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string CameraManufacturer { get => GetValue(CameraManufacturerProperty) as string; set => SetValue(CameraManufacturerProperty, value); }
 
         /// <summary>
@@ -46,10 +41,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as PhotoPropertiesRowViewModel<TEntity>)?.OnCameraModelPropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string CameraModel { get => GetValue(CameraModelProperty) as string; set => SetValue(CameraModelProperty, value); }
 
         /// <summary>
@@ -71,10 +62,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as PhotoPropertiesRowViewModel<TEntity>)?.OnDateTakenPropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public DateTime? DateTaken { get => (DateTime?)GetValue(DateTakenProperty); set => SetValue(DateTakenProperty, value); }
 
         /// <summary>
@@ -96,10 +83,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as PhotoPropertiesRowViewModel<TEntity>)?.OnEXIFVersionPropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string EXIFVersion { get => GetValue(EXIFVersionProperty) as string; set => SetValue(EXIFVersionProperty, value); }
 
         /// <summary>
@@ -121,10 +104,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as PhotoPropertiesRowViewModel<TEntity>)?.OnOrientationPropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public ushort? Orientation { get => (ushort?)GetValue(OrientationProperty); set => SetValue(OrientationProperty, value); }
 
         /// <summary>
@@ -146,10 +125,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as PhotoPropertiesRowViewModel<TEntity>)?.OnOrientationTextPropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string OrientationText { get => GetValue(OrientationTextProperty) as string; set => SetValue(OrientationTextProperty, value); }
 
         /// <summary>
@@ -160,7 +135,6 @@ namespace FsInfoCat.Desktop.ViewModel
         protected virtual void OnOrientationTextPropertyChanged(string oldValue, string newValue) { }
 
         #endregion
-#pragma warning restore IDE0060 // Remove unused parameter
 
         public PhotoPropertiesRowViewModel([DisallowNull] TEntity entity) : base(entity)
         {

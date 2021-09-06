@@ -60,7 +60,7 @@ namespace FsInfoCat.Desktop.Local.FileSystems
                 dbContext.FileSystemListing.Where(f => f.IsInactive)) : dbContext.FileSystemListing;
         }
 
-        protected override ListItemViewModel CreateItemViewModel([DisallowNull] FileSystemListItem entity) => new ListItemViewModel(entity);
+        protected override ListItemViewModel CreateItemViewModel([DisallowNull] FileSystemListItem entity) => new(entity);
 
         protected override void OnApplyFilterOptionsCommand(object parameter)
         {

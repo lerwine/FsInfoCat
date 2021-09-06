@@ -9,7 +9,6 @@ namespace FsInfoCat.Desktop.ViewModel
     {
         protected internal TEntity Entity { get; }
 
-#pragma warning disable IDE0060 // Remove unused parameter
         #region Name Property Members
 
         /// <summary>
@@ -21,10 +20,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as FsItemAncestorNameViewModel<TEntity>)?.OnNamePropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string Name { get => GetValue(NameProperty) as string; set => SetValue(NameProperty, value); }
 
         /// <summary>
@@ -47,14 +42,9 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         public static readonly DependencyProperty PathProperty = PathPropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string Path { get => GetValue(PathProperty) as string; private set => SetValue(PathPropertyKey, value); }
 
         #endregion
-#pragma warning restore IDE0060 // Remove unused parameter
 
         public FsItemAncestorNameViewModel(TEntity entity)
         {

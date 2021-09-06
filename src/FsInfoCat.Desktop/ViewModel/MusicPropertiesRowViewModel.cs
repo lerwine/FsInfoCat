@@ -9,7 +9,6 @@ namespace FsInfoCat.Desktop.ViewModel
     public class MusicPropertiesRowViewModel<TEntity> : DbEntityRowViewModel<TEntity>
         where TEntity : DbEntity, IMusicProperties
     {
-#pragma warning disable IDE0060 // Remove unused parameter
         #region AlbumArtist Property Members
 
         /// <summary>
@@ -21,10 +20,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as MusicPropertiesRowViewModel<TEntity>)?.OnAlbumArtistPropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string AlbumArtist { get => GetValue(AlbumArtistProperty) as string; set => SetValue(AlbumArtistProperty, value); }
 
         /// <summary>
@@ -46,10 +41,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as MusicPropertiesRowViewModel<TEntity>)?.OnAlbumTitlePropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string AlbumTitle { get => GetValue(AlbumTitleProperty) as string; set => SetValue(AlbumTitleProperty, value); }
 
         /// <summary>
@@ -71,10 +62,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as MusicPropertiesRowViewModel<TEntity>)?.OnChannelCountPropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public uint? ChannelCount { get => (uint?)GetValue(ChannelCountProperty); set => SetValue(ChannelCountProperty, value); }
 
         /// <summary>
@@ -117,10 +104,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as MusicPropertiesRowViewModel<TEntity>)?.OnDisplayArtistPropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string DisplayArtist { get => GetValue(DisplayArtistProperty) as string; set => SetValue(DisplayArtistProperty, value); }
 
         /// <summary>
@@ -142,10 +125,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as MusicPropertiesRowViewModel<TEntity>)?.OnPartOfSetPropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string PartOfSet { get => GetValue(PartOfSetProperty) as string; set => SetValue(PartOfSetProperty, value); }
 
         /// <summary>
@@ -167,10 +146,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as MusicPropertiesRowViewModel<TEntity>)?.OnPeriodPropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string Period { get => GetValue(PeriodProperty) as string; set => SetValue(PeriodProperty, value); }
 
         /// <summary>
@@ -192,10 +167,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as MusicPropertiesRowViewModel<TEntity>)?.OnTrackNumberPropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public uint? TrackNumber { get => (uint?)GetValue(TrackNumberProperty); set => SetValue(TrackNumberProperty, value); }
 
         /// <summary>
@@ -206,7 +177,6 @@ namespace FsInfoCat.Desktop.ViewModel
         protected virtual void OnTrackNumberPropertyChanged(uint? oldValue, uint? newValue) { }
 
         #endregion
-#pragma warning restore IDE0060 // Remove unused parameter
 
         public MusicPropertiesRowViewModel([DisallowNull] TEntity entity) : base(entity)
         {

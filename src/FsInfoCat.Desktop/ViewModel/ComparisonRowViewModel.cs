@@ -7,7 +7,6 @@ namespace FsInfoCat.Desktop.ViewModel
     public class ComparisonRowViewModel<TEntity> : DbEntityRowViewModel<TEntity>
         where TEntity : DbEntity, IComparison
     {
-#pragma warning disable IDE0060 // Remove unused parameter
         #region AreEqual Property Members
 
         /// <summary>
@@ -20,10 +19,6 @@ namespace FsInfoCat.Desktop.ViewModel
                 (d as ComparisonRowViewModel<TEntity>).OnAreEqualPropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public bool AreEqual { get => (bool)GetValue(AreEqualProperty); set => SetValue(AreEqualProperty, value); }
 
         /// <summary>
@@ -45,10 +40,6 @@ namespace FsInfoCat.Desktop.ViewModel
                 (d as ComparisonRowViewModel<TEntity>).OnComparedOnPropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public DateTime ComparedOn { get => (DateTime)GetValue(ComparedOnProperty); set => SetValue(ComparedOnProperty, value); }
 
         /// <summary>
@@ -59,7 +50,6 @@ namespace FsInfoCat.Desktop.ViewModel
         protected virtual void OnComparedOnPropertyChanged(DateTime oldValue, DateTime newValue) { }
 
         #endregion
-#pragma warning restore IDE0060 // Remove unused parameter
 
         public ComparisonRowViewModel([DisallowNull] TEntity entity) : base(entity)
         {

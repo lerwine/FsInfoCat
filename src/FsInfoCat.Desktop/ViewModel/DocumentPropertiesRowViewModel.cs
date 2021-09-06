@@ -9,7 +9,6 @@ namespace FsInfoCat.Desktop.ViewModel
     public class DocumentPropertiesRowViewModel<TEntity> : DbEntityRowViewModel<TEntity>
         where TEntity : DbEntity, IDocumentProperties
     {
-#pragma warning disable IDE0060 // Remove unused parameter
         #region ClientID Property Members
 
         /// <summary>
@@ -21,10 +20,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as DocumentPropertiesRowViewModel<TEntity>)?.OnClientIDPropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string ClientID { get => GetValue(ClientIDProperty) as string; set => SetValue(ClientIDProperty, value); }
 
         /// <summary>
@@ -46,10 +41,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as DocumentPropertiesRowViewModel<TEntity>)?.OnDateCreatedPropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public DateTime? DateCreated { get => (DateTime?)GetValue(DateCreatedProperty); set => SetValue(DateCreatedProperty, value); }
 
         /// <summary>
@@ -72,10 +63,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default)
             .AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string LastAuthor { get => GetValue(LastAuthorProperty) as string; set => SetValue(LastAuthorProperty, value); }
 
         /// <summary>
@@ -98,10 +85,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default)
             .AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string RevisionNumber { get => GetValue(RevisionNumberProperty) as string; set => SetValue(RevisionNumberProperty, value); }
 
         /// <summary>
@@ -122,10 +105,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as DocumentPropertiesRowViewModel<TEntity>)?.OnSecurityPropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public int? Security { get => (int?)GetValue(SecurityProperty); set => SetValue(SecurityProperty, value); }
 
         /// <summary>
@@ -148,10 +127,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default)
             .AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string Division { get => GetValue(DivisionProperty) as string; set => SetValue(DivisionProperty, value); }
 
         /// <summary>
@@ -174,10 +149,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default)
             .AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string DocumentID { get => GetValue(DocumentIDProperty) as string; set => SetValue(DocumentIDProperty, value); }
 
         /// <summary>
@@ -200,10 +171,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default)
             .AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string Manager { get => GetValue(ManagerProperty) as string; set => SetValue(ManagerProperty, value); }
 
         /// <summary>
@@ -226,10 +193,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default)
             .AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string PresentationFormat { get => GetValue(PresentationFormatProperty) as string; set => SetValue(PresentationFormatProperty, value); }
 
         /// <summary>
@@ -252,10 +215,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default)
             .AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string Version { get => GetValue(VersionProperty) as string; set => SetValue(VersionProperty, value); }
 
         /// <summary>
@@ -266,7 +225,6 @@ namespace FsInfoCat.Desktop.ViewModel
         protected virtual void OnVersionPropertyChanged(string oldValue, string newValue) { }
 
         #endregion
-#pragma warning restore IDE0060 // Remove unused parameter
 
         public DocumentPropertiesRowViewModel([DisallowNull] TEntity entity) : base(entity)
         {

@@ -9,7 +9,6 @@ namespace FsInfoCat.Desktop.ViewModel
     public class RecordedTVPropertiesRowViewModel<TEntity> : DbEntityRowViewModel<TEntity>
         where TEntity : DbEntity, IRecordedTVProperties
     {
-#pragma warning disable IDE0060 // Remove unused parameter
         #region ChannelNumber Property Members
 
         /// <summary>
@@ -21,10 +20,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as RecordedTVPropertiesRowViewModel<TEntity>)?.OnChannelNumberPropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public uint? ChannelNumber { get => (uint?)GetValue(ChannelNumberProperty); set => SetValue(ChannelNumberProperty, value); }
 
         /// <summary>
@@ -46,10 +41,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as RecordedTVPropertiesRowViewModel<TEntity>)?.OnEpisodeNamePropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string EpisodeName { get => GetValue(EpisodeNameProperty) as string; set => SetValue(EpisodeNameProperty, value); }
 
         /// <summary>
@@ -71,10 +62,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as RecordedTVPropertiesRowViewModel<TEntity>)?.OnIsDTVContentPropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public bool? IsDTVContent { get => (bool?)GetValue(IsDTVContentProperty); set => SetValue(IsDTVContentProperty, value); }
 
         /// <summary>
@@ -96,10 +83,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as RecordedTVPropertiesRowViewModel<TEntity>)?.OnIsHDContentPropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public bool? IsHDContent { get => (bool?)GetValue(IsHDContentProperty); set => SetValue(IsHDContentProperty, value); }
 
         /// <summary>
@@ -121,10 +104,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as RecordedTVPropertiesRowViewModel<TEntity>)?.OnNetworkAffiliationPropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string NetworkAffiliation { get => GetValue(NetworkAffiliationProperty) as string; set => SetValue(NetworkAffiliationProperty, value); }
 
         /// <summary>
@@ -146,10 +125,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as RecordedTVPropertiesRowViewModel<TEntity>)?.OnOriginalBroadcastDatePropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public DateTime? OriginalBroadcastDate { get => (DateTime?)GetValue(OriginalBroadcastDateProperty); set => SetValue(OriginalBroadcastDateProperty, value); }
 
         /// <summary>
@@ -171,10 +146,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as RecordedTVPropertiesRowViewModel<TEntity>)?.OnProgramDescriptionPropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string ProgramDescription { get => GetValue(ProgramDescriptionProperty) as string; set => SetValue(ProgramDescriptionProperty, value); }
 
         /// <summary>
@@ -196,10 +167,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as RecordedTVPropertiesRowViewModel<TEntity>)?.OnStationCallSignPropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string StationCallSign { get => GetValue(StationCallSignProperty) as string; set => SetValue(StationCallSignProperty, value); }
 
         /// <summary>
@@ -221,10 +188,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as RecordedTVPropertiesRowViewModel<TEntity>)?.OnStationNamePropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string StationName { get => GetValue(StationNameProperty) as string; set => SetValue(StationNameProperty, value); }
 
         /// <summary>
@@ -235,7 +198,6 @@ namespace FsInfoCat.Desktop.ViewModel
         protected virtual void OnStationNamePropertyChanged(string oldValue, string newValue) { }
 
         #endregion
-#pragma warning restore IDE0060 // Remove unused parameter
 
         public RecordedTVPropertiesRowViewModel([DisallowNull] TEntity entity) : base(entity)
         {

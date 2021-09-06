@@ -9,7 +9,6 @@ namespace FsInfoCat.Desktop.ViewModel
     public class MediaPropertiesRowViewModel<TEntity> : DbEntityRowViewModel<TEntity>
         where TEntity : DbEntity, IMediaProperties
     {
-#pragma warning disable IDE0060 // Remove unused parameter
         #region ContentDistributor Property Members
 
         /// <summary>
@@ -21,10 +20,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as MediaPropertiesRowViewModel<TEntity>)?.OnContentDistributorPropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string ContentDistributor { get => GetValue(ContentDistributorProperty) as string; set => SetValue(ContentDistributorProperty, value); }
 
         /// <summary>
@@ -46,10 +41,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as MediaPropertiesRowViewModel<TEntity>)?.OnCreatorApplicationPropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string CreatorApplication { get => GetValue(CreatorApplicationProperty) as string; set => SetValue(CreatorApplicationProperty, value); }
 
         /// <summary>
@@ -71,10 +62,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as MediaPropertiesRowViewModel<TEntity>)?.OnCreatorApplicationVersionPropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string CreatorApplicationVersion { get => GetValue(CreatorApplicationVersionProperty) as string; set => SetValue(CreatorApplicationVersionProperty, value); }
 
         /// <summary>
@@ -96,10 +83,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as MediaPropertiesRowViewModel<TEntity>)?.OnDateReleasedPropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string DateReleased { get => GetValue(DateReleasedProperty) as string; set => SetValue(DateReleasedProperty, value); }
 
         /// <summary>
@@ -121,10 +104,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as MediaPropertiesRowViewModel<TEntity>)?.OnDurationPropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public TimeSpan? Duration { get => (TimeSpan?)GetValue(DurationProperty); set => SetValue(DurationProperty, value); }
 
         /// <summary>
@@ -146,10 +125,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as MediaPropertiesRowViewModel<TEntity>)?.OnDVDIDPropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string DVDID { get => GetValue(DVDIDProperty) as string; set => SetValue(DVDIDProperty, value); }
 
         /// <summary>
@@ -171,10 +146,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as MediaPropertiesRowViewModel<TEntity>)?.OnFrameCountPropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public uint? FrameCount { get => (uint?)GetValue(FrameCountProperty); set => SetValue(FrameCountProperty, value); }
 
         /// <summary>
@@ -196,10 +167,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as MediaPropertiesRowViewModel<TEntity>)?.OnProtectionTypePropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string ProtectionType { get => GetValue(ProtectionTypeProperty) as string; set => SetValue(ProtectionTypeProperty, value); }
 
         /// <summary>
@@ -221,10 +188,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as MediaPropertiesRowViewModel<TEntity>)?.OnProviderRatingPropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string ProviderRating { get => GetValue(ProviderRatingProperty) as string; set => SetValue(ProviderRatingProperty, value); }
 
         /// <summary>
@@ -246,10 +209,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as MediaPropertiesRowViewModel<TEntity>)?.OnProviderStylePropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string ProviderStyle { get => GetValue(ProviderStyleProperty) as string; set => SetValue(ProviderStyleProperty, value); }
 
         /// <summary>
@@ -271,10 +230,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as MediaPropertiesRowViewModel<TEntity>)?.OnPublisherPropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string Publisher { get => GetValue(PublisherProperty) as string; set => SetValue(PublisherProperty, value); }
 
         /// <summary>
@@ -296,10 +251,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as MediaPropertiesRowViewModel<TEntity>)?.OnSubtitlePropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string Subtitle { get => GetValue(SubtitleProperty) as string; set => SetValue(SubtitleProperty, value); }
 
         /// <summary>
@@ -321,10 +272,6 @@ namespace FsInfoCat.Desktop.ViewModel
             .OnChanged((d, oldValue, newValue) => (d as MediaPropertiesRowViewModel<TEntity>)?.OnYearPropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public uint? Year { get => (uint?)GetValue(YearProperty); set => SetValue(YearProperty, value); }
 
         /// <summary>
@@ -335,7 +282,6 @@ namespace FsInfoCat.Desktop.ViewModel
         protected virtual void OnYearPropertyChanged(uint? oldValue, uint? newValue) { }
 
         #endregion
-#pragma warning restore IDE0060 // Remove unused parameter
 
         public MediaPropertiesRowViewModel([DisallowNull] TEntity entity) : base(entity)
         {

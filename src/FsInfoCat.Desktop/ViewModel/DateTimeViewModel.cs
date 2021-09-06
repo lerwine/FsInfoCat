@@ -33,10 +33,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty IsRequiredProperty = DependencyProperty.Register(nameof(IsRequired), typeof(bool), typeof(DateTimeViewModel),
                 new PropertyMetadata(false, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as DateTimeViewModel)?.OnIsRequiredPropertyChanged((bool)e.OldValue, (bool)e.NewValue)));
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public bool IsRequired { get => (bool)GetValue(IsRequiredProperty); set => SetValue(IsRequiredProperty, value); }
 
         /// <summary>
@@ -79,10 +75,6 @@ namespace FsInfoCat.Desktop.ViewModel
                 new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as DateTimeViewModel)?.OnValuePropertyChanged(e),
                     DateTimeCoersion.NormalizedToMinutesLocal.ToCoerceValueCallback()));
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public DateTime? Value { get => (DateTime?)GetValue(ValueProperty); set => SetValue(ValueProperty, value); }
 
         /// <summary>
@@ -176,10 +168,6 @@ namespace FsInfoCat.Desktop.ViewModel
             (d as DateTimeViewModel)?.OnValueValidationMessagePropertyChanged(e.OldValue as string, e.NewValue as string),
                 NormalizedOrEmptyStringCoersion.Default.ToCoerceValueCallback()));
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string ValueValidationMessage { get => GetValue(ValueValidationMessageProperty) as string; set => SetValue(ValueValidationMessageProperty, value); }
 
         /// <summary>
@@ -209,10 +197,6 @@ namespace FsInfoCat.Desktop.ViewModel
                 (d as DateTimeViewModel)?.OnSelectedDatePropertyChanged((DateTime?)e.OldValue, (DateTime?)e.NewValue),
                     DateTimeCoersion.NormalizedToDaysLocal.ToCoerceValueCallback()));
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public DateTime? SelectedDate { get => (DateTime?)GetValue(SelectedDateProperty); set => SetValue(SelectedDateProperty, value); }
 
         /// <summary>
@@ -261,10 +245,6 @@ namespace FsInfoCat.Desktop.ViewModel
             (d as DateTimeViewModel)?.OnSelectedValidationMessagePropertyChanged(e.OldValue as string, e.NewValue as string),
                 NormalizedOrEmptyStringCoersion.Default.ToCoerceValueCallback()));
 
-        /// <summary>
-        /// Gets or sets .
-        /// </summary>
-        /// <value>The .</value>
         public string SelectedValidationMessage { get => GetValue(SelectedValidationMessageProperty) as string; set => SetValue(SelectedValidationMessageProperty, value); }
 
         /// <summary>
