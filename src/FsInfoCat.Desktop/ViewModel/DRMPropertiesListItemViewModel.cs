@@ -108,10 +108,10 @@ namespace FsInfoCat.Desktop.ViewModel
             switch (propertyName)
             {
                 case nameof(ExistingFileCount):
-                    Dispatcher.CheckInvoke(() => ExistingFileCount = Entity.ExistingFileCount);
+                    _ = Dispatcher.CheckInvoke(() => ExistingFileCount = Entity.ExistingFileCount);
                     break;
                 case nameof(TotalFileCount):
-                    Dispatcher.CheckInvoke(() => TotalFileCount = Entity.TotalFileCount);
+                    _ = Dispatcher.CheckInvoke(() => TotalFileCount = Entity.TotalFileCount);
                     break;
                 default:
                     base.OnEntityPropertyChanged(propertyName);

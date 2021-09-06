@@ -23,7 +23,7 @@ namespace FsInfoCat.Desktop
 
         private async void Application_Startup(object sender, StartupEventArgs e)
         {
-            await Services.Initialize(e.Args);
+            _ = await Services.Initialize(e.Args);
             if (Dispatcher.CheckAccess())
                 ShowMainWindow();
             else

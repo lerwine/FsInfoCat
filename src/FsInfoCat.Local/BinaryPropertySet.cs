@@ -120,7 +120,7 @@ namespace FsInfoCat.Local
                     Length = length,
                     Hash = (length == 0L) ? (MD5Hash?)await MD5Hash.CreateAsync(System.IO.Stream.Null, cancellationToken) : null
                 });
-                await dbContext.SaveChangesAsync(cancellationToken);
+                _ = await dbContext.SaveChangesAsync(cancellationToken);
             }
             return bps;
         }
@@ -135,7 +135,7 @@ namespace FsInfoCat.Local
                     Length = length,
                     Hash = hash
                 });
-                await dbContext.SaveChangesAsync(cancellationToken);
+                _ = await dbContext.SaveChangesAsync(cancellationToken);
             }
             return bps;
         }

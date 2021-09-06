@@ -523,7 +523,7 @@ namespace FsInfoCat.Local
                     Status = FileCorrelationStatus.Correlated;
                 }
                 entry = dbContext.Files.Update(this);
-                await dbContext.SaveChangesAsync(cancellationToken);
+                _ = await dbContext.SaveChangesAsync(cancellationToken);
                 return entry;
             }
 
@@ -544,7 +544,7 @@ namespace FsInfoCat.Local
                 cancellationToken.ThrowIfCancellationRequested();
                 Status = FileCorrelationStatus.Dissociated;
                 entry = dbContext.Files.Update(this);
-                await dbContext.SaveChangesAsync(cancellationToken);
+                _ = await dbContext.SaveChangesAsync(cancellationToken);
             }
             return entry;
         }
@@ -581,7 +581,7 @@ namespace FsInfoCat.Local
             await PhotoPropertySet.RefreshAsync(entry, fileDetailProvider, cancellationToken);
             await RecordedTVPropertySet.RefreshAsync(entry, fileDetailProvider, cancellationToken);
             await VideoPropertySet.RefreshAsync(entry, fileDetailProvider, cancellationToken);
-            await dbContext.SaveChangesAsync(cancellationToken);
+            _ = await dbContext.SaveChangesAsync(cancellationToken);
             // TODO: Need to add code later to see where comparisons need to be made
             return entry;
         }
@@ -656,7 +656,7 @@ namespace FsInfoCat.Local
             }
             Guid id = dbEntry.Entity.Id;
             cancellationToken.ThrowIfCancellationRequested();
-            await dbContext.SaveChangesAsync(cancellationToken);
+            _ = await dbContext.SaveChangesAsync(cancellationToken);
             bool shouldSaveChanges = oldRedundantSet.ExistsInDb() && !(await oldRedundantSet.GetRelatedCollectionAsync(r => r.Redundancies, cancellationToken)).Any(r => r.FileId != id);
             if (shouldSaveChanges)
                 _ = dbContext.RedundantSets.Remove(oldRedundantSet.Entity);
@@ -723,7 +723,7 @@ namespace FsInfoCat.Local
             }
             cancellationToken.ThrowIfCancellationRequested();
             if (shouldSaveChanges)
-                await dbContext.SaveChangesAsync(cancellationToken);
+                _ = await dbContext.SaveChangesAsync(cancellationToken);
         }
 
         public async Task SetStatusDeleted(LocalDbContext dbContext, CancellationToken cancellationToken)
@@ -790,7 +790,7 @@ namespace FsInfoCat.Local
             EntityEntry<VideoPropertySet> oldVideoPropertySet = await dbEntry.GetRelatedTargetEntryAsync(f => f.VideoProperties, cancellationToken);
             Guid id = dbEntry.Entity.Id;
             cancellationToken.ThrowIfCancellationRequested();
-            await dbContext.SaveChangesAsync(cancellationToken);
+            _ = await dbContext.SaveChangesAsync(cancellationToken);
             bool shouldSaveChanges = oldRedundantSet.ExistsInDb() && !(await oldRedundantSet.GetRelatedCollectionAsync(r => r.Redundancies, cancellationToken)).Any(r => r.FileId != id);
             if (shouldSaveChanges)
                 _ = dbContext.RedundantSets.Remove(oldRedundantSet.Entity);
@@ -856,7 +856,7 @@ namespace FsInfoCat.Local
             }
             cancellationToken.ThrowIfCancellationRequested();
             if (shouldSaveChanges)
-                await dbContext.SaveChangesAsync(cancellationToken);
+                _ = await dbContext.SaveChangesAsync(cancellationToken);
             return true;
         }
 

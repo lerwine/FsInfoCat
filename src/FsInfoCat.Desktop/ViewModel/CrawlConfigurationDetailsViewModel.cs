@@ -115,13 +115,13 @@ namespace FsInfoCat.Desktop.ViewModel
             using IServiceScope scope = Services.CreateScope();
             using LocalDbContext dbContext = scope.ServiceProvider.GetRequiredService<LocalDbContext>();
             using DbContextEventReceiver eventReceiver = new(dbContext);
-            await DeleteCrawlJobLogFromDbContextAsync(targets.Entity, dbContext, statusListener);
+            _ = await DeleteCrawlJobLogFromDbContextAsync(targets.Entity, dbContext, statusListener);
             if (eventReceiver.SavedChangesOccurred && !eventReceiver.SaveChangesFailedOcurred)
                 await Dispatcher.InvokeAsync(() =>
                 {
                     targets.Item.EditCommand -= Item_EditCommand;
                     targets.Item.DeleteCommand -= Item_DeleteCommand;
-                    _backingLogs.Remove(targets.Item);
+                    _ = _backingLogs.Remove(targets.Item);
                     OnCrawlJobLogDeleted(targets.Item);
                 }, DispatcherPriority.Background, statusListener.CancellationToken);
         }
@@ -141,7 +141,7 @@ namespace FsInfoCat.Desktop.ViewModel
         protected virtual void OnCrawlJobLogDeleteCommand([DisallowNull] TCrawlJobLogItem item, object parameter)
         {
             if (ConfirmCrawlJobLogDelete(item, parameter))
-                DeleteCrawlJobLogAsync(item);
+                _ = DeleteCrawlJobLogAsync(item);
         }
 
         private void Item_DeleteCommand(object sender, Commands.CommandEventArgs e)

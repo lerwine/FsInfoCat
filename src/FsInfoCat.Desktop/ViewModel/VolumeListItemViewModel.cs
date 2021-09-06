@@ -181,7 +181,7 @@ namespace FsInfoCat.Desktop.ViewModel
                     Dispatcher.CheckInvoke(() => PersonalTagCount = Entity.PersonalTagCount);
                     break;
                 default:
-                    CheckEntityPropertyChanged(propertyName);
+                    _ = CheckEntityPropertyChanged(propertyName);
                     break;
             }
         }

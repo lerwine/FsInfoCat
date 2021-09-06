@@ -340,7 +340,7 @@ namespace FsInfoCat.Local
                         Volume = parentVolume.Entity,
                         Status = markNewAsCompleted ? DirectoryStatus.Complete : DirectoryStatus.Incomplete
                     };
-                    await dbContext.SaveChangesAsync(cancellationToken);
+                    _ = await dbContext.SaveChangesAsync(cancellationToken);
                 }
                 else
                 {
@@ -373,7 +373,7 @@ namespace FsInfoCat.Local
                         CreationTime = directoryInfo.CreationTime,
                         Status = markNewAsCompleted ? DirectoryStatus.Complete : DirectoryStatus.Incomplete
                     };
-                    await dbContext.SaveChangesAsync(cancellationToken);
+                    _ = await dbContext.SaveChangesAsync(cancellationToken);
                 }
                 else
                 {
@@ -387,7 +387,7 @@ namespace FsInfoCat.Local
                         {
                             foreach (DbFile f in files)
                                 f.Status = FileCorrelationStatus.Deleted;
-                            await dbContext.SaveChangesAsync(cancellationToken);
+                            _ = await dbContext.SaveChangesAsync(cancellationToken);
                         }
                     }
                     Subdirectory[] subdirectories = await (from d in dbContext.Subdirectories where d.ParentId == parentId && d.Name == name select d).ToArrayAsync(cancellationToken);
@@ -407,7 +407,7 @@ namespace FsInfoCat.Local
                             {
                                 foreach (Subdirectory d in subdirectories)
                                     await d.MarkBranchDeletedAsync(dbContext, cancellationToken);
-                                await dbContext.SaveChangesAsync(cancellationToken);
+                                _ = await dbContext.SaveChangesAsync(cancellationToken);
                             }
                             if (result.Status == DirectoryStatus.Deleted)
                                 result.Status = markNewAsCompleted ? DirectoryStatus.Complete : DirectoryStatus.Incomplete;
@@ -453,7 +453,7 @@ namespace FsInfoCat.Local
                 dbContext.SubdirectoryAccessErrors.RemoveRange(accessErrors);
             foreach (Subdirectory subdirectory in await dbEntry.GetRelatedCollectionAsync(d => d.SubDirectories, cancellationToken))
                 await MarkBranchIncompleteAsync(dbContext.Entry(subdirectory), cancellationToken);
-            await dbContext.SaveChangesAsync(cancellationToken);
+            _ = await dbContext.SaveChangesAsync(cancellationToken);
         }
 
         public async Task MarkBranchIncompleteAsync(LocalDbContext dbContext, CancellationToken cancellationToken)
@@ -513,7 +513,7 @@ namespace FsInfoCat.Local
                     await subdirectory.MarkBranchDeletedAsync(dbContext, cancellationToken);
                 foreach (DbFile file in await dbEntry.GetRelatedCollectionAsync(d => d.Files, cancellationToken))
                     await file.SetStatusDeleted(dbContext, cancellationToken);
-                await dbContext.SaveChangesAsync(cancellationToken);
+                _ = await dbContext.SaveChangesAsync(cancellationToken);
             }
         }
 
@@ -575,7 +575,7 @@ namespace FsInfoCat.Local
                 dbContext.SubdirectoryAccessErrors.RemoveRange(accessErrors);
             Guid id = Id;
             cancellationToken.ThrowIfCancellationRequested();
-            await dbContext.SaveChangesAsync(cancellationToken);
+            _ = await dbContext.SaveChangesAsync(cancellationToken);
             cancellationToken.ThrowIfCancellationRequested();
             return true;
         }

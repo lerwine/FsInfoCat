@@ -134,11 +134,11 @@ namespace FsInfoCat.UnitTests
                         (Source, Content, NavigationState, SandboxExternalContent) = current;
                         _backwardHistory.Push((Source, Content, NavigationState, SandboxExternalContent));
                         if (Source is not null || Content is not null)
-                            _forwardHistory.Pop();
+                            _ = _forwardHistory.Pop();
                     }
                     return false;
                 });
-                result.ContinueWith(task => Monitor.Exit(_backwardHistory));
+                _ = result.ContinueWith(task => Monitor.Exit(_backwardHistory));
                 return result.Result;
             }
 
@@ -175,11 +175,11 @@ namespace FsInfoCat.UnitTests
                         (Source, Content, NavigationState, SandboxExternalContent) = current;
                         _forwardHistory.Push((Source, Content, NavigationState, SandboxExternalContent));
                         if (Source is not null || Content is not null)
-                            _backwardHistory.Pop();
+                            _ = _backwardHistory.Pop();
                     }
                     return false;
                 });
-                result.ContinueWith(task => Monitor.Exit(_backwardHistory));
+                _ = result.ContinueWith(task => Monitor.Exit(_backwardHistory));
                 return result.Result;
             }
 
@@ -210,7 +210,7 @@ namespace FsInfoCat.UnitTests
                     (Source, Content, NavigationState, SandboxExternalContent) = current;
                     return false;
                 });
-                result.ContinueWith(task => Monitor.Exit(_backwardHistory));
+                _ = result.ContinueWith(task => Monitor.Exit(_backwardHistory));
                 return result.Result;
             }
 
@@ -241,7 +241,7 @@ namespace FsInfoCat.UnitTests
                     (Source, Content, NavigationState, SandboxExternalContent) = current;
                     return false;
                 });
-                result.ContinueWith(task => Monitor.Exit(_backwardHistory));
+                _ = result.ContinueWith(task => Monitor.Exit(_backwardHistory));
                 return result.Result;
             }
 
@@ -272,7 +272,7 @@ namespace FsInfoCat.UnitTests
                     (Source, Content, NavigationState, SandboxExternalContent) = current;
                     return false;
                 });
-                result.ContinueWith(task => Monitor.Exit(_backwardHistory));
+                _ = result.ContinueWith(task => Monitor.Exit(_backwardHistory));
                 return result.Result;
             }
 
@@ -304,7 +304,7 @@ namespace FsInfoCat.UnitTests
                     (Source, Content, NavigationState, SandboxExternalContent) = current;
                     return false;
                 });
-                result.ContinueWith(task => Monitor.Exit(_backwardHistory));
+                _ = result.ContinueWith(task => Monitor.Exit(_backwardHistory));
                 return result.Result;
             }
 
@@ -336,7 +336,7 @@ namespace FsInfoCat.UnitTests
                     (Source, Content, NavigationState, SandboxExternalContent) = current;
                     return false;
                 });
-                result.ContinueWith(task => Monitor.Exit(_backwardHistory));
+                _ = result.ContinueWith(task => Monitor.Exit(_backwardHistory));
                 return result.Result;
             }
 

@@ -75,7 +75,7 @@ namespace FsInfoCat.Desktop.ViewModel
             using IServiceScope scope = Services.CreateScope();
             using LocalDbContext dbContext = scope.ServiceProvider.GetRequiredService<LocalDbContext>();
             IQueryable<TEntity> items = GetQueryableListing(options, dbContext, statusListener);
-            await Dispatcher.InvokeAsync(ClearItems, DispatcherPriority.Background, statusListener.CancellationToken);
+            _ = await Dispatcher.InvokeAsync(ClearItems, DispatcherPriority.Background, statusListener.CancellationToken);
             await items.ForEachAsync(async item => await AddItemAsync(item, statusListener), statusListener.CancellationToken);
         }
 
@@ -84,7 +84,7 @@ namespace FsInfoCat.Desktop.ViewModel
             using IServiceScope scope = Services.CreateScope();
             using LocalDbContext dbContext = scope.ServiceProvider.GetRequiredService<LocalDbContext>();
             using DbContextEventReceiver eventReceiver = new(dbContext);
-            await DeleteEntityFromDbContextAsync(targets.Entity, dbContext, statusListener);
+            _ = await DeleteEntityFromDbContextAsync(targets.Entity, dbContext, statusListener);
             if (eventReceiver.SavedChangesOccurred && !eventReceiver.SaveChangesFailedOcurred)
                 await Dispatcher.InvokeAsync(() =>
                 {
