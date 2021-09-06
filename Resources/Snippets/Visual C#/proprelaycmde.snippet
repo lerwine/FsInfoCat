@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
   <CodeSnippet Format="1.0.0">
     <Header>
@@ -18,78 +18,46 @@
           <Default>MyButtonClick</Default>
         </Literal>
         <Literal>
-          <ID>event</ID>
-          <ToolTip>Event Name</ToolTip>
-          <Default>MyButtonClicked</Default>
-        </Literal>
-        <Literal>
           <ID>ownerclass</ID>
           <Function>ClassName()</Function>
           <ToolTip>The owning class of this Property. Typically the class that it is declared in.</ToolTip>
-        </Literal>
-        <Literal>
-          <ID>summary</ID>
-          <ToolTip>The summary description of this property.</ToolTip>
-          <Default>Gets the $name$ command object.</Default>
-        </Literal>
-        <Literal>
-          <ID>returnValue</ID>
-          <ToolTip>Describes the value of this property.</ToolTip>
-          <Default>The &lt;see cref=&quot;System.Windows.Input.ICommand&quot;/&gt; that implements the $command$ command.</Default>
-        </Literal>
-        <Literal>
-          <ID>eventHandler</ID>
-          <ToolTip>Describes the value of this property.</ToolTip>
-          <Default><![CDATA[EventHandler<Commands.CommandEventArgs>]]></Default>
-        </Literal>
-        <Literal>
-          <ID>methodAccess</ID>
-          <ToolTip>Access of the event handler method.</ToolTip>
-          <Default>protected virtual</Default>
         </Literal>
       </Declarations>
       <Code Language="csharp"><![CDATA[#region $command$ Command Property Members
 
 /// <summary>
-/// Occurs when the <see cref="$command$">$command$ Command</see> is invoked.
+/// Occurs when the <see cref="$command$"/> is invoked.
 /// </summary>
-public event $eventHandler$ $event$;
+public event EventHandler<Commands.CommandEventArgs> $command$Command;
 
-private static readonly DependencyPropertyKey $command$PropertyKey = DependencyProperty.RegisterReadOnly(nameof($command$),
-    typeof(Commands.RelayCommand), typeof($ownerclass$), new PropertyMetadata(null));
+private static readonly DependencyPropertyKey $command$PropertyKey = DependencyProperty.RegisterReadOnly(nameof($command$), typeof(Commands.RelayCommand), typeof($ownerclass$));
 
 /// <summary>
 /// Identifies the <see cref="$command$"/> dependency property.
 /// </summary>
 public static readonly DependencyProperty $command$Property = $command$PropertyKey.DependencyProperty;
 
-/// <summary>
-/// $summary$
-/// </summary>
-/// <value>$returnValue$</value>
 public Commands.RelayCommand $command$ => (Commands.RelayCommand)GetValue($command$Property);
 
 /// <summary>
 /// Called when the $command$ event is raised by <see cref="$command$" />.
 /// </summary>
 /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="$command$" />.</param>
-private void Raise$event$(object parameter)
+protected void Raise$command$Command(object parameter) => $command$Command?.Invoke(this, new(parameter));
 {
-  try { On$event$(parameter); }
-  finally { $event$?.Invoke(this, new(parameter)); }
+  try { On$command$Command(parameter); }
+  finally { $command$Command?.Invoke(this, new(parameter)); }
 }
 
 /// <summary>
 /// Called when the <see cref="$command$">$command$ Command</see> is invoked.
 /// </summary>
 /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="$command$" />.</param>
-$methodAccess$ void On$event$(object parameter)
+protected virtual void On$command$Command(object parameter)
 {
-  // TODO: Implement On$event$ Logic
+  // TODO: Implement On$command$Command Logic
+  // TODO: Add initialization code to constructor: $end$SetValue($command$PropertyKey, new Commands.RelayCommand(Raise$command$Command));
 }
-
-/* TODO: Add $command$ to initialization code to constructor
-   SetValue($command$PropertyKey, new Commands.RelayCommand(Raise$event$));$end$ */
 
 #endregion]]></Code>
     </Snippet>

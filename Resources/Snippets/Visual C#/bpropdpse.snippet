@@ -1,10 +1,10 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8"?>
 <CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
   <CodeSnippet Format="1.0.0">
     <Header>
-      <Title>Define a string DependencyProperty with a &quot;DependencyPropertyChanged&quot; event.</Title>
-      <Shortcut>propdpsce</Shortcut>
-      <Description>Code snippet for a string property using DependencyProperty as the backing store with a &quot;DependencyPropertyChanged&quot; event.</Description>
+      <Title>Define a string DependencyProperty with a "DependencyPropertyChanged" event.</Title>
+      <Shortcut>bpropdpse</Shortcut>
+      <Description>Code snippet for a string property using DependencyProperty as the backing store with a "DependencyPropertyChanged" event.</Description>
       <Author>Leonard T. Erwine</Author>
       <SnippetTypes>
         <SnippetType>Expansion</SnippetType>
@@ -33,9 +33,12 @@ public event DependencyPropertyChangedEventHandler $property$PropertyChanged;
 /// <summary>
 /// Identifies the <see cref="$property$"/> dependency property.
 /// </summary>
-public static readonly DependencyProperty $property$Property = DependencyProperty.Register(nameof($property$), typeof(string), typeof($ownerclass$),
-        new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as $ownerclass$)?.Raise$property$PropertyChanged(e),
-        NonWhiteSpaceOrEmptyStringCoersion.Default.ToCoerceValueCallback()));
+public static readonly DependencyProperty $property$Property = DependencyPropertyBuilder<$ownerclass$, string>
+    .Register(nameof($property$))
+    .DefaultValue("")
+    .OnChanged((d, e) => (d as $ownerclass$)?.Raise$property$PropertyChanged(e))
+    .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default)
+    .AsReadWrite();
 
 public string $property$ { get => GetValue($property$Property) as string; set => SetValue($property$Property, value); }
 
@@ -43,23 +46,9 @@ public string $property$ { get => GetValue($property$Property) as string; set =>
 /// Called when the <see cref="PropertyChangedCallback">PropertyChanged</see> event on <see cref="$property$Property"/> is raised.
 /// </summary>
 /// <param name="args">The Event data that is issued by the event on <see cref="$property$Property"/> that tracks changes to its effective value.</param>
-protected void Raise$property$PropertyChanged(DependencyPropertyChangedEventArgs args)
-{
-    try { On$property$PropertyChanged(args.OldValue as string, args.NewValue as string); }
-    finally { $property$PropertyChanged?.Invoke(this, args); }
-}
+protected void Raise$property$PropertyChanged(DependencyPropertyChangedEventArgs args) => $property$PropertyChanged?.Invoke(this, args);
 
-/// <summary>
-/// Called when the value of the <see cref="$property$"/> dependency property has changed.
-/// </summary>
-/// <param name="oldValue">The previous value of the <see cref="$property$"/> property.</param>
-/// <param name="newValue">The new value of the <see cref="$property$"/> property.</param>
-protected virtual void On$property$PropertyChanged(string oldValue, string newValue)
-{
-    $end$// TODO: Implement On$property$PropertyChanged Logic
-}
-
-#endregion]]></Code>
+#endregion$end$]]></Code>
     </Snippet>
   </CodeSnippet>
 </CodeSnippets>

@@ -1,10 +1,10 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8"?>
 <CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
   <CodeSnippet Format="1.0.0">
     <Header>
-      <Title>Define a read-only DependencyProperty with a protected &quot;OnPropertyChanged&quot; method.</Title>
-      <Shortcut>propdproc</Shortcut>
-      <Description>Code snippet for a read-only property using DependencyProperty as the backing store with a protected &quot;OnPropertyChanged&quot; method.</Description>
+      <Title>Define an attached DependencyProperty with an "OnPropertyChanged" method.</Title>
+      <Shortcut>propac</Shortcut>
+      <Description>Code snippet for an attached property using DependencyProperty as the backing store with an "OnPropertyChanged" method.</Description>
       <Author>Leonard T. Erwine</Author>
       <SnippetTypes>
         <SnippetType>Expansion</SnippetType>
@@ -33,24 +33,30 @@
           <Default>null</Default>
         </Literal>
       </Declarations>
-      <Code Language="csharp"><![CDATA[#region $property$ Property Members
+      <Code Language="csharp"><![CDATA[#region $property$ Attached Property Members
 
-private static readonly DependencyPropertyKey $property$PropertyKey = DependencyProperty.RegisterReadOnly(nameof($property$), typeof($type$), typeof($ownerclass$),
-        new PropertyMetadata($defaultvalue$, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as $ownerclass$).On$property$PropertyChanged(($type$)e.OldValue, ($type$)e.NewValue)));
+/// <summary>
+/// The name of the <see cref="$property$Property">$property$</see> attached dependency property.
+/// </summary>
+public const string PropertyName_$property$ = "$property$";
 
 /// <summary>
 /// Identifies the <see cref="$property$"/> dependency property.
 /// </summary>
-public static readonly DependencyProperty $property$Property = $property$PropertyKey.DependencyProperty;
+public static readonly DependencyProperty $property$Property = DependencyProperty.RegisterAttached(nameof($property$), typeof($type$), typeof($ownerclass$),
+        new PropertyMetadata($defaultvalue$, (DependencyObject d, DependencyPropertyChangedEventArgs e) => On$property$PropertyChanged(d, ($type$)e.OldValue, ($type$)e.NewValue)));
 
-public $type$ $property$ { get => ($type$)GetValue($property$Property); private set => SetValue($property$PropertyKey, value); }
+public static $type$ Get$property$([DisallowNull] DependencyObject obj) => ($type$)obj.GetValue($property$Property);
+
+public static void Set$property$([DisallowNull] DependencyObject obj, $type$ value) => obj.SetValue($property$Property, value);
 
 /// <summary>
 /// Called when the value of the <see cref="$property$"/> dependency property has changed.
 /// </summary>
+/// <param name="obj">The object whose attached property value has changed.</param>
 /// <param name="oldValue">The previous value of the <see cref="$property$"/> property.</param>
 /// <param name="newValue">The new value of the <see cref="$property$"/> property.</param>
-protected virtual void On$property$PropertyChanged($type$ oldValue, $type$ newValue)
+private static void On$property$PropertyChanged(DependencyObject obj, $type$ oldValue, $type$ newValue)
 {
     $end$// TODO: Implement On$property$PropertyChanged Logic
 }

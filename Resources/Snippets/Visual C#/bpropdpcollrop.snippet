@@ -1,9 +1,9 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8"?>
 <CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
   <CodeSnippet Format="1.0.0">
     <Header>
       <Title>Define an inheritable generic read-only collection DependencyProperty</Title>
-      <Shortcut>propdpcollrop</Shortcut>
+      <Shortcut>bpropdpcollrop</Shortcut>
       <Description>Code snippet for a generic read-only collection, writable by inheriting classes, property using DependencyProperty as the backing store</Description>
       <Author>Leonard T. Erwine</Author>
       <SnippetTypes>
@@ -30,9 +30,13 @@
         </Declarations>
       <Code Language="csharp"><![CDATA[#region $property$ Property Members
 
-private static readonly DependencyPropertyKey Backing$property$PropertyKey = DependencyProperty.RegisterReadOnly(nameof(Backing$property$), typeof(ObservableCollection<$itemType$>), typeof($ownerclass$));
+private static readonly DependencyPropertyKey Backing$property$PropertyKey = DependencyPropertyBuilder<$ownerclass$, ObservableCollection<$itemType$>>
+    .Register(nameof(Backing$property$))
+    .AsReadOnly();
 
-private static readonly DependencyPropertyKey $property$PropertyKey = DependencyProperty.RegisterReadOnly(nameof($property$), typeof(ReadOnlyObservableCollection<$itemType$>), typeof($ownerclass$));
+private static readonly DependencyPropertyKey $property$PropertyKey = DependencyPropertyBuilder<$ownerclass$, ReadOnlyObservableCollection<$itemType$>>
+    .Register(nameof($property$))
+    .AsReadOnly();
 
 /// <summary>
 /// Identifies the <see cref="Backing$property$"/> dependency property.

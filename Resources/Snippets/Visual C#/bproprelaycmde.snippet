@@ -1,10 +1,10 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8"?>
 <CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
   <CodeSnippet Format="1.0.0">
     <Header>
-      <Title>Define a relay command property</Title>
-      <Shortcut>proprelaycmd</Shortcut>
-      <Description>Code snippet for a relay command property.</Description>
+      <Title>Define a relay command property with an event</Title>
+      <Shortcut>bproprelaycmde</Shortcut>
+      <Description>Code snippet for a relay command property with an event.</Description>
       <Author>Leonard T. Erwine</Author>
       <SnippetTypes>
         <SnippetType>Expansion</SnippetType>
@@ -15,7 +15,7 @@
         <Literal>
           <ID>command</ID>
           <ToolTip>Command Name</ToolTip>
-          <Default>MyClick</Default>
+          <Default>MyButtonClick</Default>
         </Literal>
         <Literal>
           <ID>ownerclass</ID>
@@ -25,7 +25,14 @@
       </Declarations>
       <Code Language="csharp"><![CDATA[#region $command$ Command Property Members
 
-private static readonly DependencyPropertyKey $command$PropertyKey = DependencyProperty.RegisterReadOnly(nameof($command$), typeof(Commands.RelayCommand), typeof($ownerclass$));
+/// <summary>
+/// Occurs when the <see cref="$command$"/> is invoked.
+/// </summary>
+public event EventHandler<Commands.CommandEventArgs> $command$Command;
+
+private static readonly DependencyPropertyKey $command$PropertyKey = DependencyPropertyBuilder<$ownerclass$, Commands.RelayCommand>
+    .Register(nameof($command$))
+    .AsReadOnly();
 
 /// <summary>
 /// Identifies the <see cref="$command$"/> dependency property.
@@ -35,13 +42,23 @@ public static readonly DependencyProperty $command$Property = $command$PropertyK
 public Commands.RelayCommand $command$ => (Commands.RelayCommand)GetValue($command$Property);
 
 /// <summary>
+/// Called when the $command$ event is raised by <see cref="$command$" />.
+/// </summary>
+/// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="$command$" />.</param>
+protected void Raise$command$Command(object parameter) => $command$Command?.Invoke(this, new(parameter));
+{
+  try { On$command$Command(parameter); }
+  finally { $command$Command?.Invoke(this, new(parameter)); }
+}
+
+/// <summary>
 /// Called when the <see cref="$command$">$command$ Command</see> is invoked.
 /// </summary>
 /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="$command$" />.</param>
 protected virtual void On$command$Command(object parameter)
 {
   // TODO: Implement On$command$Command Logic
-  // TODO: Add initialization code to constructor: $end$SetValue($command$PropertyKey, new Commands.RelayCommand(On$command$Command));
+  // TODO: Add initialization code to constructor: $end$SetValue($command$PropertyKey, new Commands.RelayCommand(Raise$command$Command));
 }
 
 #endregion]]></Code>

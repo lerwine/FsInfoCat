@@ -1,10 +1,10 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8"?>
 <CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
   <CodeSnippet Format="1.0.0">
     <Header>
-      <Title>Define a generic collection DependencyProperty</Title>
-      <Shortcut>propdpcoll</Shortcut>
-      <Description>Code snippet for a generic collection property using DependencyProperty as the backing store</Description>
+      <Title>Define a read-only string DependencyProperty.</Title>
+      <Shortcut>bpropdpsro</Shortcut>
+      <Description>Code snippet for a read-only string property using DependencyProperty as the backing store.</Description>
       <Author>Leonard T. Erwine</Author>
       <SnippetTypes>
         <SnippetType>Expansion</SnippetType>
@@ -12,11 +12,6 @@
     </Header>
     <Snippet>
       <Declarations>
-        <Literal>
-          <ID>itemType</ID>
-          <ToolTip>Collection element type</ToolTip>
-          <Default>ElementType</Default>
-        </Literal>
         <Literal>
           <ID>property</ID>
           <ToolTip>Property Name</ToolTip>
@@ -30,17 +25,20 @@
         </Declarations>
       <Code Language="csharp"><![CDATA[#region $property$ Property Members
 
-private static readonly DependencyPropertyKey $property$PropertyKey = DependencyProperty.RegisterReadOnly(nameof($property$), typeof(ObservableCollection<$itemType$>), typeof($ownerclass$));
+private static readonly DependencyPropertyKey $property$PropertyKey = DependencyPropertyBuilder<$ownerclass$, string>
+    .Register(nameof($property$))
+    .DefaultValue("")
+    .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default)
+    .AsReadOnly();
 
 /// <summary>
 /// Identifies the <see cref="$property$"/> dependency property.
 /// </summary>
 public static readonly DependencyProperty $property$Property = $property$PropertyKey.DependencyProperty;
 
-public ObservableCollection<$itemType$> $property$ { get => (ObservableCollection<$itemType$>)GetValue($property$Property); private set => SetValue($property$PropertyKey, value); }
+public string $property$ { get => GetValue($property$Property) as string; private set => SetValue($property$PropertyKey, value); }
 
-#endregion
-// TODO: Add to initialization code to constructor: $end$$property$ = new();]]></Code>
+#endregion$end$]]></Code>
     </Snippet>
   </CodeSnippet>
 </CodeSnippets>

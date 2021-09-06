@@ -1,10 +1,10 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8"?>
 <CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
   <CodeSnippet Format="1.0.0">
     <Header>
-      <Title>Define a read-only DependencyProperty.</Title>
-      <Shortcut>propdpro</Shortcut>
-      <Description>Code snippet for a read-only property using DependencyProperty as the backing store.</Description>
+      <Title>Define an attached read-only DependencyProperty.</Title>
+      <Shortcut>proparo</Shortcut>
+      <Description>Code snippet for an attached read-only property using DependencyProperty as the backing store.</Description>
       <Author>Leonard T. Erwine</Author>
       <SnippetTypes>
         <SnippetType>Expansion</SnippetType>
@@ -33,9 +33,14 @@
           <Default>null</Default>
         </Literal>
         </Declarations>
-      <Code Language="csharp"><![CDATA[#region $property$ Property Members
+      <Code Language="csharp"><![CDATA[#region $property$ Attached Property Members
 
-private static readonly DependencyPropertyKey $property$PropertyKey = DependencyProperty.RegisterReadOnly(nameof($property$), typeof($type$), typeof($ownerclass$),
+/// <summary>
+/// The name of the <see cref="$property$Property">$property$</see> attached dependency property.
+/// </summary>
+public const string PropertyName_$property$ = "$property$";
+
+private static readonly DependencyPropertyKey $property$PropertyKey = DependencyProperty.RegisterAttachedReadOnly(nameof($property$), typeof($type$), typeof($ownerclass$),
         new PropertyMetadata($defaultvalue$));
 
 /// <summary>
@@ -43,7 +48,9 @@ private static readonly DependencyPropertyKey $property$PropertyKey = Dependency
 /// </summary>
 public static readonly DependencyProperty $property$Property = $property$PropertyKey.DependencyProperty;
 
-public $type$ $property$ { get => ($type$)GetValue($property$Property); private set => SetValue($property$PropertyKey, value); }
+public static $type$ Get$property$([DisallowNull] DependencyObject obj) => ($type$)obj.GetValue($property$Property);
+
+private static void Set$property$([DisallowNull] DependencyObject obj, $type$ value) => obj.SetValue($property$PropertyKey, value);
 
 #endregion$end$]]></Code>
     </Snippet>

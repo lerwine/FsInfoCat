@@ -1,10 +1,10 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8"?>
 <CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
   <CodeSnippet Format="1.0.0">
     <Header>
-      <Title>Define a string DependencyProperty with a protected &quot;OnPropertyChanged&quot; method.</Title>
-      <Shortcut>propdpsc</Shortcut>
-      <Description>Code snippet for a string property using DependencyProperty as the backing store with a protected &quot;OnPropertyChanged&quot; method.</Description>
+      <Title>Define a DependencyProperty with a protected "OnPropertyChanged" method.</Title>
+      <Shortcut>bpropdpc</Shortcut>
+      <Description>Code snippet for a property using DependencyProperty as the backing store with a protected "OnPropertyChanged" method.</Description>
       <Author>Leonard T. Erwine</Author>
       <SnippetTypes>
         <SnippetType>Expansion</SnippetType>
@@ -12,6 +12,11 @@
     </Header>
     <Snippet>
       <Declarations>
+        <Literal>
+          <ID>type</ID>
+          <ToolTip>Property Type</ToolTip>
+          <Default>PropertyType</Default>
+        </Literal>
         <Literal>
           <ID>property</ID>
           <ToolTip>Property Name</ToolTip>
@@ -22,24 +27,31 @@
           <Function>ClassName()</Function>
           <ToolTip>The owning class of this Property. Typically the class that it is declared in.</ToolTip>
         </Literal>
+        <Literal>
+          <ID>defaultvalue</ID>
+          <ToolTip>The default value for this property.</ToolTip>
+          <Default>null</Default>
+        </Literal>
       </Declarations>
       <Code Language="csharp"><![CDATA[#region $property$ Property Members
 
 /// <summary>
 /// Identifies the <see cref="$property$"/> dependency property.
 /// </summary>
-public static readonly DependencyProperty $property$Property = DependencyProperty.Register(nameof($property$), typeof(string), typeof($ownerclass$),
-        new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as $ownerclass$)?.On$property$PropertyChanged(e.OldValue as string, e.NewValue as string),
-        NonWhiteSpaceOrEmptyStringCoersion.Default.ToCoerceValueCallback()));
+public static readonly DependencyProperty $property$Property = DependencyPropertyBuilder<$ownerclass$, $type$>
+    .Register(nameof($property$))
+    .DefaultValue($defaultvalue$)
+    .OnChanged((d, oldValue, newValue) => (d as $ownerclass$)?.On$property$PropertyChanged(oldValue, newValue))
+    .AsReadWrite();
 
-public string $property$ { get => GetValue($property$Property) as string; set => SetValue($property$Property, value); }
-
+public $type$ $property$ { get => ($type$)GetValue($property$Property); set => SetValue($property$Property, value); }
+  
 /// <summary>
 /// Called when the value of the <see cref="$property$"/> dependency property has changed.
 /// </summary>
 /// <param name="oldValue">The previous value of the <see cref="$property$"/> property.</param>
 /// <param name="newValue">The new value of the <see cref="$property$"/> property.</param>
-protected virtual void On$property$PropertyChanged(string oldValue, string newValue)
+protected virtual void On$property$PropertyChanged($type$ oldValue, $type$ newValue)
 {
     $end$// TODO: Implement On$property$PropertyChanged Logic
 }

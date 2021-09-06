@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <Title>Define an attached generic read-only collection DependencyProperty</Title>
+      <Shortcut>propacollro</Shortcut>
+      <Description>Code snippet for an attached generic read-only collection property using a read-only field as the backing store</Description>
+      <Author>Leonard T. Erwine</Author>
+      <SnippetTypes>
+        <SnippetType>Expansion</SnippetType>
+      </SnippetTypes>
+    </Header>
+    <Snippet>
+      <Declarations>
+        <Literal>
+          <ID>itemType</ID>
+          <ToolTip>Collection element type</ToolTip>
+          <Default>ElementType</Default>
+        </Literal>
+        <Literal>
+          <ID>property</ID>
+          <ToolTip>Property Name</ToolTip>
+          <Default>MyProperty</Default>
+        </Literal>
+        <Literal>
+          <ID>ownerclass</ID>
+          <Function>ClassName()</Function>
+          <ToolTip>The owning class of this Property. Typically the class that it is declared in.</ToolTip>
+        </Literal>
+        </Declarations>
+      <Code Language="csharp"><![CDATA[#region $property$ Attached Property Members
+
+/// <summary>
+/// The name of the <see cref="$property$Property">$property$</see> attached dependency property.
+/// </summary>
+public const string PropertyName_$property$ = "$property$";
+
+private static readonly DependencyPropertyKey Backing$property$PropertyKey = DependencyProperty.RegisterAttachedReadOnly(nameof(Backing$property$), typeof(ObservableCollection<$itemType$>), typeof($ownerclass$),
+new PropertyMetaData((DependencyObject d, DependencyPropertyChangedEventArgs e) =>
+{
+    if (e.NewValue is ObservableCollection<$itemType$> newValue)
+        d.SetValue($property$PropertyKey, new ReadOnlyObservableCollection<$itemType$>(newValue));
+    else
+        d.SetValue($property$PropertyKey, null);
+});
+
+private static readonly DependencyPropertyKey $property$PropertyKey = DependencyProperty.RegisterAttachedReadOnly(nameof($property$), typeof(ReadOnlyObservableCollection<$itemType$>), typeof($ownerclass$));
+
+/// <summary>
+/// Identifies the <see cref="Backing$property$"/> dependency property.
+/// </summary>
+private static readonly DependencyProperty Backing$property$Property = Backing$property$PropertyKey.DependencyProperty;
+
+/// <summary>
+/// Identifies the <see cref="$property$"/> dependency property.
+/// </summary>
+public static readonly DependencyProperty $property$Property = $property$PropertyKey.DependencyProperty;
+
+private ObservableCollection<$itemType$> Backing$property$ => (ObservableCollection<$itemType$>)GetValue(Backing$property$Property);
+
+private static ObservableCollection<$itemType$> GetBacking$property$([DisallowNull] DependencyObject obj) => obj.GetValue(Backing$property$Property) as ObservableCollection<$itemType$>;
+
+private static void SetBacking$property$([DisallowNull] DependencyObject obj, ObservableCollection<$itemType$> value) => obj.SetValue(Backing$property$PropertyKey, value);
+
+public static ReadOnlyObservableCollection<$itemType$> Get$property$([DisallowNull] DependencyObject obj) => obj.GetValue($property$Property) as ReadOnlyObservableCollection<$itemType$>;
+
+#endregion#$end$]]></Code>
+    </Snippet>
+  </CodeSnippet>
+</CodeSnippets>

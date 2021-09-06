@@ -1,10 +1,10 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8"?>
 <CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
   <CodeSnippet Format="1.0.0">
     <Header>
-      <Title>Define a read-only string DependencyProperty.</Title>
-      <Shortcut>propdpsro</Shortcut>
-      <Description>Code snippet for a read-only string property using DependencyProperty as the backing store.</Description>
+      <Title>Define an attached read-only string DependencyProperty.</Title>
+      <Shortcut>propasro</Shortcut>
+      <Description>Code snippet for an attached read-only string property using DependencyProperty as the backing store.</Description>
       <Author>Leonard T. Erwine</Author>
       <SnippetTypes>
         <SnippetType>Expansion</SnippetType>
@@ -23,9 +23,14 @@
           <ToolTip>The owning class of this Property. Typically the class that it is declared in.</ToolTip>
         </Literal>
         </Declarations>
-      <Code Language="csharp"><![CDATA[#region $property$ Property Members
+      <Code Language="csharp"><![CDATA[#region $property$ Attached Property Members
 
-private static readonly DependencyPropertyKey $property$PropertyKey = DependencyProperty.RegisterReadOnly(nameof($property$), typeof(string), typeof($ownerclass$),
+/// <summary>
+/// The name of the <see cref="$property$Property">$property$</see> attached dependency property.
+/// </summary>
+public const string PropertyName_$property$ = "$property$";
+
+private static readonly DependencyPropertyKey $property$PropertyKey = DependencyProperty.RegisterAttachedReadOnly(nameof($property$), typeof(string), typeof($ownerclass$),
     new PropertyMetadata("") { CoerceValueCallback = NonWhiteSpaceOrEmptyStringCoersion.Default.ToCoerceValueCallback() });
 
 /// <summary>
@@ -33,7 +38,9 @@ private static readonly DependencyPropertyKey $property$PropertyKey = Dependency
 /// </summary>
 public static readonly DependencyProperty $property$Property = $property$PropertyKey.DependencyProperty;
 
-public string $property$ { get => GetValue($property$Property) as string; private set => SetValue($property$PropertyKey, value); }
+public static string Get$property$([DisallowNull] DependencyObject obj) => obj.GetValue($property$Property) as string;
+
+private static void Set$property$([DisallowNull] DependencyObject obj, string value) => obj.SetValue($property$PropertyKey, value);
 
 #endregion$end$]]></Code>
     </Snippet>

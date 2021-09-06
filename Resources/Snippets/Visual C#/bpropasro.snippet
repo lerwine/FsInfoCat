@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <Title>Define an attached read-only string DependencyProperty.</Title>
+      <Shortcut>bpropasro</Shortcut>
+      <Description>Code snippet for an attached read-only string property using DependencyProperty as the backing store.</Description>
+      <Author>Leonard T. Erwine</Author>
+      <SnippetTypes>
+        <SnippetType>Expansion</SnippetType>
+      </SnippetTypes>
+    </Header>
+    <Snippet>
+      <Declarations>
+        <Literal>
+          <ID>property</ID>
+          <ToolTip>Property Name</ToolTip>
+          <Default>MyProperty</Default>
+        </Literal>
+        <Literal>
+          <ID>ownerclass</ID>
+          <Function>ClassName()</Function>
+          <ToolTip>The owning class of this Property. Typically the class that it is declared in.</ToolTip>
+        </Literal>
+        </Declarations>
+      <Code Language="csharp"><![CDATA[#region $property$ Attached Property Members
+
+/// <summary>
+/// The name of the <see cref="$property$Property">$property$</see> attached dependency property.
+/// </summary>
+public const string PropertyName_$property$ = "$property$";
+
+private static readonly DependencyPropertyKey $property$PropertyKey = DependencyPropertyBuilder<$ownerclass$, string>
+    .RegisterAttached(nameof($property$))
+    .DefaultValue("")
+    .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default)
+    .AsReadOnly();
+
+/// <summary>
+/// Identifies the <see cref="$property$"/> dependency property.
+/// </summary>
+public static readonly DependencyProperty $property$Property = $property$PropertyKey.DependencyProperty;
+
+public static string Get$property$([DisallowNull] DependencyObject obj) => obj.GetValue($property$Property) as string;
+
+private static void Set$property$([DisallowNull] DependencyObject obj, string value) => obj.SetValue($property$PropertyKey, value);
+
+#endregion$end$]]></Code>
+    </Snippet>
+  </CodeSnippet>
+</CodeSnippets>

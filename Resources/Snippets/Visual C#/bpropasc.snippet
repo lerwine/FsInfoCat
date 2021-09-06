@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <Title>Define an attached string DependencyProperty with an "OnPropertyChanged" method.</Title>
+      <Shortcut>bpropasc</Shortcut>
+      <Description>Code snippet for an attached read-only string property using DependencyProperty as the backing store with an "OnPropertyChanged" method.</Description>
+      <Author>Leonard T. Erwine</Author>
+      <SnippetTypes>
+        <SnippetType>Expansion</SnippetType>
+      </SnippetTypes>
+    </Header>
+    <Snippet>
+      <Declarations>
+        <Literal>
+          <ID>property</ID>
+          <ToolTip>Property Name</ToolTip>
+          <Default>MyProperty</Default>
+        </Literal>
+        <Literal>
+          <ID>ownerclass</ID>
+          <Function>ClassName()</Function>
+          <ToolTip>The owning class of this Property. Typically the class that it is declared in.</ToolTip>
+        </Literal>
+      </Declarations>
+      <Code Language="csharp"><![CDATA[#region $property$ Attached Property Members
+
+/// <summary>
+/// The name of the <see cref="$property$Property">$property$</see> attached dependency property.
+/// </summary>
+public const string PropertyName_$property$ = "$property$";
+
+private static readonly DependencyPropertyKey $property$PropertyKey = DependencyPropertyBuilder<$ownerclass$, string>
+    .RegisterAttached(nameof($property$))
+    .DefaultValue("")
+    .OnChanged((d, oldValue, newValue) => On$property$PropertyChanged(d, oldValue, newValue))
+    .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default)
+    .AsReadWrite();
+
+/// <summary>
+/// Identifies the <c>$property$</c> dependency property.
+/// </summary>
+public static readonly DependencyProperty $property$Property = $property$PropertyKey.DependencyProperty;
+
+public string Get$property$([DisallowNull] DependencyObject obj) => GetValue($property$Property) as string;
+
+private void Set$property$([DisallowNull] DependencyObject obj, string value) => SetValue($property$PropertyKey, value);
+
+/// <summary>
+/// Called when the value of the <see cref="$property$Property">$property$</see> dependency property has changed.
+/// </summary>
+/// <param name="obj">The object whose attached property value has changed.</param>
+/// <param name="oldValue">The previous value of the <see cref="$property$Property">$property$</see> property.</param>
+/// <param name="newValue">The new value of the <see cref="$property$Property">$property$</see> property.</param>
+private static void On$property$PropertyChanged(DependencyObject obj, string oldValue, string newValue)
+{
+    $end$// TODO: Implement On$property$PropertyChanged Logic
+}
+
+#endregion]]></Code>
+    </Snippet>
+  </CodeSnippet>
+</CodeSnippets>

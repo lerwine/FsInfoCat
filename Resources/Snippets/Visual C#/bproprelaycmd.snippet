@@ -1,9 +1,9 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8"?>
 <CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
   <CodeSnippet Format="1.0.0">
     <Header>
       <Title>Define a relay command property</Title>
-      <Shortcut>proprelaycmd</Shortcut>
+      <Shortcut>bproprelaycmd</Shortcut>
       <Description>Code snippet for a relay command property.</Description>
       <Author>Leonard T. Erwine</Author>
       <SnippetTypes>
@@ -25,7 +25,9 @@
       </Declarations>
       <Code Language="csharp"><![CDATA[#region $command$ Command Property Members
 
-private static readonly DependencyPropertyKey $command$PropertyKey = DependencyProperty.RegisterReadOnly(nameof($command$), typeof(Commands.RelayCommand), typeof($ownerclass$));
+private static readonly DependencyPropertyKey $command$PropertyKey = DependencyPropertyBuilder<$ownerclass$, Commands.RelayCommand>
+    .Register(nameof($command$))
+    .AsReadOnly();
 
 /// <summary>
 /// Identifies the <see cref="$command$"/> dependency property.
@@ -40,8 +42,8 @@ public Commands.RelayCommand $command$ => (Commands.RelayCommand)GetValue($comma
 /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="$command$" />.</param>
 protected virtual void On$command$Command(object parameter)
 {
-  // TODO: Implement On$command$Command Logic
-  // TODO: Add initialization code to constructor: $end$SetValue($command$PropertyKey, new Commands.RelayCommand(On$command$Command));
+    // TODO: Implement On$command$Command Logic
+    // TODO: Add initialization code to constructor: $end$SetValue($command$PropertyKey, new Commands.RelayCommand(On$command$Command));
 }
 
 #endregion]]></Code>

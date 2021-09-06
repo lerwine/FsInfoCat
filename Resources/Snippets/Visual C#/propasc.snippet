@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <Title>Define an attached string DependencyProperty with an "OnPropertyChanged" method.</Title>
+      <Shortcut>propasc</Shortcut>
+      <Description>Code snippet for an attached string property using DependencyProperty as the backing store with an "OnPropertyChanged" method.</Description>
+      <Author>Leonard T. Erwine</Author>
+      <SnippetTypes>
+        <SnippetType>Expansion</SnippetType>
+      </SnippetTypes>
+    </Header>
+    <Snippet>
+      <Declarations>
+        <Literal>
+          <ID>property</ID>
+          <ToolTip>Property Name</ToolTip>
+          <Default>MyProperty</Default>
+        </Literal>
+        <Literal>
+          <ID>ownerclass</ID>
+          <Function>ClassName()</Function>
+          <ToolTip>The owning class of this Property. Typically the class that it is declared in.</ToolTip>
+        </Literal>
+      </Declarations>
+      <Code Language="csharp"><![CDATA[#region $property$ Attached Property Members
+
+/// <summary>
+/// The name of the <see cref="$property$Property">$property$</see> attached dependency property.
+/// </summary>
+public const string PropertyName_$property$ = "$property$";
+
+/// <summary>
+/// Identifies the <see cref="$property$"/> dependency property.
+/// </summary>
+public static readonly DependencyProperty $property$Property = DependencyProperty.RegisterAttached(nameof($property$), typeof(string), typeof($ownerclass$),
+        new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) => On$property$PropertyChanged(d, e.OldValue as string, e.NewValue as string),
+        NonWhiteSpaceOrEmptyStringCoersion.Default.ToCoerceValueCallback()));
+
+public static string Get$property$([DisallowNull] DependencyObject obj) => obj.GetValue($property$Property) as string;
+
+public static void Set$property$([DisallowNull] DependencyObject obj, string value) => obj.SetValue($property$Property, value);
+
+/// <summary>
+/// Called when the value of the <see cref="$property$"/> dependency property has changed.
+/// </summary>
+/// <param name="obj">The object whose attached property value has changed.</param>
+/// <param name="oldValue">The previous value of the <see cref="$property$"/> property.</param>
+/// <param name="newValue">The new value of the <see cref="$property$"/> property.</param>
+private static void On$property$PropertyChanged(DependencyObject obj, string oldValue, string newValue)
+{
+    $end$// TODO: Implement On$property$PropertyChanged Logic
+}
+
+#endregion]]></Code>
+    </Snippet>
+  </CodeSnippet>
+</CodeSnippets>

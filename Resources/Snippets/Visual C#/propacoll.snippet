@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <Title>Define an attached generic collection DependencyProperty</Title>
+      <Shortcut>propacoll</Shortcut>
+      <Description>Code snippet for an attached generic collection property using DependencyProperty as the backing store</Description>
+      <Author>Leonard T. Erwine</Author>
+      <SnippetTypes>
+        <SnippetType>Expansion</SnippetType>
+      </SnippetTypes>
+    </Header>
+    <Snippet>
+      <Declarations>
+        <Literal>
+          <ID>itemType</ID>
+          <ToolTip>Collection element type</ToolTip>
+          <Default>ElementType</Default>
+        </Literal>
+        <Literal>
+          <ID>property</ID>
+          <ToolTip>Property Name</ToolTip>
+          <Default>MyProperty</Default>
+        </Literal>
+        <Literal>
+          <ID>ownerclass</ID>
+          <Function>ClassName()</Function>
+          <ToolTip>The owning class of this Property. Typically the class that it is declared in.</ToolTip>
+        </Literal>
+        </Declarations>
+      <Code Language="csharp"><![CDATA[#region $property$ Attached Property Members
+
+/// <summary>
+/// The name of the <see cref="$property$Property">$property$</see> attached dependency property.
+/// </summary>
+public const string PropertyName_$property$ = "$property$";
+
+private static readonly DependencyPropertyKey $property$PropertyKey = DependencyProperty.RegisterAttachedReadOnly(nameof($property$), typeof(ObservableCollection<$itemType$>), typeof($ownerclass$));
+
+/// <summary>
+/// Identifies the <see cref="$property$"/> dependency property.
+/// </summary>
+public static readonly DependencyProperty $property$Property = $property$PropertyKey.DependencyProperty;
+
+public static ObservableCollection<$itemType$> Get$property$([DisallowNull] DependencyObject obj) => obj.GetValue($property$Property) as ObservableCollection<$itemType$>;
+
+private static void Set$property$([DisallowNull] DependencyObject obj, ObservableCollection<$itemType$> value) => obj.SetValue($property$PropertyKey, value);
+
+#endregion$end$]]></Code>
+    </Snippet>
+  </CodeSnippet>
+</CodeSnippets>
