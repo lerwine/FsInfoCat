@@ -621,7 +621,7 @@ namespace FsInfoCat.Numerics
             if (conversionType.AssemblyQualifiedName == (typeof(string)).AssemblyQualifiedName)
                 return c.ToString(provider);
             if (conversionType.AssemblyQualifiedName == (typeof(long)).AssemblyQualifiedName)
-                c.ToInt64(provider);
+                return c.ToInt64(provider);
             if (conversionType.AssemblyQualifiedName == (typeof(decimal)).AssemblyQualifiedName)
                 return c.ToDecimal(provider);
             if (conversionType.AssemblyQualifiedName == (typeof(uint)).AssemblyQualifiedName)

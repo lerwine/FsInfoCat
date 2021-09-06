@@ -535,7 +535,7 @@ namespace FsInfoCat
             if (obj is Type t)
                 return t.ToCsTypeName();
             if (obj is IFormattable fm)
-                fm.ToString();
+                return fm.ToString();
             if (obj is IConvertible cv)
             {
                 switch (cv.GetTypeCode())
