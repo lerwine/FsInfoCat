@@ -99,7 +99,7 @@ namespace FsInfoCat.Desktop.ViewModel
 
         protected virtual TItem[] ClearItems()
         {
-            CheckAccess();
+            VerifyAccess();
             TItem[] removedItems = _backingItems.ToArray();
             _backingItems.Clear();
             foreach (TItem item in removedItems)
@@ -115,7 +115,7 @@ namespace FsInfoCat.Desktop.ViewModel
 
         protected virtual void AddItem(TItem item)
         {
-            CheckAccess();
+            VerifyAccess();
             if (item is null)
                 throw new ArgumentNullException(nameof(item));
             if (!_backingItems.Any(i => ReferenceEquals(i, item)))
