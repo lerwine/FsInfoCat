@@ -13,7 +13,7 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
         private static void ConfigureServices(IServiceCollection services)
 #pragma warning restore IDE0051 // Remove unused private members
         {
-            services.AddSingleton<IWindowsAsyncJobFactoryService, AsyncJobService>()
+            _ = services.AddSingleton<IWindowsAsyncJobFactoryService, AsyncJobService>()
                 .AddSingleton<IAsyncJobFactoryService>(services => services.GetRequiredService<IWindowsAsyncJobFactoryService>());
         }
 
@@ -56,7 +56,7 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
             lock (_backingItems)
             {
                 _backingItems.Add(item);
-                job.Task.ContinueWith(task => RemoveJob(item));
+                _ = job.Task.ContinueWith(task => RemoveJob(item));
             }
             IsBusy = _backingItems.Count > 0;
             return item;
@@ -65,7 +65,7 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
         private void RemoveJob(BackgroundJobVM item) => Dispatcher.Invoke(() =>
         {
             lock (_backingItems)
-                _backingItems.Remove(item);
+                _ = _backingItems.Remove(item);
             IsBusy = _backingItems.Count > 0;
         });
 

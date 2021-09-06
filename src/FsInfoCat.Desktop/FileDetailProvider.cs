@@ -329,11 +329,11 @@ namespace FsInfoCat.Desktop
             if (!_isDisposed)
             {
                 if (disposing)
-                    _task.ContinueWith(t =>
-                    {
-                        if (t.IsCompletedSuccessfully)
-                            t.Result.Dispose();
-                    });
+                    _ = _task.ContinueWith(t =>
+                      {
+                          if (t.IsCompletedSuccessfully)
+                              t.Result.Dispose();
+                      });
                 _isDisposed = true;
             }
         }

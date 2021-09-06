@@ -99,7 +99,7 @@ namespace FsInfoCat.Local
             string n = nameof(Id);
             Guid binaryPropertiesId = binaryPropertiesIdElement.GetAttributeGuid(n).Value;
             logger.LogInformation($"Inserting {nameof(BinaryPropertySet)} with Id {{Id}}", binaryPropertiesId);
-            await new InsertQueryBuilder(nameof(LocalDbContext.BinaryPropertySets), binaryPropertiesIdElement, n).AppendInt64(nameof(Length)).AppendMd5Hash(nameof(Hash))
+            _ = await new InsertQueryBuilder(nameof(LocalDbContext.BinaryPropertySets), binaryPropertiesIdElement, n).AppendInt64(nameof(Length)).AppendMd5Hash(nameof(Hash))
                 .AppendDateTime(nameof(CreatedOn)).AppendDateTime(nameof(ModifiedOn)).AppendDateTime(nameof(LastSynchronizedOn))
                 .AppendGuid(nameof(UpstreamId)).ExecuteSqlAsync(dbContext.Database);
             return binaryPropertiesIdElement.Elements(nameof(RedundantSet)).Select(e => RedundantSet.ImportAsync(dbContext, logger, binaryPropertiesId, e).Result).ToArray();
@@ -115,7 +115,7 @@ namespace FsInfoCat.Local
 
             if (bps is null)
             {
-                dbContext.BinaryPropertySets.Add(bps = new()
+                _ = dbContext.BinaryPropertySets.Add(bps = new()
                 {
                     Length = length,
                     Hash = (length == 0L) ? (MD5Hash?)await MD5Hash.CreateAsync(System.IO.Stream.Null, cancellationToken) : null
@@ -130,7 +130,7 @@ namespace FsInfoCat.Local
             BinaryPropertySet bps = await dbContext.BinaryPropertySets.FirstOrDefaultAsync(p => p.Length == length && p.Hash == hash, cancellationToken);
             if (bps is null)
             {
-                dbContext.BinaryPropertySets.Add(bps = new()
+                _ = dbContext.BinaryPropertySets.Add(bps = new()
                 {
                     Length = length,
                     Hash = hash

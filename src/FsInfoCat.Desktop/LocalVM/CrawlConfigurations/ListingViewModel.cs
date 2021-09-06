@@ -69,7 +69,7 @@ namespace FsInfoCat.Desktop.LocalVM.CrawlConfigurations
                 StatusOptions.SelectedItem = _currentStatusOptions.ShowAll ? _allOption : _allFailedOption;
         }
 
-        protected override bool ConfirmItemDelete(ListItemViewModel item, object parameter) => MessageBox.Show(App.Current.MainWindow,
+        protected override bool ConfirmItemDelete(ListItemViewModel item, object parameter) => MessageBox.Show(Application.Current.MainWindow,
             "This action cannot be undone!\n\nAre you sure you want to remove this crawl configuration from the database?",
             "Delete Crawl Configuration", MessageBoxButton.YesNo, MessageBoxImage.Exclamation) == MessageBoxResult.Yes;
 
@@ -137,7 +137,7 @@ namespace FsInfoCat.Desktop.LocalVM.CrawlConfigurations
                     return;
             }
             _currentStatusOptions = newStatusOptions;
-            ReloadAsync(_currentStatusOptions);
+            _ = ReloadAsync(_currentStatusOptions);
         }
 
         protected override void OnCancelFilterOptionsCommand(object parameter)

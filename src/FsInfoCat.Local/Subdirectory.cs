@@ -309,7 +309,7 @@ namespace FsInfoCat.Local
             if (dbContext.ChangeTracker.HasChanges())
                 result += await dbContext.SaveChangesAsync(statusListener.CancellationToken);
             statusListener.Logger.LogInformation("Removing Subdirectory {{ Id = {Id}; Path = \"{Path}\" }}", target.Id, path);
-            dbContext.Subdirectories.Remove(target);
+            _ = dbContext.Subdirectories.Remove(target);
             result += await dbContext.SaveChangesAsync(statusListener.CancellationToken);
             await transaction.CommitAsync(statusListener.CancellationToken);
             return result;
@@ -566,8 +566,8 @@ namespace FsInfoCat.Local
             if (oldCrawlConfiguration.ExistsInDb())
             {
                 cancellationToken.ThrowIfCancellationRequested();
-                dbContext.CrawlConfigurations.Remove(oldCrawlConfiguration.Entity);
-                await dbContext.SaveChangesAsync(cancellationToken);
+                _ = dbContext.CrawlConfigurations.Remove(oldCrawlConfiguration.Entity);
+                _ = await dbContext.SaveChangesAsync(cancellationToken);
             }
             SubdirectoryAccessError[] accessErrors = (await dbEntry.GetRelatedCollectionAsync(f => f.AccessErrors, cancellationToken)).ToArray();
             cancellationToken.ThrowIfCancellationRequested();
@@ -588,7 +588,7 @@ namespace FsInfoCat.Local
 
         public void SetError(LocalDbContext dbContext, AccessErrorCode errorCode, Exception exception, string message = null)
         {
-            dbContext.SubdirectoryAccessErrors.Add(new SubdirectoryAccessError()
+            _ = dbContext.SubdirectoryAccessErrors.Add(new SubdirectoryAccessError()
             {
                 ErrorCode = errorCode,
                 Message = message.GetDefaultIfNullOrWhiteSpace(() => $"An unexpected {exception.GetType().Name} has occurred."),
@@ -617,8 +617,8 @@ namespace FsInfoCat.Local
 
         internal static void OnBuildEntity(EntityTypeBuilder<Subdirectory> builder)
         {
-            builder.HasOne(sn => sn.Parent).WithMany(d => d.SubDirectories).HasForeignKey(nameof(ParentId)).OnDelete(DeleteBehavior.Restrict);
-            builder.HasOne(sn => sn.Volume).WithOne(d => d.RootDirectory).HasForeignKey<Subdirectory>(nameof(VolumeId)).OnDelete(DeleteBehavior.Restrict);//.HasPrincipalKey<Volume>(nameof(Local.Volume.Id));
+            _ = builder.HasOne(sn => sn.Parent).WithMany(d => d.SubDirectories).HasForeignKey(nameof(ParentId)).OnDelete(DeleteBehavior.Restrict);
+            _ = builder.HasOne(sn => sn.Volume).WithOne(d => d.RootDirectory).HasForeignKey<Subdirectory>(nameof(VolumeId)).OnDelete(DeleteBehavior.Restrict);//.HasPrincipalKey<Volume>(nameof(Local.Volume.Id));
         }
 
         protected override void OnValidate(ValidationContext validationContext, List<ValidationResult> results)
@@ -630,7 +630,7 @@ namespace FsInfoCat.Local
                 if (vr is not null)
                 {
                     int index = results.IndexOf(vr);
-                    results.Remove(vr);
+                    _ = results.Remove(vr);
                     vr = new ValidationResult(vr.ErrorMessage, vr.MemberNames.Select(m => m == nameof(ParentId) ? nameof(Parent) : m).ToArray());
                     if (index < results.Count - 1)
                         results.Insert(index, vr);
@@ -641,7 +641,7 @@ namespace FsInfoCat.Local
                 if (vr is not null)
                 {
                     int index = results.IndexOf(vr);
-                    results.Remove(vr);
+                    _ = results.Remove(vr);
                     vr = new ValidationResult(vr.ErrorMessage, vr.MemberNames.Select(m => m == nameof(VolumeId) ? nameof(Volume) : m).ToArray());
                     if (index < results.Count - 1)
                         results.Insert(index, vr);
@@ -716,14 +716,14 @@ namespace FsInfoCat.Local
         {
             Subdirectory nav = _parent.GetValue();
             if (!(nav is null || (value.HasValue && nav.Id.Equals(value.Value))))
-                _parent.SetValue(null);
+                _ = _parent.SetValue(null);
         }
 
         protected override void OnVolumeIdChanged(Guid? value)
         {
             Volume nav = _volume.GetValue();
             if (!(nav is null || (value.HasValue && nav.Id.Equals(value.Value))))
-                _volume.SetValue(null);
+                _ = _volume.SetValue(null);
         }
     }
 }

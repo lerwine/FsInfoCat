@@ -58,7 +58,7 @@ namespace FsInfoCat.Desktop.LocalVM.SummaryPropertySets
             if (_currentOptions.HasValue ? (ListingOptions.Value.HasValue && _currentOptions.Value == ListingOptions.Value.Value) : !ListingOptions.Value.HasValue)
                 return;
             _currentOptions = ListingOptions.Value;
-            ReloadAsync(_currentOptions);
+            _ = ReloadAsync(_currentOptions);
         }
 
         protected override void OnRefreshCommand(object parameter) => ReloadAsync(_currentOptions);
@@ -68,7 +68,7 @@ namespace FsInfoCat.Desktop.LocalVM.SummaryPropertySets
             // TODO: Implement OnItemEditCommand(object);
         }
 
-        protected override bool ConfirmItemDelete(ListItemViewModel item, object parameter) => MessageBox.Show(App.Current.MainWindow,
+        protected override bool ConfirmItemDelete(ListItemViewModel item, object parameter) => MessageBox.Show(Application.Current.MainWindow,
             "This action cannot be undone!\n\nAre you sure you want to remove this summary property set from the database?",
             "Delete Summary Property Set", MessageBoxButton.YesNo, MessageBoxImage.Exclamation) == MessageBoxResult.Yes;
 
@@ -78,7 +78,7 @@ namespace FsInfoCat.Desktop.LocalVM.SummaryPropertySets
             SummaryPropertySet target = await dbContext.SummaryPropertySets.FindAsync(new object[] { entity.Id }, statusListener.CancellationToken);
             if (target is null)
                 return 0;
-            dbContext.SummaryPropertySets.Remove(target);
+            _ = dbContext.SummaryPropertySets.Remove(target);
             return await dbContext.SaveChangesAsync(statusListener.CancellationToken);
         }
 

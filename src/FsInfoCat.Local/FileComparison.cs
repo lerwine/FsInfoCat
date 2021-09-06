@@ -53,7 +53,7 @@ namespace FsInfoCat.Local
                 {
                     DbFile nav = _baseline.GetValue();
                     if (!(nav is null || nav.Id.Equals(value)))
-                        _baseline.SetValue(null);
+                        _ = _baseline.SetValue(null);
                 }
             }
         }
@@ -72,7 +72,7 @@ namespace FsInfoCat.Local
                 {
                     DbFile nav = _correlative.GetValue();
                     if (!(nav is null || nav.Id.Equals(value)))
-                        _correlative.SetValue(null);
+                        _ = _correlative.SetValue(null);
                 }
             }
         }
@@ -103,9 +103,9 @@ namespace FsInfoCat.Local
                 if (_baseline.SetValue(value))
                 {
                     if (value is null)
-                        _baselineId.SetValue(Guid.Empty);
+                        _ = _baselineId.SetValue(Guid.Empty);
                     else
-                        _baselineId.SetValue(value.Id);
+                        _ = _baselineId.SetValue(value.Id);
                 }
             }
         }
@@ -122,9 +122,9 @@ namespace FsInfoCat.Local
                 if (_correlative.SetValue(value))
                 {
                     if (value is null)
-                        _correlativeId.SetValue(Guid.Empty);
+                        _ = _correlativeId.SetValue(Guid.Empty);
                     else
-                        _correlativeId.SetValue(value.Id);
+                        _ = _correlativeId.SetValue(value.Id);
                 }
             }
         }
@@ -158,9 +158,9 @@ namespace FsInfoCat.Local
 
         internal static void OnBuildEntity(EntityTypeBuilder<FileComparison> builder)
         {
-            builder.HasKey(nameof(BaselineId), nameof(CorrelativeId));
-            builder.HasOne(sn => sn.Baseline).WithMany(d => d.BaselineComparisons).HasForeignKey(nameof(BaselineId)).IsRequired().OnDelete(DeleteBehavior.Restrict);
-            builder.HasOne(sn => sn.Correlative).WithMany(d => d.CorrelativeComparisons).HasForeignKey(nameof(CorrelativeId)).IsRequired().OnDelete(DeleteBehavior.Restrict);
+            _ = builder.HasKey(nameof(BaselineId), nameof(CorrelativeId));
+            _ = builder.HasOne(sn => sn.Baseline).WithMany(d => d.BaselineComparisons).HasForeignKey(nameof(BaselineId)).IsRequired().OnDelete(DeleteBehavior.Restrict);
+            _ = builder.HasOne(sn => sn.Correlative).WithMany(d => d.CorrelativeComparisons).HasForeignKey(nameof(CorrelativeId)).IsRequired().OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

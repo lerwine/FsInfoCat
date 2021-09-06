@@ -137,7 +137,7 @@ namespace FsInfoCat.Local
                 case EntityState.Modified:
                     Guid id = entity.Id;
                     if (!(await dbContext.Entry(oldPropertySet).GetRelatedCollectionAsync(p => p.Files, cancellationToken)).Any(f => f.Id != id))
-                        dbContext.DocumentPropertySets.Remove(oldPropertySet);
+                        _ = dbContext.DocumentPropertySets.Remove(oldPropertySet);
                     cancellationToken.ThrowIfCancellationRequested();
                     break;
             }

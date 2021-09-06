@@ -32,9 +32,9 @@ namespace FsInfoCat.Local
 
         internal static void OnBuildEntity(EntityTypeBuilder<FileWithBinaryPropertiesAndAncestorNames> builder)
         {
-            builder.ToView(VIEW_NAME);
-            builder.Property(nameof(Hash)).HasConversion(MD5Hash.Converter);
-            builder.Property(nameof(VolumeIdentifier)).HasConversion(VolumeIdentifier.Converter);
+            _ = builder.ToView(VIEW_NAME);
+            _ = builder.Property(nameof(Hash)).HasConversion(MD5Hash.Converter);
+            _ = builder.Property(nameof(VolumeIdentifier)).HasConversion(VolumeIdentifier.Converter);
         }
 
         public FileWithBinaryPropertiesAndAncestorNames()

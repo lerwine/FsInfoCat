@@ -53,7 +53,7 @@ namespace FsInfoCat.Local
                 {
                     DbFile nav = _target.GetValue();
                     if (!(nav is null || nav.Id.Equals(value)))
-                        _targetId.SetValue(null);
+                        _ = _targetId.SetValue(null);
                 }
             }
         }
@@ -67,9 +67,9 @@ namespace FsInfoCat.Local
                 if (_target.SetValue(value))
                 {
                     if (value is null)
-                        _targetId.SetValue(Guid.Empty);
+                        _ = _targetId.SetValue(Guid.Empty);
                     else
-                        _targetId.SetValue(value.Id);
+                        _ = _targetId.SetValue(value.Id);
                 }
             }
         }
@@ -164,7 +164,7 @@ namespace FsInfoCat.Local
 
         internal static void OnBuildEntity(EntityTypeBuilder<FileAccessError> builder)
         {
-            builder.HasOne(e => e.Target).WithMany(d => d.AccessErrors).HasForeignKey(nameof(TargetId)).IsRequired().OnDelete(DeleteBehavior.Restrict);
+            _ = builder.HasOne(e => e.Target).WithMany(d => d.AccessErrors).HasForeignKey(nameof(TargetId)).IsRequired().OnDelete(DeleteBehavior.Restrict);
         }
 
         IEnumerable<Guid> IIdentityReference.GetIdentifiers()

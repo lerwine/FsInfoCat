@@ -56,23 +56,23 @@ namespace FsInfoCat.Local
 
         internal static void OnBuildEntity(EntityTypeBuilder<SharedFileTag> builder)
         {
-            builder.HasKey(nameof(TaggedId), nameof(DefinitionId));
-            builder.HasOne(pft => pft.Definition).WithMany(d => d.FileTags).HasForeignKey(nameof(DefinitionId)).IsRequired().OnDelete(DeleteBehavior.Restrict);
-            builder.HasOne(pft => pft.Tagged).WithMany(d => d.SharedTags).HasForeignKey(nameof(TaggedId)).IsRequired().OnDelete(DeleteBehavior.Restrict);
+            _ = builder.HasKey(nameof(TaggedId), nameof(DefinitionId));
+            _ = builder.HasOne(pft => pft.Definition).WithMany(d => d.FileTags).HasForeignKey(nameof(DefinitionId)).IsRequired().OnDelete(DeleteBehavior.Restrict);
+            _ = builder.HasOne(pft => pft.Tagged).WithMany(d => d.SharedTags).HasForeignKey(nameof(TaggedId)).IsRequired().OnDelete(DeleteBehavior.Restrict);
         }
 
         protected override void OnTaggedIdChanged(Guid value)
         {
             DbFile nav = _tagged.GetValue();
             if (!(nav is null || nav.Id.Equals(value)))
-                _tagged.SetValue(null);
+                _ = _tagged.SetValue(null);
         }
 
         protected override void OnDefinitionIdChanged(Guid value)
         {
             SharedTagDefinition nav = _definition.GetValue();
             if (!(nav is null || nav.Id.Equals(value)))
-                _definition.SetValue(null);
+                _ = _definition.SetValue(null);
         }
     }
 }

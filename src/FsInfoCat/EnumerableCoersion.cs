@@ -77,7 +77,7 @@ namespace FsInfoCat
                 {
                     if (_backingCoersion.TryCoerce(o, out e))
                     {
-                        items.AddLast(e);
+                        _ = items.AddLast(e);
                         return true;
                     }
                     return false;

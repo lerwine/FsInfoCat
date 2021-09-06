@@ -51,7 +51,7 @@ namespace FsInfoCat.Collections
             do
             {
                 text = Coersion.Normalize(enumerator.Current);
-                stringBuilder.Append(ESCAPE).Append(RECORD_SEPARATOR).Append((text is null) ? ESCAPED_NULL : text.Replace(UNESCAPED_LITERAL, ESCAPED_LITERAL));
+                _ = stringBuilder.Append(ESCAPE).Append(RECORD_SEPARATOR).Append((text is null) ? ESCAPED_NULL : text.Replace(UNESCAPED_LITERAL, ESCAPED_LITERAL));
             } while (enumerator.MoveNext());
             return stringBuilder.ToString();
         }

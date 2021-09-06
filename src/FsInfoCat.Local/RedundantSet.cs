@@ -62,7 +62,7 @@ namespace FsInfoCat.Local
 
         internal static void OnBuildEntity(EntityTypeBuilder<RedundantSet> builder)
         {
-            builder.HasOne(sn => sn.BinaryProperties).WithMany(d => d.RedundantSets).HasForeignKey(nameof(BinaryPropertiesId)).IsRequired().OnDelete(DeleteBehavior.Restrict);
+            _ = builder.HasOne(sn => sn.BinaryProperties).WithMany(d => d.RedundantSets).HasForeignKey(nameof(BinaryPropertiesId)).IsRequired().OnDelete(DeleteBehavior.Restrict);
         }
 
         internal static async Task<(Guid redundantSetId, XElement[] redundancies)> ImportAsync(LocalDbContext dbContext, ILogger<LocalDbContext> logger, Guid binaryPropertiesId, XElement redundantSetElement)
@@ -80,7 +80,7 @@ namespace FsInfoCat.Local
         {
             BinaryPropertySet nav = _binaryProperties.GetValue();
             if (!(nav is null || nav.Id.Equals(value)))
-                _binaryProperties.SetValue(null);
+                _ = _binaryProperties.SetValue(null);
         }
     }
 }

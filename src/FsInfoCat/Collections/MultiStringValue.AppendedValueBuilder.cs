@@ -11,12 +11,12 @@ namespace FsInfoCat.Collections
             public IValueBuilder Append(string text)
             {
                 if (!string.IsNullOrEmpty(text))
-                    _stringBuilder.Append(text);
+                    _ = _stringBuilder.Append(text);
                 return this;
             }
             public IValueBuilder Append(char c)
             {
-                _stringBuilder.Append(c);
+                _ = _stringBuilder.Append(c);
                 return this;
             }
             public bool TryGetValue(out string text) { text = GetValue(); return true; }

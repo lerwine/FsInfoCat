@@ -5,9 +5,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -41,7 +39,7 @@ namespace FsInfoCat
                 return path;
             path = Path.Combine(path, name);
             if (!Directory.Exists(path))
-                Directory.CreateDirectory(path);
+                _ = Directory.CreateDirectory(path);
             return path;
         }
 
@@ -54,13 +52,13 @@ namespace FsInfoCat
             AssemblyCompanyAttribute companyAttr = assembly.GetCustomAttribute<AssemblyCompanyAttribute>();
             string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), companyAttr?.Company ?? "UnknownCompany");
             if (!Directory.Exists(path))
-                Directory.CreateDirectory(path);
+                _ = Directory.CreateDirectory(path);
             if (level == AppDataPathLevel.Company)
                 return path;
             AssemblyName assemblyName = assembly.GetName();
             path = Path.Combine(path, assemblyName.Name ?? "UnknownAssembly");
             if (!Directory.Exists(path))
-                Directory.CreateDirectory(path);
+                _ = Directory.CreateDirectory(path);
             if (level == AppDataPathLevel.Application)
                 return path;
             Version version = assemblyName.Version;
@@ -68,7 +66,7 @@ namespace FsInfoCat
             {
                 path = Path.Combine(path, version.ToString());
                 if (!Directory.Exists(path))
-                    Directory.CreateDirectory(path);
+                    _ = Directory.CreateDirectory(path);
             }
             if (level == AppDataPathLevel.CurrentVersion)
                 return path;

@@ -23,9 +23,9 @@ namespace FsInfoCat.Local
 
         internal static void OnBuildEntity(EntityTypeBuilder<PhotoPropertiesListItem> builder)
         {
-            builder.ToView(VIEW_NAME);
-            builder.Property(nameof(Event)).HasConversion(MultiStringValue.Converter);
-            builder.Property(nameof(PeopleNames)).HasConversion(MultiStringValue.Converter);
+            _ = builder.ToView(VIEW_NAME);
+            _ = builder.Property(nameof(Event)).HasConversion(MultiStringValue.Converter);
+            _ = builder.Property(nameof(PeopleNames)).HasConversion(MultiStringValue.Converter);
         }
     }
 }

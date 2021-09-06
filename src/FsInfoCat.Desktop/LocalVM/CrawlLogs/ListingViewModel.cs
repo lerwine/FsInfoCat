@@ -68,7 +68,7 @@ namespace FsInfoCat.Desktop.LocalVM.CrawlLogs
         protected override void OnApplyFilterOptionsCommand(object parameter)
         {
             CurrentStatusOptions.SelectedIndex = EditingStatusOptions.SelectedIndex;
-            ReloadAsync(CurrentStatusOptions.SelectedItem);
+            _ = ReloadAsync(CurrentStatusOptions.SelectedItem);
         }
 
         protected override void OnCancelFilterOptionsCommand(object parameter)
@@ -84,7 +84,7 @@ namespace FsInfoCat.Desktop.LocalVM.CrawlLogs
             // TODO: Implement OnItemEditCommand(object);
         }
 
-        protected override bool ConfirmItemDelete(ListItemViewModel item, object parameter) => MessageBox.Show(App.Current.MainWindow,
+        protected override bool ConfirmItemDelete(ListItemViewModel item, object parameter) => MessageBox.Show(Application.Current.MainWindow,
             "This action cannot be undone!\n\nAre you sure you want to remove this crawl result log entry from the database?",
             "Delete Crawl Result Log Entry", MessageBoxButton.YesNo, MessageBoxImage.Exclamation) == MessageBoxResult.Yes;
 
@@ -94,7 +94,7 @@ namespace FsInfoCat.Desktop.LocalVM.CrawlLogs
             CrawlJobLog target = await dbContext.CrawlJobLogs.FindAsync(new object[] { entity.Id }, statusListener.CancellationToken);
             if (target is null)
                 return 0;
-            dbContext.CrawlJobLogs.Remove(target);
+            _ = dbContext.CrawlJobLogs.Remove(target);
             return await dbContext.SaveChangesAsync(statusListener.CancellationToken);
         }
 

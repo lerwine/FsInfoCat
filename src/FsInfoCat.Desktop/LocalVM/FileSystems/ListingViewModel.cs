@@ -38,7 +38,7 @@ namespace FsInfoCat.Desktop.LocalVM.FileSystems
         void INotifyNavigatedTo.OnNavigatedTo()
         {
             IAsyncJob asyncJob = ReloadAsync(_currentListingOption);
-            asyncJob.Task.ContinueWith(task => OnReloadComplete(task, asyncJob));
+            _ = asyncJob.Task.ContinueWith(task => OnReloadComplete(task, asyncJob));
         }
 
         private void OnReloadComplete(Task task, IAsyncJob asyncJob)
@@ -49,7 +49,7 @@ namespace FsInfoCat.Desktop.LocalVM.FileSystems
                 .Where(m => !string.IsNullOrWhiteSpace(m)).FirstOrDefault();
             if (userMessage is null)
                 userMessage = "An unexpected error has occurred. See logs for details.";
-            MessageBox.Show(App.Current.MainWindow, userMessage, asyncJob.Title, MessageBoxButton.OK, MessageBoxImage.Error);
+            _ = MessageBox.Show(Application.Current.MainWindow, userMessage, asyncJob.Title, MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
         protected override IQueryable<FileSystemListItem> GetQueryableListing(bool? options, [DisallowNull] LocalDbContext dbContext,
@@ -73,7 +73,7 @@ namespace FsInfoCat.Desktop.LocalVM.FileSystems
                 return;
             _currentListingOption = ListingOption.Value;
             IAsyncJob asyncJob = ReloadAsync(_currentListingOption);
-            asyncJob.Task.ContinueWith(task => OnReloadComplete(task, asyncJob));
+            _ = asyncJob.Task.ContinueWith(task => OnReloadComplete(task, asyncJob));
         }
 
         protected override void OnCancelFilterOptionsCommand(object parameter)
@@ -89,7 +89,7 @@ namespace FsInfoCat.Desktop.LocalVM.FileSystems
             // TODO: Implement OnItemEditCommand(object);
         }
 
-        protected override bool ConfirmItemDelete(ListItemViewModel item, object parameter) => MessageBox.Show(App.Current.MainWindow,
+        protected override bool ConfirmItemDelete(ListItemViewModel item, object parameter) => MessageBox.Show(Application.Current.MainWindow,
             "This action cannot be undone!\n\nAre you sure you want to remove this file system definition from the database?",
             "Delete File System Definition", MessageBoxButton.YesNo, MessageBoxImage.Exclamation) == MessageBoxResult.Yes;
 

@@ -7,8 +7,7 @@ namespace FsInfoCat
     public class NormalizedOrEmptyStringCoersion : ICoersion<string>
     {
         public static readonly NormalizedOrEmptyStringCoersion Default = new();
-
-        IEqualityComparer<string> _backingComparer;
+        readonly IEqualityComparer<string> _backingComparer;
 
         Type ICoersion.ValueType => typeof(string);
 

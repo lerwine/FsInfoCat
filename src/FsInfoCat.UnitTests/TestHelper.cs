@@ -78,8 +78,8 @@ namespace FsInfoCat.UnitTests
 
         internal class ApplicationNavigationFake : IApplicationNavigation
         {
-            private Stack<(Uri Source, object Content, object NavigationState, bool? SandboxExternalContent)> _backwardHistory = new();
-            private Stack<(Uri Source, object Content, object NavigationState, bool? SandboxExternalContent)> _forwardHistory = new();
+            private readonly Stack<(Uri Source, object Content, object NavigationState, bool? SandboxExternalContent)> _backwardHistory = new();
+            private readonly Stack<(Uri Source, object Content, object NavigationState, bool? SandboxExternalContent)> _forwardHistory = new();
 
             public IEnumerable<(Uri Source, object Content, object NavigationState, bool? SandboxExternalContent)> GetBackwardHistory() => _backwardHistory.AsEnumerable();
 

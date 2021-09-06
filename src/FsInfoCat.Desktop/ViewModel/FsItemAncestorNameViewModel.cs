@@ -49,7 +49,7 @@ namespace FsInfoCat.Desktop.ViewModel
         public FsItemAncestorNameViewModel(TEntity entity)
         {
             Entity = entity ?? throw new ArgumentNullException(nameof(entity));
-            WeakPropertyChangedEventRelay.Attach(entity, OnEntityPropertyChanged);
+            _ = WeakPropertyChangedEventRelay.Attach(entity, OnEntityPropertyChanged);
             Path = EntityExtensions.AncestorNamesToPath(Entity.AncestorNames);
             Name = Entity.Name;
         }

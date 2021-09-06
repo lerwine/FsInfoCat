@@ -65,7 +65,7 @@ namespace FsInfoCat.Desktop.Converters
                     if (enumerator.MoveNext())
                     {
                         StringBuilder sb = new(t);
-                        do { sb.Append("; ").Append(enumerator.Current); } while (enumerator.MoveNext());
+                        do { _ = sb.Append("; ").Append(enumerator.Current); } while (enumerator.MoveNext());
                         t = sb.ToString();
                     }
                 }

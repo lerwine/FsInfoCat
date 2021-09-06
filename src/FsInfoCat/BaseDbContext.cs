@@ -55,7 +55,7 @@ namespace FsInfoCat
                     if (!(_scopes.TryGetValue(ContextId.InstanceId, out List<int> list) && list.Remove(ContextId.Lease)))
                         return;
                     if (list.Count == 0)
-                        _scopes.Remove(ContextId.InstanceId);
+                        _ = _scopes.Remove(ContextId.InstanceId);
                 }
                 _loggerScope.Dispose();
             }

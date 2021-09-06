@@ -23,12 +23,12 @@ namespace FsInfoCat.Local
 
         internal static void OnBuildEntity(EntityTypeBuilder<MusicPropertiesListItem> builder)
         {
-            builder.ToView(VIEW_NAME);
-            builder.Property(nameof(Artist)).HasConversion(MultiStringValue.Converter);
-            builder.Property(nameof(Composer)).HasConversion(MultiStringValue.Converter);
-            builder.Property(nameof(Conductor)).HasConversion(MultiStringValue.Converter);
-            builder.Property(nameof(Genre)).HasConversion(MultiStringValue.Converter);
-            builder.Property(nameof(Genre)).HasConversion(MultiStringValue.Converter);
+            _ = builder.ToView(VIEW_NAME);
+            _ = builder.Property(nameof(Artist)).HasConversion(MultiStringValue.Converter);
+            _ = builder.Property(nameof(Composer)).HasConversion(MultiStringValue.Converter);
+            _ = builder.Property(nameof(Conductor)).HasConversion(MultiStringValue.Converter);
+            _ = builder.Property(nameof(Genre)).HasConversion(MultiStringValue.Converter);
+            _ = builder.Property(nameof(Genre)).HasConversion(MultiStringValue.Converter);
         }
     }
 }

@@ -32,8 +32,8 @@ namespace FsInfoCat.Local
 
         internal static void OnBuildEntity(EntityTypeBuilder<SubdirectoryListItemWithAncestorNames> builder)
         {
-            builder.ToView(VIEW_NAME_WITH_ANCESTOR_NAMES);
-            builder.Property(nameof(VolumeIdentifier)).HasConversion(VolumeIdentifier.Converter);
+            _ = builder.ToView(VIEW_NAME_WITH_ANCESTOR_NAMES);
+            _ = builder.Property(nameof(VolumeIdentifier)).HasConversion(VolumeIdentifier.Converter);
         }
 
         public SubdirectoryListItemWithAncestorNames()

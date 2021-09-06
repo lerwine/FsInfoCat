@@ -44,7 +44,7 @@ namespace FsInfoCat.Local
 
         internal static void OnBuildEntity([DisallowNull] EntityTypeBuilder<SymbolicName> builder)
         {
-            builder.HasOne(sn => sn.FileSystem).WithMany(d => d.SymbolicNames).HasForeignKey(nameof(FileSystemId)).IsRequired().OnDelete(DeleteBehavior.Restrict);
+            _ = builder.HasOne(sn => sn.FileSystem).WithMany(d => d.SymbolicNames).HasForeignKey(nameof(FileSystemId)).IsRequired().OnDelete(DeleteBehavior.Restrict);
         }
 
         internal static async Task<int> ImportAsync(LocalDbContext dbContext, ILogger<LocalDbContext> logger, Guid fileSystemId, XElement symbolicNameElement)
@@ -80,7 +80,7 @@ namespace FsInfoCat.Local
         {
             FileSystem nav = _fileSystem.GetValue();
             if (!(nav is null || nav.Id.Equals(value)))
-                _fileSystem.SetValue(null);
+                _ = _fileSystem.SetValue(null);
         }
     }
 }

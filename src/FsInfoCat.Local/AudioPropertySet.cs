@@ -67,7 +67,7 @@ namespace FsInfoCat.Local
                 case EntityState.Modified:
                     Guid id = entity.Id;
                     if (!(await dbContext.Entry(oldPropertySet).GetRelatedCollectionAsync(p => p.Files, cancellationToken)).Any(f => f.Id != id))
-                        dbContext.AudioPropertySets.Remove(oldPropertySet);
+                        _ = dbContext.AudioPropertySets.Remove(oldPropertySet);
                     cancellationToken.ThrowIfCancellationRequested();
                     break;
             }

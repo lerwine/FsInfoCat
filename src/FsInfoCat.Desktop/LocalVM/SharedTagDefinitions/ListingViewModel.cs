@@ -51,7 +51,7 @@ namespace FsInfoCat.Desktop.LocalVM.SharedTagDefinitions
             if (_currentOptions.HasValue ? (ListingOptions.Value.HasValue && _currentOptions.Value == ListingOptions.Value.Value) : !ListingOptions.Value.HasValue)
                 return;
             _currentOptions = ListingOptions.Value;
-            ReloadAsync(_currentOptions);
+            _ = ReloadAsync(_currentOptions);
         }
 
         protected override void OnCancelFilterOptionsCommand(object parameter)
@@ -135,7 +135,7 @@ namespace FsInfoCat.Desktop.LocalVM.SharedTagDefinitions
                     },
                 },
             };
-            return MessageBox.Show(App.Current.MainWindow, "This action cannot be undone!\n\nAre you sure you want to remove this shared tag{message}from the database?",
+            return MessageBox.Show(Application.Current.MainWindow, "This action cannot be undone!\n\nAre you sure you want to remove this shared tag{message}from the database?",
                 "Delete Shared Tag", MessageBoxButton.YesNo, MessageBoxImage.Exclamation) == MessageBoxResult.Yes;
         }
 

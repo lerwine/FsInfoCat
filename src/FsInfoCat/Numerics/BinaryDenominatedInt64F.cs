@@ -34,9 +34,9 @@ namespace FsInfoCat.Numerics
         public const string KB_SUFFIX = "KB";
         public const string B_SUFFIX = "b";
 
-        private long _value;
-        private double _numerator;
-        private BinaryDenomination _denominator;
+        private readonly long _value;
+        private readonly double _numerator;
+        private readonly BinaryDenomination _denominator;
 
         public double Numerator => _numerator;
 
@@ -193,7 +193,7 @@ namespace FsInfoCat.Numerics
             return new(Convert.ToInt64(double.Parse(s)));
         }
 
-        public bool TryParse(string s, out BinaryDenominatedInt64F result)
+        public static bool TryParse(string s, out BinaryDenominatedInt64F result)
         {
             if (s is not null && (s = s.Trim()).Length > 0)
             {

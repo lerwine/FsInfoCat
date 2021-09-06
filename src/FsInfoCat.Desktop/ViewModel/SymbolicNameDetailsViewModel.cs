@@ -9,7 +9,6 @@ namespace FsInfoCat.Desktop.ViewModel
         where TFileSystemEntity : DbEntity, IFileSystemRow
         where TFileSystemModel : FileSystemRowViewModel<TFileSystemEntity>
     {
-#pragma warning disable IDE0060 // Remove unused parameter
         #region FileSystem Property Members
 
         /// <summary>
@@ -31,7 +30,6 @@ namespace FsInfoCat.Desktop.ViewModel
         private void OnFileSystemPropertyChanged(TFileSystemModel oldValue, TFileSystemModel newValue) { }
 
         #endregion
-#pragma warning restore IDE0060 // Remove unused parameter
 
         public SymbolicNameDetailsViewModel([DisallowNull] TEntity entity, TFileSystemModel fileSystem) : base(entity)
         {

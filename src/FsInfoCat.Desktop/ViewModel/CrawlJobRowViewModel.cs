@@ -109,7 +109,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="StatusMessage"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="StatusMessage"/> property.</param>
-        private void OnStatusMessagePropertyChanged(string oldValue, string newValue) { }
+        protected virtual void OnStatusMessagePropertyChanged(string oldValue, string newValue) { }
 
         #endregion
         #region StatusDetail Property Members

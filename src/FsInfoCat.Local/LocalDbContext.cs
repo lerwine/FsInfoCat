@@ -167,7 +167,7 @@ namespace FsInfoCat.Local
                             using SqliteCommand command = connection.CreateCommand();
                             command.CommandText = element.Value;
                             command.CommandType = System.Data.CommandType.Text;
-                            try { command.ExecuteNonQuery(); }
+                            try { _ = command.ExecuteNonQuery(); }
                             catch (Exception exception)
                             {
                                 throw new Exception($"Error executing query '{element.Value}': {exception.Message}");
@@ -188,7 +188,7 @@ namespace FsInfoCat.Local
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.HasDefaultSchema("dbo")
+            _ = modelBuilder.HasDefaultSchema("dbo")
                 .Entity<SymbolicName>(SymbolicName.OnBuildEntity)
                 .Entity<Volume>(Volume.OnBuildEntity)
                 .Entity<Subdirectory>(Subdirectory.OnBuildEntity)
@@ -248,7 +248,7 @@ namespace FsInfoCat.Local
         public static void AddDbContextPool(IServiceCollection services, string dbPath)
         {
             string connectionString = GetConnectionString(dbPath);
-            services.AddDbContextPool<LocalDbContext>(options => options.AddInterceptors(new Interceptor()).UseSqlite(connectionString));
+            _ = services.AddDbContextPool<LocalDbContext>(options => options.AddInterceptors(new Interceptor()).UseSqlite(connectionString));
         }
 
         public static string GetConnectionString(Assembly assembly, string dbFileName) => GetConnectionString(GetDbFilePath(assembly, dbFileName));
@@ -525,7 +525,7 @@ namespace FsInfoCat.Local
             EntityEntry<BinaryPropertySet> entry = Entry(binaryProperties);
             if ((await entry.GetRelatedCollectionAsync(p => p.Files, cancellationToken)).Any() || !(await entry.GetRelatedCollectionAsync(p => p.RedundantSets, cancellationToken)).Any())
                 return false;
-            BinaryPropertySets.Remove(binaryProperties);
+            _ = BinaryPropertySets.Remove(binaryProperties);
             return true;
         }
 
@@ -534,7 +534,7 @@ namespace FsInfoCat.Local
             cancellationToken.ThrowIfCancellationRequested();
             if ((await GetRelatedCollectionAsync(videoProperties, p => p.Files, cancellationToken)).Any())
                 return false;
-            VideoPropertySets.Remove(videoProperties);
+            _ = VideoPropertySets.Remove(videoProperties);
             return true;
         }
 
@@ -543,7 +543,7 @@ namespace FsInfoCat.Local
             cancellationToken.ThrowIfCancellationRequested();
             if ((await GetRelatedCollectionAsync(recordedTVProperties, p => p.Files, cancellationToken)).Any())
                 return false;
-            RecordedTVPropertySets.Remove(recordedTVProperties);
+            _ = RecordedTVPropertySets.Remove(recordedTVProperties);
             return true;
         }
 
@@ -552,7 +552,7 @@ namespace FsInfoCat.Local
             cancellationToken.ThrowIfCancellationRequested();
             if ((await GetRelatedCollectionAsync(photoProperties, p => p.Files, cancellationToken)).Any())
                 return false;
-            PhotoPropertySets.Remove(photoProperties);
+            _ = PhotoPropertySets.Remove(photoProperties);
             return true;
         }
 
@@ -561,7 +561,7 @@ namespace FsInfoCat.Local
             cancellationToken.ThrowIfCancellationRequested();
             if ((await GetRelatedCollectionAsync(musicProperties, p => p.Files, cancellationToken)).Any())
                 return false;
-            MusicPropertySets.Remove(musicProperties);
+            _ = MusicPropertySets.Remove(musicProperties);
             return true;
         }
 
@@ -570,7 +570,7 @@ namespace FsInfoCat.Local
             cancellationToken.ThrowIfCancellationRequested();
             if ((await GetRelatedCollectionAsync(mediaProperties, p => p.Files, cancellationToken)).Any())
                 return false;
-            MediaPropertySets.Remove(mediaProperties);
+            _ = MediaPropertySets.Remove(mediaProperties);
             return true;
         }
 
@@ -579,7 +579,7 @@ namespace FsInfoCat.Local
             cancellationToken.ThrowIfCancellationRequested();
             if ((await GetRelatedCollectionAsync(imageProperties, p => p.Files, cancellationToken)).Any())
                 return false;
-            ImagePropertySets.Remove(imageProperties);
+            _ = ImagePropertySets.Remove(imageProperties);
             return true;
         }
 
@@ -588,7 +588,7 @@ namespace FsInfoCat.Local
             cancellationToken.ThrowIfCancellationRequested();
             if ((await GetRelatedCollectionAsync(gpsProperties, p => p.Files, cancellationToken)).Any())
                 return false;
-            GPSPropertySets.Remove(gpsProperties);
+            _ = GPSPropertySets.Remove(gpsProperties);
             return true;
         }
 
@@ -597,7 +597,7 @@ namespace FsInfoCat.Local
             cancellationToken.ThrowIfCancellationRequested();
             if ((await GetRelatedCollectionAsync(drmProperties, p => p.Files, cancellationToken)).Any())
                 return false;
-            DRMPropertySets.Remove(drmProperties);
+            _ = DRMPropertySets.Remove(drmProperties);
             return true;
         }
 
@@ -606,7 +606,7 @@ namespace FsInfoCat.Local
             cancellationToken.ThrowIfCancellationRequested();
             if ((await GetRelatedCollectionAsync(audioProperties, p => p.Files, cancellationToken)).Any())
                 return false;
-            AudioPropertySets.Remove(audioProperties);
+            _ = AudioPropertySets.Remove(audioProperties);
             return true;
         }
 
@@ -615,7 +615,7 @@ namespace FsInfoCat.Local
             cancellationToken.ThrowIfCancellationRequested();
             if ((await GetRelatedCollectionAsync(documentProperties, p => p.Files, cancellationToken)).Any())
                 return false;
-            DocumentPropertySets.Remove(documentProperties);
+            _ = DocumentPropertySets.Remove(documentProperties);
             return true;
         }
 
@@ -624,7 +624,7 @@ namespace FsInfoCat.Local
             cancellationToken.ThrowIfCancellationRequested();
             if ((await GetRelatedCollectionAsync(summaryProperties, p => p.Files, cancellationToken)).Any())
                 return false;
-            SummaryPropertySets.Remove(summaryProperties);
+            _ = SummaryPropertySets.Remove(summaryProperties);
             return true;
         }
 
@@ -633,10 +633,10 @@ namespace FsInfoCat.Local
             if (target is null)
                 throw new ArgumentNullException(nameof(target));
             var redundantSet = target.RedundantSet;
-            Redundancies.Remove(target);
-            SaveChanges();
+            _ = Redundancies.Remove(target);
+            _ = SaveChanges();
             if (redundantSet.Redundancies.Count == 0)
-                RedundantSets.Remove(redundantSet);
+                _ = RedundantSets.Remove(redundantSet);
         }
 
         #region Overrides

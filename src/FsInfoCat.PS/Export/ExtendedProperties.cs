@@ -5,7 +5,7 @@ using System.Xml.Serialization;
 
 namespace FsInfoCat.PS.Export
 {
-    [Obsolete]
+    [Obsolete("Use categories property system classes (ie. FsInfoCat.PS.Export.BinaryPropertySet)")]
     public class ExtendedProperties : ExportSet.ExtendedPropertySetBase
     {
         public string Kind { get; set; }

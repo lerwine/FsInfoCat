@@ -30,7 +30,7 @@ namespace FsInfoCat.Desktop.COM
             if (!_disposed)
             {
                 if (disposing)
-                    Marshal.ReleaseComObject(_instance);
+                    _ = Marshal.ReleaseComObject(_instance);
                 _disposed = true;
             }
         }

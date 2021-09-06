@@ -1,7 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -53,7 +52,7 @@ namespace FsInfoCat.DeferredDelegation
                             return true;
                         _deferences.Remove(_deferences.First);
                     }
-                    _service._deferenceCollections.Remove(this);
+                    _ = _service._deferenceCollections.Remove(this);
                     Dispose();
                     return false;
                 }
@@ -109,7 +108,7 @@ namespace FsInfoCat.DeferredDelegation
                     try
                     {
                         DeferenceCollection collection = new(service, target, syncRoot);
-                        service._deferenceCollections.AddLast(collection);
+                        _ = service._deferenceCollections.AddLast(collection);
                         return collection.AddDeference();
                     }
                     finally { Monitor.Exit(service._deferenceCollections); }
@@ -123,7 +122,7 @@ namespace FsInfoCat.DeferredDelegation
                     {
                         DelegateDeference<TTarget> deference = new(this);
                         deference.Disposed += Deference_Disposed;
-                        _deferences.AddLast(new WeakReference<DelegateDeference<TTarget>>(deference));
+                        _ = _deferences.AddLast(new WeakReference<DelegateDeference<TTarget>>(deference));
                         return deference;
                     }
                     finally { Monitor.Exit(_deferences); }
@@ -470,13 +469,13 @@ namespace FsInfoCat.DeferredDelegation
                 private void InvokeDeferred((Delegate Delegate, Delegate ErrorHandler, object[] Args) deferredInvocation)
                 {
                     using IDisposable scope = _logger.BeginScope("{MethodName}({Delegate}, {ErrorHandler}, {Args})", nameof(InvokeDeferred), deferredInvocation.Delegate, deferredInvocation.ErrorHandler, deferredInvocation.Args);
-                    try { deferredInvocation.Delegate.DynamicInvoke(deferredInvocation.Args); }
+                    try { _ = deferredInvocation.Delegate.DynamicInvoke(deferredInvocation.Args); }
                     catch (Exception exception)
                     {
                         if (deferredInvocation.ErrorHandler is null)
                             RaiseUnhandledExceptionEvent(exception);
                         else
-                            try { deferredInvocation.ErrorHandler.DynamicInvoke(new object[] { exception }.Concat(deferredInvocation.Args).ToArray()); }
+                            try { _ = deferredInvocation.ErrorHandler.DynamicInvoke(new object[] { exception }.Concat(deferredInvocation.Args).ToArray()); }
                             catch (Exception error) { RaiseUnhandledExceptionEvent(error); }
                     }
                 }
@@ -506,7 +505,7 @@ namespace FsInfoCat.DeferredDelegation
                         try
                         {
                             Monitor.Enter(_service._deferenceCollections);
-                            try { _service._deferenceCollections.Remove(this); }
+                            try { _ = _service._deferenceCollections.Remove(this); }
                             finally { Monitor.Exit(_service._deferenceCollections); }
                         }
                         finally

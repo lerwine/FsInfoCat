@@ -1,16 +1,13 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 
 namespace FsInfoCat
 {
     public class NullIfWhiteSpaceOrTrimmedStringCoersion : ICoersion<string>
     {
         public static readonly NullIfWhiteSpaceOrTrimmedStringCoersion Default = new();
-
-        IEqualityComparer<string> _backingComparer;
+        readonly IEqualityComparer<string> _backingComparer;
 
         Type ICoersion.ValueType => typeof(string);
 

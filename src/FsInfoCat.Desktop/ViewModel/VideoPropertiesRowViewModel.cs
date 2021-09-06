@@ -9,7 +9,6 @@ namespace FsInfoCat.Desktop.ViewModel
     public class VideoPropertiesRowViewModel<TEntity> : DbEntityRowViewModel<TEntity>
         where TEntity : DbEntity, IVideoProperties
     {
-#pragma warning disable IDE0060 // Remove unused parameter
         #region Director Property Members
 
         /// <summary>
@@ -220,7 +219,6 @@ namespace FsInfoCat.Desktop.ViewModel
         protected virtual void OnVerticalAspectRatioPropertyChanged(uint? oldValue, uint? newValue) { }
 
         #endregion
-#pragma warning restore IDE0060 // Remove unused parameter
 
         public VideoPropertiesRowViewModel([DisallowNull] TEntity entity) : base(entity)
         {

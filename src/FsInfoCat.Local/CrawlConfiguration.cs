@@ -65,14 +65,14 @@ namespace FsInfoCat.Local
 
         internal static void OnBuildEntity(EntityTypeBuilder<CrawlConfiguration> builder)
         {
-            builder.HasOne(s => s.Root).WithOne(c => c.CrawlConfiguration).HasForeignKey<CrawlConfiguration>(nameof(RootId)).OnDelete(DeleteBehavior.Restrict);
+            _ = builder.HasOne(s => s.Root).WithOne(c => c.CrawlConfiguration).HasForeignKey<CrawlConfiguration>(nameof(RootId)).OnDelete(DeleteBehavior.Restrict);
         }
 
         protected override void OnRootIdChanged(Guid value)
         {
             Subdirectory nav = _root.GetValue();
             if (!(nav is null || nav.Id.Equals(value)))
-                _root.SetValue(null);
+                _ = _root.SetValue(null);
         }
 
         public static async Task<int> DeleteAsync(CrawlConfiguration target, LocalDbContext dbContext, IStatusListener statusListener)
@@ -91,7 +91,7 @@ namespace FsInfoCat.Local
             }
             else
                 result = 0;
-            dbContext.CrawlConfigurations.Remove(target);
+            _ = dbContext.CrawlConfigurations.Remove(target);
             result += await dbContext.SaveChangesAsync(statusListener.CancellationToken);
             await transaction.CommitAsync(statusListener.CancellationToken);
             return result;

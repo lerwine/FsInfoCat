@@ -2,11 +2,9 @@ using FsInfoCat.Local;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
@@ -57,7 +55,7 @@ namespace FsInfoCat.Desktop.ViewModel
         protected virtual void OnItemDeleteCommand([DisallowNull] TItem item, object parameter)
         {
             if (ConfirmItemDelete(item, parameter))
-                DeleteItemAsync(item);
+                _ = DeleteItemAsync(item);
         }
 
         protected IAsyncJob DeleteItemAsync([DisallowNull] TItem item)
@@ -92,7 +90,7 @@ namespace FsInfoCat.Desktop.ViewModel
                 {
                     targets.Item.EditCommand -= Item_EditCommand;
                     targets.Item.DeleteCommand -= Item_DeleteCommand;
-                    _backingItems.Remove(targets.Item);
+                    _ = _backingItems.Remove(targets.Item);
                     OnItemDeleted(targets.Item);
                 }, DispatcherPriority.Background, statusListener.CancellationToken);
         }

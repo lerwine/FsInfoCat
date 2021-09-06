@@ -32,8 +32,8 @@ namespace FsInfoCat.Numerics
         public const string KB_SUFFIX = "KB";
         public const string B_SUFFIX = "b";
 
-        private long _numerator;
-        private BinaryDenomination _denominator;
+        private readonly long _numerator;
+        private readonly BinaryDenomination _denominator;
 
         public long Numerator => _numerator;
 
@@ -73,12 +73,12 @@ namespace FsInfoCat.Numerics
                 _numerator = value;
                 _denominator = BinaryDenomination.Bytes;
             }
-            else if ((a & (bits = bits << 10)) != 0L)
+            else if ((a & (bits <<= 10)) != 0L)
             {
                 _numerator = (value < 0L) ? (a >> KB_SHIFT) * -1L : value >> KB_SHIFT;
                 _denominator = BinaryDenomination.Kilobytes;
             }
-            else if ((a & (bits = bits << 10)) != 0L)
+            else if ((a & (bits <<= 10)) != 0L)
             {
                 _numerator = (value < 0L) ? (a >> MB_SHIFT) * -1L : value >> MB_SHIFT;
                 _denominator = BinaryDenomination.Megabytes;
@@ -168,7 +168,7 @@ namespace FsInfoCat.Numerics
             return new(long.Parse(s));
         }
 
-        public bool TryParse(string s, out BinaryDenominatedInt64 result)
+        public static bool TryParse(string s, out BinaryDenominatedInt64 result)
         {
             if (s is not null && (s = s.Trim()).Length > 0)
             {

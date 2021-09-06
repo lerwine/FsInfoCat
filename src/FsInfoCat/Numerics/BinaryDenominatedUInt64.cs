@@ -18,8 +18,8 @@ namespace FsInfoCat.Numerics
         public const ulong TB_MAX = 0x0000_0000_00ff_ffffUL;
         public const ulong TB_DENOMINATOR = 0x0100_0000_0000UL;
 
-        private ulong _numerator;
-        private BinaryDenomination _denominator;
+        private readonly ulong _numerator;
+        private readonly BinaryDenomination _denominator;
 
         public ulong Numerator => _numerator;
 
@@ -58,17 +58,17 @@ namespace FsInfoCat.Numerics
                 _numerator = value;
                 _denominator = BinaryDenomination.Bytes;
             }
-            else if ((value & (bits = bits << 10)) != 0L)
+            else if ((value & (bits <<= 10)) != 0L)
             {
                 _numerator = value >> KB_SHIFT;
                 _denominator = BinaryDenomination.Kilobytes;
             }
-            else if ((value & (bits = bits << 10)) != 0L)
+            else if ((value & (bits <<= 10)) != 0L)
             {
                 _numerator = value >> MB_SHIFT;
                 _denominator = BinaryDenomination.Megabytes;
             }
-            else if ((value & (bits = bits << 10)) != 0L)
+            else if ((value & (bits <<= 10)) != 0L)
             {
                 _numerator = value >> GB_SHIFT;
                 _denominator = BinaryDenomination.Gigabytes;
@@ -141,7 +141,7 @@ namespace FsInfoCat.Numerics
             return new(ulong.Parse(s));
         }
 
-        public bool TryParse(string s, out BinaryDenominatedUInt64 result)
+        public static bool TryParse(string s, out BinaryDenominatedUInt64 result)
         {
             if (s is not null && (s = s.Trim()).Length > 0)
             {

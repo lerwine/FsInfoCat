@@ -44,10 +44,10 @@ namespace FsInfoCat.Local
         {
             if (builder is null)
                 throw new ArgumentOutOfRangeException(nameof(builder));
-            builder.Property(nameof(Author)).HasConversion(MultiStringValue.Converter);
-            builder.Property(nameof(Keywords)).HasConversion(MultiStringValue.Converter);
-            builder.Property(nameof(ItemAuthors)).HasConversion(MultiStringValue.Converter);
-            builder.Property(nameof(Kind)).HasConversion(MultiStringValue.Converter);
+            _ = builder.Property(nameof(Author)).HasConversion(MultiStringValue.Converter);
+            _ = builder.Property(nameof(Keywords)).HasConversion(MultiStringValue.Converter);
+            _ = builder.Property(nameof(ItemAuthors)).HasConversion(MultiStringValue.Converter);
+            _ = builder.Property(nameof(Kind)).HasConversion(MultiStringValue.Converter);
         }
 
         internal static async Task RefreshAsync([DisallowNull] EntityEntry<DbFile> entry, [DisallowNull] IFileDetailProvider fileDetailProvider,
@@ -86,7 +86,7 @@ namespace FsInfoCat.Local
                 case EntityState.Modified:
                     Guid id = entity.Id;
                     if (!(await dbContext.Entry(oldPropertySet).GetRelatedCollectionAsync(p => p.Files, cancellationToken)).Any(f => f.Id != id))
-                        dbContext.SummaryPropertySets.Remove(oldPropertySet);
+                        _ = dbContext.SummaryPropertySets.Remove(oldPropertySet);
                     cancellationToken.ThrowIfCancellationRequested();
                     break;
             }

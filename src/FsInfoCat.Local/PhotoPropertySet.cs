@@ -44,8 +44,8 @@ namespace FsInfoCat.Local
         {
             if (builder is null)
                 throw new ArgumentOutOfRangeException(nameof(builder));
-            builder.Property(nameof(Event)).HasConversion(MultiStringValue.Converter);
-            builder.Property(nameof(PeopleNames)).HasConversion(MultiStringValue.Converter);
+            _ = builder.Property(nameof(Event)).HasConversion(MultiStringValue.Converter);
+            _ = builder.Property(nameof(PeopleNames)).HasConversion(MultiStringValue.Converter);
         }
 
         internal static async Task RefreshAsync([DisallowNull] EntityEntry<DbFile> entry, [DisallowNull] IFileDetailProvider fileDetailProvider,
@@ -84,7 +84,7 @@ namespace FsInfoCat.Local
                 case EntityState.Modified:
                     Guid id = entity.Id;
                     if (!(await dbContext.Entry(oldPropertySet).GetRelatedCollectionAsync(p => p.Files, cancellationToken)).Any(f => f.Id != id))
-                        dbContext.PhotoPropertySets.Remove(oldPropertySet);
+                        _ = dbContext.PhotoPropertySets.Remove(oldPropertySet);
                     cancellationToken.ThrowIfCancellationRequested();
                     break;
             }

@@ -116,7 +116,7 @@ namespace FsInfoCat
                 switch (entry.State)
                 {
                     case EntityState.Added:
-                        dbContext.Remove(entry.Entity);
+                        _ = dbContext.Remove(entry.Entity);
                         break;
                     case EntityState.Modified:
                         if (entry.Entity is IDbEntity dbEntity)
@@ -135,7 +135,7 @@ namespace FsInfoCat
                 case EntityState.Added:
                     //if (entry.Entity is IRevertibleChangeTracking rct)
                     //    rct.RejectChanges();
-                    entry.Context.Remove(entry.Entity);
+                    _ = entry.Context.Remove(entry.Entity);
                     break;
                 case EntityState.Deleted:
                     if (entry.Entity is IRevertibleChangeTracking rct2)

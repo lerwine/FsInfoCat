@@ -53,7 +53,7 @@ namespace FsInfoCat.Desktop.ViewModel
             {
                 if (wasLastMessage)
                 {
-                    _messages.Remove(propertyName);
+                    _ = _messages.Remove(propertyName);
                     SetValidationState(propertyName, true);
                     try { SetValidationState(propertyName, true); }
                     finally { RaiseErrorsChanged(propertyName); }

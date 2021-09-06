@@ -84,7 +84,7 @@ namespace FsInfoCat.Desktop.ViewModel
                 if ((bool)e.NewValue)
                     _backingSelectedItems.Add(item);
                 else
-                    _backingSelectedItems.Remove(item);
+                    _ = _backingSelectedItems.Remove(item);
             }
         }
     }

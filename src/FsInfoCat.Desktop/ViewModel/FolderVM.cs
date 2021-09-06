@@ -66,7 +66,7 @@ namespace FsInfoCat.Desktop.ViewModel
                 if (item is null)
                     return null;
                 list = new();
-                list.AddLast(item);
+                _ = list.AddLast(item);
             }
             else if ((list = FindByPath(logicalDisks, parentPath)) is not null)
             {
@@ -90,7 +90,7 @@ namespace FsInfoCat.Desktop.ViewModel
                 }
                 if (item is null)
                     return null;
-                list.AddLast(item);
+                _ = list.AddLast(item);
             }
             return list;
         }
@@ -135,7 +135,7 @@ namespace FsInfoCat.Desktop.ViewModel
         protected virtual void OnIsSelectedPropertyChanged(DependencyPropertyChangedEventArgs args)
         {
             if ((bool)args.NewValue)
-                PreloadAsync();
+                _ = PreloadAsync();
         }
 
         public static readonly DependencyProperty IsExpandedProperty = DependencyProperty.Register(nameof(IsExpanded), typeof(bool), typeof(FolderVM),
@@ -150,7 +150,7 @@ namespace FsInfoCat.Desktop.ViewModel
         protected virtual void OnIsExpandedPropertyChanged(DependencyPropertyChangedEventArgs args)
         {
             if ((bool)args.NewValue)
-                PreloadAsync();
+                _ = PreloadAsync();
         }
 
         #region SubFolders Property Members
@@ -396,15 +396,15 @@ namespace FsInfoCat.Desktop.ViewModel
                 else
                     return _preload.Task;
             }
-            preload.Task.ContinueWith(task =>
-            {
-                lock (_syncRoot)
-                {
-                    if (_preload is not null && ReferenceEquals(_preload, preload))
-                        _preload = preload with { TokenSource = null };
-                }
-                preload.TokenSource.Dispose();
-            });
+            _ = preload.Task.ContinueWith(task =>
+              {
+                  lock (_syncRoot)
+                  {
+                      if (_preload is not null && ReferenceEquals(_preload, preload))
+                          _preload = preload with { TokenSource = null };
+                  }
+                  preload.TokenSource.Dispose();
+              });
             return preload.Task;
         }
 

@@ -79,7 +79,7 @@ namespace FsInfoCat.Desktop.LocalVM.SymbolicNames
             // TODO: Implement OnItemEditCommand(object);
         }
 
-        protected override bool ConfirmItemDelete(ListItemViewModel item, object parameter) => MessageBox.Show(App.Current.MainWindow,
+        protected override bool ConfirmItemDelete(ListItemViewModel item, object parameter) => MessageBox.Show(Application.Current.MainWindow,
             "This action cannot be undone!\n\nAre you sure you want to remove this symbolic name from the database?",
             "Delete Symbolic Name", MessageBoxButton.YesNo, MessageBoxImage.Exclamation) == MessageBoxResult.Yes;
 
@@ -89,7 +89,7 @@ namespace FsInfoCat.Desktop.LocalVM.SymbolicNames
             SymbolicName target = await dbContext.SymbolicNames.FindAsync(new object[] { entity.Id }, statusListener.CancellationToken);
             if (target is null)
                 return 0;
-            dbContext.SymbolicNames.Remove(target);
+            _ = dbContext.SymbolicNames.Remove(target);
             return await dbContext.SaveChangesAsync(statusListener.CancellationToken);
         }
 

@@ -14,7 +14,7 @@ namespace FsInfoCat.Desktop
 #pragma warning disable IDE0051 // Remove unused private members
         private static void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton<IFileSystemDetailService, FileSystemDetailService>();
+            _ = services.AddSingleton<IFileSystemDetailService, FileSystemDetailService>();
         }
 #pragma warning restore IDE0051 // Remove unused private members
 

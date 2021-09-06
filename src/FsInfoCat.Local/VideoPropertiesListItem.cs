@@ -23,7 +23,7 @@ namespace FsInfoCat.Local
 
         internal static void OnBuildEntity(EntityTypeBuilder<VideoPropertiesListItem> builder)
         {
-            builder.ToView(VIEW_NAME).Property(nameof(Director)).HasConversion(MultiStringValue.Converter); ;
+            _ = builder.ToView(VIEW_NAME).Property(nameof(Director)).HasConversion(MultiStringValue.Converter); ;
         }
     }
 }

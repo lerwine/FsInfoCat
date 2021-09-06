@@ -73,7 +73,7 @@ namespace FsInfoCat.Local
             if (volumeTags.Length > 0)
                 dbContext.PersonalVolumeTags.RemoveRange(volumeTags);
             int result = dbContext.ChangeTracker.HasChanges() ? await dbContext.SaveChangesAsync(statusListener.CancellationToken) : 0;
-            dbContext.PersonalTagDefinitions.Remove(target);
+            _ = dbContext.PersonalTagDefinitions.Remove(target);
             result += await dbContext.SaveChangesAsync(statusListener.CancellationToken);
             await transaction.CommitAsync(statusListener.CancellationToken);
             return result;

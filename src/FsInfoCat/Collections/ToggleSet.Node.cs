@@ -1,6 +1,5 @@
 using System;
 using System.ComponentModel;
-using System.Collections.Generic;
 using System.Linq;
 using System.Collections.Specialized;
 using System.Diagnostics.CodeAnalysis;
@@ -59,7 +58,7 @@ namespace FsInfoCat.Collections
                                 {
                                     int newIndex = target._trueAccessor.Count;
                                     target._trueAccessor.Add(this);
-                                    target._falseAccessor.Remove(this);
+                                    _ = target._falseAccessor.Remove(this);
                                     delegateDeference.DeferAction(() =>
                                     {
                                         target.True.RaiseCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, Value, newIndex));
@@ -97,7 +96,7 @@ namespace FsInfoCat.Collections
                                 {
                                     int newIndex = target._falseAccessor.Count;
                                     target._falseAccessor.Add(this);
-                                    target._trueAccessor.Remove(this);
+                                    _ = target._trueAccessor.Remove(this);
                                     delegateDeference.DeferAction(() =>
                                     {
                                         target.False.RaiseCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, Value, newIndex));
@@ -139,7 +138,7 @@ namespace FsInfoCat.Collections
                                 {
                                     int newIndex = target._trueAccessor.Count;
                                     target._trueAccessor.Add(this);
-                                    target._indeterminateAccessor.Remove(this);
+                                    _ = target._indeterminateAccessor.Remove(this);
                                     delegateDeference.DeferAction(() =>
                                     {
                                         target.True.RaiseCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, Value, newIndex));
@@ -177,7 +176,7 @@ namespace FsInfoCat.Collections
                                 {
                                     int newIndex = target._falseAccessor.Count;
                                     target._falseAccessor.Add(this);
-                                    target._indeterminateAccessor.Remove(this);
+                                    _ = target._indeterminateAccessor.Remove(this);
                                     delegateDeference.DeferAction(() =>
                                     {
                                         target.False.RaiseCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, Value, newIndex));
@@ -221,7 +220,7 @@ namespace FsInfoCat.Collections
                             if (_state.Value)
                             {
                                 target._indeterminateAccessor.Add(this);
-                                target._trueAccessor.Remove(this);
+                                _ = target._trueAccessor.Remove(this);
                                 delegateDeference.DeferAction(() =>
                                 {
                                     target.Indeterminate.RaiseCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, Value, newIndex));
@@ -258,7 +257,7 @@ namespace FsInfoCat.Collections
                             else
                             {
                                 target._indeterminateAccessor.Add(this);
-                                target._falseAccessor.Remove(this);
+                                _ = target._falseAccessor.Remove(this);
                                 delegateDeference.DeferAction(() =>
                                 {
                                     target.Indeterminate.RaiseCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, Value, newIndex));
@@ -627,7 +626,7 @@ namespace FsInfoCat.Collections
                 {
                     if (node._state.Value)
                     {
-                        toggleSet._trueAccessor.Remove(node);
+                        _ = toggleSet._trueAccessor.Remove(node);
                         delegateDeference.DeferAction(() =>
                         {
                             toggleSet.True.RaiseCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, value, indexOfState));
@@ -662,7 +661,7 @@ namespace FsInfoCat.Collections
                         }
                         return true;
                     }
-                    toggleSet._falseAccessor.Remove(node);
+                    _ = toggleSet._falseAccessor.Remove(node);
                     delegateDeference.DeferAction(() =>
                     {
                         toggleSet.False.RaiseCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, value, indexOfState));
@@ -697,7 +696,7 @@ namespace FsInfoCat.Collections
                     }
                     return true;
                 }
-                toggleSet._indeterminateAccessor.Remove(node);
+                _ = toggleSet._indeterminateAccessor.Remove(node);
                 delegateDeference.DeferAction(() =>
                 {
                     toggleSet.Indeterminate.RaiseCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, value, indexOfState));
@@ -889,7 +888,7 @@ namespace FsInfoCat.Collections
 
                 protected StateSet Target { get; }
 
-                protected void InsertOfState(Node item, Node previous)
+                protected static void InsertOfState(Node item, Node previous)
                 {
                     if ((item.NextOfState = (item.PreviousOfState = previous).NextOfState) is not null)
                         previous.NextOfState = item.NextOfState.PreviousOfState = item;
@@ -897,7 +896,7 @@ namespace FsInfoCat.Collections
                         previous.NextOfState = item;
                 }
 
-                protected void RemoveOfState(Node node)
+                protected static void RemoveOfState(Node node)
                 {
                     if (node.PreviousOfState is null)
                     {
@@ -914,7 +913,7 @@ namespace FsInfoCat.Collections
                         node.PreviousOfState = null;
                     }
                 }
-                protected void ClearOfState([DisallowNull] Node node)
+                protected static void ClearOfState([DisallowNull] Node node)
                 {
                     while (node.PreviousOfState is not null)
                         node = node.PreviousOfState;

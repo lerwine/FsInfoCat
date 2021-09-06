@@ -206,7 +206,7 @@ namespace FsInfoCat.Local
                     if (DB.Status == DirectoryStatus.Incomplete && Worker.TotalItems <= Worker.MaxTotalItems)
                         DB.Status = DirectoryStatus.Complete;
                     Worker._logger.LogInformation("Saving changes to database");
-                    await dbContext.SaveChangesAsync(cancellationToken);
+                    _ = await dbContext.SaveChangesAsync(cancellationToken);
                 }
                 else
                     await DB.MarkBranchDeletedAsync(dbContext, cancellationToken);

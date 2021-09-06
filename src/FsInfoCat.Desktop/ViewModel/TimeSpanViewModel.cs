@@ -136,7 +136,7 @@ namespace FsInfoCat.Desktop.ViewModel
                     }
                 }
             }
-            finally { Interlocked.Decrement(ref _valueChanging); }
+            finally { _ = Interlocked.Decrement(ref _valueChanging); }
             PropertyValidatingEventArgs<TimeSpan?, (string DaysMessage, string HoursMessage, string MinutesMessage)> args = new(newValue, nameof(Value),
                 (DaysValidationMessage, HoursValidationMessage, MinutesValidationMessage));
             if (newValue.HasValue)
@@ -320,7 +320,7 @@ namespace FsInfoCat.Desktop.ViewModel
                 else
                     Value = null;
             }
-            finally { Interlocked.Decrement(ref _valueChanging); }
+            finally { _ = Interlocked.Decrement(ref _valueChanging); }
         }
 
         protected virtual void OnValidateDaysValue(PropertyValidatingEventArgs<int?, (int? Hours, int? Minutes)> args) =>
@@ -432,7 +432,7 @@ namespace FsInfoCat.Desktop.ViewModel
                     }
                 }
             }
-            finally { Interlocked.Decrement(ref _valueChanging); }
+            finally { _ = Interlocked.Decrement(ref _valueChanging); }
             Hours24ValidationMessage = args.ValidationMessage;
         }
 
@@ -502,7 +502,7 @@ namespace FsInfoCat.Desktop.ViewModel
                         }
                 }
             }
-            finally { Interlocked.Decrement(ref _valueChanging); }
+            finally { _ = Interlocked.Decrement(ref _valueChanging); }
             PropertyValidatingEventArgs<int?, (int? Days, int? Minutes, bool IsPm)> args = new(Hours12Value, nameof(Hours12Value), (DaysValue, MinutesValue, newValue),
                 Hours12ValidationMessage);
             OnValidateHours12Value(args);
@@ -568,7 +568,7 @@ namespace FsInfoCat.Desktop.ViewModel
                         Hours24Value = null;
                 }
             }
-            finally { Interlocked.Decrement(ref _valueChanging); }
+            finally { _ = Interlocked.Decrement(ref _valueChanging); }
             Hours12ValidationMessage = args.ValidationMessage;
         }
 
@@ -676,7 +676,7 @@ namespace FsInfoCat.Desktop.ViewModel
                 else
                     Value = null;
             }
-            finally { Interlocked.Decrement(ref _valueChanging); }
+            finally { _ = Interlocked.Decrement(ref _valueChanging); }
         }
 
         protected virtual void OnValidateMinutes(PropertyValidatingEventArgs<int?, (int? Days, int? Hours)> args) =>

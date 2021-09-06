@@ -11,7 +11,9 @@ namespace FsInfoCat.PS.Export
 
         [XmlAttribute(nameof(Id))]
         [EditorBrowsable(EditorBrowsableState.Never)]
+#pragma warning disable IDE1006 // Naming Styles
         public string __XML_Id { get => Id.ToGuidXml(); set => _id = value.FromXmlGuid(); }
+#pragma warning restore IDE1006 // Naming Styles
         [XmlIgnore]
         public Guid Id
         {

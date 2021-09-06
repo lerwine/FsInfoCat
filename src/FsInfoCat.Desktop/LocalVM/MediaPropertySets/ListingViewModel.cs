@@ -58,7 +58,7 @@ namespace FsInfoCat.Desktop.LocalVM.MediaPropertySets
             if (_currentOptions.HasValue ? (ListingOptions.Value.HasValue && _currentOptions.Value == ListingOptions.Value.Value) : !ListingOptions.Value.HasValue)
                 return;
             _currentOptions = ListingOptions.Value;
-            ReloadAsync(_currentOptions);
+            _ = ReloadAsync(_currentOptions);
         }
 
         protected override void OnRefreshCommand(object parameter) => ReloadAsync(_currentOptions);
@@ -68,7 +68,7 @@ namespace FsInfoCat.Desktop.LocalVM.MediaPropertySets
             // TODO: Implement OnItemEditCommand(object);
         }
 
-        protected override bool ConfirmItemDelete(ListItemViewModel item, object parameter) => MessageBox.Show(App.Current.MainWindow,
+        protected override bool ConfirmItemDelete(ListItemViewModel item, object parameter) => MessageBox.Show(Application.Current.MainWindow,
             "This action cannot be undone!\n\nAre you sure you want to remove this media property set from the database?",
             "Delete Media Property Set", MessageBoxButton.YesNo, MessageBoxImage.Exclamation) == MessageBoxResult.Yes;
 
@@ -78,7 +78,7 @@ namespace FsInfoCat.Desktop.LocalVM.MediaPropertySets
             MediaPropertySet target = await dbContext.MediaPropertySets.FindAsync(new object[] { entity.Id }, statusListener.CancellationToken);
             if (target is null)
                 return 0;
-            dbContext.MediaPropertySets.Remove(target);
+            _ = dbContext.MediaPropertySets.Remove(target);
             return await dbContext.SaveChangesAsync(statusListener.CancellationToken);
         }
 

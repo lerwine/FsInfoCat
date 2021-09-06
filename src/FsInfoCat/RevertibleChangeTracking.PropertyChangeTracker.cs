@@ -22,7 +22,7 @@ namespace FsInfoCat
                 {
                     if (target._changeTrackers.Any(t => t.PropertyName.Equals(propertyName)))
                         throw new ArgumentOutOfRangeException(nameof(propertyName));
-                    target._changeTrackers.AddLast(this);
+                    _ = target._changeTrackers.AddLast(this);
                 }
                 Coersion = coersion ?? Coersion<T>.Default;
                 _value = Coersion.Normalize(initialValue);

@@ -7,9 +7,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel
@@ -54,15 +52,15 @@ namespace FsInfoCat.Desktop.ViewModel
                 fullPath = newValue;
             else
             {
-                try { fullPath = System.IO.Path.GetFullPath(newValue); }
+                try { fullPath = Path.GetFullPath(newValue); }
                 catch (Exception exception)
                 {
                     PathError = string.IsNullOrWhiteSpace(exception.Message) ? exception.ToString() : exception.Message;
                     return;
                 }
-                while (string.IsNullOrWhiteSpace(System.IO.Path.GetFileName(fullPath)))
+                while (string.IsNullOrWhiteSpace(Path.GetFileName(fullPath)))
                 {
-                    string p = System.IO.Path.GetDirectoryName(fullPath);
+                    string p = Path.GetDirectoryName(fullPath);
                     if (string.IsNullOrWhiteSpace(p))
                         break;
                     fullPath = p;
@@ -304,7 +302,7 @@ namespace FsInfoCat.Desktop.ViewModel
         {
             MainWindow mainWindow = Services.ServiceProvider.GetService<MainWindow>();
             if (mainWindow is not null)
-                MessageBox.Show(mainWindow, string.IsNullOrWhiteSpace(exception.Message) ? exception.ToString() : exception.Message, title, MessageBoxButton.OK, MessageBoxImage.Error);
+                _ = MessageBox.Show(mainWindow, string.IsNullOrWhiteSpace(exception.Message) ? exception.ToString() : exception.Message, title, MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
 }

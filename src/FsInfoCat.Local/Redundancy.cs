@@ -42,7 +42,7 @@ namespace FsInfoCat.Local
                 {
                     DbFile nav = _file.GetValue();
                     if (!(nav is null || nav.Id.Equals(value)))
-                        _file.SetValue(null);
+                        _ = _file.SetValue(null);
                 }
             }
         }
@@ -57,7 +57,7 @@ namespace FsInfoCat.Local
                 {
                     RedundantSet nav = _redundantSet.GetValue();
                     if (!(nav is null || nav.Id.Equals(value)))
-                        _redundantSet.SetValue(null);
+                        _ = _redundantSet.SetValue(null);
                 }
             }
         }
@@ -80,9 +80,9 @@ namespace FsInfoCat.Local
                 if (_file.SetValue(value))
                 {
                     if (value is null)
-                        _fileId.SetValue(Guid.Empty);
+                        _ = _fileId.SetValue(Guid.Empty);
                     else
-                        _fileId.SetValue(value.Id);
+                        _ = _fileId.SetValue(value.Id);
                 }
             }
         }
@@ -98,9 +98,9 @@ namespace FsInfoCat.Local
                 if (_redundantSet.SetValue(value))
                 {
                     if (value is null)
-                        _redundantSetId.SetValue(Guid.Empty);
+                        _ = _redundantSetId.SetValue(Guid.Empty);
                     else
-                        _redundantSetId.SetValue(value.Id);
+                        _ = _redundantSetId.SetValue(value.Id);
                 }
             }
         }
@@ -156,9 +156,9 @@ namespace FsInfoCat.Local
 
         internal static void OnBuildEntity(EntityTypeBuilder<Redundancy> builder)
         {
-            builder.HasKey(nameof(FileId), nameof(RedundantSetId));
-            builder.HasOne(sn => sn.File).WithOne(d => d.Redundancy).HasForeignKey<Redundancy>(nameof(FileId)).IsRequired().OnDelete(DeleteBehavior.Restrict);
-            builder.HasOne(sn => sn.RedundantSet).WithMany(d => d.Redundancies).HasForeignKey(nameof(RedundantSetId)).IsRequired().OnDelete(DeleteBehavior.Restrict);
+            _ = builder.HasKey(nameof(FileId), nameof(RedundantSetId));
+            _ = builder.HasOne(sn => sn.File).WithOne(d => d.Redundancy).HasForeignKey<Redundancy>(nameof(FileId)).IsRequired().OnDelete(DeleteBehavior.Restrict);
+            _ = builder.HasOne(sn => sn.RedundantSet).WithMany(d => d.Redundancies).HasForeignKey(nameof(RedundantSetId)).IsRequired().OnDelete(DeleteBehavior.Restrict);
         }
 
         protected override void OnValidate(ValidationContext validationContext, List<ValidationResult> results)
@@ -189,7 +189,7 @@ namespace FsInfoCat.Local
             values.Add(redundantSetId);
             foreach (XAttribute attribute in redundancyElement.Attributes().Where(a => a.Name != n))
             {
-                sql.Append(", \"").Append(attribute.Name.LocalName).Append('"');
+                _ = sql.Append(", \"").Append(attribute.Name.LocalName).Append('"');
                 switch (attribute.Name.LocalName)
                 {
                     case nameof(Reference):
@@ -208,11 +208,11 @@ namespace FsInfoCat.Local
                         throw new NotSupportedException($"Attribute {attribute.Name} is not supported for {nameof(Redundancy)}");
                 }
             }
-            sql.Append(") Values({0}");
+            _ = sql.Append(") Values({0}");
             for (int i = 1; i < values.Count; i++)
-                sql.Append(", {").Append(i).Append('}');
+                _ = sql.Append(", {").Append(i).Append('}');
             logger.LogInformation($"Inserting {nameof(Redundancy)} with FileId {{FileId}} and RedundantSetId {{RedundantSetId}}", fileId, redundantSetId);
-            await dbContext.Database.ExecuteSqlRawAsync(sql.Append(')').ToString(), values.ToArray());
+            _ = await dbContext.Database.ExecuteSqlRawAsync(sql.Append(')').ToString(), values.ToArray());
         }
 
         public static async Task<int> DeleteAsync([DisallowNull] Redundancy target, [DisallowNull] LocalDbContext dbContext, [AllowNull] ILogger logger,
@@ -229,12 +229,12 @@ namespace FsInfoCat.Local
                 logger?.LogInformation("Removing Redundancy {{ Id = {Id} }}", target.Id);
                 EntityEntry<Redundancy> entry = dbContext.Entry(target);
                 EntityEntry<RedundantSet> redundantSet = await entry.GetRelatedTargetEntryAsync(e => e.RedundantSet, cancellationToken);
-                dbContext.Redundancies.Remove(target);
+                _ = dbContext.Redundancies.Remove(target);
                 int result = await dbContext.SaveChangesAsync(cancellationToken);
                 if ((await redundantSet.GetRelatedCollectionAsync(p => p.Redundancies, cancellationToken)).Count() > 0)
                     return result;
                 logger?.LogInformation("Removing empty RedundantSet {{ Id = {Id} }}", redundantSet.Entity.Id);
-                dbContext.RedundantSets.Remove(redundantSet.Entity);
+                _ = dbContext.RedundantSets.Remove(redundantSet.Entity);
                 result += await dbContext.SaveChangesAsync(cancellationToken);
                 await transaction.CommitAsync(cancellationToken);
                 return result;

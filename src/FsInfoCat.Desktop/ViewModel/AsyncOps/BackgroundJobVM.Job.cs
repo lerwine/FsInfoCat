@@ -57,38 +57,38 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
                 _stopwatch = new Stopwatch();
                 _stopwatch.Start();
                 Timer timer = new(TimerTick, null, 1000, 1000);
-                Task.ContinueWith(t =>
-                {
-                    if (t.IsCanceled)
-                        statusListener.Logger.LogWarning("Task canceled: Title = \"{Title}\"; ConcurrencyId = {ConcurrencyId}", Title, statusListener.ConcurrencyId);
-                    else if (t.IsFaulted)
-                        statusListener.Logger.LogError(t.Exception, "Task Faulted: Title = \"{Title}\"; ConcurrencyId = {ConcurrencyId}", Title, statusListener.ConcurrencyId);
-                    else
-                        statusListener.Logger.LogDebug("Task completed: Title = \"{Title}\"; ConcurrencyId = {ConcurrencyId}", Title, statusListener.ConcurrencyId);
-                });
-                Task.ContinueWith(async t =>
-                {
-                    try { loggerScope.Dispose(); }
-                    finally
-                    {
-                        try { await timer.DisposeAsync(); }
-                        finally
-                        {
-                            try { _stopwatch.Stop(); }
-                            finally
-                            {
-                                if (SetJobStatus(out AsyncJobStatus newValue))
-                                    await _viewModel.Dispatcher.InvokeAsync(() =>
-                                    {
-                                        try { _viewModel.Duration = _stopwatch.Elapsed; }
-                                        finally { _viewModel.JobStatus = JobStatus; }
-                                    }, DispatcherPriority.Background);
-                                else
-                                    await _viewModel.Dispatcher.InvokeAsync(() => _viewModel.Duration = _stopwatch.Elapsed, DispatcherPriority.Background);
-                            }
-                        }
-                    }
-                });
+                _ = Task.ContinueWith(t =>
+                  {
+                      if (t.IsCanceled)
+                          statusListener.Logger.LogWarning("Task canceled: Title = \"{Title}\"; ConcurrencyId = {ConcurrencyId}", Title, statusListener.ConcurrencyId);
+                      else if (t.IsFaulted)
+                          statusListener.Logger.LogError(t.Exception, "Task Faulted: Title = \"{Title}\"; ConcurrencyId = {ConcurrencyId}", Title, statusListener.ConcurrencyId);
+                      else
+                          statusListener.Logger.LogDebug("Task completed: Title = \"{Title}\"; ConcurrencyId = {ConcurrencyId}", Title, statusListener.ConcurrencyId);
+                  });
+                _ = Task.ContinueWith(async t =>
+                  {
+                      try { loggerScope.Dispose(); }
+                      finally
+                      {
+                          try { await timer.DisposeAsync(); }
+                          finally
+                          {
+                              try { _stopwatch.Stop(); }
+                              finally
+                              {
+                                  if (SetJobStatus(out AsyncJobStatus newValue))
+                                      await _viewModel.Dispatcher.InvokeAsync(() =>
+                                      {
+                                          try { _viewModel.Duration = _stopwatch.Elapsed; }
+                                          finally { _viewModel.JobStatus = JobStatus; }
+                                      }, DispatcherPriority.Background);
+                                  else
+                                      _ = await _viewModel.Dispatcher.InvokeAsync(() => _viewModel.Duration = _stopwatch.Elapsed, DispatcherPriority.Background);
+                              }
+                          }
+                      }
+                  });
             }
 
             private void TimerTick(object state)

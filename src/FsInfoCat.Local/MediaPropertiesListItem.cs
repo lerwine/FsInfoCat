@@ -23,9 +23,9 @@ namespace FsInfoCat.Local
 
         internal static void OnBuildEntity(EntityTypeBuilder<MediaPropertiesListItem> builder)
         {
-            builder.ToView(VIEW_NAME);
-            builder.Property(nameof(Producer)).HasConversion(MultiStringValue.Converter);
-            builder.Property(nameof(Writer)).HasConversion(MultiStringValue.Converter);
+            _ = builder.ToView(VIEW_NAME);
+            _ = builder.Property(nameof(Producer)).HasConversion(MultiStringValue.Converter);
+            _ = builder.Property(nameof(Writer)).HasConversion(MultiStringValue.Converter);
         }
     }
 }

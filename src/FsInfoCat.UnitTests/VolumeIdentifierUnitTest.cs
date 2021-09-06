@@ -18,7 +18,7 @@ namespace FsInfoCat.UnitTests
             _testContext = testContext;
         }
 
-        public void ConstructorEmptyTestMethod()
+        public static void ConstructorEmptyTestMethod()
         {
             VolumeIdentifier volumeIdentifier = new();
             Assert.AreEqual(true, volumeIdentifier.IsEmpty());

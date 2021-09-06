@@ -67,7 +67,7 @@ namespace FsInfoCat.Desktop.LocalVM.AudioPropertySets
             if (_currentOptions.HasValue ? (ListingOptions.Value.HasValue && _currentOptions.Value == ListingOptions.Value.Value) : !ListingOptions.Value.HasValue)
                 return;
             _currentOptions = ListingOptions.Value;
-            ReloadAsync(_currentOptions);
+            _ = ReloadAsync(_currentOptions);
         }
 
         protected override void OnRefreshCommand(object parameter) => ReloadAsync(_currentOptions);
@@ -77,7 +77,7 @@ namespace FsInfoCat.Desktop.LocalVM.AudioPropertySets
             // TODO: Implement OnItemEditCommand(object);
         }
 
-        protected override bool ConfirmItemDelete(ListItemViewModel item, object parameter) => MessageBox.Show(App.Current.MainWindow,
+        protected override bool ConfirmItemDelete(ListItemViewModel item, object parameter) => MessageBox.Show(Application.Current.MainWindow,
             "This action cannot be undone!\n\nAre you sure you want to remove this audio property set from the database?",
             "Delete Audio Property Set", MessageBoxButton.YesNo, MessageBoxImage.Exclamation) == MessageBoxResult.Yes;
 
@@ -87,7 +87,7 @@ namespace FsInfoCat.Desktop.LocalVM.AudioPropertySets
             AudioPropertySet target = await dbContext.AudioPropertySets.FindAsync(new object[] { entity.Id }, statusListener.CancellationToken);
             if (target is null)
                 return 0;
-            dbContext.AudioPropertySets.Remove(target);
+            _ = dbContext.AudioPropertySets.Remove(target);
             return await dbContext.SaveChangesAsync(statusListener.CancellationToken);
         }
 

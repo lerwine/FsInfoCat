@@ -13,7 +13,9 @@ namespace FsInfoCat.UnitTests
     [TestClass]
     public class LocalMusicPropertySetUnitTest
     {
+#pragma warning disable IDE0052 // Remove unread private members
         private static TestContext _testContext;
+#pragma warning restore IDE0052 // Remove unread private members
 
         [ClassInitialize]
         public static void OnClassInitialize(TestContext testContext)

@@ -108,14 +108,14 @@ namespace FsInfoCat.Local
             IDbContextTransaction transaction = await dbContext.Database.BeginTransactionAsync(cancellationToken);
             Subdirectory oldSubdirectory = await dbEntry.GetRelatedReferenceAsync(f => f.RootDirectory, cancellationToken);
             if (oldSubdirectory is not null)
-                await oldSubdirectory.ExpungeAsync(dbContext, cancellationToken);
+                _ = await oldSubdirectory.ExpungeAsync(dbContext, cancellationToken);
             cancellationToken.ThrowIfCancellationRequested();
             VolumeAccessError[] accessErrors = (await dbEntry.GetRelatedCollectionAsync(f => f.AccessErrors, cancellationToken)).ToArray();
             if (accessErrors.Length > 0)
                 dbContext.VolumeAccessErrors.RemoveRange(accessErrors);
             Guid id = Id;
             cancellationToken.ThrowIfCancellationRequested();
-            await dbContext.SaveChangesAsync(cancellationToken);
+            _ = await dbContext.SaveChangesAsync(cancellationToken);
             cancellationToken.ThrowIfCancellationRequested();
             await transaction.CommitAsync(cancellationToken);
             return true;
@@ -123,8 +123,8 @@ namespace FsInfoCat.Local
 
         internal static void OnBuildEntity(EntityTypeBuilder<Volume> builder)
         {
-            builder.HasOne(sn => sn.FileSystem).WithMany(d => d.Volumes).HasForeignKey(nameof(FileSystemId)).IsRequired().OnDelete(DeleteBehavior.Restrict);
-            builder.Property(nameof(Identifier)).HasConversion(VolumeIdentifier.Converter);
+            _ = builder.HasOne(sn => sn.FileSystem).WithMany(d => d.Volumes).HasForeignKey(nameof(FileSystemId)).IsRequired().OnDelete(DeleteBehavior.Restrict);
+            _ = builder.Property(nameof(Identifier)).HasConversion(VolumeIdentifier.Converter);
         }
 
         public static async Task<EntityEntry<Volume>> ImportVolumeAsync([DisallowNull] DirectoryInfo directoryInfo, [DisallowNull] LocalDbContext dbContext, CancellationToken cancellationToken)
@@ -183,9 +183,9 @@ namespace FsInfoCat.Local
             if (fileSystem.Entry.State == EntityState.Added)
             {
                 result.ModifiedOn = result.CreatedOn = fileSystem.Entry.Entity.CreatedOn;
-                await dbContext.SaveChangesAsync(cancellationToken);
-                dbContext.SymbolicNames.Add(fileSystem.SymbolicName);
-                await dbContext.SaveChangesAsync(cancellationToken);
+                _ = await dbContext.SaveChangesAsync(cancellationToken);
+                _ = dbContext.SymbolicNames.Add(fileSystem.SymbolicName);
+                _ = await dbContext.SaveChangesAsync(cancellationToken);
             }
             else
                 result.ModifiedOn = result.CreatedOn = DateTime.Now;
@@ -219,7 +219,7 @@ namespace FsInfoCat.Local
             if (dbContext.ChangeTracker.HasChanges())
                 result += await dbContext.SaveChangesAsync(statusListener.CancellationToken);
             statusListener.Logger.LogInformation("Removing Volume {{ Id = {Id}; Identifier = {Identifier} }}", target.Id, target.Identifier);
-            dbContext.Volumes.Remove(target);
+            _ = dbContext.Volumes.Remove(target);
             result += await dbContext.SaveChangesAsync(statusListener.CancellationToken);
             await transaction.CommitAsync();
             return result;
@@ -229,7 +229,7 @@ namespace FsInfoCat.Local
         {
             FileSystem nav = _fileSystem.GetValue();
             if (!(nav is null || nav.Id.Equals(value)))
-                _fileSystem.SetValue(null);
+                _ = _fileSystem.SetValue(null);
         }
     }
 }

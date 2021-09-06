@@ -67,7 +67,7 @@ namespace FsInfoCat
         protected void RaiseEvent(object sender, TEventArgs e)
         {
             if (_eventHandler.TryGetTarget(out THandler eventHandler))
-                eventHandler.DynamicInvoke(sender, e);
+                _ = eventHandler.DynamicInvoke(sender, e);
             else
                 Detach();
         }

@@ -134,37 +134,37 @@ namespace FsInfoCat.Desktop.ViewModel
 
         public ColumnPropertyBuilder<TProperty, TTarget> DefaultValue(TProperty defaultValue)
         {
-            _backingBuilder.DefaultValue(defaultValue);
+            _ = _backingBuilder.DefaultValue(defaultValue);
             return this;
         }
 
         public ColumnPropertyBuilder<TProperty, TTarget> OnChanged([DisallowNull] Action<DependencyObject, TProperty, TProperty> propertyChangedCallback)
         {
-            _backingBuilder.OnChanged(propertyChangedCallback);
+            _ = _backingBuilder.OnChanged(propertyChangedCallback);
             return this;
         }
 
         public ColumnPropertyBuilder<TProperty, TTarget> OnChanged([DisallowNull] PropertyChangedCallback propertyChangedCallback)
         {
-            _backingBuilder.OnChanged(propertyChangedCallback);
+            _ = _backingBuilder.OnChanged(propertyChangedCallback);
             return this;
         }
 
         public ColumnPropertyBuilder<TProperty, TTarget> CoerseWith([DisallowNull] ICoersion<TProperty> coersion)
         {
-            _backingBuilder.CoerseWith(coersion);
+            _ = _backingBuilder.CoerseWith(coersion);
             return this;
         }
 
         public ColumnPropertyBuilder<TProperty, TTarget> CoerseWith([DisallowNull] Func<DependencyObject, object, TProperty> coersion)
         {
-            _backingBuilder.CoerseWith(coersion);
+            _ = _backingBuilder.CoerseWith(coersion);
             return this;
         }
 
         public ColumnPropertyBuilder<TProperty, TTarget> ValidateWith([DisallowNull] Func<TProperty, bool> func)
         {
-            _backingBuilder.ValidateWith(func);
+            _ = _backingBuilder.ValidateWith(func);
             return this;
         }
 

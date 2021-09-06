@@ -19,8 +19,8 @@ namespace FsInfoCat.Local
 
         internal static void OnBuildEntity(EntityTypeBuilder<RedundantSetListItem> builder)
         {
-            builder.ToView(VIEW_NAME);
-            builder.Property(nameof(Hash)).HasConversion(MD5Hash.Converter);
+            _ = builder.ToView(VIEW_NAME);
+            _ = builder.Property(nameof(Hash)).HasConversion(MD5Hash.Converter);
         }
 
         public RedundantSetListItem()

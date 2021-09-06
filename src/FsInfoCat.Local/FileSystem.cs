@@ -130,7 +130,7 @@ namespace FsInfoCat.Local
             }
             else
                 result = 0;
-            dbContext.FileSystems.Remove(target);
+            _ = dbContext.FileSystems.Remove(target);
             result += await dbContext.SaveChangesAsync(statusListener.CancellationToken);
             await transaction.CommitAsync(statusListener.CancellationToken);
             return result;

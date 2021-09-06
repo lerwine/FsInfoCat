@@ -22,11 +22,11 @@ namespace FsInfoCat.Local
 
         internal static void OnBuildEntity(EntityTypeBuilder<SummaryPropertiesListItem> builder)
         {
-            builder.ToView(VIEW_NAME);
-            builder.Property(nameof(Author)).HasConversion(MultiStringValue.Converter);
-            builder.Property(nameof(Keywords)).HasConversion(MultiStringValue.Converter);
-            builder.Property(nameof(ItemAuthors)).HasConversion(MultiStringValue.Converter);
-            builder.Property(nameof(Kind)).HasConversion(MultiStringValue.Converter);
+            _ = builder.ToView(VIEW_NAME);
+            _ = builder.Property(nameof(Author)).HasConversion(MultiStringValue.Converter);
+            _ = builder.Property(nameof(Keywords)).HasConversion(MultiStringValue.Converter);
+            _ = builder.Property(nameof(ItemAuthors)).HasConversion(MultiStringValue.Converter);
+            _ = builder.Property(nameof(Kind)).HasConversion(MultiStringValue.Converter);
         }
     }
 }

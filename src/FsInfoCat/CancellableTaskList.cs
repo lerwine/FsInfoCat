@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -76,7 +74,7 @@ namespace FsInfoCat
                         return;
                     _disposed = true;
                     if (_list._items.Contains(this))
-                        _list._items.Remove(this);
+                        _ = _list._items.Remove(this);
                 }
                 if (!_task.IsCompleted)
                 {
@@ -92,7 +90,7 @@ namespace FsInfoCat
                 _tokenSource = new CancellationTokenSource();
                 _list = list;
                 _task = func(_tokenSource.Token);
-                _task.ContinueWith(t => Dispose());
+                _ = _task.ContinueWith(t => Dispose());
             }
 
             internal static Item<TTask> FromAsync<TArg>(CancellableTaskList list, TArg arg, Func<TArg, CancellationToken, TTask> func) => new(list, t => func(arg, t));
@@ -148,7 +146,7 @@ namespace FsInfoCat
                         return;
                     _disposed = true;
                     if (_list._items.Contains(this))
-                        _list._items.Remove(this);
+                        _ = _list._items.Remove(this);
                 }
                 if (!_task.IsCompleted)
                 {
@@ -164,7 +162,7 @@ namespace FsInfoCat
                 _tokenSource = new CancellationTokenSource();
                 _list = list;
                 _task = func(_tokenSource.Token);
-                _task.ContinueWith(t => Dispose());
+                _ = _task.ContinueWith(t => Dispose());
             }
 
             internal static Item FromAsync<TArg>(CancellableTaskList<TTask> list, TArg arg, Func<TArg, CancellationToken, TTask> func) => new(list, t => func(arg, t));

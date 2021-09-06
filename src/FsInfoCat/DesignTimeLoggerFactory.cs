@@ -1,9 +1,6 @@
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FsInfoCat
 {
@@ -11,7 +8,7 @@ namespace FsInfoCat
     {
         private static readonly object _syncRoot = new();
         private static ILoggerFactory _factory;
-        private static LinkedList<WeakReference<ILogger>> _loggers = new();
+        private static readonly LinkedList<WeakReference<ILogger>> _loggers = new();
 
         public static ILogger<T> GetLogger<T>()
         {
@@ -38,7 +35,7 @@ namespace FsInfoCat
                     }
                 }
                 ILogger<T> result = _factory.CreateLogger<T>();
-                _loggers.AddLast(new WeakReference<ILogger>(result));
+                _ = _loggers.AddLast(new WeakReference<ILogger>(result));
                 return result;
             }
         }

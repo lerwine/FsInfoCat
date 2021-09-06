@@ -226,7 +226,7 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
             {
                 IAsyncJob<TResult> job = StartNew(title, initialMessage, arg1, arg2, arg3, method);
                 if (onComplete is not null)
-                    job.Task.ContinueWith(t => onComplete(job));
+                    _ = job.Task.ContinueWith(t => onComplete(job));
                 return job.Task;
             }
 
@@ -235,7 +235,7 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
             {
                 IAsyncJob<TResult> job = StartNew(title, initialMessage, arg1, arg2, method);
                 if (onComplete is not null)
-                    job.Task.ContinueWith(t => onComplete(job));
+                    _ = job.Task.ContinueWith(t => onComplete(job));
                 return job.Task;
             }
 
@@ -244,7 +244,7 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
             {
                 IAsyncJob<TResult> job = StartNew(title, initialMessage, arg, method);
                 if (onComplete is not null)
-                    job.Task.ContinueWith(t => onComplete(job));
+                    _ = job.Task.ContinueWith(t => onComplete(job));
                 return job.Task;
             }
 
@@ -253,7 +253,7 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
             {
                 IAsyncJob<TResult> job = StartNew(title, initialMessage, method);
                 if (onComplete is not null)
-                    job.Task.ContinueWith(t => onComplete(job));
+                    _ = job.Task.ContinueWith(t => onComplete(job));
                 return job.Task;
             }
 
@@ -262,7 +262,7 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
             {
                 IAsyncJob job = StartNew(title, initialMessage, arg1, arg2, arg3, method);
                 if (onComplete is not null)
-                    job.Task.ContinueWith(t => onComplete(job));
+                    _ = job.Task.ContinueWith(t => onComplete(job));
                 return job.Task;
             }
 
@@ -271,7 +271,7 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
             {
                 IAsyncJob job = StartNew(title, initialMessage, arg1, arg2, method);
                 if (onComplete is not null)
-                    job.Task.ContinueWith(t => onComplete(job));
+                    _ = job.Task.ContinueWith(t => onComplete(job));
                 return job.Task;
             }
 
@@ -280,7 +280,7 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
             {
                 IAsyncJob job = StartNew(title, initialMessage, arg, method);
                 if (onComplete is not null)
-                    job.Task.ContinueWith(t => onComplete(job));
+                    _ = job.Task.ContinueWith(t => onComplete(job));
                 return job.Task;
             }
 
@@ -289,7 +289,7 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
             {
                 IAsyncJob job = StartNew(title, initialMessage, method);
                 if (onComplete is not null)
-                    job.Task.ContinueWith(t => onComplete(job));
+                    _ = job.Task.ContinueWith(t => onComplete(job));
                 return job.Task;
             }
 
@@ -298,7 +298,7 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
             {
                 IAsyncJob<TResult> job = StartNew(title, initialMessage, arg1, arg2, arg3, method);
                 if (onComplete is not null)
-                    job.Task.ContinueWith(t => onComplete(job));
+                    _ = job.Task.ContinueWith(t => onComplete(job));
                 return job.Task;
             }
 
@@ -307,7 +307,7 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
             {
                 IAsyncJob<TResult> job = StartNew(title, initialMessage, arg1, arg2, method);
                 if (onComplete is not null)
-                    job.Task.ContinueWith(t => onComplete(job));
+                    _ = job.Task.ContinueWith(t => onComplete(job));
                 return job.Task;
             }
 
@@ -316,7 +316,7 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
             {
                 IAsyncJob<TResult> job = StartNew(title, initialMessage, arg, method);
                 if (onComplete is not null)
-                    job.Task.ContinueWith(t => onComplete(job));
+                    _ = job.Task.ContinueWith(t => onComplete(job));
                 return job.Task;
             }
 
@@ -325,7 +325,7 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
             {
                 IAsyncJob<TResult> job = StartNew(title, initialMessage, method);
                 if (onComplete is not null)
-                    job.Task.ContinueWith(t => onComplete(job));
+                    _ = job.Task.ContinueWith(t => onComplete(job));
                 return job.Task;
             }
 
@@ -334,7 +334,7 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
             {
                 IAsyncJob job = StartNew(title, initialMessage, arg1, arg2, arg3, method);
                 if (onComplete is not null)
-                    job.Task.ContinueWith(t => onComplete(job));
+                    _ = job.Task.ContinueWith(t => onComplete(job));
                 return job.Task;
             }
 
@@ -343,7 +343,7 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
             {
                 IAsyncJob job = StartNew(title, initialMessage, arg1, arg2, method);
                 if (onComplete is not null)
-                    job.Task.ContinueWith(t => onComplete(job));
+                    _ = job.Task.ContinueWith(t => onComplete(job));
                 return job.Task;
             }
 
@@ -352,7 +352,7 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
             {
                 IAsyncJob job = StartNew(title, initialMessage, arg, method);
                 if (onComplete is not null)
-                    job.Task.ContinueWith(t => onComplete(job));
+                    _ = job.Task.ContinueWith(t => onComplete(job));
                 return job.Task;
             }
 
@@ -360,7 +360,7 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
             {
                 IAsyncJob job = StartNew(title, initialMessage, method);
                 if (onComplete is not null)
-                    job.Task.ContinueWith(t => onComplete(job));
+                    _ = job.Task.ContinueWith(t => onComplete(job));
                 return job.Task;
             }
         }

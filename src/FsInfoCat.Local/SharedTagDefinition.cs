@@ -73,7 +73,7 @@ namespace FsInfoCat.Local
             if (volumeTags.Length > 0)
                 dbContext.SharedVolumeTags.RemoveRange(volumeTags);
             int result = dbContext.ChangeTracker.HasChanges() ? await dbContext.SaveChangesAsync(statusListener.CancellationToken) : 0;
-            dbContext.SharedTagDefinitions.Remove(target);
+            _ = dbContext.SharedTagDefinitions.Remove(target);
             result += await dbContext.SaveChangesAsync(statusListener.CancellationToken);
             await transaction.CommitAsync(statusListener.CancellationToken);
             return result;

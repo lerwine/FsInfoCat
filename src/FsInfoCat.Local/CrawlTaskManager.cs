@@ -49,7 +49,7 @@ namespace FsInfoCat.Local
             else
                 _isExpired = () => token.IsCancellationRequested || DateTime.Now >= stopAt;
             _task = CrawlAsync(crawlConfiguration, crawlEventReceiver, token);
-            _task.ContinueWith(OnCompleted, crawlEventReceiver);
+            _ = _task.ContinueWith(OnCompleted, crawlEventReceiver);
         }
 
         public CrawlTaskManager([DisallowNull] CrawlConfiguration crawlConfiguration, CrawlEventReceiver crawlEventReceiver = null)
@@ -63,7 +63,7 @@ namespace FsInfoCat.Local
             CancellationToken token = _cancellationTokenSource.Token;
             _isExpired = ttl.HasValue ? () => token.IsCancellationRequested || _stopWatch.ElapsedMilliseconds > ttl.Value : () => token.IsCancellationRequested;
             _task = CrawlAsync(crawlConfiguration, crawlEventReceiver, token);
-            _task.ContinueWith(OnCompleted, crawlEventReceiver);
+            _ = _task.ContinueWith(OnCompleted, crawlEventReceiver);
         }
 
         private void OnCompleted(Task task, object arg)

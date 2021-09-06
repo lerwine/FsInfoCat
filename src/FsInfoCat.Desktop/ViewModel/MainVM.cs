@@ -483,7 +483,7 @@ namespace FsInfoCat.Desktop.ViewModel
         private void NavigateTo(string pageUri)
         {
             _logger.LogInformation("Navigating to {PageUri}", pageUri);
-            Navigate(new Uri(pageUri, UriKind.Relative));
+            _ = Navigate(new Uri(pageUri, UriKind.Relative));
         }
 
         private bool P_TryGetNavigationService(out NavigationService navigationService)

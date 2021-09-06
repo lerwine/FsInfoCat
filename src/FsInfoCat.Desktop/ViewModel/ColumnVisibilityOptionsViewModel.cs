@@ -114,7 +114,7 @@ namespace FsInfoCat.Desktop.ViewModel
         {
             base.OnPropertyChanged(e);
             if (e.NewValue is bool isVisible)
-                ColumnVisibilityItemViewModel.NotifyBooleanPropertyChanged(Columns, e.Property.Name, isVisible);
+                _ = ColumnVisibilityItemViewModel.NotifyBooleanPropertyChanged(Columns, e.Property.Name, isVisible);
         }
 
         [Obsolete("This is handled by OnPropertyChanged override in the base object")]

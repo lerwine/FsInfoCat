@@ -41,8 +41,8 @@ namespace FsInfoCat.Local
 
         internal static void OnBuildEntity(EntityTypeBuilder<FileWithAncestorNames> builder)
         {
-            builder.ToView(VIEW_NAME);
-            builder.Property(nameof(VolumeIdentifier)).HasConversion(VolumeIdentifier.Converter);
+            _ = builder.ToView(VIEW_NAME);
+            _ = builder.Property(nameof(VolumeIdentifier)).HasConversion(VolumeIdentifier.Converter);
         }
 
         public FileWithAncestorNames()

@@ -111,7 +111,7 @@ namespace FsInfoCat.Desktop.ViewModel
                     }
                 }
             }
-            finally { Interlocked.Decrement(ref _valueChanging); }
+            finally { _ = Interlocked.Decrement(ref _valueChanging); }
             PropertyValidatingEventArgs<DateTime?, (string SelectedValueMessage, string TimeMessage)> args = new(newValue, nameof(Value),
                 (SelectedValidationMessage, TimeValidationMesage));
             if (IsRequired && !(newValue.HasValue || SelectedDate.HasValue))
@@ -228,7 +228,7 @@ namespace FsInfoCat.Desktop.ViewModel
                 else
                     Value = null;
             }
-            finally { Interlocked.Decrement(ref _valueChanging); }
+            finally { _ = Interlocked.Decrement(ref _valueChanging); }
         }
 
         protected virtual void OnValidateSelectedDate(PropertyValidatingEventArgs<DateTime?, TimeSpan?> args) =>

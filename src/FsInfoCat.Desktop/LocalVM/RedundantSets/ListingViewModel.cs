@@ -85,7 +85,7 @@ namespace FsInfoCat.Desktop.LocalVM.RedundantSets
             // TODO: Implement OnItemEditCommand(object);
         }
 
-        protected override bool ConfirmItemDelete(ListItemViewModel item, object parameter) => MessageBox.Show(App.Current.MainWindow,
+        protected override bool ConfirmItemDelete(ListItemViewModel item, object parameter) => MessageBox.Show(Application.Current.MainWindow,
             "This action cannot be undone!\n\nAre you sure you want to remove this redundancy set from the database?",
             "Delete Redundancy Set", MessageBoxButton.YesNo, MessageBoxImage.Exclamation) == MessageBoxResult.Yes;
 
@@ -95,7 +95,7 @@ namespace FsInfoCat.Desktop.LocalVM.RedundantSets
             RedundantSet target = await dbContext.RedundantSets.FindAsync(new object[] { entity.Id }, statusListener.CancellationToken);
             if (target is null)
                 return 0;
-            dbContext.RedundantSets.Remove(target);
+            _ = dbContext.RedundantSets.Remove(target);
             return await dbContext.SaveChangesAsync(statusListener.CancellationToken);
         }
 

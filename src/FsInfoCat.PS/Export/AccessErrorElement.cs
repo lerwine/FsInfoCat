@@ -11,7 +11,9 @@ namespace FsInfoCat.PS.Export
 
         [XmlAttribute(nameof(ErrorCode))]
         [EditorBrowsable(EditorBrowsableState.Never)]
+#pragma warning disable IDE1006 // Naming Styles
         public string __XML_ErrorCode { get => ErrorCode.ToAccessErrorCodeXml(); set => ErrorCode = value.FromAccessErrorCode(ErrorCode); }
+#pragma warning restore IDE1006 // Naming Styles
         [XmlIgnore]
         public AccessErrorCode ErrorCode { get; set; }
 
