@@ -2,6 +2,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Navigation;
 
@@ -393,6 +394,30 @@ namespace FsInfoCat.Desktop.ViewModel
         public CommandBindingCollection CommandBindings => (CommandBindingCollection)GetValue(CommandBindingsProperty);
 
         #endregion
+        #region PageTitle Property Members
+
+        /// <summary>
+        /// Identifies the <see cref="PageTitle"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty PageTitleProperty = DependencyPropertyBuilder<MainVM, string>
+            .Register(nameof(PageTitle))
+            .DefaultValue("")
+            .OnChanged((d, oldValue, newValue) => (d as MainVM)?.OnPageTitlePropertyChanged(newValue))
+            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default)
+            .AsReadWrite();
+
+        public string PageTitle { get => GetValue(PageTitleProperty) as string; set => SetValue(PageTitleProperty, value); }
+
+        /// <summary>
+        /// Called when the value of the <see cref="PageTitle"/> dependency property has changed.
+        /// </summary>
+        /// <param name="oldValue">The previous value of the <see cref="PageTitle"/> property.</param>
+        /// <param name="newValue">The new value of the <see cref="PageTitle"/> property.</param>
+        protected virtual void OnPageTitlePropertyChanged(string newValue) => WindowTitle = (newValue.Length > 0) ?
+            string.Format(FsInfoCat.Properties.Resources.FormatDisplayName_FSInfoCatTitle, newValue) : FsInfoCat.Properties.Resources.DisplayName_FSInfoCat;
+
+        #endregion
+
         #region NavigatedContent Property Members
 
         /// <summary>
@@ -414,7 +439,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <param name="args">The Event data that is issued by the event on <see cref="NavigatedContentProperty"/> that tracks changes to its effective value.</param>
         protected virtual void OnNavigatedContentPropertyChanged(DependencyPropertyChangedEventArgs args)
         {
-            try { OnNavigatedContentPropertyChanged((object)args.OldValue, (object)args.NewValue); }
+            try { OnNavigatedContentPropertyChanged(args.OldValue, args.NewValue); }
             finally { NavigatedContentPropertyChanged?.Invoke(this, args); }
         }
 
@@ -427,20 +452,22 @@ namespace FsInfoCat.Desktop.ViewModel
         {
             if (oldValue is FrameworkElement oldContent)
             {
+                if (oldContent is Page)
+                    BindingOperations.ClearBinding(this, PageTitleProperty);
                 if (oldContent.DataContext is INotifyNavigatedFrom navigatedFrom)
                     navigatedFrom.OnNavigatedFrom();
             }
             if (newValue is FrameworkElement newContent)
             {
                 if (newContent is Page page)
-                {
-                    string title = page.Title;
-                    WindowTitle = string.IsNullOrWhiteSpace(title) ? FsInfoCat.Properties.Resources.DisplayName_FSInfoCat :
-                        string.Format(FsInfoCat.Properties.Resources.FormatDisplayName_FSInfoCatTitle, title);
-                }
+                    BindingOperations.SetBinding(this, Page.TitleProperty, new Binding(nameof(Page.TitleProperty)) { Source = page }).UpdateTarget();
+                else
+                    PageTitle = "";
                 if (newContent.DataContext is INotifyNavigatedTo navigatedTo)
                     navigatedTo.OnNavigatedTo();
             }
+            else
+                PageTitle = "";
         }
 
         #endregion
