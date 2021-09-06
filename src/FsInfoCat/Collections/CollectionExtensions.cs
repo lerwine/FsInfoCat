@@ -397,12 +397,9 @@ namespace FsInfoCat.Collections
                 .DefaultIfEmpty(-1).Last();
         }
 
-        public static int FindLastIndex<T>(this IList<T> source, Predicate<T> match)
-        {
-            if (source is List<T> list)
-                return list.FindLastIndex(match);
-            return source.Select((e, i) => (E: e, I: i)).Where(a => match(a.E)).Select(a => a.I).DefaultIfEmpty(-1).Last();
-        }
+        public static int FindLastIndex<T>(this IList<T> source, Predicate<T> match) => source is List<T> list
+                ? list.FindLastIndex(match)
+                : source.Select((e, i) => (E: e, I: i)).Where(a => match(a.E)).Select(a => a.I).DefaultIfEmpty(-1).Last();
 
         public static int IndexOf<T>(this IList<T> source, T item, int index, int count)
         {
