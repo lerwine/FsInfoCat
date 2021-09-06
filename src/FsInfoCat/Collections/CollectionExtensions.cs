@@ -340,7 +340,7 @@ namespace FsInfoCat.Collections
             if (source is null || count < 1)
                 return -1;
             if (source is List<T> list)
-                list.FindIndex(startIndex, count, match);
+                return list.FindIndex(startIndex, count, match);
             return source.Skip(startIndex).Take(count).Select((e, i) => new { E = e, I = i }).Where(a => match(a.E)).Select(a => a.I + startIndex)
                 .DefaultIfEmpty(-1).First();
         }
