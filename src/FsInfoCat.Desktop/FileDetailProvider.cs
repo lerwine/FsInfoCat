@@ -1,3 +1,4 @@
+using FsInfoCat.Desktop.FileSystemDetail;
 using FsInfoCat.Local;
 using Microsoft.WindowsAPICodePack.Shell;
 using Microsoft.WindowsAPICodePack.Shell.PropertySystem;

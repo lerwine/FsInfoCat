@@ -1,7 +1,7 @@
 using FsInfoCat.Collections;
 using System;
 
-namespace FsInfoCat.Desktop
+namespace FsInfoCat.Desktop.FileSystemDetail
 {
     public record DocumentPropertiesRecord : IDocumentProperties
     {

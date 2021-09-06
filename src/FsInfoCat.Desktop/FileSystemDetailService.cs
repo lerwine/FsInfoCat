@@ -1,3 +1,4 @@
+using FsInfoCat.Desktop.FileSystemDetail;
 using FsInfoCat.Local;
 using Microsoft.Extensions.DependencyInjection;
 using System.IO;

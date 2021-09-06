@@ -1,4 +1,4 @@
-﻿namespace FsInfoCat.Desktop
+namespace FsInfoCat.Desktop.FileSystemDetail
 {
     public record ImagePropertiesRecord : IImageProperties
     {

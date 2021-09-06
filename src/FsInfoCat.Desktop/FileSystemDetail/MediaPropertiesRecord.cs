@@ -1,6 +1,6 @@
 using FsInfoCat.Collections;
 
-namespace FsInfoCat.Desktop
+namespace FsInfoCat.Desktop.FileSystemDetail
 {
     public record MediaPropertiesRecord : IMediaProperties
     {
