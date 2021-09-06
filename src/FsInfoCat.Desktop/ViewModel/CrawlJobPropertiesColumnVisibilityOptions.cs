@@ -14,7 +14,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty ConfigurationDisplayNameProperty = DependencyPropertyBuilder<CrawlJobPropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(ConfigurationDisplayName))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as CrawlJobPropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool ConfigurationDisplayName { get => (bool)GetValue(ConfigurationDisplayNameProperty); set => SetValue(ConfigurationDisplayNameProperty, value); }
@@ -28,7 +27,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty CrawlEndProperty = DependencyPropertyBuilder<CrawlJobPropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(CrawlEnd))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as CrawlJobPropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool CrawlEnd { get => (bool)GetValue(CrawlEndProperty); set => SetValue(CrawlEndProperty, value); }
@@ -42,7 +40,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty CrawlStartProperty = DependencyPropertyBuilder<CrawlJobPropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(CrawlStart))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as CrawlJobPropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool CrawlStart { get => (bool)GetValue(CrawlStartProperty); set => SetValue(CrawlStartProperty, value); }
@@ -56,7 +53,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty RootPathProperty = DependencyPropertyBuilder<CrawlJobPropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(RootPath))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as CrawlJobPropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool RootPath { get => (bool)GetValue(RootPathProperty); set => SetValue(RootPathProperty, value); }
@@ -70,7 +66,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty StatusCodeProperty = DependencyPropertyBuilder<CrawlJobPropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(StatusCode))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as CrawlJobPropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool StatusCode { get => (bool)GetValue(StatusCodeProperty); set => SetValue(StatusCodeProperty, value); }
@@ -84,7 +79,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty StatusDetailProperty = DependencyPropertyBuilder<CrawlJobPropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(StatusDetail))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as CrawlJobPropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool StatusDetail { get => (bool)GetValue(StatusDetailProperty); set => SetValue(StatusDetailProperty, value); }
@@ -98,7 +92,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty StatusMessageProperty = DependencyPropertyBuilder<CrawlJobPropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(StatusMessage))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as CrawlJobPropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool StatusMessage { get => (bool)GetValue(StatusMessageProperty); set => SetValue(StatusMessageProperty, value); }

@@ -14,7 +14,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty ClientIDProperty = DependencyPropertyBuilder<DocumentPropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(ClientID))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as DocumentPropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool ClientID { get => (bool)GetValue(ClientIDProperty); set => SetValue(ClientIDProperty, value); }
@@ -28,7 +27,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty ContributorProperty = DependencyPropertyBuilder<DocumentPropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(Contributor))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as DocumentPropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool Contributor { get => (bool)GetValue(ContributorProperty); set => SetValue(ContributorProperty, value); }
@@ -42,7 +40,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty DateCreatedProperty = DependencyPropertyBuilder<DocumentPropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(DateCreated))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as DocumentPropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool DateCreated { get => (bool)GetValue(DateCreatedProperty); set => SetValue(DateCreatedProperty, value); }
@@ -56,7 +53,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty DivisionProperty = DependencyPropertyBuilder<DocumentPropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(Division))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as DocumentPropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool Division { get => (bool)GetValue(DivisionProperty); set => SetValue(DivisionProperty, value); }
@@ -70,7 +66,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty DocumentIDProperty = DependencyPropertyBuilder<DocumentPropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(DocumentID))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as DocumentPropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool DocumentID { get => (bool)GetValue(DocumentIDProperty); set => SetValue(DocumentIDProperty, value); }
@@ -84,7 +79,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty LastAuthorProperty = DependencyPropertyBuilder<DocumentPropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(LastAuthor))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as DocumentPropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool LastAuthor { get => (bool)GetValue(LastAuthorProperty); set => SetValue(LastAuthorProperty, value); }
@@ -98,7 +92,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty ManagerProperty = DependencyPropertyBuilder<DocumentPropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(Manager))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as DocumentPropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool Manager { get => (bool)GetValue(ManagerProperty); set => SetValue(ManagerProperty, value); }
@@ -112,7 +105,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty PresentationFormatProperty = DependencyPropertyBuilder<DocumentPropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(PresentationFormat))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as DocumentPropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool PresentationFormat { get => (bool)GetValue(PresentationFormatProperty); set => SetValue(PresentationFormatProperty, value); }
@@ -126,7 +118,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty RevisionNumberProperty = DependencyPropertyBuilder<DocumentPropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(RevisionNumber))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as DocumentPropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool RevisionNumber { get => (bool)GetValue(RevisionNumberProperty); set => SetValue(RevisionNumberProperty, value); }
@@ -140,7 +131,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty SecurityProperty = DependencyPropertyBuilder<DocumentPropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(Security))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as DocumentPropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool Security { get => (bool)GetValue(SecurityProperty); set => SetValue(SecurityProperty, value); }
@@ -154,7 +144,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty TotalFileCountProperty = DependencyPropertyBuilder<DocumentPropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(TotalFileCount))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as DocumentPropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool TotalFileCount { get => (bool)GetValue(TotalFileCountProperty); set => SetValue(TotalFileCountProperty, value); }
@@ -168,7 +157,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty VersionProperty = DependencyPropertyBuilder<DocumentPropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(Version))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as DocumentPropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool Version { get => (bool)GetValue(VersionProperty); set => SetValue(VersionProperty, value); }

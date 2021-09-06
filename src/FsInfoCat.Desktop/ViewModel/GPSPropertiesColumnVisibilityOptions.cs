@@ -14,7 +14,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty AreaInformationProperty = DependencyPropertyBuilder<GPSPropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(AreaInformation))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as GPSPropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool AreaInformation { get => (bool)GetValue(AreaInformationProperty); set => SetValue(AreaInformationProperty, value); }
@@ -28,7 +27,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty LatitudeDegreesProperty = DependencyPropertyBuilder<GPSPropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(LatitudeDegrees))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as GPSPropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool LatitudeDegrees { get => (bool)GetValue(LatitudeDegreesProperty); set => SetValue(LatitudeDegreesProperty, value); }
@@ -42,7 +40,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty LatitudeMinutesProperty = DependencyPropertyBuilder<GPSPropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(LatitudeMinutes))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as GPSPropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool LatitudeMinutes { get => (bool)GetValue(LatitudeMinutesProperty); set => SetValue(LatitudeMinutesProperty, value); }
@@ -56,7 +53,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty LatitudeRefProperty = DependencyPropertyBuilder<GPSPropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(LatitudeRef))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as GPSPropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool LatitudeRef { get => (bool)GetValue(LatitudeRefProperty); set => SetValue(LatitudeRefProperty, value); }
@@ -70,7 +66,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty LatitudeSecondsProperty = DependencyPropertyBuilder<GPSPropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(LatitudeSeconds))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as GPSPropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool LatitudeSeconds { get => (bool)GetValue(LatitudeSecondsProperty); set => SetValue(LatitudeSecondsProperty, value); }
@@ -84,7 +79,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty LongitudeDegreesProperty = DependencyPropertyBuilder<GPSPropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(LongitudeDegrees))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as GPSPropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool LongitudeDegrees { get => (bool)GetValue(LongitudeDegreesProperty); set => SetValue(LongitudeDegreesProperty, value); }
@@ -98,7 +92,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty LongitudeMinutesProperty = DependencyPropertyBuilder<GPSPropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(LongitudeMinutes))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as GPSPropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool LongitudeMinutes { get => (bool)GetValue(LongitudeMinutesProperty); set => SetValue(LongitudeMinutesProperty, value); }
@@ -112,7 +105,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty LongitudeRefProperty = DependencyPropertyBuilder<GPSPropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(LongitudeRef))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as GPSPropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool LongitudeRef { get => (bool)GetValue(LongitudeRefProperty); set => SetValue(LongitudeRefProperty, value); }
@@ -126,7 +118,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty LongitudeSecondsProperty = DependencyPropertyBuilder<GPSPropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(LongitudeSeconds))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as GPSPropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool LongitudeSeconds { get => (bool)GetValue(LongitudeSecondsProperty); set => SetValue(LongitudeSecondsProperty, value); }
@@ -140,7 +131,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty MeasureModeProperty = DependencyPropertyBuilder<GPSPropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(MeasureMode))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as GPSPropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool MeasureMode { get => (bool)GetValue(MeasureModeProperty); set => SetValue(MeasureModeProperty, value); }
@@ -154,7 +144,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty ProcessingMethodProperty = DependencyPropertyBuilder<GPSPropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(ProcessingMethod))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as GPSPropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool ProcessingMethod { get => (bool)GetValue(ProcessingMethodProperty); set => SetValue(ProcessingMethodProperty, value); }
@@ -168,7 +157,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty TotalFileCountProperty = DependencyPropertyBuilder<GPSPropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(TotalFileCount))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as GPSPropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool TotalFileCount { get => (bool)GetValue(TotalFileCountProperty); set => SetValue(TotalFileCountProperty, value); }
@@ -182,7 +170,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty VersionIDProperty = DependencyPropertyBuilder<GPSPropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(VersionID))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as GPSPropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool VersionID { get => (bool)GetValue(VersionIDProperty); set => SetValue(VersionIDProperty, value); }

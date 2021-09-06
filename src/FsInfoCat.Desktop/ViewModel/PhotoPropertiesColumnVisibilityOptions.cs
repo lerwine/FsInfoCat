@@ -14,7 +14,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty TotalFileCountProperty = DependencyPropertyBuilder<PhotoPropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(TotalFileCount))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as PhotoPropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool TotalFileCount { get => (bool)GetValue(TotalFileCountProperty); set => SetValue(TotalFileCountProperty, value); }
@@ -28,7 +27,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty CameraManufacturerProperty = DependencyPropertyBuilder<PhotoPropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(CameraManufacturer))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as PhotoPropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool CameraManufacturer { get => (bool)GetValue(CameraManufacturerProperty); set => SetValue(CameraManufacturerProperty, value); }
@@ -42,7 +40,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty CameraModelProperty = DependencyPropertyBuilder<PhotoPropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(CameraModel))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as PhotoPropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool CameraModel { get => (bool)GetValue(CameraModelProperty); set => SetValue(CameraModelProperty, value); }
@@ -56,7 +53,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty DateTakenProperty = DependencyPropertyBuilder<PhotoPropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(DateTaken))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as PhotoPropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool DateTaken { get => (bool)GetValue(DateTakenProperty); set => SetValue(DateTakenProperty, value); }
@@ -70,7 +66,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty EventProperty = DependencyPropertyBuilder<PhotoPropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(Event))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as PhotoPropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool Event { get => (bool)GetValue(EventProperty); set => SetValue(EventProperty, value); }
@@ -84,7 +79,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty EXIFVersionProperty = DependencyPropertyBuilder<PhotoPropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(EXIFVersion))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as PhotoPropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool EXIFVersion { get => (bool)GetValue(EXIFVersionProperty); set => SetValue(EXIFVersionProperty, value); }
@@ -98,7 +92,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty OrientationProperty = DependencyPropertyBuilder<PhotoPropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(Orientation))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as PhotoPropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool Orientation { get => (bool)GetValue(OrientationProperty); set => SetValue(OrientationProperty, value); }
@@ -112,7 +105,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty OrientationTextProperty = DependencyPropertyBuilder<PhotoPropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(OrientationText))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as PhotoPropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool OrientationText { get => (bool)GetValue(OrientationTextProperty); set => SetValue(OrientationTextProperty, value); }
@@ -126,7 +118,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty PeopleNamesProperty = DependencyPropertyBuilder<PhotoPropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(PeopleNames))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as PhotoPropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool PeopleNames { get => (bool)GetValue(PeopleNamesProperty); set => SetValue(PeopleNamesProperty, value); }

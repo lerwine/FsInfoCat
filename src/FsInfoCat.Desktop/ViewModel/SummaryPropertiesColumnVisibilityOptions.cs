@@ -14,7 +14,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty TotalFileCountProperty = DependencyPropertyBuilder<SummaryPropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(TotalFileCount))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as SummaryPropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool TotalFileCount { get => (bool)GetValue(TotalFileCountProperty); set => SetValue(TotalFileCountProperty, value); }
@@ -28,7 +27,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty ApplicationNameProperty = DependencyPropertyBuilder<SummaryPropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(ApplicationName))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as SummaryPropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool ApplicationName { get => (bool)GetValue(ApplicationNameProperty); set => SetValue(ApplicationNameProperty, value); }
@@ -42,7 +40,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty AuthorProperty = DependencyPropertyBuilder<SummaryPropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(Author))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as SummaryPropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool Author { get => (bool)GetValue(AuthorProperty); set => SetValue(AuthorProperty, value); }
@@ -56,7 +53,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty CommentProperty = DependencyPropertyBuilder<SummaryPropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(Comment))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as SummaryPropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool Comment { get => (bool)GetValue(CommentProperty); set => SetValue(CommentProperty, value); }
@@ -70,7 +66,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty KeywordsProperty = DependencyPropertyBuilder<SummaryPropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(Keywords))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as SummaryPropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool Keywords { get => (bool)GetValue(KeywordsProperty); set => SetValue(KeywordsProperty, value); }
@@ -84,7 +79,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty SubjectProperty = DependencyPropertyBuilder<SummaryPropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(Subject))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as SummaryPropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool Subject { get => (bool)GetValue(SubjectProperty); set => SetValue(SubjectProperty, value); }
@@ -98,7 +92,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty TitleProperty = DependencyPropertyBuilder<SummaryPropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(Title))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as SummaryPropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool Title { get => (bool)GetValue(TitleProperty); set => SetValue(TitleProperty, value); }
@@ -112,7 +105,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty CompanyProperty = DependencyPropertyBuilder<SummaryPropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(Company))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as SummaryPropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool Company { get => (bool)GetValue(CompanyProperty); set => SetValue(CompanyProperty, value); }
@@ -126,7 +118,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty ContentTypeProperty = DependencyPropertyBuilder<SummaryPropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(ContentType))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as SummaryPropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool ContentType { get => (bool)GetValue(ContentTypeProperty); set => SetValue(ContentTypeProperty, value); }
@@ -140,7 +131,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty CopyrightProperty = DependencyPropertyBuilder<SummaryPropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(Copyright))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as SummaryPropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool Copyright { get => (bool)GetValue(CopyrightProperty); set => SetValue(CopyrightProperty, value); }
@@ -154,7 +144,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty ParentalRatingProperty = DependencyPropertyBuilder<SummaryPropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(ParentalRating))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as SummaryPropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool ParentalRating { get => (bool)GetValue(ParentalRatingProperty); set => SetValue(ParentalRatingProperty, value); }
@@ -168,7 +157,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty RatingProperty = DependencyPropertyBuilder<SummaryPropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(Rating))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as SummaryPropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool Rating { get => (bool)GetValue(RatingProperty); set => SetValue(RatingProperty, value); }
@@ -182,7 +170,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty ItemAuthorsProperty = DependencyPropertyBuilder<SummaryPropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(ItemAuthors))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as SummaryPropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool ItemAuthors { get => (bool)GetValue(ItemAuthorsProperty); set => SetValue(ItemAuthorsProperty, value); }
@@ -196,7 +183,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty ItemTypeProperty = DependencyPropertyBuilder<SummaryPropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(ItemType))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as SummaryPropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool ItemType { get => (bool)GetValue(ItemTypeProperty); set => SetValue(ItemTypeProperty, value); }
@@ -210,7 +196,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty ItemTypeTextProperty = DependencyPropertyBuilder<SummaryPropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(ItemTypeText))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as SummaryPropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool ItemTypeText { get => (bool)GetValue(ItemTypeTextProperty); set => SetValue(ItemTypeTextProperty, value); }
@@ -224,7 +209,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty KindProperty = DependencyPropertyBuilder<SummaryPropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(Kind))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as SummaryPropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool Kind { get => (bool)GetValue(KindProperty); set => SetValue(KindProperty, value); }
@@ -238,7 +222,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty MIMETypeProperty = DependencyPropertyBuilder<SummaryPropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(MIMEType))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as SummaryPropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool MIMEType { get => (bool)GetValue(MIMETypeProperty); set => SetValue(MIMETypeProperty, value); }
@@ -252,7 +235,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty ParentalRatingReasonProperty = DependencyPropertyBuilder<SummaryPropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(ParentalRatingReason))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as SummaryPropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool ParentalRatingReason { get => (bool)GetValue(ParentalRatingReasonProperty); set => SetValue(ParentalRatingReasonProperty, value); }
@@ -266,7 +248,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty ParentalRatingsOrganizationProperty = DependencyPropertyBuilder<SummaryPropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(ParentalRatingsOrganization))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as SummaryPropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool ParentalRatingsOrganization { get => (bool)GetValue(ParentalRatingsOrganizationProperty); set => SetValue(ParentalRatingsOrganizationProperty, value); }
@@ -280,7 +261,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty SensitivityProperty = DependencyPropertyBuilder<SummaryPropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(Sensitivity))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as SummaryPropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool Sensitivity { get => (bool)GetValue(SensitivityProperty); set => SetValue(SensitivityProperty, value); }
@@ -294,7 +274,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty SensitivityTextProperty = DependencyPropertyBuilder<SummaryPropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(SensitivityText))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as SummaryPropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool SensitivityText { get => (bool)GetValue(SensitivityTextProperty); set => SetValue(SensitivityTextProperty, value); }
@@ -308,7 +287,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty SimpleRatingProperty = DependencyPropertyBuilder<SummaryPropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(SimpleRating))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as SummaryPropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool SimpleRating { get => (bool)GetValue(SimpleRatingProperty); set => SetValue(SimpleRatingProperty, value); }
@@ -322,7 +300,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty TrademarksProperty = DependencyPropertyBuilder<SummaryPropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(Trademarks))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as SummaryPropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool Trademarks { get => (bool)GetValue(TrademarksProperty); set => SetValue(TrademarksProperty, value); }
@@ -336,7 +313,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty ProductNameProperty = DependencyPropertyBuilder<SummaryPropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(ProductName))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as SummaryPropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool ProductName { get => (bool)GetValue(ProductNameProperty); set => SetValue(ProductNameProperty, value); }

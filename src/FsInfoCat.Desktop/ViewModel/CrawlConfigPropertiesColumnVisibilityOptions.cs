@@ -14,7 +14,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty TotalFileCountProperty = DependencyPropertyBuilder<CrawlConfigPropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(TotalFileCount))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as CrawlConfigPropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool TotalFileCount { get => (bool)GetValue(TotalFileCountProperty); set => SetValue(TotalFileCountProperty, value); }
@@ -28,7 +27,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty CompressionProperty = DependencyPropertyBuilder<CrawlConfigPropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(Compression))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as CrawlConfigPropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool Compression { get => (bool)GetValue(CompressionProperty); set => SetValue(CompressionProperty, value); }
@@ -42,7 +40,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty EncodingBitrateProperty = DependencyPropertyBuilder<CrawlConfigPropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(EncodingBitrate))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as CrawlConfigPropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool EncodingBitrate { get => (bool)GetValue(EncodingBitrateProperty); set => SetValue(EncodingBitrateProperty, value); }
@@ -56,7 +53,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty FormatProperty = DependencyPropertyBuilder<CrawlConfigPropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(Format))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as CrawlConfigPropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool Format { get => (bool)GetValue(FormatProperty); set => SetValue(FormatProperty, value); }
@@ -70,7 +66,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty IsVariableBitrateProperty = DependencyPropertyBuilder<CrawlConfigPropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(IsVariableBitrate))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as CrawlConfigPropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool IsVariableBitrate { get => (bool)GetValue(IsVariableBitrateProperty); set => SetValue(IsVariableBitrateProperty, value); }
@@ -84,7 +79,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty SampleRateProperty = DependencyPropertyBuilder<CrawlConfigPropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(SampleRate))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as CrawlConfigPropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool SampleRate { get => (bool)GetValue(SampleRateProperty); set => SetValue(SampleRateProperty, value); }
@@ -98,7 +92,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty SampleSizeProperty = DependencyPropertyBuilder<CrawlConfigPropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(SampleSize))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as CrawlConfigPropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool SampleSize { get => (bool)GetValue(SampleSizeProperty); set => SetValue(SampleSizeProperty, value); }
@@ -112,7 +105,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty StreamNameProperty = DependencyPropertyBuilder<CrawlConfigPropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(StreamName))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as CrawlConfigPropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool StreamName { get => (bool)GetValue(StreamNameProperty); set => SetValue(StreamNameProperty, value); }
@@ -126,7 +118,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty StreamNumberProperty = DependencyPropertyBuilder<CrawlConfigPropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(StreamNumber))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as CrawlConfigPropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool StreamNumber { get => (bool)GetValue(StreamNumberProperty); set => SetValue(StreamNumberProperty, value); }

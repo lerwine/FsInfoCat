@@ -14,7 +14,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty DatePlayExpiresProperty = DependencyPropertyBuilder<DRMPropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(DatePlayExpires))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as DRMPropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool DatePlayExpires { get => (bool)GetValue(DatePlayExpiresProperty); set => SetValue(DatePlayExpiresProperty, value); }
@@ -28,7 +27,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty DatePlayStartsProperty = DependencyPropertyBuilder<DRMPropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(DatePlayStarts))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as DRMPropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool DatePlayStarts { get => (bool)GetValue(DatePlayStartsProperty); set => SetValue(DatePlayStartsProperty, value); }
@@ -42,7 +40,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty DescriptionProperty = DependencyPropertyBuilder<DRMPropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(Description))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as DRMPropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool Description { get => (bool)GetValue(DescriptionProperty); set => SetValue(DescriptionProperty, value); }
@@ -56,7 +53,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty ExistingFileCountProperty = DependencyPropertyBuilder<DRMPropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(ExistingFileCount))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as DRMPropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool ExistingFileCount { get => (bool)GetValue(ExistingFileCountProperty); set => SetValue(ExistingFileCountProperty, value); }
@@ -70,7 +66,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty IsProtectedProperty = DependencyPropertyBuilder<DRMPropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(IsProtected))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as DRMPropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool IsProtected { get => (bool)GetValue(IsProtectedProperty); set => SetValue(IsProtectedProperty, value); }
@@ -84,7 +79,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty PlayCountProperty = DependencyPropertyBuilder<DRMPropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(PlayCount))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as DRMPropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool PlayCount { get => (bool)GetValue(PlayCountProperty); set => SetValue(PlayCountProperty, value); }
@@ -98,7 +92,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty TotalFileCountProperty = DependencyPropertyBuilder<DRMPropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(TotalFileCount))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as DRMPropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool TotalFileCount { get => (bool)GetValue(TotalFileCountProperty); set => SetValue(TotalFileCountProperty, value); }

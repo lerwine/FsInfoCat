@@ -14,7 +14,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty TotalFileCountProperty = DependencyPropertyBuilder<MusicPropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(TotalFileCount))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as MusicPropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool TotalFileCount { get => (bool)GetValue(TotalFileCountProperty); set => SetValue(TotalFileCountProperty, value); }
@@ -28,7 +27,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty AlbumArtistProperty = DependencyPropertyBuilder<MusicPropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(AlbumArtist))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as MusicPropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool AlbumArtist { get => (bool)GetValue(AlbumArtistProperty); set => SetValue(AlbumArtistProperty, value); }
@@ -42,7 +40,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty AlbumTitleProperty = DependencyPropertyBuilder<MusicPropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(AlbumTitle))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as MusicPropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool AlbumTitle { get => (bool)GetValue(AlbumTitleProperty); set => SetValue(AlbumTitleProperty, value); }
@@ -56,7 +53,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty ArtistProperty = DependencyPropertyBuilder<MusicPropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(Artist))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as MusicPropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool Artist { get => (bool)GetValue(ArtistProperty); set => SetValue(ArtistProperty, value); }
@@ -70,7 +66,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty ChannelCountProperty = DependencyPropertyBuilder<MusicPropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(ChannelCount))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as MusicPropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool ChannelCount { get => (bool)GetValue(ChannelCountProperty); set => SetValue(ChannelCountProperty, value); }
@@ -84,7 +79,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty ComposerProperty = DependencyPropertyBuilder<MusicPropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(Composer))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as MusicPropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool Composer { get => (bool)GetValue(ComposerProperty); set => SetValue(ComposerProperty, value); }
@@ -98,7 +92,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty ConductorProperty = DependencyPropertyBuilder<MusicPropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(Conductor))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as MusicPropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool Conductor { get => (bool)GetValue(ConductorProperty); set => SetValue(ConductorProperty, value); }
@@ -112,7 +105,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty DisplayArtistProperty = DependencyPropertyBuilder<MusicPropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(DisplayArtist))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as MusicPropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool DisplayArtist { get => (bool)GetValue(DisplayArtistProperty); set => SetValue(DisplayArtistProperty, value); }
@@ -126,7 +118,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty GenreProperty = DependencyPropertyBuilder<MusicPropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(Genre))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as MusicPropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool Genre { get => (bool)GetValue(GenreProperty); set => SetValue(GenreProperty, value); }
@@ -140,7 +131,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty PartOfSetProperty = DependencyPropertyBuilder<MusicPropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(PartOfSet))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as MusicPropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool PartOfSet { get => (bool)GetValue(PartOfSetProperty); set => SetValue(PartOfSetProperty, value); }
@@ -154,7 +144,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty PeriodProperty = DependencyPropertyBuilder<MusicPropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(Period))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as MusicPropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool Period { get => (bool)GetValue(PeriodProperty); set => SetValue(PeriodProperty, value); }
@@ -168,7 +157,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty TrackNumberProperty = DependencyPropertyBuilder<MusicPropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(TrackNumber))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as MusicPropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool TrackNumber { get => (bool)GetValue(TrackNumberProperty); set => SetValue(TrackNumberProperty, value); }

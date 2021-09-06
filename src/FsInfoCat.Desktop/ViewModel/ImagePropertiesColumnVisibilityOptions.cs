@@ -14,7 +14,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty TotalFileCountProperty = DependencyPropertyBuilder<ImagePropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(TotalFileCount))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as ImagePropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool TotalFileCount { get => (bool)GetValue(TotalFileCountProperty); set => SetValue(TotalFileCountProperty, value); }
@@ -28,7 +27,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty BitDepthProperty = DependencyPropertyBuilder<ImagePropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(BitDepth))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as ImagePropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool BitDepth { get => (bool)GetValue(BitDepthProperty); set => SetValue(BitDepthProperty, value); }
@@ -42,7 +40,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty ColorSpaceProperty = DependencyPropertyBuilder<ImagePropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(ColorSpace))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as ImagePropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool ColorSpace { get => (bool)GetValue(ColorSpaceProperty); set => SetValue(ColorSpaceProperty, value); }
@@ -56,7 +53,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty CompressedBitsPerPixelProperty = DependencyPropertyBuilder<ImagePropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(CompressedBitsPerPixel))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as ImagePropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool CompressedBitsPerPixel { get => (bool)GetValue(CompressedBitsPerPixelProperty); set => SetValue(CompressedBitsPerPixelProperty, value); }
@@ -70,7 +66,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty CompressionProperty = DependencyPropertyBuilder<ImagePropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(Compression))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as ImagePropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool Compression { get => (bool)GetValue(CompressionProperty); set => SetValue(CompressionProperty, value); }
@@ -84,7 +79,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty CompressionTextProperty = DependencyPropertyBuilder<ImagePropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(CompressionText))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as ImagePropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool CompressionText { get => (bool)GetValue(CompressionTextProperty); set => SetValue(CompressionTextProperty, value); }
@@ -98,7 +92,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty HorizontalResolutionProperty = DependencyPropertyBuilder<ImagePropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(HorizontalResolution))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as ImagePropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool HorizontalResolution { get => (bool)GetValue(HorizontalResolutionProperty); set => SetValue(HorizontalResolutionProperty, value); }
@@ -112,7 +105,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty HorizontalSizeProperty = DependencyPropertyBuilder<ImagePropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(HorizontalSize))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as ImagePropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool HorizontalSize { get => (bool)GetValue(HorizontalSizeProperty); set => SetValue(HorizontalSizeProperty, value); }
@@ -126,7 +118,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty ImageIDProperty = DependencyPropertyBuilder<ImagePropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(ImageID))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as ImagePropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool ImageID { get => (bool)GetValue(ImageIDProperty); set => SetValue(ImageIDProperty, value); }
@@ -140,7 +131,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty ResolutionUnitProperty = DependencyPropertyBuilder<ImagePropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(ResolutionUnit))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as ImagePropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool ResolutionUnit { get => (bool)GetValue(ResolutionUnitProperty); set => SetValue(ResolutionUnitProperty, value); }
@@ -154,7 +144,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty VerticalResolutionProperty = DependencyPropertyBuilder<ImagePropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(VerticalResolution))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as ImagePropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool VerticalResolution { get => (bool)GetValue(VerticalResolutionProperty); set => SetValue(VerticalResolutionProperty, value); }
@@ -168,7 +157,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty VerticalSizeProperty = DependencyPropertyBuilder<ImagePropertiesColumnVisibilityOptions<TEntity, TViewModel>, bool>
             .Register(nameof(VerticalSize))
             .DefaultValue(false)
-            .OnChanged((d, e) => (d as ImagePropertiesColumnVisibilityOptions<TEntity, TViewModel>)?.RaiseColumnVisibilityPropertyChanged(e))
             .AsReadWrite();
 
         public bool VerticalSize { get => (bool)GetValue(VerticalSizeProperty); set => SetValue(VerticalSizeProperty, value); }
