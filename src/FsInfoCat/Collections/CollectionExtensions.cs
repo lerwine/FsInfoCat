@@ -317,7 +317,7 @@ namespace FsInfoCat.Collections
                 comparer = Comparer<T>.Default;
             if (source is List<T> list)
                 return list.BinarySearch(index, count, item, comparer);
-            return source.Skip(index).Take(count).Select((e, i) => new { E = e, I = i }).Where(a => comparer.Compare(a.E, item) == 0).Select(a => a.I + index)
+            return source.Skip(index).Take(count).Select((e, i) => (E: e, I: i)).Where(a => comparer.Compare(a.E, item) == 0).Select(a => a.I + index)
                 .DefaultIfEmpty(-1).First();
         }
 
@@ -339,10 +339,9 @@ namespace FsInfoCat.Collections
                 throw new ArgumentOutOfRangeException(nameof(startIndex));
             if (source is null || count < 1)
                 return -1;
-            if (source is List<T> list)
-                return list.FindIndex(startIndex, count, match);
-            return source.Skip(startIndex).Take(count).Select((e, i) => new { E = e, I = i }).Where(a => match(a.E)).Select(a => a.I + startIndex)
-                .DefaultIfEmpty(-1).First();
+            return source is List<T> list ? list.FindIndex(startIndex, count, match) :
+                source.Skip(startIndex).Take(count).Select((e, i) => (E: e, I: i)).Where(a => match(a.E)).Select(a => a.I + startIndex)
+                    .DefaultIfEmpty(-1).First();
         }
 
         public static int FindIndex<T>(this IList<T> source, int startIndex, Predicate<T> match)
@@ -355,7 +354,7 @@ namespace FsInfoCat.Collections
                 return -1;
             if (source is List<T> list)
                 return list.FindIndex(startIndex, match);
-            return source.Skip(startIndex).Select((e, i) => new { E = e, I = i }).Where(a => match(a.E)).Select(a => a.I + startIndex)
+            return source.Skip(startIndex).Select((e, i) => (E: e, I: i)).Where(a => match(a.E)).Select(a => a.I + startIndex)
                 .DefaultIfEmpty(-1).First();
         }
 
@@ -367,7 +366,7 @@ namespace FsInfoCat.Collections
                 return -1;
             if (source is List<T> list)
                 return list.FindIndex(match);
-            return source.Select((e, i) => new { E = e, I = i }).Where(a => match(a.E)).Select(a => a.I).DefaultIfEmpty(-1).First();
+            return source.Select((e, i) => (E: e, I: i)).Where(a => match(a.E)).Select(a => a.I).DefaultIfEmpty(-1).First();
         }
 
         public static int FindLastIndex<T>(this IList<T> source, int startIndex, int count, Predicate<T> match)
@@ -380,7 +379,7 @@ namespace FsInfoCat.Collections
                 return -1;
             if (source is List<T> list)
                 return list.FindLastIndex(match);
-            return source.Skip(startIndex).Take(count).Select((e, i) => new { E = e, I = i }).Where(a => match(a.E)).Select(a => a.I + startIndex)
+            return source.Skip(startIndex).Take(count).Select((e, i) => (E: e, I: i)).Where(a => match(a.E)).Select(a => a.I + startIndex)
                 .DefaultIfEmpty(-1).Last();
         }
 
@@ -394,7 +393,7 @@ namespace FsInfoCat.Collections
                 return -1;
             if (source is List<T> list)
                 return list.FindLastIndex(startIndex, match);
-            return source.Skip(startIndex).Select((e, i) => new { E = e, I = i }).Where(a => match(a.E)).Select(a => a.I + startIndex)
+            return source.Skip(startIndex).Select((e, i) => (E: e, I: i)).Where(a => match(a.E)).Select(a => a.I + startIndex)
                 .DefaultIfEmpty(-1).Last();
         }
 
@@ -402,7 +401,7 @@ namespace FsInfoCat.Collections
         {
             if (source is List<T> list)
                 return list.FindLastIndex(match);
-            return source.Select((e, i) => new { E = e, I = i }).Where(a => match(a.E)).Select(a => a.I).DefaultIfEmpty(-1).Last();
+            return source.Select((e, i) => (E: e, I: i)).Where(a => match(a.E)).Select(a => a.I).DefaultIfEmpty(-1).Last();
         }
 
         public static int IndexOf<T>(this IList<T> source, T item, int index, int count)
@@ -414,7 +413,7 @@ namespace FsInfoCat.Collections
             if (source is List<T> list)
                 return list.IndexOf(item, index, count);
             IEqualityComparer<T> comparer = EqualityComparer<T>.Default;
-            return source.Skip(index).Take(count).Select((e, i) => new { E = e, I = i }).Where(a => comparer.Equals(a.E, item)).Select(a => a.I + index)
+            return source.Skip(index).Take(count).Select((e, i) => (E: e, I: i)).Where(a => comparer.Equals(a.E, item)).Select(a => a.I + index)
                 .DefaultIfEmpty(-1).First();
         }
 
@@ -427,7 +426,7 @@ namespace FsInfoCat.Collections
             if (source is List<T> list)
                 return list.IndexOf(item, index);
             IEqualityComparer<T> comparer = EqualityComparer<T>.Default;
-            return source.Skip(index).Select((e, i) => new { E = e, I = i }).Where(a => comparer.Equals(a.E, item)).Select(a => a.I + index)
+            return source.Skip(index).Select((e, i) => (E: e, I: i)).Where(a => comparer.Equals(a.E, item)).Select(a => a.I + index)
                 .DefaultIfEmpty(-1).First();
         }
 
@@ -440,7 +439,7 @@ namespace FsInfoCat.Collections
             if (source is List<T> list)
                 return list.IndexOf(item, index, count);
             IEqualityComparer<T> comparer = EqualityComparer<T>.Default;
-            return source.Skip(index).Take(count).Select((e, i) => new { E = e, I = i }).Where(a => comparer.Equals(a.E, item)).Select(a => a.I + index)
+            return source.Skip(index).Take(count).Select((e, i) => (E: e, I: i)).Where(a => comparer.Equals(a.E, item)).Select(a => a.I + index)
                 .DefaultIfEmpty(-1).Last();
         }
 

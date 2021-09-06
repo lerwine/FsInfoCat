@@ -88,7 +88,7 @@ namespace FsInfoCat
                     {
                         KeyValuePair<string, string[]>[] keyValuePairs = _lastValidationResults.ToArray();
                         IEnumerable<KeyValuePair<string, string[]>> added = validationResults.SelectMany(r =>
-                                r.MemberNames.Where(n => !string.IsNullOrWhiteSpace(n)).Select(n => new { MemberName = string.IsNullOrWhiteSpace(n) ? "" : n, r.ErrorMessage }))
+                                r.MemberNames.Where(n => !string.IsNullOrWhiteSpace(n)).Select(n => (MemberName: string.IsNullOrWhiteSpace(n) ? "" : n, r.ErrorMessage)))
                             .GroupBy(a => a.MemberName, a => a.ErrorMessage ?? "").ToKeyValuePairs(g => g.Key, g => g.Distinct().ToArray());
                         if (string.IsNullOrWhiteSpace(args.PropertyName))
                         {
