@@ -1,0 +1,30 @@
+using FsInfoCat.Desktop.ViewModel;
+using FsInfoCat.Local;
+using System;
+using System.Diagnostics.CodeAnalysis;
+using System.Windows;
+
+namespace FsInfoCat.Desktop.LocalData.MusicPropertySets
+{
+    public class ListItemViewModel : MusicPropertiesListItemViewModel<MusicPropertiesListItem>, ILocalCrudEntityRowViewModel<MusicPropertiesListItem>
+    {
+        #region LastSynchronizedOn Property Members
+
+        private static readonly DependencyPropertyKey LastSynchronizedOnPropertyKey = DependencyProperty.RegisterReadOnly(nameof(LastSynchronizedOn), typeof(DateTime?), typeof(ListItemViewModel),
+                new PropertyMetadata(null));
+
+        /// <summary>
+        /// Identifies the <see cref="LastSynchronizedOn"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty LastSynchronizedOnProperty = LastSynchronizedOnPropertyKey.DependencyProperty;
+
+        public DateTime? LastSynchronizedOn { get => (DateTime?)GetValue(LastSynchronizedOnProperty); private set => SetValue(LastSynchronizedOnPropertyKey, value); }
+
+        #endregion
+
+        public ListItemViewModel([DisallowNull] MusicPropertiesListItem entity) : base(entity)
+        {
+            LastSynchronizedOn = entity.LastSynchronizedOn;
+        }
+    }
+}

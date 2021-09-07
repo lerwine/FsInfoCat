@@ -1,0 +1,54 @@
+<UserControl x:Class="FsInfoCat.Desktop.LocalData.AudioPropertySets.ListItemControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:FsInfoCat.Desktop.LocalData.AudioPropertySets"
+             mc:Ignorable="d" d:DataContext="{x:Type local:ListItemViewModel}"
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid VerticalAlignment="Top">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <Label ToolTip="" VerticalAlignment="Bottom" Content="Stream Name" Padding="{DynamicResource DefaultSpacingTopLeftRight}" FontWeight="Bold"/>
+        <Label ToolTip="" VerticalAlignment="Bottom" Content="Stream Number" Padding="{DynamicResource DefaultSpacingTopLeftRight}" Grid.Column="1" FontWeight="Bold"/>
+        <Label ToolTip="" VerticalAlignment="Bottom" Content="Total File Count" Grid.Column="2" Padding="{DynamicResource DefaultSpacingTopLeft}" FontWeight="Bold"/>
+        <Button Style="{DynamicResource EditButton}" Grid.Column="3" Margin="{DynamicResource DefaultSpacingTopLeft}" ToolTip="Edit the current Audio Property Set." Command="{Binding Edit, Mode=OneWay}"/>
+        <Button Style="{DynamicResource DeleteButton}" Grid.Column="4" Margin="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="Delete the Audio Property Set." Command="{Binding Delete, Mode=OneWay}"/>
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding StreamName}" Grid.Row="1" Margin="{DynamicResource DefaultSpacingLeftRight}"/>
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding StreamNumber}" Grid.Column="1" Grid.Row="1" Margin="{DynamicResource DefaultSpacingLeftRight}"/>
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding TotalFileCount}" Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="3" Margin="{DynamicResource DefaultSpacingLeftRight}"/>
+        <Label ToolTip="" VerticalAlignment="Bottom" Content="Format" Grid.Row="2" Padding="{DynamicResource DefaultSpacingTopLeftRight}" FontWeight="Bold"/>
+        <Label ToolTip="" VerticalAlignment="Bottom" Content="Compression" Grid.Column="1" Grid.Row="2" Padding="{DynamicResource DefaultSpacingTopLeftRight}" FontWeight="Bold"/>
+        <Label ToolTip="" VerticalAlignment="Bottom" Content="Encoding Bitrate" Grid.Column="2" Grid.ColumnSpan="3" Grid.Row="2" Padding="{DynamicResource DefaultSpacingTopLeftRight}" FontWeight="Bold"/>
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding Format}" Grid.Row="3" Margin="{DynamicResource DefaultSpacingLeftRight}"/>
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding Compression}" Grid.Row="3" Grid.Column="1" Margin="{DynamicResource DefaultSpacingLeftRight}"/>
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding EncodingBitrate}" Grid.Row="3" Grid.Column="2" Grid.ColumnSpan="3" Margin="{DynamicResource DefaultSpacingLeftRight}"/>
+        <Label ToolTip="" VerticalAlignment="Bottom" Content="Sample Rate" Grid.Row="4" Padding="{DynamicResource DefaultSpacingTopLeftRight}" FontWeight="Bold"/>
+        <Label ToolTip="" VerticalAlignment="Bottom" Content="Sample Size" Grid.Column="1" Grid.Row="4" Padding="{DynamicResource DefaultSpacingTopLeftRight}" FontWeight="Bold"/>
+        <Label ToolTip="" VerticalAlignment="Bottom" Content="Is Variable Bitrate" Grid.Column="2" Grid.ColumnSpan="3" Grid.Row="4" Padding="{DynamicResource DefaultSpacingTopLeftRight}" FontWeight="Bold"/>
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding SampleRate}" Grid.Row="5" Margin="{DynamicResource DefaultSpacingLeftRight}"/>
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding SampleSize}" Grid.Row="5" Grid.Column="1" Margin="{DynamicResource DefaultSpacingLeftRight}"/>
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding IsVariableBitrate}" Grid.Row="5" Grid.Column="2" Grid.ColumnSpan="3" Margin="{DynamicResource DefaultSpacingLeftRight}"/>
+        <Label ToolTip="" VerticalAlignment="Bottom" Content="Created On" Grid.Row="6" Padding="{DynamicResource DefaultSpacingTopLeftRight}" FontWeight="Bold"/>
+        <Label ToolTip="" VerticalAlignment="Bottom" Content="Modified On" Grid.Column="1" Grid.Row="6" Padding="{DynamicResource DefaultSpacingTopLeftRight}" FontWeight="Bold"/>
+        <Label ToolTip="" VerticalAlignment="Bottom" Content="Last Synchronized" Grid.Column="2" Grid.ColumnSpan="3" Grid.Row="6" Padding="{DynamicResource DefaultSpacingTopLeftRight}" FontWeight="Bold"/>
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding CreatedOn}" Grid.Row="7" Margin="{DynamicResource DefaultSpacingLeftRight}"/>
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding ModifiedOn}" Grid.Row="7" Grid.Column="1" Margin="{DynamicResource DefaultSpacingLeftRight}"/>
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding LastSynchronizedOn}" Grid.Row="7" Grid.Column="2" Grid.ColumnSpan="3" Margin="{DynamicResource DefaultSpacingLeftRight}"/>
+    </Grid>
+</UserControl>
