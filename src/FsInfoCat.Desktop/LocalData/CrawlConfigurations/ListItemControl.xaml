@@ -114,8 +114,15 @@
                                 <TextBox x:Name="modifiedOnTextBox" Margin="{DynamicResource DefaultSpacingLeftRight}" ToolTip="Last date and time when record was last modified." Style="{DynamicResource ReadOnlyValueTextBox}"/>
                             </StackPanel>
                             <StackPanel>
-                                <Label Content="Synchronized" Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="When record was last synchronized with remote database." Target="{Binding ElementName=synchronizedTextBox, Mode=OneWay}" FontWeight="Bold"/>
-                                <TextBox x:Name="synchronizedTextBox" Margin="{DynamicResource DefaultSpacingLeftRight}" ToolTip="When record was last synchronized with remote database." Style="{DynamicResource ReadOnlyValueTextBox}"/>
+                                <Label Content="Last Synchronized" Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="When record was last synchronized with remote database." Target="{Binding ElementName=synchronizedTextBox, Mode=OneWay}" FontWeight="Bold"/>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBox x:Name="synchronizedTextBox" Margin="{DynamicResource DefaultSpacingLeftRight}" ToolTip="When record was last synchronized with remote database." Style="{DynamicResource ReadOnlyValueTextBox}"/>
+                                    <Button Style="{DynamicResource SyncButton}" ToolTip="Synchronize Now" Margin="{DynamicResource DefaultSpacingRight}" Grid.Column="1"/>
+                                </Grid>
                             </StackPanel>
                         </WrapPanel>
                     </GroupBox>
