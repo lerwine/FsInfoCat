@@ -5,8 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:FsInfoCat.Desktop.LocalVM.MusicPropertySets"
              xmlns:Converters="clr-namespace:FsInfoCat.Desktop.Converters" x:Class="FsInfoCat.Desktop.LocalVM.MusicPropertySets.ListItemControl"
-             mc:Ignorable="d" d:DataContext="{x:Type local:ListItemViewModel}"
-             d:DesignHeight="450" d:DesignWidth="800">
+             mc:Ignorable="d" d:DataContext="{x:Type local:ListItemViewModel}" d:DesignWidth="800">
     <UserControl.Resources>
         <Converters:StringToVisibilityConverter x:Key="StringToVisibilityConverter" NullSource="Collapsed"/>
     </UserControl.Resources>
@@ -74,6 +73,7 @@
         <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingLeftRight}" ToolTip="" Text="{Binding TotalFileCount}" Grid.Row="17"/>
         <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingLeftRight}" ToolTip="" Text="{Binding CreatedOn}" Grid.Column="1" Grid.Row="17"/>
         <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingLeftRight}" ToolTip="" Text="{Binding ModifiedOn}" Grid.Column="2" Grid.Row="17"/>
-        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingLeftRight}" ToolTip="" Text="{Binding LastSynchronizedOn}" Grid.ColumnSpan="3" Grid.Row="17" Grid.Column="3"/>
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingLeftRight}" ToolTip="" Text="{Binding LastSynchronizedOn}" Grid.ColumnSpan="3" Grid.Row="17" Grid.Column="2"/>
+        <Button Grid.Column="5" Grid.Row="17" Style="{DynamicResource SyncButton}" ToolTip="Synchronize Now" Margin="{DynamicResource DefaultSpacingRight}"/>
     </Grid>
 </UserControl>

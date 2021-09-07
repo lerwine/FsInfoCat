@@ -4,8 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:FsInfoCat.Desktop.LocalVM.MediaPropertySets"
-             mc:Ignorable="d" d:DataContext="{x:Type local:ListItemViewModel}"
-             d:DesignHeight="450" d:DesignWidth="800">
+             mc:Ignorable="d" d:DataContext="{x:Type local:ListItemViewModel}" d:DesignWidth="800">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -31,51 +30,59 @@
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
-        <Label Padding="{DynamicResource DefaultSpacingTopLeft}" ToolTip="" VerticalAlignment="Bottom" Content="Subtitle" Grid.ColumnSpan="4"/>
+        <Label Padding="{DynamicResource DefaultSpacingTopLeft}" ToolTip="" VerticalAlignment="Bottom" Content="Subtitle" Grid.ColumnSpan="4" FontWeight="Bold"/>
         <Button Style="{DynamicResource EditButton}" Grid.Column="4" Margin="{DynamicResource DefaultSpacingTopLeft}" ToolTip="Edit the current item." Command="{Binding Edit, Mode=OneWay}"/>
         <Button Style="{DynamicResource DeleteButton}" Grid.Column="5" Margin="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="Delete the item." Command="{Binding Delete, Mode=OneWay}"/>
         <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingLeftRight}" ToolTip="" Text="{Binding Subtitle}" Grid.Row="1" Grid.ColumnSpan="6"/>
 
-        <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="" Content="Producer" Grid.Row="2"/>
-        <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="" Content="Content Distributor" Grid.Row="2" Grid.ColumnSpan="4" Grid.Column="2"/>
+        <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="" Content="Producer" Grid.Row="2" FontWeight="Bold"/>
+        <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="" Content="Content Distributor" Grid.Row="2" Grid.ColumnSpan="4" Grid.Column="2" FontWeight="Bold"/>
         <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingLeftRight}" ToolTip="" Text="{Binding Producer}" Grid.Row="3" Grid.ColumnSpan="2"/>
         <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingLeftRight}" ToolTip="" Text="{Binding ContentDistributor}" Grid.Row="3" Grid.ColumnSpan="4" Grid.Column="2"/>
 
-        <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="" Content="Publisher" Grid.Row="4"/>
-        <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="" Content="Writer" Grid.Row="4" Grid.ColumnSpan="4" Grid.Column="2"/>
+        <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="" Content="Publisher" Grid.Row="4" FontWeight="Bold"/>
+        <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="" Content="Writer" Grid.Row="4" Grid.ColumnSpan="4" Grid.Column="2" FontWeight="Bold"/>
         <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingLeftRight}" ToolTip="" Text="{Binding Publisher}" Grid.Row="5" Grid.ColumnSpan="2"/>
         <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingLeftRight}" ToolTip="" Text="{Binding Writer}" Grid.Row="5" Grid.ColumnSpan="4" Grid.Column="2"/>
 
-        <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="" Content="Date Released" Grid.Row="6"/>
-        <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="" Content="Year" Grid.Row="6" Grid.Column="1"/>
-        <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="" Content="Duration" Grid.Row="6" Grid.Column="2"/>
-        <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="" Content="Frame Count" Grid.Row="6" Grid.ColumnSpan="3" Grid.Column="3"/>
+        <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="" Content="Date Released" Grid.Row="6" FontWeight="Bold"/>
+        <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="" Content="Year" Grid.Row="6" Grid.Column="1" FontWeight="Bold"/>
+        <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="" Content="Duration" Grid.Row="6" Grid.Column="2" FontWeight="Bold"/>
+        <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="" Content="Frame Count" Grid.Row="6" Grid.ColumnSpan="3" Grid.Column="3" FontWeight="Bold"/>
         <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingLeftRight}" ToolTip="" Text="{Binding DateReleased}" Grid.Row="7"/>
         <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingLeftRight}" ToolTip="" Text="{Binding Year}" Grid.Row="7" Grid.Column="1"/>
         <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingLeftRight}" ToolTip="" Text="{Binding Duration}" Grid.Row="7" Grid.Column="2"/>
         <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingLeftRight}" ToolTip="" Text="{Binding FrameCount}" Grid.Row="7" Grid.ColumnSpan="3" Grid.Column="3"/>
 
-        <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="" Content="Protection Type" Grid.Row="8"/>
-        <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="" Content="DVD ID" Grid.Row="8" Grid.Column="1"/>
-        <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="" Content="Provider Rating" Grid.Row="8" Grid.Column="2"/>
-        <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="" Content="Provider Style" Grid.Row="8" Grid.ColumnSpan="3" Grid.Column="3"/>
+        <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="" Content="Protection Type" Grid.Row="8" FontWeight="Bold"/>
+        <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="" Content="DVD ID" Grid.Row="8" Grid.Column="1" FontWeight="Bold"/>
+        <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="" Content="Provider Rating" Grid.Row="8" Grid.Column="2" FontWeight="Bold"/>
+        <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="" Content="Provider Style" Grid.Row="8" Grid.ColumnSpan="3" Grid.Column="3" FontWeight="Bold"/>
         <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingLeftRight}" ToolTip="" Text="{Binding ProtectionType}" Grid.Row="9"/>
         <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingLeftRight}" ToolTip="" Text="{Binding DVDID}" Grid.Row="9" Grid.Column="1"/>
         <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingLeftRight}" ToolTip="" Text="{Binding ProviderRating}" Grid.Row="9" Grid.Column="2"/>
         <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingLeftRight}" ToolTip="" Text="{Binding ProviderStyle}" Grid.Row="9" Grid.ColumnSpan="3" Grid.Column="3"/>
 
-        <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="" Content="Creator Application" Grid.Row="10"/>
-        <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="" Content="Creator App Version" Grid.Row="10" Grid.ColumnSpan="4" Grid.Column="2"/>
+        <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="" Content="Creator Application" Grid.Row="10" FontWeight="Bold"/>
+        <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="" Content="Creator App Version" Grid.Row="10" Grid.ColumnSpan="4" Grid.Column="2" FontWeight="Bold"/>
         <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingLeftRight}" ToolTip="" Text="{Binding CreatorApplication}" Grid.Row="11" Grid.ColumnSpan="2"/>
         <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingLeftRight}" ToolTip="" Text="{Binding CreatorApplicationVersion}" Grid.Row="11" Grid.ColumnSpan="4" Grid.Column="2"/>
 
-        <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="" Content="Total File Count" Grid.Row="12"/>
-        <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="" Content="Created On" Grid.Row="12" Grid.Column="1"/>
-        <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="" Content="Modified On" Grid.Row="12" Grid.Column="2"/>
-        <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="" Content="Last Synchronized" Grid.Row="12" Grid.ColumnSpan="3" Grid.Column="3"/>
-        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingLeftRight}" ToolTip="" Text="{Binding TotalFileCount}" Grid.Row="13"/>
+        <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="" Content="Total File Count" Grid.Row="12" FontWeight="Bold"/>
+        <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="" Content="Created On" Grid.Row="12" Grid.Column="1" FontWeight="Bold"/>
+        <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="" Content="Modified On" Grid.Row="12" Grid.Column="2" FontWeight="Bold"/>
+        <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="" Content="Last Synchronized" Grid.Row="12" Grid.ColumnSpan="3" Grid.Column="3" FontWeight="Bold"/>
+        <Grid Grid.Row="13">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingLeft}" ToolTip="" Text="{Binding TotalFileCount}"/>
+            <Button Style="{DynamicResource OpenListingButton}" Grid.Column="1" Margin="{DynamicResource DefaultSpacingRight}" ToolTip="Open file Listing"/>
+        </Grid>
         <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingLeftRight}" ToolTip="" Text="{Binding CreatedOn}" Grid.Row="13" Grid.Column="1"/>
         <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingLeftRight}" ToolTip="" Text="{Binding ModifiedOn}" Grid.Row="13" Grid.Column="2"/>
-        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingLeftRight}" ToolTip="" Text="{Binding LastSynchronizedOn}" Grid.Row="13" Grid.ColumnSpan="3" Grid.Column="3"/>
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingLeftRight}" ToolTip="" Text="{Binding LastSynchronizedOn}" Grid.Row="13" Grid.ColumnSpan="2" Grid.Column="3"/>
+        <Button Grid.Column="5" Grid.Row="13" Style="{DynamicResource SyncButton}" ToolTip="Synchronize Now" Margin="{DynamicResource DefaultSpacingRight}"/>
     </Grid>
 </UserControl>

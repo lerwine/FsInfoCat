@@ -78,5 +78,7 @@ namespace FsInfoCat.Desktop.ViewModel
             Value = value;
             DisplayName = value.GetDisplayName();
         }
+
+        public override string ToString() => Dispatcher.CheckInvoke(() => DisplayName);
     }
 }

@@ -815,7 +815,7 @@
     <value>Rating</value>
   </data>
   <data name="DisplayName_RedundantSets" xml:space="preserve">
-    <value>Redundant Sets</value>
+    <value>Binary Redundant Sets</value>
   </data>
   <data name="DisplayName_ResolutionUnit" xml:space="preserve">
     <value>Resolution Unit</value>
@@ -1861,5 +1861,206 @@
   <data name="FormatDisplayName_FSInfoCatTitle" xml:space="preserve">
     <value>FS InfoCat: {0}</value>
     <comment>Window title: Paramter 0: string = Page Title</comment>
+  </data>
+  <data name="ShortName_RedundantSets" xml:space="preserve">
+    <value>Redundant Sets</value>
+  </data>
+  <data name="FormatDisplayName_RedundantSets_MinOnly" xml:space="preserve">
+    <value>Binary Redundant Sets - Length &gt;= {0}</value>
+    <comment>Parameter 0: string = Minimum inclusive length as string</comment>
+  </data>
+  <data name="DisplayName_RedundantSets_All" xml:space="preserve">
+    <value>Binary Redundant Sets - All Items</value>
+  </data>
+  <data name="FormatDisplayName_RedundantSets_MaxOnly" xml:space="preserve">
+    <value>Binary Redundant Sets - Length &lt; {0}</value>
+    <comment>Parameter 0: string = Maximum exclusive length as string</comment>
+  </data>
+  <data name="FormatDisplayName_RedundantSets_MinMax" xml:space="preserve">
+    <value>Binary Redundant Sets - Length &gt;= {0} and &lt; {1}</value>
+    <comment>Parameter 0: string = Minimum inclusive length as string; Parameter 1: string = Maximum exclusive length as string</comment>
+  </data>
+  <data name="DisplayName_AudioPropertyGroups_All" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_AudioPropertyGroups_HasFiles" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_AudioPropertyGroups_NoExistingFiles" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_CrawlConfigs_All" xml:space="preserve">
+    <value>Crawl Configurations - All</value>
+  </data>
+  <data name="DisplayName_CrawlConfigs_Failed" xml:space="preserve">
+    <value>Crawl Configurations - All Failed</value>
+  </data>
+  <data name="DisplayName_CrawlLog_All" xml:space="preserve">
+    <value>Crawl Result Logs - All</value>
+  </data>
+  <data name="DisplayName_CrawlLog_Failed" xml:space="preserve">
+    <value>Crawl Result Logs - Failed</value>
+  </data>
+  <data name="DisplayName_DocumentPropertyGroups_All" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_DocumentPropertyGroups_HasFiles" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_DocumentPropertyGroups_NoExistingFiles" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_DRMPropertyGroups_All" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_DRMPropertyGroups_HasFiles" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_DRMPropertyGroups_NoExistingFiles" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_FileSystemDefinitions_All" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_FileSystemDefinitions_IsActive" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_FileSystemDefinitions_IsInactive" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_GPSPropertyGroups_All" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_GPSPropertyGroups_HasFiles" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_GPSPropertyGroups_NoExistingFiles" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_ImagePropertyGroups_All" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_ImagePropertyGroups_HasFiles" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_ImagePropertyGroups_NoExistingFiles" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_MediaPropertyGroups_All" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_MediaPropertyGroups_HasFiles" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_MediaPropertyGroups_NoExistingFiles" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_MusicPropertyGroups_All" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_MusicPropertyGroups_HasFiles" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_MusicPropertyGroups_NoExistingFiles" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_PersonalTagDefinition_ActiveOnly" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_PersonalTagDefinition_All" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_PersonalTagDefinition_InactiveOnlly" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_PhotoPropertyGroups_All" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_PhotoPropertyGroups_HasFiles" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_PhotoPropertyGroups_NoExistingFiles" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_RrecordedTVPropertyGroups_All" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_RrecordedTVPropertyGroups_HasFiles" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_RrecordedTVPropertyGroups_NoExistingFiles" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_ScheduledCrawlConfigs_All" xml:space="preserve">
+    <value>Scheduled Crawl Configurations - All</value>
+  </data>
+  <data name="DisplayName_ScheduledCrawlConfigs_Failed" xml:space="preserve">
+    <value>Scheduled Crawl Configurations - Failed</value>
+  </data>
+  <data name="DisplayName_SharedTagDefinition_ActiveOnly" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_SharedTagDefinition_All" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_SharedTagDefinition_InactiveOnlly" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_SummaryPropertyGroups_All" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_SummaryPropertyGroups_HasFiles" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_SummaryPropertyGroups_NoExistingFiles" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_SymbolicNames_ActiveOnly" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_SymbolicNames_All" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_SymbolicNames_InactiveOnly" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DisplayName_UnscheduledCrawlConfigs_All" xml:space="preserve">
+    <value>Unscheduled Crawl Configurations - All</value>
+  </data>
+  <data name="DisplayName_UnscheduledCrawlConfigs_Failed" xml:space="preserve">
+    <value>Unscheduled Crawl Configurations - Failed</value>
+  </data>
+  <data name="DisplayName_VideoPropertyGroups_All" xml:space="preserve">
+    <value>Video Property Groups - All</value>
+  </data>
+  <data name="DisplayName_VideoPropertyGroups_HasFiles" xml:space="preserve">
+    <value>Video Property Groups - Containing Files</value>
+  </data>
+  <data name="DisplayName_VideoPropertyGroups_NoExistingFiles" xml:space="preserve">
+    <value>Video Property Groups - Contains only deleted files</value>
+  </data>
+  <data name="DisplayName_Volumes_ActiveOnly" xml:space="preserve">
+    <value>Volumes - Active</value>
+  </data>
+  <data name="DisplayName_Volumes_All" xml:space="preserve">
+    <value>Volumes - All</value>
+  </data>
+  <data name="DisplayName_Volumes_InactiveOnly" xml:space="preserve">
+    <value>Volumes - Inactive</value>
+  </data>
+  <data name="FormatDisplayName_CrawlConfigs_Status" xml:space="preserve">
+    <value>Crawl Configurations - {0}</value>
+  </data>
+  <data name="FormatDisplayName_CrawlLog_Status" xml:space="preserve">
+    <value>Crawl Result Logs - {0}</value>
+  </data>
+  <data name="FormatDisplayName_ScheduledCrawlConfigs_Status" xml:space="preserve">
+    <value>Scheduled Crawl Configurations - {0}</value>
+  </data>
+  <data name="FormatDisplayName_UnscheduledCrawlConfigs_Status" xml:space="preserve">
+    <value>Unscheduled Crawl Configurations - {0}</value>
+  </data>
+  <data name="FormatDisplayName_Volumes_Status" xml:space="preserve">
+    <value>Volumes - State  is {0}</value>
   </data>
 </root>

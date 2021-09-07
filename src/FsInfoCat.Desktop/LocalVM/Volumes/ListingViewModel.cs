@@ -10,64 +10,98 @@ using System.Windows;
 
 namespace FsInfoCat.Desktop.LocalVM.Volumes
 {
-    public class ListingViewModel : ListingViewModel<VolumeListItemWithFileSystem, ListItemViewModel, (VolumeStatus? Status, bool? ShowActiveOnly)>, INotifyNavigatedTo
+    public class ListingViewModel : ListingViewModel<VolumeListItemWithFileSystem, ListItemViewModel, ListingViewModel.ListingOptions>, INotifyNavigatedTo
     {
-        #region ViewOptions Property Members
+        #region StatusFilterOption Property Members
 
+        private ListingOptions _currentOptions = new(null, true);
         private readonly EnumChoiceItem<VolumeStatus> _allOption;
         private readonly EnumChoiceItem<VolumeStatus> _inactiveOption;
-
-        private static readonly DependencyPropertyKey ViewOptionsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ViewOptions), typeof(EnumValuePickerVM<VolumeStatus>), typeof(ListingViewModel),
+        private readonly EnumChoiceItem<VolumeStatus> _activeOption;
+        private static readonly DependencyPropertyKey StatusFilterOptionPropertyKey = DependencyProperty.RegisterReadOnly(nameof(StatusFilterOption), typeof(EnumValuePickerVM<VolumeStatus>), typeof(ListingViewModel),
                 new PropertyMetadata(null));
 
         /// <summary>
-        /// Identifies the <see cref="ViewOptions"/> dependency property.
+        /// Identifies the <see cref="StatusFilterOption"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty ViewOptionsProperty = ViewOptionsPropertyKey.DependencyProperty;
+        public static readonly DependencyProperty StatusFilterOptionProperty = StatusFilterOptionPropertyKey.DependencyProperty;
 
-        public EnumValuePickerVM<VolumeStatus> ViewOptions => (EnumValuePickerVM<VolumeStatus>)GetValue(ViewOptionsProperty);
+        public EnumValuePickerVM<VolumeStatus> StatusFilterOption => (EnumValuePickerVM<VolumeStatus>)GetValue(StatusFilterOptionProperty);
 
         #endregion
-        #region EditingOptions Property Members
+        #region PageTitle Property Members
 
-        private static readonly DependencyPropertyKey EditingOptionsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(EditingOptions), typeof(EnumValuePickerVM<VolumeStatus>), typeof(ListingViewModel),
-                new PropertyMetadata(null));
+        private static readonly DependencyPropertyKey PageTitlePropertyKey = DependencyPropertyBuilder<ListingViewModel, string>
+            .Register(nameof(PageTitle))
+            .DefaultValue("")
+            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default)
+            .AsReadOnly();
 
         /// <summary>
-        /// Identifies the <see cref="EditingOptions"/> dependency property.
+        /// Identifies the <see cref="PageTitle"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty EditingOptionsProperty = EditingOptionsPropertyKey.DependencyProperty;
+        public static readonly DependencyProperty PageTitleProperty = PageTitlePropertyKey.DependencyProperty;
 
-        public EnumValuePickerVM<VolumeStatus> EditingOptions => (EnumValuePickerVM<VolumeStatus>)GetValue(EditingOptionsProperty);
+        public string PageTitle { get => GetValue(PageTitleProperty) as string; private set => SetValue(PageTitlePropertyKey, value); }
+
+        private void UpdatePageTitle(ListingOptions options)
+        {
+            if (options.Status.HasValue)
+                PageTitle = string.Format(FsInfoCat.Properties.Resources.FormatDisplayName_Volumes_Status, options.Status.Value.GetDisplayName());
+            else
+                PageTitle = options.ShowActiveOnly.HasValue ?
+                    (options.ShowActiveOnly.Value ? FsInfoCat.Properties.Resources.DisplayName_Volumes_ActiveOnly :
+                    FsInfoCat.Properties.Resources.DisplayName_Volumes_InactiveOnly) :
+                    FsInfoCat.Properties.Resources.DisplayName_Volumes_All;
+        }
 
         #endregion
 
         public ListingViewModel()
         {
-            string[] names = new[] { FsInfoCat.Properties.Resources.DisplayName_AllItems, FsInfoCat.Properties.Resources.DisplayName_ActiveItems, FsInfoCat.Properties.Resources.DisplayName_InactiveItems };
-            EnumValuePickerVM<VolumeStatus> viewOptions = new(names);
+            EnumValuePickerVM<VolumeStatus> viewOptions = new(FsInfoCat.Properties.Resources.DisplayName_AllItems, FsInfoCat.Properties.Resources.DisplayName_ActiveItems,
+                FsInfoCat.Properties.Resources.DisplayName_InactiveItems);
             _allOption = viewOptions.Choices.First(o => o.DisplayName == FsInfoCat.Properties.Resources.DisplayName_AllItems);
             _inactiveOption = viewOptions.Choices.First(o => o.DisplayName == FsInfoCat.Properties.Resources.DisplayName_InactiveItems);
-            SetValue(ViewOptionsPropertyKey, viewOptions);
-            viewOptions.SelectedItemPropertyChanged += (object sender, DependencyPropertyChangedEventArgs e) => ReloadAsync(e.NewValue as EnumChoiceItem<VolumeStatus>);
-            SetValue(EditingOptionsPropertyKey, new EnumValuePickerVM<VolumeStatus>(names) { SelectedIndex = viewOptions.SelectedIndex });
+            _activeOption = viewOptions.Choices.First(o => o.DisplayName == FsInfoCat.Properties.Resources.DisplayName_ActiveItems);
+            viewOptions.SelectedItem = FromListingOptions(_currentOptions);
+            SetValue(StatusFilterOptionPropertyKey, viewOptions);
+            UpdatePageTitle(_currentOptions);
         }
 
-        void INotifyNavigatedTo.OnNavigatedTo() => ReloadAsync(ViewOptions.SelectedItem);
-
-        private IAsyncJob ReloadAsync(EnumChoiceItem<VolumeStatus> selectedItem)
+        private ListingOptions ToListingOptions(EnumChoiceItem<VolumeStatus> item)
         {
-            VolumeStatus? status;
-            if (selectedItem is not null)
+            if (item is not null)
             {
-                if ((status = selectedItem.Value).HasValue || ReferenceEquals(selectedItem, _allOption))
-                    return ReloadAsync((status, null));
-                return ReloadAsync((status, !ReferenceEquals(selectedItem, _inactiveOption)));
+                VolumeStatus? status = item.Value;
+                if (status.HasValue)
+                    return new(status, null);
+                if (ReferenceEquals(_allOption, item))
+                    return new(null, null);
+                if (ReferenceEquals(_inactiveOption, item))
+                    return new(null, false);
             }
-            return ReloadAsync((null, true));
+            return new(null, true);
         }
 
-        protected override IQueryable<VolumeListItemWithFileSystem> GetQueryableListing((VolumeStatus? Status, bool? ShowActiveOnly) options, [DisallowNull] LocalDbContext dbContext,
+        private EnumChoiceItem<VolumeStatus> FromListingOptions(ListingOptions options)
+        {
+            if (options.Status.HasValue)
+                return StatusFilterOption.Choices.FirstOrDefault(o => o.Value == options.Status);
+            if (options.ShowActiveOnly.HasValue)
+                return options.ShowActiveOnly.Value ? _activeOption : _inactiveOption;
+            return _allOption;
+        }
+
+        protected override IAsyncJob ReloadAsync(ListingOptions options)
+        {
+            UpdatePageTitle(options);
+            return base.ReloadAsync(options);
+        }
+
+        void INotifyNavigatedTo.OnNavigatedTo() => ReloadAsync(_currentOptions);
+
+        protected override IQueryable<VolumeListItemWithFileSystem> GetQueryableListing(ListingOptions options, [DisallowNull] LocalDbContext dbContext,
             [DisallowNull] IWindowsStatusListener statusListener)
         {
             statusListener.SetMessage("Reading volume information records from database");
@@ -89,16 +123,18 @@ namespace FsInfoCat.Desktop.LocalVM.Volumes
 
         protected override void OnApplyFilterOptionsCommand(object parameter)
         {
-            // BUG: Need to fix logic
-            ViewOptions.SelectedIndex = EditingOptions.SelectedIndex;
+            ListingOptions newOptions = ToListingOptions(StatusFilterOption.SelectedItem);
+            if (newOptions.Status.HasValue ? _currentOptions.Status != newOptions.Status : (_currentOptions.Status.HasValue || newOptions.ShowActiveOnly != _currentOptions.ShowActiveOnly))
+                _ =ReloadAsync(newOptions);
         }
 
         protected override void OnCancelFilterOptionsCommand(object parameter)
         {
-            EditingOptions.SelectedIndex = ViewOptions.SelectedIndex;
+            UpdatePageTitle(_currentOptions);
+            StatusFilterOption.SelectedItem = FromListingOptions(_currentOptions);
             base.OnCancelFilterOptionsCommand(parameter);
         }
-        protected override void OnRefreshCommand(object parameter) => ReloadAsync(ViewOptions.SelectedItem);
+        protected override void OnRefreshCommand(object parameter) => ReloadAsync(_currentOptions);
 
         protected override void OnItemEditCommand(ListItemViewModel item, object parameter)
         {
@@ -120,5 +156,27 @@ namespace FsInfoCat.Desktop.LocalVM.Volumes
             Volume target = await dbContext.Volumes.FindAsync(new object[] { entity.Id }, statusListener.CancellationToken);
             return (target is null) ? 0 : await Volume.DeleteAsync(target, dbContext, statusListener);
         }
+
+        protected override void OnReloadTaskCompleted(ListingOptions options) => _currentOptions = options;
+
+        protected override void OnReloadTaskFaulted(Exception exception, ListingOptions options)
+        {
+            UpdatePageTitle(_currentOptions);
+            StatusFilterOption.SelectedItem = FromListingOptions(_currentOptions);
+            _ = MessageBox.Show(Application.Current.MainWindow,
+                ((exception is AsyncOperationFailureException aExc) ? aExc.UserMessage.NullIfWhiteSpace() :
+                    (exception as AggregateException)?.InnerExceptions.OfType<AsyncOperationFailureException>().Select(e => e.UserMessage)
+                    .Where(m => !string.IsNullOrWhiteSpace(m)).FirstOrDefault()) ??
+                    "There was an unexpected error while loading items from the databse.\n\nSee logs for further information",
+                "Database Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+
+        protected override void OnReloadTaskCanceled(ListingOptions options)
+        {
+            UpdatePageTitle(_currentOptions);
+            StatusFilterOption.SelectedItem = FromListingOptions(_currentOptions);
+        }
+
+        public record ListingOptions(VolumeStatus? Status, bool? ShowActiveOnly);
     }
 }

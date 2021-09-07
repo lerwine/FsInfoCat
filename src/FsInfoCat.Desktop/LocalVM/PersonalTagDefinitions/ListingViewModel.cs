@@ -1,5 +1,6 @@
 using FsInfoCat.Desktop.ViewModel;
 using FsInfoCat.Local;
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
@@ -28,10 +29,38 @@ namespace FsInfoCat.Desktop.LocalVM.PersonalTagDefinitions
         public ThreeStateViewModel ListingOptions => (ThreeStateViewModel)GetValue(ListingOptionsProperty);
 
         #endregion
+        #region PageTitle Property Members
+
+        private static readonly DependencyPropertyKey PageTitlePropertyKey = DependencyPropertyBuilder<ListingViewModel, string>
+            .Register(nameof(PageTitle))
+            .DefaultValue("")
+            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default)
+            .AsReadOnly();
+
+        /// <summary>
+        /// Identifies the <see cref="PageTitle"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty PageTitleProperty = PageTitlePropertyKey.DependencyProperty;
+
+        public string PageTitle { get => GetValue(PageTitleProperty) as string; private set => SetValue(PageTitlePropertyKey, value); }
+
+        private void UpdatePageTitle(bool? options) => PageTitle = options.HasValue ?
+                    (options.Value ? FsInfoCat.Properties.Resources.DisplayName_PersonalTagDefinition_ActiveOnly :
+                    FsInfoCat.Properties.Resources.DisplayName_PersonalTagDefinition_InactiveOnlly) :
+                    FsInfoCat.Properties.Resources.DisplayName_PersonalTagDefinition_All;
+
+        #endregion
 
         public ListingViewModel()
         {
             SetValue(ListingOptionsPropertyKey, new ThreeStateViewModel(_currentOptions));
+            UpdatePageTitle(_currentOptions);
+        }
+
+        protected override IAsyncJob ReloadAsync(bool? options)
+        {
+            UpdatePageTitle(options);
+            return base.ReloadAsync(options);
         }
 
         void INotifyNavigatedTo.OnNavigatedTo() => ReloadAsync(_currentOptions);
@@ -48,14 +77,13 @@ namespace FsInfoCat.Desktop.LocalVM.PersonalTagDefinitions
 
         protected override void OnApplyFilterOptionsCommand(object parameter)
         {
-            if (_currentOptions.HasValue ? (ListingOptions.Value.HasValue && _currentOptions.Value == ListingOptions.Value.Value) : !ListingOptions.Value.HasValue)
-                return;
-            _currentOptions = ListingOptions.Value;
-            _ = ReloadAsync(_currentOptions);
+            if (_currentOptions.HasValue ? (!ListingOptions.Value.HasValue || _currentOptions.Value != ListingOptions.Value.Value) : ListingOptions.Value.HasValue)
+                _ = ReloadAsync(ListingOptions.Value);
         }
 
         protected override void OnCancelFilterOptionsCommand(object parameter)
         {
+            UpdatePageTitle(_currentOptions);
             ListingOptions.Value = _currentOptions;
             base.OnCancelFilterOptionsCommand(parameter);
         }
@@ -149,6 +177,26 @@ namespace FsInfoCat.Desktop.LocalVM.PersonalTagDefinitions
         protected override void OnAddNewItemCommand(object parameter)
         {
             // TODO: Implement OnAddNewItemCommand(object);
+        }
+
+        protected override void OnReloadTaskCompleted(bool? options) => _currentOptions = options;
+
+        protected override void OnReloadTaskFaulted(Exception exception, bool? options)
+        {
+            UpdatePageTitle(_currentOptions);
+            ListingOptions.Value = _currentOptions;
+            _ = MessageBox.Show(Application.Current.MainWindow,
+                ((exception is AsyncOperationFailureException aExc) ? aExc.UserMessage.NullIfWhiteSpace() :
+                    (exception as AggregateException)?.InnerExceptions.OfType<AsyncOperationFailureException>().Select(e => e.UserMessage)
+                    .Where(m => !string.IsNullOrWhiteSpace(m)).FirstOrDefault()) ??
+                    "There was an unexpected error while loading items from the databse.\n\nSee logs for further information",
+                "Database Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+
+        protected override void OnReloadTaskCanceled(bool? options)
+        {
+            UpdatePageTitle(_currentOptions);
+            ListingOptions.Value = _currentOptions;
         }
     }
 }

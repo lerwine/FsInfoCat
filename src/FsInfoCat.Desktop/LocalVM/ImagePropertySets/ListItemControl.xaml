@@ -6,8 +6,7 @@
              xmlns:local="clr-namespace:FsInfoCat.Desktop.LocalVM.ImagePropertySets"
              xmlns:Converters="clr-namespace:FsInfoCat.Desktop.Converters"
              x:Class="FsInfoCat.Desktop.LocalVM.ImagePropertySets.ListItemControl"
-             mc:Ignorable="d" d:DataContext="{x:Type local:ListItemViewModel}"
-             d:DesignHeight="450" d:DesignWidth="800">
+             mc:Ignorable="d" d:DataContext="{x:Type local:ListItemViewModel}" d:DesignWidth="800">
     <UserControl.Resources>
         <Converters:StringToVisibilityConverter x:Key="VisibileIfNotEmptyConverter" NullSource="Collapsed"/>
         <Converters:StringToVisibilityConverter x:Key="VisibileIfEmptyConverter" NullSource="Visible" Empty="Visible" NonWhitespace="Collapsed" Whitespace="Visible"/>
@@ -65,6 +64,7 @@
         <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="" Content="Last Synchronized" Grid.Column="2" Grid.ColumnSpan="4" Grid.Row="6" FontWeight="Bold"/>
         <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingLeftRight}" ToolTip="" Text="{Binding CreatedOn}" Grid.Row="7"/>
         <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingLeftRight}" ToolTip="" Text="{Binding ModifiedOn}" Grid.Column="1" Grid.Row="7"/>
-        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingLeftRight}" ToolTip="" Text="{Binding LastSynchronizedOn}" Grid.Column="2" Grid.ColumnSpan="4" Grid.Row="7"/>
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingLeftRight}" ToolTip="" Text="{Binding LastSynchronizedOn}" Grid.Column="2" Grid.ColumnSpan="3" Grid.Row="7"/>
+        <Button Grid.Column="5" Grid.Row="7" Style="{DynamicResource SyncButton}" ToolTip="Synchronize Now" Margin="{DynamicResource DefaultSpacingRight}"/>
     </Grid>
 </UserControl>

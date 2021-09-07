@@ -3,6 +3,7 @@ using FsInfoCat.Local;
 using FsInfoCat.Numerics;
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -12,7 +13,6 @@ namespace FsInfoCat.Desktop.LocalVM.RedundantSets
     public class ListingViewModel : ListingViewModel<RedundantSetListItem, ListItemViewModel, ListingViewModel.ListingOptions>, INotifyNavigatedTo
     {
         private ListingOptions _currentRange;
-        private ListingOptions _editingRange;
 
         #region MinimumRange Property Members
 
@@ -40,6 +40,45 @@ namespace FsInfoCat.Desktop.LocalVM.RedundantSets
         public DenominatedLengthViewModel MaximumRange => (DenominatedLengthViewModel)GetValue(MaximumRangeProperty);
 
         #endregion
+        #region PageTitle Property Members
+
+        private static readonly DependencyPropertyKey PageTitlePropertyKey = DependencyPropertyBuilder<ListingViewModel, string>
+            .Register(nameof(PageTitle))
+            .DefaultValue(FsInfoCat.Properties.Resources.DisplayName_RedundantSets) // Binary Redundancy Sets
+            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default)
+            .AsReadOnly();
+
+        /// <summary>
+        /// Identifies the <see cref="PageTitle"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty PageTitleProperty = PageTitlePropertyKey.DependencyProperty;
+
+        public string PageTitle { get => GetValue(PageTitleProperty) as string; private set => SetValue(PageTitlePropertyKey, value); }
+
+        private void UpdatePageTitle(ListingOptions options)
+        {
+            (BinaryDenominatedInt64F? minRange, BinaryDenominatedInt64F? maxRange) = options;
+            if (minRange.HasValue)
+            {
+                if (maxRange.HasValue)
+                    PageTitle = string.Format(FsInfoCat.Properties.Resources.FormatDisplayName_RedundantSets_MinMax, minRange.Value.ToString(CultureInfo.CurrentUICulture),
+                        maxRange.Value.ToString(CultureInfo.CurrentUICulture));
+                else
+                    PageTitle = string.Format(FsInfoCat.Properties.Resources.FormatDisplayName_RedundantSets_MinOnly, minRange.Value.ToString(CultureInfo.CurrentUICulture));
+            }
+            else if (maxRange.HasValue)
+                PageTitle = string.Format(FsInfoCat.Properties.Resources.FormatDisplayName_RedundantSets_MaxOnly, maxRange.Value.ToString(CultureInfo.CurrentUICulture));
+            else
+                PageTitle = FsInfoCat.Properties.Resources.DisplayName_RedundantSets_All;
+        }
+
+        #endregion
+
+        protected override IAsyncJob ReloadAsync(ListingOptions options)
+        {
+            UpdatePageTitle(options);
+            return base.ReloadAsync(options);
+        }
 
         protected override IQueryable<RedundantSetListItem> GetQueryableListing(ListingOptions options, [DisallowNull] LocalDbContext dbContext, [DisallowNull] IWindowsStatusListener statusListener)
         {
@@ -66,13 +105,14 @@ namespace FsInfoCat.Desktop.LocalVM.RedundantSets
 
         protected override void OnApplyFilterOptionsCommand(object parameter)
         {
-            // BUG: Need to fix logic
-            _currentRange = _editingRange;
+            ListingOptions newRange = new(MinimumRange.DenominatedValue, MaximumRange.DenominatedValue);
+            if (_currentRange.MaxRange != newRange.MaxRange || _currentRange.MinRange != newRange.MinRange)
+                ReloadAsync(newRange);
         }
 
         protected override void OnCancelFilterOptionsCommand(object parameter)
         {
-            _editingRange = _currentRange;
+            UpdatePageTitle(new(MinimumRange.DenominatedValue, MaximumRange.DenominatedValue));
             MinimumRange.DenominatedValue = _currentRange.MinRange;
             MaximumRange.DenominatedValue = _currentRange.MaxRange;
             base.OnCancelFilterOptionsCommand(parameter);
@@ -106,30 +146,38 @@ namespace FsInfoCat.Desktop.LocalVM.RedundantSets
 
         void INotifyNavigatedTo.OnNavigatedTo() => ReloadAsync(_currentRange);
 
+        protected override void OnReloadTaskCompleted(ListingOptions options) => _currentRange = options;
+
+        protected override void OnReloadTaskFaulted(Exception exception, ListingOptions options)
+        {
+            MinimumRange.DenominatedValue = _currentRange.MinRange;
+            MaximumRange.DenominatedValue = _currentRange.MaxRange;
+            UpdatePageTitle(_currentRange);
+            _ = MessageBox.Show(Application.Current.MainWindow,
+                ((exception is AsyncOperationFailureException aExc) ? aExc.UserMessage.NullIfWhiteSpace() :
+                    (exception as AggregateException)?.InnerExceptions.OfType<AsyncOperationFailureException>().Select(e => e.UserMessage)
+                    .Where(m => !string.IsNullOrWhiteSpace(m)).FirstOrDefault()) ??
+                    "There was an unexpected error while loading items from the databse.\n\nSee logs for further information",
+                "Database Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+
+        protected override void OnReloadTaskCanceled(ListingOptions options)
+        {
+            MinimumRange.DenominatedValue = _currentRange.MinRange;
+            MaximumRange.DenominatedValue = _currentRange.MaxRange;
+            UpdatePageTitle(_currentRange);
+        }
+
         public ListingViewModel()
         {
             DenominatedLengthViewModel minRange = new();
             SetValue(MinimumRangePropertyKey, minRange);
             DenominatedLengthViewModel maxRange = new();
             SetValue(MaximumRangePropertyKey, maxRange);
-            minRange.DenominatedValuePropertyChanged += MinimumRange_DenominatedValuePropertyChanged;
-            maxRange.DenominatedValuePropertyChanged += MaximumRange_DenominatedValuePropertyChanged;
             _currentRange = new(minRange.DenominatedValue, maxRange.DenominatedValue);
-            _editingRange = _currentRange;
+            UpdatePageTitle(_currentRange);
         }
 
-        private void MinimumRange_DenominatedValuePropertyChanged(object sender, DependencyPropertyChangedEventArgs e)
-        {
-            // TODO: Implement MinimumRange_DenominatedValuePropertyChanged(object, e)
-            throw new NotImplementedException();
-        }
-
-        private void MaximumRange_DenominatedValuePropertyChanged(object sender, DependencyPropertyChangedEventArgs e)
-        {
-            // TODO: Implement MaximumRange_DenominatedValuePropertyChanged(object, e)
-            throw new NotImplementedException();
-        }
-
-        public record ListingOptions(BinaryDenominatedInt64? MinRange, BinaryDenominatedInt64? MaxRange);
+        public record ListingOptions(BinaryDenominatedInt64F? MinRange, BinaryDenominatedInt64F? MaxRange);
     }
 }

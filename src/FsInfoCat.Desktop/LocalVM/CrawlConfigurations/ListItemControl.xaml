@@ -6,8 +6,7 @@
              xmlns:local="clr-namespace:FsInfoCat.Desktop.LocalVM.CrawlConfigurations"
              xmlns:Converters="clr-namespace:FsInfoCat.Desktop.Converters"
              xmlns:localCvt="clr-namespace:FsInfoCat.Desktop.Converters.Local"
-             mc:Ignorable="d" d:DataContext="{x:Type local:ListItemViewModel}"
-             d:DesignHeight="450" d:DesignWidth="800">
+             mc:Ignorable="d" d:DataContext="{x:Type local:ListItemViewModel}" d:DesignWidth="800">
     <UserControl.Resources>
         <Converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" NullSource="Collapsed"/>
         <Converters:ObjectToInt32Converter x:Key="As2IfNullElse1Converter" NullSource="2"/>

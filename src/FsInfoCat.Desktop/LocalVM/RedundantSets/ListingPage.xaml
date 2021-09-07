@@ -9,8 +9,9 @@
       mc:Ignorable="d"
       d:DesignHeight="768" d:DesignWidth="1024"
       DataContext="{DynamicResource ViewModel}"
-      Title="Binary Redundancy Sets">
+      Title="{Binding PageTitle, Mode=OneWay}">
     <Page.Resources>
+        <Converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
         <Converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
         <Converters:BooleanToStringConverter x:Key="BooleanToStatusConverter" FalseValue="Active" TrueValue="Inactive"/>
         <Converters:BooleanToStringConverter x:Key="BooleanToYesNoConverter" FalseValue="No" TrueValue="Yes"/>
@@ -19,11 +20,12 @@
     <Grid>
         <DataGrid ItemsSource="{Binding Items}" AutoGenerateColumns="False">
             <DataGrid.Columns>
-                <DataGridTextColumn Binding="{Binding DisplayName}" Header="Length" />
+                <DataGridTextColumn Binding="{Binding Length, Mode=OneWay}" Header="Length" />
+                <DataGridTextColumn Binding="{Binding Hash, Mode=OneWay}" Header="MD5 Hash" />
                 <DataGridTextColumn Binding="{Binding Reference}" Header="Reference" Width="*" />
                 <DataGridTextColumn MinWidth="100" Binding="{Binding RedundancyCount, Mode=OneWay}">
                     <DataGridTextColumn.Header>
-                        <StackPanel Orientation="Horizontal">
+                        <StackPanel Orientation="Horizontal" DataContext="{DynamicResource ViewModel}">
                             <Label Content="Redundancies"/>
                             <Button Style="{DynamicResource AddNewButton}" Margin="{DynamicResource DefaultSpacingLeft}" Command="{Binding AddNewItem, Mode=OneWay}"/>
                             <Button Style="{DynamicResource FilterButton}" Margin="{DynamicResource DefaultSpacingLeft}" Command="{Binding ShowFilterOptions, Mode=OneWay}"/>
@@ -45,21 +47,49 @@
                         <RowDefinition/>
                     </Grid.RowDefinitions>
                     <Border Style="{DynamicResource PopupTitleBorder}">
-                        <TextBlock Text="Listing Display Options" FontWeight="Bold"/>
+                        <TextBlock Text="Listing Filter Options" FontWeight="Bold"/>
                     </Border>
                     <Border Grid.Row="1" Style="{DynamicResource PopupContentBorder}">
                         <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition/>
-                            </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
                                 <RowDefinition/>
                                 <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
-                            <Label Content="Show:" Padding="{DynamicResource DefaultSpacing}"/>
-                            <ComboBox Grid.Column="1"/>
-                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="1" Grid.ColumnSpan="2">
+                            <Label Content="Filter by size" Padding="{DynamicResource DefaultSpacing}"/>
+                            <StackPanel Grid.Row="1">
+                                <Grid DataContext="{Binding MinimumRange, Mode=OneWay}">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition/>
+                                    </Grid.RowDefinitions>
+                                    <RadioButton Content="Larger than or equal to" IsChecked="{Binding HasValue, Mode=TwoWay}" GroupName="MinimumRange"/>
+                                    <TextBlock Grid.Column="1" Text="{Binding Value, Mode=TwoWay, ValidatesOnExceptions=True}"/>
+                                    <ComboBox Grid.Column="2" DataContext="{Binding Denomination, Mode=OneWay}" ItemsSource="{Binding Choices}" SelectedIndex="{Binding SelectedIndex, Mode=TwoWay}" Text="{Binding SelectedItem.DisplayName, Mode=OneWay}"/>
+                                    <RadioButton Content="No Minimum Length" GroupName="MinimumRange" Grid.Row="1" Grid.ColumnSpan="3" IsChecked="{Binding HasValue, Converter={StaticResource InverseBooleanConverter}, Mode=TwoWay}"/>
+                                </Grid>
+                                <Grid DataContext="{Binding MaximumRange, Mode=OneWay}">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition/>
+                                    </Grid.RowDefinitions>
+                                    <RadioButton Content="Less than" IsChecked="{Binding HasValue, Mode=TwoWay}" GroupName="MaximumRange"/>
+                                    <TextBlock Grid.Column="1" Text="{Binding Value, Mode=TwoWay, ValidatesOnExceptions=True}"/>
+                                    <ComboBox Grid.Column="2" DataContext="{Binding Denomination, Mode=OneWay}" ItemsSource="{Binding Choices}" SelectedIndex="{Binding SelectedIndex, Mode=TwoWay}" Text="{Binding SelectedItem.DisplayName, Mode=OneWay}"/>
+                                    <RadioButton Content="No Maximum Length" GroupName="MaximumRange" Grid.Row="1" Grid.ColumnSpan="3" IsChecked="{Binding HasValue, Converter={StaticResource InverseBooleanConverter}, Mode=TwoWay}"/>
+                                </Grid>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="2">
                                 <Button Style="{DynamicResource AcceptButton}" ToolTip="Apply Filter" Margin="{DynamicResource DefaultSpacingBottomLeftRight}" Command="{Binding SaveFilterOptionsButtonClick, Mode=OneWay}"/>
                                 <Button Style="{DynamicResource CancelButton}" ToolTip="Discard Filter Changes" Margin="{DynamicResource DefaultSpacingBottomRight}" Command="{Binding CancelFilterOptionsButtonClick, Mode=OneWay}"/>
                             </StackPanel>

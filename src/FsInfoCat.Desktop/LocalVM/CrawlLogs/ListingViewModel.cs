@@ -8,47 +8,70 @@ using System.Windows;
 
 namespace FsInfoCat.Desktop.LocalVM.CrawlLogs
 {
-    public class ListingViewModel : ListingViewModel<CrawlJobLogListItem, ListItemViewModel, (CrawlStatus? Status, bool ShowAll)>, INotifyNavigatedTo
+    public class ListingViewModel : ListingViewModel<CrawlJobLogListItem, ListItemViewModel, ListingViewModel.FilterOptions>, INotifyNavigatedTo
     {
-        #region CurrentStatusOptions Property Members
+        private FilterOptions _currentOptions = new(null, true);
+        private readonly EnumChoiceItem<CrawlStatus> _allOption;
+        private readonly EnumChoiceItem<CrawlStatus> _failedOption;
 
-        private static readonly DependencyPropertyKey CurrentStatusOptionsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(CurrentStatusOptions), typeof(EnumValuePickerVM<CrawlStatus>), typeof(ListingViewModel),
+        #region StatusOptions Property Members
+
+        private static readonly DependencyPropertyKey StatusOptionsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(StatusOptions), typeof(EnumValuePickerVM<CrawlStatus>), typeof(ListingViewModel),
                 new PropertyMetadata(null));
 
         /// <summary>
-        /// Identifies the <see cref="CurrentStatusOptions"/> dependency property.
+        /// Identifies the <see cref="StatusOptions"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty CurrentStatusOptionsProperty = CurrentStatusOptionsPropertyKey.DependencyProperty;
+        public static readonly DependencyProperty StatusOptionsProperty = StatusOptionsPropertyKey.DependencyProperty;
 
-        public EnumValuePickerVM<CrawlStatus> CurrentStatusOptions => (EnumValuePickerVM<CrawlStatus>)GetValue(CurrentStatusOptionsProperty);
+        public EnumValuePickerVM<CrawlStatus> StatusOptions => (EnumValuePickerVM<CrawlStatus>)GetValue(StatusOptionsProperty);
 
         #endregion
-        #region EditingStatusOptions Property Members
+        #region PageTitle Property Members
 
-        private static readonly DependencyPropertyKey EditingStatusOptionsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(EditingStatusOptions), typeof(EnumValuePickerVM<CrawlStatus>), typeof(ListingViewModel),
-                new PropertyMetadata(null));
+        private static readonly DependencyPropertyKey PageTitlePropertyKey = DependencyPropertyBuilder<ListingViewModel, string>
+            .Register(nameof(PageTitle))
+            .DefaultValue("")
+            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default)
+            .AsReadOnly();
 
         /// <summary>
-        /// Identifies the <see cref="EditingStatusOptions"/> dependency property.
+        /// Identifies the <see cref="PageTitle"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty EditingStatusOptionsProperty = EditingStatusOptionsPropertyKey.DependencyProperty;
-        private readonly EnumChoiceItem<CrawlStatus> _allOption;
+        public static readonly DependencyProperty PageTitleProperty = PageTitlePropertyKey.DependencyProperty;
 
-        public EnumValuePickerVM<CrawlStatus> EditingStatusOptions => (EnumValuePickerVM<CrawlStatus>)GetValue(EditingStatusOptionsProperty);
+        public string PageTitle { get => GetValue(PageTitleProperty) as string; private set => SetValue(PageTitlePropertyKey, value); }
+
+        private void UpdatePageTitle(FilterOptions options) => PageTitle = options.Status.HasValue ?
+            string.Format(FsInfoCat.Properties.Resources.FormatDisplayName_CrawlLog_Status, options.Status.Value.GetDisplayName()) :
+            options.ShowAll ? FsInfoCat.Properties.Resources.DisplayName_CrawlLog_All : FsInfoCat.Properties.Resources.DisplayName_CrawlLog_Failed;
 
         #endregion
 
         public ListingViewModel()
         {
             string[] names = new[] { FsInfoCat.Properties.Resources.DisplayName_AllItems, FsInfoCat.Properties.Resources.DisplayName_AllFailedItems };
-            EnumValuePickerVM<CrawlStatus> viewOptions = new(names);
-            _allOption = viewOptions.Choices.First(o => o.DisplayName == FsInfoCat.Properties.Resources.DisplayName_AllItems); ;
-            SetValue(CurrentStatusOptionsPropertyKey, viewOptions);
-            SetValue(EditingStatusOptionsPropertyKey, new EnumValuePickerVM<CrawlStatus>(names) { SelectedIndex = viewOptions.SelectedIndex });
-            ThreeStateViewModel isScheduledOption = new(null);
+            EnumValuePickerVM<CrawlStatus> viewOptions = new EnumValuePickerVM<CrawlStatus>(names);
+            _allOption = viewOptions.Choices.First(o => o.DisplayName == FsInfoCat.Properties.Resources.DisplayName_AllItems);
+            _failedOption = viewOptions.Choices.First(o => o.DisplayName == FsInfoCat.Properties.Resources.DisplayName_AllFailedItems);
+            SetValue(StatusOptionsPropertyKey, viewOptions);
+            viewOptions.SelectedItem = FromFilterOptions(_currentOptions);
+            UpdatePageTitle(_currentOptions);
         }
 
-        protected override IQueryable<CrawlJobLogListItem> GetQueryableListing((CrawlStatus? Status, bool ShowAll) options, [DisallowNull] LocalDbContext dbContext,
+        protected override IAsyncJob ReloadAsync(FilterOptions options)
+        {
+            UpdatePageTitle(options);
+            return base.ReloadAsync(options);
+        }
+
+        public FilterOptions ToFilterOptions(EnumChoiceItem<CrawlStatus> item) => ReferenceEquals(_allOption, item) ? (new(null, true)) : (new(item?.Value, false));
+
+        public EnumChoiceItem<CrawlStatus> FromFilterOptions(FilterOptions value) => value.Status.HasValue
+                ? StatusOptions.Choices.FirstOrDefault(c => c.Value == value.Status)
+                : value.ShowAll ? _allOption : _failedOption;
+
+        protected override IQueryable<CrawlJobLogListItem> GetQueryableListing(FilterOptions options, [DisallowNull] LocalDbContext dbContext,
             [DisallowNull] IWindowsStatusListener statusListener)
         {
             statusListener.SetMessage("Reading crawl result log entries from database");
@@ -67,17 +90,19 @@ namespace FsInfoCat.Desktop.LocalVM.CrawlLogs
 
         protected override void OnApplyFilterOptionsCommand(object parameter)
         {
-            CurrentStatusOptions.SelectedIndex = EditingStatusOptions.SelectedIndex;
-            _ = ReloadAsync(CurrentStatusOptions.SelectedItem);
+            FilterOptions newOptions = ToFilterOptions(StatusOptions.SelectedItem);
+            if (newOptions.Status != _currentOptions.Status || newOptions.ShowAll != _currentOptions.ShowAll)
+                ReloadAsync(newOptions);
         }
 
         protected override void OnCancelFilterOptionsCommand(object parameter)
         {
-            EditingStatusOptions.SelectedIndex = CurrentStatusOptions.SelectedIndex;
+            UpdatePageTitle(_currentOptions);
+            StatusOptions.SelectedItem = FromFilterOptions(_currentOptions);
             base.OnCancelFilterOptionsCommand(parameter);
         }
 
-        protected override void OnRefreshCommand(object parameter) => ReloadAsync(CurrentStatusOptions.SelectedItem);
+        protected override void OnRefreshCommand(object parameter) => ReloadAsync(_currentOptions);
 
         protected override void OnItemEditCommand([DisallowNull] ListItemViewModel item, object parameter)
         {
@@ -103,13 +128,28 @@ namespace FsInfoCat.Desktop.LocalVM.CrawlLogs
             // TODO: Implement OnAddNewItemCommand(object);
         }
 
-        void INotifyNavigatedTo.OnNavigatedTo() => ReloadAsync(CurrentStatusOptions.SelectedItem);
+        void INotifyNavigatedTo.OnNavigatedTo() => ReloadAsync(_currentOptions);
 
-        private IAsyncJob ReloadAsync(EnumChoiceItem<CrawlStatus> selectedItem)
+        protected override void OnReloadTaskCompleted(FilterOptions options) => _currentOptions = options;
+
+        protected override void OnReloadTaskFaulted(Exception exception, FilterOptions options)
         {
-            if (selectedItem.Value.HasValue)
-                return ReloadAsync((selectedItem.Value, false));
-            return ReloadAsync((null, ReferenceEquals(selectedItem, _allOption)));
+            UpdatePageTitle(_currentOptions);
+            StatusOptions.SelectedItem = FromFilterOptions(_currentOptions);
+            _ = MessageBox.Show(Application.Current.MainWindow,
+                ((exception is AsyncOperationFailureException aExc) ? aExc.UserMessage.NullIfWhiteSpace() :
+                    (exception as AggregateException)?.InnerExceptions.OfType<AsyncOperationFailureException>().Select(e => e.UserMessage)
+                    .Where(m => !string.IsNullOrWhiteSpace(m)).FirstOrDefault()) ??
+                    "There was an unexpected error while loading items from the databse.\n\nSee logs for further information",
+                "Database Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
+
+        protected override void OnReloadTaskCanceled(FilterOptions options)
+        {
+            UpdatePageTitle(_currentOptions);
+            StatusOptions.SelectedItem = FromFilterOptions(_currentOptions);
+        }
+
+        public record FilterOptions(CrawlStatus? Status, bool ShowAll);
     }
 }

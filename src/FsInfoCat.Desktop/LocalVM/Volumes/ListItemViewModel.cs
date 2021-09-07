@@ -1,3 +1,4 @@
+using FsInfoCat.Desktop.Converters;
 using FsInfoCat.Desktop.ViewModel;
 using FsInfoCat.Local;
 using System;
@@ -56,11 +57,48 @@ namespace FsInfoCat.Desktop.LocalVM.Volumes
         public DateTime? LastSynchronizedOn { get => (DateTime?)GetValue(LastSynchronizedOnProperty); private set => SetValue(LastSynchronizedOnPropertyKey, value); }
 
         #endregion
+        #region IdentifierDisplayText Property Members
+
+        private static readonly DependencyPropertyKey IdentifierDisplayTextPropertyKey = DependencyPropertyBuilder<ListItemViewModel, string>
+            .Register(nameof(IdentifierDisplayText))
+            .DefaultValue("")
+            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default)
+            .AsReadOnly();
+
+        /// <summary>
+        /// Identifies the <see cref="IdentifierDisplayText"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty IdentifierDisplayTextProperty = IdentifierDisplayTextPropertyKey.DependencyProperty;
+
+        public string IdentifierDisplayText { get => GetValue(IdentifierDisplayTextProperty) as string; private set => SetValue(IdentifierDisplayTextPropertyKey, value); }
+
+        private void UpdateIdentifierDisplayText(string volumeName, VolumeIdentifier identifier)
+        {
+            if (string.IsNullOrWhiteSpace(volumeName) || !(identifier.SerialNumber.HasValue  || identifier.UUID.HasValue))
+                IdentifierDisplayText = VolumeIdentifierToStringConverter.Convert(identifier);
+            else
+                IdentifierDisplayText = identifier.IsEmpty() ? volumeName : $"v{volumeName} ({VolumeIdentifierToStringConverter.Convert(identifier)})";
+        }
+
+        #endregion
+
+        protected override void OnVolumeNamePropertyChanged(string oldValue, string newValue)
+        {
+            UpdateIdentifierDisplayText(newValue, Identifier);
+            base.OnVolumeNamePropertyChanged(oldValue, newValue);
+        }
+
+        protected override void OnIdentifierPropertyChanged(VolumeIdentifier oldValue, VolumeIdentifier newValue)
+        {
+            UpdateIdentifierDisplayText(VolumeName, newValue);
+            base.OnIdentifierPropertyChanged(oldValue, newValue);
+        }
 
         public ListItemViewModel([DisallowNull] VolumeListItemWithFileSystem entity) : base(entity)
         {
             UpstreamId = entity.UpstreamId;
             LastSynchronizedOn = entity.LastSynchronizedOn;
+            UpdateIdentifierDisplayText(VolumeName, Identifier);
         }
     }
 }

@@ -24,9 +24,8 @@ namespace FsInfoCat
 
         /// <summary>Gets the sets of files which were determined to be duplicates.</summary>
         /// <value>The sets of files which were determined to be duplicates.</value>
-        [Display(Name = nameof(Properties.Resources.DisplayName_RedundantSets), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.DisplayName_RedundantSets), ShortName = nameof(Properties.Resources.ShortName_RedundantSets), ResourceType = typeof(Properties.Resources))]
         IEnumerable<IRedundantSet> RedundantSets { get; }
     }
-
 }
 

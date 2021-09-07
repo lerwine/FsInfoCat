@@ -8,7 +8,7 @@
       xmlns:Converters="clr-namespace:FsInfoCat.Desktop.Converters" x:Class="FsInfoCat.Desktop.LocalVM.SymbolicNames.ListingPage"
       mc:Ignorable="d" DataContext="{DynamicResource ResourceKey=ViewModel}"
       d:DesignHeight="768" d:DesignWidth="1024"
-      Title="Symbolic Name Definitions">
+      Title="{Binding PageTitle, Mode=OneWay}">
     <Page.Resources>
         <Converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
         <Converters:BooleanToStringConverter x:Key="BooleanToStatusConverter" FalseValue="Active" TrueValue="Inactive"/>

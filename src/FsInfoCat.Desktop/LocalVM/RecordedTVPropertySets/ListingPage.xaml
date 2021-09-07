@@ -9,9 +9,9 @@
       mc:Ignorable="d"
       d:DesignHeight="768" d:DesignWidth="1024"
       DataContext="{DynamicResource ViewModel}"
-      Title="Recorded TV Property Sets">
+      Title="{Binding PageTitle, Mode=OneWay}">
     <Page.Resources>
-        <Converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        <Converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" NullSource="Collapsed"/>
         <Converters:BooleanToStringConverter x:Key="BooleanToStatusConverter" FalseValue="Active" TrueValue="Inactive"/>
         <Converters:BooleanToStringConverter x:Key="BooleanToYesNoConverter" FalseValue="No" TrueValue="Yes"/>
         <local:ListingViewModel x:Key="ViewModel"/>
@@ -22,7 +22,7 @@
                 <DataGridTextColumn Binding="{Binding (ViewModel:CommonAttached.ListItemTitle), Mode=OneWay}" Header="Values" Width="*"/>
                 <DataGridTextColumn Binding="{Binding ExistingFileCount}" MinWidth="100">
                     <DataGridTextColumn.Header>
-                        <StackPanel Orientation="Horizontal">
+                        <StackPanel Orientation="Horizontal" DataContext="{DynamicResource ViewModel}">
                             <Label Content="Files"/>
                             <Button Style="{DynamicResource AddNewButton}" Margin="{DynamicResource DefaultSpacingLeft}" Command="{Binding AddNewItem, Mode=OneWay}"/>
                             <Button Style="{DynamicResource FilterButton}" Margin="{DynamicResource DefaultSpacingLeft}" Command="{Binding ShowFilterOptions, Mode=OneWay}"/>
@@ -52,11 +52,11 @@
                                 <RowDefinition/>
                                 <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
-                            <WrapPanel DataContext="{Binding ListingOptions, Mode=OneWay}">
+                            <WrapPanel DataContext="{Binding FilterOptions, Mode=OneWay}">
                                 <Label Content="Show:" Padding="{DynamicResource DefaultSpacing}"/>
-                                <RadioButton Content="Active Only" Margin="{DynamicResource DefaultSpacingTopBottomRight}" GroupName="ViewOptions" IsChecked="{Binding IsTrue}"/>
-                                <RadioButton Content="Inactive Only" Margin="{DynamicResource DefaultSpacingTopBottomRight}" GroupName="ViewOptions" IsChecked="{Binding IsFalse}"/>
-                                <RadioButton Content="All Items" Margin="{DynamicResource DefaultSpacingTopBottomRight}" GroupName="ViewOptions" IsChecked="{Binding IsNull}"/>
+                                <RadioButton Content="Has Files" Margin="{DynamicResource DefaultSpacingTopBottomRight}" GroupName="ViewOptions" IsChecked="{Binding IsTrue}"/>
+                                <RadioButton Content="Has Only Deleted Files" Margin="{DynamicResource DefaultSpacingTopBottomRight}" GroupName="ViewOptions" IsChecked="{Binding IsFalse}"/>
+                                <RadioButton Content="All Groups" Margin="{DynamicResource DefaultSpacingTopBottomRight}" GroupName="ViewOptions" IsChecked="{Binding IsNull}"/>
                             </WrapPanel>
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="1">
                                 <Button Style="{DynamicResource AcceptButton}" ToolTip="Apply Filter" Margin="{DynamicResource DefaultSpacingBottomLeftRight}" Command="{Binding SaveFilterOptions, Mode=OneWay}"/>

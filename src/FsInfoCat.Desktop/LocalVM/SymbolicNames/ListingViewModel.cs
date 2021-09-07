@@ -1,5 +1,6 @@
 using FsInfoCat.Desktop.ViewModel;
 using FsInfoCat.Local;
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
@@ -9,46 +10,56 @@ namespace FsInfoCat.Desktop.LocalVM.SymbolicNames
 {
     public class ListingViewModel : ListingViewModel<SymbolicNameListItem, ListItemViewModel, bool?>, INotifyNavigatedTo
     {
-        #region ViewOptions Property Members
+        private bool? _currentStateFilterOption = true;
 
-        private static readonly DependencyPropertyKey ViewOptionsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ViewOptions), typeof(ThreeStateViewModel), typeof(ListingViewModel),
+        #region StateFilterOption Property Members
+
+        private static readonly DependencyPropertyKey StateFilterOptionPropertyKey = DependencyProperty.RegisterReadOnly(nameof(StateFilterOption), typeof(ThreeStateViewModel), typeof(ListingViewModel),
                 new PropertyMetadata(null));
 
         /// <summary>
-        /// Identifies the <see cref="ViewOptions"/> dependency property.
+        /// Identifies the <see cref="StateFilterOption"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty ViewOptionsProperty = ViewOptionsPropertyKey.DependencyProperty;
+        public static readonly DependencyProperty StateFilterOptionProperty = StateFilterOptionPropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Gets the view model for the listing view options.
-        /// </summary>
-        /// <value>The view model that indicates what items to load into the <see cref="Items"/> collection.</value>
-        public ThreeStateViewModel ViewOptions => (ThreeStateViewModel)GetValue(ViewOptionsProperty);
+        public ThreeStateViewModel StateFilterOption => (ThreeStateViewModel)GetValue(StateFilterOptionProperty);
 
         #endregion
-        #region EditingOptions Property Members
+        #region PageTitle Property Members
 
-        private static readonly DependencyPropertyKey EditingOptionsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(EditingOptions), typeof(ThreeStateViewModel), typeof(ListingViewModel),
-                new PropertyMetadata(null));
+        private static readonly DependencyPropertyKey PageTitlePropertyKey = DependencyPropertyBuilder<ListingViewModel, string>
+            .Register(nameof(PageTitle))
+            .DefaultValue("")
+            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default)
+            .AsReadOnly();
 
         /// <summary>
-        /// Identifies the <see cref="EditingOptions"/> dependency property.
+        /// Identifies the <see cref="PageTitle"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty EditingOptionsProperty = EditingOptionsPropertyKey.DependencyProperty;
+        public static readonly DependencyProperty PageTitleProperty = PageTitlePropertyKey.DependencyProperty;
 
-        public ThreeStateViewModel EditingOptions => (ThreeStateViewModel)GetValue(EditingOptionsProperty);
+        public string PageTitle { get => GetValue(PageTitleProperty) as string; private set => SetValue(PageTitlePropertyKey, value); }
+
+        private void UpdatePageTitle(bool? options) => PageTitle = options.HasValue ?
+                    (options.Value ? FsInfoCat.Properties.Resources.DisplayName_SymbolicNames_ActiveOnly :
+                    FsInfoCat.Properties.Resources.DisplayName_SymbolicNames_InactiveOnly) :
+                    FsInfoCat.Properties.Resources.DisplayName_SymbolicNames_All;
 
         #endregion
 
         public ListingViewModel()
         {
-            ThreeStateViewModel viewOptions = new(true);
-            SetValue(ViewOptionsPropertyKey, viewOptions);
-            viewOptions.ValuePropertyChanged += (sender, e) => ReloadAsync(e.NewValue as bool?);
-            SetValue(EditingOptionsPropertyKey, new ThreeStateViewModel(viewOptions.Value));
+            SetValue(StateFilterOptionPropertyKey, new ThreeStateViewModel(_currentStateFilterOption));
+            UpdatePageTitle(_currentStateFilterOption);
         }
 
-        void INotifyNavigatedTo.OnNavigatedTo() => ReloadAsync(ViewOptions.Value);
+        protected override IAsyncJob ReloadAsync(bool? options)
+        {
+            UpdatePageTitle(options);
+            return base.ReloadAsync(options);
+        }
+
+        void INotifyNavigatedTo.OnNavigatedTo() => ReloadAsync(_currentStateFilterOption);
 
         protected override IQueryable<SymbolicNameListItem> GetQueryableListing(bool? options, [DisallowNull] LocalDbContext dbContext,
             [DisallowNull] IWindowsStatusListener statusListener)
@@ -62,17 +73,18 @@ namespace FsInfoCat.Desktop.LocalVM.SymbolicNames
 
         protected override void OnApplyFilterOptionsCommand(object parameter)
         {
-            // BUG: Need to fix logic
-            ViewOptions.Value = EditingOptions.Value;
+            if (_currentStateFilterOption.HasValue ? (!StateFilterOption.Value.HasValue || _currentStateFilterOption.Value != StateFilterOption.Value.Value) : StateFilterOption.Value.HasValue)
+                _ = ReloadAsync(StateFilterOption.Value);
         }
 
         protected override void OnCancelFilterOptionsCommand(object parameter)
         {
-            EditingOptions.Value = ViewOptions.Value;
+            UpdatePageTitle(_currentStateFilterOption);
+            StateFilterOption.Value = _currentStateFilterOption;
             base.OnCancelFilterOptionsCommand(parameter);
         }
 
-        protected override void OnRefreshCommand(object parameter) => ReloadAsync(ViewOptions.Value);
+        protected override void OnRefreshCommand(object parameter) => ReloadAsync(_currentStateFilterOption);
 
         protected override void OnItemEditCommand([DisallowNull] ListItemViewModel item, object parameter)
         {
@@ -96,6 +108,26 @@ namespace FsInfoCat.Desktop.LocalVM.SymbolicNames
         protected override void OnAddNewItemCommand(object parameter)
         {
             // TODO: Implement OnAddNewItemCommand(object);
+        }
+
+        protected override void OnReloadTaskCompleted(bool? options) => _currentStateFilterOption = options;
+
+        protected override void OnReloadTaskFaulted(Exception exception, bool? options)
+        {
+            UpdatePageTitle(_currentStateFilterOption);
+            StateFilterOption.Value = _currentStateFilterOption;
+            _ = MessageBox.Show(Application.Current.MainWindow,
+                ((exception is AsyncOperationFailureException aExc) ? aExc.UserMessage.NullIfWhiteSpace() :
+                    (exception as AggregateException)?.InnerExceptions.OfType<AsyncOperationFailureException>().Select(e => e.UserMessage)
+                    .Where(m => !string.IsNullOrWhiteSpace(m)).FirstOrDefault()) ??
+                    "There was an unexpected error while loading items from the databse.\n\nSee logs for further information",
+                "Database Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+
+        protected override void OnReloadTaskCanceled(bool? options)
+        {
+            UpdatePageTitle(_currentStateFilterOption);
+            StateFilterOption.Value = _currentStateFilterOption;
         }
     }
 }

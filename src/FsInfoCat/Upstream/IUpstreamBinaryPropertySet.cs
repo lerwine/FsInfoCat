@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.Upstream
@@ -15,7 +15,7 @@ namespace FsInfoCat.Upstream
 
         /// <summary>Gets the sets of files which were determined to be duplicates.</summary>
         /// <value>The sets of files which were determined to be duplicates.</value>
-        [Display(Name = nameof(Properties.Resources.DisplayName_RedundantSets), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.DisplayName_RedundantSets), ShortName = nameof(Properties.Resources.ShortName_RedundantSets), ResourceType = typeof(Properties.Resources))]
         new IEnumerable<IUpstreamRedundantSet> RedundantSets { get; }
     }
 }

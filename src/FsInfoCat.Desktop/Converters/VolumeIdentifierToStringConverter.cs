@@ -18,7 +18,9 @@ namespace FsInfoCat.Desktop.Converters
 
         #endregion
 
-        public override string Convert(VolumeIdentifier value, object parameter, CultureInfo culture)
+        public override string Convert(VolumeIdentifier value, object parameter, CultureInfo culture) => Convert(value);
+
+        public static string Convert(VolumeIdentifier value)
         {
             if (value.IsEmpty())
                 return "";
@@ -26,7 +28,7 @@ namespace FsInfoCat.Desktop.Converters
                 return VolumeIdentifier.ToVsnString(value.SerialNumber.Value, true);
             if (value.UUID.HasValue)
                 return value.UUID.Value.ToString("d");
-            return (value.Location.IsUnc) ? value.Location.LocalPath : value.Location.AbsoluteUri;
+            return value.Location.IsUnc ? value.Location.LocalPath : value.Location.AbsoluteUri;
         }
     }
 }

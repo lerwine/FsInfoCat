@@ -8,11 +8,11 @@ using System.Windows;
 
 namespace FsInfoCat.Desktop.LocalVM.CrawlConfigurations
 {
-    public class ListingViewModel : ListingViewModel<CrawlConfigListItem, ListItemViewModel, (CrawlStatus? Status, bool ShowAll, bool? IsScheduled)>, INotifyNavigatedTo
+    public class ListingViewModel : ListingViewModel<CrawlConfigListItem, ListItemViewModel, ListingViewModel.FilterOptions>, INotifyNavigatedTo
     {
         private readonly EnumChoiceItem<CrawlStatus> _allOption;
         private readonly EnumChoiceItem<CrawlStatus> _allFailedOption;
-        private (CrawlStatus? Status, bool ShowAll, bool? IsScheduled) _currentStatusOptions = new(null, true, false);
+        private FilterOptions _currentStatusOptions = new(null, true, false);
 
         #region StatusOptions Property Members
 
@@ -53,6 +53,43 @@ namespace FsInfoCat.Desktop.LocalVM.CrawlConfigurations
         public ThreeStateViewModel SchedulingOptions => (ThreeStateViewModel)GetValue(SchedulingOptionsProperty);
 
         #endregion
+        #region PageTitle Property Members
+
+        private static readonly DependencyPropertyKey PageTitlePropertyKey = DependencyPropertyBuilder<ListingViewModel, string>
+            .Register(nameof(PageTitle))
+            .DefaultValue("")
+            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default)
+            .AsReadOnly();
+
+        /// <summary>
+        /// Identifies the <see cref="PageTitle"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty PageTitleProperty = PageTitlePropertyKey.DependencyProperty;
+
+        public string PageTitle { get => GetValue(PageTitleProperty) as string; private set => SetValue(PageTitlePropertyKey, value); }
+
+        private void UpdatePageTitle(FilterOptions options)
+        {
+            if (options.IsScheduled.HasValue)
+            {
+                if (options.IsScheduled.Value)
+                    PageTitle = options.Status.HasValue ?
+                        string.Format(FsInfoCat.Properties.Resources.FormatDisplayName_ScheduledCrawlConfigs_Status, options.Status.Value.GetDisplayName()) :
+                        options.ShowAll ? FsInfoCat.Properties.Resources.DisplayName_ScheduledCrawlConfigs_All :
+                        FsInfoCat.Properties.Resources.DisplayName_ScheduledCrawlConfigs_Failed;
+                else
+                    PageTitle = options.Status.HasValue ?
+                        string.Format(FsInfoCat.Properties.Resources.FormatDisplayName_UnscheduledCrawlConfigs_Status, options.Status.Value.GetDisplayName()) :
+                        options.ShowAll ? FsInfoCat.Properties.Resources.DisplayName_UnscheduledCrawlConfigs_All :
+                        FsInfoCat.Properties.Resources.DisplayName_UnscheduledCrawlConfigs_Failed;
+            }
+            else
+                PageTitle = options.Status.HasValue ?
+                    string.Format(FsInfoCat.Properties.Resources.FormatDisplayName_CrawlConfigs_Status, options.Status.Value.GetDisplayName()) :
+                    options.ShowAll ? FsInfoCat.Properties.Resources.DisplayName_CrawlConfigs_All : FsInfoCat.Properties.Resources.DisplayName_CrawlConfigs_Failed;
+        }
+
+        #endregion
 
         public ListingViewModel()
         {
@@ -63,10 +100,29 @@ namespace FsInfoCat.Desktop.LocalVM.CrawlConfigurations
             SetValue(StatusOptionsPropertyKey, viewOptions);
             SetValue(EditingStatusOptionsPropertyKey, new EnumValuePickerVM<CrawlStatus>(names) { SelectedIndex = viewOptions.SelectedIndex });
             SetValue(SchedulingOptionsPropertyKey, new ThreeStateViewModel(_currentStatusOptions.IsScheduled));
-            if (_currentStatusOptions.Status.HasValue)
-                StatusOptions.SelectedValue = _currentStatusOptions.Status.Value;
-            else
-                StatusOptions.SelectedItem = _currentStatusOptions.ShowAll ? _allOption : _allFailedOption;
+            StatusOptions.SelectedItem = FromFilterOptions(_currentStatusOptions, out _);
+            UpdatePageTitle(_currentStatusOptions);
+        }
+
+        private FilterOptions ToFilterOptions(EnumChoiceItem<CrawlStatus> item, bool? isScheduled)
+        {
+            if (ReferenceEquals(item, _allOption))
+                return new(null, true, isScheduled);
+            return new(item?.Value, false, isScheduled);
+        }
+
+        private EnumChoiceItem<CrawlStatus> FromFilterOptions(FilterOptions options, out bool? isScheduled)
+        {
+            isScheduled = options.IsScheduled;
+            if (options.Status.HasValue)
+                return StatusOptions.Choices.First(c => c.Value == options.Status);
+            return options.ShowAll ? _allOption : _allFailedOption;
+        }
+
+        protected override IAsyncJob ReloadAsync(FilterOptions options)
+        {
+            UpdatePageTitle(options);
+            return base.ReloadAsync(options);
         }
 
         protected override bool ConfirmItemDelete(ListItemViewModel item, object parameter) => MessageBox.Show(Application.Current.MainWindow,
@@ -82,7 +138,7 @@ namespace FsInfoCat.Desktop.LocalVM.CrawlConfigurations
             return (target is null) ? 0 : await CrawlConfiguration.DeleteAsync(target, dbContext, statusListener);
         }
 
-        protected override IQueryable<CrawlConfigListItem> GetQueryableListing((CrawlStatus? Status, bool ShowAll, bool? IsScheduled) options, [DisallowNull] LocalDbContext dbContext,
+        protected override IQueryable<CrawlConfigListItem> GetQueryableListing(FilterOptions options, [DisallowNull] LocalDbContext dbContext,
             [DisallowNull] IWindowsStatusListener statusListener)
         {
             statusListener.SetMessage("Reading crawl configurations from database");
@@ -117,40 +173,43 @@ namespace FsInfoCat.Desktop.LocalVM.CrawlConfigurations
 
         protected override void OnApplyFilterOptionsCommand(object parameter)
         {
-            (CrawlStatus? Status, bool ShowAll, bool? IsScheduled) newStatusOptions = (StatusOptions.SelectedValue, ReferenceEquals(StatusOptions.SelectedItem, _allOption), SchedulingOptions.Value);
-            if (newStatusOptions.ShowAll == _currentStatusOptions.ShowAll)
-            {
-                if (newStatusOptions.Status.HasValue)
-                {
-                    if (_currentStatusOptions.Status.HasValue && _currentStatusOptions.Status.Value == newStatusOptions.Status.Value)
-                    {
-                        if (newStatusOptions.IsScheduled.HasValue ? (_currentStatusOptions.IsScheduled.HasValue && _currentStatusOptions.IsScheduled.Value == newStatusOptions.IsScheduled.Value) : !_currentStatusOptions.IsScheduled.HasValue)
-                        {
-                            if (_currentStatusOptions.IsScheduled.HasValue && _currentStatusOptions.IsScheduled.Value == newStatusOptions.IsScheduled.Value)
-                                return;
-                        }
-                        else if (!_currentStatusOptions.IsScheduled.HasValue)
-                            return;
-                    }
-                }
-                else if (!_currentStatusOptions.Status.HasValue)
-                    return;
-            }
-            _currentStatusOptions = newStatusOptions;
-            _ = ReloadAsync(_currentStatusOptions);
+            FilterOptions newStatusOptions = ToFilterOptions(StatusOptions.SelectedItem, SchedulingOptions.Value);
+            if (newStatusOptions.IsScheduled != _currentStatusOptions.IsScheduled || newStatusOptions.ShowAll != _currentStatusOptions.ShowAll || newStatusOptions.Status != _currentStatusOptions.Status)
+                _ = ReloadAsync(newStatusOptions);
         }
 
         protected override void OnCancelFilterOptionsCommand(object parameter)
         {
-            CrawlStatus? status = _currentStatusOptions.Status;
-            if (status.HasValue)
-                StatusOptions.SelectedValue = status.Value;
-            else
-                StatusOptions.SelectedItem = _currentStatusOptions.ShowAll ? _allOption : _allFailedOption;
-            SchedulingOptions.Value = _currentStatusOptions.IsScheduled;
+            UpdatePageTitle(_currentStatusOptions);
+            StatusOptions.SelectedItem = FromFilterOptions(_currentStatusOptions, out bool? isScheduled);
+            SchedulingOptions.Value = isScheduled;
             base.OnCancelFilterOptionsCommand(parameter);
         }
 
         void INotifyNavigatedTo.OnNavigatedTo() => ReloadAsync(_currentStatusOptions);
+
+        protected override void OnReloadTaskCompleted(FilterOptions options) => _currentStatusOptions = options;
+
+        protected override void OnReloadTaskFaulted(Exception exception, FilterOptions options)
+        {
+            UpdatePageTitle(_currentStatusOptions);
+            StatusOptions.SelectedItem = FromFilterOptions(_currentStatusOptions, out bool? isScheduled);
+            SchedulingOptions.Value = isScheduled;
+            _ = MessageBox.Show(Application.Current.MainWindow,
+                ((exception is AsyncOperationFailureException aExc) ? aExc.UserMessage.NullIfWhiteSpace() :
+                    (exception as AggregateException)?.InnerExceptions.OfType<AsyncOperationFailureException>().Select(e => e.UserMessage)
+                    .Where(m => !string.IsNullOrWhiteSpace(m)).FirstOrDefault()) ??
+                    "There was an unexpected error while loading items from the databse.\n\nSee logs for further information",
+                "Database Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+
+        protected override void OnReloadTaskCanceled(FilterOptions options)
+        {
+            UpdatePageTitle(_currentStatusOptions);
+            StatusOptions.SelectedItem = FromFilterOptions(_currentStatusOptions, out bool? isScheduled);
+            SchedulingOptions.Value = isScheduled;
+        }
+
+        public record FilterOptions(CrawlStatus? Status, bool ShowAll, bool? IsScheduled);
     }
 }

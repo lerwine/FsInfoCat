@@ -5,12 +5,11 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:FsInfoCat.Desktop.LocalVM.RecordedTVPropertySets"
              xmlns:b="http://schemas.microsoft.com/xaml/behaviors" xmlns:Converters="clr-namespace:FsInfoCat.Desktop.Converters" x:Class="FsInfoCat.Desktop.LocalVM.RecordedTVPropertySets.ListItemControl"
-             mc:Ignorable="d" d:DataContext="{x:Type local:ListItemViewModel}"
-             d:DesignHeight="450" d:DesignWidth="800">
+             mc:Ignorable="d" d:DataContext="{x:Type local:ListItemViewModel}" d:DesignWidth="800">
     <UserControl.Resources>
         <Converters:StringToBooleanConverter x:Key="StringToBooleanConverter"/>
     </UserControl.Resources>
-    <Grid VerticalAlignment="Top">
+    <Grid>
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="DescriptiveText">
                 <VisualStateGroup.Transitions>
@@ -156,6 +155,7 @@
         <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingLeftRight}" ToolTip="" Text="{Binding TotalFileCount}" Grid.Row="9"/>
         <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingLeftRight}" ToolTip="" Text="{Binding CreatedOn}" Grid.Row="9" Grid.Column="1"/>
         <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingLeftRight}" ToolTip="" Text="{Binding ModifiedOn}" Grid.Row="9" Grid.Column="2"/>
-        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingLeftRight}" ToolTip="" Text="{Binding LastSynchronizedOn}" Grid.Row="9" Grid.Column="3" Grid.ColumnSpan="3"/>
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingLeftRight}" ToolTip="" Text="{Binding LastSynchronizedOn}" Grid.Row="9" Grid.Column="3" Grid.ColumnSpan="2"/>
+        <Button Grid.Column="5" Grid.Row="9" Style="{DynamicResource SyncButton}" ToolTip="Synchronize Now" Margin="{DynamicResource DefaultSpacingRight}"/>
     </Grid>
 </UserControl>

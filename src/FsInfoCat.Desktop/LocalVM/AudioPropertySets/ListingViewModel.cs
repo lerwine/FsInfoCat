@@ -12,26 +12,54 @@ namespace FsInfoCat.Desktop.LocalVM.AudioPropertySets
 {
     public class ListingViewModel : ListingViewModel<AudioPropertiesListItem, ListItemViewModel, bool?>, INotifyNavigatedTo
     {
-        private bool? _currentOptions;
+        private bool? _currentOptions = true;
 
-        #region ListingOptions Property Members
+        #region FilterOptions Property Members
 
-        private static readonly DependencyPropertyKey ListingOptionsPropertyKey = DependencyPropertyBuilder<ListingViewModel, ThreeStateViewModel>
-            .Register(nameof(ListingOptions))
+        private static readonly DependencyPropertyKey FilterOptionsPropertyKey = DependencyPropertyBuilder<ListingViewModel, ThreeStateViewModel>
+            .Register(nameof(FilterOptions))
             .AsReadOnly();
 
         /// <summary>
-        /// Identifies the <see cref="ListingOptions"/> dependency property.
+        /// Identifies the <see cref="FilterOptions"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty ListingOptionsProperty = ListingOptionsPropertyKey.DependencyProperty;
+        public static readonly DependencyProperty FilterOptionsProperty = FilterOptionsPropertyKey.DependencyProperty;
 
-        public ThreeStateViewModel ListingOptions { get => (ThreeStateViewModel)GetValue(ListingOptionsProperty); private set => SetValue(ListingOptionsPropertyKey, value); }
+        public ThreeStateViewModel FilterOptions { get => (ThreeStateViewModel)GetValue(FilterOptionsProperty); private set => SetValue(FilterOptionsPropertyKey, value); }
+
+        #endregion
+        #region PageTitle Property Members
+
+        private static readonly DependencyPropertyKey PageTitlePropertyKey = DependencyPropertyBuilder<ListingViewModel, string>
+            .Register(nameof(PageTitle))
+            .DefaultValue("")
+            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default)
+            .AsReadOnly();
+
+        /// <summary>
+        /// Identifies the <see cref="PageTitle"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty PageTitleProperty = PageTitlePropertyKey.DependencyProperty;
+
+        public string PageTitle { get => GetValue(PageTitleProperty) as string; private set => SetValue(PageTitlePropertyKey, value); }
+
+        private void UpdatePageTitle(bool? options) => PageTitle = options.HasValue ?
+                    (options.Value ? FsInfoCat.Properties.Resources.DisplayName_AudioPropertyGroups_HasFiles :
+                    FsInfoCat.Properties.Resources.DisplayName_AudioPropertyGroups_NoExistingFiles) :
+                    FsInfoCat.Properties.Resources.DisplayName_AudioPropertyGroups_All;
 
         #endregion
 
         public ListingViewModel()
         {
-            SetValue(ListingOptionsPropertyKey, new ThreeStateViewModel(true));
+            SetValue(FilterOptionsPropertyKey, new ThreeStateViewModel(_currentOptions));
+            UpdatePageTitle(_currentOptions);
+        }
+
+        protected override IAsyncJob ReloadAsync(bool? options)
+        {
+            UpdatePageTitle(options);
+            return base.ReloadAsync(options);
         }
 
         void INotifyNavigatedTo.OnNavigatedTo() => ReloadAsync(_currentOptions);
@@ -58,16 +86,15 @@ namespace FsInfoCat.Desktop.LocalVM.AudioPropertySets
 
         protected override void OnCancelFilterOptionsCommand(object parameter)
         {
-            ListingOptions.Value = _currentOptions;
+            UpdatePageTitle(_currentOptions);
+            FilterOptions.Value = _currentOptions;
             base.OnCancelFilterOptionsCommand(parameter);
         }
 
         protected override void OnApplyFilterOptionsCommand(object parameter)
         {
-            if (_currentOptions.HasValue ? (ListingOptions.Value.HasValue && _currentOptions.Value == ListingOptions.Value.Value) : !ListingOptions.Value.HasValue)
-                return;
-            _currentOptions = ListingOptions.Value;
-            _ = ReloadAsync(_currentOptions);
+            if (_currentOptions.HasValue ? (!FilterOptions.Value.HasValue || _currentOptions.Value != FilterOptions.Value.Value) : FilterOptions.Value.HasValue)
+                _ = ReloadAsync(FilterOptions.Value);
         }
 
         protected override void OnRefreshCommand(object parameter) => ReloadAsync(_currentOptions);
@@ -94,6 +121,26 @@ namespace FsInfoCat.Desktop.LocalVM.AudioPropertySets
         protected override void OnAddNewItemCommand(object parameter)
         {
             // TODO: Implement OnAddNewItemCommand(object);
+        }
+
+        protected override void OnReloadTaskCompleted(bool? options) => _currentOptions = options;
+
+        protected override void OnReloadTaskFaulted(Exception exception, bool? options)
+        {
+            UpdatePageTitle(_currentOptions);
+            FilterOptions.Value = _currentOptions;
+            _ = MessageBox.Show(Application.Current.MainWindow,
+                ((exception is AsyncOperationFailureException aExc) ? aExc.UserMessage.NullIfWhiteSpace() :
+                    (exception as AggregateException)?.InnerExceptions.OfType<AsyncOperationFailureException>().Select(e => e.UserMessage)
+                    .Where(m => !string.IsNullOrWhiteSpace(m)).FirstOrDefault()) ??
+                    "There was an unexpected error while loading items from the databse.\n\nSee logs for further information",
+                "Database Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+
+        protected override void OnReloadTaskCanceled(bool? options)
+        {
+            UpdatePageTitle(_currentOptions);
+            FilterOptions.Value = _currentOptions;
         }
     }
 }

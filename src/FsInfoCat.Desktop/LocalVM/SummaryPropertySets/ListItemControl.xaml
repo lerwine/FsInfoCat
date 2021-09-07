@@ -4,50 +4,124 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:FsInfoCat.Desktop.LocalVM.SummaryPropertySets"
-             mc:Ignorable="d" d:DataContext="{x:Type local:ListItemViewModel}"
-             d:DesignHeight="450" d:DesignWidth="800">
+             mc:Ignorable="d" d:DataContext="{x:Type local:ListItemViewModel}" d:DesignWidth="800">
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
+            <ColumnDefinition/>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
-        <Label Padding="{DynamicResource DefaultSpacingTopLeft}" ToolTip="" VerticalAlignment="Bottom" Content="Title"/>
-        <Button Style="{DynamicResource EditButton}" Grid.Column="1" Margin="{DynamicResource DefaultSpacingTopLeft}" ToolTip="Edit the current item." Command="{Binding Edit, Mode=OneWay}"/>
-        <Button Style="{DynamicResource DeleteButton}" Grid.Column="2" Margin="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="Delete the item." Command="{Binding Delete, Mode=OneWay}"/>
-        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding Title}" Grid.Row="1" Grid.ColumnSpan="2"/>
-
-        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding ApplicationName}"/>
-        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding Author}"/>
-        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding Comment}"/>
-        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding Company}"/>
-        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding ContentType}"/>
-        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding Copyright}"/>
-        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding ExistingFileCount}"/>
-        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding ItemAuthors}"/>
-        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding ItemType}"/>
-        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding ItemTypeText}"/>
-        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding Keywords}"/>
-        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding Kind}"/>
-        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding MIMEType}"/>
-        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding ParentalRating}"/>
-        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding ParentalRatingReason}"/>
-        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding ParentalRatingsOrganization}"/>
-        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding ProductName}"/>
-        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding Rating}"/>
-        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding Sensitivity}"/>
-        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding SensitivityText}"/>
-        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding SimpleRating}"/>
-        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding Subject}"/>
-        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding TotalFileCount}"/>
-        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding Trademarks}"/>
-
-        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding CreatedOn}"/>
-        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding ModifiedOn}"/>
-        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding LastSynchronizedOn}"/>
+        <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="" VerticalAlignment="Bottom" Content="Title" FontWeight="Bold"/>
+        <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="" VerticalAlignment="Bottom" Content="Subject" Grid.Column="1" FontWeight="Bold"/>
+        <Button Style="{DynamicResource EditButton}" Grid.Column="2" Margin="{DynamicResource DefaultSpacingTopLeft}" ToolTip="Edit the current item." Command="{Binding Edit, Mode=OneWay}"/>
+        <Button Style="{DynamicResource DeleteButton}" Grid.Column="3" Margin="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="Delete the item." Command="{Binding Delete, Mode=OneWay}"/>
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding Title}" Grid.Row="1" Margin="{DynamicResource DefaultSpacingLeftRight}"/>
+        <TextBox Margin="{DynamicResource DefaultSpacingLeftRight}" Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding Subject}" Grid.Row="1" Grid.ColumnSpan="3" Grid.Column="1"/>
+        <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="" Content="Author" Grid.Row="2" FontWeight="Bold"/>
+        <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="" Content="Item Authors" Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="3" FontWeight="Bold"/>
+        <TextBox Margin="{DynamicResource DefaultSpacingLeftRight}" Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding Author}" Grid.Row="3"/>
+        <TextBox Margin="{DynamicResource DefaultSpacingLeftRight}" Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding ItemAuthors}" Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="3"/>
+        <StackPanel Grid.Row="4" Grid.ColumnSpan="4">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="" Content="Product Name" FontWeight="Bold"/>
+                <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="" Content="Application Name" Grid.Column="1" FontWeight="Bold"/>
+                <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="" Content="Company" Grid.Column="2" FontWeight="Bold"/>
+                <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="" Content="Simple Rating" Grid.Column="3" FontWeight="Bold"/>
+                <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="" Content="Rating" Grid.Column="4" FontWeight="Bold"/>
+                <TextBox Margin="{DynamicResource DefaultSpacingLeftRight}" Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding ProductName}" Grid.Row="1"/>
+                <TextBox Margin="{DynamicResource DefaultSpacingLeftRight}" Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding ApplicationName}" Grid.Row="1" Grid.Column="1"/>
+                <TextBox Margin="{DynamicResource DefaultSpacingLeftRight}" Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding Company}" Grid.Row="1" Grid.Column="2"/>
+                <TextBox Margin="{DynamicResource DefaultSpacingLeftRight}" Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding SimpleRating}" Grid.Row="1" Grid.Column="3"/>
+                <TextBox Margin="{DynamicResource DefaultSpacingLeftRight}" Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding Rating}" Grid.Row="1" Grid.Column="4"/>
+                <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="" Content="Parental Rating" Grid.Row="2" FontWeight="Bold"/>
+                <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="" Content="Parental Ratings Organization" Grid.Column="1" Grid.Row="2" FontWeight="Bold"/>
+                <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="" Content="Parental Rating Reason" Grid.Row="2" Grid.ColumnSpan="3" Grid.Column="2" FontWeight="Bold"/>
+                <TextBox Margin="{DynamicResource DefaultSpacingLeftRight}" Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding ParentalRating}" Grid.Row="3"/>
+                <TextBox Margin="{DynamicResource DefaultSpacingLeftRight}" Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding ParentalRatingsOrganization}" Grid.Row="3" Grid.Column="1"/>
+                <TextBox Margin="{DynamicResource DefaultSpacingLeftRight}" Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding ParentalRatingReason}" Grid.Row="3" Grid.ColumnSpan="3" Grid.Column="2"/>
+            </Grid>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="" Content="Kind" FontWeight="Bold"/>
+                <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="" Content="Item Type" Grid.Column="1" FontWeight="Bold"/>
+                <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="" Content="Content Type" Grid.Column="2" FontWeight="Bold"/>
+                <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="" Content="MIME Type" Grid.Column="3" Grid.ColumnSpan="2" FontWeight="Bold"/>
+                <TextBox Margin="{DynamicResource DefaultSpacingLeftRight}" Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding Kind}" Grid.Row="1"/>
+                <TextBox Margin="{DynamicResource DefaultSpacingLeftRight}" Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding ItemTypeText}" Grid.Row="1" Grid.Column="1"/>
+                <TextBox Margin="{DynamicResource DefaultSpacingLeftRight}" Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding ContentType}" Grid.Row="1" Grid.Column="2"/>
+                <TextBox Margin="{DynamicResource DefaultSpacingLeftRight}" Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding MIMEType}" Grid.Row="1" Grid.Column="3" Grid.ColumnSpan="2"/>
+                <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="" Content="Copyright" Grid.Row="2" Grid.ColumnSpan="2" FontWeight="Bold"/>
+                <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="" Content="Trademarks" Grid.Row="2" Grid.Column="2" FontWeight="Bold"/>
+                <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="" Content="Sensitivity" Grid.Row="2" Grid.Column="3" FontWeight="Bold"/>
+                <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="" Content="Total File Count" Grid.Row="2" Grid.Column="4" FontWeight="Bold"/>
+                <TextBox Margin="{DynamicResource DefaultSpacingLeftRight}" Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding Copyright}" Grid.Row="3" Grid.ColumnSpan="2"/>
+                <TextBox Margin="{DynamicResource DefaultSpacingLeftRight}" Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding Trademarks}" Grid.Row="3" Grid.Column="2"/>
+                <TextBox Margin="{DynamicResource DefaultSpacingLeftRight}" Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding SensitivityText}" Grid.Row="3" Grid.Column="3"/>
+                <Grid Grid.Row="3" Grid.Column="4">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBox Margin="{DynamicResource DefaultSpacingLeft}" Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding TotalFileCount}"/>
+                    <Button Style="{DynamicResource OpenListingButton}" ToolTip="Open File Listing" Margin="{DynamicResource DefaultSpacingRight}" Grid.Column="1"/>
+                </Grid>
+            </Grid>
+            <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="" Content="Keywords" FontWeight="Bold"/>
+            <TextBox Margin="{DynamicResource DefaultSpacingLeftRight}" Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding Keywords}"/>
+            <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="" Content="Comments" FontWeight="Bold"/>
+            <TextBox Margin="{DynamicResource DefaultSpacingLeftRight}" Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding Comment}"/>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="" Content="Created On" FontWeight="Bold"/>
+                <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="" Content="Modified On" Grid.Column="1" FontWeight="Bold"/>
+                <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="" Content="Last Synchronized" Grid.Column="2" FontWeight="Bold"/>
+                <TextBox Margin="{DynamicResource DefaultSpacingLeftRight}" Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding CreatedOn}" Grid.Row="1"/>
+                <TextBox Margin="{DynamicResource DefaultSpacingLeftRight}" Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding ModifiedOn}" Grid.Row="1" Grid.Column="1"/>
+                <TextBox Margin="{DynamicResource DefaultSpacingLeftRight}" Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding LastSynchronizedOn}" Grid.Row="1" Grid.Column="2"/>
+            </Grid>
+        </StackPanel>
     </Grid>
 </UserControl>

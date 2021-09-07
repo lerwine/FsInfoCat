@@ -29,28 +29,42 @@ namespace FsInfoCat.Desktop.LocalVM.FileSystems
         public ThreeStateViewModel ListingOption => (ThreeStateViewModel)GetValue(ListingOptionProperty);
 
         #endregion
+        #region PageTitle Property Members
+
+        private static readonly DependencyPropertyKey PageTitlePropertyKey = DependencyPropertyBuilder<ListingViewModel, string>
+            .Register(nameof(PageTitle))
+            .DefaultValue("")
+            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default)
+            .AsReadOnly();
+
+        /// <summary>
+        /// Identifies the <see cref="PageTitle"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty PageTitleProperty = PageTitlePropertyKey.DependencyProperty;
+
+        public string PageTitle { get => GetValue(PageTitleProperty) as string; private set => SetValue(PageTitlePropertyKey, value); }
+
+        private void UpdatePageTitle(bool? options) => PageTitle = options.HasValue ?
+                    (options.Value ? FsInfoCat.Properties.Resources.DisplayName_FileSystemDefinitions_IsActive :
+                    FsInfoCat.Properties.Resources.DisplayName_FileSystemDefinitions_IsInactive) :
+                    FsInfoCat.Properties.Resources.DisplayName_FileSystemDefinitions_All;
+
+        #endregion
+
 
         public ListingViewModel()
         {
             SetValue(ListingOptionPropertyKey, new ThreeStateViewModel(_currentListingOption));
+            UpdatePageTitle(_currentListingOption);
         }
 
-        void INotifyNavigatedTo.OnNavigatedTo()
+        protected override IAsyncJob ReloadAsync(bool? options)
         {
-            IAsyncJob asyncJob = ReloadAsync(_currentListingOption);
-            _ = asyncJob.Task.ContinueWith(task => OnReloadComplete(task, asyncJob));
+            UpdatePageTitle(options);
+            return base.ReloadAsync(options);
         }
 
-        private void OnReloadComplete(Task task, IAsyncJob asyncJob)
-        {
-            if (task.IsCanceled || !task.IsFaulted)
-                return;
-            string userMessage = task.Exception.InnerExceptions.OfType<AsyncOperationFailureException>().Select(e => e.UserMessage)
-                .Where(m => !string.IsNullOrWhiteSpace(m)).FirstOrDefault();
-            if (userMessage is null)
-                userMessage = "An unexpected error has occurred. See logs for details.";
-            _ = MessageBox.Show(Application.Current.MainWindow, userMessage, asyncJob.Title, MessageBoxButton.OK, MessageBoxImage.Error);
-        }
+        void INotifyNavigatedTo.OnNavigatedTo() => ReloadAsync(_currentListingOption);
 
         protected override IQueryable<FileSystemListItem> GetQueryableListing(bool? options, [DisallowNull] LocalDbContext dbContext,
             [DisallowNull] IWindowsStatusListener statusListener)
@@ -64,20 +78,13 @@ namespace FsInfoCat.Desktop.LocalVM.FileSystems
 
         protected override void OnApplyFilterOptionsCommand(object parameter)
         {
-            if (_currentListingOption.HasValue)
-            {
-                if (ListingOption.Value.HasValue && _currentListingOption.Value == ListingOption.Value)
-                    return;
-            }
-            else if (!ListingOption.Value.HasValue)
-                return;
-            _currentListingOption = ListingOption.Value;
-            IAsyncJob asyncJob = ReloadAsync(_currentListingOption);
-            _ = asyncJob.Task.ContinueWith(task => OnReloadComplete(task, asyncJob));
+            if (_currentListingOption.HasValue ? (!ListingOption.Value.HasValue || _currentListingOption.Value != ListingOption.Value.Value) : ListingOption.Value.HasValue)
+                _ = ReloadAsync(ListingOption.Value);
         }
 
         protected override void OnCancelFilterOptionsCommand(object parameter)
         {
+            UpdatePageTitle(_currentListingOption);
             ListingOption.Value = _currentListingOption;
             base.OnCancelFilterOptionsCommand(parameter);
         }
@@ -103,6 +110,26 @@ namespace FsInfoCat.Desktop.LocalVM.FileSystems
         protected override void OnAddNewItemCommand(object parameter)
         {
             // TODO: Implement OnAddNewItemCommand(object);
+        }
+
+        protected override void OnReloadTaskCompleted(bool? options) => _currentListingOption = options;
+
+        protected override void OnReloadTaskFaulted(Exception exception, bool? options)
+        {
+            UpdatePageTitle(_currentListingOption);
+            ListingOption.Value = _currentListingOption;
+            _ = MessageBox.Show(Application.Current.MainWindow,
+                ((exception is AsyncOperationFailureException aExc) ? aExc.UserMessage.NullIfWhiteSpace() :
+                    (exception as AggregateException)?.InnerExceptions.OfType<AsyncOperationFailureException>().Select(e => e.UserMessage)
+                    .Where(m => !string.IsNullOrWhiteSpace(m)).FirstOrDefault()) ??
+                    "There was an unexpected error while loading items from the databse.\n\nSee logs for further information",
+                "Database Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+
+        protected override void OnReloadTaskCanceled(bool? options)
+        {
+            UpdatePageTitle(_currentListingOption);
+            ListingOption.Value = _currentListingOption;
         }
     }
 }

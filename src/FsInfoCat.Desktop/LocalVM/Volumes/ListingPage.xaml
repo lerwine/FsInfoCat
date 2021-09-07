@@ -5,12 +5,11 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:FsInfoCat.Desktop.LocalVM.Volumes"
       xmlns:ViewModel="clr-namespace:FsInfoCat.Desktop.ViewModel"
-      mc:Ignorable="d" DataContext="{DynamicResource ViewModel}"
-      xmlns:Converters="clr-namespace:FsInfoCat.Desktop.Converters" d:DesignHeight="768" d:DesignWidth="1024"
-      Title="Explore Volumes">
+      xmlns:Converters="clr-namespace:FsInfoCat.Desktop.Converters"
+      mc:Ignorable="d" DataContext="{DynamicResource ViewModel}" d:DesignHeight="768" d:DesignWidth="1024"
+      Title="{Binding PageTitle, Mode=OneWay}">
     <Page.Resources>
         <Converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
-        <Converters:VolumeIdentifierToStringConverter x:Key="VolumeIdentifierToStringConverter"/>
         <Converters:VolumeStatusToStringConverter x:Key="VolumeStatusToStringConverter"/>
         <local:ListingViewModel x:Key="ViewModel"/>
     </Page.Resources>
@@ -18,10 +17,8 @@
         <DataGrid ItemsSource="{Binding Items}" AutoGenerateColumns="False">
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding DisplayName}" Header="Display Name" />
-                <DataGridTextColumn Binding="{Binding VolumeName}" Header="Vol Name" />
-                <DataGridTextColumn Binding="{Binding Identifier, Converter={StaticResource VolumeIdentifierToStringConverter}}" Header="Identifier" />
+                <DataGridTextColumn Binding="{Binding IdentifierDisplayText}" Header="Identifier" />
                 <DataGridTextColumn Binding="{Binding RootPath}" Header="Root" Width="*"/>
-                <DataGridTextColumn Binding="{Binding ReadOnly}" Header="ReadOnly" />
                 <DataGridTextColumn Binding="{Binding Status, Converter={StaticResource VolumeStatusToStringConverter}}" MinWidth="100">
                     <DataGridTextColumn.Header>
                         <StackPanel Orientation="Horizontal">

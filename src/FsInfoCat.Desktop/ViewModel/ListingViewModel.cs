@@ -41,6 +41,7 @@ namespace FsInfoCat.Desktop.ViewModel
             SetValue(ItemsPropertyKey, new ReadOnlyObservableCollection<TItem>(_backingItems));
         }
 
+        
         protected abstract IQueryable<TEntity> GetQueryableListing(TOptions options, [DisallowNull] LocalDbContext dbContext, [DisallowNull] IWindowsStatusListener statusListener);
 
         protected abstract TItem CreateItemViewModel([DisallowNull] TEntity entity);
@@ -64,11 +65,32 @@ namespace FsInfoCat.Desktop.ViewModel
             return jobFactory.StartNew("Deleting data", "Opening database", (item, item.Entity), DeleteItemAsync);
         }
 
-        protected IAsyncJob ReloadAsync(TOptions options)
+        protected virtual IAsyncJob ReloadAsync(TOptions options)
         {
             IWindowsAsyncJobFactoryService jobFactory = Services.GetRequiredService<IWindowsAsyncJobFactoryService>();
-            return jobFactory.StartNew("Loading data", "Opening database", options, LoadItemsAsync);
+            IAsyncJob job = jobFactory.StartNew("Loading data", "Opening database", options, LoadItemsAsync);
+            job.Task.ContinueWith(task => Dispatcher.Invoke(() =>
+            {
+                if (task.IsCanceled)
+                    OnReloadTaskCanceled(options);
+                else if (task.IsFaulted)
+                {
+                    if (task.Exception.InnerExceptions.Count == 1)
+                        OnReloadTaskFaulted(task.Exception.InnerException, options);
+                    else
+                        OnReloadTaskFaulted(task.Exception, options);
+                }
+                else
+                    OnReloadTaskCompleted(options);
+            }, DispatcherPriority.Background));
+            return job;
         }
+
+        protected abstract void OnReloadTaskCompleted(TOptions options);
+
+        protected abstract void OnReloadTaskFaulted(Exception exception, TOptions options);
+
+        protected abstract void OnReloadTaskCanceled(TOptions options);
 
         private async Task LoadItemsAsync(TOptions options, [DisallowNull] IWindowsStatusListener statusListener)
         {
