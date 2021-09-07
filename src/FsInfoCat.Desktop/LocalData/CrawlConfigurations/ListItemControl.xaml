@@ -1,0 +1,133 @@
+<UserControl x:Class="FsInfoCat.Desktop.LocalData.CrawlConfigurations.ListItemControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:FsInfoCat.Desktop.LocalData.CrawlConfigurations"
+             xmlns:Converters="clr-namespace:FsInfoCat.Desktop.Converters"
+             xmlns:localCvt="clr-namespace:FsInfoCat.Desktop.Converters.Local"
+             mc:Ignorable="d" d:DataContext="{x:Type local:ListItemViewModel}"
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <Converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" NullSource="Collapsed"/>
+        <Converters:ObjectToInt32Converter x:Key="As2IfNullElse1Converter" NullSource="2"/>
+        <Converters:ObjectToVisibilityConverter x:Key="VisibileIfNotNullConverter"/>
+        <Converters:TimeSpanToStringConverter x:Key="TimeSpanToString" NullSource="(unlimited)"/>
+        <localCvt:CrawlConfigurationToAutoRescheduleString x:Key="CrawlConfigToAutoRescheduleString" NullSource="(none)"/>
+        <Converters:DateTimeToStringConverter x:Key="CrawlStartToString" NullSource="(never started)"/>
+        <Converters:DateTimeToStringConverter x:Key="LastSynchronizedToString" NullSource="(not synchronized)"/>
+        <Converters:CrawlStatusToStringConverter x:Key="CrawlStatusToDescription" Display="Description" />
+        <Converters:DateTimeToStringConverter x:Key="DateTimeToString"/>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <TextBox Margin="{DynamicResource DefaultSpacingTopLeft}" ToolTip="The descriptive status of the current crawl." Style="{DynamicResource ReadOnlyValueTextBox}" Text="{Binding StatusValue, Converter={StaticResource CrawlStatusToDescription}, Mode=OneWay}"/>
+        <Button Style="{DynamicResource LogButton}" Grid.Column="1" Margin="{DynamicResource DefaultSpacingTopLeft}" ToolTip="Show crawl activity records." Command="{Binding ShowCrawlActivityRecords, Mode=OneWay}"/>
+        <Button Style="{DynamicResource EditButton}" Grid.Column="2" Margin="{DynamicResource DefaultSpacingTopLeft}" ToolTip="Edit the current crawl configuration." Command="{Binding EditCurrentItem, Mode=OneWay}"/>
+        <Button Style="{DynamicResource DeleteButton}" Grid.Column="3" Margin="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="Delete the current crawl configuration." Command="{Binding DeleteCurrentItem, Mode=OneWay}"/>
+        <StackPanel Grid.Row="1" Grid.ColumnSpan="4">
+            <GroupBox Padding="{DynamicResource DefaultSpacingBottom}">
+                <StackPanel>
+                    <Label Content="Path" Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="The path of the starting subdirectory for the current crawl configuration." Target="{Binding ElementName=pathTextBox, Mode=OneWay}" FontWeight="Bold"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox x:Name="pathTextBox" Margin="{DynamicResource DefaultSpacingLeft}" ToolTip="The path of the starting subdirectory for the current crawl configuration." Style="{DynamicResource ReadOnlyValueTextBox}" Text="{Binding RootPath, Mode=OneWay}"/>
+                        <Button Grid.Column="1" ToolTip="Open the database record for the starting subdirectory of the current crawl configuration." Style="{DynamicResource OpenButton}" Margin="{DynamicResource DefaultSpacingRight}" Command="{Binding OpenRootFolderCommand, Mode=OneWay}"/>
+                    </Grid>
+                    <WrapPanel>
+                        <StackPanel>
+                            <Label Content="Volume Display Name" Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="The display name given to the file system volume containing the target subdirectory ." Target="{Binding ElementName=volumeDisplayNameTextBox, Mode=OneWay}" FontWeight="Bold"/>
+                            <TextBox x:Name="volumeDisplayNameTextBox" Margin="{DynamicResource DefaultSpacingLeftRight}" ToolTip="The display name given to the file system volume containing the target subdirectory ." Style="{DynamicResource ReadOnlyValueTextBox}" Text="{Binding VolumeDisplayName, Mode=OneWay}"/>
+                        </StackPanel>
+                        <StackPanel>
+                            <Label Content="Volume Name" Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="The name of the target file system volume as was reported by the file system." Target="{Binding ElementName=volumeNameTextBox, Mode=OneWay}" FontWeight="Bold"/>
+                            <TextBox x:Name="volumeNameTextBox" Margin="{DynamicResource DefaultSpacingLeftRight}" ToolTip="The name of the target file system volume as was reported by the file system." Style="{DynamicResource ReadOnlyValueTextBox}" Text="{Binding VolumeName, Mode=OneWay}"/>
+                        </StackPanel>
+                        <StackPanel>
+                            <Label Content="Volume Identifier" Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="A unique identifier string that is used to uniquely identify the volume." Target="{Binding ElementName=identifierTextBox, Mode=OneWay}" FontWeight="Bold"/>
+                            <TextBox x:Name="identifierTextBox" Margin="{DynamicResource DefaultSpacingLeftRight}" ToolTip="A unique identifier string that is used to uniquely identify the volume." Style="{DynamicResource ReadOnlyValueTextBox}" Text="{Binding VolumeIdentifier, Mode=OneWay}"/>
+                        </StackPanel>
+                        <StackPanel>
+                            <Label Content="File System" Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="The type of file system that is used by the target volume." Target="{Binding ElementName=fileSystemTextBox, Mode=OneWay}" FontWeight="Bold"/>
+                            <TextBox x:Name="fileSystemTextBox" Margin="{DynamicResource DefaultSpacingLeftRight}" ToolTip="The type of file system that is used by the target volume." Style="{DynamicResource ReadOnlyValueTextBox}" Text="{Binding FileSystemDetailText, Mode=OneWay}"/>
+                        </StackPanel>
+                    </WrapPanel>
+                </StackPanel>
+            </GroupBox>
+            <WrapPanel>
+                <GroupBox Header="Maximum Ranges" Padding="{DynamicResource DefaultSpacingBottom}">
+                    <WrapPanel>
+                        <StackPanel>
+                            <Label Content="Recursion" Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="The maximum subdirectory recursion depth." Target="{Binding ElementName=maxRecursionDepthTextBox, Mode=OneWay}" FontWeight="Bold"/>
+                            <TextBox x:Name="maxRecursionDepthTextBox" Margin="{DynamicResource DefaultSpacingLeftRight}" ToolTip="The maximum subdirectory recursion depth." Style="{DynamicResource ReadOnlyValueTextBox}" Text="{Binding MaxRecursionDepth, Mode=OneWay}"/>
+                        </StackPanel>
+                        <StackPanel>
+                            <Label Content="Items" Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="The maximum number of items that may be procesed in a single crawl." Target="{Binding ElementName=maxTotalItemsTextBox, Mode=OneWay}" FontWeight="Bold"/>
+                            <TextBox x:Name="maxTotalItemsTextBox" Margin="{DynamicResource DefaultSpacingLeftRight}" ToolTip="The maximum number of items that may be procesed in a single crawl." Style="{DynamicResource ReadOnlyValueTextBox}" Text="{Binding MaxTotalItems, Mode=OneWay, TargetNullValue=(unlimited)}"/>
+                        </StackPanel>
+                        <StackPanel>
+                            <Label Content="Duration" Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="The maximum amount of time that a crawl may run." Target="{Binding ElementName=ttlTextBox, Mode=OneWay}" FontWeight="Bold"/>
+                            <TextBox x:Name="ttlTextBox" Margin="{DynamicResource DefaultSpacingLeftRight}" ToolTip="The maximum amount of time that a crawl may run." Style="{DynamicResource ReadOnlyValueTextBox}" Text="{Binding TTL, Converter={StaticResource TimeSpanToString}, Mode=OneWay}"/>
+                        </StackPanel>
+                    </WrapPanel>
+                </GroupBox>
+                <GroupBox Header="Scheduling">
+                    <WrapPanel>
+                        <StackPanel>
+                            <Label Content="Auto-Reschedule" Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="Auto-reschedule settings for the current crawl configuration." Target="{Binding ElementName=autoRescheduleTextBox, Mode=OneWay}" FontWeight="Bold"/>
+                            <TextBox x:Name="autoRescheduleTextBox" Margin="{DynamicResource DefaultSpacingLeftRight}" ToolTip="Auto-reschedule settings for the current crawl configuration." Style="{DynamicResource ReadOnlyValueTextBox}" Text="{Binding Converter={StaticResource CrawlConfigToAutoRescheduleString}, Mode=OneWay}"/>
+                        </StackPanel>
+                        <StackPanel>
+                            <Label Content="Next Scheduled Start" Padding="{DynamicResource DefaultSpacingTopLeft}" ToolTip="Date and time of the next scheduled crawl for this configuration." Target="{Binding ElementName=nextScheduledStartTextBox, Mode=OneWay}" FontWeight="Bold"/>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBox x:Name="nextScheduledStartTextBox" Margin="{DynamicResource DefaultSpacingLeft}" ToolTip="Date and time of the next scheduled crawl for this configuration." Style="{DynamicResource ReadOnlyValueTextBox}" Text="{Binding NextScheduledStart, Converter={StaticResource DateTimeToString}, Mode=OneWay, TargetNullValue=(not scheduled)}"/>
+                                <Button Grid.Column="1" ToolTip="Starts the subdirectory crawl now." Style="{DynamicResource StartButton}" Margin="{DynamicResource DefaultSpacingRight}" Command="{Binding StartCrawl, Mode=OneWay}" Visibility="{Binding StartCrawl.IsEnabled, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                                <Button Grid.Column="1" ToolTip="Stops the active subdirectory crawl." Style="{DynamicResource StopButton}" Margin="{DynamicResource DefaultSpacingRight}" Command="{Binding StopCrawl, Mode=OneWay}" Visibility="{Binding StopCrawl.IsEnabled, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                            </Grid>
+                        </StackPanel>
+                    </WrapPanel>
+                </GroupBox>
+                <WrapPanel>
+                    <GroupBox>
+                        <WrapPanel>
+                            <StackPanel>
+                                <Label Content="Created On" Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="Date and time when record was first created." Target="{Binding ElementName=createdOnTextBox, Mode=OneWay}" FontWeight="Bold"/>
+                                <TextBox x:Name="createdOnTextBox" Margin="{DynamicResource DefaultSpacingLeftRight}" ToolTip="Date and time when record was first created." Style="{DynamicResource ReadOnlyValueTextBox}"/>
+                            </StackPanel>
+                            <StackPanel>
+                                <Label Content="Modified On" Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="Last date and time when record was last modified." Target="{Binding ElementName=modifiedOnTextBox, Mode=OneWay}" FontWeight="Bold"/>
+                                <TextBox x:Name="modifiedOnTextBox" Margin="{DynamicResource DefaultSpacingLeftRight}" ToolTip="Last date and time when record was last modified." Style="{DynamicResource ReadOnlyValueTextBox}"/>
+                            </StackPanel>
+                            <StackPanel>
+                                <Label Content="Synchronized" Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="When record was last synchronized with remote database." Target="{Binding ElementName=synchronizedTextBox, Mode=OneWay}" FontWeight="Bold"/>
+                                <TextBox x:Name="synchronizedTextBox" Margin="{DynamicResource DefaultSpacingLeftRight}" ToolTip="When record was last synchronized with remote database." Style="{DynamicResource ReadOnlyValueTextBox}"/>
+                            </StackPanel>
+                        </WrapPanel>
+                    </GroupBox>
+                    <GroupBox>
+                        <StackPanel>
+                            <Label Content="Notes" Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="Custom notes for the current crawl configuration." Target="{Binding ElementName=notesTextBox, Mode=OneWay}" FontWeight="Bold"/>
+                            <TextBox x:Name="notesTextBox" Margin="{DynamicResource DefaultSpacingLeftRight}" ToolTip="Custom notes for the current crawl configuration." Style="{DynamicResource ReadOnlyValueTextBox}"/>
+                        </StackPanel>
+                    </GroupBox>
+                </WrapPanel>
+            </WrapPanel>
+        </StackPanel>
+    </Grid>
+</UserControl>

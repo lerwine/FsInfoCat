@@ -67,7 +67,7 @@
             <Separator/>
             <MenuItem Header="Help" HorizontalAlignment="Right"/>
         </Menu>
-        <Frame Grid.Row="1" Source="/LocalVM/FileSystems/ListingPage.xaml" Content="{Binding NavigatedContent, Mode=TwoWay}" />
+        <Frame Grid.Row="1" Source="/LocalData/FileSystems/ListingPage.xaml" Content="{Binding NavigatedContent, Mode=TwoWay}" />
         <Border DataContext="{DynamicResource AsyncJobFactoryService}" Grid.RowSpan="2" Background="{DynamicResource TranslucentBlack50pctBrush}" Visibility="{Binding IsBusy, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}">
             <Viewbox Stretch="Uniform" StretchDirection="DownOnly">
                 <ListView Background="{x:Null}" BorderBrush="{x:Null}" ItemsSource="{Binding Items, Mode=OneWay}">
