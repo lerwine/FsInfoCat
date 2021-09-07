@@ -1,0 +1,155 @@
+using FsInfoCat.Desktop.ViewModel;
+using FsInfoCat.Local;
+using System;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows;
+
+namespace FsInfoCat.Desktop.LocalData.CrawlLogs
+{
+    public class ListingViewModel : ListingViewModel<CrawlJobLogListItem, ListItemViewModel, ListingViewModel.FilterOptions>, INotifyNavigatedTo
+    {
+        private FilterOptions _currentOptions = new(null, true);
+        private readonly EnumChoiceItem<CrawlStatus> _allOption;
+        private readonly EnumChoiceItem<CrawlStatus> _failedOption;
+
+        #region StatusOptions Property Members
+
+        private static readonly DependencyPropertyKey StatusOptionsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(StatusOptions), typeof(EnumValuePickerVM<CrawlStatus>), typeof(ListingViewModel),
+                new PropertyMetadata(null));
+
+        /// <summary>
+        /// Identifies the <see cref="StatusOptions"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty StatusOptionsProperty = StatusOptionsPropertyKey.DependencyProperty;
+
+        public EnumValuePickerVM<CrawlStatus> StatusOptions => (EnumValuePickerVM<CrawlStatus>)GetValue(StatusOptionsProperty);
+
+        #endregion
+        #region PageTitle Property Members
+
+        private static readonly DependencyPropertyKey PageTitlePropertyKey = DependencyPropertyBuilder<ListingViewModel, string>
+            .Register(nameof(PageTitle))
+            .DefaultValue("")
+            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default)
+            .AsReadOnly();
+
+        /// <summary>
+        /// Identifies the <see cref="PageTitle"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty PageTitleProperty = PageTitlePropertyKey.DependencyProperty;
+
+        public string PageTitle { get => GetValue(PageTitleProperty) as string; private set => SetValue(PageTitlePropertyKey, value); }
+
+        private void UpdatePageTitle(FilterOptions options) => PageTitle = options.Status.HasValue ?
+            string.Format(FsInfoCat.Properties.Resources.FormatDisplayName_CrawlLog_Status, options.Status.Value.GetDisplayName()) :
+            options.ShowAll ? FsInfoCat.Properties.Resources.DisplayName_CrawlLog_All : FsInfoCat.Properties.Resources.DisplayName_CrawlLog_Failed;
+
+        #endregion
+
+        public ListingViewModel()
+        {
+            string[] names = new[] { FsInfoCat.Properties.Resources.DisplayName_AllItems, FsInfoCat.Properties.Resources.DisplayName_AllFailedItems };
+            EnumValuePickerVM<CrawlStatus> viewOptions = new EnumValuePickerVM<CrawlStatus>(names);
+            _allOption = viewOptions.Choices.First(o => o.DisplayName == FsInfoCat.Properties.Resources.DisplayName_AllItems);
+            _failedOption = viewOptions.Choices.First(o => o.DisplayName == FsInfoCat.Properties.Resources.DisplayName_AllFailedItems);
+            SetValue(StatusOptionsPropertyKey, viewOptions);
+            viewOptions.SelectedItem = FromFilterOptions(_currentOptions);
+            UpdatePageTitle(_currentOptions);
+        }
+
+        protected override IAsyncJob ReloadAsync(FilterOptions options)
+        {
+            UpdatePageTitle(options);
+            return base.ReloadAsync(options);
+        }
+
+        public FilterOptions ToFilterOptions(EnumChoiceItem<CrawlStatus> item) => ReferenceEquals(_allOption, item) ? (new(null, true)) : (new(item?.Value, false));
+
+        public EnumChoiceItem<CrawlStatus> FromFilterOptions(FilterOptions value) => value.Status.HasValue
+                ? StatusOptions.Choices.FirstOrDefault(c => c.Value == value.Status)
+                : value.ShowAll ? _allOption : _failedOption;
+
+        protected override IQueryable<CrawlJobLogListItem> GetQueryableListing(FilterOptions options, [DisallowNull] LocalDbContext dbContext,
+            [DisallowNull] IWindowsStatusListener statusListener)
+        {
+            statusListener.SetMessage("Reading crawl result log entries from database");
+            if (options.Status.HasValue)
+            {
+                CrawlStatus status = options.Status.Value;
+                return dbContext.CrawlJobListing.Where(c => c.StatusCode == status);
+            }
+            if (options.ShowAll)
+                return dbContext.CrawlJobListing;
+            return dbContext.CrawlJobListing.Where(c => c.StatusCode != CrawlStatus.Completed && c.StatusCode != CrawlStatus.Disabled && c.StatusCode != CrawlStatus.InProgress &&
+                c.StatusCode != CrawlStatus.NotRunning);
+        }
+
+        protected override ListItemViewModel CreateItemViewModel([DisallowNull] CrawlJobLogListItem entity) => new(entity);
+
+        protected override void OnApplyFilterOptionsCommand(object parameter)
+        {
+            FilterOptions newOptions = ToFilterOptions(StatusOptions.SelectedItem);
+            if (newOptions.Status != _currentOptions.Status || newOptions.ShowAll != _currentOptions.ShowAll)
+                ReloadAsync(newOptions);
+        }
+
+        protected override void OnCancelFilterOptionsCommand(object parameter)
+        {
+            UpdatePageTitle(_currentOptions);
+            StatusOptions.SelectedItem = FromFilterOptions(_currentOptions);
+            base.OnCancelFilterOptionsCommand(parameter);
+        }
+
+        protected override void OnRefreshCommand(object parameter) => ReloadAsync(_currentOptions);
+
+        protected override void OnItemEditCommand([DisallowNull] ListItemViewModel item, object parameter)
+        {
+            // TODO: Implement OnItemEditCommand(object);
+        }
+
+        protected override bool ConfirmItemDelete(ListItemViewModel item, object parameter) => MessageBox.Show(Application.Current.MainWindow,
+            "This action cannot be undone!\n\nAre you sure you want to remove this crawl result log entry from the database?",
+            "Delete Crawl Result Log Entry", MessageBoxButton.YesNo, MessageBoxImage.Exclamation) == MessageBoxResult.Yes;
+
+        protected override async Task<int> DeleteEntityFromDbContextAsync([DisallowNull] CrawlJobLogListItem entity, [DisallowNull] LocalDbContext dbContext,
+            [DisallowNull] IWindowsStatusListener statusListener)
+        {
+            CrawlJobLog target = await dbContext.CrawlJobLogs.FindAsync(new object[] { entity.Id }, statusListener.CancellationToken);
+            if (target is null)
+                return 0;
+            _ = dbContext.CrawlJobLogs.Remove(target);
+            return await dbContext.SaveChangesAsync(statusListener.CancellationToken);
+        }
+
+        protected override void OnAddNewItemCommand(object parameter)
+        {
+            // TODO: Implement OnAddNewItemCommand(object);
+        }
+
+        void INotifyNavigatedTo.OnNavigatedTo() => ReloadAsync(_currentOptions);
+
+        protected override void OnReloadTaskCompleted(FilterOptions options) => _currentOptions = options;
+
+        protected override void OnReloadTaskFaulted(Exception exception, FilterOptions options)
+        {
+            UpdatePageTitle(_currentOptions);
+            StatusOptions.SelectedItem = FromFilterOptions(_currentOptions);
+            _ = MessageBox.Show(Application.Current.MainWindow,
+                ((exception is AsyncOperationFailureException aExc) ? aExc.UserMessage.NullIfWhiteSpace() :
+                    (exception as AggregateException)?.InnerExceptions.OfType<AsyncOperationFailureException>().Select(e => e.UserMessage)
+                    .Where(m => !string.IsNullOrWhiteSpace(m)).FirstOrDefault()) ??
+                    "There was an unexpected error while loading items from the databse.\n\nSee logs for further information",
+                "Database Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+
+        protected override void OnReloadTaskCanceled(FilterOptions options)
+        {
+            UpdatePageTitle(_currentOptions);
+            StatusOptions.SelectedItem = FromFilterOptions(_currentOptions);
+        }
+
+        public record FilterOptions(CrawlStatus? Status, bool ShowAll);
+    }
+}

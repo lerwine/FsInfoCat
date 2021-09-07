@@ -1,0 +1,70 @@
+<Page x:Class="FsInfoCat.Desktop.LocalData.Volumes.ListingPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:FsInfoCat.Desktop.LocalData.Volumes"
+      xmlns:ViewModel="clr-namespace:FsInfoCat.Desktop.ViewModel"
+      xmlns:Converters="clr-namespace:FsInfoCat.Desktop.Converters"
+      mc:Ignorable="d" DataContext="{DynamicResource ViewModel}" d:DesignHeight="768" d:DesignWidth="1024"
+      Title="{Binding PageTitle, Mode=OneWay}">
+    <Page.Resources>
+        <Converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        <Converters:VolumeStatusToStringConverter x:Key="VolumeStatusToStringConverter"/>
+        <local:ListingViewModel x:Key="ViewModel"/>
+    </Page.Resources>
+    <Grid>
+        <DataGrid ItemsSource="{Binding Items}" AutoGenerateColumns="False">
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding DisplayName}" Header="Display Name" />
+                <DataGridTextColumn Binding="{Binding IdentifierDisplayText}" Header="Identifier" />
+                <DataGridTextColumn Binding="{Binding RootPath}" Header="Root" Width="*"/>
+                <DataGridTextColumn Binding="{Binding Status, Converter={StaticResource VolumeStatusToStringConverter}}" MinWidth="100">
+                    <DataGridTextColumn.Header>
+                        <StackPanel Orientation="Horizontal">
+                            <Label Content="State"/>
+                            <Button Style="{DynamicResource AddNewButton}" Margin="{DynamicResource DefaultSpacingLeft}" Command="{Binding AddNewItem, Mode=OneWay}"/>
+                            <Button Style="{DynamicResource FilterButton}" Margin="{DynamicResource DefaultSpacingLeft}" Command="{Binding ShowFilterOptions, Mode=OneWay}"/>
+                        </StackPanel>
+                    </DataGridTextColumn.Header>
+                </DataGridTextColumn>
+            </DataGrid.Columns>
+            <DataGrid.RowDetailsTemplate>
+                <DataTemplate>
+                    <local:ListItemControl/>
+                </DataTemplate>
+            </DataGrid.RowDetailsTemplate>
+        </DataGrid>
+        <Border Background="{DynamicResource TranslucentBlack50pctBrush}" Visibility="{Binding ViewOptionsVisible, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}">
+            <Border HorizontalAlignment="Center" VerticalAlignment="Center" Style="{DynamicResource PopupOuterBorder}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Border Style="{DynamicResource PopupTitleBorder}">
+                        <TextBlock Text="Listing Display Options" FontWeight="Bold"/>
+                    </Border>
+                    <Border Grid.Row="1" Style="{DynamicResource PopupContentBorder}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Label Content="Show:" Padding="{DynamicResource DefaultSpacing}"/>
+                            <ComboBox Grid.Column="1"/>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="1" Grid.ColumnSpan="2">
+                                <Button Style="{DynamicResource AcceptButton}" ToolTip="Apply Filter" Margin="{DynamicResource DefaultSpacingBottomLeftRight}" Command="{Binding SaveFilterOptionsButtonClick, Mode=OneWay}"/>
+                                <Button Style="{DynamicResource CancelButton}" ToolTip="Discard Filter Changes" Margin="{DynamicResource DefaultSpacingBottomRight}" Command="{Binding CancelFilterOptionsButtonClick, Mode=OneWay}"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                </Grid>
+            </Border>
+        </Border>
+    </Grid>
+</Page>

@@ -161,7 +161,7 @@ Function Get-ColumnVisibilityOptionsProperties {
 
 #$Code = Get-ColumnVisibilityOptionsProperties -Interface ([FsInfoCat.ICrawlConfigurationListItem]) -ClassName 'CrawlConfigPropertiesColumnVisibilityOptions<TEntity, TViewModel>';
 
-$Code = ((Get-PropertyDefinitions -Types ([FsInfoCat.Local.ILocalAudioPropertySet])) | ForEach-Object {
+$Code = ((Get-PropertyDefinitions -Types ([FsInfoCat.Local.ILocalRedundantSetListItem])) | ForEach-Object {
     if ($_.Name -ne 'IsChanged') {
         $DisplayAttribute = [System.Reflection.CustomAttributeExtensions]::GetCustomAttribute($_, [System.ComponentModel.DataAnnotations.DisplayAttribute]);
         $ShortName = $null;
@@ -191,7 +191,10 @@ $Code = ((Get-PropertyDefinitions -Types ([FsInfoCat.Local.ILocalAudioPropertySe
         if ($_.PropertyType.IsValueType -and $_.PropertyType.IsGenericType -and [Nullable`1].Equals($_.PropertyType.GetGenericTypeDefinition())) {
             $UnderlyingType = [Nullable]::GetUnderlyingType($_.PropertyType);
         }
-        "                <DataGridTextColumn Binding=""{Binding $($_.Name), Mode=OneWay}"" Header=""$DisplayName""/>"
+        @"
+        <Label ToolTip="" Content="$DisplayName" Padding="{DynamicResource DefaultSpacingTopLeftRight}" FontWeight="Bold"/>
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding $_.Name}" Margin="{DynamicResource DefaultSpacingLeftRight}"/>
+"@
     }
 })
 [System.Windows.Clipboard]::SetText($Code);

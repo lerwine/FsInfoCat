@@ -1,0 +1,65 @@
+<UserControl x:Class="FsInfoCat.Desktop.LocalData.PhotoPropertySets.ListItemControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:FsInfoCat.Desktop.LocalData.PhotoPropertySets"
+             xmlns:Converters="clr-namespace:FsInfoCat.Desktop.Converters"
+             mc:Ignorable="d" d:DataContext="{x:Type local:ListItemViewModel}" d:DesignWidth="800">
+    <UserControl.Resources>
+        <Converters:StringToVisibilityConverter x:Key="VisibileIfNotEmptyConverter" NullSource="Collapsed"/>
+        <Converters:StringToVisibilityConverter x:Key="VisibileIfEmptyConverter" NullSource="Visible" Empty="Visible" NonWhitespace="Collapsed" Whitespace="Visible"/>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <Label Padding="{DynamicResource DefaultSpacingTopLeft}" ToolTip="" VerticalAlignment="Bottom" Content="Event" Grid.ColumnSpan="4" FontWeight="Bold"/>
+        <Button Style="{DynamicResource EditButton}" Grid.Column="4" Margin="{DynamicResource DefaultSpacingTopLeft}" ToolTip="Edit the current item." Command="{Binding Edit, Mode=OneWay}"/>
+        <Button Style="{DynamicResource DeleteButton}" Grid.Column="5" Margin="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="Delete the item." Command="{Binding Delete, Mode=OneWay}"/>
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding Event}" Grid.Row="1" Grid.ColumnSpan="6"/>
+
+        <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="" Content="Camera Manufacturer" Grid.Row="2" Grid.ColumnSpan="2" FontWeight="Bold"/>
+        <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="" Content="Camera Model" Grid.Row="2" Grid.ColumnSpan="4" Grid.Column="2" FontWeight="Bold"/>
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding CameraManufacturer}" Grid.Row="3" Grid.ColumnSpan="2"/>
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding CameraModel}" Grid.Row="3" Grid.Column="2" Grid.ColumnSpan="4"/>
+
+        <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="" Content="Total File Count" Grid.Row="4" FontWeight="Bold"/>
+        <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="" Content="Date Taken" Grid.Row="4" Grid.Column="1" FontWeight="Bold"/>
+        <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="" Content="EXIF Version" Grid.Row="4" Grid.Column="2" FontWeight="Bold"/>
+        <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="" Content="Orientation" Grid.Row="4" Grid.Column="3" Grid.ColumnSpan="3" FontWeight="Bold"/>
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding TotalFileCount}" Grid.Row="5"/>
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding DateTaken}" Grid.Row="5" Grid.Column="1"/>
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding EXIFVersion}" Grid.Row="5" Grid.Column="2"/>
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding Orientation}" Grid.Row="5" Grid.Column="3" Grid.ColumnSpan="3" Visibility="{Binding OrientationText, Converter={StaticResource VisibileIfEmptyConverter}}"/>
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding OrientationText}" Grid.Row="5" Grid.Column="3" Grid.ColumnSpan="3" Visibility="{Binding OrientationText, Converter={StaticResource VisibileIfNotEmptyConverter}}"/>
+
+        <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="" Content="Tagged" Grid.Row="6" Grid.ColumnSpan="6" Visibility="{Binding PeopleNames, Converter={StaticResource VisibileIfNotEmptyConverter}, Mode=OneWay}" FontWeight="Bold"/>
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding PeopleNames}" Grid.Row="7" Grid.ColumnSpan="6" Visibility="{Binding PeopleNames, Converter={StaticResource VisibileIfNotEmptyConverter}, Mode=OneWay}"/>
+
+        <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="" Content="Created On" Grid.Row="8" FontWeight="Bold"/>
+        <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="" Content="Modified On" Grid.Row="8" Grid.Column="1" FontWeight="Bold"/>
+        <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="" Content="LastSynchronized" Grid.Row="8" Grid.Column="2" Grid.ColumnSpan="4" FontWeight="Bold"/>
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding CreatedOn}" Grid.Row="9"/>
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding ModifiedOn}" Grid.Row="9" Grid.Column="1"/>
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" ToolTip="" Text="{Binding LastSynchronizedOn}" Grid.Row="9" Grid.Column="2" Grid.ColumnSpan="4"/>
+        <Button Grid.Column="5" Grid.Row="9" Style="{DynamicResource SyncButton}" ToolTip="Synchronize Now" Margin="{DynamicResource DefaultSpacingRight}"/>
+    </Grid>
+</UserControl>
