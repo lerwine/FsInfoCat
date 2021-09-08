@@ -50,7 +50,7 @@ namespace FsInfoCat.Desktop.ViewModel
 
         #endregion
 
-        public AccessErrorRowViewModel([DisallowNull] TEntity entity) : base(entity)
+        public AccessErrorRowViewModel([DisallowNull] TEntity entity, bool isNew) : base(entity)
         {
             ErrorCode = entity.ErrorCode;
             Details = entity.Details;

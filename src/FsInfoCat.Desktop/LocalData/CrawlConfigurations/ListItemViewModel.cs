@@ -259,7 +259,8 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
             SetValue(StartCrawlPropertyKey, new Commands.RelayCommand(RaiseStartCrawlCommand));
             SetValue(StopCrawlPropertyKey, new Commands.RelayCommand(RaiseStopCrawlCommand));
             SetValue(ShowCrawlActivityRecordsPropertyKey, new Commands.RelayCommand(RaiseShowCrawlActivityRecordsCommand));
-            // TODO: Implement ListItemViewModel
+            UpstreamId = entity.UpstreamId;
+            LastSynchronizedOn = entity.LastSynchronizedOn;
         }
     }
 }

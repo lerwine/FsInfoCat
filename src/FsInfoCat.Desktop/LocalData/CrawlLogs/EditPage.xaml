@@ -1,4 +1,4 @@
-﻿<Page x:Class="FsInfoCat.Desktop.LocalData.CrawlLogs.EditPage"
+<Page x:Class="FsInfoCat.Desktop.LocalData.CrawlLogs.EditPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -7,8 +7,34 @@
       mc:Ignorable="d" d:DataContext="{x:Type local:EditViewModel}"
       d:DesignHeight="768" d:DesignWidth="1024"
       Title="EditPage">
-
     <Grid>
-
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" VerticalAlignment="Bottom" Content="Root Path" Grid.ColumnSpan="3" FontWeight="Bold"/>
+        <Button Style="{DynamicResource EditButton}" Grid.Column="3" Margin="{DynamicResource DefaultSpacingTopLeft}" ToolTip="Edit the current item."/>
+        <Button Style="{DynamicResource DeleteButton}" Grid.Column="4" Margin="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="Delete the item."/>
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingLeftRight}" Text="{Binding RootPath}" Grid.Row="1" Grid.ColumnSpan="5"/>
+        <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" Content="Detail" Grid.ColumnSpan="5" Grid.Row="2" FontWeight="Bold"/>
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingLeftRight}" Text="{Binding StatusDetail}" Grid.ColumnSpan="5" Grid.Row="3"/>
+        <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" Content="Created On" Grid.Row="4" FontWeight="Bold"/>
+        <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" Content="Modified On" Grid.Row="4" Grid.Column="1" FontWeight="Bold"/>
+        <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" Content="Last Synchronized" Grid.Row="4" Grid.Column="2" Grid.ColumnSpan="3" FontWeight="Bold"/>
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingLeftRight}" Text="{Binding CreatedOn}" Grid.Row="5"/>
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingLeftRight}" Text="{Binding ModifiedOn}" Grid.Row="5" Grid.Column="1"/>
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingLeftRight}" Text="{Binding LastSynchronizedOn}" Grid.ColumnSpan="3" Grid.Row="5" Grid.Column="2"/>
+        <Button Grid.Column="7" Grid.Row="9" Style="{DynamicResource SyncDisabledButton}" ToolTip="Synchronization disabled - no remote connection configured." Margin="{DynamicResource DefaultSpacingRight}"/>
     </Grid>
 </Page>

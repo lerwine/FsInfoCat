@@ -6,8 +6,51 @@
       xmlns:local="clr-namespace:FsInfoCat.Desktop.LocalData.AudioPropertySets"
       mc:Ignorable="d" d:DataContext="{x:Type local:EditViewModel}"
       d:DesignHeight="768" d:DesignWidth="1024">
-
     <Grid>
-
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <Label VerticalAlignment="Bottom" Content="Stream Name" Padding="{DynamicResource DefaultSpacingTopLeftRight}" FontWeight="Bold"/>
+        <Label VerticalAlignment="Bottom" Content="Stream Number" Padding="{DynamicResource DefaultSpacingTopLeftRight}" Grid.Column="1" FontWeight="Bold"/>
+        <Label VerticalAlignment="Bottom" Content="Total File Count" Grid.Column="2" Padding="{DynamicResource DefaultSpacingTopLeft}" FontWeight="Bold"/>
+        <Button Style="{DynamicResource EditButton}" Grid.Column="3" Margin="{DynamicResource DefaultSpacingTopLeft}" ToolTip="Edit the current Audio Property Set."/>
+        <Button Style="{DynamicResource DeleteButton}" Grid.Column="4" Margin="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="Delete the Audio Property Set."/>
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding StreamName}" Grid.Row="1" Margin="{DynamicResource DefaultSpacingLeftRight}"/>
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding StreamNumber}" Grid.Column="1" Grid.Row="1" Margin="{DynamicResource DefaultSpacingLeftRight}"/>
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding TotalFileCount}" Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2" Margin="{DynamicResource DefaultSpacingLeftRight}"/>
+        <Button Style="{DynamicResource OpenListingButton}" Grid.Column="4" Margin="{DynamicResource DefaultSpacingRight}" ToolTip="Show Files" Grid.Row="1"/>
+        <Label VerticalAlignment="Bottom" Content="Format" Grid.Row="2" Padding="{DynamicResource DefaultSpacingTopLeftRight}" FontWeight="Bold"/>
+        <Label VerticalAlignment="Bottom" Content="Compression" Grid.Column="1" Grid.Row="2" Padding="{DynamicResource DefaultSpacingTopLeftRight}" FontWeight="Bold"/>
+        <Label VerticalAlignment="Bottom" Content="Encoding Bitrate" Grid.Column="2" Grid.ColumnSpan="3" Grid.Row="2" Padding="{DynamicResource DefaultSpacingTopLeftRight}" FontWeight="Bold"/>
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding Format}" Grid.Row="3" Margin="{DynamicResource DefaultSpacingLeftRight}"/>
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding Compression}" Grid.Row="3" Grid.Column="1" Margin="{DynamicResource DefaultSpacingLeftRight}"/>
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding EncodingBitrate}" Grid.Row="3" Grid.Column="2" Grid.ColumnSpan="3" Margin="{DynamicResource DefaultSpacingLeftRight}"/>
+        <Label VerticalAlignment="Bottom" Content="Sample Rate" Grid.Row="4" Padding="{DynamicResource DefaultSpacingTopLeftRight}" FontWeight="Bold"/>
+        <Label VerticalAlignment="Bottom" Content="Sample Size" Grid.Column="1" Grid.Row="4" Padding="{DynamicResource DefaultSpacingTopLeftRight}" FontWeight="Bold"/>
+        <Label VerticalAlignment="Bottom" Content="Is Variable Bitrate" Grid.Column="2" Grid.ColumnSpan="3" Grid.Row="4" Padding="{DynamicResource DefaultSpacingTopLeftRight}" FontWeight="Bold"/>
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding SampleRate}" Grid.Row="5" Margin="{DynamicResource DefaultSpacingLeftRight}"/>
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding SampleSize}" Grid.Row="5" Grid.Column="1" Margin="{DynamicResource DefaultSpacingLeftRight}"/>
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding IsVariableBitrate}" Grid.Row="5" Grid.Column="2" Grid.ColumnSpan="3" Margin="{DynamicResource DefaultSpacingLeftRight}"/>
+        <Label VerticalAlignment="Bottom" Content="Created On" Grid.Row="6" Padding="{DynamicResource DefaultSpacingTopLeftRight}" FontWeight="Bold"/>
+        <Label VerticalAlignment="Bottom" Content="Modified On" Grid.Column="1" Grid.Row="6" Padding="{DynamicResource DefaultSpacingTopLeftRight}" FontWeight="Bold"/>
+        <Label VerticalAlignment="Bottom" Content="Last Synchronized" Grid.Column="2" Grid.ColumnSpan="3" Grid.Row="6" Padding="{DynamicResource DefaultSpacingTopLeftRight}" FontWeight="Bold"/>
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding CreatedOn}" Grid.Row="7" Margin="{DynamicResource DefaultSpacingLeftRight}"/>
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding ModifiedOn}" Grid.Row="7" Grid.Column="1" Margin="{DynamicResource DefaultSpacingLeftRight}"/>
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding LastSynchronizedOn}" Grid.Row="7" Grid.Column="2" Grid.ColumnSpan="2" Margin="{DynamicResource DefaultSpacingLeftRight}"/>
+        <Button Grid.Column="4" Grid.Row="7" Style="{DynamicResource SyncDisabledButton}" ToolTip="Synchronization disabled - no remote connection configured." Margin="{DynamicResource DefaultSpacingRight}"/>
     </Grid>
 </Page>

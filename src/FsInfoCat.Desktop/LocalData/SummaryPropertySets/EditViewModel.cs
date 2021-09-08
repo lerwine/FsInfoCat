@@ -57,9 +57,25 @@ namespace FsInfoCat.Desktop.LocalData.SummaryPropertySets
         private void OnLastSynchronizedOnPropertyChanged(DateTime? oldValue, DateTime? newValue) { }
 
         #endregion
+        #region IsNew Property Members
 
-        public EditViewModel([DisallowNull] SummaryPropertySet entity) : base(entity)
+        private static readonly DependencyPropertyKey IsNewPropertyKey = DependencyPropertyBuilder<EditViewModel, bool>
+            .Register(nameof(IsNew))
+            .DefaultValue(false)
+            .AsReadOnly();
+
+        /// <summary>
+        /// Identifies the <see cref="IsNew"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty IsNewProperty = IsNewPropertyKey.DependencyProperty;
+
+        public bool IsNew { get => (bool)GetValue(IsNewProperty); private set => SetValue(IsNewPropertyKey, value); }
+
+        #endregion
+
+        public EditViewModel([DisallowNull] SummaryPropertySet entity, bool isNew) : base(entity)
         {
+            IsNew = isNew;
             UpstreamId = entity.UpstreamId;
             LastSynchronizedOn = entity.LastSynchronizedOn;
         }

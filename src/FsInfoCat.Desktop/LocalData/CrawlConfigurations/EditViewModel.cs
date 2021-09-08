@@ -17,6 +17,36 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
 {
     public class EditViewModel : CrawlConfigurationDetailsViewModel<CrawlConfiguration, SubdirectoryListItemWithAncestorNames, SubdirectoryListItemViewModel, CrawlJobLogListItem, CrawlJobListItemViewModel>
     {
+        #region UpstreamId Property Members
+
+        private static readonly DependencyPropertyKey UpstreamIdPropertyKey = DependencyPropertyBuilder<EditViewModel, Guid?>
+            .Register(nameof(UpstreamId))
+            .DefaultValue(null)
+            .AsReadOnly();
+
+        /// <summary>
+        /// Identifies the <see cref="UpstreamId"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty UpstreamIdProperty = UpstreamIdPropertyKey.DependencyProperty;
+
+        public Guid? UpstreamId { get => (Guid?)GetValue(UpstreamIdProperty); private set => SetValue(UpstreamIdPropertyKey, value); }
+
+        #endregion
+        #region LastSynchronizedOn Property Members
+
+        private static readonly DependencyPropertyKey LastSynchronizedOnPropertyKey = DependencyPropertyBuilder<EditViewModel, DateTime?>
+            .Register(nameof(LastSynchronizedOn))
+            .DefaultValue(null)
+            .AsReadOnly();
+
+        /// <summary>
+        /// Identifies the <see cref="LastSynchronizedOn"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty LastSynchronizedOnProperty = LastSynchronizedOnPropertyKey.DependencyProperty;
+
+        public DateTime? LastSynchronizedOn { get => (DateTime?)GetValue(LastSynchronizedOnProperty); private set => SetValue(LastSynchronizedOnPropertyKey, value); }
+
+        #endregion
         #region BrowseNewRootFolder Command Property Members
 
         private static readonly DependencyPropertyKey BrowseNewRootFolderPropertyKey = DependencyProperty.RegisterReadOnly(nameof(BrowseNewRootFolder),
@@ -34,10 +64,28 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
         public Commands.RelayCommand BrowseNewRootFolder => (Commands.RelayCommand)GetValue(BrowseNewRootFolderProperty);
 
         #endregion
+        #region IsNew Property Members
 
-        public EditViewModel([DisallowNull] CrawlConfiguration entity, [AllowNull] SubdirectoryListItemViewModel root) : base(entity, root)
+        private static readonly DependencyPropertyKey IsNewPropertyKey = DependencyPropertyBuilder<EditViewModel, bool>
+            .Register(nameof(IsNew))
+            .DefaultValue(false)
+            .AsReadOnly();
+
+        /// <summary>
+        /// Identifies the <see cref="IsNew"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty IsNewProperty = IsNewPropertyKey.DependencyProperty;
+
+        public bool IsNew { get => (bool)GetValue(IsNewProperty); private set => SetValue(IsNewPropertyKey, value); }
+
+        #endregion
+
+        public EditViewModel([DisallowNull] CrawlConfiguration entity, [AllowNull] SubdirectoryListItemViewModel root, bool isNew) : base(entity, root)
         {
             SetValue(BrowseNewRootFolderPropertyKey, new Commands.RelayCommand(OnBrowseNewRootFolder));
+            IsNew = isNew;
+            UpstreamId = entity.UpstreamId;
+            LastSynchronizedOn = entity.LastSynchronizedOn;
         }
 
         private void OnBrowseNewRootFolder(object parameter)
