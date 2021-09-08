@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Logging;
 using System;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -501,6 +502,17 @@ namespace FsInfoCat.Desktop.ViewModel
             SetValue(ViewVideoPropertySetsPropertyKey, new Commands.RelayCommand(OnViewVideoPropertySets));
         }
 
+        private bool CanNavigateFrom()
+        {
+            if (NavigatedContent is  INavigatingFromNotifiable notifiable)
+            {
+                CancelEventArgs args = new(false);
+                notifiable.OnNavigatingFrom(args);
+                return !args.Cancel;
+            }
+            return true;
+        }
+
         private void OnClose(object sender, ExecutedRoutedEventArgs e)
         {
             _logger.LogInformation("{EventName} event raise: sender = {Sender}; EventArgs= {EventArgs}", nameof(OnClose), sender, e);
@@ -557,7 +569,7 @@ namespace FsInfoCat.Desktop.ViewModel
 
         public bool GoBack() => Dispatcher.CheckInvoke(() =>
         {
-            if (P_TryGetNavigationService(out NavigationService navigationService) && navigationService.CanGoBack)
+            if (P_TryGetNavigationService(out NavigationService navigationService) && CanNavigateFrom() && navigationService.CanGoBack)
             {
                 _logger.LogInformation("Navigating back");
                 navigationService.GoBack();
@@ -568,7 +580,7 @@ namespace FsInfoCat.Desktop.ViewModel
 
         public bool GoForward() => Dispatcher.CheckInvoke(() =>
         {
-            if (P_TryGetNavigationService(out NavigationService navigationService) && navigationService.CanGoForward)
+            if (P_TryGetNavigationService(out NavigationService navigationService) && CanNavigateFrom() && navigationService.CanGoForward)
             {
                 _logger.LogInformation("Navigating forward");
                 navigationService.GoForward();
@@ -582,33 +594,33 @@ namespace FsInfoCat.Desktop.ViewModel
             _logger.LogInformation("Navigating to URI {source} (navigationState: {navigationState}, sandboxExternalContent: {sandboxExternalContent})",
                 source, navigationState, sandboxExternalContent);
             return Dispatcher.CheckInvoke(() =>
-                P_TryGetNavigationService(out NavigationService navigationService) && navigationService.Navigate(source, navigationState, sandboxExternalContent));
+                P_TryGetNavigationService(out NavigationService navigationService) && CanNavigateFrom() && navigationService.Navigate(source, navigationState, sandboxExternalContent));
         }
 
         public bool Navigate(Uri source, object navigationState)
         {
             _logger.LogInformation("Navigating to URI {source} (navigationState: {navigationState})", source, navigationState);
             return Dispatcher.CheckInvoke(() =>
-                P_TryGetNavigationService(out NavigationService navigationService) && navigationService.Navigate(source, navigationState));
+                P_TryGetNavigationService(out NavigationService navigationService) && CanNavigateFrom() && navigationService.Navigate(source, navigationState));
         }
 
         public bool Navigate(Uri source)
         {
             _logger.LogInformation("Navigating to URI {source}", source);
-            return Dispatcher.CheckInvoke(() => P_TryGetNavigationService(out NavigationService navigationService) && navigationService.Navigate(source));
+            return Dispatcher.CheckInvoke(() => P_TryGetNavigationService(out NavigationService navigationService) && CanNavigateFrom() && navigationService.Navigate(source));
         }
 
         public bool Navigate(object root, object navigationState)
         {
             _logger.LogInformation("Navigating to Content {root} (navigationState: {navigationState})", root, navigationState);
             return Dispatcher.CheckInvoke(() =>
-                P_TryGetNavigationService(out NavigationService navigationService) && navigationService.Navigate(root, navigationState));
+                P_TryGetNavigationService(out NavigationService navigationService) && CanNavigateFrom() && navigationService.Navigate(root, navigationState));
         }
 
         public bool Navigate(object root)
         {
             _logger.LogInformation("Navigating to Content {root}", root);
-            return Dispatcher.CheckInvoke(() => P_TryGetNavigationService(out NavigationService navigationService) && navigationService.Navigate(root));
+            return Dispatcher.CheckInvoke(() => P_TryGetNavigationService(out NavigationService navigationService) && CanNavigateFrom() && navigationService.Navigate(root));
         }
 
         public void Refresh()
