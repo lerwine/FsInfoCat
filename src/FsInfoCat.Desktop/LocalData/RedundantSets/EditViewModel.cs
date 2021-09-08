@@ -15,7 +15,7 @@ using System.Windows.Threading;
 
 namespace FsInfoCat.Desktop.LocalData.RedundantSets
 {
-    public class EditViewModel : DependencyObject
+    public class EditViewModel : RedundantSetRowViewModel<RedundantSet>
     {
         #region UpstreamId Property Members
 
@@ -62,6 +62,10 @@ namespace FsInfoCat.Desktop.LocalData.RedundantSets
         public bool IsNew { get => (bool)GetValue(IsNewProperty); private set => SetValue(IsNewPropertyKey, value); }
 
         #endregion
-        // TODO: Implement EditViewModel
+
+        public EditViewModel(RedundantSet entity) : base(entity)
+        {
+            // TODO: Implement EditViewModel
+        }
     }
 }

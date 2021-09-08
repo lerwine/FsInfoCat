@@ -15,7 +15,7 @@ using System.Windows.Threading;
 
 namespace FsInfoCat.Desktop.LocalData.Volumes
 {
-    public class EditViewModel : DependencyObject
+    public class EditViewModel : VolumeRowViewModel<Volume>
     {
         #region UpstreamId Property Members
 
@@ -63,5 +63,9 @@ namespace FsInfoCat.Desktop.LocalData.Volumes
 
         #endregion
 
+        public EditViewModel(Volume entity) : base(entity)
+        {
+
+        }
     }
 }

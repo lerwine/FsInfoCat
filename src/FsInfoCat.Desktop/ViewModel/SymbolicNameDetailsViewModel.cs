@@ -31,9 +31,8 @@ namespace FsInfoCat.Desktop.ViewModel
 
         #endregion
 
-        public SymbolicNameDetailsViewModel([DisallowNull] TEntity entity, TFileSystemModel fileSystem) : base(entity)
+        public SymbolicNameDetailsViewModel([DisallowNull] TEntity entity) : base(entity)
         {
-            FileSystem = fileSystem;
         }
     }
 }

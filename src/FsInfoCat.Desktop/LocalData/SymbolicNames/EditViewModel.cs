@@ -63,7 +63,7 @@ namespace FsInfoCat.Desktop.LocalData.SymbolicNames
 
         #endregion
 
-        public EditViewModel(SymbolicName entity, FileSystemItemViewModel fileSystem, bool isNew) : base(entity, fileSystem)
+        public EditViewModel(SymbolicName entity, bool isNew) : base(entity)
         {
             IsNew = isNew;
             UpstreamId = entity.UpstreamId;

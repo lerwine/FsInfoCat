@@ -63,7 +63,7 @@ namespace FsInfoCat.Desktop.LocalData.CrawlLogs
 
         #endregion
 
-        public EditViewModel(CrawlJobLog entity, CrawlConfigurations.ListItemViewModel configuration) : base(entity, configuration)
+        public EditViewModel(CrawlJobLog entity) : base(entity)
         {
             // TODO: Implement EditViewModel
         }

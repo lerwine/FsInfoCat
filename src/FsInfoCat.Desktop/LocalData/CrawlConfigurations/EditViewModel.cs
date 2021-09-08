@@ -80,7 +80,7 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
 
         #endregion
 
-        public EditViewModel([DisallowNull] CrawlConfiguration entity, [AllowNull] SubdirectoryListItemViewModel root, bool isNew) : base(entity, root)
+        public EditViewModel([DisallowNull] CrawlConfiguration entity, bool isNew) : base(entity)
         {
             SetValue(BrowseNewRootFolderPropertyKey, new Commands.RelayCommand(OnBrowseNewRootFolder));
             IsNew = isNew;

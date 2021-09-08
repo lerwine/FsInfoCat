@@ -85,12 +85,11 @@ namespace FsInfoCat.Desktop.ViewModel
 
         #endregion
 
-        public CrawlConfigurationDetailsViewModel([DisallowNull] TEntity entity, [AllowNull] TSubdirectoryItem root) : base(entity)
+        public CrawlConfigurationDetailsViewModel([DisallowNull] TEntity entity) : base(entity)
         {
             SetValue(AddNewCrawlJobLogPropertyKey, new Commands.RelayCommand(OnAddNewCrawlJobLogCommand));
             SetValue(RefreshCrawlJobLogsPropertyKey, new Commands.RelayCommand(OnRefreshCrawlJobLogsCommand));
             SetValue(LogsPropertyKey, new ReadOnlyObservableCollection<TCrawlJobLogItem>(_backingLogs));
-            Root = root;
         }
 
         protected abstract void OnRefreshCrawlJobLogsCommand(object parameter);

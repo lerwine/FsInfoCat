@@ -8,7 +8,7 @@ namespace FsInfoCat.Desktop.ViewModel
         where TCrawlConfigEntity : DbEntity, ICrawlConfigurationListItem
         where TCrawlConfigViewModel : CrawlConfigListItemViewModel<TCrawlConfigEntity>
     {
-        public CrawlJobLogEditViewModel([DisallowNull] TEntity entity, TCrawlConfigViewModel crawlConfiguration) : base(entity)
+        public CrawlJobLogEditViewModel([DisallowNull] TEntity entity) : base(entity)
         {
             // TODO: Implement CrawlJobLogEditViewModel
         }
