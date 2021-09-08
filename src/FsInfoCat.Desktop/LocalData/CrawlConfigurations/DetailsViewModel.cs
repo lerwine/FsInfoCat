@@ -1,4 +1,4 @@
-﻿using FsInfoCat.Desktop.ViewModel;
+using FsInfoCat.Desktop.ViewModel;
 using FsInfoCat.Local;
 using System;
 using System.Diagnostics.CodeAnalysis;
@@ -9,10 +9,8 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
 {
     public class DetailsViewModel : CrawlConfigurationDetailsViewModel<CrawlConfiguration, SubdirectoryListItemWithAncestorNames, SubdirectoryListItemViewModel, CrawlJobLogListItem, CrawlJobListItemViewModel>
     {
-        public DetailsViewModel([DisallowNull] CrawlConfiguration entity, [DisallowNull] SubdirectoryListItemViewModel root) : base(entity, root)
+        public DetailsViewModel([DisallowNull] CrawlConfiguration entity) : base(entity)
         {
-            if (root is null)
-                throw new ArgumentNullException(nameof(root));
         }
 
         protected override bool ConfirmCrawlJobLogDelete([DisallowNull] CrawlJobListItemViewModel item, object parameter)
