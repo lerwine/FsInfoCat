@@ -8,114 +8,155 @@ namespace FsInfoCat.Desktop.LocalData.PersonalTagDefinitions
 {
     public class ListItemViewModel : TagDefinitionListItemViewModel<PersonalTagDefinitionListItem>, ILocalCrudEntityRowViewModel<PersonalTagDefinitionListItem>
     {
-        #region ShowTaggedVolumesButtonClick Property Members
+        #region SynchronizeNow Command Property Members
 
         /// <summary>
-        /// Occurs when the <see cref="ShowTaggedVolumesButtonClick">ShowTaggedVolumesButtonClick Command</see> is invoked.
+        /// Occurs when the <see cref="SynchronizeNow"/> is invoked.
         /// </summary>
-        public event EventHandler<Commands.CommandEventArgs> ShowTaggedVolumesButtonClicked;
+        public event EventHandler<Commands.CommandEventArgs> SynchronizeNowCommand;
 
-        private static readonly DependencyPropertyKey ShowTaggedVolumesButtonClickPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ShowTaggedVolumesButtonClick),
-            typeof(Commands.RelayCommand), typeof(ListItemViewModel), new PropertyMetadata(null));
+        private static readonly DependencyPropertyKey SynchronizeNowPropertyKey = DependencyPropertyBuilder<ListItemViewModel, Commands.RelayCommand>
+            .Register(nameof(SynchronizeNow))
+            .AsReadOnly();
 
         /// <summary>
-        /// Identifies the <see cref="ShowTaggedVolumesButtonClick"/> dependency property.
+        /// Identifies the <see cref="SynchronizeNow"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty ShowTaggedVolumesButtonClickProperty = ShowTaggedVolumesButtonClickPropertyKey.DependencyProperty;
+        public static readonly DependencyProperty SynchronizeNowProperty = SynchronizeNowPropertyKey.DependencyProperty;
 
-        public Commands.RelayCommand ShowTaggedVolumesButtonClick => (Commands.RelayCommand)GetValue(ShowTaggedVolumesButtonClickProperty);
+        public Commands.RelayCommand SynchronizeNow => (Commands.RelayCommand)GetValue(SynchronizeNowProperty);
 
         /// <summary>
-        /// Called when the ShowTaggedVolumesButtonClick event is raised by <see cref="ShowTaggedVolumesButtonClick" />.
+        /// Called when the SynchronizeNow event is raised by <see cref="SynchronizeNow" />.
         /// </summary>
-        /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="ShowTaggedVolumesButtonClick" />.</param>
-        private void RaiseShowTaggedVolumesButtonClicked(object parameter)
+        /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="SynchronizeNow" />.</param>
+        protected void RaiseSynchronizeNowCommand(object parameter) => SynchronizeNowCommand?.Invoke(this, new(parameter));
+        // {
+        //   try { OnSynchronizeNowCommand(parameter); }
+        //   finally { SynchronizeNowCommand?.Invoke(this, new(parameter)); }
+        // }
+
+        /// <summary>
+        /// Called when the <see cref="SynchronizeNow">SynchronizeNow Command</see> is invoked.
+        /// </summary>
+        /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="SynchronizeNow" />.</param>
+        protected virtual void OnSynchronizeNowCommand(object parameter)
         {
-            try { OnShowTaggedVolumesButtonClicked(parameter); }
-            finally { ShowTaggedVolumesButtonClicked?.Invoke(this, new(parameter)); }
-        }
-
-        /// <summary>
-        /// Called when the <see cref="ShowTaggedVolumesButtonClick">ShowTaggedVolumesButtonClick Command</see> is invoked.
-        /// </summary>
-        /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="ShowTaggedVolumesButtonClick" />.</param>
-        protected virtual void OnShowTaggedVolumesButtonClicked(object parameter)
-        {
-            // TODO: Implement OnShowTaggedVolumesButtonClicked Logic
-        }
-
-        #endregion
-        #region ShowTaggedFoldersButtonClick Property Members
-
-        /// <summary>
-        /// Occurs when the <see cref="ShowTaggedFoldersButtonClick">ShowTaggedFoldersButtonClick Command</see> is invoked.
-        /// </summary>
-        public event EventHandler<Commands.CommandEventArgs> ShowTaggedFoldersButtonClicked;
-
-        private static readonly DependencyPropertyKey ShowTaggedFoldersButtonClickPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ShowTaggedFoldersButtonClick),
-            typeof(Commands.RelayCommand), typeof(ListItemViewModel), new PropertyMetadata(null));
-
-        /// <summary>
-        /// Identifies the <see cref="ShowTaggedFoldersButtonClick"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty ShowTaggedFoldersButtonClickProperty = ShowTaggedFoldersButtonClickPropertyKey.DependencyProperty;
-
-        public Commands.RelayCommand ShowTaggedFoldersButtonClick => (Commands.RelayCommand)GetValue(ShowTaggedFoldersButtonClickProperty);
-
-        /// <summary>
-        /// Called when the ShowTaggedFoldersButtonClick event is raised by <see cref="ShowTaggedFoldersButtonClick" />.
-        /// </summary>
-        /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="ShowTaggedFoldersButtonClick" />.</param>
-        private void RaiseShowTaggedFoldersButtonClicked(object parameter)
-        {
-            try { OnShowTaggedFoldersButtonClicked(parameter); }
-            finally { ShowTaggedFoldersButtonClicked?.Invoke(this, new(parameter)); }
-        }
-
-        /// <summary>
-        /// Called when the <see cref="ShowTaggedFoldersButtonClick">ShowTaggedFoldersButtonClick Command</see> is invoked.
-        /// </summary>
-        /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="ShowTaggedFoldersButtonClick" />.</param>
-        protected virtual void OnShowTaggedFoldersButtonClicked(object parameter)
-        {
-            // TODO: Implement OnShowTaggedFoldersButtonClicked Logic
+            // TODO: Implement OnSynchronizeNowCommand Logic
         }
 
         #endregion
-        #region ShowTaggedFilesButtonClick Property Members
+        #region ShowTaggedVolumes Command Property Members
 
         /// <summary>
-        /// Occurs when the <see cref="ShowTaggedFilesButtonClick">ShowTaggedFilesButtonClick Command</see> is invoked.
+        /// Occurs when the <see cref="ShowTaggedVolumes"/> is invoked.
         /// </summary>
-        public event EventHandler<Commands.CommandEventArgs> ShowTaggedFilesButtonClicked;
+        public event EventHandler<Commands.CommandEventArgs> ShowTaggedVolumesCommand;
 
-        private static readonly DependencyPropertyKey ShowTaggedFilesButtonClickPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ShowTaggedFilesButtonClick),
-            typeof(Commands.RelayCommand), typeof(ListItemViewModel), new PropertyMetadata(null));
+        private static readonly DependencyPropertyKey ShowTaggedVolumesPropertyKey = DependencyPropertyBuilder<ListItemViewModel, Commands.RelayCommand>
+            .Register(nameof(ShowTaggedVolumes))
+            .AsReadOnly();
 
         /// <summary>
-        /// Identifies the <see cref="ShowTaggedFilesButtonClick"/> dependency property.
+        /// Identifies the <see cref="ShowTaggedVolumes"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty ShowTaggedFilesButtonClickProperty = ShowTaggedFilesButtonClickPropertyKey.DependencyProperty;
+        public static readonly DependencyProperty ShowTaggedVolumesProperty = ShowTaggedVolumesPropertyKey.DependencyProperty;
 
-        public Commands.RelayCommand ShowTaggedFilesButtonClick => (Commands.RelayCommand)GetValue(ShowTaggedFilesButtonClickProperty);
+        public Commands.RelayCommand ShowTaggedVolumes => (Commands.RelayCommand)GetValue(ShowTaggedVolumesProperty);
 
         /// <summary>
-        /// Called when the ShowTaggedFilesButtonClick event is raised by <see cref="ShowTaggedFilesButtonClick" />.
+        /// Called when the ShowTaggedVolumes event is raised by <see cref="ShowTaggedVolumes" />.
         /// </summary>
-        /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="ShowTaggedFilesButtonClick" />.</param>
-        private void RaiseShowTaggedFilesButtonClicked(object parameter)
+        /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="ShowTaggedVolumes" />.</param>
+        protected void RaiseShowTaggedVolumesCommand(object parameter) => ShowTaggedVolumesCommand?.Invoke(this, new(parameter));
+        // {
+        //   try { OnShowTaggedVolumesCommand(parameter); }
+        //   finally { ShowTaggedVolumesCommand?.Invoke(this, new(parameter)); }
+        // }
+
+        /// <summary>
+        /// Called when the <see cref="ShowTaggedVolumes">ShowTaggedVolumes Command</see> is invoked.
+        /// </summary>
+        /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="ShowTaggedVolumes" />.</param>
+        protected virtual void OnShowTaggedVolumesCommand(object parameter)
         {
-            try { OnShowTaggedFilesButtonClicked(parameter); }
-            finally { ShowTaggedFilesButtonClicked?.Invoke(this, new(parameter)); }
+            // TODO: Implement OnShowTaggedVolumesCommand Logic
         }
 
+        #endregion
+        #region ShowTaggedSubdirectories Command Property Members
+
         /// <summary>
-        /// Called when the <see cref="ShowTaggedFilesButtonClick">ShowTaggedFilesButtonClick Command</see> is invoked.
+        /// Occurs when the <see cref="ShowTaggedSubdirectories"/> is invoked.
         /// </summary>
-        /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="ShowTaggedFilesButtonClick" />.</param>
-        protected virtual void OnShowTaggedFilesButtonClicked(object parameter)
+        public event EventHandler<Commands.CommandEventArgs> ShowTaggedSubdirectoriesCommand;
+
+        private static readonly DependencyPropertyKey ShowTaggedSubdirectoriesPropertyKey = DependencyPropertyBuilder<ListItemViewModel, Commands.RelayCommand>
+            .Register(nameof(ShowTaggedSubdirectories))
+            .AsReadOnly();
+
+        /// <summary>
+        /// Identifies the <see cref="ShowTaggedSubdirectories"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ShowTaggedSubdirectoriesProperty = ShowTaggedSubdirectoriesPropertyKey.DependencyProperty;
+
+        public Commands.RelayCommand ShowTaggedSubdirectories => (Commands.RelayCommand)GetValue(ShowTaggedSubdirectoriesProperty);
+
+        /// <summary>
+        /// Called when the ShowTaggedSubdirectories event is raised by <see cref="ShowTaggedSubdirectories" />.
+        /// </summary>
+        /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="ShowTaggedSubdirectories" />.</param>
+        protected void RaiseShowTaggedSubdirectoriesCommand(object parameter) => ShowTaggedSubdirectoriesCommand?.Invoke(this, new(parameter));
+        // {
+        //   try { OnShowTaggedSubdirectoriesCommand(parameter); }
+        //   finally { ShowTaggedSubdirectoriesCommand?.Invoke(this, new(parameter)); }
+        // }
+
+        /// <summary>
+        /// Called when the <see cref="ShowTaggedSubdirectories">ShowTaggedSubdirectories Command</see> is invoked.
+        /// </summary>
+        /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="ShowTaggedSubdirectories" />.</param>
+        protected virtual void OnShowTaggedSubdirectoriesCommand(object parameter)
         {
-            // TODO: Implement OnShowTaggedFilesButtonClicked Logic
+            // TODO: Implement OnShowTaggedSubdirectoriesCommand Logic
+        }
+
+        #endregion
+        #region ShowTaggedFiles Command Property Members
+
+        /// <summary>
+        /// Occurs when the <see cref="ShowTaggedFiles"/> is invoked.
+        /// </summary>
+        public event EventHandler<Commands.CommandEventArgs> ShowTaggedFilesCommand;
+
+        private static readonly DependencyPropertyKey ShowTaggedFilesPropertyKey = DependencyPropertyBuilder<ListItemViewModel, Commands.RelayCommand>
+            .Register(nameof(ShowTaggedFiles))
+            .AsReadOnly();
+
+        /// <summary>
+        /// Identifies the <see cref="ShowTaggedFiles"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ShowTaggedFilesProperty = ShowTaggedFilesPropertyKey.DependencyProperty;
+
+        public Commands.RelayCommand ShowTaggedFiles => (Commands.RelayCommand)GetValue(ShowTaggedFilesProperty);
+
+        /// <summary>
+        /// Called when the ShowTaggedFiles event is raised by <see cref="ShowTaggedFiles" />.
+        /// </summary>
+        /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="ShowTaggedFiles" />.</param>
+        protected void RaiseShowTaggedFilesCommand(object parameter) => ShowTaggedFilesCommand?.Invoke(this, new(parameter));
+        // {
+        //   try { OnShowTaggedFilesCommand(parameter); }
+        //   finally { ShowTaggedFilesCommand?.Invoke(this, new(parameter)); }
+        // }
+
+        /// <summary>
+        /// Called when the <see cref="ShowTaggedFiles">ShowTaggedFiles Command</see> is invoked.
+        /// </summary>
+        /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="ShowTaggedFiles" />.</param>
+        protected virtual void OnShowTaggedFilesCommand(object parameter)
+        {
+            // TODO: Implement OnShowTaggedFilesCommand Logic
         }
 
         #endregion
@@ -167,9 +208,10 @@ namespace FsInfoCat.Desktop.LocalData.PersonalTagDefinitions
 
         public ListItemViewModel([DisallowNull] PersonalTagDefinitionListItem entity) : base(entity)
         {
-            SetValue(ShowTaggedVolumesButtonClickPropertyKey, new Commands.RelayCommand(RaiseShowTaggedVolumesButtonClicked));
-            SetValue(ShowTaggedFoldersButtonClickPropertyKey, new Commands.RelayCommand(RaiseShowTaggedFoldersButtonClicked));
-            SetValue(ShowTaggedFilesButtonClickPropertyKey, new Commands.RelayCommand(RaiseShowTaggedFilesButtonClicked));
+            SetValue(SynchronizeNowPropertyKey, new Commands.RelayCommand(RaiseSynchronizeNowCommand));
+            SetValue(ShowTaggedVolumesPropertyKey, new Commands.RelayCommand(RaiseShowTaggedVolumesCommand));
+            SetValue(ShowTaggedSubdirectoriesPropertyKey, new Commands.RelayCommand(RaiseShowTaggedSubdirectoriesCommand));
+            SetValue(ShowTaggedFilesPropertyKey, new Commands.RelayCommand(RaiseShowTaggedFilesCommand));
             UpstreamId = entity.UpstreamId;
             LastSynchronizedOn = entity.LastSynchronizedOn;
         }

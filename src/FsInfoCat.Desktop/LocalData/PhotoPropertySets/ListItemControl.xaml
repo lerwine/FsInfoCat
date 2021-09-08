@@ -47,7 +47,7 @@
         <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" Content="EXIF Version" Grid.Row="4" Grid.Column="3" FontWeight="Bold"/>
         <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" Content="Orientation" Grid.Row="4" Grid.Column="4" Grid.ColumnSpan="3" FontWeight="Bold"/>
         <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding TotalFileCount}" Grid.Row="5"/>
-        <Button Style="{DynamicResource OpenListingButton}" Grid.Column="1" Margin="{DynamicResource DefaultSpacingRight}" ToolTip="Show Files" Grid.Row="5" />
+        <Button Style="{DynamicResource OpenListingButton}" Grid.Column="1" Margin="{DynamicResource DefaultSpacingRight}" ToolTip="Show Files" Grid.Row="5" Command="{Binding ShowFileListing, Mode=OneWay}"/>
         <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding DateTaken}" Grid.Row="5" Grid.Column="2"/>
         <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding EXIFVersion}" Grid.Row="5" Grid.Column="3"/>
         <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding Orientation}" Grid.Row="5" Grid.Column="4" Grid.ColumnSpan="3" Visibility="{Binding OrientationText, Converter={StaticResource VisibileIfEmptyConverter}}"/>
@@ -62,6 +62,6 @@
         <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding CreatedOn}" Grid.Row="9" Grid.ColumnSpan="2"/>
         <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding ModifiedOn}" Grid.Row="9" Grid.Column="2"/>
         <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding LastSynchronizedOn}" Grid.Row="9" Grid.Column="3" Grid.ColumnSpan="4"/>
-        <Button Grid.Column="6" Grid.Row="9" Style="{DynamicResource SyncButton}" ToolTip="Synchronize Now" Margin="{DynamicResource DefaultSpacingRight}"/>
+        <Button Grid.Column="6" Grid.Row="9" Style="{DynamicResource SyncDisabledButton}" ToolTip="Synchronization disabled - no remote connection configured." Margin="{DynamicResource DefaultSpacingRight}" Command="{Binding SynchronizeNow, Mode=OneWay}"/>
     </Grid>
 </UserControl>

@@ -64,10 +64,10 @@
         <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" Content="Modified On" Grid.Row="8" Grid.Column="3" FontWeight="Bold"/>
         <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" Content="Last Synchronized" Grid.Row="8" Grid.ColumnSpan="3" Grid.Column="4" FontWeight="Bold"/>
         <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingLeftRight}" Text="{Binding TotalFileCount}" Grid.Row="9"/>
-        <Button Style="{DynamicResource OpenListingButton}" Grid.Column="1" Margin="{DynamicResource DefaultSpacingRight}" ToolTip="Show Files" Grid.Row="9" />
+        <Button Style="{DynamicResource OpenListingButton}" Grid.Column="1" Margin="{DynamicResource DefaultSpacingRight}" ToolTip="Show Files" Grid.Row="9" Command="{Binding ShowFileListing, Mode=OneWay}"/>
         <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingLeftRight}" Text="{Binding CreatedOn}" Grid.Row="9" Grid.Column="2"/>
         <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingLeftRight}" Text="{Binding ModifiedOn}" Grid.Row="9" Grid.Column="3"/>
         <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingLeftRight}" Text="{Binding LastSynchronizedOn}" Grid.Row="9" Grid.ColumnSpan="2" Grid.Column="4"/>
-        <Button Grid.Column="7" Grid.Row="9" Style="{DynamicResource SyncButton}" ToolTip="Synchronize Now" Margin="{DynamicResource DefaultSpacingRight}"/>
+        <Button Grid.Column="7" Grid.Row="9" Style="{DynamicResource SyncDisabledButton}" ToolTip="Synchronization disabled - no remote connection configured." Margin="{DynamicResource DefaultSpacingRight}" Command="{Binding SynchronizeNow, Mode=OneWay}"/>
     </Grid>
 </UserControl>

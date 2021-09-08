@@ -31,11 +31,11 @@
         <TextBox Margin="{DynamicResource DefaultSpacingLeftRight}" Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding CreatedOn}" Grid.Row="3"/>
         <TextBox Margin="{DynamicResource DefaultSpacingLeftRight}" Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding ModifiedOn}" Grid.Row="3" Grid.Column="1"/>
         <TextBox Margin="{DynamicResource DefaultSpacingLeft}" Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding LastSynchronizedOn}" Grid.Row="3" Grid.Column="2" Grid.ColumnSpan="2"/>
-        <Button Style="{DynamicResource SyncButton}" Grid.Column="4" Margin="{DynamicResource DefaultSpacingRight}" ToolTip="Synchronize Now" Grid.Row="3" />
+        <Button Style="{DynamicResource SyncDisabledButton}" Grid.Column="4" Margin="{DynamicResource DefaultSpacingRight}" ToolTip="Synchronization disabled - no remote connection configured." Grid.Row="3" Command="{Binding SynchronizeNow, Mode=OneWay}"/>
         <WrapPanel Grid.Row="4" HorizontalAlignment="Right" Grid.ColumnSpan="5">
-            <Button Content="Show Tagged Volumes" Style="{DynamicResource DefaultButton}" Margin="{DynamicResource DefaultSpacingBottomLeftRight}"/>
-            <Button Content="Show Tagged Subdirectories" Margin="{DynamicResource DefaultSpacingBottomRight}"/>
-            <Button Content="Show Tagged Files" Margin="{DynamicResource DefaultSpacingBottomRight}"/>
+            <Button Content="Show Tagged Volumes" Style="{DynamicResource DefaultButton}" Margin="{DynamicResource DefaultSpacingBottomLeftRight}" Command="{Binding ShowTaggedVolumes, Mode=OneWay}"/>
+            <Button Content="Show Tagged Subdirectories" Margin="{DynamicResource DefaultSpacingBottomRight}" Command="{Binding ShowTaggedSubdirectories, Mode=OneWay}"/>
+            <Button Content="Show Tagged Files" Margin="{DynamicResource DefaultSpacingBottomRight}" Command="{Binding ShowTaggedFiles, Mode=OneWay}"/>
         </WrapPanel>
     </Grid>
 </UserControl>

@@ -13,151 +13,117 @@ namespace FsInfoCat.Desktop.LocalData.FileSystems
 {
     public class ListItemViewModel : FileSystemListItemViewModel<FileSystemListItem>, ILocalCrudEntityRowViewModel<FileSystemListItem>
     {
-        #region EditButtonClick Property Members
+        #region SynchronizeNow Command Property Members
 
         /// <summary>
-        /// Occurs when the <see cref="EditButtonClick">EditButtonClick Command</see> is invoked.
+        /// Occurs when the <see cref="SynchronizeNow"/> is invoked.
         /// </summary>
-        public event EventHandler<Commands.CommandEventArgs> EditButtonClicked;
+        public event EventHandler<Commands.CommandEventArgs> SynchronizeNowCommand;
 
-        private static readonly DependencyPropertyKey EditButtonClickPropertyKey = DependencyProperty.RegisterReadOnly(nameof(EditButtonClick),
-            typeof(Commands.RelayCommand), typeof(ListItemViewModel), new PropertyMetadata(null));
+        private static readonly DependencyPropertyKey SynchronizeNowPropertyKey = DependencyPropertyBuilder<ListItemViewModel, Commands.RelayCommand>
+            .Register(nameof(SynchronizeNow))
+            .AsReadOnly();
 
         /// <summary>
-        /// Identifies the <see cref="EditButtonClick"/> dependency property.
+        /// Identifies the <see cref="SynchronizeNow"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty EditButtonClickProperty = EditButtonClickPropertyKey.DependencyProperty;
+        public static readonly DependencyProperty SynchronizeNowProperty = SynchronizeNowPropertyKey.DependencyProperty;
 
-        public Commands.RelayCommand EditButtonClick => (Commands.RelayCommand)GetValue(EditButtonClickProperty);
+        public Commands.RelayCommand SynchronizeNow => (Commands.RelayCommand)GetValue(SynchronizeNowProperty);
 
         /// <summary>
-        /// Called when the EditButtonClick event is raised by <see cref="EditButtonClick" />.
+        /// Called when the SynchronizeNow event is raised by <see cref="SynchronizeNow" />.
         /// </summary>
-        /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="EditButtonClick" />.</param>
-        private void RaiseEditButtonClicked(object parameter)
+        /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="SynchronizeNow" />.</param>
+        protected void RaiseSynchronizeNowCommand(object parameter) => SynchronizeNowCommand?.Invoke(this, new(parameter));
+        // {
+        //   try { OnSynchronizeNowCommand(parameter); }
+        //   finally { SynchronizeNowCommand?.Invoke(this, new(parameter)); }
+        // }
+
+        /// <summary>
+        /// Called when the <see cref="SynchronizeNow">SynchronizeNow Command</see> is invoked.
+        /// </summary>
+        /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="SynchronizeNow" />.</param>
+        protected virtual void OnSynchronizeNowCommand(object parameter)
         {
-            try { OnEditButtonClicked(parameter); }
-            finally { EditButtonClicked?.Invoke(this, new(parameter)); }
-        }
-
-        /// <summary>
-        /// Called when the <see cref="EditButtonClick">EditButtonClick Command</see> is invoked.
-        /// </summary>
-        /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="EditButtonClick" />.</param>
-        protected virtual void OnEditButtonClicked(object parameter)
-        {
-            // TODO: Implement OnEditButtonClicked Logic
-        }
-
-        #endregion
-        #region DeleteButtonClick Property Members
-
-        /// <summary>
-        /// Occurs when the <see cref="DeleteButtonClick">DeleteButtonClick Command</see> is invoked.
-        /// </summary>
-        public event EventHandler<Commands.CommandEventArgs> DeleteButtonClicked;
-
-        private static readonly DependencyPropertyKey DeleteButtonClickPropertyKey = DependencyProperty.RegisterReadOnly(nameof(DeleteButtonClick),
-            typeof(Commands.RelayCommand), typeof(ListItemViewModel), new PropertyMetadata(null));
-
-        /// <summary>
-        /// Identifies the <see cref="DeleteButtonClick"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty DeleteButtonClickProperty = DeleteButtonClickPropertyKey.DependencyProperty;
-
-        public Commands.RelayCommand DeleteButtonClick => (Commands.RelayCommand)GetValue(DeleteButtonClickProperty);
-
-        /// <summary>
-        /// Called when the DeleteButtonClick event is raised by <see cref="DeleteButtonClick" />.
-        /// </summary>
-        /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="DeleteButtonClick" />.</param>
-        private void RaiseDeleteButtonClicked(object parameter)
-        {
-            try { OnDeleteButtonClicked(parameter); }
-            finally { DeleteButtonClicked?.Invoke(this, new(parameter)); }
-        }
-
-        /// <summary>
-        /// Called when the <see cref="DeleteButtonClick">DeleteButtonClick Command</see> is invoked.
-        /// </summary>
-        /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="DeleteButtonClick" />.</param>
-        protected virtual void OnDeleteButtonClicked(object parameter)
-        {
-            // TODO: Implement OnDeleteButtonClicked Logic
+            // TODO: Implement OnSynchronizeNowCommand Logic
         }
 
         #endregion
-        #region OpenListingButtonClick Property Members
+        #region ShowVolumeListing Command Property Members
 
         /// <summary>
-        /// Occurs when the <see cref="OpenListingButtonClick">OpenListingButtonClick Command</see> is invoked.
+        /// Occurs when the <see cref="ShowVolumeListing"/> is invoked.
         /// </summary>
-        public event EventHandler<Commands.CommandEventArgs> OpenListingButtonClicked;
+        public event EventHandler<Commands.CommandEventArgs> ShowVolumeListingCommand;
 
-        private static readonly DependencyPropertyKey OpenListingButtonClickPropertyKey = DependencyProperty.RegisterReadOnly(nameof(OpenListingButtonClick),
-            typeof(Commands.RelayCommand), typeof(ListItemViewModel), new PropertyMetadata(null));
+        private static readonly DependencyPropertyKey ShowVolumeListingPropertyKey = DependencyPropertyBuilder<ListItemViewModel, Commands.RelayCommand>
+            .Register(nameof(ShowVolumeListing))
+            .AsReadOnly();
 
         /// <summary>
-        /// Identifies the <see cref="OpenListingButtonClick"/> dependency property.
+        /// Identifies the <see cref="ShowVolumeListing"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty OpenListingButtonClickProperty = OpenListingButtonClickPropertyKey.DependencyProperty;
+        public static readonly DependencyProperty ShowVolumeListingProperty = ShowVolumeListingPropertyKey.DependencyProperty;
 
-        public Commands.RelayCommand OpenListingButtonClick => (Commands.RelayCommand)GetValue(OpenListingButtonClickProperty);
+        public Commands.RelayCommand ShowVolumeListing => (Commands.RelayCommand)GetValue(ShowVolumeListingProperty);
 
         /// <summary>
-        /// Called when the OpenListingButtonClick event is raised by <see cref="OpenListingButtonClick" />.
+        /// Called when the ShowVolumeListing event is raised by <see cref="ShowVolumeListing" />.
         /// </summary>
-        /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="OpenListingButtonClick" />.</param>
-        private void RaiseOpenListingButtonClicked(object parameter)
+        /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="ShowVolumeListing" />.</param>
+        protected void RaiseShowVolumeListingCommand(object parameter) // => ShowVolumeListingCommand?.Invoke(this, new(parameter));
         {
-            try { OnOpenListingButtonClicked(parameter); }
-            finally { OpenListingButtonClicked?.Invoke(this, new(parameter)); }
+            try { OnShowVolumeListingCommand(parameter); }
+            finally { ShowVolumeListingCommand?.Invoke(this, new(parameter)); }
         }
 
         /// <summary>
-        /// Called when the <see cref="OpenListingButtonClick">OpenListingButtonClick Command</see> is invoked.
+        /// Called when the <see cref="ShowVolumeListing">ShowVolumeListing Command</see> is invoked.
         /// </summary>
-        /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="OpenListingButtonClick" />.</param>
-        protected virtual void OnOpenListingButtonClicked(object parameter)
+        /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="ShowVolumeListing" />.</param>
+        protected virtual void OnShowVolumeListingCommand(object parameter)
         {
-            // TODO: Implement OnOpenListingButtonClicked Logic
+            // TODO: Implement OnShowVolumeListingCommand Logic
         }
 
         #endregion
-        #region SynchronizeNowButtonClick Property Members
+        #region ShowSymbolicNameListing Command Property Members
 
         /// <summary>
-        /// Occurs when the <see cref="SynchronizeNowButtonClick">SynchronizeNowButtonClick Command</see> is invoked.
+        /// Occurs when the <see cref="ShowSymbolicNameListing"/> is invoked.
         /// </summary>
-        public event EventHandler<Commands.CommandEventArgs> SynchronizeNowButtonClicked;
+        public event EventHandler<Commands.CommandEventArgs> ShowSymbolicNameListingCommand;
 
-        private static readonly DependencyPropertyKey SynchronizeNowButtonClickPropertyKey = DependencyProperty.RegisterReadOnly(nameof(SynchronizeNowButtonClick),
-            typeof(Commands.RelayCommand), typeof(ListItemViewModel), new PropertyMetadata(null));
+        private static readonly DependencyPropertyKey ShowSymbolicNameListingPropertyKey = DependencyPropertyBuilder<ListItemViewModel, Commands.RelayCommand>
+            .Register(nameof(ShowSymbolicNameListing))
+            .AsReadOnly();
 
         /// <summary>
-        /// Identifies the <see cref="SynchronizeNowButtonClick"/> dependency property.
+        /// Identifies the <see cref="ShowSymbolicNameListing"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty SynchronizeNowButtonClickProperty = SynchronizeNowButtonClickPropertyKey.DependencyProperty;
+        public static readonly DependencyProperty ShowSymbolicNameListingProperty = ShowSymbolicNameListingPropertyKey.DependencyProperty;
 
-        public Commands.RelayCommand SynchronizeNowButtonClick => (Commands.RelayCommand)GetValue(SynchronizeNowButtonClickProperty);
+        public Commands.RelayCommand ShowSymbolicNameListing => (Commands.RelayCommand)GetValue(ShowSymbolicNameListingProperty);
 
         /// <summary>
-        /// Called when the SynchronizeNowButtonClick event is raised by <see cref="SynchronizeNowButtonClick" />.
+        /// Called when the ShowSymbolicNameListing event is raised by <see cref="ShowSymbolicNameListing" />.
         /// </summary>
-        /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="SynchronizeNowButtonClick" />.</param>
-        private void RaiseSynchronizeNowButtonClicked(object parameter)
+        /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="ShowSymbolicNameListing" />.</param>
+        protected void RaiseShowSymbolicNameListingCommand(object parameter) // => ShowSymbolicNameListingCommand?.Invoke(this, new(parameter));
         {
-            try { OnSynchronizeNowButtonClicked(parameter); }
-            finally { SynchronizeNowButtonClicked?.Invoke(this, new(parameter)); }
+            try { OnShowSymbolicNameListingCommand(parameter); }
+            finally { ShowSymbolicNameListingCommand?.Invoke(this, new(parameter)); }
         }
 
         /// <summary>
-        /// Called when the <see cref="SynchronizeNowButtonClick">SynchronizeNowButtonClick Command</see> is invoked.
+        /// Called when the <see cref="ShowSymbolicNameListing">ShowSymbolicNameListing Command</see> is invoked.
         /// </summary>
-        /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="SynchronizeNowButtonClick" />.</param>
-        protected virtual void OnSynchronizeNowButtonClicked(object parameter)
+        /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="ShowSymbolicNameListing" />.</param>
+        protected virtual void OnShowSymbolicNameListingCommand(object parameter)
         {
-            // TODO: Implement OnSynchronizeNowButtonClicked Logic
+            // TODO: Implement OnShowSymbolicNameListingCommand Logic
         }
 
         #endregion
@@ -213,10 +179,9 @@ namespace FsInfoCat.Desktop.LocalData.FileSystems
         public ListItemViewModel([DisallowNull] FileSystemListItem entity)
             : base(entity)
         {
-            SetValue(EditButtonClickPropertyKey, new Commands.RelayCommand(RaiseEditButtonClicked));
-            SetValue(DeleteButtonClickPropertyKey, new Commands.RelayCommand(RaiseDeleteButtonClicked));
-            SetValue(OpenListingButtonClickPropertyKey, new Commands.RelayCommand(RaiseOpenListingButtonClicked));
-            SetValue(SynchronizeNowButtonClickPropertyKey, new Commands.RelayCommand(RaiseSynchronizeNowButtonClicked));
+            SetValue(SynchronizeNowPropertyKey, new Commands.RelayCommand(RaiseSynchronizeNowCommand));
+            SetValue(ShowVolumeListingPropertyKey, new Commands.RelayCommand(RaiseShowVolumeListingCommand));
+            SetValue(ShowSymbolicNameListingPropertyKey, new Commands.RelayCommand(RaiseShowSymbolicNameListingCommand));
             UpstreamId = entity.UpstreamId;
             LastSynchronizedOn = entity.LastSynchronizedOn;
         }

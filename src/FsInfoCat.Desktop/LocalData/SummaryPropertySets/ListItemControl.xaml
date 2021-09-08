@@ -65,7 +65,8 @@
         <TextBox Margin="{DynamicResource DefaultSpacingLeft}" Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding SensitivityText}" Grid.Row="9"/>
         <TextBox Margin="{DynamicResource DefaultSpacingLeft}" Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding Copyright}" Grid.Row="9" Grid.Column="1"/>
         <TextBox Margin="{DynamicResource DefaultSpacingLeft}" Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding Trademarks}" Grid.Row="9" Grid.Column="2"/>
-        <TextBox Margin="{DynamicResource DefaultSpacingLeft}" Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding TotalFileCount}" Grid.Row="9" Grid.Column="3" Grid.ColumnSpan="3"/>
+        <TextBox Margin="{DynamicResource DefaultSpacingLeft}" Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding TotalFileCount}" Grid.Row="9" Grid.Column="3" Grid.ColumnSpan="2"/>
+        <Button Style="{DynamicResource OpenListingButton}" ToolTip="Show File Listing" Margin="{DynamicResource DefaultSpacingRight}" Grid.Column="6" Grid.Row="9" Command="{Binding ShowFileListing, Mode=OneWay}"/>
         <Label Padding="{DynamicResource DefaultSpacingTopLeft}" Content="Rating" Grid.Row="10"/>
         <Label Padding="{DynamicResource DefaultSpacingTopLeft}" Content="Simple Rating" Grid.Row="10" Grid.Column="1"/>
         <Label Padding="{DynamicResource DefaultSpacingTopLeft}" Content="Parental Rating" Grid.Row="10" Grid.Column="2" Grid.ColumnSpan="4"/>
@@ -85,6 +86,7 @@
         <Label Padding="{DynamicResource DefaultSpacingTopLeft}" Content="Last Synchronized" Grid.Row="16" Grid.Column="2" Grid.ColumnSpan="4"/>
         <TextBox Margin="{DynamicResource DefaultSpacingLeft}" Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding CreatedOn}" Grid.Row="17"/>
         <TextBox Margin="{DynamicResource DefaultSpacingLeft}" Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding ModifiedOn}" Grid.Row="17" Grid.Column="1"/>
-        <TextBox Margin="{DynamicResource DefaultSpacingLeft}" Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding LastSynchronizedOn}" Grid.Row="17" Grid.Column="2" Grid.ColumnSpan="4"/>
+        <TextBox Margin="{DynamicResource DefaultSpacingLeft}" Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding LastSynchronizedOn}" Grid.Row="17" Grid.Column="2" Grid.ColumnSpan="3"/>
+        <Button Style="{DynamicResource SyncDisabledButton}" ToolTip="Synchronization disabled - no remote connection configured." Margin="{DynamicResource DefaultSpacingRight}" Grid.Column="17" Grid.Row="17" Command="{Binding SynchronizeNow, Mode=OneWay}"/>
     </Grid>
 </UserControl>

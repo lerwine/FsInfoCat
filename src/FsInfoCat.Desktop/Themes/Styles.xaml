@@ -495,6 +495,31 @@
             </Setter.Value>
         </Setter>
     </Style>
+    <Style x:Key="SyncDisabledButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
+        <Setter Property="ContentTemplate">
+            <Setter.Value>
+                <DataTemplate>
+                    <Image>
+                        <Image.Source>
+                            <DrawingImage>
+                                <DrawingImage.Drawing>
+                                    <DrawingGroup>
+                                        <DrawingGroup.Children>
+                                            <GeometryDrawing Brush="#00FFFFFF" Geometry="F1M16,16L0,16 0,0 16,0z" />
+                                            <GeometryDrawing Brush="#FFF6F6F6" Geometry="F1M0.7992,5.3584L2.9132,7.4724 3.9972,6.3894 3.9972,12.9994 6.9972,12.9994 6.9972,11.8604 10.4972,15.4274 15.1962,10.6394 13.0822,8.5244 11.9982,9.6094 11.9982,2.9974 8.9982,2.9974 8.9982,4.1374 5.4982,0.570399999999999z M6.9972,6.3884L8.0822,7.4724 8.9982,6.5564 8.9982,9.6094 7.9132,8.5244 6.9972,9.4404z" />
+                                            <GeometryDrawing Brush="#FF424242" Geometry="F1M5.498,1.9985L8.789,5.3525 8.082,6.0595 5.997,3.9755 5.997,11.9995 4.997,11.9995 4.997,3.9755 2.913,6.0595 2.206,5.3525z M10.497,13.9995L7.206,10.6465 7.913,9.9395 9.998,12.0235 9.998,3.9985 10.998,3.9985 10.998,12.0235 13.082,9.9395 13.789,10.6465z" />
+                                            <GeometryDrawing Brush="#FFE51300" Geometry="F1M13.3535,12.6465L12.6465,13.3535 11.4995,12.2075 10.3535,13.3535 9.6465,12.6465 10.7925,11.5005 9.6465,10.3535 10.3535,9.6465 11.4995,10.7925 12.6465,9.6465 13.3535,10.3535 12.2075,11.5005z M11.4995,8.0005C9.5675,8.0005 7.9995,9.5675 7.9995,11.5005 7.9995,13.4325 9.5675,15.0005 11.4995,15.0005 13.4325,15.0005 14.9995,13.4325 14.9995,11.5005 14.9995,9.5675 13.4325,8.0005 11.4995,8.0005" />
+                                            <GeometryDrawing Brush="#FFFFFFFF" Geometry="F1M13.3535,10.3535L12.6465,9.6465 11.4995,10.7925 10.3535,9.6465 9.6465,10.3535 10.7925,11.4995 9.6465,12.6465 10.3535,13.3535 11.4995,12.2075 12.6465,13.3535 13.3535,12.6465 12.2075,11.4995z" />
+                                        </DrawingGroup.Children>
+                                    </DrawingGroup>
+                                </DrawingImage.Drawing>
+                            </DrawingImage>
+                        </Image.Source>
+                    </Image>
+                </DataTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
     <Style x:Key="FilterButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
         <Setter Property="ContentTemplate">
         <Setter.Value>
@@ -681,6 +706,32 @@
                                         <DrawingGroup>
                                             <DrawingGroup.Children>
                                                 <GeometryDrawing Brush="#00FFFFFF" Geometry="F1M16,16L0,16 0,0 16,0z" />
+                                                <GeometryDrawing Brush="#FFF6F6F6" Geometry="F1M1,15L15,15 15,0 1,0z" />
+                                                <GeometryDrawing Brush="#FF424242" Geometry="F1M13,3L12,3 12,2 13,2z M13,5L12,5 12,4 13,4z M13,7L12,7 12,6 13,6z M13,9L12,9 12,8 13,8z M13,11L12,11 12,10 13,10z M13,13L12,13 12,12 13,12z M11,13L5,13 5,2 11,2z M4,3L3,3 3,2 4,2z M4,5L3,5 3,4 4,4z M4,7L3,7 3,6 4,6z M4,9L3,9 3,8 4,8z M4,11L3,11 3,10 4,10z M4,13L3,13 3,12 4,12z M2,14L14,14 14,1 2,1z" />
+                                                <GeometryDrawing Brush="#FFEFEFF0" Geometry="F1M13,12L12,12 12,13 13,13z M13,10L12,10 12,11 13,11z M13,8L12,8 12,9 13,9z M13,6L12,6 12,7 13,7z M13,4L12,4 12,5 13,5z M13,2L12,2 12,3 13,3z M4,12L3,12 3,13 4,13z M4,10L3,10 3,11 4,11z M4,8L3,8 3,9 4,9z M4,6L3,6 3,7 4,7z M4,4L3,4 3,5 4,5z M4,2L3,2 3,3 4,3z M11,13L5,13 5,2 11,2z" />
+                                            </DrawingGroup.Children>
+                                        </DrawingGroup>
+                                    </DrawingGroup>
+                                </DrawingImage.Drawing>
+                            </DrawingImage>
+                        </Image.Source>
+                    </Image>
+                </DataTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="VideoButton2" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
+        <Setter Property="ContentTemplate">
+            <Setter.Value>
+                <DataTemplate>
+                    <Image>
+                        <Image.Source>
+                            <DrawingImage>
+                                <DrawingImage.Drawing>
+                                    <DrawingGroup>
+                                        <DrawingGroup>
+                                            <DrawingGroup.Children>
+                                                <GeometryDrawing Brush="#00FFFFFF" Geometry="F1M16,16L0,16 0,0 16,0z" />
                                                 <GeometryDrawing Brush="#FFF6F6F6" Geometry="F1M0,15L16,15 16,1.999 0,1.999z" />
                                                 <GeometryDrawing Brush="#FF424242" Geometry="F1M12,6L13,6 13,7 12,7z M12,8L13,8 13,9 12,9z M12,10L13,10 13,11 12,11z M3,10L4,10 4,11 3,11z M3,8L4,8 4,9 3,9z M3,6L4,6 4,7 3,7z M14,13L13,13 13,12 12,12 12,13 4,13 4,12 3,12 3,13 2,13 2,4 3,4 3,5 4,5 4,4 12,4 12,5 13,5 13,4 14,4z M1,14L15,14 15,3 1,3z" />
                                                 <GeometryDrawing Brush="#FFF0EFF1" Geometry="F1M8.5986,8.5L6.9996,9.565 6.9996,7.434z M12.9996,7L11.9996,7 11.9996,6 12.9996,6z M12.9996,9L11.9996,9 11.9996,8 12.9996,8z M12.9996,11L11.9996,11 11.9996,10 12.9996,10z M5.9996,11.435L5.9996,5.566 10.4016,8.5z M3.9996,7L2.9996,7 2.9996,6 3.9996,6z M3.9996,9L2.9996,9 2.9996,8 3.9996,8z M3.9996,11L2.9996,11 2.9996,10 3.9996,10z M12.9996,5L11.9996,5 11.9996,4 3.9996,4 3.9996,5 2.9996,5 2.9996,4 1.9996,4 1.9996,13 2.9996,13 2.9996,12 3.9996,12 3.9996,13 11.9996,13 11.9996,12 12.9996,12 12.9996,13 13.9996,13 13.9996,4 12.9996,4z" />
@@ -723,7 +774,7 @@
             </Setter.Value>
         </Setter>
     </Style>
-    <Style x:Key="DocumentBUtton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
+    <Style x:Key="DocumentButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
         <Setter Property="ContentTemplate">
             <Setter.Value>
                 <DataTemplate>
@@ -738,6 +789,33 @@
                                                 <GeometryDrawing Brush="#FFF6F6F6" Geometry="F1M1.9998,-0.000199999999999534L1.9998,15.9998 15.0008,15.9998 15.0008,4.2078 10.8328,-0.000199999999999534z" />
                                                 <GeometryDrawing Brush="#FF424242" Geometry="F1M13,14L9,14 7,14 4,14 4,2 9,2 9,6 13,6z M10,2.207L12.793,5 10,5z M10.442,1L3,1 3,15 14,15 14,4.562z M12,11L5,11 5,12 12,12z M12,9L5,9 5,10 12,10z M12,7L5,7 5,8 12,8z M8,6L5,6 5,5 8,5z" />
                                                 <GeometryDrawing Brush="#FFEFEFF0" Geometry="F1M13,5L10,5 10,2z M12,8L5,8 5,7 12,7z M12,10L5,10 5,9 12,9z M12,12L5,12 5,11 12,11z M5,5L8,5 8,6 5,6z M9,6L9,2 4,2 4,6 4,14 9,14 13,14 13,6z" />
+                                            </DrawingGroup.Children>
+                                        </DrawingGroup>
+                                    </DrawingGroup>
+                                </DrawingImage.Drawing>
+                            </DrawingImage>
+                        </Image.Source>
+                    </Image>
+                </DataTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="PeformanceErrorButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
+        <Setter Property="ContentTemplate">
+            <Setter.Value>
+                <DataTemplate>
+                    <Image>
+                        <Image.Source>
+                            <DrawingImage>
+                                <DrawingImage.Drawing>
+                                    <DrawingGroup>
+                                        <DrawingGroup>
+                                            <DrawingGroup.Children>
+                                                <GeometryDrawing Brush="#FFF6F6F6" Geometry="F1M14,7.7598L14,-0.000199999999999534 0,-0.000199999999999534 0,11.9998 7.05,11.9998C7.302,14.2468 9.186,15.9998 11.5,15.9998 13.985,15.9998 16,13.9858 16,11.4998 16,9.9408 15.205,8.5668 14,7.7598" />
+                                                <GeometryDrawing Brush="#FF414141" Geometry="F1M3,6.793L4.146,5.647C4.249,5.544 4.384,5.492 4.536,5.501 4.681,5.512 4.813,5.584 4.899,5.7L5.962,7.117 8.576,3.735C8.665,3.593 8.817,3.505 8.984,3.5 9.172,3.503 9.311,3.574 9.407,3.71L11,5.94 11,3 3,3z M3,9L7.76,9C8.406,8.034,9.416,7.332,10.594,7.091L9.028,4.899 6.424,8.265C6.337,8.405 6.187,8.493 6.021,8.5 5.864,8.516 5.698,8.432 5.601,8.3L4.446,6.761 3,8.207z M7.05,11L1,11 1,0.999999999999999 13,0.999999999999999 13,7.275C12.682,7.162,12.347,7.089,12,7.05L12,2 2,2 2,10 7.275,10C7.162,10.318,7.089,10.653,7.05,11" />
+                                                <GeometryDrawing Brush="#FFF0EFF1" Geometry="F1M3,3L11,3 11,5.94 9.407,3.709C9.311,3.574 9.172,3.503 8.984,3.5 8.817,3.505 8.665,3.593 8.576,3.735L5.962,7.117 4.899,5.7C4.813,5.584 4.681,5.512 4.536,5.501 4.384,5.492 4.249,5.544 4.146,5.646L3,6.793z M7.76,9L3,9 3,8.207 4.446,6.761 5.601,8.3C5.698,8.432 5.864,8.516 6.021,8.5 6.187,8.493 6.337,8.405 6.424,8.265L9.028,4.899 10.594,7.091C10.887,7.031 11.189,7 11.5,7 11.671,7 11.834,7.032 12,7.05L12,2 11,2 3,2 2,2 2,10 3,10 7.275,10C7.401,9.646,7.555,9.307,7.76,9" />
+                                                <GeometryDrawing Brush="#FFE51300" Geometry="F1M13.3535,12.6465L12.6465,13.3535 11.4995,12.2075 10.3535,13.3535 9.6465,12.6465 10.7925,11.5005 9.6465,10.3535 10.3535,9.6465 11.4995,10.7925 12.6465,9.6465 13.3535,10.3535 12.2075,11.5005z M11.4995,8.0005C9.5675,8.0005 7.9995,9.5675 7.9995,11.5005 7.9995,13.4325 9.5675,15.0005 11.4995,15.0005 13.4325,15.0005 14.9995,13.4325 14.9995,11.5005 14.9995,9.5675 13.4325,8.0005 11.4995,8.0005" />
+                                                <GeometryDrawing Brush="#FFFFFFFF" Geometry="F1M13.3535,10.3535L12.6465,9.6465 11.4995,10.7925 10.3535,9.6465 9.6465,10.3535 10.7925,11.4995 9.6465,12.6465 10.3535,13.3535 11.4995,12.2075 12.6465,13.3535 13.3535,12.6465 12.2075,11.4995z" />
                                             </DrawingGroup.Children>
                                         </DrawingGroup>
                                     </DrawingGroup>

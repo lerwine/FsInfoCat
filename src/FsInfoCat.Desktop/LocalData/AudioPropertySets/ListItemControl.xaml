@@ -31,7 +31,7 @@
         <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding StreamName}" Grid.Row="1" Margin="{DynamicResource DefaultSpacingLeftRight}"/>
         <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding StreamNumber}" Grid.Column="1" Grid.Row="1" Margin="{DynamicResource DefaultSpacingLeftRight}"/>
         <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding TotalFileCount}" Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2" Margin="{DynamicResource DefaultSpacingLeftRight}"/>
-        <Button Style="{DynamicResource OpenListingButton}" Grid.Column="4" Margin="{DynamicResource DefaultSpacingRight}" ToolTip="Show Files" Grid.Row="1" />
+        <Button Style="{DynamicResource OpenListingButton}" Grid.Column="4" Margin="{DynamicResource DefaultSpacingRight}" ToolTip="Show Files" Grid.Row="1" Command="{Binding ShowFileListing, Mode=OneWay}"/>
         <Label VerticalAlignment="Bottom" Content="Format" Grid.Row="2" Padding="{DynamicResource DefaultSpacingTopLeftRight}" FontWeight="Bold"/>
         <Label VerticalAlignment="Bottom" Content="Compression" Grid.Column="1" Grid.Row="2" Padding="{DynamicResource DefaultSpacingTopLeftRight}" FontWeight="Bold"/>
         <Label VerticalAlignment="Bottom" Content="Encoding Bitrate" Grid.Column="2" Grid.ColumnSpan="3" Grid.Row="2" Padding="{DynamicResource DefaultSpacingTopLeftRight}" FontWeight="Bold"/>
@@ -50,6 +50,6 @@
         <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding CreatedOn}" Grid.Row="7" Margin="{DynamicResource DefaultSpacingLeftRight}"/>
         <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding ModifiedOn}" Grid.Row="7" Grid.Column="1" Margin="{DynamicResource DefaultSpacingLeftRight}"/>
         <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding LastSynchronizedOn}" Grid.Row="7" Grid.Column="2" Grid.ColumnSpan="2" Margin="{DynamicResource DefaultSpacingLeftRight}"/>
-        <Button Grid.Column="4" Grid.Row="7" Style="{DynamicResource SyncButton}" ToolTip="Synchronize Now" Margin="{DynamicResource DefaultSpacingRight}"/>
+        <Button Grid.Column="4" Grid.Row="7" Style="{DynamicResource SyncDisabledButton}" ToolTip="Synchronization disabled - no remote connection configured." Margin="{DynamicResource DefaultSpacingRight}" Command="{Binding SynchronizeNow, Mode=OneWay}"/>
     </Grid>
 </UserControl>

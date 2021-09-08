@@ -31,8 +31,8 @@
         </Grid.ColumnDefinitions>
         <TextBox Margin="{DynamicResource DefaultSpacingTopLeft}" ToolTip="The descriptive status of the current crawl." Style="{DynamicResource ReadOnlyValueTextBox}" Text="{Binding StatusValue, Converter={StaticResource CrawlStatusToDescription}, Mode=OneWay}"/>
         <Button Style="{DynamicResource LogButton}" Grid.Column="1" Margin="{DynamicResource DefaultSpacingTopLeft}" ToolTip="Show crawl activity records." Command="{Binding ShowCrawlActivityRecords, Mode=OneWay}"/>
-        <Button Style="{DynamicResource EditButton}" Grid.Column="2" Margin="{DynamicResource DefaultSpacingTopLeft}" ToolTip="Edit the current crawl configuration." Command="{Binding EditCurrentItem, Mode=OneWay}"/>
-        <Button Style="{DynamicResource DeleteButton}" Grid.Column="3" Margin="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="Delete the current crawl configuration." Command="{Binding DeleteCurrentItem, Mode=OneWay}"/>
+        <Button Style="{DynamicResource EditButton}" Grid.Column="2" Margin="{DynamicResource DefaultSpacingTopLeft}" ToolTip="Edit the current crawl configuration." Command="{Binding Edit, Mode=OneWay}"/>
+        <Button Style="{DynamicResource DeleteButton}" Grid.Column="3" Margin="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="Delete the current crawl configuration." Command="{Binding Delete, Mode=OneWay}"/>
         <StackPanel Grid.Row="1" Grid.ColumnSpan="4">
             <GroupBox Padding="{DynamicResource DefaultSpacingBottom}">
                 <StackPanel>
@@ -43,7 +43,7 @@
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
                         <TextBox x:Name="pathTextBox" Margin="{DynamicResource DefaultSpacingLeft}" ToolTip="The path of the starting subdirectory for the current crawl configuration." Style="{DynamicResource ReadOnlyValueTextBox}" Text="{Binding RootPath, Mode=OneWay}"/>
-                        <Button Grid.Column="1" ToolTip="Open the database record for the starting subdirectory of the current crawl configuration." Style="{DynamicResource OpenButton}" Margin="{DynamicResource DefaultSpacingRight}" Command="{Binding OpenRootFolderCommand, Mode=OneWay}"/>
+                        <Button Grid.Column="1" ToolTip="Open the database record for the starting subdirectory of the current crawl configuration." Style="{DynamicResource OpenButton}" Margin="{DynamicResource DefaultSpacingRight}" Command="{Binding OpenRootSubdirectory, Mode=OneWay}"/>
                     </Grid>
                     <WrapPanel>
                         <StackPanel>
@@ -121,7 +121,7 @@
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
                                     <TextBox x:Name="synchronizedTextBox" Margin="{DynamicResource DefaultSpacingLeftRight}" ToolTip="When record was last synchronized with remote database." Style="{DynamicResource ReadOnlyValueTextBox}"/>
-                                    <Button Style="{DynamicResource SyncButton}" ToolTip="Synchronize Now" Margin="{DynamicResource DefaultSpacingRight}" Grid.Column="1"/>
+                                    <Button Style="{DynamicResource SyncDisabledButton}" ToolTip="Synchronization disabled - no remote connection configured." Margin="{DynamicResource DefaultSpacingRight}" Grid.Column="1" Command="{Binding SynchronizeNow, Mode=OneWay}"/>
                                 </Grid>
                             </StackPanel>
                         </WrapPanel>

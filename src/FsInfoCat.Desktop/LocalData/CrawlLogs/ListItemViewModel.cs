@@ -21,9 +21,48 @@ namespace FsInfoCat.Desktop.LocalData.CrawlLogs
         public DateTime? LastSynchronizedOn { get => (DateTime?)GetValue(LastSynchronizedOnProperty); private set => SetValue(LastSynchronizedOnPropertyKey, value); }
 
         #endregion
+        #region SynchronizeNow Command Property Members
+
+        /// <summary>
+        /// Occurs when the <see cref="SynchronizeNow"/> is invoked.
+        /// </summary>
+        public event EventHandler<Commands.CommandEventArgs> SynchronizeNowCommand;
+
+        private static readonly DependencyPropertyKey SynchronizeNowPropertyKey = DependencyPropertyBuilder<ListItemViewModel, Commands.RelayCommand>
+            .Register(nameof(SynchronizeNow))
+            .AsReadOnly();
+
+        /// <summary>
+        /// Identifies the <see cref="SynchronizeNow"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty SynchronizeNowProperty = SynchronizeNowPropertyKey.DependencyProperty;
+
+        public Commands.RelayCommand SynchronizeNow => (Commands.RelayCommand)GetValue(SynchronizeNowProperty);
+
+        /// <summary>
+        /// Called when the SynchronizeNow event is raised by <see cref="SynchronizeNow" />.
+        /// </summary>
+        /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="SynchronizeNow" />.</param>
+        protected void RaiseSynchronizeNowCommand(object parameter) => SynchronizeNowCommand?.Invoke(this, new(parameter));
+        // {
+        //   try { OnSynchronizeNowCommand(parameter); }
+        //   finally { SynchronizeNowCommand?.Invoke(this, new(parameter)); }
+        // }
+
+        /// <summary>
+        /// Called when the <see cref="SynchronizeNow">SynchronizeNow Command</see> is invoked.
+        /// </summary>
+        /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="SynchronizeNow" />.</param>
+        protected virtual void OnSynchronizeNowCommand(object parameter)
+        {
+            // TODO: Implement OnSynchronizeNowCommand Logic
+        }
+
+        #endregion
 
         public ListItemViewModel([DisallowNull] CrawlJobLogListItem entity) : base(entity)
         {
+            SetValue(SynchronizeNowPropertyKey, new Commands.RelayCommand(RaiseSynchronizeNowCommand));
             LastSynchronizedOn = entity.LastSynchronizedOn;
         }
     }
