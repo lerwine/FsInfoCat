@@ -8,7 +8,7 @@ using System.Windows;
 
 namespace FsInfoCat.Desktop.LocalData.SymbolicNames
 {
-    public class ListingViewModel : ListingViewModel<SymbolicNameListItem, ListItemViewModel, bool?>, INotifyNavigatedTo
+    public class ListingViewModel : ListingViewModel<SymbolicNameListItem, ListItemViewModel, bool?>, INavigatedToNotifiable
     {
         private bool? _currentStateFilterOption = true;
 
@@ -59,7 +59,7 @@ namespace FsInfoCat.Desktop.LocalData.SymbolicNames
             return base.ReloadAsync(options);
         }
 
-        void INotifyNavigatedTo.OnNavigatedTo() => ReloadAsync(_currentStateFilterOption);
+        void INavigatedToNotifiable.OnNavigatedTo() => ReloadAsync(_currentStateFilterOption);
 
         protected override IQueryable<SymbolicNameListItem> GetQueryableListing(bool? options, [DisallowNull] LocalDbContext dbContext,
             [DisallowNull] IWindowsStatusListener statusListener)

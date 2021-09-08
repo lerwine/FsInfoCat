@@ -15,7 +15,7 @@ using System.Windows.Threading;
 namespace FsInfoCat.Desktop.LocalData.SummaryPropertySets
 {
     public class EditViewModel : SummaryPropertySetDetailsViewModel<SummaryPropertySet, FileWithBinaryPropertiesAndAncestorNames, FileWithBinaryPropertiesAndAncestorNamesViewModel>,
-        INotifyNavigatedTo
+        INavigatedToNotifiable
     {
         #region UpstreamId Property Members
 
@@ -80,7 +80,7 @@ namespace FsInfoCat.Desktop.LocalData.SummaryPropertySets
             LastSynchronizedOn = entity.LastSynchronizedOn;
         }
 
-        void INotifyNavigatedTo.OnNavigatedTo()
+        void INavigatedToNotifiable.OnNavigatedTo()
         {
             // TODO: Load option lists from database
             throw new NotImplementedException();

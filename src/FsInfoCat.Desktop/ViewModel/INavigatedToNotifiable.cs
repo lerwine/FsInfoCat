@@ -1,6 +1,6 @@
 namespace FsInfoCat.Desktop.ViewModel
 {
-    interface INotifyNavigatedTo
+    interface INavigatedToNotifiable
     {
         void OnNavigatedTo();
     }

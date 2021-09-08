@@ -8,7 +8,7 @@ using System.Windows;
 
 namespace FsInfoCat.Desktop.LocalData.DRMPropertySets
 {
-    public class ListingViewModel : ListingViewModel<DRMPropertiesListItem, ListItemViewModel, bool?>, INotifyNavigatedTo
+    public class ListingViewModel : ListingViewModel<DRMPropertiesListItem, ListItemViewModel, bool?>, INavigatedToNotifiable
     {
         private bool? _currentOptions;
 
@@ -59,7 +59,7 @@ namespace FsInfoCat.Desktop.LocalData.DRMPropertySets
             return base.ReloadAsync(options);
         }
 
-        void INotifyNavigatedTo.OnNavigatedTo() => ReloadAsync(_currentOptions);
+        void INavigatedToNotifiable.OnNavigatedTo() => ReloadAsync(_currentOptions);
 
         protected override IQueryable<DRMPropertiesListItem> GetQueryableListing(bool? options, [DisallowNull] LocalDbContext dbContext, [DisallowNull] IWindowsStatusListener statusListener)
         {

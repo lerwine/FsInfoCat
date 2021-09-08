@@ -8,7 +8,7 @@ using System.Windows;
 
 namespace FsInfoCat.Desktop.LocalData.RecordedTVPropertySets
 {
-    public class ListingViewModel : ListingViewModel<RecordedTVPropertiesListItem, ListItemViewModel, bool?>, INotifyNavigatedTo
+    public class ListingViewModel : ListingViewModel<RecordedTVPropertiesListItem, ListItemViewModel, bool?>, INavigatedToNotifiable
     {
         private bool? _currentOptions;
 
@@ -59,7 +59,7 @@ namespace FsInfoCat.Desktop.LocalData.RecordedTVPropertySets
             return base.ReloadAsync(options);
         }
 
-        void INotifyNavigatedTo.OnNavigatedTo() => ReloadAsync(_currentOptions);
+        void INavigatedToNotifiable.OnNavigatedTo() => ReloadAsync(_currentOptions);
 
         protected override IQueryable<RecordedTVPropertiesListItem> GetQueryableListing(bool? options, [DisallowNull] LocalDbContext dbContext, [DisallowNull] IWindowsStatusListener statusListener)
         {

@@ -8,7 +8,7 @@ using System.Windows;
 
 namespace FsInfoCat.Desktop.LocalData.FileSystems
 {
-    public class ListingViewModel : ListingViewModel<FileSystemListItem, ListItemViewModel, bool?>, INotifyNavigatedTo
+    public class ListingViewModel : ListingViewModel<FileSystemListItem, ListItemViewModel, bool?>, INavigatedToNotifiable
     {
         bool? _currentListingOption = true;
 
@@ -64,7 +64,7 @@ namespace FsInfoCat.Desktop.LocalData.FileSystems
             return base.ReloadAsync(options);
         }
 
-        void INotifyNavigatedTo.OnNavigatedTo() => ReloadAsync(_currentListingOption);
+        void INavigatedToNotifiable.OnNavigatedTo() => ReloadAsync(_currentListingOption);
 
         protected override IQueryable<FileSystemListItem> GetQueryableListing(bool? options, [DisallowNull] LocalDbContext dbContext,
             [DisallowNull] IWindowsStatusListener statusListener)

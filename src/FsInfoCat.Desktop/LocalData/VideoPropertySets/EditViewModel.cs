@@ -16,7 +16,7 @@ using System.Windows.Threading;
 namespace FsInfoCat.Desktop.LocalData.VideoPropertySets
 {
     public class EditViewModel : VideoPropertySetDetailsViewModel<VideoPropertySet, FileWithBinaryPropertiesAndAncestorNames, FileWithBinaryPropertiesAndAncestorNamesViewModel>,
-        INotifyNavigatedTo
+        INavigatedToNotifiable
     {
         #region UpstreamId Property Members
 
@@ -71,7 +71,7 @@ namespace FsInfoCat.Desktop.LocalData.VideoPropertySets
             LastSynchronizedOn = entity.LastSynchronizedOn;
         }
 
-        void INotifyNavigatedTo.OnNavigatedTo()
+        void INavigatedToNotifiable.OnNavigatedTo()
         {
             // TODO: Load option lists from database
             throw new NotImplementedException();

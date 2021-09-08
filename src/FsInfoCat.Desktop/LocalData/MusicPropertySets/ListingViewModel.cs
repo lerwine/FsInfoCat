@@ -8,7 +8,7 @@ using System.Windows;
 
 namespace FsInfoCat.Desktop.LocalData.MusicPropertySets
 {
-    public class ListingViewModel : ListingViewModel<MusicPropertiesListItem, ListItemViewModel, bool?>, INotifyNavigatedTo
+    public class ListingViewModel : ListingViewModel<MusicPropertiesListItem, ListItemViewModel, bool?>, INavigatedToNotifiable
     {
         private bool? _currentOptions;
 
@@ -59,7 +59,7 @@ namespace FsInfoCat.Desktop.LocalData.MusicPropertySets
             return base.ReloadAsync(options);
         }
 
-        void INotifyNavigatedTo.OnNavigatedTo() => ReloadAsync(_currentOptions);
+        void INavigatedToNotifiable.OnNavigatedTo() => ReloadAsync(_currentOptions);
 
         protected override IQueryable<MusicPropertiesListItem> GetQueryableListing(bool? options, [DisallowNull] LocalDbContext dbContext, [DisallowNull] IWindowsStatusListener statusListener)
         {

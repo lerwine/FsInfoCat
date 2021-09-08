@@ -454,7 +454,7 @@ namespace FsInfoCat.Desktop.ViewModel
             {
                 if (oldContent is Page)
                     BindingOperations.ClearBinding(this, PageTitleProperty);
-                if (oldContent.DataContext is INotifyNavigatedFrom navigatedFrom)
+                if (oldContent.DataContext is INavigatedFromNotifiable navigatedFrom)
                     navigatedFrom.OnNavigatedFrom();
             }
             if (newValue is FrameworkElement newContent)
@@ -463,7 +463,7 @@ namespace FsInfoCat.Desktop.ViewModel
                     BindingOperations.SetBinding(this, Page.TitleProperty, new Binding(nameof(Page.TitleProperty)) { Source = page }).UpdateTarget();
                 else
                     PageTitle = "";
-                if (newContent.DataContext is INotifyNavigatedTo navigatedTo)
+                if (newContent.DataContext is INavigatedToNotifiable navigatedTo)
                     navigatedTo.OnNavigatedTo();
             }
             else

@@ -16,7 +16,7 @@ using System.Windows.Threading;
 namespace FsInfoCat.Desktop.LocalData.DocumentPropertySets
 {
     public class EditViewModel : DocumentPropertySetDetailsViewModel<DocumentPropertySet, FileWithBinaryPropertiesAndAncestorNames, FileWithBinaryPropertiesAndAncestorNamesViewModel>,
-        INotifyNavigatedTo
+        INavigatedToNotifiable
     {
         #region UpstreamId Property Members
 
@@ -81,7 +81,7 @@ namespace FsInfoCat.Desktop.LocalData.DocumentPropertySets
             LastSynchronizedOn = entity.LastSynchronizedOn;
         }
 
-        void INotifyNavigatedTo.OnNavigatedTo()
+        void INavigatedToNotifiable.OnNavigatedTo()
         {
             // TODO: Load option lists from database
             throw new NotImplementedException();

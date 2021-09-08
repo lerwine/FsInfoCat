@@ -8,7 +8,7 @@ using System.Windows;
 
 namespace FsInfoCat.Desktop.LocalData.CrawlLogs
 {
-    public class ListingViewModel : ListingViewModel<CrawlJobLogListItem, ListItemViewModel, ListingViewModel.FilterOptions>, INotifyNavigatedTo
+    public class ListingViewModel : ListingViewModel<CrawlJobLogListItem, ListItemViewModel, ListingViewModel.FilterOptions>, INavigatedToNotifiable
     {
         private FilterOptions _currentOptions = new(null, true);
         private readonly EnumChoiceItem<CrawlStatus> _allOption;
@@ -128,7 +128,7 @@ namespace FsInfoCat.Desktop.LocalData.CrawlLogs
             // TODO: Implement OnAddNewItemCommand(object);
         }
 
-        void INotifyNavigatedTo.OnNavigatedTo() => ReloadAsync(_currentOptions);
+        void INavigatedToNotifiable.OnNavigatedTo() => ReloadAsync(_currentOptions);
 
         protected override void OnReloadTaskCompleted(FilterOptions options) => _currentOptions = options;
 

@@ -7,7 +7,7 @@ using System.Windows;
 namespace FsInfoCat.Desktop.LocalData.PhotoPropertySets
 {
     public class EditViewModel : PhotoPropertySetDetailsViewModel<PhotoPropertySet, FileWithBinaryPropertiesAndAncestorNames, FileWithBinaryPropertiesAndAncestorNamesViewModel>,
-        INotifyNavigatedTo
+        INavigatedToNotifiable
     {
         #region UpstreamId Property Members
 
@@ -72,7 +72,7 @@ namespace FsInfoCat.Desktop.LocalData.PhotoPropertySets
             LastSynchronizedOn = entity.LastSynchronizedOn;
         }
 
-        void INotifyNavigatedTo.OnNavigatedTo()
+        void INavigatedToNotifiable.OnNavigatedTo()
         {
             // TODO: Load option lists from database
             throw new NotImplementedException();

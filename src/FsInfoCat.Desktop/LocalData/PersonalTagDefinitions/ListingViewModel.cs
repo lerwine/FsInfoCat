@@ -8,7 +8,7 @@ using System.Windows;
 
 namespace FsInfoCat.Desktop.LocalData.PersonalTagDefinitions
 {
-    public class ListingViewModel : ListingViewModel<PersonalTagDefinitionListItem, ListItemViewModel, bool?>, INotifyNavigatedTo
+    public class ListingViewModel : ListingViewModel<PersonalTagDefinitionListItem, ListItemViewModel, bool?>, INavigatedToNotifiable
     {
         private bool? _currentOptions = true;
 
@@ -63,7 +63,7 @@ namespace FsInfoCat.Desktop.LocalData.PersonalTagDefinitions
             return base.ReloadAsync(options);
         }
 
-        void INotifyNavigatedTo.OnNavigatedTo() => ReloadAsync(_currentOptions);
+        void INavigatedToNotifiable.OnNavigatedTo() => ReloadAsync(_currentOptions);
 
         protected override IQueryable<PersonalTagDefinitionListItem> GetQueryableListing(bool? options, [DisallowNull] LocalDbContext dbContext,
             [DisallowNull] IWindowsStatusListener statusListener)

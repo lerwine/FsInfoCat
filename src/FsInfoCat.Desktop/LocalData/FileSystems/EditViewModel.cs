@@ -13,7 +13,7 @@ using System.Windows;
 namespace FsInfoCat.Desktop.LocalData.FileSystems
 {
     public class EditViewModel : FileSystemDetailsViewModel<FileSystem, VolumeListItem, VolumeListItemViewModel, SymbolicNameRow, SymbolicNameListItemViewModel>,
-        INotifyNavigatedTo
+        INavigatedToNotifiable
     {
         #region UpstreamId Property Members
 
@@ -78,7 +78,7 @@ namespace FsInfoCat.Desktop.LocalData.FileSystems
             LastSynchronizedOn = entity.LastSynchronizedOn;
         }
 
-        void INotifyNavigatedTo.OnNavigatedTo()
+        void INavigatedToNotifiable.OnNavigatedTo()
         {
             // TODO: Load option lists from database
             throw new NotImplementedException();

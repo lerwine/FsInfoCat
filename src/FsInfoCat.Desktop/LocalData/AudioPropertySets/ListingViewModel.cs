@@ -10,7 +10,7 @@ using System.Windows.Threading;
 
 namespace FsInfoCat.Desktop.LocalData.AudioPropertySets
 {
-    public class ListingViewModel : ListingViewModel<AudioPropertiesListItem, ListItemViewModel, bool?>, INotifyNavigatedTo
+    public class ListingViewModel : ListingViewModel<AudioPropertiesListItem, ListItemViewModel, bool?>, INavigatedToNotifiable
     {
         private bool? _currentOptions = true;
 
@@ -62,7 +62,7 @@ namespace FsInfoCat.Desktop.LocalData.AudioPropertySets
             return base.ReloadAsync(options);
         }
 
-        void INotifyNavigatedTo.OnNavigatedTo() => ReloadAsync(_currentOptions);
+        void INavigatedToNotifiable.OnNavigatedTo() => ReloadAsync(_currentOptions);
 
         protected override IQueryable<AudioPropertiesListItem> GetQueryableListing(bool? options, [DisallowNull] LocalDbContext dbContext,
             [DisallowNull] IWindowsStatusListener statusListener)

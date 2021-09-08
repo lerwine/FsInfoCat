@@ -16,7 +16,7 @@ using System.Windows.Threading;
 namespace FsInfoCat.Desktop.LocalData.GPSPropertySets
 {
     public class EditViewModel : GPSPropertySetDetailsViewModel<GPSPropertySet, FileWithBinaryPropertiesAndAncestorNames, FileWithBinaryPropertiesAndAncestorNamesViewModel>,
-        INotifyNavigatedTo
+        INavigatedToNotifiable
     {
         #region UpstreamId Property Members
 
@@ -81,7 +81,7 @@ namespace FsInfoCat.Desktop.LocalData.GPSPropertySets
             LastSynchronizedOn = entity.LastSynchronizedOn;
         }
 
-        void INotifyNavigatedTo.OnNavigatedTo()
+        void INavigatedToNotifiable.OnNavigatedTo()
         {
             // TODO: Load option lists from database
             throw new NotImplementedException();

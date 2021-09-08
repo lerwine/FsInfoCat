@@ -10,7 +10,7 @@ using System.Windows;
 
 namespace FsInfoCat.Desktop.LocalData.RedundantSets
 {
-    public class ListingViewModel : ListingViewModel<RedundantSetListItem, ListItemViewModel, ListingViewModel.ListingOptions>, INotifyNavigatedTo
+    public class ListingViewModel : ListingViewModel<RedundantSetListItem, ListItemViewModel, ListingViewModel.ListingOptions>, INavigatedToNotifiable
     {
         private ListingOptions _currentRange;
 
@@ -144,7 +144,7 @@ namespace FsInfoCat.Desktop.LocalData.RedundantSets
             // TODO: Implement OnAddNewItemCommand(object);
         }
 
-        void INotifyNavigatedTo.OnNavigatedTo() => ReloadAsync(_currentRange);
+        void INavigatedToNotifiable.OnNavigatedTo() => ReloadAsync(_currentRange);
 
         protected override void OnReloadTaskCompleted(ListingOptions options) => _currentRange = options;
 

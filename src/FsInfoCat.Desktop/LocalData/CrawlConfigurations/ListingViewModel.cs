@@ -8,7 +8,7 @@ using System.Windows;
 
 namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
 {
-    public class ListingViewModel : ListingViewModel<CrawlConfigListItem, ListItemViewModel, ListingViewModel.FilterOptions>, INotifyNavigatedTo
+    public class ListingViewModel : ListingViewModel<CrawlConfigListItem, ListItemViewModel, ListingViewModel.FilterOptions>, INavigatedToNotifiable
     {
         private readonly EnumChoiceItem<CrawlStatus> _allOption;
         private readonly EnumChoiceItem<CrawlStatus> _allFailedOption;
@@ -186,7 +186,7 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
             base.OnCancelFilterOptionsCommand(parameter);
         }
 
-        void INotifyNavigatedTo.OnNavigatedTo() => ReloadAsync(_currentStatusOptions);
+        void INavigatedToNotifiable.OnNavigatedTo() => ReloadAsync(_currentStatusOptions);
 
         protected override void OnReloadTaskCompleted(FilterOptions options) => _currentStatusOptions = options;
 

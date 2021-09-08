@@ -10,7 +10,7 @@ using System.Windows;
 
 namespace FsInfoCat.Desktop.LocalData.Volumes
 {
-    public class ListingViewModel : ListingViewModel<VolumeListItemWithFileSystem, ListItemViewModel, ListingViewModel.ListingOptions>, INotifyNavigatedTo
+    public class ListingViewModel : ListingViewModel<VolumeListItemWithFileSystem, ListItemViewModel, ListingViewModel.ListingOptions>, INavigatedToNotifiable
     {
         #region StatusFilterOption Property Members
 
@@ -99,7 +99,7 @@ namespace FsInfoCat.Desktop.LocalData.Volumes
             return base.ReloadAsync(options);
         }
 
-        void INotifyNavigatedTo.OnNavigatedTo() => ReloadAsync(_currentOptions);
+        void INavigatedToNotifiable.OnNavigatedTo() => ReloadAsync(_currentOptions);
 
         protected override IQueryable<VolumeListItemWithFileSystem> GetQueryableListing(ListingOptions options, [DisallowNull] LocalDbContext dbContext,
             [DisallowNull] IWindowsStatusListener statusListener)
