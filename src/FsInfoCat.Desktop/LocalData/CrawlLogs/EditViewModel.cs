@@ -63,8 +63,11 @@ namespace FsInfoCat.Desktop.LocalData.CrawlLogs
 
         #endregion
 
-        public EditViewModel(CrawlJobLog entity) : base(entity)
+        public EditViewModel(CrawlJobLog entity, bool isNew) : base(entity)
         {
+            IsNew = isNew;
+            UpstreamId = entity.UpstreamId;
+            LastSynchronizedOn = entity.LastSynchronizedOn;
             // TODO: Implement EditViewModel
         }
     }

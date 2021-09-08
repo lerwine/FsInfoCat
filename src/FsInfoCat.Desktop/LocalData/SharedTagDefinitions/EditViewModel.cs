@@ -15,7 +15,7 @@ using System.Windows.Threading;
 
 namespace FsInfoCat.Desktop.LocalData.SharedTagDefinitions
 {
-    public class EditViewModel : DependencyObject
+    public class EditViewModel : TagDefinitionRowViewModel<SharedTagDefinition>
     {
         #region UpstreamId Property Members
 
@@ -63,5 +63,11 @@ namespace FsInfoCat.Desktop.LocalData.SharedTagDefinitions
 
         #endregion
 
+        public EditViewModel(SharedTagDefinition entity, bool isNew) : base(entity)
+        {
+            IsNew = isNew;
+            UpstreamId = entity.UpstreamId;
+            LastSynchronizedOn = entity.LastSynchronizedOn;
+        }
     }
 }

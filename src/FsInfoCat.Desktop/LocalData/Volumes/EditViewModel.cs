@@ -63,9 +63,11 @@ namespace FsInfoCat.Desktop.LocalData.Volumes
 
         #endregion
 
-        public EditViewModel(Volume entity) : base(entity)
+        public EditViewModel(Volume entity, bool isNew) : base(entity)
         {
-
+            IsNew = isNew;
+            UpstreamId = entity.UpstreamId;
+            LastSynchronizedOn = entity.LastSynchronizedOn;
         }
     }
 }

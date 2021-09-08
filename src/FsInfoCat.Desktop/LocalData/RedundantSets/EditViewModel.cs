@@ -63,8 +63,11 @@ namespace FsInfoCat.Desktop.LocalData.RedundantSets
 
         #endregion
 
-        public EditViewModel(RedundantSet entity) : base(entity)
+        public EditViewModel(RedundantSet entity, bool isNew) : base(entity)
         {
+            IsNew = isNew;
+            UpstreamId = entity.UpstreamId;
+            LastSynchronizedOn = entity.LastSynchronizedOn;
             // TODO: Implement EditViewModel
         }
     }
