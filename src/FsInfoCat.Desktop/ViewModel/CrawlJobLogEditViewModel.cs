@@ -3,16 +3,17 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat.Desktop.ViewModel
 {
-    public class CrawlJobLogEditViewModel<TEntity, TCrawlConfiguration> : CrawlJobRowViewModel<TEntity>
+    public class CrawlJobLogEditViewModel<TEntity, TCrawlConfigEntity, TCrawlConfigViewModel> : CrawlJobRowViewModel<TEntity>
         where TEntity : DbEntity, ICrawlJobLog
-        where TCrawlConfiguration : ICrawlConfiguration
+        where TCrawlConfigEntity : DbEntity, ICrawlConfigurationListItem
+        where TCrawlConfigViewModel : CrawlConfigListItemViewModel<TCrawlConfigEntity>
     {
-        public CrawlJobLogEditViewModel([DisallowNull] TEntity entity, TCrawlConfiguration crawlConfiguration) : base(entity)
+        public CrawlJobLogEditViewModel([DisallowNull] TEntity entity, TCrawlConfigViewModel crawlConfiguration) : base(entity)
         {
             // TODO: Implement CrawlJobLogEditViewModel
         }
 
-        public TCrawlConfiguration Configuration => throw new NotImplementedException();
+        public TCrawlConfigEntity Configuration => throw new NotImplementedException();
 
         public ushort MaxRecursionDepth => throw new NotImplementedException();
 

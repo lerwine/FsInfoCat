@@ -15,7 +15,7 @@ using System.Windows.Threading;
 
 namespace FsInfoCat.Desktop.LocalData.CrawlLogs
 {
-    public class EditViewModel : DependencyObject
+    public class EditViewModel : CrawlJobLogEditViewModel<CrawlJobLog, CrawlConfigListItem, CrawlConfigurations.ListItemViewModel>
     {
         #region UpstreamId Property Members
 
@@ -62,6 +62,10 @@ namespace FsInfoCat.Desktop.LocalData.CrawlLogs
         public bool IsNew { get => (bool)GetValue(IsNewProperty); private set => SetValue(IsNewPropertyKey, value); }
 
         #endregion
-        // TODO: Implement EditViewModel
+
+        public EditViewModel(CrawlJobLog entity, CrawlConfigurations.ListItemViewModel configuration) : base(entity, configuration)
+        {
+            // TODO: Implement EditViewModel
+        }
     }
 }
