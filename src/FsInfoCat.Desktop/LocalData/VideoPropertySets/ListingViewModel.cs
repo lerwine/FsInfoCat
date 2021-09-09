@@ -1,14 +1,18 @@
 using FsInfoCat.Desktop.ViewModel;
 using FsInfoCat.Local;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Navigation;
 
 namespace FsInfoCat.Desktop.LocalData.VideoPropertySets
 {
-    public class ListingViewModel : ListingViewModel<VideoPropertiesListItem, ListItemViewModel, bool?>, INavigatedToNotifiable
+    public class ListingViewModel : ListingViewModel<VideoPropertiesListItem, ListItemViewModel, bool?, VideoPropertySet, ItemEditResult>, INavigatedToNotifiable
     {
         private bool? _currentOptions;
 
@@ -25,27 +29,6 @@ namespace FsInfoCat.Desktop.LocalData.VideoPropertySets
         public ThreeStateViewModel FilterOptions { get => (ThreeStateViewModel)GetValue(FilterOptionsProperty); private set => SetValue(FilterOptionsPropertyKey, value); }
 
         #endregion
-        #region PageTitle Property Members
-
-        private static readonly DependencyPropertyKey PageTitlePropertyKey = DependencyPropertyBuilder<ListingViewModel, string>
-            .Register(nameof(PageTitle))
-            .DefaultValue("")
-            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default)
-            .AsReadOnly();
-
-        /// <summary>
-        /// Identifies the <see cref="PageTitle"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty PageTitleProperty = PageTitlePropertyKey.DependencyProperty;
-
-        public string PageTitle { get => GetValue(PageTitleProperty) as string; private set => SetValue(PageTitlePropertyKey, value); }
-
-        private void UpdatePageTitle(bool? options) => PageTitle = options.HasValue ?
-                    (options.Value ? FsInfoCat.Properties.Resources.DisplayName_VideoPropertyGroups_HasFiles :
-                    FsInfoCat.Properties.Resources.DisplayName_VideoPropertyGroups_NoExistingFiles) :
-                    FsInfoCat.Properties.Resources.DisplayName_VideoPropertyGroups_All;
-
-        #endregion
 
         public ListingViewModel()
         {
@@ -58,6 +41,11 @@ namespace FsInfoCat.Desktop.LocalData.VideoPropertySets
             UpdatePageTitle(options);
             return base.ReloadAsync(options);
         }
+
+        private void UpdatePageTitle(bool? options) => PageTitle = options.HasValue ?
+                    (options.Value ? FsInfoCat.Properties.Resources.DisplayName_VideoPropertyGroups_HasFiles :
+                    FsInfoCat.Properties.Resources.DisplayName_VideoPropertyGroups_NoExistingFiles) :
+                    FsInfoCat.Properties.Resources.DisplayName_VideoPropertyGroups_All;
 
         void INavigatedToNotifiable.OnNavigatedTo() => ReloadAsync(_currentOptions);
 
@@ -90,29 +78,9 @@ namespace FsInfoCat.Desktop.LocalData.VideoPropertySets
 
         protected override void OnRefreshCommand(object parameter) => ReloadAsync(_currentOptions);
 
-        protected override void OnItemEditCommand([DisallowNull] ListItemViewModel item, object parameter)
-        {
-            // TODO: Implement OnItemEditCommand(object);
-        }
-
         protected override bool ConfirmItemDelete(ListItemViewModel item, object parameter) => MessageBox.Show(Application.Current.MainWindow,
             "This action cannot be undone!\n\nAre you sure you want to remove this video property set from the database?",
             "Delete Video Property Set", MessageBoxButton.YesNo, MessageBoxImage.Exclamation) == MessageBoxResult.Yes;
-
-        protected override async Task<int> DeleteEntityFromDbContextAsync([DisallowNull] VideoPropertiesListItem entity, [DisallowNull] LocalDbContext dbContext,
-            [DisallowNull] IWindowsStatusListener statusListener)
-        {
-            VideoPropertySet target = await dbContext.VideoPropertySets.FindAsync(new object[] { entity.Id }, statusListener.CancellationToken);
-            if (target is null)
-                return 0;
-            _ = dbContext.VideoPropertySets.Remove(target);
-            return await dbContext.SaveChangesAsync(statusListener.CancellationToken);
-        }
-
-        protected override void OnAddNewItemCommand(object parameter)
-        {
-            // TODO: Implement OnAddNewItemCommand(object);
-        }
 
         protected override void OnReloadTaskCompleted(bool? options) => _currentOptions = options;
 
@@ -132,6 +100,45 @@ namespace FsInfoCat.Desktop.LocalData.VideoPropertySets
         {
             UpdatePageTitle(_currentOptions);
             FilterOptions.Value = _currentOptions;
+        }
+
+        protected override bool EntityMatchesCurrentFilter(VideoPropertiesListItem entity)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override PageFunction<ItemEditResult> GetEditPage(VideoPropertySet args)
+        {
+            EditViewModel viewModel;
+            if (args is null)
+                viewModel = new(new VideoPropertySet(), true);
+            else
+                viewModel = new EditViewModel(args, false);
+            return new EditPage(viewModel);
+        }
+
+        protected async override Task<VideoPropertySet> LoadItemAsync([DisallowNull] VideoPropertiesListItem item, [DisallowNull] IWindowsStatusListener statusListener)
+        {
+            using IServiceScope serviceScope = Services.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+            Guid id = item.Id;
+            statusListener.SetMessage("Reading data");
+            return await dbContext.VideoPropertySets.Include(e => e.Files).FirstOrDefaultAsync(e => e.Id == id, statusListener.CancellationToken);
+        }
+
+        protected override void OnEditTaskFaulted(Exception exception, ListItemViewModel item)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override Task<EntityEntry> DeleteEntityFromDbContextAsync([DisallowNull] VideoPropertiesListItem entity, [DisallowNull] LocalDbContext dbContext, [DisallowNull] IWindowsStatusListener statusListener)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override void OnDeleteTaskFaulted(Exception exception, ListItemViewModel item)
+        {
+            throw new NotImplementedException();
         }
     }
 }

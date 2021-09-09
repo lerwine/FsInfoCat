@@ -155,7 +155,7 @@ namespace FsInfoCat.Desktop.LocalData.SummaryPropertySets
             LastSynchronizedOn = entity.LastSynchronizedOn;
         }
 
-        private async Task<SummaryPropertySet> EditItemAsync([DisallowNull] SummaryPropertiesListItem item, [DisallowNull] IWindowsStatusListener statusListener)
+        private static async Task<SummaryPropertySet> EditItemAsync([DisallowNull] SummaryPropertiesListItem item, [DisallowNull] IWindowsStatusListener statusListener)
         {
             using IServiceScope serviceScope = Services.CreateScope();
             using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
@@ -164,7 +164,7 @@ namespace FsInfoCat.Desktop.LocalData.SummaryPropertySets
             return await dbContext.SummaryPropertySets.Include(e => e.Files).FirstOrDefaultAsync(e => e.Id == id, statusListener.CancellationToken);
         }
 
-        public Task EditItemAsync([DisallowNull] SummaryPropertiesListItem item, ReturnEventHandler<ItemEditResult> onReturn = null)
+        public static Task EditItemAsync([DisallowNull] SummaryPropertiesListItem item, ReturnEventHandler<ItemEditResult> onReturn = null)
         {
             if (item is null)
                 throw new ArgumentNullException(nameof(item));

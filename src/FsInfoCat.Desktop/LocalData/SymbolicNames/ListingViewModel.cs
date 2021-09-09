@@ -1,14 +1,18 @@
 using FsInfoCat.Desktop.ViewModel;
 using FsInfoCat.Local;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Navigation;
 
 namespace FsInfoCat.Desktop.LocalData.SymbolicNames
 {
-    public class ListingViewModel : ListingViewModel<SymbolicNameListItem, ListItemViewModel, bool?>, INavigatedToNotifiable
+    public class ListingViewModel : ListingViewModel<SymbolicNameListItem, ListItemViewModel, bool?, SymbolicName, ItemEditResult>, INavigatedToNotifiable
     {
         private bool? _currentStateFilterOption = true;
 
@@ -25,27 +29,6 @@ namespace FsInfoCat.Desktop.LocalData.SymbolicNames
         public ThreeStateViewModel StateFilterOption => (ThreeStateViewModel)GetValue(StateFilterOptionProperty);
 
         #endregion
-        #region PageTitle Property Members
-
-        private static readonly DependencyPropertyKey PageTitlePropertyKey = DependencyPropertyBuilder<ListingViewModel, string>
-            .Register(nameof(PageTitle))
-            .DefaultValue("")
-            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default)
-            .AsReadOnly();
-
-        /// <summary>
-        /// Identifies the <see cref="PageTitle"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty PageTitleProperty = PageTitlePropertyKey.DependencyProperty;
-
-        public string PageTitle { get => GetValue(PageTitleProperty) as string; private set => SetValue(PageTitlePropertyKey, value); }
-
-        private void UpdatePageTitle(bool? options) => PageTitle = options.HasValue ?
-                    (options.Value ? FsInfoCat.Properties.Resources.DisplayName_SymbolicNames_ActiveOnly :
-                    FsInfoCat.Properties.Resources.DisplayName_SymbolicNames_InactiveOnly) :
-                    FsInfoCat.Properties.Resources.DisplayName_SymbolicNames_All;
-
-        #endregion
 
         public ListingViewModel()
         {
@@ -58,6 +41,11 @@ namespace FsInfoCat.Desktop.LocalData.SymbolicNames
             UpdatePageTitle(options);
             return base.ReloadAsync(options);
         }
+
+        private void UpdatePageTitle(bool? options) => PageTitle = options.HasValue ?
+                    (options.Value ? FsInfoCat.Properties.Resources.DisplayName_SymbolicNames_ActiveOnly :
+                    FsInfoCat.Properties.Resources.DisplayName_SymbolicNames_InactiveOnly) :
+                    FsInfoCat.Properties.Resources.DisplayName_SymbolicNames_All;
 
         void INavigatedToNotifiable.OnNavigatedTo() => ReloadAsync(_currentStateFilterOption);
 
@@ -86,28 +74,19 @@ namespace FsInfoCat.Desktop.LocalData.SymbolicNames
 
         protected override void OnRefreshCommand(object parameter) => ReloadAsync(_currentStateFilterOption);
 
-        protected override void OnItemEditCommand([DisallowNull] ListItemViewModel item, object parameter)
-        {
-            // TODO: Implement OnItemEditCommand(object);
-        }
-
         protected override bool ConfirmItemDelete(ListItemViewModel item, object parameter) => MessageBox.Show(Application.Current.MainWindow,
             "This action cannot be undone!\n\nAre you sure you want to remove this symbolic name from the database?",
             "Delete Symbolic Name", MessageBoxButton.YesNo, MessageBoxImage.Exclamation) == MessageBoxResult.Yes;
 
-        protected override async Task<int> DeleteEntityFromDbContextAsync([DisallowNull] SymbolicNameListItem entity, [DisallowNull] LocalDbContext dbContext,
+        protected override async Task<EntityEntry> DeleteEntityFromDbContextAsync([DisallowNull] SymbolicNameListItem entity, [DisallowNull] LocalDbContext dbContext,
             [DisallowNull] IWindowsStatusListener statusListener)
         {
             SymbolicName target = await dbContext.SymbolicNames.FindAsync(new object[] { entity.Id }, statusListener.CancellationToken);
             if (target is null)
-                return 0;
-            _ = dbContext.SymbolicNames.Remove(target);
-            return await dbContext.SaveChangesAsync(statusListener.CancellationToken);
-        }
-
-        protected override void OnAddNewItemCommand(object parameter)
-        {
-            // TODO: Implement OnAddNewItemCommand(object);
+                return null;
+            EntityEntry<SymbolicName> entityEntry = dbContext.SymbolicNames.Remove(target);
+            await dbContext.SaveChangesAsync(statusListener.CancellationToken);
+            return entityEntry;
         }
 
         protected override void OnReloadTaskCompleted(bool? options) => _currentStateFilterOption = options;
@@ -128,6 +107,41 @@ namespace FsInfoCat.Desktop.LocalData.SymbolicNames
         {
             UpdatePageTitle(_currentStateFilterOption);
             StateFilterOption.Value = _currentStateFilterOption;
+        }
+
+        protected override bool EntityMatchesCurrentFilter(SymbolicNameListItem entity)
+        {
+            bool? options = _currentStateFilterOption;
+            return options.HasValue ? entity.IsInactive != options.Value : true;
+        }
+
+        protected override PageFunction<ItemEditResult> GetEditPage(SymbolicName args)
+        {
+            EditViewModel viewModel;
+            if (args is null)
+                viewModel = new(new SymbolicName(), true);
+            else
+                viewModel = new EditViewModel(args, false);
+            return new EditPage(viewModel);
+        }
+
+        protected async override Task<SymbolicName> LoadItemAsync([DisallowNull] SymbolicNameListItem item, [DisallowNull] IWindowsStatusListener statusListener)
+        {
+            using IServiceScope serviceScope = Services.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+            Guid id = item.Id;
+            statusListener.SetMessage("Reading data");
+            return await dbContext.SymbolicNames.Include(e => e.FileSystem).FirstOrDefaultAsync(e => e.Id == id, statusListener.CancellationToken);
+        }
+
+        protected override void OnEditTaskFaulted(Exception exception, ListItemViewModel item)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override void OnDeleteTaskFaulted(Exception exception, ListItemViewModel item)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -1,14 +1,18 @@
 using FsInfoCat.Desktop.ViewModel;
 using FsInfoCat.Local;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Navigation;
 
 namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
 {
-    public class ListingViewModel : ListingViewModel<CrawlConfigListItem, ListItemViewModel, ListingViewModel.FilterOptions>, INavigatedToNotifiable
+    public class ListingViewModel : ListingViewModel<CrawlConfigListItem, ListItemViewModel, ListingViewModel.FilterOptions, CrawlConfiguration, ItemEditResult>, INavigatedToNotifiable
     {
         private readonly EnumChoiceItem<CrawlStatus> _allOption;
         private readonly EnumChoiceItem<CrawlStatus> _allFailedOption;
@@ -131,11 +135,14 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
 
         protected override ListItemViewModel CreateItemViewModel([DisallowNull] CrawlConfigListItem entity) => new(entity);
 
-        protected override async Task<int> DeleteEntityFromDbContextAsync([DisallowNull] CrawlConfigListItem entity, [DisallowNull] LocalDbContext dbContext,
+        protected override async Task<EntityEntry> DeleteEntityFromDbContextAsync([DisallowNull] CrawlConfigListItem entity, [DisallowNull] LocalDbContext dbContext,
             [DisallowNull] IWindowsStatusListener statusListener)
         {
             CrawlConfiguration target = await dbContext.CrawlConfigurations.FindAsync(new object[] { entity.Id }, statusListener.CancellationToken);
-            return (target is null) ? 0 : await CrawlConfiguration.DeleteAsync(target, dbContext, statusListener);
+            if (target is null)
+                return null;
+            await CrawlConfiguration.DeleteAsync(target, dbContext, statusListener);
+            return dbContext.Entry(target);
         }
 
         protected override IQueryable<CrawlConfigListItem> GetQueryableListing(FilterOptions options, [DisallowNull] LocalDbContext dbContext,
@@ -157,16 +164,6 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
                 return dbContext.CrawlConfigListing;
             return dbContext.CrawlConfigListing.Where(c => c.StatusValue != CrawlStatus.Completed && c.StatusValue != CrawlStatus.Disabled && c.StatusValue != CrawlStatus.InProgress &&
                 c.StatusValue != CrawlStatus.NotRunning);
-        }
-
-        protected override void OnAddNewItemCommand(object parameter)
-        {
-            // TODO: Implement OnAddNewItemCommand(object);
-        }
-
-        protected override void OnItemEditCommand([DisallowNull] ListItemViewModel item, object parameter)
-        {
-            // TODO: Implement OnItemEditCommand(object);
         }
 
         protected override void OnRefreshCommand(object parameter) => ReloadAsync(_currentStatusOptions);
@@ -208,6 +205,35 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
             UpdatePageTitle(_currentStatusOptions);
             StatusOptions.SelectedItem = FromFilterOptions(_currentStatusOptions, out bool? isScheduled);
             SchedulingOptions.Value = isScheduled;
+        }
+
+        protected override bool EntityMatchesCurrentFilter(CrawlConfigListItem entity)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override PageFunction<ItemEditResult> GetEditPage(CrawlConfiguration args)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override void OnEditTaskFaulted(Exception exception, ListItemViewModel item)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override void OnDeleteTaskFaulted(Exception exception, ListItemViewModel item)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected async override Task<CrawlConfiguration> LoadItemAsync([DisallowNull] CrawlConfigListItem item, [DisallowNull] IWindowsStatusListener statusListener)
+        {
+            using IServiceScope serviceScope = Services.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+            Guid id = item.Id;
+            statusListener.SetMessage("Reading data");
+            return await dbContext.CrawlConfigurations.Include(e => e.Root).FirstOrDefaultAsync(e => e.Id == id, statusListener.CancellationToken);
         }
 
         public record FilterOptions(CrawlStatus? Status, bool ShowAll, bool? IsScheduled);

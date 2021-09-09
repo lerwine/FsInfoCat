@@ -1,6 +1,7 @@
+using FsInfoCat.Desktop.ViewModel;
 using FsInfoCat.Local;
 
 namespace FsInfoCat.Desktop.LocalData.SummaryPropertySets
 {
-    public record ItemEditResult(SummaryPropertiesListItem ItemEntity, Microsoft.EntityFrameworkCore.EntityState Result);
+    public record ItemEditResult(SummaryPropertiesListItem ItemEntity, EntityEditResultState State) : IEntityEditResult<SummaryPropertiesListItem>;
 }

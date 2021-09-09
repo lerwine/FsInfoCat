@@ -1,6 +1,7 @@
+using FsInfoCat.Desktop.ViewModel;
 using FsInfoCat.Local;
 
 namespace FsInfoCat.Desktop.LocalData.MusicPropertySets
 {
-    public record ItemEditResult(MusicPropertiesListItem ItemEntity, Microsoft.EntityFrameworkCore.EntityState Result);
+    public record ItemEditResult(MusicPropertiesListItem ItemEntity, EntityEditResultState State) : IEntityEditResult<MusicPropertiesListItem>;
 }

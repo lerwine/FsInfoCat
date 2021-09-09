@@ -145,7 +145,7 @@ namespace FsInfoCat.Desktop.LocalData.SymbolicNames
             LastSynchronizedOn = entity.LastSynchronizedOn;
         }
 
-        private async Task<SymbolicName> EditItemAsync([DisallowNull] SymbolicNameListItem item, [DisallowNull] IWindowsStatusListener statusListener)
+        private static async Task<SymbolicName> EditItemAsync([DisallowNull] SymbolicNameListItem item, [DisallowNull] IWindowsStatusListener statusListener)
         {
             using IServiceScope serviceScope = Services.CreateScope();
             using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
@@ -154,7 +154,7 @@ namespace FsInfoCat.Desktop.LocalData.SymbolicNames
             return await dbContext.SymbolicNames.Include(e => e.FileSystem).FirstOrDefaultAsync(e => e.Id == id, statusListener.CancellationToken);
         }
 
-        public Task EditItemAsync([DisallowNull] SymbolicNameListItem item, ReturnEventHandler<ItemEditResult> onReturn = null)
+        public static Task EditItemAsync([DisallowNull] SymbolicNameListItem item, ReturnEventHandler<ItemEditResult> onReturn = null)
         {
             if (item is null)
                 throw new ArgumentNullException(nameof(item));

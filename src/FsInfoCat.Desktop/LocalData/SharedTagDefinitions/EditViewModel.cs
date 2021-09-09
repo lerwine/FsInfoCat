@@ -145,7 +145,7 @@ namespace FsInfoCat.Desktop.LocalData.SharedTagDefinitions
             LastSynchronizedOn = entity.LastSynchronizedOn;
         }
 
-        private async Task<SharedTagDefinition> EditItemAsync([DisallowNull] SharedTagDefinitionListItem item, [DisallowNull] IWindowsStatusListener statusListener)
+        private static async Task<SharedTagDefinition> EditItemAsync([DisallowNull] SharedTagDefinitionListItem item, [DisallowNull] IWindowsStatusListener statusListener)
         {
             using IServiceScope serviceScope = Services.CreateScope();
             using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
@@ -155,7 +155,7 @@ namespace FsInfoCat.Desktop.LocalData.SharedTagDefinitions
                 .FirstOrDefaultAsync(e => e.Id == id, statusListener.CancellationToken);
         }
 
-        public Task EditItemAsync([DisallowNull] SharedTagDefinitionListItem item, ReturnEventHandler<ItemEditResult> onReturn = null)
+        public static Task EditItemAsync([DisallowNull] SharedTagDefinitionListItem item, ReturnEventHandler<ItemEditResult> onReturn = null)
         {
             if (item is null)
                 throw new ArgumentNullException(nameof(item));

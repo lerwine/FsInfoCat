@@ -1,14 +1,18 @@
 using FsInfoCat.Desktop.ViewModel;
 using FsInfoCat.Local;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Navigation;
 
 namespace FsInfoCat.Desktop.LocalData.PhotoPropertySets
 {
-    public class ListingViewModel : ListingViewModel<PhotoPropertiesListItem, ListItemViewModel, bool?>, INavigatedToNotifiable
+    public class ListingViewModel : ListingViewModel<PhotoPropertiesListItem, ListItemViewModel, bool?, PhotoPropertySet, ItemEditResult>, INavigatedToNotifiable
     {
         private bool? _currentOptions;
 
@@ -25,27 +29,6 @@ namespace FsInfoCat.Desktop.LocalData.PhotoPropertySets
         public ThreeStateViewModel FilterOptions { get => (ThreeStateViewModel)GetValue(FilterOptionsProperty); private set => SetValue(FilterOptionsPropertyKey, value); }
 
         #endregion
-        #region PageTitle Property Members
-
-        private static readonly DependencyPropertyKey PageTitlePropertyKey = DependencyPropertyBuilder<ListingViewModel, string>
-            .Register(nameof(PageTitle))
-            .DefaultValue("")
-            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default)
-            .AsReadOnly();
-
-        /// <summary>
-        /// Identifies the <see cref="PageTitle"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty PageTitleProperty = PageTitlePropertyKey.DependencyProperty;
-
-        public string PageTitle { get => GetValue(PageTitleProperty) as string; private set => SetValue(PageTitlePropertyKey, value); }
-
-        private void UpdatePageTitle(bool? options) => PageTitle = options.HasValue ?
-                    (options.Value ? FsInfoCat.Properties.Resources.DisplayName_PhotoPropertyGroups_HasFiles :
-                    FsInfoCat.Properties.Resources.DisplayName_PhotoPropertyGroups_NoExistingFiles) :
-                    FsInfoCat.Properties.Resources.DisplayName_PhotoPropertyGroups_All;
-
-        #endregion
 
         public ListingViewModel()
         {
@@ -58,6 +41,11 @@ namespace FsInfoCat.Desktop.LocalData.PhotoPropertySets
             UpdatePageTitle(options);
             return base.ReloadAsync(options);
         }
+
+        private void UpdatePageTitle(bool? options) => PageTitle = options.HasValue ?
+                    (options.Value ? FsInfoCat.Properties.Resources.DisplayName_PhotoPropertyGroups_HasFiles :
+                    FsInfoCat.Properties.Resources.DisplayName_PhotoPropertyGroups_NoExistingFiles) :
+                    FsInfoCat.Properties.Resources.DisplayName_PhotoPropertyGroups_All;
 
         void INavigatedToNotifiable.OnNavigatedTo() => ReloadAsync(_currentOptions);
 
@@ -91,28 +79,19 @@ namespace FsInfoCat.Desktop.LocalData.PhotoPropertySets
 
         protected override void OnRefreshCommand(object parameter) => ReloadAsync(_currentOptions);
 
-        protected override void OnItemEditCommand([DisallowNull] ListItemViewModel item, object parameter)
-        {
-            // TODO: Implement OnItemEditCommand(object);
-        }
-
         protected override bool ConfirmItemDelete(ListItemViewModel item, object parameter) => MessageBox.Show(Application.Current.MainWindow,
             "This action cannot be undone!\n\nAre you sure you want to remove this photo property set from the database?",
             "Delete Photo Property Set", MessageBoxButton.YesNo, MessageBoxImage.Exclamation) == MessageBoxResult.Yes;
 
-        protected override async Task<int> DeleteEntityFromDbContextAsync([DisallowNull] PhotoPropertiesListItem entity, [DisallowNull] LocalDbContext dbContext,
+        protected override async Task<EntityEntry> DeleteEntityFromDbContextAsync([DisallowNull] PhotoPropertiesListItem entity, [DisallowNull] LocalDbContext dbContext,
             [DisallowNull] IWindowsStatusListener statusListener)
         {
             PhotoPropertySet target = await dbContext.PhotoPropertySets.FindAsync(new object[] { entity.Id }, statusListener.CancellationToken);
             if (target is null)
-                return 0;
-            _ = dbContext.PhotoPropertySets.Remove(target);
-            return await dbContext.SaveChangesAsync(statusListener.CancellationToken);
-        }
-
-        protected override void OnAddNewItemCommand(object parameter)
-        {
-            // TODO: Implement OnAddNewItemCommand(object);
+                return null;
+            EntityEntry entry = dbContext.PhotoPropertySets.Remove(target);
+            await dbContext.SaveChangesAsync(statusListener.CancellationToken);
+            return entry;
         }
 
         protected override void OnReloadTaskCompleted(bool? options) => _currentOptions = options;
@@ -133,6 +112,40 @@ namespace FsInfoCat.Desktop.LocalData.PhotoPropertySets
         {
             UpdatePageTitle(_currentOptions);
             FilterOptions.Value = _currentOptions;
+        }
+
+        protected override bool EntityMatchesCurrentFilter(PhotoPropertiesListItem entity)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override PageFunction<ItemEditResult> GetEditPage(PhotoPropertySet args)
+        {
+            EditViewModel viewModel;
+            if (args is null)
+                viewModel = new(new PhotoPropertySet(), true);
+            else
+                viewModel = new EditViewModel(args, false);
+            return new EditPage(viewModel);
+        }
+
+        protected async override Task<PhotoPropertySet> LoadItemAsync([DisallowNull] PhotoPropertiesListItem item, [DisallowNull] IWindowsStatusListener statusListener)
+        {
+            using IServiceScope serviceScope = Services.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+            Guid id = item.Id;
+            statusListener.SetMessage("Reading data");
+            return await dbContext.PhotoPropertySets.Include(e => e.Files).FirstOrDefaultAsync(e => e.Id == id, statusListener.CancellationToken);
+        }
+
+        protected override void OnEditTaskFaulted(Exception exception, ListItemViewModel item)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override void OnDeleteTaskFaulted(Exception exception, ListItemViewModel item)
+        {
+            throw new NotImplementedException();
         }
     }
 }

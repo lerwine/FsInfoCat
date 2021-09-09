@@ -1,16 +1,20 @@
 using FsInfoCat.Desktop.ViewModel;
 using FsInfoCat.Local;
 using FsInfoCat.Numerics;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Navigation;
 
 namespace FsInfoCat.Desktop.LocalData.RedundantSets
 {
-    public class ListingViewModel : ListingViewModel<RedundantSetListItem, ListItemViewModel, ListingViewModel.ListingOptions>, INavigatedToNotifiable
+    public class ListingViewModel : ListingViewModel<RedundantSetListItem, ListItemViewModel, ListingViewModel.ListingOptions, RedundantSet, ItemEditResult>, INavigatedToNotifiable
     {
         private ListingOptions _currentRange;
 
@@ -40,21 +44,6 @@ namespace FsInfoCat.Desktop.LocalData.RedundantSets
         public DenominatedLengthViewModel MaximumRange => (DenominatedLengthViewModel)GetValue(MaximumRangeProperty);
 
         #endregion
-        #region PageTitle Property Members
-
-        private static readonly DependencyPropertyKey PageTitlePropertyKey = DependencyPropertyBuilder<ListingViewModel, string>
-            .Register(nameof(PageTitle))
-            .DefaultValue(FsInfoCat.Properties.Resources.DisplayName_RedundantSets) // Binary Redundancy Sets
-            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default)
-            .AsReadOnly();
-
-        /// <summary>
-        /// Identifies the <see cref="PageTitle"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty PageTitleProperty = PageTitlePropertyKey.DependencyProperty;
-
-        public string PageTitle { get => GetValue(PageTitleProperty) as string; private set => SetValue(PageTitlePropertyKey, value); }
-
         private void UpdatePageTitle(ListingOptions options)
         {
             (BinaryDenominatedInt64F? minRange, BinaryDenominatedInt64F? maxRange) = options;
@@ -72,7 +61,6 @@ namespace FsInfoCat.Desktop.LocalData.RedundantSets
                 PageTitle = FsInfoCat.Properties.Resources.DisplayName_RedundantSets_All;
         }
 
-        #endregion
 
         protected override IAsyncJob ReloadAsync(ListingOptions options)
         {
@@ -120,28 +108,36 @@ namespace FsInfoCat.Desktop.LocalData.RedundantSets
 
         protected override void OnRefreshCommand(object parameter) => ReloadAsync(_currentRange);
 
-        protected override void OnItemEditCommand([DisallowNull] ListItemViewModel item, object parameter)
+        private static async Task<FileSystem> LoadItemAsync([DisallowNull] FileSystemListItem item, [DisallowNull] IWindowsStatusListener statusListener)
         {
-            // TODO: Implement OnItemEditCommand(object);
+            using IServiceScope serviceScope = Services.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+            Guid id = item.Id;
+            statusListener.SetMessage("Reading data");
+            return await dbContext.FileSystems.Include(e => e.SymbolicNames).FirstOrDefaultAsync(e => e.Id == id, statusListener.CancellationToken);
+        }
+
+
+        private void OnItemAdded(object sender, ReturnEventArgs<FileSystem> e)
+        {
+            if (e.Result is not null)
+                throw new NotImplementedException();
+            // TODO: Add to current list if it matches filter.
         }
 
         protected override bool ConfirmItemDelete(ListItemViewModel item, object parameter) => MessageBox.Show(Application.Current.MainWindow,
             "This action cannot be undone!\n\nAre you sure you want to remove this redundancy set from the database?",
             "Delete Redundancy Set", MessageBoxButton.YesNo, MessageBoxImage.Exclamation) == MessageBoxResult.Yes;
 
-        protected override async Task<int> DeleteEntityFromDbContextAsync([DisallowNull] RedundantSetListItem entity, [DisallowNull] LocalDbContext dbContext,
+        protected override async Task<EntityEntry> DeleteEntityFromDbContextAsync([DisallowNull] RedundantSetListItem entity, [DisallowNull] LocalDbContext dbContext,
             [DisallowNull] IWindowsStatusListener statusListener)
         {
             RedundantSet target = await dbContext.RedundantSets.FindAsync(new object[] { entity.Id }, statusListener.CancellationToken);
             if (target is null)
-                return 0;
-            _ = dbContext.RedundantSets.Remove(target);
-            return await dbContext.SaveChangesAsync(statusListener.CancellationToken);
-        }
-
-        protected override void OnAddNewItemCommand(object parameter)
-        {
-            // TODO: Implement OnAddNewItemCommand(object);
+                return null;
+            EntityEntry entry = dbContext.RedundantSets.Remove(target);
+            await dbContext.SaveChangesAsync(statusListener.CancellationToken);
+            return entry;
         }
 
         void INavigatedToNotifiable.OnNavigatedTo() => ReloadAsync(_currentRange);
@@ -166,6 +162,31 @@ namespace FsInfoCat.Desktop.LocalData.RedundantSets
             MinimumRange.DenominatedValue = _currentRange.MinRange;
             MaximumRange.DenominatedValue = _currentRange.MaxRange;
             UpdatePageTitle(_currentRange);
+        }
+
+        protected override bool EntityMatchesCurrentFilter(RedundantSetListItem entity)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override PageFunction<ItemEditResult> GetEditPage(RedundantSet args)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override Task<RedundantSet> LoadItemAsync([DisallowNull] RedundantSetListItem item, [DisallowNull] IWindowsStatusListener statusListener)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override void OnEditTaskFaulted(Exception exception, ListItemViewModel item)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override void OnDeleteTaskFaulted(Exception exception, ListItemViewModel item)
+        {
+            throw new NotImplementedException();
         }
 
         public ListingViewModel()

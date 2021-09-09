@@ -1,14 +1,17 @@
 using FsInfoCat.Desktop.ViewModel;
 using FsInfoCat.Local;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Navigation;
 
 namespace FsInfoCat.Desktop.LocalData.SharedTagDefinitions
 {
-    public class ListingViewModel : ListingViewModel<SharedTagDefinitionListItem, ListItemViewModel, bool?>, INavigatedToNotifiable
+    public class ListingViewModel : ListingViewModel<SharedTagDefinitionListItem, ListItemViewModel, bool?, SharedTagDefinition, ItemEditResult>, INavigatedToNotifiable
     {
         private bool? _currentOptions = true;
 
@@ -29,27 +32,11 @@ namespace FsInfoCat.Desktop.LocalData.SharedTagDefinitions
         public ThreeStateViewModel ListingOptions => (ThreeStateViewModel)GetValue(ListingOptionsProperty);
 
         #endregion
-        #region PageTitle Property Members
-
-        private static readonly DependencyPropertyKey PageTitlePropertyKey = DependencyPropertyBuilder<ListingViewModel, string>
-            .Register(nameof(PageTitle))
-            .DefaultValue("")
-            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default)
-            .AsReadOnly();
-
-        /// <summary>
-        /// Identifies the <see cref="PageTitle"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty PageTitleProperty = PageTitlePropertyKey.DependencyProperty;
-
-        public string PageTitle { get => GetValue(PageTitleProperty) as string; private set => SetValue(PageTitlePropertyKey, value); }
 
         private void UpdatePageTitle(bool? options) => PageTitle = options.HasValue ?
                     (options.Value ? FsInfoCat.Properties.Resources.DisplayName_SharedTagDefinition_ActiveOnly :
                     FsInfoCat.Properties.Resources.DisplayName_SharedTagDefinition_InactiveOnlly) :
                     FsInfoCat.Properties.Resources.DisplayName_SharedTagDefinition_All;
-
-        #endregion
 
         public ListingViewModel()
         {
@@ -90,9 +77,33 @@ namespace FsInfoCat.Desktop.LocalData.SharedTagDefinitions
 
         protected override void OnRefreshCommand(object parameter) => ReloadAsync(_currentOptions);
 
-        protected override void OnItemEditCommand([DisallowNull] ListItemViewModel item, object parameter)
+        private static async Task<FileSystem> LoadItemAsync([DisallowNull] FileSystemListItem item, [DisallowNull] IWindowsStatusListener statusListener)
         {
-            // TODO: Implement OnItemEditCommand(object);
+            using IServiceScope serviceScope = Services.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+            Guid id = item.Id;
+            statusListener.SetMessage("Reading data");
+            return await dbContext.FileSystems.Include(e => e.SymbolicNames).FirstOrDefaultAsync(e => e.Id == id, statusListener.CancellationToken);
+        }
+
+        private void OnEditItemComplete(object sender, ReturnEventArgs<ItemEditResult> e)
+        {
+            switch (e.Result.Result)
+            {
+                case Microsoft.EntityFrameworkCore.EntityState.Added:
+                    // TODO: Add to current list if it matches filter.
+                    break;
+                case Microsoft.EntityFrameworkCore.EntityState.Deleted:
+                    RemoveItem(Items.FirstOrDefault(i => ReferenceEquals(i.Entity, e.Result.ItemEntity)));
+                    break;
+            }
+        }
+
+        private void OnItemAdded(object sender, ReturnEventArgs<FileSystem> e)
+        {
+            if (e.Result is not null)
+                throw new NotImplementedException();
+            // TODO: Add to current list if it matches filter.
         }
 
         protected override bool ConfirmItemDelete(ListItemViewModel item, object parameter)
@@ -172,11 +183,6 @@ namespace FsInfoCat.Desktop.LocalData.SharedTagDefinitions
         {
             SharedTagDefinition target = await dbContext.SharedTagDefinitions.FindAsync(new object[] { entity.Id }, statusListener.CancellationToken);
             return (target is null) ? 0 : await SharedTagDefinition.DeleteAsync(target, dbContext, statusListener);
-        }
-
-        protected override void OnAddNewItemCommand(object parameter)
-        {
-            // TODO: Implement OnAddNewItemCommand(object);
         }
 
         protected override void OnReloadTaskCompleted(bool? options) => _currentOptions = options;

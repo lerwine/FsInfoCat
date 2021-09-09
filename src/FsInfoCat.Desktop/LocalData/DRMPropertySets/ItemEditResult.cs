@@ -1,6 +1,7 @@
-﻿using FsInfoCat.Local;
+using FsInfoCat.Desktop.ViewModel;
+using FsInfoCat.Local;
 
 namespace FsInfoCat.Desktop.LocalData.DRMPropertySets
 {
-    public record ItemEditResult(DRMPropertiesListItem ItemEntity, Microsoft.EntityFrameworkCore.EntityState Result);
+    public record ItemEditResult(DRMPropertiesListItem ItemEntity, EntityEditResultState State) : IEntityEditResult<DRMPropertiesListItem>;
 }

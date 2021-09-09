@@ -1,14 +1,19 @@
 using FsInfoCat.Desktop.ViewModel;
 using FsInfoCat.Local;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Navigation;
 
 namespace FsInfoCat.Desktop.LocalData.FileSystems
 {
-    public class ListingViewModel : ListingViewModel<FileSystemListItem, ListItemViewModel, bool?>, INavigatedToNotifiable
+
+    public class ListingViewModel : ListingViewModel<FileSystemListItem, ListItemViewModel, bool?, FileSystem, ItemEditResult>, INavigatedToNotifiable
     {
         bool? _currentListingOption = true;
 
@@ -29,33 +34,17 @@ namespace FsInfoCat.Desktop.LocalData.FileSystems
         public ThreeStateViewModel ListingOption => (ThreeStateViewModel)GetValue(ListingOptionProperty);
 
         #endregion
-        #region PageTitle Property Members
-
-        private static readonly DependencyPropertyKey PageTitlePropertyKey = DependencyPropertyBuilder<ListingViewModel, string>
-            .Register(nameof(PageTitle))
-            .DefaultValue("")
-            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default)
-            .AsReadOnly();
-
-        /// <summary>
-        /// Identifies the <see cref="PageTitle"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty PageTitleProperty = PageTitlePropertyKey.DependencyProperty;
-
-        public string PageTitle { get => GetValue(PageTitleProperty) as string; private set => SetValue(PageTitlePropertyKey, value); }
-
-        private void UpdatePageTitle(bool? options) => PageTitle = options.HasValue ?
-                    (options.Value ? FsInfoCat.Properties.Resources.DisplayName_FileSystemDefinitions_IsActive :
-                    FsInfoCat.Properties.Resources.DisplayName_FileSystemDefinitions_IsInactive) :
-                    FsInfoCat.Properties.Resources.DisplayName_FileSystemDefinitions_All;
-
-        #endregion
 
         public ListingViewModel()
         {
             SetValue(ListingOptionPropertyKey, new ThreeStateViewModel(_currentListingOption));
             UpdatePageTitle(_currentListingOption);
         }
+
+        private void UpdatePageTitle(bool? options) => PageTitle = options.HasValue ?
+                    (options.Value ? FsInfoCat.Properties.Resources.DisplayName_FileSystemDefinitions_IsActive :
+                    FsInfoCat.Properties.Resources.DisplayName_FileSystemDefinitions_IsInactive) :
+                    FsInfoCat.Properties.Resources.DisplayName_FileSystemDefinitions_All;
 
         protected override IAsyncJob ReloadAsync(bool? options)
         {
@@ -90,26 +79,18 @@ namespace FsInfoCat.Desktop.LocalData.FileSystems
 
         protected override void OnRefreshCommand(object parameter) => ReloadAsync(_currentListingOption);
 
-        protected override void OnItemEditCommand([DisallowNull] ListItemViewModel item, object parameter)
-        {
-            //EditViewModel.ShowEditWindow(item.Entity);
-            // TODO: Implement OnItemEditCommand(object);
-        }
-
         protected override bool ConfirmItemDelete(ListItemViewModel item, object parameter) => MessageBox.Show(Application.Current.MainWindow,
             "This action cannot be undone!\n\nAre you sure you want to remove this file system definition from the database?",
             "Delete File System Definition", MessageBoxButton.YesNo, MessageBoxImage.Exclamation) == MessageBoxResult.Yes;
 
-        protected override async Task<int> DeleteEntityFromDbContextAsync([DisallowNull] FileSystemListItem entity, [DisallowNull] LocalDbContext dbContext,
+        protected override async Task<EntityEntry> DeleteEntityFromDbContextAsync([DisallowNull] FileSystemListItem entity, [DisallowNull] LocalDbContext dbContext,
             [DisallowNull] IWindowsStatusListener statusListener)
         {
             FileSystem target = await dbContext.FileSystems.FindAsync(new object[] { entity.Id }, statusListener.CancellationToken);
-            return (target is null) ? 0 : await FileSystem.DeleteAsync(target, dbContext, statusListener);
-        }
-
-        protected override void OnAddNewItemCommand(object parameter)
-        {
-            // TODO: Implement OnAddNewItemCommand(object);
+            if (target is null)
+                return null;
+            await FileSystem.DeleteAsync(target, dbContext, statusListener);
+            return dbContext.Entry(target);
         }
 
         protected override void OnReloadTaskCompleted(bool? options) => _currentListingOption = options;
@@ -130,6 +111,55 @@ namespace FsInfoCat.Desktop.LocalData.FileSystems
         {
             UpdatePageTitle(_currentListingOption);
             ListingOption.Value = _currentListingOption;
+        }
+
+        protected override bool EntityMatchesCurrentFilter(FileSystemListItem entity)
+        {
+            bool? option = _currentListingOption;
+            return option.HasValue ? entity.IsInactive != option.HasValue : true;
+        }
+
+        protected override PageFunction<ItemEditResult> GetEditPage(FileSystem args)
+        {
+            EditViewModel viewModel;
+            if (args is null)
+                viewModel = new(new FileSystem(), true);
+            else
+                viewModel = new EditViewModel(args, false);
+            return new EditPage(viewModel);
+        }
+
+        protected async override Task<FileSystem> LoadItemAsync([DisallowNull] FileSystemListItem item, [DisallowNull] IWindowsStatusListener statusListener)
+        {
+            using IServiceScope serviceScope = Services.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+            Guid id = item.Id;
+            statusListener.SetMessage("Reading data");
+            return await dbContext.FileSystems.Include(e => e.SymbolicNames).FirstOrDefaultAsync(e => e.Id == id, statusListener.CancellationToken);
+        }
+
+        protected override void OnDeleteTaskFaulted(Exception exception, ListItemViewModel item)
+        {
+            UpdatePageTitle(_currentListingOption);
+            ListingOption.Value = _currentListingOption;
+            _ = MessageBox.Show(Application.Current.MainWindow,
+                ((exception is AsyncOperationFailureException aExc) ? aExc.UserMessage.NullIfWhiteSpace() :
+                    (exception as AggregateException)?.InnerExceptions.OfType<AsyncOperationFailureException>().Select(e => e.UserMessage)
+                    .Where(m => !string.IsNullOrWhiteSpace(m)).FirstOrDefault()) ??
+                    "There was an unexpected error while loading items from the databse.\n\nSee logs for further information",
+                "Database Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+
+        protected override void OnEditTaskFaulted(Exception exception, ListItemViewModel item)
+        {
+            UpdatePageTitle(_currentListingOption);
+            ListingOption.Value = _currentListingOption;
+            _ = MessageBox.Show(Application.Current.MainWindow,
+                ((exception is AsyncOperationFailureException aExc) ? aExc.UserMessage.NullIfWhiteSpace() :
+                    (exception as AggregateException)?.InnerExceptions.OfType<AsyncOperationFailureException>().Select(e => e.UserMessage)
+                    .Where(m => !string.IsNullOrWhiteSpace(m)).FirstOrDefault()) ??
+                    "There was an unexpected error while loading items from the databse.\n\nSee logs for further information",
+                "Database Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
 }

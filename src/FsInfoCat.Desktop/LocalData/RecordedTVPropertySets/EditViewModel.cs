@@ -156,7 +156,7 @@ namespace FsInfoCat.Desktop.LocalData.RecordedTVPropertySets
             LastSynchronizedOn = entity.LastSynchronizedOn;
         }
 
-        private async Task<RecordedTVPropertySet> EditItemAsync([DisallowNull] RecordedTVPropertiesListItem item, [DisallowNull] IWindowsStatusListener statusListener)
+        private static async Task<RecordedTVPropertySet> EditItemAsync([DisallowNull] RecordedTVPropertiesListItem item, [DisallowNull] IWindowsStatusListener statusListener)
         {
             using IServiceScope serviceScope = Services.CreateScope();
             using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
@@ -165,7 +165,7 @@ namespace FsInfoCat.Desktop.LocalData.RecordedTVPropertySets
             return await dbContext.RecordedTVPropertySets.Include(e => e.Files).FirstOrDefaultAsync(e => e.Id == id, statusListener.CancellationToken);
         }
 
-        public Task EditItemAsync([DisallowNull] RecordedTVPropertiesListItem item, ReturnEventHandler<ItemEditResult> onReturn = null)
+        public static Task EditItemAsync([DisallowNull] RecordedTVPropertiesListItem item, ReturnEventHandler<ItemEditResult> onReturn = null)
         {
             if (item is null)
                 throw new ArgumentNullException(nameof(item));

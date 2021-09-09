@@ -150,7 +150,7 @@ namespace FsInfoCat.Desktop.LocalData.PhotoPropertySets
             LastSynchronizedOn = entity.LastSynchronizedOn;
         }
 
-        private async Task<PhotoPropertySet> EditItemAsync([DisallowNull] PhotoPropertiesListItem item, [DisallowNull] IWindowsStatusListener statusListener)
+        private static async Task<PhotoPropertySet> EditItemAsync([DisallowNull] PhotoPropertiesListItem item, [DisallowNull] IWindowsStatusListener statusListener)
         {
             using IServiceScope serviceScope = Services.CreateScope();
             using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
@@ -159,7 +159,7 @@ namespace FsInfoCat.Desktop.LocalData.PhotoPropertySets
             return await dbContext.PhotoPropertySets.Include(e => e.Files).FirstOrDefaultAsync(e => e.Id == id, statusListener.CancellationToken);
         }
 
-        public Task EditItemAsync([DisallowNull] PhotoPropertiesListItem item, ReturnEventHandler<ItemEditResult> onReturn = null)
+        public static Task EditItemAsync([DisallowNull] PhotoPropertiesListItem item, ReturnEventHandler<ItemEditResult> onReturn = null)
         {
             if (item is null)
                 throw new ArgumentNullException(nameof(item));

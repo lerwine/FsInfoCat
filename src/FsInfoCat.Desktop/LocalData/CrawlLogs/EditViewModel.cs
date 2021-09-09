@@ -146,7 +146,7 @@ namespace FsInfoCat.Desktop.LocalData.CrawlLogs
             // TODO: Implement EditViewModel
         }
 
-        private async Task<CrawlJobLog> EditItemAsync([DisallowNull] CrawlJobLogListItem item, [DisallowNull] IWindowsStatusListener statusListener)
+        private static async Task<CrawlJobLog> EditItemAsync([DisallowNull] CrawlJobLogListItem item, [DisallowNull] IWindowsStatusListener statusListener)
         {
             using IServiceScope serviceScope = Services.CreateScope();
             using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
@@ -155,7 +155,7 @@ namespace FsInfoCat.Desktop.LocalData.CrawlLogs
             return await dbContext.CrawlJobLogs.Include(e => e.Configuration).FirstOrDefaultAsync(e => e.Id == id, statusListener.CancellationToken);
         }
 
-        public Task EditItemAsync([DisallowNull] CrawlJobLogListItem item, ReturnEventHandler<ItemEditResult> onReturn = null)
+        public static Task EditItemAsync([DisallowNull] CrawlJobLogListItem item, ReturnEventHandler<ItemEditResult> onReturn = null)
         {
             if (item is null)
                 throw new ArgumentNullException(nameof(item));

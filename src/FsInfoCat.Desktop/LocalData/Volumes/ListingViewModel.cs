@@ -2,15 +2,17 @@ using FsInfoCat.Desktop.ViewModel;
 using FsInfoCat.Local;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Navigation;
 
 namespace FsInfoCat.Desktop.LocalData.Volumes
 {
-    public class ListingViewModel : ListingViewModel<VolumeListItemWithFileSystem, ListItemViewModel, ListingViewModel.ListingOptions>, INavigatedToNotifiable
+    public class ListingViewModel : ListingViewModel<VolumeListItemWithFileSystem, ListItemViewModel, ListingViewModel.ListingOptions, Volume, ItemEditResult>, INavigatedToNotifiable
     {
         #region StatusFilterOption Property Members
 
@@ -136,25 +138,19 @@ namespace FsInfoCat.Desktop.LocalData.Volumes
         }
         protected override void OnRefreshCommand(object parameter) => ReloadAsync(_currentOptions);
 
-        protected override void OnItemEditCommand(ListItemViewModel item, object parameter)
-        {
-            // TODO: Implement OnItemEditCommand(object);
-        }
-
         protected override bool ConfirmItemDelete(ListItemViewModel item, object parameter) => MessageBox.Show(Application.Current.MainWindow,
             "This action cannot be undone!\n\nAre you sure you want to remove this volume record from the database?",
             "Delete Volume Record", MessageBoxButton.YesNo, MessageBoxImage.Exclamation) == MessageBoxResult.Yes;
 
-        protected override void OnAddNewItemCommand(object parameter)
-        {
-            // TODO: Implement OnAddNewItemCommand(object);
-        }
-
-        protected override async Task<int> DeleteEntityFromDbContextAsync([DisallowNull] VolumeListItemWithFileSystem entity, [DisallowNull] LocalDbContext dbContext,
+        protected override async Task<EntityEntry> DeleteEntityFromDbContextAsync([DisallowNull] VolumeListItemWithFileSystem entity, [DisallowNull] LocalDbContext dbContext,
             [DisallowNull] IWindowsStatusListener statusListener)
         {
             Volume target = await dbContext.Volumes.FindAsync(new object[] { entity.Id }, statusListener.CancellationToken);
-            return (target is null) ? 0 : await Volume.DeleteAsync(target, dbContext, statusListener);
+            EntityEntry<Volume> entry = dbContext.Entry(target);
+            if (target is null)
+                return null;
+            await Volume.DeleteAsync(target, dbContext, statusListener);
+            return entry;
         }
 
         protected override void OnReloadTaskCompleted(ListingOptions options) => _currentOptions = options;
@@ -175,6 +171,35 @@ namespace FsInfoCat.Desktop.LocalData.Volumes
         {
             UpdatePageTitle(_currentOptions);
             StatusFilterOption.SelectedItem = FromListingOptions(_currentOptions);
+        }
+
+        protected override bool EntityMatchesCurrentFilter(VolumeListItemWithFileSystem entity)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override PageFunction<ItemEditResult> GetEditPage(Volume args)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected async override Task<Volume> LoadItemAsync([DisallowNull] VolumeListItemWithFileSystem item, [DisallowNull] IWindowsStatusListener statusListener)
+        {
+            using IServiceScope serviceScope = Services.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+            Guid id = item.Id;
+            statusListener.SetMessage("Reading data");
+            return await dbContext.Volumes.Include(e => e.FileSystem).Include(e => e.RootDirectory).FirstOrDefaultAsync(e => e.Id == id, statusListener.CancellationToken);
+        }
+
+        protected override void OnEditTaskFaulted(Exception exception, ListItemViewModel item)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override void OnDeleteTaskFaulted(Exception exception, ListItemViewModel item)
+        {
+            throw new NotImplementedException();
         }
 
         public record ListingOptions(VolumeStatus? Status, bool? ShowActiveOnly);

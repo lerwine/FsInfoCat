@@ -146,7 +146,7 @@ namespace FsInfoCat.Desktop.LocalData.RedundantSets
             // TODO: Implement EditViewModel
         }
 
-        private async Task<RedundantSet> EditItemAsync([DisallowNull] RedundantSetListItem item, [DisallowNull] IWindowsStatusListener statusListener)
+        private static async Task<RedundantSet> EditItemAsync([DisallowNull] RedundantSetListItem item, [DisallowNull] IWindowsStatusListener statusListener)
         {
             using IServiceScope serviceScope = Services.CreateScope();
             using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
@@ -155,7 +155,7 @@ namespace FsInfoCat.Desktop.LocalData.RedundantSets
             return await dbContext.RedundantSets.Include(e => e.BinaryProperties).Include(e => e.Redundancies).FirstOrDefaultAsync(e => e.Id == id, statusListener.CancellationToken);
         }
 
-        public Task EditItemAsync([DisallowNull] RedundantSetListItem item, ReturnEventHandler<ItemEditResult> onReturn = null)
+        public static Task EditItemAsync([DisallowNull] RedundantSetListItem item, ReturnEventHandler<ItemEditResult> onReturn = null)
         {
             if (item is null)
                 throw new ArgumentNullException(nameof(item));

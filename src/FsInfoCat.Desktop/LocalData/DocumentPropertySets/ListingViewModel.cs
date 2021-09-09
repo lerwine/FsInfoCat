@@ -1,14 +1,18 @@
 using FsInfoCat.Desktop.ViewModel;
 using FsInfoCat.Local;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Navigation;
 
 namespace FsInfoCat.Desktop.LocalData.DocumentPropertySets
 {
-    public class ListingViewModel : ListingViewModel<DocumentPropertiesListItem, ListItemViewModel, bool?>, INavigatedToNotifiable
+    public class ListingViewModel : ListingViewModel<DocumentPropertiesListItem, ListItemViewModel, bool?, DocumentPropertySet, ItemEditResult>, INavigatedToNotifiable
     {
         private bool? _currentOptions;
 
@@ -91,28 +95,28 @@ namespace FsInfoCat.Desktop.LocalData.DocumentPropertySets
 
         protected override void OnRefreshCommand(object parameter) => ReloadAsync(_currentOptions);
 
-        protected override void OnItemEditCommand([DisallowNull] ListItemViewModel item, object parameter)
+        private static async Task<FileSystem> LoadItemAsync([DisallowNull] FileSystemListItem item, [DisallowNull] IWindowsStatusListener statusListener)
         {
-            // TODO: Implement OnItemEditCommand(object);
+            using IServiceScope serviceScope = Services.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+            Guid id = item.Id;
+            statusListener.SetMessage("Reading data");
+            return await dbContext.FileSystems.Include(e => e.SymbolicNames).FirstOrDefaultAsync(e => e.Id == id, statusListener.CancellationToken);
         }
 
         protected override bool ConfirmItemDelete(ListItemViewModel item, object parameter) => MessageBox.Show(Application.Current.MainWindow,
             "This action cannot be undone!\n\nAre you sure you want to remove this document property set from the database?",
             "Delete Document Property Set", MessageBoxButton.YesNo, MessageBoxImage.Exclamation) == MessageBoxResult.Yes;
 
-        protected override async Task<int> DeleteEntityFromDbContextAsync([DisallowNull] DocumentPropertiesListItem entity, [DisallowNull] LocalDbContext dbContext,
+        protected override async Task<EntityEntry> DeleteEntityFromDbContextAsync([DisallowNull] DocumentPropertiesListItem entity, [DisallowNull] LocalDbContext dbContext,
             [DisallowNull] IWindowsStatusListener statusListener)
         {
             DocumentPropertySet target = await dbContext.DocumentPropertySets.FindAsync(new object[] { entity.Id }, statusListener.CancellationToken);
             if (target is null)
-                return 0;
-            _ = dbContext.DocumentPropertySets.Remove(target);
-            return await dbContext.SaveChangesAsync(statusListener.CancellationToken);
-        }
-
-        protected override void OnAddNewItemCommand(object parameter)
-        {
-            // TODO: Implement OnAddNewItemCommand(object);
+                return null;
+            EntityEntry entry = dbContext.DocumentPropertySets.Remove(target);
+            await dbContext.SaveChangesAsync(statusListener.CancellationToken);
+            return entry;
         }
 
         protected override void OnReloadTaskCompleted(bool? options) => _currentOptions = options;
@@ -133,6 +137,31 @@ namespace FsInfoCat.Desktop.LocalData.DocumentPropertySets
         {
             UpdatePageTitle(_currentOptions);
             FilterOptions.Value = _currentOptions;
+        }
+
+        protected override bool EntityMatchesCurrentFilter(DocumentPropertiesListItem entity)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override PageFunction<ItemEditResult> GetEditPage(DocumentPropertySet args)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override Task<DocumentPropertySet> LoadItemAsync([DisallowNull] DocumentPropertiesListItem item, [DisallowNull] IWindowsStatusListener statusListener)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override void OnEditTaskFaulted(Exception exception, ListItemViewModel item)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override void OnDeleteTaskFaulted(Exception exception, ListItemViewModel item)
+        {
+            throw new NotImplementedException();
         }
     }
 }

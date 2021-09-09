@@ -1,6 +1,7 @@
-﻿using FsInfoCat.Local;
+using FsInfoCat.Desktop.ViewModel;
+using FsInfoCat.Local;
 
 namespace FsInfoCat.Desktop.LocalData.CrawlLogs
 {
-    public record ItemEditResult(CrawlJobLogListItem ItemEntity, Microsoft.EntityFrameworkCore.EntityState Result);
+    public record ItemEditResult(CrawlJobLogListItem ItemEntity, EntityEditResultState State) : IEntityEditResult<CrawlJobLogListItem>;
 }

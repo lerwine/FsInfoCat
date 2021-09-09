@@ -145,7 +145,7 @@ namespace FsInfoCat.Desktop.LocalData.Volumes
             LastSynchronizedOn = entity.LastSynchronizedOn;
         }
 
-        private async Task<Volume> EditItemAsync([DisallowNull] VolumeListItemWithFileSystem item, [DisallowNull] IWindowsStatusListener statusListener)
+        private static async Task<Volume> EditItemAsync([DisallowNull] VolumeListItemWithFileSystem item, [DisallowNull] IWindowsStatusListener statusListener)
         {
             using IServiceScope serviceScope = Services.CreateScope();
             using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
@@ -154,7 +154,7 @@ namespace FsInfoCat.Desktop.LocalData.Volumes
             return await dbContext.Volumes.FirstOrDefaultAsync(e => e.Id == id, statusListener.CancellationToken);
         }
 
-        public Task EditItemAsync([DisallowNull] VolumeListItemWithFileSystem item, ReturnEventHandler<ItemEditResult> onReturn = null)
+        public static Task EditItemAsync([DisallowNull] VolumeListItemWithFileSystem item, ReturnEventHandler<ItemEditResult> onReturn = null)
         {
             if (item is null)
                 throw new ArgumentNullException(nameof(item));

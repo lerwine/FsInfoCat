@@ -1,16 +1,18 @@
 using FsInfoCat.Desktop.ViewModel;
 using FsInfoCat.Local;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Threading;
+using System.Windows.Navigation;
 
 namespace FsInfoCat.Desktop.LocalData.AudioPropertySets
 {
-    public class ListingViewModel : ListingViewModel<AudioPropertiesListItem, ListItemViewModel, bool?>, INavigatedToNotifiable
+    public class ListingViewModel : ListingViewModel<AudioPropertiesListItem, ListItemViewModel, bool?, AudioPropertySet, ItemEditResult>, INavigatedToNotifiable
     {
         private bool? _currentOptions = true;
 
@@ -28,27 +30,6 @@ namespace FsInfoCat.Desktop.LocalData.AudioPropertySets
         public ThreeStateViewModel FilterOptions { get => (ThreeStateViewModel)GetValue(FilterOptionsProperty); private set => SetValue(FilterOptionsPropertyKey, value); }
 
         #endregion
-        #region PageTitle Property Members
-
-        private static readonly DependencyPropertyKey PageTitlePropertyKey = DependencyPropertyBuilder<ListingViewModel, string>
-            .Register(nameof(PageTitle))
-            .DefaultValue("")
-            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default)
-            .AsReadOnly();
-
-        /// <summary>
-        /// Identifies the <see cref="PageTitle"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty PageTitleProperty = PageTitlePropertyKey.DependencyProperty;
-
-        public string PageTitle { get => GetValue(PageTitleProperty) as string; private set => SetValue(PageTitlePropertyKey, value); }
-
-        private void UpdatePageTitle(bool? options) => PageTitle = options.HasValue ?
-                    (options.Value ? FsInfoCat.Properties.Resources.DisplayName_AudioPropertyGroups_HasFiles :
-                    FsInfoCat.Properties.Resources.DisplayName_AudioPropertyGroups_NoExistingFiles) :
-                    FsInfoCat.Properties.Resources.DisplayName_AudioPropertyGroups_All;
-
-        #endregion
 
         public ListingViewModel()
         {
@@ -61,6 +42,11 @@ namespace FsInfoCat.Desktop.LocalData.AudioPropertySets
             UpdatePageTitle(options);
             return base.ReloadAsync(options);
         }
+
+        private void UpdatePageTitle(bool? options) => PageTitle = options.HasValue ?
+                    (options.Value ? FsInfoCat.Properties.Resources.DisplayName_AudioPropertyGroups_HasFiles :
+                    FsInfoCat.Properties.Resources.DisplayName_AudioPropertyGroups_NoExistingFiles) :
+                    FsInfoCat.Properties.Resources.DisplayName_AudioPropertyGroups_All;
 
         void INavigatedToNotifiable.OnNavigatedTo() => ReloadAsync(_currentOptions);
 
@@ -99,28 +85,19 @@ namespace FsInfoCat.Desktop.LocalData.AudioPropertySets
 
         protected override void OnRefreshCommand(object parameter) => ReloadAsync(_currentOptions);
 
-        protected override void OnItemEditCommand([DisallowNull] ListItemViewModel item, object parameter)
-        {
-            // TODO: Implement OnItemEditCommand(object);
-        }
-
         protected override bool ConfirmItemDelete(ListItemViewModel item, object parameter) => MessageBox.Show(Application.Current.MainWindow,
             "This action cannot be undone!\n\nAre you sure you want to remove this audio property set from the database?",
             "Delete Audio Property Set", MessageBoxButton.YesNo, MessageBoxImage.Exclamation) == MessageBoxResult.Yes;
 
-        protected override async Task<int> DeleteEntityFromDbContextAsync([DisallowNull] AudioPropertiesListItem entity, [DisallowNull] LocalDbContext dbContext,
+        protected override async Task<EntityEntry> DeleteEntityFromDbContextAsync([DisallowNull] AudioPropertiesListItem entity, [DisallowNull] LocalDbContext dbContext,
             [DisallowNull] IWindowsStatusListener statusListener)
         {
             AudioPropertySet target = await dbContext.AudioPropertySets.FindAsync(new object[] { entity.Id }, statusListener.CancellationToken);
             if (target is null)
-                return 0;
-            _ = dbContext.AudioPropertySets.Remove(target);
-            return await dbContext.SaveChangesAsync(statusListener.CancellationToken);
-        }
-
-        protected override void OnAddNewItemCommand(object parameter)
-        {
-            // TODO: Implement OnAddNewItemCommand(object);
+                return null;
+            EntityEntry entry = dbContext.AudioPropertySets.Remove(target);
+            await dbContext.SaveChangesAsync(statusListener.CancellationToken);
+            return entry;
         }
 
         protected override void OnReloadTaskCompleted(bool? options) => _currentOptions = options;
@@ -141,6 +118,40 @@ namespace FsInfoCat.Desktop.LocalData.AudioPropertySets
         {
             UpdatePageTitle(_currentOptions);
             FilterOptions.Value = _currentOptions;
+        }
+
+        protected override bool EntityMatchesCurrentFilter(AudioPropertiesListItem entity)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override PageFunction<ItemEditResult> GetEditPage(AudioPropertySet args)
+        {
+            EditViewModel viewModel;
+            if (args is null)
+                viewModel = new(new AudioPropertySet(), true);
+            else
+                viewModel = new EditViewModel(args, false);
+            return new EditPage(viewModel);
+        }
+
+        protected async override Task<AudioPropertySet> LoadItemAsync([DisallowNull] AudioPropertiesListItem item, [DisallowNull] IWindowsStatusListener statusListener)
+        {
+            using IServiceScope serviceScope = Services.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+            Guid id = item.Id;
+            statusListener.SetMessage("Reading data");
+            return await dbContext.AudioPropertySets.Include(e => e.Files).FirstOrDefaultAsync(e => e.Id == id, statusListener.CancellationToken);
+        }
+
+        protected override void OnEditTaskFaulted(Exception exception, ListItemViewModel item)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override void OnDeleteTaskFaulted(Exception exception, ListItemViewModel item)
+        {
+            throw new NotImplementedException();
         }
     }
 }
