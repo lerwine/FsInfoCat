@@ -1,12 +1,15 @@
-<Page x:Class="FsInfoCat.Desktop.LocalData.CrawlConfigurations.EditPage"
-      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-      xmlns:local="clr-namespace:FsInfoCat.Desktop.LocalData.CrawlConfigurations"
-      mc:Ignorable="d" d:DataContext="{x:Type local:EditViewModel}"
-      d:DesignHeight="768" d:DesignWidth="1024"
-      Title="EditPage">
+<PageFunction
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:sys="clr-namespace:System;assembly=System.Runtime"
+    x:Class="FsInfoCat.Desktop.LocalData.CrawlConfigurations.EditPage"
+    x:TypeArguments="local:ItemEditResult"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:FsInfoCat.Desktop.LocalData.CrawlConfigurations"
+    mc:Ignorable="d" d:DataContext="{x:Type local:EditViewModel}"
+    d:DesignHeight="768" d:DesignWidth="1024"
+    Title="Edit Crawl Configuration">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -125,4 +128,4 @@
             </WrapPanel>
         </StackPanel>
     </Grid>
-</Page>
+</PageFunction>

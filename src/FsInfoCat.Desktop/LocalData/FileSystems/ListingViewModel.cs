@@ -51,7 +51,6 @@ namespace FsInfoCat.Desktop.LocalData.FileSystems
 
         #endregion
 
-
         public ListingViewModel()
         {
             SetValue(ListingOptionPropertyKey, new ThreeStateViewModel(_currentListingOption));
@@ -93,6 +92,7 @@ namespace FsInfoCat.Desktop.LocalData.FileSystems
 
         protected override void OnItemEditCommand([DisallowNull] ListItemViewModel item, object parameter)
         {
+            //EditViewModel.ShowEditWindow(item.Entity);
             // TODO: Implement OnItemEditCommand(object);
         }
 

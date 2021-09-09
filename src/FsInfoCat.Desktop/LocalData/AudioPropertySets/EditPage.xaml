@@ -1,11 +1,15 @@
-<Page x:Class="FsInfoCat.Desktop.LocalData.AudioPropertySets.EditPage"
-      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-      xmlns:local="clr-namespace:FsInfoCat.Desktop.LocalData.AudioPropertySets"
-      mc:Ignorable="d" d:DataContext="{x:Type local:EditViewModel}"
-      d:DesignHeight="768" d:DesignWidth="1024">
+<PageFunction
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:sys="clr-namespace:System;assembly=System.Runtime"
+    x:Class="FsInfoCat.Desktop.LocalData.AudioPropertySets.EditPage"
+    x:TypeArguments="local:ItemEditResult"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:FsInfoCat.Desktop.LocalData.AudioPropertySets"
+    mc:Ignorable="d" d:DataContext="{x:Type local:EditViewModel}"
+    d:DesignHeight="768" d:DesignWidth="1024"
+    Title="Edit Audio Property Group">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -53,4 +57,4 @@
         <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding LastSynchronizedOn}" Grid.Row="7" Grid.Column="2" Grid.ColumnSpan="2" Margin="{DynamicResource DefaultSpacingLeftRight}"/>
         <Button Grid.Column="4" Grid.Row="7" Style="{DynamicResource SyncDisabledButton}" ToolTip="Synchronization disabled - no remote connection configured." Margin="{DynamicResource DefaultSpacingRight}"/>
     </Grid>
-</Page>
+</PageFunction>

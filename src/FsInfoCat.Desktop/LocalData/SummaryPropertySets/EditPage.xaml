@@ -1,12 +1,15 @@
-<Page x:Class="FsInfoCat.Desktop.LocalData.SummaryPropertySets.EditPage"
-      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-      xmlns:local="clr-namespace:FsInfoCat.Desktop.LocalData.SummaryPropertySets"
-      mc:Ignorable="d" d:DataContext="{x:Type local:EditViewModel}"
-      d:DesignHeight="768" d:DesignWidth="1024"
-      Title="EditPage">
+<PageFunction
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:sys="clr-namespace:System;assembly=System.Runtime"
+    x:Class="FsInfoCat.Desktop.LocalData.SummaryPropertySets.EditPage"
+    x:TypeArguments="local:ItemEditResult"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:FsInfoCat.Desktop.LocalData.SummaryPropertySets"
+    mc:Ignorable="d" d:DataContext="{x:Type local:EditViewModel}"
+    d:DesignHeight="768" d:DesignWidth="1024"
+    Title="Edit Summary Property Group">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -91,4 +94,4 @@
         <TextBox Margin="{DynamicResource DefaultSpacingLeft}" Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding LastSynchronizedOn}" Grid.Row="17" Grid.Column="2" Grid.ColumnSpan="3"/>
         <Button Style="{DynamicResource SyncDisabledButton}" ToolTip="Synchronization disabled - no remote connection configured." Margin="{DynamicResource DefaultSpacingRight}" Grid.Column="17" Grid.Row="17"/>
     </Grid>
-</Page>
+</PageFunction>
