@@ -29,33 +29,17 @@ namespace FsInfoCat.Desktop.LocalData.MediaPropertySets
         public ThreeStateViewModel FilterOptions { get => (ThreeStateViewModel)GetValue(FilterOptionsProperty); private set => SetValue(FilterOptionsPropertyKey, value); }
 
         #endregion
-        #region PageTitle Property Members
-
-        private static readonly DependencyPropertyKey PageTitlePropertyKey = DependencyPropertyBuilder<ListingViewModel, string>
-            .Register(nameof(PageTitle))
-            .DefaultValue("")
-            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default)
-            .AsReadOnly();
-
-        /// <summary>
-        /// Identifies the <see cref="PageTitle"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty PageTitleProperty = PageTitlePropertyKey.DependencyProperty;
-
-        public string PageTitle { get => GetValue(PageTitleProperty) as string; private set => SetValue(PageTitlePropertyKey, value); }
-
-        private void UpdatePageTitle(bool? options) => PageTitle = options.HasValue ?
-                    (options.Value ? FsInfoCat.Properties.Resources.DisplayName_MediaPropertyGroups_HasFiles :
-                    FsInfoCat.Properties.Resources.DisplayName_MediaPropertyGroups_NoExistingFiles) :
-                    FsInfoCat.Properties.Resources.DisplayName_MediaPropertyGroups_All;
-
-        #endregion
 
         public ListingViewModel()
         {
             SetValue(FilterOptionsPropertyKey, new ThreeStateViewModel(true));
             UpdatePageTitle(_currentOptions);
         }
+
+        private void UpdatePageTitle(bool? options) => PageTitle = options.HasValue ?
+                    (options.Value ? FsInfoCat.Properties.Resources.DisplayName_MediaPropertyGroups_HasFiles :
+                    FsInfoCat.Properties.Resources.DisplayName_MediaPropertyGroups_NoExistingFiles) :
+                    FsInfoCat.Properties.Resources.DisplayName_MediaPropertyGroups_All;
 
         protected override IAsyncJob ReloadAsync(bool? options)
         {
@@ -94,15 +78,6 @@ namespace FsInfoCat.Desktop.LocalData.MediaPropertySets
 
         protected override void OnRefreshCommand(object parameter) => ReloadAsync(_currentOptions);
 
-        private static async Task<FileSystem> LoadItemAsync([DisallowNull] FileSystemListItem item, [DisallowNull] IWindowsStatusListener statusListener)
-        {
-            using IServiceScope serviceScope = Services.CreateScope();
-            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
-            Guid id = item.Id;
-            statusListener.SetMessage("Reading data");
-            return await dbContext.FileSystems.Include(e => e.SymbolicNames).FirstOrDefaultAsync(e => e.Id == id, statusListener.CancellationToken);
-        }
-
         protected override bool ConfirmItemDelete(ListItemViewModel item, object parameter) => MessageBox.Show(Application.Current.MainWindow,
             "This action cannot be undone!\n\nAre you sure you want to remove this media property set from the database?",
             "Delete Media Property Set", MessageBoxButton.YesNo, MessageBoxImage.Exclamation) == MessageBoxResult.Yes;
@@ -140,27 +115,49 @@ namespace FsInfoCat.Desktop.LocalData.MediaPropertySets
 
         protected override bool EntityMatchesCurrentFilter(MediaPropertiesListItem entity)
         {
+            // TODO: Implement EntityMatchesCurrentFilter
             throw new NotImplementedException();
         }
 
         protected override PageFunction<ItemEditResult> GetEditPage(MediaPropertySet args)
         {
-            throw new NotImplementedException();
+            EditViewModel viewModel;
+            if (args is null)
+                viewModel = new(new MediaPropertySet(), true);
+            else
+                viewModel = new EditViewModel(args, false);
+            return new EditPage(viewModel);
         }
 
-        protected override Task<MediaPropertySet> LoadItemAsync([DisallowNull] MediaPropertiesListItem item, [DisallowNull] IWindowsStatusListener statusListener)
+        protected override async Task<MediaPropertySet> LoadItemAsync([DisallowNull] MediaPropertiesListItem item, [DisallowNull] IWindowsStatusListener statusListener)
         {
-            throw new NotImplementedException();
+            using IServiceScope serviceScope = Services.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+            Guid id = item.Id;
+            statusListener.SetMessage("Reading data");
+            return await dbContext.MediaPropertySets.Include(e => e.Files).FirstOrDefaultAsync(e => e.Id == id, statusListener.CancellationToken);
         }
 
         protected override void OnEditTaskFaulted(Exception exception, ListItemViewModel item)
         {
-            throw new NotImplementedException();
+            UpdatePageTitle(_currentOptions);
+            FilterOptions.Value = _currentOptions;
+            _ = MessageBox.Show(Application.Current.MainWindow,
+                ((exception is AsyncOperationFailureException aExc) ? aExc.UserMessage.NullIfWhiteSpace() :
+                    (exception as AggregateException)?.InnerExceptions.OfType<AsyncOperationFailureException>().Select(e => e.UserMessage)
+                    .Where(m => !string.IsNullOrWhiteSpace(m)).FirstOrDefault()) ??
+                    "There was an unexpected error while loading items from the databse.\n\nSee logs for further information",
+                "Database Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
         protected override void OnDeleteTaskFaulted(Exception exception, ListItemViewModel item)
         {
-            throw new NotImplementedException();
+            _ = MessageBox.Show(Application.Current.MainWindow,
+                ((exception is AsyncOperationFailureException aExc) ? aExc.UserMessage.NullIfWhiteSpace() :
+                    (exception as AggregateException)?.InnerExceptions.OfType<AsyncOperationFailureException>().Select(e => e.UserMessage)
+                    .Where(m => !string.IsNullOrWhiteSpace(m)).FirstOrDefault()) ??
+                    "There was an unexpected error while loading items from the databse.\n\nSee logs for further information",
+                "Database Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
 }

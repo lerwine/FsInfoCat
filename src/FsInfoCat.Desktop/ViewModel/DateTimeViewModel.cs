@@ -1,410 +1,138 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Threading;
 using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel
 {
-    public class DateTimeViewModel : DependencyObject, INotifyDataErrorInfo
+    public class DateTimeViewModel : OptionalValueViewModel<DateTime>
     {
-        private int _valueChanging = 0;
+        private DateTime? _pendingResultValueChange;
 
-        public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
+        #region Date Property Members
 
-        #region HasErrors Property Members
+        private DateTime? _pendingDateChange;
 
-        private static readonly DependencyPropertyKey HasErrorsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(HasErrors), typeof(bool), typeof(DateTimeViewModel),
-                new PropertyMetadata(false));
-
-        /// <summary>
-        /// Identifies the <see cref="HasErrors"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty HasErrorsProperty = HasErrorsPropertyKey.DependencyProperty;
-
-        public bool HasErrors { get => (bool)GetValue(HasErrorsProperty); private set => SetValue(HasErrorsPropertyKey, value); }
-
-        #endregion
-        #region IsRequired Property Members
+        private static readonly DependencyPropertyKey DatePropertyKey = DependencyPropertyBuilder<DateTimeViewModel, OptionalValueViewModel<DateTime>>
+            .Register(nameof(Date))
+            .AsReadOnly();
 
         /// <summary>
-        /// Identifies the <see cref="IsRequired"/> dependency property.
+        /// Identifies the <see cref="Date"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty IsRequiredProperty = DependencyProperty.Register(nameof(IsRequired), typeof(bool), typeof(DateTimeViewModel),
-                new PropertyMetadata(false, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as DateTimeViewModel)?.OnIsRequiredPropertyChanged((bool)e.OldValue, (bool)e.NewValue)));
+        public static readonly DependencyProperty DateProperty = DatePropertyKey.DependencyProperty;
 
-        public bool IsRequired { get => (bool)GetValue(IsRequiredProperty); set => SetValue(IsRequiredProperty, value); }
+        public OptionalValueViewModel<DateTime> Date { get => (OptionalValueViewModel<DateTime>)GetValue(DateProperty); private set => SetValue(DatePropertyKey, value); }
 
-        /// <summary>
-        /// Called when the value of the <see cref="IsRequired"/> dependency property has changed.
-        /// </summary>
-        /// <param name="oldValue">The previous value of the <see cref="IsRequired"/> property.</param>
-        /// <param name="newValue">The new value of the <see cref="IsRequired"/> property.</param>
-        protected virtual void OnIsRequiredPropertyChanged(bool oldValue, bool newValue)
+        private void Date_ResultValuePropertyChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-
-            if (!(Value.HasValue || SelectedDate.HasValue))
-            {
-                if (newValue)
-                {
-                    ValueValidationMessage = FsInfoCat.Properties.Resources.ErrorMessage_Required;
-                    SelectedValidationMessage = FsInfoCat.Properties.Resources.ErrorMessage_Required;
-                }
-                else
-                {
-                    ValueValidationMessage = string.Empty;
-                    SelectedValidationMessage = string.Empty;
-                }
-            }
+            DateTime? newValue = e.NewValue as DateTime?;
+            if (_pendingDateChange == newValue)
+                return;
+            _pendingDateChange = newValue;
+            TimeSpan? time = Time.ResultValue;
+            _pendingResultValueChange = (newValue.HasValue && time.HasValue && !ForceNullResult) ? newValue.Value.Date.Add(time.Value) : null;
+            InputValue = _pendingResultValueChange;
         }
 
-        #endregion
-        #region Value Property Members
-
-        /// <summary>
-        /// Occurs when the value of the <see cref="Value"/> dependency property has changed.
-        /// </summary>
-        public event DependencyPropertyChangedEventHandler ValuePropertyChanged;
-
-        public event EventHandler<PropertyValidatingEventArgs<DateTime?, (string SelectedValueMessage, string TimeMessage)>> ValidateValue;
-
-        /// <summary>
-        /// Identifies the <see cref="Value"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty ValueProperty = DependencyProperty.Register(nameof(Value), typeof(DateTime?), typeof(DateTimeViewModel),
-                new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as DateTimeViewModel)?.OnValuePropertyChanged(e),
-                    DateTimeCoersion.NormalizedToMinutesLocal.ToCoerceValueCallback()));
-
-        public DateTime? Value { get => (DateTime?)GetValue(ValueProperty); set => SetValue(ValueProperty, value); }
-
-        /// <summary>
-        /// Called when the <see cref="PropertyChangedCallback">PropertyChanged</see> event on <see cref="ValueProperty"/> is raised.
-        /// </summary>
-        /// <param name="args">The Event data that is issued by the event on <see cref="ValueProperty"/> that tracks changes to its effective value.</param>
-        protected virtual void OnValuePropertyChanged(DependencyPropertyChangedEventArgs args)
-        {
-            try { OnValuePropertyChanged((DateTime?)args.OldValue, (DateTime?)args.NewValue); }
-            finally { ValuePropertyChanged?.Invoke(this, args); }
-        }
-
-        /// <summary>
-        /// Called when the value of the <see cref="Value"/> dependency property has changed.
-        /// </summary>
-        /// <param name="oldValue">The previous value of the <see cref="Value"/> property.</param>
-        /// <param name="newValue">The new value of the <see cref="Value"/> property.</param>
-        protected virtual void OnValuePropertyChanged(DateTime? oldValue, DateTime? newValue)
-        {
-            bool isChange = Interlocked.Increment(ref _valueChanging) == 1;
-            try
-            {
-                if (isChange)
-                {
-                    if (newValue.HasValue)
-                    {
-                        SelectedDate = newValue.Value.Date;
-                        Time.Value = newValue.Value.TimeOfDay;
-                    }
-                    else
-                    {
-                        SelectedDate = null;
-                        Time.Value = null;
-                    }
-                }
-            }
-            finally { _ = Interlocked.Decrement(ref _valueChanging); }
-            PropertyValidatingEventArgs<DateTime?, (string SelectedValueMessage, string TimeMessage)> args = new(newValue, nameof(Value),
-                (SelectedValidationMessage, TimeValidationMesage));
-            if (IsRequired && !(newValue.HasValue || SelectedDate.HasValue))
-                ValueValidationMessage = FsInfoCat.Properties.Resources.ErrorMessage_Required;
-            OnValidateValue(args);
-            ValueValidationMessage = args.ValidationMessage;
-        }
-
-        protected virtual void OnValidateValue(PropertyValidatingEventArgs<DateTime?, (string SelectedValueMessage, string TimeMessage)> args) =>
-            ValidateValue?.Invoke(this, args);
-
-        #endregion
-        #region AggregateValidationMessage Property Members
-
-        private static readonly DependencyPropertyKey AggregateValidationMessagePropertyKey = DependencyProperty.RegisterReadOnly(nameof(AggregateValidationMessage), typeof(string), typeof(DateTimeViewModel),
-                new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as DateTimeViewModel)?.OnAggregateValidationMessagePropertyChanged(e.OldValue as string, e.NewValue as string)));
-
-        /// <summary>
-        /// Identifies the <see cref="AggregateValidationMessage"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty AggregateValidationMessageProperty = AggregateValidationMessagePropertyKey.DependencyProperty;
-
-        public string AggregateValidationMessage { get => GetValue(AggregateValidationMessageProperty) as string; private set => SetValue(AggregateValidationMessagePropertyKey, value); }
-
-        /// <summary>
-        /// Called when the value of the <see cref="AggregateValidationMessage"/> dependency property has changed.
-        /// </summary>
-        /// <param name="oldValue">The previous value of the <see cref="AggregateValidationMessage"/> property.</param>
-        /// <param name="newValue">The new value of the <see cref="AggregateValidationMessage"/> property.</param>
-        protected virtual void OnAggregateValidationMessagePropertyChanged(string oldValue, string newValue) { }
-
-        private void UpdateAggregateValidationMessage(string valueMessage, string seletedDateMessage, string timeMessage)
-        {
-            if (string.IsNullOrEmpty(timeMessage))
-                AggregateValidationMessage = string.IsNullOrEmpty(seletedDateMessage) ? valueMessage : @$"{valueMessage}
-{string.Format(FsInfoCat.Properties.Resources.Format_InvalidDate, seletedDateMessage)}";
-            else if (string.IsNullOrWhiteSpace(seletedDateMessage))
-                AggregateValidationMessage = @$"{valueMessage}
-{string.Format(FsInfoCat.Properties.Resources.Format_InvalidTime, timeMessage)}";
-            else
-                AggregateValidationMessage = @$"{valueMessage}
-{string.Format(FsInfoCat.Properties.Resources.Format_InvalidDate, seletedDateMessage)}
-{string.Format(FsInfoCat.Properties.Resources.Format_InvalidTime, timeMessage)}";
-        }
-
-        #endregion
-        #region ValueValidationMessage Property Members
-
-        /// <summary>
-        /// Identifies the <see cref="ValueValidationMessage"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty ValueValidationMessageProperty = DependencyProperty.Register(nameof(ValueValidationMessage), typeof(string),
-            typeof(DateTimeViewModel), new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-            (d as DateTimeViewModel)?.OnValueValidationMessagePropertyChanged(e.OldValue as string, e.NewValue as string),
-                NormalizedOrEmptyStringCoersion.Default.ToCoerceValueCallback()));
-
-        public string ValueValidationMessage { get => GetValue(ValueValidationMessageProperty) as string; set => SetValue(ValueValidationMessageProperty, value); }
-
-        /// <summary>
-        /// Called when the value of the <see cref="ValueValidationMessage"/> dependency property has changed.
-        /// </summary>
-        /// <param name="oldValue">The previous value of the <see cref="ValueValidationMessage"/> property.</param>
-        /// <param name="newValue">The new value of the <see cref="ValueValidationMessage"/> property.</param>
-        protected virtual void OnValueValidationMessagePropertyChanged(string oldValue, string newValue)
-        {
-            try { UpdateAggregateValidationMessage(newValue, SelectedValidationMessage, TimeValidationMesage); }
-            finally { RaiseDataErrorsChanged(nameof(Value)); }
-        }
-
-        #endregion
-        #region SelectedDate Property Members
-
-        /// <summary>
-        /// Occurs when the value of the <see cref="Value"/> dependency property is being validated.
-        /// </summary>
-        public event EventHandler<PropertyValidatingEventArgs<DateTime?, TimeSpan?>> ValidateSelectedDate;
-
-        /// <summary>
-        /// Identifies the <see cref="SelectedDate"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty SelectedDateProperty = DependencyProperty.Register(nameof(SelectedDate), typeof(DateTime?), typeof(DateTimeViewModel),
-                new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as DateTimeViewModel)?.OnSelectedDatePropertyChanged((DateTime?)e.OldValue, (DateTime?)e.NewValue),
-                    DateTimeCoersion.NormalizedToDaysLocal.ToCoerceValueCallback()));
-
-        public DateTime? SelectedDate { get => (DateTime?)GetValue(SelectedDateProperty); set => SetValue(SelectedDateProperty, value); }
-
-        /// <summary>
-        /// Called when the value of the <see cref="SelectedDate"/> dependency property has changed.
-        /// </summary>
-        /// <param name="oldValue">The previous value of the <see cref="SelectedDate"/> property.</param>
-        /// <param name="newValue">The new value of the <see cref="SelectedDate"/> property.</param>
-        protected virtual void OnSelectedDatePropertyChanged(DateTime? oldValue, DateTime? newValue)
-        {
-            PropertyValidatingEventArgs<DateTime?, TimeSpan?> args = new(newValue, nameof(SelectedDate), Time.Value);
-            if (IsRequired && !newValue.HasValue)
-                ValueValidationMessage = FsInfoCat.Properties.Resources.ErrorMessage_Required;
-            OnValidateSelectedDate(args);
-            SelectedValidationMessage = args.ValidationMessage;
-            bool ignoreChange = Interlocked.Increment(ref _valueChanging) != 1;
-            try
-            {
-                if (ignoreChange)
-                    return;
-                TimeSpan timeSpan;
-                if (newValue.HasValue && args.ValidationMessage.Length == 0 && TimeValidationMesage.Length == 0 && args.Context.HasValue &&
-                    (timeSpan = args.Context.Value) >= TimeSpan.Zero)
-                {
-                    if (timeSpan.Days != 0)
-                        Value = newValue.Value.Add(new TimeSpan(0, timeSpan.Hours, timeSpan.Minutes, 0, 0));
-                    else
-                        Value = newValue.Value.Add(timeSpan);
-                }
-                else
-                    Value = null;
-            }
-            finally { _ = Interlocked.Decrement(ref _valueChanging); }
-        }
-
-        protected virtual void OnValidateSelectedDate(PropertyValidatingEventArgs<DateTime?, TimeSpan?> args) =>
-            ValidateSelectedDate?.Invoke(this, args);
-
-        #endregion
-        #region SelectedValidationMessage Property Members
-
-        /// <summary>
-        /// Identifies the <see cref="SelectedValidationMessage"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty SelectedValidationMessageProperty = DependencyProperty.Register(nameof(SelectedValidationMessage), typeof(string),
-            typeof(DateTimeViewModel), new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-            (d as DateTimeViewModel)?.OnSelectedValidationMessagePropertyChanged(e.OldValue as string, e.NewValue as string),
-                NormalizedOrEmptyStringCoersion.Default.ToCoerceValueCallback()));
-
-        public string SelectedValidationMessage { get => GetValue(SelectedValidationMessageProperty) as string; set => SetValue(SelectedValidationMessageProperty, value); }
-
-        /// <summary>
-        /// Called when the value of the <see cref="SelectedValidationMessage"/> dependency property has changed.
-        /// </summary>
-        /// <param name="oldValue">The previous value of the <see cref="SelectedValidationMessage"/> property.</param>
-        /// <param name="newValue">The new value of the <see cref="SelectedValidationMessage"/> property.</param>
-        protected virtual void OnSelectedValidationMessagePropertyChanged(string oldValue, string newValue)
-        {
-            try { UpdateAggregateValidationMessage(ValueValidationMessage, newValue, TimeValidationMesage); }
-            finally { RaiseDataErrorsChanged(nameof(SelectedDate)); }
-        }
+        private void Date_HasErrorsPropertyChanged(object sender, DependencyPropertyChangedEventArgs e) => HasComponentValueErrors = (bool)e.NewValue || Time.HasErrors;
 
         #endregion
         #region Time Property Members
 
-        /// <summary>
-        /// Occurs when the value of the <see cref="Value"/> dependency property is being validated.
-        /// </summary>
-        public event EventHandler<PropertyValidatingEventArgs<TimeSpan?, DateTime?>> ValidateTime;
+        private TimeSpan? _pendingTimeChange;
 
-        private static readonly DependencyPropertyKey TimePropertyKey = DependencyProperty.RegisterReadOnly(nameof(Time), typeof(TimeSpanViewModel), typeof(DateTimeViewModel),
-                new PropertyMetadata(null));
+        private static readonly DependencyPropertyKey TimePropertyKey = DependencyPropertyBuilder<DateTimeViewModel, TimeOfDayViewModel>
+            .Register(nameof(Time))
+            .AsReadOnly();
 
         /// <summary>
         /// Identifies the <see cref="Time"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty TimeProperty = TimePropertyKey.DependencyProperty;
 
-        public TimeSpanViewModel Time => (TimeSpanViewModel)GetValue(TimeProperty);
+        public TimeOfDayViewModel Time { get => (TimeOfDayViewModel)GetValue(TimeProperty); private set => SetValue(TimePropertyKey, value); }
 
-        private void Time_ValuePropertyChanged(object sender, DependencyPropertyChangedEventArgs e)
+        private void Time_ValidateInputValue(object sender, PropertyValidatingEventArgs<TimeSpan> e)
         {
-            TimeSpan? time = e.NewValue as TimeSpan?;
-            if (time.HasValue && time.Value >= TimeSpan.Zero)
-            {
-                if (time.Value.Days != 0)
-                    Value = SelectedDate?.Add(new TimeSpan(0, time.Value.Hours, time.Value.Minutes, 0, 0));
-                else
-                    Value = SelectedDate?.Add(time.Value);
-            }
-            else
-                Value = null;
+            throw new NotImplementedException();
         }
 
-        protected virtual void OnValidateTime(PropertyValidatingEventArgs<TimeSpan?, DateTime?> args) => ValidateTime?.Invoke(this, args);
-
-        private void Time_ValidateValue(object sender, PropertyValidatingEventArgs<TimeSpan?, (string DaysMessage, string HoursMessage, string MinutesMessage)> e)
+        private void Time_ResultValuePropertyChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            TimeSpan? timeSpan = e.Value;
-            if (timeSpan.HasValue && timeSpan.Value.Days != 0)
-                timeSpan = new TimeSpan(0, timeSpan.Value.Hours, timeSpan.Value.Minutes, 0, 0);
-            PropertyValidatingEventArgs<TimeSpan?, DateTime?> args = new(timeSpan, nameof(Time), SelectedDate);
-            if (timeSpan.HasValue && timeSpan.Value < TimeSpan.Zero)
-                args.ValidationMessage = e.ValidationMessage = FsInfoCat.Properties.Resources.ErrorMessage_InvalidTime;
-            else if (string.IsNullOrWhiteSpace(e.Context.HoursMessage))
-            {
-                if (!string.IsNullOrWhiteSpace(e.Context.MinutesMessage))
-                    args.ValidationMessage = string.Format(FsInfoCat.Properties.Resources.FormatMessage_InvalidMinutes, e.Context.MinutesMessage);
-            }
-            else if (string.IsNullOrWhiteSpace(e.Context.MinutesMessage))
-                args.ValidationMessage = string.Format(FsInfoCat.Properties.Resources.FormatMessage_InvalidHour, e.Context.HoursMessage);
-            else
-                args.ValidationMessage = $"{string.Format(FsInfoCat.Properties.Resources.FormatMessage_InvalidHour, e.Context.HoursMessage)}; {string.Format(FsInfoCat.Properties.Resources.FormatMessage_InvalidMinutes, e.Context.MinutesMessage)}";
-            OnValidateTime(args);
-            e.ValidationMessage = args.ValidationMessage;
+            TimeSpan? newValue = e.NewValue as TimeSpan?;
+            if (_pendingTimeChange == newValue)
+                return;
+            _pendingTimeChange = newValue;
+            DateTime? date = Date.ResultValue;
+            _pendingResultValueChange = (newValue.HasValue && date.HasValue && !ForceNullResult) ? date.Value.Date.Add(newValue.Value) : null;
+            InputValue = _pendingResultValueChange;
         }
 
-        private void Time_ErrorsChanged(object sender, DataErrorsChangedEventArgs e)
-        {
-            if (Time.HasErrors)
-            {
-                string message = Time.ValidationMessage;
-                TimeValidationMesage = string.IsNullOrEmpty(message) ? string.Join("; ", Time.GetErrors(null)) : message;
-            }
-            else
-                TimeValidationMesage = "";
-        }
+        private void Time_HasErrorsPropertyChanged(object sender, DependencyPropertyChangedEventArgs e) => HasComponentValueErrors = (bool)e.NewValue || Date.HasErrors;
 
         #endregion
-        #region TimeValidationMesage Property Members
-
-        private static readonly DependencyPropertyKey TimeValidationMesagePropertyKey = DependencyProperty.RegisterReadOnly(nameof(TimeValidationMesage), typeof(string), typeof(DateTimeViewModel),
-                new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as DateTimeViewModel)?.OnTimeValidationMesagePropertyChanged(e.OldValue as string, e.NewValue as string),
-                NormalizedOrEmptyStringCoersion.Default.ToCoerceValueCallback()));
+        #region HasComponentValueErrors Property Members
 
         /// <summary>
-        /// Identifies the <see cref="TimeValidationMesage"/> dependency property.
+        /// Occurs when the value of the <see cref="HasComponentValueErrors"/> dependency property has changed.
         /// </summary>
-        public static readonly DependencyProperty TimeValidationMesageProperty = TimeValidationMesagePropertyKey.DependencyProperty;
+        public event DependencyPropertyChangedEventHandler HasComponentValueErrorsPropertyChanged;
 
-        public string TimeValidationMesage { get => GetValue(TimeValidationMesageProperty) as string; private set => SetValue(TimeValidationMesagePropertyKey, value); }
+        private static readonly DependencyPropertyKey HasComponentValueErrorsPropertyKey = DependencyPropertyBuilder<DateTimeViewModel, bool>
+            .Register(nameof(HasComponentValueErrors))
+            .DefaultValue(false)
+            .OnChanged((d, e) => (d as DateTimeViewModel)?.RaiseHasComponentValueErrorsPropertyChanged(e))
+            .AsReadOnly();
 
         /// <summary>
-        /// Called when the value of the <see cref="TimeValidationMesage"/> dependency property has changed.
+        /// Identifies the <see cref="HasComponentValueErrors"/> dependency property.
         /// </summary>
-        /// <param name="oldValue">The previous value of the <see cref="TimeValidationMesage"/> property.</param>
-        /// <param name="timeMessage">The new value of the <see cref="TimeValidationMesage"/> property.</param>
-        protected virtual void OnTimeValidationMesagePropertyChanged(string oldValue, string newValue)
-        {
-            try { UpdateAggregateValidationMessage(ValueValidationMessage, SelectedValidationMessage, newValue); }
-            finally { RaiseDataErrorsChanged(nameof(Time)); }
-        }
+        public static readonly DependencyProperty HasComponentValueErrorsProperty = HasComponentValueErrorsPropertyKey.DependencyProperty;
+
+        public bool HasComponentValueErrors { get => (bool)GetValue(HasComponentValueErrorsProperty); private set => SetValue(HasComponentValueErrorsPropertyKey, value); }
+
+        /// <summary>
+        /// Called when the <see cref="PropertyChangedCallback">PropertyChanged</see> event on <see cref="HasComponentValueErrorsProperty"/> is raised.
+        /// </summary>
+        /// <param name="args">The Event data that is issued by the event on <see cref="HasComponentValueErrorsProperty"/> that tracks changes to its effective value.</param>
+        protected void RaiseHasComponentValueErrorsPropertyChanged(DependencyPropertyChangedEventArgs args) => HasComponentValueErrorsPropertyChanged?.Invoke(this, args);
 
         #endregion
-
-        public DateTimeViewModel(DateTime? value)
+        public DateTimeViewModel()
         {
-            TimeSpanViewModel timeSpanViewModel = new(value.HasValue ? value.Value.TimeOfDay : null);
-            SetValue(TimePropertyKey, timeSpanViewModel);
-            timeSpanViewModel.ValuePropertyChanged += Time_ValuePropertyChanged;
-            timeSpanViewModel.ValidateValue += Time_ValidateValue;
-            timeSpanViewModel.ErrorsChanged += Time_ErrorsChanged;
-            Value = value;
+            OptionalValueViewModel<DateTime> date = new();
+            TimeOfDayViewModel time = new();
+            SetValue(DatePropertyKey, date);
+            SetValue(TimePropertyKey, time);
+            date.ResultValuePropertyChanged += Date_ResultValuePropertyChanged;
+            date.HasErrorsPropertyChanged += Date_HasErrorsPropertyChanged;
+            time.ValidateInputValue += Time_ValidateInputValue;
+            time.ResultValuePropertyChanged += Time_ResultValuePropertyChanged;
+            time.HasErrorsPropertyChanged += Time_HasErrorsPropertyChanged;
         }
 
-        private void RaiseDataErrorsChanged(string propertyName) => ErrorsChanged?.Invoke(this, new(propertyName));
-
-        public IEnumerable GetErrors(string propertyName)
+        protected override void OnResultValuePropertyChanged(DependencyPropertyChangedEventArgs args)
         {
-            if (string.IsNullOrEmpty(propertyName))
-            {
-                string time = TimeValidationMesage;
-                string date = SelectedValidationMessage;
-                string value = ValueValidationMessage;
-                if (!string.IsNullOrEmpty(value))
-                    yield return value;
-                if (!(string.IsNullOrEmpty(time) || value == time) && (string.IsNullOrEmpty(date) || value == date))
-                {
-                    if (!string.IsNullOrEmpty(date))
-                        yield return string.Format(FsInfoCat.Properties.Resources.Format_InvalidDate, date);
-                    if (!string.IsNullOrEmpty(time))
-                        yield return string.Format(FsInfoCat.Properties.Resources.Format_InvalidTime, time);
-                }
-            }
-            else
-            {
-                string message, format;
-                switch (propertyName)
-                {
-                    case nameof(Value):
-                        message = ValueValidationMessage;
-                        if (!string.IsNullOrEmpty(message))
-                            yield return message;
-                        yield break;
-                    case nameof(SelectedDate):
-                        message = SelectedValidationMessage;
-                        format = FsInfoCat.Properties.Resources.Format_InvalidDate;
-                        break;
-                    case nameof(Time):
-                        message = TimeValidationMesage;
-                        format = FsInfoCat.Properties.Resources.Format_InvalidTime;
-                        break;
-                    default:
-                        yield break;
-                }
-                if (!string.IsNullOrEmpty(message))
-                    yield return string.Format(format, message);
-            }
+            base.OnResultValuePropertyChanged(args);
+            DateTime? newValue = args.NewValue as DateTime?;
+            if (newValue == _pendingResultValueChange)
+                return;
+            _pendingResultValueChange = newValue;
+            DateTime? pendingDateChange = newValue?.Date;
+            TimeSpan? pendingTimeChange = newValue?.TimeOfDay;
+            _pendingDateChange = pendingDateChange;
+            _pendingTimeChange = pendingTimeChange;
+            _pendingResultValueChange = newValue;
+            Date.InputValue = pendingDateChange;
+            if (_pendingTimeChange == pendingTimeChange)
+                Time.InputValue = pendingTimeChange;
         }
     }
 }

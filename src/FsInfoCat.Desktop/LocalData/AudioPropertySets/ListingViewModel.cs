@@ -122,6 +122,7 @@ namespace FsInfoCat.Desktop.LocalData.AudioPropertySets
 
         protected override bool EntityMatchesCurrentFilter(AudioPropertiesListItem entity)
         {
+            // TODO: Implement EntityMatchesCurrentFilter
             throw new NotImplementedException();
         }
 
@@ -146,12 +147,24 @@ namespace FsInfoCat.Desktop.LocalData.AudioPropertySets
 
         protected override void OnEditTaskFaulted(Exception exception, ListItemViewModel item)
         {
-            throw new NotImplementedException();
+            UpdatePageTitle(_currentOptions);
+            FilterOptions.Value = _currentOptions;
+            _ = MessageBox.Show(Application.Current.MainWindow,
+                ((exception is AsyncOperationFailureException aExc) ? aExc.UserMessage.NullIfWhiteSpace() :
+                    (exception as AggregateException)?.InnerExceptions.OfType<AsyncOperationFailureException>().Select(e => e.UserMessage)
+                    .Where(m => !string.IsNullOrWhiteSpace(m)).FirstOrDefault()) ??
+                    "There was an unexpected error while loading items from the databse.\n\nSee logs for further information",
+                "Database Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
         protected override void OnDeleteTaskFaulted(Exception exception, ListItemViewModel item)
         {
-            throw new NotImplementedException();
+            _ = MessageBox.Show(Application.Current.MainWindow,
+                ((exception is AsyncOperationFailureException aExc) ? aExc.UserMessage.NullIfWhiteSpace() :
+                    (exception as AggregateException)?.InnerExceptions.OfType<AsyncOperationFailureException>().Select(e => e.UserMessage)
+                    .Where(m => !string.IsNullOrWhiteSpace(m)).FirstOrDefault()) ??
+                    "There was an unexpected error while deleting the item from the databse.\n\nSee logs for further information",
+                "Database Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
 }

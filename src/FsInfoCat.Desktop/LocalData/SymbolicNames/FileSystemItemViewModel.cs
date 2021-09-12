@@ -62,8 +62,7 @@ namespace FsInfoCat.Desktop.LocalData.SymbolicNames
 
         #endregion
 
-        public FileSystemItemViewModel([DisallowNull] FileSystemListItem entity
-            )
+        public FileSystemItemViewModel([DisallowNull] FileSystemListItem entity)
             : base(entity)
         {
 

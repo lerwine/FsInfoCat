@@ -1,6 +1,7 @@
 using FsInfoCat.Desktop.ViewModel;
 using FsInfoCat.Local;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Diagnostics.CodeAnalysis;
@@ -77,23 +78,14 @@ namespace FsInfoCat.Desktop.LocalData.SharedTagDefinitions
 
         protected override void OnRefreshCommand(object parameter) => ReloadAsync(_currentOptions);
 
-        private static async Task<FileSystem> LoadItemAsync([DisallowNull] FileSystemListItem item, [DisallowNull] IWindowsStatusListener statusListener)
-        {
-            using IServiceScope serviceScope = Services.CreateScope();
-            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
-            Guid id = item.Id;
-            statusListener.SetMessage("Reading data");
-            return await dbContext.FileSystems.Include(e => e.SymbolicNames).FirstOrDefaultAsync(e => e.Id == id, statusListener.CancellationToken);
-        }
-
         private void OnEditItemComplete(object sender, ReturnEventArgs<ItemEditResult> e)
         {
-            switch (e.Result.Result)
+            switch (e.Result.State)
             {
-                case Microsoft.EntityFrameworkCore.EntityState.Added:
+                case  EntityEditResultState.Added:
                     // TODO: Add to current list if it matches filter.
                     break;
-                case Microsoft.EntityFrameworkCore.EntityState.Deleted:
+                case EntityEditResultState.Deleted:
                     RemoveItem(Items.FirstOrDefault(i => ReferenceEquals(i.Entity, e.Result.ItemEntity)));
                     break;
             }
@@ -174,15 +166,17 @@ namespace FsInfoCat.Desktop.LocalData.SharedTagDefinitions
                     },
                 },
             };
-            return MessageBox.Show(Application.Current.MainWindow, "This action cannot be undone!\n\nAre you sure you want to remove this shared tag{message}from the database?",
+            return MessageBox.Show(Application.Current.MainWindow, $"This action cannot be undone!\n\nAre you sure you want to remove this shared tag{message}from the database?",
                 "Delete Shared Tag", MessageBoxButton.YesNo, MessageBoxImage.Exclamation) == MessageBoxResult.Yes;
         }
 
-        protected override async Task<int> DeleteEntityFromDbContextAsync([DisallowNull] SharedTagDefinitionListItem entity, [DisallowNull] LocalDbContext dbContext,
+        protected override async Task<EntityEntry> DeleteEntityFromDbContextAsync([DisallowNull] SharedTagDefinitionListItem entity, [DisallowNull] LocalDbContext dbContext,
             [DisallowNull] IWindowsStatusListener statusListener)
         {
             SharedTagDefinition target = await dbContext.SharedTagDefinitions.FindAsync(new object[] { entity.Id }, statusListener.CancellationToken);
-            return (target is null) ? 0 : await SharedTagDefinition.DeleteAsync(target, dbContext, statusListener);
+            if (target is null)
+                return null;
+            return await SharedTagDefinition.DeleteAsync(target, dbContext, statusListener);
         }
 
         protected override void OnReloadTaskCompleted(bool? options) => _currentOptions = options;
@@ -203,6 +197,53 @@ namespace FsInfoCat.Desktop.LocalData.SharedTagDefinitions
         {
             UpdatePageTitle(_currentOptions);
             ListingOptions.Value = _currentOptions;
+        }
+
+        protected override bool EntityMatchesCurrentFilter(SharedTagDefinitionListItem entity)
+        {
+            // TODO: Implement EntityMatchesCurrentFilter
+            throw new NotImplementedException();
+        }
+
+        protected override PageFunction<ItemEditResult> GetEditPage(SharedTagDefinition args)
+        {
+            EditViewModel viewModel;
+            if (args is null)
+                viewModel = new(new SharedTagDefinition(), true);
+            else
+                viewModel = new EditViewModel(args, false);
+            return new EditPage(viewModel);
+        }
+
+        protected override async Task<SharedTagDefinition> LoadItemAsync([DisallowNull] SharedTagDefinitionListItem item, [DisallowNull] IWindowsStatusListener statusListener)
+        {
+            using IServiceScope serviceScope = Services.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+            Guid id = item.Id;
+            statusListener.SetMessage("Reading data");
+            return await dbContext.SharedTagDefinitions.FirstOrDefaultAsync(e => e.Id == id, statusListener.CancellationToken);
+        }
+
+        protected override void OnEditTaskFaulted(Exception exception, ListItemViewModel item)
+        {
+            UpdatePageTitle(_currentOptions);
+            ListingOptions.Value = _currentOptions;
+            _ = MessageBox.Show(Application.Current.MainWindow,
+                ((exception is AsyncOperationFailureException aExc) ? aExc.UserMessage.NullIfWhiteSpace() :
+                    (exception as AggregateException)?.InnerExceptions.OfType<AsyncOperationFailureException>().Select(e => e.UserMessage)
+                    .Where(m => !string.IsNullOrWhiteSpace(m)).FirstOrDefault()) ??
+                    "There was an unexpected error while loading items from the databse.\n\nSee logs for further information",
+                "Database Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+
+        protected override void OnDeleteTaskFaulted(Exception exception, ListItemViewModel item)
+        {
+            _ = MessageBox.Show(Application.Current.MainWindow,
+                ((exception is AsyncOperationFailureException aExc) ? aExc.UserMessage.NullIfWhiteSpace() :
+                    (exception as AggregateException)?.InnerExceptions.OfType<AsyncOperationFailureException>().Select(e => e.UserMessage)
+                    .Where(m => !string.IsNullOrWhiteSpace(m)).FirstOrDefault()) ??
+                    "There was an unexpected error while deleting the item from the databse.\n\nSee logs for further information",
+                "Database Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
 }

@@ -33,33 +33,17 @@ namespace FsInfoCat.Desktop.LocalData.PersonalTagDefinitions
         public ThreeStateViewModel ListingOptions => (ThreeStateViewModel)GetValue(ListingOptionsProperty);
 
         #endregion
-        #region PageTitle Property Members
-
-        private static readonly DependencyPropertyKey PageTitlePropertyKey = DependencyPropertyBuilder<ListingViewModel, string>
-            .Register(nameof(PageTitle))
-            .DefaultValue("")
-            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default)
-            .AsReadOnly();
-
-        /// <summary>
-        /// Identifies the <see cref="PageTitle"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty PageTitleProperty = PageTitlePropertyKey.DependencyProperty;
-
-        public string PageTitle { get => GetValue(PageTitleProperty) as string; private set => SetValue(PageTitlePropertyKey, value); }
-
-        private void UpdatePageTitle(bool? options) => PageTitle = options.HasValue ?
-                    (options.Value ? FsInfoCat.Properties.Resources.DisplayName_PersonalTagDefinition_ActiveOnly :
-                    FsInfoCat.Properties.Resources.DisplayName_PersonalTagDefinition_InactiveOnlly) :
-                    FsInfoCat.Properties.Resources.DisplayName_PersonalTagDefinition_All;
-
-        #endregion
 
         public ListingViewModel()
         {
             SetValue(ListingOptionsPropertyKey, new ThreeStateViewModel(_currentOptions));
             UpdatePageTitle(_currentOptions);
         }
+
+        private void UpdatePageTitle(bool? options) => PageTitle = options.HasValue ?
+                    (options.Value ? FsInfoCat.Properties.Resources.DisplayName_PersonalTagDefinition_ActiveOnly :
+                    FsInfoCat.Properties.Resources.DisplayName_PersonalTagDefinition_InactiveOnlly) :
+                    FsInfoCat.Properties.Resources.DisplayName_PersonalTagDefinition_All;
 
         protected override IAsyncJob ReloadAsync(bool? options)
         {
@@ -93,15 +77,6 @@ namespace FsInfoCat.Desktop.LocalData.PersonalTagDefinitions
         }
 
         protected override void OnRefreshCommand(object parameter) => ReloadAsync(_currentOptions);
-
-        private static async Task<FileSystem> LoadItemAsync([DisallowNull] FileSystemListItem item, [DisallowNull] IWindowsStatusListener statusListener)
-        {
-            using IServiceScope serviceScope = Services.CreateScope();
-            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
-            Guid id = item.Id;
-            statusListener.SetMessage("Reading data");
-            return await dbContext.FileSystems.Include(e => e.SymbolicNames).FirstOrDefaultAsync(e => e.Id == id, statusListener.CancellationToken);
-        }
 
         protected override bool ConfirmItemDelete(ListItemViewModel item, object parameter)
         {
@@ -208,27 +183,49 @@ namespace FsInfoCat.Desktop.LocalData.PersonalTagDefinitions
 
         protected override bool EntityMatchesCurrentFilter(PersonalTagDefinitionListItem entity)
         {
+            // TODO: Implement EntityMatchesCurrentFilter
             throw new NotImplementedException();
         }
 
         protected override PageFunction<ItemEditResult> GetEditPage(PersonalTagDefinition args)
         {
-            throw new NotImplementedException();
+            EditViewModel viewModel;
+            if (args is null)
+                viewModel = new(new PersonalTagDefinition(), true);
+            else
+                viewModel = new EditViewModel(args, false);
+            return new EditPage(viewModel);
         }
 
-        protected override Task<PersonalTagDefinition> LoadItemAsync([DisallowNull] PersonalTagDefinitionListItem item, [DisallowNull] IWindowsStatusListener statusListener)
+        protected override async Task<PersonalTagDefinition> LoadItemAsync([DisallowNull] PersonalTagDefinitionListItem item, [DisallowNull] IWindowsStatusListener statusListener)
         {
-            throw new NotImplementedException();
+            using IServiceScope serviceScope = Services.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+            Guid id = item.Id;
+            statusListener.SetMessage("Reading data");
+            return await dbContext.PersonalTagDefinitions.FirstOrDefaultAsync(e => e.Id == id, statusListener.CancellationToken);
         }
 
         protected override void OnEditTaskFaulted(Exception exception, ListItemViewModel item)
         {
-            throw new NotImplementedException();
+            UpdatePageTitle(_currentOptions);
+            ListingOptions.Value = _currentOptions;
+            _ = MessageBox.Show(Application.Current.MainWindow,
+                ((exception is AsyncOperationFailureException aExc) ? aExc.UserMessage.NullIfWhiteSpace() :
+                    (exception as AggregateException)?.InnerExceptions.OfType<AsyncOperationFailureException>().Select(e => e.UserMessage)
+                    .Where(m => !string.IsNullOrWhiteSpace(m)).FirstOrDefault()) ??
+                    "There was an unexpected error while loading items from the databse.\n\nSee logs for further information",
+                "Database Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
         protected override void OnDeleteTaskFaulted(Exception exception, ListItemViewModel item)
         {
-            throw new NotImplementedException();
+            _ = MessageBox.Show(Application.Current.MainWindow,
+                ((exception is AsyncOperationFailureException aExc) ? aExc.UserMessage.NullIfWhiteSpace() :
+                    (exception as AggregateException)?.InnerExceptions.OfType<AsyncOperationFailureException>().Select(e => e.UserMessage)
+                    .Where(m => !string.IsNullOrWhiteSpace(m)).FirstOrDefault()) ??
+                    "There was an unexpected error while deleting the item from the databse.\n\nSee logs for further information",
+                "Database Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
 }

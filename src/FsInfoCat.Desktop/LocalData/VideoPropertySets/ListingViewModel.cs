@@ -104,6 +104,7 @@ namespace FsInfoCat.Desktop.LocalData.VideoPropertySets
 
         protected override bool EntityMatchesCurrentFilter(VideoPropertiesListItem entity)
         {
+            // TODO: Implement EntityMatchesCurrentFilter
             throw new NotImplementedException();
         }
 
@@ -128,17 +129,34 @@ namespace FsInfoCat.Desktop.LocalData.VideoPropertySets
 
         protected override void OnEditTaskFaulted(Exception exception, ListItemViewModel item)
         {
-            throw new NotImplementedException();
+            UpdatePageTitle(_currentOptions);
+            FilterOptions.Value = _currentOptions;
+            _ = MessageBox.Show(Application.Current.MainWindow,
+                ((exception is AsyncOperationFailureException aExc) ? aExc.UserMessage.NullIfWhiteSpace() :
+                    (exception as AggregateException)?.InnerExceptions.OfType<AsyncOperationFailureException>().Select(e => e.UserMessage)
+                    .Where(m => !string.IsNullOrWhiteSpace(m)).FirstOrDefault()) ??
+                    "There was an unexpected error while loading items from the databse.\n\nSee logs for further information",
+                "Database Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
-        protected override Task<EntityEntry> DeleteEntityFromDbContextAsync([DisallowNull] VideoPropertiesListItem entity, [DisallowNull] LocalDbContext dbContext, [DisallowNull] IWindowsStatusListener statusListener)
+        protected override async Task<EntityEntry> DeleteEntityFromDbContextAsync([DisallowNull] VideoPropertiesListItem entity, [DisallowNull] LocalDbContext dbContext, [DisallowNull] IWindowsStatusListener statusListener)
         {
-            throw new NotImplementedException();
+            VideoPropertySet target = await dbContext.VideoPropertySets.FindAsync(new object[] { entity.Id }, statusListener.CancellationToken);
+            if (target is null)
+                return null;
+            EntityEntry entry = dbContext.VideoPropertySets.Remove(target);
+            await dbContext.SaveChangesAsync(statusListener.CancellationToken);
+            return entry;
         }
 
         protected override void OnDeleteTaskFaulted(Exception exception, ListItemViewModel item)
         {
-            throw new NotImplementedException();
+            _ = MessageBox.Show(Application.Current.MainWindow,
+                ((exception is AsyncOperationFailureException aExc) ? aExc.UserMessage.NullIfWhiteSpace() :
+                    (exception as AggregateException)?.InnerExceptions.OfType<AsyncOperationFailureException>().Select(e => e.UserMessage)
+                    .Where(m => !string.IsNullOrWhiteSpace(m)).FirstOrDefault()) ??
+                    "There was an unexpected error while deleting the item from the databse.\n\nSee logs for further information",
+                "Database Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
 }

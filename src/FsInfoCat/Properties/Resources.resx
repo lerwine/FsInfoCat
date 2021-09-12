@@ -1799,7 +1799,7 @@
     <value>Invalid duration value.</value>
   </data>
   <data name="ErrorMessage_InvalidHours" xml:space="preserve">
-    <value>Invlid hours value.</value>
+    <value>Invalid hours value.</value>
   </data>
   <data name="ErrorMessage_InvalidMinutes" xml:space="preserve">
     <value>Invalid minutes value.</value>
@@ -2062,5 +2062,11 @@
   </data>
   <data name="FormatDisplayName_Volumes_Status" xml:space="preserve">
     <value>Volumes - State  is {0}</value>
+  </data>
+  <data name="ErrorMessage_InvalidMilliseconds" xml:space="preserve">
+    <value>Invalid milliseconds value.</value>
+  </data>
+  <data name="ErrorMessage_InvalidSeconds" xml:space="preserve">
+    <value>Invalid seconds value.</value>
   </data>
 </root>

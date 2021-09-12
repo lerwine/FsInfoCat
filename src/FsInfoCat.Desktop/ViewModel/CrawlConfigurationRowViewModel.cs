@@ -179,7 +179,7 @@ namespace FsInfoCat.Desktop.ViewModel
             MaxRecursionDepth = entity.MaxRecursionDepth;
             MaxTotalItems = entity.MaxTotalItems;
             long? seconds = entity.TTL;
-            SetValue(MaxDurationPropertyKey, new TimeSpanViewModel(seconds.HasValue ? TimeSpan.FromSeconds(seconds.Value) : null));
+            SetValue(MaxDurationPropertyKey, new TimeSpanViewModel() { InputValue = seconds.HasValue ? TimeSpan.FromSeconds(seconds.Value) : null });
         }
 
         protected bool CheckEntityPropertyChanged(string propertyName)

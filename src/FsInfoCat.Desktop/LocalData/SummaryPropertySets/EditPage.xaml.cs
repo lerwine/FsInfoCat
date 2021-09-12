@@ -33,7 +33,7 @@ namespace FsInfoCat.Desktop.LocalData.SummaryPropertySets
             EditViewModel viewModel = DataContext as EditViewModel;
             if (viewModel is not null)
                 OnReturn(new(new(viewModel.ListItem,
-                    viewModel.IsNew ? Microsoft.EntityFrameworkCore.EntityState.Added : Microsoft.EntityFrameworkCore.EntityState.Modified)));
+                    viewModel.IsNew ?ViewModel.EntityEditResultState.Added :ViewModel.EntityEditResultState.Modified)));
         }
 
         private void ViewModel_ChangesDiscarded(object sender, Commands.CommandEventArgs e)
@@ -41,7 +41,7 @@ namespace FsInfoCat.Desktop.LocalData.SummaryPropertySets
             EditViewModel viewModel = DataContext as EditViewModel;
             if (viewModel is not null)
                 OnReturn(new(new(viewModel.ListItem,
-                    viewModel.IsNew ? Microsoft.EntityFrameworkCore.EntityState.Detached : Microsoft.EntityFrameworkCore.EntityState.Unchanged)));
+                    viewModel.IsNew ?ViewModel.EntityEditResultState.Deleted :ViewModel.EntityEditResultState.Unchanged)));
         }
     }
 }

@@ -1,6 +1,7 @@
-﻿using FsInfoCat.Local;
+using FsInfoCat.Desktop.ViewModel;
+using FsInfoCat.Local;
 
 namespace FsInfoCat.Desktop.LocalData.AudioPropertySets
 {
-    public record ItemEditResult(AudioPropertiesListItem ItemEntity, Microsoft.EntityFrameworkCore.EntityState Result);
+    public record ItemEditResult(AudioPropertiesListItem ItemEntity, EntityEditResultState State) : IEntityEditResult<AudioPropertiesListItem>;
 }

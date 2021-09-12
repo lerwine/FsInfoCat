@@ -31,33 +31,6 @@ namespace FsInfoCat.Desktop.LocalData.Volumes
         public EnumValuePickerVM<VolumeStatus> StatusFilterOption => (EnumValuePickerVM<VolumeStatus>)GetValue(StatusFilterOptionProperty);
 
         #endregion
-        #region PageTitle Property Members
-
-        private static readonly DependencyPropertyKey PageTitlePropertyKey = DependencyPropertyBuilder<ListingViewModel, string>
-            .Register(nameof(PageTitle))
-            .DefaultValue("")
-            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default)
-            .AsReadOnly();
-
-        /// <summary>
-        /// Identifies the <see cref="PageTitle"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty PageTitleProperty = PageTitlePropertyKey.DependencyProperty;
-
-        public string PageTitle { get => GetValue(PageTitleProperty) as string; private set => SetValue(PageTitlePropertyKey, value); }
-
-        private void UpdatePageTitle(ListingOptions options)
-        {
-            if (options.Status.HasValue)
-                PageTitle = string.Format(FsInfoCat.Properties.Resources.FormatDisplayName_Volumes_Status, options.Status.Value.GetDisplayName());
-            else
-                PageTitle = options.ShowActiveOnly.HasValue ?
-                    (options.ShowActiveOnly.Value ? FsInfoCat.Properties.Resources.DisplayName_Volumes_ActiveOnly :
-                    FsInfoCat.Properties.Resources.DisplayName_Volumes_InactiveOnly) :
-                    FsInfoCat.Properties.Resources.DisplayName_Volumes_All;
-        }
-
-        #endregion
 
         public ListingViewModel()
         {
@@ -69,6 +42,17 @@ namespace FsInfoCat.Desktop.LocalData.Volumes
             viewOptions.SelectedItem = FromListingOptions(_currentOptions);
             SetValue(StatusFilterOptionPropertyKey, viewOptions);
             UpdatePageTitle(_currentOptions);
+        }
+
+        private void UpdatePageTitle(ListingOptions options)
+        {
+            if (options.Status.HasValue)
+                PageTitle = string.Format(FsInfoCat.Properties.Resources.FormatDisplayName_Volumes_Status, options.Status.Value.GetDisplayName());
+            else
+                PageTitle = options.ShowActiveOnly.HasValue ?
+                    (options.ShowActiveOnly.Value ? FsInfoCat.Properties.Resources.DisplayName_Volumes_ActiveOnly :
+                    FsInfoCat.Properties.Resources.DisplayName_Volumes_InactiveOnly) :
+                    FsInfoCat.Properties.Resources.DisplayName_Volumes_All;
         }
 
         private ListingOptions ToListingOptions(EnumChoiceItem<VolumeStatus> item)
@@ -175,12 +159,18 @@ namespace FsInfoCat.Desktop.LocalData.Volumes
 
         protected override bool EntityMatchesCurrentFilter(VolumeListItemWithFileSystem entity)
         {
+            // TODO: Implement EntityMatchesCurrentFilter
             throw new NotImplementedException();
         }
 
         protected override PageFunction<ItemEditResult> GetEditPage(Volume args)
         {
-            throw new NotImplementedException();
+            EditViewModel viewModel;
+            if (args is null)
+                viewModel = new(new Volume(), true);
+            else
+                viewModel = new EditViewModel(args, false);
+            return new EditPage(viewModel);
         }
 
         protected async override Task<Volume> LoadItemAsync([DisallowNull] VolumeListItemWithFileSystem item, [DisallowNull] IWindowsStatusListener statusListener)
@@ -194,12 +184,24 @@ namespace FsInfoCat.Desktop.LocalData.Volumes
 
         protected override void OnEditTaskFaulted(Exception exception, ListItemViewModel item)
         {
-            throw new NotImplementedException();
+            UpdatePageTitle(_currentOptions);
+            StatusFilterOption.SelectedItem = FromListingOptions(_currentOptions);
+            _ = MessageBox.Show(Application.Current.MainWindow,
+                ((exception is AsyncOperationFailureException aExc) ? aExc.UserMessage.NullIfWhiteSpace() :
+                    (exception as AggregateException)?.InnerExceptions.OfType<AsyncOperationFailureException>().Select(e => e.UserMessage)
+                    .Where(m => !string.IsNullOrWhiteSpace(m)).FirstOrDefault()) ??
+                    "There was an unexpected error while loading items from the databse.\n\nSee logs for further information",
+                "Database Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
         protected override void OnDeleteTaskFaulted(Exception exception, ListItemViewModel item)
         {
-            throw new NotImplementedException();
+            _ = MessageBox.Show(Application.Current.MainWindow,
+                ((exception is AsyncOperationFailureException aExc) ? aExc.UserMessage.NullIfWhiteSpace() :
+                    (exception as AggregateException)?.InnerExceptions.OfType<AsyncOperationFailureException>().Select(e => e.UserMessage)
+                    .Where(m => !string.IsNullOrWhiteSpace(m)).FirstOrDefault()) ??
+                    "There was an unexpected error while deleting the item from the databse.\n\nSee logs for further information",
+                "Database Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
         public record ListingOptions(VolumeStatus? Status, bool? ShowActiveOnly);

@@ -56,7 +56,7 @@ namespace FsInfoCat.Local
 
         IEnumerable<ILocalSharedVolumeTag> ILocalSharedTagDefinition.VolumeTags => VolumeTags.Cast<ILocalSharedVolumeTag>();
 
-        public static async Task<int> DeleteAsync(SharedTagDefinition target, LocalDbContext dbContext, IStatusListener statusListener)
+        public static async Task<EntityEntry<SharedTagDefinition>> DeleteAsync(SharedTagDefinition target, LocalDbContext dbContext, IStatusListener statusListener)
         {
             using IDbContextTransaction transaction = dbContext.Database.BeginTransaction();
             using IDisposable loggerScope = statusListener.Logger.BeginScope(target.Id);
@@ -72,11 +72,11 @@ namespace FsInfoCat.Local
                 dbContext.SharedSubdirectoryTags.RemoveRange(subdirectoryTags);
             if (volumeTags.Length > 0)
                 dbContext.SharedVolumeTags.RemoveRange(volumeTags);
-            int result = dbContext.ChangeTracker.HasChanges() ? await dbContext.SaveChangesAsync(statusListener.CancellationToken) : 0;
+            _ = dbContext.ChangeTracker.HasChanges() ? await dbContext.SaveChangesAsync(statusListener.CancellationToken) : 0;
             _ = dbContext.SharedTagDefinitions.Remove(target);
-            result += await dbContext.SaveChangesAsync(statusListener.CancellationToken);
+            _ = await dbContext.SaveChangesAsync(statusListener.CancellationToken);
             await transaction.CommitAsync(statusListener.CancellationToken);
-            return result;
+            return entry;
         }
     }
 }

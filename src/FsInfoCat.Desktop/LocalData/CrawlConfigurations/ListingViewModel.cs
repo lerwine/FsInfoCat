@@ -16,7 +16,7 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
     {
         private readonly EnumChoiceItem<CrawlStatus> _allOption;
         private readonly EnumChoiceItem<CrawlStatus> _allFailedOption;
-        private FilterOptions _currentStatusOptions = new(null, true, false);
+        private FilterOptions _currentStatusOptions = new(null, true, false, null, null);
 
         #region StatusOptions Property Members
 
@@ -57,20 +57,49 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
         public ThreeStateViewModel SchedulingOptions => (ThreeStateViewModel)GetValue(SchedulingOptionsProperty);
 
         #endregion
-        #region PageTitle Property Members
+        #region ScheduleRangeStart Property Members
 
-        private static readonly DependencyPropertyKey PageTitlePropertyKey = DependencyPropertyBuilder<ListingViewModel, string>
-            .Register(nameof(PageTitle))
-            .DefaultValue("")
-            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default)
+        private static readonly DependencyPropertyKey ScheduleRangeStartPropertyKey = DependencyPropertyBuilder<ListingViewModel, DateTimeViewModel>
+            .Register(nameof(ScheduleRangeStart))
             .AsReadOnly();
 
         /// <summary>
-        /// Identifies the <see cref="PageTitle"/> dependency property.
+        /// Identifies the <see cref="ScheduleRangeStart"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty PageTitleProperty = PageTitlePropertyKey.DependencyProperty;
+        public static readonly DependencyProperty ScheduleRangeStartProperty = ScheduleRangeStartPropertyKey.DependencyProperty;
 
-        public string PageTitle { get => GetValue(PageTitleProperty) as string; private set => SetValue(PageTitlePropertyKey, value); }
+        public DateTimeViewModel ScheduleRangeStart => (DateTimeViewModel)GetValue(ScheduleRangeStartProperty);
+
+        #endregion
+        #region ScheduleRangeEnd Property Members
+
+        private static readonly DependencyPropertyKey ScheduleRangeEndPropertyKey = DependencyPropertyBuilder<ListingViewModel, DateTimeViewModel>
+            .Register(nameof(ScheduleRangeEnd))
+            .AsReadOnly();
+
+        /// <summary>
+        /// Identifies the <see cref="ScheduleRangeEnd"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ScheduleRangeEndProperty = ScheduleRangeEndPropertyKey.DependencyProperty;
+
+        public DateTimeViewModel ScheduleRangeEnd => (DateTimeViewModel)GetValue(ScheduleRangeEndProperty);
+
+        #endregion
+
+        public ListingViewModel()
+        {
+            string[] names = new[] { FsInfoCat.Properties.Resources.DisplayName_AllItems, FsInfoCat.Properties.Resources.DisplayName_AllFailedItems };
+            EnumValuePickerVM<CrawlStatus> viewOptions = new(names);
+            _allOption = viewOptions.Choices.First(o => o.DisplayName == FsInfoCat.Properties.Resources.DisplayName_AllItems);
+            _allFailedOption = viewOptions.Choices.First(o => o.DisplayName == FsInfoCat.Properties.Resources.DisplayName_AllFailedItems);
+            SetValue(StatusOptionsPropertyKey, viewOptions);
+            SetValue(EditingStatusOptionsPropertyKey, new EnumValuePickerVM<CrawlStatus>(names) { SelectedIndex = viewOptions.SelectedIndex });
+            SetValue(SchedulingOptionsPropertyKey, new ThreeStateViewModel(_currentStatusOptions.IsScheduled));
+            SetValue(ScheduleRangeStartPropertyKey, new DateTimeViewModel());
+            SetValue(ScheduleRangeEndPropertyKey, new DateTimeViewModel());
+            StatusOptions.SelectedItem = FromFilterOptions(_currentStatusOptions, out _);
+            UpdatePageTitle(_currentStatusOptions);
+        }
 
         private void UpdatePageTitle(FilterOptions options)
         {
@@ -93,26 +122,11 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
                     options.ShowAll ? FsInfoCat.Properties.Resources.DisplayName_CrawlConfigs_All : FsInfoCat.Properties.Resources.DisplayName_CrawlConfigs_Failed;
         }
 
-        #endregion
-
-        public ListingViewModel()
-        {
-            string[] names = new[] { FsInfoCat.Properties.Resources.DisplayName_AllItems, FsInfoCat.Properties.Resources.DisplayName_AllFailedItems };
-            EnumValuePickerVM<CrawlStatus> viewOptions = new(names);
-            _allOption = viewOptions.Choices.First(o => o.DisplayName == FsInfoCat.Properties.Resources.DisplayName_AllItems);
-            _allFailedOption = viewOptions.Choices.First(o => o.DisplayName == FsInfoCat.Properties.Resources.DisplayName_AllFailedItems);
-            SetValue(StatusOptionsPropertyKey, viewOptions);
-            SetValue(EditingStatusOptionsPropertyKey, new EnumValuePickerVM<CrawlStatus>(names) { SelectedIndex = viewOptions.SelectedIndex });
-            SetValue(SchedulingOptionsPropertyKey, new ThreeStateViewModel(_currentStatusOptions.IsScheduled));
-            StatusOptions.SelectedItem = FromFilterOptions(_currentStatusOptions, out _);
-            UpdatePageTitle(_currentStatusOptions);
-        }
-
-        private FilterOptions ToFilterOptions(EnumChoiceItem<CrawlStatus> item, bool? isScheduled)
+        private FilterOptions ToFilterOptions(EnumChoiceItem<CrawlStatus> item, bool? isScheduled, DateTime? scheduleRangeStart, DateTime? scheduleRangeEnd)
         {
             if (ReferenceEquals(item, _allOption))
-                return new(null, true, isScheduled);
-            return new(item?.Value, false, isScheduled);
+                return new(null, true, isScheduled, scheduleRangeStart, scheduleRangeEnd);
+            return new(item?.Value, false, isScheduled, scheduleRangeStart, scheduleRangeEnd);
         }
 
         private EnumChoiceItem<CrawlStatus> FromFilterOptions(FilterOptions options, out bool? isScheduled)
@@ -170,7 +184,8 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
 
         protected override void OnApplyFilterOptionsCommand(object parameter)
         {
-            FilterOptions newStatusOptions = ToFilterOptions(StatusOptions.SelectedItem, SchedulingOptions.Value);
+            // TODO: Verify that this is okay
+            FilterOptions newStatusOptions = ToFilterOptions(StatusOptions.SelectedItem, SchedulingOptions.Value, ScheduleRangeStart.ResultValue, ScheduleRangeEnd.ResultValue);
             if (newStatusOptions.IsScheduled != _currentStatusOptions.IsScheduled || newStatusOptions.ShowAll != _currentStatusOptions.ShowAll || newStatusOptions.Status != _currentStatusOptions.Status)
                 _ = ReloadAsync(newStatusOptions);
         }
@@ -209,22 +224,41 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
 
         protected override bool EntityMatchesCurrentFilter(CrawlConfigListItem entity)
         {
+            // TODO: Implement EntityMatchesCurrentFilter
             throw new NotImplementedException();
         }
 
         protected override PageFunction<ItemEditResult> GetEditPage(CrawlConfiguration args)
         {
-            throw new NotImplementedException();
+            EditViewModel viewModel;
+            if (args is null)
+                viewModel = new(new CrawlConfiguration(), true);
+            else
+                viewModel = new EditViewModel(args, false);
+            return new EditPage(viewModel);
         }
 
         protected override void OnEditTaskFaulted(Exception exception, ListItemViewModel item)
         {
-            throw new NotImplementedException();
+            UpdatePageTitle(_currentStatusOptions);
+            StatusOptions.SelectedItem = FromFilterOptions(_currentStatusOptions, out bool? isScheduled);
+            SchedulingOptions.Value = isScheduled;
+            _ = MessageBox.Show(Application.Current.MainWindow,
+                ((exception is AsyncOperationFailureException aExc) ? aExc.UserMessage.NullIfWhiteSpace() :
+                    (exception as AggregateException)?.InnerExceptions.OfType<AsyncOperationFailureException>().Select(e => e.UserMessage)
+                    .Where(m => !string.IsNullOrWhiteSpace(m)).FirstOrDefault()) ??
+                    "There was an unexpected error while loading items from the databse.\n\nSee logs for further information",
+                "Database Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
         protected override void OnDeleteTaskFaulted(Exception exception, ListItemViewModel item)
         {
-            throw new NotImplementedException();
+            _ = MessageBox.Show(Application.Current.MainWindow,
+                ((exception is AsyncOperationFailureException aExc) ? aExc.UserMessage.NullIfWhiteSpace() :
+                    (exception as AggregateException)?.InnerExceptions.OfType<AsyncOperationFailureException>().Select(e => e.UserMessage)
+                    .Where(m => !string.IsNullOrWhiteSpace(m)).FirstOrDefault()) ??
+                    "There was an unexpected error while deleting the item from the databse.\n\nSee logs for further information",
+                "Database Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
         protected async override Task<CrawlConfiguration> LoadItemAsync([DisallowNull] CrawlConfigListItem item, [DisallowNull] IWindowsStatusListener statusListener)
@@ -236,6 +270,6 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
             return await dbContext.CrawlConfigurations.Include(e => e.Root).FirstOrDefaultAsync(e => e.Id == id, statusListener.CancellationToken);
         }
 
-        public record FilterOptions(CrawlStatus? Status, bool ShowAll, bool? IsScheduled);
+        public record FilterOptions(CrawlStatus? Status, bool ShowAll, bool? IsScheduled, DateTime? ScheduleRangeStart, DateTime? ScheduleRangeEnd);
     }
 }

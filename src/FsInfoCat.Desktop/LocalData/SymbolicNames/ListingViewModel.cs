@@ -112,7 +112,7 @@ namespace FsInfoCat.Desktop.LocalData.SymbolicNames
         protected override bool EntityMatchesCurrentFilter(SymbolicNameListItem entity)
         {
             bool? options = _currentStateFilterOption;
-            return options.HasValue ? entity.IsInactive != options.Value : true;
+            return !options.HasValue || entity.IsInactive != options.Value;
         }
 
         protected override PageFunction<ItemEditResult> GetEditPage(SymbolicName args)
@@ -136,12 +136,24 @@ namespace FsInfoCat.Desktop.LocalData.SymbolicNames
 
         protected override void OnEditTaskFaulted(Exception exception, ListItemViewModel item)
         {
-            throw new NotImplementedException();
+            UpdatePageTitle(_currentStateFilterOption);
+            StateFilterOption.Value = _currentStateFilterOption;
+            _ = MessageBox.Show(Application.Current.MainWindow,
+                ((exception is AsyncOperationFailureException aExc) ? aExc.UserMessage.NullIfWhiteSpace() :
+                    (exception as AggregateException)?.InnerExceptions.OfType<AsyncOperationFailureException>().Select(e => e.UserMessage)
+                    .Where(m => !string.IsNullOrWhiteSpace(m)).FirstOrDefault()) ??
+                    "There was an unexpected error while loading items from the databse.\n\nSee logs for further information",
+                "Database Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
         protected override void OnDeleteTaskFaulted(Exception exception, ListItemViewModel item)
         {
-            throw new NotImplementedException();
+            _ = MessageBox.Show(Application.Current.MainWindow,
+                ((exception is AsyncOperationFailureException aExc) ? aExc.UserMessage.NullIfWhiteSpace() :
+                    (exception as AggregateException)?.InnerExceptions.OfType<AsyncOperationFailureException>().Select(e => e.UserMessage)
+                    .Where(m => !string.IsNullOrWhiteSpace(m)).FirstOrDefault()) ??
+                    "There was an unexpected error while deleting the item from the databse.\n\nSee logs for further information",
+                "Database Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
 }

@@ -116,7 +116,7 @@ namespace FsInfoCat.Desktop.LocalData.FileSystems
         protected override bool EntityMatchesCurrentFilter(FileSystemListItem entity)
         {
             bool? option = _currentListingOption;
-            return option.HasValue ? entity.IsInactive != option.HasValue : true;
+            return !option.HasValue || entity.IsInactive != option.HasValue;
         }
 
         protected override PageFunction<ItemEditResult> GetEditPage(FileSystem args)
@@ -140,13 +140,11 @@ namespace FsInfoCat.Desktop.LocalData.FileSystems
 
         protected override void OnDeleteTaskFaulted(Exception exception, ListItemViewModel item)
         {
-            UpdatePageTitle(_currentListingOption);
-            ListingOption.Value = _currentListingOption;
             _ = MessageBox.Show(Application.Current.MainWindow,
                 ((exception is AsyncOperationFailureException aExc) ? aExc.UserMessage.NullIfWhiteSpace() :
                     (exception as AggregateException)?.InnerExceptions.OfType<AsyncOperationFailureException>().Select(e => e.UserMessage)
                     .Where(m => !string.IsNullOrWhiteSpace(m)).FirstOrDefault()) ??
-                    "There was an unexpected error while loading items from the databse.\n\nSee logs for further information",
+                    "There was an unexpected error while deleting the item from the databse.\n\nSee logs for further information",
                 "Database Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 

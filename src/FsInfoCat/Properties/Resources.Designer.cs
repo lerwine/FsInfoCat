@@ -5371,11 +5371,20 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Invlid hours value..
+        ///   Looks up a localized string similar to Invalid hours value..
         /// </summary>
         public static string ErrorMessage_InvalidHours {
             get {
                 return ResourceManager.GetString("ErrorMessage_InvalidHours", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid milliseconds value..
+        /// </summary>
+        public static string ErrorMessage_InvalidMilliseconds {
+            get {
+                return ResourceManager.GetString("ErrorMessage_InvalidMilliseconds", resourceCulture);
             }
         }
         
@@ -5394,6 +5403,15 @@ namespace FsInfoCat.Properties {
         public static string ErrorMessage_InvalidPathError {
             get {
                 return ResourceManager.GetString("ErrorMessage_InvalidPathError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid seconds value..
+        /// </summary>
+        public static string ErrorMessage_InvalidSeconds {
+            get {
+                return ResourceManager.GetString("ErrorMessage_InvalidSeconds", resourceCulture);
             }
         }
         
