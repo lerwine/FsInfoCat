@@ -91,7 +91,7 @@ namespace FsInfoCat.Desktop.LocalData.SymbolicNames
 
         protected override void OnReloadTaskCompleted(bool? options) => _currentStateFilterOption = options;
 
-        protected override void OnReloadTaskFaulted(Exception exception, bool? options)
+        protected override void OnReloadTaskFaulted([DisallowNull] Exception exception, bool? options)
         {
             UpdatePageTitle(_currentStateFilterOption);
             StateFilterOption.Value = _currentStateFilterOption;
@@ -109,7 +109,7 @@ namespace FsInfoCat.Desktop.LocalData.SymbolicNames
             StateFilterOption.Value = _currentStateFilterOption;
         }
 
-        protected override bool EntityMatchesCurrentFilter(SymbolicNameListItem entity)
+        protected override bool EntityMatchesCurrentFilter([DisallowNull] SymbolicNameListItem entity)
         {
             bool? options = _currentStateFilterOption;
             return !options.HasValue || entity.IsInactive != options.Value;
@@ -134,7 +134,7 @@ namespace FsInfoCat.Desktop.LocalData.SymbolicNames
             return await dbContext.SymbolicNames.Include(e => e.FileSystem).FirstOrDefaultAsync(e => e.Id == id, statusListener.CancellationToken);
         }
 
-        protected override void OnEditTaskFaulted(Exception exception, ListItemViewModel item)
+        protected override void OnEditTaskFaulted([DisallowNull] Exception exception, [DisallowNull] ListItemViewModel item)
         {
             UpdatePageTitle(_currentStateFilterOption);
             StateFilterOption.Value = _currentStateFilterOption;
@@ -146,7 +146,7 @@ namespace FsInfoCat.Desktop.LocalData.SymbolicNames
                 "Database Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
-        protected override void OnDeleteTaskFaulted(Exception exception, ListItemViewModel item)
+        protected override void OnDeleteTaskFaulted([DisallowNull] Exception exception, [DisallowNull] ListItemViewModel item)
         {
             _ = MessageBox.Show(Application.Current.MainWindow,
                 ((exception is AsyncOperationFailureException aExc) ? aExc.UserMessage.NullIfWhiteSpace() :

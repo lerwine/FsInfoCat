@@ -96,7 +96,7 @@ namespace FsInfoCat.Desktop.LocalData.PhotoPropertySets
 
         protected override void OnReloadTaskCompleted(bool? options) => _currentOptions = options;
 
-        protected override void OnReloadTaskFaulted(Exception exception, bool? options)
+        protected override void OnReloadTaskFaulted([DisallowNull] Exception exception, bool? options)
         {
             UpdatePageTitle(_currentOptions);
             FilterOptions.Value = _currentOptions;
@@ -114,7 +114,7 @@ namespace FsInfoCat.Desktop.LocalData.PhotoPropertySets
             FilterOptions.Value = _currentOptions;
         }
 
-        protected override bool EntityMatchesCurrentFilter(PhotoPropertiesListItem entity)
+        protected override bool EntityMatchesCurrentFilter([DisallowNull] PhotoPropertiesListItem entity)
         {
             // TODO: Implement EntityMatchesCurrentFilter
             throw new NotImplementedException();
@@ -139,7 +139,7 @@ namespace FsInfoCat.Desktop.LocalData.PhotoPropertySets
             return await dbContext.PhotoPropertySets.Include(e => e.Files).FirstOrDefaultAsync(e => e.Id == id, statusListener.CancellationToken);
         }
 
-        protected override void OnEditTaskFaulted(Exception exception, ListItemViewModel item)
+        protected override void OnEditTaskFaulted([DisallowNull] Exception exception, [DisallowNull] ListItemViewModel item)
         {
             UpdatePageTitle(_currentOptions);
             FilterOptions.Value = _currentOptions;
@@ -151,7 +151,7 @@ namespace FsInfoCat.Desktop.LocalData.PhotoPropertySets
                 "Database Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
-        protected override void OnDeleteTaskFaulted(Exception exception, ListItemViewModel item)
+        protected override void OnDeleteTaskFaulted([DisallowNull] Exception exception, [DisallowNull] ListItemViewModel item)
         {
             _ = MessageBox.Show(Application.Current.MainWindow,
                 ((exception is AsyncOperationFailureException aExc) ? aExc.UserMessage.NullIfWhiteSpace() :

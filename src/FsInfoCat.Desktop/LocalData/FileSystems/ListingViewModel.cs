@@ -95,7 +95,7 @@ namespace FsInfoCat.Desktop.LocalData.FileSystems
 
         protected override void OnReloadTaskCompleted(bool? options) => _currentListingOption = options;
 
-        protected override void OnReloadTaskFaulted(Exception exception, bool? options)
+        protected override void OnReloadTaskFaulted([DisallowNull] Exception exception, bool? options)
         {
             UpdatePageTitle(_currentListingOption);
             ListingOption.Value = _currentListingOption;
@@ -113,7 +113,7 @@ namespace FsInfoCat.Desktop.LocalData.FileSystems
             ListingOption.Value = _currentListingOption;
         }
 
-        protected override bool EntityMatchesCurrentFilter(FileSystemListItem entity)
+        protected override bool EntityMatchesCurrentFilter([DisallowNull] FileSystemListItem entity)
         {
             bool? option = _currentListingOption;
             return !option.HasValue || entity.IsInactive != option.HasValue;
@@ -138,7 +138,7 @@ namespace FsInfoCat.Desktop.LocalData.FileSystems
             return await dbContext.FileSystems.Include(e => e.SymbolicNames).FirstOrDefaultAsync(e => e.Id == id, statusListener.CancellationToken);
         }
 
-        protected override void OnDeleteTaskFaulted(Exception exception, ListItemViewModel item)
+        protected override void OnDeleteTaskFaulted([DisallowNull] Exception exception, [DisallowNull] ListItemViewModel item)
         {
             _ = MessageBox.Show(Application.Current.MainWindow,
                 ((exception is AsyncOperationFailureException aExc) ? aExc.UserMessage.NullIfWhiteSpace() :
@@ -148,7 +148,7 @@ namespace FsInfoCat.Desktop.LocalData.FileSystems
                 "Database Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
-        protected override void OnEditTaskFaulted(Exception exception, ListItemViewModel item)
+        protected override void OnEditTaskFaulted([DisallowNull] Exception exception, [DisallowNull] ListItemViewModel item)
         {
             UpdatePageTitle(_currentListingOption);
             ListingOption.Value = _currentListingOption;

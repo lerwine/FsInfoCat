@@ -110,7 +110,7 @@ namespace FsInfoCat.Desktop.LocalData.CrawlLogs
 
         protected override void OnReloadTaskCompleted(FilterOptions options) => _currentOptions = options;
 
-        protected override void OnReloadTaskFaulted(Exception exception, FilterOptions options)
+        protected override void OnReloadTaskFaulted([DisallowNull] Exception exception, FilterOptions options)
         {
             UpdatePageTitle(_currentOptions);
             StatusOptions.SelectedItem = FromFilterOptions(_currentOptions);
@@ -128,7 +128,7 @@ namespace FsInfoCat.Desktop.LocalData.CrawlLogs
             StatusOptions.SelectedItem = FromFilterOptions(_currentOptions);
         }
 
-        protected override bool EntityMatchesCurrentFilter(CrawlJobLogListItem entity)
+        protected override bool EntityMatchesCurrentFilter([DisallowNull] CrawlJobLogListItem entity)
         {
             // TODO: Implement EntityMatchesCurrentFilter
             throw new NotImplementedException();
@@ -153,7 +153,7 @@ namespace FsInfoCat.Desktop.LocalData.CrawlLogs
             return await dbContext.CrawlJobLogs.Include(e => e.Configuration).FirstOrDefaultAsync(e => e.Id == id, statusListener.CancellationToken);
         }
 
-        protected override void OnEditTaskFaulted(Exception exception, ListItemViewModel item)
+        protected override void OnEditTaskFaulted([DisallowNull] Exception exception, [DisallowNull] ListItemViewModel item)
         {
             UpdatePageTitle(_currentOptions);
             StatusOptions.SelectedItem = FromFilterOptions(_currentOptions);
@@ -165,7 +165,7 @@ namespace FsInfoCat.Desktop.LocalData.CrawlLogs
                 "Database Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
-        protected override void OnDeleteTaskFaulted(Exception exception, ListItemViewModel item)
+        protected override void OnDeleteTaskFaulted([DisallowNull] Exception exception, [DisallowNull] ListItemViewModel item)
         {
             _ = MessageBox.Show(Application.Current.MainWindow,
                 ((exception is AsyncOperationFailureException aExc) ? aExc.UserMessage.NullIfWhiteSpace() :

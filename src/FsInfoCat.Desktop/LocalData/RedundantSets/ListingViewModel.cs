@@ -134,7 +134,7 @@ namespace FsInfoCat.Desktop.LocalData.RedundantSets
 
         protected override void OnReloadTaskCompleted(ListingOptions options) => _currentRange = options;
 
-        protected override void OnReloadTaskFaulted(Exception exception, ListingOptions options)
+        protected override void OnReloadTaskFaulted([DisallowNull] Exception exception, ListingOptions options)
         {
             MinimumRange.DenominatedValue = _currentRange.MinRange;
             MaximumRange.DenominatedValue = _currentRange.MaxRange;
@@ -154,7 +154,7 @@ namespace FsInfoCat.Desktop.LocalData.RedundantSets
             UpdatePageTitle(_currentRange);
         }
 
-        protected override bool EntityMatchesCurrentFilter(RedundantSetListItem entity)
+        protected override bool EntityMatchesCurrentFilter([DisallowNull] RedundantSetListItem entity)
         {
             // TODO: Implement EntityMatchesCurrentFilter
             throw new NotImplementedException();
@@ -179,7 +179,7 @@ namespace FsInfoCat.Desktop.LocalData.RedundantSets
             return await dbContext.RedundantSets.FirstOrDefaultAsync(e => e.Id == id, statusListener.CancellationToken);
         }
 
-        protected override void OnEditTaskFaulted(Exception exception, ListItemViewModel item)
+        protected override void OnEditTaskFaulted([DisallowNull] Exception exception, [DisallowNull] ListItemViewModel item)
         {
             UpdatePageTitle(_currentRange);
             MinimumRange.DenominatedValue = _currentRange.MinRange;
@@ -192,7 +192,7 @@ namespace FsInfoCat.Desktop.LocalData.RedundantSets
                 "Database Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
-        protected override void OnDeleteTaskFaulted(Exception exception, ListItemViewModel item)
+        protected override void OnDeleteTaskFaulted([DisallowNull] Exception exception, [DisallowNull] ListItemViewModel item)
         {
             _ = MessageBox.Show(Application.Current.MainWindow,
                 ((exception is AsyncOperationFailureException aExc) ? aExc.UserMessage.NullIfWhiteSpace() :

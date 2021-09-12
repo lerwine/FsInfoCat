@@ -139,7 +139,7 @@ namespace FsInfoCat.Desktop.LocalData.Volumes
 
         protected override void OnReloadTaskCompleted(ListingOptions options) => _currentOptions = options;
 
-        protected override void OnReloadTaskFaulted(Exception exception, ListingOptions options)
+        protected override void OnReloadTaskFaulted([DisallowNull] Exception exception, ListingOptions options)
         {
             UpdatePageTitle(_currentOptions);
             StatusFilterOption.SelectedItem = FromListingOptions(_currentOptions);
@@ -157,7 +157,7 @@ namespace FsInfoCat.Desktop.LocalData.Volumes
             StatusFilterOption.SelectedItem = FromListingOptions(_currentOptions);
         }
 
-        protected override bool EntityMatchesCurrentFilter(VolumeListItemWithFileSystem entity)
+        protected override bool EntityMatchesCurrentFilter([DisallowNull] VolumeListItemWithFileSystem entity)
         {
             // TODO: Implement EntityMatchesCurrentFilter
             throw new NotImplementedException();
@@ -182,7 +182,7 @@ namespace FsInfoCat.Desktop.LocalData.Volumes
             return await dbContext.Volumes.Include(e => e.FileSystem).Include(e => e.RootDirectory).FirstOrDefaultAsync(e => e.Id == id, statusListener.CancellationToken);
         }
 
-        protected override void OnEditTaskFaulted(Exception exception, ListItemViewModel item)
+        protected override void OnEditTaskFaulted([DisallowNull] Exception exception, [DisallowNull] ListItemViewModel item)
         {
             UpdatePageTitle(_currentOptions);
             StatusFilterOption.SelectedItem = FromListingOptions(_currentOptions);
@@ -194,7 +194,7 @@ namespace FsInfoCat.Desktop.LocalData.Volumes
                 "Database Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
-        protected override void OnDeleteTaskFaulted(Exception exception, ListItemViewModel item)
+        protected override void OnDeleteTaskFaulted([DisallowNull] Exception exception, [DisallowNull] ListItemViewModel item)
         {
             _ = MessageBox.Show(Application.Current.MainWindow,
                 ((exception is AsyncOperationFailureException aExc) ? aExc.UserMessage.NullIfWhiteSpace() :

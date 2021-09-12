@@ -181,7 +181,7 @@ namespace FsInfoCat.Desktop.LocalData.SharedTagDefinitions
 
         protected override void OnReloadTaskCompleted(bool? options) => _currentOptions = options;
 
-        protected override void OnReloadTaskFaulted(Exception exception, bool? options)
+        protected override void OnReloadTaskFaulted([DisallowNull] Exception exception, bool? options)
         {
             UpdatePageTitle(_currentOptions);
             ListingOptions.Value = _currentOptions;
@@ -199,7 +199,7 @@ namespace FsInfoCat.Desktop.LocalData.SharedTagDefinitions
             ListingOptions.Value = _currentOptions;
         }
 
-        protected override bool EntityMatchesCurrentFilter(SharedTagDefinitionListItem entity)
+        protected override bool EntityMatchesCurrentFilter([DisallowNull] SharedTagDefinitionListItem entity)
         {
             // TODO: Implement EntityMatchesCurrentFilter
             throw new NotImplementedException();
@@ -224,7 +224,7 @@ namespace FsInfoCat.Desktop.LocalData.SharedTagDefinitions
             return await dbContext.SharedTagDefinitions.FirstOrDefaultAsync(e => e.Id == id, statusListener.CancellationToken);
         }
 
-        protected override void OnEditTaskFaulted(Exception exception, ListItemViewModel item)
+        protected override void OnEditTaskFaulted([DisallowNull] Exception exception, [DisallowNull] ListItemViewModel item)
         {
             UpdatePageTitle(_currentOptions);
             ListingOptions.Value = _currentOptions;
@@ -236,7 +236,7 @@ namespace FsInfoCat.Desktop.LocalData.SharedTagDefinitions
                 "Database Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
-        protected override void OnDeleteTaskFaulted(Exception exception, ListItemViewModel item)
+        protected override void OnDeleteTaskFaulted([DisallowNull] Exception exception, [DisallowNull] ListItemViewModel item)
         {
             _ = MessageBox.Show(Application.Current.MainWindow,
                 ((exception is AsyncOperationFailureException aExc) ? aExc.UserMessage.NullIfWhiteSpace() :

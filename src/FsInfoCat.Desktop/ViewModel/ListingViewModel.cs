@@ -61,7 +61,7 @@ namespace FsInfoCat.Desktop.ViewModel
             SetValue(ItemsPropertyKey, new ReadOnlyObservableCollection<TItemViewModel>(_backingItems));
         }
 
-        protected abstract bool EntityMatchesCurrentFilter(TEntity entity);
+        protected abstract bool EntityMatchesCurrentFilter([DisallowNull] TEntity entity);
 
         protected abstract IQueryable<TEntity> GetQueryableListing(TFilterOptions options, [DisallowNull] LocalDbContext dbContext, [DisallowNull] IWindowsStatusListener statusListener);
 
@@ -75,16 +75,16 @@ namespace FsInfoCat.Desktop.ViewModel
 
         protected abstract void OnReloadTaskCompleted(TFilterOptions options);
 
-        protected abstract void OnReloadTaskFaulted(Exception exception, TFilterOptions options);
+        protected abstract void OnReloadTaskFaulted([DisallowNull] Exception exception, TFilterOptions options);
 
         protected abstract void OnReloadTaskCanceled(TFilterOptions options);
 
-        protected abstract void OnEditTaskFaulted(Exception exception, TItemViewModel item);
+        protected abstract void OnEditTaskFaulted([DisallowNull] Exception exception, [DisallowNull] TItemViewModel item);
 
         protected abstract Task<EntityEntry> DeleteEntityFromDbContextAsync([DisallowNull] TEntity entity, [DisallowNull] LocalDbContext dbContext,
             [DisallowNull] IWindowsStatusListener statusListener);
 
-        protected abstract void OnDeleteTaskFaulted(Exception exception, TItemViewModel item);
+        protected abstract void OnDeleteTaskFaulted([DisallowNull] Exception exception, [DisallowNull] TItemViewModel item);
 
         private async Task<bool> DeleteItemAsync((TItemViewModel Item, TEntity Entity) targets, [DisallowNull] IWindowsStatusListener statusListener)
         {
@@ -303,7 +303,7 @@ namespace FsInfoCat.Desktop.ViewModel
 
         protected abstract void OnReloadTaskCompleted(TOptions options);
 
-        protected abstract void OnReloadTaskFaulted(Exception exception, TOptions options);
+        protected abstract void OnReloadTaskFaulted([DisallowNull] Exception exception, TOptions options);
 
         protected abstract void OnReloadTaskCanceled(TOptions options);
 
