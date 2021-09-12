@@ -87,6 +87,13 @@ namespace FsInfoCat.Desktop.LocalData.Volumes
 
         void INavigatedToNotifiable.OnNavigatedTo() => ReloadAsync(_currentOptions);
 
+        protected override bool EntityMatchesCurrentFilter([DisallowNull] VolumeListItemWithFileSystem entity) => _currentOptions.Status.HasValue ? entity.Status == _currentOptions.Status.Value : entity.Status switch
+        {
+            VolumeStatus.Controlled or VolumeStatus.AccessError or VolumeStatus.Offline => _currentOptions.ShowActiveOnly.Value,
+            _ => !_currentOptions.ShowActiveOnly.Value,
+        };
+
+
         protected override IQueryable<VolumeListItemWithFileSystem> GetQueryableListing(ListingOptions options, [DisallowNull] LocalDbContext dbContext,
             [DisallowNull] IWindowsStatusListener statusListener)
         {
@@ -155,12 +162,6 @@ namespace FsInfoCat.Desktop.LocalData.Volumes
         {
             UpdatePageTitle(_currentOptions);
             StatusFilterOption.SelectedItem = FromListingOptions(_currentOptions);
-        }
-
-        protected override bool EntityMatchesCurrentFilter([DisallowNull] VolumeListItemWithFileSystem entity)
-        {
-            // TODO: Implement EntityMatchesCurrentFilter
-            throw new NotImplementedException();
         }
 
         protected override PageFunction<ItemEditResult> GetEditPage(Volume args)

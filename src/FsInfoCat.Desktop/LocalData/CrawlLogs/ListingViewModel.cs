@@ -58,6 +58,13 @@ namespace FsInfoCat.Desktop.LocalData.CrawlLogs
                 ? StatusOptions.Choices.FirstOrDefault(c => c.Value == value.Status)
                 : value.ShowAll ? _allOption : _failedOption;
 
+        protected override bool EntityMatchesCurrentFilter([DisallowNull] CrawlJobLogListItem entity) => _currentOptions.Status.HasValue ? entity.StatusCode == _currentOptions.Status.Value :
+            (_currentOptions.ShowAll || entity.StatusCode switch
+            {
+                CrawlStatus.Completed or CrawlStatus.Disabled or CrawlStatus.InProgress or CrawlStatus.NotRunning => true,
+                _ => false,
+            });
+
         protected override IQueryable<CrawlJobLogListItem> GetQueryableListing(FilterOptions options, [DisallowNull] LocalDbContext dbContext,
             [DisallowNull] IWindowsStatusListener statusListener)
         {
@@ -126,12 +133,6 @@ namespace FsInfoCat.Desktop.LocalData.CrawlLogs
         {
             UpdatePageTitle(_currentOptions);
             StatusOptions.SelectedItem = FromFilterOptions(_currentOptions);
-        }
-
-        protected override bool EntityMatchesCurrentFilter([DisallowNull] CrawlJobLogListItem entity)
-        {
-            // TODO: Implement EntityMatchesCurrentFilter
-            throw new NotImplementedException();
         }
 
         protected override PageFunction<ItemEditResult> GetEditPage(CrawlJobLog args)

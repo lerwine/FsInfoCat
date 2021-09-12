@@ -68,6 +68,10 @@ namespace FsInfoCat.Desktop.LocalData.RedundantSets
             return base.ReloadAsync(options);
         }
 
+        protected override bool EntityMatchesCurrentFilter([DisallowNull] RedundantSetListItem entity) => _currentRange.MinRange.HasValue ?
+                entity.Length >= _currentRange.MinRange.Value && (!_currentRange.MaxRange.HasValue || entity.Length < _currentRange.MaxRange.Value) :
+                !_currentRange.MaxRange.HasValue || entity.Length < _currentRange.MaxRange.Value;
+
         protected override IQueryable<RedundantSetListItem> GetQueryableListing(ListingOptions options, [DisallowNull] LocalDbContext dbContext, [DisallowNull] IWindowsStatusListener statusListener)
         {
             statusListener.SetMessage("Reading redundancy sets from database");
@@ -108,13 +112,6 @@ namespace FsInfoCat.Desktop.LocalData.RedundantSets
 
         protected override void OnRefreshCommand(object parameter) => ReloadAsync(_currentRange);
 
-        private void OnItemAdded(object sender, ReturnEventArgs<FileSystem> e)
-        {
-            if (e.Result is not null)
-                throw new NotImplementedException();
-            // TODO: Add to current list if it matches filter.
-        }
-
         protected override bool ConfirmItemDelete(ListItemViewModel item, object parameter) => MessageBox.Show(Application.Current.MainWindow,
             "This action cannot be undone!\n\nAre you sure you want to remove this redundancy set from the database?",
             "Delete Redundancy Set", MessageBoxButton.YesNo, MessageBoxImage.Exclamation) == MessageBoxResult.Yes;
@@ -152,12 +149,6 @@ namespace FsInfoCat.Desktop.LocalData.RedundantSets
             MinimumRange.DenominatedValue = _currentRange.MinRange;
             MaximumRange.DenominatedValue = _currentRange.MaxRange;
             UpdatePageTitle(_currentRange);
-        }
-
-        protected override bool EntityMatchesCurrentFilter([DisallowNull] RedundantSetListItem entity)
-        {
-            // TODO: Implement EntityMatchesCurrentFilter
-            throw new NotImplementedException();
         }
 
         protected override PageFunction<ItemEditResult> GetEditPage(RedundantSet args)

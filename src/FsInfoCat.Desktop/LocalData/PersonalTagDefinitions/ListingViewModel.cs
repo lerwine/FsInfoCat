@@ -181,11 +181,7 @@ namespace FsInfoCat.Desktop.LocalData.PersonalTagDefinitions
             ListingOptions.Value = _currentOptions;
         }
 
-        protected override bool EntityMatchesCurrentFilter([DisallowNull] PersonalTagDefinitionListItem entity)
-        {
-            // TODO: Implement EntityMatchesCurrentFilter
-            throw new NotImplementedException();
-        }
+        protected override bool EntityMatchesCurrentFilter([DisallowNull] PersonalTagDefinitionListItem entity) => !_currentOptions.HasValue || _currentOptions.Value != entity.IsInactive;
 
         protected override PageFunction<ItemEditResult> GetEditPage(PersonalTagDefinition args)
         {

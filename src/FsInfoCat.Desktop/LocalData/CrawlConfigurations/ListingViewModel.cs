@@ -159,6 +159,14 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
             return dbContext.Entry(target);
         }
 
+        protected override bool EntityMatchesCurrentFilter([DisallowNull] CrawlConfigListItem entity) => _currentStatusOptions.Status.HasValue ?
+            (entity.StatusValue == _currentStatusOptions.Status.Value && !_currentStatusOptions.IsScheduled.HasValue || (entity.NextScheduledStart is null) == _currentStatusOptions.IsScheduled.Value) :
+            (_currentStatusOptions.ShowAll || entity.StatusValue switch
+            {
+                CrawlStatus.Completed or CrawlStatus.Disabled or CrawlStatus.InProgress or CrawlStatus.NotRunning => true,
+                _ => false,
+            });
+
         protected override IQueryable<CrawlConfigListItem> GetQueryableListing(FilterOptions options, [DisallowNull] LocalDbContext dbContext,
             [DisallowNull] IWindowsStatusListener statusListener)
         {
@@ -220,12 +228,6 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
             UpdatePageTitle(_currentStatusOptions);
             StatusOptions.SelectedItem = FromFilterOptions(_currentStatusOptions, out bool? isScheduled);
             SchedulingOptions.Value = isScheduled;
-        }
-
-        protected override bool EntityMatchesCurrentFilter([DisallowNull] CrawlConfigListItem entity)
-        {
-            // TODO: Implement EntityMatchesCurrentFilter
-            throw new NotImplementedException();
         }
 
         protected override PageFunction<ItemEditResult> GetEditPage(CrawlConfiguration args)

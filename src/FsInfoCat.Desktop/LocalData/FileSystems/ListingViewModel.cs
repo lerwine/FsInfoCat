@@ -113,11 +113,7 @@ namespace FsInfoCat.Desktop.LocalData.FileSystems
             ListingOption.Value = _currentListingOption;
         }
 
-        protected override bool EntityMatchesCurrentFilter([DisallowNull] FileSystemListItem entity)
-        {
-            bool? option = _currentListingOption;
-            return !option.HasValue || entity.IsInactive != option.HasValue;
-        }
+        protected override bool EntityMatchesCurrentFilter([DisallowNull] FileSystemListItem entity) => !_currentListingOption.HasValue || _currentListingOption.Value != entity.IsInactive;
 
         protected override PageFunction<ItemEditResult> GetEditPage(FileSystem args)
         {

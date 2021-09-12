@@ -113,11 +113,7 @@ namespace FsInfoCat.Desktop.LocalData.SummaryPropertySets
             FilterOptions.Value = _currentOptions;
         }
 
-        protected override bool EntityMatchesCurrentFilter([DisallowNull] SummaryPropertiesListItem entity)
-        {
-            // TODO: Implement EntityMatchesCurrentFilter
-            throw new NotImplementedException();
-        }
+        protected override bool EntityMatchesCurrentFilter([DisallowNull] SummaryPropertiesListItem entity) => !_currentOptions.HasValue || (_currentOptions.Value ? entity.ExistingFileCount > 0L : entity.ExistingFileCount == 0L);
 
         protected override PageFunction<ItemEditResult> GetEditPage(SummaryPropertySet args)
         {

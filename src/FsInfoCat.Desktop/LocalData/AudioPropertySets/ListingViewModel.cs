@@ -63,6 +63,8 @@ namespace FsInfoCat.Desktop.LocalData.AudioPropertySets
             return dbContext.AudioPropertiesListing;
         }
 
+        protected override bool EntityMatchesCurrentFilter([DisallowNull] AudioPropertiesListItem entity) => !_currentOptions.HasValue || (_currentOptions.Value ? entity.ExistingFileCount > 0L : entity.ExistingFileCount == 0L);
+
         protected override ListItemViewModel CreateItemViewModel([DisallowNull] AudioPropertiesListItem entity)
         {
             ListItemViewModel listItemViewModel = new(entity);
@@ -118,12 +120,6 @@ namespace FsInfoCat.Desktop.LocalData.AudioPropertySets
         {
             UpdatePageTitle(_currentOptions);
             FilterOptions.Value = _currentOptions;
-        }
-
-        protected override bool EntityMatchesCurrentFilter([DisallowNull] AudioPropertiesListItem entity)
-        {
-            // TODO: Implement EntityMatchesCurrentFilter
-            throw new NotImplementedException();
         }
 
         protected override PageFunction<ItemEditResult> GetEditPage(AudioPropertySet args)

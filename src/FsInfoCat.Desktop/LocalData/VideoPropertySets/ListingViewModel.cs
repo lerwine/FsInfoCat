@@ -102,11 +102,7 @@ namespace FsInfoCat.Desktop.LocalData.VideoPropertySets
             FilterOptions.Value = _currentOptions;
         }
 
-        protected override bool EntityMatchesCurrentFilter([DisallowNull] VideoPropertiesListItem entity)
-        {
-            // TODO: Implement EntityMatchesCurrentFilter
-            throw new NotImplementedException();
-        }
+        protected override bool EntityMatchesCurrentFilter([DisallowNull] VideoPropertiesListItem entity) => !_currentOptions.HasValue || (_currentOptions.Value ? entity.ExistingFileCount > 0L : entity.ExistingFileCount == 0L);
 
         protected override PageFunction<ItemEditResult> GetEditPage(VideoPropertySet args)
         {

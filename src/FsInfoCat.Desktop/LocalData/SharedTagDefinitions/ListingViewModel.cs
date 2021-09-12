@@ -61,6 +61,8 @@ namespace FsInfoCat.Desktop.LocalData.SharedTagDefinitions
                 dbContext.SharedTagDefinitionListing.Where(f => f.IsInactive)) : dbContext.SharedTagDefinitionListing;
         }
 
+        protected override bool EntityMatchesCurrentFilter([DisallowNull] SharedTagDefinitionListItem entity) => !_currentOptions.HasValue || _currentOptions.Value != entity.IsInactive;
+
         protected override ListItemViewModel CreateItemViewModel([DisallowNull] SharedTagDefinitionListItem entity) => new(entity);
 
         protected override void OnApplyFilterOptionsCommand(object parameter)
@@ -78,25 +80,23 @@ namespace FsInfoCat.Desktop.LocalData.SharedTagDefinitions
 
         protected override void OnRefreshCommand(object parameter) => ReloadAsync(_currentOptions);
 
-        private void OnEditItemComplete(object sender, ReturnEventArgs<ItemEditResult> e)
-        {
-            switch (e.Result.State)
-            {
-                case  EntityEditResultState.Added:
-                    // TODO: Add to current list if it matches filter.
-                    break;
-                case EntityEditResultState.Deleted:
-                    RemoveItem(Items.FirstOrDefault(i => ReferenceEquals(i.Entity, e.Result.ItemEntity)));
-                    break;
-            }
-        }
+        //private void OnEditItemComplete(object sender, ReturnEventArgs<ItemEditResult> e)
+        //{
+        //    switch (e.Result.State)
+        //    {
+        //        case  EntityEditResultState.Added:
+        //            break;
+        //        case EntityEditResultState.Deleted:
+        //            RemoveItem(Items.FirstOrDefault(i => ReferenceEquals(i.Entity, e.Result.ItemEntity)));
+        //            break;
+        //    }
+        //}
 
-        private void OnItemAdded(object sender, ReturnEventArgs<FileSystem> e)
-        {
-            if (e.Result is not null)
-                throw new NotImplementedException();
-            // TODO: Add to current list if it matches filter.
-        }
+        //private void OnItemAdded(object sender, ReturnEventArgs<FileSystem> e)
+        //{
+        //    if (e.Result is not null)
+        //        throw new NotImplementedException();
+        //}
 
         protected override bool ConfirmItemDelete(ListItemViewModel item, object parameter)
         {
@@ -197,12 +197,6 @@ namespace FsInfoCat.Desktop.LocalData.SharedTagDefinitions
         {
             UpdatePageTitle(_currentOptions);
             ListingOptions.Value = _currentOptions;
-        }
-
-        protected override bool EntityMatchesCurrentFilter([DisallowNull] SharedTagDefinitionListItem entity)
-        {
-            // TODO: Implement EntityMatchesCurrentFilter
-            throw new NotImplementedException();
         }
 
         protected override PageFunction<ItemEditResult> GetEditPage(SharedTagDefinition args)

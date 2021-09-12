@@ -113,11 +113,7 @@ namespace FsInfoCat.Desktop.LocalData.ImagePropertySets
             FilterOptions.Value = _currentOptions;
         }
 
-        protected override bool EntityMatchesCurrentFilter([DisallowNull] ImagePropertiesListItem entity)
-        {
-            // TODO: Implement EntityMatchesCurrentFilter
-            throw new NotImplementedException();
-        }
+        protected override bool EntityMatchesCurrentFilter([DisallowNull] ImagePropertiesListItem entity) => !_currentOptions.HasValue || (_currentOptions.Value ? entity.ExistingFileCount > 0L : entity.ExistingFileCount == 0L);
 
         protected override PageFunction<ItemEditResult> GetEditPage(ImagePropertySet args)
         {

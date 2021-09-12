@@ -109,11 +109,7 @@ namespace FsInfoCat.Desktop.LocalData.SymbolicNames
             StateFilterOption.Value = _currentStateFilterOption;
         }
 
-        protected override bool EntityMatchesCurrentFilter([DisallowNull] SymbolicNameListItem entity)
-        {
-            bool? options = _currentStateFilterOption;
-            return !options.HasValue || entity.IsInactive != options.Value;
-        }
+        protected override bool EntityMatchesCurrentFilter([DisallowNull] SymbolicNameListItem entity) => !_currentStateFilterOption.HasValue || _currentStateFilterOption.Value != entity.IsInactive;
 
         protected override PageFunction<ItemEditResult> GetEditPage(SymbolicName args)
         {
