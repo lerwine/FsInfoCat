@@ -174,25 +174,26 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
             jobFactory.StartNew("Loading database record", "Opening database", (CrawlJobListItemViewModel)null, GetEditPageAsync).Task.ContinueWith(task => OnGetEditPageComplete(task, null));
         }
 
-        protected override void OnCrawlJobLogEditCommand([DisallowNull] CrawlJobListItemViewModel item, object parameter)
-        {
-            IWindowsAsyncJobFactoryService jobFactory = Services.GetRequiredService<IWindowsAsyncJobFactoryService>();
-            jobFactory.StartNew("Loading database record", "Opening database", item, GetEditPageAsync).Task.ContinueWith(task => OnGetEditPageComplete(task, item));
-        }
-
         private async Task<PageFunction<CrawlLogs.ItemEditResult>> GetEditPageAsync(CrawlJobListItemViewModel item, [DisallowNull] IWindowsStatusListener statusListener)
         {
-            using IServiceScope scope = Services.CreateScope();
-            using LocalDbContext dbContext = scope.ServiceProvider.GetRequiredService<LocalDbContext>();
-            Guid id = item.Entity.Id;
-            CrawlJobLog crawlJobLog = await dbContext.CrawlJobLogs.FirstOrDefaultAsync(j => j.Id == id, statusListener.CancellationToken);
-            if (crawlJobLog is null)
+            CrawlJobLog crawlJobLog;
+            if (item is null)
+                crawlJobLog = new() { Configuration = Entity };
+            else
             {
-                _ = MessageBox.Show(Application.Current.MainWindow, "Item not found in database. Click OK to refresh listing.", "Security Exception", MessageBoxButton.OK, MessageBoxImage.Error);
-                ReloadAsync();
-                return null;
+                using IServiceScope scope = Services.CreateScope();
+                using LocalDbContext dbContext = scope.ServiceProvider.GetRequiredService<LocalDbContext>();
+                Guid id = item.Entity.Id;
+                crawlJobLog = await dbContext.CrawlJobLogs.FirstOrDefaultAsync(j => j.Id == id, statusListener.CancellationToken);
+                if (crawlJobLog is null)
+                {
+                    await Dispatcher.ShowMessageBoxAsync("Item not found in database. Click OK to refresh listing.", "Security Exception", MessageBoxButton.OK, MessageBoxImage.Error,
+                        statusListener.CancellationToken);
+                    ReloadAsync();
+                    return null;
+                }
             }
-            return new CrawlLogs.EditPage(new(crawlJobLog, item.Entity));
+            return await Dispatcher.InvokeAsync(() => new CrawlLogs.EditPage(new(crawlJobLog, item?.Entity)), DispatcherPriority.Normal, statusListener.CancellationToken);
         }
 
         private void OnGetEditPageComplete(Task<PageFunction<CrawlLogs.ItemEditResult>> task, CrawlJobListItemViewModel item) => Dispatcher.Invoke(() =>
@@ -252,12 +253,6 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
 
         protected override CrawlJobListItemViewModel CreateCrawlJobLogViewModel([DisallowNull] CrawlJobLogListItem entity) => new(entity);
 
-        protected override Task<int> DeleteCrawlJobLogFromDbContextAsync([DisallowNull] CrawlJobLogListItem entity, [DisallowNull] LocalDbContext dbContext, [DisallowNull] IWindowsStatusListener statusListener)
-        {
-            // TODO: Implement DeleteCrawlJobLogFromDbContextAsync(CrawlJobLogListItem, LocalDbContext, IWindowsStatusListener)
-            throw new NotImplementedException();
-        }
-
         void INavigatedToNotifiable.OnNavigatedTo()
         {
             if (!IsNew)
@@ -278,5 +273,10 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
                     "There was an unexpected error while loading items from the databse.\n\nSee logs for further information",
                 "Database Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
+
+        protected override SubdirectoryListItemViewModel CreateSubdirectoryViewModel(SubdirectoryListItemWithAncestorNames subdirectory) => new(subdirectory);
+
+        protected async override Task<SubdirectoryListItemWithAncestorNames> LoadSubdirectoryAsync(Guid id, LocalDbContext dbContext, IWindowsStatusListener statusListener) =>
+            await dbContext.SubdirectoryListingWithAncestorNames.FirstOrDefaultAsync(s => s.Id == id);
     }
 }

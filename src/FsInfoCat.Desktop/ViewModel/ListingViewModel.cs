@@ -70,8 +70,6 @@ namespace FsInfoCat.Desktop.ViewModel
 
         protected abstract bool ConfirmItemDelete([DisallowNull] TItemViewModel item, object parameter);
 
-        //protected abstract Task<TEditArgs> LoadItemAsync([DisallowNull] TEntity item, [DisallowNull] IWindowsStatusListener statusListener);
-
         protected abstract void OnReloadTaskCompleted(TFilterOptions options);
 
         protected abstract void OnReloadTaskFaulted([DisallowNull] Exception exception, TFilterOptions options);

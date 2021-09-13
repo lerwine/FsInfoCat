@@ -19,19 +19,6 @@ namespace FsInfoCat.Desktop.ViewModel
         where TCrawlJobLogEntity : DbEntity, ICrawlJobListItem
         where TCrawlJobLogItem : CrawlJobListItemViewModel<TCrawlJobLogEntity>
     {
-        #region AddNewCrawlJobLog Command Property Members
-
-        private static readonly DependencyPropertyKey AddNewCrawlJobLogPropertyKey = DependencyProperty.RegisterReadOnly(nameof(AddNewCrawlJobLog), typeof(Commands.RelayCommand),
-            typeof(CrawlConfigurationDetailsViewModel<TEntity, TSubdirectoryEntity, TSubdirectoryItem, TCrawlJobLogEntity, TCrawlJobLogItem>), new PropertyMetadata(null));
-
-        /// <summary>
-        /// Identifies the <see cref="AddNewCrawlJobLog"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty AddNewCrawlJobLogProperty = AddNewCrawlJobLogPropertyKey.DependencyProperty;
-
-        public Commands.RelayCommand AddNewCrawlJobLog => (Commands.RelayCommand)GetValue(AddNewCrawlJobLogProperty);
-
-        #endregion
         #region RefreshCrawlJobLogs Command Property Members
 
         private static readonly DependencyPropertyKey RefreshCrawlJobLogsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(RefreshCrawlJobLogs),
@@ -90,7 +77,6 @@ namespace FsInfoCat.Desktop.ViewModel
 
         public CrawlConfigurationDetailsViewModel([DisallowNull] TEntity entity) : base(entity)
         {
-            SetValue(AddNewCrawlJobLogPropertyKey, new Commands.RelayCommand(OnAddNewCrawlJobLogCommand));
             SetValue(RefreshCrawlJobLogsPropertyKey, new Commands.RelayCommand(o => ReloadAsync()));
             SetValue(LogsPropertyKey, new ReadOnlyObservableCollection<TCrawlJobLogItem>(_backingLogs));
         }
@@ -99,37 +85,40 @@ namespace FsInfoCat.Desktop.ViewModel
         {
             using IServiceScope scope = Services.CreateScope();
             using LocalDbContext dbContext = scope.ServiceProvider.GetRequiredService<LocalDbContext>();
+            ISubdirectory root = Entity.Root;
+            if (root is not null)
+            {
+                TSubdirectoryEntity subdirectory = await LoadSubdirectoryAsync(root.Id, dbContext, statusListener);
+                if (subdirectory is not null)
+                    Root = CreateSubdirectoryViewModel(subdirectory);
+            }
             IQueryable<TCrawlJobLogEntity> items = GetQueryableCrawlJobLogListing(dbContext, statusListener);
             _ = await Dispatcher.InvokeAsync(ClearItems, DispatcherPriority.Background, statusListener.CancellationToken);
             await items.ForEachAsync(async item => await AddCrawlJobLogItemAsync(item, statusListener), statusListener.CancellationToken);
         }
 
+        protected abstract TSubdirectoryItem CreateSubdirectoryViewModel(TSubdirectoryEntity subdirectory);
+
+        protected abstract Task<TSubdirectoryEntity> LoadSubdirectoryAsync(Guid id, LocalDbContext dbContext, IWindowsStatusListener statusListener);
+
         private DispatcherOperation AddCrawlJobLogItemAsync([DisallowNull] TCrawlJobLogEntity entity, [DisallowNull] IWindowsStatusListener statusListener) =>
             Dispatcher.InvokeAsync(() => AddCrawlJobLogItem(CreateCrawlJobLogViewModel(entity)), DispatcherPriority.Background, statusListener.CancellationToken);
 
-        protected void AddCrawlJobLogItem(TCrawlJobLogItem item)
+        protected virtual bool AddCrawlJobLogItem(TCrawlJobLogItem item)
         {
             VerifyAccess();
             if (item is null)
                 throw new ArgumentNullException(nameof(item));
-            if (!_backingLogs.Any(i => ReferenceEquals(i, item)))
-            {
-                _backingLogs.Add(item);
-                item.EditCommand += Item_EditCommand;
-                item.DeleteCommand += Item_DeleteCommand;
-            }
+            if (_backingLogs.Any(i => ReferenceEquals(i, item)))
+                return false;
+            _backingLogs.Add(item);
+            return true;
         }
 
-        protected bool RemoveCrawlJobLogItem(TCrawlJobLogItem item)
+        protected virtual bool RemoveCrawlJobLogItem(TCrawlJobLogItem item)
         {
             VerifyAccess();
-            if (item is not null && _backingLogs.Remove(item))
-            {
-                item.EditCommand += Item_EditCommand;
-                item.DeleteCommand += Item_DeleteCommand;
-                return true;
-            }
-            return false;
+            return item is not null && _backingLogs.Remove(item);
         }
 
         protected virtual IAsyncJob ReloadAsync()
@@ -153,97 +142,19 @@ namespace FsInfoCat.Desktop.ViewModel
             VerifyAccess();
             TCrawlJobLogItem[] removedItems = _backingLogs.ToArray();
             _backingLogs.Clear();
-            foreach (TCrawlJobLogItem item in removedItems)
-            {
-                item.EditCommand -= Item_EditCommand;
-                item.DeleteCommand -= Item_DeleteCommand;
-            }
             return removedItems;
         }
 
         protected abstract void OnAddNewCrawlJobLogCommand(object parameter);
 
-        //private void OnGetEditPageComplete(Task<PageFunction<TEditResult>> task, TCrawlJobLogItem item) => Dispatcher.Invoke(() =>
-        //{
-        //    if (task.IsCanceled)
-        //        return;
-        //    if (task.IsFaulted)
-        //        OnEditTaskFaulted(task.Exception, item);
-        //    else
-        //    {
-        //        PageFunction<TEditResult> page = task.Result;
-        //        if (page is null)
-        //            return;
-        //        page.Return += Page_Return;
-        //        Services.ServiceProvider.GetRequiredService<IApplicationNavigation>().Navigate(page);
-        //    }
-        //});
-
         private void OnEditTaskFaulted(AggregateException exception, TCrawlJobLogItem item)
         {
             throw new NotImplementedException();
         }
-
-        //private void Page_Return(object sender, ReturnEventArgs<TEditResult> e)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //protected abstract Task<PageFunction<TEditResult>> GetEditPageAsync(TCrawlJobLogItem item, [DisallowNull] IWindowsStatusListener statusListener);
-
         protected abstract bool ConfirmCrawlJobLogDelete([DisallowNull] TCrawlJobLogItem item, object parameter);
 
         protected abstract IQueryable<TCrawlJobLogEntity> GetQueryableCrawlJobLogListing([DisallowNull] LocalDbContext dbContext, [DisallowNull] IWindowsStatusListener statusListener);
 
         protected abstract TCrawlJobLogItem CreateCrawlJobLogViewModel([DisallowNull] TCrawlJobLogEntity entity);
-
-        protected abstract Task<int> DeleteCrawlJobLogFromDbContextAsync([DisallowNull] TCrawlJobLogEntity entity, [DisallowNull] LocalDbContext dbContext,
-            [DisallowNull] IWindowsStatusListener statusListener);
-
-        protected virtual void OnCrawlJobLogDeleted([DisallowNull] TCrawlJobLogItem item) { }
-
-        private async Task DeleteItemAsync((TCrawlJobLogItem Item, TCrawlJobLogEntity Entity) targets, [DisallowNull] IWindowsStatusListener statusListener)
-        {
-            using IServiceScope scope = Services.CreateScope();
-            using LocalDbContext dbContext = scope.ServiceProvider.GetRequiredService<LocalDbContext>();
-            using DbContextEventReceiver eventReceiver = new(dbContext);
-            _ = await DeleteCrawlJobLogFromDbContextAsync(targets.Entity, dbContext, statusListener);
-            if (eventReceiver.SavedChangesOccurred && !eventReceiver.SaveChangesFailedOcurred)
-                await Dispatcher.InvokeAsync(() =>
-                {
-                    targets.Item.EditCommand -= Item_EditCommand;
-                    targets.Item.DeleteCommand -= Item_DeleteCommand;
-                    _ = _backingLogs.Remove(targets.Item);
-                    OnCrawlJobLogDeleted(targets.Item);
-                }, DispatcherPriority.Background, statusListener.CancellationToken);
-        }
-
-        protected IAsyncJob DeleteCrawlJobLogAsync([DisallowNull] TCrawlJobLogItem item)
-        {
-            IWindowsAsyncJobFactoryService jobFactory = Services.GetRequiredService<IWindowsAsyncJobFactoryService>();
-            return jobFactory.StartNew("Deleting data", "Opening database", (item, item.Entity), DeleteItemAsync);
-        }
-
-        protected abstract void OnCrawlJobLogEditCommand([DisallowNull] TCrawlJobLogItem item, object parameter);
-
-        private void Item_EditCommand(object sender, Commands.CommandEventArgs e)
-        {
-            if (sender is TCrawlJobLogItem item)
-            {
-
-            }
-        }
-
-        protected virtual void OnCrawlJobLogDeleteCommand([DisallowNull] TCrawlJobLogItem item, object parameter)
-        {
-            if (ConfirmCrawlJobLogDelete(item, parameter))
-                _ = DeleteCrawlJobLogAsync(item);
-        }
-
-        private void Item_DeleteCommand(object sender, Commands.CommandEventArgs e)
-        {
-            if (sender is TCrawlJobLogItem item)
-                OnCrawlJobLogDeleteCommand(item, e.Parameter);
-        }
     }
 }
