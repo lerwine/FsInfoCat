@@ -29,13 +29,13 @@
         <Button Style="{DynamicResource OpenListingButton}" Grid.Column="3" ToolTip="Show Redundant Files" Margin="{DynamicResource DefaultSpacingRight}"/>
         <Button Style="{DynamicResource EditButton}" Grid.Column="4" Margin="{DynamicResource DefaultSpacingTopLeft}" ToolTip="Edit the current item."/>
         <Button Style="{DynamicResource DeleteButton}" Grid.Column="5" Margin="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="Delete the item."/>
-        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingLeftRight}" Text="{Binding Notes}" Grid.Row="1" Grid.ColumnSpan="6"/>
+        <TextBox Style="{DynamicResource SingleLineTextBox}" Margin="{DynamicResource DefaultSpacingLeftRight}" Text="{Binding Notes}" Grid.Row="1" Grid.ColumnSpan="6"/>
         <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" Content="Created On" Grid.Row="2" FontWeight="Bold"/>
         <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" Content="Modified On" Grid.Row="2" Grid.Column="1" FontWeight="Bold"/>
         <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" Content="Last Synchronized" Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="4" FontWeight="Bold"/>
-        <TextBox Margin="{DynamicResource DefaultSpacingLeftRight}" Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding CreatedOn}" Grid.Row="3"/>
-        <TextBox Margin="{DynamicResource DefaultSpacingLeftRight}" Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding ModifiedOn}" Grid.Row="3" Grid.Column="1"/>
-        <TextBox Margin="{DynamicResource DefaultSpacingLeft}" Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding LastSynchronizedOn}" Grid.Row="3" Grid.Column="2" Grid.ColumnSpan="3"/>
+        <TextBox Margin="{DynamicResource DefaultSpacingLeftRight}" Style="{DynamicResource SingleLineTextBox}" Text="{Binding CreatedOn}" Grid.Row="3"/>
+        <TextBox Margin="{DynamicResource DefaultSpacingLeftRight}" Style="{DynamicResource SingleLineTextBox}" Text="{Binding ModifiedOn}" Grid.Row="3" Grid.Column="1"/>
+        <TextBox Margin="{DynamicResource DefaultSpacingLeft}" Style="{DynamicResource SingleLineTextBox}" Text="{Binding LastSynchronizedOn}" Grid.Row="3" Grid.Column="2" Grid.ColumnSpan="3"/>
         <Button Style="{DynamicResource SyncDisabledButton}" Grid.Column="5" Margin="{DynamicResource DefaultSpacingRight}" ToolTip="Synchronization disabled - no remote connection configured." Grid.Row="3"/>
     </Grid>
 </PageFunction>

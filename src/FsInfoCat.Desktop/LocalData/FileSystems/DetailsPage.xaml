@@ -11,6 +11,43 @@
     d:DesignHeight="768" d:DesignWidth="1024"
     Title="DetailsPage">
     <Grid>
-
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Label Content="Maximum Name Length" Padding="{DynamicResource DefaultSpacingTopLeftRight}" VerticalAlignment="Bottom" FontWeight="Bold"/>
+        <TextBox Grid.Row="1" Style="{DynamicResource SingleLineReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingLeftRight}" Text="{Binding MaxNameLength}"/>
+        <Label Content="Default Drive Type" Grid.Column="1" Padding="{DynamicResource DefaultSpacingTopRight}" VerticalAlignment="Bottom" FontWeight="Bold"/>
+        <TextBox Grid.Row="1" Grid.Column="1" Style="{DynamicResource ReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingRight}" Text="{Binding DefaultDriveType}"/>
+        <Label Content="Symbolic Name Count" Grid.Column="2" Padding="{DynamicResource DefaultSpacingTopRight}" VerticalAlignment="Bottom" FontWeight="Bold" Grid.ColumnSpan="2"/>
+        <TextBox Grid.Row="1" Grid.Column="2" Style="{DynamicResource SingleLineReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingRight}" Text="{Binding SymbolicNameCount, Mode=OneWay}"/>
+        <Button Grid.Column="3" Grid.Row="1" Style="{DynamicResource OpenListingButton}" ToolTip="Open System Defintion Listing" Margin="{DynamicResource DefaultSpacingRight}"/>
+        <Label Content="Volume Count" Grid.Column="4" Padding="{DynamicResource DefaultSpacingTopRight}" VerticalAlignment="Bottom" FontWeight="Bold"/>
+        <TextBox Grid.Row="1" Grid.Column="4" Grid.ColumnSpan="2" Style="{DynamicResource SingleLineReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingRight}" Text="{Binding VolumeCount, Mode=OneWay}"/>
+        <Button Style="{DynamicResource EditButton}" Grid.Column="5" ToolTip="Edit File System Defintion"/>
+        <Button Style="{DynamicResource DeleteButton}" Grid.Column="6" ToolTip="Delete System Defintion"/>
+        <Button Grid.Column="6" Grid.Row="1" Style="{DynamicResource OpenListingButton}" ToolTip="Open System Defintion Listing" Margin="{DynamicResource DefaultSpacingRight}"/>
+        <Label Content="Record Created On" Grid.Row="2" Padding="{DynamicResource DefaultSpacingTopLeftRight}" FontWeight="Bold"/>
+        <TextBox Grid.Row="3" Style="{DynamicResource ReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingLeftRight}" Text="{Binding CreatedOn, Mode=OneWay}"/>
+        <Label Content="Record Modified On" Grid.Row="2" Grid.Column="1" Padding="{DynamicResource DefaultSpacingTopRight}" FontWeight="Bold"/>
+        <TextBox Grid.Row="3" Grid.Column="1" Style="{DynamicResource ReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingRight}" Text="{Binding ModifiedOn, Mode=OneWay}"/>
+        <Label Content="Last Synchronized" Grid.Row="2" Grid.Column="2" Padding="{DynamicResource DefaultSpacingTopRight}" FontWeight="Bold" Grid.ColumnSpan="5"/>
+        <TextBox Grid.Row="3" Grid.ColumnSpan="4" Grid.Column="2" Style="{DynamicResource ReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingRight}" Text="{Binding LastSynchronizedOn, Mode=OneWay}"/>
+        <Button Grid.Column="6" Grid.Row="3" Style="{DynamicResource SyncDisabledButton}" ToolTip="Synchronization disabled - no remote connection configured." Margin="{DynamicResource DefaultSpacingRight}"/>
+        <Label Grid.Row="4" Content="Notes" Grid.ColumnSpan="7" Padding="{DynamicResource DefaultSpacingTopLeftRight}" FontWeight="Bold"/>
+        <TextBox Grid.Row="5" Grid.ColumnSpan="7" Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingBottomLeftRight}" Text="{Binding Notes}"/>
     </Grid>
 </PageFunction>
