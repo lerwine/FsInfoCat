@@ -11,7 +11,7 @@ using System.Windows;
 using System.Windows.Navigation;
 namespace FsInfoCat.Desktop.LocalData.CrawlLogs
 {
-    public class ListingViewModel : ListingViewModel<CrawlJobLogListItem, ListItemViewModel, ListingViewModel.FilterOptions, CrawlJobLog, ItemEditResult>, INavigatedToNotifiable
+    public class ListingViewModel : ListingViewModel<CrawlJobLogListItem, ListItemViewModel, ListingViewModel.FilterOptions, ItemEditResult>, INavigatedToNotifiable
     {
         private FilterOptions _currentOptions = new(null, true);
         private readonly EnumChoiceItem<CrawlStatus> _allOption;
@@ -135,24 +135,36 @@ namespace FsInfoCat.Desktop.LocalData.CrawlLogs
             StatusOptions.SelectedItem = FromFilterOptions(_currentOptions);
         }
 
-        protected override async Task<PageFunction<ItemEditResult>> GetEditPageAsync(CrawlJobLog args, [DisallowNull] IWindowsStatusListener statusListener)
+        protected async override Task<PageFunction<ItemEditResult>> GetEditPageAsync(ListItemViewModel item, [DisallowNull] IWindowsStatusListener statusListener)
         {
             EditViewModel viewModel;
-            if (args is null)
-                viewModel = new(new CrawlJobLog(), true);
+            if (item is null)
+                viewModel = new(new CrawlJobLog(), null);
             else
-                viewModel = new EditViewModel(args, false);
+            {
+                using IServiceScope serviceScope = Services.CreateScope();
+                using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+                Guid id = item.Entity.Id;
+                CrawlJobLog crawlJobLog = await dbContext.CrawlJobLogs.FirstOrDefaultAsync(j => j.Id == id, statusListener.CancellationToken);
+                if (crawlJobLog is null)
+                {
+                    await Dispatcher.ShowMessageBoxAsync("Item not found in database. Click OK to refresh listing.", "Security Exception", MessageBoxButton.OK, MessageBoxImage.Error, statusListener.CancellationToken);
+                    ReloadAsync(_currentOptions);
+                    return null;
+                }
+                viewModel = new EditViewModel(crawlJobLog, item.Entity);
+            }
             return new EditPage(viewModel);
         }
 
-        protected override async Task<CrawlJobLog> LoadItemAsync([DisallowNull] CrawlJobLogListItem item, [DisallowNull] IWindowsStatusListener statusListener)
-        {
-            using IServiceScope serviceScope = Services.CreateScope();
-            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
-            Guid id = item.Id;
-            statusListener.SetMessage("Reading data");
-            return await dbContext.CrawlJobLogs.Include(e => e.Configuration).FirstOrDefaultAsync(e => e.Id == id, statusListener.CancellationToken);
-        }
+        //protected override async Task<CrawlJobLog> LoadItemAsync([DisallowNull] CrawlJobLogListItem item, [DisallowNull] IWindowsStatusListener statusListener)
+        //{
+        //    using IServiceScope serviceScope = Services.CreateScope();
+        //    using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+        //    Guid id = item.Id;
+        //    statusListener.SetMessage("Reading data");
+        //    return await dbContext.CrawlJobLogs.Include(e => e.Configuration).FirstOrDefaultAsync(e => e.Id == id, statusListener.CancellationToken);
+        //}
 
         protected override void OnEditTaskFaulted([DisallowNull] Exception exception, ListItemViewModel item)
         {

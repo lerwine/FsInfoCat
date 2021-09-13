@@ -8,7 +8,7 @@ using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel
 {
-    public class FileSystemRowViewModel<TEntity> : DbEntityRowViewModel<TEntity>
+    public class FileSystemRowViewModel<TEntity> : DbEntityRowViewModel<TEntity>, IFileSystemRowViewModel
         where TEntity : DbEntity, IFileSystemRow
     {
         #region Notes Property Members
@@ -137,6 +137,8 @@ namespace FsInfoCat.Desktop.ViewModel
         protected virtual void OnDefaultDriveTypePropertyChanged(DriveType? oldValue, DriveType? newValue) { }
 
         #endregion
+
+        IFileSystemRow IFileSystemRowViewModel.Entity => Entity;
 
         public FileSystemRowViewModel([DisallowNull] TEntity entity) : base(entity)
         {

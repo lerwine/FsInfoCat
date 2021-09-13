@@ -7,6 +7,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Navigation;
 using System.Windows.Threading;
 
 namespace FsInfoCat.Desktop.ViewModel
@@ -90,7 +91,7 @@ namespace FsInfoCat.Desktop.ViewModel
         public CrawlConfigurationDetailsViewModel([DisallowNull] TEntity entity) : base(entity)
         {
             SetValue(AddNewCrawlJobLogPropertyKey, new Commands.RelayCommand(OnAddNewCrawlJobLogCommand));
-            SetValue(RefreshCrawlJobLogsPropertyKey, new Commands.RelayCommand(OnRefreshCrawlJobLogsCommand));
+            SetValue(RefreshCrawlJobLogsPropertyKey, new Commands.RelayCommand(o => ReloadAsync()));
             SetValue(LogsPropertyKey, new ReadOnlyObservableCollection<TCrawlJobLogItem>(_backingLogs));
         }
 
@@ -106,7 +107,7 @@ namespace FsInfoCat.Desktop.ViewModel
         private DispatcherOperation AddCrawlJobLogItemAsync([DisallowNull] TCrawlJobLogEntity entity, [DisallowNull] IWindowsStatusListener statusListener) =>
             Dispatcher.InvokeAsync(() => AddCrawlJobLogItem(CreateCrawlJobLogViewModel(entity)), DispatcherPriority.Background, statusListener.CancellationToken);
 
-        private void AddCrawlJobLogItem(TCrawlJobLogItem item)
+        protected void AddCrawlJobLogItem(TCrawlJobLogItem item)
         {
             VerifyAccess();
             if (item is null)
@@ -117,6 +118,18 @@ namespace FsInfoCat.Desktop.ViewModel
                 item.EditCommand += Item_EditCommand;
                 item.DeleteCommand += Item_DeleteCommand;
             }
+        }
+
+        protected bool RemoveCrawlJobLogItem(TCrawlJobLogItem item)
+        {
+            VerifyAccess();
+            if (item is not null && _backingLogs.Remove(item))
+            {
+                item.EditCommand += Item_EditCommand;
+                item.DeleteCommand += Item_DeleteCommand;
+                return true;
+            }
+            return false;
         }
 
         protected virtual IAsyncJob ReloadAsync()
@@ -148,14 +161,35 @@ namespace FsInfoCat.Desktop.ViewModel
             return removedItems;
         }
 
-        private void OnRefreshCrawlJobLogsCommand(object parameter)
-        {
-
-        }
-
         protected abstract void OnAddNewCrawlJobLogCommand(object parameter);
 
-        protected abstract void OnCrawlJobLogEditCommand([DisallowNull] TCrawlJobLogItem item, object parameter);
+        //private void OnGetEditPageComplete(Task<PageFunction<TEditResult>> task, TCrawlJobLogItem item) => Dispatcher.Invoke(() =>
+        //{
+        //    if (task.IsCanceled)
+        //        return;
+        //    if (task.IsFaulted)
+        //        OnEditTaskFaulted(task.Exception, item);
+        //    else
+        //    {
+        //        PageFunction<TEditResult> page = task.Result;
+        //        if (page is null)
+        //            return;
+        //        page.Return += Page_Return;
+        //        Services.ServiceProvider.GetRequiredService<IApplicationNavigation>().Navigate(page);
+        //    }
+        //});
+
+        private void OnEditTaskFaulted(AggregateException exception, TCrawlJobLogItem item)
+        {
+            throw new NotImplementedException();
+        }
+
+        //private void Page_Return(object sender, ReturnEventArgs<TEditResult> e)
+        //{
+        //    throw new NotImplementedException();
+        //}
+
+        //protected abstract Task<PageFunction<TEditResult>> GetEditPageAsync(TCrawlJobLogItem item, [DisallowNull] IWindowsStatusListener statusListener);
 
         protected abstract bool ConfirmCrawlJobLogDelete([DisallowNull] TCrawlJobLogItem item, object parameter);
 
@@ -190,10 +224,14 @@ namespace FsInfoCat.Desktop.ViewModel
             return jobFactory.StartNew("Deleting data", "Opening database", (item, item.Entity), DeleteItemAsync);
         }
 
+        protected abstract void OnCrawlJobLogEditCommand([DisallowNull] TCrawlJobLogItem item, object parameter);
+
         private void Item_EditCommand(object sender, Commands.CommandEventArgs e)
         {
             if (sender is TCrawlJobLogItem item)
-                OnCrawlJobLogEditCommand(item, e.Parameter);
+            {
+
+            }
         }
 
         protected virtual void OnCrawlJobLogDeleteCommand([DisallowNull] TCrawlJobLogItem item, object parameter)

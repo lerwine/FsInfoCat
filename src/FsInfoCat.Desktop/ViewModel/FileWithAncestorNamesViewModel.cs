@@ -4,7 +4,7 @@ using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel
 {
-    public class FileWithAncestorNamesViewModel<TEntity> : FileRowViewModel<TEntity>, ICrudEntityRowViewModel<TEntity>
+    public class FileWithAncestorNamesViewModel<TEntity> : FileRowViewModel<TEntity>, ICrudEntityRowViewModel<TEntity>, IFileWithAncestorNamesViewModel
         where TEntity : DbEntity, IFileListItemWithAncestorNames
     {
         #region Edit Property Members
@@ -293,6 +293,8 @@ namespace FsInfoCat.Desktop.ViewModel
         }
 
         #endregion
+
+        IFileListItemWithAncestorNames IFileWithAncestorNamesViewModel.Entity => Entity;
 
         public FileWithAncestorNamesViewModel([DisallowNull] TEntity entity) : base(entity)
         {

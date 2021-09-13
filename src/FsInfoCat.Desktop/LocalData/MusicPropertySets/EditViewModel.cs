@@ -147,12 +147,11 @@ namespace FsInfoCat.Desktop.LocalData.MusicPropertySets
 
         #endregion
 
-        public EditViewModel([DisallowNull] MusicPropertySet entity, bool isNew) : base(entity)
+        public EditViewModel([DisallowNull] MusicPropertySet entity, MusicPropertiesListItem listItem) : base(entity)
         {
             SetValue(SaveChangesPropertyKey, new Commands.RelayCommand(OnSaveChangesCommand));
             SetValue(DiscardChangesPropertyKey, new Commands.RelayCommand(OnDiscardChangesCommand));
-            IsNew = isNew;
-            UpstreamId = entity.UpstreamId;
+            IsNew = (ListItem = listItem) is null;
             LastSynchronizedOn = entity.LastSynchronizedOn;
         }
 

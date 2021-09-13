@@ -12,7 +12,7 @@ using System.Windows.Navigation;
 
 namespace FsInfoCat.Desktop.LocalData.SharedTagDefinitions
 {
-    public class ListingViewModel : ListingViewModel<SharedTagDefinitionListItem, ListItemViewModel, bool?, SharedTagDefinition, ItemEditResult>, INavigatedToNotifiable
+    public class ListingViewModel : ListingViewModel<SharedTagDefinitionListItem, ListItemViewModel, bool?, ItemEditResult>, INavigatedToNotifiable
     {
         private bool? _currentOptions = true;
 
@@ -199,24 +199,36 @@ namespace FsInfoCat.Desktop.LocalData.SharedTagDefinitions
             ListingOptions.Value = _currentOptions;
         }
 
-        protected override async Task<PageFunction<ItemEditResult>> GetEditPageAsync(SharedTagDefinition args, [DisallowNull] IWindowsStatusListener statusListener)
+        protected override async Task<PageFunction<ItemEditResult>> GetEditPageAsync(ListItemViewModel item, [DisallowNull] IWindowsStatusListener statusListener)
         {
             EditViewModel viewModel;
-            if (args is null)
-                viewModel = new(new SharedTagDefinition(), true);
+            if (item is null)
+                viewModel = new(new SharedTagDefinition(), null);
             else
-                viewModel = new EditViewModel(args, false);
+            {
+                using IServiceScope serviceScope = Services.CreateScope();
+                using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+                Guid id = item.Entity.Id;
+                SharedTagDefinition fs = await dbContext.SharedTagDefinitions.FirstOrDefaultAsync(f => f.Id == id, statusListener.CancellationToken);
+                if (fs is null)
+                {
+                    await Dispatcher.ShowMessageBoxAsync("Item not found in database. Click OK to refresh listing.", "Security Exception", MessageBoxButton.OK, MessageBoxImage.Error, statusListener.CancellationToken);
+                    ReloadAsync(_currentOptions);
+                    return null;
+                }
+                viewModel = new EditViewModel(fs, item.Entity);
+            }
             return new EditPage(viewModel);
         }
 
-        protected override async Task<SharedTagDefinition> LoadItemAsync([DisallowNull] SharedTagDefinitionListItem item, [DisallowNull] IWindowsStatusListener statusListener)
-        {
-            using IServiceScope serviceScope = Services.CreateScope();
-            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
-            Guid id = item.Id;
-            statusListener.SetMessage("Reading data");
-            return await dbContext.SharedTagDefinitions.FirstOrDefaultAsync(e => e.Id == id, statusListener.CancellationToken);
-        }
+        //protected override async Task<SharedTagDefinition> LoadItemAsync([DisallowNull] SharedTagDefinitionListItem item, [DisallowNull] IWindowsStatusListener statusListener)
+        //{
+        //    using IServiceScope serviceScope = Services.CreateScope();
+        //    using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+        //    Guid id = item.Id;
+        //    statusListener.SetMessage("Reading data");
+        //    return await dbContext.SharedTagDefinitions.FirstOrDefaultAsync(e => e.Id == id, statusListener.CancellationToken);
+        //}
 
         protected override void OnEditTaskFaulted([DisallowNull] Exception exception, ListItemViewModel item)
         {

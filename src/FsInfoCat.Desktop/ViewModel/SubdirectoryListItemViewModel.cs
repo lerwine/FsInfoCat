@@ -4,7 +4,7 @@ using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel
 {
-    public class SubdirectoryListItemViewModel<TEntity> : SubdirectoryRowViewModel<TEntity>, ICrudEntityRowViewModel<TEntity>
+    public class SubdirectoryListItemViewModel<TEntity> : SubdirectoryRowViewModel<TEntity>, ICrudEntityRowViewModel<TEntity>, ISubdirectoryListItemViewModel
         where TEntity : DbEntity, ISubdirectoryListItem
     {
         #region Edit Property Members
@@ -201,6 +201,10 @@ namespace FsInfoCat.Desktop.ViewModel
         private void SetHasDependentItems(long subdirectoryCount, long fileCount, bool hasCrawlConfig) => HasDependentItems = hasCrawlConfig || subdirectoryCount > 0L || fileCount > 0L;
 
         #endregion
+
+        IDbFsItemListItem IFsItemListItemViewModel.Entity => Entity;
+
+        ISubdirectoryListItem ISubdirectoryListItemViewModel.Entity => Entity;
 
         public SubdirectoryListItemViewModel([DisallowNull] TEntity entity) : base(entity)
         {

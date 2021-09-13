@@ -12,7 +12,7 @@ using System.Windows.Navigation;
 
 namespace FsInfoCat.Desktop.LocalData.PhotoPropertySets
 {
-    public class ListingViewModel : ListingViewModel<PhotoPropertiesListItem, ListItemViewModel, bool?, PhotoPropertySet, ItemEditResult>, INavigatedToNotifiable
+    public class ListingViewModel : ListingViewModel<PhotoPropertiesListItem, ListItemViewModel, bool?, ItemEditResult>, INavigatedToNotifiable
     {
         private bool? _currentOptions;
 
@@ -116,24 +116,36 @@ namespace FsInfoCat.Desktop.LocalData.PhotoPropertySets
 
         protected override bool EntityMatchesCurrentFilter([DisallowNull] PhotoPropertiesListItem entity) => !_currentOptions.HasValue || (_currentOptions.Value ? entity.ExistingFileCount > 0L : entity.ExistingFileCount == 0L);
 
-        protected override async Task<PageFunction<ItemEditResult>> GetEditPageAsync(PhotoPropertySet args, [DisallowNull] IWindowsStatusListener statusListener)
+        protected override async Task<PageFunction<ItemEditResult>> GetEditPageAsync(ListItemViewModel item, [DisallowNull] IWindowsStatusListener statusListener)
         {
             EditViewModel viewModel;
-            if (args is null)
-                viewModel = new(new PhotoPropertySet(), true);
+            if (item is null)
+                viewModel = new(new PhotoPropertySet(), null);
             else
-                viewModel = new EditViewModel(args, false);
+            {
+                using IServiceScope serviceScope = Services.CreateScope();
+                using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+                Guid id = item.Entity.Id;
+                PhotoPropertySet fs = await dbContext.PhotoPropertySets.FirstOrDefaultAsync(f => f.Id == id, statusListener.CancellationToken);
+                if (fs is null)
+                {
+                    await Dispatcher.ShowMessageBoxAsync("Item not found in database. Click OK to refresh listing.", "Security Exception", MessageBoxButton.OK, MessageBoxImage.Error, statusListener.CancellationToken);
+                    ReloadAsync(_currentOptions);
+                    return null;
+                }
+                viewModel = new EditViewModel(fs, item.Entity);
+            }
             return new EditPage(viewModel);
         }
 
-        protected async override Task<PhotoPropertySet> LoadItemAsync([DisallowNull] PhotoPropertiesListItem item, [DisallowNull] IWindowsStatusListener statusListener)
-        {
-            using IServiceScope serviceScope = Services.CreateScope();
-            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
-            Guid id = item.Id;
-            statusListener.SetMessage("Reading data");
-            return await dbContext.PhotoPropertySets.Include(e => e.Files).FirstOrDefaultAsync(e => e.Id == id, statusListener.CancellationToken);
-        }
+        //protected async override Task<PhotoPropertySet> LoadItemAsync([DisallowNull] PhotoPropertiesListItem item, [DisallowNull] IWindowsStatusListener statusListener)
+        //{
+        //    using IServiceScope serviceScope = Services.CreateScope();
+        //    using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+        //    Guid id = item.Id;
+        //    statusListener.SetMessage("Reading data");
+        //    return await dbContext.PhotoPropertySets.Include(e => e.Files).FirstOrDefaultAsync(e => e.Id == id, statusListener.CancellationToken);
+        //}
 
         protected override void OnEditTaskFaulted([DisallowNull] Exception exception, ListItemViewModel item)
         {

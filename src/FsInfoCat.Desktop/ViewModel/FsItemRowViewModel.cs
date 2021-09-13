@@ -4,7 +4,7 @@ using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel
 {
-    public class FsItemRowViewModel<TEntity> : DbEntityRowViewModel<TEntity>
+    public class FsItemRowViewModel<TEntity> : DbEntityRowViewModel<TEntity>, IFsItemRowViewModel
         where TEntity : DbEntity, IDbFsItemRow
     {
         #region Name Property Members
@@ -112,6 +112,8 @@ namespace FsInfoCat.Desktop.ViewModel
         protected virtual void OnLastWriteTimePropertyChanged(DateTime oldValue, DateTime newValue) { }
 
         #endregion
+
+        IDbFsItemRow IFsItemRowViewModel.Entity => Entity;
 
         public FsItemRowViewModel([DisallowNull] TEntity entity) : base(entity)
         {

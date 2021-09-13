@@ -14,7 +14,7 @@ using System.Windows.Navigation;
 
 namespace FsInfoCat.Desktop.LocalData.RedundantSets
 {
-    public class ListingViewModel : ListingViewModel<RedundantSetListItem, ListItemViewModel, ListingViewModel.ListingOptions, RedundantSet, ItemEditResult>, INavigatedToNotifiable
+    public class ListingViewModel : ListingViewModel<RedundantSetListItem, ListItemViewModel, ListingViewModel.ListingOptions, ItemEditResult>, INavigatedToNotifiable
     {
         private ListingOptions _currentRange;
 
@@ -151,24 +151,36 @@ namespace FsInfoCat.Desktop.LocalData.RedundantSets
             UpdatePageTitle(_currentRange);
         }
 
-        protected override async Task<PageFunction<ItemEditResult>> GetEditPageAsync(RedundantSet args, [DisallowNull] IWindowsStatusListener statusListener)
+        protected override async Task<PageFunction<ItemEditResult>> GetEditPageAsync(ListItemViewModel item, [DisallowNull] IWindowsStatusListener statusListener)
         {
             EditViewModel viewModel;
-            if (args is null)
-                viewModel = new(new RedundantSet(), true);
+            if (item is null)
+                viewModel = new(new RedundantSet(), null);
             else
-                viewModel = new EditViewModel(args, false);
+            {
+                using IServiceScope serviceScope = Services.CreateScope();
+                using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+                Guid id = item.Entity.Id;
+                RedundantSet fs = await dbContext.RedundantSets.FirstOrDefaultAsync(f => f.Id == id, statusListener.CancellationToken);
+                if (fs is null)
+                {
+                    await Dispatcher.ShowMessageBoxAsync("Item not found in database. Click OK to refresh listing.", "Security Exception", MessageBoxButton.OK, MessageBoxImage.Error, statusListener.CancellationToken);
+                    ReloadAsync(_currentRange);
+                    return null;
+                }
+                viewModel = new EditViewModel(fs, item.Entity);
+            }
             return new EditPage(viewModel);
         }
 
-        protected override async Task<RedundantSet> LoadItemAsync([DisallowNull] RedundantSetListItem item, [DisallowNull] IWindowsStatusListener statusListener)
-        {
-            using IServiceScope serviceScope = Services.CreateScope();
-            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
-            Guid id = item.Id;
-            statusListener.SetMessage("Reading data");
-            return await dbContext.RedundantSets.FirstOrDefaultAsync(e => e.Id == id, statusListener.CancellationToken);
-        }
+        //protected override async Task<RedundantSet> LoadItemAsync([DisallowNull] RedundantSetListItem item, [DisallowNull] IWindowsStatusListener statusListener)
+        //{
+        //    using IServiceScope serviceScope = Services.CreateScope();
+        //    using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+        //    Guid id = item.Id;
+        //    statusListener.SetMessage("Reading data");
+        //    return await dbContext.RedundantSets.FirstOrDefaultAsync(e => e.Id == id, statusListener.CancellationToken);
+        //}
 
         protected override void OnEditTaskFaulted([DisallowNull] Exception exception, ListItemViewModel item)
         {

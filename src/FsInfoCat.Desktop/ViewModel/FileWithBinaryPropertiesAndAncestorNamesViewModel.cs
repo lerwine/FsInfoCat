@@ -3,7 +3,7 @@ using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel
 {
-    public class FileWithBinaryPropertiesAndAncestorNamesViewModel<TEntity> : FileWithAncestorNamesViewModel<TEntity>
+    public class FileWithBinaryPropertiesAndAncestorNamesViewModel<TEntity> : FileWithAncestorNamesViewModel<TEntity>, IFileWithBinaryPropertiesAndAncestorNamesViewModel
         where TEntity : DbEntity, IFileListItemWithBinaryPropertiesAndAncestorNames
     {
         #region Length Property Members
@@ -36,6 +36,8 @@ namespace FsInfoCat.Desktop.ViewModel
         public MD5Hash? Hash { get => (MD5Hash?)GetValue(HashProperty); private set => SetValue(HashPropertyKey, value); }
 
         #endregion
+
+        IFileListItemWithBinaryPropertiesAndAncestorNames IFileWithBinaryPropertiesAndAncestorNamesViewModel.Entity => Entity;
 
         public FileWithBinaryPropertiesAndAncestorNamesViewModel([DisallowNull] TEntity entity) : base(entity)
         {

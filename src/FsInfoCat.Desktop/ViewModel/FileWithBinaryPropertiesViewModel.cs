@@ -4,7 +4,7 @@ using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel
 {
-    public class FileWithBinaryPropertiesViewModel<TEntity> : FileRowViewModel<TEntity>, ICrudEntityRowViewModel<TEntity>
+    public class FileWithBinaryPropertiesViewModel<TEntity> : FileRowViewModel<TEntity>, ICrudEntityRowViewModel<TEntity>, IFileWithBinaryPropertiesViewModel
         where TEntity : DbEntity, IFileListItemWithBinaryProperties
     {
         #region Edit Property Members
@@ -200,6 +200,8 @@ namespace FsInfoCat.Desktop.ViewModel
         protected virtual void OnSharedTagCountPropertyChanged(long oldValue, long newValue) { }
 
         #endregion
+
+        IFileListItemWithBinaryProperties IFileWithBinaryPropertiesViewModel.Entity => Entity;
 
         public FileWithBinaryPropertiesViewModel([DisallowNull] TEntity entity) : base(entity)
         {

@@ -4,7 +4,7 @@ using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel
 {
-    public abstract class CrawlConfigurationRowViewModel<TEntity> : DbEntityRowViewModel<TEntity>
+    public abstract class CrawlConfigurationRowViewModel<TEntity> : DbEntityRowViewModel<TEntity>, ICrawlConfigurationRowViewModel
         where TEntity : DbEntity, ICrawlConfigurationRow
     {
         #region DisplayName Property Members
@@ -163,6 +163,8 @@ namespace FsInfoCat.Desktop.ViewModel
         public TimeSpanViewModel MaxDuration => (TimeSpanViewModel)GetValue(MaxDurationProperty);
 
         #endregion
+
+        ICrawlConfigurationRow ICrawlConfigurationRowViewModel.Entity => Entity;
 
         public CrawlConfigurationRowViewModel([DisallowNull] TEntity entity) : base(entity)
         {

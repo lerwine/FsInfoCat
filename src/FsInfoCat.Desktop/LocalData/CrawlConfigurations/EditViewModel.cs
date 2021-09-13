@@ -170,17 +170,76 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
 
         protected override void OnAddNewCrawlJobLogCommand(object parameter)
         {
-            // TODO: Implement OnAddNewCrawlJobLogCommand(parameter)
+            IWindowsAsyncJobFactoryService jobFactory = Services.GetRequiredService<IWindowsAsyncJobFactoryService>();
+            jobFactory.StartNew("Loading database record", "Opening database", (CrawlJobListItemViewModel)null, GetEditPageAsync).Task.ContinueWith(task => OnGetEditPageComplete(task, null));
         }
 
         protected override void OnCrawlJobLogEditCommand([DisallowNull] CrawlJobListItemViewModel item, object parameter)
         {
-            // TODO: Implement GetQueryableCrawlJobLogListing(CrawlJobListItemViewModel, parameter)
+            IWindowsAsyncJobFactoryService jobFactory = Services.GetRequiredService<IWindowsAsyncJobFactoryService>();
+            jobFactory.StartNew("Loading database record", "Opening database", item, GetEditPageAsync).Task.ContinueWith(task => OnGetEditPageComplete(task, item));
+        }
+
+        private async Task<PageFunction<CrawlLogs.ItemEditResult>> GetEditPageAsync(CrawlJobListItemViewModel item, [DisallowNull] IWindowsStatusListener statusListener)
+        {
+            using IServiceScope scope = Services.CreateScope();
+            using LocalDbContext dbContext = scope.ServiceProvider.GetRequiredService<LocalDbContext>();
+            Guid id = item.Entity.Id;
+            CrawlJobLog crawlJobLog = await dbContext.CrawlJobLogs.FirstOrDefaultAsync(j => j.Id == id, statusListener.CancellationToken);
+            if (crawlJobLog is null)
+            {
+                _ = MessageBox.Show(Application.Current.MainWindow, "Item not found in database. Click OK to refresh listing.", "Security Exception", MessageBoxButton.OK, MessageBoxImage.Error);
+                ReloadAsync();
+                return null;
+            }
+            return new CrawlLogs.EditPage(new(crawlJobLog, item.Entity));
+        }
+
+        private void OnGetEditPageComplete(Task<PageFunction<CrawlLogs.ItemEditResult>> task, CrawlJobListItemViewModel item) => Dispatcher.Invoke(() =>
+        {
+            if (task.IsCanceled)
+                return;
+            if (task.IsFaulted)
+            {
+                Exception exception = (task.Exception.InnerExceptions.Count > 1) ? task.Exception : task.Exception.InnerExceptions[0];
+                _ = MessageBox.Show(Application.Current.MainWindow,
+                    ((exception is AsyncOperationFailureException aExc) ? aExc.UserMessage.NullIfWhiteSpace() :
+                        (exception as AggregateException)?.InnerExceptions.OfType<AsyncOperationFailureException>().Select(e => e.UserMessage)
+                        .Where(m => !string.IsNullOrWhiteSpace(m)).FirstOrDefault()) ??
+                        "There was an unexpected error while loading items from the databse.\n\nSee logs for further information",
+                    "Database Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            else
+            {
+                PageFunction<CrawlLogs.ItemEditResult> page = task.Result;
+                if (page is null)
+                    return;
+                page.Return += Page_Return;
+                Services.ServiceProvider.GetRequiredService<IApplicationNavigation>().Navigate(page);
+            }
+        });
+
+        private void Page_Return(object sender, ReturnEventArgs<CrawlLogs.ItemEditResult> e)
+        {
+            switch (e.Result.State)
+            {
+                case EntityEditResultState.Added:
+                    if (e.Result.ItemEntity.ConfigurationId == Entity.Id)
+                        AddCrawlJobLogItem(new CrawlJobListItemViewModel(e.Result.ItemEntity));
+                    break;
+                case EntityEditResultState.Modified:
+                    if (e.Result.ItemEntity.ConfigurationId != Entity.Id)
+                        RemoveCrawlJobLogItem(Logs.FirstOrDefault(i => ReferenceEquals(i.Entity, e.Result.ItemEntity)));
+                    break;
+                case EntityEditResultState.Deleted:
+                    RemoveCrawlJobLogItem(Logs.FirstOrDefault(i => ReferenceEquals(i.Entity, e.Result.ItemEntity)));
+                    break;
+            }
         }
 
         protected override bool ConfirmCrawlJobLogDelete([DisallowNull] CrawlJobListItemViewModel item, object parameter)
         {
-            // TODO: Implement GetQueryableCrawlJobLogListing(CrawlJobListItemViewModel, parameter)
+            // TODO: Implement GetQueryableCrawlJobLogListing(CrawlJobListItemViewModel, object)
             throw new NotImplementedException();
         }
 

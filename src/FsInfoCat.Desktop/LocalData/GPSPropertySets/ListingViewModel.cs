@@ -12,7 +12,7 @@ using System.Windows.Navigation;
 
 namespace FsInfoCat.Desktop.LocalData.GPSPropertySets
 {
-    public class ListingViewModel : ListingViewModel<GPSPropertiesListItem, ListItemViewModel, bool?, GPSPropertySet, ItemEditResult>, INavigatedToNotifiable
+    public class ListingViewModel : ListingViewModel<GPSPropertiesListItem, ListItemViewModel, bool?, ItemEditResult>, INavigatedToNotifiable
     {
         private bool? _currentOptions = true;
 
@@ -116,24 +116,36 @@ namespace FsInfoCat.Desktop.LocalData.GPSPropertySets
 
         protected override bool EntityMatchesCurrentFilter([DisallowNull] GPSPropertiesListItem entity) => !_currentOptions.HasValue || (_currentOptions.Value ? entity.ExistingFileCount > 0L : entity.ExistingFileCount == 0L);
 
-        protected override async Task<PageFunction<ItemEditResult>> GetEditPageAsync(GPSPropertySet args, [DisallowNull] IWindowsStatusListener statusListener)
+        protected override async Task<PageFunction<ItemEditResult>> GetEditPageAsync(ListItemViewModel item, [DisallowNull] IWindowsStatusListener statusListener)
         {
             EditViewModel viewModel;
-            if (args is null)
-                viewModel = new(new GPSPropertySet(), true);
+            if (item is null)
+                viewModel = new(new GPSPropertySet(), null);
             else
-                viewModel = new EditViewModel(args, false);
+            {
+                using IServiceScope serviceScope = Services.CreateScope();
+                using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+                Guid id = item.Entity.Id;
+                GPSPropertySet fs = await dbContext.GPSPropertySets.FirstOrDefaultAsync(f => f.Id == id, statusListener.CancellationToken);
+                if (fs is null)
+                {
+                    await Dispatcher.ShowMessageBoxAsync("Item not found in database. Click OK to refresh listing.", "Security Exception", MessageBoxButton.OK, MessageBoxImage.Error, statusListener.CancellationToken);
+                    ReloadAsync(_currentOptions);
+                    return null;
+                }
+                viewModel = new EditViewModel(fs, item.Entity);
+            }
             return new EditPage(viewModel);
         }
 
-        protected async override Task<GPSPropertySet> LoadItemAsync([DisallowNull] GPSPropertiesListItem item, [DisallowNull] IWindowsStatusListener statusListener)
-        {
-            using IServiceScope serviceScope = Services.CreateScope();
-            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
-            Guid id = item.Id;
-            statusListener.SetMessage("Reading data");
-            return await dbContext.GPSPropertySets.Include(e => e.Files).FirstOrDefaultAsync(e => e.Id == id, statusListener.CancellationToken);
-        }
+        //protected async override Task<GPSPropertySet> LoadItemAsync([DisallowNull] GPSPropertiesListItem item, [DisallowNull] IWindowsStatusListener statusListener)
+        //{
+        //    using IServiceScope serviceScope = Services.CreateScope();
+        //    using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+        //    Guid id = item.Id;
+        //    statusListener.SetMessage("Reading data");
+        //    return await dbContext.GPSPropertySets.Include(e => e.Files).FirstOrDefaultAsync(e => e.Id == id, statusListener.CancellationToken);
+        //}
 
         protected override void OnEditTaskFaulted([DisallowNull] Exception exception, ListItemViewModel item)
         {

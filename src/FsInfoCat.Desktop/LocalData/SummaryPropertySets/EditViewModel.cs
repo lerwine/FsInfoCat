@@ -146,11 +146,11 @@ namespace FsInfoCat.Desktop.LocalData.SummaryPropertySets
 
         #endregion
 
-        public EditViewModel([DisallowNull] SummaryPropertySet entity, bool isNew) : base(entity)
+        public EditViewModel([DisallowNull] SummaryPropertySet entity, SummaryPropertiesListItem listItem) : base(entity)
         {
             SetValue(SaveChangesPropertyKey, new Commands.RelayCommand(OnSaveChangesCommand));
             SetValue(DiscardChangesPropertyKey, new Commands.RelayCommand(OnDiscardChangesCommand));
-            IsNew = isNew;
+            IsNew = (ListItem = listItem) is null;
             UpstreamId = entity.UpstreamId;
             LastSynchronizedOn = entity.LastSynchronizedOn;
         }

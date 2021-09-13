@@ -141,11 +141,11 @@ namespace FsInfoCat.Desktop.LocalData.PhotoPropertySets
 
         #endregion
 
-        public EditViewModel([DisallowNull] PhotoPropertySet entity, bool isNew) : base(entity)
+        public EditViewModel([DisallowNull] PhotoPropertySet entity, PhotoPropertiesListItem listItem) : base(entity)
         {
             SetValue(SaveChangesPropertyKey, new Commands.RelayCommand(OnSaveChangesCommand));
             SetValue(DiscardChangesPropertyKey, new Commands.RelayCommand(OnDiscardChangesCommand));
-            IsNew = isNew;
+            IsNew = (ListItem = listItem) is null;
             UpstreamId = entity.UpstreamId;
             LastSynchronizedOn = entity.LastSynchronizedOn;
         }

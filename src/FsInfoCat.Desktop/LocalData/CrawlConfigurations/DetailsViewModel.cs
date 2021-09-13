@@ -39,7 +39,7 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
 
         protected override void OnAddNewCrawlJobLogCommand(object parameter)
         {
-            // TODO: Implement OnAddNewCrawlJobLogCommand(parameter)
+            // TODO: Implement OnAddNewCrawlJobLogCommand(object)
             throw new NotImplementedException();
         }
 

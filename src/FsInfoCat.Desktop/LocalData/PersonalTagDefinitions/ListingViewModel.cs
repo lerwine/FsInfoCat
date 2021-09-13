@@ -12,7 +12,7 @@ using System.Windows.Navigation;
 
 namespace FsInfoCat.Desktop.LocalData.PersonalTagDefinitions
 {
-    public class ListingViewModel : ListingViewModel<PersonalTagDefinitionListItem, ListItemViewModel, bool?, PersonalTagDefinition, ItemEditResult>, INavigatedToNotifiable
+    public class ListingViewModel : ListingViewModel<PersonalTagDefinitionListItem, ListItemViewModel, bool?, ItemEditResult>, INavigatedToNotifiable
     {
         private bool? _currentOptions = true;
 
@@ -183,24 +183,36 @@ namespace FsInfoCat.Desktop.LocalData.PersonalTagDefinitions
 
         protected override bool EntityMatchesCurrentFilter([DisallowNull] PersonalTagDefinitionListItem entity) => !_currentOptions.HasValue || _currentOptions.Value != entity.IsInactive;
 
-        protected override async Task<PageFunction<ItemEditResult>> GetEditPageAsync(PersonalTagDefinition args, [DisallowNull] IWindowsStatusListener statusListener)
+        protected override async Task<PageFunction<ItemEditResult>> GetEditPageAsync(ListItemViewModel item, [DisallowNull] IWindowsStatusListener statusListener)
         {
             EditViewModel viewModel;
-            if (args is null)
-                viewModel = new(new PersonalTagDefinition(), true);
+            if (item is null)
+                viewModel = new(new PersonalTagDefinition(), null);
             else
-                viewModel = new EditViewModel(args, false);
+            {
+                using IServiceScope serviceScope = Services.CreateScope();
+                using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+                Guid id = item.Entity.Id;
+                PersonalTagDefinition fs = await dbContext.PersonalTagDefinitions.FirstOrDefaultAsync(f => f.Id == id, statusListener.CancellationToken);
+                if (fs is null)
+                {
+                    await Dispatcher.ShowMessageBoxAsync("Item not found in database. Click OK to refresh listing.", "Security Exception", MessageBoxButton.OK, MessageBoxImage.Error, statusListener.CancellationToken);
+                    ReloadAsync(_currentOptions);
+                    return null;
+                }
+                viewModel = new EditViewModel(fs, item.Entity);
+            }
             return new EditPage(viewModel);
         }
 
-        protected override async Task<PersonalTagDefinition> LoadItemAsync([DisallowNull] PersonalTagDefinitionListItem item, [DisallowNull] IWindowsStatusListener statusListener)
-        {
-            using IServiceScope serviceScope = Services.CreateScope();
-            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
-            Guid id = item.Id;
-            statusListener.SetMessage("Reading data");
-            return await dbContext.PersonalTagDefinitions.FirstOrDefaultAsync(e => e.Id == id, statusListener.CancellationToken);
-        }
+        //protected override async Task<PersonalTagDefinition> LoadItemAsync([DisallowNull] PersonalTagDefinitionListItem item, [DisallowNull] IWindowsStatusListener statusListener)
+        //{
+        //    using IServiceScope serviceScope = Services.CreateScope();
+        //    using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+        //    Guid id = item.Id;
+        //    statusListener.SetMessage("Reading data");
+        //    return await dbContext.PersonalTagDefinitions.FirstOrDefaultAsync(e => e.Id == id, statusListener.CancellationToken);
+        //}
 
         protected override void OnEditTaskFaulted([DisallowNull] Exception exception, ListItemViewModel item)
         {

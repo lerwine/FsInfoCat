@@ -4,7 +4,7 @@ using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel
 {
-    public class FileRowViewModel<TEntity> : FsItemRowViewModel<TEntity>
+    public class FileRowViewModel<TEntity> : FsItemRowViewModel<TEntity>, IFileRowViewModel
         where TEntity : DbEntity, IFileRow
     {
         #region Options Property Members
@@ -70,6 +70,8 @@ namespace FsInfoCat.Desktop.ViewModel
         protected virtual void OnLastHashCalculationPropertyChanged(DateTime? oldValue, DateTime? newValue) { }
 
         #endregion
+
+        IFileRow IFileRowViewModel.Entity => Entity;
 
         public FileRowViewModel([DisallowNull] TEntity entity) : base(entity)
         {

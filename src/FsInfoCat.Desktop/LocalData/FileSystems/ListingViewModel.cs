@@ -13,7 +13,7 @@ using System.Windows.Navigation;
 namespace FsInfoCat.Desktop.LocalData.FileSystems
 {
 
-    public class ListingViewModel : ListingViewModel<FileSystemListItem, ListItemViewModel, bool?, FileSystem, ItemEditResult>, INavigatedToNotifiable
+    public class ListingViewModel : ListingViewModel<FileSystemListItem, ListItemViewModel, bool?, ItemEditResult>, INavigatedToNotifiable
     {
         bool? _currentListingOption = true;
 
@@ -115,24 +115,36 @@ namespace FsInfoCat.Desktop.LocalData.FileSystems
 
         protected override bool EntityMatchesCurrentFilter([DisallowNull] FileSystemListItem entity) => !_currentListingOption.HasValue || _currentListingOption.Value != entity.IsInactive;
 
-        protected override async Task<PageFunction<ItemEditResult>> GetEditPageAsync(FileSystem args, [DisallowNull] IWindowsStatusListener statusListener)
+        protected async override Task<PageFunction<ItemEditResult>> GetEditPageAsync(ListItemViewModel item, [DisallowNull] IWindowsStatusListener statusListener)
         {
             EditViewModel viewModel;
-            if (args is null)
-                viewModel = new(new FileSystem(), true);
+            if (item is null)
+                viewModel = new(new FileSystem(), null);
             else
-                viewModel = new EditViewModel(args, false);
+            {
+                using IServiceScope serviceScope = Services.CreateScope();
+                using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+                Guid id = item.Entity.Id;
+                FileSystem fs = await dbContext.FileSystems.FirstOrDefaultAsync(f => f.Id == id, statusListener.CancellationToken);
+                if (fs is null)
+                {
+                    await Dispatcher.ShowMessageBoxAsync("Item not found in database. Click OK to refresh listing.", "Security Exception", MessageBoxButton.OK, MessageBoxImage.Error, statusListener.CancellationToken);
+                    ReloadAsync(_currentListingOption);
+                    return null;
+                }
+                viewModel = new EditViewModel(fs, item.Entity);
+            }
             return new EditPage(viewModel);
         }
 
-        protected async override Task<FileSystem> LoadItemAsync([DisallowNull] FileSystemListItem item, [DisallowNull] IWindowsStatusListener statusListener)
-        {
-            using IServiceScope serviceScope = Services.CreateScope();
-            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
-            Guid id = item.Id;
-            statusListener.SetMessage("Reading data");
-            return await dbContext.FileSystems.Include(e => e.SymbolicNames).FirstOrDefaultAsync(e => e.Id == id, statusListener.CancellationToken);
-        }
+        //protected async override Task<FileSystem> LoadItemAsync([DisallowNull] FileSystemListItem item, [DisallowNull] IWindowsStatusListener statusListener)
+        //{
+        //    using IServiceScope serviceScope = Services.CreateScope();
+        //    using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+        //    Guid id = item.Id;
+        //    statusListener.SetMessage("Reading data");
+        //    return await dbContext.FileSystems.Include(e => e.SymbolicNames).FirstOrDefaultAsync(e => e.Id == id, statusListener.CancellationToken);
+        //}
 
         protected override void OnDeleteTaskFaulted([DisallowNull] Exception exception, [DisallowNull] ListItemViewModel item)
         {

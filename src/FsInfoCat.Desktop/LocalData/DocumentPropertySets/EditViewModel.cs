@@ -147,11 +147,11 @@ namespace FsInfoCat.Desktop.LocalData.DocumentPropertySets
 
         #endregion
 
-        public EditViewModel([DisallowNull] DocumentPropertySet entity, bool isNew) : base(entity)
+        public EditViewModel([DisallowNull] DocumentPropertySet entity, DocumentPropertiesListItem listItem) : base(entity)
         {
             SetValue(SaveChangesPropertyKey, new Commands.RelayCommand(OnSaveChangesCommand));
             SetValue(DiscardChangesPropertyKey, new Commands.RelayCommand(OnDiscardChangesCommand));
-            IsNew = isNew;
+            IsNew = (ListItem = listItem) is null;
             UpstreamId = entity.UpstreamId;
             LastSynchronizedOn = entity.LastSynchronizedOn;
         }

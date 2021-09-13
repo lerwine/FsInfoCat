@@ -12,7 +12,7 @@ using System.Windows.Navigation;
 
 namespace FsInfoCat.Desktop.LocalData.SymbolicNames
 {
-    public class ListingViewModel : ListingViewModel<SymbolicNameListItem, ListItemViewModel, bool?, SymbolicName, ItemEditResult>, INavigatedToNotifiable
+    public class ListingViewModel : ListingViewModel<SymbolicNameListItem, ListItemViewModel, bool?, ItemEditResult>, INavigatedToNotifiable
     {
         private bool? _currentStateFilterOption = true;
 
@@ -111,24 +111,36 @@ namespace FsInfoCat.Desktop.LocalData.SymbolicNames
 
         protected override bool EntityMatchesCurrentFilter([DisallowNull] SymbolicNameListItem entity) => !_currentStateFilterOption.HasValue || _currentStateFilterOption.Value != entity.IsInactive;
 
-        protected override async Task<PageFunction<ItemEditResult>> GetEditPageAsync(SymbolicName args, [DisallowNull] IWindowsStatusListener statusListener)
+        protected async override Task<PageFunction<ItemEditResult>> GetEditPageAsync(ListItemViewModel item, [DisallowNull] IWindowsStatusListener statusListener)
         {
             EditViewModel viewModel;
-            if (args is null)
-                viewModel = new(new SymbolicName(), true);
+            if (item is null)
+                viewModel = new(new SymbolicName(), null);
             else
-                viewModel = new EditViewModel(args, false);
+            {
+                using IServiceScope serviceScope = Services.CreateScope();
+                using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+                Guid id = item.Entity.Id;
+                SymbolicName fs = await dbContext.SymbolicNames.FirstOrDefaultAsync(f => f.Id == id, statusListener.CancellationToken);
+                if (fs is null)
+                {
+                    await Dispatcher.ShowMessageBoxAsync("Item not found in database. Click OK to refresh listing.", "Security Exception", MessageBoxButton.OK, MessageBoxImage.Error, statusListener.CancellationToken);
+                    ReloadAsync(_currentStateFilterOption);
+                    return null;
+                }
+                viewModel = new EditViewModel(fs, item.Entity);
+            }
             return new EditPage(viewModel);
         }
 
-        protected async override Task<SymbolicName> LoadItemAsync([DisallowNull] SymbolicNameListItem item, [DisallowNull] IWindowsStatusListener statusListener)
-        {
-            using IServiceScope serviceScope = Services.CreateScope();
-            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
-            Guid id = item.Id;
-            statusListener.SetMessage("Reading data");
-            return await dbContext.SymbolicNames.Include(e => e.FileSystem).FirstOrDefaultAsync(e => e.Id == id, statusListener.CancellationToken);
-        }
+        //protected async override Task<SymbolicName> LoadItemAsync([DisallowNull] SymbolicNameListItem item, [DisallowNull] IWindowsStatusListener statusListener)
+        //{
+        //    using IServiceScope serviceScope = Services.CreateScope();
+        //    using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+        //    Guid id = item.Id;
+        //    statusListener.SetMessage("Reading data");
+        //    return await dbContext.SymbolicNames.Include(e => e.FileSystem).FirstOrDefaultAsync(e => e.Id == id, statusListener.CancellationToken);
+        //}
 
         protected override void OnEditTaskFaulted([DisallowNull] Exception exception, ListItemViewModel item)
         {

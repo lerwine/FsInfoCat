@@ -42,19 +42,6 @@ Error	1	ListItemViewModel	FileSystemDetailText	TextBox.Text, Name='fileSystemTex
         public EnumValuePickerVM<CrawlStatus> StatusOptions => (EnumValuePickerVM<CrawlStatus>)GetValue(StatusOptionsProperty);
 
         #endregion
-        #region EditingStatusOptions Property Members
-
-        private static readonly DependencyPropertyKey EditingStatusOptionsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(EditingStatusOptions), typeof(EnumValuePickerVM<CrawlStatus>), typeof(ListingViewModel),
-                new PropertyMetadata(null));
-
-        /// <summary>
-        /// Identifies the <see cref="EditingStatusOptions"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty EditingStatusOptionsProperty = EditingStatusOptionsPropertyKey.DependencyProperty;
-
-        public EnumValuePickerVM<CrawlStatus> EditingStatusOptions => (EnumValuePickerVM<CrawlStatus>)GetValue(EditingStatusOptionsProperty);
-
-        #endregion
         #region SchedulingOptions Property Members
 
         private static readonly DependencyPropertyKey SchedulingOptionsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(SchedulingOptions), typeof(ThreeStateViewModel), typeof(ListingViewModel),
@@ -104,7 +91,6 @@ Error	1	ListItemViewModel	FileSystemDetailText	TextBox.Text, Name='fileSystemTex
             _allOption = viewOptions.Choices.First(o => o.DisplayName == FsInfoCat.Properties.Resources.DisplayName_AllItems);
             _allFailedOption = viewOptions.Choices.First(o => o.DisplayName == FsInfoCat.Properties.Resources.DisplayName_AllFailedItems);
             SetValue(StatusOptionsPropertyKey, viewOptions);
-            SetValue(EditingStatusOptionsPropertyKey, new EnumValuePickerVM<CrawlStatus>(names) { SelectedIndex = viewOptions.SelectedIndex });
             SetValue(SchedulingOptionsPropertyKey, new ThreeStateViewModel(_currentStatusOptions.IsScheduled));
             SetValue(ScheduleRangeStartPropertyKey, new DateTimeViewModel());
             SetValue(ScheduleRangeEndPropertyKey, new DateTimeViewModel());
@@ -260,10 +246,9 @@ Error	1	ListItemViewModel	FileSystemDetailText	TextBox.Text, Name='fileSystemTex
             CrawlConfigListItem itemEntity;
             if (listItem is not null)
             {
-                itemEntity = await Dispatcher.InvokeAsync(() => listItem.Entity, DispatcherPriority.Normal, statusListener.CancellationToken);
                 using IServiceScope serviceScope = Services.CreateScope();
                 using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
-                Guid id = itemEntity.Id;
+                Guid id = listItem.Entity.Id;
                 crawlConfiguration = await dbContext.CrawlConfigurations.FirstOrDefaultAsync(c => c.Id == id, statusListener.CancellationToken);
                 if (crawlConfiguration is null)
                     selectedRoot = null;
@@ -272,7 +257,7 @@ Error	1	ListItemViewModel	FileSystemDetailText	TextBox.Text, Name='fileSystemTex
                     id = crawlConfiguration.RootId;
                     selectedRoot = await dbContext.SubdirectoryListingWithAncestorNames.FirstOrDefaultAsync(d => d.Id == id);
                 }
-                return await CreateEditPageAsync(crawlConfiguration, selectedRoot, itemEntity, statusListener);
+                return await CreateEditPageAsync(crawlConfiguration, selectedRoot, listItem.Entity, statusListener);
             }
 
             itemEntity = null;
@@ -384,7 +369,6 @@ Error	1	ListItemViewModel	FileSystemDetailText	TextBox.Text, Name='fileSystemTex
             }
             return await CreateEditPageAsync(crawlConfiguration ?? new(), selectedRoot, itemEntity, statusListener);
         }
-
 
         protected override void OnEditTaskFaulted([DisallowNull] Exception exception, ListItemViewModel item)
         {

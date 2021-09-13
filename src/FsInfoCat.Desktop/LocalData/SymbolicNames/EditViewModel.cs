@@ -136,11 +136,11 @@ namespace FsInfoCat.Desktop.LocalData.SymbolicNames
 
         #endregion
 
-        public EditViewModel(SymbolicName entity, bool isNew) : base(entity)
+        public EditViewModel(SymbolicName entity, SymbolicNameListItem listItem) : base(entity)
         {
             SetValue(SaveChangesPropertyKey, new Commands.RelayCommand(OnSaveChangesCommand));
             SetValue(DiscardChangesPropertyKey, new Commands.RelayCommand(OnDiscardChangesCommand));
-            IsNew = isNew;
+            IsNew = (ListItem = listItem) is null;
             UpstreamId = entity.UpstreamId;
             LastSynchronizedOn = entity.LastSynchronizedOn;
         }

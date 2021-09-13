@@ -3,7 +3,7 @@ using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel
 {
-    public class SubdirectoryRowViewModel<TEntity> : FsItemRowViewModel<TEntity>
+    public class SubdirectoryRowViewModel<TEntity> : FsItemRowViewModel<TEntity>, ISubdirectoryRowViewModel
         where TEntity : DbEntity, ISubdirectoryRow
     {
         #region Options Property Members
@@ -48,6 +48,8 @@ namespace FsInfoCat.Desktop.ViewModel
         protected virtual void OnStatusPropertyChanged(DirectoryStatus oldValue, DirectoryStatus newValue) { }
 
         #endregion
+
+        ISubdirectoryRow ISubdirectoryRowViewModel.Entity => Entity;
 
         public SubdirectoryRowViewModel([DisallowNull] TEntity entity) : base(entity)
         {

@@ -1,4 +1,4 @@
-﻿namespace FsInfoCat.Desktop.ViewModel
+namespace FsInfoCat.Desktop.ViewModel
 {
     public interface IEntityEditResult<TEntity>
         where TEntity : DbEntity

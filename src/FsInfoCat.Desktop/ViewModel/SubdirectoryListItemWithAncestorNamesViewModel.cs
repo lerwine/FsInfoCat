@@ -4,7 +4,7 @@ using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel
 {
-    public class SubdirectoryListItemWithAncestorNamesViewModel<TEntity> : SubdirectoryListItemViewModel<TEntity>
+    public class SubdirectoryListItemWithAncestorNamesViewModel<TEntity> : SubdirectoryListItemViewModel<TEntity>, ISubdirectoryListItemWithAncestorNamesViewModel
         where TEntity : DbEntity, ISubdirectoryListItemWithAncestorNames
     {
         #region VolumeDisplayName Property Members
@@ -167,6 +167,8 @@ namespace FsInfoCat.Desktop.ViewModel
         }
 
         #endregion
+
+        ISubdirectoryListItemWithAncestorNames ISubdirectoryListItemWithAncestorNamesViewModel.Entity => Entity;
 
         public SubdirectoryListItemWithAncestorNamesViewModel([DisallowNull] TEntity entity) : base(entity)
         {

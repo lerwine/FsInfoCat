@@ -146,25 +146,25 @@ namespace FsInfoCat.Desktop.LocalData.FileSystems
 
         #endregion
 
-        public EditViewModel([DisallowNull] FileSystem entity, bool isNew) : base(entity)
+        public EditViewModel([DisallowNull] FileSystem entity, FileSystemListItem listItem) : base(entity)
         {
             SetValue(SaveChangesPropertyKey, new Commands.RelayCommand(OnSaveChangesCommand));
             SetValue(DiscardChangesPropertyKey, new Commands.RelayCommand(OnDiscardChangesCommand));
-            IsNew = isNew;
+            IsNew = (ListItem = listItem) is null;
             UpstreamId = entity.UpstreamId;
             LastSynchronizedOn = entity.LastSynchronizedOn;
         }
 
-        public static bool NavigateToEditPage([DisallowNull] FileSystemListItem item, [DisallowNull] FileSystem entity, ReturnEventHandler<ItemEditResult> onReturn = null)
-        {
-            if (entity is null)
-                throw new ArgumentNullException(nameof(entity));
-            EditViewModel viewModel = new(entity, false) { ListItem = item };
-            EditPage page = new(viewModel);
-            if (onReturn is not null)
-                page.Return += onReturn;
-            return Services.ServiceProvider.GetRequiredService<IApplicationNavigation>().Navigate(page);
-        }
+        //public static bool NavigateToEditPage([DisallowNull] FileSystemListItem item, [DisallowNull] FileSystem entity, ReturnEventHandler<ItemEditResult> onReturn = null)
+        //{
+        //    if (entity is null)
+        //        throw new ArgumentNullException(nameof(entity));
+        //    EditViewModel viewModel = new(entity, false) { ListItem = item };
+        //    EditPage page = new(viewModel);
+        //    if (onReturn is not null)
+        //        page.Return += onReturn;
+        //    return Services.ServiceProvider.GetRequiredService<IApplicationNavigation>().Navigate(page);
+        //}
 
         public static void AddNewItem(ReturnEventHandler<FileSystem> onReturn = null)
         {

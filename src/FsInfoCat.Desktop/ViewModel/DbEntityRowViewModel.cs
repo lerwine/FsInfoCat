@@ -33,6 +33,8 @@ namespace FsInfoCat.Desktop.ViewModel
 
         TEntity IDbEntityRowViewModel<TEntity>.Entity { get => Entity; set => Entity = value; }
 
+        DbEntity IDbEntityRowViewModel.Entity => Entity;
+
         #region CreatedOn Property Members
 
         private static readonly DependencyPropertyKey CreatedOnPropertyKey = ColumnPropertyBuilder<DateTime, DbEntityRowViewModel<TEntity>>
