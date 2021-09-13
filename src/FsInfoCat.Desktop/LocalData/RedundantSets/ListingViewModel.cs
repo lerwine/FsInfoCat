@@ -151,6 +151,28 @@ namespace FsInfoCat.Desktop.LocalData.RedundantSets
             UpdatePageTitle(_currentRange);
         }
 
+        protected async override Task<PageFunction<ItemEditResult>> GetDetailPageAsync([DisallowNull] ListItemViewModel item, [DisallowNull] IWindowsStatusListener statusListener)
+        {
+            DetailsViewModel viewModel;
+            if (item is null)
+                viewModel = new(new RedundantSet(), null);
+            else
+            {
+                using IServiceScope serviceScope = Services.CreateScope();
+                using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+                Guid id = item.Entity.Id;
+                RedundantSet fs = await dbContext.RedundantSets.FirstOrDefaultAsync(f => f.Id == id, statusListener.CancellationToken);
+                if (fs is null)
+                {
+                    await Dispatcher.ShowMessageBoxAsync("Item not found in database. Click OK to refresh listing.", "Security Exception", MessageBoxButton.OK, MessageBoxImage.Error, statusListener.CancellationToken);
+                    ReloadAsync(_currentRange);
+                    return null;
+                }
+                viewModel = new(fs, item.Entity);
+            }
+            return new DetailsPage(viewModel);
+        }
+
         protected override async Task<PageFunction<ItemEditResult>> GetEditPageAsync(ListItemViewModel item, [DisallowNull] IWindowsStatusListener statusListener)
         {
             EditViewModel viewModel;

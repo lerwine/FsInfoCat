@@ -135,6 +135,8 @@ namespace FsInfoCat.Desktop.LocalData.CrawlLogs
             StatusOptions.SelectedItem = FromFilterOptions(_currentOptions);
         }
 
+        protected override Task<PageFunction<ItemEditResult>> GetDetailPageAsync([DisallowNull] ListItemViewModel item, [DisallowNull] IWindowsStatusListener statusListener) => GetEditPageAsync(item, statusListener);
+
         protected async override Task<PageFunction<ItemEditResult>> GetEditPageAsync(ListItemViewModel item, [DisallowNull] IWindowsStatusListener statusListener)
         {
             EditViewModel viewModel;

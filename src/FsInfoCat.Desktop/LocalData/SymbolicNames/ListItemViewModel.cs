@@ -13,6 +13,31 @@ namespace FsInfoCat.Desktop.LocalData.SymbolicNames
 {
     public class ListItemViewModel : SymbolicNameRowViewModel<SymbolicNameListItem>, ILocalCrudEntityRowViewModel<SymbolicNameListItem>
     {
+        #region Open Command Property Members
+
+        /// <summary>
+        /// Occurs when the <see cref="Open"/> is invoked.
+        /// </summary>
+        public event EventHandler<Commands.CommandEventArgs> OpenCommand;
+
+        private static readonly DependencyPropertyKey OpenPropertyKey = DependencyPropertyBuilder<ListItemViewModel, Commands.RelayCommand>
+            .Register(nameof(Open))
+            .AsReadOnly();
+
+        /// <summary>
+        /// Identifies the <see cref="Open"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty OpenProperty = OpenPropertyKey.DependencyProperty;
+
+        public Commands.RelayCommand Open => (Commands.RelayCommand)GetValue(OpenProperty);
+
+        /// <summary>
+        /// Called when the Open event is raised by <see cref="Open" />.
+        /// </summary>
+        /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="Open" />.</param>
+        protected void RaiseOpenCommand(object parameter) => OpenCommand?.Invoke(this, new(parameter));
+
+        #endregion
         #region Edit Property Members
 
         /// <summary>
@@ -150,6 +175,7 @@ namespace FsInfoCat.Desktop.LocalData.SymbolicNames
 
         public ListItemViewModel([DisallowNull] SymbolicNameListItem entity) : base(entity)
         {
+            SetValue(OpenPropertyKey, new Commands.RelayCommand(RaiseOpenCommand));
             SetValue(EditPropertyKey, new Commands.RelayCommand(RaiseEditCommand));
             SetValue(DeletePropertyKey, new Commands.RelayCommand(RaiseDeleteCommand));
             SetValue(SynchronizeNowPropertyKey, new Commands.RelayCommand(RaiseSynchronizeNowCommand));

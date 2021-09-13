@@ -14,6 +14,13 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
 {
     public class DetailsViewModel : CrawlConfigurationDetailsViewModel<CrawlConfiguration, SubdirectoryListItemWithAncestorNames, SubdirectoryListItemViewModel, CrawlJobLogListItem, CrawlJobListItemViewModel>
     {
+        /// <summary>
+        /// Occurs when the <see cref="SaveChanges"/> is invoked.
+        /// </summary>
+        public event EventHandler<Commands.CommandEventArgs> ChangesSaved;
+
+        private void RaiseChangesSaved(object args) => ChangesSaved?.Invoke(this, new Commands.CommandEventArgs(args));
+
         #region AddNewCrawlJobLog Command Property Members
 
         private static readonly DependencyPropertyKey AddNewCrawlJobLogPropertyKey = DependencyProperty.RegisterReadOnly(nameof(AddNewCrawlJobLog), typeof(Commands.RelayCommand),

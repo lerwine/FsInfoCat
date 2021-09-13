@@ -155,36 +155,6 @@ namespace FsInfoCat.Desktop.LocalData.SummaryPropertySets
             LastSynchronizedOn = entity.LastSynchronizedOn;
         }
 
-        //private static async Task<SummaryPropertySet> EditItemAsync([DisallowNull] SummaryPropertiesListItem item, [DisallowNull] IWindowsStatusListener statusListener)
-        //{
-        //    using IServiceScope serviceScope = Services.CreateScope();
-        //    using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
-        //    Guid id = item.Id;
-        //    statusListener.SetMessage("Reading data");
-        //    return await dbContext.SummaryPropertySets.Include(e => e.Files).FirstOrDefaultAsync(e => e.Id == id, statusListener.CancellationToken);
-        //}
-
-        //public static Task EditItemAsync([DisallowNull] SummaryPropertiesListItem item, ReturnEventHandler<ItemEditResult> onReturn = null)
-        //{
-        //    if (item is null)
-        //        throw new ArgumentNullException(nameof(item));
-        //    IWindowsAsyncJobFactoryService jobFactory = Services.GetRequiredService<IWindowsAsyncJobFactoryService>();
-        //    return jobFactory.StartNew("Loading database record", "Opening database", item, EditItemAsync).Task.ContinueWith(task => Dispatcher.Invoke(() =>
-        //    {
-        //        SummaryPropertySet entity = task.Result;
-        //        EditViewModel viewModel = new(entity, false) { ListItem = item };
-        //        EditPage page = new(viewModel);
-        //        if (onReturn is not null)
-        //            page.Return += onReturn;
-        //        Services.ServiceProvider.GetRequiredService<IApplicationNavigation>().Navigate(page);
-        //    }));
-        //}
-
-        public static void AddNewItem(ReturnEventHandler<SummaryPropertySet> onReturn = null)
-        {
-            // TODO: Implement AddNewItem
-        }
-
         void INavigatedToNotifiable.OnNavigatedTo()
         {
             // TODO: Load option lists from database

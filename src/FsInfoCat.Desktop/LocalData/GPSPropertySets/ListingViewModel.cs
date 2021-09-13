@@ -116,6 +116,28 @@ namespace FsInfoCat.Desktop.LocalData.GPSPropertySets
 
         protected override bool EntityMatchesCurrentFilter([DisallowNull] GPSPropertiesListItem entity) => !_currentOptions.HasValue || (_currentOptions.Value ? entity.ExistingFileCount > 0L : entity.ExistingFileCount == 0L);
 
+        protected async override Task<PageFunction<ItemEditResult>> GetDetailPageAsync([DisallowNull] ListItemViewModel item, [DisallowNull] IWindowsStatusListener statusListener)
+        {
+            DetailsViewModel viewModel;
+            if (item is null)
+                viewModel = new(new GPSPropertySet(), null);
+            else
+            {
+                using IServiceScope serviceScope = Services.CreateScope();
+                using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+                Guid id = item.Entity.Id;
+                GPSPropertySet fs = await dbContext.GPSPropertySets.FirstOrDefaultAsync(f => f.Id == id, statusListener.CancellationToken);
+                if (fs is null)
+                {
+                    await Dispatcher.ShowMessageBoxAsync("Item not found in database. Click OK to refresh listing.", "Security Exception", MessageBoxButton.OK, MessageBoxImage.Error, statusListener.CancellationToken);
+                    ReloadAsync(_currentOptions);
+                    return null;
+                }
+                viewModel = new(fs, item.Entity);
+            }
+            return new DetailsPage(viewModel);
+        }
+
         protected override async Task<PageFunction<ItemEditResult>> GetEditPageAsync(ListItemViewModel item, [DisallowNull] IWindowsStatusListener statusListener)
         {
             EditViewModel viewModel;

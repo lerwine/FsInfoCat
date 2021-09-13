@@ -68,6 +68,8 @@ namespace FsInfoCat.Desktop.ViewModel
 
         protected abstract Task<PageFunction<TEditResult>> GetEditPageAsync(TItemViewModel item, [DisallowNull] IWindowsStatusListener statusListener);
 
+        protected abstract Task<PageFunction<TEditResult>> GetDetailPageAsync([DisallowNull] TItemViewModel item, [DisallowNull] IWindowsStatusListener statusListener);
+
         protected abstract bool ConfirmItemDelete([DisallowNull] TItemViewModel item, object parameter);
 
         protected abstract void OnReloadTaskCompleted(TFilterOptions options);
@@ -102,8 +104,12 @@ namespace FsInfoCat.Desktop.ViewModel
                         return;
                     if (task.IsFaulted)
                         OnDeleteTaskFaulted(task.Exception, item);
-                    else if (task.Result)
-                        _backingItems.Remove(item);
+                    else if (task.Result && _backingItems.Remove(item))
+                    {
+                        item.OpenCommand -= Item_OpenCommand;
+                        item.EditCommand -= Item_EditCommand;
+                        item.DeleteCommand -= Item_DeleteCommand;
+                    }
                 }));
             }
         }
@@ -145,6 +151,7 @@ namespace FsInfoCat.Desktop.ViewModel
             _backingItems.Clear();
             foreach (TItemViewModel item in removedItems)
             {
+                item.OpenCommand -= Item_OpenCommand;
                 item.EditCommand -= Item_EditCommand;
                 item.DeleteCommand -= Item_DeleteCommand;
             }
@@ -162,15 +169,32 @@ namespace FsInfoCat.Desktop.ViewModel
             if (!_backingItems.Any(i => ReferenceEquals(i, item)))
             {
                 _backingItems.Add(item);
+                item.OpenCommand += Item_OpenCommand;
                 item.EditCommand += Item_EditCommand;
                 item.DeleteCommand += Item_DeleteCommand;
+            }
+        }
+
+        private void Item_OpenCommand(object sender, Commands.CommandEventArgs e)
+        {
+            if (sender is TItemViewModel item)
+            {
+                IWindowsAsyncJobFactoryService jobFactory = Services.GetRequiredService<IWindowsAsyncJobFactoryService>();
+                jobFactory.StartNew("Loading database record", "Opening database", item, GetDetailPageAsync).Task.ContinueWith(task => OnGetEditPageComplete(task, item));
             }
         }
 
         protected virtual bool RemoveItem(TItemViewModel item)
         {
             VerifyAccess();
-            return item is not null && _backingItems.Remove(item);
+            if (item is not null && _backingItems.Remove(item))
+            {
+                item.OpenCommand -= Item_OpenCommand;
+                item.EditCommand -= Item_EditCommand;
+                item.DeleteCommand -= Item_DeleteCommand;
+                return true;
+            }
+            return false;
         }
 
         private void OnGetEditPageComplete(Task<PageFunction<TEditResult>> task, TItemViewModel item) => Dispatcher.Invoke(() =>
@@ -206,18 +230,39 @@ namespace FsInfoCat.Desktop.ViewModel
 
         private void Page_Return(object sender, ReturnEventArgs<TEditResult> e)
         {
+            TItemViewModel item;
             switch (e.Result.State)
             {
                 case EntityEditResultState.Added:
                     if (EntityMatchesCurrentFilter(e.Result.ItemEntity))
-                        _backingItems.Add(CreateItemViewModel(e.Result.ItemEntity));
+                    {
+                        item = CreateItemViewModel(e.Result.ItemEntity);
+                        _backingItems.Add(item);
+                        item.OpenCommand += Item_OpenCommand;
+                        item.EditCommand += Item_EditCommand;
+                        item.DeleteCommand += Item_DeleteCommand;
+                    }
                     break;
                 case EntityEditResultState.Modified:
                     if (!EntityMatchesCurrentFilter(e.Result.ItemEntity))
-                        _backingItems.Remove(Items.FirstOrDefault(i => ReferenceEquals(i.Entity, e.Result.ItemEntity)));
+                    {
+                        item = Items.FirstOrDefault(i => ReferenceEquals(i.Entity, e.Result.ItemEntity));
+                        if (_backingItems.Remove(item))
+                        {
+                            item.OpenCommand -= Item_OpenCommand;
+                            item.EditCommand -= Item_EditCommand;
+                            item.DeleteCommand -= Item_DeleteCommand;
+                        }
+                    }
                     break;
                 case EntityEditResultState.Deleted:
-                    _backingItems.Remove(Items.FirstOrDefault(i => ReferenceEquals(i.Entity, e.Result.ItemEntity)));
+                    item = Items.FirstOrDefault(i => ReferenceEquals(i.Entity, e.Result.ItemEntity));
+                    if (_backingItems.Remove(item))
+                    {
+                        item.OpenCommand -= Item_OpenCommand;
+                        item.EditCommand -= Item_EditCommand;
+                        item.DeleteCommand -= Item_DeleteCommand;
+                    }
                     break;
             }
         }
