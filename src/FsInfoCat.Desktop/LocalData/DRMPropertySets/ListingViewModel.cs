@@ -103,7 +103,7 @@ namespace FsInfoCat.Desktop.LocalData.DRMPropertySets
 
         protected override bool EntityMatchesCurrentFilter([DisallowNull] DRMPropertiesListItem entity) => !_currentOptions.HasValue || (_currentOptions.Value ? entity.ExistingFileCount > 0L : entity.ExistingFileCount == 0L);
 
-        protected override PageFunction<ItemEditResult> GetEditPage(DRMPropertySet args)
+        protected override async Task<PageFunction<ItemEditResult>> GetEditPageAsync(DRMPropertySet args, [DisallowNull] IWindowsStatusListener statusListener)
         {
             EditViewModel viewModel;
             if (args is null)
@@ -122,7 +122,7 @@ namespace FsInfoCat.Desktop.LocalData.DRMPropertySets
             return await dbContext.DRMPropertySets.Include(e => e.Files).FirstOrDefaultAsync(e => e.Id == id, statusListener.CancellationToken);
         }
 
-        protected override void OnEditTaskFaulted([DisallowNull] Exception exception, [DisallowNull] ListItemViewModel item)
+        protected override void OnEditTaskFaulted([DisallowNull] Exception exception, ListItemViewModel item)
         {
             UpdatePageTitle(_currentOptions);
             FilterOptions.Value = _currentOptions;

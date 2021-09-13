@@ -111,7 +111,7 @@ namespace FsInfoCat.Desktop.LocalData.SymbolicNames
 
         protected override bool EntityMatchesCurrentFilter([DisallowNull] SymbolicNameListItem entity) => !_currentStateFilterOption.HasValue || _currentStateFilterOption.Value != entity.IsInactive;
 
-        protected override PageFunction<ItemEditResult> GetEditPage(SymbolicName args)
+        protected override async Task<PageFunction<ItemEditResult>> GetEditPageAsync(SymbolicName args, [DisallowNull] IWindowsStatusListener statusListener)
         {
             EditViewModel viewModel;
             if (args is null)
@@ -130,7 +130,7 @@ namespace FsInfoCat.Desktop.LocalData.SymbolicNames
             return await dbContext.SymbolicNames.Include(e => e.FileSystem).FirstOrDefaultAsync(e => e.Id == id, statusListener.CancellationToken);
         }
 
-        protected override void OnEditTaskFaulted([DisallowNull] Exception exception, [DisallowNull] ListItemViewModel item)
+        protected override void OnEditTaskFaulted([DisallowNull] Exception exception, ListItemViewModel item)
         {
             UpdatePageTitle(_currentStateFilterOption);
             StateFilterOption.Value = _currentStateFilterOption;

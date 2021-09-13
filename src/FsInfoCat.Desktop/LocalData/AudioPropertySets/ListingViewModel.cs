@@ -122,7 +122,7 @@ namespace FsInfoCat.Desktop.LocalData.AudioPropertySets
             FilterOptions.Value = _currentOptions;
         }
 
-        protected override PageFunction<ItemEditResult> GetEditPage(AudioPropertySet args)
+        protected override async Task<PageFunction<ItemEditResult>> GetEditPageAsync(AudioPropertySet args, [DisallowNull] IWindowsStatusListener statusListener)
         {
             EditViewModel viewModel;
             if (args is null)
@@ -141,7 +141,7 @@ namespace FsInfoCat.Desktop.LocalData.AudioPropertySets
             return await dbContext.AudioPropertySets.Include(e => e.Files).FirstOrDefaultAsync(e => e.Id == id, statusListener.CancellationToken);
         }
 
-        protected override void OnEditTaskFaulted([DisallowNull] Exception exception, [DisallowNull] ListItemViewModel item)
+        protected override void OnEditTaskFaulted([DisallowNull] Exception exception, ListItemViewModel item)
         {
             UpdatePageTitle(_currentOptions);
             FilterOptions.Value = _currentOptions;

@@ -10,6 +10,23 @@ namespace FsInfoCat.Desktop
         public static CoerceValueCallback ToCoerceValueCallback<T>(this ICoersion<T> coersion) => (coersion is null) ? null :
             (DependencyObject d, object baseValue) => coersion.Coerce(baseValue);
 
+        public static DispatcherOperation<MessageBoxResult> ShowMessageBoxAsync(this Dispatcher dispatcher, string messageBoxText, string caption, MessageBoxButton button, MessageBoxImage icon, MessageBoxResult defaultResult,
+            MessageBoxOptions options, CancellationToken cancellationToken, DispatcherPriority priority = DispatcherPriority.Background) => dispatcher.InvokeAsync(() => MessageBox.Show(Application.Current.MainWindow,
+                messageBoxText, caption, button, icon, defaultResult, options), priority, cancellationToken);
+
+        public static DispatcherOperation<MessageBoxResult> ShowMessageBoxAsync(this Dispatcher dispatcher, string messageBoxText, string caption, MessageBoxButton button, MessageBoxImage icon, MessageBoxResult defaultResult,
+            CancellationToken cancellationToken, DispatcherPriority priority = DispatcherPriority.Background) => dispatcher.InvokeAsync(() => MessageBox.Show(Application.Current.MainWindow,
+                messageBoxText, caption, button, icon, defaultResult), priority, cancellationToken);
+
+        public static DispatcherOperation<MessageBoxResult> ShowMessageBoxAsync(this Dispatcher dispatcher, string messageBoxText, string caption, MessageBoxButton button, MessageBoxImage icon, CancellationToken cancellationToken,
+            DispatcherPriority priority = DispatcherPriority.Background) => dispatcher.InvokeAsync(() => MessageBox.Show(Application.Current.MainWindow, messageBoxText, caption, button, icon), priority, cancellationToken);
+
+        public static DispatcherOperation<MessageBoxResult> ShowMessageBoxAsync(this Dispatcher dispatcher, string messageBoxText, string caption, MessageBoxButton button, CancellationToken cancellationToken,
+            DispatcherPriority priority = DispatcherPriority.Background) => dispatcher.InvokeAsync(() => MessageBox.Show(Application.Current.MainWindow, messageBoxText, caption, button), priority, cancellationToken);
+
+        public static DispatcherOperation<MessageBoxResult> ShowMessageBoxAsync(this Dispatcher dispatcher, string messageBoxText, string caption, CancellationToken cancellationToken,
+            DispatcherPriority priority = DispatcherPriority.Background) => dispatcher.InvokeAsync(() => MessageBox.Show(Application.Current.MainWindow, messageBoxText, caption, MessageBoxButton.OK), priority, cancellationToken);
+
         public static void CheckInvoke<TArg1, TArg2, TArg3>(this Dispatcher dispatcher, TArg1 arg1, TArg2 arg2, TArg3 arg3, Action<TArg1, TArg2, TArg3> callback, DispatcherPriority priority = DispatcherPriority.Background)
         {
             if (dispatcher.CheckAccess())

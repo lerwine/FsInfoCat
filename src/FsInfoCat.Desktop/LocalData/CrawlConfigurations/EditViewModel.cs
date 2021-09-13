@@ -80,7 +80,6 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
 
         private static readonly DependencyPropertyKey ListItemPropertyKey = DependencyPropertyBuilder<EditViewModel, CrawlConfigListItem>
             .Register(nameof(ListItem))
-            .DefaultValue(null)
             .AsReadOnly();
 
         /// <summary>
@@ -154,19 +153,14 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
 
         #endregion
 
-        public EditViewModel([DisallowNull] CrawlConfiguration entity, bool isNew) : base(entity)
+        public EditViewModel([DisallowNull] CrawlConfiguration tableEntity, CrawlConfigListItem itemEntity) : base(tableEntity)
         {
             SetValue(SaveChangesPropertyKey, new Commands.RelayCommand(OnSaveChangesCommand));
             SetValue(DiscardChangesPropertyKey, new Commands.RelayCommand(OnDiscardChangesCommand));
             SetValue(BrowseNewRootFolderPropertyKey, new Commands.RelayCommand(OnBrowseNewRootFolder));
-            IsNew = isNew;
-            UpstreamId = entity.UpstreamId;
-            LastSynchronizedOn = entity.LastSynchronizedOn;
-        }
-
-        public static void AddNewItem(ReturnEventHandler<CrawlConfiguration> onReturn = null)
-        {
-            // TODO: Implement AddNewItem
+            IsNew = (ListItem = itemEntity) is null;
+            UpstreamId = tableEntity.UpstreamId;
+            LastSynchronizedOn = tableEntity.LastSynchronizedOn;
         }
 
         private void OnBrowseNewRootFolder(object parameter)
@@ -174,31 +168,14 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
             // TODO: Implement OnBrowseNewRootFolder Logic
         }
 
-        protected override void OnRefreshCrawlJobLogsCommand(object parameter)
-        {
-            // TODO: Implement OnRefreshCrawlJobLogsCommand(parameter)
-            throw new NotImplementedException();
-        }
-
-        internal static void NavigateToEditPage(CrawlConfigListItem item, CrawlConfiguration entity, ReturnEventHandler<ItemEditResult> onReturn = null)
-        {
-            EditViewModel viewModel = new(entity, false) { ListItem = item };
-            EditPage page = new(viewModel);
-            if (onReturn is not null)
-                page.Return += onReturn;
-            Services.ServiceProvider.GetRequiredService<IApplicationNavigation>().Navigate(page);
-        }
-
         protected override void OnAddNewCrawlJobLogCommand(object parameter)
         {
             // TODO: Implement OnAddNewCrawlJobLogCommand(parameter)
-            throw new NotImplementedException();
         }
 
         protected override void OnCrawlJobLogEditCommand([DisallowNull] CrawlJobListItemViewModel item, object parameter)
         {
             // TODO: Implement GetQueryableCrawlJobLogListing(CrawlJobListItemViewModel, parameter)
-            throw new NotImplementedException();
         }
 
         protected override bool ConfirmCrawlJobLogDelete([DisallowNull] CrawlJobListItemViewModel item, object parameter)
@@ -209,15 +186,12 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
 
         protected override IQueryable<CrawlJobLogListItem> GetQueryableCrawlJobLogListing([DisallowNull] LocalDbContext dbContext, [DisallowNull] IWindowsStatusListener statusListener)
         {
-            // TODO: Implement GetQueryableCrawlJobLogListing(LocalDbContext, IWindowsStatusListener)
-            throw new NotImplementedException();
+            Guid id = Entity.Id;
+            statusListener.SetMessage("Reading from database");
+            return dbContext.CrawlJobListing.Where(j => j.ConfigurationId == id);
         }
 
-        protected override CrawlJobListItemViewModel CreateCrawlJobLogViewModel([DisallowNull] CrawlJobLogListItem entity)
-        {
-            // TODO: Implement CreateCrawlJobLogViewModel(CrawlJobLogListItem)
-            throw new NotImplementedException();
-        }
+        protected override CrawlJobListItemViewModel CreateCrawlJobLogViewModel([DisallowNull] CrawlJobLogListItem entity) => new(entity);
 
         protected override Task<int> DeleteCrawlJobLogFromDbContextAsync([DisallowNull] CrawlJobLogListItem entity, [DisallowNull] LocalDbContext dbContext, [DisallowNull] IWindowsStatusListener statusListener)
         {
@@ -227,14 +201,23 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
 
         void INavigatedToNotifiable.OnNavigatedTo()
         {
-            // TODO: Load option lists from database
-            throw new NotImplementedException();
+            if (!IsNew)
+                ReloadAsync();
         }
 
         void INavigatingFromNotifiable.OnNavigatingFrom(CancelEventArgs e)
         {
             // TODO: Prompt to lose changes if not saved
-            throw new NotImplementedException();
+        }
+
+        protected override void OnReloadTaskFaulted(Exception exception)
+        {
+            _ = MessageBox.Show(Application.Current.MainWindow,
+                ((exception is AsyncOperationFailureException aExc) ? aExc.UserMessage.NullIfWhiteSpace() :
+                    (exception as AggregateException)?.InnerExceptions.OfType<AsyncOperationFailureException>().Select(e => e.UserMessage)
+                    .Where(m => !string.IsNullOrWhiteSpace(m)).FirstOrDefault()) ??
+                    "There was an unexpected error while loading items from the databse.\n\nSee logs for further information",
+                "Database Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
 }

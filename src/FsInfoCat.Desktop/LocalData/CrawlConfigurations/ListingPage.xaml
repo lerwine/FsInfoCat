@@ -31,7 +31,7 @@
                 <DataGridTextColumn Binding="{Binding NextScheduledStart, Mode=OneWay}" Header="Next Scheduled"/>
                 <DataGridTextColumn Binding="{Binding StatusValue, Converter={StaticResource BooleanToStatusConverter}}" MinWidth="100">
                     <DataGridTextColumn.Header>
-                        <StackPanel Orientation="Horizontal">
+                        <StackPanel Orientation="Horizontal" DataContext="{DynamicResource ViewModel}">
                             <Label Content="Status"/>
                             <Button Style="{DynamicResource AddNewButton}" Margin="{DynamicResource DefaultSpacingLeft}" Command="{Binding AddNewItem, Mode=OneWay}"/>
                             <Button Style="{DynamicResource FilterButton}" Margin="{DynamicResource DefaultSpacingLeft}" Command="{Binding ShowFilterOptions, Mode=OneWay}"/>

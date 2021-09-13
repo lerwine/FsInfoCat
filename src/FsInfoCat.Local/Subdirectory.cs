@@ -10,6 +10,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Security;
 using System.Threading;
 using System.Threading.Tasks;
@@ -154,6 +155,19 @@ namespace FsInfoCat.Local
             _crawlConfiguration = AddChangeTracker<CrawlConfiguration>(nameof(CrawlConfiguration), null);
         }
 
+        /// <summary>
+        /// Asynchronously calculates the full path name of the current subdirectory.
+        /// </summary>
+        /// <param name="dbContext">The database context.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"><paramref name="dbContext"/> is <see langword="null"/>.</exception>
+        /// <exception cref="InvalidOperationException"><see cref="State"/> is either:
+        /// <list type="bullet">
+        ///     <item><see cref="EntityState.Deleted"/></item>
+        ///     <item><see cref="State"/> is <see cref="EntityState.Added"/> or <see cref="EntityState.Detached"/> and <see cref="ParentId"/> is <see langword="null"/></item>
+        ///     <item>or <see cref="ParentId"/> and <see cref="VolumeId"/> are both <see langword="null"/></item>
+        /// </list></exception>
         public async Task<string> GetFullNameAsync([DisallowNull] LocalDbContext dbContext, CancellationToken cancellationToken)
         {
             EntityEntry<Subdirectory> entry = dbContext.Entry(this);
@@ -194,8 +208,14 @@ namespace FsInfoCat.Local
             return Path.Combine(await parent.GetFullNameAsync(dbContext, cancellationToken), Name);
         }
 
-        public static Task<Subdirectory> FindByFullNameAsync(string path, CancellationToken cancellationToken, Action<LocalDbContext, Subdirectory,
-            CancellationToken> onMatchSuccess = null)
+        /// <summary>
+        /// Asynchouusly finds the <see cref="Subdirectory"/> that matches the specified path.
+        /// </summary>
+        /// <param name="path">The file system path.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <param name="onMatchSuccess">The optional callback to invoke if a match is found.</param>
+        /// <returns>A <see cref="Task{Subdirectory}"/> that returns the matching <see cref="Subdirectory"/> or <see langword="null"/> if not match was found.</returns>
+        public static Task<Subdirectory> FindByFullNameAsync(string path, CancellationToken cancellationToken, Action<LocalDbContext, Subdirectory, CancellationToken> onMatchSuccess = null)
         {
             cancellationToken.ThrowIfCancellationRequested();
             if (string.IsNullOrEmpty(path))
@@ -203,6 +223,14 @@ namespace FsInfoCat.Local
             return FindByFullNameAsync(null, path, cancellationToken, onMatchSuccess);
         }
 
+        /// <summary>
+        /// Asynchouusly finds the <see cref="Subdirectory"/> that matches the specified path.
+        /// </summary>
+        /// <param name="path">The file system path.</param>
+        /// <param name="dbContext">The database context.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>A <see cref="Task{Subdirectory}"/> that returns the matching <see cref="Subdirectory"/> or <see langword="null"/> if not match was found.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="dbContext"/> is <see langword="null"/>.</exception>
         public static Task<Subdirectory> FindByFullNameAsync(string path, [DisallowNull] LocalDbContext dbContext, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
@@ -213,8 +241,16 @@ namespace FsInfoCat.Local
             return FindByFullNameAsync(dbContext, path, cancellationToken);
         }
 
+        /// <summary>
+        /// Asynchouusly finds the <see cref="Subdirectory"/> that matches the specified path.
+        /// </summary>
+        /// <param name="dbContext">The database context or <see langword="null"/> to use a new database context.</param>
+        /// <param name="path">The file system path.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <param name="onMatchSuccess">The optional callback to invoke if a match is found or <see langword="null"/>.</param>
+        /// <returns>A <see cref="Task{Subdirectory}"/> that returns the matching <see cref="Subdirectory"/> or <see langword="null"/> if not match was found.</returns>
         private static async Task<Subdirectory> FindByFullNameAsync(LocalDbContext dbContext, string path, CancellationToken cancellationToken,
-            Action<LocalDbContext, Subdirectory, CancellationToken> onMatchSuccess = null)
+            Action<LocalDbContext, Subdirectory, CancellationToken> onMatchSuccess = null, Func<DbSet<Subdirectory>, IQueryable<Subdirectory>> toQueryable = null)
         {
             cancellationToken.ThrowIfCancellationRequested();
             if (!Path.IsPathFullyQualified(path))
@@ -225,46 +261,62 @@ namespace FsInfoCat.Local
             if (dbContext is null)
             {
                 using LocalDbContext context = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
-                result = await FindByFullNameAsync(context, fileSystemDetailService, path, cancellationToken);
+                result = await FindByFullNameAsync((toQueryable is null) ? context.Subdirectories : toQueryable(context.Subdirectories), fileSystemDetailService, path, cancellationToken);
                 if (result is not null)
                     onMatchSuccess?.Invoke(context, result, cancellationToken);
             }
-            else if ((result = await FindByFullNameAsync(dbContext, fileSystemDetailService, path, cancellationToken)) is not null)
+            else if ((result = await FindByFullNameAsync((toQueryable is null) ? dbContext.Subdirectories : toQueryable(dbContext.Subdirectories), fileSystemDetailService, path, cancellationToken)) is not null)
                 onMatchSuccess?.Invoke(dbContext, result, cancellationToken);
             return result;
         }
 
-        private static async Task<Subdirectory> FindByFullNameAsync(LocalDbContext dbContext, IFileSystemDetailService fileSystemDetailService, string path,
-            CancellationToken cancellationToken)
+        private static Task<Subdirectory> FindByFullNameAsync<TProperty>(LocalDbContext dbContext, string path, CancellationToken cancellationToken, Func<DbSet<Subdirectory>, IQueryable<Subdirectory>> toQueryable) =>
+            FindByFullNameAsync(dbContext, path, cancellationToken, null, toQueryable);
+
+        //private static async Task<Subdirectory> FindByFullNameAsync([DisallowNull] LocalDbContext dbContext, IFileSystemDetailService fileSystemDetailService, string path, CancellationToken cancellationToken)
+        //{
+        //    cancellationToken.ThrowIfCancellationRequested();
+        //    string directoryName = ExtensionMethods.SplitPath(path, out string leaf);
+        //    Subdirectory subdirectory;
+        //    if (string.IsNullOrEmpty(leaf))
+        //    {
+        //        if (fileSystemDetailService is not null)
+        //        {
+        //            ILogicalDiskInfo logicalDisk = (await fileSystemDetailService.GetLogicalDisksAsync(cancellationToken))
+        //                .FirstOrDefault(d => string.Equals(d.Name, path, StringComparison.InvariantCultureIgnoreCase));
+        //            if (logicalDisk is not null && logicalDisk.DriveType == DriveType.Network && !string.IsNullOrEmpty(logicalDisk.ProviderName))
+        //                return await FindByFullNameAsync(dbContext, null, logicalDisk.ProviderName, cancellationToken);
+        //        }
+        //        return await (from d in dbContext.Subdirectories.Include(d => d.Parent) where d.VolumeId != null && d.Name == path select d).FirstOrDefaultAsync(cancellationToken);
+        //    }
+        //    subdirectory = await FindByFullNameAsync(dbContext, fileSystemDetailService, directoryName, cancellationToken);
+        //    if (subdirectory is null)
+        //        return null;
+        //    Guid id = subdirectory.Id;
+        //    return await (from d in dbContext.Subdirectories where d.ParentId == id && d.Name == leaf select d).FirstOrDefaultAsync(cancellationToken);
+        //}
+
+        private static async Task<Subdirectory> FindByFullNameAsync([DisallowNull] IQueryable<Subdirectory> subdirectories, IFileSystemDetailService fileSystemDetailService, string path, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            string leaf = Path.GetFileName(path);
-            string directoryName = Path.GetDirectoryName(path);
-            while (string.IsNullOrEmpty(leaf))
-            {
-                if (string.IsNullOrEmpty(directoryName))
-                    break;
-                path = directoryName;
-                leaf = Path.GetFileName(path);
-                directoryName = Path.GetDirectoryName(path);
-            }
+            string directoryName = ExtensionMethods.SplitPath(path, out string leaf);
             Subdirectory subdirectory;
-            if (string.IsNullOrEmpty(directoryName) || string.IsNullOrEmpty(leaf))
+            if (string.IsNullOrEmpty(leaf))
             {
                 if (fileSystemDetailService is not null)
                 {
                     ILogicalDiskInfo logicalDisk = (await fileSystemDetailService.GetLogicalDisksAsync(cancellationToken))
                         .FirstOrDefault(d => string.Equals(d.Name, path, StringComparison.InvariantCultureIgnoreCase));
                     if (logicalDisk is not null && logicalDisk.DriveType == DriveType.Network && !string.IsNullOrEmpty(logicalDisk.ProviderName))
-                        return await FindByFullNameAsync(dbContext, null, logicalDisk.ProviderName, cancellationToken);
+                        return await FindByFullNameAsync(subdirectories, null, logicalDisk.ProviderName, cancellationToken);
                 }
-                return await (from d in dbContext.Subdirectories where d.VolumeId != null && d.Name == path select d).FirstOrDefaultAsync(cancellationToken);
+                return await subdirectories.Where(d => d.VolumeId != null && d.Name == path).FirstOrDefaultAsync(cancellationToken);
             }
-            subdirectory = await FindByFullNameAsync(dbContext, fileSystemDetailService, directoryName, cancellationToken);
+            subdirectory = await FindByFullNameAsync(subdirectories, fileSystemDetailService, directoryName, cancellationToken);
             if (subdirectory is null)
                 return null;
             Guid id = subdirectory.Id;
-            return await (from d in dbContext.Subdirectories where d.ParentId == id && d.Name == leaf select d).FirstOrDefaultAsync(cancellationToken);
+            return await subdirectories.Where(d => d.ParentId == id && d.Name == leaf).FirstOrDefaultAsync(cancellationToken);
         }
 
         internal static async Task<int> DeleteAsync([DisallowNull] Subdirectory target, [DisallowNull] LocalDbContext dbContext, [DisallowNull] IStatusListener statusListener,

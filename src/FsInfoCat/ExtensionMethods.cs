@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
@@ -17,6 +18,34 @@ namespace FsInfoCat
 
         public static readonly Regex BackslashEscapableLBPattern = new(@"(?<l>[""\\])|(?<n>\r\n?|\n)|[\0\a\b\f\t\v]|(\p{C}|(?! )(\s|\p{Z}))(?<x>[\da-fA-F])?",
             RegexOptions.Compiled);
+
+        public static string SplitPath(string path, out string leaf)
+        {
+            if (string.IsNullOrEmpty(path))
+            {
+                leaf = "";
+                return "";
+            }
+            string directoryName = Path.GetDirectoryName(path);
+            if (string.IsNullOrEmpty(directoryName))
+            {
+                leaf = "";
+                return path;
+            }
+            leaf = Path.GetFileName(path);
+            while (string.IsNullOrEmpty(leaf))
+            {
+                path = directoryName;
+                leaf = Path.GetFileName(path);
+                directoryName = Path.GetDirectoryName(path);
+                if (string.IsNullOrEmpty(directoryName))
+                {
+                    leaf = "";
+                    return path;
+                }
+            }
+            return directoryName;
+        }
 
         public static T DefaultIf<T>(T inputValue, [DisallowNull] Func<T, bool> predicate, T defaultValue)
         {

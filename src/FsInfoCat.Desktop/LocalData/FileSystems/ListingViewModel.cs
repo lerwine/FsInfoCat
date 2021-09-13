@@ -115,7 +115,7 @@ namespace FsInfoCat.Desktop.LocalData.FileSystems
 
         protected override bool EntityMatchesCurrentFilter([DisallowNull] FileSystemListItem entity) => !_currentListingOption.HasValue || _currentListingOption.Value != entity.IsInactive;
 
-        protected override PageFunction<ItemEditResult> GetEditPage(FileSystem args)
+        protected override async Task<PageFunction<ItemEditResult>> GetEditPageAsync(FileSystem args, [DisallowNull] IWindowsStatusListener statusListener)
         {
             EditViewModel viewModel;
             if (args is null)
@@ -144,7 +144,7 @@ namespace FsInfoCat.Desktop.LocalData.FileSystems
                 "Database Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
-        protected override void OnEditTaskFaulted([DisallowNull] Exception exception, [DisallowNull] ListItemViewModel item)
+        protected override void OnEditTaskFaulted([DisallowNull] Exception exception, ListItemViewModel item)
         {
             UpdatePageTitle(_currentListingOption);
             ListingOption.Value = _currentListingOption;

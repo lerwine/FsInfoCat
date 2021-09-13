@@ -115,7 +115,7 @@ namespace FsInfoCat.Desktop.LocalData.RecordedTVPropertySets
 
         protected override bool EntityMatchesCurrentFilter([DisallowNull] RecordedTVPropertiesListItem entity) => !_currentOptions.HasValue || (_currentOptions.Value ? entity.ExistingFileCount > 0L : entity.ExistingFileCount == 0L);
 
-        protected override PageFunction<ItemEditResult> GetEditPage(RecordedTVPropertySet args)
+        protected override async Task<PageFunction<ItemEditResult>> GetEditPageAsync(RecordedTVPropertySet args, [DisallowNull] IWindowsStatusListener statusListener)
         {
             EditViewModel viewModel;
             if (args is null)
@@ -134,7 +134,7 @@ namespace FsInfoCat.Desktop.LocalData.RecordedTVPropertySets
             return await dbContext.RecordedTVPropertySets.Include(e => e.Files).FirstOrDefaultAsync(e => e.Id == id, statusListener.CancellationToken);
         }
 
-        protected override void OnEditTaskFaulted([DisallowNull] Exception exception, [DisallowNull] ListItemViewModel item)
+        protected override void OnEditTaskFaulted([DisallowNull] Exception exception, ListItemViewModel item)
         {
             UpdatePageTitle(_currentOptions);
             FilterOptions.Value = _currentOptions;

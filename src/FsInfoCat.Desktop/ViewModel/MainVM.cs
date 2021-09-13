@@ -418,7 +418,6 @@ namespace FsInfoCat.Desktop.ViewModel
             string.Format(FsInfoCat.Properties.Resources.FormatDisplayName_FSInfoCatTitle, newValue) : FsInfoCat.Properties.Resources.DisplayName_FSInfoCat;
 
         #endregion
-
         #region NavigatedContent Property Members
 
         /// <summary>
@@ -461,7 +460,7 @@ namespace FsInfoCat.Desktop.ViewModel
             if (newValue is FrameworkElement newContent)
             {
                 if (newContent is Page page)
-                    BindingOperations.SetBinding(this, Page.TitleProperty, new Binding(nameof(Page.TitleProperty)) { Source = page }).UpdateTarget();
+                    BindingOperations.SetBinding(this, PageTitleProperty, new Binding(nameof(Page.Title)) { Source = page }).UpdateTarget();
                 else
                     PageTitle = "";
                 if (newContent.DataContext is INavigatedToNotifiable navigatedTo)

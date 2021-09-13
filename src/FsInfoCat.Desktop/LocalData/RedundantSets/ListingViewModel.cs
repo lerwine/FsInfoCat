@@ -151,7 +151,7 @@ namespace FsInfoCat.Desktop.LocalData.RedundantSets
             UpdatePageTitle(_currentRange);
         }
 
-        protected override PageFunction<ItemEditResult> GetEditPage(RedundantSet args)
+        protected override async Task<PageFunction<ItemEditResult>> GetEditPageAsync(RedundantSet args, [DisallowNull] IWindowsStatusListener statusListener)
         {
             EditViewModel viewModel;
             if (args is null)
@@ -170,7 +170,7 @@ namespace FsInfoCat.Desktop.LocalData.RedundantSets
             return await dbContext.RedundantSets.FirstOrDefaultAsync(e => e.Id == id, statusListener.CancellationToken);
         }
 
-        protected override void OnEditTaskFaulted([DisallowNull] Exception exception, [DisallowNull] ListItemViewModel item)
+        protected override void OnEditTaskFaulted([DisallowNull] Exception exception, ListItemViewModel item)
         {
             UpdatePageTitle(_currentRange);
             MinimumRange.DenominatedValue = _currentRange.MinRange;

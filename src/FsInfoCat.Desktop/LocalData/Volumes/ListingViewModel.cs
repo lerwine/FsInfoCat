@@ -164,7 +164,7 @@ namespace FsInfoCat.Desktop.LocalData.Volumes
             StatusFilterOption.SelectedItem = FromListingOptions(_currentOptions);
         }
 
-        protected override PageFunction<ItemEditResult> GetEditPage(Volume args)
+        protected override async Task<PageFunction<ItemEditResult>> GetEditPageAsync(Volume args, [DisallowNull] IWindowsStatusListener statusListener)
         {
             EditViewModel viewModel;
             if (args is null)
@@ -183,7 +183,7 @@ namespace FsInfoCat.Desktop.LocalData.Volumes
             return await dbContext.Volumes.Include(e => e.FileSystem).Include(e => e.RootDirectory).FirstOrDefaultAsync(e => e.Id == id, statusListener.CancellationToken);
         }
 
-        protected override void OnEditTaskFaulted([DisallowNull] Exception exception, [DisallowNull] ListItemViewModel item)
+        protected override void OnEditTaskFaulted([DisallowNull] Exception exception, ListItemViewModel item)
         {
             UpdatePageTitle(_currentOptions);
             StatusFilterOption.SelectedItem = FromListingOptions(_currentOptions);

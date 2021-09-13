@@ -49,9 +49,8 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
             throw new NotImplementedException();
         }
 
-        protected override void OnRefreshCrawlJobLogsCommand(object parameter)
+        protected override void OnReloadTaskFaulted(Exception exception)
         {
-            // TODO: Implement OnRefreshCrawlJobLogsCommand(parameter)
             throw new NotImplementedException();
         }
     }

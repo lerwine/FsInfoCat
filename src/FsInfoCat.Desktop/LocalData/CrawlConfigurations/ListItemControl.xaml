@@ -42,7 +42,7 @@
                             <ColumnDefinition/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
-                        <TextBox x:Name="pathTextBox" Margin="{DynamicResource DefaultSpacingLeft}" ToolTip="The path of the starting subdirectory for the current crawl configuration." Style="{DynamicResource ReadOnlyValueTextBox}" Text="{Binding RootPath, Mode=OneWay}"/>
+                        <TextBox x:Name="pathTextBox" Margin="{DynamicResource DefaultSpacingLeft}" ToolTip="The path of the starting subdirectory for the current crawl configuration." Style="{DynamicResource ReadOnlyValueTextBox}" Text="{Binding Path, Mode=OneWay}"/>
                         <Button Grid.Column="1" ToolTip="Open the database record for the starting subdirectory of the current crawl configuration." Style="{DynamicResource OpenButton}" Margin="{DynamicResource DefaultSpacingRight}" Command="{Binding OpenRootSubdirectory, Mode=OneWay}"/>
                     </Grid>
                     <WrapPanel>
@@ -60,7 +60,7 @@
                         </StackPanel>
                         <StackPanel>
                             <Label Content="File System" Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="The type of file system that is used by the target volume." Target="{Binding ElementName=fileSystemTextBox, Mode=OneWay}" FontWeight="Bold"/>
-                            <TextBox x:Name="fileSystemTextBox" Margin="{DynamicResource DefaultSpacingLeftRight}" ToolTip="The type of file system that is used by the target volume." Style="{DynamicResource ReadOnlyValueTextBox}" Text="{Binding FileSystemDetailText, Mode=OneWay}"/>
+                            <TextBox x:Name="fileSystemTextBox" Margin="{DynamicResource DefaultSpacingLeftRight}" ToolTip="The type of file system that is used by the target volume." Style="{DynamicResource ReadOnlyValueTextBox}" Text="{Binding FileSystemDisplayName, Mode=OneWay}"/>
                         </StackPanel>
                     </WrapPanel>
                 </StackPanel>
