@@ -145,13 +145,9 @@ namespace FsInfoCat.Desktop.ViewModel
             return removedItems;
         }
 
-        protected abstract void OnAddNewCrawlJobLogCommand(object parameter);
+        //protected abstract void OnAddNewCrawlJobLogCommand(object parameter);
 
-        private void OnEditTaskFaulted(AggregateException exception, TCrawlJobLogItem item)
-        {
-            throw new NotImplementedException();
-        }
-        protected abstract bool ConfirmCrawlJobLogDelete([DisallowNull] TCrawlJobLogItem item, object parameter);
+        //protected abstract bool ConfirmCrawlJobLogDelete([DisallowNull] TCrawlJobLogItem item, object parameter);
 
         protected abstract IQueryable<TCrawlJobLogEntity> GetQueryableCrawlJobLogListing([DisallowNull] LocalDbContext dbContext, [DisallowNull] IWindowsStatusListener statusListener);
 

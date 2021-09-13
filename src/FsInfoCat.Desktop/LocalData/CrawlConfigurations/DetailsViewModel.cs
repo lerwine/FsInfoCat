@@ -80,7 +80,7 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
             LastSynchronizedOn = entity.LastSynchronizedOn;
         }
 
-        protected override bool ConfirmCrawlJobLogDelete([DisallowNull] CrawlJobListItemViewModel item, object parameter)
+        private bool ConfirmCrawlJobLogDelete([DisallowNull] CrawlJobListItemViewModel item, object parameter)
         {
             // TODO: Implement ConfirmCrawlJobLogDelete(CrawlJobListItemViewModel, object)
             throw new NotImplementedException();
@@ -101,7 +101,7 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
             return dbContext.CrawlJobListing.Where(j => j.ConfigurationId == id);
         }
 
-        protected override void OnAddNewCrawlJobLogCommand(object parameter)
+        private void OnAddNewCrawlJobLogCommand(object parameter)
         {
             IWindowsAsyncJobFactoryService jobFactory = Services.GetRequiredService<IWindowsAsyncJobFactoryService>();
             jobFactory.StartNew("Loading database record", "Opening database", (CrawlJobListItemViewModel)null, GetEditPageAsync).Task.ContinueWith(task => OnGetEditPageComplete(task, null));
