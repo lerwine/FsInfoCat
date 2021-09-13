@@ -1052,6 +1052,42 @@ END]]>
         <Text Message="Dropping view 'vSymbolicNameListing'">
             <![CDATA[DROP VIEW IF EXISTS "vSymbolicNameListing"]]>
         </Text>
+        <Text Message="Dropping view 'vSummaryPropertiesListing'">
+            <![CDATA[DROP VIEW IF EXISTS "vSummaryPropertiesListing"]]>
+        </Text>
+        <Text Message="Dropping view 'vDocumentPropertiesListing'">
+            <![CDATA[DROP VIEW IF EXISTS "vDocumentPropertiesListing"]]>
+        </Text>
+        <Text Message="Dropping view 'vAudioPropertiesListing'">
+            <![CDATA[DROP VIEW IF EXISTS "vAudioPropertiesListing"]]>
+        </Text>
+        <Text Message="Dropping view 'vDRMPropertiesListing'">
+            <![CDATA[DROP VIEW IF EXISTS "vDRMPropertiesListing"]]>
+        </Text>
+        <Text Message="Dropping view 'vGPSPropertiesListing'">
+            <![CDATA[DROP VIEW IF EXISTS "vGPSPropertiesListing"]]>
+        </Text>
+        <Text Message="Dropping view 'vImagePropertiesListing'">
+            <![CDATA[DROP VIEW IF EXISTS "vImagePropertiesListing"]]>
+        </Text>
+        <Text Message="Dropping view 'vMediaPropertiesListing'">
+            <![CDATA[DROP VIEW IF EXISTS "vMediaPropertiesListing"]]>
+        </Text>
+        <Text Message="Dropping view 'vMusicPropertiesListing'">
+            <![CDATA[DROP VIEW IF EXISTS "vMusicPropertiesListing"]]>
+        </Text>
+        <Text Message="Dropping view 'vPhotoPropertiesListing'">
+            <![CDATA[DROP VIEW IF EXISTS "vPhotoPropertiesListing"]]>
+        </Text>
+        <Text Message="Dropping view 'vRecordedTVPropertiesListing'">
+            <![CDATA[DROP VIEW IF EXISTS "vRecordedTVPropertiesListing"]]>
+        </Text>
+        <Text Message="Dropping view 'vVideoPropertiesListing'">
+            <![CDATA[DROP VIEW IF EXISTS "vVideoPropertiesListing"]]>
+        </Text>
+        <Text Message="Dropping view 'vCrawlJobListing'">
+            <![CDATA[DROP VIEW IF EXISTS "vCrawlJobListing"]]>
+        </Text>
         <Text Message="Dropping table 'SharedFileTags'">
             <![CDATA[DROP VIEW IF EXISTS SharedFileTags]]>
         </Text>

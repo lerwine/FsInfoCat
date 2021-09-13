@@ -24,6 +24,7 @@ DROP VIEW IF EXISTS "vMusicPropertiesListing";
 DROP VIEW IF EXISTS "vPhotoPropertiesListing";
 DROP VIEW IF EXISTS "vRecordedTVPropertiesListing";
 DROP VIEW IF EXISTS "vVideoPropertiesListing";
+DROP VIEW IF EXISTS "vCrawlJobListing";
 DROP TABLE IF EXISTS "Comparisons";
 DROP TABLE IF EXISTS "SharedVolumeTags";
 DROP TABLE IF EXISTS "SharedSubdirectoryTags";

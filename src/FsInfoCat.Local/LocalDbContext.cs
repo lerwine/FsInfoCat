@@ -226,6 +226,7 @@ namespace FsInfoCat.Local
                 .Entity<SubdirectoryListItemWithAncestorNames>(SubdirectoryListItemWithAncestorNames.OnBuildEntity)
                 .Entity<SubdirectoryAncestorNames>(Local.SubdirectoryAncestorNames.OnBuildEntity)
                 .Entity<CrawlConfigListItem>(CrawlConfigListItem.OnBuildEntity)
+                .Entity<CrawlJobLogListItem>(CrawlJobLogListItem.OnBuildEntity)
                 .Entity<FileWithAncestorNames>(FileWithAncestorNames.OnBuildEntity)
                 .Entity<FileWithBinaryProperties>(FileWithBinaryProperties.OnBuildEntity)
                 .Entity<FileWithBinaryPropertiesAndAncestorNames>(FileWithBinaryPropertiesAndAncestorNames.OnBuildEntity)
