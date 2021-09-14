@@ -14,17 +14,38 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
         </Grid.ColumnDefinitions>
+        <WrapPanel>
+            <Button ToolTip="Choose a different root subdirectory." Style="{DynamicResource OpenFolderButton}" Margin="{DynamicResource DefaultSpacingRight}" Command="{Binding BrowseNewRootFolder}"/>
+            <TextBox Text="{Binding CreatedOn}"/>
+            <TextBox Text="{Binding LastSynchronizedOn}"/>
+            <Button ToolTip="Discard changes." Style="{DynamicResource CancelButton}" Margin="{DynamicResource DefaultSpacingLeft}" Command="{Binding DiscardChanges}"/>
+            <TextBox Text="{Binding DisplayName}"/>
+            <DataGrid ItemsSource="{Binding Logs}"/>
+            <GroupBox>
+                <GroupBox.Header>
+                    <Label Content="Maximum Recursion Depth"/>
+                </GroupBox.Header>
+                <WrapPanel>
+                    <TextBox Text="{Binding MaxDuration}"/>
+                </WrapPanel>
+            </GroupBox>
+            <TextBox Text="{Binding DisplayName}"/>
+        </WrapPanel>
+        <!--
+        Logs CrawlConfigurationRowViewModel<CrawlConfiguration>. CrawlConfigurationRowViewModel<CrawlConfiguration>.MaxRecursionDepth CrawlConfigurationRowViewModel<CrawlConfiguration>.MaxTotalItems DbEntityRowViewModel<CrawlConfiguration>.ModifiedOn CrawlConfigurationRowViewModel<CrawlConfiguration>.Notes CrawlConfigurationDetailsViewModel<CrawlConfiguration, SubdirectoryListItemWithAncestorNames, SubdirectoryListItemViewModel, CrawlJobLogListItem, CrawlJobListItemViewModel>.RefreshCrawlJobLogs CrawlConfigurationRowViewModel<CrawlConfiguration>.RescheduleAfterFail CrawlConfigurationRowViewModel<CrawlConfiguration>.RescheduleFromJobEnd CrawlConfigurationDetailsViewModel<CrawlConfiguration, SubdirectoryListItemWithAncestorNames, SubdirectoryListItemViewModel, CrawlJobLogListItem, CrawlJobListItemViewModel>.Root
+        EditViewModel.IsNew
+        -->
         <TextBox Margin="{DynamicResource DefaultSpacingTopLeft}" ToolTip="The descriptive status of the current crawl." Style="{DynamicResource SingleLineTextBox}" Text="{Binding StatusValue, Mode=OneWay}"/>
-        <Button Style="{DynamicResource LogButton}" Grid.Column="1" Margin="{DynamicResource DefaultSpacingTopLeft}" ToolTip="Show crawl activity records."/>
-        <Button Style="{DynamicResource EditButton}" Grid.Column="2" Margin="{DynamicResource DefaultSpacingTopLeft}" ToolTip="Edit the current crawl configuration."/>
-        <Button Style="{DynamicResource DeleteButton}" Grid.Column="3" Margin="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="Delete the current crawl configuration."/>
         <StackPanel Grid.Row="1" Grid.ColumnSpan="4">
             <GroupBox Padding="{DynamicResource DefaultSpacingBottom}">
                 <StackPanel>
