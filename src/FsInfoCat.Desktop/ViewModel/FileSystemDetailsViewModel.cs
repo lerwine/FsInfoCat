@@ -1,10 +1,12 @@
+using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel
 {
-    public class FileSystemDetailsViewModel<TEntity, TVolumeEntity, TVolumeItem, TSymbolicNameEntity, TSymbolicNameItem> : FileSystemRowViewModel<TEntity>
+    public class FileSystemDetailsViewModel<TEntity, TVolumeEntity, TVolumeItem, TSymbolicNameEntity, TSymbolicNameItem>
+        : FileSystemRowViewModel<TEntity>, IItemFunctionViewModel<TEntity>
         where TEntity : DbEntity, IFileSystem, IFileSystemRow
         where TVolumeEntity : DbEntity, IVolumeListItem
         where TVolumeItem : VolumeListItemViewModel<TVolumeEntity>
@@ -43,9 +45,23 @@ namespace FsInfoCat.Desktop.ViewModel
         public ReadOnlyObservableCollection<TSymbolicNameItem> SymbolicNames => (ReadOnlyObservableCollection<TSymbolicNameItem>)GetValue(SymbolicNamesProperty);
 
         #endregion
+        #region Completed Event Members
 
-        public FileSystemDetailsViewModel([DisallowNull] TEntity entity) : base(entity)
+        public event EventHandler<ItemFunctionResultEventArgs> Completed;
+
+        internal object InvocationState { get; }
+
+        object IItemFunctionViewModel.InvocationState => InvocationState;
+
+        protected virtual void OnItemFunctionResult(ItemFunctionResultEventArgs args) => Completed?.Invoke(this, args);
+
+        protected void RaiseItemFunctionResult(ItemFunctionResult result) => OnItemFunctionResult(new(result, InvocationState));
+
+        #endregion
+
+        public FileSystemDetailsViewModel([DisallowNull] TEntity entity, object state = null) : base(entity)
         {
+            InvocationState = state;
             SetValue(VolumesPropertyKey, new ReadOnlyObservableCollection<TVolumeItem>(BackingVolumes));
             SetValue(SymbolicNamesPropertyKey, new ReadOnlyObservableCollection<TSymbolicNameItem>(BackingSymbolicNames));
         }
