@@ -17,79 +17,11 @@ using System.Windows.Threading;
 
 namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
 {
-    public class EditViewModel : CrawlConfigurationEditViewModel<CrawlConfiguration, SubdirectoryListItemWithAncestorNames, SubdirectoryListItemViewModel, CrawlJobLogListItem, CrawlJobListItemViewModel>,
+    public sealed class EditViewModel : CrawlConfigurationEditViewModel<CrawlConfiguration, SubdirectoryListItemWithAncestorNames, SubdirectoryListItemViewModel, CrawlJobLogListItem, CrawlJobListItemViewModel>,
         INavigatedToNotifiable, INavigatingFromNotifiable
     {
-        #region SaveChanges Command Property Members
+        internal CrawlConfigListItem ListItem { get; }
 
-        /// <summary>
-        /// Occurs when the <see cref="SaveChanges"/> is invoked.
-        /// </summary>
-        public event EventHandler<Commands.CommandEventArgs> ChangesSaved;
-
-        private static readonly DependencyPropertyKey SaveChangesPropertyKey = DependencyPropertyBuilder<EditViewModel, Commands.RelayCommand>
-            .Register(nameof(SaveChanges))
-            .AsReadOnly();
-
-        /// <summary>
-        /// Identifies the <see cref="SaveChanges"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty SaveChangesProperty = SaveChangesPropertyKey.DependencyProperty;
-
-        public Commands.RelayCommand SaveChanges => (Commands.RelayCommand)GetValue(SaveChangesProperty);
-
-        /// <summary>
-        /// Called when the <see cref="SaveChanges">SaveChanges Command</see> is invoked.
-        /// </summary>
-        /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="SaveChanges" />.</param>
-        protected virtual void OnSaveChangesCommand(object parameter)
-        {
-            // TODO: Implement OnSaveChangesCommand Logic
-        }
-
-        #endregion
-        #region DiscardChanges Command Property Members
-
-        /// <summary>
-        /// Occurs when the <see cref="DiscardChanges"/> is invoked.
-        /// </summary>
-        public event EventHandler<Commands.CommandEventArgs> ChangesDiscarded;
-
-        private static readonly DependencyPropertyKey DiscardChangesPropertyKey = DependencyPropertyBuilder<EditViewModel, Commands.RelayCommand>
-            .Register(nameof(DiscardChanges))
-            .AsReadOnly();
-
-        /// <summary>
-        /// Identifies the <see cref="DiscardChanges"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty DiscardChangesProperty = DiscardChangesPropertyKey.DependencyProperty;
-
-        public Commands.RelayCommand DiscardChanges => (Commands.RelayCommand)GetValue(DiscardChangesProperty);
-
-        /// <summary>
-        /// Called when the <see cref="DiscardChanges">DiscardChanges Command</see> is invoked.
-        /// </summary>
-        /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="DiscardChanges" />.</param>
-        protected virtual void OnDiscardChangesCommand(object parameter)
-        {
-            // TODO: Implement OnDiscardChangesCommand Logic
-        }
-
-        #endregion
-        #region ListItem Property Members
-
-        private static readonly DependencyPropertyKey ListItemPropertyKey = DependencyPropertyBuilder<EditViewModel, CrawlConfigListItem>
-            .Register(nameof(ListItem))
-            .AsReadOnly();
-
-        /// <summary>
-        /// Identifies the <see cref="ListItem"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty ListItemProperty = ListItemPropertyKey.DependencyProperty;
-
-        public CrawlConfigListItem ListItem { get => (CrawlConfigListItem)GetValue(ListItemProperty); private set => SetValue(ListItemPropertyKey, value); }
-
-        #endregion
         #region UpstreamId Property Members
 
         private static readonly DependencyPropertyKey UpstreamIdPropertyKey = DependencyPropertyBuilder<EditViewModel, Guid?>
@@ -137,28 +69,11 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
         public Commands.RelayCommand BrowseNewRootFolder => (Commands.RelayCommand)GetValue(BrowseNewRootFolderProperty);
 
         #endregion
-        #region IsNew Property Members
 
-        private static readonly DependencyPropertyKey IsNewPropertyKey = DependencyPropertyBuilder<EditViewModel, bool>
-            .Register(nameof(IsNew))
-            .DefaultValue(false)
-            .AsReadOnly();
-
-        /// <summary>
-        /// Identifies the <see cref="IsNew"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty IsNewProperty = IsNewPropertyKey.DependencyProperty;
-
-        public bool IsNew { get => (bool)GetValue(IsNewProperty); private set => SetValue(IsNewPropertyKey, value); }
-
-        #endregion
-
-        public EditViewModel([DisallowNull] CrawlConfiguration tableEntity, CrawlConfigListItem itemEntity) : base(tableEntity)
+        public EditViewModel([DisallowNull] CrawlConfiguration tableEntity, CrawlConfigListItem itemEntity) : base(tableEntity, itemEntity is null)
         {
-            SetValue(SaveChangesPropertyKey, new Commands.RelayCommand(OnSaveChangesCommand));
-            SetValue(DiscardChangesPropertyKey, new Commands.RelayCommand(OnDiscardChangesCommand));
             SetValue(BrowseNewRootFolderPropertyKey, new Commands.RelayCommand(OnBrowseNewRootFolder));
-            IsNew = (ListItem = itemEntity) is null;
+            ListItem = itemEntity;
             UpstreamId = tableEntity.UpstreamId;
             LastSynchronizedOn = tableEntity.LastSynchronizedOn;
         }

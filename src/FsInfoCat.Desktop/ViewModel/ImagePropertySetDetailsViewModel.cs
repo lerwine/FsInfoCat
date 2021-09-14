@@ -1,10 +1,11 @@
+using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel
 {
-    public class ImagePropertySetDetailsViewModel<TEntity, TFileEntity, TFileItem> : ImagePropertiesRowViewModel<TEntity>
+    public class ImagePropertySetDetailsViewModel<TEntity, TFileEntity, TFileItem> : ImagePropertiesRowViewModel<TEntity>, IItemFunctionViewModel<TEntity>
         where TEntity : DbEntity, IImagePropertySet, IImageProperties
         where TFileEntity : DbEntity, IFileListItemWithBinaryPropertiesAndAncestorNames
         where TFileItem : FileWithBinaryPropertiesAndAncestorNamesViewModel<TFileEntity>
@@ -23,6 +24,19 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty FilesProperty = FilesPropertyKey.DependencyProperty;
 
         public ReadOnlyObservableCollection<TFileItem> Files => (ReadOnlyObservableCollection<TFileItem>)GetValue(FilesProperty);
+
+        #endregion
+        #region Completed Event Members
+
+        public event EventHandler<ItemFunctionResultEventArgs> Completed;
+
+        internal object InvocationState { get; }
+
+        object IItemFunctionViewModel.InvocationState => InvocationState;
+
+        protected virtual void OnItemFunctionResult(ItemFunctionResultEventArgs args) => Completed?.Invoke(this, args);
+
+        protected void RaiseItemFunctionResult(ItemFunctionResult result) => OnItemFunctionResult(new(result, InvocationState));
 
         #endregion
 

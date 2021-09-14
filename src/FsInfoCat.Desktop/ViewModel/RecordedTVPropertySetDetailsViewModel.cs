@@ -1,10 +1,11 @@
+using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel
 {
-    public class RecordedTVPropertySetDetailsViewModel<TEntity, TFileEntity, TFileItem> : RecordedTVPropertiesRowViewModel<TEntity>
+    public class RecordedTVPropertySetDetailsViewModel<TEntity, TFileEntity, TFileItem> : RecordedTVPropertiesRowViewModel<TEntity>, IItemFunctionViewModel<TEntity>
         where TEntity : DbEntity, IRecordedTVPropertySet, IRecordedTVProperties
         where TFileEntity : DbEntity, IFileListItemWithBinaryPropertiesAndAncestorNames
         where TFileItem : FileWithBinaryPropertiesAndAncestorNamesViewModel<TFileEntity>
@@ -25,9 +26,23 @@ namespace FsInfoCat.Desktop.ViewModel
         public ReadOnlyObservableCollection<TFileItem> Files => (ReadOnlyObservableCollection<TFileItem>)GetValue(FilesProperty);
 
         #endregion
+        #region Completed Event Members
 
-        public RecordedTVPropertySetDetailsViewModel([DisallowNull] TEntity entity) : base(entity)
+        public event EventHandler<ItemFunctionResultEventArgs> Completed;
+
+        internal object InvocationState { get; }
+
+        object IItemFunctionViewModel.InvocationState => InvocationState;
+
+        protected virtual void OnItemFunctionResult(ItemFunctionResultEventArgs args) => Completed?.Invoke(this, args);
+
+        protected void RaiseItemFunctionResult(ItemFunctionResult result) => OnItemFunctionResult(new(result, InvocationState));
+
+        #endregion
+
+        public RecordedTVPropertySetDetailsViewModel([DisallowNull] TEntity entity, object state = null) : base(entity)
         {
+            InvocationState = state;
             SetValue(FilesPropertyKey, new ReadOnlyObservableCollection<TFileItem>(BackingFiles));
         }
     }

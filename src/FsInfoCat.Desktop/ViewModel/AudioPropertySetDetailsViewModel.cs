@@ -1,10 +1,11 @@
+using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel
 {
-    public class AudioPropertySetDetailsViewModel<TEntity, TFileEntity, TFileItem> : AudioPropertiesRowViewModel<TEntity>
+    public class AudioPropertySetDetailsViewModel<TEntity, TFileEntity, TFileItem> : AudioPropertiesRowViewModel<TEntity>, IItemFunctionViewModel<TEntity>
         where TEntity : DbEntity, IAudioPropertySet, IAudioProperties
         where TFileEntity : DbEntity, IFileListItemWithBinaryPropertiesAndAncestorNames
         where TFileItem : FileWithBinaryPropertiesAndAncestorNamesViewModel<TFileEntity>
@@ -25,9 +26,23 @@ namespace FsInfoCat.Desktop.ViewModel
         public ReadOnlyObservableCollection<TFileItem> Files => (ReadOnlyObservableCollection<TFileItem>)GetValue(FilesProperty);
 
         #endregion
+        #region Completed Event Members
 
-        public AudioPropertySetDetailsViewModel([DisallowNull] TEntity entity) : base(entity)
+        public event EventHandler<ItemFunctionResultEventArgs> Completed;
+
+        internal object InvocationState { get; }
+
+        object IItemFunctionViewModel.InvocationState => InvocationState;
+
+        protected virtual void OnItemFunctionResult(ItemFunctionResultEventArgs args) => Completed?.Invoke(this, args);
+
+        protected void RaiseItemFunctionResult(ItemFunctionResult result) => OnItemFunctionResult(new(result, InvocationState));
+
+        #endregion
+
+        public AudioPropertySetDetailsViewModel([DisallowNull] TEntity entity, object state = null) : base(entity)
         {
+            InvocationState = state;
             SetValue(FilesPropertyKey, new ReadOnlyObservableCollection<TFileItem>(BackingFiles));
         }
     }

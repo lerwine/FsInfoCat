@@ -5,6 +5,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Navigation;
@@ -12,73 +13,8 @@ using System.Windows.Threading;
 
 namespace FsInfoCat.Desktop.ViewModel
 {
-    public abstract class CrawlConfigurationEditViewModel<TEntity, TSubdirectoryEntity, TSubdirectoryItem, TCrawlJobLogEntity, TCrawlJobLogItem> : CrawlConfigurationDetailsViewModel<TEntity, TSubdirectoryEntity, TSubdirectoryItem, TCrawlJobLogEntity, TCrawlJobLogItem>
-        where TEntity : DbEntity, ICrawlConfiguration, ICrawlConfigurationRow
-        where TSubdirectoryEntity : DbEntity, ISubdirectoryListItemWithAncestorNames
-        where TSubdirectoryItem : SubdirectoryListItemWithAncestorNamesViewModel<TSubdirectoryEntity>
-        where TCrawlJobLogEntity : DbEntity, ICrawlJobListItem
-        where TCrawlJobLogItem : CrawlJobListItemViewModel<TCrawlJobLogEntity>
-    {
-        #region MaxDuration Property Members
-
-        private static readonly DependencyPropertyKey MaxDurationPropertyKey = ColumnPropertyBuilder<TimeSpanViewModel, CrawlConfigurationEditViewModel<TEntity, TSubdirectoryEntity, TSubdirectoryItem, TCrawlJobLogEntity, TCrawlJobLogItem>>
-            .RegisterEntityMapped<TEntity>(nameof(MaxDuration), nameof(ICrawlConfigurationRow.TTL))
-            .AsReadOnly();
-
-        /// <summary>
-        /// Identifies the <see cref="MaxDuration"/> lodependency property.
-        /// </summary>
-        public static readonly DependencyProperty MaxDurationProperty = MaxDurationPropertyKey.DependencyProperty;
-
-        public TimeSpanViewModel MaxDuration => (TimeSpanViewModel)GetValue(MaxDurationProperty);
-
-        #endregion
-        #region RescheduleInterval Property Members
-
-        private static readonly DependencyPropertyKey RescheduleIntervalPropertyKey = ColumnPropertyBuilder<TimeSpanViewModel, CrawlConfigurationEditViewModel<TEntity, TSubdirectoryEntity, TSubdirectoryItem, TCrawlJobLogEntity, TCrawlJobLogItem>>
-            .RegisterEntityMapped<TEntity>(nameof(RescheduleInterval))
-            .AsReadOnly();
-
-        /// <summary>
-        /// Identifies the <see cref="RescheduleInterval"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty RescheduleIntervalProperty = RescheduleIntervalPropertyKey.DependencyProperty;
-
-        public TimeSpanViewModel RescheduleInterval { get => (TimeSpanViewModel)GetValue(RescheduleIntervalProperty); private set => SetValue(RescheduleIntervalPropertyKey, value); }
-
-        #endregion
-        #region NextScheduledStart Property Members
-
-        private static readonly DependencyPropertyKey NextScheduledStartPropertyKey = ColumnPropertyBuilder<DateTimeViewModel, CrawlConfigurationEditViewModel<TEntity, TSubdirectoryEntity, TSubdirectoryItem, TCrawlJobLogEntity, TCrawlJobLogItem>>
-            .Register(nameof(NextScheduledStart))
-            .DefaultValue(null)
-            .AsReadOnly();
-
-        /// <summary>
-        /// Identifies the <see cref="NextScheduledStart"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty NextScheduledStartProperty = NextScheduledStartPropertyKey.DependencyProperty;
-
-        public DateTimeViewModel NextScheduledStart { get => (DateTimeViewModel)GetValue(NextScheduledStartProperty); private set => SetValue(NextScheduledStartPropertyKey, value); }
-
-        #endregion
-
-        public CrawlConfigurationEditViewModel([DisallowNull] TEntity entity) : base(entity)
-        {
-            long? seconds = entity.TTL;
-            TimeSpanViewModel tsVm = new();
-            SetValue(MaxDurationPropertyKey, tsVm);
-            tsVm.SetValue(seconds.HasValue ? TimeSpan.FromSeconds(seconds.Value) : null);
-            seconds = entity.RescheduleInterval;
-            tsVm = new TimeSpanViewModel();
-            SetValue(RescheduleIntervalPropertyKey, tsVm);
-            tsVm.SetValue(seconds.HasValue ? TimeSpan.FromSeconds(seconds.Value) : null);
-            DateTimeViewModel dtVm = new();
-            SetValue(NextScheduledStartPropertyKey, dtVm);
-            dtVm.SetValue(entity.NextScheduledStart);
-        }
-    }
-    public abstract class CrawlConfigurationDetailsViewModel<TEntity, TSubdirectoryEntity, TSubdirectoryItem, TCrawlJobLogEntity, TCrawlJobLogItem> : CrawlConfigurationRowViewModel<TEntity>
+    public abstract class CrawlConfigurationDetailsViewModel<TEntity, TSubdirectoryEntity, TSubdirectoryItem, TCrawlJobLogEntity, TCrawlJobLogItem> :
+        CrawlConfigurationRowViewModel<TEntity>, IItemFunctionViewModel<TEntity>
         where TEntity : DbEntity, ICrawlConfiguration, ICrawlConfigurationRow
         where TSubdirectoryEntity : DbEntity, ISubdirectoryListItemWithAncestorNames
         where TSubdirectoryItem : SubdirectoryListItemWithAncestorNamesViewModel<TSubdirectoryEntity>
@@ -140,11 +76,54 @@ namespace FsInfoCat.Desktop.ViewModel
         public ReadOnlyObservableCollection<TCrawlJobLogItem> Logs => (ReadOnlyObservableCollection<TCrawlJobLogItem>)GetValue(LogsProperty);
 
         #endregion
+        #region Completed Event Members
 
-        public CrawlConfigurationDetailsViewModel([DisallowNull] TEntity entity) : base(entity)
+        public event EventHandler<ItemFunctionResultEventArgs> Completed;
+
+        internal object InvocationState { get; }
+
+        object IItemFunctionViewModel.InvocationState => InvocationState;
+
+        protected virtual void OnItemFunctionResult(ItemFunctionResultEventArgs args) => Completed?.Invoke(this, args);
+
+        protected void RaiseItemFunctionResult(ItemFunctionResult result) => OnItemFunctionResult(new(result, InvocationState));
+
+        #endregion
+
+        public CrawlConfigurationDetailsViewModel([DisallowNull] TEntity entity, object state = null) : base(entity)
         {
+            InvocationState = state;
             SetValue(RefreshCrawlJobLogsPropertyKey, new Commands.RelayCommand(o => ReloadAsync()));
             SetValue(LogsPropertyKey, new ReadOnlyObservableCollection<TCrawlJobLogItem>(_backingLogs));
+        }
+
+        protected override void OnEntityPropertyChanged(string propertyName)
+        {
+            if (propertyName == nameof(Entity.Root))
+            {
+                ISubdirectory root = Entity.Root;
+                if (root is null)
+                    Dispatcher.CheckInvoke(() => Root = null);
+                else
+                {
+                    IWindowsAsyncJobFactoryService jobFactory = Services.GetRequiredService<IWindowsAsyncJobFactoryService>();
+                    jobFactory.StartNew("Loading data", "Opening database", root.Id, LoadSubdirectoryAsync).Task.ContinueWith(task => Dispatcher.Invoke(() =>
+                    {
+                        Dispatcher.ShowMessageBoxAsync("Unexpected error while reading from the database. See error logs for more information.",
+                            "Database Error", CancellationToken.None);
+                    }, DispatcherPriority.Background), TaskContinuationOptions.OnlyOnFaulted);
+                }
+            }
+            else
+                base.OnEntityPropertyChanged(propertyName);
+        }
+
+        private async Task LoadSubdirectoryAsync(Guid id, IWindowsStatusListener statusListener)
+        {
+            using IServiceScope scope = Services.CreateScope();
+            using LocalDbContext dbContext = scope.ServiceProvider.GetRequiredService<LocalDbContext>();
+            TSubdirectoryEntity subdirectory = await LoadSubdirectoryAsync(id, dbContext, statusListener);
+            Root = (subdirectory is null) ? null : CreateSubdirectoryViewModel(subdirectory);
         }
 
         private async Task LoadItemsAsync([DisallowNull] IWindowsStatusListener statusListener)
