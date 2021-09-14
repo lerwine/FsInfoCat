@@ -115,24 +115,19 @@ namespace FsInfoCat.Desktop.LocalData.SymbolicNames
 
         protected async override Task<PageFunction<ItemEditResult>> GetEditPageAsync(ListItemViewModel item, [DisallowNull] IWindowsStatusListener statusListener)
         {
-            EditViewModel viewModel;
             if (item is null)
-                viewModel = new(new SymbolicName(), null);
-            else
+                return await Dispatcher.InvokeAsync<PageFunction<ItemEditResult>>(() => new EditPage(new(new(), null)));
+            using IServiceScope serviceScope = Services.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+            Guid id = item.Entity.Id;
+            SymbolicName fs = await dbContext.SymbolicNames.FirstOrDefaultAsync(f => f.Id == id, statusListener.CancellationToken);
+            if (fs is null)
             {
-                using IServiceScope serviceScope = Services.CreateScope();
-                using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
-                Guid id = item.Entity.Id;
-                SymbolicName fs = await dbContext.SymbolicNames.FirstOrDefaultAsync(f => f.Id == id, statusListener.CancellationToken);
-                if (fs is null)
-                {
-                    await Dispatcher.ShowMessageBoxAsync("Item not found in database. Click OK to refresh listing.", "Security Exception", MessageBoxButton.OK, MessageBoxImage.Error, statusListener.CancellationToken);
-                    ReloadAsync(_currentStateFilterOption);
-                    return null;
-                }
-                viewModel = new EditViewModel(fs, item.Entity);
+                await Dispatcher.ShowMessageBoxAsync("Item not found in database. Click OK to refresh listing.", "Security Exception", MessageBoxButton.OK, MessageBoxImage.Error, statusListener.CancellationToken);
+                ReloadAsync(_currentStateFilterOption);
+                return null;
             }
-            return new EditPage(viewModel);
+            return await Dispatcher.InvokeAsync<PageFunction<ItemEditResult>>(() => new EditPage(new(fs, item.Entity)));
         }
 
         //protected async override Task<SymbolicName> LoadItemAsync([DisallowNull] SymbolicNameListItem item, [DisallowNull] IWindowsStatusListener statusListener)

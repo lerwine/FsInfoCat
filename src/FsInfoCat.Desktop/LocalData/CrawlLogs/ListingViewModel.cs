@@ -139,24 +139,19 @@ namespace FsInfoCat.Desktop.LocalData.CrawlLogs
 
         protected async override Task<PageFunction<ItemEditResult>> GetEditPageAsync(ListItemViewModel item, [DisallowNull] IWindowsStatusListener statusListener)
         {
-            EditViewModel viewModel;
             if (item is null)
-                viewModel = new(new CrawlJobLog(), null);
-            else
+                return await Dispatcher.InvokeAsync<PageFunction<ItemEditResult>>(() => new EditPage(new(new(), null)));
+            using IServiceScope serviceScope = Services.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+            Guid id = item.Entity.Id;
+            CrawlJobLog crawlJobLog = await dbContext.CrawlJobLogs.FirstOrDefaultAsync(j => j.Id == id, statusListener.CancellationToken);
+            if (crawlJobLog is null)
             {
-                using IServiceScope serviceScope = Services.CreateScope();
-                using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
-                Guid id = item.Entity.Id;
-                CrawlJobLog crawlJobLog = await dbContext.CrawlJobLogs.FirstOrDefaultAsync(j => j.Id == id, statusListener.CancellationToken);
-                if (crawlJobLog is null)
-                {
-                    await Dispatcher.ShowMessageBoxAsync("Item not found in database. Click OK to refresh listing.", "Security Exception", MessageBoxButton.OK, MessageBoxImage.Error, statusListener.CancellationToken);
-                    ReloadAsync(_currentOptions);
-                    return null;
-                }
-                viewModel = new EditViewModel(crawlJobLog, item.Entity);
+                await Dispatcher.ShowMessageBoxAsync("Item not found in database. Click OK to refresh listing.", "Security Exception", MessageBoxButton.OK, MessageBoxImage.Error, statusListener.CancellationToken);
+                ReloadAsync(_currentOptions);
+                return null;
             }
-            return new EditPage(viewModel);
+            return await Dispatcher.InvokeAsync<PageFunction<ItemEditResult>>(() => new EditPage(new(crawlJobLog, item.Entity)));
         }
 
         //protected override async Task<CrawlJobLog> LoadItemAsync([DisallowNull] CrawlJobLogListItem item, [DisallowNull] IWindowsStatusListener statusListener)

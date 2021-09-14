@@ -148,21 +148,6 @@ namespace FsInfoCat.Desktop.ViewModel
 
         #endregion
         //public abstract TimeSpan? TTL { get; set; }
-        #region MaxDuration Property Members
-
-        private static readonly DependencyPropertyKey MaxDurationPropertyKey = ColumnPropertyBuilder<TimeSpanViewModel, CrawlConfigurationRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(MaxDuration), nameof(ICrawlConfigurationRow.TTL))
-            .AsReadOnly();
-
-        /// <summary>
-        /// Identifies the <see cref="MaxDuration"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty MaxDurationProperty = MaxDurationPropertyKey.DependencyProperty;
-
-        // BUG: This is not acceptable for listing views. Needs to be TimeSpan?
-        public TimeSpanViewModel MaxDuration => (TimeSpanViewModel)GetValue(MaxDurationProperty);
-
-        #endregion
 
         ICrawlConfigurationRow ICrawlConfigurationRowViewModel.Entity => Entity;
 
@@ -180,8 +165,6 @@ namespace FsInfoCat.Desktop.ViewModel
             RescheduleAfterFail = entity.RescheduleAfterFail;
             MaxRecursionDepth = entity.MaxRecursionDepth;
             MaxTotalItems = entity.MaxTotalItems;
-            long? seconds = entity.TTL;
-            SetValue(MaxDurationPropertyKey, new TimeSpanViewModel() { InputValue = seconds.HasValue ? TimeSpan.FromSeconds(seconds.Value) : null });
         }
 
         protected bool CheckEntityPropertyChanged(string propertyName)

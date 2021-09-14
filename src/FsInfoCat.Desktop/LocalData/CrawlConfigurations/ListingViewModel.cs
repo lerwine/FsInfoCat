@@ -241,24 +241,20 @@ Error	1	ListItemViewModel	FileSystemDetailText	TextBox.Text, Name='fileSystemTex
 
         protected async override Task<PageFunction<ItemEditResult>> GetDetailPageAsync([DisallowNull] ListItemViewModel item, [DisallowNull] IWindowsStatusListener statusListener)
         {
-            DetailsViewModel viewModel;
             if (item is null)
-                viewModel = new(new CrawlConfiguration(), null);
-            else
+                return await Dispatcher.InvokeAsync<PageFunction<ItemEditResult>>(() => new DetailsPage(new(new CrawlConfiguration(), null)));
+            using IServiceScope serviceScope = Services.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+            Guid id = item.Entity.Id;
+            CrawlConfiguration fs = await dbContext.CrawlConfigurations.FirstOrDefaultAsync(f => f.Id == id, statusListener.CancellationToken);
+            if (fs is null)
             {
-                using IServiceScope serviceScope = Services.CreateScope();
-                using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
-                Guid id = item.Entity.Id;
-                CrawlConfiguration fs = await dbContext.CrawlConfigurations.FirstOrDefaultAsync(f => f.Id == id, statusListener.CancellationToken);
-                if (fs is null)
-                {
-                    await Dispatcher.ShowMessageBoxAsync("Item not found in database. Click OK to refresh listing.", "Security Exception", MessageBoxButton.OK, MessageBoxImage.Error, statusListener.CancellationToken);
-                    ReloadAsync(_currentStatusOptions);
-                    return null;
-                }
-                viewModel = new(fs, item.Entity);
+                await Dispatcher.ShowMessageBoxAsync("Item not found in database. Click OK to refresh listing.", "Security Exception", MessageBoxButton.OK, MessageBoxImage.Error, statusListener.CancellationToken);
+                ReloadAsync(_currentStatusOptions);
+                return null;
             }
-            return new DetailsPage(viewModel);
+            // BUG: The calling thread must be STA, because many UI components require this.
+            return await Dispatcher.InvokeAsync<PageFunction<ItemEditResult>>(() => new DetailsPage(new(fs, item.Entity)));
         }
 
         protected override async Task<PageFunction<ItemEditResult>> GetEditPageAsync(ListItemViewModel listItem, [DisallowNull] IWindowsStatusListener statusListener)

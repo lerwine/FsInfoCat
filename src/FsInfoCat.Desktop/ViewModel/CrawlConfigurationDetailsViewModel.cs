@@ -12,6 +12,72 @@ using System.Windows.Threading;
 
 namespace FsInfoCat.Desktop.ViewModel
 {
+    public abstract class CrawlConfigurationEditViewModel<TEntity, TSubdirectoryEntity, TSubdirectoryItem, TCrawlJobLogEntity, TCrawlJobLogItem> : CrawlConfigurationDetailsViewModel<TEntity, TSubdirectoryEntity, TSubdirectoryItem, TCrawlJobLogEntity, TCrawlJobLogItem>
+        where TEntity : DbEntity, ICrawlConfiguration, ICrawlConfigurationRow
+        where TSubdirectoryEntity : DbEntity, ISubdirectoryListItemWithAncestorNames
+        where TSubdirectoryItem : SubdirectoryListItemWithAncestorNamesViewModel<TSubdirectoryEntity>
+        where TCrawlJobLogEntity : DbEntity, ICrawlJobListItem
+        where TCrawlJobLogItem : CrawlJobListItemViewModel<TCrawlJobLogEntity>
+    {
+        #region MaxDuration Property Members
+
+        private static readonly DependencyPropertyKey MaxDurationPropertyKey = ColumnPropertyBuilder<TimeSpanViewModel, CrawlConfigurationEditViewModel<TEntity, TSubdirectoryEntity, TSubdirectoryItem, TCrawlJobLogEntity, TCrawlJobLogItem>>
+            .RegisterEntityMapped<TEntity>(nameof(MaxDuration), nameof(ICrawlConfigurationRow.TTL))
+            .AsReadOnly();
+
+        /// <summary>
+        /// Identifies the <see cref="MaxDuration"/> lodependency property.
+        /// </summary>
+        public static readonly DependencyProperty MaxDurationProperty = MaxDurationPropertyKey.DependencyProperty;
+
+        public TimeSpanViewModel MaxDuration => (TimeSpanViewModel)GetValue(MaxDurationProperty);
+
+        #endregion
+        #region RescheduleInterval Property Members
+
+        private static readonly DependencyPropertyKey RescheduleIntervalPropertyKey = ColumnPropertyBuilder<TimeSpanViewModel, CrawlConfigurationEditViewModel<TEntity, TSubdirectoryEntity, TSubdirectoryItem, TCrawlJobLogEntity, TCrawlJobLogItem>>
+            .RegisterEntityMapped<TEntity>(nameof(RescheduleInterval))
+            .AsReadOnly();
+
+        /// <summary>
+        /// Identifies the <see cref="RescheduleInterval"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty RescheduleIntervalProperty = RescheduleIntervalPropertyKey.DependencyProperty;
+
+        public TimeSpanViewModel RescheduleInterval { get => (TimeSpanViewModel)GetValue(RescheduleIntervalProperty); private set => SetValue(RescheduleIntervalPropertyKey, value); }
+
+        #endregion
+        #region NextScheduledStart Property Members
+
+        private static readonly DependencyPropertyKey NextScheduledStartPropertyKey = ColumnPropertyBuilder<DateTimeViewModel, CrawlConfigurationEditViewModel<TEntity, TSubdirectoryEntity, TSubdirectoryItem, TCrawlJobLogEntity, TCrawlJobLogItem>>
+            .Register(nameof(NextScheduledStart))
+            .DefaultValue(null)
+            .AsReadOnly();
+
+        /// <summary>
+        /// Identifies the <see cref="NextScheduledStart"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty NextScheduledStartProperty = NextScheduledStartPropertyKey.DependencyProperty;
+
+        public DateTimeViewModel NextScheduledStart { get => (DateTimeViewModel)GetValue(NextScheduledStartProperty); private set => SetValue(NextScheduledStartPropertyKey, value); }
+
+        #endregion
+
+        public CrawlConfigurationEditViewModel([DisallowNull] TEntity entity) : base(entity)
+        {
+            long? seconds = entity.TTL;
+            TimeSpanViewModel tsVm = new();
+            SetValue(MaxDurationPropertyKey, tsVm);
+            tsVm.SetValue(seconds.HasValue ? TimeSpan.FromSeconds(seconds.Value) : null);
+            seconds = entity.RescheduleInterval;
+            tsVm = new TimeSpanViewModel();
+            SetValue(RescheduleIntervalPropertyKey, tsVm);
+            tsVm.SetValue(seconds.HasValue ? TimeSpan.FromSeconds(seconds.Value) : null);
+            DateTimeViewModel dtVm = new();
+            SetValue(NextScheduledStartPropertyKey, dtVm);
+            dtVm.SetValue(entity.NextScheduledStart);
+        }
+    }
     public abstract class CrawlConfigurationDetailsViewModel<TEntity, TSubdirectoryEntity, TSubdirectoryItem, TCrawlJobLogEntity, TCrawlJobLogItem> : CrawlConfigurationRowViewModel<TEntity>
         where TEntity : DbEntity, ICrawlConfiguration, ICrawlConfigurationRow
         where TSubdirectoryEntity : DbEntity, ISubdirectoryListItemWithAncestorNames

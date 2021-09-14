@@ -124,46 +124,36 @@ namespace FsInfoCat.Desktop.LocalData.AudioPropertySets
 
         protected async override Task<PageFunction<ItemEditResult>> GetDetailPageAsync([DisallowNull] ListItemViewModel item, [DisallowNull] IWindowsStatusListener statusListener)
         {
-            DetailsViewModel viewModel;
             if (item is null)
-                viewModel = new(new AudioPropertySet(), null);
-            else
+                return await Dispatcher.InvokeAsync<PageFunction<ItemEditResult>>(() => new DetailsPage(new(new AudioPropertySet(), null)));
+            using IServiceScope serviceScope = Services.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+            Guid id = item.Entity.Id;
+            AudioPropertySet fs = await dbContext.AudioPropertySets.FirstOrDefaultAsync(f => f.Id == id, statusListener.CancellationToken);
+            if (fs is null)
             {
-                using IServiceScope serviceScope = Services.CreateScope();
-                using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
-                Guid id = item.Entity.Id;
-                AudioPropertySet fs = await dbContext.AudioPropertySets.FirstOrDefaultAsync(f => f.Id == id, statusListener.CancellationToken);
-                if (fs is null)
-                {
-                    await Dispatcher.ShowMessageBoxAsync("Item not found in database. Click OK to refresh listing.", "Security Exception", MessageBoxButton.OK, MessageBoxImage.Error, statusListener.CancellationToken);
-                    ReloadAsync(_currentOptions);
-                    return null;
-                }
-                viewModel = new(fs, item.Entity);
+                await Dispatcher.ShowMessageBoxAsync("Item not found in database. Click OK to refresh listing.", "Security Exception", MessageBoxButton.OK, MessageBoxImage.Error, statusListener.CancellationToken);
+                ReloadAsync(_currentOptions);
+                return null;
             }
-            return new DetailsPage(viewModel);
+            return await Dispatcher.InvokeAsync<PageFunction<ItemEditResult>>(() => new DetailsPage(new(fs, item.Entity)));
         }
 
         protected override async Task<PageFunction<ItemEditResult>> GetEditPageAsync(ListItemViewModel item, [DisallowNull] IWindowsStatusListener statusListener)
         {
-            EditViewModel viewModel;
             if (item is null)
-                viewModel = new(new AudioPropertySet(), null);
-            else
+                return await Dispatcher.InvokeAsync<PageFunction<ItemEditResult>>(() => new EditPage(new(new AudioPropertySet(), null)));
+            using IServiceScope serviceScope = Services.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+            Guid id = item.Entity.Id;
+            AudioPropertySet fs = await dbContext.AudioPropertySets.FirstOrDefaultAsync(f => f.Id == id, statusListener.CancellationToken);
+            if (fs is null)
             {
-                using IServiceScope serviceScope = Services.CreateScope();
-                using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
-                Guid id = item.Entity.Id;
-                AudioPropertySet fs = await dbContext.AudioPropertySets.FirstOrDefaultAsync(f => f.Id == id, statusListener.CancellationToken);
-                if (fs is null)
-                {
-                    await Dispatcher.ShowMessageBoxAsync("Item not found in database. Click OK to refresh listing.", "Security Exception", MessageBoxButton.OK, MessageBoxImage.Error, statusListener.CancellationToken);
-                    ReloadAsync(_currentOptions);
-                    return null;
-                }
-                viewModel = new EditViewModel(fs, item.Entity);
+                await Dispatcher.ShowMessageBoxAsync("Item not found in database. Click OK to refresh listing.", "Security Exception", MessageBoxButton.OK, MessageBoxImage.Error, statusListener.CancellationToken);
+                ReloadAsync(_currentOptions);
+                return null;
             }
-            return new EditPage(viewModel);
+            return await Dispatcher.InvokeAsync<PageFunction<ItemEditResult>>(() => new EditPage(new(fs, item.Entity)));
         }
 
         //protected async override Task<AudioPropertySet> LoadItemAsync([DisallowNull] AudioPropertiesListItem item, [DisallowNull] IWindowsStatusListener statusListener)
