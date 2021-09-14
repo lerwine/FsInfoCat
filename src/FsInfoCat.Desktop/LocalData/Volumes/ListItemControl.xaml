@@ -34,49 +34,51 @@
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
         <Label x:Name="DisplayNameLabel" Padding="{DynamicResource DefaultSpacingTopLeftRight}" VerticalAlignment="Bottom" Content="Display Name" Grid.ColumnSpan="6" FontWeight="Bold"/>
-        <Button x:Name="EditButton" Style="{DynamicResource EditButton}" Grid.Column="7" Margin="{DynamicResource DefaultSpacingLeft}" ToolTip="Edit the current item." Command="{Binding Edit, Mode=OneWay}" HorizontalAlignment="Right"/>
-        <Button x:Name="DeleteButton" Style="{DynamicResource DeleteButton}" Grid.Column="8" Margin="{DynamicResource DefaultSpacingLeftRight}" ToolTip="Delete the item." Command="{Binding Delete, Mode=OneWay}" HorizontalAlignment="Right"/>
-        <TextBox x:Name="DisplayNameTextBox" Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingLeftRight}" Text="{Binding DisplayName}" Grid.Row="1" Grid.ColumnSpan="9"/>
+        <Button x:Name="DetailsButton" Style="{DynamicResource OpenfileDialogButton}" Grid.Column="7" Margin="{DynamicResource DefaultSpacingLeft}" ToolTip="View current item in new page." Command="{Binding Open, Mode=OneWay}" HorizontalAlignment="Right"/>
+        <Button x:Name="EditButton" Style="{DynamicResource EditButton}" Grid.Column="8" Margin="{DynamicResource DefaultSpacingLeft}" ToolTip="Edit the current item." Command="{Binding Edit, Mode=OneWay}" HorizontalAlignment="Right"/>
+        <Button x:Name="DeleteButton" Style="{DynamicResource DeleteButton}" Grid.Column="9" Margin="{DynamicResource DefaultSpacingLeftRight}" ToolTip="Delete the item." Command="{Binding Delete, Mode=OneWay}" HorizontalAlignment="Right"/>
+        <TextBox x:Name="DisplayNameTextBox" Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingLeftRight}" Text="{Binding DisplayName}" Grid.Row="1" Grid.ColumnSpan="10"/>
 
         <Label x:Name="IdentifierLabel" Padding="{DynamicResource DefaultSpacingTopLeftRight}" Content="Volume Identifer" Grid.Row="2" Grid.ColumnSpan="8" Grid.Column="1" FontWeight="Bold"/>
         <Label x:Name="VolumeNameLabel" Padding="{DynamicResource DefaultSpacingTopLeftRight}" Content="Volume Name" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="1" FontWeight="Bold"/>
-        <TextBox x:Name="IdentifierTextBox" Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding Identifier, Converter={StaticResource VolumeIdentifierToStringConverter}}" Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="7"/>
+        <TextBox x:Name="IdentifierTextBox" Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding Identifier, Converter={StaticResource VolumeIdentifierToStringConverter}}" Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="8"/>
         <TextBox x:Name="VolumeNameTextBox" Margin="{DynamicResource DefaultSpacingLeft}" Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding VolumeName}" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="1"/>
-        <Button x:Name="BrowseVolumeButton" Style="{DynamicResource OpenFolderButton}" Grid.Column="8" Margin="{DynamicResource DefaultSpacingRight}" ToolTip="Browse Volume" Grid.Row="3" HorizontalAlignment="Left" Command="{Binding BrowseVolume, Mode=OneWay}"/>
+        <Button x:Name="BrowseVolumeButton" Style="{DynamicResource OpenFolderButton}" Grid.Column="9" Margin="{DynamicResource DefaultSpacingRight}" ToolTip="Browse Volume" Grid.Row="3" HorizontalAlignment="Left" Command="{Binding BrowseVolume, Mode=OneWay}"/>
         <Label x:Name="TypeLabel" Padding="{DynamicResource DefaultSpacingTopLeftRight}" Content="Type" Grid.Row="4" FontWeight="Bold"/>
         <Label x:Name="FileSystemLabel" Padding="{DynamicResource DefaultSpacingTopLeftRight}" Content="File System" Grid.Column="1" Grid.Row="4" FontWeight="Bold"/>
         <Label x:Name="MaxNameLengthLabel" Padding="{DynamicResource DefaultSpacingTopLeftRight}" Content="Max Name Length" Grid.Column="3" Grid.Row="4" FontWeight="Bold"/>
         <Label x:Name="EffectiveMaxNameLengthLabel" Padding="{DynamicResource DefaultSpacingTopRight}" Content="(effective)" Grid.Column="4" Grid.Row="4" Grid.ColumnSpan="2"/>
         <Label x:Name="ReadOnlyLabel" Padding="{DynamicResource DefaultSpacingTopLeftRight}" Content="Read-only" Grid.Column="6" Grid.Row="4" FontWeight="Bold"/>
-        <Label x:Name="EffectiveReadOnlyLabel" Padding="{DynamicResource DefaultSpacingTop}" Content="(effective)" Grid.Column="7" Grid.Row="4" Grid.ColumnSpan="2"/>
+        <Label x:Name="EffectiveReadOnlyLabel" Padding="{DynamicResource DefaultSpacingTop}" Content="(effective)" Grid.Column="7" Grid.Row="4" Grid.ColumnSpan="3"/>
         <TextBox x:Name="TypeTextBox" Margin="{DynamicResource DefaultSpacingLeftRight}" Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding Type}" Grid.Row="5"/>
         <TextBox x:Name="FileSystemTextBox" Margin="{DynamicResource DefaultSpacingLeft}" Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding FileSystemDisplayName}" Grid.Row="5" Grid.Column="1"/>
         <Button x:Name="OpenFileSystemButton" Style="{DynamicResource OpenButton}" Grid.Column="2" Margin="{DynamicResource DefaultSpacingTopRight}" ToolTip="Open Filesystem" Grid.Row="5" HorizontalAlignment="Left" Command="{Binding OpenFileSystem, Mode=OneWay}"/>
         <TextBox x:Name="MaxNameLengthTextBox" Margin="{DynamicResource DefaultSpacingLeftRight}" Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding MaxNameLength}" Grid.Row="5" Grid.Column="3"/>
         <TextBox x:Name="EffectiveMaxNameLengthTextBox" Margin="{DynamicResource DefaultSpacingLeftRight}" Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding EffectiveMaxNameLength}" Grid.Row="5" Grid.Column="4" Grid.ColumnSpan="2"/>
         <TextBox x:Name="ReadOnlyTextBox" Margin="{DynamicResource DefaultSpacingLeftRight}" Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding ReadOnly}" Grid.Row="5" Grid.Column="6" Grid.ColumnSpan="1"/>
-        <TextBox x:Name="EffectiveReadOnlyTextBox" Margin="{DynamicResource DefaultSpacingLeftRight}" Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding EffectiveReadOnly}" Grid.Row="5" Grid.Column="7" Grid.ColumnSpan="2"/>
+        <TextBox x:Name="EffectiveReadOnlyTextBox" Margin="{DynamicResource DefaultSpacingLeftRight}" Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding EffectiveReadOnly}" Grid.Row="5" Grid.Column="7" Grid.ColumnSpan="3"/>
         <Label x:Name="StatusLabel" Padding="{DynamicResource DefaultSpacingTopLeftRight}" Content="Status" Grid.Row="6" FontWeight="Bold"/>
         <Label x:Name="AccessErrorCountLabel" Padding="{DynamicResource DefaultSpacingTopLeftRight}" Content="Access Error Count" Grid.Row="6" Grid.Column="1" FontWeight="Bold"/>
         <Label x:Name="PersonalTagCcountLabel" Padding="{DynamicResource DefaultSpacingTopLeftRight}" Content="Personal Tag Count" Grid.Row="6" Grid.Column="3" FontWeight="Bold" Grid.ColumnSpan="3"/>
-        <Label x:Name="SharedTagCcountLabel" Padding="{DynamicResource DefaultSpacingTopLeftRight}" Content="Shared Tag Count" Grid.Row="6" Grid.Column="6" Grid.ColumnSpan="3" FontWeight="Bold"/>
+        <Label x:Name="SharedTagCcountLabel" Padding="{DynamicResource DefaultSpacingTopLeftRight}" Content="Shared Tag Count" Grid.Row="6" Grid.Column="6" Grid.ColumnSpan="4" FontWeight="Bold"/>
         <TextBox Margin="{DynamicResource DefaultSpacingLeftRight}" Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding Status}" Grid.Row="7"/>
         <TextBox Margin="{DynamicResource DefaultSpacingLeft}" Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding AccessErrorCount}" Grid.Row="7" Grid.Column="1"/>
         <Button Style="{DynamicResource OpenListingButton}" ToolTip="View Error Listing" Margin="{DynamicResource DefaultSpacingRight}" Grid.Row="7" Grid.Column="2" HorizontalAlignment="Left" Command="{Binding ViewErrorListing, Mode=OneWay}"/>
         <TextBox Margin="{DynamicResource DefaultSpacingLeft}" Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding PersonalTagCount}" Grid.Row="7" Grid.Column="3" Grid.ColumnSpan="2"/>
         <Button Style="{DynamicResource OpenListingButton}" ToolTip="Manage Personal Tags" Margin="{DynamicResource DefaultSpacingRight}" Grid.Row="7" Grid.Column="5" HorizontalAlignment="Left" Command="{Binding ViewPersonalTags, Mode=OneWay}"/>
-        <TextBox Margin="{DynamicResource DefaultSpacingLeft}" Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding SharedTagCount}" Grid.Row="7" Grid.Column="6" Grid.ColumnSpan="2"/>
-        <Button Style="{DynamicResource OpenListingButton}" ToolTip="Manage Shared Tags" Margin="{DynamicResource DefaultSpacingRight}" Grid.Row="7" Grid.Column="8" HorizontalAlignment="Left" Command="{Binding ViewSharedTags, Mode=OneWay}"/>
+        <TextBox Margin="{DynamicResource DefaultSpacingLeft}" Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding SharedTagCount}" Grid.Row="7" Grid.Column="6" Grid.ColumnSpan="3"/>
+        <Button Style="{DynamicResource OpenListingButton}" ToolTip="Manage Shared Tags" Margin="{DynamicResource DefaultSpacingRight}" Grid.Row="7" Grid.Column="9" HorizontalAlignment="Left" Command="{Binding ViewSharedTags, Mode=OneWay}"/>
         <Label Padding="{DynamicResource DefaultSpacingTopLeft}" Content="Notes" Grid.Row="8" Grid.ColumnSpan="8" FontWeight="Bold"/>
-        <TextBox Margin="{DynamicResource DefaultSpacingLeft}" Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding Notes}" Grid.Row="9" Grid.ColumnSpan="9"/>
+        <TextBox Margin="{DynamicResource DefaultSpacingLeft}" Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding Notes}" Grid.Row="9" Grid.ColumnSpan="10"/>
         <Label Padding="{DynamicResource DefaultSpacingTopLeft}" Content="Created On" Grid.Row="10" FontWeight="Bold"/>
         <Label Padding="{DynamicResource DefaultSpacingTopLeft}" Content="Modified On" Grid.Row="10" Grid.Column="1" Grid.ColumnSpan="2" FontWeight="Bold"/>
-        <Label Padding="{DynamicResource DefaultSpacingTopLeft}" Content="Last Synchronized" Grid.Row="10" Grid.Column="3" Grid.ColumnSpan="5" FontWeight="Bold"/>
+        <Label Padding="{DynamicResource DefaultSpacingTopLeft}" Content="Last Synchronized" Grid.Row="10" Grid.Column="3" Grid.ColumnSpan="7" FontWeight="Bold"/>
         <TextBox Margin="{DynamicResource DefaultSpacingLeft}" Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding CreatedOn}" Grid.Row="11"/>
         <TextBox Margin="{DynamicResource DefaultSpacingLeft}" Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding ModifiedOn}" Grid.Row="11" Grid.Column="1" Grid.ColumnSpan="2"/>
-        <TextBox Margin="{DynamicResource DefaultSpacingLeft}" Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding LastSynchronizedOn}" Grid.Row="11" Grid.Column="3" Grid.ColumnSpan="5"/>
-        <Button Style="{DynamicResource SyncDisabledButton}" ToolTip="Synchronization disabled - no remote connection configured." Margin="{DynamicResource DefaultSpacingRight}" Grid.Row="11" Grid.Column="8" HorizontalAlignment="Left" Command="{Binding SynchronizeNow, Mode=OneWay}"/>
+        <TextBox Margin="{DynamicResource DefaultSpacingLeft}" Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding LastSynchronizedOn}" Grid.Row="11" Grid.Column="3" Grid.ColumnSpan="6"/>
+        <Button Style="{DynamicResource SyncDisabledButton}" ToolTip="Synchronization disabled - no remote connection configured." Margin="{DynamicResource DefaultSpacingRight}" Grid.Row="11" Grid.Column="9" HorizontalAlignment="Left" Command="{Binding SynchronizeNow, Mode=OneWay}"/>
     </Grid>
 </UserControl>

@@ -21,6 +21,7 @@
             <ColumnDefinition/>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
         <GroupBox Header="Coordinates" HorizontalAlignment="Left" Grid.ColumnSpan="2" Grid.RowSpan="2">
             <Grid>
@@ -52,25 +53,26 @@
                 <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding LongitudeSeconds}" Grid.Row="2" Grid.Column="4"/>
             </Grid>
         </GroupBox>
-        <Button Style="{DynamicResource EditButton}" Grid.Column="4" Margin="{DynamicResource DefaultSpacingTopLeft}" ToolTip="Edit the current item." Command="{Binding Edit, Mode=OneWay}"/>
-        <Button Style="{DynamicResource DeleteButton}" Grid.Column="5" Margin="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="Delete the item." Command="{Binding Delete, Mode=OneWay}"/>
+        <Button Style="{DynamicResource OpenfileDialogButton}" Grid.Column="4" Margin="{DynamicResource DefaultSpacingLeft}" ToolTip="View current item in new page." Command="{Binding Open, Mode=OneWay}"/>
+        <Button Style="{DynamicResource EditButton}" Grid.Column="5" Margin="{DynamicResource DefaultSpacingLeft}" ToolTip="Edit the current item." Command="{Binding Edit, Mode=OneWay}"/>
+        <Button Style="{DynamicResource DeleteButton}" Grid.Column="6" Margin="{DynamicResource DefaultSpacingLeftRight}" ToolTip="Delete the item." Command="{Binding Delete, Mode=OneWay}"/>
         <Label Padding="{DynamicResource DefaultSpacingTopLeft}" VerticalAlignment="Bottom" Content="Area Information" Grid.Column="2" Grid.ColumnSpan="2" FontWeight="Bold"/>
-        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingLeftRight}" Text="{Binding AreaInformation}" Grid.Row="1" Grid.ColumnSpan="4" Grid.Column="2"/>
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingLeftRight}" Text="{Binding AreaInformation}" Grid.Row="1" Grid.ColumnSpan="5" Grid.Column="2"/>
         <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" Content="Measure Mode" Grid.Column="0" Grid.Row="2" FontWeight="Bold"/>
         <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" Content="Version ID" Grid.Column="1" Grid.Row="2" FontWeight="Bold"/>
         <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" Content="Processing Method" Grid.Column="2" Grid.Row="2" FontWeight="Bold"/>
-        <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" Content="Total File Count" Grid.Row="2" FontWeight="Bold" Grid.Column="3" Grid.ColumnSpan="3"/>
+        <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" Content="Total File Count" Grid.Row="2" FontWeight="Bold" Grid.Column="3" Grid.ColumnSpan="4"/>
         <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingLeftRight}" Text="{Binding MeasureMode}" Grid.Row="3"/>
         <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingLeftRight}" Text="{Binding VersionID}" Grid.Row="3" Grid.Column="1"/>
         <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingLeftRight}" Text="{Binding ProcessingMethod}" Grid.Row="3" Grid.Column="2"/>
-        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingLeftRight}" Text="{Binding TotalFileCount}" Grid.Row="3" Grid.Column="3" Grid.ColumnSpan="2"/>
-        <Button Style="{DynamicResource OpenListingButton}" Grid.Column="5" Margin="{DynamicResource DefaultSpacingRight}" ToolTip="Show Files" Grid.Row="3" Command="{Binding ShowFileListing, Mode=OneWay}"/>
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingLeftRight}" Text="{Binding TotalFileCount}" Grid.Row="3" Grid.Column="3" Grid.ColumnSpan="3"/>
+        <Button Style="{DynamicResource OpenListingButton}" Grid.Column="6" Margin="{DynamicResource DefaultSpacingRight}" ToolTip="Show Files" Grid.Row="3" Command="{Binding ShowFileListing, Mode=OneWay}"/>
         <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" Content="Created On" Grid.Row="4" FontWeight="Bold"/>
         <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" Content="Modified On" Grid.Column="1" Grid.Row="4" FontWeight="Bold"/>
         <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" Content="Last Synchronized" Grid.Column="2" Grid.ColumnSpan="4" Grid.Row="4" FontWeight="Bold"/>
         <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingLeftRight}" Text="{Binding CreatedOn}" Grid.Row="5"/>
         <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingLeftRight}" Text="{Binding ModifiedOn}" Grid.Row="5" Grid.Column="1"/>
-        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingLeftRight}" Text="{Binding LastSynchronizedOn}" Grid.Row="5" Grid.ColumnSpan="3" Grid.Column="2"/>
-        <Button Grid.Column="5" Grid.Row="5" Style="{DynamicResource SyncDisabledButton}" ToolTip="Synchronization disabled - no remote connection configured." Margin="{DynamicResource DefaultSpacingRight}" Command="{Binding SynchronizeNow, Mode=OneWay}"/>
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingLeftRight}" Text="{Binding LastSynchronizedOn}" Grid.Row="5" Grid.ColumnSpan="4" Grid.Column="2"/>
+        <Button Grid.Column="6" Grid.Row="5" Style="{DynamicResource SyncDisabledButton}" ToolTip="Synchronization disabled - no remote connection configured." Margin="{DynamicResource DefaultSpacingRight}" Command="{Binding SynchronizeNow, Mode=OneWay}"/>
     </Grid>
 </UserControl>

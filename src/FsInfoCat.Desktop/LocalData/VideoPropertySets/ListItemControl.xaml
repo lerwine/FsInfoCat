@@ -23,38 +23,40 @@
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
         <Label Padding="{DynamicResource DefaultSpacingTopLeft}" Content="Stream #" Grid.Column="0" Grid.ColumnSpan="1" VerticalAlignment="Bottom" FontWeight="Bold"/>
         <Label Padding="{DynamicResource DefaultSpacingTopLeft}" VerticalAlignment="Bottom" Content="Stream Name" Grid.Column="1" FontWeight="Bold"/>
         <Label Padding="{DynamicResource DefaultSpacingTopLeft}" Content="Director" Grid.Column="2" Grid.ColumnSpan="2" VerticalAlignment="Bottom" FontWeight="Bold"/>
-        <Button Style="{DynamicResource EditButton}" Grid.Column="4" Margin="{DynamicResource DefaultSpacingTopLeft}" ToolTip="Edit the current item." Command="{Binding Edit, Mode=OneWay}"/>
+        <Button Style="{DynamicResource OpenfileDialogButton}" Grid.Column="4" Margin="{DynamicResource DefaultSpacingLeft}" ToolTip="View current item in new page." Command="{Binding Open, Mode=OneWay}"/>
+        <Button Style="{DynamicResource EditButton}" Grid.Column="5" Margin="{DynamicResource DefaultSpacingTopLeft}" ToolTip="Edit the current item." Command="{Binding Edit, Mode=OneWay}"/>
         <Button Style="{DynamicResource DeleteButton}" Grid.Column="6" Margin="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="Delete the item." Command="{Binding Delete, Mode=OneWay}"/>
         <TextBox x:Name="StreamNumberTextBox" Margin="{DynamicResource DefaultSpacingLeft}" Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding StreamNumber}" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="1"/>
-        <TextBox x:Name="DirectorTextBox" Margin="{DynamicResource DefaultSpacingLeft}" Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding Director}" Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="4"/>
+        <TextBox x:Name="DirectorTextBox" Margin="{DynamicResource DefaultSpacingLeft}" Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding Director}" Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="5"/>
         <TextBox x:Name="StreamNameTextBox" Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding StreamName}" Grid.Row="1" Grid.ColumnSpan="1" Grid.Column="1"/>
         <Label Padding="{DynamicResource DefaultSpacingTopLeft}" Content="Horizontal Aspect Ratio" Grid.Row="2" Grid.Column="0" FontWeight="Bold"/>
         <Label Padding="{DynamicResource DefaultSpacingTopLeft}" Content="Vertical Aspect Ratio" Grid.Row="2" Grid.Column="1" FontWeight="Bold"/>
         <Label Padding="{DynamicResource DefaultSpacingTopLeft}" Content="Frame Width" Grid.Row="2" Grid.Column="2" FontWeight="Bold"/>
-        <Label Padding="{DynamicResource DefaultSpacingTopLeft}" Content="Frame Height" Grid.Row="2" Grid.Column="3" Grid.ColumnSpan="3" FontWeight="Bold"/>
+        <Label Padding="{DynamicResource DefaultSpacingTopLeft}" Content="Frame Height" Grid.Row="2" Grid.Column="3" Grid.ColumnSpan="4" FontWeight="Bold"/>
         <TextBox x:Name="HorizontalAspectRatioTextBox" Margin="{DynamicResource DefaultSpacingLeft}" Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding HorizontalAspectRatio}" Grid.Row="3" Grid.Column="0"/>
         <TextBox x:Name="VerticalAspectRatioTextBox" Margin="{DynamicResource DefaultSpacingLeft}" Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding VerticalAspectRatio}" Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="1"/>
         <TextBox x:Name="FrameWidthTextBox" Margin="{DynamicResource DefaultSpacingLeft}" Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding FrameWidth}" Grid.Row="3" Grid.Column="2"/>
-        <TextBox x:Name="FrameHeightTextBox" Margin="{DynamicResource DefaultSpacingLeft}" Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding FrameHeight}" Grid.Row="3" Grid.Column="3"/>
+        <TextBox x:Name="FrameHeightTextBox" Margin="{DynamicResource DefaultSpacingLeft}" Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding FrameHeight}" Grid.Row="3" Grid.Column="3" Grid.ColumnSpan="4"/>
         <Label Padding="{DynamicResource DefaultSpacingTopLeft}" Content="Frame Rate" Grid.Row="4" FontWeight="Bold"/>
         <Label Padding="{DynamicResource DefaultSpacingTopLeft}" Content="Compression" Grid.Row="4" Grid.Column="1" FontWeight="Bold"/>
         <Label Padding="{DynamicResource DefaultSpacingTopLeft}" Content="Encoding Bitrate" Grid.Row="4" Grid.Column="2" FontWeight="Bold"/>
-        <Label Padding="{DynamicResource DefaultSpacingTopLeft}" Content="Total File Count" Grid.Row="4" Grid.Column="3" Grid.ColumnSpan="3" FontWeight="Bold"/>
+        <Label Padding="{DynamicResource DefaultSpacingTopLeft}" Content="Total File Count" Grid.Row="4" Grid.Column="3" Grid.ColumnSpan="4" FontWeight="Bold"/>
         <TextBox x:Name="FrameRateTextBox" Margin="{DynamicResource DefaultSpacingLeft}" Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding FrameRate}" Grid.Row="5"/>
         <TextBox x:Name="CompressionTextBox" Margin="{DynamicResource DefaultSpacingLeft}" Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding Compression}" Grid.Row="5" Grid.Column="1"/>
         <TextBox x:Name="EncodingBitrateTextBox" Margin="{DynamicResource DefaultSpacingLeft}" Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding EncodingBitrate}" Grid.Row="5" Grid.Column="2"/>
-        <TextBox x:Name="TotalFileCountTextBox" Margin="{DynamicResource DefaultSpacingLeft}" Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding TotalFileCount}" Grid.Row="5" Grid.Column="3" Grid.ColumnSpan="2"/>
+        <TextBox x:Name="TotalFileCountTextBox" Margin="{DynamicResource DefaultSpacingLeft}" Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding TotalFileCount}" Grid.Row="5" Grid.Column="3" Grid.ColumnSpan="3"/>
         <Button Style="{DynamicResource OpenListingButton}" ToolTip="Show File Listing" Margin="{DynamicResource DefaultSpacingRight}" Grid.Column="6" Grid.Row="5" Command="{Binding ShowFileListing, Mode=OneWay}"/>
         <Label Padding="{DynamicResource DefaultSpacingTopLeft}" Content="Created On" Grid.Row="6" FontWeight="Bold"/>
         <Label Padding="{DynamicResource DefaultSpacingTopLeft}" Content="Modified On" Grid.Row="6" Grid.Column="1" FontWeight="Bold"/>
-        <Label Padding="{DynamicResource DefaultSpacingTopLeft}" Content="Last Synchronized" Grid.Row="6" Grid.Column="2" Grid.ColumnSpan="4" FontWeight="Bold"/>
+        <Label Padding="{DynamicResource DefaultSpacingTopLeft}" Content="Last Synchronized" Grid.Row="6" Grid.Column="2" Grid.ColumnSpan="5" FontWeight="Bold"/>
         <TextBox Margin="{DynamicResource DefaultSpacingLeft}" Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding CreatedOn}" Grid.Row="7"/>
         <TextBox Margin="{DynamicResource DefaultSpacingLeft}" Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding ModifiedOn}" Grid.Row="7" Grid.Column="1"/>
-        <TextBox Margin="{DynamicResource DefaultSpacingLeft}" Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding LastSynchronizedOn}" Grid.Row="7" Grid.Column="2" Grid.ColumnSpan="3"/>
+        <TextBox Margin="{DynamicResource DefaultSpacingLeft}" Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding LastSynchronizedOn}" Grid.Row="7" Grid.Column="2" Grid.ColumnSpan="4"/>
         <Button Style="{DynamicResource SyncDisabledButton}" ToolTip="Synchronization disabled - no remote connection configured." Margin="{DynamicResource DefaultSpacingRight}" Grid.Column="6" Grid.Row="7" Command="{Binding SynchronizeNow, Mode=OneWay}"/>
     </Grid>
 </UserControl>

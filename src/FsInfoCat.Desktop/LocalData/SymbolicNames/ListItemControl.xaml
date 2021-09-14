@@ -18,18 +18,20 @@
             <ColumnDefinition/>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
         <Label Padding="{DynamicResource DefaultSpacingTopLeft}" VerticalAlignment="Bottom" Content="Notes" Grid.ColumnSpan="4" FontWeight="Bold"/>
-        <Button Style="{DynamicResource EditButton}" Grid.Column="3" Margin="{DynamicResource DefaultSpacingLeft}" ToolTip="Edit the current item." Command="{Binding Edit, Mode=OneWay}"/>
-        <Button Style="{DynamicResource DeleteButton}" Grid.Column="4" Margin="{DynamicResource DefaultSpacingLeftRight}" ToolTip="Delete the item." Command="{Binding Delete, Mode=OneWay}"/>
-        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding Notes}" Grid.Row="1" Grid.ColumnSpan="5"/>
+        <Button Style="{DynamicResource OpenfileDialogButton}" Grid.Column="3" Margin="{DynamicResource DefaultSpacingLeft}" ToolTip="View current item in new page." Command="{Binding Open, Mode=OneWay}"/>
+        <Button Style="{DynamicResource EditButton}" Grid.Column="4" Margin="{DynamicResource DefaultSpacingLeft}" ToolTip="Edit the current item." Command="{Binding Edit, Mode=OneWay}"/>
+        <Button Style="{DynamicResource DeleteButton}" Grid.Column="5" Margin="{DynamicResource DefaultSpacingLeftRight}" ToolTip="Delete the item." Command="{Binding Delete, Mode=OneWay}"/>
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding Notes}" Grid.Row="1" Grid.ColumnSpan="6"/>
 
         <Label Padding="{DynamicResource DefaultSpacingTopLeft}" Content="Created On" Grid.Row="2" FontWeight="Bold"/>
         <Label Padding="{DynamicResource DefaultSpacingTopLeft}" Content="Modified On" Grid.Row="2" Grid.Column="1" FontWeight="Bold"/>
-        <Label Padding="{DynamicResource DefaultSpacingTopLeft}" Content="Last Synchronized" Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="3" FontWeight="Bold"/>
+        <Label Padding="{DynamicResource DefaultSpacingTopLeft}" Content="Last Synchronized" Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="4" FontWeight="Bold"/>
         <TextBox Margin="{DynamicResource DefaultSpacingLeft}" Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding CreatedOn}" Grid.Row="3"/>
         <TextBox Margin="{DynamicResource DefaultSpacingLeft}" Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding ModifiedOn}" Grid.Row="3" Grid.Column="1"/>
-        <TextBox Margin="{DynamicResource DefaultSpacingLeft}" Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding LastSynchronizedOn}" Grid.Row="3" Grid.Column="2" Grid.ColumnSpan="2"/>
-        <Button Style="{DynamicResource SyncDisabledButton}" Grid.Column="4" Margin="{DynamicResource DefaultSpacingTopLeft}" ToolTip="Synchronization disabled - no remote connection configured." Grid.Row="3" Command="{Binding SynchronizeNow, Mode=OneWay}"/>
+        <TextBox Margin="{DynamicResource DefaultSpacingLeft}" Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding LastSynchronizedOn}" Grid.Row="3" Grid.Column="2" Grid.ColumnSpan="3"/>
+        <Button Style="{DynamicResource SyncDisabledButton}" Grid.Column="5" Margin="{DynamicResource DefaultSpacingTopLeft}" ToolTip="Synchronization disabled - no remote connection configured." Grid.Row="3" Command="{Binding SynchronizeNow, Mode=OneWay}"/>
     </Grid>
 </UserControl>

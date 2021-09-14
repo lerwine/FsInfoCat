@@ -85,7 +85,7 @@
                             <DiscreteObjectKeyFrame KeyTime="00:00:00" Value="{x:Static VerticalAlignment.Bottom}"/>
                         </ObjectAnimationUsingKeyFrames>
                         <Int32AnimationUsingKeyFrames Storyboard.TargetName="label1" Storyboard.TargetProperty="(Grid.ColumnSpan)">
-                            <EasingInt32KeyFrame KeyTime="00:00:00" Value="4"/>
+                            <EasingInt32KeyFrame KeyTime="00:00:00" Value="5"/>
                         </Int32AnimationUsingKeyFrames>
                     </Storyboard>
                 </VisualState>
@@ -112,6 +112,7 @@
             <ColumnDefinition/>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
         <b:Interaction.Triggers>
             <b:PropertyChangedTrigger Binding="{Binding ProgramDescription, Converter={StaticResource StringToBooleanConverter}}">
@@ -127,36 +128,37 @@
             </b:PropertyChangedTrigger>
         </b:Interaction.Triggers>
         <Label x:Name="label" Padding="{DynamicResource DefaultSpacingTopLeft}" VerticalAlignment="Bottom" Content="Program Description" Grid.ColumnSpan="4" FontWeight="Bold"/>
-        <Button Style="{DynamicResource EditButton}" Grid.Column="5" Margin="{DynamicResource DefaultSpacingTopLeft}" ToolTip="Edit the current item." Command="{Binding Edit, Mode=OneWay}"/>
-        <Button Style="{DynamicResource DeleteButton}" Grid.Column="6" Margin="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="Delete the item." Command="{Binding Delete, Mode=OneWay}"/>
-        <TextBox x:Name="textBox" Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingLeftRight}" Text="{Binding ProgramDescription}" Grid.Row="1" Grid.ColumnSpan="6"/>
-        <Label x:Name="label1" Padding="{DynamicResource DefaultSpacingTopLeftRight}" Content="Episode Name" Grid.ColumnSpan="6" Grid.Row="2" FontWeight="Bold"/>
-        <TextBox x:Name="textBox1" Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingLeftRight}" Text="{Binding EpisodeName}" Grid.ColumnSpan="6" Grid.Row="3"/>
+        <Button Style="{DynamicResource OpenfileDialogButton}" Grid.Column="5" Margin="{DynamicResource DefaultSpacingLeft}" ToolTip="View current item in new page." Command="{Binding Open, Mode=OneWay}"/>
+        <Button Style="{DynamicResource EditButton}" Grid.Column="6" Margin="{DynamicResource DefaultSpacingLeft}" ToolTip="Edit the current item." Command="{Binding Edit, Mode=OneWay}"/>
+        <Button Style="{DynamicResource DeleteButton}" Grid.Column="7" Margin="{DynamicResource DefaultSpacingLeftRight}" ToolTip="Delete the item." Command="{Binding Delete, Mode=OneWay}"/>
+        <TextBox x:Name="textBox" Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingLeftRight}" Text="{Binding ProgramDescription}" Grid.Row="1" Grid.ColumnSpan="8"/>
+        <Label x:Name="label1" Padding="{DynamicResource DefaultSpacingTopLeftRight}" Content="Episode Name" Grid.ColumnSpan="8" Grid.Row="2" FontWeight="Bold"/>
+        <TextBox x:Name="textBox1" Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingLeftRight}" Text="{Binding EpisodeName}" Grid.ColumnSpan="8" Grid.Row="3"/>
         <Label x:Name="label2" Padding="{DynamicResource DefaultSpacingTopLeftRight}" Content="Channel Number" Grid.Row="4" FontWeight="Bold" Grid.ColumnSpan="2"/>
         <Label x:Name="label3" Padding="{DynamicResource DefaultSpacingTopLeftRight}" Content="Station Call Sign" Grid.Row="4" Grid.Column="2" FontWeight="Bold"/>
         <Label x:Name="label4" Padding="{DynamicResource DefaultSpacingTopLeftRight}" Content="Station Name" Grid.Row="4" Grid.Column="3" FontWeight="Bold"/>
-        <Label x:Name="label5" Padding="{DynamicResource DefaultSpacingTopLeftRight}" Content="Network Affiliation" Grid.Row="4" Grid.Column="4" FontWeight="Bold"/>
+        <Label x:Name="label5" Padding="{DynamicResource DefaultSpacingTopLeftRight}" Content="Network Affiliation" Grid.Row="4" Grid.Column="4" FontWeight="Bold" Grid.ColumnSpan="4"/>
         <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingLeftRight}" Text="{Binding ChannelNumber}" Grid.Row="5" Grid.ColumnSpan="2"/>
         <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingLeftRight}" Text="{Binding StationCallSign}" Grid.Row="5" Grid.Column="2"/>
         <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingLeftRight}" Text="{Binding StationName}" Grid.Row="5" Grid.Column="3"/>
-        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Margin="5,0,5,0" Text="{Binding NetworkAffiliation}" Grid.Row="5" Grid.Column="4" Grid.ColumnSpan="3" Height="23" Grid.RowSpan="2" VerticalAlignment="Top"/>
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Margin="5,0,5,0" Text="{Binding NetworkAffiliation}" Grid.Row="5" Grid.Column="4" Grid.ColumnSpan="4" Height="23" Grid.RowSpan="2" VerticalAlignment="Top"/>
 
         <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" Content="Original Broadcast Date" Grid.Row="6" Grid.ColumnSpan="3" FontWeight="Bold"/>
         <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" Content="Is DTV" Grid.Row="6" Grid.Column="3" FontWeight="Bold"/>
-        <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" Content="Is HD" Grid.Row="6" Grid.Column="4" FontWeight="Bold"/>
+        <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" Content="Is HD" Grid.Row="6" Grid.Column="4" FontWeight="Bold" Grid.ColumnSpan="4"/>
         <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingLeftRight}" Text="{Binding OriginalBroadcastDate}" Grid.Row="7" Grid.ColumnSpan="3"/>
         <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingLeftRight}" Text="{Binding IsDTVContent}" Grid.Row="7" Grid.Column="3"/>
-        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingLeftRight}" Text="{Binding IsHDContent}" Grid.Row="7" Grid.Column="4" Grid.ColumnSpan="3"/>
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingLeftRight}" Text="{Binding IsHDContent}" Grid.Row="7" Grid.Column="4" Grid.ColumnSpan="4"/>
 
         <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" Content="Total File Count" Grid.Row="8" FontWeight="Bold" Grid.ColumnSpan="2"/>
         <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" Content="Created On" Grid.Row="8" Grid.Column="2" FontWeight="Bold"/>
         <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" Content="Modified On" Grid.Row="8" Grid.Column="3" FontWeight="Bold"/>
-        <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" Content="Last Synchronized" Grid.Row="8" Grid.Column="4" FontWeight="Bold"/>
+        <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" Content="Last Synchronized" Grid.Row="8" Grid.Column="4" FontWeight="Bold" Grid.ColumnSpan="4"/>
         <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingLeftRight}" Text="{Binding TotalFileCount}" Grid.Row="9"/>
         <Button Style="{DynamicResource OpenListingButton}" Grid.Column="1" Margin="{DynamicResource DefaultSpacingRight}" ToolTip="Show Files" Grid.Row="9" Command="{Binding ShowFileListing, Mode=OneWay}"/>
         <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingLeftRight}" Text="{Binding CreatedOn}" Grid.Row="9" Grid.Column="2"/>
         <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingLeftRight}" Text="{Binding ModifiedOn}" Grid.Row="9" Grid.Column="3"/>
-        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingLeft}" Text="{Binding LastSynchronizedOn}" Grid.Row="9" Grid.Column="4" Grid.ColumnSpan="2"/>
-        <Button Style="{DynamicResource SyncDisabledButton}" Grid.Column="6" Margin="{DynamicResource DefaultSpacingRight}" ToolTip="Synchronization disabled - no remote connection configured." Grid.Row="9" Command="{Binding SynchronizeNow, Mode=OneWay}"/>
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingLeft}" Text="{Binding LastSynchronizedOn}" Grid.Row="9" Grid.Column="4" Grid.ColumnSpan="3"/>
+        <Button Style="{DynamicResource SyncDisabledButton}" Grid.Column="7" Margin="{DynamicResource DefaultSpacingRight}" ToolTip="Synchronization disabled - no remote connection configured." Grid.Row="9" Command="{Binding SynchronizeNow, Mode=OneWay}"/>
     </Grid>
 </UserControl>

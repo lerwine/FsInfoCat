@@ -31,37 +31,35 @@
             <ColumnDefinition/>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
         <Label Padding="{DynamicResource DefaultSpacingTopLeft}" VerticalAlignment="Bottom" Content="Event" Grid.ColumnSpan="4" FontWeight="Bold"/>
-        <Button Style="{DynamicResource EditButton}" Grid.Column="5" Margin="{DynamicResource DefaultSpacingTopLeft}" ToolTip="Edit the current item." Command="{Binding Edit, Mode=OneWay}"/>
-        <Button Style="{DynamicResource DeleteButton}" Grid.Column="6" Margin="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="Delete the item." Command="{Binding Delete, Mode=OneWay}"/>
-        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding Event}" Grid.Row="1" Grid.ColumnSpan="6"/>
-
+        <Button Style="{DynamicResource OpenfileDialogButton}" Grid.Column="5" Margin="{DynamicResource DefaultSpacingLeft}" ToolTip="View current item in new page." Command="{Binding Open, Mode=OneWay}"/>
+        <Button Style="{DynamicResource EditButton}" Grid.Column="6" Margin="{DynamicResource DefaultSpacingLeft}" ToolTip="Edit the current item." Command="{Binding Edit, Mode=OneWay}"/>
+        <Button Style="{DynamicResource DeleteButton}" Grid.Column="7" Margin="{DynamicResource DefaultSpacingLeftRight}" ToolTip="Delete the item." Command="{Binding Delete, Mode=OneWay}"/>
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding Event}" Grid.Row="1" Grid.ColumnSpan="8" Margin="{DynamicResource DefaultSpacingLeftRight}"/>
         <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" Content="Camera Manufacturer" Grid.Row="2" Grid.ColumnSpan="3" FontWeight="Bold"/>
-        <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" Content="Camera Model" Grid.Row="2" Grid.ColumnSpan="4" Grid.Column="3" FontWeight="Bold"/>
-        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding CameraManufacturer}" Grid.Row="3" Grid.ColumnSpan="3"/>
-        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding CameraModel}" Grid.Row="3" Grid.Column="3" Grid.ColumnSpan="4"/>
-
+        <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" Content="Camera Model" Grid.Row="2" Grid.ColumnSpan="5" Grid.Column="3" FontWeight="Bold"/>
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding CameraManufacturer}" Grid.Row="3" Grid.ColumnSpan="3" Margin="{DynamicResource DefaultSpacingLeftRight}"/>
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding CameraModel}" Grid.Row="3" Grid.Column="3" Grid.ColumnSpan="5" Margin="{DynamicResource DefaultSpacingLeftRight}"/>
         <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" Content="Total File Count" Grid.Row="4" FontWeight="Bold"/>
         <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" Content="Date Taken" Grid.Row="4" Grid.Column="2" FontWeight="Bold"/>
         <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" Content="EXIF Version" Grid.Row="4" Grid.Column="3" FontWeight="Bold"/>
-        <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" Content="Orientation" Grid.Row="4" Grid.Column="4" Grid.ColumnSpan="3" FontWeight="Bold"/>
-        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding TotalFileCount}" Grid.Row="5"/>
+        <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" Content="Orientation" Grid.Row="4" Grid.Column="4" Grid.ColumnSpan="4" FontWeight="Bold"/>
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding TotalFileCount}" Grid.Row="5" Margin="{DynamicResource DefaultSpacingLeft}"/>
         <Button Style="{DynamicResource OpenListingButton}" Grid.Column="1" Margin="{DynamicResource DefaultSpacingRight}" ToolTip="Show Files" Grid.Row="5" Command="{Binding ShowFileListing, Mode=OneWay}"/>
-        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding DateTaken}" Grid.Row="5" Grid.Column="2"/>
-        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding EXIFVersion}" Grid.Row="5" Grid.Column="3"/>
-        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding Orientation}" Grid.Row="5" Grid.Column="4" Grid.ColumnSpan="3" Visibility="{Binding OrientationText, Converter={StaticResource VisibileIfEmptyConverter}}"/>
-        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding OrientationText}" Grid.Row="5" Grid.Column="4" Grid.ColumnSpan="3" Visibility="{Binding OrientationText, Converter={StaticResource VisibileIfNotEmptyConverter}}"/>
-
-        <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" Content="Tagged" Grid.Row="6" Grid.ColumnSpan="6" Visibility="{Binding PeopleNames, Converter={StaticResource VisibileIfNotEmptyConverter}, Mode=OneWay}" FontWeight="Bold"/>
-        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding PeopleNames}" Grid.Row="7" Grid.ColumnSpan="6" Visibility="{Binding PeopleNames, Converter={StaticResource VisibileIfNotEmptyConverter}, Mode=OneWay}"/>
-
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding DateTaken}" Grid.Row="5" Grid.Column="2" Margin="{DynamicResource DefaultSpacingLeftRight}"/>
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding EXIFVersion}" Grid.Row="5" Grid.Column="3" Margin="{DynamicResource DefaultSpacingLeftRight}"/>
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding Orientation}" Grid.Row="5" Grid.Column="4" Grid.ColumnSpan="3" Visibility="{Binding OrientationText, Converter={StaticResource VisibileIfEmptyConverter}}" Margin="{DynamicResource DefaultSpacingLeftRight}"/>
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding OrientationText}" Grid.Row="5" Grid.Column="4" Grid.ColumnSpan="4" Visibility="{Binding OrientationText, Converter={StaticResource VisibileIfNotEmptyConverter}}" Margin="{DynamicResource DefaultSpacingLeftRight}"/>
+        <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" Content="Tagged" Grid.Row="6" Grid.ColumnSpan="8" Visibility="{Binding PeopleNames, Converter={StaticResource VisibileIfNotEmptyConverter}, Mode=OneWay}" FontWeight="Bold"/>
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding PeopleNames}" Grid.Row="7" Grid.ColumnSpan="8" Visibility="{Binding PeopleNames, Converter={StaticResource VisibileIfNotEmptyConverter}, Mode=OneWay}" Margin="{DynamicResource DefaultSpacingLeftRight}"/>
         <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" Content="Created On" Grid.Row="8" FontWeight="Bold" Grid.ColumnSpan="2"/>
         <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" Content="Modified On" Grid.Row="8" Grid.Column="2" FontWeight="Bold"/>
         <Label Padding="{DynamicResource DefaultSpacingTopLeftRight}" Content="LastSynchronized" Grid.Row="8" Grid.Column="3" Grid.ColumnSpan="4" FontWeight="Bold"/>
-        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding CreatedOn}" Grid.Row="9" Grid.ColumnSpan="2"/>
-        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding ModifiedOn}" Grid.Row="9" Grid.Column="2"/>
-        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding LastSynchronizedOn}" Grid.Row="9" Grid.Column="3" Grid.ColumnSpan="4"/>
-        <Button Grid.Column="6" Grid.Row="9" Style="{DynamicResource SyncDisabledButton}" ToolTip="Synchronization disabled - no remote connection configured." Margin="{DynamicResource DefaultSpacingRight}" Command="{Binding SynchronizeNow, Mode=OneWay}"/>
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding CreatedOn}" Grid.Row="9" Grid.ColumnSpan="2" Margin="{DynamicResource DefaultSpacingLeftRight}"/>
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding ModifiedOn}" Grid.Row="9" Grid.Column="2" Margin="{DynamicResource DefaultSpacingLeftRight}"/>
+        <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Text="{Binding LastSynchronizedOn}" Grid.Row="9" Grid.Column="3" Grid.ColumnSpan="4" Margin="{DynamicResource DefaultSpacingLeft}"/>
+        <Button Grid.Column="7" Grid.Row="9" Style="{DynamicResource SyncDisabledButton}" ToolTip="Synchronization disabled - no remote connection configured." Margin="{DynamicResource DefaultSpacingRight}" Command="{Binding SynchronizeNow, Mode=OneWay}"/>
     </Grid>
 </UserControl>
