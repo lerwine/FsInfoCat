@@ -1,12 +1,13 @@
+using FsInfoCat.Desktop.ViewModel;
 using FsInfoCat.Local;
 using System;
 using System.Windows;
 
 namespace FsInfoCat.Desktop.LocalData.RecordedTVPropertySets
 {
-    public class DetailsViewModel : DependencyObject
+    public class DetailsViewModel : RecordedTVPropertySetDetailsViewModel<RecordedTVPropertySet, FileWithBinaryPropertiesAndAncestorNames, FileWithBinaryPropertiesAndAncestorNamesViewModel>
     {
-        public DetailsViewModel(RecordedTVPropertySet fs, RecordedTVPropertiesListItem entity)
+        public DetailsViewModel(RecordedTVPropertySet fs, RecordedTVPropertiesListItem entity) : base(fs, entity)
         {
         }
     }

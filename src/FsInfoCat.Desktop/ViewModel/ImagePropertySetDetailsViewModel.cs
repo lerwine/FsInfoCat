@@ -46,8 +46,9 @@ namespace FsInfoCat.Desktop.ViewModel
 
         #endregion
 
-        public ImagePropertySetDetailsViewModel([DisallowNull] TEntity entity) : base(entity)
+        public ImagePropertySetDetailsViewModel([DisallowNull] TEntity entity, object state = null) : base(entity)
         {
+            InvocationState = state;
             SetValue(FilesPropertyKey, new ReadOnlyObservableCollection<TFileItem>(BackingFiles));
         }
     }

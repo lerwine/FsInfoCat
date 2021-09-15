@@ -17,7 +17,7 @@ using System.Windows.Threading;
 
 namespace FsInfoCat.Desktop.LocalData.RedundantSets
 {
-    public class EditViewModel : RedundantSetRowViewModel<RedundantSet>, INavigatedToNotifiable, INavigatingFromNotifiable
+    public class EditViewModel : RedundantSetDetailsViewModel<RedundantSet, BinaryPropertySet, BinaryPropertySetRowViewModel<BinaryPropertySet>, Redundancy, RedundancyRowViewModel<Redundancy>>, INavigatedToNotifiable, INavigatingFromNotifiable
     {
         #region SaveChanges Command Property Members
 

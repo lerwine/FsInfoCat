@@ -7,7 +7,7 @@ using System.Windows.Navigation;
 
 namespace FsInfoCat.Desktop.LocalData.RedundantSets
 {
-    public class DetailsViewModel : RedundantSetRowViewModel<RedundantSet>, INavigatedToNotifiable, INavigatingFromNotifiable
+    public class DetailsViewModel : RedundantSetDetailsViewModel<RedundantSet, BinaryPropertySet, BinaryPropertySetRowViewModel<BinaryPropertySet>, Redundancy, RedundancyRowViewModel<Redundancy>>, INavigatedToNotifiable, INavigatingFromNotifiable
     {
         #region ListItem Property Members
 

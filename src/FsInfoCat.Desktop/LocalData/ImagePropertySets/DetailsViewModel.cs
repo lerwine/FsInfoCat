@@ -1,12 +1,13 @@
+using FsInfoCat.Desktop.ViewModel;
 using FsInfoCat.Local;
 using System;
 using System.Windows;
 
 namespace FsInfoCat.Desktop.LocalData.ImagePropertySets
 {
-    public class DetailsViewModel : DependencyObject
+    public class DetailsViewModel : ImagePropertySetDetailsViewModel<ImagePropertySet, FileWithBinaryPropertiesAndAncestorNames, FileWithBinaryPropertiesAndAncestorNamesViewModel>
     {
-        public DetailsViewModel(ImagePropertySet fs, ImagePropertiesListItem entity)
+        public DetailsViewModel(ImagePropertySet fs, ImagePropertiesListItem entity) : base(fs, entity)
         {
         }
     }

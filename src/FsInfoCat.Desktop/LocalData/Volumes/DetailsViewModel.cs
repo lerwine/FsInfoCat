@@ -7,7 +7,7 @@ using System.Windows.Navigation;
 
 namespace FsInfoCat.Desktop.LocalData.Volumes
 {
-    public class DetailsViewModel : VolumeRowViewModel<Volume>, INavigatedToNotifiable, INavigatingFromNotifiable
+    public class DetailsViewModel : VolumeDetailsViewModel<Volume, FileSystemListItem, FileSystemListItemViewModel, SubdirectoryListItem, SubdirectoryListItemViewModel, VolumeAccessError, AccessErrorViewModel, PersonalVolumeTagListItem, PersonalTagViewModel, SharedVolumeTagListItem, SharedTagViewModel>, INavigatedToNotifiable, INavigatingFromNotifiable
     {
         #region Edit Command Property Members
 
