@@ -113,7 +113,7 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
             jobFactory.StartNew("Loading database record", "Opening database", item, GetEditPageAsync).Task.ContinueWith(task => OnGetEditPageComplete(task, item));
         }
 
-        private async Task<PageFunction<CrawlLogs.ItemEditResult>> GetEditPageAsync(CrawlJobListItemViewModel item, [DisallowNull] IWindowsStatusListener statusListener)
+        private async Task<PageFunction<ItemFunctionResultEventArgs>> GetEditPageAsync(CrawlJobListItemViewModel item, [DisallowNull] IWindowsStatusListener statusListener)
         {
             CrawlJobLog crawlJobLog;
             if (item is null)
@@ -135,7 +135,7 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
             return await Dispatcher.InvokeAsync(() => new CrawlLogs.EditPage(new(crawlJobLog, item?.Entity)), DispatcherPriority.Normal, statusListener.CancellationToken);
         }
 
-        private void OnGetEditPageComplete(Task<PageFunction<CrawlLogs.ItemEditResult>> task, CrawlJobListItemViewModel item) => Dispatcher.Invoke(() =>
+        private void OnGetEditPageComplete(Task<PageFunction<ItemFunctionResultEventArgs>> task, CrawlJobListItemViewModel item) => Dispatcher.Invoke(() =>
         {
             if (task.IsCanceled)
                 return;
@@ -151,7 +151,7 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
             }
             else
             {
-                PageFunction<CrawlLogs.ItemEditResult> page = task.Result;
+                PageFunction<ItemFunctionResultEventArgs> page = task.Result;
                 if (page is null)
                     return;
                 page.Return += Page_Return;
@@ -159,20 +159,21 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
             }
         });
 
-        private void Page_Return(object sender, ReturnEventArgs<CrawlLogs.ItemEditResult> e)
+        private void Page_Return(object sender, ReturnEventArgs<ItemFunctionResultEventArgs> e)
         {
             switch (e.Result.State)
             {
                 case EntityEditResultState.Added:
-                    if (e.Result.ItemEntity.ConfigurationId == Entity.Id)
-                        AddCrawlJobLogItem(new CrawlJobListItemViewModel(e.Result.ItemEntity));
+                    if (e.Result.Entity is CrawlJobLogListItem addedItem && addedItem.ConfigurationId == Entity.Id)
+                        AddCrawlJobLogItem(new CrawlJobListItemViewModel(addedItem));
                     break;
                 case EntityEditResultState.Modified:
-                    if (e.Result.ItemEntity.ConfigurationId != Entity.Id)
-                        RemoveCrawlJobLogItem(Logs.FirstOrDefault(i => ReferenceEquals(i.Entity, e.Result.ItemEntity)));
+                    if (e.Result.State is CrawlJobLogListItem modifiedItem && modifiedItem.ConfigurationId != Entity.Id)
+                        RemoveCrawlJobLogItem(Logs.FirstOrDefault(i => ReferenceEquals(i.Entity, modifiedItem)));
                     break;
                 case EntityEditResultState.Deleted:
-                    RemoveCrawlJobLogItem(Logs.FirstOrDefault(i => ReferenceEquals(i.Entity, e.Result.ItemEntity)));
+                    if (e.Result.State is CrawlJobLogListItem deletedItem && deletedItem.ConfigurationId != Entity.Id)
+                        RemoveCrawlJobLogItem(Logs.FirstOrDefault(i => ReferenceEquals(i.Entity, deletedItem)));
                     break;
             }
         }

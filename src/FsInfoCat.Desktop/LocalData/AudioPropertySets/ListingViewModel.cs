@@ -12,7 +12,7 @@ using System.Windows.Navigation;
 
 namespace FsInfoCat.Desktop.LocalData.AudioPropertySets
 {
-    public class ListingViewModel : ListingViewModel<AudioPropertiesListItem, ListItemViewModel, bool?, ItemEditResult>, INavigatedToNotifiable
+    public class ListingViewModel : ListingViewModel<AudioPropertiesListItem, ListItemViewModel, bool?>, INavigatedToNotifiable
     {
         private bool? _currentOptions = true;
 
@@ -122,10 +122,10 @@ namespace FsInfoCat.Desktop.LocalData.AudioPropertySets
             FilterOptions.Value = _currentOptions;
         }
 
-        protected async override Task<PageFunction<ItemEditResult>> GetDetailPageAsync([DisallowNull] ListItemViewModel item, [DisallowNull] IWindowsStatusListener statusListener)
+        protected async override Task<PageFunction<ItemFunctionResultEventArgs>> GetDetailPageAsync([DisallowNull] ListItemViewModel item, [DisallowNull] IWindowsStatusListener statusListener)
         {
             if (item is null)
-                return await Dispatcher.InvokeAsync<PageFunction<ItemEditResult>>(() => new DetailsPage(new(new AudioPropertySet(), null)));
+                return await Dispatcher.InvokeAsync<PageFunction<ItemFunctionResultEventArgs>>(() => new DetailsPage(new(new AudioPropertySet(), null)));
             using IServiceScope serviceScope = Services.CreateScope();
             using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             Guid id = item.Entity.Id;
@@ -136,13 +136,13 @@ namespace FsInfoCat.Desktop.LocalData.AudioPropertySets
                 ReloadAsync(_currentOptions);
                 return null;
             }
-            return await Dispatcher.InvokeAsync<PageFunction<ItemEditResult>>(() => new DetailsPage(new(fs, item.Entity)));
+            return await Dispatcher.InvokeAsync<PageFunction<ItemFunctionResultEventArgs>>(() => new DetailsPage(new(fs, item.Entity)));
         }
 
-        protected override async Task<PageFunction<ItemEditResult>> GetEditPageAsync(ListItemViewModel item, [DisallowNull] IWindowsStatusListener statusListener)
+        protected override async Task<PageFunction<ItemFunctionResultEventArgs>> GetEditPageAsync(ListItemViewModel item, [DisallowNull] IWindowsStatusListener statusListener)
         {
             if (item is null)
-                return await Dispatcher.InvokeAsync<PageFunction<ItemEditResult>>(() => new EditPage(new(new AudioPropertySet(), null)));
+                return await Dispatcher.InvokeAsync<PageFunction<ItemFunctionResultEventArgs>>(() => new EditPage(new(new AudioPropertySet(), null)));
             using IServiceScope serviceScope = Services.CreateScope();
             using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             Guid id = item.Entity.Id;
@@ -153,7 +153,7 @@ namespace FsInfoCat.Desktop.LocalData.AudioPropertySets
                 ReloadAsync(_currentOptions);
                 return null;
             }
-            return await Dispatcher.InvokeAsync<PageFunction<ItemEditResult>>(() => new EditPage(new(fs, item.Entity)));
+            return await Dispatcher.InvokeAsync<PageFunction<ItemFunctionResultEventArgs>>(() => new EditPage(new(fs, item.Entity)));
         }
 
         //protected async override Task<AudioPropertySet> LoadItemAsync([DisallowNull] AudioPropertiesListItem item, [DisallowNull] IWindowsStatusListener statusListener)

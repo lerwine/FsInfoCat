@@ -276,6 +276,8 @@ namespace FsInfoCat.Desktop.ViewModel
                 OnItemDeleteCommand(item, e.Parameter);
         }
     }
+
+    [Obsolete("Use ListingViewModel<TEntity, TItemViewModel, TFilterOptions>")]
     public abstract class ListingViewModel<TEntity, TItemViewModel, TFilterOptions, TEditResult> : FilteredItemsViewModel
         where TEntity : DbEntity
         where TItemViewModel : DbEntityRowViewModel<TEntity>, ICrudEntityRowViewModel<TEntity>

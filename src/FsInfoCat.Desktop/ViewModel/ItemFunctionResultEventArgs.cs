@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat.Desktop.ViewModel
 {
@@ -11,15 +10,11 @@ namespace FsInfoCat.Desktop.ViewModel
 
         public DbEntity Entity { get; }
 
-        [Obsolete("Use constructor with DbEntity, instead")]
-        public ItemFunctionResultEventArgs(ItemFunctionResult functionResult, object state = null)
-        {
-            FunctionResult = functionResult;
-        }
-
         public ItemFunctionResultEventArgs(ItemFunctionResult functionResult, DbEntity entity, object state = null)
         {
             FunctionResult = functionResult;
+            Entity = entity;
+            State = state;
         }
     }
 }

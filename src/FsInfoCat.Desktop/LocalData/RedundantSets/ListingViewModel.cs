@@ -14,7 +14,7 @@ using System.Windows.Navigation;
 
 namespace FsInfoCat.Desktop.LocalData.RedundantSets
 {
-    public class ListingViewModel : ListingViewModel<RedundantSetListItem, ListItemViewModel, ListingViewModel.ListingOptions, ItemEditResult>, INavigatedToNotifiable
+    public class ListingViewModel : ListingViewModel<RedundantSetListItem, ListItemViewModel, ListingViewModel.ListingOptions>, INavigatedToNotifiable
     {
         private ListingOptions _currentRange;
 
@@ -151,10 +151,10 @@ namespace FsInfoCat.Desktop.LocalData.RedundantSets
             UpdatePageTitle(_currentRange);
         }
 
-        protected async override Task<PageFunction<ItemEditResult>> GetDetailPageAsync([DisallowNull] ListItemViewModel item, [DisallowNull] IWindowsStatusListener statusListener)
+        protected async override Task<PageFunction<ItemFunctionResultEventArgs>> GetDetailPageAsync([DisallowNull] ListItemViewModel item, [DisallowNull] IWindowsStatusListener statusListener)
         {
             if (item is null)
-                return await Dispatcher.InvokeAsync<PageFunction<ItemEditResult>>(() => new DetailsPage(new(new(), null)));
+                return await Dispatcher.InvokeAsync<PageFunction<ItemFunctionResultEventArgs>>(() => new DetailsPage(new(new(), null)));
             using IServiceScope serviceScope = Services.CreateScope();
             using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             Guid id = item.Entity.Id;
@@ -165,13 +165,13 @@ namespace FsInfoCat.Desktop.LocalData.RedundantSets
                 ReloadAsync(_currentRange);
                 return null;
             }
-            return await Dispatcher.InvokeAsync<PageFunction<ItemEditResult>>(() => new DetailsPage(new(fs, item.Entity)));
+            return await Dispatcher.InvokeAsync<PageFunction<ItemFunctionResultEventArgs>>(() => new DetailsPage(new(fs, item.Entity)));
         }
 
-        protected override async Task<PageFunction<ItemEditResult>> GetEditPageAsync(ListItemViewModel item, [DisallowNull] IWindowsStatusListener statusListener)
+        protected override async Task<PageFunction<ItemFunctionResultEventArgs>> GetEditPageAsync(ListItemViewModel item, [DisallowNull] IWindowsStatusListener statusListener)
         {
             if (item is null)
-                return await Dispatcher.InvokeAsync<PageFunction<ItemEditResult>>(() => new EditPage(new(new(), null)));
+                return await Dispatcher.InvokeAsync<PageFunction<ItemFunctionResultEventArgs>>(() => new EditPage(new(new(), null)));
             using IServiceScope serviceScope = Services.CreateScope();
             using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             Guid id = item.Entity.Id;
@@ -182,7 +182,7 @@ namespace FsInfoCat.Desktop.LocalData.RedundantSets
                 ReloadAsync(_currentRange);
                 return null;
             }
-            return await Dispatcher.InvokeAsync<PageFunction<ItemEditResult>>(() => new EditPage(new(fs, item.Entity)));
+            return await Dispatcher.InvokeAsync<PageFunction<ItemFunctionResultEventArgs>>(() => new EditPage(new(fs, item.Entity)));
         }
 
         //protected override async Task<RedundantSet> LoadItemAsync([DisallowNull] RedundantSetListItem item, [DisallowNull] IWindowsStatusListener statusListener)

@@ -11,7 +11,7 @@ using System.Windows;
 using System.Windows.Navigation;
 namespace FsInfoCat.Desktop.LocalData.CrawlLogs
 {
-    public class ListingViewModel : ListingViewModel<CrawlJobLogListItem, ListItemViewModel, ListingViewModel.FilterOptions, ItemEditResult>, INavigatedToNotifiable
+    public class ListingViewModel : ListingViewModel<CrawlJobLogListItem, ListItemViewModel, ListingViewModel.FilterOptions>, INavigatedToNotifiable
     {
         private FilterOptions _currentOptions = new(null, true);
         private readonly EnumChoiceItem<CrawlStatus> _allOption;
@@ -135,12 +135,12 @@ namespace FsInfoCat.Desktop.LocalData.CrawlLogs
             StatusOptions.SelectedItem = FromFilterOptions(_currentOptions);
         }
 
-        protected override Task<PageFunction<ItemEditResult>> GetDetailPageAsync([DisallowNull] ListItemViewModel item, [DisallowNull] IWindowsStatusListener statusListener) => GetEditPageAsync(item, statusListener);
+        protected override Task<PageFunction<ItemFunctionResultEventArgs>> GetDetailPageAsync([DisallowNull] ListItemViewModel item, [DisallowNull] IWindowsStatusListener statusListener) => GetEditPageAsync(item, statusListener);
 
-        protected async override Task<PageFunction<ItemEditResult>> GetEditPageAsync(ListItemViewModel item, [DisallowNull] IWindowsStatusListener statusListener)
+        protected async override Task<PageFunction<ItemFunctionResultEventArgs>> GetEditPageAsync(ListItemViewModel item, [DisallowNull] IWindowsStatusListener statusListener)
         {
             if (item is null)
-                return await Dispatcher.InvokeAsync<PageFunction<ItemEditResult>>(() => new EditPage(new(new(), null)));
+                return await Dispatcher.InvokeAsync<PageFunction<ItemFunctionResultEventArgs>>(() => new EditPage(new(new(), null)));
             using IServiceScope serviceScope = Services.CreateScope();
             using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             Guid id = item.Entity.Id;
@@ -151,7 +151,7 @@ namespace FsInfoCat.Desktop.LocalData.CrawlLogs
                 ReloadAsync(_currentOptions);
                 return null;
             }
-            return await Dispatcher.InvokeAsync<PageFunction<ItemEditResult>>(() => new EditPage(new(crawlJobLog, item.Entity)));
+            return await Dispatcher.InvokeAsync<PageFunction<ItemFunctionResultEventArgs>>(() => new EditPage(new(crawlJobLog, item.Entity)));
         }
 
         //protected override async Task<CrawlJobLog> LoadItemAsync([DisallowNull] CrawlJobLogListItem item, [DisallowNull] IWindowsStatusListener statusListener)

@@ -12,7 +12,7 @@ using System.Windows.Navigation;
 
 namespace FsInfoCat.Desktop.LocalData.SharedTagDefinitions
 {
-    public class ListingViewModel : ListingViewModel<SharedTagDefinitionListItem, ListItemViewModel, bool?, ItemEditResult>, INavigatedToNotifiable
+    public class ListingViewModel : ListingViewModel<SharedTagDefinitionListItem, ListItemViewModel, bool?>, INavigatedToNotifiable
     {
         private bool? _currentOptions = true;
 
@@ -80,7 +80,7 @@ namespace FsInfoCat.Desktop.LocalData.SharedTagDefinitions
 
         protected override void OnRefreshCommand(object parameter) => ReloadAsync(_currentOptions);
 
-        //private void OnEditItemComplete(object sender, ReturnEventArgs<ItemEditResult> e)
+        //private void OnEditItemComplete(object sender, ReturnEventArgs<ItemFunctionResultEventArgs> e)
         //{
         //    switch (e.Result.State)
         //    {
@@ -199,10 +199,10 @@ namespace FsInfoCat.Desktop.LocalData.SharedTagDefinitions
             ListingOptions.Value = _currentOptions;
         }
 
-        protected async override Task<PageFunction<ItemEditResult>> GetDetailPageAsync([DisallowNull] ListItemViewModel item, [DisallowNull] IWindowsStatusListener statusListener)
+        protected async override Task<PageFunction<ItemFunctionResultEventArgs>> GetDetailPageAsync([DisallowNull] ListItemViewModel item, [DisallowNull] IWindowsStatusListener statusListener)
         {
             if (item is null)
-                return await Dispatcher.InvokeAsync<PageFunction<ItemEditResult>>(() => new DetailsPage(new(new(), null)));
+                return await Dispatcher.InvokeAsync<PageFunction<ItemFunctionResultEventArgs>>(() => new DetailsPage(new(new(), null)));
             using IServiceScope serviceScope = Services.CreateScope();
             using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             Guid id = item.Entity.Id;
@@ -213,13 +213,13 @@ namespace FsInfoCat.Desktop.LocalData.SharedTagDefinitions
                 ReloadAsync(_currentOptions);
                 return null;
             }
-            return await Dispatcher.InvokeAsync<PageFunction<ItemEditResult>>(() => new DetailsPage(new(fs, item.Entity)));
+            return await Dispatcher.InvokeAsync<PageFunction<ItemFunctionResultEventArgs>>(() => new DetailsPage(new(fs, item.Entity)));
         }
 
-        protected override async Task<PageFunction<ItemEditResult>> GetEditPageAsync(ListItemViewModel item, [DisallowNull] IWindowsStatusListener statusListener)
+        protected override async Task<PageFunction<ItemFunctionResultEventArgs>> GetEditPageAsync(ListItemViewModel item, [DisallowNull] IWindowsStatusListener statusListener)
         {
             if (item is null)
-                return await Dispatcher.InvokeAsync<PageFunction<ItemEditResult>>(() => new EditPage(new(new(), null)));
+                return await Dispatcher.InvokeAsync<PageFunction<ItemFunctionResultEventArgs>>(() => new EditPage(new(new(), null)));
             using IServiceScope serviceScope = Services.CreateScope();
             using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             Guid id = item.Entity.Id;
@@ -230,7 +230,7 @@ namespace FsInfoCat.Desktop.LocalData.SharedTagDefinitions
                 ReloadAsync(_currentOptions);
                 return null;
             }
-            return await Dispatcher.InvokeAsync<PageFunction<ItemEditResult>>(() => new EditPage(new(fs, item.Entity)));
+            return await Dispatcher.InvokeAsync<PageFunction<ItemFunctionResultEventArgs>>(() => new EditPage(new(fs, item.Entity)));
         }
 
         //protected override async Task<SharedTagDefinition> LoadItemAsync([DisallowNull] SharedTagDefinitionListItem item, [DisallowNull] IWindowsStatusListener statusListener)

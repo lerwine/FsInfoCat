@@ -1,4 +1,5 @@
 using FsInfoCat.Desktop.Commands;
+using FsInfoCat.Desktop.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,20 +20,14 @@ namespace FsInfoCat.Desktop.LocalData.RedundantSets
     /// <summary>
     /// Interaction logic for DetailsPage.xaml
     /// </summary>
-    public partial class DetailsPage : PageFunction<ItemEditResult>
+    public partial class DetailsPage : PageFunction<ItemFunctionResultEventArgs>
     {
         public DetailsPage(DetailsViewModel viewModel)
         {
             InitializeComponent();
             DataContext = viewModel;
-            // TODO: ViewModel needs to implement Completed event
-            //viewModel.Completed += ViewModel_Completed;
-        }
-
-        private void ViewModel_Completed(object sender, ViewModel.ItemFunctionResultEventArgs e)
-        {
-            // TODO: Call OnReturn
-            throw new NotImplementedException();
+#warning View model needs to implement Completed event
+            //viewModel.Completed += (object sender, ItemFunctionResultEventArgs e) => OnReturn(new ReturnEventArgs<ItemFunctionResultEventArgs>(e));
         }
     }
 }

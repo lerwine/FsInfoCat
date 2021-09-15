@@ -23,7 +23,7 @@ Error	1	ListItemViewModel	RootPath	TextBox.Text, Name='pathTextBox'	String	RootP
 Error	1	ListItemViewModel	FileSystemDetailText	TextBox.Text, Name='fileSystemTextBox'	String	FileSystemDetailText property not found on object of type ListItemViewModel.	\localdata\crawlconfigurations\listitemcontrol.xaml	63	FsInfoCat.Desktop
 
      */
-    public class ListingViewModel : ListingViewModel<CrawlConfigListItem, ListItemViewModel, ListingViewModel.FilterOptions, ItemEditResult>, INavigatedToNotifiable
+    public class ListingViewModel : ListingViewModel<CrawlConfigListItem, ListItemViewModel, ListingViewModel.FilterOptions>, INavigatedToNotifiable
     {
         private readonly EnumChoiceItem<CrawlStatus> _allOption;
         private readonly EnumChoiceItem<CrawlStatus> _allFailedOption;
@@ -239,10 +239,10 @@ Error	1	ListItemViewModel	FileSystemDetailText	TextBox.Text, Name='fileSystemTex
                 return new EditPage(new(crawlConfiguration, listitem) { Root = new(selectedRoot) });
             }, DispatcherPriority.Normal, statusListener.CancellationToken);
 
-        protected async override Task<PageFunction<ItemEditResult>> GetDetailPageAsync([DisallowNull] ListItemViewModel item, [DisallowNull] IWindowsStatusListener statusListener)
+        protected async override Task<PageFunction<ItemFunctionResultEventArgs>> GetDetailPageAsync([DisallowNull] ListItemViewModel item, [DisallowNull] IWindowsStatusListener statusListener)
         {
             if (item is null)
-                return await Dispatcher.InvokeAsync<PageFunction<ItemEditResult>>(() => new DetailsPage(new(new CrawlConfiguration(), null)));
+                return await Dispatcher.InvokeAsync<PageFunction<ItemFunctionResultEventArgs>>(() => new DetailsPage(new(new CrawlConfiguration(), null)));
             using IServiceScope serviceScope = Services.CreateScope();
             using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             Guid id = item.Entity.Id;
@@ -253,10 +253,10 @@ Error	1	ListItemViewModel	FileSystemDetailText	TextBox.Text, Name='fileSystemTex
                 ReloadAsync(_currentStatusOptions);
                 return null;
             }
-            return await Dispatcher.InvokeAsync<PageFunction<ItemEditResult>>(() => new DetailsPage(new(fs, item.Entity)));
+            return await Dispatcher.InvokeAsync<PageFunction<ItemFunctionResultEventArgs>>(() => new DetailsPage(new(fs, item.Entity)));
         }
 
-        protected override async Task<PageFunction<ItemEditResult>> GetEditPageAsync(ListItemViewModel listItem, [DisallowNull] IWindowsStatusListener statusListener)
+        protected override async Task<PageFunction<ItemFunctionResultEventArgs>> GetEditPageAsync(ListItemViewModel listItem, [DisallowNull] IWindowsStatusListener statusListener)
         {
             CrawlConfiguration crawlConfiguration;
             SubdirectoryListItemWithAncestorNames selectedRoot;
@@ -274,9 +274,7 @@ Error	1	ListItemViewModel	FileSystemDetailText	TextBox.Text, Name='fileSystemTex
                     id = crawlConfiguration.RootId;
                     selectedRoot = await dbContext.SubdirectoryListingWithAncestorNames.FirstOrDefaultAsync(d => d.Id == id);
                 }
-                throw new NotImplementedException();
-                // TODO: Base type needs to use ItemFunctionResultEventArgs
-                //return await CreateEditPageAsync(crawlConfiguration, selectedRoot, listItem.Entity, statusListener);
+                return await CreateEditPageAsync(crawlConfiguration, selectedRoot, listItem.Entity, statusListener);
             }
 
             itemEntity = null;
@@ -386,9 +384,7 @@ Error	1	ListItemViewModel	FileSystemDetailText	TextBox.Text, Name='fileSystemTex
                     }
                 }
             }
-            throw new NotImplementedException();
-            // TODO: Base type needs to use ItemFunctionResultEventArgs
-            //return await CreateEditPageAsync(crawlConfiguration ?? new(), selectedRoot, itemEntity, statusListener);
+            return await CreateEditPageAsync(crawlConfiguration ?? new(), selectedRoot, itemEntity, statusListener);
         }
 
         protected override void OnEditTaskFaulted([DisallowNull] Exception exception, ListItemViewModel item)
