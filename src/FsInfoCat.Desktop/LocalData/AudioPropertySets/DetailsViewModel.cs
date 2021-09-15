@@ -10,13 +10,6 @@ namespace FsInfoCat.Desktop.LocalData.AudioPropertySets
     public class DetailsViewModel : AudioPropertySetDetailsViewModel<AudioPropertySet, FileWithBinaryPropertiesAndAncestorNames, FileWithBinaryPropertiesAndAncestorNamesViewModel>,
         INavigatedToNotifiable, INavigatingFromNotifiable
     {
-        /// <summary>
-        /// Occurs when the <see cref="SaveChanges"/> is invoked.
-        /// </summary>
-        public event EventHandler<Commands.CommandEventArgs> ChangesSaved;
-
-        private void RaiseChangesSaved(object args) => ChangesSaved?.Invoke(this, new Commands.CommandEventArgs(args));
-
         #region ListItem Property Members
 
         private static readonly DependencyPropertyKey ListItemPropertyKey = DependencyPropertyBuilder<DetailsViewModel, AudioPropertiesListItem>
@@ -73,7 +66,7 @@ namespace FsInfoCat.Desktop.LocalData.AudioPropertySets
 
         #endregion
 
-        public DetailsViewModel([DisallowNull] AudioPropertySet entity, [DisallowNull] AudioPropertiesListItem listItem) : base(entity)
+        public DetailsViewModel([DisallowNull] AudioPropertySet entity, [DisallowNull] AudioPropertiesListItem listItem, object state = null) : base(entity, state)
         {
             ListItem = listItem;
             UpstreamId = entity.UpstreamId;

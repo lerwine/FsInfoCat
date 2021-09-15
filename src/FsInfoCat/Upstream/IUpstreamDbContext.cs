@@ -253,6 +253,18 @@ namespace FsInfoCat.Upstream
 
         IEnumerable<IUserProfileListItem> UserProfileListing { get; }
 
+        new IEnumerable<IUpstreamItemTagListItem> PersonalVolumeTagListing { get; }
+
+        new IEnumerable<IUpstreamItemTagListItem> SharedVolumeTagListing { get; }
+
+        new IEnumerable<IUpstreamItemTagListItem> PersonalSubdirectoryTagListing { get; }
+
+        new IEnumerable<IUpstreamItemTagListItem> SharedSubdirectoryTagListing { get; }
+
+        new IEnumerable<IUpstreamItemTagListItem> PersonalFileTagListing { get; }
+
+        new IEnumerable<IUpstreamItemTagListItem> SharedFileTagListing { get; }
+
         /// <summary>
         /// Finds the generic <see cref="IUpstreamSummaryPropertySet"/> in the upstream (remote) database that matches the specified summary properties.
         /// </summary>

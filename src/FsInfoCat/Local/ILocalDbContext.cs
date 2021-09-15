@@ -200,6 +200,18 @@ namespace FsInfoCat.Local
 
         new IEnumerable<ILocalVideoPropertiesListItem> VideoPropertiesListing { get; }
 
+        new IEnumerable<ILocalItemTagListItem> PersonalVolumeTagListing { get; }
+
+        new IEnumerable<ILocalItemTagListItem> SharedVolumeTagListing { get; }
+
+        new IEnumerable<ILocalItemTagListItem> PersonalSubdirectoryTagListing { get; }
+
+        new IEnumerable<ILocalItemTagListItem> SharedSubdirectoryTagListing { get; }
+
+        new IEnumerable<ILocalItemTagListItem> PersonalFileTagListing { get; }
+
+        new IEnumerable<ILocalItemTagListItem> SharedFileTagListing { get; }
+
         /// <summary>
         /// Finds the generic <see cref="ILocalSummaryPropertySet"/> in the local database that matches the specified summary properties.
         /// </summary>

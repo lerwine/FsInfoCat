@@ -227,8 +227,8 @@ Error	1	ListItemViewModel	FileSystemDetailText	TextBox.Text, Name='fileSystemTex
             SchedulingOptions.Value = isScheduled;
         }
 
-        private DispatcherOperation<PageFunction<ItemEditResult>> CreateEditPageAsync(CrawlConfiguration crawlConfiguration, SubdirectoryListItemWithAncestorNames selectedRoot, CrawlConfigListItem listitem,
-            [DisallowNull] IWindowsStatusListener statusListener) => Dispatcher.InvokeAsync<PageFunction<ItemEditResult>>(() =>
+        private DispatcherOperation<PageFunction<ItemFunctionResultEventArgs>> CreateEditPageAsync(CrawlConfiguration crawlConfiguration, SubdirectoryListItemWithAncestorNames selectedRoot, CrawlConfigListItem listitem,
+            [DisallowNull] IWindowsStatusListener statusListener) => Dispatcher.InvokeAsync<PageFunction<ItemFunctionResultEventArgs>>(() =>
             {
                 if (crawlConfiguration is null || selectedRoot is null)
                 {
@@ -253,7 +253,6 @@ Error	1	ListItemViewModel	FileSystemDetailText	TextBox.Text, Name='fileSystemTex
                 ReloadAsync(_currentStatusOptions);
                 return null;
             }
-            // BUG: The calling thread must be STA, because many UI components require this.
             return await Dispatcher.InvokeAsync<PageFunction<ItemEditResult>>(() => new DetailsPage(new(fs, item.Entity)));
         }
 
@@ -275,7 +274,9 @@ Error	1	ListItemViewModel	FileSystemDetailText	TextBox.Text, Name='fileSystemTex
                     id = crawlConfiguration.RootId;
                     selectedRoot = await dbContext.SubdirectoryListingWithAncestorNames.FirstOrDefaultAsync(d => d.Id == id);
                 }
-                return await CreateEditPageAsync(crawlConfiguration, selectedRoot, listItem.Entity, statusListener);
+                throw new NotImplementedException();
+                // TODO: Base type needs to use ItemFunctionResultEventArgs
+                //return await CreateEditPageAsync(crawlConfiguration, selectedRoot, listItem.Entity, statusListener);
             }
 
             itemEntity = null;
@@ -385,7 +386,9 @@ Error	1	ListItemViewModel	FileSystemDetailText	TextBox.Text, Name='fileSystemTex
                     }
                 }
             }
-            return await CreateEditPageAsync(crawlConfiguration ?? new(), selectedRoot, itemEntity, statusListener);
+            throw new NotImplementedException();
+            // TODO: Base type needs to use ItemFunctionResultEventArgs
+            //return await CreateEditPageAsync(crawlConfiguration ?? new(), selectedRoot, itemEntity, statusListener);
         }
 
         protected override void OnEditTaskFaulted([DisallowNull] Exception exception, ListItemViewModel item)

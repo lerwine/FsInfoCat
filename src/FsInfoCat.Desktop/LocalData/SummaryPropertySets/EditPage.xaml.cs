@@ -24,8 +24,13 @@ namespace FsInfoCat.Desktop.LocalData.SummaryPropertySets
         {
             InitializeComponent();
             DataContext = viewModel;
-            viewModel.ChangesSaved += ViewModel_ChangesSaved;
-            viewModel.ChangesDiscarded += ViewModel_ChangesDiscarded;
+            viewModel.Completed += ViewModel_Completed;
+        }
+
+        private void ViewModel_Completed(object sender, ViewModel.ItemFunctionResultEventArgs e)
+        {
+            // TODO: Call OnReturn
+            throw new NotImplementedException();
         }
 
         private void ViewModel_ChangesSaved(object sender, Commands.CommandEventArgs e)

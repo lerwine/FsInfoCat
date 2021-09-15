@@ -70,7 +70,7 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
 
         #endregion
 
-        public EditViewModel([DisallowNull] CrawlConfiguration tableEntity, CrawlConfigListItem itemEntity) : base(tableEntity, itemEntity is null)
+        public EditViewModel([DisallowNull] CrawlConfiguration tableEntity, CrawlConfigListItem itemEntity) : base(tableEntity, itemEntity is null, itemEntity)
         {
             SetValue(BrowseNewRootFolderPropertyKey, new Commands.RelayCommand(OnBrowseNewRootFolder));
             ListItem = itemEntity;

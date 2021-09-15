@@ -22,11 +22,6 @@ namespace FsInfoCat.Desktop.LocalData.AudioPropertySets
     {
         #region SaveChanges Command Property Members
 
-        /// <summary>
-        /// Occurs when the <see cref="SaveChanges"/> is invoked.
-        /// </summary>
-        public event EventHandler<Commands.CommandEventArgs> ChangesSaved;
-
         private static readonly DependencyPropertyKey SaveChangesPropertyKey = DependencyPropertyBuilder<EditViewModel, Commands.RelayCommand>
             .Register(nameof(SaveChanges))
             .AsReadOnly();
@@ -49,11 +44,6 @@ namespace FsInfoCat.Desktop.LocalData.AudioPropertySets
 
         #endregion
         #region DiscardChanges Command Property Members
-
-        /// <summary>
-        /// Occurs when the <see cref="DiscardChanges"/> is invoked.
-        /// </summary>
-        public event EventHandler<Commands.CommandEventArgs> ChangesDiscarded;
 
         private static readonly DependencyPropertyKey DiscardChangesPropertyKey = DependencyPropertyBuilder<EditViewModel, Commands.RelayCommand>
             .Register(nameof(DiscardChanges))
@@ -147,7 +137,7 @@ namespace FsInfoCat.Desktop.LocalData.AudioPropertySets
 
         #endregion
 
-        public EditViewModel([DisallowNull] AudioPropertySet entity, AudioPropertiesListItem listItem) : base(entity)
+        public EditViewModel([DisallowNull] AudioPropertySet entity, AudioPropertiesListItem listItem, object state = null) : base(entity, state)
         {
             SetValue(SaveChangesPropertyKey, new Commands.RelayCommand(OnSaveChangesCommand));
             SetValue(DiscardChangesPropertyKey, new Commands.RelayCommand(OnDiscardChangesCommand));

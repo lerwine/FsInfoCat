@@ -25,11 +25,13 @@ namespace FsInfoCat.Desktop.LocalData.SummaryPropertySets
         {
             InitializeComponent();
             DataContext = viewModel;
-            viewModel.ChangesSaved += ViewModel_ChangesSaved;
+            // TODO: ViewModel needs to implement Completed event
+            //viewModel.Completed += ViewModel_Completed;
         }
 
-        private void ViewModel_ChangesSaved(object sender, CommandEventArgs e)
+        private void ViewModel_Completed(object sender, ViewModel.ItemFunctionResultEventArgs e)
         {
+            // TODO: Call OnReturn
             throw new NotImplementedException();
         }
     }

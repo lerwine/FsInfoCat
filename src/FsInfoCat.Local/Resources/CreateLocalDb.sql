@@ -1,5 +1,11 @@
 -- Deleting tables
 
+DROP VIEW IF EXISTS "vPersonalVolumeTagListing";
+DROP VIEW IF EXISTS "vSharedVolumeTagListing";
+DROP VIEW IF EXISTS "vPersonalSubdirectoryTagListing";
+DROP VIEW IF EXISTS "vSharedSubdirectoryTagListing";
+DROP VIEW IF EXISTS "vPersonalFileTagListing";
+DROP VIEW IF EXISTS "vSharedFileTagListing";
 DROP VIEW IF EXISTS "vFileListingWithAncestorNames";
 DROP VIEW IF EXISTS "vFileListingWithBinaryProperties";
 DROP VIEW IF EXISTS "vFileListingWithBinaryPropertiesAndAncestorNames";
@@ -24,6 +30,7 @@ DROP VIEW IF EXISTS "vMusicPropertiesListing";
 DROP VIEW IF EXISTS "vPhotoPropertiesListing";
 DROP VIEW IF EXISTS "vRecordedTVPropertiesListing";
 DROP VIEW IF EXISTS "vVideoPropertiesListing";
+DROP VIEW IF EXISTS "vCrawlConfigListing";
 DROP VIEW IF EXISTS "vCrawlJobListing";
 DROP TABLE IF EXISTS "Comparisons";
 DROP TABLE IF EXISTS "SharedVolumeTags";
@@ -547,41 +554,41 @@ CREATE TABLE IF NOT EXISTS "PersonalTagDefinitions" (
 CREATE INDEX "IDX_PersonalTagDefinition_Name" ON "PersonalTagDefinitions" ("Name");
 
 CREATE TABLE IF NOT EXISTS "PersonalFileTags" (
-    "FileId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_PersonalFileTag_File" REFERENCES "Files"("Id") ON DELETE RESTRICT COLLATE NOCASE,
-    "PersonalTagDefinitionId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_PersonalFileTag_TagDefinition" REFERENCES "PersonalTagDefinitions"("Id") ON DELETE RESTRICT COLLATE NOCASE,
+    "TaggedId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_PersonalFileTag_File" REFERENCES "Files"("Id") ON DELETE RESTRICT COLLATE NOCASE,
+    "DefinitionId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_PersonalFileTag_TagDefinition" REFERENCES "PersonalTagDefinitions"("Id") ON DELETE RESTRICT COLLATE NOCASE,
     "Notes" TEXT NOT NULL DEFAULT '',
     "IsInactive" BIT NOT NULL DEFAULT 0,
     "CreatedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
     "ModifiedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
     "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL COLLATE NOCASE,
     "LastSynchronizedOn" DATETIME DEFAULT NULL,
-    CONSTRAINT "PK_PersonalFileTags" PRIMARY KEY("FileId", "PersonalTagDefinitionId"),
+    CONSTRAINT "PK_PersonalFileTags" PRIMARY KEY("TaggedId", "DefinitionId"),
     CHECK((("UpstreamId" IS NULL AND "LastSynchronizedOn" IS NULL) OR ("UpstreamId" IS NOT NULL AND "LastSynchronizedOn" IS NOT NULL)) AND "CreatedOn"<="ModifiedOn")
 );
 
 CREATE TABLE IF NOT EXISTS "PersonalSubdirectoryTags" (
-    "SubdirectoryId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_PersonalSubdirectoryTag_Subdirectory" REFERENCES "Subdirectories"("Id") ON DELETE RESTRICT COLLATE NOCASE,
-    "PersonalTagDefinitionId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_PersonalSubdirectoryTag_TagDefinition" REFERENCES "PersonalTagDefinitions"("Id") ON DELETE RESTRICT COLLATE NOCASE,
+    "TaggedId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_PersonalSubdirectoryTag_Subdirectory" REFERENCES "Subdirectories"("Id") ON DELETE RESTRICT COLLATE NOCASE,
+    "DefinitionId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_PersonalSubdirectoryTag_TagDefinition" REFERENCES "PersonalTagDefinitions"("Id") ON DELETE RESTRICT COLLATE NOCASE,
     "Notes" TEXT NOT NULL DEFAULT '',
     "IsInactive" BIT NOT NULL DEFAULT 0,
     "CreatedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
     "ModifiedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
     "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL COLLATE NOCASE,
     "LastSynchronizedOn" DATETIME DEFAULT NULL,
-    CONSTRAINT "PK_PersonalSubdirectoryTags" PRIMARY KEY("SubdirectoryId", "PersonalTagDefinitionId"),
+    CONSTRAINT "PK_PersonalSubdirectoryTags" PRIMARY KEY("TaggedId", "DefinitionId"),
     CHECK((("UpstreamId" IS NULL AND "LastSynchronizedOn" IS NULL) OR ("UpstreamId" IS NOT NULL AND "LastSynchronizedOn" IS NOT NULL)) AND "CreatedOn"<="ModifiedOn")
 );
 
 CREATE TABLE IF NOT EXISTS "PersonalVolumeTags" (
-    "VolumeId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_PersonalVolumeTag_Volume" REFERENCES "Volumes"("Id") ON DELETE RESTRICT COLLATE NOCASE,
-    "PersonalTagDefinitionId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_PersonalVolumeTag_TagDefinition" REFERENCES "PersonalTagDefinitions"("Id") ON DELETE RESTRICT COLLATE NOCASE,
+    "TaggedId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_PersonalVolumeTag_Volume" REFERENCES "Volumes"("Id") ON DELETE RESTRICT COLLATE NOCASE,
+    "DefinitionId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_PersonalVolumeTag_TagDefinition" REFERENCES "PersonalTagDefinitions"("Id") ON DELETE RESTRICT COLLATE NOCASE,
     "Notes" TEXT NOT NULL DEFAULT '',
     "IsInactive" BIT NOT NULL DEFAULT 0,
     "CreatedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
     "ModifiedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
     "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL COLLATE NOCASE,
     "LastSynchronizedOn" DATETIME DEFAULT NULL,
-    CONSTRAINT "PK_PersonalVolumeTags" PRIMARY KEY("VolumeId", "PersonalTagDefinitionId"),
+    CONSTRAINT "PK_PersonalVolumeTags" PRIMARY KEY("TaggedId", "DefinitionId"),
     CHECK((("UpstreamId" IS NULL AND "LastSynchronizedOn" IS NULL) OR ("UpstreamId" IS NOT NULL AND "LastSynchronizedOn" IS NOT NULL)) AND "CreatedOn"<="ModifiedOn")
 );
 
@@ -602,41 +609,41 @@ CREATE TABLE IF NOT EXISTS "SharedTagDefinitions" (
 CREATE INDEX "IDX_SharedTagDefinition_Name" ON "SharedTagDefinitions" ("Name");
 
 CREATE TABLE IF NOT EXISTS "SharedFileTags" (
-    "FileId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_SharedFileTag_File" REFERENCES "Files"("Id") ON DELETE RESTRICT COLLATE NOCASE,
-    "SharedTagDefinitionId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_SharedFileTag_TagDefinition" REFERENCES "SharedTagDefinitions"("Id") ON DELETE RESTRICT COLLATE NOCASE,
+    "TaggedId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_SharedFileTag_File" REFERENCES "Files"("Id") ON DELETE RESTRICT COLLATE NOCASE,
+    "DefinitionId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_SharedFileTag_TagDefinition" REFERENCES "SharedTagDefinitions"("Id") ON DELETE RESTRICT COLLATE NOCASE,
     "Notes" TEXT NOT NULL DEFAULT '',
     "IsInactive" BIT NOT NULL DEFAULT 0,
     "CreatedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
     "ModifiedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
     "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL COLLATE NOCASE,
     "LastSynchronizedOn" DATETIME DEFAULT NULL,
-    CONSTRAINT "PK_SharedFileTags" PRIMARY KEY("FileId", "SharedTagDefinitionId"),
+    CONSTRAINT "PK_SharedFileTags" PRIMARY KEY("TaggedId", "DefinitionId"),
     CHECK((("UpstreamId" IS NULL AND "LastSynchronizedOn" IS NULL) OR ("UpstreamId" IS NOT NULL AND "LastSynchronizedOn" IS NOT NULL)) AND "CreatedOn"<="ModifiedOn")
 );
 
 CREATE TABLE IF NOT EXISTS "SharedSubdirectoryTags" (
-    "SubdirectoryId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_SharedSubdirectoryTag_Subdirectory" REFERENCES "Subdirectories"("Id") ON DELETE RESTRICT COLLATE NOCASE,
-    "SharedTagDefinitionId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_SharedSubdirectoryTag_TagDefinition" REFERENCES "SharedTagDefinitions"("Id") ON DELETE RESTRICT COLLATE NOCASE,
+    "TaggedId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_SharedSubdirectoryTag_Subdirectory" REFERENCES "Subdirectories"("Id") ON DELETE RESTRICT COLLATE NOCASE,
+    "DefinitionId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_SharedSubdirectoryTag_TagDefinition" REFERENCES "SharedTagDefinitions"("Id") ON DELETE RESTRICT COLLATE NOCASE,
     "Notes" TEXT NOT NULL DEFAULT '',
     "IsInactive" BIT NOT NULL DEFAULT 0,
     "CreatedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
     "ModifiedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
     "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL COLLATE NOCASE,
     "LastSynchronizedOn" DATETIME DEFAULT NULL,
-    CONSTRAINT "PK_SharedSubdirectoryTags" PRIMARY KEY("SubdirectoryId", "SharedTagDefinitionId"),
+    CONSTRAINT "PK_SharedSubdirectoryTags" PRIMARY KEY("TaggedId", "DefinitionId"),
     CHECK((("UpstreamId" IS NULL AND "LastSynchronizedOn" IS NULL) OR ("UpstreamId" IS NOT NULL AND "LastSynchronizedOn" IS NOT NULL)) AND "CreatedOn"<="ModifiedOn")
 );
 
 CREATE TABLE IF NOT EXISTS "SharedVolumeTags" (
-    "VolumeId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_SharedVolumeTag_Volume" REFERENCES "Volumes"("Id") ON DELETE RESTRICT COLLATE NOCASE,
-    "SharedTagDefinitionId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_SharedVolumeTag_TagDefinition" REFERENCES "SharedTagDefinitions"("Id") ON DELETE RESTRICT COLLATE NOCASE,
+    "TaggedId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_SharedVolumeTag_Volume" REFERENCES "Volumes"("Id") ON DELETE RESTRICT COLLATE NOCASE,
+    "DefinitionId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_SharedVolumeTag_TagDefinition" REFERENCES "SharedTagDefinitions"("Id") ON DELETE RESTRICT COLLATE NOCASE,
     "Notes" TEXT NOT NULL DEFAULT '',
     "IsInactive" BIT NOT NULL DEFAULT 0,
     "CreatedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
     "ModifiedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
     "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL COLLATE NOCASE,
     "LastSynchronizedOn" DATETIME DEFAULT NULL,
-    CONSTRAINT "PK_SharedVolumeTags" PRIMARY KEY("VolumeId", "SharedTagDefinitionId"),
+    CONSTRAINT "PK_SharedVolumeTags" PRIMARY KEY("TaggedId", "DefinitionId"),
     CHECK((("UpstreamId" IS NULL AND "LastSynchronizedOn" IS NULL) OR ("UpstreamId" IS NOT NULL AND "LastSynchronizedOn" IS NOT NULL)) AND "CreatedOn"<="ModifiedOn")
 );
 
@@ -773,15 +780,15 @@ CREATE VIEW IF NOT EXISTS "vFileSystemListing" AS SELECT "FileSystems".*, "Symbo
 	LEFT JOIN "SymbolicNames" ON "PrimarySymbolicNameId"="SymbolicNames"."Id";
 
 CREATE VIEW IF NOT EXISTS "vPersonalTagDefinitionListing" AS SELECT "PersonalTagDefinitions".*,
-	(SELECT count("PersonalVolumeTags"."VolumeId") FROM "PersonalVolumeTags" WHERE "PersonalVolumeTags"."PersonalTagDefinitionId"="PersonalTagDefinitions"."Id") AS "VolumeTagCount",
-	(SELECT count("PersonalSubdirectoryTags"."SubdirectoryId") FROM "PersonalSubdirectoryTags" WHERE "PersonalSubdirectoryTags"."PersonalTagDefinitionId"="PersonalTagDefinitions"."Id") AS "SubdirectoryTagCount",
-	(SELECT count("PersonalFileTags"."FileId") FROM "PersonalFileTags" WHERE "PersonalFileTags"."PersonalTagDefinitionId"="PersonalTagDefinitions"."Id") AS "FileTagCount"
+	(SELECT count("PersonalVolumeTags"."TaggedId") FROM "PersonalVolumeTags" WHERE "PersonalVolumeTags"."DefinitionId"="PersonalTagDefinitions"."Id") AS "VolumeTagCount",
+	(SELECT count("PersonalSubdirectoryTags"."TaggedId") FROM "PersonalSubdirectoryTags" WHERE "PersonalSubdirectoryTags"."DefinitionId"="PersonalTagDefinitions"."Id") AS "SubdirectoryTagCount",
+	(SELECT count("PersonalFileTags"."TaggedId") FROM "PersonalFileTags" WHERE "PersonalFileTags"."DefinitionId"="PersonalTagDefinitions"."Id") AS "FileTagCount"
 	FROM "PersonalTagDefinitions";
 
 CREATE VIEW IF NOT EXISTS "vSharedTagDefinitionListing" AS SELECT "SharedTagDefinitions".*,
-	(SELECT count("SharedVolumeTags"."VolumeId") FROM "SharedVolumeTags" WHERE "SharedVolumeTags"."SharedTagDefinitionId"="SharedTagDefinitions"."Id") AS "VolumeTagCount",
-	(SELECT count("SharedSubdirectoryTags"."SubdirectoryId") FROM "SharedSubdirectoryTags" WHERE "SharedSubdirectoryTags"."SharedTagDefinitionId"="SharedTagDefinitions"."Id") AS "SubdirectoryTagCount",
-	(SELECT count("SharedFileTags"."FileId") FROM "SharedFileTags" WHERE "SharedFileTags"."SharedTagDefinitionId"="SharedTagDefinitions"."Id") AS "FileTagCount"
+	(SELECT count("SharedVolumeTags"."TaggedId") FROM "SharedVolumeTags" WHERE "SharedVolumeTags"."DefinitionId"="SharedTagDefinitions"."Id") AS "VolumeTagCount",
+	(SELECT count("SharedSubdirectoryTags"."TaggedId") FROM "SharedSubdirectoryTags" WHERE "SharedSubdirectoryTags"."DefinitionId"="SharedTagDefinitions"."Id") AS "SubdirectoryTagCount",
+	(SELECT count("SharedFileTags"."TaggedId") FROM "SharedFileTags" WHERE "SharedFileTags"."DefinitionId"="SharedTagDefinitions"."Id") AS "FileTagCount"
 	FROM "SharedTagDefinitions";
 
 CREATE VIEW IF NOT EXISTS "vRedundantSetListing" AS SELECT "RedundantSets".*, "BinaryPropertySets"."Length", "BinaryPropertySets"."Hash",
@@ -793,8 +800,8 @@ CREATE VIEW IF NOT EXISTS "vVolumeListing" AS SELECT "Volumes".*, "r"."Name" AS 
 	(SELECT count("s"."Id") FROM "Subdirectories" "s" WHERE "s"."ParentId"="r"."Id") AS "RootSubdirectoryCount",
 	(SELECT count("Files"."Id") FROM "Files" WHERE "Files"."ParentId"="r"."Id") AS "RootFileCount",
 	(SELECT count("VolumeAccessErrors"."Id") FROM "VolumeAccessErrors" WHERE "VolumeAccessErrors"."TargetId"="Volumes"."Id") AS "AccessErrorCount",
-	(SELECT count("SharedVolumeTags"."SharedTagDefinitionId") FROM "SharedVolumeTags" WHERE "SharedVolumeTags"."VolumeId"="Volumes"."Id") AS "SharedTagCount",
-	(SELECT count("PersonalVolumeTags"."PersonalTagDefinitionId") FROM "PersonalVolumeTags" WHERE "PersonalVolumeTags"."VolumeId"="Volumes"."Id") AS "PersonalTagCount"
+	(SELECT count("SharedVolumeTags"."DefinitionId") FROM "SharedVolumeTags" WHERE "SharedVolumeTags"."TaggedId"="Volumes"."Id") AS "SharedTagCount",
+	(SELECT count("PersonalVolumeTags"."DefinitionId") FROM "PersonalVolumeTags" WHERE "PersonalVolumeTags"."TaggedId"="Volumes"."Id") AS "PersonalTagCount"
 	FROM "Volumes"
 	LEFT JOIN "Subdirectories" "r" ON "Volumes"."Id"="r"."VolumeId";
 
@@ -804,8 +811,8 @@ CREATE VIEW IF NOT EXISTS "vVolumeListingWithFileSystem" AS SELECT "Volumes".*, 
 	(SELECT count("s"."Id") FROM "Subdirectories" "s" WHERE "s"."ParentId"="r"."Id") AS "RootSubdirectoryCount",
 	(SELECT count("Files"."Id") FROM "Files" WHERE "Files"."ParentId"="r"."Id") AS "RootFileCount",
 	(SELECT count("VolumeAccessErrors"."Id") FROM "VolumeAccessErrors" WHERE "VolumeAccessErrors"."TargetId"="Volumes"."Id") AS "AccessErrorCount",
-	(SELECT count("SharedVolumeTags"."SharedTagDefinitionId") FROM "SharedVolumeTags" WHERE "SharedVolumeTags"."VolumeId"="Volumes"."Id") AS "SharedTagCount",
-	(SELECT count("PersonalVolumeTags"."PersonalTagDefinitionId") FROM "PersonalVolumeTags" WHERE "PersonalVolumeTags"."VolumeId"="Volumes"."Id") AS "PersonalTagCount"
+	(SELECT count("SharedVolumeTags"."DefinitionId") FROM "SharedVolumeTags" WHERE "SharedVolumeTags"."TaggedId"="Volumes"."Id") AS "SharedTagCount",
+	(SELECT count("PersonalVolumeTags"."DefinitionId") FROM "PersonalVolumeTags" WHERE "PersonalVolumeTags"."TaggedId"="Volumes"."Id") AS "PersonalTagCount"
 	FROM "Volumes"
 	LEFT JOIN "Subdirectories" "r" ON "Volumes"."Id"="r"."VolumeId"
 	LEFT JOIN "FileSystems" ON "Volumes"."FileSystemId"="FileSystems"."Id";
@@ -814,8 +821,8 @@ CREATE VIEW IF NOT EXISTS "vSubdirectoryListing" AS SELECT "Subdirectories".*, "
     (SELECT count("s"."Id") FROM "Subdirectories" "s" WHERE "s"."ParentId"="Subdirectories"."Id") AS "SubdirectoryCount",
 	(SELECT count("Files"."Id") FROM "Files" WHERE "Files"."ParentId"="Subdirectories"."Id") AS "FileCount",
 	(SELECT count("SubdirectoryAccessErrors"."Id") FROM "SubdirectoryAccessErrors" WHERE "SubdirectoryAccessErrors"."TargetId"="Subdirectories"."Id") AS "AccessErrorCount",
-	(SELECT count("SharedSubdirectoryTags"."SharedTagDefinitionId") FROM "SharedSubdirectoryTags" WHERE "SharedSubdirectoryTags"."SubdirectoryId"="Subdirectories"."Id") AS "SharedTagCount",
-	(SELECT count("PersonalSubdirectoryTags"."PersonalTagDefinitionId") FROM "PersonalSubdirectoryTags" WHERE "PersonalSubdirectoryTags"."SubdirectoryId"="Subdirectories"."Id") AS "PersonalTagCount"
+	(SELECT count("SharedSubdirectoryTags"."DefinitionId") FROM "SharedSubdirectoryTags" WHERE "SharedSubdirectoryTags"."TaggedId"="Subdirectories"."Id") AS "SharedTagCount",
+	(SELECT count("PersonalSubdirectoryTags"."DefinitionId") FROM "PersonalSubdirectoryTags" WHERE "PersonalSubdirectoryTags"."TaggedId"="Subdirectories"."Id") AS "PersonalTagCount"
     FROM "Subdirectories"
     LEFT JOIN "CrawlConfigurations" ON "Subdirectories"."Id"="CrawlConfigurations"."RootId";
     
@@ -823,8 +830,8 @@ CREATE VIEW IF NOT EXISTS "vSubdirectoryListingWithAncestorNames" AS SELECT "Sub
     (SELECT count("s"."Id") FROM "Subdirectories" "s" WHERE "s"."ParentId"="Subdirectories"."Id") AS "SubdirectoryCount",
 	(SELECT count("Files"."Id") FROM "Files" WHERE "Files"."ParentId"="Subdirectories"."Id") AS "FileCount",
 	(SELECT count("SubdirectoryAccessErrors"."Id") FROM "SubdirectoryAccessErrors" WHERE "SubdirectoryAccessErrors"."TargetId"="Subdirectories"."Id") AS "AccessErrorCount",
-	(SELECT count("SharedSubdirectoryTags"."SharedTagDefinitionId") FROM "SharedSubdirectoryTags" WHERE "SharedSubdirectoryTags"."SubdirectoryId"="Subdirectories"."Id") AS "SharedTagCount",
-	(SELECT count("PersonalSubdirectoryTags"."PersonalTagDefinitionId") FROM "PersonalSubdirectoryTags" WHERE "PersonalSubdirectoryTags"."SubdirectoryId"="Subdirectories"."Id") AS "PersonalTagCount",
+	(SELECT count("SharedSubdirectoryTags"."DefinitionId") FROM "SharedSubdirectoryTags" WHERE "SharedSubdirectoryTags"."TaggedId"="Subdirectories"."Id") AS "SharedTagCount",
+	(SELECT count("PersonalSubdirectoryTags"."DefinitionId") FROM "PersonalSubdirectoryTags" WHERE "PersonalSubdirectoryTags"."TaggedId"="Subdirectories"."Id") AS "PersonalTagCount",
     (WITH RECURSIVE
         directlyContains("ChildId", "ParentId") AS (SELECT "Id", "ParentId" FROM "Subdirectories"),
         containerOf("ChildId") AS (SELECT "ParentId" FROM directlyContains WHERE "ChildId"="Subdirectories"."Id" UNION ALL SELECT "ParentId" FROM directlyContains JOIN containerOf USING("ChildId"))
@@ -870,8 +877,8 @@ CREATE VIEW IF NOT EXISTS "vFileListingWithBinaryProperties" AS SELECT "Files".*
 	(SELECT count("Redundancies"."RedundantSetId") FROM "Redundancies" WHERE "Redundancies"."FileId"="Files"."Id") AS "RedundancyCount",
 	(SELECT count("Comparisons"."AreEqual") FROM "Comparisons" WHERE "Comparisons"."BaselineId"="Files"."Id" OR "Comparisons"."CorrelativeId"="Files"."Id") AS "ComparisonCount",
 	(SELECT count("FileAccessErrors"."Id") FROM "FileAccessErrors" WHERE "FileAccessErrors"."TargetId"="Files"."Id") AS "AccessErrorCount",
-	(SELECT count("SharedFileTags"."SharedTagDefinitionId") FROM "SharedFileTags" WHERE "SharedFileTags"."FileId"="Files"."Id") AS "SharedTagCount",
-	(SELECT count("PersonalFileTags"."PersonalTagDefinitionId") FROM "PersonalFileTags" WHERE "PersonalFileTags"."FileId"="Files"."Id") AS "PersonalTagCount" FROM "Files"
+	(SELECT count("SharedFileTags"."DefinitionId") FROM "SharedFileTags" WHERE "SharedFileTags"."TaggedId"="Files"."Id") AS "SharedTagCount",
+	(SELECT count("PersonalFileTags"."DefinitionId") FROM "PersonalFileTags" WHERE "PersonalFileTags"."TaggedId"="Files"."Id") AS "PersonalTagCount" FROM "Files"
 	LEFT JOIN "BinaryPropertySets" ON "Files"."BinaryPropertySetId"="BinaryPropertySets"."Id";
 
 CREATE VIEW IF NOT EXISTS "vFileListingWithBinaryPropertiesAndAncestorNames" AS SELECT "Files".*, "BinaryPropertySets"."Length", "BinaryPropertySets"."Hash",
@@ -921,6 +928,30 @@ CREATE VIEW IF NOT EXISTS "vRecordedTVPropertiesListing" AS SELECT "RecordedTVPr
 
 CREATE VIEW IF NOT EXISTS "vVideoPropertiesListing" AS SELECT "VideoPropertySets".*, Count("Files"."Id") FROM "VideoPropertySets"
     LEFT JOIN "Files" ON "VideoPropertySets"."Id" = "Files"."VideoPropertySetId";
+
+CREATE VIEW IF NOT EXISTS "vPersonalVolumeTagListing" AS SELECT "PersonalVolumeTags".*, "PersonalTagDefinitions"."Name", "PersonalTagDefinitions"."Description"
+	FROM "PersonalVolumeTags"
+	LEFT JOIN "PersonalTagDefinitions" ON "PersonalVolumeTags"."DefinitionId"="PersonalTagDefinitions"."Id";
+
+CREATE VIEW IF NOT EXISTS "vSharedVolumeTagListing" AS SELECT "SharedVolumeTags".*, "SharedTagDefinitions"."Name", "SharedTagDefinitions"."Description"
+	FROM "SharedVolumeTags"
+	LEFT JOIN "SharedTagDefinitions" ON "SharedVolumeTags"."DefinitionId"="SharedTagDefinitions"."Id";
+
+CREATE VIEW IF NOT EXISTS "vPersonalSubdirectoryTagListing" AS SELECT "PersonalSubdirectoryTags".*, "PersonalTagDefinitions"."Name", "PersonalTagDefinitions"."Description"
+	FROM "PersonalSubdirectoryTags"
+	LEFT JOIN "PersonalTagDefinitions" ON "PersonalSubdirectoryTags"."DefinitionId"="PersonalTagDefinitions"."Id";
+
+CREATE VIEW IF NOT EXISTS "vSharedSubdirectoryTagListing" AS SELECT "SharedSubdirectoryTags".*, "SharedTagDefinitions"."Name", "SharedTagDefinitions"."Description"
+	FROM "SharedSubdirectoryTags"
+	LEFT JOIN "SharedTagDefinitions" ON "SharedSubdirectoryTags"."DefinitionId"="SharedTagDefinitions"."Id";
+
+CREATE VIEW IF NOT EXISTS "vPersonalFileTagListing" AS SELECT "PersonalFileTags".*, "PersonalTagDefinitions"."Name", "PersonalTagDefinitions"."Description"
+	FROM "PersonalFileTags"
+	LEFT JOIN "PersonalTagDefinitions" ON "PersonalFileTags"."DefinitionId"="PersonalTagDefinitions"."Id";
+
+CREATE VIEW IF NOT EXISTS "vSharedFileTagListing" AS SELECT "SharedFileTags".*, "SharedTagDefinitions"."Name", "SharedTagDefinitions"."Description"
+	FROM "SharedFileTags"
+	LEFT JOIN "SharedTagDefinitions" ON "SharedFileTags"."DefinitionId"="SharedTagDefinitions"."Id";
 
 INSERT INTO "FileSystems" ("Id", "DisplayName", "CreatedOn", "ModifiedOn")
 	VALUES ('bedb396b-2212-4149-9cad-7e437c47314c', 'New Technology File System', '2004-08-19 14:51:06', '2004-08-19 14:51:06');

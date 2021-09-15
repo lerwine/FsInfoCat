@@ -20,13 +20,6 @@ namespace FsInfoCat.Desktop.LocalData.DocumentPropertySets
     public class DetailsViewModel : DocumentPropertySetDetailsViewModel<DocumentPropertySet, FileWithBinaryPropertiesAndAncestorNames, FileWithBinaryPropertiesAndAncestorNamesViewModel>,
         INavigatedToNotifiable, INavigatingFromNotifiable
     {
-        /// <summary>
-        /// Occurs when the <see cref="SaveChanges"/> is invoked.
-        /// </summary>
-        public event EventHandler<Commands.CommandEventArgs> ChangesSaved;
-
-        private void RaiseChangesSaved(object args) => ChangesSaved?.Invoke(this, new Commands.CommandEventArgs(args));
-
         #region ListItem Property Members
 
         private static readonly DependencyPropertyKey ListItemPropertyKey = DependencyPropertyBuilder<DetailsViewModel, DocumentPropertiesListItem>
@@ -83,7 +76,7 @@ namespace FsInfoCat.Desktop.LocalData.DocumentPropertySets
 
         #endregion
 
-        public DetailsViewModel([DisallowNull] DocumentPropertySet entity, DocumentPropertiesListItem listItem) : base(entity)
+        public DetailsViewModel([DisallowNull] DocumentPropertySet entity, DocumentPropertiesListItem listItem) : base(entity, listItem)
         {
             ListItem = listItem;
             UpstreamId = entity.UpstreamId;

@@ -9,13 +9,6 @@ namespace FsInfoCat.Desktop.LocalData.RedundantSets
 {
     public class DetailsViewModel : RedundantSetRowViewModel<RedundantSet>, INavigatedToNotifiable, INavigatingFromNotifiable
     {
-        /// <summary>
-        /// Occurs when the <see cref="SaveChanges"/> is invoked.
-        /// </summary>
-        public event EventHandler<Commands.CommandEventArgs> ChangesSaved;
-
-        private void RaiseChangesSaved(object args) => ChangesSaved?.Invoke(this, new Commands.CommandEventArgs(args));
-
         #region ListItem Property Members
 
         private static readonly DependencyPropertyKey ListItemPropertyKey = DependencyPropertyBuilder<DetailsViewModel, RedundantSetListItem>

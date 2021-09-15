@@ -299,6 +299,18 @@ namespace FsInfoCat
 
         IEnumerable<IVideoPropertiesListItem> VideoPropertiesListing { get; }
 
+        IEnumerable<IItemTagListItem> PersonalVolumeTagListing { get; }
+
+        IEnumerable<IItemTagListItem> SharedVolumeTagListing { get; }
+
+        IEnumerable<IItemTagListItem> PersonalSubdirectoryTagListing { get; }
+
+        IEnumerable<IItemTagListItem> SharedSubdirectoryTagListing { get; }
+
+        IEnumerable<IItemTagListItem> PersonalFileTagListing { get; }
+
+        IEnumerable<IItemTagListItem> SharedFileTagListing { get; }
+
         /// <summary>
         /// Finds the generic <see cref="ISummaryPropertySet"/> that matches the specified summary properties.
         /// </summary>

@@ -342,6 +342,18 @@ namespace FsInfoCat
 
         protected abstract IEnumerable<IVideoPropertiesListItem> GetVideoPropertiesListing();
 
+        protected abstract IEnumerable<IItemTagListItem> GetPersonalVolumeTagListing();
+
+        protected abstract IEnumerable<IItemTagListItem> GetSharedVolumeTagListing();
+
+        protected abstract IEnumerable<IItemTagListItem> GetPersonalSubdirectoryTagListing();
+
+        protected abstract IEnumerable<IItemTagListItem> GetSharedSubdirectoryTagListing();
+
+        protected abstract IEnumerable<IItemTagListItem> GetPersonalFileTagListing();
+
+        protected abstract IEnumerable<IItemTagListItem> GetSharedFileTagListing();
+
         protected abstract Task<IGPSPropertySet> FindGenericMatchingAsync(IGPSProperties properties, CancellationToken cancellationToken);
 
         protected abstract Task<IImagePropertySet> FindGenericMatchingAsync(IImageProperties properties, CancellationToken cancellationToken);
@@ -452,6 +464,18 @@ namespace FsInfoCat
         IEnumerable<IRecordedTVPropertiesListItem> IDbContext.RecordedTVPropertiesListing => GetRecordedTVPropertiesListing();
 
         IEnumerable<IVideoPropertiesListItem> IDbContext.VideoPropertiesListing => GetVideoPropertiesListing();
+
+        IEnumerable<IItemTagListItem> IDbContext.PersonalVolumeTagListing => GetPersonalVolumeTagListing();
+
+        IEnumerable<IItemTagListItem> IDbContext.SharedVolumeTagListing => GetSharedVolumeTagListing();
+
+        IEnumerable<IItemTagListItem> IDbContext.PersonalSubdirectoryTagListing => GetPersonalSubdirectoryTagListing();
+
+        IEnumerable<IItemTagListItem> IDbContext.SharedSubdirectoryTagListing => GetSharedSubdirectoryTagListing();
+
+        IEnumerable<IItemTagListItem> IDbContext.PersonalFileTagListing => GetPersonalFileTagListing();
+
+        IEnumerable<IItemTagListItem> IDbContext.SharedFileTagListing => GetSharedFileTagListing();
 
         Task<ISummaryPropertySet> IDbContext.FindMatchingAsync(ISummaryProperties properties, CancellationToken cancellationToken)
             => FindGenericMatchingAsync(properties, cancellationToken);

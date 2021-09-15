@@ -1,3 +1,4 @@
+using FsInfoCat.Desktop.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,28 +19,33 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
     /// <summary>
     /// Interaction logic for EditPage.xaml
     /// </summary>
-    public partial class EditPage : PageFunction<ItemEditResult>
+    public partial class EditPage : PageFunction<ItemFunctionResultEventArgs>
     {
         public EditPage(EditViewModel viewModel)
         {
             InitializeComponent();
             DataContext = viewModel;
-            viewModel.ChangesSaved += ViewModel_ChangesSaved;
-            viewModel.ChangesDiscarded += ViewModel_ChangesDiscarded;
+            viewModel.Completed += ViewModel_Completed;
         }
 
-        private void ViewModel_ChangesSaved(object sender, Commands.CommandEventArgs e)
+        private void ViewModel_Completed(object sender, ItemFunctionResultEventArgs e)
         {
-            EditViewModel viewModel = DataContext as EditViewModel;
-            if (viewModel is not null)
-                OnReturn(new(new(viewModel.ListItem, viewModel.IsNew ? ViewModel.EntityEditResultState.Added : ViewModel.EntityEditResultState.Modified)));
+            // TODO: Call OnReturn
+            throw new NotImplementedException();
         }
 
-        private void ViewModel_ChangesDiscarded(object sender, Commands.CommandEventArgs e)
-        {
-            EditViewModel viewModel = DataContext as EditViewModel;
-            if (viewModel is not null)
-                OnReturn(new(new(viewModel.ListItem, viewModel.IsNew ? ViewModel.EntityEditResultState.Deleted : ViewModel.EntityEditResultState.Unchanged)));
-        }
+        //private void ViewModel_ChangesSaved(object sender, Commands.CommandEventArgs e)
+        //{
+        //    EditViewModel viewModel = DataContext as EditViewModel;
+        //    if (viewModel is not null)
+        //        OnReturn(new(new(viewModel.ListItem, viewModel.IsNew ? ViewModel.EntityEditResultState.Added : ViewModel.EntityEditResultState.Modified)));
+        //}
+
+        //private void ViewModel_ChangesDiscarded(object sender, Commands.CommandEventArgs e)
+        //{
+        //    EditViewModel viewModel = DataContext as EditViewModel;
+        //    if (viewModel is not null)
+        //        OnReturn(new(new(viewModel.ListItem, viewModel.IsNew ? ViewModel.EntityEditResultState.Deleted : ViewModel.EntityEditResultState.Unchanged)));
+        //}
     }
 }

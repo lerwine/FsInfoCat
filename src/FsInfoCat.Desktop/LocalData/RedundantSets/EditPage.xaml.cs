@@ -24,8 +24,14 @@ namespace FsInfoCat.Desktop.LocalData.RedundantSets
         {
             InitializeComponent();
             DataContext = viewModel;
-            viewModel.ChangesSaved += ViewModel_ChangesSaved;
-            viewModel.ChangesDiscarded += ViewModel_ChangesDiscarded;
+            // TODO: View model needs to implement Completed event
+            //viewModel.Completed += ViewModel_Completed;
+        }
+
+        private void ViewModel_Completed(object sender, ViewModel.ItemFunctionResultEventArgs e)
+        {
+            // TODO: Call OnReturn
+            throw new NotImplementedException();
         }
 
         private void ViewModel_ChangesSaved(object sender, Commands.CommandEventArgs e)

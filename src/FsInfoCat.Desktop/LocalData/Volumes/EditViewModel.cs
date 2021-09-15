@@ -17,14 +17,9 @@ using System.Windows.Threading;
 
 namespace FsInfoCat.Desktop.LocalData.Volumes
 {
-    public class EditViewModel : VolumeRowViewModel<Volume>, INavigatedToNotifiable, INavigatingFromNotifiable
+    public sealed class EditViewModel : VolumeDetailsViewModel<Volume, FileSystemListItem, FileSystemListItemViewModel, SubdirectoryListItem, SubdirectoryListItemViewModel, VolumeAccessError, AccessErrorViewModel, PersonalVolumeTagListItem, PersonalTagViewModel, SharedVolumeTagListItem, SharedTagViewModel>, INavigatedToNotifiable, INavigatingFromNotifiable
     {
         #region SaveChanges Command Property Members
-
-        /// <summary>
-        /// Occurs when the <see cref="SaveChanges"/> is invoked.
-        /// </summary>
-        public event EventHandler<Commands.CommandEventArgs> ChangesSaved;
 
         private static readonly DependencyPropertyKey SaveChangesPropertyKey = DependencyPropertyBuilder<EditViewModel, Commands.RelayCommand>
             .Register(nameof(SaveChanges))
@@ -37,22 +32,13 @@ namespace FsInfoCat.Desktop.LocalData.Volumes
 
         public Commands.RelayCommand SaveChanges => (Commands.RelayCommand)GetValue(SaveChangesProperty);
 
-        /// <summary>
-        /// Called when the <see cref="SaveChanges">SaveChanges Command</see> is invoked.
-        /// </summary>
-        /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="SaveChanges" />.</param>
-        protected virtual void OnSaveChangesCommand(object parameter)
+        private void OnSaveChangesCommand(object parameter)
         {
             // TODO: Implement OnSaveChangesCommand Logic
         }
 
         #endregion
         #region DiscardChanges Command Property Members
-
-        /// <summary>
-        /// Occurs when the <see cref="DiscardChanges"/> is invoked.
-        /// </summary>
-        public event EventHandler<Commands.CommandEventArgs> ChangesDiscarded;
 
         private static readonly DependencyPropertyKey DiscardChangesPropertyKey = DependencyPropertyBuilder<EditViewModel, Commands.RelayCommand>
             .Register(nameof(DiscardChanges))
@@ -65,11 +51,7 @@ namespace FsInfoCat.Desktop.LocalData.Volumes
 
         public Commands.RelayCommand DiscardChanges => (Commands.RelayCommand)GetValue(DiscardChangesProperty);
 
-        /// <summary>
-        /// Called when the <see cref="DiscardChanges">DiscardChanges Command</see> is invoked.
-        /// </summary>
-        /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="DiscardChanges" />.</param>
-        protected virtual void OnDiscardChangesCommand(object parameter)
+        private void OnDiscardChangesCommand(object parameter)
         {
             // TODO: Implement OnDiscardChangesCommand Logic
         }

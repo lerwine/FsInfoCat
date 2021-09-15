@@ -4,48 +4,43 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.Local
 {
-    public abstract class ItemTag : LocalDbEntity, ILocalItemTag
+    public abstract class ItemTagListItem : ItemTagRow, ILocalItemTagListItem
     {
+        private readonly IPropertyChangeTracker<string> _name;
+        private readonly IPropertyChangeTracker<string> _description;
         private readonly IPropertyChangeTracker<Guid> _taggedId;
         private readonly IPropertyChangeTracker<Guid> _definitionId;
+
+        [Required]
+        public virtual string Name { get => _name.GetValue(); set => _name.SetValue(value); }
+
+        [Required(AllowEmptyStrings = true)]
+        public virtual string Description { get => _description.GetValue(); set => _description.SetValue(value); }
+
+        public override Guid TaggedId { get => _taggedId.GetValue(); set => _taggedId.SetValue(value); }
+
+        public override Guid DefinitionId { get => _definitionId.GetValue(); set => _definitionId.SetValue(value); }
+
+        public ItemTagListItem()
+        {
+            _name = AddChangeTracker(nameof(Name), "", NormalizedOrEmptyStringCoersion.Default);
+            _description = AddChangeTracker(nameof(Description), "", NonWhiteSpaceOrEmptyStringCoersion.Default);
+            _taggedId = AddChangeTracker(nameof(TaggedId), Guid.Empty);
+            _definitionId = AddChangeTracker(nameof(DefinitionId), Guid.Empty);
+        }
+    }
+    public abstract class ItemTagRow : LocalDbEntity, ILocalItemTagRow
+    {
         private readonly IPropertyChangeTracker<string> _notes;
 
-        protected abstract ILocalDbEntity GetTagged();
-
-        protected abstract ILocalTagDefinition GetDefinition();
+        [Required]
+        public abstract Guid TaggedId { get; set; }
 
         [Required]
-        public virtual Guid TaggedId
-        {
-            get => _taggedId.GetValue();
-            set
-            {
-                if (_taggedId.SetValue(value))
-                    OnTaggedIdChanged(value);
-            }
-        }
-
-        [Required]
-        public virtual Guid DefinitionId
-        {
-            get => _definitionId.GetValue();
-            set
-            {
-                if (_definitionId.SetValue(value))
-                    OnDefinitionIdChanged(value);
-            }
-        }
+        public abstract Guid DefinitionId { get; set; }
 
         [Required(AllowEmptyStrings = true)]
         public virtual string Notes { get => _notes.GetValue(); set => _notes.SetValue(value); }
-
-        IDbEntity IItemTag.Tagged => GetTagged();
-
-        ITagDefinition IItemTag.Definition => GetDefinition();
-
-        ILocalDbEntity ILocalItemTag.Tagged => GetTagged();
-
-        ILocalTagDefinition ILocalItemTag.Definition => GetDefinition();
 
         IEnumerable<Guid> IHasCompoundIdentifier.Id
         {
@@ -56,7 +51,49 @@ namespace FsInfoCat.Local
             }
         }
 
-        (Guid , Guid) IHasIdentifierPair.Id => (DefinitionId, TaggedId);
+        (Guid, Guid) IHasIdentifierPair.Id => (DefinitionId, TaggedId);
+
+        public ItemTagRow()
+        {
+            _notes = AddChangeTracker(nameof(Notes), "", NonWhiteSpaceOrEmptyStringCoersion.Default);
+        }
+    }
+    public abstract class ItemTag : ItemTagRow, ILocalItemTag
+    {
+        private readonly IPropertyChangeTracker<Guid> _taggedId;
+        private readonly IPropertyChangeTracker<Guid> _definitionId;
+
+        public override Guid TaggedId
+        {
+            get => _taggedId.GetValue();
+            set
+            {
+                if (_taggedId.SetValue(value))
+                    OnTaggedIdChanged(value);
+            }
+        }
+
+        public override Guid DefinitionId
+        {
+            get => _definitionId.GetValue();
+            set
+            {
+                if (_definitionId.SetValue(value))
+                    OnDefinitionIdChanged(value);
+            }
+        }
+
+        protected abstract ILocalDbEntity GetTagged();
+
+        protected abstract ILocalTagDefinition GetDefinition();
+
+        IDbEntity IItemTag.Tagged => GetTagged();
+
+        ITagDefinition IItemTag.Definition => GetDefinition();
+
+        ILocalDbEntity ILocalItemTag.Tagged => GetTagged();
+
+        ILocalTagDefinition ILocalItemTag.Definition => GetDefinition();
 
         protected abstract void OnTaggedIdChanged(Guid value);
 
@@ -70,7 +107,6 @@ namespace FsInfoCat.Local
         {
             _taggedId = AddChangeTracker(nameof(TaggedId), Guid.Empty);
             _definitionId = AddChangeTracker(nameof(DefinitionId), Guid.Empty);
-            _notes = AddChangeTracker(nameof(Notes), "", NonWhiteSpaceOrEmptyStringCoersion.Default);
         }
     }
 }

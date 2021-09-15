@@ -11,13 +11,6 @@ namespace FsInfoCat.Desktop.LocalData.SummaryPropertySets
     public class DetailsViewModel : SummaryPropertySetDetailsViewModel<SummaryPropertySet, FileWithBinaryPropertiesAndAncestorNames, FileWithBinaryPropertiesAndAncestorNamesViewModel>,
         INavigatedToNotifiable, INavigatingFromNotifiable
     {
-        /// <summary>
-        /// Occurs when the <see cref="SaveChanges"/> is invoked.
-        /// </summary>
-        public event EventHandler<Commands.CommandEventArgs> ChangesSaved;
-
-        private void RaiseChangesSaved(object args) => ChangesSaved?.Invoke(this, new Commands.CommandEventArgs(args));
-
         #region Edit Command Property Members
 
         /// <summary>

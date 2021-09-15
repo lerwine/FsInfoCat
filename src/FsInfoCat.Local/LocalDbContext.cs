@@ -141,6 +141,18 @@ namespace FsInfoCat.Local
 
         public virtual DbSet<VideoPropertiesListItem> VideoPropertiesListing { get; set; }
 
+        public virtual DbSet<PersonalVolumeTagListItem> PersonalVolumeTagListing { get; set; }
+
+        public virtual DbSet<SharedVolumeTagListItem> SharedVolumeTagListing { get; set; }
+
+        public virtual DbSet<PersonalSubdirectoryTagListItem> PersonalSubdirectoryTagListing { get; set; }
+
+        public virtual DbSet<SharedSubdirectoryTagListItem> SharedSubdirectoryTagListing { get; set; }
+
+        public virtual DbSet<PersonalFileTagListItem> PersonalFileTagListing { get; set; }
+
+        public virtual DbSet<SharedFileTagListItem> SharedFileTagListing { get; set; }
+
         public LocalDbContext(DbContextOptions<LocalDbContext> options)
             : base(options)
         {
@@ -766,6 +778,18 @@ namespace FsInfoCat.Local
 
         protected override IEnumerable<IVideoPropertiesListItem> GetVideoPropertiesListing() => VideoPropertiesListing;
 
+        protected override IEnumerable<IItemTagListItem> GetPersonalVolumeTagListing() => PersonalVolumeTagListing;
+
+        protected override IEnumerable<IItemTagListItem> GetSharedVolumeTagListing() => SharedVolumeTagListing;
+
+        protected override IEnumerable<IItemTagListItem> GetPersonalSubdirectoryTagListing() => PersonalSubdirectoryTagListing;
+
+        protected override IEnumerable<IItemTagListItem> GetSharedSubdirectoryTagListing() => SharedSubdirectoryTagListing;
+
+        protected override IEnumerable<IItemTagListItem> GetPersonalFileTagListing() => PersonalFileTagListing;
+
+        protected override IEnumerable<IItemTagListItem> GetSharedFileTagListing() => SharedFileTagListing;
+
         protected async override Task<IGPSPropertySet> FindGenericMatchingAsync(IGPSProperties properties, CancellationToken cancellationToken) =>
             await FindMatchingAsync(properties, cancellationToken);
 
@@ -918,6 +942,18 @@ namespace FsInfoCat.Local
         IEnumerable<ILocalRecordedTVPropertiesListItem> ILocalDbContext.RecordedTVPropertiesListing => RecordedTVPropertiesListing;
 
         IEnumerable<ILocalVideoPropertiesListItem> ILocalDbContext.VideoPropertiesListing => VideoPropertiesListing;
+
+        IEnumerable<ILocalItemTagListItem> ILocalDbContext.PersonalVolumeTagListing => PersonalVolumeTagListing;
+
+        IEnumerable<ILocalItemTagListItem> ILocalDbContext.SharedVolumeTagListing => SharedVolumeTagListing;
+
+        IEnumerable<ILocalItemTagListItem> ILocalDbContext.PersonalSubdirectoryTagListing => PersonalSubdirectoryTagListing;
+
+        IEnumerable<ILocalItemTagListItem> ILocalDbContext.SharedSubdirectoryTagListing => SharedSubdirectoryTagListing;
+
+        IEnumerable<ILocalItemTagListItem> ILocalDbContext.PersonalFileTagListing => PersonalFileTagListing;
+
+        IEnumerable<ILocalItemTagListItem> ILocalDbContext.SharedFileTagListing => SharedFileTagListing;
 
         async Task<ILocalSummaryPropertySet> ILocalDbContext.FindMatchingAsync(ISummaryProperties properties, CancellationToken cancellationToken) =>
             await FindMatchingAsync(properties, cancellationToken);
