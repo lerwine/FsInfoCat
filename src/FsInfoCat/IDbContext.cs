@@ -269,6 +269,8 @@ namespace FsInfoCat
         /// </value>
         IEnumerable<ICrawlConfigurationListItem> CrawlConfigListing { get; }
 
+        IEnumerable<ICrawlConfigReportItem> CrawlConfigReport { get; }
+
         /// <summary>
         /// Enumerates entites from the file listing view that includes size and hash.
         /// </summary>

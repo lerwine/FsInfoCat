@@ -318,6 +318,8 @@ namespace FsInfoCat
 
         protected abstract IEnumerable<ICrawlConfigurationListItem> GetCrawlConfigListing();
 
+        protected abstract IEnumerable<ICrawlConfigReportItem> GetCrawlConfigReport();
+
         protected abstract IEnumerable<ICrawlJobListItem> GetCrawlJobListing();
 
         protected abstract IEnumerable<ISummaryPropertiesListItem> GetSummaryPropertiesListing();
@@ -440,6 +442,8 @@ namespace FsInfoCat
         IEnumerable<IFileListItemWithBinaryPropertiesAndAncestorNames> IDbContext.FileListingWithBinaryPropertiesAndAncestorNames => GetFileListingWithBinaryPropertiesAndAncestorNames();
 
         IEnumerable<ICrawlConfigurationListItem> IDbContext.CrawlConfigListing => GetCrawlConfigListing();
+
+        IEnumerable<ICrawlConfigReportItem> IDbContext.CrawlConfigReport => GetCrawlConfigReport();
 
         IEnumerable<ICrawlJobListItem> IDbContext.CrawlJobListing => GetCrawlJobListing();
 

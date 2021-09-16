@@ -176,6 +176,8 @@ namespace FsInfoCat.Local
 
         new IEnumerable<ILocalCrawlConfigurationListItem> CrawlConfigListing { get; }
 
+        new IEnumerable<ILocalCrawlConfigReportItem> CrawlConfigReport { get; }
+
         new IEnumerable<ILocalCrawlJobListItem> CrawlJobListing { get; }
 
         new IEnumerable<ILocalSummaryPropertiesListItem> SummaryPropertiesListing { get; }

@@ -133,7 +133,48 @@ namespace FsInfoCat.Desktop.ViewModel
         protected virtual void OnStatusDetailPropertyChanged(string oldValue, string newValue) { }
 
         #endregion
+        #region FoldersProcessed Property Members
 
+        /// <summary>
+        /// Identifies the <see cref="FoldersProcessed"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty FoldersProcessedProperty = ColumnPropertyBuilder<long, CrawlJobRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(ICrawlJobLogRow.FoldersProcessed))
+            .DefaultValue(0L)
+            .OnChanged((d, oldValue, newValue) => (d as CrawlJobRowViewModel<TEntity>)?.OnFoldersProcessedPropertyChanged(oldValue, newValue))
+            .AsReadWrite();
+
+        public long FoldersProcessed { get => (long)GetValue(FoldersProcessedProperty); set => SetValue(FoldersProcessedProperty, value); }
+
+        /// <summary>
+        /// Called when the value of the <see cref="FoldersProcessed"/> dependency property has changed.
+        /// </summary>
+        /// <param name="oldValue">The previous value of the <see cref="FoldersProcessed"/> property.</param>
+        /// <param name="newValue">The new value of the <see cref="FoldersProcessed"/> property.</param>
+        protected virtual void OnFoldersProcessedPropertyChanged(long oldValue, long newValue) { }
+
+        #endregion
+        #region FilesProcessed Property Members
+
+        /// <summary>
+        /// Identifies the <see cref="FilesProcessed"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty FilesProcessedProperty = ColumnPropertyBuilder<long, CrawlJobRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(ICrawlJobLogRow.FilesProcessed))
+            .DefaultValue(0L)
+            .OnChanged((d, oldValue, newValue) => (d as CrawlJobRowViewModel<TEntity>)?.OnFilesProcessedPropertyChanged(oldValue, newValue))
+            .AsReadWrite();
+
+        public long FilesProcessed { get => (long)GetValue(FilesProcessedProperty); set => SetValue(FilesProcessedProperty, value); }
+
+        /// <summary>
+        /// Called when the value of the <see cref="FilesProcessed"/> dependency property has changed.
+        /// </summary>
+        /// <param name="oldValue">The previous value of the <see cref="FilesProcessed"/> property.</param>
+        /// <param name="newValue">The new value of the <see cref="FilesProcessed"/> property.</param>
+        protected virtual void OnFilesProcessedPropertyChanged(long oldValue, long newValue) { }
+
+        #endregion
         protected CrawlJobRowViewModel([DisallowNull] TEntity entity) : base(entity)
         {
             // TODO: Initialize properties

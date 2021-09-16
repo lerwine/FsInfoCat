@@ -148,6 +148,8 @@
     "CrawlEnd" DATETIME DEFAULT NULL,
     "StatusMessage" NVARCHAR(1024) NOT NULL CHECK(length(trim("StatusMessage"))=length("StatusMessage")) COLLATE NOCASE,
     "StatusDetail" TEXT NOT NULL,
+    "FoldersProcessed" BIGINT NOT NULL DEFAULT 0,
+    "FilesProcessed" BIGINT NOT NULL DEFAULT 0,
     "CreatedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
     "ModifiedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
     "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL COLLATE NOCASE,
@@ -973,6 +975,25 @@ END]]>
 	FROM "SharedFileTags"
 	LEFT JOIN "SharedTagDefinitions" ON "SharedFileTags"."DefinitionId"="SharedTagDefinitions"."Id"]]>
         </Text>
+        <Text Message="Creating View 'vCrawlConfigReport'">
+            <![CDATA[CREATE VIEW "vCrawlConfigReport" AS SELECT "CrawlConfigurations".*,
+	iif("vSubdirectoryListingWithAncestorNames"."AncestorNames" IS NULL,
+		"vSubdirectoryListingWithAncestorNames"."Name",
+		printf('%s/%s', "vSubdirectoryListingWithAncestorNames"."Name", "vSubdirectoryListingWithAncestorNames"."AncestorNames")
+	) AS "AncestorNames",
+    "vSubdirectoryListingWithAncestorNames"."EffectiveVolumeId" AS "VolumeId", "vSubdirectoryListingWithAncestorNames"."VolumeDisplayName",
+	"vSubdirectoryListingWithAncestorNames"."VolumeName", "vSubdirectoryListingWithAncestorNames"."VolumeIdentifier",
+	"vSubdirectoryListingWithAncestorNames"."FileSystemDisplayName", "vSubdirectoryListingWithAncestorNames"."FileSystemSymbolicName",
+	(SELECT COUNT("Id") FROM "CrawlJobLogs" WHERE "ConfigurationId"="CrawlConfigurations"."Id" AND "StatusCode"=2) AS "SucceededCount",
+	(SELECT COUNT("Id") FROM "CrawlJobLogs" WHERE "ConfigurationId"="CrawlConfigurations"."Id" AND "StatusCode"=3) AS "TimedOutCount",
+	(SELECT COUNT("Id") FROM "CrawlJobLogs" WHERE "ConfigurationId"="CrawlConfigurations"."Id" AND "StatusCode"=4) AS "ItemLimitReachedCount",
+	(SELECT COUNT("Id") FROM "CrawlJobLogs" WHERE "ConfigurationId"="CrawlConfigurations"."Id" AND "StatusCode"=5) AS "CanceledCount",
+	(SELECT COUNT("Id") FROM "CrawlJobLogs" WHERE "ConfigurationId"="CrawlConfigurations"."Id" AND "StatusCode"=6) AS "FailedCount",
+	(SELECT AVG(ROUND((JULIANDAY("CrawlEnd") - JULIANDAY("CrawlStart")) * 86400)) FROM "CrawlJobLogs" WHERE "ConfigurationId"="CrawlConfigurations"."Id" AND "CrawlEnd" IS NOT NULL) AS "AverageDuration",
+	(SELECT MAX(ROUND((JULIANDAY("CrawlEnd") - JULIANDAY("CrawlStart")) * 86400)) FROM "CrawlJobLogs" WHERE "ConfigurationId"="CrawlConfigurations"."Id" AND "CrawlEnd" IS NOT NULL) AS "MaxDuration"
+	FROM "CrawlConfigurations"
+	LEFT JOIN "vSubdirectoryListingWithAncestorNames" ON "CrawlConfigurations"."RootId"="vSubdirectoryListingWithAncestorNames"."Id"]]>
+        </Text>
         <Text Message="Inserting FileSystem 'New Technology File System'">
             <![CDATA[INSERT INTO "FileSystems" ("Id", "DisplayName")
 	VALUES ('bedb396b-2212-4149-9cad-7e437c47314c', 'New Technology File System')]]>
@@ -1135,6 +1156,9 @@ END]]>
         </Text>
         <Text Message="Dropping view 'vCrawlConfigListing'">
             <![CDATA[DROP VIEW IF EXISTS "vCrawlConfigListing"]]>
+        </Text>
+        <Text Message="Dropping view 'vCrawlConfigReport'">
+            <![CDATA[DROP VIEW IF EXISTS "vCrawlConfigReport"]]>
         </Text>
         <Text Message="Dropping view 'vCrawlJobListing'">
             <![CDATA[DROP VIEW IF EXISTS "vCrawlJobListing"]]>

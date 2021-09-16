@@ -96,5 +96,21 @@ namespace FsInfoCat
 
         string FileSystemSymbolicName { get; }
     }
+    public interface ICrawlConfigReportItem : ICrawlConfigurationListItem
+    {
+        long SucceededCount { get; }
+
+        long TimedOutCount { get; }
+
+        long ItemLimitReachedCount { get; }
+
+        long CanceledCount { get; }
+
+        long FailedCount { get; }
+
+        long? AverageDuration { get; }
+
+        long? MaxDuration { get; }
+    }
 }
 

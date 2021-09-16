@@ -22,4 +22,6 @@ namespace FsInfoCat.Upstream
         [Display(Name = nameof(Properties.Resources.DisplayName_Logs), ResourceType = typeof(Properties.Resources))]
         new IEnumerable<IUpstreamCrawlJobLog> Logs { get; }
     }
+
+    public interface IUpstreamCrawlConfigReportItem : IUpstreamCrawlConfigurationListItem, ICrawlConfigReportItem { }
 }

@@ -34,9 +34,17 @@ namespace FsInfoCat
         string StatusMessage { get; }
 
         /// <summary>Gets the status details.</summary>
-        /// <value>The status details.</value>
+        /// <value>The detailed status results.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_Details), ResourceType = typeof(Properties.Resources))]
         string StatusDetail { get; }
+
+        /// <summary>Gets the total number of folders crawled.</summary>
+        /// <value>The total number of folders crawled.</value>
+        long FoldersProcessed { get; }
+
+        /// <summary>Gets the total number of files read.</summary>
+        /// <value>The total number of files read.</value>
+        long FilesProcessed { get; }
     }
     /// <summary>Log of crawl job results.</summary>
     /// <seealso cref="IDbEntity" />

@@ -20,6 +20,8 @@ namespace FsInfoCat.Local
         private readonly IPropertyChangeTracker<ushort> _maxRecursionDepth;
         private readonly IPropertyChangeTracker<ulong?> _totalMaxItems;
         private readonly IPropertyChangeTracker<long?> _ttl;
+        private readonly IPropertyChangeTracker<long> _foldersProcessed;
+        private readonly IPropertyChangeTracker<long> _filesProcessed;
         private readonly IPropertyChangeTracker<Guid> _configurationId;
 
         #endregion
@@ -86,6 +88,10 @@ namespace FsInfoCat.Local
             ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual long? TTL { get => _ttl.GetValue(); set => _ttl.SetValue(value); }
 
+        public long FoldersProcessed { get => _foldersProcessed.GetValue(); set => _foldersProcessed.SetValue(value); }
+
+        public long FilesProcessed { get => _filesProcessed.GetValue(); set => _filesProcessed.SetValue(value); }
+
         public virtual Guid ConfigurationId
         {
             get => _configurationId.GetValue();
@@ -115,6 +121,8 @@ namespace FsInfoCat.Local
             _maxRecursionDepth = AddChangeTracker(nameof(MaxRecursionDepth), DbConstants.DbColDefaultValue_MaxRecursionDepth);
             _totalMaxItems = AddChangeTracker<ulong?>(nameof(MaxTotalItems), null);
             _ttl = AddChangeTracker<long?>(nameof(TTL), null);
+            _foldersProcessed = AddChangeTracker(nameof(FoldersProcessed), 0L);
+            _filesProcessed = AddChangeTracker(nameof(FilesProcessed), 0L);
             _configurationId = AddChangeTracker(nameof(ConfigurationId), Guid.Empty);
         }
 

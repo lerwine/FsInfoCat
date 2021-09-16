@@ -22,4 +22,6 @@ namespace FsInfoCat.Local
         [Display(Name = nameof(Properties.Resources.DisplayName_Logs), ResourceType = typeof(Properties.Resources))]
         new IEnumerable<ILocalCrawlJobLog> Logs { get; }
     }
+
+    public interface ILocalCrawlConfigReportItem : ILocalCrawlConfigurationListItem, ICrawlConfigReportItem { }
 }

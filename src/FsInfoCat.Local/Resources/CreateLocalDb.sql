@@ -31,6 +31,7 @@ DROP VIEW IF EXISTS "vPhotoPropertiesListing";
 DROP VIEW IF EXISTS "vRecordedTVPropertiesListing";
 DROP VIEW IF EXISTS "vVideoPropertiesListing";
 DROP VIEW IF EXISTS "vCrawlConfigListing";
+DROP VIEW IF EXISTS "vCrawlConfigReport";
 DROP VIEW IF EXISTS "vCrawlJobListing";
 DROP TABLE IF EXISTS "Comparisons";
 DROP TABLE IF EXISTS "SharedVolumeTags";
@@ -206,6 +207,8 @@ CREATE TABLE IF NOT EXISTS "CrawlJobLogs" (
     "CrawlEnd" DATETIME DEFAULT NULL,
     "StatusMessage" NVARCHAR(1024) NOT NULL CHECK(length(trim("StatusMessage"))=length("StatusMessage")) COLLATE NOCASE,
     "StatusDetail" TEXT NOT NULL,
+    "FoldersProcessed" BIGINT NOT NULL DEFAULT 0,
+    "FilesProcessed" BIGINT NOT NULL DEFAULT 0,
     "CreatedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
     "ModifiedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
     "UpstreamId" UNIQUEIDENTIFIER DEFAULT NULL COLLATE NOCASE,
@@ -952,6 +955,28 @@ CREATE VIEW IF NOT EXISTS "vPersonalFileTagListing" AS SELECT "PersonalFileTags"
 CREATE VIEW IF NOT EXISTS "vSharedFileTagListing" AS SELECT "SharedFileTags".*, "SharedTagDefinitions"."Name", "SharedTagDefinitions"."Description"
 	FROM "SharedFileTags"
 	LEFT JOIN "SharedTagDefinitions" ON "SharedFileTags"."DefinitionId"="SharedTagDefinitions"."Id";
+
+CREATE VIEW IF NOT EXISTS "vSharedFileTagListing" AS SELECT "SharedFileTags".*, "SharedTagDefinitions"."Name", "SharedTagDefinitions"."Description"
+	FROM "SharedFileTags"
+	LEFT JOIN "SharedTagDefinitions" ON "SharedFileTags"."DefinitionId"="SharedTagDefinitions"."Id";
+
+CREATE VIEW "vCrawlConfigReport" AS SELECT "CrawlConfigurations".*,
+	iif("vSubdirectoryListingWithAncestorNames"."AncestorNames" IS NULL,
+		"vSubdirectoryListingWithAncestorNames"."Name",
+		printf('%s/%s', "vSubdirectoryListingWithAncestorNames"."Name", "vSubdirectoryListingWithAncestorNames"."AncestorNames")
+	) AS "AncestorNames",
+    "vSubdirectoryListingWithAncestorNames"."EffectiveVolumeId" AS "VolumeId", "vSubdirectoryListingWithAncestorNames"."VolumeDisplayName",
+	"vSubdirectoryListingWithAncestorNames"."VolumeName", "vSubdirectoryListingWithAncestorNames"."VolumeIdentifier",
+	"vSubdirectoryListingWithAncestorNames"."FileSystemDisplayName", "vSubdirectoryListingWithAncestorNames"."FileSystemSymbolicName",
+	(SELECT COUNT("Id") FROM "CrawlJobLogs" WHERE "ConfigurationId"="CrawlConfigurations"."Id" AND "StatusCode"=2) AS "SucceededCount",
+	(SELECT COUNT("Id") FROM "CrawlJobLogs" WHERE "ConfigurationId"="CrawlConfigurations"."Id" AND "StatusCode"=3) AS "TimedOutCount",
+	(SELECT COUNT("Id") FROM "CrawlJobLogs" WHERE "ConfigurationId"="CrawlConfigurations"."Id" AND "StatusCode"=4) AS "ItemLimitReachedCount",
+	(SELECT COUNT("Id") FROM "CrawlJobLogs" WHERE "ConfigurationId"="CrawlConfigurations"."Id" AND "StatusCode"=5) AS "CanceledCount",
+	(SELECT COUNT("Id") FROM "CrawlJobLogs" WHERE "ConfigurationId"="CrawlConfigurations"."Id" AND "StatusCode"=6) AS "FailedCount",
+	(SELECT AVG(ROUND((JULIANDAY("CrawlEnd") - JULIANDAY("CrawlStart")) * 86400)) FROM "CrawlJobLogs" WHERE "ConfigurationId"="CrawlConfigurations"."Id" AND "CrawlEnd" IS NOT NULL) AS "AverageDuration",
+	(SELECT MAX(ROUND((JULIANDAY("CrawlEnd") - JULIANDAY("CrawlStart")) * 86400)) FROM "CrawlJobLogs" WHERE "ConfigurationId"="CrawlConfigurations"."Id" AND "CrawlEnd" IS NOT NULL) AS "MaxDuration"
+	FROM "CrawlConfigurations"
+	LEFT JOIN "vSubdirectoryListingWithAncestorNames" ON "CrawlConfigurations"."RootId"="vSubdirectoryListingWithAncestorNames"."Id";
 
 INSERT INTO "FileSystems" ("Id", "DisplayName", "CreatedOn", "ModifiedOn")
 	VALUES ('bedb396b-2212-4149-9cad-7e437c47314c', 'New Technology File System', '2004-08-19 14:51:06', '2004-08-19 14:51:06');

@@ -117,6 +117,8 @@ namespace FsInfoCat.Local
 
         public virtual DbSet<CrawlConfigListItem> CrawlConfigListing { get; set; }
 
+        public virtual DbSet<CrawlConfigReportItem> CrawlConfigReport { get; set; }
+
         public virtual DbSet<CrawlJobLogListItem> CrawlJobListing { get; set; }
 
         public virtual DbSet<SummaryPropertiesListItem> SummaryPropertiesListing { get; set; }
@@ -238,6 +240,7 @@ namespace FsInfoCat.Local
                 .Entity<SubdirectoryListItemWithAncestorNames>(SubdirectoryListItemWithAncestorNames.OnBuildEntity)
                 .Entity<SubdirectoryAncestorNames>(Local.SubdirectoryAncestorNames.OnBuildEntity)
                 .Entity<CrawlConfigListItem>(CrawlConfigListItem.OnBuildEntity)
+                .Entity<CrawlConfigReportItem>(CrawlConfigReportItem.OnBuildEntity)
                 .Entity<CrawlJobLogListItem>(CrawlJobLogListItem.OnBuildEntity)
                 .Entity<FileWithAncestorNames>(FileWithAncestorNames.OnBuildEntity)
                 .Entity<FileWithBinaryProperties>(FileWithBinaryProperties.OnBuildEntity)
@@ -754,6 +757,8 @@ namespace FsInfoCat.Local
 
         protected override IEnumerable<ICrawlConfigurationListItem> GetCrawlConfigListing() => CrawlConfigListing;
 
+        protected override IEnumerable<ICrawlConfigReportItem> GetCrawlConfigReport() => CrawlConfigReport;
+
         protected override IEnumerable<ICrawlJobListItem> GetCrawlJobListing() => CrawlJobListing;
 
         protected override IEnumerable<ISummaryPropertiesListItem> GetSummaryPropertiesListing() => SummaryPropertiesListing;
@@ -918,6 +923,8 @@ namespace FsInfoCat.Local
         IEnumerable<ILocalFileListItemWithBinaryPropertiesAndAncestorNames> ILocalDbContext.FileListingWithBinaryPropertiesAndAncestorNames => FileListingWithBinaryPropertiesAndAncestorNames;
 
         IEnumerable<ILocalCrawlConfigurationListItem> ILocalDbContext.CrawlConfigListing => CrawlConfigListing;
+
+        IEnumerable<ILocalCrawlConfigReportItem> ILocalDbContext.CrawlConfigReport => CrawlConfigReport;
 
         IEnumerable<ILocalCrawlJobListItem> ILocalDbContext.CrawlJobListing => CrawlJobListing;
 

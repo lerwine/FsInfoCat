@@ -232,7 +232,7 @@ namespace FsInfoCat.Desktop.ViewModel
             TItemViewModel item;
             switch (e.Result.FunctionResult)
             {
-                case  ItemFunctionResult.Inserted:
+                case ItemFunctionResult.Inserted:
                     // BUG: This does not work. e.Result.State will be null
                     if (e.Result.Entity is TEntity addedEntity && EntityMatchesCurrentFilter(addedEntity))
                     {

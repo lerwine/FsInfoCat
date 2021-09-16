@@ -215,6 +215,8 @@ namespace FsInfoCat.Upstream
 
         new IEnumerable<IUpstreamCrawlConfigurationListItem> CrawlConfigListing { get; }
 
+        new IEnumerable<IUpstreamCrawlConfigReportItem> CrawlConfigReport { get; }
+
         new IEnumerable<IUpstreamCrawlJobListItem> CrawlJobListing { get; }
 
         new IEnumerable<IUpstreamSummaryPropertiesListItem> SummaryPropertiesListing { get; }
