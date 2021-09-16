@@ -13,12 +13,11 @@
     <Page.Resources>
         <Converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
         <Converters:BooleanToStringConverter x:Key="BooleanToStatusConverter" FalseValue="Active" TrueValue="Inactive"/>
-        <Converters:BooleanToStringConverter x:Key="BooleanToYesNoConverter" FalseValue="No" TrueValue="Yes"/>
         <Converters:BooleanToVisibilityConverter x:Key="VisibleIfTrueConverter" NullSource="Collapsed"/>
         <Converters:CrawlStatusToStringConverter x:Key="CrawlStatusToCol" Display="ShortName" />
         <Converters:CrawlStatusToStringConverter x:Key="CrawlStatusToClipboard" />
         <Converters:DateTimeToStringConverter x:Key="DateTimeToCol" Format="HH:mm:ss M/d/yyyy"/>
-        <Converters:DateTimeToStringConverter x:Key="CrawlStartToCol" NullSource="(never)" Format="HH:mm:ss M/d/yyyy"/>
+        <Converters:DateTimeToStringConverter x:Key="CrawlEndToString"  Format="HH:mm:ss M/d/yyyy"/>
         <Converters:DateTimeToStringConverter x:Key="NextCrawlToCol" NullSource="(none)" Format="HH:mm:ss M/d/yyyy"/>
         <Converters:DateTimeToStringConverter x:Key="DateTimeToClipboard" Format="yyyy-MM-ddTHH:mm:ss"/>
         <local:ListingViewModel x:Key="ViewModel"/>
@@ -27,8 +26,8 @@
         <DataGrid ItemsSource="{Binding Items}" AutoGenerateColumns="False">
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding DisplayName, Mode=OneWay}" Header="Name" Width="*"/>
-                <DataGridTextColumn Binding="{Binding LastCrawlEnd, Mode=OneWay}" Header="Last Completed"/>
-                <DataGridTextColumn Binding="{Binding NextScheduledStart, Mode=OneWay}" Header="Next Scheduled"/>
+                <DataGridTextColumn Binding="{Binding LastCrawlEnd, Converter={StaticResource CrawlEndToString}, Mode=OneWay}" Header="Last Completed"/>
+                <DataGridTextColumn Binding="{Binding NextScheduledStart, Converter={StaticResource NextCrawlToCol}, Mode=OneWay}" Header="Next Scheduled"/>
                 <DataGridTextColumn Binding="{Binding StatusValue, Converter={StaticResource BooleanToStatusConverter}}" MinWidth="100">
                     <DataGridTextColumn.Header>
                         <StackPanel Orientation="Horizontal" DataContext="{DynamicResource ViewModel}">

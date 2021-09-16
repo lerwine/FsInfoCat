@@ -5,14 +5,12 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:FsInfoCat.Desktop.LocalData.CrawlConfigurations"
              xmlns:Converters="clr-namespace:FsInfoCat.Desktop.Converters"
-             xmlns:localCvt="clr-namespace:FsInfoCat.Desktop.Converters.Local"
              mc:Ignorable="d" d:DataContext="{x:Type local:ListItemViewModel}" d:DesignWidth="800">
     <UserControl.Resources>
         <Converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" NullSource="Collapsed"/>
-        <Converters:ObjectToInt32Converter x:Key="As2IfNullElse1Converter" NullSource="2"/>
-        <Converters:ObjectToVisibilityConverter x:Key="VisibileIfNotNullConverter"/>
         <Converters:TimeSpanToStringConverter x:Key="TimeSpanToString" NullSource="(unlimited)"/>
-        <localCvt:CrawlConfigurationToAutoRescheduleString x:Key="CrawlConfigToAutoRescheduleString" NullSource="(none)"/>
+        <Converters:CrawlConfigRescheduleDescriptionConverter x:Key="CrawlConfigRescheduleDescriptionConverter"/>
+        <Converters:DateTimeToStringConverter x:Key="CrawlEndToString" NullSource="(n/a)"/>
         <Converters:DateTimeToStringConverter x:Key="CrawlStartToString" NullSource="(never started)"/>
         <Converters:DateTimeToStringConverter x:Key="LastSynchronizedToString" NullSource="(not synchronized)"/>
         <Converters:CrawlStatusToStringConverter x:Key="CrawlStatusToDescription" Display="Description" />
@@ -88,7 +86,15 @@
                     <WrapPanel>
                         <StackPanel>
                             <Label Content="Auto-Reschedule" Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="Auto-reschedule settings for the current crawl configuration." Target="{Binding ElementName=autoRescheduleTextBox, Mode=OneWay}" FontWeight="Bold"/>
-                            <TextBox x:Name="autoRescheduleTextBox" Margin="{DynamicResource DefaultSpacingLeftRight}" ToolTip="Auto-reschedule settings for the current crawl configuration." Style="{DynamicResource ReadOnlyValueTextBox}" Text="{Binding Converter={StaticResource CrawlConfigToAutoRescheduleString}, Mode=OneWay}"/>
+                            <TextBox x:Name="autoRescheduleTextBox" Margin="{DynamicResource DefaultSpacingLeftRight}" ToolTip="Auto-reschedule settings for the current crawl configuration." Style="{DynamicResource ReadOnlyValueTextBox}">
+                                <TextBox.Text>
+                                    <MultiBinding Converter="{StaticResource CrawlConfigRescheduleDescriptionConverter}">
+                                        <Binding Path="RescheduleInterval" Mode="OneWay"/>
+                                        <Binding Path="RescheduleFromJobEnd" Mode="OneWay"/>
+                                        <Binding Path="RescheduleAfterFail" Mode="OneWay"/>
+                                    </MultiBinding>
+                                </TextBox.Text>
+                            </TextBox>
                         </StackPanel>
                         <StackPanel>
                             <Label Content="Next Scheduled Start" Padding="{DynamicResource DefaultSpacingTopLeft}" ToolTip="Date and time of the next scheduled crawl for this configuration." Target="{Binding ElementName=nextScheduledStartTextBox, Mode=OneWay}" FontWeight="Bold"/>

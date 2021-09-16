@@ -2,152 +2,289 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:sys="clr-namespace:System;assembly=System.Runtime"
-    x:Class="FsInfoCat.Desktop.LocalData.CrawlConfigurations.EditPage"
-    x:TypeArguments="ViewModel:ItemFunctionResultEventArgs"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:FsInfoCat.Desktop.LocalData.CrawlConfigurations"
     xmlns:ViewModel="clr-namespace:FsInfoCat.Desktop.ViewModel"
+    xmlns:Converters="clr-namespace:FsInfoCat.Desktop.Converters"
+    xmlns:FsInfoCat="clr-namespace:FsInfoCat;assembly=FsInfoCat"
+    xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
+    x:Class="FsInfoCat.Desktop.LocalData.CrawlConfigurations.EditPage"
+    x:TypeArguments="ViewModel:ItemFunctionResultEventArgs"
     mc:Ignorable="d" d:DataContext="{x:Type local:EditViewModel}"
     d:DesignHeight="768" d:DesignWidth="1024"
     Title="Edit Crawl Configuration">
+    <Page.Resources>
+        <Converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
+        <Converters:ThreeStateBooleanConverter x:Key="ManualScheduleBooleanConverter" NullSource="True" IfTrue="False" IfFalse="False"/>
+        <Converters:ThreeStateBooleanConverter x:Key="ResheduleAfterLastStartBooleanConverter" NullSource="False" IfTrue="False" IfFalse="True"/>
+        <Converters:ThreeStateBooleanConverter x:Key="ResheduleAfterLastEndBooleanConverter"/>
+        <Converters:DateTimeToStringConverter x:Key="DateTimeToStringConverter" />
+        <Converters:DateTimeToStringConverter x:Key="StartTimeToStringConverter" NullSource="(never crawled)"/>
+        <Converters:DateTimeToStringConverter x:Key="EndTimeToStringConverter" NullSource="(n/a)"/>
+        <Converters:DateTimeToStringConverter x:Key="LastSyncrhonizedToStringConverter" NullSource="(never syncrhonized)"/>
+        <Converters:CrawlStatusToStringConverter x:Key="CrawlStatusToStringConverter" Display="Description"/>
+        <Converters:BooleanToVisibilityConverter x:Key="VisibleIfFalseConverter" False="Visible" NullSource="Collapsed" True="Collapsed"/>
+    </Page.Resources>
     <Grid>
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="ExistenceStateStateGroup">
+                <VisualState x:Name="NotNew">
+                    <Storyboard>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="currentStatusLabel" Storyboard.TargetProperty="(UIElement.Visibility)">
+                            <DiscreteObjectKeyFrame KeyTime="00:00:00" Value="{x:Static Visibility.Visible}"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="currentStatusGrid" Storyboard.TargetProperty="(UIElement.Visibility)">
+                            <DiscreteObjectKeyFrame KeyTime="00:00:00" Value="{x:Static Visibility.Visible}"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="label1" Storyboard.TargetProperty="(UIElement.Visibility)">
+                            <DiscreteObjectKeyFrame KeyTime="00:00:00" Value="{x:Static Visibility.Visible}"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="label2" Storyboard.TargetProperty="(UIElement.Visibility)">
+                            <DiscreteObjectKeyFrame KeyTime="00:00:00" Value="{x:Static Visibility.Visible}"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="lastCrawlStartTextBox" Storyboard.TargetProperty="(UIElement.Visibility)">
+                            <DiscreteObjectKeyFrame KeyTime="00:00:00" Value="{x:Static Visibility.Visible}"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="lastCrawlEndTextBox" Storyboard.TargetProperty="(UIElement.Visibility)">
+                            <DiscreteObjectKeyFrame KeyTime="00:00:00" Value="{x:Static Visibility.Visible}"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="grid1" Storyboard.TargetProperty="(UIElement.Visibility)">
+                            <DiscreteObjectKeyFrame KeyTime="00:00:00" Value="{x:Static Visibility.Visible}"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="crawlLogsDataGrid" Storyboard.TargetProperty="(UIElement.Visibility)">
+                            <DiscreteObjectKeyFrame KeyTime="00:00:00" Value="{x:Static Visibility.Visible}"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <Int32AnimationUsingKeyFrames Storyboard.TargetName="label" Storyboard.TargetProperty="(Grid.ColumnSpan)">
+                            <EasingInt32KeyFrame KeyTime="00:00:00" Value="1"/>
+                        </Int32AnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="grid2" Storyboard.TargetProperty="(UIElement.Visibility)">
+                            <DiscreteObjectKeyFrame KeyTime="00:00:00" Value="{x:Static Visibility.Visible}"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <Int32AnimationUsingKeyFrames Storyboard.TargetName="notesTextBox" Storyboard.TargetProperty="(Grid.RowSpan)">
+                            <EasingInt32KeyFrame KeyTime="00:00:00" Value="3"/>
+                        </Int32AnimationUsingKeyFrames>
+                        <Int32AnimationUsingKeyFrames Storyboard.TargetName="notesTextBox" Storyboard.TargetProperty="(Grid.ColumnSpan)">
+                            <EasingInt32KeyFrame KeyTime="00:00:00" Value="1"/>
+                        </Int32AnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="button" Storyboard.TargetProperty="(UIElement.Visibility)">
+                            <DiscreteObjectKeyFrame KeyTime="00:00:00" Value="{x:Static Visibility.Visible}"/>
+                        </ObjectAnimationUsingKeyFrames>
+                    </Storyboard>
+                </VisualState>
+                <VisualState x:Name="IsNew">
+                    <Storyboard>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="currentStatusLabel" Storyboard.TargetProperty="(UIElement.Visibility)">
+                            <DiscreteObjectKeyFrame KeyTime="00:00:00" Value="{x:Static Visibility.Collapsed}"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="currentStatusGrid" Storyboard.TargetProperty="(UIElement.Visibility)">
+                            <DiscreteObjectKeyFrame KeyTime="00:00:00" Value="{x:Static Visibility.Collapsed}"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="label1" Storyboard.TargetProperty="(UIElement.Visibility)">
+                            <DiscreteObjectKeyFrame KeyTime="00:00:00" Value="{x:Static Visibility.Collapsed}"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="label2" Storyboard.TargetProperty="(UIElement.Visibility)">
+                            <DiscreteObjectKeyFrame KeyTime="00:00:00" Value="{x:Static Visibility.Collapsed}"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="lastCrawlStartTextBox" Storyboard.TargetProperty="(UIElement.Visibility)">
+                            <DiscreteObjectKeyFrame KeyTime="00:00:00" Value="{x:Static Visibility.Collapsed}"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="lastCrawlEndTextBox" Storyboard.TargetProperty="(UIElement.Visibility)">
+                            <DiscreteObjectKeyFrame KeyTime="00:00:00" Value="{x:Static Visibility.Collapsed}"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="grid1" Storyboard.TargetProperty="(UIElement.Visibility)">
+                            <DiscreteObjectKeyFrame KeyTime="00:00:00" Value="{x:Static Visibility.Collapsed}"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="crawlLogsDataGrid" Storyboard.TargetProperty="(UIElement.Visibility)">
+                            <DiscreteObjectKeyFrame KeyTime="00:00:00" Value="{x:Static Visibility.Collapsed}"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <Int32AnimationUsingKeyFrames Storyboard.TargetName="label" Storyboard.TargetProperty="(Grid.ColumnSpan)">
+                            <EasingInt32KeyFrame KeyTime="00:00:00" Value="3"/>
+                        </Int32AnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="grid2" Storyboard.TargetProperty="(UIElement.Visibility)">
+                            <DiscreteObjectKeyFrame KeyTime="00:00:00" Value="{x:Static Visibility.Collapsed}"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <Int32AnimationUsingKeyFrames Storyboard.TargetName="notesTextBox" Storyboard.TargetProperty="(Grid.RowSpan)">
+                            <EasingInt32KeyFrame KeyTime="00:00:00" Value="2"/>
+                        </Int32AnimationUsingKeyFrames>
+                        <Int32AnimationUsingKeyFrames Storyboard.TargetName="notesTextBox" Storyboard.TargetProperty="(Grid.ColumnSpan)">
+                            <EasingInt32KeyFrame KeyTime="00:00:00" Value="3"/>
+                        </Int32AnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="button" Storyboard.TargetProperty="(UIElement.Visibility)">
+                            <DiscreteObjectKeyFrame KeyTime="00:00:00" Value="{x:Static Visibility.Collapsed}"/>
+                        </ObjectAnimationUsingKeyFrames>
+                    </Storyboard>
+                </VisualState>
+            </VisualStateGroup>
+            <VisualStateGroup x:Name="CrawlStatusStateGroup">
+                <VisualState x:Name="EnabledState">
+                    <Storyboard>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="enableDisableButton" Storyboard.TargetProperty="(FrameworkElement.Style)">
+                            <DiscreteObjectKeyFrame KeyTime="00:00:00" Value="{DynamicResource DeactivateButton}"/>
+                        </ObjectAnimationUsingKeyFrames>
+                    </Storyboard>
+                </VisualState>
+                <VisualState x:Name="DisabledState">
+                    <Storyboard>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="enableDisableButton" Storyboard.TargetProperty="(FrameworkElement.Style)">
+                            <DiscreteObjectKeyFrame KeyTime="00:00:00" Value="{DynamicResource ActivateButton}"/>
+                        </ObjectAnimationUsingKeyFrames>
+                    </Storyboard>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+        <b:Interaction.Behaviors>
+            <b:DataStateBehavior Binding="{Binding IsNew, Mode=OneWay}" TrueState="IsNew" FalseState="NotNew" Value="true"/>
+            <b:DataStateBehavior Binding="{Binding StatusValue, Mode=OneWay}" TrueState="DisabledState" FalseState="EnabledState" Value="{x:Static FsInfoCat:CrawlStatus.Disabled}"/>
+        </b:Interaction.Behaviors>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="2*"/>
+        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
-        </Grid.ColumnDefinitions>
-        <WrapPanel>
-            <Button ToolTip="Choose a different root subdirectory." Style="{DynamicResource OpenFolderButton}" Margin="{DynamicResource DefaultSpacingRight}" Command="{Binding BrowseNewRootFolder}"/>
-            <TextBox Text="{Binding CreatedOn}"/>
-            <TextBox Text="{Binding LastSynchronizedOn}"/>
-            <Button ToolTip="Discard changes." Style="{DynamicResource CancelButton}" Margin="{DynamicResource DefaultSpacingLeft}" Command="{Binding DiscardChanges}"/>
-            <TextBox Text="{Binding DisplayName}"/>
-            <DataGrid ItemsSource="{Binding Logs}"/>
-            <GroupBox>
-                <GroupBox.Header>
-                    <Label Content="Maximum Recursion Depth"/>
-                </GroupBox.Header>
-                <WrapPanel>
-                    <TextBox Text="{Binding MaxDuration}"/>
-                </WrapPanel>
-            </GroupBox>
-            <TextBox Text="{Binding DisplayName}"/>
-        </WrapPanel>
-        <!--
-        Logs CrawlConfigurationRowViewModel<CrawlConfiguration>. CrawlConfigurationRowViewModel<CrawlConfiguration>.MaxRecursionDepth CrawlConfigurationRowViewModel<CrawlConfiguration>.MaxTotalItems DbEntityRowViewModel<CrawlConfiguration>.ModifiedOn CrawlConfigurationRowViewModel<CrawlConfiguration>.Notes CrawlConfigurationDetailsViewModel<CrawlConfiguration, SubdirectoryListItemWithAncestorNames, SubdirectoryListItemViewModel, CrawlJobLogListItem, CrawlJobListItemViewModel>.RefreshCrawlJobLogs CrawlConfigurationRowViewModel<CrawlConfiguration>.RescheduleAfterFail CrawlConfigurationRowViewModel<CrawlConfiguration>.RescheduleFromJobEnd CrawlConfigurationDetailsViewModel<CrawlConfiguration, SubdirectoryListItemWithAncestorNames, SubdirectoryListItemViewModel, CrawlJobLogListItem, CrawlJobListItemViewModel>.Root
-        EditViewModel.IsNew
-        -->
-        <TextBox Margin="{DynamicResource DefaultSpacingTopLeft}" ToolTip="The descriptive status of the current crawl." Style="{DynamicResource SingleLineTextBox}" Text="{Binding StatusValue, Mode=OneWay}"/>
-        <StackPanel Grid.Row="1" Grid.ColumnSpan="4">
-            <GroupBox Padding="{DynamicResource DefaultSpacingBottom}">
-                <StackPanel>
-                    <Label Content="Path" Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="The path of the starting subdirectory for the current crawl configuration." Target="{Binding ElementName=pathTextBox, Mode=OneWay}" FontWeight="Bold"/>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
-                        <TextBox x:Name="pathTextBox" Margin="{DynamicResource DefaultSpacingLeft}" ToolTip="The path of the starting subdirectory for the current crawl configuration." Style="{DynamicResource SingleLineTextBox}" Text="{Binding RootPath, Mode=OneWay}"/>
-                        <Button Grid.Column="1" ToolTip="Open the database record for the starting subdirectory of the current crawl configuration." Style="{DynamicResource OpenButton}" Margin="{DynamicResource DefaultSpacingRight}"/>
-                    </Grid>
-                    <WrapPanel>
-                        <StackPanel>
-                            <Label Content="Volume Display Name" Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="The display name given to the file system volume containing the target subdirectory ." Target="{Binding ElementName=volumeDisplayNameTextBox, Mode=OneWay}" FontWeight="Bold"/>
-                            <TextBox x:Name="volumeDisplayNameTextBox" Margin="{DynamicResource DefaultSpacingLeftRight}" ToolTip="The display name given to the file system volume containing the target subdirectory ." Style="{DynamicResource SingleLineTextBox}" Text="{Binding VolumeDisplayName, Mode=OneWay}"/>
-                        </StackPanel>
-                        <StackPanel>
-                            <Label Content="Volume Name" Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="The name of the target file system volume as was reported by the file system." Target="{Binding ElementName=volumeNameTextBox, Mode=OneWay}" FontWeight="Bold"/>
-                            <TextBox x:Name="volumeNameTextBox" Margin="{DynamicResource DefaultSpacingLeftRight}" ToolTip="The name of the target file system volume as was reported by the file system." Style="{DynamicResource SingleLineTextBox}" Text="{Binding VolumeName, Mode=OneWay}"/>
-                        </StackPanel>
-                        <StackPanel>
-                            <Label Content="Volume Identifier" Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="A unique identifier string that is used to uniquely identify the volume." Target="{Binding ElementName=identifierTextBox, Mode=OneWay}" FontWeight="Bold"/>
-                            <TextBox x:Name="identifierTextBox" Margin="{DynamicResource DefaultSpacingLeftRight}" ToolTip="A unique identifier string that is used to uniquely identify the volume." Style="{DynamicResource SingleLineTextBox}" Text="{Binding VolumeIdentifier, Mode=OneWay}"/>
-                        </StackPanel>
-                        <StackPanel>
-                            <Label Content="File System" Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="The type of file system that is used by the target volume." Target="{Binding ElementName=fileSystemTextBox, Mode=OneWay}" FontWeight="Bold"/>
-                            <TextBox x:Name="fileSystemTextBox" Margin="{DynamicResource DefaultSpacingLeftRight}" ToolTip="The type of file system that is used by the target volume." Style="{DynamicResource SingleLineTextBox}" Text="{Binding FileSystemDetailText, Mode=OneWay}"/>
-                        </StackPanel>
-                    </WrapPanel>
+        <Label Content="Display Name" Style="{DynamicResource TopLabelPaddedTopLeftRight}" Grid.ColumnSpan="3" Target="{Binding ElementName=displayNameTextBox, Mode=OneWay}"/>
+        <TextBox x:Name="displayNameTextBox" Style="{DynamicResource SingleLineTextBox}" Margin="{DynamicResource DefaultSpacingLeftRight}" Grid.Row="1" Grid.ColumnSpan="3" Text="{Binding DisplayName}"/>
+        <Label Content="Starting Subdirectory" Style="{DynamicResource TopLabelPaddedTopLeftRight}" Grid.Row="2" Grid.ColumnSpan="2" Target="{Binding ElementName=rootPathTextBox, Mode=OneWay}"/>
+        <Grid Grid.Row="3" Grid.ColumnSpan="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBox x:Name="rootPathTextBox" Grid.ColumnSpan="1" Style="{DynamicResource ReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingLeft}" Text="{Binding Root.Path, Mode=OneWay}"/>
+            <Button ToolTip="Choose a different root subdirectory." Style="{DynamicResource EllipsisButton}" Grid.Column="2" Margin="{DynamicResource DefaultSpacingRight}" Command="{Binding BrowseNewRootFolder, Mode=OneWay}" IsEnabled="{Binding BrowseNewRootFolder.IsEnabled}"/>
+        </Grid>
+        <GroupBox Header="Scheduling" Grid.Row="4" Grid.RowSpan="5">
+            <StackPanel>
+                <Label x:Name="currentStatusLabel" Content="Current Status" Style="{DynamicResource TopLabelPaddedTopLeftRight}" Target="{Binding ElementName=statusTextBox, Mode=OneWay}"/>
+                <Grid x:Name="currentStatusGrid">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBox x:Name="statusTextBox" Style="{DynamicResource ReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingLeftRight}" Text="{Binding StatusValue, Converter={StaticResource CrawlStatusToStringConverter}}"/>
+                    <Button x:Name="enableDisableButton" Grid.Column="1" Style="{DynamicResource DeactivateButton}" ToolTip="Disable Crawl Configuration" Command="{Binding ToggleActivation, Mode=OneWay}"/>
+                </Grid>
+                <Label Content="Next Scheduled Start" Style="{DynamicResource TopLabelPaddedTopLeftRight}" Target="{Binding ElementName=nextScheduledStartDatePicker, Mode=OneWay}"/>
+                <StackPanel Orientation="Horizontal" DataContext="{Binding NextScheduledStart, Mode=OneWay}">
+                    <DatePicker x:Name="nextScheduledStartDatePicker" Margin="{DynamicResource DefaultSpacingLeft}" SelectedDate="{Binding Date, Mode=OneWay}"/>
+                    <TextBlock Text=" at " VerticalAlignment="Center"/>
+                    <TextBox x:Name="nextScheduledStartHoursTextBox" Style="{DynamicResource TwoDigitNumericTextBox}" DataContext="{Binding Time, Mode=OneWay}" Text="{Binding Hours12, Mode=OneWay}"/>
+                    <TextBlock Text=" : " VerticalAlignment="Center"/>
+                    <TextBox x:Name="nextScheduledStartMinutesTextBox" Style="{DynamicResource TwoDigitNumericTextBox}" Margin="{DynamicResource DefaultSpacingRight}" DataContext="{Binding Time, Mode=OneWay}" Text="{Binding Minutes, Mode=OneWay}"/>
+                    <RadioButton x:Name="isAmRadioButton" Content="AM" GroupName="AmPm" DataContext="{Binding Time, Mode=OneWay}" IsChecked="{Binding IsPm, Converter={StaticResource InverseBooleanConverter}}"/>
+                    <RadioButton x:Name="isPmRadioButton" Content="PM" DataContext="{Binding Time, Mode=OneWay}" IsChecked="{Binding IsPm}" GroupName="AmPm"/>
                 </StackPanel>
-            </GroupBox>
-            <WrapPanel>
-                <GroupBox Header="Maximum Ranges" Padding="{DynamicResource DefaultSpacingBottom}">
-                    <WrapPanel>
-                        <StackPanel>
-                            <Label Content="Recursion" Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="The maximum subdirectory recursion depth." Target="{Binding ElementName=maxRecursionDepthTextBox, Mode=OneWay}" FontWeight="Bold"/>
-                            <TextBox x:Name="maxRecursionDepthTextBox" Margin="{DynamicResource DefaultSpacingLeftRight}" ToolTip="The maximum subdirectory recursion depth." Style="{DynamicResource SingleLineTextBox}" Text="{Binding MaxRecursionDepth, Mode=OneWay}"/>
-                        </StackPanel>
-                        <StackPanel>
-                            <Label Content="Items" Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="The maximum number of items that may be procesed in a single crawl." Target="{Binding ElementName=maxTotalItemsTextBox, Mode=OneWay}" FontWeight="Bold"/>
-                            <TextBox x:Name="maxTotalItemsTextBox" Margin="{DynamicResource DefaultSpacingLeftRight}" ToolTip="The maximum number of items that may be procesed in a single crawl." Style="{DynamicResource SingleLineTextBox}" Text="{Binding MaxTotalItems, Mode=OneWay, TargetNullValue=(unlimited)}"/>
-                        </StackPanel>
-                        <StackPanel>
-                            <Label Content="Duration" Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="The maximum amount of time that a crawl may run." Target="{Binding ElementName=ttlTextBox, Mode=OneWay}" FontWeight="Bold"/>
-                            <TextBox x:Name="ttlTextBox" Margin="{DynamicResource DefaultSpacingLeftRight}" ToolTip="The maximum amount of time that a crawl may run." Style="{DynamicResource SingleLineTextBox}" Text="{Binding TTL, Mode=OneWay}"/>
-                        </StackPanel>
-                    </WrapPanel>
-                </GroupBox>
-                <GroupBox Header="Scheduling">
-                    <WrapPanel>
-                        <StackPanel>
-                            <Label Content="Auto-Reschedule" Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="Auto-reschedule settings for the current crawl configuration." Target="{Binding ElementName=autoRescheduleTextBox, Mode=OneWay}" FontWeight="Bold"/>
-                            <TextBox x:Name="autoRescheduleTextBox" Margin="{DynamicResource DefaultSpacingLeftRight}" ToolTip="Auto-reschedule settings for the current crawl configuration." Style="{DynamicResource SingleLineTextBox}" />
-                        </StackPanel>
-                        <StackPanel>
-                            <Label Content="Next Scheduled Start" Padding="{DynamicResource DefaultSpacingTopLeft}" ToolTip="Date and time of the next scheduled crawl for this configuration." Target="{Binding ElementName=nextScheduledStartTextBox, Mode=OneWay}" FontWeight="Bold"/>
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
-                                <TextBox x:Name="nextScheduledStartTextBox" Margin="{DynamicResource DefaultSpacingLeft}" ToolTip="Date and time of the next scheduled crawl for this configuration." Style="{DynamicResource SingleLineTextBox}" Text="{Binding NextScheduledStart, Mode=OneWay, TargetNullValue=(not scheduled)}"/>
-                                <Button Grid.Column="1" ToolTip="Starts the subdirectory crawl now." Style="{DynamicResource StartButton}" Margin="{DynamicResource DefaultSpacingRight}"/>
-                                <Button Grid.Column="1" ToolTip="Stops the active subdirectory crawl." Style="{DynamicResource StopButton}" Margin="{DynamicResource DefaultSpacingRight}"/>
-                            </Grid>
-                        </StackPanel>
-                    </WrapPanel>
-                </GroupBox>
-                <WrapPanel>
-                    <GroupBox>
-                        <WrapPanel>
-                            <StackPanel>
-                                <Label Content="Created On" Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="Date and time when record was first created." Target="{Binding ElementName=createdOnTextBox, Mode=OneWay}" FontWeight="Bold"/>
-                                <TextBox x:Name="createdOnTextBox" Margin="{DynamicResource DefaultSpacingLeftRight}" ToolTip="Date and time when record was first created." Style="{DynamicResource SingleLineTextBox}"/>
-                            </StackPanel>
-                            <StackPanel>
-                                <Label Content="Modified On" Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="Last date and time when record was last modified." Target="{Binding ElementName=modifiedOnTextBox, Mode=OneWay}" FontWeight="Bold"/>
-                                <TextBox x:Name="modifiedOnTextBox" Margin="{DynamicResource DefaultSpacingLeftRight}" ToolTip="Last date and time when record was last modified." Style="{DynamicResource SingleLineTextBox}"/>
-                            </StackPanel>
-                            <StackPanel>
-                                <Label Content="Last Synchronized" Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="When record was last synchronized with remote database." Target="{Binding ElementName=synchronizedTextBox, Mode=OneWay}" FontWeight="Bold"/>
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition />
-                                        <ColumnDefinition Width="Auto" />
-                                    </Grid.ColumnDefinitions>
-                                    <TextBox x:Name="synchronizedTextBox" Margin="{DynamicResource DefaultSpacingLeftRight}" ToolTip="When record was last synchronized with remote database." Style="{DynamicResource SingleLineTextBox}"/>
-                                    <Button Style="{DynamicResource SyncDisabledButton}" ToolTip="Synchronization disabled - no remote connection configured." Margin="{DynamicResource DefaultSpacingRight}" Grid.Column="1"/>
-                                </Grid>
-                            </StackPanel>
-                        </WrapPanel>
-                    </GroupBox>
-                    <GroupBox>
-                        <StackPanel>
-                            <Label Content="Notes" Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="Custom notes for the current crawl configuration." Target="{Binding ElementName=notesTextBox, Mode=OneWay}" FontWeight="Bold"/>
-                            <TextBox x:Name="notesTextBox" Margin="{DynamicResource DefaultSpacingLeftRight}" ToolTip="Custom notes for the current crawl configuration." Style="{DynamicResource SingleLineTextBox}"/>
-                        </StackPanel>
-                    </GroupBox>
-                </WrapPanel>
-            </WrapPanel>
-        </StackPanel>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <RadioButton x:Name="autoRescheduleRadioButton" Content="Auto Reschedule:" GroupName="Scheduling" Style="{DynamicResource TopLabelPaddedTopLeftRight}" Margin="{DynamicResource DefaultSpacingTopLeft}" DataContext="{Binding ScheduleOption, Mode=OneWay}" IsChecked="{Binding IsNull, Converter={StaticResource InverseBooleanConverter}}"/>
+                    <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.ColumnSpan="2" DataContext="{Binding RescheduleInterval, Mode=OneWay}">
+                        <TextBox x:Name="intervalDaysTextBox" Style="{DynamicResource TwoDigitNumericTextBox}" Margin="{DynamicResource DefaultSpacingTopLeft}" Text="{Binding InputValue}" DataContext="{Binding Days, Mode=OneWay}"/>
+                        <Label Content=" days, " VerticalContentAlignment="Center" Padding="{DynamicResource DefaultSpacingTop}" Target="{Binding ElementName=intervalDaysTextBox, Mode=OneWay}"/>
+                        <TextBox x:Name="intervalHoursTextBox" Style="{DynamicResource TwoDigitNumericTextBox}" Margin="{DynamicResource DefaultSpacingTop}" DataContext="{Binding Hours, Mode=OneWay}" Text="{Binding InputValue}"/>
+                        <Label Content=" hours, " Padding="{DynamicResource DefaultSpacingTop}" VerticalContentAlignment="Center" Target="{Binding ElementName=intervalHoursTextBox, Mode=OneWay}"/>
+                        <TextBox x:Name="intervalMinutesTextBox" Style="{DynamicResource TwoDigitNumericTextBox}" Margin="{DynamicResource DefaultSpacingTop}" DataContext="{Binding Minutes, Mode=OneWay}" Text="{Binding InputValue}"/>
+                        <Label Content=" minutes" Padding="{DynamicResource DefaultSpacingTop}" VerticalContentAlignment="Center" Target="{Binding ElementName=intervalMinutesTextBox, Mode=OneWay}"/>
+                    </StackPanel>
+                    <RadioButton x:Name="rescheduleFromJobStartRadioButton" Content="After Last Start" GroupName="AutoReschedule" Grid.Column="1" Margin="{DynamicResource DefaultSpacingTopLeft}" Grid.Row="1" IsChecked="{Binding RescheduleFromJobEnd, Converter={StaticResource InverseBooleanConverter}}"/>
+                    <RadioButton x:Name="rescheduleFromJobEndRadioButton" Grid.Row="1" Content="After Last End" GroupName="AutoReschedule" Grid.Column="2" Margin="{DynamicResource DefaultSpacingTopLeftRight}" IsChecked="{Binding RescheduleFromJobEnd}"/>
+                    <RadioButton x:Name="manualSchedulingRadioButton" Content="Manual Only" GroupName="Scheduling" Grid.Row="1" Style="{DynamicResource TopLabelPaddedTopLeftRight}" Margin="{DynamicResource DefaultSpacingTopLeftRight}" IsChecked="{Binding IsNull, Converter={StaticResource ManualScheduleBooleanConverter}}" DataContext="{Binding ScheduleOption, Mode=OneWay}"/>
+                    <Label Content="Reschedule even after failure?" Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Style="{DynamicResource TopLabelPaddedTopLeftRight}" Target="{Binding ElementName=rescheduleAfterFailYesRadioButton, Mode=OneWay}"/>
+                    <RadioButton x:Name="rescheduleAfterFailYesRadioButton" Content="Yes" Grid.Row="3" Grid.Column="1" Margin="{DynamicResource DefaultSpacingLeft}" GroupName="RescheduleAfterFail" IsChecked="{Binding RescheduleAfterFail}"/>
+                    <RadioButton x:Name="rescheduleAfterFailNoRadioButton" Content="No" Grid.Row="3" Grid.Column="2" Margin="{DynamicResource DefaultSpacingLeftRight}" GroupName="RescheduleAfterFail" IsChecked="{Binding RescheduleAfterFail, Converter={StaticResource InverseBooleanConverter}}"/>
+                </Grid>
+            </StackPanel>
+        </GroupBox>
+        <Label x:Name="label1" Content="Last Crawl Start" Style="{DynamicResource TopLabelPaddedTopLeftRight}" Grid.Column="1" Grid.Row="4" Target="{Binding ElementName=lastCrawlStartTextBox, Mode=OneWay}"/>
+        <Label x:Name="label2" Content="Last Crawl End" Grid.Column="2" Style="{DynamicResource TopLabelPaddedTopLeftRight}" Grid.Row="4" Target="{Binding ElementName=lastCrawlEndTextBox, Mode=OneWay}"/>
+        <TextBox x:Name="lastCrawlStartTextBox" Grid.Row="5" Style="{DynamicResource ReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingLeftRight}" Grid.Column="1" Text="{Binding LastCrawlStart, Converter={StaticResource StartTimeToStringConverter}}"/>
+        <TextBox x:Name="lastCrawlEndTextBox" Grid.Row="5" Grid.Column="2" Style="{DynamicResource ReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingLeftRight}" Text="{Binding LastCrawlEnd, Converter={StaticResource EndTimeToStringConverter}}"/>
+        <GroupBox Header="Limits" Grid.Row="6" Grid.ColumnSpan="2" Grid.Column="1">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <CheckBox x:Name="ttlCheckBox" Content="Limit Duration" Grid.ColumnSpan="6" Style="{DynamicResource TopLabelPaddedTopLeftRight}" VerticalContentAlignment="Bottom" DataContext="{Binding MaxDuration, Mode=OneWay}" IsChecked="{Binding ForceNullResult, Converter={StaticResource InverseBooleanConverter}}"/>
+                <StackPanel Orientation="Horizontal" Grid.Row="1" DataContext="{Binding MaxDuration, Mode=OneWay}">
+                    <TextBox x:Name="ttlDaysTextBox"  Style="{DynamicResource TwoDigitNumericTextBox}" DataContext="{Binding Days, Mode=OneWay}" Text="{Binding InputValue}"/>
+                    <Label Content=" days, " Padding="0,0,0,0" VerticalContentAlignment="Center" Target="{Binding ElementName=ttlDaysTextBox, Mode=OneWay}"/>
+                    <TextBox x:Name="ttlHoursTextBox" Style="{DynamicResource TwoDigitNumericTextBox}" DataContext="{Binding Hours, Mode=OneWay}" Text="{Binding InputValue}"/>
+                    <Label Content=" hours, " Padding="0,0,0,0" VerticalContentAlignment="Center" Target="{Binding ElementName=ttlHoursTextBox, Mode=OneWay}"/>
+                    <TextBox x:Name="ttlMinutesTextBox" Style="{DynamicResource TwoDigitNumericTextBox}" DataContext="{Binding Minutes, Mode=OneWay}" Text="{Binding InputValue}"/>
+                    <Label Content=" minutes" Padding="0,0,0,0" VerticalContentAlignment="Center" Target="{Binding ElementName=ttlMinutesTextBox, Mode=OneWay}"/>
+                </StackPanel>
+                <Label Content="Maximum Recursion Depth" Grid.Column="2" Style="{DynamicResource TopLabelPaddedTopLeftRight}" Target="{Binding ElementName=maxRecursionDepthTextBox, Mode=OneWay}"/>
+                <TextBox x:Name="maxRecursionDepthTextBox" Grid.Row="1" Grid.Column="2" Style="{DynamicResource TwoDigitNumericTextBox}" HorizontalAlignment="Center" Text="{Binding MaxRecursionDepth}"/>
+                <CheckBox Content="Limit Total Items" Grid.Column="4" Style="{DynamicResource TopLabelPaddedTopLeftRight}" DataContext="{Binding MaxTotalItems, Mode=OneWay}" IsChecked="{Binding ForceNullResult, Converter={StaticResource InverseBooleanConverter}}"/>
+                <TextBox x:Name="maxTotalItemsTextBox" Grid.Row="1" Grid.Column="4" Style="{DynamicResource TwoDigitNumericTextBox}" HorizontalAlignment="Center" DataContext="{Binding MaxTotalItems, Mode=OneWay}" Text="{Binding InputValue}"/>
+            </Grid>
+        </GroupBox>
+        <Grid x:Name="grid1" Grid.Row="7" Grid.Column="1" Grid.ColumnSpan="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Label Content="Crawl Result Summary Logs" Style="{DynamicResource TopLabelPaddedTopLeftRight}" Target="{Binding ElementName=crawlLogsDataGrid, Mode=OneWay}"/>
+            <Button Grid.Column="1" Style="{DynamicResource MiniRefreshButton}" VerticalAlignment="Bottom" Command="{Binding RefreshCrawlJobLogs, Mode=OneWay}"/>
+        </Grid>
+        <DataGrid x:Name="crawlLogsDataGrid" Grid.Row="8" Grid.Column="1" Grid.ColumnSpan="2" Grid.RowSpan="3" Margin="{DynamicResource DefaultSpacingLeftRight}"/>
+        <Grid x:Name="grid2" Grid.Row="11" Grid.RowSpan="1" Grid.Column="1" Grid.ColumnSpan="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Label Content="Created On" Style="{DynamicResource TopLabelPaddedTopLeftRight}" Target="{Binding ElementName=createdOnTextBox, Mode=OneWay}" Grid.ColumnSpan="2" Margin="0,3,292,16" Grid.RowSpan="2"/>
+            <Label Content="Modified On" Grid.Column="1" Style="{DynamicResource TopLabelPaddedTopLeftRight}" Target="{Binding ElementName=modifiedOnTextBox, Mode=OneWay}"/>
+            <TextBox x:Name="createdOnTextBox" Grid.Row="1" Style="{DynamicResource ReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingLeftRight}" Text="{Binding CreatedOn, Converter={StaticResource DateTimeToStringConverter}, Mode=OneWay}"/>
+            <TextBox x:Name="modifiedOnTextBox" Grid.Row="1" Grid.Column="1" Style="{DynamicResource ReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingLeftRight}" Text="{Binding ModifiedOn, Converter={StaticResource DateTimeToStringConverter}, Mode=OneWay}"/>
+            <Label Content="Last Synchronized" Grid.Row="2" Grid.ColumnSpan="2" Style="{DynamicResource TopLabelPaddedTopLeftRight}" Target="{Binding ElementName=lastSynchronizedOnTextBox, Mode=OneWay}"/>
+            <TextBox x:Name="lastSynchronizedOnTextBox" Grid.Row="3" Grid.ColumnSpan="2" Style="{DynamicResource ReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingLeftRight}" Text="{Binding LastSynchronizedOn, Converter={StaticResource LastSyncrhonizedToStringConverter}, Mode=OneWay}"/>
+        </Grid>
+        <Label x:Name="label" Content="Notes" Style="{DynamicResource TopLabelPaddedTopLeftRight}" Grid.Row="9" Grid.Column="0" Target="{Binding ElementName=notesTextBox, Mode=OneWay}"/>
+        <TextBox x:Name="notesTextBox" Grid.Column="0" Grid.Row="10" Grid.ColumnSpan="1" Margin="{DynamicResource DefaultSpacingBottomLeftRight}" Grid.RowSpan="3" Text="{Binding Notes}"/>
+        <WrapPanel HorizontalAlignment="Right" Grid.Row="12" Grid.Column="1" Grid.ColumnSpan="2">
+            <Button x:Name="button" Style="{DynamicResource DeleteButton}" Margin="{DynamicResource DefaultSpacing}" ToolTip="Delete Crawl Configuration" Command="{Binding Delete, Mode=OneWay}"/>
+            <Button Style="{DynamicResource StartButton}" Margin="{DynamicResource DefaultSpacing}" ToolTip="Save Changes and Start Immediately" Command="{Binding SaveAndRun, Mode=OneWay}" IsEnabled="{Binding SaveAndRun.IsEnabled}"/>
+            <Button Style="{DynamicResource AcceptButton}" Margin="{DynamicResource DefaultSpacingTopBottomRight}" ToolTip="Save Changes" Command="{Binding SaveChanges, Mode=OneWay}" IsEnabled="{Binding SaveChanges.IsEnabled}"/>
+            <Button Style="{DynamicResource CancelButton}" Margin="{DynamicResource DefaultSpacingTopBottomRight}" ToolTip="Discard Changes" Command="{Binding DiscardChanges, Mode=OneWay}"/>
+        </WrapPanel>
     </Grid>
 </PageFunction>

@@ -121,6 +121,55 @@
   <Style TargetType="TextBox" BasedOn="{StaticResource DefaultTextBoxBase}"></Style>
   <Style TargetType="GroupBox" BasedOn="{StaticResource DefaultGroupBoxBase}"></Style>
   <Style TargetType="PasswordBox" BasedOn="{StaticResource DefaultPasswordBoxBase}"></Style>
+    <Style x:Key="TopLabel" TargetType="ContentControl">
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="VerticalContentAlignment" Value="Bottom"/>
+    </Style>
+    <Style x:Key="TopLabelNotPadded" TargetType="ContentControl" BasedOn="{StaticResource TopLabel}">
+        <Setter Property="Padding" Value="0"/>
+    </Style>
+    <Style x:Key="TopLabelPaddedBottom" TargetType="ContentControl" BasedOn="{StaticResource TopLabel}">
+        <Setter Property="Padding" Value="{DynamicResource DefaultSpacingBottom}"/>
+    </Style>
+    <Style x:Key="TopLabelPaddedRight" TargetType="ContentControl" BasedOn="{StaticResource TopLabel}">
+        <Setter Property="Padding" Value="{DynamicResource DefaultSpacingRight}"/>
+    </Style>
+    <Style x:Key="TopLabelPaddedBottomRight" TargetType="ContentControl" BasedOn="{StaticResource TopLabel}">
+        <Setter Property="Padding" Value="{DynamicResource DefaultSpacingBottomRight}"/>
+    </Style>
+    <Style x:Key="TopLabelPaddedTop" TargetType="ContentControl" BasedOn="{StaticResource TopLabel}">
+        <Setter Property="Padding" Value="{DynamicResource DefaultSpacingTop}"/>
+    </Style>
+    <Style x:Key="TopLabelPaddedTopBottom" TargetType="ContentControl" BasedOn="{StaticResource TopLabel}">
+        <Setter Property="Padding" Value="{DynamicResource DefaultSpacingTopBottom}"/>
+    </Style>
+    <Style x:Key="TopLabelPaddedTopRight" TargetType="ContentControl" BasedOn="{StaticResource TopLabel}">
+        <Setter Property="Padding" Value="{DynamicResource DefaultSpacingTopRight}"/>
+    </Style>
+    <Style x:Key="TopLabelPaddedTopBottomRight" TargetType="ContentControl" BasedOn="{StaticResource TopLabel}">
+        <Setter Property="Padding" Value="{DynamicResource DefaultSpacingTopBottomRight}"/>
+    </Style>
+    <Style x:Key="TopLabelPaddedLeft" TargetType="ContentControl" BasedOn="{StaticResource TopLabel}">
+        <Setter Property="Padding" Value="{DynamicResource DefaultSpacingLeft}"/>
+    </Style>
+    <Style x:Key="TopLabelPaddedBottomLeft" TargetType="ContentControl" BasedOn="{StaticResource TopLabel}">
+        <Setter Property="Padding" Value="{DynamicResource DefaultSpacingBottomLeft}"/>
+    </Style>
+    <Style x:Key="TopLabelPaddedLeftRight" TargetType="ContentControl" BasedOn="{StaticResource TopLabel}">
+        <Setter Property="Padding" Value="{DynamicResource DefaultSpacingLeftRight}"/>
+    </Style>
+    <Style x:Key="TopLabelPaddedBottomLeftRight" TargetType="ContentControl" BasedOn="{StaticResource TopLabel}">
+        <Setter Property="Padding" Value="{DynamicResource DefaultSpacingBottomLeftRight}"/>
+    </Style>
+    <Style x:Key="TopLabelPaddedTopLeft" TargetType="ContentControl" BasedOn="{StaticResource TopLabel}">
+        <Setter Property="Padding" Value="{DynamicResource DefaultSpacingTopLeft}"/>
+    </Style>
+    <Style x:Key="TopLabelPaddedTopBottomLeft" TargetType="ContentControl" BasedOn="{StaticResource TopLabel}">
+        <Setter Property="Padding" Value="{DynamicResource DefaultSpacingTopBottomLeft}"/>
+    </Style>
+    <Style x:Key="TopLabelPaddedTopLeftRight" TargetType="ContentControl" BasedOn="{StaticResource TopLabel}">
+        <Setter Property="Padding" Value="{DynamicResource DefaultSpacingTopLeftRight}"/>
+    </Style>
   <Style TargetType="GridSplitter">
     <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" />
     <Setter Property="PreviewStyle">
@@ -293,6 +342,10 @@
       </Setter.Value>
     </Setter>
   </Style>
+  <Style x:Key="MiniCommandButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
+    <Setter Property="Height" Value="{DynamicResource LargeFontSize}" />
+    <Setter Property="Width" Value="{DynamicResource LargeFontSize}" />
+  </Style>
   <Style x:Key="EditButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
     <Setter Property="ContentTemplate" Value="{DynamicResource EditImageContentTemplate}" />
   </Style>
@@ -411,6 +464,9 @@
     <Setter Property="ContentTemplate" Value="{DynamicResource OutputImageContentTemplate}" />
   </Style>
   <Style x:Key="RefreshButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
+    <Setter Property="ContentTemplate" Value="{DynamicResource RefreshImageContentTemplate}" />
+  </Style>
+  <Style x:Key="MiniRefreshButton" TargetType="{x:Type Button}" BasedOn="{StaticResource MiniCommandButton}">
     <Setter Property="ContentTemplate" Value="{DynamicResource RefreshImageContentTemplate}" />
   </Style>
   <Style x:Key="SharedDataSourceButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">

@@ -25,14 +25,14 @@ namespace FsInfoCat.Desktop.Commands
         /// </summary>
         public static readonly DependencyProperty IsEnabledProperty = DependencyProperty.Register(nameof(IsEnabled), typeof(bool), typeof(BaseCommand),
                 new PropertyMetadata(true,
-                (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as BaseCommand).IsEnabled_PropertyChanged((bool)(e.OldValue), (bool)(e.NewValue))));
+                (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as BaseCommand).IsEnabled_PropertyChanged((bool)e.OldValue, (bool)e.NewValue)));
 
         /// <summary>
         /// True if the command is explicitly enabled; otherwise false.
         /// </summary>
         public bool IsEnabled
         {
-            get { return (bool)(GetValue(IsEnabledProperty)); }
+            get { return (bool)GetValue(IsEnabledProperty); }
             set { SetValue(IsEnabledProperty, value); }
         }
 
@@ -52,14 +52,14 @@ namespace FsInfoCat.Desktop.Commands
         /// </summary>
         public static readonly DependencyProperty AllowSimultaneousExecuteProperty = DependencyProperty.Register(nameof(AllowSimultaneousExecute), typeof(bool), typeof(BaseCommand),
                 new PropertyMetadata(false,
-                (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as BaseCommand).AllowSimultaneousExecute_PropertyChanged((bool)(e.OldValue), (bool)(e.NewValue))));
+                (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as BaseCommand).AllowSimultaneousExecute_PropertyChanged((bool)e.OldValue, (bool)e.NewValue)));
 
         /// <summary>
         /// True if multiple invocations can be executed simultaneously; otherwise false.
         /// </summary>
         public bool AllowSimultaneousExecute
         {
-            get { return (bool)(GetValue(AllowSimultaneousExecuteProperty)); }
+            get { return (bool)GetValue(AllowSimultaneousExecuteProperty); }
             set { SetValue(AllowSimultaneousExecuteProperty, value); }
         }
 

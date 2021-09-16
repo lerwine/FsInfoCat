@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 
@@ -97,32 +95,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public string Path { get => GetValue(PathProperty) as string; private set => SetValue(PathPropertyKey, value); }
 
         #endregion
-        #region LastCrawlEnd Property Members
-
-        /// <summary>
-        /// Identifies the <see cref="LastCrawlEnd"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty LastCrawlEndProperty = ColumnPropertyBuilder<DateTime?, CrawlConfigListItemViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(ICrawlConfigurationListItem.LastCrawlEnd))
-            .DefaultValue(null)
-            .AsReadWrite();
-
-        public DateTime? LastCrawlEnd { get => (DateTime?)GetValue(LastCrawlEndProperty); set => SetValue(LastCrawlEndProperty, value); }
-
-        #endregion
-        #region LastCrawlStart Property Members
-
-        /// <summary>
-        /// Identifies the <see cref="LastCrawlStart"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty LastCrawlStartProperty = ColumnPropertyBuilder<DateTime?, CrawlConfigListItemViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(ICrawlConfigurationListItem.LastCrawlStart))
-            .DefaultValue(null)
-            .AsReadWrite();
-
-        public DateTime? LastCrawlStart { get => (DateTime?)GetValue(LastCrawlStartProperty); set => SetValue(LastCrawlStartProperty, value); }
-
-        #endregion
         #region NextScheduledStart Property Members
 
         /// <summary>
@@ -149,19 +121,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public TimeSpan? RescheduleInterval { get => (TimeSpan?)GetValue(RescheduleIntervalProperty); set => SetValue(RescheduleIntervalProperty, value); }
 
         #endregion
-        #region StatusValue Property Members
-
-        /// <summary>
-        /// Identifies the <see cref="StatusValue"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty StatusValueProperty = ColumnPropertyBuilder<CrawlStatus, CrawlConfigListItemViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(ICrawlConfigurationListItem.StatusValue))
-            .DefaultValue(CrawlStatus.NotRunning)
-            .AsReadWrite();
-
-        public CrawlStatus StatusValue { get => (CrawlStatus)GetValue(StatusValueProperty); set => SetValue(StatusValueProperty, value); }
-
-        #endregion
         #region TTL Property Members
 
         /// <summary>
@@ -173,6 +132,19 @@ namespace FsInfoCat.Desktop.ViewModel
             .AsReadWrite();
 
         public TimeSpan? TTL { get => (TimeSpan?)GetValue(TTLProperty); set => SetValue(TTLProperty, value); }
+
+        #endregion
+        #region MaxTotalItems Property Members
+
+        /// <summary>
+        /// Identifies the <see cref="MaxTotalItems"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty MaxTotalItemsProperty = ColumnPropertyBuilder<ulong?, CrawlConfigListItemViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(ICrawlConfigurationRow.MaxTotalItems))
+            .DefaultValue(0)
+            .AsReadWrite();
+
+        public ulong? MaxTotalItems { get => (ulong?)GetValue(MaxTotalItemsProperty); set => SetValue(MaxTotalItemsProperty, value); }
 
         #endregion
         #region VolumeDisplayName Property Members
@@ -332,6 +304,11 @@ namespace FsInfoCat.Desktop.ViewModel
             VolumeIdentifier = entity.VolumeIdentifier;
             FileSystemDisplayName = entity.FileSystemDisplayName;
             FileSystemSymbolicName = entity.FileSystemSymbolicName;
+            NextScheduledStart = entity.NextScheduledStart;
+            long? seconds = entity.RescheduleInterval;
+            RescheduleInterval = seconds.HasValue ? TimeSpan.FromSeconds(seconds.Value) : null;
+            seconds = entity.TTL;
+            TTL = seconds.HasValue ? TimeSpan.FromSeconds(seconds.Value) : null;
         }
 
         protected override void OnEntityPropertyChanged(string propertyName)
@@ -355,6 +332,26 @@ namespace FsInfoCat.Desktop.ViewModel
                     break;
                 case nameof(ICrawlConfigurationListItem.FileSystemSymbolicName):
                     Dispatcher.CheckInvoke(() => FileSystemSymbolicName = Entity.FileSystemSymbolicName);
+                    break;
+                case nameof(ICrawlConfigurationRow.MaxTotalItems):
+                    Dispatcher.CheckInvoke(() => MaxTotalItems = Entity.MaxTotalItems);
+                    break;
+                case nameof(ICrawlConfigurationRow.TTL):
+                    Dispatcher.CheckInvoke(() =>
+                    {
+                        long? value = Entity.TTL;
+                        TTL = value.HasValue ? TimeSpan.FromSeconds(value.Value) : null;
+                    });
+                    break;
+                case nameof(ICrawlConfigurationRow.NextScheduledStart):
+                    Dispatcher.CheckInvoke(() => NextScheduledStart = Entity.NextScheduledStart);
+                    break;
+                case nameof(ICrawlConfigurationRow.RescheduleInterval):
+                    Dispatcher.CheckInvoke(() =>
+                    {
+                        long? value = Entity.RescheduleInterval;
+                        RescheduleInterval = value.HasValue ? TimeSpan.FromSeconds(value.Value) : null;
+                    });
                     break;
                 default:
                     CheckEntityPropertyChanged(propertyName);

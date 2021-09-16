@@ -53,9 +53,45 @@ namespace FsInfoCat.Desktop.ViewModel
         protected virtual void OnNotesPropertyChanged(string oldValue, string newValue) { }
 
         #endregion
-        //public abstract CrawlStatus StatusValue { get; set; }
-        //public abstract DateTime? LastCrawlStart { get; set; }
-        //public abstract DateTime? LastCrawlEnd { get; set; }
+        #region StatusValue Property Members
+
+        /// <summary>
+        /// Identifies the <see cref="StatusValue"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty StatusValueProperty = ColumnPropertyBuilder<CrawlStatus, CrawlConfigurationRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(ICrawlConfigurationListItem.StatusValue))
+            .DefaultValue(CrawlStatus.NotRunning)
+            .AsReadWrite();
+
+        public CrawlStatus StatusValue { get => (CrawlStatus)GetValue(StatusValueProperty); set => SetValue(StatusValueProperty, value); }
+
+        #endregion
+        #region LastCrawlEnd Property Members
+
+        /// <summary>
+        /// Identifies the <see cref="LastCrawlEnd"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty LastCrawlEndProperty = ColumnPropertyBuilder<DateTime?, CrawlConfigurationRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(ICrawlConfigurationListItem.LastCrawlEnd))
+            .DefaultValue(null)
+            .AsReadWrite();
+
+        public DateTime? LastCrawlEnd { get => (DateTime?)GetValue(LastCrawlEndProperty); set => SetValue(LastCrawlEndProperty, value); }
+
+        #endregion
+        #region LastCrawlStart Property Members
+
+        /// <summary>
+        /// Identifies the <see cref="LastCrawlStart"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty LastCrawlStartProperty = ColumnPropertyBuilder<DateTime?, CrawlConfigurationRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(ICrawlConfigurationListItem.LastCrawlStart))
+            .DefaultValue(null)
+            .AsReadWrite();
+
+        public DateTime? LastCrawlStart { get => (DateTime?)GetValue(LastCrawlStartProperty); set => SetValue(LastCrawlStartProperty, value); }
+
+        #endregion
         //public abstract DateTime? NextScheduledStart { get; set; }
         //public abstract TimeSpan? RescheduleInterval { get; set; }
 
@@ -125,28 +161,6 @@ namespace FsInfoCat.Desktop.ViewModel
         protected virtual void OnMaxRecursionDepthPropertyChanged(ushort oldValue, ushort newValue) { }
 
         #endregion
-        #region MaxTotalItems Property Members
-
-        /// <summary>
-        /// Identifies the <see cref="MaxTotalItems"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty MaxTotalItemsProperty = ColumnPropertyBuilder<ulong?, CrawlConfigurationRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(ICrawlConfigurationRow.MaxTotalItems))
-            .DefaultValue(0)
-            .OnChanged((DependencyObject d, ulong? oldValue, ulong? newValue) =>
-                (d as CrawlConfigurationRowViewModel<TEntity>).OnMaxTotalItemsPropertyChanged(oldValue, newValue))
-            .AsReadWrite();
-
-        public ulong? MaxTotalItems { get => (ulong?)GetValue(MaxTotalItemsProperty); set => SetValue(MaxTotalItemsProperty, value); }
-
-        /// <summary>
-        /// Called when the value of the <see cref="MaxTotalItems"/> dependency property has changed.
-        /// </summary>
-        /// <param name="oldValue">The previous value of the <see cref="MaxTotalItems"/> property.</param>
-        /// <param name="newValue">The new value of the <see cref="MaxTotalItems"/> property.</param>
-        protected virtual void OnMaxTotalItemsPropertyChanged(ulong? oldValue, ulong? newValue) { }
-
-        #endregion
         //public abstract TimeSpan? TTL { get; set; }
 
         ICrawlConfigurationRow ICrawlConfigurationRowViewModel.Entity => Entity;
@@ -155,16 +169,15 @@ namespace FsInfoCat.Desktop.ViewModel
         {
             DisplayName = entity.DisplayName;
             Notes = entity.Notes;
-            //StatusValue = entity.StatusValue;
-            //LastCrawlStart = entity.LastCrawlStart;
-            //LastCrawlEnd = entity.LastCrawlEnd;
+            StatusValue = entity.StatusValue;
+            LastCrawlStart = entity.LastCrawlStart;
+            LastCrawlEnd = entity.LastCrawlEnd;
             //NextScheduledStart = entity.NextScheduledStart;
             //long? seconds = entity.RescheduleInterval;
             //RescheduleInterval = seconds.HasValue ? TimeSpan.FromSeconds(seconds.Value) : null;
             //RescheduleFromJobEnd = entity.RescheduleFromJobEnd;
             RescheduleAfterFail = entity.RescheduleAfterFail;
             MaxRecursionDepth = entity.MaxRecursionDepth;
-            MaxTotalItems = entity.MaxTotalItems;
         }
 
         protected bool CheckEntityPropertyChanged(string propertyName)
@@ -177,15 +190,15 @@ namespace FsInfoCat.Desktop.ViewModel
                 case nameof(ICrawlConfigurationRow.Notes):
                     Dispatcher.CheckInvoke(() => Notes = Entity.Notes);
                     break;
-                //case nameof(ICrawlConfigurationRow.StatusValue):
-                //    Dispatcher.CheckInvoke(() => StatusValue = Entity.StatusValue);
-                //    break;
-                //case nameof(ICrawlConfigurationRow.LastCrawlStart):
-                //    Dispatcher.CheckInvoke(() => LastCrawlStart = Entity.LastCrawlStart);
-                //    break;
-                //case nameof(ICrawlConfigurationRow.LastCrawlEnd):
-                //    Dispatcher.CheckInvoke(() => LastCrawlEnd = Entity.LastCrawlEnd);
-                //    break;
+                case nameof(ICrawlConfigurationRow.StatusValue):
+                    Dispatcher.CheckInvoke(() => StatusValue = Entity.StatusValue);
+                    break;
+                case nameof(ICrawlConfigurationRow.LastCrawlStart):
+                    Dispatcher.CheckInvoke(() => LastCrawlStart = Entity.LastCrawlStart);
+                    break;
+                case nameof(ICrawlConfigurationRow.LastCrawlEnd):
+                    Dispatcher.CheckInvoke(() => LastCrawlEnd = Entity.LastCrawlEnd);
+                    break;
                 //case nameof(ICrawlConfigurationRow.NextScheduledStart):
                 //    Dispatcher.CheckInvoke(() => NextScheduledStart = Entity.NextScheduledStart);
                 //    break;
@@ -201,9 +214,6 @@ namespace FsInfoCat.Desktop.ViewModel
                     break;
                 case nameof(ICrawlConfigurationRow.MaxRecursionDepth):
                     Dispatcher.CheckInvoke(() => MaxRecursionDepth = Entity.MaxRecursionDepth);
-                    break;
-                case nameof(ICrawlConfigurationRow.MaxTotalItems):
-                    Dispatcher.CheckInvoke(() => MaxTotalItems = Entity.MaxTotalItems);
                     break;
                 //case nameof(ICrawlConfigurationRow.TTL):
                 //    long? ttl = Entity.TTL;
