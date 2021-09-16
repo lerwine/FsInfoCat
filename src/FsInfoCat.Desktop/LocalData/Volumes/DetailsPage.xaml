@@ -11,7 +11,7 @@
     xmlns:Converters="clr-namespace:FsInfoCat.Desktop.Converters"
     mc:Ignorable="d" d:DataContext="{x:Type local:DetailsViewModel}"
     d:DesignHeight="768" d:DesignWidth="1024"
-    Title="DetailsPage">
+    Title="File Storage Volume Details">
     <Page.Resources>
         <Converters:VolumeIdentifierToStringConverter x:Key="VolumeIdentifierToStringConverter"/>
     </Page.Resources>

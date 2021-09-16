@@ -10,7 +10,7 @@
     xmlns:local="clr-namespace:FsInfoCat.Desktop.LocalData.AudioPropertySets"
     mc:Ignorable="d" d:DataContext="{x:Type local:DetailsViewModel}"
     d:DesignHeight="768" d:DesignWidth="1024"
-    Title="DetailsPage">
+    WindowTitle="Audio Property Set Details">
     <Grid>
 
     </Grid>

@@ -10,7 +10,7 @@
     xmlns:local="clr-namespace:FsInfoCat.Desktop.LocalData.FileSystems"
     mc:Ignorable="d" d:DataContext="{x:Type local:EditViewModel}"
     d:DesignHeight="450" d:DesignWidth="800"
-    Title="Edit File System Type">
+    WindowTitle="Edit File System Type">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>

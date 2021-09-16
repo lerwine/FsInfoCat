@@ -10,7 +10,7 @@
     xmlns:local="clr-namespace:FsInfoCat.Desktop.LocalData.ImagePropertySets"
     mc:Ignorable="d" d:DataContext="{x:Type local:EditViewModel}"
     d:DesignHeight="768" d:DesignWidth="1024"
-    Title="Edit Image Property Group">
+    WindowTitle="Edit Image Property Group">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>

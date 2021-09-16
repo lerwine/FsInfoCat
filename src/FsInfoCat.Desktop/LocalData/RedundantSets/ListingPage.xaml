@@ -9,7 +9,7 @@
       mc:Ignorable="d"
       d:DesignHeight="768" d:DesignWidth="1024"
       DataContext="{DynamicResource ViewModel}"
-      Title="{Binding PageTitle, Mode=OneWay}">
+      WindowTitle="{Binding PageTitle, Mode=OneWay}">
     <Page.Resources>
         <Converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
         <Converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>

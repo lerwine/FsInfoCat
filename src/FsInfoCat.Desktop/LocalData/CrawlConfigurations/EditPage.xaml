@@ -13,7 +13,7 @@
     x:TypeArguments="ViewModel:ItemFunctionResultEventArgs"
     mc:Ignorable="d" d:DataContext="{x:Type local:EditViewModel}"
     d:DesignHeight="768" d:DesignWidth="1024"
-    Title="Edit Crawl Configuration">
+    WindowTitle="Edit Crawl Configuration">
     <Page.Resources>
         <Converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
         <Converters:ThreeStateBooleanConverter x:Key="ManualScheduleBooleanConverter" NullSource="True" IfTrue="False" IfFalse="False"/>

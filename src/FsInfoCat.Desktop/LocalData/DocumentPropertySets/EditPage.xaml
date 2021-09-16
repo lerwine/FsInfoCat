@@ -10,7 +10,7 @@
     xmlns:local="clr-namespace:FsInfoCat.Desktop.LocalData.DocumentPropertySets"
     mc:Ignorable="d" d:DataContext="{x:Type local:EditViewModel}"
     d:DesignHeight="768" d:DesignWidth="1024"
-    Title="Edit Document Property Group">
+    WindowTitle="Edit Document Property Group">
     <StackPanel>
         <Grid>
             <Grid.RowDefinitions>

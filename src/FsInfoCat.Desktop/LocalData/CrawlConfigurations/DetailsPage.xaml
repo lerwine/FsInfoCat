@@ -11,7 +11,7 @@
     xmlns:Converters="clr-namespace:FsInfoCat.Desktop.Converters"
     mc:Ignorable="d" d:DataContext="{x:Type local:DetailsViewModel}"
     d:DesignHeight="768" d:DesignWidth="1024"
-    WindowTitle="DetailsPage">
+    WindowTitle="Crawl Configuration Details">
     <Page.Resources>
         <Converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" NullSource="Collapsed"/>
         <Converters:ObjectToVisibilityConverter x:Key="VisibleIfNotNullConverter"/>
