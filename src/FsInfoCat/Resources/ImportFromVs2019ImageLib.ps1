@@ -1,5 +1,10 @@
-﻿$Name = 'FolderOpened';
+﻿$Name = 'StatusStop';
 $ImportPath = [System.IO.Path]::Combine('C:\Users\lerwi\Downloads\VS2019 Image Library\vswin2019', $Name);
+$StylesPath = 'C:\Users\lerwi\Git\FsInfoCat\src\FsInfoCat.Desktop\Themes\Styles.xaml';
+$VectorPath = 'C:\Users\lerwi\Git\FsInfoCat\src\FsInfoCat.Desktop\Themes\Vector.xaml';
+$ExamplesPath = 'C:\Users\lerwi\Git\FsInfoCat\src\FsInfoCat.Desktop\View\VectorExamplesUserControl.xaml'
+$PresentationNamespace = 'http://schemas.microsoft.com/winfx/2006/xaml/presentation';
+$XamlNamespace = 'http://schemas.microsoft.com/winfx/2006/xaml';
 $Files = [System.IO.Directory]::GetFiles($ImportPath, '*.xaml');
 if ($Files.Length -eq 1) {
     $ImportPath = $Files[0];
@@ -24,11 +29,6 @@ if ($null -eq $DrawingGroupChildren) {
     return;
 }
 $KeyBase = [System.IO.Path]::GetFileName([System.IO.Path]::GetDirectoryName($ImportPath));
-$StylesPath = 'C:\Users\lerwi\Git\FsInfoCat\src\FsInfoCat.Desktop\Themes\Styles.xaml';
-$VectorPath = 'C:\Users\lerwi\Git\FsInfoCat\src\FsInfoCat.Desktop\Themes\Vector.xaml';
-$ExamplesPath = 'C:\Users\lerwi\Git\FsInfoCat\src\FsInfoCat.Desktop\View\VectorExamplesUserControl.xaml'
-$PresentationNamespace = 'http://schemas.microsoft.com/winfx/2006/xaml/presentation';
-$XamlNamespace = 'http://schemas.microsoft.com/winfx/2006/xaml';
 $StylesXmlDocument = [System.Xml.XmlDocument]::new();
 $VectorXmlDocument = [System.Xml.XmlDocument]::new();
 $ExamplesDocument = [System.Xml.XmlDocument]::new();
@@ -46,16 +46,15 @@ $ExamplesNsmgr = [System.Xml.XmlNamespaceManager]::new($ExamplesDocument.NameTab
 $ExamplesNsmgr.AddNamespace('p', $PresentationNamespace);
 $ExamplesNsmgr.AddNamespace('x', $XamlNamespace);
 $ButtonKey = "$($KeyBase)Button";
-if ($null -ne $StylesXmlDocument.SelectSingleNode("p:Style[@x:Key='$ButtonKey']", $nsmgr)) {
+if ($null -ne $StylesXmlDocument.DocumentElement.SelectSingleNode("p:Style[@x:Key='$ButtonKey']", $StylesNsmgr)) {
     Write-Warning -Message "Key $ButtonKey already exists";
     return;
 }
 $DataTemplateKey = "$($KeyBase)ImageContentTemplate";
-if ($null -ne $VectorXmlDocument.SelectSingleNode("p:DataTemplate[@x:Key='$DataTemplateKey']", $nsmgr)) {
+if ($null -ne $VectorXmlDocument.DocumentElement.SelectSingleNode("p:DataTemplate[@x:Key='$DataTemplateKey']", $ExamplesNsmgr)) {
     Write-Warning -Message "Key $DataTemplateKey already exists";
     return;
 }
-
 $DataTemplate = $VectorXmlDocument.DocumentElement.AppendChild($VectorXmlDocument.CreateElement('DataTemplate', $PresentationNamespace));
 $DataTemplate.Attributes.Append($VectorXmlDocument.CreateAttribute('x', 'Key', $XamlNamespace)).Value = $DataTemplateKey;
 $XmlElement = $DataTemplate.AppendChild($VectorXmlDocument.CreateElement('Image', $PresentationNamespace));
@@ -82,6 +81,7 @@ $ContentControl.Attributes.Append($ExamplesDocument.CreateAttribute('Width')).Va
 $XmlWriterSettings = [System.Xml.XmlWriterSettings]@{
     Indent = $true;
     Encoding = [System.Text.UTF8Encoding]::new($false);
+    IndentChars = '    ';
 };
 $XmlWriter = [System.Xml.XmlWriter]::Create($StylesPath, $XmlWriterSettings);
 try {
@@ -98,6 +98,3 @@ try {
     $ExamplesDocument.WriteTo($XmlWriter);
     $XmlWriter.Flush();
 } finally { $XmlWriter.Close() }
-
-<#
-#>
