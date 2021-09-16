@@ -12,7 +12,7 @@ namespace FsInfoCat.Desktop.Converters
 
         public override ScrollBarVisibility? NullSource
         {
-            get { return (ScrollBarVisibility?)(GetValue(NullSourceProperty)); }
+            get { return (ScrollBarVisibility?)GetValue(NullSourceProperty); }
             set { SetValue(NullSourceProperty, value); }
         }
 

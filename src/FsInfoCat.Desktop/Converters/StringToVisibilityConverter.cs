@@ -30,7 +30,7 @@ namespace FsInfoCat.Desktop.Converters
         /// </summary>
         public override Visibility? NullSource
         {
-            get { return (Visibility?)(GetValue(NullSourceProperty)); }
+            get { return (Visibility?)GetValue(NullSourceProperty); }
             set { SetValue(NullSourceProperty, value); }
         }
 

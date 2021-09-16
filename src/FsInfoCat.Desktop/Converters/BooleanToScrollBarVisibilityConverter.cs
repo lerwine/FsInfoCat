@@ -30,7 +30,7 @@ namespace FsInfoCat.Desktop.Converters
         /// </summary>
         public override ScrollBarVisibility? NullSource
         {
-            get { return (ScrollBarVisibility?)(GetValue(NullSourceProperty)); }
+            get { return (ScrollBarVisibility?)GetValue(NullSourceProperty); }
             set { SetValue(NullSourceProperty, value); }
         }
 
@@ -54,7 +54,7 @@ namespace FsInfoCat.Desktop.Converters
         /// </summary>
         public ScrollBarVisibility? True
         {
-            get { return (ScrollBarVisibility?)(GetValue(TrueProperty)); }
+            get { return (ScrollBarVisibility?)GetValue(TrueProperty); }
             set { SetValue(TrueProperty, value); }
         }
 
@@ -78,7 +78,7 @@ namespace FsInfoCat.Desktop.Converters
         /// </summary>
         public ScrollBarVisibility? False
         {
-            get { return (ScrollBarVisibility?)(GetValue(FalseProperty)); }
+            get { return (ScrollBarVisibility?)GetValue(FalseProperty); }
             set { SetValue(FalseProperty, value); }
         }
 
@@ -93,7 +93,7 @@ namespace FsInfoCat.Desktop.Converters
         /// <returns><seealso cref="bool"/> value converted to a <seealso cref="ScrollBarVisibility"/> or null value.</returns>
         public override ScrollBarVisibility? Convert(bool value, object parameter, CultureInfo culture)
         {
-            return (value) ? True : False;
+            return value ? True : False;
         }
     }
 }

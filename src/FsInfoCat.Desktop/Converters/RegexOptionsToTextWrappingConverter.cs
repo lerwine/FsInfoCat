@@ -13,7 +13,7 @@ namespace FsInfoCat.Desktop.Converters
 
         public override TextWrapping? NullSource
         {
-            get { return (TextWrapping?)(GetValue(NullSourceProperty)); }
+            get { return (TextWrapping?)GetValue(NullSourceProperty); }
             set { SetValue(NullSourceProperty, value); }
         }
 

@@ -29,7 +29,7 @@ namespace FsInfoCat.Desktop.Converters
         /// </summary>
         public override bool? NullSource
         {
-            get { return (bool?)(GetValue(NullSourceProperty)); }
+            get { return (bool?)GetValue(NullSourceProperty); }
             set { SetValue(NullSourceProperty, value); }
         }
 

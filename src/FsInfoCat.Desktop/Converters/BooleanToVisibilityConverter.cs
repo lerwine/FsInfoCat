@@ -29,7 +29,7 @@ namespace FsInfoCat.Desktop.Converters
         /// </summary>
         public override Visibility? NullSource
         {
-            get { return (Visibility?)(GetValue(NullSourceProperty)); }
+            get { return (Visibility?)GetValue(NullSourceProperty); }
             set { SetValue(NullSourceProperty, value); }
         }
 
@@ -92,7 +92,7 @@ namespace FsInfoCat.Desktop.Converters
         /// <returns><seealso cref="bool"/> value converted to a <seealso cref="Visibility"/> or null value.</returns>
         public override Visibility? Convert(bool value, object parameter, CultureInfo culture)
         {
-            return (value) ? True : False;
+            return value ? True : False;
         }
     }
 }
