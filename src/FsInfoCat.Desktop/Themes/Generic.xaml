@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:FsInfoCat="clr-namespace:FsInfoCat;assembly=FsInfoCat"
+    xmlns:View="clr-namespace:FsInfoCat.Desktop.View" xmlns:System="clr-namespace:System;assembly=mscorlib"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    mc:Ignorable="d">
+    <Style TargetType="{x:Type View:CrawlStatusIndicator}">
+        <Setter Property="Width" Value="{DynamicResource DefaultTextBoxHeight}"/>
+        <Setter Property="Height" Value="{DynamicResource DefaultTextBoxHeight}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type View:CrawlStatusIndicator}">
+                    <Border x:Name="border" BorderThickness="{TemplateBinding BorderThickness}">
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="Status" Value="{x:Static FsInfoCat:CrawlStatus.NotRunning}">
+                            <Setter Property="Background" TargetName="border">
+                                <Setter.Value>
+                                    <DrawingBrush>
+                                        <DrawingBrush.Drawing>
+                                            <DrawingGroup>
+                                                <DrawingGroup.Children>
+                                                    <GeometryDrawing Brush="#00FFFFFF" Geometry="F1M16,16L0,16 0,0 16,0z" />
+                                                    <GeometryDrawing Brush="#FFF6F6F6" Geometry="F1M0,8C0,3.582 3.582,0 8,0 12.418,0 16,3.582 16,8 16,12.418 12.418,16 8,16 3.582,16 0,12.418 0,8" />
+                                                    <GeometryDrawing Brush="#FF329932" Geometry="F1M11,11L5,11 5,5 11,5z M8,1C4.135,1 1,4.134 1,8 1,11.865 4.135,15 8,15 11.865,15 15,11.865 15,8 15,4.134 11.865,1 8,1" />
+                                                    <GeometryDrawing Brush="#FFFFFFFF" Geometry="F1M11,11L5,11 5,5 11,5z" />
+                                                </DrawingGroup.Children>
+                                            </DrawingGroup>
+                                        </DrawingBrush.Drawing>
+                                    </DrawingBrush>
+                                </Setter.Value>
+                            </Setter>
+                            <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource SuccessDarkBrush}"/>
+                        </Trigger>
+                        <Trigger Property="Status" Value="{x:Static FsInfoCat:CrawlStatus.InProgress}">
+                            <Setter Property="Background" TargetName="border">
+                                <Setter.Value>
+                                    <DrawingBrush>
+                                        <DrawingBrush.Drawing>
+                                            <DrawingGroup>
+                                                <DrawingGroup.Children>
+                                                    <GeometryDrawing Brush="#FFF6F6F6" Geometry="F1M0,8C0,3.582 3.582,0 8,0 12.418,0 16,3.582 16,8 16,12.418 12.418,16 8,16 3.582,16 0,12.418 0,8" />
+                                                    <GeometryDrawing Brush="#FF329932" Geometry="F1M6,12L6,4 12,8z M8,1C4.135,1 1,4.134 1,8 1,11.865 4.135,15 8,15 11.865,15 15,11.865 15,8 15,4.134 11.865,1 8,1" />
+                                                    <GeometryDrawing Brush="#FFFFFFFF" Geometry="F1M6,4L12,8 6,12z" />
+                                                </DrawingGroup.Children>
+                                            </DrawingGroup>
+                                        </DrawingBrush.Drawing>
+                                    </DrawingBrush>
+                                </Setter.Value>
+                            </Setter>
+                            <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource SuccessDarkBrush}"/>
+                        </Trigger>
+                        <Trigger Property="Status" Value="{x:Static FsInfoCat:CrawlStatus.Completed}">
+                            <Setter Property="Background" TargetName="border">
+                                <Setter.Value>
+                                    <DrawingBrush>
+                                        <DrawingBrush.Drawing>
+                                            <DrawingGroup>
+                                                <DrawingGroup.Children>
+                                                    <GeometryDrawing Brush="#00FFFFFF" Geometry="F1M16,16L0,16 0,0 16,0z" />
+                                                    <GeometryDrawing Brush="#FFF6F6F6" Geometry="F1M8,16C3.589,16 0,12.411 0,8 0,3.589 3.589,0 8,0 12.411,0 16,3.589 16,8 16,12.411 12.411,16 8,16" />
+                                                    <GeometryDrawing Brush="#FF329932" Geometry="F1M6.2998,12.3887L3.0428,9.1317 4.4568,7.7177 6.2998,9.5607 11.5428,4.3177 12.9568,5.7317z M7.9998,0.999700000000001C4.1338,0.999700000000001 0.9998,4.1337 0.9998,7.9997 0.9998,11.8667 4.1338,14.9997 7.9998,14.9997 11.8658,14.9997 14.9998,11.8667 14.9998,7.9997 14.9998,4.1337 11.8658,0.999700000000001 7.9998,0.999700000000001" />
+                                                    <GeometryDrawing Brush="#FFFFFFFF" Geometry="F1M6.2998,12.3887L3.0428,9.1317 4.4568,7.7177 6.2998,9.5607 11.5428,4.3177 12.9568,5.7317z" />
+                                                </DrawingGroup.Children>
+                                            </DrawingGroup>
+                                        </DrawingBrush.Drawing>
+                                    </DrawingBrush>
+                                </Setter.Value>
+                            </Setter>
+                            <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource SuccessDarkBrush}"/>
+                        </Trigger>
+                        <Trigger Property="Status" Value="{x:Static FsInfoCat:CrawlStatus.AllottedTimeElapsed}">
+                            <Setter Property="Background" TargetName="border">
+                                <Setter.Value>
+                                    <DrawingBrush>
+                                        <DrawingBrush.Drawing>
+                                            <DrawingGroup>
+                                                <DrawingGroup.Children>
+                                                    <GeometryDrawing Brush="#00FFFFFF" Geometry="F1M16,16L0,16 0,0 16,0z" />
+                                                    <GeometryDrawing Brush="#FFF6F6F6" Geometry="F1M16,8C16,12.418 12.418,16 8,16 3.582,16 0,12.418 0,8 0,3.582 3.582,0 8,0 12.418,0 16,3.582 16,8" />
+                                                    <GeometryDrawing Brush="#FF414141" Geometry="F1M8,1C4.134,1 1,4.134 1,8 1,8.188 1.014,8.373 1.028,8.558L2.207,7.379 2.408,7.58C2.592,4.66 5.013,2.347 7.978,2.347 11.065,2.347 13.566,4.849 13.566,7.935 13.566,10.902 11.254,13.321 8.333,13.506L8.621,13.793 7.442,14.972C7.627,14.986 7.812,15 8,15 11.866,15 15,11.866 15,8 15,4.134 11.866,1 8,1" />
+                                                    <GeometryDrawing Brush="#FF414141" Geometry="F1M8,4L7,4 7,9 11,9 11,8 8,8z" />
+                                                    <GeometryDrawing Brush="#FFF0EFF1" Geometry="F1M7.978,2.3467C5.013,2.3467,2.592,4.6597,2.408,7.5797L4,9.1717 5.793,7.3787 7,8.5857 7,3.9997 8,3.9997 8,7.9997 11,7.9997 11,8.9997 7.414,8.9997 8.621,10.2067 6.828,11.9997 8.333,13.5057C11.254,13.3217 13.566,10.9027 13.566,7.9347 13.566,4.8487 11.065,2.3467 7.978,2.3467" />
+                                                    <GeometryDrawing Brush="#FFF6F6F6" Geometry="F1M2.8281,16L4.0001,14.828 5.1721,16 6.4141,16 8.6211,13.793 6.8281,12 8.6211,10.207 5.7931,7.379 4.0001,9.172 2.2071,7.379 0.000100000000000211,9.586 0.000100000000000211,10.828 1.1721,12 0.000100000000000211,13.172 0.000100000000000211,14.414 1.5861,16z" />
+                                                    <GeometryDrawing Brush="#FFA1250C" Geometry="F1M5.793,8.793L4,10.586 2.207,8.793 0.793,10.207 2.586,12 0.793,13.793 2.207,15.207 4,13.414 5.793,15.207 7.207,13.793 5.414,12 7.207,10.207z" />
+                                                </DrawingGroup.Children>
+                                            </DrawingGroup>
+                                        </DrawingBrush.Drawing>
+                                    </DrawingBrush>
+                                </Setter.Value>
+                            </Setter>
+                            <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource WarningDarkBrush}"/>
+                        </Trigger>
+                        <Trigger Property="Status" Value="{x:Static FsInfoCat:CrawlStatus.MaxItemCountReached}">
+                            <Setter Property="Background" TargetName="border">
+                                <Setter.Value>
+                                    <DrawingBrush>
+                                        <DrawingBrush.Drawing>
+                                            <DrawingGroup>
+                                                <DrawingGroup.Children>
+                                                    <GeometryDrawing Brush="#00FFFFFF" Geometry="F1M16,16L0,16 0,0 16,0z" />
+                                                    <GeometryDrawing Brush="#FFF6F6F6" Geometry="F1M7.0002,-0.000199999999999534L0.000200000000000422,13.9998 2.0002,15.9998 14.0002,15.9998 16.0002,13.9998 9.0002,-0.000199999999999534z" />
+                                                    <GeometryDrawing Brush="#FFFFCC00" Geometry="F1M9,10L7,10 7,5 9,5z M9,13L7,13 7,11 9,11z M8.382,1L7.618,1 1.217,13.803 2.5,15 13.5,15 14.783,13.803z" />
+                                                    <GeometryDrawing Brush="#FF000000" Geometry="F1M9,11L7,11 7,13 9,13z M9,10L7,10 7,5 9,5z" />
+                                                </DrawingGroup.Children>
+                                            </DrawingGroup>
+                                        </DrawingBrush.Drawing>
+                                    </DrawingBrush>
+                                </Setter.Value>
+                            </Setter>
+                            <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource WarningDarkBrush}"/>
+                        </Trigger>
+                        <Trigger Property="Status" Value="{x:Static FsInfoCat:CrawlStatus.Canceled}">
+                            <Setter Property="Background" TargetName="border">
+                                <Setter.Value>
+                                    <DrawingBrush>
+                                        <DrawingBrush.Drawing>
+                                            <DrawingGroup>
+                                                <DrawingGroup.Children>
+                                                    <GeometryDrawing Brush="#00FFFFFF" Geometry="F1M16,16L0,16 0,0 16,0z" />
+                                                    <GeometryDrawing Brush="#FFF6F6F6" Geometry="F1M0,8C0,3.582 3.582,0 8,0 12.418,0 16,3.582 16,8 16,12.418 12.418,16 8,16 3.582,16 0,12.418 0,8" />
+                                                    <GeometryDrawing Brush="#FFFFCC00" Geometry="F1M3,7L13,7 13,9 3,9z M8,1C4.135,1 1,4.134 1,8 1,11.865 4.135,15 8,15 11.865,15 15,11.865 15,8 15,4.134 11.865,1 8,1" />
+                                                    <GeometryDrawing Brush="#FFFFFFFF" Geometry="F1M13,9L3,9 3,7 13,7z" />
+                                                </DrawingGroup.Children>
+                                            </DrawingGroup>
+                                        </DrawingBrush.Drawing>
+                                    </DrawingBrush>
+                                </Setter.Value>
+                            </Setter>
+                            <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource WarningDarkBrush}"/>
+                        </Trigger>
+                        <Trigger Property="Status" Value="{x:Static FsInfoCat:CrawlStatus.Failed}">
+                            <Setter Property="Background" TargetName="border">
+                                <Setter.Value>
+                                    <DrawingBrush>
+                                        <DrawingBrush.Drawing>
+                                            <DrawingGroup>
+                                                <DrawingGroup.Children>
+                                                    <GeometryDrawing Brush="#00FFFFFF" Geometry="F1M16,16L0,16 0,0 16,0z" />
+                                                    <GeometryDrawing Brush="#FFF6F6F6" Geometry="F1M16,8C16,12.418 12.418,16 8,16 3.582,16 0,12.418 0,8 0,3.582 3.582,0 8,0 12.418,0 16,3.582 16,8" />
+                                                    <GeometryDrawing Brush="#FFE41400" Geometry="F1M12.4141,11L11.0001,12.414 8.0001,9.414 5.0001,12.414 3.5871,11 6.5861,8 3.5871,5 5.0001,3.586 8.0001,6.586 11.0001,3.586 12.4141,5 9.4141,8z M8.0001,1C4.1351,1 1.0001,4.135 1.0001,8 1.0001,11.865 4.1351,15 8.0001,15 11.8651,15 15.0001,11.865 15.0001,8 15.0001,4.135 11.8651,1 8.0001,1" />
+                                                    <GeometryDrawing Brush="#FFFFFFFF" Geometry="F1M9.4141,8L12.4141,11 11.0001,12.414 8.0001,9.414 5.0001,12.414 3.5861,11 6.5861,8 3.5861,5 5.0001,3.586 8.0001,6.586 11.0001,3.586 12.4141,5z" />
+                                                </DrawingGroup.Children>
+                                            </DrawingGroup>
+                                        </DrawingBrush.Drawing>
+                                    </DrawingBrush>
+                                </Setter.Value>
+                            </Setter>
+                            <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource ErrorDarkBrush}"/>
+                        </Trigger>
+                        <Trigger Property="Status" Value="{x:Static FsInfoCat:CrawlStatus.Disabled}">
+                            <Setter Property="Background" TargetName="border">
+                                <Setter.Value>
+                                    <DrawingBrush>
+                                        <DrawingBrush.Drawing>
+                                            <DrawingGroup>
+                                                <DrawingGroup.Children>
+                                                    <GeometryDrawing Brush="#00FFFFFF" Geometry="F1M16,16L0,16 0,0 16,0z" />
+                                                    <GeometryDrawing Brush="#FFF6F6F6" Geometry="F1M16,8C16,12.411 12.411,16 8,16 3.589,16 0,12.411 0,8 0,3.589 3.589,0 8,0 12.411,0 16,3.589 16,8" />
+                                                    <GeometryDrawing Brush="#FF424242" Geometry="F1M8,13.5C6.754,13.5,5.607,13.078,4.684,12.377L12.377,4.684C13.078,5.607 13.5,6.754 13.5,8 13.5,11.032 11.032,13.5 8,13.5 M2.5,8C2.5,4.967 4.967,2.5 8,2.5 9.246,2.5 10.393,2.921 11.316,3.623L3.623,11.316C2.921,10.393,2.5,9.246,2.5,8 M8,1C4.14,1 1,4.14 1,8 1,11.859 4.14,15 8,15 11.859,15 15,11.859 15,8 15,4.14 11.859,1 8,1" />
+                                                </DrawingGroup.Children>
+                                            </DrawingGroup>
+                                        </DrawingBrush.Drawing>
+                                    </DrawingBrush>
+                                </Setter.Value>
+                            </Setter>
+                            <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource LightBorderBrush}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

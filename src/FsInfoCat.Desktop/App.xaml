@@ -12,6 +12,7 @@
                 <ResourceDictionary Source="Themes\Vector.xaml"/>
                 <ResourceDictionary Source="Themes\Styles.xaml"/>
                 <ResourceDictionary Source="Themes\ViewModels.xaml"/>
+                <ResourceDictionary Source="Themes\Generic.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

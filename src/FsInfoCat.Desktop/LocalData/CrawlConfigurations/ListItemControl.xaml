@@ -36,7 +36,7 @@
         <StackPanel Grid.Row="1" Grid.ColumnSpan="5">
             <GroupBox Padding="{DynamicResource DefaultSpacingBottom}">
                 <StackPanel>
-                    <Label Content="Path" Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="The path of the starting subdirectory for the current crawl configuration." Target="{Binding ElementName=pathTextBox, Mode=OneWay}" FontWeight="Bold"/>
+                    <Label Content="Status" Padding="{DynamicResource DefaultSpacingTopLeftRight}" Target="{Binding ElementName=pathTextBox, Mode=OneWay}" FontWeight="Bold"/>
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition/>
@@ -45,6 +45,7 @@
                         <TextBox x:Name="pathTextBox" Margin="{DynamicResource DefaultSpacingLeft}" ToolTip="The path of the starting subdirectory for the current crawl configuration." Style="{DynamicResource ReadOnlyValueTextBox}" Text="{Binding Path, Mode=OneWay}"/>
                         <Button Grid.Column="1" ToolTip="Open the database record for the starting subdirectory of the current crawl configuration." Style="{DynamicResource OpenButton}" Margin="{DynamicResource DefaultSpacingRight}" Command="{Binding OpenRootSubdirectory, Mode=OneWay}"/>
                     </Grid>
+                    <Label Content="Path" Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="The path of the starting subdirectory for the current crawl configuration." Target="{Binding ElementName=pathTextBox, Mode=OneWay}" FontWeight="Bold"/>
                     <WrapPanel>
                         <StackPanel>
                             <Label Content="Volume Display Name" Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="The display name given to the file system volume containing the target subdirectory ." Target="{Binding ElementName=volumeDisplayNameTextBox, Mode=OneWay}" FontWeight="Bold"/>

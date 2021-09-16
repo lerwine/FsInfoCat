@@ -1,4 +1,4 @@
-<Page x:Class="FsInfoCat.Desktop.LocalData.CrawlConfigurations.ListingPage"
+<Page xmlns:View="clr-namespace:FsInfoCat.Desktop.View"  x:Class="FsInfoCat.Desktop.LocalData.CrawlConfigurations.ListingPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -28,15 +28,20 @@
                 <DataGridTextColumn Binding="{Binding DisplayName, Mode=OneWay}" Header="Name" Width="*"/>
                 <DataGridTextColumn Binding="{Binding LastCrawlEnd, Converter={StaticResource CrawlEndToString}, Mode=OneWay}" Header="Last Completed"/>
                 <DataGridTextColumn Binding="{Binding NextScheduledStart, Converter={StaticResource NextCrawlToCol}, Mode=OneWay}" Header="Next Scheduled"/>
-                <DataGridTextColumn Binding="{Binding StatusValue, Converter={StaticResource BooleanToStatusConverter}}" MinWidth="100">
-                    <DataGridTextColumn.Header>
+                <DataGridTemplateColumn MinWidth="100">
+                    <DataGridTemplateColumn.Header>
                         <StackPanel Orientation="Horizontal" DataContext="{DynamicResource ViewModel}">
                             <Label Content="Status"/>
                             <Button Style="{DynamicResource AddNewButton}" Margin="{DynamicResource DefaultSpacingLeft}" Command="{Binding AddNewItem, Mode=OneWay}"/>
                             <Button Style="{DynamicResource FilterButton}" Margin="{DynamicResource DefaultSpacingLeft}" Command="{Binding ShowFilterOptions, Mode=OneWay}"/>
                         </StackPanel>
-                    </DataGridTextColumn.Header>
-                </DataGridTextColumn>
+                    </DataGridTemplateColumn.Header>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <View:CrawlStatusIndicator Status="{Binding StatusValue}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
             </DataGrid.Columns>
             <DataGrid.RowDetailsTemplate>
                 <DataTemplate>
@@ -44,6 +49,7 @@
                 </DataTemplate>
             </DataGrid.RowDetailsTemplate>
         </DataGrid>
+        <View:CrawlStatusIndicator Width="{DynamicResource DefaultTextBoxHeight}" Height="{DynamicResource DefaultTextBoxHeight}"/>
         <Border Background="{DynamicResource TranslucentBlack50pctBrush}" Visibility="{Binding ViewOptionsVisible, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}">
             <Border HorizontalAlignment="Center" VerticalAlignment="Center" Style="{DynamicResource PopupOuterBorder}">
                 <Grid>

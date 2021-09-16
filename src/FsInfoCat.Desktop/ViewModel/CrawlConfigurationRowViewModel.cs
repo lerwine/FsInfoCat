@@ -56,14 +56,26 @@ namespace FsInfoCat.Desktop.ViewModel
         #region StatusValue Property Members
 
         /// <summary>
+        /// Occurs when the value of the <see cref="StatusValue"/> dependency property has changed.
+        /// </summary>
+        public event DependencyPropertyChangedEventHandler StatusValuePropertyChanged;
+
+        /// <summary>
         /// Identifies the <see cref="StatusValue"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty StatusValueProperty = ColumnPropertyBuilder<CrawlStatus, CrawlConfigurationRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(ICrawlConfigurationListItem.StatusValue))
+        public static readonly DependencyProperty StatusValueProperty = DependencyPropertyBuilder<CrawlConfigurationRowViewModel<TEntity>, CrawlStatus>
+            .Register(nameof(StatusValue))
             .DefaultValue(CrawlStatus.NotRunning)
+            .OnChanged((d, e) => (d as CrawlConfigurationRowViewModel<TEntity>)?.OnStatusValuePropertyChanged(e))
             .AsReadWrite();
 
         public CrawlStatus StatusValue { get => (CrawlStatus)GetValue(StatusValueProperty); set => SetValue(StatusValueProperty, value); }
+
+        /// <summary>
+        /// Called when the <see cref="PropertyChangedCallback">PropertyChanged</see> event on <see cref="StatusValueProperty"/> is raised.
+        /// </summary>
+        /// <param name="args">The Event data that is issued by the event on <see cref="StatusValueProperty"/> that tracks changes to its effective value.</param>
+        protected virtual void OnStatusValuePropertyChanged(DependencyPropertyChangedEventArgs args) => StatusValuePropertyChanged?.Invoke(this, args);
 
         #endregion
         #region LastCrawlEnd Property Members

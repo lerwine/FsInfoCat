@@ -48,6 +48,14 @@
             <ContentControl ContentTemplate="{DynamicResource FolderOpenedImageContentTemplate}" Height="32" Width="32" />
             <ContentControl ContentTemplate="{DynamicResource TagIconPathContentTemplate}" Height="32" Width="32" />
             <ContentControl ContentTemplate="{DynamicResource MusicFileIconPathContentTemplate}" Height="32" Width="32" />
+            <ContentControl ContentTemplate="{DynamicResource StatusNotRunningImageContentTemplate}" Height="32" Width="32" />
+            <ContentControl ContentTemplate="{DynamicResource StatusInProgressImageContentTemplate}" Height="32" Width="32" />
+            <ContentControl ContentTemplate="{DynamicResource StatusCompletedImageContentTemplate}" Height="32" Width="32" />
+            <ContentControl ContentTemplate="{DynamicResource StatusMaxItemCountReachedImageContentTemplate}" Height="32" Width="32" />
+            <ContentControl ContentTemplate="{DynamicResource StatusAllottedTimeElapsedImageContentTemplate}" Height="32" Width="32" />
+            <ContentControl ContentTemplate="{DynamicResource StatusCanceledImageContentTemplate}" Height="32" Width="32" />
+            <ContentControl ContentTemplate="{DynamicResource StatusFailedImageContentTemplate}" Height="32" Width="32" />
+            <ContentControl ContentTemplate="{DynamicResource StatusDisabledImageContentTemplate}" Height="32" Width="32" />
         </WrapPanel>
         <WrapPanel>
             <ContentControl ContentTemplate="{DynamicResource AddBookmarkIcon1PathContentTemplate}" Height="32" Width="32" />

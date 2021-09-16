@@ -80,11 +80,7 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
             LastSynchronizedOn = entity.LastSynchronizedOn;
         }
 
-        private bool ConfirmCrawlJobLogDelete([DisallowNull] CrawlJobListItemViewModel item, object parameter)
-        {
-            // TODO: Implement ConfirmCrawlJobLogDelete(CrawlJobListItemViewModel, object)
-            throw new NotImplementedException();
-        }
+        private bool ConfirmCrawlJobLogDelete([DisallowNull] CrawlJobListItemViewModel item, object parameter) => MessageBox.Show(Application.Current.MainWindow, "This action cannot be undone!\n\nAre you sure you want to delete this crawl completion log entry?", "Delete Completion Log Entry", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes;
 
         protected override CrawlJobListItemViewModel CreateCrawlJobLogViewModel([DisallowNull] CrawlJobLogListItem entity) => new(entity);
 

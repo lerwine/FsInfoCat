@@ -77,7 +77,7 @@
         <GradientStop Color="{DynamicResource InfoLightColor}" Offset="0.5"/>
         <GradientStop Color="{DynamicResource InfoMediumColor}" Offset="0.75"/>
         <GradientStop Color="{DynamicResource InfoDarkColor}" Offset="1"/>
-</LinearGradientBrush>
+    </LinearGradientBrush>
     <LinearGradientBrush x:Key="PopupTitleWarningBackgroundBrush" EndPoint="0.5,1" StartPoint="0.5,0">
         <GradientStop Color="White" Offset="0"/>
         <GradientStop Color="{DynamicResource WarningLightColor}" Offset="0.5"/>

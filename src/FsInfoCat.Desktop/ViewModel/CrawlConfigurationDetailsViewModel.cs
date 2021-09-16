@@ -39,6 +39,158 @@ namespace FsInfoCat.Desktop.ViewModel
         protected virtual void RaiseEditCommand(object parameter) => EditCommand?.Invoke(this, new(parameter));
 
         #endregion
+        #region StartCrawl Command Property Members
+
+        /// <summary>
+        /// Occurs when the <see cref="StartCrawl"/> is invoked.
+        /// </summary>
+        public event EventHandler<Commands.CommandEventArgs> StartCrawlCommand;
+
+        private static readonly DependencyPropertyKey StartCrawlPropertyKey = DependencyPropertyBuilder<CrawlConfigurationDetailsViewModel<TEntity, TSubdirectoryEntity, TSubdirectoryItem, TCrawlJobLogEntity, TCrawlJobLogItem>, Commands.RelayCommand>
+            .Register(nameof(StartCrawl))
+            .AsReadOnly();
+
+        /// <summary>
+        /// Identifies the <see cref="StartCrawl"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty StartCrawlProperty = StartCrawlPropertyKey.DependencyProperty;
+
+        public Commands.RelayCommand StartCrawl => (Commands.RelayCommand)GetValue(StartCrawlProperty);
+
+        /// <summary>
+        /// Called when the StartCrawl event is raised by <see cref="StartCrawl" />.
+        /// </summary>
+        /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="StartCrawl" />.</param>
+        protected void RaiseStartCrawlCommand(object parameter) // => StartCrawlCommand?.Invoke(this, new(parameter));
+        {
+            try { OnStartCrawlCommand(parameter); }
+            finally { StartCrawlCommand?.Invoke(this, new(parameter)); }
+        }
+
+        /// <summary>
+        /// Called when the <see cref="StartCrawl">StartCrawl Command</see> is invoked.
+        /// </summary>
+        /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="StartCrawl" />.</param>
+        protected virtual void OnStartCrawlCommand(object parameter)
+        {
+            // TODO: Implement OnStartCrawlCommand Logic
+        }
+
+        #endregion
+        #region StopCrawl Command Property Members
+
+        /// <summary>
+        /// Occurs when the <see cref="StopCrawl"/> is invoked.
+        /// </summary>
+        public event EventHandler<Commands.CommandEventArgs> StopCrawlCommand;
+
+        private static readonly DependencyPropertyKey StopCrawlPropertyKey = DependencyPropertyBuilder<CrawlConfigurationDetailsViewModel<TEntity, TSubdirectoryEntity, TSubdirectoryItem, TCrawlJobLogEntity, TCrawlJobLogItem>, Commands.RelayCommand>
+            .Register(nameof(StopCrawl))
+            .AsReadOnly();
+
+        /// <summary>
+        /// Identifies the <see cref="StopCrawl"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty StopCrawlProperty = StopCrawlPropertyKey.DependencyProperty;
+
+        public Commands.RelayCommand StopCrawl => (Commands.RelayCommand)GetValue(StopCrawlProperty);
+
+        /// <summary>
+        /// Called when the StopCrawl event is raised by <see cref="StopCrawl" />.
+        /// </summary>
+        /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="StopCrawl" />.</param>
+        protected void RaiseStopCrawlCommand(object parameter) // => StopCrawlCommand?.Invoke(this, new(parameter));
+        {
+            try { OnStopCrawlCommand(parameter); }
+            finally { StopCrawlCommand?.Invoke(this, new(parameter)); }
+        }
+
+        /// <summary>
+        /// Called when the <see cref="StopCrawl">StopCrawl Command</see> is invoked.
+        /// </summary>
+        /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="StopCrawl" />.</param>
+        protected virtual void OnStopCrawlCommand(object parameter)
+        {
+            // TODO: Implement OnStopCrawlCommand Logic
+        }
+
+        #endregion
+        #region GoToRootSubdirectory Command Property Members
+
+        /// <summary>
+        /// Occurs when the <see cref="GoToRootSubdirectory"/> is invoked.
+        /// </summary>
+        public event EventHandler<Commands.CommandEventArgs> GoToRootSubdirectoryCommand;
+
+        private static readonly DependencyPropertyKey GoToRootSubdirectoryPropertyKey = DependencyPropertyBuilder<CrawlConfigurationDetailsViewModel<TEntity, TSubdirectoryEntity, TSubdirectoryItem, TCrawlJobLogEntity, TCrawlJobLogItem>, Commands.RelayCommand>
+            .Register(nameof(GoToRootSubdirectory))
+            .AsReadOnly();
+
+        /// <summary>
+        /// Identifies the <see cref="GoToRootSubdirectory"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty GoToRootSubdirectoryProperty = GoToRootSubdirectoryPropertyKey.DependencyProperty;
+
+        public Commands.RelayCommand GoToRootSubdirectory => (Commands.RelayCommand)GetValue(GoToRootSubdirectoryProperty);
+
+        /// <summary>
+        /// Called when the GoToRootSubdirectory event is raised by <see cref="GoToRootSubdirectory" />.
+        /// </summary>
+        /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="GoToRootSubdirectory" />.</param>
+        protected void RaiseGoToRootSubdirectoryCommand(object parameter) // => GoToRootSubdirectoryCommand?.Invoke(this, new(parameter));
+        {
+            try { OnGoToRootSubdirectoryCommand(parameter); }
+            finally { GoToRootSubdirectoryCommand?.Invoke(this, new(parameter)); }
+        }
+
+        /// <summary>
+        /// Called when the <see cref="GoToRootSubdirectory">GoToRootSubdirectory Command</see> is invoked.
+        /// </summary>
+        /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="GoToRootSubdirectory" />.</param>
+        protected virtual void OnGoToRootSubdirectoryCommand(object parameter)
+        {
+            // TODO: Implement OnGoToRootSubdirectoryCommand Logic
+        }
+
+        #endregion
+        #region ViewLogs Command Property Members
+
+        /// <summary>
+        /// Occurs when the <see cref="ViewLogs"/> is invoked.
+        /// </summary>
+        public event EventHandler<Commands.CommandEventArgs> ViewLogsCommand;
+
+        private static readonly DependencyPropertyKey ViewLogsPropertyKey = DependencyPropertyBuilder<CrawlConfigurationDetailsViewModel<TEntity, TSubdirectoryEntity, TSubdirectoryItem, TCrawlJobLogEntity, TCrawlJobLogItem>, Commands.RelayCommand>
+            .Register(nameof(ViewLogs))
+            .AsReadOnly();
+
+        /// <summary>
+        /// Identifies the <see cref="ViewLogs"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ViewLogsProperty = ViewLogsPropertyKey.DependencyProperty;
+
+        public Commands.RelayCommand ViewLogs => (Commands.RelayCommand)GetValue(ViewLogsProperty);
+
+        /// <summary>
+        /// Called when the ViewLogs event is raised by <see cref="ViewLogs" />.
+        /// </summary>
+        /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="ViewLogs" />.</param>
+        protected void RaiseViewLogsCommand(object parameter) // => ViewLogsCommand?.Invoke(this, new(parameter));
+        {
+            try { OnViewLogsCommand(parameter); }
+            finally { ViewLogsCommand?.Invoke(this, new(parameter)); }
+        }
+
+        /// <summary>
+        /// Called when the <see cref="ViewLogs">ViewLogs Command</see> is invoked.
+        /// </summary>
+        /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="ViewLogs" />.</param>
+        protected virtual void OnViewLogsCommand(object parameter)
+        {
+            // TODO: Implement OnViewLogsCommand Logic
+        }
+
+        #endregion
         #region MaxTotalItems Property Members
 
         /// <summary>
@@ -106,12 +258,41 @@ namespace FsInfoCat.Desktop.ViewModel
         public CrawlConfigurationDetailsViewModel([DisallowNull] TEntity entity, object state = null) : base(entity, state)
         {
             SetValue(EditPropertyKey, new Commands.RelayCommand(RaiseEditCommand));
+            SetValue(StartCrawlPropertyKey, new Commands.RelayCommand(RaiseStartCrawlCommand));
+            SetValue(StopCrawlPropertyKey, new Commands.RelayCommand(RaiseStopCrawlCommand));
+            SetValue(GoToRootSubdirectoryPropertyKey, new Commands.RelayCommand(RaiseGoToRootSubdirectoryCommand));
+            SetValue(ViewLogsPropertyKey, new Commands.RelayCommand(RaiseViewLogsCommand));
             MaxTotalItems = entity.MaxTotalItems;
             NextScheduledStart = entity.NextScheduledStart;
             long? seconds = entity.RescheduleInterval;
             RescheduleInterval = seconds.HasValue ? TimeSpan.FromSeconds(seconds.Value) : null;
             seconds = entity.TTL;
             TTL = seconds.HasValue ? TimeSpan.FromSeconds(seconds.Value) : null;
+            OnStatusValueChanged(entity.StatusValue);
+        }
+
+        private void OnStatusValueChanged(CrawlStatus statusValue)
+        {
+            switch (statusValue)
+            {
+                case CrawlStatus.Disabled:
+                    StartCrawl.IsEnabled = StopCrawl.IsEnabled = false;
+                    break;
+                case CrawlStatus.InProgress:
+                    StartCrawl.IsEnabled = false;
+                    StopCrawl.IsEnabled = true;
+                    break;
+                default:
+                    StartCrawl.IsEnabled = true;
+                    StopCrawl.IsEnabled = false;
+                    break;
+            }
+        }
+
+        protected override void OnStatusValuePropertyChanged(DependencyPropertyChangedEventArgs args)
+        {
+            base.OnStatusValuePropertyChanged(args);
+            OnStatusValueChanged((CrawlStatus)args.NewValue);
         }
 
         protected override void OnEntityPropertyChanged(string propertyName)

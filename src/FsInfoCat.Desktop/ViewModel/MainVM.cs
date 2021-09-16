@@ -33,22 +33,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public const string Page_Uri_Local_RecordedTVPropertySets = "/LocalData/RecordedTVPropertySets/ListingPage.xaml";
         public const string Page_Uri_Local_VideoPropertySets = "/LocalData/VideoPropertySets/ListingPage.xaml";
 
-        #region WindowTitle Property Members
-
-        private static readonly DependencyPropertyKey WindowTitlePropertyKey = DependencyPropertyBuilder<MainVM, string>
-            .Register(nameof(WindowTitle))
-            .DefaultValue("")
-            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default)
-            .AsReadOnly();
-
-        /// <summary>
-        /// Identifies the <see cref="WindowTitle"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty WindowTitleProperty = WindowTitlePropertyKey.DependencyProperty;
-
-        public string WindowTitle { get => GetValue(WindowTitleProperty) as string; private set => SetValue(WindowTitlePropertyKey, value); }
-
-        #endregion
         #region ViewFileSystems Command Property Members
 
         private static readonly DependencyPropertyKey ViewFileSystemsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ViewFileSystems),
@@ -395,29 +379,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public CommandBindingCollection CommandBindings => (CommandBindingCollection)GetValue(CommandBindingsProperty);
 
         #endregion
-        #region PageTitle Property Members
-
-        /// <summary>
-        /// Identifies the <see cref="PageTitle"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty PageTitleProperty = DependencyPropertyBuilder<MainVM, string>
-            .Register(nameof(PageTitle))
-            .DefaultValue("")
-            .OnChanged((d, oldValue, newValue) => (d as MainVM)?.OnPageTitlePropertyChanged(newValue))
-            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default)
-            .AsReadWrite();
-
-        public string PageTitle { get => GetValue(PageTitleProperty) as string; set => SetValue(PageTitleProperty, value); }
-
-        /// <summary>
-        /// Called when the value of the <see cref="PageTitle"/> dependency property has changed.
-        /// </summary>
-        /// <param name="oldValue">The previous value of the <see cref="PageTitle"/> property.</param>
-        /// <param name="newValue">The new value of the <see cref="PageTitle"/> property.</param>
-        protected virtual void OnPageTitlePropertyChanged(string newValue) => WindowTitle = (newValue.Length > 0) ?
-            string.Format(FsInfoCat.Properties.Resources.FormatDisplayName_FSInfoCatTitle, newValue) : FsInfoCat.Properties.Resources.DisplayName_FSInfoCat;
-
-        #endregion
         #region NavigatedContent Property Members
 
         /// <summary>
@@ -450,24 +411,10 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <param name="newValue">The new value of the <see cref="NavigatedContent"/> property.</param>
         protected virtual void OnNavigatedContentPropertyChanged(object oldValue, object newValue)
         {
-            if (oldValue is FrameworkElement oldContent)
-            {
-                if (oldContent is Page)
-                    BindingOperations.ClearBinding(this, PageTitleProperty);
-                if (oldContent.DataContext is INavigatedFromNotifiable navigatedFrom)
-                    navigatedFrom.OnNavigatedFrom();
-            }
-            if (newValue is FrameworkElement newContent)
-            {
-                if (newContent is Page page)
-                    BindingOperations.SetBinding(this, PageTitleProperty, new Binding(nameof(Page.Title)) { Source = page }).UpdateTarget();
-                else
-                    PageTitle = "";
-                if (newContent.DataContext is INavigatedToNotifiable navigatedTo)
-                    navigatedTo.OnNavigatedTo();
-            }
-            else
-                PageTitle = "";
+            if (oldValue is FrameworkElement oldContent && oldContent.DataContext is INavigatedFromNotifiable navigatedFrom)
+                navigatedFrom.OnNavigatedFrom();
+            if (newValue is FrameworkElement newContent && newContent.DataContext is INavigatedToNotifiable navigatedTo)
+                navigatedTo.OnNavigatedTo();
         }
 
         #endregion

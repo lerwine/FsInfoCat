@@ -82,7 +82,6 @@ namespace FsInfoCat.Desktop.LocalData.Volumes
         protected virtual void OnDeleteCommand(object parameter)
         {
             // TODO: Implement OnDeleteCommand Logic
-            // TODO: Add initialization code to constructor: 
         }
 
         #endregion

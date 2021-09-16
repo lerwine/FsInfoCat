@@ -1,490 +1,514 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:View="clr-namespace:FsInfoCat.Desktop.View" xmlns:System="clr-namespace:System;assembly=mscorlib" mc:Ignorable="d" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-  <Style x:Key="DefaultTextBoxBase" TargetType="TextBox">
-    <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" />
-    <Setter Property="BorderBrush" Value="{DynamicResource TextBoxBorderBrush}" />
-    <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />
-    <Setter Property="BorderThickness" Value="1" />
-    <Setter Property="HorizontalContentAlignment" Value="Left" />
-    <Setter Property="Padding" Value="2" />
-    <Style.Triggers>
-      <MultiTrigger>
-        <MultiTrigger.Conditions>
-          <Condition Property="IsInactiveSelectionHighlightEnabled" Value="True" />
-          <Condition Property="IsSelectionActive" Value="False" />
-        </MultiTrigger.Conditions>
-        <Setter Property="SelectionBrush" Value="{DynamicResource {x:Static SystemColors.InactiveSelectionHighlightBrushKey}}" />
-      </MultiTrigger>
-    </Style.Triggers>
-  </Style>
-  <Style x:Key="ReadOnlyValueTextBox" TargetType="TextBox" BasedOn="{StaticResource DefaultTextBoxBase}">
-    <Setter Property="IsReadOnly" Value="True" />
-    <Setter Property="BorderThickness" Value="0.5" />
-    <Setter Property="Padding" Value="1" />
-    <Setter Property="BorderBrush" Value="{DynamicResource ValueTextBoxBorderBrush}" />
-    <Setter Property="HorizontalScrollBarVisibility" Value="Hidden" />
-    <Setter Property="VerticalScrollBarVisibility" Value="Auto" />
-    <Setter Property="TextWrapping" Value="Wrap" />
-  </Style>
-  <Style x:Key="SingleLineTextBox" TargetType="TextBox" BasedOn="{StaticResource DefaultTextBoxBase}">
-    <Setter Property="Height" Value="{DynamicResource DefaultTextBoxHeight}" />
-    <Setter Property="AcceptsReturn" Value="False" />
-    <Setter Property="AcceptsTab" Value="False" />
-    <Setter Property="TextWrapping" Value="NoWrap" />
-  </Style>
-  <Style x:Key="SingleLineReadOnlyValueTextBox" TargetType="TextBox" BasedOn="{StaticResource SingleLineTextBox}">
-    <Setter Property="IsReadOnly" Value="True" />
-    <Setter Property="BorderThickness" Value="0.5" />
-    <Setter Property="Padding" Value="1" />
-    <Setter Property="BorderBrush" Value="{DynamicResource ValueTextBoxBorderBrush}" />
-  </Style>
-  <Style x:Key="DefaultGroupBoxBase" TargetType="GroupBox">
-    <Setter Property="BorderBrush" Value="#D5DFE5" />
-    <Setter Property="BorderThickness" Value="1" />
-    <Setter Property="Template">
-      <Setter.Value>
-        <ControlTemplate TargetType="{x:Type GroupBox}">
-          <Grid SnapsToDevicePixels="true">
-            <Grid.Resources>
-              <BorderGapMaskConverter x:Key="BorderGapMaskConverter" />
-            </Grid.Resources>
-            <Grid.ColumnDefinitions>
-              <ColumnDefinition Width="6" />
-              <ColumnDefinition Width="Auto" />
-              <ColumnDefinition Width="*" />
-              <ColumnDefinition Width="6" />
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-              <RowDefinition Height="Auto" />
-              <RowDefinition Height="Auto" />
-              <RowDefinition Height="*" />
-              <RowDefinition Height="6" />
-            </Grid.RowDefinitions>
-            <Border Background="{TemplateBinding Background}" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="Transparent" CornerRadius="4" Grid.ColumnSpan="4" Grid.Column="0" Grid.RowSpan="3" Grid.Row="1" />
-            <Border BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="White" CornerRadius="4" Grid.ColumnSpan="4" Grid.RowSpan="3" Grid.Row="1">
-              <Border.OpacityMask>
-                <MultiBinding Converter="{StaticResource BorderGapMaskConverter}" ConverterParameter="7">
-                  <Binding ElementName="Header" Path="ActualWidth" />
-                  <Binding Path="ActualWidth" RelativeSource="{RelativeSource Self}" />
-                  <Binding Path="ActualHeight" RelativeSource="{RelativeSource Self}" />
-                </MultiBinding>
-              </Border.OpacityMask>
-              <Border BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}" CornerRadius="3">
-                <Border BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="White" CornerRadius="2" />
-              </Border>
-            </Border>
-            <Border x:Name="Header" Grid.Column="1" Padding="3,1,3,0" Grid.RowSpan="2" Grid.Row="0">
-              <ContentPresenter ContentSource="Header" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
-            </Border>
-            <ContentPresenter Grid.ColumnSpan="2" Grid.Column="1" Margin="{TemplateBinding Padding}" Grid.Row="2" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
-          </Grid>
-        </ControlTemplate>
-      </Setter.Value>
-    </Setter>
-  </Style>
-  <Style x:Key="DefaultButtonBase" TargetType="{x:Type Button}">
-    <Setter Property="Background" Value="{DynamicResource ButtonBackgroundBrush}" />
-    <Setter Property="BorderThickness" Value="{DynamicResource ThinBorderThickness}" />
-    <Setter Property="Height" Value="{DynamicResource DefaultButtonHeight}" />
-    <Setter Property="Template">
-      <Setter.Value>
-        <ControlTemplate TargetType="{x:Type ButtonBase}">
-          <Border x:Name="border" Background="{TemplateBinding Background}" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}" SnapsToDevicePixels="true">
-            <ContentPresenter x:Name="contentPresenter" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
-          </Border>
-          <ControlTemplate.Triggers>
-            <Trigger Property="Button.IsDefaulted" Value="true">
-              <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" />
-            </Trigger>
-            <Trigger Property="IsMouseOver" Value="true">
-              <Setter Property="Background" TargetName="border" Value="{StaticResource Button.MouseOver.Background}" />
-              <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.MouseOver.Border}" />
-            </Trigger>
-            <Trigger Property="IsPressed" Value="true">
-              <Setter Property="Background" TargetName="border" Value="{StaticResource Button.Pressed.Background}" />
-              <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.Pressed.Border}" />
-            </Trigger>
-            <Trigger Property="IsEnabled" Value="false">
-              <Setter Property="Background" TargetName="border" Value="{StaticResource Button.Disabled.Background}" />
-              <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.Disabled.Border}" />
-              <Setter Property="TextElement.Foreground" TargetName="contentPresenter" Value="{StaticResource Button.Disabled.Foreground}" />
-            </Trigger>
-          </ControlTemplate.Triggers>
-        </ControlTemplate>
-      </Setter.Value>
-    </Setter>
-  </Style>
-  <Style x:Key="DefaultPasswordBoxBase" TargetType="PasswordBox">
-    <Setter Property="Height" Value="{DynamicResource DefaultTextBoxHeight}" />
-  </Style>
-  <Style TargetType="Button" BasedOn="{StaticResource DefaultButtonBase}"></Style>
-  <Style TargetType="TextBox" BasedOn="{StaticResource DefaultTextBoxBase}"></Style>
-  <Style TargetType="GroupBox" BasedOn="{StaticResource DefaultGroupBoxBase}"></Style>
-  <Style TargetType="PasswordBox" BasedOn="{StaticResource DefaultPasswordBoxBase}"></Style>
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:View="clr-namespace:FsInfoCat.Desktop.View" xmlns:System="clr-namespace:System;assembly=mscorlib" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" mc:Ignorable="d">
+    <Style x:Key="DefaultTextBoxBase" TargetType="TextBox">
+        <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource TextBoxBorderBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="HorizontalContentAlignment" Value="Left" />
+        <Setter Property="Padding" Value="2" />
+        <Style.Triggers>
+            <MultiTrigger>
+                <MultiTrigger.Conditions>
+                    <Condition Property="IsInactiveSelectionHighlightEnabled" Value="True" />
+                    <Condition Property="IsSelectionActive" Value="False" />
+                </MultiTrigger.Conditions>
+                <Setter Property="SelectionBrush" Value="{DynamicResource {x:Static SystemColors.InactiveSelectionHighlightBrushKey}}" />
+            </MultiTrigger>
+        </Style.Triggers>
+    </Style>
+    <Style x:Key="ReadOnlyValueTextBox" TargetType="TextBox" BasedOn="{StaticResource DefaultTextBoxBase}">
+        <Setter Property="IsReadOnly" Value="True" />
+        <Setter Property="BorderThickness" Value="0.5" />
+        <Setter Property="Padding" Value="1" />
+        <Setter Property="BorderBrush" Value="{DynamicResource ValueTextBoxBorderBrush}" />
+        <Setter Property="HorizontalScrollBarVisibility" Value="Hidden" />
+        <Setter Property="VerticalScrollBarVisibility" Value="Auto" />
+        <Setter Property="TextWrapping" Value="Wrap" />
+    </Style>
+    <Style x:Key="SingleLineTextBox" TargetType="TextBox" BasedOn="{StaticResource DefaultTextBoxBase}">
+        <Setter Property="Height" Value="{DynamicResource DefaultTextBoxHeight}" />
+        <Setter Property="AcceptsReturn" Value="False" />
+        <Setter Property="AcceptsTab" Value="False" />
+        <Setter Property="TextWrapping" Value="NoWrap" />
+    </Style>
+    <Style x:Key="SingleLineReadOnlyValueTextBox" TargetType="TextBox" BasedOn="{StaticResource SingleLineTextBox}">
+        <Setter Property="IsReadOnly" Value="True" />
+        <Setter Property="BorderThickness" Value="0.5" />
+        <Setter Property="Padding" Value="1" />
+        <Setter Property="BorderBrush" Value="{DynamicResource ValueTextBoxBorderBrush}" />
+    </Style>
+    <Style x:Key="DefaultGroupBoxBase" TargetType="GroupBox">
+        <Setter Property="BorderBrush" Value="#D5DFE5" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type GroupBox}">
+                    <Grid SnapsToDevicePixels="true">
+                        <Grid.Resources>
+                            <BorderGapMaskConverter x:Key="BorderGapMaskConverter" />
+                        </Grid.Resources>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="6" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="6" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="6" />
+                        </Grid.RowDefinitions>
+                        <Border Background="{TemplateBinding Background}" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="Transparent" CornerRadius="4" Grid.ColumnSpan="4" Grid.Column="0" Grid.RowSpan="3" Grid.Row="1" />
+                        <Border BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="White" CornerRadius="4" Grid.ColumnSpan="4" Grid.RowSpan="3" Grid.Row="1">
+                            <Border.OpacityMask>
+                                <MultiBinding Converter="{StaticResource BorderGapMaskConverter}" ConverterParameter="7">
+                                    <Binding ElementName="Header" Path="ActualWidth" />
+                                    <Binding Path="ActualWidth" RelativeSource="{RelativeSource Self}" />
+                                    <Binding Path="ActualHeight" RelativeSource="{RelativeSource Self}" />
+                                </MultiBinding>
+                            </Border.OpacityMask>
+                            <Border BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}" CornerRadius="3">
+                                <Border BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="White" CornerRadius="2" />
+                            </Border>
+                        </Border>
+                        <Border x:Name="Header" Grid.Column="1" Padding="3,1,3,0" Grid.RowSpan="2" Grid.Row="0">
+                            <ContentPresenter ContentSource="Header" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                        </Border>
+                        <ContentPresenter Grid.ColumnSpan="2" Grid.Column="1" Margin="{TemplateBinding Padding}" Grid.Row="2" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="DefaultButtonBase" TargetType="{x:Type Button}">
+        <Setter Property="Background" Value="{DynamicResource ButtonBackgroundBrush}" />
+        <Setter Property="BorderThickness" Value="{DynamicResource ThinBorderThickness}" />
+        <Setter Property="Height" Value="{DynamicResource DefaultButtonHeight}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ButtonBase}">
+                    <Border x:Name="border" Background="{TemplateBinding Background}" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}" SnapsToDevicePixels="true">
+                        <ContentPresenter x:Name="contentPresenter" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="Button.IsDefaulted" Value="true">
+                            <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" />
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter Property="Background" TargetName="border" Value="{StaticResource Button.MouseOver.Background}" />
+                            <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.MouseOver.Border}" />
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="true">
+                            <Setter Property="Background" TargetName="border" Value="{StaticResource Button.Pressed.Background}" />
+                            <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.Pressed.Border}" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="false">
+                            <Setter Property="Background" TargetName="border" Value="{StaticResource Button.Disabled.Background}" />
+                            <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.Disabled.Border}" />
+                            <Setter Property="TextElement.Foreground" TargetName="contentPresenter" Value="{StaticResource Button.Disabled.Foreground}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="DefaultPasswordBoxBase" TargetType="PasswordBox">
+        <Setter Property="Height" Value="{DynamicResource DefaultTextBoxHeight}" />
+    </Style>
+    <Style TargetType="Button" BasedOn="{StaticResource DefaultButtonBase}"></Style>
+    <Style TargetType="TextBox" BasedOn="{StaticResource DefaultTextBoxBase}"></Style>
+    <Style TargetType="GroupBox" BasedOn="{StaticResource DefaultGroupBoxBase}"></Style>
+    <Style TargetType="PasswordBox" BasedOn="{StaticResource DefaultPasswordBoxBase}"></Style>
     <Style x:Key="TopLabel" TargetType="ContentControl">
-        <Setter Property="FontWeight" Value="Bold"/>
-        <Setter Property="VerticalContentAlignment" Value="Bottom"/>
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="VerticalContentAlignment" Value="Bottom" />
     </Style>
     <Style x:Key="TopLabelNotPadded" TargetType="ContentControl" BasedOn="{StaticResource TopLabel}">
-        <Setter Property="Padding" Value="0"/>
+        <Setter Property="Padding" Value="0" />
     </Style>
     <Style x:Key="TopLabelPaddedBottom" TargetType="ContentControl" BasedOn="{StaticResource TopLabel}">
-        <Setter Property="Padding" Value="{DynamicResource DefaultSpacingBottom}"/>
+        <Setter Property="Padding" Value="{DynamicResource DefaultSpacingBottom}" />
     </Style>
     <Style x:Key="TopLabelPaddedRight" TargetType="ContentControl" BasedOn="{StaticResource TopLabel}">
-        <Setter Property="Padding" Value="{DynamicResource DefaultSpacingRight}"/>
+        <Setter Property="Padding" Value="{DynamicResource DefaultSpacingRight}" />
     </Style>
     <Style x:Key="TopLabelPaddedBottomRight" TargetType="ContentControl" BasedOn="{StaticResource TopLabel}">
-        <Setter Property="Padding" Value="{DynamicResource DefaultSpacingBottomRight}"/>
+        <Setter Property="Padding" Value="{DynamicResource DefaultSpacingBottomRight}" />
     </Style>
     <Style x:Key="TopLabelPaddedTop" TargetType="ContentControl" BasedOn="{StaticResource TopLabel}">
-        <Setter Property="Padding" Value="{DynamicResource DefaultSpacingTop}"/>
+        <Setter Property="Padding" Value="{DynamicResource DefaultSpacingTop}" />
     </Style>
     <Style x:Key="TopLabelPaddedTopBottom" TargetType="ContentControl" BasedOn="{StaticResource TopLabel}">
-        <Setter Property="Padding" Value="{DynamicResource DefaultSpacingTopBottom}"/>
+        <Setter Property="Padding" Value="{DynamicResource DefaultSpacingTopBottom}" />
     </Style>
     <Style x:Key="TopLabelPaddedTopRight" TargetType="ContentControl" BasedOn="{StaticResource TopLabel}">
-        <Setter Property="Padding" Value="{DynamicResource DefaultSpacingTopRight}"/>
+        <Setter Property="Padding" Value="{DynamicResource DefaultSpacingTopRight}" />
     </Style>
     <Style x:Key="TopLabelPaddedTopBottomRight" TargetType="ContentControl" BasedOn="{StaticResource TopLabel}">
-        <Setter Property="Padding" Value="{DynamicResource DefaultSpacingTopBottomRight}"/>
+        <Setter Property="Padding" Value="{DynamicResource DefaultSpacingTopBottomRight}" />
     </Style>
     <Style x:Key="TopLabelPaddedLeft" TargetType="ContentControl" BasedOn="{StaticResource TopLabel}">
-        <Setter Property="Padding" Value="{DynamicResource DefaultSpacingLeft}"/>
+        <Setter Property="Padding" Value="{DynamicResource DefaultSpacingLeft}" />
     </Style>
     <Style x:Key="TopLabelPaddedBottomLeft" TargetType="ContentControl" BasedOn="{StaticResource TopLabel}">
-        <Setter Property="Padding" Value="{DynamicResource DefaultSpacingBottomLeft}"/>
+        <Setter Property="Padding" Value="{DynamicResource DefaultSpacingBottomLeft}" />
     </Style>
     <Style x:Key="TopLabelPaddedLeftRight" TargetType="ContentControl" BasedOn="{StaticResource TopLabel}">
-        <Setter Property="Padding" Value="{DynamicResource DefaultSpacingLeftRight}"/>
+        <Setter Property="Padding" Value="{DynamicResource DefaultSpacingLeftRight}" />
     </Style>
     <Style x:Key="TopLabelPaddedBottomLeftRight" TargetType="ContentControl" BasedOn="{StaticResource TopLabel}">
-        <Setter Property="Padding" Value="{DynamicResource DefaultSpacingBottomLeftRight}"/>
+        <Setter Property="Padding" Value="{DynamicResource DefaultSpacingBottomLeftRight}" />
     </Style>
     <Style x:Key="TopLabelPaddedTopLeft" TargetType="ContentControl" BasedOn="{StaticResource TopLabel}">
-        <Setter Property="Padding" Value="{DynamicResource DefaultSpacingTopLeft}"/>
+        <Setter Property="Padding" Value="{DynamicResource DefaultSpacingTopLeft}" />
     </Style>
     <Style x:Key="TopLabelPaddedTopBottomLeft" TargetType="ContentControl" BasedOn="{StaticResource TopLabel}">
-        <Setter Property="Padding" Value="{DynamicResource DefaultSpacingTopBottomLeft}"/>
+        <Setter Property="Padding" Value="{DynamicResource DefaultSpacingTopBottomLeft}" />
     </Style>
     <Style x:Key="TopLabelPaddedTopLeftRight" TargetType="ContentControl" BasedOn="{StaticResource TopLabel}">
-        <Setter Property="Padding" Value="{DynamicResource DefaultSpacingTopLeftRight}"/>
+        <Setter Property="Padding" Value="{DynamicResource DefaultSpacingTopLeftRight}" />
     </Style>
-  <Style TargetType="GridSplitter">
-    <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" />
-    <Setter Property="PreviewStyle">
-      <Setter.Value>
-        <Style>
-          <Setter Property="Control.Template">
+    <Style TargetType="GridSplitter">
+        <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" />
+        <Setter Property="PreviewStyle">
             <Setter.Value>
-              <ControlTemplate TargetType="{x:Type Control}">
-                <Rectangle Fill="{DynamicResource TranslucentBlack50pctBrush}" />
-              </ControlTemplate>
+                <Style>
+                    <Setter Property="Control.Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type Control}">
+                                <Rectangle Fill="{DynamicResource TranslucentBlack50pctBrush}" />
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
             </Setter.Value>
-          </Setter>
-        </Style>
-      </Setter.Value>
-    </Setter>
-    <Setter Property="Template">
-      <Setter.Value>
-        <ControlTemplate TargetType="{x:Type GridSplitter}">
-          <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" />
-        </ControlTemplate>
-      </Setter.Value>
-    </Setter>
-  </Style>
-  <Style TargetType="TextBox" x:Key="TwoDigitNumericTextBox" BasedOn="{StaticResource SingleLineTextBox}">
-    <Setter Property="MinWidth" Value="{DynamicResource DefaultTextBoxHeight}" />
-  </Style>
-  <Style x:Key="MultiLineTextBox" TargetType="TextBox" BasedOn="{StaticResource DefaultTextBoxBase}">
-    <Setter Property="MinHeight" Value="{DynamicResource DefaultMultiLineTextBoxHeight}" />
-    <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" />
-    <Setter Property="BorderBrush" Value="{DynamicResource TextBoxBorderBrush}" />
-    <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />
-    <Setter Property="BorderThickness" Value="1" />
-    <Setter Property="HorizontalContentAlignment" Value="Left" />
-    <Setter Property="HorizontalScrollBarVisibility" Value="Hidden" />
-    <Setter Property="VerticalScrollBarVisibility" Value="Auto" />
-    <Setter Property="Padding" Value="2" />
-    <Setter Property="AcceptsReturn" Value="True" />
-    <Setter Property="AcceptsTab" Value="True" />
-    <Setter Property="TextWrapping" Value="Wrap" />
-    <Style.Triggers>
-      <MultiTrigger>
-        <MultiTrigger.Conditions>
-          <Condition Property="IsInactiveSelectionHighlightEnabled" Value="True" />
-          <Condition Property="IsSelectionActive" Value="False" />
-        </MultiTrigger.Conditions>
-        <Setter Property="SelectionBrush" Value="{DynamicResource {x:Static SystemColors.InactiveSelectionHighlightBrushKey}}" />
-      </MultiTrigger>
-    </Style.Triggers>
-  </Style>
-  <Style x:Key="MultiLineReadOnlyValueTextBox" TargetType="TextBox" BasedOn="{StaticResource MultiLineTextBox}">
-    <Setter Property="MinHeight" Value="{DynamicResource DefaultTextBoxHeight}" />
-    <Setter Property="IsReadOnly" Value="True" />
-    <Setter Property="BorderThickness" Value="0.5" />
-    <Setter Property="Padding" Value="1" />
-    <Setter Property="BorderBrush" Value="{DynamicResource ValueTextBoxBorderBrush}" />
-  </Style>
-  <Style x:Key="InfoMessageTextBlock" TargetType="TextBlock">
-    <Setter Property="Foreground" Value="{DynamicResource InfoDarkBrush}" />
-    <Setter Property="TextWrapping" Value="Wrap" />
-  </Style>
-  <Style x:Key="SuccessMessageTextBlock" TargetType="TextBlock">
-    <Setter Property="Foreground" Value="{DynamicResource SuccessDarkBrush}" />
-    <Setter Property="TextWrapping" Value="Wrap" />
-  </Style>
-  <Style x:Key="WarningMessageTextBlock" TargetType="TextBlock">
-    <Setter Property="Foreground" Value="{DynamicResource WarningDarkBrush}" />
-    <Setter Property="TextWrapping" Value="Wrap" />
-  </Style>
-  <Style x:Key="ErrorMessageTextBlock" TargetType="TextBlock">
-    <Setter Property="Foreground" Value="{DynamicResource ErrorDarkBrush}" />
-    <Setter Property="TextWrapping" Value="Wrap" />
-  </Style>
-  <Style x:Key="FocusVisual">
-    <Setter Property="Control.Template">
-      <Setter.Value>
-        <ControlTemplate>
-          <Rectangle Margin="2" StrokeDashArray="1 2" SnapsToDevicePixels="true" StrokeThickness="1" Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />
-        </ControlTemplate>
-      </Setter.Value>
-    </Setter>
-  </Style>
-  <Style x:Key="VerticalGridSplitterStyle" TargetType="{x:Type GridSplitter}">
-    <Setter Property="Background" Value="{DynamicResource VerticalSeparatorBrush}" />
-    <Setter Property="ResizeDirection" Value="Columns" />
-    <Setter Property="Width" Value="{DynamicResource DefaultSpacingValue}" />
-    <Setter Property="VerticalAlignment" Value="Stretch" />
-    <Setter Property="Cursor" Value="SizeWE" />
-  </Style>
-  <Style x:Key="HorizontalGridSplitterStyle" TargetType="{x:Type GridSplitter}">
-    <Setter Property="Background" Value="{DynamicResource HorizontalSeparatorBrush}" />
-    <Setter Property="ResizeDirection" Value="Rows" />
-    <Setter Property="Height" Value="{DynamicResource DefaultSpacingValue}" />
-    <Setter Property="HorizontalAlignment" Value="Stretch" />
-    <Setter Property="Cursor" Value="SizeNS" />
-  </Style>
-  <!--<Style TargetType="GroupBox" BasedOn="{StaticResource DefaultGroupBoxStyle}"/>-->
-  <Style x:Key="DefaultGroupBoxStyle" TargetType="{x:Type GroupBox}" BasedOn="{StaticResource DefaultGroupBoxBase}">
-    <Setter Property="BorderBrush" Value="{DynamicResource LightBorderBrush}" />
-    <Setter Property="BorderThickness" Value="1" />
-  </Style>
-  <Style x:Key="PopupOuterBorder" TargetType="{x:Type Border}">
-    <Setter Property="BorderBrush" Value="{DynamicResource PopupBorderBrush}" />
-    <Setter Property="BorderThickness" Value="{DynamicResource ThickBorderThickness}" />
-    <Setter Property="CornerRadius" Value="{DynamicResource PopupOuterBortderCornerRadius}" />
-    <Setter Property="HorizontalAlignment" Value="Center" />
-    <Setter Property="VerticalAlignment" Value="Center" />
-    <Setter Property="Margin" Value="{DynamicResource DefaultSpacing}" />
-  </Style>
-  <Style x:Key="PopupTitleBorder" TargetType="{x:Type Border}">
-    <Setter Property="CornerRadius" Value="{DynamicResource PopupTitleCornerRadius}" />
-    <Setter Property="Padding" Value="{DynamicResource DefaultSpacing}" />
-    <Setter Property="Background" Value="{DynamicResource PopupTitleInfoBackgroundBrush}" />
-  </Style>
-  <Style x:Key="ErrorPopupTitleBorder" TargetType="{x:Type Border}" BasedOn="{StaticResource PopupTitleBorder}">
-    <Setter Property="Background" Value="{DynamicResource PopupTitleErrorBackgroundBrush}" />
-  </Style>
-  <Style x:Key="WarningPopupTitleBorder" TargetType="{x:Type Border}" BasedOn="{StaticResource PopupTitleBorder}">
-    <Setter Property="Background" Value="{DynamicResource PopupTitleWarningBackgroundBrush}" />
-  </Style>
-  <Style x:Key="SuccessPopupTitleBorder" TargetType="{x:Type Border}" BasedOn="{StaticResource PopupTitleBorder}">
-    <Setter Property="Background" Value="{DynamicResource PopupTitleSuccessBackgroundBrush}" />
-  </Style>
-  <Style x:Key="PopupContentBorder" TargetType="{x:Type Border}">
-    <Setter Property="CornerRadius" Value="{DynamicResource PopupContentCornerRadius}" />
-    <Setter Property="Background" Value="White" />
-  </Style>
-  <Style x:Key="DefaultButton" TargetType="{x:Type Button}" BasedOn="{StaticResource DefaultButtonBase}">
-    <Setter Property="Width" Value="{DynamicResource DefaultButtonWidth}" />
-  </Style>
-  <Style x:Key="SquareButton" TargetType="{x:Type Button}" BasedOn="{StaticResource DefaultButtonBase}">
-    <Setter Property="Height" Value="{DynamicResource DefaultButtonHeight}" />
-    <Setter Property="Width" Value="{DynamicResource DefaultButtonHeight}" />
-  </Style>
-  <Style x:Key="CommandButton" TargetType="{x:Type Button}" BasedOn="{StaticResource DefaultButtonBase}">
-    <Setter Property="Height" Value="{DynamicResource DefaultTextBoxHeight}" />
-    <Setter Property="Width" Value="{DynamicResource DefaultTextBoxHeight}" />
-    <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}" />
-    <Setter Property="Background" Value="{StaticResource ButtonBackgroundBrush}" />
-    <Setter Property="BorderBrush" Value="{StaticResource LightBorderBrush}" />
-    <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />
-    <Setter Property="BorderThickness" Value="1" />
-    <Setter Property="HorizontalContentAlignment" Value="Center" />
-    <Setter Property="VerticalContentAlignment" Value="Center" />
-    <Setter Property="Padding" Value="0" />
-    <Setter Property="Template">
-      <Setter.Value>
-        <ControlTemplate TargetType="{x:Type Button}">
-          <Border x:Name="border" Background="{TemplateBinding Background}" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}" SnapsToDevicePixels="true" Width="{TemplateBinding Width}" Height="{TemplateBinding Height}">
-            <ContentPresenter x:Name="contentPresenter" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
-          </Border>
-          <ControlTemplate.Triggers>
-            <Trigger Property="IsDefaulted" Value="true">
-              <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" />
-            </Trigger>
-            <Trigger Property="IsMouseOver" Value="true">
-              <Setter Property="Background" TargetName="border" Value="{StaticResource Button.MouseOver.Background}" />
-              <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.MouseOver.Border}" />
-            </Trigger>
-            <Trigger Property="IsPressed" Value="true">
-              <Setter Property="Background" TargetName="border" Value="{StaticResource Button.Pressed.Background}" />
-              <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.Pressed.Border}" />
-            </Trigger>
-            <Trigger Property="IsEnabled" Value="false">
-              <Setter Property="Background" TargetName="border" Value="{StaticResource Button.Disabled.Background}" />
-              <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.Disabled.Border}" />
-              <Setter Property="TextElement.Foreground" TargetName="contentPresenter" Value="{StaticResource Button.Disabled.Foreground}" />
-            </Trigger>
-          </ControlTemplate.Triggers>
-        </ControlTemplate>
-      </Setter.Value>
-    </Setter>
-  </Style>
-  <Style x:Key="MiniCommandButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
-    <Setter Property="Height" Value="{DynamicResource LargeFontSize}" />
-    <Setter Property="Width" Value="{DynamicResource LargeFontSize}" />
-  </Style>
-  <Style x:Key="EditButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
-    <Setter Property="ContentTemplate" Value="{DynamicResource EditImageContentTemplate}" />
-  </Style>
-  <Style x:Key="DeleteButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
-    <Setter Property="ContentTemplate" Value="{DynamicResource DeleteImageContentTemplate}" />
-  </Style>
-  <Style x:Key="ActivateButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
-    <Setter Property="ContentTemplate" Value="{DynamicResource ActivateImageContentTemplate}" />
-  </Style>
-  <Style x:Key="DeactivateButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
-    <Setter Property="ContentTemplate" Value="{DynamicResource DeactivateImageContentTemplate}" />
-  </Style>
-  <Style x:Key="AddNewButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
-    <Setter Property="ContentTemplate" Value="{DynamicResource AddNewImageContentTemplate}" />
-  </Style>
-  <Style x:Key="OpenButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
-    <Setter Property="ContentTemplate" Value="{DynamicResource OpenImageContentTemplate}" />
-  </Style>
-  <Style x:Key="OpenListingButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
-    <Setter Property="ContentTemplate" Value="{DynamicResource OpenListingImageContentTemplate}" />
-  </Style>
-  <Style x:Key="SyncButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
-    <Setter Property="ContentTemplate" Value="{DynamicResource SyncImageContentTemplate}" />
-  </Style>
-  <Style x:Key="SyncDisabledButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
-    <Setter Property="ContentTemplate" Value="{DynamicResource SyncDisabledImageContentTemplate}" />
-  </Style>
-  <Style x:Key="FilterButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
-    <Setter Property="ContentTemplate" Value="{DynamicResource FilterImageContentTemplate}" />
-  </Style>
-  <Style x:Key="StartButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
-    <Setter Property="ContentTemplate" Value="{DynamicResource StartImageContentTemplate}" />
-  </Style>
-  <Style x:Key="StopButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
-    <Setter Property="ContentTemplate" Value="{DynamicResource StopImageContentTemplate}" />
-  </Style>
-  <Style x:Key="LogButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
-    <Setter Property="ContentTemplate" Value="{DynamicResource LogImageContentTemplate}" />
-  </Style>
-  <Style x:Key="AcceptButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
-    <Setter Property="ContentTemplate" Value="{DynamicResource AcceptImageContentTemplate}" />
-  </Style>
-  <Style x:Key="CancelButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
-    <Setter Property="ContentTemplate" Value="{DynamicResource CancelImageContentTemplate}" />
-  </Style>
-  <Style x:Key="OpenFolderButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
-    <Setter Property="ContentTemplate" Value="{DynamicResource OpenFolderImageContentTemplate}" />
-  </Style>
-  <Style x:Key="VideoButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
-    <Setter Property="ContentTemplate" Value="{DynamicResource VideoImageContentTemplate}" />
-  </Style>
-  <Style x:Key="VideoButton2" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
-    <Setter Property="ContentTemplate" Value="{DynamicResource MediaImageContentTemplate}" />
-  </Style>
-  <Style x:Key="FolderOfflineButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
-    <Setter Property="ContentTemplate" Value="{DynamicResource FolderOfflineImageContentTemplate}" />
-  </Style>
-  <Style x:Key="DocumentButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
-    <Setter Property="ContentTemplate" Value="{DynamicResource DocumentImageContentTemplate}" />
-  </Style>
-  <Style x:Key="PeformanceErrorButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
-    <Setter Property="ContentTemplate" Value="{DynamicResource PeformanceErrorImageContentTemplate}" />
-  </Style>
-  <Style x:Key="BackwardsButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
-    <Setter Property="ContentTemplate" Value="{DynamicResource BackwardsImageContentTemplate}" />
-  </Style>
-  <Style x:Key="CDButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
-    <Setter Property="ContentTemplate" Value="{DynamicResource CDImageContentTemplate}" />
-  </Style>
-  <Style x:Key="CategorizedViewButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
-    <Setter Property="ContentTemplate" Value="{DynamicResource CategorizedViewImageContentTemplate}" />
-  </Style>
-  <Style x:Key="CopyButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
-    <Setter Property="ContentTemplate" Value="{DynamicResource CopyImageContentTemplate}" />
-  </Style>
-  <Style x:Key="CutButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
-    <Setter Property="ContentTemplate" Value="{DynamicResource CutImageContentTemplate}" />
-  </Style>
-  <Style x:Key="PasteButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
-    <Setter Property="ContentTemplate" Value="{DynamicResource PasteImageContentTemplate}" />
-  </Style>
-  <Style x:Key="EllipsisButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
-    <Setter Property="ContentTemplate" Value="{DynamicResource EllipsisImageContentTemplate}" />
-  </Style>
-  <Style x:Key="EventErrorButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
-    <Setter Property="ContentTemplate" Value="{DynamicResource EventErrorImageContentTemplate}" />
-  </Style>
-  <Style x:Key="EventWarningButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
-    <Setter Property="ContentTemplate" Value="{DynamicResource EventWarningImageContentTemplate}" />
-  </Style>
-  <Style x:Key="EventLogButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
-    <Setter Property="ContentTemplate" Value="{DynamicResource EventLogImageContentTemplate}" />
-  </Style>
-  <Style x:Key="F1HelpButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
-    <Setter Property="ContentTemplate" Value="{DynamicResource F1HelpImageContentTemplate}" />
-  </Style>
-  <Style x:Key="FilmstripButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
-    <Setter Property="ContentTemplate" Value="{DynamicResource FilmstripImageContentTemplate}" />
-  </Style>
-  <Style x:Key="ForwardsButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
-    <Setter Property="ContentTemplate" Value="{DynamicResource ForwardsImageContentTemplate}" />
-  </Style>
-  <Style x:Key="ImageButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
-    <Setter Property="ContentTemplate" Value="{DynamicResource ImageImageContentTemplate}" />
-  </Style>
-  <Style x:Key="NewFileButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
-    <Setter Property="ContentTemplate" Value="{DynamicResource NewFileImageContentTemplate}" />
-  </Style>
-  <Style x:Key="OpenfileDialogButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
-    <Setter Property="ContentTemplate" Value="{DynamicResource OpenfileDialogImageContentTemplate}" />
-  </Style>
-  <Style x:Key="OneLevelUpButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
-    <Setter Property="ContentTemplate" Value="{DynamicResource OneLevelUpImageContentTemplate}" />
-  </Style>
-  <Style x:Key="OutputButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
-    <Setter Property="ContentTemplate" Value="{DynamicResource OutputImageContentTemplate}" />
-  </Style>
-  <Style x:Key="RefreshButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
-    <Setter Property="ContentTemplate" Value="{DynamicResource RefreshImageContentTemplate}" />
-  </Style>
-  <Style x:Key="MiniRefreshButton" TargetType="{x:Type Button}" BasedOn="{StaticResource MiniCommandButton}">
-    <Setter Property="ContentTemplate" Value="{DynamicResource RefreshImageContentTemplate}" />
-  </Style>
-  <Style x:Key="SharedDataSourceButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
-    <Setter Property="ContentTemplate" Value="{DynamicResource SharedDataSourceImageContentTemplate}" />
-  </Style>
-  <Style x:Key="HardDriveButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
-    <Setter Property="ContentTemplate" Value="{DynamicResource HardDriveImageContentTemplate}" />
-  </Style>
-  <Style x:Key="RemoteRepositoryFolderButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
-    <Setter Property="ContentTemplate" Value="{DynamicResource RemoteRepositoryFolderImageContentTemplate}" />
-  </Style>
-  <Style x:Key="FolderOpenedButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
-    <Setter Property="ContentTemplate" Value="{DynamicResource FolderOpenedImageContentTemplate}" />
-  </Style>
-  <Style x:Key="TagIconButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
-    <Setter Property="ContentTemplate" Value="{DynamicResource TagIconPathContentTemplate}" />
-  </Style>
+        </Setter>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type GridSplitter}">
+                    <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" />
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style TargetType="TextBox" x:Key="TwoDigitNumericTextBox" BasedOn="{StaticResource SingleLineTextBox}">
+        <Setter Property="MinWidth" Value="{DynamicResource DefaultTextBoxHeight}" />
+    </Style>
+    <Style x:Key="MultiLineTextBox" TargetType="TextBox" BasedOn="{StaticResource DefaultTextBoxBase}">
+        <Setter Property="MinHeight" Value="{DynamicResource DefaultMultiLineTextBoxHeight}" />
+        <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource TextBoxBorderBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="HorizontalContentAlignment" Value="Left" />
+        <Setter Property="HorizontalScrollBarVisibility" Value="Hidden" />
+        <Setter Property="VerticalScrollBarVisibility" Value="Auto" />
+        <Setter Property="Padding" Value="2" />
+        <Setter Property="AcceptsReturn" Value="True" />
+        <Setter Property="AcceptsTab" Value="True" />
+        <Setter Property="TextWrapping" Value="Wrap" />
+        <Style.Triggers>
+            <MultiTrigger>
+                <MultiTrigger.Conditions>
+                    <Condition Property="IsInactiveSelectionHighlightEnabled" Value="True" />
+                    <Condition Property="IsSelectionActive" Value="False" />
+                </MultiTrigger.Conditions>
+                <Setter Property="SelectionBrush" Value="{DynamicResource {x:Static SystemColors.InactiveSelectionHighlightBrushKey}}" />
+            </MultiTrigger>
+        </Style.Triggers>
+    </Style>
+    <Style x:Key="MultiLineReadOnlyValueTextBox" TargetType="TextBox" BasedOn="{StaticResource MultiLineTextBox}">
+        <Setter Property="MinHeight" Value="{DynamicResource DefaultTextBoxHeight}" />
+        <Setter Property="IsReadOnly" Value="True" />
+        <Setter Property="BorderThickness" Value="0.5" />
+        <Setter Property="Padding" Value="1" />
+        <Setter Property="BorderBrush" Value="{DynamicResource ValueTextBoxBorderBrush}" />
+    </Style>
+    <Style x:Key="InfoMessageTextBlock" TargetType="TextBlock">
+        <Setter Property="Foreground" Value="{DynamicResource InfoDarkBrush}" />
+        <Setter Property="TextWrapping" Value="Wrap" />
+    </Style>
+    <Style x:Key="SuccessMessageTextBlock" TargetType="TextBlock">
+        <Setter Property="Foreground" Value="{DynamicResource SuccessDarkBrush}" />
+        <Setter Property="TextWrapping" Value="Wrap" />
+    </Style>
+    <Style x:Key="WarningMessageTextBlock" TargetType="TextBlock">
+        <Setter Property="Foreground" Value="{DynamicResource WarningDarkBrush}" />
+        <Setter Property="TextWrapping" Value="Wrap" />
+    </Style>
+    <Style x:Key="ErrorMessageTextBlock" TargetType="TextBlock">
+        <Setter Property="Foreground" Value="{DynamicResource ErrorDarkBrush}" />
+        <Setter Property="TextWrapping" Value="Wrap" />
+    </Style>
+    <Style x:Key="FocusVisual">
+        <Setter Property="Control.Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Rectangle Margin="2" StrokeDashArray="1 2" SnapsToDevicePixels="true" StrokeThickness="1" Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="VerticalGridSplitterStyle" TargetType="{x:Type GridSplitter}">
+        <Setter Property="Background" Value="{DynamicResource VerticalSeparatorBrush}" />
+        <Setter Property="ResizeDirection" Value="Columns" />
+        <Setter Property="Width" Value="{DynamicResource DefaultSpacingValue}" />
+        <Setter Property="VerticalAlignment" Value="Stretch" />
+        <Setter Property="Cursor" Value="SizeWE" />
+    </Style>
+    <Style x:Key="HorizontalGridSplitterStyle" TargetType="{x:Type GridSplitter}">
+        <Setter Property="Background" Value="{DynamicResource HorizontalSeparatorBrush}" />
+        <Setter Property="ResizeDirection" Value="Rows" />
+        <Setter Property="Height" Value="{DynamicResource DefaultSpacingValue}" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="Cursor" Value="SizeNS" />
+    </Style>
+    <!--<Style TargetType="GroupBox" BasedOn="{StaticResource DefaultGroupBoxStyle}"/>-->
+    <Style x:Key="DefaultGroupBoxStyle" TargetType="{x:Type GroupBox}" BasedOn="{StaticResource DefaultGroupBoxBase}">
+        <Setter Property="BorderBrush" Value="{DynamicResource LightBorderBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+    </Style>
+    <Style x:Key="PopupOuterBorder" TargetType="{x:Type Border}">
+        <Setter Property="BorderBrush" Value="{DynamicResource PopupBorderBrush}" />
+        <Setter Property="BorderThickness" Value="{DynamicResource ThickBorderThickness}" />
+        <Setter Property="CornerRadius" Value="{DynamicResource PopupOuterBortderCornerRadius}" />
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Margin" Value="{DynamicResource DefaultSpacing}" />
+    </Style>
+    <Style x:Key="PopupTitleBorder" TargetType="{x:Type Border}">
+        <Setter Property="CornerRadius" Value="{DynamicResource PopupTitleCornerRadius}" />
+        <Setter Property="Padding" Value="{DynamicResource DefaultSpacing}" />
+        <Setter Property="Background" Value="{DynamicResource PopupTitleInfoBackgroundBrush}" />
+    </Style>
+    <Style x:Key="ErrorPopupTitleBorder" TargetType="{x:Type Border}" BasedOn="{StaticResource PopupTitleBorder}">
+        <Setter Property="Background" Value="{DynamicResource PopupTitleErrorBackgroundBrush}" />
+    </Style>
+    <Style x:Key="WarningPopupTitleBorder" TargetType="{x:Type Border}" BasedOn="{StaticResource PopupTitleBorder}">
+        <Setter Property="Background" Value="{DynamicResource PopupTitleWarningBackgroundBrush}" />
+    </Style>
+    <Style x:Key="SuccessPopupTitleBorder" TargetType="{x:Type Border}" BasedOn="{StaticResource PopupTitleBorder}">
+        <Setter Property="Background" Value="{DynamicResource PopupTitleSuccessBackgroundBrush}" />
+    </Style>
+    <Style x:Key="PopupContentBorder" TargetType="{x:Type Border}">
+        <Setter Property="CornerRadius" Value="{DynamicResource PopupContentCornerRadius}" />
+        <Setter Property="Background" Value="White" />
+    </Style>
+    <Style x:Key="DefaultButton" TargetType="{x:Type Button}" BasedOn="{StaticResource DefaultButtonBase}">
+        <Setter Property="Width" Value="{DynamicResource DefaultButtonWidth}" />
+    </Style>
+    <Style x:Key="SquareButton" TargetType="{x:Type Button}" BasedOn="{StaticResource DefaultButtonBase}">
+        <Setter Property="Height" Value="{DynamicResource DefaultButtonHeight}" />
+        <Setter Property="Width" Value="{DynamicResource DefaultButtonHeight}" />
+    </Style>
+    <Style x:Key="CommandButton" TargetType="{x:Type Button}" BasedOn="{StaticResource DefaultButtonBase}">
+        <Setter Property="Height" Value="{DynamicResource DefaultTextBoxHeight}" />
+        <Setter Property="Width" Value="{DynamicResource DefaultTextBoxHeight}" />
+        <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}" />
+        <Setter Property="Background" Value="{StaticResource ButtonBackgroundBrush}" />
+        <Setter Property="BorderBrush" Value="{StaticResource LightBorderBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Border x:Name="border" Background="{TemplateBinding Background}" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}" SnapsToDevicePixels="true" Width="{TemplateBinding Width}" Height="{TemplateBinding Height}">
+                        <ContentPresenter x:Name="contentPresenter" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsDefaulted" Value="true">
+                            <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" />
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter Property="Background" TargetName="border" Value="{StaticResource Button.MouseOver.Background}" />
+                            <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.MouseOver.Border}" />
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="true">
+                            <Setter Property="Background" TargetName="border" Value="{StaticResource Button.Pressed.Background}" />
+                            <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.Pressed.Border}" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="false">
+                            <Setter Property="Background" TargetName="border" Value="{StaticResource Button.Disabled.Background}" />
+                            <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.Disabled.Border}" />
+                            <Setter Property="TextElement.Foreground" TargetName="contentPresenter" Value="{StaticResource Button.Disabled.Foreground}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="MiniCommandButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
+        <Setter Property="Height" Value="{DynamicResource LargeFontSize}" />
+        <Setter Property="Width" Value="{DynamicResource LargeFontSize}" />
+    </Style>
+    <Style x:Key="EditButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
+        <Setter Property="ContentTemplate" Value="{DynamicResource EditImageContentTemplate}" />
+    </Style>
+    <Style x:Key="DeleteButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
+        <Setter Property="ContentTemplate" Value="{DynamicResource DeleteImageContentTemplate}" />
+    </Style>
+    <Style x:Key="ActivateButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
+        <Setter Property="ContentTemplate" Value="{DynamicResource ActivateImageContentTemplate}" />
+    </Style>
+    <Style x:Key="DeactivateButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
+        <Setter Property="ContentTemplate" Value="{DynamicResource DeactivateImageContentTemplate}" />
+    </Style>
+    <Style x:Key="AddNewButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
+        <Setter Property="ContentTemplate" Value="{DynamicResource AddNewImageContentTemplate}" />
+    </Style>
+    <Style x:Key="OpenButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
+        <Setter Property="ContentTemplate" Value="{DynamicResource OpenImageContentTemplate}" />
+    </Style>
+    <Style x:Key="OpenListingButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
+        <Setter Property="ContentTemplate" Value="{DynamicResource OpenListingImageContentTemplate}" />
+    </Style>
+    <Style x:Key="SyncButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
+        <Setter Property="ContentTemplate" Value="{DynamicResource SyncImageContentTemplate}" />
+    </Style>
+    <Style x:Key="SyncDisabledButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
+        <Setter Property="ContentTemplate" Value="{DynamicResource SyncDisabledImageContentTemplate}" />
+    </Style>
+    <Style x:Key="FilterButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
+        <Setter Property="ContentTemplate" Value="{DynamicResource FilterImageContentTemplate}" />
+    </Style>
+    <Style x:Key="StartButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
+        <Setter Property="ContentTemplate" Value="{DynamicResource StartImageContentTemplate}" />
+    </Style>
+    <Style x:Key="StopButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
+        <Setter Property="ContentTemplate" Value="{DynamicResource StopImageContentTemplate}" />
+    </Style>
+    <Style x:Key="LogButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
+        <Setter Property="ContentTemplate" Value="{DynamicResource LogImageContentTemplate}" />
+    </Style>
+    <Style x:Key="AcceptButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
+        <Setter Property="ContentTemplate" Value="{DynamicResource AcceptImageContentTemplate}" />
+    </Style>
+    <Style x:Key="CancelButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
+        <Setter Property="ContentTemplate" Value="{DynamicResource CancelImageContentTemplate}" />
+    </Style>
+    <Style x:Key="OpenFolderButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
+        <Setter Property="ContentTemplate" Value="{DynamicResource OpenFolderImageContentTemplate}" />
+    </Style>
+    <Style x:Key="VideoButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
+        <Setter Property="ContentTemplate" Value="{DynamicResource VideoImageContentTemplate}" />
+    </Style>
+    <Style x:Key="VideoButton2" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
+        <Setter Property="ContentTemplate" Value="{DynamicResource MediaImageContentTemplate}" />
+    </Style>
+    <Style x:Key="FolderOfflineButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
+        <Setter Property="ContentTemplate" Value="{DynamicResource FolderOfflineImageContentTemplate}" />
+    </Style>
+    <Style x:Key="DocumentButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
+        <Setter Property="ContentTemplate" Value="{DynamicResource DocumentImageContentTemplate}" />
+    </Style>
+    <Style x:Key="PeformanceErrorButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
+        <Setter Property="ContentTemplate" Value="{DynamicResource PeformanceErrorImageContentTemplate}" />
+    </Style>
+    <Style x:Key="BackwardsButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
+        <Setter Property="ContentTemplate" Value="{DynamicResource BackwardsImageContentTemplate}" />
+    </Style>
+    <Style x:Key="CDButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
+        <Setter Property="ContentTemplate" Value="{DynamicResource CDImageContentTemplate}" />
+    </Style>
+    <Style x:Key="CategorizedViewButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
+        <Setter Property="ContentTemplate" Value="{DynamicResource CategorizedViewImageContentTemplate}" />
+    </Style>
+    <Style x:Key="CopyButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
+        <Setter Property="ContentTemplate" Value="{DynamicResource CopyImageContentTemplate}" />
+    </Style>
+    <Style x:Key="CutButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
+        <Setter Property="ContentTemplate" Value="{DynamicResource CutImageContentTemplate}" />
+    </Style>
+    <Style x:Key="PasteButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
+        <Setter Property="ContentTemplate" Value="{DynamicResource PasteImageContentTemplate}" />
+    </Style>
+    <Style x:Key="EllipsisButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
+        <Setter Property="ContentTemplate" Value="{DynamicResource EllipsisImageContentTemplate}" />
+    </Style>
+    <Style x:Key="EventErrorButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
+        <Setter Property="ContentTemplate" Value="{DynamicResource EventErrorImageContentTemplate}" />
+    </Style>
+    <Style x:Key="EventWarningButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
+        <Setter Property="ContentTemplate" Value="{DynamicResource EventWarningImageContentTemplate}" />
+    </Style>
+    <Style x:Key="EventLogButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
+        <Setter Property="ContentTemplate" Value="{DynamicResource EventLogImageContentTemplate}" />
+    </Style>
+    <Style x:Key="F1HelpButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
+        <Setter Property="ContentTemplate" Value="{DynamicResource F1HelpImageContentTemplate}" />
+    </Style>
+    <Style x:Key="FilmstripButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
+        <Setter Property="ContentTemplate" Value="{DynamicResource FilmstripImageContentTemplate}" />
+    </Style>
+    <Style x:Key="ForwardsButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
+        <Setter Property="ContentTemplate" Value="{DynamicResource ForwardsImageContentTemplate}" />
+    </Style>
+    <Style x:Key="ImageButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
+        <Setter Property="ContentTemplate" Value="{DynamicResource ImageImageContentTemplate}" />
+    </Style>
+    <Style x:Key="NewFileButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
+        <Setter Property="ContentTemplate" Value="{DynamicResource NewFileImageContentTemplate}" />
+    </Style>
+    <Style x:Key="OpenfileDialogButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
+        <Setter Property="ContentTemplate" Value="{DynamicResource OpenfileDialogImageContentTemplate}" />
+    </Style>
+    <Style x:Key="OneLevelUpButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
+        <Setter Property="ContentTemplate" Value="{DynamicResource OneLevelUpImageContentTemplate}" />
+    </Style>
+    <Style x:Key="OutputButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
+        <Setter Property="ContentTemplate" Value="{DynamicResource OutputImageContentTemplate}" />
+    </Style>
+    <Style x:Key="RefreshButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
+        <Setter Property="ContentTemplate" Value="{DynamicResource RefreshImageContentTemplate}" />
+    </Style>
+    <Style x:Key="MiniRefreshButton" TargetType="{x:Type Button}" BasedOn="{StaticResource MiniCommandButton}">
+        <Setter Property="ContentTemplate" Value="{DynamicResource RefreshImageContentTemplate}" />
+    </Style>
+    <Style x:Key="SharedDataSourceButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
+        <Setter Property="ContentTemplate" Value="{DynamicResource SharedDataSourceImageContentTemplate}" />
+    </Style>
+    <Style x:Key="HardDriveButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
+        <Setter Property="ContentTemplate" Value="{DynamicResource HardDriveImageContentTemplate}" />
+    </Style>
+    <Style x:Key="RemoteRepositoryFolderButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
+        <Setter Property="ContentTemplate" Value="{DynamicResource RemoteRepositoryFolderImageContentTemplate}" />
+    </Style>
+    <Style x:Key="FolderOpenedButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
+        <Setter Property="ContentTemplate" Value="{DynamicResource FolderOpenedImageContentTemplate}" />
+    </Style>
+    <Style x:Key="TagIconButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
+        <Setter Property="ContentTemplate" Value="{DynamicResource TagIconPathContentTemplate}" />
+    </Style>
     <Style x:Key="MusicFileIconButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
         <Setter Property="ContentTemplate" Value="{DynamicResource MusicFileIconPathContentTemplate}" />
+    </Style>
+    <Style x:Key="StatusNotRunningButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
+        <Setter Property="ContentTemplate" Value="{DynamicResource StatusNotRunningImageContentTemplate}" />
+    </Style>
+    <Style x:Key="StatusInProgressButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
+        <Setter Property="ContentTemplate" Value="{DynamicResource StatusInProgressImageContentTemplate}" />
+    </Style>
+    <Style x:Key="StatusCompletedButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
+        <Setter Property="ContentTemplate" Value="{DynamicResource StatusCompletedImageContentTemplate}" />
+    </Style>
+    <Style x:Key="StatusMaxItemCountReachedButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
+        <Setter Property="ContentTemplate" Value="{DynamicResource StatusMaxItemCountReachedImageContentTemplate}" />
+    </Style>
+    <Style x:Key="StatusAllottedTimeElapsedButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
+        <Setter Property="ContentTemplate" Value="{DynamicResource StatusAllottedTimeElapsedImageContentTemplate}" />
+    </Style>
+    <Style x:Key="StatusCanceledButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
+        <Setter Property="ContentTemplate" Value="{DynamicResource StatusCanceledImageContentTemplate}" />
+    </Style>
+    <Style x:Key="StatusFailedButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
+        <Setter Property="ContentTemplate" Value="{DynamicResource StatusFailedImageContentTemplate}" />
+    </Style>
+    <Style x:Key="StatusDisabledButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
+        <Setter Property="ContentTemplate" Value="{DynamicResource StatusDisabledImageContentTemplate}" />
     </Style>
 </ResourceDictionary>
