@@ -24,7 +24,7 @@ namespace FsInfoCat.Local
 
         public long VolumeCount { get => _volumeCount.GetValue(); set => _volumeCount.SetValue(value); }
 
-        internal static void OnBuildEntity(EntityTypeBuilder<FileSystemListItem> builder) => builder.ToView(VIEW_NAME);
+        internal static void OnBuildEntity(EntityTypeBuilder<FileSystemListItem> builder) => builder.ToView(VIEW_NAME).HasKey(nameof(Id));
 
         public FileSystemListItem()
         {

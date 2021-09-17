@@ -26,7 +26,7 @@ namespace FsInfoCat.Local
 
         public string CrawlConfigDisplayName { get => _crawlConfigDisplayName.GetValue(); set => _crawlConfigDisplayName.SetValue(value); }
 
-        internal static void OnBuildEntity(EntityTypeBuilder<SubdirectoryListItem> builder) => builder.ToView(VIEW_NAME);
+        internal static void OnBuildEntity(EntityTypeBuilder<SubdirectoryListItem> builder) => builder.ToView(VIEW_NAME).HasKey(nameof(Id));
 
         public SubdirectoryListItem()
         {

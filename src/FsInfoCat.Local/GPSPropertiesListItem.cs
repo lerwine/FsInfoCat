@@ -1,4 +1,4 @@
-﻿using FsInfoCat.Collections;
+using FsInfoCat.Collections;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -21,6 +21,10 @@ namespace FsInfoCat.Local
             _totalFileCount = AddChangeTracker(nameof(TotalFileCount), 0L);
         }
 
-        internal static void OnBuildEntity(EntityTypeBuilder<GPSPropertiesListItem> builder) => builder.ToView(VIEW_NAME).Property(nameof(VersionID)).HasConversion(ByteValues.Converter);
+        internal static void OnBuildEntity(EntityTypeBuilder<GPSPropertiesListItem> builder)
+        {
+            _ = builder.ToView(VIEW_NAME).HasKey(nameof(Id));
+            _ = builder.Property(nameof(VersionID)).HasConversion(ByteValues.Converter);
+        }
     }
 }

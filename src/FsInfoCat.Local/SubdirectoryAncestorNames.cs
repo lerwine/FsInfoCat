@@ -25,7 +25,7 @@ namespace FsInfoCat.Local
 
         public string AncestorNames { get => _ancestorNames.GetValue(); set => _ancestorNames.SetValue(value); }
 
-        internal static void OnBuildEntity(EntityTypeBuilder<SubdirectoryAncestorNames> builder) => builder.ToView(VIEW_NAME);
+        internal static void OnBuildEntity(EntityTypeBuilder<SubdirectoryAncestorNames> builder) => builder.ToView(VIEW_NAME).HasKey(nameof(Id));
 
         public SubdirectoryAncestorNames()
         {

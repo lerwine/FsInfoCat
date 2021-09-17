@@ -229,7 +229,6 @@ namespace FsInfoCat.Local
                 .Entity<FileAccessError>(FileAccessError.OnBuildEntity)
                 .Entity<SubdirectoryAccessError>(SubdirectoryAccessError.OnBuildEntity)
                 .Entity<VolumeAccessError>(VolumeAccessError.OnBuildEntity)
-
                 .Entity<FileSystemListItem>(FileSystemListItem.OnBuildEntity)
                 .Entity<SymbolicNameListItem>(SymbolicNameListItem.OnBuildEntity)
                 .Entity<PersonalTagDefinitionListItem>(PersonalTagDefinitionListItem.OnBuildEntity)
@@ -256,7 +255,13 @@ namespace FsInfoCat.Local
                 .Entity<MusicPropertiesListItem>(MusicPropertiesListItem.OnBuildEntity)
                 .Entity<PhotoPropertiesListItem>(PhotoPropertiesListItem.OnBuildEntity)
                 .Entity<RecordedTVPropertiesListItem>(RecordedTVPropertiesListItem.OnBuildEntity)
-                .Entity<VideoPropertiesListItem>(VideoPropertiesListItem.OnBuildEntity);
+                .Entity<VideoPropertiesListItem>(VideoPropertiesListItem.OnBuildEntity)
+                .Entity<PersonalVolumeTagListItem>(PersonalVolumeTagListItem.OnBuildEntity)
+                .Entity<SharedVolumeTagListItem>(SharedVolumeTagListItem.OnBuildEntity)
+                .Entity<PersonalSubdirectoryTagListItem>(PersonalSubdirectoryTagListItem.OnBuildEntity)
+                .Entity<SharedSubdirectoryTagListItem>(SharedSubdirectoryTagListItem.OnBuildEntity)
+                .Entity<PersonalFileTagListItem>(PersonalFileTagListItem.OnBuildEntity)
+                .Entity<SharedFileTagListItem>(SharedFileTagListItem.OnBuildEntity);
         }
 
         public static void AddDbContextPool(IServiceCollection services, Assembly assembly, string dbFileName) => AddDbContextPool(services, GetDbFilePath(assembly, dbFileName));

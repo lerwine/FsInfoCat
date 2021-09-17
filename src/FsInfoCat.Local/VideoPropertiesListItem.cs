@@ -1,4 +1,4 @@
-﻿using FsInfoCat.Collections;
+using FsInfoCat.Collections;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -23,7 +23,8 @@ namespace FsInfoCat.Local
 
         internal static void OnBuildEntity(EntityTypeBuilder<VideoPropertiesListItem> builder)
         {
-            _ = builder.ToView(VIEW_NAME).Property(nameof(Director)).HasConversion(MultiStringValue.Converter); ;
+            _ = builder.ToView(VIEW_NAME).HasKey(nameof(Id));
+            _ = builder.Property(nameof(Director)).HasConversion(MultiStringValue.Converter);
         }
     }
 }

@@ -17,7 +17,7 @@ namespace FsInfoCat.Local
 
         public long VolumeTagCount { get => _volumeTagCount.GetValue(); set => _volumeTagCount.SetValue(value); }
 
-        internal static void OnBuildEntity(EntityTypeBuilder<PersonalTagDefinitionListItem> builder) => builder.ToView(VIEW_NAME);
+        internal static void OnBuildEntity(EntityTypeBuilder<PersonalTagDefinitionListItem> builder) => builder.ToView(VIEW_NAME).HasKey(nameof(Id));
 
         public PersonalTagDefinitionListItem()
         {
