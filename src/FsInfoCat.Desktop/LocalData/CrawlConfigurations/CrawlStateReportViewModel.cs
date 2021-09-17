@@ -19,69 +19,14 @@ using System.Windows.Threading;
 
 namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
 {
-    public interface ITimeRange
-    {
-        ITime Start { get; }
-        ITime End { get; }
-    }
-    public interface IExtendableTime : IRelativeTime
-    {
-        bool IsInTheFuture { get; }
-    }
-    public interface ITime : IComparable<DateTime>
-    {
-    }
-    public interface IAbsoluteTime : ITime
-    {
-        DateTime Value { get; }
-    }
-    public interface IRelativeTime : ITime
-    {
-        int? Days { get; }
-        int? Hours { get; }
-    }
-    public interface IRelativeTimeMonthly : IRelativeTime
-    {
-        int? Years { get; }
-        int? Months { get; }
-    }
-    public interface IExtendableTimeMonthly : IRelativeTimeMonthly, IExtendableTime
-    {
-    }
-    public interface IRelativeTimeWeekly : IRelativeTime
-    {
-        int? Weeks { get; }
-    }
-    public interface IExtendableTimeWeekly : IRelativeTimeWeekly, IExtendableTime
-    {
-        int? Weeks { get; }
-    }
-    public interface IRelativeNextCrawl
-    {
-        /// <summary>
-        /// Start of range relative to days in past or future.
-        /// </summary>
-        /// <value>
-        /// From.
-        /// </value>
-        int? From { get; }
-        /// <summary>
-        /// End of range relative to days in past or future.
-        /// </summary>
-        /// <value>
-        /// To.
-        /// </value>
-        int? To { get; }
-
-    }
-    public class ReportOptionItem : DependencyObject
+    public class ReportItemFilter : ViewModel.Filter.CrawlConfigFilter
     {
         #region DisplayText Property Members
 
         /// <summary>
         /// Identifies the <see cref="DisplayText"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty DisplayTextProperty = DependencyPropertyBuilder<ReportOptionItem, string>
+        public static readonly DependencyProperty DisplayTextProperty = DependencyPropertyBuilder<ReportItemFilter, string>
             .Register(nameof(DisplayText))
             .DefaultValue("")
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default)
@@ -90,566 +35,11 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
         public string DisplayText { get => GetValue(DisplayTextProperty) as string; set => SetValue(DisplayTextProperty, value); }
 
         #endregion
-        #region StatusOptions Property Members
-
-        /// <summary>
-        /// Identifies the <see cref="StatusOptions"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty StatusOptionsProperty = DependencyPropertyBuilder<ReportOptionItem, ObservableCollection<CrawlStatus>>
-            .Register(nameof(StatusOptions))
-            .DefaultValue(null)
-            .AsReadWrite();
-
-        public ObservableCollection<CrawlStatus> StatusOptions { get => (ObservableCollection<CrawlStatus>)GetValue(StatusOptionsProperty); set => SetValue(StatusOptionsProperty, value); }
-
-        #endregion
-        #region StatusNotEquals Property Members
-
-        /// <summary>
-        /// Identifies the <see cref="StatusNotEquals"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty StatusNotEqualsProperty = DependencyPropertyBuilder<ReportOptionItem, bool>
-            .Register(nameof(StatusNotEquals))
-            .DefaultValue(false)
-            .AsReadWrite();
-
-        public bool StatusNotEquals { get => (bool)GetValue(StatusNotEqualsProperty); set => SetValue(StatusNotEqualsProperty, value); }
-
-        #endregion
-        #region IncludeMinLastCrawlEnd Property Members
-
-        /// <summary>
-        /// Identifies the <see cref="IncludeMinLastCrawlEnd"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty IncludeMinLastCrawlEndProperty = DependencyPropertyBuilder<ReportOptionItem, bool>
-            .Register(nameof(IncludeMinLastCrawlEnd))
-            .DefaultValue(false)
-            .AsReadWrite();
-
-        public bool IncludeMinLastCrawlEnd { get => (bool)GetValue(IncludeMinLastCrawlEndProperty); set => SetValue(IncludeMinLastCrawlEndProperty, value); }
-
-        #endregion
-        #region IncludeLastCrawlEndLimit Property Members
-
-        /// <summary>
-        /// Identifies the <see cref="IncludeLastCrawlEndLimit"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty IncludeLastCrawlEndLimitProperty = DependencyPropertyBuilder<ReportOptionItem, bool>
-            .Register(nameof(IncludeLastCrawlEndLimit))
-            .DefaultValue(false)
-            .AsReadWrite();
-
-        public bool IncludeLastCrawlEndLimit { get => (bool)GetValue(IncludeLastCrawlEndLimitProperty); set => SetValue(IncludeLastCrawlEndLimitProperty, value); }
-
-        #endregion
-        #region RelativeLastCrawlEndDays Property Members
-
-        /// <summary>
-        /// Identifies the <see cref="RelativeLastCrawlEndDays"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty RelativeLastCrawlEndDaysProperty = DependencyPropertyBuilder<ReportOptionItem, int?>
-            .Register(nameof(RelativeLastCrawlEndDays))
-            .DefaultValue(null)
-            .AsReadWrite();
-
-        public int? RelativeLastCrawlEndDays { get => (int?)GetValue(RelativeLastCrawlEndDaysProperty); set => SetValue(RelativeLastCrawlEndDaysProperty, value); }
-
-        #endregion
-        #region UserSuppliedRelativeLastCrawlEndDays Property Members
-
-        /// <summary>
-        /// Identifies the <see cref="UserSuppliedRelativeLastCrawlEndDays"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty UserSuppliedRelativeLastCrawlEndDaysProperty = DependencyPropertyBuilder<ReportOptionItem, bool>
-            .Register(nameof(UserSuppliedRelativeLastCrawlEndDays))
-            .DefaultValue(false)
-            .AsReadWrite();
-
-        public bool UserSuppliedRelativeLastCrawlEndDays { get => (bool)GetValue(UserSuppliedRelativeLastCrawlEndDaysProperty); set => SetValue(UserSuppliedRelativeLastCrawlEndDaysProperty, value); }
-
-        #endregion
-        #region HasLastCrawlEnd Property Members
-
-        /// <summary>
-        /// Identifies the <see cref="HasLastCrawlEnd"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty HasLastCrawlEndProperty = DependencyPropertyBuilder<ReportOptionItem, bool?>
-            .Register(nameof(HasLastCrawlEnd))
-            .DefaultValue(null)
-            .AsReadWrite();
-
-        public bool? HasLastCrawlEnd { get => (bool?)GetValue(HasLastCrawlEndProperty); set => SetValue(HasLastCrawlEndProperty, value); }
-
-        #endregion
-        #region RelativeLastCrawlEndIsBefore Property Members
-
-        /// <summary>
-        /// Identifies the <see cref="RelativeLastCrawlEndIsBefore"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty RelativeLastCrawlEndIsBeforeProperty = DependencyPropertyBuilder<ReportOptionItem, bool>
-            .Register(nameof(RelativeLastCrawlEndIsBefore))
-            .DefaultValue(false)
-            .AsReadWrite();
-
-        public bool RelativeLastCrawlEndIsBefore { get => (bool)GetValue(RelativeLastCrawlEndIsBeforeProperty); set => SetValue(RelativeLastCrawlEndIsBeforeProperty, value); }
-
-        #endregion
-        #region IncludeMinNextScheduledStart Property Members
-
-        /// <summary>
-        /// Identifies the <see cref="IncludeMinNextScheduledStart"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty IncludeMinNextScheduledStartProperty = DependencyPropertyBuilder<ReportOptionItem, bool>
-            .Register(nameof(IncludeMinNextScheduledStart))
-            .DefaultValue(false)
-            .AsReadWrite();
-
-        public bool IncludeMinNextScheduledStart { get => (bool)GetValue(IncludeMinNextScheduledStartProperty); set => SetValue(IncludeMinNextScheduledStartProperty, value); }
-
-        #endregion
-        #region IncludeNextScheduledStartLimit Property Members
-
-        /// <summary>
-        /// Identifies the <see cref="IncludeNextScheduledStartLimit"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty IncludeNextScheduledStartLimitProperty = DependencyPropertyBuilder<ReportOptionItem, bool>
-            .Register(nameof(IncludeNextScheduledStartLimit))
-            .DefaultValue(false)
-            .AsReadWrite();
-
-        public bool IncludeNextScheduledStartLimit { get => (bool)GetValue(IncludeNextScheduledStartLimitProperty); set => SetValue(IncludeNextScheduledStartLimitProperty, value); }
-
-        #endregion
-        #region UserSuppliedRelativeNextScheduledStartDays Property Members
-
-        /// <summary>
-        /// Identifies the <see cref="UserSuppliedRelativeNextScheduledStartDays"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty UserSuppliedRelativeNextScheduledStartDaysProperty = DependencyPropertyBuilder<ReportOptionItem, bool>
-            .Register(nameof(UserSuppliedRelativeNextScheduledStartDays))
-            .DefaultValue(false)
-            .AsReadWrite();
-
-        public bool UserSuppliedRelativeNextScheduledStartDays { get => (bool)GetValue(UserSuppliedRelativeNextScheduledStartDaysProperty); set => SetValue(UserSuppliedRelativeNextScheduledStartDaysProperty, value); }
-
-        #endregion
-        #region RelativeNextScheduledStartDays Property Members
-
-        /// <summary>
-        /// Identifies the <see cref="RelativeNextScheduledStartDays"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty RelativeNextScheduledStartDaysProperty = DependencyPropertyBuilder<ReportOptionItem, int?>
-            .Register(nameof(RelativeNextScheduledStartDays))
-            .DefaultValue(null)
-            .AsReadWrite();
-
-        public int? RelativeNextScheduledStartDays { get => (int?)GetValue(RelativeNextScheduledStartDaysProperty); set => SetValue(RelativeNextScheduledStartDaysProperty, value); }
-
-        #endregion
-        #region RelativeNextScheduledStartIsBefore Property Members
-
-        /// <summary>
-        /// Identifies the <see cref="RelativeNextScheduledStartIsBefore"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty RelativeNextScheduledStartIsBeforeProperty = DependencyPropertyBuilder<ReportOptionItem, bool>
-            .Register(nameof(RelativeNextScheduledStartIsBefore))
-            .DefaultValue(false)
-            .AsReadWrite();
-
-        public bool RelativeNextScheduledStartIsBefore { get => (bool)GetValue(RelativeNextScheduledStartIsBeforeProperty); set => SetValue(RelativeNextScheduledStartIsBeforeProperty, value); }
-
-        #endregion
-        #region NextScheduledStartDaysOverdue Property Members
-
-        /// <summary>
-        /// Identifies the <see cref="NextScheduledStartDaysOverdue"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty NextScheduledStartDaysOverdueProperty = DependencyPropertyBuilder<ReportOptionItem, bool>
-            .Register(nameof(NextScheduledStartDaysOverdue))
-            .DefaultValue(false)
-            .AsReadWrite();
-
-        public bool NextScheduledStartDaysOverdue { get => (bool)GetValue(NextScheduledStartDaysOverdueProperty); set => SetValue(NextScheduledStartDaysOverdueProperty, value); }
-
-        #endregion
-        #region IsScheduled Property Members
-
-        /// <summary>
-        /// Identifies the <see cref="IsScheduled"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty IsScheduledProperty = DependencyPropertyBuilder<ReportOptionItem, bool?>
-            .Register(nameof(IsScheduled))
-            .DefaultValue(null)
-            .AsReadWrite();
-
-        public bool? IsScheduled { get => (bool?)GetValue(IsScheduledProperty); set => SetValue(IsScheduledProperty, value); }
-
-        #endregion
-        #region IncludeFileSystemTypeSelection Property Members
-
-        /// <summary>
-        /// Identifies the <see cref="IncludeFileSystemTypeSelection"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty IncludeFileSystemTypeSelectionProperty = DependencyPropertyBuilder<ReportOptionItem, bool>
-            .Register(nameof(IncludeFileSystemTypeSelection))
-            .DefaultValue(false)
-            .AsReadWrite();
-
-        public bool IncludeFileSystemTypeSelection { get => (bool)GetValue(IncludeFileSystemTypeSelectionProperty); set => SetValue(IncludeFileSystemTypeSelectionProperty, value); }
-
-        #endregion
-        #region IncludeVolumeSelection Property Members
-
-        /// <summary>
-        /// Identifies the <see cref="IncludeVolumeSelection"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty IncludeVolumeSelectionProperty = DependencyPropertyBuilder<ReportOptionItem, bool>
-            .Register(nameof(IncludeVolumeSelection))
-            .DefaultValue(false)
-            .AsReadWrite();
-
-        public bool IncludeVolumeSelection { get => (bool)GetValue(IncludeVolumeSelectionProperty); set => SetValue(IncludeVolumeSelectionProperty, value); }
-
-        #endregion
-        #region HasSucceededCount Property Members
-
-        /// <summary>
-        /// Identifies the <see cref="HasSucceededCount"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty HasSucceededCountProperty = DependencyPropertyBuilder<ReportOptionItem, bool?>
-            .Register(nameof(HasSucceededCount))
-            .DefaultValue(null)
-            .AsReadWrite();
-
-        public bool? HasSucceededCount { get => (bool?)GetValue(HasSucceededCountProperty); set => SetValue(HasSucceededCountProperty, value); }
-
-        #endregion
-        #region HasTimedOutCount Property Members
-
-        /// <summary>
-        /// Identifies the <see cref="HasTimedOutCount"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty HasTimedOutCountProperty = DependencyPropertyBuilder<ReportOptionItem, bool?>
-            .Register(nameof(HasTimedOutCount))
-            .DefaultValue(null)
-            .AsReadWrite();
-
-        public bool? HasTimedOutCount { get => (bool?)GetValue(HasTimedOutCountProperty); set => SetValue(HasTimedOutCountProperty, value); }
-
-        #endregion
-        #region HasItemLimitReachedCount Property Members
-
-        /// <summary>
-        /// Identifies the <see cref="HasItemLimitReachedCount"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty HasItemLimitReachedCountProperty = DependencyPropertyBuilder<ReportOptionItem, bool?>
-            .Register(nameof(HasItemLimitReachedCount))
-            .DefaultValue(null)
-            .AsReadWrite();
-
-        public bool? HasItemLimitReachedCount { get => (bool?)GetValue(HasItemLimitReachedCountProperty); set => SetValue(HasItemLimitReachedCountProperty, value); }
-
-        #endregion
-        #region HasCanceledCount Property Members
-
-        /// <summary>
-        /// Identifies the <see cref="HasCanceledCount"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty HasCanceledCountProperty = DependencyPropertyBuilder<ReportOptionItem, bool?>
-            .Register(nameof(HasCanceledCount))
-            .DefaultValue(null)
-            .AsReadWrite();
-
-        public bool? HasCanceledCount { get => (bool?)GetValue(HasCanceledCountProperty); set => SetValue(HasCanceledCountProperty, value); }
-
-        #endregion
-        #region HasFailedCount Property Members
-
-        /// <summary>
-        /// Identifies the <see cref="HasFailedCount"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty HasFailedCountProperty = DependencyPropertyBuilder<ReportOptionItem, bool?>
-            .Register(nameof(HasFailedCount))
-            .DefaultValue(null)
-            .AsReadWrite();
-
-        public bool? HasFailedCount { get => (bool?)GetValue(HasFailedCountProperty); set => SetValue(HasFailedCountProperty, value); }
-
-        #endregion
-        #region IncludeMinAverageDuration Property Members
-
-        /// <summary>
-        /// Identifies the <see cref="IncludeMinAverageDuration"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty IncludeMinAverageDurationProperty = DependencyPropertyBuilder<ReportOptionItem, bool>
-            .Register(nameof(IncludeMinAverageDuration))
-            .DefaultValue(false)
-            .AsReadWrite();
-
-        public bool IncludeMinAverageDuration { get => (bool)GetValue(IncludeMinAverageDurationProperty); set => SetValue(IncludeMinAverageDurationProperty, value); }
-
-        #endregion
-        #region IncudeAverageDurationLimit Property Members
-
-        /// <summary>
-        /// Identifies the <see cref="IncudeAverageDurationLimit"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty IncudeAverageDurationLimitProperty = DependencyPropertyBuilder<ReportOptionItem, bool>
-            .Register(nameof(IncudeAverageDurationLimit))
-            .DefaultValue(false)
-            .AsReadWrite();
-
-        public bool IncudeAverageDurationLimit { get => (bool)GetValue(IncudeAverageDurationLimitProperty); set => SetValue(IncudeAverageDurationLimitProperty, value); }
-
-        #endregion
-        #region IncludeMinMaxDuration Property Members
-
-        /// <summary>
-        /// Identifies the <see cref="IncludeMinMaxDuration"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty IncludeMinMaxDurationProperty = DependencyPropertyBuilder<ReportOptionItem, bool>
-            .Register(nameof(IncludeMinMaxDuration))
-            .DefaultValue(false)
-            .AsReadWrite();
-
-        public bool IncludeMinMaxDuration { get => (bool)GetValue(IncludeMinMaxDurationProperty); set => SetValue(IncludeMinMaxDurationProperty, value); }
-
-        #endregion
-        #region IncludeMaxDurationLimit Property Members
-
-        /// <summary>
-        /// Identifies the <see cref="IncludeMaxDurationLimit"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty IncludeMaxDurationLimitProperty = DependencyPropertyBuilder<ReportOptionItem, bool>
-            .Register(nameof(IncludeMaxDurationLimit))
-            .DefaultValue(false)
-            .AsReadWrite();
-
-        public bool IncludeMaxDurationLimit { get => (bool)GetValue(IncludeMaxDurationLimitProperty); set => SetValue(IncludeMaxDurationLimitProperty, value); }
-
-        #endregion
-
-        internal bool IsMatch(CrawlConfigReportItem entity, CrawlStateReportViewModel owner)
-        {
-            if (entity is null)
-                return false;
-            ObservableCollection<CrawlStatus> statusOptions = StatusOptions;
-            if (statusOptions is not null && statusOptions.Count > 0 && statusOptions.Contains(entity.StatusValue) == StatusNotEquals)
-                return false;
-
-            DateTime? dtX = entity.LastCrawlEnd;
-            bool? req = (IncludeMinLastCrawlEnd || IncludeLastCrawlEndLimit) ? HasLastCrawlEnd.Value : HasLastCrawlEnd;
-            if (dtX.HasValue)
-            {
-                if (req.HasValue && !req.Value)
-                    return false;
-                DateTime? dtY = IncludeMinLastCrawlEnd ? owner.MinLastCrawlEnd?.Date : null;
-                if (dtY.HasValue && dtX.Value < dtY.Value)
-                    return false;
-                dtY = IncludeLastCrawlEndLimit ? owner.LastCrawlEndLimit?.Date : null;
-                if (dtY.HasValue && dtX.Value > dtY.Value)
-                    return false;
-                int? days = UserSuppliedRelativeLastCrawlEndDays ? RelativeLastCrawlEndDays : RelativeLastCrawlEndDays;
-                if (days.HasValue)
-                {
-                    if (UserSuppliedRelativeLastCrawlEndDays ? NextScheduledStartDaysOverdue : owner.NextScheduledStartDaysOverdue)
-                }
-                if (days.HasValue && ((UserSuppliedRelativeLastCrawlEndDays ? owner.RelativeLastCrawlEndIsBefore : RelativeLastCrawlEndIsBefore) ?
-                    DateTime.Today.AddDays((UserSuppliedRelativeLastCrawlEndDays ? NextScheduledStartDaysOverdue : owner.NextScheduledStartDaysOverdue) ? 0 - days.Value : days.Value) > dtX.Value :
-                    DateTime.Today.AddDays((UserSuppliedRelativeLastCrawlEndDays ? NextScheduledStartDaysOverdue : owner.NextScheduledStartDaysOverdue) ? 0 - days.Value : days.Value) < dtX.Value))
-                    return false;
-            }
-            else if (req.HasValue && req.Value)
-                return false;
-            req = (IncludeMinNextScheduledStart || IncludeNextScheduledStartLimit) ? owner.IsScheduled.Value : IsScheduled;
-            if ((dtX = entity.NextScheduledStart).HasValue)
-            {
-                if (req.HasValue && !req.Value)
-                    return false;
-                DateTime? dtY = IncludeMinNextScheduledStart ? owner.MinNextScheduledStart?.Date : null;
-                if (dtY.HasValue && dtX.Value < dtY.Value)
-                    return false;
-                dtY = IncludeNextScheduledStartLimit ? owner.NextScheduledStartLimit?.Date : null;
-                if (dtY.HasValue && dtX.Value > dtY.Value)
-                    return false;
-                int? days = UserSuppliedRelativeNextScheduledStartDays ? owner.RelativeNextScheduledStartDays : RelativeNextScheduledStartDays;
-                if (days.HasValue && ((UserSuppliedRelativeLastCrawlEndDays ? owner.RelativeLastCrawlEndIsBefore : RelativeLastCrawlEndIsBefore) ? DateTime.Today.AddDays(0 - days.Value) > dtX.Value : DateTime.Today.AddDays(0 - days.Value) < dtX.Value))
-                    return false;
-            }
-            else if (req.HasValue && req.Value)
-                return false;
-            dateTimeX = IncludeLastCrawlEndLimit ? owner.MinNextScheduledStart?.Date : null;
-            if (dateTimeX.HasValue && (dateTimeY = entity.NextScheduledStart).HasValue && dateTimeY.Value > dateTimeX.Value)
-                return false;
-            int? relativeDays = UserSuppliedRelativeLastCrawlEndDays ? owner.RelativeLastCrawlEndDays : RelativeLastCrawlEndDays;
-            if (relativeDays.HasValue && (dateTimeX = entity.LastCrawlEnd).HasValue
-            dateTimeX = IncludeMinNextScheduledStart ? owner.MinNextScheduledStart?.Date : null;
-            if (dateTimeX.HasValue && (dateTimeY = entity.NextScheduledStart).HasValue && dateTimeY.Value < dateTimeX.Value)
-                return false;
-            dateTimeX = IncludeNextScheduledStartLimit ? owner.MinNextScheduledStart?.Date : null;
-            if (dateTimeX.HasValue && (dateTimeY = entity.NextScheduledStart).HasValue && dateTimeY.Value > dateTimeX.Value)
-                return false;
-            throw new NotImplementedException();
-        }
-
-        internal bool IsSameAs(ReportOptionItem other)
-        {
-            throw new NotImplementedException();
-        }
     }
-    public class CrawlStateReportViewModel : ListingViewModel<CrawlConfigReportItem, ReportItemViewModel, ReportOptionItem>, INavigatedToNotifiable
+    public class CrawlStateReportViewModel : ListingViewModel<CrawlConfigReportItem, ReportItemViewModel, ReportItemFilter>, INavigatedToNotifiable
     {
-        private ReportOptionItem _currentReportOption;
+        private ReportItemFilter _currentReportOption;
 
-        #region HasLastCrawlEnd Property Members
-
-        private static readonly DependencyPropertyKey HasLastCrawlEndPropertyKey = DependencyPropertyBuilder<CrawlStateReportViewModel, ThreeStateViewModel>
-            .Register(nameof(HasLastCrawlEnd))
-            .DefaultValue(null)
-            .AsReadOnly();
-
-        /// <summary>
-        /// Identifies the <see cref="HasLastCrawlEnd"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty HasLastCrawlEndProperty = HasLastCrawlEndPropertyKey.DependencyProperty;
-
-        public ThreeStateViewModel HasLastCrawlEnd { get => (ThreeStateViewModel)GetValue(HasLastCrawlEndProperty); private set => SetValue(HasLastCrawlEndPropertyKey, value); }
-
-        #endregion
-        #region MinLastCrawlEnd Property Members
-
-        /// <summary>
-        /// Identifies the <see cref="MinLastCrawlEnd"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty MinLastCrawlEndProperty = DependencyPropertyBuilder<CrawlStateReportViewModel, DateTime?>
-            .Register(nameof(MinLastCrawlEnd))
-            .DefaultValue(null)
-            .AsReadWrite();
-
-        public DateTime? MinLastCrawlEnd { get => (DateTime?)GetValue(MinLastCrawlEndProperty); set => SetValue(MinLastCrawlEndProperty, value); }
-
-        #endregion
-        #region LastCrawlEndLimit Property Members
-
-        /// <summary>
-        /// Identifies the <see cref="LastCrawlEndLimit"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty LastCrawlEndLimitProperty = DependencyPropertyBuilder<CrawlStateReportViewModel, DateTime?>
-            .Register(nameof(LastCrawlEndLimit))
-            .DefaultValue(null)
-            .AsReadWrite();
-
-        public DateTime? LastCrawlEndLimit { get => (DateTime?)GetValue(LastCrawlEndLimitProperty); set => SetValue(LastCrawlEndLimitProperty, value); }
-
-        #endregion
-        #region RelativeLastCrawlEndIsBefore Property Members
-
-        /// <summary>
-        /// Identifies the <see cref="RelativeLastCrawlEndIsBefore"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty RelativeLastCrawlEndIsBeforeProperty = DependencyPropertyBuilder<CrawlStateReportViewModel, bool>
-            .Register(nameof(RelativeLastCrawlEndIsBefore))
-            .DefaultValue(false)
-            .AsReadWrite();
-
-        public bool RelativeLastCrawlEndIsBefore { get => (bool)GetValue(RelativeLastCrawlEndIsBeforeProperty); set => SetValue(RelativeLastCrawlEndIsBeforeProperty, value); }
-
-        #endregion
-        #region IsScheduled Property Members
-
-        private static readonly DependencyPropertyKey IsScheduledPropertyKey = DependencyPropertyBuilder<CrawlStateReportViewModel, ThreeStateViewModel>
-            .Register(nameof(IsScheduled))
-            .DefaultValue(null)
-            .AsReadOnly();
-
-        /// <summary>
-        /// Identifies the <see cref="IsScheduled"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty IsScheduledProperty = IsScheduledPropertyKey.DependencyProperty;
-
-        public ThreeStateViewModel IsScheduled { get => (ThreeStateViewModel)GetValue(IsScheduledProperty); private set => SetValue(IsScheduledPropertyKey, value); }
-
-        #endregion
-        #region MinNextScheduledStart Property Members
-
-        private static readonly DependencyPropertyKey MinNextScheduledStartPropertyKey = DependencyPropertyBuilder<CrawlStateReportViewModel, DateTime?>
-            .Register(nameof(MinNextScheduledStart))
-            .DefaultValue(null)
-            .AsReadOnly();
-
-        /// <summary>
-        /// Identifies the <see cref="MinNextScheduledStart"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty MinNextScheduledStartProperty = MinNextScheduledStartPropertyKey.DependencyProperty;
-
-        public DateTime? MinNextScheduledStart { get => (DateTime?)GetValue(MinNextScheduledStartProperty); private set => SetValue(MinNextScheduledStartPropertyKey, value); }
-
-        #endregion
-        #region NextScheduledStartLimit Property Members
-
-        /// <summary>
-        /// Identifies the <see cref="NextScheduledStartLimit"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty NextScheduledStartLimitProperty = DependencyPropertyBuilder<CrawlStateReportViewModel, DateTime?>
-            .Register(nameof(NextScheduledStartLimit))
-            .DefaultValue(null)
-            .AsReadWrite();
-
-        public DateTime? NextScheduledStartLimit { get => (DateTime?)GetValue(NextScheduledStartLimitProperty); set => SetValue(NextScheduledStartLimitProperty, value); }
-
-        #endregion
-        #region RelativeLastCrawlEndDays Property Members
-
-        /// <summary>
-        /// Identifies the <see cref="RelativeLastCrawlEndDays"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty RelativeLastCrawlEndDaysProperty = DependencyPropertyBuilder<CrawlStateReportViewModel, int?>
-            .Register(nameof(RelativeLastCrawlEndDays))
-            .DefaultValue(null)
-            .AsReadWrite();
-
-        public int? RelativeLastCrawlEndDays { get => (int?)GetValue(RelativeLastCrawlEndDaysProperty); set => SetValue(RelativeLastCrawlEndDaysProperty, value); }
-
-        #endregion
-        #region RelativeNextScheduledStartIsBefore Property Members
-
-        /// <summary>
-        /// Identifies the <see cref="RelativeNextScheduledStartIsBefore"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty RelativeNextScheduledStartIsBeforeProperty = DependencyPropertyBuilder<CrawlStateReportViewModel, bool>
-            .Register(nameof(RelativeNextScheduledStartIsBefore))
-            .DefaultValue(false)
-            .AsReadWrite();
-
-        public bool RelativeNextScheduledStartIsBefore { get => (bool)GetValue(RelativeNextScheduledStartIsBeforeProperty); set => SetValue(RelativeNextScheduledStartIsBeforeProperty, value); }
-
-        #endregion
-        #region RelativeNextScheduledStartDays Property Members
-
-        /// <summary>
-        /// Identifies the <see cref="RelativeNextScheduledStartDays"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty RelativeNextScheduledStartDaysProperty = DependencyPropertyBuilder<CrawlStateReportViewModel, int?>
-            .Register(nameof(RelativeNextScheduledStartDays))
-            .DefaultValue(null)
-            .AsReadWrite();
-
-        public int? RelativeNextScheduledStartDays { get => (int?)GetValue(RelativeNextScheduledStartDaysProperty); set => SetValue(RelativeNextScheduledStartDaysProperty, value); }
-
-        #endregion
-        #region NextScheduledStartDaysOverdue Property Members
-
-        /// <summary>
-        /// Identifies the <see cref="NextScheduledStartDaysOverdue"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty NextScheduledStartDaysOverdueProperty = DependencyPropertyBuilder<CrawlStateReportViewModel, bool>
-            .Register(nameof(NextScheduledStartDaysOverdue))
-            .DefaultValue(false)
-            .AsReadWrite();
-
-        public bool NextScheduledStartDaysOverdue { get => (bool)GetValue(NextScheduledStartDaysOverdueProperty); set => SetValue(NextScheduledStartDaysOverdueProperty, value); }
-
-        #endregion
         #region Owner Attached Property Members
 
         /// <summary>
@@ -700,11 +90,11 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
         /// <param name="newValue">The new value of the <see cref="IsSelected"/> property.</param>
         private static void RaiseIsSelectedPropertyChanged(DependencyObject obj, bool oldValue, bool newValue)
         {
-            if (obj is ReportOptionItem item)
+            if (obj is ReportItemFilter item)
                 GetOwner(item)?.OnIsSelectedPropertyChanged(item, newValue);
         }
 
-        private void OnIsSelectedPropertyChanged(ReportOptionItem item, bool newValue)
+        private void OnIsSelectedPropertyChanged(ReportItemFilter item, bool newValue)
         {
             if (newValue)
                 SelectedReportOption = item;
@@ -715,28 +105,28 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
         #endregion
         #region ReportOptions Property Members
 
-        private HashSet<ReportOptionItem> _distinctItems = new();
+        private HashSet<ReportItemFilter> _distinctItems = new();
 
         /// <summary>
         /// Identifies the <see cref="ReportOptions"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty ReportOptionsProperty = DependencyPropertyBuilder<CrawlStateReportViewModel, ObservableCollection<ReportOptionItem>>
+        public static readonly DependencyProperty ReportOptionsProperty = DependencyPropertyBuilder<CrawlStateReportViewModel, ObservableCollection<ReportItemFilter>>
             .Register(nameof(ReportOptions))
             .OnChanged((d, oldValue, newValue) => (d as CrawlStateReportViewModel)?.OnReportOptionsPropertyChanged(oldValue, newValue))
-            .CoerseWith((d, baseValue) => (baseValue as ObservableCollection<ReportOptionItem>) ?? new())
+            .CoerseWith((d, baseValue) => (baseValue as ObservableCollection<ReportItemFilter>) ?? new())
             .AsReadWrite();
 
-        public ObservableCollection<ReportOptionItem> ReportOptions { get => (ObservableCollection<ReportOptionItem>)GetValue(ReportOptionsProperty); set => SetValue(ReportOptionsProperty, value); }
+        public ObservableCollection<ReportItemFilter> ReportOptions { get => (ObservableCollection<ReportItemFilter>)GetValue(ReportOptionsProperty); set => SetValue(ReportOptionsProperty, value); }
 
         /// <summary>
         /// Called when the value of the <see cref="ReportOptions"/> dependency property has changed.
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="ReportOptions"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="ReportOptions"/> property.</param>
-        protected virtual void OnReportOptionsPropertyChanged(ObservableCollection<ReportOptionItem> oldValue, ObservableCollection<ReportOptionItem> newValue)
+        protected virtual void OnReportOptionsPropertyChanged(ObservableCollection<ReportItemFilter> oldValue, ObservableCollection<ReportItemFilter> newValue)
         {
-            ReportOptionItem oldOption = _currentReportOption ?? SelectedReportOption;
-            foreach (ReportOptionItem item in _distinctItems)
+            ReportItemFilter oldOption = _currentReportOption ?? SelectedReportOption;
+            foreach (ReportItemFilter item in _distinctItems)
             {
                 if (ReferenceEquals(this, GetOwner(item)))
                     SetOwner(item, null);
@@ -745,23 +135,23 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
             if (oldValue is not null)
             {
                 oldValue.CollectionChanged -= ReportOptions_CollectionChanged;
-                foreach (ReportOptionItem item in oldValue.Where(i => i is not null))
+                foreach (ReportItemFilter item in oldValue.Where(i => i is not null))
                 {
                     if (ReferenceEquals(GetOwner(item), this))
                         SetOwner(item, null);
                 }
             }
-            foreach (ReportOptionItem item in newValue.Where(i => i is not null))
+            foreach (ReportItemFilter item in newValue.Where(i => i is not null))
             {
                 if (_distinctItems.Add(item) && !ReferenceEquals(GetOwner(item), this))
                     SetOwner(item, this);
             }
             _distinctItems.LastOrDefault(i => GetIsSelected(i));
-            IEnumerable<ReportOptionItem> enumerator = _distinctItems.Reverse().SkipWhile(i => !GetIsSelected(i));
-            ReportOptionItem newOption = enumerator.FirstOrDefault();
-            foreach (ReportOptionItem item in enumerator.Skip(1).ToArray())
+            IEnumerable<ReportItemFilter> enumerator = _distinctItems.Reverse().SkipWhile(i => !GetIsSelected(i));
+            ReportItemFilter newOption = enumerator.FirstOrDefault();
+            foreach (ReportItemFilter item in enumerator.Skip(1).ToArray())
                 SetIsSelected(item, false);
-            _currentReportOption = (newOption is null && (oldOption is null || (newOption = _distinctItems.FirstOrDefault(other => oldOption.IsSameAs(other))) is null)) ? _distinctItems.FirstOrDefault() : newOption;
+            _currentReportOption = (newOption is null && (oldOption is null || (newOption = _distinctItems.FirstOrDefault(other => ReportItemFilter.AreSame(oldOption, other))) is null)) ? _distinctItems.FirstOrDefault() : newOption;
             SelectedReportOption = _currentReportOption;
             newValue.CollectionChanged += ReportOptions_CollectionChanged;
             if ((oldOption is null) ? _currentReportOption is not null : !ReferenceEquals(oldOption, _currentReportOption))
@@ -770,14 +160,14 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
 
         private void ReportOptions_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-            IEnumerable<ReportOptionItem> enumerable;
-            ReportOptionItem oldCurrentItem = _currentReportOption, newCurrentItem = _currentReportOption;
+            IEnumerable<ReportItemFilter> enumerable;
+            ReportItemFilter oldCurrentItem = _currentReportOption, newCurrentItem = _currentReportOption;
             switch (e.Action)
             {
                 case System.Collections.Specialized.NotifyCollectionChangedAction.Add:
-                    if ((enumerable = e.NewItems?.OfType<ReportOptionItem>().Where(i => i is not null)) is not null)
+                    if ((enumerable = e.NewItems?.OfType<ReportItemFilter>().Where(i => i is not null)) is not null)
                     {
-                        foreach (ReportOptionItem item in enumerable)
+                        foreach (ReportItemFilter item in enumerable)
                         {
                             if (!ReferenceEquals(GetOwner(item), this))
                                 SetOwner(item, this);
@@ -792,7 +182,7 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
                     }
                     break;
                 case System.Collections.Specialized.NotifyCollectionChangedAction.Reset:
-                    foreach (ReportOptionItem item in _distinctItems)
+                    foreach (ReportItemFilter item in _distinctItems)
                     {
                         if (ReferenceEquals(this, GetOwner(item)))
                             SetOwner(item, null);
@@ -800,7 +190,7 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
                     _distinctItems.Clear();
                     if (ReportOptions.Count > 0)
                     {
-                        foreach (ReportOptionItem item in ReportOptions.Where(i => i is not null))
+                        foreach (ReportItemFilter item in ReportOptions.Where(i => i is not null))
                         {
                             if (!ReferenceEquals(this, GetOwner(item)))
                                 SetOwner(item, this);
@@ -810,9 +200,9 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
                     }
                     break;
                 case System.Collections.Specialized.NotifyCollectionChangedAction.Remove:
-                    if ((enumerable = e.OldItems?.OfType<ReportOptionItem>().Where(i => i is not null)) is not null)
+                    if ((enumerable = e.OldItems?.OfType<ReportItemFilter>().Where(i => i is not null)) is not null)
                     {
-                        foreach (ReportOptionItem item in enumerable)
+                        foreach (ReportItemFilter item in enumerable)
                         {
                             if (!ReportOptions.Any(o => ReferenceEquals(item, o)))
                             {
@@ -826,9 +216,9 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
                     }
                     break;
                 case System.Collections.Specialized.NotifyCollectionChangedAction.Replace:
-                    if ((enumerable = e.OldItems?.OfType<ReportOptionItem>().Where(i => i is not null)) is not null)
+                    if ((enumerable = e.OldItems?.OfType<ReportItemFilter>().Where(i => i is not null)) is not null)
                     {
-                        foreach (ReportOptionItem item in enumerable)
+                        foreach (ReportItemFilter item in enumerable)
                         {
                             if (!ReportOptions.Any(o => ReferenceEquals(item, o)))
                             {
@@ -840,9 +230,9 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
                             }
                         }
                     }
-                    if ((enumerable = e.NewItems?.OfType<ReportOptionItem>().Where(i => i is not null)) is not null)
+                    if ((enumerable = e.NewItems?.OfType<ReportItemFilter>().Where(i => i is not null)) is not null)
                     {
-                        foreach (ReportOptionItem item in enumerable)
+                        foreach (ReportItemFilter item in enumerable)
                         {
                             if (!ReferenceEquals(GetOwner(item), this))
                                 SetOwner(item, this);
@@ -859,7 +249,7 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
                 default:
                     return;
             }
-            if (newCurrentItem is null && (newCurrentItem = ReportOptions.FirstOrDefault(i => GetIsSelected(i))) is null && (oldCurrentItem is null || (newCurrentItem = ReportOptions.FirstOrDefault(i => oldCurrentItem.IsSameAs(i))) is null) &&
+            if (newCurrentItem is null && (newCurrentItem = ReportOptions.FirstOrDefault(i => GetIsSelected(i))) is null && (oldCurrentItem is null || (newCurrentItem = ReportOptions.FirstOrDefault(i => ReportItemFilter.AreSame(oldCurrentItem, i))) is null) &&
                 (newCurrentItem = ReportOptions.FirstOrDefault(i => i is not null)) is null)
                 SelectedReportOption = _currentReportOption = null;
             else
@@ -875,20 +265,20 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
         /// <summary>
         /// Identifies the <see cref="SelectedReportOption"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty SelectedReportOptionProperty = DependencyPropertyBuilder<CrawlStateReportViewModel, ReportOptionItem>
+        public static readonly DependencyProperty SelectedReportOptionProperty = DependencyPropertyBuilder<CrawlStateReportViewModel, ReportItemFilter>
             .Register(nameof(SelectedReportOption))
             .DefaultValue(null)
             .OnChanged((d, oldValue, newValue) => (d as CrawlStateReportViewModel)?.OnSelectedReportOptionPropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
-        public ReportOptionItem SelectedReportOption { get => (ReportOptionItem)GetValue(SelectedReportOptionProperty); set => SetValue(SelectedReportOptionProperty, value); }
+        public ReportItemFilter SelectedReportOption { get => (ReportItemFilter)GetValue(SelectedReportOptionProperty); set => SetValue(SelectedReportOptionProperty, value); }
 
         /// <summary>
         /// Called when the value of the <see cref="SelectedReportOption"/> dependency property has changed.
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="SelectedReportOption"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="SelectedReportOption"/> property.</param>
-        protected virtual void OnSelectedReportOptionPropertyChanged(ReportOptionItem oldValue, ReportOptionItem newValue)
+        protected virtual void OnSelectedReportOptionPropertyChanged(ReportItemFilter oldValue, ReportItemFilter newValue)
         {
             if (newValue is not null)
             {
@@ -911,10 +301,7 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
             ReportOptions = new();
         }
 
-        private void UpdatePageTitle(ReportOptionItem currentReportOption)
-        {
-            throw new NotImplementedException();
-        }
+        private void UpdatePageTitle(ReportItemFilter currentReportOption) => PageTitle = currentReportOption?.DisplayText.NullIfWhiteSpace() ?? FsInfoCat.Properties.Resources.DisplayName_FSInfoCat;
 
         void INavigatedToNotifiable.OnNavigatedTo() => ReloadAsync(_currentReportOption);
 
@@ -1092,7 +479,7 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
             return await CreateEditPageAsync(crawlConfiguration ?? new(), selectedRoot, itemEntity, statusListener);
         }
 
-        protected override IQueryable<CrawlConfigReportItem> GetQueryableListing(ReportOptionItem options, [DisallowNull] LocalDbContext dbContext, [DisallowNull] IWindowsStatusListener statusListener)
+        protected override IQueryable<CrawlConfigReportItem> GetQueryableListing(ReportItemFilter options, [DisallowNull] LocalDbContext dbContext, [DisallowNull] IWindowsStatusListener statusListener)
         {
             throw new NotImplementedException();
         }
@@ -1122,15 +509,15 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
 
         protected override void OnRefreshCommand(object parameter) => ReloadAsync(_currentReportOption);
 
-        protected override void OnReloadTaskCanceled(ReportOptionItem options)
+        protected override void OnReloadTaskCanceled(ReportItemFilter options)
         {
             UpdatePageTitle(_currentReportOption);
             SelectedReportOption = _currentReportOption;
         }
 
-        protected override void OnReloadTaskCompleted(ReportOptionItem options) => _currentReportOption = options;
+        protected override void OnReloadTaskCompleted(ReportItemFilter options) => _currentReportOption = options;
 
-        protected override void OnReloadTaskFaulted([DisallowNull] Exception exception, ReportOptionItem options)
+        protected override void OnReloadTaskFaulted([DisallowNull] Exception exception, ReportItemFilter options)
         {
             UpdatePageTitle(_currentReportOption);
             SelectedReportOption = _currentReportOption;

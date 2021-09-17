@@ -19,6 +19,18 @@ namespace FsInfoCat
         public static readonly Regex BackslashEscapableLBPattern = new(@"(?<l>[""\\])|(?<n>\r\n?|\n)|[\0\a\b\f\t\v]|(\p{C}|(?! )(\s|\p{Z}))(?<x>[\da-fA-F])?",
             RegexOptions.Compiled);
 
+        public static DateTime CurrentHour(this DateTime dateTime) => (dateTime.Minute == 0 && dateTime.Second == 0 && dateTime.Millisecond == 0) ? dateTime : new DateTime(dateTime.Year, dateTime.Month, dateTime.Day, dateTime.Hour, 0, 0, 0, dateTime.Kind);
+
+        public static DateTime CurrentMinute(this DateTime dateTime) => (dateTime.Second == 0 && dateTime.Millisecond == 0) ? dateTime : new DateTime(dateTime.Year, dateTime.Month, dateTime.Day, dateTime.Hour, dateTime.Minute, 0, 0, dateTime.Kind);
+
+        public static DateTime CurrentSecond(this DateTime dateTime) => (dateTime.Millisecond == 0) ? dateTime : new DateTime(dateTime.Year, dateTime.Month, dateTime.Day, dateTime.Hour, dateTime.Minute, dateTime.Second, 0, dateTime.Kind);
+
+        public static TimeSpan TruncateHour(this TimeSpan timeSpan) => (timeSpan.Minutes == 0 && timeSpan.Seconds == 0 && timeSpan.Milliseconds == 0) ? timeSpan : new TimeSpan(timeSpan.Days, timeSpan.Hours, 0, 0, 0);
+
+        public static TimeSpan TruncateMinute(this TimeSpan timeSpan) => (timeSpan.Seconds == 0 && timeSpan.Milliseconds == 0) ? timeSpan : new TimeSpan(timeSpan.Days, timeSpan.Hours, timeSpan.Minutes, 0, 0);
+
+        public static TimeSpan TruncateSecond(this TimeSpan timeSpan) => (timeSpan.Milliseconds == 0) ? timeSpan : new TimeSpan(timeSpan.Days, timeSpan.Hours, timeSpan.Minutes, timeSpan.Seconds, 0);
+
         public static string SplitPath(string path, out string leaf)
         {
             if (string.IsNullOrEmpty(path))
