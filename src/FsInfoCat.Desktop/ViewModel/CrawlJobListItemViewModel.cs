@@ -100,6 +100,15 @@ namespace FsInfoCat.Desktop.ViewModel
             SetValue(OpenPropertyKey, new Commands.RelayCommand(RaiseOpenCommand));
             SetValue(EditPropertyKey, new Commands.RelayCommand(RaiseEditCommand));
             SetValue(DeletePropertyKey, new Commands.RelayCommand(RaiseDeleteCommand));
+            ConfigurationDisplayName = entity.ConfigurationDisplayName;
+        }
+
+        protected override void OnEntityPropertyChanged(string propertyName)
+        {
+            if (propertyName == nameof(ICrawlJobListItem.ConfigurationDisplayName))
+                ConfigurationDisplayName = Entity.ConfigurationDisplayName;
+            else
+                base.OnEntityPropertyChanged(propertyName);
         }
     }
 }

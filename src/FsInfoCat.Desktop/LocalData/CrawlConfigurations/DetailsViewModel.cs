@@ -59,7 +59,7 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
         #endregion
         #region ListItem Property Members
 
-        private static readonly DependencyPropertyKey ListItemPropertyKey = DependencyPropertyBuilder<DetailsViewModel, CrawlConfigListItem>
+        private static readonly DependencyPropertyKey ListItemPropertyKey = DependencyPropertyBuilder<DetailsViewModel, CrawlConfigListItemBase>
             .Register(nameof(ListItem))
             .AsReadOnly();
 
@@ -68,11 +68,11 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
         /// </summary>
         public static readonly DependencyProperty ListItemProperty = ListItemPropertyKey.DependencyProperty;
 
-        public CrawlConfigListItem ListItem { get => (CrawlConfigListItem)GetValue(ListItemProperty); private set => SetValue(ListItemPropertyKey, value); }
+        public CrawlConfigListItemBase ListItem { get => (CrawlConfigListItemBase)GetValue(ListItemProperty); private set => SetValue(ListItemPropertyKey, value); }
 
         #endregion
 
-        public DetailsViewModel([DisallowNull] CrawlConfiguration entity, [DisallowNull] CrawlConfigListItem itemEntity) : base(entity, itemEntity)
+        public DetailsViewModel([DisallowNull] CrawlConfiguration entity, [DisallowNull] CrawlConfigListItemBase itemEntity) : base(entity, itemEntity)
         {
             SetValue(AddNewCrawlJobLogPropertyKey, new Commands.RelayCommand(OnAddNewCrawlJobLogCommand));
             ListItem = itemEntity;

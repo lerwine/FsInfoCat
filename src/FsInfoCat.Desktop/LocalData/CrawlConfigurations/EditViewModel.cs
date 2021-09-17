@@ -20,7 +20,7 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
     public sealed class EditViewModel : CrawlConfigurationEditViewModel<CrawlConfiguration, SubdirectoryListItemWithAncestorNames, SubdirectoryListItemViewModel, CrawlJobLogListItem, CrawlJobListItemViewModel>,
         INavigatedToNotifiable, INavigatingFromNotifiable
     {
-        internal CrawlConfigListItem ListItem { get; }
+        internal CrawlConfigListItemBase ListItem { get; }
 
         #region UpstreamId Property Members
 
@@ -70,7 +70,7 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
 
         #endregion
 
-        public EditViewModel([DisallowNull] CrawlConfiguration tableEntity, CrawlConfigListItem itemEntity) : base(tableEntity, itemEntity is null, itemEntity)
+        public EditViewModel([DisallowNull] CrawlConfiguration tableEntity, CrawlConfigListItemBase itemEntity) : base(tableEntity, itemEntity is null, itemEntity)
         {
             SetValue(BrowseNewRootFolderPropertyKey, new Commands.RelayCommand(OnBrowseNewRootFolder));
             ListItem = itemEntity;
