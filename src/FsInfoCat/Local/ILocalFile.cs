@@ -3,13 +3,6 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.Local
 {
-    public interface ILocalFileRow : ILocalDbFsItemRow, IFileRow { }
-
-    public interface ILocalFileListItemWithAncestorNames : ILocalDbFsItemListItem, IFileListItemWithAncestorNames, ILocalFileRow { }
-
-    public interface ILocalFileListItemWithBinaryProperties : ILocalDbFsItemListItem, IFileListItemWithBinaryProperties, ILocalFileRow { }
-
-    public interface ILocalFileListItemWithBinaryPropertiesAndAncestorNames : IFileListItemWithBinaryPropertiesAndAncestorNames, ILocalFileListItemWithAncestorNames { }
 
     /// <summary>Represents a structural instance of file on a local host file system.</summary>
     /// <seealso cref="ILocalDbFsItem" />

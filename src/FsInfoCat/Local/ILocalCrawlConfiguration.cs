@@ -3,9 +3,6 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.Local
 {
-    public interface ILocalCrawlConfigurationRow : ILocalDbEntity, ICrawlConfigurationRow { }
-
-    public interface ILocalCrawlConfigurationListItem : ILocalDbEntity, ICrawlConfigurationListItem { }
 
     /// <summary>Specifies the configuration of a file system crawl.</summary>
     /// <seealso cref="ILocalDbEntity" />
@@ -22,6 +19,4 @@ namespace FsInfoCat.Local
         [Display(Name = nameof(Properties.Resources.DisplayName_Logs), ResourceType = typeof(Properties.Resources))]
         new IEnumerable<ILocalCrawlJobLog> Logs { get; }
     }
-
-    public interface ILocalCrawlConfigReportItem : ILocalCrawlConfigurationListItem, ICrawlConfigReportItem { }
 }

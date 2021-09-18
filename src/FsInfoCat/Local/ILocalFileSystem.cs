@@ -3,9 +3,6 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.Local
 {
-    public interface ILocalFileSystemRow : ILocalDbEntity, IFileSystemRow { }
-
-    public interface ILocalFileSystemListItem : ILocalFileSystemRow, IFileSystemListItem { }
 
     /// <summary>Interface for entities which represent a specific file system type.</summary>
     /// <seealso cref="ILocalDbEntity" />

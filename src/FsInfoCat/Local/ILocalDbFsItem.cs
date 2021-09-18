@@ -3,11 +3,6 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.Local
 {
-    public interface ILocalDbFsItemRow : ILocalDbEntity, IDbFsItemRow { }
-
-    public interface ILocalDbFsItemListItem : IDbFsItemListItem, ILocalDbFsItemRow { }
-
-    public interface ILocalDbFsItemListItemWithAncestorNames : IDbFsItemListItemWithAncestorNames, ILocalDbFsItemListItem { }
 
     /// <summary>Base interface for a database entity that represents a file system node on the local host machine.</summary>
     /// <seealso cref="ILocalDbEntity" />

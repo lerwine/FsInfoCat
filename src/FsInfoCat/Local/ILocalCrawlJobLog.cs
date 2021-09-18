@@ -2,7 +2,6 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.Local
 {
-    public interface ILocalCrawlJobLogRow : ICrawlJobLogRow, ILocalDbEntity { }
 
     /// <summary>Log of crawl job results.</summary>
     /// <seealso cref="ILocalDbEntity" />
@@ -14,6 +13,4 @@ namespace FsInfoCat.Local
         [Display(Name = nameof(Properties.Resources.DisplayName_Configuration), ResourceType = typeof(Properties.Resources))]
         new ILocalCrawlConfiguration Configuration { get; }
     }
-
-    public interface ILocalCrawlJobListItem : ILocalCrawlJobLogRow, ICrawlJobListItem { }
 }
