@@ -1,0 +1,29 @@
+<Page
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:FsInfoCat.Desktop.LocalData.CrawlConfigurations"
+      xmlns:Scheduled="clr-namespace:FsInfoCat.Desktop.ViewModel.Filter.Scheduled" x:Class="FsInfoCat.Desktop.LocalData.CrawlConfigurations.CrawlStatusReportPage"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="Crawl Status Report">
+    <Page.DataContext>
+        <local:CrawlStateReportViewModel>
+            <local:CrawlStateReportViewModel.ReportOptions>
+                <local:ReportItemFilter DisplayText="Recent and Upcomin"/>
+                <local:ReportItemFilter DisplayText="Crawls Due">
+                    <local:ReportItemFilter.NextCrawlStart>
+                        <Scheduled:Range>
+                            <Scheduled:Range.End>
+                                <Scheduled:Relative Days="1"/>
+                            </Scheduled:Range.End>
+                        </Scheduled:Range>
+                    </local:ReportItemFilter.NextCrawlStart>
+                </local:ReportItemFilter>
+            </local:CrawlStateReportViewModel.ReportOptions>
+        </local:CrawlStateReportViewModel>
+    </Page.DataContext>
+
+    <Grid/>
+</Page>

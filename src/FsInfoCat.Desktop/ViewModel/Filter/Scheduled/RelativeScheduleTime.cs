@@ -26,7 +26,7 @@ namespace FsInfoCat.Desktop.ViewModel.Filter.Scheduled
         public static readonly DependencyProperty DaysProperty = DependencyPropertyBuilder<RelativeScheduleTime, int>
             .Register(nameof(Days))
             .DefaultValue(0)
-            .OnChanged((d, oldValue, newValue) => (d as RelativeScheduleTime)?.OnDaysPropertyChanged(oldValue, newValue))
+            .OnChanged((d, oldValue, newValue) => (d as RelativeScheduleTime)?.OnDaysPropertyChanged(newValue))
             .AsReadWrite();
 
         public int Days { get => (int)GetValue(DaysProperty); set => SetValue(DaysProperty, value); }
@@ -34,9 +34,8 @@ namespace FsInfoCat.Desktop.ViewModel.Filter.Scheduled
         /// <summary>
         /// Called when the value of the <see cref="Days"/> dependency property has changed.
         /// </summary>
-        /// <param name="oldValue">The previous value of the <see cref="Days"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Days"/> property.</param>
-        protected virtual void OnDaysPropertyChanged(int oldValue, int newValue)
+        protected virtual void OnDaysPropertyChanged(int newValue)
         {
             if (newValue < 0)
                 ErrorInfo.SetError($"{nameof(Days)} cannot be negative.", nameof(Days));

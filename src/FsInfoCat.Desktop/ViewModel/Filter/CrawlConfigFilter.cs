@@ -1,10 +1,15 @@
+using FsInfoCat.Local;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Linq.Expressions;
+using LinqExpression = System.Linq.Expressions.Expression;
 using System.Windows;
+
 
 namespace FsInfoCat.Desktop.ViewModel.Filter
 {
@@ -200,6 +205,66 @@ namespace FsInfoCat.Desktop.ViewModel.Filter
             _errorInfo.ErrorsChanged += ErrorInfo_ErrorsChanged;
         }
 
+        record RangeValue<T>(T Value, bool IsExclusive);
+        record RangePair<T>(RangeValue<T> Start, RangeValue<T> End, bool IncludeNull);
+
+        internal BinaryExpression CreateExpression(ParameterExpression parameterExpression)
+        {
+            VerifyAccess();
+            BinaryExpression binaryExpression = CrawlEnd?.GetExpression<CrawlConfigReportItem>(LinqExpression.Property(parameterExpression, nameof(CrawlConfigReportItem.LastCrawlEnd)));
+            BinaryExpression expr = NextCrawlStart?.GetExpression<CrawlConfigReportItem>(LinqExpression.Property(parameterExpression, nameof(CrawlConfigReportItem.NextScheduledStart)));
+            if (expr is not null)
+                binaryExpression = (binaryExpression is null) ? expr : LinqExpression.AndAlso(binaryExpression, expr);
+            if ((expr = AverageDuration?.GetExpression<CrawlConfigReportItem>(LinqExpression.Property(parameterExpression, nameof(CrawlConfigReportItem.AverageDuration)))) is not null)
+                binaryExpression = (binaryExpression is null) ? expr : LinqExpression.AndAlso(binaryExpression, expr);
+            if ((expr = MaxDuration?.GetExpression<CrawlConfigReportItem>(LinqExpression.Property(parameterExpression, nameof(CrawlConfigReportItem.MaxDuration)))) is not null)
+                binaryExpression = (binaryExpression is null) ? expr : LinqExpression.AndAlso(binaryExpression, expr);
+            bool? b = AnySucceeded;
+            if (b.HasValue)
+            {
+                expr = b.Value ? LinqExpression.GreaterThan(LinqExpression.Property(parameterExpression, nameof(CrawlConfigReportItem.SucceededCount)),
+                    LinqExpression.Constant(0)) :
+                    LinqExpression.Equal(LinqExpression.Property(parameterExpression, nameof(CrawlConfigReportItem.SucceededCount)),
+                    LinqExpression.Constant(0));
+                binaryExpression = (binaryExpression is null) ? expr : LinqExpression.AndAlso(binaryExpression, expr);
+            }
+            if ((b = AnyReachedItemLimit).HasValue)
+            {
+                expr = b.Value ? LinqExpression.GreaterThan(LinqExpression.Property(parameterExpression, nameof(CrawlConfigReportItem.ItemLimitReachedCount)),
+                    LinqExpression.Constant(0)) :
+                    LinqExpression.Equal(LinqExpression.Property(parameterExpression, nameof(CrawlConfigReportItem.ItemLimitReachedCount)),
+                    LinqExpression.Constant(0));
+                binaryExpression = (binaryExpression is null) ? expr : LinqExpression.AndAlso(binaryExpression, expr);
+            }
+            if ((b = AnyTimedOut).HasValue)
+            {
+                expr = b.Value ? LinqExpression.GreaterThan(LinqExpression.Property(parameterExpression, nameof(CrawlConfigReportItem.TimedOutCount)),
+                    LinqExpression.Constant(0)) :
+                    LinqExpression.Equal(LinqExpression.Property(parameterExpression, nameof(CrawlConfigReportItem.TimedOutCount)),
+                    LinqExpression.Constant(0));
+                binaryExpression = (binaryExpression is null) ? expr : LinqExpression.AndAlso(binaryExpression, expr);
+            }
+            if ((b = HasCancel).HasValue)
+            {
+                expr = b.Value ? LinqExpression.GreaterThan(LinqExpression.Property(parameterExpression, nameof(CrawlConfigReportItem.CanceledCount)),
+                    LinqExpression.Constant(0)) :
+                    LinqExpression.Equal(LinqExpression.Property(parameterExpression, nameof(CrawlConfigReportItem.CanceledCount)),
+                    LinqExpression.Constant(0));
+                binaryExpression = (binaryExpression is null) ? expr : LinqExpression.AndAlso(binaryExpression, expr);
+            }
+            if ((b = HasFail).HasValue)
+            {
+                expr = b.Value ? LinqExpression.GreaterThan(LinqExpression.Property(parameterExpression, nameof(CrawlConfigReportItem.FailedCount)),
+                    LinqExpression.Constant(0)) :
+                    LinqExpression.Equal(LinqExpression.Property(parameterExpression, nameof(CrawlConfigReportItem.FailedCount)),
+                    LinqExpression.Constant(0));
+                binaryExpression = (binaryExpression is null) ? expr : LinqExpression.AndAlso(binaryExpression, expr);
+            }
+
+            expr = Status?.Distinct().Select(s => LinqExpression.Equal(LinqExpression.Property(parameterExpression, nameof(CrawlConfigReportItem.StatusValue)), LinqExpression.Constant(s))).Aggregate(LinqExpression.OrElse);
+            return (expr is null) ? binaryExpression : (binaryExpression is null) ? expr : LinqExpression.AndAlso(binaryExpression, expr);
+        }
+
         internal static bool AreSame(CrawlConfigFilter x, CrawlConfigFilter y)
         {
             if (x is null)
@@ -222,7 +287,7 @@ namespace FsInfoCat.Desktop.ViewModel.Filter
             IEnumerable<CrawlStatus> crawlStatus;
             DurationRange dr;
             bool? b;
-            return (crawlEnd is null || crawlEnd.IsValid(item.LastCrawlEnd)) && (nextStart is null || nextStart.IsValid(item.NextScheduledStart)) &&
+            return (crawlEnd is null || crawlEnd.IsInRange(item.LastCrawlEnd)) && (nextStart is null || nextStart.IsInRange(item.NextScheduledStart)) &&
                 (!(crawlStatus = Status ?? Enumerable.Empty<CrawlStatus>()).Any() || crawlStatus.Contains(item.StatusValue)) && ((dr = AverageDuration) is null || dr.IsInRange(item.AverageDuration)) &&
                 ((dr = MaxDuration) is null || dr.IsInRange(item.MaxDuration)) && (!(b = HasCancel).HasValue || b.Value == item.CanceledCount > 0) && (!(b = HasFail).HasValue || b.Value == item.FailedCount > 0) &&
                 (!(b = AnyReachedItemLimit).HasValue || b.Value == item.ItemLimitReachedCount > 0) && (!(b = AnySucceeded).HasValue || b.Value == item.SucceededCount > 0) &&

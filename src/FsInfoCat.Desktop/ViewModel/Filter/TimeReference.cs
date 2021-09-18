@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.ComponentModel;
+using System.Linq.Expressions;
 using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel.Filter
@@ -11,6 +12,19 @@ namespace FsInfoCat.Desktop.ViewModel.Filter
 
         protected DataErrorInfo ErrorInfo { get; }
 
+        #region IsExclusive Property Members
+
+        /// <summary>
+        /// Identifies the <see cref="IsExclusive"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty IsExclusiveProperty = DependencyPropertyBuilder<TimeReference, bool>
+            .Register(nameof(IsExclusive))
+            .DefaultValue(false)
+            .AsReadWrite();
+
+        public bool IsExclusive { get => (bool)GetValue(IsExclusiveProperty); set => SetValue(IsExclusiveProperty, value); }
+
+        #endregion
         #region IncludeNull Property Members
 
         /// <summary>
@@ -24,7 +38,6 @@ namespace FsInfoCat.Desktop.ViewModel.Filter
         public bool IncludeNull { get => (bool)GetValue(IncludeNullProperty); set => SetValue(IncludeNullProperty, value); }
 
         #endregion
-
         #region HasErrors Property Members
 
         /// <summary>

@@ -10,6 +10,8 @@ using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
+using LinqExpression = System.Linq.Expressions.Expression;
 using System.Security;
 using System.Threading;
 using System.Threading.Tasks;
@@ -326,6 +328,7 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
             using IServiceScope serviceScope = Services.CreateScope();
             using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             Guid id = item.Entity.Id;
+            dbContext.CrawlConfigReport.Where(e => e.RootId == id);
             CrawlConfiguration fs = await dbContext.CrawlConfigurations.FirstOrDefaultAsync(f => f.Id == id, statusListener.CancellationToken);
             if (fs is null)
             {
@@ -481,7 +484,21 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
 
         protected override IQueryable<CrawlConfigReportItem> GetQueryableListing(ReportItemFilter options, [DisallowNull] LocalDbContext dbContext, [DisallowNull] IWindowsStatusListener statusListener)
         {
-            throw new NotImplementedException();
+            statusListener.SetMessage("Reading report input data from database");
+            ParameterExpression parameterExpression = LinqExpression.Parameter(typeof(CrawlConfigReportItem), "entity");
+            BinaryExpression binaryExpression = Dispatcher.CheckInvoke(() =>
+            {
+                if (options is null)
+                {
+                    statusListener.Logger.LogWarning("No report item filter was selected. Returning all items");
+                    return null;
+                }
+                return options.CreateExpression(parameterExpression);
+            });
+            if (binaryExpression is null)
+                return dbContext.CrawlConfigReport;
+            Expression<Func<CrawlConfigReportItem, bool>> expression = LinqExpression.Lambda<Func<CrawlConfigReportItem, bool>>(binaryExpression, parameterExpression);
+            return dbContext.CrawlConfigReport.Where(expression);
         }
 
         protected override void OnApplyFilterOptionsCommand(object parameter) => ReloadAsync(SelectedReportOption);

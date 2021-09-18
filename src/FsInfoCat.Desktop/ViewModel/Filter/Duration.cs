@@ -16,6 +16,19 @@ namespace FsInfoCat.Desktop.ViewModel.Filter
 
         public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
 
+        #region IsExclusive Property Members
+
+        /// <summary>
+        /// Identifies the <see cref="IsExclusive"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty IsExclusiveProperty = DependencyPropertyBuilder<Duration, bool>
+            .Register(nameof(IsExclusive))
+            .DefaultValue(false)
+            .AsReadWrite();
+
+        public bool IsExclusive { get => (bool)GetValue(IsExclusiveProperty); set => SetValue(IsExclusiveProperty, value); }
+
+        #endregion
         #region IncludeNull Property Members
 
         /// <summary>

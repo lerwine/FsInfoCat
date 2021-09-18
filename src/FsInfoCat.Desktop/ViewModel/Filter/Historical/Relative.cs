@@ -1,4 +1,5 @@
 using System;
+using System.Linq.Expressions;
 using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel.Filter.Historical

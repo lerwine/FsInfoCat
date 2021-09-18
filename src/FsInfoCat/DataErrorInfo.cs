@@ -17,7 +17,7 @@ namespace FsInfoCat
         public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public object SyncRoot { get; }
+        public object SyncRoot { get; } = new();
 
         public bool HasErrors => _errors.Count > 0;
 

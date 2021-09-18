@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
 {
     /// <summary>
-    /// Interaction logic for CrawlStateReportControl.xaml
+    /// Interaction logic for CrawlStatusReportPage.xaml
     /// </summary>
-    public partial class CrawlStateReportControl : UserControl
+    public partial class CrawlStatusReportPage : Page
     {
-        public CrawlStateReportControl()
+        public CrawlStatusReportPage()
         {
             InitializeComponent();
         }
