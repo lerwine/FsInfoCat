@@ -2,9 +2,7 @@ using FsInfoCat.Local;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Linq.Expressions;
 using LinqExpression = System.Linq.Expressions.Expression;
@@ -77,12 +75,12 @@ namespace FsInfoCat.Desktop.ViewModel.Filter
         /// <summary>
         /// Identifies the <see cref="Status"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty StatusProperty = DependencyPropertyBuilder<CrawlConfigFilter, ObservableCollection<CrawlStatus>>
+        public static readonly DependencyProperty StatusProperty = DependencyPropertyBuilder<CrawlConfigFilter, CrawlStatusOptions>
             .Register(nameof(Status))
             .DefaultValue(null)
             .AsReadWrite();
 
-        public ObservableCollection<CrawlStatus> Status { get => (ObservableCollection<CrawlStatus>)GetValue(StatusProperty); set => SetValue(StatusProperty, value); }
+        public CrawlStatusOptions Status { get => (CrawlStatusOptions)GetValue(StatusProperty); set => SetValue(StatusProperty, value); }
 
         #endregion
         #region AverageDuration Property Members
@@ -261,8 +259,7 @@ namespace FsInfoCat.Desktop.ViewModel.Filter
                 binaryExpression = (binaryExpression is null) ? expr : LinqExpression.AndAlso(binaryExpression, expr);
             }
 
-            expr = Status?.Distinct().Select(s => LinqExpression.Equal(LinqExpression.Property(parameterExpression, nameof(CrawlConfigReportItem.StatusValue)), LinqExpression.Constant(s))).Aggregate(LinqExpression.OrElse);
-            return (expr is null) ? binaryExpression : (binaryExpression is null) ? expr : LinqExpression.AndAlso(binaryExpression, expr);
+            return ((expr = Status?.CreateExpression(parameterExpression)) is null) ? binaryExpression : (binaryExpression is null) ? expr : LinqExpression.AndAlso(binaryExpression, expr);
         }
 
         internal static bool AreSame(CrawlConfigFilter x, CrawlConfigFilter y)
@@ -274,8 +271,7 @@ namespace FsInfoCat.Desktop.ViewModel.Filter
             if (ReferenceEquals(x, y))
                 return true;
             return Historical.Range.AreSame(x.CrawlEnd, y.CrawlEnd) && Scheduled.Range.AreSame(x.NextCrawlStart, y.NextCrawlStart) && DurationRange.AreSame(x.AverageDuration, y.AverageDuration) && DurationRange.AreSame(x.MaxDuration, y.MaxDuration) &&
-                x.HasCancel == y.HasCancel && x.HasFail == y.HasFail && x.AnyReachedItemLimit == y.AnyReachedItemLimit & x.AnySucceeded == y.AnySucceeded && x.AnyTimedOut == y.AnyTimedOut &&
-                (x.Status?.Distinct().OrderBy(e => e) ?? Enumerable.Empty<CrawlStatus>()).SequenceEqual(y.Status?.Distinct().OrderBy(e => e) ?? Enumerable.Empty<CrawlStatus>());
+                x.HasCancel == y.HasCancel && x.HasFail == y.HasFail && x.AnyReachedItemLimit == y.AnyReachedItemLimit & x.AnySucceeded == y.AnySucceeded && x.AnyTimedOut == y.AnyTimedOut && CrawlStatusOptions.AreSame(x.Status, y.Status);
         }
 
         public bool IsMatch(ICrawlConfigReportItem item)
@@ -284,11 +280,11 @@ namespace FsInfoCat.Desktop.ViewModel.Filter
                 return false;
             Historical.Range crawlEnd = CrawlEnd;
             Scheduled.Range nextStart = NextCrawlStart;
-            IEnumerable<CrawlStatus> crawlStatus;
+            CrawlStatusOptions crawlStatus;
             DurationRange dr;
             bool? b;
             return (crawlEnd is null || crawlEnd.IsInRange(item.LastCrawlEnd)) && (nextStart is null || nextStart.IsInRange(item.NextScheduledStart)) &&
-                (!(crawlStatus = Status ?? Enumerable.Empty<CrawlStatus>()).Any() || crawlStatus.Contains(item.StatusValue)) && ((dr = AverageDuration) is null || dr.IsInRange(item.AverageDuration)) &&
+                ((crawlStatus = Status) is null || crawlStatus.IsMatch(item.StatusValue)) && ((dr = AverageDuration) is null || dr.IsInRange(item.AverageDuration)) &&
                 ((dr = MaxDuration) is null || dr.IsInRange(item.MaxDuration)) && (!(b = HasCancel).HasValue || b.Value == item.CanceledCount > 0) && (!(b = HasFail).HasValue || b.Value == item.FailedCount > 0) &&
                 (!(b = AnyReachedItemLimit).HasValue || b.Value == item.ItemLimitReachedCount > 0) && (!(b = AnySucceeded).HasValue || b.Value == item.SucceededCount > 0) &&
                 (!(b = AnyTimedOut).HasValue || b.Value == item.TimedOutCount > 0);

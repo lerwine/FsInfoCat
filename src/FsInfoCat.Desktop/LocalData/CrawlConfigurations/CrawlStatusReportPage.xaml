@@ -4,23 +4,135 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:FsInfoCat.Desktop.LocalData.CrawlConfigurations"
-      xmlns:Scheduled="clr-namespace:FsInfoCat.Desktop.ViewModel.Filter.Scheduled" x:Class="FsInfoCat.Desktop.LocalData.CrawlConfigurations.CrawlStatusReportPage"
+      xmlns:Filter="clr-namespace:FsInfoCat.Desktop.ViewModel.Filter"
+      xmlns:Scheduled="clr-namespace:FsInfoCat.Desktop.ViewModel.Filter.Scheduled"
+      xmlns:Historical="clr-namespace:FsInfoCat.Desktop.ViewModel.Filter.Historical"
+      xmlns:FsInfoCat="clr-namespace:FsInfoCat;assembly=FsInfoCat"
+      x:Class="FsInfoCat.Desktop.LocalData.CrawlConfigurations.CrawlStatusReportPage"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="Crawl Status Report">
     <Page.DataContext>
         <local:CrawlStateReportViewModel>
             <local:CrawlStateReportViewModel.ReportOptions>
-                <local:ReportItemFilter DisplayText="Recent and Upcomin"/>
-                <local:ReportItemFilter DisplayText="Crawls Due">
+                <local:ReportItemFilter DisplayText="Recent and Upcoming">
                     <local:ReportItemFilter.NextCrawlStart>
                         <Scheduled:Range>
+                            <Scheduled:Range.Start>
+                                <Scheduled:RelativeWeek Weeks="1" IsExclusive="True"/>
+                            </Scheduled:Range.Start>
                             <Scheduled:Range.End>
-                                <Scheduled:Relative Days="1"/>
+                                <Scheduled:RelativeWeek Weeks="1" IsExclusive="True"/>
                             </Scheduled:Range.End>
                         </Scheduled:Range>
                     </local:ReportItemFilter.NextCrawlStart>
                 </local:ReportItemFilter>
+                <local:ReportItemFilter DisplayText="Crawls Due">
+                    <local:ReportItemFilter.NextCrawlStart>
+                        <Scheduled:Range>
+                            <Scheduled:Range.End>
+                                <Scheduled:Relative Days="1" IsExclusive="True"/>
+                            </Scheduled:Range.End>
+                        </Scheduled:Range>
+                    </local:ReportItemFilter.NextCrawlStart>
+                </local:ReportItemFilter>
+                <local:ReportItemFilter DisplayText="Crawls Overdue">
+                    <local:ReportItemFilter.NextCrawlStart>
+                        <Scheduled:Range>
+                            <Scheduled:Range.End>
+                                <Scheduled:Relative Days="0" IsExclusive="True"/>
+                            </Scheduled:Range.End>
+                        </Scheduled:Range>
+                    </local:ReportItemFilter.NextCrawlStart>
+                </local:ReportItemFilter>
+                <local:ReportItemFilter DisplayText="Failed, last 90 days">
+                    <local:ReportItemFilter.Status>
+                        <Filter:CrawlStatusOptions Failed="True"/>
+                    </local:ReportItemFilter.Status>
+                    <local:ReportItemFilter.CrawlEnd>
+                        <Historical:Range>
+                            <Historical:Range.End>
+                                <Historical:Relative Days="90"/>
+                            </Historical:Range.End>
+                        </Historical:Range>
+                    </local:ReportItemFilter.CrawlEnd>
+                </local:ReportItemFilter>
+                <local:ReportItemFilter DisplayText="Failed, last 30 days">
+                    <local:ReportItemFilter.Status>
+                        <Filter:CrawlStatusOptions Failed="True"/>
+                    </local:ReportItemFilter.Status>
+                    <local:ReportItemFilter.CrawlEnd>
+                        <Historical:Range>
+                            <Historical:Range.End>
+                                <Historical:Relative Days="30"/>
+                            </Historical:Range.End>
+                        </Historical:Range>
+                    </local:ReportItemFilter.CrawlEnd>
+                </local:ReportItemFilter>
+                <local:ReportItemFilter DisplayText="Incomplete, last 90 days">
+                    <local:ReportItemFilter.Status>
+                        <Filter:CrawlStatusOptions AllottedTimeElapsed="True" MaxItemCountReached="True" Canceled="True"/>
+                    </local:ReportItemFilter.Status>
+                    <local:ReportItemFilter.CrawlEnd>
+                        <Historical:Range>
+                            <Historical:Range.End>
+                                <Historical:Relative Days="90"/>
+                            </Historical:Range.End>
+                        </Historical:Range>
+                    </local:ReportItemFilter.CrawlEnd>
+                </local:ReportItemFilter>
+                <local:ReportItemFilter DisplayText="Incomplete, last 30 days">
+                    <local:ReportItemFilter.Status>
+                        <Filter:CrawlStatusOptions AllottedTimeElapsed="True" MaxItemCountReached="True" Canceled="True"/>
+                    </local:ReportItemFilter.Status>
+                    <local:ReportItemFilter.CrawlEnd>
+                        <Historical:Range>
+                            <Historical:Range.End>
+                                <Historical:Relative Days="30"/>
+                            </Historical:Range.End>
+                        </Historical:Range>
+                    </local:ReportItemFilter.CrawlEnd>
+                </local:ReportItemFilter>
+                <local:ReportItemFilter DisplayText="Completed, last 90 days">
+                    <local:ReportItemFilter.Status>
+                        <Filter:CrawlStatusOptions Completed="True"/>
+                    </local:ReportItemFilter.Status>
+                    <local:ReportItemFilter.CrawlEnd>
+                        <Historical:Range>
+                            <Historical:Range.End>
+                                <Historical:Relative Days="90"/>
+                            </Historical:Range.End>
+                        </Historical:Range>
+                    </local:ReportItemFilter.CrawlEnd>
+                </local:ReportItemFilter>
+                <local:ReportItemFilter DisplayText="Completed, last 30 days">
+                    <local:ReportItemFilter.Status>
+                        <Filter:CrawlStatusOptions Completed="True"/>
+                    </local:ReportItemFilter.Status>
+                    <local:ReportItemFilter.CrawlEnd>
+                        <Historical:Range>
+                            <Historical:Range.End>
+                                <Historical:Relative Days="30"/>
+                            </Historical:Range.End>
+                        </Historical:Range>
+                    </local:ReportItemFilter.CrawlEnd>
+                </local:ReportItemFilter>
+                <local:ReportItemFilter DisplayText="All Failed">
+                    <local:ReportItemFilter.Status>
+                        <Filter:CrawlStatusOptions Failed="True"/>
+                    </local:ReportItemFilter.Status>
+                </local:ReportItemFilter>
+                <local:ReportItemFilter DisplayText="All Incomplete">
+                    <local:ReportItemFilter.Status>
+                        <Filter:CrawlStatusOptions AllottedTimeElapsed="True" MaxItemCountReached="True" Canceled="True"/>
+                    </local:ReportItemFilter.Status>
+                </local:ReportItemFilter>
+                <local:ReportItemFilter DisplayText="All Completed">
+                    <local:ReportItemFilter.Status>
+                        <Filter:CrawlStatusOptions Completed="True"/>
+                    </local:ReportItemFilter.Status>
+                </local:ReportItemFilter>
+                <local:ReportItemFilter DisplayText="All"/>
             </local:CrawlStateReportViewModel.ReportOptions>
         </local:CrawlStateReportViewModel>
     </Page.DataContext>
