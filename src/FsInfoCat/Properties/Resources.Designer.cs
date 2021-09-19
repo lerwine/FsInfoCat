@@ -5398,6 +5398,15 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Invalid months value..
+        /// </summary>
+        public static string ErrorMessage_InvalidMonths {
+            get {
+                return ResourceManager.GetString("ErrorMessage_InvalidMonths", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to A path validation error has occurred..
         /// </summary>
         public static string ErrorMessage_InvalidPathError {
@@ -5430,6 +5439,24 @@ namespace FsInfoCat.Properties {
         public static string ErrorMessage_InvalidVolumeStatus {
             get {
                 return ResourceManager.GetString("ErrorMessage_InvalidVolumeStatus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid weeks values..
+        /// </summary>
+        public static string ErrorMessage_InvalidWeeks {
+            get {
+                return ResourceManager.GetString("ErrorMessage_InvalidWeeks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid years value..
+        /// </summary>
+        public static string ErrorMessage_InvalidYears {
+            get {
+                return ResourceManager.GetString("ErrorMessage_InvalidYears", resourceCulture);
             }
         }
         

@@ -2069,4 +2069,13 @@
   <data name="ErrorMessage_InvalidSeconds" xml:space="preserve">
     <value>Invalid seconds value.</value>
   </data>
+  <data name="ErrorMessage_InvalidMonths" xml:space="preserve">
+    <value>Invalid months value.</value>
+  </data>
+  <data name="ErrorMessage_InvalidWeeks" xml:space="preserve">
+    <value>Invalid weeks values.</value>
+  </data>
+  <data name="ErrorMessage_InvalidYears" xml:space="preserve">
+    <value>Invalid years value.</value>
+  </data>
 </root>
