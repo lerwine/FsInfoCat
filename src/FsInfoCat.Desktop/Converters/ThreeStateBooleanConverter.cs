@@ -1,4 +1,4 @@
-﻿using FsInfoCat.Desktop.ViewModel;
+using FsInfoCat.Desktop.ViewModel;
 using System;
 using System.Globalization;
 using System.Windows;
@@ -22,8 +22,10 @@ namespace FsInfoCat.Desktop.Converters
         /// <summary>
         /// Identifies the <see cref="NullSource"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty NullSourceProperty = DependencyProperty.Register(DependencyPropertyName_NullSource, typeof(bool?),
-            typeof(InverseBooleanConverter), new PropertyMetadata(false));
+        public static readonly DependencyProperty NullSourceProperty = DependencyPropertyBuilder<ThreeStateBooleanConverter, bool?>
+            .Register(nameof(NullSource))
+            .DefaultValue(false)
+            .AsReadWrite();
 
         /// <summary>
         /// <see cref="Nullable{TTarget}"/> value to represent a null source value.
