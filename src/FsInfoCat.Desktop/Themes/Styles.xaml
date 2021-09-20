@@ -347,45 +347,119 @@
         <Setter Property="Width" Value="{DynamicResource LargeFontSize}" />
     </Style>
     <Style x:Key="EditButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
+        <Style.Triggers>
+            <Trigger Property="IsEnabled" Value="false">
+                <Setter Property="Background" Value="{StaticResource Button.Disabled.Background}" />
+                <Setter Property="BorderBrush" Value="{StaticResource Button.Disabled.Border}" />
+                <Setter Property="ContentTemplate" Value="{StaticResource EditDisabledImageContentTemplate}" />
+            </Trigger>
+        </Style.Triggers>
         <Setter Property="ContentTemplate" Value="{DynamicResource EditImageContentTemplate}" />
     </Style>
     <Style x:Key="DeleteButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
+        <Style.Triggers>
+            <Trigger Property="IsEnabled" Value="false">
+                <Setter Property="Background" Value="{StaticResource Button.Disabled.Background}" />
+                <Setter Property="BorderBrush" Value="{StaticResource Button.Disabled.Border}" />
+                <Setter Property="ContentTemplate" Value="{StaticResource DeleteDisabledImageContentTemplate}" />
+            </Trigger>
+        </Style.Triggers>
         <Setter Property="ContentTemplate" Value="{DynamicResource DeleteImageContentTemplate}" />
     </Style>
     <Style x:Key="ActivateButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
+        <Style.Triggers>
+            <Trigger Property="IsEnabled" Value="false">
+                <Setter Property="Background" Value="{StaticResource Button.Disabled.Background}" />
+                <Setter Property="BorderBrush" Value="{StaticResource Button.Disabled.Border}" />
+                <Setter Property="ContentTemplate" Value="{StaticResource ActivateDisabledImageContentTemplate}" />
+            </Trigger>
+        </Style.Triggers>
         <Setter Property="ContentTemplate" Value="{DynamicResource ActivateImageContentTemplate}" />
     </Style>
     <Style x:Key="DeactivateButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
+        <Style.Triggers>
+            <Trigger Property="IsEnabled" Value="false">
+                <Setter Property="Background" Value="{StaticResource Button.Disabled.Background}" />
+                <Setter Property="BorderBrush" Value="{StaticResource Button.Disabled.Border}" />
+                <Setter Property="ContentTemplate" Value="{StaticResource DeactivateDisabledImageContentTemplate}" />
+            </Trigger>
+        </Style.Triggers>
         <Setter Property="ContentTemplate" Value="{DynamicResource DeactivateImageContentTemplate}" />
     </Style>
     <Style x:Key="AddNewButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
+        <Style.Triggers>
+            <Trigger Property="IsEnabled" Value="false">
+                <Setter Property="Background" Value="{StaticResource Button.Disabled.Background}" />
+                <Setter Property="BorderBrush" Value="{StaticResource Button.Disabled.Border}" />
+                <Setter Property="ContentTemplate" Value="{StaticResource AddNewDisabledImageContentTemplate}" />
+            </Trigger>
+        </Style.Triggers>
         <Setter Property="ContentTemplate" Value="{DynamicResource AddNewImageContentTemplate}" />
     </Style>
     <Style x:Key="OpenButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
+        <Style.Triggers>
+            <Trigger Property="IsEnabled" Value="false">
+                <Setter Property="Background" Value="{StaticResource Button.Disabled.Background}" />
+                <Setter Property="BorderBrush" Value="{StaticResource Button.Disabled.Border}" />
+                <Setter Property="ContentTemplate" Value="{StaticResource OpenDisabledImageContentTemplate}" />
+            </Trigger>
+        </Style.Triggers>
         <Setter Property="ContentTemplate" Value="{DynamicResource OpenImageContentTemplate}" />
     </Style>
     <Style x:Key="OpenListingButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
+        <Style.Triggers>
+            <Trigger Property="IsEnabled" Value="false">
+                <Setter Property="Background" Value="{StaticResource Button.Disabled.Background}" />
+                <Setter Property="BorderBrush" Value="{StaticResource Button.Disabled.Border}" />
+                <Setter Property="ContentTemplate" Value="{StaticResource OpenListingDisabledImageContentTemplate}" />
+            </Trigger>
+        </Style.Triggers>
         <Setter Property="ContentTemplate" Value="{DynamicResource OpenListingImageContentTemplate}" />
     </Style>
     <Style x:Key="SyncButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
+        <Style.Triggers>
+            <Trigger Property="IsEnabled" Value="false">
+                <Setter Property="Background" Value="{StaticResource Button.Disabled.Background}" />
+                <Setter Property="BorderBrush" Value="{StaticResource Button.Disabled.Border}" />
+                <Setter Property="ContentTemplate" Value="{StaticResource SyncDisabledImageContentTemplate}" />
+            </Trigger>
+        </Style.Triggers>
         <Setter Property="ContentTemplate" Value="{DynamicResource SyncImageContentTemplate}" />
-    </Style>
-    <Style x:Key="SyncDisabledButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
-        <Setter Property="ContentTemplate" Value="{DynamicResource SyncDisabledImageContentTemplate}" />
     </Style>
     <Style x:Key="FilterButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
         <Setter Property="ContentTemplate" Value="{DynamicResource FilterImageContentTemplate}" />
     </Style>
     <Style x:Key="StartButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
+        <Style.Triggers>
+            <Trigger Property="IsEnabled" Value="false">
+                <Setter Property="Background" Value="{StaticResource Button.Disabled.Background}" />
+                <Setter Property="BorderBrush" Value="{StaticResource Button.Disabled.Border}" />
+                <Setter Property="ContentTemplate" Value="{StaticResource StartDisabledImageContentTemplate}" />
+            </Trigger>
+        </Style.Triggers>
         <Setter Property="ContentTemplate" Value="{DynamicResource StartImageContentTemplate}" />
     </Style>
     <Style x:Key="StopButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
+        <Style.Triggers>
+            <Trigger Property="IsEnabled" Value="false">
+                <Setter Property="Background" Value="{StaticResource Button.Disabled.Background}" />
+                <Setter Property="BorderBrush" Value="{StaticResource Button.Disabled.Border}" />
+                <Setter Property="ContentTemplate" Value="{StaticResource StopDisabledImageContentTemplate}" />
+            </Trigger>
+        </Style.Triggers>
         <Setter Property="ContentTemplate" Value="{DynamicResource StopImageContentTemplate}" />
     </Style>
     <Style x:Key="LogButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
         <Setter Property="ContentTemplate" Value="{DynamicResource LogImageContentTemplate}" />
     </Style>
     <Style x:Key="AcceptButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">
+        <Style.Triggers>
+            <Trigger Property="IsEnabled" Value="false">
+                <Setter Property="Background" Value="{StaticResource Button.Disabled.Background}" />
+                <Setter Property="BorderBrush" Value="{StaticResource Button.Disabled.Border}" />
+                <Setter Property="ContentTemplate" Value="{StaticResource AcceptDisabledImageContentTemplate}" />
+            </Trigger>
+        </Style.Triggers>
         <Setter Property="ContentTemplate" Value="{DynamicResource AcceptImageContentTemplate}" />
     </Style>
     <Style x:Key="CancelButton" TargetType="{x:Type Button}" BasedOn="{StaticResource CommandButton}">

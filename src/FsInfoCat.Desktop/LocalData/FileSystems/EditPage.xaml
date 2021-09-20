@@ -47,7 +47,7 @@
         <TextBox Grid.Row="3" Grid.Column="1" Style="{DynamicResource ReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingRight}" Text="{Binding ModifiedOn, Mode=OneWay}"/>
         <Label Content="Last Synchronized" Grid.Row="2" Grid.Column="2" Padding="{DynamicResource DefaultSpacingTopRight}" FontWeight="Bold" Grid.ColumnSpan="5"/>
         <TextBox Grid.Row="3" Grid.ColumnSpan="4" Grid.Column="2" Style="{DynamicResource ReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingRight}" Text="{Binding LastSynchronizedOn, Mode=OneWay}"/>
-        <Button Grid.Column="6" Grid.Row="3" Style="{DynamicResource SyncDisabledButton}" ToolTip="Synchronization disabled - no remote connection configured." Margin="{DynamicResource DefaultSpacingRight}"/>
+        <Button Grid.Column="6" Grid.Row="3" Style="{DynamicResource SyncButton}" ToolTip="Synchronization disabled - no remote connection configured." Margin="{DynamicResource DefaultSpacingRight}"/>
         <Label Grid.Row="4" Content="Notes" Grid.ColumnSpan="7" Padding="{DynamicResource DefaultSpacingTopLeftRight}" FontWeight="Bold"/>
         <TextBox Grid.Row="5" Grid.ColumnSpan="7" Style="{DynamicResource MultiLineTextBox}" Margin="{DynamicResource DefaultSpacingBottomLeftRight}" Text="{Binding Notes}"/>
     </Grid>
