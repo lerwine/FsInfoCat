@@ -22,6 +22,13 @@ namespace FsInfoCat.Desktop.ViewModel.Filter
 
         public ObservableCollection<Filter<TEntity>> Filters { get => (ObservableCollection<Filter<TEntity>>)GetValue(FiltersProperty); set => SetValue(FiltersProperty, value); }
 
+        #endregion
+
+        protected OrFilter()
+        {
+            Filters = new();
+        }
+
         public override BinaryExpression CreateExpression([DisallowNull] ParameterExpression parameterExpression)
         {
             ObservableCollection<Filter<TEntity>> filters = Filters;
@@ -32,13 +39,6 @@ namespace FsInfoCat.Desktop.ViewModel.Filter
         {
             ObservableCollection<Filter<TEntity>> filters = Filters;
             return filters is not null && filters.All(f => f is null || f.IsMatch(entity));
-        }
-
-        #endregion
-
-        protected OrFilter()
-        {
-            Filters = new();
         }
     }
 }

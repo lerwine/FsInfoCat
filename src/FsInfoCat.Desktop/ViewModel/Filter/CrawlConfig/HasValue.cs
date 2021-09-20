@@ -6,9 +6,6 @@ using LinqExpression = System.Linq.Expressions.Expression;
 
 namespace FsInfoCat.Desktop.ViewModel.Filter.CrawlConfig
 {
-    public sealed class And : AndFilter<CrawlConfigReportItem> { }
-
-    public sealed class Or : OrFilter<CrawlConfigReportItem> { }
 
     public sealed class HasValue : Filter<CrawlConfigReportItem>
     {

@@ -13,6 +13,7 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
         internal class Job : IBackgroundJob
         {
             private readonly object _syncRoot = new();
+            private readonly Task _task;
             private readonly CancellationTokenSource _tokenSource = new();
             private readonly BackgroundJobVM _viewModel;
             private readonly Stopwatch _stopwatch;
@@ -21,7 +22,14 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
 
             public AsyncJobStatus JobStatus { get; private set; } = AsyncJobStatus.WaitingToRun;
 
-            public Task Task { get; }
+            public Task Task
+            {
+                get
+                {
+                    lock (_syncRoot)
+                        return _task;
+                }
+            }
 
             public bool IsCancellationRequested => _tokenSource.IsCancellationRequested;
 
@@ -53,9 +61,12 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
                 viewModel.CancelInvoked += ViewModel_CancelInvoked;
                 StatusListener statusListener = new(viewModel, ConcurrencyId, viewModel._logger, _tokenSource.Token);
                 IDisposable loggerScope = viewModel._logger.BeginScope(ConcurrencyId);
-                Task = createTask(statusListener, this);
-                _stopwatch = new Stopwatch();
-                _stopwatch.Start();
+                lock (_syncRoot)
+                {
+                    _task = createTask(statusListener, this);
+                    _stopwatch = new Stopwatch();
+                    _stopwatch.Start();
+                }
                 Timer timer = new(TimerTick, null, 1000, 1000);
                 _ = Task.ContinueWith(t =>
                   {

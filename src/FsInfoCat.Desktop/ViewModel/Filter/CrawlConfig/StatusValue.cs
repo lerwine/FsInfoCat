@@ -35,8 +35,8 @@ namespace FsInfoCat.Desktop.ViewModel.Filter.CrawlConfig
 
         #endregion
         public override BinaryExpression CreateExpression([DisallowNull] ParameterExpression parameterExpression) => (Operator == ValueEqualityOperator.EqualTo) ?
-            LinqExpression.Equal(LinqExpression.Property(parameterExpression, nameof(ICrawlConfigReportItem.StatusValue)), parameterExpression) :
-            LinqExpression.NotEqual(LinqExpression.Property(parameterExpression, nameof(ICrawlConfigReportItem.StatusValue)), parameterExpression);
+            LinqExpression.Equal(LinqExpression.Property(parameterExpression, nameof(ICrawlConfigReportItem.StatusValue)), LinqExpression.Constant(Value)) :
+            LinqExpression.NotEqual(LinqExpression.Property(parameterExpression, nameof(ICrawlConfigReportItem.StatusValue)), LinqExpression.Constant(Value));
 
         public override bool IsMatch(CrawlConfigReportItem crawlConfiguration) => crawlConfiguration is not null && crawlConfiguration.StatusValue == Value;
     }

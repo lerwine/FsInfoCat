@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
@@ -20,9 +21,9 @@ using LinqExpression = System.Linq.Expressions.Expression;
 
 namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
 {
-    public class CrawlStateReportViewModel : ListingViewModel<CrawlConfigReportItem, ReportItemViewModel, ViewModel.Filter.Filter<CrawlConfigReportItem>>, INavigatedToNotifiable
+    public class CrawlStateReportViewModel : ListingViewModel<CrawlConfigReportItem, ReportItemViewModel, ViewModel.Filter.Filter<CrawlConfigReportItem>>//, INavigatedToNotifiable
     {
-        private ViewModel.Filter.Filter<CrawlConfigReportItem> _currentReportOption;
+        //private ViewModel.Filter.Filter<CrawlConfigReportItem> _currentReportOption;
 
         #region Owner Attached Property Members
 
@@ -80,10 +81,9 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
 
         private void OnIsSelectedPropertyChanged(ViewModel.Filter.Filter<CrawlConfigReportItem> item, bool newValue)
         {
+            _logger.LogDebug("Invoked {MethodName}(item: {item}, newValue: {newValue})", nameof(OnIsSelectedPropertyChanged), item, newValue);
             if (newValue)
-                SelectedReportOption = item;
-            else if (ReferenceEquals(item, SelectedReportOption))
-                SelectedReportOption = ReportOptions.FirstOrDefault(i => i is not null && !ReferenceEquals(i, item));
+                SelectedReportIndex = ReportOptions.IndexOf(item);
         }
 
         #endregion
@@ -141,6 +141,7 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
             .OnChanged((d, oldValue, newValue) => (d as CrawlStateReportViewModel)?.OnReportOptionsPropertyChanged(oldValue, newValue))
             .CoerseWith((d, baseValue) => (baseValue as ObservableCollection<ViewModel.Filter.Filter<CrawlConfigReportItem>>) ?? new())
             .AsReadWrite();
+        private readonly ILogger<CrawlStateReportViewModel> _logger;
 
         public ObservableCollection<ViewModel.Filter.Filter<CrawlConfigReportItem>> ReportOptions { get => (ObservableCollection<ViewModel.Filter.Filter<CrawlConfigReportItem>>)GetValue(ReportOptionsProperty); set => SetValue(ReportOptionsProperty, value); }
 
@@ -151,7 +152,8 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
         /// <param name="newValue">The new value of the <see cref="ReportOptions"/> property.</param>
         protected virtual void OnReportOptionsPropertyChanged(ObservableCollection<ViewModel.Filter.Filter<CrawlConfigReportItem>> oldValue, ObservableCollection<ViewModel.Filter.Filter<CrawlConfigReportItem>> newValue)
         {
-            ViewModel.Filter.Filter<CrawlConfigReportItem> oldOption = _currentReportOption ?? SelectedReportOption;
+            _logger.LogDebug("Invoked {MethodName}(oldValue: {oldValue}, newValue: {newValue})", nameof(OnReportOptionsPropertyChanged), oldValue, newValue);
+            //ViewModel.Filter.Filter<CrawlConfigReportItem> oldOption = _currentReportOption ?? SelectedReportOption;
             foreach (ViewModel.Filter.Filter<CrawlConfigReportItem> item in _distinctItems)
             {
                 if (ReferenceEquals(this, GetOwner(item)))
@@ -159,52 +161,62 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
             }
             _distinctItems.Clear();
             if (oldValue is not null)
-            {
                 oldValue.CollectionChanged -= ReportOptions_CollectionChanged;
-                foreach (ViewModel.Filter.Filter<CrawlConfigReportItem> item in oldValue.Where(i => i is not null))
+            if (newValue is not null)
+            {
+                newValue.CollectionChanged += ReportOptions_CollectionChanged;
+                foreach (ViewModel.Filter.Filter<CrawlConfigReportItem> item in newValue.Where(i => i is not null && _distinctItems.Add(i)))
+                    SetOwner(item, this);
+                if (_distinctItems.Count > 0)
                 {
-                    if (ReferenceEquals(GetOwner(item), this))
-                        SetOwner(item, null);
+                    IEnumerable<ViewModel.Filter.Filter<CrawlConfigReportItem>> distinctItems = _distinctItems.Reverse().SkipWhile(i => !GetIsSelected(i));
+                    ViewModel.Filter.Filter<CrawlConfigReportItem> newOption = distinctItems.FirstOrDefault();
+                    if (newOption is not null)
+                    {
+                        foreach (ViewModel.Filter.Filter<CrawlConfigReportItem> item in distinctItems.Skip(1).Where(i => GetIsSelected(i)).ToArray())
+                            SetIsSelected(item, false);
+                    }
+                    else
+                        newOption = _distinctItems.FirstOrDefault();
+                    int index = ReportOptions.IndexOf(newOption);
+                    if (index == SelectedReportIndex)
+                        ReloadAsync(newOption);
+                    else
+                    {
+                        _logger.LogDebug("Changing {PropertyName} from {oldValue} to {newValue}", nameof(OnReportOptionsPropertyChanged), SelectedReportIndex, index);
+                        SelectedReportIndex = index;
+                    }
+                    return;
                 }
             }
-            foreach (ViewModel.Filter.Filter<CrawlConfigReportItem> item in newValue.Where(i => i is not null))
+            if (SelectedReportIndex != -1)
+                SelectedReportIndex = -1;
+            else
             {
-                if (_distinctItems.Add(item) && !ReferenceEquals(GetOwner(item), this))
-                    SetOwner(item, this);
+                ClearItems();
+                SelectedReportOption = null;
             }
-            IEnumerable<ViewModel.Filter.Filter<CrawlConfigReportItem>> enumerator = _distinctItems.Reverse().SkipWhile(i => !GetIsSelected(i));
-            ViewModel.Filter.Filter<CrawlConfigReportItem> newOption = enumerator.FirstOrDefault();
-            foreach (ViewModel.Filter.Filter<CrawlConfigReportItem> item in enumerator.Skip(1).ToArray())
-                SetIsSelected(item, false);
-            _currentReportOption = (newOption is null) ? _distinctItems.FirstOrDefault() : newOption;
-            SelectedReportOption = _currentReportOption;
-            newValue.CollectionChanged += ReportOptions_CollectionChanged;
-            if ((oldOption is null) ? _currentReportOption is not null : !ReferenceEquals(oldOption, _currentReportOption))
-                ReloadAsync(_currentReportOption);
         }
 
         private void ReportOptions_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
+            _logger.LogDebug("Invoked {MethodName}(sender: {sender}, e: {e})", nameof(ReportOptions_CollectionChanged), sender, e);
             IEnumerable<ViewModel.Filter.Filter<CrawlConfigReportItem>> enumerable;
-            ViewModel.Filter.Filter<CrawlConfigReportItem> oldCurrentItem = _currentReportOption, newCurrentItem = _currentReportOption;
             switch (e.Action)
             {
                 case System.Collections.Specialized.NotifyCollectionChangedAction.Add:
-                    if ((enumerable = e.NewItems?.OfType<ViewModel.Filter.Filter<CrawlConfigReportItem>>().Where(i => i is not null)) is not null)
-                    {
+                    if ((enumerable = e.NewItems?.OfType<ViewModel.Filter.Filter<CrawlConfigReportItem>>().Where(i => i is not null && _distinctItems.Add(i))) is not null)
                         foreach (ViewModel.Filter.Filter<CrawlConfigReportItem> item in enumerable)
                         {
-                            if (!ReferenceEquals(GetOwner(item), this))
-                                SetOwner(item, this);
-                            if (_distinctItems.Add(item) && GetIsSelected(item))
+                            SetOwner(item, this);
+                            if (GetIsSelected(item))
                             {
-                                if (newCurrentItem is null)
-                                    newCurrentItem = item;
+                                if (SelectedReportIndex < 0)
+                                    SelectedReportIndex = ReportOptions.IndexOf(item);
                                 else
                                     SetIsSelected(item, false);
                             }
                         }
-                    }
                     break;
                 case System.Collections.Specialized.NotifyCollectionChangedAction.Reset:
                     foreach (ViewModel.Filter.Filter<CrawlConfigReportItem> item in _distinctItems)
@@ -213,16 +225,6 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
                             SetOwner(item, null);
                     }
                     _distinctItems.Clear();
-                    if (ReportOptions.Count > 0)
-                    {
-                        foreach (ViewModel.Filter.Filter<CrawlConfigReportItem> item in ReportOptions.Where(i => i is not null))
-                        {
-                            if (!ReferenceEquals(this, GetOwner(item)))
-                                SetOwner(item, this);
-                            _distinctItems.Add(item);
-                        }
-                        newCurrentItem = ReportOptions.FirstOrDefault(i => i is not null && GetIsSelected(i));
-                    }
                     break;
                 case System.Collections.Specialized.NotifyCollectionChangedAction.Remove:
                     if ((enumerable = e.OldItems?.OfType<ViewModel.Filter.Filter<CrawlConfigReportItem>>().Where(i => i is not null)) is not null)
@@ -234,10 +236,10 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
                                 if (ReferenceEquals(this, GetOwner(item)))
                                     SetOwner(item, null);
                                 _distinctItems.Remove(item);
-                                if (newCurrentItem is not null && ReferenceEquals(newCurrentItem, item))
-                                    newCurrentItem = null;
                             }
                         }
+                        if (SelectedReportOption is not null && enumerable.Contains(SelectedReportOption) && ReportOptions.IndexOf(SelectedReportOption) != SelectedReportIndex)
+                            SelectedReportIndex = -1;
                     }
                     break;
                 case System.Collections.Specialized.NotifyCollectionChangedAction.Replace:
@@ -250,86 +252,166 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
                                 if (ReferenceEquals(this, GetOwner(item)))
                                     SetOwner(item, null);
                                 _distinctItems.Remove(item);
-                                if (newCurrentItem is not null && ReferenceEquals(newCurrentItem, item))
-                                    newCurrentItem = null;
                             }
                         }
                     }
-                    if ((enumerable = e.NewItems?.OfType<ViewModel.Filter.Filter<CrawlConfigReportItem>>().Where(i => i is not null)) is not null)
-                    {
+                    int selectedReportIndex = (SelectedReportOption is not null && enumerable.Contains(SelectedReportOption) && ReportOptions.IndexOf(SelectedReportOption) != SelectedReportIndex) ? -1 : SelectedReportIndex;
+                    if ((enumerable = e.NewItems?.OfType<ViewModel.Filter.Filter<CrawlConfigReportItem>>().Where(i => i is not null && _distinctItems.Add(i))) is not null)
                         foreach (ViewModel.Filter.Filter<CrawlConfigReportItem> item in enumerable)
                         {
-                            if (!ReferenceEquals(GetOwner(item), this))
-                                SetOwner(item, this);
-                            if (_distinctItems.Add(item) && GetIsSelected(item))
+                            SetOwner(item, this);
+                            if (GetIsSelected(item))
                             {
-                                if (newCurrentItem is null)
-                                    newCurrentItem = item;
+                                if (selectedReportIndex < 0)
+                                    selectedReportIndex = ReportOptions.IndexOf(item);
                                 else
                                     SetIsSelected(item, false);
                             }
                         }
-                    }
+                    if (selectedReportIndex != SelectedReportIndex)
+                        SelectedReportIndex = selectedReportIndex;
+                    else if (!ReferenceEquals(ReportOptions[selectedReportIndex], SelectedReportOption))
+                        ReloadAsync(ReportOptions[selectedReportIndex]);
                     break;
                 default:
                     return;
             }
-            if (newCurrentItem is null && (newCurrentItem = ReportOptions.FirstOrDefault(i => GetIsSelected(i))) is null && (oldCurrentItem is null) &&
-                    (newCurrentItem = ReportOptions.FirstOrDefault(i => i is not null)) is null)
-                SelectedReportOption = _currentReportOption = null;
+        }
+
+        #endregion
+        #region SelectedReportIndex Property Members
+
+        /// <summary>
+        /// Identifies the <see cref="SelectedReportIndex"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty SelectedReportIndexProperty = DependencyPropertyBuilder<CrawlStateReportViewModel, int>
+            .Register(nameof(SelectedReportIndex))
+            .DefaultValue(-1)
+            .OnChanged((d, oldValue, newValue) => (d as CrawlStateReportViewModel)?.OnSelectedReportIndexPropertyChanged(oldValue, newValue))
+            .AsReadWrite();
+
+        public int SelectedReportIndex
+        {
+            get => (int)GetValue(SelectedReportIndexProperty); set
+            {
+                _logger.LogDebug("Invoked {PropertyName} setter (value: {value})", nameof(SelectedReportIndex), value);
+                SetValue(SelectedReportIndexProperty, value);
+            }
+        }
+
+        /// <summary>
+        /// Called when the value of the <see cref="SelectedReportIndex"/> dependency property has changed.
+        /// </summary>
+        /// <param name="oldValue">The previous value of the <see cref="SelectedReportIndex"/> property.</param>
+        /// <param name="newValue">The new value of the <see cref="SelectedReportIndex"/> property.</param>
+        protected virtual void OnSelectedReportIndexPropertyChanged(int oldValue, int newValue)
+        {
+            _logger.LogDebug("Invoked {MethodName}(oldValue: {oldValue}, newValue: {newValue})", nameof(OnSelectedReportIndexPropertyChanged), oldValue, newValue);
+            ViewModel.Filter.Filter<CrawlConfigReportItem> oldItem = (oldValue < 0 || oldValue >= ReportOptions.Count) ? null : ReportOptions[oldValue];
+            ViewModel.Filter.Filter<CrawlConfigReportItem> newItem = (newValue < 0 || newValue >= ReportOptions.Count) ? null : ReportOptions[newValue];
+
+            if (newItem is not null)
+            {
+                //CurrentReportOptionDisplayText = GetDisplayText(newItem);
+                SetIsSelected(newItem, true);
+                if (oldItem is not null && ReferenceEquals(this, GetOwner(oldItem)))
+                    SetIsSelected(oldItem, false);
+                if (!DesignerProperties.GetIsInDesignMode(this))
+                    ReloadAsync(newItem);
+                //CurrentReportOptionDisplayText = GetDisplayText(newItem);
+            }
             else
             {
-                SelectedReportOption = _currentReportOption = newCurrentItem;
-                SetIsSelected(newCurrentItem, true);
+                if (oldItem is not null && ReferenceEquals(this, GetOwner(oldItem)))
+                    SetIsSelected(oldItem, false);
+                //CurrentReportOptionDisplayText = "";
+                ClearItems();
             }
         }
 
         #endregion
         #region SelectedReportOption Property Members
 
+        private static readonly DependencyPropertyKey SelectedReportOptionPropertyKey = DependencyPropertyBuilder<CrawlStateReportViewModel, ViewModel.Filter.Filter<CrawlConfigReportItem>>
+            .Register(nameof(SelectedReportOption))
+            .DefaultValue(null)
+            .AsReadOnly();
+
         /// <summary>
         /// Identifies the <see cref="SelectedReportOption"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty SelectedReportOptionProperty = DependencyPropertyBuilder<CrawlStateReportViewModel, ViewModel.Filter.Filter<CrawlConfigReportItem>>
-            .Register(nameof(SelectedReportOption))
-            .DefaultValue(null)
-            .OnChanged((d, oldValue, newValue) => (d as CrawlStateReportViewModel)?.OnSelectedReportOptionPropertyChanged(oldValue, newValue))
-            .AsReadWrite();
+        public static readonly DependencyProperty SelectedReportOptionProperty = SelectedReportOptionPropertyKey.DependencyProperty;
 
-        public ViewModel.Filter.Filter<CrawlConfigReportItem> SelectedReportOption { get => (ViewModel.Filter.Filter<CrawlConfigReportItem>)GetValue(SelectedReportOptionProperty); set => SetValue(SelectedReportOptionProperty, value); }
+        //public ViewModel.Filter.Filter<CrawlConfigReportItem> SelectedReportOption => (ViewModel.Filter.Filter<CrawlConfigReportItem>)GetValue(SelectedReportOptionProperty);
 
-        /// <summary>
-        /// Called when the value of the <see cref="SelectedReportOption"/> dependency property has changed.
-        /// </summary>
-        /// <param name="oldValue">The previous value of the <see cref="SelectedReportOption"/> property.</param>
-        /// <param name="newValue">The new value of the <see cref="SelectedReportOption"/> property.</param>
-        protected virtual void OnSelectedReportOptionPropertyChanged(ViewModel.Filter.Filter<CrawlConfigReportItem> oldValue, ViewModel.Filter.Filter<CrawlConfigReportItem> newValue)
-        {
-            if (newValue is not null)
-            {
-                if (ReferenceEquals(this, GetOwner(newValue)))
-                {
-                    SetIsSelected(newValue, true);
-                    if (oldValue is not null && ReferenceEquals(this, GetOwner(oldValue)))
-                        SetIsSelected(oldValue, false);
-                }
-                else
-                    SelectedReportOption = (oldValue is null || !ReferenceEquals(this, GetOwner(oldValue))) ? _currentReportOption : oldValue;
-            }
-            else if (oldValue is not null && ReferenceEquals(this, GetOwner(newValue)))
-                SetIsSelected(oldValue, false);
-        }
+        public ViewModel.Filter.Filter<CrawlConfigReportItem> SelectedReportOption { get => (ViewModel.Filter.Filter<CrawlConfigReportItem>)GetValue(SelectedReportOptionProperty); private set => SetValue(SelectedReportOptionPropertyKey, value); }
 
         #endregion
 
+        //#region SelectedReportOption Property Members
+
+        ///// <summary>
+        ///// Identifies the <see cref="SelectedReportOption"/> dependency property.
+        ///// </summary>
+        //public static readonly DependencyProperty SelectedReportOptionProperty = DependencyPropertyBuilder<CrawlStateReportViewModel, ViewModel.Filter.Filter<CrawlConfigReportItem>>
+        //    .Register(nameof(SelectedReportOption))
+        //    .DefaultValue(null)
+        //    .OnChanged((d, oldValue, newValue) => (d as CrawlStateReportViewModel)?.OnSelectedReportOptionPropertyChanged(oldValue, newValue))
+        //    .AsReadWrite();
+
+        //public ViewModel.Filter.Filter<CrawlConfigReportItem> SelectedReportOption { get => (ViewModel.Filter.Filter<CrawlConfigReportItem>)GetValue(SelectedReportOptionProperty); set => SetValue(SelectedReportOptionProperty, value); }
+
+        ///// <summary>
+        ///// Called when the value of the <see cref="SelectedReportOption"/> dependency property has changed.
+        ///// </summary>
+        ///// <param name="oldValue">The previous value of the <see cref="SelectedReportOption"/> property.</param>
+        ///// <param name="newValue">The new value of the <see cref="SelectedReportOption"/> property.</param>
+        //protected virtual void OnSelectedReportOptionPropertyChanged(ViewModel.Filter.Filter<CrawlConfigReportItem> oldValue, ViewModel.Filter.Filter<CrawlConfigReportItem> newValue)
+        //{
+        //    if (newValue is not null)
+        //    {
+        //        CurrentReportOptionDisplayText =  GetDisplayText(newValue);
+        //        if (ReferenceEquals(this, GetOwner(newValue)))
+        //        {
+        //            SetIsSelected(newValue, true);
+        //            if (oldValue is not null && ReferenceEquals(this, GetOwner(oldValue)))
+        //                SetIsSelected(oldValue, false);
+        //        }
+        //        else
+        //            SelectedReportOption = (oldValue is null || !ReferenceEquals(this, GetOwner(oldValue))) ? _currentReportOption : oldValue;
+        //    }
+        //    else
+        //    {
+        //        if (oldValue is not null && ReferenceEquals(this, GetOwner(oldValue)))
+        //            SetIsSelected(oldValue, false);
+        //        CurrentReportOptionDisplayText = "";
+        //    }
+        //}
+
+        //#endregion
+        //#region CurrentReportOptionDisplayText Property Members
+
+        //private static readonly DependencyPropertyKey CurrentReportOptionDisplayTextPropertyKey = DependencyPropertyBuilder<CrawlStateReportViewModel, string>
+        //    .Register(nameof(CurrentReportOptionDisplayText))
+        //    .DefaultValue("")
+        //    .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default)
+        //    .AsReadOnly();
+
+        ///// <summary>
+        ///// Identifies the <see cref="CurrentReportOptionDisplayText"/> dependency property.
+        ///// </summary>
+        //public static readonly DependencyProperty CurrentReportOptionDisplayTextProperty = CurrentReportOptionDisplayTextPropertyKey.DependencyProperty;
+
+        //public string CurrentReportOptionDisplayText { get => GetValue(CurrentReportOptionDisplayTextProperty) as string; private set => SetValue(CurrentReportOptionDisplayTextPropertyKey, value); }
+
+        //#endregion
         public CrawlStateReportViewModel()
         {
+            _logger = App.GetLogger(this);
             ReportOptions = new();
         }
 
         private void UpdatePageTitle(ViewModel.Filter.Filter<CrawlConfigReportItem> currentReportOption) => PageTitle = GetDisplayText(currentReportOption).NullIfWhiteSpace() ?? FsInfoCat.Properties.Resources.DisplayName_FSInfoCat;
-
-        void INavigatedToNotifiable.OnNavigatedTo() => ReloadAsync(_currentReportOption);
 
         protected override bool ConfirmItemDelete([DisallowNull] ReportItemViewModel item, object parameter)
         {
@@ -343,7 +425,7 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
             throw new NotImplementedException();
         }
 
-        protected override bool EntityMatchesCurrentFilter([DisallowNull] CrawlConfigReportItem entity) => _currentReportOption?.IsMatch(entity) ?? true;
+        protected override bool EntityMatchesCurrentFilter([DisallowNull] CrawlConfigReportItem entity) => SelectedReportOption?.IsMatch(entity) ?? true;
 
         protected async override Task<PageFunction<ItemFunctionResultEventArgs>> GetDetailPageAsync([DisallowNull] ReportItemViewModel item, [DisallowNull] IWindowsStatusListener statusListener)
         {
@@ -357,7 +439,7 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
             if (fs is null)
             {
                 await Dispatcher.ShowMessageBoxAsync("Item not found in database. Click OK to refresh listing.", "Security Exception", MessageBoxButton.OK, MessageBoxImage.Error, statusListener.CancellationToken);
-                ReloadAsync(_currentReportOption);
+                ReloadAsync(SelectedReportOption);
                 return null;
             }
             return await Dispatcher.InvokeAsync<PageFunction<ItemFunctionResultEventArgs>>(() => new DetailsPage(new(fs, item.Entity)));
@@ -369,7 +451,7 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
                 if (crawlConfiguration is null || selectedRoot is null)
                 {
                     _ = MessageBox.Show(Application.Current.MainWindow, "Item not found in database. Click OK to refresh listing.", "Security Exception", MessageBoxButton.OK, MessageBoxImage.Error);
-                    ReloadAsync(_currentReportOption);
+                    ReloadAsync(SelectedReportOption);
                     return null;
                 }
                 return new EditPage(new(crawlConfiguration, listitem) { Root = new(selectedRoot) });
@@ -539,7 +621,9 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
 
         protected override void OnEditTaskFaulted([DisallowNull] Exception exception, ReportItemViewModel item)
         {
-            UpdatePageTitle(_currentReportOption);
+            UpdatePageTitle(SelectedReportOption);
+            //CurrentReportOptionDisplayText = GetDisplayText(SelectedReportOption);
+            SelectedReportIndex = ReportOptions.IndexOf(SelectedReportOption);
             _ = MessageBox.Show(Application.Current.MainWindow,
                 ((exception is AsyncOperationFailureException aExc) ? aExc.UserMessage.NullIfWhiteSpace() :
                     (exception as AggregateException)?.InnerExceptions.OfType<AsyncOperationFailureException>().Select(e => e.UserMessage)
@@ -548,20 +632,29 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
                 "Database Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
-        protected override void OnRefreshCommand(object parameter) => ReloadAsync(_currentReportOption);
+        protected override void OnRefreshCommand(object parameter) => ReloadAsync(SelectedReportOption);
 
         protected override void OnReloadTaskCanceled(ViewModel.Filter.Filter<CrawlConfigReportItem> options)
         {
-            UpdatePageTitle(_currentReportOption);
-            SelectedReportOption = _currentReportOption;
+            _logger.LogDebug("Invoked {MethodName}(options: {options})", nameof(OnReloadTaskCanceled), options);
+            UpdatePageTitle(SelectedReportOption);
+            //CurrentReportOptionDisplayText = GetDisplayText(SelectedReportOption);
+            SelectedReportIndex = ReportOptions.IndexOf(SelectedReportOption);
         }
 
-        protected override void OnReloadTaskCompleted(ViewModel.Filter.Filter<CrawlConfigReportItem> options) => _currentReportOption = options;
+        protected override void OnReloadTaskCompleted(ViewModel.Filter.Filter<CrawlConfigReportItem> options)
+        {
+            _logger.LogDebug("Invoked {MethodName}(options: {options})", nameof(OnReloadTaskCompleted), options);
+            SelectedReportOption = options;
+            //CurrentReportOptionDisplayText = GetDisplayText(options);
+        }
 
         protected override void OnReloadTaskFaulted([DisallowNull] Exception exception, ViewModel.Filter.Filter<CrawlConfigReportItem> options)
         {
-            UpdatePageTitle(_currentReportOption);
-            SelectedReportOption = _currentReportOption;
+            _logger.LogDebug("Invoked {MethodName}(options: {options})", nameof(OnReloadTaskFaulted), options);
+            UpdatePageTitle(SelectedReportOption);
+            //CurrentReportOptionDisplayText = GetDisplayText(SelectedReportOption);
+            SelectedReportIndex = ReportOptions.IndexOf(SelectedReportOption);
             _ = MessageBox.Show(Application.Current.MainWindow,
                 ((exception is AsyncOperationFailureException aExc) ? aExc.UserMessage.NullIfWhiteSpace() :
                     (exception as AggregateException)?.InnerExceptions.OfType<AsyncOperationFailureException>().Select(e => e.UserMessage)

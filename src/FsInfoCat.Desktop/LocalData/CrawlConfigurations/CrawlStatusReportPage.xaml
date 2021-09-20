@@ -4,58 +4,107 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:FsInfoCat.Desktop.LocalData.CrawlConfigurations"
-      xmlns:Filter="clr-namespace:FsInfoCat.Desktop.ViewModel.Filter"
-      xmlns:CfgFilter="clr-namespace:FsInfoCat.Desktop.ViewModel.Filter.CrawlConfig"
-      xmlns:Scheduled="clr-namespace:FsInfoCat.Desktop.ViewModel.Filter.Scheduled"
-      xmlns:Historical="clr-namespace:FsInfoCat.Desktop.ViewModel.Filter.Historical"
-      xmlns:FsInfoCat="clr-namespace:FsInfoCat;assembly=FsInfoCat"
+      xmlns:Filter="clr-namespace:FsInfoCat.Desktop.ViewModel.Filter.CrawlConfig"
+      xmlns:Converters="clr-namespace:FsInfoCat.Desktop.Converters"
+      xmlns:View="clr-namespace:FsInfoCat.Desktop.View"
       x:Class="FsInfoCat.Desktop.LocalData.CrawlConfigurations.CrawlStatusReportPage"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
+      DataContext="{DynamicResource ViewModel}"
       Title="Crawl Status Report">
-    <Page.DataContext>
-        <local:CrawlStateReportViewModel>
+    <Page.Resources>
+        <Converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        <Converters:BooleanToStringConverter x:Key="BooleanToStatusConverter" FalseValue="Active" TrueValue="Inactive"/>
+        <Converters:BooleanToVisibilityConverter x:Key="VisibleIfTrueConverter" NullSource="Collapsed"/>
+        <Converters:CrawlStatusToStringConverter x:Key="CrawlStatusToCol" Display="ShortName" />
+        <Converters:CrawlStatusToStringConverter x:Key="CrawlStatusToClipboard" />
+        <Converters:DateTimeToStringConverter x:Key="DateTimeToCol" Format="HH:mm:ss M/d/yyyy"/>
+        <Converters:DateTimeToStringConverter x:Key="CrawlEndToString"  Format="HH:mm:ss M/d/yyyy"/>
+        <Converters:DateTimeToStringConverter x:Key="NextCrawlToCol" NullSource="(none)" Format="HH:mm:ss M/d/yyyy"/>
+        <Converters:DateTimeToStringConverter x:Key="DateTimeToClipboard" Format="yyyy-MM-ddTHH:mm:ss"/>
+        <local:CrawlStateReportViewModel x:Key="ViewModel">
             <local:CrawlStateReportViewModel.ReportOptions>
-                <CfgFilter:And local:CrawlStateReportViewModel.DisplayText="Recent and Upcoming"
+                <Filter:And local:CrawlStateReportViewModel.DisplayText="Recent and Upcoming"
                               local:CrawlStateReportViewModel.Description="Crawls that have completed in the last week or which are scheduled before the end of the upcoming week."
                               local:CrawlStateReportViewModel.IsSelected="True">
-                    <CfgFilter:And.Filters>
-                        <CfgFilter:StatusValue Value="Disabled" Operator="NotEqualTo"/>
-                        <CfgFilter:Or>
-                            <CfgFilter:Or.Filters>
-                                <CfgFilter:RelativeNextScheduledStart Period="1" Operator="LessThanOrEqualTo"/>
-                                <CfgFilter:RelativeLastCrawlEnd Period="1" Operator="GreaterThanOrEqualTo" />
-                                <CfgFilter:StatusValue Value="Disabled" Operator="NotEqualTo"/>
-                            </CfgFilter:Or.Filters>
-                        </CfgFilter:Or>
-                    </CfgFilter:And.Filters>
-                </CfgFilter:And>
-                <CfgFilter:And local:CrawlStateReportViewModel.DisplayText="Recently failed" local:CrawlStateReportViewModel.Description="Crawls completed in the last 90 days.">
-                    <CfgFilter:And.Filters>
-                        <CfgFilter:RelativeLastCrawlEnd Days="90" Operator="GreaterThanOrEqualTo"/>
-                        <CfgFilter:StatusValue Value="Failed"/>
-                    </CfgFilter:And.Filters>
-                </CfgFilter:And>
-                <CfgFilter:And local:CrawlStateReportViewModel.DisplayText="Overdue" local:CrawlStateReportViewModel.Description="Crawls whose next scheduled crawl date is in the past.">
-                    <CfgFilter:And.Filters>
-                        <CfgFilter:StatusValue Value="Disabled" Operator="NotEqualTo"/>
-                        <CfgFilter:RelativeNextScheduledStart Operator="LessThan" IsHistorical="True"/>
-                    </CfgFilter:And.Filters>
-                </CfgFilter:And>
-                <CfgFilter:And local:CrawlStateReportViewModel.DisplayText="Unscheduled" local:CrawlStateReportViewModel.Description="Crawls whose next scheduled crawl date is in the past.">
-                    <CfgFilter:And.Filters>
-                        <CfgFilter:StatusValue Value="Disabled" Operator="NotEqualTo"/>
-                        <CfgFilter:HasValue NextScheduledStart="False"/>
-                    </CfgFilter:And.Filters>
-                </CfgFilter:And>
-                <CfgFilter:And local:CrawlStateReportViewModel.DisplayText="Never Run" local:CrawlStateReportViewModel.Description="Crawls that have never been run.">
-                    <CfgFilter:And.Filters>
-                        <CfgFilter:StatusValue Value="Disabled" Operator="NotEqualTo"/>
-                        <CfgFilter:HasValue LastCrawlStart="False"/>
-                    </CfgFilter:And.Filters>
-                </CfgFilter:And>
+                    <Filter:And.Filters>
+                        <Filter:StatusValue Value="Disabled" Operator="NotEqualTo"/>
+                        <Filter:Or>
+                            <Filter:Or.Filters>
+                                <Filter:RelativeNextScheduledStart Period="1" Operator="LessThanOrEqualTo"/>
+                                <Filter:RelativeLastCrawlEnd Period="1" Operator="GreaterThanOrEqualTo" />
+                                <Filter:StatusValue Value="Disabled" Operator="NotEqualTo"/>
+                            </Filter:Or.Filters>
+                        </Filter:Or>
+                    </Filter:And.Filters>
+                </Filter:And>
+                <Filter:And local:CrawlStateReportViewModel.DisplayText="Recently failed" local:CrawlStateReportViewModel.Description="Crawls completed in the last 90 days.">
+                    <Filter:And.Filters>
+                        <Filter:RelativeLastCrawlEnd Days="90" Operator="GreaterThanOrEqualTo"/>
+                        <Filter:StatusValue Value="Failed"/>
+                    </Filter:And.Filters>
+                </Filter:And>
+                <Filter:And local:CrawlStateReportViewModel.DisplayText="Overdue" local:CrawlStateReportViewModel.Description="Crawls whose next scheduled crawl date is in the past.">
+                    <Filter:And.Filters>
+                        <Filter:StatusValue Value="Disabled" Operator="NotEqualTo"/>
+                        <Filter:RelativeNextScheduledStart Operator="LessThan" IsHistorical="True"/>
+                    </Filter:And.Filters>
+                </Filter:And>
+                <Filter:And local:CrawlStateReportViewModel.DisplayText="Unscheduled" local:CrawlStateReportViewModel.Description="Crawls whose next scheduled crawl date is in the past.">
+                    <Filter:And.Filters>
+                        <Filter:StatusValue Value="Disabled" Operator="NotEqualTo"/>
+                        <Filter:HasValue NextScheduledStart="False"/>
+                    </Filter:And.Filters>
+                </Filter:And>
+                <Filter:And local:CrawlStateReportViewModel.DisplayText="Never Run" local:CrawlStateReportViewModel.Description="Crawls that have never been run.">
+                    <Filter:And.Filters>
+                        <Filter:StatusValue Value="Disabled" Operator="NotEqualTo"/>
+                        <Filter:HasValue LastCrawlStart="False"/>
+                    </Filter:And.Filters>
+                </Filter:And>
             </local:CrawlStateReportViewModel.ReportOptions>
         </local:CrawlStateReportViewModel>
-    </Page.DataContext>
-    <Grid/>
+    </Page.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="124*"/>
+            <RowDefinition Height="43*"/>
+        </Grid.RowDefinitions>
+        <Label Content="Current Report:"/>
+        <ComboBox Grid.Column="1" ItemsSource="{Binding ReportOptions}" SelectedIndex="{Binding SelectedReportIndex, BindsDirectlyToSource=False, IsAsync=False, NotifyOnTargetUpdated=False, NotifyOnValidationError=False, NotifyOnSourceUpdated=False, ValidatesOnNotifyDataErrors=True, ValidatesOnExceptions=False, ValidatesOnDataErrors=False}">
+            <ComboBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding (local:CrawlStateReportViewModel.DisplayText)}"/>
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+        </ComboBox>
+        <TextBlock Grid.Row="1" Text="{Binding (local:CrawlStateReportViewModel.Description), Mode=OneWay}" TextWrapping="Wrap" Grid.ColumnSpan="2" DataContext="{Binding SelectedReportOption}"/>
+        <DataGrid Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2" AutoGenerateColumns="False" ItemsSource="{Binding Items}">
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding DisplayName, Mode=OneWay}" Header="Name" Width="*"/>
+                <DataGridTextColumn Binding="{Binding LastCrawlEnd, Converter={StaticResource CrawlEndToString}, Mode=OneWay}" Header="Last Completed"/>
+                <DataGridTextColumn Binding="{Binding NextScheduledStart, Converter={StaticResource NextCrawlToCol}, Mode=OneWay}" Header="Next Scheduled"/>
+                <DataGridTemplateColumn MinWidth="100">
+                    <DataGridTemplateColumn.Header>
+                        <StackPanel Orientation="Horizontal" DataContext="{DynamicResource ViewModel}">
+                            <Label Content="Status"/>
+                            <Button Style="{DynamicResource AddNewButton}" Margin="{DynamicResource DefaultSpacingLeft}" Command="{Binding AddNewItem, Mode=OneWay}"/>
+                            <Button Style="{DynamicResource FilterButton}" Margin="{DynamicResource DefaultSpacingLeft}" Command="{Binding ShowFilterOptions, Mode=OneWay}"/>
+                        </StackPanel>
+                    </DataGridTemplateColumn.Header>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <View:CrawlStatusIndicator Status="{Binding StatusValue}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
 </Page>

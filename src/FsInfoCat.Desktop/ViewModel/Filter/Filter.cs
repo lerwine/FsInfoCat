@@ -142,8 +142,8 @@ namespace FsInfoCat.Desktop.ViewModel.Filter
                 _ => LinqExpression.Equal(CreateMemberExpressions(parameterExpression, propertyName, value, out memberExpression, out valueConstant), valueConstant),
             };
             return @operator.HasFlag(ObjectEqualityOperator.NotNullOrEqualTo) ?
-                LinqExpression.OrElse(LinqExpression.Equal(memberExpression, LinqExpression.Constant(null)), expression) // parameter.{propertyName} == null || {expression}
-                : LinqExpression.AndAlso(LinqExpression.NotEqual(memberExpression, LinqExpression.Constant(null)), expression);  // parameter.{propertyName} != null && {expression}
+                LinqExpression.AndAlso(LinqExpression.NotEqual(memberExpression, LinqExpression.Constant(null)), expression)  // parameter.{propertyName} != null && {expression}
+                : LinqExpression.OrElse(LinqExpression.Equal(memberExpression, LinqExpression.Constant(null)), expression); // parameter.{propertyName} == null || {expression}
         }
 
         protected static BinaryExpression CreateExpression<T>([DisallowNull] ParameterExpression parameterExpression, [DisallowNull] string propertyName, ValueEqualityOperator @operator, T value) where T : struct =>
@@ -160,8 +160,8 @@ namespace FsInfoCat.Desktop.ViewModel.Filter
                 _ => LinqExpression.Equal(memberExpression, valueConstant),
             };
             return @operator.HasFlag(ObjectEqualityOperator.NotNullOrEqualTo) ?
-                LinqExpression.OrElse(LinqExpression.Equal(memberExpression, LinqExpression.Constant(null)), expression) // parameter.{propertyName} == null || {expression}
-                : LinqExpression.AndAlso(LinqExpression.NotEqual(memberExpression, LinqExpression.Constant(null)), expression);  // parameter.{propertyName} != null && {expression}
+                LinqExpression.AndAlso(LinqExpression.NotEqual(memberExpression, LinqExpression.Constant(null)), expression) // parameter.{propertyName} != null && {expression}
+                : LinqExpression.OrElse(LinqExpression.Equal(memberExpression, LinqExpression.Constant(null)), expression);  // parameter.{propertyName} == null || {expression}
         }
 
         protected static BinaryExpression CreateExpressionForString([DisallowNull] ParameterExpression parameterExpression, [DisallowNull] string propertyName, ValueEqualityOperator @operator, [DisallowNull] string value) =>
@@ -188,8 +188,8 @@ namespace FsInfoCat.Desktop.ViewModel.Filter
                     )
                 );
             return @operator.HasFlag(ObjectComparisonOperator.NotNullOrEqualTo) ?
-                LinqExpression.OrElse(LinqExpression.Equal(memberExpression, LinqExpression.Constant(null)), expression) // parameter.{propertyName} == null || {expression}
-                : LinqExpression.AndAlso(LinqExpression.NotEqual(memberExpression, LinqExpression.Constant(null)), expression);  // parameter.{propertyName} != null && {expression}
+                LinqExpression.AndAlso(LinqExpression.NotEqual(memberExpression, LinqExpression.Constant(null)), expression)  // parameter.{propertyName} != null && {expression}
+                : LinqExpression.OrElse(LinqExpression.Equal(memberExpression, LinqExpression.Constant(null)), expression); // parameter.{propertyName} == null || {expression}
         }
 
         protected static BinaryExpression CreateExpression<T>([DisallowNull] ParameterExpression parameterExpression, [DisallowNull] string propertyName, ObjectComparisonOperator @operator, [DisallowNull] T value)
@@ -212,8 +212,8 @@ namespace FsInfoCat.Desktop.ViewModel.Filter
                     )
                 );
             return @operator.HasFlag(ObjectComparisonOperator.NotNullOrEqualTo) ?
-                LinqExpression.OrElse(LinqExpression.Equal(memberExpression, LinqExpression.Constant(null)), expression) // parameter.{propertyName} == null || {expression}
-                : LinqExpression.AndAlso(LinqExpression.NotEqual(memberExpression, LinqExpression.Constant(null)), expression);  // parameter.{propertyName} != null && {expression}
+                LinqExpression.AndAlso(LinqExpression.NotEqual(memberExpression, LinqExpression.Constant(null)), expression) // parameter.{propertyName} != null && {expression}
+                : LinqExpression.OrElse(LinqExpression.Equal(memberExpression, LinqExpression.Constant(null)), expression);  // parameter.{propertyName} == null || {expression}
         }
 
         protected static BinaryExpression CreateExpressionForValues<T>([DisallowNull] ParameterExpression parameterExpression, [DisallowNull] string propertyName, ValueEqualityOperator @operator, [DisallowNull] IEnumerable<T> values)
