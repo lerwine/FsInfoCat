@@ -1,4 +1,3 @@
-using System;
 using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel.Filter.Historical

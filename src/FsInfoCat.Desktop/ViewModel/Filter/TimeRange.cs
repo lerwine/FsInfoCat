@@ -3,7 +3,9 @@ using System.Collections;
 using System.ComponentModel;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Windows;
+using LinqExpression = System.Linq.Expressions.Expression;
 
 namespace FsInfoCat.Desktop.ViewModel.Filter
 {
@@ -177,28 +179,62 @@ namespace FsInfoCat.Desktop.ViewModel.Filter
             T start = Start;
             T end = End;
 
-            ConstantExpression endExp;
-            BinaryExpression binaryExpression;
-            ConstantExpression nc = System.Linq.Expressions.Expression.Constant(null);
+            Type t = (memberExpression.Member is PropertyInfo propertyInfo) ? propertyInfo.PropertyType : (memberExpression.Member as FieldInfo).FieldType;
+            bool canBeNull;
+            MemberExpression nonNullMemberExpression;
+            if (t.IsValueType)
+            {
+                canBeNull = t.IsGenericType && typeof(Nullable<>).Equals(t.GetGenericTypeDefinition());
+                nonNullMemberExpression = canBeNull ? LinqExpression.Property(memberExpression, nameof(Nullable<int>.Value)) : memberExpression;
+            }
+            else
+            {
+                canBeNull = true;
+                nonNullMemberExpression = memberExpression;
+            }
+
             if (start is null)
             {
                 if (end is null)
                     return null;
-                endExp = System.Linq.Expressions.Expression.Constant(end.ToDateTime());
-                binaryExpression = end.IsExclusive ? System.Linq.Expressions.Expression.LessThan(memberExpression, endExp) : System.Linq.Expressions.Expression.LessThanOrEqual(memberExpression, endExp);
-                return end.IncludeNull ? System.Linq.Expressions.Expression.OrElse(System.Linq.Expressions.Expression.Equal(memberExpression, nc), binaryExpression) :
-                    System.Linq.Expressions.Expression.AndAlso(System.Linq.Expressions.Expression.NotEqual(memberExpression, nc), binaryExpression);
+                if (end.IncludeNull)
+                {
+                    if (canBeNull)
+                        return LinqExpression.OrElse(LinqExpression.Equal(memberExpression, LinqExpression.Constant(null)), end.IsExclusive ? LinqExpression.LessThan(nonNullMemberExpression, LinqExpression.Constant(end.ToDateTime())) :
+                            LinqExpression.LessThanOrEqual(nonNullMemberExpression, LinqExpression.Constant(end.ToDateTime())));
+                }
+                else if (canBeNull)
+                    return LinqExpression.AndAlso(LinqExpression.NotEqual(memberExpression, LinqExpression.Constant(null)), end.IsExclusive ? LinqExpression.LessThan(nonNullMemberExpression, LinqExpression.Constant(end.ToDateTime())) :
+                            LinqExpression.LessThanOrEqual(nonNullMemberExpression, LinqExpression.Constant(end.ToDateTime())));
+                return end.IsExclusive ? LinqExpression.LessThan(memberExpression, LinqExpression.Constant(end.ToDateTime())) : LinqExpression.LessThanOrEqual(memberExpression, LinqExpression.Constant(end.ToDateTime()));
             }
-            ConstantExpression startExp = System.Linq.Expressions.Expression.Constant(start.ToDateTime());
-            binaryExpression = start.IsExclusive ? System.Linq.Expressions.Expression.GreaterThan(memberExpression, startExp) : System.Linq.Expressions.Expression.GreaterThanOrEqual(memberExpression, startExp);
+            BinaryExpression binaryExpression;
+            if (start.IncludeNull)
+            {
+                if (canBeNull)
+                    binaryExpression = LinqExpression.OrElse(LinqExpression.Equal(memberExpression, LinqExpression.Constant(null)), start.IsExclusive ? LinqExpression.GreaterThan(nonNullMemberExpression, LinqExpression.Constant(start.ToDateTime())) :
+                        LinqExpression.GreaterThanOrEqual(nonNullMemberExpression, LinqExpression.Constant(start.ToDateTime())));
+                else
+                    binaryExpression = start.IsExclusive ? LinqExpression.GreaterThan(memberExpression, LinqExpression.Constant(start.ToDateTime())) : LinqExpression.GreaterThanOrEqual(memberExpression, LinqExpression.Constant(start.ToDateTime()));
+            }
+            else if (canBeNull)
+                binaryExpression = LinqExpression.AndAlso(LinqExpression.NotEqual(memberExpression, LinqExpression.Constant(null)), start.IsExclusive ? LinqExpression.GreaterThan(nonNullMemberExpression, LinqExpression.Constant(start.ToDateTime())) :
+                        LinqExpression.GreaterThanOrEqual(nonNullMemberExpression, LinqExpression.Constant(start.ToDateTime())));
+            else
+                binaryExpression = start.IsExclusive ? LinqExpression.GreaterThan(memberExpression, LinqExpression.Constant(start.ToDateTime())) : LinqExpression.GreaterThanOrEqual(memberExpression, LinqExpression.Constant(start.ToDateTime()));
             if (end is null)
-                return start.IncludeNull ? System.Linq.Expressions.Expression.OrElse(System.Linq.Expressions.Expression.Equal(memberExpression, nc), binaryExpression) :
-                    System.Linq.Expressions.Expression.AndAlso(System.Linq.Expressions.Expression.NotEqual(memberExpression, nc), binaryExpression);
-            endExp = System.Linq.Expressions.Expression.Constant(end.ToDateTime());
-            binaryExpression = System.Linq.Expressions.Expression.AndAlso(binaryExpression, end.IsExclusive ? System.Linq.Expressions.Expression.LessThan(memberExpression, endExp) :
-                System.Linq.Expressions.Expression.LessThanOrEqual(memberExpression, endExp));
-            return (start.IncludeNull || end.IncludeNull) ? System.Linq.Expressions.Expression.OrElse(System.Linq.Expressions.Expression.Equal(memberExpression, nc), binaryExpression) :
-                    System.Linq.Expressions.Expression.AndAlso(System.Linq.Expressions.Expression.NotEqual(memberExpression, nc), binaryExpression);
+                return binaryExpression;
+
+            if (end.IncludeNull)
+            {
+                if (canBeNull)
+                    return LinqExpression.AndAlso(binaryExpression, LinqExpression.OrElse(LinqExpression.Equal(memberExpression, LinqExpression.Constant(null)), end.IsExclusive ? LinqExpression.LessThan(nonNullMemberExpression, LinqExpression.Constant(end.ToDateTime())) :
+                        LinqExpression.LessThanOrEqual(nonNullMemberExpression, LinqExpression.Constant(end.ToDateTime()))));
+            }
+            else if (canBeNull)
+                return LinqExpression.AndAlso(binaryExpression, LinqExpression.AndAlso(LinqExpression.NotEqual(memberExpression, LinqExpression.Constant(null)), end.IsExclusive ? LinqExpression.LessThan(nonNullMemberExpression, LinqExpression.Constant(end.ToDateTime())) :
+                        LinqExpression.LessThanOrEqual(nonNullMemberExpression, LinqExpression.Constant(end.ToDateTime()))));
+            return LinqExpression.AndAlso(binaryExpression, end.IsExclusive ? LinqExpression.LessThan(memberExpression, LinqExpression.Constant(end.ToDateTime())) : LinqExpression.LessThanOrEqual(memberExpression, LinqExpression.Constant(end.ToDateTime())));
         }
     }
 }

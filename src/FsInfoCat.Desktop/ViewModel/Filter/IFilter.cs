@@ -1,6 +1,4 @@
-using System;
 using System.ComponentModel;
-using System.Linq.Expressions;
 using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel.Filter

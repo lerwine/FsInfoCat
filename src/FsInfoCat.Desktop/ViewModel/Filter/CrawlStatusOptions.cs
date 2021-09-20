@@ -4,13 +4,14 @@ using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Linq.Expressions;
-using LinqExpression = System.Linq.Expressions.Expression;
 using System.Windows;
+using LinqExpression = System.Linq.Expressions.Expression;
 
 
 namespace FsInfoCat.Desktop.ViewModel.Filter
 {
-    public class CrawlStatusOptions : DependencyObject
+    public class CrawlStatusOptions<TEntity> : Filter<TEntity>
+        where TEntity : class, ICrawlConfigurationRow
     {
         #region Owner Attached Property Members
 
@@ -19,7 +20,7 @@ namespace FsInfoCat.Desktop.ViewModel.Filter
         /// </summary>
         public const string PropertyName_Owner = "Owner";
 
-        private static readonly DependencyPropertyKey OwnerPropertyKey = DependencyPropertyBuilder<CrawlStatusOptions, CrawlStatusOptions>
+        private static readonly DependencyPropertyKey OwnerPropertyKey = DependencyPropertyBuilder<CrawlStatusOptions<TEntity>, CrawlStatusOptions<TEntity>>
             .RegisterAttached(PropertyName_Owner)
             .DefaultValue(null)
             .AsReadOnly();
@@ -29,14 +30,14 @@ namespace FsInfoCat.Desktop.ViewModel.Filter
         /// </summary>
         public static readonly DependencyProperty OwnerProperty = OwnerPropertyKey.DependencyProperty;
 
-        public static CrawlStatusOptions GetOwner([DisallowNull] DependencyObject obj) => (CrawlStatusOptions)obj.GetValue(OwnerProperty);
+        public static CrawlStatusOptions<TEntity> GetOwner([DisallowNull] DependencyObject obj) => (CrawlStatusOptions<TEntity>)obj.GetValue(OwnerProperty);
 
-        private static void SetOwner([DisallowNull] DependencyObject obj, CrawlStatusOptions value) => obj.SetValue(OwnerPropertyKey, value);
+        private static void SetOwner([DisallowNull] DependencyObject obj, CrawlStatusOptions<TEntity> value) => obj.SetValue(OwnerPropertyKey, value);
 
         #endregion
         #region OptionItems Property Members
 
-        private static readonly DependencyPropertyKey OptionItemsPropertyKey = DependencyPropertyBuilder<CrawlStatusOptions, ReadOnlyObservableCollection<CrawlStatusItemVM>>
+        private static readonly DependencyPropertyKey OptionItemsPropertyKey = DependencyPropertyBuilder<CrawlStatusOptions<TEntity>, ReadOnlyObservableCollection<CrawlStatusItemVM<TEntity>>>
             .Register(nameof(OptionItems))
             .AsReadOnly();
 
@@ -45,7 +46,7 @@ namespace FsInfoCat.Desktop.ViewModel.Filter
         /// </summary>
         public static readonly DependencyProperty OptionItemsProperty = OptionItemsPropertyKey.DependencyProperty;
 
-        public ReadOnlyObservableCollection<CrawlStatusItemVM> OptionItems => (ReadOnlyObservableCollection<CrawlStatusItemVM>)GetValue(OptionItemsProperty);
+        public ReadOnlyObservableCollection<CrawlStatusItemVM<TEntity>> OptionItems => (ReadOnlyObservableCollection<CrawlStatusItemVM<TEntity>>)GetValue(OptionItemsProperty);
 
         #endregion
         #region NotRunning Property Members
@@ -53,10 +54,10 @@ namespace FsInfoCat.Desktop.ViewModel.Filter
         /// <summary>
         /// Identifies the <see cref="NotRunning"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty NotRunningProperty = DependencyPropertyBuilder<CrawlStatusOptions, bool>
+        public static readonly DependencyProperty NotRunningProperty = DependencyPropertyBuilder<CrawlStatusOptions<TEntity>, bool>
             .Register(nameof(NotRunning))
             .DefaultValue(false)
-            .OnChanged((d, oldValue, newValue) => (d as CrawlStatusOptions)?.OnNotRunningPropertyChanged(oldValue, newValue))
+            .OnChanged((d, oldValue, newValue) => (d as CrawlStatusOptions<TEntity>)?.OnNotRunningPropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
         public bool NotRunning { get => (bool)GetValue(NotRunningProperty); set => SetValue(NotRunningProperty, value); }
@@ -74,10 +75,10 @@ namespace FsInfoCat.Desktop.ViewModel.Filter
         /// <summary>
         /// Identifies the <see cref="InProgress"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty InProgressProperty = DependencyPropertyBuilder<CrawlStatusOptions, bool>
+        public static readonly DependencyProperty InProgressProperty = DependencyPropertyBuilder<CrawlStatusOptions<TEntity>, bool>
             .Register(nameof(InProgress))
             .DefaultValue(false)
-            .OnChanged((d, oldValue, newValue) => (d as CrawlStatusOptions)?.OnInProgressPropertyChanged(oldValue, newValue))
+            .OnChanged((d, oldValue, newValue) => (d as CrawlStatusOptions<TEntity>)?.OnInProgressPropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
         public bool InProgress { get => (bool)GetValue(InProgressProperty); set => SetValue(InProgressProperty, value); }
@@ -95,10 +96,10 @@ namespace FsInfoCat.Desktop.ViewModel.Filter
         /// <summary>
         /// Identifies the <see cref="Completed"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty CompletedProperty = DependencyPropertyBuilder<CrawlStatusOptions, bool>
+        public static readonly DependencyProperty CompletedProperty = DependencyPropertyBuilder<CrawlStatusOptions<TEntity>, bool>
             .Register(nameof(Completed))
             .DefaultValue(false)
-            .OnChanged((d, oldValue, newValue) => (d as CrawlStatusOptions)?.OnCompletedPropertyChanged(oldValue, newValue))
+            .OnChanged((d, oldValue, newValue) => (d as CrawlStatusOptions<TEntity>)?.OnCompletedPropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
         public bool Completed { get => (bool)GetValue(CompletedProperty); set => SetValue(CompletedProperty, value); }
@@ -116,10 +117,10 @@ namespace FsInfoCat.Desktop.ViewModel.Filter
         /// <summary>
         /// Identifies the <see cref="AllottedTimeElapsed"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty AllottedTimeElapsedProperty = DependencyPropertyBuilder<CrawlStatusOptions, bool>
+        public static readonly DependencyProperty AllottedTimeElapsedProperty = DependencyPropertyBuilder<CrawlStatusOptions<TEntity>, bool>
             .Register(nameof(AllottedTimeElapsed))
             .DefaultValue(false)
-            .OnChanged((d, oldValue, newValue) => (d as CrawlStatusOptions)?.OnAllottedTimeElapsedPropertyChanged(oldValue, newValue))
+            .OnChanged((d, oldValue, newValue) => (d as CrawlStatusOptions<TEntity>)?.OnAllottedTimeElapsedPropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
         public bool AllottedTimeElapsed { get => (bool)GetValue(AllottedTimeElapsedProperty); set => SetValue(AllottedTimeElapsedProperty, value); }
@@ -137,10 +138,10 @@ namespace FsInfoCat.Desktop.ViewModel.Filter
         /// <summary>
         /// Identifies the <see cref="MaxItemCountReached"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty MaxItemCountReachedProperty = DependencyPropertyBuilder<CrawlStatusOptions, bool>
+        public static readonly DependencyProperty MaxItemCountReachedProperty = DependencyPropertyBuilder<CrawlStatusOptions<TEntity>, bool>
             .Register(nameof(MaxItemCountReached))
             .DefaultValue(false)
-            .OnChanged((d, oldValue, newValue) => (d as CrawlStatusOptions)?.OnMaxItemCountReachedPropertyChanged(oldValue, newValue))
+            .OnChanged((d, oldValue, newValue) => (d as CrawlStatusOptions<TEntity>)?.OnMaxItemCountReachedPropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
         public bool MaxItemCountReached { get => (bool)GetValue(MaxItemCountReachedProperty); set => SetValue(MaxItemCountReachedProperty, value); }
@@ -158,10 +159,10 @@ namespace FsInfoCat.Desktop.ViewModel.Filter
         /// <summary>
         /// Identifies the <see cref="Canceled"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty CanceledProperty = DependencyPropertyBuilder<CrawlStatusOptions, bool>
+        public static readonly DependencyProperty CanceledProperty = DependencyPropertyBuilder<CrawlStatusOptions<TEntity>, bool>
             .Register(nameof(Canceled))
             .DefaultValue(false)
-            .OnChanged((d, oldValue, newValue) => (d as CrawlStatusOptions)?.OnCanceledPropertyChanged(oldValue, newValue))
+            .OnChanged((d, oldValue, newValue) => (d as CrawlStatusOptions<TEntity>)?.OnCanceledPropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
         public bool Canceled { get => (bool)GetValue(CanceledProperty); set => SetValue(CanceledProperty, value); }
@@ -179,10 +180,10 @@ namespace FsInfoCat.Desktop.ViewModel.Filter
         /// <summary>
         /// Identifies the <see cref="Failed"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty FailedProperty = DependencyPropertyBuilder<CrawlStatusOptions, bool>
+        public static readonly DependencyProperty FailedProperty = DependencyPropertyBuilder<CrawlStatusOptions<TEntity>, bool>
             .Register(nameof(Failed))
             .DefaultValue(false)
-            .OnChanged((d, oldValue, newValue) => (d as CrawlStatusOptions)?.OnFailedPropertyChanged(oldValue, newValue))
+            .OnChanged((d, oldValue, newValue) => (d as CrawlStatusOptions<TEntity>)?.OnFailedPropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
         public bool Failed { get => (bool)GetValue(FailedProperty); set => SetValue(FailedProperty, value); }
@@ -200,10 +201,10 @@ namespace FsInfoCat.Desktop.ViewModel.Filter
         /// <summary>
         /// Identifies the <see cref="Disabled"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty DisabledProperty = DependencyPropertyBuilder<CrawlStatusOptions, bool>
+        public static readonly DependencyProperty DisabledProperty = DependencyPropertyBuilder<CrawlStatusOptions<TEntity>, bool>
             .Register(nameof(Disabled))
             .DefaultValue(false)
-            .OnChanged((d, oldValue, newValue) => (d as CrawlStatusOptions)?.OnDisabledPropertyChanged(oldValue, newValue))
+            .OnChanged((d, oldValue, newValue) => (d as CrawlStatusOptions<TEntity>)?.OnDisabledPropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
         public bool Disabled { get => (bool)GetValue(DisabledProperty); set => SetValue(DisabledProperty, value); }
@@ -221,10 +222,10 @@ namespace FsInfoCat.Desktop.ViewModel.Filter
         /// <summary>
         /// Identifies the <see cref="IsExclusive"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty IsExclusiveProperty = DependencyPropertyBuilder<CrawlStatusOptions, bool>
+        public static readonly DependencyProperty IsExclusiveProperty = DependencyPropertyBuilder<CrawlStatusOptions<TEntity>, bool>
             .Register(nameof(IsExclusive))
             .DefaultValue(false)
-            .OnChanged((d, oldValue, newValue) => (d as CrawlStatusOptions)?.OnIsExclusivePropertyChanged(oldValue, newValue))
+            .OnChanged((d, oldValue, newValue) => (d as CrawlStatusOptions<TEntity>)?.OnIsExclusivePropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
         public bool IsExclusive { get => (bool)GetValue(IsExclusiveProperty); set => SetValue(IsExclusiveProperty, value); }
@@ -243,40 +244,17 @@ namespace FsInfoCat.Desktop.ViewModel.Filter
 
         public CrawlStatusOptions()
         {
-            ObservableCollection<CrawlStatusItemVM> backingOptionItems = new();
+            ObservableCollection<CrawlStatusItemVM<TEntity>> backingOptionItems = new();
             foreach (CrawlStatus status in Enum.GetValues<CrawlStatus>())
             {
-                CrawlStatusItemVM item = new(status);
+                CrawlStatusItemVM<TEntity> item = new(status);
                 SetOwner(item, this);
                 backingOptionItems.Add(item);
             }
-            SetValue(OptionItemsPropertyKey, new ReadOnlyObservableCollection<CrawlStatusItemVM>(backingOptionItems));
+            SetValue(OptionItemsPropertyKey, new ReadOnlyObservableCollection<CrawlStatusItemVM<TEntity>>(backingOptionItems));
         }
 
-        public static bool AreSame(CrawlStatusOptions x, CrawlStatusOptions y)
-        {
-            if (x is null)
-                return y is null || !y.OptionItems.Any(o => o.IsSealed);
-            if (y is null)
-                return !x.OptionItems.Any(o => o.IsSealed);
-            if (ReferenceEquals(x, y))
-                return true;
-            CrawlStatus[] a = x.OptionItems.Where(o => o.IsSelected).Select(o => o.Value.Value).ToArray();
-            CrawlStatus[] b = y.OptionItems.Where(o => o.IsSelected).Select(o => o.Value.Value).ToArray();
-            if (a.Length != b.Length)
-                return false;
-            switch (a.Length)
-            {
-                case 0:
-                    return true;
-                case 1:
-                    return a[0] == b[0];
-                default:
-                    return x.IsExclusive == y.IsExclusive && a.SequenceEqual(b);
-            }
-        }
-
-        internal BinaryExpression CreateExpression(ParameterExpression parameterExpression) => IsExclusive ?
+        public override BinaryExpression CreateExpression(ParameterExpression parameterExpression) => IsExclusive ?
             OptionItems.Where(o => o.IsSelected).Select(o => LinqExpression.Equal(LinqExpression.Property(parameterExpression, nameof(CrawlConfigReportItem.StatusValue)), LinqExpression.Constant(o.Value.Value))).Aggregate(LinqExpression.AndAlso) :
             OptionItems.Where(o => o.IsSelected).Select(o => LinqExpression.Equal(LinqExpression.Property(parameterExpression, nameof(CrawlConfigReportItem.StatusValue)), LinqExpression.Constant(o.Value.Value))).Aggregate(LinqExpression.OrElse);
 
@@ -313,25 +291,17 @@ namespace FsInfoCat.Desktop.ViewModel.Filter
 
         internal bool IsMatch(CrawlStatus value)
         {
-            switch (value)
+            return value switch
             {
-                case CrawlStatus.InProgress:
-                    return InProgress != IsExclusive;
-                case CrawlStatus.Completed:
-                    return Completed != IsExclusive;
-                case CrawlStatus.AllottedTimeElapsed:
-                    return AllottedTimeElapsed != IsExclusive;
-                case CrawlStatus.MaxItemCountReached:
-                    return MaxItemCountReached != IsExclusive;
-                case CrawlStatus.Canceled:
-                    return Canceled != IsExclusive;
-                case CrawlStatus.Failed:
-                    return Failed != IsExclusive;
-                case CrawlStatus.Disabled:
-                    return Disabled != IsExclusive;
-                default:
-                    return NotRunning != IsExclusive;
-            }
+                CrawlStatus.InProgress => InProgress != IsExclusive,
+                CrawlStatus.Completed => Completed != IsExclusive,
+                CrawlStatus.AllottedTimeElapsed => AllottedTimeElapsed != IsExclusive,
+                CrawlStatus.MaxItemCountReached => MaxItemCountReached != IsExclusive,
+                CrawlStatus.Canceled => Canceled != IsExclusive,
+                CrawlStatus.Failed => Failed != IsExclusive,
+                CrawlStatus.Disabled => Disabled != IsExclusive,
+                _ => NotRunning != IsExclusive,
+            };
         }
 
         internal void Deselect(CrawlStatus value)
@@ -364,5 +334,7 @@ namespace FsInfoCat.Desktop.ViewModel.Filter
                     break;
             }
         }
+
+        public override bool IsMatch(TEntity entity) => entity is not null && IsMatch(entity.StatusValue);
     }
 }

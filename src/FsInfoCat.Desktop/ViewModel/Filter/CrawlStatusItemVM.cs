@@ -1,6 +1,7 @@
-﻿namespace FsInfoCat.Desktop.ViewModel.Filter
+namespace FsInfoCat.Desktop.ViewModel.Filter
 {
-    public class CrawlStatusItemVM : EnumValueViewModel<CrawlStatus>
+    public class CrawlStatusItemVM<TEntity> : EnumValueViewModel<CrawlStatus>
+        where TEntity : class, ICrawlConfigurationRow
     {
         public CrawlStatusItemVM(CrawlStatus crawlStatus) : base(crawlStatus) { }
 
@@ -8,9 +9,9 @@
         {
             base.OnIsSelectedPropertyChanged(oldValue, newValue);
             if (newValue)
-                CrawlStatusOptions.GetOwner(this)?.Select(Value.Value);
+                CrawlStatusOptions<TEntity>.GetOwner(this)?.Select(Value.Value);
             else
-                CrawlStatusOptions.GetOwner(this)?.Deselect(Value.Value);
+                CrawlStatusOptions<TEntity>.GetOwner(this)?.Deselect(Value.Value);
         }
     }
 }

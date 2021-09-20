@@ -2,7 +2,9 @@ using System;
 using System.Collections;
 using System.ComponentModel;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Windows;
+using LinqExpression = System.Linq.Expressions.Expression;
 
 namespace FsInfoCat.Desktop.ViewModel.Filter
 {
@@ -103,54 +105,68 @@ namespace FsInfoCat.Desktop.ViewModel.Filter
             _errorInfo = new();
             _errorInfo.ErrorsChanged += ErrorInfo_ErrorsChanged;
         }
+        // LinqExpression.Constant(Convert.ToInt64(max.ToTimeSpan().TotalSeconds));
         public BinaryExpression GetExpression<TEntity>(MemberExpression memberExpression)
         {
             Duration min = Min;
             Duration max = Max;
 
-            ConstantExpression endExp;
-            BinaryExpression binaryExpression;
-            ConstantExpression nc = System.Linq.Expressions.Expression.Constant(null);
+            Type t = (memberExpression.Member is PropertyInfo propertyInfo) ? propertyInfo.PropertyType : (memberExpression.Member as FieldInfo).FieldType;
+            bool canBeNull;
+            MemberExpression nonNullMemberExpression;
+            if (t.IsValueType)
+            {
+                canBeNull = t.IsGenericType && typeof(Nullable<>).Equals(t.GetGenericTypeDefinition());
+                nonNullMemberExpression = canBeNull ? LinqExpression.Property(memberExpression, nameof(Nullable<int>.Value)) : memberExpression;
+            }
+            else
+            {
+                canBeNull = true;
+                nonNullMemberExpression = memberExpression;
+            }
+
             if (min is null)
             {
                 if (max is null)
                     return null;
-                endExp = System.Linq.Expressions.Expression.Constant(Convert.ToInt64(max.ToTimeSpan().TotalSeconds));
-                binaryExpression = max.IsExclusive ? System.Linq.Expressions.Expression.LessThan(memberExpression, endExp) : System.Linq.Expressions.Expression.LessThanOrEqual(memberExpression, endExp);
-                return max.IncludeNull ? System.Linq.Expressions.Expression.OrElse(System.Linq.Expressions.Expression.Equal(memberExpression, nc), binaryExpression) :
-                    System.Linq.Expressions.Expression.AndAlso(System.Linq.Expressions.Expression.NotEqual(memberExpression, nc), binaryExpression);
+                if (max.IncludeNull)
+                {
+                    if (canBeNull)
+                        return LinqExpression.OrElse(LinqExpression.Equal(memberExpression, LinqExpression.Constant(null)), max.IsExclusive ? LinqExpression.LessThan(nonNullMemberExpression, LinqExpression.Constant(max.ToTimeSpan())) :
+                            LinqExpression.LessThanOrEqual(nonNullMemberExpression, LinqExpression.Constant(max.ToTimeSpan())));
+                }
+                else if (canBeNull)
+                    return LinqExpression.AndAlso(LinqExpression.NotEqual(memberExpression, LinqExpression.Constant(null)), max.IsExclusive ? LinqExpression.LessThan(nonNullMemberExpression, LinqExpression.Constant(max.ToTimeSpan())) :
+                            LinqExpression.LessThanOrEqual(nonNullMemberExpression, LinqExpression.Constant(max.ToTimeSpan())));
+                return max.IsExclusive ? LinqExpression.LessThan(memberExpression, LinqExpression.Constant(max.ToTimeSpan())) : LinqExpression.LessThanOrEqual(memberExpression, LinqExpression.Constant(max.ToTimeSpan()));
             }
-            ConstantExpression startExp = System.Linq.Expressions.Expression.Constant(Convert.ToInt64(min.ToTimeSpan().TotalSeconds));
-            binaryExpression = min.IsExclusive ? System.Linq.Expressions.Expression.GreaterThan(memberExpression, startExp) : System.Linq.Expressions.Expression.GreaterThanOrEqual(memberExpression, startExp);
-            if (max is null)
-                return min.IncludeNull ? System.Linq.Expressions.Expression.OrElse(System.Linq.Expressions.Expression.Equal(memberExpression, nc), binaryExpression) :
-                    System.Linq.Expressions.Expression.AndAlso(System.Linq.Expressions.Expression.NotEqual(memberExpression, nc), binaryExpression);
-            endExp = System.Linq.Expressions.Expression.Constant(Convert.ToInt64(max.ToTimeSpan().TotalSeconds));
-            binaryExpression = System.Linq.Expressions.Expression.AndAlso(binaryExpression, max.IsExclusive ? System.Linq.Expressions.Expression.LessThan(memberExpression, endExp) :
-                System.Linq.Expressions.Expression.LessThanOrEqual(memberExpression, endExp));
-            return (min.IncludeNull || max.IncludeNull) ? System.Linq.Expressions.Expression.OrElse(System.Linq.Expressions.Expression.Equal(memberExpression, nc), binaryExpression) :
-                    System.Linq.Expressions.Expression.AndAlso(System.Linq.Expressions.Expression.NotEqual(memberExpression, nc), binaryExpression);
-        }
-
-        public static (TimeSpan? MinValue, bool MinIsExclusive, TimeSpan? MaxValue, bool MaxIsExclusive, bool IncludesNull) GetRangeValues(DurationRange range)
-        {
-            if (range is not null)
+            BinaryExpression binaryExpression;
+            if (min.IncludeNull)
             {
-                Duration start = range.Min;
-                Duration end = range.Max;
-                if (start is null)
-                {
-                    if (end is not null)
-                        return (null, false, end.ToTimeSpan(), end.IsExclusive, end.IncludeNull);
-                }
+                if (canBeNull)
+                    binaryExpression = LinqExpression.OrElse(LinqExpression.Equal(memberExpression, LinqExpression.Constant(null)), min.IsExclusive ? LinqExpression.GreaterThan(nonNullMemberExpression, LinqExpression.Constant(min.ToTimeSpan())) :
+                        LinqExpression.GreaterThanOrEqual(nonNullMemberExpression, LinqExpression.Constant(min.ToTimeSpan())));
                 else
-                {
-                    if (end is null)
-                        return (start.ToTimeSpan(), start.IsExclusive, null, false, start.IncludeNull);
-                    return (start.ToTimeSpan(), start.IsExclusive, end.ToTimeSpan(), end.IsExclusive, start.IncludeNull || end.IncludeNull);
-                }
+                    binaryExpression = min.IsExclusive ? LinqExpression.GreaterThan(memberExpression, LinqExpression.Constant(min.ToTimeSpan())) : LinqExpression.GreaterThanOrEqual(memberExpression, LinqExpression.Constant(min.ToTimeSpan()));
             }
-            return (null, false, null, false, true);
+            else if (canBeNull)
+                binaryExpression = LinqExpression.AndAlso(LinqExpression.NotEqual(memberExpression, LinqExpression.Constant(null)), min.IsExclusive ? LinqExpression.GreaterThan(nonNullMemberExpression, LinqExpression.Constant(min.ToTimeSpan())) :
+                        LinqExpression.GreaterThanOrEqual(nonNullMemberExpression, LinqExpression.Constant(min.ToTimeSpan())));
+            else
+                binaryExpression = min.IsExclusive ? LinqExpression.GreaterThan(memberExpression, LinqExpression.Constant(min.ToTimeSpan())) : LinqExpression.GreaterThanOrEqual(memberExpression, LinqExpression.Constant(min.ToTimeSpan()));
+            if (max is null)
+                return binaryExpression;
+
+            if (max.IncludeNull)
+            {
+                if (canBeNull)
+                    return LinqExpression.AndAlso(binaryExpression, LinqExpression.OrElse(LinqExpression.Equal(memberExpression, LinqExpression.Constant(null)), max.IsExclusive ? LinqExpression.LessThan(nonNullMemberExpression, LinqExpression.Constant(max.ToTimeSpan())) :
+                        LinqExpression.LessThanOrEqual(nonNullMemberExpression, LinqExpression.Constant(max.ToTimeSpan()))));
+            }
+            else if (canBeNull)
+                return LinqExpression.AndAlso(binaryExpression, LinqExpression.AndAlso(LinqExpression.NotEqual(memberExpression, LinqExpression.Constant(null)), max.IsExclusive ? LinqExpression.LessThan(nonNullMemberExpression, LinqExpression.Constant(max.ToTimeSpan())) :
+                        LinqExpression.LessThanOrEqual(nonNullMemberExpression, LinqExpression.Constant(max.ToTimeSpan()))));
+            return LinqExpression.AndAlso(binaryExpression, max.IsExclusive ? LinqExpression.LessThan(memberExpression, LinqExpression.Constant(max.ToTimeSpan())) : LinqExpression.LessThanOrEqual(memberExpression, LinqExpression.Constant(max.ToTimeSpan())));
         }
 
         private void ErrorInfo_ErrorsChanged(object sender, DataErrorsChangedEventArgs e) => ErrorsChanged?.Invoke(this, e);

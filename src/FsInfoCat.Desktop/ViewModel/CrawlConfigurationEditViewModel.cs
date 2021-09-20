@@ -285,7 +285,7 @@ namespace FsInfoCat.Desktop.ViewModel
             SetValue(ScheduleOptionPropertyKey, scheduleOption);
             TimeSpanViewModel maxDuration = new();
             SetValue(MaxDurationPropertyKey, maxDuration);
-            TimeSpanViewModel rescheduleInterval = new TimeSpanViewModel();
+            TimeSpanViewModel rescheduleInterval = new();
             SetValue(RescheduleIntervalPropertyKey, rescheduleInterval);
             DateTimeViewModel nextScheduledStart = new();
             SetValue(NextScheduledStartPropertyKey, nextScheduledStart);

@@ -284,7 +284,7 @@ Error	1	ListItemViewModel	FileSystemDetailText	TextBox.Text, Name='fileSystemTex
             {
                 string path = await Dispatcher.InvokeAsync(() =>
                 {
-                    using System.Windows.Forms.FolderBrowserDialog dialog = new System.Windows.Forms.FolderBrowserDialog()
+                    using System.Windows.Forms.FolderBrowserDialog dialog = new()
                     {
                         Description = "Select root folder",
                         ShowNewFolderButton = false,

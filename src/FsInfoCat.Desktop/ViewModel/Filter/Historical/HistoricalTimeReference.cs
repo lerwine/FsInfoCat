@@ -1,5 +1,3 @@
-using System;
-
 namespace FsInfoCat.Desktop.ViewModel.Filter.Historical
 {
     public abstract class HistoricalTimeReference : TimeReference

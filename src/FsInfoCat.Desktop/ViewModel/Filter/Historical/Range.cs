@@ -1,5 +1,3 @@
-using System;
-
 namespace FsInfoCat.Desktop.ViewModel.Filter.Historical
 {
     public class Range : TimeRange<HistoricalTimeReference>, IHistoricalTimeRange

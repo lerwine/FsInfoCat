@@ -143,6 +143,14 @@ namespace FsInfoCat.Desktop.ViewModel
             return this;
         }
 
+        public DependencyPropertyBuilder<TOwner, TProperty> CoerseWith([DisallowNull] Func<object, TProperty> coersion)
+        {
+            if (coersion is null)
+                throw new ArgumentNullException(nameof(coersion));
+            _coerceValueCallback = (DependencyObject d, object baseValue) => coersion(baseValue);
+            return this;
+        }
+
         public DependencyPropertyBuilder<TOwner, TProperty> ValidateWith([DisallowNull] Func<TProperty, bool> func)
         {
             if (func is null)

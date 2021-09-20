@@ -173,6 +173,6 @@ namespace FsInfoCat.Desktop.ViewModel.Filter
 
         public TimeSpan ToTimeSpan() => new(Days ?? 0, Hours ?? 0, Minutes ?? 0, 0, 0);
 
-        public int CompareTo(TimeSpan? other) => (other.HasValue)? ToTimeSpan().CompareTo(other.Value) : IncludeNull ? 0 : 1;
+        public int CompareTo(TimeSpan? other) => (other.HasValue) ? ToTimeSpan().CompareTo(other.Value) : IncludeNull ? 0 : 1;
     }
 }

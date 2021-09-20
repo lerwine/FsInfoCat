@@ -1,5 +1,3 @@
-using System;
-
 namespace FsInfoCat.Desktop.ViewModel.Filter.Scheduled
 {
     public abstract class SchedulableTimeReference : TimeReference
