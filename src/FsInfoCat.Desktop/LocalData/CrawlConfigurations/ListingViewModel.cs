@@ -9,7 +9,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Security;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Navigation;
@@ -183,7 +182,6 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
 
         protected override void OnApplyFilterOptionsCommand(object parameter)
         {
-            // TODO: Verify that this is okay
             FilterOptions newStatusOptions = ToFilterOptions(StatusOptions.SelectedItem, SchedulingOptions.Value, ScheduleRangeStart.ResultValue, ScheduleRangeEnd.ResultValue);
             if (newStatusOptions.IsScheduled != _currentStatusOptions.IsScheduled || newStatusOptions.ShowAll != _currentStatusOptions.ShowAll || newStatusOptions.Status != _currentStatusOptions.Status)
                 _ = ReloadAsync(newStatusOptions);
@@ -210,7 +208,7 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
                 ((exception is AsyncOperationFailureException aExc) ? aExc.UserMessage.NullIfWhiteSpace() :
                     (exception as AggregateException)?.InnerExceptions.OfType<AsyncOperationFailureException>().Select(e => e.UserMessage)
                     .Where(m => !string.IsNullOrWhiteSpace(m)).FirstOrDefault()) ??
-                    "There was an unexpected error while loading items from the databse.\n\nSee logs for further information",
+                    "There was an unexpected error while loading items from the database.\n\nSee logs for further information",
                 "Database Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
@@ -390,7 +388,7 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
                 ((exception is AsyncOperationFailureException aExc) ? aExc.UserMessage.NullIfWhiteSpace() :
                     (exception as AggregateException)?.InnerExceptions.OfType<AsyncOperationFailureException>().Select(e => e.UserMessage)
                     .Where(m => !string.IsNullOrWhiteSpace(m)).FirstOrDefault()) ??
-                    "There was an unexpected error while loading items from the databse.\n\nSee logs for further information",
+                    "There was an unexpected error while loading items from the database.\n\nSee logs for further information",
                 "Database Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
@@ -400,7 +398,7 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
                 ((exception is AsyncOperationFailureException aExc) ? aExc.UserMessage.NullIfWhiteSpace() :
                     (exception as AggregateException)?.InnerExceptions.OfType<AsyncOperationFailureException>().Select(e => e.UserMessage)
                     .Where(m => !string.IsNullOrWhiteSpace(m)).FirstOrDefault()) ??
-                    "There was an unexpected error while deleting the item from the databse.\n\nSee logs for further information",
+                    "There was an unexpected error while deleting the item from the database.\n\nSee logs for further information",
                 "Database Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 

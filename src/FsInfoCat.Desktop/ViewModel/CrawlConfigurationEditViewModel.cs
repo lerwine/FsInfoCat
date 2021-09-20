@@ -125,11 +125,6 @@ namespace FsInfoCat.Desktop.ViewModel
 
         public TimeSpanViewModel MaxDuration => (TimeSpanViewModel)GetValue(MaxDurationProperty);
 
-        //private void MaxDuration_ResultValuePropertyChanged(object sender, DependencyPropertyChangedEventArgs e)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
         private void MaxDuration_HasComponentValueErrorsPropertyChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             HasErrors = (bool)e.NewValue || MaxTotalItems.HasErrors || NextScheduledStart.HasComponentValueErrors || RescheduleInterval.HasComponentValueErrors;
@@ -148,11 +143,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty RescheduleIntervalProperty = RescheduleIntervalPropertyKey.DependencyProperty;
 
         public TimeSpanViewModel RescheduleInterval { get => (TimeSpanViewModel)GetValue(RescheduleIntervalProperty); private set => SetValue(RescheduleIntervalPropertyKey, value); }
-
-        //private void RescheduleInterval_ResultValuePropertyChanged(object sender, DependencyPropertyChangedEventArgs e)
-        //{
-        //    throw new NotImplementedException();
-        //}
 
         private void RescheduleInterval_HasComponentValueErrorsPropertyChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
@@ -179,11 +169,6 @@ namespace FsInfoCat.Desktop.ViewModel
             HasErrors = (bool)e.NewValue || NextScheduledStart.HasComponentValueErrors || RescheduleInterval.HasComponentValueErrors || MaxDuration.HasComponentValueErrors;
         }
 
-        //private void MaxTotalItems_ResultValuePropertyChanged(object sender, DependencyPropertyChangedEventArgs e)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
         private void MaxTotalItems_ValidateInputValue(object sender, PropertyValidatingEventArgs<ulong> e)
         {
             throw new NotImplementedException();
@@ -203,11 +188,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty NextScheduledStartProperty = NextScheduledStartPropertyKey.DependencyProperty;
 
         public DateTimeViewModel NextScheduledStart { get => (DateTimeViewModel)GetValue(NextScheduledStartProperty); private set => SetValue(NextScheduledStartPropertyKey, value); }
-
-        //private void NextScheduledStart_ResultValuePropertyChanged(object sender, DependencyPropertyChangedEventArgs e)
-        //{
-        //    throw new NotImplementedException();
-        //}
 
         private void NextScheduledStart_HasComponentValueErrorsPropertyChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
@@ -290,14 +270,10 @@ namespace FsInfoCat.Desktop.ViewModel
             DateTimeViewModel nextScheduledStart = new();
             SetValue(NextScheduledStartPropertyKey, nextScheduledStart);
             maxTotalItems.ValidateInputValue += MaxTotalItems_ValidateInputValue;
-            //maxTotalItems.ResultValuePropertyChanged += MaxTotalItems_ResultValuePropertyChanged;
             maxTotalItems.HasErrorsPropertyChanged += MaxTotalItems_HasErrorsPropertyChanged;
             scheduleOption.ValuePropertyChanged += ScheduleOption_ValuePropertyChanged;
-            //maxDuration.ResultValuePropertyChanged += MaxDuration_ResultValuePropertyChanged;
             maxDuration.HasComponentValueErrorsPropertyChanged += MaxDuration_HasComponentValueErrorsPropertyChanged;
-            //rescheduleInterval.ResultValuePropertyChanged += RescheduleInterval_ResultValuePropertyChanged;
             rescheduleInterval.HasComponentValueErrorsPropertyChanged += RescheduleInterval_HasComponentValueErrorsPropertyChanged;
-            //nextScheduledStart.ResultValuePropertyChanged += NextScheduledStart_ResultValuePropertyChanged;
             nextScheduledStart.HasComponentValueErrorsPropertyChanged += NextScheduledStart_HasComponentValueErrorsPropertyChanged;
             IsNew = isNew;
             maxTotalItems.SetValue(entity.MaxTotalItems);

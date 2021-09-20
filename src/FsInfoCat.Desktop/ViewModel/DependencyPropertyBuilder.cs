@@ -11,7 +11,6 @@ namespace FsInfoCat.Desktop.ViewModel
     {
         public Type OwnerType => typeof(TOwner);
         public string PropertyName { get; }
-        // will be null if attached property
         public PropertyDescriptor TargetProperty { get; }
         public PropertyDescriptor EntityProperty { get; }
         private bool _hasDefaultValue;

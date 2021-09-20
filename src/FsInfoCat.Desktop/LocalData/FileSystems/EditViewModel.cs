@@ -1,16 +1,8 @@
 using FsInfoCat.Desktop.ViewModel;
 using FsInfoCat.Local;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Navigation;
 
@@ -144,17 +136,6 @@ namespace FsInfoCat.Desktop.LocalData.FileSystems
             UpstreamId = entity.UpstreamId;
             LastSynchronizedOn = entity.LastSynchronizedOn;
         }
-
-        //public static bool NavigateToEditPage([DisallowNull] FileSystemListItem item, [DisallowNull] FileSystem entity, ReturnEventHandler<ItemEditResult> onReturn = null)
-        //{
-        //    if (entity is null)
-        //        throw new ArgumentNullException(nameof(entity));
-        //    EditViewModel viewModel = new(entity, false) { ListItem = item };
-        //    EditPage page = new(viewModel);
-        //    if (onReturn is not null)
-        //        page.Return += onReturn;
-        //    return Services.ServiceProvider.GetRequiredService<IApplicationNavigation>().Navigate(page);
-        //}
 
         public static void AddNewItem(ReturnEventHandler<FileSystem> onReturn = null)
         {

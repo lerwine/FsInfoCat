@@ -105,7 +105,6 @@ namespace FsInfoCat.Desktop.ViewModel.Filter
             _errorInfo = new();
             _errorInfo.ErrorsChanged += ErrorInfo_ErrorsChanged;
         }
-        // LinqExpression.Constant(Convert.ToInt64(max.ToTimeSpan().TotalSeconds));
         public BinaryExpression GetExpression<TEntity>(MemberExpression memberExpression)
         {
             Duration min = Min;

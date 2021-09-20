@@ -197,10 +197,7 @@ namespace FsInfoCat.Desktop.ViewModel
             yield return (nameof(SampleSize), SampleSize?.ToString());
             yield return (nameof(StreamName), StreamName.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
             yield return (nameof(StreamNumber), StreamNumber?.ToString());
-        }
-
-        //internal string CalculateDisplayText(Func<(string PropertyName, string Value), bool> filter = null) => (filter is null) ?
-        //    StringExtensionMethods.ToKeyValueListString(GetNameValuePairs()) : StringExtensionMethods.ToKeyValueListString(GetNameValuePairs().Where(filter));
+        }
 
         /// <summary>
         /// Calculates the display text.

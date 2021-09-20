@@ -103,7 +103,7 @@ namespace FsInfoCat.Desktop.LocalData.FileSystems
                 ((exception is AsyncOperationFailureException aExc) ? aExc.UserMessage.NullIfWhiteSpace() :
                     (exception as AggregateException)?.InnerExceptions.OfType<AsyncOperationFailureException>().Select(e => e.UserMessage)
                     .Where(m => !string.IsNullOrWhiteSpace(m)).FirstOrDefault()) ??
-                    "There was an unexpected error while loading items from the databse.\n\nSee logs for further information",
+                    "There was an unexpected error while loading items from the database.\n\nSee logs for further information",
                 "Database Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
@@ -149,22 +149,13 @@ namespace FsInfoCat.Desktop.LocalData.FileSystems
             return await Dispatcher.InvokeAsync<PageFunction<ItemFunctionResultEventArgs>>(() => new EditPage(new(fs, item.Entity)));
         }
 
-        //protected async override Task<FileSystem> LoadItemAsync([DisallowNull] FileSystemListItem item, [DisallowNull] IWindowsStatusListener statusListener)
-        //{
-        //    using IServiceScope serviceScope = Services.CreateScope();
-        //    using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
-        //    Guid id = item.Id;
-        //    statusListener.SetMessage("Reading data");
-        //    return await dbContext.FileSystems.Include(e => e.SymbolicNames).FirstOrDefaultAsync(e => e.Id == id, statusListener.CancellationToken);
-        //}
-
         protected override void OnDeleteTaskFaulted([DisallowNull] Exception exception, [DisallowNull] ListItemViewModel item)
         {
             _ = MessageBox.Show(Application.Current.MainWindow,
                 ((exception is AsyncOperationFailureException aExc) ? aExc.UserMessage.NullIfWhiteSpace() :
                     (exception as AggregateException)?.InnerExceptions.OfType<AsyncOperationFailureException>().Select(e => e.UserMessage)
                     .Where(m => !string.IsNullOrWhiteSpace(m)).FirstOrDefault()) ??
-                    "There was an unexpected error while deleting the item from the databse.\n\nSee logs for further information",
+                    "There was an unexpected error while deleting the item from the database.\n\nSee logs for further information",
                 "Database Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
@@ -176,7 +167,7 @@ namespace FsInfoCat.Desktop.LocalData.FileSystems
                 ((exception is AsyncOperationFailureException aExc) ? aExc.UserMessage.NullIfWhiteSpace() :
                     (exception as AggregateException)?.InnerExceptions.OfType<AsyncOperationFailureException>().Select(e => e.UserMessage)
                     .Where(m => !string.IsNullOrWhiteSpace(m)).FirstOrDefault()) ??
-                    "There was an unexpected error while loading items from the databse.\n\nSee logs for further information",
+                    "There was an unexpected error while loading items from the database.\n\nSee logs for further information",
                 "Database Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }

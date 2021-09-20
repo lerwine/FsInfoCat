@@ -80,24 +80,6 @@ namespace FsInfoCat.Desktop.LocalData.SharedTagDefinitions
 
         protected override void OnRefreshCommand(object parameter) => ReloadAsync(_currentOptions);
 
-        //private void OnEditItemComplete(object sender, ReturnEventArgs<ItemFunctionResultEventArgs> e)
-        //{
-        //    switch (e.Result.State)
-        //    {
-        //        case  EntityEditResultState.Added:
-        //            break;
-        //        case EntityEditResultState.Deleted:
-        //            RemoveItem(Items.FirstOrDefault(i => ReferenceEquals(i.Entity, e.Result.ItemEntity)));
-        //            break;
-        //    }
-        //}
-
-        //private void OnItemAdded(object sender, ReturnEventArgs<FileSystem> e)
-        //{
-        //    if (e.Result is not null)
-        //        throw new NotImplementedException();
-        //}
-
         protected override bool ConfirmItemDelete(ListItemViewModel item, object parameter)
         {
             string message = item.FileTagCount switch
@@ -189,7 +171,7 @@ namespace FsInfoCat.Desktop.LocalData.SharedTagDefinitions
                 ((exception is AsyncOperationFailureException aExc) ? aExc.UserMessage.NullIfWhiteSpace() :
                     (exception as AggregateException)?.InnerExceptions.OfType<AsyncOperationFailureException>().Select(e => e.UserMessage)
                     .Where(m => !string.IsNullOrWhiteSpace(m)).FirstOrDefault()) ??
-                    "There was an unexpected error while loading items from the databse.\n\nSee logs for further information",
+                    "There was an unexpected error while loading items from the database.\n\nSee logs for further information",
                 "Database Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
@@ -233,15 +215,6 @@ namespace FsInfoCat.Desktop.LocalData.SharedTagDefinitions
             return await Dispatcher.InvokeAsync<PageFunction<ItemFunctionResultEventArgs>>(() => new EditPage(new(fs, item.Entity)));
         }
 
-        //protected override async Task<SharedTagDefinition> LoadItemAsync([DisallowNull] SharedTagDefinitionListItem item, [DisallowNull] IWindowsStatusListener statusListener)
-        //{
-        //    using IServiceScope serviceScope = Services.CreateScope();
-        //    using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
-        //    Guid id = item.Id;
-        //    statusListener.SetMessage("Reading data");
-        //    return await dbContext.SharedTagDefinitions.FirstOrDefaultAsync(e => e.Id == id, statusListener.CancellationToken);
-        //}
-
         protected override void OnEditTaskFaulted([DisallowNull] Exception exception, ListItemViewModel item)
         {
             UpdatePageTitle(_currentOptions);
@@ -250,7 +223,7 @@ namespace FsInfoCat.Desktop.LocalData.SharedTagDefinitions
                 ((exception is AsyncOperationFailureException aExc) ? aExc.UserMessage.NullIfWhiteSpace() :
                     (exception as AggregateException)?.InnerExceptions.OfType<AsyncOperationFailureException>().Select(e => e.UserMessage)
                     .Where(m => !string.IsNullOrWhiteSpace(m)).FirstOrDefault()) ??
-                    "There was an unexpected error while loading items from the databse.\n\nSee logs for further information",
+                    "There was an unexpected error while loading items from the database.\n\nSee logs for further information",
                 "Database Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
@@ -260,7 +233,7 @@ namespace FsInfoCat.Desktop.LocalData.SharedTagDefinitions
                 ((exception is AsyncOperationFailureException aExc) ? aExc.UserMessage.NullIfWhiteSpace() :
                     (exception as AggregateException)?.InnerExceptions.OfType<AsyncOperationFailureException>().Select(e => e.UserMessage)
                     .Where(m => !string.IsNullOrWhiteSpace(m)).FirstOrDefault()) ??
-                    "There was an unexpected error while deleting the item from the databse.\n\nSee logs for further information",
+                    "There was an unexpected error while deleting the item from the database.\n\nSee logs for further information",
                 "Database Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }

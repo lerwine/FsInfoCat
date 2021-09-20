@@ -177,7 +177,8 @@ namespace FsInfoCat.Desktop.ViewModel
             VolumeIdentifier = entity.VolumeIdentifier;
             FileSystemDisplayName = entity.FileSystemDisplayName;
             FileSystemSymbolicName = entity.FileSystemSymbolicName;
-            Path = EntityExtensions.AncestorNamesToPath(Entity.AncestorNames);
+            string parentDirectory = EntityExtensions.AncestorNamesToPath(entity.AncestorNames);
+            Path = string.IsNullOrEmpty(parentDirectory) ? Name : System.IO.Path.Combine(parentDirectory, Name);
         }
 
         protected override void OnEntityPropertyChanged(string propertyName)
@@ -200,7 +201,11 @@ namespace FsInfoCat.Desktop.ViewModel
                     Dispatcher.CheckInvoke(() => FileSystemSymbolicName = Entity.FileSystemSymbolicName);
                     break;
                 case nameof(ISubdirectoryListItemWithAncestorNames.AncestorNames):
-                    Dispatcher.CheckInvoke(() => Path = EntityExtensions.AncestorNamesToPath(Entity.AncestorNames));
+                    Dispatcher.CheckInvoke(() =>
+                    {
+                        string parentDirectory = EntityExtensions.AncestorNamesToPath(Entity.AncestorNames);
+                        return Path = string.IsNullOrEmpty(parentDirectory) ? Name : System.IO.Path.Combine(parentDirectory, Name);
+                    });
                     break;
                 default:
                     base.OnEntityPropertyChanged(propertyName);
