@@ -181,7 +181,7 @@
                 </Grid>
                 <Label Content="Next Scheduled Start" Style="{DynamicResource TopLabelPaddedTopLeftRight}" Target="{Binding ElementName=nextScheduledStartDatePicker, Mode=OneWay}"/>
                 <StackPanel Orientation="Horizontal" DataContext="{Binding NextScheduledStart, Mode=OneWay}">
-                    <DatePicker x:Name="nextScheduledStartDatePicker" Margin="{DynamicResource DefaultSpacingLeft}" SelectedDate="{Binding Date, Mode=OneWay}"/>
+                    <DatePicker x:Name="nextScheduledStartDatePicker" Margin="{DynamicResource DefaultSpacingLeft}" SelectedDate="{Binding Date.InputValue}"/>
                     <TextBlock Text=" at " VerticalAlignment="Center"/>
                     <TextBox x:Name="nextScheduledStartHoursTextBox" Style="{DynamicResource TwoDigitNumericTextBox}" DataContext="{Binding Time, Mode=OneWay}" Text="{Binding Hours12, Mode=OneWay}"/>
                     <TextBlock Text=" : " VerticalAlignment="Center"/>
@@ -203,19 +203,19 @@
                     </Grid.ColumnDefinitions>
                     <RadioButton x:Name="autoRescheduleRadioButton" Content="Auto Reschedule:" GroupName="Scheduling" Style="{DynamicResource TopLabelPaddedTopLeftRight}" Margin="{DynamicResource DefaultSpacingTopLeft}" DataContext="{Binding ScheduleOption, Mode=OneWay}" IsChecked="{Binding IsNull, Converter={StaticResource InverseBooleanConverter}}"/>
                     <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.ColumnSpan="2" DataContext="{Binding RescheduleInterval, Mode=OneWay}">
-                        <TextBox x:Name="intervalDaysTextBox" Style="{DynamicResource TwoDigitNumericTextBox}" Margin="{DynamicResource DefaultSpacingTopLeft}" Text="{Binding InputValue}" DataContext="{Binding Days, Mode=OneWay}"/>
+                        <TextBox x:Name="intervalDaysTextBox" Style="{DynamicResource TwoDigitNumericTextBox}" Margin="{DynamicResource DefaultSpacingTopLeft}" Text="{Binding InputValue}" DataContext="{Binding Days, Mode=OneWay}" IsReadOnly="{Binding IsChecked, Converter={StaticResource InverseBooleanConverter}, ElementName=autoRescheduleRadioButton}"/>
                         <Label Content=" days, " VerticalContentAlignment="Center" Padding="{DynamicResource DefaultSpacingTop}" Target="{Binding ElementName=intervalDaysTextBox, Mode=OneWay}"/>
-                        <TextBox x:Name="intervalHoursTextBox" Style="{DynamicResource TwoDigitNumericTextBox}" Margin="{DynamicResource DefaultSpacingTop}" DataContext="{Binding Hours, Mode=OneWay}" Text="{Binding InputValue}"/>
+                        <TextBox x:Name="intervalHoursTextBox" Style="{DynamicResource TwoDigitNumericTextBox}" Margin="{DynamicResource DefaultSpacingTop}" DataContext="{Binding Hours, Mode=OneWay}" Text="{Binding InputValue}" IsReadOnly="{Binding IsChecked, Converter={StaticResource InverseBooleanConverter}, ElementName=autoRescheduleRadioButton}"/>
                         <Label Content=" hours, " Padding="{DynamicResource DefaultSpacingTop}" VerticalContentAlignment="Center" Target="{Binding ElementName=intervalHoursTextBox, Mode=OneWay}"/>
-                        <TextBox x:Name="intervalMinutesTextBox" Style="{DynamicResource TwoDigitNumericTextBox}" Margin="{DynamicResource DefaultSpacingTop}" DataContext="{Binding Minutes, Mode=OneWay}" Text="{Binding InputValue}"/>
+                        <TextBox x:Name="intervalMinutesTextBox" Style="{DynamicResource TwoDigitNumericTextBox}" Margin="{DynamicResource DefaultSpacingTop}" DataContext="{Binding Minutes, Mode=OneWay}" Text="{Binding InputValue}" IsReadOnly="{Binding IsChecked, Converter={StaticResource InverseBooleanConverter}, ElementName=autoRescheduleRadioButton}"/>
                         <Label Content=" minutes" Padding="{DynamicResource DefaultSpacingTop}" VerticalContentAlignment="Center" Target="{Binding ElementName=intervalMinutesTextBox, Mode=OneWay}"/>
                     </StackPanel>
-                    <RadioButton x:Name="rescheduleFromJobStartRadioButton" Content="After Last Start" GroupName="AutoReschedule" Grid.Column="1" Margin="{DynamicResource DefaultSpacingTopLeft}" Grid.Row="1" IsChecked="{Binding RescheduleFromJobEnd, Converter={StaticResource InverseBooleanConverter}}"/>
-                    <RadioButton x:Name="rescheduleFromJobEndRadioButton" Grid.Row="1" Content="After Last End" GroupName="AutoReschedule" Grid.Column="2" Margin="{DynamicResource DefaultSpacingTopLeftRight}" IsChecked="{Binding RescheduleFromJobEnd}"/>
+                    <RadioButton x:Name="rescheduleFromJobStartRadioButton" Content="After Last Start" GroupName="AutoReschedule" Grid.Column="1" Margin="{DynamicResource DefaultSpacingTopLeft}" Grid.Row="1" IsChecked="{Binding RescheduleFromJobEnd, Converter={StaticResource InverseBooleanConverter}}" IsEnabled="{Binding IsChecked, ElementName=autoRescheduleRadioButton}"/>
+                    <RadioButton x:Name="rescheduleFromJobEndRadioButton" Grid.Row="1" Content="After Last End" GroupName="AutoReschedule" Grid.Column="2" Margin="{DynamicResource DefaultSpacingTopLeftRight}" IsChecked="{Binding RescheduleFromJobEnd}" IsEnabled="{Binding IsChecked, ElementName=autoRescheduleRadioButton}"/>
                     <RadioButton x:Name="manualSchedulingRadioButton" Content="Manual Only" GroupName="Scheduling" Grid.Row="1" Style="{DynamicResource TopLabelPaddedTopLeftRight}" Margin="{DynamicResource DefaultSpacingTopLeftRight}" IsChecked="{Binding IsNull, Converter={StaticResource ManualScheduleBooleanConverter}}" DataContext="{Binding ScheduleOption, Mode=OneWay}"/>
                     <Label Content="Reschedule even after failure?" Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Style="{DynamicResource TopLabelPaddedTopLeftRight}" Target="{Binding ElementName=rescheduleAfterFailYesRadioButton, Mode=OneWay}"/>
-                    <RadioButton x:Name="rescheduleAfterFailYesRadioButton" Content="Yes" Grid.Row="3" Grid.Column="1" Margin="{DynamicResource DefaultSpacingLeft}" GroupName="RescheduleAfterFail" IsChecked="{Binding RescheduleAfterFail}"/>
-                    <RadioButton x:Name="rescheduleAfterFailNoRadioButton" Content="No" Grid.Row="3" Grid.Column="2" Margin="{DynamicResource DefaultSpacingLeftRight}" GroupName="RescheduleAfterFail" IsChecked="{Binding RescheduleAfterFail, Converter={StaticResource InverseBooleanConverter}}"/>
+                    <RadioButton x:Name="rescheduleAfterFailYesRadioButton" Content="Yes" Grid.Row="3" Grid.Column="1" Margin="{DynamicResource DefaultSpacingLeft}" GroupName="RescheduleAfterFail" IsChecked="{Binding RescheduleAfterFail}" IsEnabled="{Binding IsChecked, ElementName=autoRescheduleRadioButton}"/>
+                    <RadioButton x:Name="rescheduleAfterFailNoRadioButton" Content="No" Grid.Row="3" Grid.Column="2" Margin="{DynamicResource DefaultSpacingLeftRight}" GroupName="RescheduleAfterFail" IsChecked="{Binding RescheduleAfterFail, Converter={StaticResource InverseBooleanConverter}}" IsEnabled="{Binding IsChecked, ElementName=autoRescheduleRadioButton}"/>
                 </Grid>
             </StackPanel>
         </GroupBox>
@@ -238,17 +238,17 @@
                 </Grid.ColumnDefinitions>
                 <CheckBox x:Name="ttlCheckBox" Content="Limit Duration" Grid.ColumnSpan="6" Style="{DynamicResource TopLabelPaddedTopLeftRight}" VerticalContentAlignment="Bottom" DataContext="{Binding MaxDuration, Mode=OneWay}" IsChecked="{Binding ForceNullResult, Converter={StaticResource InverseBooleanConverter}}"/>
                 <StackPanel Orientation="Horizontal" Grid.Row="1" DataContext="{Binding MaxDuration, Mode=OneWay}">
-                    <TextBox x:Name="ttlDaysTextBox"  Style="{DynamicResource TwoDigitNumericTextBox}" DataContext="{Binding Days, Mode=OneWay}" Text="{Binding InputValue}"/>
+                    <TextBox x:Name="ttlDaysTextBox"  Style="{DynamicResource TwoDigitNumericTextBox}" DataContext="{Binding Days, Mode=OneWay}" Text="{Binding InputValue}" IsReadOnly="{Binding IsChecked, Converter={StaticResource InverseBooleanConverter}, ElementName=ttlCheckBox}"/>
                     <Label Content=" days, " Padding="0,0,0,0" VerticalContentAlignment="Center" Target="{Binding ElementName=ttlDaysTextBox, Mode=OneWay}"/>
-                    <TextBox x:Name="ttlHoursTextBox" Style="{DynamicResource TwoDigitNumericTextBox}" DataContext="{Binding Hours, Mode=OneWay}" Text="{Binding InputValue}"/>
+                    <TextBox x:Name="ttlHoursTextBox" Style="{DynamicResource TwoDigitNumericTextBox}" DataContext="{Binding Hours, Mode=OneWay}" Text="{Binding InputValue}" IsReadOnly="{Binding IsChecked, Converter={StaticResource InverseBooleanConverter}, ElementName=ttlCheckBox}"/>
                     <Label Content=" hours, " Padding="0,0,0,0" VerticalContentAlignment="Center" Target="{Binding ElementName=ttlHoursTextBox, Mode=OneWay}"/>
-                    <TextBox x:Name="ttlMinutesTextBox" Style="{DynamicResource TwoDigitNumericTextBox}" DataContext="{Binding Minutes, Mode=OneWay}" Text="{Binding InputValue}"/>
+                    <TextBox x:Name="ttlMinutesTextBox" Style="{DynamicResource TwoDigitNumericTextBox}" DataContext="{Binding Minutes, Mode=OneWay}" Text="{Binding InputValue}" IsReadOnly="{Binding IsChecked, Converter={StaticResource InverseBooleanConverter}, ElementName=ttlCheckBox}"/>
                     <Label Content=" minutes" Padding="0,0,0,0" VerticalContentAlignment="Center" Target="{Binding ElementName=ttlMinutesTextBox, Mode=OneWay}"/>
                 </StackPanel>
                 <Label Content="Maximum Recursion Depth" Grid.Column="2" Style="{DynamicResource TopLabelPaddedTopLeftRight}" Target="{Binding ElementName=maxRecursionDepthTextBox, Mode=OneWay}"/>
                 <TextBox x:Name="maxRecursionDepthTextBox" Grid.Row="1" Grid.Column="2" Style="{DynamicResource TwoDigitNumericTextBox}" HorizontalAlignment="Center" Text="{Binding MaxRecursionDepth}"/>
-                <CheckBox Content="Limit Total Items" Grid.Column="4" Style="{DynamicResource TopLabelPaddedTopLeftRight}" DataContext="{Binding MaxTotalItems, Mode=OneWay}" IsChecked="{Binding ForceNullResult, Converter={StaticResource InverseBooleanConverter}}"/>
-                <TextBox x:Name="maxTotalItemsTextBox" Grid.Row="1" Grid.Column="4" Style="{DynamicResource TwoDigitNumericTextBox}" HorizontalAlignment="Center" DataContext="{Binding MaxTotalItems, Mode=OneWay}" Text="{Binding InputValue}"/>
+                <CheckBox x:Name="maxTotalItemsCheckBox" Content="Limit Total Items" Grid.Column="4" Style="{DynamicResource TopLabelPaddedTopLeftRight}" DataContext="{Binding MaxTotalItems, Mode=OneWay}" IsChecked="{Binding ForceNullResult, Converter={StaticResource InverseBooleanConverter}}"/>
+                <TextBox x:Name="maxTotalItemsTextBox" Grid.Row="1" Grid.Column="4" Style="{DynamicResource TwoDigitNumericTextBox}" HorizontalAlignment="Center" DataContext="{Binding MaxTotalItems, Mode=OneWay}" Text="{Binding InputValue}" IsReadOnly="{Binding IsEnabled, Converter={StaticResource InverseBooleanConverter}, ElementName=maxTotalItemsCheckBox}"/>
             </Grid>
         </GroupBox>
         <Grid x:Name="grid1" Grid.Row="7" Grid.Column="1" Grid.ColumnSpan="2">

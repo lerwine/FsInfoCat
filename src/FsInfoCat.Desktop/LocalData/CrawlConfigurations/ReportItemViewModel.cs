@@ -1,4 +1,4 @@
-﻿using FsInfoCat.Desktop.ViewModel;
+using FsInfoCat.Desktop.ViewModel;
 using FsInfoCat.Local;
 using System;
 using System.Diagnostics.CodeAnalysis;
@@ -56,8 +56,125 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
         public DateTime? LastSynchronizedOn { get => (DateTime?)GetValue(LastSynchronizedOnProperty); private set => SetValue(LastSynchronizedOnPropertyKey, value); }
 
         #endregion
+        #region StartCrawl Command Property Members
+
+        /// <summary>
+        /// Occurs when the <see cref="StartCrawl"/> is invoked.
+        /// </summary>
+        public event EventHandler<Commands.CommandEventArgs> StartCrawlCommand;
+
+        private static readonly DependencyPropertyKey StartCrawlPropertyKey = DependencyPropertyBuilder<ReportItemViewModel, Commands.RelayCommand>
+            .Register(nameof(StartCrawl))
+            .AsReadOnly();
+
+        /// <summary>
+        /// Identifies the <see cref="StartCrawl"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty StartCrawlProperty = StartCrawlPropertyKey.DependencyProperty;
+
+        public Commands.RelayCommand StartCrawl => (Commands.RelayCommand)GetValue(StartCrawlProperty);
+
+        /// <summary>
+        /// Called when the StartCrawl event is raised by <see cref="StartCrawl" />.
+        /// </summary>
+        /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="StartCrawl" />.</param>
+        protected void RaiseStartCrawlCommand(object parameter) // => StartCrawlCommand?.Invoke(this, new(parameter));
+        {
+            try { OnStartCrawlCommand(parameter); }
+            finally { StartCrawlCommand?.Invoke(this, new(parameter)); }
+        }
+
+        /// <summary>
+        /// Called when the <see cref="StartCrawl">StartCrawl Command</see> is invoked.
+        /// </summary>
+        /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="StartCrawl" />.</param>
+        protected virtual void OnStartCrawlCommand(object parameter)
+        {
+            // TODO: Implement OnStartCrawlCommand Logic
+        }
+
+        #endregion
+        #region StopCrawl Command Property Members
+
+        /// <summary>
+        /// Occurs when the <see cref="StopCrawl"/> is invoked.
+        /// </summary>
+        public event EventHandler<Commands.CommandEventArgs> StopCrawlCommand;
+
+        private static readonly DependencyPropertyKey StopCrawlPropertyKey = DependencyPropertyBuilder<ReportItemViewModel, Commands.RelayCommand>
+            .Register(nameof(StopCrawl))
+            .AsReadOnly();
+
+        /// <summary>
+        /// Identifies the <see cref="StopCrawl"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty StopCrawlProperty = StopCrawlPropertyKey.DependencyProperty;
+
+        public Commands.RelayCommand StopCrawl => (Commands.RelayCommand)GetValue(StopCrawlProperty);
+
+        /// <summary>
+        /// Called when the StopCrawl event is raised by <see cref="StopCrawl" />.
+        /// </summary>
+        /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="StopCrawl" />.</param>
+        protected void RaiseStopCrawlCommand(object parameter) // => StopCrawlCommand?.Invoke(this, new(parameter));
+        {
+            try { OnStopCrawlCommand(parameter); }
+            finally { StopCrawlCommand?.Invoke(this, new(parameter)); }
+        }
+
+        /// <summary>
+        /// Called when the <see cref="StopCrawl">StopCrawl Command</see> is invoked.
+        /// </summary>
+        /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="StopCrawl" />.</param>
+        protected virtual void OnStopCrawlCommand(object parameter)
+        {
+            // TODO: Implement OnStopCrawlCommand Logic
+        }
+
+        #endregion
+        #region SynchronizeNow Command Property Members
+
+        /// <summary>
+        /// Occurs when the <see cref="SynchronizeNow"/> is invoked.
+        /// </summary>
+        public event EventHandler<Commands.CommandEventArgs> SynchronizeNowCommand;
+
+        private static readonly DependencyPropertyKey SynchronizeNowPropertyKey = DependencyPropertyBuilder<ReportItemViewModel, Commands.RelayCommand>
+            .Register(nameof(SynchronizeNow))
+            .AsReadOnly();
+
+        /// <summary>
+        /// Identifies the <see cref="SynchronizeNow"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty SynchronizeNowProperty = SynchronizeNowPropertyKey.DependencyProperty;
+
+        public Commands.RelayCommand SynchronizeNow => (Commands.RelayCommand)GetValue(SynchronizeNowProperty);
+
+        /// <summary>
+        /// Called when the SynchronizeNow event is raised by <see cref="SynchronizeNow" />.
+        /// </summary>
+        /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="SynchronizeNow" />.</param>
+        protected void RaiseSynchronizeNowCommand(object parameter) // => SynchronizeNowCommand?.Invoke(this, new(parameter));
+        {
+            try { OnSynchronizeNowCommand(parameter); }
+            finally { SynchronizeNowCommand?.Invoke(this, new(parameter)); }
+        }
+
+        /// <summary>
+        /// Called when the <see cref="SynchronizeNow">SynchronizeNow Command</see> is invoked.
+        /// </summary>
+        /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="SynchronizeNow" />.</param>
+        protected virtual void OnSynchronizeNowCommand(object parameter)
+        {
+            // TODO: Implement OnSynchronizeNowCommand Logic
+        }
+
+        #endregion
         public ReportItemViewModel([DisallowNull] CrawlConfigReportItem entity) : base(entity)
         {
+            SetValue(StartCrawlPropertyKey, new Commands.RelayCommand(RaiseStartCrawlCommand));
+            SetValue(StopCrawlPropertyKey, new Commands.RelayCommand(RaiseStopCrawlCommand));
+            SetValue(SynchronizeNowPropertyKey, new Commands.RelayCommand(RaiseSynchronizeNowCommand));
             UpstreamId = entity.UpstreamId;
             LastSynchronizedOn = entity.LastSynchronizedOn;
         }
