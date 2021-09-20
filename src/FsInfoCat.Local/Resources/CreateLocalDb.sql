@@ -960,7 +960,7 @@ CREATE VIEW IF NOT EXISTS "vSharedFileTagListing" AS SELECT "SharedFileTags".*, 
 	FROM "SharedFileTags"
 	LEFT JOIN "SharedTagDefinitions" ON "SharedFileTags"."DefinitionId"="SharedTagDefinitions"."Id";
 
-CREATE VIEW "vCrawlConfigReport" AS SELECT "CrawlConfigurations".*,
+CREATE VIEW IF NOT EXISTS "vCrawlConfigReport" AS SELECT "CrawlConfigurations".*,
 	iif("vSubdirectoryListingWithAncestorNames"."AncestorNames" IS NULL,
 		"vSubdirectoryListingWithAncestorNames"."Name",
 		printf('%s/%s', "vSubdirectoryListingWithAncestorNames"."Name", "vSubdirectoryListingWithAncestorNames"."AncestorNames")
