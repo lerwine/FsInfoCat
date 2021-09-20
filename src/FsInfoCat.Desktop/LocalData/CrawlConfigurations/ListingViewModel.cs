@@ -17,12 +17,6 @@ using System.Windows.Threading;
 
 namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
 {
-    /* BUG: Binding errors
-Severity	Count	Data Context	Binding Path	Target	Target Type	Description	File	Line	Project
-Error	1	ListItemViewModel	RootPath	TextBox.Text, Name='pathTextBox'	String	RootPath property not found on object of type ListItemViewModel.	\localdata\crawlconfigurations\listitemcontrol.xaml	45	FsInfoCat.Desktop
-Error	1	ListItemViewModel	FileSystemDetailText	TextBox.Text, Name='fileSystemTextBox'	String	FileSystemDetailText property not found on object of type ListItemViewModel.	\localdata\crawlconfigurations\listitemcontrol.xaml	63	FsInfoCat.Desktop
-
-     */
     public class ListingViewModel : ListingViewModel<CrawlConfigListItem, ListItemViewModel, ListingViewModel.FilterOptions>, INavigatedToNotifiable
     {
         private readonly EnumChoiceItem<CrawlStatus> _allOption;

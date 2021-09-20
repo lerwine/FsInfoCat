@@ -1,4 +1,4 @@
-﻿using FsInfoCat.Local;
+using FsInfoCat.Local;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -62,27 +62,12 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="Root"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty RootProperty = DependencyProperty.Register(nameof(Root), typeof(TSubdirectoryItem),
-            typeof(CrawlConfigurationViewModel<TEntity, TSubdirectoryEntity, TSubdirectoryItem, TCrawlJobLogEntity, TCrawlJobLogItem>),
-                new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-                (d as CrawlConfigurationViewModel<TEntity, TSubdirectoryEntity, TSubdirectoryItem, TCrawlJobLogEntity, TCrawlJobLogItem>)?
-                    .OnRootPropertyChanged((TSubdirectoryItem)e.OldValue, (TSubdirectoryItem)e.NewValue)));
+        public static readonly DependencyProperty RootProperty = DependencyPropertyBuilder<CrawlConfigurationViewModel<TEntity, TSubdirectoryEntity, TSubdirectoryItem, TCrawlJobLogEntity, TCrawlJobLogItem>, TSubdirectoryItem>
+            .Register(nameof(Root))
+            .DefaultValue(null)
+            .AsReadWrite();
 
-        /// <summary>
-        /// Gets or sets the starting subdirectory for the configured subdirectory crawl.
-        /// </summary>
-        /// <value>The starting subdirectory for the configured subdirectory crawl.</value>
         public TSubdirectoryItem Root { get => (TSubdirectoryItem)GetValue(RootProperty); set => SetValue(RootProperty, value); }
-
-        /// <summary>
-        /// Called when the value of the <see cref="Root"/> dependency property has changed.
-        /// </summary>
-        /// <param name="oldValue">The previous value of the <see cref="Root"/> property.</param>
-        /// <param name="newValue">The new value of the <see cref="Root"/> property.</param>
-        protected virtual void OnRootPropertyChanged(TSubdirectoryItem oldValue, TSubdirectoryItem newValue)
-        {
-            // TODO: Recalculate RootPath
-        }
 
         #endregion
         #region Logs Property Members

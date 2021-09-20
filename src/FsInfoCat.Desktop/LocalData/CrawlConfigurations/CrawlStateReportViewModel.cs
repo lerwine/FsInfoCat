@@ -21,10 +21,8 @@ using LinqExpression = System.Linq.Expressions.Expression;
 
 namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
 {
-    public class CrawlStateReportViewModel : ListingViewModel<CrawlConfigReportItem, ReportItemViewModel, ViewModel.Filter.Filter<CrawlConfigReportItem>>//, INavigatedToNotifiable
+    public class CrawlStateReportViewModel : ListingViewModel<CrawlConfigReportItem, ReportItemViewModel, ViewModel.Filter.Filter<CrawlConfigReportItem>>
     {
-        //private ViewModel.Filter.Filter<CrawlConfigReportItem> _currentReportOption;
-
         #region Owner Attached Property Members
 
         /// <summary>
@@ -60,7 +58,7 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
         public static readonly DependencyProperty IsSelectedProperty = DependencyPropertyBuilder<CrawlStateReportViewModel, bool>
             .RegisterAttached(PropertyName_IsSelected)
             .DefaultValue(false)
-            .OnChanged((d, oldValue, newValue) => RaiseIsSelectedPropertyChanged(d, oldValue, newValue))
+            .OnChanged((d, oldValue, newValue) => RaiseIsSelectedPropertyChanged(d, newValue))
             .AsReadWrite();
 
         public static bool GetIsSelected([DisallowNull] DependencyObject obj) => (bool)obj.GetValue(IsSelectedProperty);
@@ -73,7 +71,7 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
         /// <param name="obj">The object whose attached property value has changed.</param>
         /// <param name="oldValue">The previous value of the <see cref="IsSelected"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="IsSelected"/> property.</param>
-        private static void RaiseIsSelectedPropertyChanged(DependencyObject obj, bool oldValue, bool newValue)
+        private static void RaiseIsSelectedPropertyChanged(DependencyObject obj, bool newValue)
         {
             if (obj is ViewModel.Filter.Filter<CrawlConfigReportItem> item)
                 GetOwner(item)?.OnIsSelectedPropertyChanged(item, newValue);
@@ -131,7 +129,7 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
         #endregion
         #region ReportOptions Property Members
 
-        private HashSet<ViewModel.Filter.Filter<CrawlConfigReportItem>> _distinctItems = new();
+        private readonly HashSet<ViewModel.Filter.Filter<CrawlConfigReportItem>> _distinctItems = new();
 
         /// <summary>
         /// Identifies the <see cref="ReportOptions"/> dependency property.
@@ -153,7 +151,6 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
         protected virtual void OnReportOptionsPropertyChanged(ObservableCollection<ViewModel.Filter.Filter<CrawlConfigReportItem>> oldValue, ObservableCollection<ViewModel.Filter.Filter<CrawlConfigReportItem>> newValue)
         {
             _logger.LogDebug("Invoked {MethodName}(oldValue: {oldValue}, newValue: {newValue})", nameof(OnReportOptionsPropertyChanged), oldValue, newValue);
-            //ViewModel.Filter.Filter<CrawlConfigReportItem> oldOption = _currentReportOption ?? SelectedReportOption;
             foreach (ViewModel.Filter.Filter<CrawlConfigReportItem> item in _distinctItems)
             {
                 if (ReferenceEquals(this, GetOwner(item)))
@@ -312,19 +309,16 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
 
             if (newItem is not null)
             {
-                //CurrentReportOptionDisplayText = GetDisplayText(newItem);
                 SetIsSelected(newItem, true);
                 if (oldItem is not null && ReferenceEquals(this, GetOwner(oldItem)))
                     SetIsSelected(oldItem, false);
                 if (!DesignerProperties.GetIsInDesignMode(this))
                     ReloadAsync(newItem);
-                //CurrentReportOptionDisplayText = GetDisplayText(newItem);
             }
             else
             {
                 if (oldItem is not null && ReferenceEquals(this, GetOwner(oldItem)))
                     SetIsSelected(oldItem, false);
-                //CurrentReportOptionDisplayText = "";
                 ClearItems();
             }
         }
@@ -342,69 +336,10 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
         /// </summary>
         public static readonly DependencyProperty SelectedReportOptionProperty = SelectedReportOptionPropertyKey.DependencyProperty;
 
-        //public ViewModel.Filter.Filter<CrawlConfigReportItem> SelectedReportOption => (ViewModel.Filter.Filter<CrawlConfigReportItem>)GetValue(SelectedReportOptionProperty);
-
         public ViewModel.Filter.Filter<CrawlConfigReportItem> SelectedReportOption { get => (ViewModel.Filter.Filter<CrawlConfigReportItem>)GetValue(SelectedReportOptionProperty); private set => SetValue(SelectedReportOptionPropertyKey, value); }
 
         #endregion
 
-        //#region SelectedReportOption Property Members
-
-        ///// <summary>
-        ///// Identifies the <see cref="SelectedReportOption"/> dependency property.
-        ///// </summary>
-        //public static readonly DependencyProperty SelectedReportOptionProperty = DependencyPropertyBuilder<CrawlStateReportViewModel, ViewModel.Filter.Filter<CrawlConfigReportItem>>
-        //    .Register(nameof(SelectedReportOption))
-        //    .DefaultValue(null)
-        //    .OnChanged((d, oldValue, newValue) => (d as CrawlStateReportViewModel)?.OnSelectedReportOptionPropertyChanged(oldValue, newValue))
-        //    .AsReadWrite();
-
-        //public ViewModel.Filter.Filter<CrawlConfigReportItem> SelectedReportOption { get => (ViewModel.Filter.Filter<CrawlConfigReportItem>)GetValue(SelectedReportOptionProperty); set => SetValue(SelectedReportOptionProperty, value); }
-
-        ///// <summary>
-        ///// Called when the value of the <see cref="SelectedReportOption"/> dependency property has changed.
-        ///// </summary>
-        ///// <param name="oldValue">The previous value of the <see cref="SelectedReportOption"/> property.</param>
-        ///// <param name="newValue">The new value of the <see cref="SelectedReportOption"/> property.</param>
-        //protected virtual void OnSelectedReportOptionPropertyChanged(ViewModel.Filter.Filter<CrawlConfigReportItem> oldValue, ViewModel.Filter.Filter<CrawlConfigReportItem> newValue)
-        //{
-        //    if (newValue is not null)
-        //    {
-        //        CurrentReportOptionDisplayText =  GetDisplayText(newValue);
-        //        if (ReferenceEquals(this, GetOwner(newValue)))
-        //        {
-        //            SetIsSelected(newValue, true);
-        //            if (oldValue is not null && ReferenceEquals(this, GetOwner(oldValue)))
-        //                SetIsSelected(oldValue, false);
-        //        }
-        //        else
-        //            SelectedReportOption = (oldValue is null || !ReferenceEquals(this, GetOwner(oldValue))) ? _currentReportOption : oldValue;
-        //    }
-        //    else
-        //    {
-        //        if (oldValue is not null && ReferenceEquals(this, GetOwner(oldValue)))
-        //            SetIsSelected(oldValue, false);
-        //        CurrentReportOptionDisplayText = "";
-        //    }
-        //}
-
-        //#endregion
-        //#region CurrentReportOptionDisplayText Property Members
-
-        //private static readonly DependencyPropertyKey CurrentReportOptionDisplayTextPropertyKey = DependencyPropertyBuilder<CrawlStateReportViewModel, string>
-        //    .Register(nameof(CurrentReportOptionDisplayText))
-        //    .DefaultValue("")
-        //    .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default)
-        //    .AsReadOnly();
-
-        ///// <summary>
-        ///// Identifies the <see cref="CurrentReportOptionDisplayText"/> dependency property.
-        ///// </summary>
-        //public static readonly DependencyProperty CurrentReportOptionDisplayTextProperty = CurrentReportOptionDisplayTextPropertyKey.DependencyProperty;
-
-        //public string CurrentReportOptionDisplayText { get => GetValue(CurrentReportOptionDisplayTextProperty) as string; private set => SetValue(CurrentReportOptionDisplayTextPropertyKey, value); }
-
-        //#endregion
         public CrawlStateReportViewModel()
         {
             _logger = App.GetLogger(this);
@@ -413,10 +348,9 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
 
         private void UpdatePageTitle(ViewModel.Filter.Filter<CrawlConfigReportItem> currentReportOption) => PageTitle = GetDisplayText(currentReportOption).NullIfWhiteSpace() ?? FsInfoCat.Properties.Resources.DisplayName_FSInfoCat;
 
-        protected override bool ConfirmItemDelete([DisallowNull] ReportItemViewModel item, object parameter)
-        {
-            throw new NotImplementedException();
-        }
+        protected override bool ConfirmItemDelete([DisallowNull] ReportItemViewModel item, object parameter) => MessageBox.Show(Application.Current.MainWindow,
+            "This action cannot be undone!\n\nAre you sure you want to remove this crawl configuration from the database?",
+            "Delete Crawl Configuration", MessageBoxButton.YesNo, MessageBoxImage.Exclamation) == MessageBoxResult.Yes;
 
         protected override ReportItemViewModel CreateItemViewModel([DisallowNull] CrawlConfigReportItem entity) => new(entity);
 
@@ -485,6 +419,8 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
             {
                 string path = await Dispatcher.InvokeAsync(() =>
                 {
+
+
                     using System.Windows.Forms.FolderBrowserDialog dialog = new()
                     {
                         Description = "Select root folder",
@@ -551,7 +487,13 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
                     if (root is null)
                     {
                         crawlConfiguration = null;
-                        root = (await Subdirectory.ImportBranchAsync(directoryInfo, dbContext, statusListener.CancellationToken))?.Entity;
+                        EntityEntry<Subdirectory> entry = (await Subdirectory.ImportBranchAsync(directoryInfo, dbContext, statusListener.CancellationToken));
+                        if (entry is not null)
+                        {
+                            if (entry.State == EntityState.Added)
+                                await dbContext.SaveChangesAsync(statusListener.CancellationToken);
+                            root = entry.Entity;
+                        }
                     }
                     else
                         crawlConfiguration = await dbContext.Entry(root).GetRelatedReferenceAsync(d => d.CrawlConfiguration, statusListener.CancellationToken);
@@ -622,7 +564,6 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
         protected override void OnEditTaskFaulted([DisallowNull] Exception exception, ReportItemViewModel item)
         {
             UpdatePageTitle(SelectedReportOption);
-            //CurrentReportOptionDisplayText = GetDisplayText(SelectedReportOption);
             SelectedReportIndex = ReportOptions.IndexOf(SelectedReportOption);
             _ = MessageBox.Show(Application.Current.MainWindow,
                 ((exception is AsyncOperationFailureException aExc) ? aExc.UserMessage.NullIfWhiteSpace() :
@@ -638,7 +579,6 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
         {
             _logger.LogDebug("Invoked {MethodName}(options: {options})", nameof(OnReloadTaskCanceled), options);
             UpdatePageTitle(SelectedReportOption);
-            //CurrentReportOptionDisplayText = GetDisplayText(SelectedReportOption);
             SelectedReportIndex = ReportOptions.IndexOf(SelectedReportOption);
         }
 
@@ -646,14 +586,12 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
         {
             _logger.LogDebug("Invoked {MethodName}(options: {options})", nameof(OnReloadTaskCompleted), options);
             SelectedReportOption = options;
-            //CurrentReportOptionDisplayText = GetDisplayText(options);
         }
 
         protected override void OnReloadTaskFaulted([DisallowNull] Exception exception, ViewModel.Filter.Filter<CrawlConfigReportItem> options)
         {
             _logger.LogDebug("Invoked {MethodName}(options: {options})", nameof(OnReloadTaskFaulted), options);
             UpdatePageTitle(SelectedReportOption);
-            //CurrentReportOptionDisplayText = GetDisplayText(SelectedReportOption);
             SelectedReportIndex = ReportOptions.IndexOf(SelectedReportOption);
             _ = MessageBox.Show(Application.Current.MainWindow,
                 ((exception is AsyncOperationFailureException aExc) ? aExc.UserMessage.NullIfWhiteSpace() :

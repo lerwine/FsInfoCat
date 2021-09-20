@@ -95,7 +95,6 @@
                         <StackPanel Orientation="Horizontal" DataContext="{DynamicResource ViewModel}">
                             <Label Content="Status"/>
                             <Button Style="{DynamicResource AddNewButton}" Margin="{DynamicResource DefaultSpacingLeft}" Command="{Binding AddNewItem, Mode=OneWay}"/>
-                            <Button Style="{DynamicResource FilterButton}" Margin="{DynamicResource DefaultSpacingLeft}" Command="{Binding ShowFilterOptions, Mode=OneWay}"/>
                         </StackPanel>
                     </DataGridTemplateColumn.Header>
                     <DataGridTemplateColumn.CellTemplate>
@@ -105,6 +104,11 @@
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
             </DataGrid.Columns>
+            <DataGrid.RowDetailsTemplate>
+                <DataTemplate>
+                    <local:ReportItemControl/>
+                </DataTemplate>
+            </DataGrid.RowDetailsTemplate>
         </DataGrid>
     </Grid>
 </Page>
