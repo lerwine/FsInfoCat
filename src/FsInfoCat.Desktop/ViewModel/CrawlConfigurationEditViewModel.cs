@@ -171,7 +171,8 @@ namespace FsInfoCat.Desktop.ViewModel
 
         private void MaxTotalItems_ValidateInputValue(object sender, PropertyValidatingEventArgs<ulong> e)
         {
-            throw new NotImplementedException();
+            if (e.Value < 1L)
+                e.ValidationMessage = "Maximum total item count must be greater than zero.";
         }
 
         #endregion
