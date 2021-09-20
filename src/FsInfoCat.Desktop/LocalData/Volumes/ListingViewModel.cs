@@ -118,7 +118,7 @@ namespace FsInfoCat.Desktop.LocalData.Volumes
         {
             ListingOptions newOptions = ToListingOptions(StatusFilterOption.SelectedItem);
             if (newOptions.Status.HasValue ? _currentOptions.Status != newOptions.Status : (_currentOptions.Status.HasValue || newOptions.ShowActiveOnly != _currentOptions.ShowActiveOnly))
-                _ =ReloadAsync(newOptions);
+                _ = ReloadAsync(newOptions);
         }
 
         protected override void OnCancelFilterOptionsCommand(object parameter)
@@ -154,7 +154,7 @@ namespace FsInfoCat.Desktop.LocalData.Volumes
                 ((exception is AsyncOperationFailureException aExc) ? aExc.UserMessage.NullIfWhiteSpace() :
                     (exception as AggregateException)?.InnerExceptions.OfType<AsyncOperationFailureException>().Select(e => e.UserMessage)
                     .Where(m => !string.IsNullOrWhiteSpace(m)).FirstOrDefault()) ??
-                    "There was an unexpected error while loading items from the databse.\n\nSee logs for further information",
+                    "There was an unexpected error while loading items from the database.\n\nSee logs for further information",
                 "Database Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
@@ -198,15 +198,6 @@ namespace FsInfoCat.Desktop.LocalData.Volumes
             return await Dispatcher.InvokeAsync<PageFunction<ItemFunctionResultEventArgs>>(() => new EditPage(new(fs, item.Entity)));
         }
 
-        //protected async override Task<Volume> LoadItemAsync([DisallowNull] VolumeListItemWithFileSystem item, [DisallowNull] IWindowsStatusListener statusListener)
-        //{
-        //    using IServiceScope serviceScope = Services.CreateScope();
-        //    using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
-        //    Guid id = item.Id;
-        //    statusListener.SetMessage("Reading data");
-        //    return await dbContext.Volumes.Include(e => e.FileSystem).Include(e => e.RootDirectory).FirstOrDefaultAsync(e => e.Id == id, statusListener.CancellationToken);
-        //}
-
         protected override void OnEditTaskFaulted([DisallowNull] Exception exception, ListItemViewModel item)
         {
             UpdatePageTitle(_currentOptions);
@@ -215,7 +206,7 @@ namespace FsInfoCat.Desktop.LocalData.Volumes
                 ((exception is AsyncOperationFailureException aExc) ? aExc.UserMessage.NullIfWhiteSpace() :
                     (exception as AggregateException)?.InnerExceptions.OfType<AsyncOperationFailureException>().Select(e => e.UserMessage)
                     .Where(m => !string.IsNullOrWhiteSpace(m)).FirstOrDefault()) ??
-                    "There was an unexpected error while loading items from the databse.\n\nSee logs for further information",
+                    "There was an unexpected error while loading items from the database.\n\nSee logs for further information",
                 "Database Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
@@ -225,7 +216,7 @@ namespace FsInfoCat.Desktop.LocalData.Volumes
                 ((exception is AsyncOperationFailureException aExc) ? aExc.UserMessage.NullIfWhiteSpace() :
                     (exception as AggregateException)?.InnerExceptions.OfType<AsyncOperationFailureException>().Select(e => e.UserMessage)
                     .Where(m => !string.IsNullOrWhiteSpace(m)).FirstOrDefault()) ??
-                    "There was an unexpected error while deleting the item from the databse.\n\nSee logs for further information",
+                    "There was an unexpected error while deleting the item from the database.\n\nSee logs for further information",
                 "Database Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 

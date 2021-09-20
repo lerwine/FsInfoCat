@@ -1,19 +1,10 @@
 using FsInfoCat.Desktop.ViewModel;
 using FsInfoCat.Local;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Navigation;
-using System.Windows.Threading;
 
 namespace FsInfoCat.Desktop.LocalData.RecordedTVPropertySets
 {
@@ -145,31 +136,6 @@ namespace FsInfoCat.Desktop.LocalData.RecordedTVPropertySets
             UpstreamId = entity.UpstreamId;
             LastSynchronizedOn = entity.LastSynchronizedOn;
         }
-
-        //private static async Task<RecordedTVPropertySet> EditItemAsync([DisallowNull] RecordedTVPropertiesListItem item, [DisallowNull] IWindowsStatusListener statusListener)
-        //{
-        //    using IServiceScope serviceScope = Services.CreateScope();
-        //    using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
-        //    Guid id = item.Id;
-        //    statusListener.SetMessage("Reading data");
-        //    return await dbContext.RecordedTVPropertySets.Include(e => e.Files).FirstOrDefaultAsync(e => e.Id == id, statusListener.CancellationToken);
-        //}
-
-        //public static Task EditItemAsync([DisallowNull] RecordedTVPropertiesListItem item, ReturnEventHandler<ItemEditResult> onReturn = null)
-        //{
-        //    if (item is null)
-        //        throw new ArgumentNullException(nameof(item));
-        //    IWindowsAsyncJobFactoryService jobFactory = Services.GetRequiredService<IWindowsAsyncJobFactoryService>();
-        //    return jobFactory.StartNew("Loading database record", "Opening database", item, EditItemAsync).Task.ContinueWith(task => Dispatcher.Invoke(() =>
-        //    {
-        //        RecordedTVPropertySet entity = task.Result;
-        //        EditViewModel viewModel = new(entity, false) { ListItem = item };
-        //        EditPage page = new(viewModel);
-        //        if (onReturn is not null)
-        //            page.Return += onReturn;
-        //        Services.ServiceProvider.GetRequiredService<IApplicationNavigation>().Navigate(page);
-        //    }));
-        //}
 
         public static void AddNewItem(ReturnEventHandler<RecordedTVPropertySet> onReturn = null)
         {

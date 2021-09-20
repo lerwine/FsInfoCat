@@ -182,11 +182,11 @@
                 </Grid>
                 <Label Content="Next Scheduled Start" Style="{DynamicResource TopLabelPaddedTopLeftRight}" Target="{Binding ElementName=nextScheduledStartDatePicker, Mode=OneWay}"/>
                 <StackPanel Orientation="Horizontal" DataContext="{Binding NextScheduledStart, Mode=OneWay}">
-                    <DatePicker x:Name="nextScheduledStartDatePicker" Margin="{DynamicResource DefaultSpacingLeft}" SelectedDate="{Binding Date.InputValue}"/>
+                    <DatePicker x:Name="nextScheduledStartDatePicker" Margin="{DynamicResource DefaultSpacingLeft}" SelectedDate="{Binding InputValue}" DataContext="{Binding Date}"/>
                     <TextBlock Text=" at " VerticalAlignment="Center"/>
-                    <TextBox x:Name="nextScheduledStartHoursTextBox" Style="{DynamicResource TwoDigitNumericTextBox}" DataContext="{Binding Time, Mode=OneWay}" Text="{Binding Hours12, Mode=OneWay}"/>
+                    <TextBox x:Name="nextScheduledStartHoursTextBox" Style="{DynamicResource TwoDigitNumericTextBox}" DataContext="{Binding Time.Hours12, Mode=OneWay}" Text="{Binding InputValue}"/>
                     <TextBlock Text=" : " VerticalAlignment="Center"/>
-                    <TextBox x:Name="nextScheduledStartMinutesTextBox" Style="{DynamicResource TwoDigitNumericTextBox}" Margin="{DynamicResource DefaultSpacingRight}" DataContext="{Binding Time, Mode=OneWay}" Text="{Binding Minutes, Mode=OneWay}"/>
+                    <TextBox x:Name="nextScheduledStartMinutesTextBox" Style="{DynamicResource TwoDigitNumericTextBox}" Margin="{DynamicResource DefaultSpacingRight}" DataContext="{Binding Time.Minutes, Mode=OneWay}" Text="{Binding InputValue}"/>
                     <RadioButton x:Name="isAmRadioButton" Content="AM" GroupName="AmPm" DataContext="{Binding Time, Mode=OneWay}" IsChecked="{Binding IsPm, Converter={StaticResource InverseBooleanConverter}}"/>
                     <RadioButton x:Name="isPmRadioButton" Content="PM" DataContext="{Binding Time, Mode=OneWay}" IsChecked="{Binding IsPm}" GroupName="AmPm"/>
                 </StackPanel>

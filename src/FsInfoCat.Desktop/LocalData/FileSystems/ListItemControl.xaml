@@ -49,7 +49,7 @@
         <TextBox Grid.Row="3" Grid.Column="1" Style="{DynamicResource ReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingRight}" Text="{Binding ModifiedOn, Converter={StaticResource DateTimeToStringConverter}, Mode=OneWay}"/>
         <Label Content="Last Synchronized" Grid.Row="2" Grid.Column="2" Padding="{DynamicResource DefaultSpacingTopRight}" FontWeight="Bold" Grid.ColumnSpan="5"/>
         <TextBox Grid.Row="3" Grid.ColumnSpan="5" Grid.Column="2" Style="{DynamicResource ReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingRight}" Text="{Binding LastSynchronizedOn, Converter={StaticResource DateTimeToStringConverter}, Mode=OneWay}"/>
-        <Button Grid.Column="7" Grid.Row="3" Style="{DynamicResource SyncDisabledButton}" ToolTip="Synchronization disabled - no remote connection configured." Margin="{DynamicResource DefaultSpacingRight}" Command="{Binding SynchronizeNow, Mode=OneWay}"/>
+        <Button Grid.Column="7" Grid.Row="3" Style="{DynamicResource SyncButton}" ToolTip="Synchronization disabled - no remote connection configured." Margin="{DynamicResource DefaultSpacingRight}" Command="{Binding SynchronizeNow, Mode=OneWay}"/>
         <Label Grid.Row="4" Content="Notes" Grid.ColumnSpan="7" Padding="{DynamicResource DefaultSpacingTopLeftRight}" FontWeight="Bold"/>
         <TextBox Grid.Row="5" Grid.ColumnSpan="8" Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingBottomLeftRight}" Text="{Binding Notes}"/>
     </Grid>

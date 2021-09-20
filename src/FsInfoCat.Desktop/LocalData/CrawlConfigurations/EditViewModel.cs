@@ -1,21 +1,16 @@
 using FsInfoCat.Desktop.ViewModel;
 using FsInfoCat.Local;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Security;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Navigation;
 using System.Windows.Threading;
 
 namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
@@ -150,7 +145,7 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
             ((exception is AsyncOperationFailureException aExc) ? aExc.UserMessage.NullIfWhiteSpace() :
                 (exception as AggregateException)?.InnerExceptions.OfType<AsyncOperationFailureException>().Select(e => e.UserMessage)
                 .Where(m => !string.IsNullOrWhiteSpace(m)).FirstOrDefault()) ??
-                "There was an unexpected error while importing the subdirectory into the databse.\n\nSee logs for further information",
+                "There was an unexpected error while importing the subdirectory into the database.\n\nSee logs for further information",
             "Database Error", MessageBoxButton.OK, MessageBoxImage.Error);
 
         private async Task<SubdirectoryListItemWithAncestorNames> ImportBranchAsync(DirectoryInfo directoryInfo, [DisallowNull] IWindowsStatusListener statusListener)
@@ -199,7 +194,7 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
                 ((exception is AsyncOperationFailureException aExc) ? aExc.UserMessage.NullIfWhiteSpace() :
                     (exception as AggregateException)?.InnerExceptions.OfType<AsyncOperationFailureException>().Select(e => e.UserMessage)
                     .Where(m => !string.IsNullOrWhiteSpace(m)).FirstOrDefault()) ??
-                    "There was an unexpected error while loading items from the databse.\n\nSee logs for further information",
+                    "There was an unexpected error while loading items from the database.\n\nSee logs for further information",
                 "Database Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 

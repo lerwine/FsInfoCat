@@ -163,7 +163,7 @@
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
                                     <TextBox x:Name="synchronizedTextBox" Margin="{DynamicResource DefaultSpacingLeftRight}" ToolTip="When record was last synchronized with remote database." Style="{DynamicResource ReadOnlyValueTextBox}"/>
-                                    <Button Style="{DynamicResource SyncDisabledButton}" ToolTip="Synchronization disabled - no remote connection configured." Margin="{DynamicResource DefaultSpacingRight}" Grid.Column="1" Command="{Binding SynchronizeNow, Mode=OneWay}"/>
+                                    <Button Style="{DynamicResource SyncButton}" ToolTip="Synchronization disabled - no remote connection configured." Margin="{DynamicResource DefaultSpacingRight}" Grid.Column="1" Command="{Binding SynchronizeNow, Mode=OneWay}"/>
                                 </Grid>
                             </StackPanel>
                         </WrapPanel>

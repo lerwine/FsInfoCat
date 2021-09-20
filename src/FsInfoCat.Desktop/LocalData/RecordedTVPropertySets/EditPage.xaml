@@ -62,6 +62,6 @@
         <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingLeftRight}" Text="{Binding CreatedOn}" Grid.Row="9" Grid.Column="2"/>
         <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingLeftRight}" Text="{Binding ModifiedOn}" Grid.Row="9" Grid.Column="3"/>
         <TextBox Style="{DynamicResource MultiLineReadOnlyValueTextBox}" Margin="{DynamicResource DefaultSpacingLeft}" Text="{Binding LastSynchronizedOn}" Grid.Row="9" Grid.Column="4" Grid.ColumnSpan="2"/>
-        <Button Style="{DynamicResource SyncDisabledButton}" Grid.Column="6" Margin="{DynamicResource DefaultSpacingRight}" ToolTip="Synchronization disabled - no remote connection configured." Grid.Row="9"/>
+        <Button Style="{DynamicResource SyncButton}" Grid.Column="6" Margin="{DynamicResource DefaultSpacingRight}" ToolTip="Synchronization disabled - no remote connection configured." Grid.Row="9"/>
     </Grid>
 </PageFunction>

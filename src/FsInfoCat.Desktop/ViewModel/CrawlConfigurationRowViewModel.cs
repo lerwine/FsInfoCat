@@ -104,8 +104,6 @@ namespace FsInfoCat.Desktop.ViewModel
         public DateTime? LastCrawlStart { get => (DateTime?)GetValue(LastCrawlStartProperty); set => SetValue(LastCrawlStartProperty, value); }
 
         #endregion
-        //public abstract DateTime? NextScheduledStart { get; set; }
-        //public abstract TimeSpan? RescheduleInterval { get; set; }
 
         #region RescheduleFromJobEnd Property Members
 
@@ -173,7 +171,6 @@ namespace FsInfoCat.Desktop.ViewModel
         protected virtual void OnMaxRecursionDepthPropertyChanged(ushort oldValue, ushort newValue) { }
 
         #endregion
-        //public abstract TimeSpan? TTL { get; set; }
 
         ICrawlConfigurationRow ICrawlConfigurationRowViewModel.Entity => Entity;
 
@@ -184,10 +181,6 @@ namespace FsInfoCat.Desktop.ViewModel
             StatusValue = entity.StatusValue;
             LastCrawlStart = entity.LastCrawlStart;
             LastCrawlEnd = entity.LastCrawlEnd;
-            //NextScheduledStart = entity.NextScheduledStart;
-            //long? seconds = entity.RescheduleInterval;
-            //RescheduleInterval = seconds.HasValue ? TimeSpan.FromSeconds(seconds.Value) : null;
-            //RescheduleFromJobEnd = entity.RescheduleFromJobEnd;
             RescheduleAfterFail = entity.RescheduleAfterFail;
             MaxRecursionDepth = entity.MaxRecursionDepth;
         }
@@ -211,13 +204,6 @@ namespace FsInfoCat.Desktop.ViewModel
                 case nameof(ICrawlConfigurationRow.LastCrawlEnd):
                     Dispatcher.CheckInvoke(() => LastCrawlEnd = Entity.LastCrawlEnd);
                     break;
-                //case nameof(ICrawlConfigurationRow.NextScheduledStart):
-                //    Dispatcher.CheckInvoke(() => NextScheduledStart = Entity.NextScheduledStart);
-                //    break;
-                //case nameof(ICrawlConfigurationRow.RescheduleInterval):
-                //    long? seconds = Entity.RescheduleInterval;
-                //    RescheduleInterval = seconds.HasValue ? TimeSpan.FromSeconds(seconds.Value) : null;
-                //    break;
                 case nameof(ICrawlConfigurationRow.RescheduleFromJobEnd):
                     Dispatcher.CheckInvoke(() => RescheduleFromJobEnd = Entity.RescheduleFromJobEnd);
                     break;
@@ -227,10 +213,6 @@ namespace FsInfoCat.Desktop.ViewModel
                 case nameof(ICrawlConfigurationRow.MaxRecursionDepth):
                     Dispatcher.CheckInvoke(() => MaxRecursionDepth = Entity.MaxRecursionDepth);
                     break;
-                //case nameof(ICrawlConfigurationRow.TTL):
-                //    long? ttl = Entity.TTL;
-                //    Dispatcher.CheckInvoke(() => TTL = ttl.HasValue ? TimeSpan.FromSeconds(ttl.Value) : null);
-                //    break;
                 default:
                     base.OnEntityPropertyChanged(propertyName);
                     return false;
