@@ -10,6 +10,7 @@
     xmlns:FsInfoCat="clr-namespace:FsInfoCat;assembly=FsInfoCat"
     xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
     x:Class="FsInfoCat.Desktop.LocalData.CrawlConfigurations.EditPage"
+      xmlns:View="clr-namespace:FsInfoCat.Desktop.View"
     x:TypeArguments="ViewModel:ItemFunctionResultEventArgs"
     mc:Ignorable="d" d:DataContext="{x:Type local:EditViewModel}"
     d:DesignHeight="768" d:DesignWidth="1024"
@@ -259,7 +260,21 @@
             <Label Content="Crawl Result Summary Logs" Style="{DynamicResource TopLabelPaddedTopLeftRight}" Target="{Binding ElementName=crawlLogsDataGrid, Mode=OneWay}"/>
             <Button Grid.Column="1" Style="{DynamicResource MiniRefreshButton}" VerticalAlignment="Bottom" Command="{Binding RefreshCrawlJobLogs, Mode=OneWay}"/>
         </Grid>
-        <DataGrid x:Name="crawlLogsDataGrid" Grid.Row="8" Grid.Column="1" Grid.ColumnSpan="2" Grid.RowSpan="3" Margin="{DynamicResource DefaultSpacingLeftRight}"/>
+        <DataGrid x:Name="crawlLogsDataGrid" Grid.Row="8" Grid.Column="1" Grid.ColumnSpan="2" Grid.RowSpan="3" Margin="{DynamicResource DefaultSpacingLeftRight}" ItemsSource="{Binding Logs, Mode=OneWay}" AutoGenerateColumns="False">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Start" Binding="{Binding CrawlStart, Converter={StaticResource DateTimeToStringConverter}}"/>
+                <DataGridTextColumn Header="End" Binding="{Binding CrawlEnd, Converter={StaticResource DateTimeToStringConverter}}"/>
+                <DataGridTextColumn Header="Message" Binding="{Binding StatusMessage}" Width="*"/>
+                <DataGridTemplateColumn MinWidth="100" Header="Status">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <View:CrawlStatusIndicator Status="{Binding Logs.StatusCode}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+
+        </DataGrid>
         <Grid x:Name="grid2" Grid.Row="11" Grid.RowSpan="1" Grid.Column="1" Grid.ColumnSpan="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
