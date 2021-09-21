@@ -1,6 +1,8 @@
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
 using System.ComponentModel;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -77,15 +79,25 @@ namespace FsInfoCat.Desktop.ViewModel
 
         private void OnNewCrawl(object parameter)
         {
-            // TODO: Implement OnNewCrawl(object)
-            throw new NotImplementedException();
-            //if (NavigatedContent is View.Local.CrawlConfigurationsPage crawlConfigurationsPage && crawlConfigurationsPage.DataContext is Local.CrawlConfigurationsPageVM crawlConfigurationsVM)
-            //    crawlConfigurationsVM.RaiseAddNewItem(parameter);
-            //else
-            //{
-            //    View.Local.EditCrawlConfigWindow window = new();
-            //    window.ShowDialog();
-            //}
+            LocalData.CrawlConfigurations.ListingViewModel.GetNewItemEditPageAsync(Dispatcher).ContinueWith(task => Dispatcher.Invoke(() =>
+            {
+                if (task.IsCanceled)
+                    return;
+                if (task.IsFaulted)
+                    _ = MessageBox.Show(Application.Current.MainWindow,
+                        ((task.Exception.InnerException is AsyncOperationFailureException aExc) ? aExc.UserMessage.NullIfWhiteSpace() :
+                            task.Exception.InnerExceptions.OfType<AsyncOperationFailureException>().Select(e => e.UserMessage)
+                            .Where(m => !string.IsNullOrWhiteSpace(m)).FirstOrDefault()) ??
+                            "There was an unexpected error while loading items from the database.\n\nSee logs for further information",
+                        "Database Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                else
+                {
+                    PageFunction<ItemFunctionResultEventArgs> page = task.Result;
+                    if (page is not null)
+                        Services.ServiceProvider.GetRequiredService<IApplicationNavigation>().Navigate(page);
+                }
+
+            }));
         }
 
         #endregion

@@ -78,20 +78,7 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
         /// Called when the StartCrawl event is raised by <see cref="StartCrawl" />.
         /// </summary>
         /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="StartCrawl" />.</param>
-        protected void RaiseStartCrawlCommand(object parameter) // => StartCrawlCommand?.Invoke(this, new(parameter));
-        {
-            try { OnStartCrawlCommand(parameter); }
-            finally { StartCrawlCommand?.Invoke(this, new(parameter)); }
-        }
-
-        /// <summary>
-        /// Called when the <see cref="StartCrawl">StartCrawl Command</see> is invoked.
-        /// </summary>
-        /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="StartCrawl" />.</param>
-        protected virtual void OnStartCrawlCommand(object parameter)
-        {
-            // TODO: Implement OnStartCrawlCommand Logic
-        }
+        protected void RaiseStartCrawlCommand(object parameter) => StartCrawlCommand?.Invoke(this, new(parameter));
 
         #endregion
         #region StopCrawl Command Property Members
@@ -116,20 +103,7 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
         /// Called when the StopCrawl event is raised by <see cref="StopCrawl" />.
         /// </summary>
         /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="StopCrawl" />.</param>
-        protected void RaiseStopCrawlCommand(object parameter) // => StopCrawlCommand?.Invoke(this, new(parameter));
-        {
-            try { OnStopCrawlCommand(parameter); }
-            finally { StopCrawlCommand?.Invoke(this, new(parameter)); }
-        }
-
-        /// <summary>
-        /// Called when the <see cref="StopCrawl">StopCrawl Command</see> is invoked.
-        /// </summary>
-        /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="StopCrawl" />.</param>
-        protected virtual void OnStopCrawlCommand(object parameter)
-        {
-            // TODO: Implement OnStopCrawlCommand Logic
-        }
+        protected void RaiseStopCrawlCommand(object parameter) => StopCrawlCommand?.Invoke(this, new(parameter));
 
         #endregion
         #region SynchronizeNow Command Property Members
@@ -154,20 +128,58 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
         /// Called when the SynchronizeNow event is raised by <see cref="SynchronizeNow" />.
         /// </summary>
         /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="SynchronizeNow" />.</param>
-        protected void RaiseSynchronizeNowCommand(object parameter) // => SynchronizeNowCommand?.Invoke(this, new(parameter));
-        {
-            try { OnSynchronizeNowCommand(parameter); }
-            finally { SynchronizeNowCommand?.Invoke(this, new(parameter)); }
-        }
+        protected void RaiseSynchronizeNowCommand(object parameter) => SynchronizeNowCommand?.Invoke(this, new(parameter));
+
+        #endregion
+        #region ShowCrawlActivityRecords Command Property Members
 
         /// <summary>
-        /// Called when the <see cref="SynchronizeNow">SynchronizeNow Command</see> is invoked.
+        /// Occurs when the <see cref="ShowCrawlActivityRecords"/> is invoked.
         /// </summary>
-        /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="SynchronizeNow" />.</param>
-        protected virtual void OnSynchronizeNowCommand(object parameter)
-        {
-            // TODO: Implement OnSynchronizeNowCommand Logic
-        }
+        public event EventHandler<Commands.CommandEventArgs> ShowCrawlActivityRecordsCommand;
+
+        private static readonly DependencyPropertyKey ShowCrawlActivityRecordsPropertyKey = DependencyPropertyBuilder<ReportItemViewModel, Commands.RelayCommand>
+            .Register(nameof(ShowCrawlActivityRecords))
+            .AsReadOnly();
+
+        /// <summary>
+        /// Identifies the <see cref="ShowCrawlActivityRecords"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ShowCrawlActivityRecordsProperty = ShowCrawlActivityRecordsPropertyKey.DependencyProperty;
+
+        public Commands.RelayCommand ShowCrawlActivityRecords => (Commands.RelayCommand)GetValue(ShowCrawlActivityRecordsProperty);
+
+        /// <summary>
+        /// Called when the ShowCrawlActivityRecords event is raised by <see cref="ShowCrawlActivityRecords" />.
+        /// </summary>
+        /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="ShowCrawlActivityRecords" />.</param>
+        protected void RaiseShowCrawlActivityRecordsCommand(object parameter) => ShowCrawlActivityRecordsCommand?.Invoke(this, new(parameter));
+
+        #endregion
+
+        #region OpenRootSubdirectory Command Property Members
+
+        /// <summary>
+        /// Occurs when the <see cref="OpenRootSubdirectory"/> is invoked.
+        /// </summary>
+        public event EventHandler<Commands.CommandEventArgs> OpenRootSubdirectoryCommand;
+
+        private static readonly DependencyPropertyKey OpenRootSubdirectoryPropertyKey = DependencyPropertyBuilder<ReportItemViewModel, Commands.RelayCommand>
+            .Register(nameof(OpenRootSubdirectory))
+            .AsReadOnly();
+
+        /// <summary>
+        /// Identifies the <see cref="OpenRootSubdirectory"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty OpenRootSubdirectoryProperty = OpenRootSubdirectoryPropertyKey.DependencyProperty;
+
+        public Commands.RelayCommand OpenRootSubdirectory => (Commands.RelayCommand)GetValue(OpenRootSubdirectoryProperty);
+
+        /// <summary>
+        /// Called when the OpenRootSubdirectory event is raised by <see cref="OpenRootSubdirectory" />.
+        /// </summary>
+        /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="OpenRootSubdirectory" />.</param>
+        protected void RaiseOpenRootSubdirectoryCommand(object parameter) => OpenRootSubdirectoryCommand?.Invoke(this, new(parameter));
 
         #endregion
         public ReportItemViewModel([DisallowNull] CrawlConfigReportItem entity) : base(entity)
@@ -175,6 +187,8 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
             SetValue(StartCrawlPropertyKey, new Commands.RelayCommand(RaiseStartCrawlCommand));
             SetValue(StopCrawlPropertyKey, new Commands.RelayCommand(RaiseStopCrawlCommand));
             SetValue(SynchronizeNowPropertyKey, new Commands.RelayCommand(RaiseSynchronizeNowCommand));
+            SetValue(ShowCrawlActivityRecordsPropertyKey, new Commands.RelayCommand(RaiseShowCrawlActivityRecordsCommand));
+            SetValue(OpenRootSubdirectoryPropertyKey, new Commands.RelayCommand(RaiseOpenRootSubdirectoryCommand));
             UpstreamId = entity.UpstreamId;
             LastSynchronizedOn = entity.LastSynchronizedOn;
         }

@@ -354,9 +354,66 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
 
         protected override ReportItemViewModel CreateItemViewModel([DisallowNull] CrawlConfigReportItem entity) => new(entity);
 
+        private void Item_OpenRootSubdirectoryCommand(object sender, Commands.CommandEventArgs e)
+        {
+            // TODO: Implement Item_OpenRootSubdirectoryCommand
+            MessageBox.Show("You  have invoked a command which has not yet been implemented.", "Not Implemented", MessageBoxButton.OK, MessageBoxImage.Hand);
+        }
+
+        private void Item_ShowCrawlActivityRecordsCommand(object sender, Commands.CommandEventArgs e)
+        {
+            // TODO: Implement Item_ShowCrawlActivityRecordsCommand
+            MessageBox.Show("You  have invoked a command which has not yet been implemented.", "Not Implemented", MessageBoxButton.OK, MessageBoxImage.Hand);
+        }
+
+        private void Item_StartCrawlCommand(object sender, Commands.CommandEventArgs e)
+        {
+            // TODO: Implement Item_StartCrawlCommand
+            MessageBox.Show("You  have invoked a command which has not yet been implemented.", "Not Implemented", MessageBoxButton.OK, MessageBoxImage.Hand);
+        }
+
+        private void Item_StopCrawlCommand(object sender, Commands.CommandEventArgs e)
+        {
+            // TODO: Implement Item_StopCrawlCommand
+            MessageBox.Show("You  have invoked a command which has not yet been implemented.", "Not Implemented", MessageBoxButton.OK, MessageBoxImage.Hand);
+        }
+
+        protected override void AddItem(ReportItemViewModel item)
+        {
+            base.AddItem(item);
+            item.OpenRootSubdirectoryCommand += Item_OpenRootSubdirectoryCommand;
+            item.ShowCrawlActivityRecordsCommand += Item_ShowCrawlActivityRecordsCommand;
+            item.StartCrawlCommand += Item_StartCrawlCommand;
+            item.StopCrawlCommand += Item_StopCrawlCommand;
+        }
+
+        protected override bool RemoveItem(ReportItemViewModel item)
+        {
+            return base.RemoveItem(item);
+            item.OpenRootSubdirectoryCommand -= Item_OpenRootSubdirectoryCommand;
+            item.ShowCrawlActivityRecordsCommand -= Item_ShowCrawlActivityRecordsCommand;
+            item.StartCrawlCommand -= Item_StartCrawlCommand;
+            item.StopCrawlCommand -= Item_StopCrawlCommand;
+        }
+
+        protected override ReportItemViewModel[] ClearItems()
+        {
+            ReportItemViewModel[] removedItems = base.ClearItems();
+            foreach (ReportItemViewModel item in removedItems)
+            {
+                item.OpenRootSubdirectoryCommand -= Item_OpenRootSubdirectoryCommand;
+                item.ShowCrawlActivityRecordsCommand -= Item_ShowCrawlActivityRecordsCommand;
+                item.StartCrawlCommand -= Item_StartCrawlCommand;
+                item.StopCrawlCommand -= Item_StopCrawlCommand;
+            }
+            return removedItems;
+        }
+
         protected override Task<EntityEntry> DeleteEntityFromDbContextAsync([DisallowNull] CrawlConfigReportItem entity, [DisallowNull] LocalDbContext dbContext, [DisallowNull] IWindowsStatusListener statusListener)
         {
-            throw new NotImplementedException();
+            // TODO: Implement DeleteEntityFromDbContextAsync
+            Dispatcher.ShowMessageBoxAsync("You  have invoked a command which has not yet been implemented.", "Not Implemented", MessageBoxButton.OK, MessageBoxImage.Hand, statusListener.CancellationToken);
+            throw new NotImplementedException($"{nameof(DeleteEntityFromDbContextAsync)} not implemented");
         }
 
         protected override bool EntityMatchesCurrentFilter([DisallowNull] CrawlConfigReportItem entity) => SelectedReportOption?.IsMatch(entity) ?? true;

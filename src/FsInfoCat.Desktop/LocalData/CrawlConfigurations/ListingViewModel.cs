@@ -241,40 +241,21 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
             CrawlConfiguration fs = await dbContext.CrawlConfigurations.FirstOrDefaultAsync(f => f.Id == id, statusListener.CancellationToken);
             if (fs is null)
             {
-                await Dispatcher.ShowMessageBoxAsync("Item not found in database. Click OK to refresh listing.", "Security Exception", MessageBoxButton.OK, MessageBoxImage.Error, statusListener.CancellationToken);
+                await Dispatcher.ShowMessageBoxAsync("Item not found in database. Click OK to refresh listing.", "Not Found", MessageBoxButton.OK, MessageBoxImage.Error, statusListener.CancellationToken);
                 ReloadAsync(_currentStatusOptions);
                 return null;
             }
             return await Dispatcher.InvokeAsync<PageFunction<ItemFunctionResultEventArgs>>(() => new DetailsPage(new(fs, item.Entity)));
         }
 
-        protected override async Task<PageFunction<ItemFunctionResultEventArgs>> GetEditPageAsync(ListItemViewModel listItem, [DisallowNull] IWindowsStatusListener statusListener)
+        private static async Task<(CrawlConfiguration CrawlConfiguration, SubdirectoryListItemWithAncestorNames SelectedRoot, CrawlConfigListItem ItemEntity)?> GetNewItemParamsAsync([DisallowNull] Dispatcher dispatcher, [DisallowNull] IWindowsStatusListener statusListener)
         {
-            CrawlConfiguration crawlConfiguration;
-            SubdirectoryListItemWithAncestorNames selectedRoot;
-            CrawlConfigListItem itemEntity;
-            if (listItem is not null)
-            {
-                using IServiceScope serviceScope = Services.CreateScope();
-                using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
-                Guid id = listItem.Entity.Id;
-                crawlConfiguration = await dbContext.CrawlConfigurations.FirstOrDefaultAsync(c => c.Id == id, statusListener.CancellationToken);
-                if (crawlConfiguration is null)
-                    selectedRoot = null;
-                else
-                {
-                    id = crawlConfiguration.RootId;
-                    selectedRoot = await dbContext.SubdirectoryListingWithAncestorNames.FirstOrDefaultAsync(d => d.Id == id);
-                }
-                return await CreateEditPageAsync(crawlConfiguration, selectedRoot, listItem.Entity, statusListener);
-            }
-
-            itemEntity = null;
-            selectedRoot = null;
-            crawlConfiguration = null;
+            SubdirectoryListItemWithAncestorNames selectedRoot = null;
+            CrawlConfiguration crawlConfiguration = null;
+            CrawlConfigListItem itemEntity = null;
             while (selectedRoot is null)
             {
-                string path = await Dispatcher.InvokeAsync(() =>
+                string path = await dispatcher.InvokeAsync(() =>
                 {
                     using System.Windows.Forms.FolderBrowserDialog dialog = new()
                     {
@@ -291,7 +272,7 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
                 catch (SecurityException exc)
                 {
                     statusListener.Logger.LogError(exc, "Permission denied getting directory information for {Path}.", path);
-                    switch (await Dispatcher.ShowMessageBoxAsync($"Permission denied while attempting to import subdirectory.", "Security Exception", MessageBoxButton.OKCancel, MessageBoxImage.Error,
+                    switch (await dispatcher.ShowMessageBoxAsync($"Permission denied while attempting to import subdirectory.", "Security Exception", MessageBoxButton.OKCancel, MessageBoxImage.Error,
                         statusListener.CancellationToken))
                     {
                         case MessageBoxResult.OK:
@@ -305,7 +286,7 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
                 catch (PathTooLongException exc)
                 {
                     statusListener.Logger.LogError(exc, "Error getting directory information for ({Path} is too long).", path);
-                    switch (await Dispatcher.ShowMessageBoxAsync($"Path is too long. Cannnot import subdirectory as crawl root.", "Path Too Long", MessageBoxButton.OKCancel, MessageBoxImage.Error, statusListener.CancellationToken))
+                    switch (await dispatcher.ShowMessageBoxAsync($"Path is too long. Cannnot import subdirectory as crawl root.", "Path Too Long", MessageBoxButton.OKCancel, MessageBoxImage.Error, statusListener.CancellationToken))
                     {
                         case MessageBoxResult.OK:
                             selectedRoot = null;
@@ -318,7 +299,7 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
                 catch (Exception exc)
                 {
                     statusListener.Logger.LogError(exc, "Error getting directory information for {Path}.", path);
-                    switch (await Dispatcher.ShowMessageBoxAsync($"Unable to import subdirectory. See system logs for details.", "File System Error", MessageBoxButton.OKCancel, MessageBoxImage.Error,
+                    switch (await dispatcher.ShowMessageBoxAsync($"Unable to import subdirectory. See system logs for details.", "File System Error", MessageBoxButton.OKCancel, MessageBoxImage.Error,
                         statusListener.CancellationToken))
                     {
                         case MessageBoxResult.OK:
@@ -351,7 +332,7 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
                 }
                 if (crawlConfiguration is not null)
                 {
-                    switch (await Dispatcher.ShowMessageBoxAsync($"There is already a configuration defined for that path. Would you like to edit that configuration, instead?", "Configuration exists", MessageBoxButton.YesNoCancel,
+                    switch (await dispatcher.ShowMessageBoxAsync($"There is already a configuration defined for that path. Would you like to edit that configuration, instead?", "Configuration exists", MessageBoxButton.YesNoCancel,
                         MessageBoxImage.Warning, statusListener.CancellationToken))
                     {
                         case MessageBoxResult.Yes:
@@ -376,7 +357,55 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
                     }
                 }
             }
-            return await CreateEditPageAsync(crawlConfiguration ?? new(), selectedRoot, itemEntity, statusListener);
+            return (crawlConfiguration, selectedRoot, itemEntity);
+        }
+
+        public static Task<PageFunction<ItemFunctionResultEventArgs>> GetNewItemEditPageAsync([DisallowNull] Dispatcher dispatcher)
+        {
+            IWindowsAsyncJobFactoryService jobFactory = Services.GetRequiredService<IWindowsAsyncJobFactoryService>();
+            return jobFactory.StartNew("Loading data", "Opening database", dispatcher, GetNewItemEditPageAsync).Task;
+        }
+
+        private async static Task<PageFunction<ItemFunctionResultEventArgs>> GetNewItemEditPageAsync([DisallowNull] Dispatcher dispatcher, [DisallowNull] IWindowsStatusListener statusListener)
+        {
+            (CrawlConfiguration CrawlConfiguration, SubdirectoryListItemWithAncestorNames SelectedRoot, CrawlConfigListItem ItemEntity)? args = await GetNewItemParamsAsync(dispatcher, statusListener);
+            if (args.HasValue)
+                return await dispatcher.InvokeAsync<PageFunction<ItemFunctionResultEventArgs>>(() =>
+                {
+                    if (args.Value.CrawlConfiguration is null || args.Value.SelectedRoot is null)
+                    {
+                        _ = MessageBox.Show(Application.Current.MainWindow, "Item not found in database.", "Not Found", MessageBoxButton.OK, MessageBoxImage.Error);
+                        return null;
+                    }
+                    return new EditPage(new(args.Value.CrawlConfiguration, args.Value.ItemEntity) { Root = new(args.Value.SelectedRoot) });
+                }, DispatcherPriority.Normal, statusListener.CancellationToken);
+            return null;
+        }
+
+        protected override async Task<PageFunction<ItemFunctionResultEventArgs>> GetEditPageAsync(ListItemViewModel listItem, [DisallowNull] IWindowsStatusListener statusListener)
+        {
+            CrawlConfiguration crawlConfiguration;
+            SubdirectoryListItemWithAncestorNames selectedRoot;
+            if (listItem is not null)
+            {
+                using IServiceScope serviceScope = Services.CreateScope();
+                using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+                Guid id = listItem.Entity.Id;
+                crawlConfiguration = await dbContext.CrawlConfigurations.FirstOrDefaultAsync(c => c.Id == id, statusListener.CancellationToken);
+                if (crawlConfiguration is null)
+                    selectedRoot = null;
+                else
+                {
+                    id = crawlConfiguration.RootId;
+                    selectedRoot = await dbContext.SubdirectoryListingWithAncestorNames.FirstOrDefaultAsync(d => d.Id == id);
+                }
+                return await CreateEditPageAsync(crawlConfiguration, selectedRoot, listItem.Entity, statusListener);
+            }
+
+            (CrawlConfiguration CrawlConfiguration, SubdirectoryListItemWithAncestorNames SelectedRoot, CrawlConfigListItem ItemEntity)? args = await GetNewItemParamsAsync(Dispatcher, statusListener);
+            if (args.HasValue)
+                return await CreateEditPageAsync(args.Value.CrawlConfiguration ?? new(), args.Value.SelectedRoot, args.Value.ItemEntity, statusListener);
+            return null;
         }
 
         protected override void OnEditTaskFaulted([DisallowNull] Exception exception, ListItemViewModel item)
