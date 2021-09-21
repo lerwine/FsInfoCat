@@ -1,18 +1,11 @@
 using FsInfoCat.Desktop.ViewModel;
 using FsInfoCat.Local;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Navigation;
 using System.Windows.Threading;
 
 namespace FsInfoCat.Desktop.LocalData.VideoPropertySets
@@ -39,7 +32,14 @@ namespace FsInfoCat.Desktop.LocalData.VideoPropertySets
         /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="SaveChanges" />.</param>
         protected virtual void OnSaveChangesCommand(object parameter)
         {
-            // TODO: Implement OnSaveChangesCommand Logic
+            if (ApplyChanges() || IsNew)
+            {
+                IWindowsAsyncJobFactoryService jobFactory = Services.GetRequiredService<IWindowsAsyncJobFactoryService>();
+                IAsyncJob<VideoPropertiesListItem> job = jobFactory.StartNew("Saving changes", "Opening database", IsNew, SaveChangesAsync);
+                job.Task.ContinueWith(task => Dispatcher.Invoke(() => OnSaveTaskCompleted(task)));
+            }
+            else
+                RaiseItemUnmodifiedResult();
         }
 
         #endregion
@@ -62,7 +62,8 @@ namespace FsInfoCat.Desktop.LocalData.VideoPropertySets
         /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="DiscardChanges" />.</param>
         protected virtual void OnDiscardChangesCommand(object parameter)
         {
-            // TODO: Implement OnDiscardChangesCommand Logic
+            RejectChanges();
+            RaiseItemUnmodifiedResult();
         }
 
         #endregion
@@ -142,10 +143,90 @@ namespace FsInfoCat.Desktop.LocalData.VideoPropertySets
             throw new NotImplementedException();
         }
 
+        private bool ApplyChanges()
+        {
+            if (Entity.IsChanged())
+                Entity.RejectChanges();
+            Entity.Compression = Compression;
+            Entity.Director = Director;
+            Entity.EncodingBitrate = EncodingBitrate;
+            Entity.FrameHeight = FrameHeight;
+            Entity.FrameRate = FrameRate;
+            Entity.FrameWidth = FrameWidth;
+            Entity.HorizontalAspectRatio = HorizontalAspectRatio;
+            Entity.LastSynchronizedOn = LastSynchronizedOn;
+            Entity.StreamName = StreamName;
+            Entity.StreamNumber = StreamNumber;
+            Entity.UpstreamId = UpstreamId;
+            Entity.VerticalAspectRatio = VerticalAspectRatio;
+            return Entity.IsChanged();
+        }
+
+        private void ReinitializeFromEntity()
+        {
+            Compression = Entity.Compression;
+            Director = Entity.Director;
+            EncodingBitrate = Entity.EncodingBitrate;
+            FrameHeight = Entity.FrameHeight;
+            FrameRate = Entity.FrameRate;
+            FrameWidth = Entity.FrameWidth;
+            HorizontalAspectRatio = Entity.HorizontalAspectRatio;
+            LastSynchronizedOn = Entity.LastSynchronizedOn;
+            StreamName = Entity.StreamName;
+            StreamNumber = Entity.StreamNumber;
+            UpstreamId = Entity.UpstreamId;
+            VerticalAspectRatio = Entity.VerticalAspectRatio;
+        }
+
+        private static async Task<VideoPropertiesListItem> SaveChangesAsync(bool isNew, IWindowsStatusListener statusListener)
+        {
+            // TODO: Implement SaveChangesAsync
+            throw new NotImplementedException();
+        }
+
+        private void OnSaveTaskCompleted(Task<VideoPropertiesListItem> task)
+        {
+            if (task.IsCanceled)
+                return;
+            if (task.IsFaulted)
+                _ = MessageBox.Show(Application.Current.MainWindow,
+                    ((task.Exception.InnerException is AsyncOperationFailureException aExc) ? aExc.UserMessage.NullIfWhiteSpace() :
+                        task.Exception.InnerExceptions.OfType<AsyncOperationFailureException>().Select(e => e.UserMessage)
+                        .Where(m => !string.IsNullOrWhiteSpace(m)).FirstOrDefault()) ??
+                        "There was an unexpected error while loading items from the database.\n\nSee logs for further information",
+                    "Database Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            else if (IsNew)
+                RaiseItemInsertedResult(task.Result);
+            else
+                RaiseItemUpdatedResult();
+        }
+
+        protected override void RejectChanges()
+        {
+            base.RejectChanges();
+            ReinitializeFromEntity();
+        }
+
         void INavigatingFromNotifiable.OnNavigatingFrom(CancelEventArgs e)
         {
-            // TODO: Prompt to lose changes if not saved
-            throw new NotImplementedException();
+            if (ApplyChanges())
+            {
+                switch (MessageBox.Show(Application.Current.MainWindow, "There are unsaved changes. Do you wish to save them before continuing?", "Unsaved Changes",
+                    MessageBoxButton.YesNoCancel, MessageBoxImage.Warning))
+                {
+                    case MessageBoxResult.Yes:
+                        IWindowsAsyncJobFactoryService jobFactory = Services.GetRequiredService<IWindowsAsyncJobFactoryService>();
+                        IAsyncJob<VideoPropertiesListItem> job = jobFactory.StartNew("Saving changes", "Opening database", IsNew, SaveChangesAsync);
+                        job.Task.ContinueWith(task => Dispatcher.Invoke(() => OnSaveTaskCompleted(task)));
+                        e.Cancel = true;
+                        break;
+                    case MessageBoxResult.No:
+                        break;
+                    default:
+                        e.Cancel = true;
+                        break;
+                }
+            }
         }
     }
 }

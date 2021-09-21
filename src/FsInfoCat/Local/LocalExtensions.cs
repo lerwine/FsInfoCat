@@ -53,7 +53,7 @@ namespace FsInfoCat.Local
             ILogicalDiskInfo disk = await serviceScope.ServiceProvider.GetRequiredService<IFileSystemDetailService>().GetLogicalDiskAsync(directoryInfo, cancellationToken);//mucinex dm
             if (disk is null)
             {
-                Uri uri = new Uri(((directoryInfo.Parent is null) ? directoryInfo : directoryInfo.Root).FullName, UriKind.Absolute);
+                Uri uri = new(((directoryInfo.Parent is null) ? directoryInfo : directoryInfo.Root).FullName, UriKind.Absolute);
                 if (uri.IsUnc)
                     return new VolumeIdentifier(uri);
                 return null;

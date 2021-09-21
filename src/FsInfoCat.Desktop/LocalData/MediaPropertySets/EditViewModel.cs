@@ -1,8 +1,11 @@
 using FsInfoCat.Desktop.ViewModel;
 using FsInfoCat.Local;
 using System;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Navigation;
 
@@ -30,7 +33,14 @@ namespace FsInfoCat.Desktop.LocalData.MediaPropertySets
         /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="SaveChanges" />.</param>
         protected virtual void OnSaveChangesCommand(object parameter)
         {
-            // TODO: Implement OnSaveChangesCommand Logic
+            if (ApplyChanges() || IsNew)
+            {
+                IWindowsAsyncJobFactoryService jobFactory = Services.GetRequiredService<IWindowsAsyncJobFactoryService>();
+                IAsyncJob<MediaPropertiesListItem> job = jobFactory.StartNew("Saving changes", "Opening database", IsNew, SaveChangesAsync);
+                job.Task.ContinueWith(task => Dispatcher.Invoke(() => OnSaveTaskCompleted(task)));
+            }
+            else
+                RaiseItemUnmodifiedResult();
         }
 
         #endregion
@@ -53,7 +63,8 @@ namespace FsInfoCat.Desktop.LocalData.MediaPropertySets
         /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="DiscardChanges" />.</param>
         protected virtual void OnDiscardChangesCommand(object parameter)
         {
-            // TODO: Implement OnDiscardChangesCommand Logic
+            RejectChanges();
+            RaiseItemUnmodifiedResult();
         }
 
         #endregion
@@ -137,21 +148,114 @@ namespace FsInfoCat.Desktop.LocalData.MediaPropertySets
             LastSynchronizedOn = entity.LastSynchronizedOn;
         }
 
-        public static void AddNewItem(ReturnEventHandler<MediaPropertySet> onReturn = null)
-        {
-            // TODO: Implement AddNewItem
-        }
-
         void INavigatedToNotifiable.OnNavigatedTo()
         {
             // TODO: Load option lists from database
             throw new NotImplementedException();
         }
 
+        private bool ApplyChanges()
+        {
+            if (Entity.IsChanged())
+                Entity.RejectChanges();
+            Entity.ContentDistributor = ContentDistributor;
+            Entity.CreatorApplication = CreatorApplication;
+            Entity.CreatorApplicationVersion = CreatorApplicationVersion;
+            Entity.DateReleased = DateReleased;
+            Entity.Duration = Converters.TimeSpanToStringConverter.ToMediaDuration(Duration);
+            Entity.DVDID = DVDID;
+            Entity.FrameCount = FrameCount;
+            Entity.LastSynchronizedOn = LastSynchronizedOn;
+            Entity.Producer = new(Producer);
+            Entity.ProtectionType = ProtectionType;
+            Entity.ProviderRating = ProviderRating;
+            Entity.ProviderStyle = ProviderStyle;
+            Entity.Publisher = Publisher;
+            Entity.Subtitle = Subtitle;
+            Entity.UpstreamId = UpstreamId;
+            Entity.Writer = new(Writer);
+            Entity.Year = Year;
+            return Entity.IsChanged();
+        }
+
+        private void ReinitializeFromEntity()
+        {
+            ContentDistributor = Entity.ContentDistributor;
+            CreatorApplication = Entity.CreatorApplication;
+            CreatorApplicationVersion = Entity.CreatorApplicationVersion;
+            DateReleased = Entity.DateReleased;
+            Duration = Converters.TimeSpanToStringConverter.FromMediaDuration(Entity.Duration);
+            DVDID = Entity.DVDID;
+            FrameCount = Entity.FrameCount;
+            LastSynchronizedOn = Entity.LastSynchronizedOn;
+            ProtectionType = Entity.ProtectionType;
+            ProviderRating = Entity.ProviderRating;
+            ProviderStyle = Entity.ProviderStyle;
+            Publisher = Entity.Publisher;
+            Subtitle = Entity.Subtitle;
+            UpstreamId = Entity.UpstreamId;
+            Year = Entity.Year;
+            ReadOnlyCollection<string> values = Entity.Producer;
+            Producer.Clear();
+            if (values is not null)
+                foreach (string s in values)
+                    Producer.Add(s ?? "");
+            values = Entity.Writer;
+            Writer.Clear();
+            if (values is not null)
+                foreach (string s in values)
+                    Writer.Add(s ?? "");
+        }
+
+        private static async Task<MediaPropertiesListItem> SaveChangesAsync(bool isNew, IWindowsStatusListener statusListener)
+        {
+            // TODO: Implement SaveChangesAsync
+            throw new NotImplementedException();
+        }
+
+        private void OnSaveTaskCompleted(Task<MediaPropertiesListItem> task)
+        {
+            if (task.IsCanceled)
+                return;
+            if (task.IsFaulted)
+                _ = MessageBox.Show(Application.Current.MainWindow,
+                    ((task.Exception.InnerException is AsyncOperationFailureException aExc) ? aExc.UserMessage.NullIfWhiteSpace() :
+                        task.Exception.InnerExceptions.OfType<AsyncOperationFailureException>().Select(e => e.UserMessage)
+                        .Where(m => !string.IsNullOrWhiteSpace(m)).FirstOrDefault()) ??
+                        "There was an unexpected error while loading items from the database.\n\nSee logs for further information",
+                    "Database Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            else if (IsNew)
+                RaiseItemInsertedResult(task.Result);
+            else
+                RaiseItemUpdatedResult();
+        }
+
+        protected override void RejectChanges()
+        {
+            base.RejectChanges();
+            ReinitializeFromEntity();
+        }
+
         void INavigatingFromNotifiable.OnNavigatingFrom(CancelEventArgs e)
         {
-            // TODO: Prompt to lose changes if not saved
-            throw new NotImplementedException();
+            if (ApplyChanges())
+            {
+                switch (MessageBox.Show(Application.Current.MainWindow, "There are unsaved changes. Do you wish to save them before continuing?", "Unsaved Changes",
+                    MessageBoxButton.YesNoCancel, MessageBoxImage.Warning))
+                {
+                    case MessageBoxResult.Yes:
+                        IWindowsAsyncJobFactoryService jobFactory = Services.GetRequiredService<IWindowsAsyncJobFactoryService>();
+                        IAsyncJob<MediaPropertiesListItem> job = jobFactory.StartNew("Saving changes", "Opening database", IsNew, SaveChangesAsync);
+                        job.Task.ContinueWith(task => Dispatcher.Invoke(() => OnSaveTaskCompleted(task)));
+                        e.Cancel = true;
+                        break;
+                    case MessageBoxResult.No:
+                        break;
+                    default:
+                        e.Cancel = true;
+                        break;
+                }
+            }
         }
     }
 }

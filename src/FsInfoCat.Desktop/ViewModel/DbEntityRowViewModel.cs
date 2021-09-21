@@ -6,7 +6,7 @@ using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel
 {
-    public class DbEntityRowViewModel<TEntity> : DependencyObject, IDbEntityRowViewModel<TEntity>
+    public abstract class DbEntityRowViewModel<TEntity> : DependencyObject, IDbEntityRowViewModel<TEntity>
         where TEntity : DbEntity
     {
         private TEntity _entity;
@@ -77,9 +77,16 @@ namespace FsInfoCat.Desktop.ViewModel
         protected DbEntityRowViewModel([DisallowNull] TEntity entity)
         {
             _entity = entity ?? throw new ArgumentNullException(nameof(entity));
+            _propertyChangedEventRelay = WeakPropertyChangedEventRelay.Attach(entity, OnEntityPropertyChanged);
             CreatedOn = entity.CreatedOn;
             ModifiedOn = entity.ModifiedOn;
-            _propertyChangedEventRelay = WeakPropertyChangedEventRelay.Attach(entity, OnEntityPropertyChanged);
+        }
+
+        protected virtual void RejectChanges()
+        {
+            _entity.RejectChanges();
+            CreatedOn = _entity.CreatedOn;
+            ModifiedOn = _entity.ModifiedOn;
         }
 
         protected virtual void OnEntityObjectChanged([DisallowNull] TEntity oldValue, [DisallowNull] TEntity newValue)

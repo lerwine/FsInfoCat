@@ -10,6 +10,20 @@ namespace FsInfoCat.Desktop.ViewModel
         where TFileEntity : DbEntity, IFileListItemWithBinaryPropertiesAndAncestorNames
         where TFileItem : FileWithBinaryPropertiesAndAncestorNamesViewModel<TFileEntity>
     {
+        #region Contributor Property Members
+
+        private static readonly DependencyPropertyKey ContributorPropertyKey = DependencyPropertyBuilder<DocumentPropertySetDetailsViewModel<TEntity, TFileEntity, TFileItem>, ObservableCollection<string>>
+            .Register(nameof(Contributor))
+            .AsReadOnly();
+
+        /// <summary>
+        /// Identifies the <see cref="Contributor"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ContributorProperty = ContributorPropertyKey.DependencyProperty;
+
+        public ObservableCollection<string> Contributor { get => (ObservableCollection<string>)GetValue(ContributorProperty); private set => SetValue(ContributorPropertyKey, value); }
+
+        #endregion
         #region Files Property Members
 
         protected ObservableCollection<TFileItem> BackingFiles { get; } = new();
@@ -50,6 +64,12 @@ namespace FsInfoCat.Desktop.ViewModel
         {
             InvocationState = state;
             SetValue(FilesPropertyKey, new ReadOnlyObservableCollection<TFileItem>(BackingFiles));
+            ObservableCollection<string> target = new();
+            Contributor = target;
+            ReadOnlyCollection<string> source = entity.Contributor;
+            if (source is not null)
+                foreach (string s in source)
+                    target.Add(s ?? "");
         }
     }
 }

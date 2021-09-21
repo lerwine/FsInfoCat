@@ -1,19 +1,9 @@
 using FsInfoCat.Desktop.ViewModel;
 using FsInfoCat.Local;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Navigation;
-using System.Windows.Threading;
 
 namespace FsInfoCat.Desktop.LocalData.CrawlLogs
 {
@@ -38,7 +28,14 @@ namespace FsInfoCat.Desktop.LocalData.CrawlLogs
         /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="SaveChanges" />.</param>
         protected virtual void OnSaveChangesCommand(object parameter)
         {
-            // TODO: Implement OnSaveChangesCommand Logic
+            if (ApplyChanges() || IsNew)
+            {
+                IWindowsAsyncJobFactoryService jobFactory = Services.GetRequiredService<IWindowsAsyncJobFactoryService>();
+                IAsyncJob<CrawlJobLogListItem> job = jobFactory.StartNew("Saving changes", "Opening database", IsNew, SaveChangesAsync);
+                job.Task.ContinueWith(task => Dispatcher.Invoke(() => OnSaveTaskCompleted(task)));
+            }
+            else
+                RaiseItemUnmodifiedResult();
         }
 
         #endregion
@@ -61,7 +58,8 @@ namespace FsInfoCat.Desktop.LocalData.CrawlLogs
         /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="DiscardChanges" />.</param>
         protected virtual void OnDiscardChangesCommand(object parameter)
         {
-            // TODO: Implement OnDiscardChangesCommand Logic
+            RejectChanges();
+            RaiseItemUnmodifiedResult();
         }
 
         #endregion
@@ -136,11 +134,6 @@ namespace FsInfoCat.Desktop.LocalData.CrawlLogs
             // TODO: Implement EditViewModel
         }
 
-        public static void AddNewItem(ReturnEventHandler<CrawlJobLog> onReturn = null)
-        {
-            // TODO: Implement AddNewItem
-        }
-
         void INavigatedToNotifiable.OnNavigatedTo()
         {
             // TODO: Load option lists from database
@@ -149,7 +142,25 @@ namespace FsInfoCat.Desktop.LocalData.CrawlLogs
 
         void INavigatingFromNotifiable.OnNavigatingFrom(CancelEventArgs e)
         {
-            // TODO: Prompt to lose changes if not saved
+            // TODO: Implement OnNavigatingFrom
+            throw new NotImplementedException();
+        }
+
+        private Task<CrawlJobLogListItem> SaveChangesAsync(bool isNew, IWindowsStatusListener arg2)
+        {
+            // TODO: Implement SaveChangesAsync
+            throw new NotImplementedException();
+        }
+
+        private void OnSaveTaskCompleted(Task<CrawlJobLogListItem> task)
+        {
+            // TODO: Implement OnSaveTaskCompleted
+            throw new NotImplementedException();
+        }
+
+        private bool ApplyChanges()
+        {
+            // TODO: Implement ApplyChanges
             throw new NotImplementedException();
         }
     }

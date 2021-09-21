@@ -27,14 +27,14 @@ namespace FsInfoCat.Desktop.Converters
         public static TimeSpan? FromMediaDuration(ulong? value)
         {
             if (value.HasValue)
-                return TimeSpan.FromMilliseconds((long)(value.Value / 10UL));
+                return TimeSpan.FromMilliseconds(System.Convert.ToDouble(value.Value) / 10.0);
             return null;
         }
 
         public static ulong? ToMediaDuration(TimeSpan? value)
         {
             if (value.HasValue)
-                return System.Convert.ToUInt64(value.Value.TotalMilliseconds) * 10UL;
+                return System.Convert.ToUInt64(value.Value.TotalMilliseconds * 10.0);
             return null;
         }
 

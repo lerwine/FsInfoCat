@@ -183,9 +183,95 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
                 ReloadAsync();
         }
 
+        protected override bool ApplyChanges()
+        {
+            if (Entity.IsChanged())
+                Entity.RejectChanges();
+            Entity.CreatedOn = CreatedOn;
+            Entity.DisplayName = DisplayName;
+            Entity.LastCrawlEnd = LastCrawlEnd;
+            Entity.LastCrawlStart = LastCrawlStart;
+            Entity.LastSynchronizedOn = LastSynchronizedOn;
+            Entity.MaxRecursionDepth = MaxRecursionDepth;
+            Entity.MaxTotalItems = MaxTotalItems.ResultValue;
+            Entity.ModifiedOn = ModifiedOn;
+            Entity.NextScheduledStart = NextScheduledStart.ResultValue;
+            Entity.Notes = Notes;
+            Entity.RescheduleAfterFail = RescheduleAfterFail;
+            Entity.RescheduleFromJobEnd = RescheduleFromJobEnd;
+            Entity.RescheduleInterval = RescheduleInterval.ResultValue?.ToSeconds();
+            Entity.RootId = Root.Entity.Id;
+            Entity.StatusValue = StatusValue;
+            Entity.TTL = MaxDuration.ResultValue?.ToSeconds();
+            Entity.UpstreamId = UpstreamId;
+            return Entity.IsChanged();
+        }
+
+        protected override void ReinitializeFromEntity()
+        {
+            base.ReinitializeFromEntity();
+            LastSynchronizedOn = Entity.LastSynchronizedOn;
+            UpstreamId = Entity.UpstreamId;
+            SetRootSubdirectory(Entity.RootId);
+        }
+
+        protected override IAsyncJob SaveChangesAsync(bool isNew)
+        {
+            IWindowsAsyncJobFactoryService jobFactory = Services.GetRequiredService<IWindowsAsyncJobFactoryService>();
+            IAsyncJob<CrawlConfigListItemBase> job = jobFactory.StartNew("Saving changes", "Opening database", IsNew, SaveChangesAsync);
+            job.Task.ContinueWith(task => Dispatcher.Invoke(() => OnSaveTaskCompleted(task)));
+            return job;
+        }
+
+        private static async Task<CrawlConfigListItemBase> SaveChangesAsync(bool isNew, IWindowsStatusListener statusListener)
+        {
+            // TODO: Implement SaveChangesAsync
+            throw new NotImplementedException();
+        }
+
+        private void OnSaveTaskCompleted(Task<CrawlConfigListItemBase> task)
+        {
+            if (task.IsCanceled)
+                return;
+            if (task.IsFaulted)
+                _ = MessageBox.Show(Application.Current.MainWindow,
+                    ((task.Exception.InnerException is AsyncOperationFailureException aExc) ? aExc.UserMessage.NullIfWhiteSpace() :
+                        task.Exception.InnerExceptions.OfType<AsyncOperationFailureException>().Select(e => e.UserMessage)
+                        .Where(m => !string.IsNullOrWhiteSpace(m)).FirstOrDefault()) ??
+                        "There was an unexpected error while loading items from the database.\n\nSee logs for further information",
+                    "Database Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            else if (IsNew)
+                RaiseItemInsertedResult(task.Result);
+            else
+                RaiseItemUpdatedResult();
+        }
+
+        protected override void RejectChanges()
+        {
+            base.RejectChanges();
+            ReinitializeFromEntity();
+        }
+
         void INavigatingFromNotifiable.OnNavigatingFrom(CancelEventArgs e)
         {
-            // TODO: Prompt to lose changes if not saved
+            if (ApplyChanges())
+            {
+                switch (MessageBox.Show(Application.Current.MainWindow, "There are unsaved changes. Do you wish to save them before continuing?", "Unsaved Changes",
+                    MessageBoxButton.YesNoCancel, MessageBoxImage.Warning))
+                {
+                    case MessageBoxResult.Yes:
+                        IWindowsAsyncJobFactoryService jobFactory = Services.GetRequiredService<IWindowsAsyncJobFactoryService>();
+                        IAsyncJob<CrawlConfigListItemBase> job = jobFactory.StartNew("Saving changes", "Opening database", IsNew, SaveChangesAsync);
+                        job.Task.ContinueWith(task => Dispatcher.Invoke(() => OnSaveTaskCompleted(task)));
+                        e.Cancel = true;
+                        break;
+                    case MessageBoxResult.No:
+                        break;
+                    default:
+                        e.Cancel = true;
+                        break;
+                }
+            }
         }
 
         protected override void OnReloadTaskFaulted(Exception exception)

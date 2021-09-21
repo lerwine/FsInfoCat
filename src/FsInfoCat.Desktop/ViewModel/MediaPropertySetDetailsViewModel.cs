@@ -10,6 +10,34 @@ namespace FsInfoCat.Desktop.ViewModel
         where TFileEntity : DbEntity, IFileListItemWithBinaryPropertiesAndAncestorNames
         where TFileItem : FileWithBinaryPropertiesAndAncestorNamesViewModel<TFileEntity>
     {
+        #region Producer Property Members
+
+        private static readonly DependencyPropertyKey ProducerPropertyKey = DependencyPropertyBuilder<MediaPropertySetDetailsViewModel<TEntity, TFileEntity, TFileItem>, ObservableCollection<string>>
+            .Register(nameof(Producer))
+            .AsReadOnly();
+
+        /// <summary>
+        /// Identifies the <see cref="Producer"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ProducerProperty = ProducerPropertyKey.DependencyProperty;
+
+        public ObservableCollection<string> Producer { get => (ObservableCollection<string>)GetValue(ProducerProperty); private set => SetValue(ProducerPropertyKey, value); }
+
+        #endregion
+        #region Writer Property Members
+
+        private static readonly DependencyPropertyKey WriterPropertyKey = DependencyPropertyBuilder<MediaPropertySetDetailsViewModel<TEntity, TFileEntity, TFileItem>, ObservableCollection<string>>
+            .Register(nameof(Writer))
+            .AsReadOnly();
+
+        /// <summary>
+        /// Identifies the <see cref="Writer"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty WriterProperty = WriterPropertyKey.DependencyProperty;
+
+        public ObservableCollection<string> Writer { get => (ObservableCollection<string>)GetValue(WriterProperty); private set => SetValue(WriterPropertyKey, value); }
+
+        #endregion
         #region Files Property Members
 
         protected ObservableCollection<TFileItem> BackingFiles { get; } = new();
@@ -50,6 +78,18 @@ namespace FsInfoCat.Desktop.ViewModel
         {
             InvocationState = state;
             SetValue(FilesPropertyKey, new ReadOnlyObservableCollection<TFileItem>(BackingFiles));
+            ObservableCollection<string> target = new();
+            Producer = target;
+            ReadOnlyCollection<string> items = entity.Producer;
+            if (items is not null)
+                foreach (string s in items)
+                    target.Add(s);
+            target = new();
+            Writer = target;
+            items = entity.Writer;
+            if (items is not null)
+                foreach (string s in items)
+                    target.Add(s);
         }
     }
 }

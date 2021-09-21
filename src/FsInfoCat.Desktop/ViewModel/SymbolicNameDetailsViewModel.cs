@@ -1,10 +1,11 @@
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel
 {
-    public class SymbolicNameDetailsViewModel<TEntity, TFileSystemEntity, TFileSystemModel> : SymbolicNameRowViewModel<TEntity>
+    public class SymbolicNameDetailsViewModel<TEntity, TFileSystemEntity, TFileSystemModel> : SymbolicNameRowViewModel<TEntity>, IItemFunctionViewModel<TEntity>
         where TEntity : DbEntity, ISymbolicName
         where TFileSystemEntity : DbEntity, IFileSystemRow
         where TFileSystemModel : FileSystemRowViewModel<TFileSystemEntity>
@@ -30,9 +31,40 @@ namespace FsInfoCat.Desktop.ViewModel
         private void OnFileSystemPropertyChanged(TFileSystemModel oldValue, TFileSystemModel newValue) { }
 
         #endregion
+        #region Completed Event Members
+
+        public event EventHandler<ItemFunctionResultEventArgs> Completed;
+
+        internal object InvocationState { get; }
+
+        object IItemFunctionViewModel.InvocationState => InvocationState;
+
+        protected virtual void OnItemFunctionResult(ItemFunctionResultEventArgs args) => Completed?.Invoke(this, args);
+
+        protected void RaiseItemInsertedResult([DisallowNull] DbEntity entity) => OnItemFunctionResult(new(ItemFunctionResult.Inserted, entity, InvocationState));
+
+        protected void RaiseItemUpdatedResult() => OnItemFunctionResult(new(ItemFunctionResult.ChangesSaved, Entity, InvocationState));
+
+        protected void RaiseItemDeletedResult() => OnItemFunctionResult(new(ItemFunctionResult.Deleted, Entity, InvocationState));
+
+        protected void RaiseItemUnmodifiedResult() => OnItemFunctionResult(new(ItemFunctionResult.Unmodified, Entity, InvocationState));
+
+        #endregion
 
         public SymbolicNameDetailsViewModel([DisallowNull] TEntity entity) : base(entity)
         {
+        }
+
+        protected void SetFileSystem(Guid id)
+        {
+            // TODO: Impolement SetFileSystem
+            throw new NotImplementedException();
+        }
+
+        protected void SetFileSystem(IFileSystemRow fileSystem)
+        {
+            // TODO: Impolement SetFileSystem
+            throw new NotImplementedException();
         }
     }
 }

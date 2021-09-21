@@ -2,8 +2,9 @@ using FsInfoCat.Desktop.ViewModel;
 using FsInfoCat.Local;
 using System;
 using System.ComponentModel;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Navigation;
 
 namespace FsInfoCat.Desktop.LocalData.SymbolicNames
 {
@@ -28,7 +29,14 @@ namespace FsInfoCat.Desktop.LocalData.SymbolicNames
         /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="SaveChanges" />.</param>
         protected virtual void OnSaveChangesCommand(object parameter)
         {
-            // TODO: Implement OnSaveChangesCommand Logic
+            if (ApplyChanges() || IsNew)
+            {
+                IWindowsAsyncJobFactoryService jobFactory = Services.GetRequiredService<IWindowsAsyncJobFactoryService>();
+                IAsyncJob<SymbolicNameListItem> job = jobFactory.StartNew("Saving changes", "Opening database", IsNew, SaveChangesAsync);
+                job.Task.ContinueWith(task => Dispatcher.Invoke(() => OnSaveTaskCompleted(task)));
+            }
+            else
+                RaiseItemUnmodifiedResult();
         }
 
         #endregion
@@ -51,7 +59,8 @@ namespace FsInfoCat.Desktop.LocalData.SymbolicNames
         /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="DiscardChanges" />.</param>
         protected virtual void OnDiscardChangesCommand(object parameter)
         {
-            // TODO: Implement OnDiscardChangesCommand Logic
+            RejectChanges();
+            RaiseItemUnmodifiedResult();
         }
 
         #endregion
@@ -125,21 +134,90 @@ namespace FsInfoCat.Desktop.LocalData.SymbolicNames
             LastSynchronizedOn = entity.LastSynchronizedOn;
         }
 
-        public static void AddNewItem(ReturnEventHandler<SymbolicName> onReturn = null)
-        {
-            // TODO: Implement AddNewItem
-        }
-
         void INavigatedToNotifiable.OnNavigatedTo()
         {
             // TODO: Load option lists from database
             throw new NotImplementedException();
         }
 
+        private bool ApplyChanges()
+        {
+            if (Entity.IsChanged())
+                Entity.RejectChanges();
+            Entity.FileSystemId = FileSystem.Entity.Id;
+            Entity.IsInactive = IsInactive;
+            Entity.LastSynchronizedOn = LastSynchronizedOn;
+            Entity.Name = Name;
+            Entity.Notes = Notes;
+            Entity.Priority = Priority;
+            Entity.UpstreamId = UpstreamId;
+            return Entity.IsChanged();
+        }
+
+        private void ReinitializeFromEntity()
+        {
+            FileSystem fileSystem = Entity.FileSystem;
+            if (fileSystem is null)
+                SetFileSystem(Entity.FileSystemId);
+            else
+                SetFileSystem(fileSystem);
+            IsInactive = Entity.IsInactive;
+            LastSynchronizedOn = Entity.LastSynchronizedOn;
+            Name = Entity.Name;
+            Notes = Entity.Notes;
+            Priority = Entity.Priority;
+            UpstreamId = Entity.UpstreamId;
+        }
+
+        private static async Task<SymbolicNameListItem> SaveChangesAsync(bool isNew, IWindowsStatusListener statusListener)
+        {
+            // TODO: Implement SaveChangesAsync
+            throw new NotImplementedException();
+        }
+
+        private void OnSaveTaskCompleted(Task<SymbolicNameListItem> task)
+        {
+            if (task.IsCanceled)
+                return;
+            if (task.IsFaulted)
+                _ = MessageBox.Show(Application.Current.MainWindow,
+                    ((task.Exception.InnerException is AsyncOperationFailureException aExc) ? aExc.UserMessage.NullIfWhiteSpace() :
+                        task.Exception.InnerExceptions.OfType<AsyncOperationFailureException>().Select(e => e.UserMessage)
+                        .Where(m => !string.IsNullOrWhiteSpace(m)).FirstOrDefault()) ??
+                        "There was an unexpected error while loading items from the database.\n\nSee logs for further information",
+                    "Database Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            else if (IsNew)
+                RaiseItemInsertedResult(task.Result);
+            else
+                RaiseItemUpdatedResult();
+        }
+
+        protected override void RejectChanges()
+        {
+            base.RejectChanges();
+            ReinitializeFromEntity();
+        }
+
         void INavigatingFromNotifiable.OnNavigatingFrom(CancelEventArgs e)
         {
-            // TODO: Prompt to lose changes if not saved
-            throw new NotImplementedException();
+            if (ApplyChanges())
+            {
+                switch (MessageBox.Show(Application.Current.MainWindow, "There are unsaved changes. Do you wish to save them before continuing?", "Unsaved Changes",
+                    MessageBoxButton.YesNoCancel, MessageBoxImage.Warning))
+                {
+                    case MessageBoxResult.Yes:
+                        IWindowsAsyncJobFactoryService jobFactory = Services.GetRequiredService<IWindowsAsyncJobFactoryService>();
+                        IAsyncJob<SymbolicNameListItem> job = jobFactory.StartNew("Saving changes", "Opening database", IsNew, SaveChangesAsync);
+                        job.Task.ContinueWith(task => Dispatcher.Invoke(() => OnSaveTaskCompleted(task)));
+                        e.Cancel = true;
+                        break;
+                    case MessageBoxResult.No:
+                        break;
+                    default:
+                        e.Cancel = true;
+                        break;
+                }
+            }
         }
     }
 }

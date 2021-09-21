@@ -5,6 +5,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
@@ -184,6 +185,26 @@ namespace FsInfoCat.Desktop.ViewModel
             TCrawlJobLogItem[] removedItems = _backingLogs.ToArray();
             _backingLogs.Clear();
             return removedItems;
+        }
+
+
+        protected void SetRootSubdirectory(ISubdirectory root)
+        {
+            if (root is null || root is TSubdirectoryItem)
+                Dispatcher.CheckInvoke(() => Root = root as TSubdirectoryItem);
+            else
+                SetRootSubdirectory(root.Id);
+        }
+
+        protected void SetRootSubdirectory(Guid id)
+        {
+            Guid? g = Root?.Entity.Id;
+            if (g.HasValue && g.Value == id)
+                return;
+            IWindowsAsyncJobFactoryService jobFactory = Services.GetRequiredService<IWindowsAsyncJobFactoryService>();
+            jobFactory.StartNew("Loading data", "Opening database", id, LoadSubdirectoryAsync).Task.ContinueWith(task => Dispatcher.Invoke(() =>
+                MessageBox.Show(Application.Current.MainWindow, "Unexpected error while reading from the database. See error logs for more information.",
+                    "Database Error", MessageBoxButton.OK, MessageBoxImage.Error), DispatcherPriority.Background), TaskContinuationOptions.OnlyOnFaulted);
         }
 
         protected abstract IQueryable<TCrawlJobLogEntity> GetQueryableCrawlJobLogListing([DisallowNull] LocalDbContext dbContext, [DisallowNull] IWindowsStatusListener statusListener);

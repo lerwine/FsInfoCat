@@ -35,20 +35,20 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="ColorSpace"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty ColorSpaceProperty = ColumnPropertyBuilder<uint?, ImagePropertiesRowViewModel<TEntity>>
+        public static readonly DependencyProperty ColorSpaceProperty = ColumnPropertyBuilder<ushort?, ImagePropertiesRowViewModel<TEntity>>
             .RegisterEntityMapped<TEntity>(nameof(IImageProperties.ColorSpace))
             .DefaultValue(null)
             .OnChanged((d, oldValue, newValue) => (d as ImagePropertiesRowViewModel<TEntity>)?.OnColorSpacePropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
-        public uint? ColorSpace { get => (uint?)GetValue(ColorSpaceProperty); set => SetValue(ColorSpaceProperty, value); }
+        public ushort? ColorSpace { get => (ushort?)GetValue(ColorSpaceProperty); set => SetValue(ColorSpaceProperty, value); }
 
         /// <summary>
         /// Called when the value of the <see cref="ColorSpace"/> dependency property has changed.
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="ColorSpace"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="ColorSpace"/> property.</param>
-        protected virtual void OnColorSpacePropertyChanged(uint? oldValue, uint? newValue) { }
+        protected virtual void OnColorSpacePropertyChanged(ushort? oldValue, ushort? newValue) { }
 
         #endregion
         #region CompressedBitsPerPixel Property Members

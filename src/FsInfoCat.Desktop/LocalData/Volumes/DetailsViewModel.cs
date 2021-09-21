@@ -1,13 +1,11 @@
 using FsInfoCat.Desktop.ViewModel;
 using FsInfoCat.Local;
 using System;
-using System.ComponentModel;
 using System.Windows;
-using System.Windows.Navigation;
 
 namespace FsInfoCat.Desktop.LocalData.Volumes
 {
-    public class DetailsViewModel : VolumeDetailsViewModel<Volume, FileSystemListItem, FileSystemListItemViewModel, SubdirectoryListItem, SubdirectoryListItemViewModel, VolumeAccessError, AccessErrorViewModel, PersonalVolumeTagListItem, PersonalTagViewModel, SharedVolumeTagListItem, SharedTagViewModel>, INavigatedToNotifiable, INavigatingFromNotifiable
+    public class DetailsViewModel : VolumeDetailsViewModel<Volume, FileSystemListItem, FileSystemListItemViewModel, SubdirectoryListItem, SubdirectoryListItemViewModel, VolumeAccessError, AccessErrorViewModel, PersonalVolumeTagListItem, PersonalTagViewModel, SharedVolumeTagListItem, SharedTagViewModel>, INavigatedToNotifiable
     {
         #region Edit Command Property Members
 
@@ -81,7 +79,8 @@ namespace FsInfoCat.Desktop.LocalData.Volumes
         /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="Delete" />.</param>
         protected virtual void OnDeleteCommand(object parameter)
         {
-            // TODO: Implement OnDeleteCommand Logic
+            RejectChanges();
+            RaiseItemUnmodifiedResult();
         }
 
         #endregion
@@ -218,20 +217,9 @@ namespace FsInfoCat.Desktop.LocalData.Volumes
             LastSynchronizedOn = entity.LastSynchronizedOn;
         }
 
-        public static void AddNewItem(ReturnEventHandler<Volume> onReturn = null)
-        {
-            // TODO: Implement AddNewItem
-        }
-
         void INavigatedToNotifiable.OnNavigatedTo()
         {
             // TODO: Load option lists from database
-            throw new NotImplementedException();
-        }
-
-        void INavigatingFromNotifiable.OnNavigatingFrom(CancelEventArgs e)
-        {
-            // TODO: Prompt to lose changes if not saved
             throw new NotImplementedException();
         }
     }

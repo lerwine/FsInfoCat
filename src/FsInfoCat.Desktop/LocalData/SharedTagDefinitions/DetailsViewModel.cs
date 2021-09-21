@@ -1,13 +1,36 @@
+using FsInfoCat.Desktop.ViewModel;
 using FsInfoCat.Local;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 
 namespace FsInfoCat.Desktop.LocalData.SharedTagDefinitions
 {
-    public class DetailsViewModel : DependencyObject
+    public class DetailsViewModel : TagDefinitionRowViewModel<SharedTagDefinition>, IItemFunctionViewModel<SharedTagDefinition>
     {
-        public DetailsViewModel(SharedTagDefinition fs, SharedTagDefinitionListItem entity)
+        #region Completed Event Members
+
+        public event EventHandler<ItemFunctionResultEventArgs> Completed;
+
+        internal object InvocationState { get; }
+
+        object IItemFunctionViewModel.InvocationState => InvocationState;
+
+        protected virtual void OnItemFunctionResult(ItemFunctionResultEventArgs args) => Completed?.Invoke(this, args);
+
+        protected void RaiseItemInsertedResult([DisallowNull] DbEntity entity) => OnItemFunctionResult(new(ItemFunctionResult.Inserted, entity, InvocationState));
+
+        protected void RaiseItemUpdatedResult() => OnItemFunctionResult(new(ItemFunctionResult.ChangesSaved, Entity, InvocationState));
+
+        protected void RaiseItemDeletedResult() => OnItemFunctionResult(new(ItemFunctionResult.Deleted, Entity, InvocationState));
+
+        protected void RaiseItemUnmodifiedResult() => OnItemFunctionResult(new(ItemFunctionResult.Unmodified, Entity, InvocationState));
+
+        #endregion
+
+        public DetailsViewModel(SharedTagDefinition entity, SharedTagDefinitionListItem listItemEntity) : base(entity)
         {
+            // TODO: Implement DetailsViewModel
         }
     }
 }

@@ -62,7 +62,10 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="SaveChanges" />.</param>
         protected virtual void OnSaveChangesCommand(object parameter)
         {
-            // TODO: Implement OnSaveChangesCommand Logic
+            if (ApplyChanges() || IsNew)
+                SaveChangesAsync(IsNew);
+            else
+                RaiseItemUnmodifiedResult();
         }
 
         #endregion
@@ -108,7 +111,8 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="DiscardChanges" />.</param>
         protected virtual void OnDiscardChangesCommand(object parameter)
         {
-            // TODO: Implement OnDiscardChangesCommand Logic
+            RejectChanges();
+            RaiseItemUnmodifiedResult();
         }
 
         #endregion
@@ -283,6 +287,28 @@ namespace FsInfoCat.Desktop.ViewModel
             seconds = entity.RescheduleInterval;
             rescheduleInterval.SetValue(seconds.HasValue ? TimeSpan.FromSeconds(seconds.Value) : null);
             nextScheduledStart.SetValue(entity.NextScheduledStart);
+        }
+
+        protected abstract bool ApplyChanges();
+
+        protected abstract IAsyncJob SaveChangesAsync(bool isNew);
+
+        protected virtual void ReinitializeFromEntity()
+        {
+            DisplayName = Entity.DisplayName;
+            LastCrawlEnd = Entity.LastCrawlEnd;
+            LastCrawlStart = Entity.LastCrawlStart;
+            MaxRecursionDepth = Entity.MaxRecursionDepth;
+            MaxTotalItems.SetValue(Entity.MaxTotalItems);
+            NextScheduledStart.SetValue(Entity.NextScheduledStart);
+            Notes = Entity.Notes;
+            RescheduleAfterFail = Entity.RescheduleAfterFail;
+            RescheduleFromJobEnd = Entity.RescheduleFromJobEnd;
+            long? value = Entity.RescheduleInterval;
+            RescheduleInterval.SetValue(value.HasValue ? TimeSpan.FromSeconds(value.Value) : null);
+            StatusValue = Entity.StatusValue;
+            value = Entity.TTL;
+            MaxDuration.SetValue(value.HasValue ? TimeSpan.FromSeconds(value.Value) : null);
         }
     }
 }

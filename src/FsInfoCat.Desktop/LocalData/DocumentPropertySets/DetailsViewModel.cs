@@ -1,15 +1,13 @@
 using FsInfoCat.Desktop.ViewModel;
 using FsInfoCat.Local;
 using System;
-using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows;
-using System.Windows.Navigation;
 
 namespace FsInfoCat.Desktop.LocalData.DocumentPropertySets
 {
     public class DetailsViewModel : DocumentPropertySetDetailsViewModel<DocumentPropertySet, FileWithBinaryPropertiesAndAncestorNames, FileWithBinaryPropertiesAndAncestorNamesViewModel>,
-        INavigatedToNotifiable, INavigatingFromNotifiable
+        INavigatedToNotifiable
     {
         #region ListItem Property Members
 
@@ -74,20 +72,9 @@ namespace FsInfoCat.Desktop.LocalData.DocumentPropertySets
             LastSynchronizedOn = entity.LastSynchronizedOn;
         }
 
-        public static void AddNewItem(ReturnEventHandler<DocumentPropertySet> onReturn = null)
-        {
-            // TODO: Implement AddNewItem
-        }
-
         void INavigatedToNotifiable.OnNavigatedTo()
         {
             // TODO: Load option lists from database
-            throw new NotImplementedException();
-        }
-
-        void INavigatingFromNotifiable.OnNavigatingFrom(CancelEventArgs e)
-        {
-            // TODO: Prompt to lose changes if not saved
             throw new NotImplementedException();
         }
     }

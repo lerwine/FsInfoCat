@@ -120,7 +120,7 @@ namespace FsInfoCat.UnitTests
                 Assert.ThrowsException< ArgumentOutOfRangeException>(() => new VolumeIdentifier(uri));
             else
             {
-                VolumeIdentifier volumeIdentifier = new VolumeIdentifier(uri);
+                VolumeIdentifier volumeIdentifier = new(uri);
                 Assert.AreEqual(expected.IsEmpty, volumeIdentifier.IsEmpty());
                 Assert.IsNotNull(volumeIdentifier.Location);
                 Assert.AreEqual(expected.Location.ToString(), volumeIdentifier.ToString());
@@ -141,7 +141,7 @@ namespace FsInfoCat.UnitTests
         [DynamicData(nameof(GetConstructorSerialNumberTestData), DynamicDataSourceType.Method)]
         public void ConstructorSerialNumberTestMethod(uint serialNumber, ConstructorResultExpected expected)
         {
-            VolumeIdentifier volumeIdentifier = new VolumeIdentifier(serialNumber);
+            VolumeIdentifier volumeIdentifier = new(serialNumber);
             Assert.AreEqual(expected.IsEmpty, volumeIdentifier.IsEmpty());
             Assert.IsNotNull(volumeIdentifier.Location);
             Assert.AreEqual(expected.Location.ToString(), volumeIdentifier.Location.ToString());
@@ -161,7 +161,7 @@ namespace FsInfoCat.UnitTests
         [DynamicData(nameof(GetConstructorUuidTestData), DynamicDataSourceType.Method)]
         public void ConstructorUuidTestMethod(Guid uuid, ConstructorResultExpected expected)
         {
-            VolumeIdentifier volumeIdentifier = new VolumeIdentifier(uuid);
+            VolumeIdentifier volumeIdentifier = new(uuid);
             Assert.AreEqual(expected.IsEmpty, volumeIdentifier.IsEmpty());
             Assert.IsNotNull(volumeIdentifier.Location);
             Assert.AreEqual(expected.Location.ToString(), volumeIdentifier.Location.ToString());

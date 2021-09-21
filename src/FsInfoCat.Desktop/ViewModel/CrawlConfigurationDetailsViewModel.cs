@@ -301,17 +301,7 @@ namespace FsInfoCat.Desktop.ViewModel
             {
                 case nameof(Entity.Root):
                     ISubdirectory root = Entity.Root;
-                    if (root is null)
-                        Dispatcher.CheckInvoke(() => Root = null);
-                    else
-                    {
-                        IWindowsAsyncJobFactoryService jobFactory = Services.GetRequiredService<IWindowsAsyncJobFactoryService>();
-                        jobFactory.StartNew("Loading data", "Opening database", root.Id, LoadSubdirectoryAsync).Task.ContinueWith(task => Dispatcher.Invoke(() =>
-                        {
-                            Dispatcher.ShowMessageBoxAsync("Unexpected error while reading from the database. See error logs for more information.",
-                                "Database Error", CancellationToken.None);
-                        }, DispatcherPriority.Background), TaskContinuationOptions.OnlyOnFaulted);
-                    }
+                    SetRootSubdirectory(root);
                     break;
                 case nameof(ICrawlConfigurationRow.MaxTotalItems):
                     Dispatcher.CheckInvoke(() => MaxTotalItems = Entity.MaxTotalItems);

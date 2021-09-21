@@ -9,7 +9,7 @@ namespace FsInfoCat
     {
         private readonly LinkedList<IItem> _items = new();
 
-        public Item<TTask> FromAsync<TTask>(Func<CancellationToken, TTask> func) where TTask : Task => new Item<TTask>(this, func);
+        public Item<TTask> FromAsync<TTask>(Func<CancellationToken, TTask> func) where TTask : Task => new(this, func);
 
         public Item<TTask> FromAsync<TArg, TTask>(TArg arg, Func<TArg, CancellationToken, TTask> func) where TTask : Task => Item<TTask>.FromAsync(this, arg, func);
 
@@ -17,21 +17,21 @@ namespace FsInfoCat
 
         public Item<TTask> FromAsync<TArg1, TArg2, TArg3, TTask>(TArg1 arg1, TArg2 arg2, TArg3 arg3, Func<TArg1, TArg2, TArg3, CancellationToken, TTask> func) where TTask : Task => Item<TTask>.FromAsync(this, arg1, arg2, arg3, func);
 
-        public Item<Task<TResult>> StartNew<TArg1, TArg2, TArg3, TResult>(TArg1 arg1, TArg2 arg2, TArg3 arg3, Func<TArg1, TArg2, TArg3, CancellationToken, TResult> func) => new Item<Task<TResult>>(this, token => Task.Factory.StartNew(() => func(arg1, arg2, arg3, token)));
+        public Item<Task<TResult>> StartNew<TArg1, TArg2, TArg3, TResult>(TArg1 arg1, TArg2 arg2, TArg3 arg3, Func<TArg1, TArg2, TArg3, CancellationToken, TResult> func) => new(this, token => Task.Factory.StartNew(() => func(arg1, arg2, arg3, token)));
 
-        public Item<Task> StartNew<TArg1, TArg2, TArg3>(TArg1 arg1, TArg2 arg2, TArg3 arg3, Action<TArg1, TArg2, TArg3, CancellationToken> action) => new Item<Task>(this, token => Task.Factory.StartNew(() => action(arg1, arg2, arg3, token)));
+        public Item<Task> StartNew<TArg1, TArg2, TArg3>(TArg1 arg1, TArg2 arg2, TArg3 arg3, Action<TArg1, TArg2, TArg3, CancellationToken> action) => new(this, token => Task.Factory.StartNew(() => action(arg1, arg2, arg3, token)));
 
-        public Item<Task<TResult>> StartNew<TArg1, TArg2, TResult>(TArg1 arg1, TArg2 arg2, Func<TArg1, TArg2, CancellationToken, TResult> func) => new Item<Task<TResult>>(this, token => Task.Factory.StartNew(() => func(arg1, arg2, token)));
+        public Item<Task<TResult>> StartNew<TArg1, TArg2, TResult>(TArg1 arg1, TArg2 arg2, Func<TArg1, TArg2, CancellationToken, TResult> func) => new(this, token => Task.Factory.StartNew(() => func(arg1, arg2, token)));
 
-        public Item<Task> StartNew<TArg1, TArg2>(TArg1 arg1, TArg2 arg2, Action<TArg1, TArg2, CancellationToken> action) => new Item<Task>(this, token => Task.Factory.StartNew(() => action(arg1, arg2, token)));
+        public Item<Task> StartNew<TArg1, TArg2>(TArg1 arg1, TArg2 arg2, Action<TArg1, TArg2, CancellationToken> action) => new(this, token => Task.Factory.StartNew(() => action(arg1, arg2, token)));
 
-        public Item<Task<TResult>> StartNew<TArg, TResult>(TArg arg, Func<TArg, CancellationToken, TResult> func) => new Item<Task<TResult>>(this, token => Task.Factory.StartNew(() => func(arg, token)));
+        public Item<Task<TResult>> StartNew<TArg, TResult>(TArg arg, Func<TArg, CancellationToken, TResult> func) => new(this, token => Task.Factory.StartNew(() => func(arg, token)));
 
-        public Item<Task> StartNew<T>(T arg, Action<T, CancellationToken> action) => new Item<Task>(this, token => Task.Factory.StartNew(() => action(arg, token)));
+        public Item<Task> StartNew<T>(T arg, Action<T, CancellationToken> action) => new(this, token => Task.Factory.StartNew(() => action(arg, token)));
 
-        public Item<Task<TResult>> StartNew<TResult>(Func<CancellationToken, TResult> func) => new Item<Task<TResult>>(this, token => Task.Factory.StartNew(() => func(token)));
+        public Item<Task<TResult>> StartNew<TResult>(Func<CancellationToken, TResult> func) => new(this, token => Task.Factory.StartNew(() => func(token)));
 
-        public Item<Task> StartNew(Action<CancellationToken> action) => new Item<Task>(this, token => Task.Factory.StartNew(() => action(token)));
+        public Item<Task> StartNew(Action<CancellationToken> action) => new(this, token => Task.Factory.StartNew(() => action(token)));
 
         public void CancelAll(bool throwOnFirstException)
         {
@@ -106,7 +106,7 @@ namespace FsInfoCat
     {
         private readonly LinkedList<Item> _items = new();
 
-        public Item  FromAsync(Func<CancellationToken, TTask> func) => new Item(this, func);
+        public Item  FromAsync(Func<CancellationToken, TTask> func) => new(this, func);
 
         public Item FromAsync<TArg>(TArg arg, Func<TArg, CancellationToken, TTask> func) => Item.FromAsync(this, arg, func);
 

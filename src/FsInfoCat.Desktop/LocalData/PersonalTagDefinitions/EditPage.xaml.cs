@@ -25,8 +25,7 @@ namespace FsInfoCat.Desktop.LocalData.PersonalTagDefinitions
         {
             InitializeComponent();
             DataContext = viewModel;
-#warning View model needs to implement Completed event
-            //viewModel.Completed += (object sender, ItemFunctionResultEventArgs e) => OnReturn(new ReturnEventArgs<ItemFunctionResultEventArgs>(e));
+            viewModel.Completed += (object sender, ItemFunctionResultEventArgs e) => OnReturn(new ReturnEventArgs<ItemFunctionResultEventArgs>(e));
         }
     }
 }

@@ -36,8 +36,6 @@ namespace FsInfoCat.Desktop.ViewModel
 
         public TCrawlConfigEntity Configuration => throw new NotImplementedException();
 
-        public ushort MaxRecursionDepth => throw new NotImplementedException();
-
         public ulong? MaxTotalItems => throw new NotImplementedException();
 
         public TimeSpanViewModel TTL => throw new NotImplementedException();

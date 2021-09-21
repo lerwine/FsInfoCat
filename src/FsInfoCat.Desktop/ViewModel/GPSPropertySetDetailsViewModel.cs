@@ -10,6 +10,20 @@ namespace FsInfoCat.Desktop.ViewModel
         where TFileEntity : DbEntity, IFileListItemWithBinaryPropertiesAndAncestorNames
         where TFileItem : FileWithBinaryPropertiesAndAncestorNamesViewModel<TFileEntity>
     {
+        #region VersionID Property Members
+
+        private static readonly DependencyPropertyKey VersionIDPropertyKey = DependencyPropertyBuilder<GPSPropertySetDetailsViewModel<TEntity, TFileEntity, TFileItem>, ObservableCollection<byte>>
+            .Register(nameof(VersionID))
+            .AsReadOnly();
+
+        /// <summary>
+        /// Identifies the <see cref="VersionID"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty VersionIDProperty = VersionIDPropertyKey.DependencyProperty;
+
+        public ObservableCollection<byte> VersionID { get => (ObservableCollection<byte>)GetValue(VersionIDProperty); private set => SetValue(VersionIDPropertyKey, value); }
+
+        #endregion
         #region Files Property Members
 
         protected ObservableCollection<TFileItem> BackingFiles { get; } = new();
@@ -50,6 +64,11 @@ namespace FsInfoCat.Desktop.ViewModel
         {
             InvocationState = state;
             SetValue(FilesPropertyKey, new ReadOnlyObservableCollection<TFileItem>(BackingFiles));
+            ObservableCollection<byte> target = new();
+            ReadOnlyCollection<byte> source = entity.VersionID;
+            if (source is not null)
+                foreach (byte value in source)
+                    target.Add(value);
         }
     }
 }

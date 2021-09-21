@@ -31,6 +31,8 @@ namespace FsInfoCat
 
         public static TimeSpan TruncateSecond(this TimeSpan timeSpan) => (timeSpan.Milliseconds == 0) ? timeSpan : new TimeSpan(timeSpan.Days, timeSpan.Hours, timeSpan.Minutes, timeSpan.Seconds, 0);
 
+        public static long ToSeconds(this TimeSpan timeSpan) => Convert.ToInt64(timeSpan.TruncateSecond().TotalSeconds);
+
         public static string SplitPath(string path, out string leaf)
         {
             if (string.IsNullOrEmpty(path))

@@ -49,6 +49,27 @@ namespace FsInfoCat.Desktop.ViewModel
         protected virtual void OnStatusCodePropertyChanged(CrawlStatus oldValue, CrawlStatus newValue) { }
 
         #endregion
+        #region MaxRecursionDepth Property Members
+
+        /// <summary>
+        /// Identifies the <see cref="MaxRecursionDepth"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty MaxRecursionDepthProperty = DependencyPropertyBuilder<CrawlJobRowViewModel<TEntity>, ushort>
+            .Register(nameof(MaxRecursionDepth))
+            .DefaultValue(DbConstants.DbColDefaultValue_MaxRecursionDepth)
+            .OnChanged((d, oldValue, newValue) => (d as CrawlJobRowViewModel<TEntity>)?.OnMaxRecursionDepthPropertyChanged(oldValue, newValue))
+            .AsReadWrite();
+
+        public ushort MaxRecursionDepth { get => (ushort)GetValue(MaxRecursionDepthProperty); set => SetValue(MaxRecursionDepthProperty, value); }
+
+        /// <summary>
+        /// Called when the value of the <see cref="MaxRecursionDepth"/> dependency property has changed.
+        /// </summary>
+        /// <param name="oldValue">The previous value of the <see cref="MaxRecursionDepth"/> property.</param>
+        /// <param name="newValue">The new value of the <see cref="MaxRecursionDepth"/> property.</param>
+        protected virtual void OnMaxRecursionDepthPropertyChanged(ushort oldValue, ushort newValue) { }
+
+        #endregion
         #region CrawlStart Property Members
 
         /// <summary>

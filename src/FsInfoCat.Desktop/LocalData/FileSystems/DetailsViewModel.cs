@@ -1,20 +1,13 @@
 using FsInfoCat.Desktop.ViewModel;
 using FsInfoCat.Local;
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Navigation;
 
 namespace FsInfoCat.Desktop.LocalData.FileSystems
 {
     public class DetailsViewModel : FileSystemDetailsViewModel<FileSystem, VolumeListItem, VolumeListItemViewModel, SymbolicNameRow, SymbolicNameListItemViewModel>,
-        INavigatedToNotifiable, INavigatingFromNotifiable
+        INavigatedToNotifiable
     {
         #region ListItem Property Members
 
@@ -79,20 +72,9 @@ namespace FsInfoCat.Desktop.LocalData.FileSystems
             LastSynchronizedOn = entity.LastSynchronizedOn;
         }
 
-        public static void AddNewItem(ReturnEventHandler<FileSystem> onReturn = null)
-        {
-            // TODO: Implement AddNewItem
-        }
-
         void INavigatedToNotifiable.OnNavigatedTo()
         {
             // TODO: Load option lists from database
-            throw new NotImplementedException();
-        }
-
-        void INavigatingFromNotifiable.OnNavigatingFrom(CancelEventArgs e)
-        {
-            // TODO: Prompt to lose changes if not saved
             throw new NotImplementedException();
         }
     }

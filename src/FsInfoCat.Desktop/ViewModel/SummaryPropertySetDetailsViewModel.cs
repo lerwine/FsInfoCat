@@ -10,6 +10,62 @@ namespace FsInfoCat.Desktop.ViewModel
         where TFileEntity : DbEntity, IFileListItemWithBinaryPropertiesAndAncestorNames
         where TFileItem : FileWithBinaryPropertiesAndAncestorNamesViewModel<TFileEntity>
     {
+        #region Author Property Members
+
+        private static readonly DependencyPropertyKey AuthorPropertyKey = DependencyPropertyBuilder<SummaryPropertySetDetailsViewModel<TEntity, TFileEntity, TFileItem>, ObservableCollection<string>>
+            .Register(nameof(Author))
+            .AsReadOnly();
+
+        /// <summary>
+        /// Identifies the <see cref="Author"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty AuthorProperty = AuthorPropertyKey.DependencyProperty;
+
+        public ObservableCollection<string> Author { get => (ObservableCollection<string>)GetValue(AuthorProperty); private set => SetValue(AuthorPropertyKey, value); }
+
+        #endregion
+        #region ItemAuthors Property Members
+
+        private static readonly DependencyPropertyKey ItemAuthorsPropertyKey = DependencyPropertyBuilder<SummaryPropertySetDetailsViewModel<TEntity, TFileEntity, TFileItem>, ObservableCollection<string>>
+            .Register(nameof(ItemAuthors))
+            .AsReadOnly();
+
+        /// <summary>
+        /// Identifies the <see cref="ItemAuthors"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ItemAuthorsProperty = ItemAuthorsPropertyKey.DependencyProperty;
+
+        public ObservableCollection<string> ItemAuthors { get => (ObservableCollection<string>)GetValue(ItemAuthorsProperty); private set => SetValue(ItemAuthorsPropertyKey, value); }
+
+        #endregion
+        #region Keywords Property Members
+
+        private static readonly DependencyPropertyKey KeywordsPropertyKey = DependencyPropertyBuilder<SummaryPropertySetDetailsViewModel<TEntity, TFileEntity, TFileItem>, ObservableCollection<string>>
+            .Register(nameof(Keywords))
+            .AsReadOnly();
+
+        /// <summary>
+        /// Identifies the <see cref="Keywords"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty KeywordsProperty = KeywordsPropertyKey.DependencyProperty;
+
+        public ObservableCollection<string> Keywords { get => (ObservableCollection<string>)GetValue(KeywordsProperty); private set => SetValue(KeywordsPropertyKey, value); }
+
+        #endregion
+        #region Kind Property Members
+
+        private static readonly DependencyPropertyKey KindPropertyKey = DependencyPropertyBuilder<SummaryPropertySetDetailsViewModel<TEntity, TFileEntity, TFileItem>, ObservableCollection<string>>
+            .Register(nameof(Kind))
+            .AsReadOnly();
+
+        /// <summary>
+        /// Identifies the <see cref="Kind"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty KindProperty = KindPropertyKey.DependencyProperty;
+
+        public ObservableCollection<string> Kind { get => (ObservableCollection<string>)GetValue(KindProperty); private set => SetValue(KindPropertyKey, value); }
+
+        #endregion
         #region Files Property Members
 
         protected ObservableCollection<TFileItem> BackingFiles { get; } = new();
@@ -50,6 +106,30 @@ namespace FsInfoCat.Desktop.ViewModel
         {
             InvocationState = state;
             SetValue(FilesPropertyKey, new ReadOnlyObservableCollection<TFileItem>(BackingFiles));
+            ObservableCollection<string> target = new();
+            Author = target;
+            ReadOnlyCollection<string> source = entity.Author;
+            if (source is not null)
+                foreach (string s in source)
+                    target.Add(s ?? "");
+            target = new();
+            ItemAuthors = target;
+            source = entity.ItemAuthors;
+            if (source is not null)
+                foreach (string s in source)
+                    target.Add(s ?? "");
+            target = new();
+            Keywords = target;
+            source = entity.Keywords;
+            if (source is not null)
+                foreach (string s in source)
+                    target.Add(s ?? "");
+            target = new();
+            Kind = target;
+            source = entity.Kind;
+            if (source is not null)
+                foreach (string s in source)
+                    target.Add(s ?? "");
         }
     }
 }

@@ -135,6 +135,30 @@ namespace FsInfoCat.Desktop.ViewModel
             SetValue(SharedTagsPropertyKey, new ReadOnlyObservableCollection<TSharedTagItem>(BackingSharedTags));
         }
 
+        protected void SetRootDirectory(Guid id)
+        {
+            // TODO: Impolement SetRootDirectory
+            throw new NotImplementedException();
+        }
+
+        protected void SetRootDirectory(ISubdirectoryRow fileSystem)
+        {
+            // TODO: Impolement SetRootDirectory
+            throw new NotImplementedException();
+        }
+
+        protected void SetFileSystem(Guid id)
+        {
+            // TODO: Impolement SetFileSystem
+            throw new NotImplementedException();
+        }
+
+        protected void SetFileSystem(IFileSystemRow fileSystem)
+        {
+            // TODO: Impolement SetFileSystem
+            throw new NotImplementedException();
+        }
+
         protected override void OnEntityPropertyChanged(string propertyName)
         {
             base.OnEntityPropertyChanged(propertyName);

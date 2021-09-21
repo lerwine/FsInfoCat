@@ -1,18 +1,12 @@
 using FsInfoCat.Desktop.ViewModel;
 using FsInfoCat.Local;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Navigation;
 using System.Windows.Threading;
 namespace FsInfoCat.Desktop.LocalData.SummaryPropertySets
 {
@@ -38,7 +32,14 @@ namespace FsInfoCat.Desktop.LocalData.SummaryPropertySets
         /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="SaveChanges" />.</param>
         protected virtual void OnSaveChangesCommand(object parameter)
         {
-            // TODO: Implement OnSaveChangesCommand Logic
+            if (ApplyChanges() || IsNew)
+            {
+                IWindowsAsyncJobFactoryService jobFactory = Services.GetRequiredService<IWindowsAsyncJobFactoryService>();
+                IAsyncJob<SummaryPropertiesListItem> job = jobFactory.StartNew("Saving changes", "Opening database", IsNew, SaveChangesAsync);
+                job.Task.ContinueWith(task => Dispatcher.Invoke(() => OnSaveTaskCompleted(task)));
+            }
+            else
+                RaiseItemUnmodifiedResult();
         }
 
         #endregion
@@ -61,7 +62,8 @@ namespace FsInfoCat.Desktop.LocalData.SummaryPropertySets
         /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="DiscardChanges" />.</param>
         protected virtual void OnDiscardChangesCommand(object parameter)
         {
-            // TODO: Implement OnDiscardChangesCommand Logic
+            RejectChanges();
+            RaiseItemUnmodifiedResult();
         }
 
         #endregion
@@ -151,10 +153,132 @@ namespace FsInfoCat.Desktop.LocalData.SummaryPropertySets
             throw new NotImplementedException();
         }
 
+        private bool ApplyChanges()
+        {
+            if (Entity.IsChanged())
+                Entity.RejectChanges();
+            Entity.ApplicationName = ApplicationName;
+            Entity.Author = new(Author);
+            Entity.Comment = Comment;
+            Entity.Company = Company;
+            Entity.ContentType = ContentType;
+            Entity.Copyright = Copyright;
+            Entity.ItemAuthors = new(ItemAuthors);
+            Entity.ItemType = ItemType;
+            Entity.ItemTypeText = ItemTypeText;
+            Entity.Keywords = new(Keywords);
+            Entity.Kind = new(Kind);
+            Entity.LastSynchronizedOn = LastSynchronizedOn;
+            Entity.MIMEType = MIMEType;
+            Entity.ParentalRating = ParentalRating;
+            Entity.ParentalRatingReason = ParentalRatingReason;
+            Entity.ParentalRatingsOrganization = ParentalRatingsOrganization;
+            Entity.ProductName = ProductName;
+            Entity.Rating = Rating;
+            Entity.Sensitivity = Sensitivity;
+            Entity.SensitivityText = SensitivityText;
+            Entity.SimpleRating = SimpleRating;
+            Entity.Subject = Subject;
+            Entity.Title = Title;
+            Entity.Trademarks = Trademarks;
+            Entity.UpstreamId = UpstreamId;
+            return Entity.IsChanged();
+        }
+
+        private void ReinitializeFromEntity()
+        {
+            ApplicationName = Entity.ApplicationName;
+            Comment = Entity.Comment;
+            Company = Entity.Company;
+            ContentType = Entity.ContentType;
+            Copyright = Entity.Copyright;
+            ItemType = Entity.ItemType;
+            ItemTypeText = Entity.ItemTypeText;
+            LastSynchronizedOn = Entity.LastSynchronizedOn;
+            MIMEType = Entity.MIMEType;
+            ParentalRating = Entity.ParentalRating;
+            ParentalRatingReason = Entity.ParentalRatingReason;
+            ParentalRatingsOrganization = Entity.ParentalRatingsOrganization;
+            ProductName = Entity.ProductName;
+            Rating = Entity.Rating;
+            Sensitivity = Entity.Sensitivity;
+            SensitivityText = Entity.SensitivityText;
+            SimpleRating = Entity.SimpleRating;
+            Subject = Entity.Subject;
+            Title = Entity.Title;
+            Trademarks = Entity.Trademarks;
+            UpstreamId = Entity.UpstreamId;
+            Author.Clear();
+            ReadOnlyCollection<string> source = Entity.Author;
+            if (source is not null)
+                foreach (string s in source)
+                    Author.Add(s ?? "");
+            source = Entity.ItemAuthors;
+            ItemAuthors.Clear();
+            if (source is not null)
+                foreach (string s in source)
+                    ItemAuthors.Add(s ?? "");
+            Keywords.Clear();
+            source = Entity.Keywords;
+            if (source is not null)
+                foreach (string s in source)
+                    Keywords.Add(s ?? "");
+            Kind.Clear();
+            source = Entity.Kind;
+            if (source is not null)
+                foreach (string s in source)
+                    Kind.Add(s ?? "");
+        }
+
+        private static async Task<SummaryPropertiesListItem> SaveChangesAsync(bool isNew, IWindowsStatusListener statusListener)
+        {
+            // TODO: Implement SaveChangesAsync
+            throw new NotImplementedException();
+        }
+
+        private void OnSaveTaskCompleted(Task<SummaryPropertiesListItem> task)
+        {
+            if (task.IsCanceled)
+                return;
+            if (task.IsFaulted)
+                _ = MessageBox.Show(Application.Current.MainWindow,
+                    ((task.Exception.InnerException is AsyncOperationFailureException aExc) ? aExc.UserMessage.NullIfWhiteSpace() :
+                        task.Exception.InnerExceptions.OfType<AsyncOperationFailureException>().Select(e => e.UserMessage)
+                        .Where(m => !string.IsNullOrWhiteSpace(m)).FirstOrDefault()) ??
+                        "There was an unexpected error while loading items from the database.\n\nSee logs for further information",
+                    "Database Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            else if (IsNew)
+                RaiseItemInsertedResult(task.Result);
+            else
+                RaiseItemUpdatedResult();
+        }
+
+        protected override void RejectChanges()
+        {
+            base.RejectChanges();
+            ReinitializeFromEntity();
+        }
+
         void INavigatingFromNotifiable.OnNavigatingFrom(CancelEventArgs e)
         {
-            // TODO: Prompt to lose changes if not saved
-            throw new NotImplementedException();
+            if (ApplyChanges())
+            {
+                switch (MessageBox.Show(Application.Current.MainWindow, "There are unsaved changes. Do you wish to save them before continuing?", "Unsaved Changes",
+                    MessageBoxButton.YesNoCancel, MessageBoxImage.Warning))
+                {
+                    case MessageBoxResult.Yes:
+                        IWindowsAsyncJobFactoryService jobFactory = Services.GetRequiredService<IWindowsAsyncJobFactoryService>();
+                        IAsyncJob<SummaryPropertiesListItem> job = jobFactory.StartNew("Saving changes", "Opening database", IsNew, SaveChangesAsync);
+                        job.Task.ContinueWith(task => Dispatcher.Invoke(() => OnSaveTaskCompleted(task)));
+                        e.Cancel = true;
+                        break;
+                    case MessageBoxResult.No:
+                        break;
+                    default:
+                        e.Cancel = true;
+                        break;
+                }
+            }
         }
     }
 }

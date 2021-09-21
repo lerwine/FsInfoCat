@@ -2,13 +2,34 @@ using FsInfoCat.Desktop.ViewModel;
 using FsInfoCat.Local;
 using System;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Navigation;
 
 namespace FsInfoCat.Desktop.LocalData.SharedTagDefinitions
 {
-    public class EditViewModel : TagDefinitionRowViewModel<SharedTagDefinition>, INavigatedToNotifiable, INavigatingFromNotifiable
+    public class EditViewModel : TagDefinitionEditViewModel<SharedTagDefinition, SharedTagDefinitionListItem>, INavigatedToNotifiable, INavigatingFromNotifiable, IItemFunctionViewModel<SharedTagDefinition>
     {
+        #region Completed Event Members
+
+        public event EventHandler<ItemFunctionResultEventArgs> Completed;
+
+        internal object InvocationState { get; }
+
+        object IItemFunctionViewModel.InvocationState => InvocationState;
+
+        protected virtual void OnItemFunctionResult(ItemFunctionResultEventArgs args) => Completed?.Invoke(this, args);
+
+        protected void RaiseItemInsertedResult([DisallowNull] DbEntity entity) => OnItemFunctionResult(new(ItemFunctionResult.Inserted, entity, InvocationState));
+
+        protected void RaiseItemUpdatedResult() => OnItemFunctionResult(new(ItemFunctionResult.ChangesSaved, Entity, InvocationState));
+
+        protected void RaiseItemDeletedResult() => OnItemFunctionResult(new(ItemFunctionResult.Deleted, Entity, InvocationState));
+
+        protected void RaiseItemUnmodifiedResult() => OnItemFunctionResult(new(ItemFunctionResult.Unmodified, Entity, InvocationState));
+
+        #endregion
         #region SaveChanges Command Property Members
 
         private static readonly DependencyPropertyKey SaveChangesPropertyKey = DependencyPropertyBuilder<EditViewModel, Commands.RelayCommand>
@@ -28,7 +49,14 @@ namespace FsInfoCat.Desktop.LocalData.SharedTagDefinitions
         /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="SaveChanges" />.</param>
         protected virtual void OnSaveChangesCommand(object parameter)
         {
-            // TODO: Implement OnSaveChangesCommand Logic
+            if (ApplyChanges() || IsNew)
+            {
+                IWindowsAsyncJobFactoryService jobFactory = Services.GetRequiredService<IWindowsAsyncJobFactoryService>();
+                IAsyncJob<SharedTagDefinitionListItem> job = jobFactory.StartNew("Saving changes", "Opening database", IsNew, SaveChangesAsync);
+                job.Task.ContinueWith(task => Dispatcher.Invoke(() => OnSaveTaskCompleted(task)));
+            }
+            else
+                RaiseItemUnmodifiedResult();
         }
 
         #endregion
@@ -51,23 +79,9 @@ namespace FsInfoCat.Desktop.LocalData.SharedTagDefinitions
         /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="DiscardChanges" />.</param>
         protected virtual void OnDiscardChangesCommand(object parameter)
         {
-            // TODO: Implement OnDiscardChangesCommand Logic
+            RejectChanges();
+            RaiseItemUnmodifiedResult();
         }
-
-        #endregion
-        #region ListItem Property Members
-
-        private static readonly DependencyPropertyKey ListItemPropertyKey = DependencyPropertyBuilder<EditViewModel, SharedTagDefinitionListItem>
-            .Register(nameof(ListItem))
-            .DefaultValue(null)
-            .AsReadOnly();
-
-        /// <summary>
-        /// Identifies the <see cref="ListItem"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty ListItemProperty = ListItemPropertyKey.DependencyProperty;
-
-        public SharedTagDefinitionListItem ListItem { get => (SharedTagDefinitionListItem)GetValue(ListItemProperty); private set => SetValue(ListItemPropertyKey, value); }
 
         #endregion
         #region UpstreamId Property Members
@@ -100,34 +114,13 @@ namespace FsInfoCat.Desktop.LocalData.SharedTagDefinitions
         public DateTime? LastSynchronizedOn { get => (DateTime?)GetValue(LastSynchronizedOnProperty); private set => SetValue(LastSynchronizedOnPropertyKey, value); }
 
         #endregion
-        #region IsNew Property Members
 
-        private static readonly DependencyPropertyKey IsNewPropertyKey = DependencyPropertyBuilder<EditViewModel, bool>
-            .Register(nameof(IsNew))
-            .DefaultValue(false)
-            .AsReadOnly();
-
-        /// <summary>
-        /// Identifies the <see cref="IsNew"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty IsNewProperty = IsNewPropertyKey.DependencyProperty;
-
-        public bool IsNew { get => (bool)GetValue(IsNewProperty); private set => SetValue(IsNewPropertyKey, value); }
-
-        #endregion
-
-        public EditViewModel(SharedTagDefinition entity, SharedTagDefinitionListItem listItem) : base(entity)
+        public EditViewModel(SharedTagDefinition entity, SharedTagDefinitionListItem listItem) : base(entity, listItem)
         {
             SetValue(SaveChangesPropertyKey, new Commands.RelayCommand(OnSaveChangesCommand));
             SetValue(DiscardChangesPropertyKey, new Commands.RelayCommand(OnDiscardChangesCommand));
-            IsNew = (ListItem = listItem) is null;
             UpstreamId = entity.UpstreamId;
             LastSynchronizedOn = entity.LastSynchronizedOn;
-        }
-
-        public static void AddNewItem(ReturnEventHandler<SharedTagDefinition> onReturn = null)
-        {
-            // TODO: Implement AddNewItem
         }
 
         void INavigatedToNotifiable.OnNavigatedTo()
@@ -136,10 +129,76 @@ namespace FsInfoCat.Desktop.LocalData.SharedTagDefinitions
             throw new NotImplementedException();
         }
 
+        private bool ApplyChanges()
+        {
+            if (Entity.IsChanged())
+                Entity.RejectChanges();
+            Entity.Description = Description;
+            Entity.IsInactive = IsInactive;
+            Entity.LastSynchronizedOn = LastSynchronizedOn;
+            Entity.Name = Name;
+            Entity.UpstreamId = UpstreamId;
+            return Entity.IsChanged();
+        }
+
+        private void ReinitializeFromEntity()
+        {
+            Description = Entity.Description;
+            IsInactive = Entity.IsInactive;
+            LastSynchronizedOn = Entity.LastSynchronizedOn;
+            Name = Entity.Name;
+            UpstreamId = Entity.UpstreamId;
+        }
+
+        private static async Task<SharedTagDefinitionListItem> SaveChangesAsync(bool isNew, IWindowsStatusListener statusListener)
+        {
+            // TODO: Implement SaveChangesAsync
+            throw new NotImplementedException();
+        }
+
+        private void OnSaveTaskCompleted(Task<SharedTagDefinitionListItem> task)
+        {
+            if (task.IsCanceled)
+                return;
+            if (task.IsFaulted)
+                _ = MessageBox.Show(Application.Current.MainWindow,
+                    ((task.Exception.InnerException is AsyncOperationFailureException aExc) ? aExc.UserMessage.NullIfWhiteSpace() :
+                        task.Exception.InnerExceptions.OfType<AsyncOperationFailureException>().Select(e => e.UserMessage)
+                        .Where(m => !string.IsNullOrWhiteSpace(m)).FirstOrDefault()) ??
+                        "There was an unexpected error while loading items from the database.\n\nSee logs for further information",
+                    "Database Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            else if (IsNew)
+                RaiseItemInsertedResult(task.Result);
+            else
+                RaiseItemUpdatedResult();
+        }
+
+        protected override void RejectChanges()
+        {
+            base.RejectChanges();
+            ReinitializeFromEntity();
+        }
+
         void INavigatingFromNotifiable.OnNavigatingFrom(CancelEventArgs e)
         {
-            // TODO: Prompt to lose changes if not saved
-            throw new NotImplementedException();
+            if (ApplyChanges())
+            {
+                switch (MessageBox.Show(Application.Current.MainWindow, "There are unsaved changes. Do you wish to save them before continuing?", "Unsaved Changes",
+                    MessageBoxButton.YesNoCancel, MessageBoxImage.Warning))
+                {
+                    case MessageBoxResult.Yes:
+                        IWindowsAsyncJobFactoryService jobFactory = Services.GetRequiredService<IWindowsAsyncJobFactoryService>();
+                        IAsyncJob<SharedTagDefinitionListItem> job = jobFactory.StartNew("Saving changes", "Opening database", IsNew, SaveChangesAsync);
+                        job.Task.ContinueWith(task => Dispatcher.Invoke(() => OnSaveTaskCompleted(task)));
+                        e.Cancel = true;
+                        break;
+                    case MessageBoxResult.No:
+                        break;
+                    default:
+                        e.Cancel = true;
+                        break;
+                }
+            }
         }
     }
 }
