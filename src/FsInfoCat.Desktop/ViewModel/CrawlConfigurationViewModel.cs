@@ -5,7 +5,6 @@ using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
@@ -190,7 +189,7 @@ namespace FsInfoCat.Desktop.ViewModel
 
         protected void SetRootSubdirectory(ISubdirectory root)
         {
-            if (root is null || root is TSubdirectoryItem)
+            if (root is null or TSubdirectoryItem)
                 Dispatcher.CheckInvoke(() => Root = root as TSubdirectoryItem);
             else
                 SetRootSubdirectory(root.Id);
