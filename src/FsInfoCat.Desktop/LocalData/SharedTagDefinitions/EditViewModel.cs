@@ -130,7 +130,6 @@ namespace FsInfoCat.Desktop.LocalData.SharedTagDefinitions
         void INavigatedToNotifiable.OnNavigatedTo()
         {
             // TODO: Load option lists from database
-            throw new NotImplementedException();
         }
 
         private bool ApplyChanges()

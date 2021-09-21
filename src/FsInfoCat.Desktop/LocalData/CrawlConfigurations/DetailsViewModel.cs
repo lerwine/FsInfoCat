@@ -86,8 +86,9 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
 
         private Task<int> DeleteCrawlJobLogFromDbContextAsync([DisallowNull] CrawlJobLogListItem entity, [DisallowNull] LocalDbContext dbContext, [DisallowNull] IWindowsStatusListener statusListener)
         {
-            // TODO: Implement DeleteCrawlJobLogFromDbContextAsync(CrawlJobLogListItem, LocalDbContext, IWindowsStatusListener)
-            throw new NotImplementedException();
+            // TODO: Implement DeleteCrawlJobLogFromDbContextAsync(CrawlJobLogListItem, LocalDbContext, IWindowsStatusListener
+            Dispatcher.ShowMessageBoxAsync("You  have invoked a command which has not yet been implemented.", "Not Implemented", MessageBoxButton.OK, MessageBoxImage.Hand, statusListener.CancellationToken);
+            throw new NotImplementedException($"{nameof(DeleteCrawlJobLogFromDbContextAsync)} not implemented");
         }
 
         protected override IQueryable<CrawlJobLogListItem> GetQueryableCrawlJobLogListing([DisallowNull] LocalDbContext dbContext, [DisallowNull] IWindowsStatusListener statusListener)
@@ -193,7 +194,9 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
         private Task<int> DeleteCrawlJobLogFromDbContextAsync([DisallowNull] CrawlJobListItemViewModel entity, [DisallowNull] LocalDbContext dbContext,
             [DisallowNull] IWindowsStatusListener statusListener)
         {
-            throw new NotImplementedException();
+            // TODO: Implement DeleteCrawlJobLogFromDbContextAsync
+            Dispatcher.ShowMessageBoxAsync("You  have invoked a command which has not yet been implemented.", "Not Implemented", MessageBoxButton.OK, MessageBoxImage.Hand, statusListener.CancellationToken);
+            throw new NotImplementedException($"{nameof(DeleteCrawlJobLogFromDbContextAsync)} not implemented");
         }
 
         protected override bool AddCrawlJobLogItem(CrawlJobListItemViewModel item)

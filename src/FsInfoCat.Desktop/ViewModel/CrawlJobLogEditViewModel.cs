@@ -34,10 +34,10 @@ namespace FsInfoCat.Desktop.ViewModel
             // TODO: Implement CrawlJobLogEditViewModel
         }
 
-        public TCrawlConfigEntity Configuration => throw new NotImplementedException();
+        public TCrawlConfigEntity Configuration => throw new NotImplementedException("Configuration not implemented");
 
-        public ulong? MaxTotalItems => throw new NotImplementedException();
+        public ulong? MaxTotalItems => throw new NotImplementedException("Configuration not implemented");
 
-        public TimeSpanViewModel TTL => throw new NotImplementedException();
+        public TimeSpanViewModel TTL => throw new NotImplementedException("Configuration not implemented");
     }
 }

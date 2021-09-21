@@ -72,7 +72,7 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
         internal void CancelAll()
         {
             // TODO: Implement CancelAll()
-            throw new NotImplementedException();
+            throw new NotImplementedException("CancelAll not implemented");
         }
     }
 }

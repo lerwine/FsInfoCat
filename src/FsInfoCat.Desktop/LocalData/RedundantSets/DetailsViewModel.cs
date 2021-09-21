@@ -64,7 +64,6 @@ namespace FsInfoCat.Desktop.LocalData.RedundantSets
         void INavigatedToNotifiable.OnNavigatedTo()
         {
             // TODO: Load option lists from database
-            throw new NotImplementedException();
         }
     }
 }

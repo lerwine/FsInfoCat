@@ -61,7 +61,8 @@ namespace FsInfoCat.Desktop.ViewModel
 
         private void Time_ValidateInputValue(object sender, PropertyValidatingEventArgs<TimeSpan> e)
         {
-            throw new NotImplementedException();
+            // TODO: Implement Time_ValidateInputValue
+            MessageBox.Show("You  have invoked a command which has not yet been implemented.", "Not Implemented", MessageBoxButton.OK, MessageBoxImage.Hand);
         }
 
         private void Time_ResultValuePropertyChanged(object sender, DependencyPropertyChangedEventArgs e)

@@ -143,7 +143,6 @@ namespace FsInfoCat.Desktop.LocalData.VideoPropertySets
         void INavigatedToNotifiable.OnNavigatedTo()
         {
             // TODO: Load option lists from database
-            throw new NotImplementedException();
         }
 
         private bool ApplyChanges()

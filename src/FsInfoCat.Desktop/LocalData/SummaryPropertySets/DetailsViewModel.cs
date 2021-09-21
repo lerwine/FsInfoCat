@@ -154,7 +154,6 @@ namespace FsInfoCat.Desktop.LocalData.SummaryPropertySets
         void INavigatedToNotifiable.OnNavigatedTo()
         {
             // TODO: Load option lists from database
-            throw new NotImplementedException();
         }
     }
 }

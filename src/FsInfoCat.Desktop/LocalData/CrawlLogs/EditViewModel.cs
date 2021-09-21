@@ -141,13 +141,11 @@ namespace FsInfoCat.Desktop.LocalData.CrawlLogs
         void INavigatedToNotifiable.OnNavigatedTo()
         {
             // TODO: Load option lists from database
-            throw new NotImplementedException();
         }
 
         void INavigatingFromNotifiable.OnNavigatingFrom(CancelEventArgs e)
         {
             // TODO: Implement OnNavigatingFrom
-            throw new NotImplementedException();
         }
 
         private static async Task<CrawlJobLogListItem> SaveChangesAsync(CrawlJobLog entity, object invocationState, IWindowsStatusListener statusListener)
@@ -183,13 +181,13 @@ namespace FsInfoCat.Desktop.LocalData.CrawlLogs
         private void OnSaveTaskCompleted(Task<CrawlJobLogListItem> task)
         {
             // TODO: Implement OnSaveTaskCompleted
-            throw new NotImplementedException();
+            throw new NotImplementedException("OnSaveTaskCompleted not implemented");
         }
 
         private bool ApplyChanges()
         {
             // TODO: Implement ApplyChanges
-            throw new NotImplementedException();
+            throw new NotImplementedException("ApplyChanges not implemented");
         }
     }
 }
