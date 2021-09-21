@@ -1,5 +1,8 @@
 using FsInfoCat.Desktop.ViewModel;
 using FsInfoCat.Local;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -7,6 +10,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Threading;
 
 namespace FsInfoCat.Desktop.LocalData.GPSPropertySets
 {
@@ -35,7 +39,7 @@ namespace FsInfoCat.Desktop.LocalData.GPSPropertySets
             if (ApplyChanges() || IsNew)
             {
                 IWindowsAsyncJobFactoryService jobFactory = Services.GetRequiredService<IWindowsAsyncJobFactoryService>();
-                IAsyncJob<GPSPropertiesListItem> job = jobFactory.StartNew("Saving changes", "Opening database", IsNew, SaveChangesAsync);
+                IAsyncJob<GPSPropertiesListItem> job = jobFactory.StartNew("Saving changes", "Opening database", Entity, InvocationState, SaveChangesAsync);
                 job.Task.ContinueWith(task => Dispatcher.Invoke(() => OnSaveTaskCompleted(task)));
             }
             else
@@ -196,10 +200,34 @@ namespace FsInfoCat.Desktop.LocalData.GPSPropertySets
                     VersionID.Add(value);
         }
 
-        private static async Task<GPSPropertiesListItem> SaveChangesAsync(bool isNew, IWindowsStatusListener statusListener)
+        private static async Task<GPSPropertiesListItem> SaveChangesAsync(GPSPropertySet entity, object invocationState, IWindowsStatusListener statusListener)
         {
-            // TODO: Implement SaveChangesAsync
-            throw new NotImplementedException();
+            using IServiceScope scope = Services.CreateScope();
+            using LocalDbContext dbContext = scope.ServiceProvider.GetRequiredService<LocalDbContext>();
+            EntityEntry entry = dbContext.Entry(entity);
+            bool isNew = entry.State == EntityState.Detached;
+            switch (entry.State)
+            {
+                case EntityState.Added:
+                    isNew = true;
+                    break;
+                case EntityState.Detached:
+                    entry = dbContext.GPSPropertySets.Add(entity);
+                    isNew = true;
+                    break;
+                default:
+                    isNew = false;
+                    break;
+            }
+            if (entry.State == EntityState.Detached)
+                entry = dbContext.GPSPropertySets.Add(entity);
+            DispatcherOperation dispatcherOperation = statusListener.BeginSetMessage((entry.State == EntityState.Added) ?
+                "Inserting new GPS properties record into database" : "Saving GPS properties record changes to database");
+            await dbContext.SaveChangesAsync(statusListener.CancellationToken);
+            await dispatcherOperation;
+            if (isNew)
+                return await dbContext.GPSPropertiesListing.FindAsync(entity.Id, statusListener.CancellationToken);
+            return invocationState is GPSPropertiesListItem item ? item : null;
         }
 
         private void OnSaveTaskCompleted(Task<GPSPropertiesListItem> task)
@@ -234,7 +262,7 @@ namespace FsInfoCat.Desktop.LocalData.GPSPropertySets
                 {
                     case MessageBoxResult.Yes:
                         IWindowsAsyncJobFactoryService jobFactory = Services.GetRequiredService<IWindowsAsyncJobFactoryService>();
-                        IAsyncJob<GPSPropertiesListItem> job = jobFactory.StartNew("Saving changes", "Opening database", IsNew, SaveChangesAsync);
+                        IAsyncJob<GPSPropertiesListItem> job = jobFactory.StartNew("Saving changes", "Opening database", Entity, InvocationState, SaveChangesAsync);
                         job.Task.ContinueWith(task => Dispatcher.Invoke(() => OnSaveTaskCompleted(task)));
                         e.Cancel = true;
                         break;

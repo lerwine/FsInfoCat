@@ -1,9 +1,13 @@
 using FsInfoCat.Desktop.ViewModel;
 using FsInfoCat.Local;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Threading;
 
 namespace FsInfoCat.Desktop.LocalData.RedundantSets
 {
@@ -31,7 +35,7 @@ namespace FsInfoCat.Desktop.LocalData.RedundantSets
             if (ApplyChanges() || IsNew)
             {
                 IWindowsAsyncJobFactoryService jobFactory = Services.GetRequiredService<IWindowsAsyncJobFactoryService>();
-                IAsyncJob<RedundantSetListItem> job = jobFactory.StartNew("Saving changes", "Opening database", IsNew, SaveChangesAsync);
+                IAsyncJob<RedundantSetListItem> job = jobFactory.StartNew("Saving changes", "Opening database", Entity, InvocationState, SaveChangesAsync);
                 job.Task.ContinueWith(task => Dispatcher.Invoke(() => OnSaveTaskCompleted(task)));
             }
             else
@@ -146,10 +150,34 @@ namespace FsInfoCat.Desktop.LocalData.RedundantSets
             throw new NotImplementedException();
         }
 
-        private Task<RedundantSetListItem> SaveChangesAsync(bool isNew, IWindowsStatusListener arg2)
+        private static async Task<RedundantSetListItem> SaveChangesAsync(RedundantSet entity, object invocationState, IWindowsStatusListener statusListener)
         {
-            // TODO: Implement SaveChangesAsync
-            throw new NotImplementedException();
+            using IServiceScope scope = Services.CreateScope();
+            using LocalDbContext dbContext = scope.ServiceProvider.GetRequiredService<LocalDbContext>();
+            EntityEntry entry = dbContext.Entry(entity);
+            bool isNew = entry.State == EntityState.Detached;
+            switch (entry.State)
+            {
+                case EntityState.Added:
+                    isNew = true;
+                    break;
+                case EntityState.Detached:
+                    entry = dbContext.RedundantSets.Add(entity);
+                    isNew = true;
+                    break;
+                default:
+                    isNew = false;
+                    break;
+            }
+            if (entry.State == EntityState.Detached)
+                entry = dbContext.RedundantSets.Add(entity);
+            DispatcherOperation dispatcherOperation = statusListener.BeginSetMessage((entry.State == EntityState.Added) ?
+                "Inserting new redundancy set into database" : "Saving redundancy set changes to database");
+            await dbContext.SaveChangesAsync(statusListener.CancellationToken);
+            await dispatcherOperation;
+            if (isNew)
+                return await dbContext.RedundantSetListing.FindAsync(entity.Id, statusListener.CancellationToken);
+            return invocationState is RedundantSetListItem item ? item : null;
         }
 
         private void OnSaveTaskCompleted(Task<RedundantSetListItem> task)

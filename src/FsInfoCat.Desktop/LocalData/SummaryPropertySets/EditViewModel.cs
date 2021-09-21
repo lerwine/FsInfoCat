@@ -1,5 +1,8 @@
 using FsInfoCat.Desktop.ViewModel;
 using FsInfoCat.Local;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -35,7 +38,7 @@ namespace FsInfoCat.Desktop.LocalData.SummaryPropertySets
             if (ApplyChanges() || IsNew)
             {
                 IWindowsAsyncJobFactoryService jobFactory = Services.GetRequiredService<IWindowsAsyncJobFactoryService>();
-                IAsyncJob<SummaryPropertiesListItem> job = jobFactory.StartNew("Saving changes", "Opening database", IsNew, SaveChangesAsync);
+                IAsyncJob<SummaryPropertiesListItem> job = jobFactory.StartNew("Saving changes", "Opening database", Entity, InvocationState, SaveChangesAsync);
                 job.Task.ContinueWith(task => Dispatcher.Invoke(() => OnSaveTaskCompleted(task)));
             }
             else
@@ -230,10 +233,34 @@ namespace FsInfoCat.Desktop.LocalData.SummaryPropertySets
                     Kind.Add(s ?? "");
         }
 
-        private static async Task<SummaryPropertiesListItem> SaveChangesAsync(bool isNew, IWindowsStatusListener statusListener)
+        private static async Task<SummaryPropertiesListItem> SaveChangesAsync(SummaryPropertySet entity, object invocationState, IWindowsStatusListener statusListener)
         {
-            // TODO: Implement SaveChangesAsync
-            throw new NotImplementedException();
+            using IServiceScope scope = Services.CreateScope();
+            using LocalDbContext dbContext = scope.ServiceProvider.GetRequiredService<LocalDbContext>();
+            EntityEntry entry = dbContext.Entry(entity);
+            bool isNew = entry.State == EntityState.Detached;
+            switch (entry.State)
+            {
+                case EntityState.Added:
+                    isNew = true;
+                    break;
+                case EntityState.Detached:
+                    entry = dbContext.SummaryPropertySets.Add(entity);
+                    isNew = true;
+                    break;
+                default:
+                    isNew = false;
+                    break;
+            }
+            if (entry.State == EntityState.Detached)
+                entry = dbContext.SummaryPropertySets.Add(entity);
+            DispatcherOperation dispatcherOperation = statusListener.BeginSetMessage((entry.State == EntityState.Added) ?
+                "Inserting new summary properties record into database" : "Saving summary properties record changes to database");
+            await dbContext.SaveChangesAsync(statusListener.CancellationToken);
+            await dispatcherOperation;
+            if (isNew)
+                return await dbContext.SummaryPropertiesListing.FindAsync(entity.Id, statusListener.CancellationToken);
+            return invocationState is SummaryPropertiesListItem item ? item : null;
         }
 
         private void OnSaveTaskCompleted(Task<SummaryPropertiesListItem> task)
@@ -268,7 +295,7 @@ namespace FsInfoCat.Desktop.LocalData.SummaryPropertySets
                 {
                     case MessageBoxResult.Yes:
                         IWindowsAsyncJobFactoryService jobFactory = Services.GetRequiredService<IWindowsAsyncJobFactoryService>();
-                        IAsyncJob<SummaryPropertiesListItem> job = jobFactory.StartNew("Saving changes", "Opening database", IsNew, SaveChangesAsync);
+                        IAsyncJob<SummaryPropertiesListItem> job = jobFactory.StartNew("Saving changes", "Opening database", Entity, InvocationState, SaveChangesAsync);
                         job.Task.ContinueWith(task => Dispatcher.Invoke(() => OnSaveTaskCompleted(task)));
                         e.Cancel = true;
                         break;

@@ -1,11 +1,15 @@
 using FsInfoCat.Desktop.ViewModel;
 using FsInfoCat.Local;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Threading;
 
 namespace FsInfoCat.Desktop.LocalData.SharedTagDefinitions
 {
@@ -52,7 +56,7 @@ namespace FsInfoCat.Desktop.LocalData.SharedTagDefinitions
             if (ApplyChanges() || IsNew)
             {
                 IWindowsAsyncJobFactoryService jobFactory = Services.GetRequiredService<IWindowsAsyncJobFactoryService>();
-                IAsyncJob<SharedTagDefinitionListItem> job = jobFactory.StartNew("Saving changes", "Opening database", IsNew, SaveChangesAsync);
+                IAsyncJob<SharedTagDefinitionListItem> job = jobFactory.StartNew("Saving changes", "Opening database", Entity, InvocationState, SaveChangesAsync);
                 job.Task.ContinueWith(task => Dispatcher.Invoke(() => OnSaveTaskCompleted(task)));
             }
             else
@@ -150,10 +154,34 @@ namespace FsInfoCat.Desktop.LocalData.SharedTagDefinitions
             UpstreamId = Entity.UpstreamId;
         }
 
-        private static async Task<SharedTagDefinitionListItem> SaveChangesAsync(bool isNew, IWindowsStatusListener statusListener)
+        private static async Task<SharedTagDefinitionListItem> SaveChangesAsync(SharedTagDefinition entity, object invocationState, IWindowsStatusListener statusListener)
         {
-            // TODO: Implement SaveChangesAsync
-            throw new NotImplementedException();
+            using IServiceScope scope = Services.CreateScope();
+            using LocalDbContext dbContext = scope.ServiceProvider.GetRequiredService<LocalDbContext>();
+            EntityEntry entry = dbContext.Entry(entity);
+            bool isNew = entry.State == EntityState.Detached;
+            switch (entry.State)
+            {
+                case EntityState.Added:
+                    isNew = true;
+                    break;
+                case EntityState.Detached:
+                    entry = dbContext.SharedTagDefinitions.Add(entity);
+                    isNew = true;
+                    break;
+                default:
+                    isNew = false;
+                    break;
+            }
+            if (entry.State == EntityState.Detached)
+                entry = dbContext.SharedTagDefinitions.Add(entity);
+            DispatcherOperation dispatcherOperation = statusListener.BeginSetMessage((entry.State == EntityState.Added) ?
+                "Inserting new shared tag definition into database" : "Saving shared tag definition changes to database");
+            await dbContext.SaveChangesAsync(statusListener.CancellationToken);
+            await dispatcherOperation;
+            if (isNew)
+                return await dbContext.SharedTagDefinitionListing.FindAsync(entity.Id, statusListener.CancellationToken);
+            return invocationState is SharedTagDefinitionListItem item ? item : null;
         }
 
         private void OnSaveTaskCompleted(Task<SharedTagDefinitionListItem> task)
@@ -188,7 +216,7 @@ namespace FsInfoCat.Desktop.LocalData.SharedTagDefinitions
                 {
                     case MessageBoxResult.Yes:
                         IWindowsAsyncJobFactoryService jobFactory = Services.GetRequiredService<IWindowsAsyncJobFactoryService>();
-                        IAsyncJob<SharedTagDefinitionListItem> job = jobFactory.StartNew("Saving changes", "Opening database", IsNew, SaveChangesAsync);
+                        IAsyncJob<SharedTagDefinitionListItem> job = jobFactory.StartNew("Saving changes", "Opening database", Entity, InvocationState, SaveChangesAsync);
                         job.Task.ContinueWith(task => Dispatcher.Invoke(() => OnSaveTaskCompleted(task)));
                         e.Cancel = true;
                         break;

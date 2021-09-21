@@ -1,5 +1,9 @@
 using FsInfoCat.Desktop.ViewModel;
 using FsInfoCat.Local;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System;
 using System.ComponentModel;
 using System.Linq;
@@ -29,7 +33,7 @@ namespace FsInfoCat.Desktop.LocalData.Volumes
             if (ApplyChanges() || IsNew)
             {
                 IWindowsAsyncJobFactoryService jobFactory = Services.GetRequiredService<IWindowsAsyncJobFactoryService>();
-                IAsyncJob<VolumeListItemWithFileSystem> job = jobFactory.StartNew("Saving changes", "Opening database", IsNew, SaveChangesAsync);
+                IAsyncJob<VolumeListItemWithFileSystem> job = jobFactory.StartNew("Saving changes", "Opening database", Entity, InvocationState, SaveChangesAsync);
                 job.Task.ContinueWith(task => Dispatcher.Invoke(() => OnSaveTaskCompleted(task)));
             }
             else
@@ -171,10 +175,34 @@ namespace FsInfoCat.Desktop.LocalData.Volumes
             VolumeName = Entity.VolumeName;
         }
 
-        private static async Task<VolumeListItemWithFileSystem> SaveChangesAsync(bool isNew, IWindowsStatusListener statusListener)
+        private static async Task<VolumeListItemWithFileSystem> SaveChangesAsync(Volume entity, object invocationState, IWindowsStatusListener statusListener)
         {
-            // TODO: Implement SaveChangesAsync
-            throw new NotImplementedException();
+            using IServiceScope scope = Services.CreateScope();
+            using LocalDbContext dbContext = scope.ServiceProvider.GetRequiredService<LocalDbContext>();
+            EntityEntry entry = dbContext.Entry(entity);
+            bool isNew = entry.State == EntityState.Detached;
+            switch (entry.State)
+            {
+                case EntityState.Added:
+                    isNew = true;
+                    break;
+                case EntityState.Detached:
+                    entry = dbContext.Volumes.Add(entity);
+                    isNew = true;
+                    break;
+                default:
+                    isNew = false;
+                    break;
+            }
+            if (entry.State == EntityState.Detached)
+                entry = dbContext.Volumes.Add(entity);
+            DispatcherOperation dispatcherOperation = statusListener.BeginSetMessage((entry.State == EntityState.Added) ?
+                "Inserting new volume record into database" : "Saving volume record changes to database");
+            await dbContext.SaveChangesAsync(statusListener.CancellationToken);
+            await dispatcherOperation;
+            if (isNew)
+                return await dbContext.VolumeListingWithFileSystem.FindAsync(entity.Id, statusListener.CancellationToken);
+            return invocationState is VolumeListItemWithFileSystem item ? item : null;
         }
 
         private void OnSaveTaskCompleted(Task<VolumeListItemWithFileSystem> task)
@@ -209,7 +237,7 @@ namespace FsInfoCat.Desktop.LocalData.Volumes
                 {
                     case MessageBoxResult.Yes:
                         IWindowsAsyncJobFactoryService jobFactory = Services.GetRequiredService<IWindowsAsyncJobFactoryService>();
-                        IAsyncJob<VolumeListItemWithFileSystem> job = jobFactory.StartNew("Saving changes", "Opening database", IsNew, SaveChangesAsync);
+                        IAsyncJob<VolumeListItemWithFileSystem> job = jobFactory.StartNew("Saving changes", "Opening database", Entity, InvocationState, SaveChangesAsync);
                         job.Task.ContinueWith(task => Dispatcher.Invoke(() => OnSaveTaskCompleted(task)));
                         e.Cancel = true;
                         break;
