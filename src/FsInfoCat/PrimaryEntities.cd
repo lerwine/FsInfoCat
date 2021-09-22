@@ -1,0 +1,111 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Interface Name="FsInfoCat.IFileSystem" Collapsed="true">
+    <Position X="9" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAEBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>IFileSystem.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="SymbolicNames" />
+      <Property Name="Volumes" />
+    </ShowAsCollectionAssociation>
+  </Interface>
+  <Interface Name="FsInfoCat.ISymbolicName" Collapsed="true">
+    <Position X="9" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ISymbolicName.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.IVolume">
+    <Position X="9" Y="0.5" Width="1.5" />
+    <Members>
+      <Property Name="FileSystem" Hidden="true" />
+      <Property Name="RootDirectory" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAAACAAAAAAAAAAAAAAAAAAAAAAAEAAAABAAAAEAQ=</HashCode>
+      <FileName>IVolume.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.ISubdirectory">
+    <Position X="6.25" Y="0.5" Width="1.75" />
+    <Members>
+      <Property Name="CrawlConfiguration" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAABAAAAQAAAAAAAAAAQAAIBAAAAEIQ=</HashCode>
+      <FileName>ISubdirectory.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Volume" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="Files" />
+    </ShowAsCollectionAssociation>
+  </Interface>
+  <Interface Name="FsInfoCat.IFile">
+    <Position X="3.25" Y="0.5" Width="2" />
+    <Members>
+      <Property Name="BinaryProperties" Hidden="true" />
+      <Property Name="Redundancy" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>ACAAAAAAAIAQAEIAAgAACAAkAAQAIQAAAAABQBAAEAU=</HashCode>
+      <FileName>IFile.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.ICrawlConfiguration" Collapsed="true">
+    <Position X="6.25" Y="3.25" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAQAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ICrawlConfiguration.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Root" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="Logs" />
+    </ShowAsCollectionAssociation>
+  </Interface>
+  <Interface Name="FsInfoCat.ICrawlJobLog" Collapsed="true">
+    <Position X="6.25" Y="4.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAA=</HashCode>
+      <FileName>ICrawlJobLog.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.IBinaryPropertySet" Collapsed="true">
+    <Position X="0.5" Y="4" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAIAAAAAAAAAAABAABAAAAAAAAAAAAAAAIA=</HashCode>
+      <FileName>IBinaryPropertySet.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Files" />
+      <Property Name="RedundantSets" />
+    </ShowAsCollectionAssociation>
+  </Interface>
+  <Interface Name="FsInfoCat.IRedundantSet" Collapsed="true">
+    <Position X="0.5" Y="2.25" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAgAAAAAAACAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>IRedundantSet.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Redundancies" />
+    </ShowAsCollectionAssociation>
+  </Interface>
+  <Interface Name="FsInfoCat.IRedundancy" Collapsed="true">
+    <Position X="0.5" Y="0.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAgAACAAEAAAAAAAACAAAAAAAAEAAAAAAAAAAIAAAA=</HashCode>
+      <FileName>IRedundancy.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="File" />
+    </ShowAsAssociation>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
