@@ -4,18 +4,35 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>net5.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
+    <StartupObject>FsInfoCat.Desktop.App</StartupObject>
+    <Company>Leonard T. Erwine</Company>
+    <RepositoryType>https://github.com/lerwine/FsInfoCat.git</RepositoryType>
+    <RepositoryUrl>git</RepositoryUrl>
+    <Copyright>© Leonard T. Erwine 2021</Copyright>
+    <Description>FS InfoCat is a file information cataloging tool designed to support managing files distributed across multiple storage locations and devices. This application collects metadata and characteristic of files, storing the information in the database, which can then be searched and analyzed.</Description>
+    <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
+    <PackageProjectUrl>https://github.com/lerwine/FsInfoCat</PackageProjectUrl>
+    <Authors>Leonard T. Erwine</Authors>
+    <Product>FS InfoCat</Product>
+    <PackageTags>File System Linter; Detect Duplicate; File Redundancy</PackageTags>
+    <NeutralLanguage>en-US</NeutralLanguage>
   </PropertyGroup>
 
   <ItemGroup>
     <Compile Remove="Resources\**" />
     <EmbeddedResource Remove="Resources\**" />
     <None Remove="Resources\**" />
+    <None Include="LICENSE.md">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
     <Page Remove="Resources\**" />
   </ItemGroup>
 
   <ItemGroup>
     <None Remove="appsettings.Development.json" />
     <None Remove="appsettings.json" />
+    <None Remove="LICENSE.md" />
   </ItemGroup>
 
   <ItemGroup>
@@ -35,6 +52,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="LICENSE.md">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
@@ -85,6 +105,12 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="MainWindow.xaml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Page>
   </ItemGroup>
 
 </Project>

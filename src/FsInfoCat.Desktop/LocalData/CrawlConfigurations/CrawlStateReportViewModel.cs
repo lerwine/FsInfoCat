@@ -389,11 +389,15 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
 
         protected override bool RemoveItem(ReportItemViewModel item)
         {
-            return base.RemoveItem(item);
-            item.OpenRootSubdirectoryCommand -= Item_OpenRootSubdirectoryCommand;
-            item.ShowCrawlActivityRecordsCommand -= Item_ShowCrawlActivityRecordsCommand;
-            item.StartCrawlCommand -= Item_StartCrawlCommand;
-            item.StopCrawlCommand -= Item_StopCrawlCommand;
+            if (base.RemoveItem(item))
+            {
+                item.OpenRootSubdirectoryCommand -= Item_OpenRootSubdirectoryCommand;
+                item.ShowCrawlActivityRecordsCommand -= Item_ShowCrawlActivityRecordsCommand;
+                item.StartCrawlCommand -= Item_StartCrawlCommand;
+                item.StopCrawlCommand -= Item_StopCrawlCommand;
+                return true;
+            }
+            return false;
         }
 
         protected override ReportItemViewModel[] ClearItems()
