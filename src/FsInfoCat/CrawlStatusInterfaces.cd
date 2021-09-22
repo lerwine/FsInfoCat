@@ -1,0 +1,251 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Interface Name="FsInfoCat.ICrawlConfiguration" Collapsed="true">
+    <Position X="21" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAQAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ICrawlConfiguration.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.IAccessError" HideInheritanceLine="true">
+    <Position X="10.25" Y="3.5" Width="1.75" />
+    <InheritanceLine Type="FsInfoCat.IDbEntity" IsHidden="true" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAABAAAAAAAAACAAAAgAAAAAAAAAIAAAAAA=</HashCode>
+      <FileName>IAccessError.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Target" />
+    </ShowAsAssociation>
+  </Interface>
+  <Interface Name="FsInfoCat.Local.ILocalAccessError">
+    <Position X="10.25" Y="7.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Local\ILocalAccessError.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Target" />
+    </ShowAsAssociation>
+  </Interface>
+  <Interface Name="FsInfoCat.IFileAccessError">
+    <Position X="14.5" Y="4" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>IFileAccessError.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Target" />
+    </ShowAsAssociation>
+  </Interface>
+  <Interface Name="FsInfoCat.ISubdirectoryAccessError" Collapsed="true">
+    <Position X="7.5" Y="4.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ISubdirectoryAccessError.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Target" />
+    </ShowAsAssociation>
+  </Interface>
+  <Interface Name="FsInfoCat.IVolumeAccessError" Collapsed="true">
+    <Position X="3.5" Y="3.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>IVolumeAccessError.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Target" />
+    </ShowAsAssociation>
+  </Interface>
+  <Interface Name="FsInfoCat.Local.ILocalFileAccessError">
+    <Position X="14.25" Y="7.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Local\ILocalFileAccessError.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Target" />
+    </ShowAsAssociation>
+  </Interface>
+  <Interface Name="FsInfoCat.Local.ILocalSubdirectoryAccessError" Collapsed="true">
+    <Position X="7.5" Y="6.5" Width="2.5" />
+    <InheritanceLine Type="FsInfoCat.Local.ILocalAccessError" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="10.25" Y="8.319" />
+        <Point X="8.812" Y="8.319" />
+        <Point X="8.812" Y="7.32" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Local\ILocalSubdirectoryAccessError.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Target" />
+    </ShowAsAssociation>
+  </Interface>
+  <Interface Name="FsInfoCat.Local.ILocalVolumeAccessError" Collapsed="true">
+    <Position X="3.5" Y="8" Width="2.25" />
+    <InheritanceLine Type="FsInfoCat.Local.ILocalAccessError" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="11" Y="8.877" />
+        <Point X="11" Y="9.195" />
+        <Point X="7.708" Y="9.195" Type="JumpStart" />
+        <Point X="7.542" Y="9.195" Type="JumpEnd" />
+        <Point X="6.333" Y="9.195" Type="JumpStart" />
+        <Point X="6.167" Y="9.195" Type="JumpEnd" />
+        <Point X="4.688" Y="9.195" />
+        <Point X="4.688" Y="8.82" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Local\ILocalVolumeAccessError.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Target" />
+    </ShowAsAssociation>
+  </Interface>
+  <Interface Name="FsInfoCat.Upstream.IUpstreamFileAccessError">
+    <Position X="14.5" Y="1.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Upstream\IUpstreamFileAccessError.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Target" />
+    </ShowAsAssociation>
+  </Interface>
+  <Interface Name="FsInfoCat.Upstream.IUpstreamSubdirectoryAccessError">
+    <Position X="7.25" Y="2.25" Width="2.5" />
+    <InheritanceLine Type="FsInfoCat.Upstream.IUpstreamAccessError" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="10.25" Y="2.015" />
+        <Point X="8.438" Y="2.015" />
+        <Point X="8.438" Y="2.25" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Upstream\IUpstreamSubdirectoryAccessError.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Target" />
+    </ShowAsAssociation>
+  </Interface>
+  <Interface Name="FsInfoCat.Upstream.IUpstreamVolumeAccessError">
+    <Position X="3.5" Y="1.5" Width="2.25" />
+    <InheritanceLine Type="FsInfoCat.Upstream.IUpstreamAccessError" FixedToPoint="true">
+      <Path>
+        <Point X="10.891" Y="1.5" />
+        <Point X="10.891" Y="1" />
+        <Point X="4.75" Y="1" />
+        <Point X="4.75" Y="1.5" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Upstream\IUpstreamVolumeAccessError.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Target" />
+    </ShowAsAssociation>
+  </Interface>
+  <Interface Name="FsInfoCat.Upstream.IUpstreamAccessError" HideInheritanceLine="true">
+    <Position X="10.25" Y="1.5" Width="1.75" />
+    <InheritanceLine Type="FsInfoCat.IDbEntity" IsHidden="true" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Upstream\IUpstreamAccessError.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Target" />
+    </ShowAsAssociation>
+  </Interface>
+  <Interface Name="FsInfoCat.Upstream.IUpstreamDbEntity" Collapsed="true">
+    <Position X="12.5" Y="0.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAE=</HashCode>
+      <FileName>Upstream\IUpstreamDbEntity.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Upstream.IUpstreamFile" Collapsed="true">
+    <Position X="18.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAAAAAAIAQAEIAAgAACAAkAAQAIQAAAAABQBAAEAU=</HashCode>
+      <FileName>Upstream\IUpstreamFile.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.IFile" Collapsed="true">
+    <Position X="18.25" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAAAAAAIAQAEIAAgAACAAkAAQAIQAAAAABQBAAEAU=</HashCode>
+      <FileName>IFile.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Local.ILocalFile" Collapsed="true">
+    <Position X="18.25" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAAAAAAIAQAEIAAgAACAAkAAQAIQAAAAABQBAAEAU=</HashCode>
+      <FileName>Local\ILocalFile.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Local.ILocalDbEntity" Collapsed="true">
+    <Position X="12.75" Y="9" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAA=</HashCode>
+      <FileName>Local\ILocalDbEntity.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Local.ILocalSubdirectory" Collapsed="true">
+    <Position X="6" Y="10.25" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAABAAAAAAAAAAAAAAAQAAIBAAAAEIQ=</HashCode>
+      <FileName>Local\ILocalSubdirectory.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Local.ILocalVolume" Collapsed="true">
+    <Position X="0.75" Y="8.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAACAAAAAAAAAAAAAAAAAAAAAAAEAAAABAAAAEAQ=</HashCode>
+      <FileName>Local\ILocalVolume.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.IVolume" Collapsed="true">
+    <Position X="0.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAACAAAAAAAAAAAAAAAAAAAAAAAEAAAABAAAAEAQ=</HashCode>
+      <FileName>IVolume.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Upstream.IUpstreamVolume" Collapsed="true">
+    <Position X="0.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAACACAAAAAAAAAAAAAAAAAAAAAEAAAABAAAAEAQ=</HashCode>
+      <FileName>Upstream\IUpstreamVolume.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Upstream.IUpstreamSubdirectory" Collapsed="true">
+    <Position X="6" Y="1.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAABAAAAAAAAAAAAAAAQAAIBAAAAEIQ=</HashCode>
+      <FileName>Upstream\IUpstreamSubdirectory.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.ISubdirectory" Collapsed="true">
+    <Position X="5.5" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAABAAAAQAAAAAAAAAAQAAIBAAAAEIQ=</HashCode>
+      <FileName>ISubdirectory.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.IDbEntity" Collapsed="true">
+    <Position X="12.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAABAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>IDbEntity.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

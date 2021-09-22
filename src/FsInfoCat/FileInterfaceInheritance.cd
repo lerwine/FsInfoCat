@@ -1,0 +1,117 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Interface Name="FsInfoCat.Local.ILocalFile">
+    <Position X="1.5" Y="9.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>ACAAAAAAAIAQAEIAAgAACAAkAAQAIQAAAAABQBAAEAU=</HashCode>
+      <FileName>Local\ILocalFile.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Local.ILocalDbFsItem">
+    <Position X="0.5" Y="5.25" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAABAAAAEAQ=</HashCode>
+      <FileName>Local\ILocalDbFsItem.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.IFile">
+    <Position X="4.5" Y="9.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>ACAAAAAAAIAQAEIAAgAACAAkAAQAIQAAAAABQBAAEAU=</HashCode>
+      <FileName>IFile.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Upstream.IUpstreamFile">
+    <Position X="10.75" Y="9.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>ACAAAAAAAIAQAEIAAgAACAAkAAQAIQAAAAABQBAAEAU=</HashCode>
+      <FileName>Upstream\IUpstreamFile.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Upstream.IUpstreamDbFsItem">
+    <Position X="9.75" Y="5.25" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAABAAAAEAQ=</HashCode>
+      <FileName>Upstream\IUpstreamDbFsItem.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Local.ILocalDbEntity">
+    <Position X="3" Y="0.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAA=</HashCode>
+      <FileName>Local\ILocalDbEntity.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.IDbFsItem">
+    <Position X="4.75" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAABAAAAEAQ=</HashCode>
+      <FileName>IDbFsItem.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.IDbFsItemRow" BaseTypeListCollapsed="true">
+    <Position X="7" Y="2.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAAIAAAAAAAAAAAAAQAAAQAAAAAAAAAgAAAAAA=</HashCode>
+      <FileName>IDbFsItemRow.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.IDbEntity" BaseTypeListCollapsed="true">
+    <Position X="7" Y="0.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAABAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>IDbEntity.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.IFileRow">
+    <Position X="7.25" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gQAAAAAEAAAEAAAQAhAACIqAAACAAAAAAgAAAABIAAA=</HashCode>
+      <FileName>IFileRow.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Upstream.IUpstreamDbFsItemRow">
+    <Position X="12.25" Y="2.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Upstream\IUpstreamDbFsItem.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Upstream.IUpstreamDbEntity">
+    <Position X="12.25" Y="0.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAE=</HashCode>
+      <FileName>Upstream\IUpstreamDbEntity.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Local.ILocalDbFsItemRow">
+    <Position X="3" Y="2.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Local\ILocalDbFsItemRow.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Upstream.IUpstreamFileRow">
+    <Position X="12.5" Y="7.25" Width="1.5" />
+    <InheritanceLine Type="FsInfoCat.IFileRow" FixedFromPoint="true">
+      <Path>
+        <Point X="8.75" Y="7.937" />
+        <Point X="10.542" Y="7.937" Type="JumpStart" />
+        <Point X="10.708" Y="7.937" Type="JumpEnd" />
+        <Point X="12.5" Y="7.937" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Upstream\IUpstreamFile.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Local.ILocalFileRow">
+    <Position X="3" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Local\ILocalFileRow.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

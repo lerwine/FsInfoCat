@@ -14,7 +14,7 @@ namespace FsInfoCat.Upstream
     /// <summary>Represents a structural instance of file.</summary>
     /// <seealso cref="IUpstreamDbFsItem" />
     /// <seealso cref="IFile" />
-    public interface IUpstreamFile : IUpstreamDbFsItem, IFile
+    public interface IUpstreamFile : IUpstreamDbFsItem, IFile, IUpstreamFileRow
     {
         /// <summary>Gets the binary properties for the current file.</summary>
         /// <value>The generic <see cref="IUpstreamBinaryPropertySet" /> that contains the file size and optionally, the <see cref="MD5Hash">MD5 hash</see> value of its binary contents.</value>

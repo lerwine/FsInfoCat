@@ -1,0 +1,224 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Interface Name="FsInfoCat.IFileSystem">
+    <Position X="19" Y="9.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAEBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>IFileSystem.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="SymbolicNames" />
+      <Property Name="Volumes" />
+    </ShowAsCollectionAssociation>
+  </Interface>
+  <Interface Name="FsInfoCat.ISymbolicName" Collapsed="true">
+    <Position X="18.75" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ISymbolicName.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.IVolume">
+    <Position X="16.5" Y="9.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAACAAAAAAAAAAAAAAAAAAAAAAAEAAAABAAAAEAQ=</HashCode>
+      <FileName>IVolume.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.ISubdirectory">
+    <Position X="16.5" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAABAAAAQAAAAAAAAAAQAAIBAAAAEIQ=</HashCode>
+      <FileName>ISubdirectory.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Volume" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="Files" />
+    </ShowAsCollectionAssociation>
+  </Interface>
+  <Interface Name="FsInfoCat.IFile">
+    <Position X="8.75" Y="6.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>ACAAAAAAAIAQAEIAAgAACAAkAAQAIQAAAAABQBAAEAU=</HashCode>
+      <FileName>IFile.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="AudioProperties" />
+      <Property Name="BinaryProperties" />
+      <Property Name="DocumentProperties" />
+      <Property Name="DRMProperties" />
+      <Property Name="GPSProperties" />
+      <Property Name="ImageProperties" />
+      <Property Name="MediaProperties" />
+      <Property Name="MusicProperties" />
+      <Property Name="PhotoProperties" />
+      <Property Name="RecordedTVProperties" />
+      <Property Name="SummaryProperties" />
+      <Property Name="VideoProperties" />
+    </ShowAsAssociation>
+  </Interface>
+  <Interface Name="FsInfoCat.IAudioPropertySet" Collapsed="true">
+    <Position X="11.25" Y="9.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>IAudioPropertySet.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.IBinaryPropertySet">
+    <Position X="1" Y="7" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAIAAAAAAAAAAABAABAAAAAAAAAAAAAAAIA=</HashCode>
+      <FileName>IBinaryPropertySet.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.IDocumentPropertySet" Collapsed="true">
+    <Position X="6.75" Y="9.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>IDocumentPropertySet.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.IDRMPropertySet" Collapsed="true">
+    <Position X="9.25" Y="9.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>IDRMPropertySet.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.IGPSPropertySet" Collapsed="true">
+    <Position X="12.5" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>IGPSPropertySet.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.IImagePropertySet" Collapsed="true">
+    <Position X="14.5" Y="5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>IImagePropertySet.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.IMediaPropertySet" Collapsed="true">
+    <Position X="2.75" Y="5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>IMediaPropertySet.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.IMusicPropertySet" Collapsed="true">
+    <Position X="13.5" Y="9.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>IMusicPropertySet.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.IPhotoPropertySet" Collapsed="true">
+    <Position X="10.25" Y="5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>IPhotoPropertySet.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.IRecordedTVPropertySet" Collapsed="true">
+    <Position X="5.5" Y="5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>IRecordedTVPropertySet.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.ISummaryPropertySet" Collapsed="true">
+    <Position X="4" Y="9.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ISummaryPropertySet.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.IVideoPropertySet" Collapsed="true">
+    <Position X="8" Y="5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>IVideoPropertySet.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.ISummaryProperties">
+    <Position X="4" Y="11" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>BAAAAAAFAABEBEAAgIBAAkAAAAAAAAEAADAQBABIggA=</HashCode>
+      <FileName>ISummaryProperties.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.IDocumentProperties">
+    <Position X="6.75" Y="11" Width="2" />
+    <TypeIdentifier>
+      <HashCode>IAAABBAAAAIIAAAAAAgAAAAAABAABAAAAABEAAAAAAA=</HashCode>
+      <FileName>IDocumentProperties.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.IGPSProperties">
+    <Position X="12.5" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAEBAAAAAAAAAAAAAAIAAAAIAAAAQAKAAECAAAEgAAA=</HashCode>
+      <FileName>IGPSProperties.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.IMediaProperties">
+    <Position X="2.75" Y="0.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AYAAABEABEACAAAASAAAAAADACAwAAAAAAAAAAEAAAA=</HashCode>
+      <FileName>IMediaProperties.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.IDRMProperties">
+    <Position X="9.25" Y="11" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAQAAAgAAAhAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>IDRMProperties.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.IAudioProperties">
+    <Position X="11.25" Y="11" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>BAACIAAAAAAACAAAAAEIAAAAAAgAAAAAAAAAgAAAAAA=</HashCode>
+      <FileName>IAudioProperties.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.IMusicProperties">
+    <Position X="13.5" Y="11" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AACAAAAAAAAAAAAAQAIAAAAACpAAAAAAAAAAAUAAAQI=</HashCode>
+      <FileName>IMusicProperties.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.IVideoProperties">
+    <Position X="8" Y="1.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAACoBAAAAAAAAAAAAAIAABAACAAAAAAACAAgAgAAAA=</HashCode>
+      <FileName>IVideoProperties.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.IRecordedTVProperties">
+    <Position X="5.5" Y="2" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAACAAAAQAAQAAAIQAAAAAAAEABAAAAAAAAgA=</HashCode>
+      <FileName>IRecordedTVProperties.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.IPhotoProperties">
+    <Position X="10.25" Y="2" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEAQAAChAQAAAAAAAAAgAAAAABAAAAAAAAAAA=</HashCode>
+      <FileName>IPhotoProperties.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.IImageProperties">
+    <Position X="14.5" Y="1.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>BAAAIAAAAECAAAAAEAAACAEEAQACAAAAAABAAAAAAAA=</HashCode>
+      <FileName>IImageProperties.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

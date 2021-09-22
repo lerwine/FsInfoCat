@@ -1,0 +1,229 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="FsInfoCat.Local.DbFile">
+    <Position X="0.5" Y="4.75" Width="2" />
+    <Members>
+      <Property Name="IDbFsItem.AccessErrors" Hidden="true" />
+      <Property Name="IDbFsItem.Parent" Hidden="true" />
+      <Property Name="IDbFsItem.PersonalTags" Hidden="true" />
+      <Property Name="IDbFsItem.SharedTags" Hidden="true" />
+      <Property Name="IFile.AccessErrors" Hidden="true" />
+      <Property Name="IFile.AudioProperties" Hidden="true" />
+      <Property Name="IFile.BaselineComparisons" Hidden="true" />
+      <Property Name="IFile.BinaryProperties" Hidden="true" />
+      <Property Name="IFile.CorrelativeComparisons" Hidden="true" />
+      <Property Name="IFile.DocumentProperties" Hidden="true" />
+      <Property Name="IFile.DRMProperties" Hidden="true" />
+      <Property Name="IFile.GPSProperties" Hidden="true" />
+      <Property Name="IFile.ImageProperties" Hidden="true" />
+      <Property Name="IFile.MediaProperties" Hidden="true" />
+      <Property Name="IFile.MusicProperties" Hidden="true" />
+      <Property Name="IFile.PersonalTags" Hidden="true" />
+      <Property Name="IFile.PhotoProperties" Hidden="true" />
+      <Property Name="IFile.RecordedTVProperties" Hidden="true" />
+      <Property Name="IFile.Redundancy" Hidden="true" />
+      <Property Name="IFile.SharedTags" Hidden="true" />
+      <Property Name="IFile.SummaryProperties" Hidden="true" />
+      <Property Name="IFile.VideoProperties" Hidden="true" />
+      <Property Name="IIdentityReference&lt;DbFile&gt;.Entity" Hidden="true" />
+      <Property Name="ILocalDbFsItem.AccessErrors" Hidden="true" />
+      <Property Name="ILocalDbFsItem.Parent" Hidden="true" />
+      <Property Name="ILocalDbFsItem.PersonalTags" Hidden="true" />
+      <Property Name="ILocalDbFsItem.SharedTags" Hidden="true" />
+      <Property Name="ILocalFile.AccessErrors" Hidden="true" />
+      <Property Name="ILocalFile.AudioProperties" Hidden="true" />
+      <Property Name="ILocalFile.BaselineComparisons" Hidden="true" />
+      <Property Name="ILocalFile.BinaryProperties" Hidden="true" />
+      <Property Name="ILocalFile.CorrelativeComparisons" Hidden="true" />
+      <Property Name="ILocalFile.DocumentProperties" Hidden="true" />
+      <Property Name="ILocalFile.DRMProperties" Hidden="true" />
+      <Property Name="ILocalFile.GPSProperties" Hidden="true" />
+      <Property Name="ILocalFile.ImageProperties" Hidden="true" />
+      <Property Name="ILocalFile.MediaProperties" Hidden="true" />
+      <Property Name="ILocalFile.MusicProperties" Hidden="true" />
+      <Property Name="ILocalFile.PersonalTags" Hidden="true" />
+      <Property Name="ILocalFile.PhotoProperties" Hidden="true" />
+      <Property Name="ILocalFile.RecordedTVProperties" Hidden="true" />
+      <Property Name="ILocalFile.Redundancy" Hidden="true" />
+      <Property Name="ILocalFile.SharedTags" Hidden="true" />
+      <Property Name="ILocalFile.SummaryProperties" Hidden="true" />
+      <Property Name="ILocalFile.VideoProperties" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>VygGzoQCAojwIUpRi8eCSzR0C4UMI4ARChjBQhwA0IU=</HashCode>
+      <FileName>DbFile.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Redundancy" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="FsInfoCat.Local.Subdirectory">
+    <Position X="1" Y="10.75" Width="1.5" />
+    <Members>
+      <Property Name="IDbFsItem.AccessErrors" Hidden="true" />
+      <Property Name="IDbFsItem.Parent" Hidden="true" />
+      <Property Name="IDbFsItem.PersonalTags" Hidden="true" />
+      <Property Name="IDbFsItem.SharedTags" Hidden="true" />
+      <Property Name="IIdentityReference.Entity" Hidden="true" />
+      <Property Name="IIdentityReference&lt;Subdirectory&gt;.Entity" Hidden="true" />
+      <Property Name="ILocalDbFsItem.AccessErrors" Hidden="true" />
+      <Property Name="ILocalDbFsItem.Parent" Hidden="true" />
+      <Property Name="ILocalDbFsItem.PersonalTags" Hidden="true" />
+      <Property Name="ILocalDbFsItem.SharedTags" Hidden="true" />
+      <Property Name="ILocalSubdirectory.AccessErrors" Hidden="true" />
+      <Property Name="ILocalSubdirectory.CrawlConfiguration" Hidden="true" />
+      <Property Name="ILocalSubdirectory.Files" Hidden="true" />
+      <Property Name="ILocalSubdirectory.PersonalTags" Hidden="true" />
+      <Property Name="ILocalSubdirectory.SharedTags" Hidden="true" />
+      <Property Name="ILocalSubdirectory.SubDirectories" Hidden="true" />
+      <Property Name="ILocalSubdirectory.Volume" Hidden="true" />
+      <Property Name="ISubdirectory.AccessErrors" Hidden="true" />
+      <Property Name="ISubdirectory.CrawlConfiguration" Hidden="true" />
+      <Property Name="ISubdirectory.Files" Hidden="true" />
+      <Property Name="ISubdirectory.Parent" Hidden="true" />
+      <Property Name="ISubdirectory.PersonalTags" Hidden="true" />
+      <Property Name="ISubdirectory.SharedTags" Hidden="true" />
+      <Property Name="ISubdirectory.SubDirectories" Hidden="true" />
+      <Property Name="ISubdirectory.Volume" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>BQIIAgAAAACwAQkhEQEJQgAwCpkEIMRSYgqjAhbAEIQ=</HashCode>
+      <FileName>Subdirectory.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Files" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="FsInfoCat.Local.Volume">
+    <Position X="4.75" Y="10.75" Width="2" />
+    <Members>
+      <Property Name="IIdentityReference&lt;Volume&gt;.Entity" Hidden="true" />
+      <Property Name="ILocalVolume.AccessErrors" Hidden="true" />
+      <Property Name="ILocalVolume.FileSystem" Hidden="true" />
+      <Property Name="ILocalVolume.PersonalTags" Hidden="true" />
+      <Property Name="ILocalVolume.RootDirectory" Hidden="true" />
+      <Property Name="ILocalVolume.SharedTags" Hidden="true" />
+      <Property Name="IVolume.AccessErrors" Hidden="true" />
+      <Property Name="IVolume.FileSystem" Hidden="true" />
+      <Property Name="IVolume.PersonalTags" Hidden="true" />
+      <Property Name="IVolume.RootDirectory" Hidden="true" />
+      <Property Name="IVolume.SharedTags" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>hAIAIACAAADAABAgIEACAgYAAAAAAgEAAgABABAAEJY=</HashCode>
+      <FileName>Volume.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="RootDirectory" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="FsInfoCat.Local.FileSystem">
+    <Position X="8.75" Y="11" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Properties" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAgAAAAABAEBAAQAAAAAACAAQBAAAAAAABAgAAAAAIA=</HashCode>
+      <FileName>FileSystem.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Volumes" />
+      <Property Name="SymbolicNames" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="FsInfoCat.Local.SymbolicName">
+    <Position X="11" Y="11" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAAAAACAAAAEAAAAAAAABAQAAAAAQgAAAAAAABAAgAA=</HashCode>
+      <FileName>SymbolicName.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="FsInfoCat.Local.BinaryPropertySet">
+    <Position X="4.25" Y="5" Width="2.5" />
+    <Members>
+      <Property Name="IBinaryPropertySet.Files" Hidden="true" />
+      <Property Name="IBinaryPropertySet.RedundantSets" Hidden="true" />
+      <Property Name="IIdentityReference.Entity" Hidden="true" />
+      <Property Name="IIdentityReference&lt;BinaryPropertySet&gt;.Entity" Hidden="true" />
+      <Property Name="ILocalBinaryPropertySet.Files" Hidden="true" />
+      <Property Name="ILocalBinaryPropertySet.RedundantSets" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AQECAAAAAQIEAAABAAHAAABAABAAAKBhBAAAADAAEIA=</HashCode>
+      <FileName>BinaryPropertySet.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Files" />
+      <Property Name="RedundantSets" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="FsInfoCat.Local.RedundantSet">
+    <Position X="4.25" Y="0.5" Width="1.5" />
+    <Members>
+      <Property Name="IIdentityReference.Entity" Hidden="true" />
+      <Property Name="IIdentityReference&lt;RedundantSet&gt;.Entity" Hidden="true" />
+      <Property Name="ILocalRedundantSet.BinaryProperties" Hidden="true" />
+      <Property Name="ILocalRedundantSet.Redundancies" Hidden="true" />
+      <Property Name="IRedundantSet.BinaryProperties" Hidden="true" />
+      <Property Name="IRedundantSet.Redundancies" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AQCAAAAAAABEAABCEgAAIAAAACAAAAAAAEAAABAAAAE=</HashCode>
+      <FileName>RedundantSet.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Redundancies" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="FsInfoCat.Local.Redundancy">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <Members>
+      <Property Name="IHasCompoundIdentifier.Id" Hidden="true" />
+      <Property Name="IHasIdentifierPair.Id" Hidden="true" />
+      <Property Name="IIdentityReference.Entity" Hidden="true" />
+      <Property Name="IIdentityReference&lt;Redundancy&gt;.Entity" Hidden="true" />
+      <Property Name="ILocalRedundancy.File" Hidden="true" />
+      <Property Name="ILocalRedundancy.RedundantSet" Hidden="true" />
+      <Property Name="IRedundancy.File" Hidden="true" />
+      <Property Name="IRedundancy.RedundantSet" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AQAzgACAIEAEgAABAAGAAAAggBAUAAABQAQAABIAEIA=</HashCode>
+      <FileName>Redundancy.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

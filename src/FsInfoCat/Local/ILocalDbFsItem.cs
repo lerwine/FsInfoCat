@@ -7,7 +7,7 @@ namespace FsInfoCat.Local
     /// <summary>Base interface for a database entity that represents a file system node on the local host machine.</summary>
     /// <seealso cref="ILocalDbEntity" />
     /// <seealso cref="IDbFsItem" />
-    public interface ILocalDbFsItem : ILocalDbEntity, IDbFsItem
+    public interface ILocalDbFsItem : ILocalDbFsItemRow, IDbFsItem
     {
         /// <summary>Gets the parent subdirectory.</summary>
         /// <value>The parent <see cref="ILocalSubdirectory" /> or <see langword="null" /> if this is the root <see cref="ILocalSubdirectory" />.</value>

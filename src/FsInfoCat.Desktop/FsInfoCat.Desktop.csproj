@@ -22,6 +22,7 @@
     <Compile Remove="Resources\**" />
     <EmbeddedResource Remove="Resources\**" />
     <None Remove="Resources\**" />
+    <None Include="..\CodeMap1.dgml" Link="CodeMap1.dgml" />
     <None Include="LICENSE.md">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
