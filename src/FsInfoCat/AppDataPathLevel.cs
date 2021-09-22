@@ -16,18 +16,27 @@ namespace FsInfoCat
         /// </summary>
         /// <remarks>
         /// This refers to a subdirectory named after the application's <see cref="System.Reflection.AssemblyName.Version">Assembly Version</see>, and is located within
-        /// the <see cref="Application">local application data subdirectory</see>.
+        /// the <see cref="Assembly">general assembly app data subdirectory</see>.
         /// </remarks>
         CurrentVersion,
 
         /// <summary>
-        /// The parent directory for application-specific data that is used by the current, non-roaming user.
+        /// The parent directory containing assembly data that is used by the current, non-roaming user.
         /// </summary>
         /// <remarks>
         /// This refers to a subdirectory named after the application's <see cref="System.Reflection.AssemblyName.Name">Assembly Name</see>, and is located within
+        /// the <see cref="Product">product-specific app data subdirectory</see>.
+        /// </remarks>
+        Assembly,
+
+        /// <summary>
+        /// The parent directory for product-specific data that is used by the current, non-roaming user.
+        /// </summary>
+        /// <remarks>
+        /// This refers to a subdirectory named after the application's <see cref="System.Reflection.AssemblyProductAttribute.Product">Product Name</see>, and is located within
         /// the <see cref="Company">company-specific app data subdirectory</see>.
         /// </remarks>
-        Application,
+        Product,
 
         /// <summary>
         /// TThe directory that serves as a common repository for application-independent, company-specific data that is used by the current, non-roaming user.

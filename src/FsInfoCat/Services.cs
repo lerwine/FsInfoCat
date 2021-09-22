@@ -3,9 +3,13 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Reflection;
+using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -43,6 +47,8 @@ namespace FsInfoCat
             return path;
         }
 
+        public static Regex FileNameEncodedSequenceRegex = new(@"__0x[\da-f]{4}__", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+
         public static string GetAppDataPath(Assembly assembly) => GetAppDataPath(assembly, AppDataPathLevel.CurrentVersion);
 
         public static string GetAppDataPath(Assembly assembly, CultureInfo culture) => GetAppDataPath(GetAppDataPath(assembly, AppDataPathLevel.CurrentVersion), culture);
@@ -55,11 +61,16 @@ namespace FsInfoCat
                 _ = Directory.CreateDirectory(path);
             if (level == AppDataPathLevel.Company)
                 return path;
+            path = Path.Combine(path, assembly.GetCustomAttribute<AssemblyProductAttribute>()?.Product.NullIfWhiteSpace() ?? nameof(FsInfoCat));
+            if (!Directory.Exists(path))
+                _ = Directory.CreateDirectory(path);
+            if (level == AppDataPathLevel.Product)
+                return path;
             AssemblyName assemblyName = assembly.GetName();
             path = Path.Combine(path, assemblyName.Name ?? "UnknownAssembly");
             if (!Directory.Exists(path))
                 _ = Directory.CreateDirectory(path);
-            if (level == AppDataPathLevel.Application)
+            if (level == AppDataPathLevel.Assembly)
                 return path;
             Version version = assemblyName.Version;
             if (version is not null)
