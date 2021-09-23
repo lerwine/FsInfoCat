@@ -108,8 +108,8 @@ namespace FsInfoCat.UnitTests
             yield return ConstructorResultExpected.CreateArgumentOutOfRangeExceptionTestData(new Uri("file:///Users/jlynn/ANWR", UriKind.Absolute));
             yield return ConstructorResultExpected.CreateArgumentOutOfRangeExceptionTestData(new Uri("http://servicenowdiag479.file.core.windows.net/testazureshare", UriKind.Absolute));
             yield return ConstructorResultExpected.CreateArgumentOutOfRangeExceptionTestData(new Uri("http://desktop-10538/Users/jlynn/ANWR", UriKind.Absolute));
-            yield return ConstructorResultExpected.CreateArgumentOutOfRangeExceptionTestData(new Uri("/servicenowdiag479.file.core.windows.net/testazureshare", UriKind.Absolute));
-            yield return ConstructorResultExpected.CreateArgumentOutOfRangeExceptionTestData(new Uri("/desktop-10538/Users/jlynn/ANWR", UriKind.Absolute));
+            yield return ConstructorResultExpected.CreateArgumentOutOfRangeExceptionTestData(new Uri("file:///servicenowdiag479.file.core.windows.net/testazureshare", UriKind.Absolute));
+            yield return ConstructorResultExpected.CreateArgumentOutOfRangeExceptionTestData(new Uri("file:///desktop-10538/Users/jlynn/ANWR", UriKind.Absolute));
         }
 
         [DataTestMethod]

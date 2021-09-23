@@ -41,6 +41,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SQLite", "SQLite", "{E4FEA3
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FsInfoCat.PS", "FsInfoCat.PS\FsInfoCat.PS.csproj", "{1FAF9E79-E791-44AC-8EEC-DC5A0D9A8BAF}"
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Setup", "Setup\Setup.vdproj", "{ED90162A-1EA8-4C11-9743-C8099F610430}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -175,6 +177,16 @@ Global
 		{1FAF9E79-E791-44AC-8EEC-DC5A0D9A8BAF}.Release|x64.Build.0 = Release|Any CPU
 		{1FAF9E79-E791-44AC-8EEC-DC5A0D9A8BAF}.Release|x86.ActiveCfg = Release|Any CPU
 		{1FAF9E79-E791-44AC-8EEC-DC5A0D9A8BAF}.Release|x86.Build.0 = Release|Any CPU
+		{ED90162A-1EA8-4C11-9743-C8099F610430}.Debug|Any CPU.ActiveCfg = Release
+		{ED90162A-1EA8-4C11-9743-C8099F610430}.Debug|ARM.ActiveCfg = Debug
+		{ED90162A-1EA8-4C11-9743-C8099F610430}.Debug|ARM64.ActiveCfg = Debug
+		{ED90162A-1EA8-4C11-9743-C8099F610430}.Debug|x64.ActiveCfg = Debug
+		{ED90162A-1EA8-4C11-9743-C8099F610430}.Debug|x86.ActiveCfg = Debug
+		{ED90162A-1EA8-4C11-9743-C8099F610430}.Release|Any CPU.ActiveCfg = Release
+		{ED90162A-1EA8-4C11-9743-C8099F610430}.Release|ARM.ActiveCfg = Release
+		{ED90162A-1EA8-4C11-9743-C8099F610430}.Release|ARM64.ActiveCfg = Release
+		{ED90162A-1EA8-4C11-9743-C8099F610430}.Release|x64.ActiveCfg = Release
+		{ED90162A-1EA8-4C11-9743-C8099F610430}.Release|x86.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

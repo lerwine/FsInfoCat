@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<svg stroke-linecap="round" font-size="12" font-family="Segoe UI" width="3182.2816666666695" height="1010" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <image id="CodeSchema_Interface" width="16" height="9" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAJCAYAAAA7KqwyAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA6cAfpM6f8AAAFxSURBVChTYyAE/v//zwLECf/+/dsPxPeBeDcQ54DEQfKMUEU8QMoFxAaCA4yMjB9ADKjm5WfvvQmpXX6W4cbTjwwywtwM5QF6DN7GsiB1roxABRpAvP3k7dcKX378ZrDXknjBysLsCJS8ARRPOHHr1XzXxu0MIDlksLrEmSHEUrGRAeiczTXLzvxnCJoNxiHde4D6EMClYRtYfPrOa/+///rzf/OZR2C+StbK/0C91xlB/tIrWqdw5dF7qNnYwbflCQycbCxAbzEwMIXMAYv9X5vCwASkr3gYyoIFQADoLLAEDLvoSYPFN5x6CHTtf4aD156D+QpivKAwugELg8M7LzwVefPpB0OwpcJLoE0OoDAAuq7g6I2X/Y712xj+/P0H1ggD83PsGOIdVDvAHKABAkCcAMUiYEEgALI5gIYc3n/l2X+b6s3/eaIW/NcpWPN//r6bIP+fBslDleIGQEU8IJcA8Xkg/gzVWAHEwHTAwAAAzqT6wt3Hgl4AAAAASUVORK5CYII=" />
+  </defs>
+  <rect width="3182.2816666666695" height="1010" fill="#1E1E1E" />
+  <g transform="translate(1095.19742493331,272.665818869903)">
+    <g id="(Assembly=file:///C:/Users/lerwi/Git/FsInfoCat/src/FsInfoCat/bin/Release/net5.0/FsInfoCat.dll Namespace=FsInfoCat.Local Type=ILocalFile)-&gt;(Assembly=file:///C:/Users/lerwi/Git/FsInfoCat/src/FsInfoCat/bin/Release/net5.0/FsInfoCat.dll Namespace=FsInfoCat Type=IFile)">
+      <path d="M 762.791892664784,186.033171007124 L 736.818752100709,209.643081149758" stroke-dasharray="2,2" fill="none" stroke="#00A600" stroke-width="1" />
+      <path d="M 730.159031626428,215.696850488315 L 740.249285192765,211.930315878488 C 737.715606817532,210.629706405207 735.921897383885,208.656455894309 734.868156891826,206.010564345794 z" fill="#00A600" stroke="#00A600" stroke-width="1" stroke-linejoin="round" />
+    </g>
+    <g id="(Assembly=file:///C:/Users/lerwi/Git/FsInfoCat/src/FsInfoCat/bin/Release/net5.0/FsInfoCat.dll Namespace=FsInfoCat.Local Type=ILocalFile)-&gt;(Assembly=file:///C:/Users/lerwi/Git/FsInfoCat/src/FsInfoCat/bin/Release/net5.0/FsInfoCat.dll Namespace=FsInfoCat.Local Type=ILocalDbFsItem)">
+      <path d="M 730.534294179936,186.033171007124 L 629.280884632404,213.542431330488" stroke-dasharray="2,2" fill="none" stroke="#00A600" stroke-width="1" />
+      <path d="M 620.5957213769,215.902079445196 L 631.29463526733,217.140320764633 C 629.630462130879,214.829122183155 628.931307133929,212.255740477821 629.197170276479,209.42017564863 z" fill="#00A600" stroke="#00A600" stroke-width="1" stroke-linejoin="round" />
+    </g>
+    <g id="(Assembly=file:///C:/Users/lerwi/Git/FsInfoCat/src/FsInfoCat/bin/Release/net5.0/FsInfoCat.dll Namespace=FsInfoCat.Local Type=ILocalFile)-&gt;(Assembly=file:///C:/Users/lerwi/Git/FsInfoCat/src/FsInfoCat/bin/Release/net5.0/FsInfoCat.dll Namespace=FsInfoCat.Local Type=ILocalFileRow)">
+      <path d="M 793.934339634481,186.033171007124 L 827.959227322846,210.488619508994" stroke-dasharray="2,2" fill="none" stroke="#00A600" stroke-width="1" />
+      <path d="M 835.267359508933,215.741352507222 L 829.481760634716,206.656923759818 C 828.73740998925,209.405933259203 827.181044656442,211.571305758784 824.81266463629,213.153041258562 z" fill="#00A600" stroke="#00A600" stroke-width="1" stroke-linejoin="round" />
+    </g>
+    <g id="(Assembly=file:///C:/Users/lerwi/Git/FsInfoCat/src/FsInfoCat/bin/Release/net5.0/FsInfoCat.dll Namespace=FsInfoCat.Local Type=ILocalFile)">
+      <rect x="721.85307829359624" y="161.03317100712397" rx="5" ry="5" width="109.38000000000011" height="25" fill="none" stroke="#F9EC31" stroke-width="5" />
+      <rect x="721.85307829359624" y="161.03317100712397" rx="5" ry="5" width="109.38000000000011" height="25" fill="#1382CE" stroke="#1382CE" stroke-width="1" />
+      <use x="741.85307829359624" y="169.03317100712397" xlink:href="#CodeSchema_Interface" />
+      <text x="762.85307829359624" y="178.98317100712396" fill="#FFFFFF">ILocalFile</text>
+      <rect x="INF" y="INF" width="-INF" height="-INF" fill="#1E1E1E" stroke="#1382CE" stroke-width="1" />
+    </g>
+  </g>
+</svg>

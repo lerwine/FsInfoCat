@@ -39,7 +39,7 @@ namespace FsInfoCat
         public VolumeIdentifier(uint vsn)
         {
             _serialNumber = vsn;
-            _location = new($"{UriHelper.URI_SCHEME_URN}:{UriHelper.URN_NAMESPACE_VOLUME}:{UriHelper.URN_NAMESPACE_ID}:{vsn >> 16:x4}-{vsn & 0xffff:x4}", UriKind.Absolute);
+            _location = new($"{UriHelper.URI_SCHEME_URN}:{UriHelper.URN_NAMESPACE_VOLUME}:{UriHelper.URN_NAMESPACE_ID}:{(vsn >> 16):X4}-{(vsn & 0xffff):X4}", UriKind.Absolute);
             _uuid = null;
         }
 
@@ -59,8 +59,6 @@ namespace FsInfoCat
                 _serialNumber = null;
                 return;
             }
-            if (!(string.IsNullOrEmpty(uri.Query) && string.IsNullOrEmpty(uri.Fragment)))
-                throw new ArgumentOutOfRangeException(nameof(uri));
             if (!uri.IsAbsoluteUri)
             {
                 if (uri.ToString().Length > 0)
@@ -70,6 +68,22 @@ namespace FsInfoCat
                 _uuid = null;
                 return;
             }
+            if (uri.Query == "?")
+            {
+                UriBuilder uriBuilder = new(uri);
+                uriBuilder.Query = "";
+                if (uri.Fragment == "#")
+                    uriBuilder.Fragment = "";
+                uri = uriBuilder.Uri;
+            }
+            else if (uri.Fragment == "#")
+            {
+                UriBuilder uriBuilder = new(uri);
+                uriBuilder.Fragment = "";
+                uri = uriBuilder.Uri;
+            }
+            if (!(string.IsNullOrEmpty(uri.Query) && string.IsNullOrEmpty(uri.Fragment)))
+                throw new ArgumentOutOfRangeException(nameof(uri));
             string path = PathSeparatorNormalize.Replace(uri.AbsolutePath, "");
             if (path.EndsWith(UriHelper.URI_PATH_SEPARATOR_STRING))
                 path = path[0..^1];
@@ -85,7 +99,7 @@ namespace FsInfoCat
                             uint.TryParse(match.Groups[2].Value, NumberStyles.HexNumber, null, out uint vsnL))
                         {
                             _serialNumber = vsnL | (vsnH << 16);
-                            _location = new($"{UriHelper.URI_SCHEME_URN}:{UriHelper.URN_NAMESPACE_VOLUME}:{UriHelper.URN_NAMESPACE_ID}:{vsnH:x4}-{vsnL:x4}", UriKind.Absolute);
+                            _location = new($"{UriHelper.URI_SCHEME_URN}:{UriHelper.URN_NAMESPACE_VOLUME}:{UriHelper.URN_NAMESPACE_ID}:{vsnH:X4}-{vsnL:X4}", UriKind.Absolute);
                             _uuid = null;
                             return;
                         }
@@ -194,7 +208,7 @@ namespace FsInfoCat
 
         public override int GetHashCode() => (_location is null || !_location.IsAbsoluteUri) ? 0 : _location.AbsolutePath.GetHashCode();
 
-        public bool IsEmpty() => _location is null;
+        public bool IsEmpty() => string.IsNullOrEmpty(_location?.OriginalString);
 
         public override string ToString() => (_location is null) ? "" : _location.ToString();
 
