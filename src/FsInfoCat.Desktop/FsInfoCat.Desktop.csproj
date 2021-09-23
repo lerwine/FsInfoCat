@@ -88,8 +88,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\FsInfoCat.Local\FsInfoCat.Local.csproj" />
-    <ProjectReference Include="..\FsInfoCat.PS\FsInfoCat.PS.csproj" />
-    <ProjectReference Include="..\FsInfoCat.Upstream\FsInfoCat.Upstream.csproj" />
     <ProjectReference Include="..\FsInfoCat\FsInfoCat.csproj" />
   </ItemGroup>
 
