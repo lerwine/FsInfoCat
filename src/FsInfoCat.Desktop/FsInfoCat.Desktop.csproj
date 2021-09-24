@@ -9,13 +9,16 @@
     <RepositoryType>https://github.com/lerwine/FsInfoCat.git</RepositoryType>
     <RepositoryUrl>git</RepositoryUrl>
     <Copyright>© Leonard T. Erwine 2021</Copyright>
-    <Description>FS InfoCat is a file information cataloging tool designed to support managing files distributed across multiple storage locations and devices. This application collects metadata and characteristic of files, storing the information in the database, which can then be searched and analyzed.</Description>
+    <Description>FS InfoCat is a file management assistance application which creates a database of files distributed across multiple storage locations and devices. This application collects metadata and characteristic of files, storing the information in the database, which can then be searched and analyzed.</Description>
     <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
     <PackageProjectUrl>https://github.com/lerwine/FsInfoCat</PackageProjectUrl>
     <Authors>Leonard T. Erwine</Authors>
     <Product>FS InfoCat</Product>
     <PackageTags>File System Linter; Detect Duplicate; File Redundancy</PackageTags>
     <NeutralLanguage>en-US</NeutralLanguage>
+    <PackageIcon>Prince.png</PackageIcon>
+    <PackageIconUrl />
+    <ApplicationIcon>FsInfoCat.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -27,12 +30,17 @@
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>
+    <None Include="Prince.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
     <Page Remove="Resources\**" />
   </ItemGroup>
 
   <ItemGroup>
     <None Remove="appsettings.Development.json" />
     <None Remove="appsettings.json" />
+    <None Remove="FsInfoCat.ico" />
     <None Remove="LICENSE.md" />
   </ItemGroup>
 
@@ -53,6 +61,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="FsInfoCat.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="LICENSE.md">
@@ -87,7 +98,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\FsInfoCat.Local\FsInfoCat.Local.csproj" />
+    <ProjectReference Include="..\FsInfoCat.Local\FsInfoCat.Local.csproj">
+      <CopyLocalSatelliteAssemblies>true</CopyLocalSatelliteAssemblies>
+      <Private>true</Private>
+    </ProjectReference>
     <ProjectReference Include="..\FsInfoCat\FsInfoCat.csproj" />
   </ItemGroup>
 
