@@ -250,7 +250,10 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
             await dbContext.SaveChangesAsync(statusListener.CancellationToken);
             await dispatcherOperation;
             if (isNew)
-                return await dbContext.CrawlConfigListing.FindAsync(entity.Id, statusListener.CancellationToken);
+            {
+                Guid id = entity.Id;
+                return await dbContext.CrawlConfigListing.FirstOrDefaultAsync(e => e.Id == id, statusListener.CancellationToken);
+            }
             return invocationState is CrawlConfigListItemBase item ? item : null;
         }
 

@@ -414,6 +414,7 @@
             <![CDATA[CREATE TABLE IF NOT EXISTS "RedundantSets" (
     "Id" UNIQUEIDENTIFIER NOT NULL COLLATE NOCASE,
     "Reference" NVARCHAR(128) NOT NULL CHECK(length(trim("Reference"))=length("Reference")) COLLATE NOCASE,
+    "Status" UNSIGNED TINYINT NOT NULL CHECK("Status"<9) DEFAULT 1,
     "Notes" TEXT NOT NULL DEFAULT '',
     "CreatedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
     "ModifiedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),

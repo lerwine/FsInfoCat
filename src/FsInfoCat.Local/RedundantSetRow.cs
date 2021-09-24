@@ -30,6 +30,7 @@ namespace FsInfoCat.Local
         private readonly IPropertyChangeTracker<string> _reference;
         private readonly IPropertyChangeTracker<string> _notes;
         private readonly IPropertyChangeTracker<Guid> _binaryPropertiesId;
+        private readonly IPropertyChangeTracker<RedundancyRemediationStatus> _status;
 
         #endregion
 
@@ -42,6 +43,8 @@ namespace FsInfoCat.Local
         [StringLength(DbConstants.DbColMaxLen_ShortName, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_NameLength),
             ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual string Reference { get => _reference.GetValue(); set => _reference.SetValue(value); }
+
+        public RedundancyRemediationStatus Status { get => _status.GetValue(); set => _status.SetValue(value); }
 
         [Required(AllowEmptyStrings = true)]
         public virtual string Notes { get => _notes.GetValue(); set => _notes.SetValue(value); }
@@ -70,6 +73,7 @@ namespace FsInfoCat.Local
             _reference = AddChangeTracker(nameof(Reference), "", TrimmedNonNullStringCoersion.Default);
             _notes = AddChangeTracker(nameof(Notes), "", NonWhiteSpaceOrEmptyStringCoersion.Default);
             _binaryPropertiesId = AddChangeTracker(nameof(BinaryPropertiesId), Guid.Empty);
+            _status = AddChangeTracker(nameof(Status), RedundancyRemediationStatus.Unconfirmed);
         }
 
         protected override void OnPropertyChanging(PropertyChangingEventArgs args)

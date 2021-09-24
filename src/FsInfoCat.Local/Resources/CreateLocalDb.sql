@@ -485,6 +485,7 @@ CREATE TABLE IF NOT EXISTS "VideoPropertySets" (
 CREATE TABLE IF NOT EXISTS "RedundantSets" (
     "Id" UNIQUEIDENTIFIER NOT NULL COLLATE NOCASE,
     "Reference" NVARCHAR(128) NOT NULL CHECK(length(trim("Reference"))=length("Reference")) COLLATE NOCASE,
+    "Status" UNSIGNED TINYINT NOT NULL CHECK("Status"<9) DEFAULT 1,
     "Notes" TEXT NOT NULL DEFAULT '',
     "CreatedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
     "ModifiedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
@@ -1026,9 +1027,29 @@ INSERT INTO "Subdirectories" ("Id", "Name", "LastAccessed", "CreationTime", "Las
     VALUES ('38a40fde-acf0-4cc5-9302-d37ec2cbb631', 'lerwi', '2021-06-05 00:58:34', '2021-03-09 23:51:36', '2021-06-04 03:09:25', 'b63144ce-91cb-4cb8-a407-8d3490a8c90c', NULL, '2021-06-05 00:58:34', '2021-06-05 00:58:34');
 INSERT INTO "Subdirectories" ("Id", "Name", "LastAccessed", "CreationTime", "LastWriteTime", "ParentId", "VolumeId", "CreatedOn", "ModifiedOn")
     VALUES ('3dfc92c9-8af0-4ab6-bcc3-9104fdcdc35a', 'Videos', '2021-06-05 00:58:34', '2019-11-23 20:30:23', '2021-05-16 18:54:50', '38a40fde-acf0-4cc5-9302-d37ec2cbb631', NULL, '2021-06-05 00:58:34', '2021-06-05 00:58:34');
-INSERT INTO "main"."CrawlConfigurations" ("Id", "DisplayName", "RootId", "CreatedOn", "ModifiedOn")
-    VALUES ('9c91ba89-6ab5-4d4e-9798-0d926b405f41', 'Lenny''s Laptop Videos', '3dfc92c9-8af0-4ab6-bcc3-9104fdcdc35a', '2021-07-31 15:28:18', '2021-07-31 15:28:18');
+INSERT INTO "CrawlConfigurations" ("Id", "DisplayName", "RootId", "StatusValue", "LastCrawlStart", "LastCrawlEnd", "CreatedOn", "ModifiedOn")
+    VALUES ('9c91ba89-6ab5-4d4e-9798-0d926b405f41', 'Lenny''s Laptop Videos', '3dfc92c9-8af0-4ab6-bcc3-9104fdcdc35a', 2, '2021-08-01 14:54:22', '2021-08-01 14:57:16', '2021-07-31 15:28:18', '2021-08-01 14:57:16');
+INSERT INTO "CrawlJobLogs" ("Id", "MaxRecursionDepth", "RootPath", "StatusCode", "CrawlStart", "CrawlEnd", "StatusMessage", "StatusDetail", "FoldersProcessed", "FilesProcessed", "CreatedOn", "ModifiedOn", "ConfigurationId")
+    VALUES ('563160b2-cb6e-4e3b-855c-89eebefdf8bd', 256, 'C:\Users\lerwi\Downloads', 2, '2021-08-01 14:54:22', '2021-08-01 14:57:16', 'Directory was empty.', '', 0, 0, '2021-08-01 14:57:16', '2021-08-01 14:57:16', '9c91ba89-6ab5-4d4e-9798-0d926b405f41');
 INSERT INTO "BinaryPropertySets" ("Id", "Length", "CreatedOn", "ModifiedOn")
     VALUES('82d46e21-5eba-4f1b-8c99-78cb94689316', 25057982, '2021-08-22 14:32:22', '2021-08-22 14:32:2s');
 INSERT INTO "Files" ("Id", "Name", "CreationTime", "LastWriteTime", "CreatedOn", "ParentId", "BinaryPropertySetId")
     VALUES ('5f7b7beb-5aae-496a-925c-b3a43666c742', 'the move down on the bay - YouTube.webm', '2020-07-19 00:02:07', '2020-07-19 00:04:35', '2021-08-22 14:32:22', '3dfc92c9-8af0-4ab6-bcc3-9104fdcdc35a', '82d46e21-5eba-4f1b-8c99-78cb94689316');
+INSERT INTO "Subdirectories" ("Id", "Name", "LastAccessed", "CreationTime", "LastWriteTime", "ParentId", "VolumeId", "CreatedOn", "ModifiedOn")
+    VALUES ('b228346f-7023-4ba9-afe3-8e9ff758971f', '\', '2021-02-27 05:11:00', '2021-06-04 13:48:55', '2021-08-22 15:04:12', NULL, 'c48c1c92-154c-43cf-a277-53223d5c1510', '2021-08-22 15:04:12', '2021-08-22 15:04:12');
+INSERT INTO "CrawlConfigurations" ("Id", "DisplayName", "RootId", "StatusValue", "LastCrawlStart", "LastCrawlEnd", "CreatedOn", "ModifiedOn")
+    VALUES ('fa6c52c5-862b-4bf7-a145-ad7d2533a1d2', 'Lenny''s Laptop Videos', 'b228346f-7023-4ba9-afe3-8e9ff758971f', 6, '2021-08-22 15:04:17', '2021-08-22 15:04:31', '2021-08-22 15:04:12', '2021-08-22 15:04:32');
+INSERT INTO "CrawlJobLogs" ("Id", "MaxRecursionDepth", "RootPath", "StatusCode", "CrawlStart", "CrawlEnd", "StatusMessage", "StatusDetail", "FoldersProcessed", "FilesProcessed", "CreatedOn", "ModifiedOn", "ConfigurationId")
+    VALUES ('602c23f2-522b-402b-a40e-b80420a901b8', 256, '\\servicenowdiag479.file.core.windows.net\testazureshare', 6, '2021-08-22 15:04:17', '2021-08-22 15:04:31', 'Access Denied', '', 0, 0, '2021-08-22 15:04:31', '2021-08-22 15:04:31', 'fa6c52c5-862b-4bf7-a145-ad7d2533a1d2');
+INSERT INTO "Subdirectories" ("Id", "Name", "LastAccessed", "CreationTime", "LastWriteTime", "ParentId", "VolumeId", "CreatedOn", "ModifiedOn")
+    VALUES ('A85D3A22-C402-43F1-AC82-B2B83B843C0F', 'Downloads', '2021-09-24 07:17:22', '2019-11-23 20:30:23', '2021-09-24 06:16:50', '38a40fde-acf0-4cc5-9302-d37ec2cbb631', NULL, '2021-09-24 07:17:34', '2021-09-24 07:17:34');
+INSERT INTO "CrawlConfigurations" ("Id", "DisplayName", "RootId", "Status", "CreatedOn", "ModifiedOn")
+    VALUES ('5221E107-D03D-4D9D-AB2A-55425AF103E0', 'Local Downloads', 'A85D3A22-C402-43F1-AC82-B2B83B843C0F', 7, '2021-09-24 07:18:24', '2021-09-24 07:18:24');
+INSERT INTO "Subdirectories" ("Id", "Name", "LastAccessed", "CreationTime", "LastWriteTime", "Options", "Status", "VolumeId", "ParentId", "CreatedOn", "ModifiedOn")
+    VALUES ('C8E9C683-82A2-4BCE-8C59-2E57055FFEA7', 'OneDrive', '2021-09-24 08:00:03', '2019-11-23 20:35:06', '2021-09-24 06:01:39', 0, 1, NULL, '38a40fde-acf0-4cc5-9302-d37ec2cbb631', '2021-09-24 08:00:04', '2021-09-24 08:00:04');
+INSERT INTO "Subdirectories" ("Id", "Name", "LastAccessed", "CreationTime", "LastWriteTime", "Options", "Status", "VolumeId", "ParentId", "CreatedOn", "ModifiedOn")
+    VALUES ('2AB26D8B-562C-44CB-8C1C-971733F5DC04', 'Music', '2021-09-24 08:00:03', '2019-11-23 20:35:49', '2021-09-20 18:48:49', 0, 1, NULL, 'C8E9C683-82A2-4BCE-8C59-2E57055FFEA7', '2021-09-24 08:00:04', '2021-09-24 08:00:04');
+INSERT INTO "Subdirectories" ("Id", "Name", "LastAccessed", "CreationTime", "LastWriteTime", "Options", "Status", "VolumeId", "ParentId", "CreatedOn", "ModifiedOn")
+    VALUES ('58CB39A1-6080-4F73-A1E7-34274552B47B', 'SmashMouth', '2021-09-24 08:00:03', '2021-07-22 23:06:10', '2021-07-22 23:06:10', 0, 0, NULL, '2AB26D8B-562C-44CB-8C1C-971733F5DC04', '2021-09-24 08:00:04', '2021-09-24 08:00:04');
+INSERT INTO "CrawlConfigurations" ("Id", "DisplayName", "MaxRecursionDepth", "RootId", "StatusValue", "CreatedOn", "ModifiedOn")
+    VALUES ('2DD01786-78F7-45A3-8C18-7B02E3336768', 'Music folder', 256, '58CB39A1-6080-4F73-A1E7-34274552B47B', 0	'2021-09-24 08:01:01', '2021-09-24 08:01:01');

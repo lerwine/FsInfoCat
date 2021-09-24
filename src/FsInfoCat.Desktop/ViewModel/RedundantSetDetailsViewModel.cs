@@ -45,6 +45,19 @@ namespace FsInfoCat.Desktop.ViewModel
         public ReadOnlyObservableCollection<TRedundancyItem> Redundancies => (ReadOnlyObservableCollection<TRedundancyItem>)GetValue(RedundanciesProperty);
 
         #endregion
+        #region Status Property Members
+
+        /// <summary>
+        /// Identifies the <see cref="Status"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty StatusProperty = DependencyPropertyBuilder<RedundantSetDetailsViewModel<TEntity, TBinaryPropertySetEntity, TBinaryPropertySetItem, TRedundancyEntity, TRedundancyItem>, RedundancyRemediationStatus>
+            .Register(nameof(Status))
+            .DefaultValue(RedundancyRemediationStatus.Unconfirmed)
+            .AsReadWrite();
+
+        public RedundancyRemediationStatus Status { get => (RedundancyRemediationStatus)GetValue(StatusProperty); set => SetValue(StatusProperty, value); }
+
+        #endregion
         #region Completed Event Members
 
         public event EventHandler<ItemFunctionResultEventArgs> Completed;

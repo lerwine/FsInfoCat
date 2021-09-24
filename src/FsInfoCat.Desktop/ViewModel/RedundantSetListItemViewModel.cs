@@ -110,6 +110,19 @@ namespace FsInfoCat.Desktop.ViewModel
         public MD5Hash? Hash { get => (MD5Hash?)GetValue(HashProperty); private set => SetValue(HashPropertyKey, value); }
 
         #endregion
+        #region Status Property Members
+
+        /// <summary>
+        /// Identifies the <see cref="Status"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty StatusProperty = DependencyPropertyBuilder<RedundantSetListItemViewModel<TEntity>, RedundancyRemediationStatus>
+            .Register(nameof(Status))
+            .DefaultValue(RedundancyRemediationStatus.Unconfirmed)
+            .AsReadWrite();
+
+        public RedundancyRemediationStatus Status { get => (RedundancyRemediationStatus)GetValue(StatusProperty); set => SetValue(StatusProperty, value); }
+
+        #endregion
         #region RedundancyCount Property Members
 
         private static readonly DependencyPropertyKey RedundancyCountPropertyKey = ColumnPropertyBuilder<long, RedundantSetListItemViewModel<TEntity>>
@@ -141,6 +154,7 @@ namespace FsInfoCat.Desktop.ViewModel
             SetValue(DeletePropertyKey, new Commands.RelayCommand(RaiseDeleteCommand));
             Length = entity.Length;
             Hash = entity.Hash;
+            Status = entity.Status;
             RedundancyCount = entity.RedundancyCount;
         }
 
@@ -153,6 +167,9 @@ namespace FsInfoCat.Desktop.ViewModel
                     break;
                 case nameof(IRedundantSetListItem.Hash):
                     Dispatcher.CheckInvoke(() => Hash = Entity.Hash);
+                    break;
+                case nameof(IRedundantSetListItem.Status):
+                    Dispatcher.CheckInvoke(() => Status = Entity.Status);
                     break;
                 case nameof(IRedundantSetListItem.RedundancyCount):
                     Dispatcher.CheckInvoke(() => RedundancyCount = Entity.RedundancyCount);

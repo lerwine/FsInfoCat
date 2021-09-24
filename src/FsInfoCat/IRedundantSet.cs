@@ -15,8 +15,10 @@ namespace FsInfoCat
         /// <value>The custom notes to associate with the current set of redunant files.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_Notes), ResourceType = typeof(Properties.Resources))]
         string Notes { get; }
+        
+        RedundancyRemediationStatus Status { get; }
 
-        public Guid BinaryPropertiesId { get; }
+        Guid BinaryPropertiesId { get; }
     }
 
     public interface IRedundantSetListItem : IRedundantSetRow
