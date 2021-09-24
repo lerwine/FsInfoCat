@@ -1018,7 +1018,7 @@ INSERT INTO "Volumes" ("Id", "DisplayName", "VolumeName", "Identifier", "FileSys
 INSERT INTO "Volumes" ("Id", "DisplayName", "VolumeName", "Identifier", "FileSystemId", "MaxNameLength", "Type", "Status", "CreatedOn", "ModifiedOn")
 	VALUES ('355b32f0-d9c8-4a81-b894-24109fbbda64', 'E:', 'Audio CD', 'urn:volume:id:032B-0EBE', '88a3cdb9-ed66-4778-a33b-437675a5ae38', 221, 5, 3, '2021-06-05 01:09:46', '2021-06-05 01:09:46');
 INSERT INTO "Volumes" ("Id", "DisplayName", "VolumeName", "Identifier", "FileSystemId", "MaxNameLength", "Type", "Status", "CreatedOn", "ModifiedOn")
-	VALUES ('c48c1c92-154c-43cf-a277-53223d5c1510', 'testazureshare (on servicenowdiag479.file.core.windows.net)', '', 'file://servicenowdiag479.file.core.windows.net/testazureshare', '0af7fe3e-3bc2-41ac-b6b1-310ad5fc46cd', 255, 4, 3, '2021-06-05 00:58:35', '2021-06-05 00:58:35');
+	VALUES ('c48c1c92-154c-43cf-a277-53223d5c1510', 'testazureshare (on servicenowdiag479.file.core.windows.net)', '', 'file://servicenowdiag479.file.core.windows.net/testazureshare', '0af7fe3e-3bc2-41ac-b6b1-310ad5fc46cd', 255, 4, 2, '2021-06-05 00:58:35', '2021-09-24 14:15:09');
 INSERT INTO "Subdirectories" ("Id", "Name", "LastAccessed", "CreationTime", "LastWriteTime", "ParentId", "VolumeId", "CreatedOn", "ModifiedOn")
     VALUES ('20a61d4b-80c2-48a3-8df6-522e598aae08', 'C:\', '2021-06-05 00:58:34', '2019-03-19 00:37:21', '2021-06-04 13:47:20', NULL, '7920cf04-9e7f-4414-986e-d1bfba011db7', '2021-06-05 00:58:34', '2021-06-05 00:58:34');
 INSERT INTO "Subdirectories" ("Id", "Name", "LastAccessed", "CreationTime", "LastWriteTime", "ParentId", "VolumeId", "CreatedOn", "ModifiedOn")
@@ -1036,14 +1036,14 @@ INSERT INTO "BinaryPropertySets" ("Id", "Length", "CreatedOn", "ModifiedOn")
 INSERT INTO "Files" ("Id", "Name", "CreationTime", "LastWriteTime", "CreatedOn", "ParentId", "BinaryPropertySetId")
     VALUES ('5f7b7beb-5aae-496a-925c-b3a43666c742', 'the move down on the bay - YouTube.webm', '2020-07-19 00:02:07', '2020-07-19 00:04:35', '2021-08-22 14:32:22', '3dfc92c9-8af0-4ab6-bcc3-9104fdcdc35a', '82d46e21-5eba-4f1b-8c99-78cb94689316');
 INSERT INTO "Subdirectories" ("Id", "Name", "LastAccessed", "CreationTime", "LastWriteTime", "ParentId", "VolumeId", "CreatedOn", "ModifiedOn")
-    VALUES ('b228346f-7023-4ba9-afe3-8e9ff758971f', '\', '2021-02-27 05:11:00', '2021-06-04 13:48:55', '2021-08-22 15:04:12', NULL, 'c48c1c92-154c-43cf-a277-53223d5c1510', '2021-08-22 15:04:12', '2021-08-22 15:04:12');
+    VALUES ('b228346f-7023-4ba9-afe3-8e9ff758971f', '\\servicenowdiag479.file.core.windows.net\testazureshare', '2020-05-11 09:31:25', '2021-06-04 13:48:55', '2021-08-22 15:04:12', NULL, 'c48c1c92-154c-43cf-a277-53223d5c1510', '2021-08-22 15:04:12', '2021-08-22 15:04:12');
+INSERT INTO "Subdirectories" ("Id", "Name", "LastAccessed", "CreationTime", "LastWriteTime", "Options", "Notes", "ParentId", "VolumeId", "CreatedOn", "ModifiedOn")
+    VALUES ('c7f6d510-6acf-43c0-b5d5-d5f99cca0ce3', 'webroot', '2021-08-22 15:04:12', '2021-01-03 12:30:47', '2021-01-05 10:52:06', 1, 'Only scanning the root files.', 'b228346f-7023-4ba9-afe3-8e9ff758971f', NULL, '2021-08-22 15:04:12', '2021-08-22 15:04:12');
 INSERT INTO "CrawlConfigurations" ("Id", "DisplayName", "RootId", "StatusValue", "LastCrawlStart", "LastCrawlEnd", "CreatedOn", "ModifiedOn")
-    VALUES ('fa6c52c5-862b-4bf7-a145-ad7d2533a1d2', 'Lenny''s Laptop Videos', 'b228346f-7023-4ba9-afe3-8e9ff758971f', 6, '2021-08-22 15:04:17', '2021-08-22 15:04:31', '2021-08-22 15:04:12', '2021-08-22 15:04:32');
-INSERT INTO "CrawlJobLogs" ("Id", "MaxRecursionDepth", "RootPath", "StatusCode", "CrawlStart", "CrawlEnd", "StatusMessage", "StatusDetail", "FoldersProcessed", "FilesProcessed", "CreatedOn", "ModifiedOn", "ConfigurationId")
-    VALUES ('602c23f2-522b-402b-a40e-b80420a901b8', 256, '\\servicenowdiag479.file.core.windows.net\testazureshare', 6, '2021-08-22 15:04:17', '2021-08-22 15:04:31', 'Access Denied', '', 0, 0, '2021-08-22 15:04:31', '2021-08-22 15:04:31', 'fa6c52c5-862b-4bf7-a145-ad7d2533a1d2');
+    VALUES ('fa6c52c5-862b-4bf7-a145-ad7d2533a1d2', 'Web Root', 'c7f6d510-6acf-43c0-b5d5-d5f99cca0ce3', 0, '2021-08-22 15:04:17', '2021-08-22 15:04:31', '2021-08-22 15:04:12', '2021-08-22 15:04:32');
 INSERT INTO "Subdirectories" ("Id", "Name", "LastAccessed", "CreationTime", "LastWriteTime", "ParentId", "VolumeId", "CreatedOn", "ModifiedOn")
     VALUES ('A85D3A22-C402-43F1-AC82-B2B83B843C0F', 'Downloads', '2021-09-24 07:17:22', '2019-11-23 20:30:23', '2021-09-24 06:16:50', '38a40fde-acf0-4cc5-9302-d37ec2cbb631', NULL, '2021-09-24 07:17:34', '2021-09-24 07:17:34');
-INSERT INTO "CrawlConfigurations" ("Id", "DisplayName", "RootId", "Status", "CreatedOn", "ModifiedOn")
+INSERT INTO "CrawlConfigurations" ("Id", "DisplayName", "RootId", "StatusValue", "CreatedOn", "ModifiedOn")
     VALUES ('5221E107-D03D-4D9D-AB2A-55425AF103E0', 'Local Downloads', 'A85D3A22-C402-43F1-AC82-B2B83B843C0F', 7, '2021-09-24 07:18:24', '2021-09-24 07:18:24');
 INSERT INTO "Subdirectories" ("Id", "Name", "LastAccessed", "CreationTime", "LastWriteTime", "Options", "Status", "VolumeId", "ParentId", "CreatedOn", "ModifiedOn")
     VALUES ('C8E9C683-82A2-4BCE-8C59-2E57055FFEA7', 'OneDrive', '2021-09-24 08:00:03', '2019-11-23 20:35:06', '2021-09-24 06:01:39', 0, 1, NULL, '38a40fde-acf0-4cc5-9302-d37ec2cbb631', '2021-09-24 08:00:04', '2021-09-24 08:00:04');
@@ -1052,4 +1052,8 @@ INSERT INTO "Subdirectories" ("Id", "Name", "LastAccessed", "CreationTime", "Las
 INSERT INTO "Subdirectories" ("Id", "Name", "LastAccessed", "CreationTime", "LastWriteTime", "Options", "Status", "VolumeId", "ParentId", "CreatedOn", "ModifiedOn")
     VALUES ('58CB39A1-6080-4F73-A1E7-34274552B47B', 'SmashMouth', '2021-09-24 08:00:03', '2021-07-22 23:06:10', '2021-07-22 23:06:10', 0, 0, NULL, '2AB26D8B-562C-44CB-8C1C-971733F5DC04', '2021-09-24 08:00:04', '2021-09-24 08:00:04');
 INSERT INTO "CrawlConfigurations" ("Id", "DisplayName", "MaxRecursionDepth", "RootId", "StatusValue", "CreatedOn", "ModifiedOn")
-    VALUES ('2DD01786-78F7-45A3-8C18-7B02E3336768', 'Music folder', 256, '58CB39A1-6080-4F73-A1E7-34274552B47B', 0	'2021-09-24 08:01:01', '2021-09-24 08:01:01');
+    VALUES ('2DD01786-78F7-45A3-8C18-7B02E3336768', 'Music folder', 256, '58CB39A1-6080-4F73-A1E7-34274552B47B', 0,	'2021-09-24 08:01:01', '2021-09-24 08:01:01');
+INSERT INTO "VolumeAccessErrors" ("Id", "ErrorCode", "Message", "CreatedOn", "ModifiedOn", "TargetId")
+    VALUES ('b806e05a-b705-4ef7-b127-a8e477125cfc', 2, 'Network unreachable.', '2021-09-24 14:15:09', '2021-09-24 14:15:09', 'c48c1c92-154c-43cf-a277-53223d5c1510');
+INSERT INTO "CrawlJobLogs" ("Id", "RootPath", "StatusCode", "CrawlStart", "CrawlEnd", "StatusMessage", "StatusDetail", "FoldersProcessed", "FilesProcessed", "CreatedOn", "ModifiedOn", "ConfigurationId")
+    VALUES ('7a337ebd-4dc6-4560-ba21-bc1ed1262d49', '\\servicenowdiag479.file.core.windows.net\testazureshare\webroot', 6, '2021-09-24 14:12:06', '2021-09-24 14:15:09', 'Network unreachable.', '', 0, 0, '2021-09-24 14:15:09', '2021-09-24 14:15:09', 'fa6c52c5-862b-4bf7-a145-ad7d2533a1d2');
