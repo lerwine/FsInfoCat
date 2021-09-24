@@ -37,15 +37,15 @@ namespace FsInfoCat.UnitTests
             public Guid? UUID { get; init; }
             public Uri Location { get; init; }
             internal static object[] CreateTestData(Guid uuid) => new object[] { uuid, new ConstructorResultExpected { UUID = uuid, Location = new Uri($"urn:uuid:{uuid:d}", UriKind.Absolute) } };
-            internal static object[] CreateTestData(uint serialNumber) => new object[] { serialNumber, new ConstructorResultExpected { SerialNumber = serialNumber, Location = new Uri($"urn:volume:id:{(serialNumber >> 8):X4}-{(serialNumber & 0x0ffff):X4}", UriKind.Absolute) } };
+            internal static object[] CreateTestData(uint serialNumber) => new object[] { serialNumber, new ConstructorResultExpected { SerialNumber = serialNumber, Location = new Uri($"urn:volume:id:{ (serialNumber >> 16):X4}-{(serialNumber & 0x0ffff):X4}", UriKind.Absolute) } };
             internal static object[] CreateTestData(string text, Uri location) => new object[] { text, new ConstructorResultExpected { Location = location } };
             internal static object[] CreateTestData(string text, Guid uuid) => new object[] { text, new ConstructorResultExpected { UUID = uuid, Location = new Uri($"urn:uuid:{uuid:d}", UriKind.Absolute) } };
-            internal static object[] CreateTestData(string text, uint serialNumber) => new object[] { text, new ConstructorResultExpected { SerialNumber = serialNumber, Location = new Uri($"urn:volume:id:{(serialNumber >> 8):X4}-{(serialNumber & 0x0ffff):X4}", UriKind.Absolute) } };
+            internal static object[] CreateTestData(string text, uint serialNumber) => new object[] { text, new ConstructorResultExpected { SerialNumber = serialNumber, Location = new Uri($"urn:volume:id:{(serialNumber >> 16):X4}-{(serialNumber & 0x0ffff):X4}", UriKind.Absolute) } };
             internal static object[] CreateEmptyTestData(string text) => new object[] { text, new ConstructorResultExpected { IsEmpty = true, Location = new("", UriKind.Relative) } };
             internal static object[] CreateArgumentOutOfRangeExceptionTestData(string text) => new object[] { text, new ConstructorResultExpected { IsArgumentOutOfRangeException = true } };
             internal static object[] CreateTestData(Uri uri, Uri location) => new object[] { uri, new ConstructorResultExpected { Location = location } };
             internal static object[] CreateTestData(Uri uri, Guid uuid) => new object[] { uri, new ConstructorResultExpected { UUID = uuid, Location = new Uri($"urn:uuid:{uuid:d}", UriKind.Absolute) } };
-            internal static object[] CreateTestData(Uri uri, uint serialNumber) => new object[] { uri, new ConstructorResultExpected { SerialNumber = serialNumber, Location = new Uri($"urn:volume:id:{(serialNumber >> 8):X4}-{(serialNumber & 0x0ffff):X4}", UriKind.Absolute) } };
+            internal static object[] CreateTestData(Uri uri, uint serialNumber) => new object[] { uri, new ConstructorResultExpected { SerialNumber = serialNumber, Location = new Uri($"urn:volume:id:{(serialNumber >> 16):X4}-{(serialNumber & 0x0ffff):X4}", UriKind.Absolute) } };
             internal static object[] CreateEmptyTestData(Uri uri) => new object[] { uri, new ConstructorResultExpected { IsEmpty = true, Location = new("", UriKind.Relative) } };
             internal static object[] CreateArgumentOutOfRangeExceptionTestData(Uri uri) => new object[] { uri, new ConstructorResultExpected { IsArgumentOutOfRangeException = true } };
         }
