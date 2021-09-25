@@ -45,7 +45,7 @@
             </DataGrid.Columns>
             <DataGrid.RowDetailsTemplate>
                 <DataTemplate>
-                    <local:ListItemControl/>
+                    <local:ListItemControl MaxWidth="{Binding RelativeSource={RelativeSource TemplatedParent, AncestorType={x:Type DataGrid}}, Path=ActualWidth}"/>
                 </DataTemplate>
             </DataGrid.RowDetailsTemplate>
         </DataGrid>

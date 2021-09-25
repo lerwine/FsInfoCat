@@ -186,8 +186,6 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
 
         protected override bool ApplyChanges()
         {
-            if (Entity.IsChanged())
-                Entity.RejectChanges();
             Entity.CreatedOn = CreatedOn;
             Entity.DisplayName = DisplayName;
             Entity.LastCrawlEnd = LastCrawlEnd;
@@ -228,23 +226,16 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
         {
             using IServiceScope scope = Services.CreateScope();
             using LocalDbContext dbContext = scope.ServiceProvider.GetRequiredService<LocalDbContext>();
-            EntityEntry entry = dbContext.Entry(entity);
-            bool isNew = entry.State == EntityState.Detached;
-            switch (entry.State)
-            {
-                case EntityState.Added:
-                    isNew = true;
-                    break;
-                case EntityState.Detached:
-                    entry = dbContext.CrawlConfigurations.Add(entity);
-                    isNew = true;
-                    break;
-                default:
-                    isNew = false;
-                    break;
-            }
-            if (entry.State == EntityState.Detached)
+            CrawlConfiguration local = await dbContext.CrawlConfigurations.FirstOrDefaultAsync(e => e.Id == entity.Id, statusListener.CancellationToken);
+            EntityEntry entry;
+            bool isNew = local is null;
+            if (isNew)
                 entry = dbContext.CrawlConfigurations.Add(entity);
+            else
+            {
+                dbContext.Entry(local).State = EntityState.Detached;
+                (entry = dbContext.Entry(entity)).State = EntityState.Modified;
+            }
             DispatcherOperation dispatcherOperation = statusListener.BeginSetMessage((entry.State == EntityState.Added) ?
                 "Inserting new crawl configuration into database" : "Saving crawl configuration record changes to database");
             await dbContext.SaveChangesAsync(statusListener.CancellationToken);

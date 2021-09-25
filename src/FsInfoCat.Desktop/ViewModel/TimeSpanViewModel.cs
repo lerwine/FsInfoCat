@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Immutable;
 using System.Linq;
@@ -211,6 +212,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="HasComponentValueErrors"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty HasComponentValueErrorsProperty = HasComponentValueErrorsPropertyKey.DependencyProperty;
+        private readonly ILogger<TimeSpanViewModel> _logger;
 
         public bool HasComponentValueErrors { get => (bool)GetValue(HasComponentValueErrorsProperty); private set => SetValue(HasComponentValueErrorsPropertyKey, value); }
 
@@ -224,6 +226,7 @@ namespace FsInfoCat.Desktop.ViewModel
 
         public TimeSpanViewModel()
         {
+            _logger = App.GetLogger(this);
             OptionalValueViewModel<int> days = new(), hours = new(), minutes = new(), seconds = new(), milliseconds = new();
             SetValue(DaysPropertyKey, days);
             SetValue(HoursPropertyKey, hours);

@@ -8,6 +8,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 
 namespace FsInfoCat
@@ -18,6 +19,63 @@ namespace FsInfoCat
 
         public static readonly Regex BackslashEscapableLBPattern = new(@"(?<l>[""\\])|(?<n>\r\n?|\n)|[\0\a\b\f\t\v]|(\p{C}|(?! )(\s|\p{Z}))(?<x>[\da-fA-F])?",
             RegexOptions.Compiled);
+
+        class EnteredMethod : IDisposable
+        {
+            private bool disposedValue;
+            private readonly string _format;
+            private readonly object[] _args;
+            private readonly ILogger _logger;
+
+            internal EnteredMethod([DisallowNull] ILogger logger, string argsFormat, params object[] args)
+            {
+                (_logger = logger).LogDebug($"Enter #{{HashCode}}.{{Method}}({argsFormat})", args);
+                _format = $"Exit #{{HashCode}}.{{Method}}({argsFormat})";
+                _args = args;
+            }
+
+            protected virtual void Dispose(bool disposing)
+            {
+                if (!disposedValue)
+                {
+                    if (disposing)
+                        _logger.LogDebug(_format, _args);
+
+                    disposedValue = true;
+                }
+            }
+
+            public void Dispose()
+            {
+                // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+                Dispose(disposing: true);
+                GC.SuppressFinalize(this);
+            }
+        }
+
+        public static IDisposable EnterMethod<TTarget, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7>([DisallowNull] this ILogger<TTarget> logger, TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5, TArg6 arg6, TArg7 arg7, [DisallowNull] TTarget target, [CallerMemberName] string methodName = null) =>
+            new EnteredMethod(logger, "{Arg1}, {Arg2}, {Arg3}, {Arg4}, {Arg5}, {Arg6}, {Arg7}", RuntimeHelpers.GetHashCode(target), methodName, arg1, arg2, arg3, arg4, arg5, arg6, arg7);
+
+        public static IDisposable EnterMethod<TTarget, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6>([DisallowNull] this ILogger<TTarget> logger, TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5, TArg6 arg6, [DisallowNull] TTarget target, [CallerMemberName] string methodName = null) =>
+            new EnteredMethod(logger, "{Arg1}, {Arg2}, {Arg3}, {Arg4}, {Arg5}, {Arg6}", RuntimeHelpers.GetHashCode(target), methodName, arg1, arg2, arg3, arg4, arg5, arg6);
+
+        public static IDisposable EnterMethod<TTarget, TArg1, TArg2, TArg3, TArg4, TArg5>([DisallowNull] this ILogger<TTarget> logger, TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5, [DisallowNull] TTarget target, [CallerMemberName] string methodName = null) =>
+            new EnteredMethod(logger, "{Arg1}, {Arg2}, {Arg3}, {Arg4}, {Arg5}", RuntimeHelpers.GetHashCode(target), methodName, arg1, arg2, arg3, arg4, arg5);
+
+        public static IDisposable EnterMethod<TTarget, TArg1, TArg2, TArg3, TArg4>([DisallowNull] this ILogger<TTarget> logger, TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, [DisallowNull] TTarget target, [CallerMemberName] string methodName = null) =>
+            new EnteredMethod(logger, "{Arg1}, {Arg2}, {Arg3}, {Arg4}", RuntimeHelpers.GetHashCode(target), methodName, arg1, arg2, arg3, arg4);
+
+        public static IDisposable EnterMethod<TTarget, TArg1, TArg2, TArg3>([DisallowNull] this ILogger<TTarget> logger, TArg1 arg1, TArg2 arg2, TArg3 arg3, [DisallowNull] TTarget target, [CallerMemberName] string methodName = null) =>
+            new EnteredMethod(logger, "{Arg1}, {Arg2}, {Arg3}", RuntimeHelpers.GetHashCode(target), methodName, arg1, arg2, arg3);
+
+        public static IDisposable EnterMethod<TTarget, TArg1, TArg2>(this ILogger<TTarget> logger, TArg1 arg1, TArg2 arg2, [DisallowNull] TTarget target, [CallerMemberName] string methodName = null) =>
+            new EnteredMethod(logger, "{Arg1}, {Arg2}", RuntimeHelpers.GetHashCode(target), methodName, arg1, arg2);
+
+        public static IDisposable EnterMethod<TTarget, TArg>([DisallowNull] this ILogger<TTarget> logger, TArg arg, [DisallowNull] TTarget target, [CallerMemberName] string methodName = null) =>
+            new EnteredMethod(logger, "{Arg}", RuntimeHelpers.GetHashCode(target), methodName, arg);
+
+        public static IDisposable EnterMethod<TTarget>([DisallowNull] this ILogger<TTarget> logger, [DisallowNull] TTarget target, [CallerMemberName] string methodName = null) =>
+            new EnteredMethod(logger, "", RuntimeHelpers.GetHashCode(target), methodName);
 
         public static DateTime CurrentHour(this DateTime dateTime) => (dateTime.Minute == 0 && dateTime.Second == 0 && dateTime.Millisecond == 0) ? dateTime : new DateTime(dateTime.Year, dateTime.Month, dateTime.Day, dateTime.Hour, 0, 0, 0, dateTime.Kind);
 

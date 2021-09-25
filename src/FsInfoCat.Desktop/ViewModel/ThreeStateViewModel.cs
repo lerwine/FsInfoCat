@@ -1,3 +1,5 @@
+using Microsoft.Extensions.Logging;
+using System.Runtime.CompilerServices;
 using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel
@@ -8,6 +10,8 @@ namespace FsInfoCat.Desktop.ViewModel
     /// <seealso cref="DependencyObject" />
     public class ThreeStateViewModel : DependencyObject
     {
+        private readonly ILogger<ThreeStateViewModel> _logger;
+
         #region Value Property Members
 
         /// <summary>
@@ -33,8 +37,12 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <param name="args">The Event data that is issued by the event on <see cref="ValueProperty"/> that tracks changes to its effective value.</param>
         protected virtual void OnValuePropertyChanged(DependencyPropertyChangedEventArgs args)
         {
+            _logger.LogDebug("Enter <#{HashCode}>.{MethodName}({{ Property.Name = \"{Name}\", OldValue = {OldValue}, NewValue = {NewValue} }})", RuntimeHelpers.GetHashCode(this),
+                nameof(OnValuePropertyChanged), args.Property.Name, args.OldValue, args.NewValue);
             try { OnValuePropertyChanged((bool?)args.OldValue, (bool?)args.NewValue); }
             finally { ValuePropertyChanged?.Invoke(this, args); }
+            _logger.LogDebug("Exit <#{HashCode}>.{MethodName}({{ Property.Name = \"{Name}\", OldValue = {OldValue}, NewValue = {NewValue} }})", RuntimeHelpers.GetHashCode(this),
+                nameof(OnValuePropertyChanged), args.Property.Name, args.OldValue, args.NewValue);
         }
 
         /// <summary>
@@ -82,8 +90,12 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <param name="args">The Event data that is issued by the event on <see cref="IsTrueProperty"/> that tracks changes to its effective value.</param>
         protected virtual void OnIsTruePropertyChanged(DependencyPropertyChangedEventArgs args)
         {
+            _logger.LogDebug("Enter <#{HashCode}>.{MethodName}({{ Property.Name = \"{Name}\", OldValue = {OldValue}, NewValue = {NewValue} }})", RuntimeHelpers.GetHashCode(this),
+                nameof(OnIsTruePropertyChanged), args.Property.Name, args.OldValue, args.NewValue);
             try { OnIsTruePropertyChanged((bool)args.OldValue, (bool)args.NewValue); }
             finally { IsTruePropertyChanged?.Invoke(this, args); }
+            _logger.LogDebug("Exit <#{HashCode}>.{MethodName}({{ Property.Name = \"{Name}\", OldValue = {OldValue}, NewValue = {NewValue} }})", RuntimeHelpers.GetHashCode(this),
+                nameof(OnIsTruePropertyChanged), args.Property.Name, args.OldValue, args.NewValue);
         }
 
         /// <summary>
@@ -126,8 +138,12 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <param name="args">The Event data that is issued by the event on <see cref="IsFalseProperty"/> that tracks changes to its effective value.</param>
         protected virtual void OnIsFalsePropertyChanged(DependencyPropertyChangedEventArgs args)
         {
+            _logger.LogDebug("Enter <#{HashCode}>.{MethodName}({{ Property.Name = \"{Name}\", OldValue = {OldValue}, NewValue = {NewValue} }})", RuntimeHelpers.GetHashCode(this),
+                nameof(OnIsFalsePropertyChanged), args.Property.Name, args.OldValue, args.NewValue);
             try { OnIsFalsePropertyChanged((bool)args.OldValue, (bool)args.NewValue); }
             finally { IsFalsePropertyChanged?.Invoke(this, args); }
+            _logger.LogDebug("Exit <#{HashCode}>.{MethodName}({{ Property.Name = \"{Name}\", OldValue = {OldValue}, NewValue = {NewValue} }})", RuntimeHelpers.GetHashCode(this),
+                nameof(OnIsFalsePropertyChanged), args.Property.Name, args.OldValue, args.NewValue);
         }
 
         /// <summary>
@@ -170,8 +186,12 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <param name="args">The Event data that is issued by the event on <see cref="IsNullProperty"/> that tracks changes to its effective value.</param>
         protected virtual void OnIsNullPropertyChanged(DependencyPropertyChangedEventArgs args)
         {
+            _logger.LogDebug("Enter <#{HashCode}>.{MethodName}({{ Property.Name = \"{Name}\", OldValue = {OldValue}, NewValue = {NewValue} }})", RuntimeHelpers.GetHashCode(this),
+                nameof(OnIsNullPropertyChanged), args.Property.Name, args.OldValue, args.NewValue);
             try { OnIsNullPropertyChanged((bool)args.OldValue, (bool)args.NewValue); }
             finally { IsNullPropertyChanged?.Invoke(this, args); }
+            _logger.LogDebug("Exit <#{HashCode}>.{MethodName}({{ Property.Name = \"{Name}\", OldValue = {OldValue}, NewValue = {NewValue} }})", RuntimeHelpers.GetHashCode(this),
+                nameof(OnIsNullPropertyChanged), args.Property.Name, args.OldValue, args.NewValue);
         }
 
         /// <summary>
@@ -189,7 +209,11 @@ namespace FsInfoCat.Desktop.ViewModel
 
         #endregion
 
-        public ThreeStateViewModel() { }
-        public ThreeStateViewModel(bool? initialValue) { Value = initialValue; }
+        public ThreeStateViewModel()
+        {
+            _logger = App.GetLogger(this);
+        }
+
+        public ThreeStateViewModel(bool? initialValue) : this() { Value = initialValue; }
     }
 }

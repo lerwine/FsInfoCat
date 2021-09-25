@@ -1,4 +1,7 @@
+using Microsoft.Extensions.Logging;
 using System;
+using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Windows;
 using System.Windows.Threading;
@@ -7,6 +10,57 @@ namespace FsInfoCat.Desktop
 {
     public static class DependencyObjectExtensionMethods
     {
+        class EnteredMethod : IDisposable
+        {
+            private bool disposedValue;
+            private readonly string _format;
+            private readonly object[] _args;
+            private readonly ILogger _logger;
+
+            internal EnteredMethod([DisallowNull] ILogger logger, int hashCode, string method, object sender, [DisallowNull] DependencyPropertyChangedEventArgs e)
+            {
+                string pattern;
+                if (sender is null)
+                {
+                    _args = new object[] { hashCode, method, e.Property.Name, e.OldValue, e.NewValue };
+                    pattern = "#{HashCode}.{Method}({{ Name: {Name}, OldValue: {OldValue}, NewValue: {NewValue} }})";
+                }
+                else
+                {
+                    _args = new object[] { hashCode, method, sender, e.Property.Name, e.OldValue, e.NewValue };
+                    pattern = "#{HashCode}.{Method}({Sender}, {{ Name: {Name}, OldValue: {OldValue}, NewValue: {NewValue} }})";
+                }
+                (_logger = logger).LogDebug($"Enter {pattern}", _args);
+                _format = $"Exit {pattern}";
+            }
+
+            protected virtual void Dispose(bool disposing)
+            {
+                if (!disposedValue)
+                {
+                    if (disposing)
+                        _logger.LogDebug(_format, _args);
+
+                    disposedValue = true;
+                }
+            }
+
+            public void Dispose()
+            {
+                // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+                Dispose(disposing: true);
+                GC.SuppressFinalize(this);
+            }
+        }
+
+        public static IDisposable EnterMethod<TTarget>([DisallowNull] this ILogger<TTarget> logger, object sender, [DisallowNull] DependencyPropertyChangedEventArgs e, [DisallowNull] TTarget target,
+            [CallerMemberName] string methodName = null) =>
+            new EnteredMethod(logger, RuntimeHelpers.GetHashCode(target), methodName, sender, e);
+
+        public static IDisposable EnterMethod<TTarget>([DisallowNull] this ILogger<TTarget> logger, [DisallowNull] DependencyPropertyChangedEventArgs e, [DisallowNull] TTarget target,
+            [CallerMemberName] string methodName = null) =>
+            new EnteredMethod(logger, RuntimeHelpers.GetHashCode(target), methodName, null, e);
+
         public static CoerceValueCallback ToCoerceValueCallback<T>(this ICoersion<T> coersion) => (coersion is null) ? null :
             (DependencyObject d, object baseValue) => coersion.Coerce(baseValue);
 

@@ -82,7 +82,7 @@ namespace FsInfoCat.Desktop.ViewModel
         #endregion
         #region ConfigurationDisplayName Property Members
 
-        private static readonly DependencyPropertyKey ConfigurationDisplayNamePropertyKey = ColumnPropertyBuilder<string, CrawlJobRowViewModel<TEntity>>
+        private static readonly DependencyPropertyKey ConfigurationDisplayNamePropertyKey = ColumnPropertyBuilder<string, CrawlJobListItemViewModel<TEntity>>
             .RegisterEntityMapped<TEntity>(nameof(ICrawlJobListItem.ConfigurationDisplayName))
             .DefaultValue("").AsReadOnly();
 

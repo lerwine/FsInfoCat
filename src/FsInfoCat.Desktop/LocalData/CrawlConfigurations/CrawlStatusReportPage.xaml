@@ -73,8 +73,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="124*"/>
-            <RowDefinition Height="43*"/>
+            <RowDefinition/>
         </Grid.RowDefinitions>
         <Label Content="Current Report:"/>
         <ComboBox Grid.Column="1" ItemsSource="{Binding ReportOptions}" SelectedIndex="{Binding SelectedReportIndex, BindsDirectlyToSource=False, IsAsync=False, NotifyOnTargetUpdated=False, NotifyOnValidationError=False, NotifyOnSourceUpdated=False, ValidatesOnNotifyDataErrors=True, ValidatesOnExceptions=False, ValidatesOnDataErrors=False}">
@@ -85,7 +84,7 @@
             </ComboBox.ItemTemplate>
         </ComboBox>
         <TextBlock Grid.Row="1" Text="{Binding (local:CrawlStateReportViewModel.Description), Mode=OneWay}" TextWrapping="Wrap" Grid.ColumnSpan="2" DataContext="{Binding SelectedReportOption}"/>
-        <DataGrid Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2" AutoGenerateColumns="False" ItemsSource="{Binding Items}">
+        <DataGrid Grid.Row="2" Grid.ColumnSpan="2" AutoGenerateColumns="False" ItemsSource="{Binding Items}">
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding DisplayName, Mode=OneWay}" Header="Name" Width="*"/>
                 <DataGridTextColumn Binding="{Binding LastCrawlEnd, Converter={StaticResource CrawlEndToString}, Mode=OneWay}" Header="Last Completed"/>
@@ -106,7 +105,7 @@
             </DataGrid.Columns>
             <DataGrid.RowDetailsTemplate>
                 <DataTemplate>
-                    <local:ReportItemControl/>
+                    <local:ReportItemControl Width="{Binding RelativeSource={RelativeSource AncestorType={x:Type ItemsPresenter}}, Path=ActualWidth}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
                 </DataTemplate>
             </DataGrid.RowDetailsTemplate>
         </DataGrid>

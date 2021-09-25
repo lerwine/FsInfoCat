@@ -480,8 +480,6 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
             {
                 string path = await Dispatcher.InvokeAsync(() =>
                 {
-
-
                     using System.Windows.Forms.FolderBrowserDialog dialog = new()
                     {
                         Description = "Select root folder",

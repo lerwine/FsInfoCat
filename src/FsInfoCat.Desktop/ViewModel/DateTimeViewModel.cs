@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -6,6 +7,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Windows;
 
@@ -13,6 +15,7 @@ namespace FsInfoCat.Desktop.ViewModel
 {
     public class DateTimeViewModel : OptionalValueViewModel<DateTime>
     {
+        private readonly ILogger<DateTimeViewModel> _logger;
         private DateTime? _pendingResultValueChange;
 
         #region Date Property Members
@@ -32,6 +35,7 @@ namespace FsInfoCat.Desktop.ViewModel
 
         private void Date_ResultValuePropertyChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
+            using IDisposable scope = _logger.EnterMethod(sender, e, this);
             DateTime? newValue = e.NewValue as DateTime?;
             if (_pendingDateChange == newValue)
                 return;
@@ -62,7 +66,7 @@ namespace FsInfoCat.Desktop.ViewModel
         private void Time_ValidateInputValue(object sender, PropertyValidatingEventArgs<TimeSpan> e)
         {
             // TODO: Implement Time_ValidateInputValue
-            MessageBox.Show("You  have invoked a command which has not yet been implemented.", "Not Implemented", MessageBoxButton.OK, MessageBoxImage.Hand);
+            MessageBox.Show("Time_ValidateInputValue has not yet been implemented.", "Not Implemented", MessageBoxButton.OK, MessageBoxImage.Hand);
         }
 
         private void Time_ResultValuePropertyChanged(object sender, DependencyPropertyChangedEventArgs e)
@@ -103,11 +107,17 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Called when the <see cref="PropertyChangedCallback">PropertyChanged</see> event on <see cref="HasComponentValueErrorsProperty"/> is raised.
         /// </summary>
         /// <param name="args">The Event data that is issued by the event on <see cref="HasComponentValueErrorsProperty"/> that tracks changes to its effective value.</param>
-        protected void RaiseHasComponentValueErrorsPropertyChanged(DependencyPropertyChangedEventArgs args) => HasComponentValueErrorsPropertyChanged?.Invoke(this, args);
+        protected void RaiseHasComponentValueErrorsPropertyChanged(DependencyPropertyChangedEventArgs args)
+        {
+            using IDisposable scope = _logger.EnterMethod(args, this);
+            HasComponentValueErrorsPropertyChanged?.Invoke(this, args);
+        }
 
         #endregion
+
         public DateTimeViewModel()
         {
+            _logger = App.GetLogger(this);
             OptionalValueViewModel<DateTime> date = new();
             TimeOfDayViewModel time = new();
             SetValue(DatePropertyKey, date);
@@ -121,6 +131,7 @@ namespace FsInfoCat.Desktop.ViewModel
 
         protected override void OnResultValuePropertyChanged(DependencyPropertyChangedEventArgs args)
         {
+            using IDisposable scope = _logger.EnterMethod(args, this);
             base.OnResultValuePropertyChanged(args);
             DateTime? newValue = args.NewValue as DateTime?;
             if (newValue == _pendingResultValueChange)

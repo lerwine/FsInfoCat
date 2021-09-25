@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:FsInfoCat.Desktop.LocalData.CrawlConfigurations"
              xmlns:Converters="clr-namespace:FsInfoCat.Desktop.Converters"
              mc:Ignorable="d" d:DataContext="{x:Type local:ReportItemViewModel}"
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="800" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
     <UserControl.Resources>
         <Converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" NullSource="Collapsed"/>
         <Converters:TimeSpanToStringConverter x:Key="TimeSpanToString" NullSource="(unlimited)"/>
@@ -29,15 +29,16 @@
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
-        <TextBox Margin="{DynamicResource DefaultSpacingTopLeft}" ToolTip="The descriptive status of the current crawl." Style="{DynamicResource ReadOnlyValueTextBox}" Text="{Binding StatusValue, Converter={StaticResource CrawlStatusToDescription}, Mode=OneWay}"/>
+        <Label Content="Status" Padding="{DynamicResource DefaultSpacingTopLeftRight}" Target="{Binding ElementName=pathTextBox, Mode=OneWay}" FontWeight="Bold"/>
         <Button Style="{DynamicResource LogButton}" Grid.Column="1" Margin="{DynamicResource DefaultSpacingTopLeft}" ToolTip="Show crawl activity records." Command="{Binding ShowCrawlActivityRecords, Mode=OneWay}"/>
         <Button Style="{DynamicResource OpenfileDialogButton}" Grid.Column="2" Margin="{DynamicResource DefaultSpacingLeft}" ToolTip="View current item in new page." Command="{Binding Open, Mode=OneWay}"/>
         <Button Style="{DynamicResource EditButton}" Grid.Column="3" Margin="{DynamicResource DefaultSpacingTopLeft}" ToolTip="Edit the current crawl configuration." Command="{Binding Edit, Mode=OneWay}"/>
         <Button Style="{DynamicResource DeleteButton}" Grid.Column="4" Margin="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="Delete the current crawl configuration." Command="{Binding Delete, Mode=OneWay}"/>
-        <StackPanel Grid.Row="1" Grid.ColumnSpan="5">
+        <StackPanel Grid.Row="1" Grid.ColumnSpan="5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
             <GroupBox Padding="{DynamicResource DefaultSpacingBottom}">
                 <StackPanel>
-                    <Label Content="Status" Padding="{DynamicResource DefaultSpacingTopLeftRight}" Target="{Binding ElementName=pathTextBox, Mode=OneWay}" FontWeight="Bold"/>
+                    <TextBox x:Name="StatusTextBox" Margin="{DynamicResource DefaultSpacingTopLeft}" ToolTip="The descriptive status of the current crawl." Style="{DynamicResource ReadOnlyValueTextBox}" Text="{Binding StatusValue, Converter={StaticResource CrawlStatusToDescription}, Mode=OneWay}"/>
+                    <Label Content="Path" Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="The path of the starting subdirectory for the current crawl configuration." Target="{Binding ElementName=pathTextBox, Mode=OneWay}" FontWeight="Bold"/>
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition/>
@@ -46,7 +47,6 @@
                         <TextBox x:Name="pathTextBox" Margin="{DynamicResource DefaultSpacingLeft}" ToolTip="The path of the starting subdirectory for the current crawl configuration." Style="{DynamicResource ReadOnlyValueTextBox}" Text="{Binding Path, Mode=OneWay}"/>
                         <Button Grid.Column="1" ToolTip="Open the database record for the starting subdirectory of the current crawl configuration." Style="{DynamicResource OpenButton}" Margin="{DynamicResource DefaultSpacingRight}" Command="{Binding OpenRootSubdirectory, Mode=OneWay}"/>
                     </Grid>
-                    <Label Content="Path" Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="The path of the starting subdirectory for the current crawl configuration." Target="{Binding ElementName=pathTextBox, Mode=OneWay}" FontWeight="Bold"/>
                     <WrapPanel>
                         <StackPanel>
                             <Label Content="Volume Display Name" Padding="{DynamicResource DefaultSpacingTopLeftRight}" ToolTip="The display name given to the file system volume containing the target subdirectory ." Target="{Binding ElementName=volumeDisplayNameTextBox, Mode=OneWay}" FontWeight="Bold"/>
