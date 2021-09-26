@@ -90,7 +90,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("GPSPropertySet AreaInformation Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "GPSPropertySet.AreaInformation: NVARCHAR(1024)")]
+        [Description("GPSPropertySet.AreaInformation: NVARCHAR(1024)")]
         [Ignore]
         public void GPSPropertySetAreaInformationTestMethod()
         {
@@ -136,7 +136,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("GPSPropertySet LatitudeDegrees Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "GPSPropertySet.LatitudeDegrees: DOUBLE")]
+        [Description("GPSPropertySet.LatitudeDegrees: DOUBLE")]
         [Ignore]
         public void GPSPropertySetLatitudeDegreesTestMethod()
         {
@@ -182,7 +182,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("GPSPropertySet LatitudeMinutes Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "GPSPropertySet.LatitudeMinutes: DOUBLE")]
+        [Description("GPSPropertySet.LatitudeMinutes: DOUBLE")]
         [Ignore]
         public void GPSPropertySetLatitudeMinutesTestMethod()
         {
@@ -228,7 +228,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("GPSPropertySet LatitudeSeconds Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "GPSPropertySet.LatitudeSeconds: DOUBLE")]
+        [Description("GPSPropertySet.LatitudeSeconds: DOUBLE")]
         [Ignore]
         public void GPSPropertySetLatitudeSecondsTestMethod()
         {
@@ -274,7 +274,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("GPSPropertySet LatitudeRef Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "GPSPropertySet.LatitudeRef: NVARCHAR(256)")]
+        [Description("GPSPropertySet.LatitudeRef: NVARCHAR(256)")]
         [Ignore]
         public void GPSPropertySetLatitudeRefTestMethod()
         {
@@ -320,7 +320,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("GPSPropertySet LongitudeDegrees Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "GPSPropertySet.LongitudeDegrees: DOUBLE")]
+        [Description("GPSPropertySet.LongitudeDegrees: DOUBLE")]
         [Ignore]
         public void GPSPropertySetLongitudeDegreesTestMethod()
         {
@@ -366,7 +366,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("GPSPropertySet LongitudeMinutes Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "GPSPropertySet.LongitudeMinutes: DOUBLE")]
+        [Description("GPSPropertySet.LongitudeMinutes: DOUBLE")]
         [Ignore]
         public void GPSPropertySetLongitudeMinutesTestMethod()
         {
@@ -412,7 +412,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("GPSPropertySet LongitudeSeconds Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "GPSPropertySet.LongitudeSeconds: DOUBLE")]
+        [Description("GPSPropertySet.LongitudeSeconds: DOUBLE")]
         [Ignore]
         public void GPSPropertySetLongitudeSecondsTestMethod()
         {
@@ -458,7 +458,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("GPSPropertySet LongitudeRef Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "GPSPropertySet.LongitudeRef: NVARCHAR(256)")]
+        [Description("GPSPropertySet.LongitudeRef: NVARCHAR(256)")]
         [Ignore]
         public void GPSPropertySetLongitudeRefTestMethod()
         {
@@ -504,7 +504,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("GPSPropertySet MeasureMode Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "GPSPropertySet.MeasureMode: NVARCHAR(256)")]
+        [Description("GPSPropertySet.MeasureMode: NVARCHAR(256)")]
         [Ignore]
         public void GPSPropertySetMeasureModeTestMethod()
         {
@@ -550,7 +550,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("GPSPropertySet ProcessingMethod Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "GPSPropertySet.ProcessingMethod: NVARCHAR(256)")]
+        [Description("GPSPropertySet.ProcessingMethod: NVARCHAR(256)")]
         [Ignore]
         public void GPSPropertySetProcessingMethodTestMethod()
         {
@@ -596,7 +596,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("GPSPropertySet VersionID Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "GPSPropertySet.VersionID: BINARY(6)")]
+        [Description("GPSPropertySet.VersionID: BINARY(6)")]
         [Ignore]
         public void GPSPropertySetVersionIDTestMethod()
         {

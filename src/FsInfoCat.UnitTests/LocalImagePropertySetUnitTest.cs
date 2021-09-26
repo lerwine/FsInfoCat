@@ -180,7 +180,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("ImagePropertySet CompressedBitsPerPixel Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "ImagePropertySet.CompressedBitsPerPixel: DOUBLE")]
+        [Description("ImagePropertySet.CompressedBitsPerPixel: DOUBLE")]
         [Ignore]
         public void ImagePropertySetCompressedBitsPerPixelTestMethod()
         {
@@ -272,7 +272,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("ImagePropertySet CompressionText Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "ImagePropertySet.CompressionText: NVARCHAR(256)")]
+        [Description("ImagePropertySet.CompressionText: NVARCHAR(256)")]
         [Ignore]
         public void ImagePropertySetCompressionTextTestMethod()
         {
@@ -318,7 +318,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("ImagePropertySet HorizontalResolution Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "ImagePropertySet.HorizontalResolution: DOUBLE")]
+        [Description("ImagePropertySet.HorizontalResolution: DOUBLE")]
         [Ignore]
         public void ImagePropertySetHorizontalResolutionTestMethod()
         {
@@ -410,7 +410,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("ImagePropertySet ImageID Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "ImagePropertySet.ImageID: NVARCHAR(256)")]
+        [Description("ImagePropertySet.ImageID: NVARCHAR(256)")]
         [Ignore]
         public void ImagePropertySetImageIDTestMethod()
         {
@@ -456,7 +456,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("ImagePropertySet ResolutionUnit Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "ImagePropertySet.ResolutionUnit: TINYINT")]
+        [Description("ImagePropertySet.ResolutionUnit: TINYINT")]
         [Ignore]
         public void ImagePropertySetResolutionUnitTestMethod()
         {
@@ -502,7 +502,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("ImagePropertySet VerticalResolution Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "ImagePropertySet.VerticalResolution: DOUBLE")]
+        [Description("ImagePropertySet.VerticalResolution: DOUBLE")]
         [Ignore]
         public void ImagePropertySetVerticalResolutionTestMethod()
         {

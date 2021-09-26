@@ -1,4 +1,3 @@
-using FsInfoCat;
 using FsInfoCat.Local;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
@@ -6,7 +5,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 namespace FsInfoCat.UnitTests
 {
@@ -75,7 +73,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("long Length"), Ignore]
-        [TestProperty(TestHelper.TestProperty_Description, "BinaryProperties.Length: BIGINT NOT NULL CHECK(Length>=0) UNIQUE")]
+        [Description("BinaryProperties.Length: BIGINT NOT NULL CHECK(Length>=0) UNIQUE")]
         public void LengthTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -89,7 +87,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("MD5Hash? Hash"), Ignore]
-        [TestProperty(TestHelper.TestProperty_Description, "BinaryProperties.Hash: BINARY(16) CHECK(Hash IS NULL OR length(HASH)=16) DEFAULT NULL")]
+        [Description("BinaryProperties.Hash: BINARY(16) CHECK(Hash IS NULL OR length(HASH)=16) DEFAULT NULL")]
         public void HashTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -157,7 +155,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("DateTime CreatedOn"), Ignore]
-        [TestProperty(TestHelper.TestProperty_Description, "BinaryProperties.CreatedOn: CreatedOn<=ModifiedOn")]
+        [Description("BinaryProperties.CreatedOn: CreatedOn<=ModifiedOn")]
         public void CreatedOnTestMethod()
         {
             Assert.Inconclusive("Test not implemented");

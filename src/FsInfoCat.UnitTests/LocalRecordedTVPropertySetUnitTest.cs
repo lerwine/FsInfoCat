@@ -132,7 +132,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("RecordedTVPropertySet EpisodeName Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "RecordedTVPropertySet.EpisodeName: NVARCHAR(1024)")]
+        [Description("RecordedTVPropertySet.EpisodeName: NVARCHAR(1024)")]
         [Ignore]
         public void RecordedTVPropertySetEpisodeNameTestMethod()
         {
@@ -178,7 +178,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("RecordedTVPropertySet IsDTVContent Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "RecordedTVPropertySet.IsDTVContent: BIT")]
+        [Description("RecordedTVPropertySet.IsDTVContent: BIT")]
         [Ignore]
         public void RecordedTVPropertySetIsDTVContentTestMethod()
         {
@@ -224,7 +224,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("RecordedTVPropertySet IsHDContent Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "RecordedTVPropertySet.IsHDContent: BIT")]
+        [Description("RecordedTVPropertySet.IsHDContent: BIT")]
         [Ignore]
         public void RecordedTVPropertySetIsHDContentTestMethod()
         {
@@ -270,7 +270,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("RecordedTVPropertySet NetworkAffiliation Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "RecordedTVPropertySet.NetworkAffiliation: NVARCHAR(256)")]
+        [Description("RecordedTVPropertySet.NetworkAffiliation: NVARCHAR(256)")]
         [Ignore]
         public void RecordedTVPropertySetNetworkAffiliationTestMethod()
         {
@@ -316,13 +316,13 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("RecordedTVPropertySet OriginalBroadcastDate Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "RecordedTVPropertySet.OriginalBroadcastDate: DATETIME")]
+        [Description("RecordedTVPropertySet.OriginalBroadcastDate: DATETIME")]
         [Ignore]
         public void RecordedTVPropertySetOriginalBroadcastDateTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
-            System.DateTime? expected = default; // DEFERRED: Set invalid value
+            DateTime? expected = default; // DEFERRED: Set invalid value
             Local.RecordedTVPropertySet target = new() { OriginalBroadcastDate = expected };
             EntityEntry<Local.RecordedTVPropertySet> entityEntry = dbContext.RecordedTVPropertySets.Add(target);
             Collection<ValidationResult> results = new();
@@ -362,7 +362,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("RecordedTVPropertySet ProgramDescription Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "RecordedTVPropertySet.ProgramDescription: TEXT")]
+        [Description("RecordedTVPropertySet.ProgramDescription: TEXT")]
         [Ignore]
         public void RecordedTVPropertySetProgramDescriptionTestMethod()
         {
@@ -408,7 +408,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("RecordedTVPropertySet StationCallSign Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "RecordedTVPropertySet.StationCallSign: NVARCHAR(32)")]
+        [Description("RecordedTVPropertySet.StationCallSign: NVARCHAR(32)")]
         [Ignore]
         public void RecordedTVPropertySetStationCallSignTestMethod()
         {
@@ -454,7 +454,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("RecordedTVPropertySet StationName Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "RecordedTVPropertySet.StationName: NVARCHAR(256)")]
+        [Description("RecordedTVPropertySet.StationName: NVARCHAR(256)")]
         [Ignore]
         public void RecordedTVPropertySetStationNameTestMethod()
         {

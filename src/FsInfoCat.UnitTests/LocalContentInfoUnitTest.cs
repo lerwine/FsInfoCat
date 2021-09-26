@@ -64,7 +64,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("BinaryProperties Hash Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "BinaryProperties.Hash: BINARY(16) CHECK(Hash IS NULL OR length(HASH)=16) DEFAULT NULL")]
+        [Description("BinaryProperties.Hash: BINARY(16) CHECK(Hash IS NULL OR length(HASH)=16) DEFAULT NULL")]
         [Ignore]
         public void BinaryPropertiesHashTestMethod()
         {
@@ -93,7 +93,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("BinaryProperties Length Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "BinaryProperties.Length: BIGINT NOT NULL CHECK(Length>=0) UNIQUE")]
+        [Description("BinaryProperties.Length: BIGINT NOT NULL CHECK(Length>=0) UNIQUE")]
         [Ignore]
         public void BinaryPropertiesLengthTestMethod()
         {
@@ -139,7 +139,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("BinaryProperties CreatedOn Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "BinaryProperties.CreatedOn: CreatedOn<=ModifiedOn")]
+        [Description("BinaryProperties.CreatedOn: CreatedOn<=ModifiedOn")]
         [Ignore]
         public void BinaryPropertiesCreatedOnTestMethod()
         {

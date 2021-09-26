@@ -85,7 +85,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("AudioPropertySet Compression Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "AudioPropertySet.Compression: NVARCHAR(256)")]
+        [Description("AudioPropertySet.Compression: NVARCHAR(256)")]
         [Ignore]
         public void AudioPropertySetCompressionTestMethod()
         {
@@ -177,7 +177,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("AudioPropertySet Format Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "AudioPropertySet.Format: NVARCHAR(256)")]
+        [Description("AudioPropertySet.Format: NVARCHAR(256)")]
         [Ignore]
         public void AudioPropertySetFormatTestMethod()
         {
@@ -223,7 +223,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("AudioPropertySet IsVariableBitrate Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "AudioPropertySet.IsVariableBitrate: BIT")]
+        [Description("AudioPropertySet.IsVariableBitrate: BIT")]
         [Ignore]
         public void AudioPropertySetIsVariableBitrateTestMethod()
         {
@@ -361,7 +361,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("AudioPropertySet StreamName Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "AudioPropertySet.StreamName: NVARCHAR(256)")]
+        [Description("AudioPropertySet.StreamName: NVARCHAR(256)")]
         [Ignore]
         public void AudioPropertySetStreamNameTestMethod()
         {

@@ -88,7 +88,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("DocumentPropertySet ClientID Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "DocumentPropertySet.ClientID: NVARCHAR(64)")]
+        [Description("DocumentPropertySet.ClientID: NVARCHAR(64)")]
         [Ignore]
         public void DocumentPropertySetClientIDTestMethod()
         {
@@ -134,7 +134,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("DocumentPropertySet Contributor Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "DocumentPropertySet.Contributor: TEXT")]
+        [Description("DocumentPropertySet.Contributor: TEXT")]
         [Ignore]
         public void DocumentPropertySetContributorTestMethod()
         {
@@ -180,13 +180,13 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("DocumentPropertySet DateCreated Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "DocumentPropertySet.DateCreated: DATETIME")]
+        [Description("DocumentPropertySet.DateCreated: DATETIME")]
         [Ignore]
         public void DocumentPropertySetDateCreatedTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
-            System.DateTime? expected = default; // DEFERRED: Set invalid value
+            DateTime? expected = default; // DEFERRED: Set invalid value
             Local.DocumentPropertySet target = new() { DateCreated = expected };
             EntityEntry<Local.DocumentPropertySet> entityEntry = dbContext.DocumentPropertySets.Add(target);
             Collection<ValidationResult> results = new();
@@ -226,7 +226,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("DocumentPropertySet LastAuthor Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "DocumentPropertySet.LastAuthor: NVARCHAR(1024)")]
+        [Description("DocumentPropertySet.LastAuthor: NVARCHAR(1024)")]
         [Ignore]
         public void DocumentPropertySetLastAuthorTestMethod()
         {
@@ -272,7 +272,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("DocumentPropertySet RevisionNumber Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "DocumentPropertySet.RevisionNumber: NVARCHAR(64)")]
+        [Description("DocumentPropertySet.RevisionNumber: NVARCHAR(64)")]
         [Ignore]
         public void DocumentPropertySetRevisionNumberTestMethod()
         {
@@ -318,7 +318,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("DocumentPropertySet Security Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "DocumentPropertySet.Security: INT")]
+        [Description("DocumentPropertySet.Security: INT")]
         [Ignore]
         public void DocumentPropertySetSecurityTestMethod()
         {
@@ -364,7 +364,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("DocumentPropertySet Division Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "DocumentPropertySet.Division: NVARCHAR(256)")]
+        [Description("DocumentPropertySet.Division: NVARCHAR(256)")]
         [Ignore]
         public void DocumentPropertySetDivisionTestMethod()
         {
@@ -410,7 +410,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("DocumentPropertySet DocumentID Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "DocumentPropertySet.DocumentID: NVARCHAR(64)")]
+        [Description("DocumentPropertySet.DocumentID: NVARCHAR(64)")]
         [Ignore]
         public void DocumentPropertySetDocumentIDTestMethod()
         {
@@ -456,7 +456,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("DocumentPropertySet Manager Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "DocumentPropertySet.Manager: NVARCHAR(256)")]
+        [Description("DocumentPropertySet.Manager: NVARCHAR(256)")]
         [Ignore]
         public void DocumentPropertySetManagerTestMethod()
         {
@@ -502,7 +502,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("DocumentPropertySet PresentationFormat Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "DocumentPropertySet.PresentationFormat: NVARCHAR(256)")]
+        [Description("DocumentPropertySet.PresentationFormat: NVARCHAR(256)")]
         [Ignore]
         public void DocumentPropertySetPresentationFormatTestMethod()
         {
@@ -548,7 +548,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("DocumentPropertySet Version Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "DocumentPropertySet.Version: NVARCHAR(64)")]
+        [Description("DocumentPropertySet.Version: NVARCHAR(64)")]
         [Ignore]
         public void DocumentPropertySetVersionTestMethod()
         {

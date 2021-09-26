@@ -92,7 +92,7 @@ namespace FsInfoCat.UnitTests
 
         [DataTestMethod, Priority(20)]
         [DynamicData(nameof(GetDisplayNameTestData), DynamicDataSourceType.Method)]
-        [TestProperty(TestHelper.TestProperty_Description, "Volume.DisplayName: NVARCHAR(1024) NOT NULL CHECK(length(trim(DisplayName))>0) COLLATE NOCASE")]
+        [Description("Volume.DisplayName: NVARCHAR(1024) NOT NULL CHECK(length(trim(DisplayName))>0) COLLATE NOCASE")]
         public void DisplayNameTestMethod(string displayName, string expected, string errorMessage)
         {
             using IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
@@ -146,7 +146,7 @@ namespace FsInfoCat.UnitTests
 
         [DataTestMethod, Priority(20)]
         [DynamicData(nameof(GetVolumeNameTestData), DynamicDataSourceType.Method)]
-        [TestProperty(TestHelper.TestProperty_Description, "Volume.VolumeName: NVARCHAR(128) NOT NULL CHECK(length(trim(VolumeName))>0) COLLATE NOCASE")]
+        [Description("Volume.VolumeName: NVARCHAR(128) NOT NULL CHECK(length(trim(VolumeName))>0) COLLATE NOCASE")]
         public void VolumeNameTestMethod(string volumeName, string expected, string errorMessage)
         {
             Volume target = new() { VolumeName = volumeName };
@@ -175,7 +175,7 @@ namespace FsInfoCat.UnitTests
 
         [DataTestMethod, Priority(20)]
         [DynamicData(nameof(GetIdentifierTestData), DynamicDataSourceType.Method)]
-        [TestProperty(TestHelper.TestProperty_Description, "Volume.Identifier: NVARCHAR(1024) NOT NULL CHECK(length(trim(Identifier))>0) UNIQUE COLLATE NOCASE")]
+        [Description("Volume.Identifier: NVARCHAR(1024) NOT NULL CHECK(length(trim(Identifier))>0) UNIQUE COLLATE NOCASE")]
         public void IdentifierTestMethod(string identifier, string expected, string errorMessage)
         {
             using IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
@@ -217,7 +217,7 @@ namespace FsInfoCat.UnitTests
         [DataRow(VolumeStatus.Relinquished, null, DisplayName = "VolumeStatus Status = Relinquished")]
         [DataRow(VolumeStatus.Destroyed, null, DisplayName = "VolumeStatus Status = Destroyed")]
         [DataRow(7, "Volume Status is invalid.", DisplayName = "VolumeStatus Status = 6")]
-        [TestProperty(TestHelper.TestProperty_Description, "Volume.Type: TINYINT NOT NULL CHECK(Status>=0 AND Status<6)")]
+        [Description("Volume.Type: TINYINT NOT NULL CHECK(Status>=0 AND Status<6)")]
         public void StatusTestMethod(object sourceValue, string errorMessage)
         {
             VolumeStatus value = (VolumeStatus)Enum.ToObject(typeof(VolumeStatus), sourceValue);
@@ -253,7 +253,7 @@ namespace FsInfoCat.UnitTests
         [DataRow(DriveType.CDRom, null, DisplayName = "DriveType Type = CDRom")]
         [DataRow(DriveType.Ram, null, DisplayName = "DriveType Type = Ram")]
         [DataRow(7, "Drive Type is invalid.", DisplayName = "DriveType Type = 7")]
-        [Microsoft.VisualStudio.TestTools.UnitTesting.Description("Volume.Type: TINYINT NOT NULL CHECK(Type>=0 AND Type<7)")]
+        [Description("Volume.Type: TINYINT NOT NULL CHECK(Type>=0 AND Type<7)")]
         public void TypeTestMethod(DriveType value, string errorMessage)
         {
             Volume target = new() { Type = value };
@@ -299,7 +299,7 @@ namespace FsInfoCat.UnitTests
         [DataRow(1u, null, DisplayName = "uint? MaxNameLength = 1")]
         [DataRow((uint)int.MaxValue, null, DisplayName = "int? MaxNameLength = int.MaxValue")]
         [DataRow(0u, "Maximum Name Length must be greater than zero.", DisplayName = "uint? MaxNameLength = 0")]
-        [TestProperty(TestHelper.TestProperty_Description, "Volume.MaxNameLength: CHECK(MaxNameLength IS NULL OR MaxNameLength>=1)")]
+        [Description("Volume.MaxNameLength: CHECK(MaxNameLength IS NULL OR MaxNameLength>=1)")]
         public void MaxNameLengthTestMethod(uint? value, string errorMessage)
         {
             Volume target = new() { MaxNameLength = value };
@@ -341,7 +341,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("FileSystem FileSystem"), Priority(20)]
-        [TestProperty(TestHelper.TestProperty_Description, "Volume.FileSystem: UNIQUEIDENTIFIER NOT NULL FOREIGN REFERENCES FileSystems")]
+        [Description("Volume.FileSystem: UNIQUEIDENTIFIER NOT NULL FOREIGN REFERENCES FileSystems")]
         public void FileSystemTestMethod()
         {
             using IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
@@ -437,7 +437,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("DateTime CreatedOn"), Priority(20)]
-        [TestProperty(TestHelper.TestProperty_Description, "BinaryProperties.CreatedOn: CreatedOn<=ModifiedOn")]
+        [Description("BinaryProperties.CreatedOn: CreatedOn<=ModifiedOn")]
         public void CreatedOnTestMethod()
         {
             DateTime expectedValue = DateTime.Now.AddDays(-1);

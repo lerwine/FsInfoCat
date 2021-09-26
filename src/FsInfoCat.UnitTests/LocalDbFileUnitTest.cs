@@ -80,7 +80,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("DbFile Content Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "DbFile.Content: UNIQUEIDENTIFIER FOREIGN REFERENCES BinaryProperties")]
+        [Description("DbFile.Content: UNIQUEIDENTIFIER FOREIGN REFERENCES BinaryProperties")]
         [Ignore]
         public void DbFileBinaryPropertiesTestMethod()
         {
@@ -127,7 +127,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("DbFile Name Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "DbFile.Name: NVARCHAR(1024) NOT NULL CHECK(length(trim(Name))>0) COLLATE NOCASE")]
+        [Description("DbFile.Name: NVARCHAR(1024) NOT NULL CHECK(length(trim(Name))>0) COLLATE NOCASE")]
         [Ignore]
         public void DbFileNameTestMethod()
         {
@@ -176,7 +176,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("DbFile Parent Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "DbFile.Parent: UNIQUEIDENTIFIER NOT NULL FOREIGN REFERENCES Subdirectories")]
+        [Description("DbFile.Parent: UNIQUEIDENTIFIER NOT NULL FOREIGN REFERENCES Subdirectories")]
         [Ignore]
         public void DbFileParentTestMethod()
         {
@@ -223,7 +223,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("DbFile Options Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "DbFile.Options: TINYINT  NOT NULL CHECK(Options>=0 AND Options<15)")]
+        [Description("DbFile.Options: TINYINT  NOT NULL CHECK(Options>=0 AND Options<15)")]
         [Ignore]
         public void DbFileOptionsTestMethod()
         {
@@ -269,7 +269,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("DbFile CreatedOn Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "DbFile.CreatedOn: CreatedOn<=ModifiedOn")]
+        [Description("DbFile.CreatedOn: CreatedOn<=ModifiedOn")]
         [Ignore]
         public void DbFileCreatedOnTestMethod()
         {

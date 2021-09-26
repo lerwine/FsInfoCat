@@ -68,7 +68,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("FileSystem DefaultDriveType Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "FileSystem.DefaultDriveType: CHECK(DefaultDriveType IS NULL OR (DefaultDriveType>=0 AND DefaultDriveType<7))")]
+        [Description("FileSystem.DefaultDriveType: CHECK(DefaultDriveType IS NULL OR (DefaultDriveType>=0 AND DefaultDriveType<7))")]
         [Ignore]
         public void FileSystemDefaultDriveTypeTestMethod()
         {
@@ -116,7 +116,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("FileSystem DisplayName Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "FileSystem: DisplayName NVARCHAR(1024) NOT NULL CHECK(length(trim(DisplayName)) = length(DisplayName) AND length(DisplayName)>0) UNIQUE COLLATE NOCASE")]
+        [Description("FileSystem: DisplayName NVARCHAR(1024) NOT NULL CHECK(length(trim(DisplayName)) = length(DisplayName) AND length(DisplayName)>0) UNIQUE COLLATE NOCASE")]
         [Ignore]
         public void FileSystemDisplayNameTestMethod()
         {
@@ -218,7 +218,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("FileSystem MaxNameLength Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "FileSystem: MaxNameLength CHECK(MaxNameLength IS NULL OR MaxNameLength>=0)")]
+        [Description("FileSystem: MaxNameLength CHECK(MaxNameLength IS NULL OR MaxNameLength>=0)")]
         [Ignore]
         public void FileSystemMaxNameLengthTestMethod()
         {
@@ -268,7 +268,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("FileSystem CreatedOn Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "FileSystem.CreatedOn: CreatedOn<=ModifiedOn")]
+        [Description("FileSystem.CreatedOn: CreatedOn<=ModifiedOn")]
         [Ignore]
         public void FileSystemCreatedOnTestMethod()
         {

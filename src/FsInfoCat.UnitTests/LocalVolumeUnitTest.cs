@@ -75,7 +75,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("Volume Identifier Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "Volume.Identifier: NVARCHAR(1024) NOT NULL CHECK(length(trim(Identifier))>0) UNIQUE COLLATE NOCASE")]
+        [Description("Volume.Identifier: NVARCHAR(1024) NOT NULL CHECK(length(trim(Identifier))>0) UNIQUE COLLATE NOCASE")]
         [TestCategory(TestHelper.TestCategory_LocalDb)]
         [Ignore]
         public void VolumeIdentifierTestMethod()
@@ -230,7 +230,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("Volume VolumeName Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "Volume.VolumeName: NVARCHAR(128) NOT NULL CHECK(length(trim(VolumeName))>0) COLLATE NOCASE")]
+        [Description("Volume.VolumeName: NVARCHAR(128) NOT NULL CHECK(length(trim(VolumeName))>0) COLLATE NOCASE")]
         [TestCategory(TestHelper.TestCategory_LocalDb)]
         [Ignore]
         public void VolumeVolumeNameTestMethod()
@@ -349,7 +349,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("Volume DisplayName Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "Volume.DisplayName: NVARCHAR(1024) NOT NULL CHECK(length(trim(DisplayName))>0) COLLATE NOCASE")]
+        [Description("Volume.DisplayName: NVARCHAR(1024) NOT NULL CHECK(length(trim(DisplayName))>0) COLLATE NOCASE")]
         [TestCategory(TestHelper.TestCategory_LocalDb)]
         [Ignore]
         public void VolumeDisplayNameTestMethod()
@@ -469,7 +469,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("Volume Type Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "Volume.Type: TINYINT NOT NULL CHECK(Type>=0 AND Type<7)")]
+        [Description("Volume.Type: TINYINT NOT NULL CHECK(Type>=0 AND Type<7)")]
         [TestCategory(TestHelper.TestCategory_LocalDb)]
         [Ignore]
         public void VolumeTypeTestMethod()
@@ -519,7 +519,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("Volume FileSystem Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "Volume.FileSystem: UNIQUEIDENTIFIER NOT NULL FOREIGN REFERENCES FileSystems")]
+        [Description("Volume.FileSystem: UNIQUEIDENTIFIER NOT NULL FOREIGN REFERENCES FileSystems")]
         [TestCategory(TestHelper.TestCategory_LocalDb)]
         [Ignore]
         public void VolumeFileSystemTestMethod()
@@ -596,7 +596,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("Volume Status Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "Volume.Status: TINYINT NOT NULL CHECK(Status>=0 AND Status<6)")]
+        [Description("Volume.Status: TINYINT NOT NULL CHECK(Status>=0 AND Status<6)")]
         [TestCategory(TestHelper.TestCategory_LocalDb)]
         [Ignore]
         public void VolumeStatusTestMethod()
@@ -646,7 +646,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("Volume MaxNameLength Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "Volume.MaxNameLength: CHECK(MaxNameLength IS NULL OR MaxNameLength>=1)")]
+        [Description("Volume.MaxNameLength: CHECK(MaxNameLength IS NULL OR MaxNameLength>=1)")]
         [TestCategory(TestHelper.TestCategory_LocalDb)]
         [Ignore]
         public void VolumeMaxNameLengthTestMethod()
@@ -701,7 +701,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("Volume CreatedOn Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "Volume.CreatedOn: CreatedOn<=ModifiedOn")]
+        [Description("Volume.CreatedOn: CreatedOn<=ModifiedOn")]
         [TestCategory(TestHelper.TestCategory_LocalDb)]
         [Ignore]
         public void VolumeCreatedOnTestMethod()

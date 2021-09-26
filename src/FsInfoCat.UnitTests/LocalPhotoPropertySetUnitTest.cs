@@ -86,7 +86,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("PhotoPropertySet CameraManufacturer Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "PhotoPropertySet.CameraManufacturer: NVARCHAR(256)")]
+        [Description("PhotoPropertySet.CameraManufacturer: NVARCHAR(256)")]
         [Ignore]
         public void PhotoPropertySetCameraManufacturerTestMethod()
         {
@@ -132,7 +132,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("PhotoPropertySet CameraModel Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "PhotoPropertySet.CameraModel: NVARCHAR(256)")]
+        [Description("PhotoPropertySet.CameraModel: NVARCHAR(256)")]
         [Ignore]
         public void PhotoPropertySetCameraModelTestMethod()
         {
@@ -178,13 +178,13 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("PhotoPropertySet DateTaken Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "PhotoPropertySet.DateTaken: DATETIME")]
+        [Description("PhotoPropertySet.DateTaken: DATETIME")]
         [Ignore]
         public void PhotoPropertySetDateTakenTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
-            System.DateTime? expected = default; // DEFERRED: Set invalid value
+            DateTime? expected = default; // DEFERRED: Set invalid value
             Local.PhotoPropertySet target = new() { DateTaken = expected };
             EntityEntry<Local.PhotoPropertySet> entityEntry = dbContext.PhotoPropertySets.Add(target);
             Collection<ValidationResult> results = new();
@@ -224,7 +224,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("PhotoPropertySet Event Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "PhotoPropertySet.Event: TEXT")]
+        [Description("PhotoPropertySet.Event: TEXT")]
         [Ignore]
         public void PhotoPropertySetEventTestMethod()
         {
@@ -270,7 +270,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("PhotoPropertySet EXIFVersion Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "PhotoPropertySet.EXIFVersion: NVARCHAR(256)")]
+        [Description("PhotoPropertySet.EXIFVersion: NVARCHAR(256)")]
         [Ignore]
         public void PhotoPropertySetEXIFVersionTestMethod()
         {
@@ -362,7 +362,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("PhotoPropertySet OrientationText Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "PhotoPropertySet.OrientationText: NVARCHAR")]
+        [Description("PhotoPropertySet.OrientationText: NVARCHAR")]
         [Ignore]
         public void PhotoPropertySetOrientationTextTestMethod()
         {
@@ -408,7 +408,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("PhotoPropertySet PeopleNames Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "PhotoPropertySet.PeopleNames: TEXT")]
+        [Description("PhotoPropertySet.PeopleNames: TEXT")]
         [Ignore]
         public void PhotoPropertySetPeopleNamesTestMethod()
         {

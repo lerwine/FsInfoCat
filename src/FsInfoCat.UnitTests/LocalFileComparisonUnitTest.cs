@@ -63,7 +63,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("FileComparison Baseline Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "FileComparison.Baseline: UNIQUEIDENTIFIER NOT NULL (BaselineId<>CorrelativeId) FOREIGN REFERENCES DbFiles")]
+        [Description("FileComparison.Baseline: UNIQUEIDENTIFIER NOT NULL (BaselineId<>CorrelativeId) FOREIGN REFERENCES DbFiles")]
         [Ignore]
         public void FileComparisonBaselineTestMethod()
         {
@@ -109,7 +109,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("FileComparison Correlative Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "FileComparison.Correlative: UNIQUEIDENTIFIER NOT NULL FOREIGN REFERENCES DbFiles")]
+        [Description("FileComparison.Correlative: UNIQUEIDENTIFIER NOT NULL FOREIGN REFERENCES DbFiles")]
         [Ignore]
         public void FileComparisonCorrelativeTestMethod()
         {
@@ -155,7 +155,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("FileComparison CreatedOn Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "FileComparison.CreatedOn: CreatedOn<=ModifiedOn")]
+        [Description("FileComparison.CreatedOn: CreatedOn<=ModifiedOn")]
         [Ignore]
         public void FileComparisonCreatedOnTestMethod()
         {

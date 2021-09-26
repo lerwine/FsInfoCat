@@ -1,4 +1,3 @@
-using FsInfoCat;
 using FsInfoCat.Local;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
@@ -6,7 +5,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.UnitTests
@@ -282,7 +280,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("DateTime CreatedOn"), Ignore]
-        [TestProperty(TestHelper.TestProperty_Description, "BinaryProperties.CreatedOn: CreatedOn<=ModifiedOn")]
+        [Microsoft.VisualStudio.TestTools.UnitTesting.Description("BinaryProperties.CreatedOn: CreatedOn<=ModifiedOn")]
         public void CreatedOnTestMethod()
         {
             Assert.Inconclusive("Test not implemented");

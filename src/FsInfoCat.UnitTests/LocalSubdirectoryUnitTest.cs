@@ -35,8 +35,13 @@ namespace FsInfoCat.UnitTests
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
             Local.FileSystem fileSystem1 = new() { DisplayName = "Subdirectory Add/Remove FileSystem" };
             dbContext.FileSystems.Add(fileSystem1);
-            Local.Volume volume1 = new() { DisplayName = "Subdirectory Add/Remove Item", VolumeName = "Subdirectory_Add_Remove_Name", Identifier = new(Guid.NewGuid()),
-                FileSystem = fileSystem1 };
+            Local.Volume volume1 = new()
+            {
+                DisplayName = "Subdirectory Add/Remove Item",
+                VolumeName = "Subdirectory_Add_Remove_Name",
+                Identifier = new(Guid.NewGuid()),
+                FileSystem = fileSystem1
+            };
             dbContext.Volumes.Add(volume1);
             string expectedName = "";
             Local.Subdirectory target1 = new() { Volume = volume1 };
@@ -73,7 +78,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("Subdirectory Name Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "Subdirectory.Name: NVARCHAR(1024) NOT NULL (ParentId IS NULL OR length(trim(Name))>0) COLLATE NOCASE")]
+        [Description("Subdirectory.Name: NVARCHAR(1024) NOT NULL (ParentId IS NULL OR length(trim(Name))>0) COLLATE NOCASE")]
         [TestCategory(TestHelper.TestCategory_LocalDb)]
         [Ignore]
         public void SubdirectoryNameTestMethod()
@@ -237,7 +242,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("Subdirectory Options Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "Subdirectory.Options: TINYINT NOT NULL TINYINT  NOT NULL CHECK(Options>=0 AND Options<64)")]
+        [Description("Subdirectory.Options: TINYINT NOT NULL TINYINT  NOT NULL CHECK(Options>=0 AND Options<64)")]
         [TestCategory(TestHelper.TestCategory_LocalDb)]
         [Ignore]
         public void SubdirectoryOptionsTestMethod()
@@ -282,7 +287,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("Subdirectory CreatedOn Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "Subdirectory.CreatedOn: CreatedOn<=ModifiedOn")]
+        [Description("Subdirectory.CreatedOn: CreatedOn<=ModifiedOn")]
         [TestCategory(TestHelper.TestCategory_LocalDb)]
         [Ignore]
         public void SubdirectoryCreatedOnTestMethod()
@@ -355,7 +360,7 @@ namespace FsInfoCat.UnitTests
             dbContext.Subdirectories.Add(parent);
             dbContext.SaveChanges();
             Local.Subdirectory target = new() { UpstreamId = Guid.NewGuid(), Parent = parent, Name = "LastSynchronizedOn Dir" };
-            EntityEntry <Local.Subdirectory> entityEntry = dbContext.Subdirectories.Add(target);
+            EntityEntry<Local.Subdirectory> entityEntry = dbContext.Subdirectories.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsTrue(success);

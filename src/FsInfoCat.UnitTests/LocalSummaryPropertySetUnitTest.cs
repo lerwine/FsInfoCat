@@ -99,7 +99,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("SummaryPropertySet ApplicationName Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "SummaryPropertySet.ApplicationName: NVARCHAR(1024)")]
+        [Description("SummaryPropertySet.ApplicationName: NVARCHAR(1024)")]
         [Ignore]
         public void SummaryPropertySetApplicationNameTestMethod()
         {
@@ -145,7 +145,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("SummaryPropertySet Author Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "SummaryPropertySet.Author: TEXT")]
+        [Description("SummaryPropertySet.Author: TEXT")]
         [Ignore]
         public void SummaryPropertySetAuthorTestMethod()
         {
@@ -191,7 +191,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("SummaryPropertySet Comment Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "SummaryPropertySet.Comment: TEXT")]
+        [Description("SummaryPropertySet.Comment: TEXT")]
         [Ignore]
         public void SummaryPropertySetCommentTestMethod()
         {
@@ -237,7 +237,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("SummaryPropertySet Keywords Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "SummaryPropertySet.Keywords: TEXT")]
+        [Description("SummaryPropertySet.Keywords: TEXT")]
         [Ignore]
         public void SummaryPropertySetKeywordsTestMethod()
         {
@@ -283,7 +283,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("SummaryPropertySet Subject Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "SummaryPropertySet.Subject: NVARCHAR(1024)")]
+        [Description("SummaryPropertySet.Subject: NVARCHAR(1024)")]
         [Ignore]
         public void SummaryPropertySetSubjectTestMethod()
         {
@@ -329,7 +329,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("SummaryPropertySet Title Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "SummaryPropertySet.Title: NVARCHAR(1024)")]
+        [Description("SummaryPropertySet.Title: NVARCHAR(1024)")]
         [Ignore]
         public void SummaryPropertySetTitleTestMethod()
         {
@@ -375,7 +375,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("SummaryPropertySet Company Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "SummaryPropertySet.Company: NVARCHAR(1024)")]
+        [Description("SummaryPropertySet.Company: NVARCHAR(1024)")]
         [Ignore]
         public void SummaryPropertySetCompanyTestMethod()
         {
@@ -421,7 +421,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("SummaryPropertySet ContentType Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "SummaryPropertySet.ContentType: NVARCHAR(1024)")]
+        [Description("SummaryPropertySet.ContentType: NVARCHAR(1024)")]
         [Ignore]
         public void SummaryPropertySetContentTypeTestMethod()
         {
@@ -467,7 +467,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("SummaryPropertySet Copyright Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "SummaryPropertySet.Copyright: NVARCHAR(1024)")]
+        [Description("SummaryPropertySet.Copyright: NVARCHAR(1024)")]
         [Ignore]
         public void SummaryPropertySetCopyrightTestMethod()
         {
@@ -513,7 +513,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("SummaryPropertySet ParentalRating Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "SummaryPropertySet.ParentalRating: NVARCHAR(32)")]
+        [Description("SummaryPropertySet.ParentalRating: NVARCHAR(32)")]
         [Ignore]
         public void SummaryPropertySetParentalRatingTestMethod()
         {
@@ -605,7 +605,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("SummaryPropertySet ItemAuthors Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "SummaryPropertySet.ItemAuthors: TEXT")]
+        [Description("SummaryPropertySet.ItemAuthors: TEXT")]
         [Ignore]
         public void SummaryPropertySetItemAuthorsTestMethod()
         {
@@ -651,7 +651,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("SummaryPropertySet ItemType Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "SummaryPropertySet.ItemType: NVARCHAR(32)")]
+        [Description("SummaryPropertySet.ItemType: NVARCHAR(32)")]
         [Ignore]
         public void SummaryPropertySetItemTypeTestMethod()
         {
@@ -697,7 +697,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("SummaryPropertySet ItemTypeText Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "SummaryPropertySet.ItemTypeText: NVARCHAR(64)")]
+        [Description("SummaryPropertySet.ItemTypeText: NVARCHAR(64)")]
         [Ignore]
         public void SummaryPropertySetItemTypeTextTestMethod()
         {
@@ -743,7 +743,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("SummaryPropertySet Kind Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "SummaryPropertySet.Kind: NVARCHAR(128)")]
+        [Description("SummaryPropertySet.Kind: NVARCHAR(128)")]
         [Ignore]
         public void SummaryPropertySetKindTestMethod()
         {
@@ -789,7 +789,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("SummaryPropertySet MIMEType Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "SummaryPropertySet.MIMEType: NVARCHAR(1024)")]
+        [Description("SummaryPropertySet.MIMEType: NVARCHAR(1024)")]
         [Ignore]
         public void SummaryPropertySetMIMETypeTestMethod()
         {
@@ -835,7 +835,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("SummaryPropertySet ParentalRatingReason Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "SummaryPropertySet.ParentalRatingReason: NVARCHAR(1024)")]
+        [Description("SummaryPropertySet.ParentalRatingReason: NVARCHAR(1024)")]
         [Ignore]
         public void SummaryPropertySetParentalRatingReasonTestMethod()
         {
@@ -881,7 +881,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("SummaryPropertySet ParentalRatingsOrganization Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "SummaryPropertySet.ParentalRatingsOrganization: NVARCHAR(1024)")]
+        [Description("SummaryPropertySet.ParentalRatingsOrganization: NVARCHAR(1024)")]
         [Ignore]
         public void SummaryPropertySetParentalRatingsOrganizationTestMethod()
         {
@@ -973,7 +973,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("SummaryPropertySet SensitivityText Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "SummaryPropertySet.SensitivityText: NVARCHAR(1024)")]
+        [Description("SummaryPropertySet.SensitivityText: NVARCHAR(1024)")]
         [Ignore]
         public void SummaryPropertySetSensitivityTextTestMethod()
         {
@@ -1065,7 +1065,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("SummaryPropertySet Trademarks Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "SummaryPropertySet.Trademarks: NVARCHAR(1024)")]
+        [Description("SummaryPropertySet.Trademarks: NVARCHAR(1024)")]
         [Ignore]
         public void SummaryPropertySetTrademarksTestMethod()
         {
@@ -1112,7 +1112,7 @@ namespace FsInfoCat.UnitTests
 
 
         [TestMethod("SoftwarePropertySet ProductName Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "SoftwarePropertySet.ProductName: NVARCHAR(256)")]
+        [Description("SoftwarePropertySet.ProductName: NVARCHAR(256)")]
         [Ignore]
         public void SoftwarePropertySetProductNameTestMethod()
         {

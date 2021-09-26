@@ -92,7 +92,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("MediaPropertySet ContentDistributor Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "MediaPropertySet.ContentDistributor: NVARCHAR(256)")]
+        [Description("MediaPropertySet.ContentDistributor: NVARCHAR(256)")]
         [Ignore]
         public void MediaPropertySetContentDistributorTestMethod()
         {
@@ -138,7 +138,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("MediaPropertySet CreatorApplication Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "MediaPropertySet.CreatorApplication: NVARCHAR(256)")]
+        [Description("MediaPropertySet.CreatorApplication: NVARCHAR(256)")]
         [Ignore]
         public void MediaPropertySetCreatorApplicationTestMethod()
         {
@@ -184,7 +184,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("MediaPropertySet CreatorApplicationVersion Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "MediaPropertySet.CreatorApplicationVersion: NVARCHAR(64)")]
+        [Description("MediaPropertySet.CreatorApplicationVersion: NVARCHAR(64)")]
         [Ignore]
         public void MediaPropertySetCreatorApplicationVersionTestMethod()
         {
@@ -230,7 +230,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("MediaPropertySet DateReleased Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "MediaPropertySet.DateReleased: NVARCHAR(64)")]
+        [Description("MediaPropertySet.DateReleased: NVARCHAR(64)")]
         [Ignore]
         public void MediaPropertySetDateReleasedTestMethod()
         {
@@ -276,7 +276,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("MediaPropertySet Duration Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "MediaPropertySet.Duration: BIGINT")]
+        [Description("MediaPropertySet.Duration: BIGINT")]
         [Ignore]
         public void MediaPropertySetDurationTestMethod()
         {
@@ -322,7 +322,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("MediaPropertySet DVDID Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "MediaPropertySet.DVDID: NVARCHAR(64)")]
+        [Description("MediaPropertySet.DVDID: NVARCHAR(64)")]
         [Ignore]
         public void MediaPropertySetDVDIDTestMethod()
         {
@@ -414,7 +414,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("MediaPropertySet Producer Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "MediaPropertySet.Producer: TEXT")]
+        [Description("MediaPropertySet.Producer: TEXT")]
         [Ignore]
         public void MediaPropertySetProducerTestMethod()
         {
@@ -460,7 +460,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("MediaPropertySet ProtectionType Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "MediaPropertySet.ProtectionType: NVARCHAR(256)")]
+        [Description("MediaPropertySet.ProtectionType: NVARCHAR(256)")]
         [Ignore]
         public void MediaPropertySetProtectionTypeTestMethod()
         {
@@ -506,7 +506,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("MediaPropertySet ProviderRating Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "MediaPropertySet.ProviderRating: NVARCHAR(256)")]
+        [Description("MediaPropertySet.ProviderRating: NVARCHAR(256)")]
         [Ignore]
         public void MediaPropertySetProviderRatingTestMethod()
         {
@@ -552,7 +552,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("MediaPropertySet ProviderStyle Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "MediaPropertySet.ProviderStyle: NVARCHAR(256)")]
+        [Description("MediaPropertySet.ProviderStyle: NVARCHAR(256)")]
         [Ignore]
         public void MediaPropertySetProviderStyleTestMethod()
         {
@@ -598,7 +598,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("MediaPropertySet Publisher Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "MediaPropertySet.Publisher: NVARCHAR(256)")]
+        [Description("MediaPropertySet.Publisher: NVARCHAR(256)")]
         [Ignore]
         public void MediaPropertySetPublisherTestMethod()
         {
@@ -644,7 +644,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("MediaPropertySet Subtitle Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "MediaPropertySet.Subtitle: NVARCHAR(256)")]
+        [Description("MediaPropertySet.Subtitle: NVARCHAR(256)")]
         [Ignore]
         public void MediaPropertySetSubtitleTestMethod()
         {
@@ -690,7 +690,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("MediaPropertySet Writer Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "MediaPropertySet.Writer: TEXT")]
+        [Description("MediaPropertySet.Writer: TEXT")]
         [Ignore]
         public void MediaPropertySetWriterTestMethod()
         {

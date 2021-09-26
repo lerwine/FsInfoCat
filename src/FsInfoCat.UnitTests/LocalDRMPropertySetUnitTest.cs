@@ -82,13 +82,13 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("DRMPropertySet DatePlayExpires Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "DRMPropertySet.DatePlayExpires: DATETIME")]
+        [Description("DRMPropertySet.DatePlayExpires: DATETIME")]
         [Ignore]
         public void DRMPropertySetDatePlayExpiresTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
-            System.DateTime? expected = default; // DEFERRED: Set invalid value
+            DateTime? expected = default; // DEFERRED: Set invalid value
             Local.DRMPropertySet target = new() { DatePlayExpires = expected };
             EntityEntry<Local.DRMPropertySet> entityEntry = dbContext.DRMPropertySets.Add(target);
             Collection<ValidationResult> results = new();
@@ -128,13 +128,13 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("DRMPropertySet DatePlayStarts Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "DRMPropertySet.DatePlayStarts: DATETIME")]
+        [Description("DRMPropertySet.DatePlayStarts: DATETIME")]
         [Ignore]
         public void DRMPropertySetDatePlayStartsTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
             using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
-            System.DateTime? expected = default; // DEFERRED: Set invalid value
+            DateTime? expected = default; // DEFERRED: Set invalid value
             Local.DRMPropertySet target = new() { DatePlayStarts = expected };
             EntityEntry<Local.DRMPropertySet> entityEntry = dbContext.DRMPropertySets.Add(target);
             Collection<ValidationResult> results = new();
@@ -174,7 +174,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("DRMPropertySet Description Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "DRMPropertySet.Description: TEXT")]
+        [Description("DRMPropertySet.Description: TEXT")]
         [Ignore]
         public void DRMPropertySetDescriptionTestMethod()
         {
@@ -220,7 +220,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("DRMPropertySet IsProtected Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "DRMPropertySet.IsProtected: BIT")]
+        [Description("DRMPropertySet.IsProtected: BIT")]
         [Ignore]
         public void DRMPropertySetIsProtectedTestMethod()
         {

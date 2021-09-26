@@ -69,7 +69,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("SymbolicName Name Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "SymbolicName.Name: NVARCHAR(256) NOT NULL CHECK(length(trim(Name)) = length(Name) AND length(Name)>0) UNIQUE COLLATE NOCASE")]
+        [Description("SymbolicName.Name: NVARCHAR(256) NOT NULL CHECK(length(trim(Name)) = length(Name) AND length(Name)>0) UNIQUE COLLATE NOCASE")]
         [TestCategory(TestHelper.TestCategory_LocalDb)]
         [Ignore]
         public void SymbolicNameNameTestMethod()
@@ -156,7 +156,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("SymbolicName FileSystem Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "SymbolicName.FileSystem: UNIQUEIDENTIFIER NOT NULL FOREIGN REFERENCES FileSystems")]
+        [Description("SymbolicName.FileSystem: UNIQUEIDENTIFIER NOT NULL FOREIGN REFERENCES FileSystems")]
         [TestCategory(TestHelper.TestCategory_LocalDb)]
         [Ignore]
         public void SymbolicNameFileSystemTestMethod()
@@ -190,7 +190,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("SymbolicName CreatedOn Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "SymbolicName.CreatedOn: CreatedOn<=ModifiedOn")]
+        [Description("SymbolicName.CreatedOn: CreatedOn<=ModifiedOn")]
         [TestCategory(TestHelper.TestCategory_LocalDb)]
         [Ignore]
         public void SymbolicNameCreatedOnTestMethod()

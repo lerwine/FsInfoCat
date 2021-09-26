@@ -63,7 +63,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("RedundantSet BinaryProperties Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "RedundantSet.BinaryProperties: UNIQUEIDENTIFIER NOT NULL FOREIGN REFERENCES BinaryProperties")]
+        [Description("RedundantSet.BinaryProperties: UNIQUEIDENTIFIER NOT NULL FOREIGN REFERENCES BinaryProperties")]
         [Ignore]
         public void RedundantSetBinaryPropertiesTestMethod()
         {
@@ -109,7 +109,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("RedundantSet Reference Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "RedundantSet.Reference: NVARCHAR(128) NOT NULL COLLATE NOCASE")]
+        [Description("RedundantSet.Reference: NVARCHAR(128) NOT NULL COLLATE NOCASE")]
         [Ignore]
         public void RedundantSetReferenceTestMethod()
         {
@@ -155,7 +155,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("RedundantSet CreatedOn Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "RedundantSet.CreatedOn: CreatedOn<=ModifiedOn")]
+        [Description("RedundantSet.CreatedOn: CreatedOn<=ModifiedOn")]
         [Ignore]
         public void RedundantSetCreatedOnTestMethod()
         {

@@ -86,7 +86,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("VideoPropertySet Compression Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "VideoPropertySet.Compression: NVARCHAR(256)")]
+        [Description("VideoPropertySet.Compression: NVARCHAR(256)")]
         [Ignore]
         public void VideoPropertySetCompressionTestMethod()
         {
@@ -132,7 +132,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("VideoPropertySet Director Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "VideoPropertySet.Director: TEXT")]
+        [Description("VideoPropertySet.Director: TEXT")]
         [Ignore]
         public void VideoPropertySetDirectorTestMethod()
         {
@@ -408,7 +408,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("VideoPropertySet StreamName Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "VideoPropertySet.StreamName: NVARCHAR(256)")]
+        [Description("VideoPropertySet.StreamName: NVARCHAR(256)")]
         [Ignore]
         public void VideoPropertySetStreamNameTestMethod()
         {

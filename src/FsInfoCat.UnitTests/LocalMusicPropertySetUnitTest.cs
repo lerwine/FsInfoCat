@@ -88,7 +88,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("MusicPropertySet AlbumArtist Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "MusicPropertySet.AlbumArtist: NVARCHAR(1024)")]
+        [Description("MusicPropertySet.AlbumArtist: NVARCHAR(1024)")]
         [Ignore]
         public void MusicPropertySetAlbumArtistTestMethod()
         {
@@ -134,7 +134,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("MusicPropertySet AlbumTitle Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "MusicPropertySet.AlbumTitle: NVARCHAR(1024)")]
+        [Description("MusicPropertySet.AlbumTitle: NVARCHAR(1024)")]
         [Ignore]
         public void MusicPropertySetAlbumTitleTestMethod()
         {
@@ -180,7 +180,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("MusicPropertySet Artist Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "MusicPropertySet.Artist: TEXT")]
+        [Description("MusicPropertySet.Artist: TEXT")]
         [Ignore]
         public void MusicPropertySetArtistTestMethod()
         {
@@ -226,7 +226,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("MusicPropertySet Composer Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "MusicPropertySet.Composer: TEXT")]
+        [Description("MusicPropertySet.Composer: TEXT")]
         [Ignore]
         public void MusicPropertySetComposerTestMethod()
         {
@@ -272,7 +272,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("MusicPropertySet Conductor Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "MusicPropertySet.Conductor: TEXT")]
+        [Description("MusicPropertySet.Conductor: TEXT")]
         [Ignore]
         public void MusicPropertySetConductorTestMethod()
         {
@@ -318,7 +318,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("MusicPropertySet DisplayArtist Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "MusicPropertySet.DisplayArtist: TEXT")]
+        [Description("MusicPropertySet.DisplayArtist: TEXT")]
         [Ignore]
         public void MusicPropertySetDisplayArtistTestMethod()
         {
@@ -364,7 +364,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("MusicPropertySet Genre Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "MusicPropertySet.Genre: TEXT")]
+        [Description("MusicPropertySet.Genre: TEXT")]
         [Ignore]
         public void MusicPropertySetGenreTestMethod()
         {
@@ -410,7 +410,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("MusicPropertySet PartOfSet Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "MusicPropertySet.PartOfSet: NVARCHAR(64)")]
+        [Description("MusicPropertySet.PartOfSet: NVARCHAR(64)")]
         [Ignore]
         public void MusicPropertySetPartOfSetTestMethod()
         {
@@ -456,7 +456,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("MusicPropertySet Period Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "MusicPropertySet.Period: NVARCHAR(64)")]
+        [Description("MusicPropertySet.Period: NVARCHAR(64)")]
         [Ignore]
         public void MusicPropertySetPeriodTestMethod()
         {

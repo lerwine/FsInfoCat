@@ -64,7 +64,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("Redundancy Reference Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "Redundancy.Reference: NVARCHAR(128) NOT NULL COLLATE NOCASE")]
+        [Description("Redundancy.Reference: NVARCHAR(128) NOT NULL COLLATE NOCASE")]
         [Ignore]
         public void RedundancyReferenceTestMethod()
         {
@@ -110,7 +110,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("Redundancy RedundantSet Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "Redundancy.RedundantSet: UNIQUEIDENTIFIER NOT NULL FOREIGN REFERENCES RedundantSets")]
+        [Description("Redundancy.RedundantSet: UNIQUEIDENTIFIER NOT NULL FOREIGN REFERENCES RedundantSets")]
         [Ignore]
         public void RedundancyRedundantSetTestMethod()
         {
@@ -156,7 +156,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("Redundancy File Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "Redundancy.File: UNIQUEIDENTIFIER NOT NULL FOREIGN REFERENCES DbFiles")]
+        [Description("Redundancy.File: UNIQUEIDENTIFIER NOT NULL FOREIGN REFERENCES DbFiles")]
         [Ignore]
         public void RedundancyFileTestMethod()
         {
@@ -202,7 +202,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("Redundancy CreatedOn Validation Tests")]
-        [TestProperty(TestHelper.TestProperty_Description, "Redundancy.CreatedOn: CreatedOn<=ModifiedOn")]
+        [Description("Redundancy.CreatedOn: CreatedOn<=ModifiedOn")]
         [Ignore]
         public void RedundancyCreatedOnTestMethod()
         {
