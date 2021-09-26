@@ -40,8 +40,16 @@ namespace FsInfoCat
                 }
                 list.Add(ContextId.Lease);
             }
+            ChangeTracker.Tracked += ChangeTracker_Tracked;
+
             _loggerScope = _logger.BeginScope($"{{{nameof(Database.ProviderName)}}}: {nameof(DbContextId.InstanceId)}={{{nameof(DbContextId.InstanceId)}}}, {nameof(DbContextId.Lease)}={{{nameof(DbContextId.Lease)}}}, ConnectionString={{ConnectionString}}",
                 Database.ProviderName, ContextId.InstanceId, ContextId.Lease, Database.GetConnectionString());
+        }
+
+        private void ChangeTracker_Tracked(object sender, EntityTrackedEventArgs e)
+        {
+            if (e.Entry.Entity is RevertibleChangeTracking rtc && e.Entry.State == EntityState.Unchanged)
+                rtc.AcceptChanges();
         }
 
         [SuppressMessage("Usage", "CA1816:Dispose methods should call SuppressFinalize", Justification = "Inherited class will have called SuppressFinalize if necessary.")]

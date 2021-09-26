@@ -99,11 +99,6 @@ namespace FsInfoCat
                         newValue = Coersion.Normalize(newValue);
                         if (Coersion.Equals(oldValue, newValue))
                             return false;
-                        if (!target._changeTrackers.Any(t => ReferenceEquals(target, t)))
-                        {
-                            _value = newValue;
-                            return true;
-                        }
                     }
                     target.RaisePropertyChanging(PropertyName);
                     lock (target.SyncRoot)
