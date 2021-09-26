@@ -116,7 +116,7 @@ CREATE TABLE IF NOT EXISTS "Volumes" (
     "Id" UNIQUEIDENTIFIER NOT NULL COLLATE NOCASE,
     "DisplayName" NVARCHAR(1024) NOT NULL CHECK(length(trim("DisplayName"))=length("DisplayName") AND length("DisplayName")>0) COLLATE NOCASE,
     "VolumeName" NVARCHAR(128) NOT NULL CHECK(length(trim("VolumeName"))=length("VolumeName")) DEFAULT '' COLLATE NOCASE,
-    "Identifier" NVARCHAR(1024) NOT NULL COLLATE NOCASE,
+    "Identifier" NVARCHAR(1024) NOT NULL CHECK(length(trim("Identifier"))=length("Identifier") AND length("Identifier")>9) COLLATE NOCASE,
     "ReadOnly" BIT DEFAULT NULL,
     "MaxNameLength" UNSIGNED INT DEFAULT NULL,
     "Type" UNSIGNED TINYINT NOT NULL CHECK("Type">=0 AND "Type"<7) DEFAULT 0, -- Unknown
