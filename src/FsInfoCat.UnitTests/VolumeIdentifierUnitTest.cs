@@ -18,6 +18,63 @@ namespace FsInfoCat.UnitTests
             _testContext = testContext;
         }
 
+        public static IEnumerable<object[]> GetConstructorSerialNumberTestData()
+        {
+            yield return ConstructorResultExpected.CreateTestData(0x094f622a5u);
+            yield return ConstructorResultExpected.CreateTestData(uint.MaxValue);
+            yield return ConstructorResultExpected.CreateTestData(uint.MinValue);
+        }
+
+        [DataTestMethod, Priority(0)]
+        [DynamicData(nameof(GetConstructorSerialNumberTestData), DynamicDataSourceType.Method)]
+        public void ConstructorSerialNumberTestMethod(uint serialNumber, ConstructorResultExpected expected)
+        {
+            VolumeIdentifier volumeIdentifier = new(serialNumber);
+            Assert.IsFalse(volumeIdentifier.IsEmpty());
+            Assert.IsNotNull(volumeIdentifier.Location);
+            Assert.AreEqual(expected.Location.ToString(), volumeIdentifier.Location.ToString());
+            Assert.AreEqual(expected.Location.ToString(), volumeIdentifier.ToString());
+            Assert.AreEqual(expected.SerialNumber, volumeIdentifier.SerialNumber);
+            Assert.IsFalse(volumeIdentifier.UUID.HasValue);
+        }
+
+        public static IEnumerable<object[]> GetConstructorUuidTestData()
+        {
+            yield return ConstructorResultExpected.CreateTestData(Guid.Parse("91502fe2-cb4b-4274-a8ad-8b70074132c3"));
+            yield return ConstructorResultExpected.CreateTestData(Guid.Parse("ffffffff-ffff-ffff-ffff-ffffffffffff"));
+            yield return ConstructorResultExpected.CreateTestData(Guid.Empty);
+        }
+
+        [DataTestMethod, Priority(0)]
+        [DynamicData(nameof(GetConstructorUuidTestData), DynamicDataSourceType.Method)]
+        public void ConstructorUuidTestMethod(Guid uuid, ConstructorResultExpected expected)
+        {
+            VolumeIdentifier volumeIdentifier = new(uuid);
+            Assert.IsFalse(volumeIdentifier.IsEmpty());
+            Assert.IsNotNull(volumeIdentifier.Location);
+            Assert.AreEqual(expected.Location.ToString(), volumeIdentifier.Location.ToString());
+            Assert.AreEqual(expected.Location.ToString(), volumeIdentifier.ToString());
+            Assert.AreEqual(expected.UUID, volumeIdentifier.UUID);
+            Assert.IsFalse(volumeIdentifier.SerialNumber.HasValue);
+        }
+
+        public static IEnumerable<object[]> GetSerializedValueTestData()
+        {
+            yield return new object[] { new VolumeIdentifier(), "" };
+            yield return new object[] { new VolumeIdentifier(0x270d32a3), "urn:volume:id:270D-32A3" };
+            yield return new object[] { new VolumeIdentifier(Guid.Parse("aacbef27-5451-4964-aba3-e4c2c5118a87")), "urn:uuid:aacbef27-5451-4964-aba3-e4c2c5118a87" };
+            yield return new object[] { new VolumeIdentifier(new Uri("file://servicenowdiag479.file.core.windows.net/testazureshare", UriKind.Absolute)), "file://servicenowdiag479.file.core.windows.net/testazureshare" };
+        }
+
+        [DataTestMethod, Priority(0)]
+        [DynamicData(nameof(GetSerializedValueTestData), DynamicDataSourceType.Method)]
+        public void SerializedValueTestMethod(VolumeIdentifier target, string expected)
+        {
+            string actual = target.ToString();
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod, Priority(0)]
         public static void ConstructorEmptyTestMethod()
         {
             VolumeIdentifier volumeIdentifier = new();
@@ -28,6 +85,219 @@ namespace FsInfoCat.UnitTests
             Assert.IsFalse(volumeIdentifier.SerialNumber.HasValue);
             Assert.IsFalse(volumeIdentifier.UUID.HasValue);
         }
+
+        public static IEnumerable<object[]> GetConstructorUriTestData()
+        {
+            yield return ConstructorResultExpected.CreateEmptyTestData((Uri)null);
+            yield return ConstructorResultExpected.CreateEmptyTestData(new Uri("", UriKind.Relative));
+            yield return ConstructorResultExpected.CreateTestData(new Uri("urn:volume:id:94F6-22A5", UriKind.Absolute), 0x094f622a5u);
+            yield return ConstructorResultExpected.CreateTestData(new Uri("urn:volume:id:94F622A5", UriKind.Absolute), 0x094f622a5u);
+            yield return ConstructorResultExpected.CreateTestData(new Uri("urn:volume:id:94f6-22a5", UriKind.Absolute), 0x094f622a5u);
+            yield return ConstructorResultExpected.CreateTestData(new Uri("urn:volume:id:94f622a5", UriKind.Absolute), 0x094f622a5u);
+            yield return ConstructorResultExpected.CreateTestData(new Uri("urn:volume:id:ffffffff", UriKind.Absolute), 0xffffffffu);
+            yield return ConstructorResultExpected.CreateTestData(new Uri("urn:volume:id:ffff-ffff", UriKind.Absolute), 0xffffffffu);
+            yield return ConstructorResultExpected.CreateTestData(new Uri("urn:volume:id:FFFF-FFFF", UriKind.Absolute), 0xffffffffu);
+            yield return ConstructorResultExpected.CreateTestData(new Uri("urn:volume:id:FFFFFFFF", UriKind.Absolute), 0xffffffffu);
+            yield return ConstructorResultExpected.CreateTestData(new Uri("urn:uuid:91502fe2-cb4b-4274-a8ad-8b70074132c3", UriKind.Absolute), Guid.Parse("91502fe2-cb4b-4274-a8ad-8b70074132c3"));
+            yield return ConstructorResultExpected.CreateTestData(new Uri("urn:uuid:91502fe2cb4b4274a8ad8b70074132c3", UriKind.Absolute), Guid.Parse("91502fe2-cb4b-4274-a8ad-8b70074132c3"));
+            yield return ConstructorResultExpected.CreateTestData(new Uri("urn:uuid:91502FE2-CB4B-4274-A8AD-8B70074132C3", UriKind.Absolute), Guid.Parse("91502fe2-cb4b-4274-a8ad-8b70074132c3"));
+            yield return ConstructorResultExpected.CreateTestData(new Uri("urn:uuid:91502FE2CB4B4274A8AD8B70074132C3", UriKind.Absolute), Guid.Parse("91502fe2-cb4b-4274-a8ad-8b70074132c3"));
+            yield return ConstructorResultExpected.CreateTestData(new Uri("urn:uuid:00000000-0000-0000-0000-000000000000", UriKind.Absolute), Guid.Empty);
+            yield return ConstructorResultExpected.CreateTestData(new Uri("urn:uuid:00000000000000000000000000000000", UriKind.Absolute), Guid.Empty);
+            yield return ConstructorResultExpected.CreateTestData(new Uri("file://servicenowdiag479.file.core.windows.net/testazureshare", UriKind.Absolute), new Uri("file://servicenowdiag479.file.core.windows.net/testazureshare", UriKind.Absolute));
+            yield return ConstructorResultExpected.CreateTestData(new Uri("file://desktop-10538/Users/jlynn/ANWR", UriKind.Absolute), new Uri("file://desktop-10538/Users/jlynn/ANWR", UriKind.Absolute));
+            yield return ConstructorResultExpected.CreateTestData(new Uri("file://SERVICENOWDIAG479.FILE.CORE.WINDOWS.NET/TESTAZURESHARE", UriKind.Absolute), new Uri("file://servicenowdiag479.file.core.windows.net/TESTAZURESHARE", UriKind.Absolute));
+            yield return ConstructorResultExpected.CreateTestData(new Uri("file://DESKTOP-10538/USERS/JLYNN/ANWR", UriKind.Absolute), new Uri("file://desktop-10538/USERS/JLYNN/ANWR", UriKind.Absolute));
+            yield return ConstructorResultExpected.CreateTestData(new Uri("file://servicenowdiag479.file.core.windows.net/testazureshare/", UriKind.Absolute), new Uri("file://servicenowdiag479.file.core.windows.net/testazureshare", UriKind.Absolute));
+            yield return ConstructorResultExpected.CreateTestData(new Uri("file://desktop-10538/Users/jlynn/ANWR/", UriKind.Absolute), new Uri("file://desktop-10538/Users/jlynn/ANWR", UriKind.Absolute));
+            yield return ConstructorResultExpected.CreateTestData(new Uri("file://SERVICENOWDIAG479.FILE.CORE.WINDOWS.NET/TESTAZURESHARE/", UriKind.Absolute), new Uri("file://servicenowdiag479.file.core.windows.net/TESTAZURESHARE", UriKind.Absolute));
+            yield return ConstructorResultExpected.CreateTestData(new Uri("file://DESKTOP-10538/USERS/JLYNN/ANWR/", UriKind.Absolute), new Uri("file://desktop-10538/USERS/JLYNN/ANWR", UriKind.Absolute));
+            yield return ConstructorResultExpected.CreateTestData(new Uri("file://servicenowdiag479.file.core.windows.net/testazureshare?", UriKind.Absolute), new Uri("file://servicenowdiag479.file.core.windows.net/testazureshare", UriKind.Absolute));
+            yield return ConstructorResultExpected.CreateTestData(new Uri("file://desktop-10538/Users/jlynn/ANWR?", UriKind.Absolute), new Uri("file://desktop-10538/Users/jlynn/ANWR", UriKind.Absolute));
+            yield return ConstructorResultExpected.CreateTestData(new Uri("file://SERVICENOWDIAG479.FILE.CORE.WINDOWS.NET/TESTAZURESHARE?", UriKind.Absolute), new Uri("file://servicenowdiag479.file.core.windows.net/TESTAZURESHARE", UriKind.Absolute));
+            yield return ConstructorResultExpected.CreateTestData(new Uri("file://DESKTOP-10538/USERS/JLYNN/ANWR?", UriKind.Absolute), new Uri("file://desktop-10538/USERS/JLYNN/ANWR", UriKind.Absolute));
+            yield return ConstructorResultExpected.CreateTestData(new Uri("file://servicenowdiag479.file.core.windows.net/testazureshare/?", UriKind.Absolute), new Uri("file://servicenowdiag479.file.core.windows.net/testazureshare", UriKind.Absolute));
+            yield return ConstructorResultExpected.CreateTestData(new Uri("file://desktop-10538/Users/jlynn/ANWR/?", UriKind.Absolute), new Uri("file://desktop-10538/Users/jlynn/ANWR", UriKind.Absolute));
+            yield return ConstructorResultExpected.CreateTestData(new Uri("file://SERVICENOWDIAG479.FILE.CORE.WINDOWS.NET/TESTAZURESHARE/?", UriKind.Absolute), new Uri("file://servicenowdiag479.file.core.windows.net/TESTAZURESHARE", UriKind.Absolute));
+            yield return ConstructorResultExpected.CreateTestData(new Uri("file://DESKTOP-10538/USERS/JLYNN/ANWR/?", UriKind.Absolute), new Uri("file://desktop-10538/USERS/JLYNN/ANWR", UriKind.Absolute));
+            yield return ConstructorResultExpected.CreateTestData(new Uri("file://servicenowdiag479.file.core.windows.net/testazureshare#", UriKind.Absolute), new Uri("file://servicenowdiag479.file.core.windows.net/testazureshare", UriKind.Absolute));
+            yield return ConstructorResultExpected.CreateTestData(new Uri("file://desktop-10538/Users/jlynn/ANWR#", UriKind.Absolute), new Uri("file://desktop-10538/Users/jlynn/ANWR", UriKind.Absolute));
+            yield return ConstructorResultExpected.CreateTestData(new Uri("file://SERVICENOWDIAG479.FILE.CORE.WINDOWS.NET/TESTAZURESHARE#", UriKind.Absolute), new Uri("file://servicenowdiag479.file.core.windows.net/TESTAZURESHARE", UriKind.Absolute));
+            yield return ConstructorResultExpected.CreateTestData(new Uri("file://DESKTOP-10538/USERS/JLYNN/ANWR#", UriKind.Absolute), new Uri("file://desktop-10538/USERS/JLYNN/ANWR", UriKind.Absolute));
+            yield return ConstructorResultExpected.CreateTestData(new Uri("file://servicenowdiag479.file.core.windows.net/testazureshare/#", UriKind.Absolute), new Uri("file://servicenowdiag479.file.core.windows.net/testazureshare", UriKind.Absolute));
+            yield return ConstructorResultExpected.CreateTestData(new Uri("file://desktop-10538/Users/jlynn/ANWR/#", UriKind.Absolute), new Uri("file://desktop-10538/Users/jlynn/ANWR", UriKind.Absolute));
+            yield return ConstructorResultExpected.CreateTestData(new Uri("file://SERVICENOWDIAG479.FILE.CORE.WINDOWS.NET/TESTAZURESHARE/#", UriKind.Absolute), new Uri("file://servicenowdiag479.file.core.windows.net/TESTAZURESHARE", UriKind.Absolute));
+            yield return ConstructorResultExpected.CreateTestData(new Uri("file://DESKTOP-10538/USERS/JLYNN/ANWR/#", UriKind.Absolute), new Uri("file://desktop-10538/USERS/JLYNN/ANWR", UriKind.Absolute));
+            yield return ConstructorResultExpected.CreateTestData(new Uri("file://servicenowdiag479.file.core.windows.net/testazureshare?#", UriKind.Absolute), new Uri("file://servicenowdiag479.file.core.windows.net/testazureshare", UriKind.Absolute));
+            yield return ConstructorResultExpected.CreateTestData(new Uri("file://desktop-10538/Users/jlynn/ANWR?#", UriKind.Absolute), new Uri("file://desktop-10538/Users/jlynn/ANWR", UriKind.Absolute));
+            yield return ConstructorResultExpected.CreateTestData(new Uri("file://SERVICENOWDIAG479.FILE.CORE.WINDOWS.NET/TESTAZURESHARE?#", UriKind.Absolute), new Uri("file://servicenowdiag479.file.core.windows.net/TESTAZURESHARE", UriKind.Absolute));
+            yield return ConstructorResultExpected.CreateTestData(new Uri("file://DESKTOP-10538/USERS/JLYNN/ANWR?#", UriKind.Absolute), new Uri("file://desktop-10538/USERS/JLYNN/ANWR", UriKind.Absolute));
+            yield return ConstructorResultExpected.CreateTestData(new Uri("file://servicenowdiag479.file.core.windows.net/testazureshare/?#", UriKind.Absolute), new Uri("file://servicenowdiag479.file.core.windows.net/testazureshare", UriKind.Absolute));
+            yield return ConstructorResultExpected.CreateTestData(new Uri("file://desktop-10538/Users/jlynn/ANWR/?#", UriKind.Absolute), new Uri("file://desktop-10538/Users/jlynn/ANWR", UriKind.Absolute));
+            yield return ConstructorResultExpected.CreateTestData(new Uri("file://SERVICENOWDIAG479.FILE.CORE.WINDOWS.NET/TESTAZURESHARE/?", UriKind.Absolute), new Uri("file://servicenowdiag479.file.core.windows.net/TESTAZURESHARE", UriKind.Absolute));
+            yield return ConstructorResultExpected.CreateTestData(new Uri("file://DESKTOP-10538/USERS/JLYNN/ANWR/?#", UriKind.Absolute), new Uri("file://desktop-10538/USERS/JLYNN/ANWR", UriKind.Absolute));
+            yield return ConstructorResultExpected.CreateArgumentOutOfRangeExceptionTestData(new Uri("file://servicenowdiag479.file.core.windows.net", UriKind.Absolute));
+            yield return ConstructorResultExpected.CreateArgumentOutOfRangeExceptionTestData(new Uri("file://desktop-10538", UriKind.Absolute));
+            yield return ConstructorResultExpected.CreateArgumentOutOfRangeExceptionTestData(new Uri("file://servicenowdiag479.file.core.windows.net/", UriKind.Absolute));
+            yield return ConstructorResultExpected.CreateArgumentOutOfRangeExceptionTestData(new Uri("file://desktop-10538/", UriKind.Absolute));
+            yield return ConstructorResultExpected.CreateArgumentOutOfRangeExceptionTestData(new Uri("file:///testazureshare", UriKind.Absolute));
+            yield return ConstructorResultExpected.CreateArgumentOutOfRangeExceptionTestData(new Uri("file:///Users/jlynn/ANWR", UriKind.Absolute));
+            yield return ConstructorResultExpected.CreateArgumentOutOfRangeExceptionTestData(new Uri("http://servicenowdiag479.file.core.windows.net/testazureshare", UriKind.Absolute));
+            yield return ConstructorResultExpected.CreateArgumentOutOfRangeExceptionTestData(new Uri("http://desktop-10538/Users/jlynn/ANWR", UriKind.Absolute));
+            yield return ConstructorResultExpected.CreateArgumentOutOfRangeExceptionTestData(new Uri("file:///servicenowdiag479.file.core.windows.net/testazureshare", UriKind.Absolute));
+            yield return ConstructorResultExpected.CreateArgumentOutOfRangeExceptionTestData(new Uri("file:///desktop-10538/Users/jlynn/ANWR", UriKind.Absolute));
+        }
+
+        [DataTestMethod, Priority(0)]
+        [DynamicData(nameof(GetConstructorUriTestData), DynamicDataSourceType.Method)]
+        public void ConstructorUriTestMethod(Uri uri, ConstructorResultExpected expected)
+        {
+            if (expected.IsArgumentOutOfRangeException)
+                Assert.ThrowsException<ArgumentOutOfRangeException>(() => new VolumeIdentifier(uri));
+            else
+            {
+                VolumeIdentifier volumeIdentifier = new(uri);
+                Assert.AreEqual(expected.IsEmpty, volumeIdentifier.IsEmpty());
+                Assert.IsNotNull(volumeIdentifier.Location);
+                Assert.AreEqual(expected.Location.ToString(), volumeIdentifier.Location.ToString());
+                Assert.AreEqual(expected.Location.ToString(), volumeIdentifier.ToString());
+                Assert.AreEqual(expected.SerialNumber, volumeIdentifier.SerialNumber);
+                Assert.AreEqual(expected.UUID, volumeIdentifier.UUID);
+            }
+        }
+
+        public static IEnumerable<object[]> GetParseTestData()
+        {
+            yield return ConstructorResultExpected.CreateEmptyTestData((string)null);
+            yield return ConstructorResultExpected.CreateEmptyTestData("");
+            yield return ConstructorResultExpected.CreateTestData("94F6-22A5", 0x094f622a5u);
+            yield return ConstructorResultExpected.CreateTestData("94F622A5", 0x094f622a5u);
+            yield return ConstructorResultExpected.CreateTestData("94f6-22a5", 0x094f622a5u);
+            yield return ConstructorResultExpected.CreateTestData("94f622a5", 0x094f622a5u);
+            yield return ConstructorResultExpected.CreateTestData("ffffffff", 0xffffffffu);
+            yield return ConstructorResultExpected.CreateTestData("ffff-ffff", 0xffffffffu);
+            yield return ConstructorResultExpected.CreateTestData("FFFF-FFFF", 0xffffffffu);
+            yield return ConstructorResultExpected.CreateTestData("FFFFFFFF", 0xffffffffu);
+            yield return ConstructorResultExpected.CreateTestData("91502fe2-cb4b-4274-a8ad-8b70074132c3", Guid.Parse("91502fe2-cb4b-4274-a8ad-8b70074132c3"));
+            yield return ConstructorResultExpected.CreateTestData("91502fe2cb4b4274a8ad8b70074132c3", Guid.Parse("91502fe2-cb4b-4274-a8ad-8b70074132c3"));
+            yield return ConstructorResultExpected.CreateTestData("91502FE2-CB4B-4274-A8AD-8B70074132C3", Guid.Parse("91502fe2-cb4b-4274-a8ad-8b70074132c3"));
+            yield return ConstructorResultExpected.CreateTestData("91502FE2CB4B4274A8AD8B70074132C3", Guid.Parse("91502fe2-cb4b-4274-a8ad-8b70074132c3"));
+            yield return ConstructorResultExpected.CreateTestData("00000000-0000-0000-0000-000000000000", Guid.Empty);
+            yield return ConstructorResultExpected.CreateTestData("00000000000000000000000000000000", Guid.Empty);
+            yield return ConstructorResultExpected.CreateTestData("urn:volume:id:94F6-22A5", 0x094f622a5u);
+            yield return ConstructorResultExpected.CreateTestData("urn:volume:id:94F622A5", 0x094f622a5u);
+            yield return ConstructorResultExpected.CreateTestData("urn:volume:id:94f6-22a5", 0x094f622a5u);
+            yield return ConstructorResultExpected.CreateTestData("urn:volume:id:94f622a5", 0x094f622a5u);
+            yield return ConstructorResultExpected.CreateTestData("urn:volume:id:ffffffff", 0xffffffffu);
+            yield return ConstructorResultExpected.CreateTestData("urn:volume:id:ffff-ffff", 0xffffffffu);
+            yield return ConstructorResultExpected.CreateTestData("urn:volume:id:FFFF-FFFF", 0xffffffffu);
+            yield return ConstructorResultExpected.CreateTestData("urn:volume:id:FFFFFFFF", 0xffffffffu);
+            yield return ConstructorResultExpected.CreateTestData("urn:uuid:91502fe2-cb4b-4274-a8ad-8b70074132c3", Guid.Parse("91502fe2-cb4b-4274-a8ad-8b70074132c3"));
+            yield return ConstructorResultExpected.CreateTestData("urn:uuid:91502fe2cb4b4274a8ad8b70074132c3", Guid.Parse("91502fe2-cb4b-4274-a8ad-8b70074132c3"));
+            yield return ConstructorResultExpected.CreateTestData("urn:uuid:91502FE2-CB4B-4274-A8AD-8B70074132C3", Guid.Parse("91502fe2-cb4b-4274-a8ad-8b70074132c3"));
+            yield return ConstructorResultExpected.CreateTestData("urn:uuid:91502FE2CB4B4274A8AD8B70074132C3", Guid.Parse("91502fe2-cb4b-4274-a8ad-8b70074132c3"));
+            yield return ConstructorResultExpected.CreateTestData("urn:uuid:00000000-0000-0000-0000-000000000000", Guid.Empty);
+            yield return ConstructorResultExpected.CreateTestData("urn:uuid:00000000000000000000000000000000", Guid.Empty);
+            yield return ConstructorResultExpected.CreateTestData("file://servicenowdiag479.file.core.windows.net/testazureshare", new Uri("file://servicenowdiag479.file.core.windows.net/testazureshare", UriKind.Absolute));
+            yield return ConstructorResultExpected.CreateTestData("file://desktop-10538/Users/jlynn/ANWR", new Uri("file://desktop-10538/Users/jlynn/ANWR", UriKind.Absolute));
+            yield return ConstructorResultExpected.CreateTestData("file://SERVICENOWDIAG479.FILE.CORE.WINDOWS.NET/TESTAZURESHARE", new Uri("file://servicenowdiag479.file.core.windows.net/TESTAZURESHARE", UriKind.Absolute));
+            yield return ConstructorResultExpected.CreateTestData("file://DESKTOP-10538/USERS/JLYNN/ANWR", new Uri("file://desktop-10538/USERS/JLYNN/ANWR", UriKind.Absolute));
+            yield return ConstructorResultExpected.CreateTestData("file://servicenowdiag479.file.core.windows.net/testazureshare/", new Uri("file://servicenowdiag479.file.core.windows.net/testazureshare", UriKind.Absolute));
+            yield return ConstructorResultExpected.CreateTestData("file://desktop-10538/Users/jlynn/ANWR/", new Uri("file://desktop-10538/Users/jlynn/ANWR", UriKind.Absolute));
+            yield return ConstructorResultExpected.CreateTestData("file://SERVICENOWDIAG479.FILE.CORE.WINDOWS.NET/TESTAZURESHARE/", new Uri("file://servicenowdiag479.file.core.windows.net/TESTAZURESHARE", UriKind.Absolute));
+            yield return ConstructorResultExpected.CreateTestData("file://DESKTOP-10538/USERS/JLYNN/ANWR/", new Uri("file://desktop-10538/USERS/JLYNN/ANWR", UriKind.Absolute));
+            yield return ConstructorResultExpected.CreateTestData("file://servicenowdiag479.file.core.windows.net/testazureshare?", new Uri("file://servicenowdiag479.file.core.windows.net/testazureshare", UriKind.Absolute));
+            yield return ConstructorResultExpected.CreateTestData("file://desktop-10538/Users/jlynn/ANWR?", new Uri("file://desktop-10538/Users/jlynn/ANWR", UriKind.Absolute));
+            yield return ConstructorResultExpected.CreateTestData("file://SERVICENOWDIAG479.FILE.CORE.WINDOWS.NET/TESTAZURESHARE?", new Uri("file://servicenowdiag479.file.core.windows.net/TESTAZURESHARE", UriKind.Absolute));
+            yield return ConstructorResultExpected.CreateTestData("file://DESKTOP-10538/USERS/JLYNN/ANWR?", new Uri("file://desktop-10538/USERS/JLYNN/ANWR", UriKind.Absolute));
+            yield return ConstructorResultExpected.CreateTestData("file://servicenowdiag479.file.core.windows.net/testazureshare/?", new Uri("file://servicenowdiag479.file.core.windows.net/testazureshare", UriKind.Absolute));
+            yield return ConstructorResultExpected.CreateTestData("file://desktop-10538/Users/jlynn/ANWR/?", new Uri("file://desktop-10538/Users/jlynn/ANWR", UriKind.Absolute));
+            yield return ConstructorResultExpected.CreateTestData("file://SERVICENOWDIAG479.FILE.CORE.WINDOWS.NET/TESTAZURESHARE/?", new Uri("file://servicenowdiag479.file.core.windows.net/TESTAZURESHARE", UriKind.Absolute));
+            yield return ConstructorResultExpected.CreateTestData("file://DESKTOP-10538/USERS/JLYNN/ANWR/?", new Uri("file://desktop-10538/USERS/JLYNN/ANWR", UriKind.Absolute));
+            yield return ConstructorResultExpected.CreateTestData("file://servicenowdiag479.file.core.windows.net/testazureshare#", new Uri("file://servicenowdiag479.file.core.windows.net/testazureshare", UriKind.Absolute));
+            yield return ConstructorResultExpected.CreateTestData("file://desktop-10538/Users/jlynn/ANWR#", new Uri("file://desktop-10538/Users/jlynn/ANWR", UriKind.Absolute));
+            yield return ConstructorResultExpected.CreateTestData("file://SERVICENOWDIAG479.FILE.CORE.WINDOWS.NET/TESTAZURESHARE#", new Uri("file://servicenowdiag479.file.core.windows.net/TESTAZURESHARE", UriKind.Absolute));
+            yield return ConstructorResultExpected.CreateTestData("file://DESKTOP-10538/USERS/JLYNN/ANWR#", new Uri("file://desktop-10538/USERS/JLYNN/ANWR", UriKind.Absolute));
+            yield return ConstructorResultExpected.CreateTestData("file://servicenowdiag479.file.core.windows.net/testazureshare/#", new Uri("file://servicenowdiag479.file.core.windows.net/testazureshare", UriKind.Absolute));
+            yield return ConstructorResultExpected.CreateTestData("file://desktop-10538/Users/jlynn/ANWR/#", new Uri("file://desktop-10538/Users/jlynn/ANWR", UriKind.Absolute));
+            yield return ConstructorResultExpected.CreateTestData("file://SERVICENOWDIAG479.FILE.CORE.WINDOWS.NET/TESTAZURESHARE/#", new Uri("file://servicenowdiag479.file.core.windows.net/TESTAZURESHARE", UriKind.Absolute));
+            yield return ConstructorResultExpected.CreateTestData("file://DESKTOP-10538/USERS/JLYNN/ANWR/#", new Uri("file://desktop-10538/USERS/JLYNN/ANWR", UriKind.Absolute));
+            yield return ConstructorResultExpected.CreateTestData("file://servicenowdiag479.file.core.windows.net/testazureshare?#", new Uri("file://servicenowdiag479.file.core.windows.net/testazureshare", UriKind.Absolute));
+            yield return ConstructorResultExpected.CreateTestData("file://desktop-10538/Users/jlynn/ANWR?#", new Uri("file://desktop-10538/Users/jlynn/ANWR", UriKind.Absolute));
+            yield return ConstructorResultExpected.CreateTestData("file://SERVICENOWDIAG479.FILE.CORE.WINDOWS.NET/TESTAZURESHARE?#", new Uri("file://servicenowdiag479.file.core.windows.net/TESTAZURESHARE", UriKind.Absolute));
+            yield return ConstructorResultExpected.CreateTestData("file://DESKTOP-10538/USERS/JLYNN/ANWR?#", new Uri("file://desktop-10538/USERS/JLYNN/ANWR", UriKind.Absolute));
+            yield return ConstructorResultExpected.CreateTestData("file://servicenowdiag479.file.core.windows.net/testazureshare/?#", new Uri("file://servicenowdiag479.file.core.windows.net/testazureshare", UriKind.Absolute));
+            yield return ConstructorResultExpected.CreateTestData("file://desktop-10538/Users/jlynn/ANWR/?#", new Uri("file://desktop-10538/Users/jlynn/ANWR", UriKind.Absolute));
+            yield return ConstructorResultExpected.CreateTestData("file://SERVICENOWDIAG479.FILE.CORE.WINDOWS.NET/TESTAZURESHARE/?", new Uri("file://servicenowdiag479.file.core.windows.net/TESTAZURESHARE", UriKind.Absolute));
+            yield return ConstructorResultExpected.CreateTestData("file://DESKTOP-10538/USERS/JLYNN/ANWR/?#", new Uri("file://desktop-10538/USERS/JLYNN/ANWR", UriKind.Absolute));
+            yield return ConstructorResultExpected.CreateTestData(@"\\servicenowdiag479.file.core.windows.net\testazureshare", new Uri("file://servicenowdiag479.file.core.windows.net/testazureshare", UriKind.Absolute));
+            yield return ConstructorResultExpected.CreateTestData(@"\\desktop-10538\Users\jlynn\ANWR", new Uri("file://desktop-10538/Users/jlynn/ANWR", UriKind.Absolute));
+            yield return ConstructorResultExpected.CreateTestData(@"\\SERVICENOWDIAG479.FILE.CORE.WINDOWS.NET\TESTAZURESHARE", new Uri("file://servicenowdiag479.file.core.windows.net/TESTAZURESHARE", UriKind.Absolute));
+            yield return ConstructorResultExpected.CreateTestData(@"\\DESKTOP-10538\USERS\JLYNN\ANWR", new Uri("file://desktop-10538/USERS/JLYNN/ANWR", UriKind.Absolute));
+            yield return ConstructorResultExpected.CreateTestData(@"\\servicenowdiag479.file.core.windows.net\testazureshare\", new Uri("file://servicenowdiag479.file.core.windows.net/testazureshare", UriKind.Absolute));
+            yield return ConstructorResultExpected.CreateTestData(@"\\desktop-10538\Users\jlynn\ANWR\", new Uri("file://desktop-10538/Users/jlynn/ANWR", UriKind.Absolute));
+            yield return ConstructorResultExpected.CreateTestData(@"\\SERVICENOWDIAG479.FILE.CORE.WINDOWS.NET\TESTAZURESHARE\", new Uri("file://servicenowdiag479.file.core.windows.net/TESTAZURESHARE", UriKind.Absolute));
+            yield return ConstructorResultExpected.CreateTestData(@"\\DESKTOP-10538\USERS\JLYNN\ANWR\", new Uri("file://desktop-10538/USERS/JLYNN/ANWR", UriKind.Absolute));
+            yield return ConstructorResultExpected.CreateTestData("//servicenowdiag479.file.core.windows.net/testazureshare", new Uri("file://servicenowdiag479.file.core.windows.net/testazureshare", UriKind.Absolute));
+            yield return ConstructorResultExpected.CreateTestData("//desktop-10538/Users/jlynn/ANWR", new Uri("file://desktop-10538/Users/jlynn/ANWR", UriKind.Absolute));
+            yield return ConstructorResultExpected.CreateTestData("//SERVICENOWDIAG479.FILE.CORE.WINDOWS.NET/TESTAZURESHARE", new Uri("file://servicenowdiag479.file.core.windows.net/TESTAZURESHARE", UriKind.Absolute));
+            yield return ConstructorResultExpected.CreateTestData("//DESKTOP-10538/USERS/JLYNN/ANWR", new Uri("file://desktop-10538/USERS/JLYNN/ANWR", UriKind.Absolute));
+            yield return ConstructorResultExpected.CreateTestData("//servicenowdiag479.file.core.windows.net/testazureshare/", new Uri("file://servicenowdiag479.file.core.windows.net/testazureshare", UriKind.Absolute));
+            yield return ConstructorResultExpected.CreateTestData("//desktop-10538/Users/jlynn/ANWR/", new Uri("file://desktop-10538/Users/jlynn/ANWR", UriKind.Absolute));
+            yield return ConstructorResultExpected.CreateTestData("//SERVICENOWDIAG479.FILE.CORE.WINDOWS.NET/TESTAZURESHARE/", new Uri("file://servicenowdiag479.file.core.windows.net/TESTAZURESHARE", UriKind.Absolute));
+            yield return ConstructorResultExpected.CreateTestData("//DESKTOP-10538/USERS/JLYNN/ANWR/", new Uri("file://desktop-10538/USERS/JLYNN/ANWR", UriKind.Absolute));
+            yield return ConstructorResultExpected.CreateArgumentOutOfRangeExceptionTestData("file://servicenowdiag479.file.core.windows.net");
+            yield return ConstructorResultExpected.CreateArgumentOutOfRangeExceptionTestData("file://desktop-10538");
+            yield return ConstructorResultExpected.CreateArgumentOutOfRangeExceptionTestData("file://servicenowdiag479.file.core.windows.net/");
+            yield return ConstructorResultExpected.CreateArgumentOutOfRangeExceptionTestData("file://desktop-10538/");
+            yield return ConstructorResultExpected.CreateArgumentOutOfRangeExceptionTestData("file:///testazureshare");
+            yield return ConstructorResultExpected.CreateArgumentOutOfRangeExceptionTestData("file:///Users/jlynn/ANWR");
+            yield return ConstructorResultExpected.CreateArgumentOutOfRangeExceptionTestData("http://servicenowdiag479.file.core.windows.net/testazureshare");
+            yield return ConstructorResultExpected.CreateArgumentOutOfRangeExceptionTestData("http://desktop-10538/Users/jlynn/ANWR");
+            yield return ConstructorResultExpected.CreateArgumentOutOfRangeExceptionTestData("/servicenowdiag479.file.core.windows.net/testazureshare");
+            yield return ConstructorResultExpected.CreateArgumentOutOfRangeExceptionTestData("/desktop-10538/Users/jlynn/ANWR");
+            yield return ConstructorResultExpected.CreateArgumentOutOfRangeExceptionTestData(@"\\servicenowdiag479.file.core.windows.net");
+            yield return ConstructorResultExpected.CreateArgumentOutOfRangeExceptionTestData(@"\\desktop-10538");
+            yield return ConstructorResultExpected.CreateArgumentOutOfRangeExceptionTestData(@"\\servicenowdiag479.file.core.windows.net\");
+            yield return ConstructorResultExpected.CreateArgumentOutOfRangeExceptionTestData(@"\\desktop-10538\");
+        }
+
+        [DataTestMethod, Priority(1)]
+        [DynamicData(nameof(GetParseTestData), DynamicDataSourceType.Method)]
+        public void ParseTestMethod(string text, ConstructorResultExpected expected)
+        {
+            if (expected.IsArgumentOutOfRangeException)
+                Assert.ThrowsException<ArgumentOutOfRangeException>(() => VolumeIdentifier.Parse(text));
+            else
+            {
+                VolumeIdentifier volumeIdentifier = VolumeIdentifier.Parse(text);
+                Assert.AreEqual(expected.IsEmpty, volumeIdentifier.IsEmpty());
+                Assert.IsNotNull(volumeIdentifier.Location);
+                Assert.AreEqual(expected.Location.ToString(), volumeIdentifier.Location.ToString());
+                Assert.AreEqual(expected.Location.ToString(), volumeIdentifier.ToString());
+                Assert.AreEqual(expected.SerialNumber, volumeIdentifier.SerialNumber);
+                Assert.AreEqual(expected.UUID, volumeIdentifier.UUID);
+            }
+        }
+
+        [DataTestMethod, Priority(1)]
+        [DynamicData(nameof(GetParseTestData), DynamicDataSourceType.Method)]
+        public void TryParseTestMethod(string text, ConstructorResultExpected expected)
+        {
+            bool result = VolumeIdentifier.TryParse(text, out VolumeIdentifier volumeIdentifier);
+            Assert.AreNotEqual(expected.IsArgumentOutOfRangeException, result);
+            if (!expected.IsArgumentOutOfRangeException)
+            {
+                Assert.AreEqual(expected.IsEmpty, volumeIdentifier.IsEmpty());
+                Assert.IsNotNull(volumeIdentifier.Location);
+                Assert.AreEqual(expected.Location.ToString(), volumeIdentifier.Location.ToString());
+                Assert.AreEqual(expected.Location.ToString(), volumeIdentifier.ToString());
+                Assert.AreEqual(expected.SerialNumber, volumeIdentifier.SerialNumber);
+                Assert.AreEqual(expected.UUID, volumeIdentifier.UUID);
+            }
+        }
+
+        // TODO: Tests for equality where case is ignored
 
         public record ConstructorResultExpected
         {
@@ -49,258 +319,5 @@ namespace FsInfoCat.UnitTests
             internal static object[] CreateEmptyTestData(Uri uri) => new object[] { uri, new ConstructorResultExpected { IsEmpty = true, Location = new("", UriKind.Relative) } };
             internal static object[] CreateArgumentOutOfRangeExceptionTestData(Uri uri) => new object[] { uri, new ConstructorResultExpected { IsArgumentOutOfRangeException = true } };
         }
-
-        public static IEnumerable<object[]> GetConstructorUriTestData()
-        {
-            yield return ConstructorResultExpected.CreateEmptyTestData((Uri)null);
-            yield return ConstructorResultExpected.CreateEmptyTestData(new Uri("", UriKind.Relative));
-            yield return ConstructorResultExpected.CreateTestData(new Uri("urn:volume:id:094F6-22A5", UriKind.Absolute), 0x094f622a5u);
-            yield return ConstructorResultExpected.CreateTestData(new Uri("urn:volume:id:094F622A5", UriKind.Absolute), 0x094f622a5u);
-            yield return ConstructorResultExpected.CreateTestData(new Uri("urn:volume:id:094f6-22a5", UriKind.Absolute), 0x094f622a5u);
-            yield return ConstructorResultExpected.CreateTestData(new Uri("urn:volume:id:094f622a5", UriKind.Absolute), 0x094f622a5u);
-            yield return ConstructorResultExpected.CreateTestData(new Uri("urn:volume:id:ffffffff", UriKind.Absolute), 0xffffffffu);
-            yield return ConstructorResultExpected.CreateTestData(new Uri("urn:volume:id:ffff-ffff", UriKind.Absolute), 0xffffffffu);
-            yield return ConstructorResultExpected.CreateTestData(new Uri("urn:volume:id:FFFF-FFFF", UriKind.Absolute), 0xffffffffu);
-            yield return ConstructorResultExpected.CreateTestData(new Uri("urn:volume:id:FFFFFFFF", UriKind.Absolute), 0xffffffffu);
-            yield return ConstructorResultExpected.CreateTestData(new Uri("urn:uuid:91502fe2-cb4b-4274-a8ad-8b70074132c3", UriKind.Absolute), Guid.Parse("91502fe2-cb4b-4274-a8ad-8b70074132c3"));
-            yield return ConstructorResultExpected.CreateTestData(new Uri("urn:uuid:91502fe2cb4b4274a8ad8b70074132c3", UriKind.Absolute), Guid.Parse("91502fe2-cb4b-4274-a8ad-8b70074132c3"));
-            yield return ConstructorResultExpected.CreateTestData(new Uri("urn:uuid:91502FE2-CB4B-4274-A8AD-8B70074132C3", UriKind.Absolute), Guid.Parse("91502fe2-cb4b-4274-a8ad-8b70074132c3"));
-            yield return ConstructorResultExpected.CreateTestData(new Uri("urn:uuid:91502FE2CB4B4274A8AD8B70074132C3", UriKind.Absolute), Guid.Parse("91502fe2-cb4b-4274-a8ad-8b70074132c3"));
-            yield return ConstructorResultExpected.CreateTestData(new Uri("urn:uuid:00000000-0000-0000-0000-000000000000", UriKind.Absolute), Guid.Empty);
-            yield return ConstructorResultExpected.CreateTestData(new Uri("urn:uuid:00000000000000000000000000000000", UriKind.Absolute), Guid.Empty);
-            yield return ConstructorResultExpected.CreateTestData(new Uri("file://servicenowdiag479.file.core.windows.net/testazureshare", UriKind.Absolute), new Uri("file://servicenowdiag479.file.core.windows.net/testazureshare", UriKind.Absolute));
-            yield return ConstructorResultExpected.CreateTestData(new Uri("file://desktop-10538/Users/jlynn/ANWR", UriKind.Absolute), new Uri("file://desktop-10538/Users/jlynn/ANWR", UriKind.Absolute));
-            yield return ConstructorResultExpected.CreateTestData(new Uri("file://SERVICENOWDIAG479.FILE.CORE.WINDOWS.NET/TESTAZURESHARE", UriKind.Absolute), new Uri("file://servicenowdiag479.file.core.windows.net/TESTAZURESHARE", UriKind.Absolute));
-            yield return ConstructorResultExpected.CreateTestData(new Uri("file://DESKTOP-10538/USERS/JLYNN/ANWR", UriKind.Absolute), new Uri("file://desktop-10538/Users/jlynn/ANWR", UriKind.Absolute));
-            yield return ConstructorResultExpected.CreateTestData(new Uri("file://servicenowdiag479.file.core.windows.net/testazureshare/", UriKind.Absolute), new Uri("file://servicenowdiag479.file.core.windows.net/testazureshare", UriKind.Absolute));
-            yield return ConstructorResultExpected.CreateTestData(new Uri("file://desktop-10538/Users/jlynn/ANWR/", UriKind.Absolute), new Uri("file://desktop-10538/Users/jlynn/ANWR", UriKind.Absolute));
-            yield return ConstructorResultExpected.CreateTestData(new Uri("file://SERVICENOWDIAG479.FILE.CORE.WINDOWS.NET/TESTAZURESHARE/", UriKind.Absolute), new Uri("file://servicenowdiag479.file.core.windows.net/TESTAZURESHARE", UriKind.Absolute));
-            yield return ConstructorResultExpected.CreateTestData(new Uri("file://DESKTOP-10538/USERS/JLYNN/ANWR/", UriKind.Absolute), new Uri("file://desktop-10538/Users/jlynn/ANWR", UriKind.Absolute));
-            yield return ConstructorResultExpected.CreateTestData(new Uri("file://servicenowdiag479.file.core.windows.net/testazureshare?", UriKind.Absolute), new Uri("file://servicenowdiag479.file.core.windows.net/testazureshare", UriKind.Absolute));
-            yield return ConstructorResultExpected.CreateTestData(new Uri("file://desktop-10538/Users/jlynn/ANWR?", UriKind.Absolute), new Uri("file://desktop-10538/Users/jlynn/ANWR", UriKind.Absolute));
-            yield return ConstructorResultExpected.CreateTestData(new Uri("file://SERVICENOWDIAG479.FILE.CORE.WINDOWS.NET/TESTAZURESHARE?", UriKind.Absolute), new Uri("file://servicenowdiag479.file.core.windows.net/TESTAZURESHARE", UriKind.Absolute));
-            yield return ConstructorResultExpected.CreateTestData(new Uri("file://DESKTOP-10538/USERS/JLYNN/ANWR?", UriKind.Absolute), new Uri("file://desktop-10538/Users/jlynn/ANWR", UriKind.Absolute));
-            yield return ConstructorResultExpected.CreateTestData(new Uri("file://servicenowdiag479.file.core.windows.net/testazureshare/?", UriKind.Absolute), new Uri("file://servicenowdiag479.file.core.windows.net/testazureshare", UriKind.Absolute));
-            yield return ConstructorResultExpected.CreateTestData(new Uri("file://desktop-10538/Users/jlynn/ANWR/?", UriKind.Absolute), new Uri("file://desktop-10538/Users/jlynn/ANWR", UriKind.Absolute));
-            yield return ConstructorResultExpected.CreateTestData(new Uri("file://SERVICENOWDIAG479.FILE.CORE.WINDOWS.NET/TESTAZURESHARE/?", UriKind.Absolute), new Uri("file://servicenowdiag479.file.core.windows.net/TESTAZURESHARE", UriKind.Absolute));
-            yield return ConstructorResultExpected.CreateTestData(new Uri("file://DESKTOP-10538/USERS/JLYNN/ANWR/?", UriKind.Absolute), new Uri("file://desktop-10538/Users/jlynn/ANWR", UriKind.Absolute));
-            yield return ConstructorResultExpected.CreateTestData(new Uri("file://servicenowdiag479.file.core.windows.net/testazureshare#", UriKind.Absolute), new Uri("file://servicenowdiag479.file.core.windows.net/testazureshare", UriKind.Absolute));
-            yield return ConstructorResultExpected.CreateTestData(new Uri("file://desktop-10538/Users/jlynn/ANWR#", UriKind.Absolute), new Uri("file://desktop-10538/Users/jlynn/ANWR", UriKind.Absolute));
-            yield return ConstructorResultExpected.CreateTestData(new Uri("file://SERVICENOWDIAG479.FILE.CORE.WINDOWS.NET/TESTAZURESHARE#", UriKind.Absolute), new Uri("file://servicenowdiag479.file.core.windows.net/TESTAZURESHARE", UriKind.Absolute));
-            yield return ConstructorResultExpected.CreateTestData(new Uri("file://DESKTOP-10538/USERS/JLYNN/ANWR#", UriKind.Absolute), new Uri("file://desktop-10538/Users/jlynn/ANWR", UriKind.Absolute));
-            yield return ConstructorResultExpected.CreateTestData(new Uri("file://servicenowdiag479.file.core.windows.net/testazureshare/#", UriKind.Absolute), new Uri("file://servicenowdiag479.file.core.windows.net/testazureshare", UriKind.Absolute));
-            yield return ConstructorResultExpected.CreateTestData(new Uri("file://desktop-10538/Users/jlynn/ANWR/#", UriKind.Absolute), new Uri("file://desktop-10538/Users/jlynn/ANWR", UriKind.Absolute));
-            yield return ConstructorResultExpected.CreateTestData(new Uri("file://SERVICENOWDIAG479.FILE.CORE.WINDOWS.NET/TESTAZURESHARE/#", UriKind.Absolute), new Uri("file://servicenowdiag479.file.core.windows.net/TESTAZURESHARE", UriKind.Absolute));
-            yield return ConstructorResultExpected.CreateTestData(new Uri("file://DESKTOP-10538/USERS/JLYNN/ANWR/#", UriKind.Absolute), new Uri("file://desktop-10538/Users/jlynn/ANWR", UriKind.Absolute));
-            yield return ConstructorResultExpected.CreateTestData(new Uri("file://servicenowdiag479.file.core.windows.net/testazureshare?#", UriKind.Absolute), new Uri("file://servicenowdiag479.file.core.windows.net/testazureshare", UriKind.Absolute));
-            yield return ConstructorResultExpected.CreateTestData(new Uri("file://desktop-10538/Users/jlynn/ANWR?#", UriKind.Absolute), new Uri("file://desktop-10538/Users/jlynn/ANWR", UriKind.Absolute));
-            yield return ConstructorResultExpected.CreateTestData(new Uri("file://SERVICENOWDIAG479.FILE.CORE.WINDOWS.NET/TESTAZURESHARE?#", UriKind.Absolute), new Uri("file://servicenowdiag479.file.core.windows.net/TESTAZURESHARE", UriKind.Absolute));
-            yield return ConstructorResultExpected.CreateTestData(new Uri("file://DESKTOP-10538/USERS/JLYNN/ANWR?#", UriKind.Absolute), new Uri("file://desktop-10538/Users/jlynn/ANWR", UriKind.Absolute));
-            yield return ConstructorResultExpected.CreateTestData(new Uri("file://servicenowdiag479.file.core.windows.net/testazureshare/?#", UriKind.Absolute), new Uri("file://servicenowdiag479.file.core.windows.net/testazureshare", UriKind.Absolute));
-            yield return ConstructorResultExpected.CreateTestData(new Uri("file://desktop-10538/Users/jlynn/ANWR/?#", UriKind.Absolute), new Uri("file://desktop-10538/Users/jlynn/ANWR", UriKind.Absolute));
-            yield return ConstructorResultExpected.CreateTestData(new Uri("file://SERVICENOWDIAG479.FILE.CORE.WINDOWS.NET/TESTAZURESHARE/?", UriKind.Absolute), new Uri("file://servicenowdiag479.file.core.windows.net/TESTAZURESHARE", UriKind.Absolute));
-            yield return ConstructorResultExpected.CreateTestData(new Uri("file://DESKTOP-10538/USERS/JLYNN/ANWR/?#", UriKind.Absolute), new Uri("file://desktop-10538/Users/jlynn/ANWR", UriKind.Absolute));
-            yield return ConstructorResultExpected.CreateArgumentOutOfRangeExceptionTestData(new Uri("file://servicenowdiag479.file.core.windows.net", UriKind.Absolute));
-            yield return ConstructorResultExpected.CreateArgumentOutOfRangeExceptionTestData(new Uri("file://desktop-10538", UriKind.Absolute));
-            yield return ConstructorResultExpected.CreateArgumentOutOfRangeExceptionTestData(new Uri("file://servicenowdiag479.file.core.windows.net/", UriKind.Absolute));
-            yield return ConstructorResultExpected.CreateArgumentOutOfRangeExceptionTestData(new Uri("file://desktop-10538/", UriKind.Absolute));
-            yield return ConstructorResultExpected.CreateArgumentOutOfRangeExceptionTestData(new Uri("file:///testazureshare", UriKind.Absolute));
-            yield return ConstructorResultExpected.CreateArgumentOutOfRangeExceptionTestData(new Uri("file:///Users/jlynn/ANWR", UriKind.Absolute));
-            yield return ConstructorResultExpected.CreateArgumentOutOfRangeExceptionTestData(new Uri("http://servicenowdiag479.file.core.windows.net/testazureshare", UriKind.Absolute));
-            yield return ConstructorResultExpected.CreateArgumentOutOfRangeExceptionTestData(new Uri("http://desktop-10538/Users/jlynn/ANWR", UriKind.Absolute));
-            yield return ConstructorResultExpected.CreateArgumentOutOfRangeExceptionTestData(new Uri("file:///servicenowdiag479.file.core.windows.net/testazureshare", UriKind.Absolute));
-            yield return ConstructorResultExpected.CreateArgumentOutOfRangeExceptionTestData(new Uri("file:///desktop-10538/Users/jlynn/ANWR", UriKind.Absolute));
-        }
-
-        [DataTestMethod]
-        [DynamicData(nameof(GetConstructorUriTestData), DynamicDataSourceType.Method)]
-        public void ConstructorUriTestMethod(Uri uri, ConstructorResultExpected expected)
-        {
-            if (expected.IsArgumentOutOfRangeException)
-                Assert.ThrowsException< ArgumentOutOfRangeException>(() => new VolumeIdentifier(uri));
-            else
-            {
-                VolumeIdentifier volumeIdentifier = new(uri);
-                Assert.AreEqual(expected.IsEmpty, volumeIdentifier.IsEmpty());
-                Assert.IsNotNull(volumeIdentifier.Location);
-                Assert.AreEqual(expected.Location.ToString(), volumeIdentifier.ToString());
-                Assert.AreEqual(expected.Location.ToString(), volumeIdentifier.ToString());
-                Assert.AreEqual(expected.SerialNumber, volumeIdentifier.SerialNumber);
-                Assert.AreEqual(expected.UUID, volumeIdentifier.UUID);
-            }
-        }
-
-        public static IEnumerable<object[]> GetConstructorSerialNumberTestData()
-        {
-            yield return ConstructorResultExpected.CreateTestData(0x094f622a5u);
-            yield return ConstructorResultExpected.CreateTestData(uint.MaxValue);
-            yield return ConstructorResultExpected.CreateTestData(uint.MinValue);
-        }
-
-        [DataTestMethod]
-        [DynamicData(nameof(GetConstructorSerialNumberTestData), DynamicDataSourceType.Method)]
-        public void ConstructorSerialNumberTestMethod(uint serialNumber, ConstructorResultExpected expected)
-        {
-            VolumeIdentifier volumeIdentifier = new(serialNumber);
-            Assert.AreEqual(expected.IsEmpty, volumeIdentifier.IsEmpty());
-            Assert.IsNotNull(volumeIdentifier.Location);
-            Assert.AreEqual(expected.Location.ToString(), volumeIdentifier.Location.ToString());
-            Assert.AreEqual(expected.Location.ToString(), volumeIdentifier.ToString());
-            Assert.AreEqual(expected.SerialNumber, volumeIdentifier.SerialNumber);
-            Assert.AreEqual(expected.UUID, volumeIdentifier.UUID);
-        }
-
-        public static IEnumerable<object[]> GetConstructorUuidTestData()
-        {
-            yield return ConstructorResultExpected.CreateTestData(Guid.Parse("91502fe2-cb4b-4274-a8ad-8b70074132c3"));
-            yield return ConstructorResultExpected.CreateTestData(Guid.Parse("ffffffff-ffff-ffff-ffff-ffffffffffff"));
-            yield return ConstructorResultExpected.CreateTestData(Guid.Empty);
-        }
-
-        [DataTestMethod]
-        [DynamicData(nameof(GetConstructorUuidTestData), DynamicDataSourceType.Method)]
-        public void ConstructorUuidTestMethod(Guid uuid, ConstructorResultExpected expected)
-        {
-            VolumeIdentifier volumeIdentifier = new(uuid);
-            Assert.AreEqual(expected.IsEmpty, volumeIdentifier.IsEmpty());
-            Assert.IsNotNull(volumeIdentifier.Location);
-            Assert.AreEqual(expected.Location.ToString(), volumeIdentifier.Location.ToString());
-            Assert.AreEqual(expected.Location.ToString(), volumeIdentifier.ToString());
-            Assert.AreEqual(expected.SerialNumber, volumeIdentifier.SerialNumber);
-            Assert.AreEqual(expected.UUID, volumeIdentifier.UUID);
-        }
-
-        public static IEnumerable<object[]> GetParseTestData()
-        {
-            yield return ConstructorResultExpected.CreateEmptyTestData((string)null);
-            yield return ConstructorResultExpected.CreateEmptyTestData("");
-            yield return ConstructorResultExpected.CreateTestData("094F6-22A5", 0x094f622a5u);
-            yield return ConstructorResultExpected.CreateTestData("094F622A5", 0x094f622a5u);
-            yield return ConstructorResultExpected.CreateTestData("094f6-22a5", 0x094f622a5u);
-            yield return ConstructorResultExpected.CreateTestData("094f622a5", 0x094f622a5u);
-            yield return ConstructorResultExpected.CreateTestData("ffffffff", 0xffffffffu);
-            yield return ConstructorResultExpected.CreateTestData("ffff-ffff", 0xffffffffu);
-            yield return ConstructorResultExpected.CreateTestData("FFFF-FFFF", 0xffffffffu);
-            yield return ConstructorResultExpected.CreateTestData("FFFFFFFF", 0xffffffffu);
-            yield return ConstructorResultExpected.CreateTestData("91502fe2-cb4b-4274-a8ad-8b70074132c3", Guid.Parse("91502fe2-cb4b-4274-a8ad-8b70074132c3"));
-            yield return ConstructorResultExpected.CreateTestData("91502fe2cb4b4274a8ad8b70074132c3", Guid.Parse("91502fe2-cb4b-4274-a8ad-8b70074132c3"));
-            yield return ConstructorResultExpected.CreateTestData("91502FE2-CB4B-4274-A8AD-8B70074132C3", Guid.Parse("91502fe2-cb4b-4274-a8ad-8b70074132c3"));
-            yield return ConstructorResultExpected.CreateTestData("91502FE2CB4B4274A8AD8B70074132C3", Guid.Parse("91502fe2-cb4b-4274-a8ad-8b70074132c3"));
-            yield return ConstructorResultExpected.CreateTestData("00000000-0000-0000-0000-000000000000", Guid.Empty);
-            yield return ConstructorResultExpected.CreateTestData("00000000000000000000000000000000", Guid.Empty);
-            yield return ConstructorResultExpected.CreateTestData("urn:volume:id:094F6-22A5", 0x094f622a5u);
-            yield return ConstructorResultExpected.CreateTestData("urn:volume:id:094F622A5", 0x094f622a5u);
-            yield return ConstructorResultExpected.CreateTestData("urn:volume:id:094f6-22a5", 0x094f622a5u);
-            yield return ConstructorResultExpected.CreateTestData("urn:volume:id:094f622a5", 0x094f622a5u);
-            yield return ConstructorResultExpected.CreateTestData("urn:volume:id:ffffffff", 0xffffffffu);
-            yield return ConstructorResultExpected.CreateTestData("urn:volume:id:ffff-ffff", 0xffffffffu);
-            yield return ConstructorResultExpected.CreateTestData("urn:volume:id:FFFF-FFFF", 0xffffffffu);
-            yield return ConstructorResultExpected.CreateTestData("urn:volume:id:FFFFFFFF", 0xffffffffu);
-            yield return ConstructorResultExpected.CreateTestData("urn:uuid:91502fe2-cb4b-4274-a8ad-8b70074132c3", Guid.Parse("91502fe2-cb4b-4274-a8ad-8b70074132c3"));
-            yield return ConstructorResultExpected.CreateTestData("urn:uuid:91502fe2cb4b4274a8ad8b70074132c3", Guid.Parse("91502fe2-cb4b-4274-a8ad-8b70074132c3"));
-            yield return ConstructorResultExpected.CreateTestData("urn:uuid:91502FE2-CB4B-4274-A8AD-8B70074132C3", Guid.Parse("91502fe2-cb4b-4274-a8ad-8b70074132c3"));
-            yield return ConstructorResultExpected.CreateTestData("urn:uuid:91502FE2CB4B4274A8AD8B70074132C3", Guid.Parse("91502fe2-cb4b-4274-a8ad-8b70074132c3"));
-            yield return ConstructorResultExpected.CreateTestData("urn:uuid:00000000-0000-0000-0000-000000000000", Guid.Empty);
-            yield return ConstructorResultExpected.CreateTestData("urn:uuid:00000000000000000000000000000000", Guid.Empty);
-            yield return ConstructorResultExpected.CreateTestData("file://servicenowdiag479.file.core.windows.net/testazureshare", new Uri("file://servicenowdiag479.file.core.windows.net/testazureshare", UriKind.Absolute));
-            yield return ConstructorResultExpected.CreateTestData("file://desktop-10538/Users/jlynn/ANWR", new Uri("file://desktop-10538/Users/jlynn/ANWR", UriKind.Absolute));
-            yield return ConstructorResultExpected.CreateTestData("file://SERVICENOWDIAG479.FILE.CORE.WINDOWS.NET/TESTAZURESHARE", new Uri("file://servicenowdiag479.file.core.windows.net/TESTAZURESHARE", UriKind.Absolute));
-            yield return ConstructorResultExpected.CreateTestData("file://DESKTOP-10538/USERS/JLYNN/ANWR", new Uri("file://desktop-10538/Users/jlynn/ANWR", UriKind.Absolute));
-            yield return ConstructorResultExpected.CreateTestData("file://servicenowdiag479.file.core.windows.net/testazureshare/", new Uri("file://servicenowdiag479.file.core.windows.net/testazureshare", UriKind.Absolute));
-            yield return ConstructorResultExpected.CreateTestData("file://desktop-10538/Users/jlynn/ANWR/", new Uri("file://desktop-10538/Users/jlynn/ANWR", UriKind.Absolute));
-            yield return ConstructorResultExpected.CreateTestData("file://SERVICENOWDIAG479.FILE.CORE.WINDOWS.NET/TESTAZURESHARE/", new Uri("file://servicenowdiag479.file.core.windows.net/TESTAZURESHARE", UriKind.Absolute));
-            yield return ConstructorResultExpected.CreateTestData("file://DESKTOP-10538/USERS/JLYNN/ANWR/", new Uri("file://desktop-10538/Users/jlynn/ANWR", UriKind.Absolute));
-            yield return ConstructorResultExpected.CreateTestData("file://servicenowdiag479.file.core.windows.net/testazureshare?", new Uri("file://servicenowdiag479.file.core.windows.net/testazureshare", UriKind.Absolute));
-            yield return ConstructorResultExpected.CreateTestData("file://desktop-10538/Users/jlynn/ANWR?", new Uri("file://desktop-10538/Users/jlynn/ANWR", UriKind.Absolute));
-            yield return ConstructorResultExpected.CreateTestData("file://SERVICENOWDIAG479.FILE.CORE.WINDOWS.NET/TESTAZURESHARE?", new Uri("file://servicenowdiag479.file.core.windows.net/TESTAZURESHARE", UriKind.Absolute));
-            yield return ConstructorResultExpected.CreateTestData("file://DESKTOP-10538/USERS/JLYNN/ANWR?", new Uri("file://desktop-10538/Users/jlynn/ANWR", UriKind.Absolute));
-            yield return ConstructorResultExpected.CreateTestData("file://servicenowdiag479.file.core.windows.net/testazureshare/?", new Uri("file://servicenowdiag479.file.core.windows.net/testazureshare", UriKind.Absolute));
-            yield return ConstructorResultExpected.CreateTestData("file://desktop-10538/Users/jlynn/ANWR/?", new Uri("file://desktop-10538/Users/jlynn/ANWR", UriKind.Absolute));
-            yield return ConstructorResultExpected.CreateTestData("file://SERVICENOWDIAG479.FILE.CORE.WINDOWS.NET/TESTAZURESHARE/?", new Uri("file://servicenowdiag479.file.core.windows.net/TESTAZURESHARE", UriKind.Absolute));
-            yield return ConstructorResultExpected.CreateTestData("file://DESKTOP-10538/USERS/JLYNN/ANWR/?", new Uri("file://desktop-10538/Users/jlynn/ANWR", UriKind.Absolute));
-            yield return ConstructorResultExpected.CreateTestData("file://servicenowdiag479.file.core.windows.net/testazureshare#", new Uri("file://servicenowdiag479.file.core.windows.net/testazureshare", UriKind.Absolute));
-            yield return ConstructorResultExpected.CreateTestData("file://desktop-10538/Users/jlynn/ANWR#", new Uri("file://desktop-10538/Users/jlynn/ANWR", UriKind.Absolute));
-            yield return ConstructorResultExpected.CreateTestData("file://SERVICENOWDIAG479.FILE.CORE.WINDOWS.NET/TESTAZURESHARE#", new Uri("file://servicenowdiag479.file.core.windows.net/TESTAZURESHARE", UriKind.Absolute));
-            yield return ConstructorResultExpected.CreateTestData("file://DESKTOP-10538/USERS/JLYNN/ANWR#", new Uri("file://desktop-10538/Users/jlynn/ANWR", UriKind.Absolute));
-            yield return ConstructorResultExpected.CreateTestData("file://servicenowdiag479.file.core.windows.net/testazureshare/#", new Uri("file://servicenowdiag479.file.core.windows.net/testazureshare", UriKind.Absolute));
-            yield return ConstructorResultExpected.CreateTestData("file://desktop-10538/Users/jlynn/ANWR/#", new Uri("file://desktop-10538/Users/jlynn/ANWR", UriKind.Absolute));
-            yield return ConstructorResultExpected.CreateTestData("file://SERVICENOWDIAG479.FILE.CORE.WINDOWS.NET/TESTAZURESHARE/#", new Uri("file://servicenowdiag479.file.core.windows.net/TESTAZURESHARE", UriKind.Absolute));
-            yield return ConstructorResultExpected.CreateTestData("file://DESKTOP-10538/USERS/JLYNN/ANWR/#", new Uri("file://desktop-10538/Users/jlynn/ANWR", UriKind.Absolute));
-            yield return ConstructorResultExpected.CreateTestData("file://servicenowdiag479.file.core.windows.net/testazureshare?#", new Uri("file://servicenowdiag479.file.core.windows.net/testazureshare", UriKind.Absolute));
-            yield return ConstructorResultExpected.CreateTestData("file://desktop-10538/Users/jlynn/ANWR?#", new Uri("file://desktop-10538/Users/jlynn/ANWR", UriKind.Absolute));
-            yield return ConstructorResultExpected.CreateTestData("file://SERVICENOWDIAG479.FILE.CORE.WINDOWS.NET/TESTAZURESHARE?#", new Uri("file://servicenowdiag479.file.core.windows.net/TESTAZURESHARE", UriKind.Absolute));
-            yield return ConstructorResultExpected.CreateTestData("file://DESKTOP-10538/USERS/JLYNN/ANWR?#", new Uri("file://desktop-10538/Users/jlynn/ANWR", UriKind.Absolute));
-            yield return ConstructorResultExpected.CreateTestData("file://servicenowdiag479.file.core.windows.net/testazureshare/?#", new Uri("file://servicenowdiag479.file.core.windows.net/testazureshare", UriKind.Absolute));
-            yield return ConstructorResultExpected.CreateTestData("file://desktop-10538/Users/jlynn/ANWR/?#", new Uri("file://desktop-10538/Users/jlynn/ANWR", UriKind.Absolute));
-            yield return ConstructorResultExpected.CreateTestData("file://SERVICENOWDIAG479.FILE.CORE.WINDOWS.NET/TESTAZURESHARE/?", new Uri("file://servicenowdiag479.file.core.windows.net/TESTAZURESHARE", UriKind.Absolute));
-            yield return ConstructorResultExpected.CreateTestData("file://DESKTOP-10538/USERS/JLYNN/ANWR/?#", new Uri("file://desktop-10538/Users/jlynn/ANWR", UriKind.Absolute));
-            yield return ConstructorResultExpected.CreateTestData(@"\\servicenowdiag479.file.core.windows.net\testazureshare", new Uri("file://servicenowdiag479.file.core.windows.net/testazureshare", UriKind.Absolute));
-            yield return ConstructorResultExpected.CreateTestData(@"\\desktop-10538\Users\jlynn\ANWR", new Uri("file://desktop-10538/Users/jlynn/ANWR", UriKind.Absolute));
-            yield return ConstructorResultExpected.CreateTestData(@"\\SERVICENOWDIAG479.FILE.CORE.WINDOWS.NET\TESTAZURESHARE", new Uri("file://servicenowdiag479.file.core.windows.net/TESTAZURESHARE", UriKind.Absolute));
-            yield return ConstructorResultExpected.CreateTestData(@"\\DESKTOP-10538\USERS\JLYNN\ANWR", new Uri("file://desktop-10538/Users/jlynn/ANWR", UriKind.Absolute));
-            yield return ConstructorResultExpected.CreateTestData(@"\\servicenowdiag479.file.core.windows.net\testazureshare\", new Uri("file://servicenowdiag479.file.core.windows.net/testazureshare", UriKind.Absolute));
-            yield return ConstructorResultExpected.CreateTestData(@"\\desktop-10538\Users\jlynn\ANWR\", new Uri("file://desktop-10538/Users/jlynn/ANWR", UriKind.Absolute));
-            yield return ConstructorResultExpected.CreateTestData(@"\\SERVICENOWDIAG479.FILE.CORE.WINDOWS.NET\TESTAZURESHARE\", new Uri("file://servicenowdiag479.file.core.windows.net/TESTAZURESHARE", UriKind.Absolute));
-            yield return ConstructorResultExpected.CreateTestData(@"\\DESKTOP-10538\USERS\JLYNN\ANWR\", new Uri("file://desktop-10538/Users/jlynn/ANWR", UriKind.Absolute));
-            yield return ConstructorResultExpected.CreateTestData("//servicenowdiag479.file.core.windows.net/testazureshare", new Uri("file://servicenowdiag479.file.core.windows.net/testazureshare", UriKind.Absolute));
-            yield return ConstructorResultExpected.CreateTestData("//desktop-10538/Users/jlynn/ANWR", new Uri("file://desktop-10538/Users/jlynn/ANWR", UriKind.Absolute));
-            yield return ConstructorResultExpected.CreateTestData("//SERVICENOWDIAG479.FILE.CORE.WINDOWS.NET/TESTAZURESHARE", new Uri("file://servicenowdiag479.file.core.windows.net/TESTAZURESHARE", UriKind.Absolute));
-            yield return ConstructorResultExpected.CreateTestData("//DESKTOP-10538/USERS/JLYNN/ANWR", new Uri("file://desktop-10538/Users/jlynn/ANWR", UriKind.Absolute));
-            yield return ConstructorResultExpected.CreateTestData("//servicenowdiag479.file.core.windows.net/testazureshare/", new Uri("file://servicenowdiag479.file.core.windows.net/testazureshare", UriKind.Absolute));
-            yield return ConstructorResultExpected.CreateTestData("//desktop-10538/Users/jlynn/ANWR/", new Uri("file://desktop-10538/Users/jlynn/ANWR", UriKind.Absolute));
-            yield return ConstructorResultExpected.CreateTestData("//SERVICENOWDIAG479.FILE.CORE.WINDOWS.NET/TESTAZURESHARE/", new Uri("file://servicenowdiag479.file.core.windows.net/TESTAZURESHARE", UriKind.Absolute));
-            yield return ConstructorResultExpected.CreateTestData("//DESKTOP-10538/USERS/JLYNN/ANWR/", new Uri("file://desktop-10538/Users/jlynn/ANWR", UriKind.Absolute));
-            yield return ConstructorResultExpected.CreateArgumentOutOfRangeExceptionTestData("file://servicenowdiag479.file.core.windows.net");
-            yield return ConstructorResultExpected.CreateArgumentOutOfRangeExceptionTestData("file://desktop-10538");
-            yield return ConstructorResultExpected.CreateArgumentOutOfRangeExceptionTestData("file://servicenowdiag479.file.core.windows.net/");
-            yield return ConstructorResultExpected.CreateArgumentOutOfRangeExceptionTestData("file://desktop-10538/");
-            yield return ConstructorResultExpected.CreateArgumentOutOfRangeExceptionTestData("file:///testazureshare");
-            yield return ConstructorResultExpected.CreateArgumentOutOfRangeExceptionTestData("file:///Users/jlynn/ANWR");
-            yield return ConstructorResultExpected.CreateArgumentOutOfRangeExceptionTestData("http://servicenowdiag479.file.core.windows.net/testazureshare");
-            yield return ConstructorResultExpected.CreateArgumentOutOfRangeExceptionTestData("http://desktop-10538/Users/jlynn/ANWR");
-            yield return ConstructorResultExpected.CreateArgumentOutOfRangeExceptionTestData("/servicenowdiag479.file.core.windows.net/testazureshare");
-            yield return ConstructorResultExpected.CreateArgumentOutOfRangeExceptionTestData("/desktop-10538/Users/jlynn/ANWR");
-            yield return ConstructorResultExpected.CreateArgumentOutOfRangeExceptionTestData(@"\\servicenowdiag479.file.core.windows.net");
-            yield return ConstructorResultExpected.CreateArgumentOutOfRangeExceptionTestData(@"\\desktop-10538");
-            yield return ConstructorResultExpected.CreateArgumentOutOfRangeExceptionTestData(@"\\servicenowdiag479.file.core.windows.net\");
-            yield return ConstructorResultExpected.CreateArgumentOutOfRangeExceptionTestData(@"\\desktop-10538\");
-        }
-
-        [DataTestMethod]
-        [DynamicData(nameof(GetParseTestData), DynamicDataSourceType.Method)]
-        public void ParseTestMethod(string text, ConstructorResultExpected expected)
-        {
-            if (expected.IsArgumentOutOfRangeException)
-                Assert.ThrowsException<ArgumentOutOfRangeException>(() => VolumeIdentifier.Parse(text));
-            else
-            {
-                VolumeIdentifier volumeIdentifier = VolumeIdentifier.Parse(text);
-                Assert.AreEqual(expected.IsEmpty, volumeIdentifier.IsEmpty());
-                Assert.IsNotNull(volumeIdentifier.Location);
-                Assert.AreEqual(expected.Location.ToString(), volumeIdentifier.Location.ToString());
-                Assert.AreEqual(expected.Location.ToString(), volumeIdentifier.ToString());
-                Assert.AreEqual(expected.SerialNumber, volumeIdentifier.SerialNumber);
-                Assert.AreEqual(expected.UUID, volumeIdentifier.UUID);
-            }
-        }
-
-        [DataTestMethod]
-        [DynamicData(nameof(GetParseTestData), DynamicDataSourceType.Method)]
-        public void TryParseTestMethod(string text, ConstructorResultExpected expected)
-        {
-            bool result = VolumeIdentifier.TryParse(text, out VolumeIdentifier volumeIdentifier);
-            Assert.AreEqual(expected.IsArgumentOutOfRangeException, result);
-            if (!expected.IsArgumentOutOfRangeException)
-            {
-                Assert.AreEqual(expected.IsEmpty, volumeIdentifier.IsEmpty());
-                Assert.IsNotNull(volumeIdentifier.Location);
-                Assert.AreEqual(expected.Location.ToString(), volumeIdentifier.Location.ToString());
-                Assert.AreEqual(expected.Location.ToString(), volumeIdentifier.ToString());
-                Assert.AreEqual(expected.SerialNumber, volumeIdentifier.SerialNumber);
-                Assert.AreEqual(expected.UUID, volumeIdentifier.UUID);
-            }
-        }
-
-        // TODO: Tests for equality where case is ignored
     }
 }

@@ -23,7 +23,7 @@ namespace FsInfoCat.UnitTests
             _testContext = testContext;
         }
 
-        [TestMethod("new BinaryProperties()")]
+        [TestMethod("new BinaryProperties()"), Ignore]
         public void NewBinaryPropertiesTestMethod()
         {
             using IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
@@ -60,8 +60,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(target.CreatedOn, target.ModifiedOn);
         }
 
-        [TestMethod("Guid Id")]
-        [Ignore]
+        [TestMethod("Guid Id"), Ignore]
         public void IdTestMethod()
         {
             BinaryPropertySet target = new();
@@ -75,7 +74,7 @@ namespace FsInfoCat.UnitTests
             Assert.ThrowsException<InvalidOperationException>(() => target.Id = Guid.NewGuid());
         }
 
-        [TestMethod("long Length")]
+        [TestMethod("long Length"), Ignore]
         [TestProperty(TestHelper.TestProperty_Description, "BinaryProperties.Length: BIGINT NOT NULL CHECK(Length>=0) UNIQUE")]
         public void LengthTestMethod()
         {
@@ -89,7 +88,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expectedValue, actualValue);
         }
 
-        [TestMethod("MD5Hash? Hash")]
+        [TestMethod("MD5Hash? Hash"), Ignore]
         [TestProperty(TestHelper.TestProperty_Description, "BinaryProperties.Hash: BINARY(16) CHECK(Hash IS NULL OR length(HASH)=16) DEFAULT NULL")]
         public void HashTestMethod()
         {
@@ -103,7 +102,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expectedValue, actualValue);
         }
 
-        [TestMethod("HashSet<DbFile> Files")]
+        [TestMethod("HashSet<DbFile> Files"), Ignore]
         public void FilesTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -116,7 +115,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expectedValue, actualValue);
         }
 
-        [TestMethod("HashSet<RedundantSet> RedundantSets")]
+        [TestMethod("HashSet<RedundantSet> RedundantSets"), Ignore]
         public void RedundantSetsTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -129,7 +128,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expectedValue, actualValue);
         }
 
-        [TestMethod("Guid? UpstreamId")]
+        [TestMethod("Guid? UpstreamId"), Ignore]
         public void UpstreamIdTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -142,7 +141,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expectedValue, actualValue);
         }
 
-        [TestMethod("DateTime? LastSynchronizedOn")]
+        [TestMethod("DateTime? LastSynchronizedOn"), Ignore]
         [TestProperty(TestHelper.TestProperty_Description,
             "Volume.LastSynchronizedOn: (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL) AND LastSynchronizedOn>=CreatedOn AND LastSynchronizedOn<=ModifiedOn")]
         public void LastSynchronizedOnTestMethod()
@@ -157,7 +156,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expectedValue, actualValue);
         }
 
-        [TestMethod("DateTime CreatedOn")]
+        [TestMethod("DateTime CreatedOn"), Ignore]
         [TestProperty(TestHelper.TestProperty_Description, "BinaryProperties.CreatedOn: CreatedOn<=ModifiedOn")]
         public void CreatedOnTestMethod()
         {
@@ -171,7 +170,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expectedValue, actualValue);
         }
 
-        [TestMethod("DateTime ModifiedOn")]
+        [TestMethod("DateTime ModifiedOn"), Ignore]
         public void ModifiedOnTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -184,7 +183,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expectedValue, actualValue);
         }
 
-        [TestMethod("string Item[string]")]
+        [TestMethod("string Item[string]"), Ignore]
         public void ItemColumnNameTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -197,7 +196,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expectedValue, actualValue);
         }
 
-        [TestMethod("IEnumerable<ValidationResult> Validate(ValidationContext)")]
+        [TestMethod("IEnumerable<ValidationResult> Validate(ValidationContext)"), Ignore]
         public void ValidateValidationContextTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -210,7 +209,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expectedReturnValue, actualReturnValue);
         }
 
-        [TestMethod("bool HasErrors()")]
+        [TestMethod("bool HasErrors()"), Ignore]
         public void HasErrorsTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -222,7 +221,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expectedReturnValue, actualReturnValue);
         }
 
-        [TestMethod("void AcceptChanges()")]
+        [TestMethod("void AcceptChanges()"), Ignore]
         public void AcceptChangesTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -232,7 +231,7 @@ namespace FsInfoCat.UnitTests
             target.AcceptChanges();
         }
 
-        [TestMethod("bool IsChanged()")]
+        [TestMethod("bool IsChanged()"), Ignore]
         public void IsChangedTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -244,7 +243,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expectedReturnValue, actualReturnValue);
         }
 
-        [TestMethod("void RejectChanges()")]
+        [TestMethod("void RejectChanges()"), Ignore]
         public void RejectChangesTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -254,7 +253,7 @@ namespace FsInfoCat.UnitTests
             target.RejectChanges();
         }
 
-        [TestMethod("Type GetType()")]
+        [TestMethod("Type GetType()"), Ignore]
         public void GetTypeTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -266,7 +265,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expectedReturnValue, actualReturnValue);
         }
 
-        [TestMethod("string ToString()")]
+        [TestMethod("string ToString()"), Ignore]
         public void ToStringTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -278,7 +277,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expectedReturnValue, actualReturnValue);
         }
 
-        [TestMethod("bool Equals(object)")]
+        [TestMethod("bool Equals(object)"), Ignore]
         public void EqualsObjectTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -291,7 +290,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expectedReturnValue, actualReturnValue);
         }
 
-        [TestMethod("int GetHashCode()")]
+        [TestMethod("int GetHashCode()"), Ignore]
         public void GetHashCodeTestMethod()
         {
             Assert.Inconclusive("Test not implemented");

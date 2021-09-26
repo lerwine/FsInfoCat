@@ -22,7 +22,7 @@ namespace FsInfoCat.UnitTests
             _testContext = testContext;
         }
 
-        [TestMethod("new SubdirectoryAccessError()")]
+        [TestMethod("new SubdirectoryAccessError()"), Ignore]
         public void NewSubdirectoryAccessErrorTestMethod()
         {
             using IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
@@ -57,8 +57,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(target.CreatedOn, target.ModifiedOn);
         }
 
-        [TestMethod("Guid Id")]
-        [Ignore]
+        [TestMethod("Guid Id"), Ignore]
         public void IdTestMethod()
         {
             SubdirectoryAccessError target = new();
@@ -102,7 +101,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, actualValue);
         }
 
-        [TestMethod("AccessErrorCode ErrorCode")]
+        [TestMethod("AccessErrorCode ErrorCode"), Ignore]
         public void ErrorCodeTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -115,7 +114,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expectedValue, actualValue);
         }
 
-        [TestMethod("Guid TargetId")]
+        [TestMethod("Guid TargetId"), Ignore]
         public void TargetIdTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -128,7 +127,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expectedValue, actualValue);
         }
 
-        [TestMethod("Subdirectory Target")]
+        [TestMethod("Subdirectory Target"), Ignore]
         public void TargetTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -141,7 +140,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expectedValue, actualValue);
         }
 
-        [TestMethod("DateTime CreatedOn")]
+        [TestMethod("DateTime CreatedOn"), Ignore]
         [TestProperty(TestHelper.TestProperty_Description, "BinaryProperties.CreatedOn: CreatedOn<=ModifiedOn")]
         public void CreatedOnTestMethod()
         {
@@ -155,7 +154,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expectedValue, actualValue);
         }
 
-        [TestMethod("DateTime ModifiedOn")]
+        [TestMethod("DateTime ModifiedOn"), Ignore]
         public void ModifiedOnTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -168,7 +167,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expectedValue, actualValue);
         }
 
-        [TestMethod("string Item[string]")]
+        [TestMethod("string Item[string]"), Ignore]
         public void ItemColumnNameTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -181,7 +180,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expectedValue, actualValue);
         }
 
-        [TestMethod("IEnumerable<ValidationResult> Validate(ValidationContext)")]
+        [TestMethod("IEnumerable<ValidationResult> Validate(ValidationContext)"), Ignore]
         public void ValidateValidationContextTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -194,7 +193,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expectedReturnValue, actualReturnValue);
         }
 
-        [TestMethod("bool HasErrors()")]
+        [TestMethod("bool HasErrors()"), Ignore]
         public void HasErrorsTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -206,7 +205,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expectedReturnValue, actualReturnValue);
         }
 
-        [TestMethod("void AcceptChanges()")]
+        [TestMethod("void AcceptChanges()"), Ignore]
         public void AcceptChangesTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -216,7 +215,7 @@ namespace FsInfoCat.UnitTests
             target.AcceptChanges();
         }
 
-        [TestMethod("bool IsChanged()")]
+        [TestMethod("bool IsChanged()"), Ignore]
         public void IsChangedTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -228,7 +227,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expectedReturnValue, actualReturnValue);
         }
 
-        [TestMethod("void RejectChanges()")]
+        [TestMethod("void RejectChanges()"), Ignore]
         public void RejectChangesTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -238,7 +237,7 @@ namespace FsInfoCat.UnitTests
             target.RejectChanges();
         }
 
-        [TestMethod("Type GetType()")]
+        [TestMethod("Type GetType()"), Ignore]
         public void GetTypeTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -250,7 +249,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expectedReturnValue, actualReturnValue);
         }
 
-        [TestMethod("string ToString()")]
+        [TestMethod("string ToString()"), Ignore]
         public void ToStringTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -262,7 +261,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expectedReturnValue, actualReturnValue);
         }
 
-        [TestMethod("bool Equals(object)")]
+        [TestMethod("bool Equals(object)"), Ignore]
         public void EqualsObjectTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -275,7 +274,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expectedReturnValue, actualReturnValue);
         }
 
-        [TestMethod("int GetHashCode()")]
+        [TestMethod("int GetHashCode()"), Ignore]
         public void GetHashCodeTestMethod()
         {
             Assert.Inconclusive("Test not implemented");

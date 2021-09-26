@@ -1,3 +1,5 @@
+src/TestResults/Deploy_*
+*.trx
 
 # dependencies
 node_modules/

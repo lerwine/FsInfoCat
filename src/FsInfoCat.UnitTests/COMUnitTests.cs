@@ -20,7 +20,7 @@ namespace FsInfoCat.UnitTests
             _testContext = testContext;
         }
 
-        [TestMethod()]
+        [TestMethod(), Priority(0)]
         public void GetExtendedPropertyMapAsyncTest()
         {
             using ShellAdapter shell = new();
@@ -33,7 +33,7 @@ namespace FsInfoCat.UnitTests
             Assert.IsTrue(result.Values.Contains("Date created"));
        }
 
-        [TestMethod()]
+        [TestMethod(), Priority(0)]
         public void GetExtendedPropertyDictionaryAsyncTest()
         {
             using ShellAdapter shell = new();
@@ -46,7 +46,7 @@ namespace FsInfoCat.UnitTests
             Assert.IsTrue(result.ContainsKey(ExtendedPropertyName.DateCreated));
         }
 
-        [TestMethod()]
+        [TestMethod(), Priority(0)]
         public void GetExtendedPropertiesAsyncTest()
         {
             using ShellAdapter shell = new();
@@ -65,7 +65,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(typeof(Microsoft.Data.Sqlite.SqliteConnectionStringBuilder).Assembly.GetName().Version.ToString(3), version.ToString(3));
         }
 
-        [TestMethod()]
+        [TestMethod(), Ignore]
         public void GetAllExtendedPropertiesAsyncTest()
         {
             Assert.Inconclusive();
