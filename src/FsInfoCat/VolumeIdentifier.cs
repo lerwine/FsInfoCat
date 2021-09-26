@@ -22,7 +22,7 @@ namespace FsInfoCat
         /// references (<c>/../</c>) unless they are at the beginning of the string.</remarks>
         public static readonly Regex PathSeparatorNormalize = new(@"^\s*(\.\.?/+|\s+)+|(?<!^\s*file:/?)/(?=/)|/\.(?=/|$)", RegexOptions.Compiled);
         public static readonly Regex VsnRegex = new(@"^([a-f\d]{4})-?([a-f\d]{4})$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
-        public static readonly Regex UuidRegex = new(@"^[a-f\d]{8}(-[a-f\d]{4}){4}[a-f\d]{8}$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+        public static readonly Regex UuidRegex = new(@"^([a-f\d]{8}(-?[a-f\d]{4}){4}[a-f\d]{8}|\{[a-f\d]{8}(-[a-f\d]{4}){4}[a-f\d]{8}\})$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
         public static readonly VolumeIdentifier Empty = new(null);
 
@@ -123,11 +123,11 @@ namespace FsInfoCat
                 }
                 throw new ArgumentOutOfRangeException(nameof(uri));
             }
-            if (uri.Scheme == Uri.UriSchemeFile)
+            else if (uri.Scheme == Uri.UriSchemeFile)
             {
                 if (string.IsNullOrWhiteSpace(uri.Host))
                     throw new ArgumentOutOfRangeException(nameof(uri));
-                if (path.Split('/').Length != 2)
+                if (path.Split('/').Length < 2)
                     throw new ArgumentOutOfRangeException(nameof(uri));
             }
             else
@@ -169,7 +169,7 @@ namespace FsInfoCat
             if (match.Success)
             {
                 if (uint.TryParse(match.Groups[1].Value, NumberStyles.HexNumber, null, out uint vsnH) &&
-                    uint.TryParse(match.Groups[1].Value, NumberStyles.HexNumber, null, out uint vsnL))
+                    uint.TryParse(match.Groups[2].Value, NumberStyles.HexNumber, null, out uint vsnL))
                 {
                     result = new VolumeIdentifier(vsnL | (vsnH << 16));
                     return true;
