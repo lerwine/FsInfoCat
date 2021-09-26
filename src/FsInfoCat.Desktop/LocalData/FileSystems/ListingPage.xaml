@@ -7,8 +7,9 @@
       xmlns:ViewModel="clr-namespace:FsInfoCat.Desktop.ViewModel"
       mc:Ignorable="d" DataContext="{DynamicResource ViewModel}"
       xmlns:Converters="clr-namespace:FsInfoCat.Desktop.Converters" d:DesignHeight="768" d:DesignWidth="1024"
-      WindowTitle="{Binding PageTitle, Mode=OneWay}">
+      WindowTitle="File System Types">
     <Page.Resources>
+        <Converters:DoubleAdjustConverter x:Key="DoubleAdjustConverter" AddedValue="-8"/>
         <Converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
         <Converters:BooleanToStringConverter x:Key="BooleanToStatusConverter" FalseValue="Active" TrueValue="Inactive"/>
         <Converters:BooleanToStringConverter x:Key="BooleanToYesNoConverter" FalseValue="No" TrueValue="Yes"/>
@@ -18,8 +19,8 @@
         <DataGrid ItemsSource="{Binding Items}" AutoGenerateColumns="False">
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding DisplayName}" Header="Name" Width="*"/>
-                <DataGridTextColumn Binding="{Binding PrimarySymbolicName, Mode=OneWay}" Header="Priority"/>
-                <DataGridTextColumn Binding="{Binding ReadOnly}" Header="Priority"/>
+                <DataGridTextColumn Binding="{Binding PrimarySymbolicName, Mode=OneWay}" Header="Symb"/>
+                <DataGridTextColumn Binding="{Binding ReadOnly}" Header="Read-Only"/>
                 <DataGridTextColumn Binding="{Binding IsInactive, Converter={StaticResource BooleanToStatusConverter}}" MinWidth="100">
                     <DataGridTextColumn.Header>
                         <StackPanel Orientation="Horizontal" DataContext="{DynamicResource ViewModel}">
@@ -32,7 +33,7 @@
             </DataGrid.Columns>
             <DataGrid.RowDetailsTemplate>
                 <DataTemplate>
-                    <local:ListItemControl/>
+                    <local:ListItemControl Width="{Binding RelativeSource={RelativeSource AncestorType={x:Type ItemsPresenter}}, Path=ActualWidth, Converter={StaticResource DoubleAdjustConverter}}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
                 </DataTemplate>
             </DataGrid.RowDetailsTemplate>
         </DataGrid>

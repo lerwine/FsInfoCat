@@ -13,6 +13,7 @@
       DataContext="{DynamicResource ViewModel}"
       Title="Crawl Status Report">
     <Page.Resources>
+        <Converters:DoubleAdjustConverter x:Key="DoubleAdjustConverter" AddedValue="-8"/>
         <Converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
         <Converters:BooleanToStringConverter x:Key="BooleanToStatusConverter" FalseValue="Active" TrueValue="Inactive"/>
         <Converters:BooleanToVisibilityConverter x:Key="VisibleIfTrueConverter" NullSource="Collapsed"/>
@@ -105,7 +106,7 @@
             </DataGrid.Columns>
             <DataGrid.RowDetailsTemplate>
                 <DataTemplate>
-                    <local:ReportItemControl Width="{Binding RelativeSource={RelativeSource AncestorType={x:Type ItemsPresenter}}, Path=ActualWidth}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                    <local:ReportItemControl Width="{Binding RelativeSource={RelativeSource AncestorType={x:Type ItemsPresenter}}, Path=ActualWidth, Converter={StaticResource DoubleAdjustConverter}}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
                 </DataTemplate>
             </DataGrid.RowDetailsTemplate>
         </DataGrid>

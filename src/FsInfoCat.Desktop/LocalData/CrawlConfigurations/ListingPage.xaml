@@ -45,7 +45,7 @@
             </DataGrid.Columns>
             <DataGrid.RowDetailsTemplate>
                 <DataTemplate>
-                    <local:ListItemControl MaxWidth="{Binding RelativeSource={RelativeSource TemplatedParent, AncestorType={x:Type DataGrid}}, Path=ActualWidth}"/>
+                    <local:ListItemControl Width="{Binding RelativeSource={RelativeSource AncestorType={x:Type ItemsPresenter}}, Path=ActualWidth, Converter={StaticResource DoubleAdjustConverter}}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
                 </DataTemplate>
             </DataGrid.RowDetailsTemplate>
         </DataGrid>
