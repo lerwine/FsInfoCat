@@ -27,11 +27,28 @@ namespace FsInfoCat.Local
 
         #region Properties
 
-        /// <summary>Gets the primary key value.</summary>
+        /// <summary>
+        /// Gets the primary key value.
+        /// </summary>
         /// <value>The <see cref="Guid">unique identifier</see> used as the current entity's primary key the database.</value>
         [Key]
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_Id), ResourceType = typeof(FsInfoCat.Properties.Resources))]
-        public virtual Guid Id { get => _id.GetValue(); set => _id.SetValue(value); }
+        public virtual Guid Id
+        {
+            get => _id.GetValue();
+            set
+            {
+                if (_id.IsSet)
+                {
+                    Guid id = _id.GetValue();
+                    if (id.Equals(value))
+                        return;
+                    if (!id.Equals(Guid.Empty))
+                        throw new InvalidOperationException();
+                }
+                _id.SetValue(value);
+            }
+        }
 
         /// <summary>Gets the display name.</summary>
         /// <value>The display name for the current crawl configuration.</value>

@@ -1,7 +1,7 @@
-using System;
-using System.ComponentModel.DataAnnotations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.Local
 {
@@ -14,8 +14,28 @@ namespace FsInfoCat.Local
         private readonly IPropertyChangeTracker<string> _name;
         private readonly IPropertyChangeTracker<string> _ancestorNames;
 
+        /// <summary>
+        /// Gets the primary key value.
+        /// </summary>
+        /// <value>The <see cref="Guid">unique identifier</see> used as the current entity's primary key the database.</value>
         [Key]
-        public virtual Guid Id { get => _id.GetValue(); set => _id.SetValue(value); }
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_Id), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        public virtual Guid Id
+        {
+            get => _id.GetValue();
+            set
+            {
+                if (_id.IsSet)
+                {
+                    Guid id = _id.GetValue();
+                    if (id.Equals(value))
+                        return;
+                    if (!id.Equals(Guid.Empty))
+                        throw new InvalidOperationException();
+                }
+                _id.SetValue(value);
+            }
+        }
 
         [StringLength(DbConstants.DbColMaxLen_FileName, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_NameLength),
             ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
