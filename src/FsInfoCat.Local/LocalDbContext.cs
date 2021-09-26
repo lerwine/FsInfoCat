@@ -202,7 +202,7 @@ namespace FsInfoCat.Local
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            _ = modelBuilder.HasDefaultSchema("dbo")
+            _ = modelBuilder//.HasDefaultSchema("dbo")
                 .Entity<SymbolicName>(SymbolicName.OnBuildEntity)
                 .Entity<Volume>(Volume.OnBuildEntity)
                 .Entity<Subdirectory>(Subdirectory.OnBuildEntity)
