@@ -30,8 +30,6 @@ namespace FsInfoCat.Local
         #region Properties
 
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_FileSystem), ResourceType = typeof(FsInfoCat.Properties.Resources))]
-        [Required(ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_FileSystemRequired),
-            ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual FileSystem FileSystem
         {
             get => _fileSystem.GetValue();
