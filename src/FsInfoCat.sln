@@ -14,6 +14,9 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FsInfoCat.UnitTests", "FsInfoCat.UnitTests\FsInfoCat.UnitTests.csproj", "{C4D22FAB-2F3D-43B1-A3BB-8A4775A5838C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{21DE209E-F2AD-48EC-A6BB-7C66EF73762F}"
+	ProjectSection(SolutionItems) = preProject
+		test.runsettings = test.runsettings
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Resources", "Resources", "{0F4404B3-2A29-4956-8AC6-C36AD8D40B33}"
 EndProject
