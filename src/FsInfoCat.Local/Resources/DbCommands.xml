@@ -35,7 +35,7 @@
     CONSTRAINT "PK_SymbolicNames" PRIMARY KEY("Id"),
     CONSTRAINT "UK_FileSystem_Name" UNIQUE("Name"),
     CHECK((("UpstreamId" IS NULL AND "LastSynchronizedOn" IS NULL) OR ("UpstreamId" IS NOT NULL AND "LastSynchronizedOn" IS NOT NULL)) AND "CreatedOn"<="ModifiedOn")
-)]]></Text>https://docs.microsoft.com/en-us/dotnet/desktop/wpf/?view=netdesktop-5.0
+)]]></Text>
         <Text Message="Creating index 'IDX_SymbolicName_Name'">
             <![CDATA[CREATE INDEX "IDX_SymbolicName_Name" ON "SymbolicNames" ("Name" COLLATE NOCASE)]]></Text>
         <Text Message="Creating index 'IDX_SymbolicName_IsInactive'">
