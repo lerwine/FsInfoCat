@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<Package
+  xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
+  xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest"
+  xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
+  IgnorableNamespaces="uap mp">
+
+  <Identity
+    Name="19caf027-e564-4bf5-a83a-876d7c501b48"
+    Publisher="CN=lerwi"
+    Version="1.0.0.0" />
+
+  <mp:PhoneIdentity PhoneProductId="19caf027-e564-4bf5-a83a-876d7c501b48" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+
+  <Properties>
+    <DisplayName>FS InfoCat</DisplayName>
+    <PublisherDisplayName>Leonard T. Erwine</PublisherDisplayName>
+    <Logo>Assets\StoreLogo.png</Logo>
+  </Properties>
+
+  <Dependencies>
+    <TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.0.0" MaxVersionTested="10.0.0.0" />
+  </Dependencies>
+
+  <Resources>
+    <Resource Language="x-generate"/>
+  </Resources>
+
+  <Applications>
+    <Application Id="App"
+      Executable="$targetnametoken$.exe"
+      EntryPoint="FsInfoCat.App">
+      <uap:VisualElements
+        DisplayName="FS InfoCat"
+        Square150x150Logo="Assets\FsInfoCat-Medium.png"
+        Square44x44Logo="Assets\FsInfoCat-Square44x44.png"
+        Description="File System Information Cataloging tool"
+        BackgroundColor="transparent">
+        <uap:DefaultTile Wide310x150Logo="Assets\FsInfoCat-Wide.png" Square71x71Logo="Assets\FsInfoCat-Small.png" Square310x310Logo="Assets\FsInfoCat-Large.png" ShortName="FS InfoCat"/>
+        <uap:SplashScreen Image="Assets\FsInfoCat.png" />
+        <uap:LockScreen BadgeLogo="Assets\BadgeLogo.png" Notification="badgeAndTileText"/>
+      </uap:VisualElements>
+    </Application>
+  </Applications>
+</Package>
