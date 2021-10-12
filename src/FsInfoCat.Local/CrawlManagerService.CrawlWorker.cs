@@ -211,9 +211,9 @@ namespace FsInfoCat.Local
                         finally
                         {
                             if (_isTimedOut.HasValue)
-                                _crawlJob.Service.RaiseDirectoryCrawled(new DirectoryCrawlEndEventArgs(startArgs.Target, startArgs.FullName, _isTimedOut.Value ? "Crawl terminated due to time limit." : "Crawl terminated due to item limit.", startArgs.ConcurrencyId, StatusMessageLevel.Warning));
+                                _crawlJob.Service.RaiseDirectoryCrawled(new DirectoryCrawlEndEventArgs(startArgs.Entity, startArgs.FullName, _isTimedOut.Value ? "Crawl terminated due to time limit." : "Crawl terminated due to item limit.", startArgs.ConcurrencyId, StatusMessageLevel.Warning));
                             else
-                                _crawlJob.Service.RaiseDirectoryCrawled(new DirectoryCrawlEndEventArgs(startArgs.Target, startArgs.FullName, "Crawl job canceled.", startArgs.ConcurrencyId, StatusMessageLevel.Warning));
+                                _crawlJob.Service.RaiseDirectoryCrawled(new DirectoryCrawlEndEventArgs(startArgs.Entity, startArgs.FullName, "Crawl job canceled.", startArgs.ConcurrencyId, StatusMessageLevel.Warning));
                         }
                         throw;
                     }
@@ -337,7 +337,7 @@ namespace FsInfoCat.Local
                     await CrawlAsync(dbContext, context, false);
                 foreach (Context context in newSubdirectories)
                     await CrawlAsync(dbContext, context, true);
-                _crawlJob.Service.RaiseDirectoryCrawled(new DirectoryCrawlEndEventArgs(startArgs.Target, startArgs.FullName, "Completed successfully", startArgs.ConcurrencyId));
+                _crawlJob.Service.RaiseDirectoryCrawled(new DirectoryCrawlEndEventArgs(startArgs.Entity, startArgs.FullName, "Completed successfully", startArgs.ConcurrencyId));
             }
 
             private async Task RunAsync(IServiceScope serviceScope)

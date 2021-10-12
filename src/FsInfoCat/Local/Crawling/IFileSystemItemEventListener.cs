@@ -4,12 +4,4 @@ namespace FsInfoCat.Local.Crawling
     {
         void OnFileSystemItemEvent(ICrawlManagerFsItemEventArgs args);
     }
-    public interface ISubdirectoryCrawlEventListener
-    {
-        void OnSubdirectoryCrawlEvent(DirectoryCrawlEventArgs args);
-    }
-    public interface IFileCrawlEventListener
-    {
-        void OnFileCrawlEvent(FileCrawlEventArgs args);
-    }
 }
