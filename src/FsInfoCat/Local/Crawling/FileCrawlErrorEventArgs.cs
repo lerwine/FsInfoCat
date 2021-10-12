@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat.Local.Crawling
 {
-    public class FileCrawlErrorEventArgs : FileCrawlEventArgs, ICrawlErrorEventArgs
+    public class FileCrawlErrorEventArgs : FileCrawlEndEventArgs, ICrawlErrorEventArgs
     {
         public Exception Exception { get; }
 

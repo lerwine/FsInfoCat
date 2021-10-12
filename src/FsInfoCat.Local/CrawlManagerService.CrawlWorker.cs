@@ -98,7 +98,8 @@ namespace FsInfoCat.Local
                     _isTimedOut = false;
                 }
                 _cancellationToken.ThrowIfCancellationRequested();
-                _crawlJob.Service.RaiseDirectoryCrawling(new DirectoryCrawlEventArgs(this, parent));
+                DirectoryCrawlStartEventArgs startArgs = new(parent.Subdirectory, parent.FullName, $"Crawling {parent.GetCrawlRelativeName()}", _crawlJob.ConcurrencyId);
+                _crawlJob.Service.RaiseDirectoryCrawling(startArgs);
                 EntityEntry<Subdirectory> entry = dbContext.Entry(parent.Subdirectory);
                 List<Context> subdirectories, files;
                 using (IDbContextTransaction transaction = await dbContext.Database.BeginTransactionAsync(_cancellationToken))
@@ -148,7 +149,7 @@ namespace FsInfoCat.Local
                         dbContext.SubdirectoryAccessErrors.Add(subdirectoryAccessError);
                         await dbContext.SaveChangesAsync(_cancellationToken);
                         try { await transaction.CommitAsync(_cancellationToken); }
-                        finally { _crawlJob.Service.RaiseDirectoryCrawled(new DirectoryCrawlEventArgs(this, parent, subdirectoryAccessError)); }
+                        finally { _crawlJob.Service.RaiseDirectoryCrawled(new DirectoryCrawlErrorEventArgs(secExc, startArgs, "A security violation has occurred.")); }
                         return;
                     }
                     catch (UnauthorizedAccessException uaExc)
@@ -163,7 +164,7 @@ namespace FsInfoCat.Local
                         dbContext.SubdirectoryAccessErrors.Add(subdirectoryAccessError);
                         await dbContext.SaveChangesAsync(_cancellationToken);
                         try { await transaction.CommitAsync(_cancellationToken); }
-                        finally { _crawlJob.Service.RaiseDirectoryCrawled(new DirectoryCrawlEventArgs(this, parent, subdirectoryAccessError)); }
+                        finally { _crawlJob.Service.RaiseDirectoryCrawled(new DirectoryCrawlErrorEventArgs(uaExc, startArgs, "Access is unauthorized")); }
                         return;
                     }
                     catch (PathTooLongException pExc)
@@ -178,7 +179,7 @@ namespace FsInfoCat.Local
                         dbContext.SubdirectoryAccessErrors.Add(subdirectoryAccessError);
                         await dbContext.SaveChangesAsync(_cancellationToken);
                         try { await transaction.CommitAsync(_cancellationToken); }
-                        finally { _crawlJob.Service.RaiseDirectoryCrawled(new DirectoryCrawlEventArgs(this, parent, subdirectoryAccessError)); }
+                        finally { _crawlJob.Service.RaiseDirectoryCrawled(new DirectoryCrawlErrorEventArgs(pExc, startArgs, "Item path is too long.")); }
                         return;
                     }
                     catch (IOException ioExc)
@@ -193,10 +194,29 @@ namespace FsInfoCat.Local
                         dbContext.SubdirectoryAccessErrors.Add(subdirectoryAccessError);
                         await dbContext.SaveChangesAsync(_cancellationToken);
                         try { await transaction.CommitAsync(_cancellationToken); }
-                        finally { _crawlJob.Service.RaiseDirectoryCrawled(new DirectoryCrawlEventArgs(this, parent, subdirectoryAccessError)); }
+                        finally { _crawlJob.Service.RaiseDirectoryCrawled(new DirectoryCrawlErrorEventArgs(ioExc, startArgs, "An I/O exception occurred.")); }
                         return;
                     }
-                    catch (OperationCanceledException) { throw; }
+                    catch (OperationCanceledException)
+                    {
+                        try
+                        {
+                            if (_isTimedOut.HasValue)
+                            {
+                                if (dbContext.ChangeTracker.HasChanges())
+                                    await dbContext.SaveChangesAsync(_cancellationToken);
+                                await transaction.CommitAsync(_cancellationToken);
+                            }
+                        }
+                        finally
+                        {
+                            if (_isTimedOut.HasValue)
+                                _crawlJob.Service.RaiseDirectoryCrawled(new DirectoryCrawlEndEventArgs(startArgs.Target, startArgs.FullName, _isTimedOut.Value ? "Crawl terminated due to time limit." : "Crawl terminated due to item limit.", startArgs.ConcurrencyId, StatusMessageLevel.Warning));
+                            else
+                                _crawlJob.Service.RaiseDirectoryCrawled(new DirectoryCrawlEndEventArgs(startArgs.Target, startArgs.FullName, "Crawl job canceled.", startArgs.ConcurrencyId, StatusMessageLevel.Warning));
+                        }
+                        throw;
+                    }
                     catch (Exception exc)
                     {
                         SubdirectoryAccessError subdirectoryAccessError = new()
@@ -209,7 +229,7 @@ namespace FsInfoCat.Local
                         dbContext.SubdirectoryAccessErrors.Add(subdirectoryAccessError);
                         await dbContext.SaveChangesAsync(_cancellationToken);
                         try { await transaction.CommitAsync(_cancellationToken); }
-                        finally { _crawlJob.Service.RaiseDirectoryCrawled(new DirectoryCrawlEventArgs(this, parent, subdirectoryAccessError)); }
+                        finally { _crawlJob.Service.RaiseDirectoryCrawled(new DirectoryCrawlErrorEventArgs(exc, startArgs, "An unexpected exception occurred.")); }
                         return;
                     }
                     await dbContext.SaveChangesAsync(_cancellationToken);
@@ -228,6 +248,7 @@ namespace FsInfoCat.Local
                         files.RemoveAt(i--);
                     }
                 }
+                // TODO: Catch subsequent exceptions so DirectroyCrawled is called - maybe we need to be updating the current item?
                 foreach (Context fc in files)
                 {
                     DbFile dbFile = fc.DbFile;
@@ -316,7 +337,7 @@ namespace FsInfoCat.Local
                     await CrawlAsync(dbContext, context, false);
                 foreach (Context context in newSubdirectories)
                     await CrawlAsync(dbContext, context, true);
-                _crawlJob.Service.RaiseDirectoryCrawled(new DirectoryCrawlEventArgs(this, parent));
+                _crawlJob.Service.RaiseDirectoryCrawled(new DirectoryCrawlEndEventArgs(startArgs.Target, startArgs.FullName, "Completed successfully", startArgs.ConcurrencyId));
             }
 
             private async Task RunAsync(IServiceScope serviceScope)

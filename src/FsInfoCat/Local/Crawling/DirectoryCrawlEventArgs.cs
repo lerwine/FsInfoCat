@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat.Local.Crawling
 {
-    public class DirectoryCrawlEventArgs : CrawlActivityEventArgs, ICrawlManagerFsItemEventArgs
+    public abstract class DirectoryCrawlEventArgs : CrawlActivityEventArgs, ICrawlManagerFsItemEventArgs
     {
         public ILocalSubdirectory Target { get; }
 
@@ -11,7 +11,7 @@ namespace FsInfoCat.Local.Crawling
 
         ILocalDbFsItem ICurrentItem.Target { get; }
 
-        public DirectoryCrawlEventArgs([DisallowNull] ILocalSubdirectory target, [DisallowNull] string fullName, string message, Guid concurrencyId,
+        protected DirectoryCrawlEventArgs([DisallowNull] ILocalSubdirectory target, [DisallowNull] string fullName, string message, Guid concurrencyId,
             StatusMessageLevel level = StatusMessageLevel.Information) : base(message, StatusMessageLevel.Information, AsyncJobStatus.Running, concurrencyId)
         {
             Target = target ?? throw new ArgumentNullException(nameof(target));
@@ -24,5 +24,20 @@ namespace FsInfoCat.Local.Crawling
             Target = args.Target;
             FullName = args.FullName;
         }
+    }
+
+    public class DirectoryCrawlStartEventArgs : DirectoryCrawlEventArgs
+    {
+        public DirectoryCrawlStartEventArgs([DisallowNull] ILocalSubdirectory target, [DisallowNull] string fullName, string message, Guid concurrencyId,
+            StatusMessageLevel level = StatusMessageLevel.Information) : base(target, fullName, message, concurrencyId, level) { }
+
+    }
+
+    public class DirectoryCrawlEndEventArgs : DirectoryCrawlEventArgs
+    {
+        public DirectoryCrawlEndEventArgs([DisallowNull] ILocalSubdirectory target, [DisallowNull] string fullName, string message, Guid concurrencyId,
+            StatusMessageLevel level = StatusMessageLevel.Information) : base(target, fullName, message, concurrencyId, level) { }
+
+        protected DirectoryCrawlEndEventArgs([DisallowNull] DirectoryCrawlEventArgs args, string message, StatusMessageLevel level) : base(args, message, level) { }
     }
 }

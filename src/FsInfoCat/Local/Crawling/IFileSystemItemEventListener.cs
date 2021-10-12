@@ -6,7 +6,7 @@ namespace FsInfoCat.Local.Crawling
     }
     public interface ISubdirectoryCrawlEventListener
     {
-        void OnFileCrawlEvent(DirectoryCrawlEventArgs args);
+        void OnSubdirectoryCrawlEvent(DirectoryCrawlEventArgs args);
     }
     public interface IFileCrawlEventListener
     {

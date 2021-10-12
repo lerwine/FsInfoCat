@@ -145,24 +145,50 @@ namespace FsInfoCat.Local
                 listener.OnCrawlManagerEvent(args);
         }
 
-        private void RaiseDirectoryCrawling(DirectoryCrawlEventArgs args)
+        private void RaiseDirectoryCrawling(DirectoryCrawlStartEventArgs args)
         {
-
+            foreach (ICrawlActivityEventListener listener in GetItemArray(_crawlActivityEventListeners))
+                listener.OnCrawlActivity(args);
+            foreach (IFileSystemItemEventListener listener in GetItemArray(_fileSystemItemEventListeners))
+                listener.OnFileSystemItemEvent(args);
+            foreach (ISubdirectoryCrawlEventListener listener in GetItemArray(_subdirectoryCrawlEventListeners))
+                listener.OnSubdirectoryCrawlEvent(args);
         }
 
-        private void RaiseDirectoryCrawled(DirectoryCrawlEventArgs args)
+        private void RaiseDirectoryCrawled(DirectoryCrawlEndEventArgs args)
         {
-
+            foreach (ICrawlActivityEventListener listener in GetItemArray(_crawlActivityEventListeners))
+                listener.OnCrawlActivity(args);
+            if (args is ICrawlErrorEventArgs errorEvent)
+                foreach (ICrawlErrorEventListener listener in GetItemArray(_crawlErrorEventListeners))
+                    listener.OnCrawlErrorEvent(errorEvent);
+            foreach (IFileSystemItemEventListener listener in GetItemArray(_fileSystemItemEventListeners))
+                listener.OnFileSystemItemEvent(args);
+            foreach (ISubdirectoryCrawlEventListener listener in GetItemArray(_subdirectoryCrawlEventListeners))
+                listener.OnSubdirectoryCrawlEvent(args);
         }
 
-        private void RaiseFileCrawling(FileCrawlEventArgs args)
+        private void RaiseFileCrawling(FileCrawlStartEventArgs args)
         {
-
+            foreach (ICrawlActivityEventListener listener in GetItemArray(_crawlActivityEventListeners))
+                listener.OnCrawlActivity(args);
+            foreach (IFileSystemItemEventListener listener in GetItemArray(_fileSystemItemEventListeners))
+                listener.OnFileSystemItemEvent(args);
+            foreach (IFileCrawlEventListener listener in GetItemArray(_fileCrawlEventListeners))
+                listener.OnFileCrawlEvent(args);
         }
 
-        private void RaiseFileCrawled(FileCrawlEventArgs args)
+        private void RaiseFileCrawled(FileCrawlEndEventArgs args)
         {
-
+            foreach (ICrawlActivityEventListener listener in GetItemArray(_crawlActivityEventListeners))
+                listener.OnCrawlActivity(args);
+            if (args is ICrawlErrorEventArgs errorEvent)
+                foreach (ICrawlErrorEventListener listener in GetItemArray(_crawlErrorEventListeners))
+                    listener.OnCrawlErrorEvent(errorEvent);
+            foreach (IFileSystemItemEventListener listener in GetItemArray(_fileSystemItemEventListeners))
+                listener.OnFileSystemItemEvent(args);
+            foreach (IFileCrawlEventListener listener in GetItemArray(_fileCrawlEventListeners))
+                listener.OnFileCrawlEvent(args);
         }
     }
 }

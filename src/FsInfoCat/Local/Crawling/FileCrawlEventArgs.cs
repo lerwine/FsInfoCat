@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat.Local.Crawling
 {
-    public class FileCrawlEventArgs : CrawlActivityEventArgs, ICrawlManagerFsItemEventArgs
+    public abstract class FileCrawlEventArgs : CrawlActivityEventArgs, ICrawlManagerFsItemEventArgs
     {
         public ILocalFile Target { get; }
 
@@ -11,7 +11,7 @@ namespace FsInfoCat.Local.Crawling
 
         ILocalDbFsItem ICurrentItem.Target { get; }
 
-        public FileCrawlEventArgs([DisallowNull] ILocalFile target, [DisallowNull] string fullName, string message, Guid concurrencyId,
+        protected FileCrawlEventArgs([DisallowNull] ILocalFile target, [DisallowNull] string fullName, string message, Guid concurrencyId,
             StatusMessageLevel level = StatusMessageLevel.Information) : base(message, StatusMessageLevel.Information, AsyncJobStatus.Running, concurrencyId)
         {
             Target = target ?? throw new ArgumentNullException(nameof(target));
@@ -24,5 +24,20 @@ namespace FsInfoCat.Local.Crawling
             Target = args.Target;
             FullName = args.FullName;
         }
+    }
+
+    public class FileCrawlStartEventArgs : FileCrawlEventArgs
+    {
+        public FileCrawlStartEventArgs([DisallowNull] ILocalFile target, [DisallowNull] string fullName, string message, Guid concurrencyId,
+            StatusMessageLevel level = StatusMessageLevel.Information) : base(target, fullName, message, concurrencyId, level) { }
+
+    }
+
+    public class FileCrawlEndEventArgs : FileCrawlEventArgs
+    {
+        public FileCrawlEndEventArgs([DisallowNull] ILocalFile target, [DisallowNull] string fullName, string message, Guid concurrencyId,
+            StatusMessageLevel level = StatusMessageLevel.Information) : base(target, fullName, message, concurrencyId, level) { }
+
+        protected FileCrawlEndEventArgs([DisallowNull] FileCrawlEventArgs args, string message, StatusMessageLevel level) : base(args, message, level) { }
     }
 }
