@@ -273,6 +273,26 @@ namespace FsInfoCat.Local
         IEnumerable<ISharedTag> IDbFsItem.SharedTags => SharedTags.Cast<ISharedTag>();
         DbFile IIdentityReference<DbFile>.Entity => this;
 
+        #endregion
+
+        public DbFile()
+        {
+            _parent = AddChangeTracker<Subdirectory>(nameof(Parent), null);
+            _binaryProperties = AddChangeTracker<BinaryPropertySet>(nameof(BinaryProperties), null);
+            _redundancy = AddChangeTracker<Redundancy>(nameof(Redundancy), null);
+            _summaryProperties = AddChangeTracker<SummaryPropertySet>(nameof(SummaryProperties), null);
+            _documentProperties = AddChangeTracker<DocumentPropertySet>(nameof(DocumentProperties), null);
+            _audioProperties = AddChangeTracker<AudioPropertySet>(nameof(AudioProperties), null);
+            _drmProperties = AddChangeTracker<DRMPropertySet>(nameof(DRMProperties), null);
+            _gpsProperties = AddChangeTracker<GPSPropertySet>(nameof(GPSProperties), null);
+            _imageProperties = AddChangeTracker<ImagePropertySet>(nameof(ImageProperties), null);
+            _mediaProperties = AddChangeTracker<MediaPropertySet>(nameof(MediaProperties), null);
+            _musicProperties = AddChangeTracker<MusicPropertySet>(nameof(MusicProperties), null);
+            _photoProperties = AddChangeTracker<PhotoPropertySet>(nameof(PhotoProperties), null);
+            _recordedTVProperties = AddChangeTracker<RecordedTVPropertySet>(nameof(RecordedTVProperties), null);
+            _videoProperties = AddChangeTracker<VideoPropertySet>(nameof(VideoProperties), null);
+        }
+
         public static async Task<bool> DeleteAsync([DisallowNull] DbFile target, [DisallowNull] LocalDbContext dbContext, [DisallowNull] CancellationToken cancellationToken, ItemDeletionOption deletionOption = ItemDeletionOption.Default)
         {
             if (target is null)
@@ -504,130 +524,6 @@ namespace FsInfoCat.Local
             return shouldDelete;
         }
 
-        [Obsolete("Use DeleteAsync(DbFile, LocalDbContext, CancellationToken [, ItemDeletionOption])")]
-        public static async Task<int> DeleteAsync_Obsolete([DisallowNull] DbFile target, [DisallowNull] LocalDbContext dbContext, [DisallowNull] IStatusListener statusListener, string parentPath = null)
-        {
-            if (target is null)
-                throw new ArgumentNullException(nameof(target));
-            if (dbContext is null)
-                throw new ArgumentNullException(nameof(dbContext));
-            if (statusListener is null)
-                throw new ArgumentNullException(nameof(statusListener));
-            string path = string.IsNullOrEmpty(parentPath) ? target.Name : Path.Combine(parentPath, target.Name);
-            using IDisposable loggerScope = statusListener.Logger.BeginScope(target.Id);
-            statusListener.Logger.LogDebug("Removing dependant records for DbFile {{ Id = {Id}; Path = \"{Path}\" }}", target.Id, path);
-            statusListener.SetMessage($"Removing file record: {path}");
-            using IDbContextTransaction transaction = dbContext.Database.BeginTransaction();
-            EntityEntry<DbFile> entry = dbContext.Entry(target);
-            EntityEntry<BinaryPropertySet> binaryProperties = await entry.GetRelatedTargetEntryAsync(e => e.BinaryProperties, statusListener.CancellationToken);
-            EntityEntry<SummaryPropertySet> summaryProperties = await entry.GetRelatedTargetEntryAsync(e => e.SummaryProperties, statusListener.CancellationToken);
-            EntityEntry<DocumentPropertySet> documentProperties = await entry.GetRelatedTargetEntryAsync(e => e.DocumentProperties, statusListener.CancellationToken);
-            EntityEntry<AudioPropertySet> audioProperties = await entry.GetRelatedTargetEntryAsync(e => e.AudioProperties, statusListener.CancellationToken);
-            EntityEntry<DRMPropertySet> drmProperties = await entry.GetRelatedTargetEntryAsync(e => e.DRMProperties, statusListener.CancellationToken);
-            EntityEntry<GPSPropertySet> gpsProperties = await entry.GetRelatedTargetEntryAsync(e => e.GPSProperties, statusListener.CancellationToken);
-            EntityEntry<ImagePropertySet> imageProperties = await entry.GetRelatedTargetEntryAsync(e => e.ImageProperties, statusListener.CancellationToken);
-            EntityEntry<MediaPropertySet> mediaProperties = await entry.GetRelatedTargetEntryAsync(e => e.MediaProperties, statusListener.CancellationToken);
-            EntityEntry<MusicPropertySet> musicProperties = await entry.GetRelatedTargetEntryAsync(e => e.MusicProperties, statusListener.CancellationToken);
-            EntityEntry<PhotoPropertySet> photoProperties = await entry.GetRelatedTargetEntryAsync(e => e.PhotoProperties, statusListener.CancellationToken);
-            EntityEntry<RecordedTVPropertySet> recordedTVProperties = await entry.GetRelatedTargetEntryAsync(e => e.RecordedTVProperties, statusListener.CancellationToken);
-            EntityEntry<VideoPropertySet> videoProperties = await entry.GetRelatedTargetEntryAsync(e => e.VideoProperties, statusListener.CancellationToken);
-            Redundancy redundancy = await entry.GetRelatedReferenceAsync(e => e.Redundancy, statusListener.CancellationToken);
-            int result = (redundancy is null) ? 0 : await Redundancy.DeleteAsync(redundancy, dbContext, statusListener.CancellationToken);
-            FileComparison[] fileComparisons = (await entry.GetRelatedCollectionAsync(e => e.BaselineComparisons, statusListener.CancellationToken))
-                .Concat(await entry.GetRelatedCollectionAsync(e => e.BaselineComparisons, statusListener.CancellationToken)).ToArray();
-            if (fileComparisons.Length > 0)
-                dbContext.Comparisons.RemoveRange(fileComparisons);
-            FileAccessError[] accessErrors = (await entry.GetRelatedCollectionAsync(e => e.AccessErrors, statusListener.CancellationToken)).ToArray();
-            if (accessErrors.Length > 0)
-                dbContext.FileAccessErrors.RemoveRange(accessErrors);
-            PersonalFileTag[] personalFileTags = (await entry.GetRelatedCollectionAsync(e => e.PersonalTags, statusListener.CancellationToken)).ToArray();
-            if (personalFileTags.Length > 0)
-                dbContext.PersonalFileTags.RemoveRange(personalFileTags);
-            SharedFileTag[] sharedFileTags = (await entry.GetRelatedCollectionAsync(e => e.SharedTags, statusListener.CancellationToken)).ToArray();
-            if (sharedFileTags.Length > 0)
-                dbContext.SharedFileTags.RemoveRange(sharedFileTags);
-            if (dbContext.ChangeTracker.HasChanges())
-                result += await dbContext.SaveChangesAsync(statusListener.CancellationToken);
-            statusListener.Logger.LogInformation("Removing DbFile {{ Id = {Id}; Path = \"{Path}\" }}", target.Id, path);
-            _ = dbContext.Files.Remove(target);
-            result += await dbContext.SaveChangesAsync(statusListener.CancellationToken);
-            statusListener.Logger.LogDebug("Removing unused former dependencies of DbFile {{ Id = {Id}; Path = \"{Path}\" }}", target.Id, path);
-            if (!(await binaryProperties.GetRelatedCollectionAsync(p => p.Files, statusListener.CancellationToken)).Any())
-                _ = dbContext.BinaryPropertySets.Remove(binaryProperties.Entity);
-            if (summaryProperties is not null && !(await summaryProperties.GetRelatedCollectionAsync(p => p.Files, statusListener.CancellationToken)).Any())
-                _ = dbContext.SummaryPropertySets.Remove(summaryProperties.Entity);
-            if (documentProperties is not null && !(await documentProperties.GetRelatedCollectionAsync(p => p.Files, statusListener.CancellationToken)).Any())
-                _ = dbContext.DocumentPropertySets.Remove(documentProperties.Entity);
-            if (audioProperties is not null && !(await audioProperties.GetRelatedCollectionAsync(p => p.Files, statusListener.CancellationToken)).Any())
-                _ = dbContext.AudioPropertySets.Remove(audioProperties.Entity);
-            if (drmProperties is not null && !(await drmProperties.GetRelatedCollectionAsync(p => p.Files, statusListener.CancellationToken)).Any())
-                _ = dbContext.DRMPropertySets.Remove(drmProperties.Entity);
-            if (gpsProperties is not null && !(await gpsProperties.GetRelatedCollectionAsync(p => p.Files, statusListener.CancellationToken)).Any())
-                _ = dbContext.GPSPropertySets.Remove(gpsProperties.Entity);
-            if (imageProperties is not null && !(await imageProperties.GetRelatedCollectionAsync(p => p.Files, statusListener.CancellationToken)).Any())
-                _ = dbContext.ImagePropertySets.Remove(imageProperties.Entity);
-            if (mediaProperties is not null && !(await mediaProperties.GetRelatedCollectionAsync(p => p.Files, statusListener.CancellationToken)).Any())
-                _ = dbContext.MediaPropertySets.Remove(mediaProperties.Entity);
-            if (musicProperties is not null && !(await musicProperties.GetRelatedCollectionAsync(p => p.Files, statusListener.CancellationToken)).Any())
-                _ = dbContext.MusicPropertySets.Remove(musicProperties.Entity);
-            if (photoProperties is not null && !(await photoProperties.GetRelatedCollectionAsync(p => p.Files, statusListener.CancellationToken)).Any())
-                _ = dbContext.PhotoPropertySets.Remove(photoProperties.Entity);
-            if (recordedTVProperties is not null && !(await recordedTVProperties.GetRelatedCollectionAsync(p => p.Files, statusListener.CancellationToken)).Any())
-                _ = dbContext.RecordedTVPropertySets.Remove(recordedTVProperties.Entity);
-            if (videoProperties is not null && !(await videoProperties.GetRelatedCollectionAsync(p => p.Files, statusListener.CancellationToken)).Any())
-                _ = dbContext.VideoPropertySets.Remove(videoProperties.Entity);
-            return dbContext.ChangeTracker.HasChanges() ? result + await dbContext.SaveChangesAsync(statusListener.CancellationToken) : result;
-        }
-
-        #endregion
-
-        public DbFile()
-        {
-            _parent = AddChangeTracker<Subdirectory>(nameof(Parent), null);
-            _binaryProperties = AddChangeTracker<BinaryPropertySet>(nameof(BinaryProperties), null);
-            _redundancy = AddChangeTracker<Redundancy>(nameof(Redundancy), null);
-            _summaryProperties = AddChangeTracker<SummaryPropertySet>(nameof(SummaryProperties), null);
-            _documentProperties = AddChangeTracker<DocumentPropertySet>(nameof(DocumentProperties), null);
-            _audioProperties = AddChangeTracker<AudioPropertySet>(nameof(AudioProperties), null);
-            _drmProperties = AddChangeTracker<DRMPropertySet>(nameof(DRMProperties), null);
-            _gpsProperties = AddChangeTracker<GPSPropertySet>(nameof(GPSProperties), null);
-            _imageProperties = AddChangeTracker<ImagePropertySet>(nameof(ImageProperties), null);
-            _mediaProperties = AddChangeTracker<MediaPropertySet>(nameof(MediaProperties), null);
-            _musicProperties = AddChangeTracker<MusicPropertySet>(nameof(MusicProperties), null);
-            _photoProperties = AddChangeTracker<PhotoPropertySet>(nameof(PhotoProperties), null);
-            _recordedTVProperties = AddChangeTracker<RecordedTVPropertySet>(nameof(RecordedTVProperties), null);
-            _videoProperties = AddChangeTracker<VideoPropertySet>(nameof(VideoProperties), null);
-        }
-
-        /// <summary>Asynchronously expunghes the current <see cref="Subdirectory"/> from the database, including all subdirectories and files contained therein,
-        /// if the <see cref="Status"/> is <see cref="DirectoryStatus.Deleted"/> and <see cref="UpstreamId"/> is <see langword="null"/>.</summary>
-        /// <param name="dbContext">The database context.</param>
-        /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns>A <see cref="Task{TResult}">Task&lt;System.Boolean&gt;</see> returning <span class="keyword"><span class="languageSpecificText"><span class="cs">true</span><span class="vb">True</span><span class="cpp">true</span></span></span><span class="nu"><span class="keyword">true</span> (<span class="keyword">True</span> in Visual Basic)</span>
-        /// if the subdirectory was deleted; otherwise <span class="keyword"><span class="languageSpecificText"><span class="cs">false</span><span class="vb">False</span><span class="cpp">false</span></span></span><span class="nu"><span class="keyword">false</span> (<span class="keyword">False</span> in Visual Basic)</span>
-        /// if <see cref="Options"/> contained <see cref="FileCrawlOptions.FlaggedForDeletion"/>, <see cref="Status"/> was not <see cref="FileCorrelationStatus.Deleted"/> or <see cref="UpstreamId"/> was not null.</returns>
-        [Obsolete("Use DeleteAsync(DbFile, LocalDbContext, CancellationToken [, ItemDeletionOption])")]
-        public async Task<bool> ExpungeAsync(LocalDbContext dbContext, CancellationToken cancellationToken)
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-            if (dbContext.Database.CurrentTransaction is null)
-            {
-                IDbContextTransaction transaction = await dbContext.Database.BeginTransactionAsync(cancellationToken);
-                cancellationToken.ThrowIfCancellationRequested();
-                bool result = await ExpungeAsync(dbContext, cancellationToken);
-                cancellationToken.ThrowIfCancellationRequested();
-                if (result)
-                    await transaction.CommitAsync(cancellationToken);
-                else
-                    await transaction.RollbackAsync(cancellationToken);
-                return result;
-            }
-            EntityEntry<DbFile> dbEntry = dbContext.Entry(this);
-            if (Status != FileCorrelationStatus.Deleted || UpstreamId.HasValue || !dbEntry.ExistsInDb())
-                return false;
-            return await ExpungeAsync(dbEntry, cancellationToken);
-        }
-
         internal static void OnBuildEntity(EntityTypeBuilder<DbFile> builder)
         {
             _ = builder.HasOne(sn => sn.Parent).WithMany(d => d.Files).HasForeignKey(nameof(ParentId)).IsRequired().OnDelete(DeleteBehavior.Restrict);
@@ -817,186 +713,6 @@ namespace FsInfoCat.Local
             _ = await dbContext.SaveChangesAsync(cancellationToken);
             // TODO: Need to add code later to see where comparisons need to be made
             return entry;
-        }
-
-        [Obsolete("Use DeleteAsync(DbFile, LocalDbContext, CancellationToken [, ItemDeletionOption])")]
-        private static async Task SetStatusDeleted(EntityEntry<DbFile> dbEntry, CancellationToken cancellationToken)
-        {
-            if (dbEntry.Context is not LocalDbContext dbContext)
-                throw new InvalidOperationException();
-            Redundancy oldRedundancy = await dbEntry.GetRelatedReferenceAsync(f => f.Redundancy, cancellationToken);
-            EntityEntry<RedundantSet> oldRedundantSet;
-            if (oldRedundancy is null)
-                oldRedundantSet = null;
-            else
-            {
-                oldRedundantSet = await dbContext.Entry(oldRedundancy).GetRelatedTargetEntryAsync(r => r.RedundantSet, cancellationToken);
-                cancellationToken.ThrowIfCancellationRequested();
-                _ = dbContext.Redundancies.Remove(oldRedundancy);
-                dbEntry.Entity.Redundancy = null;
-            }
-            EntityEntry<BinaryPropertySet> oldBinaryPropertySet = await dbEntry.GetRelatedTargetEntryAsync(f => f.BinaryProperties, cancellationToken);
-            if (oldBinaryPropertySet.Entity.Hash.HasValue || oldBinaryPropertySet.Entity.Length > 0)
-            {
-                BinaryPropertySet newBinaryPropertySet = await dbContext.BinaryPropertySets.FirstOrDefaultAsync(p => p.Length == 0L && p.Hash == null, cancellationToken);
-                if (newBinaryPropertySet is null)
-                {
-                    newBinaryPropertySet = new() { Length = 0L };
-                    cancellationToken.ThrowIfCancellationRequested();
-                    _ = dbContext.BinaryPropertySets.Add(newBinaryPropertySet);
-                }
-                dbEntry.Entity.BinaryProperties = newBinaryPropertySet;
-            }
-            FileAccessError[] accessErrors = (await dbEntry.GetRelatedCollectionAsync(f => f.AccessErrors, cancellationToken)).ToArray();
-            if (accessErrors.Length > 0)
-                dbContext.FileAccessErrors.RemoveRange(accessErrors);
-            FileComparison[] comparisons = (await dbEntry.GetRelatedCollectionAsync(f => f.BaselineComparisons, cancellationToken))
-                .Concat(await dbEntry.GetRelatedCollectionAsync(f => f.CorrelativeComparisons, cancellationToken)).ToArray();
-            if (comparisons.Length > 0)
-                dbContext.Comparisons.RemoveRange(comparisons);
-            PersonalFileTag[] personalTags = (await dbEntry.GetRelatedCollectionAsync(f => f.PersonalTags, cancellationToken)).ToArray();
-            if (personalTags.Length > 0)
-                dbContext.PersonalFileTags.RemoveRange(personalTags);
-            SharedFileTag[] sharedTags = (await dbEntry.GetRelatedCollectionAsync(f => f.SharedTags, cancellationToken)).ToArray();
-            if (sharedTags.Length > 0)
-                dbContext.SharedFileTags.RemoveRange(sharedTags);
-            EntityEntry<SummaryPropertySet> oldSummaryPropertySet = await dbEntry.GetRelatedTargetEntryAsync(f => f.SummaryProperties, cancellationToken);
-            dbEntry.Entity.SummaryProperties = null;
-            EntityEntry<AudioPropertySet> oldAudioPropertySet = await dbEntry.GetRelatedTargetEntryAsync(f => f.AudioProperties, cancellationToken);
-            dbEntry.Entity.AudioProperties = null;
-            EntityEntry<DocumentPropertySet> oldDocumentPropertySet = await dbEntry.GetRelatedTargetEntryAsync(f => f.DocumentProperties, cancellationToken);
-            dbEntry.Entity.DocumentProperties = null;
-            EntityEntry<DRMPropertySet> oldDRMPropertySet = await dbEntry.GetRelatedTargetEntryAsync(f => f.DRMProperties, cancellationToken);
-            dbEntry.Entity.DRMProperties = null;
-            EntityEntry<GPSPropertySet> oldGPSPropertySet = await dbEntry.GetRelatedTargetEntryAsync(f => f.GPSProperties, cancellationToken);
-            dbEntry.Entity.GPSProperties = null;
-            EntityEntry<ImagePropertySet> oldImagePropertySet = await dbEntry.GetRelatedTargetEntryAsync(f => f.ImageProperties, cancellationToken);
-            dbEntry.Entity.ImageProperties = null;
-            EntityEntry<MediaPropertySet> oldMediaPropertySet = await dbEntry.GetRelatedTargetEntryAsync(f => f.MediaProperties, cancellationToken);
-            dbEntry.Entity.MediaProperties = null;
-            EntityEntry<MusicPropertySet> oldMusicPropertySet = await dbEntry.GetRelatedTargetEntryAsync(f => f.MusicProperties, cancellationToken);
-            dbEntry.Entity.MusicProperties = null;
-            EntityEntry<PhotoPropertySet> oldPhotoPropertySet = await dbEntry.GetRelatedTargetEntryAsync(f => f.PhotoProperties, cancellationToken);
-            dbEntry.Entity.PhotoProperties = null;
-            EntityEntry<RecordedTVPropertySet> oldRecordedTVPropertySet = await dbEntry.GetRelatedTargetEntryAsync(f => f.RecordedTVProperties, cancellationToken);
-            dbEntry.Entity.RecordedTVProperties = null;
-            EntityEntry<VideoPropertySet> oldVideoPropertySet = await dbEntry.GetRelatedTargetEntryAsync(f => f.VideoProperties, cancellationToken);
-            dbEntry.Entity.SummaryProperties = null;
-            dbEntry.Entity.Status = FileCorrelationStatus.Deleted;
-            if (dbEntry.Entity.Options.HasFlag(FileCrawlOptions.FlaggedForRescan))
-                dbEntry.Entity.Options ^= FileCrawlOptions.FlaggedForRescan;
-            Guid id = dbEntry.Entity.Id;
-            _ = await dbContext.SaveChangesAsync(cancellationToken);
-            if (oldRedundantSet.ExistsInDb() && !(await oldRedundantSet.GetRelatedCollectionAsync(r => r.Redundancies, cancellationToken)).Any(r => r.FileId != id))
-                _ = dbContext.RedundantSets.Remove(oldRedundantSet.Entity);
-            if (oldBinaryPropertySet.ExistsInDb() && oldBinaryPropertySet.Entity.Hash.HasValue || oldBinaryPropertySet.Entity.Length > 0 &&
-                !(await oldBinaryPropertySet.GetRelatedCollectionAsync(p => p.Files, cancellationToken)).Any(f => f.Id != id))
-                _ = dbContext.BinaryPropertySets.Remove(oldBinaryPropertySet.Entity);
-            if (oldSummaryPropertySet.ExistsInDb() && (await oldSummaryPropertySet.GetRelatedCollectionAsync(p => p.Files, cancellationToken)).Any(f => f.Id != id))
-                _ = dbContext.SummaryPropertySets.Remove(oldSummaryPropertySet.Entity);
-            if (oldAudioPropertySet.ExistsInDb() && (await oldAudioPropertySet.GetRelatedCollectionAsync(p => p.Files, cancellationToken)).Any(f => f.Id != id))
-                _ = dbContext.AudioPropertySets.Remove(oldAudioPropertySet.Entity);
-            if (oldDocumentPropertySet.ExistsInDb() && (await oldDocumentPropertySet.GetRelatedCollectionAsync(p => p.Files, cancellationToken)).Any(f => f.Id != id))
-                _ = dbContext.DocumentPropertySets.Remove(oldDocumentPropertySet.Entity);
-            if (oldDRMPropertySet.ExistsInDb() && (await oldDRMPropertySet.GetRelatedCollectionAsync(p => p.Files, cancellationToken)).Any(f => f.Id != id))
-                _ = dbContext.DRMPropertySets.Remove(oldDRMPropertySet.Entity);
-            if (oldGPSPropertySet.ExistsInDb() && (await oldGPSPropertySet.GetRelatedCollectionAsync(p => p.Files, cancellationToken)).Any(f => f.Id != id))
-                _ = dbContext.GPSPropertySets.Remove(oldGPSPropertySet.Entity);
-            if (oldImagePropertySet.ExistsInDb() && (await oldImagePropertySet.GetRelatedCollectionAsync(p => p.Files, cancellationToken)).Any(f => f.Id != id))
-                _ = dbContext.ImagePropertySets.Remove(oldImagePropertySet.Entity);
-            if (oldMediaPropertySet.ExistsInDb() && (await oldMediaPropertySet.GetRelatedCollectionAsync(p => p.Files, cancellationToken)).Any(f => f.Id != id))
-                _ = dbContext.MediaPropertySets.Remove(oldMediaPropertySet.Entity);
-            if (oldMusicPropertySet.ExistsInDb() && (await oldMusicPropertySet.GetRelatedCollectionAsync(p => p.Files, cancellationToken)).Any(f => f.Id != id))
-                _ = dbContext.MusicPropertySets.Remove(oldMusicPropertySet.Entity);
-            if (oldPhotoPropertySet.ExistsInDb() && (await oldPhotoPropertySet.GetRelatedCollectionAsync(p => p.Files, cancellationToken)).Any(f => f.Id != id))
-                _ = dbContext.PhotoPropertySets.Remove(oldPhotoPropertySet.Entity);
-            if (oldRecordedTVPropertySet.ExistsInDb() && (await oldRecordedTVPropertySet.GetRelatedCollectionAsync(p => p.Files, cancellationToken)).Any(f => f.Id != id))
-                _ = dbContext.RecordedTVPropertySets.Remove(oldRecordedTVPropertySet.Entity);
-            if (oldVideoPropertySet.ExistsInDb() && (await oldVideoPropertySet.GetRelatedCollectionAsync(p => p.Files, cancellationToken)).Any(f => f.Id != id))
-                _ = dbContext.VideoPropertySets.Remove(oldVideoPropertySet.Entity);
-        }
-
-        [Obsolete("Use DeleteAsync(DbFile, LocalDbContext, CancellationToken [, ItemDeletionOption])")]
-        public async Task<bool> SetStatusDeleted(LocalDbContext dbContext, CancellationToken cancellationToken)
-        {
-            EntityEntry<DbFile> dbEntry;
-            if (Status == FileCorrelationStatus.Deleted || !(dbEntry = dbContext.Entry(this)).ExistsInDb())
-                return false;
-            await SetStatusDeleted(dbEntry, cancellationToken);
-            return true;
-        }
-
-        [Obsolete("Use DeleteAsync(DbFile, LocalDbContext, CancellationToken [, ItemDeletionOption])")]
-        private static async Task<bool> ExpungeAsync(EntityEntry<DbFile> dbEntry, CancellationToken cancellationToken)
-        {
-            if (dbEntry.Context is not LocalDbContext dbContext)
-                throw new InvalidOperationException();
-            Redundancy oldRedundancy = await dbEntry.GetRelatedReferenceAsync(f => f.Redundancy, cancellationToken);
-            EntityEntry<RedundantSet> oldRedundantSet;
-            if (oldRedundancy is null)
-                oldRedundantSet = null;
-            else
-            {
-                oldRedundantSet = await dbContext.Entry(oldRedundancy).GetRelatedTargetEntryAsync(r => r.RedundantSet, cancellationToken);
-                _ = dbContext.Redundancies.Remove(oldRedundancy);
-            }
-            EntityEntry<BinaryPropertySet> oldBinaryPropertySet = await dbEntry.GetRelatedTargetEntryAsync(f => f.BinaryProperties, cancellationToken);
-            FileAccessError[] accessErrors = (await dbEntry.GetRelatedCollectionAsync(f => f.AccessErrors, cancellationToken)).ToArray();
-            if (accessErrors.Length > 0)
-                dbContext.FileAccessErrors.RemoveRange(accessErrors);
-            FileComparison[] comparisons = (await dbEntry.GetRelatedCollectionAsync(f => f.BaselineComparisons, cancellationToken))
-                .Concat(await dbEntry.GetRelatedCollectionAsync(f => f.CorrelativeComparisons, cancellationToken)).ToArray();
-            if (comparisons.Length > 0)
-                dbContext.Comparisons.RemoveRange(comparisons);
-            PersonalFileTag[] personalTags = (await dbEntry.GetRelatedCollectionAsync(f => f.PersonalTags, cancellationToken)).ToArray();
-            if (personalTags.Length > 0)
-                dbContext.PersonalFileTags.RemoveRange(personalTags);
-            SharedFileTag[] sharedTags = (await dbEntry.GetRelatedCollectionAsync(f => f.SharedTags, cancellationToken)).ToArray();
-            if (sharedTags.Length > 0)
-                dbContext.SharedFileTags.RemoveRange(sharedTags);
-            EntityEntry<SummaryPropertySet> oldSummaryPropertySet = await dbEntry.GetRelatedTargetEntryAsync(f => f.SummaryProperties, cancellationToken);
-            EntityEntry<AudioPropertySet> oldAudioPropertySet = await dbEntry.GetRelatedTargetEntryAsync(f => f.AudioProperties, cancellationToken);
-            EntityEntry<DocumentPropertySet> oldDocumentPropertySet = await dbEntry.GetRelatedTargetEntryAsync(f => f.DocumentProperties, cancellationToken);
-            EntityEntry<DRMPropertySet> oldDRMPropertySet = await dbEntry.GetRelatedTargetEntryAsync(f => f.DRMProperties, cancellationToken);
-            EntityEntry<GPSPropertySet> oldGPSPropertySet = await dbEntry.GetRelatedTargetEntryAsync(f => f.GPSProperties, cancellationToken);
-            EntityEntry<ImagePropertySet> oldImagePropertySet = await dbEntry.GetRelatedTargetEntryAsync(f => f.ImageProperties, cancellationToken);
-            EntityEntry<MediaPropertySet> oldMediaPropertySet = await dbEntry.GetRelatedTargetEntryAsync(f => f.MediaProperties, cancellationToken);
-            EntityEntry<MusicPropertySet> oldMusicPropertySet = await dbEntry.GetRelatedTargetEntryAsync(f => f.MusicProperties, cancellationToken);
-            EntityEntry<PhotoPropertySet> oldPhotoPropertySet = await dbEntry.GetRelatedTargetEntryAsync(f => f.PhotoProperties, cancellationToken);
-            EntityEntry<RecordedTVPropertySet> oldRecordedTVPropertySet = await dbEntry.GetRelatedTargetEntryAsync(f => f.RecordedTVProperties, cancellationToken);
-            EntityEntry<VideoPropertySet> oldVideoPropertySet = await dbEntry.GetRelatedTargetEntryAsync(f => f.VideoProperties, cancellationToken);
-            
-            Guid id = dbEntry.Entity.Id;
-            if (oldRedundantSet.ExistsInDb() && !(await oldRedundantSet.GetRelatedCollectionAsync(r => r.Redundancies, cancellationToken)).Any(r => r.FileId != id))
-                _ = dbContext.RedundantSets.Remove(oldRedundantSet.Entity);
-            if (oldBinaryPropertySet.ExistsInDb() && !(await oldBinaryPropertySet.GetRelatedCollectionAsync(p => p.Files, cancellationToken)).Any(f => f.Id != id))
-                _ = dbContext.BinaryPropertySets.Remove(oldBinaryPropertySet.Entity);
-            if (oldSummaryPropertySet.ExistsInDb() && (await oldSummaryPropertySet.GetRelatedCollectionAsync(p => p.Files, cancellationToken)).Any(f => f.Id != id))
-                _ = dbContext.SummaryPropertySets.Remove(oldSummaryPropertySet.Entity);
-            if (oldAudioPropertySet.ExistsInDb() && (await oldAudioPropertySet.GetRelatedCollectionAsync(p => p.Files, cancellationToken)).Any(f => f.Id != id))
-                _ = dbContext.AudioPropertySets.Remove(oldAudioPropertySet.Entity);
-            if (oldDocumentPropertySet.ExistsInDb() && (await oldDocumentPropertySet.GetRelatedCollectionAsync(p => p.Files, cancellationToken)).Any(f => f.Id != id))
-                _ = dbContext.DocumentPropertySets.Remove(oldDocumentPropertySet.Entity);
-            if (oldDRMPropertySet.ExistsInDb() && (await oldDRMPropertySet.GetRelatedCollectionAsync(p => p.Files, cancellationToken)).Any(f => f.Id != id))
-                _ = dbContext.DRMPropertySets.Remove(oldDRMPropertySet.Entity);
-            if (oldGPSPropertySet.ExistsInDb() && (await oldGPSPropertySet.GetRelatedCollectionAsync(p => p.Files, cancellationToken)).Any(f => f.Id != id))
-                _ = dbContext.GPSPropertySets.Remove(oldGPSPropertySet.Entity);
-            if (oldImagePropertySet.ExistsInDb() && (await oldImagePropertySet.GetRelatedCollectionAsync(p => p.Files, cancellationToken)).Any(f => f.Id != id))
-                _ = dbContext.ImagePropertySets.Remove(oldImagePropertySet.Entity);
-            if (oldMediaPropertySet.ExistsInDb() && (await oldMediaPropertySet.GetRelatedCollectionAsync(p => p.Files, cancellationToken)).Any(f => f.Id != id))
-                _ = dbContext.MediaPropertySets.Remove(oldMediaPropertySet.Entity);
-            if (oldMusicPropertySet.ExistsInDb() && (await oldMusicPropertySet.GetRelatedCollectionAsync(p => p.Files, cancellationToken)).Any(f => f.Id != id))
-                _ = dbContext.MusicPropertySets.Remove(oldMusicPropertySet.Entity);
-            if (oldPhotoPropertySet.ExistsInDb() && (await oldPhotoPropertySet.GetRelatedCollectionAsync(p => p.Files, cancellationToken)).Any(f => f.Id != id))
-                _ = dbContext.PhotoPropertySets.Remove(oldPhotoPropertySet.Entity);
-            if (oldRecordedTVPropertySet.ExistsInDb() && (await oldRecordedTVPropertySet.GetRelatedCollectionAsync(p => p.Files, cancellationToken)).Any(f => f.Id != id))
-                _ = dbContext.RecordedTVPropertySets.Remove(oldRecordedTVPropertySet.Entity);
-            if (oldVideoPropertySet.ExistsInDb() && (await oldVideoPropertySet.GetRelatedCollectionAsync(p => p.Files, cancellationToken)).Any(f => f.Id != id))
-                _ = dbContext.VideoPropertySets.Remove(oldVideoPropertySet.Entity);
-            if (dbEntry.Entity.Options.HasFlag(FileCrawlOptions.FlaggedForDeletion))
-                return false;
-            dbContext.Files.Remove(dbEntry.Entity);
-            return true;
         }
 
         IEnumerable<Guid> IIdentityReference.GetIdentifiers()

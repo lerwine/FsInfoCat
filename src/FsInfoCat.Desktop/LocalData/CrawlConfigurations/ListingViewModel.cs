@@ -145,8 +145,9 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
             CrawlConfiguration target = await dbContext.CrawlConfigurations.FindAsync(new object[] { entity.Id }, statusListener.CancellationToken);
             if (target is null)
                 return null;
-            // TODO: Use CrawlConfiguration.RemoveAsync
-            await CrawlConfiguration.DeleteAsync(target, dbContext, statusListener);
+            statusListener.Logger.LogInformation("Removing CrawlConfiguration {{ Id = {Id}; DisplayName = \"{DisplayName}\" }}", target.Id, target.DisplayName);
+            statusListener.SetMessage($"Removing crawl configuration record: {target.DisplayName}");
+            await CrawlConfiguration.RemoveAsync(dbContext.Entry(target), statusListener.CancellationToken);
             return dbContext.Entry(target);
         }
 
