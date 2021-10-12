@@ -137,25 +137,25 @@ namespace FsInfoCat.Desktop.ViewModel
 
         protected void SetRootDirectory(Guid id)
         {
-            // TODO: Impolement SetRootDirectory
+            // TODO: Implement SetRootDirectory
             throw new NotImplementedException("SetRootDirectory not implemented");
         }
 
         protected void SetRootDirectory(ISubdirectoryRow fileSystem)
         {
-            // TODO: Impolement SetRootDirectory
+            // TODO: Implement SetRootDirectory
             throw new NotImplementedException("SetRootDirectory not implemented");
         }
 
         protected void SetFileSystem(Guid id)
         {
-            // TODO: Impolement SetFileSystem
+            // TODO: Implement SetFileSystem
             throw new NotImplementedException("SetFileSystem not implemented");
         }
 
         protected void SetFileSystem(IFileSystemRow fileSystem)
         {
-            // TODO: Impolement SetFileSystem
+            // TODO: Implement SetFileSystem
             throw new NotImplementedException("SetFileSystem not implemented");
         }
 

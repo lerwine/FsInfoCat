@@ -57,13 +57,13 @@ namespace FsInfoCat.Desktop.ViewModel
 
         protected void SetFileSystem(Guid id)
         {
-            // TODO: Impolement SetFileSystem
+            // TODO: Implement SetFileSystem
             throw new NotImplementedException("SetFileSystem not implemented");
         }
 
         protected void SetFileSystem(IFileSystemRow fileSystem)
         {
-            // TODO: Impolement SetFileSystem
+            // TODO: Implement SetFileSystem
             throw new NotImplementedException("SetFileSystem not implemented");
         }
     }
