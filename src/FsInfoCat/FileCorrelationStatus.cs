@@ -59,6 +59,5 @@ namespace FsInfoCat
             Description = nameof(Properties.Resources.Description_FileCorrelationStatus_FileDeleted), ResourceType = typeof(Properties.Resources))]
         Deleted = 9
     }
-
 }
 

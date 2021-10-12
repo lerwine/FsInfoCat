@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 
 namespace FsInfoCat.Local
@@ -9,13 +9,11 @@ namespace FsInfoCat.Local
 
         public Subdirectory DB { get; }
 
-        public int Depth { get; }
-
-        public DirectoryCrawlEventArgs(CrawlTaskManager.CrawlContext crawlContext) : base((crawlContext ?? throw new ArgumentNullException(nameof(crawlContext))).Worker)
+        internal DirectoryCrawlEventArgs(CrawlManagerService.CrawlWorker worker, CrawlManagerService.Context context, SubdirectoryAccessError accessError = null)
+            : base(worker, context, accessError)
         {
-            FS = crawlContext.FS;
-            DB = crawlContext.DB;
-            Depth = crawlContext.Depth;
+            FS = context.DirectoryInfo;
+            DB = context.Subdirectory;
         }
     }
 }

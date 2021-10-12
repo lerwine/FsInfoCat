@@ -145,6 +145,7 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
             CrawlConfiguration target = await dbContext.CrawlConfigurations.FindAsync(new object[] { entity.Id }, statusListener.CancellationToken);
             if (target is null)
                 return null;
+            // TODO: Use CrawlConfiguration.RemoveAsync
             await CrawlConfiguration.DeleteAsync(target, dbContext, statusListener);
             return dbContext.Entry(target);
         }

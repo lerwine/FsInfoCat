@@ -117,9 +117,6 @@ namespace FsInfoCat.Desktop.ViewModel
                 _ = ColumnVisibilityItemViewModel.NotifyBooleanPropertyChanged(Columns, e.Property.Name, isVisible);
         }
 
-        [Obsolete("This is handled by OnPropertyChanged override in the base object")]
-        protected void RaiseColumnVisibilityPropertyChanged(DependencyPropertyChangedEventArgs args) { }
-
         public virtual bool IsColumnHidden(string name) => Columns.Where(c => c.ShortName == name).Any(c => !c.IsVisible);
 
         public virtual IEnumerable<string> GetHiddenColumns() => Columns.Where(c => !c.IsVisible).Select(c => c.ShortName);

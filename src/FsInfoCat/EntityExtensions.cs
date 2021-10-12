@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
@@ -13,11 +14,27 @@ namespace FsInfoCat
 {
     public static class EntityExtensions
     {
+        public static readonly StringComparer FileNameComparer = StringComparer.InvariantCultureIgnoreCase;
+
         public static string ToVersionString(this Collections.ByteValues value)
         {
             if (value is null || value.Count == 0)
                 return "";
             return string.Join('.', value.Select(b => b.ToString()));
+        }
+
+        public static async Task<bool> RemoveRelatedEntitiesAsync<TEntity, TProperty>([DisallowNull] this EntityEntry<TEntity> entry,
+            [DisallowNull] Expression<Func<TEntity, IEnumerable<TProperty>>> propertyExpression, [DisallowNull] DbSet<TProperty> dbSet, CancellationToken cancellationToken)
+            where TEntity : class
+            where TProperty : class
+        {
+            TProperty[] related = (await entry.GetRelatedCollectionAsync(propertyExpression, cancellationToken)).ToArray();
+            if (related.Length > 0)
+            {
+                dbSet.RemoveRange(related);
+                return true;
+            }
+            return false;
         }
 
         public static string AncestorNamesToPath(string ancestorNames)
@@ -55,14 +72,11 @@ namespace FsInfoCat
         {
             if (entry is null)
                 return false;
-            switch (entry.State)
+            return entry.State switch
             {
-                case EntityState.Unchanged:
-                case EntityState.Modified:
-                    return true;
-                default:
-                    return false;
-            }
+                EntityState.Unchanged or EntityState.Modified => true,
+                _ => false,
+            };
         }
 
         public static async Task<TProperty> GetRelatedReferenceAsync<TEntity, TProperty>([DisallowNull] this EntityEntry<TEntity> entry,
@@ -153,5 +167,142 @@ namespace FsInfoCat
             }
         }
 
+        public static List<(TSubdirectory Subdirectory, DirectoryInfo DirectoryInfo)> ToMatchedPairs<TSubdirectory>(this IEnumerable<TSubdirectory> subdirectories, IEnumerable<DirectoryInfo> directoryInfos)
+            where TSubdirectory : class, ISubdirectory
+        {
+            if (subdirectories is null || !(subdirectories = subdirectories.Where(s => s is not null)).Distinct().Any())
+            {
+                if (directoryInfos is null || !(directoryInfos = directoryInfos.Where(d => d is not null)).Distinct().Any())
+                    return new();
+                return directoryInfos.Select(d => ((TSubdirectory)null, d)).ToList();
+            }
+            if (directoryInfos is null || !(directoryInfos = directoryInfos.Where(d => d is not null)).Distinct().Any())
+                return subdirectories.Select(s => (s, (DirectoryInfo)null)).ToList();
+
+            StringComparer csComparer = StringComparer.InvariantCulture;
+            StringComparer ciComparer = StringComparer.InvariantCultureIgnoreCase;
+
+            List<TSubdirectory> unmatchedSubdirectories = new();
+            if (directoryInfos is not List<DirectoryInfo> unmatchedDirectoryInfos)
+                unmatchedDirectoryInfos = directoryInfos.ToList();
+            List<(TSubdirectory Subdirectory, DirectoryInfo DirectoryInfo)> result = subdirectories.Select(Subdirectory =>
+            {
+                string n = Subdirectory.Name;
+                for (int i = 0; i < unmatchedDirectoryInfos.Count; i++)
+                {
+                    DirectoryInfo d = unmatchedDirectoryInfos[i];
+                    if (ciComparer.Equals(n, d.Name))
+                    {
+                        unmatchedDirectoryInfos.RemoveAt(i);
+                        return (Subdirectory, DirectoryInfo: d);
+                    }
+                }
+                return (Subdirectory, DirectoryInfo: (DirectoryInfo)null);
+            }).Where(t =>
+                {
+                    if (t.DirectoryInfo is null)
+                    {
+                        unmatchedSubdirectories.Add(t.Subdirectory);
+                        return false;
+                    }
+                    return true;
+                }).ToList();
+            if (unmatchedSubdirectories.Count == 0)
+            {
+                foreach (DirectoryInfo di in unmatchedDirectoryInfos)
+                    result.Add(new(null, di));
+            }
+            else
+            {
+                if (unmatchedDirectoryInfos.Count > 0)
+                {
+                    Dictionary<string, DirectoryInfo[]> directoryInfosByCiName = unmatchedDirectoryInfos.GroupBy(d => d.Name, ciComparer).ToDictionary(k => k.Key, v => v.ToArray(), ciComparer);
+                    foreach (IGrouping<string, TSubdirectory> subdirectoryByCiName in unmatchedSubdirectories.GroupBy(s => s.Name, ciComparer))
+                    {
+                        string n = subdirectoryByCiName.Key;
+                        if (!subdirectoryByCiName.Skip(1).Any() && directoryInfosByCiName.TryGetValue(n, out DirectoryInfo[] di) && di.Length == 1)
+                        {
+                            DirectoryInfo d = di[0];
+                            unmatchedDirectoryInfos.Remove(d);
+                            result.Add((subdirectoryByCiName.First(), d));
+                        }
+                        else
+                            result.AddRange(subdirectoryByCiName.Select(s => (s, (DirectoryInfo)null)));
+                    }
+                }
+                foreach (TSubdirectory s in unmatchedSubdirectories)
+                    result.Add(new(s, null));
+            }
+            return result;
+        }
+
+        public static List<(TDbFile DbFile, FileInfo FileInfo)> ToMatchedPairs<TDbFile>(this IEnumerable<TDbFile> dbFiles, IEnumerable<FileInfo> fileInfos)
+            where TDbFile : class, IFile
+        {
+            if (dbFiles is null || !(dbFiles = dbFiles.Where(f => f is not null)).Distinct().Any())
+            {
+                if (fileInfos is null || !(fileInfos = fileInfos.Where(f => f is not null)).Distinct().Any())
+                    return new();
+                return fileInfos.Select(f => ((TDbFile)null, f)).ToList();
+            }
+            if (fileInfos is null || !(fileInfos = fileInfos.Where(f => f is not null)).Distinct().Any())
+                return dbFiles.Select(f => (f, (FileInfo)null)).ToList();
+
+            StringComparer csComparer = StringComparer.InvariantCulture;
+            StringComparer ciComparer = StringComparer.InvariantCultureIgnoreCase;
+
+            List<TDbFile> unmatchedDbFiles = new();
+            if (fileInfos is not List<FileInfo> unmatchedFileInfos)
+                unmatchedFileInfos = fileInfos.ToList();
+            List<(TDbFile DbFile, FileInfo FileInfo)> result = dbFiles.Select(DbFile =>
+            {
+                string n = DbFile.Name;
+                for (int i = 0; i < unmatchedFileInfos.Count; i++)
+                {
+                    FileInfo f = unmatchedFileInfos[i];
+                    if (ciComparer.Equals(n, f.Name))
+                    {
+                        unmatchedFileInfos.RemoveAt(i);
+                        return (DbFile, FileInfo: f);
+                    }
+                }
+                return (DbFile, FileInfo: (FileInfo)null);
+            }).Where(t =>
+            {
+                if (t.FileInfo is null)
+                {
+                    unmatchedDbFiles.Add(t.DbFile);
+                    return false;
+                }
+                return true;
+            }).ToList();
+            if (unmatchedDbFiles.Count == 0)
+            {
+                foreach (FileInfo fi in unmatchedFileInfos)
+                    result.Add(new(null, fi));
+            }
+            else
+            {
+                if (unmatchedFileInfos.Count > 0)
+                {
+                    Dictionary<string, FileInfo[]> fileInfosByCiName = unmatchedFileInfos.GroupBy(f => f.Name, ciComparer).ToDictionary(k => k.Key, v => v.ToArray(), ciComparer);
+                    foreach (IGrouping<string, TDbFile> dbFileByCiName in unmatchedDbFiles.GroupBy(f => f.Name, ciComparer))
+                    {
+                        string n = dbFileByCiName.Key;
+                        if (!dbFileByCiName.Skip(1).Any() && fileInfosByCiName.TryGetValue(n, out FileInfo[] fi) && fi.Length == 1)
+                        {
+                            FileInfo f = fi[0];
+                            unmatchedFileInfos.Remove(f);
+                            result.Add((dbFileByCiName.First(), f));
+                        }
+                        else
+                            result.AddRange(dbFileByCiName.Select(f => (f, (FileInfo)null)));
+                    }
+                }
+                foreach (TDbFile f in unmatchedDbFiles)
+                    result.Add(new(f, null));
+            }
+            return result;
+        }
     }
 }

@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace FsInfoCat.Local
@@ -75,6 +76,8 @@ namespace FsInfoCat.Local
                 _ = _root.SetValue(null);
         }
 
+        // TODO: Use RemoveAsync
+        [Obsolete("Use RemoveAsync")]
         public static async Task<int> DeleteAsync(CrawlConfiguration target, LocalDbContext dbContext, IStatusListener statusListener)
         {
             using IDbContextTransaction transaction = dbContext.Database.BeginTransaction();
@@ -95,6 +98,22 @@ namespace FsInfoCat.Local
             result += await dbContext.SaveChangesAsync(statusListener.CancellationToken);
             await transaction.CommitAsync(statusListener.CancellationToken);
             return result;
+        }
+
+        internal static async Task RemoveAsync(EntityEntry<CrawlConfiguration> entry, CancellationToken cancellationToken)
+        {
+            if (entry?.Context is not LocalDbContext dbContext)
+                throw new InvalidOperationException();
+            CrawlJobLog[] logs = (await entry.GetRelatedCollectionAsync(e => e.Logs, cancellationToken)).ToArray();
+            int result;
+            if (logs.Length > 0)
+            {
+                dbContext.CrawlJobLogs.RemoveRange(logs);
+                result = await dbContext.SaveChangesAsync(cancellationToken);
+            }
+            else
+                result = 0;
+            _ = dbContext.CrawlConfigurations.Remove(entry.Entity);
         }
     }
 }

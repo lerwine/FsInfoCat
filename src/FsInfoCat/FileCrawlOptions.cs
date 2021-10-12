@@ -32,6 +32,5 @@ namespace FsInfoCat
             ResourceType = typeof(Properties.Resources))]
         FlaggedForRescan = 8
     }
-
 }
 
