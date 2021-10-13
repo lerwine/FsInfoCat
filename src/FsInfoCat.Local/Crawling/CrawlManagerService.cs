@@ -1,4 +1,6 @@
 using FsInfoCat.Collections;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -8,19 +10,26 @@ using System.Text;
 
 namespace FsInfoCat.Local.Crawling
 {
-    internal partial class CrawlManagerService : ICrawlManagerService
+    [Obsolete("Use CrawlMessageBus")]
+    public partial class CrawlManagerService : ICrawlManagerService
     {
-        public bool IsActive => throw new NotImplementedException();
+        private readonly ILogger<CrawlManagerService> _logger;
+        private readonly IFileSystemDetailService _fileSystemDetailService;
+        private readonly object _serviceScopeFactory;
+        private readonly WeakReferenceSet<IProgress<ICrawlActivityEventArgs>> _crawlActivityEventListeners = new();
+        private readonly WeakReferenceSet<IProgress<ICrawlErrorEventArgs>> _crawlErrorEventListeners = new();
+        private readonly WeakReferenceSet<IProgress<ICrawlManagerEventArgs>> _crawlManagerEventListeners = new();
+        private readonly WeakReferenceSet<IProgress<FileCrawlEventArgs>> _anyFileCrawlEventListeners = new();
+        private readonly WeakReferenceSet<IProgress<FileCrawlEventArgs>> _fileCrawlEventListeners = new();
+        private readonly WeakReferenceSet<IProgress<ICrawlManagerFsItemEventArgs>> _anyFsItemEventListeners = new();
+        private readonly WeakReferenceSet<IProgress<ICrawlManagerFsItemEventArgs>> _fsItemEventListeners = new();
+        private readonly WeakReferenceSet<IProgress<DirectoryCrawlEventArgs>> _anyDirectoryEventListeners = new();
+        private readonly WeakReferenceSet<IProgress<DirectoryCrawlEventArgs>> _directoryEventListeners = new();
 
-        private WeakReferenceSet<IProgress<ICrawlActivityEventArgs>> _crawlActivityEventListeners = new();
-        private WeakReferenceSet<IProgress<ICrawlErrorEventArgs>> _crawlErrorEventListeners = new();
-        private WeakReferenceSet<IProgress<ICrawlManagerEventArgs>> _crawlManagerEventListeners = new();
-        private WeakReferenceSet<IProgress<FileCrawlEventArgs>> _anyFileCrawlEventListeners = new();
-        private WeakReferenceSet<IProgress<FileCrawlEventArgs>> _fileCrawlEventListeners = new();
-        private WeakReferenceSet<IProgress<ICrawlManagerFsItemEventArgs>> _anyFsItemEventListeners = new();
-        private WeakReferenceSet<IProgress<ICrawlManagerFsItemEventArgs>> _fsItemEventListeners = new();
-        private WeakReferenceSet<IProgress<DirectoryCrawlEventArgs>> _anyDirectoryEventListeners = new();
-        private WeakReferenceSet<IProgress<DirectoryCrawlEventArgs>> _directoryEventListeners = new();
+        public CrawlManagerService(ILogger<CrawlManagerService> logger, IFileSystemDetailService fileSystemDetailService, IServiceScopeFactory serviceScopeFactory) =>
+            (_logger, _fileSystemDetailService, _serviceScopeFactory) = (logger, fileSystemDetailService, serviceScopeFactory);
+
+        public bool IsActive => throw new NotImplementedException();
 
         public void AddCrawlActivityEventListener([DisallowNull] IProgress<ICrawlActivityEventArgs> listener) => _crawlActivityEventListeners.Add(listener ?? throw new ArgumentNullException(nameof(listener)));
 

@@ -34,7 +34,7 @@ namespace FsInfoCat.Local
 
             public DateTime Started { get; private set; }
 
-            public TimeSpan Duration => _stopWatch.Elapsed;
+            public TimeSpan Elapsed => _stopWatch.Elapsed;
 
             public object AsyncState => Task.AsyncState;
 
