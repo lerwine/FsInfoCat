@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 
 namespace FsInfoCat.Local.Crawling
 {
-    public class CrawlActivityEventArgs : EventArgs, ICrawlActivityEventArgs
+    public abstract class CrawlActivityEventArgs : EventArgs, ICrawlActivityEventArgs
     {
         public string Message { get; }
 
@@ -12,7 +12,7 @@ namespace FsInfoCat.Local.Crawling
 
         public AsyncJobStatus JobStatus { get; }
 
-        public CrawlActivityEventArgs(string message, StatusMessageLevel level, AsyncJobStatus status, Guid concurrencyId)
+        protected CrawlActivityEventArgs(string message, StatusMessageLevel level, AsyncJobStatus status, Guid concurrencyId)
         {
             Message = message ?? "";
             MessageLevel = level;

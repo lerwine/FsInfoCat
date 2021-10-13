@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat.Local.Crawling
@@ -7,33 +7,33 @@ namespace FsInfoCat.Local.Crawling
     {
         bool IsActive { get; }
 
-        void AddCrawlActivityEventListener([DisallowNull] ICrawlActivityEventListener listener);
+        void AddCrawlActivityEventListener([DisallowNull] IProgress<ICrawlActivityEventArgs> listener);
 
-        bool RemoveCrawlActivityEventListener(ICrawlActivityEventListener listener);
+        bool RemoveCrawlActivityEventListener(IProgress<ICrawlActivityEventArgs> listener);
 
-        void AddCrawlManagerEventListener([DisallowNull] ICrawlManagerEventListener listener);
+        void AddCrawlManagerEventListener([DisallowNull] IProgress<ICrawlManagerEventArgs> listener);
 
-        bool RemoveCrawlManagerEventListener(ICrawlManagerEventListener listener);
+        bool RemoveCrawlManagerEventListener(IProgress<ICrawlManagerEventArgs> listener);
 
-        void AddCrawlErrorEventListener([DisallowNull] ICrawlErrorEventListener listener);
+        void AddCrawlErrorEventListener([DisallowNull] IProgress<ICrawlErrorEventArgs> listener);
 
-        bool RemoveCrawlErrorEventListener(ICrawlErrorEventListener listener);
+        bool RemoveCrawlErrorEventListener(IProgress<ICrawlErrorEventArgs> listener);
 
-        void AddFileSystemItemEventListener([DisallowNull] IFileSystemItemEventListener listener);
+        void AddFileSystemItemEventListener([DisallowNull] IProgress<ICrawlManagerFsItemEventArgs> listener, bool includeErrorEvents);
 
-        bool RemoveFileSystemItemEventListener(IFileSystemItemEventListener listener);
+        bool RemoveFileSystemItemEventListener(IProgress<ICrawlManagerFsItemEventArgs> listener);
 
-        void AddSubdirectoryCrawlEventListener([DisallowNull] ISubdirectoryCrawlEventListener listener);
+        void AddSubdirectoryCrawlEventListener([DisallowNull] IProgress<DirectoryCrawlEventArgs> listener, bool includeErrorEvents);
 
-        bool RemoveSubdirectoryCrawlEventListener(ISubdirectoryCrawlEventListener listener);
+        bool RemoveSubdirectoryCrawlEventListener(IProgress<DirectoryCrawlEventArgs> listener);
 
-        void AddFileCrawlEventListener([DisallowNull] IFileCrawlEventListener listener);
+        void AddFileCrawlEventListener([DisallowNull] IProgress<FileCrawlEventArgs> listener, bool includeErrorEvents);
 
-        bool RemoveFileCrawlEventListener(IFileCrawlEventListener listener);
+        bool RemoveFileCrawlEventListener(IProgress<FileCrawlEventArgs> listener);
 
-        ICrawlJob StartCrawlAsync([DisallowNull] ILocalCrawlConfiguration crawlConfiguration, DateTime stopAt);
+        ICrawlJob QueueCrawlAsync([DisallowNull] ILocalCrawlConfiguration crawlConfiguration, DateTime stopAt);
 
-        ICrawlJob StartCrawlAsync([DisallowNull] ILocalCrawlConfiguration crawlConfiguration);
+        ICrawlJob QueueCrawlAsync([DisallowNull] ILocalCrawlConfiguration crawlConfiguration);
 
         void CancelAllCrawlsAsync();
     }

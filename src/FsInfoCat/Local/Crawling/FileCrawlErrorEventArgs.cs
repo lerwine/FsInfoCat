@@ -7,8 +7,8 @@ namespace FsInfoCat.Local.Crawling
     {
         public Exception Exception { get; }
 
-        public FileCrawlErrorEventArgs([DisallowNull] Exception exception, [DisallowNull] FileCrawlErrorEventArgs args, string message,
-            StatusMessageLevel level = StatusMessageLevel.Error) : base(args, message, level)
+        public FileCrawlErrorEventArgs([DisallowNull] Exception exception, [DisallowNull] FileCrawlEventArgs args, string message = null, StatusMessageLevel level = StatusMessageLevel.Error, AsyncJobStatus status = AsyncJobStatus.Faulted)
+            : base(args, string.IsNullOrWhiteSpace(message) ? (string.IsNullOrWhiteSpace(exception.Message) ? exception.ToString() : exception.Message) : message, level, status)
         {
             Exception = exception ?? throw new ArgumentNullException(nameof(exception));
         }
