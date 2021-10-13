@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat.Local
 {
+    [Obsolete("Use Crawling.CrawlManagerService")]
     public sealed partial class CrawlManagerService : ICrawlManagerService_Obsolete
     {
         private readonly LinkedList<WeakReference<ICrawlActivityEventListener>> _crawlActivityEventListeners = new();

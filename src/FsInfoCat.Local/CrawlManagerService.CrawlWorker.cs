@@ -15,6 +15,7 @@ namespace FsInfoCat.Local
 {
     public sealed partial class CrawlManagerService
     {
+        [Obsolete("Use Crawling.CrawlManagerService")]
         internal class CrawlWorker : ILocalCrawlConfiguration
         {
             private readonly CancellationToken _cancellationToken;

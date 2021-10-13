@@ -7,6 +7,7 @@ namespace FsInfoCat.Local
 {
     public sealed partial class CrawlManagerService
     {
+        [Obsolete("Use Crawling.CrawlManagerService")]
         internal class CrawlJob : ICrawlJob
         {
             private readonly CancellationTokenSource _tokenSource = new();
