@@ -3,7 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat.Local.Crawling
 {
-    public sealed class CrawlJobEndEventArgs : CrawlActivityEventArgs, ICrawlManagerEventArgs
+    public sealed class CrawlJobEndEventArgs : CrawlActivityEventArgs, ICrawlJobEventArgs
     {
         public ILocalCrawlConfiguration Configuration { get; }
         public bool IsLastJob { get; }

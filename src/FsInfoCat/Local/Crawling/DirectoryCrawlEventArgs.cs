@@ -4,7 +4,7 @@ using System.IO;
 
 namespace FsInfoCat.Local.Crawling
 {
-    public abstract class DirectoryCrawlEventArgs : CrawlActivityEventArgs, ICrawlManagerFsItemEventArgs
+    public abstract class DirectoryCrawlEventArgs : CrawlActivityEventArgs, IFsItemCrawlEventArgs
     {
         public ILocalSubdirectory Entity { get; }
 

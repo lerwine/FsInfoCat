@@ -1,6 +1,6 @@
 namespace FsInfoCat.Local.Crawling
 {
-    public interface ICrawlManagerFsItemEventArgs : ICurrentItem, ICrawlActivityEventArgs
+    public interface IFsItemCrawlEventArgs : ICurrentItem, ICrawlActivityEventArgs
     {
         DirectoryCrawlEventArgs Parent { get; }
     }

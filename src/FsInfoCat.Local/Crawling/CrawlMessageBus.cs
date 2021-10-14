@@ -13,11 +13,11 @@ namespace FsInfoCat.Local.Crawling
         private readonly ILogger<CrawlMessageBus> _logger;
         private readonly WeakReferenceSet<IProgress<ICrawlActivityEventArgs>> _crawlActivityEventListeners = new();
         private readonly WeakReferenceSet<IProgress<ICrawlErrorEventArgs>> _crawlErrorEventListeners = new();
-        private readonly WeakReferenceSet<IProgress<ICrawlManagerEventArgs>> _crawlManagerEventListeners = new();
+        private readonly WeakReferenceSet<IProgress<ICrawlJobEventArgs>> _crawlManagerEventListeners = new();
         private readonly WeakReferenceSet<IProgress<FileCrawlEventArgs>> _anyFileCrawlEventListeners = new();
         private readonly WeakReferenceSet<IProgress<FileCrawlEventArgs>> _fileCrawlEventListeners = new();
-        private readonly WeakReferenceSet<IProgress<ICrawlManagerFsItemEventArgs>> _anyFsItemEventListeners = new();
-        private readonly WeakReferenceSet<IProgress<ICrawlManagerFsItemEventArgs>> _fsItemEventListeners = new();
+        private readonly WeakReferenceSet<IProgress<IFsItemCrawlEventArgs>> _anyFsItemEventListeners = new();
+        private readonly WeakReferenceSet<IProgress<IFsItemCrawlEventArgs>> _fsItemEventListeners = new();
         private readonly WeakReferenceSet<IProgress<DirectoryCrawlEventArgs>> _anyDirectoryEventListeners = new();
         private readonly WeakReferenceSet<IProgress<DirectoryCrawlEventArgs>> _directoryEventListeners = new();
 
@@ -33,12 +33,12 @@ namespace FsInfoCat.Local.Crawling
 
         public void AddCrawlErrorEventListener([DisallowNull] IProgress<ICrawlErrorEventArgs> listener) => _crawlErrorEventListeners.Add(listener ?? throw new ArgumentNullException(nameof(listener)));
 
-        public void AddCrawlManagerEventListener([DisallowNull] IProgress<ICrawlManagerEventArgs> listener) => _crawlManagerEventListeners.Add(listener ?? throw new ArgumentNullException(nameof(listener)));
+        public void AddCrawlManagerEventListener([DisallowNull] IProgress<ICrawlJobEventArgs> listener) => _crawlManagerEventListeners.Add(listener ?? throw new ArgumentNullException(nameof(listener)));
 
         public void AddFileCrawlEventListener([DisallowNull] IProgress<FileCrawlEventArgs> listener, bool includeErrorEvents) => (includeErrorEvents ? _anyFileCrawlEventListeners : _fileCrawlEventListeners)
             .Add(listener ?? throw new ArgumentNullException(nameof(listener)));
 
-        public void AddFileSystemItemEventListener([DisallowNull] IProgress<ICrawlManagerFsItemEventArgs> listener, bool includeErrorEvents) => (includeErrorEvents ? _anyFsItemEventListeners : _fsItemEventListeners)
+        public void AddFileSystemItemEventListener([DisallowNull] IProgress<IFsItemCrawlEventArgs> listener, bool includeErrorEvents) => (includeErrorEvents ? _anyFsItemEventListeners : _fsItemEventListeners)
             .Add(listener ?? throw new ArgumentNullException(nameof(listener)));
 
         public void AddSubdirectoryCrawlEventListener([DisallowNull] IProgress<DirectoryCrawlEventArgs> listener, bool includeErrorEvents) => (includeErrorEvents ? _anyDirectoryEventListeners : _directoryEventListeners)
@@ -48,11 +48,11 @@ namespace FsInfoCat.Local.Crawling
 
         public bool RemoveCrawlErrorEventListener(IProgress<ICrawlErrorEventArgs> listener) => _crawlErrorEventListeners.Remove(listener);
 
-        public bool RemoveCrawlManagerEventListener(IProgress<ICrawlManagerEventArgs> listener) => _crawlManagerEventListeners.Remove(listener);
+        public bool RemoveCrawlManagerEventListener(IProgress<ICrawlJobEventArgs> listener) => _crawlManagerEventListeners.Remove(listener);
 
         public bool RemoveFileCrawlEventListener(IProgress<FileCrawlEventArgs> listener, bool includesErrorEvents) => (includesErrorEvents ? _anyFileCrawlEventListeners : _fileCrawlEventListeners).Remove(listener);
 
-        public bool RemoveFileSystemItemEventListener(IProgress<ICrawlManagerFsItemEventArgs> listener, bool includesErrorEvents) => (includesErrorEvents ? _anyFsItemEventListeners : _fsItemEventListeners).Remove(listener);
+        public bool RemoveFileSystemItemEventListener(IProgress<IFsItemCrawlEventArgs> listener, bool includesErrorEvents) => (includesErrorEvents ? _anyFsItemEventListeners : _fsItemEventListeners).Remove(listener);
 
         public bool RemoveSubdirectoryCrawlEventListener(IProgress<DirectoryCrawlEventArgs> listener, bool includesErrorEvents) => (includesErrorEvents ? _anyDirectoryEventListeners : _directoryEventListeners).Remove(listener);
 
@@ -68,13 +68,13 @@ namespace FsInfoCat.Local.Crawling
             await Task.WhenAll(_crawlErrorEventListeners.RaiseProgressChangedAsync(eventArgs, cancellationToken), ReportCrawlActivityEventAsync(eventArgs, cancellationToken));
         }
 
-        private async Task ReportAnyFsItemEventAsync([DisallowNull] ICrawlManagerFsItemEventArgs eventArgs, CancellationToken cancellationToken)
+        private async Task ReportAnyFsItemEventAsync([DisallowNull] IFsItemCrawlEventArgs eventArgs, CancellationToken cancellationToken)
         {
             _logger.LogDebug("{Method}({eventArgs}, {cancellationToken})", nameof(ReportAnyFsItemEventAsync), eventArgs, cancellationToken);
             await Task.WhenAll(_anyFsItemEventListeners.RaiseProgressChangedAsync(eventArgs, cancellationToken), ReportCrawlActivityEventAsync(eventArgs, cancellationToken));
         }
 
-        private async Task ReportFsItemEventAsync([DisallowNull] ICrawlManagerFsItemEventArgs eventArgs, CancellationToken cancellationToken)
+        private async Task ReportFsItemEventAsync([DisallowNull] IFsItemCrawlEventArgs eventArgs, CancellationToken cancellationToken)
         {
             _logger.LogDebug("{Method}({eventArgs}, {cancellationToken})", nameof(ReportFsItemEventAsync), eventArgs, cancellationToken);
             await Task.WhenAll(_fsItemEventListeners.RaiseProgressChangedAsync(eventArgs, cancellationToken), ReportAnyFsItemEventAsync(eventArgs, cancellationToken));
