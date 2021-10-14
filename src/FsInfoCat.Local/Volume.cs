@@ -96,6 +96,7 @@ namespace FsInfoCat.Local
             _rootDirectory = AddChangeTracker<Subdirectory>(nameof(RootDirectory), null);
         }
 
+#warning Need to replace with long running BackgroundTask
         internal async Task<bool> ForceDeleteFromDbAsync(LocalDbContext dbContext, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
@@ -106,7 +107,7 @@ namespace FsInfoCat.Local
             IDbContextTransaction transaction = await dbContext.Database.BeginTransactionAsync(cancellationToken);
             Subdirectory oldSubdirectory = await dbEntry.GetRelatedReferenceAsync(f => f.RootDirectory, cancellationToken);
             if (oldSubdirectory is not null)
-                await Subdirectory.DeleteAsync(oldSubdirectory, dbContext, cancellationToken);
+                await Subdirectory.DeleteAsync(oldSubdirectory, dbContext, cancellationToken, ItemDeletionOption.Force);
             cancellationToken.ThrowIfCancellationRequested();
             VolumeAccessError[] accessErrors = (await dbEntry.GetRelatedCollectionAsync(f => f.AccessErrors, cancellationToken)).ToArray();
             if (accessErrors.Length > 0)
@@ -190,6 +191,7 @@ namespace FsInfoCat.Local
             return dbContext.Volumes.Add(result);
         }
 
+#warning Need to replace with long running BackgroundTask
         public static async Task<int> DeleteAsync([DisallowNull] Volume target, [DisallowNull] LocalDbContext dbContext, [DisallowNull] IStatusListener statusListener)
         {
             if (target is null)
@@ -204,7 +206,7 @@ namespace FsInfoCat.Local
             EntityEntry<Volume> entry = dbContext.Entry(target);
             statusListener.Logger.LogDebug("Removing dependant records for Subdirectory {{ Id = {Id}; Identifier = {Identifier} }}", target.Id, target.Identifier);
             Subdirectory subdirectory = await entry.GetRelatedReferenceAsync(e => e.RootDirectory, statusListener.CancellationToken);
-            int result = (subdirectory is null || !(await Subdirectory.DeleteAsync(subdirectory, dbContext, statusListener.CancellationToken))) ? 0 : 1;
+            int result = (subdirectory is null || !(await Subdirectory.DeleteAsync(subdirectory, dbContext, statusListener.CancellationToken, ItemDeletionOption.Force))) ? 0 : 1;
             PersonalVolumeTag[] pvt = (await entry.GetRelatedCollectionAsync(e => e.PersonalTags, statusListener.CancellationToken)).ToArray();
             if (pvt.Length > 0)
                 dbContext.PersonalVolumeTags.RemoveRange(pvt);

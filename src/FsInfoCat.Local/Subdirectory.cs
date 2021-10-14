@@ -319,6 +319,7 @@ namespace FsInfoCat.Local
             return await subdirectories.Where(d => d.ParentId == id && d.Name == leaf).FirstOrDefaultAsync(cancellationToken);
         }
 
+#warning Need to replace with long running BackgroundTask
         internal static async Task<bool> DeleteAsync([DisallowNull] Subdirectory target, [DisallowNull] LocalDbContext dbContext, CancellationToken cancellationToken,
             ItemDeletionOption deletionOption = ItemDeletionOption.Default)
         {
@@ -506,6 +507,7 @@ namespace FsInfoCat.Local
             return dbContext.Subdirectories.Add(result);
         }
 
+#warning Need to replace with long running BackgroundTask
         public static async Task MarkBranchIncompleteAsync(EntityEntry<Subdirectory> dbEntry, CancellationToken cancellationToken)
         {
             if (dbEntry.Context is not LocalDbContext dbContext)
@@ -519,6 +521,7 @@ namespace FsInfoCat.Local
             _ = await dbContext.SaveChangesAsync(cancellationToken);
         }
 
+#warning Need to replace with long running BackgroundTask
         public async Task MarkBranchIncompleteAsync(LocalDbContext dbContext, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
