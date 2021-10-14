@@ -1,3 +1,4 @@
+using FsInfoCat.Local.Background;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat.Local.Crawling
 {
-    public class CrawlJob : BackgroundService, ICrawlJob
+    public partial class CrawlJob : BackgroundService, ICrawlJob
     {
         private readonly ILogger<CrawlJob> _logger;
         private readonly ICrawlMessageBus _crawlMessageBus;
@@ -41,6 +42,8 @@ namespace FsInfoCat.Local.Crawling
         bool IAsyncResult.CompletedSynchronously => ((IAsyncResult)_task)?.CompletedSynchronously ?? false;
 
         bool IAsyncResult.IsCompleted => ((IAsyncResult)_task)?.CompletedSynchronously ?? false;
+
+        Task ILongRunningAsyncService.Task => Task;
 
         public CrawlJob(ILogger<CrawlJob> logger, ICrawlMessageBus crawlMessageBus, ICrawlQueue crawlQueue, IFileSystemDetailService fileSystemDetailService, LocalDbContext localDbContext) =>
             (_logger, _crawlMessageBus, _crawlQueue, _fileSystemDetailService, _localDbContext) = (logger, crawlMessageBus, crawlQueue, fileSystemDetailService, localDbContext);
@@ -105,25 +108,6 @@ namespace FsInfoCat.Local.Crawling
                 };
             }, TaskContinuationOptions.NotOnFaulted); ;
             return workerTask;
-        }
-
-        record CrawlResult : ICrawlResult
-        {
-            public DateTime Started { get; init; }
-
-            public TimeSpan Duration { get; init; }
-
-            public CrawlTerminationReason TerminationReason { get; init; }
-
-            public Task WorkerTask { get; init; }
-
-            object IAsyncResult.AsyncState => ((IAsyncResult)WorkerTask).AsyncState;
-
-            WaitHandle IAsyncResult.AsyncWaitHandle => ((IAsyncResult)WorkerTask).AsyncWaitHandle;
-
-            bool IAsyncResult.CompletedSynchronously => ((IAsyncResult)WorkerTask).CompletedSynchronously;
-
-            bool IAsyncResult.IsCompleted => ((IAsyncResult)WorkerTask).IsCompleted;
         }
     }
 }
