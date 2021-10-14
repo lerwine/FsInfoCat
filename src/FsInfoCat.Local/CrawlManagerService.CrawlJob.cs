@@ -7,6 +7,7 @@ namespace FsInfoCat.Local
 {
     public sealed partial class CrawlManagerService
     {
+        [Obsolete("Use Crawling.CrawlManagerService")]
         internal class CrawlJob : ICrawlJob
         {
             private readonly CancellationTokenSource _tokenSource = new();
@@ -33,7 +34,7 @@ namespace FsInfoCat.Local
 
             public DateTime Started { get; private set; }
 
-            public TimeSpan Duration => _stopWatch.Elapsed;
+            public TimeSpan Elapsed => _stopWatch.Elapsed;
 
             public object AsyncState => Task.AsyncState;
 

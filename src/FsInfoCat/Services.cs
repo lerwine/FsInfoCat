@@ -84,6 +84,11 @@ namespace FsInfoCat
             return GetAppDataPath(path, assemblyName.CultureInfo);
         }
 
+        /// <summary>
+        /// Initializes the application <see cref="Microsoft.Extensions.Hosting.Host"/>.
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns></returns>
         public static async Task<IHost> Initialize(params string[] args)
         {
             Thread.BeginCriticalRegion();

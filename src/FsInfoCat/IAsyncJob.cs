@@ -3,9 +3,7 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat
 {
-    /// <summary>
-    /// Represents an asynchronous background job.
-    /// </summary>
+    [Obsolete("Use IHostedService")]
     public interface IAsyncJob : IAsyncResult
     {
         /// <summary>
@@ -84,10 +82,7 @@ namespace FsInfoCat
         void Cancel();
     }
 
-    /// <summary>
-    /// Represents an asynchronous background job that produces a result value.
-    /// </summary>
-    /// <typeparam name="TResult">The type of the result value.</typeparam>
+    [Obsolete("Use IHostedService")]
     public interface IAsyncJob<TResult> : IAsyncJob
     {
         /// <summary>

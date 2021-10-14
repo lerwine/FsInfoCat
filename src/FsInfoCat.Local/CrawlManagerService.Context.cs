@@ -11,6 +11,7 @@ namespace FsInfoCat.Local
 {
     public sealed partial class CrawlManagerService
     {
+        [Obsolete("Use Crawling.CrawlManagerService")]
         public record Context
         {
             public DirectoryInfo DirectoryInfo { get; init; }
