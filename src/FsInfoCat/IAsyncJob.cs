@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat
 {
-    [Obsolete("Use IHostedService")]
     public interface IAsyncJob : IAsyncResult
     {
         /// <summary>
@@ -82,7 +81,6 @@ namespace FsInfoCat
         void Cancel();
     }
 
-    [Obsolete("Use IHostedService")]
     public interface IAsyncJob<TResult> : IAsyncJob
     {
         /// <summary>
