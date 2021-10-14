@@ -19,5 +19,10 @@ namespace FsInfoCat.Local.Crawling
             JobStatus = status;
             ConcurrencyId = concurrencyId;
         }
+
+        public override string ToString() => $@"Message = {ExtensionMethods.ToPseudoCsText(Message)},
+  MessageLevel = {ExtensionMethods.ToPseudoCsText(MessageLevel)},
+  ConcurrencyId = {ExtensionMethods.ToPseudoCsText(ConcurrencyId)},
+  JobStatus = {ExtensionMethods.ToPseudoCsText(JobStatus)}";
     }
 }

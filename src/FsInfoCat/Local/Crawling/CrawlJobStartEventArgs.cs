@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat.Local.Crawling
@@ -13,5 +13,12 @@ namespace FsInfoCat.Local.Crawling
             Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
             IsFirstJob = isFirstJob;
         }
+
+        public override string ToString() => $@"{GetType().ToCsTypeName(true)}
+{{
+  IsFirstJob = {ExtensionMethods.ToPseudoCsText(IsFirstJob).AsIndented()},
+  {base.ToString()},
+  Configuration = {ExtensionMethods.ToPseudoCsText(Configuration).AsIndented()}
+}}";
     }
 }

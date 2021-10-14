@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace FsInfoCat.Collections
 {
@@ -32,6 +33,14 @@ namespace FsInfoCat.Collections
                     yield return value;
                 }
         }
+
+        public static Task RaiseProgressChangedAsync<T>(this IEnumerable<IProgress<T>> eventListeners, T value, CancellationToken cancellationToken) => Task.Run(() =>
+            Parallel.ForEach(eventListeners, new ParallelOptions() { CancellationToken = cancellationToken, MaxDegreeOfParallelism = Environment.ProcessorCount }, p =>
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                p.Report(value);
+            })
+        );
 
         /// <summary>
         /// Returns an <c><see cref="IEnumerable{T}"/>&lt;<typeparamref name="T"/>&gt;</c> that throws <see cref="OperationCanceledException"/> upon element enumeration if specified <see cref="CancellationToken"/> has had cancellation requested.

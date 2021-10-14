@@ -679,6 +679,16 @@ namespace FsInfoCat
             return obj.ToString();
         }
 
+        public static string AsIndented(this string text, string indent = "    ")
+        {
+            if (text is null || string.IsNullOrEmpty(indent))
+                return text;
+            string[] lines = text.SplitLines();
+            if (lines.Length == 1)
+                return text;
+            return lines.Take(1).Concat(lines.Skip(1).Select(s => (indent + s).TrimEnd())).JoinWithNewLines();
+        }
+
         public static string EscapeCsString(string source, bool keepLineBreaks = false)
         {
             if (string.IsNullOrEmpty(source) || !BackslashEscapablePattern.IsMatch(source))

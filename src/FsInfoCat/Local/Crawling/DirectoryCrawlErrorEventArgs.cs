@@ -12,5 +12,7 @@ namespace FsInfoCat.Local.Crawling
         {
             Exception = exception ?? throw new ArgumentNullException(nameof(exception));
         }
+
+        public override string ToString() => $@"{base.ToString()}.Exception = {ExtensionMethods.ToPseudoCsText(Exception).AsIndented()}";
     }
 }

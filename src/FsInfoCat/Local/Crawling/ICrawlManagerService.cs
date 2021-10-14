@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace FsInfoCat.Local.Crawling
@@ -20,23 +21,39 @@ namespace FsInfoCat.Local.Crawling
 
         void AddFileSystemItemEventListener([DisallowNull] IProgress<ICrawlManagerFsItemEventArgs> listener, bool includeErrorEvents);
 
-        bool RemoveFileSystemItemEventListener(IProgress<ICrawlManagerFsItemEventArgs> listener);
+        bool RemoveFileSystemItemEventListener(IProgress<ICrawlManagerFsItemEventArgs> listener, bool includesErrorEvents);
 
         void AddSubdirectoryCrawlEventListener([DisallowNull] IProgress<DirectoryCrawlEventArgs> listener, bool includeErrorEvents);
 
-        bool RemoveSubdirectoryCrawlEventListener(IProgress<DirectoryCrawlEventArgs> listener);
+        bool RemoveSubdirectoryCrawlEventListener(IProgress<DirectoryCrawlEventArgs> listener, bool includesErrorEvents);
 
         void AddFileCrawlEventListener([DisallowNull] IProgress<FileCrawlEventArgs> listener, bool includeErrorEvents);
 
-        bool RemoveFileCrawlEventListener(IProgress<FileCrawlEventArgs> listener);
+        bool RemoveFileCrawlEventListener(IProgress<FileCrawlEventArgs> listener, bool includesErrorEvents);
+
+        Task ReportAsync([DisallowNull] CrawlJobStartEventArgs eventArgs, CancellationToken cancellationToken);
+
+        Task ReportAsync([DisallowNull] CrawlJobEndEventArgs eventArgs, CancellationToken cancellationToken);
+
+        Task ReportAsync([DisallowNull] DirectoryCrawlStartEventArgs eventArgs, CancellationToken cancellationToken);
+
+        Task ReportAsync([DisallowNull] DirectoryCrawlEndEventArgs eventArgs, CancellationToken cancellationToken);
+
+        Task ReportAsync([DisallowNull] DirectoryCrawlErrorEventArgs eventArgs, CancellationToken cancellationToken);
+
+        Task ReportAsync([DisallowNull] FileCrawlStartEventArgs eventArgs, CancellationToken cancellationToken);
+
+        Task ReportAsync([DisallowNull] FileCrawlEndEventArgs eventArgs, CancellationToken cancellationToken);
+
+        Task ReportAsync([DisallowNull] FileCrawlErrorEventArgs eventArgs, CancellationToken cancellationToken);
     }
     public interface ICrawlQueue
     {
         ICrawlJob ActiveJob { get; }
 
-        bool TryEnqueue(ICrawlJob crawlJob);
+        Task<bool> TryEnqueueAsync(ICrawlJob crawlJob, CancellationToken cancellationToken);
 
-        bool TryDequeue(ICrawlJob crawlJob, bool throwIfActive = false);
+        Task<bool> TryDequeueAsync(ICrawlJob crawlJob, CancellationToken cancellationToken);
 
         bool IsActive(ICrawlJob crawlJob);
 

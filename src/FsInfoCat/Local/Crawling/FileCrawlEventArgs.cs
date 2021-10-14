@@ -82,6 +82,14 @@ namespace FsInfoCat.Local.Crawling
             string name = Target?.Name ?? Entity?.Name;
             return string.IsNullOrEmpty(name) ? path : Path.Combine(path, name);
         }
+
+        public override string ToString() => $@"{GetType().ToCsTypeName(true)}
+{{
+  {base.ToString()},
+  Entity = {ExtensionMethods.ToPseudoCsText(Entity).AsIndented()},
+  Target = {ExtensionMethods.ToPseudoCsText(Target).AsIndented()},
+  Parent = {ExtensionMethods.ToPseudoCsText(Parent).AsIndented()}
+}}";
     }
 
     public class FileCrawlStartEventArgs : FileCrawlEventArgs
