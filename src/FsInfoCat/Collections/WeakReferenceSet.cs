@@ -308,7 +308,7 @@ namespace FsInfoCat.Collections
 
             internal Enumerator([DisallowNull] WeakReferenceSet<T> target)
             {
-                _backingEnumerator = target._backingSet.GetEnumerator();
+                _backingEnumerator = (_target = target)._backingSet.GetEnumerator();
             }
 
             public bool MoveNext()
