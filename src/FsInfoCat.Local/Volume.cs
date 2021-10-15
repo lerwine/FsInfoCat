@@ -96,7 +96,7 @@ namespace FsInfoCat.Local
             _rootDirectory = AddChangeTracker<Subdirectory>(nameof(RootDirectory), null);
         }
 
-#warning Need to replace with long running BackgroundTask
+        [Obsolete("Use FsInfoCat.Local.Background.IDeleteVolumeBackgroundService")]
         internal async Task<bool> ForceDeleteFromDbAsync(LocalDbContext dbContext, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
@@ -191,7 +191,7 @@ namespace FsInfoCat.Local
             return dbContext.Volumes.Add(result);
         }
 
-#warning Need to replace with long running BackgroundTask
+        [Obsolete("Use FsInfoCat.Local.Background.IDeleteVolumeBackgroundService")]
         public static async Task<int> DeleteAsync([DisallowNull] Volume target, [DisallowNull] LocalDbContext dbContext, [DisallowNull] IStatusListener statusListener)
         {
             if (target is null)

@@ -2,6 +2,7 @@ using FsInfoCat.Background;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -9,23 +10,23 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat.Local.Background
 {
-    public class MarkBranchIncompleteBackgroundService : LongRunningAsyncService<Task<bool>>, IMarkBranchIncompleteBackgroundService<Subdirectory>
+    public class ImportBranchBackgroundService : LongRunningAsyncService<Task<Subdirectory>>, IImportBranchBackgroundService<Subdirectory>
     {
         private readonly LocalDbContext _dbContext;
 
-        public Subdirectory Target { get; set; }
+        public DirectoryInfo Source { get; set; }
 
-        ISubdirectory IMarkBranchIncompleteBackgroundService.Target => Target;
+        Task<ISubdirectory> IImportBranchBackgroundService.Task => throw new NotImplementedException();
 
         public IProgress<string> ReportProgressHandler { get; set; }
 
-        public MarkBranchIncompleteBackgroundService(ILogger<MarkBranchIncompleteBackgroundService> logger, LocalDbContext dbContext)
+        public ImportBranchBackgroundService(ILogger<ImportBranchBackgroundService> logger, LocalDbContext dbContext)
             : base(logger)
         {
             _dbContext = dbContext;
         }
 
-        protected async override Task<bool> ExecuteAsync()
+        protected async override Task<Subdirectory> ExecuteAsync()
         {
             throw new NotImplementedException();
         }

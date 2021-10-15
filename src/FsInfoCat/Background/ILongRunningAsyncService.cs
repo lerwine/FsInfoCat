@@ -2,7 +2,7 @@ using Microsoft.Extensions.Hosting;
 using System;
 using System.Threading.Tasks;
 
-namespace FsInfoCat.Local.Background
+namespace FsInfoCat.Background
 {
     public interface ILongRunningAsyncService : IAsyncResult, IHostedService, IDisposable
     {

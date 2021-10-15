@@ -1,23 +1,32 @@
+using FsInfoCat.Background;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace FsInfoCat.Local.Background
 {
-    public class DeleteBranchBackgroundService : LongRunningAsyncService, IDeleteBranchBackgroundService
+    public class DeleteBranchBackgroundService : LongRunningAsyncService<Task<bool>>, IDeleteBranchBackgroundService<Subdirectory>
     {
-        public new Task<bool> Task { get; private set; }
+        private readonly LocalDbContext _dbContext;
 
-        Task<bool> ILongRunningAsyncService<bool>.Task => Task;
+        public Subdirectory Target { get; set; }
 
-        public Subdirectory Target { get; }
+        ISubdirectory IDeleteBranchBackgroundService.Target => Target;
 
-        public DeleteBranchBackgroundService(Subdirectory target)
+        public bool ForceDeleteFromDb { get; set; }
+
+        Subdirectory IDeleteBranchBackgroundService<Subdirectory>.Target { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+        public IProgress<string> ReportProgressHandler { get; set; }
+
+        public DeleteBranchBackgroundService(ILogger<DeleteBranchBackgroundService> logger, LocalDbContext dbContext)
+            : base(logger)
         {
-            Target = target;
+            _dbContext = dbContext;
         }
 
-        protected override Task ExecuteAsync(CancellationToken stoppingToken)
+        protected async override Task<bool> ExecuteAsync()
         {
             throw new NotImplementedException();
         }

@@ -319,7 +319,7 @@ namespace FsInfoCat.Local
             return await subdirectories.Where(d => d.ParentId == id && d.Name == leaf).FirstOrDefaultAsync(cancellationToken);
         }
 
-#warning Need to replace with long running BackgroundTask
+        [Obsolete("Use FsInfoCat.Local.Background.IDeleteBranchBackgroundService")]
         internal static async Task<bool> DeleteAsync([DisallowNull] Subdirectory target, [DisallowNull] LocalDbContext dbContext, CancellationToken cancellationToken,
             ItemDeletionOption deletionOption = ItemDeletionOption.Default)
         {
@@ -379,6 +379,7 @@ namespace FsInfoCat.Local
             return false;
         }
 
+        [Obsolete("Use FsInfoCat.Local.Background.IImportBranchBackgroundService")]
         public static async Task<EntityEntry<Subdirectory>> ImportBranchAsync([DisallowNull] DirectoryInfo directoryInfo, [DisallowNull] LocalDbContext dbContext,
             CancellationToken cancellationToken, bool markNewAsCompleted = false)
         {
@@ -507,7 +508,7 @@ namespace FsInfoCat.Local
             return dbContext.Subdirectories.Add(result);
         }
 
-#warning Need to replace with long running BackgroundTask
+        [Obsolete("Use FsInfoCat.Local.Background.IMarkBranchIncompleteBackgroundService")]
         public static async Task MarkBranchIncompleteAsync(EntityEntry<Subdirectory> dbEntry, CancellationToken cancellationToken)
         {
             if (dbEntry.Context is not LocalDbContext dbContext)
@@ -521,7 +522,7 @@ namespace FsInfoCat.Local
             _ = await dbContext.SaveChangesAsync(cancellationToken);
         }
 
-#warning Need to replace with long running BackgroundTask
+        [Obsolete("Use FsInfoCat.Local.Background.IMarkBranchIncompleteBackgroundService")]
         public async Task MarkBranchIncompleteAsync(LocalDbContext dbContext, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();

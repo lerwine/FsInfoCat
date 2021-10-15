@@ -1,3 +1,4 @@
+using FsInfoCat.Background;
 using FsInfoCat.Local.Background;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
