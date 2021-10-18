@@ -57,7 +57,9 @@ namespace FsInfoCat
         /// <summary>The file has been deleted.</summary>
         [Display(Name = nameof(Properties.Resources.DisplayName_Deleted), ShortName = nameof(Properties.Resources.DisplayName_Deleted),
             Description = nameof(Properties.Resources.Description_FileCorrelationStatus_FileDeleted), ResourceType = typeof(Properties.Resources))]
-        Deleted = 9
+        Deleted = 9,
+
+        AccessError = 10
     }
 }
 

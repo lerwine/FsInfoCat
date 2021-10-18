@@ -62,6 +62,16 @@ namespace FsInfoCat
             return collectionEntry.CurrentValue;
         }
 
+        public static async Task<TProperty[]> QueryRelatedCollectionAsync<TEntity, TProperty>([DisallowNull] this EntityEntry<TEntity> entry,
+            [DisallowNull] Expression<Func<TEntity, IEnumerable<TProperty>>> propertyExpression, [DisallowNull] Expression<Func<TProperty, bool>> predicate, CancellationToken cancellationToken)
+            where TEntity : class
+            where TProperty : class
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            CollectionEntry<TEntity, TProperty> collectionEntry = entry.Collection(propertyExpression);
+            return await collectionEntry.Query().Where(predicate).ToArrayAsync(cancellationToken);
+        }
+
         /// <summary>
         /// Indicates whether the entry exists in the target database.
         /// </summary>

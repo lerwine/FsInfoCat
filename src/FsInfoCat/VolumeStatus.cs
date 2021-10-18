@@ -38,7 +38,9 @@ namespace FsInfoCat
         /// <summary>Volume has been destroyed.</summary>
         [Display(Name = nameof(Properties.Resources.DisplayName_VolumeStatus_Destroyed), ShortName = nameof(Properties.Resources.DisplayName_VolumeStatus_Destroyed),
             Description = nameof(Properties.Resources.Description_VolumeStatus_Destroyed), ResourceType = typeof(Properties.Resources))]
-        Destroyed = 6
+        Destroyed = 6,
+
+        Deleted = 7
     }
 
 }

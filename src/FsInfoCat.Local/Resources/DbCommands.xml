@@ -49,7 +49,7 @@
     "ReadOnly" BIT DEFAULT NULL,
     "MaxNameLength" UNSIGNED INT DEFAULT NULL,
     "Type" UNSIGNED TINYINT NOT NULL CHECK("Type">=0 AND "Type"<7) DEFAULT 0, -- Unknown
-    "Status" UNSIGNED TINYINT NOT NULL CHECK("Status"<=6) DEFAULT 0, -- VolumeStatus.Unknown
+    "Status" UNSIGNED TINYINT NOT NULL CHECK("Status"<=7) DEFAULT 0, -- VolumeStatus.Unknown
     "Notes" TEXT NOT NULL DEFAULT '',
     "CreatedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
     "ModifiedOn" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
@@ -430,7 +430,7 @@
     "Name" NVARCHAR(1024) NOT NULL COLLATE NOCASE,
     "LastAccessed" DATETIME NOT NULL DEFAULT (datetime('now','localtime')),
     "Options" UNSIGNED TINYINT NOT NULL CHECK("Options"<=8) DEFAULT 0, -- FileCrawlOptions.None
-    "Status" UNSIGNED TINYINT NOT NULL CHECK("Status"<=9) DEFAULT 0, -- FileCorrelationStatus.Dissociated
+    "Status" UNSIGNED TINYINT NOT NULL CHECK("Status"<=10) DEFAULT 0, -- FileCorrelationStatus.Dissociated
     "LastHashCalculation" DATETIME DEFAULT NULL,
     "CreationTime" DATETIME NOT NULL,
     "LastWriteTime" DATETIME NOT NULL,

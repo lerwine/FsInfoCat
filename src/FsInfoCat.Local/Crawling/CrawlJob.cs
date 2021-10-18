@@ -16,7 +16,7 @@ namespace FsInfoCat.Local.Crawling
         private readonly ICrawlMessageBus _crawlMessageBus;
         private readonly ICrawlQueue _crawlQueue;
         private readonly IFileSystemDetailService _fileSystemDetailService;
-        private readonly LocalDbContext _localDbContext;
+        private readonly DbOperationService _dbOperationService;
         private Stopwatch _stopwatch;
         private CancellationToken _stoppingToken;
         private Task<ICrawlResult> _task;
@@ -46,14 +46,12 @@ namespace FsInfoCat.Local.Crawling
 
         Task ILongRunningAsyncService.Task => Task;
 
-        public CrawlJob(ILogger<CrawlJob> logger, ICrawlMessageBus crawlMessageBus, ICrawlQueue crawlQueue, IFileSystemDetailService fileSystemDetailService, LocalDbContext localDbContext) =>
-            (_logger, _crawlMessageBus, _crawlQueue, _fileSystemDetailService, _localDbContext) = (logger, crawlMessageBus, crawlQueue, fileSystemDetailService, localDbContext);
+        public CrawlJob(DbOperationService dbOperationService, ILogger<CrawlJob> logger, ICrawlMessageBus crawlMessageBus, ICrawlQueue crawlQueue, IFileSystemDetailService fileSystemDetailService) => (_dbOperationService, _logger, _crawlMessageBus, _crawlQueue, _fileSystemDetailService) = (dbOperationService, logger, crawlMessageBus, crawlQueue, fileSystemDetailService);
 
         [ServiceBuilderHandler()]
         public static void ConfigureService(IServiceCollection services)
         {
-            services.AddHostedService<ICrawlJob>(provider => new CrawlJob(provider.GetRequiredService<ILogger<CrawlJob>>(), provider.GetRequiredService<ICrawlMessageBus>(), provider.GetRequiredService<ICrawlQueue>(),
-                provider.GetRequiredService<IFileSystemDetailService>(), provider.GetRequiredService<LocalDbContext>()));
+            services.AddHostedService<ICrawlJob>();
         }
 
         private async Task ExecuteAsync()

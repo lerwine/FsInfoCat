@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Hosting;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace FsInfoCat.Background
@@ -30,11 +31,25 @@ namespace FsInfoCat.Background
         /// </value>
         AsyncJobStatus JobStatus { get; }
 
+        /// <summary>
+        /// Gets the latest task.
+        /// </summary>
+        /// <value>The latest task that was created.</value>
         Task Task { get; }
     }
 
     public interface ILongRunningAsyncService<TResult> : ILongRunningAsyncService
     {
+        /// <summary>
+        /// Gets the latest task.
+        /// </summary>
+        /// <value>The latest task that was created.</value>
         new Task<TResult> Task { get; }
+    }
+    public interface IBackgroundTaskQueue
+    {
+        Task EnqueueAsync(Func<CancellationToken, Task> doWorkAsync);
+
+        Task<Func<CancellationToken, Task>> DequeueAsync(CancellationToken cancellationToken);
     }
 }
