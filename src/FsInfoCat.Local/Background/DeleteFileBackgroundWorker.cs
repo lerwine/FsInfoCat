@@ -1,25 +1,27 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat.Local.Background
 {
-    public class DeletFileBackgroundWorker
+    public class DeleteFileBackgroundWorker
     {
-        private readonly ILogger<DeletFileBackgroundWorker> _logger;
+        private readonly ILogger<DeleteFileBackgroundWorker> _logger;
         private readonly DbOperationService _dbOperationService;
 
-        [ServiceBuilderHandler()]
-        public static void ConfigureService(IServiceCollection services)
+        [ServiceBuilderHandler(Priority = 200)]
+        public static void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton<DeletFileBackgroundWorker>();
+            System.Diagnostics.Debug.WriteLine($"Invoked {typeof(DeleteFileBackgroundWorker).FullName}.{nameof(ConfigureServices)}");
+            services.AddSingleton<DeleteFileBackgroundWorker>();
         }
 
-        public DeletFileBackgroundWorker([DisallowNull] ILogger<DeletFileBackgroundWorker> logger, [DisallowNull] DbOperationService dbOperationService)
+        public DeleteFileBackgroundWorker([DisallowNull] ILogger<DeleteFileBackgroundWorker> logger, [DisallowNull] DbOperationService dbOperationService)
         {
             _logger = logger;
             _dbOperationService = dbOperationService;
+            _logger.LogDebug($"{nameof(DeleteFileBackgroundWorker)} Service instantiated");
         }
 
         public DeleteFileBackgroundJob EnqueueAsync(IFileRow file, bool forceDelete = false, bool deleteEmptyParent = false, IProgress<string> onReportProgress = null, bool doNotUseTransaction = false)

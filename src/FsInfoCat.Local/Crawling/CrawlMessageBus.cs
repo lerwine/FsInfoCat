@@ -21,13 +21,18 @@ namespace FsInfoCat.Local.Crawling
         private readonly WeakReferenceSet<IProgress<DirectoryCrawlEventArgs>> _anyDirectoryEventListeners = new();
         private readonly WeakReferenceSet<IProgress<DirectoryCrawlEventArgs>> _directoryEventListeners = new();
 
-        [ServiceBuilderHandler()]
-        public static void ConfigureService(IServiceCollection services)
+        [ServiceBuilderHandler]
+        public static void ConfigureServices(IServiceCollection services)
         {
+            System.Diagnostics.Debug.WriteLine($"Invoked {typeof(CrawlMessageBus).FullName}.{nameof(ConfigureServices)}");
             services.AddSingleton<ICrawlMessageBus, CrawlMessageBus>();
         }
 
-        public CrawlMessageBus(ILogger<CrawlMessageBus> logger) => _logger = logger;
+        public CrawlMessageBus(ILogger<CrawlMessageBus> logger)
+        {
+            _logger = logger;
+            _logger.LogDebug($"{nameof(ICrawlMessageBus)} Service instantiated");
+        }
 
         public void AddCrawlActivityEventListener([DisallowNull] IProgress<ICrawlActivityEventArgs> listener) => _crawlActivityEventListeners.Add(listener ?? throw new ArgumentNullException(nameof(listener)));
 

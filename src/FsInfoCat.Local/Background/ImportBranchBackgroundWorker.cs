@@ -16,9 +16,10 @@ namespace FsInfoCat.Local.Background
         private readonly IFileSystemDetailService _fileSystemDetailService;
         private readonly DbOperationService _dbOperationService;
 
-        [ServiceBuilderHandler()]
-        public static void ConfigureService(IServiceCollection services)
+        [ServiceBuilderHandler(Priority = 200)]
+        public static void ConfigureServices(IServiceCollection services)
         {
+            System.Diagnostics.Debug.WriteLine($"Invoked {typeof(ImportBranchBackgroundWorker).FullName}.{nameof(ConfigureServices)}");
             services.AddSingleton<ImportBranchBackgroundWorker>();
         }
 
@@ -27,6 +28,7 @@ namespace FsInfoCat.Local.Background
             _fileSystemDetailService = fileSystemDetailService;
             _logger = logger;
             _dbOperationService = dbOperationService;
+            _logger.LogDebug($"{nameof(ImportBranchBackgroundWorker)} Service instantiated");
         }
 
         public ImportBranchBackgroundJob EnqueueAsync(DirectoryInfo directoryInfo, bool markNewAsCompleted = false, IProgress<string> onReportProgress = null)

@@ -19,17 +19,20 @@ namespace FsInfoCat.Local.Background
 
         private void OnApplicationStopping() => _queue.Writer.TryComplete();
 
-        [ServiceBuilderHandler()]
-        public static void ConfigureService(IServiceCollection services)
+        [ServiceBuilderHandler(Priority = 100)]
+        public static void ConfigureServices(IServiceCollection services)
         {
+            System.Diagnostics.Debug.WriteLine($"Invoked {typeof(DbOperationService).FullName}.{nameof(ConfigureServices)}");
             services.AddHostedService<DbOperationService>();
         }
 
         public DbOperationService(IServiceProvider services, IHostApplicationLifetime applicationLifetime, ILogger<DbOperationService> logger)
         {
-            _services = services;
             _logger = logger;
+            _logger.LogDebug($"{nameof(DbOperationService)} Service constructor invoked");
+            _services = services;
             _registration = applicationLifetime.ApplicationStopping.Register(OnApplicationStopping);
+            _logger.LogDebug($"{nameof(DbOperationService)} Service instantiated");
         }
 
         protected async override Task ExecuteAsync(CancellationToken stoppingToken)

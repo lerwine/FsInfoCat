@@ -15,7 +15,7 @@ namespace FsInfoCat.Local.Background
     {
         private readonly ILogger<DeleteBranchBackgroundWorker> _logger;
         private readonly IProgress<string> _onReportProgress;
-        private readonly DeletFileBackgroundWorker _deleteFileService;
+        private readonly DeleteFileBackgroundWorker _deleteFileService;
         private readonly DeleteCrawlConfigurationBackgroundWorker _deleteCrawlConfigurationService;
 
         public bool DoNotUseTransaction { get; }
@@ -48,7 +48,7 @@ namespace FsInfoCat.Local.Background
             return await _workItem.Task;
         }
 
-        public DeleteBranchBackgroundJob([DisallowNull] ILogger<DeleteBranchBackgroundWorker> logger, [DisallowNull] DbOperationService dbOperationService, [DisallowNull] DeletFileBackgroundWorker deleteFileService, [DisallowNull] DeleteCrawlConfigurationBackgroundWorker deleteCrawlConfigurationService,
+        public DeleteBranchBackgroundJob([DisallowNull] ILogger<DeleteBranchBackgroundWorker> logger, [DisallowNull] DbOperationService dbOperationService, [DisallowNull] DeleteFileBackgroundWorker deleteFileService, [DisallowNull] DeleteCrawlConfigurationBackgroundWorker deleteCrawlConfigurationService,
             ISubdirectoryRow target, bool forceDelete, bool deleteEmptyParent, IProgress<string> onReportProgress, bool doNotUseTransaction)
         {
             _logger = logger;

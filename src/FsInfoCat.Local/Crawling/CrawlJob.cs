@@ -46,12 +46,24 @@ namespace FsInfoCat.Local.Crawling
 
         Task ILongRunningAsyncService.Task => Task;
 
-        public CrawlJob(DbOperationService dbOperationService, ILogger<CrawlJob> logger, ICrawlMessageBus crawlMessageBus, ICrawlQueue crawlQueue, IFileSystemDetailService fileSystemDetailService) => (_dbOperationService, _logger, _crawlMessageBus, _crawlQueue, _fileSystemDetailService) = (dbOperationService, logger, crawlMessageBus, crawlQueue, fileSystemDetailService);
-
-        [ServiceBuilderHandler()]
-        public static void ConfigureService(IServiceCollection services)
+        public CrawlJob(ILogger<CrawlJob> logger, ICrawlMessageBus crawlMessageBus, ICrawlQueue crawlQueue, IFileSystemDetailService fileSystemDetailService, IServiceProvider provider)
         {
-            services.AddHostedService<ICrawlJob>();
+            (_dbOperationService, _logger, _crawlMessageBus, _crawlQueue, _fileSystemDetailService) = (provider.GetRequiredService<DbOperationService>(), logger, crawlMessageBus, crawlQueue, fileSystemDetailService);
+            _logger.LogDebug($"{nameof(CrawlJob)} Service instantiated");
+        }
+
+        [ServiceBuilderHandler(Priority = 200)]
+        public static void ConfigureServices(IServiceCollection services)
+        {
+            System.Diagnostics.Debug.WriteLine($"Invoked {typeof(CrawlJob).FullName}.{nameof(ConfigureServices)}");
+            services.AddHostedService<CrawlJob>();
+            //services.AddHostedService<CrawlJob>(provider => new CrawlJob(
+            //    provider.GetRequiredService<DbOperationService>(),
+            //    provider.GetRequiredService<ILogger<CrawlJob>>(),
+            //    provider.GetRequiredService<ICrawlMessageBus>(),
+            //    provider.GetRequiredService<ICrawlQueue>(),
+            //    provider.GetRequiredService<IFileSystemDetailService>()
+            //));
         }
 
         private async Task ExecuteAsync()

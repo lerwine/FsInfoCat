@@ -12,9 +12,10 @@ namespace FsInfoCat.Local.Background
         private readonly DbOperationService _dbOperationService;
         private readonly DeleteBranchBackgroundWorker _deleteBranchService;
 
-        [ServiceBuilderHandler()]
-        public static void ConfigureService(IServiceCollection services)
+        [ServiceBuilderHandler(Priority = 400)]
+        public static void ConfigureServices(IServiceCollection services)
         {
+            System.Diagnostics.Debug.WriteLine($"Invoked {typeof(DeleteVolumeBackgroundWorker).FullName}.{nameof(ConfigureServices)}");
             services.AddSingleton<DeleteVolumeBackgroundWorker>();
         }
 
@@ -23,6 +24,7 @@ namespace FsInfoCat.Local.Background
             _logger = logger;
             _dbOperationService = dbOperationService;
             _deleteBranchService = deleteBranchService;
+            _logger.LogDebug($"{nameof(DeleteVolumeBackgroundWorker)} Service instantiated");
         }
 
         public DeleteVolumeBackgroundJob EnqueueAsync(Volume target, bool forceDelete = false, IProgress<string> onReportProgress = null, bool doNotUseTransaction = false)

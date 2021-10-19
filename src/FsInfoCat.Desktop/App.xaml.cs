@@ -21,13 +21,26 @@ namespace FsInfoCat.Desktop
             return Services.ServiceProvider.GetRequiredService<ILogger<T>>();
         }
 
-        private async void Application_Startup(object sender, StartupEventArgs e)
+        private void Application_Startup(object sender, StartupEventArgs e)
         {
-            _ = await Services.Initialize(e.Args);
-            if (Dispatcher.CheckAccess())
-                ShowMainWindow();
-            else
-                Dispatcher.Invoke(ShowMainWindow);
+            System.Diagnostics.Debug.WriteLine($"Invoked {typeof(App).FullName}.{nameof(Application_Startup)}");
+            Services.Initialize(e.Args, typeof(Services).Assembly, typeof(Local.LocalDbContext).Assembly, GetType().Assembly).ContinueWith(task =>
+            {
+                if (task.IsCanceled)
+                {
+                    System.Diagnostics.Debug.WriteLine("Service initialization canceled");
+                    Shutdown(1);
+                }
+                else if (task.IsFaulted)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Service initialization failed: {task.Exception}");
+                    Exception exception = (task.Exception.InnerExceptions.Count == 1) ? task.Exception.InnerException : task.Exception;
+                    MessageBox.Show($"Service initialization failed: {exception.Message.NullIfWhiteSpace() ?? exception.ToString()}", exception.GetType().Name, MessageBoxButton.OK, MessageBoxImage.Stop);
+                    Shutdown(2);
+                }
+                else
+                    Dispatcher.Invoke(ShowMainWindow, System.Windows.Threading.DispatcherPriority.Send);
+            });
         }
 
         internal static ViewModel.MainVM GetMainViewModel() => (ViewModel.MainVM)Services.ServiceProvider.GetRequiredService<IApplicationNavigation>();
@@ -39,15 +52,22 @@ namespace FsInfoCat.Desktop
             mainWindow.Show();
         }
 
+        public App()
+        {
+            System.Diagnostics.Debug.WriteLine($"Constructing {typeof(App).FullName}");
+        }
+
         [ServiceBuilderHandler]
 #pragma warning disable IDE0051 // Remove unused private members
-        private static void ConfigureServices(IServiceCollection services)
+        private static void ConfigureServices(IServiceCollection services, HostBuilderContext builderContext)
 #pragma warning restore IDE0051 // Remove unused private members
         {
+            System.Diagnostics.Debug.WriteLine($"Invoked {typeof(App).FullName}.{nameof(ConfigureServices)}");
             Local.LocalDbContext.AddDbContextPool(services
                     .AddSingleton<MainWindow>()
                     .AddSingleton<IApplicationNavigation, ViewModel.MainVM>(),
-                typeof(App).Assembly, Desktop.Properties.Settings.Default.LocalDbfileName);
+                typeof(App).Assembly,
+                builderContext.Configuration.GetSection(FsInfoCatOptions.FsInfoCat)?.GetSection(nameof(FsInfoCatOptions.LocalDbFile))?.Value.NullIfWhiteSpace() ?? Desktop.Properties.Settings.Default.LocalDbfileName);
         }
 
         private async void Application_Exit(object sender, ExitEventArgs e)

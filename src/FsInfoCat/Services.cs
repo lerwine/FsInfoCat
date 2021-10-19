@@ -89,13 +89,17 @@ namespace FsInfoCat
         /// </summary>
         /// <param name="args"></param>
         /// <returns></returns>
-        public static async Task<IHost> Initialize(params string[] args)
+        public static async Task<IHost> Initialize(string[] args, params Assembly[] assemblies)
         {
+
             Thread.BeginCriticalRegion();
             if (_initializeTask is null)
+            {
                 _initializeTask = Task.Run(async () =>
                 {
+                    System.Diagnostics.Debug.WriteLine($"Invoked {typeof(Services).FullName}.{nameof(Initialize)} initialize task started");
                     _host = Microsoft.Extensions.Hosting.Host.CreateDefaultBuilder(args)
+                        .UseDefaultServiceProvider(opt => { }) // workaround?
                         .ConfigureHostConfiguration(builder => builder
                             .SetBasePath(AppContext.BaseDirectory)
                             .AddJsonFile(path: "hostsettings.json", optional: true, reloadOnChange: true)
@@ -103,13 +107,23 @@ namespace FsInfoCat
                             .SetBasePath(AppContext.BaseDirectory)
                             .AddJsonFile(path: "appsettings.json", optional: true, reloadOnChange: true)
                             .AddJsonFile(path: $"appsettings.{context.HostingEnvironment.EnvironmentName}.json", optional: true, reloadOnChange: true)
-                        ).ConfigureServices(ServiceBuilderHandlerAttribute.InvokeHandlers)
+                        ).ConfigureServices((hostContext, services) =>
+                        {
+                            services.AddLogging();
+                            services.Configure<FsInfoCatOptions>(hostContext.Configuration.GetSection(FsInfoCatOptions.FsInfoCat));
+                            ServiceBuilderHandlerAttribute.InvokeHandlers(hostContext, services, assemblies);
+                        })
                         .ConfigureLogging((context, builder) =>
                             builder.Configure(options => options.ActivityTrackingOptions = ActivityTrackingOptions.SpanId | ActivityTrackingOptions.TraceId | ActivityTrackingOptions.ParentId)
                         ).Build();
+                    System.Diagnostics.Debug.WriteLine($"{typeof(Services).FullName}.{nameof(Initialize)} host built");
                     await _host.StartAsync();
+                    System.Diagnostics.Debug.WriteLine($"{typeof(Services).FullName}.{nameof(Initialize)} host started");
                     return _host;
                 });
+            }
+            else
+                System.Diagnostics.Debug.WriteLine($"{typeof(Services).FullName}.{nameof(Initialize)} initialize task already started");
             Thread.EndCriticalRegion();
             return await _initializeTask;
         }

@@ -10,9 +10,10 @@ namespace FsInfoCat.Local.Background
         private readonly ILogger<DeleteCrawlConfigurationBackgroundWorker> _logger;
         private readonly DbOperationService _dbOperationService;
 
-        [ServiceBuilderHandler()]
-        public static void ConfigureService(IServiceCollection services)
+        [ServiceBuilderHandler(Priority = 200)]
+        public static void ConfigureServices(IServiceCollection services)
         {
+            System.Diagnostics.Debug.WriteLine($"Invoked {typeof(DeleteCrawlConfigurationBackgroundWorker).FullName}.{nameof(ConfigureServices)}");
             services.AddSingleton<DeleteBranchBackgroundWorker>();
         }
 
@@ -20,6 +21,7 @@ namespace FsInfoCat.Local.Background
         {
             _logger = logger;
             _dbOperationService = dbOperationService;
+            _logger.LogDebug($"{nameof(DeleteCrawlConfigurationBackgroundWorker)} Service instantiated");
         }
 
         public DeleteCrawlConfigurationBackgroundJob EnqueueAsync(ICrawlConfigurationRow crawlConfiguration, IProgress<string> onReportProgress = null, bool doNotUseTransaction = false)

@@ -10,21 +10,23 @@ namespace FsInfoCat.Local.Background
     {
         private readonly ILogger<DeleteBranchBackgroundWorker> _logger;
         private readonly DbOperationService _dbOperationService;
-        private readonly DeletFileBackgroundWorker _deleteFileService;
+        private readonly DeleteFileBackgroundWorker _deleteFileService;
         private readonly DeleteCrawlConfigurationBackgroundWorker _deleteCrawlConfigurationService;
 
-        [ServiceBuilderHandler()]
-        public static void ConfigureService(IServiceCollection services)
+        [ServiceBuilderHandler(Priority = 300)]
+        public static void ConfigureServices(IServiceCollection services)
         {
+            System.Diagnostics.Debug.WriteLine($"Invoked {typeof(DeleteBranchBackgroundWorker).FullName}.{nameof(ConfigureServices)}");
             services.AddSingleton<DeleteBranchBackgroundWorker>();
         }
 
-        public DeleteBranchBackgroundWorker([DisallowNull] ILogger<DeleteBranchBackgroundWorker> logger, [DisallowNull] DbOperationService dbOperationService, [DisallowNull] DeletFileBackgroundWorker deleteFileService, [DisallowNull] DeleteCrawlConfigurationBackgroundWorker deleteCrawlConfigurationService)
+        public DeleteBranchBackgroundWorker([DisallowNull] ILogger<DeleteBranchBackgroundWorker> logger, [DisallowNull] DbOperationService dbOperationService, [DisallowNull] DeleteFileBackgroundWorker deleteFileService, [DisallowNull] DeleteCrawlConfigurationBackgroundWorker deleteCrawlConfigurationService)
         {
             _logger = logger;
             _dbOperationService = dbOperationService;
             _deleteFileService = deleteFileService;
             _deleteCrawlConfigurationService = deleteCrawlConfigurationService;
+            _logger.LogDebug($"{nameof(DeleteBranchBackgroundWorker)} Service instantiated");
         }
 
         public DeleteBranchBackgroundJob EnqueueAsync(ISubdirectoryRow subdirectory, bool forceDelete = false, bool deleteEmptyParent = false, IProgress<string> onReportProgress = null, bool doNotUseTransaction = false)

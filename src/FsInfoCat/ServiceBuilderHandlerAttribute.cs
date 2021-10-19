@@ -1,7 +1,9 @@
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 
 namespace FsInfoCat
@@ -11,27 +13,51 @@ namespace FsInfoCat
     {
         public int Priority { get; set; }
 
-        public static void InvokeHandlers(IServiceCollection services)
+        public static IEnumerable<(MethodInfo Method, bool PassContext, int Order)> GetHandlers(Assembly[] assemblies)
         {
-            object[] parameters = { services };
-            foreach (MethodInfo method in GetHandlers())
-                _ = method.Invoke(null, parameters);
-        }
-
-        public static IEnumerable<MethodInfo> GetHandlers(Type type)
-        {
+            //// Filter assemblies by name to make loading faster.
+            //string f = nameof(FsInfoCat);
+            //string f2 = $"{f}.";
             Type r = typeof(void);
             Type a = typeof(IServiceCollection);
-            ParameterInfo[] parameters;
-            return type.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static)
-                .Select(m => (Method: m, Attribute: m.GetCustomAttribute<ServiceBuilderHandlerAttribute>()))
-                .Where(t => t.Attribute is not null && t.Method.ReturnType.Equals(r) && (parameters = t.Method.GetParameters()).Length == 1 &&
-                    parameters[0].ParameterType.Equals(a) && !(parameters[0].IsOut || parameters[0].IsRetval))
-                .OrderBy(t => t.Attribute?.Priority ?? 0).Select(t => t.Method);
+            Type b = typeof(HostBuilderContext);
+            foreach (Assembly assembly in assemblies)
+            {
+                System.Diagnostics.Debug.WriteLine($"Getting methods for {assembly.FullName}");
+                foreach (Type type in assembly.GetTypes())
+                {
+                    foreach (MethodInfo method in type.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static))
+                    {
+                        ServiceBuilderHandlerAttribute attribute = method.GetCustomAttribute<ServiceBuilderHandlerAttribute>();
+                        if (attribute is not null && method.ReturnType.Equals(r))
+                        {
+                            ParameterInfo[] parameters = method.GetParameters();
+                            ParameterInfo p1;
+                            bool passContext = parameters.Length == 2;
+                            if (passContext)
+                            {
+                                ParameterInfo p2 = parameters[1];
+                                if (!p2.ParameterType.IsAssignableFrom(b) || p2.IsOut)
+                                    continue;
+                            }
+                            else if (parameters.Length > 1)
+                                continue;
+                            p1 = parameters[0];
+                            if (p1.ParameterType.IsAssignableFrom(a) && !p1.IsOut)
+                                yield return (method, passContext, attribute.Priority);
+                        }
+                    }
+                }
+            }
         }
 
-        public static IEnumerable<MethodInfo> GetHandlers(Assembly assembly) => assembly.GetTypes().SelectMany(t => GetHandlers(t));
-
-        public static IEnumerable<MethodInfo> GetHandlers() => AppDomain.CurrentDomain.GetAssemblies().SelectMany(a => GetHandlers(a));
+        public static void InvokeHandlers(HostBuilderContext context, IServiceCollection services, params Assembly[] assemblies)
+        {
+            object[] p1 = { services };
+            object[] p2 = { services, context };
+            foreach ((MethodInfo Method, bool PassContext, int Order) handler in GetHandlers(assemblies).OrderBy(t => t.Order))
+                _ = handler.Method.Invoke(null, handler.PassContext ? p2 : p1);
+            System.Diagnostics.Debug.WriteLine("Handlers initialized");
+        }
     }
 }

@@ -1,4 +1,4 @@
-﻿using FsInfoCat.Collections;
+using FsInfoCat.Collections;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
@@ -18,11 +18,16 @@ namespace FsInfoCat.Local.Crawling
 
         public ICrawlJob ActiveJob { get; private set; }
 
-        public CrawlQueue(ILogger<CrawlQueue> logger) => _logger = logger;
-
-        [ServiceBuilderHandler()]
-        public static void ConfigureService(IServiceCollection services)
+        public CrawlQueue(ILogger<CrawlQueue> logger)
         {
+            _logger = logger;
+            _logger.LogDebug($"{nameof(ICrawlQueue)} Service instantiated");
+        }
+
+        [ServiceBuilderHandler]
+        public static void ConfigureServices(IServiceCollection services)
+        {
+            System.Diagnostics.Debug.WriteLine($"Invoked {typeof(CrawlQueue).FullName}.{nameof(ConfigureServices)}");
             services.AddSingleton<ICrawlQueue, CrawlQueue>();
         }
 

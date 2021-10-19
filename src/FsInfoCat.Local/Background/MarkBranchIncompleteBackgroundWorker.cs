@@ -10,9 +10,10 @@ namespace FsInfoCat.Local.Background
         private readonly ILogger<MarkBranchIncompleteBackgroundWorker> _logger;
         private readonly DbOperationService _dbOperationService;
 
-        [ServiceBuilderHandler()]
-        public static void ConfigureService(IServiceCollection services)
+        [ServiceBuilderHandler(Priority = 200)]
+        public static void ConfigureServices(IServiceCollection services)
         {
+            System.Diagnostics.Debug.WriteLine($"Invoked {typeof(MarkBranchIncompleteBackgroundWorker).FullName}.{nameof(ConfigureServices)}");
             services.AddSingleton<MarkBranchIncompleteBackgroundWorker>();
         }
 
@@ -20,6 +21,7 @@ namespace FsInfoCat.Local.Background
         {
             _logger = logger;
             _dbOperationService = dbOperationService;
+            _logger.LogDebug($"{nameof(MarkBranchIncompleteBackgroundWorker)} Service instantiated");
         }
 
         public MarkBranchIncompleteBackgroundJob EnqueueAsync(Subdirectory subdirectory, IProgress<string> onReportProgress = null, bool doNotUseTransaction = false)

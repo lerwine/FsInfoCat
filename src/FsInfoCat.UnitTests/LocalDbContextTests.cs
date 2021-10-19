@@ -1,4 +1,5 @@
 using FsInfoCat.Local;
+using FsInfoCat.UnitTests.Fakes;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Infrastructure;
@@ -15,7 +16,6 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
 
@@ -24,11 +24,24 @@ namespace FsInfoCat.UnitTests
     [TestClass]
     public class LocalDbContextTests
     {
+        public static string DbPath { get; private set; }
+
         [AssemblyInitialize()]
-        public static void AssemblyInit(TestContext context) => TestHelper.AssemblyInit(context);
+        public static void AssemblyInit(TestContext context)
+        {
+            DbPath = Path.Combine(context.DeploymentDirectory, Properties.Resources.TestDbRelativePath);
+            AppFake.AssemblyInit(context);
+            DriveFake.AssemblyInit(context);
+        }
 
         [AssemblyCleanup()]
-        public static void AssemblyCleanup() => TestHelper.AssemblyCleanup();
+        public static void AssemblyCleanup()
+        {
+            AppFake.AssemblyCleanup();
+            DriveFake.AssemblyCleanup();
+            using (Services.Host)
+                Services.Host.StopAsync(TimeSpan.FromSeconds(5)).Wait();
+        }
 
         [TestMethod("new LocalDbContext(DbContextOptions<LocalDbContext>)")]
         public void NewLocalDbContextDbContextOptionsTestMethod()

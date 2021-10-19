@@ -1,4 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.ObjectModel;
 using System.Windows;
@@ -13,6 +14,7 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
         private static void ConfigureServices(IServiceCollection services)
 #pragma warning restore IDE0051 // Remove unused private members
         {
+            System.Diagnostics.Debug.WriteLine($"Invoked {typeof(JobFactoryServiceViewModel).FullName}.{nameof(ConfigureServices)}");
             _ = services.AddSingleton<IWindowsAsyncJobFactoryService, AsyncJobService>()
                 .AddSingleton<IAsyncJobFactoryService>(services => services.GetRequiredService<IWindowsAsyncJobFactoryService>());
         }
@@ -41,14 +43,18 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
         /// Identifies the <see cref="IsBusy"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty IsBusyProperty = IsBusyPropertyKey.DependencyProperty;
+        private readonly ILogger<JobFactoryServiceViewModel> _logger;
 
         public bool IsBusy { get => (bool)GetValue(IsBusyProperty); private set => SetValue(IsBusyPropertyKey, value); }
 
         #endregion
 
-        public JobFactoryServiceViewModel()
+        public JobFactoryServiceViewModel(ILogger<JobFactoryServiceViewModel> logger)
         {
+            _logger.LogDebug($"{nameof(JobFactoryServiceViewModel)} Service constructor invoked");
+            _logger = logger;
             SetValue(ItemsPropertyKey, new ReadOnlyObservableCollection<BackgroundJobVM>(_backingItems));
+            _logger.LogDebug($"{nameof(JobFactoryServiceViewModel)} Service instantiated");
         }
 
         private void AddJob(BackgroundJobVM item, IAsyncJob job) => Dispatcher.Invoke(() =>

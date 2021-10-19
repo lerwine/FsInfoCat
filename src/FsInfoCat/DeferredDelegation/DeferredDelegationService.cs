@@ -22,6 +22,7 @@ namespace FsInfoCat.DeferredDelegation
         [ServiceBuilderHandler]
         private static void ConfigureServices(IServiceCollection services)
         {
+            System.Diagnostics.Debug.WriteLine($"Invoked {typeof(DeferredDelegationService).FullName}.{nameof(ConfigureServices)}");
             _ = services.AddSingleton<IDeferredDelegationService, DeferredDelegationService>();
         }
 

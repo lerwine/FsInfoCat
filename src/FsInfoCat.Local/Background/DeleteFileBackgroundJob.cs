@@ -11,7 +11,7 @@ namespace FsInfoCat.Local.Background
 {
     public class DeleteFileBackgroundJob : IAsyncResult, IProgress<DbOperationService.WorkItem<bool>>
     {
-        private readonly ILogger<DeletFileBackgroundWorker> _logger;
+        private readonly ILogger<DeleteFileBackgroundWorker> _logger;
         private readonly IProgress<string> _onReportProgress;
 
         public bool DoNotUseTransaction { get; }
@@ -44,7 +44,7 @@ namespace FsInfoCat.Local.Background
             return await _workItem.Task;
         }
 
-        public DeleteFileBackgroundJob(ILogger<DeletFileBackgroundWorker> logger, DbOperationService dbOperationService, IFileRow target, bool forceDelete, bool deleteEmptyParent, IProgress<string> onReportProgress, bool doNotUseTransaction)
+        public DeleteFileBackgroundJob(ILogger<DeleteFileBackgroundWorker> logger, DbOperationService dbOperationService, IFileRow target, bool forceDelete, bool deleteEmptyParent, IProgress<string> onReportProgress, bool doNotUseTransaction)
         {
             _logger = logger;
             Target = target;
