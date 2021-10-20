@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat.Local.Crawling
 {
+    [Obsolete("Use JobQueue for long running background tasks")]
     public partial class CrawlJob : BackgroundService, ICrawlJob
     {
         private readonly ILogger<CrawlJob> _logger;
