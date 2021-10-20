@@ -37,6 +37,12 @@ namespace FsInfoCat.AsyncOps
             throw new NotImplementedException();
         }
 
+        public IJobResult<TResult> Enqueue<TJobContext, TResult>(Func<CancellationToken, Func<TimeSpan>, TJobContext> factory, Func<TJobContext, Task<TResult>> doWorkAsync)
+            where TJobContext : JobContext
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task EnqueueAsync(Func<JobContext, Task> doWorkAsync)
         {
             throw new NotImplementedException();
@@ -70,15 +76,17 @@ namespace FsInfoCat.AsyncOps
 
     public class JobContext
     {
-        private readonly Func<TimeSpan> _getElapsed;
+        private readonly IJobResult _jobResult;
 
         public CancellationToken CancellationToken { get; }
 
-        public TimeSpan Elapsed => _getElapsed();
+        public DateTime Started => _jobResult.Started;
 
-        public JobContext(CancellationToken cancellationToken, Func<TimeSpan> getElapsed)
+        public TimeSpan Elapsed => _jobResult.Elapsed;
+
+        public JobContext(CancellationToken cancellationToken, IJobResult jobResult)
         {
-            _getElapsed = getElapsed;
+            _jobResult = jobResult;
             CancellationToken = cancellationToken;
         }
     }
@@ -90,10 +98,14 @@ namespace FsInfoCat.AsyncOps
         TimeSpan Elapsed { get; }
 
         AsyncJobStatus Status { get; }
+
+        Task GetTask();
     }
 
     public interface IJobResult<TResult> : IJobResult
     {
         TResult Result { get; }
+
+        new Task<TResult> GetTask();
     }
 }
