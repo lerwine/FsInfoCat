@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Logging;
@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat.Local.Background
 {
+    // TODO: Use FsInfoCat.AsyncOps.IJobResult<bool> instead of FsInfoCat.Local.Background.DbOperationService.WorkItem<bool> #105
     public class DeleteFileBackgroundJob : IAsyncResult, IProgress<DbOperationService.WorkItem<bool>>
     {
         private readonly ILogger<DeleteFileBackgroundWorker> _logger;
@@ -44,6 +45,7 @@ namespace FsInfoCat.Local.Background
             return await _workItem.Task;
         }
 
+        // TODO: Use FsInfoCat.AsyncOps.JobQueue instead of FsInfoCat.Local.Background.DbOperationService #105
         public DeleteFileBackgroundJob(ILogger<DeleteFileBackgroundWorker> logger, DbOperationService dbOperationService, IFileRow target, bool forceDelete, bool deleteEmptyParent, IProgress<string> onReportProgress, bool doNotUseTransaction)
         {
             _logger = logger;

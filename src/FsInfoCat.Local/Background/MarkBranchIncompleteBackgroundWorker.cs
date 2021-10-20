@@ -17,6 +17,7 @@ namespace FsInfoCat.Local.Background
             services.AddSingleton<MarkBranchIncompleteBackgroundWorker>();
         }
 
+        // TODO: Use FsInfoCat.AsyncOps.JobQueue instead of FsInfoCat.Local.Background.DbOperationService #105
         public MarkBranchIncompleteBackgroundWorker([DisallowNull] ILogger<MarkBranchIncompleteBackgroundWorker> logger, [DisallowNull] DbOperationService dbOperationService)
         {
             _logger = logger;

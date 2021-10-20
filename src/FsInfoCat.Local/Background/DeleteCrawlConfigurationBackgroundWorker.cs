@@ -17,6 +17,7 @@ namespace FsInfoCat.Local.Background
             services.AddSingleton<DeleteBranchBackgroundWorker>();
         }
 
+        // TODO: Use FsInfoCat.AsyncOps.JobQueue instead of FsInfoCat.Local.Background.DbOperationService #105
         public DeleteCrawlConfigurationBackgroundWorker([DisallowNull] ILogger<DeleteCrawlConfigurationBackgroundWorker> logger, [DisallowNull] DbOperationService dbOperationService)
         {
             _logger = logger;

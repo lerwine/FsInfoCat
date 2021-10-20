@@ -17,6 +17,7 @@ namespace FsInfoCat.Local.Background
             services.AddSingleton<DeleteFileBackgroundWorker>();
         }
 
+        // TODO: Use FsInfoCat.AsyncOps.JobQueue instead of FsInfoCat.Local.Background.DbOperationService #105
         public DeleteFileBackgroundWorker([DisallowNull] ILogger<DeleteFileBackgroundWorker> logger, [DisallowNull] DbOperationService dbOperationService)
         {
             _logger = logger;

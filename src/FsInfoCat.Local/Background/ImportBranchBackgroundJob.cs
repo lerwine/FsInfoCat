@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.Logging;
 using System;
@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat.Local.Background
 {
+    // TODO: Use FsInfoCat.AsyncOps.IJobResult<Subdirectory> instead of FsInfoCat.Local.Background.DbOperationService.WorkItem<Subdirectory> #105
     public class ImportBranchBackgroundJob : IAsyncResult, IProgress<DbOperationService.WorkItem<Subdirectory>>
     {
         private readonly ILogger<ImportBranchBackgroundWorker> _logger;
@@ -31,6 +32,7 @@ namespace FsInfoCat.Local.Background
             return await _workItem.Task;
         }
 
+        // TODO: Use FsInfoCat.AsyncOps.JobQueue instead of FsInfoCat.Local.Background.DbOperationService #105
         internal ImportBranchBackgroundJob([DisallowNull] ILogger<ImportBranchBackgroundWorker> logger, IFileSystemDetailService fileSystemDetailService, [DisallowNull] DbOperationService dbOperationService, [DisallowNull] DirectoryInfo source, bool markNewAsCompleted, IProgress<string> onReportProgress)
         {
             _fileSystemDetailService = fileSystemDetailService;

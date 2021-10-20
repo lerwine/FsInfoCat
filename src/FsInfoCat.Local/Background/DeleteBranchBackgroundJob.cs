@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat.Local.Background
 {
+    // TODO: Use FsInfoCat.AsyncOps.IJobResult<bool> instead of FsInfoCat.Local.Background.DbOperationService.WorkItem<bool> #105
     public class DeleteBranchBackgroundJob : IAsyncResult, IProgress<DbOperationService.WorkItem<bool>>
     {
         private readonly ILogger<DeleteBranchBackgroundWorker> _logger;
@@ -48,6 +49,7 @@ namespace FsInfoCat.Local.Background
             return await _workItem.Task;
         }
 
+        // TODO: Use FsInfoCat.AsyncOps.JobQueue instead of FsInfoCat.Local.Background.DbOperationService #105
         public DeleteBranchBackgroundJob([DisallowNull] ILogger<DeleteBranchBackgroundWorker> logger, [DisallowNull] DbOperationService dbOperationService, [DisallowNull] DeleteFileBackgroundWorker deleteFileService, [DisallowNull] DeleteCrawlConfigurationBackgroundWorker deleteCrawlConfigurationService,
             ISubdirectoryRow target, bool forceDelete, bool deleteEmptyParent, IProgress<string> onReportProgress, bool doNotUseTransaction)
         {

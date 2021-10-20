@@ -23,6 +23,7 @@ namespace FsInfoCat.Local.Background
             services.AddSingleton<ImportBranchBackgroundWorker>();
         }
 
+        // TODO: Use FsInfoCat.AsyncOps.JobQueue instead of FsInfoCat.Local.Background.DbOperationService #105
         public ImportBranchBackgroundWorker([DisallowNull] ILogger<ImportBranchBackgroundWorker> logger, IFileSystemDetailService fileSystemDetailService, [DisallowNull] DbOperationService dbOperationService)
         {
             _fileSystemDetailService = fileSystemDetailService;
