@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace FsInfoCat.Local.Background
+namespace FsInfoCat.AsyncOps
 {
     public class JobQueue : BackgroundService
     {

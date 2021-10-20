@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat.Local.Background
 {
-    [Obsolete("Use JobQueue for long running background tasks")]
+    [Obsolete("Use FsInfoCat.AsyncOps.JobQueue for long running background tasks")]
     public class DbOperationService : BackgroundService
     {
         private readonly IServiceProvider _services;
