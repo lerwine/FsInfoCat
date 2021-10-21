@@ -1,4 +1,5 @@
-﻿using System;
+using FsInfoCat.AsyncOps;
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
@@ -9,9 +10,9 @@ namespace FsInfoCat.Local.Crawling
     {
         ICrawlJob ActiveJob { get; }
 
-        Task<bool> TryEnqueueAsync(ICrawlJob crawlJob, CancellationToken cancellationToken);
+        ICrawlJob Enqueue(ILocalCrawlConfiguration crawlConfiguration);
 
-        Task<bool> TryDequeueAsync(ICrawlJob crawlJob, CancellationToken cancellationToken);
+        ICrawlJob Enqueue(ILocalCrawlConfiguration crawlConfiguration, DateTime stopAt);
 
         bool IsActive(ICrawlJob crawlJob);
 

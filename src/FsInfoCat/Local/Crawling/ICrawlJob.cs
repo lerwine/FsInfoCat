@@ -5,10 +5,8 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat.Local.Crawling
 {
-    public interface ICrawlJob : IAsyncResult, IProgress<IJobResult<CrawlTerminationReason>>
+    public interface ICrawlJob : IJobResult<CrawlTerminationReason>, ICancellableJob
     {
         ICurrentItem CurrentItem { get; }
-
-        AsyncJobStatus JobStatus { get; }
     }
 }

@@ -6,9 +6,6 @@ namespace FsInfoCat.Local.Crawling
     {
         string Name { get; }
 
-        [System.Obsolete("Use GetFullName() or GetRelativeParentPath()")]
-        string FullName { get; }
-
         FileSystemInfo Target { get; }
 
         ILocalDbFsItem Entity { get; }

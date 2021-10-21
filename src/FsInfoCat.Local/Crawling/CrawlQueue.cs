@@ -16,20 +16,26 @@ namespace FsInfoCat.Local.Crawling
     {
         private readonly ILogger<CrawlQueue> _logger;
         private readonly JobQueue _jobQueueService;
-        private readonly Queue<ICrawlJob> _enqueued = new();
+        private readonly ICrawlMessageBus _crawlMessageBus;
+        private readonly IFileSystemDetailService _fileSystemDetailService;
+        private readonly List<CrawlJob> _enqueued = new();
         private readonly WeakReferenceSet<IProgress<bool>> _activeStateChangedEventListeners = new();
 
-        public ICrawlJob ActiveJob { get; private set; }
+        public CrawlJob ActiveJob { get; private set; }
 
-        public CrawlQueue([DisallowNull] ILogger<CrawlQueue> logger, [DisallowNull] JobQueue jobQueueService)
+        ICrawlJob ICrawlQueue.ActiveJob => ActiveJob;
+
+        public CrawlQueue([DisallowNull] ILogger<CrawlQueue> logger, [DisallowNull] JobQueue jobQueueService, [DisallowNull] ICrawlMessageBus crawlMessageBus, [DisallowNull] IFileSystemDetailService fileSystemDetailService)
         {
             _logger = logger;
             _jobQueueService = jobQueueService;
+            _crawlMessageBus = crawlMessageBus;
+            _fileSystemDetailService = fileSystemDetailService;
             _logger.LogDebug($"{nameof(ICrawlQueue)} Service instantiated");
         }
 
         [ServiceBuilderHandler]
-        public static void ConfigureServices(IServiceCollection services)
+        public static void ConfigureServices([DisallowNull] IServiceCollection services)
         {
             System.Diagnostics.Debug.WriteLine($"Invoked {typeof(CrawlQueue).FullName}.{nameof(ConfigureServices)}");
             services.AddSingleton<ICrawlQueue, CrawlQueue>();
@@ -39,121 +45,58 @@ namespace FsInfoCat.Local.Crawling
 
         public bool RemoveActiveStateChangedEventListener(IProgress<bool> listener) => _activeStateChangedEventListeners.Remove(listener);
 
-        public async Task<bool> TryEnqueueAsync(ICrawlJob crawlJob, CancellationToken cancellationToken)
+        private ICrawlJob Enqueue(DateTime? stopAt, [DisallowNull] ILocalCrawlConfiguration crawlConfiguration)
         {
-            //_logger.LogDebug("{Method}({crawlJob}, {cancellationToken})", nameof(TryEnqueueAsync), crawlJob, cancellationToken);
-            //Monitor.Enter(_enqueued);
-            //try
-            //{
-            //    if (crawlJob.Status != AsyncJobStatus.WaitingToRun)
-            //    {
-            //        _logger.LogWarning("Attempted to start CrawlJob with status of {JobStatus}", crawlJob.JobStatus);
-            //        return false;
-            //    }
-            //    if (ActiveJob is null)
-            //    {
-            //        ActiveJob = crawlJob;
-            //        try
-            //        {
-            //            _logger.LogDebug("Starting first job");
-            //            crawlJob.StartAsync(cancellationToken).ContinueWith(task => OnJobCompleted(crawlJob, cancellationToken));
-            //        }
-            //        catch (Exception exception)
-            //        {
-            //            _logger.LogError(exception, "Failed to start job");
-            //            ActiveJob = null;
-            //            return false;
-            //        }
-            //    }
-            //    else if (ReferenceEquals(ActiveJob, crawlJob) || _enqueued.Any(j => ReferenceEquals(j, crawlJob)))
-            //    {
-            //        _logger.LogWarning("Job already enqueued");
-            //        return false;
-            //    }
-            //    else
-            //    {
-            //        _logger.LogDebug("Enqueueing job");
-            //        _enqueued.Enqueue(crawlJob);
-            //        return true;
-            //    }
-            //}
-            //finally { Monitor.Exit(_enqueued); }
-            //_logger.LogDebug("Raising ActiveStateChangedEvent as true");
-            //await _activeStateChangedEventListeners.RaiseProgressChangedAsync(true, cancellationToken);
-            //return true;
-            throw new NotImplementedException();
+            CrawlJob crawlJob;
+            Monitor.Enter(_enqueued);
+            try
+            {
+                crawlJob = new(_jobQueueService, crawlConfiguration, _crawlMessageBus, _fileSystemDetailService, stopAt, OnJobStarted);
+                _enqueued.Add(crawlJob);
+            }
+            finally { Monitor.Exit(_enqueued); }
+            crawlJob.GetTask().ContinueWith(task => OnJobCompleted(crawlJob));
+            return crawlJob;
         }
 
-        private async Task OnJobCompleted(ICrawlJob crawlJob, CancellationToken cancellationToken)
+        public ICrawlJob Enqueue([DisallowNull] ILocalCrawlConfiguration crawlConfiguration) => Enqueue(null, crawlConfiguration);
+
+        public ICrawlJob Enqueue([DisallowNull] ILocalCrawlConfiguration crawlConfiguration, DateTime stopAt) => Enqueue(stopAt, crawlConfiguration);
+
+        private void OnJobStarted([DisallowNull] CrawlJob crawlJob)
         {
-            //_logger.LogDebug("{Method}({crawlJob}, {cancellationToken})", nameof(OnJobCompleted), crawlJob, cancellationToken);
-            //bool isFinalJob;
-            //Monitor.Enter(_enqueued);
-            //try
-            //{
-            //    if (ActiveJob is not null && ReferenceEquals(ActiveJob, crawlJob))
-            //    {
-            //        if (_enqueued.TryDequeue(out crawlJob))
-            //        {
-            //            ActiveJob = crawlJob;
-            //            try
-            //            {
-            //                _logger.LogDebug("Starting next job");
-            //                crawlJob.StartAsync(cancellationToken).ContinueWith(task => OnJobCompleted(crawlJob, cancellationToken));
-            //                return;
-            //            }
-            //            catch (Exception exception)
-            //            {
-            //                _logger.LogError(exception, "Failed to start next job");
-            //                isFinalJob = false;
-            //            }
-            //        }
-            //        else
-            //        {
-            //            isFinalJob = true;
-            //            ActiveJob = null;
-            //        }
-            //    }
-            //    else
-            //        return;
-            //}
-            //finally { Monitor.Exit(_enqueued); }
-            //if (isFinalJob)
-            //{
-            //    _logger.LogDebug("Raising ActiveStateChangedEvent as false");
-            //    await _activeStateChangedEventListeners.RaiseProgressChangedAsync(false, cancellationToken);
-            //}
-            //else
-            //    await OnJobCompleted(crawlJob, cancellationToken);
-            throw new NotImplementedException();
+            bool isFirstJob;
+            Monitor.Enter(_enqueued);
+            try
+            {
+                isFirstJob = ActiveJob is null;
+                try { _enqueued.Remove(crawlJob); }
+                finally { ActiveJob = crawlJob; }
+            }
+            finally { Monitor.Exit(_enqueued); }
+            if (isFirstJob)
+                _activeStateChangedEventListeners.RaiseProgressChangedAsync(true, CancellationToken.None);
         }
 
-        public async Task<bool> TryDequeueAsync(ICrawlJob crawlJob, CancellationToken cancellationToken)
+        private void OnJobCompleted([DisallowNull] CrawlJob crawlJob)
         {
-            //_logger.LogDebug("{Method}({crawlJob}, {cancellationToken})", nameof(TryDequeueAsync), crawlJob, cancellationToken);
-            //if (crawlJob is null)
-            //    return false;
-            //Monitor.Enter(_enqueued);
-            //try
-            //{
-            //    if (ActiveJob is null)
-            //        return false;
-            //    if (ReferenceEquals(ActiveJob, crawlJob))
-            //    {
-            //        _logger.LogDebug("Stopping active job");
-            //        await crawlJob.StopAsync(new CancellationToken(true));
-            //    }
-            //    else if (_enqueued.TryPeek(out ICrawlJob job) && ReferenceEquals(job, crawlJob))
-            //    {
-            //        _logger.LogDebug("Stopping pending job");
-            //        await crawlJob.StopAsync(new CancellationToken(true));
-            //    }
-            //    else
-            //        return false;
-            //}
-            //finally { Monitor.Exit(_enqueued); }
-            //return true;
-            throw new NotImplementedException();
+            bool isLastJob;
+            Monitor.Enter(_enqueued);
+            try
+            {
+
+                if (ActiveJob is not null && ReferenceEquals(ActiveJob, crawlJob))
+                {
+                    isLastJob = _enqueued.Count == 0;
+                    if (isLastJob)
+                        ActiveJob = null;
+                }
+                else
+                    isLastJob = false;
+            }
+            finally { Monitor.Exit(_enqueued); }
+            if (isLastJob)
+                _activeStateChangedEventListeners.RaiseProgressChangedAsync(false, CancellationToken.None);
         }
 
         public bool IsActive(ICrawlJob crawlJob) => ActiveJob is not null && ReferenceEquals(ActiveJob, crawlJob);
@@ -174,17 +117,19 @@ namespace FsInfoCat.Local.Crawling
 
         public async Task CancelAllCrawlsAsync()
         {
-            //_logger.LogDebug("{Method}()", nameof(CancelAllCrawlsAsync));
-            //Monitor.Enter(_enqueued);
-            //try
-            //{
-            //    if (ActiveJob is null)
-            //        return;
-            //    CancellationToken token = new(true);
-            //    await Task.WhenAll(Enumerable.Repeat(ActiveJob, 1).Concat(_enqueued).Select(j => j.StopAsync(token)));
-            //}
-            //finally { Monitor.Exit(_enqueued); }
-            throw new NotImplementedException();
+            _logger.LogDebug("{Method}()", nameof(CancelAllCrawlsAsync));
+            Monitor.Enter(_enqueued);
+            try
+            {
+                if (ActiveJob is null)
+                    return;
+                await Task.WhenAll(Enumerable.Repeat(ActiveJob, 1).Concat(_enqueued).ToArray().Select(j =>
+                {
+                    j.Cancel(true);
+                    return j.GetTask();
+                }));
+            }
+            finally { Monitor.Exit(_enqueued); }
         }
     }
 }
