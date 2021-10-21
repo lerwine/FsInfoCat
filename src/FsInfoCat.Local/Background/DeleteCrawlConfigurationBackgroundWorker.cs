@@ -1,3 +1,4 @@
+using FsInfoCat.AsyncOps;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
@@ -8,7 +9,7 @@ namespace FsInfoCat.Local.Background
     public class DeleteCrawlConfigurationBackgroundWorker
     {
         private readonly ILogger<DeleteCrawlConfigurationBackgroundWorker> _logger;
-        private readonly DbOperationService _dbOperationService;
+        private readonly JobQueue _jobQueueService;
 
         [ServiceBuilderHandler(Priority = 200)]
         public static void ConfigureServices(IServiceCollection services)
@@ -17,11 +18,10 @@ namespace FsInfoCat.Local.Background
             services.AddSingleton<DeleteBranchBackgroundWorker>();
         }
 
-        // TODO: Use FsInfoCat.AsyncOps.JobQueue instead of FsInfoCat.Local.Background.DbOperationService #105
-        public DeleteCrawlConfigurationBackgroundWorker([DisallowNull] ILogger<DeleteCrawlConfigurationBackgroundWorker> logger, [DisallowNull] DbOperationService dbOperationService)
+        public DeleteCrawlConfigurationBackgroundWorker([DisallowNull] ILogger<DeleteCrawlConfigurationBackgroundWorker> logger, [DisallowNull] JobQueue jobQueueService)
         {
             _logger = logger;
-            _dbOperationService = dbOperationService;
+            _jobQueueService = jobQueueService;
             _logger.LogDebug($"{nameof(DeleteCrawlConfigurationBackgroundWorker)} Service instantiated");
         }
 
@@ -29,7 +29,7 @@ namespace FsInfoCat.Local.Background
         {
             if (crawlConfiguration is null)
                 throw new ArgumentNullException(nameof(crawlConfiguration));
-            return new DeleteCrawlConfigurationBackgroundJob(_logger, _dbOperationService, crawlConfiguration, onReportProgress, doNotUseTransaction);
+            return new DeleteCrawlConfigurationBackgroundJob(_logger, _jobQueueService, crawlConfiguration, onReportProgress, doNotUseTransaction);
         }
     }
 }

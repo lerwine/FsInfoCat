@@ -1,3 +1,4 @@
+using FsInfoCat.AsyncOps;
 using FsInfoCat.Background;
 using FsInfoCat.Local.Background;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,18 +11,13 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat.Local.Crawling
 {
-    // TODO: Replace functionality of CrawlJob class #104
-    [Obsolete("Use FsInfoCat.AsyncOps.JobQueue for long running background tasks")]
-    public partial class CrawlJob : BackgroundService, ICrawlJob
+    // TODO: Implement CrawlJob service #104
+    public partial class CrawlJob : ICrawlJob
     {
         private readonly ILogger<CrawlJob> _logger;
         private readonly ICrawlMessageBus _crawlMessageBus;
-        private readonly ICrawlQueue _crawlQueue;
         private readonly IFileSystemDetailService _fileSystemDetailService;
-        private readonly DbOperationService _dbOperationService;
-        private Stopwatch _stopwatch;
-        private CancellationToken _stoppingToken;
-        private Task<ICrawlResult> _task;
+        //private readonly IJobResult<CrawlTerminationReason> _workItem;
         private CrawlTerminationReason _terminationReason;
 
         public DateTime? StopAt { get; }
@@ -30,27 +26,21 @@ namespace FsInfoCat.Local.Crawling
 
         public DateTime Started { get; private set; }
 
-        public TimeSpan Elapsed => _stopwatch?.Elapsed ?? TimeSpan.Zero;
-
         public AsyncJobStatus JobStatus { get; private set; }
 
         public ICurrentItem CurrentItem { get; private set; }
 
-        public Task<ICrawlResult> Task => _task ?? throw new InvalidOperationException();
+        object IAsyncResult.AsyncState => throw new NotImplementedException();
 
-        object IAsyncResult.AsyncState => ((IAsyncResult)Task).AsyncState;
+        WaitHandle IAsyncResult.AsyncWaitHandle => throw new NotImplementedException();
 
-        WaitHandle IAsyncResult.AsyncWaitHandle => ((IAsyncResult)Task).AsyncWaitHandle;
+        bool IAsyncResult.CompletedSynchronously => throw new NotImplementedException();
 
-        bool IAsyncResult.CompletedSynchronously => ((IAsyncResult)_task)?.CompletedSynchronously ?? false;
+        bool IAsyncResult.IsCompleted => throw new NotImplementedException();
 
-        bool IAsyncResult.IsCompleted => ((IAsyncResult)_task)?.CompletedSynchronously ?? false;
-
-        Task ILongRunningAsyncService.Task => Task;
-
-        public CrawlJob(ILogger<CrawlJob> logger, ICrawlMessageBus crawlMessageBus, ICrawlQueue crawlQueue, IFileSystemDetailService fileSystemDetailService, IServiceProvider provider)
+        public CrawlJob(ILogger<CrawlJob> logger, ICrawlMessageBus crawlMessageBus, ICrawlQueue crawlQueueService, IFileSystemDetailService fileSystemDetailService)
         {
-            (_dbOperationService, _logger, _crawlMessageBus, _crawlQueue, _fileSystemDetailService) = (provider.GetRequiredService<DbOperationService>(), logger, crawlMessageBus, crawlQueue, fileSystemDetailService);
+            (_logger, _crawlMessageBus, _fileSystemDetailService) = (logger, crawlMessageBus, fileSystemDetailService);
             _logger.LogDebug($"{nameof(CrawlJob)} Service instantiated");
         }
 
@@ -58,7 +48,7 @@ namespace FsInfoCat.Local.Crawling
         public static void ConfigureServices(IServiceCollection services)
         {
             System.Diagnostics.Debug.WriteLine($"Invoked {typeof(CrawlJob).FullName}.{nameof(ConfigureServices)}");
-            services.AddHostedService<CrawlJob>();
+            services.AddTransient<CrawlJob>();
             //services.AddHostedService<CrawlJob>(provider => new CrawlJob(
             //    provider.GetRequiredService<DbOperationService>(),
             //    provider.GetRequiredService<ILogger<CrawlJob>>(),
@@ -68,59 +58,24 @@ namespace FsInfoCat.Local.Crawling
             //));
         }
 
-        private async Task ExecuteAsync()
+        void IProgress<IJobResult<CrawlTerminationReason>>.Report(IJobResult<CrawlTerminationReason> value)
         {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// Do not invoke this method directly. Use <see cref="ICrawlQueue.TryEnqueue(ICrawlJob)"/> instead.
-        /// </summary>
-        /// <param name="cancellationToken">Indicates if/when the process has been aborted.</param>
-        /// <returns>A <see cref="Task"/> for the long-running operation.</returns>
-        public override Task StartAsync(CancellationToken cancellationToken)
-        {
-            if (_crawlQueue.ActiveJob is null || !ReferenceEquals(this, _crawlQueue.ActiveJob))
-                throw new InvalidOperationException();
-            return base.StartAsync(cancellationToken);
-        }
-
-        protected override Task ExecuteAsync(CancellationToken stoppingToken)
-        {
-            JobStatus = AsyncJobStatus.Running;
-            Stopwatch stopwatch = new();
-            stopwatch.Start();
-            _stopwatch = stopwatch;
-            _stoppingToken = stoppingToken;
-            Task workerTask = ExecuteAsync();
-            _task = workerTask.ContinueWith<ICrawlResult>(task =>
-            {
-                stopwatch.Stop();
-                if (task.IsCanceled)
-                    JobStatus = AsyncJobStatus.Canceled;
-                else if (task.IsFaulted)
-                    JobStatus = AsyncJobStatus.Faulted;
-                else
-                {
-                    JobStatus = AsyncJobStatus.Succeeded;
-                    return new CrawlResult
-                    {
-                        Started = Started,
-                        Duration = stopwatch.Elapsed,
-                        WorkerTask = task,
-                        TerminationReason = _terminationReason
-                    };
-                }
-                _terminationReason = CrawlTerminationReason.Aborted;
-                return new CrawlResult
-                {
-                    Started = Started,
-                    Duration = stopwatch.Elapsed,
-                    WorkerTask = task,
-                    TerminationReason = _terminationReason
-                };
-            }, TaskContinuationOptions.NotOnFaulted); ;
-            return workerTask;
+            JobStatus = value.Status;
+            //switch (JobStatus)
+            //{
+            //    case AsyncJobStatus.Cancelling:
+            //        _onReportProgress?.Report(new CrawlProgress(value.Started, value.Elapsed, value.Status, "Cancelling background job..."));
+            //        break;
+            //    case AsyncJobStatus.Canceled:
+            //        _onReportProgress?.Report(new CrawlProgress(value.Started, value.Elapsed, value.Status, "Background job canceled."));
+            //        break;
+            //    case AsyncJobStatus.Faulted:
+            //        _onReportProgress?.Report(new CrawlProgress(value.Started, value.Elapsed, value.Status, "Background job failed."));
+            //        break;
+            //    case AsyncJobStatus.Succeeded:
+            //        _onReportProgress?.Report(new CrawlProgress(value.Started, value.Elapsed, value.Status, "Background job completed."));
+            //        break;
+            //}
         }
     }
 }

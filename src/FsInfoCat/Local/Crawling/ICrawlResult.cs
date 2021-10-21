@@ -7,7 +7,8 @@ namespace FsInfoCat.Local.Crawling
     /// <summary>
     /// Describes the result of a file system crawl job.
     /// </summary>
-    public interface ICrawlResult : IAsyncResult
+    [Obsolete("Use IJobResult<CrawlTerminationReason>")]
+    public interface ICrawlResult
     {
         /// <summary>
         /// Gets the start date/time of the crawl job.
@@ -29,11 +30,5 @@ namespace FsInfoCat.Local.Crawling
         /// Indicates why the file system crawl was terminated.
         /// </summary>
         CrawlTerminationReason TerminationReason { get; }
-
-
-        /// <summary>
-        /// Gets the completed worker task.
-        /// </summary>
-        Task WorkerTask { get; }
     }
 }

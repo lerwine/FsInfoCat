@@ -1,6 +1,8 @@
+using FsInfoCat.AsyncOps;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
@@ -9,17 +11,15 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat.Local.Background
 {
-    // TODO: Use FsInfoCat.AsyncOps.IJobResult<bool> instead of FsInfoCat.Local.Background.DbOperationService.WorkItem<bool> #105
-    public class DeleteCrawlConfigurationBackgroundJob : IAsyncResult, IProgress<DbOperationService.WorkItem<bool>>
+    public class DeleteCrawlConfigurationBackgroundJob : IAsyncResult, IProgress<IJobResult<bool>>
     {
         private readonly ILogger<DeleteCrawlConfigurationBackgroundWorker> _logger;
         private readonly IProgress<string> _onReportProgress;
+        private readonly IJobResult<bool> _workItem;
 
         public bool DoNotUseTransaction { get; }
 
-        public Task<bool> Task { get; }
-
-        private DbOperationService.WorkItem<bool> _workItem;
+        public Task<bool> Task => _workItem.GetTask();
 
         public DateTime Started { get; private set; }
 
@@ -35,35 +35,35 @@ namespace FsInfoCat.Local.Background
 
         public AsyncJobStatus JobStatus { get; private set; }
 
-        private async Task<bool> GetResult(Task<DbOperationService.WorkItem<bool>> task)
-        {
-            _workItem = await task;
-            Started = _workItem.Started;
-            return await _workItem.Task;
-        }
-
-        // TODO: Use FsInfoCat.AsyncOps.JobQueue instead of FsInfoCat.Local.Background.DbOperationService #105
-        public DeleteCrawlConfigurationBackgroundJob(ILogger<DeleteCrawlConfigurationBackgroundWorker> logger, DbOperationService dbOperationService, ICrawlConfigurationRow target, IProgress<string> onReportProgress, bool doNotUseTransaction)
+        public DeleteCrawlConfigurationBackgroundJob(ILogger<DeleteCrawlConfigurationBackgroundWorker> logger, JobQueue jobQueueService, ICrawlConfigurationRow target, IProgress<string> onReportProgress, bool doNotUseTransaction)
         {
             _logger = logger;
             Target = target;
             _onReportProgress = onReportProgress;
             DoNotUseTransaction = doNotUseTransaction;
-            Task = GetResult(dbOperationService.EnqueueAsync(async (LocalDbContext dbContext, CancellationToken cancellationToken) =>
+            _workItem = jobQueueService.Enqueue(async context =>
             {
-                if (target is not CrawlConfiguration crawlConfig)
-                {
-                    Guid id = target.Id;
-                    if ((crawlConfig = await dbContext.CrawlConfigurations.FindAsync(new object[] { target.Id }, cancellationToken)) is null)
-                        return false;
-                }
-                if (doNotUseTransaction)
-                    return await DoWorkAsync(crawlConfig, dbContext, cancellationToken);
-                using IDbContextTransaction transaction = await dbContext.Database.BeginTransactionAsync(cancellationToken);
-                bool result = await DoWorkAsync(crawlConfig, dbContext, cancellationToken);
-                await transaction.CommitAsync(cancellationToken);
-                return result;
-            }, this));
+                Started = context.Started;
+                return await DoWorkAsync(target, doNotUseTransaction, context.CancellationToken);
+            });
+        }
+
+        private async Task<bool> DoWorkAsync(ICrawlConfigurationRow target, bool doNotUseTransaction, CancellationToken cancellationToken)
+        {
+            using IServiceScope serviceScope = Services.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+            if (target is not CrawlConfiguration crawlConfig)
+            {
+                Guid id = target.Id;
+                if ((crawlConfig = await dbContext.CrawlConfigurations.FindAsync(new object[] { target.Id }, cancellationToken)) is null)
+                    return false;
+            }
+            if (doNotUseTransaction)
+                return await DoWorkAsync(crawlConfig, dbContext, cancellationToken);
+            using IDbContextTransaction transaction = await dbContext.Database.BeginTransactionAsync(cancellationToken);
+            bool result = await DoWorkAsync(crawlConfig, dbContext, cancellationToken);
+            await transaction.CommitAsync(cancellationToken);
+            return result;
         }
 
         private async Task<bool> DoWorkAsync(CrawlConfiguration crawlConfig, LocalDbContext dbContext, CancellationToken cancellationToken)
@@ -90,10 +90,10 @@ namespace FsInfoCat.Local.Background
             return true;
         }
 
-        void IProgress<DbOperationService.WorkItem<bool>>.Report(DbOperationService.WorkItem<bool> value)
+        void IProgress<IJobResult<bool>>.Report(IJobResult<bool> value)
         {
-            JobStatus = value.JobStatus;
-            switch (value.JobStatus)
+            JobStatus = value.Status;
+            switch (JobStatus)
             {
                 case AsyncJobStatus.Cancelling:
                     _onReportProgress?.Report("Cancelling background job...");

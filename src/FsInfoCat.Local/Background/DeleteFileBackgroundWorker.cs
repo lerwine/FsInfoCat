@@ -1,3 +1,4 @@
+using FsInfoCat.AsyncOps;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
@@ -8,7 +9,7 @@ namespace FsInfoCat.Local.Background
     public class DeleteFileBackgroundWorker
     {
         private readonly ILogger<DeleteFileBackgroundWorker> _logger;
-        private readonly DbOperationService _dbOperationService;
+        private readonly JobQueue _jobQueueService;
 
         [ServiceBuilderHandler(Priority = 200)]
         public static void ConfigureServices(IServiceCollection services)
@@ -17,11 +18,10 @@ namespace FsInfoCat.Local.Background
             services.AddSingleton<DeleteFileBackgroundWorker>();
         }
 
-        // TODO: Use FsInfoCat.AsyncOps.JobQueue instead of FsInfoCat.Local.Background.DbOperationService #105
-        public DeleteFileBackgroundWorker([DisallowNull] ILogger<DeleteFileBackgroundWorker> logger, [DisallowNull] DbOperationService dbOperationService)
+        public DeleteFileBackgroundWorker([DisallowNull] ILogger<DeleteFileBackgroundWorker> logger, [DisallowNull] JobQueue jobQueueService)
         {
             _logger = logger;
-            _dbOperationService = dbOperationService;
+            _jobQueueService = jobQueueService;
             _logger.LogDebug($"{nameof(DeleteFileBackgroundWorker)} Service instantiated");
         }
 
@@ -29,7 +29,7 @@ namespace FsInfoCat.Local.Background
         {
             if (file is null)
                 throw new ArgumentNullException(nameof(file));
-            return new DeleteFileBackgroundJob(_logger, _dbOperationService, file, forceDelete, deleteEmptyParent, onReportProgress, doNotUseTransaction);
+            return new DeleteFileBackgroundJob(_logger, _jobQueueService, file, forceDelete, deleteEmptyParent, onReportProgress, doNotUseTransaction);
         }
     }
 }

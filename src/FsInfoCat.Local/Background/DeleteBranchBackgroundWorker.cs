@@ -1,4 +1,4 @@
-using FsInfoCat.Background;
+using FsInfoCat.AsyncOps;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
@@ -9,7 +9,7 @@ namespace FsInfoCat.Local.Background
     public class DeleteBranchBackgroundWorker
     {
         private readonly ILogger<DeleteBranchBackgroundWorker> _logger;
-        private readonly DbOperationService _dbOperationService;
+        private readonly JobQueue _jobQueueService;
         private readonly DeleteFileBackgroundWorker _deleteFileService;
         private readonly DeleteCrawlConfigurationBackgroundWorker _deleteCrawlConfigurationService;
 
@@ -20,11 +20,10 @@ namespace FsInfoCat.Local.Background
             services.AddSingleton<DeleteBranchBackgroundWorker>();
         }
 
-        // TODO: Use FsInfoCat.AsyncOps.JobQueue instead of FsInfoCat.Local.Background.DbOperationService #105
-        public DeleteBranchBackgroundWorker([DisallowNull] ILogger<DeleteBranchBackgroundWorker> logger, [DisallowNull] DbOperationService dbOperationService, [DisallowNull] DeleteFileBackgroundWorker deleteFileService, [DisallowNull] DeleteCrawlConfigurationBackgroundWorker deleteCrawlConfigurationService)
+        public DeleteBranchBackgroundWorker([DisallowNull] ILogger<DeleteBranchBackgroundWorker> logger, [DisallowNull] JobQueue jobQueueService, [DisallowNull] DeleteFileBackgroundWorker deleteFileService, [DisallowNull] DeleteCrawlConfigurationBackgroundWorker deleteCrawlConfigurationService)
         {
             _logger = logger;
-            _dbOperationService = dbOperationService;
+            _jobQueueService = jobQueueService;
             _deleteFileService = deleteFileService;
             _deleteCrawlConfigurationService = deleteCrawlConfigurationService;
             _logger.LogDebug($"{nameof(DeleteBranchBackgroundWorker)} Service instantiated");
@@ -34,7 +33,7 @@ namespace FsInfoCat.Local.Background
         {
             if (subdirectory is null)
                 throw new ArgumentNullException(nameof(subdirectory));
-            return new DeleteBranchBackgroundJob(_logger, _dbOperationService, _deleteFileService, _deleteCrawlConfigurationService, subdirectory, forceDelete, deleteEmptyParent, onReportProgress, doNotUseTransaction);
+            return new DeleteBranchBackgroundJob(_logger, _jobQueueService, _deleteFileService, _deleteCrawlConfigurationService, subdirectory, forceDelete, deleteEmptyParent, onReportProgress, doNotUseTransaction);
         }
     }
 }

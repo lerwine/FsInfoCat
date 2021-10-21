@@ -1,12 +1,9 @@
-using FsInfoCat.Background;
+using FsInfoCat.AsyncOps;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using System.Linq;
-using System.Text;
 
 namespace FsInfoCat.Local.Background
 {
@@ -14,7 +11,7 @@ namespace FsInfoCat.Local.Background
     {
         private readonly ILogger<ImportBranchBackgroundWorker> _logger;
         private readonly IFileSystemDetailService _fileSystemDetailService;
-        private readonly DbOperationService _dbOperationService;
+        private readonly JobQueue _jobQueueService;
 
         [ServiceBuilderHandler(Priority = 200)]
         public static void ConfigureServices(IServiceCollection services)
@@ -23,12 +20,11 @@ namespace FsInfoCat.Local.Background
             services.AddSingleton<ImportBranchBackgroundWorker>();
         }
 
-        // TODO: Use FsInfoCat.AsyncOps.JobQueue instead of FsInfoCat.Local.Background.DbOperationService #105
-        public ImportBranchBackgroundWorker([DisallowNull] ILogger<ImportBranchBackgroundWorker> logger, IFileSystemDetailService fileSystemDetailService, [DisallowNull] DbOperationService dbOperationService)
+        public ImportBranchBackgroundWorker([DisallowNull] ILogger<ImportBranchBackgroundWorker> logger, IFileSystemDetailService fileSystemDetailService, [DisallowNull] JobQueue jobQueueService)
         {
             _fileSystemDetailService = fileSystemDetailService;
             _logger = logger;
-            _dbOperationService = dbOperationService;
+            _jobQueueService = jobQueueService;
             _logger.LogDebug($"{nameof(ImportBranchBackgroundWorker)} Service instantiated");
         }
 
@@ -36,7 +32,7 @@ namespace FsInfoCat.Local.Background
         {
             if (directoryInfo is null)
                 throw new ArgumentNullException(nameof(directoryInfo));
-            return new ImportBranchBackgroundJob(_logger, _fileSystemDetailService, _dbOperationService, directoryInfo, markNewAsCompleted, onReportProgress);
+            return new ImportBranchBackgroundJob(_logger, _fileSystemDetailService, _jobQueueService, directoryInfo, markNewAsCompleted, onReportProgress);
         }
     }
 }

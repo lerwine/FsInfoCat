@@ -1,4 +1,4 @@
-using FsInfoCat.Background;
+using FsInfoCat.AsyncOps;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
@@ -9,7 +9,7 @@ namespace FsInfoCat.Local.Background
     public class DeleteVolumeBackgroundWorker
     {
         private readonly ILogger<DeleteVolumeBackgroundWorker> _logger;
-        private readonly DbOperationService _dbOperationService;
+        private readonly JobQueue _jobQueueService;
         private readonly DeleteBranchBackgroundWorker _deleteBranchService;
 
         [ServiceBuilderHandler(Priority = 400)]
@@ -19,11 +19,10 @@ namespace FsInfoCat.Local.Background
             services.AddSingleton<DeleteVolumeBackgroundWorker>();
         }
 
-        // TODO: Use FsInfoCat.AsyncOps.JobQueue instead of FsInfoCat.Local.Background.DbOperationService #105
-        public DeleteVolumeBackgroundWorker([DisallowNull] ILogger<DeleteVolumeBackgroundWorker> logger, [DisallowNull] DbOperationService dbOperationService, [DisallowNull] DeleteBranchBackgroundWorker deleteBranchService)
+        public DeleteVolumeBackgroundWorker([DisallowNull] ILogger<DeleteVolumeBackgroundWorker> logger, [DisallowNull] JobQueue jobQueueService, [DisallowNull] DeleteBranchBackgroundWorker deleteBranchService)
         {
             _logger = logger;
-            _dbOperationService = dbOperationService;
+            _jobQueueService = jobQueueService;
             _deleteBranchService = deleteBranchService;
             _logger.LogDebug($"{nameof(DeleteVolumeBackgroundWorker)} Service instantiated");
         }
@@ -32,7 +31,7 @@ namespace FsInfoCat.Local.Background
         {
             if (target is null)
                 throw new ArgumentNullException(nameof(target));
-            return new DeleteVolumeBackgroundJob(_logger, _dbOperationService, _deleteBranchService, target, forceDelete, onReportProgress, doNotUseTransaction);
+            return new DeleteVolumeBackgroundJob(_logger, _jobQueueService, _deleteBranchService, target, forceDelete, onReportProgress, doNotUseTransaction);
         }
     }
 }

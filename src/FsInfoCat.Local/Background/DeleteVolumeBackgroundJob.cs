@@ -1,6 +1,8 @@
+using FsInfoCat.AsyncOps;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
@@ -9,17 +11,15 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat.Local.Background
 {
-    // TODO: Use FsInfoCat.AsyncOps.IJobResult<bool> instead of FsInfoCat.Local.Background.DbOperationService.WorkItem<bool> #105
-    public class DeleteVolumeBackgroundJob : IAsyncResult, IProgress<DbOperationService.WorkItem<bool>>
+    public class DeleteVolumeBackgroundJob : IAsyncResult, IProgress<IJobResult<bool>>
     {
         private readonly ILogger<DeleteVolumeBackgroundWorker> _logger;
         private readonly IProgress<string> _onReportProgress;
+        private readonly IJobResult<bool> _workItem;
 
         public bool DoNotUseTransaction { get; }
 
-        public Task<bool> Task { get; }
-
-        private DbOperationService.WorkItem<bool> _workItem;
+        public Task<bool> Task => _workItem.GetTask();
 
         public DateTime Started { get; private set; }
 
@@ -37,36 +37,36 @@ namespace FsInfoCat.Local.Background
 
         public AsyncJobStatus JobStatus { get; private set; }
 
-        private async Task<bool> GetResult(Task<DbOperationService.WorkItem<bool>> task)
-        {
-            _workItem = await task;
-            Started = _workItem.Started;
-            return await _workItem.Task;
-        }
-
-        // TODO: Use FsInfoCat.AsyncOps.JobQueue instead of FsInfoCat.Local.Background.DbOperationService #105
-        public DeleteVolumeBackgroundJob(ILogger<DeleteVolumeBackgroundWorker> logger, DbOperationService dbOperationService, DeleteBranchBackgroundWorker deleteBranchService, IVolumeRow target, bool forceDelete, IProgress<string> onReportProgress, bool doNotUseTransaction)
+        public DeleteVolumeBackgroundJob(ILogger<DeleteVolumeBackgroundWorker> logger, JobQueue jobQueueService, DeleteBranchBackgroundWorker deleteBranchService, IVolumeRow target, bool forceDelete, IProgress<string> onReportProgress, bool doNotUseTransaction)
         {
             _logger = logger;
             Target = target;
             ForceDelete = forceDelete;
             _onReportProgress = onReportProgress;
             DoNotUseTransaction = doNotUseTransaction;
-            Task = GetResult(dbOperationService.EnqueueAsync(async (LocalDbContext dbContext, CancellationToken cancellationToken) =>
+            _workItem = jobQueueService.Enqueue(async context =>
             {
-                if (target is not Volume volume)
-                {
-                    Guid id = target.Id;
-                    if ((volume = await dbContext.Volumes.FindAsync(new object[] { cancellationToken }, cancellationToken)) is null)
-                        return false;
-                }
-                if (doNotUseTransaction)
-                    return await DoWorkAsync(volume, dbContext, deleteBranchService, cancellationToken);
-                using IDbContextTransaction transaction = await dbContext.Database.BeginTransactionAsync(cancellationToken);
-                bool result = await DoWorkAsync(volume, dbContext, deleteBranchService, cancellationToken);
-                await transaction.CommitAsync(cancellationToken);
-                return result;
-            }, this));
+                Started = context.Started;
+                return await DoWorkAsync(deleteBranchService, target, doNotUseTransaction, context.CancellationToken);
+            });
+        }
+
+        private async Task<bool> DoWorkAsync(DeleteBranchBackgroundWorker deleteBranchService, IVolumeRow target, bool doNotUseTransaction, CancellationToken cancellationToken)
+        {
+            using IServiceScope serviceScope = Services.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+            if (target is not Volume volume)
+            {
+                Guid id = target.Id;
+                if ((volume = await dbContext.Volumes.FindAsync(new object[] { cancellationToken }, cancellationToken)) is null)
+                    return false;
+            }
+            if (doNotUseTransaction)
+                return await DoWorkAsync(volume, dbContext, deleteBranchService, cancellationToken);
+            using IDbContextTransaction transaction = await dbContext.Database.BeginTransactionAsync(cancellationToken);
+            bool result = await DoWorkAsync(volume, dbContext, deleteBranchService, cancellationToken);
+            await transaction.CommitAsync(cancellationToken);
+            return result;
         }
 
         private async Task<bool> DoWorkAsync(Volume volume, LocalDbContext dbContext, DeleteBranchBackgroundWorker deleteBranchService, CancellationToken cancellationToken)
@@ -111,10 +111,10 @@ namespace FsInfoCat.Local.Background
             return false;
         }
 
-        void IProgress<DbOperationService.WorkItem<bool>>.Report(DbOperationService.WorkItem<bool> value)
+        void IProgress<IJobResult<bool>>.Report(IJobResult<bool> value)
         {
-            JobStatus = value.JobStatus;
-            switch (value.JobStatus)
+            JobStatus = value.Status;
+            switch (JobStatus)
             {
                 case AsyncJobStatus.Cancelling:
                     _onReportProgress?.Report("Cancelling background job...");

@@ -1,3 +1,4 @@
+using FsInfoCat.AsyncOps;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
@@ -8,7 +9,7 @@ namespace FsInfoCat.Local.Background
     public class MarkBranchIncompleteBackgroundWorker
     {
         private readonly ILogger<MarkBranchIncompleteBackgroundWorker> _logger;
-        private readonly DbOperationService _dbOperationService;
+        private readonly JobQueue _jobQueueService;
 
         [ServiceBuilderHandler(Priority = 200)]
         public static void ConfigureServices(IServiceCollection services)
@@ -17,11 +18,10 @@ namespace FsInfoCat.Local.Background
             services.AddSingleton<MarkBranchIncompleteBackgroundWorker>();
         }
 
-        // TODO: Use FsInfoCat.AsyncOps.JobQueue instead of FsInfoCat.Local.Background.DbOperationService #105
-        public MarkBranchIncompleteBackgroundWorker([DisallowNull] ILogger<MarkBranchIncompleteBackgroundWorker> logger, [DisallowNull] DbOperationService dbOperationService)
+        public MarkBranchIncompleteBackgroundWorker([DisallowNull] ILogger<MarkBranchIncompleteBackgroundWorker> logger, [DisallowNull] JobQueue jobQueueService)
         {
             _logger = logger;
-            _dbOperationService = dbOperationService;
+            _jobQueueService = jobQueueService;
             _logger.LogDebug($"{nameof(MarkBranchIncompleteBackgroundWorker)} Service instantiated");
         }
 
@@ -29,7 +29,7 @@ namespace FsInfoCat.Local.Background
         {
             if (subdirectory is null)
                 throw new ArgumentNullException(nameof(subdirectory));
-            return new MarkBranchIncompleteBackgroundJob(_logger, _dbOperationService, subdirectory, onReportProgress, doNotUseTransaction);
+            return new MarkBranchIncompleteBackgroundJob(_logger, _jobQueueService, subdirectory, onReportProgress, doNotUseTransaction);
         }
     }
 }
