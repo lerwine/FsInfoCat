@@ -22,7 +22,7 @@ namespace FsInfoCat
 
         protected BaseDbContext([NotNull] DbContextOptions options) : base(options)
         {
-            _logger = Services.ServiceProvider.GetRequiredService<ILogger<BaseDbContext>>();
+            _logger = Hosting.ServiceProvider.GetRequiredService<ILogger<BaseDbContext>>();
             lock (_syncRoot)
             {
                 if (_scopes.TryGetValue(ContextId.InstanceId, out List<int> list))
@@ -521,7 +521,7 @@ namespace FsInfoCat
             private readonly Type _entityType;
 
             internal DbContextServiceProvider([DisallowNull] BaseDbContext dbContext, [DisallowNull] object entity)
-                : base(Services.ServiceProvider)
+                : base(Hosting.ServiceProvider)
             {
                 _dbContext = dbContext;
                 _entityType = (_entity = entity).GetType();
@@ -542,7 +542,7 @@ namespace FsInfoCat
                     service = _dbContext.Entry(_entity);
                 else
                 {
-                    service = Services.ServiceProvider.GetService(serviceType);
+                    service = Hosting.ServiceProvider.GetService(serviceType);
                     return service is not null;
                 }
                 return true;
@@ -557,7 +557,7 @@ namespace FsInfoCat
                 get
                 {
                     if (_logger is null)
-                        _logger = Services.ServiceProvider.GetRequiredService<ILogger<BaseDbContext>>();
+                        _logger = Hosting.ServiceProvider.GetRequiredService<ILogger<BaseDbContext>>();
                     return _logger;
                 }
             }

@@ -21,7 +21,7 @@ namespace FsInfoCat.DeferredDelegation
             private DelegateDeference(DeferenceCollection owner)
             {
                 _owner = owner;
-                using IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
+                using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
                 _logger = serviceScope.ServiceProvider.GetRequiredService<ILogger<DelegateDeference<TTarget>>>();
             }
 

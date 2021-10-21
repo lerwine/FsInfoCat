@@ -23,7 +23,7 @@ namespace FsInfoCat.UnitTests
         [TestInitialize]
         public void OnTestInitialize()
         {
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             dbContext.RejectChanges();
         }
 
@@ -32,7 +32,7 @@ namespace FsInfoCat.UnitTests
         [Ignore]
         public void SubdirectoryAddRemoveTestMethod()
         {
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             Local.FileSystem fileSystem1 = new() { DisplayName = "Subdirectory Add/Remove FileSystem" };
             dbContext.FileSystems.Add(fileSystem1);
             Local.Volume volume1 = new()
@@ -83,7 +83,7 @@ namespace FsInfoCat.UnitTests
         [Ignore]
         public void SubdirectoryNameTestMethod()
         {
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             string expectedName = "";
             Local.FileSystem fileSystem1 = new() { DisplayName = "Subdirectory NameTest FileSystem" };
             dbContext.FileSystems.Add(fileSystem1);
@@ -247,7 +247,7 @@ namespace FsInfoCat.UnitTests
         [Ignore]
         public void SubdirectoryOptionsTestMethod()
         {
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             Local.FileSystem fileSystem = new() { DisplayName = "Subdirectory OptionsTest FileSystem" };
             dbContext.FileSystems.Add(fileSystem);
             Local.Volume volume = new()
@@ -292,7 +292,7 @@ namespace FsInfoCat.UnitTests
         [Ignore]
         public void SubdirectoryCreatedOnTestMethod()
         {
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             Local.FileSystem fileSystem = new() { DisplayName = "Subdirectory CreatedOnTest FileSystem" };
             dbContext.FileSystems.Add(fileSystem);
             Local.Volume volume = new()
@@ -345,7 +345,7 @@ namespace FsInfoCat.UnitTests
         [Ignore]
         public void SubdirectoryLastSynchronizedOnTestMethod()
         {
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             Local.FileSystem fileSystem = new() { DisplayName = "Subdirectory LastSynchronizedOn FileSystem" };
             dbContext.FileSystems.Add(fileSystem);
             Local.Volume volume = new()

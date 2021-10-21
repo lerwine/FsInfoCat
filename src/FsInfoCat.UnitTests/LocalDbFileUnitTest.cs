@@ -25,7 +25,7 @@ namespace FsInfoCat.UnitTests
         [TestInitialize]
         public void OnTestInitialize()
         {
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             dbContext.RejectChanges();
         }
 
@@ -34,7 +34,7 @@ namespace FsInfoCat.UnitTests
         public void DbFileAddRemoveTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             Local.FileSystem fileSystem1 = new() { DisplayName = "Subdirectory Add/Remove FileSystem" };
             dbContext.FileSystems.Add(fileSystem1);
             Local.Volume volume1 = new()
@@ -85,7 +85,7 @@ namespace FsInfoCat.UnitTests
         public void DbFileBinaryPropertiesTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             Local.BinaryPropertySet expected = default; // DEFERRED: Set invalid value
             Local.DbFile target = new() { BinaryProperties = expected };
             EntityEntry<Local.DbFile> entityEntry = dbContext.Files.Add(target);
@@ -132,7 +132,7 @@ namespace FsInfoCat.UnitTests
         public void DbFileNameTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             string expected = default; // DEFERRED: Set invalid value
             Local.DbFile target = new() { Name = expected };
             EntityEntry<Local.DbFile> entityEntry = dbContext.Files.Add(target);
@@ -181,7 +181,7 @@ namespace FsInfoCat.UnitTests
         public void DbFileParentTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             Local.Subdirectory expected = default; // DEFERRED: Set invalid value
             Local.DbFile target = new() { Parent = expected };
             EntityEntry<Local.DbFile> entityEntry = dbContext.Files.Add(target);
@@ -228,7 +228,7 @@ namespace FsInfoCat.UnitTests
         public void DbFileOptionsTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             FileCrawlOptions expected = default; // DEFERRED: Set invalid value
             Local.DbFile target = new() { Options = expected };
             EntityEntry<Local.DbFile> entityEntry = dbContext.Files.Add(target);
@@ -274,7 +274,7 @@ namespace FsInfoCat.UnitTests
         public void DbFileCreatedOnTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             Local.DbFile target = new() {  /* DEFERRED: Initialize properties */ };
             EntityEntry<Local.DbFile> entityEntry = dbContext.Files.Add(target);
             dbContext.SaveChanges();
@@ -314,7 +314,7 @@ namespace FsInfoCat.UnitTests
         public void DbFileLastSynchronizedOnTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             Local.DbFile target = new() {  /* DEFERRED: Initialize properties */ UpstreamId = Guid.NewGuid() };
             EntityEntry<Local.DbFile> entityEntry = dbContext.Files.Add(target);
             Collection<ValidationResult> results = new();

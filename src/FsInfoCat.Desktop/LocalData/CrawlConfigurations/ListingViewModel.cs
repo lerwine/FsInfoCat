@@ -237,7 +237,7 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
         {
             if (item is null)
                 return await Dispatcher.InvokeAsync<PageFunction<ItemFunctionResultEventArgs>>(() => new DetailsPage(new(new CrawlConfiguration(), null)));
-            using IServiceScope serviceScope = Services.CreateScope();
+            using IServiceScope serviceScope = Hosting.CreateScope();
             using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             Guid id = item.Entity.Id;
             CrawlConfiguration fs = await dbContext.CrawlConfigurations.FirstOrDefaultAsync(f => f.Id == id, statusListener.CancellationToken);
@@ -319,7 +319,7 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
                 }
                 else
                 {
-                    using IServiceScope serviceScope = Services.CreateScope();
+                    using IServiceScope serviceScope = Hosting.CreateScope();
                     using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
                     Subdirectory root = await Subdirectory.FindByFullNameAsync(path, dbContext, statusListener.CancellationToken);
                     if (root is null)
@@ -339,7 +339,7 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
                     {
                         case MessageBoxResult.Yes:
                             Guid id = crawlConfiguration.Id;
-                            using (IServiceScope serviceScope = Services.CreateScope())
+                            using (IServiceScope serviceScope = Hosting.CreateScope())
                             {
                                 using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
                                 itemEntity = await dbContext.CrawlConfigListing.FirstOrDefaultAsync(c => c.Id == id, statusListener.CancellationToken);
@@ -364,7 +364,7 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
 
         public static Task<PageFunction<ItemFunctionResultEventArgs>> GetNewItemEditPageAsync([DisallowNull] Dispatcher dispatcher)
         {
-            IWindowsAsyncJobFactoryService jobFactory = Services.GetRequiredService<IWindowsAsyncJobFactoryService>();
+            IWindowsAsyncJobFactoryService jobFactory = Hosting.GetRequiredService<IWindowsAsyncJobFactoryService>();
             return jobFactory.StartNew("Loading data", "Opening database", dispatcher, GetNewItemEditPageAsync).Task;
         }
 
@@ -390,7 +390,7 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
             SubdirectoryListItemWithAncestorNames selectedRoot;
             if (listItem is not null)
             {
-                using IServiceScope serviceScope = Services.CreateScope();
+                using IServiceScope serviceScope = Hosting.CreateScope();
                 using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
                 Guid id = listItem.Entity.Id;
                 crawlConfiguration = await dbContext.CrawlConfigurations.FirstOrDefaultAsync(c => c.Id == id, statusListener.CancellationToken);

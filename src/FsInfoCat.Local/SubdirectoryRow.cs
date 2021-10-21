@@ -159,7 +159,7 @@ namespace FsInfoCat.Local
             Guid? volume = VolumeId;
             Guid id = Id;
             LocalDbContext dbContext;
-            using IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
             if (parent.HasValue)
             {
                 if (volume.HasValue)

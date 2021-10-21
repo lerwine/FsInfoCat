@@ -562,7 +562,7 @@ namespace FsInfoCat.Local
             string name = Name;
             EntityEntry entry;
             LocalDbContext dbContext;
-            using IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
             if (string.IsNullOrEmpty(name) || (entry = validationContext.GetService<EntityEntry>()) is null ||
                 (dbContext = serviceScope.ServiceProvider.GetService<LocalDbContext>()) is null)
                 return;

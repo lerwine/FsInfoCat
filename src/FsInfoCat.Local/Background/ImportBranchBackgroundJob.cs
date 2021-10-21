@@ -52,7 +52,7 @@ namespace FsInfoCat.Local.Background
                 Started = context.Started;
                 if (!source.Exists)
                     throw new DirectoryNotFoundException();
-                using IServiceScope serviceScope = Services.CreateScope();
+                using IServiceScope serviceScope = Hosting.CreateScope();
                 using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
                 return (await DoWorkAsync(source, MarkNewAsCompleted ? DirectoryStatus.Complete : DirectoryStatus.Incomplete, dbContext, context.CancellationToken))?.Entity;
             });

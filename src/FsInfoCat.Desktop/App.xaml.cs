@@ -18,13 +18,13 @@ namespace FsInfoCat.Desktop
         {
             if (DesignerProperties.GetIsInDesignMode(dependencyObject))
                 return DesignTimeLoggerFactory.GetLogger<T>();
-            return Services.ServiceProvider.GetRequiredService<ILogger<T>>();
+            return Hosting.ServiceProvider.GetRequiredService<ILogger<T>>();
         }
 
         private void Application_Startup(object sender, StartupEventArgs e)
         {
             System.Diagnostics.Debug.WriteLine($"Invoked {typeof(App).FullName}.{nameof(Application_Startup)}");
-            Services.Initialize(e.Args, typeof(Services).Assembly, typeof(Local.LocalDbContext).Assembly, GetType().Assembly).ContinueWith(task =>
+            Hosting.Initialize(e.Args, typeof(Hosting).Assembly, typeof(Local.LocalDbContext).Assembly, GetType().Assembly).ContinueWith(task =>
             {
                 if (task.IsCanceled)
                 {
@@ -43,12 +43,12 @@ namespace FsInfoCat.Desktop
             });
         }
 
-        internal static ViewModel.MainVM GetMainViewModel() => (ViewModel.MainVM)Services.ServiceProvider.GetRequiredService<IApplicationNavigation>();
+        internal static ViewModel.MainVM GetMainViewModel() => (ViewModel.MainVM)Hosting.ServiceProvider.GetRequiredService<IApplicationNavigation>();
 
         private void ShowMainWindow()
         {
-            _logger = Services.ServiceProvider.GetRequiredService<ILogger<App>>();
-            MainWindow mainWindow = Services.ServiceProvider.GetRequiredService<MainWindow>();
+            _logger = Hosting.ServiceProvider.GetRequiredService<ILogger<App>>();
+            MainWindow mainWindow = Hosting.ServiceProvider.GetRequiredService<MainWindow>();
             mainWindow.Show();
         }
 
@@ -72,8 +72,8 @@ namespace FsInfoCat.Desktop
 
         private async void Application_Exit(object sender, ExitEventArgs e)
         {
-            using (Services.Host)
-                await Services.Host.StopAsync(TimeSpan.FromSeconds(5));
+            using (Hosting.Host)
+                await Hosting.Host.StopAsync(TimeSpan.FromSeconds(5));
         }
 
         private void Application_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)

@@ -156,7 +156,7 @@ namespace FsInfoCat.Local
         {
             VolumeIdentifier identifier = Identifier;
             LocalDbContext dbContext;
-            using IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
             if (identifier.IsEmpty())
                 results.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_IdentifierRequired, new string[] { nameof(Identifier) }));
             else if (identifier.ToString().Length > DbConstants.DbColMaxLen_Identifier)

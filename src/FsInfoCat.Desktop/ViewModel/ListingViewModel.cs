@@ -86,7 +86,7 @@ namespace FsInfoCat.Desktop.ViewModel
 
         private async Task<bool> DeleteItemAsync((TItemViewModel Item, TEntity Entity) targets, [DisallowNull] IWindowsStatusListener statusListener)
         {
-            using IServiceScope scope = Services.CreateScope();
+            using IServiceScope scope = Hosting.CreateScope();
             using LocalDbContext dbContext = scope.ServiceProvider.GetRequiredService<LocalDbContext>();
             EntityEntry entry = await DeleteEntityFromDbContextAsync(targets.Entity, dbContext, statusListener);
             return entry.State == EntityState.Detached;
@@ -96,7 +96,7 @@ namespace FsInfoCat.Desktop.ViewModel
         {
             if (ConfirmItemDelete(item, parameter))
             {
-                IWindowsAsyncJobFactoryService jobFactory = Services.GetRequiredService<IWindowsAsyncJobFactoryService>();
+                IWindowsAsyncJobFactoryService jobFactory = Hosting.GetRequiredService<IWindowsAsyncJobFactoryService>();
                 jobFactory.StartNew("Deleting data", "Opening database", (item, item.Entity), DeleteItemAsync).Task.ContinueWith(task => Dispatcher.Invoke(() =>
                 {
                     if (task.IsCanceled)
@@ -115,7 +115,7 @@ namespace FsInfoCat.Desktop.ViewModel
 
         protected virtual IAsyncJob ReloadAsync(TFilterOptions options)
         {
-            IWindowsAsyncJobFactoryService jobFactory = Services.GetRequiredService<IWindowsAsyncJobFactoryService>();
+            IWindowsAsyncJobFactoryService jobFactory = Hosting.GetRequiredService<IWindowsAsyncJobFactoryService>();
             IAsyncJob job = jobFactory.StartNew("Loading data", "Opening database", options, LoadItemsAsync);
             job.Task.ContinueWith(task => Dispatcher.Invoke(() =>
             {
@@ -136,7 +136,7 @@ namespace FsInfoCat.Desktop.ViewModel
 
         private async Task LoadItemsAsync(TFilterOptions options, [DisallowNull] IWindowsStatusListener statusListener)
         {
-            using IServiceScope scope = Services.CreateScope();
+            using IServiceScope scope = Hosting.CreateScope();
             using LocalDbContext dbContext = scope.ServiceProvider.GetRequiredService<LocalDbContext>();
             IQueryable<TEntity> items = GetQueryableListing(options, dbContext, statusListener);
             _ = await Dispatcher.InvokeAsync(ClearItems, DispatcherPriority.Background, statusListener.CancellationToken);
@@ -178,7 +178,7 @@ namespace FsInfoCat.Desktop.ViewModel
         {
             if (sender is TItemViewModel item)
             {
-                IWindowsAsyncJobFactoryService jobFactory = Services.GetRequiredService<IWindowsAsyncJobFactoryService>();
+                IWindowsAsyncJobFactoryService jobFactory = Hosting.GetRequiredService<IWindowsAsyncJobFactoryService>();
                 jobFactory.StartNew("Loading database record", "Opening database", item, GetDetailPageAsync).Task.ContinueWith(task => OnGetEditPageComplete(task, item));
             }
         }
@@ -208,13 +208,13 @@ namespace FsInfoCat.Desktop.ViewModel
                 if (page is null)
                     return;
                 page.Return += Page_Return;
-                Services.ServiceProvider.GetRequiredService<IApplicationNavigation>().Navigate(page);
+                Hosting.ServiceProvider.GetRequiredService<IApplicationNavigation>().Navigate(page);
             }
         });
 
         protected sealed override void OnAddNewItemCommand(object parameter)
         {
-            IWindowsAsyncJobFactoryService jobFactory = Services.GetRequiredService<IWindowsAsyncJobFactoryService>();
+            IWindowsAsyncJobFactoryService jobFactory = Hosting.GetRequiredService<IWindowsAsyncJobFactoryService>();
             jobFactory.StartNew("Loading database record", "Opening database", (TItemViewModel)null, GetEditPageAsync).Task.ContinueWith(task => OnGetEditPageComplete(task, null));
         }
 
@@ -222,7 +222,7 @@ namespace FsInfoCat.Desktop.ViewModel
         {
             if (sender is TItemViewModel item)
             {
-                IWindowsAsyncJobFactoryService jobFactory = Services.GetRequiredService<IWindowsAsyncJobFactoryService>();
+                IWindowsAsyncJobFactoryService jobFactory = Hosting.GetRequiredService<IWindowsAsyncJobFactoryService>();
                 jobFactory.StartNew("Loading database record", "Opening database", item, GetEditPageAsync).Task.ContinueWith(task => OnGetEditPageComplete(task, item));
             }
         }

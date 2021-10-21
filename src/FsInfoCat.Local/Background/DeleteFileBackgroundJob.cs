@@ -55,7 +55,7 @@ namespace FsInfoCat.Local.Background
 
         private async Task<bool> DoWorkAsync(IFileRow target, bool doNotUseTransaction, CancellationToken cancellationToken)
         {
-            using IServiceScope serviceScope = Services.CreateScope();
+            using IServiceScope serviceScope = Hosting.CreateScope();
             using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             if (target is not DbFile file)
             {

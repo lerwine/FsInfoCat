@@ -24,7 +24,7 @@ namespace FsInfoCat.UnitTests
         [TestMethod("new BinaryProperties()"), Ignore]
         public void NewBinaryPropertiesTestMethod()
         {
-            using IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
             using LocalDbContext dbContext = serviceScope.ServiceProvider.GetService<LocalDbContext>();
             BinaryPropertySet target = new();
 

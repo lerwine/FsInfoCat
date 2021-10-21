@@ -255,7 +255,7 @@ namespace FsInfoCat.Local
             cancellationToken.ThrowIfCancellationRequested();
             if (!Path.IsPathFullyQualified(path))
                 return null;
-            using IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
             IFileSystemDetailService fileSystemDetailService = serviceScope.ServiceProvider.GetRequiredService<IFileSystemDetailService>();
             Subdirectory result;
             if (dbContext is null)
@@ -637,7 +637,7 @@ namespace FsInfoCat.Local
             Volume volume = Volume;
             Guid id = Id;
             LocalDbContext dbContext;
-            using IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
             if (parent is null)
             {
                 if (volume is null)

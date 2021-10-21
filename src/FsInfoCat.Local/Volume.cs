@@ -137,7 +137,7 @@ namespace FsInfoCat.Local
             if (directoryInfo.Parent is not null)
                 directoryInfo = directoryInfo.Root;
 
-            using IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
             IFileSystemDetailService fileSystemDetailService = serviceScope.ServiceProvider.GetService<IFileSystemDetailService>();
             string name = directoryInfo.Name;
             ILogicalDiskInfo diskInfo = await fileSystemDetailService.GetLogicalDiskAsync(directoryInfo, cancellationToken);

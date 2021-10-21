@@ -23,7 +23,7 @@ namespace FsInfoCat.UnitTests
         [TestMethod("new Redundancy()"), Ignore]
         public void NewRedundancyTestMethod()
         {
-            using IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
             using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             Redundancy target = new();
 

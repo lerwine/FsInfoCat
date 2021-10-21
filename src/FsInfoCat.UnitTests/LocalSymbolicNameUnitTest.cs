@@ -23,7 +23,7 @@ namespace FsInfoCat.UnitTests
         [TestInitialize]
         public void OnTestInitialize()
         {
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             dbContext.RejectChanges();
         }
 
@@ -32,7 +32,7 @@ namespace FsInfoCat.UnitTests
         [Ignore]
         public void SymbolicNameAddRemoveTestMethod()
         {
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             string expected = "SymbolicNameAddRemove";
             Local.FileSystem fileSystem = TestHelper.GetVFatFileSystem(dbContext);
             Local.SymbolicName target = new() { Name = expected, FileSystem = fileSystem };
@@ -74,7 +74,7 @@ namespace FsInfoCat.UnitTests
         [Ignore]
         public void SymbolicNameNameTestMethod()
         {
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             string expected = "";
             Local.FileSystem fileSystem = TestHelper.GetVFatFileSystem(dbContext);
             Local.SymbolicName target = new() { Name = null, FileSystem = fileSystem };
@@ -161,7 +161,7 @@ namespace FsInfoCat.UnitTests
         [Ignore]
         public void SymbolicNameFileSystemTestMethod()
         {
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             Local.FileSystem expected = null;
             Local.SymbolicName target = new() { Name = "SymbolicNameFileSystemTest", FileSystem = expected };
             EntityEntry<Local.SymbolicName> entityEntry = dbContext.SymbolicNames.Add(target);
@@ -195,7 +195,7 @@ namespace FsInfoCat.UnitTests
         [Ignore]
         public void SymbolicNameCreatedOnTestMethod()
         {
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             Local.FileSystem fileSystem = TestHelper.GetVFatFileSystem(dbContext);
             Local.SymbolicName target = new() { Name = "SymbolicName CreatedOn Item", FileSystem = fileSystem };
             EntityEntry<Local.SymbolicName> entityEntry = dbContext.SymbolicNames.Add(target);
@@ -236,7 +236,7 @@ namespace FsInfoCat.UnitTests
         [Ignore]
         public void SymbolicNameLastSynchronizedOnTestMethod()
         {
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             Local.FileSystem fileSystem = TestHelper.GetVFatFileSystem(dbContext);
             Local.SymbolicName target = new() { Name = "SymbolicName LastSynchronizedOn Item", FileSystem = fileSystem, UpstreamId = Guid.NewGuid() };
             EntityEntry<Local.SymbolicName> entityEntry = dbContext.SymbolicNames.Add(target);

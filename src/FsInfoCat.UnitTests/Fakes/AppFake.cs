@@ -32,7 +32,7 @@ namespace FsInfoCat.UnitTests.Fakes
 
         private AppFake(TaskCompletionSource<Exception> taskCompletionSource)
         {
-            _logger = Services.ServiceProvider.GetRequiredService<ILogger<AppFake>>();
+            _logger = Hosting.ServiceProvider.GetRequiredService<ILogger<AppFake>>();
             _logger.LogDebug("Invoked {Type} constructor", typeof(AppFake));
             Startup += (s, e) => taskCompletionSource.SetResult(null);
             Dispatcher.UnhandledException += Dispatcher_UnhandledException;
@@ -49,7 +49,7 @@ namespace FsInfoCat.UnitTests.Fakes
                 System.Diagnostics.Debug.WriteLine($"{typeof(AppFake).FullName}.{nameof(AssemblyInit)} starting service initialization");
                 try
                 {
-                    await Services.Initialize(Array.Empty<string>(), typeof(Services).Assembly, typeof(Local.LocalDbContext).Assembly, typeof(Desktop.ViewModel.MainVM).Assembly, typeof(AppFake).Assembly);
+                    await Hosting.Initialize(Array.Empty<string>(), typeof(Hosting).Assembly, typeof(Local.LocalDbContext).Assembly, typeof(Desktop.ViewModel.MainVM).Assembly, typeof(AppFake).Assembly);
                 }
                 catch (Exception exception)
                 {

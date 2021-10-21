@@ -100,13 +100,13 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
 
         private void OnAddNewCrawlJobLogCommand(object parameter)
         {
-            IWindowsAsyncJobFactoryService jobFactory = Services.GetRequiredService<IWindowsAsyncJobFactoryService>();
+            IWindowsAsyncJobFactoryService jobFactory = Hosting.GetRequiredService<IWindowsAsyncJobFactoryService>();
             jobFactory.StartNew("Loading database record", "Opening database", (CrawlJobListItemViewModel)null, GetEditPageAsync).Task.ContinueWith(task => OnGetEditPageComplete(task, null));
         }
 
         private void OnCrawlJobLogEditCommand([DisallowNull] CrawlJobListItemViewModel item, object parameter)
         {
-            IWindowsAsyncJobFactoryService jobFactory = Services.GetRequiredService<IWindowsAsyncJobFactoryService>();
+            IWindowsAsyncJobFactoryService jobFactory = Hosting.GetRequiredService<IWindowsAsyncJobFactoryService>();
             jobFactory.StartNew("Loading database record", "Opening database", item, GetEditPageAsync).Task.ContinueWith(task => OnGetEditPageComplete(task, item));
         }
 
@@ -117,7 +117,7 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
                 crawlJobLog = new() { Configuration = Entity };
             else
             {
-                using IServiceScope scope = Services.CreateScope();
+                using IServiceScope scope = Hosting.CreateScope();
                 using LocalDbContext dbContext = scope.ServiceProvider.GetRequiredService<LocalDbContext>();
                 Guid id = item.Entity.Id;
                 crawlJobLog = await dbContext.CrawlJobLogs.FirstOrDefaultAsync(j => j.Id == id, statusListener.CancellationToken);
@@ -152,7 +152,7 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
                 if (page is null)
                     return;
                 page.Return += Page_Return;
-                Services.ServiceProvider.GetRequiredService<IApplicationNavigation>().Navigate(page);
+                Hosting.ServiceProvider.GetRequiredService<IApplicationNavigation>().Navigate(page);
             }
         });
 
@@ -234,7 +234,7 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
 
         private async Task DeleteItemAsync((CrawlJobListItemViewModel Item, CrawlJobLogListItem Entity) targets, [DisallowNull] IWindowsStatusListener statusListener)
         {
-            using IServiceScope scope = Services.CreateScope();
+            using IServiceScope scope = Hosting.CreateScope();
             using LocalDbContext dbContext = scope.ServiceProvider.GetRequiredService<LocalDbContext>();
             using DbContextEventReceiver eventReceiver = new(dbContext);
             _ = await DeleteCrawlJobLogFromDbContextAsync(targets.Entity, dbContext, statusListener);
@@ -244,7 +244,7 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
 
         protected IAsyncJob DeleteCrawlJobLogAsync([DisallowNull] CrawlJobListItemViewModel item)
         {
-            IWindowsAsyncJobFactoryService jobFactory = Services.GetRequiredService<IWindowsAsyncJobFactoryService>();
+            IWindowsAsyncJobFactoryService jobFactory = Hosting.GetRequiredService<IWindowsAsyncJobFactoryService>();
             return jobFactory.StartNew("Deleting data", "Opening database", (item, item.Entity), DeleteItemAsync);
         }
 

@@ -25,7 +25,7 @@ namespace FsInfoCat.UnitTests
         [TestInitialize]
         public void OnTestInitialize()
         {
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             dbContext.RejectChanges();
         }
 
@@ -34,7 +34,7 @@ namespace FsInfoCat.UnitTests
         public void RedundancyAddRemoveTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             Local.Redundancy target = new() { /* DEFERRED: Initialize properties */ };
             EntityEntry<Local.Redundancy> entityEntry = dbContext.Entry(target);
             Assert.AreEqual(EntityState.Detached, entityEntry.State);
@@ -69,7 +69,7 @@ namespace FsInfoCat.UnitTests
         public void RedundancyReferenceTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             string expected = default; // DEFERRED: Set invalid value
             Local.Redundancy target = new() { Reference = expected };
             EntityEntry<Local.Redundancy> entityEntry = dbContext.Redundancies.Add(target);
@@ -115,7 +115,7 @@ namespace FsInfoCat.UnitTests
         public void RedundancyRedundantSetTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             Local.RedundantSet expected = default; // DEFERRED: Set invalid value
             Local.Redundancy target = new() { RedundantSet = expected };
             EntityEntry<Local.Redundancy> entityEntry = dbContext.Redundancies.Add(target);
@@ -161,7 +161,7 @@ namespace FsInfoCat.UnitTests
         public void RedundancyFileTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             Local.DbFile expected = default; // DEFERRED: Set invalid value
             Local.Redundancy target = new() { File = expected };
             EntityEntry<Local.Redundancy> entityEntry = dbContext.Redundancies.Add(target);
@@ -207,7 +207,7 @@ namespace FsInfoCat.UnitTests
         public void RedundancyCreatedOnTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             Local.Redundancy target = new() {  /* DEFERRED: Initialize properties */ };
             EntityEntry<Local.Redundancy> entityEntry = dbContext.Redundancies.Add(target);
             dbContext.SaveChanges();
@@ -247,7 +247,7 @@ namespace FsInfoCat.UnitTests
         public void RedundancyLastSynchronizedOnTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             Local.Redundancy target = new() {  /* DEFERRED: Initialize properties */ UpstreamId = Guid.NewGuid() };
             EntityEntry<Local.Redundancy> entityEntry = dbContext.Redundancies.Add(target);
             Collection<ValidationResult> results = new();

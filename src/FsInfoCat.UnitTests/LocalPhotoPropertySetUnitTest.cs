@@ -26,7 +26,7 @@ namespace FsInfoCat.UnitTests
         [TestInitialize]
         public void OnTestInitialize()
         {
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             dbContext.RejectChanges();
         }
 
@@ -35,7 +35,7 @@ namespace FsInfoCat.UnitTests
         public void PhotoPropertySetAddRemoveTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             Local.PhotoPropertySet target = new();
             EntityEntry<Local.PhotoPropertySet> entityEntry = dbContext.Entry(target);
             Assert.AreEqual(EntityState.Detached, entityEntry.State);
@@ -91,7 +91,7 @@ namespace FsInfoCat.UnitTests
         public void PhotoPropertySetCameraManufacturerTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             string expected = default; // DEFERRED: Set invalid value
             Local.PhotoPropertySet target = new() { CameraManufacturer = expected };
             EntityEntry<Local.PhotoPropertySet> entityEntry = dbContext.PhotoPropertySets.Add(target);
@@ -137,7 +137,7 @@ namespace FsInfoCat.UnitTests
         public void PhotoPropertySetCameraModelTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             string expected = default; // DEFERRED: Set invalid value
             Local.PhotoPropertySet target = new() { CameraModel = expected };
             EntityEntry<Local.PhotoPropertySet> entityEntry = dbContext.PhotoPropertySets.Add(target);
@@ -183,7 +183,7 @@ namespace FsInfoCat.UnitTests
         public void PhotoPropertySetDateTakenTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             DateTime? expected = default; // DEFERRED: Set invalid value
             Local.PhotoPropertySet target = new() { DateTaken = expected };
             EntityEntry<Local.PhotoPropertySet> entityEntry = dbContext.PhotoPropertySets.Add(target);
@@ -229,7 +229,7 @@ namespace FsInfoCat.UnitTests
         public void PhotoPropertySetEventTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             MultiStringValue expected = default; // DEFERRED: Set invalid value
             Local.PhotoPropertySet target = new() { Event = expected };
             EntityEntry<Local.PhotoPropertySet> entityEntry = dbContext.PhotoPropertySets.Add(target);
@@ -275,7 +275,7 @@ namespace FsInfoCat.UnitTests
         public void PhotoPropertySetEXIFVersionTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             string expected = default; // DEFERRED: Set invalid value
             Local.PhotoPropertySet target = new() { EXIFVersion = expected };
             EntityEntry<Local.PhotoPropertySet> entityEntry = dbContext.PhotoPropertySets.Add(target);
@@ -321,7 +321,7 @@ namespace FsInfoCat.UnitTests
         public void PhotoPropertySetOrientationTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             ushort? expected = default; // DEFERRED: Set invalid value
             Local.PhotoPropertySet target = new() { Orientation = expected };
             EntityEntry<Local.PhotoPropertySet> entityEntry = dbContext.PhotoPropertySets.Add(target);
@@ -367,7 +367,7 @@ namespace FsInfoCat.UnitTests
         public void PhotoPropertySetOrientationTextTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             string expected = default; // DEFERRED: Set invalid value
             Local.PhotoPropertySet target = new() { OrientationText = expected };
             EntityEntry<Local.PhotoPropertySet> entityEntry = dbContext.PhotoPropertySets.Add(target);
@@ -413,7 +413,7 @@ namespace FsInfoCat.UnitTests
         public void PhotoPropertySetPeopleNamesTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             MultiStringValue expected = default; // DEFERRED: Set invalid value
             Local.PhotoPropertySet target = new() { PeopleNames = expected };
             EntityEntry<Local.PhotoPropertySet> entityEntry = dbContext.PhotoPropertySets.Add(target);

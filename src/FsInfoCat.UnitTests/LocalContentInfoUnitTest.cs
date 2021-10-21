@@ -25,7 +25,7 @@ namespace FsInfoCat.UnitTests
         [TestInitialize]
         public void OnTestInitialize()
         {
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             dbContext.RejectChanges();
         }
 
@@ -34,7 +34,7 @@ namespace FsInfoCat.UnitTests
         public void BinaryPropertiesAddRemoveTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             Local.BinaryPropertySet target = new() { /* DEFERRED: Initialize properties */ };
             EntityEntry<Local.BinaryPropertySet> entityEntry = dbContext.Entry(target);
             Assert.AreEqual(EntityState.Detached, entityEntry.State);
@@ -69,7 +69,7 @@ namespace FsInfoCat.UnitTests
         public void BinaryPropertiesHashTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             Local.BinaryPropertySet target = new() { Hash = null };
             EntityEntry<Local.BinaryPropertySet> entityEntry = dbContext.BinaryPropertySets.Add(target);
             Collection<ValidationResult> results = new();
@@ -98,7 +98,7 @@ namespace FsInfoCat.UnitTests
         public void BinaryPropertiesLengthTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             long expected = default; // DEFERRED: Set invalid value
             Local.BinaryPropertySet target = new() { Length = expected };
             EntityEntry<Local.BinaryPropertySet> entityEntry = dbContext.BinaryPropertySets.Add(target);
@@ -144,7 +144,7 @@ namespace FsInfoCat.UnitTests
         public void BinaryPropertiesCreatedOnTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             Local.BinaryPropertySet target = new() {  /* DEFERRED: Initialize properties */ };
             EntityEntry<Local.BinaryPropertySet> entityEntry = dbContext.BinaryPropertySets.Add(target);
             dbContext.SaveChanges();
@@ -184,7 +184,7 @@ namespace FsInfoCat.UnitTests
         public void BinaryPropertiesLastSynchronizedOnTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             Local.BinaryPropertySet target = new() {  /* DEFERRED: Initialize properties */ UpstreamId = Guid.NewGuid() };
             EntityEntry<Local.BinaryPropertySet> entityEntry = dbContext.BinaryPropertySets.Add(target);
             Collection<ValidationResult> results = new();

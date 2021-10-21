@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat
 {
-    public static class Services
+    public static class Hosting
     {
         private static Task<IHost> _initializeTask;
         private static IHost _host;
@@ -21,7 +21,7 @@ namespace FsInfoCat
 
         public static IHost Host => _host is null
                     ? _initializeTask is null
-                        ? throw new InvalidOperationException($"{nameof(Services)}.{nameof(Initialize)} has not been invoked.")
+                        ? throw new InvalidOperationException($"{nameof(Hosting)}.{nameof(Initialize)} has not been invoked.")
                         : _initializeTask.Result
                     : _host;
 
@@ -94,7 +94,7 @@ namespace FsInfoCat
             {
                 _initializeTask = Task.Run(async () =>
                 {
-                    System.Diagnostics.Debug.WriteLine($"Invoked {typeof(Services).FullName}.{nameof(Initialize)} initialize task started");
+                    System.Diagnostics.Debug.WriteLine($"Invoked {typeof(Hosting).FullName}.{nameof(Initialize)} initialize task started");
                     _host = Microsoft.Extensions.Hosting.Host.CreateDefaultBuilder(args)
                         .UseDefaultServiceProvider(opt => { }) // workaround?
                         .ConfigureHostConfiguration(builder => builder
@@ -113,14 +113,14 @@ namespace FsInfoCat
                         .ConfigureLogging((context, builder) =>
                             builder.Configure(options => options.ActivityTrackingOptions = ActivityTrackingOptions.SpanId | ActivityTrackingOptions.TraceId | ActivityTrackingOptions.ParentId)
                         ).Build();
-                    System.Diagnostics.Debug.WriteLine($"{typeof(Services).FullName}.{nameof(Initialize)} host built");
+                    System.Diagnostics.Debug.WriteLine($"{typeof(Hosting).FullName}.{nameof(Initialize)} host built");
                     await _host.StartAsync();
-                    System.Diagnostics.Debug.WriteLine($"{typeof(Services).FullName}.{nameof(Initialize)} host started");
+                    System.Diagnostics.Debug.WriteLine($"{typeof(Hosting).FullName}.{nameof(Initialize)} host started");
                     return _host;
                 });
             }
             else
-                System.Diagnostics.Debug.WriteLine($"{typeof(Services).FullName}.{nameof(Initialize)} initialize task already started");
+                System.Diagnostics.Debug.WriteLine($"{typeof(Hosting).FullName}.{nameof(Initialize)} initialize task already started");
             Thread.EndCriticalRegion();
             return await _initializeTask;
         }

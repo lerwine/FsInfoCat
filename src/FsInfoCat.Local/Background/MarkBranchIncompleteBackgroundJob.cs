@@ -51,7 +51,7 @@ namespace FsInfoCat.Local.Background
 
         private async Task<bool> DoWorkAsync(Subdirectory subdirectory, bool doNotUseTransaction, CancellationToken cancellationToken)
         {
-            using IServiceScope serviceScope = Services.CreateScope();
+            using IServiceScope serviceScope = Hosting.CreateScope();
             using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             if (doNotUseTransaction)
                 return await DoWorkAsync(subdirectory, dbContext, cancellationToken);

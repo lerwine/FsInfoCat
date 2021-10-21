@@ -28,7 +28,7 @@ namespace FsInfoCat.DeferredDelegation
                     _service = service;
                     Target = target;
                     SyncRoot = syncRoot;
-                    using IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
+                    using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
                     _logger = serviceScope.ServiceProvider.GetRequiredService<ILogger<DelegateDeference<TTarget>>>();
                 }
 

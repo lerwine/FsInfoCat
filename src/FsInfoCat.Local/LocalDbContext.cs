@@ -158,7 +158,7 @@ namespace FsInfoCat.Local
         public LocalDbContext(DbContextOptions<LocalDbContext> options)
             : base(options)
         {
-            _logger = Services.ServiceProvider.GetRequiredService<ILogger<LocalDbContext>>();
+            _logger = Hosting.ServiceProvider.GetRequiredService<ILogger<LocalDbContext>>();
             lock (_syncRoot)
             {
                 if (!_connectionStringValidated)
@@ -288,8 +288,8 @@ namespace FsInfoCat.Local
         public static string GetDbFilePath(Assembly assembly, string dbFileName)
         {
             if (string.IsNullOrWhiteSpace(dbFileName))
-                dbFileName = Services.DEFAULT_LOCAL_DB_FILENAME;
-            return Path.IsPathFullyQualified(dbFileName) ? Path.GetFullPath(dbFileName) : Path.Combine(Services.GetAppDataPath(assembly), dbFileName);
+                dbFileName = Hosting.DEFAULT_LOCAL_DB_FILENAME;
+            return Path.IsPathFullyQualified(dbFileName) ? Path.GetFullPath(dbFileName) : Path.Combine(Hosting.GetAppDataPath(assembly), dbFileName);
         }
 
         public async Task<IEnumerable<TProperty>> GetRelatedCollectionAsync<TEntity, TProperty>([DisallowNull] TEntity entity,

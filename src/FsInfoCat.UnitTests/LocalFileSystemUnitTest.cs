@@ -26,7 +26,7 @@ namespace FsInfoCat.UnitTests
         [TestInitialize]
         public void OnTestInitialize()
         {
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             dbContext.RejectChanges();
         }
 
@@ -34,7 +34,7 @@ namespace FsInfoCat.UnitTests
         [Ignore]
         public void FileSystemAddRemoveTestMethod()
         {
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             string expected = "FileSystem Add/Remove Item";
             Local.FileSystem target = new() { DisplayName = expected };
             EntityEntry<Local.FileSystem> entityEntry = dbContext.Entry(target);
@@ -72,7 +72,7 @@ namespace FsInfoCat.UnitTests
         [Ignore]
         public void FileSystemDefaultDriveTypeTestMethod()
         {
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             DriveType expected = (DriveType)(object)-1;
             Local.FileSystem target = new() { DefaultDriveType = expected, DisplayName = "FileSystem DefaultDriveType Item" };
             EntityEntry<Local.FileSystem> entityEntry = dbContext.FileSystems.Add(target);
@@ -120,7 +120,7 @@ namespace FsInfoCat.UnitTests
         [Ignore]
         public void FileSystemDisplayNameTestMethod()
         {
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             string expected = "";
             Local.FileSystem target = new() { DisplayName = null };
             Assert.AreEqual(expected, target.DisplayName);
@@ -222,7 +222,7 @@ namespace FsInfoCat.UnitTests
         [Ignore]
         public void FileSystemMaxNameLengthTestMethod()
         {
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             uint expected = 0;
             Local.FileSystem target = new() { DisplayName = "FileSystem MaxNameLength Item", MaxNameLength = expected };
             EntityEntry<Local.FileSystem> entityEntry = dbContext.FileSystems.Add(target);
@@ -272,7 +272,7 @@ namespace FsInfoCat.UnitTests
         [Ignore]
         public void FileSystemCreatedOnTestMethod()
         {
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             Local.FileSystem target = new() { DisplayName = "FileSystem CreatedOn FileSystem" };
             EntityEntry<Local.FileSystem> entityEntry = dbContext.FileSystems.Add(target);
             dbContext.SaveChanges();
@@ -311,7 +311,7 @@ namespace FsInfoCat.UnitTests
         [Ignore]
         public void FileSystemLastSynchronizedOnTestMethod()
         {
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             Local.FileSystem target = new() { DisplayName = "FileSystem LastSynchronizedOn FileSystem", UpstreamId = Guid.NewGuid() };
             EntityEntry<Local.FileSystem> entityEntry = dbContext.FileSystems.Add(target);
             Collection<ValidationResult> results = new();

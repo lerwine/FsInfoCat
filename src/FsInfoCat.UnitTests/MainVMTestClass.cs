@@ -17,10 +17,10 @@ namespace FsInfoCat.UnitTests
             IApplicationNavigation nav = await Application.Current.Dispatcher.InvokeAsync(() =>
             {
                 Thread.Sleep(1000);
-                return Services.ServiceProvider.GetRequiredService<IApplicationNavigation>();
+                return Hosting.ServiceProvider.GetRequiredService<IApplicationNavigation>();
             });
             Assert.IsNotNull(nav);
-            Assert.AreSame(nav, Services.ServiceProvider.GetRequiredService<IApplicationNavigation>());
+            Assert.AreSame(nav, Hosting.ServiceProvider.GetRequiredService<IApplicationNavigation>());
             await Application.Current.Dispatcher.InvokeAsync(() => Assert.IsFalse(nav.CanGoBack));
             await Application.Current.Dispatcher.InvokeAsync(() => Assert.IsNull(nav.Content));
             MainVM target = nav as MainVM;

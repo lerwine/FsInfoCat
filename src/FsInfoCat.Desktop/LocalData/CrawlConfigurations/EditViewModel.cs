@@ -113,7 +113,7 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
                     directoryInfo = null;
                 }
             }
-            IWindowsAsyncJobFactoryService jobFactory = Services.GetRequiredService<IWindowsAsyncJobFactoryService>();
+            IWindowsAsyncJobFactoryService jobFactory = Hosting.GetRequiredService<IWindowsAsyncJobFactoryService>();
             IAsyncJob<SubdirectoryListItemWithAncestorNames> job = jobFactory.StartNew("Loading path", "Opening database", directoryInfo, ImportBranchAsync);
             job.Task.ContinueWith(task =>
             {
@@ -151,7 +151,7 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
 
         private async Task<SubdirectoryListItemWithAncestorNames> ImportBranchAsync(DirectoryInfo directoryInfo, [DisallowNull] IWindowsStatusListener statusListener)
         {
-            using IServiceScope serviceScope = Services.CreateScope();
+            using IServiceScope serviceScope = Hosting.CreateScope();
             using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             Subdirectory root = await Subdirectory.FindByFullNameAsync(directoryInfo.FullName, dbContext, statusListener.CancellationToken);
             if (root is null)
@@ -216,7 +216,7 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
 
         protected override IAsyncJob SaveChangesAsync(bool isNew)
         {
-            IWindowsAsyncJobFactoryService jobFactory = Services.GetRequiredService<IWindowsAsyncJobFactoryService>();
+            IWindowsAsyncJobFactoryService jobFactory = Hosting.GetRequiredService<IWindowsAsyncJobFactoryService>();
             IAsyncJob<CrawlConfigListItemBase> job = jobFactory.StartNew("Saving changes", "Opening database", Entity, InvocationState, SaveChangesAsync);
             job.Task.ContinueWith(task => Dispatcher.Invoke(() => OnSaveTaskCompleted(task)));
             return job;
@@ -224,7 +224,7 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
 
         private static async Task<CrawlConfigListItemBase> SaveChangesAsync(CrawlConfiguration entity, object invocationState, IWindowsStatusListener statusListener)
         {
-            using IServiceScope scope = Services.CreateScope();
+            using IServiceScope scope = Hosting.CreateScope();
             using LocalDbContext dbContext = scope.ServiceProvider.GetRequiredService<LocalDbContext>();
             CrawlConfiguration local = await dbContext.CrawlConfigurations.FirstOrDefaultAsync(e => e.Id == entity.Id, statusListener.CancellationToken);
             EntityEntry entry;
@@ -279,7 +279,7 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
                     MessageBoxButton.YesNoCancel, MessageBoxImage.Warning))
                 {
                     case MessageBoxResult.Yes:
-                        IWindowsAsyncJobFactoryService jobFactory = Services.GetRequiredService<IWindowsAsyncJobFactoryService>();
+                        IWindowsAsyncJobFactoryService jobFactory = Hosting.GetRequiredService<IWindowsAsyncJobFactoryService>();
                         IAsyncJob<CrawlConfigListItemBase> job = jobFactory.StartNew("Saving changes", "Opening database", Entity, InvocationState, SaveChangesAsync);
                         job.Task.ContinueWith(task => Dispatcher.Invoke(() => OnSaveTaskCompleted(task)));
                         e.Cancel = true;

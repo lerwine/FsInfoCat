@@ -26,7 +26,7 @@ namespace FsInfoCat.UnitTests
         [TestInitialize]
         public void OnTestInitialize()
         {
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             dbContext.RejectChanges();
         }
 
@@ -35,7 +35,7 @@ namespace FsInfoCat.UnitTests
         public void GPSPropertySetAddRemoveTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             Local.GPSPropertySet target = new();
             EntityEntry<Local.GPSPropertySet> entityEntry = dbContext.Entry(target);
             Assert.AreEqual(EntityState.Detached, entityEntry.State);
@@ -95,7 +95,7 @@ namespace FsInfoCat.UnitTests
         public void GPSPropertySetAreaInformationTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             string expected = default; // DEFERRED: Set invalid value
             Local.GPSPropertySet target = new() { AreaInformation = expected };
             EntityEntry<Local.GPSPropertySet> entityEntry = dbContext.GPSPropertySets.Add(target);
@@ -141,7 +141,7 @@ namespace FsInfoCat.UnitTests
         public void GPSPropertySetLatitudeDegreesTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             double expected = default; // DEFERRED: Set invalid value
             Local.GPSPropertySet target = new() { LatitudeDegrees = expected };
             EntityEntry<Local.GPSPropertySet> entityEntry = dbContext.GPSPropertySets.Add(target);
@@ -187,7 +187,7 @@ namespace FsInfoCat.UnitTests
         public void GPSPropertySetLatitudeMinutesTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             double expected = default; // DEFERRED: Set invalid value
             Local.GPSPropertySet target = new() { LatitudeMinutes = expected };
             EntityEntry<Local.GPSPropertySet> entityEntry = dbContext.GPSPropertySets.Add(target);
@@ -233,7 +233,7 @@ namespace FsInfoCat.UnitTests
         public void GPSPropertySetLatitudeSecondsTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             double expected = default; // DEFERRED: Set invalid value
             Local.GPSPropertySet target = new() { LatitudeSeconds = expected };
             EntityEntry<Local.GPSPropertySet> entityEntry = dbContext.GPSPropertySets.Add(target);
@@ -279,7 +279,7 @@ namespace FsInfoCat.UnitTests
         public void GPSPropertySetLatitudeRefTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             string expected = default; // DEFERRED: Set invalid value
             Local.GPSPropertySet target = new() { LatitudeRef = expected };
             EntityEntry<Local.GPSPropertySet> entityEntry = dbContext.GPSPropertySets.Add(target);
@@ -325,7 +325,7 @@ namespace FsInfoCat.UnitTests
         public void GPSPropertySetLongitudeDegreesTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             double expected = default; // DEFERRED: Set invalid value
             Local.GPSPropertySet target = new() { LongitudeDegrees = expected };
             EntityEntry<Local.GPSPropertySet> entityEntry = dbContext.GPSPropertySets.Add(target);
@@ -371,7 +371,7 @@ namespace FsInfoCat.UnitTests
         public void GPSPropertySetLongitudeMinutesTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             double expected = default; // DEFERRED: Set invalid value
             Local.GPSPropertySet target = new() { LongitudeMinutes = expected };
             EntityEntry<Local.GPSPropertySet> entityEntry = dbContext.GPSPropertySets.Add(target);
@@ -417,7 +417,7 @@ namespace FsInfoCat.UnitTests
         public void GPSPropertySetLongitudeSecondsTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             double expected = default; // DEFERRED: Set invalid value
             Local.GPSPropertySet target = new() { LongitudeSeconds = expected };
             EntityEntry<Local.GPSPropertySet> entityEntry = dbContext.GPSPropertySets.Add(target);
@@ -463,7 +463,7 @@ namespace FsInfoCat.UnitTests
         public void GPSPropertySetLongitudeRefTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             string expected = default; // DEFERRED: Set invalid value
             Local.GPSPropertySet target = new() { LongitudeRef = expected };
             EntityEntry<Local.GPSPropertySet> entityEntry = dbContext.GPSPropertySets.Add(target);
@@ -509,7 +509,7 @@ namespace FsInfoCat.UnitTests
         public void GPSPropertySetMeasureModeTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             string expected = default; // DEFERRED: Set invalid value
             Local.GPSPropertySet target = new() { MeasureMode = expected };
             EntityEntry<Local.GPSPropertySet> entityEntry = dbContext.GPSPropertySets.Add(target);
@@ -555,7 +555,7 @@ namespace FsInfoCat.UnitTests
         public void GPSPropertySetProcessingMethodTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             string expected = default; // DEFERRED: Set invalid value
             Local.GPSPropertySet target = new() { ProcessingMethod = expected };
             EntityEntry<Local.GPSPropertySet> entityEntry = dbContext.GPSPropertySets.Add(target);
@@ -601,7 +601,7 @@ namespace FsInfoCat.UnitTests
         public void GPSPropertySetVersionIDTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             ByteValues expected = default; // DEFERRED: Set invalid value
             Local.GPSPropertySet target = new() { VersionID = expected };
             EntityEntry<Local.GPSPropertySet> entityEntry = dbContext.GPSPropertySets.Add(target);

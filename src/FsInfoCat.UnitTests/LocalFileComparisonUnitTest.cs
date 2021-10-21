@@ -25,7 +25,7 @@ namespace FsInfoCat.UnitTests
         [TestInitialize]
         public void OnTestInitialize()
         {
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             dbContext.RejectChanges();
         }
 
@@ -34,7 +34,7 @@ namespace FsInfoCat.UnitTests
         public void FileComparisonAddRemoveTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             Local.FileComparison target = new() { /* DEFERRED: Initialize properties */ };
             EntityEntry<Local.FileComparison> entityEntry = dbContext.Entry(target);
             Assert.AreEqual(EntityState.Detached, entityEntry.State);
@@ -68,7 +68,7 @@ namespace FsInfoCat.UnitTests
         public void FileComparisonBaselineTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             Local.DbFile expected = default; // DEFERRED: Set invalid value
             Local.FileComparison target = new() { Baseline = expected };
             EntityEntry<Local.FileComparison> entityEntry = dbContext.Comparisons.Add(target);
@@ -114,7 +114,7 @@ namespace FsInfoCat.UnitTests
         public void FileComparisonCorrelativeTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             Local.DbFile expected = default; // DEFERRED: Set invalid value
             Local.FileComparison target = new() { Correlative = expected };
             EntityEntry<Local.FileComparison> entityEntry = dbContext.Comparisons.Add(target);
@@ -160,7 +160,7 @@ namespace FsInfoCat.UnitTests
         public void FileComparisonCreatedOnTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             Local.FileComparison target = new() {  /* DEFERRED: Initialize properties */ };
             EntityEntry<Local.FileComparison> entityEntry = dbContext.Comparisons.Add(target);
             dbContext.SaveChanges();
@@ -200,7 +200,7 @@ namespace FsInfoCat.UnitTests
         public void FileComparisonLastSynchronizedOnTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             Local.FileComparison target = new() {  /* DEFERRED: Initialize properties */ UpstreamId = Guid.NewGuid() };
             EntityEntry<Local.FileComparison> entityEntry = dbContext.Comparisons.Add(target);
             Collection<ValidationResult> results = new();

@@ -22,7 +22,7 @@ namespace FsInfoCat.UnitTests
         [TestMethod, Priority(10)]
         public void LocalDbContextTestMethod()
         {
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             Assert.IsNotNull(dbContext);
             Assert.IsNotNull(dbContext.AudioPropertiesListing);
             Assert.IsNotNull(dbContext.AudioPropertySets);

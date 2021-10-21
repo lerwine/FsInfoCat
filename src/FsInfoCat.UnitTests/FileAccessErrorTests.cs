@@ -25,7 +25,7 @@ namespace FsInfoCat.UnitTests
         [TestMethod("new FileAccessError()"), Ignore]
         public void NewFileAccessErrorTestMethod()
         {
-            using IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
             using LocalDbContext dbContext = serviceScope.ServiceProvider.GetService<LocalDbContext>();
             FileAccessError target = new();
 

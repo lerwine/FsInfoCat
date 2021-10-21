@@ -47,7 +47,7 @@ namespace FsInfoCat.Collections
 
         public ToggleSet(IEqualityComparer<T> comparer = null)
         {
-            using IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
             _deferredDelegation = serviceScope.ServiceProvider.GetRequiredService<IDeferredDelegationService>();
             _comparer = comparer ?? EqualityComparer<T>.Default;
             True = StateSet.Create(_deferredDelegation, _comparer, _syncRoot, out ICollection<Node> accessor);

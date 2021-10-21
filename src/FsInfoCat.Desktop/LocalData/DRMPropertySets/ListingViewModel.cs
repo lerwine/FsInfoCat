@@ -107,7 +107,7 @@ namespace FsInfoCat.Desktop.LocalData.DRMPropertySets
         {
             if (item is null)
                 return await Dispatcher.InvokeAsync<PageFunction<ItemFunctionResultEventArgs>>(() => new DetailsPage(new(new(), null)));
-            using IServiceScope serviceScope = Services.CreateScope();
+            using IServiceScope serviceScope = Hosting.CreateScope();
             using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             Guid id = item.Entity.Id;
             DRMPropertySet fs = await dbContext.DRMPropertySets.FirstOrDefaultAsync(f => f.Id == id, statusListener.CancellationToken);
@@ -124,7 +124,7 @@ namespace FsInfoCat.Desktop.LocalData.DRMPropertySets
         {
             if (item is null)
                 return await Dispatcher.InvokeAsync<PageFunction<ItemFunctionResultEventArgs>>(() => new EditPage(new(new(), null)));
-            using IServiceScope serviceScope = Services.CreateScope();
+            using IServiceScope serviceScope = Hosting.CreateScope();
             using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             Guid id = item.Entity.Id;
             DRMPropertySet fs = await dbContext.DRMPropertySets.FirstOrDefaultAsync(f => f.Id == id, statusListener.CancellationToken);

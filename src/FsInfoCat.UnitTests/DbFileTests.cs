@@ -25,7 +25,7 @@ namespace FsInfoCat.UnitTests
         [TestMethod("new DbFile()"), Ignore]
         public void NewDbFileTestMethod()
         {
-            using IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
             using LocalDbContext dbContext = serviceScope.ServiceProvider.GetService<LocalDbContext>();
             DbFile target = new();
 

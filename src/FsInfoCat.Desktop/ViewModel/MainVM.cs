@@ -94,7 +94,7 @@ namespace FsInfoCat.Desktop.ViewModel
                 {
                     PageFunction<ItemFunctionResultEventArgs> page = task.Result;
                     if (page is not null)
-                        Services.ServiceProvider.GetRequiredService<IApplicationNavigation>().Navigate(page);
+                        Hosting.ServiceProvider.GetRequiredService<IApplicationNavigation>().Navigate(page);
                 }
 
             }));

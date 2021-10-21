@@ -25,7 +25,7 @@ namespace FsInfoCat.UnitTests
         [TestInitialize]
         public void OnTestInitialize()
         {
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             dbContext.RejectChanges();
         }
 
@@ -34,7 +34,7 @@ namespace FsInfoCat.UnitTests
         public void ImagePropertySetAddRemoveTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             Local.ImagePropertySet target = new();
             EntityEntry<Local.ImagePropertySet> entityEntry = dbContext.Entry(target);
             Assert.AreEqual(EntityState.Detached, entityEntry.State);
@@ -93,7 +93,7 @@ namespace FsInfoCat.UnitTests
         public void ImagePropertySetBitDepthTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             uint? expected = default; // DEFERRED: Set invalid value
             Local.ImagePropertySet target = new() { BitDepth = expected };
             EntityEntry<Local.ImagePropertySet> entityEntry = dbContext.ImagePropertySets.Add(target);
@@ -139,7 +139,7 @@ namespace FsInfoCat.UnitTests
         public void ImagePropertySetColorSpaceTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             ushort? expected = default; // DEFERRED: Set invalid value
             Local.ImagePropertySet target = new() { ColorSpace = expected };
             EntityEntry<Local.ImagePropertySet> entityEntry = dbContext.ImagePropertySets.Add(target);
@@ -185,7 +185,7 @@ namespace FsInfoCat.UnitTests
         public void ImagePropertySetCompressedBitsPerPixelTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             double? expected = default; // DEFERRED: Set invalid value
             Local.ImagePropertySet target = new() { CompressedBitsPerPixel = expected };
             EntityEntry<Local.ImagePropertySet> entityEntry = dbContext.ImagePropertySets.Add(target);
@@ -231,7 +231,7 @@ namespace FsInfoCat.UnitTests
         public void ImagePropertySetCompressionTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             ushort? expected = default; // DEFERRED: Set invalid value
             Local.ImagePropertySet target = new() { Compression = expected };
             EntityEntry<Local.ImagePropertySet> entityEntry = dbContext.ImagePropertySets.Add(target);
@@ -277,7 +277,7 @@ namespace FsInfoCat.UnitTests
         public void ImagePropertySetCompressionTextTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             string expected = default; // DEFERRED: Set invalid value
             Local.ImagePropertySet target = new() { CompressionText = expected };
             EntityEntry<Local.ImagePropertySet> entityEntry = dbContext.ImagePropertySets.Add(target);
@@ -323,7 +323,7 @@ namespace FsInfoCat.UnitTests
         public void ImagePropertySetHorizontalResolutionTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             double? expected = default; // DEFERRED: Set invalid value
             Local.ImagePropertySet target = new() { HorizontalResolution = expected };
             EntityEntry<Local.ImagePropertySet> entityEntry = dbContext.ImagePropertySets.Add(target);
@@ -369,7 +369,7 @@ namespace FsInfoCat.UnitTests
         public void ImagePropertySetHorizontalSizeTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             uint? expected = default; // DEFERRED: Set invalid value
             Local.ImagePropertySet target = new() { HorizontalSize = expected };
             EntityEntry<Local.ImagePropertySet> entityEntry = dbContext.ImagePropertySets.Add(target);
@@ -415,7 +415,7 @@ namespace FsInfoCat.UnitTests
         public void ImagePropertySetImageIDTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             string expected = default; // DEFERRED: Set invalid value
             Local.ImagePropertySet target = new() { ImageID = expected };
             EntityEntry<Local.ImagePropertySet> entityEntry = dbContext.ImagePropertySets.Add(target);
@@ -461,7 +461,7 @@ namespace FsInfoCat.UnitTests
         public void ImagePropertySetResolutionUnitTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             short? expected = default; // DEFERRED: Set invalid value
             Local.ImagePropertySet target = new() { ResolutionUnit = expected };
             EntityEntry<Local.ImagePropertySet> entityEntry = dbContext.ImagePropertySets.Add(target);
@@ -507,7 +507,7 @@ namespace FsInfoCat.UnitTests
         public void ImagePropertySetVerticalResolutionTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             double? expected = default; // DEFERRED: Set invalid value
             Local.ImagePropertySet target = new() { VerticalResolution = expected };
             EntityEntry<Local.ImagePropertySet> entityEntry = dbContext.ImagePropertySets.Add(target);
@@ -553,7 +553,7 @@ namespace FsInfoCat.UnitTests
         public void ImagePropertySetVerticalSizeTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             uint? expected = default; // DEFERRED: Set invalid value
             Local.ImagePropertySet target = new() { VerticalSize = expected };
             EntityEntry<Local.ImagePropertySet> entityEntry = dbContext.ImagePropertySets.Add(target);

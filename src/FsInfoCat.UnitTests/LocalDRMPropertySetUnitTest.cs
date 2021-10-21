@@ -25,7 +25,7 @@ namespace FsInfoCat.UnitTests
         [TestInitialize]
         public void OnTestInitialize()
         {
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             dbContext.RejectChanges();
         }
 
@@ -34,7 +34,7 @@ namespace FsInfoCat.UnitTests
         public void DRMPropertySetAddRemoveTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             Local.DRMPropertySet target = new();
             EntityEntry<Local.DRMPropertySet> entityEntry = dbContext.Entry(target);
             Assert.AreEqual(EntityState.Detached, entityEntry.State);
@@ -87,7 +87,7 @@ namespace FsInfoCat.UnitTests
         public void DRMPropertySetDatePlayExpiresTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             DateTime? expected = default; // DEFERRED: Set invalid value
             Local.DRMPropertySet target = new() { DatePlayExpires = expected };
             EntityEntry<Local.DRMPropertySet> entityEntry = dbContext.DRMPropertySets.Add(target);
@@ -133,7 +133,7 @@ namespace FsInfoCat.UnitTests
         public void DRMPropertySetDatePlayStartsTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             DateTime? expected = default; // DEFERRED: Set invalid value
             Local.DRMPropertySet target = new() { DatePlayStarts = expected };
             EntityEntry<Local.DRMPropertySet> entityEntry = dbContext.DRMPropertySets.Add(target);
@@ -179,7 +179,7 @@ namespace FsInfoCat.UnitTests
         public void DRMPropertySetDescriptionTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             string expected = default; // DEFERRED: Set invalid value
             Local.DRMPropertySet target = new() { Description = expected };
             EntityEntry<Local.DRMPropertySet> entityEntry = dbContext.DRMPropertySets.Add(target);
@@ -225,7 +225,7 @@ namespace FsInfoCat.UnitTests
         public void DRMPropertySetIsProtectedTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             bool? expected = default; // DEFERRED: Set invalid value
             Local.DRMPropertySet target = new() { IsProtected = expected };
             EntityEntry<Local.DRMPropertySet> entityEntry = dbContext.DRMPropertySets.Add(target);
@@ -271,7 +271,7 @@ namespace FsInfoCat.UnitTests
         public void DRMPropertySetPlayCountTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             uint? expected = default; // DEFERRED: Set invalid value
             Local.DRMPropertySet target = new() { PlayCount = expected };
             EntityEntry<Local.DRMPropertySet> entityEntry = dbContext.DRMPropertySets.Add(target);

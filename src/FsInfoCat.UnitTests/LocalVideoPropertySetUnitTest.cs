@@ -24,7 +24,7 @@ namespace FsInfoCat.UnitTests
         [TestInitialize]
         public void OnTestInitialize()
         {
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             dbContext.RejectChanges();
         }
 
@@ -33,7 +33,7 @@ namespace FsInfoCat.UnitTests
         public void VideoPropertySetAddRemoveTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             Local.VideoPropertySet target = new();
             EntityEntry<Local.VideoPropertySet> entityEntry = dbContext.Entry(target);
             Assert.AreEqual(EntityState.Detached, entityEntry.State);
@@ -91,7 +91,7 @@ namespace FsInfoCat.UnitTests
         public void VideoPropertySetCompressionTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             string expected = default; // DEFERRED: Set invalid value
             Local.VideoPropertySet target = new() { Compression = expected };
             EntityEntry<Local.VideoPropertySet> entityEntry = dbContext.VideoPropertySets.Add(target);
@@ -137,7 +137,7 @@ namespace FsInfoCat.UnitTests
         public void VideoPropertySetDirectorTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             MultiStringValue expected = default; // DEFERRED: Set invalid value
             Local.VideoPropertySet target = new() { Director = expected };
             EntityEntry<Local.VideoPropertySet> entityEntry = dbContext.VideoPropertySets.Add(target);
@@ -183,7 +183,7 @@ namespace FsInfoCat.UnitTests
         public void VideoPropertySetEncodingBitrateTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             uint? expected = default; // DEFERRED: Set invalid value
             Local.VideoPropertySet target = new() { EncodingBitrate = expected };
             EntityEntry<Local.VideoPropertySet> entityEntry = dbContext.VideoPropertySets.Add(target);
@@ -229,7 +229,7 @@ namespace FsInfoCat.UnitTests
         public void VideoPropertySetFrameHeightTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             uint? expected = default; // DEFERRED: Set invalid value
             Local.VideoPropertySet target = new() { FrameHeight = expected };
             EntityEntry<Local.VideoPropertySet> entityEntry = dbContext.VideoPropertySets.Add(target);
@@ -275,7 +275,7 @@ namespace FsInfoCat.UnitTests
         public void VideoPropertySetFrameRateTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             uint? expected = default; // DEFERRED: Set invalid value
             Local.VideoPropertySet target = new() { FrameRate = expected };
             EntityEntry<Local.VideoPropertySet> entityEntry = dbContext.VideoPropertySets.Add(target);
@@ -321,7 +321,7 @@ namespace FsInfoCat.UnitTests
         public void VideoPropertySetFrameWidthTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             uint? expected = default; // DEFERRED: Set invalid value
             Local.VideoPropertySet target = new() { FrameWidth = expected };
             EntityEntry<Local.VideoPropertySet> entityEntry = dbContext.VideoPropertySets.Add(target);
@@ -367,7 +367,7 @@ namespace FsInfoCat.UnitTests
         public void VideoPropertySetHorizontalAspectRatioTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             uint? expected = default; // DEFERRED: Set invalid value
             Local.VideoPropertySet target = new() { HorizontalAspectRatio = expected };
             EntityEntry<Local.VideoPropertySet> entityEntry = dbContext.VideoPropertySets.Add(target);
@@ -413,7 +413,7 @@ namespace FsInfoCat.UnitTests
         public void VideoPropertySetStreamNameTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             string expected = default; // DEFERRED: Set invalid value
             Local.VideoPropertySet target = new() { StreamName = expected };
             EntityEntry<Local.VideoPropertySet> entityEntry = dbContext.VideoPropertySets.Add(target);
@@ -459,7 +459,7 @@ namespace FsInfoCat.UnitTests
         public void VideoPropertySetStreamNumberTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             ushort? expected = default; // DEFERRED: Set invalid value
             Local.VideoPropertySet target = new() { StreamNumber = expected };
             EntityEntry<Local.VideoPropertySet> entityEntry = dbContext.VideoPropertySets.Add(target);
@@ -505,7 +505,7 @@ namespace FsInfoCat.UnitTests
         public void VideoPropertySetVerticalAspectRatioTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             uint? expected = default; // DEFERRED: Set invalid value
             Local.VideoPropertySet target = new() { VerticalAspectRatio = expected };
             EntityEntry<Local.VideoPropertySet> entityEntry = dbContext.VideoPropertySets.Add(target);

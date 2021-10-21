@@ -21,7 +21,7 @@ namespace FsInfoCat.Local.Crawling
 
         internal CrawlWorker([DisallowNull] ILocalCrawlConfiguration crawlConfiguration, [DisallowNull] ICrawlMessageBus crawlMessageBus, [DisallowNull] IFileSystemDetailService fileSystemDetailService, DateTime? stopAt)
         {
-            (_logger, _crawlMessageBus, _fileSystemDetailService) = (Services.GetRequiredService<ILogger<CrawlWorker>>(), crawlMessageBus, fileSystemDetailService);
+            (_logger, _crawlMessageBus, _fileSystemDetailService) = (Hosting.GetRequiredService<ILogger<CrawlWorker>>(), crawlMessageBus, fileSystemDetailService);
             _logger.LogDebug($"{nameof(CrawlWorker)} instantiated");
         }
 

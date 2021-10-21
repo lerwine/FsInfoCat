@@ -25,7 +25,7 @@ namespace FsInfoCat.UnitTests
         [TestInitialize]
         public void OnTestInitialize()
         {
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             dbContext.RejectChanges();
         }
 
@@ -34,7 +34,7 @@ namespace FsInfoCat.UnitTests
         public void AudioPropertySetAddRemoveTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             Local.AudioPropertySet target = new();
             EntityEntry<Local.AudioPropertySet> entityEntry = dbContext.Entry(target);
             Assert.AreEqual(EntityState.Detached, entityEntry.State);
@@ -90,7 +90,7 @@ namespace FsInfoCat.UnitTests
         public void AudioPropertySetCompressionTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             string expected = default; // DEFERRED: Set invalid value
             Local.AudioPropertySet target = new() { Compression = expected };
             EntityEntry<Local.AudioPropertySet> entityEntry = dbContext.AudioPropertySets.Add(target);
@@ -136,7 +136,7 @@ namespace FsInfoCat.UnitTests
         public void AudioPropertySetEncodingBitrateTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             uint? expected = default; // DEFERRED: Set invalid value
             Local.AudioPropertySet target = new() { EncodingBitrate = expected };
             EntityEntry<Local.AudioPropertySet> entityEntry = dbContext.AudioPropertySets.Add(target);
@@ -182,7 +182,7 @@ namespace FsInfoCat.UnitTests
         public void AudioPropertySetFormatTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             string expected = default; // DEFERRED: Set invalid value
             Local.AudioPropertySet target = new() { Format = expected };
             EntityEntry<Local.AudioPropertySet> entityEntry = dbContext.AudioPropertySets.Add(target);
@@ -228,7 +228,7 @@ namespace FsInfoCat.UnitTests
         public void AudioPropertySetIsVariableBitrateTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             bool? expected = default; // DEFERRED: Set invalid value
             Local.AudioPropertySet target = new() { IsVariableBitrate = expected };
             EntityEntry<Local.AudioPropertySet> entityEntry = dbContext.AudioPropertySets.Add(target);
@@ -274,7 +274,7 @@ namespace FsInfoCat.UnitTests
         public void AudioPropertySetSampleRateTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             uint? expected = default; // DEFERRED: Set invalid value
             Local.AudioPropertySet target = new() { SampleRate = expected };
             EntityEntry<Local.AudioPropertySet> entityEntry = dbContext.AudioPropertySets.Add(target);
@@ -320,7 +320,7 @@ namespace FsInfoCat.UnitTests
         public void AudioPropertySetSampleSizeTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             uint? expected = default; // DEFERRED: Set invalid value
             Local.AudioPropertySet target = new() { SampleSize = expected };
             EntityEntry<Local.AudioPropertySet> entityEntry = dbContext.AudioPropertySets.Add(target);
@@ -366,7 +366,7 @@ namespace FsInfoCat.UnitTests
         public void AudioPropertySetStreamNameTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             string expected = default; // DEFERRED: Set invalid value
             Local.AudioPropertySet target = new() { StreamName = expected };
             EntityEntry<Local.AudioPropertySet> entityEntry = dbContext.AudioPropertySets.Add(target);
@@ -412,7 +412,7 @@ namespace FsInfoCat.UnitTests
         public void AudioPropertySetStreamNumberTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             ushort? expected = default; // DEFERRED: Set invalid value
             Local.AudioPropertySet target = new() { StreamNumber = expected };
             EntityEntry<Local.AudioPropertySet> entityEntry = dbContext.AudioPropertySets.Add(target);

@@ -164,7 +164,7 @@ namespace FsInfoCat.Desktop.ViewModel
             viewModel.InstructionsText = instructions ?? "";
             if (!string.IsNullOrWhiteSpace(title))
                 window.Title = title;
-            MainWindow mainWindow = Services.ServiceProvider.GetService<MainWindow>();
+            MainWindow mainWindow = Hosting.ServiceProvider.GetService<MainWindow>();
             if (mainWindow is not null)
                 window.Owner = mainWindow;
             if (window.ShowDialog() ?? false)
@@ -300,7 +300,7 @@ namespace FsInfoCat.Desktop.ViewModel
 
         private void NotifyError(string title, Exception exception)
         {
-            MainWindow mainWindow = Services.ServiceProvider.GetService<MainWindow>();
+            MainWindow mainWindow = Hosting.ServiceProvider.GetService<MainWindow>();
             if (mainWindow is not null)
                 _ = MessageBox.Show(mainWindow, string.IsNullOrWhiteSpace(exception.Message) ? exception.ToString() : exception.Message, title, MessageBoxButton.OK, MessageBoxImage.Error);
         }

@@ -142,7 +142,7 @@ namespace FsInfoCat.Local
                         return;
                 }
             string message = Message;
-            using IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
             LocalDbContext dbContext;
             if (string.IsNullOrEmpty(Message) || (dbContext = serviceScope.ServiceProvider.GetService<LocalDbContext>()) is null)
                 return;

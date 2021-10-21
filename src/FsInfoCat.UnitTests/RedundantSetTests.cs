@@ -23,7 +23,7 @@ namespace FsInfoCat.UnitTests
         [TestMethod("new RedundantSet()"), Ignore]
         public void NewRedundantSetTestMethod()
         {
-            using IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
             using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             RedundantSet target = new();
 

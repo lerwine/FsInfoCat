@@ -24,7 +24,7 @@ namespace FsInfoCat.UnitTests
         [TestInitialize]
         public void OnTestInitialize()
         {
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             dbContext.RejectChanges();
         }
 
@@ -33,7 +33,7 @@ namespace FsInfoCat.UnitTests
         public void SummaryPropertySetAddRemoveTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             Local.SummaryPropertySet target = new();
             EntityEntry<Local.SummaryPropertySet> entityEntry = dbContext.Entry(target);
             Assert.AreEqual(EntityState.Detached, entityEntry.State);
@@ -104,7 +104,7 @@ namespace FsInfoCat.UnitTests
         public void SummaryPropertySetApplicationNameTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             string expected = default; // DEFERRED: Set invalid value
             Local.SummaryPropertySet target = new() { ApplicationName = expected };
             EntityEntry<Local.SummaryPropertySet> entityEntry = dbContext.SummaryPropertySets.Add(target);
@@ -150,7 +150,7 @@ namespace FsInfoCat.UnitTests
         public void SummaryPropertySetAuthorTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             MultiStringValue expected = default; // DEFERRED: Set invalid value
             Local.SummaryPropertySet target = new() { Author = expected };
             EntityEntry<Local.SummaryPropertySet> entityEntry = dbContext.SummaryPropertySets.Add(target);
@@ -196,7 +196,7 @@ namespace FsInfoCat.UnitTests
         public void SummaryPropertySetCommentTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             string expected = default; // DEFERRED: Set invalid value
             Local.SummaryPropertySet target = new() { Comment = expected };
             EntityEntry<Local.SummaryPropertySet> entityEntry = dbContext.SummaryPropertySets.Add(target);
@@ -242,7 +242,7 @@ namespace FsInfoCat.UnitTests
         public void SummaryPropertySetKeywordsTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             MultiStringValue expected = default; // DEFERRED: Set invalid value
             Local.SummaryPropertySet target = new() { Keywords = expected };
             EntityEntry<Local.SummaryPropertySet> entityEntry = dbContext.SummaryPropertySets.Add(target);
@@ -288,7 +288,7 @@ namespace FsInfoCat.UnitTests
         public void SummaryPropertySetSubjectTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             string expected = default; // DEFERRED: Set invalid value
             Local.SummaryPropertySet target = new() { Subject = expected };
             EntityEntry<Local.SummaryPropertySet> entityEntry = dbContext.SummaryPropertySets.Add(target);
@@ -334,7 +334,7 @@ namespace FsInfoCat.UnitTests
         public void SummaryPropertySetTitleTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             string expected = default; // DEFERRED: Set invalid value
             Local.SummaryPropertySet target = new() { Title = expected };
             EntityEntry<Local.SummaryPropertySet> entityEntry = dbContext.SummaryPropertySets.Add(target);
@@ -380,7 +380,7 @@ namespace FsInfoCat.UnitTests
         public void SummaryPropertySetCompanyTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             string expected = default; // DEFERRED: Set invalid value
             Local.SummaryPropertySet target = new() { Company = expected };
             EntityEntry<Local.SummaryPropertySet> entityEntry = dbContext.SummaryPropertySets.Add(target);
@@ -426,7 +426,7 @@ namespace FsInfoCat.UnitTests
         public void SummaryPropertySetContentTypeTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             string expected = default; // DEFERRED: Set invalid value
             Local.SummaryPropertySet target = new() { ContentType = expected };
             EntityEntry<Local.SummaryPropertySet> entityEntry = dbContext.SummaryPropertySets.Add(target);
@@ -472,7 +472,7 @@ namespace FsInfoCat.UnitTests
         public void SummaryPropertySetCopyrightTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             string expected = default; // DEFERRED: Set invalid value
             Local.SummaryPropertySet target = new() { Copyright = expected };
             EntityEntry<Local.SummaryPropertySet> entityEntry = dbContext.SummaryPropertySets.Add(target);
@@ -518,7 +518,7 @@ namespace FsInfoCat.UnitTests
         public void SummaryPropertySetParentalRatingTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             string expected = default; // DEFERRED: Set invalid value
             Local.SummaryPropertySet target = new() { ParentalRating = expected };
             EntityEntry<Local.SummaryPropertySet> entityEntry = dbContext.SummaryPropertySets.Add(target);
@@ -564,7 +564,7 @@ namespace FsInfoCat.UnitTests
         public void SummaryPropertySetRatingTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             uint? expected = default; // DEFERRED: Set invalid value
             Local.SummaryPropertySet target = new() { Rating = expected };
             EntityEntry<Local.SummaryPropertySet> entityEntry = dbContext.SummaryPropertySets.Add(target);
@@ -610,7 +610,7 @@ namespace FsInfoCat.UnitTests
         public void SummaryPropertySetItemAuthorsTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             MultiStringValue expected = default; // DEFERRED: Set invalid value
             Local.SummaryPropertySet target = new() { ItemAuthors = expected };
             EntityEntry<Local.SummaryPropertySet> entityEntry = dbContext.SummaryPropertySets.Add(target);
@@ -656,7 +656,7 @@ namespace FsInfoCat.UnitTests
         public void SummaryPropertySetItemTypeTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             string expected = default; // DEFERRED: Set invalid value
             Local.SummaryPropertySet target = new() { ItemType = expected };
             EntityEntry<Local.SummaryPropertySet> entityEntry = dbContext.SummaryPropertySets.Add(target);
@@ -702,7 +702,7 @@ namespace FsInfoCat.UnitTests
         public void SummaryPropertySetItemTypeTextTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             string expected = default; // DEFERRED: Set invalid value
             Local.SummaryPropertySet target = new() { ItemTypeText = expected };
             EntityEntry<Local.SummaryPropertySet> entityEntry = dbContext.SummaryPropertySets.Add(target);
@@ -748,7 +748,7 @@ namespace FsInfoCat.UnitTests
         public void SummaryPropertySetKindTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             MultiStringValue expected = default; // DEFERRED: Set invalid value
             Local.SummaryPropertySet target = new() { Kind = expected };
             EntityEntry<Local.SummaryPropertySet> entityEntry = dbContext.SummaryPropertySets.Add(target);
@@ -794,7 +794,7 @@ namespace FsInfoCat.UnitTests
         public void SummaryPropertySetMIMETypeTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             string expected = default; // DEFERRED: Set invalid value
             Local.SummaryPropertySet target = new() { MIMEType = expected };
             EntityEntry<Local.SummaryPropertySet> entityEntry = dbContext.SummaryPropertySets.Add(target);
@@ -840,7 +840,7 @@ namespace FsInfoCat.UnitTests
         public void SummaryPropertySetParentalRatingReasonTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             string expected = default; // DEFERRED: Set invalid value
             Local.SummaryPropertySet target = new() { ParentalRatingReason = expected };
             EntityEntry<Local.SummaryPropertySet> entityEntry = dbContext.SummaryPropertySets.Add(target);
@@ -886,7 +886,7 @@ namespace FsInfoCat.UnitTests
         public void SummaryPropertySetParentalRatingsOrganizationTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             string expected = default; // DEFERRED: Set invalid value
             Local.SummaryPropertySet target = new() { ParentalRatingsOrganization = expected };
             EntityEntry<Local.SummaryPropertySet> entityEntry = dbContext.SummaryPropertySets.Add(target);
@@ -932,7 +932,7 @@ namespace FsInfoCat.UnitTests
         public void SummaryPropertySetSensitivityTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             ushort? expected = default; // DEFERRED: Set invalid value
             Local.SummaryPropertySet target = new() { Sensitivity = expected };
             EntityEntry<Local.SummaryPropertySet> entityEntry = dbContext.SummaryPropertySets.Add(target);
@@ -978,7 +978,7 @@ namespace FsInfoCat.UnitTests
         public void SummaryPropertySetSensitivityTextTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             string expected = default; // DEFERRED: Set invalid value
             Local.SummaryPropertySet target = new() { SensitivityText = expected };
             EntityEntry<Local.SummaryPropertySet> entityEntry = dbContext.SummaryPropertySets.Add(target);
@@ -1024,7 +1024,7 @@ namespace FsInfoCat.UnitTests
         public void SummaryPropertySetSimpleRatingTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             uint? expected = default; // DEFERRED: Set invalid value
             Local.SummaryPropertySet target = new() { SimpleRating = expected };
             EntityEntry<Local.SummaryPropertySet> entityEntry = dbContext.SummaryPropertySets.Add(target);
@@ -1070,7 +1070,7 @@ namespace FsInfoCat.UnitTests
         public void SummaryPropertySetTrademarksTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             string expected = default; // DEFERRED: Set invalid value
             Local.SummaryPropertySet target = new() { Trademarks = expected };
             EntityEntry<Local.SummaryPropertySet> entityEntry = dbContext.SummaryPropertySets.Add(target);
@@ -1117,7 +1117,7 @@ namespace FsInfoCat.UnitTests
         public void SoftwarePropertySetProductNameTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             string expected = default; // DEFERRED: Set invalid value
             Local.SummaryPropertySet target = new() { ProductName = expected };
             EntityEntry<Local.SummaryPropertySet> entityEntry = dbContext.SummaryPropertySets.Add(target);

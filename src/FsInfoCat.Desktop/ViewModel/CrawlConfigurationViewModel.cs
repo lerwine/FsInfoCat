@@ -116,7 +116,7 @@ namespace FsInfoCat.Desktop.ViewModel
 
         protected async Task LoadSubdirectoryAsync(Guid id, IWindowsStatusListener statusListener)
         {
-            using IServiceScope scope = Services.CreateScope();
+            using IServiceScope scope = Hosting.CreateScope();
             using LocalDbContext dbContext = scope.ServiceProvider.GetRequiredService<LocalDbContext>();
             TSubdirectoryEntity subdirectory = await LoadSubdirectoryAsync(id, dbContext, statusListener);
             Root = (subdirectory is null) ? null : CreateSubdirectoryViewModel(subdirectory);
@@ -124,7 +124,7 @@ namespace FsInfoCat.Desktop.ViewModel
 
         private async Task LoadItemsAsync([DisallowNull] IWindowsStatusListener statusListener)
         {
-            using IServiceScope scope = Services.CreateScope();
+            using IServiceScope scope = Hosting.CreateScope();
             using LocalDbContext dbContext = scope.ServiceProvider.GetRequiredService<LocalDbContext>();
             ISubdirectory root = Entity.Root;
             if (root is not null)
@@ -164,7 +164,7 @@ namespace FsInfoCat.Desktop.ViewModel
 
         protected virtual IAsyncJob ReloadAsync()
         {
-            IWindowsAsyncJobFactoryService jobFactory = Services.GetRequiredService<IWindowsAsyncJobFactoryService>();
+            IWindowsAsyncJobFactoryService jobFactory = Hosting.GetRequiredService<IWindowsAsyncJobFactoryService>();
             IAsyncJob job = jobFactory.StartNew("Loading data", "Opening database", LoadItemsAsync);
             job.Task.ContinueWith(task => Dispatcher.Invoke(() =>
             {
@@ -200,7 +200,7 @@ namespace FsInfoCat.Desktop.ViewModel
             Guid? g = Root?.Entity.Id;
             if (g.HasValue && g.Value == id)
                 return;
-            IWindowsAsyncJobFactoryService jobFactory = Services.GetRequiredService<IWindowsAsyncJobFactoryService>();
+            IWindowsAsyncJobFactoryService jobFactory = Hosting.GetRequiredService<IWindowsAsyncJobFactoryService>();
             jobFactory.StartNew("Loading data", "Opening database", id, LoadSubdirectoryAsync).Task.ContinueWith(task => Dispatcher.Invoke(() =>
                 MessageBox.Show(Application.Current.MainWindow, "Unexpected error while reading from the database. See error logs for more information.",
                     "Database Error", MessageBoxButton.OK, MessageBoxImage.Error), DispatcherPriority.Background), TaskContinuationOptions.OnlyOnFaulted);

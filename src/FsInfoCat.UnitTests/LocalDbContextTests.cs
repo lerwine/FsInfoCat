@@ -39,14 +39,14 @@ namespace FsInfoCat.UnitTests
         {
             AppFake.AssemblyCleanup();
             DriveFake.AssemblyCleanup();
-            using (Services.Host)
-                Services.Host.StopAsync(TimeSpan.FromSeconds(5)).Wait();
+            using (Hosting.Host)
+                Hosting.Host.StopAsync(TimeSpan.FromSeconds(5)).Wait();
         }
 
         [TestMethod("new LocalDbContext(DbContextOptions<LocalDbContext>)")]
         public void NewLocalDbContextDbContextOptionsTestMethod()
         {
-            using IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
             using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
 
             Assert.IsNotNull(dbContext.FileSystems);

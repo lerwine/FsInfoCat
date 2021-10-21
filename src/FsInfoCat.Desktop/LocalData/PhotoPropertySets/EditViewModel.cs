@@ -39,7 +39,7 @@ namespace FsInfoCat.Desktop.LocalData.PhotoPropertySets
         {
             if (ApplyChanges() || IsNew)
             {
-                IWindowsAsyncJobFactoryService jobFactory = Services.GetRequiredService<IWindowsAsyncJobFactoryService>();
+                IWindowsAsyncJobFactoryService jobFactory = Hosting.GetRequiredService<IWindowsAsyncJobFactoryService>();
                 IAsyncJob<PhotoPropertiesListItem> job = jobFactory.StartNew("Saving changes", "Opening database", Entity, InvocationState, SaveChangesAsync);
                 job.Task.ContinueWith(task => Dispatcher.Invoke(() => OnSaveTaskCompleted(task)));
             }
@@ -198,7 +198,7 @@ namespace FsInfoCat.Desktop.LocalData.PhotoPropertySets
 
         private static async Task<PhotoPropertiesListItem> SaveChangesAsync(PhotoPropertySet entity, object invocationState, IWindowsStatusListener statusListener)
         {
-            using IServiceScope scope = Services.CreateScope();
+            using IServiceScope scope = Hosting.CreateScope();
             using LocalDbContext dbContext = scope.ServiceProvider.GetRequiredService<LocalDbContext>();
             EntityEntry entry = dbContext.Entry(entity);
             bool isNew = entry.State == EntityState.Detached;
@@ -257,7 +257,7 @@ namespace FsInfoCat.Desktop.LocalData.PhotoPropertySets
                     MessageBoxButton.YesNoCancel, MessageBoxImage.Warning))
                 {
                     case MessageBoxResult.Yes:
-                        IWindowsAsyncJobFactoryService jobFactory = Services.GetRequiredService<IWindowsAsyncJobFactoryService>();
+                        IWindowsAsyncJobFactoryService jobFactory = Hosting.GetRequiredService<IWindowsAsyncJobFactoryService>();
                         IAsyncJob<PhotoPropertiesListItem> job = jobFactory.StartNew("Saving changes", "Opening database", Entity, InvocationState, SaveChangesAsync);
                         job.Task.ContinueWith(task => Dispatcher.Invoke(() => OnSaveTaskCompleted(task)));
                         e.Cancel = true;

@@ -25,7 +25,7 @@ namespace FsInfoCat.UnitTests
         [TestInitialize]
         public void OnTestInitialize()
         {
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             dbContext.RejectChanges();
         }
 
@@ -34,7 +34,7 @@ namespace FsInfoCat.UnitTests
         public void DocumentPropertySetAddRemoveTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             Local.DocumentPropertySet target = new();
             EntityEntry<Local.DocumentPropertySet> entityEntry = dbContext.Entry(target);
             Assert.AreEqual(EntityState.Detached, entityEntry.State);
@@ -93,7 +93,7 @@ namespace FsInfoCat.UnitTests
         public void DocumentPropertySetClientIDTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             string expected = default; // DEFERRED: Set invalid value
             Local.DocumentPropertySet target = new() { ClientID = expected };
             EntityEntry<Local.DocumentPropertySet> entityEntry = dbContext.DocumentPropertySets.Add(target);
@@ -139,7 +139,7 @@ namespace FsInfoCat.UnitTests
         public void DocumentPropertySetContributorTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             string[] expected = default; // DEFERRED: Set invalid value
             Local.DocumentPropertySet target = new() { Contributor = expected };
             EntityEntry<Local.DocumentPropertySet> entityEntry = dbContext.DocumentPropertySets.Add(target);
@@ -185,7 +185,7 @@ namespace FsInfoCat.UnitTests
         public void DocumentPropertySetDateCreatedTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             DateTime? expected = default; // DEFERRED: Set invalid value
             Local.DocumentPropertySet target = new() { DateCreated = expected };
             EntityEntry<Local.DocumentPropertySet> entityEntry = dbContext.DocumentPropertySets.Add(target);
@@ -231,7 +231,7 @@ namespace FsInfoCat.UnitTests
         public void DocumentPropertySetLastAuthorTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             string expected = default; // DEFERRED: Set invalid value
             Local.DocumentPropertySet target = new() { LastAuthor = expected };
             EntityEntry<Local.DocumentPropertySet> entityEntry = dbContext.DocumentPropertySets.Add(target);
@@ -277,7 +277,7 @@ namespace FsInfoCat.UnitTests
         public void DocumentPropertySetRevisionNumberTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             string expected = default; // DEFERRED: Set invalid value
             Local.DocumentPropertySet target = new() { RevisionNumber = expected };
             EntityEntry<Local.DocumentPropertySet> entityEntry = dbContext.DocumentPropertySets.Add(target);
@@ -323,7 +323,7 @@ namespace FsInfoCat.UnitTests
         public void DocumentPropertySetSecurityTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             int? expected = default; // DEFERRED: Set invalid value
             Local.DocumentPropertySet target = new() { Security = expected };
             EntityEntry<Local.DocumentPropertySet> entityEntry = dbContext.DocumentPropertySets.Add(target);
@@ -369,7 +369,7 @@ namespace FsInfoCat.UnitTests
         public void DocumentPropertySetDivisionTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             string expected = default; // DEFERRED: Set invalid value
             Local.DocumentPropertySet target = new() { Division = expected };
             EntityEntry<Local.DocumentPropertySet> entityEntry = dbContext.DocumentPropertySets.Add(target);
@@ -415,7 +415,7 @@ namespace FsInfoCat.UnitTests
         public void DocumentPropertySetDocumentIDTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             string expected = default; // DEFERRED: Set invalid value
             Local.DocumentPropertySet target = new() { DocumentID = expected };
             EntityEntry<Local.DocumentPropertySet> entityEntry = dbContext.DocumentPropertySets.Add(target);
@@ -461,7 +461,7 @@ namespace FsInfoCat.UnitTests
         public void DocumentPropertySetManagerTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             string expected = default; // DEFERRED: Set invalid value
             Local.DocumentPropertySet target = new() { Manager = expected };
             EntityEntry<Local.DocumentPropertySet> entityEntry = dbContext.DocumentPropertySets.Add(target);
@@ -507,7 +507,7 @@ namespace FsInfoCat.UnitTests
         public void DocumentPropertySetPresentationFormatTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             string expected = default; // DEFERRED: Set invalid value
             Local.DocumentPropertySet target = new() { PresentationFormat = expected };
             EntityEntry<Local.DocumentPropertySet> entityEntry = dbContext.DocumentPropertySets.Add(target);
@@ -553,7 +553,7 @@ namespace FsInfoCat.UnitTests
         public void DocumentPropertySetVersionTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             string expected = default; // DEFERRED: Set invalid value
             Local.DocumentPropertySet target = new() { Version = expected };
             EntityEntry<Local.DocumentPropertySet> entityEntry = dbContext.DocumentPropertySets.Add(target);

@@ -24,7 +24,7 @@ namespace FsInfoCat.UnitTests
         [TestInitialize]
         public void OnTestInitialize()
         {
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             dbContext.RejectChanges();
         }
 
@@ -33,7 +33,7 @@ namespace FsInfoCat.UnitTests
         [Ignore]
         public void VolumeAddRemoveTestMethod()
         {
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             string displayName = "Volume Add/Remove Item", volumeName = "Volume_Add_Remove_Name";
             VolumeIdentifier identifier = new(Guid.NewGuid());
             Local.FileSystem fileSystem = new() { DisplayName = "Volume Add/Remove FileSystem" };
@@ -80,7 +80,7 @@ namespace FsInfoCat.UnitTests
         [Ignore]
         public void VolumeIdentifierTestMethod()
         {
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             string displayName = "Volume Identifier Item", volumeName = "Volume_Identifier_Test";
             VolumeIdentifier expected = default;
             Local.FileSystem fileSystem = new() { DisplayName = "Volume Identifier FileSystem" };
@@ -235,7 +235,7 @@ namespace FsInfoCat.UnitTests
         [Ignore]
         public void VolumeVolumeNameTestMethod()
         {
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             string expected = "";
             string displayName = "Volume VolumeName Item";
             VolumeIdentifier identifier = new(Guid.NewGuid());
@@ -354,7 +354,7 @@ namespace FsInfoCat.UnitTests
         [Ignore]
         public void VolumeDisplayNameTestMethod()
         {
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             string expected = "";
             string volumeName = "Volume_DisplayName";
             VolumeIdentifier identifier = new(Guid.NewGuid());
@@ -474,7 +474,7 @@ namespace FsInfoCat.UnitTests
         [Ignore]
         public void VolumeTypeTestMethod()
         {
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             DriveType expected = (DriveType)(object)-1;
             Local.FileSystem fileSystem = new() { DisplayName = "Volume Type FileSystem" };
             dbContext.FileSystems.Add(fileSystem);
@@ -524,7 +524,7 @@ namespace FsInfoCat.UnitTests
         [Ignore]
         public void VolumeFileSystemTestMethod()
         {
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             Local.FileSystem expected = null;
             string displayName = "Volume FileSystem Item", volumeName = "Volume_FileSystem_Name";
             VolumeIdentifier identifier = new(Guid.NewGuid());
@@ -601,7 +601,7 @@ namespace FsInfoCat.UnitTests
         [Ignore]
         public void VolumeStatusTestMethod()
         {
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             VolumeStatus expected = (VolumeStatus)(object)(byte)255;
             Local.FileSystem fileSystem = new() { DisplayName = "Volume Status FileSystem" };
             dbContext.FileSystems.Add(fileSystem);
@@ -651,7 +651,7 @@ namespace FsInfoCat.UnitTests
         [Ignore]
         public void VolumeMaxNameLengthTestMethod()
         {
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             uint expected = 0;
             Local.FileSystem fileSystem = new() { DisplayName = "Volume MaxNameLength FileSystem" };
             dbContext.FileSystems.Add(fileSystem);
@@ -706,7 +706,7 @@ namespace FsInfoCat.UnitTests
         [Ignore]
         public void VolumeCreatedOnTestMethod()
         {
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             Local.FileSystem fileSystem = new() { DisplayName = "Volume CreatedOn FileSystem" };
             dbContext.FileSystems.Add(fileSystem);
             string displayName = "Volume CreatedOn Item", volumeName = "Volume_CreatedOn_Name";
@@ -750,7 +750,7 @@ namespace FsInfoCat.UnitTests
         [Ignore]
         public void VolumeLastSynchronizedOnTestMethod()
         {
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             Local.FileSystem fileSystem = new() { DisplayName = "Volume LastSynchronizedOn FileSystem" };
             dbContext.FileSystems.Add(fileSystem);
             string displayName = "Volume LastSynchronizedOn Item", volumeName = "Volume_LastSynchronizedOn_Name";

@@ -23,7 +23,7 @@ namespace FsInfoCat.UnitTests
         [TestMethod("new Subdirectory()"), Ignore]
         public void NewSubdirectoryTestMethod()
         {
-            using IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
             using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             Subdirectory target = new();
 

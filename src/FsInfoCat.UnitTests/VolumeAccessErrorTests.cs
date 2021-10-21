@@ -23,7 +23,7 @@ namespace FsInfoCat.UnitTests
         [TestMethod("new VolumeAccessError()"), Ignore]
         public void NewVolumeAccessErrorTestMethod()
         {
-            using IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
             using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             VolumeAccessError target = new();
 

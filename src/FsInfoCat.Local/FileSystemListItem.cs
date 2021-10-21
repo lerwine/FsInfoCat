@@ -37,7 +37,7 @@ namespace FsInfoCat.Local
         public async Task<(SymbolicName[], VolumeListItem[])> LoadRelatedItemsAsync(IStatusListener statusListener)
         {
             Guid id = Id;
-            using IServiceScope scope = Services.ServiceProvider.CreateScope();
+            using IServiceScope scope = Hosting.ServiceProvider.CreateScope();
             using LocalDbContext dbContext = scope.ServiceProvider.GetRequiredService<LocalDbContext>();
             SymbolicName[] symbolicNames = await dbContext.SymbolicNames.Where(n => n.FileSystemId == id).ToArrayAsync(statusListener.CancellationToken);
             VolumeListItem[] volumes = await dbContext.VolumeListing.Where(v => v.FileSystemId == id).ToArrayAsync(statusListener.CancellationToken);

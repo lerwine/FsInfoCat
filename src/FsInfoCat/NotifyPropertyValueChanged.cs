@@ -9,7 +9,7 @@ namespace FsInfoCat
 {
     public abstract class NotifyPropertyValueChanged : INotifyPropertyValueChanged
     {
-        private readonly ILogger<NotifyPropertyValueChanged> _logger = Services.ServiceProvider.GetRequiredService<ILogger<NotifyPropertyValueChanged>>();
+        private readonly ILogger<NotifyPropertyValueChanged> _logger = Hosting.ServiceProvider.GetRequiredService<ILogger<NotifyPropertyValueChanged>>();
 
         public event PropertyValueChangedEventHandler PropertyValueChanged;
         public event PropertyChangedEventHandler PropertyChanged;

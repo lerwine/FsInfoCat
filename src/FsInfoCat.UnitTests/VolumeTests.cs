@@ -95,7 +95,7 @@ namespace FsInfoCat.UnitTests
         [Description("Volume.DisplayName: NVARCHAR(1024) NOT NULL CHECK(length(trim(DisplayName))>0) COLLATE NOCASE")]
         public void DisplayNameTestMethod(string displayName, string expected, string errorMessage)
         {
-            using IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
             using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction dbContextTransaction = dbContext.Database.BeginTransaction();
             Volume target = new() { DisplayName = displayName };
@@ -178,7 +178,7 @@ namespace FsInfoCat.UnitTests
         [Description("Volume.Identifier: NVARCHAR(1024) NOT NULL CHECK(length(trim(Identifier))>0) UNIQUE COLLATE NOCASE")]
         public void IdentifierTestMethod(string identifier, string expected, string errorMessage)
         {
-            using IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
             using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction dbContextTransaction = dbContext.Database.BeginTransaction();
             Volume target = new() { Identifier = string.IsNullOrWhiteSpace(identifier) ? default : VolumeIdentifier.Parse(identifier) };
@@ -344,7 +344,7 @@ namespace FsInfoCat.UnitTests
         [Description("Volume.FileSystem: UNIQUEIDENTIFIER NOT NULL FOREIGN REFERENCES FileSystems")]
         public void FileSystemTestMethod()
         {
-            using IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
             using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction dbContextTransaction = dbContext.Database.BeginTransaction();
             Guid expectedFileSystemId = Guid.Parse("88a3cdb9-ed66-4778-a33b-437675a5ae38");
@@ -535,7 +535,7 @@ namespace FsInfoCat.UnitTests
             VolumeStatus expectedStatus = VolumeStatus.Controlled;
             DriveType expectdType = DriveType.CDRom;
             bool? expectedReadOnly = true;
-            using IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
             using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction dbContextTransaction = dbContext.Database.BeginTransaction();
             Volume target = new()
@@ -602,7 +602,7 @@ namespace FsInfoCat.UnitTests
         public void DbUpdateTestMethod()
         {
             Guid targetId = Guid.Parse("355b32f0-d9c8-4a81-b894-24109fbbda64");
-            using IServiceScope serviceScope = Services.ServiceProvider.CreateScope();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
             using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction dbContextTransaction = dbContext.Database.BeginTransaction();
             Volume target = dbContext.Volumes.Find(targetId);

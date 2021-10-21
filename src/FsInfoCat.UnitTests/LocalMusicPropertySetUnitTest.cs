@@ -26,7 +26,7 @@ namespace FsInfoCat.UnitTests
         [TestInitialize]
         public void OnTestInitialize()
         {
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             dbContext.RejectChanges();
         }
 
@@ -35,7 +35,7 @@ namespace FsInfoCat.UnitTests
         public void MusicPropertySetAddRemoveTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             Local.MusicPropertySet target = new();
             EntityEntry<Local.MusicPropertySet> entityEntry = dbContext.Entry(target);
             Assert.AreEqual(EntityState.Detached, entityEntry.State);
@@ -93,7 +93,7 @@ namespace FsInfoCat.UnitTests
         public void MusicPropertySetAlbumArtistTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             string expected = default; // DEFERRED: Set invalid value
             Local.MusicPropertySet target = new() { AlbumArtist = expected };
             EntityEntry<Local.MusicPropertySet> entityEntry = dbContext.MusicPropertySets.Add(target);
@@ -139,7 +139,7 @@ namespace FsInfoCat.UnitTests
         public void MusicPropertySetAlbumTitleTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             string expected = default; // DEFERRED: Set invalid value
             Local.MusicPropertySet target = new() { AlbumTitle = expected };
             EntityEntry<Local.MusicPropertySet> entityEntry = dbContext.MusicPropertySets.Add(target);
@@ -185,7 +185,7 @@ namespace FsInfoCat.UnitTests
         public void MusicPropertySetArtistTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             MultiStringValue expected = default; // DEFERRED: Set invalid value
             Local.MusicPropertySet target = new() { Artist = expected };
             EntityEntry<Local.MusicPropertySet> entityEntry = dbContext.MusicPropertySets.Add(target);
@@ -231,7 +231,7 @@ namespace FsInfoCat.UnitTests
         public void MusicPropertySetComposerTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             MultiStringValue expected = default; // DEFERRED: Set invalid value
             Local.MusicPropertySet target = new() { Composer = expected };
             EntityEntry<Local.MusicPropertySet> entityEntry = dbContext.MusicPropertySets.Add(target);
@@ -277,7 +277,7 @@ namespace FsInfoCat.UnitTests
         public void MusicPropertySetConductorTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             MultiStringValue expected = default; // DEFERRED: Set invalid value
             Local.MusicPropertySet target = new() { Conductor = expected };
             EntityEntry<Local.MusicPropertySet> entityEntry = dbContext.MusicPropertySets.Add(target);
@@ -323,7 +323,7 @@ namespace FsInfoCat.UnitTests
         public void MusicPropertySetDisplayArtistTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             string expected = default; // DEFERRED: Set invalid value
             Local.MusicPropertySet target = new() { DisplayArtist = expected };
             EntityEntry<Local.MusicPropertySet> entityEntry = dbContext.MusicPropertySets.Add(target);
@@ -369,7 +369,7 @@ namespace FsInfoCat.UnitTests
         public void MusicPropertySetGenreTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             MultiStringValue expected = default; // DEFERRED: Set invalid value
             Local.MusicPropertySet target = new() { Genre = expected };
             EntityEntry<Local.MusicPropertySet> entityEntry = dbContext.MusicPropertySets.Add(target);
@@ -415,7 +415,7 @@ namespace FsInfoCat.UnitTests
         public void MusicPropertySetPartOfSetTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             string expected = default; // DEFERRED: Set invalid value
             Local.MusicPropertySet target = new() { PartOfSet = expected };
             EntityEntry<Local.MusicPropertySet> entityEntry = dbContext.MusicPropertySets.Add(target);
@@ -461,7 +461,7 @@ namespace FsInfoCat.UnitTests
         public void MusicPropertySetPeriodTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             string expected = default; // DEFERRED: Set invalid value
             Local.MusicPropertySet target = new() { Period = expected };
             EntityEntry<Local.MusicPropertySet> entityEntry = dbContext.MusicPropertySets.Add(target);
@@ -507,7 +507,7 @@ namespace FsInfoCat.UnitTests
         public void MusicPropertySetTrackNumberTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Services.ServiceProvider.GetService<Local.LocalDbContext>();
+            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
             uint? expected = default; // DEFERRED: Set invalid value
             Local.MusicPropertySet target = new() { TrackNumber = expected };
             EntityEntry<Local.MusicPropertySet> entityEntry = dbContext.MusicPropertySets.Add(target);
