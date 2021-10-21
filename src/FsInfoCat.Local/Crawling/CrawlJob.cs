@@ -13,11 +13,9 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat.Local.Crawling
 {
-    // TODO: Implement CrawlJob service #104
     public partial class CrawlJob : ICrawlJob
     {
         private readonly CrawlWorker _worker;
-        //private CancellationTokenSource _tokenSource = new();
 
         internal IJobResult<CrawlTerminationReason> JobResult { get; }
 
@@ -88,6 +86,7 @@ namespace FsInfoCat.Local.Crawling
             _logger.LogDebug($"{nameof(CrawlWorker)} instantiated");
         }
 
+        // TODO: Implement CrawlWorker.DoWorkAsync #104
         internal async Task<bool?> DoWorkAsync(CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
