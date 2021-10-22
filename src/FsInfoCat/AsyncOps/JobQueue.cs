@@ -14,13 +14,6 @@ namespace FsInfoCat.AsyncOps
         private IJobResult _current;
         private CancellationToken _stoppingToken = new(false);
 
-        [ServiceBuilderHandler]
-        public static void ConfigureServices(IServiceCollection services)
-        {
-            System.Diagnostics.Debug.WriteLine($"Invoked {typeof(JobQueue).FullName}.{nameof(ConfigureServices)}");
-            services.AddHostedService<JobQueue>();
-        }
-
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
             _stoppingToken = stoppingToken;
