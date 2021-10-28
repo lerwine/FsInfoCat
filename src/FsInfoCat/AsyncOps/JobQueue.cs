@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat.AsyncOps
 {
+    [Obsolete("use FSIOQueueService")]
     public partial class JobQueue : BackgroundService
     {
         private readonly Queue<(Action Start, IPendingJob Job)> _queue = new();

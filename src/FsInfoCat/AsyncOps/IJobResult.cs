@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat.AsyncOps
 {
+    [Obsolete("use FSIOQueueService")]
     public interface IJobResult : IAsyncResult
     {
         DateTime Started { get; }
@@ -16,6 +17,7 @@ namespace FsInfoCat.AsyncOps
         Task GetTask();
     }
 
+    [Obsolete("use FSIOQueueService")]
     public interface IJobResult<TResult> : IJobResult
     {
         TResult Result { get; }
@@ -23,6 +25,7 @@ namespace FsInfoCat.AsyncOps
         new Task<TResult> GetTask();
     }
 
+    [Obsolete("use FSIOQueueService")]
     public interface ICancellableJob : IJobResult
     {
         void Cancel();

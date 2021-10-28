@@ -3,6 +3,7 @@ using System.Threading;
 
 namespace FsInfoCat.AsyncOps
 {
+    [Obsolete("use FSIOQueueService")]
     public class JobContext
     {
         private readonly IJobResult _jobResult;
