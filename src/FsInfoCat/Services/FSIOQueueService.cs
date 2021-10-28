@@ -2,29 +2,15 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Collections.Concurrent;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Collections;
 
 namespace FsInfoCat.Services
 {
-
-    public interface IFSIOQueueService : IHostedService, IReadOnlyCollection<IQueuedBgOperation>
-    {
-        bool IsActive { get; }
-
-        IQueuedBgOperation CurrentOperation { get; }
-
-        IQueuedBgOperation Enqueue([DisallowNull] Func<CancellationToken, Task> asyncFunction);
-
-        IQueuedBgOperation<TResult> Enqueue<TResult>([DisallowNull] Func<CancellationToken, Task<TResult>> asyncFunction);
-    }
-
     public partial class FSIOQueueService : BackgroundService, IFSIOQueueService
     {
         private object _syncRoot = new();
@@ -78,7 +64,7 @@ namespace FsInfoCat.Services
             {
                 lock (_queue)
                 {
-                    for (LinkedListNode< (IQueuedBgOperation Target, CancellationTokenSource StartSource)> node = _queue.First; node is not null; node = node.Next)
+                    for (LinkedListNode<(IQueuedBgOperation Target, CancellationTokenSource StartSource)> node = _queue.First; node is not null; node = node.Next)
                     {
                         node.Value.Target.Cancel();
                         node.Value.StartSource.Dispose();

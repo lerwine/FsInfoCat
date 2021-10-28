@@ -147,8 +147,6 @@ namespace FsInfoCat.Services
 
             public void Cancel() => _tokenSource.Cancel();
 
-            public void Cancel(bool throwOnFirstException) => _tokenSource.Cancel(throwOnFirstException);
-
             public void CancelAfter(int millisecondsDelay) => _tokenSource.CancelAfter(millisecondsDelay);
 
             public void CancelAfter(TimeSpan delay) => _tokenSource.CancelAfter(delay);
