@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat
 {
-    // TODO: Use IAsyncJobFactoryService
+    // TODO: Use IAsyncJobFactoryService #106
     [Obsolete("Use IAsyncJobFactoryService")]
     public interface IAsyncBackgroundOperationManager
     {

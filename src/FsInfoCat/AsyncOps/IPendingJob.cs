@@ -2,6 +2,7 @@ using System;
 
 namespace FsInfoCat.AsyncOps
 {
+    [Obsolete("use FSIOQueueService")]
     public interface IPendingJob : ICancellableJob
     {
         IJobResult Job { get; }
@@ -10,6 +11,7 @@ namespace FsInfoCat.AsyncOps
 
         void CancelAfter(TimeSpan delay);
     }
+    [Obsolete("use FSIOQueueService")]
 
     public interface IPendingJob<TResult> : IJobResult<TResult>, IPendingJob
     {
