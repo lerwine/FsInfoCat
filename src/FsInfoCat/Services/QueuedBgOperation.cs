@@ -1,9 +1,8 @@
 using System;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace FsInfoCat.Services
 {
