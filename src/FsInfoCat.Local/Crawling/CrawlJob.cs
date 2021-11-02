@@ -1,6 +1,6 @@
-using FsInfoCat.AsyncOps;
 using FsInfoCat.Background;
 using FsInfoCat.Local.Background;
+using FsInfoCat.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
@@ -15,11 +15,19 @@ namespace FsInfoCat.Local.Crawling
     {
         private readonly CrawlWorker _worker;
 
-        internal IJobResult<CrawlTerminationReason> JobResult { get; }
+        internal IQueuedBgOperation<CrawlTerminationReason> JobResult { get; }
+
+        public ICurrentItem CurrentItem => _worker.CurrentItem;
+
+        public Task<CrawlTerminationReason> Task => JobResult.Task;
+
+        Task IQueuedBgOperation.Task => Task;
+
+        public AsyncJobStatus Status => JobResult.Status;
 
         public DateTime Started => JobResult.Started;
 
-        public ICurrentItem CurrentItem => _worker.CurrentItem;
+        public TimeSpan Elapsed => JobResult.Elapsed;
 
         object IAsyncResult.AsyncState => JobResult.AsyncState;
 
@@ -29,22 +37,10 @@ namespace FsInfoCat.Local.Crawling
 
         bool IAsyncResult.IsCompleted => JobResult.IsCompleted;
 
-        public CrawlTerminationReason Result => JobResult.Result;
-
-        public TimeSpan Elapsed => JobResult.Elapsed;
-
-        public AsyncJobStatus Status => JobResult.Status;
-
-        public bool IsCancellationRequested => JobResult.IsCancellationRequested;
-
-        public Task<CrawlTerminationReason> GetTask() => JobResult.GetTask();
-
-        Task IJobResult.GetTask() => GetTask();
-
-        internal CrawlJob([DisallowNull] JobQueue jobQueueService, [DisallowNull] ILocalCrawlConfiguration crawlConfiguration, [DisallowNull] ICrawlMessageBus crawlMessageBus, [DisallowNull] IFileSystemDetailService fileSystemDetailService, DateTime? stopAt, Action<CrawlJob> onStarted)
+        internal CrawlJob([DisallowNull] IFSIOQueueService fsIOQueueService, [DisallowNull] ILocalCrawlConfiguration crawlConfiguration, [DisallowNull] ICrawlMessageBus crawlMessageBus, [DisallowNull] IFileSystemDetailService fileSystemDetailService, DateTime? stopAt, Action<CrawlJob> onStarted)
         {
             _worker = new(crawlConfiguration, crawlMessageBus, fileSystemDetailService, stopAt);
-            JobResult = jobQueueService.Enqueue(context => DoWorkAsync(onStarted.Invoke, context.CancellationToken).ContinueWith(task =>
+            fsIOQueueService.Enqueue(cancellationToken => DoWorkAsync(onStarted.Invoke, cancellationToken).ContinueWith(task =>
             {
                 if (task.IsCanceled || task.IsFaulted)
                     return CrawlTerminationReason.Aborted;
@@ -61,8 +57,10 @@ namespace FsInfoCat.Local.Crawling
             return await _worker.DoWorkAsync(cancellationToken);
         }
 
-        public void Cancel() => (JobResult as ICancellableJob)?.Cancel();
+        public void Cancel() => JobResult.Cancel();
 
-        public void Cancel(bool throwOnFirstException) => (JobResult as ICancellableJob)?.Cancel(throwOnFirstException);
+        public void CancelAfter(int millisecondsDelay) => JobResult.CancelAfter(millisecondsDelay);
+
+        public void CancelAfter(TimeSpan delay) => JobResult.CancelAfter(delay);
     }
 }

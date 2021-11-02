@@ -1,4 +1,4 @@
-using FsInfoCat.AsyncOps;
+using FsInfoCat.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -13,19 +13,15 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat.Local.Background
 {
-    public class DeleteBranchBackgroundJob : IAsyncResult, IProgress<IJobResult<bool>>
+    public class DeleteBranchBackgroundJob : IAsyncResult, IProgress<IQueuedBgOperation<bool>>
     {
         private readonly ILogger<DeleteBranchBackgroundWorker> _logger;
         private readonly IProgress<string> _onReportProgress;
         private readonly DeleteFileBackgroundWorker _deleteFileService;
         private readonly DeleteCrawlConfigurationBackgroundWorker _deleteCrawlConfigurationService;
-        private readonly IJobResult<bool> _workItem;
+        private readonly IQueuedBgOperation<bool> _workItem;
 
         public bool DoNotUseTransaction { get; }
-
-        public Task<bool> Task => _workItem.GetTask();
-
-        public DateTime Started { get; private set; }
 
         public ISubdirectoryRow Target { get; }
 
@@ -33,18 +29,18 @@ namespace FsInfoCat.Local.Background
 
         public bool DeleteEmptyParent { get; }
 
-        public object AsyncState => ((IAsyncResult)Task).AsyncState;
+        internal Task<bool> Task => _workItem.Task;
 
-        public WaitHandle AsyncWaitHandle => ((IAsyncResult)Task).AsyncWaitHandle;
+        object IAsyncResult.AsyncState => _workItem.AsyncState;
 
-        public bool CompletedSynchronously => ((IAsyncResult)Task).CompletedSynchronously;
+        WaitHandle IAsyncResult.AsyncWaitHandle => _workItem.AsyncWaitHandle;
 
-        public bool IsCompleted => ((IAsyncResult)Task).IsCompleted;
+        bool IAsyncResult.CompletedSynchronously => _workItem.CompletedSynchronously;
 
-        public AsyncJobStatus JobStatus { get; private set; }
+        bool IAsyncResult.IsCompleted => _workItem.IsCompleted;
 
-        public DeleteBranchBackgroundJob([DisallowNull] ILogger<DeleteBranchBackgroundWorker> logger, [DisallowNull] JobQueue jobQueueService, [DisallowNull] DeleteFileBackgroundWorker deleteFileService, [DisallowNull] DeleteCrawlConfigurationBackgroundWorker deleteCrawlConfigurationService,
-            ISubdirectoryRow target, bool forceDelete, bool deleteEmptyParent, IProgress<string> onReportProgress, bool doNotUseTransaction)
+        public DeleteBranchBackgroundJob([DisallowNull] ILogger<DeleteBranchBackgroundWorker> logger, [DisallowNull] IFSIOQueueService fsIOQueueService, [DisallowNull] DeleteFileBackgroundWorker deleteFileService,
+            [DisallowNull] DeleteCrawlConfigurationBackgroundWorker deleteCrawlConfigurationService, [DisallowNull] ISubdirectoryRow target, bool forceDelete, bool deleteEmptyParent, IProgress<string> onReportProgress, bool doNotUseTransaction)
         {
             _logger = logger;
             Target = target;
@@ -54,14 +50,10 @@ namespace FsInfoCat.Local.Background
             DoNotUseTransaction = doNotUseTransaction;
             _deleteFileService = deleteFileService;
             _deleteCrawlConfigurationService = deleteCrawlConfigurationService;
-            _workItem = jobQueueService.Enqueue(async context =>
-            {
-                Started = context.Started;
-                return await DoWorkAsync(target, doNotUseTransaction, context.CancellationToken);
-            });
+            _workItem = fsIOQueueService.Enqueue(async cancellationToken => await DoWorkAsync(target, doNotUseTransaction, cancellationToken));
         }
 
-        private async Task<bool> DoWorkAsync(ISubdirectoryRow target, bool doNotUseTransaction, CancellationToken cancellationToken)
+        private async Task<bool> DoWorkAsync([DisallowNull] ISubdirectoryRow target, bool doNotUseTransaction, CancellationToken cancellationToken)
         {
             using IServiceScope serviceScope = Hosting.CreateScope();
             using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
@@ -79,7 +71,7 @@ namespace FsInfoCat.Local.Background
             return result;
         }
 
-        private async Task<bool> DoWorkAsync(string relativePath, Subdirectory target, LocalDbContext dbContext, CancellationToken cancellationToken)
+        private async Task<bool> DoWorkAsync([DisallowNull] string relativePath, [DisallowNull] Subdirectory target, [DisallowNull] LocalDbContext dbContext, CancellationToken cancellationToken)
         {
             _logger.LogInformation("Processing {RelativePath}", relativePath);
             EntityEntry<Subdirectory> entry = dbContext.Entry(target);
@@ -182,10 +174,9 @@ namespace FsInfoCat.Local.Background
             return result;
         }
 
-        void IProgress<IJobResult<bool>>.Report(IJobResult<bool> value)
+        void IProgress<IQueuedBgOperation<bool>>.Report(IQueuedBgOperation<bool> value)
         {
-            JobStatus = value.Status;
-            switch (JobStatus)
+            switch (value.Status)
             {
                 case AsyncJobStatus.Cancelling:
                     _onReportProgress?.Report("Cancelling background job...");

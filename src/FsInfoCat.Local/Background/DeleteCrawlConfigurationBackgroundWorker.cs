@@ -1,4 +1,4 @@
-using FsInfoCat.AsyncOps;
+using FsInfoCat.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
@@ -9,27 +9,27 @@ namespace FsInfoCat.Local.Background
     public class DeleteCrawlConfigurationBackgroundWorker
     {
         private readonly ILogger<DeleteCrawlConfigurationBackgroundWorker> _logger;
-        private readonly JobQueue _jobQueueService;
+        private readonly IFSIOQueueService _fsIOQueueService;
 
         [ServiceBuilderHandler(Priority = 200)]
-        public static void ConfigureServices(IServiceCollection services)
+        private static void ConfigureServices([DisallowNull] IServiceCollection services)
         {
             System.Diagnostics.Debug.WriteLine($"Invoked {typeof(DeleteCrawlConfigurationBackgroundWorker).FullName}.{nameof(ConfigureServices)}");
             services.AddSingleton<DeleteBranchBackgroundWorker>();
         }
 
-        public DeleteCrawlConfigurationBackgroundWorker([DisallowNull] ILogger<DeleteCrawlConfigurationBackgroundWorker> logger, [DisallowNull] JobQueue jobQueueService)
+        public DeleteCrawlConfigurationBackgroundWorker([DisallowNull] ILogger<DeleteCrawlConfigurationBackgroundWorker> logger, [DisallowNull] IFSIOQueueService fsIOQueueService)
         {
             _logger = logger;
-            _jobQueueService = jobQueueService;
+            _fsIOQueueService = fsIOQueueService;
             _logger.LogDebug($"{nameof(DeleteCrawlConfigurationBackgroundWorker)} Service instantiated");
         }
 
-        public DeleteCrawlConfigurationBackgroundJob EnqueueAsync(ICrawlConfigurationRow crawlConfiguration, IProgress<string> onReportProgress = null, bool doNotUseTransaction = false)
+        public DeleteCrawlConfigurationBackgroundJob EnqueueAsync([DisallowNull] ICrawlConfigurationRow crawlConfiguration, IProgress<string> onReportProgress = null, bool doNotUseTransaction = false)
         {
             if (crawlConfiguration is null)
                 throw new ArgumentNullException(nameof(crawlConfiguration));
-            return new DeleteCrawlConfigurationBackgroundJob(_logger, _jobQueueService, crawlConfiguration, onReportProgress, doNotUseTransaction);
+            return new DeleteCrawlConfigurationBackgroundJob(_logger, _fsIOQueueService, crawlConfiguration, onReportProgress, doNotUseTransaction);
         }
     }
 }

@@ -1,5 +1,5 @@
-using FsInfoCat.AsyncOps;
 using FsInfoCat.Collections;
+using FsInfoCat.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
@@ -14,7 +14,7 @@ namespace FsInfoCat.Local.Crawling
     public class CrawlQueue : ICrawlQueue
     {
         private readonly ILogger<CrawlQueue> _logger;
-        private readonly JobQueue _jobQueueService;
+        private readonly IFSIOQueueService _fsIOQueueService;
         private readonly ICrawlMessageBus _crawlMessageBus;
         private readonly IFileSystemDetailService _fileSystemDetailService;
         private readonly List<CrawlJob> _enqueued = new();
@@ -24,10 +24,10 @@ namespace FsInfoCat.Local.Crawling
 
         ICrawlJob ICrawlQueue.ActiveJob => ActiveJob;
 
-        public CrawlQueue([DisallowNull] ILogger<CrawlQueue> logger, [DisallowNull] JobQueue jobQueueService, [DisallowNull] ICrawlMessageBus crawlMessageBus, [DisallowNull] IFileSystemDetailService fileSystemDetailService)
+        public CrawlQueue([DisallowNull] ILogger<CrawlQueue> logger, [DisallowNull] IFSIOQueueService fsIOQueueService, [DisallowNull] ICrawlMessageBus crawlMessageBus, [DisallowNull] IFileSystemDetailService fileSystemDetailService)
         {
             _logger = logger;
-            _jobQueueService = jobQueueService;
+            _fsIOQueueService = fsIOQueueService;
             _crawlMessageBus = crawlMessageBus;
             _fileSystemDetailService = fileSystemDetailService;
             _logger.LogDebug($"{nameof(ICrawlQueue)} Service instantiated");
@@ -50,11 +50,11 @@ namespace FsInfoCat.Local.Crawling
             Monitor.Enter(_enqueued);
             try
             {
-                crawlJob = new(_jobQueueService, crawlConfiguration, _crawlMessageBus, _fileSystemDetailService, stopAt, OnJobStarted);
+                crawlJob = new(_fsIOQueueService, crawlConfiguration, _crawlMessageBus, _fileSystemDetailService, stopAt, OnJobStarted);
                 _enqueued.Add(crawlJob);
             }
             finally { Monitor.Exit(_enqueued); }
-            crawlJob.GetTask().ContinueWith(task => OnJobCompleted(crawlJob));
+            crawlJob.Task.ContinueWith(task => OnJobCompleted(crawlJob));
             return crawlJob;
         }
 
@@ -124,8 +124,8 @@ namespace FsInfoCat.Local.Crawling
                     return;
                 await Task.WhenAll(Enumerable.Repeat(ActiveJob, 1).Concat(_enqueued).ToArray().Select(j =>
                 {
-                    j.Cancel(true);
-                    return j.GetTask();
+                    j.Cancel();
+                    return j.Task;
                 }));
             }
             finally { Monitor.Exit(_enqueued); }

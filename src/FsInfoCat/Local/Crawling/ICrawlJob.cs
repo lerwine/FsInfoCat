@@ -1,11 +1,8 @@
-using FsInfoCat.AsyncOps;
-using Microsoft.Extensions.Hosting;
-using System;
-using System.Threading.Tasks;
+using FsInfoCat.Services;
 
 namespace FsInfoCat.Local.Crawling
 {
-    public interface ICrawlJob : IJobResult<CrawlTerminationReason>, ICancellableJob
+    public interface ICrawlJob : IQueuedBgOperation<CrawlTerminationReason>
     {
         ICurrentItem CurrentItem { get; }
     }
