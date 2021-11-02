@@ -1,4 +1,4 @@
-using FsInfoCat.AsyncOps;
+using FsInfoCat.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,50 +11,41 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat.Local.Background
 {
-    public class ImportBranchBackgroundJob : IAsyncResult, IProgress<IJobResult<Subdirectory>>
+    public class ImportBranchBackgroundJob : IAsyncResult, IProgress<IQueuedBgOperation<Subdirectory>>
     {
         private readonly ILogger<ImportBranchBackgroundWorker> _logger;
         private readonly IFileSystemDetailService _fileSystemDetailService;
         private readonly IProgress<string> _onReportProgress;
-        private readonly IJobResult<Subdirectory> _workItem;
-
-        public Task<Subdirectory> Task => _workItem.GetTask();
-
-        public DateTime Started { get; private set; }
-
-        public AsyncJobStatus JobStatus { get; private set; }
-
-        public TimeSpan Elapsed => _workItem?.Elapsed ?? TimeSpan.Zero;
+        private readonly IQueuedBgOperation<Subdirectory> _workItem;
 
         public bool MarkNewAsCompleted { get; }
 
         public DirectoryInfo Source { get; }
 
-        public IJobResult<bool> WorkItem { get; }
+        internal Task<Subdirectory> Task => _workItem.Task;
 
-        public object AsyncState => ((IAsyncResult)Task).AsyncState;
+        object IAsyncResult.AsyncState => _workItem.AsyncState;
 
-        public WaitHandle AsyncWaitHandle => ((IAsyncResult)Task).AsyncWaitHandle;
+        WaitHandle IAsyncResult.AsyncWaitHandle => _workItem.AsyncWaitHandle;
 
-        public bool CompletedSynchronously => ((IAsyncResult)Task).CompletedSynchronously;
+        bool IAsyncResult.CompletedSynchronously => _workItem.CompletedSynchronously;
 
-        public bool IsCompleted => ((IAsyncResult)Task).IsCompleted;
+        bool IAsyncResult.IsCompleted => _workItem.IsCompleted;
 
-        internal ImportBranchBackgroundJob([DisallowNull] ILogger<ImportBranchBackgroundWorker> logger, IFileSystemDetailService fileSystemDetailService, [DisallowNull] JobQueue jobQueueService, [DisallowNull] DirectoryInfo source, bool markNewAsCompleted, IProgress<string> onReportProgress)
+        internal ImportBranchBackgroundJob([DisallowNull] ILogger<ImportBranchBackgroundWorker> logger, [DisallowNull] IFileSystemDetailService fileSystemDetailService, [DisallowNull] IFSIOQueueService fsIOQueueService, [DisallowNull] DirectoryInfo source, bool markNewAsCompleted, IProgress<string> onReportProgress)
         {
             _fileSystemDetailService = fileSystemDetailService;
             _logger = logger;
             MarkNewAsCompleted = markNewAsCompleted;
             Source = source;
             _onReportProgress = onReportProgress;
-            _workItem = jobQueueService.Enqueue(async context =>
+            _workItem = fsIOQueueService.Enqueue(async cancellationToken =>
             {
-                Started = context.Started;
                 if (!source.Exists)
                     throw new DirectoryNotFoundException();
                 using IServiceScope serviceScope = Hosting.CreateScope();
                 using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
-                return (await DoWorkAsync(source, MarkNewAsCompleted ? DirectoryStatus.Complete : DirectoryStatus.Incomplete, dbContext, context.CancellationToken))?.Entity;
+                return (await DoWorkAsync(source, MarkNewAsCompleted ? DirectoryStatus.Complete : DirectoryStatus.Incomplete, dbContext, cancellationToken))?.Entity;
             });
         }
 
@@ -99,10 +90,9 @@ namespace FsInfoCat.Local.Background
             return dbContext.Entry(subdirectory);
         }
 
-        void IProgress<IJobResult<Subdirectory>>.Report(IJobResult<Subdirectory> value)
+        void IProgress<IQueuedBgOperation<Subdirectory>>.Report(IQueuedBgOperation<Subdirectory> value)
         {
-            JobStatus = value.Status;
-            switch (JobStatus)
+            switch (value.Status)
             {
                 case AsyncJobStatus.Cancelling:
                     _onReportProgress?.Report("Cancelling background job...");

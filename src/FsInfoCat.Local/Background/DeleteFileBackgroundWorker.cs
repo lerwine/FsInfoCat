@@ -1,4 +1,4 @@
-using FsInfoCat.AsyncOps;
+using FsInfoCat.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
@@ -9,7 +9,7 @@ namespace FsInfoCat.Local.Background
     public class DeleteFileBackgroundWorker
     {
         private readonly ILogger<DeleteFileBackgroundWorker> _logger;
-        private readonly JobQueue _jobQueueService;
+        private readonly IFSIOQueueService _fsIOQueueService;
 
         [ServiceBuilderHandler(Priority = 200)]
         public static void ConfigureServices(IServiceCollection services)
@@ -18,18 +18,18 @@ namespace FsInfoCat.Local.Background
             services.AddSingleton<DeleteFileBackgroundWorker>();
         }
 
-        public DeleteFileBackgroundWorker([DisallowNull] ILogger<DeleteFileBackgroundWorker> logger, [DisallowNull] JobQueue jobQueueService)
+        public DeleteFileBackgroundWorker([DisallowNull] ILogger<DeleteFileBackgroundWorker> logger, [DisallowNull] IFSIOQueueService fsIOQueueService)
         {
             _logger = logger;
-            _jobQueueService = jobQueueService;
+            _fsIOQueueService = fsIOQueueService;
             _logger.LogDebug($"{nameof(DeleteFileBackgroundWorker)} Service instantiated");
         }
 
-        public DeleteFileBackgroundJob EnqueueAsync(IFileRow file, bool forceDelete = false, bool deleteEmptyParent = false, IProgress<string> onReportProgress = null, bool doNotUseTransaction = false)
+        public DeleteFileBackgroundJob EnqueueAsync([DisallowNull] IFileRow file, bool forceDelete = false, bool deleteEmptyParent = false, IProgress<string> onReportProgress = null, bool doNotUseTransaction = false)
         {
             if (file is null)
                 throw new ArgumentNullException(nameof(file));
-            return new DeleteFileBackgroundJob(_logger, _jobQueueService, file, forceDelete, deleteEmptyParent, onReportProgress, doNotUseTransaction);
+            return new DeleteFileBackgroundJob(_logger, _fsIOQueueService, file, forceDelete, deleteEmptyParent, onReportProgress, doNotUseTransaction);
         }
     }
 }

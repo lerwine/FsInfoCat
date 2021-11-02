@@ -1,4 +1,4 @@
-using FsInfoCat.AsyncOps;
+using FsInfoCat.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
@@ -11,28 +11,28 @@ namespace FsInfoCat.Local.Background
     {
         private readonly ILogger<ImportBranchBackgroundWorker> _logger;
         private readonly IFileSystemDetailService _fileSystemDetailService;
-        private readonly JobQueue _jobQueueService;
+        private readonly IFSIOQueueService _fsIOQueueService;
 
         [ServiceBuilderHandler(Priority = 200)]
-        public static void ConfigureServices(IServiceCollection services)
+        private static void ConfigureServices([DisallowNull] IServiceCollection services)
         {
             System.Diagnostics.Debug.WriteLine($"Invoked {typeof(ImportBranchBackgroundWorker).FullName}.{nameof(ConfigureServices)}");
             services.AddSingleton<ImportBranchBackgroundWorker>();
         }
 
-        public ImportBranchBackgroundWorker([DisallowNull] ILogger<ImportBranchBackgroundWorker> logger, IFileSystemDetailService fileSystemDetailService, [DisallowNull] JobQueue jobQueueService)
+        public ImportBranchBackgroundWorker([DisallowNull] ILogger<ImportBranchBackgroundWorker> logger, [DisallowNull] IFileSystemDetailService fileSystemDetailService, [DisallowNull] IFSIOQueueService fsIOQueueService)
         {
             _fileSystemDetailService = fileSystemDetailService;
             _logger = logger;
-            _jobQueueService = jobQueueService;
+            _fsIOQueueService = fsIOQueueService;
             _logger.LogDebug($"{nameof(ImportBranchBackgroundWorker)} Service instantiated");
         }
 
-        public ImportBranchBackgroundJob EnqueueAsync(DirectoryInfo directoryInfo, bool markNewAsCompleted = false, IProgress<string> onReportProgress = null)
+        public ImportBranchBackgroundJob EnqueueAsync([DisallowNull] DirectoryInfo directoryInfo, bool markNewAsCompleted = false, IProgress<string> onReportProgress = null)
         {
             if (directoryInfo is null)
                 throw new ArgumentNullException(nameof(directoryInfo));
-            return new ImportBranchBackgroundJob(_logger, _fileSystemDetailService, _jobQueueService, directoryInfo, markNewAsCompleted, onReportProgress);
+            return new ImportBranchBackgroundJob(_logger, _fileSystemDetailService, _fsIOQueueService, directoryInfo, markNewAsCompleted, onReportProgress);
         }
     }
 }
