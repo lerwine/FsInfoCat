@@ -144,5 +144,9 @@ namespace FsInfoCat.Local.Crawling
             _logger.LogDebug("{Method}({Type} {eventArgs}, {cancellationToken})", nameof(ReportAsync), nameof(FileCrawlErrorEventArgs), eventArgs, cancellationToken);
             await Task.WhenAll(ReportCrawlErrorEventAsync(eventArgs, cancellationToken), ReportAnyAsync(eventArgs, cancellationToken));
         }
+
+        public Task ReportAsync([DisallowNull] CrawlJobStartEventArgs eventArgs) => ReportAsync(eventArgs, CancellationToken.None);
+
+        public Task ReportAsync([DisallowNull] CrawlJobEndEventArgs eventArgs) => ReportAsync(eventArgs, CancellationToken.None);
     }
 }

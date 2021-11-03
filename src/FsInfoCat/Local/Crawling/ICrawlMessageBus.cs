@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
@@ -31,7 +31,11 @@ namespace FsInfoCat.Local.Crawling
 
         bool RemoveFileCrawlEventListener(IProgress<FileCrawlEventArgs> listener, bool includesErrorEvents);
 
+        Task ReportAsync([DisallowNull] CrawlJobStartEventArgs eventArgs);
+
         Task ReportAsync([DisallowNull] CrawlJobStartEventArgs eventArgs, CancellationToken cancellationToken);
+
+        Task ReportAsync([DisallowNull] CrawlJobEndEventArgs eventArgs);
 
         Task ReportAsync([DisallowNull] CrawlJobEndEventArgs eventArgs, CancellationToken cancellationToken);
 
