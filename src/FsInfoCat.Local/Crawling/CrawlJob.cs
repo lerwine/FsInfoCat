@@ -15,11 +15,13 @@ namespace FsInfoCat.Local.Crawling
     {
         private readonly CrawlWorker _worker;
 
+        public Guid ConcurrencyId { get; } = Guid.NewGuid();
+
         internal IQueuedBgOperation<CrawlTerminationReason> JobResult { get; }
 
         public ICurrentItem CurrentItem => _worker.CurrentItem;
 
-        public Task<CrawlTerminationReason> Task => JobResult.Task;
+        public Task<CrawlTerminationReason> Task { get; }
 
         Task IQueuedBgOperation.Task => Task;
 
@@ -31,30 +33,30 @@ namespace FsInfoCat.Local.Crawling
 
         object IAsyncResult.AsyncState => JobResult.AsyncState;
 
-        WaitHandle IAsyncResult.AsyncWaitHandle => JobResult.AsyncWaitHandle;
+        WaitHandle IAsyncResult.AsyncWaitHandle => ((IAsyncResult)Task).AsyncWaitHandle;
 
-        bool IAsyncResult.CompletedSynchronously => JobResult.CompletedSynchronously;
+        bool IAsyncResult.CompletedSynchronously => ((IAsyncResult)Task).CompletedSynchronously;
 
-        bool IAsyncResult.IsCompleted => JobResult.IsCompleted;
+        bool IAsyncResult.IsCompleted => ((IAsyncResult)Task).IsCompleted;
 
-        internal CrawlJob([DisallowNull] IFSIOQueueService fsIOQueueService, [DisallowNull] ILocalCrawlConfiguration crawlConfiguration, [DisallowNull] ICrawlMessageBus crawlMessageBus, [DisallowNull] IFileSystemDetailService fileSystemDetailService, DateTime? stopAt, Action<CrawlJob> onStarted)
+        internal CrawlJob([DisallowNull] IFSIOQueueService fsIOQueueService, [DisallowNull] ILocalCrawlConfiguration crawlConfiguration, [DisallowNull] ICrawlMessageBus crawlMessageBus, [DisallowNull] IFileSystemDetailService fileSystemDetailService, DateTime? stopAt,
+            [DisallowNull] Action<CrawlJob> onStarted)
         {
-            _worker = new(crawlConfiguration, crawlMessageBus, fileSystemDetailService, stopAt);
-            fsIOQueueService.Enqueue(cancellationToken => DoWorkAsync(onStarted.Invoke, cancellationToken).ContinueWith(task =>
+            _worker = new(crawlConfiguration, crawlMessageBus, fileSystemDetailService, ConcurrencyId, stopAt);
+            JobResult = fsIOQueueService.Enqueue(cancellationToken => DoWorkAsync(onStarted.Invoke, cancellationToken));
+            Task = JobResult.Task.ContinueWith(task =>
             {
                 if (task.IsCanceled || task.IsFaulted)
                     return CrawlTerminationReason.Aborted;
-                bool? itemLimitReached = task.Result;
-                if (itemLimitReached.HasValue)
-                    return itemLimitReached.Value ? CrawlTerminationReason.ItemLimitReached : CrawlTerminationReason.TimeLimitReached;
-                return CrawlTerminationReason.Completed;
-            }));
+                return task.Result;
+            });
         }
 
-        private async Task<bool?> DoWorkAsync([DisallowNull] Action<CrawlJob> onStarted, CancellationToken cancellationToken)
+        private async Task<CrawlTerminationReason> DoWorkAsync([DisallowNull] Action<CrawlJob> onStarted, CancellationToken cancellationToken)
         {
-            onStarted?.Invoke(this);
-            return await _worker.DoWorkAsync(cancellationToken);
+            onStarted(this);
+            bool? timeoutReached = await _worker.DoWorkAsync(cancellationToken);
+            return timeoutReached.HasValue ? (timeoutReached.Value ? CrawlTerminationReason.TimeLimitReached : CrawlTerminationReason.ItemLimitReached) : CrawlTerminationReason.Completed;
         }
 
         public void Cancel() => JobResult.Cancel();

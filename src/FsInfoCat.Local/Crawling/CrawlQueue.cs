@@ -15,6 +15,7 @@ namespace FsInfoCat.Local.Crawling
     {
         private readonly ILogger<CrawlQueue> _logger;
         private readonly IFSIOQueueService _fsIOQueueService;
+        private readonly WeakReferenceSet<IProgress<ICrawlJob>> _crawlProgressListeners = new();
         private readonly ICrawlMessageBus _crawlMessageBus;
         private readonly IFileSystemDetailService _fileSystemDetailService;
         private readonly List<CrawlJob> _enqueued = new();
@@ -54,7 +55,7 @@ namespace FsInfoCat.Local.Crawling
                 _enqueued.Add(crawlJob);
             }
             finally { Monitor.Exit(_enqueued); }
-            crawlJob.Task.ContinueWith(task => OnJobCompleted(crawlJob));
+            crawlJob.JobResult.Task.ContinueWith(task => OnJobCompleted(task, crawlJob));
             return crawlJob;
         }
 
@@ -73,17 +74,17 @@ namespace FsInfoCat.Local.Crawling
                 finally { ActiveJob = crawlJob; }
             }
             finally { Monitor.Exit(_enqueued); }
+            Task reportCrawlStart = _crawlMessageBus.ReportAsync(new CrawlJobStartEventArgs(crawlJob, isFirstJob));
             if (isFirstJob)
                 _activeStateChangedEventListeners.RaiseProgressChangedAsync(true, CancellationToken.None);
         }
 
-        private void OnJobCompleted([DisallowNull] CrawlJob crawlJob)
+        private void OnJobCompleted(Task<CrawlTerminationReason> task, [DisallowNull] CrawlJob crawlJob)
         {
             bool isLastJob;
             Monitor.Enter(_enqueued);
             try
             {
-
                 if (ActiveJob is not null && ReferenceEquals(ActiveJob, crawlJob))
                 {
                     isLastJob = _enqueued.Count == 0;
@@ -94,6 +95,21 @@ namespace FsInfoCat.Local.Crawling
                     isLastJob = false;
             }
             finally { Monitor.Exit(_enqueued); }
+            CrawlJobEndEventArgs eventArgs;
+            if (task.IsFaulted)
+            {
+                Exception exception = (task.Exception.InnerExceptions.Count == 1) ? task.Exception.InnerException : task.Exception;
+                eventArgs = new CrawlJobEndEventArgs(crawlJob, isLastJob, CrawlTerminationReason.Aborted, string.IsNullOrWhiteSpace(exception.Message) ? exception.ToString() : exception.Message, StatusMessageLevel.Error);
+            }
+            else
+                eventArgs = (task.IsCanceled ? CrawlTerminationReason.Aborted : task.Result) switch
+                {
+                    CrawlTerminationReason.ItemLimitReached => new CrawlJobEndEventArgs(crawlJob, isLastJob, CrawlTerminationReason.ItemLimitReached, "Item limit reached before crawl completion.", StatusMessageLevel.Warning),
+                    CrawlTerminationReason.TimeLimitReached => new CrawlJobEndEventArgs(crawlJob, isLastJob, CrawlTerminationReason.TimeLimitReached, "Time limit reached before crawl completion.", StatusMessageLevel.Warning),
+                    CrawlTerminationReason.Completed => new CrawlJobEndEventArgs(crawlJob, isLastJob, CrawlTerminationReason.Completed, "Crawl job completed successfully.", StatusMessageLevel.Information),
+                    _ => new CrawlJobEndEventArgs(crawlJob, isLastJob, CrawlTerminationReason.Aborted, "Crawl job canceled.", StatusMessageLevel.Warning),
+                };
+            _crawlMessageBus.ReportAsync(eventArgs);
             if (isLastJob)
                 _activeStateChangedEventListeners.RaiseProgressChangedAsync(false, CancellationToken.None);
         }
