@@ -5,9 +5,6 @@ namespace FsInfoCat.Local.Crawling
 {
     public sealed class CrawlJobEndEventArgs : CrawlActivityEventArgs, ICrawlJobEventArgs
     {
-        [Obsolete("Use CrawlJob")]
-        public ILocalCrawlConfiguration Configuration { get; }
-
         public CrawlTerminationReason TerminationReason { get; }
 
         public ICrawlJob CrawlJob { get; }
@@ -19,14 +16,6 @@ namespace FsInfoCat.Local.Crawling
         {
             TerminationReason = terminationReason;
             CrawlJob = crawlJob;
-            IsLastJob = isLastJob;
-        }
-
-        [Obsolete("Use CrawlJobEndEventArgs(ICrawlJob, bool, string, StatusMessageLevel)")]
-        public CrawlJobEndEventArgs(string message, StatusMessageLevel level, [DisallowNull] ILocalCrawlConfiguration configuration, bool isLastJob, Guid concurrencyId)
-            : base(message, level, AsyncJobStatus.Running, concurrencyId)
-        {
-            Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
             IsLastJob = isLastJob;
         }
 
