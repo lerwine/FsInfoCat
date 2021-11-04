@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat.Local.Crawling
 {
-    public interface ICrawlMessageBus
+    public interface ICrawlMessageBus : ICrawlProgress
     {
         void AddCrawlActivityEventListener([DisallowNull] IProgress<ICrawlActivityEventArgs> listener);
 
@@ -30,25 +30,5 @@ namespace FsInfoCat.Local.Crawling
         void AddFileCrawlEventListener([DisallowNull] IProgress<FileCrawlEventArgs> listener, bool includeErrorEvents);
 
         bool RemoveFileCrawlEventListener(IProgress<FileCrawlEventArgs> listener, bool includesErrorEvents);
-
-        Task ReportAsync([DisallowNull] CrawlJobStartEventArgs eventArgs);
-
-        Task ReportAsync([DisallowNull] CrawlJobStartEventArgs eventArgs, CancellationToken cancellationToken);
-
-        Task ReportAsync([DisallowNull] CrawlJobEndEventArgs eventArgs);
-
-        Task ReportAsync([DisallowNull] CrawlJobEndEventArgs eventArgs, CancellationToken cancellationToken);
-
-        Task ReportAsync([DisallowNull] DirectoryCrawlStartEventArgs eventArgs, CancellationToken cancellationToken);
-
-        Task ReportAsync([DisallowNull] DirectoryCrawlEndEventArgs eventArgs, CancellationToken cancellationToken);
-
-        Task ReportAsync([DisallowNull] DirectoryCrawlErrorEventArgs eventArgs, CancellationToken cancellationToken);
-
-        Task ReportAsync([DisallowNull] FileCrawlStartEventArgs eventArgs, CancellationToken cancellationToken);
-
-        Task ReportAsync([DisallowNull] FileCrawlEndEventArgs eventArgs, CancellationToken cancellationToken);
-
-        Task ReportAsync([DisallowNull] FileCrawlErrorEventArgs eventArgs, CancellationToken cancellationToken);
     }
 }

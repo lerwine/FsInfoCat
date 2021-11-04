@@ -1267,6 +1267,51 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Background job canceled..
+        /// </summary>
+        public static string DisplayName_BackgroundJobCanceled {
+            get {
+                return ResourceManager.GetString("DisplayName_BackgroundJobCanceled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Background job completed..
+        /// </summary>
+        public static string DisplayName_BackgroundJobCompleted {
+            get {
+                return ResourceManager.GetString("DisplayName_BackgroundJobCompleted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Background job failed..
+        /// </summary>
+        public static string DisplayName_BackgroundJobFailed {
+            get {
+                return ResourceManager.GetString("DisplayName_BackgroundJobFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Background job pending..
+        /// </summary>
+        public static string DisplayName_BackgroundJobPending {
+            get {
+                return ResourceManager.GetString("DisplayName_BackgroundJobPending", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Background job started..
+        /// </summary>
+        public static string DisplayName_BackgroundJobStarted {
+            get {
+                return ResourceManager.GetString("DisplayName_BackgroundJobStarted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Baseline File.
         /// </summary>
         public static string DisplayName_Baseline {
@@ -1335,6 +1380,24 @@ namespace FsInfoCat.Properties {
         public static string DisplayName_Canceled {
             get {
                 return ResourceManager.GetString("DisplayName_Canceled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cancelling.
+        /// </summary>
+        public static string DisplayName_Cancelling {
+            get {
+                return ResourceManager.GetString("DisplayName_Cancelling", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cancelling background job..
+        /// </summary>
+        public static string DisplayName_CancellingBackgroundJob {
+            get {
+                return ResourceManager.GetString("DisplayName_CancellingBackgroundJob", resourceCulture);
             }
         }
         
@@ -1578,6 +1641,24 @@ namespace FsInfoCat.Properties {
         public static string DisplayName_CrawlFailed {
             get {
                 return ResourceManager.GetString("DisplayName_CrawlFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Crawling.
+        /// </summary>
+        public static string DisplayName_Crawling {
+            get {
+                return ResourceManager.GetString("DisplayName_Crawling", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Crawling File System.
+        /// </summary>
+        public static string DisplayName_CrawlingFileSystem {
+            get {
+                return ResourceManager.GetString("DisplayName_CrawlingFileSystem", resourceCulture);
             }
         }
         
@@ -2275,6 +2356,15 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Failed.
+        /// </summary>
+        public static string DisplayName_Failed {
+            get {
+                return ResourceManager.GetString("DisplayName_Failed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to File.
         /// </summary>
         public static string DisplayName_File {
@@ -2658,6 +2748,15 @@ namespace FsInfoCat.Properties {
         public static string DisplayName_GetLogicalDisksFailure {
             get {
                 return ResourceManager.GetString("DisplayName_GetLogicalDisksFailure", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Getting Drive Info.
+        /// </summary>
+        public static string DisplayName_GettingDriveInfo {
+            get {
+                return ResourceManager.GetString("DisplayName_GettingDriveInfo", resourceCulture);
             }
         }
         
@@ -4341,6 +4440,15 @@ namespace FsInfoCat.Properties {
         public static string DisplayName_Source {
             get {
                 return ResourceManager.GetString("DisplayName_Source", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Started.
+        /// </summary>
+        public static string DisplayName_Started {
+            get {
+                return ResourceManager.GetString("DisplayName_Started", resourceCulture);
             }
         }
         
