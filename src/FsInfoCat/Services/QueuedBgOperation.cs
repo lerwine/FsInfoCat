@@ -15,6 +15,7 @@ namespace FsInfoCat.Services
             private readonly Action _setCompleted;
             private readonly CancellationTokenSource _tokenSource = new();
             private readonly Stopwatch _stopwatch = new();
+            private OperationStatus _operationStatus;
 
             internal object SyncRoot { get; } = new();
 
@@ -36,13 +37,30 @@ namespace FsInfoCat.Services
                 _ => false,
             };
 
+            protected IStatusReportable Reportable { get; }
+
             object IAsyncResult.AsyncState => (Task ?? throw new InvalidOperationException()).AsyncState;
 
             Task IQueuedBgOperation.Task => Task;
 
-            protected QueuedBgOperation([DisallowNull] FSIOQueueService service)
+            public ActivityCode Activity { get; }
+
+            public MessageCode StatusDescription => _operationStatus.StatusDescription;
+
+            ActivityCode? IAsyncOperationInfo.Activity => Activity;
+
+            MessageCode? IAsyncOperationInfo.StatusDescription => StatusDescription;
+
+            public string CurrentOperation => _operationStatus.CurrentOperation;
+
+            public object AsyncState { get; private set; }
+
+            protected QueuedBgOperation([DisallowNull] FSIOQueueService service, ActivityCode activity, MessageCode statusDescription)
             {
                 _service = service ?? throw new ArgumentNullException(nameof(service));
+                Reportable = new StatusReportable(this);
+                Activity = activity;
+                _operationStatus = new(statusDescription, "");
                 AsyncWaitHandle = WaitHandleRelay.CreateManualSetOnly(out _setCompleted);
                 _tokenSource.Token.Register(OnCancelRequested);
                 WithQueueLocked(() =>
@@ -149,6 +167,59 @@ namespace FsInfoCat.Services
             public void CancelAfter(int millisecondsDelay) => _tokenSource.CancelAfter(millisecondsDelay);
 
             public void CancelAfter(TimeSpan delay) => _tokenSource.CancelAfter(delay);
+
+            class StatusReportable : IStatusReportable
+            {
+                private readonly QueuedBgOperation<TTask> _bgOperation;
+
+                internal StatusReportable([DisallowNull] QueuedBgOperation<TTask> bgOperation)
+                {
+                    _bgOperation = bgOperation;
+                }
+
+                public ActivityCode Activity => _bgOperation.Activity;
+
+                public OperationStatus Current => _bgOperation._operationStatus;
+
+                public void Report(MessageCode statusDescription, string currentOperation)
+                {
+                    if (string.IsNullOrEmpty(currentOperation))
+                    {
+                        if (_bgOperation._operationStatus.CurrentOperation.Length > 0 || _bgOperation._operationStatus.StatusDescription != statusDescription)
+                            _bgOperation._operationStatus = new(statusDescription, "");
+                    }
+                    else if (statusDescription != _bgOperation._operationStatus.StatusDescription || _bgOperation._operationStatus.CurrentOperation != currentOperation)
+                        _bgOperation._operationStatus = new(statusDescription, currentOperation);
+                }
+
+                public void Report([DisallowNull] OperationStatus value)
+                {
+                    if (value.CurrentOperation is null)
+                    {
+                        if (value.StatusDescription != _bgOperation._operationStatus.StatusDescription || _bgOperation._operationStatus.CurrentOperation.Length > 0)
+                            _bgOperation._operationStatus = new(value.StatusDescription, "");
+                    }
+                    else if (value.StatusDescription != _bgOperation._operationStatus.StatusDescription || value.CurrentOperation != _bgOperation._operationStatus.CurrentOperation)
+                        _bgOperation._operationStatus = value;
+                }
+
+                public void Report(string value)
+                {
+                    if (string.IsNullOrEmpty(value))
+                    {
+                        if (_bgOperation._operationStatus.CurrentOperation.Length > 0)
+                            _bgOperation._operationStatus = _bgOperation._operationStatus with { CurrentOperation = "" };
+                    }
+                    else if (value != _bgOperation._operationStatus.CurrentOperation)
+                        _bgOperation._operationStatus = _bgOperation._operationStatus with { CurrentOperation = value };
+                }
+
+                public void Report(MessageCode value)
+                {
+                    if (_bgOperation._operationStatus.CurrentOperation.Length > 0 || _bgOperation._operationStatus.StatusDescription != value)
+                        _bgOperation._operationStatus = new(value, "");
+                }
+            }
         }
     }
 
@@ -156,8 +227,17 @@ namespace FsInfoCat.Services
     {
         private readonly Func<CancellationToken, Task> _asyncFunction;
 
-        internal QueuedBgOperation([DisallowNull] FSIOQueueService service, [DisallowNull] Func<CancellationToken, Task> asyncFunction)
-            : base(service)
+        [Obsolete]
+        internal QueuedBgOperation([DisallowNull] FSIOQueueService service, [DisallowNull] Func<CancellationToken, Task> asyncFunction) : this(service, asyncFunction, ActivityCode.CrawlingFileSystem) { }
+
+        internal QueuedBgOperation([DisallowNull] FSIOQueueService service, [DisallowNull] Func<IStatusReportable, CancellationToken, Task> asyncFunction, ActivityCode activity, MessageCode statusDescription = MessageCode.BackgroundJobPending)
+            : base(service, activity, statusDescription)
+        {
+            _asyncFunction = token => asyncFunction(Reportable, token);
+        }
+
+        internal QueuedBgOperation([DisallowNull] FSIOQueueService service, [DisallowNull] Func<CancellationToken, Task> asyncFunction, ActivityCode activity, MessageCode statusDescription = MessageCode.BackgroundJobPending)
+            : base(service, activity, statusDescription)
         {
             _asyncFunction = asyncFunction;
         }
@@ -177,10 +257,19 @@ namespace FsInfoCat.Services
 
         object IAsyncResult.AsyncState => (Task ?? throw new InvalidOperationException()).AsyncState;
 
-        internal QueuedBgOperation([DisallowNull] FSIOQueueService service, [DisallowNull] Func<CancellationToken, Task<TResult>> asyncFunction)
-            : base(service)
+        [Obsolete]
+        internal QueuedBgOperation([DisallowNull] FSIOQueueService service, [DisallowNull] Func<CancellationToken, Task<TResult>> asyncFunction) : this(service, asyncFunction, ActivityCode.CrawlingFileSystem) { }
+
+        internal QueuedBgOperation([DisallowNull] FSIOQueueService service, [DisallowNull] Func<CancellationToken, Task<TResult>> asyncFunction, ActivityCode activity, MessageCode statusDescription = MessageCode.BackgroundJobPending)
+            : base(service, activity, statusDescription)
         {
             _asyncFunction = asyncFunction;
+        }
+
+        internal QueuedBgOperation([DisallowNull] FSIOQueueService service, [DisallowNull] Func<IStatusReportable, CancellationToken, Task<TResult>> asyncFunction, ActivityCode activity, MessageCode statusDescription = MessageCode.BackgroundJobPending)
+            : base(service, activity, statusDescription)
+        {
+            _asyncFunction = token => asyncFunction(Reportable, token);
         }
 
         protected override Task<TResult> CreateCanceled(CancellationToken cancellationToken) => System.Threading.Tasks.Task.FromCanceled<TResult>(cancellationToken);

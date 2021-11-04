@@ -2078,4 +2078,40 @@
   <data name="ErrorMessage_InvalidYears" xml:space="preserve">
     <value>Invalid years value.</value>
   </data>
+  <data name="DisplayName_BackgroundJobCanceled" xml:space="preserve">
+    <value>Background job canceled.</value>
+  </data>
+  <data name="DisplayName_BackgroundJobCompleted" xml:space="preserve">
+    <value>Background job completed.</value>
+  </data>
+  <data name="DisplayName_BackgroundJobFailed" xml:space="preserve">
+    <value>Background job failed.</value>
+  </data>
+  <data name="DisplayName_BackgroundJobPending" xml:space="preserve">
+    <value>Background job pending.</value>
+  </data>
+  <data name="DisplayName_BackgroundJobStarted" xml:space="preserve">
+    <value>Background job started.</value>
+  </data>
+  <data name="DisplayName_Cancelling" xml:space="preserve">
+    <value>Cancelling</value>
+  </data>
+  <data name="DisplayName_CancellingBackgroundJob" xml:space="preserve">
+    <value>Cancelling background job.</value>
+  </data>
+  <data name="DisplayName_Crawling" xml:space="preserve">
+    <value>Crawling</value>
+  </data>
+  <data name="DisplayName_CrawlingFileSystem" xml:space="preserve">
+    <value>Crawling File System</value>
+  </data>
+  <data name="DisplayName_Failed" xml:space="preserve">
+    <value>Failed</value>
+  </data>
+  <data name="DisplayName_GettingDriveInfo" xml:space="preserve">
+    <value>Getting Drive Info</value>
+  </data>
+  <data name="DisplayName_Started" xml:space="preserve">
+    <value>Started</value>
+  </data>
 </root>
