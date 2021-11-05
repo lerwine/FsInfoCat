@@ -127,7 +127,7 @@ namespace FsInfoCat.ExpressionFilter
             if (ReferenceEquals(x, y))
                 return true;
             return Historical.Range.AreSame(x.CrawlEnd, y.CrawlEnd) && Scheduled.Range.AreSame(x.NextCrawlStart, y.NextCrawlStart) && DurationRange.AreSame(x.AverageDuration, y.AverageDuration) && DurationRange.AreSame(x.MaxDuration, y.MaxDuration) &&
-                x.HasCancel == y.HasCancel && x.HasFail == y.HasFail && x.AnyReachedItemLimit == y.AnyReachedItemLimit & x.AnySucceeded == y.AnySucceeded && x.AnyTimedOut == y.AnyTimedOut &&
+                x.HasCancel == y.HasCancel && x.HasFail == y.HasFail && x.AnyReachedItemLimit == y.AnyReachedItemLimit && x.AnySucceeded == y.AnySucceeded && x.AnyTimedOut == y.AnyTimedOut &&
                 StatusFilter.AreSame(x.Status, y.Status);
         }
 
