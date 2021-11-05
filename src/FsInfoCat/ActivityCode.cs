@@ -9,6 +9,12 @@ namespace FsInfoCat
         CrawlingFileSystem = 1,
 
         [Display(Name = nameof(Properties.Resources.DisplayName_GettingDriveInfo), ShortName = nameof(Properties.Resources.DisplayName_GettingDriveInfo), Description = nameof(Properties.Resources.DisplayName_GettingDriveInfo), ResourceType = typeof(Properties.Resources))]
-        GettingDriveInfo = 2
+        GettingDriveInfo = 2,
+        DeletingVolume = 3,
+        DeletingCrawlConfiguration = 4,
+        DeletingSubdirectory = 5,
+        DeletingFile = 6,
+        ImportingSubdirectory = 7,
+        SettingBranchIncomplete = 8
     }
 }

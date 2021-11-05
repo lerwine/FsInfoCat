@@ -24,7 +24,7 @@ namespace FsInfoCat.Local.Background
 
         internal Task<bool> Task => _workItem.Task;
 
-        object IAsyncResult.AsyncState => _workItem.AsyncState;
+        object IAsyncResult.AsyncState => ((IAsyncOperationInfo)_workItem).AsyncState;
 
         WaitHandle IAsyncResult.AsyncWaitHandle => _workItem.AsyncWaitHandle;
 
@@ -38,7 +38,7 @@ namespace FsInfoCat.Local.Background
             Target = target;
             _onReportProgress = onReportProgress;
             DoNotUseTransaction = doNotUseTransaction;
-            _workItem = fsIOQueueService.Enqueue(async cancellationToken => await DoWorkAsync(target, doNotUseTransaction, cancellationToken));
+            _workItem = fsIOQueueService.Enqueue(ActivityCode.DeletingCrawlConfiguration, async cancellationToken => await DoWorkAsync(target, doNotUseTransaction, cancellationToken));
         }
 
         private async Task<bool> DoWorkAsync([DisallowNull] ICrawlConfigurationRow target, bool doNotUseTransaction, CancellationToken cancellationToken)

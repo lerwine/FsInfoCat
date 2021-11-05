@@ -1,6 +1,6 @@
 using System;
 
-namespace FsInfoCat.Services
+namespace FsInfoCat
 {
     public interface IStatusReportable : IProgress<OperationStatus>, IProgress<string>, IProgress<MessageCode>
     {

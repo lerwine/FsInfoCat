@@ -1,15 +1,9 @@
-using System;
-
 namespace FsInfoCat.Local.Crawling
 {
-    public interface ICrawlActivityEventArgs
+    public interface ICrawlActivityEventArgs : IAsyncOperationInfo
     {
-        string Message { get; }
+        new ActivityCode Activity { get; }
 
-        StatusMessageLevel MessageLevel { get; }
-
-        Guid ConcurrencyId { get; }
-
-        AsyncJobStatus JobStatus { get; }
+        new MessageCode StatusDescription { get; }
     }
 }

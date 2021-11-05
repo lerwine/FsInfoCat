@@ -74,7 +74,7 @@ namespace FsInfoCat.Local.Crawling
                 finally { ActiveJob = crawlJob; }
             }
             finally { Monitor.Exit(_enqueued); }
-            Task reportCrawlStart = _crawlMessageBus.ReportAsync(new CrawlJobStartEventArgs(crawlJob, isFirstJob));
+            _crawlMessageBus.Report(new CrawlJobStartEventArgs(crawlJob, isFirstJob));
             if (isFirstJob)
                 _activeStateChangedEventListeners.RaiseProgressChangedAsync(true, CancellationToken.None);
         }
@@ -99,17 +99,18 @@ namespace FsInfoCat.Local.Crawling
             if (task.IsFaulted)
             {
                 Exception exception = (task.Exception.InnerExceptions.Count == 1) ? task.Exception.InnerException : task.Exception;
-                eventArgs = new CrawlJobEndEventArgs(crawlJob, isLastJob, CrawlTerminationReason.Aborted, string.IsNullOrWhiteSpace(exception.Message) ? exception.ToString() : exception.Message, StatusMessageLevel.Error);
+                // TODO: if (exception is AsyncOperationFailureException failureException)
+                eventArgs = new CrawlJobEndEventArgs(crawlJob, isLastJob, CrawlTerminationReason.Aborted);
             }
             else
                 eventArgs = (task.IsCanceled ? CrawlTerminationReason.Aborted : task.Result) switch
                 {
-                    CrawlTerminationReason.ItemLimitReached => new CrawlJobEndEventArgs(crawlJob, isLastJob, CrawlTerminationReason.ItemLimitReached, "Item limit reached before crawl completion.", StatusMessageLevel.Warning),
-                    CrawlTerminationReason.TimeLimitReached => new CrawlJobEndEventArgs(crawlJob, isLastJob, CrawlTerminationReason.TimeLimitReached, "Time limit reached before crawl completion.", StatusMessageLevel.Warning),
-                    CrawlTerminationReason.Completed => new CrawlJobEndEventArgs(crawlJob, isLastJob, CrawlTerminationReason.Completed, "Crawl job completed successfully.", StatusMessageLevel.Information),
-                    _ => new CrawlJobEndEventArgs(crawlJob, isLastJob, CrawlTerminationReason.Aborted, "Crawl job canceled.", StatusMessageLevel.Warning),
+                    CrawlTerminationReason.ItemLimitReached => new CrawlJobEndEventArgs(crawlJob, isLastJob, CrawlTerminationReason.ItemLimitReached),
+                    CrawlTerminationReason.TimeLimitReached => new CrawlJobEndEventArgs(crawlJob, isLastJob, CrawlTerminationReason.TimeLimitReached),
+                    CrawlTerminationReason.Completed => new CrawlJobEndEventArgs(crawlJob, isLastJob, CrawlTerminationReason.Completed),
+                    _ => new CrawlJobEndEventArgs(crawlJob, isLastJob, CrawlTerminationReason.Aborted),
                 };
-            _crawlMessageBus.ReportAsync(eventArgs);
+            _crawlMessageBus.Report(eventArgs);
             if (isLastJob)
                 _activeStateChangedEventListeners.RaiseProgressChangedAsync(false, CancellationToken.None);
         }

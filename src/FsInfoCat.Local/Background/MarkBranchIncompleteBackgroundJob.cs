@@ -25,7 +25,7 @@ namespace FsInfoCat.Local.Background
 
         internal Task<bool> Task => _workItem.Task;
 
-        object IAsyncResult.AsyncState => _workItem.AsyncState;
+        object IAsyncResult.AsyncState => ((IAsyncOperationInfo)_workItem).AsyncState;
 
         WaitHandle IAsyncResult.AsyncWaitHandle => _workItem.AsyncWaitHandle;
 
@@ -39,7 +39,7 @@ namespace FsInfoCat.Local.Background
             Target = subdirectory;
             _onReportProgress = onReportProgress;
             DoNotUseTransaction = doNotUseTransaction;
-            _workItem = fsIOQueueService.Enqueue(async cancellationToken => await DoWorkAsync(subdirectory, doNotUseTransaction, cancellationToken));
+            _workItem = fsIOQueueService.Enqueue(ActivityCode.SettingBranchIncomplete, async cancellationToken => await DoWorkAsync(subdirectory, doNotUseTransaction, cancellationToken));
         }
 
         private async Task<bool> DoWorkAsync([DisallowNull] Subdirectory subdirectory, bool doNotUseTransaction, CancellationToken cancellationToken)

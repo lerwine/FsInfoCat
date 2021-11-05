@@ -1,9 +1,11 @@
-﻿using System;
+using System;
 
 namespace FsInfoCat.Services
 {
     public class BgOperationEventArgs : EventArgs, IBgOperationEventArgs
     {
+        public Guid ConcurrencyId { get; }
+
         /// <summary>
         /// Gets the status of the background operation.
         /// </summary>
@@ -35,7 +37,7 @@ namespace FsInfoCat.Services
 
         MessageCode? IAsyncOperationInfo.StatusDescription => StatusDescription;
 
-        public BgOperationEventArgs(DateTime started, TimeSpan elapsed, AsyncJobStatus status, ActivityCode activity, MessageCode statusDescription, string currentOperation = null, object asyncState = null)
-            => (Started, Elapsed, Status, Activity, StatusDescription, CurrentOperation, AsyncState) = (started, elapsed, status, activity, statusDescription, currentOperation.EmptyIfNullOrWhiteSpace(), asyncState);
+        public BgOperationEventArgs(Guid concurrencyId, DateTime started, TimeSpan elapsed, AsyncJobStatus status, ActivityCode activity, MessageCode statusDescription, string currentOperation = null, object asyncState = null)
+            => (ConcurrencyId, Started, Elapsed, Status, Activity, StatusDescription, CurrentOperation, AsyncState) = (concurrencyId, started, elapsed, status, activity, statusDescription, currentOperation.EmptyIfNullOrWhiteSpace(), asyncState);
     }
 }

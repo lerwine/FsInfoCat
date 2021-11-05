@@ -1,10 +1,5 @@
-using FsInfoCat.Background;
-using FsInfoCat.Local.Background;
 using FsInfoCat.Services;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using System;
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
@@ -31,7 +26,9 @@ namespace FsInfoCat.Local.Crawling
 
         public TimeSpan Elapsed => JobResult.Elapsed;
 
-        object IAsyncResult.AsyncState => JobResult.AsyncState;
+        public MessageCode StatusDescription { get; private set; }
+
+        object IAsyncResult.AsyncState => ((IAsyncOperationInfo)JobResult).AsyncState;
 
         WaitHandle IAsyncResult.AsyncWaitHandle => ((IAsyncResult)Task).AsyncWaitHandle;
 
@@ -39,11 +36,21 @@ namespace FsInfoCat.Local.Crawling
 
         bool IAsyncResult.IsCompleted => ((IAsyncResult)Task).IsCompleted;
 
+        ActivityCode IBgOperationEventArgs.Activity => ActivityCode.CrawlingFileSystem;
+
+        ActivityCode? IAsyncOperationInfo.Activity => ActivityCode.CrawlingFileSystem;
+
+        MessageCode? IAsyncOperationInfo.StatusDescription => throw new NotImplementedException();
+
+        public string CurrentOperation => throw new NotImplementedException();
+
+        public object AsyncState => throw new NotImplementedException();
+
         internal CrawlJob([DisallowNull] IFSIOQueueService fsIOQueueService, [DisallowNull] ILocalCrawlConfiguration crawlConfiguration, [DisallowNull] ICrawlMessageBus crawlMessageBus, [DisallowNull] IFileSystemDetailService fileSystemDetailService, DateTime? stopAt,
             [DisallowNull] Action<CrawlJob> onStarted)
         {
             _worker = new(crawlConfiguration, crawlMessageBus, fileSystemDetailService, ConcurrencyId, stopAt);
-            JobResult = fsIOQueueService.Enqueue(cancellationToken => DoWorkAsync(onStarted.Invoke, cancellationToken));
+            JobResult = fsIOQueueService.Enqueue(ActivityCode.CrawlingFileSystem, cancellationToken => DoWorkAsync(onStarted.Invoke, cancellationToken));
             Task = JobResult.Task.ContinueWith(task =>
             {
                 if (task.IsCanceled || task.IsFaulted)

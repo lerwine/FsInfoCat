@@ -1,4 +1,3 @@
-using System;
 using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat.Local.Crawling
@@ -11,10 +10,24 @@ namespace FsInfoCat.Local.Crawling
 
         public bool IsLastJob { get; }
 
-        public CrawlJobEndEventArgs([DisallowNull] ICrawlJob crawlJob, bool isLastJob, CrawlTerminationReason terminationReason, string message, StatusMessageLevel level)
-            : base(message, level, AsyncJobStatus.Running, (crawlJob ?? throw new ArgumentNullException(nameof(crawlJob))).ConcurrencyId)
+        public CrawlJobEndEventArgs([DisallowNull] ICrawlJob crawlJob, bool isLastJob, CrawlTerminationReason terminationReason)
+            : base(crawlJob, (terminationReason == CrawlTerminationReason.Aborted) ? ((crawlJob.Status == AsyncJobStatus.Faulted) ? AsyncJobStatus.Faulted : AsyncJobStatus.Canceled) : AsyncJobStatus.Succeeded, terminationReason switch
+            {
+                CrawlTerminationReason.ItemLimitReached => MessageCode.ItemLimitReached,
+                CrawlTerminationReason.TimeLimitReached => MessageCode.TimeLimitReached,
+                CrawlTerminationReason.Aborted => (crawlJob.Status == AsyncJobStatus.Faulted) ? MessageCode.BackgroundJobFaulted : MessageCode.BackgroundJobCanceled,
+                _ => crawlJob.StatusDescription,
+            }, (crawlJob.Status == AsyncJobStatus.Faulted) ? crawlJob.CurrentOperation : null)
         {
             TerminationReason = terminationReason;
+            CrawlJob = crawlJob;
+            IsLastJob = isLastJob;
+        }
+
+        public CrawlJobEndEventArgs([DisallowNull] ICrawlJob crawlJob, bool isLastJob, AsyncOperationFailureException exception)
+            : base(crawlJob, AsyncJobStatus.Faulted, ((IAsyncOperationInfo)exception).StatusDescription, exception.AsyncOperation.CurrentOperation)
+        {
+            TerminationReason = CrawlTerminationReason.Aborted;
             CrawlJob = crawlJob;
             IsLastJob = isLastJob;
         }

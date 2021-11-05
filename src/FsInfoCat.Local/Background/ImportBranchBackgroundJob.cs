@@ -24,7 +24,7 @@ namespace FsInfoCat.Local.Background
 
         internal Task<Subdirectory> Task => _workItem.Task;
 
-        object IAsyncResult.AsyncState => _workItem.AsyncState;
+        object IAsyncResult.AsyncState => ((IAsyncOperationInfo)_workItem).AsyncState;
 
         WaitHandle IAsyncResult.AsyncWaitHandle => _workItem.AsyncWaitHandle;
 
@@ -39,7 +39,7 @@ namespace FsInfoCat.Local.Background
             MarkNewAsCompleted = markNewAsCompleted;
             Source = source;
             _onReportProgress = onReportProgress;
-            _workItem = fsIOQueueService.Enqueue(async cancellationToken =>
+            _workItem = fsIOQueueService.Enqueue(ActivityCode.ImportingSubdirectory, async cancellationToken =>
             {
                 if (!source.Exists)
                     throw new DirectoryNotFoundException();

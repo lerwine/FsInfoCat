@@ -1663,6 +1663,15 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Crawling Subdirectory.
+        /// </summary>
+        public static string DisplayName_CrawlingSubdirectory {
+            get {
+                return ResourceManager.GetString("DisplayName_CrawlingSubdirectory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Crawl Result Logs - All.
         /// </summary>
         public static string DisplayName_CrawlLog_All {
@@ -3094,6 +3103,15 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Item limit reached..
+        /// </summary>
+        public static string DisplayName_ItemLimitReached {
+            get {
+                return ResourceManager.GetString("DisplayName_ItemLimitReached", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Item Type.
         /// </summary>
         public static string DisplayName_ItemType {
@@ -3807,9 +3825,9 @@ namespace FsInfoCat.Properties {
         /// <summary>
         ///   Looks up a localized string similar to .
         /// </summary>
-        public static string DisplayName_PersonalTagDefinition_InactiveOnlly {
+        public static string DisplayName_PersonalTagDefinition_InactiveOnly {
             get {
-                return ResourceManager.GetString("DisplayName_PersonalTagDefinition_InactiveOnlly", resourceCulture);
+                return ResourceManager.GetString("DisplayName_PersonalTagDefinition_InactiveOnly", resourceCulture);
             }
         }
         
@@ -4080,6 +4098,15 @@ namespace FsInfoCat.Properties {
         public static string DisplayName_Rating {
             get {
                 return ResourceManager.GetString("DisplayName_Rating", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reading File Information.
+        /// </summary>
+        public static string DisplayName_ReadingFileInformation {
+            get {
+                return ResourceManager.GetString("DisplayName_ReadingFileInformation", resourceCulture);
             }
         }
         
@@ -4392,9 +4419,9 @@ namespace FsInfoCat.Properties {
         /// <summary>
         ///   Looks up a localized string similar to .
         /// </summary>
-        public static string DisplayName_SharedTagDefinition_InactiveOnlly {
+        public static string DisplayName_SharedTagDefinition_InactiveOnly {
             get {
-                return ResourceManager.GetString("DisplayName_SharedTagDefinition_InactiveOnlly", resourceCulture);
+                return ResourceManager.GetString("DisplayName_SharedTagDefinition_InactiveOnly", resourceCulture);
             }
         }
         
@@ -4764,6 +4791,15 @@ namespace FsInfoCat.Properties {
         public static string DisplayName_TaskStatus_Open {
             get {
                 return ResourceManager.GetString("DisplayName_TaskStatus_Open", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Time limit reached..
+        /// </summary>
+        public static string DisplayName_TimeLimitReached {
+            get {
+                return ResourceManager.GetString("DisplayName_TimeLimitReached", resourceCulture);
             }
         }
         

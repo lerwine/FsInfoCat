@@ -1970,7 +1970,7 @@
   <data name="DisplayName_PersonalTagDefinition_All" xml:space="preserve">
     <value />
   </data>
-  <data name="DisplayName_PersonalTagDefinition_InactiveOnlly" xml:space="preserve">
+  <data name="DisplayName_PersonalTagDefinition_InactiveOnly" xml:space="preserve">
     <value />
   </data>
   <data name="DisplayName_PhotoPropertyGroups_All" xml:space="preserve">
@@ -2003,7 +2003,7 @@
   <data name="DisplayName_SharedTagDefinition_All" xml:space="preserve">
     <value />
   </data>
-  <data name="DisplayName_SharedTagDefinition_InactiveOnlly" xml:space="preserve">
+  <data name="DisplayName_SharedTagDefinition_InactiveOnly" xml:space="preserve">
     <value />
   </data>
   <data name="DisplayName_SummaryPropertyGroups_All" xml:space="preserve">
@@ -2113,5 +2113,17 @@
   </data>
   <data name="DisplayName_Started" xml:space="preserve">
     <value>Started</value>
+  </data>
+  <data name="DisplayName_CrawlingSubdirectory" xml:space="preserve">
+    <value>Crawling Subdirectory</value>
+  </data>
+  <data name="DisplayName_ItemLimitReached" xml:space="preserve">
+    <value>Item limit reached.</value>
+  </data>
+  <data name="DisplayName_ReadingFileInformation" xml:space="preserve">
+    <value>Reading File Information</value>
+  </data>
+  <data name="DisplayName_TimeLimitReached" xml:space="preserve">
+    <value>Time limit reached.</value>
   </data>
 </root>

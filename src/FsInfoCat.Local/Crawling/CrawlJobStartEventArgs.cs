@@ -1,4 +1,3 @@
-using System;
 using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat.Local.Crawling
@@ -9,8 +8,7 @@ namespace FsInfoCat.Local.Crawling
 
         public bool IsFirstJob { get; }
 
-        public CrawlJobStartEventArgs([DisallowNull] ICrawlJob crawlJob, bool isFirstJob, string message = null, StatusMessageLevel level = StatusMessageLevel.Information)
-            : base(message, level, AsyncJobStatus.Running, (crawlJob ?? throw new ArgumentNullException(nameof(crawlJob))).ConcurrencyId)
+        public CrawlJobStartEventArgs([DisallowNull] ICrawlJob crawlJob, bool isFirstJob) : base(crawlJob, AsyncJobStatus.Running)
         {
             CrawlJob = crawlJob;
             IsFirstJob = isFirstJob;

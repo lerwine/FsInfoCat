@@ -61,92 +61,101 @@ namespace FsInfoCat.Local.Crawling
 
         public bool RemoveSubdirectoryCrawlEventListener(IProgress<DirectoryCrawlEventArgs> listener, bool includesErrorEvents) => (includesErrorEvents ? _anyDirectoryEventListeners : _directoryEventListeners).Remove(listener);
 
-        private async Task ReportCrawlActivityEventAsync([DisallowNull] ICrawlActivityEventArgs eventArgs, CancellationToken cancellationToken)
+        private void ReportCrawlActivityEvent([DisallowNull] ICrawlActivityEventArgs eventArgs)
         {
-            _logger.LogDebug("{Method}({eventArgs}, {cancellationToken})", nameof(ReportCrawlActivityEventAsync), eventArgs, cancellationToken);
-            await _crawlActivityEventListeners.RaiseProgressChangedAsync(eventArgs, cancellationToken);
+            _logger.LogDebug("{Method}({eventArgs})", nameof(ReportCrawlActivityEvent), eventArgs);
+            _crawlActivityEventListeners.RaiseProgressChangedAsync(eventArgs);
         }
 
-        private async Task ReportCrawlErrorEventAsync([DisallowNull] ICrawlErrorEventArgs eventArgs, CancellationToken cancellationToken)
+        private void ReportCrawlErrorEvent([DisallowNull] ICrawlErrorEventArgs eventArgs)
         {
-            _logger.LogDebug("{Method}({eventArgs}, {cancellationToken})", nameof(ReportCrawlErrorEventAsync), eventArgs, cancellationToken);
-            await Task.WhenAll(_crawlErrorEventListeners.RaiseProgressChangedAsync(eventArgs, cancellationToken), ReportCrawlActivityEventAsync(eventArgs, cancellationToken));
+            _logger.LogDebug("{Method}({eventArgs})", nameof(ReportCrawlErrorEvent), eventArgs);
+            _crawlErrorEventListeners.RaiseProgressChangedAsync(eventArgs);
+            ReportCrawlActivityEvent(eventArgs);
         }
 
-        private async Task ReportAnyFsItemEventAsync([DisallowNull] IFsItemCrawlEventArgs eventArgs, CancellationToken cancellationToken)
+        private void ReportAnyFsItemEvent([DisallowNull] IFsItemCrawlEventArgs eventArgs)
         {
-            _logger.LogDebug("{Method}({eventArgs}, {cancellationToken})", nameof(ReportAnyFsItemEventAsync), eventArgs, cancellationToken);
-            await Task.WhenAll(_anyFsItemEventListeners.RaiseProgressChangedAsync(eventArgs, cancellationToken), ReportCrawlActivityEventAsync(eventArgs, cancellationToken));
+            _logger.LogDebug("{Method}({eventArgs})", nameof(ReportAnyFsItemEvent), eventArgs);
+            _anyFsItemEventListeners.RaiseProgressChangedAsync(eventArgs);
+            ReportCrawlActivityEvent(eventArgs);
         }
 
-        private async Task ReportFsItemEventAsync([DisallowNull] IFsItemCrawlEventArgs eventArgs, CancellationToken cancellationToken)
+        private void ReportFsItemEvent([DisallowNull] IFsItemCrawlEventArgs eventArgs)
         {
-            _logger.LogDebug("{Method}({eventArgs}, {cancellationToken})", nameof(ReportFsItemEventAsync), eventArgs, cancellationToken);
-            await Task.WhenAll(_fsItemEventListeners.RaiseProgressChangedAsync(eventArgs, cancellationToken), ReportAnyFsItemEventAsync(eventArgs, cancellationToken));
+            _logger.LogDebug("{Method}({eventArgs})", nameof(ReportFsItemEvent), eventArgs);
+            _fsItemEventListeners.RaiseProgressChangedAsync(eventArgs);
+            ReportAnyFsItemEvent(eventArgs);
         }
 
-        private async Task ReportAnyAsync([DisallowNull] DirectoryCrawlEventArgs eventArgs, CancellationToken cancellationToken)
+        private void ReportAny([DisallowNull] DirectoryCrawlEventArgs eventArgs)
         {
-            _logger.LogDebug("{Method}({Type} {eventArgs}, {cancellationToken})", nameof(ReportAnyAsync), nameof(DirectoryCrawlEventArgs), eventArgs, cancellationToken);
-            await Task.WhenAll(_anyDirectoryEventListeners.RaiseProgressChangedAsync(eventArgs, cancellationToken), ReportFsItemEventAsync(eventArgs, cancellationToken));
+            _logger.LogDebug("{Method}({Type} {eventArgs})", nameof(ReportAny), nameof(DirectoryCrawlEventArgs), eventArgs);
+            _anyDirectoryEventListeners.RaiseProgressChangedAsync(eventArgs);
+            ReportFsItemEvent(eventArgs);
         }
 
-        private async Task ReportAnyAsync([DisallowNull] FileCrawlEventArgs eventArgs, CancellationToken cancellationToken)
+        private void ReportAny([DisallowNull] FileCrawlEventArgs eventArgs)
         {
-            _logger.LogDebug("{Method}({Type} {eventArgs}, {cancellationToken})", nameof(ReportAnyAsync), nameof(FileCrawlEventArgs), eventArgs, cancellationToken);
-            await Task.WhenAll(_anyFileCrawlEventListeners.RaiseProgressChangedAsync(eventArgs, cancellationToken), ReportFsItemEventAsync(eventArgs, cancellationToken));
+            _logger.LogDebug("{Method}({Type} {eventArgs})", nameof(ReportAny), nameof(FileCrawlEventArgs), eventArgs);
+            _anyFileCrawlEventListeners.RaiseProgressChangedAsync(eventArgs);
+            ReportFsItemEvent(eventArgs);
         }
 
-        public async Task ReportAsync([DisallowNull] CrawlJobStartEventArgs eventArgs, CancellationToken cancellationToken)
+        public void Report([DisallowNull] CrawlJobStartEventArgs eventArgs)
         {
-            _logger.LogDebug("{Method}({Type} {eventArgs}, {cancellationToken})", nameof(ReportAsync), nameof(CrawlJobStartEventArgs), eventArgs, cancellationToken);
-            await Task.WhenAll(_crawlManagerEventListeners.RaiseProgressChangedAsync(eventArgs, cancellationToken), ReportCrawlActivityEventAsync(eventArgs, cancellationToken));
+            _logger.LogDebug("{Method}({Type} {eventArgs})", nameof(Report), nameof(CrawlJobStartEventArgs), eventArgs);
+            _crawlManagerEventListeners.RaiseProgressChangedAsync(eventArgs);
+            ReportCrawlActivityEvent(eventArgs);
         }
 
-        public async Task ReportAsync([DisallowNull] CrawlJobEndEventArgs eventArgs, CancellationToken cancellationToken)
+        public void Report([DisallowNull] CrawlJobEndEventArgs eventArgs)
         {
-            _logger.LogDebug("{Method}({Type} {eventArgs}, {cancellationToken})", nameof(ReportAsync), nameof(CrawlJobEndEventArgs), eventArgs, cancellationToken);
-            await Task.WhenAll(_crawlManagerEventListeners.RaiseProgressChangedAsync(eventArgs, cancellationToken), ReportCrawlActivityEventAsync(eventArgs, cancellationToken));
+            _logger.LogDebug("{Method}({Type} {eventArgs})", nameof(Report), nameof(CrawlJobEndEventArgs), eventArgs);
+            _crawlManagerEventListeners.RaiseProgressChangedAsync(eventArgs);
+            ReportCrawlActivityEvent(eventArgs);
         }
 
-        public async Task ReportAsync([DisallowNull] DirectoryCrawlStartEventArgs eventArgs, CancellationToken cancellationToken)
+        public void Report([DisallowNull] DirectoryCrawlStartEventArgs eventArgs)
         {
-            _logger.LogDebug("{Method}({Type} {eventArgs}, {cancellationToken})", nameof(ReportAsync), nameof(DirectoryCrawlStartEventArgs), eventArgs, cancellationToken);
-            await Task.WhenAll(_directoryEventListeners.RaiseProgressChangedAsync(eventArgs, cancellationToken), ReportAnyAsync(eventArgs, cancellationToken));
+            _logger.LogDebug("{Method}({Type} {eventArgs})", nameof(Report), nameof(DirectoryCrawlStartEventArgs), eventArgs);
+            _directoryEventListeners.RaiseProgressChangedAsync(eventArgs);
+            ReportAny(eventArgs);
         }
 
-        public async Task ReportAsync([DisallowNull] DirectoryCrawlEndEventArgs eventArgs, CancellationToken cancellationToken)
+        public void Report([DisallowNull] DirectoryCrawlEndEventArgs eventArgs)
         {
-            _logger.LogDebug("{Method}({Type} {eventArgs}, {cancellationToken})", nameof(ReportAsync), nameof(DirectoryCrawlEndEventArgs), eventArgs, cancellationToken);
-            await Task.WhenAll(_directoryEventListeners.RaiseProgressChangedAsync(eventArgs, cancellationToken), ReportAnyAsync(eventArgs, cancellationToken));
+            _logger.LogDebug("{Method}({Type} {eventArgs})", nameof(Report), nameof(DirectoryCrawlEndEventArgs), eventArgs);
+            _directoryEventListeners.RaiseProgressChangedAsync(eventArgs);
+            ReportAny(eventArgs);
         }
 
-        public async Task ReportAsync([DisallowNull] DirectoryCrawlErrorEventArgs eventArgs, CancellationToken cancellationToken)
+        public void Report([DisallowNull] DirectoryCrawlErrorEventArgs eventArgs)
         {
-            _logger.LogDebug("{Method}({Type} {eventArgs}, {cancellationToken})", nameof(ReportAsync), nameof(DirectoryCrawlErrorEventArgs), eventArgs, cancellationToken);
-            await Task.WhenAll(ReportCrawlErrorEventAsync(eventArgs, cancellationToken), ReportAnyAsync(eventArgs, cancellationToken));
+            _logger.LogDebug("{Method}({Type} {eventArgs})", nameof(Report), nameof(DirectoryCrawlErrorEventArgs), eventArgs);
+            ReportCrawlErrorEvent(eventArgs);
+            ReportAny(eventArgs);
         }
 
-        public async Task ReportAsync([DisallowNull] FileCrawlStartEventArgs eventArgs, CancellationToken cancellationToken)
+        public void Report([DisallowNull] FileCrawlStartEventArgs eventArgs)
         {
-            _logger.LogDebug("{Method}({Type} {eventArgs}, {cancellationToken})", nameof(ReportAsync), nameof(FileCrawlStartEventArgs), eventArgs, cancellationToken);
-            await Task.WhenAll(_fileCrawlEventListeners.RaiseProgressChangedAsync(eventArgs, cancellationToken), ReportAnyAsync(eventArgs, cancellationToken));
+            _logger.LogDebug("{Method}({Type} {eventArgs})", nameof(Report), nameof(FileCrawlStartEventArgs), eventArgs);
+            _fileCrawlEventListeners.RaiseProgressChangedAsync(eventArgs);
+            ReportAny(eventArgs);
         }
 
-        public async Task ReportAsync([DisallowNull] FileCrawlEndEventArgs eventArgs, CancellationToken cancellationToken)
+        public void Report([DisallowNull] FileCrawlEndEventArgs eventArgs)
         {
-            _logger.LogDebug("{Method}({Type} {eventArgs}, {cancellationToken})", nameof(ReportAsync), nameof(FileCrawlEndEventArgs), eventArgs, cancellationToken);
-            await Task.WhenAll(_fileCrawlEventListeners.RaiseProgressChangedAsync(eventArgs, cancellationToken), ReportAnyAsync(eventArgs, cancellationToken));
+            _logger.LogDebug("{Method}({Type} {eventArgs})", nameof(Report), nameof(FileCrawlEndEventArgs), eventArgs);
+            _fileCrawlEventListeners.RaiseProgressChangedAsync(eventArgs);
+            ReportAny(eventArgs);
         }
 
-        public async Task ReportAsync([DisallowNull] FileCrawlErrorEventArgs eventArgs, CancellationToken cancellationToken)
+        public void Report([DisallowNull] FileCrawlErrorEventArgs eventArgs)
         {
-            _logger.LogDebug("{Method}({Type} {eventArgs}, {cancellationToken})", nameof(ReportAsync), nameof(FileCrawlErrorEventArgs), eventArgs, cancellationToken);
-            await Task.WhenAll(ReportCrawlErrorEventAsync(eventArgs, cancellationToken), ReportAnyAsync(eventArgs, cancellationToken));
+            _logger.LogDebug("{Method}({Type} {eventArgs})", nameof(Report), nameof(FileCrawlErrorEventArgs), eventArgs);
+            ReportCrawlErrorEvent(eventArgs);
+            ReportAny(eventArgs);
         }
-
-        public Task ReportAsync([DisallowNull] CrawlJobStartEventArgs eventArgs) => ReportAsync(eventArgs, CancellationToken.None);
-
-        public Task ReportAsync([DisallowNull] CrawlJobEndEventArgs eventArgs) => ReportAsync(eventArgs, CancellationToken.None);
     }
 }

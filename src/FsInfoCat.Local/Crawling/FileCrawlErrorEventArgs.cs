@@ -7,12 +7,11 @@ namespace FsInfoCat.Local.Crawling
     {
         public Exception Exception { get; }
 
-        public FileCrawlErrorEventArgs([DisallowNull] Exception exception, [DisallowNull] FileCrawlEventArgs args, string message = null, StatusMessageLevel level = StatusMessageLevel.Error, AsyncJobStatus status = AsyncJobStatus.Faulted)
-            : base(args, string.IsNullOrWhiteSpace(message) ? (string.IsNullOrWhiteSpace(exception.Message) ? exception.ToString() : exception.Message) : message, level, status)
+        public FileCrawlErrorEventArgs([DisallowNull] Exception exception, [DisallowNull] ICrawlJob source, [DisallowNull] ICurrentFile target, MessageCode statusMessage)
+            : base(source, target, statusMessage)
         {
             Exception = exception ?? throw new ArgumentNullException(nameof(exception));
         }
-
         public override string ToString() => $@"{base.ToString()}.Exception = {ExtensionMethods.ToPseudoCsText(Exception).AsIndented()}";
     }
 }

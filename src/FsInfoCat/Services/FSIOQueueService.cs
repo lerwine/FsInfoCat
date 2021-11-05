@@ -36,9 +36,9 @@ namespace FsInfoCat.Services
             services.AddHostedService<IFSIOQueueService>(serviceProvider => new FSIOQueueService(serviceProvider.GetRequiredService<ILogger<FSIOQueueService>>()));
         }
 
-        public IQueuedBgOperation Enqueue([DisallowNull] Func<CancellationToken, Task> asyncFunction) => new QueuedBgOperation(this, asyncFunction);
+        public IQueuedBgOperation Enqueue(ActivityCode activity, [DisallowNull] Func<CancellationToken, Task> asyncFunction) => new QueuedBgOperation(this, asyncFunction, activity);
 
-        public IQueuedBgOperation<TResult> Enqueue<TResult>([DisallowNull] Func<CancellationToken, Task<TResult>> asyncFunction) => new Services.QueuedBgOperation<TResult>(this, asyncFunction);
+        public IQueuedBgOperation<TResult> Enqueue<TResult>(ActivityCode activity, [DisallowNull] Func<CancellationToken, Task<TResult>> asyncFunction) => new Services.QueuedBgOperation<TResult>(this, asyncFunction, activity);
 
         public IEnumerator<IQueuedBgOperation> GetEnumerator() => _queue.Select(t => t.Target).GetEnumerator();
 

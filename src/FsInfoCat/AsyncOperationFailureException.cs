@@ -23,6 +23,8 @@ namespace FsInfoCat
 
         object IAsyncOperationInfo.AsyncState => AsyncOperation?.AsyncState;
 
+        Guid IAsyncOperationInfo.ConcurrencyId => AsyncOperation?.ConcurrencyId ?? Guid.Empty;
+
         public AsyncOperationFailureException() { }
 
         public AsyncOperationFailureException(string message, string userMessage = null, IAsyncOperationInfo asyncOp = null) : base(message)

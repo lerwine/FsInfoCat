@@ -1,7 +1,11 @@
-﻿namespace FsInfoCat
+using System;
+
+namespace FsInfoCat
 {
     public interface IAsyncOperationInfo
     {
+        Guid ConcurrencyId { get; }
+
         /// <summary>
         /// Gets the status of the background operation.
         /// </summary>

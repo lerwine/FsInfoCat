@@ -1,14 +1,14 @@
-﻿using System.IO;
+using System.IO;
 
 namespace FsInfoCat.Local.Crawling
 {
     partial class CrawlWorker
     {
-        record CurrentDirectory : ICurrentItem
+        record CurrentDirectory : ICurrentDirectory
         {
-            internal DirectoryInfo Target { get; init; }
+            public DirectoryInfo Target { get; init; }
 
-            internal Subdirectory Entity { get; init; }
+            public Subdirectory Entity { get; init; }
 
             internal CurrentDirectory Parent { get; init; }
 

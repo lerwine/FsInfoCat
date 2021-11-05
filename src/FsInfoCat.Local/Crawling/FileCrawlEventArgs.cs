@@ -21,42 +21,12 @@ namespace FsInfoCat.Local.Crawling
 
         FileSystemInfo ICurrentItem.Target => Target;
 
-        [Obsolete("Use constructor without full name")]
-        protected FileCrawlEventArgs([DisallowNull] FileInfo target, ILocalFile entity, [DisallowNull] string fullName, string message, Guid concurrencyId,
-            StatusMessageLevel level = StatusMessageLevel.Information) : base(message, StatusMessageLevel.Information, AsyncJobStatus.Running, concurrencyId)
+        protected FileCrawlEventArgs([DisallowNull] ICrawlJob source, [DisallowNull] ICurrentFile target, MessageCode? statusDescription = null)
+            : base((source ?? throw new ArgumentNullException(nameof(source))).ConcurrencyId, source.Status,
+                  source.Activity, statusDescription ?? source.StatusDescription, target.GetRelativeParentPath(), ((IAsyncOperationInfo)source).AsyncState)
         {
-            Target = target ?? throw new ArgumentNullException(nameof(target));
-            Entity = entity;
-        }
-
-        protected FileCrawlEventArgs([DisallowNull] FileInfo target, ILocalFile entity, [DisallowNull] DirectoryCrawlEventArgs parent, string message,
-            StatusMessageLevel level, AsyncJobStatus status) : base(message, level, status, (parent ?? throw new ArgumentNullException(nameof(parent))).ConcurrencyId)
-        {
-            Target = target ?? throw new ArgumentNullException(nameof(target));
-            Parent = parent ?? throw new ArgumentNullException(nameof(parent));
-            Entity = entity;
-        }
-
-        [Obsolete("Use constructor without full name")]
-        protected FileCrawlEventArgs([DisallowNull] ILocalFile target,  [DisallowNull] string fullName, string message, Guid concurrencyId,
-            StatusMessageLevel level = StatusMessageLevel.Information) : base(message, StatusMessageLevel.Information, AsyncJobStatus.Running, concurrencyId)
-        {
-            Entity = target ?? throw new ArgumentNullException(nameof(target));
-        }
-
-        protected FileCrawlEventArgs([DisallowNull] ILocalFile entity, [DisallowNull] DirectoryCrawlEventArgs parent, string message,
-            StatusMessageLevel level, AsyncJobStatus status) : base(message, level, status, (parent ?? throw new ArgumentNullException(nameof(parent))).ConcurrencyId)
-        {
-            Entity = entity ?? throw new ArgumentNullException(nameof(entity));
-            Parent = parent ?? throw new ArgumentNullException(nameof(parent));
-        }
-
-        protected FileCrawlEventArgs([DisallowNull] FileCrawlEventArgs args, string message, StatusMessageLevel level, AsyncJobStatus status)
-            : base(message, level, status, (args ?? throw new ArgumentNullException(nameof(args))).ConcurrencyId)
-        {
-            Entity = args.Entity;
-            Target = args.Target;
-            Parent = args.Parent;
+            Target = (target ?? throw new ArgumentNullException(nameof(target))).Target;
+            Entity = target.Entity;
         }
 
         public string GetFullName()
@@ -90,27 +60,5 @@ namespace FsInfoCat.Local.Crawling
   Target = {ExtensionMethods.ToPseudoCsText(Target).AsIndented()},
   Parent = {ExtensionMethods.ToPseudoCsText(Parent).AsIndented()}
 }}";
-    }
-
-    public class FileCrawlStartEventArgs : FileCrawlEventArgs
-    {
-        [Obsolete("Use constructor without full name")]
-        public FileCrawlStartEventArgs([DisallowNull] ILocalFile entity, [DisallowNull] string fullName, string message, Guid concurrencyId,
-            StatusMessageLevel level = StatusMessageLevel.Information) : base(entity, fullName, message, concurrencyId, level) { }
-
-        public FileCrawlStartEventArgs([DisallowNull] FileInfo target, ILocalFile entity, [DisallowNull] DirectoryCrawlEventArgs parent, string message,
-            StatusMessageLevel level = StatusMessageLevel.Information, AsyncJobStatus status = AsyncJobStatus.Running) : base(target, entity, parent, message, level, status) { }
-
-        public FileCrawlStartEventArgs([DisallowNull] ILocalFile entity, [DisallowNull] DirectoryCrawlEventArgs parent, string message, StatusMessageLevel level = StatusMessageLevel.Information, AsyncJobStatus status = AsyncJobStatus.Running)
-            : base(entity, parent, message, level, status) { }
-    }
-
-    public class FileCrawlEndEventArgs : FileCrawlEventArgs
-    {
-        [Obsolete("Use constructor without full name")]
-        public FileCrawlEndEventArgs([DisallowNull] ILocalFile target, [DisallowNull] string fullName, string message, Guid concurrencyId,
-            StatusMessageLevel level = StatusMessageLevel.Information) : base(target, fullName, message, concurrencyId, level) { }
-
-        public FileCrawlEndEventArgs([DisallowNull] FileCrawlEventArgs args, string message, StatusMessageLevel level = StatusMessageLevel.Information, AsyncJobStatus status = AsyncJobStatus.Succeeded) : base(args, message, level, status) { }
     }
 }

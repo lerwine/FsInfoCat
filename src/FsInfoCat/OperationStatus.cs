@@ -1,4 +1,4 @@
-﻿namespace FsInfoCat.Services
+namespace FsInfoCat
 {
     public record OperationStatus(MessageCode StatusDescription, string CurrentOperation);
 }

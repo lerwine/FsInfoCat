@@ -8,7 +8,7 @@ namespace FsInfoCat.Services
 {
     public partial class FSIOQueueService
     {
-        internal abstract class QueuedBgOperation<TTask> : IQueuedBgOperation
+        internal abstract partial class QueuedBgOperation<TTask> : IQueuedBgOperation
             where TTask : Task
         {
             private readonly FSIOQueueService _service;
@@ -18,6 +18,8 @@ namespace FsInfoCat.Services
             private OperationStatus _operationStatus;
 
             internal object SyncRoot { get; } = new();
+
+            public Guid ConcurrencyId { get; }
 
             public TTask Task { get; private set; }
 
@@ -55,9 +57,10 @@ namespace FsInfoCat.Services
 
             public object AsyncState { get; private set; }
 
-            protected QueuedBgOperation([DisallowNull] FSIOQueueService service, ActivityCode activity, MessageCode statusDescription)
+            protected QueuedBgOperation(Guid concurrencyId, [DisallowNull] FSIOQueueService service, ActivityCode activity, MessageCode statusDescription)
             {
                 _service = service ?? throw new ArgumentNullException(nameof(service));
+                ConcurrencyId = concurrencyId;
                 Reportable = new StatusReportable(this);
                 Activity = activity;
                 _operationStatus = new(statusDescription, "");
@@ -167,59 +170,6 @@ namespace FsInfoCat.Services
             public void CancelAfter(int millisecondsDelay) => _tokenSource.CancelAfter(millisecondsDelay);
 
             public void CancelAfter(TimeSpan delay) => _tokenSource.CancelAfter(delay);
-
-            class StatusReportable : IStatusReportable
-            {
-                private readonly QueuedBgOperation<TTask> _bgOperation;
-
-                internal StatusReportable([DisallowNull] QueuedBgOperation<TTask> bgOperation)
-                {
-                    _bgOperation = bgOperation;
-                }
-
-                public ActivityCode Activity => _bgOperation.Activity;
-
-                public OperationStatus Current => _bgOperation._operationStatus;
-
-                public void Report(MessageCode statusDescription, string currentOperation)
-                {
-                    if (string.IsNullOrEmpty(currentOperation))
-                    {
-                        if (_bgOperation._operationStatus.CurrentOperation.Length > 0 || _bgOperation._operationStatus.StatusDescription != statusDescription)
-                            _bgOperation._operationStatus = new(statusDescription, "");
-                    }
-                    else if (statusDescription != _bgOperation._operationStatus.StatusDescription || _bgOperation._operationStatus.CurrentOperation != currentOperation)
-                        _bgOperation._operationStatus = new(statusDescription, currentOperation);
-                }
-
-                public void Report([DisallowNull] OperationStatus value)
-                {
-                    if (value.CurrentOperation is null)
-                    {
-                        if (value.StatusDescription != _bgOperation._operationStatus.StatusDescription || _bgOperation._operationStatus.CurrentOperation.Length > 0)
-                            _bgOperation._operationStatus = new(value.StatusDescription, "");
-                    }
-                    else if (value.StatusDescription != _bgOperation._operationStatus.StatusDescription || value.CurrentOperation != _bgOperation._operationStatus.CurrentOperation)
-                        _bgOperation._operationStatus = value;
-                }
-
-                public void Report(string value)
-                {
-                    if (string.IsNullOrEmpty(value))
-                    {
-                        if (_bgOperation._operationStatus.CurrentOperation.Length > 0)
-                            _bgOperation._operationStatus = _bgOperation._operationStatus with { CurrentOperation = "" };
-                    }
-                    else if (value != _bgOperation._operationStatus.CurrentOperation)
-                        _bgOperation._operationStatus = _bgOperation._operationStatus with { CurrentOperation = value };
-                }
-
-                public void Report(MessageCode value)
-                {
-                    if (_bgOperation._operationStatus.CurrentOperation.Length > 0 || _bgOperation._operationStatus.StatusDescription != value)
-                        _bgOperation._operationStatus = new(value, "");
-                }
-            }
         }
     }
 
@@ -231,13 +181,25 @@ namespace FsInfoCat.Services
         internal QueuedBgOperation([DisallowNull] FSIOQueueService service, [DisallowNull] Func<CancellationToken, Task> asyncFunction) : this(service, asyncFunction, ActivityCode.CrawlingFileSystem) { }
 
         internal QueuedBgOperation([DisallowNull] FSIOQueueService service, [DisallowNull] Func<IStatusReportable, CancellationToken, Task> asyncFunction, ActivityCode activity, MessageCode statusDescription = MessageCode.BackgroundJobPending)
-            : base(service, activity, statusDescription)
+            : this(service, asyncFunction, activity, statusDescription, Guid.NewGuid()) { }
+
+        internal QueuedBgOperation([DisallowNull] FSIOQueueService service, [DisallowNull] Func<IStatusReportable, CancellationToken, Task> asyncFunction, ActivityCode activity, Guid concurrencyId)
+            : this(service, asyncFunction, activity, MessageCode.BackgroundJobPending, concurrencyId) { }
+
+        internal QueuedBgOperation([DisallowNull] FSIOQueueService service, [DisallowNull] Func<IStatusReportable, CancellationToken, Task> asyncFunction, ActivityCode activity, MessageCode statusDescription, Guid concurrencyId)
+            : base(concurrencyId, service, activity, statusDescription)
         {
             _asyncFunction = token => asyncFunction(Reportable, token);
         }
 
         internal QueuedBgOperation([DisallowNull] FSIOQueueService service, [DisallowNull] Func<CancellationToken, Task> asyncFunction, ActivityCode activity, MessageCode statusDescription = MessageCode.BackgroundJobPending)
-            : base(service, activity, statusDescription)
+            : this(service, asyncFunction, activity, statusDescription, Guid.NewGuid()) { }
+
+        internal QueuedBgOperation([DisallowNull] FSIOQueueService service, [DisallowNull] Func<CancellationToken, Task> asyncFunction, ActivityCode activity, Guid concurrencyId)
+            : this(service, asyncFunction, activity, MessageCode.BackgroundJobPending, concurrencyId) { }
+
+        internal QueuedBgOperation([DisallowNull] FSIOQueueService service, [DisallowNull] Func<CancellationToken, Task> asyncFunction, ActivityCode activity, MessageCode statusDescription, Guid concurrencyId)
+            : base(concurrencyId, service, activity, statusDescription)
         {
             _asyncFunction = asyncFunction;
         }
@@ -261,13 +223,25 @@ namespace FsInfoCat.Services
         internal QueuedBgOperation([DisallowNull] FSIOQueueService service, [DisallowNull] Func<CancellationToken, Task<TResult>> asyncFunction) : this(service, asyncFunction, ActivityCode.CrawlingFileSystem) { }
 
         internal QueuedBgOperation([DisallowNull] FSIOQueueService service, [DisallowNull] Func<CancellationToken, Task<TResult>> asyncFunction, ActivityCode activity, MessageCode statusDescription = MessageCode.BackgroundJobPending)
-            : base(service, activity, statusDescription)
+            : this(service, asyncFunction, activity, statusDescription, Guid.NewGuid()) { }
+
+        internal QueuedBgOperation([DisallowNull] FSIOQueueService service, [DisallowNull] Func<CancellationToken, Task<TResult>> asyncFunction, ActivityCode activity, MessageCode statusDescription, Guid concurrencyId)
+            : base(concurrencyId, service, activity, statusDescription)
         {
             _asyncFunction = asyncFunction;
         }
 
+        internal QueuedBgOperation([DisallowNull] FSIOQueueService service, [DisallowNull] Func<CancellationToken, Task<TResult>> asyncFunction, ActivityCode activity, Guid concurrencyId)
+            : this(service, asyncFunction, activity, MessageCode.BackgroundJobPending, concurrencyId) { }
+
         internal QueuedBgOperation([DisallowNull] FSIOQueueService service, [DisallowNull] Func<IStatusReportable, CancellationToken, Task<TResult>> asyncFunction, ActivityCode activity, MessageCode statusDescription = MessageCode.BackgroundJobPending)
-            : base(service, activity, statusDescription)
+            : this(service, asyncFunction, activity, statusDescription, Guid.NewGuid()) { }
+
+        internal QueuedBgOperation([DisallowNull] FSIOQueueService service, [DisallowNull] Func<IStatusReportable, CancellationToken, Task<TResult>> asyncFunction, ActivityCode activity, Guid concurrencyId)
+            : this(service, asyncFunction, activity, MessageCode.BackgroundJobPending, concurrencyId) { }
+
+        internal QueuedBgOperation([DisallowNull] FSIOQueueService service, [DisallowNull] Func<IStatusReportable, CancellationToken, Task<TResult>> asyncFunction, ActivityCode activity, MessageCode statusDescription, Guid concurrencyId)
+            : base(concurrencyId, service, activity, statusDescription)
         {
             _asyncFunction = token => asyncFunction(Reportable, token);
         }
