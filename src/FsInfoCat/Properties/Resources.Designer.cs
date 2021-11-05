@@ -1942,6 +1942,42 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Deleting Crawl Configuration.
+        /// </summary>
+        public static string DisplayName_DeletingCrawlConfiguration {
+            get {
+                return ResourceManager.GetString("DisplayName_DeletingCrawlConfiguration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Deleting File Record.
+        /// </summary>
+        public static string DisplayName_DeletingFile {
+            get {
+                return ResourceManager.GetString("DisplayName_DeletingFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Deleting Subdirectory Record.
+        /// </summary>
+        public static string DisplayName_DeletingSubdirectory {
+            get {
+                return ResourceManager.GetString("DisplayName_DeletingSubdirectory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Deleting Volume Record.
+        /// </summary>
+        public static string DisplayName_DeletingVolume {
+            get {
+                return ResourceManager.GetString("DisplayName_DeletingVolume", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Description.
         /// </summary>
         public static string DisplayName_Description {
@@ -2973,6 +3009,15 @@ namespace FsInfoCat.Properties {
         public static string DisplayName_ImagePropertyGroups_NoExistingFiles {
             get {
                 return ResourceManager.GetString("DisplayName_ImagePropertyGroups_NoExistingFiles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Importing Subdirectory.
+        /// </summary>
+        public static string DisplayName_ImportingSubdirectory {
+            get {
+                return ResourceManager.GetString("DisplayName_ImportingSubdirectory", resourceCulture);
             }
         }
         
@@ -4395,6 +4440,15 @@ namespace FsInfoCat.Properties {
         public static string DisplayName_Sensitivity {
             get {
                 return ResourceManager.GetString("DisplayName_Sensitivity", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Setting Branch Incomplete.
+        /// </summary>
+        public static string DisplayName_SettingBranchIncomplete {
+            get {
+                return ResourceManager.GetString("DisplayName_SettingBranchIncomplete", resourceCulture);
             }
         }
         

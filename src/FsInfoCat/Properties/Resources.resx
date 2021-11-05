@@ -2126,4 +2126,22 @@
   <data name="DisplayName_TimeLimitReached" xml:space="preserve">
     <value>Time limit reached.</value>
   </data>
+  <data name="DisplayName_DeletingCrawlConfiguration" xml:space="preserve">
+    <value>Deleting Crawl Configuration</value>
+  </data>
+  <data name="DisplayName_DeletingFile" xml:space="preserve">
+    <value>Deleting File Record</value>
+  </data>
+  <data name="DisplayName_DeletingSubdirectory" xml:space="preserve">
+    <value>Deleting Subdirectory Record</value>
+  </data>
+  <data name="DisplayName_DeletingVolume" xml:space="preserve">
+    <value>Deleting Volume Record</value>
+  </data>
+  <data name="DisplayName_ImportingSubdirectory" xml:space="preserve">
+    <value>Importing Subdirectory</value>
+  </data>
+  <data name="DisplayName_SettingBranchIncomplete" xml:space="preserve">
+    <value>Setting Branch Incomplete</value>
+  </data>
 </root>

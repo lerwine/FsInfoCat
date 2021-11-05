@@ -500,6 +500,10 @@ namespace FsInfoCat
 #pragma warning restore CA2248 // Provide correct 'enum' argument to 'Enum.HasFlag'
         }
 
+        public static StatusMessageLevel ToStatusMessageLevel(this MessageCode messageCode) => messageCode.GetAmbientValue(StatusMessageLevel.Information);
+
+        public static MessageCode ToMessageCode(this ErrorCode errorCode) => errorCode.GetAmbientValue(MessageCode.UnexpectedError);
+
         public static ErrorCode ToErrorCode(this AccessErrorCode errorCode) => errorCode.GetAmbientValue(ErrorCode.Unexpected);
 
         public static AccessErrorCode ToAccessErrorCode(this ErrorCode errorCode) =>
