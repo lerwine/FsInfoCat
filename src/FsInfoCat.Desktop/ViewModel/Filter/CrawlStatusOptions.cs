@@ -255,8 +255,8 @@ namespace FsInfoCat.Desktop.ViewModel.Filter
         }
 
         public override BinaryExpression CreateExpression(ParameterExpression parameterExpression) => IsExclusive ?
-            OptionItems.Where(o => o.IsSelected).Select(o => LinqExpression.Equal(LinqExpression.Property(parameterExpression, nameof(CrawlConfigReportItem.StatusValue)), LinqExpression.Constant(o.Value.Value))).Aggregate(LinqExpression.AndAlso) :
-            OptionItems.Where(o => o.IsSelected).Select(o => LinqExpression.Equal(LinqExpression.Property(parameterExpression, nameof(CrawlConfigReportItem.StatusValue)), LinqExpression.Constant(o.Value.Value))).Aggregate(LinqExpression.OrElse);
+            OptionItems.Where(o => o.IsSelected).Select(o => LinqExpression.Equal(LinqExpression.Property(parameterExpression, nameof(CrawlConfigReportItem.StatusValue)), LinqExpression.Constant(o.Value))).Aggregate(LinqExpression.AndAlso) :
+            OptionItems.Where(o => o.IsSelected).Select(o => LinqExpression.Equal(LinqExpression.Property(parameterExpression, nameof(CrawlConfigReportItem.StatusValue)), LinqExpression.Constant(o.Value))).Aggregate(LinqExpression.OrElse);
 
         internal void Select(CrawlStatus value)
         {

@@ -371,8 +371,10 @@ namespace FsInfoCat.Local
             if (shouldDelete)
             {
                 if (oldCrawlConfiguration is not null)
+                {
                     await CrawlConfiguration.RemoveAsync(oldCrawlConfiguration, cancellationToken);
-                dbContext.CrawlConfigurations.Remove(oldCrawlConfiguration.Entity);
+                    dbContext.CrawlConfigurations.Remove(oldCrawlConfiguration.Entity);
+                }
                 return true;
             }
             target.Status = DirectoryStatus.Deleted;

@@ -119,7 +119,8 @@ namespace FsInfoCat.UnitTests.Fakes
                             return;
                         _lastSubstituteDrive = null;
                     }
-                    _next = _next._previous = null;
+                    else
+                        _next = _next._previous = null;
                 }
                 else if ((_previous._next = _next) is null)
                     _previous = _previous._next = null;

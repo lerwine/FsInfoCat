@@ -172,7 +172,7 @@ namespace FsInfoCat.Desktop.ViewModel.Filter
 
         public IEnumerable GetErrors(string propertyName) => _errorInfo.GetErrors(propertyName);
 
-        internal static bool AreSame(DurationRange x, DurationRange y) => (x is null) ? (y is null || Duration.AreSame(x.Min, null)) :
+        internal static bool AreSame(DurationRange x, DurationRange y) => (x is null) ? (y is null || Duration.AreSame(y.Min, null)) :
             (ReferenceEquals(x, y) || Duration.AreSame(x.Min, y?.Min) && Duration.AreSame(x.Max, y?.Max));
     }
 }

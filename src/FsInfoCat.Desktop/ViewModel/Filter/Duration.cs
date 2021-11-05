@@ -142,7 +142,7 @@ namespace FsInfoCat.Desktop.ViewModel.Filter
             if (x is null)
                 return y is null || (y.Days == 0 && y.Hours == 0 && y.Minutes == 0 && !y.IncludeNull);
             if (y is null)
-                return x.Days == 0 && y.Hours == 0 && y.Minutes == 0 && !x.IncludeNull;
+                return x.Days == 0 && x.Hours == 0 && x.Minutes == 0 && !x.IncludeNull;
             return ReferenceEquals(x, y) || (x.Days == y.Days && x.Hours == y.Hours && x.Minutes == y.Minutes && x.IncludeNull == y.IncludeNull);
         }
 

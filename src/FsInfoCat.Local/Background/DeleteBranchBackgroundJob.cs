@@ -127,8 +127,9 @@ namespace FsInfoCat.Local.Background
                 {
                     Subdirectory subdirectory = parent.Entity;
                     id = subdirectory.Id;
-                    if ((parent = await parent.GetRelatedTargetEntryAsync(s => s.Parent, cancellationToken)) is null)
-                        volume = await parent.GetRelatedReferenceAsync(s => s.Volume, cancellationToken);
+                    EntityEntry<Subdirectory> subDirEntry = parent;
+                    if ((parent = await subDirEntry.GetRelatedTargetEntryAsync(s => s.Parent, cancellationToken)) is null)
+                        volume = await subDirEntry.GetRelatedReferenceAsync(s => s.Volume, cancellationToken);
                     else if ((await parent.GetRelatedCollectionAsync(s => s.Files, cancellationToken)).Any() || (await parent.GetRelatedCollectionAsync(s => s.SubDirectories, cancellationToken)).Any(s => s.Id != id))
                     {
                         if (!dbContext.ChangeTracker.HasChanges())

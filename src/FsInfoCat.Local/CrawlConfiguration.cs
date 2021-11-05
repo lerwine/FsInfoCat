@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -64,7 +65,7 @@ namespace FsInfoCat.Local
             _root = AddChangeTracker<Subdirectory>(nameof(Root), null);
         }
 
-        internal static void OnBuildEntity(EntityTypeBuilder<CrawlConfiguration> builder)
+        internal static void OnBuildEntity([DisallowNull] EntityTypeBuilder<CrawlConfiguration> builder)
         {
             _ = builder.HasOne(s => s.Root).WithOne(c => c.CrawlConfiguration).HasForeignKey<CrawlConfiguration>(nameof(RootId)).OnDelete(DeleteBehavior.Restrict);
         }
@@ -76,9 +77,9 @@ namespace FsInfoCat.Local
                 _ = _root.SetValue(null);
         }
 
-        public static async Task RemoveAsync(EntityEntry<CrawlConfiguration> entry, CancellationToken cancellationToken)
+        public static async Task RemoveAsync([DisallowNull] EntityEntry<CrawlConfiguration> entry, CancellationToken cancellationToken)
         {
-            if (entry?.Context is not LocalDbContext dbContext)
+            if ((entry ?? throw new ArgumentNullException(nameof(entry))).Context is not LocalDbContext dbContext)
                 throw new InvalidOperationException();
             CrawlJobLog[] logs = (await entry.GetRelatedCollectionAsync(e => e.Logs, cancellationToken)).ToArray();
             if (logs.Length > 0)
