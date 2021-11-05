@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 
 namespace FsInfoCat.Local.Crawling
 {
@@ -18,12 +18,12 @@ namespace FsInfoCat.Local.Crawling
 
             ILocalDbFsItem ICurrentItem.Entity => Entity;
 
-            string ICurrentItem.GetFullName() => Target?.FullName ?? Path.Combine(Parent.GetFullName(), Target.Name ?? Entity.Name);
+            string ICurrentItem.GetFullName() => Target?.FullName ?? Path.Combine(Parent.GetFullName(), Target?.Name ?? Entity.Name);
 
             string ICurrentItem.GetRelativeParentPath()
             {
                 string path = Parent.GetRelativeParentPath();
-                return string.IsNullOrEmpty(path) ? Target.Name ?? Entity.Name : Path.Combine(path, Target.Name ?? Entity.Name);
+                return string.IsNullOrEmpty(path) ? Target?.Name ?? Entity.Name : Path.Combine(path, Target?.Name ?? Entity.Name);
             }
         }
     }

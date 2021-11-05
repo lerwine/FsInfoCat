@@ -22,10 +22,10 @@ namespace FsInfoCat.Local.Crawling
         public DirectoryCrawlEventArgs Parent { get; }
 
         protected DirectoryCrawlEventArgs([DisallowNull] ICrawlJob source, [DisallowNull] ICurrentDirectory target, MessageCode? statusDescription = null)
-            : base((source ?? throw new ArgumentNullException(nameof(source))).ConcurrencyId, source.Status,
-                  source.Activity, statusDescription ?? source.StatusDescription, target.GetRelativeParentPath(), ((IAsyncOperationInfo)source).AsyncState)
+            : base((source ?? throw new ArgumentNullException(nameof(source))).ConcurrencyId, source.Status, source.Activity,
+                  statusDescription ?? source.StatusDescription, (target ?? throw new ArgumentNullException(nameof(target))).GetRelativeParentPath(), ((IAsyncOperationInfo)source).AsyncState)
         {
-            Target = (target ?? throw new ArgumentNullException(nameof(target))).Target;
+            Target = target.Target;
             Entity = target.Entity;
         }
 

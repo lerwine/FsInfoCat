@@ -22,10 +22,10 @@ namespace FsInfoCat.Local.Crawling
         FileSystemInfo ICurrentItem.Target => Target;
 
         protected FileCrawlEventArgs([DisallowNull] ICrawlJob source, [DisallowNull] ICurrentFile target, MessageCode? statusDescription = null)
-            : base((source ?? throw new ArgumentNullException(nameof(source))).ConcurrencyId, source.Status,
-                  source.Activity, statusDescription ?? source.StatusDescription, target.GetRelativeParentPath(), ((IAsyncOperationInfo)source).AsyncState)
+            : base((source ?? throw new ArgumentNullException(nameof(source))).ConcurrencyId, source.Status, source.Activity,
+                  statusDescription ?? source.StatusDescription, (target ?? throw new ArgumentNullException(nameof(target))).GetRelativeParentPath(), ((IAsyncOperationInfo)source).AsyncState)
         {
-            Target = (target ?? throw new ArgumentNullException(nameof(target))).Target;
+            Target = target.Target;
             Entity = target.Entity;
         }
 
