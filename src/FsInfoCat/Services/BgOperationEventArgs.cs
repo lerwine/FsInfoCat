@@ -33,11 +33,13 @@ namespace FsInfoCat.Services
 
         public string CurrentOperation { get; }
 
+        public IAsyncOperationInfo ParentOperation { get; }
+
         ActivityCode? IAsyncOperationInfo.Activity => Activity;
 
         MessageCode? IAsyncOperationInfo.StatusDescription => StatusDescription;
 
-        public BgOperationEventArgs(Guid concurrencyId, DateTime started, TimeSpan elapsed, AsyncJobStatus status, ActivityCode activity, MessageCode statusDescription, string currentOperation = null, object asyncState = null)
-            => (ConcurrencyId, Started, Elapsed, Status, Activity, StatusDescription, CurrentOperation, AsyncState) = (concurrencyId, started, elapsed, status, activity, statusDescription, currentOperation.EmptyIfNullOrWhiteSpace(), asyncState);
+        public BgOperationEventArgs(Guid concurrencyId, DateTime started, TimeSpan elapsed, AsyncJobStatus status, ActivityCode activity, MessageCode statusDescription, string currentOperation = null, object asyncState = null, IAsyncOperationInfo parentOperation = null)
+            => (ConcurrencyId, Started, Elapsed, Status, Activity, StatusDescription, CurrentOperation, AsyncState, ParentOperation) = (concurrencyId, started, elapsed, status, activity, statusDescription, currentOperation.EmptyIfNullOrWhiteSpace(), asyncState, parentOperation);
     }
 }

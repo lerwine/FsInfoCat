@@ -39,11 +39,11 @@ namespace FsInfoCat.Services
                 _ => false,
             };
 
+            public IAsyncOperationInfo ParentOperation { get; }
+
             protected IStatusReportable Reportable { get; }
 
             object IAsyncResult.AsyncState => (Task ?? throw new InvalidOperationException()).AsyncState;
-
-            Task IQueuedBgOperation.Task => Task;
 
             public ActivityCode Activity { get; }
 
@@ -57,9 +57,12 @@ namespace FsInfoCat.Services
 
             public object AsyncState { get; private set; }
 
-            protected QueuedBgOperation(Guid concurrencyId, [DisallowNull] FSIOQueueService service, ActivityCode activity, MessageCode statusDescription)
+            Task IBgOperation.Task => Task;
+
+            protected QueuedBgOperation(Guid concurrencyId, [DisallowNull] FSIOQueueService service, ActivityCode activity, MessageCode statusDescription, IAsyncOperationInfo parentOperation = null)
             {
                 _service = service ?? throw new ArgumentNullException(nameof(service));
+                ParentOperation = parentOperation;
                 ConcurrencyId = concurrencyId;
                 Reportable = new StatusReportable(this);
                 Activity = activity;

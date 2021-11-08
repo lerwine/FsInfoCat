@@ -4,13 +4,25 @@ using System.Runtime.Serialization;
 namespace FsInfoCat
 {
 
+    /// <summary>
+    /// Represents an error that has occurred during an asynchronous operation.
+    /// </summary>
     [Serializable]
     public class AsyncOperationFailureException : Exception, IAsyncOperationInfo
     {
+        /// <summary>
+        /// Gets the error message intented to be displayed to the application user.
+        /// </summary>
         public string UserMessage { get; }
 
+        /// <summary>
+        /// Describes the operation that was being peformed.
+        /// </summary>
         public IAsyncOperationInfo AsyncOperation { get; }
 
+        /// <summary>
+        /// Identifies the error that occurred.
+        /// </summary>
         public ErrorCode? ErrorCode { get; }
 
         AsyncJobStatus IAsyncOperationInfo.Status => AsyncJobStatus.Faulted;
@@ -24,6 +36,8 @@ namespace FsInfoCat
         object IAsyncOperationInfo.AsyncState => AsyncOperation?.AsyncState;
 
         Guid IAsyncOperationInfo.ConcurrencyId => AsyncOperation?.ConcurrencyId ?? Guid.Empty;
+
+        IAsyncOperationInfo IAsyncOperationInfo.ParentOperation => AsyncOperation?.ParentOperation;
 
         public AsyncOperationFailureException() { }
 

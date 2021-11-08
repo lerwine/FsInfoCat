@@ -19,6 +19,7 @@ namespace FsInfoCat.Local.Crawling
         public string CurrentOperation { get; }
 
         public object AsyncState { get; }
+        public IAsyncOperationInfo ParentOperation { get; }
 
         protected CrawlActivityEventArgs(ICrawlActivityEventArgs source)
         {
@@ -28,6 +29,7 @@ namespace FsInfoCat.Local.Crawling
             StatusDescription = source.StatusDescription;
             CurrentOperation = source.CurrentOperation;
             AsyncState = source.AsyncState;
+            ParentOperation = source.ParentOperation;
         }
 
         protected CrawlActivityEventArgs(ICrawlJob source, AsyncJobStatus status, MessageCode? statusDescription = null, string currentOperation = null)
@@ -38,10 +40,10 @@ namespace FsInfoCat.Local.Crawling
             StatusDescription = statusDescription ?? source.StatusDescription;
             CurrentOperation = currentOperation ?? source.CurrentOperation;
             AsyncState = ((IAsyncOperationInfo)source).AsyncState;
+            ParentOperation = source.ParentOperation;
         }
 
-        protected CrawlActivityEventArgs(Guid concurrencyId, AsyncJobStatus status, ActivityCode activity, MessageCode statusDescription, string currentOperation = null,
-            object asyncState = null)
+        protected CrawlActivityEventArgs(Guid concurrencyId, AsyncJobStatus status, ActivityCode activity, MessageCode statusDescription, string currentOperation, object asyncState, IAsyncOperationInfo parentOperation)
         {
             ConcurrencyId = concurrencyId;
             Status = status;
@@ -49,10 +51,10 @@ namespace FsInfoCat.Local.Crawling
             StatusDescription = statusDescription;
             CurrentOperation = currentOperation ?? "";
             AsyncState = asyncState;
+            ParentOperation = parentOperation;
         }
 
-        protected CrawlActivityEventArgs(Guid concurrencyId, AsyncJobStatus status, ActivityCode activity, OperationStatus operationStatus,
-            object asyncState = null)
+        protected CrawlActivityEventArgs(Guid concurrencyId, AsyncJobStatus status, ActivityCode activity, OperationStatus operationStatus, object asyncState, IAsyncOperationInfo parentOperation)
         {
             ConcurrencyId = concurrencyId;
             Status = status;
@@ -60,6 +62,7 @@ namespace FsInfoCat.Local.Crawling
             StatusDescription = operationStatus.StatusDescription;
             CurrentOperation = operationStatus.CurrentOperation ?? "";
             AsyncState = asyncState;
+            ParentOperation = parentOperation;
         }
 
         public override string ToString() => $@"ConcurrencyId = {ExtensionMethods.ToPseudoCsText(ConcurrencyId)},
