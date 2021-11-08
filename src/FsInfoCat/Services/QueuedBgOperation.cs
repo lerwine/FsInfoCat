@@ -45,8 +45,6 @@ namespace FsInfoCat.Services
 
             object IAsyncResult.AsyncState => (Task ?? throw new InvalidOperationException()).AsyncState;
 
-            Task IQueuedBgOperation.Task => Task;
-
             public ActivityCode Activity { get; }
 
             public MessageCode StatusDescription => _operationStatus.StatusDescription;
@@ -58,6 +56,8 @@ namespace FsInfoCat.Services
             public string CurrentOperation => _operationStatus.CurrentOperation;
 
             public object AsyncState { get; private set; }
+
+            Task IBgOperation.Task => Task;
 
             protected QueuedBgOperation(Guid concurrencyId, [DisallowNull] FSIOQueueService service, ActivityCode activity, MessageCode statusDescription, IAsyncOperationInfo parentOperation = null)
             {

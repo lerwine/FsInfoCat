@@ -7,6 +7,7 @@ namespace FsInfoCat
     /// <summary>
     /// A service that can be used to create background jobs that can indicate progress/status information.
     /// </summary>
+    [Obsolete("Use Services.IFSIOQueueService")]
     public interface IAsyncJobFactoryService
     {
         /// <summary>
@@ -24,6 +25,7 @@ namespace FsInfoCat
         /// <param name="method">The asynchronous method to execute as the background job.</param>
         /// <returns>An <see cref="IAsyncJob{TResult}"/> value that can be used to monitor the status of the background job, as well as waiting for the result
         /// value and the ability to cancel the job.</returns>
+        [Obsolete("Use IWindowsAsyncJobFactoryService.Enqueue(ActivityCode activity, MessageCode, TArg1, TArg2, TArg3, Func<IAsyncOperationProgress, TArg1, TArg2, TArg3, Task<TResult>>) or IWindowsAsyncJobFactoryService.Enqueue(ActivityCode activity, TArg1, TArg2, TArg3, Func<IAsyncOperationProgress, TArg1, TArg2, TArg3, Task<TResult>>)")]
         IAsyncJob<TResult> StartNew<TArg1, TArg2, TArg3, TResult>([DisallowNull] string title, [DisallowNull] string initialMessage, TArg1 arg1, TArg2 arg2, TArg3 arg3,
             Func<TArg1, TArg2, TArg3, IStatusListener, Task<TResult>> method);
 
@@ -42,6 +44,7 @@ namespace FsInfoCat
         /// <param name="method">The asynchronous method to execute as the background job.</param>
         /// <param name="onComplete">The callback to invoke when the background job is complete.</param>
         /// <returns>The task that is executing the background job and returns the result value.</returns>
+        [Obsolete("Use IWindowsAsyncJobFactoryService.Enqueue(ActivityCode activity, MessageCode, TArg1, TArg2, TArg3, Func<IAsyncOperationProgress, TArg1, TArg2, TArg3, Task<TResult>>) or IWindowsAsyncJobFactoryService.Enqueue(ActivityCode activity, TArg1, TArg2, TArg3, Func<IAsyncOperationProgress, TArg1, TArg2, TArg3, Task<TResult>>)")]
         Task<TResult> RunAsync<TArg1, TArg2, TArg3, TResult>([DisallowNull] string title, [DisallowNull] string initialMessage, TArg1 arg1, TArg2 arg2, TArg3 arg3,
             Func<TArg1, TArg2, TArg3, IStatusListener, Task<TResult>> method, Action<IAsyncJob<TResult>> onComplete = null);
 
@@ -58,6 +61,7 @@ namespace FsInfoCat
         /// <param name="method">The asynchronous method to execute as the background job.</param>
         /// <returns>An <see cref="IAsyncJob{TResult}"/> value that can be used to monitor the status of the background job, as well as waiting for the result
         /// value and the ability to cancel the job.</returns>
+        [Obsolete("Use IWindowsAsyncJobFactoryService.Enqueue(ActivityCode activity, MessageCode, TArg1, TArg2, Func<IAsyncOperationProgress, TArg1, TArg2, Task<TResult>>) or IWindowsAsyncJobFactoryService.Enqueue(ActivityCode activity, TArg1, TArg2, Func<IAsyncOperationProgress, TArg1, TArg2, Task<TResult>>)")]
         IAsyncJob<TResult> StartNew<TArg1, TArg2, TResult>([DisallowNull] string title, [DisallowNull] string initialMessage, TArg1 arg1, TArg2 arg2,
             [DisallowNull] Func<TArg1, TArg2, IStatusListener, Task<TResult>> method);
 
@@ -74,6 +78,7 @@ namespace FsInfoCat
         /// <param name="method">The asynchronous method to execute as the background job.</param>
         /// <param name="onComplete">The callback to invoke when the background job is complete.</param>
         /// <returns>The task that is executing the background job and returns the result value.</returns>
+        [Obsolete("Use IWindowsAsyncJobFactoryService.Enqueue(ActivityCode activity, MessageCode, TArg1, TArg2, Func<IAsyncOperationProgress, TArg1, TArg2, Task<TResult>>) or IWindowsAsyncJobFactoryService.Enqueue(ActivityCode activity, TArg1, TArg2, Func<IAsyncOperationProgress, TArg1, TArg2, Task<TResult>>)")]
         Task<TResult> RunAsync<TArg1, TArg2, TResult>([DisallowNull] string title, [DisallowNull] string initialMessage, TArg1 arg1, TArg2 arg2,
             [DisallowNull] Func<TArg1, TArg2, IStatusListener, Task<TResult>> method, Action<IAsyncJob<TResult>> onComplete = null);
 
@@ -88,6 +93,7 @@ namespace FsInfoCat
         /// <param name="method">The asynchronous method to execute as the background job.</param>
         /// <returns>An <see cref="IAsyncJob{TResult}"/> value that can be used to monitor the status of the background job, as well as waiting for the result
         /// value and the ability to cancel the job.</returns>
+        [Obsolete("Use IWindowsAsyncJobFactoryService.Enqueue(ActivityCode activity, MessageCode, TArg, Func<IAsyncOperationProgress, TArg, Task<TResult>>) or IWindowsAsyncJobFactoryService.Enqueue(ActivityCode activity, TArg, Func<IAsyncOperationProgress, TArg, Task<TResult>>)")]
         IAsyncJob<TResult> StartNew<TArg, TResult>([DisallowNull] string title, [DisallowNull] string initialMessage, TArg arg,
             [DisallowNull] Func<TArg, IStatusListener, Task<TResult>> method);
 
@@ -102,6 +108,7 @@ namespace FsInfoCat
         /// <param name="method">The asynchronous method to execute as the background job.</param>
         /// <param name="onComplete">The callback to invoke when the background job is complete.</param>
         /// <returns>The task that is executing the background job and returns the result value.</returns>
+        [Obsolete("Use IWindowsAsyncJobFactoryService.Enqueue(ActivityCode activity, MessageCode, TArg, Func<IAsyncOperationProgress, TArg, Task<TResult>>) or IWindowsAsyncJobFactoryService.Enqueue(ActivityCode activity, TArg, Func<IAsyncOperationProgress, TArg, Task<TResult>>)")]
         Task<TResult> RunAsync<TArg, TResult>([DisallowNull] string title, [DisallowNull] string initialMessage, TArg arg,
             [DisallowNull] Func<TArg, IStatusListener, Task<TResult>> method, Action<IAsyncJob<TResult>> onComplete = null);
 
@@ -114,6 +121,7 @@ namespace FsInfoCat
         /// <param name="method">The asynchronous method to execute as the background job.</param>
         /// <returns>An <see cref="IAsyncJob{TResult}"/> value that can be used to monitor the status of the background job, as well as waiting for the result
         /// value and the ability to cancel the job.</returns>
+        [Obsolete("Use IWindowsAsyncJobFactoryService.Enqueue(ActivityCode activity, MessageCode, Func<IAsyncOperationProgress, Task<TResult>>) or IWindowsAsyncJobFactoryService.Enqueue(ActivityCode activity, Func<IAsyncOperationProgress, Task<TResult>>)")]
         IAsyncJob<TResult> StartNew<TResult>([DisallowNull] string title, [DisallowNull] string initialMessage,
             [DisallowNull] Func<IStatusListener, Task<TResult>> method);
 
@@ -126,6 +134,7 @@ namespace FsInfoCat
         /// <param name="method">The asynchronous method to execute as the background job.</param>
         /// <param name="onComplete">The callback to invoke when the background job is complete.</param>
         /// <returns>The task that is executing the background job and returns the result value.</returns>
+        [Obsolete("Use IWindowsAsyncJobFactoryService.Enqueue(ActivityCode activity, MessageCode, Func<IAsyncOperationProgress, Task<TResult>>) or IWindowsAsyncJobFactoryService.Enqueue(ActivityCode activity, Func<IAsyncOperationProgress, Task<TResult>>)")]
         Task<TResult> RunAsync<TResult>([DisallowNull] string title, [DisallowNull] string initialMessage,
             [DisallowNull] Func<IStatusListener, Task<TResult>> method, Action<IAsyncJob<TResult>> onComplete = null);
 
@@ -142,6 +151,7 @@ namespace FsInfoCat
         /// <param name="arg3">The third argument that is passed to the asynchronous job method.</param>
         /// <param name="method">The asynchronous method to execute as the background job.</param>
         /// <returns>An <see cref="IAsyncJob"/> value that can be used to monitor the status of the background job as well as the ability to cancel the job.</returns>
+        [Obsolete("Use IWindowsAsyncJobFactoryService.Enqueue(ActivityCode activity, MessageCode, TArg1, TArg2, TArg3, Func<IAsyncOperationProgress, TArg1, TArg2, TArg3, Task) or IWindowsAsyncJobFactoryService.Enqueue(ActivityCode activity, TArg1, TArg2, TArg3, Func<IAsyncOperationProgress, TArg1, TArg2, TArg3, Task)")]
         IAsyncJob StartNew<TArg1, TArg2, TArg3>([DisallowNull] string title, [DisallowNull] string initialMessage, TArg1 arg1, TArg2 arg2, TArg3 arg3,
             [DisallowNull] Func<TArg1, TArg2, TArg3, IStatusListener, Task> method);
 
@@ -159,6 +169,7 @@ namespace FsInfoCat
         /// <param name="method">The asynchronous method to execute as the background job.</param>
         /// <param name="onComplete">The callback to invoke when the background job is complete.</param>
         /// <returns>The task that is executing the background job.</returns>
+        [Obsolete("Use IWindowsAsyncJobFactoryService.Enqueue(ActivityCode activity, MessageCode, TArg1, TArg2, TArg3, Func<IAsyncOperationProgress, TArg1, TArg2, TArg3, Task) or IWindowsAsyncJobFactoryService.Enqueue(ActivityCode activity, TArg1, TArg2, TArg3, Func<IAsyncOperationProgress, TArg1, TArg2, TArg3, Task)")]
         Task RunAsync<TArg1, TArg2, TArg3>([DisallowNull] string title, [DisallowNull] string initialMessage, TArg1 arg1, TArg2 arg2, TArg3 arg3,
             [DisallowNull] Func<TArg1, TArg2, TArg3, IStatusListener, Task> method, Action<IAsyncJob> onComplete = null);
 
@@ -173,6 +184,7 @@ namespace FsInfoCat
         /// <param name="arg2">The second argument that is passed to the asynchronous job method.</param>
         /// <param name="method">The asynchronous method to execute as the background job.</param>
         /// <returns>An <see cref="IAsyncJob"/> value that can be used to monitor the status of the background job as well as the ability to cancel the job.</returns>
+        [Obsolete("Use IWindowsAsyncJobFactoryService.Enqueue(ActivityCode activity, MessageCode, TArg1, TArg2, Func<IAsyncOperationProgress, TArg1, TArg2, Task) or IWindowsAsyncJobFactoryService.Enqueue(ActivityCode activity, TArg1, TArg2, Func<IAsyncOperationProgress, TArg1, TArg2, Task)")]
         IAsyncJob StartNew<TArg1, TArg2>([DisallowNull] string title, [DisallowNull] string initialMessage, TArg1 arg1, TArg2 arg2,
             [DisallowNull] Func<TArg1, TArg2, IStatusListener, Task> method);
 
@@ -188,6 +200,7 @@ namespace FsInfoCat
         /// <param name="method">The asynchronous method to execute as the background job.</param>
         /// <param name="onComplete">The callback to invoke when the background job is complete.</param>
         /// <returns>The task that is executing the background job.</returns>
+        [Obsolete("Use IWindowsAsyncJobFactoryService.Enqueue(ActivityCode activity, MessageCode, TArg1, TArg2, Func<IAsyncOperationProgress, TArg1, TArg2, Task) or IWindowsAsyncJobFactoryService.Enqueue(ActivityCode activity, TArg1, TArg2, Func<IAsyncOperationProgress, TArg1, TArg2, Task)")]
         Task RunAsync<TArg1, TArg2>([DisallowNull] string title, [DisallowNull] string initialMessage, TArg1 arg1, TArg2 arg2,
             [DisallowNull] Func<TArg1, TArg2, IStatusListener, Task> method, Action<IAsyncJob> onComplete = null);
 
@@ -200,6 +213,7 @@ namespace FsInfoCat
         /// <param name="arg">The argument that is passed to the asynchronous job method.</param>
         /// <param name="method">The asynchronous method to execute as the background job.</param>
         /// <returns>An <see cref="IAsyncJob"/> value that can be used to monitor the status of the background job as well as the ability to cancel the job.</returns>
+        [Obsolete("Use IWindowsAsyncJobFactoryService.Enqueue(ActivityCode activity, MessageCode, TArg, Func<IAsyncOperationProgress, TArg, Task) or IWindowsAsyncJobFactoryService.Enqueue(ActivityCode activity, TArg, Func<IAsyncOperationProgress, TArg, Task)")]
         IAsyncJob StartNew<TArg>([DisallowNull] string title, [DisallowNull] string initialMessage, TArg arg, [DisallowNull] Func<TArg, IStatusListener, Task> method);
 
         /// <summary>
@@ -212,6 +226,7 @@ namespace FsInfoCat
         /// <param name="method">The asynchronous method to execute as the background job.</param>
         /// <param name="onComplete">The callback to invoke when the background job is complete.</param>
         /// <returns>The task that is executing the background job.</returns>
+        [Obsolete("Use IWindowsAsyncJobFactoryService.Enqueue(ActivityCode activity, MessageCode, TArg, Func<IAsyncOperationProgress, TArg, Task) or IWindowsAsyncJobFactoryService.Enqueue(ActivityCode activity, TArg, Func<IAsyncOperationProgress, TArg, Task)")]
         Task RunAsync<TArg>([DisallowNull] string title, [DisallowNull] string initialMessage, TArg arg, [DisallowNull] Func<TArg, IStatusListener, Task> method,
             Action<IAsyncJob> onComplete = null);
 
@@ -222,6 +237,7 @@ namespace FsInfoCat
         /// <param name="initialMessage">The initial status message to display for the background job.</param>
         /// <param name="method">The asynchronous method to execute as the background job.</param>
         /// <returns>An <see cref="IAsyncJob"/> value that can be used to monitor the status of the background job as well as the ability to cancel the job.</returns>
+        [Obsolete("Use IWindowsAsyncJobFactoryService.Enqueue(ActivityCode activity, MessageCode, Func<IAsyncOperationProgress, TArg1, TArg2, Task) or IWindowsAsyncJobFactoryService.Enqueue(ActivityCode activity, Func<IAsyncOperationProgress, Task)")]
         IAsyncJob StartNew([DisallowNull] string title, [DisallowNull] string initialMessage, [DisallowNull] Func<IStatusListener, Task> method);
 
         /// <summary>
@@ -232,6 +248,7 @@ namespace FsInfoCat
         /// <param name="method">The asynchronous method to execute as the background job.</param>
         /// <param name="onComplete">The callback to invoke when the background job is complete.</param>
         /// <returns>The task that is executing the background job.</returns>
+        [Obsolete("Use IWindowsAsyncJobFactoryService.Enqueue(ActivityCode activity, MessageCode, Func<IAsyncOperationProgress, TArg1, TArg2, Task) or IWindowsAsyncJobFactoryService.Enqueue(ActivityCode activity, Func<IAsyncOperationProgress, Task)")]
         Task RunAsync([DisallowNull] string title, [DisallowNull] string initialMessage, [DisallowNull] Func<IStatusListener, Task> method,
             Action<IAsyncJob> onComplete = null);
     }

@@ -5,7 +5,6 @@ using System.Windows.Threading;
 
 namespace FsInfoCat.Desktop
 {
-
     /// <summary>
     /// Allows background operations to safely update status information to the associated <see cref="IAsyncOpViewModel">background operation view model item</typeparamref>.
     /// </summary>

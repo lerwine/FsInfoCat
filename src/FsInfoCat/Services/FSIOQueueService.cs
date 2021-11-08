@@ -79,5 +79,15 @@ namespace FsInfoCat.Services
         });
 
         IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)_queue.Select(t => t.Target)).GetEnumerator();
+
+        public IQueuedBgOperation Enqueue(ActivityCode activity, [DisallowNull] Func<IAsyncOperationProgress, Task> asyncMethod)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IQueuedBgOperation<TResult> Enqueue<TResult>(ActivityCode activity, [DisallowNull] Func<IAsyncOperationProgress, Task<TResult>> asyncMethod)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

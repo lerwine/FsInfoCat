@@ -18,7 +18,7 @@ namespace FsInfoCat.Local.Crawling
 
         public Task<CrawlTerminationReason> Task { get; }
 
-        Task IQueuedBgOperation.Task => Task;
+        Task IBgOperation.Task => Task;
 
         public AsyncJobStatus Status => JobResult.Status;
 
