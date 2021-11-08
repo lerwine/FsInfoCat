@@ -28,6 +28,8 @@ namespace FsInfoCat.Local.Crawling
 
         public MessageCode StatusDescription { get; private set; }
 
+        public IAsyncOperationInfo ParentOperation { get; }
+
         object IAsyncResult.AsyncState => ((IAsyncOperationInfo)JobResult).AsyncState;
 
         WaitHandle IAsyncResult.AsyncWaitHandle => ((IAsyncResult)Task).AsyncWaitHandle;
@@ -47,9 +49,10 @@ namespace FsInfoCat.Local.Crawling
         public object AsyncState => throw new NotImplementedException();
 
         internal CrawlJob([DisallowNull] IFSIOQueueService fsIOQueueService, [DisallowNull] ILocalCrawlConfiguration crawlConfiguration, [DisallowNull] ICrawlMessageBus crawlMessageBus, [DisallowNull] IFileSystemDetailService fileSystemDetailService, DateTime? stopAt,
-            [DisallowNull] Action<CrawlJob> onStarted)
+            [DisallowNull] Action<CrawlJob> onStarted, IAsyncOperationInfo parentOperation = null)
         {
             _worker = new(crawlConfiguration, crawlMessageBus, fileSystemDetailService, ConcurrencyId, stopAt);
+            ParentOperation = parentOperation;
             JobResult = fsIOQueueService.Enqueue(ActivityCode.CrawlingFileSystem, cancellationToken => DoWorkAsync(onStarted.Invoke, cancellationToken));
             Task = JobResult.Task.ContinueWith(task =>
             {
