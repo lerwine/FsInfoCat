@@ -234,54 +234,5 @@ namespace FsInfoCat.UnitTests
             SubdirectoryAccessError target = default; // TODO: Create and initialize SubdirectoryAccessError instance
             target.RejectChanges();
         }
-
-        [TestMethod("Type GetType()"), Ignore]
-        public void GetTypeTestMethod()
-        {
-            Assert.Inconclusive("Test not implemented");
-            // DEFERRED: Implement test for Type GetType()
-
-            SubdirectoryAccessError target = default; // TODO: Create and initialize SubdirectoryAccessError instance
-            Type expectedReturnValue = default;
-            Type actualReturnValue = target.GetType();
-            Assert.AreEqual(expectedReturnValue, actualReturnValue);
-        }
-
-        [TestMethod("string ToString()"), Ignore]
-        public void ToStringTestMethod()
-        {
-            Assert.Inconclusive("Test not implemented");
-            // DEFERRED: Implement test for string ToString()
-
-            SubdirectoryAccessError target = default; // TODO: Create and initialize SubdirectoryAccessError instance
-            string expectedReturnValue = default;
-            string actualReturnValue = target.ToString();
-            Assert.AreEqual(expectedReturnValue, actualReturnValue);
-        }
-
-        [TestMethod("bool Equals(object)"), Ignore]
-        public void EqualsObjectTestMethod()
-        {
-            Assert.Inconclusive("Test not implemented");
-            // DEFERRED: Implement test for bool Equals(object)
-
-            object objArg = default;
-            SubdirectoryAccessError target = default; // TODO: Create and initialize SubdirectoryAccessError instance
-            bool expectedReturnValue = default;
-            bool actualReturnValue = target.Equals(objArg);
-            Assert.AreEqual(expectedReturnValue, actualReturnValue);
-        }
-
-        [TestMethod("int GetHashCode()"), Ignore]
-        public void GetHashCodeTestMethod()
-        {
-            Assert.Inconclusive("Test not implemented");
-            // DEFERRED: Implement test for int GetHashCode()
-
-            SubdirectoryAccessError target = default; // TODO: Create and initialize SubdirectoryAccessError instance
-            int expectedReturnValue = default;
-            int actualReturnValue = target.GetHashCode();
-            Assert.AreEqual(expectedReturnValue, actualReturnValue);
-        }
     }
 }

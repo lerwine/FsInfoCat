@@ -281,54 +281,5 @@ namespace FsInfoCat.UnitTests
             SymbolicName target = default; // TODO: Create and initialize SymbolicName instance
             target.RejectChanges();
         }
-
-        [TestMethod("Type GetType()"), Ignore]
-        public void GetTypeTestMethod()
-        {
-            Assert.Inconclusive("Test not implemented");
-            // DEFERRED: Implement test for Type GetType()
-
-            SymbolicName target = default; // TODO: Create and initialize SymbolicName instance
-            Type expectedReturnValue = default;
-            Type actualReturnValue = target.GetType();
-            Assert.AreEqual(expectedReturnValue, actualReturnValue);
-        }
-
-        [TestMethod("string ToString()"), Ignore]
-        public void ToStringTestMethod()
-        {
-            Assert.Inconclusive("Test not implemented");
-            // DEFERRED: Implement test for string ToString()
-
-            SymbolicName target = default; // TODO: Create and initialize SymbolicName instance
-            string expectedReturnValue = default;
-            string actualReturnValue = target.ToString();
-            Assert.AreEqual(expectedReturnValue, actualReturnValue);
-        }
-
-        [TestMethod("bool Equals(object)"), Ignore]
-        public void EqualsObjectTestMethod()
-        {
-            Assert.Inconclusive("Test not implemented");
-            // DEFERRED: Implement test for bool Equals(object)
-
-            object objArg = default;
-            SymbolicName target = default; // TODO: Create and initialize SymbolicName instance
-            bool expectedReturnValue = default;
-            bool actualReturnValue = target.Equals(objArg);
-            Assert.AreEqual(expectedReturnValue, actualReturnValue);
-        }
-
-        [TestMethod("int GetHashCode()"), Ignore]
-        public void GetHashCodeTestMethod()
-        {
-            Assert.Inconclusive("Test not implemented");
-            // DEFERRED: Implement test for int GetHashCode()
-
-            SymbolicName target = default; // TODO: Create and initialize SymbolicName instance
-            int expectedReturnValue = default;
-            int actualReturnValue = target.GetHashCode();
-            Assert.AreEqual(expectedReturnValue, actualReturnValue);
-        }
     }
 }

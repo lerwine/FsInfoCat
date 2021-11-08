@@ -236,54 +236,5 @@ namespace FsInfoCat.UnitTests
             FileAccessError target = default; // TODO: Create and initialize FileAccessError instance
             target.RejectChanges();
         }
-
-        [TestMethod("Type GetType()"), Ignore]
-        public void GetTypeTestMethod()
-        {
-            Assert.Inconclusive("Test not implemented");
-            // DEFERRED: Implement test for Type GetType()
-
-            FileAccessError target = default; // TODO: Create and initialize FileAccessError instance
-            Type expectedReturnValue = default;
-            Type actualReturnValue = target.GetType();
-            Assert.AreEqual(expectedReturnValue, actualReturnValue);
-        }
-
-        [TestMethod("string ToString()"), Ignore]
-        public void ToStringTestMethod()
-        {
-            Assert.Inconclusive("Test not implemented");
-            // DEFERRED: Implement test for string ToString()
-
-            FileAccessError target = default; // TODO: Create and initialize FileAccessError instance
-            string expectedReturnValue = default;
-            string actualReturnValue = target.ToString();
-            Assert.AreEqual(expectedReturnValue, actualReturnValue);
-        }
-
-        [TestMethod("bool Equals(object)"), Ignore]
-        public void EqualsObjectTestMethod()
-        {
-            Assert.Inconclusive("Test not implemented");
-            // DEFERRED: Implement test for bool Equals(object)
-
-            object objArg = default;
-            FileAccessError target = default; // TODO: Create and initialize FileAccessError instance
-            bool expectedReturnValue = default;
-            bool actualReturnValue = target.Equals(objArg);
-            Assert.AreEqual(expectedReturnValue, actualReturnValue);
-        }
-
-        [TestMethod("int GetHashCode()"), Ignore]
-        public void GetHashCodeTestMethod()
-        {
-            Assert.Inconclusive("Test not implemented");
-            // DEFERRED: Implement test for int GetHashCode()
-
-            FileAccessError target = default; // TODO: Create and initialize FileAccessError instance
-            int expectedReturnValue = default;
-            int actualReturnValue = target.GetHashCode();
-            Assert.AreEqual(expectedReturnValue, actualReturnValue);
-        }
     }
 }
