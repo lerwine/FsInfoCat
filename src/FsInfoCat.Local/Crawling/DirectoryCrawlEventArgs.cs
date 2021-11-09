@@ -4,9 +4,9 @@ using System.IO;
 
 namespace FsInfoCat.Local.Crawling
 {
-    public abstract class DirectoryCrawlEventArgs : CrawlActivityEventArgs, IFsItemCrawlEventArgs
+    public class DirectoryCrawlEventArgs : CrawlActivityEventArgs, IFsItemCrawlEventArgs
     {
-        public ILocalSubdirectory Entity { get; }
+        public Subdirectory Entity { get; }
 
         public DirectoryInfo Target { get; }
 
@@ -21,6 +21,12 @@ namespace FsInfoCat.Local.Crawling
 
         public DirectoryCrawlEventArgs Parent { get; }
 
+        public DirectoryCrawlEventArgs([DisallowNull] DirectoryCrawlEventArgs currentItem, [DisallowNull] IAsyncOperationInfo progress) : base((currentItem ?? throw new ArgumentNullException(nameof(currentItem))).ConcurrencyId,
+            (progress ?? throw new ArgumentNullException(nameof(progress))).Status, progress.Activity ?? currentItem.Activity,
+            (progress.Activity.HasValue && progress.StatusDescription.HasValue) ? progress.StatusDescription.Value : currentItem.StatusDescription, progress.CurrentOperation, progress.AsyncState, progress.ParentOperation) { }
+
+        [Obsolete("ICrawlJob can't be passed from worker")]
+        // TODO: Create constructor that does not use ICrawlJob parameter
         protected DirectoryCrawlEventArgs([DisallowNull] ICrawlJob source, [DisallowNull] ICurrentDirectory target, MessageCode? statusDescription = null, IAsyncOperationInfo parentOperation = null)
             : base((source ?? throw new ArgumentNullException(nameof(source))).ConcurrencyId, source.Status, source.Activity,
                   statusDescription ?? source.StatusDescription, (target ?? throw new ArgumentNullException(nameof(target))).GetRelativeParentPath(), ((IAsyncOperationInfo)source).AsyncState, parentOperation)

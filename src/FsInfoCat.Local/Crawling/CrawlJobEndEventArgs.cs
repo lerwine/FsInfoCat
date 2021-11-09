@@ -10,6 +10,7 @@ namespace FsInfoCat.Local.Crawling
 
         public bool IsLastJob { get; }
 
+        // TODO: Create constructor that does not use ICrawlJob parameter
         public CrawlJobEndEventArgs([DisallowNull] ICrawlJob crawlJob, bool isLastJob, CrawlTerminationReason terminationReason)
             : base(crawlJob, (terminationReason == CrawlTerminationReason.Aborted) ? ((crawlJob.Status == AsyncJobStatus.Faulted) ? AsyncJobStatus.Faulted : AsyncJobStatus.Canceled) : AsyncJobStatus.Succeeded, terminationReason switch
             {
@@ -24,6 +25,7 @@ namespace FsInfoCat.Local.Crawling
             IsLastJob = isLastJob;
         }
 
+        // TODO: Create constructor that does not use ICrawlJob parameter
         public CrawlJobEndEventArgs([DisallowNull] ICrawlJob crawlJob, bool isLastJob, AsyncOperationFailureException exception)
             : base(crawlJob, AsyncJobStatus.Faulted, ((IAsyncOperationInfo)exception).StatusDescription, exception.AsyncOperation.CurrentOperation)
         {

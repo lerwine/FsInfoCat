@@ -2,7 +2,7 @@ using System;
 
 namespace FsInfoCat.Local.Crawling
 {
-    public abstract class CrawlActivityEventArgs : EventArgs, ICrawlActivityEventArgs
+    public class CrawlActivityEventArgs : EventArgs, ICrawlActivityEventArgs
     {
         public Guid ConcurrencyId { get; }
 
@@ -19,6 +19,7 @@ namespace FsInfoCat.Local.Crawling
         public string CurrentOperation { get; }
 
         public object AsyncState { get; }
+
         public IAsyncOperationInfo ParentOperation { get; }
 
         protected CrawlActivityEventArgs(ICrawlActivityEventArgs source)
@@ -32,6 +33,8 @@ namespace FsInfoCat.Local.Crawling
             ParentOperation = source.ParentOperation;
         }
 
+        [Obsolete("ICrawlJob can't be passed from worker")]
+        // TODO: Remove this constructor
         protected CrawlActivityEventArgs(ICrawlJob source, AsyncJobStatus status, MessageCode? statusDescription = null, string currentOperation = null)
         {
             ConcurrencyId = source.ConcurrencyId;

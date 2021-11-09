@@ -7,6 +7,7 @@ namespace FsInfoCat.Local.Crawling
     {
         public Exception Exception { get; }
 
+        // TODO: Create constructor that does not use ICrawlJob parameter
         public DirectoryCrawlErrorEventArgs([DisallowNull] Exception exception, [DisallowNull] ICrawlJob source, [DisallowNull] ICurrentDirectory target, MessageCode statusMessage)
             : base(source, target, statusMessage)
         {

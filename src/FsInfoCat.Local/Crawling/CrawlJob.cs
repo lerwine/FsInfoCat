@@ -53,7 +53,7 @@ namespace FsInfoCat.Local.Crawling
         {
             _worker = new(crawlConfiguration, crawlMessageBus, fileSystemDetailService, ConcurrencyId, stopAt);
             ParentOperation = parentOperation;
-            JobResult = fsIOQueueService.Enqueue(ActivityCode.CrawlingFileSystem, cancellationToken => DoWorkAsync(onStarted.Invoke, cancellationToken));
+            JobResult = fsIOQueueService.Enqueue(ActivityCode.CrawlingFileSystem, updateProgress => DoWorkAsync(onStarted.Invoke, updateProgress));
             Task = JobResult.Task.ContinueWith(task =>
             {
                 if (task.IsCanceled || task.IsFaulted)
@@ -62,10 +62,10 @@ namespace FsInfoCat.Local.Crawling
             });
         }
 
-        private async Task<CrawlTerminationReason> DoWorkAsync([DisallowNull] Action<CrawlJob> onStarted, CancellationToken cancellationToken)
+        private async Task<CrawlTerminationReason> DoWorkAsync([DisallowNull] Action<CrawlJob> onStarted, [DisallowNull] IAsyncOperationProgress updateProgress)
         {
             onStarted(this);
-            bool? timeoutReached = await _worker.DoWorkAsync(cancellationToken);
+            bool? timeoutReached = await _worker.DoWorkAsync(updateProgress);
             return timeoutReached.HasValue ? (timeoutReached.Value ? CrawlTerminationReason.TimeLimitReached : CrawlTerminationReason.ItemLimitReached) : CrawlTerminationReason.Completed;
         }
 
