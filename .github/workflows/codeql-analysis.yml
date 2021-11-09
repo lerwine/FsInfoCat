@@ -23,13 +23,32 @@ on:
         -  '!src/Setup/**'
         -  '!src/SQLite/**'
         -  '!src/TestResults/**'
+        -  '!src/.vs/**'
   pull_request:
     # The branches below must be a subset of the branches above
     branches: [ main ]
+    paths:
+        - 'src/**'
+        -  '!src/**.dgml'
+        -  '!src/**.cd'
+        -  '!src/FsInfoCat.PS/**'
+        -  '!src/FsInfoCat.UnitTests/**'
+        -  '!src/Setup/**'
+        -  '!src/SQLite/**'
+        -  '!src/TestResults/**'
+        -  '!src/.vs/**'
   schedule:
     - cron: '17 14 * * 1'
 
 jobs:
+  issue_update:
+    name: Issue Update
+    runs-on: ubuntu-latest
+    steps:
+      - uses: "actions/checkout@master"
+      - name: "TODO to Issue"
+        uses: "alstr/todo-to-issue-action@v4.4.1"
+        id: "todo"
   analyze:
     name: Analyze
     runs-on: windows-latest
