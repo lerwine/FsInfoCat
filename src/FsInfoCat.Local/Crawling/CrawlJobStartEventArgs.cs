@@ -8,6 +8,7 @@ namespace FsInfoCat.Local.Crawling
 
         public bool IsFirstJob { get; }
 
+        // TODO: Create constructor that does not use ICrawlJob parameter
         public CrawlJobStartEventArgs([DisallowNull] ICrawlJob crawlJob, bool isFirstJob) : base(crawlJob, AsyncJobStatus.Running)
         {
             CrawlJob = crawlJob;

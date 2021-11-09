@@ -7,6 +7,10 @@ namespace FsInfoCat.Local.Crawling
 {
     public interface ICrawlMessageBus : ICrawlProgress
     {
+        void AddAsyncEventListener([DisallowNull] IProgress<IAsyncOperationInfo> listener);
+
+        bool RemoveAsyncEventListener(IProgress<IAsyncOperationInfo> listener);
+
         void AddCrawlActivityEventListener([DisallowNull] IProgress<ICrawlActivityEventArgs> listener);
 
         bool RemoveCrawlActivityEventListener(IProgress<ICrawlActivityEventArgs> listener);

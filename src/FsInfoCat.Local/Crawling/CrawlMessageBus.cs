@@ -11,6 +11,7 @@ namespace FsInfoCat.Local.Crawling
     public class CrawlMessageBus : ICrawlMessageBus
     {
         private readonly ILogger<CrawlMessageBus> _logger;
+        private readonly WeakReferenceSet<IProgress<IAsyncOperationInfo>> _asyncEventListeners = new();
         private readonly WeakReferenceSet<IProgress<ICrawlActivityEventArgs>> _crawlActivityEventListeners = new();
         private readonly WeakReferenceSet<IProgress<ICrawlErrorEventArgs>> _crawlErrorEventListeners = new();
         private readonly WeakReferenceSet<IProgress<ICrawlJobEventArgs>> _crawlManagerEventListeners = new();
@@ -34,6 +35,8 @@ namespace FsInfoCat.Local.Crawling
             _logger.LogDebug($"{nameof(ICrawlMessageBus)} Service instantiated");
         }
 
+        public void AddAsyncEventListener([DisallowNull] IProgress<IAsyncOperationInfo> listener) => _asyncEventListeners.Add(listener ?? throw new ArgumentNullException(nameof(listener)));
+
         public void AddCrawlActivityEventListener([DisallowNull] IProgress<ICrawlActivityEventArgs> listener) => _crawlActivityEventListeners.Add(listener ?? throw new ArgumentNullException(nameof(listener)));
 
         public void AddCrawlErrorEventListener([DisallowNull] IProgress<ICrawlErrorEventArgs> listener) => _crawlErrorEventListeners.Add(listener ?? throw new ArgumentNullException(nameof(listener)));
@@ -48,6 +51,8 @@ namespace FsInfoCat.Local.Crawling
 
         public void AddSubdirectoryCrawlEventListener([DisallowNull] IProgress<DirectoryCrawlEventArgs> listener, bool includeErrorEvents) => (includeErrorEvents ? _anyDirectoryEventListeners : _directoryEventListeners)
             .Add(listener ?? throw new ArgumentNullException(nameof(listener)));
+
+        public bool RemoveAsyncEventListener(IProgress<IAsyncOperationInfo> listener) => _asyncEventListeners.Remove(listener);
 
         public bool RemoveCrawlActivityEventListener(IProgress<ICrawlActivityEventArgs> listener) => _crawlActivityEventListeners.Remove(listener);
 
@@ -64,7 +69,8 @@ namespace FsInfoCat.Local.Crawling
         private void ReportCrawlActivityEvent([DisallowNull] ICrawlActivityEventArgs eventArgs)
         {
             _logger.LogDebug("{Method}({eventArgs})", nameof(ReportCrawlActivityEvent), eventArgs);
-            _crawlActivityEventListeners.RaiseProgressChangedAsync(eventArgs);
+            try { _crawlActivityEventListeners.RaiseProgressChangedAsync(eventArgs); }
+            finally { _asyncEventListeners.RaiseProgressChangedAsync(eventArgs); }
         }
 
         private void ReportCrawlErrorEvent([DisallowNull] ICrawlErrorEventArgs eventArgs)

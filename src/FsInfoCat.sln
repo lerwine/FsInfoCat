@@ -42,6 +42,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SQLite", "SQLite", "{E4FEA3
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FsInfoCat.UnitTests", "FsInfoCat.UnitTests\FsInfoCat.UnitTests.csproj", "{52428EBE-3242-4AE9-977C-4AFF05F17080}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CodeScanning", "CodeScanning", "{3696619B-376A-4F28-8AD9-4503D066BBC2}"
+	ProjectSection(SolutionItems) = preProject
+		..\.github\workflows\codeql-analysis.yml = ..\.github\workflows\codeql-analysis.yml
+		..\.github\codeql\codeql-config.yml = ..\.github\codeql\codeql-config.yml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -160,6 +166,7 @@ Global
 		{0F4404B3-2A29-4956-8AC6-C36AD8D40B33} = {21DE209E-F2AD-48EC-A6BB-7C66EF73762F}
 		{C24C3CB7-C5C3-46CA-999B-CEFE0DF7E2C8} = {0F4404B3-2A29-4956-8AC6-C36AD8D40B33}
 		{E4FEA3BF-50D9-4B1B-B702-F7A21468834E} = {21DE209E-F2AD-48EC-A6BB-7C66EF73762F}
+		{3696619B-376A-4F28-8AD9-4503D066BBC2} = {21DE209E-F2AD-48EC-A6BB-7C66EF73762F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A32FEC3A-2731-4537-A4BB-A42B8A348734}
