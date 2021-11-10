@@ -108,7 +108,7 @@ namespace FsInfoCat.Desktop.WMI
             cancellationToken.ThrowIfCancellationRequested();
             ManagementScope namespaceScope = new("\\\\.\\ROOT\\CIMV2");
             ObjectQuery diskQuery = new($"SELECT * FROM {nameof(Win32_LogicalDisk)}");
-            ManagementObjectSearcher mgmtObjSearcher = new(namespaceScope, diskQuery);
+            using ManagementObjectSearcher mgmtObjSearcher = new(namespaceScope, diskQuery);
             foreach (ManagementObject obj in mgmtObjSearcher.Get())
             {
                 cancellationToken.ThrowIfCancellationRequested();

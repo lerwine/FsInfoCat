@@ -83,11 +83,7 @@ namespace FsInfoCat.Services
                         _service.CurrentOperation = this;
                     }
                     else
-                    {
-                        CancellationTokenSource tokenSource = new();
-                        service._queue.AddLast((this, tokenSource));
-                        tokenSource.Token.Register(OnStart);
-                    }
+                        service._queue.AddLast((this, new())).Value.StartSource.Token.Register(OnStart);
                 });
             }
 
@@ -115,11 +111,7 @@ namespace FsInfoCat.Services
                         _service.CurrentOperation = this;
                     }
                     else
-                    {
-                        CancellationTokenSource tokenSource = new();
-                        service._queue.AddLast((this, tokenSource));
-                        tokenSource.Token.Register(OnStart);
-                    }
+                        service._queue.AddLast((this, new())).Value.StartSource.Token.Register(OnStart);
                 });
             }
 
