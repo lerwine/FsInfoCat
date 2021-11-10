@@ -10,9 +10,8 @@ namespace FsInfoCat.Local.Crawling
 
         public bool IsLastJob { get; }
 
-        // TODO: Create constructor that does not use ICrawlJob parameter
         public CrawlJobEndEventArgs([DisallowNull] ICrawlJob crawlJob, bool isLastJob, CrawlTerminationReason terminationReason)
-            : base(crawlJob, (terminationReason == CrawlTerminationReason.Aborted) ? ((crawlJob.Status == AsyncJobStatus.Faulted) ? AsyncJobStatus.Faulted : AsyncJobStatus.Canceled) : AsyncJobStatus.Succeeded, terminationReason switch
+            : base(crawlJob, terminationReason switch
             {
                 CrawlTerminationReason.ItemLimitReached => MessageCode.ItemLimitReached,
                 CrawlTerminationReason.TimeLimitReached => MessageCode.TimeLimitReached,
@@ -21,15 +20,6 @@ namespace FsInfoCat.Local.Crawling
             }, (crawlJob.Status == AsyncJobStatus.Faulted) ? crawlJob.CurrentOperation : null)
         {
             TerminationReason = terminationReason;
-            CrawlJob = crawlJob;
-            IsLastJob = isLastJob;
-        }
-
-        // TODO: Create constructor that does not use ICrawlJob parameter
-        public CrawlJobEndEventArgs([DisallowNull] ICrawlJob crawlJob, bool isLastJob, AsyncOperationFailureException exception)
-            : base(crawlJob, AsyncJobStatus.Faulted, ((IAsyncOperationInfo)exception).StatusDescription, exception.AsyncOperation.CurrentOperation)
-        {
-            TerminationReason = CrawlTerminationReason.Aborted;
             CrawlJob = crawlJob;
             IsLastJob = isLastJob;
         }

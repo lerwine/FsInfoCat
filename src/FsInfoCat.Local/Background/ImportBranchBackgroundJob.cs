@@ -16,7 +16,7 @@ namespace FsInfoCat.Local.Background
         private readonly ILogger<ImportBranchBackgroundWorker> _logger;
         private readonly IFileSystemDetailService _fileSystemDetailService;
         private readonly IProgress<string> _onReportProgress;
-        private readonly IQueuedBgOperation<Subdirectory> _workItem;
+        private readonly IQueuedBgProducer<Subdirectory> _workItem;
 
         public bool MarkNewAsCompleted { get; }
 

@@ -1,3 +1,4 @@
+using FsInfoCat.Services;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
@@ -6,35 +7,25 @@ namespace FsInfoCat.Local.Crawling
 {
     public class FileCrawlEventArgs : CrawlActivityEventArgs, IFsItemCrawlEventArgs
     {
-        public ILocalFile Entity { get; }
+        public FileCrawlEventArgs([DisallowNull] IBgOperationEventArgs bgOperation, [DisallowNull] ICurrentFile file, MessageCode statusDescription, string currentOperation)
+            : base(bgOperation, statusDescription, currentOperation ?? file.GetFullName())
+        {
+            Entity = file.Entity;
+            Target = file.Target;
+            Parent = file.Parent;
+        }
 
-        [System.Obsolete("Use GetFullName() or GetRelativeParentPath()")]
-        public string FullName { get; }
+        public ILocalFile Entity { get; }
 
         public FileInfo Target { get; }
 
         ILocalDbFsItem ICurrentItem.Entity { get; }
 
-        public DirectoryCrawlEventArgs Parent { get; }
+        public ICurrentDirectory Parent { get; }
 
         public string Name => Target?.Name ?? Entity?.Name ?? "";
 
         FileSystemInfo ICurrentItem.Target => Target;
-
-        public FileCrawlEventArgs([DisallowNull] FileCrawlEventArgs currentItem, [DisallowNull] IAsyncOperationInfo progress) : base((currentItem ?? throw new ArgumentNullException(nameof(currentItem))).ConcurrencyId,
-            (progress ?? throw new ArgumentNullException(nameof(progress))).Status, progress.Activity ?? currentItem.Activity,
-            (progress.Activity.HasValue && progress.StatusDescription.HasValue) ? progress.StatusDescription.Value : currentItem.StatusDescription, progress.CurrentOperation, progress.AsyncState, progress.ParentOperation)
-        { }
-
-        [Obsolete("ICrawlJob can't be passed from worker")]
-        // TODO: Create constructor that does not use ICrawlJob parameter
-        protected FileCrawlEventArgs([DisallowNull] ICrawlJob source, [DisallowNull] ICurrentFile target, MessageCode? statusDescription = null, IAsyncOperationInfo parentOperation = null)
-            : base((source ?? throw new ArgumentNullException(nameof(source))).ConcurrencyId, source.Status, source.Activity,
-                  statusDescription ?? source.StatusDescription, (target ?? throw new ArgumentNullException(nameof(target))).GetRelativeParentPath(), ((IAsyncOperationInfo)source).AsyncState, parentOperation)
-        {
-            Target = target.Target;
-            Entity = target.Entity;
-        }
 
         public string GetFullName()
         {

@@ -2,7 +2,7 @@ using FsInfoCat.Services;
 
 namespace FsInfoCat.Local.Crawling
 {
-    public interface ICrawlJob : IQueuedBgOperation<CrawlTerminationReason>
+    public interface ICrawlJob : IQueuedBgProducer<CrawlTerminationReason>
     {
         ICurrentItem CurrentItem { get; }
     }

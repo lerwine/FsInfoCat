@@ -19,4 +19,6 @@ namespace FsInfoCat.Services
 
         new MessageCode StatusDescription { get; }
     }
+
+    public interface IBgOperationEventArgs<T> : IBgOperationEventArgs, IAsyncOperationInfo<T> { }
 }

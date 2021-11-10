@@ -12,6 +12,8 @@ namespace FsInfoCat.Local.Crawling
 
             internal CurrentDirectory Parent { get; init; }
 
+            ICurrentDirectory ICurrentItem.Parent => Parent;
+
             string ICurrentItem.Name => Target.Name ?? Entity.Name;
 
             FileSystemInfo ICurrentItem.Target => Target;

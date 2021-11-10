@@ -55,4 +55,16 @@ namespace FsInfoCat
         /// PowerShell <see cref="https://docs.microsoft.com/en-us/dotnet/api/system.management.automation.progressrecord.activityid#System_Management_Automation_ProgressRecord_ParentActivityId">ProgressRecord.ParentActivityId</see> property.</remarks>
         IAsyncOperationInfo ParentOperation { get; }
     }
+
+    /// <summary>
+    /// Progress information for an asynchronous operation.
+    /// </summary>
+    /// <typeparam name="T">The type of the asynchronous state value.</typeparam>
+    public interface IAsyncOperationInfo<T> : IAsyncOperationInfo
+    {
+        /// <summary>
+        /// Gets a user-defined object that qualifies or contains information about the asynchronous operation.
+        /// </summary>
+        new T AsyncState { get; }
+    }
 }

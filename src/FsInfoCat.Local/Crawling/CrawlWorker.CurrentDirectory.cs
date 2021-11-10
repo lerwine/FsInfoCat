@@ -18,6 +18,8 @@ namespace FsInfoCat.Local.Crawling
 
             ILocalDbFsItem ICurrentItem.Entity => Entity;
 
+            ICurrentDirectory ICurrentItem.Parent => Parent;
+
             public string GetFullName()
             {
                 if (Target is null)

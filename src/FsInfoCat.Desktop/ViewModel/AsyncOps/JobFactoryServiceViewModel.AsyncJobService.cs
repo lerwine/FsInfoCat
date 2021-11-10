@@ -483,6 +483,161 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
             {
                 throw new NotImplementedException();
             }
+
+            IQueuedBgProducer<TResult> IWindowsAsyncJobFactoryService.Enqueue<TArg1, TArg2, TArg3, TResult>(ActivityCode activity, MessageCode statusMessage, TArg1 arg1, TArg2 arg2, TArg3 arg3, Func<IWindowsOperationProgress, TArg1, TArg2, TArg3, Task<TResult>> asyncMethod)
+            {
+                throw new NotImplementedException();
+            }
+
+            IQueuedBgProducer<TResult> IWindowsAsyncJobFactoryService.Enqueue<TArg1, TArg2, TArg3, TResult>(ActivityCode activity, TArg1 arg1, TArg2 arg2, TArg3 arg3, Func<IWindowsOperationProgress, TArg1, TArg2, TArg3, Task<TResult>> asyncMethod)
+            {
+                throw new NotImplementedException();
+            }
+
+            IQueuedBgProducer<TResult> IWindowsAsyncJobFactoryService.Enqueue<TArg1, TArg2, TResult>(ActivityCode activity, MessageCode statusMessage, TArg1 arg1, TArg2 arg2, Func<IWindowsOperationProgress, TArg1, TArg2, Task<TResult>> asyncMethod)
+            {
+                throw new NotImplementedException();
+            }
+
+            IQueuedBgProducer<TResult> IWindowsAsyncJobFactoryService.Enqueue<TArg1, TArg2, TResult>(ActivityCode activity, TArg1 arg1, TArg2 arg2, Func<IWindowsOperationProgress, TArg1, TArg2, Task<TResult>> asyncMethod)
+            {
+                throw new NotImplementedException();
+            }
+
+            IQueuedBgProducer<TResult> IWindowsAsyncJobFactoryService.Enqueue<TArg, TResult>(ActivityCode activity, MessageCode statusMessage, TArg arg, Func<IWindowsOperationProgress, TArg, Task<TResult>> asyncMethod)
+            {
+                throw new NotImplementedException();
+            }
+
+            IQueuedBgProducer<TResult> IWindowsAsyncJobFactoryService.Enqueue<TArg, TResult>(ActivityCode activity, TArg arg, Func<IWindowsOperationProgress, TArg, Task<TResult>> asyncMethod)
+            {
+                throw new NotImplementedException();
+            }
+
+            IQueuedBgProducer<TResult> IWindowsAsyncJobFactoryService.Enqueue<TResult>(ActivityCode activity, MessageCode statusMessage, Func<IWindowsOperationProgress, Task<TResult>> asyncMethod)
+            {
+                throw new NotImplementedException();
+            }
+
+            IQueuedBgProducer<TResult> IWindowsAsyncJobFactoryService.Enqueue<TResult>(ActivityCode activity, Func<IWindowsOperationProgress, Task<TResult>> asyncMethod)
+            {
+                throw new NotImplementedException();
+            }
+
+            public IQueuedBgOperation<T> Enqueue<T>(ActivityCode activity, T state, [DisallowNull] Func<T, IStatusReportable, Task> asyncMethod)
+            {
+                throw new NotImplementedException();
+            }
+
+            public IQueuedBgOperation<T> Enqueue<T>(ActivityCode activity, T state, IProgress<IAsyncOperationInfo> progressHandler, [DisallowNull] Func<T, IStatusReportable, Task> asyncMethod)
+            {
+                throw new NotImplementedException();
+            }
+
+            public IQueuedBgOperation<T> Enqueue<T>(ActivityCode activity, T state, [DisallowNull] Func<IStatusReportable, Task> asyncMethod)
+            {
+                throw new NotImplementedException();
+            }
+
+            public IQueuedBgOperation<T> Enqueue<T>(ActivityCode activity, T state, IProgress<IAsyncOperationInfo> progressHandler, [DisallowNull] Func<IStatusReportable, Task> asyncMethod)
+            {
+                throw new NotImplementedException();
+            }
+
+            public IQueuedBgOperation Enqueue(ActivityCode activity, [DisallowNull] Func<IStatusReportable, Task> asyncMethod)
+            {
+                throw new NotImplementedException();
+            }
+
+            public IQueuedBgOperation Enqueue(ActivityCode activity, IProgress<IAsyncOperationInfo> progressHandler, [DisallowNull] Func<IStatusReportable, Task> asyncMethod)
+            {
+                throw new NotImplementedException();
+            }
+
+            public IQueuedBgOperation<T> Enqueue<T>(ActivityCode activity, T state, [DisallowNull] Func<T, CancellationToken, Task> asyncMethod)
+            {
+                throw new NotImplementedException();
+            }
+
+            public IQueuedBgOperation<T> Enqueue<T>(ActivityCode activity, T state, IProgress<IAsyncOperationInfo> progressHandler, [DisallowNull] Func<T, CancellationToken, Task> asyncMethod)
+            {
+                throw new NotImplementedException();
+            }
+
+            public IQueuedBgOperation<T> Enqueue<T>(ActivityCode activity, T state, [DisallowNull] Func<CancellationToken, Task> asyncMethod)
+            {
+                throw new NotImplementedException();
+            }
+
+            public IQueuedBgOperation<T> Enqueue<T>(ActivityCode activity, T state, IProgress<IAsyncOperationInfo> progressHandler, [DisallowNull] Func<CancellationToken, Task> asyncMethod)
+            {
+                throw new NotImplementedException();
+            }
+
+            public IQueuedBgOperation Enqueue(ActivityCode activity, IProgress<IAsyncOperationInfo> progressHandler, [DisallowNull] Func<CancellationToken, Task> asyncMethod)
+            {
+                throw new NotImplementedException();
+            }
+
+            public IQueuedBgProducer<TState, TResult> Enqueue<TState, TResult>(ActivityCode activity, TState state, [DisallowNull] Func<TState, IStatusReportable, Task<TResult>> asyncMethod)
+            {
+                throw new NotImplementedException();
+            }
+
+            public IQueuedBgProducer<TState, TResult> Enqueue<TState, TResult>(ActivityCode activity, TState state, IProgress<IAsyncOperationInfo> progressHandler, [DisallowNull] Func<TState, IStatusReportable, Task<TResult>> asyncMethod)
+            {
+                throw new NotImplementedException();
+            }
+
+            public IQueuedBgProducer<TState, TResult> Enqueue<TState, TResult>(ActivityCode activity, TState state, [DisallowNull] Func<IStatusReportable, Task<TResult>> asyncMethod)
+            {
+                throw new NotImplementedException();
+            }
+
+            public IQueuedBgProducer<TState, TResult> Enqueue<TState, TResult>(ActivityCode activity, TState state, IProgress<IAsyncOperationInfo> progressHandler, [DisallowNull] Func<IStatusReportable, Task<TResult>> asyncMethod)
+            {
+                throw new NotImplementedException();
+            }
+
+            public IQueuedBgProducer<T> Enqueue<T>(ActivityCode activity, [DisallowNull] Func<IStatusReportable, Task<T>> asyncMethod)
+            {
+                throw new NotImplementedException();
+            }
+
+            public IQueuedBgProducer<T> Enqueue<T>(ActivityCode activity, IProgress<IAsyncOperationInfo> progressHandler, [DisallowNull] Func<IStatusReportable, Task<T>> asyncMethod)
+            {
+                throw new NotImplementedException();
+            }
+
+            public IQueuedBgProducer<TState, TResult> Enqueue<TState, TResult>(ActivityCode activity, TState state, [DisallowNull] Func<TState, CancellationToken, Task<TResult>> asyncMethod)
+            {
+                throw new NotImplementedException();
+            }
+
+            public IQueuedBgProducer<TState, TResult> Enqueue<TState, TResult>(ActivityCode activity, TState state, IProgress<IAsyncOperationInfo> progressHandler, [DisallowNull] Func<TState, CancellationToken, Task<TResult>> asyncMethod)
+            {
+                throw new NotImplementedException();
+            }
+
+            public IQueuedBgProducer<TState, TResult> Enqueue<TState, TResult>(ActivityCode activity, TState state, [DisallowNull] Func<CancellationToken, Task<TResult>> asyncMethod)
+            {
+                throw new NotImplementedException();
+            }
+
+            public IQueuedBgProducer<TState, TResult> Enqueue<TState, TResult>(ActivityCode activity, TState state, IProgress<IAsyncOperationInfo> progressHandler, [DisallowNull] Func<CancellationToken, Task<TResult>> asyncMethod)
+            {
+                throw new NotImplementedException();
+            }
+
+            IQueuedBgProducer<T> IBgOperationQueue.Enqueue<T>(ActivityCode activity, Func<CancellationToken, Task<T>> asyncMethod)
+            {
+                throw new NotImplementedException();
+            }
+
+            public IQueuedBgProducer<T> Enqueue<T>(ActivityCode activity, IProgress<IAsyncOperationInfo> progressHandler, [DisallowNull] Func<CancellationToken, Task<T>> asyncMethod)
+            {
+                throw new NotImplementedException();
+            }
         }
     }
 }

@@ -1,3 +1,4 @@
+using FsInfoCat.Services;
 using System;
 using System.Diagnostics.CodeAnalysis;
 
@@ -7,12 +8,12 @@ namespace FsInfoCat.Local.Crawling
     {
         public Exception Exception { get; }
 
-        // TODO: Create constructor that does not use ICrawlJob parameter
-        public FileCrawlErrorEventArgs([DisallowNull] Exception exception, [DisallowNull] ICrawlJob source, [DisallowNull] ICurrentFile target, MessageCode statusMessage)
-            : base(source, target, statusMessage)
+        public FileCrawlErrorEventArgs([DisallowNull] Exception exception, [DisallowNull] IBgOperationEventArgs bgOperation, [DisallowNull] ICurrentFile target, MessageCode statusMessage)
+            : base(bgOperation, target, statusMessage)
         {
             Exception = exception ?? throw new ArgumentNullException(nameof(exception));
         }
+
         public override string ToString() => $@"{base.ToString()}.Exception = {ExtensionMethods.ToPseudoCsText(Exception).AsIndented()}";
     }
 }

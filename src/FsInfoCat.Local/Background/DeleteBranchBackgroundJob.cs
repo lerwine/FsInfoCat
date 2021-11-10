@@ -19,7 +19,7 @@ namespace FsInfoCat.Local.Background
         private readonly IProgress<string> _onReportProgress;
         private readonly DeleteFileBackgroundWorker _deleteFileService;
         private readonly DeleteCrawlConfigurationBackgroundWorker _deleteCrawlConfigurationService;
-        private readonly IQueuedBgOperation<bool> _workItem;
+        private readonly IQueuedBgProducer<bool> _workItem;
 
         public bool DoNotUseTransaction { get; }
 

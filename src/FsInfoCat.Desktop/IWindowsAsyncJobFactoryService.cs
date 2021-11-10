@@ -38,9 +38,9 @@ namespace FsInfoCat.Desktop
         IAsyncJob<TResult> StartNew<TArg1, TArg2, TArg3, TResult>([DisallowNull] string title, [DisallowNull] string initialMessage, TArg1 arg1, TArg2 arg2, TArg3 arg3,
                 [DisallowNull] Func<TArg1, TArg2, TArg3, IWindowsStatusListener, Task<TResult>> method);
 
-        IQueuedBgOperation<TResult> Enqueue<TArg1, TArg2, TArg3, TResult>(ActivityCode activity, MessageCode statusMessage, TArg1 arg1, TArg2 arg2, TArg3 arg3, [DisallowNull] Func<IWindowsOperationProgress, TArg1, TArg2, TArg3, Task<TResult>> asyncMethod);
+        IQueuedBgProducer<TResult> Enqueue<TArg1, TArg2, TArg3, TResult>(ActivityCode activity, MessageCode statusMessage, TArg1 arg1, TArg2 arg2, TArg3 arg3, [DisallowNull] Func<IWindowsOperationProgress, TArg1, TArg2, TArg3, Task<TResult>> asyncMethod);
 
-        IQueuedBgOperation<TResult> Enqueue<TArg1, TArg2, TArg3, TResult>(ActivityCode activity, TArg1 arg1, TArg2 arg2, TArg3 arg3, [DisallowNull] Func<IWindowsOperationProgress, TArg1, TArg2, TArg3, Task<TResult>> asyncMethod);
+        IQueuedBgProducer<TResult> Enqueue<TArg1, TArg2, TArg3, TResult>(ActivityCode activity, TArg1 arg1, TArg2 arg2, TArg3 arg3, [DisallowNull] Func<IWindowsOperationProgress, TArg1, TArg2, TArg3, Task<TResult>> asyncMethod);
 
         /// <summary>
         /// Runs a background job asynchronously that returns a value.
@@ -78,9 +78,9 @@ namespace FsInfoCat.Desktop
         IAsyncJob<TResult> StartNew<TArg1, TArg2, TResult>([DisallowNull] string title, [DisallowNull] string initialMessage, TArg1 arg1, TArg2 arg2,
                 [DisallowNull] Func<TArg1, TArg2, IWindowsStatusListener, Task<TResult>> method);
 
-        IQueuedBgOperation<TResult> Enqueue<TArg1, TArg2, TResult>(ActivityCode activity, MessageCode statusMessage, TArg1 arg1, TArg2 arg2, [DisallowNull] Func<IWindowsOperationProgress, TArg1, TArg2, Task<TResult>> asyncMethod);
+        IQueuedBgProducer<TResult> Enqueue<TArg1, TArg2, TResult>(ActivityCode activity, MessageCode statusMessage, TArg1 arg1, TArg2 arg2, [DisallowNull] Func<IWindowsOperationProgress, TArg1, TArg2, Task<TResult>> asyncMethod);
 
-        IQueuedBgOperation<TResult> Enqueue<TArg1, TArg2, TResult>(ActivityCode activity, TArg1 arg1, TArg2 arg2, [DisallowNull] Func<IWindowsOperationProgress, TArg1, TArg2, Task<TResult>> asyncMethod);
+        IQueuedBgProducer<TResult> Enqueue<TArg1, TArg2, TResult>(ActivityCode activity, TArg1 arg1, TArg2 arg2, [DisallowNull] Func<IWindowsOperationProgress, TArg1, TArg2, Task<TResult>> asyncMethod);
 
         /// <summary>
         /// Runs a background job asynchronously that returns a value.
@@ -114,9 +114,9 @@ namespace FsInfoCat.Desktop
         IAsyncJob<TResult> StartNew<TArg, TResult>([DisallowNull] string title, [DisallowNull] string initialMessage, TArg arg,
             [DisallowNull] Func<TArg, IWindowsStatusListener, Task<TResult>> method);
 
-        IQueuedBgOperation<TResult> Enqueue<TArg, TResult>(ActivityCode activity, MessageCode statusMessage, TArg arg, [DisallowNull] Func<IWindowsOperationProgress, TArg, Task<TResult>> asyncMethod);
+        IQueuedBgProducer<TResult> Enqueue<TArg, TResult>(ActivityCode activity, MessageCode statusMessage, TArg arg, [DisallowNull] Func<IWindowsOperationProgress, TArg, Task<TResult>> asyncMethod);
 
-        IQueuedBgOperation<TResult> Enqueue<TArg, TResult>(ActivityCode activity, TArg arg, [DisallowNull] Func<IWindowsOperationProgress, TArg, Task<TResult>> asyncMethod);
+        IQueuedBgProducer<TResult> Enqueue<TArg, TResult>(ActivityCode activity, TArg arg, [DisallowNull] Func<IWindowsOperationProgress, TArg, Task<TResult>> asyncMethod);
 
         /// <summary>
         /// Runs a background job asynchronously that returns a value.
@@ -146,9 +146,9 @@ namespace FsInfoCat.Desktop
         IAsyncJob<TResult> StartNew<TResult>([DisallowNull] string title, [DisallowNull] string initialMessage,
             [DisallowNull] Func<IWindowsStatusListener, Task<TResult>> method);
 
-        IQueuedBgOperation<TResult> Enqueue<TResult>(ActivityCode activity, MessageCode statusMessage, [DisallowNull] Func<IWindowsOperationProgress, Task<TResult>> asyncMethod);
+        IQueuedBgProducer<TResult> Enqueue<TResult>(ActivityCode activity, MessageCode statusMessage, [DisallowNull] Func<IWindowsOperationProgress, Task<TResult>> asyncMethod);
 
-        IQueuedBgOperation<TResult> Enqueue<TResult>(ActivityCode activity, [DisallowNull] Func<IWindowsOperationProgress, Task<TResult>> asyncMethod);
+        IQueuedBgProducer<TResult> Enqueue<TResult>(ActivityCode activity, [DisallowNull] Func<IWindowsOperationProgress, Task<TResult>> asyncMethod);
 
         /// <summary>
         /// Runs a background job asynchronously that returns a value.

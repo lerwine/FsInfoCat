@@ -17,7 +17,7 @@ namespace FsInfoCat.Local.Background
     {
         private readonly ILogger<MarkBranchIncompleteBackgroundWorker> _logger;
         private readonly IProgress<string> _onReportProgress;
-        private readonly IQueuedBgOperation<bool> _workItem;
+        private readonly IQueuedBgProducer<bool> _workItem;
 
         public bool DoNotUseTransaction { get; }
 

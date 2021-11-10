@@ -10,6 +10,8 @@ namespace FsInfoCat.Local.Crawling
 
         ILocalDbFsItem Entity { get; }
 
+        ICurrentDirectory Parent { get; }
+
         string GetFullName();
 
         string GetRelativeParentPath();

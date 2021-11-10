@@ -36,9 +36,9 @@ namespace FsInfoCat.Services
             services.AddHostedService<IFSIOQueueService>(serviceProvider => new FSIOQueueService(serviceProvider.GetRequiredService<ILogger<FSIOQueueService>>()));
         }
 
-        public IQueuedBgOperation Enqueue(ActivityCode activity, [DisallowNull] Func<CancellationToken, Task> asyncFunction) => new QueuedBgOperation(this, asyncFunction, activity);
+        //public IQueuedBgOperation Enqueue(ActivityCode activity, [DisallowNull] Func<CancellationToken, Task> asyncFunction) => new QueuedBgOperation(this, asyncFunction, activity);
 
-        public IQueuedBgOperation<TResult> Enqueue<TResult>(ActivityCode activity, [DisallowNull] Func<CancellationToken, Task<TResult>> asyncFunction) => new Services.QueuedBgOperation<TResult>(this, asyncFunction, activity);
+        //public IQueuedBgOperation<TResult> Enqueue<TResult>(ActivityCode activity, [DisallowNull] Func<CancellationToken, Task<TResult>> asyncFunction) => new Services.QueuedBgOperation<TResult>(this, asyncFunction, activity);
 
         public IEnumerator<IQueuedBgOperation> GetEnumerator() => _queue.Select(t => t.Target).GetEnumerator();
 
@@ -80,14 +80,74 @@ namespace FsInfoCat.Services
 
         IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)_queue.Select(t => t.Target)).GetEnumerator();
 
-        public IQueuedBgOperation Enqueue(ActivityCode activity, [DisallowNull] Func<IAsyncOperationProgress, Task> asyncMethod)
-        {
-            throw new NotImplementedException();
-        }
+        public IQueuedBgOperation<T> Enqueue<T>(ActivityCode activity, T state, [DisallowNull] Func<T, IStatusReportable, Task> asyncMethod) =>
+            new QueuedBgOperation<T>(this, state, null, asyncMethod, activity);
 
-        public IQueuedBgOperation<TResult> Enqueue<TResult>(ActivityCode activity, [DisallowNull] Func<IAsyncOperationProgress, Task<TResult>> asyncMethod)
-        {
-            throw new NotImplementedException();
-        }
+        public IQueuedBgOperation<T> Enqueue<T>(ActivityCode activity, T state, [DisallowNull] Func<IStatusReportable, Task> asyncMethod) =>
+            new QueuedBgOperation<T>(this, state, null, asyncMethod, activity);
+
+        public IQueuedBgOperation Enqueue(ActivityCode activity, [DisallowNull] Func<IStatusReportable, Task> asyncMethod) => new QueuedBgOperation<object>(this, null, null, asyncMethod, activity);
+
+        public IQueuedBgOperation<T> Enqueue<T>(ActivityCode activity, T state, [DisallowNull] Func<T, CancellationToken, Task> asyncMethod) =>
+            new QueuedBgOperation<T>(this, state, null, asyncMethod, activity);
+
+        public IQueuedBgOperation<T> Enqueue<T>(ActivityCode activity, T state, [DisallowNull] Func<CancellationToken, Task> asyncMethod) =>
+            new QueuedBgOperation<T>(this, state, null, asyncMethod, activity);
+
+        public IQueuedBgOperation Enqueue(ActivityCode activity, [DisallowNull] Func<CancellationToken, Task> asyncMethod) => new QueuedBgOperation<object>(this, null, null, asyncMethod, activity);
+
+        public IQueuedBgProducer<TState, TResult> Enqueue<TState, TResult>(ActivityCode activity, TState state, [DisallowNull] Func<TState, IStatusReportable, Task<TResult>> asyncMethod) =>
+            new QueuedBgProducer<TState, TResult>(this, state, null, asyncMethod, activity);
+
+        public IQueuedBgProducer<TState, TResult> Enqueue<TState, TResult>(ActivityCode activity, TState state, [DisallowNull] Func<IStatusReportable, Task<TResult>> asyncMethod) =>
+            new QueuedBgProducer<TState, TResult>(this, state, null, asyncMethod, activity);
+
+        public IQueuedBgProducer<T> Enqueue<T>(ActivityCode activity, [DisallowNull] Func<IStatusReportable, Task<T>> asyncMethod) =>
+            new QueuedBgProducer<object, T>(this, null, null, asyncMethod, activity);
+
+        public IQueuedBgProducer<TState, TResult> Enqueue<TState, TResult>(ActivityCode activity, TState state, [DisallowNull] Func<TState, CancellationToken, Task<TResult>> asyncMethod) =>
+            new QueuedBgProducer<TState, TResult>(this, state, null, asyncMethod, activity);
+
+        public IQueuedBgProducer<TState, TResult> Enqueue<TState, TResult>(ActivityCode activity, TState state, [DisallowNull] Func<CancellationToken, Task<TResult>> asyncMethod) =>
+            new QueuedBgProducer<TState, TResult>(this, state, null, asyncMethod, activity);
+
+        public IQueuedBgProducer<T> Enqueue<T>(ActivityCode activity, [DisallowNull] Func<CancellationToken, Task<T>> asyncMethod) =>
+            new QueuedBgProducer<object, T>(this, null, null, asyncMethod, activity);
+
+        public IQueuedBgOperation<T> Enqueue<T>(ActivityCode activity, T state, IProgress<IAsyncOperationInfo> progressHandler, [DisallowNull] Func<T, IStatusReportable, Task> asyncMethod) =>
+            new QueuedBgOperation<T>(this, state, progressHandler, asyncMethod, activity);
+
+        public IQueuedBgOperation<T> Enqueue<T>(ActivityCode activity, T state, IProgress<IAsyncOperationInfo> progressHandler, [DisallowNull] Func<IStatusReportable, Task> asyncMethod) =>
+            new QueuedBgOperation<T>(this, state, progressHandler, asyncMethod, activity);
+
+        public IQueuedBgOperation Enqueue(ActivityCode activity, IProgress<IAsyncOperationInfo> progressHandler, [DisallowNull] Func<IStatusReportable, Task> asyncMethod) =>
+            new QueuedBgOperation<object>(this, null, progressHandler, asyncMethod, activity);
+
+        public IQueuedBgOperation<T> Enqueue<T>(ActivityCode activity, T state, IProgress<IAsyncOperationInfo> progressHandler, [DisallowNull] Func<T, CancellationToken, Task> asyncMethod) =>
+            new QueuedBgOperation<T>(this, state, progressHandler, asyncMethod, activity);
+
+        public IQueuedBgOperation<T> Enqueue<T>(ActivityCode activity, T state, IProgress<IAsyncOperationInfo> progressHandler, [DisallowNull] Func<CancellationToken, Task> asyncMethod) =>
+            new QueuedBgOperation<T>(this, state, progressHandler, asyncMethod, activity);
+
+        public IQueuedBgOperation Enqueue(ActivityCode activity, IProgress<IAsyncOperationInfo> progressHandler, [DisallowNull] Func<CancellationToken, Task> asyncMethod) =>
+            new QueuedBgOperation<object>(this, null, progressHandler, asyncMethod, activity);
+
+        public IQueuedBgProducer<TState, TResult> Enqueue<TState, TResult>(ActivityCode activity, TState state, IProgress<IAsyncOperationInfo> progressHandler, [DisallowNull] Func<TState, IStatusReportable, Task<TResult>> asyncMethod) =>
+            new QueuedBgProducer<TState, TResult>(this, state, progressHandler, asyncMethod, activity);
+
+        public IQueuedBgProducer<TState, TResult> Enqueue<TState, TResult>(ActivityCode activity, TState state, IProgress<IAsyncOperationInfo> progressHandler, [DisallowNull] Func<IStatusReportable, Task<TResult>> asyncMethod) =>
+            new QueuedBgProducer<TState, TResult>(this, state, progressHandler, asyncMethod, activity);
+
+        public IQueuedBgProducer<T> Enqueue<T>(ActivityCode activity, IProgress<IAsyncOperationInfo> progressHandler, [DisallowNull] Func<IStatusReportable, Task<T>> asyncMethod) =>
+            new QueuedBgProducer<object, T>(this, null, progressHandler, asyncMethod, activity);
+
+        public IQueuedBgProducer<TState, TResult> Enqueue<TState, TResult>(ActivityCode activity, TState state, IProgress<IAsyncOperationInfo> progressHandler, [DisallowNull] Func<TState, CancellationToken, Task<TResult>> asyncMethod) =>
+            new QueuedBgProducer<TState, TResult>(this, state, progressHandler, asyncMethod, activity);
+
+        public IQueuedBgProducer<TState, TResult> Enqueue<TState, TResult>(ActivityCode activity, TState state, IProgress<IAsyncOperationInfo> progressHandler, [DisallowNull] Func<CancellationToken, Task<TResult>> asyncMethod) =>
+            new QueuedBgProducer<TState, TResult>(this, state, progressHandler, asyncMethod, activity);
+
+        public IQueuedBgProducer<T> Enqueue<T>(ActivityCode activity, IProgress<IAsyncOperationInfo> progressHandler, [DisallowNull] Func<CancellationToken, Task<T>> asyncMethod) =>
+            new QueuedBgProducer<object, T>(this, null, progressHandler, asyncMethod, activity);
     }
 }

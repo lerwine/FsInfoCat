@@ -94,74 +94,59 @@ namespace FsInfoCat.Local.Crawling
             ReportAnyFsItemEvent(eventArgs);
         }
 
-        private void ReportAny([DisallowNull] DirectoryCrawlEventArgs eventArgs)
-        {
-            _logger.LogDebug("{Method}({Type} {eventArgs})", nameof(ReportAny), nameof(DirectoryCrawlEventArgs), eventArgs);
-            _anyDirectoryEventListeners.RaiseProgressChangedAsync(eventArgs);
-            ReportFsItemEvent(eventArgs);
-        }
-
-        private void ReportAny([DisallowNull] FileCrawlEventArgs eventArgs)
-        {
-            _logger.LogDebug("{Method}({Type} {eventArgs})", nameof(ReportAny), nameof(FileCrawlEventArgs), eventArgs);
-            _anyFileCrawlEventListeners.RaiseProgressChangedAsync(eventArgs);
-            ReportFsItemEvent(eventArgs);
-        }
-
-        public void Report([DisallowNull] CrawlJobStartEventArgs eventArgs)
+        public void Report([DisallowNull] ICrawlJobEventArgs eventArgs)
         {
             _logger.LogDebug("{Method}({Type} {eventArgs})", nameof(Report), nameof(CrawlJobStartEventArgs), eventArgs);
-            _crawlManagerEventListeners.RaiseProgressChangedAsync(eventArgs);
-            ReportCrawlActivityEvent(eventArgs);
+            try
+            {
+                if (eventArgs is CrawlJobStartEventArgs || eventArgs is CrawlJobEndEventArgs)
+                    _crawlManagerEventListeners.RaiseProgressChangedAsync(eventArgs);
+            }
+            finally { ReportCrawlActivityEvent(eventArgs); }
         }
 
-        public void Report([DisallowNull] CrawlJobEndEventArgs eventArgs)
+        public void Report([DisallowNull] DirectoryCrawlEventArgs eventArgs)
         {
-            _logger.LogDebug("{Method}({Type} {eventArgs})", nameof(Report), nameof(CrawlJobEndEventArgs), eventArgs);
-            _crawlManagerEventListeners.RaiseProgressChangedAsync(eventArgs);
-            ReportCrawlActivityEvent(eventArgs);
+            _logger.LogDebug("{Method}({Type} {eventArgs})", nameof(Report), nameof(DirectoryCrawlEventArgs), eventArgs);
+            try
+            {
+                if (eventArgs is DirectoryCrawlErrorEventArgs errorEventArgs)
+                    try { ReportCrawlErrorEvent(errorEventArgs); }
+                    finally { _directoryEventListeners.RaiseProgressChangedAsync(eventArgs); }
+                else if (eventArgs is DirectoryCrawlStartEventArgs || eventArgs is DirectoryCrawlEndEventArgs)
+                    _directoryEventListeners.RaiseProgressChangedAsync(eventArgs);
+            }
+            finally
+            {
+                try { _anyDirectoryEventListeners.RaiseProgressChangedAsync(eventArgs); }
+                finally { ReportFsItemEvent(eventArgs); }
+            }
         }
 
-        public void Report([DisallowNull] DirectoryCrawlStartEventArgs eventArgs)
+        public void Report([DisallowNull] FileCrawlEventArgs eventArgs)
         {
-            _logger.LogDebug("{Method}({Type} {eventArgs})", nameof(Report), nameof(DirectoryCrawlStartEventArgs), eventArgs);
-            _directoryEventListeners.RaiseProgressChangedAsync(eventArgs);
-            ReportAny(eventArgs);
+            _logger.LogDebug("{Method}({Type} {eventArgs})", nameof(Report), nameof(FileCrawlEventArgs), eventArgs);
+            try
+            {
+                if (eventArgs is FileCrawlErrorEventArgs errorEventArgs)
+                    try { ReportCrawlErrorEvent(errorEventArgs); }
+                    finally { _fileCrawlEventListeners.RaiseProgressChangedAsync(eventArgs); }
+                else if (eventArgs is FileCrawlStartEventArgs || eventArgs is FileCrawlEndEventArgs)
+                    _fileCrawlEventListeners.RaiseProgressChangedAsync(eventArgs);
+            }
+            finally
+            {
+                try { _anyFileCrawlEventListeners.RaiseProgressChangedAsync(eventArgs); }
+                finally { ReportFsItemEvent(eventArgs); }
+            }
         }
 
-        public void Report([DisallowNull] DirectoryCrawlEndEventArgs eventArgs)
+        public void ReportOtherActivity(CrawlActivityEventArgs e)
         {
-            _logger.LogDebug("{Method}({Type} {eventArgs})", nameof(Report), nameof(DirectoryCrawlEndEventArgs), eventArgs);
-            _directoryEventListeners.RaiseProgressChangedAsync(eventArgs);
-            ReportAny(eventArgs);
-        }
-
-        public void Report([DisallowNull] DirectoryCrawlErrorEventArgs eventArgs)
-        {
-            _logger.LogDebug("{Method}({Type} {eventArgs})", nameof(Report), nameof(DirectoryCrawlErrorEventArgs), eventArgs);
-            ReportCrawlErrorEvent(eventArgs);
-            ReportAny(eventArgs);
-        }
-
-        public void Report([DisallowNull] FileCrawlStartEventArgs eventArgs)
-        {
-            _logger.LogDebug("{Method}({Type} {eventArgs})", nameof(Report), nameof(FileCrawlStartEventArgs), eventArgs);
-            _fileCrawlEventListeners.RaiseProgressChangedAsync(eventArgs);
-            ReportAny(eventArgs);
-        }
-
-        public void Report([DisallowNull] FileCrawlEndEventArgs eventArgs)
-        {
-            _logger.LogDebug("{Method}({Type} {eventArgs})", nameof(Report), nameof(FileCrawlEndEventArgs), eventArgs);
-            _fileCrawlEventListeners.RaiseProgressChangedAsync(eventArgs);
-            ReportAny(eventArgs);
-        }
-
-        public void Report([DisallowNull] FileCrawlErrorEventArgs eventArgs)
-        {
-            _logger.LogDebug("{Method}({Type} {eventArgs})", nameof(Report), nameof(FileCrawlErrorEventArgs), eventArgs);
-            ReportCrawlErrorEvent(eventArgs);
-            ReportAny(eventArgs);
+            if (e is ICrawlJobEventArgs eventArgs)
+                Report(eventArgs);
+            else
+                ReportCrawlActivityEvent(e);
         }
     }
 }

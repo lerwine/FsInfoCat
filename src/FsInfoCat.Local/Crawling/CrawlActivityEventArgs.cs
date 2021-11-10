@@ -1,9 +1,21 @@
+using FsInfoCat.Services;
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat.Local.Crawling
 {
     public class CrawlActivityEventArgs : EventArgs, ICrawlActivityEventArgs
     {
+        public CrawlActivityEventArgs([DisallowNull] IBgOperationEventArgs bgOperation, MessageCode statusDescription, string currentOperation)
+        {
+            ConcurrencyId = bgOperation.ConcurrencyId;
+            Activity = bgOperation.Activity;
+            StatusDescription = statusDescription;
+            CurrentOperation = currentOperation;
+            AsyncState = bgOperation.AsyncState;
+            ParentOperation = bgOperation.ParentOperation;
+        }
+
         public Guid ConcurrencyId { get; }
 
         public ActivityCode Activity { get; }
@@ -21,52 +33,6 @@ namespace FsInfoCat.Local.Crawling
         public object AsyncState { get; }
 
         public IAsyncOperationInfo ParentOperation { get; }
-
-        protected CrawlActivityEventArgs(ICrawlActivityEventArgs source)
-        {
-            ConcurrencyId = source.ConcurrencyId;
-            Status = source.Status;
-            Activity = source.Activity;
-            StatusDescription = source.StatusDescription;
-            CurrentOperation = source.CurrentOperation;
-            AsyncState = source.AsyncState;
-            ParentOperation = source.ParentOperation;
-        }
-
-        [Obsolete("ICrawlJob can't be passed from worker")]
-        // TODO: Remove this constructor
-        protected CrawlActivityEventArgs(ICrawlJob source, AsyncJobStatus status, MessageCode? statusDescription = null, string currentOperation = null)
-        {
-            ConcurrencyId = source.ConcurrencyId;
-            Status = status;
-            Activity = source.Activity;
-            StatusDescription = statusDescription ?? source.StatusDescription;
-            CurrentOperation = currentOperation ?? source.CurrentOperation;
-            AsyncState = ((IAsyncOperationInfo)source).AsyncState;
-            ParentOperation = source.ParentOperation;
-        }
-
-        protected CrawlActivityEventArgs(Guid concurrencyId, AsyncJobStatus status, ActivityCode activity, MessageCode statusDescription, string currentOperation, object asyncState, IAsyncOperationInfo parentOperation)
-        {
-            ConcurrencyId = concurrencyId;
-            Status = status;
-            Activity = activity;
-            StatusDescription = statusDescription;
-            CurrentOperation = currentOperation ?? "";
-            AsyncState = asyncState;
-            ParentOperation = parentOperation;
-        }
-
-        protected CrawlActivityEventArgs(Guid concurrencyId, AsyncJobStatus status, ActivityCode activity, OperationStatus operationStatus, object asyncState, IAsyncOperationInfo parentOperation)
-        {
-            ConcurrencyId = concurrencyId;
-            Status = status;
-            Activity = activity;
-            StatusDescription = operationStatus.StatusDescription;
-            CurrentOperation = operationStatus.CurrentOperation ?? "";
-            AsyncState = asyncState;
-            ParentOperation = parentOperation;
-        }
 
         public override string ToString() => $@"ConcurrencyId = {ExtensionMethods.ToPseudoCsText(ConcurrencyId)},
   Status = {ExtensionMethods.ToPseudoCsText(Status)},

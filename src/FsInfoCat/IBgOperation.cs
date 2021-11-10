@@ -33,14 +33,8 @@ namespace FsInfoCat
     }
 
     /// <summary>
-    /// Represents a background operation that produces a result value.
+    /// Represents a background operation.
     /// </summary>
-    public interface IBgOperation<TResult> : IBgOperation
-    {
-        /// <summary>
-        /// Gets the <see cref="Task{TResult}"/> for the background operation.
-        /// </summary>
-        /// <remarks>If <see cref="Task.Status"/> is <see cref="TaskStatus.Running"/>, this does not necessarily indicate that the background operation is in progress. Refer to <see cref="Status"/> to get the status of the background operation.</remarks>
-        new Task<TResult> Task { get; }
-    }
+    /// <typeparam name="T">The type of the asynchronous state value.</typeparam>
+    public interface IBgOperation<T> : IBgOperation, IAsyncOperationInfo<T> { }
 }
