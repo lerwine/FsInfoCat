@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace FsInfoCat.Collections
 {
-    public class ByteValues : ReadOnlyCollection<byte>, IEquatable<ByteValues>, IConvertible
+    public sealed class ByteValues : ReadOnlyCollection<byte>, IEquatable<ByteValues>, IConvertible
     {
         public static readonly ValueConverter<ByteValues, byte[]> Converter = new(
             v => v == null ? null : v.ToArray(),

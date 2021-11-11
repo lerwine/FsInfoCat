@@ -8,7 +8,7 @@ using System.Text;
 
 namespace FsInfoCat.Collections
 {
-    public partial class MultiStringValue : ReadOnlyCollection<string>, IEquatable<MultiStringValue>, IConvertible
+    public sealed partial class MultiStringValue : ReadOnlyCollection<string>, IEquatable<MultiStringValue>, IConvertible
     {
         public static bool NullOrNotAny(MultiStringValue source) => source is null || source.Count == 0;
 
