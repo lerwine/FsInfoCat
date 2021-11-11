@@ -3,6 +3,6 @@ name: "Security and Quality"
 queries:
   - uses: security-and-quality
   with:
-    exclude: cs/virtual-call-in-constructor
-    exclude: cs/catch-of-all-exceptions
-    exclude: cs/extraction-message
+    - exclude: cs/virtual-call-in-constructor
+    - exclude: cs/catch-of-all-exceptions
+    - exclude: cs/extraction-message
