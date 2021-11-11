@@ -1,6 +1,7 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Text;
 using System.Windows;
 
@@ -63,30 +64,23 @@ namespace FsInfoCat.Desktop.Converters
 
         public static IEnumerable<string> GetFlagValues(T value, DisplayVerbosity display)
         {
+#pragma warning disable CA2248 // Provide correct 'enum' argument to 'Enum.HasFlag'
             switch (display)
             {
                 case DisplayVerbosity.ShortName:
-                    foreach (T v in Enum.GetValues<T>())
-                    {
-                        if (value.HasFlag(v))
-                            yield return v.TryGetShortName(out string t) ? t : v.ToString("F");
-                    }
+                    foreach (T v in Enum.GetValues<T>().Where(e => value.HasFlag(e)))
+                        yield return v.TryGetShortName(out string t) ? t : v.ToString("F");
                     break;
                 case DisplayVerbosity.Description:
-                    foreach (T v in Enum.GetValues<T>())
-                    {
-                        if (value.HasFlag(v))
-                            yield return v.TryGetDescription(out string t) ? t : v.ToString("F");
-                    }
+                    foreach (T v in Enum.GetValues<T>().Where(e => value.HasFlag(e)))
+                        yield return v.TryGetDescription(out string t) ? t : v.ToString("F");
                     break;
                 default:
-                    foreach (T v in Enum.GetValues<T>())
-                    {
-                        if (value.HasFlag(v))
-                            yield return v.TryGetDisplayName(out string t) ? t : v.ToString("F");
-                    }
+                    foreach (T v in Enum.GetValues<T>().Where(e => value.HasFlag(e)))
+                        yield return v.TryGetDisplayName(out string t) ? t : v.ToString("F");
                     break;
             }
+#pragma warning restore CA2248 // Provide correct 'enum' argument to 'Enum.HasFlag'
         }
 
         public override string Convert(T value, object parameter, CultureInfo culture)

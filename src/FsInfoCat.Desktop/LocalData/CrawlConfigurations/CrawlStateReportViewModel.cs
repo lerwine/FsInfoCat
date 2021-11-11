@@ -151,11 +151,8 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
         protected virtual void OnReportOptionsPropertyChanged(ObservableCollection<ViewModel.Filter.Filter<CrawlConfigReportItem>> oldValue, ObservableCollection<ViewModel.Filter.Filter<CrawlConfigReportItem>> newValue)
         {
             _logger.LogDebug("Invoked {MethodName}(oldValue: {oldValue}, newValue: {newValue})", nameof(OnReportOptionsPropertyChanged), oldValue, newValue);
-            foreach (ViewModel.Filter.Filter<CrawlConfigReportItem> item in _distinctItems)
-            {
-                if (ReferenceEquals(this, GetOwner(item)))
+            foreach (ViewModel.Filter.Filter<CrawlConfigReportItem> item in _distinctItems.Where(i => ReferenceEquals(this, GetOwner(i))))
                     SetOwner(item, null);
-            }
             _distinctItems.Clear();
             if (oldValue is not null)
                 oldValue.CollectionChanged -= ReportOptions_CollectionChanged;
@@ -216,24 +213,18 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
                         }
                     break;
                 case System.Collections.Specialized.NotifyCollectionChangedAction.Reset:
-                    foreach (ViewModel.Filter.Filter<CrawlConfigReportItem> item in _distinctItems)
-                    {
-                        if (ReferenceEquals(this, GetOwner(item)))
+                    foreach (ViewModel.Filter.Filter<CrawlConfigReportItem> item in _distinctItems.Where(i => ReferenceEquals(this, GetOwner(i))))
                             SetOwner(item, null);
-                    }
                     _distinctItems.Clear();
                     break;
                 case System.Collections.Specialized.NotifyCollectionChangedAction.Remove:
                     if ((enumerable = e.OldItems?.OfType<ViewModel.Filter.Filter<CrawlConfigReportItem>>().Where(i => i is not null)) is not null)
                     {
-                        foreach (ViewModel.Filter.Filter<CrawlConfigReportItem> item in enumerable)
+                        foreach (ViewModel.Filter.Filter<CrawlConfigReportItem> item in enumerable.Where(i => !ReportOptions.Any(o => ReferenceEquals(i, o))))
                         {
-                            if (!ReportOptions.Any(o => ReferenceEquals(item, o)))
-                            {
-                                if (ReferenceEquals(this, GetOwner(item)))
-                                    SetOwner(item, null);
-                                _distinctItems.Remove(item);
-                            }
+                            if (ReferenceEquals(this, GetOwner(item)))
+                                SetOwner(item, null);
+                            _distinctItems.Remove(item);
                         }
                         if (SelectedReportOption is not null && enumerable.Contains(SelectedReportOption) && ReportOptions.IndexOf(SelectedReportOption) != SelectedReportIndex)
                             SelectedReportIndex = -1;
@@ -242,14 +233,11 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
                 case System.Collections.Specialized.NotifyCollectionChangedAction.Replace:
                     if ((enumerable = e.OldItems?.OfType<ViewModel.Filter.Filter<CrawlConfigReportItem>>().Where(i => i is not null)) is not null)
                     {
-                        foreach (ViewModel.Filter.Filter<CrawlConfigReportItem> item in enumerable)
+                        foreach (ViewModel.Filter.Filter<CrawlConfigReportItem> item in enumerable.Where(i => !ReportOptions.Any(o => ReferenceEquals(i, o))))
                         {
-                            if (!ReportOptions.Any(o => ReferenceEquals(item, o)))
-                            {
-                                if (ReferenceEquals(this, GetOwner(item)))
-                                    SetOwner(item, null);
-                                _distinctItems.Remove(item);
-                            }
+                            if (ReferenceEquals(this, GetOwner(item)))
+                                SetOwner(item, null);
+                            _distinctItems.Remove(item);
                         }
                     }
                     int selectedReportIndex = (SelectedReportOption is not null && enumerable.Contains(SelectedReportOption) && ReportOptions.IndexOf(SelectedReportOption) != SelectedReportIndex) ? -1 : SelectedReportIndex;

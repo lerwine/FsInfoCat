@@ -358,7 +358,7 @@ namespace FsInfoCat.Local
             await entry.RemoveRelatedEntitiesAsync(e => e.PersonalTags, dbContext.PersonalSubdirectoryTags, cancellationToken);
             await entry.RemoveRelatedEntitiesAsync(e => e.SharedTags, dbContext.SharedSubdirectoryTags, cancellationToken);
             await entry.RemoveRelatedEntitiesAsync(e => e.AccessErrors, dbContext.SubdirectoryAccessErrors, cancellationToken);
-            foreach (Subdirectory s in await entry.GetRelatedCollectionAsync(e => e.SubDirectories, cancellationToken))
+            foreach (Subdirectory s in (await entry.GetRelatedCollectionAsync(e => e.SubDirectories, cancellationToken)))
             {
                 if (!(await DeleteAsync(s, dbContext, cancellationToken, deletionOption)))
                     shouldDelete = false;

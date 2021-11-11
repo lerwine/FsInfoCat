@@ -127,6 +127,7 @@ namespace FsInfoCat.Desktop.ViewModel
                 if (additionalMessages is null)
                     throw new ArgumentNullException(nameof(additionalMessages));
                 if (Items.Contains(message))
+#pragma warning disable CA1827 // Do not use Count() or LongCount() when Any() can be used
                     return additionalMessages.Count(m =>
                     {
                         if (Items.Contains(m))
@@ -134,12 +135,10 @@ namespace FsInfoCat.Desktop.ViewModel
                         Items.Add(m);
                         return true;
                     }) == 0;
+#pragma warning restore CA1827 // Do not use Count() or LongCount() when Any() can be used
                 Items.Add(message);
-                foreach (string m in additionalMessages)
-                {
-                    if (!Items.Contains(m))
-                        Items.Add(m);
-                }
+                foreach (string m in additionalMessages.Where(s => !Items.Contains(s)))
+                    Items.Add(m);
                 return true;
             }
 
