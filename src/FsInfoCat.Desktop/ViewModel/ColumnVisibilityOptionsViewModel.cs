@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Windows;
 
@@ -36,6 +35,7 @@ namespace FsInfoCat.Desktop.ViewModel
         public bool CreatedOn { get => (bool)GetValue(CreatedOnProperty); set => SetValue(CreatedOnProperty, value); }
 
         #endregion
+
         #region ModifiedOn Property Members
 
         /// <summary>
@@ -60,6 +60,7 @@ namespace FsInfoCat.Desktop.ViewModel
         public ReadOnlyObservableCollection<ColumnVisibilityItemViewModel> Columns => (ReadOnlyObservableCollection<ColumnVisibilityItemViewModel>)GetValue(ColumnsProperty);
 
         #endregion
+
         #region ShowSummaryColumn Property Members
 
         private static readonly DependencyPropertyKey ShowSummaryColumnPropertyKey = DependencyPropertyBuilder<ColumnVisibilityOptionsViewModel<TEntity, TViewModel>, bool>
@@ -75,6 +76,7 @@ namespace FsInfoCat.Desktop.ViewModel
         public bool ShowSummaryColumn { get => (bool)GetValue(ShowSummaryColumnProperty); private set => SetValue(ShowSummaryColumnPropertyKey, value); }
 
         #endregion
+
         protected ColumnVisibilityOptionsViewModel()
         {
             ObservableCollection<ColumnVisibilityItemViewModel> backingColumns = new();

@@ -437,7 +437,8 @@ namespace FsInfoCat.Desktop.ViewModel
 
         internal FolderVM(Win32_LogicalDisk logicalDisk) : this((logicalDisk.DriveType == DriveType.Network && !string.IsNullOrWhiteSpace(logicalDisk.ProviderName)) ? $"{logicalDisk.DisplayName} ({logicalDisk.ProviderName})" :
             string.IsNullOrWhiteSpace(logicalDisk.VolumeName) ? logicalDisk.DisplayName : $"{logicalDisk.DisplayName} ({logicalDisk.VolumeName})",
-            new DirectoryInfo(string.IsNullOrEmpty(logicalDisk.RootDirectory.Path) ? logicalDisk.RootDirectory.Name : logicalDisk.RootDirectory.Path)) { }
+            new DirectoryInfo(string.IsNullOrEmpty(logicalDisk.RootDirectory.Path) ? logicalDisk.RootDirectory.Name : logicalDisk.RootDirectory.Path))
+        { }
 
         internal FolderVM(DirectoryInfo directoryInfo) : this(directoryInfo.Name, directoryInfo) { }
     }

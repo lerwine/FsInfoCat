@@ -33,7 +33,7 @@ namespace FsInfoCat
             RaisePropertyChanged(oldValue, newValue, propertyName);
             return true;
         }
-        
+
         protected virtual void OnPropertyChanged(PropertyValueChangedEventArgs args)
         {
             try { PropertyValueChanged?.Invoke(this, args); }
