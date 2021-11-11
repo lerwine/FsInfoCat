@@ -254,40 +254,34 @@ namespace FsInfoCat.Desktop.ViewModel
             if (DesignerProperties.GetIsInDesignMode(this))
                 return;
 #endif
-            CancellationTokenSource tokenSource = new();
+            using CancellationTokenSource tokenSource = new();
             ExitEventHandler handler = new((sender, e) => tokenSource.Cancel(true));
             Application.Current.Exit += handler;
-            IDisposable scope = _logger.BeginScope("Getting logical disks");
-            _ = Win32_LogicalDisk.GetLogicalDisksAsync(tokenSource.Token).ContinueWith(task =>
+            using (_logger.BeginScope("Getting logical disks"))
             {
-                if (task.IsCanceled)
-                    _logger.LogWarning("GetLogicalDisksAsync canceled.");
-                else if (task.IsFaulted)
+                _ = Win32_LogicalDisk.GetLogicalDisksAsync(tokenSource.Token).ContinueWith(task =>
                 {
-                    _logger.LogError(ErrorCode.GetLogicalDisksFailure.ToEventId(), task.Exception, FsInfoCat.Properties.Resources.ErrorMessage_GetLogicalDisksFailure);
-                    Dispatcher.Invoke(new Action<string, Exception>(NotifyError), "", task.Exception);
-                }
-                else
-                {
-                    FolderVM[] vm = (FolderVM[])Dispatcher.Invoke(new Func<Win32_LogicalDisk[], FolderVM[]>(OnGetLogicalDisksCompleted), new object[] { task.Result });
-                    if (vm.Length > 0)
+                    if (task.IsCanceled)
+                        _logger.LogWarning("GetLogicalDisksAsync canceled.");
+                    else if (task.IsFaulted)
                     {
-                        _logger.LogDebug("Pre-loading contents of {Count} root directories", vm.Length);
-                        foreach (FolderVM f in vm)
-                            f.PreloadAsync().Wait();
+                        _logger.LogError(ErrorCode.GetLogicalDisksFailure.ToEventId(), task.Exception, FsInfoCat.Properties.Resources.ErrorMessage_GetLogicalDisksFailure);
+                        Dispatcher.Invoke(new Action<string, Exception>(NotifyError), "", task.Exception);
                     }
                     else
-                        _logger.LogWarning("No root directories were created from {Count} logical disks.", task.Result.Length);
-                }
-            }).ContinueWith(t =>
-            {
-                try
-                {
-                    try { Dispatcher.Invoke(() => Application.Current.Exit -= handler); }
-                    finally { scope.Dispose(); }
-                }
-                finally { tokenSource.Dispose(); }
-            });
+                    {
+                        FolderVM[] vm = (FolderVM[])Dispatcher.Invoke(new Func<Win32_LogicalDisk[], FolderVM[]>(OnGetLogicalDisksCompleted), new object[] { task.Result });
+                        if (vm.Length > 0)
+                        {
+                            _logger.LogDebug("Pre-loading contents of {Count} root directories", vm.Length);
+                            foreach (FolderVM f in vm)
+                                f.PreloadAsync().Wait();
+                        }
+                        else
+                            _logger.LogWarning("No root directories were created from {Count} logical disks.", task.Result.Length);
+                    }
+                }).ContinueWith(t => Dispatcher.Invoke(() => Application.Current.Exit -= handler));
+            }
         }
 
         private FolderVM[] OnGetLogicalDisksCompleted(Win32_LogicalDisk[] logicalDisks)

@@ -222,8 +222,7 @@ namespace FsInfoCat.Local
                 throw new ArgumentNullException(nameof(target));
             if (dbContext is null)
                 throw new ArgumentNullException(nameof(dbContext));
-            IDisposable loggerScope = logger?.BeginScope(target.Id);
-            try
+            using (logger?.BeginScope(target.Id))
             {
                 using IDbContextTransaction transaction = dbContext.Database.BeginTransaction();
                 logger?.LogInformation("Removing Redundancy {{ Id = {Id} }}", target.Id);
@@ -239,7 +238,6 @@ namespace FsInfoCat.Local
                 await transaction.CommitAsync(cancellationToken);
                 return result;
             }
-            finally { loggerScope?.Dispose(); }
         }
 
         public static async Task<int> DeleteAsync([DisallowNull] Redundancy target, [DisallowNull] LocalDbContext dbContext, [DisallowNull] IStatusListener statusListener)
