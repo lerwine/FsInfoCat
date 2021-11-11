@@ -596,16 +596,9 @@ namespace FsInfoCat.Numerics
 
         float IConvertible.ToSingle(IFormatProvider provider) { return ToSingle(); }
 
-        public override string ToString()
-        {
-            if (_numerator == 0)
-                return _wholeNumber.ToString();
-
-            if (_wholeNumber == 0)
-                return _numerator.ToString() + "/" + _denominator.ToString();
-
-            return _wholeNumber.ToString() + " " + _numerator.ToString() + "/" + _denominator.ToString();
-        }
+        public override string ToString() => _numerator == 0
+                ? _wholeNumber.ToString()
+                : _wholeNumber == 0 ? $"{_numerator}/{_denominator}" : $"{_wholeNumber} {_numerator}/{_denominator}";
 
         string IConvertible.ToString(IFormatProvider provider) { return ToString(); }
 
