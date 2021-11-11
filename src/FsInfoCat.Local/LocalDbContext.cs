@@ -302,7 +302,7 @@ namespace FsInfoCat.Local
             if (properties.IsNullOrAllPropertiesEmpty())
                 return null;
             string applicationName = properties.ApplicationName.TrimmedOrNullIfWhiteSpace();
-            MultiStringValue author = MultiStringValue.NullIfNotAny(properties.Author);
+            //MultiStringValue author = MultiStringValue.NullIfNotAny(properties.Author);
             // TODO: Implement FindMatchingAsync(ISummaryProperties, CancellationToken);
             return await SummaryPropertySets.FirstOrDefaultAsync(p => p.ApplicationName == applicationName, cancellationToken);
         }

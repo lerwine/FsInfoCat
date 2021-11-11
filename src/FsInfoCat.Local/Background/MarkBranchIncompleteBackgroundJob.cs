@@ -77,7 +77,6 @@ namespace FsInfoCat.Local.Background
                     }
                     foreach (Subdirectory subdirectory in (await entry.GetRelatedCollectionAsync(s => s.SubDirectories, cancellationToken)).ToArray())
                     {
-                        string path = Path.Combine(relativePath, subdirectory.Name);
                         if (await DoWorkAsync(Path.Combine(relativePath, subdirectory.Name), subdirectory, dbContext, cancellationToken))
                             result = true;
                     }

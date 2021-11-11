@@ -112,7 +112,6 @@ namespace FsInfoCat.Local
             VolumeAccessError[] accessErrors = (await dbEntry.GetRelatedCollectionAsync(f => f.AccessErrors, cancellationToken)).ToArray();
             if (accessErrors.Length > 0)
                 dbContext.VolumeAccessErrors.RemoveRange(accessErrors);
-            Guid id = Id;
             cancellationToken.ThrowIfCancellationRequested();
             _ = await dbContext.SaveChangesAsync(cancellationToken);
             cancellationToken.ThrowIfCancellationRequested();
@@ -139,7 +138,7 @@ namespace FsInfoCat.Local
 
             using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
             IFileSystemDetailService fileSystemDetailService = serviceScope.ServiceProvider.GetService<IFileSystemDetailService>();
-            string name = directoryInfo.Name;
+            //string name = directoryInfo.Name;
             ILogicalDiskInfo diskInfo = await fileSystemDetailService.GetLogicalDiskAsync(directoryInfo, cancellationToken);
             VolumeIdentifier volumeIdentifier;
             if (diskInfo is null)
@@ -202,7 +201,7 @@ namespace FsInfoCat.Local
             if (directoryInfo.Parent is not null)
                 directoryInfo = directoryInfo.Root;
 
-            string name = directoryInfo.Name;
+            //string name = directoryInfo.Name;
             ILogicalDiskInfo diskInfo = await fileSystemDetailService.GetLogicalDiskAsync(directoryInfo, cancellationToken);
             VolumeIdentifier volumeIdentifier;
             if (diskInfo is null)

@@ -484,15 +484,12 @@ namespace FsInfoCat.Local
                 if (item is null || oldBinaryProperties.Entity.Files.Count > 1)
                     oldBinaryProperties = null;
             }
-            EntityEntry<RedundantSet> oldRedundantSet;
             if (oldRedundancy is not null)
             {
-                oldRedundantSet = await oldRedundancy.GetRelatedTargetEntryAsync(r => r.RedundantSet, cancellationToken);
+                EntityEntry<RedundantSet> oldRedundantSet = await oldRedundancy.GetRelatedTargetEntryAsync(r => r.RedundantSet, cancellationToken);
                 if ((await oldRedundantSet.GetRelatedCollectionAsync(r => r.Redundancies, cancellationToken)).Any(r => r.FileId != id))
                     oldRedundancy = null;
             }
-            else
-                oldRedundantSet = null;
             if (oldRedundancy is not null)
                 dbContext.Redundancies.Remove(oldRedundancy.Entity);
             if (shouldDelete)
@@ -631,8 +628,8 @@ namespace FsInfoCat.Local
                     throw new InvalidOperationException("Previous file entity changes have not been saved to the database.");
             }
             BinaryPropertySet oldBinaryProperties = BinaryProperties ?? await entry.GetRelatedReferenceAsync(f => f.BinaryProperties, cancellationToken);
-            DateTime oldCreationTime = CreationTime;
-            DateTime oldLastWriteTime = LastWriteTime;
+            //DateTime oldCreationTime = CreationTime;
+            //DateTime oldLastWriteTime = LastWriteTime;
             CreationTime = creationTime;
             LastWriteTime = lastWriteTime;
 

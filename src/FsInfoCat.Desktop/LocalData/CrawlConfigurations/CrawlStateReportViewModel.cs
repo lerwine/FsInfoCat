@@ -495,42 +495,25 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
                 catch (SecurityException exc)
                 {
                     statusListener.Logger.LogError(exc, "Permission denied getting directory information for {Path}.", path);
-                    switch (await Dispatcher.ShowMessageBoxAsync($"Permission denied while attempting to import subdirectory.", "Security Exception", MessageBoxButton.OKCancel, MessageBoxImage.Error,
-                        statusListener.CancellationToken))
-                    {
-                        case MessageBoxResult.OK:
-                            selectedRoot = null;
-                            break;
-                        default:
-                            return null;
-                    }
+                    if (await Dispatcher.ShowMessageBoxAsync($"Permission denied while attempting to import subdirectory.", "Security Exception", MessageBoxButton.OKCancel, MessageBoxImage.Error,
+                        statusListener.CancellationToken) != MessageBoxResult.OK)
+                        return null;
                     directoryInfo = null;
                 }
                 catch (PathTooLongException exc)
                 {
                     statusListener.Logger.LogError(exc, "Error getting directory information for ({Path} is too long).", path);
-                    switch (await Dispatcher.ShowMessageBoxAsync($"Path is too long. Cannnot import subdirectory as crawl root.", "Path Too Long", MessageBoxButton.OKCancel, MessageBoxImage.Error, statusListener.CancellationToken))
-                    {
-                        case MessageBoxResult.OK:
-                            selectedRoot = null;
-                            break;
-                        default:
-                            return null;
-                    }
+                    if (await Dispatcher.ShowMessageBoxAsync($"Path is too long. Cannnot import subdirectory as crawl root.", "Path Too Long",
+                        MessageBoxButton.OKCancel, MessageBoxImage.Error, statusListener.CancellationToken) != MessageBoxResult.OK)
+                        return null;
                     directoryInfo = null;
                 }
                 catch (Exception exc)
                 {
                     statusListener.Logger.LogError(exc, "Error getting directory information for {Path}.", path);
-                    switch (await Dispatcher.ShowMessageBoxAsync($"Unable to import subdirectory. See system logs for details.", "File System Error", MessageBoxButton.OKCancel, MessageBoxImage.Error,
-                        statusListener.CancellationToken))
-                    {
-                        case MessageBoxResult.OK:
-                            selectedRoot = null;
-                            break;
-                        default:
-                            return null;
-                    }
+                    if (await Dispatcher.ShowMessageBoxAsync($"Unable to import subdirectory. See system logs for details.", "File System Error", MessageBoxButton.OKCancel, MessageBoxImage.Error,
+                        statusListener.CancellationToken) != MessageBoxResult.OK)
+                        return null;
                     directoryInfo = null;
                 }
                 if (directoryInfo is null)

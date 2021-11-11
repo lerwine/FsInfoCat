@@ -51,12 +51,8 @@ namespace FsInfoCat.Local.Background
         {
             using IServiceScope serviceScope = Hosting.CreateScope();
             using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
-            if (target is not DbFile file)
-            {
-                Guid id = target.Id;
-                if ((file = await dbContext.Files.FindAsync(new object[] { target.Id }, cancellationToken)) is null)
-                    return false;
-            }
+            if (target is not DbFile file && (file = await dbContext.Files.FindAsync(new object[] { target.Id }, cancellationToken)) is null)
+                return false;
             if (doNotUseTransaction)
                 return await DoWorkAsync(target.Name, file, dbContext, cancellationToken);
             using IDbContextTransaction transaction = await dbContext.Database.BeginTransactionAsync(cancellationToken);

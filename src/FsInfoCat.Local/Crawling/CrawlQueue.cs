@@ -98,7 +98,7 @@ namespace FsInfoCat.Local.Crawling
             CrawlJobEndEventArgs eventArgs;
             if (task.IsFaulted)
             {
-                Exception exception = (task.Exception.InnerExceptions.Count == 1) ? task.Exception.InnerException : task.Exception;
+                //Exception exception = (task.Exception.InnerExceptions.Count == 1) ? task.Exception.InnerException : task.Exception;
                 // TODO: if (exception is AsyncOperationFailureException failureException)
                 eventArgs = new CrawlJobEndEventArgs(crawlJob, isLastJob, CrawlTerminationReason.Aborted);
             }

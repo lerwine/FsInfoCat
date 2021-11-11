@@ -83,7 +83,6 @@ namespace FsInfoCat.DeferredDelegation
                 {
                     if (node.Value is DelegateDeference<T>.DeferenceCollection deferenceCollection && ReferenceEquals(deferenceCollection.Target, instance))
                     {
-                        LinkedListNode<IDeferenceCollection> next = node;
                         if (deferenceCollection.Verify())
                         {
                             collection = deferenceCollection;

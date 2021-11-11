@@ -158,7 +158,7 @@ namespace FsInfoCat.Desktop.LocalData.SharedTagDefinitions
             using IServiceScope scope = Hosting.CreateScope();
             using LocalDbContext dbContext = scope.ServiceProvider.GetRequiredService<LocalDbContext>();
             EntityEntry entry = dbContext.Entry(entity);
-            bool isNew = entry.State == EntityState.Detached;
+            bool isNew;
             switch (entry.State)
             {
                 case EntityState.Added:

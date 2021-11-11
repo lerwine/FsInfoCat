@@ -106,7 +106,7 @@ namespace FsInfoCat.Numerics
                 _numerator = d / MB_DENOMINATOR;
                 _denominator = BinaryDenomination.Megabytes;
             }
-            else if ((a & (bits << (shift += 10))) != 0L)
+            else if ((a & (bits << (shift + 10))) != 0L)
             {
                 _numerator = d / GB_DENOMINATOR;
                 _denominator = BinaryDenomination.Gigabytes;

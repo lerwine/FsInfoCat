@@ -130,141 +130,153 @@ namespace FsInfoCat.Collections
             {
                 if (other is null)
                     return false;
-                IDelegateDeference<StateSet> delegateDeference = _deferredDelegation.EnterSynchronized(this);
-                if (Count == 0)
-                    return other.Any();
-                IEnumerable<T> values = GetNodesInSet(First).Select(n => n.Value);
-                using IEnumerator<T> x = values.GetEnumerator();
-                using IEnumerator<T> y = other.GetEnumerator();
-                bool isProper = false;
-                while (x.MoveNext())
+                using (_deferredDelegation.EnterSynchronized(this))
                 {
-                    if (!y.MoveNext() || !other.Contains(x.Current, _comparer))
-                        return false;
-                    if (!values.Contains(y.Current, _comparer))
-                        isProper = true;
-                }
-                if (isProper)
-                    return true;
-                while (y.MoveNext())
-                {
-                    if (!values.Contains(y.Current, _comparer))
+                    if (Count == 0)
+                        return other.Any();
+                    IEnumerable<T> values = GetNodesInSet(First).Select(n => n.Value);
+                    using IEnumerator<T> x = values.GetEnumerator();
+                    using IEnumerator<T> y = other.GetEnumerator();
+                    bool isProper = false;
+                    while (x.MoveNext())
+                    {
+                        if (!y.MoveNext() || !other.Contains(x.Current, _comparer))
+                            return false;
+                        if (!values.Contains(y.Current, _comparer))
+                            isProper = true;
+                    }
+                    if (isProper)
                         return true;
+                    while (y.MoveNext())
+                    {
+                        if (!values.Contains(y.Current, _comparer))
+                            return true;
+                    }
+                    return false;
                 }
-                return false;
             }
 
             public bool IsProperSupersetOf(IEnumerable<T> other)
             {
                 if (other is null)
                     return false;
-                IDelegateDeference<StateSet> delegateDeference = _deferredDelegation.EnterSynchronized(this);
-                if (Count == 0)
-                    return false;
-                IEnumerable<T> values = GetNodesInSet(First).Select(n => n.Value);
-                using IEnumerator<T> x = values.GetEnumerator();
-                using IEnumerator<T> y = other.GetEnumerator();
-                bool isProper = false;
-                while (y.MoveNext())
+                using (_deferredDelegation.EnterSynchronized(this))
                 {
-                    if (!x.MoveNext() || !values.Contains(y.Current, _comparer))
+                    if (Count == 0)
                         return false;
-                    if (!other.Contains(x.Current, _comparer))
-                        isProper = true;
-                }
-                if (isProper)
-                    return true;
-                while (x.MoveNext())
-                {
-                    if (!other.Contains(x.Current, _comparer))
+                    IEnumerable<T> values = GetNodesInSet(First).Select(n => n.Value);
+                    using IEnumerator<T> x = values.GetEnumerator();
+                    using IEnumerator<T> y = other.GetEnumerator();
+                    bool isProper = false;
+                    while (y.MoveNext())
+                    {
+                        if (!x.MoveNext() || !values.Contains(y.Current, _comparer))
+                            return false;
+                        if (!other.Contains(x.Current, _comparer))
+                            isProper = true;
+                    }
+                    if (isProper)
                         return true;
+                    while (x.MoveNext())
+                    {
+                        if (!other.Contains(x.Current, _comparer))
+                            return true;
+                    }
+                    return false;
                 }
-                return false;
             }
 
             public bool IsSubsetOf(IEnumerable<T> other)
             {
                 if (other is null)
                     return false;
-                IDelegateDeference<StateSet> delegateDeference = _deferredDelegation.EnterSynchronized(this);
-                if (Count == 0)
-                    return true;
-                IEnumerable<T> values = GetNodesInSet(First).Select(n => n.Value);
-                using IEnumerator<T> x = values.GetEnumerator();
-                using IEnumerator<T> y = other.GetEnumerator();
-                bool isProper = false;
-                while (x.MoveNext())
+                using (_deferredDelegation.EnterSynchronized(this))
                 {
-                    if (!y.MoveNext() || !other.Contains(x.Current, _comparer))
-                        return false;
-                    if (!values.Contains(y.Current, _comparer))
-                        isProper = true;
-                }
-                if (isProper || !y.MoveNext())
-                    return true;
-                do
-                {
-                    if (!values.Contains(y.Current, _comparer))
+                    if (Count == 0)
                         return true;
-                } while (y.MoveNext());
-                return false;
+                    IEnumerable<T> values = GetNodesInSet(First).Select(n => n.Value);
+                    using IEnumerator<T> x = values.GetEnumerator();
+                    using IEnumerator<T> y = other.GetEnumerator();
+                    bool isProper = false;
+                    while (x.MoveNext())
+                    {
+                        if (!y.MoveNext() || !other.Contains(x.Current, _comparer))
+                            return false;
+                        if (!values.Contains(y.Current, _comparer))
+                            isProper = true;
+                    }
+                    if (isProper || !y.MoveNext())
+                        return true;
+                    do
+                    {
+                        if (!values.Contains(y.Current, _comparer))
+                            return true;
+                    } while (y.MoveNext());
+                    return false;
+                }
             }
 
             public bool IsSupersetOf(IEnumerable<T> other)
             {
                 if (other is null)
                     return false;
-                IDelegateDeference<StateSet> delegateDeference = _deferredDelegation.EnterSynchronized(this);
-                if (Count == 0)
-                    return !other.Any();
-                IEnumerable<T> values = GetNodesInSet(First).Select(n => n.Value);
-                using IEnumerator<T> x = values.GetEnumerator();
-                using IEnumerator<T> y = other.GetEnumerator();
-                bool isProper = false;
-                while (y.MoveNext())
+                using (_deferredDelegation.EnterSynchronized(this))
                 {
-                    if (!x.MoveNext() || !values.Contains(y.Current, _comparer))
-                        return false;
-                    if (!other.Contains(x.Current, _comparer))
-                        isProper = true;
-                }
-                if (isProper || !x.MoveNext())
-                    return true;
-                do
-                {
-                    if (!other.Contains(x.Current, _comparer))
+                    if (Count == 0)
+                        return !other.Any();
+                    IEnumerable<T> values = GetNodesInSet(First).Select(n => n.Value);
+                    using IEnumerator<T> x = values.GetEnumerator();
+                    using IEnumerator<T> y = other.GetEnumerator();
+                    bool isProper = false;
+                    while (y.MoveNext())
+                    {
+                        if (!x.MoveNext() || !values.Contains(y.Current, _comparer))
+                            return false;
+                        if (!other.Contains(x.Current, _comparer))
+                            isProper = true;
+                    }
+                    if (isProper || !x.MoveNext())
                         return true;
-                } while (x.MoveNext());
-                return false;
+                    do
+                    {
+                        if (!other.Contains(x.Current, _comparer))
+                            return true;
+                    } while (x.MoveNext());
+                    return false;
+                }
             }
 
             public bool Overlaps(IEnumerable<T> other)
             {
                 if (other is null)
                     return false;
-                IDelegateDeference<StateSet> delegateDeference = _deferredDelegation.EnterSynchronized(this);
-                if (Count == 0)
-                    return false;
-                IEnumerable<T> values = GetNodesInSet(First).Select(n => n.Value);
-                return other.Any(o => values.Contains(o, _comparer));
+                using (_deferredDelegation.EnterSynchronized(this))
+                {
+                    if (Count == 0)
+                        return false;
+                    IEnumerable<T> values = GetNodesInSet(First).Select(n => n.Value);
+                    return other.Any(o => values.Contains(o, _comparer));
+                }
             }
 
             public bool SetEquals(IEnumerable<T> other)
             {
                 if (other is null)
                     return false;
-                IDelegateDeference<StateSet> delegateDeference = _deferredDelegation.EnterSynchronized(this);
-                if (Count == 0)
-                    return !other.Any();
-                IEnumerable<T> values = GetNodesInSet(First).Select(n => n.Value);
-                using IEnumerator<T> x = values.GetEnumerator();
-                using IEnumerator<T> y = other.GetEnumerator();
-                while (x.MoveNext())
+                using (_deferredDelegation.EnterSynchronized(this))
                 {
-                    if (!(y.MoveNext() && values.Contains(y.Current, _comparer) && other.Contains(x.Current, _comparer)))
-                        return false;
+                    if (Count == 0)
+                        return !other.Any();
+                    IEnumerable<T> values = GetNodesInSet(First).Select(n => n.Value);
+                    using IEnumerator<T> x = values.GetEnumerator();
+                    using IEnumerator<T> y = other.GetEnumerator();
+                    while (x.MoveNext())
+                    {
+                        if (!(y.MoveNext() && values.Contains(y.Current, _comparer) && other.Contains(x.Current, _comparer)))
+                            return false;
+                    }
+                    return !y.MoveNext();
                 }
-                return !y.MoveNext();
             }
 
             internal void RaiseCountChanged() => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Count)));

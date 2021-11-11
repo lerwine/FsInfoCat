@@ -57,12 +57,8 @@ namespace FsInfoCat.Local.Background
         {
             using IServiceScope serviceScope = Hosting.CreateScope();
             using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
-            if (target is not Subdirectory subdirectory)
-            {
-                Guid id = target.Id;
-                if ((subdirectory = await dbContext.Subdirectories.FindAsync(new object[] { target.Id }, cancellationToken)) is null)
-                    return false;
-            }
+            if (target is not Subdirectory subdirectory && (subdirectory = await dbContext.Subdirectories.FindAsync(new object[] { target.Id }, cancellationToken)) is null)
+                return false;
             if (doNotUseTransaction)
                 return await DoWorkAsync(target.Name, subdirectory, dbContext, cancellationToken);
             using IDbContextTransaction transaction = await dbContext.Database.BeginTransactionAsync(cancellationToken);

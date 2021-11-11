@@ -221,7 +221,7 @@ namespace FsInfoCat.Desktop.ViewModel
             {
                 TimeSpan value = args.Value;
                 base.OnValidateInputValue(args);
-                if (string.IsNullOrWhiteSpace(args.ValidationMessage) && (args.Value < TimeSpan.Zero || args.Value.Days != 0))
+                if (string.IsNullOrWhiteSpace(args.ValidationMessage) && (value < TimeSpan.Zero || value.Days != 0))
                     args.ValidationMessage = FsInfoCat.Properties.Resources.ErrorMessage_InvalidTime;
             }
         }

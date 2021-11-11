@@ -48,12 +48,8 @@ namespace FsInfoCat.Local.Background
         {
             using IServiceScope serviceScope = Hosting.CreateScope();
             using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
-            if (target is not Volume volume)
-            {
-                Guid id = target.Id;
-                if ((volume = await dbContext.Volumes.FindAsync(new object[] { cancellationToken }, cancellationToken)) is null)
+            if (target is not Volume volume && (volume = await dbContext.Volumes.FindAsync(new object[] { cancellationToken }, cancellationToken)) is null)
                     return false;
-            }
             if (doNotUseTransaction)
                 return await DoWorkAsync(volume, dbContext, deleteBranchService, cancellationToken);
             using IDbContextTransaction transaction = await dbContext.Database.BeginTransactionAsync(cancellationToken);

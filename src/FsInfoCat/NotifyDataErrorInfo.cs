@@ -114,7 +114,6 @@ namespace FsInfoCat
                                 }
                                 else if (_lastValidationResults.ContainsKey(args.PropertyName))
                                 {
-                                    string[] m = _lastValidationResults[args.PropertyName];
                                     if (_lastValidationResults[args.PropertyName].OrderBy(t => t).SequenceEqual(kvp.Value.OrderBy(t => t)))
                                         return false;
                                     _lastValidationResults[args.PropertyName] = kvp.Value;

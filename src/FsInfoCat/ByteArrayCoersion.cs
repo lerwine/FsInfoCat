@@ -195,6 +195,7 @@ namespace FsInfoCat
                                 throw new FormatException($"Invalid base64/BinHex character at position {offset}.");
                             break;
                     }
+                hv = !hv;
             }
             if (!hv)
                 throw new FormatException("Uneven number of hexidecimal characters.");
@@ -421,6 +422,7 @@ namespace FsInfoCat
                             }
                             break;
                     }
+                hv = !hv;
             }
             if (hv)
             {

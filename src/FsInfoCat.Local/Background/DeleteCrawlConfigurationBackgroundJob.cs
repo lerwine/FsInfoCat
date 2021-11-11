@@ -45,12 +45,8 @@ namespace FsInfoCat.Local.Background
         {
             using IServiceScope serviceScope = Hosting.CreateScope();
             using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
-            if (target is not CrawlConfiguration crawlConfig)
-            {
-                Guid id = target.Id;
-                if ((crawlConfig = await dbContext.CrawlConfigurations.FindAsync(new object[] { target.Id }, cancellationToken)) is null)
-                    return false;
-            }
+            if (target is not CrawlConfiguration crawlConfig && (crawlConfig = await dbContext.CrawlConfigurations.FindAsync(new object[] { target.Id }, cancellationToken)) is null)
+                return false;
             if (doNotUseTransaction)
                 return await DoWorkAsync(crawlConfig, dbContext, cancellationToken);
             using IDbContextTransaction transaction = await dbContext.Database.BeginTransactionAsync(cancellationToken);
