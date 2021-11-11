@@ -12,7 +12,7 @@ namespace FsInfoCat.UnitTests.Fakes
 {
     public sealed class AppFake : Application
     {
-        private object _syncRoot = new();
+        private readonly object _syncRoot = new();
         private readonly ILogger<AppFake> _logger;
 
         public Exception UnhandledException { get; private set; }

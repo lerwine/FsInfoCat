@@ -9,13 +9,13 @@ namespace FsInfoCat.Local
     {
         private const string VIEW_NAME = "vCrawlConfigReport";
 
-        private IPropertyChangeTracker<long> _succeededCount;
-        private IPropertyChangeTracker<long> _timedOutCount;
-        private IPropertyChangeTracker<long> _itemLimitReachedCount;
-        private IPropertyChangeTracker<long> _canceledCount;
-        private IPropertyChangeTracker<long> _failedCount;
-        private IPropertyChangeTracker<long?> _averageDuration;
-        private IPropertyChangeTracker<long?> _maxDuration;
+        private readonly IPropertyChangeTracker<long> _succeededCount;
+        private readonly IPropertyChangeTracker<long> _timedOutCount;
+        private readonly IPropertyChangeTracker<long> _itemLimitReachedCount;
+        private readonly IPropertyChangeTracker<long> _canceledCount;
+        private readonly IPropertyChangeTracker<long> _failedCount;
+        private readonly IPropertyChangeTracker<long?> _averageDuration;
+        private readonly IPropertyChangeTracker<long?> _maxDuration;
 
         public long SucceededCount { get => _succeededCount.GetValue(); set => _succeededCount.SetValue(value); }
 

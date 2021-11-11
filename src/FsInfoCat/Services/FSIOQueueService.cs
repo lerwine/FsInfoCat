@@ -13,8 +13,8 @@ namespace FsInfoCat.Services
 {
     public partial class FSIOQueueService : BackgroundService, IFSIOQueueService
     {
-        private object _syncRoot = new();
-        private AutoResetEvent _processNextEvent = new(false);
+        private readonly object _syncRoot = new();
+        private readonly AutoResetEvent _processNextEvent = new(false);
         private readonly ILogger<FSIOQueueService> _logger;
         private readonly LinkedList<(IQueuedBgOperation Target, CancellationTokenSource StartSource)> _queue = new();
 
@@ -57,7 +57,9 @@ namespace FsInfoCat.Services
             return false;
         }
 
+#pragma warning disable CA2016 // Forward the 'CancellationToken' parameter to methods that take one
         protected override Task ExecuteAsync(CancellationToken stoppingToken) => Task.Run(() =>
+#pragma warning restore CA2016 // Forward the 'CancellationToken' parameter to methods that take one
         {
             try { stoppingToken.WaitHandle.WaitOne(); }
             finally

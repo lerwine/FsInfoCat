@@ -19,7 +19,7 @@ namespace FsInfoCat.Local
     public partial class LocalDbContext : BaseDbContext, ILocalDbContext
     {
         private static readonly object _syncRoot = new();
-        private static bool _connectionStringValidated;
+        private static bool _connectionStringValidated = false;
         private readonly ILogger<LocalDbContext> _logger;
 
         public virtual DbSet<FileSystem> FileSystems { get; set; }
