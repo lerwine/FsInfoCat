@@ -37,3 +37,4 @@ Thumbs.db
 # Test Data
 /FsInfoCat/FsInfoCat.UnitTests/Resources/Drive1.zip
 /FsInfoCat/FsInfoCat.UnitTests/Resources/Drive2.zip
+/src/FsInfoCat/Resources/CodeScanResults.txt
