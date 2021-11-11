@@ -127,7 +127,7 @@ namespace FsInfoCat.Numerics
             w2 = NumericsExtensions.GetNormalizedRational64(wholeNumber, numerator, denominator, out long n2, out long d2);
             NumericsExtensions.ToCommonDenominator64(ref n1, ref d1, ref n2, ref d2);
             w1 = NumericsExtensions.GetNormalizedRational64(w1 + w2, n1 + n2, d1, out n1, out d1);
-            return new Fraction64((long)w1, (long)n1, (long)d1);
+            return new Fraction64(w1, n1, d1);
         }
 
         IFraction<long> IFraction<long>.Add(long wholeNumber, long numerator, long denominator) { return Add(wholeNumber, numerator, denominator); }
@@ -147,7 +147,7 @@ namespace FsInfoCat.Numerics
             long w1 = _wholeNumber, n1 = _numerator, d1 = _denominator, w2 = other._wholeNumber, n2 = other._numerator, d2 = other._denominator;
             NumericsExtensions.ToCommonDenominator64(ref n1, ref d1, ref n2, ref d2);
             w1 = NumericsExtensions.GetNormalizedRational64(w1 + w2, n1 + n2, d1, out n1, out d1);
-            return new Fraction64((long)w1, (long)n1, (long)d1);
+            return new Fraction64(w1, n1, d1);
         }
 
         IFraction<long> IFraction<long>.Add(IFraction<long> other)
@@ -233,9 +233,9 @@ namespace FsInfoCat.Numerics
             else
             {
                 if (_numerator == 0)
-                    return (other._numerator < (long)(int.MinValue)) ? -1 : ((other._numerator > 0L) ? 1 : 0);
+                    return (other._numerator < int.MinValue) ? -1 : ((other._numerator > 0L) ? 1 : 0);
                 if (other._numerator == 0)
-                    return (_numerator < (long)(int.MinValue)) ? -1 : ((_numerator > 0L) ? 1 : 0);
+                    return (_numerator < int.MinValue) ? -1 : ((_numerator > 0L) ? 1 : 0);
             }
 
             long n1 = _numerator, d1 = _denominator, n2 = other._numerator, d2 = other._denominator;
@@ -264,9 +264,9 @@ namespace FsInfoCat.Numerics
             else
             {
                 if (_numerator == 0)
-                    return (n < (long)(int.MinValue)) ? -1 : ((n > 0L) ? 1 : 0);
+                    return (n < int.MinValue) ? -1 : ((n > 0L) ? 1 : 0);
                 if (n == 0)
-                    return (_numerator < (long)(int.MinValue)) ? -1 : ((_numerator > 0L) ? 1 : 0);
+                    return (_numerator < int.MinValue) ? -1 : ((_numerator > 0L) ? 1 : 0);
             }
 
             long n1 = _numerator, d1 = _denominator, n2 = n, d2 = d;
@@ -311,7 +311,7 @@ namespace FsInfoCat.Numerics
                 throw new DivideByZeroException();
 
             w1 = NumericsExtensions.GetNormalizedRational64(w1 * w2, n1 * n2, d1 * d2, out n1, out d1);
-            return new Fraction64((long)w1, (long)n1, (long)d1);
+            return new Fraction64(w1, n1, d1);
         }
 
         IFraction<long> IFraction<long>.Divide(long wholeNumber, long numerator, long denominator) { return Divide(wholeNumber, numerator, denominator); }
@@ -436,7 +436,7 @@ namespace FsInfoCat.Numerics
                 return Zero;
 
             w1 = NumericsExtensions.GetNormalizedRational64(w1 * w2, n1 * n2, d1 * d2, out n1, out d1);
-            return new Fraction64((long)w1, (long)n1, (long)d1);
+            return new Fraction64(w1, n1, d1);
         }
 
         IFraction<long> IFraction<long>.Multiply(long wholeNumber, long numerator, long denominator) { return Multiply(wholeNumber, numerator, denominator); }
@@ -453,7 +453,7 @@ namespace FsInfoCat.Numerics
             long w1 = _wholeNumber, n1 = _numerator, d1 = _denominator, w2 = other._wholeNumber, n2 = other._numerator, d2 = other._denominator;
 
             w1 = NumericsExtensions.GetNormalizedRational64(w1 * w2, n1 * n2, d1 * d2, out n1, out d1);
-            return new Fraction64((long)w1, (long)n1, (long)d1);
+            return new Fraction64(w1, n1, d1);
         }
 
         IFraction<long> IFraction<long>.Multiply(IFraction<long> other)
@@ -504,7 +504,7 @@ namespace FsInfoCat.Numerics
             w2 = NumericsExtensions.GetNormalizedRational64(wholeNumber, numerator, denominator, out long n2, out long d2);
             NumericsExtensions.ToCommonDenominator64(ref n1, ref d1, ref n2, ref d2);
             w1 = NumericsExtensions.GetNormalizedRational64(w1 + w2, n1 + n2, d1, out n1, out d1);
-            return new Fraction64((long)w1, (long)n1, (long)d1);
+            return new Fraction64(w1, n1, d1);
         }
 
         IFraction<long> IFraction<long>.Subtract(long wholeNumber, long numerator, long denominator) { return Subtract(wholeNumber, numerator, denominator); }

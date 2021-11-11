@@ -404,7 +404,7 @@ namespace FsInfoCat.Desktop.ViewModel
         public static readonly DependencyProperty NavigatedContentProperty = DependencyProperty.Register(nameof(NavigatedContent), typeof(object), typeof(MainVM),
                 new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as MainVM)?.OnNavigatedContentPropertyChanged(e)));
 
-        public object NavigatedContent { get => (object)GetValue(NavigatedContentProperty); set => SetValue(NavigatedContentProperty, value); }
+        public object NavigatedContent { get => GetValue(NavigatedContentProperty); set => SetValue(NavigatedContentProperty, value); }
 
         /// <summary>
         /// Called when the <see cref="PropertyChangedCallback">PropertyChanged</see> event on <see cref="NavigatedContentProperty"/> is raised.
