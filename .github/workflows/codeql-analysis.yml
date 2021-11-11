@@ -18,6 +18,7 @@ on:
         - 'src/**'
         -  '!src/**.dgml'
         -  '!src/**.cd'
+        -  '!src/**.Designer.cs'
         -  '!src/FsInfoCat.PS/**'
         -  '!src/FsInfoCat.UnitTests/**'
         -  '!src/Setup/**'
