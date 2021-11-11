@@ -64,7 +64,7 @@ namespace FsInfoCat.ExpressionFilter
         public IEnumerable<CrawlStatus> GetSelectedOptions()
         {
             if (NotRunning)
-            yield return CrawlStatus.NotRunning;
+                yield return CrawlStatus.NotRunning;
             if (InProgress)
                 yield return CrawlStatus.InProgress;
             if (Completed)
