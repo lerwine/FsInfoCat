@@ -59,24 +59,26 @@ namespace FsInfoCat.Local
         public static async Task<EntityEntry<SharedTagDefinition>> DeleteAsync(SharedTagDefinition target, LocalDbContext dbContext, IStatusListener statusListener)
         {
             using IDbContextTransaction transaction = dbContext.Database.BeginTransaction();
-            using IDisposable loggerScope = statusListener.Logger.BeginScope(target.Id);
-            statusListener.Logger.LogInformation("Removing SharedTagDefinition {{ Id = {Id}; Name = \"{Name}\" }}", target.Id, target.Name);
-            statusListener.SetMessage($"Removing shared tag definition: {target.Name}");
-            EntityEntry<SharedTagDefinition> entry = dbContext.Entry(target);
-            SharedFileTag[] fileTags = (await entry.GetRelatedCollectionAsync(e => e.FileTags, statusListener.CancellationToken)).ToArray();
-            SharedSubdirectoryTag[] subdirectoryTags = (await entry.GetRelatedCollectionAsync(e => e.SubdirectoryTags, statusListener.CancellationToken)).ToArray();
-            SharedVolumeTag[] volumeTags = (await entry.GetRelatedCollectionAsync(e => e.VolumeTags, statusListener.CancellationToken)).ToArray();
-            if (fileTags.Length > 0)
-                dbContext.SharedFileTags.RemoveRange(fileTags);
-            if (subdirectoryTags.Length > 0)
-                dbContext.SharedSubdirectoryTags.RemoveRange(subdirectoryTags);
-            if (volumeTags.Length > 0)
-                dbContext.SharedVolumeTags.RemoveRange(volumeTags);
-            _ = dbContext.ChangeTracker.HasChanges() ? await dbContext.SaveChangesAsync(statusListener.CancellationToken) : 0;
-            _ = dbContext.SharedTagDefinitions.Remove(target);
-            _ = await dbContext.SaveChangesAsync(statusListener.CancellationToken);
-            await transaction.CommitAsync(statusListener.CancellationToken);
-            return entry;
+            using (statusListener.Logger.BeginScope(target.Id))
+            {
+                statusListener.Logger.LogInformation("Removing SharedTagDefinition {{ Id = {Id}; Name = \"{Name}\" }}", target.Id, target.Name);
+                statusListener.SetMessage($"Removing shared tag definition: {target.Name}");
+                EntityEntry<SharedTagDefinition> entry = dbContext.Entry(target);
+                SharedFileTag[] fileTags = (await entry.GetRelatedCollectionAsync(e => e.FileTags, statusListener.CancellationToken)).ToArray();
+                SharedSubdirectoryTag[] subdirectoryTags = (await entry.GetRelatedCollectionAsync(e => e.SubdirectoryTags, statusListener.CancellationToken)).ToArray();
+                SharedVolumeTag[] volumeTags = (await entry.GetRelatedCollectionAsync(e => e.VolumeTags, statusListener.CancellationToken)).ToArray();
+                if (fileTags.Length > 0)
+                    dbContext.SharedFileTags.RemoveRange(fileTags);
+                if (subdirectoryTags.Length > 0)
+                    dbContext.SharedSubdirectoryTags.RemoveRange(subdirectoryTags);
+                if (volumeTags.Length > 0)
+                    dbContext.SharedVolumeTags.RemoveRange(volumeTags);
+                _ = dbContext.ChangeTracker.HasChanges() ? await dbContext.SaveChangesAsync(statusListener.CancellationToken) : 0;
+                _ = dbContext.SharedTagDefinitions.Remove(target);
+                _ = await dbContext.SaveChangesAsync(statusListener.CancellationToken);
+                await transaction.CommitAsync(statusListener.CancellationToken);
+                return entry;
+            }
         }
     }
 }

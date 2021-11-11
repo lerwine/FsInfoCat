@@ -229,143 +229,147 @@ namespace FsInfoCat.Desktop.ViewModel
         {
             cancellationToken.ThrowIfCancellationRequested();
             string path = Dispatcher.Invoke(() => Path);
-            using IDisposable scope = _logger.BeginScope("Pre-loading {Path}; Depth={Depth}", path, depth);
-            FolderVM[] subFolders;
-            if (path is not null)
+            using (_logger.BeginScope("Pre-loading {Path}; Depth={Depth}", path, depth))
             {
-                DirectoryInfo[] directories;
-                FileInfo[] files;
-                try
+                FolderVM[] subFolders;
+                if (path is not null)
                 {
-                    DirectoryInfo directory = new(path);
-                    directories = directory.GetDirectories();
-                    files = directory.GetFiles();
-                }
-                catch (UnauthorizedAccessException unauthorizedAccessException)
-                {
-                    _logger.LogError(ErrorCode.UnauthorizedAccess.ToEventId(), unauthorizedAccessException, "Access to \"{Path}\" not authorized.", path);
-                    Dispatcher.Invoke(() => AccessError = string.IsNullOrWhiteSpace(unauthorizedAccessException.Message) ? unauthorizedAccessException.ToString() : unauthorizedAccessException.Message);
-                    return;
-                }
-                catch (SecurityException securityException)
-                {
-                    _logger.LogError(ErrorCode.SecurityException.ToEventId(), securityException, "Security error while trying to access \"{Path}\".", path);
-                    Dispatcher.Invoke(() => AccessError = string.IsNullOrWhiteSpace(securityException.Message) ? securityException.ToString() : securityException.Message);
-                    return;
-                }
-                catch (PathTooLongException pathTooLongException)
-                {
-                    _logger.LogError(ErrorCode.PathTooLong.ToEventId(), pathTooLongException, "Path too long: \"{Path}\".", path);
-                    Dispatcher.Invoke(() => AccessError = string.IsNullOrWhiteSpace(pathTooLongException.Message) ? pathTooLongException.ToString() : pathTooLongException.Message);
-                    return;
-                }
-                catch (DirectoryNotFoundException argumentException)
-                {
-                    _logger.LogError(ErrorCode.InvalidPath.ToEventId(), argumentException, "Directory does not exist: \"{Path}\".", path);
-                    Dispatcher.Invoke(() => AccessError = string.IsNullOrWhiteSpace(argumentException.Message) ? argumentException.ToString() : argumentException.Message);
-                    return;
-                }
-                catch (ArgumentException argumentException)
-                {
-                    _logger.LogError(ErrorCode.InvalidPath.ToEventId(), argumentException, "Possible invalid path: \"{Path}\".", path);
-                    Dispatcher.Invoke(() => AccessError = string.IsNullOrWhiteSpace(argumentException.Message) ? argumentException.ToString() : argumentException.Message);
-                    return;
-                }
-                catch (IOException ioException)
-                {
-                    _logger.LogError(ErrorCode.IOError.ToEventId(), ioException, "I/O error while trying to access \"{Path}\"", path);
-                    Dispatcher.Invoke(() => AccessError = string.IsNullOrWhiteSpace(ioException.Message) ? ioException.ToString() : ioException.Message);
-                    return;
-                }
-                catch (Exception exception)
-                {
-                    _logger.LogError(ErrorCode.Unexpected.ToEventId(), exception, "Unknown error while trying to access \"{Path}\"", path);
-                    Dispatcher.Invoke(() => AccessError = string.IsNullOrWhiteSpace(exception.Message) ? exception.ToString() : exception.Message);
-                    return;
-                }
-                cancellationToken.ThrowIfCancellationRequested();
-                if (depth < 1)
-                {
-                    Dispatcher.Invoke(() =>
+                    DirectoryInfo[] directories;
+                    FileInfo[] files;
+                    try
+                    {
+                        DirectoryInfo directory = new(path);
+                        directories = directory.GetDirectories();
+                        files = directory.GetFiles();
+                    }
+                    catch (UnauthorizedAccessException unauthorizedAccessException)
+                    {
+                        _logger.LogError(ErrorCode.UnauthorizedAccess.ToEventId(), unauthorizedAccessException, "Access to \"{Path}\" not authorized.", path);
+                        Dispatcher.Invoke(() => AccessError = string.IsNullOrWhiteSpace(unauthorizedAccessException.Message) ? unauthorizedAccessException.ToString() : unauthorizedAccessException.Message);
+                        return;
+                    }
+                    catch (SecurityException securityException)
+                    {
+                        _logger.LogError(ErrorCode.SecurityException.ToEventId(), securityException, "Security error while trying to access \"{Path}\".", path);
+                        Dispatcher.Invoke(() => AccessError = string.IsNullOrWhiteSpace(securityException.Message) ? securityException.ToString() : securityException.Message);
+                        return;
+                    }
+                    catch (PathTooLongException pathTooLongException)
+                    {
+                        _logger.LogError(ErrorCode.PathTooLong.ToEventId(), pathTooLongException, "Path too long: \"{Path}\".", path);
+                        Dispatcher.Invoke(() => AccessError = string.IsNullOrWhiteSpace(pathTooLongException.Message) ? pathTooLongException.ToString() : pathTooLongException.Message);
+                        return;
+                    }
+                    catch (DirectoryNotFoundException argumentException)
+                    {
+                        _logger.LogError(ErrorCode.InvalidPath.ToEventId(), argumentException, "Directory does not exist: \"{Path}\".", path);
+                        Dispatcher.Invoke(() => AccessError = string.IsNullOrWhiteSpace(argumentException.Message) ? argumentException.ToString() : argumentException.Message);
+                        return;
+                    }
+                    catch (ArgumentException argumentException)
+                    {
+                        _logger.LogError(ErrorCode.InvalidPath.ToEventId(), argumentException, "Possible invalid path: \"{Path}\".", path);
+                        Dispatcher.Invoke(() => AccessError = string.IsNullOrWhiteSpace(argumentException.Message) ? argumentException.ToString() : argumentException.Message);
+                        return;
+                    }
+                    catch (IOException ioException)
+                    {
+                        _logger.LogError(ErrorCode.IOError.ToEventId(), ioException, "I/O error while trying to access \"{Path}\"", path);
+                        Dispatcher.Invoke(() => AccessError = string.IsNullOrWhiteSpace(ioException.Message) ? ioException.ToString() : ioException.Message);
+                        return;
+                    }
+                    catch (Exception exception)
+                    {
+                        _logger.LogError(ErrorCode.Unexpected.ToEventId(), exception, "Unknown error while trying to access \"{Path}\"", path);
+                        Dispatcher.Invoke(() => AccessError = string.IsNullOrWhiteSpace(exception.Message) ? exception.ToString() : exception.Message);
+                        return;
+                    }
+                    cancellationToken.ThrowIfCancellationRequested();
+                    if (depth < 1)
+                    {
+                        Dispatcher.Invoke(() =>
+                        {
+                            _logger.LogDebug("Populating SubFolders collection");
+                            foreach (DirectoryInfo d in directories)
+                            {
+                                cancellationToken.ThrowIfCancellationRequested();
+                                InnerSubFolders.Add(new(d));
+                            }
+                            _logger.LogDebug("Populating Files collection");
+                            foreach (FileInfo f in files)
+                            {
+                                cancellationToken.ThrowIfCancellationRequested();
+                                InnerFiles.Add(new(f));
+                            }
+                        });
+                        return;
+                    }
+                    subFolders = Dispatcher.Invoke(() =>
                     {
                         _logger.LogDebug("Populating SubFolders collection");
-                        foreach (DirectoryInfo d in directories)
+                        FolderVM[] folders = directories.Select(d =>
                         {
                             cancellationToken.ThrowIfCancellationRequested();
-                            InnerSubFolders.Add(new(d));
-                        }
+                            return new FolderVM(d);
+                        }).ToArray();
+                        foreach (FolderVM f in folders)
+                            InnerSubFolders.Add(f);
                         _logger.LogDebug("Populating Files collection");
                         foreach (FileInfo f in files)
                         {
                             cancellationToken.ThrowIfCancellationRequested();
                             InnerFiles.Add(new(f));
                         }
+                        return folders;
                     });
-                    return;
                 }
-                subFolders = Dispatcher.Invoke(() =>
+                else
                 {
-                    _logger.LogDebug("Populating SubFolders collection");
-                    FolderVM[] folders = directories.Select(d =>
+                    if (depth < 1)
+                        return;
+                    _logger.LogDebug("Retrieving items from SubFolders collection");
+                    subFolders = Dispatcher.Invoke(() =>
                     {
                         cancellationToken.ThrowIfCancellationRequested();
-                        return new FolderVM(d);
-                    }).ToArray();
-                    foreach (FolderVM f in folders)
-                        InnerSubFolders.Add(f);
-                    _logger.LogDebug("Populating Files collection");
-                    foreach (FileInfo f in files)
+                        return InnerSubFolders.ToArray();
+                    });
+                }
+                if (subFolders.Length > 0)
+                {
+                    _logger.LogDebug("Pre-loading {Count} SubFolders", subFolders.Length);
+                    depth--;
+                    foreach (FolderVM folder in subFolders)
                     {
                         cancellationToken.ThrowIfCancellationRequested();
-                        InnerFiles.Add(new(f));
+                        folder.PreloadAsync(depth).Wait();
                     }
-                    return folders;
-                });
-            }
-            else
-            {
-                if (depth < 1)
-                    return;
-                _logger.LogDebug("Retrieving items from SubFolders collection");
-                subFolders = Dispatcher.Invoke(() =>
-                {
-                    cancellationToken.ThrowIfCancellationRequested();
-                    return InnerSubFolders.ToArray();
-                });
-            }
-            if (subFolders.Length > 0)
-            {
-                _logger.LogDebug("Pre-loading {Count} SubFolders", subFolders.Length);
-                depth--;
-                foreach (FolderVM folder in subFolders)
-                {
-                    cancellationToken.ThrowIfCancellationRequested();
-                    folder.PreloadAsync(depth).Wait();
                 }
+                else
+                    _logger.LogDebug("No SubFolders to pre-load");
             }
-            else
-                _logger.LogDebug("No SubFolders to pre-load");
         }
 
         private void PreloadSubdirectories(int depth, CancellationToken cancellationToken)
         {
-            using IDisposable scope = _logger.BeginScope("Pre-loading child items of {Path}; Depth={Depth}", Dispatcher.Invoke(() => Path), depth);
-            FolderVM[] subFolders = Dispatcher.Invoke(() =>
+            using (_logger.BeginScope("Pre-loading child items of {Path}; Depth={Depth}", Dispatcher.Invoke(() => Path), depth))
             {
-                cancellationToken.ThrowIfCancellationRequested();
-                return InnerSubFolders.ToArray();
-            });
-            if (subFolders.Length > 0)
-            {
-                _logger.LogDebug("Pre-loading {Count} SubFolders", subFolders.Length);
-                foreach (FolderVM folder in subFolders)
+                FolderVM[] subFolders = Dispatcher.Invoke(() =>
                 {
                     cancellationToken.ThrowIfCancellationRequested();
-                    folder.PreloadAsync(depth).Wait();
+                    return InnerSubFolders.ToArray();
+                });
+                if (subFolders.Length > 0)
+                {
+                    _logger.LogDebug("Pre-loading {Count} SubFolders", subFolders.Length);
+                    foreach (FolderVM folder in subFolders)
+                    {
+                        cancellationToken.ThrowIfCancellationRequested();
+                        folder.PreloadAsync(depth).Wait();
+                    }
                 }
+                else
+                    _logger.LogDebug("No SubFolders to pre-load");
             }
-            else
-                _logger.LogDebug("No SubFolders to pre-load");
         }
 
         internal Task PreloadAsync(int depth = 2)

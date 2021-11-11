@@ -59,24 +59,26 @@ namespace FsInfoCat.Local
         public static async Task<int> DeleteAsync(PersonalTagDefinition target, LocalDbContext dbContext, IStatusListener statusListener)
         {
             using IDbContextTransaction transaction = dbContext.Database.BeginTransaction();
-            using IDisposable loggerScope = statusListener.Logger.BeginScope(target.Id);
-            statusListener.Logger.LogInformation("Removing PersonalTagDefinition {{ Id = {Id}; Name = \"{Name}\" }}", target.Id, target.Name);
-            statusListener.SetMessage($"Removing personal tag definition: {target.Name}");
-            EntityEntry<PersonalTagDefinition> entry = dbContext.Entry(target);
-            PersonalFileTag[] fileTags = (await entry.GetRelatedCollectionAsync(e => e.FileTags, statusListener.CancellationToken)).ToArray();
-            PersonalSubdirectoryTag[] subdirectoryTags = (await entry.GetRelatedCollectionAsync(e => e.SubdirectoryTags, statusListener.CancellationToken)).ToArray();
-            PersonalVolumeTag[] volumeTags = (await entry.GetRelatedCollectionAsync(e => e.VolumeTags, statusListener.CancellationToken)).ToArray();
-            if (fileTags.Length > 0)
-                dbContext.PersonalFileTags.RemoveRange(fileTags);
-            if (subdirectoryTags.Length > 0)
-                dbContext.PersonalSubdirectoryTags.RemoveRange(subdirectoryTags);
-            if (volumeTags.Length > 0)
-                dbContext.PersonalVolumeTags.RemoveRange(volumeTags);
-            int result = dbContext.ChangeTracker.HasChanges() ? await dbContext.SaveChangesAsync(statusListener.CancellationToken) : 0;
-            _ = dbContext.PersonalTagDefinitions.Remove(target);
-            result += await dbContext.SaveChangesAsync(statusListener.CancellationToken);
-            await transaction.CommitAsync(statusListener.CancellationToken);
-            return result;
+            using (statusListener.Logger.BeginScope(target.Id))
+            {
+                statusListener.Logger.LogInformation("Removing PersonalTagDefinition {{ Id = {Id}; Name = \"{Name}\" }}", target.Id, target.Name);
+                statusListener.SetMessage($"Removing personal tag definition: {target.Name}");
+                EntityEntry<PersonalTagDefinition> entry = dbContext.Entry(target);
+                PersonalFileTag[] fileTags = (await entry.GetRelatedCollectionAsync(e => e.FileTags, statusListener.CancellationToken)).ToArray();
+                PersonalSubdirectoryTag[] subdirectoryTags = (await entry.GetRelatedCollectionAsync(e => e.SubdirectoryTags, statusListener.CancellationToken)).ToArray();
+                PersonalVolumeTag[] volumeTags = (await entry.GetRelatedCollectionAsync(e => e.VolumeTags, statusListener.CancellationToken)).ToArray();
+                if (fileTags.Length > 0)
+                    dbContext.PersonalFileTags.RemoveRange(fileTags);
+                if (subdirectoryTags.Length > 0)
+                    dbContext.PersonalSubdirectoryTags.RemoveRange(subdirectoryTags);
+                if (volumeTags.Length > 0)
+                    dbContext.PersonalVolumeTags.RemoveRange(volumeTags);
+                int result = dbContext.ChangeTracker.HasChanges() ? await dbContext.SaveChangesAsync(statusListener.CancellationToken) : 0;
+                _ = dbContext.PersonalTagDefinitions.Remove(target);
+                result += await dbContext.SaveChangesAsync(statusListener.CancellationToken);
+                await transaction.CommitAsync(statusListener.CancellationToken);
+                return result;
+            }
         }
     }
 }

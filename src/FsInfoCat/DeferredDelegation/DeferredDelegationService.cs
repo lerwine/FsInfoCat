@@ -120,15 +120,17 @@ namespace FsInfoCat.DeferredDelegation
         {
             if (target is null)
                 throw new ArgumentNullException(nameof(target));
-            using IDisposable scope = _logger.BeginScope("{MethodName}({target}, {lockTaken})", nameof(Enter), target);
-            Monitor.Enter(_deferenceCollections);
-            try
+            using (_logger.BeginScope("{MethodName}({target}, {lockTaken})", nameof(Enter), target))
             {
-                if (TryFind(target, out DelegateDeference<T>.DeferenceCollection collection))
-                    return DelegateDeference<T>.DeferenceCollection.Enter(collection);
-                return DelegateDeference<T>.DeferenceCollection.EnterNew(this, target, new());
+                Monitor.Enter(_deferenceCollections);
+                try
+                {
+                    if (TryFind(target, out DelegateDeference<T>.DeferenceCollection collection))
+                        return DelegateDeference<T>.DeferenceCollection.Enter(collection);
+                    return DelegateDeference<T>.DeferenceCollection.EnterNew(this, target, new());
+                }
+                finally { Monitor.Exit(_deferenceCollections); }
             }
-            finally { Monitor.Exit(_deferenceCollections); }
         }
 
         /// <summary>
@@ -146,15 +148,17 @@ namespace FsInfoCat.DeferredDelegation
         {
             if (target is null)
                 throw new ArgumentNullException(nameof(target));
-            using IDisposable scope = _logger.BeginScope("{MethodName}({target}, {lockTaken})", nameof(Enter), target, lockTaken);
-            Monitor.Enter(_deferenceCollections);
-            try
+            using (_logger.BeginScope("{MethodName}({target}, {lockTaken})", nameof(Enter), target, lockTaken))
             {
-                if (TryFind(target, out DelegateDeference<T>.DeferenceCollection collection))
-                    return DelegateDeference<T>.DeferenceCollection.Enter(collection, ref lockTaken);
-                return DelegateDeference<T>.DeferenceCollection.EnterNew(this, target, new(), ref lockTaken);
+                Monitor.Enter(_deferenceCollections);
+                try
+                {
+                    if (TryFind(target, out DelegateDeference<T>.DeferenceCollection collection))
+                        return DelegateDeference<T>.DeferenceCollection.Enter(collection, ref lockTaken);
+                    return DelegateDeference<T>.DeferenceCollection.EnterNew(this, target, new(), ref lockTaken);
+                }
+                finally { Monitor.Exit(_deferenceCollections); }
             }
-            finally { Monitor.Exit(_deferenceCollections); }
         }
 
         /// <summary>
@@ -172,17 +176,19 @@ namespace FsInfoCat.DeferredDelegation
         {
             if (target is null)
                 throw new ArgumentNullException(nameof(target));
-            using IDisposable scope = _logger.BeginScope("{MethodName}({target})", nameof(EnterSynchronized), target);
-            Monitor.Enter(_deferenceCollections);
-            try
+            using (_logger.BeginScope("{MethodName}({target})", nameof(EnterSynchronized), target))
             {
-                if (TryFind(target, out DelegateDeference<T>.DeferenceCollection collection))
-                    return DelegateDeference<T>.DeferenceCollection.Enter(collection);
-                if (TryGetSyncRoot(target, out object syncRoot))
-                    return DelegateDeference<T>.DeferenceCollection.EnterNew(this, target, syncRoot);
-                throw new ArgumentOutOfRangeException(nameof(target));
+                Monitor.Enter(_deferenceCollections);
+                try
+                {
+                    if (TryFind(target, out DelegateDeference<T>.DeferenceCollection collection))
+                        return DelegateDeference<T>.DeferenceCollection.Enter(collection);
+                    if (TryGetSyncRoot(target, out object syncRoot))
+                        return DelegateDeference<T>.DeferenceCollection.EnterNew(this, target, syncRoot);
+                    throw new ArgumentOutOfRangeException(nameof(target));
+                }
+                finally { Monitor.Exit(_deferenceCollections); }
             }
-            finally { Monitor.Exit(_deferenceCollections); }
         }
 
         /// <summary>
@@ -197,27 +203,29 @@ namespace FsInfoCat.DeferredDelegation
         /// <seealso cref="Monitor.Enter(object)"/>
         public bool EnterIfSynchronized<T>([AllowNull] T target, out IDelegateDeference<T> deference) where T : class, ICollection
         {
-            using IDisposable scope = _logger.BeginScope("{MethodName}({target})", nameof(EnterIfSynchronized), target);
-            if (target is not null)
+            using (_logger.BeginScope("{MethodName}({target})", nameof(EnterIfSynchronized), target))
             {
-                Monitor.Enter(_deferenceCollections);
-                try
+                if (target is not null)
                 {
-                    if (TryFind(target, out DelegateDeference<T>.DeferenceCollection collection))
+                    Monitor.Enter(_deferenceCollections);
+                    try
                     {
-                        deference = DelegateDeference<T>.DeferenceCollection.Enter(collection);
-                        return true;
+                        if (TryFind(target, out DelegateDeference<T>.DeferenceCollection collection))
+                        {
+                            deference = DelegateDeference<T>.DeferenceCollection.Enter(collection);
+                            return true;
+                        }
+                        if (TryGetSyncRoot(target, out object syncRoot))
+                        {
+                            deference = DelegateDeference<T>.DeferenceCollection.EnterNew(this, target, syncRoot);
+                            return true;
+                        }
                     }
-                    if (TryGetSyncRoot(target, out object syncRoot))
-                    {
-                        deference = DelegateDeference<T>.DeferenceCollection.EnterNew(this, target, syncRoot);
-                        return true;
-                    }
+                    finally { Monitor.Exit(_deferenceCollections); }
                 }
-                finally { Monitor.Exit(_deferenceCollections); }
+                deference = null;
+                return false;
             }
-            deference = null;
-            return false;
         }
 
         /// <summary>
@@ -236,17 +244,19 @@ namespace FsInfoCat.DeferredDelegation
         {
             if (target is null)
                 throw new ArgumentNullException(nameof(target));
-            using IDisposable scope = _logger.BeginScope("{MethodName}({target}, {lockTaken})", nameof(EnterSynchronized), target, lockTaken);
-            Monitor.Enter(_deferenceCollections);
-            try
+            using (_logger.BeginScope("{MethodName}({target}, {lockTaken})", nameof(EnterSynchronized), target, lockTaken))
             {
-                if (TryFind(target, out DelegateDeference<T>.DeferenceCollection collection))
-                    return DelegateDeference<T>.DeferenceCollection.Enter(collection, ref lockTaken);
-                if (TryGetSyncRoot(target, out object syncRoot))
-                    return DelegateDeference<T>.DeferenceCollection.EnterNew(this, target, syncRoot, ref lockTaken);
-                throw new ArgumentOutOfRangeException(nameof(target));
+                Monitor.Enter(_deferenceCollections);
+                try
+                {
+                    if (TryFind(target, out DelegateDeference<T>.DeferenceCollection collection))
+                        return DelegateDeference<T>.DeferenceCollection.Enter(collection, ref lockTaken);
+                    if (TryGetSyncRoot(target, out object syncRoot))
+                        return DelegateDeference<T>.DeferenceCollection.EnterNew(this, target, syncRoot, ref lockTaken);
+                    throw new ArgumentOutOfRangeException(nameof(target));
+                }
+                finally { Monitor.Exit(_deferenceCollections); }
             }
-            finally { Monitor.Exit(_deferenceCollections); }
         }
 
         /// <summary>
@@ -262,27 +272,29 @@ namespace FsInfoCat.DeferredDelegation
         /// <seealso cref="Monitor.Enter(object, ref bool)"/>
         public bool EnterIfSynchronized<T>([AllowNull] T target, ref bool lockTaken, out IDelegateDeference<T> deference) where T : class, ICollection
         {
-            using IDisposable scope = _logger.BeginScope("{MethodName}({target}, {lockTaken})", nameof(EnterIfSynchronized), target, lockTaken);
-            if (target is not null)
+            using (_logger.BeginScope("{MethodName}({target}, {lockTaken})", nameof(EnterIfSynchronized), target, lockTaken))
             {
-                Monitor.Enter(_deferenceCollections);
-                try
+                if (target is not null)
                 {
-                    if (TryFind(target, out DelegateDeference<T>.DeferenceCollection collection))
+                    Monitor.Enter(_deferenceCollections);
+                    try
                     {
-                        deference = DelegateDeference<T>.DeferenceCollection.Enter(collection, ref lockTaken);
-                        return true;
+                        if (TryFind(target, out DelegateDeference<T>.DeferenceCollection collection))
+                        {
+                            deference = DelegateDeference<T>.DeferenceCollection.Enter(collection, ref lockTaken);
+                            return true;
+                        }
+                        if (TryGetSyncRoot(target, out object syncRoot))
+                        {
+                            deference = DelegateDeference<T>.DeferenceCollection.EnterNew(this, target, syncRoot, ref lockTaken);
+                            return true;
+                        }
                     }
-                    if (TryGetSyncRoot(target, out object syncRoot))
-                    {
-                        deference = DelegateDeference<T>.DeferenceCollection.EnterNew(this, target, syncRoot, ref lockTaken);
-                        return true;
-                    }
+                    finally { Monitor.Exit(_deferenceCollections); }
                 }
-                finally { Monitor.Exit(_deferenceCollections); }
+                deference = null;
+                return false;
             }
-            deference = null;
-            return false;
         }
 
         /// <summary>
@@ -302,17 +314,19 @@ namespace FsInfoCat.DeferredDelegation
         {
             if (target is null)
                 throw new ArgumentNullException(nameof(target));
-            using IDisposable scope = _logger.BeginScope("{MethodName}({target})", nameof(TryEnterSynchronized), target);
-            Monitor.Enter(_deferenceCollections);
-            try
+            using (_logger.BeginScope("{MethodName}({target})", nameof(TryEnterSynchronized), target))
             {
-                if (TryFind(target, out DelegateDeference<T>.DeferenceCollection collection))
-                    return DelegateDeference<T>.DeferenceCollection.TryEnter(collection, out deference);
-                if (TryGetSyncRoot(target, out object syncRoot))
-                    return DelegateDeference<T>.DeferenceCollection.TryEnterNew(this, target, syncRoot, out deference);
-                throw new ArgumentOutOfRangeException(nameof(target));
+                Monitor.Enter(_deferenceCollections);
+                try
+                {
+                    if (TryFind(target, out DelegateDeference<T>.DeferenceCollection collection))
+                        return DelegateDeference<T>.DeferenceCollection.TryEnter(collection, out deference);
+                    if (TryGetSyncRoot(target, out object syncRoot))
+                        return DelegateDeference<T>.DeferenceCollection.TryEnterNew(this, target, syncRoot, out deference);
+                    throw new ArgumentOutOfRangeException(nameof(target));
+                }
+                finally { Monitor.Exit(_deferenceCollections); }
             }
-            finally { Monitor.Exit(_deferenceCollections); }
         }
 
         /// <summary>
@@ -327,21 +341,23 @@ namespace FsInfoCat.DeferredDelegation
         /// <see cref="Monitor.TryEnter(object)"/>
         public bool TryEnterIfSynchronized<T>([AllowNull] T target, out IDelegateDeference<T> deference) where T : class, ICollection
         {
-            using IDisposable scope = _logger.BeginScope("{MethodName}({target})", nameof(TryEnterIfSynchronized), target);
-            if (target is not null)
+            using (_logger.BeginScope("{MethodName}({target})", nameof(TryEnterIfSynchronized), target))
             {
-                Monitor.Enter(_deferenceCollections);
-                try
+                if (target is not null)
                 {
-                    if (TryFind(target, out DelegateDeference<T>.DeferenceCollection collection))
-                        return DelegateDeference<T>.DeferenceCollection.TryEnter(collection, out deference);
-                    if (TryGetSyncRoot(target, out object syncRoot))
-                        return DelegateDeference<T>.DeferenceCollection.TryEnterNew(this, target, syncRoot, out deference);
+                    Monitor.Enter(_deferenceCollections);
+                    try
+                    {
+                        if (TryFind(target, out DelegateDeference<T>.DeferenceCollection collection))
+                            return DelegateDeference<T>.DeferenceCollection.TryEnter(collection, out deference);
+                        if (TryGetSyncRoot(target, out object syncRoot))
+                            return DelegateDeference<T>.DeferenceCollection.TryEnterNew(this, target, syncRoot, out deference);
+                    }
+                    finally { Monitor.Exit(_deferenceCollections); }
                 }
-                finally { Monitor.Exit(_deferenceCollections); }
+                deference = null;
+                return false;
             }
-            deference = null;
-            return false;
         }
 
         /// <summary>
@@ -362,17 +378,19 @@ namespace FsInfoCat.DeferredDelegation
         {
             if (target is null)
                 throw new ArgumentNullException(nameof(target));
-            using IDisposable scope = _logger.BeginScope("{MethodName}({target}, {lockTaken})", nameof(TryEnterSynchronized), target, lockTaken);
-            Monitor.Enter(_deferenceCollections);
-            try
+            using (_logger.BeginScope("{MethodName}({target}, {lockTaken})", nameof(TryEnterSynchronized), target, lockTaken))
             {
-                if (TryFind(target, out DelegateDeference<T>.DeferenceCollection collection))
-                    return DelegateDeference<T>.DeferenceCollection.TryEnter(collection, ref lockTaken, out deference);
-                if (TryGetSyncRoot(target, out object syncRoot))
-                    return DelegateDeference<T>.DeferenceCollection.TryEnterNew(this, target, syncRoot, ref lockTaken, out deference);
-                throw new ArgumentOutOfRangeException(nameof(target));
+                Monitor.Enter(_deferenceCollections);
+                try
+                {
+                    if (TryFind(target, out DelegateDeference<T>.DeferenceCollection collection))
+                        return DelegateDeference<T>.DeferenceCollection.TryEnter(collection, ref lockTaken, out deference);
+                    if (TryGetSyncRoot(target, out object syncRoot))
+                        return DelegateDeference<T>.DeferenceCollection.TryEnterNew(this, target, syncRoot, ref lockTaken, out deference);
+                    throw new ArgumentOutOfRangeException(nameof(target));
+                }
+                finally { Monitor.Exit(_deferenceCollections); }
             }
-            finally { Monitor.Exit(_deferenceCollections); }
         }
 
         /// <summary>
@@ -388,21 +406,23 @@ namespace FsInfoCat.DeferredDelegation
         /// <seealso cref="Monitor.Enter(object, ref bool)"/>
         public bool TryEnterIfSynchronized<T>([AllowNull] T target, ref bool lockTaken, out IDelegateDeference<T> deference) where T : class, ICollection
         {
-            using IDisposable scope = _logger.BeginScope("{MethodName}({target}, {lockTaken})", nameof(TryEnterIfSynchronized), target, lockTaken);
-            if (target is not null)
+            using (_logger.BeginScope("{MethodName}({target}, {lockTaken})", nameof(TryEnterIfSynchronized), target, lockTaken))
             {
-                Monitor.Enter(_deferenceCollections);
-                try
+                if (target is not null)
                 {
-                    if (TryFind(target, out DelegateDeference<T>.DeferenceCollection collection))
-                        return DelegateDeference<T>.DeferenceCollection.TryEnter(collection, ref lockTaken, out deference);
-                    if (TryGetSyncRoot(target, out object syncRoot))
-                        return DelegateDeference<T>.DeferenceCollection.TryEnterNew(this, target, syncRoot, ref lockTaken, out deference);
+                    Monitor.Enter(_deferenceCollections);
+                    try
+                    {
+                        if (TryFind(target, out DelegateDeference<T>.DeferenceCollection collection))
+                            return DelegateDeference<T>.DeferenceCollection.TryEnter(collection, ref lockTaken, out deference);
+                        if (TryGetSyncRoot(target, out object syncRoot))
+                            return DelegateDeference<T>.DeferenceCollection.TryEnterNew(this, target, syncRoot, ref lockTaken, out deference);
+                    }
+                    finally { Monitor.Exit(_deferenceCollections); }
                 }
-                finally { Monitor.Exit(_deferenceCollections); }
+                deference = null;
+                return false;
             }
-            deference = null;
-            return false;
         }
 
         /// <summary>
@@ -427,17 +447,19 @@ namespace FsInfoCat.DeferredDelegation
         {
             if (target is null)
                 throw new ArgumentNullException(nameof(target));
-            using IDisposable scope = _logger.BeginScope("{MethodName}({target}, {millisecondsTimeout})", nameof(TryEnterSynchronized), target, millisecondsTimeout);
-            Monitor.Enter(_deferenceCollections);
-            try
+            using (_logger.BeginScope("{MethodName}({target}, {millisecondsTimeout})", nameof(TryEnterSynchronized), target, millisecondsTimeout))
             {
-                if (TryFind(target, out DelegateDeference<T>.DeferenceCollection collection))
-                    return DelegateDeference<T>.DeferenceCollection.TryEnter(collection, millisecondsTimeout, out deference);
-                if (TryGetSyncRoot(target, out object syncRoot))
-                    return DelegateDeference<T>.DeferenceCollection.TryEnterNew(this, target, syncRoot, millisecondsTimeout, out deference);
-                throw new ArgumentOutOfRangeException(nameof(target));
+                Monitor.Enter(_deferenceCollections);
+                try
+                {
+                    if (TryFind(target, out DelegateDeference<T>.DeferenceCollection collection))
+                        return DelegateDeference<T>.DeferenceCollection.TryEnter(collection, millisecondsTimeout, out deference);
+                    if (TryGetSyncRoot(target, out object syncRoot))
+                        return DelegateDeference<T>.DeferenceCollection.TryEnterNew(this, target, syncRoot, millisecondsTimeout, out deference);
+                    throw new ArgumentOutOfRangeException(nameof(target));
+                }
+                finally { Monitor.Exit(_deferenceCollections); }
             }
-            finally { Monitor.Exit(_deferenceCollections); }
         }
 
         /// <summary>
@@ -454,21 +476,23 @@ namespace FsInfoCat.DeferredDelegation
         /// <see cref="Monitor.TryEnter(object, int)"/>
         public bool TryEnterIfSynchronized<T>([AllowNull] T target, int millisecondsTimeout, out IDelegateDeference<T> deference) where T : class, ICollection
         {
-            using IDisposable scope = _logger.BeginScope("{MethodName}({target}, {millisecondsTimeout})", nameof(TryEnterIfSynchronized), target, millisecondsTimeout);
-            if (target is not null)
+            using (_logger.BeginScope("{MethodName}({target}, {millisecondsTimeout})", nameof(TryEnterIfSynchronized), target, millisecondsTimeout))
             {
-                Monitor.Enter(_deferenceCollections);
-                try
+                if (target is not null)
                 {
-                    if (TryFind(target, out DelegateDeference<T>.DeferenceCollection collection))
-                        return DelegateDeference<T>.DeferenceCollection.TryEnter(collection, millisecondsTimeout, out deference);
-                    if (TryGetSyncRoot(target, out object syncRoot))
-                        return DelegateDeference<T>.DeferenceCollection.TryEnterNew(this, target, syncRoot, millisecondsTimeout, out deference);
+                    Monitor.Enter(_deferenceCollections);
+                    try
+                    {
+                        if (TryFind(target, out DelegateDeference<T>.DeferenceCollection collection))
+                            return DelegateDeference<T>.DeferenceCollection.TryEnter(collection, millisecondsTimeout, out deference);
+                        if (TryGetSyncRoot(target, out object syncRoot))
+                            return DelegateDeference<T>.DeferenceCollection.TryEnterNew(this, target, syncRoot, millisecondsTimeout, out deference);
+                    }
+                    finally { Monitor.Exit(_deferenceCollections); }
                 }
-                finally { Monitor.Exit(_deferenceCollections); }
+                deference = null;
+                return false;
             }
-            deference = null;
-            return false;
         }
 
         /// <summary>
@@ -494,17 +518,19 @@ namespace FsInfoCat.DeferredDelegation
         {
             if (target is null)
                 throw new ArgumentNullException(nameof(target));
-            using IDisposable scope = _logger.BeginScope("{MethodName}({target}, {millisecondsTimeout}, {lockTaken})", nameof(TryEnterSynchronized), target, millisecondsTimeout, lockTaken);
-            Monitor.Enter(_deferenceCollections);
-            try
+            using (_logger.BeginScope("{MethodName}({target}, {millisecondsTimeout}, {lockTaken})", nameof(TryEnterSynchronized), target, millisecondsTimeout, lockTaken))
             {
-                if (TryFind(target, out DelegateDeference<T>.DeferenceCollection collection))
-                    return DelegateDeference<T>.DeferenceCollection.TryEnter(collection, millisecondsTimeout, ref lockTaken, out deference);
-                if (TryGetSyncRoot(target, out object syncRoot))
-                    return DelegateDeference<T>.DeferenceCollection.TryEnterNew(this, target, syncRoot, millisecondsTimeout, ref lockTaken, out deference);
-                throw new ArgumentOutOfRangeException(nameof(target));
+                Monitor.Enter(_deferenceCollections);
+                try
+                {
+                    if (TryFind(target, out DelegateDeference<T>.DeferenceCollection collection))
+                        return DelegateDeference<T>.DeferenceCollection.TryEnter(collection, millisecondsTimeout, ref lockTaken, out deference);
+                    if (TryGetSyncRoot(target, out object syncRoot))
+                        return DelegateDeference<T>.DeferenceCollection.TryEnterNew(this, target, syncRoot, millisecondsTimeout, ref lockTaken, out deference);
+                    throw new ArgumentOutOfRangeException(nameof(target));
+                }
+                finally { Monitor.Exit(_deferenceCollections); }
             }
-            finally { Monitor.Exit(_deferenceCollections); }
         }
 
         /// <summary>
@@ -522,21 +548,23 @@ namespace FsInfoCat.DeferredDelegation
         /// <see cref="Monitor.TryEnter(object, int, ref bool)"/>
         public bool TryEnterIfSynchronized<T>([AllowNull] T target, int millisecondsTimeout, ref bool lockTaken, out IDelegateDeference<T> deference) where T : class, ICollection
         {
-            using IDisposable scope = _logger.BeginScope("{MethodName}({target}, {millisecondsTimeout}, {lockTaken})", nameof(TryEnterIfSynchronized), target, millisecondsTimeout, lockTaken);
-            if (target is not null)
+            using (_logger.BeginScope("{MethodName}({target}, {millisecondsTimeout}, {lockTaken})", nameof(TryEnterIfSynchronized), target, millisecondsTimeout, lockTaken))
             {
-                Monitor.Enter(_deferenceCollections);
-                try
+                if (target is not null)
                 {
-                    if (TryFind(target, out DelegateDeference<T>.DeferenceCollection collection))
-                        return DelegateDeference<T>.DeferenceCollection.TryEnter(collection, millisecondsTimeout, ref lockTaken, out deference);
-                    if (TryGetSyncRoot(target, out object syncRoot))
-                        return DelegateDeference<T>.DeferenceCollection.TryEnterNew(this, target, syncRoot, millisecondsTimeout, ref lockTaken, out deference);
+                    Monitor.Enter(_deferenceCollections);
+                    try
+                    {
+                        if (TryFind(target, out DelegateDeference<T>.DeferenceCollection collection))
+                            return DelegateDeference<T>.DeferenceCollection.TryEnter(collection, millisecondsTimeout, ref lockTaken, out deference);
+                        if (TryGetSyncRoot(target, out object syncRoot))
+                            return DelegateDeference<T>.DeferenceCollection.TryEnterNew(this, target, syncRoot, millisecondsTimeout, ref lockTaken, out deference);
+                    }
+                    finally { Monitor.Exit(_deferenceCollections); }
                 }
-                finally { Monitor.Exit(_deferenceCollections); }
+                deference = null;
+                return false;
             }
-            deference = null;
-            return false;
         }
 
         /// <summary>
@@ -561,17 +589,19 @@ namespace FsInfoCat.DeferredDelegation
         {
             if (target is null)
                 throw new ArgumentNullException(nameof(target));
-            using IDisposable scope = _logger.BeginScope("{MethodName}({target}, {timeout})", nameof(TryEnterSynchronized), target, timeout);
-            Monitor.Enter(_deferenceCollections);
-            try
+            using (_logger.BeginScope("{MethodName}({target}, {timeout})", nameof(TryEnterSynchronized), target, timeout))
             {
-                if (TryFind(target, out DelegateDeference<T>.DeferenceCollection collection))
-                    return DelegateDeference<T>.DeferenceCollection.TryEnter(collection, timeout, out deference);
-                if (TryGetSyncRoot(target, out object syncRoot))
-                    return DelegateDeference<T>.DeferenceCollection.TryEnterNew(this, target, syncRoot, timeout, out deference);
-                throw new ArgumentOutOfRangeException(nameof(target));
+                Monitor.Enter(_deferenceCollections);
+                try
+                {
+                    if (TryFind(target, out DelegateDeference<T>.DeferenceCollection collection))
+                        return DelegateDeference<T>.DeferenceCollection.TryEnter(collection, timeout, out deference);
+                    if (TryGetSyncRoot(target, out object syncRoot))
+                        return DelegateDeference<T>.DeferenceCollection.TryEnterNew(this, target, syncRoot, timeout, out deference);
+                    throw new ArgumentOutOfRangeException(nameof(target));
+                }
+                finally { Monitor.Exit(_deferenceCollections); }
             }
-            finally { Monitor.Exit(_deferenceCollections); }
         }
 
         /// <summary>
@@ -589,21 +619,23 @@ namespace FsInfoCat.DeferredDelegation
         /// <see cref="Monitor.TryEnter(object, TimeSpan)"/>
         public bool TryEnterIfSynchronized<T>([AllowNull] T target, TimeSpan timeout, out IDelegateDeference<T> deference) where T : class, ICollection
         {
-            using IDisposable scope = _logger.BeginScope("{MethodName}({target}, {timeout})", nameof(TryEnterIfSynchronized), target, timeout);
-            if (target is not null)
+            using (_logger.BeginScope("{MethodName}({target}, {timeout})", nameof(TryEnterIfSynchronized), target, timeout))
             {
-                Monitor.Enter(_deferenceCollections);
-                try
+                if (target is not null)
                 {
-                    if (TryFind(target, out DelegateDeference<T>.DeferenceCollection collection))
-                        return DelegateDeference<T>.DeferenceCollection.TryEnter(collection, timeout, out deference);
-                    if (TryGetSyncRoot(target, out object syncRoot))
-                        return DelegateDeference<T>.DeferenceCollection.TryEnterNew(this, target, syncRoot, timeout, out deference);
+                    Monitor.Enter(_deferenceCollections);
+                    try
+                    {
+                        if (TryFind(target, out DelegateDeference<T>.DeferenceCollection collection))
+                            return DelegateDeference<T>.DeferenceCollection.TryEnter(collection, timeout, out deference);
+                        if (TryGetSyncRoot(target, out object syncRoot))
+                            return DelegateDeference<T>.DeferenceCollection.TryEnterNew(this, target, syncRoot, timeout, out deference);
+                    }
+                    finally { Monitor.Exit(_deferenceCollections); }
                 }
-                finally { Monitor.Exit(_deferenceCollections); }
+                deference = null;
+                return false;
             }
-            deference = null;
-            return false;
         }
 
         /// <summary>
@@ -629,17 +661,19 @@ namespace FsInfoCat.DeferredDelegation
         {
             if (target is null)
                 throw new ArgumentNullException(nameof(target));
-            using IDisposable scope = _logger.BeginScope("{MethodName}({target}, {timeout}, {lockTaken})", nameof(TryEnterSynchronized), target, timeout, lockTaken);
-            Monitor.Enter(_deferenceCollections);
-            try
+            using (_logger.BeginScope("{MethodName}({target}, {timeout}, {lockTaken})", nameof(TryEnterSynchronized), target, timeout, lockTaken))
             {
-                if (TryFind(target, out DelegateDeference<T>.DeferenceCollection collection))
-                    return DelegateDeference<T>.DeferenceCollection.TryEnter(collection, timeout, ref lockTaken, out deference);
-                if (TryGetSyncRoot(target, out object syncRoot))
-                    return DelegateDeference<T>.DeferenceCollection.TryEnterNew(this, target, syncRoot, timeout, ref lockTaken, out deference);
-                throw new ArgumentOutOfRangeException(nameof(target));
+                Monitor.Enter(_deferenceCollections);
+                try
+                {
+                    if (TryFind(target, out DelegateDeference<T>.DeferenceCollection collection))
+                        return DelegateDeference<T>.DeferenceCollection.TryEnter(collection, timeout, ref lockTaken, out deference);
+                    if (TryGetSyncRoot(target, out object syncRoot))
+                        return DelegateDeference<T>.DeferenceCollection.TryEnterNew(this, target, syncRoot, timeout, ref lockTaken, out deference);
+                    throw new ArgumentOutOfRangeException(nameof(target));
+                }
+                finally { Monitor.Exit(_deferenceCollections); }
             }
-            finally { Monitor.Exit(_deferenceCollections); }
         }
 
         /// <summary>
@@ -658,21 +692,23 @@ namespace FsInfoCat.DeferredDelegation
         /// <see cref="Monitor.TryEnter(object, TimeSpan, ref bool))"/>
         public bool TryEnterIfSynchronized<T>([AllowNull] T target, TimeSpan timeout, ref bool lockTaken, out IDelegateDeference<T> deference) where T : class, ICollection
         {
-            using IDisposable scope = _logger.BeginScope("{MethodName}({target}, {timeout}, {lockTaken})", nameof(TryEnterIfSynchronized), target, timeout, lockTaken);
-            if (target is not null)
+            using (_logger.BeginScope("{MethodName}({target}, {timeout}, {lockTaken})", nameof(TryEnterIfSynchronized), target, timeout, lockTaken))
             {
-                Monitor.Enter(_deferenceCollections);
-                try
+                if (target is not null)
                 {
-                    if (TryFind(target, out DelegateDeference<T>.DeferenceCollection collection))
-                        return DelegateDeference<T>.DeferenceCollection.TryEnter(collection, timeout, ref lockTaken, out deference);
-                    if (TryGetSyncRoot(target, out object syncRoot))
-                        return DelegateDeference<T>.DeferenceCollection.TryEnterNew(this, target, syncRoot, timeout, ref lockTaken, out deference);
+                    Monitor.Enter(_deferenceCollections);
+                    try
+                    {
+                        if (TryFind(target, out DelegateDeference<T>.DeferenceCollection collection))
+                            return DelegateDeference<T>.DeferenceCollection.TryEnter(collection, timeout, ref lockTaken, out deference);
+                        if (TryGetSyncRoot(target, out object syncRoot))
+                            return DelegateDeference<T>.DeferenceCollection.TryEnterNew(this, target, syncRoot, timeout, ref lockTaken, out deference);
+                    }
+                    finally { Monitor.Exit(_deferenceCollections); }
                 }
-                finally { Monitor.Exit(_deferenceCollections); }
+                deference = null;
+                return false;
             }
-            deference = null;
-            return false;
         }
 
         /// <summary>
@@ -689,17 +725,19 @@ namespace FsInfoCat.DeferredDelegation
         {
             if (target is null)
                 throw new ArgumentNullException(nameof(target));
-            using IDisposable scope = _logger.BeginScope("{MethodName}({target})", nameof(EnterSynchronizable), target);
-            Monitor.Enter(_deferenceCollections);
-            try
+            using (_logger.BeginScope("{MethodName}({target})", nameof(EnterSynchronizable), target))
             {
-                if (TryFind(target, out DelegateDeference<T>.DeferenceCollection collection))
-                    return DelegateDeference<T>.DeferenceCollection.Enter(collection);
-                if (TryGetSyncRoot(target, out object syncRoot))
-                    return DelegateDeference<T>.DeferenceCollection.EnterNew(this, target, syncRoot);
-                throw new ArgumentOutOfRangeException(nameof(target));
+                Monitor.Enter(_deferenceCollections);
+                try
+                {
+                    if (TryFind(target, out DelegateDeference<T>.DeferenceCollection collection))
+                        return DelegateDeference<T>.DeferenceCollection.Enter(collection);
+                    if (TryGetSyncRoot(target, out object syncRoot))
+                        return DelegateDeference<T>.DeferenceCollection.EnterNew(this, target, syncRoot);
+                    throw new ArgumentOutOfRangeException(nameof(target));
+                }
+                finally { Monitor.Exit(_deferenceCollections); }
             }
-            finally { Monitor.Exit(_deferenceCollections); }
         }
 
         /// <summary>
@@ -715,27 +753,29 @@ namespace FsInfoCat.DeferredDelegation
         /// <seealso cref="Monitor.Enter(object)"/>
         public bool EnterSynchronizableIfNotNull<T>([AllowNull] T target, out IDelegateDeference<T> deference) where T : class, ISynchronizable
         {
-            using IDisposable scope = _logger.BeginScope("{MethodName}({target})", nameof(EnterSynchronizableIfNotNull), target);
-            if (target is not null)
+            using (_logger.BeginScope("{MethodName}({target})", nameof(EnterSynchronizableIfNotNull), target))
             {
-                Monitor.Enter(_deferenceCollections);
-                try
+                if (target is not null)
                 {
-                    if (TryFind(target, out DelegateDeference<T>.DeferenceCollection collection))
+                    Monitor.Enter(_deferenceCollections);
+                    try
                     {
-                        deference = DelegateDeference<T>.DeferenceCollection.Enter(collection);
-                        return true;
+                        if (TryFind(target, out DelegateDeference<T>.DeferenceCollection collection))
+                        {
+                            deference = DelegateDeference<T>.DeferenceCollection.Enter(collection);
+                            return true;
+                        }
+                        if (TryGetSyncRoot(target, out object syncRoot))
+                        {
+                            deference = DelegateDeference<T>.DeferenceCollection.EnterNew(this, target, syncRoot);
+                            return true;
+                        }
                     }
-                    if (TryGetSyncRoot(target, out object syncRoot))
-                    {
-                        deference = DelegateDeference<T>.DeferenceCollection.EnterNew(this, target, syncRoot);
-                        return true;
-                    }
+                    finally { Monitor.Exit(_deferenceCollections); }
                 }
-                finally { Monitor.Exit(_deferenceCollections); }
+                deference = null;
+                return false;
             }
-            deference = null;
-            return false;
         }
 
         /// <summary>
@@ -753,17 +793,19 @@ namespace FsInfoCat.DeferredDelegation
         {
             if (target is null)
                 throw new ArgumentNullException(nameof(target));
-            using IDisposable scope = _logger.BeginScope("{MethodName}({target}, {lockTaken})", nameof(EnterSynchronizable), target, lockTaken);
-            Monitor.Enter(_deferenceCollections);
-            try
+            using (_logger.BeginScope("{MethodName}({target}, {lockTaken})", nameof(EnterSynchronizable), target, lockTaken))
             {
-                if (TryFind(target, out DelegateDeference<T>.DeferenceCollection collection))
-                    return DelegateDeference<T>.DeferenceCollection.Enter(collection, ref lockTaken);
-                if (TryGetSyncRoot(target, out object syncRoot))
-                    return DelegateDeference<T>.DeferenceCollection.EnterNew(this, target, syncRoot, ref lockTaken);
-                throw new ArgumentOutOfRangeException(nameof(target));
+                Monitor.Enter(_deferenceCollections);
+                try
+                {
+                    if (TryFind(target, out DelegateDeference<T>.DeferenceCollection collection))
+                        return DelegateDeference<T>.DeferenceCollection.Enter(collection, ref lockTaken);
+                    if (TryGetSyncRoot(target, out object syncRoot))
+                        return DelegateDeference<T>.DeferenceCollection.EnterNew(this, target, syncRoot, ref lockTaken);
+                    throw new ArgumentOutOfRangeException(nameof(target));
+                }
+                finally { Monitor.Exit(_deferenceCollections); }
             }
-            finally { Monitor.Exit(_deferenceCollections); }
         }
 
         /// <summary>
@@ -780,27 +822,29 @@ namespace FsInfoCat.DeferredDelegation
         /// <seealso cref="Monitor.Enter(object, ref bool)"/>
         public bool EnterSynchronizableIfNotNull<T>([AllowNull] T target, ref bool lockTaken, out IDelegateDeference<T> deference) where T : class, ISynchronizable
         {
-            using IDisposable scope = _logger.BeginScope("{MethodName}({target}, {lockTaken})", nameof(EnterSynchronizableIfNotNull), target, lockTaken);
-            if (target is not null)
+            using (_logger.BeginScope("{MethodName}({target}, {lockTaken})", nameof(EnterSynchronizableIfNotNull), target, lockTaken))
             {
-                Monitor.Enter(_deferenceCollections);
-                try
+                if (target is not null)
                 {
-                    if (TryFind(target, out DelegateDeference<T>.DeferenceCollection collection))
+                    Monitor.Enter(_deferenceCollections);
+                    try
                     {
-                        deference = DelegateDeference<T>.DeferenceCollection.Enter(collection, ref lockTaken);
-                        return true;
+                        if (TryFind(target, out DelegateDeference<T>.DeferenceCollection collection))
+                        {
+                            deference = DelegateDeference<T>.DeferenceCollection.Enter(collection, ref lockTaken);
+                            return true;
+                        }
+                        if (TryGetSyncRoot(target, out object syncRoot))
+                        {
+                            deference = DelegateDeference<T>.DeferenceCollection.EnterNew(this, target, syncRoot, ref lockTaken);
+                            return true;
+                        }
                     }
-                    if (TryGetSyncRoot(target, out object syncRoot))
-                    {
-                        deference = DelegateDeference<T>.DeferenceCollection.EnterNew(this, target, syncRoot, ref lockTaken);
-                        return true;
-                    }
+                    finally { Monitor.Exit(_deferenceCollections); }
                 }
-                finally { Monitor.Exit(_deferenceCollections); }
+                deference = null;
+                return false;
             }
-            deference = null;
-            return false;
         }
 
         /// <summary>
@@ -819,17 +863,19 @@ namespace FsInfoCat.DeferredDelegation
         {
             if (target is null)
                 throw new ArgumentNullException(nameof(target));
-            using IDisposable scope = _logger.BeginScope("{MethodName}({target})", nameof(TryEnterSynchronizable), target);
-            Monitor.Enter(_deferenceCollections);
-            try
+            using (_logger.BeginScope("{MethodName}({target})", nameof(TryEnterSynchronizable), target))
             {
-                if (TryFind(target, out DelegateDeference<T>.DeferenceCollection collection))
-                    return DelegateDeference<T>.DeferenceCollection.TryEnter(collection, out deference);
-                if (TryGetSyncRoot(target, out object syncRoot))
-                    return DelegateDeference<T>.DeferenceCollection.TryEnterNew(this, target, syncRoot, out deference);
-                throw new ArgumentOutOfRangeException(nameof(target));
+                Monitor.Enter(_deferenceCollections);
+                try
+                {
+                    if (TryFind(target, out DelegateDeference<T>.DeferenceCollection collection))
+                        return DelegateDeference<T>.DeferenceCollection.TryEnter(collection, out deference);
+                    if (TryGetSyncRoot(target, out object syncRoot))
+                        return DelegateDeference<T>.DeferenceCollection.TryEnterNew(this, target, syncRoot, out deference);
+                    throw new ArgumentOutOfRangeException(nameof(target));
+                }
+                finally { Monitor.Exit(_deferenceCollections); }
             }
-            finally { Monitor.Exit(_deferenceCollections); }
         }
 
         /// <summary>
@@ -844,21 +890,23 @@ namespace FsInfoCat.DeferredDelegation
         /// <see cref="Monitor.TryEnter(object)"/>
         public bool TryEnterSynchronizableIfNotNull<T>([AllowNull] T target, out IDelegateDeference<T> deference) where T : class, ISynchronizable
         {
-            using IDisposable scope = _logger.BeginScope("{MethodName}({target})", nameof(TryEnterSynchronizableIfNotNull), target);
-            if (target is not null)
+            using (_logger.BeginScope("{MethodName}({target})", nameof(TryEnterSynchronizableIfNotNull), target))
             {
-                Monitor.Enter(_deferenceCollections);
-                try
+                if (target is not null)
                 {
-                    if (TryFind(target, out DelegateDeference<T>.DeferenceCollection collection))
-                        return DelegateDeference<T>.DeferenceCollection.TryEnter(collection, out deference);
-                    if (TryGetSyncRoot(target, out object syncRoot))
-                        return DelegateDeference<T>.DeferenceCollection.TryEnterNew(this, target, syncRoot, out deference);
+                    Monitor.Enter(_deferenceCollections);
+                    try
+                    {
+                        if (TryFind(target, out DelegateDeference<T>.DeferenceCollection collection))
+                            return DelegateDeference<T>.DeferenceCollection.TryEnter(collection, out deference);
+                        if (TryGetSyncRoot(target, out object syncRoot))
+                            return DelegateDeference<T>.DeferenceCollection.TryEnterNew(this, target, syncRoot, out deference);
+                    }
+                    finally { Monitor.Exit(_deferenceCollections); }
                 }
-                finally { Monitor.Exit(_deferenceCollections); }
+                deference = null;
+                return false;
             }
-            deference = null;
-            return false;
         }
 
         /// <summary>
@@ -878,17 +926,19 @@ namespace FsInfoCat.DeferredDelegation
         {
             if (target is null)
                 throw new ArgumentNullException(nameof(target));
-            using IDisposable scope = _logger.BeginScope("{MethodName}({target}, {lockTaken})", nameof(TryEnterSynchronizable), target, lockTaken);
-            Monitor.Enter(_deferenceCollections);
-            try
+            using (_logger.BeginScope("{MethodName}({target}, {lockTaken})", nameof(TryEnterSynchronizable), target, lockTaken))
             {
-                if (TryFind(target, out DelegateDeference<T>.DeferenceCollection collection))
-                    return DelegateDeference<T>.DeferenceCollection.TryEnter(collection, ref lockTaken, out deference);
-                if (TryGetSyncRoot(target, out object syncRoot))
-                    return DelegateDeference<T>.DeferenceCollection.TryEnterNew(this, target, syncRoot, ref lockTaken, out deference);
-                throw new ArgumentOutOfRangeException(nameof(target));
+                Monitor.Enter(_deferenceCollections);
+                try
+                {
+                    if (TryFind(target, out DelegateDeference<T>.DeferenceCollection collection))
+                        return DelegateDeference<T>.DeferenceCollection.TryEnter(collection, ref lockTaken, out deference);
+                    if (TryGetSyncRoot(target, out object syncRoot))
+                        return DelegateDeference<T>.DeferenceCollection.TryEnterNew(this, target, syncRoot, ref lockTaken, out deference);
+                    throw new ArgumentOutOfRangeException(nameof(target));
+                }
+                finally { Monitor.Exit(_deferenceCollections); }
             }
-            finally { Monitor.Exit(_deferenceCollections); }
         }
 
         /// <summary>
@@ -904,21 +954,23 @@ namespace FsInfoCat.DeferredDelegation
         /// <see cref="Monitor.TryEnter(object, ref bool)"/>
         public bool TryEnterSynchronizableIfNotNull<T>([AllowNull] T target, ref bool lockTaken, out IDelegateDeference<T> deference) where T : class, ISynchronizable
         {
-            using IDisposable scope = _logger.BeginScope("{MethodName}({target}, {lockTaken})", nameof(TryEnterSynchronizableIfNotNull), target, lockTaken);
-            if (target is not null)
+            using (_logger.BeginScope("{MethodName}({target}, {lockTaken})", nameof(TryEnterSynchronizableIfNotNull), target, lockTaken))
             {
-                Monitor.Enter(_deferenceCollections);
-                try
+                if (target is not null)
                 {
-                    if (TryFind(target, out DelegateDeference<T>.DeferenceCollection collection))
-                        return DelegateDeference<T>.DeferenceCollection.TryEnter(collection, ref lockTaken, out deference);
-                    if (TryGetSyncRoot(target, out object syncRoot))
-                        return DelegateDeference<T>.DeferenceCollection.TryEnterNew(this, target, syncRoot, ref lockTaken, out deference);
+                    Monitor.Enter(_deferenceCollections);
+                    try
+                    {
+                        if (TryFind(target, out DelegateDeference<T>.DeferenceCollection collection))
+                            return DelegateDeference<T>.DeferenceCollection.TryEnter(collection, ref lockTaken, out deference);
+                        if (TryGetSyncRoot(target, out object syncRoot))
+                            return DelegateDeference<T>.DeferenceCollection.TryEnterNew(this, target, syncRoot, ref lockTaken, out deference);
+                    }
+                    finally { Monitor.Exit(_deferenceCollections); }
                 }
-                finally { Monitor.Exit(_deferenceCollections); }
+                deference = null;
+                return false;
             }
-            deference = null;
-            return false;
         }
 
         /// <summary>
@@ -943,17 +995,19 @@ namespace FsInfoCat.DeferredDelegation
         {
             if (target is null)
                 throw new ArgumentNullException(nameof(target));
-            using IDisposable scope = _logger.BeginScope("{MethodName}({target}, {millisecondsTimeout})", nameof(TryEnterSynchronizable), target, millisecondsTimeout);
-            Monitor.Enter(_deferenceCollections);
-            try
+            using (_logger.BeginScope("{MethodName}({target}, {millisecondsTimeout})", nameof(TryEnterSynchronizable), target, millisecondsTimeout))
             {
-                if (TryFind(target, out DelegateDeference<T>.DeferenceCollection collection))
-                    return DelegateDeference<T>.DeferenceCollection.TryEnter(collection, millisecondsTimeout, out deference);
-                if (TryGetSyncRoot(target, out object syncRoot))
-                    return DelegateDeference<T>.DeferenceCollection.TryEnterNew(this, target, syncRoot, millisecondsTimeout, out deference);
-                throw new ArgumentOutOfRangeException(nameof(target));
+                Monitor.Enter(_deferenceCollections);
+                try
+                {
+                    if (TryFind(target, out DelegateDeference<T>.DeferenceCollection collection))
+                        return DelegateDeference<T>.DeferenceCollection.TryEnter(collection, millisecondsTimeout, out deference);
+                    if (TryGetSyncRoot(target, out object syncRoot))
+                        return DelegateDeference<T>.DeferenceCollection.TryEnterNew(this, target, syncRoot, millisecondsTimeout, out deference);
+                    throw new ArgumentOutOfRangeException(nameof(target));
+                }
+                finally { Monitor.Exit(_deferenceCollections); }
             }
-            finally { Monitor.Exit(_deferenceCollections); }
         }
 
         /// <summary>
@@ -970,21 +1024,23 @@ namespace FsInfoCat.DeferredDelegation
         /// <see cref="Monitor.TryEnter(object, int)"/>
         public bool TryEnterSynchronizableIfNotNull<T>([AllowNull] T target, int millisecondsTimeout, out IDelegateDeference<T> deference) where T : class, ISynchronizable
         {
-            using IDisposable scope = _logger.BeginScope("{MethodName}({target}, {millisecondsTimeout})", nameof(TryEnterSynchronizableIfNotNull), target, millisecondsTimeout);
-            if (target is not null)
+            using (_logger.BeginScope("{MethodName}({target}, {millisecondsTimeout})", nameof(TryEnterSynchronizableIfNotNull), target, millisecondsTimeout))
             {
-                Monitor.Enter(_deferenceCollections);
-                try
+                if (target is not null)
                 {
-                    if (TryFind(target, out DelegateDeference<T>.DeferenceCollection collection))
-                        return DelegateDeference<T>.DeferenceCollection.TryEnter(collection, millisecondsTimeout, out deference);
-                    if (TryGetSyncRoot(target, out object syncRoot))
-                        return DelegateDeference<T>.DeferenceCollection.TryEnterNew(this, target, syncRoot, millisecondsTimeout, out deference);
+                    Monitor.Enter(_deferenceCollections);
+                    try
+                    {
+                        if (TryFind(target, out DelegateDeference<T>.DeferenceCollection collection))
+                            return DelegateDeference<T>.DeferenceCollection.TryEnter(collection, millisecondsTimeout, out deference);
+                        if (TryGetSyncRoot(target, out object syncRoot))
+                            return DelegateDeference<T>.DeferenceCollection.TryEnterNew(this, target, syncRoot, millisecondsTimeout, out deference);
+                    }
+                    finally { Monitor.Exit(_deferenceCollections); }
                 }
-                finally { Monitor.Exit(_deferenceCollections); }
+                deference = null;
+                return false;
             }
-            deference = null;
-            return false;
         }
 
         /// <summary>
@@ -1010,17 +1066,19 @@ namespace FsInfoCat.DeferredDelegation
         {
             if (target is null)
                 throw new ArgumentNullException(nameof(target));
-            using IDisposable scope = _logger.BeginScope("{MethodName}({target}, {millisecondsTimeout}, {lockTaken})", nameof(TryEnterSynchronizable), target, millisecondsTimeout, lockTaken);
-            Monitor.Enter(_deferenceCollections);
-            try
+            using (_logger.BeginScope("{MethodName}({target}, {millisecondsTimeout}, {lockTaken})", nameof(TryEnterSynchronizable), target, millisecondsTimeout, lockTaken))
             {
-                if (TryFind(target, out DelegateDeference<T>.DeferenceCollection collection))
-                    return DelegateDeference<T>.DeferenceCollection.TryEnter(collection, millisecondsTimeout, ref lockTaken, out deference);
-                if (TryGetSyncRoot(target, out object syncRoot))
-                    return DelegateDeference<T>.DeferenceCollection.TryEnterNew(this, target, syncRoot, millisecondsTimeout, ref lockTaken, out deference);
-                throw new ArgumentOutOfRangeException(nameof(target));
+                Monitor.Enter(_deferenceCollections);
+                try
+                {
+                    if (TryFind(target, out DelegateDeference<T>.DeferenceCollection collection))
+                        return DelegateDeference<T>.DeferenceCollection.TryEnter(collection, millisecondsTimeout, ref lockTaken, out deference);
+                    if (TryGetSyncRoot(target, out object syncRoot))
+                        return DelegateDeference<T>.DeferenceCollection.TryEnterNew(this, target, syncRoot, millisecondsTimeout, ref lockTaken, out deference);
+                    throw new ArgumentOutOfRangeException(nameof(target));
+                }
+                finally { Monitor.Exit(_deferenceCollections); }
             }
-            finally { Monitor.Exit(_deferenceCollections); }
         }
 
         /// <summary>
@@ -1038,21 +1096,23 @@ namespace FsInfoCat.DeferredDelegation
         /// <see cref="Monitor.TryEnter(object, int, ref bool)"/>
         public bool TryEnterSynchronizableIfNotNull<T>([AllowNull] T target, int millisecondsTimeout, ref bool lockTaken, out IDelegateDeference<T> deference) where T : class, ISynchronizable
         {
-            using IDisposable scope = _logger.BeginScope("{MethodName}({target}, {millisecondsTimeout}, {lockTaken})", nameof(TryEnterSynchronizableIfNotNull), target, millisecondsTimeout, lockTaken);
-            if (target is not null)
+            using (_logger.BeginScope("{MethodName}({target}, {millisecondsTimeout}, {lockTaken})", nameof(TryEnterSynchronizableIfNotNull), target, millisecondsTimeout, lockTaken))
             {
-                Monitor.Enter(_deferenceCollections);
-                try
+                if (target is not null)
                 {
-                    if (TryFind(target, out DelegateDeference<T>.DeferenceCollection collection))
-                        return DelegateDeference<T>.DeferenceCollection.TryEnter(collection, millisecondsTimeout, out deference);
-                    if (TryGetSyncRoot(target, out object syncRoot))
-                        return DelegateDeference<T>.DeferenceCollection.TryEnterNew(this, target, syncRoot, millisecondsTimeout, out deference);
+                    Monitor.Enter(_deferenceCollections);
+                    try
+                    {
+                        if (TryFind(target, out DelegateDeference<T>.DeferenceCollection collection))
+                            return DelegateDeference<T>.DeferenceCollection.TryEnter(collection, millisecondsTimeout, out deference);
+                        if (TryGetSyncRoot(target, out object syncRoot))
+                            return DelegateDeference<T>.DeferenceCollection.TryEnterNew(this, target, syncRoot, millisecondsTimeout, out deference);
+                    }
+                    finally { Monitor.Exit(_deferenceCollections); }
                 }
-                finally { Monitor.Exit(_deferenceCollections); }
+                deference = null;
+                return false;
             }
-            deference = null;
-            return false;
         }
 
         /// <summary>
@@ -1077,17 +1137,19 @@ namespace FsInfoCat.DeferredDelegation
         {
             if (target is null)
                 throw new ArgumentNullException(nameof(target));
-            using IDisposable scope = _logger.BeginScope("{MethodName}({target}, {timeout})", nameof(TryEnterSynchronizable), target, timeout);
-            Monitor.Enter(_deferenceCollections);
-            try
+            using (_logger.BeginScope("{MethodName}({target}, {timeout})", nameof(TryEnterSynchronizable), target, timeout))
             {
-                if (TryFind(target, out DelegateDeference<T>.DeferenceCollection collection))
-                    return DelegateDeference<T>.DeferenceCollection.TryEnter(collection, out deference);
-                if (TryGetSyncRoot(target, out object syncRoot))
-                    return DelegateDeference<T>.DeferenceCollection.TryEnterNew(this, target, syncRoot, out deference);
-                throw new ArgumentOutOfRangeException(nameof(target));
+                Monitor.Enter(_deferenceCollections);
+                try
+                {
+                    if (TryFind(target, out DelegateDeference<T>.DeferenceCollection collection))
+                        return DelegateDeference<T>.DeferenceCollection.TryEnter(collection, out deference);
+                    if (TryGetSyncRoot(target, out object syncRoot))
+                        return DelegateDeference<T>.DeferenceCollection.TryEnterNew(this, target, syncRoot, out deference);
+                    throw new ArgumentOutOfRangeException(nameof(target));
+                }
+                finally { Monitor.Exit(_deferenceCollections); }
             }
-            finally { Monitor.Exit(_deferenceCollections); }
         }
 
         /// <summary>
@@ -1105,21 +1167,23 @@ namespace FsInfoCat.DeferredDelegation
         /// <see cref="Monitor.TryEnter(object, TimeSpan)"/>
         public bool TryEnterSynchronizableIfNotNull<T>([AllowNull] T target, TimeSpan timeout, out IDelegateDeference<T> deference) where T : class, ISynchronizable
         {
-            using IDisposable scope = _logger.BeginScope("{MethodName}({target}, {timeout})", nameof(TryEnterSynchronizableIfNotNull), target, timeout);
-            if (target is not null)
+            using (_logger.BeginScope("{MethodName}({target}, {timeout})", nameof(TryEnterSynchronizableIfNotNull), target, timeout))
             {
-                Monitor.Enter(_deferenceCollections);
-                try
+                if (target is not null)
                 {
-                    if (TryFind(target, out DelegateDeference<T>.DeferenceCollection collection))
-                        return DelegateDeference<T>.DeferenceCollection.TryEnter(collection, timeout, out deference);
-                    if (TryGetSyncRoot(target, out object syncRoot))
-                        return DelegateDeference<T>.DeferenceCollection.TryEnterNew(this, target, syncRoot, timeout, out deference);
+                    Monitor.Enter(_deferenceCollections);
+                    try
+                    {
+                        if (TryFind(target, out DelegateDeference<T>.DeferenceCollection collection))
+                            return DelegateDeference<T>.DeferenceCollection.TryEnter(collection, timeout, out deference);
+                        if (TryGetSyncRoot(target, out object syncRoot))
+                            return DelegateDeference<T>.DeferenceCollection.TryEnterNew(this, target, syncRoot, timeout, out deference);
+                    }
+                    finally { Monitor.Exit(_deferenceCollections); }
                 }
-                finally { Monitor.Exit(_deferenceCollections); }
+                deference = null;
+                return false;
             }
-            deference = null;
-            return false;
         }
 
         /// <summary>
@@ -1145,17 +1209,19 @@ namespace FsInfoCat.DeferredDelegation
         {
             if (target is null)
                 throw new ArgumentNullException(nameof(target));
-            using IDisposable scope = _logger.BeginScope("{MethodName}({target}, {timeout}, {lockTaken})", nameof(TryEnterSynchronizable), target, timeout, lockTaken);
-            Monitor.Enter(_deferenceCollections);
-            try
+            using (_logger.BeginScope("{MethodName}({target}, {timeout}, {lockTaken})", nameof(TryEnterSynchronizable), target, timeout, lockTaken))
             {
-                if (TryFind(target, out DelegateDeference<T>.DeferenceCollection collection))
-                    return DelegateDeference<T>.DeferenceCollection.TryEnter(collection, timeout, ref lockTaken, out deference);
-                if (TryGetSyncRoot(target, out object syncRoot))
-                    return DelegateDeference<T>.DeferenceCollection.TryEnterNew(this, target, syncRoot, timeout, ref lockTaken, out deference);
-                throw new ArgumentOutOfRangeException(nameof(target));
+                Monitor.Enter(_deferenceCollections);
+                try
+                {
+                    if (TryFind(target, out DelegateDeference<T>.DeferenceCollection collection))
+                        return DelegateDeference<T>.DeferenceCollection.TryEnter(collection, timeout, ref lockTaken, out deference);
+                    if (TryGetSyncRoot(target, out object syncRoot))
+                        return DelegateDeference<T>.DeferenceCollection.TryEnterNew(this, target, syncRoot, timeout, ref lockTaken, out deference);
+                    throw new ArgumentOutOfRangeException(nameof(target));
+                }
+                finally { Monitor.Exit(_deferenceCollections); }
             }
-            finally { Monitor.Exit(_deferenceCollections); }
         }
 
         /// <summary>
@@ -1174,21 +1240,23 @@ namespace FsInfoCat.DeferredDelegation
         /// <see cref="Monitor.TryEnter(object, TimeSpan, ref bool)"/>
         public bool TryEnterSynchronizableIfNotNull<T>([AllowNull] T target, TimeSpan timeout, ref bool lockTaken, out IDelegateDeference<T> deference) where T : class, ISynchronizable
         {
-            using IDisposable scope = _logger.BeginScope("{MethodName}({target}, {timeout}, {lockTaken})", nameof(TryEnterSynchronizableIfNotNull), target, timeout, lockTaken);
-            if (target is not null)
+            using (_logger.BeginScope("{MethodName}({target}, {timeout}, {lockTaken})", nameof(TryEnterSynchronizableIfNotNull), target, timeout, lockTaken))
             {
-                Monitor.Enter(_deferenceCollections);
-                try
+                if (target is not null)
                 {
-                    if (TryFind(target, out DelegateDeference<T>.DeferenceCollection collection))
-                        return DelegateDeference<T>.DeferenceCollection.TryEnter(collection, timeout, ref lockTaken, out deference);
-                    if (TryGetSyncRoot(target, out object syncRoot))
-                        return DelegateDeference<T>.DeferenceCollection.TryEnterNew(this, target, syncRoot, timeout, ref lockTaken, out deference);
+                    Monitor.Enter(_deferenceCollections);
+                    try
+                    {
+                        if (TryFind(target, out DelegateDeference<T>.DeferenceCollection collection))
+                            return DelegateDeference<T>.DeferenceCollection.TryEnter(collection, timeout, ref lockTaken, out deference);
+                        if (TryGetSyncRoot(target, out object syncRoot))
+                            return DelegateDeference<T>.DeferenceCollection.TryEnterNew(this, target, syncRoot, timeout, ref lockTaken, out deference);
+                    }
+                    finally { Monitor.Exit(_deferenceCollections); }
                 }
-                finally { Monitor.Exit(_deferenceCollections); }
+                deference = null;
+                return false;
             }
-            deference = null;
-            return false;
         }
     }
 }

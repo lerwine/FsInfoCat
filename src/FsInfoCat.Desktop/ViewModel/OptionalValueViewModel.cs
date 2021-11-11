@@ -33,9 +33,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <param name="newValue">The new value of the <see cref="InputValue"/> property.</param>
         protected virtual void OnInputValuePropertyChanged(T? newValue)
         {
-            using IDisposable scope = _logger.EnterMethod(newValue, this);
-            if (IsEnabled && !ForceNullResult && Revalidate(newValue, IsMandatory()))
-                ResultValue = newValue;
+            using (_logger.EnterMethod(newValue, this))
+            {
+                if (IsEnabled && !ForceNullResult && Revalidate(newValue, IsMandatory()))
+                    ResultValue = newValue;
+            }
         }
 
         #endregion
@@ -58,12 +60,14 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <param name="newValue">The new value of the <see cref="ForceNullResult"/> property.</param>
         protected virtual void OnForceNullResultPropertyChanged(bool newValue)
         {
-            using IDisposable scope = _logger.EnterMethod(newValue, this);
-            if (IsEnabled && InputValue.HasValue)
+            using (_logger.EnterMethod(newValue, this))
             {
-                T? value = newValue ? null : InputValue;
-                if (Revalidate(value, IsMandatory()))
-                    ResultValue = value;
+                if (IsEnabled && InputValue.HasValue)
+                {
+                    T? value = newValue ? null : InputValue;
+                    if (Revalidate(value, IsMandatory()))
+                        ResultValue = value;
+                }
             }
         }
 
@@ -87,9 +91,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <param name="newValue">The new value of the <see cref="IsRequired"/> property.</param>
         protected virtual void OnIsRequiredPropertyChanged(bool newValue)
         {
-            using IDisposable scope = _logger.EnterMethod(newValue, this);
-            if (!OverrideRequirement.HasValue)
-                OnMandatoryStateChanged(newValue);
+            using (_logger.EnterMethod(newValue, this))
+            {
+                if (!OverrideRequirement.HasValue)
+                    OnMandatoryStateChanged(newValue);
+            }
         }
 
         #endregion
@@ -115,10 +121,12 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <param name="newValue">The new value of the <see cref="OverrideRequirement"/> property.</param>
         protected virtual void OnOverrideRequirementPropertyChanged(bool? oldValue, bool? newValue)
         {
-            using IDisposable scope = _logger.EnterMethod(oldValue, newValue, this);
-            bool isMandatory = newValue ?? IsRequired;
-            if (isMandatory != (oldValue ?? IsRequired))
-                OnMandatoryStateChanged(isMandatory);
+            using (_logger.EnterMethod(oldValue, newValue, this))
+            {
+                bool isMandatory = newValue ?? IsRequired;
+                if (isMandatory != (oldValue ?? IsRequired))
+                    OnMandatoryStateChanged(isMandatory);
+            }
         }
 
         #endregion
@@ -137,15 +145,17 @@ namespace FsInfoCat.Desktop.ViewModel
 
         protected virtual void OnIsEnabledPropertyChanged(bool newValue)
         {
-            using IDisposable scope = _logger.EnterMethod(newValue, this);
-            if (newValue)
+            using (_logger.EnterMethod(newValue, this))
             {
-                T? value = ForceNullResult ? null : InputValue;
-                if (Revalidate(value, IsMandatory()))
-                    ResultValue = value;
+                if (newValue)
+                {
+                    T? value = ForceNullResult ? null : InputValue;
+                    if (Revalidate(value, IsMandatory()))
+                        ResultValue = value;
+                }
+                else
+                    ErrorInfo.ClearErrors(nameof(InputValue));
             }
-            else
-                ErrorInfo.ClearErrors(nameof(InputValue));
         }
 
         #endregion
@@ -215,15 +225,17 @@ namespace FsInfoCat.Desktop.ViewModel
 
         protected virtual void OnMandatoryStateChanged(bool isMandatory)
         {
-            using IDisposable scope = _logger.EnterMethod(isMandatory, this);
-            if (IsEnabled && (ForceNullResult || !InputValue.HasValue))
+            using (_logger.EnterMethod(isMandatory, this))
             {
-                if (isMandatory)
-                    ErrorInfo.SetErrors(InputValueProperty.Name, RequirementErrorMessage ?? FsInfoCat.Properties.Resources.DisplayName_Required);
-                else
+                if (IsEnabled && (ForceNullResult || !InputValue.HasValue))
                 {
-                    ErrorInfo.ClearErrors(InputValueProperty.Name);
-                    ResultValue = null;
+                    if (isMandatory)
+                        ErrorInfo.SetErrors(InputValueProperty.Name, RequirementErrorMessage ?? FsInfoCat.Properties.Resources.DisplayName_Required);
+                    else
+                    {
+                        ErrorInfo.ClearErrors(InputValueProperty.Name);
+                        ResultValue = null;
+                    }
                 }
             }
         }

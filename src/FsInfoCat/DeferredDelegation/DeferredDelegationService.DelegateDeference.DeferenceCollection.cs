@@ -116,64 +116,68 @@ namespace FsInfoCat.DeferredDelegation
 
                 private DelegateDeference<TTarget> AddDeference()
                 {
-                    using IDisposable scope = _logger.BeginScope("{MethodName}()", nameof(AddDeference));
-                    Monitor.Enter(_deferences);
-                    try
+                    using (_logger.BeginScope("{MethodName}()", nameof(AddDeference)))
                     {
-                        DelegateDeference<TTarget> deference = new(this);
-                        deference.Disposed += Deference_Disposed;
-                        _ = _deferences.AddLast(new WeakReference<DelegateDeference<TTarget>>(deference));
-                        return deference;
+                        Monitor.Enter(_deferences);
+                        try
+                        {
+                            DelegateDeference<TTarget> deference = new(this);
+                            deference.Disposed += Deference_Disposed;
+                            _ = _deferences.AddLast(new WeakReference<DelegateDeference<TTarget>>(deference));
+                            return deference;
+                        }
+                        finally { Monitor.Exit(_deferences); }
                     }
-                    finally { Monitor.Exit(_deferences); }
                 }
 
                 private void Deference_Disposed(object sender, EventArgs e)
                 {
                     if (sender is DelegateDeference<TTarget> target)
                     {
-                        using IDisposable scope = _logger.BeginScope("{MethodName}({sender}, {e})", nameof(Deference_Disposed), sender, e);
-                        Monitor.Enter(_deferences);
-                        try
+                        using (_logger.BeginScope("{MethodName}({sender}, {e})", nameof(Deference_Disposed), sender, e))
                         {
-                            // Start with first node and look for matching instance
-                            LinkedListNode<WeakReference<DelegateDeference<TTarget>>> node = _deferences.First;
-                            while (node is not null)
+                            Monitor.Enter(_deferences);
+                            try
                             {
-                                if (node.Value.TryGetTarget(out DelegateDeference<TTarget> item))
+                                // Start with first node and look for matching instance
+                                LinkedListNode<WeakReference<DelegateDeference<TTarget>>> node = _deferences.First;
+                                while (node is not null)
                                 {
-                                    if (ReferenceEquals(item, target))
+                                    if (node.Value.TryGetTarget(out DelegateDeference<TTarget> item))
                                     {
-                                        // Get next node and remove the node with the matching value.
+                                        if (ReferenceEquals(item, target))
+                                        {
+                                            // Get next node and remove the node with the matching value.
+                                            LinkedListNode<WeakReference<DelegateDeference<TTarget>>> next = node.Next;
+                                            _deferences.Remove(node);
+                                            node = next;
+                                            break;
+                                        }
+                                        node = node.Next;
+                                    }
+                                    else
+                                    {
+                                        // Get next node and remove the node that no longe reference anything.
                                         LinkedListNode<WeakReference<DelegateDeference<TTarget>>> next = node.Next;
                                         _deferences.Remove(node);
                                         node = next;
-                                        break;
                                     }
-                                    node = node.Next;
                                 }
-                                else
+                                // Remove nodes which no longer reference anything until we find one that does.
+                                while (node is not null)
                                 {
-                                    // Get next node and remove the node that no longe reference anything.
+                                    if (node.Value.TryGetTarget(out _))
+                                        break;
                                     LinkedListNode<WeakReference<DelegateDeference<TTarget>>> next = node.Next;
                                     _deferences.Remove(node);
                                     node = next;
                                 }
+                                // Self-dispose if no nodes are left
+                                if (_deferences.Count == 0)
+                                    Dispose();
                             }
-                            // Remove nodes which no longer reference anything until we find one that does.
-                            while (node is not null)
-                            {
-                                if (node.Value.TryGetTarget(out _))
-                                    break;
-                                LinkedListNode<WeakReference<DelegateDeference<TTarget>>> next = node.Next;
-                                _deferences.Remove(node);
-                                node = next;
-                            }
-                            // Self-dispose if no nodes are left
-                            if (_deferences.Count == 0)
-                                Dispose();
+                            finally { Monitor.Exit(_deferences); }
                         }
-                        finally { Monitor.Exit(_deferences); }
                     }
                 }
 
@@ -468,15 +472,17 @@ namespace FsInfoCat.DeferredDelegation
 
                 private void InvokeDeferred((Delegate Delegate, Delegate ErrorHandler, object[] Args) deferredInvocation)
                 {
-                    using IDisposable scope = _logger.BeginScope("{MethodName}({Delegate}, {ErrorHandler}, {Args})", nameof(InvokeDeferred), deferredInvocation.Delegate, deferredInvocation.ErrorHandler, deferredInvocation.Args);
-                    try { _ = deferredInvocation.Delegate.DynamicInvoke(deferredInvocation.Args); }
-                    catch (Exception exception)
+                    using (_logger.BeginScope("{MethodName}({Delegate}, {ErrorHandler}, {Args})", nameof(InvokeDeferred), deferredInvocation.Delegate, deferredInvocation.ErrorHandler, deferredInvocation.Args))
                     {
-                        if (deferredInvocation.ErrorHandler is null)
-                            RaiseUnhandledExceptionEvent(exception);
-                        else
-                            try { _ = deferredInvocation.ErrorHandler.DynamicInvoke(new object[] { exception }.Concat(deferredInvocation.Args).ToArray()); }
-                            catch (Exception error) { RaiseUnhandledExceptionEvent(error); }
+                        try { _ = deferredInvocation.Delegate.DynamicInvoke(deferredInvocation.Args); }
+                        catch (Exception exception)
+                        {
+                            if (deferredInvocation.ErrorHandler is null)
+                                RaiseUnhandledExceptionEvent(exception);
+                            else
+                                try { _ = deferredInvocation.ErrorHandler.DynamicInvoke(new object[] { exception }.Concat(deferredInvocation.Args).ToArray()); }
+                                catch (Exception error) { RaiseUnhandledExceptionEvent(error); }
+                        }
                     }
                 }
 
@@ -498,20 +504,22 @@ namespace FsInfoCat.DeferredDelegation
                 {
                     if (!_isDisposed)
                     {
-                        using IDisposable scope = _logger.BeginScope("{MethodName}()", nameof(Dispose));
-                        _isDisposed = true;
-                        if (Monitor.IsEntered(SyncRoot))
-                            Monitor.Exit(SyncRoot);
-                        try
+                        using (_logger.BeginScope("{MethodName}()", nameof(Dispose)))
                         {
-                            Monitor.Enter(_service._deferenceCollections);
-                            try { _ = _service._deferenceCollections.Remove(this); }
-                            finally { Monitor.Exit(_service._deferenceCollections); }
-                        }
-                        finally
-                        {
-                            while (_queue.TryDequeue(out (Delegate Delegate, Delegate ErrorHandler, object[] Args) deferredInvocation))
-                                InvokeDeferred(deferredInvocation);
+                            _isDisposed = true;
+                            if (Monitor.IsEntered(SyncRoot))
+                                Monitor.Exit(SyncRoot);
+                            try
+                            {
+                                Monitor.Enter(_service._deferenceCollections);
+                                try { _ = _service._deferenceCollections.Remove(this); }
+                                finally { Monitor.Exit(_service._deferenceCollections); }
+                            }
+                            finally
+                            {
+                                while (_queue.TryDequeue(out (Delegate Delegate, Delegate ErrorHandler, object[] Args) deferredInvocation))
+                                    InvokeDeferred(deferredInvocation);
+                            }
                         }
                     }
                     GC.SuppressFinalize(this);

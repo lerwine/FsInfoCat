@@ -117,23 +117,25 @@ namespace FsInfoCat.Local
             if (statusListener is null)
                 throw new ArgumentNullException(nameof(statusListener));
             using IDbContextTransaction transaction = dbContext.Database.BeginTransaction();
-            using IDisposable loggerScope = statusListener.Logger.BeginScope(target.Id);
-            statusListener.SetMessage($"Removing file system definition: {target.DisplayName}");
-            EntityEntry<FileSystem> entry = dbContext.Entry(target);
-            statusListener.Logger.LogDebug("Removing dependant records for Subdirectory {{ Id = {Id}; DisplayName = \"{DisplayName}\" }}", target.Id, target.DisplayName);
-            SymbolicName[] symbolicNames = (await entry.GetRelatedCollectionAsync(e => e.SymbolicNames, statusListener.CancellationToken)).ToArray();
-            int result;
-            if (symbolicNames.Length > 0)
+            using (statusListener.Logger.BeginScope(target.Id))
             {
-                dbContext.RemoveRange(symbolicNames);
-                result = await dbContext.SaveChangesAsync(statusListener.CancellationToken);
+                statusListener.SetMessage($"Removing file system definition: {target.DisplayName}");
+                EntityEntry<FileSystem> entry = dbContext.Entry(target);
+                statusListener.Logger.LogDebug("Removing dependant records for Subdirectory {{ Id = {Id}; DisplayName = \"{DisplayName}\" }}", target.Id, target.DisplayName);
+                SymbolicName[] symbolicNames = (await entry.GetRelatedCollectionAsync(e => e.SymbolicNames, statusListener.CancellationToken)).ToArray();
+                int result;
+                if (symbolicNames.Length > 0)
+                {
+                    dbContext.RemoveRange(symbolicNames);
+                    result = await dbContext.SaveChangesAsync(statusListener.CancellationToken);
+                }
+                else
+                    result = 0;
+                _ = dbContext.FileSystems.Remove(target);
+                result += await dbContext.SaveChangesAsync(statusListener.CancellationToken);
+                await transaction.CommitAsync(statusListener.CancellationToken);
+                return result;
             }
-            else
-                result = 0;
-            _ = dbContext.FileSystems.Remove(target);
-            result += await dbContext.SaveChangesAsync(statusListener.CancellationToken);
-            await transaction.CommitAsync(statusListener.CancellationToken);
-            return result;
         }
     }
 }

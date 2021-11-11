@@ -39,8 +39,8 @@ namespace FsInfoCat.DeferredDelegation
                     throw new ArgumentNullException(nameof(@delegate));
                 if (_isDisposed)
                     throw new ObjectDisposedException(nameof(DelegateDeference<TTarget>));
-                using IDisposable scope = _logger.BeginScope("{MethodName}({delegate}, {args})", nameof(DeferDelegate), @delegate, args);
-                _owner.DeferDelegate(@delegate, args ?? Array.Empty<object>());
+                using (_logger.BeginScope("{MethodName}({delegate}, {args})", nameof(DeferDelegate), @delegate, args))
+                    _owner.DeferDelegate(@delegate, args ?? Array.Empty<object>());
             }
 
             public void DeferDelegateWithErrorHandler([DisallowNull] Delegate @delegate, [DisallowNull] DeferredDelegateErrorHandler onError, params object[] args)
@@ -49,9 +49,9 @@ namespace FsInfoCat.DeferredDelegation
                     throw new ArgumentNullException(nameof(@delegate));
                 if (_isDisposed)
                     throw new ObjectDisposedException(nameof(DelegateDeference<TTarget>));
-                using IDisposable scope = _logger.BeginScope("{MethodName}({delegate}, {onError}, {args})", nameof(DeferDelegate), @delegate, onError, args);
-                try { _owner.DeferDelegateWithErrorHandler(@delegate, onError, args ?? Array.Empty<object>()); }
-                catch (Exception exception) { onError(exception, args); }
+                using (_logger.BeginScope("{MethodName}({delegate}, {onError}, {args})", nameof(DeferDelegate), @delegate, onError, args))
+                    try { _owner.DeferDelegateWithErrorHandler(@delegate, onError, args ?? Array.Empty<object>()); }
+                    catch (Exception exception) { onError(exception, args); }
             }
 
             public void DeferAction([DisallowNull] Action action, DeferredActionErrorHandler onError = null)
@@ -60,8 +60,8 @@ namespace FsInfoCat.DeferredDelegation
                     throw new ArgumentNullException(nameof(action));
                 if (_isDisposed)
                     throw new ObjectDisposedException(nameof(DelegateDeference<TTarget>));
-                using IDisposable scope = _logger.BeginScope("{MethodName}({action}, {onError})", nameof(DeferAction), action, onError);
-                _owner.DeferAction(action);
+                using (_logger.BeginScope("{MethodName}({action}, {onError})", nameof(DeferAction), action, onError))
+                    _owner.DeferAction(action);
             }
 
             public void DeferAction<TArg>(TArg arg, [DisallowNull] Action<TArg> action, DeferredActionErrorHandler<TArg> onError = null)
@@ -70,8 +70,8 @@ namespace FsInfoCat.DeferredDelegation
                     throw new ArgumentNullException(nameof(action));
                 if (_isDisposed)
                     throw new ObjectDisposedException(nameof(DelegateDeference<TTarget>));
-                using IDisposable scope = _logger.BeginScope("{MethodName}({arg}, {action}, {onError})", nameof(DeferAction), arg, action, onError);
-                _owner.DeferAction(arg, action);
+                using (_logger.BeginScope("{MethodName}({arg}, {action}, {onError})", nameof(DeferAction), arg, action, onError))
+                    _owner.DeferAction(arg, action);
             }
 
             public void DeferAction<TArg1, TArg2>(TArg1 arg1, TArg2 arg2, [DisallowNull] Action<TArg1, TArg2> action, DeferredActionErrorHandler<TArg1, TArg2> onError = null)
@@ -80,8 +80,8 @@ namespace FsInfoCat.DeferredDelegation
                     throw new ArgumentNullException(nameof(action));
                 if (_isDisposed)
                     throw new ObjectDisposedException(nameof(DelegateDeference<TTarget>));
-                using IDisposable scope = _logger.BeginScope("{MethodName}({arg1}, {arg2}, {action}, {onError})", nameof(DeferAction), arg1, arg2, action, onError);
-                _owner.DeferAction(arg1, arg2, action);
+                using (_logger.BeginScope("{MethodName}({arg1}, {arg2}, {action}, {onError})", nameof(DeferAction), arg1, arg2, action, onError))
+                    _owner.DeferAction(arg1, arg2, action);
             }
 
             public void DeferAction<TArg1, TArg2, TArg3>(TArg1 arg1, TArg2 arg2, TArg3 arg3, [DisallowNull] Action<TArg1, TArg2, TArg3> action,
@@ -91,8 +91,8 @@ namespace FsInfoCat.DeferredDelegation
                     throw new ArgumentNullException(nameof(action));
                 if (_isDisposed)
                     throw new ObjectDisposedException(nameof(DelegateDeference<TTarget>));
-                using IDisposable scope = _logger.BeginScope("{MethodName}({arg1}, {arg2}, {arg3}, {action}, {onError})", nameof(DeferAction), arg1, arg2, arg3, action, onError);
-                _owner.DeferAction(arg1, arg2, arg3, action);
+                using (_logger.BeginScope("{MethodName}({arg1}, {arg2}, {arg3}, {action}, {onError})", nameof(DeferAction), arg1, arg2, arg3, action, onError))
+                    _owner.DeferAction(arg1, arg2, arg3, action);
             }
 
             public void DeferPropertyChangedEvent([DisallowNull] INotifyPropertyChanged sender, [DisallowNull] PropertyChangedEventArgs eventArgs, [DisallowNull] PropertyChangedEventHandler eventHandler,
@@ -106,8 +106,8 @@ namespace FsInfoCat.DeferredDelegation
                     throw new ArgumentNullException(nameof(eventHandler));
                 if (_isDisposed)
                     throw new ObjectDisposedException(nameof(DelegateDeference<TTarget>));
-                using IDisposable scope = _logger.BeginScope("{MethodName}({sender}, {eventArgs}, {eventHandler}, {onError})", nameof(DeferPropertyChangedEvent), sender, eventArgs, eventHandler, onError);
-                _owner.DeferPropertyChangedEvent(sender, eventArgs, eventHandler, onError);
+                using (_logger.BeginScope("{MethodName}({sender}, {eventArgs}, {eventHandler}, {onError})", nameof(DeferPropertyChangedEvent), sender, eventArgs, eventHandler, onError))
+                    _owner.DeferPropertyChangedEvent(sender, eventArgs, eventHandler, onError);
             }
 
             public void DeferPropertyChangedEvent([DisallowNull] INotifyPropertyChanged sender, [DisallowNull] string propertyName, [DisallowNull] PropertyChangedEventHandler eventHandler,
@@ -121,8 +121,8 @@ namespace FsInfoCat.DeferredDelegation
                     throw new ArgumentNullException(nameof(eventHandler));
                 if (_isDisposed)
                     throw new ObjectDisposedException(nameof(DelegateDeference<TTarget>));
-                using IDisposable scope = _logger.BeginScope("{MethodName}({sender}, {propertyName}, {eventHandler}, {onError})", nameof(DeferPropertyChangedEvent), sender, propertyName, eventHandler, onError);
-                _owner.DeferPropertyChangedEvent(sender, new PropertyChangedEventArgs(propertyName), eventHandler, onError);
+                using (_logger.BeginScope("{MethodName}({sender}, {propertyName}, {eventHandler}, {onError})", nameof(DeferPropertyChangedEvent), sender, propertyName, eventHandler, onError))
+                    _owner.DeferPropertyChangedEvent(sender, new PropertyChangedEventArgs(propertyName), eventHandler, onError);
             }
 
             public void DeferCollectionChangedEvent([DisallowNull] INotifyCollectionChanged sender, [DisallowNull] NotifyCollectionChangedEventArgs eventArgs,
@@ -136,8 +136,8 @@ namespace FsInfoCat.DeferredDelegation
                     throw new ArgumentNullException(nameof(eventHandler));
                 if (_isDisposed)
                     throw new ObjectDisposedException(nameof(DelegateDeference<TTarget>));
-                using IDisposable scope = _logger.BeginScope("{MethodName}({sender}, {eventArgs}, {eventHandler}, {onError})", nameof(DeferCollectionChangedEvent), sender, eventArgs, eventHandler, onError);
-                _owner.DeferCollectionChangedEvent(sender, eventArgs, eventHandler, onError);
+                using (_logger.BeginScope("{MethodName}({sender}, {eventArgs}, {eventHandler}, {onError})", nameof(DeferCollectionChangedEvent), sender, eventArgs, eventHandler, onError))
+                    _owner.DeferCollectionChangedEvent(sender, eventArgs, eventHandler, onError);
             }
 
             public void DeferCollectionChangedEvent([DisallowNull] INotifyCollectionChanged sender, NotifyCollectionChangedAction action, [DisallowNull] NotifyCollectionChangedEventHandler eventHandler, DeferredEventErrorHandler<NotifyCollectionChangedEventArgs> onError = null)
@@ -148,8 +148,8 @@ namespace FsInfoCat.DeferredDelegation
                     throw new ArgumentNullException(nameof(eventHandler));
                 if (_isDisposed)
                     throw new ObjectDisposedException(nameof(DelegateDeference<TTarget>));
-                using IDisposable scope = _logger.BeginScope("{MethodName}({sender}, {action}, {eventHandler}, {onError})", nameof(DeferCollectionChangedEvent), sender, action, eventHandler, onError);
-                _owner.DeferCollectionChangedEvent(sender, new NotifyCollectionChangedEventArgs(action), eventHandler, onError);
+                using (_logger.BeginScope("{MethodName}({sender}, {action}, {eventHandler}, {onError})", nameof(DeferCollectionChangedEvent), sender, action, eventHandler, onError))
+                    _owner.DeferCollectionChangedEvent(sender, new NotifyCollectionChangedEventArgs(action), eventHandler, onError);
             }
 
             public void DeferCollectionChangedEvent([DisallowNull] INotifyCollectionChanged sender, NotifyCollectionChangedAction action, [AllowNull] IList changedItems,
@@ -161,9 +161,9 @@ namespace FsInfoCat.DeferredDelegation
                     throw new ArgumentNullException(nameof(eventHandler));
                 if (_isDisposed)
                     throw new ObjectDisposedException(nameof(DelegateDeference<TTarget>));
-                using IDisposable scope = _logger.BeginScope("{MethodName}({sender}, {action}, {changedItems}, {eventHandler}, {onError})", nameof(DeferCollectionChangedEvent), sender, action,
-                    changedItems, eventHandler, onError);
-                _owner.DeferCollectionChangedEvent(sender, new NotifyCollectionChangedEventArgs(action, changedItems), eventHandler, onError);
+                using (_logger.BeginScope("{MethodName}({sender}, {action}, {changedItems}, {eventHandler}, {onError})", nameof(DeferCollectionChangedEvent), sender, action,
+                    changedItems, eventHandler, onError))
+                    _owner.DeferCollectionChangedEvent(sender, new NotifyCollectionChangedEventArgs(action, changedItems), eventHandler, onError);
             }
 
             public void DeferCollectionChangedEvent([DisallowNull] INotifyCollectionChanged sender, NotifyCollectionChangedAction action, [AllowNull] object changedItem,
@@ -175,9 +175,9 @@ namespace FsInfoCat.DeferredDelegation
                     throw new ArgumentNullException(nameof(eventHandler));
                 if (_isDisposed)
                     throw new ObjectDisposedException(nameof(DelegateDeference<TTarget>));
-                using IDisposable scope = _logger.BeginScope("{MethodName}({sender}, {action}, {changedItem}, {eventHandler}, {onError})", nameof(DeferCollectionChangedEvent), sender, action,
-                    changedItem, eventHandler, onError);
-                _owner.DeferCollectionChangedEvent(sender, new NotifyCollectionChangedEventArgs(action, changedItem), eventHandler, onError);
+                using (_logger.BeginScope("{MethodName}({sender}, {action}, {changedItem}, {eventHandler}, {onError})", nameof(DeferCollectionChangedEvent), sender, action,
+                    changedItem, eventHandler, onError))
+                    _owner.DeferCollectionChangedEvent(sender, new NotifyCollectionChangedEventArgs(action, changedItem), eventHandler, onError);
             }
 
             public void DeferCollectionChangedEvent([DisallowNull] INotifyCollectionChanged sender, NotifyCollectionChangedAction action, [DisallowNull] IList newItems, [DisallowNull] IList oldItems,
@@ -193,9 +193,9 @@ namespace FsInfoCat.DeferredDelegation
                     throw new ArgumentNullException(nameof(eventHandler));
                 if (_isDisposed)
                     throw new ObjectDisposedException(nameof(DelegateDeference<TTarget>));
-                using IDisposable scope = _logger.BeginScope("{MethodName}({sender}, {action}, {newItems}, {oldItems}, {eventHandler}, {onError})", nameof(DeferCollectionChangedEvent), sender, action,
-                    newItems, oldItems, eventHandler, onError);
-                _owner.DeferCollectionChangedEvent(sender, new NotifyCollectionChangedEventArgs(action, newItems, oldItems), eventHandler, onError);
+                using (_logger.BeginScope("{MethodName}({sender}, {action}, {newItems}, {oldItems}, {eventHandler}, {onError})", nameof(DeferCollectionChangedEvent), sender, action,
+                    newItems, oldItems, eventHandler, onError))
+                    _owner.DeferCollectionChangedEvent(sender, new NotifyCollectionChangedEventArgs(action, newItems, oldItems), eventHandler, onError);
             }
 
             public void DeferCollectionChangedEvent([DisallowNull] INotifyCollectionChanged sender, NotifyCollectionChangedAction action, [AllowNull] IList changedItems, int startingIndex,
@@ -207,9 +207,9 @@ namespace FsInfoCat.DeferredDelegation
                     throw new ArgumentNullException(nameof(eventHandler));
                 if (_isDisposed)
                     throw new ObjectDisposedException(nameof(DelegateDeference<TTarget>));
-                using IDisposable scope = _logger.BeginScope("{MethodName}({sender}, {action}, {changedItems}, {startingIndex}, {eventHandler}, {onError})", nameof(DeferCollectionChangedEvent), sender,
-                    action, changedItems, startingIndex, eventHandler, onError);
-                _owner.DeferCollectionChangedEvent(sender, new NotifyCollectionChangedEventArgs(action, changedItems, startingIndex), eventHandler, onError);
+                using (_logger.BeginScope("{MethodName}({sender}, {action}, {changedItems}, {startingIndex}, {eventHandler}, {onError})", nameof(DeferCollectionChangedEvent), sender,
+                    action, changedItems, startingIndex, eventHandler, onError))
+                    _owner.DeferCollectionChangedEvent(sender, new NotifyCollectionChangedEventArgs(action, changedItems, startingIndex), eventHandler, onError);
             }
 
             public void DeferCollectionChangedEvent([DisallowNull] INotifyCollectionChanged sender, NotifyCollectionChangedAction action, [AllowNull] object changedItem, int index,
@@ -221,9 +221,9 @@ namespace FsInfoCat.DeferredDelegation
                     throw new ArgumentNullException(nameof(eventHandler));
                 if (_isDisposed)
                     throw new ObjectDisposedException(nameof(DelegateDeference<TTarget>));
-                using IDisposable scope = _logger.BeginScope("{MethodName}({sender}, {action}, {changedItem}, {index}, {eventHandler}, {onError})", nameof(DeferCollectionChangedEvent), sender, action,
-                    changedItem, index, eventHandler, onError);
-                _owner.DeferCollectionChangedEvent(sender, new NotifyCollectionChangedEventArgs(action, changedItem, index), eventHandler, onError);
+                using (_logger.BeginScope("{MethodName}({sender}, {action}, {changedItem}, {index}, {eventHandler}, {onError})", nameof(DeferCollectionChangedEvent), sender, action,
+                    changedItem, index, eventHandler, onError))
+                    _owner.DeferCollectionChangedEvent(sender, new NotifyCollectionChangedEventArgs(action, changedItem, index), eventHandler, onError);
             }
 
             public void DeferCollectionChangedEvent([DisallowNull] INotifyCollectionChanged sender, NotifyCollectionChangedAction action, [AllowNull] object newItem,
@@ -235,9 +235,9 @@ namespace FsInfoCat.DeferredDelegation
                     throw new ArgumentNullException(nameof(eventHandler));
                 if (_isDisposed)
                     throw new ObjectDisposedException(nameof(DelegateDeference<TTarget>));
-                using IDisposable scope = _logger.BeginScope("{MethodName}({sender}, {action}, {newItem}, {oldItem}, {eventHandler}, {onError})", nameof(DeferCollectionChangedEvent), sender, action,
-                    newItem, oldItem, eventHandler, onError);
-                _owner.DeferCollectionChangedEvent(sender, new NotifyCollectionChangedEventArgs(action, newItem, oldItem), eventHandler, onError);
+                using (_logger.BeginScope("{MethodName}({sender}, {action}, {newItem}, {oldItem}, {eventHandler}, {onError})", nameof(DeferCollectionChangedEvent), sender, action,
+                    newItem, oldItem, eventHandler, onError))
+                    _owner.DeferCollectionChangedEvent(sender, new NotifyCollectionChangedEventArgs(action, newItem, oldItem), eventHandler, onError);
             }
 
             public void DeferCollectionChangedEvent([DisallowNull] INotifyCollectionChanged sender, NotifyCollectionChangedAction action, [DisallowNull] IList newItems, [DisallowNull] IList oldItems,
@@ -253,9 +253,9 @@ namespace FsInfoCat.DeferredDelegation
                     throw new ArgumentNullException(nameof(eventHandler));
                 if (_isDisposed)
                     throw new ObjectDisposedException(nameof(DelegateDeference<TTarget>));
-                using IDisposable scope = _logger.BeginScope("{MethodName}({sender}, {action}, {newItems}, {oldItems}, {startingIndex}, {eventHandler}, {onError})", nameof(DeferCollectionChangedEvent),
-                    sender, action, newItems, oldItems, startingIndex, eventHandler, onError);
-                _owner.DeferCollectionChangedEvent(sender, new NotifyCollectionChangedEventArgs(action, newItems, oldItems, startingIndex), eventHandler, onError);
+                using (_logger.BeginScope("{MethodName}({sender}, {action}, {newItems}, {oldItems}, {startingIndex}, {eventHandler}, {onError})", nameof(DeferCollectionChangedEvent),
+                    sender, action, newItems, oldItems, startingIndex, eventHandler, onError))
+                    _owner.DeferCollectionChangedEvent(sender, new NotifyCollectionChangedEventArgs(action, newItems, oldItems, startingIndex), eventHandler, onError);
             }
 
             public void DeferCollectionChangedEvent([DisallowNull] INotifyCollectionChanged sender, NotifyCollectionChangedAction action, [AllowNull] IList changedItems, int index, int oldIndex,
@@ -267,9 +267,9 @@ namespace FsInfoCat.DeferredDelegation
                     throw new ArgumentNullException(nameof(eventHandler));
                 if (_isDisposed)
                     throw new ObjectDisposedException(nameof(DelegateDeference<TTarget>));
-                using IDisposable scope = _logger.BeginScope("{MethodName}({sender}, {action}, {changedItems}, {index}, {oldIndex}, {eventHandler}, {onError})", nameof(DeferCollectionChangedEvent),
-                    sender, action, changedItems, index, oldIndex, eventHandler, onError);
-                _owner.DeferCollectionChangedEvent(sender, new NotifyCollectionChangedEventArgs(action, changedItems, index, oldIndex), eventHandler, onError);
+                using (_logger.BeginScope("{MethodName}({sender}, {action}, {changedItems}, {index}, {oldIndex}, {eventHandler}, {onError})", nameof(DeferCollectionChangedEvent),
+                    sender, action, changedItems, index, oldIndex, eventHandler, onError))
+                    _owner.DeferCollectionChangedEvent(sender, new NotifyCollectionChangedEventArgs(action, changedItems, index, oldIndex), eventHandler, onError);
             }
 
             public void DeferCollectionChangedEvent([DisallowNull] INotifyCollectionChanged sender, NotifyCollectionChangedAction action, [AllowNull] object changedItem, int index, int oldIndex, [DisallowNull] NotifyCollectionChangedEventHandler eventHandler, DeferredEventErrorHandler<NotifyCollectionChangedEventArgs> onError = null)
@@ -280,9 +280,9 @@ namespace FsInfoCat.DeferredDelegation
                     throw new ArgumentNullException(nameof(eventHandler));
                 if (_isDisposed)
                     throw new ObjectDisposedException(nameof(DelegateDeference<TTarget>));
-                using IDisposable scope = _logger.BeginScope("{MethodName}({sender}, {action}, {changedItem}, {index}, {oldIndex}, {eventHandler}, {onError})", nameof(DeferCollectionChangedEvent),
-                    sender, action, changedItem, index, oldIndex, eventHandler, onError);
-                _owner.DeferCollectionChangedEvent(sender, new NotifyCollectionChangedEventArgs(action, changedItem, index, oldIndex), eventHandler, onError);
+                using (_logger.BeginScope("{MethodName}({sender}, {action}, {changedItem}, {index}, {oldIndex}, {eventHandler}, {onError})", nameof(DeferCollectionChangedEvent),
+                    sender, action, changedItem, index, oldIndex, eventHandler, onError))
+                    _owner.DeferCollectionChangedEvent(sender, new NotifyCollectionChangedEventArgs(action, changedItem, index, oldIndex), eventHandler, onError);
             }
 
             public void DeferCollectionChangedEvent([DisallowNull] INotifyCollectionChanged sender, NotifyCollectionChangedAction action, [AllowNull] object newItem, [AllowNull] object oldItem,
@@ -294,9 +294,9 @@ namespace FsInfoCat.DeferredDelegation
                     throw new ArgumentNullException(nameof(eventHandler));
                 if (_isDisposed)
                     throw new ObjectDisposedException(nameof(DelegateDeference<TTarget>));
-                using IDisposable scope = _logger.BeginScope("{MethodName}({sender}, {action}, {newItem}, {oldItem}, {index}, {eventHandler}, {onError})", nameof(DeferCollectionChangedEvent),
-                    sender, action, newItem, oldItem, index, eventHandler, onError);
-                _owner.DeferCollectionChangedEvent(sender, new NotifyCollectionChangedEventArgs(action, newItem, oldItem, index), eventHandler, onError);
+                using (_logger.BeginScope("{MethodName}({sender}, {action}, {newItem}, {oldItem}, {index}, {eventHandler}, {onError})", nameof(DeferCollectionChangedEvent),
+                    sender, action, newItem, oldItem, index, eventHandler, onError))
+                    _owner.DeferCollectionChangedEvent(sender, new NotifyCollectionChangedEventArgs(action, newItem, oldItem, index), eventHandler, onError);
             }
 
             public void DeferUnhandledExceptionEvent([DisallowNull] object sender, [DisallowNull] UnhandledExceptionEventArgs eventArgs, [DisallowNull] UnhandledExceptionEventHandler eventHandler)
@@ -309,8 +309,8 @@ namespace FsInfoCat.DeferredDelegation
                     throw new ArgumentNullException(nameof(eventHandler));
                 if (_isDisposed)
                     throw new ObjectDisposedException(nameof(DelegateDeference<TTarget>));
-                using IDisposable scope = _logger.BeginScope("{MethodName}({sender}, {eventArgs}, {eventHandler})", nameof(DeferEvent), sender, eventArgs, eventHandler);
-                _owner.DeferUnhandledExceptionEvent(sender, eventArgs, eventHandler);
+                using (_logger.BeginScope("{MethodName}({sender}, {eventArgs}, {eventHandler})", nameof(DeferEvent), sender, eventArgs, eventHandler))
+                    _owner.DeferUnhandledExceptionEvent(sender, eventArgs, eventHandler);
             }
 
             public void DeferUnhandledExceptionEvent([DisallowNull] object sender, [DisallowNull] Exception exception, [DisallowNull] UnhandledExceptionEventHandler eventHandler, bool isTerminating = false)
@@ -323,8 +323,8 @@ namespace FsInfoCat.DeferredDelegation
                     throw new ArgumentNullException(nameof(eventHandler));
                 if (_isDisposed)
                     throw new ObjectDisposedException(nameof(DelegateDeference<TTarget>));
-                using IDisposable scope = _logger.BeginScope("{MethodName}({sender}, {exception}, {eventHandler}, {isTerminating})", nameof(DeferEvent), sender, exception, eventHandler);
-                _owner.DeferUnhandledExceptionEvent(sender, new UnhandledExceptionEventArgs(exception, isTerminating), eventHandler);
+                using (_logger.BeginScope("{MethodName}({sender}, {exception}, {eventHandler}, {isTerminating})", nameof(DeferEvent), sender, exception, eventHandler))
+                    _owner.DeferUnhandledExceptionEvent(sender, new UnhandledExceptionEventArgs(exception, isTerminating), eventHandler);
             }
 
             public void DeferEvent<TEventArgs>([DisallowNull] object sender, [DisallowNull] TEventArgs eventArgs, [DisallowNull] EventHandler<TEventArgs> eventHandler,
@@ -338,8 +338,8 @@ namespace FsInfoCat.DeferredDelegation
                     throw new ArgumentNullException(nameof(eventHandler));
                 if (_isDisposed)
                     throw new ObjectDisposedException(nameof(DelegateDeference<TTarget>));
-                using IDisposable scope = _logger.BeginScope("{MethodName}({sender}, {eventArgs}, {eventHandler}, {onError})", nameof(DeferEvent), sender, eventArgs, eventHandler, onError);
-                _owner.DeferEvent(sender, eventArgs, eventHandler, onError);
+                using (_logger.BeginScope("{MethodName}({sender}, {eventArgs}, {eventHandler}, {onError})", nameof(DeferEvent), sender, eventArgs, eventHandler, onError))
+                    _owner.DeferEvent(sender, eventArgs, eventHandler, onError);
             }
 
             public void DeferEvent([DisallowNull] object sender, [DisallowNull] EventArgs eventArgs, [DisallowNull] EventHandler eventHandler, DeferredEventErrorHandler<EventArgs> onError = null)
@@ -352,8 +352,8 @@ namespace FsInfoCat.DeferredDelegation
                     throw new ArgumentNullException(nameof(eventHandler));
                 if (_isDisposed)
                     throw new ObjectDisposedException(nameof(DelegateDeference<TTarget>));
-                using IDisposable scope = _logger.BeginScope("{MethodName}({sender}, {eventArgs}, {eventHandler}, {onError})", nameof(DeferEvent), sender, eventArgs, eventHandler, onError);
-                _owner.DeferEvent(sender, eventArgs, eventHandler, onError);
+                using (_logger.BeginScope("{MethodName}({sender}, {eventArgs}, {eventHandler}, {onError})", nameof(DeferEvent), sender, eventArgs, eventHandler, onError))
+                    _owner.DeferEvent(sender, eventArgs, eventHandler, onError);
             }
 
             public void DeferEvent([DisallowNull] object sender, [DisallowNull] EventHandler eventHandler, DeferredEventErrorHandler<EventArgs> onError = null) =>
@@ -363,15 +363,15 @@ namespace FsInfoCat.DeferredDelegation
             {
                 if (_isDisposed)
                     throw new ObjectDisposedException(nameof(DelegateDeference<TTarget>));
-                using IDisposable scope = _logger.BeginScope("{MethodName}()", nameof(DequeueDelegates));
-                _owner.DequeueDelegates();
+                using (_logger.BeginScope("{MethodName}()", nameof(DequeueDelegates)))
+                    _owner.DequeueDelegates();
             }
 
             public void Dispose()
             {
                 if (!_isDisposed)
                 {
-                    using IDisposable scope = _logger.BeginScope("{MethodName}()", nameof(Dispose));
+                    using (_logger.BeginScope("{MethodName}()", nameof(Dispose))) { }
                     _isDisposed = true;
                     Disposed?.Invoke(this, EventArgs.Empty);
                 }

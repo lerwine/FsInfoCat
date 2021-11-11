@@ -35,14 +35,16 @@ namespace FsInfoCat.Desktop.ViewModel
 
         private void Date_ResultValuePropertyChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            using IDisposable scope = _logger.EnterMethod(sender, e, this);
-            DateTime? newValue = e.NewValue as DateTime?;
-            if (_pendingDateChange == newValue)
-                return;
-            _pendingDateChange = newValue;
-            TimeSpan? time = Time.ResultValue;
-            _pendingResultValueChange = (newValue.HasValue && time.HasValue && !ForceNullResult) ? newValue.Value.Date.Add(time.Value) : null;
-            InputValue = _pendingResultValueChange;
+            using (_logger.EnterMethod(sender, e, this))
+            {
+                DateTime? newValue = e.NewValue as DateTime?;
+                if (_pendingDateChange == newValue)
+                    return;
+                _pendingDateChange = newValue;
+                TimeSpan? time = Time.ResultValue;
+                _pendingResultValueChange = (newValue.HasValue && time.HasValue && !ForceNullResult) ? newValue.Value.Date.Add(time.Value) : null;
+                InputValue = _pendingResultValueChange;
+            }
         }
 
         private void Date_HasErrorsPropertyChanged(object sender, DependencyPropertyChangedEventArgs e) => HasComponentValueErrors = (bool)e.NewValue || Time.HasErrors;
@@ -109,8 +111,8 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <param name="args">The Event data that is issued by the event on <see cref="HasComponentValueErrorsProperty"/> that tracks changes to its effective value.</param>
         protected void RaiseHasComponentValueErrorsPropertyChanged(DependencyPropertyChangedEventArgs args)
         {
-            using IDisposable scope = _logger.EnterMethod(args, this);
-            HasComponentValueErrorsPropertyChanged?.Invoke(this, args);
+            using (_logger.EnterMethod(args, this))
+                HasComponentValueErrorsPropertyChanged?.Invoke(this, args);
         }
 
         #endregion
@@ -131,20 +133,22 @@ namespace FsInfoCat.Desktop.ViewModel
 
         protected override void OnResultValuePropertyChanged(DependencyPropertyChangedEventArgs args)
         {
-            using IDisposable scope = _logger.EnterMethod(args, this);
-            base.OnResultValuePropertyChanged(args);
-            DateTime? newValue = args.NewValue as DateTime?;
-            if (newValue == _pendingResultValueChange)
-                return;
-            _pendingResultValueChange = newValue;
-            DateTime? pendingDateChange = newValue?.Date;
-            TimeSpan? pendingTimeChange = newValue?.TimeOfDay;
-            _pendingDateChange = pendingDateChange;
-            _pendingTimeChange = pendingTimeChange;
-            _pendingResultValueChange = newValue;
-            Date.InputValue = pendingDateChange;
-            if (_pendingTimeChange == pendingTimeChange)
-                Time.InputValue = pendingTimeChange;
+            using (_logger.EnterMethod(args, this))
+            {
+                base.OnResultValuePropertyChanged(args);
+                DateTime? newValue = args.NewValue as DateTime?;
+                if (newValue == _pendingResultValueChange)
+                    return;
+                _pendingResultValueChange = newValue;
+                DateTime? pendingDateChange = newValue?.Date;
+                TimeSpan? pendingTimeChange = newValue?.TimeOfDay;
+                _pendingDateChange = pendingDateChange;
+                _pendingTimeChange = pendingTimeChange;
+                _pendingResultValueChange = newValue;
+                Date.InputValue = pendingDateChange;
+                if (_pendingTimeChange == pendingTimeChange)
+                    Time.InputValue = pendingTimeChange;
+            }
         }
     }
 }

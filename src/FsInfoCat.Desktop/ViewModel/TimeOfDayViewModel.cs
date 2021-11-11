@@ -65,23 +65,25 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <param name="newValue">The new value of the <see cref="IsPm"/> property.</param>
         protected virtual void OnIsPmPropertyChanged(bool newValue)
         {
-            using IDisposable scope = _logger.EnterMethod(newValue, this);
-            if (_pendingIsPmChange == newValue)
-                return;
-            int? value = _pendingHours24Change = Hours24.ResultValue;
-            _pendingHours12Change = Hours12.ResultValue;
-            _pendingMinutesChange = Minutes.ResultValue;
-            _pendingSecondsChange = Seconds.ResultValue;
-            _pendingMillisecondsChange = Milliseconds.ResultValue;
-            bool isPm = _pendingIsPmChange = IsPm;
-            if (value.HasValue)
-                _pendingHours24Change = isPm ? ((value.Value == 12) ? value : value.Value + 12) : (value.Value == 12) ? 0 : value;
-            else
-                _pendingHours24Change = null;
-            ImmutableArray<int?> values = ImmutableArray.Create(_pendingHours24Change, _pendingHours12Change, _pendingMinutesChange, _pendingSecondsChange, _pendingMillisecondsChange);
-            Hours24.InputValue = _pendingHours24Change;
-            if (_pendingIsPmChange == isPm && values.SequenceEqual(ImmutableArray.Create(_pendingHours24Change, _pendingHours12Change, _pendingMinutesChange, _pendingSecondsChange, _pendingMillisecondsChange)))
-                OnComponentValueChanged(_pendingHours24Change, _pendingMinutesChange, _pendingSecondsChange, _pendingMillisecondsChange);
+            using (_logger.EnterMethod(newValue, this))
+            {
+                if (_pendingIsPmChange == newValue)
+                    return;
+                int? value = _pendingHours24Change = Hours24.ResultValue;
+                _pendingHours12Change = Hours12.ResultValue;
+                _pendingMinutesChange = Minutes.ResultValue;
+                _pendingSecondsChange = Seconds.ResultValue;
+                _pendingMillisecondsChange = Milliseconds.ResultValue;
+                bool isPm = _pendingIsPmChange = IsPm;
+                if (value.HasValue)
+                    _pendingHours24Change = isPm ? ((value.Value == 12) ? value : value.Value + 12) : (value.Value == 12) ? 0 : value;
+                else
+                    _pendingHours24Change = null;
+                ImmutableArray<int?> values = ImmutableArray.Create(_pendingHours24Change, _pendingHours12Change, _pendingMinutesChange, _pendingSecondsChange, _pendingMillisecondsChange);
+                Hours24.InputValue = _pendingHours24Change;
+                if (_pendingIsPmChange == isPm && values.SequenceEqual(ImmutableArray.Create(_pendingHours24Change, _pendingHours12Change, _pendingMinutesChange, _pendingSecondsChange, _pendingMillisecondsChange)))
+                    OnComponentValueChanged(_pendingHours24Change, _pendingMinutesChange, _pendingSecondsChange, _pendingMillisecondsChange);
+            }
         }
 
         #endregion
@@ -159,8 +161,8 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <param name="args">The Event data that is issued by the event on <see cref="HasComponentValueErrorsProperty"/> that tracks changes to its effective value.</param>
         protected void RaiseHasComponentValueErrorsPropertyChanged(DependencyPropertyChangedEventArgs args)
         {
-            using IDisposable scope = _logger.EnterMethod(args, this);
-            HasComponentValueErrorsPropertyChanged?.Invoke(this, args);
+            using (_logger.EnterMethod(args, this))
+                HasComponentValueErrorsPropertyChanged?.Invoke(this, args);
         }
 
         #endregion
@@ -193,31 +195,35 @@ namespace FsInfoCat.Desktop.ViewModel
 
         protected override void OnInputValuePropertyChanged(TimeSpan? newValue)
         {
-            using IDisposable scope = _logger.EnterMethod(newValue, this);
-            if (newValue.HasValue)
+            using (_logger.EnterMethod(newValue, this))
             {
-                if (newValue.Value.Milliseconds != 0 && !Milliseconds.IsEnabled)
-                    base.OnInputValuePropertyChanged(new(newValue.Value.Days, (Hours12.IsEnabled || Hours24.IsEnabled) ? newValue.Value.Hours : 0, Minutes.IsEnabled ? newValue.Value.Minutes : 0, Seconds.IsEnabled ? newValue.Value.Seconds : 0, 0));
-                else if (newValue.Value.Seconds != 0 && !Seconds.IsEnabled)
-                    base.OnInputValuePropertyChanged(new(newValue.Value.Days, (Hours12.IsEnabled || Hours24.IsEnabled) ? newValue.Value.Hours : 0, Minutes.IsEnabled ? newValue.Value.Minutes : 0, 0, newValue.Value.Milliseconds));
-                else if (newValue.Value.Minutes != 0 && !Minutes.IsEnabled)
-                    base.OnInputValuePropertyChanged(new(newValue.Value.Days, (Hours12.IsEnabled || Hours24.IsEnabled) ? newValue.Value.Hours : 0, newValue.Value.Seconds, newValue.Value.Milliseconds));
-                else if (newValue.Value.Hours != 0 && !(Hours24.IsEnabled || Hours12.IsEnabled))
-                    base.OnInputValuePropertyChanged(new(newValue.Value.Days, 0, newValue.Value.Minutes, newValue.Value.Seconds, newValue.Value.Milliseconds));
+                if (newValue.HasValue)
+                {
+                    if (newValue.Value.Milliseconds != 0 && !Milliseconds.IsEnabled)
+                        base.OnInputValuePropertyChanged(new(newValue.Value.Days, (Hours12.IsEnabled || Hours24.IsEnabled) ? newValue.Value.Hours : 0, Minutes.IsEnabled ? newValue.Value.Minutes : 0, Seconds.IsEnabled ? newValue.Value.Seconds : 0, 0));
+                    else if (newValue.Value.Seconds != 0 && !Seconds.IsEnabled)
+                        base.OnInputValuePropertyChanged(new(newValue.Value.Days, (Hours12.IsEnabled || Hours24.IsEnabled) ? newValue.Value.Hours : 0, Minutes.IsEnabled ? newValue.Value.Minutes : 0, 0, newValue.Value.Milliseconds));
+                    else if (newValue.Value.Minutes != 0 && !Minutes.IsEnabled)
+                        base.OnInputValuePropertyChanged(new(newValue.Value.Days, (Hours12.IsEnabled || Hours24.IsEnabled) ? newValue.Value.Hours : 0, newValue.Value.Seconds, newValue.Value.Milliseconds));
+                    else if (newValue.Value.Hours != 0 && !(Hours24.IsEnabled || Hours12.IsEnabled))
+                        base.OnInputValuePropertyChanged(new(newValue.Value.Days, 0, newValue.Value.Minutes, newValue.Value.Seconds, newValue.Value.Milliseconds));
+                    else
+                        base.OnInputValuePropertyChanged(newValue);
+                }
                 else
                     base.OnInputValuePropertyChanged(newValue);
             }
-            else
-                base.OnInputValuePropertyChanged(newValue);
         }
 
         protected override void OnValidateInputValue(PropertyValidatingEventArgs<TimeSpan> args)
         {
-            using IDisposable scope = _logger.EnterMethod(args, this);
-            TimeSpan value = args.Value;
-            base.OnValidateInputValue(args);
-            if (string.IsNullOrWhiteSpace(args.ValidationMessage) && (args.Value < TimeSpan.Zero || args.Value.Days != 0))
-                args.ValidationMessage = FsInfoCat.Properties.Resources.ErrorMessage_InvalidTime;
+            using (_logger.EnterMethod(args, this))
+            {
+                TimeSpan value = args.Value;
+                base.OnValidateInputValue(args);
+                if (string.IsNullOrWhiteSpace(args.ValidationMessage) && (args.Value < TimeSpan.Zero || args.Value.Days != 0))
+                    args.ValidationMessage = FsInfoCat.Properties.Resources.ErrorMessage_InvalidTime;
+            }
         }
 
         private void Hours24_ValidateInputValue(object sender, PropertyValidatingEventArgs<int> e)
@@ -230,115 +236,125 @@ namespace FsInfoCat.Desktop.ViewModel
 
         private void Hours12_ValidateInputValue(object sender, PropertyValidatingEventArgs<int> e)
         {
-            using IDisposable scope = _logger.EnterMethod(sender, e, this);
-            if (e.Value < 1 || e.Value > 12)
-                ErrorInfo.SetError(FsInfoCat.Properties.Resources.ErrorMessage_InvalidHours, Hours12Property.Name);
-            else
-                ErrorInfo.ClearErrors(Hours12Property.Name);
+            using (_logger.EnterMethod(sender, e, this))
+            {
+                if (e.Value < 1 || e.Value > 12)
+                    ErrorInfo.SetError(FsInfoCat.Properties.Resources.ErrorMessage_InvalidHours, Hours12Property.Name);
+                else
+                    ErrorInfo.ClearErrors(Hours12Property.Name);
+            }
         }
 
         private void Minutes_ValidateInputValue(object sender, PropertyValidatingEventArgs<int> e)
         {
-            using IDisposable scope = _logger.EnterMethod(sender, e, this);
-            if (e.Value < 0 || e.Value > 59)
-                ErrorInfo.SetError(FsInfoCat.Properties.Resources.ErrorMessage_InvalidMinutes, MinutesProperty.Name);
-            else
-                ErrorInfo.ClearErrors(MinutesProperty.Name);
+            using (_logger.EnterMethod(sender, e, this))
+            {
+                if (e.Value < 0 || e.Value > 59)
+                    ErrorInfo.SetError(FsInfoCat.Properties.Resources.ErrorMessage_InvalidMinutes, MinutesProperty.Name);
+                else
+                    ErrorInfo.ClearErrors(MinutesProperty.Name);
+            }
         }
 
         private void Seconds_ValidateInputValue(object sender, PropertyValidatingEventArgs<int> e)
         {
-            using IDisposable scope = _logger.EnterMethod(sender, e, this);
-            if (e.Value < 0 || e.Value > 59)
-                ErrorInfo.SetError(FsInfoCat.Properties.Resources.ErrorMessage_InvalidSeconds, SecondsProperty.Name);
-            else
-                ErrorInfo.ClearErrors(SecondsProperty.Name);
+            using (_logger.EnterMethod(sender, e, this))
+            {
+                if (e.Value < 0 || e.Value > 59)
+                    ErrorInfo.SetError(FsInfoCat.Properties.Resources.ErrorMessage_InvalidSeconds, SecondsProperty.Name);
+                else
+                    ErrorInfo.ClearErrors(SecondsProperty.Name);
+            }
         }
 
         private void Milliseconds_ValidateInputValue(object sender, PropertyValidatingEventArgs<int> e)
         {
-            using IDisposable scope = _logger.EnterMethod(sender, e, this);
-            if (e.Value < 0 || e.Value > 59)
-                ErrorInfo.SetError(FsInfoCat.Properties.Resources.ErrorMessage_InvalidMilliseconds, MillisecondsProperty.Name);
-            else
-                ErrorInfo.ClearErrors(MillisecondsProperty.Name);
+            using (_logger.EnterMethod(sender, e, this))
+            {
+                if (e.Value < 0 || e.Value > 59)
+                    ErrorInfo.SetError(FsInfoCat.Properties.Resources.ErrorMessage_InvalidMilliseconds, MillisecondsProperty.Name);
+                else
+                    ErrorInfo.ClearErrors(MillisecondsProperty.Name);
+            }
         }
 
         protected override void OnResultValuePropertyChanged(DependencyPropertyChangedEventArgs args)
         {
-            using IDisposable scope = _logger.EnterMethod(args, this);
-            base.OnResultValuePropertyChanged(args);
-            TimeSpan? newValue = args.NewValue as TimeSpan?;
-            if (newValue == _pendingResultValueChange)
-                return;
-            _pendingResultValueChange = newValue;
-            bool isPm = _pendingIsPmChange = IsPm;
-            if (newValue.HasValue)
+            using (_logger.EnterMethod(args, this))
             {
-                _pendingHours24Change = newValue.Value.Hours;
-                int h = Math.Abs(newValue.Value.Hours);
-                switch (h)
+                base.OnResultValuePropertyChanged(args);
+                TimeSpan? newValue = args.NewValue as TimeSpan?;
+                if (newValue == _pendingResultValueChange)
+                    return;
+                _pendingResultValueChange = newValue;
+                bool isPm = _pendingIsPmChange = IsPm;
+                if (newValue.HasValue)
                 {
-                    case 0:
-                        _pendingHours12Change = (newValue.Value.Hours < 0) ? -12 : 12;
-                        _pendingIsPmChange = false;
-                        break;
-                    case 12:
-                        _pendingHours12Change = 12;
-                        _pendingIsPmChange = true;
-                        break;
-                    default:
-                        if (h > 12)
-                        {
-                            _pendingHours12Change = (newValue.Value.Hours < 0) ? newValue.Value.Hours + 12 : newValue.Value.Hours - 12;
-                            _pendingIsPmChange = true;
-                        }
-                        else
-                        {
-                            _pendingHours12Change = newValue.Value.Hours;
+                    _pendingHours24Change = newValue.Value.Hours;
+                    int h = Math.Abs(newValue.Value.Hours);
+                    switch (h)
+                    {
+                        case 0:
+                            _pendingHours12Change = (newValue.Value.Hours < 0) ? -12 : 12;
                             _pendingIsPmChange = false;
-                        }
-                        break;
-                }
-                _pendingMinutesChange = (Minutes.ResultValue.HasValue || newValue.Value.Minutes > 0 || newValue.Value.Seconds > 0 || newValue.Value.Milliseconds > 0) ? newValue.Value.Minutes : null;
-                _pendingSecondsChange = (Minutes.ResultValue.HasValue || newValue.Value.Seconds > 0 || newValue.Value.Milliseconds > 0) ? newValue.Value.Seconds : null;
-                _pendingMillisecondsChange = (Minutes.ResultValue.HasValue || newValue.Value.Milliseconds > 0) ? newValue.Value.Milliseconds : null;
-                ImmutableArray<int?> values = ImmutableArray.Create(_pendingHours24Change, _pendingHours12Change, _pendingMinutesChange, _pendingSecondsChange, _pendingMillisecondsChange);
-                Hours24.InputValue = _pendingHours24Change;
-                if (isPm == _pendingIsPmChange && values.SequenceEqual(ImmutableArray.Create(_pendingHours24Change, _pendingHours12Change, _pendingMinutesChange, _pendingSecondsChange, _pendingMillisecondsChange)))
-                {
-                    Hours12.InputValue = _pendingHours12Change;
+                            break;
+                        case 12:
+                            _pendingHours12Change = 12;
+                            _pendingIsPmChange = true;
+                            break;
+                        default:
+                            if (h > 12)
+                            {
+                                _pendingHours12Change = (newValue.Value.Hours < 0) ? newValue.Value.Hours + 12 : newValue.Value.Hours - 12;
+                                _pendingIsPmChange = true;
+                            }
+                            else
+                            {
+                                _pendingHours12Change = newValue.Value.Hours;
+                                _pendingIsPmChange = false;
+                            }
+                            break;
+                    }
+                    _pendingMinutesChange = (Minutes.ResultValue.HasValue || newValue.Value.Minutes > 0 || newValue.Value.Seconds > 0 || newValue.Value.Milliseconds > 0) ? newValue.Value.Minutes : null;
+                    _pendingSecondsChange = (Minutes.ResultValue.HasValue || newValue.Value.Seconds > 0 || newValue.Value.Milliseconds > 0) ? newValue.Value.Seconds : null;
+                    _pendingMillisecondsChange = (Minutes.ResultValue.HasValue || newValue.Value.Milliseconds > 0) ? newValue.Value.Milliseconds : null;
+                    ImmutableArray<int?> values = ImmutableArray.Create(_pendingHours24Change, _pendingHours12Change, _pendingMinutesChange, _pendingSecondsChange, _pendingMillisecondsChange);
+                    Hours24.InputValue = _pendingHours24Change;
                     if (isPm == _pendingIsPmChange && values.SequenceEqual(ImmutableArray.Create(_pendingHours24Change, _pendingHours12Change, _pendingMinutesChange, _pendingSecondsChange, _pendingMillisecondsChange)))
                     {
-                        IsPm = _pendingIsPmChange;
+                        Hours12.InputValue = _pendingHours12Change;
                         if (isPm == _pendingIsPmChange && values.SequenceEqual(ImmutableArray.Create(_pendingHours24Change, _pendingHours12Change, _pendingMinutesChange, _pendingSecondsChange, _pendingMillisecondsChange)))
                         {
-                            Minutes.InputValue = _pendingMinutesChange;
+                            IsPm = _pendingIsPmChange;
                             if (isPm == _pendingIsPmChange && values.SequenceEqual(ImmutableArray.Create(_pendingHours24Change, _pendingHours12Change, _pendingMinutesChange, _pendingSecondsChange, _pendingMillisecondsChange)))
                             {
-                                Seconds.InputValue = _pendingSecondsChange;
+                                Minutes.InputValue = _pendingMinutesChange;
                                 if (isPm == _pendingIsPmChange && values.SequenceEqual(ImmutableArray.Create(_pendingHours24Change, _pendingHours12Change, _pendingMinutesChange, _pendingSecondsChange, _pendingMillisecondsChange)))
-                                    Milliseconds.InputValue = _pendingMillisecondsChange;
+                                {
+                                    Seconds.InputValue = _pendingSecondsChange;
+                                    if (isPm == _pendingIsPmChange && values.SequenceEqual(ImmutableArray.Create(_pendingHours24Change, _pendingHours12Change, _pendingMinutesChange, _pendingSecondsChange, _pendingMillisecondsChange)))
+                                        Milliseconds.InputValue = _pendingMillisecondsChange;
+                                }
                             }
                         }
                     }
                 }
-            }
-            else
-            {
-                _pendingHours24Change = _pendingHours12Change = _pendingMinutesChange = _pendingSecondsChange = _pendingMillisecondsChange = null;
-                Hours24.InputValue = null;
-                if (!(_pendingHours24Change.HasValue || _pendingHours12Change.HasValue || _pendingMinutesChange.HasValue || _pendingSecondsChange.HasValue || _pendingMillisecondsChange.HasValue))
+                else
                 {
-                    Hours12.InputValue = null;
+                    _pendingHours24Change = _pendingHours12Change = _pendingMinutesChange = _pendingSecondsChange = _pendingMillisecondsChange = null;
+                    Hours24.InputValue = null;
                     if (!(_pendingHours24Change.HasValue || _pendingHours12Change.HasValue || _pendingMinutesChange.HasValue || _pendingSecondsChange.HasValue || _pendingMillisecondsChange.HasValue))
                     {
-                        Minutes.InputValue = null;
+                        Hours12.InputValue = null;
                         if (!(_pendingHours24Change.HasValue || _pendingHours12Change.HasValue || _pendingMinutesChange.HasValue || _pendingSecondsChange.HasValue || _pendingMillisecondsChange.HasValue))
                         {
-                            Seconds.InputValue = null;
+                            Minutes.InputValue = null;
                             if (!(_pendingHours24Change.HasValue || _pendingHours12Change.HasValue || _pendingMinutesChange.HasValue || _pendingSecondsChange.HasValue || _pendingMillisecondsChange.HasValue))
-                                Milliseconds.InputValue = null;
+                            {
+                                Seconds.InputValue = null;
+                                if (!(_pendingHours24Change.HasValue || _pendingHours12Change.HasValue || _pendingMinutesChange.HasValue || _pendingSecondsChange.HasValue || _pendingMillisecondsChange.HasValue))
+                                    Milliseconds.InputValue = null;
+                            }
                         }
                     }
                 }
@@ -347,132 +363,144 @@ namespace FsInfoCat.Desktop.ViewModel
 
         private void OnComponentValueChanged(int? hours24, int? minutes, int? seconds, int? milliseconds)
         {
-            using IDisposable scope = _logger.EnterMethod(hours24, minutes, seconds, milliseconds, this);
-            if (hours24.HasValue || minutes.HasValue || seconds.HasValue || milliseconds.HasValue)
-                _pendingResultValueChange = new(0, hours24 ?? 0, minutes ?? 0, seconds ?? 0, milliseconds ?? 0);
-            else
-                _pendingResultValueChange = null;
-            InputValue = _pendingResultValueChange;
+            using (_logger.EnterMethod(hours24, minutes, seconds, milliseconds, this))
+            {
+                if (hours24.HasValue || minutes.HasValue || seconds.HasValue || milliseconds.HasValue)
+                    _pendingResultValueChange = new(0, hours24 ?? 0, minutes ?? 0, seconds ?? 0, milliseconds ?? 0);
+                else
+                    _pendingResultValueChange = null;
+                InputValue = _pendingResultValueChange;
+            }
         }
 
         private void Hours24_ResultValuePropertyChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            using IDisposable scope = _logger.EnterMethod(sender, e, this);
-            int? value = e.NewValue as int?;
-            if (value == _pendingHours24Change)
-                return;
-            _pendingHours24Change = value;
-            _pendingMinutesChange = Minutes.ResultValue;
-            _pendingSecondsChange = Seconds.ResultValue;
-            _pendingMillisecondsChange = Milliseconds.ResultValue;
-            ImmutableArray<int?> values;
-            bool isPm;
-            if (value.HasValue)
+            using (_logger.EnterMethod(sender, e, this))
             {
-                switch (value.Value)
-                {
-                    case 0:
-                        _pendingHours12Change = 12;
-                        isPm = false;
-                        break;
-                    case 12:
-                        _pendingHours12Change = 12;
-                        isPm = true;
-                        break;
-                    default:
-                        isPm = value < 12;
-                        _pendingHours12Change = isPm ? value - 12 : value;
-                        break;
-                }
-                values = ImmutableArray.Create(_pendingHours24Change, _pendingHours12Change, _pendingMinutesChange, _pendingSecondsChange, _pendingMillisecondsChange);
-                IsPm = isPm;
-                if (_pendingIsPmChange != isPm || !values.SequenceEqual(ImmutableArray.Create(_pendingHours24Change, _pendingHours12Change, _pendingMinutesChange, _pendingSecondsChange, _pendingMillisecondsChange)))
+                int? value = e.NewValue as int?;
+                if (value == _pendingHours24Change)
                     return;
+                _pendingHours24Change = value;
+                _pendingMinutesChange = Minutes.ResultValue;
+                _pendingSecondsChange = Seconds.ResultValue;
+                _pendingMillisecondsChange = Milliseconds.ResultValue;
+                ImmutableArray<int?> values;
+                bool isPm;
+                if (value.HasValue)
+                {
+                    switch (value.Value)
+                    {
+                        case 0:
+                            _pendingHours12Change = 12;
+                            isPm = false;
+                            break;
+                        case 12:
+                            _pendingHours12Change = 12;
+                            isPm = true;
+                            break;
+                        default:
+                            isPm = value < 12;
+                            _pendingHours12Change = isPm ? value - 12 : value;
+                            break;
+                    }
+                    values = ImmutableArray.Create(_pendingHours24Change, _pendingHours12Change, _pendingMinutesChange, _pendingSecondsChange, _pendingMillisecondsChange);
+                    IsPm = isPm;
+                    if (_pendingIsPmChange != isPm || !values.SequenceEqual(ImmutableArray.Create(_pendingHours24Change, _pendingHours12Change, _pendingMinutesChange, _pendingSecondsChange, _pendingMillisecondsChange)))
+                        return;
+                }
+                else
+                {
+                    _pendingIsPmChange = isPm = IsPm;
+                    _pendingHours12Change = null;
+                    values = ImmutableArray.Create(_pendingHours24Change, _pendingHours12Change, _pendingMinutesChange, _pendingSecondsChange, _pendingMillisecondsChange);
+                }
+                Hours12.InputValue = _pendingHours12Change;
+                if (_pendingIsPmChange == isPm && values.SequenceEqual(ImmutableArray.Create(_pendingHours24Change, _pendingHours12Change, _pendingMinutesChange, _pendingSecondsChange, _pendingMillisecondsChange)))
+                    OnComponentValueChanged(_pendingHours24Change, _pendingMinutesChange, _pendingSecondsChange, _pendingMillisecondsChange);
             }
-            else
-            {
-                _pendingIsPmChange = isPm = IsPm;
-                _pendingHours12Change = null;
-                values = ImmutableArray.Create(_pendingHours24Change, _pendingHours12Change, _pendingMinutesChange, _pendingSecondsChange, _pendingMillisecondsChange);
-            }
-            Hours12.InputValue = _pendingHours12Change;
-            if (_pendingIsPmChange == isPm && values.SequenceEqual(ImmutableArray.Create(_pendingHours24Change, _pendingHours12Change, _pendingMinutesChange, _pendingSecondsChange, _pendingMillisecondsChange)))
-                OnComponentValueChanged(_pendingHours24Change, _pendingMinutesChange, _pendingSecondsChange, _pendingMillisecondsChange);
         }
 
         private void Hours12_ResultValuePropertyChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            using IDisposable scope = _logger.EnterMethod(sender, e, this);
-            int? value = e.NewValue as int?;
-            if (value == _pendingHours12Change)
-                return;
-            _pendingHours12Change = value;
-            _pendingMinutesChange = Minutes.ResultValue;
-            _pendingSecondsChange = Seconds.ResultValue;
-            _pendingMillisecondsChange = Milliseconds.ResultValue;
-            bool isPm = _pendingIsPmChange = IsPm;
-            if (value.HasValue)
-                _pendingHours24Change = isPm ? ((value.Value == 12) ? value : value.Value + 12) : (value.Value == 12) ? 0 : value;
-            else
-                _pendingHours24Change = null;
-            ImmutableArray<int?> values = ImmutableArray.Create(_pendingHours24Change, _pendingHours12Change, _pendingMinutesChange, _pendingSecondsChange, _pendingMillisecondsChange);
-            Hours24.InputValue = _pendingHours24Change;
-            if (_pendingIsPmChange == isPm && values.SequenceEqual(ImmutableArray.Create(_pendingHours24Change, _pendingHours12Change, _pendingMinutesChange, _pendingSecondsChange, _pendingMillisecondsChange)))
-                OnComponentValueChanged(_pendingHours24Change, _pendingMinutesChange, _pendingSecondsChange, _pendingMillisecondsChange);
+            using (_logger.EnterMethod(sender, e, this))
+            {
+                int? value = e.NewValue as int?;
+                if (value == _pendingHours12Change)
+                    return;
+                _pendingHours12Change = value;
+                _pendingMinutesChange = Minutes.ResultValue;
+                _pendingSecondsChange = Seconds.ResultValue;
+                _pendingMillisecondsChange = Milliseconds.ResultValue;
+                bool isPm = _pendingIsPmChange = IsPm;
+                if (value.HasValue)
+                    _pendingHours24Change = isPm ? ((value.Value == 12) ? value : value.Value + 12) : (value.Value == 12) ? 0 : value;
+                else
+                    _pendingHours24Change = null;
+                ImmutableArray<int?> values = ImmutableArray.Create(_pendingHours24Change, _pendingHours12Change, _pendingMinutesChange, _pendingSecondsChange, _pendingMillisecondsChange);
+                Hours24.InputValue = _pendingHours24Change;
+                if (_pendingIsPmChange == isPm && values.SequenceEqual(ImmutableArray.Create(_pendingHours24Change, _pendingHours12Change, _pendingMinutesChange, _pendingSecondsChange, _pendingMillisecondsChange)))
+                    OnComponentValueChanged(_pendingHours24Change, _pendingMinutesChange, _pendingSecondsChange, _pendingMillisecondsChange);
+            }
         }
 
         private void Minutes_ResultValuePropertyChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            using IDisposable scope = _logger.EnterMethod(sender, e, this);
-            int? value = e.NewValue as int?;
-            if (value == _pendingMinutesChange)
-                return;
-            _pendingMinutesChange = value;
-            _pendingHours24Change = Hours12.ResultValue;
-            bool isPm = _pendingIsPmChange = IsPm;
-            _pendingMinutesChange = Minutes.ResultValue;
-            _pendingSecondsChange = Seconds.ResultValue;
-            _pendingMillisecondsChange = Milliseconds.ResultValue;
-            ImmutableArray<int?> values = ImmutableArray.Create(_pendingHours24Change, _pendingHours12Change, _pendingMinutesChange, _pendingSecondsChange, _pendingMillisecondsChange);
-            Minutes.InputValue = _pendingMinutesChange;
-            if (_pendingIsPmChange == isPm && values.SequenceEqual(ImmutableArray.Create(_pendingHours24Change, _pendingHours12Change, _pendingMinutesChange, _pendingSecondsChange, _pendingMillisecondsChange)))
-                OnComponentValueChanged(_pendingHours24Change, _pendingMinutesChange, _pendingSecondsChange, _pendingMillisecondsChange);
+            using (_logger.EnterMethod(sender, e, this))
+            {
+                int? value = e.NewValue as int?;
+                if (value == _pendingMinutesChange)
+                    return;
+                _pendingMinutesChange = value;
+                _pendingHours24Change = Hours12.ResultValue;
+                bool isPm = _pendingIsPmChange = IsPm;
+                _pendingMinutesChange = Minutes.ResultValue;
+                _pendingSecondsChange = Seconds.ResultValue;
+                _pendingMillisecondsChange = Milliseconds.ResultValue;
+                ImmutableArray<int?> values = ImmutableArray.Create(_pendingHours24Change, _pendingHours12Change, _pendingMinutesChange, _pendingSecondsChange, _pendingMillisecondsChange);
+                Minutes.InputValue = _pendingMinutesChange;
+                if (_pendingIsPmChange == isPm && values.SequenceEqual(ImmutableArray.Create(_pendingHours24Change, _pendingHours12Change, _pendingMinutesChange, _pendingSecondsChange, _pendingMillisecondsChange)))
+                    OnComponentValueChanged(_pendingHours24Change, _pendingMinutesChange, _pendingSecondsChange, _pendingMillisecondsChange);
+            }
         }
 
         private void Seconds_ResultValuePropertyChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            using IDisposable scope = _logger.EnterMethod(sender, e, this);
-            int? value = e.NewValue as int?;
-            if (value == _pendingSecondsChange)
-                return;
-            _pendingHours12Change = Hours12.ResultValue;
-            _pendingHours24Change = Hours24.ResultValue;
-            bool isPm = _pendingIsPmChange = IsPm;
-            _pendingMinutesChange = Minutes.ResultValue;
-            _pendingSecondsChange = value;
-            _pendingMillisecondsChange = Milliseconds.ResultValue;
-            ImmutableArray<int?> values = ImmutableArray.Create(_pendingHours24Change, _pendingHours12Change, _pendingMinutesChange, _pendingSecondsChange, _pendingMillisecondsChange);
-            Seconds.InputValue = _pendingSecondsChange;
-            if (_pendingIsPmChange == isPm && values.SequenceEqual(ImmutableArray.Create(_pendingHours24Change, _pendingHours12Change, _pendingMinutesChange, _pendingSecondsChange, _pendingMillisecondsChange)))
-                OnComponentValueChanged(_pendingHours24Change, _pendingMinutesChange, _pendingSecondsChange, _pendingMillisecondsChange);
+            using (_logger.EnterMethod(sender, e, this))
+            {
+                int? value = e.NewValue as int?;
+                if (value == _pendingSecondsChange)
+                    return;
+                _pendingHours12Change = Hours12.ResultValue;
+                _pendingHours24Change = Hours24.ResultValue;
+                bool isPm = _pendingIsPmChange = IsPm;
+                _pendingMinutesChange = Minutes.ResultValue;
+                _pendingSecondsChange = value;
+                _pendingMillisecondsChange = Milliseconds.ResultValue;
+                ImmutableArray<int?> values = ImmutableArray.Create(_pendingHours24Change, _pendingHours12Change, _pendingMinutesChange, _pendingSecondsChange, _pendingMillisecondsChange);
+                Seconds.InputValue = _pendingSecondsChange;
+                if (_pendingIsPmChange == isPm && values.SequenceEqual(ImmutableArray.Create(_pendingHours24Change, _pendingHours12Change, _pendingMinutesChange, _pendingSecondsChange, _pendingMillisecondsChange)))
+                    OnComponentValueChanged(_pendingHours24Change, _pendingMinutesChange, _pendingSecondsChange, _pendingMillisecondsChange);
+            }
         }
 
         private void Milliseconds_ResultValuePropertyChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            using IDisposable scope = _logger.EnterMethod(sender, e, this);
-            int? value = e.NewValue as int?;
-            if (value == _pendingMillisecondsChange)
-                return;
-            _pendingMillisecondsChange = value;
-            _pendingHours12Change = Hours12.ResultValue;
-            _pendingHours24Change = Hours24.ResultValue;
-            bool isPm = _pendingIsPmChange = IsPm;
-            _pendingMinutesChange = Minutes.ResultValue;
-            _pendingSecondsChange = Seconds.ResultValue;
-            ImmutableArray<int?> values = ImmutableArray.Create(_pendingHours24Change, _pendingHours12Change, _pendingMinutesChange, _pendingSecondsChange, _pendingMillisecondsChange);
-            Milliseconds.InputValue = _pendingMillisecondsChange;
-            if (_pendingIsPmChange == isPm && values.SequenceEqual(ImmutableArray.Create(_pendingHours24Change, _pendingHours12Change, _pendingMinutesChange, _pendingSecondsChange, _pendingMillisecondsChange)))
-                OnComponentValueChanged(_pendingHours24Change, _pendingMinutesChange, _pendingSecondsChange, _pendingMillisecondsChange);
+            using (_logger.EnterMethod(sender, e, this))
+            {
+                int? value = e.NewValue as int?;
+                if (value == _pendingMillisecondsChange)
+                    return;
+                _pendingMillisecondsChange = value;
+                _pendingHours12Change = Hours12.ResultValue;
+                _pendingHours24Change = Hours24.ResultValue;
+                bool isPm = _pendingIsPmChange = IsPm;
+                _pendingMinutesChange = Minutes.ResultValue;
+                _pendingSecondsChange = Seconds.ResultValue;
+                ImmutableArray<int?> values = ImmutableArray.Create(_pendingHours24Change, _pendingHours12Change, _pendingMinutesChange, _pendingSecondsChange, _pendingMillisecondsChange);
+                Milliseconds.InputValue = _pendingMillisecondsChange;
+                if (_pendingIsPmChange == isPm && values.SequenceEqual(ImmutableArray.Create(_pendingHours24Change, _pendingHours12Change, _pendingMinutesChange, _pendingSecondsChange, _pendingMillisecondsChange)))
+                    OnComponentValueChanged(_pendingHours24Change, _pendingMinutesChange, _pendingSecondsChange, _pendingMillisecondsChange);
+            }
         }
 
         private void Hours24_HasErrorsPropertyChanged(object sender, DependencyPropertyChangedEventArgs e) => HasComponentValueErrors = (bool)e.NewValue || Hours12.HasErrors || Minutes.HasErrors || Seconds.HasErrors || Milliseconds.HasErrors;

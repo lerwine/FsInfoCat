@@ -71,106 +71,110 @@ namespace FsInfoCat
 
         private async Task<(EntityEntry Entry, EntityState OldState)[]> RaiseBeforeSaveAsync(CancellationToken cancellationToken = default)
         {
-            using IDisposable scope = _logger.BeginScope(nameof(RaiseBeforeSaveAsync));
-            cancellationToken.ThrowIfCancellationRequested();
-            List<(EntityEntry Entry, EntityState OldState)> toSave = new();
-            foreach (EntityEntry e in ChangeTracker.Entries())
+            using (_logger.BeginScope(nameof(RaiseBeforeSaveAsync)))
             {
-                object entity = e.Entity;
-                switch (e.State)
+                cancellationToken.ThrowIfCancellationRequested();
+                List<(EntityEntry Entry, EntityState OldState)> toSave = new();
+                foreach (EntityEntry e in ChangeTracker.Entries())
                 {
-                    case EntityState.Added:
-                        _logger.LogTrace("Inserting {Name}: {Entity}", e.Metadata.Name, entity);
-                        if (entity is IDbEntity adding)
-                            OnBeforeAddEntity(adding, cancellationToken);
-                        if (entity is IDbEntityBeforeSave beforeSave)
-                            await beforeSave.BeforeSaveAsync(cancellationToken);
-                        if (entity is IDbEntityBeforeInsert beforeInsert)
-                            await beforeInsert.BeforeInsertAsync(cancellationToken);
-                        toSave.Add((Entry: e, OldState: EntityState.Added));
-                        break;
-                    case EntityState.Modified:
-                        _logger.LogTrace("Saving {Name}: {Entity}", e.Metadata.Name, entity);
-                        if (entity is IDbEntity saving)
-                            OnBeforeSaveChanges(saving, cancellationToken);
-                        if (entity is IDbEntityBeforeSave beforeSave2)
-                            await beforeSave2.BeforeSaveAsync(cancellationToken);
-                        if (entity is IDbEntityBeforeSaveChanges beforeSaveChanges)
-                            await beforeSaveChanges.BeforeSaveChangesAsync(cancellationToken);
-                        toSave.Add((Entry: e, OldState: EntityState.Modified));
-                        break;
-                    case EntityState.Deleted:
-                        _logger.LogTrace("Deleting {Name}: {Entity}", e.Metadata.Name, entity);
-                        if (entity is IDbEntityBeforeDelete beforeDelete)
-                        {
-                            await beforeDelete.BeforeDeleteAsync(cancellationToken);
-                            cancellationToken.ThrowIfCancellationRequested();
-                        }
-                        toSave.Add((Entry: e, OldState: EntityState.Deleted));
-                        continue;
-                    default:
-                        continue;
+                    object entity = e.Entity;
+                    switch (e.State)
+                    {
+                        case EntityState.Added:
+                            _logger.LogTrace("Inserting {Name}: {Entity}", e.Metadata.Name, entity);
+                            if (entity is IDbEntity adding)
+                                OnBeforeAddEntity(adding, cancellationToken);
+                            if (entity is IDbEntityBeforeSave beforeSave)
+                                await beforeSave.BeforeSaveAsync(cancellationToken);
+                            if (entity is IDbEntityBeforeInsert beforeInsert)
+                                await beforeInsert.BeforeInsertAsync(cancellationToken);
+                            toSave.Add((Entry: e, OldState: EntityState.Added));
+                            break;
+                        case EntityState.Modified:
+                            _logger.LogTrace("Saving {Name}: {Entity}", e.Metadata.Name, entity);
+                            if (entity is IDbEntity saving)
+                                OnBeforeSaveChanges(saving, cancellationToken);
+                            if (entity is IDbEntityBeforeSave beforeSave2)
+                                await beforeSave2.BeforeSaveAsync(cancellationToken);
+                            if (entity is IDbEntityBeforeSaveChanges beforeSaveChanges)
+                                await beforeSaveChanges.BeforeSaveChangesAsync(cancellationToken);
+                            toSave.Add((Entry: e, OldState: EntityState.Modified));
+                            break;
+                        case EntityState.Deleted:
+                            _logger.LogTrace("Deleting {Name}: {Entity}", e.Metadata.Name, entity);
+                            if (entity is IDbEntityBeforeDelete beforeDelete)
+                            {
+                                await beforeDelete.BeforeDeleteAsync(cancellationToken);
+                                cancellationToken.ThrowIfCancellationRequested();
+                            }
+                            toSave.Add((Entry: e, OldState: EntityState.Deleted));
+                            continue;
+                        default:
+                            continue;
+                    }
+                    cancellationToken.ThrowIfCancellationRequested();
+                    _logger.LogTrace("Validating {Name}: {Entity}", e.Metadata.Name, entity);
+                    ValidationContext validationContext = new(entity, new DbContextServiceProvider(this, e), null);
+                    Validator.ValidateObject(entity, validationContext, true);
                 }
                 cancellationToken.ThrowIfCancellationRequested();
-                _logger.LogTrace("Validating {Name}: {Entity}", e.Metadata.Name, entity);
-                ValidationContext validationContext = new(entity, new DbContextServiceProvider(this, e), null);
-                Validator.ValidateObject(entity, validationContext, true);
+                _logger.LogTrace("Returning {Count} items", toSave.Count);
+                return toSave.ToArray();
             }
-            cancellationToken.ThrowIfCancellationRequested();
-            _logger.LogTrace("Returning {Count} items", toSave.Count);
-            return toSave.ToArray();
         }
 
         private async Task RaiseAfterSaveAsync((EntityEntry Entry, EntityState OldState)[] saved, CancellationToken cancellationToken = default)
         {
-            using IDisposable scope = _logger.BeginScope(nameof(RaiseAfterSaveAsync));
-            cancellationToken.ThrowIfCancellationRequested();
-            foreach ((EntityEntry Entry, EntityState OldState) e in saved)
+            using (_logger.BeginScope(nameof(RaiseAfterSaveAsync)))
             {
-                EntityEntry entry = e.Entry;
-                object entity = entry.Entity;
-                switch (e.OldState)
-                {
-                    case EntityState.Added:
-                        if (entry.State != EntityState.Unchanged)
-                            _logger.LogWarning("Failed to insert {Name}: State = {State}; Entity = {Entity}", entry.Metadata.Name, entry.State, entity);
-                        else
-                        {
-                            _logger.LogTrace("Inserted {Name}: {Entity}", entry.Metadata.Name, entity);
-                            if (entity is IDbEntityAfterSave afterSave)
-                                await afterSave.AfterSaveAsync(cancellationToken);
-                            if (entity is IDbEntityAfterInsert afterInsert)
-                                await afterInsert.AfterInsertAsync(cancellationToken);
-                        }
-                        break;
-                    case EntityState.Modified:
-                        if (entry.State != EntityState.Unchanged)
-                            _logger.LogWarning("Failed to update {Name}: State = {State}; Entity = {Entity}", entry.Metadata.Name, entry.State, entity);
-                        else
-                        {
-                            _logger.LogTrace("Updated {Name}: {Entity}", entry.Metadata.Name, entity);
-                            if (entity is IDbEntityAfterSave afterSave2)
-                                await afterSave2.AfterSaveAsync(cancellationToken);
-                            if (entity is IDbEntityAfterSaveChanges afterSaveChanges)
-                                await afterSaveChanges.AfterSaveChangesAsync(cancellationToken);
-                        }
-                        break;
-                    case EntityState.Deleted:
-                        if (entry.State != EntityState.Detached)
-                            _logger.LogWarning("Failed to delete {Name}: State = {State}; Entity = {Entity}", entry.Metadata.Name, entry.State, entity);
-                        else
-                        {
-                            _logger.LogTrace("Deleted {Name}: {Entity}", entry.Metadata.Name, entity);
-                            if (entity is IDbEntityAfterDelete afterDelete)
-                                await afterDelete.AfterDeleteAsync(cancellationToken);
-                        }
-                        break;
-                    default:
-                        continue;
-                }
-                if (entity is IDbEntity dbEntity)
-                    dbEntity.AcceptChanges();
                 cancellationToken.ThrowIfCancellationRequested();
+                foreach ((EntityEntry Entry, EntityState OldState) e in saved)
+                {
+                    EntityEntry entry = e.Entry;
+                    object entity = entry.Entity;
+                    switch (e.OldState)
+                    {
+                        case EntityState.Added:
+                            if (entry.State != EntityState.Unchanged)
+                                _logger.LogWarning("Failed to insert {Name}: State = {State}; Entity = {Entity}", entry.Metadata.Name, entry.State, entity);
+                            else
+                            {
+                                _logger.LogTrace("Inserted {Name}: {Entity}", entry.Metadata.Name, entity);
+                                if (entity is IDbEntityAfterSave afterSave)
+                                    await afterSave.AfterSaveAsync(cancellationToken);
+                                if (entity is IDbEntityAfterInsert afterInsert)
+                                    await afterInsert.AfterInsertAsync(cancellationToken);
+                            }
+                            break;
+                        case EntityState.Modified:
+                            if (entry.State != EntityState.Unchanged)
+                                _logger.LogWarning("Failed to update {Name}: State = {State}; Entity = {Entity}", entry.Metadata.Name, entry.State, entity);
+                            else
+                            {
+                                _logger.LogTrace("Updated {Name}: {Entity}", entry.Metadata.Name, entity);
+                                if (entity is IDbEntityAfterSave afterSave2)
+                                    await afterSave2.AfterSaveAsync(cancellationToken);
+                                if (entity is IDbEntityAfterSaveChanges afterSaveChanges)
+                                    await afterSaveChanges.AfterSaveChangesAsync(cancellationToken);
+                            }
+                            break;
+                        case EntityState.Deleted:
+                            if (entry.State != EntityState.Detached)
+                                _logger.LogWarning("Failed to delete {Name}: State = {State}; Entity = {Entity}", entry.Metadata.Name, entry.State, entity);
+                            else
+                            {
+                                _logger.LogTrace("Deleted {Name}: {Entity}", entry.Metadata.Name, entity);
+                                if (entity is IDbEntityAfterDelete afterDelete)
+                                    await afterDelete.AfterDeleteAsync(cancellationToken);
+                            }
+                            break;
+                        default:
+                            continue;
+                    }
+                    if (entity is IDbEntity dbEntity)
+                        dbEntity.AcceptChanges();
+                    cancellationToken.ThrowIfCancellationRequested();
+                }
             }
         }
 
@@ -186,44 +190,52 @@ namespace FsInfoCat
 
         public override int SaveChanges()
         {
-            using IDisposable scope = _logger.BeginScope("{MethodName}()", nameof(SaveChanges));
-            (EntityEntry Entry, EntityState OldState)[] changes = RaiseBeforeSaveAsync().Result;
-            int returnValue = base.SaveChanges();
-            RaiseAfterSaveAsync(changes).Wait();
-            _logger.LogTrace("Returning {ReturnValue}", returnValue);
-            return returnValue;
+            using (_logger.BeginScope("{MethodName}()", nameof(SaveChanges)))
+            {
+                (EntityEntry Entry, EntityState OldState)[] changes = RaiseBeforeSaveAsync().Result;
+                int returnValue = base.SaveChanges();
+                RaiseAfterSaveAsync(changes).Wait();
+                _logger.LogTrace("Returning {ReturnValue}", returnValue);
+                return returnValue;
+            }
         }
 
         public override int SaveChanges(bool acceptAllChangesOnSuccess)
         {
-            using IDisposable scope = _logger.BeginScope($"{{MethodName}}({nameof(acceptAllChangesOnSuccess)}: {{{nameof(acceptAllChangesOnSuccess)}}})", nameof(SaveChanges),
-                acceptAllChangesOnSuccess);
-            (EntityEntry Entry, EntityState OldState)[] changes = RaiseBeforeSaveAsync().Result;
-            int returnValue = base.SaveChanges(acceptAllChangesOnSuccess);
-            RaiseAfterSaveAsync(changes).Wait();
-            _logger.LogTrace("Returning {ReturnValue}", returnValue);
-            return returnValue;
+            using (_logger.BeginScope($"{{MethodName}}({nameof(acceptAllChangesOnSuccess)}: {{{nameof(acceptAllChangesOnSuccess)}}})", nameof(SaveChanges),
+                acceptAllChangesOnSuccess))
+            {
+                (EntityEntry Entry, EntityState OldState)[] changes = RaiseBeforeSaveAsync().Result;
+                int returnValue = base.SaveChanges(acceptAllChangesOnSuccess);
+                RaiseAfterSaveAsync(changes).Wait();
+                _logger.LogTrace("Returning {ReturnValue}", returnValue);
+                return returnValue;
+            }
         }
 
         public override async Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)
         {
-            using IDisposable scope = _logger.BeginScope($"{{MethodName}}({nameof(acceptAllChangesOnSuccess)}: {{{nameof(acceptAllChangesOnSuccess)}}})", nameof(SaveChangesAsync),
-                acceptAllChangesOnSuccess);
-            (EntityEntry Entry, EntityState OldState)[] changes = await RaiseBeforeSaveAsync(cancellationToken);
-            int returnValue = await base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
-            await RaiseAfterSaveAsync(changes, cancellationToken);
-            _logger.LogTrace("Returning {ReturnValue}", returnValue);
-            return returnValue;
+            using (_logger.BeginScope($"{{MethodName}}({nameof(acceptAllChangesOnSuccess)}: {{{nameof(acceptAllChangesOnSuccess)}}})", nameof(SaveChangesAsync),
+                acceptAllChangesOnSuccess))
+            {
+                (EntityEntry Entry, EntityState OldState)[] changes = await RaiseBeforeSaveAsync(cancellationToken);
+                int returnValue = await base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
+                await RaiseAfterSaveAsync(changes, cancellationToken);
+                _logger.LogTrace("Returning {ReturnValue}", returnValue);
+                return returnValue;
+            }
         }
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
-            using IDisposable scope = _logger.BeginScope("{MethodName}()", nameof(SaveChangesAsync));
-            (EntityEntry Entry, EntityState OldState)[] changes = await RaiseBeforeSaveAsync(cancellationToken);
-            int returnValue = await base.SaveChangesAsync(cancellationToken);
-            await RaiseAfterSaveAsync(changes, cancellationToken);
-            _logger.LogTrace("Returning {ReturnValue}", returnValue);
-            return returnValue;
+            using (_logger.BeginScope("{MethodName}()", nameof(SaveChangesAsync)))
+            {
+                (EntityEntry Entry, EntityState OldState)[] changes = await RaiseBeforeSaveAsync(cancellationToken);
+                int returnValue = await base.SaveChangesAsync(cancellationToken);
+                await RaiseAfterSaveAsync(changes, cancellationToken);
+                _logger.LogTrace("Returning {ReturnValue}", returnValue);
+                return returnValue;
+            }
         }
 
         protected abstract IEnumerable<IComparison> GetGenericComparisons();

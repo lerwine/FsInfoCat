@@ -42,8 +42,8 @@ namespace FsInfoCat
 
         protected void RaisePropertyChanged<T>(T oldValue, T newValue, [CallerMemberName] string propertyName = null)
         {
-            using var scope = _logger.BeginScope("Property {propertyName} changed", propertyName);
-            OnPropertyChanged(new PropertyValueChangedEventArgs(propertyName, oldValue, newValue));
+            using (_logger.BeginScope("Property {propertyName} changed", propertyName))
+                OnPropertyChanged(new PropertyValueChangedEventArgs(propertyName, oldValue, newValue));
         }
     }
 }
