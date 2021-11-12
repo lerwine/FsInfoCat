@@ -245,9 +245,8 @@ namespace FsInfoCat.Desktop.ViewModel.Filter
         public CrawlStatusOptions()
         {
             ObservableCollection<CrawlStatusItemVM<TEntity>> backingOptionItems = new();
-            foreach (CrawlStatus status in Enum.GetValues<CrawlStatus>())
+            foreach (CrawlStatusItemVM<TEntity> item in Enum.GetValues<CrawlStatus>().Select(s => new CrawlStatusItemVM<TEntity>(s)))
             {
-                CrawlStatusItemVM<TEntity> item = new(status);
                 SetOwner(item, this);
                 backingOptionItems.Add(item);
             }
