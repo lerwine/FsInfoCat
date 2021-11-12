@@ -70,14 +70,9 @@ namespace FsInfoCat.Desktop.LocalData.Volumes
             return new(null, true);
         }
 
-        private EnumChoiceItem<VolumeStatus> FromListingOptions(ListingOptions options)
-        {
-            if (options.Status.HasValue)
-                return StatusFilterOption.Choices.FirstOrDefault(o => o.Value == options.Status);
-            if (options.ShowActiveOnly.HasValue)
-                return options.ShowActiveOnly.Value ? _activeOption : _inactiveOption;
-            return _allOption;
-        }
+        private EnumChoiceItem<VolumeStatus> FromListingOptions(ListingOptions options) => options.Status.HasValue
+                ? StatusFilterOption.Choices.FirstOrDefault(o => o.Value == options.Status)
+                : options.ShowActiveOnly.HasValue ? options.ShowActiveOnly.Value ? _activeOption : _inactiveOption : _allOption;
 
         protected override IAsyncJob ReloadAsync(ListingOptions options)
         {
@@ -87,11 +82,11 @@ namespace FsInfoCat.Desktop.LocalData.Volumes
 
         void INavigatedToNotifiable.OnNavigatedTo() => ReloadAsync(_currentOptions);
 
-        protected override bool EntityMatchesCurrentFilter([DisallowNull] VolumeListItemWithFileSystem entity) => _currentOptions.Status.HasValue ? entity.Status == _currentOptions.Status.Value : entity.Status switch
+        protected override bool EntityMatchesCurrentFilter([DisallowNull] VolumeListItemWithFileSystem entity) => _currentOptions.Status.HasValue ? entity.Status == _currentOptions.Status.Value : (!_currentOptions.ShowActiveOnly.HasValue || entity.Status switch
         {
             VolumeStatus.Controlled or VolumeStatus.AccessError or VolumeStatus.Offline => _currentOptions.ShowActiveOnly.Value,
             _ => !_currentOptions.ShowActiveOnly.Value,
-        };
+        });
 
 
         protected override IQueryable<VolumeListItemWithFileSystem> GetQueryableListing(ListingOptions options, [DisallowNull] LocalDbContext dbContext,

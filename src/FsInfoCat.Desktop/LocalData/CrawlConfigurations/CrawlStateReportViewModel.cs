@@ -152,7 +152,7 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
         {
             _logger.LogDebug("Invoked {MethodName}(oldValue: {oldValue}, newValue: {newValue})", nameof(OnReportOptionsPropertyChanged), oldValue, newValue);
             foreach (ViewModel.Filter.Filter<CrawlConfigReportItem> item in _distinctItems.Where(i => ReferenceEquals(this, GetOwner(i))))
-                    SetOwner(item, null);
+                SetOwner(item, null);
             _distinctItems.Clear();
             if (oldValue is not null)
                 oldValue.CollectionChanged -= ReportOptions_CollectionChanged;
@@ -214,7 +214,7 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
                     break;
                 case System.Collections.Specialized.NotifyCollectionChangedAction.Reset:
                     foreach (ViewModel.Filter.Filter<CrawlConfigReportItem> item in _distinctItems.Where(i => ReferenceEquals(this, GetOwner(i))))
-                            SetOwner(item, null);
+                        SetOwner(item, null);
                     _distinctItems.Clear();
                     break;
                 case System.Collections.Specialized.NotifyCollectionChangedAction.Remove:
@@ -527,8 +527,13 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
                     }
                     else
                         crawlConfiguration = await dbContext.Entry(root).GetRelatedReferenceAsync(d => d.CrawlConfiguration, statusListener.CancellationToken);
-                    Guid id = root.Id;
-                    selectedRoot = await dbContext.SubdirectoryListingWithAncestorNames.FirstOrDefaultAsync(d => d.Id == id, statusListener.CancellationToken);
+                    if (root is null)
+                        selectedRoot = null;
+                    else
+                    {
+                        Guid id = root.Id;
+                        selectedRoot = await dbContext.SubdirectoryListingWithAncestorNames.FirstOrDefaultAsync(d => d.Id == id, statusListener.CancellationToken);
+                    }
                 }
                 if (crawlConfiguration is not null)
                 {

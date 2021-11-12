@@ -85,12 +85,7 @@ namespace FsInfoCat.Local
             set
             {
                 if (_target.SetValue(value))
-                {
-                    if (value is null)
-                        _ = _targetId.SetValue(Guid.Empty);
-                    else
-                        _ = _targetId.SetValue(value.Id);
-                }
+                    _targetId.SetValue(value?.Id ?? Guid.Empty);
             }
         }
 

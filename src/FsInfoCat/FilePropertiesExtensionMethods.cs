@@ -39,12 +39,17 @@ namespace FsInfoCat
 
         public static IGPSProperties NullIfPropertiesEmpty(this IGPSProperties properties) => properties.IsNullOrAllPropertiesEmpty() ? null : properties;
 
-        public static bool IsNullOrAllPropertiesEmpty(this IGPSProperties properties) => properties is null || (string.IsNullOrWhiteSpace(properties.AreaInformation) &&
-            string.IsNullOrWhiteSpace(properties.LatitudeRef) && string.IsNullOrWhiteSpace(properties.LongitudeRef) &&
-            string.IsNullOrWhiteSpace(properties.MeasureMode) && string.IsNullOrWhiteSpace(properties.ProcessingMethod) &&
-            !(properties.LatitudeDegrees.HasValue || properties.LatitudeMinutes.HasValue || properties.LatitudeSeconds.HasValue ||
-            properties.LongitudeDegrees.HasValue || properties.LongitudeMinutes.HasValue || properties.LongitudeSeconds.HasValue) &&
-            (properties.VersionID is null || properties.VersionID.Count == 0));
+        public static bool IsNullOrAllPropertiesEmpty(this IGPSProperties properties)
+        {
+            if (properties is null)
+                return true;
+            if (properties.LatitudeDegrees.HasValue || properties.LatitudeMinutes.HasValue || properties.LatitudeSeconds.HasValue || properties.LongitudeDegrees.HasValue || properties.LongitudeMinutes.HasValue || properties.LongitudeSeconds.HasValue)
+                return false;
+            if (string.IsNullOrWhiteSpace(properties.AreaInformation) && string.IsNullOrWhiteSpace(properties.LatitudeRef) && string.IsNullOrWhiteSpace(properties.LongitudeRef) &&
+                string.IsNullOrWhiteSpace(properties.MeasureMode) && string.IsNullOrWhiteSpace(properties.ProcessingMethod))
+                return properties.VersionID is null || properties.VersionID.Count == 0;
+            return false;
+        }
 
         public static IImageProperties NullIfPropertiesEmpty(this IImageProperties properties) => properties.IsNullOrAllPropertiesEmpty() ? null : properties;
 

@@ -53,12 +53,11 @@ namespace FsInfoCat.Desktop.Converters
         {
             lock (_maps)
             {
-                if (!_maps.ContainsKey(oldValue))
-                    _maps.Add(oldValue, _map);
-                if (_maps.ContainsKey(newValue))
-                    _map = _maps[newValue];
+                if (_maps.ContainsKey(oldValue))
+                    _map = _maps.TryGetValue(newValue, out Dictionary<T, string> d) ? d : (new());
                 else
-                    _map = new();
+                    _maps.Add(oldValue, _map);
+
             }
         }
 
@@ -88,9 +87,7 @@ namespace FsInfoCat.Desktop.Converters
             string t;
             lock (_maps)
             {
-                if (_map.ContainsKey(value))
-                    t = _map[value];
-                else
+                if (!_map.TryGetValue(value, out t))
                 {
                     if (_hasFlags)
                     {

@@ -61,10 +61,7 @@ namespace FsInfoCat.Local
             IDRMProperties currentProperties = await fileDetailProvider.GetDRMPropertiesAsync(cancellationToken);
             if (FilePropertiesComparer.Equals(oldPropertySet, currentProperties))
                 return;
-            if (currentProperties.IsNullOrAllPropertiesEmpty())
-                entity.DRMProperties = null;
-            else
-                entity.DRMProperties = await dbContext.GetMatchingAsync(currentProperties, cancellationToken);
+            entity.DRMProperties = currentProperties.IsNullOrAllPropertiesEmpty() ? null : await dbContext.GetMatchingAsync(currentProperties, cancellationToken);
             cancellationToken.ThrowIfCancellationRequested();
             if (oldPropertySet is null)
                 return;

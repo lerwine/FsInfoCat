@@ -71,10 +71,7 @@ namespace FsInfoCat.Local
             IPhotoProperties currentProperties = await fileDetailProvider.GetPhotoPropertiesAsync(cancellationToken);
             if (FilePropertiesComparer.Equals(oldPropertySet, currentProperties))
                 return;
-            if (currentProperties.IsNullOrAllPropertiesEmpty())
-                entity.PhotoProperties = null;
-            else
-                entity.PhotoProperties = await dbContext.GetMatchingAsync(currentProperties, cancellationToken);
+            entity.PhotoProperties = currentProperties.IsNullOrAllPropertiesEmpty() ? null : await dbContext.GetMatchingAsync(currentProperties, cancellationToken);
             cancellationToken.ThrowIfCancellationRequested();
             if (oldPropertySet is null)
                 return;

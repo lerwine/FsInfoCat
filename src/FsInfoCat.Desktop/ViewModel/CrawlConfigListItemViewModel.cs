@@ -274,7 +274,7 @@ namespace FsInfoCat.Desktop.ViewModel
         {
             displayName = displayName.AsWsNormalizedOrEmpty();
             name = name.AsWsNormalizedOrEmpty();
-            string idStr = identifier.IsEmpty() ? null : identifier.SerialNumber.HasValue ? VolumeIdentifier.ToVsnString(identifier.SerialNumber.Value, true) :
+            string idStr = identifier.IsEmpty() ? "" : identifier.SerialNumber.HasValue ? VolumeIdentifier.ToVsnString(identifier.SerialNumber.Value, true) :
                 identifier.UUID.HasValue ? identifier.UUID.Value.ToString("d") : identifier.Location.IsUnc ? identifier.Location.LocalPath : identifier.Location.ToString();
             if (name.Length > 0 && name.Equals(displayName, StringComparison.InvariantCultureIgnoreCase))
             {
@@ -284,11 +284,10 @@ namespace FsInfoCat.Desktop.ViewModel
             }
             else if (idStr.Length > 0 && (idStr.Equals(displayName, StringComparison.InvariantCultureIgnoreCase) || idStr.Equals(name, StringComparison.InvariantCultureIgnoreCase)))
                 idStr = "";
-            if (displayName.Length > 0)
-                VolumeShortDescription = (name.Length > 0) ? ((idStr.Length > 0) ? $"{displayName} ({name} / {idStr})" : $"{displayName} ({name})") :
-                    (idStr.Length > 0) ? $"{displayName} ({idStr})" : displayName;
-            else
-                VolumeShortDescription = (name.Length > 0) ? ((idStr.Length > 0) ? $"{name} ({idStr})" : name) : idStr;
+            VolumeShortDescription = displayName.Length > 0
+                ? (name.Length > 0) ? ((idStr.Length > 0) ? $"{displayName} ({name} / {idStr})" : $"{displayName} ({name})") :
+                    (idStr.Length > 0) ? $"{displayName} ({idStr})" : displayName
+                : (name.Length > 0) ? ((idStr.Length > 0) ? $"{name} ({idStr})" : name) : idStr;
         }
 
         #endregion

@@ -37,14 +37,11 @@ namespace FsInfoCat
         {
             Type type = typeof(T);
             if (type.IsValueType)
-            {
-                if (type.IsGenericType && typeof(Nullable<>).Equals(type.GetGenericTypeDefinition()))
+                Default = type.IsGenericType && typeof(Nullable<>).Equals(type.GetGenericTypeDefinition())
 #pragma warning disable CS8604 // Possible null reference argument - preceding condition ensures GetUnderlyingType will not return null.
-                    Default = (Coersion<T>)Activator.CreateInstance(typeof(NullableCoersion<>).MakeGenericType(Nullable.GetUnderlyingType(type)));
+                    ? (Coersion<T>)Activator.CreateInstance(typeof(NullableCoersion<>).MakeGenericType(Nullable.GetUnderlyingType(type)))
+                    : (Coersion<T>)Activator.CreateInstance(typeof(ValueCoersion<>).MakeGenericType(type));
 #pragma warning restore CS8604 // Possible null reference argument.
-                else
-                    Default = (Coersion<T>)Activator.CreateInstance(typeof(ValueCoersion<>).MakeGenericType(type));
-            }
             else if (type.IsArray && type.GetArrayRank() == 1)
             {
                 if (type.Equals(typeof(byte[])))

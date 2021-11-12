@@ -134,11 +134,8 @@ namespace FsInfoCat.Local
             Guid id = Id;
             using IServiceScope serviceScope = validationContext.CreateScope();
             using LocalDbContext dbContext = serviceScope.ServiceProvider.GetService<LocalDbContext>();
-            if (dbContext is not null)
-            {
-                if (dbContext.FileSystems.Any(fs => id != fs.Id && fs.DisplayName == displayName))
-                    results.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_DuplicateDisplayName, new string[] { nameof(DisplayName) }));
-            }
+            if (dbContext is not null && dbContext.FileSystems.Any(fs => id != fs.Id && fs.DisplayName == displayName))
+                results.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_DuplicateDisplayName, new string[] { nameof(DisplayName) }));
         }
 
         IEnumerable<Guid> IIdentityReference.GetIdentifiers()

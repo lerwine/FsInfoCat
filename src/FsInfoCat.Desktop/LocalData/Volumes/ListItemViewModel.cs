@@ -72,13 +72,9 @@ namespace FsInfoCat.Desktop.LocalData.Volumes
 
         public string IdentifierDisplayText { get => GetValue(IdentifierDisplayTextProperty) as string; private set => SetValue(IdentifierDisplayTextPropertyKey, value); }
 
-        private void UpdateIdentifierDisplayText(string volumeName, VolumeIdentifier identifier)
-        {
-            if (string.IsNullOrWhiteSpace(volumeName) || !(identifier.SerialNumber.HasValue  || identifier.UUID.HasValue))
-                IdentifierDisplayText = VolumeIdentifierToStringConverter.Convert(identifier);
-            else
-                IdentifierDisplayText = identifier.IsEmpty() ? volumeName : $"v{volumeName} ({VolumeIdentifierToStringConverter.Convert(identifier)})";
-        }
+        private void UpdateIdentifierDisplayText(string volumeName, VolumeIdentifier identifier) => IdentifierDisplayText = string.IsNullOrWhiteSpace(volumeName) || !(identifier.SerialNumber.HasValue || identifier.UUID.HasValue)
+                ? VolumeIdentifierToStringConverter.Convert(identifier)
+                : identifier.IsEmpty() ? volumeName : $"v{volumeName} ({VolumeIdentifierToStringConverter.Convert(identifier)})";
 
         #endregion
         #region SynchronizeNow Command Property Members

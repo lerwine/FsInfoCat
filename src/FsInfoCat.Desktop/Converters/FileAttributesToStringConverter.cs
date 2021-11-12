@@ -56,8 +56,8 @@ namespace FsInfoCat.Desktop.Converters
             string t;
             lock (_map)
             {
-                if (_map.ContainsKey(value))
-                    return _map[value];
+                if (_map.TryGetValue(value, out string s))
+                    return s;
                 using IEnumerator<string> enumerator = GetDisplayText(value).GetEnumerator();
                 if (enumerator.MoveNext())
                 {

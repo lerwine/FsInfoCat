@@ -65,10 +65,7 @@ namespace FsInfoCat.Local
             IDocumentProperties currentProperties = await fileDetailProvider.GetDocumentPropertiesAsync(cancellationToken);
             if (FilePropertiesComparer.Equals(oldPropertySet, currentProperties))
                 return;
-            if (currentProperties.IsNullOrAllPropertiesEmpty())
-                entity.DocumentProperties = null;
-            else
-                entity.DocumentProperties = await dbContext.GetMatchingAsync(currentProperties, cancellationToken);
+            entity.DocumentProperties = currentProperties.IsNullOrAllPropertiesEmpty() ? null : await dbContext.GetMatchingAsync(currentProperties, cancellationToken);
             cancellationToken.ThrowIfCancellationRequested();
             if (oldPropertySet is null)
                 return;

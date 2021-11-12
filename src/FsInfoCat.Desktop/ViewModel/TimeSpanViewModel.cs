@@ -267,10 +267,9 @@ namespace FsInfoCat.Desktop.ViewModel
 
         private void OnComponentValueChanged(int? days, int? hours, int? minutes, int? seconds, int? milliseconds)
         {
-            if (days.HasValue || hours.HasValue || minutes.HasValue)
-                _pendingResultValueChange = new TimeSpan(days ?? 0, hours ?? 0, minutes ?? 0, seconds ?? 0, milliseconds ?? 0);
-            else
-                _pendingResultValueChange = null;
+            _pendingResultValueChange = days.HasValue || hours.HasValue || minutes.HasValue
+                ? (TimeSpan?)new TimeSpan(days ?? 0, hours ?? 0, minutes ?? 0, seconds ?? 0, milliseconds ?? 0)
+                : null;
             InputValue = _pendingResultValueChange;
         }
 

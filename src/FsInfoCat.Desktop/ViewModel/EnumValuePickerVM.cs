@@ -108,7 +108,7 @@ namespace FsInfoCat.Desktop.ViewModel
             TEnum? currentValue = SelectedItem?.Value;
             if (newValue.HasValue)
             {
-                if (newValue.HasValue && newValue.Value.Equals(currentValue.Value))
+                if (newValue.Value.Equals(currentValue.Value))
                     return;
                 for (int i = 0; i < _backingChoices.Count; i++)
                 {
@@ -152,16 +152,14 @@ namespace FsInfoCat.Desktop.ViewModel
             SetValue(ChoicesPropertyKey, new ReadOnlyObservableCollection<EnumChoiceItem<TEnum>>(_backingChoices));
             if (noValueDisplayNames is not null && noValueDisplayNames.Length > 0)
                 _backingChoices.Add(new(noValueDisplayNames[0]));
-            foreach (TEnum value in Enum.GetValues<TEnum>())
+            foreach (EnumChoiceItem<TEnum> item in Enum.GetValues<TEnum>().Select(e => new EnumChoiceItem<TEnum>(e)))
             {
-                EnumChoiceItem<TEnum> item = new(value);
                 SetEnumValuePickerVM(item, this);
                 _backingChoices.Add(item);
             }
             if (noValueDisplayNames is not null && noValueDisplayNames.Length > 1)
-                foreach (string name in noValueDisplayNames.Skip(1))
+                foreach (EnumChoiceItem<TEnum> item in noValueDisplayNames.Skip(1).Select(n => new EnumChoiceItem<TEnum>(n)))
                 {
-                    EnumChoiceItem<TEnum> item = new(name);
                     SetEnumValuePickerVM(item, this);
                     _backingChoices.Add(item);
                 }

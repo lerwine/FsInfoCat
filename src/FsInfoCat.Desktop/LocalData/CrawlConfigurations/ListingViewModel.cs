@@ -152,7 +152,7 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
         }
 
         protected override bool EntityMatchesCurrentFilter([DisallowNull] CrawlConfigListItem entity) => _currentStatusOptions.Status.HasValue ?
-            (entity.StatusValue == _currentStatusOptions.Status.Value && !_currentStatusOptions.IsScheduled.HasValue || (entity.NextScheduledStart is null) == _currentStatusOptions.IsScheduled.Value) :
+            (entity.StatusValue == _currentStatusOptions.Status.Value && (!_currentStatusOptions.IsScheduled.HasValue || (entity.NextScheduledStart is null) == _currentStatusOptions.IsScheduled.Value)) :
             (_currentStatusOptions.ShowAll || entity.StatusValue switch
             {
                 CrawlStatus.Completed or CrawlStatus.Disabled or CrawlStatus.InProgress or CrawlStatus.NotRunning => true,
@@ -166,17 +166,15 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
             if (options.Status.HasValue)
             {
                 CrawlStatus status = options.Status.Value;
-                if (options.IsScheduled.HasValue)
-                {
-                    if (options.IsScheduled.Value)
-                        return dbContext.CrawlConfigListing.Where(c => c.StatusValue == status && c.NextScheduledStart != null);
-                    return dbContext.CrawlConfigListing.Where(c => c.StatusValue == status && c.NextScheduledStart == null);
-                }
-                return dbContext.CrawlConfigListing.Where(c => c.StatusValue == status);
+                return options.IsScheduled.HasValue
+                    ? options.IsScheduled.Value
+                        ? dbContext.CrawlConfigListing.Where(c => c.StatusValue == status && c.NextScheduledStart != null)
+                        : dbContext.CrawlConfigListing.Where(c => c.StatusValue == status && c.NextScheduledStart == null)
+                    : dbContext.CrawlConfigListing.Where(c => c.StatusValue == status);
             }
-            if (options.ShowAll)
-                return dbContext.CrawlConfigListing;
-            return dbContext.CrawlConfigListing.Where(c => c.StatusValue != CrawlStatus.Completed && c.StatusValue != CrawlStatus.Disabled && c.StatusValue != CrawlStatus.InProgress &&
+            return options.ShowAll
+                ? dbContext.CrawlConfigListing
+                : dbContext.CrawlConfigListing.Where(c => c.StatusValue != CrawlStatus.Completed && c.StatusValue != CrawlStatus.Disabled && c.StatusValue != CrawlStatus.InProgress &&
                 c.StatusValue != CrawlStatus.NotRunning);
         }
 

@@ -60,10 +60,7 @@ namespace FsInfoCat.Local
             IRecordedTVProperties currentProperties = await fileDetailProvider.GetRecordedTVPropertiesAsync(cancellationToken);
             if (FilePropertiesComparer.Equals(oldPropertySet, currentProperties))
                 return;
-            if (currentProperties.IsNullOrAllPropertiesEmpty())
-                entity.RecordedTVProperties = null;
-            else
-                entity.RecordedTVProperties = await dbContext.GetMatchingAsync(currentProperties, cancellationToken);
+            entity.RecordedTVProperties = currentProperties.IsNullOrAllPropertiesEmpty() ? null : await dbContext.GetMatchingAsync(currentProperties, cancellationToken);
             cancellationToken.ThrowIfCancellationRequested();
             if (oldPropertySet is null)
                 return;

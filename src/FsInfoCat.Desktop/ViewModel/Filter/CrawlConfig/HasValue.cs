@@ -115,8 +115,25 @@ namespace FsInfoCat.Desktop.ViewModel.Filter.CrawlConfig
             return (be is null) ? binaryExpression : (binaryExpression is null) ? be : isExclusive ? LinqExpression.AndAlso(binaryExpression, be) : LinqExpression.OrElse(binaryExpression, be);
         }
 
-        public override bool IsMatch(CrawlConfigReportItem crawlConfiguration) => crawlConfiguration is not null && !((LastCrawlStart.HasValue && crawlConfiguration.LastCrawlStart.HasValue != LastCrawlStart.Value) ||
-            (LastCrawlEnd.HasValue && crawlConfiguration.LastCrawlEnd.HasValue != LastCrawlEnd.Value) || (NextScheduledStart.HasValue && crawlConfiguration.NextScheduledStart.HasValue != NextScheduledStart.Value) ||
-            (RescheduleInterval.HasValue && crawlConfiguration.RescheduleInterval.HasValue != RescheduleInterval.Value) || (AggregateDurations.HasValue && crawlConfiguration.AverageDuration.HasValue != AggregateDurations.Value));
+        public override bool IsMatch(CrawlConfigReportItem crawlConfiguration)
+        {
+            if (crawlConfiguration is null)
+                return false;
+
+            bool? b = LastCrawlStart;
+            if (b.HasValue && crawlConfiguration.LastCrawlStart.HasValue != b.Value)
+                return false;
+            b = LastCrawlEnd;
+            if (b.HasValue && crawlConfiguration.LastCrawlEnd.HasValue != b.Value)
+                return false;
+            b = NextScheduledStart;
+            if (b.HasValue && crawlConfiguration.NextScheduledStart.HasValue != b.Value)
+                return false;
+            b = RescheduleInterval;
+            if (b.HasValue && crawlConfiguration.RescheduleInterval.HasValue != b.Value)
+                return false;
+            b = AggregateDurations;
+            return b.HasValue && crawlConfiguration.AverageDuration.HasValue != b.Value;
+        }
     }
 }
