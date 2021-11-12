@@ -95,7 +95,7 @@ namespace FsInfoCat.Desktop.ViewModel.Filter
             IEnumerable enumerable = End.GetErrors(null);
             if (enumerable is string s && (s = s.NullIfWhiteSpaceOrNormalized()) is not null)
                 ErrorInfo.SetError(s, nameof(End));
-            else if (!enumerable.OfType<string>().AsWsNormalizedOrEmptyValues().Where(s => s.Length > 0).Any())
+            else if (!enumerable.OfType<string>().AsWsNormalizedOrEmptyValues().Any(s => s.Length > 0))
                 ErrorInfo.ClearErrors(nameof(End));
             else
                 ErrorInfo.SetErrors(nameof(End), enumerable.OfType<string>());
@@ -148,8 +148,8 @@ namespace FsInfoCat.Desktop.ViewModel.Filter
                 }
                 else
                     return end is null
-                        ? ((DateTime? StartTime, bool StartExclusive, DateTime? EndTime, bool EndExclusive, bool IncludesNull))(start.ToDateTime(), start.IsExclusive, null, false, start.IncludeNull)
-                        : ((DateTime? StartTime, bool StartExclusive, DateTime? EndTime, bool EndExclusive, bool IncludesNull))(start.ToDateTime(), start.IsExclusive, end.ToDateTime(), end.IsExclusive, start.IncludeNull || end.IncludeNull);
+                        ? (start.ToDateTime(), start.IsExclusive, null, false, start.IncludeNull)
+                        : (start.ToDateTime(), start.IsExclusive, end.ToDateTime(), end.IsExclusive, start.IncludeNull || end.IncludeNull);
             }
             return (null, false, null, false, true);
         }
@@ -202,12 +202,10 @@ namespace FsInfoCat.Desktop.ViewModel.Filter
             }
             BinaryExpression binaryExpression;
             if (start.IncludeNull)
-            {
                 binaryExpression = canBeNull
                     ? LinqExpression.OrElse(LinqExpression.Equal(memberExpression, LinqExpression.Constant(null)), start.IsExclusive ? LinqExpression.GreaterThan(nonNullMemberExpression, LinqExpression.Constant(start.ToDateTime())) :
                         LinqExpression.GreaterThanOrEqual(nonNullMemberExpression, LinqExpression.Constant(start.ToDateTime())))
                     : start.IsExclusive ? LinqExpression.GreaterThan(memberExpression, LinqExpression.Constant(start.ToDateTime())) : LinqExpression.GreaterThanOrEqual(memberExpression, LinqExpression.Constant(start.ToDateTime()));
-            }
             else binaryExpression = canBeNull
                 ? LinqExpression.AndAlso(LinqExpression.NotEqual(memberExpression, LinqExpression.Constant(null)), start.IsExclusive ? LinqExpression.GreaterThan(nonNullMemberExpression, LinqExpression.Constant(start.ToDateTime())) :
                         LinqExpression.GreaterThanOrEqual(nonNullMemberExpression, LinqExpression.Constant(start.ToDateTime())))
