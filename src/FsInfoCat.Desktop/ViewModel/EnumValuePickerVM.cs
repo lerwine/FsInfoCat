@@ -108,7 +108,7 @@ namespace FsInfoCat.Desktop.ViewModel
             TEnum? currentValue = SelectedItem?.Value;
             if (newValue.HasValue)
             {
-                if (newValue.HasValue && newValue.Value.Equals(currentValue.Value))
+                if (newValue.Value.Equals(currentValue.Value))
                     return;
                 for (int i = 0; i < _backingChoices.Count; i++)
                 {

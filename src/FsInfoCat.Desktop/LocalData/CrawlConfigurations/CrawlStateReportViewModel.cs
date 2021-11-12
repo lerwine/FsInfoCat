@@ -527,8 +527,13 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
                     }
                     else
                         crawlConfiguration = await dbContext.Entry(root).GetRelatedReferenceAsync(d => d.CrawlConfiguration, statusListener.CancellationToken);
-                    Guid id = root.Id;
-                    selectedRoot = await dbContext.SubdirectoryListingWithAncestorNames.FirstOrDefaultAsync(d => d.Id == id, statusListener.CancellationToken);
+                    if (root is null)
+                        selectedRoot = null;
+                    else
+                    {
+                        Guid id = root.Id;
+                        selectedRoot = await dbContext.SubdirectoryListingWithAncestorNames.FirstOrDefaultAsync(d => d.Id == id, statusListener.CancellationToken);
+                    }
                 }
                 if (crawlConfiguration is not null)
                 {

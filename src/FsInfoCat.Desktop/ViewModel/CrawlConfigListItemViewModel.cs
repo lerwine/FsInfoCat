@@ -274,7 +274,7 @@ namespace FsInfoCat.Desktop.ViewModel
         {
             displayName = displayName.AsWsNormalizedOrEmpty();
             name = name.AsWsNormalizedOrEmpty();
-            string idStr = identifier.IsEmpty() ? null : identifier.SerialNumber.HasValue ? VolumeIdentifier.ToVsnString(identifier.SerialNumber.Value, true) :
+            string idStr = identifier.IsEmpty() ? "" : identifier.SerialNumber.HasValue ? VolumeIdentifier.ToVsnString(identifier.SerialNumber.Value, true) :
                 identifier.UUID.HasValue ? identifier.UUID.Value.ToString("d") : identifier.Location.IsUnc ? identifier.Location.LocalPath : identifier.Location.ToString();
             if (name.Length > 0 && name.Equals(displayName, StringComparison.InvariantCultureIgnoreCase))
             {

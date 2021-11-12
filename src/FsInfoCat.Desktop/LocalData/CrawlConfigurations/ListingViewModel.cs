@@ -152,7 +152,7 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
         }
 
         protected override bool EntityMatchesCurrentFilter([DisallowNull] CrawlConfigListItem entity) => _currentStatusOptions.Status.HasValue ?
-            (entity.StatusValue == _currentStatusOptions.Status.Value && !_currentStatusOptions.IsScheduled.HasValue || (entity.NextScheduledStart is null) == _currentStatusOptions.IsScheduled.Value) :
+            (entity.StatusValue == _currentStatusOptions.Status.Value && (!_currentStatusOptions.IsScheduled.HasValue || (entity.NextScheduledStart is null) == _currentStatusOptions.IsScheduled.Value)) :
             (_currentStatusOptions.ShowAll || entity.StatusValue switch
             {
                 CrawlStatus.Completed or CrawlStatus.Disabled or CrawlStatus.InProgress or CrawlStatus.NotRunning => true,
