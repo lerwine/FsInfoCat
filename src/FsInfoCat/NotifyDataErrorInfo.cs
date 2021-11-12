@@ -38,14 +38,7 @@ namespace FsInfoCat
 
         bool INotifyDataErrorInfo.HasErrors => HasErrors();
 
-        public string this[string columnName]
-        {
-            get
-            {
-                lock (SyncRoot)
-                    return _lastValidationResults.ContainsKey(columnName) ? _lastValidationResults[columnName].JoinWithNewLines() : null;
-            }
-        }
+        public string this[string columnName] => _lastValidationResults.TryGetValue(columnName, out string[] a) ? a.JoinWithNewLines() : null;
 
         protected bool ClearError([DisallowNull] string propertyName)
         {
@@ -58,12 +51,7 @@ namespace FsInfoCat
             return true;
         }
 
-        IEnumerable INotifyDataErrorInfo.GetErrors(string propertyName)
-        {
-            if (_lastValidationResults.TryGetValue(propertyName, out string[] result))
-                return result;
-            return null;
-        }
+        IEnumerable INotifyDataErrorInfo.GetErrors(string propertyName) => _lastValidationResults.TryGetValue(propertyName, out string[] result) ? result : null;
 
         public bool HasErrors() => _lastValidationResults.Count > 0;
 
@@ -103,18 +91,18 @@ namespace FsInfoCat
                             {
                                 if (kvp.Key == args.PropertyName)
                                 {
-                                    if (_lastValidationResults.ContainsKey(args.PropertyName))
+                                    if (_lastValidationResults.TryGetValue(args.PropertyName, out string[] a))
                                     {
-                                        if (_lastValidationResults[args.PropertyName].OrderBy(t => t).SequenceEqual(kvp.Value.OrderBy(t => t)))
+                                        if (a.OrderBy(t => t).SequenceEqual(kvp.Value.OrderBy(t => t)))
                                             return false;
                                         _lastValidationResults[args.PropertyName] = kvp.Value;
                                     }
                                     else
                                         _lastValidationResults.Add(args.PropertyName, kvp.Value);
                                 }
-                                else if (_lastValidationResults.ContainsKey(args.PropertyName))
+                                else if (_lastValidationResults.TryGetValue(args.PropertyName, out string[] validationResults))
                                 {
-                                    if (_lastValidationResults[args.PropertyName].OrderBy(t => t).SequenceEqual(kvp.Value.OrderBy(t => t)))
+                                    if (validationResults.OrderBy(t => t).SequenceEqual(kvp.Value.OrderBy(t => t)))
                                         return false;
                                     _lastValidationResults[args.PropertyName] = kvp.Value;
                                 }
@@ -126,9 +114,8 @@ namespace FsInfoCat
                         {
                             changed = added.Where(kvp =>
                             {
-                                if (_lastValidationResults.ContainsKey(args.PropertyName))
+                                if (_lastValidationResults.TryGetValue(args.PropertyName, out string[] m))
                                 {
-                                    string[] m = _lastValidationResults[args.PropertyName];
                                     if (!kvp.Value.Any(v => !m.Contains(v)))
                                         return false;
                                     _lastValidationResults[args.PropertyName] = m.Concat(kvp.Value).Distinct().ToArray();
@@ -153,9 +140,9 @@ namespace FsInfoCat
         {
             lock (SyncRoot)
             {
-                if (_lastValidationResults.ContainsKey(propertyName))
+                if (_lastValidationResults.TryGetValue(propertyName, out string[] a))
                 {
-                    if (_lastValidationResults[propertyName].Length == 1 && _lastValidationResults[propertyName][0] == message)
+                    if (a.Length == 1 && a[0] == message)
                         return false;
                     _lastValidationResults[propertyName] = new string[] { propertyName };
                 }
