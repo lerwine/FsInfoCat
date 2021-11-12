@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat.Upstream
 {
+    /// <summary>
     /// Generic interface for the upstream (remote) FS InfoCat database context.
     /// Extends the <see cref="IDbContext" /> interface to represent the upstream (remote) database.
     /// </summary>
