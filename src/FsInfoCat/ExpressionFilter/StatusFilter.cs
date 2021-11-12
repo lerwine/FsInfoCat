@@ -81,8 +81,14 @@ namespace FsInfoCat.ExpressionFilter
                 yield return CrawlStatus.Disabled;
         }
 
-        public static bool AreSame(StatusFilter x, StatusFilter y) => (x is null) ? (y is null || !y.GetSelectedOptions().Any()) : (y is null) ? !x.GetSelectedOptions().Any() :
-            y is not null && (ReferenceEquals(x, y) || (x.GetSelectedOptions().Any() ? (x.IsExclusive == y.IsExclusive && x.GetSelectedOptions().SequenceEqual(y.GetSelectedOptions())) : !y.GetSelectedOptions().Any()));
+        public static bool AreSame(StatusFilter x, StatusFilter y)
+        {
+            if (x is null)
+                return y is null || !y.GetSelectedOptions().Any();
+            if (y is null)
+                return !x.GetSelectedOptions().Any();
+            return ReferenceEquals(x, y) || (x.GetSelectedOptions().Any() ? (x.IsExclusive == y.IsExclusive && x.GetSelectedOptions().SequenceEqual(y.GetSelectedOptions())) : !y.GetSelectedOptions().Any());
+        }
 
         public bool IsMatch(CrawlStatus statusValue) => IsExclusive ? !GetSelectedOptions().Contains(statusValue) : GetSelectedOptions().Contains(statusValue);
 

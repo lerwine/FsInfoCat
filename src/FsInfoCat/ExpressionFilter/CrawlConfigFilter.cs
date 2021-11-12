@@ -137,14 +137,32 @@ namespace FsInfoCat.ExpressionFilter
                 return false;
             Historical.Range crawlEnd = CrawlEnd;
             Scheduled.Range nextStart = NextCrawlStart;
-            StatusFilter crawlStatus;
-            DurationRange dr;
-            bool? b;
-            return (crawlEnd is null || crawlEnd.IsInRange(item.LastCrawlEnd)) && (nextStart is null || nextStart.IsInRange(item.NextScheduledStart)) &&
-                ((crawlStatus = Status) is null || crawlStatus.IsMatch(item.StatusValue)) && ((dr = AverageDuration) is null || dr.IsInRange(item.AverageDuration)) &&
-                ((dr = MaxDuration) is null || dr.IsInRange(item.MaxDuration)) && (!(b = HasCancel).HasValue || b.Value == item.CanceledCount > 0) && (!(b = HasFail).HasValue || b.Value == item.FailedCount > 0) &&
-                (!(b = AnyReachedItemLimit).HasValue || b.Value == item.ItemLimitReachedCount > 0) && (!(b = AnySucceeded).HasValue || b.Value == item.SucceededCount > 0) &&
-                (!(b = AnyTimedOut).HasValue || b.Value == item.TimedOutCount > 0);
+            if ((crawlEnd is not null && !crawlEnd.IsInRange(item.LastCrawlEnd)) || (nextStart is not null && !nextStart.IsInRange(item.NextScheduledStart)))
+                return false;
+            StatusFilter crawlStatus = Status;
+            DurationRange dr = AverageDuration;
+            if ((crawlStatus is not null && !crawlStatus.IsMatch(item.StatusValue)) || (dr is not null && !dr.IsInRange(item.AverageDuration)))
+                return false;
+            dr = MaxDuration;
+            bool? b = HasCancel;
+            if ((dr is null || dr.IsInRange(item.MaxDuration)) && (!b.HasValue || b.Value == item.CanceledCount > 0))
+            {
+                b = HasFail;
+                if (!b.HasValue || b.Value == item.FailedCount > 0)
+                {
+                    b = AnyReachedItemLimit;
+                    if (!b.HasValue || b.Value == item.ItemLimitReachedCount > 0)
+                    {
+                        b = AnySucceeded;
+                        if (!b.HasValue || b.Value == item.SucceededCount > 0)
+                        {
+                            b = AnyTimedOut;
+                            return !b.HasValue || b.Value == item.TimedOutCount > 0;
+                        }
+                    }
+                }
+            }
+            return false;
         }
     }
 }
