@@ -57,7 +57,7 @@ namespace FsInfoCat.Desktop.Converters
                     _map = _maps.TryGetValue(newValue, out Dictionary<T, string> d) ? d : (new());
                 else
                     _maps.Add(oldValue, _map);
-                
+
             }
         }
 

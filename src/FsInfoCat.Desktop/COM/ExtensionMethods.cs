@@ -34,7 +34,7 @@ namespace FsInfoCat.Desktop.COM
         public static async Task<Dictionary<ExtendedPropertyName, int[]>> GetExtendedPropertyDictionaryAsync(this Folder folder) => await Task.Run(() => Enumerable.Range(0, 0xffff).Select(index =>
         {
             string name = folder.GetDetailsOf(null, index);
-            return (index, value: (string.IsNullOrWhiteSpace(name) || !_propertyMap.TryGetValue(name, out ExtendedPropertyName pn)) ? (ExtendedPropertyName?)null: pn);
+            return (index, value: (string.IsNullOrWhiteSpace(name) || !_propertyMap.TryGetValue(name, out ExtendedPropertyName pn)) ? (ExtendedPropertyName?)null : pn);
         }).Where(a => a.value.HasValue).GroupBy(a => a.value.Value).ToDictionary(a => a.Key, a => a.Select(v => v.index).ToArray()));
 
         public static async Task<IEnumerable<(string Name, Dictionary<ExtendedPropertyName, string> properties)>> GetExtendedPropertiesAsync(this Folder folder, Func<(string Name, bool IsFolder), bool> filter = null)

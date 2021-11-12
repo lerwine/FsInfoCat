@@ -1,9 +1,9 @@
-using System;
-using System.ComponentModel;
-using System.Linq;
-using System.Collections.Specialized;
-using System.Diagnostics.CodeAnalysis;
 using FsInfoCat.DeferredDelegation;
+using System;
+using System.Collections.Specialized;
+using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 
 namespace FsInfoCat.Collections
 {
@@ -322,7 +322,7 @@ namespace FsInfoCat.Collections
                     index++;
                 return index;
             }
-            
+
             internal static void Add(ToggleSet<T> target, T value, bool? state, IDelegateDeference<ToggleSet<T>> delegateDeference)
             {
                 if (target._lastInSet is null)
