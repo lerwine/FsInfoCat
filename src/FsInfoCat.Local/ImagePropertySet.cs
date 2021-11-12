@@ -61,10 +61,7 @@ namespace FsInfoCat.Local
             IImageProperties currentProperties = await fileDetailProvider.GetImagePropertiesAsync(cancellationToken);
             if (FilePropertiesComparer.Equals(oldPropertySet, currentProperties))
                 return;
-            if (currentProperties.IsNullOrAllPropertiesEmpty())
-                entity.ImageProperties = null;
-            else
-                entity.ImageProperties = await dbContext.GetMatchingAsync(currentProperties, cancellationToken);
+            entity.ImageProperties = currentProperties.IsNullOrAllPropertiesEmpty() ? null : await dbContext.GetMatchingAsync(currentProperties, cancellationToken);
             cancellationToken.ThrowIfCancellationRequested();
             if (oldPropertySet is null)
                 return;

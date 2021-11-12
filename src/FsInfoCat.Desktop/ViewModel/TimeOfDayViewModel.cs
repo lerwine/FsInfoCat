@@ -74,10 +74,7 @@ namespace FsInfoCat.Desktop.ViewModel
                 _pendingSecondsChange = Seconds.ResultValue;
                 _pendingMillisecondsChange = Milliseconds.ResultValue;
                 bool isPm = _pendingIsPmChange = IsPm;
-                if (value.HasValue)
-                    _pendingHours24Change = isPm ? ((value.Value == 12) ? value : value.Value + 12) : (value.Value == 12) ? 0 : value;
-                else
-                    _pendingHours24Change = null;
+                _pendingHours24Change = value.HasValue ? isPm ? ((value.Value == 12) ? value : value.Value + 12) : (value.Value == 12) ? 0 : value : null;
                 ImmutableArray<int?> values = ImmutableArray.Create(_pendingHours24Change, _pendingHours12Change, _pendingMinutesChange, _pendingSecondsChange, _pendingMillisecondsChange);
                 Hours24.InputValue = _pendingHours24Change;
                 if (_pendingIsPmChange == isPm && values.SequenceEqual(ImmutableArray.Create(_pendingHours24Change, _pendingHours12Change, _pendingMinutesChange, _pendingSecondsChange, _pendingMillisecondsChange)))
@@ -364,10 +361,9 @@ namespace FsInfoCat.Desktop.ViewModel
         {
             using (_logger.EnterMethod(hours24, minutes, seconds, milliseconds, this))
             {
-                if (hours24.HasValue || minutes.HasValue || seconds.HasValue || milliseconds.HasValue)
-                    _pendingResultValueChange = new(0, hours24 ?? 0, minutes ?? 0, seconds ?? 0, milliseconds ?? 0);
-                else
-                    _pendingResultValueChange = null;
+                _pendingResultValueChange = hours24.HasValue || minutes.HasValue || seconds.HasValue || milliseconds.HasValue
+                    ? (TimeSpan?)(new(0, hours24 ?? 0, minutes ?? 0, seconds ?? 0, milliseconds ?? 0))
+                    : null;
                 InputValue = _pendingResultValueChange;
             }
         }
@@ -431,10 +427,7 @@ namespace FsInfoCat.Desktop.ViewModel
                 _pendingSecondsChange = Seconds.ResultValue;
                 _pendingMillisecondsChange = Milliseconds.ResultValue;
                 bool isPm = _pendingIsPmChange = IsPm;
-                if (value.HasValue)
-                    _pendingHours24Change = isPm ? ((value.Value == 12) ? value : value.Value + 12) : (value.Value == 12) ? 0 : value;
-                else
-                    _pendingHours24Change = null;
+                _pendingHours24Change = value.HasValue ? isPm ? ((value.Value == 12) ? value : value.Value + 12) : (value.Value == 12) ? 0 : value : null;
                 ImmutableArray<int?> values = ImmutableArray.Create(_pendingHours24Change, _pendingHours12Change, _pendingMinutesChange, _pendingSecondsChange, _pendingMillisecondsChange);
                 Hours24.InputValue = _pendingHours24Change;
                 if (_pendingIsPmChange == isPm && values.SequenceEqual(ImmutableArray.Create(_pendingHours24Change, _pendingHours12Change, _pendingMinutesChange, _pendingSecondsChange, _pendingMillisecondsChange)))

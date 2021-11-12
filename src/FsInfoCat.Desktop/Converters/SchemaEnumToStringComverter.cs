@@ -54,12 +54,7 @@ namespace FsInfoCat.Desktop.Converters
             lock (_maps)
             {
                 if (_maps.ContainsKey(oldValue))
-                {
-                    if (_maps.TryGetValue(newValue, out Dictionary<T, string> d))
-                        _map = d;
-                    else
-                        _map = new();
-                }
+                    _map = _maps.TryGetValue(newValue, out Dictionary<T, string> d) ? d : (new());
                 else
                     _maps.Add(oldValue, _map);
                 

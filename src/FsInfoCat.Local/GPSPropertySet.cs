@@ -66,10 +66,7 @@ namespace FsInfoCat.Local
             IGPSProperties currentProperties = await fileDetailProvider.GetGPSPropertiesAsync(cancellationToken);
             if (FilePropertiesComparer.Equals(oldPropertySet, currentProperties))
                 return;
-            if (currentProperties.IsNullOrAllPropertiesEmpty())
-                entity.GPSProperties = null;
-            else
-                entity.GPSProperties = await dbContext.GetMatchingAsync(currentProperties, cancellationToken);
+            entity.GPSProperties = currentProperties.IsNullOrAllPropertiesEmpty() ? null : await dbContext.GetMatchingAsync(currentProperties, cancellationToken);
             cancellationToken.ThrowIfCancellationRequested();
             if (oldPropertySet is null)
                 return;

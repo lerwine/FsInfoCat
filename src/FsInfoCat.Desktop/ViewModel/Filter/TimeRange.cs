@@ -43,10 +43,7 @@ namespace FsInfoCat.Desktop.ViewModel.Filter
             if (newValue is not null)
             {
                 newValue.ErrorsChanged += RangeStart_ErrorsChanged;
-                if (HasErrors)
-                    HasErrors = newValue.HasErrors || (Start?.HasErrors ?? false);
-                else
-                    HasErrors = newValue.HasErrors;
+                HasErrors = HasErrors ? newValue.HasErrors || (Start?.HasErrors ?? false) : newValue.HasErrors;
             }
         }
 
@@ -89,10 +86,7 @@ namespace FsInfoCat.Desktop.ViewModel.Filter
             if (newValue is not null)
             {
                 newValue.ErrorsChanged += RangeEnd_ErrorsChanged;
-                if (HasErrors)
-                    HasErrors = newValue.HasErrors || (Start?.HasErrors ?? false);
-                else
-                    HasErrors = newValue.HasErrors;
+                HasErrors = HasErrors ? newValue.HasErrors || (Start?.HasErrors ?? false) : newValue.HasErrors;
             }
         }
 
@@ -153,11 +147,9 @@ namespace FsInfoCat.Desktop.ViewModel.Filter
                         return (null, false, end.ToDateTime(), end.IsExclusive, end.IncludeNull);
                 }
                 else
-                {
-                    if (end is null)
-                        return (start.ToDateTime(), start.IsExclusive, null, false, start.IncludeNull);
-                    return (start.ToDateTime(), start.IsExclusive, end.ToDateTime(), end.IsExclusive, start.IncludeNull || end.IncludeNull);
-                }
+                    return end is null
+                        ? ((DateTime? StartTime, bool StartExclusive, DateTime? EndTime, bool EndExclusive, bool IncludesNull))(start.ToDateTime(), start.IsExclusive, null, false, start.IncludeNull)
+                        : ((DateTime? StartTime, bool StartExclusive, DateTime? EndTime, bool EndExclusive, bool IncludesNull))(start.ToDateTime(), start.IsExclusive, end.ToDateTime(), end.IsExclusive, start.IncludeNull || end.IncludeNull);
             }
             return (null, false, null, false, true);
         }
@@ -211,17 +203,15 @@ namespace FsInfoCat.Desktop.ViewModel.Filter
             BinaryExpression binaryExpression;
             if (start.IncludeNull)
             {
-                if (canBeNull)
-                    binaryExpression = LinqExpression.OrElse(LinqExpression.Equal(memberExpression, LinqExpression.Constant(null)), start.IsExclusive ? LinqExpression.GreaterThan(nonNullMemberExpression, LinqExpression.Constant(start.ToDateTime())) :
-                        LinqExpression.GreaterThanOrEqual(nonNullMemberExpression, LinqExpression.Constant(start.ToDateTime())));
-                else
-                    binaryExpression = start.IsExclusive ? LinqExpression.GreaterThan(memberExpression, LinqExpression.Constant(start.ToDateTime())) : LinqExpression.GreaterThanOrEqual(memberExpression, LinqExpression.Constant(start.ToDateTime()));
+                binaryExpression = canBeNull
+                    ? LinqExpression.OrElse(LinqExpression.Equal(memberExpression, LinqExpression.Constant(null)), start.IsExclusive ? LinqExpression.GreaterThan(nonNullMemberExpression, LinqExpression.Constant(start.ToDateTime())) :
+                        LinqExpression.GreaterThanOrEqual(nonNullMemberExpression, LinqExpression.Constant(start.ToDateTime())))
+                    : start.IsExclusive ? LinqExpression.GreaterThan(memberExpression, LinqExpression.Constant(start.ToDateTime())) : LinqExpression.GreaterThanOrEqual(memberExpression, LinqExpression.Constant(start.ToDateTime()));
             }
-            else if (canBeNull)
-                binaryExpression = LinqExpression.AndAlso(LinqExpression.NotEqual(memberExpression, LinqExpression.Constant(null)), start.IsExclusive ? LinqExpression.GreaterThan(nonNullMemberExpression, LinqExpression.Constant(start.ToDateTime())) :
-                        LinqExpression.GreaterThanOrEqual(nonNullMemberExpression, LinqExpression.Constant(start.ToDateTime())));
-            else
-                binaryExpression = start.IsExclusive ? LinqExpression.GreaterThan(memberExpression, LinqExpression.Constant(start.ToDateTime())) : LinqExpression.GreaterThanOrEqual(memberExpression, LinqExpression.Constant(start.ToDateTime()));
+            else binaryExpression = canBeNull
+                ? LinqExpression.AndAlso(LinqExpression.NotEqual(memberExpression, LinqExpression.Constant(null)), start.IsExclusive ? LinqExpression.GreaterThan(nonNullMemberExpression, LinqExpression.Constant(start.ToDateTime())) :
+                        LinqExpression.GreaterThanOrEqual(nonNullMemberExpression, LinqExpression.Constant(start.ToDateTime())))
+                : start.IsExclusive ? LinqExpression.GreaterThan(memberExpression, LinqExpression.Constant(start.ToDateTime())) : LinqExpression.GreaterThanOrEqual(memberExpression, LinqExpression.Constant(start.ToDateTime()));
             if (end is null)
                 return binaryExpression;
 

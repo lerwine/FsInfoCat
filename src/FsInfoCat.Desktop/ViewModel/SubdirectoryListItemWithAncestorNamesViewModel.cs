@@ -159,11 +159,10 @@ namespace FsInfoCat.Desktop.ViewModel
             }
             else if (idStr.Length > 0 && (idStr.Equals(displayName, StringComparison.InvariantCultureIgnoreCase) || idStr.Equals(name, StringComparison.InvariantCultureIgnoreCase)))
                 idStr = "";
-            if (displayName.Length > 0)
-                VolumeShortDescription = (name.Length > 0) ? ((idStr.Length > 0) ? $"{displayName} ({name} / {idStr})" : $"{displayName} ({name})") :
-                    (idStr.Length > 0) ? $"{displayName} ({idStr})" : displayName;
-            else
-                VolumeShortDescription = (name.Length > 0) ? ((idStr.Length > 0) ? $"{name} ({idStr})" : name) : idStr;
+            VolumeShortDescription = displayName.Length > 0
+                ? (name.Length > 0) ? ((idStr.Length > 0) ? $"{displayName} ({name} / {idStr})" : $"{displayName} ({name})") :
+                    (idStr.Length > 0) ? $"{displayName} ({idStr})" : displayName
+                : (name.Length > 0) ? ((idStr.Length > 0) ? $"{name} ({idStr})" : name) : idStr;
         }
 
         #endregion

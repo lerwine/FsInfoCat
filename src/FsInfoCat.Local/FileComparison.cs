@@ -101,12 +101,7 @@ namespace FsInfoCat.Local
             set
             {
                 if (_baseline.SetValue(value))
-                {
-                    if (value is null)
-                        _ = _baselineId.SetValue(Guid.Empty);
-                    else
-                        _ = _baselineId.SetValue(value.Id);
-                }
+                    _baselineId.SetValue(value?.Id ?? Guid.Empty);
             }
         }
 
@@ -120,12 +115,7 @@ namespace FsInfoCat.Local
             set
             {
                 if (_correlative.SetValue(value))
-                {
-                    if (value is null)
-                        _ = _correlativeId.SetValue(Guid.Empty);
-                    else
-                        _ = _correlativeId.SetValue(value.Id);
-                }
+                    _correlativeId.SetValue(value?.Id ?? Guid.Empty);
             }
         }
 

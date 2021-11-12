@@ -78,12 +78,7 @@ namespace FsInfoCat.Local
             set
             {
                 if (_file.SetValue(value))
-                {
-                    if (value is null)
-                        _ = _fileId.SetValue(Guid.Empty);
-                    else
-                        _ = _fileId.SetValue(value.Id);
-                }
+                    _ = _fileId.SetValue(value?.Id ?? Guid.Empty);
             }
         }
 
@@ -96,12 +91,7 @@ namespace FsInfoCat.Local
             set
             {
                 if (_redundantSet.SetValue(value))
-                {
-                    if (value is null)
-                        _ = _redundantSetId.SetValue(Guid.Empty);
-                    else
-                        _ = _redundantSetId.SetValue(value.Id);
-                }
+                    _ = _redundantSetId.SetValue(value?.Id ?? Guid.Empty);
             }
         }
 

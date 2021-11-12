@@ -69,13 +69,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="ChannelCount"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="ChannelCount"/> property.</param>
-        protected virtual void OnChannelCountPropertyChanged(uint? oldValue, uint? newValue)
-        {
-            if (newValue.HasValue)
-                IsStereo = newValue.Value > 1;
-            else
-                IsStereo = null;
-        }
+        protected virtual void OnChannelCountPropertyChanged(uint? oldValue, uint? newValue) => IsStereo = newValue.HasValue ? newValue.Value > 1 : null;
 
         #endregion
         #region IsStereo Property Members

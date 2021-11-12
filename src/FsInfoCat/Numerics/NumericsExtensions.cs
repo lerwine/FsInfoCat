@@ -1,3 +1,4 @@
+
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
@@ -115,10 +116,9 @@ namespace FsInfoCat.Numerics
             if (n.CompareTo(denominator) > 0)
             {
                 numerator = valueHelper.Modulus(n, denominator);
-                if (valueHelper.IsNegative(w))
-                    w = valueHelper.Subtract(w, valueHelper.Divide(valueHelper.Subtract(n, numerator), denominator));
-                else
-                    w = valueHelper.Add(w, valueHelper.Divide(valueHelper.Subtract(n, numerator), denominator));
+                w = valueHelper.IsNegative(w)
+                    ? valueHelper.Subtract(w, valueHelper.Divide(valueHelper.Subtract(n, numerator), denominator))
+                    : valueHelper.Add(w, valueHelper.Divide(valueHelper.Subtract(n, numerator), denominator));
                 numerator = GetSimplifiedRational(valueHelper, numerator, denominator, out denominator);
             }
             else
@@ -129,10 +129,7 @@ namespace FsInfoCat.Numerics
 
             if (valueHelper.IsNegative(numerator))
             {
-                if (valueHelper.IsNegative(w))
-                    w = valueHelper.Add(w, valueHelper.PositiveOne);
-                else
-                    w = valueHelper.Subtract(w, valueHelper.PositiveOne);
+                w = valueHelper.IsNegative(w) ? valueHelper.Add(w, valueHelper.PositiveOne) : valueHelper.Subtract(w, valueHelper.PositiveOne);
                 numerator = valueHelper.Add(numerator, denominator);
             }
 

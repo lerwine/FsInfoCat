@@ -72,10 +72,7 @@ namespace FsInfoCat.Local
             IMediaProperties currentProperties = await fileDetailProvider.GetMediaPropertiesAsync(cancellationToken);
             if (FilePropertiesComparer.Equals(oldPropertySet, currentProperties))
                 return;
-            if (currentProperties.IsNullOrAllPropertiesEmpty())
-                entity.MediaProperties = null;
-            else
-                entity.MediaProperties = await dbContext.GetMatchingAsync(currentProperties, cancellationToken);
+            entity.MediaProperties = currentProperties.IsNullOrAllPropertiesEmpty() ? null : await dbContext.GetMatchingAsync(currentProperties, cancellationToken);
             cancellationToken.ThrowIfCancellationRequested();
             if (oldPropertySet is null)
                 return;

@@ -888,13 +888,9 @@ namespace FsInfoCat.Collections
 
                 protected StateSet Target { get; }
 
-                protected static void InsertOfState(Node item, Node previous)
-                {
-                    if ((item.NextOfState = (item.PreviousOfState = previous).NextOfState) is not null)
-                        previous.NextOfState = item.NextOfState.PreviousOfState = item;
-                    else
-                        previous.NextOfState = item;
-                }
+                protected static void InsertOfState(Node item, Node previous) => previous.NextOfState = (item.NextOfState = (item.PreviousOfState = previous).NextOfState) is not null
+                        ? (item.NextOfState.PreviousOfState = item)
+                        : item;
 
                 protected static void RemoveOfState(Node node)
                 {

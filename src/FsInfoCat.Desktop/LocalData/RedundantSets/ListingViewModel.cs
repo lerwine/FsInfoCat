@@ -49,16 +49,14 @@ namespace FsInfoCat.Desktop.LocalData.RedundantSets
             (BinaryDenominatedInt64F? minRange, BinaryDenominatedInt64F? maxRange) = options;
             if (minRange.HasValue)
             {
-                if (maxRange.HasValue)
-                    PageTitle = string.Format(FsInfoCat.Properties.Resources.FormatDisplayName_RedundantSets_MinMax, minRange.Value.ToString(CultureInfo.CurrentUICulture),
-                        maxRange.Value.ToString(CultureInfo.CurrentUICulture));
-                else
-                    PageTitle = string.Format(FsInfoCat.Properties.Resources.FormatDisplayName_RedundantSets_MinOnly, minRange.Value.ToString(CultureInfo.CurrentUICulture));
+                PageTitle = maxRange.HasValue
+                    ? string.Format(FsInfoCat.Properties.Resources.FormatDisplayName_RedundantSets_MinMax, minRange.Value.ToString(CultureInfo.CurrentUICulture),
+                        maxRange.Value.ToString(CultureInfo.CurrentUICulture))
+                    : string.Format(FsInfoCat.Properties.Resources.FormatDisplayName_RedundantSets_MinOnly, minRange.Value.ToString(CultureInfo.CurrentUICulture));
             }
-            else if (maxRange.HasValue)
-                PageTitle = string.Format(FsInfoCat.Properties.Resources.FormatDisplayName_RedundantSets_MaxOnly, maxRange.Value.ToString(CultureInfo.CurrentUICulture));
-            else
-                PageTitle = FsInfoCat.Properties.Resources.DisplayName_RedundantSets_All;
+            else PageTitle = maxRange.HasValue
+                ? string.Format(FsInfoCat.Properties.Resources.FormatDisplayName_RedundantSets_MaxOnly, maxRange.Value.ToString(CultureInfo.CurrentUICulture))
+                : FsInfoCat.Properties.Resources.DisplayName_RedundantSets_All;
         }
 
 

@@ -73,10 +73,7 @@ namespace FsInfoCat.Local
             ISummaryProperties currentProperties = await fileDetailProvider.GetSummaryPropertiesAsync(cancellationToken);
             if (FilePropertiesComparer.Equals(oldPropertySet, currentProperties))
                 return;
-            if (currentProperties.IsNullOrAllPropertiesEmpty())
-                entity.SummaryProperties = null;
-            else
-                entity.SummaryProperties = await dbContext.GetMatchingAsync(currentProperties, cancellationToken);
+            entity.SummaryProperties = currentProperties.IsNullOrAllPropertiesEmpty() ? null : await dbContext.GetMatchingAsync(currentProperties, cancellationToken);
             cancellationToken.ThrowIfCancellationRequested();
             if (oldPropertySet is null)
                 return;
