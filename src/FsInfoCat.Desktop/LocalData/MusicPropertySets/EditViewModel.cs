@@ -38,9 +38,11 @@ namespace FsInfoCat.Desktop.LocalData.MusicPropertySets
         {
             if (ApplyChanges() || IsNew)
             {
-                IWindowsAsyncJobFactoryService jobFactory = Hosting.GetRequiredService<IWindowsAsyncJobFactoryService>();
-                IAsyncJob<MusicPropertiesListItem> job = jobFactory.StartNew("Saving changes", "Opening database", Entity, InvocationState, SaveChangesAsync);
-                job.Task.ContinueWith(task => Dispatcher.Invoke(() => OnSaveTaskCompleted(task)));
+                // TODO: Implement MusicPropertySets.EditViewModel.OnSaveChangesCommand
+                throw new NotImplementedException();
+                //IWindowsAsyncJobFactoryService jobFactory = Hosting.GetRequiredService<IWindowsAsyncJobFactoryService>();
+                //IAsyncJob<MusicPropertiesListItem> job = jobFactory.StartNew("Saving changes", "Opening database", Entity, InvocationState, SaveChangesAsync);
+                //job.Task.ContinueWith(task => Dispatcher.Invoke(() => OnSaveTaskCompleted(task)));
             }
             else
                 RaiseItemUnmodifiedResult();
@@ -269,9 +271,11 @@ namespace FsInfoCat.Desktop.LocalData.MusicPropertySets
                     MessageBoxButton.YesNoCancel, MessageBoxImage.Warning))
                 {
                     case MessageBoxResult.Yes:
-                        IWindowsAsyncJobFactoryService jobFactory = Hosting.GetRequiredService<IWindowsAsyncJobFactoryService>();
-                        IAsyncJob<MusicPropertiesListItem> job = jobFactory.StartNew("Saving changes", "Opening database", Entity, InvocationState, SaveChangesAsync);
-                        job.Task.ContinueWith(task => Dispatcher.Invoke(() => OnSaveTaskCompleted(task)));
+                        // TODO: Implement MusicPropertySets.EditViewModel.OnNavigatingFrom
+                        throw new NotImplementedException();
+                        //IWindowsAsyncJobFactoryService jobFactory = Hosting.GetRequiredService<IWindowsAsyncJobFactoryService>();
+                        //IAsyncJob<MusicPropertiesListItem> job = jobFactory.StartNew("Saving changes", "Opening database", Entity, InvocationState, SaveChangesAsync);
+                        //job.Task.ContinueWith(task => Dispatcher.Invoke(() => OnSaveTaskCompleted(task)));
                         e.Cancel = true;
                         break;
                     case MessageBoxResult.No:

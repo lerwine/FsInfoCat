@@ -344,8 +344,10 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
 
         public static Task<PageFunction<ItemFunctionResultEventArgs>> GetNewItemEditPageAsync([DisallowNull] Dispatcher dispatcher)
         {
-            IWindowsAsyncJobFactoryService jobFactory = Hosting.GetRequiredService<IWindowsAsyncJobFactoryService>();
-            return jobFactory.StartNew("Loading data", "Opening database", dispatcher, GetNewItemEditPageAsync).Task;
+            // TODO: Implement ListingViewModel.GetNewItemEditPageAsync
+            throw new NotImplementedException();
+            //IWindowsAsyncJobFactoryService jobFactory = Hosting.GetRequiredService<IWindowsAsyncJobFactoryService>();
+            //return jobFactory.StartNew("Loading data", "Opening database", dispatcher, GetNewItemEditPageAsync).Task;
         }
 
         private async static Task<PageFunction<ItemFunctionResultEventArgs>> GetNewItemEditPageAsync([DisallowNull] Dispatcher dispatcher, [DisallowNull] IWindowsStatusListener statusListener)

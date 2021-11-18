@@ -164,16 +164,18 @@ namespace FsInfoCat.Desktop.ViewModel
 
         protected virtual IAsyncJob ReloadAsync()
         {
-            IWindowsAsyncJobFactoryService jobFactory = Hosting.GetRequiredService<IWindowsAsyncJobFactoryService>();
-            IAsyncJob job = jobFactory.StartNew("Loading data", "Opening database", LoadItemsAsync);
-            job.Task.ContinueWith(task => Dispatcher.Invoke(() =>
-            {
-                if (task.Exception.InnerExceptions.Count == 1)
-                    OnReloadTaskFaulted(task.Exception.InnerException);
-                else
-                    OnReloadTaskFaulted(task.Exception);
-            }, DispatcherPriority.Background), TaskContinuationOptions.OnlyOnFaulted);
-            return job;
+            // TODO: Implement CrawlConfigurationViewModel{TEntity, TSubdirectoryEntity, TSubdirectoryItem, TCrawlJobLogEntity, TCrawlJobLogItem}.ReloadAsync
+            throw new NotImplementedException();
+            //IWindowsAsyncJobFactoryService jobFactory = Hosting.GetRequiredService<IWindowsAsyncJobFactoryService>();
+            //IAsyncJob job = jobFactory.StartNew("Loading data", "Opening database", LoadItemsAsync);
+            //job.Task.ContinueWith(task => Dispatcher.Invoke(() =>
+            //{
+            //    if (task.Exception.InnerExceptions.Count == 1)
+            //        OnReloadTaskFaulted(task.Exception.InnerException);
+            //    else
+            //        OnReloadTaskFaulted(task.Exception);
+            //}, DispatcherPriority.Background), TaskContinuationOptions.OnlyOnFaulted);
+            //return job;
         }
 
         protected abstract void OnReloadTaskFaulted(Exception exception);
@@ -200,10 +202,12 @@ namespace FsInfoCat.Desktop.ViewModel
             Guid? g = Root?.Entity.Id;
             if (g.HasValue && g.Value == id)
                 return;
-            IWindowsAsyncJobFactoryService jobFactory = Hosting.GetRequiredService<IWindowsAsyncJobFactoryService>();
-            jobFactory.StartNew("Loading data", "Opening database", id, LoadSubdirectoryAsync).Task.ContinueWith(task => Dispatcher.Invoke(() =>
-                MessageBox.Show(Application.Current.MainWindow, "Unexpected error while reading from the database. See error logs for more information.",
-                    "Database Error", MessageBoxButton.OK, MessageBoxImage.Error), DispatcherPriority.Background), TaskContinuationOptions.OnlyOnFaulted);
+            // TODO: Implement CrawlConfigurationViewModel{TEntity, TSubdirectoryEntity, TSubdirectoryItem, TCrawlJobLogEntity, TCrawlJobLogItem}.SetRootSubdirectory
+            throw new NotImplementedException();
+            //IWindowsAsyncJobFactoryService jobFactory = Hosting.GetRequiredService<IWindowsAsyncJobFactoryService>();
+            //jobFactory.StartNew("Loading data", "Opening database", id, LoadSubdirectoryAsync).Task.ContinueWith(task => Dispatcher.Invoke(() =>
+            //    MessageBox.Show(Application.Current.MainWindow, "Unexpected error while reading from the database. See error logs for more information.",
+            //        "Database Error", MessageBoxButton.OK, MessageBoxImage.Error), DispatcherPriority.Background), TaskContinuationOptions.OnlyOnFaulted);
         }
 
         protected abstract IQueryable<TCrawlJobLogEntity> GetQueryableCrawlJobLogListing([DisallowNull] LocalDbContext dbContext, [DisallowNull] IWindowsStatusListener statusListener);

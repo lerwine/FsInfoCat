@@ -113,25 +113,27 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
                     directoryInfo = null;
                 }
             }
-            IWindowsAsyncJobFactoryService jobFactory = Hosting.GetRequiredService<IWindowsAsyncJobFactoryService>();
-            IAsyncJob<SubdirectoryListItemWithAncestorNames> job = jobFactory.StartNew("Loading path", "Opening database", directoryInfo, ImportBranchAsync);
-            job.Task.ContinueWith(task =>
-            {
-                if (task.IsCanceled)
-                    return;
-                Dispatcher.Invoke(() =>
-                {
-                    if (task.IsFaulted)
-                    {
-                        if (task.Exception.InnerExceptions.Count == 1)
-                            OnImportBranchFaulted(task.Exception.InnerException, directoryInfo);
-                        else
-                            OnImportBranchFaulted(task.Exception, directoryInfo);
-                    }
-                    else
-                        OnImportBranchCompleted(task.Result, directoryInfo);
-                }, DispatcherPriority.Background);
-            });
+            // TODO: Implement CrawlConfigurations.EditViewModel.OnBrowseNewRootFolder
+            throw new NotImplementedException();
+            //IWindowsAsyncJobFactoryService jobFactory = Hosting.GetRequiredService<IWindowsAsyncJobFactoryService>();
+            //IAsyncJob<SubdirectoryListItemWithAncestorNames> job = jobFactory.StartNew("Loading path", "Opening database", directoryInfo, ImportBranchAsync);
+            //job.Task.ContinueWith(task =>
+            //{
+            //    if (task.IsCanceled)
+            //        return;
+            //    Dispatcher.Invoke(() =>
+            //    {
+            //        if (task.IsFaulted)
+            //        {
+            //            if (task.Exception.InnerExceptions.Count == 1)
+            //                OnImportBranchFaulted(task.Exception.InnerException, directoryInfo);
+            //            else
+            //                OnImportBranchFaulted(task.Exception, directoryInfo);
+            //        }
+            //        else
+            //            OnImportBranchCompleted(task.Result, directoryInfo);
+            //    }, DispatcherPriority.Background);
+            //});
         }
 
         private void OnImportBranchCompleted(SubdirectoryListItemWithAncestorNames result, DirectoryInfo directoryInfo)
@@ -216,10 +218,12 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
 
         protected override IAsyncJob SaveChangesAsync(bool isNew)
         {
-            IWindowsAsyncJobFactoryService jobFactory = Hosting.GetRequiredService<IWindowsAsyncJobFactoryService>();
-            IAsyncJob<CrawlConfigListItemBase> job = jobFactory.StartNew("Saving changes", "Opening database", Entity, InvocationState, SaveChangesAsync);
-            job.Task.ContinueWith(task => Dispatcher.Invoke(() => OnSaveTaskCompleted(task)));
-            return job;
+            // TODO: Implement CrawlConfigurations.EditViewModel.SaveChangesAsync
+            throw new NotImplementedException();
+            //IWindowsAsyncJobFactoryService jobFactory = Hosting.GetRequiredService<IWindowsAsyncJobFactoryService>();
+            //IAsyncJob<CrawlConfigListItemBase> job = jobFactory.StartNew("Saving changes", "Opening database", Entity, InvocationState, SaveChangesAsync);
+            //job.Task.ContinueWith(task => Dispatcher.Invoke(() => OnSaveTaskCompleted(task)));
+            //return job;
         }
 
         private static async Task<CrawlConfigListItemBase> SaveChangesAsync(CrawlConfiguration entity, object invocationState, IWindowsStatusListener statusListener)
@@ -279,9 +283,11 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
                     MessageBoxButton.YesNoCancel, MessageBoxImage.Warning))
                 {
                     case MessageBoxResult.Yes:
-                        IWindowsAsyncJobFactoryService jobFactory = Hosting.GetRequiredService<IWindowsAsyncJobFactoryService>();
-                        IAsyncJob<CrawlConfigListItemBase> job = jobFactory.StartNew("Saving changes", "Opening database", Entity, InvocationState, SaveChangesAsync);
-                        job.Task.ContinueWith(task => Dispatcher.Invoke(() => OnSaveTaskCompleted(task)));
+                        // TODO: Implement CrawlConfigurations.EditViewModel.OnNavigatingFrom
+                        throw new NotImplementedException();
+                        //IWindowsAsyncJobFactoryService jobFactory = Hosting.GetRequiredService<IWindowsAsyncJobFactoryService>();
+                        //IAsyncJob<CrawlConfigListItemBase> job = jobFactory.StartNew("Saving changes", "Opening database", Entity, InvocationState, SaveChangesAsync);
+                        //job.Task.ContinueWith(task => Dispatcher.Invoke(() => OnSaveTaskCompleted(task)));
                         e.Cancel = true;
                         break;
                     case MessageBoxResult.No:

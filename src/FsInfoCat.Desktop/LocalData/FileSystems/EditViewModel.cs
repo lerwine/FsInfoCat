@@ -37,9 +37,11 @@ namespace FsInfoCat.Desktop.LocalData.FileSystems
         {
             if (ApplyChanges() || IsNew)
             {
-                IWindowsAsyncJobFactoryService jobFactory = Hosting.GetRequiredService<IWindowsAsyncJobFactoryService>();
-                IAsyncJob<FileSystemListItem> job = jobFactory.StartNew("Saving changes", "Opening database", Entity, InvocationState, SaveChangesAsync);
-                job.Task.ContinueWith(task => Dispatcher.Invoke(() => OnSaveTaskCompleted(task)));
+                // TODO: Implement FileSystems.EditViewModel.OnSaveChangesCommand
+                throw new NotImplementedException();
+                //IWindowsAsyncJobFactoryService jobFactory = Hosting.GetRequiredService<IWindowsAsyncJobFactoryService>();
+                //IAsyncJob<FileSystemListItem> job = jobFactory.StartNew("Saving changes", "Opening database", Entity, InvocationState, SaveChangesAsync);
+                //job.Task.ContinueWith(task => Dispatcher.Invoke(() => OnSaveTaskCompleted(task)));
             }
             else
                 RaiseItemUnmodifiedResult();
@@ -243,9 +245,11 @@ namespace FsInfoCat.Desktop.LocalData.FileSystems
                     MessageBoxButton.YesNoCancel, MessageBoxImage.Warning))
                 {
                     case MessageBoxResult.Yes:
-                        IWindowsAsyncJobFactoryService jobFactory = Hosting.GetRequiredService<IWindowsAsyncJobFactoryService>();
-                        IAsyncJob<FileSystemListItem> job = jobFactory.StartNew("Saving changes", "Opening database", Entity, InvocationState, SaveChangesAsync);
-                        job.Task.ContinueWith(task => Dispatcher.Invoke(() => OnSaveTaskCompleted(task)));
+                        // TODO: Implement FileSystems.EditViewModel.OnNavigatingFrom
+                        throw new NotImplementedException();
+                        //IWindowsAsyncJobFactoryService jobFactory = Hosting.GetRequiredService<IWindowsAsyncJobFactoryService>();
+                        //IAsyncJob<FileSystemListItem> job = jobFactory.StartNew("Saving changes", "Opening database", Entity, InvocationState, SaveChangesAsync);
+                        //job.Task.ContinueWith(task => Dispatcher.Invoke(() => OnSaveTaskCompleted(task)));
                         e.Cancel = true;
                         break;
                     case MessageBoxResult.No:

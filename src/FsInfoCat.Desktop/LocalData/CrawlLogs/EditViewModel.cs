@@ -34,9 +34,11 @@ namespace FsInfoCat.Desktop.LocalData.CrawlLogs
         {
             if (ApplyChanges() || IsNew)
             {
-                IWindowsAsyncJobFactoryService jobFactory = Hosting.GetRequiredService<IWindowsAsyncJobFactoryService>();
-                IAsyncJob<CrawlJobLogListItem> job = jobFactory.StartNew("Saving changes", "Opening database", Entity, InvocationState, SaveChangesAsync);
-                job.Task.ContinueWith(task => Dispatcher.Invoke(() => OnSaveTaskCompleted(task)));
+                // TODO: Implement CrawlLogs.EditViewModel.OnSaveChangesCommand
+                throw new NotImplementedException();
+                //IWindowsAsyncJobFactoryService jobFactory = Hosting.GetRequiredService<IWindowsAsyncJobFactoryService>();
+                //IAsyncJob<CrawlJobLogListItem> job = jobFactory.StartNew("Saving changes", "Opening database", Entity, InvocationState, SaveChangesAsync);
+                //job.Task.ContinueWith(task => Dispatcher.Invoke(() => OnSaveTaskCompleted(task)));
             }
             else
                 RaiseItemUnmodifiedResult();

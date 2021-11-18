@@ -96,42 +96,46 @@ namespace FsInfoCat.Desktop.ViewModel
         {
             if (ConfirmItemDelete(item, parameter))
             {
-                IWindowsAsyncJobFactoryService jobFactory = Hosting.GetRequiredService<IWindowsAsyncJobFactoryService>();
-                jobFactory.StartNew("Deleting data", "Opening database", (item, item.Entity), DeleteItemAsync).Task.ContinueWith(task => Dispatcher.Invoke(() =>
-                {
-                    if (task.IsCanceled)
-                        return;
-                    if (task.IsFaulted)
-                        OnDeleteTaskFaulted(task.Exception, item);
-                    else if (task.Result && _backingItems.Remove(item))
-                    {
-                        item.OpenCommand -= Item_OpenCommand;
-                        item.EditCommand -= Item_EditCommand;
-                        item.DeleteCommand -= Item_DeleteCommand;
-                    }
-                }));
+                // TODO: Implement ListingViewModel{TEntity, TItemViewModel, TFilterOptions}.OnItemDeleteCommand
+                throw new NotImplementedException();
+                //IWindowsAsyncJobFactoryService jobFactory = Hosting.GetRequiredService<IWindowsAsyncJobFactoryService>();
+                //jobFactory.StartNew("Deleting data", "Opening database", (item, item.Entity), DeleteItemAsync).Task.ContinueWith(task => Dispatcher.Invoke(() =>
+                //{
+                //    if (task.IsCanceled)
+                //        return;
+                //    if (task.IsFaulted)
+                //        OnDeleteTaskFaulted(task.Exception, item);
+                //    else if (task.Result && _backingItems.Remove(item))
+                //    {
+                //        item.OpenCommand -= Item_OpenCommand;
+                //        item.EditCommand -= Item_EditCommand;
+                //        item.DeleteCommand -= Item_DeleteCommand;
+                //    }
+                //}));
             }
         }
 
         protected virtual IAsyncJob ReloadAsync(TFilterOptions options)
         {
-            IWindowsAsyncJobFactoryService jobFactory = Hosting.GetRequiredService<IWindowsAsyncJobFactoryService>();
-            IAsyncJob job = jobFactory.StartNew("Loading data", "Opening database", options, LoadItemsAsync);
-            job.Task.ContinueWith(task => Dispatcher.Invoke(() =>
-            {
-                if (task.IsCanceled)
-                    OnReloadTaskCanceled(options);
-                else if (task.IsFaulted)
-                {
-                    if (task.Exception.InnerExceptions.Count == 1)
-                        OnReloadTaskFaulted(task.Exception.InnerException, options);
-                    else
-                        OnReloadTaskFaulted(task.Exception, options);
-                }
-                else
-                    OnReloadTaskCompleted(options);
-            }, DispatcherPriority.Background));
-            return job;
+            // TODO: Implement ListingViewModel{TEntity, TItemViewModel, TFilterOptions}.ReloadAsync
+            throw new NotImplementedException();
+            //IWindowsAsyncJobFactoryService jobFactory = Hosting.GetRequiredService<IWindowsAsyncJobFactoryService>();
+            //IAsyncJob job = jobFactory.StartNew("Loading data", "Opening database", options, LoadItemsAsync);
+            //job.Task.ContinueWith(task => Dispatcher.Invoke(() =>
+            //{
+            //    if (task.IsCanceled)
+            //        OnReloadTaskCanceled(options);
+            //    else if (task.IsFaulted)
+            //    {
+            //        if (task.Exception.InnerExceptions.Count == 1)
+            //            OnReloadTaskFaulted(task.Exception.InnerException, options);
+            //        else
+            //            OnReloadTaskFaulted(task.Exception, options);
+            //    }
+            //    else
+            //        OnReloadTaskCompleted(options);
+            //}, DispatcherPriority.Background));
+            //return job;
         }
 
         private async Task LoadItemsAsync(TFilterOptions options, [DisallowNull] IWindowsStatusListener statusListener)
@@ -178,8 +182,10 @@ namespace FsInfoCat.Desktop.ViewModel
         {
             if (sender is TItemViewModel item)
             {
-                IWindowsAsyncJobFactoryService jobFactory = Hosting.GetRequiredService<IWindowsAsyncJobFactoryService>();
-                jobFactory.StartNew("Loading database record", "Opening database", item, GetDetailPageAsync).Task.ContinueWith(task => OnGetEditPageComplete(task, item));
+                // TODO: Implement ListingViewModel{TEntity, TItemViewModel, TFilterOptions}.Item_OpenCommand
+                throw new NotImplementedException();
+                //IWindowsAsyncJobFactoryService jobFactory = Hosting.GetRequiredService<IWindowsAsyncJobFactoryService>();
+                //jobFactory.StartNew("Loading database record", "Opening database", item, GetDetailPageAsync).Task.ContinueWith(task => OnGetEditPageComplete(task, item));
             }
         }
 
@@ -214,16 +220,20 @@ namespace FsInfoCat.Desktop.ViewModel
 
         protected sealed override void OnAddNewItemCommand(object parameter)
         {
-            IWindowsAsyncJobFactoryService jobFactory = Hosting.GetRequiredService<IWindowsAsyncJobFactoryService>();
-            jobFactory.StartNew("Loading database record", "Opening database", (TItemViewModel)null, GetEditPageAsync).Task.ContinueWith(task => OnGetEditPageComplete(task, null));
+            // TODO: Implement ListingViewModel{TEntity, TItemViewModel, TFilterOptions}.OnAddNewItemCommand
+            throw new NotImplementedException();
+            //IWindowsAsyncJobFactoryService jobFactory = Hosting.GetRequiredService<IWindowsAsyncJobFactoryService>();
+            //jobFactory.StartNew("Loading database record", "Opening database", (TItemViewModel)null, GetEditPageAsync).Task.ContinueWith(task => OnGetEditPageComplete(task, null));
         }
 
         private void Item_EditCommand(object sender, Commands.CommandEventArgs e)
         {
             if (sender is TItemViewModel item)
             {
-                IWindowsAsyncJobFactoryService jobFactory = Hosting.GetRequiredService<IWindowsAsyncJobFactoryService>();
-                jobFactory.StartNew("Loading database record", "Opening database", item, GetEditPageAsync).Task.ContinueWith(task => OnGetEditPageComplete(task, item));
+                // TODO: Implement ListingViewModel{TEntity, TItemViewModel, TFilterOptions}.Item_EditCommand
+                throw new NotImplementedException();
+                //IWindowsAsyncJobFactoryService jobFactory = Hosting.GetRequiredService<IWindowsAsyncJobFactoryService>();
+                //jobFactory.StartNew("Loading database record", "Opening database", item, GetEditPageAsync).Task.ContinueWith(task => OnGetEditPageComplete(task, item));
             }
         }
 

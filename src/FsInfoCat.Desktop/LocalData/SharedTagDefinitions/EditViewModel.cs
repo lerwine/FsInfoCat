@@ -55,9 +55,11 @@ namespace FsInfoCat.Desktop.LocalData.SharedTagDefinitions
         {
             if (ApplyChanges() || IsNew)
             {
-                IWindowsAsyncJobFactoryService jobFactory = Hosting.GetRequiredService<IWindowsAsyncJobFactoryService>();
-                IAsyncJob<SharedTagDefinitionListItem> job = jobFactory.StartNew("Saving changes", "Opening database", Entity, InvocationState, SaveChangesAsync);
-                job.Task.ContinueWith(task => Dispatcher.Invoke(() => OnSaveTaskCompleted(task)));
+                // TODO: Implement SharedTagDefinitions.EditViewModel.OnSaveChangesCommand
+                throw new NotImplementedException();
+                //IWindowsAsyncJobFactoryService jobFactory = Hosting.GetRequiredService<IWindowsAsyncJobFactoryService>();
+                //IAsyncJob<SharedTagDefinitionListItem> job = jobFactory.StartNew("Saving changes", "Opening database", Entity, InvocationState, SaveChangesAsync);
+                //job.Task.ContinueWith(task => Dispatcher.Invoke(() => OnSaveTaskCompleted(task)));
             }
             else
                 RaiseItemUnmodifiedResult();
@@ -214,9 +216,11 @@ namespace FsInfoCat.Desktop.LocalData.SharedTagDefinitions
                     MessageBoxButton.YesNoCancel, MessageBoxImage.Warning))
                 {
                     case MessageBoxResult.Yes:
-                        IWindowsAsyncJobFactoryService jobFactory = Hosting.GetRequiredService<IWindowsAsyncJobFactoryService>();
-                        IAsyncJob<SharedTagDefinitionListItem> job = jobFactory.StartNew("Saving changes", "Opening database", Entity, InvocationState, SaveChangesAsync);
-                        job.Task.ContinueWith(task => Dispatcher.Invoke(() => OnSaveTaskCompleted(task)));
+                        // TODO: Implement SharedTagDefinitions.EditViewModel.OnNavigatingFrom
+                        throw new NotImplementedException();
+                        //IWindowsAsyncJobFactoryService jobFactory = Hosting.GetRequiredService<IWindowsAsyncJobFactoryService>();
+                        //IAsyncJob<SharedTagDefinitionListItem> job = jobFactory.StartNew("Saving changes", "Opening database", Entity, InvocationState, SaveChangesAsync);
+                        //job.Task.ContinueWith(task => Dispatcher.Invoke(() => OnSaveTaskCompleted(task)));
                         e.Cancel = true;
                         break;
                     case MessageBoxResult.No:

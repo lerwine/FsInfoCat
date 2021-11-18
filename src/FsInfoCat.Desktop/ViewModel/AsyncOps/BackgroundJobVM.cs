@@ -139,11 +139,13 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
                 throw new ArgumentNullException(nameof(createTask));
 
             BackgroundJobVM viewModel = new();
-            job = new Job(title, initialMessage, viewModel, createTask);
-            viewModel.Message = job.Message;
-            viewModel.Title = job.Title;
-            viewModel.MessageLevel = job.MessageLevel;
-            return viewModel;
+            // TODO: Implement BackgroundJobVM.Create(string, string, Func{StatusListener, IBackgroundJob, Task}, out IAsyncJob)
+            throw new NotImplementedException();
+            //job = new Job(title, initialMessage, viewModel, createTask);
+            //viewModel.Message = job.Message;
+            //viewModel.Title = job.Title;
+            //viewModel.MessageLevel = job.MessageLevel;
+            //return viewModel;
         }
 
         public static BackgroundJobVM Create<TResult>([DisallowNull] string title, [DisallowNull] string initialMessage,
@@ -157,11 +159,13 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
                 throw new ArgumentNullException(nameof(createTask));
 
             BackgroundJobVM viewModel = new() { Title = title, Message = initialMessage };
-            job = new Job<TResult>(title, initialMessage, viewModel, createTask);
-            viewModel.Message = job.Message;
-            viewModel.Title = job.Title;
-            viewModel.MessageLevel = job.MessageLevel;
-            return viewModel;
+            // TODO: Implement BackgroundJobVM.Create(string, string, Func{StatusListener, IBackgroundJob, Task{TResult}}, out IAsyncJob{TResult})
+            throw new NotImplementedException();
+            //job = new Job<TResult>(title, initialMessage, viewModel, createTask);
+            //viewModel.Message = job.Message;
+            //viewModel.Title = job.Title;
+            //viewModel.MessageLevel = job.MessageLevel;
+            //return viewModel;
         }
     }
 }

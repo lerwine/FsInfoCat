@@ -15,8 +15,10 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
 #pragma warning restore IDE0051 // Remove unused private members
         {
             System.Diagnostics.Debug.WriteLine($"Invoked {typeof(JobFactoryServiceViewModel).FullName}.{nameof(ConfigureServices)}");
-            _ = services.AddSingleton<IWindowsAsyncJobFactoryService, AsyncJobService>()
-                .AddSingleton<IAsyncJobFactoryService>(services => services.GetRequiredService<IWindowsAsyncJobFactoryService>());
+            // TODO: Implement JobFactoryServiceViewModel.ConfigureServices
+            throw new NotImplementedException();
+            //_ = services.AddSingleton<IWindowsAsyncJobFactoryService, AsyncJobService>()
+            //    .AddSingleton<IAsyncJobFactoryService>(services => services.GetRequiredService<IWindowsAsyncJobFactoryService>());
         }
 
         #region Items Property Members

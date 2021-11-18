@@ -100,14 +100,18 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
 
         private void OnAddNewCrawlJobLogCommand(object parameter)
         {
-            IWindowsAsyncJobFactoryService jobFactory = Hosting.GetRequiredService<IWindowsAsyncJobFactoryService>();
-            jobFactory.StartNew("Loading database record", "Opening database", (CrawlJobListItemViewModel)null, GetEditPageAsync).Task.ContinueWith(task => OnGetEditPageComplete(task, null));
+            // TODO: Implement OnAddNewCrawlJobLogCommand
+            throw new NotImplementedException();
+            //IWindowsAsyncJobFactoryService jobFactory = Hosting.GetRequiredService<IWindowsAsyncJobFactoryService>();
+            //jobFactory.StartNew("Loading database record", "Opening database", (CrawlJobListItemViewModel)null, GetEditPageAsync).Task.ContinueWith(task => OnGetEditPageComplete(task, null));
         }
 
         private void OnCrawlJobLogEditCommand([DisallowNull] CrawlJobListItemViewModel item, object parameter)
         {
-            IWindowsAsyncJobFactoryService jobFactory = Hosting.GetRequiredService<IWindowsAsyncJobFactoryService>();
-            jobFactory.StartNew("Loading database record", "Opening database", item, GetEditPageAsync).Task.ContinueWith(task => OnGetEditPageComplete(task, item));
+            // TODO: Implement OnCrawlJobLogEditCommand
+            throw new NotImplementedException();
+            //IWindowsAsyncJobFactoryService jobFactory = Hosting.GetRequiredService<IWindowsAsyncJobFactoryService>();
+            //jobFactory.StartNew("Loading database record", "Opening database", item, GetEditPageAsync).Task.ContinueWith(task => OnGetEditPageComplete(task, item));
         }
 
         private async Task<PageFunction<ItemFunctionResultEventArgs>> GetEditPageAsync(CrawlJobListItemViewModel item, [DisallowNull] IWindowsStatusListener statusListener)
@@ -244,8 +248,10 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
 
         protected IAsyncJob DeleteCrawlJobLogAsync([DisallowNull] CrawlJobListItemViewModel item)
         {
-            IWindowsAsyncJobFactoryService jobFactory = Hosting.GetRequiredService<IWindowsAsyncJobFactoryService>();
-            return jobFactory.StartNew("Deleting data", "Opening database", (item, item.Entity), DeleteItemAsync);
+            // TODO: Implement DeleteCrawlJobLogAsync
+            throw new NotImplementedException();
+            //IWindowsAsyncJobFactoryService jobFactory = Hosting.GetRequiredService<IWindowsAsyncJobFactoryService>();
+            //return jobFactory.StartNew("Deleting data", "Opening database", (item, item.Entity), DeleteItemAsync);
         }
 
         private void Item_EditCommand(object sender, Commands.CommandEventArgs e)
