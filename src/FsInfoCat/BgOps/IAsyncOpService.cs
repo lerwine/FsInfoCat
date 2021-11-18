@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace FsInfoCat.BgOps
 {
-    public interface IAsyncOpService : IAsyncOpFactory,  IReadOnlyCollection<IAsyncOperation>, IHostedService
+    public interface IAsyncOpService : IAsyncOpFactory,  IReadOnlyCollection<IAsyncAction>, IHostedService
     {
     }
 }

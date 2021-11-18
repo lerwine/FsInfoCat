@@ -1,104 +1,40 @@
-using FsInfoCat.Collections;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace FsInfoCat.BgOps
 {
-    public class AsyncOpService : BackgroundService, IAsyncOpService
+    public class AsyncOpProgress : IAsyncOpProgress
     {
-        private readonly object _syncRoot = new();
-        private readonly ILogger<AsyncOpService> _logger;
-        private readonly LinkedList<IAsyncAction> _backingList = new();
+        private readonly IAsyncOpFactory _factory;
 
-        public AsyncOpService(ILogger<AsyncOpService> logger)
+        public AsyncOpProgress(IAsyncOpFactory factory, string activity, string initialStatusDescriptiony, IAsyncOpEventArgs parentOperation, CancellationToken token)
         {
-            _logger = logger;
+            _factory = factory;
+            Activity = activity ?? "";
+            StatusDescription = initialStatusDescriptiony ?? "";
+            ParentOperation = parentOperation;
+            Token = token;
         }
 
-        int IReadOnlyCollection<IAsyncAction>.Count => throw new NotImplementedException();
+        public CancellationToken Token { get; }
 
-        [ServiceBuilderHandler]
-        public static void ConfigureServices([DisallowNull] IServiceCollection services)
+        public IAsyncOpEventArgs ParentOperation { get; }
+
+        public Guid Id { get; } = Guid.NewGuid();
+
+        public string Activity { get; }
+
+        public string StatusDescription { get; }
+
+        public string CurrentOperation { get; }
+
+        IAsyncOpInfo IAsyncOpInfo.ParentOperation => ParentOperation;
+
+        public IAsyncProducer<TState, TResult> FromAsync<TState, TResult>(string activity, string initialStatusMessage, Func<IAsyncOpProgress<TState>, Task<TResult>> asyncMethodDelegate, TState state, IObserver<IAsyncOpEventArgs<TState>> observer, Func<IAsyncProducer<TState, TResult>, string> getFinalStatusMessage)
         {
-            System.Diagnostics.Debug.WriteLine($"Invoked {typeof(AsyncOpService).FullName}.{nameof(ConfigureServices)}");
-            services.AddHostedService<IAsyncOpService>(serviceProvider => new AsyncOpService(serviceProvider.GetRequiredService<ILogger<AsyncOpService>>()));
+            throw new NotImplementedException();
         }
-
-        private TOperation FromAsync<TFactory, TTask, TOperation, TState>(TFactory operationFactory, TState state, IObserver<IAsyncOpEventArgs<TState>> observer,
-            Func<TOperation, string> getFinalStatusMessage)
-            where TTask : Task
-            where TOperation : ICustomAsyncOperation<TState, AsyncOpEventArgs<TState>>
-            where TFactory : IOperationFactory<TTask, TOperation, AsyncOpProgress<TState>, AsyncOpEventArgs<TState>>
-        {
-            CancellationTokenSource tokenSource = new();
-            AsyncOpProgress<TState> progress = new(this, operationFactory.GetActivity(out string initialStatusMessage), initialStatusMessage, null, state, tokenSource.Token);
-            TOperation asycnOp = operationFactory.CreateOperation(tokenSource, operationFactory.InvokeAsync(progress), progress, observer);
-            _backingList.AddLast(asycnOp);
-            if (getFinalStatusMessage is null)
-            {
-                if (observer is null)
-                    asycnOp.Task.ContinueWith(task => _backingList.Remove(asycnOp));
-                else
-                    asycnOp.Task.ContinueWith(task =>
-                    {
-                        try
-                        {
-                            if (!task.IsCanceled && task.IsFaulted)
-                                observer.OnError((task.Exception.InnerExceptions.Count == 1) ? task.Exception.InnerException : task.Exception);
-                        }
-                        finally
-                        {
-                            try { observer.OnCompleted(); }
-                            finally { _backingList.Remove(asycnOp); }
-                        }
-                    });
-            }
-            else if (observer is null)
-                asycnOp.Task.ContinueWith(task =>
-                {
-                    try
-                    {
-                        if (task.IsCanceled)
-                            progress.ReportStatus(getFinalStatusMessage(asycnOp));
-                        else if (task.IsFaulted)
-                            progress.ReportStatus(getFinalStatusMessage(asycnOp), "", (task.Exception.InnerExceptions.Count == 1) ? task.Exception.InnerException : task.Exception);
-                        else
-                            progress.ReportStatus(getFinalStatusMessage(asycnOp));
-                    }
-                    finally { _backingList.Remove(asycnOp); }
-                });
-            else
-                asycnOp.Task.ContinueWith(task =>
-                {
-                    try
-                    {
-                        if (task.IsCanceled)
-                            progress.ReportStatus(getFinalStatusMessage(asycnOp));
-                        else if (task.IsFaulted)
-                            progress.ReportStatus(getFinalStatusMessage(asycnOp), "", (task.Exception.InnerExceptions.Count == 1) ? task.Exception.InnerException : task.Exception);
-                        else
-                            progress.ReportStatus(getFinalStatusMessage(asycnOp));
-                    }
-                    finally
-                    {
-                        try { observer.OnCompleted(); }
-                        finally { _backingList.Remove(asycnOp); }
-                    }
-                });
-            return asycnOp;
-        }
-
-        public IAsyncProducer<TState, TResult> FromAsync<TState, TResult>(string activity, string initialStatusMessage, Func<IAsyncOpProgress<TState>, Task<TResult>> asyncMethodDelegate, TState state,
-            IObserver<IAsyncOpEventArgs<TState>> observer, Func<IAsyncProducer<TState, TResult>, string> getFinalStatusMessage) =>
-            FromAsync<FuncOperationFactory<TState, TResult>, Task<TResult>, AsyncProducer<TState, TResult>, TState>(new(activity, initialStatusMessage, asyncMethodDelegate), state, observer,
-                getFinalStatusMessage);
 
         public IAsyncProducer<TState, TResult> FromAsync<TState, TResult>(string activity, string initialStatusMessage, Func<IAsyncOpProgress<TState>, Task<TResult>> asyncMethodDelegate, TState state, IObserver<ITimedAsyncOpEventArgs<TState>> observer)
         {
@@ -135,37 +71,12 @@ namespace FsInfoCat.BgOps
             throw new NotImplementedException();
         }
 
-        public TOperation FromAsync<TOperation, TEvent, TState, TResultEvent, TResult>(IFuncOperationFactory<TOperation, IAsyncOpProgress<TState>, TEvent, TResultEvent, TResult> operationFactory,
-                IObserver<TEvent> observer, TState state)   
+        public TOperation FromAsync<TOperation, TEvent, TState, TResultEvent, TResult>(IFuncOperationFactory<TOperation, IAsyncOpProgress<TState>, TEvent, TResultEvent, TResult> operationFactory, IObserver<TEvent> observer, TState state)
             where TOperation : ICustomAsyncProducer<TState, TEvent, TResult>
             where TEvent : IAsyncOpEventArgs<TState>
             where TResultEvent : ITimedAsyncOpResultArgs<TState, TResult>, TEvent
         {
-            CancellationTokenSource tokenSource = new();
-            AsyncOpProgress<TState> progress = new(this, operationFactory.GetActivity(out string initialStatusMessage), initialStatusMessage, null, state, tokenSource.Token);
-            TOperation asycnOp = operationFactory.CreateOperation(tokenSource, operationFactory.InvokeAsync(progress), progress, observer);
-            _backingList.AddLast(asycnOp);
-            asycnOp.Task.ContinueWith(task =>
-            {
-                try
-                {
-                    if (task.IsCanceled)
-                        progress.ReportStatus(operationFactory.OnCanceled(asycnOp));
-                    else if (task.IsFaulted)
-                    {
-                        Exception exception = (task.Exception.InnerExceptions.Count == 1) ? task.Exception.InnerException : task.Exception;
-                        progress.ReportStatus(operationFactory.OnFaulted(exception, asycnOp), "", exception);
-                    }
-                    else
-                        progress.ReportStatus(operationFactory.OnRanToCompletion(asycnOp));
-                }
-                finally
-                {
-                    try { observer.OnCompleted(); }
-                    finally { _backingList.Remove(asycnOp); }
-                }
-            });
-            return asycnOp;
+            throw new NotImplementedException();
         }
 
         public TOperation FromAsync<TOperation, TEvent, TState, TResultEvent, TResult>(IFuncOperationFactory<TOperation, IAsyncOpProgress<TState>, TEvent, TResultEvent, TResult> operationFactory, TState state)
@@ -256,6 +167,36 @@ namespace FsInfoCat.BgOps
         public TOperation FromAsync<TOperation, TEvent>(IActionOperationNotifyCompleteFactory<TOperation, IAsyncOpProgress, TEvent> operationFactory)
             where TOperation : ICustomAsyncOperation<TEvent>
             where TEvent : IAsyncOpEventArgs
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Report(string currentOperation, Exception exception)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Report(string value)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Report(Exception value)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void ReportStatus(string statusDescription, string currentOperation, Exception exception)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void ReportStatus(string statusDescription, string currentOperation)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void ReportStatus(string statusDescription)
         {
             throw new NotImplementedException();
         }
@@ -400,20 +341,16 @@ namespace FsInfoCat.BgOps
         {
             throw new NotImplementedException();
         }
+    }
 
-        protected override Task ExecuteAsync(CancellationToken stoppingToken)
+    public class AsyncOpProgress<TState> : AsyncOpProgress, IAsyncOpProgress<TState>
+    {
+        public AsyncOpProgress(IAsyncOpFactory factory, string activity, string initialStatusDescription, IAsyncOpEventArgs parentOperation, TState state, CancellationToken token)
+            : base(factory, activity, initialStatusDescription, parentOperation, token)
         {
-            throw new NotImplementedException();
+            AsyncState = state;
         }
 
-        public IEnumerator<IAsyncAction> GetEnumerator()
-        {
-            throw new NotImplementedException();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            throw new NotImplementedException();
-        }
+        public TState AsyncState { get; }
     }
 }

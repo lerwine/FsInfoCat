@@ -2,7 +2,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 
-namespace FsInfoCat.Services
+namespace FsInfoCat
 {
     public class WaitHandleRelay : WaitHandle
     {

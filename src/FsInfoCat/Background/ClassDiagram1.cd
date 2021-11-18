@@ -1,0 +1,238 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="FsInfoCat.Background.BgActivityStartEventArgs&lt;TState&gt;" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="7.25" Y="3.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAIAIAAAAAAAAAAAAAEAACAAAAAAAAAAAAQMAAAAA=</HashCode>
+      <FileName>Background\BgActivityStartEventArgs.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="FsInfoCat.Background.BgActivityProgressEventArgs&lt;TState&gt;" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="7.25" Y="0.5" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAIAIAAAAAAAAAAAAAEAAAAAAAAAAAAABAQMAAAAA=</HashCode>
+      <FileName>Background\BgActivityProgressEventArgs.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="FsInfoCat.Background.BgActivityCompletedEventArgs&lt;TState&gt;" Collapsed="true">
+    <Position X="2.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAIAIAAAAAAAAAAAAAAAACAAAAAAAAAAAASMAAAAA=</HashCode>
+      <FileName>Background\BgActivityCompletedEventArgs.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="FsInfoCat.Background.BgActivityCompletedEventArgs&lt;TState, TResult&gt;" Collapsed="true">
+    <Position X="1" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Background\BgActivityCompletedEventArgs.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FsInfoCat.Background.BgActivityCanceledEventArgs&lt;TState&gt;" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="1" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAIAIAAAAAAAAAAAAAEAACAAAAAAAAAAAAQMAAAAA=</HashCode>
+      <FileName>Background\BgActivityCanceledEventArgs.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="FsInfoCat.Background.BgActivityFaultedEventArgs&lt;TState&gt;" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="4" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAIAIAAAAAAAAAAAAAEAAAAAAAAAAAAABAQMAAAAA=</HashCode>
+      <FileName>Background\BgActivityFaultedEventArgs.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="FsInfoCat.Background.TimedBgActivityStartEventArgs&lt;TState&gt;" Collapsed="true">
+    <Position X="7" Y="4.75" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAACAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Background\TimedBgActivityStartEventArgs.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="FsInfoCat.Background.TimedBgActivityProgressEventArgs&lt;TState&gt;" Collapsed="true">
+    <Position X="7" Y="1.75" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAACAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Background\TimedBgActivityProgressEventArgs.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="FsInfoCat.Background.TimedBgActivityCompletedEventArgs&lt;TState&gt;" Collapsed="true">
+    <Position X="3.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAACAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Background\TimedBgActivityCompletedEventArgs.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="FsInfoCat.Background.TimedBgActivityCompletedEventArgs&lt;TState, TResult&gt;" Collapsed="true">
+    <Position X="1" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAACAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Background\TimedBgActivityCompletedEventArgs.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="FsInfoCat.Background.TimedBgActivityCanceledEventArgs&lt;TState&gt;" Collapsed="true">
+    <Position X="1" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAACAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Background\TimedBgActivityCanceledEventArgs.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="FsInfoCat.Background.TimedBgActivityFaultedEventArgs&lt;TState&gt;" Collapsed="true">
+    <Position X="4" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAACAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Background\TimedBgActivityFaultedEventArgs.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="FsInfoCat.Background.IBgActivityService" Collapsed="true">
+    <Position X="26.5" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Background\IBgActivityService.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Background.IBgActivityObject" Collapsed="true">
+    <Position X="16.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAA=</HashCode>
+      <FileName>Background\IBgActivityObject.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Background.IBgActivityObject&lt;TState&gt;" Collapsed="true">
+    <Position X="15" Y="1.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Background\IBgActivityObject.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Background.IBgStatusEventArgs" Collapsed="true">
+    <Position X="20.5" Y="1.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEAAAAAAAAAAAAEAAAAAAAAAAAAABAAIAAAAA=</HashCode>
+      <FileName>Background\IBgStatusEventArgs.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Background.IBgStatusEventArgs&lt;TState&gt;" Collapsed="true">
+    <Position X="19.5" Y="5.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Background\IBgStatusEventArgs.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Background.IAsyncAction" Collapsed="true">
+    <Position X="12" Y="1.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AABAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAA=</HashCode>
+      <FileName>Background\IAsyncAction.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Background.IAsyncAction&lt;TState&gt;" Collapsed="true">
+    <Position X="15.5" Y="5.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Background\IAsyncAction.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Background.IAsyncFunc&lt;TResult&gt;" Collapsed="true">
+    <Position X="12.25" Y="3.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAA=</HashCode>
+      <FileName>Background\IAsyncFunc.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Background.IAsyncFunc&lt;TState, TResult&gt;" Collapsed="true">
+    <Position X="12" Y="7.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Background\IAsyncFunc.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Background.IBgActivityProgress" Collapsed="true">
+    <Position X="19.5" Y="6.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAABBAA=</HashCode>
+      <FileName>Background\IBgActivityProgress.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Background.IBgActivityProgress&lt;TState&gt;" Collapsed="true">
+    <Position X="15" Y="7.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Background\IBgActivityProgress.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Background.IBgActivitySource" Collapsed="true">
+    <Position X="26.25" Y="5.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAABAAAAAAAAAAQAAAAAAAAAAA=</HashCode>
+      <FileName>Background\IBgActivitySource.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Background.ITimedBgActivityObject" Collapsed="true">
+    <Position X="23" Y="1.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAACAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Background\ITimedBgActivityObject.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Background.ITimedBgActivityObject&lt;TState&gt;" Collapsed="true">
+    <Position X="20.75" Y="3.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Background\ITimedBgActivityObject.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Background.ITimedBgStatusEventArgs" Collapsed="true">
+    <Position X="22.75" Y="5.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Background\ITimedBgStatusEventArgs.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Background.ITimedBgStatusEventArgs&lt;TState&gt;" Collapsed="true">
+    <Position X="22.75" Y="6.75" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Background\ITimedBgStatusEventArgs.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Background.ITimedAsyncAction" Collapsed="true">
+    <Position X="17.25" Y="3.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Background\ITimedAsyncAction.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Background.ITimedAsyncAction&lt;TState&gt;" Collapsed="true">
+    <Position X="18" Y="9.25" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Background\ITimedAsyncAction.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Background.ITimedAsyncFunc&lt;TResult&gt;" Collapsed="true">
+    <Position X="12" Y="5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAA=</HashCode>
+      <FileName>Background\ITimedAsyncFunc.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsInfoCat.Background.ITimedAsyncFunc&lt;TState, TResult&gt;" Collapsed="true">
+    <Position X="15" Y="11" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Background\ITimedAsyncFunc.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

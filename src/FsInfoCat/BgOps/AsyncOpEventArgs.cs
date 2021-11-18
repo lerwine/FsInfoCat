@@ -1,40 +1,28 @@
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 
 namespace FsInfoCat.BgOps
 {
-    internal class AsyncOpEventArgs<T> : EventArgs, IAsyncOpEventArgs<T>
+    public class AsyncOpEventArgs<TState> : EventArgs, IAsyncOpEventArgs<TState>
     {
-        public TaskStatus Status { get; } = TaskStatus.Running;
+        public IAsyncOpEventArgs ParentOperation => throw new NotImplementedException();
 
-        public IAsyncOpEventArgs ParentOperation { get; }
+        public Exception Exception => throw new NotImplementedException();
 
-        public Exception Exception { get; }
+        public TaskStatus Status => throw new NotImplementedException();
 
-        public T AsyncState { get; }
+        public TState AsyncState => throw new NotImplementedException();
 
-        public Guid Id { get; }
+        public Guid Id => throw new NotImplementedException();
 
-        public string Activity { get; }
+        public string Activity => throw new NotImplementedException();
 
-        public string StatusDescription { get; }
+        public string StatusDescription => throw new NotImplementedException();
 
-        public string CurrentOperation { get; }
+        public string CurrentOperation => throw new NotImplementedException();
 
         IAsyncOpStatus IAsyncOpStatus.ParentOperation => throw new NotImplementedException();
 
         IAsyncOpInfo IAsyncOpInfo.ParentOperation => throw new NotImplementedException();
-
-        public AsyncOpEventArgs([DisallowNull] IAsyncOpProgress<T> source, Exception exception)
-        {
-            AsyncState = (source ?? throw new ArgumentNullException(nameof(source))).AsyncState;
-            Id = source.Id;
-            Activity = source.Activity;
-            StatusDescription = source.StatusDescription;
-            CurrentOperation = source.CurrentOperation;
-            ParentOperation = source.ParentOperation;
-            Exception = exception;
-        }
     }
 }
