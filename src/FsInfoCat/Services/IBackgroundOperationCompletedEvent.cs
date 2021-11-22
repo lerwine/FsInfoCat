@@ -6,7 +6,7 @@ namespace FsInfoCat.Services
     {
     }
 
-    public interface IBackgroundOperationCompletedEvent<TSTate> : IBackgroundOperationCompletedEvent, IBackgroundProgressEvent<TSTate>, IBackgroundOperationErrorOptEvent<TSTate>
+    public interface IBackgroundOperationCompletedEvent<TState> : IBackgroundOperationCompletedEvent, IBackgroundProgressEvent<TState>, IBackgroundOperationErrorOptEvent<TState>
     {
     }
 }

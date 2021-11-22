@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat.Services
 {
@@ -18,9 +19,15 @@ namespace FsInfoCat.Services
 
         public IBackgroundProgressService Source { get; }
 
-        protected BackgroundProcessStateEventArgs(IBackgroundOperation operation, MessageCode? messageCode)
+        protected BackgroundProcessStateEventArgs([DisallowNull] IBackgroundProgressService source, [DisallowNull] IBackgroundOperation operation, MessageCode? messageCode)
         {
-            // TODO: Populate properties
+            Source = source ?? throw new ArgumentNullException(nameof(source));
+            Code = messageCode;
+            OperationId = (operation ?? throw new ArgumentNullException(nameof(operation))).OperationId;
+            Activity = operation.Activity ?? "";
+            StatusDescription = operation.StatusDescription ?? "";
+            CurrentOperation = operation.CurrentOperation ?? "";
+            ParentId = operation.ParentId;
         }
     }
 }

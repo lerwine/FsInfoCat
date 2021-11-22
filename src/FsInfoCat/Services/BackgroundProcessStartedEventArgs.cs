@@ -1,14 +1,18 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat.Services
 {
     public sealed class BackgroundProcessStartedEventArgs : BackgroundProcessStateEventArgs, IObservable<IBackgroundProgressEvent>
     {
-        public IDisposable Subscribe(IObserver<IBackgroundProgressEvent> observer)
+        private readonly IBackgroundOperation _operation;
+
+        public BackgroundProcessStartedEventArgs([DisallowNull] IBackgroundProgressService source, [DisallowNull] IBackgroundOperation operation, MessageCode? messageCode)
+            : base(source, operation, messageCode)
         {
-            // TODO: Implement Subscribe
-            throw new NotImplementedException();
+            _operation = operation;
         }
 
+        public IDisposable Subscribe(IObserver<IBackgroundProgressEvent> observer) => _operation.Subscribe(observer);
     }
 }

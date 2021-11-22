@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat.Services
 {
@@ -6,21 +7,21 @@ namespace FsInfoCat.Services
     {
         MessageCode IBackgroundOperationErrorEvent.Code => Code ?? MessageCode.UnexpectedError;
 
-        public BackgroundProcessFaultedEventArgs(IBackgroundOperation operation, Exception exception, ErrorCode errorCode)
-            : base(operation, errorCode.ToMessageCode(), exception) { }
+        public BackgroundProcessFaultedEventArgs([DisallowNull] IBackgroundProgressService source, [DisallowNull] IBackgroundOperation operation, [DisallowNull] Exception exception, ErrorCode errorCode)
+            : base(source, operation, errorCode.ToMessageCode(), exception ?? throw new ArgumentNullException(nameof(exception))) { }
 
-        public BackgroundProcessFaultedEventArgs(IBackgroundOperation operation, Exception exception)
-            : base(operation, null, exception) { }
+        public BackgroundProcessFaultedEventArgs([DisallowNull] IBackgroundProgressService source, [DisallowNull] IBackgroundOperation operation, [DisallowNull] Exception exception)
+            : base(source, operation, null, exception ?? throw new ArgumentNullException(nameof(exception))) { }
     }
 
     public class BackgroundProcessFaultedEventArgs<TState> : BackgroundProcessFaultedEventArgs, IBackgroundOperationFaultedEvent<TState>
     {
         public TState AsyncState { get; }
 
-        public BackgroundProcessFaultedEventArgs(IBackgroundOperation<TState> operation, Exception exception, ErrorCode errorCode)
-            : base(operation, exception, errorCode) => AsyncState = operation.AsyncState;
+        public BackgroundProcessFaultedEventArgs([DisallowNull] IBackgroundProgressService source, [DisallowNull] IBackgroundOperation<TState> operation, [DisallowNull] Exception exception, ErrorCode errorCode)
+            : base(source, operation, exception, errorCode) => AsyncState = operation.AsyncState;
 
-        public BackgroundProcessFaultedEventArgs(IBackgroundOperation<TState> operation, Exception exception)
-            : base(operation, exception) => AsyncState = operation.AsyncState;
+        public BackgroundProcessFaultedEventArgs([DisallowNull] IBackgroundProgressService source, [DisallowNull] IBackgroundOperation<TState> operation, [DisallowNull] Exception exception)
+            : base(source, operation, exception) => AsyncState = operation.AsyncState;
     }
 }

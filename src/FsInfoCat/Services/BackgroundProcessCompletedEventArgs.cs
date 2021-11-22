@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat.Services
 {
@@ -6,8 +7,8 @@ namespace FsInfoCat.Services
     {
         public Exception Error { get; }
 
-        public BackgroundProcessCompletedEventArgs(IBackgroundOperation operation, MessageCode? messageCode, Exception exception)
-            : base(operation, messageCode)
+        public BackgroundProcessCompletedEventArgs([DisallowNull] IBackgroundProgressService source, [DisallowNull] IBackgroundOperation operation, MessageCode? messageCode, Exception exception)
+            : base(source, operation, messageCode)
         {
             Error = exception;
         }
@@ -17,8 +18,8 @@ namespace FsInfoCat.Services
     {
         public TState AsyncState { get; }
 
-        public BackgroundProcessCompletedEventArgs(IBackgroundOperation<TState> operation, MessageCode? messageCode, Exception exception)
-            : base(operation, messageCode, exception)
+        public BackgroundProcessCompletedEventArgs([DisallowNull] IBackgroundProgressService source, [DisallowNull] IBackgroundOperation<TState> operation, MessageCode? messageCode, Exception exception)
+            : base(source, operation, messageCode, exception)
         {
             AsyncState = operation.AsyncState;
         }

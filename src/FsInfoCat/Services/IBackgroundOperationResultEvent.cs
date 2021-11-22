@@ -5,7 +5,7 @@ namespace FsInfoCat.Services
         TResult Result { get; }
     }
 
-    public interface IBackgroundOperationResultEvent<TState, TResult> : IBackgroundOperationResultEvent<TResult>, IBackgroundOperationCompleteEvent<TState>
+    public interface IBackgroundOperationResultEvent<TState, TResult> : IBackgroundOperationResultEvent<TResult>, IBackgroundOperationCompletedEvent<TState>
     {
     }
 }
