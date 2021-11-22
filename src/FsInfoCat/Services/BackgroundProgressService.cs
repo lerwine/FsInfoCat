@@ -17,6 +17,18 @@ namespace FsInfoCat.Services
         private readonly object _syncRoot = new();
         private readonly ILogger<BackgroundProgressService> _logger;
         private readonly LinkedList<IBackgroundOperation> _operations = new();
+        private readonly StateEventObservers _stateEventObservers = new();
+        private readonly ActiveStatusObservers _activeStatusObservers = new();
+
+        class StateEventObservers : Observable<BackgroundProcessStateEventArgs>
+        {
+            internal void RaiseStateChanged(BackgroundProcessStateEventArgs backgroundProcessEventArgs) => RaiseNext(backgroundProcessEventArgs);
+        }
+
+        class ActiveStatusObservers : Observable<bool>
+        {
+            internal void RaiseActiveStateChanged(bool isActive) => RaiseNext(isActive);
+        }
 
         public bool IsActive { get; private set; }
 
@@ -34,21 +46,32 @@ namespace FsInfoCat.Services
             services.AddHostedService<IBackgroundProgressService>(serviceProvider => new BackgroundProgressService(serviceProvider.GetRequiredService<ILogger<BackgroundProgressService>>()));
         }
 
-        public IDisposable Subscribe([DisallowNull] IObserver<BackgroundProcessStateEventArgs> observer)
-        {
-            // TODO: Implement Subscribe
-            throw new NotImplementedException();
-        }
+        public IDisposable Subscribe([DisallowNull] IObserver<IBackgroundProgressEvent> observer) => _stateEventObservers.Subscribe(observer);
 
-        public IDisposable Subscribe([DisallowNull] IObserver<bool> observer)
-        {
-            throw new NotImplementedException();
-        }
+        public IDisposable Subscribe([DisallowNull] IObserver<bool> observer) => _activeStatusObservers.Subscribe(observer);
 
-        protected override Task ExecuteAsync(CancellationToken stoppingToken)
+#pragma warning disable CA2016 // Forward the 'CancellationToken' parameter to methods that take one
+        protected override Task ExecuteAsync(CancellationToken stoppingToken) => Task.Run(() =>
+#pragma warning restore CA2016 // Forward the 'CancellationToken' parameter to methods that take one
         {
-            throw new NotImplementedException();
-        }
+            Task task;
+            try { stoppingToken.WaitHandle.WaitOne(); }
+            finally
+            {
+                lock (_syncRoot)
+                {
+                    IBackgroundOperation[] actions = _operations.ToArray();
+                    task = Task.WhenAll(actions.Select(o => o.Task).ToArray()).ContinueWith(t =>
+                    {
+                        try { _stateEventObservers.Dispose(); }
+                        finally { _activeStatusObservers.Dispose(); }
+                    });
+                    foreach (IBackgroundOperation op in actions)
+                        op.Cancel();
+                }
+            }
+            task.Wait();
+        });
 
         public IEnumerator<IBackgroundOperation> GetEnumerator()
         {
@@ -61,16 +84,47 @@ namespace FsInfoCat.Services
             throw new NotImplementedException();
         }
 
-        private void RaiseOperationStarted(IBackgroundOperation operation)
+        private void RaiseOperationStarted(IBackgroundOperation operation, bool isFirstOperation)
         {
-            // TODO: Implement RaiseOperationStarted
-            throw new NotImplementedException();
+            try
+            {
+                if (isFirstOperation)
+                    _activeStatusObservers.RaiseActiveStateChanged(true);
+            }
+            finally { _stateEventObservers.RaiseStateChanged(new BackgroundProcessStartedEventArgs(this, operation, null)); }
         }
 
         private void RaiseOperationCompleted([DisallowNull] Task task, [DisallowNull] LinkedListNode<IBackgroundOperation> node)
         {
-            // TODO: Implement RaiseOperationCompleted
-            throw new NotImplementedException();
+            bool isLastOperation;
+            lock (_syncRoot)
+            {
+                isLastOperation = ReferenceEquals(node, _operations.First) && ReferenceEquals(node, _operations.Last);
+                _operations.Remove(node);
+            }
+            try
+            {
+                if (task.IsCanceled)
+                    _stateEventObservers.RaiseStateChanged(new BackgroundProcessCompletedEventArgs(this, node.Value, null, null, false));
+                else if (task.IsFaulted)
+                {
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+                    if (task.Exception.InnerException is AsyncOperationFailureException asyncFailureException)
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
+                        _stateEventObservers.RaiseStateChanged(new BackgroundProcessFaultedEventArgs(this, node.Value, (task.Exception.InnerExceptions.Count == 1) ? asyncFailureException : task.Exception, asyncFailureException.ErrorCode ?? ErrorCode.Unexpected));
+                    else
+#pragma warning disable CS8604 // Possible null reference argument.
+                        _stateEventObservers.RaiseStateChanged(new BackgroundProcessFaultedEventArgs(this, node.Value, (task.Exception.InnerExceptions.Count == 1) ? task.Exception.InnerException : task.Exception, ErrorCode.Unexpected));
+#pragma warning restore CS8604 // Possible null reference argument.
+                }
+                else
+                    _stateEventObservers.RaiseStateChanged(new BackgroundProcessCompletedEventArgs(this, node.Value, null, null, true));
+            }
+            finally
+            {
+                if (isLastOperation && _operations.First is null)
+                    _activeStatusObservers.RaiseActiveStateChanged(false);
+            }
         }
 
         private void OnReport(IBackgroundProgressEvent progressEvent)
@@ -88,8 +142,14 @@ namespace FsInfoCat.Services
             where TProgress : BackgroundProgress<TEvent, TOperation, TResultEvent>
         {
             TOperation operation = progress.Operation;
-            LinkedListNode<IBackgroundOperation> node = _operations.AddLast(operation);
-            RaiseOperationStarted(operation);
+            bool isFirstOperation;
+            LinkedListNode<IBackgroundOperation> node;
+            lock (_syncRoot)
+            {
+                isFirstOperation = _operations.First is null;
+                node = _operations.AddLast(operation);
+            }
+            RaiseOperationStarted(operation, isFirstOperation);
             if (onCompleted is null)
                 operation.Task.ContinueWith(task => RaiseOperationCompleted(task, node));
             else
