@@ -7,10 +7,13 @@ namespace FsInfoCat.Services
     {
         public Exception Error { get; }
 
-        public BackgroundProcessCompletedEventArgs([DisallowNull] IBackgroundProgressService source, [DisallowNull] IBackgroundOperation operation, MessageCode? messageCode, Exception exception)
+        public bool RanToCompletion { get; }
+
+        public BackgroundProcessCompletedEventArgs([DisallowNull] IBackgroundProgressService source, [DisallowNull] IBackgroundOperation operation, MessageCode? messageCode, Exception exception, bool ranToCompletion)
             : base(source, operation, messageCode)
         {
             Error = exception;
+            RanToCompletion = ranToCompletion;
         }
     }
 
@@ -18,8 +21,8 @@ namespace FsInfoCat.Services
     {
         public TState AsyncState { get; }
 
-        public BackgroundProcessCompletedEventArgs([DisallowNull] IBackgroundProgressService source, [DisallowNull] IBackgroundOperation<TState> operation, MessageCode? messageCode, Exception exception)
-            : base(source, operation, messageCode, exception)
+        public BackgroundProcessCompletedEventArgs([DisallowNull] IBackgroundProgressService source, [DisallowNull] IBackgroundOperation<TState> operation, MessageCode? messageCode, Exception exception, bool ranToCompletion)
+            : base(source, operation, messageCode, exception, ranToCompletion)
         {
             AsyncState = operation.AsyncState;
         }

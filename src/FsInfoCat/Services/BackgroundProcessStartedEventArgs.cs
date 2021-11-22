@@ -3,7 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat.Services
 {
-    public sealed class BackgroundProcessStartedEventArgs : BackgroundProcessStateEventArgs, IObservable<IBackgroundProgressEvent>
+    public sealed class BackgroundProcessStartedEventArgs : BackgroundProcessStateEventArgs, IBackgroundProgressStartedEvent
     {
         private readonly IBackgroundOperation _operation;
 

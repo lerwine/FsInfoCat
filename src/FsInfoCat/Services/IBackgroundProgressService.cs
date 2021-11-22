@@ -7,7 +7,7 @@ namespace FsInfoCat.Services
     /// <summary>
     /// Defines a service for reporting the progress of background processes.
     /// </summary>
-    public interface IBackgroundProgressService : IBackgroundProgressFactory, IHostedService, IObservable<BackgroundProcessStateEventArgs>, IObservable<bool>, IReadOnlyCollection<IBackgroundOperation>
+    public interface IBackgroundProgressService : IBackgroundProgressFactory, IHostedService, IObservable<IBackgroundProgressEvent>, IObservable<bool>, IReadOnlyCollection<IBackgroundOperation>
     {
         bool IsActive { get; }
     }
