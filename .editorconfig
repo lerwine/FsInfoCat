@@ -20,7 +20,7 @@ dotnet_diagnostic.CA5385.severity=warning
 dotnet_diagnostic.CA5397.severity=warning
 dotnet_diagnostic.CA2215.severity=warning
 dotnet_diagnostic.CA2201.severity=warning
-csharp_space_around_binary_operators=none
+csharp_space_around_binary_operators=before_and_after
 
 [*.(xml,xsd)]
 charset = utf-8
