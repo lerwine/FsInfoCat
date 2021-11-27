@@ -8,6 +8,19 @@ indent_size = 4
 insert_final_newline = true
 trim_trailing_whitespace = true
 csharp_prefer_braces  = false
+dotnet_diagnostic.CA1805.severity=warning
+dotnet_diagnostic.CA5350.severity=warning
+dotnet_diagnostic.CA5351.severity=warning
+dotnet_diagnostic.CA5360.severity=warning
+dotnet_diagnostic.CA5374.severity=warning
+dotnet_diagnostic.CA5373.severity=warning
+dotnet_diagnostic.CA5379.severity=warning
+dotnet_diagnostic.CA5384.severity=warning
+dotnet_diagnostic.CA5385.severity=warning
+dotnet_diagnostic.CA5397.severity=warning
+dotnet_diagnostic.CA2215.severity=warning
+dotnet_diagnostic.CA2201.severity=warning
+csharp_space_around_binary_operators=none
 
 [*.(xml,xsd)]
 charset = utf-8
