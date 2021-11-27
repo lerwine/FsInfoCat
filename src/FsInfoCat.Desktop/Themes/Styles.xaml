@@ -273,7 +273,7 @@
     <Style x:Key="PopupOuterBorder" TargetType="{x:Type Border}">
         <Setter Property="BorderBrush" Value="{DynamicResource PopupBorderBrush}" />
         <Setter Property="BorderThickness" Value="{DynamicResource ThickBorderThickness}" />
-        <Setter Property="CornerRadius" Value="{DynamicResource PopupOuterBortderCornerRadius}" />
+        <Setter Property="CornerRadius" Value="{DynamicResource PopupOuterBorderCornerRadius}" />
         <Setter Property="HorizontalAlignment" Value="Center" />
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="Margin" Value="{DynamicResource DefaultSpacing}" />

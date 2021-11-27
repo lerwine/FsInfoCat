@@ -34,7 +34,7 @@
     <Thickness x:Key="ThinBorderThickness" Left="{StaticResource ThinBorderWidth}" Top="{StaticResource ThinBorderWidth}" Right="{StaticResource ThinBorderWidth}" Bottom="{StaticResource ThinBorderWidth}"/>
     <Thickness x:Key="NormalBorderThickness" Left="{StaticResource NormalBorderWidth}" Top="{StaticResource NormalBorderWidth}" Right="{StaticResource NormalBorderWidth}" Bottom="{StaticResource NormalBorderWidth}"/>
     <Thickness x:Key="ThickBorderThickness" Left="{StaticResource ThickBorderWidth}" Top="{StaticResource ThickBorderWidth}" Right="{StaticResource ThickBorderWidth}" Bottom="{StaticResource ThickBorderWidth}"/>
-    <CornerRadius x:Key="PopupOuterBortderCornerRadius" TopLeft="{StaticResource DefaultSpacingValue}" TopRight="{StaticResource DefaultSpacingValue}" BottomLeft="{StaticResource DefaultSpacingValue}" BottomRight="{StaticResource DefaultSpacingValue}" />
+    <CornerRadius x:Key="PopupOuterBorderCornerRadius" TopLeft="{StaticResource DefaultSpacingValue}" TopRight="{StaticResource DefaultSpacingValue}" BottomLeft="{StaticResource DefaultSpacingValue}" BottomRight="{StaticResource DefaultSpacingValue}" />
     <CornerRadius x:Key="PopupTitleCornerRadius" TopLeft="{StaticResource NarrowSpacingValue}" TopRight="{StaticResource NarrowSpacingValue}" BottomLeft="0" BottomRight="0" />
     <CornerRadius x:Key="PopupContentCornerRadius" TopLeft="0" TopRight="0" BottomLeft="{StaticResource NarrowSpacingValue}" BottomRight="{StaticResource NarrowSpacingValue}" />
 </ResourceDictionary>

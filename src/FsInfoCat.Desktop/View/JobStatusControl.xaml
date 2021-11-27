@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:FsInfoCat.Desktop.View"
              mc:Ignorable="d" 
              d:DesignHeight="200" d:DesignWidth="400" Margin="{DynamicResource ExtraWideSpacing}">
-    <Border Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" BorderBrush="{DynamicResource PopupBorderBrush}" BorderThickness="{DynamicResource ThickBorderThickness}" CornerRadius="{DynamicResource PopupOuterBortderCornerRadius}">
+    <Border Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" BorderBrush="{DynamicResource PopupBorderBrush}" BorderThickness="{DynamicResource ThickBorderThickness}" CornerRadius="{DynamicResource PopupOuterBorderCornerRadius}">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
