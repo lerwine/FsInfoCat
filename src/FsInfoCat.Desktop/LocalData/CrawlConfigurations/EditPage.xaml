@@ -8,6 +8,7 @@
     xmlns:ViewModel="clr-namespace:FsInfoCat.Desktop.ViewModel"
     xmlns:Converters="clr-namespace:FsInfoCat.Desktop.Converters"
     xmlns:FsInfoCat="clr-namespace:FsInfoCat;assembly=FsInfoCat"
+    xmlns:Tasks="clr-namespace:System.Threading.Tasks;assembly=System.Runtime"
     xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
     x:Class="FsInfoCat.Desktop.LocalData.CrawlConfigurations.EditPage"
       xmlns:View="clr-namespace:FsInfoCat.Desktop.View"
@@ -136,7 +137,7 @@
         </VisualStateManager.VisualStateGroups>
         <b:Interaction.Behaviors>
             <b:DataStateBehavior Binding="{Binding IsNew, Mode=OneWay}" TrueState="IsNew" FalseState="NotNew" Value="true"/>
-            <b:DataStateBehavior Binding="{Binding StatusValue, Mode=OneWay}" TrueState="DisabledState" FalseState="EnabledState" Value="{x:Static FsInfoCat:CrawlStatus.Disabled}"/>
+            <b:DataStateBehavior Binding="{Binding StatusValue, Mode=OneWay}" TrueState="DisabledState" FalseState="EnabledState" Value="{x:Static Tasks:TaskStatus.WaitingToRun}"/>
         </b:Interaction.Behaviors>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="3*"/>

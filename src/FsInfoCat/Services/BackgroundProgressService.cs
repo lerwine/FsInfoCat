@@ -1,3 +1,4 @@
+using FsInfoCat.AsyncOps;
 using FsInfoCat.Collections;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;

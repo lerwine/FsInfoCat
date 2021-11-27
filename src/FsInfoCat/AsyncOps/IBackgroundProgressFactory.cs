@@ -2,7 +2,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace FsInfoCat.Services
+namespace FsInfoCat.AsyncOps
 {
     public interface IBackgroundProgressFactory
     {

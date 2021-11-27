@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FsInfoCat.AsyncOps;
+using System;
 using System.Threading.Tasks;
 
 namespace FsInfoCat.Background

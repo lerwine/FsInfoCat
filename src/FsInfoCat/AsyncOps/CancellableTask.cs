@@ -1,7 +1,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace FsInfoCat
+namespace FsInfoCat.AsyncOps
 {
     public record CancellableTask<T>
         where T : Task

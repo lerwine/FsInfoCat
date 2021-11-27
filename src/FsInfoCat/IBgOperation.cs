@@ -6,6 +6,7 @@ namespace FsInfoCat
     /// <summary>
     /// Represents a background operation.
     /// </summary>
+    [Obsolete("Use FsInfoCat.AsyncOps.IBackgroundOperation, instead")]
     public interface IBgOperation : IAsyncOperationInfo, IAsyncResult
     {
         /// <summary>
@@ -36,5 +37,6 @@ namespace FsInfoCat
     /// Represents a background operation.
     /// </summary>
     /// <typeparam name="T">The type of the asynchronous state value.</typeparam>
+    [Obsolete("Use FsInfoCat.AsyncOps.IBackgroundOperation<T>, instead")]
     public interface IBgOperation<T> : IBgOperation, IAsyncOperationInfo<T> { }
 }

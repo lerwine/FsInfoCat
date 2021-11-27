@@ -1,3 +1,4 @@
+using FsInfoCat.AsyncOps;
 using System;
 using System.Threading.Tasks;
 

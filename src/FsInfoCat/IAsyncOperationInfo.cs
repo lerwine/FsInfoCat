@@ -1,3 +1,4 @@
+using FsInfoCat.AsyncOps;
 using System;
 
 namespace FsInfoCat
@@ -6,6 +7,7 @@ namespace FsInfoCat
     /// Progress information for an asynchronous operation.
     /// </summary>
     /// <remarks>This is roughly based off of the same concept as the PowerShell <see cref="https://docs.microsoft.com/en-us/dotnet/api/system.management.automation.progressrecord">ProgressRecord</see> class.</remarks>
+    [Obsolete("Use FsInfoCat.AsyncOps.IBackgroundProgressInfo, instead")]
     public interface IAsyncOperationInfo
     {
         /// <summary>
@@ -60,6 +62,7 @@ namespace FsInfoCat
     /// Progress information for an asynchronous operation.
     /// </summary>
     /// <typeparam name="T">The type of the asynchronous state value.</typeparam>
+    [Obsolete("Use FsInfoCat.AsyncOps.IBackgroundProgressInfo, instead")]
     public interface IAsyncOperationInfo<T> : IAsyncOperationInfo
     {
         /// <summary>

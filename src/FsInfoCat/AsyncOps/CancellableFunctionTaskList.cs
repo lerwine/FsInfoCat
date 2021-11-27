@@ -2,7 +2,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace FsInfoCat
+namespace FsInfoCat.AsyncOps
 {
     public sealed class CancellableFunctionTaskList<TResult> : CancellableTaskList<Task<TResult>>
     {

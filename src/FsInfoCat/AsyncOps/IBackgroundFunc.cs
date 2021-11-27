@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace FsInfoCat.Services
+namespace FsInfoCat.AsyncOps
 {
     public interface IBackgroundFunc<TResult> : IBackgroundOperation, IObservable<IBackgroundProgressEvent>
     {

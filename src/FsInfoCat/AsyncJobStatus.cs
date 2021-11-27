@@ -2,6 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat
 {
+    [System.Obsolete("Do not use. Use System.Threading.Tasks.TaskStatus, instead.")]
     public enum AsyncJobStatus
     {
         [Display(Name = nameof(Properties.Resources.DisplayName_Pending), ShortName = nameof(Properties.Resources.DisplayName_Pending), Description = nameof(Properties.Resources.DisplayName_Pending), ResourceType = typeof(Properties.Resources))]

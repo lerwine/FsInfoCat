@@ -4,6 +4,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:FsInfoCat="clr-namespace:FsInfoCat;assembly=FsInfoCat"
+    xmlns:Tasks="clr-namespace:System.Threading.Tasks;assembly=System.Runtime"
     xmlns:View="clr-namespace:FsInfoCat.Desktop.View" xmlns:System="clr-namespace:System;assembly=mscorlib"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     mc:Ignorable="d">
@@ -16,7 +17,7 @@
                     <Border x:Name="border" BorderThickness="{TemplateBinding BorderThickness}">
                     </Border>
                     <ControlTemplate.Triggers>
-                        <Trigger Property="Status" Value="{x:Static FsInfoCat:CrawlStatus.NotRunning}">
+                        <Trigger Property="Status" Value="{x:Static Tasks:TaskStatus.WaitingToRun}">
                             <Setter Property="Background" TargetName="border">
                                 <Setter.Value>
                                     <DrawingBrush>
@@ -35,7 +36,7 @@
                             </Setter>
                             <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource SuccessDarkBrush}"/>
                         </Trigger>
-                        <Trigger Property="Status" Value="{x:Static FsInfoCat:CrawlStatus.InProgress}">
+                        <Trigger Property="Status" Value="{x:Static Tasks:TaskStatus.Running}">
                             <Setter Property="Background" TargetName="border">
                                 <Setter.Value>
                                     <DrawingBrush>
@@ -53,7 +54,7 @@
                             </Setter>
                             <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource SuccessDarkBrush}"/>
                         </Trigger>
-                        <Trigger Property="Status" Value="{x:Static FsInfoCat:CrawlStatus.Completed}">
+                        <Trigger Property="Status" Value="{x:Static Tasks:TaskStatus.RanToCompletion}">
                             <Setter Property="Background" TargetName="border">
                                 <Setter.Value>
                                     <DrawingBrush>
@@ -72,7 +73,7 @@
                             </Setter>
                             <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource SuccessDarkBrush}"/>
                         </Trigger>
-                        <Trigger Property="Status" Value="{x:Static FsInfoCat:CrawlStatus.AllottedTimeElapsed}">
+                        <!--<Trigger Property="Status" Value="{x:Static FsInfoCat:FsInfoCat.AsyncOps.CrawlStatus.AllottedTimeElapsed}">
                             <Setter Property="Background" TargetName="border">
                                 <Setter.Value>
                                     <DrawingBrush>
@@ -93,8 +94,8 @@
                                 </Setter.Value>
                             </Setter>
                             <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource WarningDarkBrush}"/>
-                        </Trigger>
-                        <Trigger Property="Status" Value="{x:Static FsInfoCat:CrawlStatus.MaxItemCountReached}">
+                        </Trigger>-->
+                        <!--<Trigger Property="Status" Value="{x:Static FsInfoCat:FsInfoCat.AsyncOps.CrawlStatus.MaxItemCountReached}">
                             <Setter Property="Background" TargetName="border">
                                 <Setter.Value>
                                     <DrawingBrush>
@@ -112,8 +113,8 @@
                                 </Setter.Value>
                             </Setter>
                             <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource WarningDarkBrush}"/>
-                        </Trigger>
-                        <Trigger Property="Status" Value="{x:Static FsInfoCat:CrawlStatus.Canceled}">
+                        </Trigger>-->
+                        <Trigger Property="Status" Value="{x:Static Tasks:TaskStatus.Canceled}">
                             <Setter Property="Background" TargetName="border">
                                 <Setter.Value>
                                     <DrawingBrush>
@@ -132,7 +133,7 @@
                             </Setter>
                             <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource WarningDarkBrush}"/>
                         </Trigger>
-                        <Trigger Property="Status" Value="{x:Static FsInfoCat:CrawlStatus.Failed}">
+                        <Trigger Property="Status" Value="{x:Static Tasks:TaskStatus.Faulted}">
                             <Setter Property="Background" TargetName="border">
                                 <Setter.Value>
                                     <DrawingBrush>
@@ -151,7 +152,7 @@
                             </Setter>
                             <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource ErrorDarkBrush}"/>
                         </Trigger>
-                        <Trigger Property="Status" Value="{x:Static FsInfoCat:CrawlStatus.Disabled}">
+                        <!--<Trigger Property="Status" Value="{x:Static FsInfoCat:FsInfoCat.AsyncOps.CrawlStatus.Disabled}">
                             <Setter Property="Background" TargetName="border">
                                 <Setter.Value>
                                     <DrawingBrush>
@@ -168,7 +169,7 @@
                                 </Setter.Value>
                             </Setter>
                             <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource LightBorderBrush}"/>
-                        </Trigger>
+                        </Trigger>-->
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>

@@ -1,6 +1,6 @@
 using System;
 
-namespace FsInfoCat.Services
+namespace FsInfoCat.AsyncOps
 {
     public interface IBackgroundOperationErrorEvent : IBackgroundOperationErrorOptEvent
     {

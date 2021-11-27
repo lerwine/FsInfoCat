@@ -5,6 +5,7 @@ namespace FsInfoCat
     /// <summary>
     /// Represents a background operation that produces a result value.
     /// </summary>
+    [System.Obsolete("Use FsInfoCat.AsyncOps.IBackgroundFunc<TResult>, instead")]
     public interface IBgProducer<TResult> : IBgOperation
     {
         /// <summary>
@@ -14,5 +15,6 @@ namespace FsInfoCat
         new Task<TResult> Task { get; }
     }
 
+    [System.Obsolete("Use FsInfoCat.AsyncOps.IBackgroundFunc<TState, TResult>, instead")]
     public interface IBgProducer<TState, TResult> : IBgProducer<TResult>, IBgOperation<TState> { }
 }

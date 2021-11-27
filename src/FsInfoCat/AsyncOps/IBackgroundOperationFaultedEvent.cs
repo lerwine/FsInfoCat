@@ -1,4 +1,4 @@
-namespace FsInfoCat.Services
+namespace FsInfoCat.AsyncOps
 {
     public interface IBackgroundOperationFaultedEvent : IBackgroundOperationCompletedEvent, IBackgroundOperationErrorEvent
     {

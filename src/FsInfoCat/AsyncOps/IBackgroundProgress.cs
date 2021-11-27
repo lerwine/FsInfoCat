@@ -1,7 +1,7 @@
 using System;
 using System.Threading;
 
-namespace FsInfoCat.Services
+namespace FsInfoCat.AsyncOps
 {
     public interface IBackgroundProgress<TEvent> : IBackgroundProgressInfo, IProgress<TEvent>, IBackgroundProgressFactory
         where TEvent : IBackgroundProgressEvent

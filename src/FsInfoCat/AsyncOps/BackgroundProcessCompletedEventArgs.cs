@@ -1,7 +1,8 @@
+using FsInfoCat.Services;
 using System;
 using System.Diagnostics.CodeAnalysis;
 
-namespace FsInfoCat.Services
+namespace FsInfoCat.AsyncOps
 {
     public class BackgroundProcessCompletedEventArgs : BackgroundProcessStateEventArgs, IBackgroundOperationCompletedEvent
     {
@@ -12,8 +13,8 @@ namespace FsInfoCat.Services
         public BackgroundProcessCompletedEventArgs([DisallowNull] IBackgroundProgressService source, [DisallowNull] IBackgroundOperation operation, MessageCode? messageCode, Exception exception, bool ranToCompletion)
             : base(source, operation, messageCode)
         {
-            Error = exception;
-            RanToCompletion = ranToCompletion;
+            Error=exception;
+            RanToCompletion=ranToCompletion;
         }
     }
 
@@ -24,7 +25,7 @@ namespace FsInfoCat.Services
         public BackgroundProcessCompletedEventArgs([DisallowNull] IBackgroundProgressService source, [DisallowNull] IBackgroundOperation<TState> operation, MessageCode? messageCode, Exception exception, bool ranToCompletion)
             : base(source, operation, messageCode, exception, ranToCompletion)
         {
-            AsyncState = operation.AsyncState;
+            AsyncState=operation.AsyncState;
         }
     }
 }

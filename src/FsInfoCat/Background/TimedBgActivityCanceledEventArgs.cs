@@ -1,3 +1,4 @@
+using FsInfoCat.AsyncOps;
 using System;
 
 namespace FsInfoCat.Background

@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace FsInfoCat
+namespace FsInfoCat.AsyncOps
 {
     public enum ActivityCode
     {

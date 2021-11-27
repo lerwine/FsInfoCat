@@ -1,7 +1,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 
-namespace FsInfoCat.Services
+namespace FsInfoCat.AsyncOps
 {
     public class BackgroundProgressEventArgs : IBackgroundProgressEvent
     {
@@ -19,14 +19,14 @@ namespace FsInfoCat.Services
 
         public BackgroundProgressEventArgs([DisallowNull] IBackgroundProgressInfo progress)
         {
-            OperationId = (progress ?? throw new ArgumentNullException(nameof(progress))).OperationId;
-            Activity = progress.Activity;
-            StatusDescription = progress.StatusDescription;
-            CurrentOperation = progress.CurrentOperation;
-            ParentId = progress.ParentId;
+            OperationId=(progress??throw new ArgumentNullException(nameof(progress))).OperationId;
+            Activity=progress.Activity;
+            StatusDescription=progress.StatusDescription;
+            CurrentOperation=progress.CurrentOperation;
+            ParentId=progress.ParentId;
         }
 
-        public BackgroundProgressEventArgs([DisallowNull] IBackgroundProgressInfo progress, MessageCode messageCode) : this(progress) { Code = messageCode; }
+        public BackgroundProgressEventArgs([DisallowNull] IBackgroundProgressInfo progress, MessageCode messageCode) : this(progress) { Code=messageCode; }
     }
 
     public class BackgroundProgressEventArgs<T> : BackgroundProgressEventArgs, IBackgroundProgressEvent<T>
@@ -35,7 +35,7 @@ namespace FsInfoCat.Services
 
         public BackgroundProgressEventArgs([DisallowNull] IBackgroundProgressInfo<T> progress) : base(progress)
         {
-            AsyncState = progress.AsyncState;
+            AsyncState=progress.AsyncState;
         }
     }
 }

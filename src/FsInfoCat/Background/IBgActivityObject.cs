@@ -1,3 +1,5 @@
+using FsInfoCat.AsyncOps;
+
 namespace FsInfoCat.Background
 {
     public interface IBgActivityObject

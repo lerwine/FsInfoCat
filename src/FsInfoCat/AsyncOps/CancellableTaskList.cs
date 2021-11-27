@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace FsInfoCat
+namespace FsInfoCat.AsyncOps
 {
     public sealed class CancellableTaskList
     {
@@ -35,10 +35,10 @@ namespace FsInfoCat
 
         public void CancelAll(bool throwOnFirstException)
         {
-            for (LinkedListNode<IItem> item = _items.Last; item is not null; item = _items.Last)
+            for (LinkedListNode<IItem> item = _items.Last; item is not null; item=_items.Last)
                 item.Value.Cancel(throwOnFirstException);
         }
-        
+
         public interface IItem : IDisposable
         {
             Task Task { get; }
@@ -60,10 +60,8 @@ namespace FsInfoCat
             public void Cancel(bool throwOnFirstException)
             {
                 lock (_tokenSource)
-                {
-                    if (!(_disposed || _task.IsCompleted || !_tokenSource.IsCancellationRequested))
+                    if (!(_disposed||_task.IsCompleted||!_tokenSource.IsCancellationRequested))
                         _tokenSource.Cancel(throwOnFirstException);
-                }
             }
 
             public void Dispose()
@@ -72,9 +70,9 @@ namespace FsInfoCat
                 {
                     if (_disposed)
                         return;
-                    _disposed = true;
+                    _disposed=true;
                     if (_list._items.Contains(this))
-                        _ = _list._items.Remove(this);
+                        _=_list._items.Remove(this);
                 }
                 if (!_task.IsCompleted)
                 {
@@ -87,10 +85,10 @@ namespace FsInfoCat
 
             internal Item(CancellableTaskList list, Func<CancellationToken, TTask> func)
             {
-                _tokenSource = new CancellationTokenSource();
-                _list = list;
-                _task = func(_tokenSource.Token);
-                _ = _task.ContinueWith(t => Dispose());
+                _tokenSource=new CancellationTokenSource();
+                _list=list;
+                _task=func(_tokenSource.Token);
+                _=_task.ContinueWith(t => Dispose());
             }
 
             internal static Item<TTask> FromAsync<TArg>(CancellableTaskList list, TArg arg, Func<TArg, CancellationToken, TTask> func) => new(list, t => func(arg, t));
@@ -100,13 +98,16 @@ namespace FsInfoCat
             internal static Item<TTask> FromAsync<TArg1, TArg2, TArg3>(CancellableTaskList list, TArg1 arg1, TArg2 arg2, TArg3 arg3, Func<TArg1, TArg2, TArg3, CancellationToken, TTask> func) => new(list, t => func(arg1, arg2, arg3, t));
         }
     }
+}
 
+namespace FsInfoCat.AsyncOps
+{
     public abstract class CancellableTaskList<TTask>
         where TTask : Task
     {
         private readonly LinkedList<Item> _items = new();
 
-        public Item  FromAsync(Func<CancellationToken, TTask> func) => new(this, func);
+        public Item FromAsync(Func<CancellationToken, TTask> func) => new(this, func);
 
         public Item FromAsync<TArg>(TArg arg, Func<TArg, CancellationToken, TTask> func) => Item.FromAsync(this, arg, func);
 
@@ -116,7 +117,7 @@ namespace FsInfoCat
 
         public void CancelAll(bool throwOnFirstException)
         {
-            for (LinkedListNode<Item> item = _items.Last; item is not null; item = _items.Last)
+            for (LinkedListNode<Item> item = _items.Last; item is not null; item=_items.Last)
                 item.Value.Cancel(throwOnFirstException);
         }
 
@@ -132,10 +133,8 @@ namespace FsInfoCat
             public void Cancel(bool throwOnFirstException)
             {
                 lock (_tokenSource)
-                {
-                    if (!(_disposed || _task.IsCompleted || !_tokenSource.IsCancellationRequested))
+                    if (!(_disposed||_task.IsCompleted||!_tokenSource.IsCancellationRequested))
                         _tokenSource.Cancel(throwOnFirstException);
-                }
             }
 
             public void Dispose()
@@ -144,9 +143,9 @@ namespace FsInfoCat
                 {
                     if (_disposed)
                         return;
-                    _disposed = true;
+                    _disposed=true;
                     if (_list._items.Contains(this))
-                        _ = _list._items.Remove(this);
+                        _=_list._items.Remove(this);
                 }
                 if (!_task.IsCompleted)
                 {
@@ -159,10 +158,10 @@ namespace FsInfoCat
 
             internal Item(CancellableTaskList<TTask> list, Func<CancellationToken, TTask> func)
             {
-                _tokenSource = new CancellationTokenSource();
-                _list = list;
-                _task = func(_tokenSource.Token);
-                _ = _task.ContinueWith(t => Dispose());
+                _tokenSource=new CancellationTokenSource();
+                _list=list;
+                _task=func(_tokenSource.Token);
+                _=_task.ContinueWith(t => Dispose());
             }
 
             internal static Item FromAsync<TArg>(CancellableTaskList<TTask> list, TArg arg, Func<TArg, CancellationToken, TTask> func) => new(list, t => func(arg, t));

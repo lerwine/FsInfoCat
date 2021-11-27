@@ -1,7 +1,8 @@
+using FsInfoCat.Services;
 using System;
 using System.Diagnostics.CodeAnalysis;
 
-namespace FsInfoCat.Services
+namespace FsInfoCat.AsyncOps
 {
     public sealed class BackgroundProcessStartedEventArgs : BackgroundProcessStateEventArgs, IBackgroundProgressStartedEvent
     {
@@ -10,7 +11,7 @@ namespace FsInfoCat.Services
         public BackgroundProcessStartedEventArgs([DisallowNull] IBackgroundProgressService source, [DisallowNull] IBackgroundOperation operation, MessageCode? messageCode)
             : base(source, operation, messageCode)
         {
-            _operation = operation;
+            _operation=operation;
         }
 
         public IDisposable Subscribe(IObserver<IBackgroundProgressEvent> observer) => _operation.Subscribe(observer);

@@ -1,3 +1,4 @@
+using FsInfoCat.AsyncOps;
 using FsInfoCat.Desktop.WMI;
 using Microsoft.Extensions.Logging;
 using System;
