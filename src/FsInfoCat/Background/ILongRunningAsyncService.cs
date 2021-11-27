@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat.Background
 {
+    [Obsolete("Use FsInfoCat.Services.IBackgroundProgressService, instead")]
     public interface ILongRunningAsyncService : IAsyncResult, IHostedService, IDisposable
     {
         /// <summary>
@@ -38,6 +39,7 @@ namespace FsInfoCat.Background
         Task Task { get; }
     }
 
+    [Obsolete("Use FsInfoCat.Services.IBackgroundProgressService, instead")]
     public interface ILongRunningAsyncService<TResult> : ILongRunningAsyncService
     {
         /// <summary>
@@ -46,6 +48,8 @@ namespace FsInfoCat.Background
         /// <value>The latest task that was created.</value>
         new Task<TResult> Task { get; }
     }
+
+    [Obsolete("Use FsInfoCat.AsyncOps.IBackgroundProgressFactory, instead")]
     public interface IBackgroundTaskQueue
     {
         Task EnqueueAsync(Func<CancellationToken, Task> doWorkAsync);
