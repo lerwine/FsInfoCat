@@ -9,6 +9,7 @@ namespace FsInfoCat
     /// Represents an error that has occurred during an asynchronous operation.
     /// </summary>
     [Serializable]
+    [Obsolete("Use FsInfoCat.AsyncOps.AsyncOperationException, instead")]
     public class AsyncOperationFailureException : Exception, IAsyncOperationInfo
     {
         /// <summary>
