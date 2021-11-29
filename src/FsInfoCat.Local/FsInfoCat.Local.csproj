@@ -9,6 +9,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Background\**" />
+    <Compile Remove="Crawling\**" />
+    <EmbeddedResource Remove="Background\**" />
+    <EmbeddedResource Remove="Crawling\**" />
+    <None Remove="Background\**" />
+    <None Remove="Crawling\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.Data.Sqlite" Version="5.0.9" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.9" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="5.0.9" />
@@ -64,11 +73,6 @@
 
   <ItemGroup>
     <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Background\" />
-    <Folder Include="Crawling\" />
   </ItemGroup>
 
 </Project>
