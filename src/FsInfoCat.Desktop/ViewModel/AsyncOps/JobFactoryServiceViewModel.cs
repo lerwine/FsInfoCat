@@ -51,10 +51,10 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
 
         #endregion
 
-        public JobFactoryServiceViewModel(ILogger<JobFactoryServiceViewModel> logger)
+        public JobFactoryServiceViewModel()
         {
             _logger.LogDebug($"{nameof(JobFactoryServiceViewModel)} Service constructor invoked");
-            _logger = logger;
+            _logger = Hosting.GetRequiredService<ILogger<JobFactoryServiceViewModel>>();
             SetValue(ItemsPropertyKey, new ReadOnlyObservableCollection<BackgroundJobVM>(_backingItems));
             _logger.LogDebug($"{nameof(JobFactoryServiceViewModel)} Service instantiated");
         }
