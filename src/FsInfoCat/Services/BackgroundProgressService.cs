@@ -21,16 +21,6 @@ namespace FsInfoCat.Services
         private readonly StateEventObservers _stateEventObservers = new();
         private readonly ActiveStatusObservers _activeStatusObservers = new();
 
-        class StateEventObservers : Observable<BackgroundProcessStateEventArgs>
-        {
-            internal void RaiseStateChanged(BackgroundProcessStateEventArgs backgroundProcessEventArgs) => RaiseNext(backgroundProcessEventArgs);
-        }
-
-        class ActiveStatusObservers : Observable<bool>
-        {
-            internal void RaiseActiveStateChanged(bool isActive) => RaiseNext(isActive);
-        }
-
         public bool IsActive { get; private set; }
 
         int IReadOnlyCollection<IBackgroundOperation>.Count => _operations.Count;
@@ -48,6 +38,15 @@ namespace FsInfoCat.Services
         }
 
         public IDisposable Subscribe([DisallowNull] IObserver<IBackgroundProgressEvent> observer) => _stateEventObservers.Subscribe(observer);
+
+        public IDisposable Subscribe(IObserver<IBackgroundProgressEvent> observer, Action<IReadOnlyList<IBackgroundOperation>> getActiveOperationsOnObserving)
+        {
+            lock (_syncRoot)
+            {
+                getActiveOperationsOnObserving?.Invoke(_operations.ToArray());
+                return _stateEventObservers.Subscribe(observer);
+            }
+        }
 
         public IDisposable Subscribe([DisallowNull] IObserver<bool> observer) => _activeStatusObservers.Subscribe(observer);
 
@@ -258,5 +257,15 @@ namespace FsInfoCat.Services
 
         public IBackgroundOperation InvokeAsync(Func<IBackgroundProgress<IBackgroundProgressEvent>, Task> asyncMethodDelegate, string activity, string statusDescription)
             => InvokeAsync<IBackgroundProgressEvent, IBackgroundOperation, BackgroundOperation, IBackgroundOperationCompletedEvent>((p, t1, t2) => new(p, asyncMethodDelegate, t1), CreateEvent, null, activity, statusDescription, null);
+
+        class StateEventObservers : Observable<BackgroundProcessStateEventArgs>
+        {
+            internal void RaiseStateChanged(BackgroundProcessStateEventArgs backgroundProcessEventArgs) => RaiseNext(backgroundProcessEventArgs);
+        }
+
+        class ActiveStatusObservers : Observable<bool>
+        {
+            internal void RaiseActiveStateChanged(bool isActive) => RaiseNext(isActive);
+        }
     }
 }

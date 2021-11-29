@@ -1,7 +1,10 @@
+using FsInfoCat.AsyncOps;
+using FsInfoCat.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 using System.Windows.Threading;
 
@@ -9,17 +12,9 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
 {
     public partial class JobFactoryServiceViewModel : DependencyObject
     {
-        [ServiceBuilderHandler]
-#pragma warning disable IDE0051 // Remove unused private members
-        private static void ConfigureServices(IServiceCollection services)
-#pragma warning restore IDE0051 // Remove unused private members
-        {
-            System.Diagnostics.Debug.WriteLine($"Invoked {typeof(JobFactoryServiceViewModel).FullName}.{nameof(ConfigureServices)}");
-            // TODO: Implement JobFactoryServiceViewModel.ConfigureServices
-            throw new NotImplementedException();
-            //_ = services.AddSingleton<IWindowsAsyncJobFactoryService, AsyncJobService>()
-            //    .AddSingleton<IAsyncJobFactoryService>(services => services.GetRequiredService<IWindowsAsyncJobFactoryService>());
-        }
+        private readonly ILogger<JobFactoryServiceViewModel> _logger;
+        private readonly EventObserver _eventObserver;
+        private readonly ActiveStateObserver _activeStateObserver;
 
         #region Items Property Members
 
@@ -45,20 +40,26 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
         /// Identifies the <see cref="IsBusy"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty IsBusyProperty = IsBusyPropertyKey.DependencyProperty;
-        private readonly ILogger<JobFactoryServiceViewModel> _logger;
 
         public bool IsBusy { get => (bool)GetValue(IsBusyProperty); private set => SetValue(IsBusyPropertyKey, value); }
 
         #endregion
 
+        private void OnOperationStarted([DisallowNull] ICancellableOperation progressInfo, MessageCode? code, [DisallowNull] IObservable<IBackgroundProgressEvent> observable) =>
+            _backingItems.Add(BackgroundJobVM.Create(progressInfo, code, observable, item => Dispatcher.Invoke(() => _backingItems.Remove(item)), out BackgroundJobVM.ProgressObserver observer));
+
         public JobFactoryServiceViewModel()
         {
-            _logger.LogDebug($"{nameof(JobFactoryServiceViewModel)} Service constructor invoked");
-            _logger = Hosting.GetRequiredService<ILogger<JobFactoryServiceViewModel>>();
+            _logger = App.GetLogger(this);
+            _logger.LogDebug($"{nameof(JobFactoryServiceViewModel)} constructor invoked");
             SetValue(ItemsPropertyKey, new ReadOnlyObservableCollection<BackgroundJobVM>(_backingItems));
+            IBackgroundProgressService backgroundService = Hosting.GetRequiredService<IBackgroundProgressService>();
+            _eventObserver = new(this, backgroundService);
+            _activeStateObserver = new(this, backgroundService);
             _logger.LogDebug($"{nameof(JobFactoryServiceViewModel)} Service instantiated");
         }
 
+        [Obsolete("Use IBackgroundProgressService, instead")]
         private void AddJob(BackgroundJobVM item, IAsyncJob job) => Dispatcher.Invoke(() =>
         {
             lock (_backingItems)
@@ -70,6 +71,7 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
             return item;
         });
 
+        [Obsolete("Use IBackgroundProgressService, instead")]
         private void RemoveJob(BackgroundJobVM item) => Dispatcher.Invoke(() =>
         {
             lock (_backingItems)
