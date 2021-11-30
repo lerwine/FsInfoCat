@@ -4,7 +4,7 @@ namespace FsInfoCat.AsyncOps
     {
     }
 
-    public interface IBackgroundOperationFaultedEvent<TSTate> : IBackgroundOperationFaultedEvent, IBackgroundOperationCompletedEvent<TSTate>, IBackgroundOperationErrorEvent<TSTate>
+    public interface IBackgroundOperationFaultedEvent<TState> : IBackgroundOperationFaultedEvent, IBackgroundOperationCompletedEvent<TState>, IBackgroundOperationErrorEvent<TState>
     {
     }
 }

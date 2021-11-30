@@ -17,25 +17,28 @@ namespace FsInfoCat.AsyncOps
 
         public Guid? ParentId { get; }
 
+        public byte? PercentComplete { get; }
+
         public BackgroundProgressEventArgs([DisallowNull] IBackgroundProgressInfo progress)
         {
-            OperationId=(progress??throw new ArgumentNullException(nameof(progress))).OperationId;
-            Activity=progress.Activity;
-            StatusDescription=progress.StatusDescription;
-            CurrentOperation=progress.CurrentOperation;
-            ParentId=progress.ParentId;
+            OperationId = (progress ?? throw new ArgumentNullException(nameof(progress))).OperationId;
+            Activity = progress.Activity;
+            StatusDescription = progress.StatusDescription;
+            CurrentOperation = progress.CurrentOperation;
+            ParentId = progress.ParentId;
+            PercentComplete = progress.PercentComplete;
         }
 
-        public BackgroundProgressEventArgs([DisallowNull] IBackgroundProgressInfo progress, MessageCode messageCode) : this(progress) { Code=messageCode; }
+        public BackgroundProgressEventArgs([DisallowNull] IBackgroundProgressInfo progress, MessageCode messageCode) : this(progress) { Code = messageCode; }
     }
 
-    public class BackgroundProgressEventArgs<T> : BackgroundProgressEventArgs, IBackgroundProgressEvent<T>
+    public class BackgroundProgressEventArgs<TState> : BackgroundProgressEventArgs, IBackgroundProgressEvent<TState>
     {
-        public T AsyncState { get; }
+        public TState AsyncState { get; }
 
-        public BackgroundProgressEventArgs([DisallowNull] IBackgroundProgressInfo<T> progress) : base(progress)
+        public BackgroundProgressEventArgs([DisallowNull] IBackgroundProgressInfo<TState> progress) : base(progress)
         {
-            AsyncState=progress.AsyncState;
+            AsyncState = progress.AsyncState;
         }
     }
 }

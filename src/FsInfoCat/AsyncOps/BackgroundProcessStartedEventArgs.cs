@@ -4,26 +4,24 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat.AsyncOps
 {
-    public sealed class BackgroundProcessStartedEventArgs : BackgroundProcessStateEventArgs, IBackgroundProgressStartedEvent
+    public class BackgroundProcessStartedEventArgs : BackgroundProcessStartedEventArgsBase<IBackgroundOperation>
     {
-        private readonly IBackgroundOperation _operation;
-
         public BackgroundProcessStartedEventArgs([DisallowNull] IBackgroundProgressService source, [DisallowNull] IBackgroundOperation operation, MessageCode? messageCode)
             : base(source, operation, messageCode)
         {
-            _operation = operation;
+        }
+    }
+
+    public sealed class BackgroundProcessStartedEventArgs<TState> : BackgroundProcessStartedEventArgsBase<IBackgroundOperation<TState>>, IBackgroundProgressStartedEvent<TState>
+    {
+        public BackgroundProcessStartedEventArgs([DisallowNull] IBackgroundProgressService source, [DisallowNull] IBackgroundOperation<TState> operation, MessageCode? messageCode)
+            : base(source, operation, messageCode)
+        {
+            AsyncState = operation.AsyncState;
         }
 
-        public bool IsCancellationRequested => _operation.IsCancellationRequested;
+        public TState AsyncState { get; }
 
-        public void Cancel() => _operation.Cancel();
-
-        public void Cancel(bool throwOnFirstException) => _operation.Cancel(throwOnFirstException);
-
-        public void CancelAfter(int millisecondsDelay) => _operation.CancelAfter(millisecondsDelay);
-
-        public void CancelAfter(TimeSpan delay) => _operation.CancelAfter(delay);
-
-        public IDisposable Subscribe(IObserver<IBackgroundProgressEvent> observer) => _operation.Subscribe(observer);
+        public IDisposable Subscribe(IObserver<IBackgroundProgressEvent<TState>> observer) => Operation.Subscribe(observer);
     }
 }

@@ -7,7 +7,7 @@ namespace FsInfoCat.AsyncOps
         Exception Error { get; }
     }
 
-    public interface IBackgroundOperationErrorOptEvent<TSTate> : IBackgroundOperationErrorOptEvent, IBackgroundProgressEvent<TSTate>
+    public interface IBackgroundOperationErrorOptEvent<TState> : IBackgroundOperationErrorOptEvent, IBackgroundProgressEvent<TState>
     {
     }
 }

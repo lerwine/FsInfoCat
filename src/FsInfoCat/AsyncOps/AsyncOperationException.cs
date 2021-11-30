@@ -25,6 +25,8 @@ namespace FsInfoCat.AsyncOps
 
         Exception IBackgroundOperationErrorOptEvent.Error => this;
 
+        public byte? PercentComplete { get; }
+
         public AsyncOperationException() { }
 
         public AsyncOperationException([DisallowNull] IBackgroundProgressInfo progressInfo, ErrorCode code, [DisallowNull] string statusMessage) : base(statusMessage)
@@ -38,6 +40,7 @@ namespace FsInfoCat.AsyncOps
             Activity = progressInfo.Activity;
             CurrentOperation = progressInfo.CurrentOperation;
             ParentId = progressInfo.ParentId;
+            PercentComplete = progressInfo.PercentComplete;
         }
 
         public AsyncOperationException([DisallowNull] IBackgroundProgressInfo progressInfo, ErrorCode code, [DisallowNull] string statusMessage, Exception inner) : base(statusMessage, inner)
@@ -51,6 +54,7 @@ namespace FsInfoCat.AsyncOps
             Activity = progressInfo.Activity;
             CurrentOperation = progressInfo.CurrentOperation;
             ParentId = progressInfo.ParentId;
+            PercentComplete = progressInfo.PercentComplete;
         }
 
         protected AsyncOperationException(SerializationInfo info, StreamingContext context) : base(info, context)
@@ -62,6 +66,7 @@ namespace FsInfoCat.AsyncOps
             Activity = info.GetString(nameof(Activity));
             CurrentOperation = info.GetString(nameof(CurrentOperation));
             ParentId = (Guid?)info.GetValue(nameof(ParentId), typeof(Guid?));
+            PercentComplete = (byte?)info.GetValue(nameof(PercentComplete), typeof(byte?));
         }
 
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
@@ -72,6 +77,7 @@ namespace FsInfoCat.AsyncOps
             info.AddValue(nameof(Activity), Activity);
             info.AddValue(nameof(CurrentOperation), CurrentOperation);
             info.AddValue(nameof(ParentId), ParentId, typeof(Guid?));
+            info.AddValue(nameof(PercentComplete), PercentComplete, typeof(byte?));
         }
     }
 }

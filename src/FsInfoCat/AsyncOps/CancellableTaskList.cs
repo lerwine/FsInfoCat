@@ -35,7 +35,7 @@ namespace FsInfoCat.AsyncOps
 
         public void CancelAll(bool throwOnFirstException)
         {
-            for (LinkedListNode<IItem> item = _items.Last; item is not null; item=_items.Last)
+            for (LinkedListNode<IItem> item = _items.Last; item is not null; item = _items.Last)
                 item.Value.Cancel(throwOnFirstException);
         }
 
@@ -60,7 +60,7 @@ namespace FsInfoCat.AsyncOps
             public void Cancel(bool throwOnFirstException)
             {
                 lock (_tokenSource)
-                    if (!(_disposed||_task.IsCompleted||!_tokenSource.IsCancellationRequested))
+                    if (!(_disposed || _task.IsCompleted || !_tokenSource.IsCancellationRequested))
                         _tokenSource.Cancel(throwOnFirstException);
             }
 
@@ -70,9 +70,9 @@ namespace FsInfoCat.AsyncOps
                 {
                     if (_disposed)
                         return;
-                    _disposed=true;
+                    _disposed = true;
                     if (_list._items.Contains(this))
-                        _=_list._items.Remove(this);
+                        _ = _list._items.Remove(this);
                 }
                 if (!_task.IsCompleted)
                 {
@@ -85,10 +85,10 @@ namespace FsInfoCat.AsyncOps
 
             internal Item(CancellableTaskList list, Func<CancellationToken, TTask> func)
             {
-                _tokenSource=new CancellationTokenSource();
-                _list=list;
-                _task=func(_tokenSource.Token);
-                _=_task.ContinueWith(t => Dispose());
+                _tokenSource = new CancellationTokenSource();
+                _list = list;
+                _task = func(_tokenSource.Token);
+                _ = _task.ContinueWith(t => Dispose());
             }
 
             internal static Item<TTask> FromAsync<TArg>(CancellableTaskList list, TArg arg, Func<TArg, CancellationToken, TTask> func) => new(list, t => func(arg, t));
@@ -117,7 +117,7 @@ namespace FsInfoCat.AsyncOps
 
         public void CancelAll(bool throwOnFirstException)
         {
-            for (LinkedListNode<Item> item = _items.Last; item is not null; item=_items.Last)
+            for (LinkedListNode<Item> item = _items.Last; item is not null; item = _items.Last)
                 item.Value.Cancel(throwOnFirstException);
         }
 
@@ -133,7 +133,7 @@ namespace FsInfoCat.AsyncOps
             public void Cancel(bool throwOnFirstException)
             {
                 lock (_tokenSource)
-                    if (!(_disposed||_task.IsCompleted||!_tokenSource.IsCancellationRequested))
+                    if (!(_disposed || _task.IsCompleted || !_tokenSource.IsCancellationRequested))
                         _tokenSource.Cancel(throwOnFirstException);
             }
 
@@ -143,9 +143,9 @@ namespace FsInfoCat.AsyncOps
                 {
                     if (_disposed)
                         return;
-                    _disposed=true;
+                    _disposed = true;
                     if (_list._items.Contains(this))
-                        _=_list._items.Remove(this);
+                        _ = _list._items.Remove(this);
                 }
                 if (!_task.IsCompleted)
                 {
@@ -158,10 +158,10 @@ namespace FsInfoCat.AsyncOps
 
             internal Item(CancellableTaskList<TTask> list, Func<CancellationToken, TTask> func)
             {
-                _tokenSource=new CancellationTokenSource();
-                _list=list;
-                _task=func(_tokenSource.Token);
-                _=_task.ContinueWith(t => Dispose());
+                _tokenSource = new CancellationTokenSource();
+                _list = list;
+                _task = func(_tokenSource.Token);
+                _ = _task.ContinueWith(t => Dispose());
             }
 
             internal static Item FromAsync<TArg>(CancellableTaskList<TTask> list, TArg arg, Func<TArg, CancellationToken, TTask> func) => new(list, t => func(arg, t));

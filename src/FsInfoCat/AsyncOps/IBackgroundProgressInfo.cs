@@ -38,6 +38,12 @@ namespace FsInfoCat.AsyncOps
         /// <remarks>This serves the same conceptual puropose as the
         /// PowerShell <see cref="https://docs.microsoft.com/en-us/dotnet/api/system.management.automation.progressrecord.activityid#System_Management_Automation_ProgressRecord_ParentActivityId">ProgressRecord.ParentActivityId</see> property.</remarks>
         Guid? ParentId { get; }
+
+        /// <summary>
+        /// Gets the job completion percentage value.
+        /// </summary>
+        /// <value>The job completion percentage value or <see langword="null"/> if not applicable.</value>
+        byte? PercentComplete { get; }
     }
 
     public interface IBackgroundProgressInfo<TState> : IBackgroundProgressInfo

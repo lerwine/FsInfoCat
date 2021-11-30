@@ -33,6 +33,8 @@ namespace FsInfoCat.Services
 
             public Guid? ParentId => _progress.ParentId;
 
+            public byte? PercentComplete => _progress.PercentComplete;
+
             Task IBackgroundOperation.Task => Task;
 
             internal BackgroundOperation(TInstance progress, Func<TProgress, TTask> asyncMethodDelegate, CancellationTokenSource tokenSource)
@@ -69,13 +71,14 @@ namespace FsInfoCat.Services
             internal BackgroundOperation(BackgroundProgress<IBackgroundProgressEvent, IBackgroundOperation, IBackgroundOperationCompletedEvent> progress, Func<IBackgroundProgress<IBackgroundProgressEvent>, Task> asyncMethodDelegate, CancellationTokenSource tokenSource)
                 : base(progress, asyncMethodDelegate, tokenSource) { }
         }
+
         class BackgroundOperation<TState> : BackgroundOperation<IBackgroundProgressEvent<TState>, IBackgroundProgress<TState, IBackgroundProgressEvent<TState>>, BackgroundProgress<TState, IBackgroundProgressEvent<TState>, IBackgroundOperation<TState>, IBackgroundOperationCompletedEvent<TState>>, Task, IBackgroundOperation<TState>, IBackgroundOperationCompletedEvent<TState>>, IBackgroundOperation<TState>
         {
             public TState AsyncState { get; }
 
             internal BackgroundOperation(BackgroundProgress<TState, IBackgroundProgressEvent<TState>, IBackgroundOperation<TState>, IBackgroundOperationCompletedEvent<TState>> progress,
                 Func<IBackgroundProgress<TState, IBackgroundProgressEvent<TState>>, Task> asyncMethodDelegate, CancellationTokenSource tokenSource)
-                :  base(progress, asyncMethodDelegate, tokenSource)
+                : base(progress, asyncMethodDelegate, tokenSource)
             {
                 AsyncState = progress.AsyncState;
             }

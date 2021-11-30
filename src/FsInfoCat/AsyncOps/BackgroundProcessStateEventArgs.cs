@@ -20,15 +20,18 @@ namespace FsInfoCat.AsyncOps
 
         public IBackgroundProgressService Source { get; }
 
+        public byte? PercentComplete { get; }
+
         protected BackgroundProcessStateEventArgs([DisallowNull] IBackgroundProgressService source, [DisallowNull] IBackgroundOperation operation, MessageCode? messageCode)
         {
-            Source=source??throw new ArgumentNullException(nameof(source));
-            Code=messageCode;
-            OperationId=(operation??throw new ArgumentNullException(nameof(operation))).OperationId;
-            Activity=operation.Activity??"";
-            StatusDescription=operation.StatusDescription??"";
-            CurrentOperation=operation.CurrentOperation??"";
-            ParentId=operation.ParentId;
+            Source = source ?? throw new ArgumentNullException(nameof(source));
+            Code = messageCode;
+            OperationId = (operation ?? throw new ArgumentNullException(nameof(operation))).OperationId;
+            Activity = operation.Activity ?? "";
+            StatusDescription = operation.StatusDescription ?? "";
+            CurrentOperation = operation.CurrentOperation ?? "";
+            ParentId = operation.ParentId;
+            PercentComplete = operation.PercentComplete;
         }
     }
 }

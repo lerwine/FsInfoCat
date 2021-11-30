@@ -1,5 +1,3 @@
-using System;
-
 namespace FsInfoCat.AsyncOps
 {
     public interface IBackgroundOperationErrorEvent : IBackgroundOperationErrorOptEvent
