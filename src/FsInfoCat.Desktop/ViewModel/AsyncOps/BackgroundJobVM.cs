@@ -1,10 +1,13 @@
 using FsInfoCat.AsyncOps;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Threading;
 
 namespace FsInfoCat.Desktop.ViewModel.AsyncOps
 {
@@ -14,6 +17,20 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
         private readonly ProgressObserver _observer;
         private readonly IDisposable _subscription;
 
+        #region OperationId Property Members
+
+        private static readonly DependencyPropertyKey OperationIdPropertyKey = DependencyPropertyBuilder<BackgroundJobVM, Guid>
+            .Register(nameof(OperationId))
+            .AsReadOnly();
+
+        /// <summary>
+        /// Identifies the <see cref="OperationId"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty OperationIdProperty = OperationIdPropertyKey.DependencyProperty;
+
+        public Guid OperationId => (Guid)GetValue(OperationIdProperty);
+
+        #endregion
         #region Activity Property Members
 
         private static readonly DependencyPropertyKey ActivityPropertyKey = DependencyPropertyBuilder<BackgroundJobVM, string>
@@ -166,23 +183,58 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
         public AsyncJobStatus JobStatus { get => (AsyncJobStatus)GetValue(JobStatusProperty); private set => SetValue(JobStatusPropertyKey, value); }
 
         #endregion
-        #region Duration Property Members
+        #region Timestamp Property Members
 
-        private static readonly DependencyPropertyKey DurationPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Duration), typeof(TimeSpan), typeof(BackgroundJobVM),
-                new PropertyMetadata(TimeSpan.Zero));
+        private static readonly DependencyPropertyKey TimestampPropertyKey = DependencyPropertyBuilder<BackgroundJobVM, TimeSpan?>
+            .Register(nameof(Timestamp))
+            .DefaultValue(null)
+            .AsReadOnly();
 
         /// <summary>
-        /// Identifies the <see cref="Duration"/> dependency property.
+        /// Identifies the <see cref="Timestamp"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty DurationProperty = DurationPropertyKey.DependencyProperty;
+        public static readonly DependencyProperty TimestampProperty = TimestampPropertyKey.DependencyProperty;
 
-        public TimeSpan Duration { get => (TimeSpan)GetValue(DurationProperty); private set => SetValue(DurationPropertyKey, value); }
+        public TimeSpan? Timestamp { get => (TimeSpan?)GetValue(TimestampProperty); private set => SetValue(TimestampPropertyKey, value); }
+
+        #endregion
+        #region PercentComplete Property Members
+
+        private static readonly DependencyPropertyKey PercentCompletePropertyKey = DependencyPropertyBuilder<BackgroundJobVM, byte?>
+            .Register(nameof(PercentComplete))
+            .DefaultValue(null)
+            .AsReadOnly();
+
+        /// <summary>
+        /// Identifies the <see cref="PercentComplete"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty PercentCompleteProperty = PercentCompletePropertyKey.DependencyProperty;
+
+        public byte? PercentComplete { get => (byte?)GetValue(PercentCompleteProperty); private set => SetValue(PercentCompletePropertyKey, value); }
+
+        #endregion
+        #region Items Property Members
+
+        private readonly ObservableCollection<BackgroundJobVM> _backingItems = new();
+
+        private static readonly DependencyPropertyKey ItemsPropertyKey = DependencyPropertyBuilder<BackgroundJobVM, ReadOnlyObservableCollection<BackgroundJobVM>>
+            .Register(nameof(Items))
+            .AsReadOnly();
+
+        /// <summary>
+        /// Identifies the <see cref="Items"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ItemsProperty = ItemsPropertyKey.DependencyProperty;
+
+        public ReadOnlyObservableCollection<BackgroundJobVM> Items => (ReadOnlyObservableCollection<BackgroundJobVM>)GetValue(ItemsProperty);
 
         #endregion
 
         public BackgroundJobVM([DisallowNull] ICancellableOperation progressInfo, MessageCode? code, [DisallowNull] IObservable<IBackgroundProgressEvent> observable, [DisallowNull] Action<BackgroundJobVM> onCompleted)
         {
             _logger = App.GetLogger(this);
+            SetValue(OperationIdPropertyKey, progressInfo.OperationId);
+            SetValue(ItemsPropertyKey, new ReadOnlyObservableCollection<BackgroundJobVM>(_backingItems));
             Activity = progressInfo.Activity;
             CurrentOperation = progressInfo.CurrentOperation;
             StatusDescription = progressInfo.StatusDescription;
@@ -195,19 +247,27 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
             }));
         }
 
-        [Obsolete("Use IBackgroundProgressService and/or Create(IBackgroundProgressInfo, MessageCode?, IObservable<IBackgroundProgressEvent>, Action<BackgroundJobVM>, out ProgressObserver), instead")]
-        public BackgroundJobVM()
+        private static bool TryFindParentVM(Guid parentId, [DisallowNull] ObservableCollection<BackgroundJobVM> backingItems, out BackgroundJobVM vm)
         {
-            _logger = App.GetLogger(this);
-            SetValue(CancelPropertyKey, new Commands.RelayCommand(parameter => CancelInvoked?.Invoke(this, new(parameter))));
+            vm = backingItems.FirstOrDefault(i => i.OperationId == parentId);
+            if (vm is not null)
+                return true;
+            foreach (BackgroundJobVM item in backingItems)
+            {
+                if (TryFindParentVM(parentId, item._backingItems, out vm))
+                    return true;
+            }
+            return false;
         }
 
-        internal static BackgroundJobVM Create(ICancellableOperation progressInfo, MessageCode? code, [DisallowNull] IObservable<IBackgroundProgressEvent> observable, [DisallowNull] Action<BackgroundJobVM> onCompleted, out ProgressObserver observer)
-        {
-            BackgroundJobVM item = new BackgroundJobVM(progressInfo, code, observable, onCompleted);
-            observer = item._observer;
-            return item;
-        }
+        internal static void OnOperationStarted([DisallowNull] Dispatcher dispatcher, [DisallowNull] ObservableCollection<BackgroundJobVM> backingItems, [DisallowNull] ICancellableOperation progressInfo, MessageCode? code,
+            [DisallowNull] IObservable<IBackgroundProgressEvent> observable) => dispatcher.Invoke(() =>
+            {
+                Guid? parentId = progressInfo.ParentId;
+                if (parentId.HasValue && TryFindParentVM(parentId.Value, backingItems, out BackgroundJobVM parentVM))
+                    backingItems = parentVM._backingItems;
+                backingItems.Add(new BackgroundJobVM(progressInfo, code, observable, item => dispatcher.Invoke(() => backingItems.Remove(item))));
+            });
 
         private void OnError(Exception error)
         {
@@ -266,48 +326,6 @@ Current Operation: {currentOperation}", "Unexpected Error", MessageBoxButton.OK,
                 MessageLevel = messageCode.Value.GetAmbientValue(StatusMessageLevel.Information);
             else
                 MessageLevel = (error is null) ? StatusMessageLevel.Information : (error is WarningException) ? StatusMessageLevel.Warning : StatusMessageLevel.Error;
-        }
-
-        [Obsolete("Use IBackgroundProgressService and/or Create(IBackgroundProgressInfo, MessageCode?, IObservable<IBackgroundProgressEvent>, Action<BackgroundJobVM>, out ProgressObserver), instead")]
-        public static BackgroundJobVM Create([DisallowNull] string title, [DisallowNull] string initialMessage,
-            [DisallowNull] Func<StatusListener, IBackgroundJob, Task> createTask, out IAsyncJob job)
-        {
-            if (string.IsNullOrWhiteSpace(title))
-                throw new ArgumentException($"'{nameof(title)}' cannot be null or whitespace.", nameof(title));
-            if (string.IsNullOrWhiteSpace(initialMessage))
-                throw new ArgumentException($"'{nameof(initialMessage)}' cannot be null or whitespace.", nameof(initialMessage));
-            if (createTask is null)
-                throw new ArgumentNullException(nameof(createTask));
-
-            BackgroundJobVM viewModel = new();
-            // TODO: Implement BackgroundJobVM.Create(string, string, Func{StatusListener, IBackgroundJob, Task}, out IAsyncJob)
-            throw new NotImplementedException();
-            //job = new Job(title, initialMessage, viewModel, createTask);
-            //viewModel.Message = job.Message;
-            //viewModel.Title = job.Title;
-            //viewModel.MessageLevel = job.MessageLevel;
-            //return viewModel;
-        }
-
-        [Obsolete("Use IBackgroundProgressService and/or Create(IBackgroundProgressInfo, MessageCode?, IObservable<IBackgroundProgressEvent>, Action<BackgroundJobVM>, out ProgressObserver), instead")]
-        public static BackgroundJobVM Create<TResult>([DisallowNull] string title, [DisallowNull] string initialMessage,
-            [DisallowNull] Func<StatusListener, IBackgroundJob, Task<TResult>> createTask, out IAsyncJob<TResult> job)
-        {
-            if (string.IsNullOrWhiteSpace(title))
-                throw new ArgumentException($"'{nameof(title)}' cannot be null or whitespace.", nameof(title));
-            if (string.IsNullOrWhiteSpace(initialMessage))
-                throw new ArgumentException($"'{nameof(initialMessage)}' cannot be null or whitespace.", nameof(initialMessage));
-            if (createTask is null)
-                throw new ArgumentNullException(nameof(createTask));
-
-            BackgroundJobVM viewModel = new() { Title = title, Message = initialMessage };
-            // TODO: Implement BackgroundJobVM.Create(string, string, Func{StatusListener, IBackgroundJob, Task{TResult}}, out IAsyncJob{TResult})
-            throw new NotImplementedException();
-            //job = new Job<TResult>(title, initialMessage, viewModel, createTask);
-            //viewModel.Message = job.Message;
-            //viewModel.Title = job.Title;
-            //viewModel.MessageLevel = job.MessageLevel;
-            //return viewModel;
         }
     }
 }

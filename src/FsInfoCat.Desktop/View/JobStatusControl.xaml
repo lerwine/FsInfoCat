@@ -4,24 +4,36 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:FsInfoCat.Desktop.View"
+             xmlns:converters="clr-namespace:FsInfoCat.Desktop.Converters"
              mc:Ignorable="d" 
-             d:DesignHeight="200" d:DesignWidth="400" Margin="{DynamicResource ExtraWideSpacing}">
+             d:DesignHeight="200" d:DesignWidth="400" Padding="{DynamicResource ExtraWideSpacing}">
+    <UserControl.Resources>
+        <converters:StringToVisibilityConverter x:Key="StringToVisibilityConverter" NullSource="Collapsed"/>
+    </UserControl.Resources>
     <Border Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" BorderBrush="{DynamicResource PopupBorderBrush}" BorderThickness="{DynamicResource ThickBorderThickness}" CornerRadius="{DynamicResource PopupOuterBorderCornerRadius}">
         <Grid>
             <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             <Border Background="{DynamicResource PopupTitleInfoBackgroundBrush}" CornerRadius="{DynamicResource PopupTitleCornerRadius}">
-                <TextBlock Text="{Binding Title}" Margin="{DynamicResource DefaultSpacing}" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <TextBlock Text="{Binding Activity}" Margin="{DynamicResource DefaultSpacing}" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
             </Border>
-            <Border Grid.Row="1">
-                <TextBlock Text="{Binding Message}" Margin="{DynamicResource DefaultSpacing}"/>
-            </Border>
-            <Border Grid.Row="2">
-                <Button Content="Cancel" Command="{Binding Cancel, Mode=OneWay}" Style="{DynamicResource DefaultButton}" Margin="{DynamicResource DefaultSpacing}"/>
-            </Border>
+            <TextBlock Text="{Binding StatusDescription}" Grid.Row="1" Margin="{DynamicResource DefaultSpacing}" TextWrapping="Wrap"/>
+            <TextBlock Text="{Binding CurrentOperation}" Grid.Row="2" Margin="{DynamicResource DefaultSpacing}" TextWrapping="Wrap" Visibility="{Binding CurrentOperation, Converter={StaticResource StringToVisibilityConverter}}"/>
+            <ListView Background="{x:Null}" BorderBrush="{x:Null}" ItemsSource="{Binding Items, Mode=OneWay}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <Border>
+                            <local:JobStatusControl/>
+                        </Border>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+            <Button Grid.Row="4" Content="Cancel" Command="{Binding Cancel, Mode=OneWay}" Style="{DynamicResource DefaultButton}" Margin="{DynamicResource DefaultSpacing}"/>
         </Grid>
     </Border>
 </UserControl>

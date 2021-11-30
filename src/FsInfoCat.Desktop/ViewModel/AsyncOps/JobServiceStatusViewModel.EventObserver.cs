@@ -7,15 +7,15 @@ using System.Windows.Threading;
 
 namespace FsInfoCat.Desktop.ViewModel.AsyncOps
 {
-    public partial class JobFactoryServiceViewModel
+    public partial class JobServiceStatusViewModel
     {
         class EventObserver : IObserver<IBackgroundProgressEvent>
         {
-            private readonly JobFactoryServiceViewModel _target;
+            private readonly JobServiceStatusViewModel _target;
 
             internal IDisposable Subscription { get; }
 
-            public EventObserver([DisallowNull] JobFactoryServiceViewModel target, [DisallowNull] IBackgroundProgressService backgroundService)
+            public EventObserver([DisallowNull] JobServiceStatusViewModel target, [DisallowNull] IBackgroundProgressService backgroundService)
             {
                 _target = target;
                 Subscription = backgroundService.Subscribe(this, activeOps =>
