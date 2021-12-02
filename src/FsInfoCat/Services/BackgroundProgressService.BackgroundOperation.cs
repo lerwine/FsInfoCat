@@ -1,5 +1,4 @@
 using FsInfoCat.AsyncOps;
-using FsInfoCat.Collections;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -42,14 +41,10 @@ namespace FsInfoCat.Services
                 _tokenSource = tokenSource;
                 _progress = progress;
                 progress.ProgressChanged += OnProgressChanged;
-                Task = asyncMethodDelegate(progress);
+                Task = asyncMethodDelegate(progress) ?? throw new InvalidOperationException();
             }
 
-            private void OnProgressChanged(object sender, TEvent e)
-            {
-                // TODO: Implement OnProgressChanged
-                throw new NotImplementedException();
-            }
+            private void OnProgressChanged(object sender, TEvent e) => RaiseNext(e);
 
             public void Cancel() => _tokenSource.Cancel();
 
@@ -59,11 +54,7 @@ namespace FsInfoCat.Services
 
             public void CancelAfter(TimeSpan delay) => _tokenSource.CancelAfter(delay);
 
-            public IDisposable Subscribe(IObserver<IBackgroundProgressEvent> observer)
-            {
-                // TODO: Implement Subscribe
-                throw new NotImplementedException();
-            }
+            public IDisposable Subscribe(IObserver<IBackgroundProgressEvent> observer) => ObserverSubscriptionRelay<TEvent, IBackgroundProgressEvent>.Create(this, observer);
         }
 
         class BackgroundOperation : BackgroundOperation<IBackgroundProgressEvent, IBackgroundProgress<IBackgroundProgressEvent>, BackgroundProgress<IBackgroundProgressEvent, IBackgroundOperation, IBackgroundOperationCompletedEvent>, Task, IBackgroundOperation, IBackgroundOperationCompletedEvent>

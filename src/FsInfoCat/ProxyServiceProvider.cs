@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat
 {
@@ -6,10 +7,7 @@ namespace FsInfoCat
     {
         private readonly IServiceProvider _backingServiceProvider;
 
-        public ProxyServiceProvider(IServiceProvider backingServiceProvider)
-        {
-            _backingServiceProvider = backingServiceProvider;
-        }
+        public ProxyServiceProvider([DisallowNull] IServiceProvider backingServiceProvider) => _backingServiceProvider = backingServiceProvider ?? throw new ArgumentNullException(nameof(backingServiceProvider));
 
         protected abstract bool TryGetService(Type serviceType, out object service);
 
@@ -26,11 +24,9 @@ namespace FsInfoCat
     {
         private readonly WeakReference<T> _service;
 
-        public ProxyServiceProvider(T service, IServiceProvider backingServiceProvider)
-            : base(backingServiceProvider)
-        {
-            _service = new WeakReference<T>(service);
-        }
+        public ProxyServiceProvider([DisallowNull] T service, [DisallowNull] IServiceProvider backingServiceProvider) : base(backingServiceProvider)
+            => _service = new WeakReference<T>(service ?? throw new ArgumentNullException(nameof(service)));
+
         protected override bool TryGetService(Type serviceType, out object service)
         {
             if (serviceType is not null && serviceType.IsAssignableFrom(typeof(T)))

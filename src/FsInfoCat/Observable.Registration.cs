@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace FsInfoCat.Collections
+namespace FsInfoCat
 {
     public partial class Observable<TNotice>
     {

@@ -13,7 +13,15 @@ namespace FsInfoCat.Services
         {
             internal TimedBackgroundFunc(TimedBackgroundProgress<ITimedBackgroundProgressEvent, ITimedBackgroundFunc<TResult>, ITimedBackgroundOperationResultEvent<TResult>> progress,
                 Func<ITimedBackgroundProgress<ITimedBackgroundProgressEvent>, Task<TResult>> asyncMethodDelegate, CancellationTokenSource tokenSource)
-                : base(progress, asyncMethodDelegate, tokenSource) { }
+                : base(progress, async p =>
+                {
+                    progress.StartTimer();
+                    TResult result;
+                    try { result = await (asyncMethodDelegate(p) ?? throw new InvalidOperationException()); }
+                    finally { progress.StopTimer(); }
+                    return result;
+                }, tokenSource)
+            { }
         }
 
         class TimedBackgroundFunc<TState, TResult> : TimedBackgroundOperation<ITimedBackgroundProgressEvent<TState>, ITimedBackgroundProgress<TState, ITimedBackgroundProgressEvent<TState>>,
@@ -24,15 +32,20 @@ namespace FsInfoCat.Services
 
             internal TimedBackgroundFunc(TimedBackgroundProgress<TState, ITimedBackgroundProgressEvent<TState>, ITimedBackgroundFunc<TState, TResult>, ITimedBackgroundOperationResultEvent<TState, TResult>> progress,
                 Func<ITimedBackgroundProgress<TState, ITimedBackgroundProgressEvent<TState>>, Task<TResult>> asyncMethodDelegate, CancellationTokenSource tokenSource)
-                : base(progress, asyncMethodDelegate, tokenSource)
+                : base(progress, async p =>
+                {
+                    progress.StartTimer();
+                    TResult result;
+                    try { result = await (asyncMethodDelegate(p) ?? throw new InvalidOperationException()); }
+                    finally { progress.StopTimer(); }
+                    return result;
+                }, tokenSource)
             {
                 AsyncState = progress.AsyncState;
             }
 
             public IDisposable Subscribe(IObserver<IBackgroundProgressEvent<TState>> observer)
-            {
-                throw new NotImplementedException();
-            }
+                => ObserverSubscriptionRelay<ITimedBackgroundProgressEvent<TState>, IBackgroundProgressEvent<TState>>.Create(this, observer);
         }
     }
 }

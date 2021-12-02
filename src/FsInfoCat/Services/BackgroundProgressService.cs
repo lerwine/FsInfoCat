@@ -1,5 +1,4 @@
 using FsInfoCat.AsyncOps;
-using FsInfoCat.Collections;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -25,10 +24,7 @@ namespace FsInfoCat.Services
 
         int IReadOnlyCollection<IBackgroundOperation>.Count => _operations.Count;
 
-        public BackgroundProgressService([DisallowNull] ILogger<BackgroundProgressService> logger)
-        {
-            _logger = logger;
-        }
+        public BackgroundProgressService([DisallowNull] ILogger<BackgroundProgressService> logger) => _logger = logger;
 
         [ServiceBuilderHandler]
         public static void ConfigureServices([DisallowNull] IServiceCollection services)
@@ -73,16 +69,9 @@ namespace FsInfoCat.Services
             task.Wait();
         });
 
-        public IEnumerator<IBackgroundOperation> GetEnumerator()
-        {
-            // TODO: Implement GetEnumerator
-            throw new NotImplementedException();
-        }
+        public IEnumerator<IBackgroundOperation> GetEnumerator() => _operations.GetEnumerator();
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            throw new NotImplementedException();
-        }
+        IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)_operations).GetEnumerator();
 
         private void RaiseOperationStarted(IBackgroundOperation operation, bool isFirstOperation)
         {
@@ -130,15 +119,12 @@ namespace FsInfoCat.Services
 
         private void OnReport(IBackgroundProgressEvent progressEvent)
         {
-            // TODO: Implement OnReport
-            throw new NotImplementedException();
+            _stateEventObservers.RaiseStateChanged(progressEvent);
         }
 
-        private TOperation Create<TEvent, TOperation, TInstance, TResultEvent, TProgress>([DisallowNull] TProgress progress, [DisallowNull] Func<TOperation, TResultEvent> onCompleted, [DisallowNull] string activity,
-            [DisallowNull] string statusDescription, Guid? parentId, params CancellationToken[] tokens)
+        private TOperation Create<TEvent, TOperation, TResultEvent, TProgress>([DisallowNull] TProgress progress, [DisallowNull] Func<TOperation, TResultEvent> onCompleted)
             where TEvent : IBackgroundProgressEvent
             where TOperation : IBackgroundOperation
-            where TInstance : Observable<TEvent>, TOperation
             where TResultEvent : TEvent, IBackgroundOperationCompletedEvent
             where TProgress : BackgroundProgressBase<TEvent, TOperation, TResultEvent>
         {
@@ -175,8 +161,8 @@ namespace FsInfoCat.Services
                 throw new ArgumentException($"'{nameof(activity)}' cannot be null or whitespace.", nameof(activity));
             if ((statusDescription = statusDescription.AsWsNormalizedOrEmpty()).Length == 0)
                 throw new ArgumentException($"'{nameof(statusDescription)}' cannot be null or whitespace.", nameof(statusDescription));
-            return Create<TEvent, TOperation, TInstance, TResultEvent, TimedBackgroundProgress<TState, TEvent, TOperation, TResultEvent>>(new(this, (p, t1, t2) =>
-            operationFactory((TimedBackgroundProgress<TState, TEvent, TOperation, TResultEvent>)p, t1, t2), eventFactory, activity, statusDescription, state, parentId, tokens), onCompleted, activity, statusDescription, parentId, tokens);
+            return Create<TEvent, TOperation, TResultEvent, TimedBackgroundProgress<TState, TEvent, TOperation, TResultEvent>>(new(this, (p, t1, t2) =>
+            operationFactory((TimedBackgroundProgress<TState, TEvent, TOperation, TResultEvent>)p, t1, t2), eventFactory, activity, statusDescription, state, parentId, tokens), onCompleted);
         }
 
         internal TOperation InvokeAsync<TEvent, TOperation, TInstance, TResultEvent>(
@@ -191,7 +177,7 @@ namespace FsInfoCat.Services
                 throw new ArgumentException($"'{nameof(activity)}' cannot be null or whitespace.", nameof(activity));
             if ((statusDescription = statusDescription.AsWsNormalizedOrEmpty()).Length == 0)
                 throw new ArgumentException($"'{nameof(statusDescription)}' cannot be null or whitespace.", nameof(statusDescription));
-            return Create<TEvent, TOperation, TInstance, TResultEvent, TimedBackgroundProgress<TEvent, TOperation, TResultEvent>>(new(this, operationFactory, eventFactory, activity, statusDescription, parentId, tokens), onCompleted, activity, statusDescription, parentId, tokens);
+            return Create<TEvent, TOperation, TResultEvent, TimedBackgroundProgress<TEvent, TOperation, TResultEvent>>(new(this, operationFactory, eventFactory, activity, statusDescription, parentId, tokens), onCompleted);
         }
 
         internal TOperation InvokeAsync<TState, TEvent, TOperation, TInstance, TResultEvent>(
@@ -206,7 +192,7 @@ namespace FsInfoCat.Services
                 throw new ArgumentException($"'{nameof(activity)}' cannot be null or whitespace.", nameof(activity));
             if ((statusDescription = statusDescription.AsWsNormalizedOrEmpty()).Length == 0)
                 throw new ArgumentException($"'{nameof(statusDescription)}' cannot be null or whitespace.", nameof(statusDescription));
-            return Create<TEvent, TOperation, TInstance, TResultEvent, BackgroundProgress<TState, TEvent, TOperation, TResultEvent>>(new(this, (p, t1, t2) => operationFactory((BackgroundProgress<TState, TEvent, TOperation, TResultEvent>)p, t1, t2), eventFactory, activity, statusDescription, state, parentId, tokens), onCompleted, activity, statusDescription, parentId, tokens);
+            return Create<TEvent, TOperation, TResultEvent, BackgroundProgress<TState, TEvent, TOperation, TResultEvent>>(new(this, (p, t1, t2) => operationFactory((BackgroundProgress<TState, TEvent, TOperation, TResultEvent>)p, t1, t2), eventFactory, activity, statusDescription, state, parentId, tokens), onCompleted);
         }
 
         internal TOperation InvokeAsync<TEvent, TOperation, TInstance, TResultEvent>(
@@ -221,17 +207,16 @@ namespace FsInfoCat.Services
                 throw new ArgumentException($"'{nameof(activity)}' cannot be null or whitespace.", nameof(activity));
             if ((statusDescription = statusDescription.AsWsNormalizedOrEmpty()).Length == 0)
                 throw new ArgumentException($"'{nameof(statusDescription)}' cannot be null or whitespace.", nameof(statusDescription));
-            return Create<TEvent, TOperation, TInstance, TResultEvent, BackgroundProgress<TEvent, TOperation, TResultEvent>>(new(this, operationFactory, eventFactory, activity, statusDescription, parentId, tokens), onCompleted, activity, statusDescription, parentId, tokens);
+            return Create<TEvent, TOperation, TResultEvent, BackgroundProgress<TEvent, TOperation, TResultEvent>>(new(this, operationFactory, eventFactory, activity, statusDescription, parentId, tokens), onCompleted);
         }
 
-        // TODO: Implement CreateEvent with exception
-        internal static ITimedBackgroundProgressEvent<TState> CreateEvent<TState>(ITimedBackgroundProgressInfo<TState> progress, Exception exception) => (exception is null) ? new TimedBackgroundProgressEventArgs<TState>(progress) : throw new NotImplementedException();
+        internal static ITimedBackgroundProgressEvent<TState> CreateEvent<TState>(ITimedBackgroundProgressInfo<TState> progress, Exception exception) => (exception is null) ? new TimedBackgroundProgressEventArgs<TState>(progress) : new TimedBackgroundProgressErrorEventArgs<TState>(progress, exception);
 
-        internal static IBackgroundProgressEvent<TState> CreateEvent<TState>(IBackgroundProgressInfo<TState> progress, Exception exception) => (exception is null) ? new BackgroundProgressEventArgs<TState>(progress) : throw new NotImplementedException();
+        internal static IBackgroundProgressEvent<TState> CreateEvent<TState>(IBackgroundProgressInfo<TState> progress, Exception exception) => (exception is null) ? new BackgroundProgressEventArgs<TState>(progress) : new BackgroundProgressErrorEventArgs<TState>(progress, exception);
 
-        internal static ITimedBackgroundProgressEvent CreateEvent(ITimedBackgroundProgressInfo progress, Exception exception) => new TimedBackgroundProgressEventArgs(progress);
+        internal static ITimedBackgroundProgressEvent CreateEvent(ITimedBackgroundProgressInfo progress, Exception exception) => (exception is null) ? new TimedBackgroundProgressEventArgs(progress) : new TimedBackgroundProgressErrorEventArgs(progress, exception);
 
-        internal static IBackgroundProgressEvent CreateEvent(IBackgroundProgressInfo progress, Exception exception) => new BackgroundProgressEventArgs(progress);
+        internal static IBackgroundProgressEvent CreateEvent(IBackgroundProgressInfo progress, Exception exception) => (exception is null) ? new BackgroundProgressEventArgs(progress) : new BackgroundProgressErrorEventArgs(progress, exception);
 
         public ITimedBackgroundFunc<TState, TResult> InvokeAsync<TState, TResult>(Func<ITimedBackgroundProgress<TState, ITimedBackgroundProgressEvent<TState>>, Task<TResult>> asyncMethodDelegate,
             Func<ITimedBackgroundFunc<TState, TResult>, ITimedBackgroundOperationResultEvent<TState, TResult>> onCompleted, string activity, string statusDescription, TState state,
@@ -389,9 +374,9 @@ namespace FsInfoCat.Services
             => InvokeAsync<IBackgroundProgressEvent, IBackgroundOperation, BackgroundOperation, IBackgroundOperationCompletedEvent>((p, t1, t2) => new(p, asyncMethodDelegate, t1), CreateEvent, null, activity,
                 statusDescription, null);
 
-        class StateEventObservers : Observable<BackgroundProcessStateEventArgs>
+        class StateEventObservers : Observable<IBackgroundProgressEvent>
         {
-            internal void RaiseStateChanged(BackgroundProcessStateEventArgs backgroundProcessEventArgs) => RaiseNext(backgroundProcessEventArgs);
+            internal void RaiseStateChanged(IBackgroundProgressEvent backgroundProcessEventArgs) => RaiseNext(backgroundProcessEventArgs);
         }
 
         class ActiveStatusObservers : Observable<bool>

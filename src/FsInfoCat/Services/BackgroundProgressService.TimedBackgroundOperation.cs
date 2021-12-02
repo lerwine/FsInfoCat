@@ -1,5 +1,4 @@
 using FsInfoCat.AsyncOps;
-using FsInfoCat.Collections;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -44,7 +43,7 @@ namespace FsInfoCat.Services
                 _tokenSource = tokenSource;
                 _progress = progress;
                 progress.ProgressChanged += OnProgressChanged;
-                Task = asyncMethodDelegate(progress);
+                Task = asyncMethodDelegate(progress) ?? throw new InvalidOperationException();
             }
 
             private void OnProgressChanged(object sender, TEvent e)
@@ -62,22 +61,22 @@ namespace FsInfoCat.Services
             public void CancelAfter(TimeSpan delay) => _tokenSource.CancelAfter(delay);
 
             public IDisposable Subscribe(IObserver<ITimedBackgroundProgressEvent> observer)
-            {
-                // TODO: Implement Subscribe
-                throw new NotImplementedException();
-            }
+                => ObserverSubscriptionRelay<TEvent, ITimedBackgroundProgressEvent>.Create(this, observer);
 
             public IDisposable Subscribe(IObserver<IBackgroundProgressEvent> observer)
-            {
-                // TODO: Implement Subscribe
-                throw new NotImplementedException();
-            }
+                => ObserverSubscriptionRelay<TEvent, IBackgroundProgressEvent>.Create(this, observer);
         }
 
         class TimedBackgroundOperation : TimedBackgroundOperation<ITimedBackgroundProgressEvent, ITimedBackgroundProgress<ITimedBackgroundProgressEvent>, TimedBackgroundProgress<ITimedBackgroundProgressEvent, ITimedBackgroundOperation, ITimedBackgroundOperationCompletedEvent>, Task, ITimedBackgroundOperation, ITimedBackgroundOperationCompletedEvent>
         {
             internal TimedBackgroundOperation(TimedBackgroundProgress<ITimedBackgroundProgressEvent, ITimedBackgroundOperation, ITimedBackgroundOperationCompletedEvent> progress, Func<ITimedBackgroundProgress<ITimedBackgroundProgressEvent>, Task> asyncMethodDelegate, CancellationTokenSource tokenSource)
-                : base(progress, asyncMethodDelegate, tokenSource) { }
+                : base(progress, async p =>
+                {
+                    progress.StartTimer();
+                    try { await (asyncMethodDelegate(p) ?? throw new InvalidOperationException()); }
+                    finally { progress.StopTimer(); }
+                }, tokenSource)
+            { }
         }
 
         class TimedBackgroundOperation<TState> : TimedBackgroundOperation<ITimedBackgroundProgressEvent<TState>, ITimedBackgroundProgress<TState, ITimedBackgroundProgressEvent<TState>>,
@@ -88,16 +87,18 @@ namespace FsInfoCat.Services
 
             internal TimedBackgroundOperation(TimedBackgroundProgress<TState, ITimedBackgroundProgressEvent<TState>, ITimedBackgroundOperation<TState>, ITimedBackgroundOperationCompletedEvent<TState>> progress,
                 Func<ITimedBackgroundProgress<TState, ITimedBackgroundProgressEvent<TState>>, Task> asyncMethodDelegate, CancellationTokenSource tokenSource)
-                : base(progress, asyncMethodDelegate, tokenSource)
+                : base(progress, async p =>
+                {
+                    progress.StartTimer();
+                    try { await (asyncMethodDelegate(p) ?? throw new InvalidOperationException()); }
+                    finally { progress.StopTimer(); }
+                }, tokenSource)
             {
                 AsyncState = progress.AsyncState;
             }
 
             public IDisposable Subscribe(IObserver<IBackgroundProgressEvent<TState>> observer)
-            {
-                // TODO: Implement Subscribe
-                throw new NotImplementedException();
-            }
+                => ObserverSubscriptionRelay<ITimedBackgroundProgressEvent<TState>, IBackgroundProgressEvent<TState>>.Create(this, observer);
         }
     }
 }

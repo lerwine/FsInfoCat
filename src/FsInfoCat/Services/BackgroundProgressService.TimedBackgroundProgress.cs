@@ -17,12 +17,18 @@ namespace FsInfoCat.Services
 
             public TimeSpan Duration => _stopwatch.Elapsed;
 
-            internal TimedBackgroundProgress(BackgroundProgressService service, Func<TimedBackgroundProgress<TEvent, TOperation, TResultEvent>, CancellationTokenSource, CancellationTokenSource, TOperation> operationFactory,
+            internal TimedBackgroundProgress(BackgroundProgressService service,
+                Func<TimedBackgroundProgress<TEvent, TOperation, TResultEvent>, CancellationTokenSource, CancellationTokenSource, TOperation> operationFactory,
                 Func<ITimedBackgroundProgressInfo, Exception, TEvent> eventFactory, string activity, string statusDescription, Guid? parentId, params CancellationToken[] tokens)
                 : base(service, (p, t1, t2) => operationFactory((TimedBackgroundProgress<TEvent, TOperation, TResultEvent>)p, t1, t2), activity, statusDescription, parentId, tokens)
             {
                 _eventFactory = eventFactory;
+                _stopwatch = new();
             }
+
+            internal void StopTimer() => _stopwatch.Stop();
+
+            internal void StartTimer() => _stopwatch.Start();
 
             protected override TEvent CreateEventObject(Exception exception) => _eventFactory(this, exception);
         }

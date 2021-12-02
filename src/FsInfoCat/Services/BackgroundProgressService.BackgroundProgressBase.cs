@@ -1,4 +1,4 @@
-﻿using FsInfoCat.AsyncOps;
+using FsInfoCat.AsyncOps;
 using System;
 using System.Linq;
 using System.Threading;
@@ -35,7 +35,8 @@ namespace FsInfoCat.Services
 
             public byte? PercentComplete { get; private set; }
 
-            internal BackgroundProgressBase(BackgroundProgressService service, Func<BackgroundProgressBase<TEvent, TOperation, TResultEvent>, CancellationTokenSource, CancellationTokenSource, TOperation> operationFactory,
+            internal BackgroundProgressBase(BackgroundProgressService service,
+                Func<BackgroundProgressBase<TEvent, TOperation, TResultEvent>, CancellationTokenSource, CancellationTokenSource, TOperation> operationFactory,
                 string activity, string statusDescription, Guid? parentId, params CancellationToken[] tokens)
             {
                 _service = service;
@@ -47,13 +48,13 @@ namespace FsInfoCat.Services
                 if (tokens is null || tokens.Length == 0)
                 {
                     Token = primaryTokenSource.Token;
-                    Operation = operationFactory(this, primaryTokenSource, null);
+                    Operation = operationFactory(this, primaryTokenSource, null) ?? throw new InvalidOperationException();
                 }
                 else
                 {
                     CancellationTokenSource linkedTokenSource = CancellationTokenSource.CreateLinkedTokenSource(Enumerable.Repeat(primaryTokenSource.Token, 1).Concat(tokens).ToArray());
                     Token = linkedTokenSource.Token;
-                    Operation = operationFactory(this, primaryTokenSource, linkedTokenSource);
+                    Operation = operationFactory(this, primaryTokenSource, linkedTokenSource) ?? throw new InvalidOperationException();
                 }
             }
 

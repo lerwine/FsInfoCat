@@ -8,6 +8,12 @@ namespace FsInfoCat.Services
     /// <summary>
     /// Defines a service for reporting the progress of background processes.
     /// </summary>
+    /// <remarks>
+    /// Pushes a <see cref="IBackgroundProgressStartedEvent"/> notification when a background operation is started and a <see cref="IBackgroundOperationCompletedEvent"/>
+    /// notification when a background operation is complete. All other events are pushed from the associated asynchronous <see cref="Task"/> through an <see cref="IBackgroundProgress{TEvent}"/> object.
+    /// <para><see langword="true"/> value notifications are pushed to indicate when the service transitions from having no active background operations, and a <see langword="false"/> value notification
+    /// after it transitions to having no active background operations.</para>
+    /// </remarks>
     public interface IBackgroundProgressService : IBackgroundProgressFactory, IHostedService, IObservable<IBackgroundProgressEvent>, IObservable<bool>, IReadOnlyCollection<IBackgroundOperation>
     {
         /// <summary>
