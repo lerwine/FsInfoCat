@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat.BgOps
 {
+    [Obsolete("Use FsInfoCat.Services.IBackgroundProgressService and/or FsInfoCat.AsyncOps classes")]
     public class FuncOperationFactory<TState, TResult> : IFuncOperationFactory<AsyncProducer<TState, TResult>, AsyncOpProgress<TState>, AsyncOpEventArgs<TState>, AsyncResultEventArgs<TState, TResult>, TResult>
     {
         private string activity;

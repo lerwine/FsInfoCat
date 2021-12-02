@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat.BgOps
 {
+    [Obsolete("Use FsInfoCat.Services.IBackgroundProgressService and/or FsInfoCat.AsyncOps classes")]
     public interface IOperationFactory<TTask, TOperation, TProgress, TEvent>
         where TTask : Task
         where TProgress : IAsyncOpProgress
@@ -17,6 +18,7 @@ namespace FsInfoCat.BgOps
         TOperation CreateOperation(CancellationTokenSource tokenSource, TTask task, TProgress progress, IObserver<TEvent> observer);
     }
 
+    [Obsolete("Use FsInfoCat.Services.IBackgroundProgressService and/or FsInfoCat.AsyncOps classes")]
     public interface IOperationNotifyCompleteFactory<TTask, TOperation, TProgress, TEvent, TFinalEvent> : IOperationFactory<TTask, TOperation, TProgress, TEvent>
         where TTask : Task
         where TProgress : IAsyncOpProgress

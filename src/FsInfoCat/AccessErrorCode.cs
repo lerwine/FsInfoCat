@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 namespace FsInfoCat
 {
     /// <summary>Represents file system access error codes.</summary>
+    [System.Obsolete("Use ErrorCode or MessageCode")]
     public enum AccessErrorCode : byte
     {
         /// <summary>An unknown/unspecified error has occurred.</summary>

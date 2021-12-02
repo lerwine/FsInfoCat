@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat.Background
 {
+    [Obsolete("Use FsInfoCat.Services.IBackgroundProgressService and/or FsInfoCat.AsyncOps classes")]
     public class BgActivityCanceledEventArgs<TState> : IBgStatusEventArgs<TState>
     {
         Exception IBgStatusEventArgs.Exception => null;

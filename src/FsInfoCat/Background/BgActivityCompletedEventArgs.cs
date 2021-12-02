@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat.Background
 {
+    [Obsolete("Use FsInfoCat.Services.IBackgroundProgressService and/or FsInfoCat.AsyncOps classes")]
     public class BgActivityCompletedEventArgs<TState> : IBgStatusEventArgs<TState>
     {
         Exception IBgStatusEventArgs.Exception => null;
@@ -28,6 +29,7 @@ namespace FsInfoCat.Background
         }
     }
 
+    [Obsolete("Use FsInfoCat.Services.IBackgroundProgressService and/or FsInfoCat.AsyncOps classes")]
     public class BgActivityCompletedEventArgs<TState, TResult> : BgActivityCompletedEventArgs<TState>
     {
         public TResult Result { get; }

@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat.BgOps
 {
+    [Obsolete("Use FsInfoCat.Services.IBackgroundProgressService and/or FsInfoCat.AsyncOps classes")]
     public class AsyncOpService : BackgroundService, IAsyncOpService
     {
         private readonly object _syncRoot = new();

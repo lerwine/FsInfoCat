@@ -3,6 +3,7 @@ namespace FsInfoCat.BgOps
     /// <summary>
     /// Represents an asynchronous operation.
     /// </summary>
+    [System.Obsolete("Use FsInfoCat.Services.IBackgroundProgressService and/or FsInfoCat.AsyncOps classes")]
     public interface IAsyncOperation : ICustomAsyncOperation<IAsyncOpEventArgs>
     //public interface IAsyncOperation : IAsyncOpStatus, IObservable<IAsyncOpEventArgs>
     {
@@ -47,6 +48,7 @@ namespace FsInfoCat.BgOps
     /// Represents an asynchronous operation.
     /// </summary>
     /// <typeparam name="TState">The type of user-defined object that qualifies or contains information about the asynchronous operation.</typeparam>
+    [System.Obsolete("Use FsInfoCat.Services.IBackgroundProgressService and/or FsInfoCat.AsyncOps classes")]
     public interface IAsyncOperation<TState> : IAsyncOperation, ICustomAsyncOperation<TState, IAsyncOpEventArgs<TState>>
     //public interface IAsyncOperation<TState> : IAsyncOperation, IAsyncOpStatus<TState>, IObservable<IAsyncOpEventArgs<TState>>
     {
