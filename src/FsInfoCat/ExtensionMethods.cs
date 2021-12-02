@@ -20,39 +20,6 @@ namespace FsInfoCat
         public static readonly Regex BackslashEscapableLBPattern = new(@"(?<l>[""\\])|(?<n>\r\n?|\n)|[\0\a\b\f\t\v]|(\p{C}|(?! )(\s|\p{Z}))(?<x>[\da-fA-F])?",
             RegexOptions.Compiled);
 
-        class EnteredMethod : IDisposable
-        {
-            private bool disposedValue;
-            private readonly string _format;
-            private readonly object[] _args;
-            private readonly ILogger _logger;
-
-            internal EnteredMethod([DisallowNull] ILogger logger, string argsFormat, params object[] args)
-            {
-                (_logger = logger).LogDebug($"Enter #{{HashCode}}.{{Method}}({argsFormat})", args);
-                _format = $"Exit #{{HashCode}}.{{Method}}({argsFormat})";
-                _args = args;
-            }
-
-            protected virtual void Dispose(bool disposing)
-            {
-                if (!disposedValue)
-                {
-                    if (disposing)
-                        _logger.LogDebug(_format, _args);
-
-                    disposedValue = true;
-                }
-            }
-
-            public void Dispose()
-            {
-                // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
-                Dispose(disposing: true);
-                GC.SuppressFinalize(this);
-            }
-        }
-
         public static IDisposable EnterMethod<TTarget, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7>([DisallowNull] this ILogger<TTarget> logger, TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5, TArg6 arg6, TArg7 arg7, [DisallowNull] TTarget target, [CallerMemberName] string methodName = null) =>
             new EnteredMethod(logger, "{Arg1}, {Arg2}, {Arg3}, {Arg4}, {Arg5}, {Arg6}, {Arg7}", RuntimeHelpers.GetHashCode(target), methodName, arg1, arg2, arg3, arg4, arg5, arg6, arg7);
 
@@ -500,18 +467,41 @@ namespace FsInfoCat
 #pragma warning restore CA2248 // Provide correct 'enum' argument to 'Enum.HasFlag'
         }
 
-        public static StatusMessageLevel ToStatusMessageLevel(this MessageCode messageCode) => messageCode.GetAmbientValue(StatusMessageLevel.Information);
+        public static MessageCode ToMessageCode<TEnum>(this TEnum value, MessageCode defaultValue) where TEnum : struct, Enum
+            => MessageCodeAttribute.TryGetCode(value, out MessageCode code) ? code : defaultValue;
 
-        public static MessageCode ToMessageCode(this ErrorCode errorCode) => errorCode.GetAmbientValue(MessageCode.UnexpectedError);
+        public static MessageCode? ToMessageCode<TEnum>(this TEnum? value) where TEnum : struct, Enum
+            => (value.HasValue && MessageCodeAttribute.TryGetCode(value.Value, out MessageCode code)) ? code : null;
 
-        public static ErrorCode ToErrorCode(this AccessErrorCode errorCode) => errorCode.GetAmbientValue(ErrorCode.Unexpected);
+        public static bool TryGetMessageCode<TEnum>(this TEnum value, out MessageCode result) where TEnum : struct, Enum
+            => MessageCodeAttribute.TryGetCode(value, out result);
 
-        public static AccessErrorCode ToAccessErrorCode(this ErrorCode errorCode) =>
-            Enum.GetValues<AccessErrorCode>().Where(e => e.ToErrorCode() == errorCode).DefaultIfEmpty(AccessErrorCode.Unspecified).First();
+        public static ErrorCode ToErrorCode<TEnum>(this TEnum value, ErrorCode defaultValue) where TEnum : struct, Enum
+            => ErrorCodeAttribute.TryGetCode(value, out ErrorCode code) ? code : defaultValue;
 
-        public static EventId ToEventId(this AccessErrorCode errorCode) => errorCode.ToErrorCode().ToEventId();
+        public static ErrorCode? ToErrorCode<TEnum>(this TEnum? value) where TEnum : struct, Enum
+            => (value.HasValue && ErrorCodeAttribute.TryGetCode(value.Value, out ErrorCode code)) ? code : null;
 
-        public static EventId ToEventId(this ErrorCode errorCode) => new((byte)errorCode, errorCode.TryGetDescription(out string name) ? name : errorCode.GetDisplayName());
+        public static bool TryGetErrorCode<TEnum>(this TEnum value, out ErrorCode result) where TEnum : struct, Enum
+            => ErrorCodeAttribute.TryGetCode(value, out result);
+
+        public static StatusMessageLevel ToStatusMessageLevel<TEnum>(this TEnum value, StatusMessageLevel defaultValue) where TEnum : struct, Enum
+            => (StatusMessageLevelAttribute.TryGetLevel(value, out StatusMessageLevel level) ||
+            (MessageCodeAttribute.TryGetCode(value, out MessageCode code) && StatusMessageLevelAttribute.TryGetLevel(code, out level))) ? level : defaultValue;
+
+        public static StatusMessageLevel? ToStatusMessageLevel<TEnum>(this TEnum? value) where TEnum : struct, Enum
+            => (value.HasValue && (StatusMessageLevelAttribute.TryGetLevel(value.Value, out StatusMessageLevel level) ||
+            (MessageCodeAttribute.TryGetCode(value.Value, out MessageCode code) && StatusMessageLevelAttribute.TryGetLevel(code, out level)))) ? level : null;
+
+        public static bool TryGetStatusMessageLevel<TEnum>(this TEnum value, out StatusMessageLevel level) where TEnum : struct, Enum
+            => StatusMessageLevelAttribute.TryGetLevel(value, out level) ||
+            (MessageCodeAttribute.TryGetCode(value, out MessageCode code) && StatusMessageLevelAttribute.TryGetLevel(code, out level));
+
+        public static EventId ToEventId(this MessageCode messageCode) => new((int)messageCode, messageCode.TryGetDescription(out string name) ? name : messageCode.GetDisplayName());
+
+        public static EventId ToEventId(this ErrorCode errorCode) => errorCode.TryGetMessageCode(out MessageCode messageCode) ?
+            new((int)messageCode, (errorCode.TryGetDescription(out string name) || messageCode.TryGetDescription(out name)) ? name : errorCode.GetDisplayName()) :
+            new((byte)errorCode, errorCode.TryGetDescription(out name) ? name : errorCode.GetDisplayName());
 
         public static bool IsNullableType(this Type type) => (type ?? throw new ArgumentNullException(nameof(type))).IsValueType && type.IsGenericType &&
             typeof(Nullable<>).Equals(type.GetGenericTypeDefinition());
@@ -764,6 +754,39 @@ namespace FsInfoCat
                         return (i > 0xff) ? $"\\x{i:x4}" : $"\\x{i:x2}";
                 }
             });
+        }
+
+        class EnteredMethod : IDisposable
+        {
+            private bool disposedValue;
+            private readonly string _format;
+            private readonly object[] _args;
+            private readonly ILogger _logger;
+
+            internal EnteredMethod([DisallowNull] ILogger logger, string argsFormat, params object[] args)
+            {
+                (_logger = logger).LogDebug($"Enter #{{HashCode}}.{{Method}}({argsFormat})", args);
+                _format = $"Exit #{{HashCode}}.{{Method}}({argsFormat})";
+                _args = args;
+            }
+
+            protected virtual void Dispose(bool disposing)
+            {
+                if (!disposedValue)
+                {
+                    if (disposing)
+                        _logger.LogDebug(_format, _args);
+
+                    disposedValue = true;
+                }
+            }
+
+            public void Dispose()
+            {
+                // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+                Dispose(disposing: true);
+                GC.SuppressFinalize(this);
+            }
         }
     }
 

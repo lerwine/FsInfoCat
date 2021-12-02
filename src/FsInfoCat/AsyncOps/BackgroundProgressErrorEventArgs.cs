@@ -7,10 +7,10 @@ namespace FsInfoCat.AsyncOps
     {
         public Exception Error { get; }
 
-        MessageCode IBackgroundOperationErrorEvent.Code => Code ?? MessageCode.UnexpectedError;
+        ErrorCode IBackgroundOperationErrorEvent.Code => Code.ToErrorCode() ?? ErrorCode.Unexpected;
 
         public BackgroundProgressErrorEventArgs([DisallowNull] IBackgroundProgressInfo progress, [DisallowNull] Exception error, ErrorCode code)
-            : base(progress, code.ToMessageCode())
+            : base(progress, code.ToMessageCode(MessageCode.UnexpectedError))
         {
             Error = error ?? throw new ArgumentNullException(nameof(error));
         }

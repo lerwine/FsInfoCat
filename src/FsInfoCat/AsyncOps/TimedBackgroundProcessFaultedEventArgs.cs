@@ -6,10 +6,10 @@ namespace FsInfoCat.AsyncOps
 {
     public class TimedBackgroundProcessFaultedEventArgs : TimedBackgroundProcessCompletedEventArgs, ITimedBackgroundOperationFaultedEvent
     {
-        MessageCode IBackgroundOperationErrorEvent.Code => Code ?? MessageCode.UnexpectedError;
+        ErrorCode IBackgroundOperationErrorEvent.Code => Code.ToErrorCode() ?? ErrorCode.Unexpected;
 
         public TimedBackgroundProcessFaultedEventArgs([DisallowNull] IBackgroundProgressService source, [DisallowNull] ITimedBackgroundOperation operation, [DisallowNull] Exception exception, ErrorCode errorCode)
-            : base(source, operation, errorCode.ToMessageCode(), exception ?? throw new ArgumentNullException(nameof(exception)), false) { }
+            : base(source, operation, errorCode.ToMessageCode(MessageCode.UnexpectedError), exception ?? throw new ArgumentNullException(nameof(exception)), false) { }
 
         public TimedBackgroundProcessFaultedEventArgs([DisallowNull] IBackgroundProgressService source, [DisallowNull] ITimedBackgroundOperation operation, [DisallowNull] Exception exception)
             : base(source, operation, null, exception ?? throw new ArgumentNullException(nameof(exception)), false) { }

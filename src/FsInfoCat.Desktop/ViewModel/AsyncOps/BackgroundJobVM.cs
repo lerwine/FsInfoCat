@@ -323,7 +323,7 @@ Current Operation: {currentOperation}", "Unexpected Error", MessageBoxButton.OK,
             MessageCode? messageCode = progressEvent.Code;
             Exception error = (progressEvent is IBackgroundOperationErrorOptEvent errorOptEvent) ? errorOptEvent.Error : null;
             if (messageCode.HasValue)
-                MessageLevel = messageCode.Value.GetAmbientValue(StatusMessageLevel.Information);
+                MessageLevel = messageCode?.ToStatusMessageLevel(StatusMessageLevel.Information) ?? StatusMessageLevel.Information;
             else
                 MessageLevel = (error is null) ? StatusMessageLevel.Information : (error is WarningException) ? StatusMessageLevel.Warning : StatusMessageLevel.Error;
         }
