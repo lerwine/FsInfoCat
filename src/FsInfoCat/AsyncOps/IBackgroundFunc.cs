@@ -30,7 +30,7 @@ namespace FsInfoCat.AsyncOps
     /// <seealso cref="IBackgroundOperation{TState}" />
     /// <seealso cref="IBackgroundProgressEvent{TState}" />
     /// <seealso cref="IObservable{IBackgroundProgressEvent{TState}}" />
-    public interface IBackgroundFunc<TState, TResult> : IBackgroundFunc<TResult>, IBackgroundOperation<TState>, IObservable<IBackgroundProgressEvent<TState>>
+    public interface IBackgroundFunc<TState, TResult> : IBackgroundOperation<TState>, IObservable<IBackgroundProgressEvent<TState>>, IBackgroundFunc<TResult>
     {
     }
 }

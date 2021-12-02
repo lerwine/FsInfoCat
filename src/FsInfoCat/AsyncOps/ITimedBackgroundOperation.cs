@@ -24,7 +24,7 @@ namespace FsInfoCat.AsyncOps
     /// <seealso cref="ITimedBackgroundProgressInfo{TState}" />
     /// <seealso cref="ITimedBackgroundProgressEvent{TState}" />
     /// <seealso cref="IObservable{ITimedBackgroundProgressEvent{TState}}" />
-    public interface ITimedBackgroundOperation<TState> : ITimedBackgroundOperation, IBackgroundOperation<TState>, ITimedBackgroundProgressInfo<TState>, IObservable<ITimedBackgroundProgressEvent<TState>>
+    public interface ITimedBackgroundOperation<TState> : IBackgroundOperation<TState>, ITimedBackgroundProgressInfo<TState>, IObservable<ITimedBackgroundProgressEvent<TState>>, ITimedBackgroundOperation
     {
     }
 }

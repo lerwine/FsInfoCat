@@ -21,7 +21,7 @@ namespace FsInfoCat.AsyncOps
     /// <typeparam name="TState">The type of user-defined object associated with the asynchronous operation.</typeparam>
     /// <seealso cref="ITimedBackgroundProgressInfo" />
     /// <seealso cref="IBackgroundProgressInfo{TState}" />
-    public interface ITimedBackgroundProgressInfo<TState> : ITimedBackgroundProgressInfo, IBackgroundProgressInfo<TState>
+    public interface ITimedBackgroundProgressInfo<TState> : IBackgroundProgressInfo<TState>, ITimedBackgroundProgressInfo
     {
     }
 }

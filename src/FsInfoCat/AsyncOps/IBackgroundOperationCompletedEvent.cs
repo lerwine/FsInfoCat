@@ -21,7 +21,7 @@ namespace FsInfoCat.AsyncOps
     /// <seealso cref="IBackgroundOperationCompletedEvent" />
     /// <seealso cref="IBackgroundProgressEvent{TState}" />
     /// <seealso cref="IBackgroundOperationErrorOptEvent{TState}" />
-    public interface IBackgroundOperationCompletedEvent<TState> : IBackgroundOperationCompletedEvent, IBackgroundProgressEvent<TState>, IBackgroundOperationErrorOptEvent<TState>
+    public interface IBackgroundOperationCompletedEvent<TState> : IBackgroundProgressEvent<TState>, IBackgroundOperationErrorOptEvent<TState>, IBackgroundOperationCompletedEvent
     {
     }
 }
