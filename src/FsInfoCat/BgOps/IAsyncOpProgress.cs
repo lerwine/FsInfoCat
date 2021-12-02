@@ -7,6 +7,7 @@ namespace FsInfoCat.BgOps
     /// <summary>
     /// Reports asynchronous progress information.
     /// </summary>
+    [Obsolete("Use FsInfoCat.Services.IBackgroundProgressService and/or FsInfoCat.AsyncOps classes")]
     public interface IAsyncOpProgress : IAsyncOpInfo, IProgress<string>, IProgress<Exception>, IAsyncOpFactory
     {
         CancellationToken Token { get; }
@@ -51,6 +52,7 @@ namespace FsInfoCat.BgOps
     /// Reports asynchronous progress information.
     /// </summary>
     /// <typeparam name="T">The type of user-defined object that qualifies or contains information about the asynchronous operation.</typeparam>
+    [Obsolete("Use FsInfoCat.Services.IBackgroundProgressService and/or FsInfoCat.AsyncOps classes")]
     public interface IAsyncOpProgress<T> : IAsyncOpProgress, IAsyncOpInfo<T>
     {
     }

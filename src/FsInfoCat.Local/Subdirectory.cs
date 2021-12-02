@@ -555,8 +555,9 @@ namespace FsInfoCat.Local
 
         public void SetError(LocalDbContext dbContext, ErrorCode errorCode, Exception exception, string message = null)
         {
-            SetError(dbContext, errorCode.ToAccessErrorCode(), exception, message.GetDefaultIfNullOrWhiteSpace(() =>
-                errorCode.TryGetDescription(out string m) ? m : errorCode.GetDisplayName()));
+            //SetError(dbContext, errorCode.ToAccessErrorCode(), exception, message.GetDefaultIfNullOrWhiteSpace(() =>
+            //    errorCode.TryGetDescription(out string m) ? m : errorCode.GetDisplayName()));
+            throw new NotImplementedException();
         }
 
         public void SetError(LocalDbContext dbContext, AccessErrorCode errorCode, Exception exception, string message = null)

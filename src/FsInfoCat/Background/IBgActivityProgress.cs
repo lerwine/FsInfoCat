@@ -3,6 +3,7 @@ using System.Threading;
 
 namespace FsInfoCat.Background
 {
+    [Obsolete("Use FsInfoCat.Services.IBackgroundProgressService and/or FsInfoCat.AsyncOps classes")]
     public interface IBgActivityProgress : IProgress<string>, IProgress<Exception>, IBgActivityObject, IBgActivitySource
     {
         CancellationToken Token { get; }
@@ -14,6 +15,7 @@ namespace FsInfoCat.Background
         void Report(string statusMessage, Exception error);
     }
 
+    [Obsolete("Use FsInfoCat.Services.IBackgroundProgressService and/or FsInfoCat.AsyncOps classes")]
     public interface IBgActivityProgress<TState> : IBgActivityProgress, IBgActivityObject<TState>
     {
     }

@@ -25,7 +25,7 @@ namespace FsInfoCat.AsyncOps
     /// <remarks>This pushes <see cref="IBackgroundProgressEvent{TState}"/> notifications which indicate the progress of the background operation.</remarks>
     /// <seealso cref="IBackgroundOperation" />
     /// <seealso cref="ICancellableOperation{TState}" />
-    public interface IBackgroundOperation<TState> : IBackgroundOperation, ICancellableOperation<TState>
+    public interface IBackgroundOperation<TState> : ICancellableOperation<TState>, IBackgroundOperation
     {
     }
 }

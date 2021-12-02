@@ -1,4 +1,4 @@
-﻿using FsInfoCat.AsyncOps;
+using FsInfoCat.AsyncOps;
 using System;
 using System.Threading.Tasks;
 
@@ -6,6 +6,7 @@ namespace FsInfoCat.Background
 {
     public partial class BgActivityService
     {
+        [Obsolete("Use FsInfoCat.Services.IBackgroundProgressService and/or FsInfoCat.AsyncOps classes")]
         class TimedAsyncActionBase<TState, TTask> : AsyncActionBase<TState, ITimedBgStatusEventArgs<TState>, TTask>, ITimedAsyncAction<TState>
             where TTask : Task
         {

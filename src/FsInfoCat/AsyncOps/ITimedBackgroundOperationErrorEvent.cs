@@ -16,7 +16,7 @@ namespace FsInfoCat.AsyncOps
     /// <seealso cref="ITimedBackgroundOperationErrorEvent" />
     /// <seealso cref="IBackgroundOperationErrorEvent{TState}" />
     /// <seealso cref="ITimedBackgroundOperationErrorOptEvent{TState}" />
-    public interface ITimedBackgroundOperationErrorEvent<TState> : ITimedBackgroundOperationErrorEvent, IBackgroundOperationErrorEvent<TState>, ITimedBackgroundOperationErrorOptEvent<TState>
+    public interface ITimedBackgroundOperationErrorEvent<TState> : IBackgroundOperationErrorEvent<TState>, ITimedBackgroundOperationErrorOptEvent<TState>, ITimedBackgroundOperationErrorEvent
     {
     }
 }

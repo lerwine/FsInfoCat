@@ -56,7 +56,7 @@ namespace FsInfoCat.AsyncOps
         /// <value>The job completion percentage value at the time the exception was thrown or <see langword="null" /> if not applicable.</value>
         public byte? PercentComplete { get; }
 
-        MessageCode? IBackgroundProgressEvent.Code => Code.ToMessageCode();
+        MessageCode? IBackgroundProgressEvent.Code => Code.ToMessageCode(MessageCode.UnexpectedError);
 
         string IBackgroundProgressInfo.StatusDescription => Message;
 

@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat.Background
 {
+    [Obsolete("Use FsInfoCat.Services.IBackgroundProgressService")]
     public partial class BgActivityService : BackgroundService, IBgActivityService
     {
         private readonly object _syncRoot = new();
@@ -22,13 +23,6 @@ namespace FsInfoCat.Background
         public BgActivityService([DisallowNull] ILogger<BgActivityService> logger)
         {
             _logger = logger;
-        }
-
-        [ServiceBuilderHandler]
-        public static void ConfigureServices([DisallowNull] IServiceCollection services)
-        {
-            System.Diagnostics.Debug.WriteLine($"Invoked {typeof(BgActivityService).FullName}.{nameof(ConfigureServices)}");
-            services.AddHostedService<BgActivityService>(serviceProvider => new BgActivityService(serviceProvider.GetRequiredService<ILogger<BgActivityService>>()));
         }
 
 #pragma warning disable CA2016 // Forward the 'CancellationToken' parameter to methods that take one

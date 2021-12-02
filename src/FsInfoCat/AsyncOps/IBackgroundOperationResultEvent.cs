@@ -23,7 +23,7 @@ namespace FsInfoCat.AsyncOps
     /// <typeparam name="TResult">The type of result value produced by the asynchronous operation.</typeparam>
     /// <seealso cref="IBackgroundOperationResultEvent{TResult}" />
     /// <seealso cref="IBackgroundOperationCompletedEvent{TState}" />
-    public interface IBackgroundOperationResultEvent<TState, TResult> : IBackgroundOperationResultEvent<TResult>, IBackgroundOperationCompletedEvent<TState>
+    public interface IBackgroundOperationResultEvent<TState, TResult> : IBackgroundOperationCompletedEvent<TState>, IBackgroundOperationResultEvent<TResult>
     {
     }
 }
