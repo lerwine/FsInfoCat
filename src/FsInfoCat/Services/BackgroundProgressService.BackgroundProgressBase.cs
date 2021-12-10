@@ -150,6 +150,96 @@ namespace FsInfoCat.Services
                 RaiseProgressChanged(e);
             }
 
+            public void ReportCurrentOperation(string currentOperation, MessageCode code, int percentComplete)
+            {
+                throw new NotImplementedException();
+            }
+
+            public void ReportCurrentOperation(string currentOperation, MessageCode code)
+            {
+                throw new NotImplementedException();
+            }
+
+            public void ReportCurrentOperation(string currentOperation, int percentComplete)
+            {
+                throw new NotImplementedException();
+            }
+
+            public void ReportException(Exception exception, string statusDescription, string currentOperation, MessageCode code, int percentComplete)
+            {
+                throw new NotImplementedException();
+            }
+
+            public void ReportException(Exception exception, string statusDescription, string currentOperation, MessageCode code)
+            {
+                throw new NotImplementedException();
+            }
+
+            public void ReportException(Exception exception, string statusDescription, string currentOperation, int percentComplete)
+            {
+                throw new NotImplementedException();
+            }
+
+            public void ReportException(Exception exception, string statusDescription, MessageCode code, int percentComplete)
+            {
+                throw new NotImplementedException();
+            }
+
+            public void ReportException(Exception exception, string statusDescription, MessageCode code)
+            {
+                throw new NotImplementedException();
+            }
+
+            public void ReportException(Exception exception, string statusDescription, int percentComplete)
+            {
+                throw new NotImplementedException();
+            }
+
+            public void ReportException(Exception exception, MessageCode code, int percentComplete)
+            {
+                throw new NotImplementedException();
+            }
+
+            public void ReportException(Exception exception, MessageCode code)
+            {
+                throw new NotImplementedException();
+            }
+
+            public void ReportException(Exception exception, int percentComplete)
+            {
+                throw new NotImplementedException();
+            }
+
+            public void ReportStatusDescription(string statusDescription, string currentOperation, MessageCode code, int percentComplete)
+            {
+                throw new NotImplementedException();
+            }
+
+            public void ReportStatusDescription(string statusDescription, string currentOperation, MessageCode code)
+            {
+                throw new NotImplementedException();
+            }
+
+            public void ReportStatusDescription(string statusDescription, string currentOperation, int percentComplete)
+            {
+                throw new NotImplementedException();
+            }
+
+            public void ReportStatusDescription(string statusDescription, MessageCode code, int percentComplete)
+            {
+                throw new NotImplementedException();
+            }
+
+            public void ReportStatusDescription(string statusDescription, MessageCode code)
+            {
+                throw new NotImplementedException();
+            }
+
+            public void ReportStatusDescription(string statusDescription, int percentComplete)
+            {
+                throw new NotImplementedException();
+            }
+
             protected abstract TEvent CreateEventObject(Exception exception);
 
             public void Report(TEvent value)

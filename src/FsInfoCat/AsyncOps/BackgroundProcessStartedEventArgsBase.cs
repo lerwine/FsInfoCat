@@ -1,4 +1,3 @@
-﻿using FsInfoCat.Services;
 using System;
 using System.Diagnostics.CodeAnalysis;
 
@@ -9,8 +8,8 @@ namespace FsInfoCat.AsyncOps
     {
         protected TOperation Operation { get; }
 
-        public BackgroundProcessStartedEventArgsBase([DisallowNull] IBackgroundProgressService source, [DisallowNull] TOperation operation, MessageCode? messageCode)
-            : base(source, operation, messageCode)
+        public BackgroundProcessStartedEventArgsBase([DisallowNull] TOperation operation, MessageCode? messageCode, string statusDescription = null)
+            : base(operation, messageCode, statusDescription)
         {
             Operation = operation;
         }

@@ -1,4 +1,3 @@
-using FsInfoCat.Services;
 using System;
 using System.Diagnostics.CodeAnalysis;
 
@@ -8,8 +7,8 @@ namespace FsInfoCat.AsyncOps
     {
         public TimeSpan Duration { get; }
 
-        public TimedBackgroundProcessStartedEventArgs([DisallowNull] IBackgroundProgressService source, [DisallowNull] ITimedBackgroundOperation operation, MessageCode? messageCode)
-            : base(source, operation, messageCode)
+        public TimedBackgroundProcessStartedEventArgs([DisallowNull] ITimedBackgroundOperation operation, MessageCode? messageCode, string statusDescription = null)
+            : base(operation, messageCode, statusDescription)
         {
             Duration = operation.Duration;
         }
@@ -23,8 +22,8 @@ namespace FsInfoCat.AsyncOps
 
         public TState AsyncState { get; }
 
-        public TimedBackgroundProcessStartedEventArgs([DisallowNull] IBackgroundProgressService source, [DisallowNull] ITimedBackgroundOperation<TState> operation, MessageCode? messageCode)
-            : base(source, operation, messageCode)
+        public TimedBackgroundProcessStartedEventArgs([DisallowNull] ITimedBackgroundOperation<TState> operation, MessageCode? messageCode, string statusDescription = null)
+            : base(operation, messageCode, statusDescription)
         {
             Duration = operation.Duration;
             AsyncState = operation.AsyncState;

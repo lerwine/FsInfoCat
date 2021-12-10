@@ -1,4 +1,3 @@
-using FsInfoCat.Services;
 using System;
 using System.Diagnostics.CodeAnalysis;
 
@@ -6,16 +5,16 @@ namespace FsInfoCat.AsyncOps
 {
     public class BackgroundProcessStartedEventArgs : BackgroundProcessStartedEventArgsBase<IBackgroundOperation>
     {
-        public BackgroundProcessStartedEventArgs([DisallowNull] IBackgroundProgressService source, [DisallowNull] IBackgroundOperation operation, MessageCode? messageCode)
-            : base(source, operation, messageCode)
+        public BackgroundProcessStartedEventArgs([DisallowNull] IBackgroundOperation operation, MessageCode? messageCode, string statusDescription = null)
+            : base(operation, messageCode, statusDescription)
         {
         }
     }
 
     public sealed class BackgroundProcessStartedEventArgs<TState> : BackgroundProcessStartedEventArgsBase<IBackgroundOperation<TState>>, IBackgroundProgressStartedEvent<TState>
     {
-        public BackgroundProcessStartedEventArgs([DisallowNull] IBackgroundProgressService source, [DisallowNull] IBackgroundOperation<TState> operation, MessageCode? messageCode)
-            : base(source, operation, messageCode)
+        public BackgroundProcessStartedEventArgs([DisallowNull] IBackgroundOperation<TState> operation, MessageCode? messageCode, string statusDescription = null)
+            : base(operation, messageCode, statusDescription)
         {
             AsyncState = operation.AsyncState;
         }

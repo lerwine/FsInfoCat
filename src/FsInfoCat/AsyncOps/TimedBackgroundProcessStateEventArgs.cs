@@ -1,4 +1,3 @@
-﻿using FsInfoCat.Services;
 using System;
 using System.Diagnostics.CodeAnalysis;
 
@@ -8,8 +7,8 @@ namespace FsInfoCat.AsyncOps
     {
         public TimeSpan Duration { get; }
 
-        protected TimedBackgroundProcessStateEventArgs([DisallowNull] IBackgroundProgressService source, [DisallowNull] ITimedBackgroundOperation operation, MessageCode? messageCode)
-            : base(source, operation, messageCode)
+        protected TimedBackgroundProcessStateEventArgs([DisallowNull] ITimedBackgroundOperation operation, MessageCode? messageCode, string statusDescription = null)
+            : base(operation, messageCode, statusDescription)
         {
             Duration = operation.Duration;
         }

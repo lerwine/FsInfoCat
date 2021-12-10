@@ -1,4 +1,3 @@
-using FsInfoCat.Services;
 using System;
 using System.Diagnostics.CodeAnalysis;
 
@@ -18,18 +17,23 @@ namespace FsInfoCat.AsyncOps
 
         public Guid? ParentId { get; }
 
-        public IBackgroundProgressService Source { get; }
-
         public byte? PercentComplete { get; }
 
-        protected BackgroundProcessStateEventArgs([DisallowNull] IBackgroundProgressService source, [DisallowNull] IBackgroundOperation operation, MessageCode? messageCode)
+        protected BackgroundProcessStateEventArgs([DisallowNull] IBackgroundOperation operation, MessageCode? messageCode, string statusDescription)
         {
-            Source = source ?? throw new ArgumentNullException(nameof(source));
             Code = messageCode;
             OperationId = (operation ?? throw new ArgumentNullException(nameof(operation))).OperationId;
             Activity = operation.Activity ?? "";
-            StatusDescription = operation.StatusDescription ?? "";
-            CurrentOperation = operation.CurrentOperation ?? "";
+            if (string.IsNullOrWhiteSpace(statusDescription))
+            {
+                StatusDescription = operation.StatusDescription ?? "";
+                CurrentOperation = operation.CurrentOperation ?? "";
+            }
+            else
+            {
+                StatusDescription = statusDescription;
+                CurrentOperation = "";
+            }
             ParentId = operation.ParentId;
             PercentComplete = operation.PercentComplete;
         }

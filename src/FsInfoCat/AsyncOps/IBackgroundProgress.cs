@@ -20,6 +20,12 @@ namespace FsInfoCat.AsyncOps
         /// <value>The token that is used to communicate background operation cancellation requests.</value>
         CancellationToken Token { get; }
 
+        void ReportCurrentOperation(string currentOperation, MessageCode code, int percentComplete);
+
+        void ReportCurrentOperation(string currentOperation, MessageCode code);
+
+        void ReportCurrentOperation(string currentOperation, int percentComplete);
+
         /// <summary>
         /// Reports the current operation.
         /// </summary>
@@ -27,6 +33,18 @@ namespace FsInfoCat.AsyncOps
         /// <para>This serves the same conceptual puropose as the
         /// PowerShell <see cref="https://docs.microsoft.com/en-us/dotnet/api/system.management.automation.progressrecord.activityid#System_Management_Automation_ProgressRecord_CurrentOperation">ProgressRecord.CurrentOperation</see> property.</para></param>
         void ReportCurrentOperation(string currentOperation);
+
+        void ReportStatusDescription(string statusDescription, string currentOperation, MessageCode code, int percentComplete);
+
+        void ReportStatusDescription(string statusDescription, string currentOperation, MessageCode code);
+
+        void ReportStatusDescription(string statusDescription, string currentOperation, int percentComplete);
+
+        void ReportStatusDescription(string statusDescription, MessageCode code, int percentComplete);
+
+        void ReportStatusDescription(string statusDescription, MessageCode code);
+
+        void ReportStatusDescription(string statusDescription, int percentComplete);
 
         /// <summary>
         /// Reports the background operation status and operation description.
@@ -47,6 +65,24 @@ namespace FsInfoCat.AsyncOps
         /// <para>This serves the same conceptual puropose as the
         /// PowerShell <see cref="https://docs.microsoft.com/en-us/dotnet/api/system.management.automation.progressrecord.activityid#System_Management_Automation_ProgressRecord_StatusDescription">ProgressRecord.StatusDescription</see> property.</para></param>
         void ReportStatusDescription(string statusDescription);
+
+        void ReportException(Exception exception, string statusDescription, string currentOperation, MessageCode code, int percentComplete);
+
+        void ReportException(Exception exception, string statusDescription, string currentOperation, MessageCode code);
+
+        void ReportException(Exception exception, string statusDescription, string currentOperation, int percentComplete);
+
+        void ReportException(Exception exception, string statusDescription, MessageCode code, int percentComplete);
+
+        void ReportException(Exception exception, string statusDescription, MessageCode code);
+
+        void ReportException(Exception exception, string statusDescription, int percentComplete);
+
+        void ReportException(Exception exception, MessageCode code, int percentComplete);
+
+        void ReportException(Exception exception, MessageCode code);
+
+        void ReportException(Exception exception, int percentComplete);
 
         /// <summary>
         /// Reports a non-fatal asynchronous operation exception.

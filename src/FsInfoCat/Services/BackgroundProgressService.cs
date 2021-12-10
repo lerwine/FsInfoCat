@@ -80,7 +80,7 @@ namespace FsInfoCat.Services
                 if (isFirstOperation)
                     _activeStatusObservers.RaiseActiveStateChanged(true);
             }
-            finally { _stateEventObservers.RaiseStateChanged(new BackgroundProcessStartedEventArgs(this, operation, null)); }
+            finally { _stateEventObservers.RaiseStateChanged(new BackgroundProcessStartedEventArgs(operation, null)); }
         }
 
         private void RaiseOperationCompleted([DisallowNull] Task task, [DisallowNull] LinkedListNode<IBackgroundOperation> node)
@@ -94,21 +94,21 @@ namespace FsInfoCat.Services
             try
             {
                 if (task.IsCanceled)
-                    _stateEventObservers.RaiseStateChanged(new BackgroundProcessCompletedEventArgs(this, node.Value, null, null, false));
+                    _stateEventObservers.RaiseStateChanged(new BackgroundProcessCompletedEventArgs(node.Value, null, null, false));
                 else if (task.IsFaulted)
                 {
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
                     if (task.Exception.InnerException is AsyncOperationException asyncFailureException)
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
-                        _stateEventObservers.RaiseStateChanged(new BackgroundProcessFaultedEventArgs(this, node.Value, (task.Exception.InnerExceptions.Count == 1) ? asyncFailureException :
+                        _stateEventObservers.RaiseStateChanged(new BackgroundProcessFaultedEventArgs(node.Value, (task.Exception.InnerExceptions.Count == 1) ? asyncFailureException :
                             task.Exception, asyncFailureException.Code));
                     else
 #pragma warning disable CS8604 // Possible null reference argument.
-                        _stateEventObservers.RaiseStateChanged(new BackgroundProcessFaultedEventArgs(this, node.Value, (task.Exception.InnerExceptions.Count == 1) ? task.Exception.InnerException : task.Exception, ErrorCode.Unexpected));
+                        _stateEventObservers.RaiseStateChanged(new BackgroundProcessFaultedEventArgs(node.Value, (task.Exception.InnerExceptions.Count == 1) ? task.Exception.InnerException : task.Exception, ErrorCode.Unexpected));
 #pragma warning restore CS8604 // Possible null reference argument.
                 }
                 else
-                    _stateEventObservers.RaiseStateChanged(new BackgroundProcessCompletedEventArgs(this, node.Value, null, null, true));
+                    _stateEventObservers.RaiseStateChanged(new BackgroundProcessCompletedEventArgs(node.Value, null, null, true));
             }
             finally
             {
