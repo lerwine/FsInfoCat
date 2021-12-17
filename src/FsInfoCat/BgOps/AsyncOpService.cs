@@ -25,13 +25,6 @@ namespace FsInfoCat.BgOps
 
         int IReadOnlyCollection<IAsyncAction>.Count => throw new NotImplementedException();
 
-        [ServiceBuilderHandler]
-        public static void ConfigureServices([DisallowNull] IServiceCollection services)
-        {
-            System.Diagnostics.Debug.WriteLine($"Invoked {typeof(AsyncOpService).FullName}.{nameof(ConfigureServices)}");
-            services.AddHostedService<IAsyncOpService>(serviceProvider => new AsyncOpService(serviceProvider.GetRequiredService<ILogger<AsyncOpService>>()));
-        }
-
         private TOperation FromAsync<TFactory, TTask, TOperation, TState>(TFactory operationFactory, TState state, IObserver<IAsyncOpEventArgs<TState>> observer,
             Func<TOperation, string> getFinalStatusMessage)
             where TTask : Task

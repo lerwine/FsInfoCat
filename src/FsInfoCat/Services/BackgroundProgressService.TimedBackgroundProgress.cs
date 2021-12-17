@@ -13,7 +13,7 @@ namespace FsInfoCat.Services
             where TOperation : ITimedBackgroundOperation
         {
             private readonly Func<ITimedBackgroundProgressInfo, Exception, TEvent> _eventFactory;
-            private readonly Stopwatch _stopwatch;
+            private readonly Stopwatch _stopwatch = new();
 
             public TimeSpan Duration => _stopwatch.Elapsed;
 
@@ -23,7 +23,6 @@ namespace FsInfoCat.Services
                 : base(service, (p, t1, t2) => operationFactory((TimedBackgroundProgress<TEvent, TOperation, TResultEvent>)p, t1, t2), activity, statusDescription, parentId, tokens)
             {
                 _eventFactory = eventFactory;
-                _stopwatch = new();
             }
 
             internal void StopTimer() => _stopwatch.Stop();

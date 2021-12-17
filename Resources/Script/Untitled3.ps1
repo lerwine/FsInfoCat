@@ -365,25 +365,25 @@ class FactoryMethod {
         if ($this.HandlesOnCompleted) {
             if ($null -ne $this.StateType) {
                 if ($this.PassesTokens) {
-                    return "InvokeAsync(asyncMethodDelegate, onCompleted, initializeData.Activity, completeData.StatusDescription, initializeData.State, tokenSource.Token)";
+                    return "InvokeAsync(asyncMethodDelegate, onCompleted, initializeData.Activity, initializeData.StatusDescription, initializeData.State, tokenSource.Token)";
                 }
-                return "InvokeAsync(asyncMethodDelegate, onCompleted, initializeData.Activity, completeData.StatusDescription, initializeData.State)";
+                return "InvokeAsync(asyncMethodDelegate, onCompleted, initializeData.Activity, initializeData.StatusDescription, initializeData.State)";
             }
             if ($this.PassesTokens) {
-                return "InvokeAsync(asyncMethodDelegate, onCompleted, initializeData.Activity, completeData.StatusDescription, tokenSource.Token)";
+                return "InvokeAsync(asyncMethodDelegate, onCompleted, initializeData.Activity, initializeData.StatusDescription, tokenSource.Token)";
             }
-            return "InvokeAsync(asyncMethodDelegate, onCompleted, initializeData.Activity, completeData.StatusDescription)";
+            return "InvokeAsync(asyncMethodDelegate, onCompleted, initializeData.Activity, initializeData.StatusDescription)";
         }
         if ($null -ne $this.StateType) {
             if ($this.PassesTokens) {
-                return "InvokeAsync(asyncMethodDelegate, initializeData.Activity, completeData.StatusDescription, initializeData.State, tokenSource.Token)";
+                return "InvokeAsync(asyncMethodDelegate, initializeData.Activity, initializeData.StatusDescription, initializeData.State, tokenSource.Token)";
             }
-            return "InvokeAsync(asyncMethodDelegate, initializeData.Activity, completeData.StatusDescription, initializeData.State)";
+            return "InvokeAsync(asyncMethodDelegate, initializeData.Activity, initializeData.StatusDescription, initializeData.State)";
         }
         if ($this.PassesTokens) {
-            return "InvokeAsync(asyncMethodDelegate, initializeData.Activity, completeData.StatusDescription, tokenSource.Token)";
+            return "InvokeAsync(asyncMethodDelegate, initializeData.Activity, initializeData.StatusDescription, tokenSource.Token)";
         }
-        return "InvokeAsync(asyncMethodDelegate, initializeData.Activity, completeData.StatusDescription)";
+        return "InvokeAsync(asyncMethodDelegate, initializeData.Activity, initializeData.StatusDescription)";
     }
 
     [string] GetTestName() {
@@ -460,7 +460,8 @@ foreach ($FactoryMethod in @(
     if ($null -ne $FactoryMethod.ResultType) { $StringWriter.Write('IResultData') } else { $StringWriter.Write('IActionCompleteData') }
     $StringWriter.WriteLine(' completeData)');
     $StringWriter.WriteLine('        {');
-    $StringWriter.WriteLine('            using AutoResetEvent syncEvent = new(false);');
+    $StringWriter.WriteLine('            using AutoResetEvent fgEvent = new(false);');
+    $StringWriter.WriteLine('            using AutoResetEvent bgEvent = new(false);');
     $StringWriter.Write('            ');
     $StringWriter.Write($FactoryMethod.GetTaskType($false));
     $StringWriter.Write(' asyncMethodDelegate(');
@@ -468,7 +469,7 @@ foreach ($FactoryMethod in @(
     $StringWriter.WriteLine(' progress) =>');
     $StringWriter.Write('                ');
     $StringWriter.Write($FactoryMethod.GetTestAsyncMethodName());
-    $StringWriter.WriteLine('(syncEvent, initializeData, updateData, completeData, progress);');
+    $StringWriter.WriteLine('(fgEvent, bgEvent, initializeData, updateData, completeData, progress);');
     if ($FactoryMethod.HandlesOnCompleted) {
         $StringWriter.Write('            ');
         $StringWriter.Write($FactoryMethod.GetFinalEventType($false));
@@ -480,7 +481,7 @@ foreach ($FactoryMethod in @(
         $StringWriter.WriteLine(';');
     }
     $StringWriter.WriteLine('');
-    $StringWriter.WriteLine('            IBackgroundProgressService service = Hosting.GetRequiredService<IBackgroundProgressService>();');
+    $StringWriter.WriteLine('            IBackgroundProgressService service = Hosting.GetBackgroundProgressService();');
     $StringWriter.WriteLine('            if (service is null)');
     $StringWriter.WriteLine('                throw new AssertInconclusiveException();');
     if ($FactoryMethod.PassesTokens) { $StringWriter.WriteLine('            using CancellationTokenSource tokenSource = new();') }
@@ -495,7 +496,7 @@ foreach ($FactoryMethod in @(
     $StringWriter.WriteLine('');
     $StringWriter.WriteLine('            #region Test Initial Progress Properties');
     $StringWriter.WriteLine('');
-    $StringWriter.WriteLine('            syncEvent.WaitOne(); // Wait until bg operation being executed');
+    $StringWriter.WriteLine('            bgEvent.WaitOne(); // Wait until bg operation being executed');
     $StringWriter.WriteLine('            using IDisposable subscription = backgroundOperation.Subscribe(operationObserver);');
     $StringWriter.WriteLine('            Assert.IsNotNull(backgroundOperation);');
     $StringWriter.WriteLine('            Assert.AreEqual(initializeData.Activity, backgroundOperation.Activity);');
@@ -503,13 +504,13 @@ foreach ($FactoryMethod in @(
     $StringWriter.WriteLine('            Assert.AreEqual(string.Empty, backgroundOperation.CurrentOperation);');
     if ($null -ne $FactoryMethod.StateType) { $StringWriter.WriteLine('            Assert.AreEqual(initializeData.State, backgroundOperation.AsyncState);') }
     $StringWriter.WriteLine('            Assert.IsFalse(backgroundOperation.PercentComplete.HasValue);');
-    $StringWriter.WriteLine('            syncEvent.Set(); // Signal that we''ve tested initial status properties');
+    $StringWriter.WriteLine('            fgEvent.Set(); // Signal that we''ve tested initial status properties');
     $StringWriter.WriteLine('');
     $StringWriter.WriteLine('            #endregion');
     $StringWriter.WriteLine('');
     $StringWriter.WriteLine('            #region Test Progress Update');
     $StringWriter.WriteLine('');
-    $StringWriter.WriteLine('            syncEvent.WaitOne(); // Wait until status has been updated');
+    $StringWriter.WriteLine('            bgEvent.WaitOne(); // Wait until status has been updated');
     $StringWriter.WriteLine('            Assert.AreEqual(initializeData.Activity, backgroundOperation.Activity);');
     $StringWriter.WriteLine('            Assert.AreEqual(string.IsNullOrWhiteSpace(updateData.StatusDescription) ? initializeData.StatusDescription : updateData.StatusDescription,');
     $StringWriter.WriteLine('                backgroundOperation.StatusDescription);');
@@ -564,7 +565,7 @@ foreach ($FactoryMethod in @(
     } else {
         $StringWriter.WriteLine('                backgroundOperation.Cancel();');
     }
-    $StringWriter.WriteLine('                syncEvent.Set(); // Signal that we''ve canceled the operation');
+    $StringWriter.WriteLine('                fgEvent.Set(); // Signal that we''ve canceled the operation');
     $StringWriter.WriteLine('                await Assert.ThrowsExceptionAsync<OperationCanceledException>(() => backgroundOperation.Task);');
     $StringWriter.WriteLine('            }');
     $StringWriter.Write('            else if (completeData is ');
@@ -581,7 +582,7 @@ foreach ($FactoryMethod in @(
     $StringWriter.WriteLine('                expectedCurrentOperation = updateData.CurrentOperation;');
     $StringWriter.WriteLine('                expectedPercentComplete = updateData.PercentComplete;');
     $StringWriter.WriteLine('                expectedCode = errorData.Code.ToMessageCode(MessageCode.UnexpectedError);');
-    $StringWriter.WriteLine('                syncEvent.Set(); // Signal that we''re ready to complete');
+    $StringWriter.WriteLine('                fgEvent.Set(); // Signal that we''re ready to complete');
     $StringWriter.WriteLine('                await Assert.ThrowsExceptionAsync<AsyncOperationException>(() => backgroundOperation.Task);');
     $StringWriter.WriteLine('            }');
     $StringWriter.WriteLine('            else');
@@ -592,7 +593,7 @@ foreach ($FactoryMethod in @(
     $StringWriter.WriteLine('                expectedCurrentOperation = string.Empty;');
     $StringWriter.WriteLine('                expectedPercentComplete = updateData.PercentComplete.HasValue ? 100 : null;');
     $StringWriter.WriteLine('                expectedCode = completeData.Code;');
-    $StringWriter.WriteLine('                syncEvent.Set(); // Signal that we''re ready to complete');
+    $StringWriter.WriteLine('                fgEvent.Set(); // Signal that we''re ready to complete');
     if ($null -ne $FactoryMethod.ResultType) {
         $StringWriter.Write('                ');
         $StringWriter.Write($FactoryMethod.ResultType.ClrType);
@@ -663,6 +664,7 @@ foreach ($FactoryMethod in @(
     $StringWriter.WriteLine('');
     $StringWriter.WriteLine('            #region Test Observer Completion');
     $StringWriter.WriteLine('');
+    $StringWriter.WriteLine('            Thread.Sleep(100);');
     $StringWriter.WriteLine('            Assert.IsTrue(operationObserver.TryDequeue(out observed));');
     $StringWriter.WriteLine('            Assert.IsTrue(observed.IsComplete);');
     $StringWriter.WriteLine('            Assert.IsNull(observed.Error);');
@@ -671,7 +673,6 @@ foreach ($FactoryMethod in @(
     $StringWriter.WriteLine('');
     $StringWriter.WriteLine('            #endregion');
     $StringWriter.WriteLine('        }');
-    $StringWriter.WriteLine('');
 }
 
 $Text = $StringWriter.ToString();

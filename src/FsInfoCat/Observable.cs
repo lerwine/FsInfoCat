@@ -14,6 +14,8 @@ namespace FsInfoCat
 
         public IDisposable Subscribe(IObserver<TNotice> observer) => Registration.Subscribe(this, observer ?? throw new ArgumentNullException(nameof(observer)));
 
+        protected virtual void OnSubscribed(IObserver<TNotice> observer) { }
+
         protected virtual void RaiseNext(TNotice value) => RaiseNext(Registration.GetObservers(this), value);
 
         private void RaiseNext(Queue<IObserver<TNotice>> queue, TNotice value)

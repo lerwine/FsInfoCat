@@ -1,5 +1,6 @@
 using FsInfoCat.AsyncOps;
 using FsInfoCat.Services;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
@@ -163,11 +164,11 @@ namespace FsInfoCat.UnitTests
                 progress.ReportStatusDescription(updateData.StatusDescription, updateData.CurrentOperation);
         }
 
-        [TestMethod("Hosting.GetRequiredService<IBackgroundProgressService>()")]
+        [TestMethod("Hosting.GetBackgroundProgressService()")]
         [Priority(1)]
         public void GetRequiredServiceTest()
         {
-            IBackgroundProgressService service = Hosting.GetRequiredService<IBackgroundProgressService>();
+            IBackgroundProgressService service = Hosting.GetBackgroundProgressService();
             Assert.IsNotNull(service);
         }
 
@@ -175,23 +176,25 @@ namespace FsInfoCat.UnitTests
         [Priority(10)]
         public async Task IsActiveTest()
         {
-            IBackgroundProgressService service = Hosting.GetRequiredService<IBackgroundProgressService>();
+            IBackgroundProgressService service = Hosting.GetBackgroundProgressService();
             if (service is null)
                 throw new AssertInconclusiveException();
             Assert.IsNotNull(service);
             Assert.IsFalse(service.IsActive);
-            using AutoResetEvent syncEvent = new(false);
+            using AutoResetEvent bgEvent = new(false);
+            using AutoResetEvent fgEvent = new(false);
             Task<bool> asyncMethodDelegate(ITimedBackgroundProgress<ITimedBackgroundProgressEvent> progress) => Task.Run(() =>
             {
-                syncEvent.Set();
-                syncEvent.WaitOne();
+                bgEvent.Set();
+                fgEvent.WaitOne();
                 return true;
             });
             ITimedBackgroundFunc<bool> backgroundOperation = service.InvokeAsync(asyncMethodDelegate, "Test timed func", "Starting");
-            syncEvent.WaitOne();
+            bgEvent.WaitOne();
             Assert.IsTrue(service.IsActive);
-            syncEvent.Set();
+            fgEvent.Set();
             await backgroundOperation.Task;
+            Thread.Sleep(100);
             Assert.IsFalse(service.IsActive);
         }
 
@@ -199,7 +202,7 @@ namespace FsInfoCat.UnitTests
         [Priority(10)]
         public async Task SubscribeTest()
         {
-            IBackgroundProgressService service = Hosting.GetRequiredService<IBackgroundProgressService>();
+            IBackgroundProgressService service = Hosting.GetBackgroundProgressService();
             if (service is null)
                 throw new AssertInconclusiveException();
             ObserverHelper<IBackgroundProgressEvent> observer1 = new();
@@ -208,18 +211,19 @@ namespace FsInfoCat.UnitTests
             Assert.IsNotNull(subscription1);
             using IDisposable subscription2 = service.Subscribe(observer2);
             Assert.IsNotNull(subscription2);
-            using AutoResetEvent syncEvent = new(false);
+            using AutoResetEvent bgEvent = new(false);
+            using AutoResetEvent fgEvent = new(false);
             Task<bool> asyncMethodDelegate(ITimedBackgroundProgress<ITimedBackgroundProgressEvent> progress) => Task.Run(() =>
             {
-                syncEvent.Set();
-                syncEvent.WaitOne();
+                bgEvent.Set();
+                fgEvent.WaitOne();
                 progress.ReportStatusDescription("New Status");
-                syncEvent.Set();
-                syncEvent.WaitOne();
+                bgEvent.Set();
+                fgEvent.WaitOne();
                 return true;
             });
             ITimedBackgroundFunc<bool> backgroundOperation = service.InvokeAsync(asyncMethodDelegate, "Test timed func", "Starting");
-            syncEvent.WaitOne();
+            bgEvent.WaitOne();
             Assert.IsTrue(observer1.TryDequeue(out Observed<IBackgroundProgressEvent> observed1));
             Assert.IsNull(observed1.Error);
             Assert.IsFalse(observed1.IsComplete);
@@ -229,8 +233,8 @@ namespace FsInfoCat.UnitTests
             Assert.AreSame(observed1.Value, observed2.Value);
             using (subscription1)
             {
-                syncEvent.Set();
-                syncEvent.WaitOne();
+                fgEvent.Set();
+                bgEvent.WaitOne();
                 Assert.IsTrue(observer1.TryDequeue(out observed1));
                 Assert.IsNull(observed1.Error);
                 Assert.IsFalse(observed1.IsComplete);
@@ -239,21 +243,22 @@ namespace FsInfoCat.UnitTests
                 Assert.IsFalse(observed2.IsComplete);
                 Assert.AreSame(observed1.Value, observed2.Value);
             }
-            syncEvent.Set();
+            fgEvent.Set();
             await backgroundOperation.Task;
+            Thread.Sleep(100);
             Assert.IsFalse(observer1.TryDequeue(out observed1));
             Assert.IsTrue(observer2.TryDequeue(out observed2));
             Assert.IsNull(observed2.Error);
             Assert.IsFalse(observed2.IsComplete);
         }
 
-        private static Task<double> TimedTestFuncState(AutoResetEvent syncEvent, InitializeStateData initializeData, UpdateData updateData, IResultData completeData, ITimedBackgroundProgress<int, ITimedBackgroundProgressEvent<int>> progress)
+        private static Task<double> TimedTestFuncState(AutoResetEvent fgEvent, AutoResetEvent bgEvent, InitializeStateData initializeData, UpdateData updateData, IResultData completeData, ITimedBackgroundProgress<int, ITimedBackgroundProgressEvent<int>> progress)
         {
             Assert.IsNotNull(progress);
             return Task.Run(() =>
             {
-                syncEvent.Set(); // Signal that bg operation is being executed
-                syncEvent.WaitOne(); // Wait until we've tested initial status properties
+                bgEvent.Set(); // Signal that bg operation is being executed
+                fgEvent.WaitOne(); // Wait until we've tested initial status properties
                 progress.Token.ThrowIfCancellationRequested();
                 Assert.AreEqual(initializeData.Activity, progress.Activity);
                 Assert.AreEqual(initializeData.StatusDescription, progress.StatusDescription);
@@ -268,20 +273,20 @@ namespace FsInfoCat.UnitTests
                 if (updateData.PercentComplete.HasValue)
                     Assert.AreEqual(updateData.PercentComplete.Value, progress.PercentComplete.Value);
                 Assert.AreEqual(initializeData.State, progress.AsyncState);
-                syncEvent.Set(); // Signal that status has been updated
-                syncEvent.WaitOne(); // Wait until we've canceled the operation
+                bgEvent.Set(); // Signal that status has been updated
+                fgEvent.WaitOne(); // Wait until we've canceled the operation
                 progress.Token.ThrowIfCancellationRequested();
                 return completeData.OnCompleting(progress);
             });
         }
 
-        private static Task TimedTestActionState(AutoResetEvent syncEvent, InitializeStateData initializeData, UpdateData updateData, IActionCompleteData completeData, ITimedBackgroundProgress<int, ITimedBackgroundProgressEvent<int>> progress)
+        private static Task TimedTestActionState(AutoResetEvent fgEvent, AutoResetEvent bgEvent, InitializeStateData initializeData, UpdateData updateData, IActionCompleteData completeData, ITimedBackgroundProgress<int, ITimedBackgroundProgressEvent<int>> progress)
         {
             Assert.IsNotNull(progress);
             return Task.Run(() =>
             {
-                syncEvent.Set(); // Signal that bg operation is being executed
-                syncEvent.WaitOne(); // Wait until we've tested initial status properties
+                bgEvent.Set(); // Signal that bg operation is being executed
+                fgEvent.WaitOne(); // Wait until we've tested initial status properties
                 progress.Token.ThrowIfCancellationRequested();
                 Assert.AreEqual(initializeData.Activity, progress.Activity);
                 Assert.AreEqual(initializeData.StatusDescription, progress.StatusDescription);
@@ -296,20 +301,20 @@ namespace FsInfoCat.UnitTests
                 if (updateData.PercentComplete.HasValue)
                     Assert.AreEqual(updateData.PercentComplete.Value, progress.PercentComplete.Value);
                 Assert.AreEqual(initializeData.State, progress.AsyncState);
-                syncEvent.Set(); // Signal that status has been updated
-                syncEvent.WaitOne(); // Wait until we've canceled the operation
+                bgEvent.Set(); // Signal that status has been updated
+                fgEvent.WaitOne(); // Wait until we've canceled the operation
                 progress.Token.ThrowIfCancellationRequested();
                 completeData.OnCompleting(progress);
             });
         }
 
-        private static Task<double> TimedTestFunc(AutoResetEvent syncEvent, InitializeData initializeData, UpdateData updateData, IResultData completeData, ITimedBackgroundProgress<ITimedBackgroundProgressEvent> progress)
+        private static Task<double> TimedTestFunc(AutoResetEvent fgEvent, AutoResetEvent bgEvent, InitializeData initializeData, UpdateData updateData, IResultData completeData, ITimedBackgroundProgress<ITimedBackgroundProgressEvent> progress)
         {
             Assert.IsNotNull(progress);
             return Task.Run(() =>
             {
-                syncEvent.Set(); // Signal that bg operation is being executed
-                syncEvent.WaitOne(); // Wait until we've tested initial status properties
+                bgEvent.Set(); // Signal that bg operation is being executed
+                fgEvent.WaitOne(); // Wait until we've tested initial status properties
                 progress.Token.ThrowIfCancellationRequested();
                 Assert.AreEqual(initializeData.Activity, progress.Activity);
                 Assert.AreEqual(initializeData.StatusDescription, progress.StatusDescription);
@@ -322,20 +327,20 @@ namespace FsInfoCat.UnitTests
                 Assert.AreEqual(updateData.PercentComplete.HasValue, progress.PercentComplete.HasValue);
                 if (updateData.PercentComplete.HasValue)
                     Assert.AreEqual(updateData.PercentComplete.Value, progress.PercentComplete.Value);
-                syncEvent.Set(); // Signal that status has been updated
-                syncEvent.WaitOne(); // Wait until we've canceled the operation
+                bgEvent.Set(); // Signal that status has been updated
+                fgEvent.WaitOne(); // Wait until we've canceled the operation
                 progress.Token.ThrowIfCancellationRequested();
                 return completeData.OnCompleting(progress);
             });
         }
 
-        private static Task TimedTestAction(AutoResetEvent syncEvent, InitializeData initializeData, UpdateData updateData, IActionCompleteData completeData, ITimedBackgroundProgress<ITimedBackgroundProgressEvent> progress)
+        private static Task TimedTestAction(AutoResetEvent fgEvent, AutoResetEvent bgEvent, InitializeData initializeData, UpdateData updateData, IActionCompleteData completeData, ITimedBackgroundProgress<ITimedBackgroundProgressEvent> progress)
         {
             Assert.IsNotNull(progress);
             return Task.Run(() =>
             {
-                syncEvent.Set(); // Signal that bg operation is being executed
-                syncEvent.WaitOne(); // Wait until we've tested initial status properties
+                bgEvent.Set(); // Signal that bg operation is being executed
+                fgEvent.WaitOne(); // Wait until we've tested initial status properties
                 progress.Token.ThrowIfCancellationRequested();
                 Assert.AreEqual(initializeData.Activity, progress.Activity);
                 Assert.AreEqual(initializeData.StatusDescription, progress.StatusDescription);
@@ -348,20 +353,20 @@ namespace FsInfoCat.UnitTests
                 Assert.AreEqual(updateData.PercentComplete.HasValue, progress.PercentComplete.HasValue);
                 if (updateData.PercentComplete.HasValue)
                     Assert.AreEqual(updateData.PercentComplete.Value, progress.PercentComplete.Value);
-                syncEvent.Set(); // Signal that status has been updated
-                syncEvent.WaitOne(); // Wait until we've canceled the operation
+                bgEvent.Set(); // Signal that status has been updated
+                fgEvent.WaitOne(); // Wait until we've canceled the operation
                 progress.Token.ThrowIfCancellationRequested();
                 completeData.OnCompleting(progress);
             });
         }
 
-        private static Task<double> TestFuncState(AutoResetEvent syncEvent, InitializeStateData initializeData, UpdateData updateData, IResultData completeData, IBackgroundProgress<int, IBackgroundProgressEvent<int>> progress)
+        private static Task<double> TestFuncState(AutoResetEvent fgEvent, AutoResetEvent bgEvent, InitializeStateData initializeData, UpdateData updateData, IResultData completeData, IBackgroundProgress<int, IBackgroundProgressEvent<int>> progress)
         {
             Assert.IsNotNull(progress);
             return Task.Run(() =>
             {
-                syncEvent.Set(); // Signal that bg operation is being executed
-                syncEvent.WaitOne(); // Wait until we've tested initial status properties
+                bgEvent.Set(); // Signal that bg operation is being executed
+                fgEvent.WaitOne(); // Wait until we've tested initial status properties
                 progress.Token.ThrowIfCancellationRequested();
                 Assert.AreEqual(initializeData.Activity, progress.Activity);
                 Assert.AreEqual(initializeData.StatusDescription, progress.StatusDescription);
@@ -376,20 +381,20 @@ namespace FsInfoCat.UnitTests
                 if (updateData.PercentComplete.HasValue)
                     Assert.AreEqual(updateData.PercentComplete.Value, progress.PercentComplete.Value);
                 Assert.AreEqual(initializeData.State, progress.AsyncState);
-                syncEvent.Set(); // Signal that status has been updated
-                syncEvent.WaitOne(); // Wait until we've canceled the operation
+                bgEvent.Set(); // Signal that status has been updated
+                fgEvent.WaitOne(); // Wait until we've canceled the operation
                 progress.Token.ThrowIfCancellationRequested();
                 return completeData.OnCompleting(progress);
             });
         }
 
-        private static Task TestActionState(AutoResetEvent syncEvent, InitializeStateData initializeData, UpdateData updateData, IActionCompleteData completeData, IBackgroundProgress<int, IBackgroundProgressEvent<int>> progress)
+        private static Task TestActionState(AutoResetEvent fgEvent, AutoResetEvent bgEvent, InitializeStateData initializeData, UpdateData updateData, IActionCompleteData completeData, IBackgroundProgress<int, IBackgroundProgressEvent<int>> progress)
         {
             Assert.IsNotNull(progress);
             return Task.Run(() =>
             {
-                syncEvent.Set(); // Signal that bg operation is being executed
-                syncEvent.WaitOne(); // Wait until we've tested initial status properties
+                bgEvent.Set(); // Signal that bg operation is being executed
+                fgEvent.WaitOne(); // Wait until we've tested initial status properties
                 progress.Token.ThrowIfCancellationRequested();
                 Assert.AreEqual(initializeData.Activity, progress.Activity);
                 Assert.AreEqual(initializeData.StatusDescription, progress.StatusDescription);
@@ -404,20 +409,20 @@ namespace FsInfoCat.UnitTests
                 if (updateData.PercentComplete.HasValue)
                     Assert.AreEqual(updateData.PercentComplete.Value, progress.PercentComplete.Value);
                 Assert.AreEqual(initializeData.State, progress.AsyncState);
-                syncEvent.Set(); // Signal that status has been updated
-                syncEvent.WaitOne(); // Wait until we've canceled the operation
+                bgEvent.Set(); // Signal that status has been updated
+                fgEvent.WaitOne(); // Wait until we've canceled the operation
                 progress.Token.ThrowIfCancellationRequested();
                 completeData.OnCompleting(progress);
             });
         }
 
-        private static Task<double> TestFunc(AutoResetEvent syncEvent, InitializeData initializeData, UpdateData updateData, IResultData completeData, IBackgroundProgress<IBackgroundProgressEvent> progress)
+        private static Task<double> TestFunc(AutoResetEvent fgEvent, AutoResetEvent bgEvent, InitializeData initializeData, UpdateData updateData, IResultData completeData, IBackgroundProgress<IBackgroundProgressEvent> progress)
         {
             Assert.IsNotNull(progress);
             return Task.Run(() =>
             {
-                syncEvent.Set(); // Signal that bg operation is being executed
-                syncEvent.WaitOne(); // Wait until we've tested initial status properties
+                bgEvent.Set(); // Signal that bg operation is being executed
+                fgEvent.WaitOne(); // Wait until we've tested initial status properties
                 progress.Token.ThrowIfCancellationRequested();
                 Assert.AreEqual(initializeData.Activity, progress.Activity);
                 Assert.AreEqual(initializeData.StatusDescription, progress.StatusDescription);
@@ -430,20 +435,20 @@ namespace FsInfoCat.UnitTests
                 Assert.AreEqual(updateData.PercentComplete.HasValue, progress.PercentComplete.HasValue);
                 if (updateData.PercentComplete.HasValue)
                     Assert.AreEqual(updateData.PercentComplete.Value, progress.PercentComplete.Value);
-                syncEvent.Set(); // Signal that status has been updated
-                syncEvent.WaitOne(); // Wait until we've canceled the operation
+                bgEvent.Set(); // Signal that status has been updated
+                fgEvent.WaitOne(); // Wait until we've canceled the operation
                 progress.Token.ThrowIfCancellationRequested();
                 return completeData.OnCompleting(progress);
             });
         }
 
-        private static Task TestAction(AutoResetEvent syncEvent, InitializeData initializeData, UpdateData updateData, IActionCompleteData completeData, IBackgroundProgress<IBackgroundProgressEvent> progress)
+        private static Task TestAction(AutoResetEvent fgEvent, AutoResetEvent bgEvent, InitializeData initializeData, UpdateData updateData, IActionCompleteData completeData, IBackgroundProgress<IBackgroundProgressEvent> progress)
         {
             Assert.IsNotNull(progress);
             return Task.Run(() =>
             {
-                syncEvent.Set(); // Signal that bg operation is being executed
-                syncEvent.WaitOne(); // Wait until we've tested initial status properties
+                bgEvent.Set(); // Signal that bg operation is being executed
+                fgEvent.WaitOne(); // Wait until we've tested initial status properties
                 progress.Token.ThrowIfCancellationRequested();
                 Assert.AreEqual(initializeData.Activity, progress.Activity);
                 Assert.AreEqual(initializeData.StatusDescription, progress.StatusDescription);
@@ -456,8 +461,8 @@ namespace FsInfoCat.UnitTests
                 Assert.AreEqual(updateData.PercentComplete.HasValue, progress.PercentComplete.HasValue);
                 if (updateData.PercentComplete.HasValue)
                     Assert.AreEqual(updateData.PercentComplete.Value, progress.PercentComplete.Value);
-                syncEvent.Set(); // Signal that status has been updated
-                syncEvent.WaitOne(); // Wait until we've canceled the operation
+                bgEvent.Set(); // Signal that status has been updated
+                fgEvent.WaitOne(); // Wait until we've canceled the operation
                 progress.Token.ThrowIfCancellationRequested();
                 completeData.OnCompleting(progress);
             });
@@ -468,22 +473,23 @@ namespace FsInfoCat.UnitTests
         [Priority(10)]
         public async Task InvokeTimedAsyncFuncCompletedStateTokenTest(InitializeStateData initializeData, UpdateData updateData, IResultData completeData)
         {
-            using AutoResetEvent syncEvent = new(false);
+            using AutoResetEvent fgEvent = new(false);
+            using AutoResetEvent bgEvent = new(false);
             Task<double> asyncMethodDelegate(ITimedBackgroundProgress<int, ITimedBackgroundProgressEvent<int>> progress) =>
-                TimedTestFuncState(syncEvent, initializeData, updateData, completeData, progress);
+                TimedTestFuncState(fgEvent, bgEvent, initializeData, updateData, completeData, progress);
             ITimedBackgroundOperationResultEvent<int, double> onCompleted(ITimedBackgroundFunc<int, double> backgroundOperation) =>
                     new TimedBackgroundProcessResultEventArgs<int, double>(backgroundOperation, completeData.Code, null, backgroundOperation.Task.Result, string.IsNullOrWhiteSpace(completeData.StatusDescription) ? backgroundOperation.StatusDescription : completeData.StatusDescription); ;
 
-            IBackgroundProgressService service = Hosting.GetRequiredService<IBackgroundProgressService>();
+            IBackgroundProgressService service = Hosting.GetBackgroundProgressService();
             if (service is null)
                 throw new AssertInconclusiveException();
             using CancellationTokenSource tokenSource = new();
             ObserverHelper<ITimedBackgroundProgressEvent<int>> operationObserver = new();
-            ITimedBackgroundFunc<int, double> backgroundOperation = service.InvokeAsync(asyncMethodDelegate, onCompleted, initializeData.Activity, completeData.StatusDescription, initializeData.State, tokenSource.Token);
+            ITimedBackgroundFunc<int, double> backgroundOperation = service.InvokeAsync(asyncMethodDelegate, onCompleted, initializeData.Activity, initializeData.StatusDescription, initializeData.State, tokenSource.Token);
 
             #region Test Initial Progress Properties
 
-            syncEvent.WaitOne(); // Wait until bg operation being executed
+            bgEvent.WaitOne(); // Wait until bg operation being executed
             using IDisposable subscription = backgroundOperation.Subscribe(operationObserver);
             Assert.IsNotNull(backgroundOperation);
             Assert.AreEqual(initializeData.Activity, backgroundOperation.Activity);
@@ -491,13 +497,13 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(string.Empty, backgroundOperation.CurrentOperation);
             Assert.AreEqual(initializeData.State, backgroundOperation.AsyncState);
             Assert.IsFalse(backgroundOperation.PercentComplete.HasValue);
-            syncEvent.Set(); // Signal that we've tested initial status properties
+            fgEvent.Set(); // Signal that we've tested initial status properties
 
             #endregion
 
             #region Test Progress Update
 
-            syncEvent.WaitOne(); // Wait until status has been updated
+            bgEvent.WaitOne(); // Wait until status has been updated
             Assert.AreEqual(initializeData.Activity, backgroundOperation.Activity);
             Assert.AreEqual(string.IsNullOrWhiteSpace(updateData.StatusDescription) ? initializeData.StatusDescription : updateData.StatusDescription,
                 backgroundOperation.StatusDescription);
@@ -544,7 +550,7 @@ namespace FsInfoCat.UnitTests
                 expectedPercentComplete = updateData.PercentComplete;
                 expectedCode = updateData.Code;
                 tokenSource.Cancel();
-                syncEvent.Set(); // Signal that we've canceled the operation
+                fgEvent.Set(); // Signal that we've canceled the operation
                 await Assert.ThrowsExceptionAsync<OperationCanceledException>(() => backgroundOperation.Task);
             }
             else if (completeData is ErrorResultData errorData)
@@ -555,7 +561,7 @@ namespace FsInfoCat.UnitTests
                 expectedCurrentOperation = updateData.CurrentOperation;
                 expectedPercentComplete = updateData.PercentComplete;
                 expectedCode = errorData.Code.ToMessageCode(MessageCode.UnexpectedError);
-                syncEvent.Set(); // Signal that we're ready to complete
+                fgEvent.Set(); // Signal that we're ready to complete
                 await Assert.ThrowsExceptionAsync<AsyncOperationException>(() => backgroundOperation.Task);
             }
             else
@@ -566,7 +572,7 @@ namespace FsInfoCat.UnitTests
                 expectedCurrentOperation = string.Empty;
                 expectedPercentComplete = updateData.PercentComplete.HasValue ? 100 : null;
                 expectedCode = completeData.Code;
-                syncEvent.Set(); // Signal that we're ready to complete
+                fgEvent.Set(); // Signal that we're ready to complete
                 double actualResult = await backgroundOperation.Task;
                 Assert.AreEqual(completeData.Result, actualResult);
             }
@@ -617,6 +623,7 @@ namespace FsInfoCat.UnitTests
 
             #region Test Observer Completion
 
+            Thread.Sleep(100);
             Assert.IsTrue(operationObserver.TryDequeue(out observed));
             Assert.IsTrue(observed.IsComplete);
             Assert.IsNull(observed.Error);
@@ -625,28 +632,28 @@ namespace FsInfoCat.UnitTests
 
             #endregion
         }
-
 
         [DataTestMethod]
         [DynamicData(nameof(GetAsyncFuncResultStateData), DynamicDataSourceType.Method)]
         [Priority(10)]
         public async Task InvokeTimedAsyncFuncCompletedStateTest(InitializeStateData initializeData, UpdateData updateData, IResultData completeData)
         {
-            using AutoResetEvent syncEvent = new(false);
+            using AutoResetEvent fgEvent = new(false);
+            using AutoResetEvent bgEvent = new(false);
             Task<double> asyncMethodDelegate(ITimedBackgroundProgress<int, ITimedBackgroundProgressEvent<int>> progress) =>
-                TimedTestFuncState(syncEvent, initializeData, updateData, completeData, progress);
+                TimedTestFuncState(fgEvent, bgEvent, initializeData, updateData, completeData, progress);
             ITimedBackgroundOperationResultEvent<int, double> onCompleted(ITimedBackgroundFunc<int, double> backgroundOperation) =>
                     new TimedBackgroundProcessResultEventArgs<int, double>(backgroundOperation, completeData.Code, null, backgroundOperation.Task.Result, string.IsNullOrWhiteSpace(completeData.StatusDescription) ? backgroundOperation.StatusDescription : completeData.StatusDescription); ;
 
-            IBackgroundProgressService service = Hosting.GetRequiredService<IBackgroundProgressService>();
+            IBackgroundProgressService service = Hosting.GetBackgroundProgressService();
             if (service is null)
                 throw new AssertInconclusiveException();
             ObserverHelper<ITimedBackgroundProgressEvent<int>> operationObserver = new();
-            ITimedBackgroundFunc<int, double> backgroundOperation = service.InvokeAsync(asyncMethodDelegate, onCompleted, initializeData.Activity, completeData.StatusDescription, initializeData.State);
+            ITimedBackgroundFunc<int, double> backgroundOperation = service.InvokeAsync(asyncMethodDelegate, onCompleted, initializeData.Activity, initializeData.StatusDescription, initializeData.State);
 
             #region Test Initial Progress Properties
 
-            syncEvent.WaitOne(); // Wait until bg operation being executed
+            bgEvent.WaitOne(); // Wait until bg operation being executed
             using IDisposable subscription = backgroundOperation.Subscribe(operationObserver);
             Assert.IsNotNull(backgroundOperation);
             Assert.AreEqual(initializeData.Activity, backgroundOperation.Activity);
@@ -654,13 +661,13 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(string.Empty, backgroundOperation.CurrentOperation);
             Assert.AreEqual(initializeData.State, backgroundOperation.AsyncState);
             Assert.IsFalse(backgroundOperation.PercentComplete.HasValue);
-            syncEvent.Set(); // Signal that we've tested initial status properties
+            fgEvent.Set(); // Signal that we've tested initial status properties
 
             #endregion
 
             #region Test Progress Update
 
-            syncEvent.WaitOne(); // Wait until status has been updated
+            bgEvent.WaitOne(); // Wait until status has been updated
             Assert.AreEqual(initializeData.Activity, backgroundOperation.Activity);
             Assert.AreEqual(string.IsNullOrWhiteSpace(updateData.StatusDescription) ? initializeData.StatusDescription : updateData.StatusDescription,
                 backgroundOperation.StatusDescription);
@@ -707,7 +714,7 @@ namespace FsInfoCat.UnitTests
                 expectedPercentComplete = updateData.PercentComplete;
                 expectedCode = updateData.Code;
                 backgroundOperation.Cancel();
-                syncEvent.Set(); // Signal that we've canceled the operation
+                fgEvent.Set(); // Signal that we've canceled the operation
                 await Assert.ThrowsExceptionAsync<OperationCanceledException>(() => backgroundOperation.Task);
             }
             else if (completeData is ErrorResultData errorData)
@@ -718,7 +725,7 @@ namespace FsInfoCat.UnitTests
                 expectedCurrentOperation = updateData.CurrentOperation;
                 expectedPercentComplete = updateData.PercentComplete;
                 expectedCode = errorData.Code.ToMessageCode(MessageCode.UnexpectedError);
-                syncEvent.Set(); // Signal that we're ready to complete
+                fgEvent.Set(); // Signal that we're ready to complete
                 await Assert.ThrowsExceptionAsync<AsyncOperationException>(() => backgroundOperation.Task);
             }
             else
@@ -729,7 +736,7 @@ namespace FsInfoCat.UnitTests
                 expectedCurrentOperation = string.Empty;
                 expectedPercentComplete = updateData.PercentComplete.HasValue ? 100 : null;
                 expectedCode = completeData.Code;
-                syncEvent.Set(); // Signal that we're ready to complete
+                fgEvent.Set(); // Signal that we're ready to complete
                 double actualResult = await backgroundOperation.Task;
                 Assert.AreEqual(completeData.Result, actualResult);
             }
@@ -780,6 +787,7 @@ namespace FsInfoCat.UnitTests
 
             #region Test Observer Completion
 
+            Thread.Sleep(100);
             Assert.IsTrue(operationObserver.TryDequeue(out observed));
             Assert.IsTrue(observed.IsComplete);
             Assert.IsNull(observed.Error);
@@ -788,27 +796,27 @@ namespace FsInfoCat.UnitTests
 
             #endregion
         }
-
 
         [DataTestMethod]
         [DynamicData(nameof(GetAsyncFuncResultStateData), DynamicDataSourceType.Method)]
         [Priority(10)]
         public async Task InvokeTimedAsyncFuncStateTokenTest(InitializeStateData initializeData, UpdateData updateData, IResultData completeData)
         {
-            using AutoResetEvent syncEvent = new(false);
+            using AutoResetEvent fgEvent = new(false);
+            using AutoResetEvent bgEvent = new(false);
             Task<double> asyncMethodDelegate(ITimedBackgroundProgress<int, ITimedBackgroundProgressEvent<int>> progress) =>
-                TimedTestFuncState(syncEvent, initializeData, updateData, completeData, progress);
+                TimedTestFuncState(fgEvent, bgEvent, initializeData, updateData, completeData, progress);
 
-            IBackgroundProgressService service = Hosting.GetRequiredService<IBackgroundProgressService>();
+            IBackgroundProgressService service = Hosting.GetBackgroundProgressService();
             if (service is null)
                 throw new AssertInconclusiveException();
             using CancellationTokenSource tokenSource = new();
             ObserverHelper<ITimedBackgroundProgressEvent<int>> operationObserver = new();
-            ITimedBackgroundFunc<int, double> backgroundOperation = service.InvokeAsync(asyncMethodDelegate, initializeData.Activity, completeData.StatusDescription, initializeData.State, tokenSource.Token);
+            ITimedBackgroundFunc<int, double> backgroundOperation = service.InvokeAsync(asyncMethodDelegate, initializeData.Activity, initializeData.StatusDescription, initializeData.State, tokenSource.Token);
 
             #region Test Initial Progress Properties
 
-            syncEvent.WaitOne(); // Wait until bg operation being executed
+            bgEvent.WaitOne(); // Wait until bg operation being executed
             using IDisposable subscription = backgroundOperation.Subscribe(operationObserver);
             Assert.IsNotNull(backgroundOperation);
             Assert.AreEqual(initializeData.Activity, backgroundOperation.Activity);
@@ -816,13 +824,13 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(string.Empty, backgroundOperation.CurrentOperation);
             Assert.AreEqual(initializeData.State, backgroundOperation.AsyncState);
             Assert.IsFalse(backgroundOperation.PercentComplete.HasValue);
-            syncEvent.Set(); // Signal that we've tested initial status properties
+            fgEvent.Set(); // Signal that we've tested initial status properties
 
             #endregion
 
             #region Test Progress Update
 
-            syncEvent.WaitOne(); // Wait until status has been updated
+            bgEvent.WaitOne(); // Wait until status has been updated
             Assert.AreEqual(initializeData.Activity, backgroundOperation.Activity);
             Assert.AreEqual(string.IsNullOrWhiteSpace(updateData.StatusDescription) ? initializeData.StatusDescription : updateData.StatusDescription,
                 backgroundOperation.StatusDescription);
@@ -869,7 +877,7 @@ namespace FsInfoCat.UnitTests
                 expectedPercentComplete = updateData.PercentComplete;
                 expectedCode = updateData.Code;
                 tokenSource.Cancel();
-                syncEvent.Set(); // Signal that we've canceled the operation
+                fgEvent.Set(); // Signal that we've canceled the operation
                 await Assert.ThrowsExceptionAsync<OperationCanceledException>(() => backgroundOperation.Task);
             }
             else if (completeData is ErrorResultData errorData)
@@ -880,7 +888,7 @@ namespace FsInfoCat.UnitTests
                 expectedCurrentOperation = updateData.CurrentOperation;
                 expectedPercentComplete = updateData.PercentComplete;
                 expectedCode = errorData.Code.ToMessageCode(MessageCode.UnexpectedError);
-                syncEvent.Set(); // Signal that we're ready to complete
+                fgEvent.Set(); // Signal that we're ready to complete
                 await Assert.ThrowsExceptionAsync<AsyncOperationException>(() => backgroundOperation.Task);
             }
             else
@@ -891,7 +899,7 @@ namespace FsInfoCat.UnitTests
                 expectedCurrentOperation = string.Empty;
                 expectedPercentComplete = updateData.PercentComplete.HasValue ? 100 : null;
                 expectedCode = completeData.Code;
-                syncEvent.Set(); // Signal that we're ready to complete
+                fgEvent.Set(); // Signal that we're ready to complete
                 double actualResult = await backgroundOperation.Task;
                 Assert.AreEqual(completeData.Result, actualResult);
             }
@@ -942,6 +950,7 @@ namespace FsInfoCat.UnitTests
 
             #region Test Observer Completion
 
+            Thread.Sleep(100);
             Assert.IsTrue(operationObserver.TryDequeue(out observed));
             Assert.IsTrue(observed.IsComplete);
             Assert.IsNull(observed.Error);
@@ -950,26 +959,26 @@ namespace FsInfoCat.UnitTests
 
             #endregion
         }
-
 
         [DataTestMethod]
         [DynamicData(nameof(GetAsyncFuncResultStateData), DynamicDataSourceType.Method)]
         [Priority(10)]
         public async Task InvokeTimedAsyncFuncStateTest(InitializeStateData initializeData, UpdateData updateData, IResultData completeData)
         {
-            using AutoResetEvent syncEvent = new(false);
+            using AutoResetEvent fgEvent = new(false);
+            using AutoResetEvent bgEvent = new(false);
             Task<double> asyncMethodDelegate(ITimedBackgroundProgress<int, ITimedBackgroundProgressEvent<int>> progress) =>
-                TimedTestFuncState(syncEvent, initializeData, updateData, completeData, progress);
+                TimedTestFuncState(fgEvent, bgEvent, initializeData, updateData, completeData, progress);
 
-            IBackgroundProgressService service = Hosting.GetRequiredService<IBackgroundProgressService>();
+            IBackgroundProgressService service = Hosting.GetBackgroundProgressService();
             if (service is null)
                 throw new AssertInconclusiveException();
             ObserverHelper<ITimedBackgroundProgressEvent<int>> operationObserver = new();
-            ITimedBackgroundFunc<int, double> backgroundOperation = service.InvokeAsync(asyncMethodDelegate, initializeData.Activity, completeData.StatusDescription, initializeData.State);
+            ITimedBackgroundFunc<int, double> backgroundOperation = service.InvokeAsync(asyncMethodDelegate, initializeData.Activity, initializeData.StatusDescription, initializeData.State);
 
             #region Test Initial Progress Properties
 
-            syncEvent.WaitOne(); // Wait until bg operation being executed
+            bgEvent.WaitOne(); // Wait until bg operation being executed
             using IDisposable subscription = backgroundOperation.Subscribe(operationObserver);
             Assert.IsNotNull(backgroundOperation);
             Assert.AreEqual(initializeData.Activity, backgroundOperation.Activity);
@@ -977,13 +986,13 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(string.Empty, backgroundOperation.CurrentOperation);
             Assert.AreEqual(initializeData.State, backgroundOperation.AsyncState);
             Assert.IsFalse(backgroundOperation.PercentComplete.HasValue);
-            syncEvent.Set(); // Signal that we've tested initial status properties
+            fgEvent.Set(); // Signal that we've tested initial status properties
 
             #endregion
 
             #region Test Progress Update
 
-            syncEvent.WaitOne(); // Wait until status has been updated
+            bgEvent.WaitOne(); // Wait until status has been updated
             Assert.AreEqual(initializeData.Activity, backgroundOperation.Activity);
             Assert.AreEqual(string.IsNullOrWhiteSpace(updateData.StatusDescription) ? initializeData.StatusDescription : updateData.StatusDescription,
                 backgroundOperation.StatusDescription);
@@ -1030,7 +1039,7 @@ namespace FsInfoCat.UnitTests
                 expectedPercentComplete = updateData.PercentComplete;
                 expectedCode = updateData.Code;
                 backgroundOperation.Cancel();
-                syncEvent.Set(); // Signal that we've canceled the operation
+                fgEvent.Set(); // Signal that we've canceled the operation
                 await Assert.ThrowsExceptionAsync<OperationCanceledException>(() => backgroundOperation.Task);
             }
             else if (completeData is ErrorResultData errorData)
@@ -1041,7 +1050,7 @@ namespace FsInfoCat.UnitTests
                 expectedCurrentOperation = updateData.CurrentOperation;
                 expectedPercentComplete = updateData.PercentComplete;
                 expectedCode = errorData.Code.ToMessageCode(MessageCode.UnexpectedError);
-                syncEvent.Set(); // Signal that we're ready to complete
+                fgEvent.Set(); // Signal that we're ready to complete
                 await Assert.ThrowsExceptionAsync<AsyncOperationException>(() => backgroundOperation.Task);
             }
             else
@@ -1052,7 +1061,7 @@ namespace FsInfoCat.UnitTests
                 expectedCurrentOperation = string.Empty;
                 expectedPercentComplete = updateData.PercentComplete.HasValue ? 100 : null;
                 expectedCode = completeData.Code;
-                syncEvent.Set(); // Signal that we're ready to complete
+                fgEvent.Set(); // Signal that we're ready to complete
                 double actualResult = await backgroundOperation.Task;
                 Assert.AreEqual(completeData.Result, actualResult);
             }
@@ -1103,6 +1112,7 @@ namespace FsInfoCat.UnitTests
 
             #region Test Observer Completion
 
+            Thread.Sleep(100);
             Assert.IsTrue(operationObserver.TryDequeue(out observed));
             Assert.IsTrue(observed.IsComplete);
             Assert.IsNull(observed.Error);
@@ -1111,42 +1121,42 @@ namespace FsInfoCat.UnitTests
 
             #endregion
         }
-
 
         [DataTestMethod]
         [DynamicData(nameof(GetAsyncFuncResultData), DynamicDataSourceType.Method)]
         [Priority(10)]
         public async Task InvokeTimedAsyncFuncCompletedTokenTest(InitializeData initializeData, UpdateData updateData, IResultData completeData)
         {
-            using AutoResetEvent syncEvent = new(false);
+            using AutoResetEvent fgEvent = new(false);
+            using AutoResetEvent bgEvent = new(false);
             Task<double> asyncMethodDelegate(ITimedBackgroundProgress<ITimedBackgroundProgressEvent> progress) =>
-                TimedTestFunc(syncEvent, initializeData, updateData, completeData, progress);
+                TimedTestFunc(fgEvent, bgEvent, initializeData, updateData, completeData, progress);
             ITimedBackgroundOperationResultEvent<double> onCompleted(ITimedBackgroundFunc<double> backgroundOperation) =>
                     new TimedBackgroundProcessResultEventArgs<double>(backgroundOperation, completeData.Code, null, backgroundOperation.Task.Result); ;
 
-            IBackgroundProgressService service = Hosting.GetRequiredService<IBackgroundProgressService>();
+            IBackgroundProgressService service = Hosting.GetBackgroundProgressService();
             if (service is null)
                 throw new AssertInconclusiveException();
             using CancellationTokenSource tokenSource = new();
             ObserverHelper<ITimedBackgroundProgressEvent> operationObserver = new();
-            ITimedBackgroundFunc<double> backgroundOperation = service.InvokeAsync(asyncMethodDelegate, onCompleted, initializeData.Activity, completeData.StatusDescription, tokenSource.Token);
+            ITimedBackgroundFunc<double> backgroundOperation = service.InvokeAsync(asyncMethodDelegate, onCompleted, initializeData.Activity, initializeData.StatusDescription, tokenSource.Token);
 
             #region Test Initial Progress Properties
 
-            syncEvent.WaitOne(); // Wait until bg operation being executed
+            bgEvent.WaitOne(); // Wait until bg operation being executed
             using IDisposable subscription = backgroundOperation.Subscribe(operationObserver);
             Assert.IsNotNull(backgroundOperation);
             Assert.AreEqual(initializeData.Activity, backgroundOperation.Activity);
             Assert.AreEqual(initializeData.StatusDescription, backgroundOperation.StatusDescription);
             Assert.AreEqual(string.Empty, backgroundOperation.CurrentOperation);
             Assert.IsFalse(backgroundOperation.PercentComplete.HasValue);
-            syncEvent.Set(); // Signal that we've tested initial status properties
+            fgEvent.Set(); // Signal that we've tested initial status properties
 
             #endregion
 
             #region Test Progress Update
 
-            syncEvent.WaitOne(); // Wait until status has been updated
+            bgEvent.WaitOne(); // Wait until status has been updated
             Assert.AreEqual(initializeData.Activity, backgroundOperation.Activity);
             Assert.AreEqual(string.IsNullOrWhiteSpace(updateData.StatusDescription) ? initializeData.StatusDescription : updateData.StatusDescription,
                 backgroundOperation.StatusDescription);
@@ -1191,7 +1201,7 @@ namespace FsInfoCat.UnitTests
                 expectedPercentComplete = updateData.PercentComplete;
                 expectedCode = updateData.Code;
                 tokenSource.Cancel();
-                syncEvent.Set(); // Signal that we've canceled the operation
+                fgEvent.Set(); // Signal that we've canceled the operation
                 await Assert.ThrowsExceptionAsync<OperationCanceledException>(() => backgroundOperation.Task);
             }
             else if (completeData is ErrorResultData errorData)
@@ -1202,7 +1212,7 @@ namespace FsInfoCat.UnitTests
                 expectedCurrentOperation = updateData.CurrentOperation;
                 expectedPercentComplete = updateData.PercentComplete;
                 expectedCode = errorData.Code.ToMessageCode(MessageCode.UnexpectedError);
-                syncEvent.Set(); // Signal that we're ready to complete
+                fgEvent.Set(); // Signal that we're ready to complete
                 await Assert.ThrowsExceptionAsync<AsyncOperationException>(() => backgroundOperation.Task);
             }
             else
@@ -1213,7 +1223,7 @@ namespace FsInfoCat.UnitTests
                 expectedCurrentOperation = string.Empty;
                 expectedPercentComplete = updateData.PercentComplete.HasValue ? 100 : null;
                 expectedCode = completeData.Code;
-                syncEvent.Set(); // Signal that we're ready to complete
+                fgEvent.Set(); // Signal that we're ready to complete
                 double actualResult = await backgroundOperation.Task;
                 Assert.AreEqual(completeData.Result, actualResult);
             }
@@ -1262,6 +1272,7 @@ namespace FsInfoCat.UnitTests
 
             #region Test Observer Completion
 
+            Thread.Sleep(100);
             Assert.IsTrue(operationObserver.TryDequeue(out observed));
             Assert.IsTrue(observed.IsComplete);
             Assert.IsNull(observed.Error);
@@ -1270,41 +1281,41 @@ namespace FsInfoCat.UnitTests
 
             #endregion
         }
-
 
         [DataTestMethod]
         [DynamicData(nameof(GetAsyncFuncResultData), DynamicDataSourceType.Method)]
         [Priority(10)]
         public async Task InvokeTimedAsyncFuncCompletedTest(InitializeData initializeData, UpdateData updateData, IResultData completeData)
         {
-            using AutoResetEvent syncEvent = new(false);
+            using AutoResetEvent fgEvent = new(false);
+            using AutoResetEvent bgEvent = new(false);
             Task<double> asyncMethodDelegate(ITimedBackgroundProgress<ITimedBackgroundProgressEvent> progress) =>
-                TimedTestFunc(syncEvent, initializeData, updateData, completeData, progress);
+                TimedTestFunc(fgEvent, bgEvent, initializeData, updateData, completeData, progress);
             ITimedBackgroundOperationResultEvent<double> onCompleted(ITimedBackgroundFunc<double> backgroundOperation) =>
                     new TimedBackgroundProcessResultEventArgs<double>(backgroundOperation, completeData.Code, null, backgroundOperation.Task.Result); ;
 
-            IBackgroundProgressService service = Hosting.GetRequiredService<IBackgroundProgressService>();
+            IBackgroundProgressService service = Hosting.GetBackgroundProgressService();
             if (service is null)
                 throw new AssertInconclusiveException();
             ObserverHelper<ITimedBackgroundProgressEvent> operationObserver = new();
-            ITimedBackgroundFunc<double> backgroundOperation = service.InvokeAsync(asyncMethodDelegate, onCompleted, initializeData.Activity, completeData.StatusDescription);
+            ITimedBackgroundFunc<double> backgroundOperation = service.InvokeAsync(asyncMethodDelegate, onCompleted, initializeData.Activity, initializeData.StatusDescription);
 
             #region Test Initial Progress Properties
 
-            syncEvent.WaitOne(); // Wait until bg operation being executed
+            bgEvent.WaitOne(); // Wait until bg operation being executed
             using IDisposable subscription = backgroundOperation.Subscribe(operationObserver);
             Assert.IsNotNull(backgroundOperation);
             Assert.AreEqual(initializeData.Activity, backgroundOperation.Activity);
             Assert.AreEqual(initializeData.StatusDescription, backgroundOperation.StatusDescription);
             Assert.AreEqual(string.Empty, backgroundOperation.CurrentOperation);
             Assert.IsFalse(backgroundOperation.PercentComplete.HasValue);
-            syncEvent.Set(); // Signal that we've tested initial status properties
+            fgEvent.Set(); // Signal that we've tested initial status properties
 
             #endregion
 
             #region Test Progress Update
 
-            syncEvent.WaitOne(); // Wait until status has been updated
+            bgEvent.WaitOne(); // Wait until status has been updated
             Assert.AreEqual(initializeData.Activity, backgroundOperation.Activity);
             Assert.AreEqual(string.IsNullOrWhiteSpace(updateData.StatusDescription) ? initializeData.StatusDescription : updateData.StatusDescription,
                 backgroundOperation.StatusDescription);
@@ -1349,7 +1360,7 @@ namespace FsInfoCat.UnitTests
                 expectedPercentComplete = updateData.PercentComplete;
                 expectedCode = updateData.Code;
                 backgroundOperation.Cancel();
-                syncEvent.Set(); // Signal that we've canceled the operation
+                fgEvent.Set(); // Signal that we've canceled the operation
                 await Assert.ThrowsExceptionAsync<OperationCanceledException>(() => backgroundOperation.Task);
             }
             else if (completeData is ErrorResultData errorData)
@@ -1360,7 +1371,7 @@ namespace FsInfoCat.UnitTests
                 expectedCurrentOperation = updateData.CurrentOperation;
                 expectedPercentComplete = updateData.PercentComplete;
                 expectedCode = errorData.Code.ToMessageCode(MessageCode.UnexpectedError);
-                syncEvent.Set(); // Signal that we're ready to complete
+                fgEvent.Set(); // Signal that we're ready to complete
                 await Assert.ThrowsExceptionAsync<AsyncOperationException>(() => backgroundOperation.Task);
             }
             else
@@ -1371,7 +1382,7 @@ namespace FsInfoCat.UnitTests
                 expectedCurrentOperation = string.Empty;
                 expectedPercentComplete = updateData.PercentComplete.HasValue ? 100 : null;
                 expectedCode = completeData.Code;
-                syncEvent.Set(); // Signal that we're ready to complete
+                fgEvent.Set(); // Signal that we're ready to complete
                 double actualResult = await backgroundOperation.Task;
                 Assert.AreEqual(completeData.Result, actualResult);
             }
@@ -1420,6 +1431,7 @@ namespace FsInfoCat.UnitTests
 
             #region Test Observer Completion
 
+            Thread.Sleep(100);
             Assert.IsTrue(operationObserver.TryDequeue(out observed));
             Assert.IsTrue(observed.IsComplete);
             Assert.IsNull(observed.Error);
@@ -1428,40 +1440,40 @@ namespace FsInfoCat.UnitTests
 
             #endregion
         }
-
 
         [DataTestMethod]
         [DynamicData(nameof(GetAsyncFuncResultData), DynamicDataSourceType.Method)]
         [Priority(10)]
         public async Task InvokeTimedAsyncFuncTokenTest(InitializeData initializeData, UpdateData updateData, IResultData completeData)
         {
-            using AutoResetEvent syncEvent = new(false);
+            using AutoResetEvent fgEvent = new(false);
+            using AutoResetEvent bgEvent = new(false);
             Task<double> asyncMethodDelegate(ITimedBackgroundProgress<ITimedBackgroundProgressEvent> progress) =>
-                TimedTestFunc(syncEvent, initializeData, updateData, completeData, progress);
+                TimedTestFunc(fgEvent, bgEvent, initializeData, updateData, completeData, progress);
 
-            IBackgroundProgressService service = Hosting.GetRequiredService<IBackgroundProgressService>();
+            IBackgroundProgressService service = Hosting.GetBackgroundProgressService();
             if (service is null)
                 throw new AssertInconclusiveException();
             using CancellationTokenSource tokenSource = new();
             ObserverHelper<ITimedBackgroundProgressEvent> operationObserver = new();
-            ITimedBackgroundFunc<double> backgroundOperation = service.InvokeAsync(asyncMethodDelegate, initializeData.Activity, completeData.StatusDescription, tokenSource.Token);
+            ITimedBackgroundFunc<double> backgroundOperation = service.InvokeAsync(asyncMethodDelegate, initializeData.Activity, initializeData.StatusDescription, tokenSource.Token);
 
             #region Test Initial Progress Properties
 
-            syncEvent.WaitOne(); // Wait until bg operation being executed
+            bgEvent.WaitOne(); // Wait until bg operation being executed
             using IDisposable subscription = backgroundOperation.Subscribe(operationObserver);
             Assert.IsNotNull(backgroundOperation);
             Assert.AreEqual(initializeData.Activity, backgroundOperation.Activity);
             Assert.AreEqual(initializeData.StatusDescription, backgroundOperation.StatusDescription);
             Assert.AreEqual(string.Empty, backgroundOperation.CurrentOperation);
             Assert.IsFalse(backgroundOperation.PercentComplete.HasValue);
-            syncEvent.Set(); // Signal that we've tested initial status properties
+            fgEvent.Set(); // Signal that we've tested initial status properties
 
             #endregion
 
             #region Test Progress Update
 
-            syncEvent.WaitOne(); // Wait until status has been updated
+            bgEvent.WaitOne(); // Wait until status has been updated
             Assert.AreEqual(initializeData.Activity, backgroundOperation.Activity);
             Assert.AreEqual(string.IsNullOrWhiteSpace(updateData.StatusDescription) ? initializeData.StatusDescription : updateData.StatusDescription,
                 backgroundOperation.StatusDescription);
@@ -1506,7 +1518,7 @@ namespace FsInfoCat.UnitTests
                 expectedPercentComplete = updateData.PercentComplete;
                 expectedCode = updateData.Code;
                 tokenSource.Cancel();
-                syncEvent.Set(); // Signal that we've canceled the operation
+                fgEvent.Set(); // Signal that we've canceled the operation
                 await Assert.ThrowsExceptionAsync<OperationCanceledException>(() => backgroundOperation.Task);
             }
             else if (completeData is ErrorResultData errorData)
@@ -1517,7 +1529,7 @@ namespace FsInfoCat.UnitTests
                 expectedCurrentOperation = updateData.CurrentOperation;
                 expectedPercentComplete = updateData.PercentComplete;
                 expectedCode = errorData.Code.ToMessageCode(MessageCode.UnexpectedError);
-                syncEvent.Set(); // Signal that we're ready to complete
+                fgEvent.Set(); // Signal that we're ready to complete
                 await Assert.ThrowsExceptionAsync<AsyncOperationException>(() => backgroundOperation.Task);
             }
             else
@@ -1528,7 +1540,7 @@ namespace FsInfoCat.UnitTests
                 expectedCurrentOperation = string.Empty;
                 expectedPercentComplete = updateData.PercentComplete.HasValue ? 100 : null;
                 expectedCode = completeData.Code;
-                syncEvent.Set(); // Signal that we're ready to complete
+                fgEvent.Set(); // Signal that we're ready to complete
                 double actualResult = await backgroundOperation.Task;
                 Assert.AreEqual(completeData.Result, actualResult);
             }
@@ -1577,6 +1589,7 @@ namespace FsInfoCat.UnitTests
 
             #region Test Observer Completion
 
+            Thread.Sleep(100);
             Assert.IsTrue(operationObserver.TryDequeue(out observed));
             Assert.IsTrue(observed.IsComplete);
             Assert.IsNull(observed.Error);
@@ -1585,39 +1598,39 @@ namespace FsInfoCat.UnitTests
 
             #endregion
         }
-
 
         [DataTestMethod]
         [DynamicData(nameof(GetAsyncFuncResultData), DynamicDataSourceType.Method)]
         [Priority(10)]
         public async Task InvokeTimedAsyncFuncTest(InitializeData initializeData, UpdateData updateData, IResultData completeData)
         {
-            using AutoResetEvent syncEvent = new(false);
+            using AutoResetEvent fgEvent = new(false);
+            using AutoResetEvent bgEvent = new(false);
             Task<double> asyncMethodDelegate(ITimedBackgroundProgress<ITimedBackgroundProgressEvent> progress) =>
-                TimedTestFunc(syncEvent, initializeData, updateData, completeData, progress);
+                TimedTestFunc(fgEvent, bgEvent, initializeData, updateData, completeData, progress);
 
-            IBackgroundProgressService service = Hosting.GetRequiredService<IBackgroundProgressService>();
+            IBackgroundProgressService service = Hosting.GetBackgroundProgressService();
             if (service is null)
                 throw new AssertInconclusiveException();
             ObserverHelper<ITimedBackgroundProgressEvent> operationObserver = new();
-            ITimedBackgroundFunc<double> backgroundOperation = service.InvokeAsync(asyncMethodDelegate, initializeData.Activity, completeData.StatusDescription);
+            ITimedBackgroundFunc<double> backgroundOperation = service.InvokeAsync(asyncMethodDelegate, initializeData.Activity, initializeData.StatusDescription);
 
             #region Test Initial Progress Properties
 
-            syncEvent.WaitOne(); // Wait until bg operation being executed
+            bgEvent.WaitOne(); // Wait until bg operation being executed
             using IDisposable subscription = backgroundOperation.Subscribe(operationObserver);
             Assert.IsNotNull(backgroundOperation);
             Assert.AreEqual(initializeData.Activity, backgroundOperation.Activity);
             Assert.AreEqual(initializeData.StatusDescription, backgroundOperation.StatusDescription);
             Assert.AreEqual(string.Empty, backgroundOperation.CurrentOperation);
             Assert.IsFalse(backgroundOperation.PercentComplete.HasValue);
-            syncEvent.Set(); // Signal that we've tested initial status properties
+            fgEvent.Set(); // Signal that we've tested initial status properties
 
             #endregion
 
             #region Test Progress Update
 
-            syncEvent.WaitOne(); // Wait until status has been updated
+            bgEvent.WaitOne(); // Wait until status has been updated
             Assert.AreEqual(initializeData.Activity, backgroundOperation.Activity);
             Assert.AreEqual(string.IsNullOrWhiteSpace(updateData.StatusDescription) ? initializeData.StatusDescription : updateData.StatusDescription,
                 backgroundOperation.StatusDescription);
@@ -1662,7 +1675,7 @@ namespace FsInfoCat.UnitTests
                 expectedPercentComplete = updateData.PercentComplete;
                 expectedCode = updateData.Code;
                 backgroundOperation.Cancel();
-                syncEvent.Set(); // Signal that we've canceled the operation
+                fgEvent.Set(); // Signal that we've canceled the operation
                 await Assert.ThrowsExceptionAsync<OperationCanceledException>(() => backgroundOperation.Task);
             }
             else if (completeData is ErrorResultData errorData)
@@ -1673,7 +1686,7 @@ namespace FsInfoCat.UnitTests
                 expectedCurrentOperation = updateData.CurrentOperation;
                 expectedPercentComplete = updateData.PercentComplete;
                 expectedCode = errorData.Code.ToMessageCode(MessageCode.UnexpectedError);
-                syncEvent.Set(); // Signal that we're ready to complete
+                fgEvent.Set(); // Signal that we're ready to complete
                 await Assert.ThrowsExceptionAsync<AsyncOperationException>(() => backgroundOperation.Task);
             }
             else
@@ -1684,7 +1697,7 @@ namespace FsInfoCat.UnitTests
                 expectedCurrentOperation = string.Empty;
                 expectedPercentComplete = updateData.PercentComplete.HasValue ? 100 : null;
                 expectedCode = completeData.Code;
-                syncEvent.Set(); // Signal that we're ready to complete
+                fgEvent.Set(); // Signal that we're ready to complete
                 double actualResult = await backgroundOperation.Task;
                 Assert.AreEqual(completeData.Result, actualResult);
             }
@@ -1733,6 +1746,7 @@ namespace FsInfoCat.UnitTests
 
             #region Test Observer Completion
 
+            Thread.Sleep(100);
             Assert.IsTrue(operationObserver.TryDequeue(out observed));
             Assert.IsTrue(observed.IsComplete);
             Assert.IsNull(observed.Error);
@@ -1741,29 +1755,29 @@ namespace FsInfoCat.UnitTests
 
             #endregion
         }
-
 
         [DataTestMethod]
         [DynamicData(nameof(GetAsyncFuncResultStateData), DynamicDataSourceType.Method)]
         [Priority(10)]
         public async Task InvokeAsyncFuncCompletedStateTokenTest(InitializeStateData initializeData, UpdateData updateData, IResultData completeData)
         {
-            using AutoResetEvent syncEvent = new(false);
+            using AutoResetEvent fgEvent = new(false);
+            using AutoResetEvent bgEvent = new(false);
             Task<double> asyncMethodDelegate(IBackgroundProgress<int, IBackgroundProgressEvent<int>> progress) =>
-                TestFuncState(syncEvent, initializeData, updateData, completeData, progress);
+                TestFuncState(fgEvent, bgEvent, initializeData, updateData, completeData, progress);
             IBackgroundOperationResultEvent<int, double> onCompleted(IBackgroundFunc<int, double> backgroundOperation) =>
                     new BackgroundProcessResultEventArgs<int, double>(backgroundOperation, completeData.Code, null, backgroundOperation.Task.Result, string.IsNullOrWhiteSpace(completeData.StatusDescription) ? backgroundOperation.StatusDescription : completeData.StatusDescription); ;
 
-            IBackgroundProgressService service = Hosting.GetRequiredService<IBackgroundProgressService>();
+            IBackgroundProgressService service = Hosting.GetBackgroundProgressService();
             if (service is null)
                 throw new AssertInconclusiveException();
             using CancellationTokenSource tokenSource = new();
             ObserverHelper<IBackgroundProgressEvent<int>> operationObserver = new();
-            IBackgroundFunc<int, double> backgroundOperation = service.InvokeAsync(asyncMethodDelegate, onCompleted, initializeData.Activity, completeData.StatusDescription, initializeData.State, tokenSource.Token);
+            IBackgroundFunc<int, double> backgroundOperation = service.InvokeAsync(asyncMethodDelegate, onCompleted, initializeData.Activity, initializeData.StatusDescription, initializeData.State, tokenSource.Token);
 
             #region Test Initial Progress Properties
 
-            syncEvent.WaitOne(); // Wait until bg operation being executed
+            bgEvent.WaitOne(); // Wait until bg operation being executed
             using IDisposable subscription = backgroundOperation.Subscribe(operationObserver);
             Assert.IsNotNull(backgroundOperation);
             Assert.AreEqual(initializeData.Activity, backgroundOperation.Activity);
@@ -1771,13 +1785,13 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(string.Empty, backgroundOperation.CurrentOperation);
             Assert.AreEqual(initializeData.State, backgroundOperation.AsyncState);
             Assert.IsFalse(backgroundOperation.PercentComplete.HasValue);
-            syncEvent.Set(); // Signal that we've tested initial status properties
+            fgEvent.Set(); // Signal that we've tested initial status properties
 
             #endregion
 
             #region Test Progress Update
 
-            syncEvent.WaitOne(); // Wait until status has been updated
+            bgEvent.WaitOne(); // Wait until status has been updated
             Assert.AreEqual(initializeData.Activity, backgroundOperation.Activity);
             Assert.AreEqual(string.IsNullOrWhiteSpace(updateData.StatusDescription) ? initializeData.StatusDescription : updateData.StatusDescription,
                 backgroundOperation.StatusDescription);
@@ -1824,7 +1838,7 @@ namespace FsInfoCat.UnitTests
                 expectedPercentComplete = updateData.PercentComplete;
                 expectedCode = updateData.Code;
                 tokenSource.Cancel();
-                syncEvent.Set(); // Signal that we've canceled the operation
+                fgEvent.Set(); // Signal that we've canceled the operation
                 await Assert.ThrowsExceptionAsync<OperationCanceledException>(() => backgroundOperation.Task);
             }
             else if (completeData is ErrorResultData errorData)
@@ -1835,7 +1849,7 @@ namespace FsInfoCat.UnitTests
                 expectedCurrentOperation = updateData.CurrentOperation;
                 expectedPercentComplete = updateData.PercentComplete;
                 expectedCode = errorData.Code.ToMessageCode(MessageCode.UnexpectedError);
-                syncEvent.Set(); // Signal that we're ready to complete
+                fgEvent.Set(); // Signal that we're ready to complete
                 await Assert.ThrowsExceptionAsync<AsyncOperationException>(() => backgroundOperation.Task);
             }
             else
@@ -1846,7 +1860,7 @@ namespace FsInfoCat.UnitTests
                 expectedCurrentOperation = string.Empty;
                 expectedPercentComplete = updateData.PercentComplete.HasValue ? 100 : null;
                 expectedCode = completeData.Code;
-                syncEvent.Set(); // Signal that we're ready to complete
+                fgEvent.Set(); // Signal that we're ready to complete
                 double actualResult = await backgroundOperation.Task;
                 Assert.AreEqual(completeData.Result, actualResult);
             }
@@ -1897,6 +1911,7 @@ namespace FsInfoCat.UnitTests
 
             #region Test Observer Completion
 
+            Thread.Sleep(100);
             Assert.IsTrue(operationObserver.TryDequeue(out observed));
             Assert.IsTrue(observed.IsComplete);
             Assert.IsNull(observed.Error);
@@ -1905,28 +1920,28 @@ namespace FsInfoCat.UnitTests
 
             #endregion
         }
-
 
         [DataTestMethod]
         [DynamicData(nameof(GetAsyncFuncResultStateData), DynamicDataSourceType.Method)]
         [Priority(10)]
         public async Task InvokeAsyncFuncCompletedStateTest(InitializeStateData initializeData, UpdateData updateData, IResultData completeData)
         {
-            using AutoResetEvent syncEvent = new(false);
+            using AutoResetEvent fgEvent = new(false);
+            using AutoResetEvent bgEvent = new(false);
             Task<double> asyncMethodDelegate(IBackgroundProgress<int, IBackgroundProgressEvent<int>> progress) =>
-                TestFuncState(syncEvent, initializeData, updateData, completeData, progress);
+                TestFuncState(fgEvent, bgEvent, initializeData, updateData, completeData, progress);
             IBackgroundOperationResultEvent<int, double> onCompleted(IBackgroundFunc<int, double> backgroundOperation) =>
                     new BackgroundProcessResultEventArgs<int, double>(backgroundOperation, completeData.Code, null, backgroundOperation.Task.Result, string.IsNullOrWhiteSpace(completeData.StatusDescription) ? backgroundOperation.StatusDescription : completeData.StatusDescription); ;
 
-            IBackgroundProgressService service = Hosting.GetRequiredService<IBackgroundProgressService>();
+            IBackgroundProgressService service = Hosting.GetBackgroundProgressService();
             if (service is null)
                 throw new AssertInconclusiveException();
             ObserverHelper<IBackgroundProgressEvent<int>> operationObserver = new();
-            IBackgroundFunc<int, double> backgroundOperation = service.InvokeAsync(asyncMethodDelegate, onCompleted, initializeData.Activity, completeData.StatusDescription, initializeData.State);
+            IBackgroundFunc<int, double> backgroundOperation = service.InvokeAsync(asyncMethodDelegate, onCompleted, initializeData.Activity, initializeData.StatusDescription, initializeData.State);
 
             #region Test Initial Progress Properties
 
-            syncEvent.WaitOne(); // Wait until bg operation being executed
+            bgEvent.WaitOne(); // Wait until bg operation being executed
             using IDisposable subscription = backgroundOperation.Subscribe(operationObserver);
             Assert.IsNotNull(backgroundOperation);
             Assert.AreEqual(initializeData.Activity, backgroundOperation.Activity);
@@ -1934,13 +1949,13 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(string.Empty, backgroundOperation.CurrentOperation);
             Assert.AreEqual(initializeData.State, backgroundOperation.AsyncState);
             Assert.IsFalse(backgroundOperation.PercentComplete.HasValue);
-            syncEvent.Set(); // Signal that we've tested initial status properties
+            fgEvent.Set(); // Signal that we've tested initial status properties
 
             #endregion
 
             #region Test Progress Update
 
-            syncEvent.WaitOne(); // Wait until status has been updated
+            bgEvent.WaitOne(); // Wait until status has been updated
             Assert.AreEqual(initializeData.Activity, backgroundOperation.Activity);
             Assert.AreEqual(string.IsNullOrWhiteSpace(updateData.StatusDescription) ? initializeData.StatusDescription : updateData.StatusDescription,
                 backgroundOperation.StatusDescription);
@@ -1987,7 +2002,7 @@ namespace FsInfoCat.UnitTests
                 expectedPercentComplete = updateData.PercentComplete;
                 expectedCode = updateData.Code;
                 backgroundOperation.Cancel();
-                syncEvent.Set(); // Signal that we've canceled the operation
+                fgEvent.Set(); // Signal that we've canceled the operation
                 await Assert.ThrowsExceptionAsync<OperationCanceledException>(() => backgroundOperation.Task);
             }
             else if (completeData is ErrorResultData errorData)
@@ -1998,7 +2013,7 @@ namespace FsInfoCat.UnitTests
                 expectedCurrentOperation = updateData.CurrentOperation;
                 expectedPercentComplete = updateData.PercentComplete;
                 expectedCode = errorData.Code.ToMessageCode(MessageCode.UnexpectedError);
-                syncEvent.Set(); // Signal that we're ready to complete
+                fgEvent.Set(); // Signal that we're ready to complete
                 await Assert.ThrowsExceptionAsync<AsyncOperationException>(() => backgroundOperation.Task);
             }
             else
@@ -2009,7 +2024,7 @@ namespace FsInfoCat.UnitTests
                 expectedCurrentOperation = string.Empty;
                 expectedPercentComplete = updateData.PercentComplete.HasValue ? 100 : null;
                 expectedCode = completeData.Code;
-                syncEvent.Set(); // Signal that we're ready to complete
+                fgEvent.Set(); // Signal that we're ready to complete
                 double actualResult = await backgroundOperation.Task;
                 Assert.AreEqual(completeData.Result, actualResult);
             }
@@ -2060,6 +2075,7 @@ namespace FsInfoCat.UnitTests
 
             #region Test Observer Completion
 
+            Thread.Sleep(100);
             Assert.IsTrue(operationObserver.TryDequeue(out observed));
             Assert.IsTrue(observed.IsComplete);
             Assert.IsNull(observed.Error);
@@ -2068,27 +2084,27 @@ namespace FsInfoCat.UnitTests
 
             #endregion
         }
-
 
         [DataTestMethod]
         [DynamicData(nameof(GetAsyncFuncResultStateData), DynamicDataSourceType.Method)]
         [Priority(10)]
         public async Task InvokeAsyncFuncStateTokenTest(InitializeStateData initializeData, UpdateData updateData, IResultData completeData)
         {
-            using AutoResetEvent syncEvent = new(false);
+            using AutoResetEvent fgEvent = new(false);
+            using AutoResetEvent bgEvent = new(false);
             Task<double> asyncMethodDelegate(IBackgroundProgress<int, IBackgroundProgressEvent<int>> progress) =>
-                TestFuncState(syncEvent, initializeData, updateData, completeData, progress);
+                TestFuncState(fgEvent, bgEvent, initializeData, updateData, completeData, progress);
 
-            IBackgroundProgressService service = Hosting.GetRequiredService<IBackgroundProgressService>();
+            IBackgroundProgressService service = Hosting.GetBackgroundProgressService();
             if (service is null)
                 throw new AssertInconclusiveException();
             using CancellationTokenSource tokenSource = new();
             ObserverHelper<IBackgroundProgressEvent<int>> operationObserver = new();
-            IBackgroundFunc<int, double> backgroundOperation = service.InvokeAsync(asyncMethodDelegate, initializeData.Activity, completeData.StatusDescription, initializeData.State, tokenSource.Token);
+            IBackgroundFunc<int, double> backgroundOperation = service.InvokeAsync(asyncMethodDelegate, initializeData.Activity, initializeData.StatusDescription, initializeData.State, tokenSource.Token);
 
             #region Test Initial Progress Properties
 
-            syncEvent.WaitOne(); // Wait until bg operation being executed
+            bgEvent.WaitOne(); // Wait until bg operation being executed
             using IDisposable subscription = backgroundOperation.Subscribe(operationObserver);
             Assert.IsNotNull(backgroundOperation);
             Assert.AreEqual(initializeData.Activity, backgroundOperation.Activity);
@@ -2096,13 +2112,13 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(string.Empty, backgroundOperation.CurrentOperation);
             Assert.AreEqual(initializeData.State, backgroundOperation.AsyncState);
             Assert.IsFalse(backgroundOperation.PercentComplete.HasValue);
-            syncEvent.Set(); // Signal that we've tested initial status properties
+            fgEvent.Set(); // Signal that we've tested initial status properties
 
             #endregion
 
             #region Test Progress Update
 
-            syncEvent.WaitOne(); // Wait until status has been updated
+            bgEvent.WaitOne(); // Wait until status has been updated
             Assert.AreEqual(initializeData.Activity, backgroundOperation.Activity);
             Assert.AreEqual(string.IsNullOrWhiteSpace(updateData.StatusDescription) ? initializeData.StatusDescription : updateData.StatusDescription,
                 backgroundOperation.StatusDescription);
@@ -2149,7 +2165,7 @@ namespace FsInfoCat.UnitTests
                 expectedPercentComplete = updateData.PercentComplete;
                 expectedCode = updateData.Code;
                 tokenSource.Cancel();
-                syncEvent.Set(); // Signal that we've canceled the operation
+                fgEvent.Set(); // Signal that we've canceled the operation
                 await Assert.ThrowsExceptionAsync<OperationCanceledException>(() => backgroundOperation.Task);
             }
             else if (completeData is ErrorResultData errorData)
@@ -2160,7 +2176,7 @@ namespace FsInfoCat.UnitTests
                 expectedCurrentOperation = updateData.CurrentOperation;
                 expectedPercentComplete = updateData.PercentComplete;
                 expectedCode = errorData.Code.ToMessageCode(MessageCode.UnexpectedError);
-                syncEvent.Set(); // Signal that we're ready to complete
+                fgEvent.Set(); // Signal that we're ready to complete
                 await Assert.ThrowsExceptionAsync<AsyncOperationException>(() => backgroundOperation.Task);
             }
             else
@@ -2171,7 +2187,7 @@ namespace FsInfoCat.UnitTests
                 expectedCurrentOperation = string.Empty;
                 expectedPercentComplete = updateData.PercentComplete.HasValue ? 100 : null;
                 expectedCode = completeData.Code;
-                syncEvent.Set(); // Signal that we're ready to complete
+                fgEvent.Set(); // Signal that we're ready to complete
                 double actualResult = await backgroundOperation.Task;
                 Assert.AreEqual(completeData.Result, actualResult);
             }
@@ -2222,6 +2238,7 @@ namespace FsInfoCat.UnitTests
 
             #region Test Observer Completion
 
+            Thread.Sleep(100);
             Assert.IsTrue(operationObserver.TryDequeue(out observed));
             Assert.IsTrue(observed.IsComplete);
             Assert.IsNull(observed.Error);
@@ -2230,26 +2247,26 @@ namespace FsInfoCat.UnitTests
 
             #endregion
         }
-
 
         [DataTestMethod]
         [DynamicData(nameof(GetAsyncFuncResultStateData), DynamicDataSourceType.Method)]
         [Priority(10)]
         public async Task InvokeAsyncFuncStateTest(InitializeStateData initializeData, UpdateData updateData, IResultData completeData)
         {
-            using AutoResetEvent syncEvent = new(false);
+            using AutoResetEvent fgEvent = new(false);
+            using AutoResetEvent bgEvent = new(false);
             Task<double> asyncMethodDelegate(IBackgroundProgress<int, IBackgroundProgressEvent<int>> progress) =>
-                TestFuncState(syncEvent, initializeData, updateData, completeData, progress);
+                TestFuncState(fgEvent, bgEvent, initializeData, updateData, completeData, progress);
 
-            IBackgroundProgressService service = Hosting.GetRequiredService<IBackgroundProgressService>();
+            IBackgroundProgressService service = Hosting.GetBackgroundProgressService();
             if (service is null)
                 throw new AssertInconclusiveException();
             ObserverHelper<IBackgroundProgressEvent<int>> operationObserver = new();
-            IBackgroundFunc<int, double> backgroundOperation = service.InvokeAsync(asyncMethodDelegate, initializeData.Activity, completeData.StatusDescription, initializeData.State);
+            IBackgroundFunc<int, double> backgroundOperation = service.InvokeAsync(asyncMethodDelegate, initializeData.Activity, initializeData.StatusDescription, initializeData.State);
 
             #region Test Initial Progress Properties
 
-            syncEvent.WaitOne(); // Wait until bg operation being executed
+            bgEvent.WaitOne(); // Wait until bg operation being executed
             using IDisposable subscription = backgroundOperation.Subscribe(operationObserver);
             Assert.IsNotNull(backgroundOperation);
             Assert.AreEqual(initializeData.Activity, backgroundOperation.Activity);
@@ -2257,13 +2274,13 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(string.Empty, backgroundOperation.CurrentOperation);
             Assert.AreEqual(initializeData.State, backgroundOperation.AsyncState);
             Assert.IsFalse(backgroundOperation.PercentComplete.HasValue);
-            syncEvent.Set(); // Signal that we've tested initial status properties
+            fgEvent.Set(); // Signal that we've tested initial status properties
 
             #endregion
 
             #region Test Progress Update
 
-            syncEvent.WaitOne(); // Wait until status has been updated
+            bgEvent.WaitOne(); // Wait until status has been updated
             Assert.AreEqual(initializeData.Activity, backgroundOperation.Activity);
             Assert.AreEqual(string.IsNullOrWhiteSpace(updateData.StatusDescription) ? initializeData.StatusDescription : updateData.StatusDescription,
                 backgroundOperation.StatusDescription);
@@ -2310,7 +2327,7 @@ namespace FsInfoCat.UnitTests
                 expectedPercentComplete = updateData.PercentComplete;
                 expectedCode = updateData.Code;
                 backgroundOperation.Cancel();
-                syncEvent.Set(); // Signal that we've canceled the operation
+                fgEvent.Set(); // Signal that we've canceled the operation
                 await Assert.ThrowsExceptionAsync<OperationCanceledException>(() => backgroundOperation.Task);
             }
             else if (completeData is ErrorResultData errorData)
@@ -2321,7 +2338,7 @@ namespace FsInfoCat.UnitTests
                 expectedCurrentOperation = updateData.CurrentOperation;
                 expectedPercentComplete = updateData.PercentComplete;
                 expectedCode = errorData.Code.ToMessageCode(MessageCode.UnexpectedError);
-                syncEvent.Set(); // Signal that we're ready to complete
+                fgEvent.Set(); // Signal that we're ready to complete
                 await Assert.ThrowsExceptionAsync<AsyncOperationException>(() => backgroundOperation.Task);
             }
             else
@@ -2332,7 +2349,7 @@ namespace FsInfoCat.UnitTests
                 expectedCurrentOperation = string.Empty;
                 expectedPercentComplete = updateData.PercentComplete.HasValue ? 100 : null;
                 expectedCode = completeData.Code;
-                syncEvent.Set(); // Signal that we're ready to complete
+                fgEvent.Set(); // Signal that we're ready to complete
                 double actualResult = await backgroundOperation.Task;
                 Assert.AreEqual(completeData.Result, actualResult);
             }
@@ -2383,6 +2400,7 @@ namespace FsInfoCat.UnitTests
 
             #region Test Observer Completion
 
+            Thread.Sleep(100);
             Assert.IsTrue(operationObserver.TryDequeue(out observed));
             Assert.IsTrue(observed.IsComplete);
             Assert.IsNull(observed.Error);
@@ -2391,42 +2409,42 @@ namespace FsInfoCat.UnitTests
 
             #endregion
         }
-
 
         [DataTestMethod]
         [DynamicData(nameof(GetAsyncFuncResultData), DynamicDataSourceType.Method)]
         [Priority(10)]
         public async Task InvokeAsyncFuncCompletedTokenTest(InitializeData initializeData, UpdateData updateData, IResultData completeData)
         {
-            using AutoResetEvent syncEvent = new(false);
+            using AutoResetEvent fgEvent = new(false);
+            using AutoResetEvent bgEvent = new(false);
             Task<double> asyncMethodDelegate(IBackgroundProgress<IBackgroundProgressEvent> progress) =>
-                TestFunc(syncEvent, initializeData, updateData, completeData, progress);
+                TestFunc(fgEvent, bgEvent, initializeData, updateData, completeData, progress);
             IBackgroundOperationResultEvent<double> onCompleted(IBackgroundFunc<double> backgroundOperation) =>
                     new BackgroundProcessResultEventArgs<double>(backgroundOperation, completeData.Code, null, backgroundOperation.Task.Result); ;
 
-            IBackgroundProgressService service = Hosting.GetRequiredService<IBackgroundProgressService>();
+            IBackgroundProgressService service = Hosting.GetBackgroundProgressService();
             if (service is null)
                 throw new AssertInconclusiveException();
             using CancellationTokenSource tokenSource = new();
             ObserverHelper<IBackgroundProgressEvent> operationObserver = new();
-            IBackgroundFunc<double> backgroundOperation = service.InvokeAsync(asyncMethodDelegate, onCompleted, initializeData.Activity, completeData.StatusDescription, tokenSource.Token);
+            IBackgroundFunc<double> backgroundOperation = service.InvokeAsync(asyncMethodDelegate, onCompleted, initializeData.Activity, initializeData.StatusDescription, tokenSource.Token);
 
             #region Test Initial Progress Properties
 
-            syncEvent.WaitOne(); // Wait until bg operation being executed
+            bgEvent.WaitOne(); // Wait until bg operation being executed
             using IDisposable subscription = backgroundOperation.Subscribe(operationObserver);
             Assert.IsNotNull(backgroundOperation);
             Assert.AreEqual(initializeData.Activity, backgroundOperation.Activity);
             Assert.AreEqual(initializeData.StatusDescription, backgroundOperation.StatusDescription);
             Assert.AreEqual(string.Empty, backgroundOperation.CurrentOperation);
             Assert.IsFalse(backgroundOperation.PercentComplete.HasValue);
-            syncEvent.Set(); // Signal that we've tested initial status properties
+            fgEvent.Set(); // Signal that we've tested initial status properties
 
             #endregion
 
             #region Test Progress Update
 
-            syncEvent.WaitOne(); // Wait until status has been updated
+            bgEvent.WaitOne(); // Wait until status has been updated
             Assert.AreEqual(initializeData.Activity, backgroundOperation.Activity);
             Assert.AreEqual(string.IsNullOrWhiteSpace(updateData.StatusDescription) ? initializeData.StatusDescription : updateData.StatusDescription,
                 backgroundOperation.StatusDescription);
@@ -2471,7 +2489,7 @@ namespace FsInfoCat.UnitTests
                 expectedPercentComplete = updateData.PercentComplete;
                 expectedCode = updateData.Code;
                 tokenSource.Cancel();
-                syncEvent.Set(); // Signal that we've canceled the operation
+                fgEvent.Set(); // Signal that we've canceled the operation
                 await Assert.ThrowsExceptionAsync<OperationCanceledException>(() => backgroundOperation.Task);
             }
             else if (completeData is ErrorResultData errorData)
@@ -2482,7 +2500,7 @@ namespace FsInfoCat.UnitTests
                 expectedCurrentOperation = updateData.CurrentOperation;
                 expectedPercentComplete = updateData.PercentComplete;
                 expectedCode = errorData.Code.ToMessageCode(MessageCode.UnexpectedError);
-                syncEvent.Set(); // Signal that we're ready to complete
+                fgEvent.Set(); // Signal that we're ready to complete
                 await Assert.ThrowsExceptionAsync<AsyncOperationException>(() => backgroundOperation.Task);
             }
             else
@@ -2493,7 +2511,7 @@ namespace FsInfoCat.UnitTests
                 expectedCurrentOperation = string.Empty;
                 expectedPercentComplete = updateData.PercentComplete.HasValue ? 100 : null;
                 expectedCode = completeData.Code;
-                syncEvent.Set(); // Signal that we're ready to complete
+                fgEvent.Set(); // Signal that we're ready to complete
                 double actualResult = await backgroundOperation.Task;
                 Assert.AreEqual(completeData.Result, actualResult);
             }
@@ -2542,6 +2560,7 @@ namespace FsInfoCat.UnitTests
 
             #region Test Observer Completion
 
+            Thread.Sleep(100);
             Assert.IsTrue(operationObserver.TryDequeue(out observed));
             Assert.IsTrue(observed.IsComplete);
             Assert.IsNull(observed.Error);
@@ -2550,41 +2569,41 @@ namespace FsInfoCat.UnitTests
 
             #endregion
         }
-
 
         [DataTestMethod]
         [DynamicData(nameof(GetAsyncFuncResultData), DynamicDataSourceType.Method)]
         [Priority(10)]
         public async Task InvokeAsyncFuncCompletedTest(InitializeData initializeData, UpdateData updateData, IResultData completeData)
         {
-            using AutoResetEvent syncEvent = new(false);
+            using AutoResetEvent fgEvent = new(false);
+            using AutoResetEvent bgEvent = new(false);
             Task<double> asyncMethodDelegate(IBackgroundProgress<IBackgroundProgressEvent> progress) =>
-                TestFunc(syncEvent, initializeData, updateData, completeData, progress);
+                TestFunc(fgEvent, bgEvent, initializeData, updateData, completeData, progress);
             IBackgroundOperationResultEvent<double> onCompleted(IBackgroundFunc<double> backgroundOperation) =>
                     new BackgroundProcessResultEventArgs<double>(backgroundOperation, completeData.Code, null, backgroundOperation.Task.Result); ;
 
-            IBackgroundProgressService service = Hosting.GetRequiredService<IBackgroundProgressService>();
+            IBackgroundProgressService service = Hosting.GetBackgroundProgressService();
             if (service is null)
                 throw new AssertInconclusiveException();
             ObserverHelper<IBackgroundProgressEvent> operationObserver = new();
-            IBackgroundFunc<double> backgroundOperation = service.InvokeAsync(asyncMethodDelegate, onCompleted, initializeData.Activity, completeData.StatusDescription);
+            IBackgroundFunc<double> backgroundOperation = service.InvokeAsync(asyncMethodDelegate, onCompleted, initializeData.Activity, initializeData.StatusDescription);
 
             #region Test Initial Progress Properties
 
-            syncEvent.WaitOne(); // Wait until bg operation being executed
+            bgEvent.WaitOne(); // Wait until bg operation being executed
             using IDisposable subscription = backgroundOperation.Subscribe(operationObserver);
             Assert.IsNotNull(backgroundOperation);
             Assert.AreEqual(initializeData.Activity, backgroundOperation.Activity);
             Assert.AreEqual(initializeData.StatusDescription, backgroundOperation.StatusDescription);
             Assert.AreEqual(string.Empty, backgroundOperation.CurrentOperation);
             Assert.IsFalse(backgroundOperation.PercentComplete.HasValue);
-            syncEvent.Set(); // Signal that we've tested initial status properties
+            fgEvent.Set(); // Signal that we've tested initial status properties
 
             #endregion
 
             #region Test Progress Update
 
-            syncEvent.WaitOne(); // Wait until status has been updated
+            bgEvent.WaitOne(); // Wait until status has been updated
             Assert.AreEqual(initializeData.Activity, backgroundOperation.Activity);
             Assert.AreEqual(string.IsNullOrWhiteSpace(updateData.StatusDescription) ? initializeData.StatusDescription : updateData.StatusDescription,
                 backgroundOperation.StatusDescription);
@@ -2629,7 +2648,7 @@ namespace FsInfoCat.UnitTests
                 expectedPercentComplete = updateData.PercentComplete;
                 expectedCode = updateData.Code;
                 backgroundOperation.Cancel();
-                syncEvent.Set(); // Signal that we've canceled the operation
+                fgEvent.Set(); // Signal that we've canceled the operation
                 await Assert.ThrowsExceptionAsync<OperationCanceledException>(() => backgroundOperation.Task);
             }
             else if (completeData is ErrorResultData errorData)
@@ -2640,7 +2659,7 @@ namespace FsInfoCat.UnitTests
                 expectedCurrentOperation = updateData.CurrentOperation;
                 expectedPercentComplete = updateData.PercentComplete;
                 expectedCode = errorData.Code.ToMessageCode(MessageCode.UnexpectedError);
-                syncEvent.Set(); // Signal that we're ready to complete
+                fgEvent.Set(); // Signal that we're ready to complete
                 await Assert.ThrowsExceptionAsync<AsyncOperationException>(() => backgroundOperation.Task);
             }
             else
@@ -2651,7 +2670,7 @@ namespace FsInfoCat.UnitTests
                 expectedCurrentOperation = string.Empty;
                 expectedPercentComplete = updateData.PercentComplete.HasValue ? 100 : null;
                 expectedCode = completeData.Code;
-                syncEvent.Set(); // Signal that we're ready to complete
+                fgEvent.Set(); // Signal that we're ready to complete
                 double actualResult = await backgroundOperation.Task;
                 Assert.AreEqual(completeData.Result, actualResult);
             }
@@ -2700,6 +2719,7 @@ namespace FsInfoCat.UnitTests
 
             #region Test Observer Completion
 
+            Thread.Sleep(100);
             Assert.IsTrue(operationObserver.TryDequeue(out observed));
             Assert.IsTrue(observed.IsComplete);
             Assert.IsNull(observed.Error);
@@ -2708,40 +2728,40 @@ namespace FsInfoCat.UnitTests
 
             #endregion
         }
-
 
         [DataTestMethod]
         [DynamicData(nameof(GetAsyncFuncResultData), DynamicDataSourceType.Method)]
         [Priority(10)]
         public async Task InvokeAsyncFuncTokenTest(InitializeData initializeData, UpdateData updateData, IResultData completeData)
         {
-            using AutoResetEvent syncEvent = new(false);
+            using AutoResetEvent fgEvent = new(false);
+            using AutoResetEvent bgEvent = new(false);
             Task<double> asyncMethodDelegate(IBackgroundProgress<IBackgroundProgressEvent> progress) =>
-                TestFunc(syncEvent, initializeData, updateData, completeData, progress);
+                TestFunc(fgEvent, bgEvent, initializeData, updateData, completeData, progress);
 
-            IBackgroundProgressService service = Hosting.GetRequiredService<IBackgroundProgressService>();
+            IBackgroundProgressService service = Hosting.GetBackgroundProgressService();
             if (service is null)
                 throw new AssertInconclusiveException();
             using CancellationTokenSource tokenSource = new();
             ObserverHelper<IBackgroundProgressEvent> operationObserver = new();
-            IBackgroundFunc<double> backgroundOperation = service.InvokeAsync(asyncMethodDelegate, initializeData.Activity, completeData.StatusDescription, tokenSource.Token);
+            IBackgroundFunc<double> backgroundOperation = service.InvokeAsync(asyncMethodDelegate, initializeData.Activity, initializeData.StatusDescription, tokenSource.Token);
 
             #region Test Initial Progress Properties
 
-            syncEvent.WaitOne(); // Wait until bg operation being executed
+            bgEvent.WaitOne(); // Wait until bg operation being executed
             using IDisposable subscription = backgroundOperation.Subscribe(operationObserver);
             Assert.IsNotNull(backgroundOperation);
             Assert.AreEqual(initializeData.Activity, backgroundOperation.Activity);
             Assert.AreEqual(initializeData.StatusDescription, backgroundOperation.StatusDescription);
             Assert.AreEqual(string.Empty, backgroundOperation.CurrentOperation);
             Assert.IsFalse(backgroundOperation.PercentComplete.HasValue);
-            syncEvent.Set(); // Signal that we've tested initial status properties
+            fgEvent.Set(); // Signal that we've tested initial status properties
 
             #endregion
 
             #region Test Progress Update
 
-            syncEvent.WaitOne(); // Wait until status has been updated
+            bgEvent.WaitOne(); // Wait until status has been updated
             Assert.AreEqual(initializeData.Activity, backgroundOperation.Activity);
             Assert.AreEqual(string.IsNullOrWhiteSpace(updateData.StatusDescription) ? initializeData.StatusDescription : updateData.StatusDescription,
                 backgroundOperation.StatusDescription);
@@ -2786,7 +2806,7 @@ namespace FsInfoCat.UnitTests
                 expectedPercentComplete = updateData.PercentComplete;
                 expectedCode = updateData.Code;
                 tokenSource.Cancel();
-                syncEvent.Set(); // Signal that we've canceled the operation
+                fgEvent.Set(); // Signal that we've canceled the operation
                 await Assert.ThrowsExceptionAsync<OperationCanceledException>(() => backgroundOperation.Task);
             }
             else if (completeData is ErrorResultData errorData)
@@ -2797,7 +2817,7 @@ namespace FsInfoCat.UnitTests
                 expectedCurrentOperation = updateData.CurrentOperation;
                 expectedPercentComplete = updateData.PercentComplete;
                 expectedCode = errorData.Code.ToMessageCode(MessageCode.UnexpectedError);
-                syncEvent.Set(); // Signal that we're ready to complete
+                fgEvent.Set(); // Signal that we're ready to complete
                 await Assert.ThrowsExceptionAsync<AsyncOperationException>(() => backgroundOperation.Task);
             }
             else
@@ -2808,7 +2828,7 @@ namespace FsInfoCat.UnitTests
                 expectedCurrentOperation = string.Empty;
                 expectedPercentComplete = updateData.PercentComplete.HasValue ? 100 : null;
                 expectedCode = completeData.Code;
-                syncEvent.Set(); // Signal that we're ready to complete
+                fgEvent.Set(); // Signal that we're ready to complete
                 double actualResult = await backgroundOperation.Task;
                 Assert.AreEqual(completeData.Result, actualResult);
             }
@@ -2857,6 +2877,7 @@ namespace FsInfoCat.UnitTests
 
             #region Test Observer Completion
 
+            Thread.Sleep(100);
             Assert.IsTrue(operationObserver.TryDequeue(out observed));
             Assert.IsTrue(observed.IsComplete);
             Assert.IsNull(observed.Error);
@@ -2865,39 +2886,39 @@ namespace FsInfoCat.UnitTests
 
             #endregion
         }
-
 
         [DataTestMethod]
         [DynamicData(nameof(GetAsyncFuncResultData), DynamicDataSourceType.Method)]
         [Priority(10)]
         public async Task InvokeAsyncFuncTest(InitializeData initializeData, UpdateData updateData, IResultData completeData)
         {
-            using AutoResetEvent syncEvent = new(false);
+            using AutoResetEvent fgEvent = new(false);
+            using AutoResetEvent bgEvent = new(false);
             Task<double> asyncMethodDelegate(IBackgroundProgress<IBackgroundProgressEvent> progress) =>
-                TestFunc(syncEvent, initializeData, updateData, completeData, progress);
+                TestFunc(fgEvent, bgEvent, initializeData, updateData, completeData, progress);
 
-            IBackgroundProgressService service = Hosting.GetRequiredService<IBackgroundProgressService>();
+            IBackgroundProgressService service = Hosting.GetBackgroundProgressService();
             if (service is null)
                 throw new AssertInconclusiveException();
             ObserverHelper<IBackgroundProgressEvent> operationObserver = new();
-            IBackgroundFunc<double> backgroundOperation = service.InvokeAsync(asyncMethodDelegate, initializeData.Activity, completeData.StatusDescription);
+            IBackgroundFunc<double> backgroundOperation = service.InvokeAsync(asyncMethodDelegate, initializeData.Activity, initializeData.StatusDescription);
 
             #region Test Initial Progress Properties
 
-            syncEvent.WaitOne(); // Wait until bg operation being executed
+            bgEvent.WaitOne(); // Wait until bg operation being executed
             using IDisposable subscription = backgroundOperation.Subscribe(operationObserver);
             Assert.IsNotNull(backgroundOperation);
             Assert.AreEqual(initializeData.Activity, backgroundOperation.Activity);
             Assert.AreEqual(initializeData.StatusDescription, backgroundOperation.StatusDescription);
             Assert.AreEqual(string.Empty, backgroundOperation.CurrentOperation);
             Assert.IsFalse(backgroundOperation.PercentComplete.HasValue);
-            syncEvent.Set(); // Signal that we've tested initial status properties
+            fgEvent.Set(); // Signal that we've tested initial status properties
 
             #endregion
 
             #region Test Progress Update
 
-            syncEvent.WaitOne(); // Wait until status has been updated
+            bgEvent.WaitOne(); // Wait until status has been updated
             Assert.AreEqual(initializeData.Activity, backgroundOperation.Activity);
             Assert.AreEqual(string.IsNullOrWhiteSpace(updateData.StatusDescription) ? initializeData.StatusDescription : updateData.StatusDescription,
                 backgroundOperation.StatusDescription);
@@ -2942,7 +2963,7 @@ namespace FsInfoCat.UnitTests
                 expectedPercentComplete = updateData.PercentComplete;
                 expectedCode = updateData.Code;
                 backgroundOperation.Cancel();
-                syncEvent.Set(); // Signal that we've canceled the operation
+                fgEvent.Set(); // Signal that we've canceled the operation
                 await Assert.ThrowsExceptionAsync<OperationCanceledException>(() => backgroundOperation.Task);
             }
             else if (completeData is ErrorResultData errorData)
@@ -2953,7 +2974,7 @@ namespace FsInfoCat.UnitTests
                 expectedCurrentOperation = updateData.CurrentOperation;
                 expectedPercentComplete = updateData.PercentComplete;
                 expectedCode = errorData.Code.ToMessageCode(MessageCode.UnexpectedError);
-                syncEvent.Set(); // Signal that we're ready to complete
+                fgEvent.Set(); // Signal that we're ready to complete
                 await Assert.ThrowsExceptionAsync<AsyncOperationException>(() => backgroundOperation.Task);
             }
             else
@@ -2964,7 +2985,7 @@ namespace FsInfoCat.UnitTests
                 expectedCurrentOperation = string.Empty;
                 expectedPercentComplete = updateData.PercentComplete.HasValue ? 100 : null;
                 expectedCode = completeData.Code;
-                syncEvent.Set(); // Signal that we're ready to complete
+                fgEvent.Set(); // Signal that we're ready to complete
                 double actualResult = await backgroundOperation.Task;
                 Assert.AreEqual(completeData.Result, actualResult);
             }
@@ -3013,6 +3034,7 @@ namespace FsInfoCat.UnitTests
 
             #region Test Observer Completion
 
+            Thread.Sleep(100);
             Assert.IsTrue(operationObserver.TryDequeue(out observed));
             Assert.IsTrue(observed.IsComplete);
             Assert.IsNull(observed.Error);
@@ -3021,29 +3043,29 @@ namespace FsInfoCat.UnitTests
 
             #endregion
         }
-
 
         [DataTestMethod]
         [DynamicData(nameof(GetAsyncActionCompletedStateData), DynamicDataSourceType.Method)]
         [Priority(10)]
         public async Task InvokeTimedAsyncActionCompletedStateTokenTest(InitializeStateData initializeData, UpdateData updateData, IActionCompleteData completeData)
         {
-            using AutoResetEvent syncEvent = new(false);
+            using AutoResetEvent fgEvent = new(false);
+            using AutoResetEvent bgEvent = new(false);
             Task asyncMethodDelegate(ITimedBackgroundProgress<int, ITimedBackgroundProgressEvent<int>> progress) =>
-                TimedTestActionState(syncEvent, initializeData, updateData, completeData, progress);
+                TimedTestActionState(fgEvent, bgEvent, initializeData, updateData, completeData, progress);
             ITimedBackgroundOperationCompletedEvent<int> onCompleted(ITimedBackgroundOperation<int> backgroundOperation) =>
                     new TimedBackgroundProcessCompletedEventArgs<int>(backgroundOperation, completeData.Code, null, !backgroundOperation.Task.IsCanceled, string.IsNullOrWhiteSpace(completeData.StatusDescription) ? backgroundOperation.StatusDescription : completeData.StatusDescription); ;
 
-            IBackgroundProgressService service = Hosting.GetRequiredService<IBackgroundProgressService>();
+            IBackgroundProgressService service = Hosting.GetBackgroundProgressService();
             if (service is null)
                 throw new AssertInconclusiveException();
             using CancellationTokenSource tokenSource = new();
             ObserverHelper<ITimedBackgroundProgressEvent<int>> operationObserver = new();
-            ITimedBackgroundOperation<int> backgroundOperation = service.InvokeAsync(asyncMethodDelegate, onCompleted, initializeData.Activity, completeData.StatusDescription, initializeData.State, tokenSource.Token);
+            ITimedBackgroundOperation<int> backgroundOperation = service.InvokeAsync(asyncMethodDelegate, onCompleted, initializeData.Activity, initializeData.StatusDescription, initializeData.State, tokenSource.Token);
 
             #region Test Initial Progress Properties
 
-            syncEvent.WaitOne(); // Wait until bg operation being executed
+            bgEvent.WaitOne(); // Wait until bg operation being executed
             using IDisposable subscription = backgroundOperation.Subscribe(operationObserver);
             Assert.IsNotNull(backgroundOperation);
             Assert.AreEqual(initializeData.Activity, backgroundOperation.Activity);
@@ -3051,13 +3073,13 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(string.Empty, backgroundOperation.CurrentOperation);
             Assert.AreEqual(initializeData.State, backgroundOperation.AsyncState);
             Assert.IsFalse(backgroundOperation.PercentComplete.HasValue);
-            syncEvent.Set(); // Signal that we've tested initial status properties
+            fgEvent.Set(); // Signal that we've tested initial status properties
 
             #endregion
 
             #region Test Progress Update
 
-            syncEvent.WaitOne(); // Wait until status has been updated
+            bgEvent.WaitOne(); // Wait until status has been updated
             Assert.AreEqual(initializeData.Activity, backgroundOperation.Activity);
             Assert.AreEqual(string.IsNullOrWhiteSpace(updateData.StatusDescription) ? initializeData.StatusDescription : updateData.StatusDescription,
                 backgroundOperation.StatusDescription);
@@ -3104,7 +3126,7 @@ namespace FsInfoCat.UnitTests
                 expectedPercentComplete = updateData.PercentComplete;
                 expectedCode = updateData.Code;
                 tokenSource.Cancel();
-                syncEvent.Set(); // Signal that we've canceled the operation
+                fgEvent.Set(); // Signal that we've canceled the operation
                 await Assert.ThrowsExceptionAsync<OperationCanceledException>(() => backgroundOperation.Task);
             }
             else if (completeData is ErrorCompleteData errorData)
@@ -3115,7 +3137,7 @@ namespace FsInfoCat.UnitTests
                 expectedCurrentOperation = updateData.CurrentOperation;
                 expectedPercentComplete = updateData.PercentComplete;
                 expectedCode = errorData.Code.ToMessageCode(MessageCode.UnexpectedError);
-                syncEvent.Set(); // Signal that we're ready to complete
+                fgEvent.Set(); // Signal that we're ready to complete
                 await Assert.ThrowsExceptionAsync<AsyncOperationException>(() => backgroundOperation.Task);
             }
             else
@@ -3126,7 +3148,7 @@ namespace FsInfoCat.UnitTests
                 expectedCurrentOperation = string.Empty;
                 expectedPercentComplete = updateData.PercentComplete.HasValue ? 100 : null;
                 expectedCode = completeData.Code;
-                syncEvent.Set(); // Signal that we're ready to complete
+                fgEvent.Set(); // Signal that we're ready to complete
                 await backgroundOperation.Task;
             }
 
@@ -3167,6 +3189,7 @@ namespace FsInfoCat.UnitTests
 
             #region Test Observer Completion
 
+            Thread.Sleep(100);
             Assert.IsTrue(operationObserver.TryDequeue(out observed));
             Assert.IsTrue(observed.IsComplete);
             Assert.IsNull(observed.Error);
@@ -3175,28 +3198,28 @@ namespace FsInfoCat.UnitTests
 
             #endregion
         }
-
 
         [DataTestMethod]
         [DynamicData(nameof(GetAsyncActionCompletedStateData), DynamicDataSourceType.Method)]
         [Priority(10)]
         public async Task InvokeTimedAsyncActionCompletedStateTest(InitializeStateData initializeData, UpdateData updateData, IActionCompleteData completeData)
         {
-            using AutoResetEvent syncEvent = new(false);
+            using AutoResetEvent fgEvent = new(false);
+            using AutoResetEvent bgEvent = new(false);
             Task asyncMethodDelegate(ITimedBackgroundProgress<int, ITimedBackgroundProgressEvent<int>> progress) =>
-                TimedTestActionState(syncEvent, initializeData, updateData, completeData, progress);
+                TimedTestActionState(fgEvent, bgEvent, initializeData, updateData, completeData, progress);
             ITimedBackgroundOperationCompletedEvent<int> onCompleted(ITimedBackgroundOperation<int> backgroundOperation) =>
                     new TimedBackgroundProcessCompletedEventArgs<int>(backgroundOperation, completeData.Code, null, !backgroundOperation.Task.IsCanceled, string.IsNullOrWhiteSpace(completeData.StatusDescription) ? backgroundOperation.StatusDescription : completeData.StatusDescription); ;
 
-            IBackgroundProgressService service = Hosting.GetRequiredService<IBackgroundProgressService>();
+            IBackgroundProgressService service = Hosting.GetBackgroundProgressService();
             if (service is null)
                 throw new AssertInconclusiveException();
             ObserverHelper<ITimedBackgroundProgressEvent<int>> operationObserver = new();
-            ITimedBackgroundOperation<int> backgroundOperation = service.InvokeAsync(asyncMethodDelegate, onCompleted, initializeData.Activity, completeData.StatusDescription, initializeData.State);
+            ITimedBackgroundOperation<int> backgroundOperation = service.InvokeAsync(asyncMethodDelegate, onCompleted, initializeData.Activity, initializeData.StatusDescription, initializeData.State);
 
             #region Test Initial Progress Properties
 
-            syncEvent.WaitOne(); // Wait until bg operation being executed
+            bgEvent.WaitOne(); // Wait until bg operation being executed
             using IDisposable subscription = backgroundOperation.Subscribe(operationObserver);
             Assert.IsNotNull(backgroundOperation);
             Assert.AreEqual(initializeData.Activity, backgroundOperation.Activity);
@@ -3204,13 +3227,13 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(string.Empty, backgroundOperation.CurrentOperation);
             Assert.AreEqual(initializeData.State, backgroundOperation.AsyncState);
             Assert.IsFalse(backgroundOperation.PercentComplete.HasValue);
-            syncEvent.Set(); // Signal that we've tested initial status properties
+            fgEvent.Set(); // Signal that we've tested initial status properties
 
             #endregion
 
             #region Test Progress Update
 
-            syncEvent.WaitOne(); // Wait until status has been updated
+            bgEvent.WaitOne(); // Wait until status has been updated
             Assert.AreEqual(initializeData.Activity, backgroundOperation.Activity);
             Assert.AreEqual(string.IsNullOrWhiteSpace(updateData.StatusDescription) ? initializeData.StatusDescription : updateData.StatusDescription,
                 backgroundOperation.StatusDescription);
@@ -3257,7 +3280,7 @@ namespace FsInfoCat.UnitTests
                 expectedPercentComplete = updateData.PercentComplete;
                 expectedCode = updateData.Code;
                 backgroundOperation.Cancel();
-                syncEvent.Set(); // Signal that we've canceled the operation
+                fgEvent.Set(); // Signal that we've canceled the operation
                 await Assert.ThrowsExceptionAsync<OperationCanceledException>(() => backgroundOperation.Task);
             }
             else if (completeData is ErrorCompleteData errorData)
@@ -3268,7 +3291,7 @@ namespace FsInfoCat.UnitTests
                 expectedCurrentOperation = updateData.CurrentOperation;
                 expectedPercentComplete = updateData.PercentComplete;
                 expectedCode = errorData.Code.ToMessageCode(MessageCode.UnexpectedError);
-                syncEvent.Set(); // Signal that we're ready to complete
+                fgEvent.Set(); // Signal that we're ready to complete
                 await Assert.ThrowsExceptionAsync<AsyncOperationException>(() => backgroundOperation.Task);
             }
             else
@@ -3279,7 +3302,7 @@ namespace FsInfoCat.UnitTests
                 expectedCurrentOperation = string.Empty;
                 expectedPercentComplete = updateData.PercentComplete.HasValue ? 100 : null;
                 expectedCode = completeData.Code;
-                syncEvent.Set(); // Signal that we're ready to complete
+                fgEvent.Set(); // Signal that we're ready to complete
                 await backgroundOperation.Task;
             }
 
@@ -3320,6 +3343,7 @@ namespace FsInfoCat.UnitTests
 
             #region Test Observer Completion
 
+            Thread.Sleep(100);
             Assert.IsTrue(operationObserver.TryDequeue(out observed));
             Assert.IsTrue(observed.IsComplete);
             Assert.IsNull(observed.Error);
@@ -3328,27 +3352,27 @@ namespace FsInfoCat.UnitTests
 
             #endregion
         }
-
 
         [DataTestMethod]
         [DynamicData(nameof(GetAsyncActionCompletedStateData), DynamicDataSourceType.Method)]
         [Priority(10)]
         public async Task InvokeTimedAsyncActionStateTokenTest(InitializeStateData initializeData, UpdateData updateData, IActionCompleteData completeData)
         {
-            using AutoResetEvent syncEvent = new(false);
+            using AutoResetEvent fgEvent = new(false);
+            using AutoResetEvent bgEvent = new(false);
             Task asyncMethodDelegate(ITimedBackgroundProgress<int, ITimedBackgroundProgressEvent<int>> progress) =>
-                TimedTestActionState(syncEvent, initializeData, updateData, completeData, progress);
+                TimedTestActionState(fgEvent, bgEvent, initializeData, updateData, completeData, progress);
 
-            IBackgroundProgressService service = Hosting.GetRequiredService<IBackgroundProgressService>();
+            IBackgroundProgressService service = Hosting.GetBackgroundProgressService();
             if (service is null)
                 throw new AssertInconclusiveException();
             using CancellationTokenSource tokenSource = new();
             ObserverHelper<ITimedBackgroundProgressEvent<int>> operationObserver = new();
-            ITimedBackgroundOperation<int> backgroundOperation = service.InvokeAsync(asyncMethodDelegate, initializeData.Activity, completeData.StatusDescription, initializeData.State, tokenSource.Token);
+            ITimedBackgroundOperation<int> backgroundOperation = service.InvokeAsync(asyncMethodDelegate, initializeData.Activity, initializeData.StatusDescription, initializeData.State, tokenSource.Token);
 
             #region Test Initial Progress Properties
 
-            syncEvent.WaitOne(); // Wait until bg operation being executed
+            bgEvent.WaitOne(); // Wait until bg operation being executed
             using IDisposable subscription = backgroundOperation.Subscribe(operationObserver);
             Assert.IsNotNull(backgroundOperation);
             Assert.AreEqual(initializeData.Activity, backgroundOperation.Activity);
@@ -3356,13 +3380,13 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(string.Empty, backgroundOperation.CurrentOperation);
             Assert.AreEqual(initializeData.State, backgroundOperation.AsyncState);
             Assert.IsFalse(backgroundOperation.PercentComplete.HasValue);
-            syncEvent.Set(); // Signal that we've tested initial status properties
+            fgEvent.Set(); // Signal that we've tested initial status properties
 
             #endregion
 
             #region Test Progress Update
 
-            syncEvent.WaitOne(); // Wait until status has been updated
+            bgEvent.WaitOne(); // Wait until status has been updated
             Assert.AreEqual(initializeData.Activity, backgroundOperation.Activity);
             Assert.AreEqual(string.IsNullOrWhiteSpace(updateData.StatusDescription) ? initializeData.StatusDescription : updateData.StatusDescription,
                 backgroundOperation.StatusDescription);
@@ -3409,7 +3433,7 @@ namespace FsInfoCat.UnitTests
                 expectedPercentComplete = updateData.PercentComplete;
                 expectedCode = updateData.Code;
                 tokenSource.Cancel();
-                syncEvent.Set(); // Signal that we've canceled the operation
+                fgEvent.Set(); // Signal that we've canceled the operation
                 await Assert.ThrowsExceptionAsync<OperationCanceledException>(() => backgroundOperation.Task);
             }
             else if (completeData is ErrorCompleteData errorData)
@@ -3420,7 +3444,7 @@ namespace FsInfoCat.UnitTests
                 expectedCurrentOperation = updateData.CurrentOperation;
                 expectedPercentComplete = updateData.PercentComplete;
                 expectedCode = errorData.Code.ToMessageCode(MessageCode.UnexpectedError);
-                syncEvent.Set(); // Signal that we're ready to complete
+                fgEvent.Set(); // Signal that we're ready to complete
                 await Assert.ThrowsExceptionAsync<AsyncOperationException>(() => backgroundOperation.Task);
             }
             else
@@ -3431,7 +3455,7 @@ namespace FsInfoCat.UnitTests
                 expectedCurrentOperation = string.Empty;
                 expectedPercentComplete = updateData.PercentComplete.HasValue ? 100 : null;
                 expectedCode = completeData.Code;
-                syncEvent.Set(); // Signal that we're ready to complete
+                fgEvent.Set(); // Signal that we're ready to complete
                 await backgroundOperation.Task;
             }
 
@@ -3472,6 +3496,7 @@ namespace FsInfoCat.UnitTests
 
             #region Test Observer Completion
 
+            Thread.Sleep(100);
             Assert.IsTrue(operationObserver.TryDequeue(out observed));
             Assert.IsTrue(observed.IsComplete);
             Assert.IsNull(observed.Error);
@@ -3480,26 +3505,26 @@ namespace FsInfoCat.UnitTests
 
             #endregion
         }
-
 
         [DataTestMethod]
         [DynamicData(nameof(GetAsyncActionCompletedStateData), DynamicDataSourceType.Method)]
         [Priority(10)]
         public async Task InvokeTimedAsyncActionStateTest(InitializeStateData initializeData, UpdateData updateData, IActionCompleteData completeData)
         {
-            using AutoResetEvent syncEvent = new(false);
+            using AutoResetEvent fgEvent = new(false);
+            using AutoResetEvent bgEvent = new(false);
             Task asyncMethodDelegate(ITimedBackgroundProgress<int, ITimedBackgroundProgressEvent<int>> progress) =>
-                TimedTestActionState(syncEvent, initializeData, updateData, completeData, progress);
+                TimedTestActionState(fgEvent, bgEvent, initializeData, updateData, completeData, progress);
 
-            IBackgroundProgressService service = Hosting.GetRequiredService<IBackgroundProgressService>();
+            IBackgroundProgressService service = Hosting.GetBackgroundProgressService();
             if (service is null)
                 throw new AssertInconclusiveException();
             ObserverHelper<ITimedBackgroundProgressEvent<int>> operationObserver = new();
-            ITimedBackgroundOperation<int> backgroundOperation = service.InvokeAsync(asyncMethodDelegate, initializeData.Activity, completeData.StatusDescription, initializeData.State);
+            ITimedBackgroundOperation<int> backgroundOperation = service.InvokeAsync(asyncMethodDelegate, initializeData.Activity, initializeData.StatusDescription, initializeData.State);
 
             #region Test Initial Progress Properties
 
-            syncEvent.WaitOne(); // Wait until bg operation being executed
+            bgEvent.WaitOne(); // Wait until bg operation being executed
             using IDisposable subscription = backgroundOperation.Subscribe(operationObserver);
             Assert.IsNotNull(backgroundOperation);
             Assert.AreEqual(initializeData.Activity, backgroundOperation.Activity);
@@ -3507,13 +3532,13 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(string.Empty, backgroundOperation.CurrentOperation);
             Assert.AreEqual(initializeData.State, backgroundOperation.AsyncState);
             Assert.IsFalse(backgroundOperation.PercentComplete.HasValue);
-            syncEvent.Set(); // Signal that we've tested initial status properties
+            fgEvent.Set(); // Signal that we've tested initial status properties
 
             #endregion
 
             #region Test Progress Update
 
-            syncEvent.WaitOne(); // Wait until status has been updated
+            bgEvent.WaitOne(); // Wait until status has been updated
             Assert.AreEqual(initializeData.Activity, backgroundOperation.Activity);
             Assert.AreEqual(string.IsNullOrWhiteSpace(updateData.StatusDescription) ? initializeData.StatusDescription : updateData.StatusDescription,
                 backgroundOperation.StatusDescription);
@@ -3560,7 +3585,7 @@ namespace FsInfoCat.UnitTests
                 expectedPercentComplete = updateData.PercentComplete;
                 expectedCode = updateData.Code;
                 backgroundOperation.Cancel();
-                syncEvent.Set(); // Signal that we've canceled the operation
+                fgEvent.Set(); // Signal that we've canceled the operation
                 await Assert.ThrowsExceptionAsync<OperationCanceledException>(() => backgroundOperation.Task);
             }
             else if (completeData is ErrorCompleteData errorData)
@@ -3571,7 +3596,7 @@ namespace FsInfoCat.UnitTests
                 expectedCurrentOperation = updateData.CurrentOperation;
                 expectedPercentComplete = updateData.PercentComplete;
                 expectedCode = errorData.Code.ToMessageCode(MessageCode.UnexpectedError);
-                syncEvent.Set(); // Signal that we're ready to complete
+                fgEvent.Set(); // Signal that we're ready to complete
                 await Assert.ThrowsExceptionAsync<AsyncOperationException>(() => backgroundOperation.Task);
             }
             else
@@ -3582,7 +3607,7 @@ namespace FsInfoCat.UnitTests
                 expectedCurrentOperation = string.Empty;
                 expectedPercentComplete = updateData.PercentComplete.HasValue ? 100 : null;
                 expectedCode = completeData.Code;
-                syncEvent.Set(); // Signal that we're ready to complete
+                fgEvent.Set(); // Signal that we're ready to complete
                 await backgroundOperation.Task;
             }
 
@@ -3623,6 +3648,7 @@ namespace FsInfoCat.UnitTests
 
             #region Test Observer Completion
 
+            Thread.Sleep(100);
             Assert.IsTrue(operationObserver.TryDequeue(out observed));
             Assert.IsTrue(observed.IsComplete);
             Assert.IsNull(observed.Error);
@@ -3631,42 +3657,42 @@ namespace FsInfoCat.UnitTests
 
             #endregion
         }
-
 
         [DataTestMethod]
         [DynamicData(nameof(GetAsyncActionCompletedData), DynamicDataSourceType.Method)]
         [Priority(10)]
         public async Task InvokeTimedAsyncActionCompletedTokenTest(InitializeData initializeData, UpdateData updateData, IActionCompleteData completeData)
         {
-            using AutoResetEvent syncEvent = new(false);
+            using AutoResetEvent fgEvent = new(false);
+            using AutoResetEvent bgEvent = new(false);
             Task asyncMethodDelegate(ITimedBackgroundProgress<ITimedBackgroundProgressEvent> progress) =>
-                TimedTestAction(syncEvent, initializeData, updateData, completeData, progress);
+                TimedTestAction(fgEvent, bgEvent, initializeData, updateData, completeData, progress);
             ITimedBackgroundOperationCompletedEvent onCompleted(ITimedBackgroundOperation backgroundOperation) =>
                     new TimedBackgroundProcessCompletedEventArgs(backgroundOperation, completeData.Code, null, !backgroundOperation.Task.IsCanceled); ;
 
-            IBackgroundProgressService service = Hosting.GetRequiredService<IBackgroundProgressService>();
+            IBackgroundProgressService service = Hosting.GetBackgroundProgressService();
             if (service is null)
                 throw new AssertInconclusiveException();
             using CancellationTokenSource tokenSource = new();
             ObserverHelper<ITimedBackgroundProgressEvent> operationObserver = new();
-            ITimedBackgroundOperation backgroundOperation = service.InvokeAsync(asyncMethodDelegate, onCompleted, initializeData.Activity, completeData.StatusDescription, tokenSource.Token);
+            ITimedBackgroundOperation backgroundOperation = service.InvokeAsync(asyncMethodDelegate, onCompleted, initializeData.Activity, initializeData.StatusDescription, tokenSource.Token);
 
             #region Test Initial Progress Properties
 
-            syncEvent.WaitOne(); // Wait until bg operation being executed
+            bgEvent.WaitOne(); // Wait until bg operation being executed
             using IDisposable subscription = backgroundOperation.Subscribe(operationObserver);
             Assert.IsNotNull(backgroundOperation);
             Assert.AreEqual(initializeData.Activity, backgroundOperation.Activity);
             Assert.AreEqual(initializeData.StatusDescription, backgroundOperation.StatusDescription);
             Assert.AreEqual(string.Empty, backgroundOperation.CurrentOperation);
             Assert.IsFalse(backgroundOperation.PercentComplete.HasValue);
-            syncEvent.Set(); // Signal that we've tested initial status properties
+            fgEvent.Set(); // Signal that we've tested initial status properties
 
             #endregion
 
             #region Test Progress Update
 
-            syncEvent.WaitOne(); // Wait until status has been updated
+            bgEvent.WaitOne(); // Wait until status has been updated
             Assert.AreEqual(initializeData.Activity, backgroundOperation.Activity);
             Assert.AreEqual(string.IsNullOrWhiteSpace(updateData.StatusDescription) ? initializeData.StatusDescription : updateData.StatusDescription,
                 backgroundOperation.StatusDescription);
@@ -3711,7 +3737,7 @@ namespace FsInfoCat.UnitTests
                 expectedPercentComplete = updateData.PercentComplete;
                 expectedCode = updateData.Code;
                 tokenSource.Cancel();
-                syncEvent.Set(); // Signal that we've canceled the operation
+                fgEvent.Set(); // Signal that we've canceled the operation
                 await Assert.ThrowsExceptionAsync<OperationCanceledException>(() => backgroundOperation.Task);
             }
             else if (completeData is ErrorCompleteData errorData)
@@ -3722,7 +3748,7 @@ namespace FsInfoCat.UnitTests
                 expectedCurrentOperation = updateData.CurrentOperation;
                 expectedPercentComplete = updateData.PercentComplete;
                 expectedCode = errorData.Code.ToMessageCode(MessageCode.UnexpectedError);
-                syncEvent.Set(); // Signal that we're ready to complete
+                fgEvent.Set(); // Signal that we're ready to complete
                 await Assert.ThrowsExceptionAsync<AsyncOperationException>(() => backgroundOperation.Task);
             }
             else
@@ -3733,7 +3759,7 @@ namespace FsInfoCat.UnitTests
                 expectedCurrentOperation = string.Empty;
                 expectedPercentComplete = updateData.PercentComplete.HasValue ? 100 : null;
                 expectedCode = completeData.Code;
-                syncEvent.Set(); // Signal that we're ready to complete
+                fgEvent.Set(); // Signal that we're ready to complete
                 await backgroundOperation.Task;
             }
 
@@ -3772,6 +3798,7 @@ namespace FsInfoCat.UnitTests
 
             #region Test Observer Completion
 
+            Thread.Sleep(100);
             Assert.IsTrue(operationObserver.TryDequeue(out observed));
             Assert.IsTrue(observed.IsComplete);
             Assert.IsNull(observed.Error);
@@ -3780,41 +3807,41 @@ namespace FsInfoCat.UnitTests
 
             #endregion
         }
-
 
         [DataTestMethod]
         [DynamicData(nameof(GetAsyncActionCompletedData), DynamicDataSourceType.Method)]
         [Priority(10)]
         public async Task InvokeTimedAsyncActionCompletedTest(InitializeData initializeData, UpdateData updateData, IActionCompleteData completeData)
         {
-            using AutoResetEvent syncEvent = new(false);
+            using AutoResetEvent fgEvent = new(false);
+            using AutoResetEvent bgEvent = new(false);
             Task asyncMethodDelegate(ITimedBackgroundProgress<ITimedBackgroundProgressEvent> progress) =>
-                TimedTestAction(syncEvent, initializeData, updateData, completeData, progress);
+                TimedTestAction(fgEvent, bgEvent, initializeData, updateData, completeData, progress);
             ITimedBackgroundOperationCompletedEvent onCompleted(ITimedBackgroundOperation backgroundOperation) =>
                     new TimedBackgroundProcessCompletedEventArgs(backgroundOperation, completeData.Code, null, !backgroundOperation.Task.IsCanceled); ;
 
-            IBackgroundProgressService service = Hosting.GetRequiredService<IBackgroundProgressService>();
+            IBackgroundProgressService service = Hosting.GetBackgroundProgressService();
             if (service is null)
                 throw new AssertInconclusiveException();
             ObserverHelper<ITimedBackgroundProgressEvent> operationObserver = new();
-            ITimedBackgroundOperation backgroundOperation = service.InvokeAsync(asyncMethodDelegate, onCompleted, initializeData.Activity, completeData.StatusDescription);
+            ITimedBackgroundOperation backgroundOperation = service.InvokeAsync(asyncMethodDelegate, onCompleted, initializeData.Activity, initializeData.StatusDescription);
 
             #region Test Initial Progress Properties
 
-            syncEvent.WaitOne(); // Wait until bg operation being executed
+            bgEvent.WaitOne(); // Wait until bg operation being executed
             using IDisposable subscription = backgroundOperation.Subscribe(operationObserver);
             Assert.IsNotNull(backgroundOperation);
             Assert.AreEqual(initializeData.Activity, backgroundOperation.Activity);
             Assert.AreEqual(initializeData.StatusDescription, backgroundOperation.StatusDescription);
             Assert.AreEqual(string.Empty, backgroundOperation.CurrentOperation);
             Assert.IsFalse(backgroundOperation.PercentComplete.HasValue);
-            syncEvent.Set(); // Signal that we've tested initial status properties
+            fgEvent.Set(); // Signal that we've tested initial status properties
 
             #endregion
 
             #region Test Progress Update
 
-            syncEvent.WaitOne(); // Wait until status has been updated
+            bgEvent.WaitOne(); // Wait until status has been updated
             Assert.AreEqual(initializeData.Activity, backgroundOperation.Activity);
             Assert.AreEqual(string.IsNullOrWhiteSpace(updateData.StatusDescription) ? initializeData.StatusDescription : updateData.StatusDescription,
                 backgroundOperation.StatusDescription);
@@ -3859,7 +3886,7 @@ namespace FsInfoCat.UnitTests
                 expectedPercentComplete = updateData.PercentComplete;
                 expectedCode = updateData.Code;
                 backgroundOperation.Cancel();
-                syncEvent.Set(); // Signal that we've canceled the operation
+                fgEvent.Set(); // Signal that we've canceled the operation
                 await Assert.ThrowsExceptionAsync<OperationCanceledException>(() => backgroundOperation.Task);
             }
             else if (completeData is ErrorCompleteData errorData)
@@ -3870,7 +3897,7 @@ namespace FsInfoCat.UnitTests
                 expectedCurrentOperation = updateData.CurrentOperation;
                 expectedPercentComplete = updateData.PercentComplete;
                 expectedCode = errorData.Code.ToMessageCode(MessageCode.UnexpectedError);
-                syncEvent.Set(); // Signal that we're ready to complete
+                fgEvent.Set(); // Signal that we're ready to complete
                 await Assert.ThrowsExceptionAsync<AsyncOperationException>(() => backgroundOperation.Task);
             }
             else
@@ -3881,7 +3908,7 @@ namespace FsInfoCat.UnitTests
                 expectedCurrentOperation = string.Empty;
                 expectedPercentComplete = updateData.PercentComplete.HasValue ? 100 : null;
                 expectedCode = completeData.Code;
-                syncEvent.Set(); // Signal that we're ready to complete
+                fgEvent.Set(); // Signal that we're ready to complete
                 await backgroundOperation.Task;
             }
 
@@ -3920,6 +3947,7 @@ namespace FsInfoCat.UnitTests
 
             #region Test Observer Completion
 
+            Thread.Sleep(100);
             Assert.IsTrue(operationObserver.TryDequeue(out observed));
             Assert.IsTrue(observed.IsComplete);
             Assert.IsNull(observed.Error);
@@ -3928,40 +3956,40 @@ namespace FsInfoCat.UnitTests
 
             #endregion
         }
-
 
         [DataTestMethod]
         [DynamicData(nameof(GetAsyncActionCompletedData), DynamicDataSourceType.Method)]
         [Priority(10)]
         public async Task InvokeTimedAsyncActionTokenTest(InitializeData initializeData, UpdateData updateData, IActionCompleteData completeData)
         {
-            using AutoResetEvent syncEvent = new(false);
+            using AutoResetEvent fgEvent = new(false);
+            using AutoResetEvent bgEvent = new(false);
             Task asyncMethodDelegate(ITimedBackgroundProgress<ITimedBackgroundProgressEvent> progress) =>
-                TimedTestAction(syncEvent, initializeData, updateData, completeData, progress);
+                TimedTestAction(fgEvent, bgEvent, initializeData, updateData, completeData, progress);
 
-            IBackgroundProgressService service = Hosting.GetRequiredService<IBackgroundProgressService>();
+            IBackgroundProgressService service = Hosting.GetBackgroundProgressService();
             if (service is null)
                 throw new AssertInconclusiveException();
             using CancellationTokenSource tokenSource = new();
             ObserverHelper<ITimedBackgroundProgressEvent> operationObserver = new();
-            ITimedBackgroundOperation backgroundOperation = service.InvokeAsync(asyncMethodDelegate, initializeData.Activity, completeData.StatusDescription, tokenSource.Token);
+            ITimedBackgroundOperation backgroundOperation = service.InvokeAsync(asyncMethodDelegate, initializeData.Activity, initializeData.StatusDescription, tokenSource.Token);
 
             #region Test Initial Progress Properties
 
-            syncEvent.WaitOne(); // Wait until bg operation being executed
+            bgEvent.WaitOne(); // Wait until bg operation being executed
             using IDisposable subscription = backgroundOperation.Subscribe(operationObserver);
             Assert.IsNotNull(backgroundOperation);
             Assert.AreEqual(initializeData.Activity, backgroundOperation.Activity);
             Assert.AreEqual(initializeData.StatusDescription, backgroundOperation.StatusDescription);
             Assert.AreEqual(string.Empty, backgroundOperation.CurrentOperation);
             Assert.IsFalse(backgroundOperation.PercentComplete.HasValue);
-            syncEvent.Set(); // Signal that we've tested initial status properties
+            fgEvent.Set(); // Signal that we've tested initial status properties
 
             #endregion
 
             #region Test Progress Update
 
-            syncEvent.WaitOne(); // Wait until status has been updated
+            bgEvent.WaitOne(); // Wait until status has been updated
             Assert.AreEqual(initializeData.Activity, backgroundOperation.Activity);
             Assert.AreEqual(string.IsNullOrWhiteSpace(updateData.StatusDescription) ? initializeData.StatusDescription : updateData.StatusDescription,
                 backgroundOperation.StatusDescription);
@@ -4006,7 +4034,7 @@ namespace FsInfoCat.UnitTests
                 expectedPercentComplete = updateData.PercentComplete;
                 expectedCode = updateData.Code;
                 tokenSource.Cancel();
-                syncEvent.Set(); // Signal that we've canceled the operation
+                fgEvent.Set(); // Signal that we've canceled the operation
                 await Assert.ThrowsExceptionAsync<OperationCanceledException>(() => backgroundOperation.Task);
             }
             else if (completeData is ErrorCompleteData errorData)
@@ -4017,7 +4045,7 @@ namespace FsInfoCat.UnitTests
                 expectedCurrentOperation = updateData.CurrentOperation;
                 expectedPercentComplete = updateData.PercentComplete;
                 expectedCode = errorData.Code.ToMessageCode(MessageCode.UnexpectedError);
-                syncEvent.Set(); // Signal that we're ready to complete
+                fgEvent.Set(); // Signal that we're ready to complete
                 await Assert.ThrowsExceptionAsync<AsyncOperationException>(() => backgroundOperation.Task);
             }
             else
@@ -4028,7 +4056,7 @@ namespace FsInfoCat.UnitTests
                 expectedCurrentOperation = string.Empty;
                 expectedPercentComplete = updateData.PercentComplete.HasValue ? 100 : null;
                 expectedCode = completeData.Code;
-                syncEvent.Set(); // Signal that we're ready to complete
+                fgEvent.Set(); // Signal that we're ready to complete
                 await backgroundOperation.Task;
             }
 
@@ -4067,6 +4095,7 @@ namespace FsInfoCat.UnitTests
 
             #region Test Observer Completion
 
+            Thread.Sleep(100);
             Assert.IsTrue(operationObserver.TryDequeue(out observed));
             Assert.IsTrue(observed.IsComplete);
             Assert.IsNull(observed.Error);
@@ -4075,39 +4104,39 @@ namespace FsInfoCat.UnitTests
 
             #endregion
         }
-
 
         [DataTestMethod]
         [DynamicData(nameof(GetAsyncActionCompletedData), DynamicDataSourceType.Method)]
         [Priority(10)]
         public async Task InvokeTimedAsyncActionTest(InitializeData initializeData, UpdateData updateData, IActionCompleteData completeData)
         {
-            using AutoResetEvent syncEvent = new(false);
+            using AutoResetEvent fgEvent = new(false);
+            using AutoResetEvent bgEvent = new(false);
             Task asyncMethodDelegate(ITimedBackgroundProgress<ITimedBackgroundProgressEvent> progress) =>
-                TimedTestAction(syncEvent, initializeData, updateData, completeData, progress);
+                TimedTestAction(fgEvent, bgEvent, initializeData, updateData, completeData, progress);
 
-            IBackgroundProgressService service = Hosting.GetRequiredService<IBackgroundProgressService>();
+            IBackgroundProgressService service = Hosting.GetBackgroundProgressService();
             if (service is null)
                 throw new AssertInconclusiveException();
             ObserverHelper<ITimedBackgroundProgressEvent> operationObserver = new();
-            ITimedBackgroundOperation backgroundOperation = service.InvokeAsync(asyncMethodDelegate, initializeData.Activity, completeData.StatusDescription);
+            ITimedBackgroundOperation backgroundOperation = service.InvokeAsync(asyncMethodDelegate, initializeData.Activity, initializeData.StatusDescription);
 
             #region Test Initial Progress Properties
 
-            syncEvent.WaitOne(); // Wait until bg operation being executed
+            bgEvent.WaitOne(); // Wait until bg operation being executed
             using IDisposable subscription = backgroundOperation.Subscribe(operationObserver);
             Assert.IsNotNull(backgroundOperation);
             Assert.AreEqual(initializeData.Activity, backgroundOperation.Activity);
             Assert.AreEqual(initializeData.StatusDescription, backgroundOperation.StatusDescription);
             Assert.AreEqual(string.Empty, backgroundOperation.CurrentOperation);
             Assert.IsFalse(backgroundOperation.PercentComplete.HasValue);
-            syncEvent.Set(); // Signal that we've tested initial status properties
+            fgEvent.Set(); // Signal that we've tested initial status properties
 
             #endregion
 
             #region Test Progress Update
 
-            syncEvent.WaitOne(); // Wait until status has been updated
+            bgEvent.WaitOne(); // Wait until status has been updated
             Assert.AreEqual(initializeData.Activity, backgroundOperation.Activity);
             Assert.AreEqual(string.IsNullOrWhiteSpace(updateData.StatusDescription) ? initializeData.StatusDescription : updateData.StatusDescription,
                 backgroundOperation.StatusDescription);
@@ -4152,7 +4181,7 @@ namespace FsInfoCat.UnitTests
                 expectedPercentComplete = updateData.PercentComplete;
                 expectedCode = updateData.Code;
                 backgroundOperation.Cancel();
-                syncEvent.Set(); // Signal that we've canceled the operation
+                fgEvent.Set(); // Signal that we've canceled the operation
                 await Assert.ThrowsExceptionAsync<OperationCanceledException>(() => backgroundOperation.Task);
             }
             else if (completeData is ErrorCompleteData errorData)
@@ -4163,7 +4192,7 @@ namespace FsInfoCat.UnitTests
                 expectedCurrentOperation = updateData.CurrentOperation;
                 expectedPercentComplete = updateData.PercentComplete;
                 expectedCode = errorData.Code.ToMessageCode(MessageCode.UnexpectedError);
-                syncEvent.Set(); // Signal that we're ready to complete
+                fgEvent.Set(); // Signal that we're ready to complete
                 await Assert.ThrowsExceptionAsync<AsyncOperationException>(() => backgroundOperation.Task);
             }
             else
@@ -4174,7 +4203,7 @@ namespace FsInfoCat.UnitTests
                 expectedCurrentOperation = string.Empty;
                 expectedPercentComplete = updateData.PercentComplete.HasValue ? 100 : null;
                 expectedCode = completeData.Code;
-                syncEvent.Set(); // Signal that we're ready to complete
+                fgEvent.Set(); // Signal that we're ready to complete
                 await backgroundOperation.Task;
             }
 
@@ -4213,6 +4242,7 @@ namespace FsInfoCat.UnitTests
 
             #region Test Observer Completion
 
+            Thread.Sleep(100);
             Assert.IsTrue(operationObserver.TryDequeue(out observed));
             Assert.IsTrue(observed.IsComplete);
             Assert.IsNull(observed.Error);
@@ -4221,29 +4251,29 @@ namespace FsInfoCat.UnitTests
 
             #endregion
         }
-
 
         [DataTestMethod]
         [DynamicData(nameof(GetAsyncActionCompletedStateData), DynamicDataSourceType.Method)]
         [Priority(10)]
         public async Task InvokeAsyncActionCompletedStateTokenTest(InitializeStateData initializeData, UpdateData updateData, IActionCompleteData completeData)
         {
-            using AutoResetEvent syncEvent = new(false);
+            using AutoResetEvent fgEvent = new(false);
+            using AutoResetEvent bgEvent = new(false);
             Task asyncMethodDelegate(IBackgroundProgress<int, IBackgroundProgressEvent<int>> progress) =>
-                TestActionState(syncEvent, initializeData, updateData, completeData, progress);
+                TestActionState(fgEvent, bgEvent, initializeData, updateData, completeData, progress);
             IBackgroundOperationCompletedEvent<int> onCompleted(IBackgroundOperation<int> backgroundOperation) =>
                     new BackgroundProcessCompletedEventArgs<int>(backgroundOperation, completeData.Code, null, !backgroundOperation.Task.IsCanceled, string.IsNullOrWhiteSpace(completeData.StatusDescription) ? backgroundOperation.StatusDescription : completeData.StatusDescription); ;
 
-            IBackgroundProgressService service = Hosting.GetRequiredService<IBackgroundProgressService>();
+            IBackgroundProgressService service = Hosting.GetBackgroundProgressService();
             if (service is null)
                 throw new AssertInconclusiveException();
             using CancellationTokenSource tokenSource = new();
             ObserverHelper<IBackgroundProgressEvent<int>> operationObserver = new();
-            IBackgroundOperation<int> backgroundOperation = service.InvokeAsync(asyncMethodDelegate, onCompleted, initializeData.Activity, completeData.StatusDescription, initializeData.State, tokenSource.Token);
+            IBackgroundOperation<int> backgroundOperation = service.InvokeAsync(asyncMethodDelegate, onCompleted, initializeData.Activity, initializeData.StatusDescription, initializeData.State, tokenSource.Token);
 
             #region Test Initial Progress Properties
 
-            syncEvent.WaitOne(); // Wait until bg operation being executed
+            bgEvent.WaitOne(); // Wait until bg operation being executed
             using IDisposable subscription = backgroundOperation.Subscribe(operationObserver);
             Assert.IsNotNull(backgroundOperation);
             Assert.AreEqual(initializeData.Activity, backgroundOperation.Activity);
@@ -4251,13 +4281,13 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(string.Empty, backgroundOperation.CurrentOperation);
             Assert.AreEqual(initializeData.State, backgroundOperation.AsyncState);
             Assert.IsFalse(backgroundOperation.PercentComplete.HasValue);
-            syncEvent.Set(); // Signal that we've tested initial status properties
+            fgEvent.Set(); // Signal that we've tested initial status properties
 
             #endregion
 
             #region Test Progress Update
 
-            syncEvent.WaitOne(); // Wait until status has been updated
+            bgEvent.WaitOne(); // Wait until status has been updated
             Assert.AreEqual(initializeData.Activity, backgroundOperation.Activity);
             Assert.AreEqual(string.IsNullOrWhiteSpace(updateData.StatusDescription) ? initializeData.StatusDescription : updateData.StatusDescription,
                 backgroundOperation.StatusDescription);
@@ -4304,7 +4334,7 @@ namespace FsInfoCat.UnitTests
                 expectedPercentComplete = updateData.PercentComplete;
                 expectedCode = updateData.Code;
                 tokenSource.Cancel();
-                syncEvent.Set(); // Signal that we've canceled the operation
+                fgEvent.Set(); // Signal that we've canceled the operation
                 await Assert.ThrowsExceptionAsync<OperationCanceledException>(() => backgroundOperation.Task);
             }
             else if (completeData is ErrorCompleteData errorData)
@@ -4315,7 +4345,7 @@ namespace FsInfoCat.UnitTests
                 expectedCurrentOperation = updateData.CurrentOperation;
                 expectedPercentComplete = updateData.PercentComplete;
                 expectedCode = errorData.Code.ToMessageCode(MessageCode.UnexpectedError);
-                syncEvent.Set(); // Signal that we're ready to complete
+                fgEvent.Set(); // Signal that we're ready to complete
                 await Assert.ThrowsExceptionAsync<AsyncOperationException>(() => backgroundOperation.Task);
             }
             else
@@ -4326,7 +4356,7 @@ namespace FsInfoCat.UnitTests
                 expectedCurrentOperation = string.Empty;
                 expectedPercentComplete = updateData.PercentComplete.HasValue ? 100 : null;
                 expectedCode = completeData.Code;
-                syncEvent.Set(); // Signal that we're ready to complete
+                fgEvent.Set(); // Signal that we're ready to complete
                 await backgroundOperation.Task;
             }
 
@@ -4367,6 +4397,7 @@ namespace FsInfoCat.UnitTests
 
             #region Test Observer Completion
 
+            Thread.Sleep(100);
             Assert.IsTrue(operationObserver.TryDequeue(out observed));
             Assert.IsTrue(observed.IsComplete);
             Assert.IsNull(observed.Error);
@@ -4375,28 +4406,28 @@ namespace FsInfoCat.UnitTests
 
             #endregion
         }
-
 
         [DataTestMethod]
         [DynamicData(nameof(GetAsyncActionCompletedStateData), DynamicDataSourceType.Method)]
         [Priority(10)]
         public async Task InvokeAsyncActionCompletedStateTest(InitializeStateData initializeData, UpdateData updateData, IActionCompleteData completeData)
         {
-            using AutoResetEvent syncEvent = new(false);
+            using AutoResetEvent fgEvent = new(false);
+            using AutoResetEvent bgEvent = new(false);
             Task asyncMethodDelegate(IBackgroundProgress<int, IBackgroundProgressEvent<int>> progress) =>
-                TestActionState(syncEvent, initializeData, updateData, completeData, progress);
+                TestActionState(fgEvent, bgEvent, initializeData, updateData, completeData, progress);
             IBackgroundOperationCompletedEvent<int> onCompleted(IBackgroundOperation<int> backgroundOperation) =>
                     new BackgroundProcessCompletedEventArgs<int>(backgroundOperation, completeData.Code, null, !backgroundOperation.Task.IsCanceled, string.IsNullOrWhiteSpace(completeData.StatusDescription) ? backgroundOperation.StatusDescription : completeData.StatusDescription); ;
 
-            IBackgroundProgressService service = Hosting.GetRequiredService<IBackgroundProgressService>();
+            IBackgroundProgressService service = Hosting.GetBackgroundProgressService();
             if (service is null)
                 throw new AssertInconclusiveException();
             ObserverHelper<IBackgroundProgressEvent<int>> operationObserver = new();
-            IBackgroundOperation<int> backgroundOperation = service.InvokeAsync(asyncMethodDelegate, onCompleted, initializeData.Activity, completeData.StatusDescription, initializeData.State);
+            IBackgroundOperation<int> backgroundOperation = service.InvokeAsync(asyncMethodDelegate, onCompleted, initializeData.Activity, initializeData.StatusDescription, initializeData.State);
 
             #region Test Initial Progress Properties
 
-            syncEvent.WaitOne(); // Wait until bg operation being executed
+            bgEvent.WaitOne(); // Wait until bg operation being executed
             using IDisposable subscription = backgroundOperation.Subscribe(operationObserver);
             Assert.IsNotNull(backgroundOperation);
             Assert.AreEqual(initializeData.Activity, backgroundOperation.Activity);
@@ -4404,13 +4435,13 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(string.Empty, backgroundOperation.CurrentOperation);
             Assert.AreEqual(initializeData.State, backgroundOperation.AsyncState);
             Assert.IsFalse(backgroundOperation.PercentComplete.HasValue);
-            syncEvent.Set(); // Signal that we've tested initial status properties
+            fgEvent.Set(); // Signal that we've tested initial status properties
 
             #endregion
 
             #region Test Progress Update
 
-            syncEvent.WaitOne(); // Wait until status has been updated
+            bgEvent.WaitOne(); // Wait until status has been updated
             Assert.AreEqual(initializeData.Activity, backgroundOperation.Activity);
             Assert.AreEqual(string.IsNullOrWhiteSpace(updateData.StatusDescription) ? initializeData.StatusDescription : updateData.StatusDescription,
                 backgroundOperation.StatusDescription);
@@ -4457,7 +4488,7 @@ namespace FsInfoCat.UnitTests
                 expectedPercentComplete = updateData.PercentComplete;
                 expectedCode = updateData.Code;
                 backgroundOperation.Cancel();
-                syncEvent.Set(); // Signal that we've canceled the operation
+                fgEvent.Set(); // Signal that we've canceled the operation
                 await Assert.ThrowsExceptionAsync<OperationCanceledException>(() => backgroundOperation.Task);
             }
             else if (completeData is ErrorCompleteData errorData)
@@ -4468,7 +4499,7 @@ namespace FsInfoCat.UnitTests
                 expectedCurrentOperation = updateData.CurrentOperation;
                 expectedPercentComplete = updateData.PercentComplete;
                 expectedCode = errorData.Code.ToMessageCode(MessageCode.UnexpectedError);
-                syncEvent.Set(); // Signal that we're ready to complete
+                fgEvent.Set(); // Signal that we're ready to complete
                 await Assert.ThrowsExceptionAsync<AsyncOperationException>(() => backgroundOperation.Task);
             }
             else
@@ -4479,7 +4510,7 @@ namespace FsInfoCat.UnitTests
                 expectedCurrentOperation = string.Empty;
                 expectedPercentComplete = updateData.PercentComplete.HasValue ? 100 : null;
                 expectedCode = completeData.Code;
-                syncEvent.Set(); // Signal that we're ready to complete
+                fgEvent.Set(); // Signal that we're ready to complete
                 await backgroundOperation.Task;
             }
 
@@ -4520,6 +4551,7 @@ namespace FsInfoCat.UnitTests
 
             #region Test Observer Completion
 
+            Thread.Sleep(100);
             Assert.IsTrue(operationObserver.TryDequeue(out observed));
             Assert.IsTrue(observed.IsComplete);
             Assert.IsNull(observed.Error);
@@ -4528,27 +4560,27 @@ namespace FsInfoCat.UnitTests
 
             #endregion
         }
-
 
         [DataTestMethod]
         [DynamicData(nameof(GetAsyncActionCompletedStateData), DynamicDataSourceType.Method)]
         [Priority(10)]
         public async Task InvokeAsyncActionStateTokenTest(InitializeStateData initializeData, UpdateData updateData, IActionCompleteData completeData)
         {
-            using AutoResetEvent syncEvent = new(false);
+            using AutoResetEvent fgEvent = new(false);
+            using AutoResetEvent bgEvent = new(false);
             Task asyncMethodDelegate(IBackgroundProgress<int, IBackgroundProgressEvent<int>> progress) =>
-                TestActionState(syncEvent, initializeData, updateData, completeData, progress);
+                TestActionState(fgEvent, bgEvent, initializeData, updateData, completeData, progress);
 
-            IBackgroundProgressService service = Hosting.GetRequiredService<IBackgroundProgressService>();
+            IBackgroundProgressService service = Hosting.GetBackgroundProgressService();
             if (service is null)
                 throw new AssertInconclusiveException();
             using CancellationTokenSource tokenSource = new();
             ObserverHelper<IBackgroundProgressEvent<int>> operationObserver = new();
-            IBackgroundOperation<int> backgroundOperation = service.InvokeAsync(asyncMethodDelegate, initializeData.Activity, completeData.StatusDescription, initializeData.State, tokenSource.Token);
+            IBackgroundOperation<int> backgroundOperation = service.InvokeAsync(asyncMethodDelegate, initializeData.Activity, initializeData.StatusDescription, initializeData.State, tokenSource.Token);
 
             #region Test Initial Progress Properties
 
-            syncEvent.WaitOne(); // Wait until bg operation being executed
+            bgEvent.WaitOne(); // Wait until bg operation being executed
             using IDisposable subscription = backgroundOperation.Subscribe(operationObserver);
             Assert.IsNotNull(backgroundOperation);
             Assert.AreEqual(initializeData.Activity, backgroundOperation.Activity);
@@ -4556,13 +4588,13 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(string.Empty, backgroundOperation.CurrentOperation);
             Assert.AreEqual(initializeData.State, backgroundOperation.AsyncState);
             Assert.IsFalse(backgroundOperation.PercentComplete.HasValue);
-            syncEvent.Set(); // Signal that we've tested initial status properties
+            fgEvent.Set(); // Signal that we've tested initial status properties
 
             #endregion
 
             #region Test Progress Update
 
-            syncEvent.WaitOne(); // Wait until status has been updated
+            bgEvent.WaitOne(); // Wait until status has been updated
             Assert.AreEqual(initializeData.Activity, backgroundOperation.Activity);
             Assert.AreEqual(string.IsNullOrWhiteSpace(updateData.StatusDescription) ? initializeData.StatusDescription : updateData.StatusDescription,
                 backgroundOperation.StatusDescription);
@@ -4609,7 +4641,7 @@ namespace FsInfoCat.UnitTests
                 expectedPercentComplete = updateData.PercentComplete;
                 expectedCode = updateData.Code;
                 tokenSource.Cancel();
-                syncEvent.Set(); // Signal that we've canceled the operation
+                fgEvent.Set(); // Signal that we've canceled the operation
                 await Assert.ThrowsExceptionAsync<OperationCanceledException>(() => backgroundOperation.Task);
             }
             else if (completeData is ErrorCompleteData errorData)
@@ -4620,7 +4652,7 @@ namespace FsInfoCat.UnitTests
                 expectedCurrentOperation = updateData.CurrentOperation;
                 expectedPercentComplete = updateData.PercentComplete;
                 expectedCode = errorData.Code.ToMessageCode(MessageCode.UnexpectedError);
-                syncEvent.Set(); // Signal that we're ready to complete
+                fgEvent.Set(); // Signal that we're ready to complete
                 await Assert.ThrowsExceptionAsync<AsyncOperationException>(() => backgroundOperation.Task);
             }
             else
@@ -4631,7 +4663,7 @@ namespace FsInfoCat.UnitTests
                 expectedCurrentOperation = string.Empty;
                 expectedPercentComplete = updateData.PercentComplete.HasValue ? 100 : null;
                 expectedCode = completeData.Code;
-                syncEvent.Set(); // Signal that we're ready to complete
+                fgEvent.Set(); // Signal that we're ready to complete
                 await backgroundOperation.Task;
             }
 
@@ -4672,6 +4704,7 @@ namespace FsInfoCat.UnitTests
 
             #region Test Observer Completion
 
+            Thread.Sleep(100);
             Assert.IsTrue(operationObserver.TryDequeue(out observed));
             Assert.IsTrue(observed.IsComplete);
             Assert.IsNull(observed.Error);
@@ -4680,26 +4713,26 @@ namespace FsInfoCat.UnitTests
 
             #endregion
         }
-
 
         [DataTestMethod]
         [DynamicData(nameof(GetAsyncActionCompletedStateData), DynamicDataSourceType.Method)]
         [Priority(10)]
         public async Task InvokeAsyncActionStateTest(InitializeStateData initializeData, UpdateData updateData, IActionCompleteData completeData)
         {
-            using AutoResetEvent syncEvent = new(false);
+            using AutoResetEvent fgEvent = new(false);
+            using AutoResetEvent bgEvent = new(false);
             Task asyncMethodDelegate(IBackgroundProgress<int, IBackgroundProgressEvent<int>> progress) =>
-                TestActionState(syncEvent, initializeData, updateData, completeData, progress);
+                TestActionState(fgEvent, bgEvent, initializeData, updateData, completeData, progress);
 
-            IBackgroundProgressService service = Hosting.GetRequiredService<IBackgroundProgressService>();
+            IBackgroundProgressService service = Hosting.GetBackgroundProgressService();
             if (service is null)
                 throw new AssertInconclusiveException();
             ObserverHelper<IBackgroundProgressEvent<int>> operationObserver = new();
-            IBackgroundOperation<int> backgroundOperation = service.InvokeAsync(asyncMethodDelegate, initializeData.Activity, completeData.StatusDescription, initializeData.State);
+            IBackgroundOperation<int> backgroundOperation = service.InvokeAsync(asyncMethodDelegate, initializeData.Activity, initializeData.StatusDescription, initializeData.State);
 
             #region Test Initial Progress Properties
 
-            syncEvent.WaitOne(); // Wait until bg operation being executed
+            bgEvent.WaitOne(); // Wait until bg operation being executed
             using IDisposable subscription = backgroundOperation.Subscribe(operationObserver);
             Assert.IsNotNull(backgroundOperation);
             Assert.AreEqual(initializeData.Activity, backgroundOperation.Activity);
@@ -4707,13 +4740,13 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(string.Empty, backgroundOperation.CurrentOperation);
             Assert.AreEqual(initializeData.State, backgroundOperation.AsyncState);
             Assert.IsFalse(backgroundOperation.PercentComplete.HasValue);
-            syncEvent.Set(); // Signal that we've tested initial status properties
+            fgEvent.Set(); // Signal that we've tested initial status properties
 
             #endregion
 
             #region Test Progress Update
 
-            syncEvent.WaitOne(); // Wait until status has been updated
+            bgEvent.WaitOne(); // Wait until status has been updated
             Assert.AreEqual(initializeData.Activity, backgroundOperation.Activity);
             Assert.AreEqual(string.IsNullOrWhiteSpace(updateData.StatusDescription) ? initializeData.StatusDescription : updateData.StatusDescription,
                 backgroundOperation.StatusDescription);
@@ -4760,7 +4793,7 @@ namespace FsInfoCat.UnitTests
                 expectedPercentComplete = updateData.PercentComplete;
                 expectedCode = updateData.Code;
                 backgroundOperation.Cancel();
-                syncEvent.Set(); // Signal that we've canceled the operation
+                fgEvent.Set(); // Signal that we've canceled the operation
                 await Assert.ThrowsExceptionAsync<OperationCanceledException>(() => backgroundOperation.Task);
             }
             else if (completeData is ErrorCompleteData errorData)
@@ -4771,7 +4804,7 @@ namespace FsInfoCat.UnitTests
                 expectedCurrentOperation = updateData.CurrentOperation;
                 expectedPercentComplete = updateData.PercentComplete;
                 expectedCode = errorData.Code.ToMessageCode(MessageCode.UnexpectedError);
-                syncEvent.Set(); // Signal that we're ready to complete
+                fgEvent.Set(); // Signal that we're ready to complete
                 await Assert.ThrowsExceptionAsync<AsyncOperationException>(() => backgroundOperation.Task);
             }
             else
@@ -4782,7 +4815,7 @@ namespace FsInfoCat.UnitTests
                 expectedCurrentOperation = string.Empty;
                 expectedPercentComplete = updateData.PercentComplete.HasValue ? 100 : null;
                 expectedCode = completeData.Code;
-                syncEvent.Set(); // Signal that we're ready to complete
+                fgEvent.Set(); // Signal that we're ready to complete
                 await backgroundOperation.Task;
             }
 
@@ -4823,6 +4856,7 @@ namespace FsInfoCat.UnitTests
 
             #region Test Observer Completion
 
+            Thread.Sleep(100);
             Assert.IsTrue(operationObserver.TryDequeue(out observed));
             Assert.IsTrue(observed.IsComplete);
             Assert.IsNull(observed.Error);
@@ -4831,42 +4865,42 @@ namespace FsInfoCat.UnitTests
 
             #endregion
         }
-
 
         [DataTestMethod]
         [DynamicData(nameof(GetAsyncActionCompletedData), DynamicDataSourceType.Method)]
         [Priority(10)]
         public async Task InvokeAsyncActionCompletedTokenTest(InitializeData initializeData, UpdateData updateData, IActionCompleteData completeData)
         {
-            using AutoResetEvent syncEvent = new(false);
+            using AutoResetEvent fgEvent = new(false);
+            using AutoResetEvent bgEvent = new(false);
             Task asyncMethodDelegate(IBackgroundProgress<IBackgroundProgressEvent> progress) =>
-                TestAction(syncEvent, initializeData, updateData, completeData, progress);
+                TestAction(fgEvent, bgEvent, initializeData, updateData, completeData, progress);
             IBackgroundOperationCompletedEvent onCompleted(IBackgroundOperation backgroundOperation) =>
                     new BackgroundProcessCompletedEventArgs(backgroundOperation, completeData.Code, null, !backgroundOperation.Task.IsCanceled); ;
 
-            IBackgroundProgressService service = Hosting.GetRequiredService<IBackgroundProgressService>();
+            IBackgroundProgressService service = Hosting.GetBackgroundProgressService();
             if (service is null)
                 throw new AssertInconclusiveException();
             using CancellationTokenSource tokenSource = new();
             ObserverHelper<IBackgroundProgressEvent> operationObserver = new();
-            IBackgroundOperation backgroundOperation = service.InvokeAsync(asyncMethodDelegate, onCompleted, initializeData.Activity, completeData.StatusDescription, tokenSource.Token);
+            IBackgroundOperation backgroundOperation = service.InvokeAsync(asyncMethodDelegate, onCompleted, initializeData.Activity, initializeData.StatusDescription, tokenSource.Token);
 
             #region Test Initial Progress Properties
 
-            syncEvent.WaitOne(); // Wait until bg operation being executed
+            bgEvent.WaitOne(); // Wait until bg operation being executed
             using IDisposable subscription = backgroundOperation.Subscribe(operationObserver);
             Assert.IsNotNull(backgroundOperation);
             Assert.AreEqual(initializeData.Activity, backgroundOperation.Activity);
             Assert.AreEqual(initializeData.StatusDescription, backgroundOperation.StatusDescription);
             Assert.AreEqual(string.Empty, backgroundOperation.CurrentOperation);
             Assert.IsFalse(backgroundOperation.PercentComplete.HasValue);
-            syncEvent.Set(); // Signal that we've tested initial status properties
+            fgEvent.Set(); // Signal that we've tested initial status properties
 
             #endregion
 
             #region Test Progress Update
 
-            syncEvent.WaitOne(); // Wait until status has been updated
+            bgEvent.WaitOne(); // Wait until status has been updated
             Assert.AreEqual(initializeData.Activity, backgroundOperation.Activity);
             Assert.AreEqual(string.IsNullOrWhiteSpace(updateData.StatusDescription) ? initializeData.StatusDescription : updateData.StatusDescription,
                 backgroundOperation.StatusDescription);
@@ -4911,7 +4945,7 @@ namespace FsInfoCat.UnitTests
                 expectedPercentComplete = updateData.PercentComplete;
                 expectedCode = updateData.Code;
                 tokenSource.Cancel();
-                syncEvent.Set(); // Signal that we've canceled the operation
+                fgEvent.Set(); // Signal that we've canceled the operation
                 await Assert.ThrowsExceptionAsync<OperationCanceledException>(() => backgroundOperation.Task);
             }
             else if (completeData is ErrorCompleteData errorData)
@@ -4922,7 +4956,7 @@ namespace FsInfoCat.UnitTests
                 expectedCurrentOperation = updateData.CurrentOperation;
                 expectedPercentComplete = updateData.PercentComplete;
                 expectedCode = errorData.Code.ToMessageCode(MessageCode.UnexpectedError);
-                syncEvent.Set(); // Signal that we're ready to complete
+                fgEvent.Set(); // Signal that we're ready to complete
                 await Assert.ThrowsExceptionAsync<AsyncOperationException>(() => backgroundOperation.Task);
             }
             else
@@ -4933,7 +4967,7 @@ namespace FsInfoCat.UnitTests
                 expectedCurrentOperation = string.Empty;
                 expectedPercentComplete = updateData.PercentComplete.HasValue ? 100 : null;
                 expectedCode = completeData.Code;
-                syncEvent.Set(); // Signal that we're ready to complete
+                fgEvent.Set(); // Signal that we're ready to complete
                 await backgroundOperation.Task;
             }
 
@@ -4972,6 +5006,7 @@ namespace FsInfoCat.UnitTests
 
             #region Test Observer Completion
 
+            Thread.Sleep(100);
             Assert.IsTrue(operationObserver.TryDequeue(out observed));
             Assert.IsTrue(observed.IsComplete);
             Assert.IsNull(observed.Error);
@@ -4980,41 +5015,41 @@ namespace FsInfoCat.UnitTests
 
             #endregion
         }
-
 
         [DataTestMethod]
         [DynamicData(nameof(GetAsyncActionCompletedData), DynamicDataSourceType.Method)]
         [Priority(10)]
         public async Task InvokeAsyncActionCompletedTest(InitializeData initializeData, UpdateData updateData, IActionCompleteData completeData)
         {
-            using AutoResetEvent syncEvent = new(false);
+            using AutoResetEvent fgEvent = new(false);
+            using AutoResetEvent bgEvent = new(false);
             Task asyncMethodDelegate(IBackgroundProgress<IBackgroundProgressEvent> progress) =>
-                TestAction(syncEvent, initializeData, updateData, completeData, progress);
+                TestAction(fgEvent, bgEvent, initializeData, updateData, completeData, progress);
             IBackgroundOperationCompletedEvent onCompleted(IBackgroundOperation backgroundOperation) =>
                     new BackgroundProcessCompletedEventArgs(backgroundOperation, completeData.Code, null, !backgroundOperation.Task.IsCanceled); ;
 
-            IBackgroundProgressService service = Hosting.GetRequiredService<IBackgroundProgressService>();
+            IBackgroundProgressService service = Hosting.GetBackgroundProgressService();
             if (service is null)
                 throw new AssertInconclusiveException();
             ObserverHelper<IBackgroundProgressEvent> operationObserver = new();
-            IBackgroundOperation backgroundOperation = service.InvokeAsync(asyncMethodDelegate, onCompleted, initializeData.Activity, completeData.StatusDescription);
+            IBackgroundOperation backgroundOperation = service.InvokeAsync(asyncMethodDelegate, onCompleted, initializeData.Activity, initializeData.StatusDescription);
 
             #region Test Initial Progress Properties
 
-            syncEvent.WaitOne(); // Wait until bg operation being executed
+            bgEvent.WaitOne(); // Wait until bg operation being executed
             using IDisposable subscription = backgroundOperation.Subscribe(operationObserver);
             Assert.IsNotNull(backgroundOperation);
             Assert.AreEqual(initializeData.Activity, backgroundOperation.Activity);
             Assert.AreEqual(initializeData.StatusDescription, backgroundOperation.StatusDescription);
             Assert.AreEqual(string.Empty, backgroundOperation.CurrentOperation);
             Assert.IsFalse(backgroundOperation.PercentComplete.HasValue);
-            syncEvent.Set(); // Signal that we've tested initial status properties
+            fgEvent.Set(); // Signal that we've tested initial status properties
 
             #endregion
 
             #region Test Progress Update
 
-            syncEvent.WaitOne(); // Wait until status has been updated
+            bgEvent.WaitOne(); // Wait until status has been updated
             Assert.AreEqual(initializeData.Activity, backgroundOperation.Activity);
             Assert.AreEqual(string.IsNullOrWhiteSpace(updateData.StatusDescription) ? initializeData.StatusDescription : updateData.StatusDescription,
                 backgroundOperation.StatusDescription);
@@ -5059,7 +5094,7 @@ namespace FsInfoCat.UnitTests
                 expectedPercentComplete = updateData.PercentComplete;
                 expectedCode = updateData.Code;
                 backgroundOperation.Cancel();
-                syncEvent.Set(); // Signal that we've canceled the operation
+                fgEvent.Set(); // Signal that we've canceled the operation
                 await Assert.ThrowsExceptionAsync<OperationCanceledException>(() => backgroundOperation.Task);
             }
             else if (completeData is ErrorCompleteData errorData)
@@ -5070,7 +5105,7 @@ namespace FsInfoCat.UnitTests
                 expectedCurrentOperation = updateData.CurrentOperation;
                 expectedPercentComplete = updateData.PercentComplete;
                 expectedCode = errorData.Code.ToMessageCode(MessageCode.UnexpectedError);
-                syncEvent.Set(); // Signal that we're ready to complete
+                fgEvent.Set(); // Signal that we're ready to complete
                 await Assert.ThrowsExceptionAsync<AsyncOperationException>(() => backgroundOperation.Task);
             }
             else
@@ -5081,7 +5116,7 @@ namespace FsInfoCat.UnitTests
                 expectedCurrentOperation = string.Empty;
                 expectedPercentComplete = updateData.PercentComplete.HasValue ? 100 : null;
                 expectedCode = completeData.Code;
-                syncEvent.Set(); // Signal that we're ready to complete
+                fgEvent.Set(); // Signal that we're ready to complete
                 await backgroundOperation.Task;
             }
 
@@ -5120,6 +5155,7 @@ namespace FsInfoCat.UnitTests
 
             #region Test Observer Completion
 
+            Thread.Sleep(100);
             Assert.IsTrue(operationObserver.TryDequeue(out observed));
             Assert.IsTrue(observed.IsComplete);
             Assert.IsNull(observed.Error);
@@ -5129,39 +5165,39 @@ namespace FsInfoCat.UnitTests
             #endregion
         }
 
-
         [DataTestMethod]
         [DynamicData(nameof(GetAsyncActionCompletedData), DynamicDataSourceType.Method)]
         [Priority(10)]
         public async Task InvokeAsyncActionTokenTest(InitializeData initializeData, UpdateData updateData, IActionCompleteData completeData)
         {
-            using AutoResetEvent syncEvent = new(false);
+            using AutoResetEvent fgEvent = new(false);
+            using AutoResetEvent bgEvent = new(false);
             Task asyncMethodDelegate(IBackgroundProgress<IBackgroundProgressEvent> progress) =>
-                TestAction(syncEvent, initializeData, updateData, completeData, progress);
+                TestAction(fgEvent, bgEvent, initializeData, updateData, completeData, progress);
 
-            IBackgroundProgressService service = Hosting.GetRequiredService<IBackgroundProgressService>();
+            IBackgroundProgressService service = Hosting.GetBackgroundProgressService();
             if (service is null)
                 throw new AssertInconclusiveException();
             using CancellationTokenSource tokenSource = new();
             ObserverHelper<IBackgroundProgressEvent> operationObserver = new();
-            IBackgroundOperation backgroundOperation = service.InvokeAsync(asyncMethodDelegate, initializeData.Activity, completeData.StatusDescription, tokenSource.Token);
+            IBackgroundOperation backgroundOperation = service.InvokeAsync(asyncMethodDelegate, initializeData.Activity, initializeData.StatusDescription, tokenSource.Token);
 
             #region Test Initial Progress Properties
 
-            syncEvent.WaitOne(); // Wait until bg operation being executed
+            bgEvent.WaitOne(); // Wait until bg operation being executed
             using IDisposable subscription = backgroundOperation.Subscribe(operationObserver);
             Assert.IsNotNull(backgroundOperation);
             Assert.AreEqual(initializeData.Activity, backgroundOperation.Activity);
             Assert.AreEqual(initializeData.StatusDescription, backgroundOperation.StatusDescription);
             Assert.AreEqual(string.Empty, backgroundOperation.CurrentOperation);
             Assert.IsFalse(backgroundOperation.PercentComplete.HasValue);
-            syncEvent.Set(); // Signal that we've tested initial status properties
+            fgEvent.Set(); // Signal that we've tested initial status properties
 
             #endregion
 
             #region Test Progress Update
 
-            syncEvent.WaitOne(); // Wait until status has been updated
+            bgEvent.WaitOne(); // Wait until status has been updated
             Assert.AreEqual(initializeData.Activity, backgroundOperation.Activity);
             Assert.AreEqual(string.IsNullOrWhiteSpace(updateData.StatusDescription) ? initializeData.StatusDescription : updateData.StatusDescription,
                 backgroundOperation.StatusDescription);
@@ -5206,7 +5242,7 @@ namespace FsInfoCat.UnitTests
                 expectedPercentComplete = updateData.PercentComplete;
                 expectedCode = updateData.Code;
                 tokenSource.Cancel();
-                syncEvent.Set(); // Signal that we've canceled the operation
+                fgEvent.Set(); // Signal that we've canceled the operation
                 await Assert.ThrowsExceptionAsync<OperationCanceledException>(() => backgroundOperation.Task);
             }
             else if (completeData is ErrorCompleteData errorData)
@@ -5217,7 +5253,7 @@ namespace FsInfoCat.UnitTests
                 expectedCurrentOperation = updateData.CurrentOperation;
                 expectedPercentComplete = updateData.PercentComplete;
                 expectedCode = errorData.Code.ToMessageCode(MessageCode.UnexpectedError);
-                syncEvent.Set(); // Signal that we're ready to complete
+                fgEvent.Set(); // Signal that we're ready to complete
                 await Assert.ThrowsExceptionAsync<AsyncOperationException>(() => backgroundOperation.Task);
             }
             else
@@ -5228,7 +5264,7 @@ namespace FsInfoCat.UnitTests
                 expectedCurrentOperation = string.Empty;
                 expectedPercentComplete = updateData.PercentComplete.HasValue ? 100 : null;
                 expectedCode = completeData.Code;
-                syncEvent.Set(); // Signal that we're ready to complete
+                fgEvent.Set(); // Signal that we're ready to complete
                 await backgroundOperation.Task;
             }
 
@@ -5267,6 +5303,7 @@ namespace FsInfoCat.UnitTests
 
             #region Test Observer Completion
 
+            Thread.Sleep(100);
             Assert.IsTrue(operationObserver.TryDequeue(out observed));
             Assert.IsTrue(observed.IsComplete);
             Assert.IsNull(observed.Error);
@@ -5276,38 +5313,38 @@ namespace FsInfoCat.UnitTests
             #endregion
         }
 
-
         [DataTestMethod]
         [DynamicData(nameof(GetAsyncActionCompletedData), DynamicDataSourceType.Method)]
         [Priority(10)]
         public async Task InvokeAsyncActionTest(InitializeData initializeData, UpdateData updateData, IActionCompleteData completeData)
         {
-            using AutoResetEvent syncEvent = new(false);
+            using AutoResetEvent fgEvent = new(false);
+            using AutoResetEvent bgEvent = new(false);
             Task asyncMethodDelegate(IBackgroundProgress<IBackgroundProgressEvent> progress) =>
-                TestAction(syncEvent, initializeData, updateData, completeData, progress);
+                TestAction(fgEvent, bgEvent, initializeData, updateData, completeData, progress);
 
-            IBackgroundProgressService service = Hosting.GetRequiredService<IBackgroundProgressService>();
+            IBackgroundProgressService service = Hosting.GetBackgroundProgressService();
             if (service is null)
                 throw new AssertInconclusiveException();
             ObserverHelper<IBackgroundProgressEvent> operationObserver = new();
-            IBackgroundOperation backgroundOperation = service.InvokeAsync(asyncMethodDelegate, initializeData.Activity, completeData.StatusDescription);
+            IBackgroundOperation backgroundOperation = service.InvokeAsync(asyncMethodDelegate, initializeData.Activity, initializeData.StatusDescription);
 
             #region Test Initial Progress Properties
 
-            syncEvent.WaitOne(); // Wait until bg operation being executed
+            bgEvent.WaitOne(); // Wait until bg operation being executed
             using IDisposable subscription = backgroundOperation.Subscribe(operationObserver);
             Assert.IsNotNull(backgroundOperation);
             Assert.AreEqual(initializeData.Activity, backgroundOperation.Activity);
             Assert.AreEqual(initializeData.StatusDescription, backgroundOperation.StatusDescription);
             Assert.AreEqual(string.Empty, backgroundOperation.CurrentOperation);
             Assert.IsFalse(backgroundOperation.PercentComplete.HasValue);
-            syncEvent.Set(); // Signal that we've tested initial status properties
+            fgEvent.Set(); // Signal that we've tested initial status properties
 
             #endregion
 
             #region Test Progress Update
 
-            syncEvent.WaitOne(); // Wait until status has been updated
+            bgEvent.WaitOne(); // Wait until status has been updated
             Assert.AreEqual(initializeData.Activity, backgroundOperation.Activity);
             Assert.AreEqual(string.IsNullOrWhiteSpace(updateData.StatusDescription) ? initializeData.StatusDescription : updateData.StatusDescription,
                 backgroundOperation.StatusDescription);
@@ -5352,7 +5389,7 @@ namespace FsInfoCat.UnitTests
                 expectedPercentComplete = updateData.PercentComplete;
                 expectedCode = updateData.Code;
                 backgroundOperation.Cancel();
-                syncEvent.Set(); // Signal that we've canceled the operation
+                fgEvent.Set(); // Signal that we've canceled the operation
                 await Assert.ThrowsExceptionAsync<OperationCanceledException>(() => backgroundOperation.Task);
             }
             else if (completeData is ErrorCompleteData errorData)
@@ -5363,7 +5400,7 @@ namespace FsInfoCat.UnitTests
                 expectedCurrentOperation = updateData.CurrentOperation;
                 expectedPercentComplete = updateData.PercentComplete;
                 expectedCode = errorData.Code.ToMessageCode(MessageCode.UnexpectedError);
-                syncEvent.Set(); // Signal that we're ready to complete
+                fgEvent.Set(); // Signal that we're ready to complete
                 await Assert.ThrowsExceptionAsync<AsyncOperationException>(() => backgroundOperation.Task);
             }
             else
@@ -5374,7 +5411,7 @@ namespace FsInfoCat.UnitTests
                 expectedCurrentOperation = string.Empty;
                 expectedPercentComplete = updateData.PercentComplete.HasValue ? 100 : null;
                 expectedCode = completeData.Code;
-                syncEvent.Set(); // Signal that we're ready to complete
+                fgEvent.Set(); // Signal that we're ready to complete
                 await backgroundOperation.Task;
             }
 
@@ -5413,6 +5450,7 @@ namespace FsInfoCat.UnitTests
 
             #region Test Observer Completion
 
+            Thread.Sleep(100);
             Assert.IsTrue(operationObserver.TryDequeue(out observed));
             Assert.IsTrue(observed.IsComplete);
             Assert.IsNull(observed.Error);

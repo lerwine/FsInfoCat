@@ -27,6 +27,8 @@ namespace FsInfoCat
 
         public static IServiceProvider ServiceProvider => Host.Services;
 
+        public static Services.IBackgroundProgressService GetBackgroundProgressService() => (Services.IBackgroundProgressService)Host.Services.GetRequiredService<IHostedService>();
+
         public static IServiceScope CreateScope() => Host.Services.CreateScope();
 
         public static T GetRequiredService<T>() => Host.Services.GetRequiredService<T>();
@@ -88,7 +90,6 @@ namespace FsInfoCat
         /// <returns></returns>
         public static async Task<IHost> Initialize(string[] args, params Assembly[] assemblies)
         {
-
             Thread.BeginCriticalRegion();
             if (_initializeTask is null)
             {

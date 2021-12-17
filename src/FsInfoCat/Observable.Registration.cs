@@ -71,7 +71,7 @@ namespace FsInfoCat
                 Queue<IObserver<TNotice>> observers = new();
                 lock (target._syncRoot)
                 {
-                    if (!target._isDisposed)
+                    if (target._isDisposed)
                         throw new InvalidOperationException();
                     Registration r = target._first;
                     while (r is not null)
@@ -199,11 +199,6 @@ namespace FsInfoCat
                     try { observer.OnCompleted(); }
                     finally { OnDisposed(observers); }
             }
-        }
-
-        private void OnSubscribed(IObserver<TNotice> observer)
-        {
-            throw new NotImplementedException();
         }
     }
 }

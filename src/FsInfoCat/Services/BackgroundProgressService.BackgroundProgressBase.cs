@@ -150,7 +150,7 @@ namespace FsInfoCat.Services
                 RaiseProgressChanged(e);
             }
 
-            public void ReportCurrentOperation(string currentOperation, MessageCode code, int percentComplete)
+            public void ReportCurrentOperation(string currentOperation, MessageCode code, byte percentComplete)
             {
                 throw new NotImplementedException();
             }
@@ -160,12 +160,12 @@ namespace FsInfoCat.Services
                 throw new NotImplementedException();
             }
 
-            public void ReportCurrentOperation(string currentOperation, int percentComplete)
+            public void ReportCurrentOperation(string currentOperation, byte percentComplete)
             {
                 throw new NotImplementedException();
             }
 
-            public void ReportException(Exception exception, string statusDescription, string currentOperation, MessageCode code, int percentComplete)
+            public void ReportException(Exception exception, string statusDescription, string currentOperation, MessageCode code, byte percentComplete)
             {
                 throw new NotImplementedException();
             }
@@ -175,12 +175,12 @@ namespace FsInfoCat.Services
                 throw new NotImplementedException();
             }
 
-            public void ReportException(Exception exception, string statusDescription, string currentOperation, int percentComplete)
+            public void ReportException(Exception exception, string statusDescription, string currentOperation, byte percentComplete)
             {
                 throw new NotImplementedException();
             }
 
-            public void ReportException(Exception exception, string statusDescription, MessageCode code, int percentComplete)
+            public void ReportException(Exception exception, string statusDescription, MessageCode code, byte percentComplete)
             {
                 throw new NotImplementedException();
             }
@@ -190,12 +190,12 @@ namespace FsInfoCat.Services
                 throw new NotImplementedException();
             }
 
-            public void ReportException(Exception exception, string statusDescription, int percentComplete)
+            public void ReportException(Exception exception, string statusDescription, byte percentComplete)
             {
                 throw new NotImplementedException();
             }
 
-            public void ReportException(Exception exception, MessageCode code, int percentComplete)
+            public void ReportException(Exception exception, MessageCode code, byte percentComplete)
             {
                 throw new NotImplementedException();
             }
@@ -205,12 +205,12 @@ namespace FsInfoCat.Services
                 throw new NotImplementedException();
             }
 
-            public void ReportException(Exception exception, int percentComplete)
+            public void ReportException(Exception exception, byte percentComplete)
             {
                 throw new NotImplementedException();
             }
 
-            public void ReportStatusDescription(string statusDescription, string currentOperation, MessageCode code, int percentComplete)
+            public void ReportStatusDescription(string statusDescription, string currentOperation, MessageCode code, byte percentComplete)
             {
                 throw new NotImplementedException();
             }
@@ -220,12 +220,12 @@ namespace FsInfoCat.Services
                 throw new NotImplementedException();
             }
 
-            public void ReportStatusDescription(string statusDescription, string currentOperation, int percentComplete)
+            public void ReportStatusDescription(string statusDescription, string currentOperation, byte percentComplete)
             {
                 throw new NotImplementedException();
             }
 
-            public void ReportStatusDescription(string statusDescription, MessageCode code, int percentComplete)
+            public void ReportStatusDescription(string statusDescription, MessageCode code, byte percentComplete)
             {
                 throw new NotImplementedException();
             }
@@ -235,7 +235,12 @@ namespace FsInfoCat.Services
                 throw new NotImplementedException();
             }
 
-            public void ReportStatusDescription(string statusDescription, int percentComplete)
+            public void ReportStatusDescription(string statusDescription, byte percentComplete)
+            {
+                throw new NotImplementedException();
+            }
+
+            public void ReportPercentComplete(byte percentComplete)
             {
                 throw new NotImplementedException();
             }
@@ -272,159 +277,159 @@ namespace FsInfoCat.Services
             public ITimedBackgroundFunc<TState, TResult> InvokeAsync<TState, TResult>(Func<ITimedBackgroundProgress<TState, ITimedBackgroundProgressEvent<TState>>, Task<TResult>> asyncMethodDelegate,
                 Func<ITimedBackgroundFunc<TState, TResult>, ITimedBackgroundOperationResultEvent<TState, TResult>> onCompleted, string activity, string statusDescription, TState state,
                 params CancellationToken[] tokens)
-                => _service.InvokeAsync<TState, ITimedBackgroundProgressEvent<TState>, ITimedBackgroundFunc<TState, TResult>, TimedBackgroundFunc<TState, TResult>, ITimedBackgroundOperationResultEvent<TState, TResult>>((p, t1, t2)
+                => _service.InvokeAsync<TState, ITimedBackgroundProgressEvent<TState>, ITimedBackgroundFunc<TState, TResult>, TimedBackgroundFunc_old<TState, TResult>, ITimedBackgroundOperationResultEvent<TState, TResult>>((p, t1, t2)
                     => new(p, asyncMethodDelegate, t1), CreateEvent, onCompleted, activity, statusDescription, state, OperationId, tokens);
 
             public IBackgroundFunc<TState, TResult> InvokeAsync<TState, TResult>(Func<IBackgroundProgress<TState, IBackgroundProgressEvent<TState>>, Task<TResult>> asyncMethodDelegate,
                 Func<IBackgroundFunc<TState, TResult>, IBackgroundOperationResultEvent<TState, TResult>> onCompleted, string activity, string statusDescription, TState state, params CancellationToken[] tokens)
-                => _service.InvokeAsync<TState, IBackgroundProgressEvent<TState>, IBackgroundFunc<TState, TResult>, BackgroundFunc<TState, TResult>, IBackgroundOperationResultEvent<TState, TResult>>((p, t1, t2)
+                => _service.InvokeAsync<TState, IBackgroundProgressEvent<TState>, IBackgroundFunc<TState, TResult>, BackgroundFunc_old<TState, TResult>, IBackgroundOperationResultEvent<TState, TResult>>((p, t1, t2)
                     => new(p, asyncMethodDelegate, t1), CreateEvent, onCompleted, activity, statusDescription, state, OperationId, tokens);
 
             public ITimedBackgroundOperation<TState> InvokeAsync<TState>(Func<ITimedBackgroundProgress<TState, ITimedBackgroundProgressEvent<TState>>, Task> asyncMethodDelegate,
                 Func<ITimedBackgroundOperation<TState>, ITimedBackgroundOperationCompletedEvent<TState>> onCompleted, string activity, string statusDescription, TState state, params CancellationToken[] tokens)
-                => _service.InvokeAsync<TState, ITimedBackgroundProgressEvent<TState>, ITimedBackgroundOperation<TState>, TimedBackgroundOperation<TState>, ITimedBackgroundOperationCompletedEvent<TState>>((p, t1, t2)
+                => _service.InvokeAsync<TState, ITimedBackgroundProgressEvent<TState>, ITimedBackgroundOperation<TState>, TimedBackgroundOperation_old<TState>, ITimedBackgroundOperationCompletedEvent<TState>>((p, t1, t2)
                     => new(p, asyncMethodDelegate, t1), CreateEvent, onCompleted, activity, statusDescription, state, OperationId, tokens);
 
             public IBackgroundOperation<TState> InvokeAsync<TState>(Func<IBackgroundProgress<TState, IBackgroundProgressEvent<TState>>, Task> asyncMethodDelegate,
                 Func<IBackgroundOperation<TState>, IBackgroundOperationCompletedEvent<TState>> onCompleted, string activity, string statusDescription, TState state, params CancellationToken[] tokens)
-                => _service.InvokeAsync<TState, IBackgroundProgressEvent<TState>, IBackgroundOperation<TState>, BackgroundOperation<TState>, IBackgroundOperationCompletedEvent<TState>>((p, t1, t2)
+                => _service.InvokeAsync<TState, IBackgroundProgressEvent<TState>, IBackgroundOperation<TState>, BackgroundOperation_old<TState>, IBackgroundOperationCompletedEvent<TState>>((p, t1, t2)
                     => new(p, asyncMethodDelegate, t1), CreateEvent, onCompleted, activity, statusDescription, state, OperationId, tokens);
 
             public ITimedBackgroundFunc<TState, TResult> InvokeAsync<TState, TResult>(Func<ITimedBackgroundProgress<TState, ITimedBackgroundProgressEvent<TState>>, Task<TResult>> asyncMethodDelegate,
                 Func<ITimedBackgroundFunc<TState, TResult>, ITimedBackgroundOperationResultEvent<TState, TResult>> onCompleted, string activity, string statusDescription, TState state)
-                => _service.InvokeAsync<TState, ITimedBackgroundProgressEvent<TState>, ITimedBackgroundFunc<TState, TResult>, TimedBackgroundFunc<TState, TResult>, ITimedBackgroundOperationResultEvent<TState, TResult>>((p, t1, t2)
+                => _service.InvokeAsync<TState, ITimedBackgroundProgressEvent<TState>, ITimedBackgroundFunc<TState, TResult>, TimedBackgroundFunc_old<TState, TResult>, ITimedBackgroundOperationResultEvent<TState, TResult>>((p, t1, t2)
                     => new(p, asyncMethodDelegate, t1), CreateEvent, onCompleted, activity, statusDescription, state, OperationId);
 
             public IBackgroundFunc<TState, TResult> InvokeAsync<TState, TResult>(Func<IBackgroundProgress<TState, IBackgroundProgressEvent<TState>>, Task<TResult>> asyncMethodDelegate,
                 Func<IBackgroundFunc<TState, TResult>, IBackgroundOperationResultEvent<TState, TResult>> onCompleted, string activity, string statusDescription, TState state)
-                => _service.InvokeAsync<TState, IBackgroundProgressEvent<TState>, IBackgroundFunc<TState, TResult>, BackgroundFunc<TState, TResult>, IBackgroundOperationResultEvent<TState, TResult>>((p, t1, t2)
+                => _service.InvokeAsync<TState, IBackgroundProgressEvent<TState>, IBackgroundFunc<TState, TResult>, BackgroundFunc_old<TState, TResult>, IBackgroundOperationResultEvent<TState, TResult>>((p, t1, t2)
                     => new(p, asyncMethodDelegate, t1), CreateEvent, onCompleted, activity, statusDescription, state, OperationId);
 
             public ITimedBackgroundOperation<TState> InvokeAsync<TState>(Func<ITimedBackgroundProgress<TState, ITimedBackgroundProgressEvent<TState>>, Task> asyncMethodDelegate,
                 Func<ITimedBackgroundOperation<TState>, ITimedBackgroundOperationCompletedEvent<TState>> onCompleted, string activity, string statusDescription, TState state)
-                => _service.InvokeAsync<TState, ITimedBackgroundProgressEvent<TState>, ITimedBackgroundOperation<TState>, TimedBackgroundOperation<TState>, ITimedBackgroundOperationCompletedEvent<TState>>((p, t1, t2)
+                => _service.InvokeAsync<TState, ITimedBackgroundProgressEvent<TState>, ITimedBackgroundOperation<TState>, TimedBackgroundOperation_old<TState>, ITimedBackgroundOperationCompletedEvent<TState>>((p, t1, t2)
                     => new(p, asyncMethodDelegate, t1), CreateEvent, onCompleted, activity, statusDescription, state, OperationId);
 
             public IBackgroundOperation<TState> InvokeAsync<TState>(Func<IBackgroundProgress<TState, IBackgroundProgressEvent<TState>>, Task> asyncMethodDelegate,
                 Func<IBackgroundOperation<TState>, IBackgroundOperationCompletedEvent<TState>> onCompleted, string activity, string statusDescription, TState state)
-                => _service.InvokeAsync<TState, IBackgroundProgressEvent<TState>, IBackgroundOperation<TState>, BackgroundOperation<TState>, IBackgroundOperationCompletedEvent<TState>>((p, t1, t2)
+                => _service.InvokeAsync<TState, IBackgroundProgressEvent<TState>, IBackgroundOperation<TState>, BackgroundOperation_old<TState>, IBackgroundOperationCompletedEvent<TState>>((p, t1, t2)
                     => new(p, asyncMethodDelegate, t1), CreateEvent, onCompleted, activity, statusDescription, state, OperationId);
 
             public ITimedBackgroundFunc<TResult> InvokeAsync<TResult>(Func<ITimedBackgroundProgress<ITimedBackgroundProgressEvent>, Task<TResult>> asyncMethodDelegate,
                 Func<ITimedBackgroundFunc<TResult>, ITimedBackgroundOperationResultEvent<TResult>> onCompleted, string activity, string statusDescription, params CancellationToken[] tokens)
-                => _service.InvokeAsync<ITimedBackgroundProgressEvent, ITimedBackgroundFunc<TResult>, TimedBackgroundFunc<TResult>, ITimedBackgroundOperationResultEvent<TResult>>((p, t1, t2) => new(p, asyncMethodDelegate, t1),
+                => _service.InvokeAsync<ITimedBackgroundProgressEvent, ITimedBackgroundFunc<TResult>, TimedBackgroundFunc_old<TResult>, ITimedBackgroundOperationResultEvent<TResult>>((p, t1, t2) => new(p, asyncMethodDelegate, t1),
                     CreateEvent, onCompleted, activity, statusDescription, OperationId, tokens);
 
             public IBackgroundFunc<TResult> InvokeAsync<TResult>(Func<IBackgroundProgress<IBackgroundProgressEvent>, Task<TResult>> asyncMethodDelegate,
                 Func<IBackgroundFunc<TResult>, IBackgroundOperationResultEvent<TResult>> onCompleted, string activity, string statusDescription, params CancellationToken[] tokens)
-                => _service.InvokeAsync<IBackgroundProgressEvent, IBackgroundFunc<TResult>, BackgroundFunc<TResult>, IBackgroundOperationResultEvent<TResult>>((p, t1, t2) => new(p, asyncMethodDelegate, t1),
+                => _service.InvokeAsync<IBackgroundProgressEvent, IBackgroundFunc<TResult>, BackgroundFunc_old<TResult>, IBackgroundOperationResultEvent<TResult>>((p, t1, t2) => new(p, asyncMethodDelegate, t1),
                     CreateEvent, onCompleted, activity, statusDescription, OperationId, tokens);
 
             public ITimedBackgroundOperation InvokeAsync(Func<ITimedBackgroundProgress<ITimedBackgroundProgressEvent>, Task> asyncMethodDelegate,
                 Func<ITimedBackgroundOperation, ITimedBackgroundOperationCompletedEvent> onCompleted, string activity, string statusDescription, params CancellationToken[] tokens)
-                => _service.InvokeAsync<ITimedBackgroundProgressEvent, ITimedBackgroundOperation, TimedBackgroundOperation, ITimedBackgroundOperationCompletedEvent>((p, t1, t2) => new(p, asyncMethodDelegate, t1), CreateEvent,
+                => _service.InvokeAsync<ITimedBackgroundProgressEvent, ITimedBackgroundOperation, TimedBackgroundOperation_old, ITimedBackgroundOperationCompletedEvent>((p, t1, t2) => new(p, asyncMethodDelegate, t1), CreateEvent,
                     onCompleted, activity,
                     statusDescription, OperationId, tokens);
 
             public IBackgroundOperation InvokeAsync(Func<IBackgroundProgress<IBackgroundProgressEvent>, Task> asyncMethodDelegate, Func<IBackgroundOperation, IBackgroundOperationCompletedEvent> onCompleted,
                 string activity, string statusDescription, params CancellationToken[] tokens)
-                => _service.InvokeAsync<IBackgroundProgressEvent, IBackgroundOperation, BackgroundOperation, IBackgroundOperationCompletedEvent>((p, t1, t2) => new(p, asyncMethodDelegate, t1), CreateEvent,
+                => _service.InvokeAsync<IBackgroundProgressEvent, IBackgroundOperation, BackgroundOperation_old, IBackgroundOperationCompletedEvent>((p, t1, t2) => new(p, asyncMethodDelegate, t1), CreateEvent,
                     onCompleted, activity,
                     statusDescription, OperationId, tokens);
 
             public ITimedBackgroundFunc<TResult> InvokeAsync<TResult>(Func<ITimedBackgroundProgress<ITimedBackgroundProgressEvent>, Task<TResult>> asyncMethodDelegate,
                 Func<ITimedBackgroundFunc<TResult>, ITimedBackgroundOperationResultEvent<TResult>> onCompleted, string activity, string statusDescription)
-                => _service.InvokeAsync<ITimedBackgroundProgressEvent, ITimedBackgroundFunc<TResult>, TimedBackgroundFunc<TResult>, ITimedBackgroundOperationResultEvent<TResult>>((p, t1, t2) => new(p, asyncMethodDelegate, t1),
+                => _service.InvokeAsync<ITimedBackgroundProgressEvent, ITimedBackgroundFunc<TResult>, TimedBackgroundFunc_old<TResult>, ITimedBackgroundOperationResultEvent<TResult>>((p, t1, t2) => new(p, asyncMethodDelegate, t1),
                     CreateEvent, onCompleted, activity, statusDescription, OperationId);
 
             public IBackgroundFunc<TResult> InvokeAsync<TResult>(Func<IBackgroundProgress<IBackgroundProgressEvent>, Task<TResult>> asyncMethodDelegate,
                 Func<IBackgroundFunc<TResult>, IBackgroundOperationResultEvent<TResult>> onCompleted, string activity, string statusDescription)
-                => _service.InvokeAsync<IBackgroundProgressEvent, IBackgroundFunc<TResult>, BackgroundFunc<TResult>, IBackgroundOperationResultEvent<TResult>>((p, t1, t2) => new(p, asyncMethodDelegate, t1),
+                => _service.InvokeAsync<IBackgroundProgressEvent, IBackgroundFunc<TResult>, BackgroundFunc_old<TResult>, IBackgroundOperationResultEvent<TResult>>((p, t1, t2) => new(p, asyncMethodDelegate, t1),
                     CreateEvent, onCompleted, activity, statusDescription, OperationId);
 
             public ITimedBackgroundOperation InvokeAsync(Func<ITimedBackgroundProgress<ITimedBackgroundProgressEvent>, Task> asyncMethodDelegate,
                 Func<ITimedBackgroundOperation, ITimedBackgroundOperationCompletedEvent> onCompleted, string activity, string statusDescription)
-                => _service.InvokeAsync<ITimedBackgroundProgressEvent, ITimedBackgroundOperation, TimedBackgroundOperation, ITimedBackgroundOperationCompletedEvent>((p, t1, t2) => new(p, asyncMethodDelegate, t1), CreateEvent,
+                => _service.InvokeAsync<ITimedBackgroundProgressEvent, ITimedBackgroundOperation, TimedBackgroundOperation_old, ITimedBackgroundOperationCompletedEvent>((p, t1, t2) => new(p, asyncMethodDelegate, t1), CreateEvent,
                     onCompleted, activity, statusDescription, OperationId);
 
             public IBackgroundOperation InvokeAsync(Func<IBackgroundProgress<IBackgroundProgressEvent>, Task> asyncMethodDelegate, Func<IBackgroundOperation, IBackgroundOperationCompletedEvent> onCompleted,
                 string activity, string statusDescription)
-                => _service.InvokeAsync<IBackgroundProgressEvent, IBackgroundOperation, BackgroundOperation, IBackgroundOperationCompletedEvent>((p, t1, t2) => new(p, asyncMethodDelegate, t1), CreateEvent,
+                => _service.InvokeAsync<IBackgroundProgressEvent, IBackgroundOperation, BackgroundOperation_old, IBackgroundOperationCompletedEvent>((p, t1, t2) => new(p, asyncMethodDelegate, t1), CreateEvent,
                     onCompleted, activity, statusDescription, OperationId);
 
             public ITimedBackgroundFunc<TState, TResult> InvokeAsync<TState, TResult>(Func<ITimedBackgroundProgress<TState, ITimedBackgroundProgressEvent<TState>>, Task<TResult>> asyncMethodDelegate,
                 string activity, string statusDescription, TState state, params CancellationToken[] tokens)
-                => _service.InvokeAsync<TState, ITimedBackgroundProgressEvent<TState>, ITimedBackgroundFunc<TState, TResult>, TimedBackgroundFunc<TState, TResult>, ITimedBackgroundOperationResultEvent<TState, TResult>>((p, t1, t2)
+                => _service.InvokeAsync<TState, ITimedBackgroundProgressEvent<TState>, ITimedBackgroundFunc<TState, TResult>, TimedBackgroundFunc_old<TState, TResult>, ITimedBackgroundOperationResultEvent<TState, TResult>>((p, t1, t2)
                     => new(p, asyncMethodDelegate, t1), CreateEvent, null, activity, statusDescription, state, OperationId, tokens);
 
             public IBackgroundFunc<TState, TResult> InvokeAsync<TState, TResult>(Func<IBackgroundProgress<TState, IBackgroundProgressEvent<TState>>, Task<TResult>> asyncMethodDelegate, string activity,
                 string statusDescription, TState state, params CancellationToken[] tokens)
-                => _service.InvokeAsync<TState, IBackgroundProgressEvent<TState>, IBackgroundFunc<TState, TResult>, BackgroundFunc<TState, TResult>, IBackgroundOperationResultEvent<TState, TResult>>((p, t1, t2)
+                => _service.InvokeAsync<TState, IBackgroundProgressEvent<TState>, IBackgroundFunc<TState, TResult>, BackgroundFunc_old<TState, TResult>, IBackgroundOperationResultEvent<TState, TResult>>((p, t1, t2)
                     => new(p, asyncMethodDelegate, t1), CreateEvent, null, activity, statusDescription, state, OperationId, tokens);
 
             public ITimedBackgroundOperation<TState> InvokeAsync<TState>(Func<ITimedBackgroundProgress<TState, ITimedBackgroundProgressEvent<TState>>, Task> asyncMethodDelegate, string activity,
                 string statusDescription, TState state, params CancellationToken[] tokens)
-                => _service.InvokeAsync<TState, ITimedBackgroundProgressEvent<TState>, ITimedBackgroundOperation<TState>, TimedBackgroundOperation<TState>, ITimedBackgroundOperationCompletedEvent<TState>>((p, t1, t2)
+                => _service.InvokeAsync<TState, ITimedBackgroundProgressEvent<TState>, ITimedBackgroundOperation<TState>, TimedBackgroundOperation_old<TState>, ITimedBackgroundOperationCompletedEvent<TState>>((p, t1, t2)
                     => new(p, asyncMethodDelegate, t1), CreateEvent, null, activity, statusDescription, state, OperationId, tokens);
 
             public IBackgroundOperation<TState> InvokeAsync<TState>(Func<IBackgroundProgress<TState, IBackgroundProgressEvent<TState>>, Task> asyncMethodDelegate, string activity, string statusDescription,
                 TState state, params CancellationToken[] tokens)
-                => _service.InvokeAsync<TState, IBackgroundProgressEvent<TState>, IBackgroundOperation<TState>, BackgroundOperation<TState>, IBackgroundOperationCompletedEvent<TState>>((p, t1, t2)
+                => _service.InvokeAsync<TState, IBackgroundProgressEvent<TState>, IBackgroundOperation<TState>, BackgroundOperation_old<TState>, IBackgroundOperationCompletedEvent<TState>>((p, t1, t2)
                     => new(p, asyncMethodDelegate, t1), CreateEvent, null, activity, statusDescription, state, OperationId, tokens);
 
             public ITimedBackgroundFunc<TState, TResult> InvokeAsync<TState, TResult>(Func<ITimedBackgroundProgress<TState, ITimedBackgroundProgressEvent<TState>>, Task<TResult>> asyncMethodDelegate,
                 string activity, string statusDescription, TState state)
-                => _service.InvokeAsync<TState, ITimedBackgroundProgressEvent<TState>, ITimedBackgroundFunc<TState, TResult>, TimedBackgroundFunc<TState, TResult>, ITimedBackgroundOperationResultEvent<TState, TResult>>((p, t1, t2)
+                => _service.InvokeAsync<TState, ITimedBackgroundProgressEvent<TState>, ITimedBackgroundFunc<TState, TResult>, TimedBackgroundFunc_old<TState, TResult>, ITimedBackgroundOperationResultEvent<TState, TResult>>((p, t1, t2)
                     => new(p, asyncMethodDelegate, t1), CreateEvent, null, activity, statusDescription, state, OperationId);
 
             public IBackgroundFunc<TState, TResult> InvokeAsync<TState, TResult>(Func<IBackgroundProgress<TState, IBackgroundProgressEvent<TState>>, Task<TResult>> asyncMethodDelegate, string activity,
                 string statusDescription, TState state)
-                => _service.InvokeAsync<TState, IBackgroundProgressEvent<TState>, IBackgroundFunc<TState, TResult>, BackgroundFunc<TState, TResult>, IBackgroundOperationResultEvent<TState, TResult>>((p, t1, t2)
+                => _service.InvokeAsync<TState, IBackgroundProgressEvent<TState>, IBackgroundFunc<TState, TResult>, BackgroundFunc_old<TState, TResult>, IBackgroundOperationResultEvent<TState, TResult>>((p, t1, t2)
                     => new(p, asyncMethodDelegate, t1), CreateEvent, null, activity, statusDescription, state, OperationId);
 
             public ITimedBackgroundOperation<TState> InvokeAsync<TState>(Func<ITimedBackgroundProgress<TState, ITimedBackgroundProgressEvent<TState>>, Task> asyncMethodDelegate, string activity,
                 string statusDescription, TState state)
-                => _service.InvokeAsync<TState, ITimedBackgroundProgressEvent<TState>, ITimedBackgroundOperation<TState>, TimedBackgroundOperation<TState>, ITimedBackgroundOperationCompletedEvent<TState>>((p, t1, t2)
+                => _service.InvokeAsync<TState, ITimedBackgroundProgressEvent<TState>, ITimedBackgroundOperation<TState>, TimedBackgroundOperation_old<TState>, ITimedBackgroundOperationCompletedEvent<TState>>((p, t1, t2)
                     => new(p, asyncMethodDelegate, t1), CreateEvent, null, activity, statusDescription, state, OperationId);
 
             public IBackgroundOperation<TState> InvokeAsync<TState>(Func<IBackgroundProgress<TState, IBackgroundProgressEvent<TState>>, Task> asyncMethodDelegate, string activity, string statusDescription,
                 TState state)
-                => _service.InvokeAsync<TState, IBackgroundProgressEvent<TState>, IBackgroundOperation<TState>, BackgroundOperation<TState>, IBackgroundOperationCompletedEvent<TState>>((p, t1, t2)
+                => _service.InvokeAsync<TState, IBackgroundProgressEvent<TState>, IBackgroundOperation<TState>, BackgroundOperation_old<TState>, IBackgroundOperationCompletedEvent<TState>>((p, t1, t2)
                     => new(p, asyncMethodDelegate, t1), CreateEvent, null, activity, statusDescription, state, OperationId);
 
             public ITimedBackgroundFunc<TResult> InvokeAsync<TResult>(Func<ITimedBackgroundProgress<ITimedBackgroundProgressEvent>, Task<TResult>> asyncMethodDelegate, string activity,
                 string statusDescription, params CancellationToken[] tokens)
-                => _service.InvokeAsync<ITimedBackgroundProgressEvent, ITimedBackgroundFunc<TResult>, TimedBackgroundFunc<TResult>, ITimedBackgroundOperationResultEvent<TResult>>((p, t1, t2) => new(p, asyncMethodDelegate, t1),
+                => _service.InvokeAsync<ITimedBackgroundProgressEvent, ITimedBackgroundFunc<TResult>, TimedBackgroundFunc_old<TResult>, ITimedBackgroundOperationResultEvent<TResult>>((p, t1, t2) => new(p, asyncMethodDelegate, t1),
                     CreateEvent, null, activity, statusDescription, OperationId, tokens);
 
             public IBackgroundFunc<TResult> InvokeAsync<TResult>(Func<IBackgroundProgress<IBackgroundProgressEvent>, Task<TResult>> asyncMethodDelegate, string activity, string statusDescription,
                 params CancellationToken[] tokens)
-                => _service.InvokeAsync<IBackgroundProgressEvent, IBackgroundFunc<TResult>, BackgroundFunc<TResult>, IBackgroundOperationResultEvent<TResult>>((p, t1, t2) => new(p, asyncMethodDelegate, t1),
+                => _service.InvokeAsync<IBackgroundProgressEvent, IBackgroundFunc<TResult>, BackgroundFunc_old<TResult>, IBackgroundOperationResultEvent<TResult>>((p, t1, t2) => new(p, asyncMethodDelegate, t1),
                     CreateEvent, null, activity, statusDescription, OperationId, tokens);
 
             public ITimedBackgroundOperation InvokeAsync(Func<ITimedBackgroundProgress<ITimedBackgroundProgressEvent>, Task> asyncMethodDelegate, string activity, string statusDescription,
                 params CancellationToken[] tokens)
-                => _service.InvokeAsync<ITimedBackgroundProgressEvent, ITimedBackgroundOperation, TimedBackgroundOperation, ITimedBackgroundOperationCompletedEvent>((p, t1, t2) => new(p, asyncMethodDelegate, t1), CreateEvent,
+                => _service.InvokeAsync<ITimedBackgroundProgressEvent, ITimedBackgroundOperation, TimedBackgroundOperation_old, ITimedBackgroundOperationCompletedEvent>((p, t1, t2) => new(p, asyncMethodDelegate, t1), CreateEvent,
                     null, activity, statusDescription, OperationId, tokens);
 
             public IBackgroundOperation InvokeAsync(Func<IBackgroundProgress<IBackgroundProgressEvent>, Task> asyncMethodDelegate, string activity, string statusDescription, params CancellationToken[] tokens)
-                => _service.InvokeAsync<IBackgroundProgressEvent, IBackgroundOperation, BackgroundOperation, IBackgroundOperationCompletedEvent>((p, t1, t2) => new(p, asyncMethodDelegate, t1), CreateEvent,
+                => _service.InvokeAsync<IBackgroundProgressEvent, IBackgroundOperation, BackgroundOperation_old, IBackgroundOperationCompletedEvent>((p, t1, t2) => new(p, asyncMethodDelegate, t1), CreateEvent,
                     null, activity, statusDescription, OperationId, tokens);
 
             public ITimedBackgroundFunc<TResult> InvokeAsync<TResult>(Func<ITimedBackgroundProgress<ITimedBackgroundProgressEvent>, Task<TResult>> asyncMethodDelegate, string activity, string statusDescription)
-                => _service.InvokeAsync<ITimedBackgroundProgressEvent, ITimedBackgroundFunc<TResult>, TimedBackgroundFunc<TResult>, ITimedBackgroundOperationResultEvent<TResult>>((p, t1, t2) => new(p, asyncMethodDelegate, t1),
+                => _service.InvokeAsync<ITimedBackgroundProgressEvent, ITimedBackgroundFunc<TResult>, TimedBackgroundFunc_old<TResult>, ITimedBackgroundOperationResultEvent<TResult>>((p, t1, t2) => new(p, asyncMethodDelegate, t1),
                     CreateEvent, null, activity, statusDescription, OperationId);
 
             public IBackgroundFunc<TResult> InvokeAsync<TResult>(Func<IBackgroundProgress<IBackgroundProgressEvent>, Task<TResult>> asyncMethodDelegate, string activity, string statusDescription)
-                => _service.InvokeAsync<IBackgroundProgressEvent, IBackgroundFunc<TResult>, BackgroundFunc<TResult>, IBackgroundOperationResultEvent<TResult>>((p, t1, t2) => new(p, asyncMethodDelegate, t1),
+                => _service.InvokeAsync<IBackgroundProgressEvent, IBackgroundFunc<TResult>, BackgroundFunc_old<TResult>, IBackgroundOperationResultEvent<TResult>>((p, t1, t2) => new(p, asyncMethodDelegate, t1),
                     CreateEvent, null, activity, statusDescription, OperationId);
 
             public ITimedBackgroundOperation InvokeAsync(Func<ITimedBackgroundProgress<ITimedBackgroundProgressEvent>, Task> asyncMethodDelegate, string activity, string statusDescription)
-                => _service.InvokeAsync<ITimedBackgroundProgressEvent, ITimedBackgroundOperation, TimedBackgroundOperation, ITimedBackgroundOperationCompletedEvent>((p, t1, t2) => new(p, asyncMethodDelegate, t1), CreateEvent,
+                => _service.InvokeAsync<ITimedBackgroundProgressEvent, ITimedBackgroundOperation, TimedBackgroundOperation_old, ITimedBackgroundOperationCompletedEvent>((p, t1, t2) => new(p, asyncMethodDelegate, t1), CreateEvent,
                     null, activity, statusDescription, OperationId);
 
             public IBackgroundOperation InvokeAsync(Func<IBackgroundProgress<IBackgroundProgressEvent>, Task> asyncMethodDelegate, string activity, string statusDescription)
-                => _service.InvokeAsync<IBackgroundProgressEvent, IBackgroundOperation, BackgroundOperation, IBackgroundOperationCompletedEvent>((p, t1, t2) => new(p, asyncMethodDelegate, t1), CreateEvent,
+                => _service.InvokeAsync<IBackgroundProgressEvent, IBackgroundOperation, BackgroundOperation_old, IBackgroundOperationCompletedEvent>((p, t1, t2) => new(p, asyncMethodDelegate, t1), CreateEvent,
                     null, activity, statusDescription, OperationId);
         }
     }
