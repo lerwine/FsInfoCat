@@ -18,6 +18,8 @@ namespace FsInfoCat.Services
 
             protected Stopwatch Stopwatch { get; } = new();
 
+            protected TimedBackgroundOperationInfo(CancellationToken[] linkedTokens) : base(linkedTokens) { }
+
             internal class TimedBackgroundProgress : BackgroundProgress, ITimedBackgroundProgress<TEvent>
             {
                 private readonly Stopwatch _stopwatch;
