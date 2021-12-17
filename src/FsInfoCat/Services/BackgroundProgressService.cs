@@ -16,7 +16,9 @@ namespace FsInfoCat.Services
     {
         private readonly object _syncRoot = new();
         private readonly ILogger<BackgroundProgressService> _logger;
-        private readonly LinkedList<IBackgroundOperation> _operations = new();
+        private readonly LinkedList<BackgroundOperationInfo> _operations = new();
+        [Obsolete("Use _operations")]
+        private readonly LinkedList<IBackgroundOperation> _operations_old = new();
         private readonly StateEventObservers _stateEventObservers = new();
         private readonly ActiveStatusObservers _activeStatusObservers = new();
 
@@ -73,6 +75,7 @@ namespace FsInfoCat.Services
 
         IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)_operations).GetEnumerator();
 
+        [Obsolete]
         private void RaiseOperationStarted(IBackgroundOperation operation, bool isFirstOperation)
         {
             try
@@ -84,7 +87,8 @@ namespace FsInfoCat.Services
             finally { _stateEventObservers.RaiseStateChanged(new BackgroundProcessStartedEventArgs(operation, null)); }
         }
 
-        private void RaiseOperationCompleted([DisallowNull] Task task, [DisallowNull] LinkedListNode<IBackgroundOperation> node)
+        [Obsolete]
+        private void RaiseOperationCompleted([DisallowNull] Task task, [DisallowNull] LinkedListNode<BackgroundOperationInfo> node)
         {
             bool isLastOperation;
             lock (_syncRoot)
@@ -128,23 +132,24 @@ namespace FsInfoCat.Services
 
         private TOperation Create<TEvent, TOperation, TResultEvent, TProgress>([DisallowNull] TProgress progress, [DisallowNull] Func<TOperation, TResultEvent> onCompleted)
             where TEvent : IBackgroundProgressEvent
-            where TOperation : IBackgroundOperation
+            where TOperation : BackgroundOperationInfo
             where TResultEvent : TEvent, IBackgroundOperationCompletedEvent
             where TProgress : BackgroundProgressBase<TEvent, TOperation, TResultEvent>
         {
             TOperation operation = progress.Operation;
             bool isFirstOperation;
-            LinkedListNode<IBackgroundOperation> node;
+            LinkedListNode<BackgroundOperationInfo> node;
             lock (_syncRoot)
             {
                 isFirstOperation = _operations.First is null;
                 node = _operations.AddLast(operation);
             }
+            // TODO: Raise events from the BackgroundOperationInfo object
             RaiseOperationStarted(operation, isFirstOperation);
             if (onCompleted is null)
-                operation.Task.ContinueWith(task => RaiseOperationCompleted(task, node));
+                ((IBackgroundOperation)operation).Task.ContinueWith(task => RaiseOperationCompleted(task, node));
             else
-                operation.Task.ContinueWith(task =>
+                ((IBackgroundOperation)operation).Task.ContinueWith(task =>
                 {
                     try { progress.Report(onCompleted(operation)); }
                     finally { RaiseOperationCompleted(task, node); }

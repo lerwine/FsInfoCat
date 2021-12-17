@@ -1,5 +1,8 @@
 using FsInfoCat.AsyncOps;
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -7,15 +10,16 @@ namespace FsInfoCat.Services
 {
     partial class BackgroundProgressService
     {
-        abstract class BackgroundOperationInfo : IBackgroundProgressInfo, IDisposable
+        abstract class BackgroundOperationInfo : IBackgroundOperation
         {
             private bool _isDisposed;
 
             private CancellationTokenSource _tokenSource = new();
+            private CancellationTokenSource _linkedTokenSource;
 
-            protected CancellationToken Token => _tokenSource.Token;
+            protected CancellationToken Token => _linkedTokenSource.Token;
 
-            public bool IsCancellationRequested => throw new NotImplementedException();
+            public bool IsCancellationRequested => _linkedTokenSource.IsCancellationRequested;
 
             public Guid OperationId => throw new NotImplementedException();
 
@@ -29,25 +33,31 @@ namespace FsInfoCat.Services
 
             public byte? PercentComplete => throw new NotImplementedException();
 
-            public void Cancel()
+            public abstract Task Task { get; }
+
+            protected BackgroundOperationInfo(CancellationToken[] linkedTokens)
             {
-                throw new NotImplementedException();
+                if (linkedTokens is not null && linkedTokens.Length > 0)
+                    _linkedTokenSource = CancellationTokenSource.CreateLinkedTokenSource(Enumerable.Repeat(_tokenSource.Token, 1).Concat(linkedTokens).ToArray());
+                else
+                    _linkedTokenSource = _tokenSource;
             }
 
-            public void Cancel(bool throwOnFirstException)
-            {
-                throw new NotImplementedException();
-            }
+            protected abstract void RaiseOperationCanceled();
 
-            public void CancelAfter(int millisecondsDelay)
-            {
-                throw new NotImplementedException();
-            }
+            protected abstract void RaiseOperationFaulted(Exception exception);
 
-            public void CancelAfter(TimeSpan delay)
-            {
-                throw new NotImplementedException();
-            }
+            public void Cancel() => _tokenSource.Cancel();
+
+            public void Cancel(bool throwOnFirstException) => _tokenSource.Cancel(throwOnFirstException);
+
+            public void CancelAfter(int millisecondsDelay) => _tokenSource.CancelAfter(millisecondsDelay);
+
+            public void CancelAfter(TimeSpan delay) => _tokenSource.CancelAfter(delay);
+
+            protected abstract IDisposable BaseSubscribe(IObserver<IBackgroundProgressEvent> observer);
+
+            IDisposable IObservable<IBackgroundProgressEvent>.Subscribe(IObserver<IBackgroundProgressEvent> observer) => BaseSubscribe(observer);
 
             protected virtual void Dispose(bool disposing)
             {
@@ -55,7 +65,9 @@ namespace FsInfoCat.Services
                 {
                     if (disposing)
                     {
-                        // TODO: dispose managed state (managed objects)
+                        if (!ReferenceEquals(_tokenSource, _linkedTokenSource))
+                            _linkedTokenSource.Dispose();
+                        _tokenSource.Dispose();
                     }
 
                     // TODO: free unmanaged resources (unmanaged objects) and override finalizer
@@ -682,6 +694,223 @@ namespace FsInfoCat.Services
 
                 #endregion
             }
+
+            protected static class OperationHelper
+            {
+                private static LinkedListNode<BackgroundOperationInfo> Start(BackgroundProgressService service, BackgroundOperationInfo backgroundOperation, out Action onStarted)
+                {
+                    LinkedListNode<BackgroundOperationInfo> node;
+                    bool isFirstOperation;
+                    lock (service._syncRoot)
+                    {
+                        isFirstOperation = service._operations.Last is null;
+                        node = service._operations.AddLast(backgroundOperation);
+                    }
+                    onStarted = () =>
+                    {
+                        try
+                        {
+                            service.IsActive = true;
+                            if (isFirstOperation)
+                                service._activeStatusObservers.RaiseActiveStateChanged(true);
+                        }
+                        finally { service._stateEventObservers.RaiseStateChanged(new BackgroundProcessStartedEventArgs(backgroundOperation, null)); }
+                    };
+                    return node;
+                }
+
+                private static bool OnCompleted(BackgroundProgressService service, LinkedListNode<BackgroundOperationInfo> node)
+                {
+                    lock (service._syncRoot)
+                    {
+                        service._operations.Remove(node);
+                        return service._operations.Last is null;
+                    }
+                }
+
+                private static void RaiseCanceled(BackgroundProgressService service, LinkedListNode<BackgroundOperationInfo> node, Action onRemoved)
+                {
+                    bool isLastOperation = OnCompleted(service, node);
+                    try { onRemoved(); }
+                    finally
+                    {
+                        try
+                        {
+                            if (isLastOperation && service._operations.First is null)
+                            {
+                                service.IsActive = false;
+                                service._activeStatusObservers.RaiseActiveStateChanged(false);
+                            }
+                        }
+                        finally { service._stateEventObservers.RaiseStateChanged(new BackgroundProcessCompletedEventArgs(node.Value, null, null, false)); }
+                    }
+                }
+
+                private static void RaiseFaulted(BackgroundProgressService service, LinkedListNode<BackgroundOperationInfo> node, AggregateException exception, Action onRemoved)
+                {
+                    bool isLastOperation = OnCompleted(service, node);
+                    try { onRemoved(); }
+                    finally
+                    {
+                        try
+                        {
+                            if (isLastOperation && service._operations.First is null)
+                            {
+                                service.IsActive = false;
+                                service._activeStatusObservers.RaiseActiveStateChanged(false);
+                            }
+                        }
+                        finally
+                        {
+                            if (exception.InnerException is AsyncOperationException asyncFailureException)
+                                service._stateEventObservers.RaiseStateChanged(new BackgroundProcessFaultedEventArgs(node.Value, (exception.InnerExceptions.Count == 1) ? asyncFailureException :
+                                    exception, asyncFailureException.Code));
+                            else
+#pragma warning disable CS8604 // Possible null reference argument.
+                                service._stateEventObservers.RaiseStateChanged(new BackgroundProcessFaultedEventArgs(node.Value, (exception.InnerExceptions.Count == 1) ? exception.InnerException : exception, ErrorCode.Unexpected));
+#pragma warning restore CS8604 // Possible null reference argument.
+                        }
+                    }
+                }
+
+                private static void RaiseRanToCompletion(BackgroundProgressService service, LinkedListNode<BackgroundOperationInfo> node, Action onRemoved)
+                {
+                    bool isLastOperation = OnCompleted(service, node);
+                    try { onRemoved(); }
+                    finally
+                    {
+                        try
+                        {
+                            if (isLastOperation && service._operations.First is null)
+                            {
+                                service.IsActive = false;
+                                service._activeStatusObservers.RaiseActiveStateChanged(false);
+                            }
+                        }
+                        finally { service._stateEventObservers.RaiseStateChanged(new BackgroundProcessCompletedEventArgs(node.Value, null, null, true)); }
+                    }
+                }
+
+                private static void OnActionCompletion(BackgroundProgressService service, LinkedListNode<BackgroundOperationInfo> node, TaskCompletionSource completionSource, Action raiseRanToCompletion, Task task)
+                {
+                    if (task.IsCanceled)
+                        try { RaiseCanceled(service, node, () => completionSource.SetCanceled()); }
+                        finally { node.Value.RaiseOperationCanceled(); }
+                    else if (task.IsFaulted)
+                        try
+                        {
+#pragma warning disable CS8604 // Possible null reference argument.
+                            RaiseFaulted(service, node, task.Exception, () => completionSource.SetException(task.Exception));
+#pragma warning restore CS8604 // Possible null reference argument.
+                        }
+                        finally
+                        {
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+                            node.Value.RaiseOperationFaulted((task.Exception.InnerExceptions.Count == 1) ? task.Exception.InnerException : task.Exception);
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
+                        }
+                    else
+                        try { RaiseRanToCompletion(service, node, () => completionSource.SetResult()); }
+                        finally { raiseRanToCompletion(); }
+                }
+
+                private static void OnFuncCompletion<TResult>(BackgroundProgressService service, LinkedListNode<BackgroundOperationInfo> node, TaskCompletionSource<TResult> completionSource, Action<TResult> raiseRanToCompletion, Task<TResult> task)
+                {
+                    if (task.IsCanceled)
+                        try { RaiseCanceled(service, node, () => completionSource.SetCanceled()); }
+                        finally { node.Value.RaiseOperationCanceled(); }
+                    else if (task.IsFaulted)
+                        try
+                        {
+#pragma warning disable CS8604 // Possible null reference argument.
+                            RaiseFaulted(service, node, task.Exception, () => completionSource.SetException(task.Exception));
+#pragma warning restore CS8604 // Possible null reference argument.
+                        }
+                        finally
+                        {
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+                            node.Value.RaiseOperationFaulted((task.Exception.InnerExceptions.Count == 1) ? task.Exception.InnerException : task.Exception);
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
+                        }
+                    else
+                        try { RaiseRanToCompletion(service, node, () => completionSource.SetResult(task.Result)); }
+                        finally { raiseRanToCompletion(task.Result); }
+                }
+
+                internal static void Start<TEvent, TResultEvent, TProgress, TOperation, TResult>(BackgroundProgressService service, TOperation backgroundOperation, TProgress progress, Stopwatch stopwatch,
+                    Func<TProgress, Task<TResult>> asyncMethodDelegate, TaskCompletionSource<TResult> completionSource, Action<TResult> raiseRanToCompletion)
+                    where TEvent : ITimedBackgroundProgressEvent
+                    where TResultEvent : TEvent, ITimedBackgroundOperationResultEvent<TResult>
+                    where TProgress : ITimedBackgroundProgress<TEvent>
+                    where TOperation : BackgroundOperationInfo, ITimedBackgroundFunc<TResult>
+                {
+                    LinkedListNode<BackgroundOperationInfo> node = Start(service, backgroundOperation, out Action onStarted);
+                    async Task<TResult> Run()
+                    {
+                        onStarted();
+                        stopwatch.Start();
+                        return await asyncMethodDelegate(progress);
+                    }
+                    Run().ContinueWith(task =>
+                    {
+                        try { stopwatch.Stop(); }
+                        finally { OnFuncCompletion(service, node, completionSource, raiseRanToCompletion, task); }
+                    });
+                }
+
+                internal static void Start<TEvent, TResultEvent, TProgress, TOperation, TResult>(BackgroundProgressService service, TOperation backgroundOperation, TProgress progress,
+                    Func<TProgress, Task<TResult>> asyncMethodDelegate, TaskCompletionSource<TResult> completionSource, Action<TResult> raiseRanToCompletion)
+                    where TEvent : IBackgroundProgressEvent
+                    where TResultEvent : TEvent, IBackgroundOperationResultEvent<TResult>
+                    where TProgress : IBackgroundProgress<TEvent>
+                    where TOperation : BackgroundOperationInfo, IBackgroundFunc<TResult>
+                {
+                    LinkedListNode<BackgroundOperationInfo> node = Start(service, backgroundOperation, out Action onStarted);
+                    async Task<TResult> Run()
+                    {
+                        onStarted();
+                        return await asyncMethodDelegate(progress);
+                    }
+                    Run().ContinueWith(task => OnFuncCompletion(service, node, completionSource, raiseRanToCompletion, task));
+                }
+
+                internal static void Start<TEvent, TResultEvent, TProgress, TOperation>(BackgroundProgressService service, TOperation backgroundOperation, TProgress progress, Stopwatch stopwatch,
+                    Func<TProgress, Task> asyncMethodDelegate, TaskCompletionSource completionSource, Action raiseRanToCompletion)
+                    where TEvent : ITimedBackgroundProgressEvent
+                    where TResultEvent : TEvent, ITimedBackgroundOperationCompletedEvent
+                    where TProgress : ITimedBackgroundProgress<TEvent>
+                    where TOperation : BackgroundOperationInfo, ITimedBackgroundOperation
+                {
+                    LinkedListNode<BackgroundOperationInfo> node = Start(service, backgroundOperation, out Action onStarted);
+                    async Task Run()
+                    {
+                        onStarted();
+                        stopwatch.Start();
+                        await asyncMethodDelegate(progress);
+                    }
+                    Run().ContinueWith(task =>
+                    {
+                        try { stopwatch.Stop(); }
+                        finally { OnActionCompletion(service, node, completionSource, raiseRanToCompletion, task); }
+                    });
+                }
+
+                internal static void Start<TEvent, TResultEvent, TProgress, TOperation>(BackgroundProgressService service, TOperation backgroundOperation, TProgress progress,
+                    Func<TProgress, Task> asyncMethodDelegate, TaskCompletionSource completionSource, Action raiseRanToCompletion)
+                    where TEvent : IBackgroundProgressEvent
+                    where TResultEvent : TEvent, IBackgroundOperationCompletedEvent
+                    where TProgress : IBackgroundProgress<TEvent>
+                    where TOperation : BackgroundOperationInfo, IBackgroundOperation
+                {
+                    LinkedListNode<BackgroundOperationInfo> node = Start(service, backgroundOperation, out Action onStarted);
+                    async Task Run()
+                    {
+                        onStarted();
+                        await asyncMethodDelegate(progress);
+                    }
+                    Run().ContinueWith(task => OnActionCompletion(service, node, completionSource, raiseRanToCompletion, task));
+                }
+            }
         }
 
         abstract class BackgroundOperationInfo<TEvent, TResultEvent, TProgress, TTask> : BackgroundOperationInfo, IObservable<TEvent>
@@ -690,13 +919,17 @@ namespace FsInfoCat.Services
             where TTask : Task
             where TResultEvent : TEvent, IBackgroundOperationCompletedEvent
         {
-            public abstract TTask Task { get; }
-
             protected abstract TProgress Progress { get; }
+
+            protected abstract IBackgroundProgressEventFactory<TEvent, TProgress> EventFactory { get; }
 
             public IDisposable Subscribe(IObserver<TEvent> observer)
             {
                 throw new NotImplementedException();
+            }
+
+            protected BackgroundOperationInfo(CancellationToken[] linkedTokens) : base(linkedTokens)
+            {
             }
 
             internal abstract class BackgroundProgress : BackgroundProgressBase, IBackgroundProgress<TEvent>
