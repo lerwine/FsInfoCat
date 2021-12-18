@@ -315,24 +315,5 @@ namespace FsInfoCat.Services
                     byte? percentComplete, Exception error) => _eventFactory.CreateProgressEvent(this, statusDescription, currentOperation, code, percentComplete, error);
             }
         }
-
-        class BackgroundFunc_old<TResult> : BackgroundOperation_old<IBackgroundProgressEvent, IBackgroundProgress<IBackgroundProgressEvent>, BackgroundProgress<IBackgroundProgressEvent, IBackgroundFunc<TResult>, IBackgroundOperationResultEvent<TResult>>, Task<TResult>, IBackgroundFunc<TResult>, IBackgroundOperationResultEvent<TResult>>, IBackgroundFunc<TResult>
-        {
-            internal BackgroundFunc_old(BackgroundProgress<IBackgroundProgressEvent, IBackgroundFunc<TResult>, IBackgroundOperationResultEvent<TResult>> progress,
-                Func<IBackgroundProgress<IBackgroundProgressEvent>, Task<TResult>> asyncMethodDelegate, CancellationTokenSource tokenSource)
-                : base(progress, asyncMethodDelegate, tokenSource) { }
-        }
-
-        class BackgroundFunc_old<TState, TResult> : BackgroundOperation_old<IBackgroundProgressEvent<TState>, IBackgroundProgress<TState, IBackgroundProgressEvent<TState>>, BackgroundProgress<TState, IBackgroundProgressEvent<TState>, IBackgroundFunc<TState, TResult>, IBackgroundOperationResultEvent<TState, TResult>>, Task<TResult>, IBackgroundFunc<TState, TResult>, IBackgroundOperationResultEvent<TState, TResult>>, IBackgroundFunc<TState, TResult>
-        {
-            public TState AsyncState { get; }
-
-            internal BackgroundFunc_old(BackgroundProgress<TState, IBackgroundProgressEvent<TState>, IBackgroundFunc<TState, TResult>, IBackgroundOperationResultEvent<TState, TResult>> progress,
-                Func<IBackgroundProgress<TState, IBackgroundProgressEvent<TState>>, Task<TResult>> asyncMethodDelegate, CancellationTokenSource tokenSource)
-                : base(progress, asyncMethodDelegate, tokenSource)
-            {
-                AsyncState = progress.AsyncState;
-            }
-        }
     }
 }
