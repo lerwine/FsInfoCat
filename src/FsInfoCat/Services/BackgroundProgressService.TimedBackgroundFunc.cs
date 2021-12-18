@@ -1,6 +1,7 @@
 using FsInfoCat.AsyncOps;
 using System;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -8,31 +9,34 @@ namespace FsInfoCat.Services
 {
     partial class BackgroundProgressService
     {
-        class TimedBackgroundFunc<TEvent, TResultEvent, TResult> : TimedBackgroundOperationInfo<TEvent, TResultEvent, TimedBackgroundFunc<TEvent, TResultEvent, TResult>.BackgroundProgressImpl, Task<TResult>>, ITimedBackgroundFunc<TResult>
+        class TimedBackgroundFunc<TEvent, TResultEvent, TResult> : TimedBackgroundOperationInfo<TEvent, TResultEvent, ITimedBackgroundProgress<TEvent>, Task<TResult>>,
+            ITimedBackgroundFunc<TResult>
             where TEvent : ITimedBackgroundProgressEvent
             where TResultEvent : TEvent, ITimedBackgroundOperationResultEvent<TResult>
         {
             private readonly TaskCompletionSource<TResult> _completionSource = new();
+            private readonly BackgroundProgressImpl _progress;
 
             public override Task Task => _completionSource.Task;
 
             Task<TResult> IBackgroundFunc<TResult>.Task => _completionSource.Task;
 
-            protected override BackgroundProgressImpl Progress { get; }
+            protected override ITimedBackgroundProgress<TEvent> Progress => _progress;
 
-            protected override IBackgroundProgressEventFactory<TEvent, BackgroundProgressImpl> EventFactory => throw new NotImplementedException();
-
-            private TimedBackgroundFunc(string activity, string initialStatusDescription, Guid? parentId, IBackgroundEventFactory<TEvent, TResultEvent, ITimedBackgroundProgress<TEvent>, TResult> eventFactory, CancellationToken[] linkedTokens) : base(linkedTokens)
+            private TimedBackgroundFunc([DisallowNull] BackgroundProgressService service, [DisallowNull] string activity, [DisallowNull] string initialStatusDescription, Guid? parentId,
+                [DisallowNull] IBackgroundEventFactory<TEvent, TResultEvent, ITimedBackgroundProgress<TEvent>, TResult> eventFactory, CancellationToken[] linkedTokens)
+                : base(service, linkedTokens)
             {
-                Progress = new(activity, initialStatusDescription, parentId, Stopwatch, Token, eventFactory);
+                _progress = new(this, activity, initialStatusDescription, parentId, Stopwatch, eventFactory, Token);
             }
 
-            internal static TimedBackgroundFunc<TEvent, TResultEvent, TResult> Start(BackgroundProgressService service, string activity, string initialStatusDescription, Guid? parentId,
-                Func<ITimedBackgroundProgress<TEvent>, Task<TResult>> asyncMethodDelegate, IBackgroundEventFactory<TEvent, TResultEvent, ITimedBackgroundProgress<TEvent>, TResult> eventFactory, params CancellationToken[] linkedTokens)
+            internal static TimedBackgroundFunc<TEvent, TResultEvent, TResult> Start([DisallowNull] BackgroundProgressService service, BackgroundOperationInfo parent, [DisallowNull] string activity,
+                [DisallowNull] string initialStatusDescription, [DisallowNull] Func<ITimedBackgroundProgress<TEvent>, Task<TResult>> asyncMethodDelegate,
+                [DisallowNull] IBackgroundEventFactory<TEvent, TResultEvent, ITimedBackgroundProgress<TEvent>, TResult> eventFactory, params CancellationToken[] linkedTokens)
             {
-                TimedBackgroundFunc<TEvent, TResultEvent, TResult> backgroundOperation = new(activity, initialStatusDescription, parentId, eventFactory, linkedTokens);
-                OperationHelper.Start<TEvent, TResultEvent, ITimedBackgroundProgress<TEvent>, TimedBackgroundFunc<TEvent, TResultEvent, TResult>, TResult>(service, backgroundOperation, backgroundOperation.Progress, asyncMethodDelegate,
-                    backgroundOperation._completionSource, backgroundOperation.RaiseRanToCompletion);
+                TimedBackgroundFunc<TEvent, TResultEvent, TResult> backgroundOperation = new(service, activity, initialStatusDescription, parent?.OperationId, eventFactory, linkedTokens);
+                OperationHelper.Start<TEvent, TResultEvent, ITimedBackgroundProgress<TEvent>, TimedBackgroundFunc<TEvent, TResultEvent, TResult>, TResult>(service, parent, backgroundOperation,
+                    backgroundOperation.Progress, backgroundOperation.Stopwatch, asyncMethodDelegate, backgroundOperation._completionSource, backgroundOperation.RaiseRanToCompletion);
                 return backgroundOperation;
             }
 
@@ -46,12 +50,12 @@ namespace FsInfoCat.Services
                 throw new NotImplementedException();
             }
 
-            protected override void RaiseOperationFaulted(Exception exception)
+            protected override void RaiseOperationFaulted([DisallowNull] Exception exception)
             {
                 throw new NotImplementedException();
             }
 
-            protected override IDisposable BaseSubscribe(IObserver<IBackgroundProgressEvent> observer)
+            protected override IDisposable BaseSubscribe([DisallowNull] IObserver<IBackgroundProgressEvent> observer)
             {
                 throw new NotImplementedException();
             }
@@ -65,19 +69,22 @@ namespace FsInfoCat.Services
             {
                 private readonly IBackgroundEventFactory<TEvent, TResultEvent, ITimedBackgroundProgress<TEvent>, TResult> _eventFactory;
 
-                internal BackgroundProgressImpl(string activity, string initialStatusDescription, Guid? parentId, Stopwatch stopwatch, CancellationToken token, IBackgroundEventFactory<TEvent, TResultEvent, ITimedBackgroundProgress<TEvent>, TResult> eventFactory) :
-                    base(activity, initialStatusDescription, parentId, stopwatch, token)
-                {
-                    _eventFactory = eventFactory;
-                }
+                internal BackgroundProgressImpl([DisallowNull] BackgroundOperationInfo operation, [DisallowNull] string activity, [DisallowNull] string initialStatusDescription, Guid? parentId, [DisallowNull] Stopwatch stopwatch,
+                    [DisallowNull] IBackgroundEventFactory<TEvent, TResultEvent, ITimedBackgroundProgress<TEvent>, TResult> eventFactory, CancellationToken token) :
+                    base(operation, activity, initialStatusDescription, parentId, stopwatch, token) => _eventFactory = eventFactory;
+
+                protected override TEvent CreateEvent([DisallowNull] string statusDescription, [DisallowNull] string currentOperation, MessageCode? code, byte? percentComplete,
+                    Exception error) => _eventFactory.CreateProgressEvent(this, statusDescription, currentOperation, code, percentComplete, error);
             }
         }
 
-        class TimedBackgroundFunc<TEvent, TResultEvent, TResult, TState> : TimedBackgroundOperationInfo<TEvent, TResultEvent, TimedBackgroundFunc<TEvent, TResultEvent, TResult, TState>.BackgroundProgressImpl, Task<TResult>>, ITimedBackgroundFunc<TState, TResult>
+        class TimedBackgroundFunc<TEvent, TResultEvent, TResult, TState> : TimedBackgroundOperationInfo<TEvent, TResultEvent, ITimedBackgroundProgress<TState, TEvent>, Task<TResult>>,
+            ITimedBackgroundFunc<TState, TResult>
             where TEvent : ITimedBackgroundProgressEvent<TState>
             where TResultEvent : TEvent, ITimedBackgroundOperationResultEvent<TState, TResult>
         {
             private readonly TaskCompletionSource<TResult> _completionSource;
+            private readonly BackgroundProgressImpl _progress;
 
             public TState AsyncState => Progress.AsyncState;
 
@@ -85,22 +92,26 @@ namespace FsInfoCat.Services
 
             Task<TResult> IBackgroundFunc<TResult>.Task => _completionSource.Task;
 
-            protected override BackgroundProgressImpl Progress { get; }
+            protected override ITimedBackgroundProgress<TState, TEvent> Progress => _progress;
 
-            protected override IBackgroundProgressEventFactory<TEvent, BackgroundProgressImpl> EventFactory => throw new NotImplementedException();
-
-            private TimedBackgroundFunc(string activity, string initialStatusDescription, Guid? parentId, TState state, IBackgroundEventFactory<TEvent, TResultEvent, ITimedBackgroundProgress<TState, TEvent>, TResult> eventFactory, CancellationToken[] linkedTokens) : base(linkedTokens)
+            private TimedBackgroundFunc([DisallowNull] BackgroundProgressService service, [DisallowNull] string activity, [DisallowNull] string initialStatusDescription, Guid? parentId, TState state,
+                [DisallowNull] IBackgroundEventFactory<TEvent, TResultEvent, ITimedBackgroundProgress<TState, TEvent>, TResult> eventFactory, CancellationToken[] linkedTokens)
+                : base(service, linkedTokens)
             {
                 _completionSource = new(state);
-                Progress = new(activity, initialStatusDescription, parentId, Stopwatch, state, Token, eventFactory);
+                _progress = new(this, activity, initialStatusDescription, parentId, Stopwatch, state, eventFactory, Token);
             }
 
-            internal static TimedBackgroundFunc<TEvent, TResultEvent, TResult, TState> Start(BackgroundProgressService service, string activity, string initialStatusDescription, Guid? parentId, TState state,
-                Func<ITimedBackgroundProgress<TEvent>, Task<TResult>> asyncMethodDelegate, IBackgroundEventFactory<TEvent, TResultEvent, ITimedBackgroundProgress<TState, TEvent>, TResult> eventFactory, params CancellationToken[] linkedTokens)
+            internal static TimedBackgroundFunc<TEvent, TResultEvent, TResult, TState> Start([DisallowNull] BackgroundProgressService service, BackgroundOperationInfo parent,
+                [DisallowNull] string activity, [DisallowNull] string initialStatusDescription, TState state,
+                [DisallowNull] Func<ITimedBackgroundProgress<TState, TEvent>, Task<TResult>> asyncMethodDelegate,
+                [DisallowNull] IBackgroundEventFactory<TEvent, TResultEvent, ITimedBackgroundProgress<TState, TEvent>, TResult> eventFactory,
+                params CancellationToken[] linkedTokens)
             {
-                TimedBackgroundFunc<TEvent, TResultEvent, TResult, TState> backgroundOperation = new(activity, initialStatusDescription, parentId, state, eventFactory, linkedTokens);
-                OperationHelper.Start<TEvent, TResultEvent, ITimedBackgroundProgress<TState, TEvent>, TimedBackgroundFunc<TEvent, TResultEvent, TResult, TState>, TResult>(service, backgroundOperation, backgroundOperation.Progress,
-                    asyncMethodDelegate, backgroundOperation._completionSource, backgroundOperation.RaiseRanToCompletion);
+                TimedBackgroundFunc<TEvent, TResultEvent, TResult, TState> backgroundOperation = new(service, activity, initialStatusDescription, parent?.OperationId, state, eventFactory, linkedTokens);
+                OperationHelper.Start<TEvent, TResultEvent, ITimedBackgroundProgress<TState, TEvent>, TimedBackgroundFunc<TEvent, TResultEvent, TResult, TState>, TResult>(service,
+                    parent, backgroundOperation, backgroundOperation.Progress, backgroundOperation.Stopwatch, asyncMethodDelegate, backgroundOperation._completionSource,
+                    backgroundOperation.RaiseRanToCompletion);
                 return backgroundOperation;
             }
 
@@ -114,7 +125,7 @@ namespace FsInfoCat.Services
                 throw new NotImplementedException();
             }
 
-            protected override void RaiseOperationFaulted(Exception exception)
+            protected override void RaiseOperationFaulted([DisallowNull] Exception exception)
             {
                 throw new NotImplementedException();
             }
@@ -129,7 +140,7 @@ namespace FsInfoCat.Services
                 throw new NotImplementedException();
             }
 
-            protected override IDisposable BaseSubscribe(IObserver<IBackgroundProgressEvent> observer)
+            protected override IDisposable BaseSubscribe([DisallowNull] IObserver<IBackgroundProgressEvent> observer)
             {
                 throw new NotImplementedException();
             }
@@ -141,116 +152,147 @@ namespace FsInfoCat.Services
 
             internal class BackgroundProgressImpl : TimedBackgroundProgress, ITimedBackgroundProgress<TState, TEvent>
             {
-                internal BackgroundProgressImpl(string activity, string initialStatusDescription, Guid? parentId, Stopwatch stopwatch, TState state, CancellationToken token, IBackgroundEventFactory<TEvent, TResultEvent, ITimedBackgroundProgress<TState, TEvent>, TResult> eventFactory) :
-                    base(activity, initialStatusDescription, parentId, stopwatch, token)
-                {
-                    AsyncState = state;
-                    _eventFactory = eventFactory;
-                }
+                private readonly IBackgroundEventFactory<TEvent, TResultEvent, ITimedBackgroundProgress<TState, TEvent>, TResult> _eventFactory;
 
                 public TState AsyncState { get; }
 
-                private readonly IBackgroundEventFactory<TEvent, TResultEvent, ITimedBackgroundProgress<TState, TEvent>, TResult> _eventFactory;
+                internal BackgroundProgressImpl([DisallowNull] BackgroundOperationInfo operation, [DisallowNull] string activity, [DisallowNull] string initialStatusDescription, Guid? parentId, [DisallowNull] Stopwatch stopwatch,
+                    TState state, [DisallowNull] IBackgroundEventFactory<TEvent, TResultEvent, ITimedBackgroundProgress<TState, TEvent>, TResult> eventFactory, CancellationToken token)
+                    : base(operation, activity, initialStatusDescription, parentId, stopwatch, token)
+                {
+                    _eventFactory = eventFactory;
+                    AsyncState = state;
+                }
+
+                protected override TEvent CreateEvent([DisallowNull] string statusDescription, [DisallowNull] string currentOperation, MessageCode? code, byte? percentComplete,
+                    Exception error) => _eventFactory.CreateProgressEvent(this, statusDescription, currentOperation, code, percentComplete, error);
             }
         }
 
-        class TimedBackgroundFunc<TResult> : TimedBackgroundOperationInfo<ITimedBackgroundProgressEvent, ITimedBackgroundOperationResultEvent<TResult>, TimedBackgroundFunc<TResult>.BackgroundProgressImpl, Task<TResult>>,
-            ITimedBackgroundFunc<TResult>, IBackgroundEventFactory<ITimedBackgroundProgressEvent, ITimedBackgroundOperationResultEvent<TResult>, ITimedBackgroundProgress<ITimedBackgroundProgressEvent>, TResult>
+        class TimedBackgroundFunc<TResult> : TimedBackgroundOperationInfo<ITimedBackgroundProgressEvent, ITimedBackgroundOperationResultEvent<TResult>,
+            ITimedBackgroundProgress<ITimedBackgroundProgressEvent>, Task<TResult>>, ITimedBackgroundFunc<TResult>,
+            IBackgroundEventFactory<ITimedBackgroundProgressEvent, ITimedBackgroundOperationResultEvent<TResult>, ITimedBackgroundProgress<ITimedBackgroundProgressEvent>, TResult>
         {
             private readonly TaskCompletionSource<TResult> _completionSource;
+            protected readonly BackgroundProgressImpl _progress;
+            private readonly Func<ITimedBackgroundFunc<TResult>, ITimedBackgroundOperationResultEvent<TResult>> _onCompleted;
 
             public override Task Task => _completionSource.Task;
 
             Task<TResult> IBackgroundFunc<TResult>.Task => _completionSource.Task;
 
-            protected override BackgroundProgressImpl Progress { get; }
+            protected override ITimedBackgroundProgress<ITimedBackgroundProgressEvent> Progress => _progress;
 
-            protected override IBackgroundProgressEventFactory<ITimedBackgroundProgressEvent, BackgroundProgressImpl> EventFactory => throw new NotImplementedException();
-
-            private TimedBackgroundFunc(string activity, string initialStatusDescription, Guid? parentId, CancellationToken[] linkedTokens) : base(linkedTokens)
+            private TimedBackgroundFunc([DisallowNull] BackgroundProgressService service, [DisallowNull] string activity, [DisallowNull] string initialStatusDescription, Guid? parentId,
+                Func<ITimedBackgroundFunc<TResult>, ITimedBackgroundOperationResultEvent<TResult>> onCompleted, CancellationToken[] linkedTokens)
+                : base(service, linkedTokens)
             {
                 _completionSource = new();
-                Progress = new(activity, initialStatusDescription, parentId, Stopwatch, Token);
+                _progress = new(this, activity, initialStatusDescription, parentId, Stopwatch, this, Token);
+                _onCompleted = onCompleted ?? BackgroundProgressImpl.CreateCompletedEvent;
             }
 
-            internal static TimedBackgroundFunc<TResult> Start(BackgroundProgressService service, string activity, string initialStatusDescription, Guid? parentId,
-                Func<ITimedBackgroundProgress<ITimedBackgroundProgressEvent>, Task<TResult>> asyncMethodDelegate, params CancellationToken[] linkedTokens)
+            internal static TimedBackgroundFunc<TResult> Start([DisallowNull] BackgroundProgressService service, BackgroundOperationInfo parent, [DisallowNull] string activity,
+                [DisallowNull] string initialStatusDescription,
+                [DisallowNull] Func<ITimedBackgroundProgress<ITimedBackgroundProgressEvent>, Task<TResult>> asyncMethodDelegate,
+                Func<ITimedBackgroundFunc<TResult>, ITimedBackgroundOperationResultEvent<TResult>> onCompleted, params CancellationToken[] linkedTokens)
             {
-                TimedBackgroundFunc<TResult> backgroundOperation = new(activity, initialStatusDescription, parentId, linkedTokens);
-                OperationHelper.Start<ITimedBackgroundProgressEvent, ITimedBackgroundOperationResultEvent<TResult>, ITimedBackgroundProgress<ITimedBackgroundProgressEvent>, TimedBackgroundFunc<TResult>, TResult>(service, backgroundOperation,
-                    backgroundOperation.Progress, asyncMethodDelegate, backgroundOperation._completionSource, backgroundOperation.RaiseRanToCompletion);
+                TimedBackgroundFunc<TResult> backgroundOperation = new(service, activity, initialStatusDescription, parent?.OperationId, onCompleted, linkedTokens);
+                OperationHelper.Start<ITimedBackgroundProgressEvent, ITimedBackgroundOperationResultEvent<TResult>, ITimedBackgroundProgress<ITimedBackgroundProgressEvent>,
+                    TimedBackgroundFunc<TResult>, TResult>(service, parent, backgroundOperation, backgroundOperation.Progress, backgroundOperation.Stopwatch, asyncMethodDelegate,
+                    backgroundOperation._completionSource, backgroundOperation.RaiseRanToCompletion);
                 return backgroundOperation;
             }
 
-            private void RaiseRanToCompletion(TResult result)
-            {
-                throw new NotImplementedException();
-            }
+            private void RaiseRanToCompletion(TResult result) => _progress.Report(_onCompleted(this));
 
             protected override void RaiseOperationCanceled()
             {
                 throw new NotImplementedException();
             }
 
-            protected override void RaiseOperationFaulted(Exception exception)
+            protected override void RaiseOperationFaulted([DisallowNull] Exception exception)
             {
                 throw new NotImplementedException();
             }
 
-            protected override IDisposable BaseSubscribe(IObserver<IBackgroundProgressEvent> observer)
+            protected override IDisposable BaseSubscribe([DisallowNull] IObserver<IBackgroundProgressEvent> observer)
+            {
+                throw new NotImplementedException();
+            }
+
+            public ITimedBackgroundProgressEvent CreateProgressEvent([DisallowNull] IBackgroundProgress<ITimedBackgroundProgressEvent> backgroundProgress,
+                [DisallowNull] string statusDescription, [DisallowNull] string currentOperation, MessageCode? code, byte? percentComplete, Exception error)
             {
                 throw new NotImplementedException();
             }
 
             internal class BackgroundProgressImpl : TimedBackgroundProgress
             {
-                internal BackgroundProgressImpl(string activity, string initialStatusDescription, Guid? parentId, Stopwatch stopwatch, CancellationToken token) :
-                    base(activity, initialStatusDescription, parentId, stopwatch, token) { }
+                private readonly IBackgroundEventFactory<ITimedBackgroundProgressEvent, ITimedBackgroundOperationResultEvent<TResult>,
+                    ITimedBackgroundProgress<ITimedBackgroundProgressEvent>, TResult> _eventFactory;
+
+                internal BackgroundProgressImpl([DisallowNull] BackgroundOperationInfo operation, [DisallowNull] string activity, [DisallowNull] string initialStatusDescription, Guid? parentId, [DisallowNull] Stopwatch stopwatch,
+                    [DisallowNull] IBackgroundEventFactory<ITimedBackgroundProgressEvent, ITimedBackgroundOperationResultEvent<TResult>,
+                        ITimedBackgroundProgress<ITimedBackgroundProgressEvent>, TResult> eventFactory, CancellationToken token)
+                    : base(operation, activity, initialStatusDescription, parentId, stopwatch, token) => _eventFactory = eventFactory;
+
+                internal static ITimedBackgroundOperationResultEvent<TResult> CreateCompletedEvent(ITimedBackgroundFunc<TResult> backgroundOperation)
+                {
+                    throw new NotImplementedException();
+                }
+
+                protected override ITimedBackgroundProgressEvent CreateEvent([DisallowNull] string statusDescription, [DisallowNull] string currentOperation, MessageCode? code,
+                    byte? percentComplete, Exception error) => _eventFactory.CreateProgressEvent(this, statusDescription, currentOperation, code, percentComplete, error);
             }
         }
 
         class TimedBackgroundFunc<TState, TResult> : TimedBackgroundOperationInfo<ITimedBackgroundProgressEvent<TState>, ITimedBackgroundOperationResultEvent<TState, TResult>,
-            TimedBackgroundFunc<TState, TResult>.BackgroundProgressImpl, Task<TResult>>, ITimedBackgroundFunc<TState, TResult>,
-            IBackgroundEventFactory<ITimedBackgroundProgressEvent<TState>, ITimedBackgroundOperationResultEvent<TState, TResult>, ITimedBackgroundProgress<TState, ITimedBackgroundProgressEvent<TState>>, TResult>
+            ITimedBackgroundProgress<TState, ITimedBackgroundProgressEvent<TState>>, Task<TResult>>, ITimedBackgroundFunc<TState, TResult>,
+            IBackgroundEventFactory<ITimedBackgroundProgressEvent<TState>, ITimedBackgroundOperationResultEvent<TState, TResult>,
+                ITimedBackgroundProgress<TState, ITimedBackgroundProgressEvent<TState>>, TResult>
         {
             private readonly TaskCompletionSource<TResult> _completionSource;
+            protected readonly BackgroundProgressImpl _progress;
+            private readonly Func<ITimedBackgroundFunc<TState, TResult>, ITimedBackgroundOperationResultEvent<TState, TResult>> _onCompleted;
 
             public override Task Task => _completionSource.Task;
 
             Task<TResult> IBackgroundFunc<TResult>.Task => _completionSource.Task;
 
-            protected override BackgroundProgressImpl Progress { get; }
+            protected override ITimedBackgroundProgress<TState, ITimedBackgroundProgressEvent<TState>> Progress => _progress;
 
             public TState AsyncState => Progress.AsyncState;
 
-            protected override IBackgroundProgressEventFactory<ITimedBackgroundProgressEvent<TState>, BackgroundProgressImpl> EventFactory => throw new NotImplementedException();
-
-            private TimedBackgroundFunc(string activity, string initialStatusDescription, Guid? parentId, TState state, CancellationToken[] linkedTokens) : base(linkedTokens)
+            private TimedBackgroundFunc([DisallowNull] BackgroundProgressService service, [DisallowNull] string activity, [DisallowNull] string initialStatusDescription, Guid? parentId, TState state,
+                Func<ITimedBackgroundFunc<TState, TResult>, ITimedBackgroundOperationResultEvent<TState, TResult>> onCompleted, CancellationToken[] linkedTokens)
+                : base(service, linkedTokens)
             {
                 _completionSource = new(state);
-                Progress = new(activity, initialStatusDescription, parentId, Stopwatch, state, Token);
+                _progress = new(this, activity, initialStatusDescription, parentId, Stopwatch, state, this, Token);
+                _onCompleted = onCompleted ?? BackgroundProgressImpl.CreateCompletedEvent;
             }
 
-            internal static TimedBackgroundFunc<TState, TResult> Start(BackgroundProgressService service, string activity, string initialStatusDescription, Guid? parentId, TState state,
-                Func<ITimedBackgroundProgress<ITimedBackgroundProgressEvent<TState>>, Task<TResult>> asyncMethodDelegate, params CancellationToken[] linkedTokens)
+            internal static TimedBackgroundFunc<TState, TResult> Start([DisallowNull] BackgroundProgressService service, BackgroundOperationInfo parent, [DisallowNull] string activity,
+                [DisallowNull] string initialStatusDescription, TState state,
+                [DisallowNull] Func<ITimedBackgroundProgress<TState, ITimedBackgroundProgressEvent<TState>>, Task<TResult>> asyncMethodDelegate,
+                Func<ITimedBackgroundFunc<TState, TResult>, ITimedBackgroundOperationResultEvent<TState, TResult>> onCompleted, params CancellationToken[] linkedTokens)
             {
-                TimedBackgroundFunc<TState, TResult> backgroundOperation = new(activity, initialStatusDescription, parentId, state, linkedTokens);
-                OperationHelper.Start<ITimedBackgroundProgressEvent<TState>, ITimedBackgroundOperationResultEvent<TState, TResult>, ITimedBackgroundProgress<TState, ITimedBackgroundProgressEvent<TState>>, TimedBackgroundFunc<TState, TResult>, TResult>(service,
-                    backgroundOperation, backgroundOperation.Progress, asyncMethodDelegate, backgroundOperation._completionSource, backgroundOperation.RaiseRanToCompletion);
+                TimedBackgroundFunc<TState, TResult> backgroundOperation = new(service, activity, initialStatusDescription, parent?.OperationId, state, onCompleted, linkedTokens);
+                OperationHelper.Start<ITimedBackgroundProgressEvent<TState>, ITimedBackgroundOperationResultEvent<TState, TResult>,
+                    ITimedBackgroundProgress<TState, ITimedBackgroundProgressEvent<TState>>, TimedBackgroundFunc<TState, TResult>, TResult>(service, parent, backgroundOperation,
+                    backgroundOperation.Progress, backgroundOperation.Stopwatch, asyncMethodDelegate, backgroundOperation._completionSource, backgroundOperation.RaiseRanToCompletion);
                 return backgroundOperation;
             }
 
-            private void RaiseRanToCompletion(TResult result)
-            {
-                throw new NotImplementedException();
-            }
+            private void RaiseRanToCompletion(TResult result) => _progress.Report(_onCompleted(this));
 
             protected override void RaiseOperationCanceled()
             {
                 throw new NotImplementedException();
             }
 
-            protected override void RaiseOperationFaulted(Exception exception)
+            protected override void RaiseOperationFaulted([DisallowNull] Exception exception)
             {
                 throw new NotImplementedException();
             }
@@ -260,7 +302,7 @@ namespace FsInfoCat.Services
                 throw new NotImplementedException();
             }
 
-            protected override IDisposable BaseSubscribe(IObserver<IBackgroundProgressEvent> observer)
+            protected override IDisposable BaseSubscribe([DisallowNull] IObserver<IBackgroundProgressEvent> observer)
             {
                 throw new NotImplementedException();
             }
@@ -270,15 +312,36 @@ namespace FsInfoCat.Services
                 throw new NotImplementedException();
             }
 
+            public ITimedBackgroundProgressEvent<TState> CreateProgressEvent([DisallowNull] IBackgroundProgress<ITimedBackgroundProgressEvent<TState>> backgroundProgress,
+                [DisallowNull] string statusDescription, [DisallowNull] string currentOperation, MessageCode? code, byte? percentComplete, Exception error)
+            {
+                throw new NotImplementedException();
+            }
+
             internal class BackgroundProgressImpl : TimedBackgroundProgress, ITimedBackgroundProgress<TState, ITimedBackgroundProgressEvent<TState>>
             {
+                private readonly IBackgroundEventFactory<ITimedBackgroundProgressEvent<TState>, ITimedBackgroundOperationResultEvent<TState, TResult>,
+                    ITimedBackgroundProgress<TState, ITimedBackgroundProgressEvent<TState>>, TResult> _eventFactory;
+
                 public TState AsyncState { get; }
 
-                internal BackgroundProgressImpl(string activity, string initialStatusDescription, Guid? parentId, Stopwatch stopwatch, TState state, CancellationToken token)
-                    : base(activity, initialStatusDescription, parentId, stopwatch, token)
+                internal BackgroundProgressImpl([DisallowNull] BackgroundOperationInfo operation, [DisallowNull] string activity, [DisallowNull] string initialStatusDescription, Guid? parentId, [DisallowNull] Stopwatch stopwatch,
+                    TState state,
+                    [DisallowNull] IBackgroundEventFactory<ITimedBackgroundProgressEvent<TState>, ITimedBackgroundOperationResultEvent<TState, TResult>,
+                        ITimedBackgroundProgress<TState, ITimedBackgroundProgressEvent<TState>>, TResult> eventFactory, CancellationToken token)
+                    : base(operation, activity, initialStatusDescription, parentId, stopwatch, token)
                 {
+                    _eventFactory = eventFactory;
                     AsyncState = state;
                 }
+
+                internal static ITimedBackgroundOperationResultEvent<TState, TResult> CreateCompletedEvent(ITimedBackgroundFunc<TState, TResult> backgroundOperation)
+                {
+                    throw new NotImplementedException();
+                }
+
+                protected override ITimedBackgroundProgressEvent<TState> CreateEvent([DisallowNull] string statusDescription, [DisallowNull] string currentOperation, MessageCode? code,
+                    byte? percentComplete, Exception error) => _eventFactory.CreateProgressEvent(this, statusDescription, currentOperation, code, percentComplete, error);
             }
         }
 

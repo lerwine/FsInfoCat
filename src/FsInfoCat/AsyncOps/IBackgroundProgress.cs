@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 
 namespace FsInfoCat.AsyncOps
@@ -20,11 +21,11 @@ namespace FsInfoCat.AsyncOps
         /// <value>The token that is used to communicate background operation cancellation requests.</value>
         CancellationToken Token { get; }
 
-        void ReportCurrentOperation(string currentOperation, MessageCode code, byte percentComplete);
+        void ReportCurrentOperation([DisallowNull] string currentOperation, MessageCode code, byte percentComplete);
 
-        void ReportCurrentOperation(string currentOperation, MessageCode code);
+        void ReportCurrentOperation([DisallowNull] string currentOperation, MessageCode code);
 
-        void ReportCurrentOperation(string currentOperation, byte percentComplete);
+        void ReportCurrentOperation([DisallowNull] string currentOperation, byte percentComplete);
 
         /// <summary>
         /// Reports the current operation.
@@ -32,19 +33,19 @@ namespace FsInfoCat.AsyncOps
         /// <param name="currentOperation">The description of the specific operation currently being conducted.
         /// <para>This serves the same conceptual puropose as the
         /// PowerShell <see cref="https://docs.microsoft.com/en-us/dotnet/api/system.management.automation.progressrecord.activityid#System_Management_Automation_ProgressRecord_CurrentOperation">ProgressRecord.CurrentOperation</see> property.</para></param>
-        void ReportCurrentOperation(string currentOperation);
+        void ReportCurrentOperation([DisallowNull] string currentOperation);
 
-        void ReportStatusDescription(string statusDescription, string currentOperation, MessageCode code, byte percentComplete);
+        void ReportStatusDescription([DisallowNull] string statusDescription, [DisallowNull] string currentOperation, MessageCode code, byte percentComplete);
 
-        void ReportStatusDescription(string statusDescription, string currentOperation, MessageCode code);
+        void ReportStatusDescription([DisallowNull] string statusDescription, [DisallowNull] string currentOperation, MessageCode code);
 
-        void ReportStatusDescription(string statusDescription, string currentOperation, byte percentComplete);
+        void ReportStatusDescription([DisallowNull] string statusDescription, [DisallowNull] string currentOperation, byte percentComplete);
 
-        void ReportStatusDescription(string statusDescription, MessageCode code, byte percentComplete);
+        void ReportStatusDescription([DisallowNull] string statusDescription, MessageCode code, byte percentComplete);
 
-        void ReportStatusDescription(string statusDescription, MessageCode code);
+        void ReportStatusDescription([DisallowNull] string statusDescription, MessageCode code);
 
-        void ReportStatusDescription(string statusDescription, byte percentComplete);
+        void ReportStatusDescription([DisallowNull] string statusDescription, byte percentComplete);
 
         /// <summary>
         /// Reports the background operation status and operation description.
@@ -56,7 +57,7 @@ namespace FsInfoCat.AsyncOps
         /// <para>This serves the same conceptual puropose as the
         /// PowerShell <see cref="https://docs.microsoft.com/en-us/dotnet/api/system.management.automation.progressrecord.activityid#System_Management_Automation_ProgressRecord_CurrentOperation">ProgressRecord.CurrentOperation</see> property.</para></param>
         /// <exception cref="ArgumentException"><paramref name="statusDescription"/> is <see langword="null"/> or contains only white space.</exception>
-        void ReportStatusDescription(string statusDescription, string currentOperation);
+        void ReportStatusDescription([DisallowNull] string statusDescription, [DisallowNull] string currentOperation);
 
         /// <summary>
         /// Reports the background operation status.
@@ -64,25 +65,25 @@ namespace FsInfoCat.AsyncOps
         /// <param name="statusDescription">The asynchronous operation status description.
         /// <para>This serves the same conceptual puropose as the
         /// PowerShell <see cref="https://docs.microsoft.com/en-us/dotnet/api/system.management.automation.progressrecord.activityid#System_Management_Automation_ProgressRecord_StatusDescription">ProgressRecord.StatusDescription</see> property.</para></param>
-        void ReportStatusDescription(string statusDescription);
+        void ReportStatusDescription([DisallowNull] string statusDescription);
 
-        void ReportException(Exception exception, string statusDescription, string currentOperation, MessageCode code, byte percentComplete);
+        void ReportException([DisallowNull] Exception exception, [DisallowNull] string statusDescription, [DisallowNull] string currentOperation, MessageCode code, byte percentComplete);
 
-        void ReportException(Exception exception, string statusDescription, string currentOperation, MessageCode code);
+        void ReportException([DisallowNull] Exception exception, [DisallowNull] string statusDescription, [DisallowNull] string currentOperation, MessageCode code);
 
-        void ReportException(Exception exception, string statusDescription, string currentOperation, byte percentComplete);
+        void ReportException([DisallowNull] Exception exception, [DisallowNull] string statusDescription, [DisallowNull] string currentOperation, byte percentComplete);
 
-        void ReportException(Exception exception, string statusDescription, MessageCode code, byte percentComplete);
+        void ReportException([DisallowNull] Exception exception, [DisallowNull] string statusDescription, MessageCode code, byte percentComplete);
 
-        void ReportException(Exception exception, string statusDescription, MessageCode code);
+        void ReportException([DisallowNull] Exception exception, [DisallowNull] string statusDescription, MessageCode code);
 
-        void ReportException(Exception exception, string statusDescription, byte percentComplete);
+        void ReportException([DisallowNull] Exception exception, [DisallowNull] string statusDescription, byte percentComplete);
 
-        void ReportException(Exception exception, MessageCode code, byte percentComplete);
+        void ReportException([DisallowNull] Exception exception, MessageCode code, byte percentComplete);
 
-        void ReportException(Exception exception, MessageCode code);
+        void ReportException([DisallowNull] Exception exception, MessageCode code);
 
-        void ReportException(Exception exception, byte percentComplete);
+        void ReportException([DisallowNull] Exception exception, byte percentComplete);
 
         void ReportPercentComplete(byte percentComplete);
 
@@ -98,7 +99,7 @@ namespace FsInfoCat.AsyncOps
         /// PowerShell <see cref="https://docs.microsoft.com/en-us/dotnet/api/system.management.automation.progressrecord.activityid#System_Management_Automation_ProgressRecord_CurrentOperation">ProgressRecord.CurrentOperation</see> property.</para></param>
         /// <exception cref="ArgumentNullException"><paramref name="exception"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException"><paramref name="statusDescription"/> is <see langword="null"/> or contains only white space.</exception>
-        void ReportException(Exception exception, string statusDescription, string currentOperation);
+        void ReportException([DisallowNull] Exception exception, [DisallowNull] string statusDescription, [DisallowNull] string currentOperation);
 
         /// <summary>
         /// Reports a non-fatal asynchronous operation exception.
@@ -109,13 +110,13 @@ namespace FsInfoCat.AsyncOps
         /// PowerShell <see cref="https://docs.microsoft.com/en-us/dotnet/api/system.management.automation.progressrecord.activityid#System_Management_Automation_ProgressRecord_StatusDescription">ProgressRecord.StatusDescription</see> property.</para></param>
         /// <exception cref="ArgumentNullException"><paramref name="exception"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException"><paramref name="statusDescription"/> is <see langword="null"/> or contains only white space.</exception>
-        void ReportException(Exception exception, string statusDescription);
+        void ReportException([DisallowNull] Exception exception, [DisallowNull] string statusDescription);
 
         /// <summary>
         /// Reports a non-fatal asynchronous operation exception.
         /// </summary>
         /// <param name="exception">The exception to report.</param>
-        void ReportException(Exception exception);
+        void ReportException([DisallowNull] Exception exception);
     }
 
     /// <summary>
