@@ -7,18 +7,18 @@ namespace FsInfoCat
     /// <seealso cref="IDbEntity" />
     public interface IComparison : IDbEntity
     {
-        /// <summary>Gets a value indicating whether the <see cref="IComparison.Baseline" /> and <see cref="IComparison.Correlative" /> are identical byte-for-byte.</summary>
-        /// <value><see langword="true" /> if <see cref="IComparison.Baseline" /> and <see cref="IComparison.Correlative" /> are identical byte-for-byte; otherwise, <see langword="false" />.</value>
+        /// <summary>Gets a value indicating whether the <see cref="Baseline" /> and <see cref="Correlative" /> are identical byte-for-byte.</summary>
+        /// <value><see langword="true" /> if <see cref="Baseline" /> and <see cref="Correlative" /> are identical byte-for-byte; otherwise, <see langword="false" />.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_AreEqual), ResourceType = typeof(Properties.Resources))]
         bool AreEqual { get; }
 
         /// <summary>Gets the date and time when the files were compared.</summary>
-        /// <value>The date and time when <see cref="IComparison.Baseline" /> was compared to <see cref="IComparison.Correlative" />.</value>
+        /// <value>The date and time when <see cref="Baseline" /> was compared to <see cref="Correlative" />.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_ComparedOn), ResourceType = typeof(Properties.Resources))]
         DateTime ComparedOn { get; }
 
         /// <summary>Gets the primary key of the baseline file in the comparison.</summary>
-        /// <value>The <see cref="Guid">unique identifier</see> used as the foreign key that refers to the <see cref="IComparison.Baseline" /><see cref="IFile">file entity</see>.</value>
+        /// <value>The <see cref="Guid">unique identifier</see> used as the foreign key that refers to the <see cref="Baseline" /><see cref="IFile">file entity</see>.</value>
         /// <remarks>This is also part of this entity's compound primary key.</remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_BaselineId), ResourceType = typeof(Properties.Resources))]
         Guid BaselineId { get; }
@@ -29,7 +29,7 @@ namespace FsInfoCat
         IFile Baseline { get; }
 
         /// <summary>Gets the primary key of the correlative file in the comparison.</summary>
-        /// <value>The <see cref="Guid">unique identifier</see> used as the foreign key that refers to the <see cref="IComparison.Correlative" /><see cref="IFile">file entity</see>.</value>
+        /// <value>The <see cref="Guid">unique identifier</see> used as the foreign key that refers to the <see cref="Correlative" /><see cref="IFile">file entity</see>.</value>
         /// <remarks>This is also part of this entity's compound primary key.</remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_CorrelativeId), ResourceType = typeof(Properties.Resources))]
         Guid CorrelativeId { get; }

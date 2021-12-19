@@ -2,9 +2,9 @@ namespace FsInfoCat
 {
     /// <summary>
     /// Interface for objects that contain the name of a file system node and a delimited list of parent subdirectory names.
-    /// Implements the <see cref="FsInfoCat.IHasSimpleIdentifier" />
+    /// Implements the <see cref="IHasSimpleIdentifier" />
     /// </summary>
-    /// <seealso cref="FsInfoCat.IHasSimpleIdentifier" />
+    /// <seealso cref="IHasSimpleIdentifier" />
     public interface IDbFsItemAncestorName : IHasSimpleIdentifier
     {
         /// <summary>

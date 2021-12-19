@@ -12,7 +12,7 @@ namespace FsInfoCat.Background
         /// Gets the start date/time of the crawl job.
         /// </summary>
         /// <value>
-        /// The date/time that <see cref="IHostedService.StartAsync(System.Threading.CancellationToken)"/> was invoked.
+        /// The date/time that <see cref="IHostedService.StartAsync(CancellationToken)"/> was invoked.
         /// </value>
         DateTime Started { get; }
 

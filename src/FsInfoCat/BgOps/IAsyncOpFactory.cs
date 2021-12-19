@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat.BgOps
 {
-    [System.Obsolete("Use FsInfoCat.Services.IBackgroundProgressService and/or FsInfoCat.AsyncOps classes")]
+    [Obsolete("Use FsInfoCat.Services.IBackgroundProgressService and/or FsInfoCat.AsyncOps classes")]
     public interface IAsyncOpFactory
     {
         /// <summary>

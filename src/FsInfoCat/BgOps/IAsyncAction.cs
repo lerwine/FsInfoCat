@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat.BgOps
 {
-    [System.Obsolete("Use FsInfoCat.Services.IBackgroundProgressService and/or FsInfoCat.AsyncOps classes")]
+    [Obsolete("Use FsInfoCat.Services.IBackgroundProgressService and/or FsInfoCat.AsyncOps classes")]
     public interface IAsyncAction : IAsyncOpStatus
     {
         /// <summary>
@@ -43,7 +43,7 @@ namespace FsInfoCat.BgOps
         new IAsyncOpEventArgs ParentOperation { get; }
     }
 
-    [System.Obsolete("Use FsInfoCat.Services.IBackgroundProgressService and/or FsInfoCat.AsyncOps classes")]
+    [Obsolete("Use FsInfoCat.Services.IBackgroundProgressService and/or FsInfoCat.AsyncOps classes")]
     public interface IAsyncAction<T> : IAsyncAction, IAsyncOpStatus<T>
     {
         new IAsyncOpEventArgs<T> LastEvent { get; }

@@ -42,7 +42,7 @@ namespace FsInfoCat.Collections
             })
         );
 
-        public static Task RaiseProgressChangedAsync<T>(this IEnumerable<IProgress<T>> eventListeners, T value) => RaiseProgressChangedAsync<T>(eventListeners, value, CancellationToken.None);
+        public static Task RaiseProgressChangedAsync<T>(this IEnumerable<IProgress<T>> eventListeners, T value) => RaiseProgressChangedAsync(eventListeners, value, CancellationToken.None);
 
         /// <summary>
         /// Returns an <c><see cref="IEnumerable{T}"/>&lt;<typeparamref name="T"/>&gt;</c> that throws <see cref="OperationCanceledException"/> upon element enumeration if specified <see cref="CancellationToken"/> has had cancellation requested.

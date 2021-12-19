@@ -44,7 +44,7 @@ namespace FsInfoCat
 
         /// <summary>Gets the parent volume.</summary>
         /// <value>The parent volume (if this is the root subdirectory or <see langword="null" /> if this is a subdirectory.</value>
-        /// <remarks>If this is <see langword="null" />, then <see cref="ISubdirectory.Parent" /> should not be null, and vice-versa.</remarks>
+        /// <remarks>If this is <see langword="null" />, then <see cref="Parent" /> should not be null, and vice-versa.</remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_Volume), ResourceType = typeof(Properties.Resources))]
         IVolume Volume { get; }
 

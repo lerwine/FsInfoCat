@@ -18,7 +18,7 @@ namespace FsInfoCat
         string Notes { get; }
 
         /// <summary>Gets the primary key of the file in the that belongs to the redundancy set.</summary>
-        /// <value>The <see cref="Guid">unique identifier</see> used as the foreign key that refers to the <see cref="IRedundancy.File" /><see cref="IFile">entity</see>.</value>
+        /// <value>The <see cref="Guid">unique identifier</see> used as the foreign key that refers to the <see cref="File" /><see cref="IFile">entity</see>.</value>
         /// <remarks>This is also part of this entity's compound primary key.</remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_FileId), ResourceType = typeof(Properties.Resources))]
         Guid FileId { get; }
@@ -29,7 +29,7 @@ namespace FsInfoCat
         IFile File { get; }
 
         /// <summary>Gets the primary key of the redundancy set file belongs to.</summary>
-        /// <value>The <see cref="Guid">unique identifier</see> used as the foreign key that refers to the <see cref="IRedundancy.RedundantSet" /><see cref="IRedundantSet">entity</see>.</value>
+        /// <value>The <see cref="Guid">unique identifier</see> used as the foreign key that refers to the <see cref="RedundantSet" /><see cref="IRedundantSet">entity</see>.</value>
         /// <remarks>This is also part of this entity's compound primary key.</remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_RedundantSetId), ResourceType = typeof(Properties.Resources))]
         Guid RedundantSetId { get; }

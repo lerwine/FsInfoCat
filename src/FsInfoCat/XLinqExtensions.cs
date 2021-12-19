@@ -63,7 +63,7 @@ namespace FsInfoCat
         /// <typeparam name="T"></typeparam>
         /// <param name="node">The node.</param>
         /// <returns>IEnumerable&lt;T&gt;.</returns>
-        /// <exception cref="System.ArgumentNullException">node</exception>
+        /// <exception cref="ArgumentNullException">node</exception>
         public static IEnumerable<T> GetAdjacentNodes<T>([DisallowNull] this T node) where T : XNode
         {
             if (node is null)

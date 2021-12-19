@@ -6,9 +6,9 @@ namespace FsInfoCat
 {
     /// <summary>
     /// Interface ICoersion
-    /// Implements the <see cref="System.Collections.IEqualityComparer" />
+    /// Implements the <see cref="IEqualityComparer" />
     /// </summary>
-    /// <seealso cref="System.Collections.IEqualityComparer" />
+    /// <seealso cref="IEqualityComparer" />
     public interface ICoersion : IEqualityComparer
     {
         /// <summary>
@@ -59,12 +59,12 @@ namespace FsInfoCat
 
     /// <summary>
     /// Interface ICoersion
-    /// Implements the <see cref="FsInfoCat.ICoersion" />
-    /// Implements the <see cref="System.Collections.Generic.IEqualityComparer{T}" />
+    /// Implements the <see cref="ICoersion" />
+    /// Implements the <see cref="IEqualityComparer{T}" />
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    /// <seealso cref="FsInfoCat.ICoersion" />
-    /// <seealso cref="System.Collections.Generic.IEqualityComparer{T}" />
+    /// <seealso cref="ICoersion" />
+    /// <seealso cref="IEqualityComparer{T}" />
     public interface ICoersion<T> : ICoersion, IEqualityComparer<T>
     {
         /// <summary>
