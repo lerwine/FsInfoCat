@@ -26,13 +26,6 @@ namespace FsInfoCat.Services
 
         public BackgroundProgressService([DisallowNull] ILogger<BackgroundProgressService> logger) => _logger = logger;
 
-        [ServiceBuilderHandler]
-        public static void ConfigureServices([DisallowNull] IServiceCollection services)
-        {
-            System.Diagnostics.Debug.WriteLine($"Invoked {typeof(BackgroundProgressService).FullName}.{nameof(ConfigureServices)}");
-            services.AddHostedService<IBackgroundProgressService>(serviceProvider => new BackgroundProgressService(serviceProvider.GetRequiredService<ILogger<BackgroundProgressService>>()));
-        }
-
         public IDisposable Subscribe([DisallowNull] IObserver<IBackgroundProgressEvent> observer) => _stateEventObservers.Subscribe(observer);
 
         public IDisposable Subscribe([DisallowNull] IObserver<IBackgroundProgressEvent> observer, Action<IReadOnlyList<IBackgroundOperation>> getActiveOperationsOnObserving)

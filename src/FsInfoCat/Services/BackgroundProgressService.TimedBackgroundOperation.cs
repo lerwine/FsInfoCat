@@ -32,23 +32,8 @@ namespace FsInfoCat.Services
             {
                 TimedBackgroundOperation<TEvent, TResultEvent> backgroundOperation = new(service, activity, initialStatusDescription, parent?.OperationId, eventFactory, linkedTokens);
                 OperationHelper.Start<TEvent, TResultEvent, ITimedBackgroundProgress<TEvent>, TimedBackgroundOperation<TEvent, TResultEvent>>(service, parent, backgroundOperation,
-                    backgroundOperation.Progress, backgroundOperation.Stopwatch, asyncMethodDelegate, backgroundOperation._completionSource, backgroundOperation.RaiseRanToCompletion);
+                    backgroundOperation.Progress, backgroundOperation.Stopwatch, asyncMethodDelegate, backgroundOperation._completionSource, backgroundOperation._progress.RaiseRanToCompletion);
                 return backgroundOperation;
-            }
-
-            private void RaiseRanToCompletion()
-            {
-                throw new NotImplementedException();
-            }
-
-            protected override void RaiseOperationCanceled()
-            {
-                throw new NotImplementedException();
-            }
-
-            protected override void RaiseOperationFaulted([DisallowNull] Exception exception)
-            {
-                throw new NotImplementedException();
             }
 
             protected override IDisposable BaseSubscribe([DisallowNull] IObserver<IBackgroundProgressEvent> observer)
@@ -68,6 +53,21 @@ namespace FsInfoCat.Services
                 internal BackgroundProgressImpl([DisallowNull] BackgroundOperationInfo operation, [DisallowNull] string activity, [DisallowNull] string initialStatusDescription, Guid? parentId, [DisallowNull] Stopwatch stopwatch,
                     [DisallowNull] IBackgroundEventFactory<TEvent, TResultEvent, ITimedBackgroundProgress<TEvent>> eventFactory, CancellationToken token)
                     : base(operation, activity, initialStatusDescription, parentId, stopwatch, token) => _eventFactory = eventFactory;
+
+                internal void RaiseRanToCompletion()
+                {
+                    throw new NotImplementedException();
+                }
+
+                internal void RaiseOperationCanceled()
+                {
+                    throw new NotImplementedException();
+                }
+
+                internal void RaiseOperationFaulted([DisallowNull] Exception exception)
+                {
+                    throw new NotImplementedException();
+                }
 
                 protected override TEvent CreateEvent([DisallowNull] string statusDescription, [DisallowNull] string currentOperation, MessageCode? code, byte? percentComplete,
                     Exception error) => _eventFactory.CreateProgressEvent(this, statusDescription, currentOperation, code, percentComplete, error);
@@ -102,23 +102,8 @@ namespace FsInfoCat.Services
             {
                 TimedBackgroundOperation<TEvent, TResultEvent, TState> backgroundOperation = new(service, activity, initialStatusDescription, parent?.OperationId, state, eventFactory, linkedTokens);
                 OperationHelper.Start<TEvent, TResultEvent, ITimedBackgroundProgress<TState, TEvent>, TimedBackgroundOperation<TEvent, TResultEvent, TState>>(service, parent, backgroundOperation,
-                    backgroundOperation.Progress, backgroundOperation.Stopwatch, asyncMethodDelegate, backgroundOperation._completionSource, backgroundOperation.RaiseRanToCompletion);
+                    backgroundOperation.Progress, backgroundOperation.Stopwatch, asyncMethodDelegate, backgroundOperation._completionSource, backgroundOperation._progress.RaiseRanToCompletion);
                 return backgroundOperation;
-            }
-
-            private void RaiseRanToCompletion()
-            {
-                throw new NotImplementedException();
-            }
-
-            protected override void RaiseOperationCanceled()
-            {
-                throw new NotImplementedException();
-            }
-
-            protected override void RaiseOperationFaulted([DisallowNull] Exception exception)
-            {
-                throw new NotImplementedException();
             }
 
             IDisposable IObservable<IBackgroundProgressEvent<TState>>.Subscribe(IObserver<IBackgroundProgressEvent<TState>> observer)
@@ -155,6 +140,21 @@ namespace FsInfoCat.Services
                     AsyncState = state;
                 }
 
+                internal void RaiseRanToCompletion()
+                {
+                    throw new NotImplementedException();
+                }
+
+                internal void RaiseOperationCanceled()
+                {
+                    throw new NotImplementedException();
+                }
+
+                internal void RaiseOperationFaulted([DisallowNull] Exception exception)
+                {
+                    throw new NotImplementedException();
+                }
+
                 protected override TEvent CreateEvent([DisallowNull] string statusDescription, [DisallowNull] string currentOperation, MessageCode? code, byte? percentComplete,
                     Exception error) => _eventFactory.CreateProgressEvent(this, statusDescription, currentOperation, code, percentComplete, error);
             }
@@ -187,23 +187,8 @@ namespace FsInfoCat.Services
                 TimedBackgroundOperation backgroundOperation = new(service, activity, initialStatusDescription, parent?.OperationId, onCompleted, linkedTokens);
                 OperationHelper.Start<ITimedBackgroundProgressEvent, ITimedBackgroundOperationCompletedEvent, ITimedBackgroundProgress<ITimedBackgroundProgressEvent>,
                     TimedBackgroundOperation>(service, parent, backgroundOperation, backgroundOperation.Progress, backgroundOperation.Stopwatch, asyncMethodDelegate,
-                    backgroundOperation._completionSource, backgroundOperation.RaiseRanToCompletion);
+                    backgroundOperation._completionSource, backgroundOperation._progress.RaiseRanToCompletion);
                 return backgroundOperation;
-            }
-
-            private void RaiseRanToCompletion()
-            {
-                throw new NotImplementedException();
-            }
-
-            protected override void RaiseOperationCanceled()
-            {
-                throw new NotImplementedException();
-            }
-
-            protected override void RaiseOperationFaulted([DisallowNull] Exception exception)
-            {
-                throw new NotImplementedException();
             }
 
             protected override IDisposable BaseSubscribe([DisallowNull] IObserver<IBackgroundProgressEvent> observer)
@@ -226,6 +211,21 @@ namespace FsInfoCat.Services
                     [DisallowNull] IBackgroundEventFactory<ITimedBackgroundProgressEvent, ITimedBackgroundOperationCompletedEvent,
                         ITimedBackgroundProgress<ITimedBackgroundProgressEvent>> eventFactory, CancellationToken token)
                     : base(operation, activity, initialStatusDescription, parentId, stopwatch, token) => _eventFactory = eventFactory;
+
+                internal void RaiseRanToCompletion()
+                {
+                    throw new NotImplementedException();
+                }
+
+                internal void RaiseOperationCanceled()
+                {
+                    throw new NotImplementedException();
+                }
+
+                internal void RaiseOperationFaulted([DisallowNull] Exception exception)
+                {
+                    throw new NotImplementedException();
+                }
 
                 internal static ITimedBackgroundOperationCompletedEvent CreateCompletedEvent(ITimedBackgroundOperation backgroundOperation)
                 {
@@ -268,23 +268,8 @@ namespace FsInfoCat.Services
                 TimedBackgroundOperation<TState> backgroundOperation = new(service, activity, initialStatusDescription, parent?.OperationId, state, onCompleted, linkedTokens);
                 OperationHelper.Start<ITimedBackgroundProgressEvent<TState>, ITimedBackgroundOperationCompletedEvent<TState>,
                     ITimedBackgroundProgress<TState, ITimedBackgroundProgressEvent<TState>>, TimedBackgroundOperation<TState>>(service, parent, backgroundOperation, backgroundOperation.Progress,
-                    backgroundOperation.Stopwatch, asyncMethodDelegate, backgroundOperation._completionSource, backgroundOperation.RaiseRanToCompletion);
+                    backgroundOperation.Stopwatch, asyncMethodDelegate, backgroundOperation._completionSource, backgroundOperation._progress.RaiseRanToCompletion);
                 return backgroundOperation;
-            }
-
-            private void RaiseRanToCompletion()
-            {
-                throw new NotImplementedException();
-            }
-
-            protected override void RaiseOperationCanceled()
-            {
-                throw new NotImplementedException();
-            }
-
-            protected override void RaiseOperationFaulted([DisallowNull] Exception exception)
-            {
-                throw new NotImplementedException();
             }
 
             IDisposable IObservable<IBackgroundProgressEvent<TState>>.Subscribe(IObserver<IBackgroundProgressEvent<TState>> observer)
@@ -323,6 +308,21 @@ namespace FsInfoCat.Services
                 {
                     _eventFactory = eventFactory;
                     AsyncState = state;
+                }
+
+                internal void RaiseRanToCompletion()
+                {
+                    throw new NotImplementedException();
+                }
+
+                internal void RaiseOperationCanceled()
+                {
+                    throw new NotImplementedException();
+                }
+
+                internal void RaiseOperationFaulted([DisallowNull] Exception exception)
+                {
+                    throw new NotImplementedException();
                 }
 
                 internal static ITimedBackgroundOperationCompletedEvent<TState> CreateCompletedEvent(ITimedBackgroundOperation<TState> backgroundOperation)

@@ -56,10 +56,6 @@ namespace FsInfoCat.Services
                     _linkedTokenSource = _tokenSource;
             }
 
-            protected abstract void RaiseOperationCanceled();
-
-            protected abstract void RaiseOperationFaulted([DisallowNull] Exception exception);
-
             public void Cancel() => _tokenSource.Cancel();
 
             public void Cancel(bool throwOnFirstException) => _tokenSource.Cancel(throwOnFirstException);
@@ -939,16 +935,12 @@ namespace FsInfoCat.Services
                     [DisallowNull] LinkedListNode<BackgroundOperationInfo> node, [DisallowNull] TaskCompletionSource completionSource,
                     [DisallowNull] Action raiseRanToCompletion, [DisallowNull] Task task)
                 {
-                    // TODO: Use linked list from parent if not null
                     if (task.IsCanceled)
                         try { RaiseCanceled(service, parent, node, () => completionSource.SetCanceled()); }
                         finally { node.Value.RaiseOperationCanceled(); }
                     else if (task.IsFaulted)
 #pragma warning disable CS8604 // Possible null reference argument.
-                        try
-                        {
-                            RaiseFaulted(service, parent, node, task.Exception, () => completionSource.SetException(task.Exception));
-                        }
+                        try { RaiseFaulted(service, parent, node, task.Exception, () => completionSource.SetException(task.Exception)); }
                         finally
                         {
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
