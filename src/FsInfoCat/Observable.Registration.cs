@@ -1,9 +1,9 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace FsInfoCat
 {
-    public partial class Observable<TNotice>
+    public sealed partial class Observable<TNotice>
     {
         sealed class Registration : IDisposable
         {
@@ -127,7 +127,6 @@ namespace FsInfoCat
                     else
                         registration._previous._next = registration;
                 }
-                target.OnSubscribed(observer);
                 return registration;
             }
 

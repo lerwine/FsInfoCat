@@ -1,5 +1,5 @@
 using FsInfoCat.AsyncOps;
-using FsInfoCat.Services;
+using FsInfoCat.Activities;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
@@ -53,7 +53,7 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
             _logger = App.GetLogger(this);
             _logger.LogDebug($"{nameof(JobServiceStatusViewModel)} constructor invoked");
             SetValue(ItemsPropertyKey, new ReadOnlyObservableCollection<BackgroundJobVM>(_backingItems));
-            IBackgroundProgressService backgroundService = Hosting.GetRequiredService<IBackgroundProgressService>();
+            IAsyncActivityService backgroundService = Hosting.GetAsyncActivityService();
             _eventObserver = new(this, backgroundService);
             _activeStateObserver = new(this, backgroundService);
             _logger.LogDebug($"{nameof(JobServiceStatusViewModel)} Service instantiated");

@@ -1,5 +1,5 @@
 using FsInfoCat.AsyncOps;
-using FsInfoCat.Services;
+using FsInfoCat.Activities;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Diagnostics.CodeAnalysis;
@@ -9,16 +9,16 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
 {
     public partial class JobServiceStatusViewModel
     {
-        class EventObserver : IObserver<IBackgroundProgressEvent>
+        class EventObserver : IObserver<IAsyncActivity>
         {
             private readonly JobServiceStatusViewModel _target;
 
             internal IDisposable Subscription { get; }
 
-            public EventObserver([DisallowNull] JobServiceStatusViewModel target, [DisallowNull] IBackgroundProgressService backgroundService)
+            public EventObserver([DisallowNull] JobServiceStatusViewModel target, [DisallowNull] IAsyncActivityService backgroundService)
             {
                 _target = target;
-                Subscription = backgroundService.Subscribe(this, activeOps =>
+                Subscription = backgroundService.SubscribeStateChange(this, activeOps =>
                 {
                     foreach (IBackgroundOperation backgroundOperation in activeOps)
                         _target.OnOperationStarted(backgroundOperation, null, backgroundOperation);
@@ -36,7 +36,7 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
                     _target._logger.LogError(ErrorCode.Unexpected.ToEventId(), error, "Unexpected background progress error observed");
             }
 
-            public void OnNext(IBackgroundProgressEvent value)
+            public void OnNext(IAsyncActivity value)
             {
                 if (value is IBackgroundProgressStartedEvent startedEvent)
                     _target.Dispatcher.BeginInvoke(() => _target.OnOperationStarted(startedEvent, startedEvent.Code, startedEvent));

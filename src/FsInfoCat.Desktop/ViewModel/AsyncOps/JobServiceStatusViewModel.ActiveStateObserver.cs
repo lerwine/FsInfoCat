@@ -1,5 +1,5 @@
 using FsInfoCat.AsyncOps;
-using FsInfoCat.Services;
+using FsInfoCat.Activities;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Diagnostics.CodeAnalysis;
@@ -15,7 +15,7 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
 
             internal IDisposable Subscription { get; }
 
-            public ActiveStateObserver([DisallowNull] JobServiceStatusViewModel target, [DisallowNull] IBackgroundProgressService backgroundService)
+            public ActiveStateObserver([DisallowNull] JobServiceStatusViewModel target, [DisallowNull] IAsyncActivityService backgroundService)
             {
                 _target = target;
                 Subscription = backgroundService.Subscribe(this);
@@ -26,8 +26,8 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
 
             public void OnError(Exception error)
             {
-                if (error is AsyncOperationException asyncOpError)
-                    _target._logger.LogError(asyncOpError.Code.ToEventId(), asyncOpError, "Active state error observed: Activity={Activity}; Status Message={Message}; Current Operation={CurrentOperation}; Operation ID={OperationId}", asyncOpError.Activity, asyncOpError.Message, asyncOpError.CurrentOperation, asyncOpError.OperationId);
+                if (error is ActivityException activityException)
+                    _target._logger.LogError(activityException.Code.ToEventId(), activityException, "Active state error observed: Activity={ShortDescription}; Status Message={Message}; Current Operation={CurrentOperation}; Activity ID={ActivityId}", activityException.Operation?.ShortDescription, activityException.Message, activityException.Operation?.CurrentOperation, activityException.Operation?.ActivityId);
                 else
                     _target._logger.LogError(ErrorCode.Unexpected.ToEventId(), error, "Unexpected active state error observed");
             }

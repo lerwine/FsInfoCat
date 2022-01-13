@@ -1,26 +1,21 @@
 using Microsoft.Extensions.Hosting;
 using System;
-using System.Collections.Generic;
 
 namespace FsInfoCat.Activities
 {
-    public interface IAsyncActivityService : IHostedService, IObservable<IOperationEvent>, IObservable<bool>, IAsyncActivityProvider
+    /// <summary>
+    /// Represents a hosted service that can be used to start asynchronous activities.
+    /// </summary>
+    /// <seealso cref="IHostedService" />
+    /// <seealso cref="IObservable{bool}" />
+    /// <seealso cref="IAsyncActivityProvider" />
+    /// <remarks>This is also an <seealso cref="IObservable{bool}" /> provider that sends boolean notifications whereby a <see langword="true"/> is pushed when the service transitions from having no activities; and a <see langword="false"/> is pushed when the service transitions to having no more activities.</remarks>
+    public interface IAsyncActivityService : IHostedService, IObservable<bool>, IAsyncActivityProvider
     {
         /// <summary>
-        /// Determines whether there are any active or pending <see cref="IAsyncAction">background operations</see>.
+        /// Gets a value indicating whether there is at least one active <see cref="IAsyncActivity"/>.
         /// </summary>
-        /// <value><see langword="true"/> if there is at least one active or pending <see cref="IAsyncAction">background operation</see>, otherwise, <see langword="false"/>.</value>
+        /// <value><see langword="true"/></c> if there is at least one active <see cref="IAsyncActivity"/>; otherwise, <see langword="false"/>.</value>
         bool IsActive { get; }
-
-        /// <summary>
-        /// Notifies the current <c>IAsyncActivityService</c> that an observer is to receive <see cref="IOperationEvent"/> notifications.
-        /// </summary>
-        /// <param name="observer">The object that is to receive <see cref="IOperationEvent"/> notifications.</param>
-        /// <param name="getActiveOperationsOnObserving">Delegate which gets called immediately before the <paramref name="observer"/> begins receiving notifications, providing <see cref="IOperationEvent"/>
-        /// events for the currently active and pending <see cref="IAsyncAction">background operations</see>.
-        /// <para>If there are no active or pending background operations, <paramref name="getActiveOperationsOnObserving"/> will be invoked with an empty list.</para></param>
-        /// <returns>A reference to an interface that allows observers to stop receiving notifications before the current <c>IAsyncActivityService</c> has finished sending them.</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="observer"/> is <see langword="null"/>.</exception>
-        IDisposable Subscribe(IObserver<IOperationEvent> observer, Action<IReadOnlyList<IOperationEvent>> getActiveOperationsOnObserving);
     }
 }

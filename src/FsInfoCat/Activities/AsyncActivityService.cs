@@ -6,24 +6,25 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace FsInfoCat.Activities
 {
-    partial class AsyncActivityService : BackgroundService, IAsyncActivityService
+    public partial class AsyncActivityService : BackgroundService, IAsyncActivityService
     {
         private readonly object _syncRoot = new();
-        private readonly LinkedList<AsyncOperation> _operations = new();
-        private readonly StateEventObservers _stateEventObservers = new();
-        private readonly ActiveStatusObservers _activeStatusObservers = new();
+        private readonly RootProvider _provider;
         private readonly ILogger<AsyncActivityService> _logger;
 
-        public bool IsActive { get; private set; }
+        public bool IsActive => _provider.IsActive;
 
-        public int Count => _operations.Count;
+        public IObservable<IAsyncActivity> StateChangeObservable => _provider.StateChangeObservable;
 
-        public AsyncActivityService([DisallowNull] ILogger<AsyncActivityService> logger) => _logger = logger;
+        public int Count => _provider.Count;
+
+        private AsyncActivityService([DisallowNull] ILogger<AsyncActivityService> logger) => _logger = logger;
 
         [ServiceBuilderHandler]
         public static void ConfigureServices([DisallowNull] IServiceCollection services)
@@ -31,245 +32,6 @@ namespace FsInfoCat.Activities
             System.Diagnostics.Debug.WriteLine($"Invoked {typeof(AsyncActivityService).FullName}.{nameof(ConfigureServices)}");
             services.AddHostedService<IAsyncActivityService>(serviceProvider => new AsyncActivityService(serviceProvider.GetRequiredService<ILogger<AsyncActivityService>>()));
         }
-
-        public IAsyncAction InvokeAsync<TEvent, TProgressEvent, TFinalEvent>(string activity, string initialStatusDescription, Func<IAsyncActivityProgress<TEvent>, Task> asyncMethodDelegate,
-            IAsyncActionEventFactory<TEvent, TProgressEvent, TFinalEvent, IOperationInfo> eventFactory)
-            where TEvent : IOperationEvent
-            where TProgressEvent : IActivityProgressEvent, TEvent
-            where TFinalEvent : IOperationEvent, TEvent
-        {
-            if (string.IsNullOrWhiteSpace(activity))
-                throw new ArgumentException($"'{nameof(activity)}' cannot be null or whitespace.", nameof(activity));
-            if (string.IsNullOrWhiteSpace(initialStatusDescription))
-                throw new ArgumentException($"'{nameof(initialStatusDescription)}' cannot be null or whitespace.", nameof(initialStatusDescription));
-            if (asyncMethodDelegate is null)
-                throw new ArgumentNullException(nameof(asyncMethodDelegate));
-            if (eventFactory is null)
-                throw new ArgumentNullException(nameof(eventFactory));
-            throw new NotImplementedException();
-        }
-
-        public IAsyncFunc<TResult> InvokeAsync<TEvent, TOperationEvent, TResult, TFinalEvent>(string activity, string initialStatusDescription, Func<IAsyncActivityProgress<TOperationEvent>, Task<TResult>> asyncMethodDelegate,
-            IAsyncFuncEventFactory<TEvent, TOperationEvent, TResult, TFinalEvent, IOperationInfo> eventFactory)
-            where TEvent : IOperationEvent
-            where TOperationEvent : IOperationEvent, TEvent
-            where TFinalEvent : IActivityResultEvent<TResult>, TEvent
-        {
-            if (string.IsNullOrWhiteSpace(activity))
-                throw new ArgumentException($"'{nameof(activity)}' cannot be null or whitespace.", nameof(activity));
-            if (string.IsNullOrWhiteSpace(initialStatusDescription))
-                throw new ArgumentException($"'{nameof(initialStatusDescription)}' cannot be null or whitespace.", nameof(initialStatusDescription));
-            if (asyncMethodDelegate is null)
-                throw new ArgumentNullException(nameof(asyncMethodDelegate));
-            if (eventFactory is null)
-                throw new ArgumentNullException(nameof(eventFactory));
-            throw new NotImplementedException();
-        }
-
-        public ITimedAsyncAction InvokeAsync<TEvent, TProgressEvent, TFinalEvent>(string activity, string initialStatusDescription, Func<ITimedAsyncActivityProgress<TEvent>, Task> asyncMethodDelegate,
-            IAsyncActionEventFactory<TEvent, TProgressEvent, TFinalEvent, ITimedOperationInfo> eventFactory)
-            where TEvent : ITimedOperationEvent
-            where TProgressEvent : ITimedActivityProgressEvent, TEvent
-            where TFinalEvent : ITimedOperationEvent, TEvent
-        {
-            if (string.IsNullOrWhiteSpace(activity))
-                throw new ArgumentException($"'{nameof(activity)}' cannot be null or whitespace.", nameof(activity));
-            if (string.IsNullOrWhiteSpace(initialStatusDescription))
-                throw new ArgumentException($"'{nameof(initialStatusDescription)}' cannot be null or whitespace.", nameof(initialStatusDescription));
-            if (asyncMethodDelegate is null)
-                throw new ArgumentNullException(nameof(asyncMethodDelegate));
-            if (eventFactory is null)
-                throw new ArgumentNullException(nameof(eventFactory));
-            throw new NotImplementedException();
-        }
-
-        public ITimedAsyncFunc<TResult> InvokeAsync<TEvent, TOperationEvent, TResult, TFinalEvent>(string activity, string initialStatusDescription, Func<ITimedAsyncActivityProgress<TOperationEvent>, Task<TResult>> asyncMethodDelegate,
-            IAsyncFuncEventFactory<TEvent, TOperationEvent, TResult, TFinalEvent, ITimedOperationInfo> eventFactory)
-            where TEvent : ITimedOperationEvent
-            where TOperationEvent : ITimedOperationEvent, TEvent
-            where TFinalEvent : ITimedActivityResultEvent<TResult>, TEvent
-        {
-            if (string.IsNullOrWhiteSpace(activity))
-                throw new ArgumentException($"'{nameof(activity)}' cannot be null or whitespace.", nameof(activity));
-            if (string.IsNullOrWhiteSpace(initialStatusDescription))
-                throw new ArgumentException($"'{nameof(initialStatusDescription)}' cannot be null or whitespace.", nameof(initialStatusDescription));
-            if (asyncMethodDelegate is null)
-                throw new ArgumentNullException(nameof(asyncMethodDelegate));
-            if (eventFactory is null)
-                throw new ArgumentNullException(nameof(eventFactory));
-            throw new NotImplementedException();
-        }
-
-        public IAsyncAction<TState> InvokeAsync<TEvent, TProgressEvent, TFinalEvent, TState>(string activity, string initialStatusDescription, Func<IAsyncActivityProgress<TState, TEvent>, Task> asyncMethodDelegate,
-            IAsyncActionEventFactory<TEvent, TProgressEvent, TFinalEvent, IOperationInfo<TState>> eventFactory, TState asyncState)
-            where TEvent : IOperationEvent<TState>
-            where TProgressEvent : IActivityProgressEvent<TState>, TEvent
-            where TFinalEvent : IOperationEvent<TState>, TEvent
-        {
-            if (string.IsNullOrWhiteSpace(activity))
-                throw new ArgumentException($"'{nameof(activity)}' cannot be null or whitespace.", nameof(activity));
-            if (string.IsNullOrWhiteSpace(initialStatusDescription))
-                throw new ArgumentException($"'{nameof(initialStatusDescription)}' cannot be null or whitespace.", nameof(initialStatusDescription));
-            if (asyncMethodDelegate is null)
-                throw new ArgumentNullException(nameof(asyncMethodDelegate));
-            if (eventFactory is null)
-                throw new ArgumentNullException(nameof(eventFactory));
-            throw new NotImplementedException();
-        }
-
-        public IAsyncFunc<TState, TResult> InvokeAsync<TEvent, TOperationEvent, TState, TResult, TFinalEvent>(string activity, string initialStatusDescription, Func<IAsyncActivityProgress<TState, TOperationEvent>, Task<TResult>> asyncMethodDelegate,
-            IAsyncFuncEventFactory<TEvent, TOperationEvent, TResult, TFinalEvent, IOperationInfo<TState>> eventFactory, TState asyncState)
-            where TEvent : IOperationEvent<TState>
-            where TOperationEvent : IOperationEvent<TState>, TEvent
-            where TFinalEvent : IActivityResultEvent<TState, TResult>, TEvent
-        {
-            if (string.IsNullOrWhiteSpace(activity))
-                throw new ArgumentException($"'{nameof(activity)}' cannot be null or whitespace.", nameof(activity));
-            if (string.IsNullOrWhiteSpace(initialStatusDescription))
-                throw new ArgumentException($"'{nameof(initialStatusDescription)}' cannot be null or whitespace.", nameof(initialStatusDescription));
-            if (asyncMethodDelegate is null)
-                throw new ArgumentNullException(nameof(asyncMethodDelegate));
-            if (eventFactory is null)
-                throw new ArgumentNullException(nameof(eventFactory));
-            throw new NotImplementedException();
-        }
-
-        public ITimedAsyncAction<TState> InvokeAsync<TEvent, TProgressEvent, TFinalEvent, TState>(string activity, string initialStatusDescription, Func<ITimedAsyncActivityProgress<TState, TEvent>, Task> asyncMethodDelegate,
-            IAsyncActionEventFactory<TEvent, TProgressEvent, TFinalEvent, IOperationInfo<TState>> eventFactory, TState asyncState)
-            where TEvent : ITimedOperationEvent<TState>
-            where TProgressEvent : ITimedActivityProgressEvent<TState>, TEvent
-            where TFinalEvent : ITimedOperationEvent<TState>, TEvent
-        {
-            if (string.IsNullOrWhiteSpace(activity))
-                throw new ArgumentException($"'{nameof(activity)}' cannot be null or whitespace.", nameof(activity));
-            if (string.IsNullOrWhiteSpace(initialStatusDescription))
-                throw new ArgumentException($"'{nameof(initialStatusDescription)}' cannot be null or whitespace.", nameof(initialStatusDescription));
-            if (asyncMethodDelegate is null)
-                throw new ArgumentNullException(nameof(asyncMethodDelegate));
-            if (eventFactory is null)
-                throw new ArgumentNullException(nameof(eventFactory));
-            throw new NotImplementedException();
-        }
-
-        public ITimedAsyncFunc<TState, TResult> InvokeAsync<TEvent, TOperationEvent, TState, TResult, TFinalEvent>(string activity, string initialStatusDescription,
-            Func<ITimedAsyncActivityProgress<TState, TOperationEvent>, Task<TResult>> asyncMethodDelegate, IAsyncFuncEventFactory<TEvent, TOperationEvent, TResult, TFinalEvent, IOperationInfo<TState>> eventFactory, TState asyncState)
-            where TEvent : ITimedOperationEvent<TState>
-            where TOperationEvent : ITimedOperationEvent<TState>, TEvent
-            where TFinalEvent : ITimedActivityResultEvent<TState, TResult>, TEvent
-        {
-            if (string.IsNullOrWhiteSpace(activity))
-                throw new ArgumentException($"'{nameof(activity)}' cannot be null or whitespace.", nameof(activity));
-            if (string.IsNullOrWhiteSpace(initialStatusDescription))
-                throw new ArgumentException($"'{nameof(initialStatusDescription)}' cannot be null or whitespace.", nameof(initialStatusDescription));
-            if (asyncMethodDelegate is null)
-                throw new ArgumentNullException(nameof(asyncMethodDelegate));
-            if (eventFactory is null)
-                throw new ArgumentNullException(nameof(eventFactory));
-            throw new NotImplementedException();
-        }
-
-        public IAsyncAction InvokeAsync(string activity, string initialStatusDescription, Func<IAsyncActivityProgress<IOperationEvent>, Task> asyncMethodDelegate)
-        {
-            if (string.IsNullOrWhiteSpace(activity))
-                throw new ArgumentException($"'{nameof(activity)}' cannot be null or whitespace.", nameof(activity));
-            if (string.IsNullOrWhiteSpace(initialStatusDescription))
-                throw new ArgumentException($"'{nameof(initialStatusDescription)}' cannot be null or whitespace.", nameof(initialStatusDescription));
-            if (asyncMethodDelegate is null)
-                throw new ArgumentNullException(nameof(asyncMethodDelegate));
-            throw new NotImplementedException();
-        }
-
-        public IAsyncFunc<TResult> InvokeAsync<TResult>(string activity, string initialStatusDescription, Func<IAsyncActivityProgress<IOperationEvent>, Task<TResult>> asyncMethodDelegate)
-        {
-            if (string.IsNullOrWhiteSpace(activity))
-                throw new ArgumentException($"'{nameof(activity)}' cannot be null or whitespace.", nameof(activity));
-            if (string.IsNullOrWhiteSpace(initialStatusDescription))
-                throw new ArgumentException($"'{nameof(initialStatusDescription)}' cannot be null or whitespace.", nameof(initialStatusDescription));
-            if (asyncMethodDelegate is null)
-                throw new ArgumentNullException(nameof(asyncMethodDelegate));
-            throw new NotImplementedException();
-        }
-
-        public ITimedAsyncAction InvokeAsync(string activity, string initialStatusDescription, Func<ITimedAsyncActivityProgress<ITimedOperationEvent>, Task> asyncMethodDelegate)
-        {
-            if (string.IsNullOrWhiteSpace(activity))
-                throw new ArgumentException($"'{nameof(activity)}' cannot be null or whitespace.", nameof(activity));
-            if (string.IsNullOrWhiteSpace(initialStatusDescription))
-                throw new ArgumentException($"'{nameof(initialStatusDescription)}' cannot be null or whitespace.", nameof(initialStatusDescription));
-            if (asyncMethodDelegate is null)
-                throw new ArgumentNullException(nameof(asyncMethodDelegate));
-            throw new NotImplementedException();
-        }
-
-        public ITimedAsyncFunc<TResult> InvokeAsync<TResult>(string activity, string initialStatusDescription, Func<ITimedAsyncActivityProgress<ITimedOperationEvent>, Task<TResult>> asyncMethodDelegate)
-        {
-            if (string.IsNullOrWhiteSpace(activity))
-                throw new ArgumentException($"'{nameof(activity)}' cannot be null or whitespace.", nameof(activity));
-            if (string.IsNullOrWhiteSpace(initialStatusDescription))
-                throw new ArgumentException($"'{nameof(initialStatusDescription)}' cannot be null or whitespace.", nameof(initialStatusDescription));
-            if (asyncMethodDelegate is null)
-                throw new ArgumentNullException(nameof(asyncMethodDelegate));
-            throw new NotImplementedException();
-        }
-
-        public IAsyncAction<TState> InvokeAsync<TState>(string activity, string initialStatusDescription, Func<IAsyncActivityProgress<TState, IOperationEvent<TState>>, Task> asyncMethodDelegate, TState asyncState)
-        {
-            if (string.IsNullOrWhiteSpace(activity))
-                throw new ArgumentException($"'{nameof(activity)}' cannot be null or whitespace.", nameof(activity));
-            if (string.IsNullOrWhiteSpace(initialStatusDescription))
-                throw new ArgumentException($"'{nameof(initialStatusDescription)}' cannot be null or whitespace.", nameof(initialStatusDescription));
-            if (asyncMethodDelegate is null)
-                throw new ArgumentNullException(nameof(asyncMethodDelegate));
-            throw new NotImplementedException();
-        }
-
-        public IAsyncFunc<TState, TResult> InvokeAsync<TState, TResult>(string activity, string initialStatusDescription, Func<IAsyncActivityProgress<TState, IOperationEvent<TState>>, Task<TResult>> asyncMethodDelegate, TState asyncState)
-        {
-            if (string.IsNullOrWhiteSpace(activity))
-                throw new ArgumentException($"'{nameof(activity)}' cannot be null or whitespace.", nameof(activity));
-            if (string.IsNullOrWhiteSpace(initialStatusDescription))
-                throw new ArgumentException($"'{nameof(initialStatusDescription)}' cannot be null or whitespace.", nameof(initialStatusDescription));
-            if (asyncMethodDelegate is null)
-                throw new ArgumentNullException(nameof(asyncMethodDelegate));
-            throw new NotImplementedException();
-        }
-
-        public ITimedAsyncAction<TState> InvokeAsync<TState>(string activity, string initialStatusDescription, Func<ITimedAsyncActivityProgress<TState, ITimedOperationEvent<TState>>, Task> asyncMethodDelegate, TState asyncState)
-        {
-            if (string.IsNullOrWhiteSpace(activity))
-                throw new ArgumentException($"'{nameof(activity)}' cannot be null or whitespace.", nameof(activity));
-            if (string.IsNullOrWhiteSpace(initialStatusDescription))
-                throw new ArgumentException($"'{nameof(initialStatusDescription)}' cannot be null or whitespace.", nameof(initialStatusDescription));
-            if (asyncMethodDelegate is null)
-                throw new ArgumentNullException(nameof(asyncMethodDelegate));
-            throw new NotImplementedException();
-        }
-
-        public ITimedAsyncFunc<TState, TResult> InvokeAsync<TState, TResult>(string activity, string initialStatusDescription, Func<ITimedAsyncActivityProgress<TState, ITimedOperationEvent<TState>>, Task<TResult>> asyncMethodDelegate, TState asyncState)
-        {
-            if (string.IsNullOrWhiteSpace(activity))
-                throw new ArgumentException($"'{nameof(activity)}' cannot be null or whitespace.", nameof(activity));
-            if (string.IsNullOrWhiteSpace(initialStatusDescription))
-                throw new ArgumentException($"'{nameof(initialStatusDescription)}' cannot be null or whitespace.", nameof(initialStatusDescription));
-            if (asyncMethodDelegate is null)
-                throw new ArgumentNullException(nameof(asyncMethodDelegate));
-            throw new NotImplementedException();
-        }
-
-        public IDisposable Subscribe(IObserver<IOperationEvent> observer, Action<IReadOnlyList<IOperationEvent>> getActiveOperationsOnObserving)
-        {
-            if (observer is null)
-                throw new ArgumentNullException(nameof(observer));
-            lock (_syncRoot)
-            {
-                getActiveOperationsOnObserving?.Invoke(_operations.Select(o => o.LatestEvent).ToArray());
-                return _stateEventObservers.Subscribe(observer);
-            }
-        }
-
-        public IDisposable Subscribe(IObserver<IOperationEvent> observer) => _stateEventObservers.Subscribe(observer);
-
-        public IDisposable Subscribe(IObserver<bool> observer) => _activeStatusObservers.Subscribe(observer);
 
         protected override Task ExecuteAsync(CancellationToken stoppingToken) => Task.Run(() =>
         {
@@ -279,42 +41,53 @@ namespace FsInfoCat.Activities
             {
                 lock (_syncRoot)
                 {
-                    AsyncOperation[] actions = _operations.ToArray();
-                    task = Task.WhenAll(actions.Select(o => o.GetTask()).Where(t => !t.IsCompleted).ToArray()).ContinueWith(t =>
+                    IAsyncActivity[] actions = _provider.ToArray();
+                    task = Task.WhenAll(actions.Select(o => o.Task).Where(t => !t.IsCompleted).ToArray()).ContinueWith(t =>
                     {
-                        try { _stateEventObservers.Dispose(); }
-                        finally { _activeStatusObservers.Dispose(); }
+                        try { _provider.StateChangeSource.Dispose(); }
+                        finally { _provider.ActiveStatusSource.Dispose(); }
                     });
-                    foreach (AsyncOperation op in actions)
-                        op.Cancel();
+                    foreach (IAsyncActivity op in actions)
+                    {
+                        if (!op.TokenSource.IsCancellationRequested)
+                            op.TokenSource.Cancel(true);
+                    }
                 }
             }
             task.Wait();
-        });
+        }, stoppingToken);
 
-        public IEnumerator<IAsyncAction> GetEnumerator() => _operations.Select(o => o.GetOperation()).GetEnumerator();
+        public IEnumerator<IAsyncActivity> GetEnumerator() => _provider.GetEnumerator();
 
-        IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)_operations.Select(o => o.GetOperation())).GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)_provider).GetEnumerator();
 
-        class AsyncOperation
-        {
-            internal IOperationEvent LatestEvent { get; private set; }
+        public IAsyncAction<IOperationEvent> InvokeAsync([DisallowNull] string activityDescription, [DisallowNull] string initialStatusMessage, [DisallowNull] Func<IActivityProgress, Task> asyncMethodDelegate)
+            => _provider.InvokeAsync(activityDescription, initialStatusMessage, asyncMethodDelegate);
 
-            internal IAsyncAction GetOperation() => throw new NotImplementedException();
+        public IAsyncFunc<IOperationEvent, TResult> InvokeAsync<TResult>([DisallowNull] string activityDescription, [DisallowNull] string initialStatusMessage,
+            [DisallowNull] Func<IActivityProgress, Task<TResult>> asyncMethodDelegate) => _provider.InvokeAsync(activityDescription, initialStatusMessage, asyncMethodDelegate);
 
-            internal Task GetTask() => throw new NotImplementedException();
+        public IAsyncAction<IOperationEvent<TState>, TState> InvokeAsync<TState>([DisallowNull] string activityDescription, [DisallowNull] string initialStatusMessage, TState state,
+            [DisallowNull] Func<IActivityProgress<TState>, Task> asyncMethodDelegate) => _provider.InvokeAsync(activityDescription, initialStatusMessage, state, asyncMethodDelegate);
 
-            internal void Cancel() => throw new NotImplementedException();
-        }
+        public IAsyncFunc<IOperationEvent<TState>, TState, TResult> InvokeAsync<TState, TResult>([DisallowNull] string activityDescription, [DisallowNull] string initialStatusMessage, TState state,
+            [DisallowNull] Func<IActivityProgress<TState>, Task<TResult>> asyncMethodDelegate) => _provider.InvokeAsync(activityDescription, initialStatusMessage, state, asyncMethodDelegate);
 
-        class StateEventObservers : Observable<IOperationEvent>
-        {
-            internal void RaiseStateChanged(IOperationEvent backgroundProcessEventArgs) => RaiseNext(backgroundProcessEventArgs);
-        }
+        public ITimedAsyncAction<ITimedOperationEvent> InvokeTimedAsync([DisallowNull] string activityDescription, [DisallowNull] string initialStatusMessage,
+            [DisallowNull] Func<IActivityProgress, Task> asyncMethodDelegate) => _provider.InvokeTimedAsync(activityDescription, initialStatusMessage, asyncMethodDelegate);
 
-        class ActiveStatusObservers : Observable<bool>
-        {
-            internal void RaiseActiveStateChanged(bool isActive) => RaiseNext(isActive);
-        }
+        public ITimedAsyncFunc<ITimedOperationEvent, TResult> InvokeTimedAsync<TResult>([DisallowNull] string activityDescription, [DisallowNull] string initialStatusMessage,
+            [DisallowNull] Func<IActivityProgress, Task<TResult>> asyncMethodDelegate) => _provider.InvokeTimedAsync(activityDescription, initialStatusMessage, asyncMethodDelegate);
+
+        public ITimedAsyncAction<ITimedOperationEvent<TState>, TState> InvokeTimedAsync<TState>([DisallowNull] string activityDescription, [DisallowNull] string initialStatusMessage, TState state,
+            [DisallowNull] Func<IActivityProgress<TState>, Task> asyncMethodDelegate) => _provider.InvokeTimedAsync(activityDescription, initialStatusMessage, state, asyncMethodDelegate);
+
+        public ITimedAsyncFunc<ITimedOperationEvent<TState>, TState, TResult> InvokeTimedAsync<TState, TResult>([DisallowNull] string activityDescription, [DisallowNull] string initialStatusMessage, TState state,
+            [DisallowNull] Func<IActivityProgress<TState>, Task<TResult>> asyncMethodDelegate) => _provider.InvokeTimedAsync(activityDescription, initialStatusMessage, state, asyncMethodDelegate);
+
+        public IDisposable Subscribe(IObserver<bool> observer) => _provider.ActiveStatusSource.Observable.Subscribe(observer);
+
+        public IDisposable SubscribeStateChange([DisallowNull] IObserver<IAsyncActivity> observer, [DisallowNull] Action<IAsyncActivity[]> onObserving) => _provider.SubscribeStateChange(observer, onObserving);
     }
+
 }

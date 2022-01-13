@@ -3,26 +3,20 @@ using System;
 namespace FsInfoCat.Activities
 {
     /// <summary>
-    /// Contains information about an activity event.
+    /// Describes an activity event.
     /// </summary>
     /// <seealso cref="IActivityInfo" />
     public interface IActivityEvent : IActivityInfo
     {
         /// <summary>
-        /// Gets the lifecycle status value.
-        /// </summary>
-        /// <value>An <see cref="ActivityState"/> value that indicates the lifecycle status of the activity.</value>
-        ActivityState StatusValue { get; }
-
-        /// <summary>
         /// Gets the exception (if any) associated with the event.
         /// </summary>
-        /// <value>The <see cref="Exception"/> associated with the event or <see langword="null"/> if there is none.</value>
+        /// <value>The <see cref="Exception" /> associated with the event or <see langword="null" /> if there is none.</value>
         Exception Exception { get; }
     }
 
     /// <summary>
-    /// Contains information about an event for an activity that is associated with a user-specified value.
+    /// Describes an event for an activity that is associated with a user-specified value.
     /// </summary>
     /// <typeparam name="TState">The type of the user specified value associated with the described activity.</typeparam>
     /// <seealso cref="IActivityInfo{TState}" />

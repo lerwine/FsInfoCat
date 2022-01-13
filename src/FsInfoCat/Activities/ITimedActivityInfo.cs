@@ -3,27 +3,29 @@ using System;
 namespace FsInfoCat.Activities
 {
     /// <summary>
-    /// Contains information about the state of a timed activity.
+    /// Represents information about the state of a timed activity.
     /// </summary>
     /// <seealso cref="IActivityInfo" />
     public interface ITimedActivityInfo : IActivityInfo
     {
         /// <summary>
-        /// Gets the activity start time.
+        /// Gets the start time.
         /// </summary>
-        /// <value>A <see cref="DateTime"/> indicating when the activity was started. If StatusValue is WaitingToRun, this will be the date and time when the activity was created.</value>
+        /// <value>The date and time when the activity was started started.</value>
+        /// <remarks>If <see cref="IOperationInfo.StatusValue"/> is <see cref="ActivityStatus.WaitingToRun"/>, this will be the date and time when this object was instantiated.</remarks>
         DateTime Started { get; }
 
         /// <summary>
-        /// Gets the activity execution time.
+        /// Gets the duration of the activity.
         /// </summary>
-        /// <value>A <see cref="TimeSpan"/> that indicates the amount of time that the activity had been running.</value>
+        /// <value>The duration of the activity.</value>
         TimeSpan Duration { get; }
     }
 
     /// <summary>
-    /// Contains information about the state of a timed activity that is associated with a user-specified value.
+    /// Represents information about the state of a timed activity that is associated with a user-defined value.
     /// </summary>
+    /// <typeparam name="TState">The type of the t state.</typeparam>
     /// <seealso cref="IActivityInfo{TState}" />
     /// <seealso cref="ITimedActivityInfo" />
     public interface ITimedActivityInfo<TState> : IActivityInfo<TState>, ITimedActivityInfo { }

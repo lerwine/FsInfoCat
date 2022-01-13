@@ -27,7 +27,7 @@ namespace FsInfoCat
 
         public static IServiceProvider ServiceProvider => Host.Services;
 
-        public static Services.IBackgroundProgressService GetBackgroundProgressService() => (Services.IBackgroundProgressService)Host.Services.GetRequiredService<IHostedService>();
+        public static Activities.IAsyncActivityService GetAsyncActivityService() => (Activities.IAsyncActivityService)Host.Services.GetRequiredService<IHostedService>();
 
         public static IServiceScope CreateScope() => Host.Services.CreateScope();
 

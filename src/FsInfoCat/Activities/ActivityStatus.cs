@@ -1,9 +1,9 @@
-namespace FsInfoCat
+﻿namespace FsInfoCat.Activities
 {
     /// <summary>
     /// Indicates the lifecycle status of an activity.
     /// </summary>
-    public enum ActivityState : byte
+    public enum ActivityStatus : byte
     {
         /// <summary>
         /// The activity has been scheduled for execution but has not yet begun executing.
