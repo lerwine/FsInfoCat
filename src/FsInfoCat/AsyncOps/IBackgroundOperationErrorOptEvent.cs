@@ -6,6 +6,7 @@ namespace FsInfoCat.AsyncOps
     /// Describes an asynchronous operation progress event.
     /// </summary>
     /// <seealso cref="IBackgroundProgressEvent" />
+    [Obsolete("Use FsInfoCat.Activities.*, instead.")]
     public interface IBackgroundOperationErrorOptEvent : IBackgroundProgressEvent
     {
         /// <summary>
@@ -21,6 +22,7 @@ namespace FsInfoCat.AsyncOps
     /// <typeparam name="TState">The type of user-defined object associated with the asynchronous operation.</typeparam>
     /// <seealso cref="IBackgroundOperationErrorOptEvent" />
     /// <seealso cref="IBackgroundProgressEvent{TState}" />
+    [Obsolete("Use FsInfoCat.Activities.*, instead.")]
     public interface IBackgroundOperationErrorOptEvent<TState> : IBackgroundProgressEvent<TState>, IBackgroundOperationErrorOptEvent
     {
     }

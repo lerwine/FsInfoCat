@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat.Background
 {
-    [Obsolete("Use FsInfoCat.Services.IBackgroundProgressService")]
+    [Obsolete("Use FsInfoCat.Activities.*, instead.")]
     public partial class BgActivityService : BackgroundService, IBgActivityService
     {
         private readonly object _syncRoot = new();

@@ -9,6 +9,7 @@ namespace FsInfoCat.AsyncOps
     /// <remarks>This pushes <see cref="IBackgroundProgressEvent"/> notifications which indicate the progress of the background operation.</remarks>
     /// <seealso cref="ICancellableOperation" />
     /// <seealso cref="IDisposable" />
+    [Obsolete("Use FsInfoCat.Activities.*, instead.")]
     public interface IBackgroundOperation : ICancellableOperation, IDisposable
     {
         /// <summary>
@@ -25,6 +26,7 @@ namespace FsInfoCat.AsyncOps
     /// <remarks>This pushes <see cref="IBackgroundProgressEvent{TState}"/> notifications which indicate the progress of the background operation.</remarks>
     /// <seealso cref="IBackgroundOperation" />
     /// <seealso cref="ICancellableOperation{TState}" />
+    [Obsolete("Use FsInfoCat.Activities.*, instead.")]
     public interface IBackgroundOperation<TState> : ICancellableOperation<TState>, IBackgroundOperation
     {
     }

@@ -3,6 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat.AsyncOps
 {
+    [Obsolete("Use FsInfoCat.Activities.*, instead.")]
     public class BackgroundProcessFaultedEventArgs : BackgroundProcessCompletedEventArgs, IBackgroundOperationFaultedEvent
     {
         ErrorCode IBackgroundOperationErrorEvent.Code => Code.ToErrorCode() ?? ErrorCode.Unexpected;
@@ -14,6 +15,7 @@ namespace FsInfoCat.AsyncOps
             : base(operation, null, exception ?? throw new ArgumentNullException(nameof(exception)), false, statusDescription) { }
     }
 
+    [Obsolete("Use FsInfoCat.Activities.*, instead.")]
     public class BackgroundProcessFaultedEventArgs<TState> : BackgroundProcessFaultedEventArgs, IBackgroundOperationFaultedEvent<TState>
     {
         public TState AsyncState { get; }

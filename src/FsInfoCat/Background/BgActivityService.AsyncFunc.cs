@@ -6,7 +6,7 @@ namespace FsInfoCat.Background
 {
     public partial class BgActivityService
     {
-        [Obsolete("Use FsInfoCat.Services.IBackgroundProgressService and/or FsInfoCat.AsyncOps classes")]
+        [Obsolete("Use FsInfoCat.Activities.*, instead.")]
         class AsyncFunc<TState, TResult> : AsyncActionBase<TState, IBgStatusEventArgs<TState>, Task<TResult>>, IAsyncFunc<TState, TResult>
         {
             internal AsyncFunc(ActivityCode activityCode, string initialStatusMessage, TState state, Func<IBgActivityProgress<TState>, Task<TResult>> asyncMethodDelegate, BgActivityService bgActivityService)

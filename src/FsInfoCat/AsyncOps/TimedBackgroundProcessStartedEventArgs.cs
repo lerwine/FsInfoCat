@@ -3,6 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat.AsyncOps
 {
+    [Obsolete("Use FsInfoCat.Activities.*, instead.")]
     public class TimedBackgroundProcessStartedEventArgs : BackgroundProcessStartedEventArgsBase<ITimedBackgroundOperation>, ITimedBackgroundProgressStartedEvent
     {
         public TimeSpan Duration { get; }
@@ -16,6 +17,7 @@ namespace FsInfoCat.AsyncOps
         public IDisposable Subscribe(IObserver<ITimedBackgroundProgressEvent> observer) => Operation.Subscribe(observer);
     }
 
+    [Obsolete("Use FsInfoCat.Activities.*, instead.")]
     public sealed class TimedBackgroundProcessStartedEventArgs<TState> : BackgroundProcessStartedEventArgsBase<ITimedBackgroundOperation<TState>>, ITimedBackgroundProgressStartedEvent<TState>
     {
         public TimeSpan Duration { get; }

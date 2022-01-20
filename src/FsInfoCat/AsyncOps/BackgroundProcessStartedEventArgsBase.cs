@@ -3,6 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat.AsyncOps
 {
+    [Obsolete("Use FsInfoCat.Activities.*, instead.")]
     public abstract class BackgroundProcessStartedEventArgsBase<TOperation> : BackgroundProcessStateEventArgs, IBackgroundProgressStartedEvent
         where TOperation : IBackgroundOperation
     {

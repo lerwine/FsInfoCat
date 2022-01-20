@@ -7,7 +7,7 @@ namespace FsInfoCat.Background
 {
     public partial class BgActivityService
     {
-        [Obsolete("Use FsInfoCat.Services.IBackgroundProgressService and/or FsInfoCat.AsyncOps classes")]
+        [Obsolete("Use FsInfoCat.Activities.*, instead.")]
         class AsyncActionBase<TState, TEvent, TTask> : IAsyncAction<TState>
             where TTask : Task
             where TEvent : IBgStatusEventArgs<TState>

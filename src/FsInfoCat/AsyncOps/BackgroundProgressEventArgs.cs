@@ -3,6 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat.AsyncOps
 {
+    [Obsolete("Use FsInfoCat.Activities.*, instead.")]
     public class BackgroundProgressEventArgs : IBackgroundProgressEvent
     {
         public MessageCode? Code { get; }
@@ -32,6 +33,7 @@ namespace FsInfoCat.AsyncOps
         public BackgroundProgressEventArgs([DisallowNull] IBackgroundProgressInfo progress, MessageCode messageCode) : this(progress) { Code = messageCode; }
     }
 
+    [Obsolete("Use FsInfoCat.Activities.*, instead.")]
     public class BackgroundProgressEventArgs<TState> : BackgroundProgressEventArgs, IBackgroundProgressEvent<TState>
     {
         public TState AsyncState { get; }

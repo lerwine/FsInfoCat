@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat
 {
-    [Obsolete("Use FsInfoCat.AsyncOps.IBackgroundOperation, instead")]
+    [Obsolete("Use FsInfoCat.Activities.*, instead.")]
     public interface IAsyncJob : IAsyncResult
     {
         /// <summary>
@@ -82,7 +82,7 @@ namespace FsInfoCat
         void Cancel();
     }
 
-    [Obsolete("Use FsInfoCat.AsyncOps.IBackgroundOperation<TResult>, instead")]
+    [Obsolete("Use FsInfoCat.Activities.*, instead.")]
     public interface IAsyncJob<TResult> : IAsyncJob
     {
         /// <summary>

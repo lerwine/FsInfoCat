@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat.BgOps
 {
-    [Obsolete("Use FsInfoCat.Services.IBackgroundProgressService and/or FsInfoCat.AsyncOps classes")]
+    [Obsolete("Use FsInfoCat.Activities.*, instead.")]
     public class AsyncOpEventArgs<TState> : EventArgs, IAsyncOpEventArgs<TState>
     {
         public IAsyncOpEventArgs ParentOperation => throw new NotImplementedException();

@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat.Background
 {
-    [Obsolete("Use FsInfoCat.Services.IBackgroundProgressService and/or FsInfoCat.AsyncOps classes")]
+    [Obsolete("Use FsInfoCat.Activities.*, instead.")]
     public interface IAsyncAction : IObservable<IBgStatusEventArgs>, IBgActivityObject, IAsyncResult
     {
         Task Task { get; }
@@ -15,7 +15,7 @@ namespace FsInfoCat.Background
         void CancelAfter(TimeSpan delay);
     }
 
-    [Obsolete("Use FsInfoCat.Services.IBackgroundProgressService and/or FsInfoCat.AsyncOps classes")]
+    [Obsolete("Use FsInfoCat.Activities.*, instead.")]
     public interface IAsyncAction<TState> : IAsyncAction, IBgActivityObject<TState>, IObservable<IBgStatusEventArgs<TState>>
     {
     }

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat.AsyncOps
 {
+    [Obsolete("Use FsInfoCat.Activities.*, instead.")]
     public sealed class CancellableTaskList
     {
         private readonly LinkedList<IItem> _items = new();
@@ -102,6 +103,7 @@ namespace FsInfoCat.AsyncOps
 
 namespace FsInfoCat.AsyncOps
 {
+    [Obsolete("Use FsInfoCat.Activities.*, instead.")]
     public abstract class CancellableTaskList<TTask>
         where TTask : Task
     {

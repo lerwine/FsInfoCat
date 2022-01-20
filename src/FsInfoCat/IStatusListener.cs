@@ -9,7 +9,7 @@ namespace FsInfoCat
     /// <summary>
     /// Allows background operations to safely update status information to the associated <see cref="IAsyncOpViewModel">background operation view model item</typeparamref>.
     /// </summary>
-    [Obsolete("Use FsInfoCat.AsyncOps.IBackgroundProgress<TEvent>, instead")]
+    [Obsolete("Use FsInfoCat.Activities.*, instead.")]
     public interface IStatusListener
     {
         /// <summary>

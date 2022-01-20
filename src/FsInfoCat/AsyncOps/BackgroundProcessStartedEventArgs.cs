@@ -3,6 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat.AsyncOps
 {
+    [Obsolete("Use FsInfoCat.Activities.*, instead.")]
     public class BackgroundProcessStartedEventArgs : BackgroundProcessStartedEventArgsBase<IBackgroundOperation>
     {
         public BackgroundProcessStartedEventArgs([DisallowNull] IBackgroundOperation operation, MessageCode? messageCode, string statusDescription = null)
@@ -11,6 +12,7 @@ namespace FsInfoCat.AsyncOps
         }
     }
 
+    [Obsolete("Use FsInfoCat.Activities.*, instead.")]
     public sealed class BackgroundProcessStartedEventArgs<TState> : BackgroundProcessStartedEventArgsBase<IBackgroundOperation<TState>>, IBackgroundProgressStartedEvent<TState>
     {
         public BackgroundProcessStartedEventArgs([DisallowNull] IBackgroundOperation<TState> operation, MessageCode? messageCode, string statusDescription = null)

@@ -5,6 +5,7 @@ namespace FsInfoCat.AsyncOps
     /// </summary>
     /// <seealso cref="IBackgroundOperationErrorOptEvent" />
     /// <seealso cref="ITimedBackgroundProgressEvent" />
+    [System.Obsolete("Use FsInfoCat.Activities.*, instead.")]
     public interface ITimedBackgroundOperationErrorOptEvent : IBackgroundOperationErrorOptEvent, ITimedBackgroundProgressEvent
     {
     }
@@ -16,6 +17,7 @@ namespace FsInfoCat.AsyncOps
     /// <seealso cref="ITimedBackgroundOperationErrorOptEvent" />
     /// <seealso cref="IBackgroundOperationErrorOptEvent{TState}" />
     /// <seealso cref="ITimedBackgroundProgressEvent{TState}" />
+    [System.Obsolete("Use FsInfoCat.Activities.*, instead.")]
     public interface ITimedBackgroundOperationErrorOptEvent<TState> : IBackgroundOperationErrorOptEvent<TState>, ITimedBackgroundProgressEvent<TState>, ITimedBackgroundOperationErrorOptEvent
     {
     }

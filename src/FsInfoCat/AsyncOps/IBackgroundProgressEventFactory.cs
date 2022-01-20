@@ -8,6 +8,7 @@ namespace FsInfoCat.AsyncOps
     /// </summary>
     /// <typeparam name="TEvent">The type of the progress event.</typeparam>
     /// <typeparam name="TProgress">The type of the progress context object.</typeparam>
+    [Obsolete("Use FsInfoCat.Activities.*, instead.")]
     public interface IBackgroundProgressEventFactory<TEvent, TProgress>
             where TEvent : IBackgroundProgressEvent
             where TProgress : IBackgroundProgress<TEvent>

@@ -2,6 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.AsyncOps
 {
+    [System.Obsolete("Use FsInfoCat.Activities.*, instead.")]
     public enum ActivityCode
     {
         /// <summary>An unknown/unspecified error has occurred.</summary>

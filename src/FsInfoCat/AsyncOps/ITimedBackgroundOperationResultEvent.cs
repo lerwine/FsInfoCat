@@ -6,6 +6,7 @@ namespace FsInfoCat.AsyncOps
     /// <typeparam name="TResult">The type of result value produced by the asynchronous operation.</typeparam>
     /// <seealso cref="IBackgroundOperationResultEvent{TResult}" />
     /// <seealso cref="ITimedBackgroundOperationCompletedEvent" />
+    [System.Obsolete("Use FsInfoCat.Activities.*, instead.")]
     public interface ITimedBackgroundOperationResultEvent<TResult> : IBackgroundOperationResultEvent<TResult>, ITimedBackgroundOperationCompletedEvent
     {
     }
@@ -18,6 +19,7 @@ namespace FsInfoCat.AsyncOps
     /// <seealso cref="ITimedBackgroundOperationResultEvent{TResult}" />
     /// <seealso cref="IBackgroundOperationResultEvent{TState, TResult}" />
     /// <seealso cref="ITimedBackgroundOperationCompletedEvent{TState}" />
+    [System.Obsolete("Use FsInfoCat.Activities.*, instead.")]
     public interface ITimedBackgroundOperationResultEvent<TState, TResult> : IBackgroundOperationResultEvent<TState, TResult>, ITimedBackgroundOperationCompletedEvent<TState>, ITimedBackgroundOperationResultEvent<TResult>, IBackgroundOperationResultEvent<TResult>, ITimedBackgroundOperationCompletedEvent
     {
     }

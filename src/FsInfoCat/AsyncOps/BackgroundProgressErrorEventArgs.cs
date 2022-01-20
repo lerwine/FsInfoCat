@@ -3,6 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat.AsyncOps
 {
+    [Obsolete("Use FsInfoCat.Activities.*, instead.")]
     public class BackgroundProgressErrorEventArgs : BackgroundProgressEventArgs, IBackgroundOperationErrorEvent
     {
         public Exception Error { get; }
@@ -19,6 +20,7 @@ namespace FsInfoCat.AsyncOps
             : this(progress, error, error is AsyncOperationException failureException ? failureException.Code : ErrorCode.Unexpected) { }
     }
 
+    [Obsolete("Use FsInfoCat.Activities.*, instead.")]
     public class BackgroundProgressErrorEventArgs<TState> : BackgroundProgressErrorEventArgs, IBackgroundOperationErrorEvent<TState>
     {
         public TState AsyncState { get; }

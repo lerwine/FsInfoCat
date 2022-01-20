@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat.BgOps
 {
-    [Obsolete("Use FsInfoCat.Services.IBackgroundProgressService and/or FsInfoCat.AsyncOps classes")]
+    [Obsolete("Use FsInfoCat.Activities.*, instead.")]
     public class AsyncOpProgress : IAsyncOpProgress
     {
         private readonly IAsyncOpFactory _factory;
@@ -344,7 +344,7 @@ namespace FsInfoCat.BgOps
         }
     }
 
-    [Obsolete("Use FsInfoCat.Services.IBackgroundProgressService and/or FsInfoCat.AsyncOps classes")]
+    [Obsolete("Use FsInfoCat.Activities.*, instead.")]
     public class AsyncOpProgress<TState> : AsyncOpProgress, IAsyncOpProgress<TState>
     {
         public AsyncOpProgress(IAsyncOpFactory factory, string activity, string initialStatusDescription, IAsyncOpEventArgs parentOperation, TState state, CancellationToken token)

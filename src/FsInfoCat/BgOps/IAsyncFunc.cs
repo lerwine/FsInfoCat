@@ -2,7 +2,7 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat.BgOps
 {
-    [System.Obsolete("Use FsInfoCat.Services.IBackgroundProgressService and/or FsInfoCat.AsyncOps classes")]
+    [System.Obsolete("Use FsInfoCat.Activities.*, instead.")]
     public interface IAsyncFunc<TResult> : IAsyncAction
     {
         /// <summary>
@@ -12,7 +12,7 @@ namespace FsInfoCat.BgOps
         new Task<TResult> Task { get; }
     }
 
-    [System.Obsolete("Use FsInfoCat.Services.IBackgroundProgressService and/or FsInfoCat.AsyncOps classes")]
+    [System.Obsolete("Use FsInfoCat.Activities.*, instead.")]
     public interface IAsyncFunc<TState, TResult> : IAsyncFunc<TResult>, IAsyncAction<TState>
     {
     }

@@ -3,6 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat.AsyncOps
 {
+    [Obsolete("Use FsInfoCat.Activities.*, instead.")]
     public abstract class BackgroundProcessStateEventArgs : EventArgs, IBackgroundProgressEvent
     {
         public MessageCode? Code { get; }

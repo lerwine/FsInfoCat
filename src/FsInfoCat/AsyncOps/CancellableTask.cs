@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat.AsyncOps
 {
+    [System.Obsolete("Use FsInfoCat.Activities.*, instead.")]
     public record CancellableTask<T>
         where T : Task
     {
@@ -10,6 +11,7 @@ namespace FsInfoCat.AsyncOps
         public T Task { get; init; }
     }
 
+    [System.Obsolete("Use FsInfoCat.Activities.*, instead.")]
     public record CancellableTask<TTask, TState>
     {
         public CancellationTokenSource TokenSource { get; init; }

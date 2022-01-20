@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat.AsyncOps
 {
+    [Obsolete("Use FsInfoCat.Activities.*, instead.")]
     public sealed class CancellableActionTaskList : CancellableTaskList<Task>
     {
         public Item StartNew<TArg1, TArg2, TArg3>(TArg1 arg1, TArg2 arg2, TArg3 arg3, Action<TArg1, TArg2, TArg3, CancellationToken> action) => new(this, token => Task.Factory.StartNew(() => action(arg1, arg2, arg3, token)));

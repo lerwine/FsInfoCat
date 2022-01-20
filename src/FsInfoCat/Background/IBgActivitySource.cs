@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat.Background
 {
-    [Obsolete("Use FsInfoCat.Services.IBackgroundProgressService and/or FsInfoCat.AsyncOps classes")]
+    [Obsolete("Use FsInfoCat.Activities.*, instead.")]
     public interface IBgActivitySource : IReadOnlyCollection<IAsyncAction>
     {
         IAsyncAction<TState> InvokeAsync<TState>(ActivityCode activityCode, string initialStatusMessage, TState state, IObserver<IBgStatusEventArgs<TState>> observer, Func<IBgActivityProgress<TState>, Task> asyncMethodDelegate);

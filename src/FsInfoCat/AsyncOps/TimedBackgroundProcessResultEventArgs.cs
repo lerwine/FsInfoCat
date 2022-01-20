@@ -3,6 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat.AsyncOps
 {
+    [Obsolete("Use FsInfoCat.Activities.*, instead.")]
     public class TimedBackgroundProcessResultEventArgs<TResult> : TimedBackgroundProcessCompletedEventArgs, ITimedBackgroundOperationResultEvent<TResult>
     {
         public TResult Result { get; }
@@ -14,6 +15,7 @@ namespace FsInfoCat.AsyncOps
         }
     }
 
+    [Obsolete("Use FsInfoCat.Activities.*, instead.")]
     public class TimedBackgroundProcessResultEventArgs<TState, TResult> : TimedBackgroundProcessCompletedEventArgs<TState>, ITimedBackgroundOperationResultEvent<TState, TResult>
     {
         public TResult Result { get; }

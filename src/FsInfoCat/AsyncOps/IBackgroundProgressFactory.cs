@@ -8,6 +8,7 @@ namespace FsInfoCat.AsyncOps
     /// <summary>
     /// Represents an object that can be used to start new background operations.
     /// </summary>
+    [Obsolete("Use FsInfoCat.Activities.*, instead.")]
     public interface IBackgroundProgressFactory
     {
         /// <summary>

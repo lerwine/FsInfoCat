@@ -1,5 +1,3 @@
-using System;
-
 namespace FsInfoCat.AsyncOps
 {
     /// <summary>
@@ -9,6 +7,7 @@ namespace FsInfoCat.AsyncOps
     /// <typeparam name="TResultEvent">The type of the event that indicates that the background operation has run to completion.</typeparam>
     /// <typeparam name="TProgress">The type of the progress context object.</typeparam>
     /// <seealso cref="IBackgroundProgressEventFactory{TEvent, TProgress}" />
+    [System.Obsolete("Use FsInfoCat.Activities.*, instead.")]
     public interface IBackgroundEventFactory<TEvent, TResultEvent, TProgress> : IBackgroundProgressEventFactory<TEvent, TProgress>
             where TEvent : IBackgroundProgressEvent
             where TResultEvent : TEvent, IBackgroundOperationCompletedEvent
@@ -24,6 +23,7 @@ namespace FsInfoCat.AsyncOps
     /// <typeparam name="TProgress">The type of the progress context object.</typeparam>
     /// <typeparam name="TResult">The type of the value produced by the background operation.</typeparam>
     /// <seealso cref="IBackgroundProgressEventFactory{TEvent, TProgress}" />
+    [System.Obsolete("Use FsInfoCat.Activities.*, instead.")]
     public interface IBackgroundEventFactory<TEvent, TResultEvent, TProgress, TResult> : IBackgroundProgressEventFactory<TEvent, TProgress>
             where TEvent : IBackgroundProgressEvent
             where TResultEvent : TEvent, IBackgroundOperationResultEvent<TResult>

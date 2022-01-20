@@ -1,6 +1,6 @@
 namespace FsInfoCat.Background
 {
-    [System.Obsolete("Use FsInfoCat.Services.IBackgroundProgressService and/or FsInfoCat.AsyncOps classes")]
+    [System.Obsolete("Use FsInfoCat.Activities.*, instead.")]
     public interface IDeleteVolumeBackgroundService : ILongRunningAsyncService<bool>
     {
         IVolume Target { get; }
@@ -8,7 +8,7 @@ namespace FsInfoCat.Background
         bool ForceDeleteFromDb { get; set; }
     }
 
-    [System.Obsolete("Use FsInfoCat.Services.IBackgroundProgressService and/or FsInfoCat.AsyncOps classes")]
+    [System.Obsolete("Use FsInfoCat.Activities.*, instead.")]
     public interface IDeleteVolumeBackgroundService<TVolume> : IDeleteVolumeBackgroundService
         where TVolume : DbEntity, IVolume
     {

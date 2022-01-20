@@ -12,6 +12,7 @@ namespace FsInfoCat.AsyncOps
     /// <seealso cref="IProgress{TEvent}" />
     /// <seealso cref="IBackgroundProgressFactory" />
     /// <seealso cref="IBackgroundProgressEvent" />
+    [Obsolete("Use FsInfoCat.Activities.*, instead.")]
     public interface IBackgroundProgress<TEvent> : IBackgroundProgressInfo, IProgress<TEvent>, IBackgroundProgressFactory
         where TEvent : IBackgroundProgressEvent
     {
@@ -127,6 +128,7 @@ namespace FsInfoCat.AsyncOps
     /// <seealso cref="IBackgroundProgress{TEvent}" />
     /// <seealso cref="IBackgroundProgressInfo{TState}" />
     /// <seealso cref="IBackgroundProgressEvent{TState}" />
+    [Obsolete("Use FsInfoCat.Activities.*, instead.")]
     public interface IBackgroundProgress<TState, TEvent> : IBackgroundProgress<TEvent>, IBackgroundProgressInfo<TState>
         where TEvent : IBackgroundProgressEvent<TState>
     {

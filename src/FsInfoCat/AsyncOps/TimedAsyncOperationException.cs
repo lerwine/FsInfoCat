@@ -10,6 +10,7 @@ namespace FsInfoCat.AsyncOps
     /// <seealso cref="AsyncOperationException"/>
     /// <seealso cref="IBackgroundOperationErrorEvent"/>
     [Serializable]
+    [Obsolete("Use FsInfoCat.Activities.ActivityException, instead.")]
     public class TimedAsyncOperationException : AsyncOperationException, ITimedBackgroundOperationErrorEvent
     {
         /// <summary>

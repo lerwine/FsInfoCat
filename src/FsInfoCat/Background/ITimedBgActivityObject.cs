@@ -2,7 +2,7 @@ using System;
 
 namespace FsInfoCat.Background
 {
-    [Obsolete("Use FsInfoCat.Services.IBackgroundProgressService and/or FsInfoCat.AsyncOps classes")]
+    [Obsolete("Use FsInfoCat.Activities.*, instead.")]
     public interface ITimedBgActivityObject : IBgActivityObject
     {
         DateTime Started { get; }
@@ -10,7 +10,7 @@ namespace FsInfoCat.Background
         TimeSpan Duration { get; }
     }
 
-    [Obsolete("Use FsInfoCat.Services.IBackgroundProgressService and/or FsInfoCat.AsyncOps classes")]
+    [Obsolete("Use FsInfoCat.Activities.*, instead.")]
     public interface ITimedBgActivityObject<TState> : ITimedBgActivityObject, IBgActivityObject<TState>
     {
     }

@@ -6,6 +6,7 @@ namespace FsInfoCat.AsyncOps
     /// Describes a timed asynchronous operation.
     /// </summary>
     /// <seealso cref="IBackgroundProgressInfo" />
+    [Obsolete("Use FsInfoCat.Activities.*, instead.")]
     public interface ITimedBackgroundProgressInfo : IBackgroundProgressInfo
     {
         /// <summary>
@@ -21,6 +22,7 @@ namespace FsInfoCat.AsyncOps
     /// <typeparam name="TState">The type of user-defined object associated with the asynchronous operation.</typeparam>
     /// <seealso cref="ITimedBackgroundProgressInfo" />
     /// <seealso cref="IBackgroundProgressInfo{TState}" />
+    [Obsolete("Use FsInfoCat.Activities.*, instead.")]
     public interface ITimedBackgroundProgressInfo<TState> : IBackgroundProgressInfo<TState>, ITimedBackgroundProgressInfo
     {
     }

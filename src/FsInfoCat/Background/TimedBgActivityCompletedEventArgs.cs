@@ -3,7 +3,7 @@ using System;
 
 namespace FsInfoCat.Background
 {
-    [Obsolete("Use FsInfoCat.Services.IBackgroundProgressService and/or FsInfoCat.AsyncOps classes")]
+    [Obsolete("Use FsInfoCat.Activities.*, instead.")]
     public class TimedBgActivityCompletedEventArgs<TState> : BgActivityCompletedEventArgs<TState>, ITimedBgStatusEventArgs<TState>
     {
         public DateTime Started { get; }
@@ -19,7 +19,7 @@ namespace FsInfoCat.Background
         }
     }
 
-    [Obsolete("Use FsInfoCat.Services.IBackgroundProgressService and/or FsInfoCat.AsyncOps classes")]
+    [Obsolete("Use FsInfoCat.Activities.*, instead.")]
     public class TimedBgActivityCompletedEventArgs<TState, TResult> : BgActivityCompletedEventArgs<TState, TResult>, ITimedBgStatusEventArgs<TState>
     {
         public DateTime Started { get; }

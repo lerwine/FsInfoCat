@@ -5,7 +5,7 @@ namespace FsInfoCat.BgOps
     /// <summary>
     /// Asynchronous operation event arguments.
     /// </summary>
-    [Obsolete("Use FsInfoCat.Services.IBackgroundProgressService and/or FsInfoCat.AsyncOps classes")]
+    [Obsolete("Use FsInfoCat.Activities.*, instead.")]
     public interface IAsyncOpEventArgs : IAsyncOpStatus
     {
         /// <summary>
@@ -25,7 +25,7 @@ namespace FsInfoCat.BgOps
     /// Asynchronous operation event arguments.
     /// </summary>
     /// <typeparam name="T">The type of user-defined object that qualifies or contains information about the asynchronous operation.</typeparam>
-    [Obsolete("Use FsInfoCat.Services.IBackgroundProgressService and/or FsInfoCat.AsyncOps classes")]
+    [Obsolete("Use FsInfoCat.Activities.*, instead.")]
     public interface IAsyncOpEventArgs<T> : IAsyncOpEventArgs, IAsyncOpStatus<T>
     {
     }
