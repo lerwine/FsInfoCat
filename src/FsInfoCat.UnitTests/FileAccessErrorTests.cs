@@ -36,7 +36,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual("", target.Message);
             Assert.IsNotNull(target.Details);
             Assert.AreEqual("", target.Details);
-            Assert.AreEqual(AccessErrorCode.Unspecified, target.ErrorCode);
+            Assert.AreEqual(ErrorCode.Unexpected, target.ErrorCode);
             Assert.AreEqual(Guid.Empty, target.TargetId);
             Assert.IsNull(target.Target);
             Assert.AreEqual(target.CreatedOn, target.ModifiedOn);
@@ -51,7 +51,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual("", target.Message);
             Assert.IsNotNull(target.Details);
             Assert.AreEqual("", target.Details);
-            Assert.AreEqual(AccessErrorCode.Unspecified, target.ErrorCode);
+            Assert.AreEqual(ErrorCode.Unexpected, target.ErrorCode);
             Assert.AreEqual(Guid.Empty, target.TargetId);
             Assert.IsNull(target.Target);
             Assert.AreEqual(target.CreatedOn, target.ModifiedOn);
@@ -101,16 +101,16 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, actualValue);
         }
 
-        [TestMethod("AccessErrorCode ErrorCode"), Ignore]
+        [TestMethod("ErrorCode ErrorCode"), Ignore]
         public void ErrorCodeTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // DEFERRED: Implement test for AccessErrorCode ErrorCode
+            // DEFERRED: Implement test for ErrorCode ErrorCode
 
             FileAccessError target = default; // TODO: Create and initialize FileAccessError instance
-            AccessErrorCode expectedValue = default;
+            ErrorCode expectedValue = default;
             target.ErrorCode = default;
-            AccessErrorCode actualValue = target.ErrorCode;
+            ErrorCode actualValue = target.ErrorCode;
             Assert.AreEqual(expectedValue, actualValue);
         }
 

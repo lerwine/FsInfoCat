@@ -555,13 +555,6 @@ namespace FsInfoCat.Local
 
         public void SetError(LocalDbContext dbContext, ErrorCode errorCode, Exception exception, string message = null)
         {
-            //SetError(dbContext, errorCode.ToAccessErrorCode(), exception, message.GetDefaultIfNullOrWhiteSpace(() =>
-            //    errorCode.TryGetDescription(out string m) ? m : errorCode.GetDisplayName()));
-            throw new NotImplementedException();
-        }
-
-        public void SetError(LocalDbContext dbContext, AccessErrorCode errorCode, Exception exception, string message = null)
-        {
             _ = dbContext.SubdirectoryAccessErrors.Add(new SubdirectoryAccessError()
             {
                 ErrorCode = errorCode,
@@ -573,19 +566,19 @@ namespace FsInfoCat.Local
         }
 
         internal void SetUnauthorizedAccessError([DisallowNull] LocalDbContext dbContext, [DisallowNull] UnauthorizedAccessException exception) =>
-            SetError(dbContext, AccessErrorCode.UnauthorizedAccess, exception);
+            SetError(dbContext, ErrorCode.UnauthorizedAccess, exception);
 
         internal void SetSecurityError([DisallowNull] LocalDbContext dbContext, [DisallowNull] SecurityException exception) =>
-            SetError(dbContext, AccessErrorCode.SecurityException, exception);
+            SetError(dbContext, ErrorCode.SecurityException, exception);
 
         internal void SetPathTooLongError([DisallowNull] LocalDbContext dbContext, [DisallowNull] PathTooLongException exception) =>
-            SetError(dbContext, AccessErrorCode.PathTooLong, exception);
+            SetError(dbContext, ErrorCode.PathTooLong, exception);
 
         internal void SetIOError([DisallowNull] LocalDbContext dbContext, [DisallowNull] IOException exception) =>
-            SetError(dbContext, AccessErrorCode.IOError, exception);
+            SetError(dbContext, ErrorCode.IOError, exception);
 
         internal void SetUnspecifiedError([DisallowNull] LocalDbContext dbContext, [DisallowNull] Exception exception) =>
-            SetError(dbContext, AccessErrorCode.Unspecified, exception);
+            SetError(dbContext, ErrorCode.Unexpected, exception);
 
         public record CrawlConfigWithFullRootPath<T>(string FullName, Guid SubdirectoryId, T Source);
 

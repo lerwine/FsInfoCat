@@ -18,8 +18,10 @@ namespace FsInfoCat.Local
         #region Fields
 
         private readonly IPropertyChangeTracker<Guid> _id;
-        private readonly IPropertyChangeTracker<AccessErrorCode> _errorCode;
+        //[Obsolete("use _errorCode field instead")]
+        //private readonly IPropertyChangeTracker<AccessErrorCode> _obsoleteCode;
         private readonly IPropertyChangeTracker<string> _message;
+        private readonly IPropertyChangeTracker<ErrorCode> _errorCode;
         private readonly IPropertyChangeTracker<string> _details;
         private readonly IPropertyChangeTracker<Guid> _targetId;
         private readonly IPropertyChangeTracker<Volume> _target;
@@ -60,9 +62,12 @@ namespace FsInfoCat.Local
         [Required(AllowEmptyStrings = true)]
         public virtual string Details { get => _details.GetValue(); set => _details.SetValue(value); }
 
+        //[Obsolete("use ErrorCode property instead")]
+        //AccessErrorCode IAccessError.ObsoleteErrorCode { get => _obsoleteCode.GetValue(); }
+
         [Required]
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_ErrorCode), ResourceType = typeof(FsInfoCat.Properties.Resources))]
-        public AccessErrorCode ErrorCode { get => _errorCode.GetValue(); set => _errorCode.SetValue(value); }
+        public ErrorCode ErrorCode { get => _errorCode.GetValue(); set => _errorCode.SetValue(value); }
 
         public virtual Guid TargetId
         {
@@ -110,7 +115,8 @@ namespace FsInfoCat.Local
         public VolumeAccessError()
         {
             _id = AddChangeTracker(nameof(Id), Guid.Empty);
-            _errorCode = AddChangeTracker(nameof(AccessErrorCode), AccessErrorCode.Unspecified);
+            //_obsoleteCode = AddChangeTracker(nameof(AccessErrorCode), AccessErrorCode.Unspecified);
+            _errorCode = AddChangeTracker(nameof(FsInfoCat.ErrorCode), ErrorCode.Unexpected);
             _message = AddChangeTracker(nameof(Message), "", TrimmedNonNullStringCoersion.Default);
             _details = AddChangeTracker(nameof(Details), "", NonWhiteSpaceOrEmptyStringCoersion.Default);
             _targetId = AddChangeTracker(nameof(TargetId), Guid.Empty);
@@ -142,7 +148,7 @@ namespace FsInfoCat.Local
             if (string.IsNullOrEmpty(Message) || (dbContext = serviceScope.ServiceProvider.GetService<LocalDbContext>()) is null)
                 return;
             Guid id = Id;
-            AccessErrorCode errorCode = ErrorCode;
+            ErrorCode errorCode = ErrorCode;
             if (dbContext.VolumeAccessErrors.Any(e => e.ErrorCode == errorCode && e.Message == message && id != e.Id))
                 results.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_DuplicateMessage, new string[] { nameof(Message) }));
         }
@@ -154,7 +160,7 @@ namespace FsInfoCat.Local
             logger.LogInformation($"Inserting {nameof(VolumeAccessError)} with Id {{Id}}", accessErrorId);
             return await new InsertQueryBuilder(nameof(LocalDbContext.VolumeAccessErrors), accessErrorElement, n).AppendGuid(nameof(TargetId), volumeId)
                 .AppendString(nameof(Message)).AppendInnerText(nameof(Details))
-                .AppendEnum<AccessErrorCode>(nameof(ErrorCode)).AppendDateTime(nameof(CreatedOn)).AppendDateTime(nameof(ModifiedOn)).ExecuteSqlAsync(dbContext.Database);
+                .AppendEnum<ErrorCode>(nameof(ErrorCode)).AppendDateTime(nameof(CreatedOn)).AppendDateTime(nameof(ModifiedOn)).ExecuteSqlAsync(dbContext.Database);
         }
 
         // DEFERRED: Change to async with LocalDbContext

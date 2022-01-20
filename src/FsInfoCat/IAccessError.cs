@@ -6,10 +6,16 @@ namespace FsInfoCat
     /// <seealso cref="IDbEntity" />
     public interface IAccessError : IDbEntity, IHasSimpleIdentifier
     {
+        ///// <summary>Gets the error code.</summary>
+        ///// <value>The <see cref="AccessErrorCode" /> value that represents the numeric error code.</value>
+        //[Display(Name = nameof(Properties.Resources.DisplayName_ErrorCode), ResourceType = typeof(Properties.Resources))]
+        //[System.Obsolete("Use ErrorCode property instead")]
+        //AccessErrorCode ObsoleteErrorCode { get; }
+
         /// <summary>Gets the error code.</summary>
         /// <value>The <see cref="AccessErrorCode" /> value that represents the numeric error code.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_ErrorCode), ResourceType = typeof(Properties.Resources))]
-        AccessErrorCode ErrorCode { get; }
+        ErrorCode ErrorCode { get; }
 
         /// <summary>Gets the brief error message.</summary>
         /// <value>The brief error message.</value>

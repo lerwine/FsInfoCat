@@ -11,20 +11,20 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="ErrorCode"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty ErrorCodeProperty = ColumnPropertyBuilder<AccessErrorCode, AccessErrorRowViewModel<TEntity>>
+        public static readonly DependencyProperty ErrorCodeProperty = ColumnPropertyBuilder<ErrorCode, AccessErrorRowViewModel<TEntity>>
             .RegisterEntityMapped<TEntity>(nameof(IAccessError.ErrorCode))
-            .DefaultValue(AccessErrorCode.Unspecified)
+            .DefaultValue(ErrorCode.Unexpected)
             .OnChanged((d, oldValue, newValue) => (d as AccessErrorRowViewModel<TEntity>)?.OnErrorCodePropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
-        public AccessErrorCode ErrorCode { get => (AccessErrorCode)GetValue(ErrorCodeProperty); set => SetValue(ErrorCodeProperty, value); }
+        public ErrorCode ErrorCode { get => (ErrorCode)GetValue(ErrorCodeProperty); set => SetValue(ErrorCodeProperty, value); }
 
         /// <summary>
         /// Called when the value of the <see cref="ErrorCode"/> dependency property has changed.
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="ErrorCode"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="ErrorCode"/> property.</param>
-        protected virtual void OnErrorCodePropertyChanged(AccessErrorCode oldValue, AccessErrorCode newValue) { }
+        protected virtual void OnErrorCodePropertyChanged(ErrorCode oldValue, ErrorCode newValue) { }
 
         #endregion
         #region Details Property Members

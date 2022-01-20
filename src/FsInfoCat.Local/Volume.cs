@@ -254,7 +254,7 @@ namespace FsInfoCat.Local
             return dbContext.Volumes.Add(result);
         }
 
-        [Obsolete("Use FsInfoCat.Local.Background.IDeleteVolumeBackgroundService")]
+        [Obsolete("Use FsInfoCat.Activities.*, instead.")]
         public static async Task<int> DeleteAsync([DisallowNull] Volume target, [DisallowNull] LocalDbContext dbContext, [DisallowNull] IStatusListener statusListener)
         {
             if (target is null)
