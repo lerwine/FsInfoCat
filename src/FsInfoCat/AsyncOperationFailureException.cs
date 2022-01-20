@@ -10,62 +10,62 @@ namespace FsInfoCat
     /// </summary>
     [Serializable]
     [Obsolete("Use FsInfoCat.Activities.ActivityException, instead.")]
-    public class AsyncOperationFailureException : Exception, IAsyncOperationInfo
+    public class AsyncOperationFailureException : Exception//, IAsyncOperationInfo
     {
         /// <summary>
         /// Gets the error message intented to be displayed to the application user.
         /// </summary>
         public string UserMessage { get; }
 
-        /// <summary>
-        /// Describes the operation that was being peformed.
-        /// </summary>
-        public IAsyncOperationInfo AsyncOperation { get; }
+        ///// <summary>
+        ///// Describes the operation that was being peformed.
+        ///// </summary>
+        //public IAsyncOperationInfo AsyncOperation { get; }
 
         /// <summary>
         /// Identifies the error that occurred.
         /// </summary>
         public ErrorCode? ErrorCode { get; }
 
-        AsyncJobStatus IAsyncOperationInfo.Status => AsyncJobStatus.Faulted;
+        //AsyncJobStatus IAsyncOperationInfo.Status => AsyncJobStatus.Faulted;
 
-        MessageCode? IAsyncOperationInfo.StatusDescription => ErrorCode?.GetAmbientValue<ErrorCode, MessageCode>();
+        //MessageCode? IAsyncOperationInfo.StatusDescription => ErrorCode?.GetAmbientValue<ErrorCode, MessageCode>();
 
-        ActivityCode? IAsyncOperationInfo.Activity => AsyncOperation?.Activity;
+        //ActivityCode? IAsyncOperationInfo.Activity => AsyncOperation?.Activity;
 
-        string IAsyncOperationInfo.CurrentOperation => AsyncOperation?.CurrentOperation;
+        //string IAsyncOperationInfo.CurrentOperation => AsyncOperation?.CurrentOperation;
 
-        object IAsyncOperationInfo.AsyncState => AsyncOperation?.AsyncState;
+        //object IAsyncOperationInfo.AsyncState => AsyncOperation?.AsyncState;
 
-        Guid IAsyncOperationInfo.ConcurrencyId => AsyncOperation?.ConcurrencyId ?? Guid.Empty;
+        //Guid IAsyncOperationInfo.ConcurrencyId => AsyncOperation?.ConcurrencyId ?? Guid.Empty;
 
-        IAsyncOperationInfo IAsyncOperationInfo.ParentOperation => AsyncOperation?.ParentOperation;
+        //IAsyncOperationInfo IAsyncOperationInfo.ParentOperation => AsyncOperation?.ParentOperation;
 
         public AsyncOperationFailureException() { }
 
-        public AsyncOperationFailureException(string message, string userMessage = null, IAsyncOperationInfo asyncOp = null) : base(message)
+        public AsyncOperationFailureException(string message, string userMessage = null/*, IAsyncOperationInfo asyncOp = null*/) : base(message)
         {
             UserMessage = userMessage ?? Message;
-            AsyncOperation = asyncOp;
+            //AsyncOperation = asyncOp;
         }
 
-        public AsyncOperationFailureException(string message, ErrorCode errorCode, string userMessage = null, IAsyncOperationInfo asyncOp = null) : this(message, userMessage ?? errorCode.GetDisplayName(), asyncOp)
+        public AsyncOperationFailureException(string message, ErrorCode errorCode, string userMessage = null/*, IAsyncOperationInfo asyncOp = null*/) : this(message, userMessage ?? errorCode.GetDisplayName()/*, asyncOp*/)
         {
             ErrorCode = errorCode;
         }
 
-        public AsyncOperationFailureException(string message, string userMessage, Exception inner, IAsyncOperationInfo asyncOp = null) : base(message, (inner is AggregateException a && a.InnerExceptions.Count < 2) ? a.InnerException : inner)
+        public AsyncOperationFailureException(string message, string userMessage, Exception inner/*, IAsyncOperationInfo asyncOp = null*/) : base(message, (inner is AggregateException a && a.InnerExceptions.Count < 2) ? a.InnerException : inner)
         {
             UserMessage = userMessage ?? Message;
-            AsyncOperation = asyncOp;
+            //AsyncOperation = asyncOp;
         }
 
-        public AsyncOperationFailureException(string message, ErrorCode errorCode, string userMessage, Exception inner, IAsyncOperationInfo asyncOp = null) : this(message, userMessage ?? errorCode.GetDisplayName(), inner, asyncOp)
+        public AsyncOperationFailureException(string message, ErrorCode errorCode, string userMessage, Exception inner/*, IAsyncOperationInfo asyncOp = null*/) : this(message, userMessage ?? errorCode.GetDisplayName(), inner/*, asyncOp*/)
         {
             ErrorCode = errorCode;
         }
 
-        public AsyncOperationFailureException(string message, ErrorCode errorCode, Exception inner, IAsyncOperationInfo asyncOp = null) : this(message, errorCode, null, inner, asyncOp) { }
+        public AsyncOperationFailureException(string message, ErrorCode errorCode, Exception inner/*, IAsyncOperationInfo asyncOp = null*/) : this(message, errorCode, null, inner/*, asyncOp*/) { }
 
         protected AsyncOperationFailureException(SerializationInfo info, StreamingContext context) : base(info, context) { }
     }
