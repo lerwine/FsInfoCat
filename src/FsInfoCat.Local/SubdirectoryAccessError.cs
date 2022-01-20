@@ -18,8 +18,6 @@ namespace FsInfoCat.Local
         #region Fields
 
         private readonly IPropertyChangeTracker<Guid> _id;
-        //[Obsolete("use _errorCode field instead")]
-        //private readonly IPropertyChangeTracker<AccessErrorCode> _obsoleteCode;
         private readonly IPropertyChangeTracker<ErrorCode> _errorCode;
         private readonly IPropertyChangeTracker<string> _message;
         private readonly IPropertyChangeTracker<string> _details;
@@ -61,9 +59,6 @@ namespace FsInfoCat.Local
 
         [Required(AllowEmptyStrings = true)]
         public virtual string Details { get => _details.GetValue(); set => _details.SetValue(value); }
-
-        //[Obsolete("use Code property instead")]
-        //AccessErrorCode IAccessError.ObsoleteErrorCode { get => _obsoleteCode.GetValue(); }
 
         [Required]
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_ErrorCode), ResourceType = typeof(FsInfoCat.Properties.Resources))]
@@ -115,7 +110,6 @@ namespace FsInfoCat.Local
         public SubdirectoryAccessError()
         {
             _id = AddChangeTracker(nameof(Id), Guid.Empty);
-            //_errorCode = AddChangeTracker(nameof(AccessErrorCode), AccessErrorCode.Unspecified);
             _errorCode = AddChangeTracker(nameof(FsInfoCat.ErrorCode), ErrorCode.Unexpected);
             _message = AddChangeTracker(nameof(Message), "", TrimmedNonNullStringCoersion.Default);
             _details = AddChangeTracker(nameof(Details), "", NonWhiteSpaceOrEmptyStringCoersion.Default);
