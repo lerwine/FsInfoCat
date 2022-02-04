@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Threading;
 
@@ -10,7 +9,7 @@ namespace FsInfoCat.Activities
         {
             internal bool IsActive { get; private set; }
 
-            internal Observable<bool>.Source ActiveStatusSource { get; private set; }
+            internal Observable<bool>.Source ActiveStatusSource { get; } = new();
 
             internal RootProvider() : base(null) { }
 

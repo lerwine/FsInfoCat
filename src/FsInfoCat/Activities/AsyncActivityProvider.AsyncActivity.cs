@@ -9,11 +9,13 @@ namespace FsInfoCat.Activities
 {
     partial class AsyncActivityProvider
     {
-        internal abstract partial class AsyncActivity<TEvent, TTask> : AsyncActivityProvider, IAsyncActivity, IObservable<TEvent>
+        internal abstract partial class AsyncActivity<TBaseEvent, TOperationEvent, TResultEvent, TTask> : IAsyncActivity, IObservable<TBaseEvent>
             where TTask : Task
-            where TEvent : IOperationEvent
+            where TBaseEvent : IActivityEvent
+            where TOperationEvent : TBaseEvent, IOperationEvent
+            where TResultEvent : TBaseEvent, IActivityCompletedEvent
         {
-            private readonly AsyncActivityProvider _provider;
+            private readonly AsyncActivityProvider _owner;
 
             public abstract TTask Task { get; }
 
@@ -25,7 +27,7 @@ namespace FsInfoCat.Activities
 
             public Guid ActivityId { get; } = Guid.NewGuid();
 
-            Guid? IActivityInfo.ParentActivityId => ParentActivityId;
+            public Guid? ParentActivityId => _owner.ParentActivityId;
 
             public string ShortDescription { get; }
 
@@ -35,47 +37,48 @@ namespace FsInfoCat.Activities
 
             public int PercentComplete { get; private set; } = -1;
 
-            protected AsyncActivity([DisallowNull] AsyncActivityProvider provider, [DisallowNull] string activityDescription, [DisallowNull] string initialStatusMessage)
-                : base((provider as IAsyncActivity)?.ActivityId)
+            protected Observable<TBaseEvent>.Source EventSource { get; } = new();
+
+            public IObservable<IAsyncActivity> StateChangeObservable => _owner.StateChangeObservable;
+
+            public int Count => _owner.Count;
+
+            protected AsyncActivity([DisallowNull] AsyncActivityProvider owner, [DisallowNull] string activityDescription, [DisallowNull] string initialStatusMessage)
             {
-                _provider = provider ?? throw new ArgumentNullException(nameof(provider));
+                _owner = owner ?? throw new ArgumentNullException(nameof(owner));
                 if (activityDescription is null || (ShortDescription = activityDescription.Trim()).Length == 0)
                     throw new ArgumentException($"'{nameof(activityDescription)}' cannot be null or whitespace.", nameof(activityDescription));
                 if (initialStatusMessage is null || (StatusMessage = initialStatusMessage.Trim()).Length == 0)
                     throw new ArgumentException($"'{nameof(initialStatusMessage)}' cannot be null or whitespace.", nameof(initialStatusMessage));
             }
 
-            public IDisposable Subscribe(IObserver<TEvent> observer)
-            {
-                throw new NotImplementedException();
-            }
+            public IDisposable Subscribe(IObserver<TBaseEvent> observer) => EventSource.Observable.Subscribe(observer);
 
             protected LinkedListNode<IAsyncActivity> OnStarting()
             {
-                LinkedListNode<IAsyncActivity> node = _provider.OnStarting(this);
+                LinkedListNode<IAsyncActivity> node = _owner.OnStarting(this);
                 return node;
             }
 
             protected virtual void OnStarted()
             {
                 StatusValue = ActivityStatus.Running;
-                // TODO: Add to collection
+                EventSource.RaiseNext(CreateInitialEvent());
             }
 
-            protected virtual void OnCanceled(LinkedListNode<IAsyncActivity> node)
-            {
-                _provider.OnCompleted(node);
-            }
+            protected abstract TBaseEvent CreateInitialEvent();
 
-            protected virtual void OnRanToCompletion(LinkedListNode<IAsyncActivity> node)
-            {
-                _provider.OnCompleted(node);
-            }
+            protected abstract TResultEvent CreateCanceledEvent();
 
-            protected virtual void OnFaulted(LinkedListNode<IAsyncActivity> node, Exception exception)
-            {
-                _provider.OnCompleted(node);
-            }
+            protected abstract TResultEvent CreateFaultedEvent(Exception error);
+
+            protected void NotifyCompleted(LinkedListNode<IAsyncActivity> node) => _owner.OnCompleted(node);
+
+            public IDisposable SubscribeStateChange([DisallowNull] IObserver<IAsyncActivity> observer, [DisallowNull] Action<IAsyncActivity[]> onObserving) => _owner.SubscribeStateChange(observer, onObserving);
+
+            public IEnumerator<IAsyncActivity> GetEnumerator() => _owner.GetEnumerator();
+
+            IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)_owner).GetEnumerator();
         }
     }
 }

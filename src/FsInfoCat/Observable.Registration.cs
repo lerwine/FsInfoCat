@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace FsInfoCat
@@ -138,6 +138,7 @@ namespace FsInfoCat
                     return;
                 lock (target._syncRoot)
                 {
+                    target._isDisposed = true;
                     if (_next is null)
                     {
                         if ((target._last = _previous) is null)

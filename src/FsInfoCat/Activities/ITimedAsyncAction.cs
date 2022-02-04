@@ -6,7 +6,7 @@ namespace FsInfoCat.Activities
     /// <typeparam name="TEvent">The base type of the push-notification events raised by this asynchronous activity.</typeparam>
     /// <seealso cref="ITimedAsyncActivity" />
     /// <seealso cref="IAsyncAction{TEvent}" />
-    public interface ITimedAsyncAction<TEvent> : ITimedAsyncActivity, IAsyncAction<TEvent> where TEvent : ITimedOperationEvent { }
+    public interface ITimedAsyncAction<TEvent> : ITimedAsyncActivity, IAsyncAction<TEvent> where TEvent : ITimedActivityEvent { }
 
     /// <summary>
     /// Represents a timed asynchronous action that is associated with a user-specified value and does not return a value.
@@ -16,5 +16,5 @@ namespace FsInfoCat.Activities
     /// <seealso cref="ITimedOperationInfo{TState}" />
     /// <seealso cref="IAsyncAction{TEvent, TState}" />
     /// <seealso cref="ITimedAsyncAction{TEvent}" />
-    public interface ITimedAsyncAction<TEvent, TState> : ITimedOperationInfo<TState>, IAsyncAction<TEvent, TState>, ITimedAsyncAction<TEvent> where TEvent : ITimedOperationEvent<TState> { }
+    public interface ITimedAsyncAction<TEvent, TState> : ITimedOperationInfo<TState>, IAsyncAction<TEvent, TState>, ITimedAsyncAction<TEvent> where TEvent : ITimedActivityEvent<TState> { }
 }

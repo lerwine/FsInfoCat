@@ -9,7 +9,7 @@ namespace FsInfoCat.Activities
     /// <typeparam name="TResult">The type of the result value produced by this asynchronous function.</typeparam>
     /// <seealso cref="IAsyncAction{TEvent}" />
     public interface IAsyncFunc<TEvent, TResult> : IAsyncAction<TEvent>
-         where TEvent : IOperationEvent
+         where TEvent : IActivityEvent
     {
         /// <summary>
         /// Gets the task for the asynchronous function.
@@ -26,5 +26,5 @@ namespace FsInfoCat.Activities
     /// <typeparam name="TResult">The type of the result value produced by this asynchronous function.</typeparam>
     /// <seealso cref="IAsyncAction{TEvent, TState}" />
     /// <seealso cref="IAsyncFunc{TEvent, TResult}" />
-    public interface IAsyncFunc<TEvent, TState, TResult> : IAsyncAction<TEvent, TState>, IAsyncFunc<TEvent, TResult> where TEvent : IOperationEvent<TState> { }
+    public interface IAsyncFunc<TEvent, TState, TResult> : IAsyncAction<TEvent, TState>, IAsyncFunc<TEvent, TResult> where TEvent : IActivityEvent<TState> { }
 }

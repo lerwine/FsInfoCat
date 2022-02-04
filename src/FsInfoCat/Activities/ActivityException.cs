@@ -34,6 +34,8 @@ namespace FsInfoCat.Activities
 
         string IActivityInfo.StatusMessage => Operation?.StatusMessage;
 
+        StatusMessageLevel IActivityEvent.MessageLevel => StatusMessageLevel.Error;
+
         public ActivityException() { }
 
         /// <summary>

@@ -1,66 +1,72 @@
+using FsInfoCat.Activities;
 using FsInfoCat.AsyncOps;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Threading;
 
 namespace FsInfoCat.Desktop.ViewModel.AsyncOps
 {
+    /// <summary>
+    /// View model for a background job being tracked by a <see cref="JobServiceStatusViewModel"/>.
+    /// </summary>
+    /// <seealso cref="DependencyObject" />
     public partial class BackgroundJobVM : DependencyObject
     {
         private readonly ILogger<BackgroundJobVM> _logger;
-        private readonly ProgressObserver _observer;
-        private readonly IDisposable _subscription;
+        private IDisposable _currentActivitySubscription;
+        private IDisposable _childActivitySubscription;
 
-        #region OperationId Property Members
+        internal CancellationToken Token { get; }
 
-        private static readonly DependencyPropertyKey OperationIdPropertyKey = DependencyPropertyBuilder<BackgroundJobVM, Guid>
-            .Register(nameof(OperationId))
+        #region ActivityId Property Members
+
+        private static readonly DependencyPropertyKey ActivityIdPropertyKey = DependencyPropertyBuilder<BackgroundJobVM, Guid>
+            .Register(nameof(ActivityId))
             .AsReadOnly();
 
         /// <summary>
-        /// Identifies the <see cref="OperationId"/> dependency property.
+        /// Identifies the <see cref="ActivityId"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty OperationIdProperty = OperationIdPropertyKey.DependencyProperty;
+        public static readonly DependencyProperty ActivityIdProperty = ActivityIdPropertyKey.DependencyProperty;
 
-        public Guid OperationId => (Guid)GetValue(OperationIdProperty);
+        public Guid ActivityId => (Guid)GetValue(ActivityIdProperty);
 
         #endregion
-        #region Activity Property Members
+        #region ShortDescription Property Members
 
-        private static readonly DependencyPropertyKey ActivityPropertyKey = DependencyPropertyBuilder<BackgroundJobVM, string>
-            .Register(nameof(Activity))
+        private static readonly DependencyPropertyKey ShortDescriptionPropertyKey = DependencyPropertyBuilder<BackgroundJobVM, string>
+            .Register(nameof(ShortDescription))
             .DefaultValue("")
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default)
             .AsReadOnly();
 
         /// <summary>
-        /// Identifies the <see cref="Activity"/> dependency property.
+        /// Identifies the <see cref="ShortDescription"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty ActivityProperty = ActivityPropertyKey.DependencyProperty;
+        public static readonly DependencyProperty ShortDescriptionProperty = ShortDescriptionPropertyKey.DependencyProperty;
 
-        public string Activity { get => GetValue(ActivityProperty) as string; private set => SetValue(ActivityPropertyKey, value); }
+        public string ShortDescription => GetValue(ShortDescriptionProperty) as string;
 
         #endregion
-        #region StatusDescription Property Members
+        #region StatusMessage Property Members
 
-        private static readonly DependencyPropertyKey StatusDescriptionPropertyKey = DependencyPropertyBuilder<BackgroundJobVM, string>
-            .Register(nameof(StatusDescription))
+        private static readonly DependencyPropertyKey StatusMessagePropertyKey = DependencyPropertyBuilder<BackgroundJobVM, string>
+            .Register(nameof(StatusMessage))
             .DefaultValue("")
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default)
             .AsReadOnly();
 
         /// <summary>
-        /// Identifies the <see cref="StatusDescription"/> dependency property.
+        /// Identifies the <see cref="StatusMessage"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty StatusDescriptionProperty = StatusDescriptionPropertyKey.DependencyProperty;
+        public static readonly DependencyProperty StatusMessageProperty = StatusMessagePropertyKey.DependencyProperty;
 
-        public string StatusDescription { get => GetValue(StatusDescriptionProperty) as string; private set => SetValue(StatusDescriptionPropertyKey, value); }
+        public string StatusMessage { get => GetValue(StatusMessageProperty) as string; private set => SetValue(StatusMessagePropertyKey, value); }
 
         #endregion
         #region CurrentOperation Property Members
@@ -79,61 +85,66 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
         public string CurrentOperation { get => GetValue(CurrentOperationProperty) as string; private set => SetValue(CurrentOperationPropertyKey, value); }
 
         #endregion
-        #region Title Property Members
-
-        /// <summary>
-        /// Occurs when the value of the <see cref="Title"/> dependency property has changed.
-        /// </summary>
-        public event DependencyPropertyChangedEventHandler TitlePropertyChanged;
-
-        /// <summary>
-        /// Identifies the <see cref="Title"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty TitleProperty = DependencyProperty.Register(nameof(Title), typeof(string), typeof(BackgroundJobVM),
-                new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as BackgroundJobVM).TitlePropertyChanged?.Invoke(d, e)));
-
-        [Obsolete("Use Activity")]
-        public string Title { get => GetValue(TitleProperty) as string; set => SetValue(TitleProperty, value); }
-
-        #endregion
-        #region Message Property Members
-
-        /// <summary>
-        /// Occurs when the value of the <see cref="Message"/> dependency property has changed.
-        /// </summary>
-        public event DependencyPropertyChangedEventHandler MessagePropertyChanged;
-
-        /// <summary>
-        /// Identifies the <see cref="Message"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty MessageProperty = DependencyProperty.Register(nameof(Message), typeof(string), typeof(BackgroundJobVM),
-                new PropertyMetadata("", (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as BackgroundJobVM).MessagePropertyChanged?.Invoke(d, e)));
-
-        [Obsolete("Use StatusDescription and/or CurrentOperation")]
-        public string Message { get => GetValue(MessageProperty) as string; set => SetValue(MessageProperty, value); }
-
-        #endregion
         #region MessageLevel Property Members
 
-        /// <summary>
-        /// Occurs when the value of the <see cref="MessageLevel"/> dependency property has changed.
-        /// </summary>
-        public event DependencyPropertyChangedEventHandler MessageLevelPropertyChanged;
+        private static readonly DependencyPropertyKey MessageLevelPropertyKey = DependencyPropertyBuilder<BackgroundJobVM, StatusMessageLevel>
+            .Register(nameof(MessageLevel))
+            .DefaultValue(StatusMessageLevel.Information)
+            .AsReadOnly();
 
         /// <summary>
         /// Identifies the <see cref="MessageLevel"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty MessageLevelProperty = DependencyProperty.Register(nameof(MessageLevel), typeof(StatusMessageLevel),
-            typeof(BackgroundJobVM), new PropertyMetadata(StatusMessageLevel.Information,
-                (DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as BackgroundJobVM)?.MessageLevelPropertyChanged?.Invoke(d, e)));
+        public static readonly DependencyProperty MessageLevelProperty = MessageLevelPropertyKey.DependencyProperty;
 
-        public StatusMessageLevel MessageLevel { get => (StatusMessageLevel)GetValue(MessageLevelProperty); set => SetValue(MessageLevelProperty, value); }
+        public StatusMessageLevel MessageLevel { get => (StatusMessageLevel)GetValue(MessageLevelProperty); private set => SetValue(MessageLevelPropertyKey, value); }
+
+        #endregion
+        #region PercentComplete Property Members
+
+        private static readonly DependencyPropertyKey PercentCompletePropertyKey = DependencyPropertyBuilder<BackgroundJobVM, int?>
+            .Register(nameof(PercentComplete))
+            .DefaultValue(null)
+            .AsReadOnly();
+
+        /// <summary>
+        /// Identifies the <see cref="PercentComplete"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty PercentCompleteProperty = PercentCompletePropertyKey.DependencyProperty;
+
+        public int? PercentComplete { get => (int?)GetValue(PercentCompleteProperty); private set => SetValue(PercentCompletePropertyKey, value); }
+
+        #endregion
+        #region Started Property Members
+
+        private static readonly DependencyPropertyKey StartedPropertyKey = DependencyPropertyBuilder<BackgroundJobVM, DateTime?>
+            .Register(nameof(Started))
+            .AsReadOnly();
+
+        /// <summary>
+        /// Identifies the <see cref="Started"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty StartedProperty = StartedPropertyKey.DependencyProperty;
+
+        public DateTime? Started { get => (DateTime?)GetValue(StartedProperty); private set => SetValue(StartedPropertyKey, value); }
+
+        #endregion
+        #region Duration Property Members
+
+        private static readonly DependencyPropertyKey DurationPropertyKey = DependencyPropertyBuilder<BackgroundJobVM, TimeSpan>
+            .Register(nameof(Duration))
+            .DefaultValue(TimeSpan.Zero)
+            .AsReadOnly();
+
+        /// <summary>
+        /// Identifies the <see cref="Duration"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty DurationProperty = DurationPropertyKey.DependencyProperty;
+
+        public TimeSpan Duration { get => (TimeSpan)GetValue(DurationProperty); private set => SetValue(DurationPropertyKey, value); }
 
         #endregion
         #region Cancel Property Members
-
-        [Obsolete("Do not use")]
-        public event EventHandler<Commands.CommandEventArgs> CancelInvoked;
 
         private static readonly DependencyPropertyKey CancelPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Cancel),
             typeof(Commands.RelayCommand), typeof(BackgroundJobVM), new PropertyMetadata(null));
@@ -144,73 +155,6 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
         public static readonly DependencyProperty CancelProperty = CancelPropertyKey.DependencyProperty;
 
         public Commands.RelayCommand Cancel => (Commands.RelayCommand)GetValue(CancelProperty);
-
-        #endregion
-        #region IsCompleted Property Members
-
-        private static readonly DependencyPropertyKey IsCompletedPropertyKey = DependencyProperty.RegisterReadOnly(nameof(IsCompleted), typeof(bool),
-            typeof(BackgroundJobVM), new PropertyMetadata(false));
-
-        /// <summary>
-        /// Identifies the <see cref="IsCompleted"/> dependency property.
-        /// </summary>
-        [Obsolete("Do not use")]
-        public static readonly DependencyProperty IsCompletedProperty = IsCompletedPropertyKey.DependencyProperty;
-
-        [Obsolete("Do not use")]
-        public bool IsCompleted { get => (bool)GetValue(IsCompletedProperty); private set => SetValue(IsCompletedPropertyKey, value); }
-
-        #endregion
-        #region JobStatus Property Members
-
-        /// <summary>
-        /// Occurs when the value of the <see cref="JobStatus"/> dependency property has changed.
-        /// </summary>
-        [Obsolete("Do not use")]
-        public event DependencyPropertyChangedEventHandler JobStatusPropertyChanged;
-
-        private static readonly DependencyPropertyKey JobStatusPropertyKey = DependencyProperty.RegisterReadOnly(nameof(JobStatus), typeof(AsyncJobStatus),
-            typeof(BackgroundJobVM), new PropertyMetadata(AsyncJobStatus.WaitingToRun, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-            (d as BackgroundJobVM)?.JobStatusPropertyChanged?.Invoke(d, e)));
-
-        /// <summary>
-        /// Identifies the <see cref="JobStatus"/> dependency property.
-        /// </summary>
-        [Obsolete("Do not use")]
-        public static readonly DependencyProperty JobStatusProperty = JobStatusPropertyKey.DependencyProperty;
-
-        [Obsolete("Do not use")]
-        public AsyncJobStatus JobStatus { get => (AsyncJobStatus)GetValue(JobStatusProperty); private set => SetValue(JobStatusPropertyKey, value); }
-
-        #endregion
-        #region Timestamp Property Members
-
-        private static readonly DependencyPropertyKey TimestampPropertyKey = DependencyPropertyBuilder<BackgroundJobVM, TimeSpan?>
-            .Register(nameof(Timestamp))
-            .DefaultValue(null)
-            .AsReadOnly();
-
-        /// <summary>
-        /// Identifies the <see cref="Timestamp"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty TimestampProperty = TimestampPropertyKey.DependencyProperty;
-
-        public TimeSpan? Timestamp { get => (TimeSpan?)GetValue(TimestampProperty); private set => SetValue(TimestampPropertyKey, value); }
-
-        #endregion
-        #region PercentComplete Property Members
-
-        private static readonly DependencyPropertyKey PercentCompletePropertyKey = DependencyPropertyBuilder<BackgroundJobVM, byte?>
-            .Register(nameof(PercentComplete))
-            .DefaultValue(null)
-            .AsReadOnly();
-
-        /// <summary>
-        /// Identifies the <see cref="PercentComplete"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty PercentCompleteProperty = PercentCompletePropertyKey.DependencyProperty;
-
-        public byte? PercentComplete { get => (byte?)GetValue(PercentCompleteProperty); private set => SetValue(PercentCompletePropertyKey, value); }
 
         #endregion
         #region Items Property Members
@@ -230,102 +174,71 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
 
         #endregion
 
-        public BackgroundJobVM([DisallowNull] ICancellableOperation progressInfo, MessageCode? code, [DisallowNull] IObservable<IBackgroundProgressEvent> observable, [DisallowNull] Action<BackgroundJobVM> onCompleted)
+        internal BackgroundJobVM([DisallowNull] IAsyncActivity activity)
         {
+            if (activity is null) throw new ArgumentNullException(nameof(activity));
             _logger = App.GetLogger(this);
-            SetValue(OperationIdPropertyKey, progressInfo.OperationId);
+            SetValue(ActivityIdPropertyKey, activity.ActivityId);
             SetValue(ItemsPropertyKey, new ReadOnlyObservableCollection<BackgroundJobVM>(_backingItems));
-            Activity = progressInfo.Activity;
-            CurrentOperation = progressInfo.CurrentOperation;
-            StatusDescription = progressInfo.StatusDescription;
-            _observer = new ProgressObserver(this, onCompleted);
-            _subscription = observable.Subscribe(_observer);
+            SetValue(ShortDescriptionPropertyKey, activity.ShortDescription);
+            CurrentOperation = activity.CurrentOperation;
+            StatusMessage = activity.StatusMessage;
+            int p = activity.PercentComplete;
+            PercentComplete = (p < 0) ? null : p;
+            if (activity is ITimedAsyncAction<ITimedActivityEvent> timedAsyncAction)
+            {
+                Started = timedAsyncAction.Started;
+                Duration = timedAsyncAction.Duration;
+            }
             SetValue(CancelPropertyKey, new Commands.RelayCommand(parameter =>
             {
-                if (!progressInfo.IsCancellationRequested)
-                    progressInfo.Cancel();
+                if (!activity.TokenSource.IsCancellationRequested)
+                    activity.TokenSource.Cancel(true);
             }));
         }
 
-        private static bool TryFindParentVM(Guid parentId, [DisallowNull] ObservableCollection<BackgroundJobVM> backingItems, out BackgroundJobVM vm)
+        private static BackgroundJobVM AppendItem<TEvent, TActivity>(ObservableCollection<BackgroundJobVM> backingCollection, TActivity asyncActivity, Func<BackgroundJobVM, IObserver<TEvent>> createObserver)
+            where TActivity : IAsyncActivity, IObservable<TEvent>
         {
-            vm = backingItems.FirstOrDefault(i => i.OperationId == parentId);
-            if (vm is not null)
-                return true;
-            foreach (BackgroundJobVM item in backingItems)
+            if (backingCollection is null) throw new ArgumentNullException(nameof(backingCollection));
+            if (asyncActivity is null) throw new ArgumentNullException(nameof(asyncActivity));
+            BackgroundJobVM item = new BackgroundJobVM(asyncActivity);
+            backingCollection.Add(item);
+            item._currentActivitySubscription = asyncActivity.Subscribe(createObserver(item));
+            item._childActivitySubscription = asyncActivity.SubscribeStateChange(new ChildOperationEventObserver(item), activeOps =>
             {
-                if (TryFindParentVM(parentId, item._backingItems, out vm))
-                    return true;
-            }
-            return false;
-        }
-
-        internal static void OnOperationStarted([DisallowNull] Dispatcher dispatcher, [DisallowNull] ObservableCollection<BackgroundJobVM> backingItems, [DisallowNull] ICancellableOperation progressInfo, MessageCode? code,
-            [DisallowNull] IObservable<IBackgroundProgressEvent> observable) => dispatcher.Invoke(() =>
-            {
-                Guid? parentId = progressInfo.ParentId;
-                if (parentId.HasValue && TryFindParentVM(parentId.Value, backingItems, out BackgroundJobVM parentVM))
-                    backingItems = parentVM._backingItems;
-                backingItems.Add(new BackgroundJobVM(progressInfo, code, observable, item => dispatcher.Invoke(() => backingItems.Remove(item))));
+                foreach (IAsyncActivity activity in activeOps)
+                    AppendItem(item._logger, activity, item._backingItems);
             });
-
-        private void OnError(Exception error)
-        {
-            if (error is AggregateException aggregateException && aggregateException.InnerExceptions.Count == 1)
-                error = aggregateException.InnerExceptions[0];
-            if (error is AsyncOperationException asyncOpException)
-            {
-                if (asyncOpException.Code.TryGetDescription(out string codeDescription))
-                {
-                    if (string.IsNullOrWhiteSpace(asyncOpException.CurrentOperation))
-                        MessageBox.Show(App.Current.MainWindow, messageBoxText: $@"An unexpected has occurred:
-Activity: {asyncOpException.Activity}
-Error Type: {asyncOpException.Code.GetDisplayName()} ({codeDescription})
-Message: {asyncOpException.Message}", "Unexpected Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                    else MessageBox.Show(App.Current.MainWindow, messageBoxText: $@"An unexpected has occurred:
-Activity: {asyncOpException.Activity}
-Error Type: {asyncOpException.Code.GetDisplayName()} ({codeDescription})
-Message: {asyncOpException.Message}
-Current Operation: {asyncOpException.CurrentOperation}", "Unexpected Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
-                else if (string.IsNullOrWhiteSpace(asyncOpException.CurrentOperation))
-                    MessageBox.Show(App.Current.MainWindow, messageBoxText: $@"An unexpected has occurred:
-Activity: {asyncOpException.Activity}
-Error Type: {asyncOpException.Code.GetDisplayName()}
-Message: {asyncOpException.Message}", "Unexpected Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                else MessageBox.Show(App.Current.MainWindow, messageBoxText: $@"An unexpected has occurred:
-Activity: {asyncOpException.Activity}
-Error Type: {asyncOpException.Code.GetDisplayName()}
-Message: {asyncOpException.Message}
-Current Operation: {asyncOpException.CurrentOperation}", "Unexpected Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                MessageLevel = StatusMessageLevel.Error;
-            }
-            else
-            {
-                string currentOperation = CurrentOperation;
-                if (string.IsNullOrWhiteSpace(currentOperation))
-                    MessageBox.Show(App.Current.MainWindow, messageBoxText: $@"An unexpected has occurred:
-Activity: {Activity}
-Latest Status: {StatusDescription}
-Message: {error.Message}", "Unexpected Error", MessageBoxButton.OK, (error is WarningException) ? MessageBoxImage.Warning : MessageBoxImage.Error);
-                else MessageBox.Show(App.Current.MainWindow, messageBoxText: $@"An unexpected has occurred:
-Activity: {Activity}
-Latest Status: {StatusDescription}
-Message: {error.Message}
-Current Operation: {currentOperation}", "Unexpected Error", MessageBoxButton.OK, (error is WarningException) ? MessageBoxImage.Warning : MessageBoxImage.Error);
-            }
+            return item;
         }
 
-        private void OnProgressEvent(IBackgroundProgressEvent progressEvent)
+        internal static void AppendItem([DisallowNull] ILogger logger, [DisallowNull] IAsyncActivity activity, [DisallowNull] ObservableCollection<BackgroundJobVM> backingCollection)
         {
-            StatusDescription = progressEvent.StatusDescription;
-            CurrentOperation = progressEvent.CurrentOperation;
-            MessageCode? messageCode = progressEvent.Code;
-            Exception error = (progressEvent is IBackgroundOperationErrorOptEvent errorOptEvent) ? errorOptEvent.Error : null;
-            if (messageCode.HasValue)
-                MessageLevel = messageCode?.ToStatusMessageLevel(StatusMessageLevel.Information) ?? StatusMessageLevel.Information;
+            if (activity is null) throw new ArgumentNullException(nameof(activity));
+            if (activity is ITimedAsyncAction<ITimedActivityEvent> timedAsyncAction)
+            {
+                BackgroundJobVM item = AppendItem(backingCollection, timedAsyncAction, vm => new TimedItemEventObserver(vm, () => backingCollection.Remove(vm)));
+                item.Started = timedAsyncAction.Started;
+                item.Duration = timedAsyncAction.Duration;
+            }
+            else if (activity is IAsyncAction<IActivityEvent> asyncAction)
+                _ = AppendItem(backingCollection, asyncAction, vm => new ItemEventObserver(vm, () => backingCollection.Remove(vm)));
             else
-                MessageLevel = (error is null) ? StatusMessageLevel.Information : (error is WarningException) ? StatusMessageLevel.Warning : StatusMessageLevel.Error;
+                logger.LogError("{Type} is not a valid activity type.", activity.GetType().AssemblyQualifiedName);
         }
+
+        //private static bool TryFindParentVM(Guid parentId, [DisallowNull] ObservableCollection<BackgroundJobVM> backingItems, out BackgroundJobVM vm)
+        //{
+        //    vm = backingItems.FirstOrDefault(i => i.OperationId == parentId);
+        //    if (vm is not null)
+        //        return true;
+        //    foreach (BackgroundJobVM item in backingItems)
+        //    {
+        //        if (TryFindParentVM(parentId, item._backingItems, out vm))
+        //            return true;
+        //    }
+        //    return false;
+        //}
     }
 }

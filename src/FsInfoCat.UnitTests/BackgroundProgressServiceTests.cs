@@ -190,7 +190,7 @@ namespace FsInfoCat.UnitTests
                 return true;
             });
             
-            ITimedAsyncFunc<ITimedOperationEvent, bool> backgroundOperation = service.InvokeTimedAsync("Test timed func", "Starting", asyncMethodDelegate);
+            ITimedAsyncFunc<ITimedActivityEvent, bool> backgroundOperation = service.InvokeTimedAsync("Test timed func", "Starting", asyncMethodDelegate);
             bgEvent.WaitOne();
             Assert.IsTrue(service.IsActive);
             fgEvent.Set();
@@ -223,7 +223,7 @@ namespace FsInfoCat.UnitTests
                 fgEvent.WaitOne();
                 return true;
             });
-            ITimedAsyncFunc<ITimedOperationEvent, bool> backgroundOperation = service.InvokeTimedAsync("Test timed func", "Starting", asyncMethodDelegate);
+            ITimedAsyncFunc<ITimedActivityEvent, bool> backgroundOperation = service.InvokeTimedAsync("Test timed func", "Starting", asyncMethodDelegate);
             bgEvent.WaitOne();
             Assert.IsTrue(observer1.TryDequeue(out Observed<IAsyncActivity> observed1));
             Assert.IsNull(observed1.Error);

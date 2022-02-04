@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
@@ -8,11 +7,14 @@ namespace FsInfoCat.Activities
 {
     partial class AsyncActivityProvider
     {
-        internal abstract partial class TimedAsyncActivity<TEvent, TTask> : AsyncActivity<TEvent, TTask>, ITimedAsyncActivity
+        internal abstract partial class TimedAsyncActivity<TBaseEvent, TOperationEvent, TResultEvent, TTask> : AsyncActivity<TBaseEvent, TOperationEvent, TResultEvent, TTask>, ITimedAsyncActivity
             where TTask : Task
-            where TEvent : ITimedOperationEvent
+            where TBaseEvent : ITimedActivityEvent
+            where TOperationEvent : TBaseEvent, ITimedOperationEvent
+            where TResultEvent : TBaseEvent, ITimedActivityCompletedEvent
         {
             private readonly Stopwatch _stopwatch = new();
+
             public DateTime Started { get; private set; } = DateTime.Now;
 
             public TimeSpan Duration => _stopwatch.Elapsed;
@@ -29,23 +31,7 @@ namespace FsInfoCat.Activities
                 base.OnStarted();
             }
 
-            protected override void OnCanceled(LinkedListNode<IAsyncActivity> node)
-            {
-                _stopwatch.Stop();
-                base.OnCanceled(node);
-            }
-
-            protected override void OnFaulted(LinkedListNode<IAsyncActivity> node, Exception exception)
-            {
-                _stopwatch.Stop();
-                base.OnFaulted(node, exception);
-            }
-
-            protected override void OnRanToCompletion(LinkedListNode<IAsyncActivity> node)
-            {
-                _stopwatch.Stop();
-                base.OnRanToCompletion(node);
-            }
+            protected void StopTimer() => _stopwatch.Stop();
         }
     }
 }

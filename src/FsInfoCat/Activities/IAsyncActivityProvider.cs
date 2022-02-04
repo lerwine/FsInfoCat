@@ -21,7 +21,7 @@ namespace FsInfoCat.Activities
         /// <exception cref="ArgumentException"><paramref name="activityDescription"/> or <paramref name="initialStatusMessage"/> is <see langword="null"/>, <see cref="string.Empty"/>
         /// or contains only <see cref="string.IsNullOrWhiteSpace(string)">white space characters</see>.</exception>
         /// <exception cref="InvalidOperationException"><paramref name="asyncMethodDelegate"/> returned a <see langword="null"/> value.</exception>
-        IAsyncAction<IOperationEvent> InvokeAsync([DisallowNull] string activityDescription, [DisallowNull] string initialStatusMessage, [DisallowNull] Func<IActivityProgress, Task> asyncMethodDelegate);
+        IAsyncAction<IActivityEvent> InvokeAsync([DisallowNull] string activityDescription, [DisallowNull] string initialStatusMessage, [DisallowNull] Func<IActivityProgress, Task> asyncMethodDelegate);
 
         /// <summary>
         /// Invokes a method that asynchronously produces a result value.
@@ -35,7 +35,7 @@ namespace FsInfoCat.Activities
         /// <exception cref="ArgumentException"><paramref name="activityDescription"/> or <paramref name="initialStatusMessage"/> is <see langword="null"/>, <see cref="string.Empty"/>
         /// or contains only <see cref="string.IsNullOrWhiteSpace(string)">white space characters</see>.</exception>
         /// <exception cref="InvalidOperationException"><paramref name="asyncMethodDelegate"/> returned a <see langword="null"/> value.</exception>
-        IAsyncFunc<IOperationEvent, TResult> InvokeAsync<TResult>([DisallowNull] string activityDescription, [DisallowNull] string initialStatusMessage,
+        IAsyncFunc<IActivityEvent, TResult> InvokeAsync<TResult>([DisallowNull] string activityDescription, [DisallowNull] string initialStatusMessage,
             [DisallowNull] Func<IActivityProgress, Task<TResult>> asyncMethodDelegate);
 
         /// <summary>
@@ -49,7 +49,7 @@ namespace FsInfoCat.Activities
         /// <exception cref="ArgumentException"><paramref name="activityDescription"/> or <paramref name="initialStatusMessage"/> is <see langword="null"/>, <see cref="string.Empty"/>
         /// or contains only <see cref="string.IsNullOrWhiteSpace(string)">white space characters</see>.</exception>
         /// <exception cref="InvalidOperationException"><paramref name="asyncMethodDelegate"/> returned a <see langword="null"/> value.</exception>
-        ITimedAsyncAction<ITimedOperationEvent> InvokeTimedAsync([DisallowNull] string activityDescription, [DisallowNull] string initialStatusMessage, [DisallowNull] Func<IActivityProgress, Task> asyncMethodDelegate);
+        ITimedAsyncAction<ITimedActivityEvent> InvokeTimedAsync([DisallowNull] string activityDescription, [DisallowNull] string initialStatusMessage, [DisallowNull] Func<IActivityProgress, Task> asyncMethodDelegate);
 
         /// <summary>
         /// Invokes a method that asynchronously produces a result value, tracking the execution start and duration.
@@ -63,7 +63,7 @@ namespace FsInfoCat.Activities
         /// <exception cref="ArgumentException"><paramref name="activityDescription"/> or <paramref name="initialStatusMessage"/> is <see langword="null"/>, <see cref="string.Empty"/>
         /// or contains only <see cref="string.IsNullOrWhiteSpace(string)">white space characters</see>.</exception>
         /// <exception cref="InvalidOperationException"><paramref name="asyncMethodDelegate"/> returned a <see langword="null"/> value.</exception>
-        ITimedAsyncFunc<ITimedOperationEvent, TResult> InvokeTimedAsync<TResult>([DisallowNull] string activityDescription, [DisallowNull] string initialStatusMessage,
+        ITimedAsyncFunc<ITimedActivityEvent, TResult> InvokeTimedAsync<TResult>([DisallowNull] string activityDescription, [DisallowNull] string initialStatusMessage,
             [DisallowNull] Func<IActivityProgress, Task<TResult>> asyncMethodDelegate);
 
         /// <summary>
@@ -79,7 +79,7 @@ namespace FsInfoCat.Activities
         /// <exception cref="ArgumentException"><paramref name="activityDescription"/> or <paramref name="initialStatusMessage"/> is <see langword="null"/>, <see cref="string.Empty"/>
         /// or contains only <see cref="string.IsNullOrWhiteSpace(string)">white space characters</see>.</exception>
         /// <exception cref="InvalidOperationException"><paramref name="asyncMethodDelegate"/> returned a <see langword="null"/> value.</exception>
-        IAsyncAction<IOperationEvent<TState>, TState> InvokeAsync<TState>([DisallowNull] string activityDescription, [DisallowNull] string initialStatusMessage, TState state,
+        IAsyncAction<IActivityEvent<TState>, TState> InvokeAsync<TState>([DisallowNull] string activityDescription, [DisallowNull] string initialStatusMessage, TState state,
             [DisallowNull] Func<IActivityProgress<TState>, Task> asyncMethodDelegate);
 
         /// <summary>
@@ -96,7 +96,7 @@ namespace FsInfoCat.Activities
         /// <exception cref="ArgumentException"><paramref name="activityDescription"/> or <paramref name="initialStatusMessage"/> is <see langword="null"/>, <see cref="string.Empty"/>
         /// or contains only <see cref="string.IsNullOrWhiteSpace(string)">white space characters</see>.</exception>
         /// <exception cref="InvalidOperationException"><paramref name="asyncMethodDelegate"/> returned a <see langword="null"/> value.</exception>
-        IAsyncFunc<IOperationEvent<TState>, TState, TResult> InvokeAsync<TState, TResult>([DisallowNull] string activityDescription, [DisallowNull] string initialStatusMessage, TState state,
+        IAsyncFunc<IActivityEvent<TState>, TState, TResult> InvokeAsync<TState, TResult>([DisallowNull] string activityDescription, [DisallowNull] string initialStatusMessage, TState state,
             [DisallowNull] Func<IActivityProgress<TState>, Task<TResult>> asyncMethodDelegate);
 
         /// <summary>
@@ -112,7 +112,7 @@ namespace FsInfoCat.Activities
         /// <exception cref="ArgumentException"><paramref name="activityDescription"/> or <paramref name="initialStatusMessage"/> is <see langword="null"/>, <see cref="string.Empty"/>
         /// or contains only <see cref="string.IsNullOrWhiteSpace(string)">white space characters</see>.</exception>
         /// <exception cref="InvalidOperationException"><paramref name="asyncMethodDelegate"/> returned a <see langword="null"/> value.</exception>
-        ITimedAsyncAction<ITimedOperationEvent<TState>, TState> InvokeTimedAsync<TState>([DisallowNull] string activityDescription, [DisallowNull] string initialStatusMessage, TState state,
+        ITimedAsyncAction<ITimedActivityEvent<TState>, TState> InvokeTimedAsync<TState>([DisallowNull] string activityDescription, [DisallowNull] string initialStatusMessage, TState state,
             [DisallowNull] Func<IActivityProgress<TState>, Task> asyncMethodDelegate);
 
         /// <summary>
@@ -129,7 +129,7 @@ namespace FsInfoCat.Activities
         /// <exception cref="ArgumentException"><paramref name="activityDescription"/> or <paramref name="initialStatusMessage"/> is <see langword="null"/>, <see cref="string.Empty"/>
         /// or contains only <see cref="string.IsNullOrWhiteSpace(string)">white space characters</see>.</exception>
         /// <exception cref="InvalidOperationException"><paramref name="asyncMethodDelegate"/> returned a <see langword="null"/> value.</exception>
-        ITimedAsyncFunc<ITimedOperationEvent<TState>, TState, TResult> InvokeTimedAsync<TState, TResult>([DisallowNull] string activityDescription, [DisallowNull] string initialStatusMessage, TState state,
+        ITimedAsyncFunc<ITimedActivityEvent<TState>, TState, TResult> InvokeTimedAsync<TState, TResult>([DisallowNull] string activityDescription, [DisallowNull] string initialStatusMessage, TState state,
             [DisallowNull] Func<IActivityProgress<TState>, Task<TResult>> asyncMethodDelegate);
     }
 }

@@ -13,6 +13,12 @@ namespace FsInfoCat.Activities
         /// </summary>
         /// <value>The <see cref="Exception" /> associated with the event or <see langword="null" /> if there is none.</value>
         Exception Exception { get; }
+
+        /// <summary>
+        /// Gets the status message level.
+        /// </summary>
+        /// <value>The message level value for the associated <see cref="IActivityInfo.StatusMessage"/>.</value>
+        StatusMessageLevel MessageLevel { get; }
     }
 
     /// <summary>

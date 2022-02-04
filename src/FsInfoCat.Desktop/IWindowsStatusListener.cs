@@ -8,6 +8,7 @@ namespace FsInfoCat.Desktop
     /// <summary>
     /// Allows background operations to safely update status information to the associated <see cref="IAsyncOpViewModel">background operation view model item</typeparamref>.
     /// </summary>
+    [Obsolete("Use IAsyncActivityService, instead")]
     public interface IWindowsStatusListener : IStatusListener
     {
         /// <summary>

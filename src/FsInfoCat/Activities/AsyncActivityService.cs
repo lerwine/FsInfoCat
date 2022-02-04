@@ -15,7 +15,7 @@ namespace FsInfoCat.Activities
     public partial class AsyncActivityService : BackgroundService, IAsyncActivityService
     {
         private readonly object _syncRoot = new();
-        private readonly RootProvider _provider;
+        private readonly RootProvider _provider = new();
         private readonly ILogger<AsyncActivityService> _logger;
 
         public bool IsActive => _provider.IsActive;
@@ -61,28 +61,28 @@ namespace FsInfoCat.Activities
 
         IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)_provider).GetEnumerator();
 
-        public IAsyncAction<IOperationEvent> InvokeAsync([DisallowNull] string activityDescription, [DisallowNull] string initialStatusMessage, [DisallowNull] Func<IActivityProgress, Task> asyncMethodDelegate)
+        public IAsyncAction<IActivityEvent> InvokeAsync([DisallowNull] string activityDescription, [DisallowNull] string initialStatusMessage, [DisallowNull] Func<IActivityProgress, Task> asyncMethodDelegate)
             => _provider.InvokeAsync(activityDescription, initialStatusMessage, asyncMethodDelegate);
 
-        public IAsyncFunc<IOperationEvent, TResult> InvokeAsync<TResult>([DisallowNull] string activityDescription, [DisallowNull] string initialStatusMessage,
+        public IAsyncFunc<IActivityEvent, TResult> InvokeAsync<TResult>([DisallowNull] string activityDescription, [DisallowNull] string initialStatusMessage,
             [DisallowNull] Func<IActivityProgress, Task<TResult>> asyncMethodDelegate) => _provider.InvokeAsync(activityDescription, initialStatusMessage, asyncMethodDelegate);
 
-        public IAsyncAction<IOperationEvent<TState>, TState> InvokeAsync<TState>([DisallowNull] string activityDescription, [DisallowNull] string initialStatusMessage, TState state,
+        public IAsyncAction<IActivityEvent<TState>, TState> InvokeAsync<TState>([DisallowNull] string activityDescription, [DisallowNull] string initialStatusMessage, TState state,
             [DisallowNull] Func<IActivityProgress<TState>, Task> asyncMethodDelegate) => _provider.InvokeAsync(activityDescription, initialStatusMessage, state, asyncMethodDelegate);
 
-        public IAsyncFunc<IOperationEvent<TState>, TState, TResult> InvokeAsync<TState, TResult>([DisallowNull] string activityDescription, [DisallowNull] string initialStatusMessage, TState state,
+        public IAsyncFunc<IActivityEvent<TState>, TState, TResult> InvokeAsync<TState, TResult>([DisallowNull] string activityDescription, [DisallowNull] string initialStatusMessage, TState state,
             [DisallowNull] Func<IActivityProgress<TState>, Task<TResult>> asyncMethodDelegate) => _provider.InvokeAsync(activityDescription, initialStatusMessage, state, asyncMethodDelegate);
 
-        public ITimedAsyncAction<ITimedOperationEvent> InvokeTimedAsync([DisallowNull] string activityDescription, [DisallowNull] string initialStatusMessage,
+        public ITimedAsyncAction<ITimedActivityEvent> InvokeTimedAsync([DisallowNull] string activityDescription, [DisallowNull] string initialStatusMessage,
             [DisallowNull] Func<IActivityProgress, Task> asyncMethodDelegate) => _provider.InvokeTimedAsync(activityDescription, initialStatusMessage, asyncMethodDelegate);
 
-        public ITimedAsyncFunc<ITimedOperationEvent, TResult> InvokeTimedAsync<TResult>([DisallowNull] string activityDescription, [DisallowNull] string initialStatusMessage,
+        public ITimedAsyncFunc<ITimedActivityEvent, TResult> InvokeTimedAsync<TResult>([DisallowNull] string activityDescription, [DisallowNull] string initialStatusMessage,
             [DisallowNull] Func<IActivityProgress, Task<TResult>> asyncMethodDelegate) => _provider.InvokeTimedAsync(activityDescription, initialStatusMessage, asyncMethodDelegate);
 
-        public ITimedAsyncAction<ITimedOperationEvent<TState>, TState> InvokeTimedAsync<TState>([DisallowNull] string activityDescription, [DisallowNull] string initialStatusMessage, TState state,
+        public ITimedAsyncAction<ITimedActivityEvent<TState>, TState> InvokeTimedAsync<TState>([DisallowNull] string activityDescription, [DisallowNull] string initialStatusMessage, TState state,
             [DisallowNull] Func<IActivityProgress<TState>, Task> asyncMethodDelegate) => _provider.InvokeTimedAsync(activityDescription, initialStatusMessage, state, asyncMethodDelegate);
 
-        public ITimedAsyncFunc<ITimedOperationEvent<TState>, TState, TResult> InvokeTimedAsync<TState, TResult>([DisallowNull] string activityDescription, [DisallowNull] string initialStatusMessage, TState state,
+        public ITimedAsyncFunc<ITimedActivityEvent<TState>, TState, TResult> InvokeTimedAsync<TState, TResult>([DisallowNull] string activityDescription, [DisallowNull] string initialStatusMessage, TState state,
             [DisallowNull] Func<IActivityProgress<TState>, Task<TResult>> asyncMethodDelegate) => _provider.InvokeTimedAsync(activityDescription, initialStatusMessage, state, asyncMethodDelegate);
 
         public IDisposable Subscribe(IObserver<bool> observer) => _provider.ActiveStatusSource.Observable.Subscribe(observer);

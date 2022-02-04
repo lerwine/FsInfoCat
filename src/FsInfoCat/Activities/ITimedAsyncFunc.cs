@@ -7,7 +7,7 @@ namespace FsInfoCat.Activities
     /// <typeparam name="TResult">The type of the result value produced by this asynchronous function.</typeparam>
     /// <seealso cref="IAsyncFunc{TEvent, TResult}" />
     /// <seealso cref="ITimedAsyncAction{TEvent}" />
-    public interface ITimedAsyncFunc<TEvent, TResult> : IAsyncFunc<TEvent, TResult>, ITimedAsyncAction<TEvent> where TEvent : ITimedOperationEvent { }
+    public interface ITimedAsyncFunc<TEvent, TResult> : IAsyncFunc<TEvent, TResult>, ITimedAsyncAction<TEvent> where TEvent : ITimedActivityEvent { }
 
     /// <summary>
     /// Represents a timed asynchronous activity that is associated with a user-specified value and produces a result value.
@@ -18,5 +18,5 @@ namespace FsInfoCat.Activities
     /// <seealso cref="IAsyncFunc{TEvent, TState, TResult}" />
     /// <seealso cref="ITimedAsyncAction{TEvent, TState}" />
     /// <seealso cref="ITimedAsyncFunc{TEvent, TResult}" />
-    public interface ITimedAsyncFunc<TEvent, TState, TResult> : IAsyncFunc<TEvent, TState, TResult>, ITimedAsyncAction<TEvent, TState>, ITimedAsyncFunc<TEvent, TResult> where TEvent : ITimedOperationEvent<TState> { }
+    public interface ITimedAsyncFunc<TEvent, TState, TResult> : IAsyncFunc<TEvent, TState, TResult>, ITimedAsyncAction<TEvent, TState>, ITimedAsyncFunc<TEvent, TResult> where TEvent : ITimedActivityEvent<TState> { }
 }

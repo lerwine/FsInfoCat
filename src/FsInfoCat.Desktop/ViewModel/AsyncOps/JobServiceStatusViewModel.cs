@@ -45,9 +45,6 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
 
         #endregion
 
-        private void OnOperationStarted([DisallowNull] ICancellableOperation progressInfo, MessageCode? code, [DisallowNull] IObservable<IBackgroundProgressEvent> observable) =>
-            BackgroundJobVM.OnOperationStarted(Dispatcher, _backingItems, progressInfo, code, observable);
-
         public JobServiceStatusViewModel()
         {
             _logger = App.GetLogger(this);
