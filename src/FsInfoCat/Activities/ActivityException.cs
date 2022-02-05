@@ -36,6 +36,25 @@ namespace FsInfoCat.Activities
 
         StatusMessageLevel IActivityEvent.MessageLevel => StatusMessageLevel.Error;
 
+        public override string ToString()
+        {
+            if (Operation is null)
+            {
+                if (string.IsNullOrWhiteSpace(Message))
+                    return "";
+                return $"{Message}\nCode: {Code}";
+            }
+            if (string.IsNullOrWhiteSpace(Message))
+            {
+                if (string.IsNullOrWhiteSpace(Operation.CurrentOperation))
+                    return $"Unexpected error (Code={Code}).\nActivity: {Operation.ShortDescription};\nStatus: {Operation.StatusMessage}";
+                return $"Unexpected error (Code={Code}).\nActivity: {Operation.ShortDescription};\nOperation: {Operation.CurrentOperation};\nStatus: {Operation.StatusMessage}";
+            }
+            if (string.IsNullOrWhiteSpace(Operation.CurrentOperation))
+                return $"{Message}\nActivity: {Operation.ShortDescription};\nStatus: {Operation.StatusMessage} (Code={Code})";
+            return $"{Message}\nActivity: {Operation.ShortDescription};\nOperation: {Operation.CurrentOperation};\nStatus: {Operation.StatusMessage} (Code={Code})";
+        }
+
         public ActivityException() { }
 
         /// <summary>

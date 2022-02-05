@@ -1,3 +1,4 @@
+using FsInfoCat.Activities;
 using FsInfoCat.Desktop.ViewModel;
 using FsInfoCat.Local;
 using Microsoft.EntityFrameworkCore;
@@ -247,8 +248,8 @@ namespace FsInfoCat.Desktop.LocalData.MediaPropertySets
                 return;
             if (task.IsFaulted)
                 _ = MessageBox.Show(Application.Current.MainWindow,
-                    ((task.Exception.InnerException is AsyncOperationFailureException aExc) ? aExc.UserMessage.NullIfWhiteSpace() :
-                        task.Exception.InnerExceptions.OfType<AsyncOperationFailureException>().Select(e => e.UserMessage)
+                    ((task.Exception.InnerException is ActivityException aExc) ? aExc.ToString().NullIfWhiteSpace() :
+                        task.Exception.InnerExceptions.OfType<ActivityException>().Select(e => e.ToString())
                         .Where(m => !string.IsNullOrWhiteSpace(m)).FirstOrDefault()) ??
                         "There was an unexpected error while loading items from the database.\n\nSee logs for further information",
                     "Database Error", MessageBoxButton.OK, MessageBoxImage.Error);

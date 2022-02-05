@@ -1,3 +1,4 @@
+using FsInfoCat.Activities;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
@@ -85,8 +86,8 @@ namespace FsInfoCat.Desktop.ViewModel
                     return;
                 if (task.IsFaulted)
                     _ = MessageBox.Show(Application.Current.MainWindow,
-                        ((task.Exception.InnerException is AsyncOperationFailureException aExc) ? aExc.UserMessage.NullIfWhiteSpace() :
-                            task.Exception.InnerExceptions.OfType<AsyncOperationFailureException>().Select(e => e.UserMessage)
+                        ((task.Exception.InnerException is ActivityException aExc) ? aExc.ToString().NullIfWhiteSpace() :
+                            task.Exception.InnerExceptions.OfType<ActivityException>().Select(e => e.ToString())
                             .Where(m => !string.IsNullOrWhiteSpace(m)).FirstOrDefault()) ??
                             "There was an unexpected error while loading items from the database.\n\nSee logs for further information",
                         "Database Error", MessageBoxButton.OK, MessageBoxImage.Error);

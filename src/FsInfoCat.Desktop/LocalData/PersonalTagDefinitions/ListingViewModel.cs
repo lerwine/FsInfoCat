@@ -1,3 +1,4 @@
+using FsInfoCat.Activities;
 using FsInfoCat.Desktop.ViewModel;
 using FsInfoCat.Local;
 using Microsoft.EntityFrameworkCore;
@@ -168,8 +169,8 @@ namespace FsInfoCat.Desktop.LocalData.PersonalTagDefinitions
             UpdatePageTitle(_currentOptions);
             ListingOptions.Value = _currentOptions;
             _ = MessageBox.Show(Application.Current.MainWindow,
-                ((exception is AsyncOperationFailureException aExc) ? aExc.UserMessage.NullIfWhiteSpace() :
-                    (exception as AggregateException)?.InnerExceptions.OfType<AsyncOperationFailureException>().Select(e => e.UserMessage)
+                ((exception is ActivityException aExc) ? aExc.ToString().NullIfWhiteSpace() :
+                    (exception as AggregateException)?.InnerExceptions.OfType<ActivityException>().Select(e => e.ToString())
                     .Where(m => !string.IsNullOrWhiteSpace(m)).FirstOrDefault()) ??
                     "There was an unexpected error while loading items from the database.\n\nSee logs for further information",
                 "Database Error", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -222,8 +223,8 @@ namespace FsInfoCat.Desktop.LocalData.PersonalTagDefinitions
             UpdatePageTitle(_currentOptions);
             ListingOptions.Value = _currentOptions;
             _ = MessageBox.Show(Application.Current.MainWindow,
-                ((exception is AsyncOperationFailureException aExc) ? aExc.UserMessage.NullIfWhiteSpace() :
-                    (exception as AggregateException)?.InnerExceptions.OfType<AsyncOperationFailureException>().Select(e => e.UserMessage)
+                ((exception is ActivityException aExc) ? aExc.ToString().NullIfWhiteSpace() :
+                    (exception as AggregateException)?.InnerExceptions.OfType<ActivityException>().Select(e => e.ToString())
                     .Where(m => !string.IsNullOrWhiteSpace(m)).FirstOrDefault()) ??
                     "There was an unexpected error while loading items from the database.\n\nSee logs for further information",
                 "Database Error", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -232,8 +233,8 @@ namespace FsInfoCat.Desktop.LocalData.PersonalTagDefinitions
         protected override void OnDeleteTaskFaulted([DisallowNull] Exception exception, [DisallowNull] ListItemViewModel item)
         {
             _ = MessageBox.Show(Application.Current.MainWindow,
-                ((exception is AsyncOperationFailureException aExc) ? aExc.UserMessage.NullIfWhiteSpace() :
-                    (exception as AggregateException)?.InnerExceptions.OfType<AsyncOperationFailureException>().Select(e => e.UserMessage)
+                ((exception is ActivityException aExc) ? aExc.ToString().NullIfWhiteSpace() :
+                    (exception as AggregateException)?.InnerExceptions.OfType<ActivityException>().Select(e => e.ToString())
                     .Where(m => !string.IsNullOrWhiteSpace(m)).FirstOrDefault()) ??
                     "There was an unexpected error while deleting the item from the database.\n\nSee logs for further information",
                 "Database Error", MessageBoxButton.OK, MessageBoxImage.Error);
