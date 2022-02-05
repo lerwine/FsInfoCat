@@ -1,4 +1,3 @@
-using FsInfoCat.AsyncOps;
 using System;
 using System.Runtime.Serialization;
 
