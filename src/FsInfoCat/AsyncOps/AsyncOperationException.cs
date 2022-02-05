@@ -7,8 +7,8 @@ namespace FsInfoCat.AsyncOps
     /// <summary>
     /// Represents an exception within the context of an asynchronous operation.
     /// </summary>
-    /// <seealso cref="Exception"/>
-    /// <seealso cref="IBackgroundOperationErrorEvent"/>
+    /// <seealso cref="Exception" />
+    /// <seealso cref="IBackgroundOperationErrorEvent" />
     [Serializable]
     [Obsolete("Use FsInfoCat.Activities.ActivityException, instead.")]
     public class AsyncOperationException : Exception, IBackgroundOperationErrorEvent
@@ -22,9 +22,9 @@ namespace FsInfoCat.AsyncOps
         /// <summary>
         /// Gets the unique identifier of the asynchronous operation.
         /// </summary>
-        /// <value>The <see cref="Guid"/> that uniquely identifies the <see cref="IBackgroundOperation"/> where the exception was thrown.</value>
+        /// <value>The <see cref="Guid" /> that uniquely identifies the <see cref="IBackgroundOperation" /> where the exception was thrown.</value>
         /// <remarks>This serves the same conceptual purpose as the
-        /// PowerShell <see cref="https://docs.microsoft.com/en-us/dotnet/api/system.management.automation.progressrecord.activityid#System_Management_Automation_ProgressRecord_ActivityId">ProgressRecord.ActivityId</see> property.</remarks>
+        /// PowerShell <a href="https://docs.microsoft.com/en-us/dotnet/api/system.management.automation.progressrecord.activityid#System_Management_Automation_ProgressRecord_ActivityId">ProgressRecord.ActivityId</a> property.</remarks>
         public Guid OperationId { get; }
 
         /// <summary>
@@ -32,7 +32,7 @@ namespace FsInfoCat.AsyncOps
         /// </summary>
         /// <value>The short description of the high-level activity that the asynchronous operation was performing.</value>
         /// <remarks>This serves the same conceptual purpose as the
-        /// PowerShell <see cref="https://docs.microsoft.com/en-us/dotnet/api/system.management.automation.progressrecord.activityid#System_Management_Automation_ProgressRecord_Activity">ProgressRecord.Activity</see> property.</remarks>
+        /// PowerShell <a href="https://docs.microsoft.com/en-us/dotnet/api/system.management.automation.progressrecord.activityid#System_Management_Automation_ProgressRecord_Activity">ProgressRecord.Activity</a> property.</remarks>
         public string Activity { get; }
 
         /// <summary>
@@ -40,7 +40,7 @@ namespace FsInfoCat.AsyncOps
         /// </summary>
         /// <value>Describes the operation that was being performed when the exception was thrown.</value>
         /// <remarks>This serves the same conceptual purpose as the
-        /// PowerShell <see cref="https://docs.microsoft.com/en-us/dotnet/api/system.management.automation.progressrecord.activityid#System_Management_Automation_ProgressRecord_CurrentOperation">ProgressRecord.CurrentOperation</see> property.</remarks>
+        /// PowerShell <a href="https://docs.microsoft.com/en-us/dotnet/api/system.management.automation.progressrecord.activityid#System_Management_Automation_ProgressRecord_CurrentOperation">ProgressRecord.CurrentOperation</a> property.</remarks>
         public string CurrentOperation { get; }
 
         /// <summary>
@@ -48,7 +48,7 @@ namespace FsInfoCat.AsyncOps
         /// </summary>
         /// <value>The <see cref="IBackgroundOperation.OperationId" /> of the parent asynchronous operation or <see langword="null" /> if there was no parent operation.</value>
         /// <remarks>This serves the same conceptual purpose as the
-        /// PowerShell <see cref="https://docs.microsoft.com/en-us/dotnet/api/system.management.automation.progressrecord.activityid#System_Management_Automation_ProgressRecord_ParentActivityId">ProgressRecord.ParentActivityId</see> property.</remarks>
+        /// PowerShell <a href="https://docs.microsoft.com/en-us/dotnet/api/system.management.automation.progressrecord.activityid#System_Management_Automation_ProgressRecord_ParentActivityId">ProgressRecord.ParentActivityId</a> property.</remarks>
         public Guid? ParentId { get; }
 
         /// <summary>
@@ -57,22 +57,39 @@ namespace FsInfoCat.AsyncOps
         /// <value>The job completion percentage value at the time the exception was thrown or <see langword="null" /> if not applicable.</value>
         public byte? PercentComplete { get; }
 
+        /// <summary>
+        /// Gets the error code.
+        /// </summary>
+        /// <value>The error code to associate with the error.</value>
         MessageCode? IBackgroundProgressEvent.Code => Code.ToMessageCode(MessageCode.UnexpectedError);
 
+        /// <summary>
+        /// Describes the status of the activity.
+        /// </summary>
+        /// <value>The status description.</value>
+        /// <remarks>This serves the same conceptual purpose as the
+        /// PowerShell <a href="https://docs.microsoft.com/en-us/dotnet/api/system.management.automation.progressrecord.activityid#System_Management_Automation_ProgressRecord_StatusDescription">ProgressRecord.StatusDescription</a> property.</remarks>
         string IBackgroundProgressInfo.StatusDescription => Message;
 
+        /// <summary>
+        /// Gets the exception for the asynchronous operation event.
+        /// </summary>
+        /// <value>The exception for the asynchronous operation event or <see langword="null" /> if there is no exception.</value>
         Exception IBackgroundOperationErrorOptEvent.Error => this;
-
-        public AsyncOperationException() { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AsyncOperationException"/> class.
         /// </summary>
+        public AsyncOperationException() { }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AsyncOperationException" /> class.
+        /// </summary>
         /// <param name="progressInfo">The progress information representing the current progress at the time the exception occurred.</param>
         /// <param name="code">The error code to associate with the exception.</param>
         /// <param name="statusMessage">The status message describing the exception.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="progressInfo"/> was null.</exception>
-        /// <exception cref="ArgumentException"><paramref name="statusMessage"/> was null or contained only whitespace.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="progressInfo" /> was null.</exception>
+        /// <exception cref="ArgumentException"><paramref name="statusMessage" /> was null or contained only whitespace.</exception>
         public AsyncOperationException([DisallowNull] IBackgroundProgressInfo progressInfo, ErrorCode code, [DisallowNull] string statusMessage) : base(statusMessage)
         {
             if (progressInfo is null)
@@ -88,14 +105,14 @@ namespace FsInfoCat.AsyncOps
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AsyncOperationException"/> class.
+        /// Initializes a new instance of the <see cref="AsyncOperationException" /> class.
         /// </summary>
         /// <param name="progressInfo">The progress information representing the current progress at the time the exception occurred.</param>
         /// <param name="code">The error code to associate with the exception.</param>
         /// <param name="statusMessage">The status message describing the exception.</param>
         /// <param name="inner">The actual exception that was thrown.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="progressInfo"/> was null.</exception>
-        /// <exception cref="ArgumentException"><paramref name="statusMessage"/> was null or contained only whitespace.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="progressInfo" /> was null.</exception>
+        /// <exception cref="ArgumentException"><paramref name="statusMessage" /> was null or contained only whitespace.</exception>
         public AsyncOperationException([DisallowNull] IBackgroundProgressInfo progressInfo, ErrorCode code, [DisallowNull] string statusMessage, Exception inner) : base(statusMessage, inner)
         {
             if (progressInfo is null)
@@ -110,6 +127,11 @@ namespace FsInfoCat.AsyncOps
             PercentComplete = progressInfo.PercentComplete;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AsyncOperationException"/> class.
+        /// </summary>
+        /// <param name="info">The <see cref="SerializationInfo" /> that holds the serialized object data about the exception being thrown.</param>
+        /// <param name="context">The <see cref="StreamingContext" /> that contains contextual information about the source or destination.</param>
         protected AsyncOperationException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
             Code = (ErrorCode)info.GetInt32(nameof(Code));
@@ -122,6 +144,11 @@ namespace FsInfoCat.AsyncOps
             PercentComplete = (byte?)info.GetValue(nameof(PercentComplete), typeof(byte?));
         }
 
+        /// <summary>
+        /// When overridden in a derived class, sets the <see cref="SerializationInfo" /> with information about the exception.
+        /// </summary>
+        /// <param name="info">The <see cref="SerializationInfo" /> that holds the serialized object data about the exception being thrown.</param>
+        /// <param name="context">The <see cref="StreamingContext" /> that contains contextual information about the source or destination.</param>
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             base.GetObjectData(info, context);
