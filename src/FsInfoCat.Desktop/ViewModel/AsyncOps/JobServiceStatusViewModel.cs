@@ -1,15 +1,14 @@
-using FsInfoCat.AsyncOps;
 using FsInfoCat.Activities;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using System;
 using System.Collections.ObjectModel;
-using System.Diagnostics.CodeAnalysis;
 using System.Windows;
-using System.Windows.Threading;
 
 namespace FsInfoCat.Desktop.ViewModel.AsyncOps
 {
+    /// <summary>
+    /// View model for representing activities being run by the <see cref="IAsyncActivityService"/>.
+    /// </summary>
+    /// <seealso cref="DependencyObject" />
     public partial class JobServiceStatusViewModel : DependencyObject
     {
         private readonly ILogger<JobServiceStatusViewModel> _logger;
@@ -28,6 +27,10 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
         /// </summary>
         public static readonly DependencyProperty ItemsProperty = ItemsPropertyKey.DependencyProperty;
 
+        /// <summary>
+        /// Gets currently active background job view model items.
+        /// </summary>
+        /// <value>The collection <see cref="BackgroundJobVM"/> items respresenting actvities being run by the  <see cref="IAsyncActivityService"/>.</value>
         public ReadOnlyObservableCollection<BackgroundJobVM> Items => (ReadOnlyObservableCollection<BackgroundJobVM>)GetValue(ItemsProperty);
 
         #endregion
@@ -41,6 +44,10 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
         /// </summary>
         public static readonly DependencyProperty IsBusyProperty = IsBusyPropertyKey.DependencyProperty;
 
+        /// <summary>
+        /// Indicates whether there is at least one background job to be displayed.
+        /// </summary>
+        /// <value><see langword="true"/> if there is at least one <see cref="BackgroundJobVM"/> in the <see cref="Items"/> collection; otherwise, <see langword="false"/>.</value>
         public bool IsBusy { get => (bool)GetValue(IsBusyProperty); private set => SetValue(IsBusyPropertyKey, value); }
 
         #endregion

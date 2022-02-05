@@ -1,4 +1,3 @@
-using FsInfoCat.AsyncOps;
 using FsInfoCat.Activities;
 using Microsoft.Extensions.Logging;
 using System;
@@ -15,7 +14,7 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
 
             internal IDisposable Subscription { get; }
 
-            public ActiveStateObserver([DisallowNull] JobServiceStatusViewModel target, [DisallowNull] IAsyncActivityService backgroundService)
+            internal ActiveStateObserver([DisallowNull] JobServiceStatusViewModel target, [DisallowNull] IAsyncActivityService backgroundService)
             {
                 _target = target;
                 Subscription = backgroundService.Subscribe(this);

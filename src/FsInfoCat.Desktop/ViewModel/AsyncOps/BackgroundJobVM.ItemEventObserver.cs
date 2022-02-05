@@ -1,6 +1,5 @@
 using FsInfoCat.Activities;
 using System;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
@@ -12,11 +11,11 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
     public partial class BackgroundJobVM
     {
         /// <summary>
-        /// Event observer for <see cref="BackgroundJobVM"/> items associated with an <see cref="IAsyncAction{TEvent}" /> activity.
+        /// Base event observer for <see cref="BackgroundJobVM"/> items associated with an <see cref="IAsyncAction{TEvent}" /> activity.
         /// </summary>
-        /// <typeparam name="TEvent">The type of the t event.</typeparam>
+        /// <typeparam name="TEvent">The type of the <see cref="IActivityEvent"/>.</typeparam>
         /// <seealso cref="IObserver{TEvent}" />
-        internal class ItemEventObserver<TEvent> : IObserver<TEvent>
+        class ItemEventObserver<TEvent> : IObserver<TEvent>
             where TEvent : class, IActivityEvent
         {
             private readonly Action _onCompleted;
@@ -72,7 +71,23 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
                     OnNextEvent(activityEvent);
             }
 
-            void IObserver<TEvent>.OnCompleted() => _onCompleted?.Invoke();
+            void IObserver<TEvent>.OnNext(TEvent value)
+            {
+                Monitor.Enter(_syncRoot);
+                try
+                {
+                    _latestEvent = value;
+                    if (_currentUiOperation is null)
+                        _currentUiOperation = Target.Dispatcher.InvokeAsync(OnNext, DispatcherPriority.Background, Target.Token);
+                }
+                finally { Monitor.Exit(_syncRoot); }
+            }
+
+            void IObserver<TEvent>.OnCompleted()
+            {
+                _onCompleted?.Invoke();
+                Target._currentActivitySubscription?.Dispose();
+            }
 
             void IObserver<TEvent>.OnError(Exception error)
             {
@@ -138,25 +153,13 @@ Message: {error.Message}
 Current Operation: {currentOperation}", caption: "Unexpected Error", MessageBoxButton.OK, (error is WarningException) ? MessageBoxImage.Warning : MessageBoxImage.Error);
                     });
             }
-
-            void IObserver<TEvent>.OnNext(TEvent value)
-            {
-                Monitor.Enter(_syncRoot);
-                try
-                {
-                    _latestEvent = value;
-                    if (_currentUiOperation is null)
-                        _currentUiOperation = Target.Dispatcher.InvokeAsync(OnNext, DispatcherPriority.Background, Target.Token);
-                }
-                finally { Monitor.Exit(_syncRoot); }
-            }
         }
 
         /// <summary>
         /// Event observer for <see cref="BackgroundJobVM"/> items associated with an <see cref="IAsyncAction{IActivityEvent}" /> activity.
         /// </summary>
         /// <seealso cref="ItemEventObserver{IActivityEvent}" />
-        internal class ItemEventObserver : ItemEventObserver<IActivityEvent>
+        class ItemEventObserver : ItemEventObserver<IActivityEvent>
         {
             /// <summary>
             /// Initializes a new instance of the <see cref="ItemEventObserver"/> class.

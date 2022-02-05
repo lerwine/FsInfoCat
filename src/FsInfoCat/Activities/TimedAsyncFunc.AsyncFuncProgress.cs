@@ -8,12 +8,24 @@ namespace FsInfoCat.Activities
     {
         class AsyncFuncProgress : ActivityProgress<TimedAsyncFunc<TResult>>
         {
-            private AsyncFuncProgress(TimedAsyncFunc<TResult> activity) : base(activity) { }
+            private AsyncFuncProgress([DisallowNull] TimedAsyncFunc<TResult> activity) : base(activity) { }
 
-            internal static async Task<TResult> StartAsync(TimedAsyncFunc<TResult> activity, [DisallowNull] Func<IActivityProgress, Task<TResult>> asyncMethodDelegate)
+            /// <summary>
+            /// Starts a timed asynchronous activity that produces a result value.
+            /// </summary>
+            /// <param name="activity">The pending activity object.</param>
+            /// <param name="asyncMethodDelegate">A reference to an asynchronous method that produces the result value.</param>
+            /// <returns>A <see cref="Task{TResult}"/> representing the asynchronous operation.</returns>
+            /// <exception cref="ArgumentNullException"><paramref name="activity"/> or <paramref name="asyncMethodDelegate"/> is <see langword="null"/>.</exception>
+            /// <exception cref="InvalidOperationException"><paramref name="asyncMethodDelegate"/> returned a <see langword="null"/> value.</exception>
+            internal static async Task<TResult> StartAsync([DisallowNull] TimedAsyncFunc<TResult> activity, [DisallowNull] Func<IActivityProgress, Task<TResult>> asyncMethodDelegate)
             {
+                if (asyncMethodDelegate is null) throw new ArgumentNullException(nameof(asyncMethodDelegate));
+                Task<TResult> task = asyncMethodDelegate(new AsyncFuncProgress(activity));
+                if (task is null)
+                    throw new InvalidOperationException();
                 activity.OnStarted();
-                return await asyncMethodDelegate(new AsyncFuncProgress(activity));
+                return await task;
             }
 
             protected override ITimedOperationEvent CreateOperationEvent([DisallowNull] TimedAsyncFunc<TResult> activity, Exception exception, StatusMessageLevel messageLevel) => new TimedOperationEvent
@@ -39,12 +51,24 @@ namespace FsInfoCat.Activities
         {
             public TState AsyncState { get; }
 
-            private AsyncFuncProgress(TimedAsyncFunc<TState, TResult> activity) : base(activity) => AsyncState = activity.AsyncState;
+            private AsyncFuncProgress([DisallowNull] TimedAsyncFunc<TState, TResult> activity) : base(activity) => AsyncState = activity.AsyncState;
 
-            internal static async Task<TResult> StartAsync(TimedAsyncFunc<TState, TResult> activity, [DisallowNull] Func<IActivityProgress<TState>, Task<TResult>> asyncMethodDelegate)
+            /// <summary>
+            /// Starts a timed asynchronous activity that is associated with a user-specified value and produces a result value.
+            /// </summary>
+            /// <param name="activity">The pending activity object.</param>
+            /// <param name="asyncMethodDelegate">A reference to an asynchronous method that produces the result value.</param>
+            /// <returns>A <see cref="Task{TResult}"/> representing the asynchronous operation.</returns>
+            /// <exception cref="ArgumentNullException"><paramref name="activity"/> or <paramref name="asyncMethodDelegate"/> is <see langword="null"/>.</exception>
+            /// <exception cref="InvalidOperationException"><paramref name="asyncMethodDelegate"/> returned a <see langword="null"/> value.</exception>
+            internal static async Task<TResult> StartAsync([DisallowNull] TimedAsyncFunc<TState, TResult> activity, [DisallowNull] Func<IActivityProgress<TState>, Task<TResult>> asyncMethodDelegate)
             {
+                if (asyncMethodDelegate is null) throw new ArgumentNullException(nameof(asyncMethodDelegate));
+                Task<TResult> task = asyncMethodDelegate(new AsyncFuncProgress(activity));
+                if (task is null)
+                    throw new InvalidOperationException();
                 activity.OnStarted();
-                return await asyncMethodDelegate(new AsyncFuncProgress(activity));
+                return await task;
             }
 
             protected override ITimedOperationEvent<TState> CreateOperationEvent([DisallowNull] TimedAsyncFunc<TState, TResult> activity, Exception exception, StatusMessageLevel messageLevel) => new TimedOperationEvent<TState>

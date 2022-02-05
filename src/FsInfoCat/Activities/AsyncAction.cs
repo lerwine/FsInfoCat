@@ -8,6 +8,14 @@ namespace FsInfoCat.Activities
 {
     partial class AsyncActivityProvider
     {
+        /// <summary>
+        /// Base class for asynchronous activity objects that do not produce a result value.
+        /// </summary>
+        /// <typeparam name="TBaseEvent">The base type for all observed <see cref="IActivityEvent"/> objects.</typeparam>
+        /// <typeparam name="TOperationEvent">The type of the <typeparamref name="TBaseEvent"/> operation object which implements <see cref="IOperationEvent"/>.</typeparam>
+        /// <typeparam name="TResultEvent">The type of the <typeparamref name="TBaseEvent"/> result object which implements <see cref="IActivityCompletedEvent"/>.</typeparam>
+        /// <seealso cref="AsyncActivity{TBaseEvent, TOperationEvent, TResultEvent, Task}" />
+        /// <seealso cref="IAsyncAction{TBaseEvent}" />
         internal abstract class AsyncAction<TBaseEvent, TOperationEvent, TResultEvent> : AsyncActivity<TBaseEvent, TOperationEvent, TResultEvent, Task>, IAsyncAction<TBaseEvent>
             where TBaseEvent : IActivityEvent
             where TOperationEvent : TBaseEvent, IOperationEvent
@@ -17,8 +25,17 @@ namespace FsInfoCat.Activities
 
             public override Task Task => _completionSource.Task;
 
-            protected AsyncAction([DisallowNull] AsyncActivityProvider provider, [DisallowNull] TaskCompletionSource completionSource, [DisallowNull] string activityDescription, [DisallowNull] string initialStatusMessage)
-                : base(provider, activityDescription, initialStatusMessage)
+            /// <summary>
+            /// Initializes a new instance of the <see cref="AsyncAction{TBaseEvent, TOperationEvent, TResultEvent}"/> class.
+            /// </summary>
+            /// <param name="owner">The owner activity provider.</param>
+            /// <param name="completionSource">The task completion source.</param>
+            /// <param name="activityDescription">The description to use for the asynchronous activity.</param>
+            /// <param name="initialStatusMessage">The activity status message that indicates the activity is waiting to start.</param>
+            /// <exception cref="ArgumentNullException"><paramref name="owner"/> or <paramref name="completionSource"/> is <see langword="null"/>.</exception>
+            /// <exception cref="ArgumentException"><paramref name="activityDescription"/> or <paramref name="initialStatusMessage"/> is null, empty or whitespace.</exception>
+            protected AsyncAction([DisallowNull] AsyncActivityProvider owner, [DisallowNull] TaskCompletionSource completionSource, [DisallowNull] string activityDescription, [DisallowNull] string initialStatusMessage)
+                : base(owner, activityDescription, initialStatusMessage)
             {
                 _completionSource = completionSource ?? throw new ArgumentNullException(nameof(completionSource));
             }
@@ -67,21 +84,35 @@ namespace FsInfoCat.Activities
         }
     }
 
+    /// <summary>
+    /// Represents an asynchronous activity that does not produce a result value.
+    /// </summary>
+    /// <seealso cref="AsyncActivityProvider.AsyncAction{IActivityEvent, IOperationEvent, IActivityCompletedEvent}" />
     internal sealed partial class AsyncAction : AsyncActivityProvider.AsyncAction<IActivityEvent, IOperationEvent, IActivityCompletedEvent>
     {
-        internal static AsyncAction Start([DisallowNull] AsyncActivityProvider provider, [DisallowNull] string activityDescription, [DisallowNull] string initialStatusMessage, [DisallowNull] Func<IActivityProgress, Task> asyncMethodDelegate)
+        /// <summary>
+        /// Invokes an asynchronous method.
+        /// </summary>
+        /// <param name="owner">The asynchronous activity provider.</param>
+        /// <param name="activityDescription">The description to use for the asynchronous activity.</param>
+        /// <param name="initialStatusMessage">The activity status message that indicates the activity is waiting to start.</param>
+        /// <param name="asyncMethodDelegate">A reference to an asynchronous method.</param>
+        /// <returns>An <see cref="AsyncAction"/> object that can be used to monitor and/or cancel the asynchronous activity..</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="asyncMethodDelegate"/> or <paramref name="owner"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentException"><paramref name="activityDescription"/> or <paramref name="initialStatusMessage"/> is <see langword="null"/>, <see cref="string.Empty"/>
+        /// or contains only <see cref="string.IsNullOrWhiteSpace(string)">white space characters</see>.</exception>
+        /// <exception cref="InvalidOperationException"><paramref name="asyncMethodDelegate"/> returned a <see langword="null"/> value.</exception>
+        internal static AsyncAction Start([DisallowNull] AsyncActivityProvider owner, [DisallowNull] string activityDescription, [DisallowNull] string initialStatusMessage, [DisallowNull] Func<IActivityProgress, Task> asyncMethodDelegate)
         {
-            if (asyncMethodDelegate is null)
-                throw new ArgumentNullException(nameof(asyncMethodDelegate));
             AsyncAction activity;
             LinkedListNode<IAsyncActivity> node;
-            Monitor.Enter((provider ?? throw new ArgumentNullException(nameof(provider))).SyncRoot);
+            Monitor.Enter((owner ?? throw new ArgumentNullException(nameof(owner))).SyncRoot);
             try
             {
-                activity = new(provider, activityDescription, initialStatusMessage);
+                activity = new(owner, activityDescription, initialStatusMessage);
                 node = activity.OnStarting();
             }
-            finally { Monitor.Exit(provider.SyncRoot); }
+            finally { Monitor.Exit(owner.SyncRoot); }
             AsyncActionProgress.StartAsync(activity, asyncMethodDelegate).ContinueWith(task => activity.SetCompleted(task, node));
             return activity;
         }
@@ -133,28 +164,55 @@ namespace FsInfoCat.Activities
             MessageLevel = StatusMessageLevel.Error
         };
 
-        private AsyncAction([DisallowNull] AsyncActivityProvider provider, [DisallowNull] string activityDescription, [DisallowNull] string initialStatusMessage)
-            : base(provider, new(), activityDescription, initialStatusMessage) { }
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AsyncAction"/> class.
+        /// </summary>
+        /// <param name="owner">The owner activity provider.</param>
+        /// <param name="activityDescription">The description to use for the asynchronous activity.</param>
+        /// <param name="initialStatusMessage">The activity status message that indicates the activity is waiting to start.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="owner"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentException"><paramref name="activityDescription"/> or <paramref name="initialStatusMessage"/> is null, empty or whitespace.</exception>
+        private AsyncAction([DisallowNull] AsyncActivityProvider owner, [DisallowNull] string activityDescription, [DisallowNull] string initialStatusMessage)
+            : base(owner, new(), activityDescription, initialStatusMessage) { }
     }
 
+    /// <summary>
+    /// Represents an asyncronous activity that is associated with a user-specified value and does not produce a result value.
+    /// </summary>
+    /// <typeparam name="TState">The type of user-specified value that is associated with the asynchronous activity.</typeparam>
+    /// <seealso cref="AsyncActivityProvider.AsyncAction{IActivityEvent{TState}, IOperationEvent{TState}, IActivityCompletedEvent{TState}}" />
+    /// <seealso cref="IAsyncAction{IActivityEvent{TState}, TState}" />
     internal sealed partial class AsyncAction<TState> : AsyncActivityProvider.AsyncAction<IActivityEvent<TState>, IOperationEvent<TState>, IActivityCompletedEvent<TState>>, IAsyncAction<IActivityEvent<TState>, TState>
     {
         public TState AsyncState { get; }
 
-        internal static Activities.AsyncAction<TState> Start(TState state, [DisallowNull] AsyncActivityProvider provider, [DisallowNull] string activityDescription,
+        /// <summary>
+        /// Invokes an asynchronous method, associating it with a user-specified value.
+        /// </summary>
+        /// <param name="state">The user-defined value to associate with the the asynchronous activity.</param>
+        /// <param name="owner">The owner activity provider.</param>
+        /// <param name="activityDescription">The description to use for the asynchronous activity.</param>
+        /// <param name="initialStatusMessage">The activity status message that indicates the activity is waiting to start.</param>
+        /// <param name="asyncMethodDelegate">A reference to an asynchronous method.</param>
+        /// <returns>An <see cref="AsyncAction{TState}" /> object that can be used to monitor and/or cancel the asynchronous activity.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="asyncMethodDelegate"/> or <paramref name="owner"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentException"><paramref name="activityDescription"/> or <paramref name="initialStatusMessage"/> is <see langword="null"/>, <see cref="string.Empty"/>
+        /// or contains only <see cref="string.IsNullOrWhiteSpace(string)">white space characters</see>.</exception>
+        /// <exception cref="InvalidOperationException"><paramref name="asyncMethodDelegate"/> returned a <see langword="null"/> value.</exception>
+        internal static AsyncAction<TState> Start(TState state, [DisallowNull] AsyncActivityProvider owner, [DisallowNull] string activityDescription,
             [DisallowNull] string initialStatusMessage, [DisallowNull] Func<IActivityProgress<TState>, Task> asyncMethodDelegate)
         {
             if (asyncMethodDelegate is null)
                 throw new ArgumentNullException(nameof(asyncMethodDelegate));
-            Activities.AsyncAction<TState> activity;
+            AsyncAction<TState> activity;
             LinkedListNode<IAsyncActivity> node;
-            Monitor.Enter((provider ?? throw new ArgumentNullException(nameof(provider))).SyncRoot);
+            Monitor.Enter((owner ?? throw new ArgumentNullException(nameof(owner))).SyncRoot);
             try
             {
-                activity = new(state, provider, activityDescription, initialStatusMessage);
+                activity = new(state, owner, activityDescription, initialStatusMessage);
                 node = activity.OnStarting();
             }
-            finally { Monitor.Exit(provider.SyncRoot); }
+            finally { Monitor.Exit(owner.SyncRoot); }
             AsyncActionProgress.StartAsync(activity, asyncMethodDelegate).ContinueWith(task => activity.SetCompleted(task, node));
             return activity;
         }
@@ -210,7 +268,16 @@ namespace FsInfoCat.Activities
             MessageLevel = StatusMessageLevel.Error
         };
 
-        private AsyncAction(TState state, [DisallowNull] AsyncActivityProvider provider, [DisallowNull] string activityDescription, [DisallowNull] string initialStatusMessage)
-            : base(provider, new(state), activityDescription, initialStatusMessage) => AsyncState = state;
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AsyncAction{TState}"/> class.
+        /// </summary>
+        /// <param name="state">The the user-defined value that is associated with this asynchronous action.</param>
+        /// <param name="owner">The owner activity provider.</param>
+        /// <param name="activityDescription">The description to use for the asynchronous activity.</param>
+        /// <param name="initialStatusMessage">The activity status message that indicates the activity is waiting to start.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="owner"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentException"><paramref name="activityDescription"/> or <paramref name="initialStatusMessage"/> is null, empty or whitespace.</exception>
+        private AsyncAction(TState state, [DisallowNull] AsyncActivityProvider owner, [DisallowNull] string activityDescription, [DisallowNull] string initialStatusMessage)
+            : base(owner, new(state), activityDescription, initialStatusMessage) => AsyncState = state;
     }
 }

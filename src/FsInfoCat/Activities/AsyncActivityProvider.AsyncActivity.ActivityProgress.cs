@@ -36,7 +36,7 @@ namespace FsInfoCat.Activities
 
                 public CancellationToken Token { get; }
 
-                internal ActivityProgress(TActivity activity) : base(activity.ParentActivityId) => (_activity, Token) = (activity, _activity.TokenSource.Token);
+                internal ActivityProgress([DisallowNull] TActivity activity) : base((activity ?? throw new ArgumentNullException(nameof(activity))).ParentActivityId) => (_activity, Token) = (activity, _activity.TokenSource.Token);
 
                 protected abstract TOperationEvent CreateOperationEvent([DisallowNull] TActivity activity, Exception exception, StatusMessageLevel messageLevel);
 

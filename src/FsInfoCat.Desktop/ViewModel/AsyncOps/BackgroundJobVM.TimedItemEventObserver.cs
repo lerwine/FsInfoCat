@@ -10,7 +10,7 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
         /// Timed operation event observer for <see cref="BackgroundJobVM"/> items associated with an <see cref="ITimedAsyncAction{ITimedActivityEvent}" /> activity.
         /// </summary>
         /// <seealso cref="ItemEventObserver{ITimedActivityEvent}" />
-        internal class TimedItemEventObserver : ItemEventObserver<ITimedActivityEvent>
+        class TimedItemEventObserver : ItemEventObserver<ITimedActivityEvent>
         {
             /// <summary>
             /// Initializes a new instance of the <see cref="TimedItemEventObserver"/> class.

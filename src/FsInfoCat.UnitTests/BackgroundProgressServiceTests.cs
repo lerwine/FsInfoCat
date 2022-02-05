@@ -208,9 +208,9 @@ namespace FsInfoCat.UnitTests
                 throw new AssertInconclusiveException();
             ObserverHelper<IAsyncActivity> observer1 = new();
             ObserverHelper<IAsyncActivity> observer2 = new();
-            IDisposable subscription1 = service.StateChangeObservable.Subscribe(observer1);
+            IDisposable subscription1 = service.ActivityStartedObservable.Subscribe(observer1);
             Assert.IsNotNull(subscription1);
-            using IDisposable subscription2 = service.StateChangeObservable.Subscribe(observer2);
+            using IDisposable subscription2 = service.ActivityStartedObservable.Subscribe(observer2);
             Assert.IsNotNull(subscription2);
             using AutoResetEvent bgEvent = new(false);
             using AutoResetEvent fgEvent = new(false);

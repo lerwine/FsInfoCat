@@ -1,25 +1,23 @@
 using FsInfoCat.Activities;
-using FsInfoCat.AsyncOps;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Threading;
 
 namespace FsInfoCat.Desktop.ViewModel.AsyncOps
 {
     /// <summary>
-    /// View model for a background job being tracked by a <see cref="JobServiceStatusViewModel"/>.
+    /// View model for an <see cref="IAsyncActivity"/> listed within the <see cref="JobServiceStatusViewModel"/>.
     /// </summary>
     /// <seealso cref="DependencyObject" />
     public partial class BackgroundJobVM : DependencyObject
     {
         private readonly ILogger<BackgroundJobVM> _logger;
         private IDisposable _currentActivitySubscription;
-        private IDisposable _childActivitySubscription;
+        private IDisposable _activityStartedSubscription;
 
         internal CancellationToken Token { get; }
 
@@ -174,10 +172,11 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
 
         #endregion
 
-        internal BackgroundJobVM([DisallowNull] IAsyncActivity activity)
+        BackgroundJobVM([DisallowNull] IAsyncActivity activity)
         {
             if (activity is null) throw new ArgumentNullException(nameof(activity));
             _logger = App.GetLogger(this);
+            Token = activity.TokenSource.Token;
             SetValue(ActivityIdPropertyKey, activity.ActivityId);
             SetValue(ItemsPropertyKey, new ReadOnlyObservableCollection<BackgroundJobVM>(_backingItems));
             SetValue(ShortDescriptionPropertyKey, activity.ShortDescription);
@@ -197,48 +196,42 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
             }));
         }
 
-        private static BackgroundJobVM AppendItem<TEvent, TActivity>(ObservableCollection<BackgroundJobVM> backingCollection, TActivity asyncActivity, Func<BackgroundJobVM, IObserver<TEvent>> createObserver)
+        private static BackgroundJobVM AppendItem<TEvent, TActivity>(ObservableCollection<BackgroundJobVM> backingCollection, TActivity asyncActivity, [DisallowNull] Dispatcher dispatcher, Func<BackgroundJobVM, IObserver<TEvent>> createObserver)
             where TActivity : IAsyncActivity, IObservable<TEvent>
         {
             if (backingCollection is null) throw new ArgumentNullException(nameof(backingCollection));
             if (asyncActivity is null) throw new ArgumentNullException(nameof(asyncActivity));
-            BackgroundJobVM item = new BackgroundJobVM(asyncActivity);
-            backingCollection.Add(item);
+            BackgroundJobVM item = dispatcher.Invoke(() =>
+            {
+                BackgroundJobVM vm = new BackgroundJobVM(asyncActivity);
+                backingCollection.Add(vm);
+                return vm;
+            });
             item._currentActivitySubscription = asyncActivity.Subscribe(createObserver(item));
-            item._childActivitySubscription = asyncActivity.SubscribeStateChange(new ChildOperationEventObserver(item), activeOps =>
+            item._activityStartedSubscription = asyncActivity.SubscribeChildActivityStart(new ChildOperationStartedObserver(item), activeOps =>
             {
                 foreach (IAsyncActivity activity in activeOps)
-                    AppendItem(item._logger, activity, item._backingItems);
+                    AppendItem(item._logger, activity, dispatcher, item._backingItems);
             });
             return item;
         }
 
-        internal static void AppendItem([DisallowNull] ILogger logger, [DisallowNull] IAsyncActivity activity, [DisallowNull] ObservableCollection<BackgroundJobVM> backingCollection)
+        internal static void AppendItem([DisallowNull] ILogger logger, [DisallowNull] IAsyncActivity activity, [DisallowNull] Dispatcher dispatcher, [DisallowNull] ObservableCollection<BackgroundJobVM> backingCollection)
         {
             if (activity is null) throw new ArgumentNullException(nameof(activity));
             if (activity is ITimedAsyncAction<ITimedActivityEvent> timedAsyncAction)
             {
-                BackgroundJobVM item = AppendItem(backingCollection, timedAsyncAction, vm => new TimedItemEventObserver(vm, () => backingCollection.Remove(vm)));
-                item.Started = timedAsyncAction.Started;
-                item.Duration = timedAsyncAction.Duration;
+                BackgroundJobVM item = AppendItem(backingCollection, timedAsyncAction, dispatcher, vm => new TimedItemEventObserver(vm, () => dispatcher.InvokeAsync(() => backingCollection.Remove(vm), DispatcherPriority.Background)));
+                item.Dispatcher.InvokeAsync(() =>
+                {
+                    item.Started = timedAsyncAction.Started;
+                    item.Duration = timedAsyncAction.Duration;
+                }, DispatcherPriority.Background);
             }
             else if (activity is IAsyncAction<IActivityEvent> asyncAction)
-                _ = AppendItem(backingCollection, asyncAction, vm => new ItemEventObserver(vm, () => backingCollection.Remove(vm)));
+                _ = AppendItem(backingCollection, asyncAction, dispatcher, vm => new ItemEventObserver(vm, () => dispatcher.InvokeAsync(() => backingCollection.Remove(vm), DispatcherPriority.Background)));
             else
                 logger.LogError("{Type} is not a valid activity type.", activity.GetType().AssemblyQualifiedName);
         }
-
-        //private static bool TryFindParentVM(Guid parentId, [DisallowNull] ObservableCollection<BackgroundJobVM> backingItems, out BackgroundJobVM vm)
-        //{
-        //    vm = backingItems.FirstOrDefault(i => i.OperationId == parentId);
-        //    if (vm is not null)
-        //        return true;
-        //    foreach (BackgroundJobVM item in backingItems)
-        //    {
-        //        if (TryFindParentVM(parentId, item._backingItems, out vm))
-        //            return true;
-        //    }
-        //    return false;
-        //}
     }
 }

@@ -20,7 +20,7 @@ namespace FsInfoCat.Activities
 
         public bool IsActive => _provider.IsActive;
 
-        public IObservable<IAsyncActivity> StateChangeObservable => _provider.StateChangeObservable;
+        public IObservable<IAsyncActivity> ActivityStartedObservable => _provider.ActivityStartedObservable;
 
         public int Count => _provider.Count;
 
@@ -44,7 +44,7 @@ namespace FsInfoCat.Activities
                     IAsyncActivity[] actions = _provider.ToArray();
                     task = Task.WhenAll(actions.Select(o => o.Task).Where(t => !t.IsCompleted).ToArray()).ContinueWith(t =>
                     {
-                        try { _provider.StateChangeSource.Dispose(); }
+                        try { _provider.ActivityStartedSource.Dispose(); }
                         finally { _provider.ActiveStatusSource.Dispose(); }
                     });
                     foreach (IAsyncActivity op in actions)
@@ -87,7 +87,7 @@ namespace FsInfoCat.Activities
 
         public IDisposable Subscribe(IObserver<bool> observer) => _provider.ActiveStatusSource.Observable.Subscribe(observer);
 
-        public IDisposable SubscribeStateChange([DisallowNull] IObserver<IAsyncActivity> observer, [DisallowNull] Action<IAsyncActivity[]> onObserving) => _provider.SubscribeStateChange(observer, onObserving);
+        public IDisposable SubscribeChildActivityStart([DisallowNull] IObserver<IAsyncActivity> observer, [DisallowNull] Action<IAsyncActivity[]> onObserving) => _provider.SubscribeChildActivityStart(observer, onObserving);
     }
 
 }

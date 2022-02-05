@@ -1,4 +1,3 @@
-using FsInfoCat.AsyncOps;
 using FsInfoCat.Activities;
 using Microsoft.Extensions.Logging;
 using System;
@@ -19,12 +18,11 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
             {
                 if (backgroundService is null) throw new ArgumentNullException(nameof(backgroundService));
                 _target = target ?? throw new ArgumentNullException(nameof(target));
-                Subscription = backgroundService.SubscribeStateChange(this, activeOps =>
+                Subscription = backgroundService.SubscribeChildActivityStart(this, activeOps =>
                 {
                     foreach (IAsyncActivity activity in activeOps)
-                        BackgroundJobVM.AppendItem(_target._logger, activity, _target._backingItems);
+                        BackgroundJobVM.AppendItem(_target._logger, activity, _target.Dispatcher, _target._backingItems);
                 });
-                target.IsBusy = backgroundService.IsActive;
             }
 
             public void OnCompleted() => _target.Dispatcher.BeginInvoke(() => _target._backingItems.Clear());
@@ -38,7 +36,7 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
                     _target._logger.LogError(ErrorCode.Unexpected.ToEventId(), error, "Unexpected background progress error observed: Error Message={Message}", error.Message);
             }
 
-            public void OnNext([DisallowNull] IAsyncActivity value) => BackgroundJobVM.AppendItem(_target._logger, value, _target._backingItems);
+            public void OnNext([DisallowNull] IAsyncActivity value) => _target.Dispatcher.Invoke(() => BackgroundJobVM.AppendItem(_target._logger, value, _target.Dispatcher, _target._backingItems));
         }
     }
 }
