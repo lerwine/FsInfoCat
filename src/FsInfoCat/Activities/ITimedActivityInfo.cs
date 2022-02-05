@@ -25,7 +25,7 @@ namespace FsInfoCat.Activities
     /// <summary>
     /// Represents information about the state of a timed activity that is associated with a user-defined value.
     /// </summary>
-    /// <typeparam name="TState">The type of the t state.</typeparam>
+    /// <typeparam name="TState">The type of the user-defined value that is associated with this activity.</typeparam>
     /// <seealso cref="IActivityInfo{TState}" />
     /// <seealso cref="ITimedActivityInfo" />
     public interface ITimedActivityInfo<TState> : IActivityInfo<TState>, ITimedActivityInfo { }

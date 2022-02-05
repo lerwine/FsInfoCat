@@ -10,7 +10,7 @@ namespace FsInfoCat.Activities
     /// <summary>
     /// Describes an event for a timed activity that is associated with a user-specified value.
     /// </summary>
-    /// <typeparam name="TState">The type of the t state.</typeparam>
+    /// <typeparam name="TState">The type of the user-defined value that is associated with this activity.</typeparam>
     /// <seealso cref="ITimedActivityInfo{TState}" />
     /// <seealso cref="IActivityEvent{TState}" />
     /// <seealso cref="ITimedActivityEvent" />

@@ -14,6 +14,10 @@ namespace FsInfoCat.Activities
     /// <seealso cref="IAsyncActivityProvider" />
     public interface IActivityProgress : IProgress<string>, IProgress<Exception>, IProgress<int>, IOperationInfo, IAsyncActivityProvider
     {
+        /// <summary>
+        /// Gets the cancellation token for the current asynchronous operation.
+        /// </summary>
+        /// <value>The <see cref="CancellationToken"/> for the associated <see cref="IAsyncActivity"/>.</value>
         CancellationToken Token { get; }
 
         /// <summary>

@@ -3,7 +3,7 @@ using System;
 namespace FsInfoCat.Activities
 {
     /// <summary>
-    /// Describes an activity event.
+    /// Describes an activity lifecycle event.
     /// </summary>
     /// <seealso cref="IActivityInfo" />
     public interface IActivityEvent : IActivityInfo
@@ -22,7 +22,7 @@ namespace FsInfoCat.Activities
     }
 
     /// <summary>
-    /// Describes an event for an activity that is associated with a user-specified value.
+    /// Describes a lifecycle event for an activity that is associated with a user-specified value.
     /// </summary>
     /// <typeparam name="TState">The type of the user specified value associated with the described activity.</typeparam>
     /// <seealso cref="IActivityInfo{TState}" />
