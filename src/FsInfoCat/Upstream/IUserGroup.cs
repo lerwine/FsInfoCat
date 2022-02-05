@@ -28,7 +28,7 @@ namespace FsInfoCat.Upstream
     public interface IUserGroup : IUserGroupRow
     {
         /// <summary>Gets the group membership.</summary>
-        /// <value>A <see cref="IGroupMembership"/> record that defines a user's membership with a specific group.</value>
+        /// <value>An <see cref="IGroupMembership"/> record that defines a user's membership with a specific group.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_Members), ResourceType = typeof(Properties.Resources))]
         IEnumerable<IGroupMembership> Members { get; }
 

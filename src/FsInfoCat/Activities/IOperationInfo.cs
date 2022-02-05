@@ -10,16 +10,16 @@ namespace FsInfoCat.Activities
         /// <summary>
         /// Gets the description of the current operation of the many required to accomplish the activity.
         /// </summary>
-        /// <remarks>This should never be <see langword="null" />.</remarks>
         /// <value>The description of the current operation being performed or <see cref="string.Empty" /> if no operation has been started or no operation description has been provided.</value>
-        /// <remarks>This serves the same conceptual puropose as the PowerShell <a href="https://docs.microsoft.com/en-us/dotnet/api/system.management.automation.progressrecord.currentoperation" target="_blank">ProgressRecord.CurrentOperation</a> property.</remarks>
+        /// <remarks>This serves the same conceptual purpose as the PowerShell <a href="https://docs.microsoft.com/en-us/dotnet/api/system.management.automation.progressrecord.currentoperation" target="_blank">ProgressRecord.CurrentOperation</a> property
+        /// and should never be <see langword="null" />.</remarks>
         string CurrentOperation { get; }
 
         /// <summary>
         /// Gets and sets the estimate of the percentage of total work for the activity that is completed.
         /// </summary>
         /// <value>The estimated percentage completion value from <c>0</c> to <c>100</c> or <c>-1</c> to indicate that the percentage completed should not be displayed.</value>
-        /// <remarks>This serves the same conceptual puropose as the PowerShell <a href="https://docs.microsoft.com/en-us/dotnet/api/system.management.automation.progressrecord.percentcomplete" target="_blank">ProgressRecord.ParentActivityId</a> property.</remarks>
+        /// <remarks>This serves the same conceptual purpose as the PowerShell <a href="https://docs.microsoft.com/en-us/dotnet/api/system.management.automation.progressrecord.percentcomplete" target="_blank">ProgressRecord.ParentActivityId</a> property.</remarks>
         int PercentComplete { get; }
     }
 

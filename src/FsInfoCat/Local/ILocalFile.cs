@@ -71,7 +71,7 @@ namespace FsInfoCat.Local
 
         /// <summary>Gets the redundancy item that indicates the membership of a collection of redundant files.</summary>
         /// <value>
-        /// A <see cref="ILocaRedundancy" /> object that indicates the current file is an exact copy of other files that belong to the same <see cref="IRedundancy.RedundantSet" />
+        /// An <see cref="ILocaRedundancy" /> object that indicates the current file is an exact copy of other files that belong to the same <see cref="IRedundancy.RedundantSet" />
         /// or <see langword="null" /> if this file has not been identified as being redundant with any other.
         /// </value>
         [Display(Name = nameof(Properties.Resources.DisplayName_Redundancy), ResourceType = typeof(Properties.Resources))]

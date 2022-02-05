@@ -27,7 +27,7 @@ namespace FsInfoCat.Activities
         /// <param name="error">The non-fatal error that was encountered by the current operation.</param>
         /// <param name="statusDescription">The new value of <see cref="IActivityInfo.StatusMessage"/>.</param>
         /// <param name="currentOperation">The new value for <see cref="IOperationInfo.CurrentOperation"/>.</param>
-        /// <param name="percentComplete">The new value for <paramref name="IOperationInfo.PercentComplete"/> as value from <c>-1</c> through <c>100</c>, whhere <c>-1</c> indicates no completion percentage is
+        /// <param name="percentComplete">The new value for <paramref name="IOperationInfo.PercentComplete"/> as value from <c>-1</c> through <c>100</c>, where <c>-1</c> indicates no completion percentage is
         /// specified.</param>
         /// <param name="isWarning">Reports a <see cref="StatusMessageLevel.Warning"/> if <see langword="true"/>; otherwise, <see cref="StatusMessageLevel.Error"/> if <see langword="false"/>.</param>
         /// <exception cref="ArgumentNullException"><paramref name="error"/> is <see langword="null"/>.</exception>
@@ -47,7 +47,7 @@ namespace FsInfoCat.Activities
         /// <param name="error">The non-fatal error that was encountered by the current operation.</param>
         /// <param name="statusDescription">The new value of <see cref="IActivityInfo.StatusMessage"/>.</param>
         /// <param name="currentOperation">The new value for <see cref="IOperationInfo.CurrentOperation"/>.</param>
-        /// <param name="percentComplete">The new value for <paramref name="IOperationInfo.PercentComplete"/> as value from <c>-1</c> through <c>100</c>, whhere <c>-1</c> indicates no completion percentage is
+        /// <param name="percentComplete">The new value for <paramref name="IOperationInfo.PercentComplete"/> as value from <c>-1</c> through <c>100</c>, where <c>-1</c> indicates no completion percentage is
         /// specified.</param>
         /// <exception cref="ArgumentNullException"><paramref name="error"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="percentComplete"/> is less than <c>-1</c> or greater than <c>100</c>.</exception>
@@ -65,7 +65,7 @@ namespace FsInfoCat.Activities
         /// </summary>
         /// <param name="statusDescription">The new value of <see cref="IActivityInfo.StatusMessage"/>.</param>
         /// <param name="currentOperation">The new value for <see cref="IOperationInfo.CurrentOperation"/>.</param>
-        /// <param name="percentComplete">The new value for <paramref name="IOperationInfo.PercentComplete"/> as value from <c>-1</c> through <c>100</c>, whhere <c>-1</c> indicates no completion percentage is
+        /// <param name="percentComplete">The new value for <paramref name="IOperationInfo.PercentComplete"/> as value from <c>-1</c> through <c>100</c>, where <c>-1</c> indicates no completion percentage is
         /// specified.</param>
         /// <param name="messageLevel">The <see cref="IActivityEvent.MessageLevel"/> value of the event.</param>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="percentComplete"/> is less than <c>-1</c> or greater than <c>100</c>.</exception>
@@ -83,7 +83,7 @@ namespace FsInfoCat.Activities
         /// </summary>
         /// <param name="statusDescription">The new value of <see cref="IActivityInfo.StatusMessage"/>.</param>
         /// <param name="currentOperation">The new value for <see cref="IOperationInfo.CurrentOperation"/>.</param>
-        /// <param name="percentComplete">The new value for <paramref name="IOperationInfo.PercentComplete"/> as value from <c>-1</c> through <c>100</c>, whhere <c>-1</c> indicates no completion percentage is
+        /// <param name="percentComplete">The new value for <paramref name="IOperationInfo.PercentComplete"/> as value from <c>-1</c> through <c>100</c>, where <c>-1</c> indicates no completion percentage is
         /// specified.</param>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="percentComplete"/> is less than <c>-1</c> or greater than <c>100</c>.</exception>
         /// <exception cref="ArgumentException"><paramref name="statusDescription"/> is <see langword="null"/>, <see cref="string.Empty"/>
@@ -132,7 +132,7 @@ namespace FsInfoCat.Activities
         /// </summary>
         /// <param name="error">The non-fatal error that was encountered by the current operation.</param>
         /// <param name="statusDescription">The new value of <see cref="IActivityInfo.StatusMessage"/>.</param>
-        /// <param name="percentComplete">The new value for <paramref name="IOperationInfo.PercentComplete"/> as value from <c>-1</c> through <c>100</c>, whhere <c>-1</c> indicates no completion percentage is
+        /// <param name="percentComplete">The new value for <paramref name="IOperationInfo.PercentComplete"/> as value from <c>-1</c> through <c>100</c>, where <c>-1</c> indicates no completion percentage is
         /// specified.</param>
         /// <param name="isWarning">Reports a <see cref="StatusMessageLevel.Warning"/> if <see langword="true"/>; otherwise, <see cref="StatusMessageLevel.Error"/> if <see langword="false"/>.</param>
         /// <exception cref="ArgumentNullException"><paramref name="error"/> is <see langword="null"/>.</exception>
@@ -149,7 +149,7 @@ namespace FsInfoCat.Activities
         /// </summary>
         /// <param name="error">The non-fatal error that was encountered by the current operation.</param>
         /// <param name="statusDescription">The new value of <see cref="IActivityInfo.StatusMessage"/>.</param>
-        /// <param name="percentComplete">The new value for <paramref name="IOperationInfo.PercentComplete"/> as value from <c>-1</c> through <c>100</c>, whhere <c>-1</c> indicates no completion percentage is
+        /// <param name="percentComplete">The new value for <paramref name="IOperationInfo.PercentComplete"/> as value from <c>-1</c> through <c>100</c>, where <c>-1</c> indicates no completion percentage is
         /// specified.</param>
         /// <exception cref="ArgumentNullException"><paramref name="error"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException"><paramref name="statusDescription"/> is <see langword="null"/>, <see cref="string.Empty"/>
@@ -223,7 +223,7 @@ namespace FsInfoCat.Activities
         /// </summary>
         /// <param name="error">The non-fatal error that was encountered by the current operation.</param>
         /// <param name="currentOperation">The new value for <see cref="IOperationInfo.CurrentOperation"/>.</param>
-        /// <param name="percentComplete">The new value for <paramref name="IOperationInfo.PercentComplete"/> as value from <c>-1</c> through <c>100</c>, whhere <c>-1</c> indicates no completion percentage is
+        /// <param name="percentComplete">The new value for <paramref name="IOperationInfo.PercentComplete"/> as value from <c>-1</c> through <c>100</c>, where <c>-1</c> indicates no completion percentage is
         /// specified.</param>
         /// <param name="isWarning">Reports a <see cref="StatusMessageLevel.Warning"/> if <see langword="true"/>; otherwise, <see cref="StatusMessageLevel.Error"/> if <see langword="false"/>.</param>
         /// <exception cref="ArgumentNullException"><paramref name="error"/> is <see langword="null"/>.</exception>
@@ -239,7 +239,7 @@ namespace FsInfoCat.Activities
         /// </summary>
         /// <param name="error">The non-fatal error that was encountered by the current operation.</param>
         /// <param name="currentOperation">The new value for <see cref="IOperationInfo.CurrentOperation"/>.</param>
-        /// <param name="percentComplete">The new value for <paramref name="IOperationInfo.PercentComplete"/> as value from <c>-1</c> through <c>100</c>, whhere <c>-1</c> indicates no completion percentage is
+        /// <param name="percentComplete">The new value for <paramref name="IOperationInfo.PercentComplete"/> as value from <c>-1</c> through <c>100</c>, where <c>-1</c> indicates no completion percentage is
         /// specified.</param>
         /// <exception cref="ArgumentNullException"><paramref name="error"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="percentComplete"/> is less than <c>-1</c> or greater than <c>100</c>.</exception>
@@ -253,7 +253,7 @@ namespace FsInfoCat.Activities
         /// Updates the <see cref="IOperationInfo.CurrentOperation"/> and <see cref="IOperationInfo.PercentComplete"/> properties for this progress object and reports the changed operation status.
         /// </summary>
         /// <param name="currentOperation">The new value for <see cref="IOperationInfo.CurrentOperation"/>.</param>
-        /// <param name="percentComplete">The new value for <paramref name="IOperationInfo.PercentComplete"/> as value from <c>-1</c> through <c>100</c>, whhere <c>-1</c> indicates no completion percentage is
+        /// <param name="percentComplete">The new value for <paramref name="IOperationInfo.PercentComplete"/> as value from <c>-1</c> through <c>100</c>, where <c>-1</c> indicates no completion percentage is
         /// specified.</param>
         /// <param name="messageLevel">The <see cref="IActivityEvent.MessageLevel"/> value of the event.</param>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="percentComplete"/> is less than <c>-1</c> or greater than <c>100</c>.</exception>
@@ -267,7 +267,7 @@ namespace FsInfoCat.Activities
         /// Updates the <see cref="IOperationInfo.CurrentOperation"/> and <see cref="IOperationInfo.PercentComplete"/> properties for this progress object and reports the changed operation <see cref="StatusMessageLevel.Information"/> status.
         /// </summary>
         /// <param name="currentOperation">The new value for <see cref="IOperationInfo.CurrentOperation"/>.</param>
-        /// <param name="percentComplete">The new value for <paramref name="IOperationInfo.PercentComplete"/> as value from <c>-1</c> through <c>100</c>, whhere <c>-1</c> indicates no completion percentage is
+        /// <param name="percentComplete">The new value for <paramref name="IOperationInfo.PercentComplete"/> as value from <c>-1</c> through <c>100</c>, where <c>-1</c> indicates no completion percentage is
         /// specified.</param>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="percentComplete"/> is less than <c>-1</c> or greater than <c>100</c>.</exception>
         /// <remarks>If the value of <see cref="IOperationInfo.CurrentOperation"/> or <paramref name="IOperationInfo.PercentComplete"/> changes, then an activity notification event will be pushed to reflect the new operational

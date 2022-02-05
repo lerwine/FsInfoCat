@@ -8,33 +8,85 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat.Activities
 {
+    /// <summary>
+    /// Base class for objects that can start asynchronous activities.
+    /// </summary>
+    /// <seealso cref="IAsyncActivityProvider" />
+    /// <remarks>Implementing classes should call <see cref="AsyncActivityProvider.OnStarting(IAsyncActivity)"/> before starting an asynchonous activity and <see cref="AsyncActivityProvider.OnCompleted(LinkedListNode{IAsyncActivity})"/> after
+    /// the activity has completed, including canceled and faulted activities.</remarks>
     public abstract partial class AsyncActivityProvider : IAsyncActivityProvider
     {
-        protected internal object SyncRoot { get; } = new();
-
         private readonly LinkedList<IAsyncActivity> _activities = new();
 
+        /// <summary>
+        /// Gets the thread synchronization lock object.
+        /// </summary>
+        /// <value>The thread synchronization lock object.</value>
+        protected internal object SyncRoot { get; } = new();
+
+        /// <summary>
+        /// Gets the observable source for activity start events.
+        /// </summary>
+        /// <value>The <see cref="Observable{IAsyncActivity}.Source"/> for pushing activity start events.</value>
         internal Observable<IAsyncActivity>.Source ActivityStartedSource { get; } = new();
 
+        /// <summary>
+        /// Gets the provider for activity start notifications.
+        /// </summary>
+        /// <value>The provider that can be used to subscribe for activity start notifications.</value>
         public IObservable<IAsyncActivity> ActivityStartedObservable => ActivityStartedSource.Observable;
 
+        /// <summary>
+        /// Gets the number of activities that this provider is running.
+        /// </summary>
+        /// <value>The count of <see cref="IAsyncActivity"/> objects representing activities that this provider is runnning.</value>
         public int Count => _activities.Count;
 
+        /// <summary>
+        /// Determines whether this provider has no running activities.
+        /// </summary>
+        /// <returns><see langword="true"/> if this provider has no running activities; otherwise, <see langword="false"/>.</returns>
         protected bool IsEmpty() => _activities.Last is null;
 
+        /// <summary>
+        /// Gets the unique identifier of the parent activity.
+        /// </summary>
+        /// <value>The <see cref="Guid" /> value that is unique to the parent activity or <see langword="null" /> if there is no parent activity.</value>
         protected Guid? ParentActivityId { get; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AsyncActivityProvider"/> class.
+        /// </summary>
+        /// <param name="parentActivityId">The parent activity identifier or <see langword="null"/> if there is no parent activity.</param>
         protected AsyncActivityProvider(Guid? parentActivityId) => ParentActivityId = parentActivityId;
 
-        protected virtual LinkedListNode<IAsyncActivity> OnStarting(IAsyncActivity asyncActivity) => _activities.AddLast(asyncActivity);
+        /// <summary>
+        /// Notifies this provider that an <see cref="IAsyncActivity"/> is starting.
+        /// </summary>
+        /// <param name="asyncActivity">The asynchronous activity that is starting.</param>
+        /// <returns>The <see cref="LinkedListNode{IAsyncActivity}"/> that was appended.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="asyncActivity"/> is <see langword="null"/>.</exception>
+        /// <remarks>This appends the activity to the underlying list and should only be called when the current thread has an exclusive <see cref="Monitor"/> lock on <see cref="SyncRoot"/>.</remarks>
+        protected virtual LinkedListNode<IAsyncActivity> OnStarting([DisallowNull] IAsyncActivity asyncActivity) => _activities.AddLast(asyncActivity ?? throw new ArgumentNullException(nameof(asyncActivity)));
 
-        protected virtual void OnCompleted(LinkedListNode<IAsyncActivity> node)
+        /// <summary>
+        /// Notifies this provider than an <see cref="IAsyncActivity"/> has been completed.
+        /// </summary>
+        /// <param name="node">The <see cref="LinkedListNode{IAsyncActivity}"/> to remove which references the <see cref="IAsyncActivity"/> that ran to completion, faulted, or was canceled.</param>
+        /// <remarks>This obtains an exclusive <see cref="Monitor"/> lock on <see cref="SyncRoot"/> and removes the specified <paramref name="node"/> from the underlying list.</remarks>
+        /// <exception cref="ArgumentNullException"><paramref name="node"/> is <see langword="null"/>.</exception>
+        protected virtual void OnCompleted([DisallowNull] LinkedListNode<IAsyncActivity> node)
         {
+            if (node is null) throw new ArgumentNullException(nameof(node));
             Monitor.Enter(SyncRoot);
             try { _activities.Remove(node); }
             finally { Monitor.Exit(SyncRoot); }
         }
 
+        /// <summary>
+        /// Returns an enumerator that iterates through the running activities started by this provider.
+        /// </summary>
+        /// <returns>An enumerator that can be used to iterate through the running <see cref="IAsyncActivity"/> objects started by this provider.</returns>
         public IEnumerator<IAsyncActivity> GetEnumerator() => _activities.GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)_activities).GetEnumerator();
@@ -166,6 +218,13 @@ namespace FsInfoCat.Activities
             TState state, [DisallowNull] Func<IActivityProgress<TState>, Task<TResult>> asyncMethodDelegate)
             => Activities.TimedAsyncFunc<TState, TResult>.Start(state, this, activityDescription, initialStatusMessage, asyncMethodDelegate);
 
+        /// <summary>
+        /// Notifies this activity source that an observer is to receive activity start notifications, providing a list of existing activities.
+        /// </summary>
+        /// <param name="observer">The object that is to receive activity start notifications.</param>
+        /// <param name="onObserving">The callback method that provides a list of existing activities immediately before the observer is registered to receive activity start notifications.</param>
+        /// <returns>A reference to an interface that allows observers to stop receiving notifications before this has finished sending them.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="observer"/> or <paramref name="onObserving"/> is <see langword="null"/>.</exception>
         public IDisposable SubscribeChildActivityStart([DisallowNull] IObserver<IAsyncActivity> observer, [DisallowNull] Action<IAsyncActivity[]> onObserving)
         {
             if (observer is null)

@@ -15,7 +15,7 @@ namespace FsInfoCat.Activities
             /// </summary>
             /// <param name="activity">The activity to start.</param>
             /// <param name="asyncMethodDelegate">A reference to an asynchronous method.</param>
-            /// <returns>A Task representing the asynchronous operation.</returns>
+            /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
             /// <exception cref="ArgumentNullException"><paramref name="activity"/> or <paramref name="asyncMethodDelegate"/> is <see langword="null"/>.</exception>
             /// <exception cref="InvalidOperationException"><paramref name="asyncMethodDelegate"/> returned a <see langword="null"/> value.</exception>
             internal static async Task StartAsync([DisallowNull] AsyncAction activity, [DisallowNull] Func<IActivityProgress, Task> asyncMethodDelegate)
@@ -24,10 +24,17 @@ namespace FsInfoCat.Activities
                 Task task = asyncMethodDelegate(new AsyncActionProgress(activity));
                 if (task is null)
                     throw new InvalidOperationException();
-                activity.OnStarted();
+                activity.OnBeforeAwaitTask();
                 await task;
             }
 
+            /// <summary>
+            /// Creates an operational event object.
+            /// </summary>
+            /// <param name="activity">The source activity of the event.</param>
+            /// <param name="exception">The exception associated with the operational event or <see langword="null" /> if there is no exception.</param>
+            /// <param name="messageLevel">The message level for the operational event.</param>
+            /// <returns>An <see cref="IOperationEvent" /> object describing the event.</returns>
             protected override IOperationEvent CreateOperationEvent([DisallowNull] AsyncAction activity, Exception exception, StatusMessageLevel messageLevel) => new OperationEvent
             {
                 ActivityId = activity.ActivityId,
@@ -47,6 +54,10 @@ namespace FsInfoCat.Activities
     {
         class AsyncActionProgress : ActivityProgress<AsyncAction<TState>>, IActivityProgress<TState>
         {
+            /// <summary>
+            /// Gets the user-defined value.
+            /// </summary>
+            /// <value>The user-defined vaue that is associated with the activity.</value>
             public TState AsyncState { get; }
 
             private AsyncActionProgress([DisallowNull] AsyncAction<TState> activity) : base(activity) => AsyncState = activity.AsyncState;
@@ -65,10 +76,17 @@ namespace FsInfoCat.Activities
                 Task task = asyncMethodDelegate(new AsyncActionProgress(activity));
                 if (task is null)
                     throw new InvalidOperationException();
-                activity.OnStarted();
+                activity.OnBeforeAwaitTask();
                 await task;
             }
 
+            /// <summary>
+            /// Creates an operational event object.
+            /// </summary>
+            /// <param name="activity">The source activity of the event.</param>
+            /// <param name="exception">The exception associated with the operational event or <see langword="null" /> if there is no exception.</param>
+            /// <param name="messageLevel">The message level for the operational event.</param>
+            /// <returns>An <see cref="IOperationEvent{TState}" /> object describing the event.</returns>
             protected override IOperationEvent<TState> CreateOperationEvent([DisallowNull] AsyncAction<TState> activity, Exception exception, StatusMessageLevel messageLevel) => new OperationEvent<TState>
             {
                 ActivityId = activity.ActivityId,

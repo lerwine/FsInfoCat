@@ -32,7 +32,7 @@ namespace FsInfoCat.AsyncOps
         /// Reports the current operation.
         /// </summary>
         /// <param name="currentOperation">The description of the specific operation currently being conducted.
-        /// <para>This serves the same conceptual puropose as the
+        /// <para>This serves the same conceptual purpose as the
         /// PowerShell <see cref="https://docs.microsoft.com/en-us/dotnet/api/system.management.automation.progressrecord.activityid#System_Management_Automation_ProgressRecord_CurrentOperation">ProgressRecord.CurrentOperation</see> property.</para></param>
         void ReportCurrentOperation([DisallowNull] string currentOperation);
 
@@ -52,10 +52,10 @@ namespace FsInfoCat.AsyncOps
         /// Reports the background operation status and operation description.
         /// </summary>
         /// <param name="statusDescription">The asynchronous operation status description.
-        /// <para>This serves the same conceptual puropose as the
+        /// <para>This serves the same conceptual purpose as the
         /// PowerShell <see cref="https://docs.microsoft.com/en-us/dotnet/api/system.management.automation.progressrecord.activityid#System_Management_Automation_ProgressRecord_StatusDescription">ProgressRecord.StatusDescription</see> property.</para></param>
         /// <param name="currentOperation">The description of the specific operation currently being conducted.
-        /// <para>This serves the same conceptual puropose as the
+        /// <para>This serves the same conceptual purpose as the
         /// PowerShell <see cref="https://docs.microsoft.com/en-us/dotnet/api/system.management.automation.progressrecord.activityid#System_Management_Automation_ProgressRecord_CurrentOperation">ProgressRecord.CurrentOperation</see> property.</para></param>
         /// <exception cref="ArgumentException"><paramref name="statusDescription"/> is <see langword="null"/> or contains only white space.</exception>
         void ReportStatusDescription([DisallowNull] string statusDescription, [DisallowNull] string currentOperation);
@@ -64,7 +64,7 @@ namespace FsInfoCat.AsyncOps
         /// Reports the background operation status.
         /// </summary>
         /// <param name="statusDescription">The asynchronous operation status description.
-        /// <para>This serves the same conceptual puropose as the
+        /// <para>This serves the same conceptual purpose as the
         /// PowerShell <see cref="https://docs.microsoft.com/en-us/dotnet/api/system.management.automation.progressrecord.activityid#System_Management_Automation_ProgressRecord_StatusDescription">ProgressRecord.StatusDescription</see> property.</para></param>
         void ReportStatusDescription([DisallowNull] string statusDescription);
 
@@ -93,10 +93,10 @@ namespace FsInfoCat.AsyncOps
         /// </summary>
         /// <param name="exception">The exception to report.</param>
         /// <param name="statusDescription">The asynchronous operation status description.
-        /// <para>This serves the same conceptual puropose as the
+        /// <para>This serves the same conceptual purpose as the
         /// PowerShell <see cref="https://docs.microsoft.com/en-us/dotnet/api/system.management.automation.progressrecord.activityid#System_Management_Automation_ProgressRecord_StatusDescription">ProgressRecord.StatusDescription</see> property.</para></param>
         /// <param name="currentOperation">The description of the specific operation currently being conducted.
-        /// <para>This serves the same conceptual puropose as the
+        /// <para>This serves the same conceptual purpose as the
         /// PowerShell <see cref="https://docs.microsoft.com/en-us/dotnet/api/system.management.automation.progressrecord.activityid#System_Management_Automation_ProgressRecord_CurrentOperation">ProgressRecord.CurrentOperation</see> property.</para></param>
         /// <exception cref="ArgumentNullException"><paramref name="exception"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException"><paramref name="statusDescription"/> is <see langword="null"/> or contains only white space.</exception>
@@ -107,7 +107,7 @@ namespace FsInfoCat.AsyncOps
         /// </summary>
         /// <param name="exception">The exception to report.</param>
         /// <param name="statusDescription">The asynchronous operation status description.
-        /// <para>This serves the same conceptual puropose as the
+        /// <para>This serves the same conceptual purpose as the
         /// PowerShell <see cref="https://docs.microsoft.com/en-us/dotnet/api/system.management.automation.progressrecord.activityid#System_Management_Automation_ProgressRecord_StatusDescription">ProgressRecord.StatusDescription</see> property.</para></param>
         /// <exception cref="ArgumentNullException"><paramref name="exception"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException"><paramref name="statusDescription"/> is <see langword="null"/> or contains only white space.</exception>

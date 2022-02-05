@@ -111,7 +111,7 @@ namespace FsInfoCat.DeferredDelegation
         /// </summary>
         /// <typeparam name="T">The type of object on which events can be deferred.</typeparam>
         /// <param name="target">The object on which events can be deferred.</param>
-        /// <returns>A <see cref="IDelegateDeference{T}" /> that can enqueue (defer) delegates, and executes them after all instances referencing the <paramref name="target" /> object are disposed or until explicitly
+        /// <returns>An <see cref="IDelegateDeference{T}" /> that can enqueue (defer) delegates, and executes them after all instances referencing the <paramref name="target" /> object are disposed or until explicitly
         /// executed.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="target"/> is <see langword="null"/>.</exception>
         /// <seealso cref="Monitor.Enter(object)"/>
@@ -138,7 +138,7 @@ namespace FsInfoCat.DeferredDelegation
         /// <typeparam name="T">The type of object on which events can be deferred.</typeparam>
         /// <param name="target">The object on which events can be deferred.</param>
         /// <param name="lockTaken">The boolean value, passed by reference, to track whether the lock was acquired. This must be <see langword="false"/> upon invocation.</param>
-        /// <returns>A <see cref="IDelegateDeference{T}" /> that can enqueue (defer) delegates, and executes them after all instances referencing the <paramref name="target" /> object are disposed or until explicitly
+        /// <returns>An <see cref="IDelegateDeference{T}" /> that can enqueue (defer) delegates, and executes them after all instances referencing the <paramref name="target" /> object are disposed or until explicitly
         /// executed.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="target"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException"><paramref name="lockTaken"/> is <see langword="true"/>.</exception>
@@ -165,7 +165,7 @@ namespace FsInfoCat.DeferredDelegation
         /// </summary>
         /// <typeparam name="T">The type of synchronized collection on which events can be deferred.</typeparam>
         /// <param name="target">The synchronized collection.</param>
-        /// <returns>A <see cref="IDelegateDeference{T}" /> that can enqueue (defer) delegates, and executes them after all instances referencing the <paramref name="target" /> object are disposed or until explicitly
+        /// <returns>An <see cref="IDelegateDeference{T}" /> that can enqueue (defer) delegates, and executes them after all instances referencing the <paramref name="target" /> object are disposed or until explicitly
         /// executed.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="target"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="target"/> is not synchronized (<see cref="ICollection.IsSynchronized"/> is <see langword="false"/>),
@@ -233,7 +233,7 @@ namespace FsInfoCat.DeferredDelegation
         /// <typeparam name="T">The type of synchronized collection on which events can be deferred.</typeparam>
         /// <param name="target">The synchronized collection.</param>
         /// <param name="lockTaken">The boolean value, passed by reference, to track whether the lock was acquired. This must be <see langword="false"/> upon invocation.</param>
-        /// <returns>A <see cref="IDelegateDeference{T}" /> that can enqueue (defer) delegates, and executes them after all instances referencing the <paramref name="target" /> object are disposed or until explicitly
+        /// <returns>An <see cref="IDelegateDeference{T}" /> that can enqueue (defer) delegates, and executes them after all instances referencing the <paramref name="target" /> object are disposed or until explicitly
         /// executed.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="target"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="target"/> is not synchronized (<see cref="ICollection.IsSynchronized"/> is <see langword="false"/>),
@@ -715,7 +715,7 @@ namespace FsInfoCat.DeferredDelegation
         /// </summary>
         /// <typeparam name="T">The type of synchronized collection on which events can be deferred.</typeparam>
         /// <param name="target">The synchronizable object.</param>
-        /// <returns>A <see cref="IDelegateDeference{T}" /> that can enqueue (defer) delegates, and executes them after all instances referencing the <paramref name="target" /> object are disposed or until explicitly
+        /// <returns>An <see cref="IDelegateDeference{T}" /> that can enqueue (defer) delegates, and executes them after all instances referencing the <paramref name="target" /> object are disposed or until explicitly
         /// executed.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="target"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentOutOfRangeException">The <see cref="ISynchronizable.SyncRoot"/> property of <paramref name="target"/> is <see langword="null"/> or could not be accessed.</exception>
@@ -783,7 +783,7 @@ namespace FsInfoCat.DeferredDelegation
         /// <typeparam name="T">The type of synchronized collection on which events can be deferred.</typeparam>
         /// <param name="target">The synchronizable object.</param>
         /// <param name="lockTaken">The boolean value, passed by reference, to track whether the lock was acquired. This must be <see langword="false"/> upon invocation.</param>
-        /// <returns>A <see cref="IDelegateDeference{T}" /> that can enqueue (defer) delegates, and executes them after all instances referencing the <paramref name="target" /> object are disposed or until explicitly
+        /// <returns>An <see cref="IDelegateDeference{T}" /> that can enqueue (defer) delegates, and executes them after all instances referencing the <paramref name="target" /> object are disposed or until explicitly
         /// executed.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="target"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentOutOfRangeException">The <see cref="ISynchronizable.SyncRoot"/> property of <paramref name="target"/> is <see langword="null"/> or could not be accessed.</exception>

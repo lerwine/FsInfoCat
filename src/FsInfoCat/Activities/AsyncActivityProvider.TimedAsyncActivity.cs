@@ -24,8 +24,17 @@ namespace FsInfoCat.Activities
         {
             private readonly Stopwatch _stopwatch = new();
 
+            /// <summary>
+            /// Gets the start time.
+            /// </summary>
+            /// <value>The date and time when the activity was started started.</value>
+            /// <remarks>If <see cref="AsyncActivity{TBaseEvent, TOperationEvent, TResultEvent, TTask}.StatusValue"/> is <see cref="ActivityStatus.WaitingToRun"/>, this will be the date and time when this object was instantiated.</remarks>
             public DateTime Started { get; private set; } = DateTime.Now;
 
+            /// <summary>
+            /// Gets the duration of the activity.
+            /// </summary>
+            /// <value>The duration of the activity.</value>
             public TimeSpan Duration => _stopwatch.Elapsed;
 
             /// <summary>
@@ -39,13 +48,19 @@ namespace FsInfoCat.Activities
             protected TimedAsyncActivity([DisallowNull] AsyncActivityProvider owner, [DisallowNull] string activityDescription, [DisallowNull] string initialStatusMessage)
                 : base(owner, activityDescription, initialStatusMessage) { }
 
-            protected override void OnStarted()
+            /// <summary>
+            /// Called when the associated task is about to be run.
+            /// </summary>
+            protected override void OnBeforeAwaitTask()
             {
                 Started = DateTime.Now;
                 _stopwatch.Start();
-                base.OnStarted();
+                base.OnBeforeAwaitTask();
             }
 
+            /// <summary>
+            /// Called when the associated task has completed.
+            /// </summary>
             protected void StopTimer() => _stopwatch.Stop();
         }
     }

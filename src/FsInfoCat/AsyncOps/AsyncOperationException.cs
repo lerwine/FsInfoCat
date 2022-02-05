@@ -23,7 +23,7 @@ namespace FsInfoCat.AsyncOps
         /// Gets the unique identifier of the asynchronous operation.
         /// </summary>
         /// <value>The <see cref="Guid"/> that uniquely identifies the <see cref="IBackgroundOperation"/> where the exception was thrown.</value>
-        /// <remarks>This serves the same conceptual puropose as the
+        /// <remarks>This serves the same conceptual purpose as the
         /// PowerShell <see cref="https://docs.microsoft.com/en-us/dotnet/api/system.management.automation.progressrecord.activityid#System_Management_Automation_ProgressRecord_ActivityId">ProgressRecord.ActivityId</see> property.</remarks>
         public Guid OperationId { get; }
 
@@ -31,7 +31,7 @@ namespace FsInfoCat.AsyncOps
         /// Short description of the high-level activity for the asynchronous operation.
         /// </summary>
         /// <value>The short description of the high-level activity that the asynchronous operation was performing.</value>
-        /// <remarks>This serves the same conceptual puropose as the
+        /// <remarks>This serves the same conceptual purpose as the
         /// PowerShell <see cref="https://docs.microsoft.com/en-us/dotnet/api/system.management.automation.progressrecord.activityid#System_Management_Automation_ProgressRecord_Activity">ProgressRecord.Activity</see> property.</remarks>
         public string Activity { get; }
 
@@ -39,7 +39,7 @@ namespace FsInfoCat.AsyncOps
         /// Describes the specific operation for the asynchronous operation.
         /// </summary>
         /// <value>Describes the operation that was being performed when the exception was thrown.</value>
-        /// <remarks>This serves the same conceptual puropose as the
+        /// <remarks>This serves the same conceptual purpose as the
         /// PowerShell <see cref="https://docs.microsoft.com/en-us/dotnet/api/system.management.automation.progressrecord.activityid#System_Management_Automation_ProgressRecord_CurrentOperation">ProgressRecord.CurrentOperation</see> property.</remarks>
         public string CurrentOperation { get; }
 
@@ -47,7 +47,7 @@ namespace FsInfoCat.AsyncOps
         /// Gets the <see cref="IBackgroundOperation.OperationId" /> of the parent asynchronous operation.
         /// </summary>
         /// <value>The <see cref="IBackgroundOperation.OperationId" /> of the parent asynchronous operation or <see langword="null" /> if there was no parent operation.</value>
-        /// <remarks>This serves the same conceptual puropose as the
+        /// <remarks>This serves the same conceptual purpose as the
         /// PowerShell <see cref="https://docs.microsoft.com/en-us/dotnet/api/system.management.automation.progressrecord.activityid#System_Management_Automation_ProgressRecord_ParentActivityId">ProgressRecord.ParentActivityId</see> property.</remarks>
         public Guid? ParentId { get; }
 

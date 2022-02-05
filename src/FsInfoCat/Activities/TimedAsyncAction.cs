@@ -23,6 +23,10 @@ namespace FsInfoCat.Activities
         {
             private readonly TaskCompletionSource _completionSource;
 
+            /// <summary>
+            /// Gets the task for the asyncronous activity.
+            /// </summary>
+            /// <value>The task for the asyncronous activity.</value>
             public override Task Task => _completionSource.Task;
 
             /// <summary>
@@ -40,9 +44,22 @@ namespace FsInfoCat.Activities
                 _completionSource = completionSource ?? throw new ArgumentNullException(nameof(completionSource));
             }
 
+            /// <summary>
+            /// Creates the result event that gets pushed after a timed activity has run to completion.
+            /// </summary>
+            /// <returns>A <typeparamref name="TResultEvent"/> describing an activity that has run to completion.</returns>
+            /// <remarks>Implementing classes should set <see cref="IActivityStatusInfo.StatusValue"/> to <see cref="ActivityStatus.RanToCompletion"/>, <see cref="IActivityEvent.Exception"/> should be <see langword="null"/>,
+            /// and <see cref="IActivityEvent.MessageLevel"/> should be <see cref="StatusMessageLevel.Information"/>.</remarks>
             protected abstract TResultEvent CreateRanToCompletionEvent();
 
-            protected void SetCompleted(Task task, LinkedListNode<IAsyncActivity> node)
+            /// <summary>
+            /// Called after an asynchronous activity has been completed.
+            /// </summary>
+            /// <param name="task">The task that implemented the asynchronous activity.</param>
+            /// <param name="node">The <see cref="LinkedListNode{IAsyncActivity}"/> that was returned by <see cref="OnStarting(IAsyncActivity)"/>,
+            /// which references the <see cref="IAsyncActivity"/> that ran to completion, faulted, or was canceled.</param>
+            /// <exception cref="ArgumentNullException"><paramref name="task"/> or <paramref name="node"/> is <see langword="null"/>.</exception>
+            protected void SetCompleted([DisallowNull] Task task, [DisallowNull] LinkedListNode<IAsyncActivity> node)
             {
                 try { StopTimer(); }
                 finally
@@ -66,7 +83,9 @@ namespace FsInfoCat.Activities
                             try
                             {
                                 StatusValue = ActivityStatus.Faulted;
-                                EventSource.RaiseNext(CreateFaultedEvent(task.Exception));
+#pragma warning disable CS8604 // Possible null reference argument.
+                                EventSource.RaiseNext(CreateFaultedEvent(task.Exception)); ;
+#pragma warning restore CS8604 // Possible null reference argument.
                             }
                             finally
                             {
@@ -125,6 +144,10 @@ namespace FsInfoCat.Activities
             return activity;
         }
 
+        /// <summary>
+        /// Creates the initial event that gets pushed before a timed activity is started.
+        /// </summary>
+        /// <returns>An <see cref="ITimedActivityEvent" /> describing a timed activity that is about to be started.</returns>
         protected override ITimedActivityEvent CreateInitialEvent() => new TimedActivityEvent
         {
             ActivityId = ActivityId,
@@ -137,6 +160,12 @@ namespace FsInfoCat.Activities
             MessageLevel = StatusMessageLevel.Information
         };
 
+        /// <summary>
+        /// Creates the result event that gets pushed after a timed activity has run to completion.
+        /// </summary>
+        /// <returns>An <see cref="ITimedActivityCompletedEvent" /> describing a timed activity that has run to completion.</returns>
+        /// <remarks>This sets <see cref="IActivityStatusInfo.StatusValue" /> to <see cref="ActivityStatus.RanToCompletion" />, <see cref=".Exception" /> to <see langword="null" />,
+        /// and <see cref="IActivityEvent.MessageLevel" /> to <see cref="StatusMessageLevel.Information" />.</remarks>
         protected override ITimedActivityCompletedEvent CreateRanToCompletionEvent() => new TimedActivityCompletedEvent
         {
             ActivityId = ActivityId,
@@ -150,6 +179,12 @@ namespace FsInfoCat.Activities
             MessageLevel = StatusMessageLevel.Information
         };
 
+        /// <summary>
+        /// Creates the result event that gets pushed after a timed activity is canceled.
+        /// </summary>
+        /// <returns>An <see cref="ITimedActivityCompletedEvent" /> describing a timed activity that has been canceled.</returns>
+        /// <remarks>This sets <see cref="IActivityStatusInfo.StatusValue" /> to <see cref="ActivityStatus.Canceled" />, <see cref="IActivityEvent.Exception" /> to <see langword="null" />,
+        /// and <see cref="IActivityEvent.MessageLevel" /> to <see cref="Warning" />.</remarks>
         protected override ITimedActivityCompletedEvent CreateCanceledEvent() => new TimedOperationTerminatedEvent
         {
             ActivityId = ActivityId,
@@ -165,6 +200,14 @@ namespace FsInfoCat.Activities
             MessageLevel = StatusMessageLevel.Warning
         };
 
+        /// <summary>
+        /// Creates the result event that gets pushed after a timed activity has faulted.
+        /// </summary>
+        /// <param name="error">The error that caused the activity to terminate before completion.</param>
+        /// <returns>An <see cref="ITimedActivityCompletedEvent" /> describing a timed activity that has terminated before completion due to an unhandled exception.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="error"/> is <see langword="null"/>.</exception>
+        /// <remarks>This sets <see cref="IActivityStatusInfo.StatusValue" /> to <see cref="ActivityStatus.Faulted" />, <see cref="IActivityEvent.Exception" /> to <paramref name="error" />,
+        /// and <see cref="IActivityEvent.MessageLevel" /> to <see cref="StatusMessageLevel.Error" />.</remarks>
         protected override ITimedActivityCompletedEvent CreateFaultedEvent(Exception error) => new TimedOperationTerminatedEvent
         {
             ActivityId = ActivityId,
@@ -200,6 +243,10 @@ namespace FsInfoCat.Activities
     /// <seealso cref="ITimedAsyncAction{ITimedActivityEvent{TState}, TState}" />
     internal sealed partial class TimedAsyncAction<TState> : AsyncActivityProvider.TimedAsyncAction<ITimedActivityEvent<TState>, ITimedOperationEvent<TState>, ITimedActivityCompletedEvent<TState>>, ITimedAsyncAction<ITimedActivityEvent<TState>, TState>
     {
+        /// <summary>
+        /// Gets the user-defined value.
+        /// </summary>
+        /// <value>The user-defined vaue that is associated with the activity.</value>
         public TState AsyncState { get; }
 
         /// <summary>
@@ -233,6 +280,10 @@ namespace FsInfoCat.Activities
             return activity;
         }
 
+        /// <summary>
+        /// Creates the initial event that gets pushed before an activity is started.
+        /// </summary>
+        /// <returns>An <see cref="ITimedActivityEvent{TState}" /> describing an activity that is about to be started.</returns>
         protected override ITimedActivityEvent<TState> CreateInitialEvent() => new TimedActivityEvent<TState>
         {
             ActivityId = ActivityId,
@@ -246,6 +297,12 @@ namespace FsInfoCat.Activities
             MessageLevel = StatusMessageLevel.Information
         };
 
+        /// <summary>
+        /// Creates the result event that gets pushed after the activity has run to completion.
+        /// </summary>
+        /// <returns>An <see cref="ITimedActivityCompletedEvent{TState}" /> describing an activity that has run to completion.</returns>
+        /// <remarks>This sets <see cref="IActivityStatusInfo.StatusValue" /> to <see cref="ActivityStatus.RanToCompletion" />, <see cref=".Exception" /> to <see langword="null" />,
+        /// and <see cref="IActivityEvent.MessageLevel" /> to <see cref="StatusMessageLevel.Information" />.</remarks>
         protected override ITimedActivityCompletedEvent<TState> CreateRanToCompletionEvent() => new TimedActivityCompletedEvent<TState>
         {
             ActivityId = ActivityId,
@@ -260,6 +317,12 @@ namespace FsInfoCat.Activities
             MessageLevel = StatusMessageLevel.Information
         };
 
+        /// <summary>
+        /// Creates the result event that gets pushed after an activity is canceled.
+        /// </summary>
+        /// <returns>An <see cref="ITimedActivityCompletedEvent{TState}" /> describing an activity that has been canceled.</returns>
+        /// <remarks>This sets <see cref="IActivityStatusInfo.StatusValue" /> to <see cref="ActivityStatus.Canceled" />, <see cref="IActivityEvent.Exception" /> to <see langword="null" />,
+        /// and <see cref="IActivityEvent.MessageLevel" /> to <see cref="Warning" />.</remarks>
         protected override ITimedActivityCompletedEvent<TState> CreateCanceledEvent() => new TimedOperationTerminatedEvent<TState>
         {
             ActivityId = ActivityId,
@@ -276,7 +339,15 @@ namespace FsInfoCat.Activities
             MessageLevel = StatusMessageLevel.Warning
         };
 
-        protected override ITimedActivityCompletedEvent<TState> CreateFaultedEvent(Exception error) => new TimedOperationTerminatedEvent<TState>
+        /// <summary>
+        /// Creates the result event that gets pushed after an activity has faulted.
+        /// </summary>
+        /// <param name="error">The error that caused the activity to terminate before completion.</param>
+        /// <returns>An <see cref="ITimedActivityCompletedEvent{TState}" /> describing an activity that that has terminated before completion due to an unhandled exception.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="error"/> is <see langword="null"/>.</exception>
+        /// <remarks>This sets <see cref="IActivityStatusInfo.StatusValue" /> to <see cref="ActivityStatus.Faulted" />, <see cref="IActivityEvent.Exception" /> to <paramref name="error" />,
+        /// and <see cref="IActivityEvent.MessageLevel" /> to <see cref="StatusMessageLevel.Error" />.</remarks>
+        protected override ITimedActivityCompletedEvent<TState> CreateFaultedEvent([DisallowNull] Exception error) => new TimedOperationTerminatedEvent<TState>
         {
             ActivityId = ActivityId,
             ParentActivityId = ParentActivityId,

@@ -4558,7 +4558,7 @@
                 Gets the redundancy item that indicates the membership of a collection of redundant files.
             </summary>
             <value>
-                A <see cref="IRedundancy" /> object that indicates the current file is an exact copy of other files that belong to the same <see cref="IRedundancy.RedundantSet" />
+                An <see cref="IRedundancy" /> object that indicates the current file is an exact copy of other files that belong to the same <see cref="IRedundancy.RedundantSet" />
                 or <langword>null</langword> if this file has not been identified as being redundant with any other.
             </value>
         </Property>
@@ -5264,7 +5264,7 @@
                     Gets the redundancy item that indicates the membership of a collection of redundant files.
                 </summary>
                 <value>
-                    A <see cref="ILocalRedundancy" /> object that indicates the current file is an exact copy of other files that belong to the same <see cref="ILocalRedundancy.RedundantSet" />
+                    An <see cref="ILocalRedundancy" /> object that indicates the current file is an exact copy of other files that belong to the same <see cref="ILocalRedundancy.RedundantSet" />
                     or <langword>null</langword> if this file has not been identified as being redundant with any other.
                 </value>
             </Property>
@@ -6132,7 +6132,7 @@
                     Gets the redundancy item that indicates the membership of a collection of redundant files.
                 </summary>
                 <value>
-                    A <see cref="IUpstreamRedundancy" /> object that indicates the current file is an exact copy of other files that belong to the same <see cref="IUpstreamRedundancy.RedundantSet" />
+                    An <see cref="IUpstreamRedundancy" /> object that indicates the current file is an exact copy of other files that belong to the same <see cref="IUpstreamRedundancy.RedundantSet" />
                     or <langword>null</langword> if this file has not been identified as being redundant with any other.
                 </value>
             </Property>
