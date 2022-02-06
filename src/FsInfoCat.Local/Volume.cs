@@ -255,42 +255,6 @@ namespace FsInfoCat.Local
             return dbContext.Volumes.Add(result);
         }
 
-        [Obsolete("Use DeleteAsync(Volume target, LocalDbContext, IActivityProgress, ILogger), instead.")]
-        public static async Task<int> DeleteAsync([DisallowNull] Volume target, [DisallowNull] LocalDbContext dbContext, [DisallowNull] IStatusListener statusListener)
-        {
-            if (target is null)
-                throw new ArgumentNullException(nameof(target));
-            if (dbContext is null)
-                throw new ArgumentNullException(nameof(dbContext));
-            if (statusListener is null)
-                throw new ArgumentNullException(nameof(statusListener));
-            using IDbContextTransaction transaction = dbContext.Database.BeginTransaction();
-            using (statusListener.Logger.BeginScope(target.Id))
-            {
-                statusListener.SetMessage($"Removing volume record: {target.Identifier}");
-                EntityEntry<Volume> entry = dbContext.Entry(target);
-                statusListener.Logger.LogDebug("Removing dependant records for Subdirectory {{ Id = {Id}; Identifier = {Identifier} }}", target.Id, target.Identifier);
-                Subdirectory subdirectory = await entry.GetRelatedReferenceAsync(e => e.RootDirectory, statusListener.CancellationToken);
-                int result = (subdirectory is null || !(await Subdirectory.DeleteAsync(subdirectory, dbContext, statusListener.CancellationToken, ItemDeletionOption.Force))) ? 0 : 1;
-                PersonalVolumeTag[] pvt = (await entry.GetRelatedCollectionAsync(e => e.PersonalTags, statusListener.CancellationToken)).ToArray();
-                if (pvt.Length > 0)
-                    dbContext.PersonalVolumeTags.RemoveRange(pvt);
-                SharedVolumeTag[] svt = (await entry.GetRelatedCollectionAsync(e => e.SharedTags, statusListener.CancellationToken)).ToArray();
-                if (svt.Length > 0)
-                    dbContext.SharedVolumeTags.RemoveRange(svt);
-                VolumeAccessError[] ve = (await entry.GetRelatedCollectionAsync(e => e.AccessErrors, statusListener.CancellationToken)).ToArray();
-                if (ve.Length > 0)
-                    dbContext.VolumeAccessErrors.RemoveRange(ve);
-                if (dbContext.ChangeTracker.HasChanges())
-                    result += await dbContext.SaveChangesAsync(statusListener.CancellationToken);
-                statusListener.Logger.LogInformation("Removing Volume {{ Id = {Id}; Identifier = {Identifier} }}", target.Id, target.Identifier);
-                _ = dbContext.Volumes.Remove(target);
-                result += await dbContext.SaveChangesAsync(statusListener.CancellationToken);
-                await transaction.CommitAsync();
-                return result;
-            }
-        }
-
         public static async Task<int> DeleteAsync([DisallowNull] Volume target, [DisallowNull] LocalDbContext dbContext, [DisallowNull] IActivityProgress progress, ILogger logger)
         {
             if (target is null) throw new ArgumentNullException(nameof(target));

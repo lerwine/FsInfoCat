@@ -1,3 +1,4 @@
+using FsInfoCat.Activities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -204,43 +205,27 @@ namespace FsInfoCat.Local
             _ = await dbContext.Database.ExecuteSqlRawAsync(sql.Append(')').ToString(), values.ToArray());
         }
 
-        public static async Task<int> DeleteAsync([DisallowNull] Redundancy target, [DisallowNull] LocalDbContext dbContext, [AllowNull] ILogger logger,
-            CancellationToken cancellationToken)
+        public static async Task<int> DeleteAsync([DisallowNull] Redundancy target, [DisallowNull] LocalDbContext dbContext, [DisallowNull] ILogger logger, CancellationToken cancellationToken)
         {
-            if (target is null)
-                throw new ArgumentNullException(nameof(target));
-            if (dbContext is null)
-                throw new ArgumentNullException(nameof(dbContext));
-            using (logger?.BeginScope(target.Id))
+            if (target is null) throw new ArgumentNullException(nameof(target));
+            if (dbContext is null) throw new ArgumentNullException(nameof(dbContext));
+            if (logger is null) throw new ArgumentNullException(nameof(logger));
+            using (logger.BeginScope(target.Id))
             {
                 using IDbContextTransaction transaction = dbContext.Database.BeginTransaction();
-                logger?.LogInformation("Removing Redundancy {{ Id = {Id} }}", target.Id);
+                logger.LogInformation("Removing Redundancy {{ Id = {Id} }}", target.Id);
                 EntityEntry<Redundancy> entry = dbContext.Entry(target);
                 EntityEntry<RedundantSet> redundantSet = await entry.GetRelatedTargetEntryAsync(e => e.RedundantSet, cancellationToken);
                 _ = dbContext.Redundancies.Remove(target);
                 int result = await dbContext.SaveChangesAsync(cancellationToken);
                 if ((await redundantSet.GetRelatedCollectionAsync(p => p.Redundancies, cancellationToken)).Count() > 0)
                     return result;
-                logger?.LogInformation("Removing empty RedundantSet {{ Id = {Id} }}", redundantSet.Entity.Id);
+                logger.LogInformation("Removing empty RedundantSet {{ Id = {Id} }}", redundantSet.Entity.Id);
                 _ = dbContext.RedundantSets.Remove(redundantSet.Entity);
                 result += await dbContext.SaveChangesAsync(cancellationToken);
                 await transaction.CommitAsync(cancellationToken);
                 return result;
             }
         }
-
-        public static async Task<int> DeleteAsync([DisallowNull] Redundancy target, [DisallowNull] LocalDbContext dbContext, [DisallowNull] IStatusListener statusListener)
-        {
-            if (target is null)
-                throw new ArgumentNullException(nameof(target));
-            if (dbContext is null)
-                throw new ArgumentNullException(nameof(dbContext));
-            if (statusListener is null)
-                throw new ArgumentNullException(nameof(statusListener));
-            return await DeleteAsync(target, dbContext, statusListener.Logger, statusListener.CancellationToken);
-        }
-
-        public static async Task<int> DeleteAsync([DisallowNull] Redundancy target, [DisallowNull] LocalDbContext dbContext, CancellationToken cancellationToken) =>
-            await DeleteAsync(target, dbContext, null, cancellationToken);
     }
 }

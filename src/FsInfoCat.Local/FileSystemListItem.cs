@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using FsInfoCat.Activities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.Extensions.DependencyInjection;
@@ -34,13 +35,13 @@ namespace FsInfoCat.Local
             _volumeCount = AddChangeTracker(nameof(VolumeCount), 0L);
         }
 
-        public async Task<(SymbolicName[], VolumeListItem[])> LoadRelatedItemsAsync(IStatusListener statusListener)
+        public async Task<(SymbolicName[], VolumeListItem[])> LoadRelatedItemsAsync(IActivityProgress progress)
         {
             Guid id = Id;
             using IServiceScope scope = Hosting.ServiceProvider.CreateScope();
             using LocalDbContext dbContext = scope.ServiceProvider.GetRequiredService<LocalDbContext>();
-            SymbolicName[] symbolicNames = await dbContext.SymbolicNames.Where(n => n.FileSystemId == id).ToArrayAsync(statusListener.CancellationToken);
-            VolumeListItem[] volumes = await dbContext.VolumeListing.Where(v => v.FileSystemId == id).ToArrayAsync(statusListener.CancellationToken);
+            SymbolicName[] symbolicNames = await dbContext.SymbolicNames.Where(n => n.FileSystemId == id).ToArrayAsync(progress.Token);
+            VolumeListItem[] volumes = await dbContext.VolumeListing.Where(v => v.FileSystemId == id).ToArrayAsync(progress.Token);
             SymbolicNameCount = symbolicNames.LongLength;
             VolumeCount = volumes.LongLength;
             return (symbolicNames, volumes);
