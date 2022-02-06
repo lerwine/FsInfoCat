@@ -163,7 +163,7 @@ namespace FsInfoCat.Desktop.ViewModel
             return item is not null && _backingLogs.Remove(item);
         }
 
-        protected virtual IAsyncJob ReloadAsync()
+        protected virtual IAsyncAction<IActivityEvent> ReloadAsync()
         {
             // TODO: Implement CrawlConfigurationViewModel{TEntity, TSubdirectoryEntity, TSubdirectoryItem, TCrawlJobLogEntity, TCrawlJobLogItem}.ReloadAsync
             throw new NotImplementedException();

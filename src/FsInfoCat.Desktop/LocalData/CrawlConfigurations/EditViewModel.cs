@@ -217,7 +217,7 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
             SetRootSubdirectory(Entity.RootId);
         }
 
-        protected override IAsyncJob SaveChangesAsync(bool isNew)
+        protected override IAsyncAction<IActivityEvent> SaveChangesAsync(bool isNew)
         {
             // TODO: Implement CrawlConfigurations.EditViewModel.SaveChangesAsync
             throw new NotImplementedException();

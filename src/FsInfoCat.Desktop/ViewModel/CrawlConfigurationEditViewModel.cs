@@ -1,3 +1,4 @@
+using FsInfoCat.Activities;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows;
@@ -291,7 +292,7 @@ namespace FsInfoCat.Desktop.ViewModel
 
         protected abstract bool ApplyChanges();
 
-        protected abstract IAsyncJob SaveChangesAsync(bool isNew);
+        protected abstract IAsyncAction<IActivityEvent> SaveChangesAsync(bool isNew);
 
         protected virtual void ReinitializeFromEntity()
         {

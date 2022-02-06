@@ -247,7 +247,7 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
                 await Dispatcher.InvokeAsync(() => RemoveCrawlJobLogItem(targets.Item), DispatcherPriority.Background, progress.Token);
         }
 
-        protected IAsyncJob DeleteCrawlJobLogAsync([DisallowNull] CrawlJobListItemViewModel item)
+        protected IAsyncAction<IActivityEvent> DeleteCrawlJobLogAsync([DisallowNull] CrawlJobListItemViewModel item)
         {
             // TODO: Implement DeleteCrawlJobLogAsync
             throw new NotImplementedException();
