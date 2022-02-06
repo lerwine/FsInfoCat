@@ -1,3 +1,4 @@
+using FsInfoCat.Activities;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Logging;
@@ -55,27 +56,27 @@ namespace FsInfoCat.Local
 
         IEnumerable<ILocalPersonalVolumeTag> ILocalPersonalTagDefinition.VolumeTags => VolumeTags.Cast<ILocalPersonalVolumeTag>();
 
-        public static async Task<int> DeleteAsync(PersonalTagDefinition target, LocalDbContext dbContext, IStatusListener statusListener)
+        public static async Task<int> DeleteAsync(PersonalTagDefinition target, LocalDbContext dbContext, IActivityProgress progress, ILogger logger)
         {
             using IDbContextTransaction transaction = dbContext.Database.BeginTransaction();
-            using (statusListener.Logger.BeginScope(target.Id))
+            using (logger.BeginScope(target.Id))
             {
-                statusListener.Logger.LogInformation("Removing PersonalTagDefinition {{ Id = {Id}; Name = \"{Name}\" }}", target.Id, target.Name);
-                statusListener.SetMessage($"Removing personal tag definition: {target.Name}");
+                logger.LogInformation("Removing PersonalTagDefinition {{ Id = {Id}; Name = \"{Name}\" }}", target.Id, target.Name);
+                progress.Report($"Removing personal tag definition: {target.Name}");
                 EntityEntry<PersonalTagDefinition> entry = dbContext.Entry(target);
-                PersonalFileTag[] fileTags = (await entry.GetRelatedCollectionAsync(e => e.FileTags, statusListener.CancellationToken)).ToArray();
-                PersonalSubdirectoryTag[] subdirectoryTags = (await entry.GetRelatedCollectionAsync(e => e.SubdirectoryTags, statusListener.CancellationToken)).ToArray();
-                PersonalVolumeTag[] volumeTags = (await entry.GetRelatedCollectionAsync(e => e.VolumeTags, statusListener.CancellationToken)).ToArray();
+                PersonalFileTag[] fileTags = (await entry.GetRelatedCollectionAsync(e => e.FileTags, progress.Token)).ToArray();
+                PersonalSubdirectoryTag[] subdirectoryTags = (await entry.GetRelatedCollectionAsync(e => e.SubdirectoryTags, progress.Token)).ToArray();
+                PersonalVolumeTag[] volumeTags = (await entry.GetRelatedCollectionAsync(e => e.VolumeTags, progress.Token)).ToArray();
                 if (fileTags.Length > 0)
                     dbContext.PersonalFileTags.RemoveRange(fileTags);
                 if (subdirectoryTags.Length > 0)
                     dbContext.PersonalSubdirectoryTags.RemoveRange(subdirectoryTags);
                 if (volumeTags.Length > 0)
                     dbContext.PersonalVolumeTags.RemoveRange(volumeTags);
-                int result = dbContext.ChangeTracker.HasChanges() ? await dbContext.SaveChangesAsync(statusListener.CancellationToken) : 0;
+                int result = dbContext.ChangeTracker.HasChanges() ? await dbContext.SaveChangesAsync(progress.Token) : 0;
                 _ = dbContext.PersonalTagDefinitions.Remove(target);
-                result += await dbContext.SaveChangesAsync(statusListener.CancellationToken);
-                await transaction.CommitAsync(statusListener.CancellationToken);
+                result += await dbContext.SaveChangesAsync(progress.Token);
+                await transaction.CommitAsync(progress.Token);
                 return result;
             }
         }

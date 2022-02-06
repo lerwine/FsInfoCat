@@ -156,7 +156,7 @@ namespace FsInfoCat.Desktop.LocalData.PersonalTagDefinitions
             UpstreamId = Entity.UpstreamId;
         }
 
-        private static async Task<PersonalTagDefinitionListItem> SaveChangesAsync(PersonalTagDefinition entity, object invocationState, IWindowsStatusListener statusListener)
+        private static async Task<PersonalTagDefinitionListItem> SaveChangesAsync(PersonalTagDefinition entity, object invocationState, IActivityProgress progress)
         {
             using IServiceScope scope = Hosting.CreateScope();
             using LocalDbContext dbContext = scope.ServiceProvider.GetRequiredService<LocalDbContext>();
@@ -177,12 +177,11 @@ namespace FsInfoCat.Desktop.LocalData.PersonalTagDefinitions
             }
             if (entry.State == EntityState.Detached)
                 entry = dbContext.PersonalTagDefinitions.Add(entity);
-            DispatcherOperation dispatcherOperation = statusListener.BeginSetMessage((entry.State == EntityState.Added) ?
+            progress.Report((entry.State == EntityState.Added) ?
                 "Inserting new personal tag definition into database" : "Saving personal tag definition changes to database");
-            await dbContext.SaveChangesAsync(statusListener.CancellationToken);
-            await dispatcherOperation;
+            await dbContext.SaveChangesAsync(progress.Token);
             if (isNew)
-                return await dbContext.PersonalTagDefinitionListing.FindAsync(entity.Id, statusListener.CancellationToken);
+                return await dbContext.PersonalTagDefinitionListing.FindAsync(entity.Id, progress.Token);
             return invocationState is PersonalTagDefinitionListItem item ? item : null;
         }
 
@@ -222,8 +221,8 @@ namespace FsInfoCat.Desktop.LocalData.PersonalTagDefinitions
                         //IWindowsAsyncJobFactoryService jobFactory = Hosting.GetRequiredService<IWindowsAsyncJobFactoryService>();
                         //IAsyncJob<PersonalTagDefinitionListItem> job = jobFactory.StartNew("Saving changes", "Opening database", Entity, InvocationState, SaveChangesAsync);
                         //job.Task.ContinueWith(task => Dispatcher.Invoke(() => OnSaveTaskCompleted(task)));
-                        e.Cancel = true;
-                        break;
+                        //e.Cancel = true;
+                        //break;
                     case MessageBoxResult.No:
                         break;
                     default:

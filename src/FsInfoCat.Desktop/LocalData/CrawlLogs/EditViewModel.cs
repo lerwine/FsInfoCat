@@ -1,3 +1,4 @@
+using FsInfoCat.Activities;
 using FsInfoCat.Desktop.ViewModel;
 using FsInfoCat.Local;
 using Microsoft.EntityFrameworkCore;
@@ -150,7 +151,7 @@ namespace FsInfoCat.Desktop.LocalData.CrawlLogs
             // TODO: Implement OnNavigatingFrom
         }
 
-        private static async Task<CrawlJobLogListItem> SaveChangesAsync(CrawlJobLog entity, object invocationState, IWindowsStatusListener statusListener)
+        private static async Task<CrawlJobLogListItem> SaveChangesAsync(CrawlJobLog entity, object invocationState, IActivityProgress progress)
         {
             using IServiceScope scope = Hosting.CreateScope();
             using LocalDbContext dbContext = scope.ServiceProvider.GetRequiredService<LocalDbContext>();
@@ -171,12 +172,11 @@ namespace FsInfoCat.Desktop.LocalData.CrawlLogs
             }
             if (entry.State == EntityState.Detached)
                 entry = dbContext.CrawlJobLogs.Add(entity);
-            DispatcherOperation dispatcherOperation = statusListener.BeginSetMessage((entry.State == EntityState.Added) ?
+            progress.Report((entry.State == EntityState.Added) ?
                 "Inserting new crawl result record into database" : "Saving crawl result record changes to database");
-            await dbContext.SaveChangesAsync(statusListener.CancellationToken);
-            await dispatcherOperation;
+            await dbContext.SaveChangesAsync(progress.Token);
             if (isNew)
-                return await dbContext.CrawlJobListing.FindAsync(entity.Id, statusListener.CancellationToken);
+                return await dbContext.CrawlJobListing.FindAsync(entity.Id, progress.Token);
             return invocationState is CrawlJobLogListItem item ? item : null;
         }
 

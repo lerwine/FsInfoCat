@@ -235,7 +235,7 @@ namespace FsInfoCat.Desktop.LocalData.SummaryPropertySets
                     Kind.Add(s ?? "");
         }
 
-        private static async Task<SummaryPropertiesListItem> SaveChangesAsync(SummaryPropertySet entity, object invocationState, IWindowsStatusListener statusListener)
+        private static async Task<SummaryPropertiesListItem> SaveChangesAsync(SummaryPropertySet entity, object invocationState, IActivityProgress progress)
         {
             using IServiceScope scope = Hosting.CreateScope();
             using LocalDbContext dbContext = scope.ServiceProvider.GetRequiredService<LocalDbContext>();
@@ -256,12 +256,10 @@ namespace FsInfoCat.Desktop.LocalData.SummaryPropertySets
             }
             if (entry.State == EntityState.Detached)
                 entry = dbContext.SummaryPropertySets.Add(entity);
-            DispatcherOperation dispatcherOperation = statusListener.BeginSetMessage((entry.State == EntityState.Added) ?
-                "Inserting new summary properties record into database" : "Saving summary properties record changes to database");
-            await dbContext.SaveChangesAsync(statusListener.CancellationToken);
-            await dispatcherOperation;
+            progress.Report((entry.State == EntityState.Added) ? "Inserting new summary properties record into database" : "Saving summary properties record changes to database");
+            await dbContext.SaveChangesAsync(progress.Token);
             if (isNew)
-                return await dbContext.SummaryPropertiesListing.FindAsync(entity.Id, statusListener.CancellationToken);
+                return await dbContext.SummaryPropertiesListing.FindAsync(entity.Id, progress.Token);
             return invocationState is SummaryPropertiesListItem item ? item : null;
         }
 
@@ -301,8 +299,8 @@ namespace FsInfoCat.Desktop.LocalData.SummaryPropertySets
                         //IWindowsAsyncJobFactoryService jobFactory = Hosting.GetRequiredService<IWindowsAsyncJobFactoryService>();
                         //IAsyncJob<SummaryPropertiesListItem> job = jobFactory.StartNew("Saving changes", "Opening database", Entity, InvocationState, SaveChangesAsync);
                         //job.Task.ContinueWith(task => Dispatcher.Invoke(() => OnSaveTaskCompleted(task)));
-                        e.Cancel = true;
-                        break;
+                        //e.Cancel = true;
+                        //break;
                     case MessageBoxResult.No:
                         break;
                     default:

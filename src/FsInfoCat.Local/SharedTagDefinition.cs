@@ -1,7 +1,10 @@
+using FsInfoCat.Activities;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -55,6 +58,7 @@ namespace FsInfoCat.Local
 
         IEnumerable<ILocalSharedVolumeTag> ILocalSharedTagDefinition.VolumeTags => VolumeTags.Cast<ILocalSharedVolumeTag>();
 
+        [Obsolete("Use DeleteAsync(SharedTagDefinition, LocalDbContext, IActivityProgress, ILogger), instead")]
         public static async Task<EntityEntry<SharedTagDefinition>> DeleteAsync(SharedTagDefinition target, LocalDbContext dbContext, IStatusListener statusListener)
         {
             using IDbContextTransaction transaction = dbContext.Database.BeginTransaction();
@@ -76,6 +80,35 @@ namespace FsInfoCat.Local
                 _ = dbContext.SharedTagDefinitions.Remove(target);
                 _ = await dbContext.SaveChangesAsync(statusListener.CancellationToken);
                 await transaction.CommitAsync(statusListener.CancellationToken);
+                return entry;
+            }
+        }
+
+        public static async Task<EntityEntry<SharedTagDefinition>> DeleteAsync([DisallowNull] SharedTagDefinition target, [DisallowNull] LocalDbContext dbContext, [DisallowNull] IActivityProgress progress, [DisallowNull] ILogger logger)
+        {
+            if (target is null) throw new ArgumentNullException(nameof(target));
+            if (dbContext is null) throw new ArgumentNullException(nameof(dbContext));
+            if (progress is null) throw new ArgumentNullException(nameof(progress));
+            if (logger is null) throw new ArgumentNullException(nameof(logger));
+            using IDbContextTransaction transaction = dbContext.Database.BeginTransaction();
+            using (logger.BeginScope(target.Id))
+            {
+                logger.LogInformation("Removing SharedTagDefinition {{ Id = {Id}; Name = \"{Name}\" }}", target.Id, target.Name);
+                progress.Report($"Removing shared tag definition: {target.Name}");
+                EntityEntry<SharedTagDefinition> entry = dbContext.Entry(target);
+                SharedFileTag[] fileTags = (await entry.GetRelatedCollectionAsync(e => e.FileTags, progress.Token)).ToArray();
+                SharedSubdirectoryTag[] subdirectoryTags = (await entry.GetRelatedCollectionAsync(e => e.SubdirectoryTags, progress.Token)).ToArray();
+                SharedVolumeTag[] volumeTags = (await entry.GetRelatedCollectionAsync(e => e.VolumeTags, progress.Token)).ToArray();
+                if (fileTags.Length > 0)
+                    dbContext.SharedFileTags.RemoveRange(fileTags);
+                if (subdirectoryTags.Length > 0)
+                    dbContext.SharedSubdirectoryTags.RemoveRange(subdirectoryTags);
+                if (volumeTags.Length > 0)
+                    dbContext.SharedVolumeTags.RemoveRange(volumeTags);
+                _ = dbContext.ChangeTracker.HasChanges() ? await dbContext.SaveChangesAsync(progress.Token) : 0;
+                _ = dbContext.SharedTagDefinitions.Remove(target);
+                _ = await dbContext.SaveChangesAsync(progress.Token);
+                await transaction.CommitAsync(progress.Token);
                 return entry;
             }
         }

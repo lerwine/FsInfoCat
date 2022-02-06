@@ -1,3 +1,4 @@
+using FsInfoCat.Activities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -108,32 +109,30 @@ namespace FsInfoCat.Local
             });
         }
 
-        public static async Task<int> DeleteAsync(FileSystem target, LocalDbContext dbContext, IStatusListener statusListener)
+        public static async Task<int> DeleteAsync([DisallowNull] FileSystem target, [DisallowNull] LocalDbContext dbContext, [DisallowNull] IActivityProgress progress, [DisallowNull] ILogger logger)
         {
-            if (target is null)
-                throw new ArgumentNullException(nameof(target));
-            if (dbContext is null)
-                throw new ArgumentNullException(nameof(dbContext));
-            if (statusListener is null)
-                throw new ArgumentNullException(nameof(statusListener));
+            if (target is null) throw new ArgumentNullException(nameof(target));
+            if (dbContext is null) throw new ArgumentNullException(nameof(dbContext));
+            if (progress is null) throw new ArgumentNullException(nameof(progress));
+            if (logger is null) throw new ArgumentNullException(nameof(logger));
             using IDbContextTransaction transaction = dbContext.Database.BeginTransaction();
-            using (statusListener.Logger.BeginScope(target.Id))
+            using (logger.BeginScope(target.Id))
             {
-                statusListener.SetMessage($"Removing file system definition: {target.DisplayName}");
+                progress.Report($"Removing file system definition: {target.DisplayName}");
                 EntityEntry<FileSystem> entry = dbContext.Entry(target);
-                statusListener.Logger.LogDebug("Removing dependant records for Subdirectory {{ Id = {Id}; DisplayName = \"{DisplayName}\" }}", target.Id, target.DisplayName);
-                SymbolicName[] symbolicNames = (await entry.GetRelatedCollectionAsync(e => e.SymbolicNames, statusListener.CancellationToken)).ToArray();
+                logger.LogDebug("Removing dependant records for Subdirectory {{ Id = {Id}; DisplayName = \"{DisplayName}\" }}", target.Id, target.DisplayName);
+                SymbolicName[] symbolicNames = (await entry.GetRelatedCollectionAsync(e => e.SymbolicNames, progress.Token)).ToArray();
                 int result;
                 if (symbolicNames.Length > 0)
                 {
                     dbContext.RemoveRange(symbolicNames);
-                    result = await dbContext.SaveChangesAsync(statusListener.CancellationToken);
+                    result = await dbContext.SaveChangesAsync(progress.Token);
                 }
                 else
                     result = 0;
                 _ = dbContext.FileSystems.Remove(target);
-                result += await dbContext.SaveChangesAsync(statusListener.CancellationToken);
-                await transaction.CommitAsync(statusListener.CancellationToken);
+                result += await dbContext.SaveChangesAsync(progress.Token);
+                await transaction.CommitAsync(progress.Token);
                 return result;
             }
         }

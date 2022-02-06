@@ -4,6 +4,7 @@ using FsInfoCat.Local;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -16,6 +17,7 @@ namespace FsInfoCat.Desktop.LocalData.SharedTagDefinitions
     public class ListingViewModel : ListingViewModel<SharedTagDefinitionListItem, ListItemViewModel, bool?>, INavigatedToNotifiable
     {
         private bool? _currentOptions = true;
+        private readonly ILogger<ListingViewModel> _logger;
 
         #region ListingOptions Property Members
 
@@ -42,22 +44,23 @@ namespace FsInfoCat.Desktop.LocalData.SharedTagDefinitions
 
         public ListingViewModel()
         {
+            _logger = App.GetLogger(this);
             SetValue(ListingOptionsPropertyKey, new ThreeStateViewModel(_currentOptions));
             UpdatePageTitle(_currentOptions);
         }
 
-        protected override IAsyncJob ReloadAsync(bool? options)
+        protected override IAsyncAction<IActivityEvent> RefreshAsync(bool? options)
         {
             UpdatePageTitle(options);
-            return base.ReloadAsync(options);
+            return base.RefreshAsync(options);
         }
 
-        void INavigatedToNotifiable.OnNavigatedTo() => ReloadAsync(_currentOptions);
+        void INavigatedToNotifiable.OnNavigatedTo() => RefreshAsync(_currentOptions);
 
         protected override IQueryable<SharedTagDefinitionListItem> GetQueryableListing(bool? options, [DisallowNull] LocalDbContext dbContext,
-            [DisallowNull] IWindowsStatusListener statusListener)
+            [DisallowNull] IActivityProgress progress)
         {
-            statusListener.SetMessage("Reading shared tags from database");
+            progress.Report("Reading shared tags from database");
             return options.HasValue ? (options.Value ? dbContext.SharedTagDefinitionListing.Where(f => !f.IsInactive) :
                 dbContext.SharedTagDefinitionListing.Where(f => f.IsInactive)) : dbContext.SharedTagDefinitionListing;
         }
@@ -69,7 +72,7 @@ namespace FsInfoCat.Desktop.LocalData.SharedTagDefinitions
         protected override void OnApplyFilterOptionsCommand(object parameter)
         {
             if (_currentOptions.HasValue ? (!ListingOptions.Value.HasValue || _currentOptions.Value != ListingOptions.Value.Value) : ListingOptions.Value.HasValue)
-                _ = ReloadAsync(ListingOptions.Value);
+                _ = RefreshAsync(ListingOptions.Value);
         }
 
         protected override void OnCancelFilterOptionsCommand(object parameter)
@@ -79,7 +82,7 @@ namespace FsInfoCat.Desktop.LocalData.SharedTagDefinitions
             base.OnCancelFilterOptionsCommand(parameter);
         }
 
-        protected override void OnRefreshCommand(object parameter) => ReloadAsync(_currentOptions);
+        protected override void OnRefreshCommand(object parameter) => RefreshAsync(_currentOptions);
 
         protected override bool ConfirmItemDelete(ListItemViewModel item, object parameter)
         {
@@ -154,12 +157,12 @@ namespace FsInfoCat.Desktop.LocalData.SharedTagDefinitions
         }
 
         protected override async Task<EntityEntry> DeleteEntityFromDbContextAsync([DisallowNull] SharedTagDefinitionListItem entity, [DisallowNull] LocalDbContext dbContext,
-            [DisallowNull] IWindowsStatusListener statusListener)
+            [DisallowNull] IActivityProgress progress)
         {
-            SharedTagDefinition target = await dbContext.SharedTagDefinitions.FindAsync(new object[] { entity.Id }, statusListener.CancellationToken);
+            SharedTagDefinition target = await dbContext.SharedTagDefinitions.FindAsync(new object[] { entity.Id }, progress.Token);
             if (target is null)
                 return null;
-            return await SharedTagDefinition.DeleteAsync(target, dbContext, statusListener);
+            return await SharedTagDefinition.DeleteAsync(target, dbContext, progress, _logger);
         }
 
         protected override void OnReloadTaskCompleted(bool? options) => _currentOptions = options;
@@ -182,35 +185,35 @@ namespace FsInfoCat.Desktop.LocalData.SharedTagDefinitions
             ListingOptions.Value = _currentOptions;
         }
 
-        protected async override Task<PageFunction<ItemFunctionResultEventArgs>> GetDetailPageAsync([DisallowNull] ListItemViewModel item, [DisallowNull] IWindowsStatusListener statusListener)
+        protected async override Task<PageFunction<ItemFunctionResultEventArgs>> GetDetailPageAsync([DisallowNull] ListItemViewModel item, [DisallowNull] IActivityProgress progress)
         {
             if (item is null)
                 return await Dispatcher.InvokeAsync<PageFunction<ItemFunctionResultEventArgs>>(() => new DetailsPage(new(new(), null)));
             using IServiceScope serviceScope = Hosting.CreateScope();
             using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             Guid id = item.Entity.Id;
-            SharedTagDefinition fs = await dbContext.SharedTagDefinitions.FirstOrDefaultAsync(f => f.Id == id, statusListener.CancellationToken);
+            SharedTagDefinition fs = await dbContext.SharedTagDefinitions.FirstOrDefaultAsync(f => f.Id == id, progress.Token);
             if (fs is null)
             {
-                await Dispatcher.ShowMessageBoxAsync("Item not found in database. Click OK to refresh listing.", "Security Exception", MessageBoxButton.OK, MessageBoxImage.Error, statusListener.CancellationToken);
-                ReloadAsync(_currentOptions);
+                await Dispatcher.ShowMessageBoxAsync("Item not found in database. Click OK to refresh listing.", "Security Exception", MessageBoxButton.OK, MessageBoxImage.Error, progress.Token);
+                RefreshAsync(_currentOptions);
                 return null;
             }
             return await Dispatcher.InvokeAsync<PageFunction<ItemFunctionResultEventArgs>>(() => new DetailsPage(new(fs, item.Entity)));
         }
 
-        protected override async Task<PageFunction<ItemFunctionResultEventArgs>> GetEditPageAsync(ListItemViewModel item, [DisallowNull] IWindowsStatusListener statusListener)
+        protected override async Task<PageFunction<ItemFunctionResultEventArgs>> GetEditPageAsync(ListItemViewModel item, [DisallowNull] IActivityProgress progress)
         {
             if (item is null)
                 return await Dispatcher.InvokeAsync<PageFunction<ItemFunctionResultEventArgs>>(() => new EditPage(new(new(), null)));
             using IServiceScope serviceScope = Hosting.CreateScope();
             using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             Guid id = item.Entity.Id;
-            SharedTagDefinition fs = await dbContext.SharedTagDefinitions.FirstOrDefaultAsync(f => f.Id == id, statusListener.CancellationToken);
+            SharedTagDefinition fs = await dbContext.SharedTagDefinitions.FirstOrDefaultAsync(f => f.Id == id, progress.Token);
             if (fs is null)
             {
-                await Dispatcher.ShowMessageBoxAsync("Item not found in database. Click OK to refresh listing.", "Security Exception", MessageBoxButton.OK, MessageBoxImage.Error, statusListener.CancellationToken);
-                ReloadAsync(_currentOptions);
+                await Dispatcher.ShowMessageBoxAsync("Item not found in database. Click OK to refresh listing.", "Security Exception", MessageBoxButton.OK, MessageBoxImage.Error, progress.Token);
+                RefreshAsync(_currentOptions);
                 return null;
             }
             return await Dispatcher.InvokeAsync<PageFunction<ItemFunctionResultEventArgs>>(() => new EditPage(new(fs, item.Entity)));

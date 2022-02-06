@@ -175,7 +175,7 @@ namespace FsInfoCat.Desktop.LocalData.SymbolicNames
             UpstreamId = Entity.UpstreamId;
         }
 
-        private static async Task<SymbolicNameListItem> SaveChangesAsync(SymbolicName entity, object invocationState, IWindowsStatusListener statusListener)
+        private static async Task<SymbolicNameListItem> SaveChangesAsync(SymbolicName entity, object invocationState, IActivityProgress progress)
         {
             using IServiceScope scope = Hosting.CreateScope();
             using LocalDbContext dbContext = scope.ServiceProvider.GetRequiredService<LocalDbContext>();
@@ -196,12 +196,10 @@ namespace FsInfoCat.Desktop.LocalData.SymbolicNames
             }
             if (entry.State == EntityState.Detached)
                 entry = dbContext.SymbolicNames.Add(entity);
-            DispatcherOperation dispatcherOperation = statusListener.BeginSetMessage((entry.State == EntityState.Added) ?
-                "Inserting new symbolic name record into database" : "Saving symbolic name record changes to database");
-            await dbContext.SaveChangesAsync(statusListener.CancellationToken);
-            await dispatcherOperation;
+            progress.Report((entry.State == EntityState.Added) ? "Inserting new symbolic name record into database" : "Saving symbolic name record changes to database");
+            await dbContext.SaveChangesAsync(progress.Token);
             if (isNew)
-                return await dbContext.SymbolicNameListing.FindAsync(entity.Id, statusListener.CancellationToken);
+                return await dbContext.SymbolicNameListing.FindAsync(entity.Id, progress.Token);
             return invocationState is SymbolicNameListItem item ? item : null;
         }
 
@@ -241,8 +239,8 @@ namespace FsInfoCat.Desktop.LocalData.SymbolicNames
                         //IWindowsAsyncJobFactoryService jobFactory = Hosting.GetRequiredService<IWindowsAsyncJobFactoryService>();
                         //IAsyncJob<SymbolicNameListItem> job = jobFactory.StartNew("Saving changes", "Opening database", Entity, InvocationState, SaveChangesAsync);
                         //job.Task.ContinueWith(task => Dispatcher.Invoke(() => OnSaveTaskCompleted(task)));
-                        e.Cancel = true;
-                        break;
+                        //e.Cancel = true;
+                        //break;
                     case MessageBoxResult.No:
                         break;
                     default:

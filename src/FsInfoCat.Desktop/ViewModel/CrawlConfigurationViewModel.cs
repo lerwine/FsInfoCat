@@ -1,3 +1,4 @@
+using FsInfoCat.Activities;
 using FsInfoCat.Local;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -114,36 +115,36 @@ namespace FsInfoCat.Desktop.ViewModel
             SetValue(LogsPropertyKey, new ReadOnlyObservableCollection<TCrawlJobLogItem>(_backingLogs));
         }
 
-        protected async Task LoadSubdirectoryAsync(Guid id, IWindowsStatusListener statusListener)
+        protected async Task LoadSubdirectoryAsync(Guid id, IActivityProgress progress)
         {
             using IServiceScope scope = Hosting.CreateScope();
             using LocalDbContext dbContext = scope.ServiceProvider.GetRequiredService<LocalDbContext>();
-            TSubdirectoryEntity subdirectory = await LoadSubdirectoryAsync(id, dbContext, statusListener);
+            TSubdirectoryEntity subdirectory = await LoadSubdirectoryAsync(id, dbContext, progress);
             Root = (subdirectory is null) ? null : CreateSubdirectoryViewModel(subdirectory);
         }
 
-        private async Task LoadItemsAsync([DisallowNull] IWindowsStatusListener statusListener)
+        private async Task LoadItemsAsync([DisallowNull] IActivityProgress progress)
         {
             using IServiceScope scope = Hosting.CreateScope();
             using LocalDbContext dbContext = scope.ServiceProvider.GetRequiredService<LocalDbContext>();
             ISubdirectory root = Entity.Root;
             if (root is not null)
             {
-                TSubdirectoryEntity subdirectory = await LoadSubdirectoryAsync(root.Id, dbContext, statusListener);
+                TSubdirectoryEntity subdirectory = await LoadSubdirectoryAsync(root.Id, dbContext, progress);
                 if (subdirectory is not null)
                     Root = CreateSubdirectoryViewModel(subdirectory);
             }
-            IQueryable<TCrawlJobLogEntity> items = GetQueryableCrawlJobLogListing(dbContext, statusListener);
-            _ = await Dispatcher.InvokeAsync(ClearItems, DispatcherPriority.Background, statusListener.CancellationToken);
-            await items.ForEachAsync(async item => await AddCrawlJobLogItemAsync(item, statusListener), statusListener.CancellationToken);
+            IQueryable<TCrawlJobLogEntity> items = GetQueryableCrawlJobLogListing(dbContext, progress);
+            _ = await Dispatcher.InvokeAsync(ClearItems, DispatcherPriority.Background, progress.Token);
+            await items.ForEachAsync(async item => await AddCrawlJobLogItemAsync(item, progress), progress.Token);
         }
 
         protected abstract TSubdirectoryItem CreateSubdirectoryViewModel(TSubdirectoryEntity subdirectory);
 
-        protected abstract Task<TSubdirectoryEntity> LoadSubdirectoryAsync(Guid id, LocalDbContext dbContext, IWindowsStatusListener statusListener);
+        protected abstract Task<TSubdirectoryEntity> LoadSubdirectoryAsync(Guid id, LocalDbContext dbContext, IActivityProgress progress);
 
-        private DispatcherOperation AddCrawlJobLogItemAsync([DisallowNull] TCrawlJobLogEntity entity, [DisallowNull] IWindowsStatusListener statusListener) =>
-            Dispatcher.InvokeAsync(() => AddCrawlJobLogItem(CreateCrawlJobLogViewModel(entity)), DispatcherPriority.Background, statusListener.CancellationToken);
+        private DispatcherOperation AddCrawlJobLogItemAsync([DisallowNull] TCrawlJobLogEntity entity, [DisallowNull] IActivityProgress progress) =>
+            Dispatcher.InvokeAsync(() => AddCrawlJobLogItem(CreateCrawlJobLogViewModel(entity)), DispatcherPriority.Background, progress.Token);
 
         protected virtual bool AddCrawlJobLogItem(TCrawlJobLogItem item)
         {
@@ -210,7 +211,7 @@ namespace FsInfoCat.Desktop.ViewModel
             //        "Database Error", MessageBoxButton.OK, MessageBoxImage.Error), DispatcherPriority.Background), TaskContinuationOptions.OnlyOnFaulted);
         }
 
-        protected abstract IQueryable<TCrawlJobLogEntity> GetQueryableCrawlJobLogListing([DisallowNull] LocalDbContext dbContext, [DisallowNull] IWindowsStatusListener statusListener);
+        protected abstract IQueryable<TCrawlJobLogEntity> GetQueryableCrawlJobLogListing([DisallowNull] LocalDbContext dbContext, [DisallowNull] IActivityProgress progress);
 
         protected abstract TCrawlJobLogItem CreateCrawlJobLogViewModel([DisallowNull] TCrawlJobLogEntity entity);
     }

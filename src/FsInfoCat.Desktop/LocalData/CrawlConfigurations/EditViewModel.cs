@@ -152,30 +152,30 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
                 "There was an unexpected error while importing the subdirectory into the database.\n\nSee logs for further information",
             "Database Error", MessageBoxButton.OK, MessageBoxImage.Error);
 
-        private async Task<SubdirectoryListItemWithAncestorNames> ImportBranchAsync(DirectoryInfo directoryInfo, [DisallowNull] IWindowsStatusListener statusListener)
+        private async Task<SubdirectoryListItemWithAncestorNames> ImportBranchAsync(DirectoryInfo directoryInfo, [DisallowNull] IActivityProgress progress)
         {
             using IServiceScope serviceScope = Hosting.CreateScope();
             using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
-            Subdirectory root = await Subdirectory.FindByFullNameAsync(directoryInfo.FullName, dbContext, statusListener.CancellationToken);
+            Subdirectory root = await Subdirectory.FindByFullNameAsync(directoryInfo.FullName, dbContext, progress.Token);
             if (root is null)
-                root = (await Subdirectory.ImportBranchAsync(directoryInfo, dbContext, statusListener.CancellationToken))?.Entity;
+                root = (await Subdirectory.ImportBranchAsync(directoryInfo, dbContext, progress.Token))?.Entity;
             else
             {
-                CrawlConfiguration crawlConfiguration = await dbContext.Entry(root).GetRelatedReferenceAsync(d => d.CrawlConfiguration, statusListener.CancellationToken);
+                CrawlConfiguration crawlConfiguration = await dbContext.Entry(root).GetRelatedReferenceAsync(d => d.CrawlConfiguration, progress.Token);
                 if (crawlConfiguration is not null && crawlConfiguration.Id != Entity.Id)
                 {
-                    await Dispatcher.ShowMessageBoxAsync($"There is already a configuration defined for that path.", "Configuration exists", MessageBoxButton.OK, MessageBoxImage.Warning, statusListener.CancellationToken);
+                    await Dispatcher.ShowMessageBoxAsync($"There is already a configuration defined for that path.", "Configuration exists", MessageBoxButton.OK, MessageBoxImage.Warning, progress.Token);
                     return null;
                 }
             }
             Guid id = root.Id;
-            return await dbContext.SubdirectoryListingWithAncestorNames.FirstOrDefaultAsync(d => d.Id == id, statusListener.CancellationToken);
+            return await dbContext.SubdirectoryListingWithAncestorNames.FirstOrDefaultAsync(d => d.Id == id, progress.Token);
         }
 
-        protected override IQueryable<CrawlJobLogListItem> GetQueryableCrawlJobLogListing([DisallowNull] LocalDbContext dbContext, [DisallowNull] IWindowsStatusListener statusListener)
+        protected override IQueryable<CrawlJobLogListItem> GetQueryableCrawlJobLogListing([DisallowNull] LocalDbContext dbContext, [DisallowNull] IActivityProgress progress)
         {
             Guid id = Entity.Id;
-            statusListener.SetMessage("Reading from database");
+            progress.Report("Reading from database");
             return dbContext.CrawlJobListing.Where(j => j.ConfigurationId == id);
         }
 
@@ -227,11 +227,11 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
             //return job;
         }
 
-        private static async Task<CrawlConfigListItemBase> SaveChangesAsync(CrawlConfiguration entity, object invocationState, IWindowsStatusListener statusListener)
+        private static async Task<CrawlConfigListItemBase> SaveChangesAsync(CrawlConfiguration entity, object invocationState, IActivityProgress progress)
         {
             using IServiceScope scope = Hosting.CreateScope();
             using LocalDbContext dbContext = scope.ServiceProvider.GetRequiredService<LocalDbContext>();
-            CrawlConfiguration local = await dbContext.CrawlConfigurations.FirstOrDefaultAsync(e => e.Id == entity.Id, statusListener.CancellationToken);
+            CrawlConfiguration local = await dbContext.CrawlConfigurations.FirstOrDefaultAsync(e => e.Id == entity.Id, progress.Token);
             EntityEntry entry;
             bool isNew = local is null;
             if (isNew)
@@ -241,14 +241,13 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
                 dbContext.Entry(local).State = EntityState.Detached;
                 (entry = dbContext.Entry(entity)).State = EntityState.Modified;
             }
-            DispatcherOperation dispatcherOperation = statusListener.BeginSetMessage((entry.State == EntityState.Added) ?
+            progress.Report((entry.State == EntityState.Added) ?
                 "Inserting new crawl configuration into database" : "Saving crawl configuration record changes to database");
-            await dbContext.SaveChangesAsync(statusListener.CancellationToken);
-            await dispatcherOperation;
+            await dbContext.SaveChangesAsync(progress.Token);
             if (isNew)
             {
                 Guid id = entity.Id;
-                return await dbContext.CrawlConfigListing.FirstOrDefaultAsync(e => e.Id == id, statusListener.CancellationToken);
+                return await dbContext.CrawlConfigListing.FirstOrDefaultAsync(e => e.Id == id, progress.Token);
             }
             return invocationState is CrawlConfigListItemBase item ? item : null;
         }
@@ -312,7 +311,7 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
 
         protected override SubdirectoryListItemViewModel CreateSubdirectoryViewModel(SubdirectoryListItemWithAncestorNames subdirectory) => new(subdirectory);
 
-        protected async override Task<SubdirectoryListItemWithAncestorNames> LoadSubdirectoryAsync(Guid id, LocalDbContext dbContext, IWindowsStatusListener statusListener) =>
+        protected async override Task<SubdirectoryListItemWithAncestorNames> LoadSubdirectoryAsync(Guid id, LocalDbContext dbContext, IActivityProgress progress) =>
             await dbContext.SubdirectoryListingWithAncestorNames.FirstOrDefaultAsync(s => s.Id == id);
     }
 }

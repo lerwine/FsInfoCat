@@ -85,17 +85,17 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
 
         protected override CrawlJobListItemViewModel CreateCrawlJobLogViewModel([DisallowNull] CrawlJobLogListItem entity) => new(entity);
 
-        private Task<int> DeleteCrawlJobLogFromDbContextAsync([DisallowNull] CrawlJobLogListItem entity, [DisallowNull] LocalDbContext dbContext, [DisallowNull] IWindowsStatusListener statusListener)
+        private Task<int> DeleteCrawlJobLogFromDbContextAsync([DisallowNull] CrawlJobLogListItem entity, [DisallowNull] LocalDbContext dbContext, [DisallowNull] IActivityProgress progress)
         {
             // TODO: Implement DeleteCrawlJobLogFromDbContextAsync(CrawlJobLogListItem, LocalDbContext, IWindowsStatusListener
-            Dispatcher.ShowMessageBoxAsync("You  have invoked a command which has not yet been implemented.", "Not Implemented", MessageBoxButton.OK, MessageBoxImage.Hand, statusListener.CancellationToken);
+            Dispatcher.ShowMessageBoxAsync("You  have invoked a command which has not yet been implemented.", "Not Implemented", MessageBoxButton.OK, MessageBoxImage.Hand, progress.Token);
             throw new NotImplementedException($"{nameof(DeleteCrawlJobLogFromDbContextAsync)} not implemented");
         }
 
-        protected override IQueryable<CrawlJobLogListItem> GetQueryableCrawlJobLogListing([DisallowNull] LocalDbContext dbContext, [DisallowNull] IWindowsStatusListener statusListener)
+        protected override IQueryable<CrawlJobLogListItem> GetQueryableCrawlJobLogListing([DisallowNull] LocalDbContext dbContext, [DisallowNull] IActivityProgress progress)
         {
             Guid id = Entity.Id;
-            statusListener.SetMessage("Reading from database");
+            progress.Report("Reading from database");
             return dbContext.CrawlJobListing.Where(j => j.ConfigurationId == id);
         }
 
@@ -115,7 +115,7 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
             //jobFactory.StartNew("Loading database record", "Opening database", item, GetEditPageAsync).Task.ContinueWith(task => OnGetEditPageComplete(task, item));
         }
 
-        private async Task<PageFunction<ItemFunctionResultEventArgs>> GetEditPageAsync(CrawlJobListItemViewModel item, [DisallowNull] IWindowsStatusListener statusListener)
+        private async Task<PageFunction<ItemFunctionResultEventArgs>> GetEditPageAsync(CrawlJobListItemViewModel item, [DisallowNull] IActivityProgress progress)
         {
             CrawlJobLog crawlJobLog;
             if (item is null)
@@ -125,16 +125,16 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
                 using IServiceScope scope = Hosting.CreateScope();
                 using LocalDbContext dbContext = scope.ServiceProvider.GetRequiredService<LocalDbContext>();
                 Guid id = item.Entity.Id;
-                crawlJobLog = await dbContext.CrawlJobLogs.FirstOrDefaultAsync(j => j.Id == id, statusListener.CancellationToken);
+                crawlJobLog = await dbContext.CrawlJobLogs.FirstOrDefaultAsync(j => j.Id == id, progress.Token);
                 if (crawlJobLog is null)
                 {
                     await Dispatcher.ShowMessageBoxAsync("Item not found in database. Click OK to refresh listing.", "Security Exception", MessageBoxButton.OK, MessageBoxImage.Error,
-                        statusListener.CancellationToken);
+                        progress.Token);
                     ReloadAsync();
                     return null;
                 }
             }
-            return await Dispatcher.InvokeAsync(() => new CrawlLogs.EditPage(new(crawlJobLog, item?.Entity)), DispatcherPriority.Normal, statusListener.CancellationToken);
+            return await Dispatcher.InvokeAsync(() => new CrawlLogs.EditPage(new(crawlJobLog, item?.Entity)), DispatcherPriority.Normal, progress.Token);
         }
 
         private void OnGetEditPageComplete(Task<PageFunction<ItemFunctionResultEventArgs>> task, CrawlJobListItemViewModel item) => Dispatcher.Invoke(() =>
@@ -192,15 +192,15 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
 
         protected override SubdirectoryListItemViewModel CreateSubdirectoryViewModel(SubdirectoryListItemWithAncestorNames subdirectory) => new(subdirectory);
 
-        protected async override Task<SubdirectoryListItemWithAncestorNames> LoadSubdirectoryAsync(Guid id, LocalDbContext dbContext, IWindowsStatusListener statusListener)
+        protected async override Task<SubdirectoryListItemWithAncestorNames> LoadSubdirectoryAsync(Guid id, LocalDbContext dbContext, IActivityProgress progress)
         {
             return await dbContext.SubdirectoryListingWithAncestorNames.FirstOrDefaultAsync(s => s.Id == id);
         }
         private Task<int> DeleteCrawlJobLogFromDbContextAsync([DisallowNull] CrawlJobListItemViewModel entity, [DisallowNull] LocalDbContext dbContext,
-            [DisallowNull] IWindowsStatusListener statusListener)
+            [DisallowNull] IActivityProgress progress)
         {
             // TODO: Implement DeleteCrawlJobLogFromDbContextAsync
-            Dispatcher.ShowMessageBoxAsync("You  have invoked a command which has not yet been implemented.", "Not Implemented", MessageBoxButton.OK, MessageBoxImage.Hand, statusListener.CancellationToken);
+            Dispatcher.ShowMessageBoxAsync("You  have invoked a command which has not yet been implemented.", "Not Implemented", MessageBoxButton.OK, MessageBoxImage.Hand, progress.Token);
             throw new NotImplementedException($"{nameof(DeleteCrawlJobLogFromDbContextAsync)} not implemented");
         }
 
@@ -237,14 +237,14 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
             return removedItems;
         }
 
-        private async Task DeleteItemAsync((CrawlJobListItemViewModel Item, CrawlJobLogListItem Entity) targets, [DisallowNull] IWindowsStatusListener statusListener)
+        private async Task DeleteItemAsync((CrawlJobListItemViewModel Item, CrawlJobLogListItem Entity) targets, [DisallowNull] IActivityProgress progress)
         {
             using IServiceScope scope = Hosting.CreateScope();
             using LocalDbContext dbContext = scope.ServiceProvider.GetRequiredService<LocalDbContext>();
             using DbContextEventReceiver eventReceiver = new(dbContext);
-            _ = await DeleteCrawlJobLogFromDbContextAsync(targets.Entity, dbContext, statusListener);
+            _ = await DeleteCrawlJobLogFromDbContextAsync(targets.Entity, dbContext, progress);
             if (eventReceiver.SavedChangesOccurred && !eventReceiver.SaveChangesFailedOcurred)
-                await Dispatcher.InvokeAsync(() => RemoveCrawlJobLogItem(targets.Item), DispatcherPriority.Background, statusListener.CancellationToken);
+                await Dispatcher.InvokeAsync(() => RemoveCrawlJobLogItem(targets.Item), DispatcherPriority.Background, progress.Token);
         }
 
         protected IAsyncJob DeleteCrawlJobLogAsync([DisallowNull] CrawlJobListItemViewModel item)

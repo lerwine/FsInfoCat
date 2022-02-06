@@ -1,3 +1,4 @@
+using FsInfoCat.Activities;
 using FsInfoCat.Local;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
@@ -61,13 +62,13 @@ namespace FsInfoCat.Desktop.ViewModel
 
         protected abstract bool EntityMatchesCurrentFilter([DisallowNull] TEntity entity);
 
-        protected abstract IQueryable<TEntity> GetQueryableListing(TFilterOptions options, [DisallowNull] LocalDbContext dbContext, [DisallowNull] IWindowsStatusListener statusListener);
+        protected abstract IQueryable<TEntity> GetQueryableListing(TFilterOptions options, [DisallowNull] LocalDbContext dbContext, [DisallowNull] IActivityProgress progress);
 
         protected abstract TItemViewModel CreateItemViewModel([DisallowNull] TEntity entity);
 
-        protected abstract Task<PageFunction<ItemFunctionResultEventArgs>> GetEditPageAsync(TItemViewModel item, [DisallowNull] IWindowsStatusListener statusListener);
+        protected abstract Task<PageFunction<ItemFunctionResultEventArgs>> GetEditPageAsync(TItemViewModel item, [DisallowNull] IActivityProgress progress);
 
-        protected abstract Task<PageFunction<ItemFunctionResultEventArgs>> GetDetailPageAsync([DisallowNull] TItemViewModel item, [DisallowNull] IWindowsStatusListener statusListener);
+        protected abstract Task<PageFunction<ItemFunctionResultEventArgs>> GetDetailPageAsync([DisallowNull] TItemViewModel item, [DisallowNull] IActivityProgress progress);
 
         protected abstract bool ConfirmItemDelete([DisallowNull] TItemViewModel item, object parameter);
 
@@ -80,17 +81,17 @@ namespace FsInfoCat.Desktop.ViewModel
         protected abstract void OnEditTaskFaulted([DisallowNull] Exception exception, TItemViewModel item);
 
         protected abstract Task<EntityEntry> DeleteEntityFromDbContextAsync([DisallowNull] TEntity entity, [DisallowNull] LocalDbContext dbContext,
-            [DisallowNull] IWindowsStatusListener statusListener);
+            [DisallowNull] IActivityProgress progress);
 
-        protected abstract void OnDeleteTaskFaulted([DisallowNull] Exception exception, [DisallowNull] TItemViewModel item);
-
-        private async Task<bool> DeleteItemAsync((TItemViewModel Item, TEntity Entity) targets, [DisallowNull] IWindowsStatusListener statusListener)
+        private async Task<bool> DeleteItemAsync((TItemViewModel Item, TEntity Entity) targets, [DisallowNull] IActivityProgress progress)
         {
             using IServiceScope scope = Hosting.CreateScope();
             using LocalDbContext dbContext = scope.ServiceProvider.GetRequiredService<LocalDbContext>();
-            EntityEntry entry = await DeleteEntityFromDbContextAsync(targets.Entity, dbContext, statusListener);
+            EntityEntry entry = await DeleteEntityFromDbContextAsync(targets.Entity, dbContext, progress);
             return entry.State == EntityState.Detached;
         }
+
+        protected abstract void OnDeleteTaskFaulted([DisallowNull] Exception exception, [DisallowNull] TItemViewModel item);
 
         protected virtual void OnItemDeleteCommand([DisallowNull] TItemViewModel item, object parameter)
         {
@@ -115,9 +116,10 @@ namespace FsInfoCat.Desktop.ViewModel
             }
         }
 
-        protected virtual IAsyncJob ReloadAsync(TFilterOptions options)
+        protected virtual IAsyncAction<IActivityEvent> RefreshAsync(TFilterOptions options)
         {
-            // TODO: Implement ListingViewModel{TEntity, TItemViewModel, TFilterOptions}.ReloadAsync
+            Hosting.GetAsyncActivityService().InvokeAsync(activityDescription: "", initialStatusMessage: "", progress => LoadItemsAsync(options, progress));
+            // TODO: Implement ListingViewModel{TEntity, TItemViewModel, TFilterOptions}.RefreshAsync
             throw new NotImplementedException();
             //IWindowsAsyncJobFactoryService jobFactory = Hosting.GetRequiredService<IWindowsAsyncJobFactoryService>();
             //IAsyncJob job = jobFactory.StartNew("Loading data", "Opening database", options, LoadItemsAsync);
@@ -138,13 +140,13 @@ namespace FsInfoCat.Desktop.ViewModel
             //return job;
         }
 
-        private async Task LoadItemsAsync(TFilterOptions options, [DisallowNull] IWindowsStatusListener statusListener)
+        private async Task LoadItemsAsync(TFilterOptions options, [DisallowNull] IActivityProgress progress)
         {
             using IServiceScope scope = Hosting.CreateScope();
             using LocalDbContext dbContext = scope.ServiceProvider.GetRequiredService<LocalDbContext>();
-            IQueryable<TEntity> items = GetQueryableListing(options, dbContext, statusListener);
-            _ = await Dispatcher.InvokeAsync(ClearItems, DispatcherPriority.Background, statusListener.CancellationToken);
-            await items.ForEachAsync(async item => await AddItemAsync(item, statusListener), statusListener.CancellationToken);
+            IQueryable<TEntity> items = GetQueryableListing(options, dbContext, progress);
+            _ = await Dispatcher.InvokeAsync(ClearItems, DispatcherPriority.Background, progress.Token);
+            await items.ForEachAsync(async item => await AddItemAsync(item, progress), progress.Token);
         }
 
         protected virtual TItemViewModel[] ClearItems()
@@ -161,8 +163,8 @@ namespace FsInfoCat.Desktop.ViewModel
             return removedItems;
         }
 
-        private DispatcherOperation AddItemAsync([DisallowNull] TEntity entity, [DisallowNull] IWindowsStatusListener statusListener) =>
-            Dispatcher.InvokeAsync(() => AddItem(CreateItemViewModel(entity)), DispatcherPriority.Background, statusListener.CancellationToken);
+        private DispatcherOperation AddItemAsync([DisallowNull] TEntity entity, [DisallowNull] IActivityProgress progress) =>
+            Dispatcher.InvokeAsync(() => AddItem(CreateItemViewModel(entity)), DispatcherPriority.Background, progress.Token);
 
         protected virtual void AddItem(TItemViewModel item)
         {

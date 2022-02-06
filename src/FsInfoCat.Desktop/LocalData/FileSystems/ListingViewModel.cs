@@ -4,6 +4,7 @@ using FsInfoCat.Local;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -17,6 +18,7 @@ namespace FsInfoCat.Desktop.LocalData.FileSystems
     public class ListingViewModel : ListingViewModel<FileSystemListItem, ListItemViewModel, bool?>, INavigatedToNotifiable
     {
         bool? _currentListingOption = true;
+        private readonly ILogger<ListingViewModel> _logger;
 
         #region ListingOption Property Members
 
@@ -38,6 +40,7 @@ namespace FsInfoCat.Desktop.LocalData.FileSystems
 
         public ListingViewModel()
         {
+            _logger = App.GetLogger(this);
             SetValue(ListingOptionPropertyKey, new ThreeStateViewModel(_currentListingOption));
             UpdatePageTitle(_currentListingOption);
         }
@@ -47,18 +50,18 @@ namespace FsInfoCat.Desktop.LocalData.FileSystems
                     FsInfoCat.Properties.Resources.DisplayName_FileSystemDefinitions_IsInactive) :
                     FsInfoCat.Properties.Resources.DisplayName_FileSystemDefinitions_All;
 
-        protected override IAsyncJob ReloadAsync(bool? options)
+        protected override IAsyncAction<IActivityEvent> RefreshAsync(bool? options)
         {
             UpdatePageTitle(options);
-            return base.ReloadAsync(options);
+            return base.RefreshAsync(options);
         }
 
-        void INavigatedToNotifiable.OnNavigatedTo() => ReloadAsync(_currentListingOption);
+        void INavigatedToNotifiable.OnNavigatedTo() => RefreshAsync(_currentListingOption);
 
         protected override IQueryable<FileSystemListItem> GetQueryableListing(bool? options, [DisallowNull] LocalDbContext dbContext,
-            [DisallowNull] IWindowsStatusListener statusListener)
+            [DisallowNull] IActivityProgress progress)
         {
-            statusListener.SetMessage("Reading file system definitions from database");
+            progress.Report("Reading file system definitions from database");
             return options.HasValue ? (options.Value ? dbContext.FileSystemListing.Where(f => !f.IsInactive) :
                 dbContext.FileSystemListing.Where(f => f.IsInactive)) : dbContext.FileSystemListing;
         }
@@ -68,7 +71,7 @@ namespace FsInfoCat.Desktop.LocalData.FileSystems
         protected override void OnApplyFilterOptionsCommand(object parameter)
         {
             if (_currentListingOption.HasValue ? (!ListingOption.Value.HasValue || _currentListingOption.Value != ListingOption.Value.Value) : ListingOption.Value.HasValue)
-                _ = ReloadAsync(ListingOption.Value);
+                _ = RefreshAsync(ListingOption.Value);
         }
 
         protected override void OnCancelFilterOptionsCommand(object parameter)
@@ -78,19 +81,19 @@ namespace FsInfoCat.Desktop.LocalData.FileSystems
             base.OnCancelFilterOptionsCommand(parameter);
         }
 
-        protected override void OnRefreshCommand(object parameter) => ReloadAsync(_currentListingOption);
+        protected override void OnRefreshCommand(object parameter) => RefreshAsync(_currentListingOption);
 
         protected override bool ConfirmItemDelete(ListItemViewModel item, object parameter) => MessageBox.Show(Application.Current.MainWindow,
             "This action cannot be undone!\n\nAre you sure you want to remove this file system definition from the database?",
             "Delete File System Definition", MessageBoxButton.YesNo, MessageBoxImage.Exclamation) == MessageBoxResult.Yes;
 
         protected override async Task<EntityEntry> DeleteEntityFromDbContextAsync([DisallowNull] FileSystemListItem entity, [DisallowNull] LocalDbContext dbContext,
-            [DisallowNull] IWindowsStatusListener statusListener)
+            [DisallowNull] IActivityProgress progress)
         {
-            FileSystem target = await dbContext.FileSystems.FindAsync(new object[] { entity.Id }, statusListener.CancellationToken);
+            FileSystem target = await dbContext.FileSystems.FindAsync(new object[] { entity.Id }, progress.Token);
             if (target is null)
                 return null;
-            await FileSystem.DeleteAsync(target, dbContext, statusListener);
+            await FileSystem.DeleteAsync(target, dbContext, progress, _logger);
             return dbContext.Entry(target);
         }
 
@@ -116,35 +119,35 @@ namespace FsInfoCat.Desktop.LocalData.FileSystems
 
         protected override bool EntityMatchesCurrentFilter([DisallowNull] FileSystemListItem entity) => !_currentListingOption.HasValue || _currentListingOption.Value != entity.IsInactive;
 
-        protected async override Task<PageFunction<ItemFunctionResultEventArgs>> GetDetailPageAsync([DisallowNull] ListItemViewModel item, [DisallowNull] IWindowsStatusListener statusListener)
+        protected async override Task<PageFunction<ItemFunctionResultEventArgs>> GetDetailPageAsync([DisallowNull] ListItemViewModel item, [DisallowNull] IActivityProgress progress)
         {
             if (item is null)
                 return await Dispatcher.InvokeAsync<PageFunction<ItemFunctionResultEventArgs>>(() => new DetailsPage(new(new(), null)));
             using IServiceScope serviceScope = Hosting.CreateScope();
             using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             Guid id = item.Entity.Id;
-            FileSystem fs = await dbContext.FileSystems.FirstOrDefaultAsync(f => f.Id == id, statusListener.CancellationToken);
+            FileSystem fs = await dbContext.FileSystems.FirstOrDefaultAsync(f => f.Id == id, progress.Token);
             if (fs is null)
             {
-                await Dispatcher.ShowMessageBoxAsync("Item not found in database. Click OK to refresh listing.", "Security Exception", MessageBoxButton.OK, MessageBoxImage.Error, statusListener.CancellationToken);
-                ReloadAsync(_currentListingOption);
+                await Dispatcher.ShowMessageBoxAsync("Item not found in database. Click OK to refresh listing.", "Security Exception", MessageBoxButton.OK, MessageBoxImage.Error, progress.Token);
+                RefreshAsync(_currentListingOption);
                 return null;
             }
             return await Dispatcher.InvokeAsync<PageFunction<ItemFunctionResultEventArgs>>(() => new DetailsPage(new(fs, item.Entity)));
         }
 
-        protected async override Task<PageFunction<ItemFunctionResultEventArgs>> GetEditPageAsync(ListItemViewModel item, [DisallowNull] IWindowsStatusListener statusListener)
+        protected async override Task<PageFunction<ItemFunctionResultEventArgs>> GetEditPageAsync(ListItemViewModel item, [DisallowNull] IActivityProgress progress)
         {
             if (item is null)
                 return await Dispatcher.InvokeAsync<PageFunction<ItemFunctionResultEventArgs>>(() => new EditPage(new(new(), null)));
             using IServiceScope serviceScope = Hosting.CreateScope();
             using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             Guid id = item.Entity.Id;
-            FileSystem fs = await dbContext.FileSystems.FirstOrDefaultAsync(f => f.Id == id, statusListener.CancellationToken);
+            FileSystem fs = await dbContext.FileSystems.FirstOrDefaultAsync(f => f.Id == id, progress.Token);
             if (fs is null)
             {
-                await Dispatcher.ShowMessageBoxAsync("Item not found in database. Click OK to refresh listing.", "Security Exception", MessageBoxButton.OK, MessageBoxImage.Error, statusListener.CancellationToken);
-                ReloadAsync(_currentListingOption);
+                await Dispatcher.ShowMessageBoxAsync("Item not found in database. Click OK to refresh listing.", "Security Exception", MessageBoxButton.OK, MessageBoxImage.Error, progress.Token);
+                RefreshAsync(_currentListingOption);
                 return null;
             }
             return await Dispatcher.InvokeAsync<PageFunction<ItemFunctionResultEventArgs>>(() => new EditPage(new(fs, item.Entity)));

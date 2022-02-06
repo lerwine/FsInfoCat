@@ -185,7 +185,7 @@ namespace FsInfoCat.Desktop.LocalData.FileSystems
             UpstreamId = Entity.UpstreamId;
         }
 
-        private static async Task<FileSystemListItem> SaveChangesAsync(FileSystem entity, object invocationState, IWindowsStatusListener statusListener)
+        private static async Task<FileSystemListItem> SaveChangesAsync(FileSystem entity, object invocationState, IActivityProgress progress)
         {
             using IServiceScope scope = Hosting.CreateScope();
             using LocalDbContext dbContext = scope.ServiceProvider.GetRequiredService<LocalDbContext>();
@@ -206,12 +206,11 @@ namespace FsInfoCat.Desktop.LocalData.FileSystems
             }
             if (entry.State == EntityState.Detached)
                 entry = dbContext.FileSystems.Add(entity);
-            DispatcherOperation dispatcherOperation = statusListener.BeginSetMessage((entry.State == EntityState.Added) ?
+            progress.Report((entry.State == EntityState.Added) ?
                 "Inserting new file system record into database" : "Saving file system record changes to database");
-            await dbContext.SaveChangesAsync(statusListener.CancellationToken);
-            await dispatcherOperation;
+            await dbContext.SaveChangesAsync(progress.Token);
             if (isNew)
-                return await dbContext.FileSystemListing.FindAsync(entity.Id, statusListener.CancellationToken);
+                return await dbContext.FileSystemListing.FindAsync(entity.Id, progress.Token);
             return invocationState is FileSystemListItem item ? item : null;
         }
 
@@ -251,8 +250,8 @@ namespace FsInfoCat.Desktop.LocalData.FileSystems
                         //IWindowsAsyncJobFactoryService jobFactory = Hosting.GetRequiredService<IWindowsAsyncJobFactoryService>();
                         //IAsyncJob<FileSystemListItem> job = jobFactory.StartNew("Saving changes", "Opening database", Entity, InvocationState, SaveChangesAsync);
                         //job.Task.ContinueWith(task => Dispatcher.Invoke(() => OnSaveTaskCompleted(task)));
-                        e.Cancel = true;
-                        break;
+                        //e.Cancel = true;
+                        //break;
                     case MessageBoxResult.No:
                         break;
                     default:

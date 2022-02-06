@@ -183,7 +183,7 @@ namespace FsInfoCat.Desktop.LocalData.DRMPropertySets
             UpstreamId = Entity.UpstreamId;
         }
 
-        private static async Task<DRMPropertiesListItem> SaveChangesAsync(DRMPropertySet entity, object invocationState, IWindowsStatusListener statusListener)
+        private static async Task<DRMPropertiesListItem> SaveChangesAsync(DRMPropertySet entity, object invocationState, IActivityProgress progress)
         {
             using IServiceScope scope = Hosting.CreateScope();
             using LocalDbContext dbContext = scope.ServiceProvider.GetRequiredService<LocalDbContext>();
@@ -204,12 +204,11 @@ namespace FsInfoCat.Desktop.LocalData.DRMPropertySets
             }
             if (entry.State == EntityState.Detached)
                 entry = dbContext.DRMPropertySets.Add(entity);
-            DispatcherOperation dispatcherOperation = statusListener.BeginSetMessage((entry.State == EntityState.Added) ?
+            progress.Report((entry.State == EntityState.Added) ?
                 "Inserting new DRM properties record into database" : "Saving DRM properties record changes to database");
-            await dbContext.SaveChangesAsync(statusListener.CancellationToken);
-            await dispatcherOperation;
+            await dbContext.SaveChangesAsync(progress.Token);
             if (isNew)
-                return await dbContext.DRMPropertiesListing.FindAsync(entity.Id, statusListener.CancellationToken);
+                return await dbContext.DRMPropertiesListing.FindAsync(entity.Id, progress.Token);
             return invocationState is DRMPropertiesListItem item ? item : null;
         }
 
@@ -249,8 +248,8 @@ namespace FsInfoCat.Desktop.LocalData.DRMPropertySets
                         //IWindowsAsyncJobFactoryService jobFactory = Hosting.GetRequiredService<IWindowsAsyncJobFactoryService>();
                         //IAsyncJob<DRMPropertiesListItem> job = jobFactory.StartNew("Saving changes", "Opening database", Entity, InvocationState, SaveChangesAsync);
                         //job.Task.ContinueWith(task => Dispatcher.Invoke(() => OnSaveTaskCompleted(task)));
-                        e.Cancel = true;
-                        break;
+                        //e.Cancel = true;
+                        //break;
                     case MessageBoxResult.No:
                         break;
                     default:

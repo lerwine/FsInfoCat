@@ -47,10 +47,10 @@ namespace FsInfoCat.Desktop.LocalData.CrawlLogs
             string.Format(FsInfoCat.Properties.Resources.FormatDisplayName_CrawlLog_Status, options.Status.Value.GetDisplayName()) :
             options.ShowAll ? FsInfoCat.Properties.Resources.DisplayName_CrawlLog_All : FsInfoCat.Properties.Resources.DisplayName_CrawlLog_Failed;
 
-        protected override IAsyncJob ReloadAsync(FilterOptions options)
+        protected override IAsyncAction<IActivityEvent> RefreshAsync(FilterOptions options)
         {
             UpdatePageTitle(options);
-            return base.ReloadAsync(options);
+            return base.RefreshAsync(options);
         }
 
         public FilterOptions ToFilterOptions(EnumChoiceItem<CrawlStatus> item) => ReferenceEquals(_allOption, item) ? (new(null, true)) : (new(item?.Value, false));
@@ -67,9 +67,9 @@ namespace FsInfoCat.Desktop.LocalData.CrawlLogs
             });
 
         protected override IQueryable<CrawlJobLogListItem> GetQueryableListing(FilterOptions options, [DisallowNull] LocalDbContext dbContext,
-            [DisallowNull] IWindowsStatusListener statusListener)
+            [DisallowNull] IActivityProgress progress)
         {
-            statusListener.SetMessage("Reading crawl result log entries from database");
+            progress.Report("Reading crawl result log entries from database");
             if (options.Status.HasValue)
             {
                 CrawlStatus status = options.Status.Value;
@@ -87,7 +87,7 @@ namespace FsInfoCat.Desktop.LocalData.CrawlLogs
         {
             FilterOptions newOptions = ToFilterOptions(StatusOptions.SelectedItem);
             if (newOptions.Status != _currentOptions.Status || newOptions.ShowAll != _currentOptions.ShowAll)
-                ReloadAsync(newOptions);
+                RefreshAsync(newOptions);
         }
 
         protected override void OnCancelFilterOptionsCommand(object parameter)
@@ -97,24 +97,24 @@ namespace FsInfoCat.Desktop.LocalData.CrawlLogs
             base.OnCancelFilterOptionsCommand(parameter);
         }
 
-        protected override void OnRefreshCommand(object parameter) => ReloadAsync(_currentOptions);
+        protected override void OnRefreshCommand(object parameter) => RefreshAsync(_currentOptions);
 
         protected override bool ConfirmItemDelete(ListItemViewModel item, object parameter) => MessageBox.Show(Application.Current.MainWindow,
             "This action cannot be undone!\n\nAre you sure you want to remove this crawl result log entry from the database?",
             "Delete Crawl Result Log Entry", MessageBoxButton.YesNo, MessageBoxImage.Exclamation) == MessageBoxResult.Yes;
 
         protected override async Task<EntityEntry> DeleteEntityFromDbContextAsync([DisallowNull] CrawlJobLogListItem entity, [DisallowNull] LocalDbContext dbContext,
-            [DisallowNull] IWindowsStatusListener statusListener)
+            [DisallowNull] IActivityProgress progress)
         {
-            CrawlJobLog target = await dbContext.CrawlJobLogs.FindAsync(new object[] { entity.Id }, statusListener.CancellationToken);
+            CrawlJobLog target = await dbContext.CrawlJobLogs.FindAsync(new object[] { entity.Id }, progress.Token);
             if (target is null)
                 return null;
             EntityEntry entry = dbContext.CrawlJobLogs.Remove(target);
-            await dbContext.SaveChangesAsync(statusListener.CancellationToken);
+            await dbContext.SaveChangesAsync(progress.Token);
             return entry;
         }
 
-        void INavigatedToNotifiable.OnNavigatedTo() => ReloadAsync(_currentOptions);
+        void INavigatedToNotifiable.OnNavigatedTo() => RefreshAsync(_currentOptions);
 
         protected override void OnReloadTaskCompleted(FilterOptions options) => _currentOptions = options;
 
@@ -136,20 +136,20 @@ namespace FsInfoCat.Desktop.LocalData.CrawlLogs
             StatusOptions.SelectedItem = FromFilterOptions(_currentOptions);
         }
 
-        protected override Task<PageFunction<ItemFunctionResultEventArgs>> GetDetailPageAsync([DisallowNull] ListItemViewModel item, [DisallowNull] IWindowsStatusListener statusListener) => GetEditPageAsync(item, statusListener);
+        protected override Task<PageFunction<ItemFunctionResultEventArgs>> GetDetailPageAsync([DisallowNull] ListItemViewModel item, [DisallowNull] IActivityProgress progress) => GetEditPageAsync(item, progress);
 
-        protected async override Task<PageFunction<ItemFunctionResultEventArgs>> GetEditPageAsync(ListItemViewModel item, [DisallowNull] IWindowsStatusListener statusListener)
+        protected async override Task<PageFunction<ItemFunctionResultEventArgs>> GetEditPageAsync(ListItemViewModel item, [DisallowNull] IActivityProgress progress)
         {
             if (item is null)
                 return await Dispatcher.InvokeAsync<PageFunction<ItemFunctionResultEventArgs>>(() => new EditPage(new(new(), null)));
             using IServiceScope serviceScope = Hosting.CreateScope();
             using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             Guid id = item.Entity.Id;
-            CrawlJobLog crawlJobLog = await dbContext.CrawlJobLogs.FirstOrDefaultAsync(j => j.Id == id, statusListener.CancellationToken);
+            CrawlJobLog crawlJobLog = await dbContext.CrawlJobLogs.FirstOrDefaultAsync(j => j.Id == id, progress.Token);
             if (crawlJobLog is null)
             {
-                await Dispatcher.ShowMessageBoxAsync("Item not found in database. Click OK to refresh listing.", "Security Exception", MessageBoxButton.OK, MessageBoxImage.Error, statusListener.CancellationToken);
-                ReloadAsync(_currentOptions);
+                await Dispatcher.ShowMessageBoxAsync("Item not found in database. Click OK to refresh listing.", "Security Exception", MessageBoxButton.OK, MessageBoxImage.Error, progress.Token);
+                RefreshAsync(_currentOptions);
                 return null;
             }
             return await Dispatcher.InvokeAsync<PageFunction<ItemFunctionResultEventArgs>>(() => new EditPage(new(crawlJobLog, item.Entity)));

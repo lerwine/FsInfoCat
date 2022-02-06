@@ -183,7 +183,7 @@ namespace FsInfoCat.Desktop.LocalData.VideoPropertySets
             VerticalAspectRatio = Entity.VerticalAspectRatio;
         }
 
-        private static async Task<VideoPropertiesListItem> SaveChangesAsync(VideoPropertySet entity, object invocationState, IWindowsStatusListener statusListener)
+        private static async Task<VideoPropertiesListItem> SaveChangesAsync(VideoPropertySet entity, object invocationState, IActivityProgress progress)
         {
             using IServiceScope scope = Hosting.CreateScope();
             using LocalDbContext dbContext = scope.ServiceProvider.GetRequiredService<LocalDbContext>();
@@ -204,12 +204,10 @@ namespace FsInfoCat.Desktop.LocalData.VideoPropertySets
             }
             if (entry.State == EntityState.Detached)
                 entry = dbContext.VideoPropertySets.Add(entity);
-            DispatcherOperation dispatcherOperation = statusListener.BeginSetMessage((entry.State == EntityState.Added) ?
-                "Inserting new video properties record into database" : "Saving video properties record changes to database");
-            await dbContext.SaveChangesAsync(statusListener.CancellationToken);
-            await dispatcherOperation;
+            progress.Report((entry.State == EntityState.Added) ? "Inserting new video properties record into database" : "Saving video properties record changes to database");
+            await dbContext.SaveChangesAsync(progress.Token);
             if (isNew)
-                return await dbContext.VideoPropertiesListing.FindAsync(entity.Id, statusListener.CancellationToken);
+                return await dbContext.VideoPropertiesListing.FindAsync(entity.Id, progress.Token);
             return invocationState is VideoPropertiesListItem item ? item : null;
         }
 
@@ -249,8 +247,8 @@ namespace FsInfoCat.Desktop.LocalData.VideoPropertySets
                         //IWindowsAsyncJobFactoryService jobFactory = Hosting.GetRequiredService<IWindowsAsyncJobFactoryService>();
                         //IAsyncJob<VideoPropertiesListItem> job = jobFactory.StartNew("Saving changes", "Opening database", Entity, InvocationState, SaveChangesAsync);
                         //job.Task.ContinueWith(task => Dispatcher.Invoke(() => OnSaveTaskCompleted(task)));
-                        e.Cancel = true;
-                        break;
+                        //e.Cancel = true;
+                        //break;
                     case MessageBoxResult.No:
                         break;
                     default:

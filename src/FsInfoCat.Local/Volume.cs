@@ -1,3 +1,4 @@
+using FsInfoCat.Activities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -254,7 +255,7 @@ namespace FsInfoCat.Local
             return dbContext.Volumes.Add(result);
         }
 
-        [Obsolete("Use FsInfoCat.Activities.*, instead.")]
+        [Obsolete("Use DeleteAsync(Volume target, LocalDbContext, IActivityProgress, ILogger), instead.")]
         public static async Task<int> DeleteAsync([DisallowNull] Volume target, [DisallowNull] LocalDbContext dbContext, [DisallowNull] IStatusListener statusListener)
         {
             if (target is null)
@@ -285,6 +286,39 @@ namespace FsInfoCat.Local
                 statusListener.Logger.LogInformation("Removing Volume {{ Id = {Id}; Identifier = {Identifier} }}", target.Id, target.Identifier);
                 _ = dbContext.Volumes.Remove(target);
                 result += await dbContext.SaveChangesAsync(statusListener.CancellationToken);
+                await transaction.CommitAsync();
+                return result;
+            }
+        }
+
+        public static async Task<int> DeleteAsync([DisallowNull] Volume target, [DisallowNull] LocalDbContext dbContext, [DisallowNull] IActivityProgress progress, ILogger logger)
+        {
+            if (target is null) throw new ArgumentNullException(nameof(target));
+            if (dbContext is null) throw new ArgumentNullException(nameof(dbContext));
+            if (progress is null) throw new ArgumentNullException(nameof(progress));
+            if (logger is null) throw new ArgumentNullException(nameof(logger));
+            using IDbContextTransaction transaction = dbContext.Database.BeginTransaction();
+            using (logger.BeginScope(target.Id))
+            {
+                progress.Report($"Removing volume record: {target.Identifier}");
+                EntityEntry<Volume> entry = dbContext.Entry(target);
+                logger.LogDebug("Removing dependant records for Subdirectory {{ Id = {Id}; Identifier = {Identifier} }}", target.Id, target.Identifier);
+                Subdirectory subdirectory = await entry.GetRelatedReferenceAsync(e => e.RootDirectory, progress.Token);
+                int result = (subdirectory is null || !(await Subdirectory.DeleteAsync(subdirectory, dbContext, progress.Token, ItemDeletionOption.Force))) ? 0 : 1;
+                PersonalVolumeTag[] pvt = (await entry.GetRelatedCollectionAsync(e => e.PersonalTags, progress.Token)).ToArray();
+                if (pvt.Length > 0)
+                    dbContext.PersonalVolumeTags.RemoveRange(pvt);
+                SharedVolumeTag[] svt = (await entry.GetRelatedCollectionAsync(e => e.SharedTags, progress.Token)).ToArray();
+                if (svt.Length > 0)
+                    dbContext.SharedVolumeTags.RemoveRange(svt);
+                VolumeAccessError[] ve = (await entry.GetRelatedCollectionAsync(e => e.AccessErrors, progress.Token)).ToArray();
+                if (ve.Length > 0)
+                    dbContext.VolumeAccessErrors.RemoveRange(ve);
+                if (dbContext.ChangeTracker.HasChanges())
+                    result += await dbContext.SaveChangesAsync(progress.Token);
+                logger.LogInformation("Removing Volume {{ Id = {Id}; Identifier = {Identifier} }}", target.Id, target.Identifier);
+                _ = dbContext.Volumes.Remove(target);
+                result += await dbContext.SaveChangesAsync(progress.Token);
                 await transaction.CommitAsync();
                 return result;
             }

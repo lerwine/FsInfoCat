@@ -211,7 +211,7 @@ namespace FsInfoCat.Desktop.LocalData.MusicPropertySets
                     Genre.Add(s);
         }
 
-        private static async Task<MusicPropertiesListItem> SaveChangesAsync(MusicPropertySet entity, object invocationState, IWindowsStatusListener statusListener)
+        private static async Task<MusicPropertiesListItem> SaveChangesAsync(MusicPropertySet entity, object invocationState, IActivityProgress progress)
         {
             using IServiceScope scope = Hosting.CreateScope();
             using LocalDbContext dbContext = scope.ServiceProvider.GetRequiredService<LocalDbContext>();
@@ -232,12 +232,11 @@ namespace FsInfoCat.Desktop.LocalData.MusicPropertySets
             }
             if (entry.State == EntityState.Detached)
                 entry = dbContext.MusicPropertySets.Add(entity);
-            DispatcherOperation dispatcherOperation = statusListener.BeginSetMessage((entry.State == EntityState.Added) ?
+            progress.Report((entry.State == EntityState.Added) ?
                 "Inserting new music properties record into database" : "Saving music properties record changes to database");
-            await dbContext.SaveChangesAsync(statusListener.CancellationToken);
-            await dispatcherOperation;
+            await dbContext.SaveChangesAsync(progress.Token);
             if (isNew)
-                return await dbContext.MusicPropertiesListing.FindAsync(entity.Id, statusListener.CancellationToken);
+                return await dbContext.MusicPropertiesListing.FindAsync(entity.Id, progress.Token);
             return invocationState is MusicPropertiesListItem item ? item : null;
         }
 
@@ -277,8 +276,8 @@ namespace FsInfoCat.Desktop.LocalData.MusicPropertySets
                         //IWindowsAsyncJobFactoryService jobFactory = Hosting.GetRequiredService<IWindowsAsyncJobFactoryService>();
                         //IAsyncJob<MusicPropertiesListItem> job = jobFactory.StartNew("Saving changes", "Opening database", Entity, InvocationState, SaveChangesAsync);
                         //job.Task.ContinueWith(task => Dispatcher.Invoke(() => OnSaveTaskCompleted(task)));
-                        e.Cancel = true;
-                        break;
+                        //e.Cancel = true;
+                        //break;
                     case MessageBoxResult.No:
                         break;
                     default:

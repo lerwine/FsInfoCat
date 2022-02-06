@@ -176,7 +176,7 @@ namespace FsInfoCat.Desktop.LocalData.Volumes
             VolumeName = Entity.VolumeName;
         }
 
-        private static async Task<VolumeListItemWithFileSystem> SaveChangesAsync(Volume entity, object invocationState, IWindowsStatusListener statusListener)
+        private static async Task<VolumeListItemWithFileSystem> SaveChangesAsync(Volume entity, object invocationState, IActivityProgress progress)
         {
             using IServiceScope scope = Hosting.CreateScope();
             using LocalDbContext dbContext = scope.ServiceProvider.GetRequiredService<LocalDbContext>();
@@ -197,12 +197,10 @@ namespace FsInfoCat.Desktop.LocalData.Volumes
             }
             if (entry.State == EntityState.Detached)
                 entry = dbContext.Volumes.Add(entity);
-            DispatcherOperation dispatcherOperation = statusListener.BeginSetMessage((entry.State == EntityState.Added) ?
-                "Inserting new volume record into database" : "Saving volume record changes to database");
-            await dbContext.SaveChangesAsync(statusListener.CancellationToken);
-            await dispatcherOperation;
+                progress.Report((entry.State == EntityState.Added) ? "Inserting new volume record into database" : "Saving volume record changes to database");
+            await dbContext.SaveChangesAsync(progress.Token);
             if (isNew)
-                return await dbContext.VolumeListingWithFileSystem.FindAsync(entity.Id, statusListener.CancellationToken);
+                return await dbContext.VolumeListingWithFileSystem.FindAsync(entity.Id, progress.Token);
             return invocationState is VolumeListItemWithFileSystem item ? item : null;
         }
 
@@ -242,8 +240,8 @@ namespace FsInfoCat.Desktop.LocalData.Volumes
                         //IWindowsAsyncJobFactoryService jobFactory = Hosting.GetRequiredService<IWindowsAsyncJobFactoryService>();
                         //IAsyncJob<VolumeListItemWithFileSystem> job = jobFactory.StartNew("Saving changes", "Opening database", Entity, InvocationState, SaveChangesAsync);
                         //job.Task.ContinueWith(task => Dispatcher.Invoke(() => OnSaveTaskCompleted(task)));
-                        e.Cancel = true;
-                        break;
+                        //e.Cancel = true;
+                        //break;
                     case MessageBoxResult.No:
                         break;
                     default:

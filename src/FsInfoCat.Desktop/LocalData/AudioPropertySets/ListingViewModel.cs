@@ -38,10 +38,10 @@ namespace FsInfoCat.Desktop.LocalData.AudioPropertySets
             UpdatePageTitle(_currentOptions);
         }
 
-        protected override IAsyncJob ReloadAsync(bool? options)
+        protected override IAsyncAction<IActivityEvent> RefreshAsync(bool? options)
         {
             UpdatePageTitle(options);
-            return base.ReloadAsync(options);
+            return base.RefreshAsync(options);
         }
 
         private void UpdatePageTitle(bool? options) => PageTitle = options.HasValue ?
@@ -49,12 +49,12 @@ namespace FsInfoCat.Desktop.LocalData.AudioPropertySets
                     FsInfoCat.Properties.Resources.DisplayName_AudioPropertyGroups_NoExistingFiles) :
                     FsInfoCat.Properties.Resources.DisplayName_AudioPropertyGroups_All;
 
-        void INavigatedToNotifiable.OnNavigatedTo() => ReloadAsync(_currentOptions);
+        void INavigatedToNotifiable.OnNavigatedTo() => RefreshAsync(_currentOptions);
 
         protected override IQueryable<AudioPropertiesListItem> GetQueryableListing(bool? options, [DisallowNull] LocalDbContext dbContext,
-            [DisallowNull] IWindowsStatusListener statusListener)
+            [DisallowNull] IActivityProgress progress)
         {
-            statusListener.SetMessage("Reading audio property sets from database");
+            progress.Report("Reading audio property sets from database");
             if (options.HasValue)
             {
                 if (options.Value)
@@ -83,23 +83,23 @@ namespace FsInfoCat.Desktop.LocalData.AudioPropertySets
         protected override void OnApplyFilterOptionsCommand(object parameter)
         {
             if (_currentOptions.HasValue ? (!FilterOptions.Value.HasValue || _currentOptions.Value != FilterOptions.Value.Value) : FilterOptions.Value.HasValue)
-                _ = ReloadAsync(FilterOptions.Value);
+                _ = RefreshAsync(FilterOptions.Value);
         }
 
-        protected override void OnRefreshCommand(object parameter) => ReloadAsync(_currentOptions);
+        protected override void OnRefreshCommand(object parameter) => RefreshAsync(_currentOptions);
 
         protected override bool ConfirmItemDelete(ListItemViewModel item, object parameter) => MessageBox.Show(Application.Current.MainWindow,
             "This action cannot be undone!\n\nAre you sure you want to remove this audio property set from the database?",
             "Delete Audio Property Set", MessageBoxButton.YesNo, MessageBoxImage.Exclamation) == MessageBoxResult.Yes;
 
         protected override async Task<EntityEntry> DeleteEntityFromDbContextAsync([DisallowNull] AudioPropertiesListItem entity, [DisallowNull] LocalDbContext dbContext,
-            [DisallowNull] IWindowsStatusListener statusListener)
+            [DisallowNull] IActivityProgress progress)
         {
-            AudioPropertySet target = await dbContext.AudioPropertySets.FindAsync(new object[] { entity.Id }, statusListener.CancellationToken);
+            AudioPropertySet target = await dbContext.AudioPropertySets.FindAsync(new object[] { entity.Id }, progress.Token);
             if (target is null)
                 return null;
             EntityEntry entry = dbContext.AudioPropertySets.Remove(target);
-            await dbContext.SaveChangesAsync(statusListener.CancellationToken);
+            await dbContext.SaveChangesAsync(progress.Token);
             return entry;
         }
 
@@ -123,35 +123,35 @@ namespace FsInfoCat.Desktop.LocalData.AudioPropertySets
             FilterOptions.Value = _currentOptions;
         }
 
-        protected async override Task<PageFunction<ItemFunctionResultEventArgs>> GetDetailPageAsync([DisallowNull] ListItemViewModel item, [DisallowNull] IWindowsStatusListener statusListener)
+        protected async override Task<PageFunction<ItemFunctionResultEventArgs>> GetDetailPageAsync([DisallowNull] ListItemViewModel item, [DisallowNull] IActivityProgress progress)
         {
             if (item is null)
                 return await Dispatcher.InvokeAsync<PageFunction<ItemFunctionResultEventArgs>>(() => new DetailsPage(new(new AudioPropertySet(), null)));
             using IServiceScope serviceScope = Hosting.CreateScope();
             using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             Guid id = item.Entity.Id;
-            AudioPropertySet fs = await dbContext.AudioPropertySets.FirstOrDefaultAsync(f => f.Id == id, statusListener.CancellationToken);
+            AudioPropertySet fs = await dbContext.AudioPropertySets.FirstOrDefaultAsync(f => f.Id == id, progress.Token);
             if (fs is null)
             {
-                await Dispatcher.ShowMessageBoxAsync("Item not found in database. Click OK to refresh listing.", "Security Exception", MessageBoxButton.OK, MessageBoxImage.Error, statusListener.CancellationToken);
-                ReloadAsync(_currentOptions);
+                await Dispatcher.ShowMessageBoxAsync("Item not found in database. Click OK to refresh listing.", "Security Exception", MessageBoxButton.OK, MessageBoxImage.Error, progress.Token);
+                RefreshAsync(_currentOptions);
                 return null;
             }
             return await Dispatcher.InvokeAsync<PageFunction<ItemFunctionResultEventArgs>>(() => new DetailsPage(new(fs, item.Entity)));
         }
 
-        protected override async Task<PageFunction<ItemFunctionResultEventArgs>> GetEditPageAsync(ListItemViewModel item, [DisallowNull] IWindowsStatusListener statusListener)
+        protected override async Task<PageFunction<ItemFunctionResultEventArgs>> GetEditPageAsync(ListItemViewModel item, [DisallowNull] IActivityProgress progress)
         {
             if (item is null)
                 return await Dispatcher.InvokeAsync<PageFunction<ItemFunctionResultEventArgs>>(() => new EditPage(new(new AudioPropertySet(), null)));
             using IServiceScope serviceScope = Hosting.CreateScope();
             using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             Guid id = item.Entity.Id;
-            AudioPropertySet fs = await dbContext.AudioPropertySets.FirstOrDefaultAsync(f => f.Id == id, statusListener.CancellationToken);
+            AudioPropertySet fs = await dbContext.AudioPropertySets.FirstOrDefaultAsync(f => f.Id == id, progress.Token);
             if (fs is null)
             {
-                await Dispatcher.ShowMessageBoxAsync("Item not found in database. Click OK to refresh listing.", "Security Exception", MessageBoxButton.OK, MessageBoxImage.Error, statusListener.CancellationToken);
-                ReloadAsync(_currentOptions);
+                await Dispatcher.ShowMessageBoxAsync("Item not found in database. Click OK to refresh listing.", "Security Exception", MessageBoxButton.OK, MessageBoxImage.Error, progress.Token);
+                RefreshAsync(_currentOptions);
                 return null;
             }
             return await Dispatcher.InvokeAsync<PageFunction<ItemFunctionResultEventArgs>>(() => new EditPage(new(fs, item.Entity)));

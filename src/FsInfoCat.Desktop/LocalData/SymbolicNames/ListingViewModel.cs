@@ -37,10 +37,10 @@ namespace FsInfoCat.Desktop.LocalData.SymbolicNames
             UpdatePageTitle(_currentStateFilterOption);
         }
 
-        protected override IAsyncJob ReloadAsync(bool? options)
+        protected override IAsyncAction<IActivityEvent> RefreshAsync(bool? options)
         {
             UpdatePageTitle(options);
-            return base.ReloadAsync(options);
+            return base.RefreshAsync(options);
         }
 
         private void UpdatePageTitle(bool? options) => PageTitle = options.HasValue ?
@@ -48,12 +48,12 @@ namespace FsInfoCat.Desktop.LocalData.SymbolicNames
                     FsInfoCat.Properties.Resources.DisplayName_SymbolicNames_InactiveOnly) :
                     FsInfoCat.Properties.Resources.DisplayName_SymbolicNames_All;
 
-        void INavigatedToNotifiable.OnNavigatedTo() => ReloadAsync(_currentStateFilterOption);
+        void INavigatedToNotifiable.OnNavigatedTo() => RefreshAsync(_currentStateFilterOption);
 
         protected override IQueryable<SymbolicNameListItem> GetQueryableListing(bool? options, [DisallowNull] LocalDbContext dbContext,
-            [DisallowNull] IWindowsStatusListener statusListener)
+            [DisallowNull] IActivityProgress progress)
         {
-            statusListener.SetMessage("Reading symbolic nams from database");
+            progress.Report("Reading symbolic nams from database");
             return options.HasValue ? (options.Value ? dbContext.SymbolicNameListing.Where(f => !f.IsInactive) : dbContext.SymbolicNameListing.Where(f => f.IsInactive)) :
                 dbContext.SymbolicNameListing;
         }
@@ -63,7 +63,7 @@ namespace FsInfoCat.Desktop.LocalData.SymbolicNames
         protected override void OnApplyFilterOptionsCommand(object parameter)
         {
             if (_currentStateFilterOption.HasValue ? (!StateFilterOption.Value.HasValue || _currentStateFilterOption.Value != StateFilterOption.Value.Value) : StateFilterOption.Value.HasValue)
-                _ = ReloadAsync(StateFilterOption.Value);
+                _ = RefreshAsync(StateFilterOption.Value);
         }
 
         protected override void OnCancelFilterOptionsCommand(object parameter)
@@ -73,20 +73,20 @@ namespace FsInfoCat.Desktop.LocalData.SymbolicNames
             base.OnCancelFilterOptionsCommand(parameter);
         }
 
-        protected override void OnRefreshCommand(object parameter) => ReloadAsync(_currentStateFilterOption);
+        protected override void OnRefreshCommand(object parameter) => RefreshAsync(_currentStateFilterOption);
 
         protected override bool ConfirmItemDelete(ListItemViewModel item, object parameter) => MessageBox.Show(Application.Current.MainWindow,
             "This action cannot be undone!\n\nAre you sure you want to remove this symbolic name from the database?",
             "Delete Symbolic Name", MessageBoxButton.YesNo, MessageBoxImage.Exclamation) == MessageBoxResult.Yes;
 
         protected override async Task<EntityEntry> DeleteEntityFromDbContextAsync([DisallowNull] SymbolicNameListItem entity, [DisallowNull] LocalDbContext dbContext,
-            [DisallowNull] IWindowsStatusListener statusListener)
+            [DisallowNull] IActivityProgress progress)
         {
-            SymbolicName target = await dbContext.SymbolicNames.FindAsync(new object[] { entity.Id }, statusListener.CancellationToken);
+            SymbolicName target = await dbContext.SymbolicNames.FindAsync(new object[] { entity.Id }, progress.Token);
             if (target is null)
                 return null;
             EntityEntry<SymbolicName> entityEntry = dbContext.SymbolicNames.Remove(target);
-            await dbContext.SaveChangesAsync(statusListener.CancellationToken);
+            await dbContext.SaveChangesAsync(progress.Token);
             return entityEntry;
         }
 
@@ -112,20 +112,20 @@ namespace FsInfoCat.Desktop.LocalData.SymbolicNames
 
         protected override bool EntityMatchesCurrentFilter([DisallowNull] SymbolicNameListItem entity) => !_currentStateFilterOption.HasValue || _currentStateFilterOption.Value != entity.IsInactive;
 
-        protected override Task<PageFunction<ItemFunctionResultEventArgs>> GetDetailPageAsync([DisallowNull] ListItemViewModel item, [DisallowNull] IWindowsStatusListener statusListener) => GetEditPageAsync(item, statusListener);
+        protected override Task<PageFunction<ItemFunctionResultEventArgs>> GetDetailPageAsync([DisallowNull] ListItemViewModel item, [DisallowNull] IActivityProgress progress) => GetEditPageAsync(item, progress);
 
-        protected async override Task<PageFunction<ItemFunctionResultEventArgs>> GetEditPageAsync(ListItemViewModel item, [DisallowNull] IWindowsStatusListener statusListener)
+        protected async override Task<PageFunction<ItemFunctionResultEventArgs>> GetEditPageAsync(ListItemViewModel item, [DisallowNull] IActivityProgress progress)
         {
             if (item is null)
                 return await Dispatcher.InvokeAsync<PageFunction<ItemFunctionResultEventArgs>>(() => new EditPage(new(new(), null)));
             using IServiceScope serviceScope = Hosting.CreateScope();
             using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             Guid id = item.Entity.Id;
-            SymbolicName fs = await dbContext.SymbolicNames.FirstOrDefaultAsync(f => f.Id == id, statusListener.CancellationToken);
+            SymbolicName fs = await dbContext.SymbolicNames.FirstOrDefaultAsync(f => f.Id == id, progress.Token);
             if (fs is null)
             {
-                await Dispatcher.ShowMessageBoxAsync("Item not found in database. Click OK to refresh listing.", "Security Exception", MessageBoxButton.OK, MessageBoxImage.Error, statusListener.CancellationToken);
-                ReloadAsync(_currentStateFilterOption);
+                await Dispatcher.ShowMessageBoxAsync("Item not found in database. Click OK to refresh listing.", "Security Exception", MessageBoxButton.OK, MessageBoxImage.Error, progress.Token);
+                RefreshAsync(_currentStateFilterOption);
                 return null;
             }
             return await Dispatcher.InvokeAsync<PageFunction<ItemFunctionResultEventArgs>>(() => new EditPage(new(fs, item.Entity)));
