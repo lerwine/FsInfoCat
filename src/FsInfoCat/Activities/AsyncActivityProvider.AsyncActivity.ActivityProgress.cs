@@ -81,7 +81,7 @@ namespace FsInfoCat.Activities
                 /// </summary>
                 /// <param name="activity">The associated activity object.</param>
                 /// <exception cref="ArgumentNullException"><paramref name="activity"/> is <see langword="null"/>.</exception>
-                internal ActivityProgress([DisallowNull] TActivity activity) : base((activity ?? throw new ArgumentNullException(nameof(activity))).ParentActivityId) => (_activity, Token) = (activity, _activity.TokenSource.Token);
+                internal ActivityProgress([DisallowNull] TActivity activity) : base((activity ?? throw new ArgumentNullException(nameof(activity))).ParentActivityId) => (_activity, Token) = (activity, activity.TokenSource.Token);
 
                 /// <summary>
                 /// Creates an operational event object.

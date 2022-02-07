@@ -181,7 +181,11 @@ namespace FsInfoCat.Activities
             /// <param name="node">The <see cref="LinkedListNode{IAsyncActivity}"/> that was returned by <see cref="OnStarting(IAsyncActivity)"/> which references the <see cref="IAsyncActivity"/> that ran to completion, faulted, or was canceled.</param>
             /// <remarks>This obtains an exclusive <see cref="Monitor"/> lock on <see cref="AsyncActivityProvider.SyncRoot"/> and removes the specified <paramref name="node"/> from the underlying list.</remarks>
             /// <exception cref="ArgumentNullException"><paramref name="node"/> is <see langword="null"/>.</exception>
-            protected void NotifyCompleted([DisallowNull] LinkedListNode<IAsyncActivity> node) => _owner.OnCompleted(node);
+            protected void NotifyCompleted([DisallowNull] LinkedListNode<IAsyncActivity> node)
+            {
+                try { _owner.OnCompleted(node); }
+                finally { EventSource.Dispose(); }
+            }
 
             /// <summary>
             /// Notifies this activity source that an observer is to receive nested activity start notifications, providing a list of existing nested activities.

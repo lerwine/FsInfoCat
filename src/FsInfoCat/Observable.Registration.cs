@@ -22,7 +22,7 @@ namespace FsInfoCat
                 lock ((target ?? throw new ArgumentNullException(nameof(target)))._syncRoot)
                 {
                     if (target._isDisposed)
-                        throw new ObjectDisposedException(target.GetType().FullName);
+                        return false;
 
                     Registration r = target._first;
                     while (r is not null)
@@ -72,7 +72,7 @@ namespace FsInfoCat
                 lock (target._syncRoot)
                 {
                     if (target._isDisposed)
-                        throw new InvalidOperationException();
+                        return observers;
                     Registration r = target._first;
                     while (r is not null)
                     {
@@ -134,11 +134,10 @@ namespace FsInfoCat
             {
                 Observable<TNotice> target = _target;
                 _target = null;
-                if (target is null || !disposing)
+                if (target is null || target._isDisposed ||!disposing)
                     return;
                 lock (target._syncRoot)
                 {
-                    target._isDisposed = true;
                     if (_next is null)
                     {
                         if ((target._last = _previous) is null)

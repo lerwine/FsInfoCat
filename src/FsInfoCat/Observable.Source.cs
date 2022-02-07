@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat
@@ -7,8 +7,6 @@ namespace FsInfoCat
     {
         public sealed class Source : IDisposable
         {
-            private bool disposedValue;
-
             public object SyncRoot => Observable._syncRoot;
 
             public Observable<TNotice> Observable { get; } = new();
@@ -28,14 +26,16 @@ namespace FsInfoCat
 
             private void Dispose(bool disposing)
             {
-                if (!disposedValue)
+                if (!Observable._isDisposed)
                 {
                     if (disposing)
+                    {
+                        Observable._isDisposed = true;
                         Registration.Dispose(Observable);
+                    }
 
                     // TODO: free unmanaged resources (unmanaged objects) and override finalizer
                     // TODO: set large fields to null
-                    disposedValue = true;
                 }
             }
 
