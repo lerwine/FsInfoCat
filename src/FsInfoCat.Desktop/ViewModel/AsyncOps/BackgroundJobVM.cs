@@ -196,32 +196,42 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
             }));
         }
 
-        private static BackgroundJobVM AppendItem<TEvent, TActivity>(ObservableCollection<BackgroundJobVM> backingCollection, TActivity asyncActivity, [DisallowNull] Dispatcher dispatcher, Func<BackgroundJobVM, IObserver<TEvent>> createObserver)
+        private static BackgroundJobVM AppendItem<TEvent, TActivity>([DisallowNull] ObservableCollection<BackgroundJobVM> backingCollection, [DisallowNull] TActivity asyncActivity, [DisallowNull] Dispatcher dispatcher,
+            [DisallowNull] Func<BackgroundJobVM, IObserver<TEvent>> createObserver)
             where TActivity : IAsyncActivity, IObservable<TEvent>
         {
             if (backingCollection is null) throw new ArgumentNullException(nameof(backingCollection));
             if (asyncActivity is null) throw new ArgumentNullException(nameof(asyncActivity));
-            BackgroundJobVM item = dispatcher.Invoke(() =>
-            {
-                BackgroundJobVM vm = new BackgroundJobVM(asyncActivity);
-                backingCollection.Add(vm);
-                return vm;
-            });
+            if (dispatcher is null) throw new ArgumentNullException(nameof(dispatcher));
+            if (createObserver is null) throw new ArgumentNullException(nameof(createObserver));
+            ChildOperationStartedObserver observer = ChildOperationStartedObserver.Create(backingCollection, asyncActivity, dispatcher, out BackgroundJobVM item);
             item._currentActivitySubscription = asyncActivity.Subscribe(createObserver(item));
-            item._activityStartedSubscription = asyncActivity.SubscribeChildActivityStart(new ChildOperationStartedObserver(item), activeOps =>
+            item._activityStartedSubscription = asyncActivity.SubscribeChildActivityStart(observer, activeOps =>
             {
                 foreach (IAsyncActivity activity in activeOps)
-                    AppendItem(item._logger, activity, dispatcher, item._backingItems);
+                    OnActivityStarted(item._logger, activity, dispatcher, item._backingItems);
             });
             return item;
         }
 
-        internal static void AppendItem([DisallowNull] ILogger logger, [DisallowNull] IAsyncActivity activity, [DisallowNull] Dispatcher dispatcher, [DisallowNull] ObservableCollection<BackgroundJobVM> backingCollection)
+        internal static void OnActivityStarted([DisallowNull] ILogger logger, [DisallowNull] IAsyncActivity activity, [DisallowNull] Dispatcher dispatcher, [DisallowNull] ObservableCollection<BackgroundJobVM> backingCollection)
         {
+            if (logger is null) throw new ArgumentNullException(nameof(logger));
             if (activity is null) throw new ArgumentNullException(nameof(activity));
+            logger.LogDebug(@"BackgroundJobVM.OnActivityStarted: Type={Type}; ActivityId={ActivityId}; ParentActivityId={ParentActivityId}; StatusValue={StatusValue}; PercentComplete={PercentComplete}
+ShortDescription={ShortDescription}
+StatusMessage={StatusMessage}
+CurrentOperation={CurrentOperation}", activity.GetType(), activity.ActivityId, activity.ParentActivityId, activity.StatusValue, activity.PercentComplete, activity.ShortDescription, activity.StatusMessage, activity.CurrentOperation);
             if (activity is ITimedAsyncAction<ITimedActivityEvent> timedAsyncAction)
             {
-                BackgroundJobVM item = AppendItem(backingCollection, timedAsyncAction, dispatcher, vm => new TimedItemEventObserver(vm, () => dispatcher.InvokeAsync(() => backingCollection.Remove(vm), DispatcherPriority.Background)));
+                BackgroundJobVM item = AppendItem(backingCollection, timedAsyncAction, dispatcher, vm => new TimedItemEventObserver(vm, () => dispatcher.InvokeAsync(() =>
+                {
+                    logger.LogDebug(@"BackgroundJobVM activity completed: Type={Type}; ActivityId={ActivityId}; ParentActivityId={ParentActivityId}; StatusValue={StatusValue}; PercentComplete={PercentComplete}
+ShortDescription={ShortDescription}
+StatusMessage={StatusMessage}
+CurrentOperation={CurrentOperation}", activity.GetType(), activity.ActivityId, activity.ParentActivityId, activity.StatusValue, activity.PercentComplete, activity.ShortDescription, activity.StatusMessage, activity.CurrentOperation);
+                    backingCollection.Remove(vm);
+                }, DispatcherPriority.Background)));
                 item.Dispatcher.InvokeAsync(() =>
                 {
                     item.Started = timedAsyncAction.Started;
@@ -229,7 +239,14 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
                 }, DispatcherPriority.Background);
             }
             else if (activity is IAsyncAction<IActivityEvent> asyncAction)
-                _ = AppendItem(backingCollection, asyncAction, dispatcher, vm => new ItemEventObserver(vm, () => dispatcher.InvokeAsync(() => backingCollection.Remove(vm), DispatcherPriority.Background)));
+                _ = AppendItem(backingCollection, asyncAction, dispatcher, vm => new ItemEventObserver(vm, () => dispatcher.InvokeAsync(() =>
+                {
+                    logger.LogDebug(@"BackgroundJobVM activity completed: Type={Type}; ActivityId={ActivityId}; ParentActivityId={ParentActivityId}; StatusValue={StatusValue}; PercentComplete={PercentComplete}
+ShortDescription={ShortDescription}
+StatusMessage={StatusMessage}
+CurrentOperation={CurrentOperation}", activity.GetType(), activity.ActivityId, activity.ParentActivityId, activity.StatusValue, activity.PercentComplete, activity.ShortDescription, activity.StatusMessage, activity.CurrentOperation);
+                    backingCollection.Remove(vm);
+                }, DispatcherPriority.Background)));
             else
                 logger.LogError("{Type} is not a valid activity type.", activity.GetType().AssemblyQualifiedName);
         }

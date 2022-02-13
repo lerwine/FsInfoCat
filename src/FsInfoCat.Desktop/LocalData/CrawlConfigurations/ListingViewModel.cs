@@ -346,15 +346,13 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
             return (crawlConfiguration, selectedRoot, itemEntity);
         }
 
-        public static Task<PageFunction<ItemFunctionResultEventArgs>> GetNewItemEditPageAsync([DisallowNull] Dispatcher dispatcher)
+        public static Task<PageFunction<ItemFunctionResultEventArgs>> GetNewItemEditPageAsync([DisallowNull] Dispatcher dispatcher, [DisallowNull] ILogger logger)
         {
-            // TODO: Implement ListingViewModel.GetNewItemEditPageAsync
-            throw new NotImplementedException();
-            //IWindowsAsyncJobFactoryService jobFactory = Hosting.GetRequiredService<IWindowsAsyncJobFactoryService>();
-            //return jobFactory.StartNew("Loading data", "Opening database", dispatcher, GetNewItemEditPageAsync).Task;
+            IAsyncActivityService backgroundService = Hosting.GetAsyncActivityService();
+            return backgroundService.InvokeAsync("Loading data", "Opening database", progress => GetNewItemEditPageAsync(dispatcher, progress, logger)).Task;
         }
 
-        private async static Task<PageFunction<ItemFunctionResultEventArgs>> GetNewItemEditPageAsync([DisallowNull] Dispatcher dispatcher, [DisallowNull] IActivityProgress progress, ILogger logger)
+        private async static Task<PageFunction<ItemFunctionResultEventArgs>> GetNewItemEditPageAsync([DisallowNull] Dispatcher dispatcher, [DisallowNull] IActivityProgress progress, [DisallowNull] ILogger logger)
         {
             (CrawlConfiguration CrawlConfiguration, SubdirectoryListItemWithAncestorNames SelectedRoot, CrawlConfigListItem ItemEntity)? args = await GetNewItemParamsAsync(dispatcher, progress, logger);
             if (args.HasValue)

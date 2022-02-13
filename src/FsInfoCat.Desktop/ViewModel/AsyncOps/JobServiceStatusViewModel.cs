@@ -12,7 +12,7 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
     public partial class JobServiceStatusViewModel : DependencyObject
     {
         private readonly ILogger<JobServiceStatusViewModel> _logger;
-        private readonly EventObserver _eventObserver;
+        private readonly ActivityStartObserver _activityStartObserver;
         private readonly ActiveStateObserver _activeStateObserver;
 
         #region Items Property Members
@@ -58,7 +58,7 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
             _logger.LogDebug($"{nameof(JobServiceStatusViewModel)} constructor invoked");
             SetValue(ItemsPropertyKey, new ReadOnlyObservableCollection<BackgroundJobVM>(_backingItems));
             IAsyncActivityService backgroundService = Hosting.GetAsyncActivityService();
-            _eventObserver = new(this, backgroundService);
+            _activityStartObserver = new(this, backgroundService);
             _activeStateObserver = new(this, backgroundService);
             _logger.LogDebug($"{nameof(JobServiceStatusViewModel)} Service instantiated");
         }

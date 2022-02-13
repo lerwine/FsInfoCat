@@ -1,4 +1,5 @@
 using FsInfoCat.Activities;
+using Microsoft.Extensions.Logging;
 using System;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
@@ -73,6 +74,19 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
 
             void IObserver<TEvent>.OnNext(TEvent value)
             {
+                if (value is IOperationEvent operationEvent)
+                    Target._logger.LogDebug(@"BackgroundJobVM.ItemEventObserver observed event: Type={Type}; ActivityId={ActivityId}; ParentActivityId={ParentActivityId}; MessageLevel={MessageLevel}
+ShortDescription={ShortDescription}
+StatusMessage={StatusMessage}
+CurrentOperation={CurrentOperation}
+PercentComplete={PercentComplete}; StatusValue={StatusValue}
+Exception={Exception}", operationEvent.GetType().FullName, operationEvent.ActivityId, operationEvent.ParentActivityId, operationEvent.MessageLevel, operationEvent.ShortDescription, operationEvent.StatusMessage, operationEvent.CurrentOperation,
+                        operationEvent.PercentComplete, operationEvent.StatusValue, operationEvent.Exception);
+                else
+                    Target._logger.LogDebug(@"BackgroundJobVM.ItemEventObserver observed event: Type={Type}; ActivityId={ActivityId}; ParentActivityId={ParentActivityId}; MessageLevel={MessageLevel}
+ShortDescription={ShortDescription}
+StatusMessage={StatusMessage}
+Exception={Exception}", value.GetType().FullName, value.ActivityId, value.ParentActivityId, value.MessageLevel, value.ShortDescription, value.StatusMessage, value.Exception);
                 Monitor.Enter(_syncRoot);
                 try
                 {
@@ -85,12 +99,14 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
 
             void IObserver<TEvent>.OnCompleted()
             {
+                Target._logger.LogDebug("BackgroundJobVM.ItemEventObserver observed completion");
                 _onCompleted?.Invoke();
                 Target._currentActivitySubscription?.Dispose();
             }
 
             void IObserver<TEvent>.OnError(Exception error)
             {
+                Target._logger.LogDebug("BackgroundJobVM.ItemEventObserver observed error {error}", error);
                 if (error is AggregateException aggregateException && aggregateException.InnerExceptions.Count == 1)
                     error = aggregateException.InnerExceptions[0];
                 if (error is ActivityException asyncOpException)

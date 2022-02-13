@@ -345,7 +345,7 @@ namespace FsInfoCat.Activities
         /// </summary>
         /// <param name="error">The error that caused the activity to terminate before completion.</param>
         /// <returns>An <see cref="ITimedActivityResultEvent{TState, TResult}" /> describing an activity that that has terminated before completion due to an unhandled exception.</returns>
-        /// <exception cref="System.ArgumentNullException">error</exception>
+        /// <exception cref="ArgumentNullException">error</exception>
         /// <remarks>This sets <see cref="IActivityStatusInfo.StatusValue" /> to <see cref="ActivityStatus.Faulted" />, <see cref="IActivityEvent.Exception" /> to <paramref name="error" />,
         /// and <see cref="IActivityEvent.MessageLevel" /> to <see cref="StatusMessageLevel.Error" />.</remarks>
         protected override ITimedActivityResultEvent<TState, TResult> CreateFaultedEvent(Exception error) => new TimedResultOperationTerminatedEvent<TState, TResult>

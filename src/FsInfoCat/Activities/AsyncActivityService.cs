@@ -65,22 +65,31 @@ namespace FsInfoCat.Activities
             try { stoppingToken.WaitHandle.WaitOne(); }
             finally
             {
+                _logger.LogDebug("Stopping AsyncActivityService");
                 lock (_syncRoot)
                 {
                     IAsyncActivity[] actions = _provider.ToArray();
+                    _logger.LogDebug("AsyncActivityService waiting for {TaskCount} tasks", actions.Length);
                     task = Task.WhenAll(actions.Select(o => o.Task).Where(t => !t.IsCompleted).ToArray()).ContinueWith(t =>
                     {
+                        _logger.LogDebug("Disposing AsyncActivityService observable sources");
                         try { _provider.ActivityStartedSource.Dispose(); }
                         finally { _provider.ActiveStatusSource.Dispose(); }
                     });
                     foreach (IAsyncActivity op in actions)
                     {
-                        if (!op.TokenSource.IsCancellationRequested)
+                        if (op.TokenSource.IsCancellationRequested)
+                            _logger.LogDebug("AsyncActivityService activity {ActivityId} ({ShortDescription}) already canceled", op.ActivityId, op.ShortDescription);
+                        else
+                        {
+                            _logger.LogDebug("AsyncActivityService cancelling Activity {ActivityId} ({ShortDescription})", op.ActivityId, op.ShortDescription);
                             op.TokenSource.Cancel(true);
+                        }
                     }
                 }
             }
             task.Wait();
+            _logger.LogDebug("All AsyncActivityService tasks complete");
         }, stoppingToken);
 
         /// <summary>

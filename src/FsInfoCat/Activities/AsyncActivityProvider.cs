@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -12,11 +13,13 @@ namespace FsInfoCat.Activities
     /// Base class for objects that can start asynchronous activities.
     /// </summary>
     /// <seealso cref="IAsyncActivityProvider" />
-    /// <remarks>Implementing classes should call <see cref="AsyncActivityProvider.OnStarting(IAsyncActivity)"/> before starting an asynchonous activity and <see cref="AsyncActivityProvider.OnCompleted(LinkedListNode{IAsyncActivity})"/> after
+    /// <remarks>Implementing classes should call <see cref="OnStarting(IAsyncActivity)"/> before starting an asynchonous activity and <see cref="OnCompleted(LinkedListNode{IAsyncActivity})"/> after
     /// the activity has completed, including canceled and faulted activities.</remarks>
     public abstract partial class AsyncActivityProvider : IAsyncActivityProvider
     {
         private readonly LinkedList<IAsyncActivity> _activities = new();
+
+        protected ILogger Logger { get; }
 
         /// <summary>
         /// Gets the thread synchronization lock object.
@@ -57,17 +60,23 @@ namespace FsInfoCat.Activities
         /// <summary>
         /// Initializes a new instance of the <see cref="AsyncActivityProvider"/> class.
         /// </summary>
+        /// <param name="logger">The logger for the progress object.</param>
         /// <param name="parentActivityId">The parent activity identifier or <see langword="null"/> if there is no parent activity.</param>
-        protected AsyncActivityProvider(Guid? parentActivityId) => ParentActivityId = parentActivityId;
+        protected AsyncActivityProvider([DisallowNull] ILogger logger, Guid? parentActivityId) => (Logger, ParentActivityId) = (logger, parentActivityId);
 
         /// <summary>
-        /// Notifies this provider that an <see cref="IAsyncActivity"/> is starting.
+        /// Adds an <see cref="IAsyncActivity"/> that is about to start.
         /// </summary>
         /// <param name="asyncActivity">The asynchronous activity that is starting.</param>
         /// <returns>The <see cref="LinkedListNode{IAsyncActivity}"/> that was appended.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="asyncActivity"/> is <see langword="null"/>.</exception>
         /// <remarks>This appends the activity to the underlying list and should only be called when the current thread has an exclusive <see cref="Monitor"/> lock on <see cref="SyncRoot"/>.</remarks>
-        protected virtual LinkedListNode<IAsyncActivity> OnStarting([DisallowNull] IAsyncActivity asyncActivity) => _activities.AddLast(asyncActivity ?? throw new ArgumentNullException(nameof(asyncActivity)));
+        protected virtual LinkedListNode<IAsyncActivity> OnStarting([DisallowNull] IAsyncActivity asyncActivity)
+        {
+            if (asyncActivity is null) throw new ArgumentNullException(nameof(asyncActivity));
+            Logger.LogDebug("Adding activity {ActivityId} to backing list; ParentActivityId={ParentActivityId}; ShortDescription={ShortDescription}", asyncActivity.ActivityId, asyncActivity.ParentActivityId, asyncActivity.ShortDescription);
+            return _activities.AddLast(asyncActivity);
+        }
 
         /// <summary>
         /// Notifies this provider than an <see cref="IAsyncActivity"/> has been completed.
@@ -78,6 +87,7 @@ namespace FsInfoCat.Activities
         protected virtual void OnCompleted([DisallowNull] LinkedListNode<IAsyncActivity> node)
         {
             if (node is null) throw new ArgumentNullException(nameof(node));
+            Logger.LogDebug("Removing activity {ActivityId} from backing list; ShortDescription={ShortDescription}", node.Value?.ActivityId, node.Value?.ShortDescription);
             Monitor.Enter(SyncRoot);
             try { _activities.Remove(node); }
             finally { Monitor.Exit(SyncRoot); }
@@ -103,7 +113,15 @@ namespace FsInfoCat.Activities
         /// or contains only <see cref="string.IsNullOrWhiteSpace(string)">white space characters</see>.</exception>
         /// <exception cref="InvalidOperationException"><paramref name="asyncMethodDelegate"/> returned a <see langword="null"/> value.</exception>
         public IAsyncAction<IActivityEvent> InvokeAsync([DisallowNull] string activityDescription, [DisallowNull] string initialStatusMessage,
-            [DisallowNull] Func<IActivityProgress, Task> asyncMethodDelegate) => AsyncAction.Start(this, activityDescription, initialStatusMessage, asyncMethodDelegate);
+            [DisallowNull] Func<IActivityProgress, Task> asyncMethodDelegate)
+        {
+            Logger.LogDebug(@"Invoking async action {activityDescription}
+initialStatusMessage={initialStatusMessage}
+ParentActivityId={ParentActivityId}", activityDescription, initialStatusMessage, ParentActivityId);
+
+            //.ContinueWith(task => activity.SetCompleted(task, node));
+            return AsyncAction.Start(this, activityDescription, initialStatusMessage, asyncMethodDelegate);
+        }
 
         /// <summary>
         /// Invokes a method that asynchronously produces a result value.
@@ -118,7 +136,13 @@ namespace FsInfoCat.Activities
         /// or contains only <see cref="string.IsNullOrWhiteSpace(string)">white space characters</see>.</exception>
         /// <exception cref="InvalidOperationException"><paramref name="asyncMethodDelegate"/> returned a <see langword="null"/> value.</exception>
         public IAsyncFunc<IActivityEvent, TResult> InvokeAsync<TResult>([DisallowNull] string activityDescription, [DisallowNull] string initialStatusMessage,
-            [DisallowNull] Func<IActivityProgress, Task<TResult>> asyncMethodDelegate) => AsyncFunc<TResult>.Start(this, activityDescription, initialStatusMessage, asyncMethodDelegate);
+            [DisallowNull] Func<IActivityProgress, Task<TResult>> asyncMethodDelegate)
+        {
+            Logger.LogDebug(@"Invoking async function {activityDescription}
+initialStatusMessage={initialStatusMessage}
+ParentActivityId={ParentActivityId}", activityDescription, initialStatusMessage, ParentActivityId);
+            return AsyncFunc<TResult>.Start(this, activityDescription, initialStatusMessage, asyncMethodDelegate);
+        }
 
         /// <summary>
         /// Invokes an asynchronous method, associating it with a user-specified value.
@@ -134,7 +158,14 @@ namespace FsInfoCat.Activities
         /// or contains only <see cref="string.IsNullOrWhiteSpace(string)">white space characters</see>.</exception>
         /// <exception cref="InvalidOperationException"><paramref name="asyncMethodDelegate"/> returned a <see langword="null"/> value.</exception>
         public IAsyncAction<IActivityEvent<TState>, TState> InvokeAsync<TState>([DisallowNull] string activityDescription, [DisallowNull] string initialStatusMessage, TState state,
-            [DisallowNull] Func<IActivityProgress<TState>, Task> asyncMethodDelegate) => AsyncAction<TState>.Start(state, this, activityDescription, initialStatusMessage, asyncMethodDelegate);
+            [DisallowNull] Func<IActivityProgress<TState>, Task> asyncMethodDelegate)
+        {
+            Logger.LogDebug(@"Invoking async action {activityDescription}
+initialStatusMessage={initialStatusMessage}
+ParentActivityId={ParentActivityId}
+state={state}", activityDescription, initialStatusMessage, ParentActivityId, state);
+            return AsyncAction<TState>.Start(state, this, activityDescription, initialStatusMessage, asyncMethodDelegate);
+        }
 
         /// <summary>
         /// Invokes a method that asynchronously produces a result value, associating the function with a user-specified value.
@@ -152,7 +183,13 @@ namespace FsInfoCat.Activities
         /// <exception cref="InvalidOperationException"><paramref name="asyncMethodDelegate"/> returned a <see langword="null"/> value.</exception>
         public IAsyncFunc<IActivityEvent<TState>, TState, TResult> InvokeAsync<TState, TResult>([DisallowNull] string activityDescription, [DisallowNull] string initialStatusMessage, TState state,
             [DisallowNull] Func<IActivityProgress<TState>, Task<TResult>> asyncMethodDelegate)
-            => AsyncFunc<TState, TResult>.Start(state, this, activityDescription, initialStatusMessage, asyncMethodDelegate);
+        {
+            Logger.LogDebug(@"Invoking async function {activityDescription}
+initialStatusMessage={initialStatusMessage}
+ParentActivityId={ParentActivityId}
+state={state}", activityDescription, initialStatusMessage, ParentActivityId, state);
+            return AsyncFunc<TState, TResult>.Start(state, this, activityDescription, initialStatusMessage, asyncMethodDelegate);
+        }
 
         /// <summary>
         /// Invokes an asynchronous method, tracking the execution start and duration.
@@ -166,7 +203,13 @@ namespace FsInfoCat.Activities
         /// or contains only <see cref="string.IsNullOrWhiteSpace(string)">white space characters</see>.</exception>
         /// <exception cref="InvalidOperationException"><paramref name="asyncMethodDelegate"/> returned a <see langword="null"/> value.</exception>
         public ITimedAsyncAction<ITimedActivityEvent> InvokeTimedAsync([DisallowNull] string activityDescription, [DisallowNull] string initialStatusMessage,
-            [DisallowNull] Func<IActivityProgress, Task> asyncMethodDelegate) => TimedAsyncAction.Start(this, activityDescription, initialStatusMessage, asyncMethodDelegate);
+            [DisallowNull] Func<IActivityProgress, Task> asyncMethodDelegate)
+        {
+            Logger.LogDebug(@"Invoking timed async action {activityDescription}
+initialStatusMessage={initialStatusMessage}
+ParentActivityId={ParentActivityId}", activityDescription, initialStatusMessage, ParentActivityId);
+            return TimedAsyncAction.Start(this, activityDescription, initialStatusMessage, asyncMethodDelegate);
+        }
 
         /// <summary>
         /// Invokes a method that asynchronously produces a result value, tracking the execution start and duration.
@@ -181,7 +224,13 @@ namespace FsInfoCat.Activities
         /// or contains only <see cref="string.IsNullOrWhiteSpace(string)">white space characters</see>.</exception>
         /// <exception cref="InvalidOperationException"><paramref name="asyncMethodDelegate"/> returned a <see langword="null"/> value.</exception>
         public ITimedAsyncFunc<ITimedActivityEvent, TResult> InvokeTimedAsync<TResult>([DisallowNull] string activityDescription, [DisallowNull] string initialStatusMessage,
-            [DisallowNull] Func<IActivityProgress, Task<TResult>> asyncMethodDelegate) => TimedAsyncFunc<TResult>.Start(this, activityDescription, initialStatusMessage, asyncMethodDelegate);
+            [DisallowNull] Func<IActivityProgress, Task<TResult>> asyncMethodDelegate)
+        {
+            Logger.LogDebug(@"Invoking timed async function {activityDescription}
+initialStatusMessage={initialStatusMessage}
+ParentActivityId={ParentActivityId}", activityDescription, initialStatusMessage, ParentActivityId);
+            return TimedAsyncFunc<TResult>.Start(this, activityDescription, initialStatusMessage, asyncMethodDelegate);
+        }
 
         /// <summary>
         /// Invokes an asynchronous method, associating it with a user-specified value and tracking the execution start and duration.
@@ -198,7 +247,13 @@ namespace FsInfoCat.Activities
         /// <exception cref="InvalidOperationException"><paramref name="asyncMethodDelegate"/> returned a <see langword="null"/> value.</exception>
         public ITimedAsyncAction<ITimedActivityEvent<TState>, TState> InvokeTimedAsync<TState>([DisallowNull] string activityDescription, [DisallowNull] string initialStatusMessage, TState state,
             [DisallowNull] Func<IActivityProgress<TState>, Task> asyncMethodDelegate)
-            => Activities.TimedAsyncAction<TState>.Start(state, this, activityDescription, initialStatusMessage, asyncMethodDelegate);
+        {
+            Logger.LogDebug(@"Invoking timed async action {activityDescription}
+initialStatusMessage={initialStatusMessage}
+ParentActivityId={ParentActivityId}
+state={state}", activityDescription, initialStatusMessage, ParentActivityId, state);
+            return TimedAsyncAction<TState>.Start(state, this, activityDescription, initialStatusMessage, asyncMethodDelegate);
+        }
 
         /// <summary>
         /// Invokes a method that asynchronously produces a result value, associating the function with a user-specified value and tracking the execution start and duration.
@@ -216,7 +271,13 @@ namespace FsInfoCat.Activities
         /// <exception cref="InvalidOperationException"><paramref name="asyncMethodDelegate"/> returned a <see langword="null"/> value.</exception>
         public ITimedAsyncFunc<ITimedActivityEvent<TState>, TState, TResult> InvokeTimedAsync<TState, TResult>([DisallowNull] string activityDescription, [DisallowNull] string initialStatusMessage,
             TState state, [DisallowNull] Func<IActivityProgress<TState>, Task<TResult>> asyncMethodDelegate)
-            => Activities.TimedAsyncFunc<TState, TResult>.Start(state, this, activityDescription, initialStatusMessage, asyncMethodDelegate);
+        {
+            Logger.LogDebug(@"Invoking timed async function {activityDescription}
+initialStatusMessage={initialStatusMessage}
+ParentActivityId={ParentActivityId}
+state={state}", activityDescription, initialStatusMessage, ParentActivityId, state);
+            return TimedAsyncFunc<TState, TResult>.Start(state, this, activityDescription, initialStatusMessage, asyncMethodDelegate);
+        }
 
         /// <summary>
         /// Notifies this activity source that an observer is to receive activity start notifications, providing a list of existing activities.

@@ -10,6 +10,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Threading;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Collections.ObjectModel;
 
 namespace FsInfoCat.UnitTests
 {
@@ -52,7 +53,7 @@ namespace FsInfoCat.UnitTests
             });
             IAsyncAction<IActivityEvent> target = asyncActivityService.InvokeAsync(activityDescription, initialStatusMessage, asyncMethodDelegate);
             Assert.IsNotNull(target);
-            using CompletionObserverHelper<IActivityEvent> observer = new();
+            using ObserverHelper<IActivityEvent> observer = new();
             using IDisposable subscription = target.Subscribe(observer);
             Assert.AreEqual(activityDescription, target.ShortDescription);
             Assert.AreEqual(initialStatusMessage, target.StatusMessage);
@@ -93,7 +94,7 @@ namespace FsInfoCat.UnitTests
             });
             IAsyncFunc<IActivityEvent, int> target = asyncActivityService.InvokeAsync(activityDescription, initialStatusMessage, asyncMethodDelegate);
             Assert.IsNotNull(target);
-            using CompletionObserverHelper<IActivityEvent> observer = new();
+            using ObserverHelper<IActivityEvent> observer = new();
             using IDisposable subscription = target.Subscribe(observer);
             Assert.IsTrue(asyncActivityService.Contains(target));
             Assert.AreEqual(activityDescription, target.ShortDescription);
@@ -135,7 +136,7 @@ namespace FsInfoCat.UnitTests
             });
             IAsyncAction<IActivityEvent<string>, string> target = asyncActivityService.InvokeAsync(activityDescription, initialStatusMessage, state, asyncMethodDelegate);
             Assert.IsNotNull(target);
-            using CompletionObserverHelper<IActivityEvent> observer = new();
+            using ObserverHelper<IActivityEvent> observer = new();
             using IDisposable subscription = target.Subscribe(observer);
             Assert.IsTrue(asyncActivityService.Contains(target));
             Assert.AreEqual(activityDescription, target.ShortDescription);
@@ -181,7 +182,7 @@ namespace FsInfoCat.UnitTests
             });
             IAsyncFunc<IActivityEvent<string>, string, int> target = asyncActivityService.InvokeAsync(activityDescription, initialStatusMessage, state, asyncMethodDelegate);
             Assert.IsNotNull(target);
-            using CompletionObserverHelper<IActivityEvent> observer = new();
+            using ObserverHelper<IActivityEvent> observer = new();
             using IDisposable subscription = target.Subscribe(observer);
             Assert.IsTrue(asyncActivityService.Contains(target));
             Assert.AreEqual(activityDescription, target.ShortDescription);
@@ -225,7 +226,7 @@ namespace FsInfoCat.UnitTests
             });
             ITimedAsyncAction<ITimedActivityEvent> target = asyncActivityService.InvokeTimedAsync(activityDescription, initialStatusMessage, asyncMethodDelegate);
             Assert.IsNotNull(target);
-            using CompletionObserverHelper<IActivityEvent> observer = new();
+            using ObserverHelper<IActivityEvent> observer = new();
             using IDisposable subscription = target.Subscribe(observer);
             Assert.IsTrue(asyncActivityService.Contains(target));
             Assert.AreEqual(activityDescription, target.ShortDescription);
@@ -271,7 +272,7 @@ namespace FsInfoCat.UnitTests
             });
             ITimedAsyncFunc<ITimedActivityEvent, int> target = asyncActivityService.InvokeTimedAsync(activityDescription, initialStatusMessage, asyncMethodDelegate);
             Assert.IsNotNull(target);
-            using CompletionObserverHelper<IActivityEvent> observer = new();
+            using ObserverHelper<IActivityEvent> observer = new();
             using IDisposable subscription = target.Subscribe(observer);
             Assert.IsTrue(asyncActivityService.Contains(target));
             Assert.AreEqual(activityDescription, target.ShortDescription);
@@ -318,7 +319,7 @@ namespace FsInfoCat.UnitTests
             });
             ITimedAsyncAction<ITimedActivityEvent<string>, string> target = asyncActivityService.InvokeTimedAsync(activityDescription, initialStatusMessage, state, asyncMethodDelegate);
             Assert.IsNotNull(target);
-            using CompletionObserverHelper<IActivityEvent> observer = new();
+            using ObserverHelper<IActivityEvent> observer = new();
             using IDisposable subscription = target.Subscribe(observer);
             Assert.IsTrue(asyncActivityService.Contains(target));
             Assert.AreEqual(activityDescription, target.ShortDescription);
@@ -369,7 +370,7 @@ namespace FsInfoCat.UnitTests
             });
             ITimedAsyncFunc<ITimedActivityEvent<string>, string, int> target = asyncActivityService.InvokeTimedAsync(activityDescription, initialStatusMessage, state, asyncMethodDelegate);
             Assert.IsNotNull(target);
-            using CompletionObserverHelper<IActivityEvent> observer = new();
+            using ObserverHelper<IActivityEvent> observer = new();
             using IDisposable subscription = target.Subscribe(observer);
             Assert.IsTrue(asyncActivityService.Contains(target));
             Assert.AreEqual(activityDescription, target.ShortDescription);
@@ -469,7 +470,7 @@ namespace FsInfoCat.UnitTests
 
             IAsyncAction<IActivityEvent> target = asyncActivityService.InvokeAsync(activityDescription, initialStatusMessage, asyncMethodDelegate);
             Assert.IsNotNull(target);
-            using CompletionObserverHelper<IActivityEvent> observer = new();
+            using ObserverHelper<IActivityEvent> observer = new();
             using IDisposable subscription = target.Subscribe(observer);
             Assert.AreEqual(activityDescription, target.ShortDescription);
             Assert.AreEqual(initialStatusMessage, target.StatusMessage);
@@ -530,55 +531,54 @@ namespace FsInfoCat.UnitTests
         {
             IAsyncActivityService asyncActivityService = Hosting.GetAsyncActivityService();
             if (asyncActivityService is null) Assert.Inconclusive("Hosting.GetAsyncActivityService returned null");
-            string activityDescription1 = "Example Activity #1";
-            string initialStatusMessage1 = "Initial Status Example #1";
-            using ManualResetEvent runningEvent = new(false);
-            using ManualResetEvent okToCompleteEvent = new(false);
+            using ManualResetEvent runningEvent1 = new(false);
+            using ManualResetEvent okToCompleteEvent1 = new(false);
             Task asyncMethodDelegate1(IActivityProgress progress) => Task.Run(() =>
             {
-                runningEvent.Set();
+                runningEvent1.Set();
                 progress.Token.ThrowIfCancellationRequested();
-                okToCompleteEvent.WaitOne();
+                okToCompleteEvent1.WaitOne();
                 progress.Token.ThrowIfCancellationRequested();
             });
-            IAsyncAction<IActivityEvent> asyncAction1 = asyncActivityService.InvokeAsync(activityDescription1, initialStatusMessage1, asyncMethodDelegate1);
-            if (asyncActivityService is null) Assert.Inconclusive("IAsyncActivityService.InvokeAsync returned null");
-            IDisposable subscription = ObserverHelper<IAsyncActivity>.SubscribeChildActivityStart(asyncActivityService, out ObserverHelper<IAsyncActivity> observer);
+            IAsyncAction<IActivityEvent> asyncAction1 = asyncActivityService.InvokeAsync("Example Activity #1", "Initial Status Example #1", asyncMethodDelegate1);
+            if (asyncAction1 is null) Assert.Inconclusive("IAsyncActivityService.InvokeAsync returned null");
+            if (!(runningEvent1.WaitOne(1000))) Assert.Inconclusive("First task not started");
+            using ObserverHelper<IAsyncActivity> observer = new();
+            using IDisposable subscription = asyncActivityService.SubscribeChildActivityStart(observer, observer.OnObserving);
             Assert.IsNotNull(subscription);
-            string activityDescription2 = "Example Activity #2";
-            string initialStatusMessage2 = "Initial Status Example #2";
-            Func<IActivityProgress, Task> asyncMethodDelegate2 = null;
-            IAsyncAction<IActivityEvent> asyncAction2 = asyncActivityService.InvokeAsync(activityDescription2, initialStatusMessage2, asyncMethodDelegate2);
-            if (asyncActivityService is null) Assert.Inconclusive("IAsyncActivityService.InvokeAsync returned null");
-            Assert.Inconclusive("Test not fully implemented");
-        }
+            Assert.AreEqual(1, observer.OnObservingInvocations.Count);
+            Assert.IsTrue(observer.OnObservingInvocations[0].Items.Any(t => ReferenceEquals(t, asyncAction1)));
+;
+            using ManualResetEvent runningEvent2 = new(false);
+            using ManualResetEvent okToCompleteEvent2 = new(false);
+            Task asyncMethodDelegate2(IActivityProgress progress) => Task.Run(() =>
+            {
+                runningEvent2.Set();
+                progress.Token.ThrowIfCancellationRequested();
+                okToCompleteEvent2.WaitOne();
+                progress.Token.ThrowIfCancellationRequested();
+            });
+            IAsyncAction<IActivityEvent> asyncAction2 = asyncActivityService.InvokeAsync("Example Activity #2", "Initial Status Example #2", asyncMethodDelegate2);
+            if (asyncAction2 is null) Assert.Inconclusive("IAsyncActivityService.InvokeAsync returned null");
+            if (!(runningEvent2.WaitOne(1000))) Assert.Inconclusive("Second task not started");
+            Assert.IsFalse(observer.OnNextInvocations.Any(t => ReferenceEquals(t.Value, asyncAction1)));
+            Assert.IsTrue(observer.OnNextInvocations.Any(t => ReferenceEquals(t.Value, asyncAction2)));
 
-        [TestMethod]
-        public void SubscribeTestMethod()
-        {
-            IAsyncActivityService asyncActivityService = Hosting.GetAsyncActivityService();
-            if (asyncActivityService is null) Assert.Inconclusive("Hosting.GetAsyncActivityService returned null");
-            string activityDescription1 = "Example Activity #1";
-            string initialStatusMessage1 = "Initial Status Example #1";
-            using ManualResetEvent runningEvent = new(false);
-            using ManualResetEvent okToCompleteEvent = new(false);
-            Task asyncMethodDelegate1(IActivityProgress progress) => Task.Run(() =>
-            {
-                runningEvent.Set();
-                progress.Token.ThrowIfCancellationRequested();
-                okToCompleteEvent.WaitOne();
-                progress.Token.ThrowIfCancellationRequested();
-            });
-            IAsyncAction<IActivityEvent> asyncAction1 = asyncActivityService.InvokeAsync(activityDescription1, initialStatusMessage1, asyncMethodDelegate1);
-            if (asyncActivityService is null) Assert.Inconclusive("IAsyncActivityService.InvokeAsync returned null");
-            IDisposable subscription = ObserverHelper<bool>.Subscribe(asyncActivityService, out ObserverHelper<bool> observer);
-            Assert.IsNotNull(subscription);
-            string activityDescription2 = "Example Activity #2";
-            string initialStatusMessage2 = "Initial Status Example #2";
-            Func<IActivityProgress, Task> asyncMethodDelegate2 = null;
-            IAsyncAction<IActivityEvent> asyncAction2 = asyncActivityService.InvokeAsync(activityDescription2, initialStatusMessage2, asyncMethodDelegate2);
-            if (asyncActivityService is null) Assert.Inconclusive("IAsyncActivityService.InvokeAsync returned null");
-            Assert.Inconclusive("Test not fully implemented");
+            using ObserverHelper<IActivityEvent> completion1 = new();
+            using IDisposable cs1 = asyncAction1.Subscribe(completion1);
+            if (cs1 is null) Assert.Inconclusive("Subscribe returned null");
+            using ObserverHelper<IActivityEvent> completion2 = new();
+            using IDisposable cs2 = asyncAction2.Subscribe(completion2);
+            if (cs2 is null) Assert.Inconclusive("Subscribe returned null");
+
+            observer.Reset();
+            okToCompleteEvent1.Set();
+            if (!completion1.WaitOne(1000)) Assert.Inconclusive("First task did not complete");
+            Assert.AreEqual(0, observer.InvocationCount);
+
+            okToCompleteEvent2.Set();
+            if (!completion2.WaitOne(1000)) Assert.Inconclusive("Second task did not complete");
+            Assert.AreEqual(0, observer.InvocationCount);
         }
 
         enum ObserverStage
@@ -588,7 +588,7 @@ namespace FsInfoCat.UnitTests
             Completed
         }
 
-        class CompletionObserverHelper<T> : IObserver<T>, IDisposable
+        class ObserverHelper<T> : IObserver<T>, IDisposable
         {
             private readonly object _syncRoot = new();
             private readonly ManualResetEvent _completedEvent = new(false);
@@ -596,20 +596,62 @@ namespace FsInfoCat.UnitTests
 
             public int InvocationCount { get; private set; }
 
-            public Queue<int> CompletionInvocations { get; } = new();
+            public Collection<int> CompletionInvocations { get; } = new();
 
-            public Queue<(Exception Error, int Index)> OnErrorInvocations { get; } = new();
+            public Collection<(Exception Error, int Index)> OnErrorInvocations { get; } = new();
 
-            public Queue<(T[] Items, int Index)> OnObservingInvocations { get; } = new();
+            public Collection<(T[] Items, int Index)> OnObservingInvocations { get; } = new();
 
-            public Queue<(T Value, int Index)> OnNextInvocations { get; } = new();
+            public Collection<(T Value, int Index)> OnNextInvocations { get; } = new();
+
+            internal IDisposable Subscribe<V>(IObservable<T> observable, Func<V> onSubscribe, out V result)
+            {
+                Monitor.Enter(_syncRoot);
+                try
+                {
+                    result = onSubscribe();
+                    return observable.Subscribe(this);
+                }
+                finally { Monitor.Exit(_syncRoot); }
+            }
+
+            internal void Reset()
+            {
+                Monitor.Enter(_syncRoot);
+                try
+                {
+                    InvocationCount = 0;
+                    CompletionInvocations.Clear();
+                    OnErrorInvocations.Clear();
+                    OnObservingInvocations.Clear();
+                    OnNextInvocations.Clear();
+                    _completedEvent.Reset();
+                }
+                finally { Monitor.Exit(_syncRoot); }
+            }
+
+            internal void Reset(out T[] values)
+            {
+                Monitor.Enter(_syncRoot);
+                try
+                {
+                    InvocationCount = 0;
+                    values = OnNextInvocations.Select(t => t.Value).ToArray();
+                    CompletionInvocations.Clear();
+                    OnErrorInvocations.Clear();
+                    OnObservingInvocations.Clear();
+                    OnNextInvocations.Clear();
+                    _completedEvent.Reset();
+                }
+                finally { Monitor.Exit(_syncRoot); }
+            }
 
             public void OnCompleted()
             {
                 Monitor.Enter(_syncRoot);
                 try
                 {
-                    CompletionInvocations.Enqueue(InvocationCount++);
+                    CompletionInvocations.Add(InvocationCount++);
                     if (CompletionInvocations.Count > 1)
                         return;
                 }
@@ -620,21 +662,21 @@ namespace FsInfoCat.UnitTests
             public void OnError(Exception error)
             {
                 Monitor.Enter(_syncRoot);
-                try { OnErrorInvocations.Enqueue((error, InvocationCount++)); }
+                try { OnErrorInvocations.Add((error, InvocationCount++)); }
                 finally { Monitor.Exit(_syncRoot); }
             }
 
             public void OnNext(T value)
             {
                 Monitor.Enter(_syncRoot);
-                try { OnNextInvocations.Enqueue((value, InvocationCount++)); }
+                try { OnNextInvocations.Add((value, InvocationCount++)); }
                 finally { Monitor.Exit(_syncRoot); }
             }
 
             internal void OnObserving(T[] items)
             {
                 Monitor.Enter(_syncRoot);
-                try { OnObservingInvocations.Enqueue((items, InvocationCount++)); }
+                try { OnObservingInvocations.Add((items, InvocationCount++)); }
                 finally { Monitor.Exit(_syncRoot); }
             }
 
@@ -662,7 +704,7 @@ namespace FsInfoCat.UnitTests
             }
 
             // // TODO: override finalizer only if 'Dispose(bool disposing)' has code to free unmanaged resources
-            // ~CompletionObserverHelper()
+            // ~ObserverHelper()
             // {
             //     // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
             //     Dispose(disposing: false);
@@ -676,79 +718,5 @@ namespace FsInfoCat.UnitTests
             }
         }
 
-        class ObserverHelper<T> : IObserver<T>
-        {
-            internal Queue<(T[] Items, ObserverStage Stage)> ObservingInvocations { get; } = new();
-
-            internal Queue<(T Value, Exception Error, bool OnObservingInvoked)> ObserverInvocations { get; } = new();
-
-            internal Queue<(T Value, Exception Error, bool IsCompleted)> PostCompletionInvocations { get; } = new();
-
-            internal ObserverStage Stage { get; private set; }
-
-            private ObserverHelper() { }
-
-            internal static IDisposable Subscribe(IObservable<T> observable, out ObserverHelper<T> observer)
-            {
-                observer = new ObserverHelper<T> { Stage = ObserverStage.Observed };
-                return observable.Subscribe(observer);
-            }
-
-            internal static IDisposable SubscribeChildActivityStart(IAsyncActivitySource asyncActivitySource, out ObserverHelper<IAsyncActivity> observer)
-            {
-                ObserverHelper<IAsyncActivity> observerHelper = new();
-                observer = observerHelper;
-                return asyncActivitySource.SubscribeChildActivityStart(observer, items =>
-                {
-                    Monitor.Enter(observerHelper.ObserverInvocations);
-                    try
-                    {
-                        observerHelper.ObservingInvocations.Enqueue((items, observerHelper.Stage));
-                        if (observerHelper.Stage == ObserverStage.Observing)
-                            observerHelper.Stage = ObserverStage.Observed;
-                    }
-                    finally { Monitor.Exit(observerHelper.ObserverInvocations); }
-                });
-            }
-
-            public void OnCompleted()
-            {
-                Monitor.Enter(ObserverInvocations);
-                try
-                {
-                    if (Stage == ObserverStage.Completed)
-                        PostCompletionInvocations.Enqueue(new(default, null, true));
-                    else
-                        Stage = ObserverStage.Completed;
-                }
-                finally { Monitor.Exit(ObserverInvocations); }
-            }
-
-            public void OnError(Exception error)
-            {
-                Monitor.Enter(ObserverInvocations);
-                try
-                {
-                    if (Stage == ObserverStage.Completed)
-                        PostCompletionInvocations.Enqueue(new(default, error, false));
-                    else
-                        ObserverInvocations.Enqueue(new(default, error, Stage == ObserverStage.Observed));
-                }
-                finally { Monitor.Exit(ObserverInvocations); }
-            }
-
-            public void OnNext(T value)
-            {
-                Monitor.Enter(ObserverInvocations);
-                try
-                {
-                    if (Stage == ObserverStage.Completed)
-                        PostCompletionInvocations.Enqueue(new(value, null, false));
-                    else
-                        ObserverInvocations.Enqueue(new(value, null, Stage == ObserverStage.Observed));
-                }
-                finally { Monitor.Exit(ObserverInvocations); }
-            }
-        }
     }
 }

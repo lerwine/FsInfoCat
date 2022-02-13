@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
@@ -10,9 +11,9 @@ namespace FsInfoCat.Activities
         /// The progress reporter and nested <see cref="AsyncActivityProvider"/> for <see cref="TimedAsyncAction"/> objects.
         /// </summary>
         /// <seealso cref="AsyncActivityProvider.AsyncActivity{ITimedActivityEvent, ITimedOperationEvent, ITimedActivityCompletedEvent, Task}.ActivityProgress{TimedAsyncAction}" />
-        class AsyncActionProgress : ActivityProgress<TimedAsyncAction>
+        sealed class AsyncActionProgress : ActivityProgress<TimedAsyncAction>
         {
-            private AsyncActionProgress([DisallowNull] TimedAsyncAction activity) : base(activity) { }
+            private AsyncActionProgress([DisallowNull] TimedAsyncAction activity) : base(Hosting.GetRequiredService<ILogger<AsyncActionProgress>>(), activity) { }
 
             /// <summary>
             /// Starts a timed asynchronous activity.
@@ -25,11 +26,14 @@ namespace FsInfoCat.Activities
             internal static async Task StartAsync([DisallowNull] TimedAsyncAction activity, [DisallowNull] Func<IActivityProgress, Task> asyncMethodDelegate)
             {
                 if (asyncMethodDelegate is null) throw new ArgumentNullException(nameof(asyncMethodDelegate));
+                activity.Logger.LogDebug("Invoking asyncMethodDelegate for TimedAsyncAction {ActivityId} ({ShortDescription})", activity.ActivityId, activity.ShortDescription);
                 Task task = asyncMethodDelegate(new AsyncActionProgress(activity));
                 if (task is null)
                     throw new InvalidOperationException();
                 activity.OnBeforeAwaitTask();
+                activity.Logger.LogDebug("Awaiting task completion for TimedAsyncAction {ActivityId} ({ShortDescription})", activity.ActivityId, activity.ShortDescription);
                 await task;
+                activity.Logger.LogDebug("Task for TimedAsyncAction completed successfully", activity.ActivityId, activity.ShortDescription);
             }
 
             /// <summary>
@@ -64,7 +68,7 @@ namespace FsInfoCat.Activities
         /// </summary>
         /// <seealso cref="AsyncActivityProvider.AsyncActivity{ITimedActivityEvent{TState}, ITimedOperationEvent{TState}, ITimedActivityCompletedEvent{TState}, Task}.ActivityProgress{TimedAsyncAction{TState}}" />
         /// <seealso cref="IActivityProgress{TState}" />
-        class AsyncActionProgress : ActivityProgress<TimedAsyncAction<TState>>, IActivityProgress<TState>
+        sealed class AsyncActionProgress : ActivityProgress<TimedAsyncAction<TState>>, IActivityProgress<TState>
         {
             /// <summary>
             /// Gets the user-defined value.
@@ -72,7 +76,7 @@ namespace FsInfoCat.Activities
             /// <value>The user-defined vaue that is associated with the activity.</value>
             public TState AsyncState { get; }
 
-            private AsyncActionProgress([DisallowNull] TimedAsyncAction<TState> activity) : base(activity) => AsyncState = activity.AsyncState;
+            private AsyncActionProgress([DisallowNull] TimedAsyncAction<TState> activity) : base(Hosting.GetRequiredService<ILogger<AsyncActionProgress>>(), activity) => AsyncState = activity.AsyncState;
 
             /// <summary>
             /// Starts a timed asynchronous activity that is associated with a user-specified value.
@@ -85,11 +89,14 @@ namespace FsInfoCat.Activities
             internal static async Task StartAsync([DisallowNull] TimedAsyncAction<TState> activity, [DisallowNull] Func<IActivityProgress<TState>, Task> asyncMethodDelegate)
             {
                 if (asyncMethodDelegate is null) throw new ArgumentNullException(nameof(asyncMethodDelegate));
+                activity.Logger.LogDebug("Invoking asyncMethodDelegate for TimedAsyncAction {ActivityId} ({ShortDescription})", activity.ActivityId, activity.ShortDescription);
                 Task task = asyncMethodDelegate(new AsyncActionProgress(activity));
                 if (task is null)
                     throw new InvalidOperationException();
                 activity.OnBeforeAwaitTask();
+                activity.Logger.LogDebug("Awaiting task completion for TimedAsyncAction {ActivityId} ({ShortDescription})", activity.ActivityId, activity.ShortDescription);
                 await task;
+                activity.Logger.LogDebug("Task for TimedAsyncAction completed successfully", activity.ActivityId, activity.ShortDescription);
             }
 
             /// <summary>

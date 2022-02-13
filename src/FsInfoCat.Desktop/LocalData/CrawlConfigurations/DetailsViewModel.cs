@@ -15,6 +15,109 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
 {
     public class DetailsViewModel : CrawlConfigurationDetailsViewModel<CrawlConfiguration, SubdirectoryListItemWithAncestorNames, SubdirectoryListItemViewModel, CrawlJobLogListItem, CrawlJobListItemViewModel>
     {
+        private IAsyncAction<IActivityEvent> _currentAction;
+
+        #region StartCrawl Command Property Members
+
+        /// <summary>
+        /// Occurs when the <see cref="StartCrawl"/> is invoked.
+        /// </summary>
+        public event EventHandler<Commands.CommandEventArgs> StartCrawlCommand;
+
+        private static readonly DependencyPropertyKey StartCrawlPropertyKey = DependencyPropertyBuilder<DetailsViewModel, Commands.RelayCommand>
+            .Register(nameof(StartCrawl))
+            .AsReadOnly();
+
+        /// <summary>
+        /// Identifies the <see cref="StartCrawl"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty StartCrawlProperty = StartCrawlPropertyKey.DependencyProperty;
+
+        public Commands.RelayCommand StartCrawl => (Commands.RelayCommand)GetValue(StartCrawlProperty);
+
+        /// <summary>
+        /// Called when the StartCrawl event is raised by <see cref="StartCrawl" />.
+        /// </summary>
+        /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="StartCrawl" />.</param>
+        protected void RaiseStartCrawlCommand(object parameter) // => StartCrawlCommand?.Invoke(this, new(parameter));
+        {
+            try { OnStartCrawlCommand(parameter); }
+            finally { StartCrawlCommand?.Invoke(this, new(parameter)); }
+        }
+
+        private async Task CrawlAsync(IActivityProgress progress)
+        {
+            using IServiceScope scope = Hosting.CreateScope();
+            using LocalDbContext dbContext = scope.ServiceProvider.GetRequiredService<LocalDbContext>();
+            Guid id = Entity.RootId;
+            Subdirectory subdirectory = await dbContext.Subdirectories.FirstOrDefaultAsync(s => s.Id == id);
+
+        }
+
+        /// <summary>
+        /// Called when the <see cref="StartCrawl">StartCrawl Command</see> is invoked.
+        /// </summary>
+        /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="StartCrawl" />.</param>
+        protected virtual void OnStartCrawlCommand(object parameter)
+        {
+            IAsyncActivityService backgroundService = Hosting.GetAsyncActivityService();
+            StatusValue = CrawlStatus.InProgress;
+            IAsyncAction<IActivityEvent> currentAction = backgroundService.InvokeAsync("", "", CrawlAsync);
+            _currentAction = currentAction;
+            currentAction.Task.ContinueWith(task => Dispatcher.Invoke(() =>
+            {
+                if (ReferenceEquals(_currentAction, currentAction))
+                {
+                    _currentAction = null;
+                    if (task.IsCanceled)
+                        StatusValue = CrawlStatus.Canceled;
+                    else if (task.IsFaulted)
+                        StatusValue = CrawlStatus.Failed;
+                    else if (StatusValue == CrawlStatus.InProgress)
+                        StatusValue = CrawlStatus.Completed;
+                }
+            }));
+        }
+
+        #endregion
+        #region StopCrawl Command Property Members
+
+        /// <summary>
+        /// Occurs when the <see cref="StopCrawl"/> is invoked.
+        /// </summary>
+        public event EventHandler<Commands.CommandEventArgs> StopCrawlCommand;
+
+        private static readonly DependencyPropertyKey StopCrawlPropertyKey = DependencyPropertyBuilder<DetailsViewModel, Commands.RelayCommand>
+            .Register(nameof(StopCrawl))
+            .AsReadOnly();
+
+        /// <summary>
+        /// Identifies the <see cref="StopCrawl"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty StopCrawlProperty = StopCrawlPropertyKey.DependencyProperty;
+
+        public Commands.RelayCommand StopCrawl => (Commands.RelayCommand)GetValue(StopCrawlProperty);
+
+        /// <summary>
+        /// Called when the StopCrawl event is raised by <see cref="StopCrawl" />.
+        /// </summary>
+        /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="StopCrawl" />.</param>
+        protected void RaiseStopCrawlCommand(object parameter) // => StopCrawlCommand?.Invoke(this, new(parameter));
+        {
+            try { OnStopCrawlCommand(parameter); }
+            finally { StopCrawlCommand?.Invoke(this, new(parameter)); }
+        }
+
+        /// <summary>
+        /// Called when the <see cref="StopCrawl">StopCrawl Command</see> is invoked.
+        /// </summary>
+        /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="StopCrawl" />.</param>
+        protected virtual void OnStopCrawlCommand(object parameter)
+        {
+            // TODO: Implement OnStopCrawlCommand Logic
+        }
+
+        #endregion
         #region AddNewCrawlJobLog Command Property Members
 
         private static readonly DependencyPropertyKey AddNewCrawlJobLogPropertyKey = DependencyProperty.RegisterReadOnly(nameof(AddNewCrawlJobLog), typeof(Commands.RelayCommand),
@@ -76,9 +179,36 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
         public DetailsViewModel([DisallowNull] CrawlConfiguration entity, [DisallowNull] CrawlConfigListItemBase itemEntity) : base(entity, itemEntity)
         {
             SetValue(AddNewCrawlJobLogPropertyKey, new Commands.RelayCommand(OnAddNewCrawlJobLogCommand));
+            SetValue(StartCrawlPropertyKey, new Commands.RelayCommand(RaiseStartCrawlCommand));
+            SetValue(StopCrawlPropertyKey, new Commands.RelayCommand(RaiseStopCrawlCommand));
             ListItem = itemEntity;
             UpstreamId = entity.UpstreamId;
             LastSynchronizedOn = entity.LastSynchronizedOn;
+            OnStatusValueChanged(entity.StatusValue);
+        }
+
+        private void OnStatusValueChanged(CrawlStatus statusValue)
+        {
+            switch (statusValue)
+            {
+                case CrawlStatus.Disabled:
+                    StartCrawl.IsEnabled = StopCrawl.IsEnabled = false;
+                    break;
+                case CrawlStatus.InProgress:
+                    StartCrawl.IsEnabled = false;
+                    StopCrawl.IsEnabled = true;
+                    break;
+                default:
+                    StartCrawl.IsEnabled = true;
+                    StopCrawl.IsEnabled = false;
+                    break;
+            }
+        }
+
+        protected override void OnStatusValuePropertyChanged(DependencyPropertyChangedEventArgs args)
+        {
+            base.OnStatusValuePropertyChanged(args);
+            OnStatusValueChanged((CrawlStatus)args.NewValue);
         }
 
         private bool ConfirmCrawlJobLogDelete([DisallowNull] CrawlJobListItemViewModel item, object parameter) => MessageBox.Show(Application.Current.MainWindow, "This action cannot be undone!\n\nAre you sure you want to delete this crawl completion log entry?", "Delete Completion Log Entry", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes;

@@ -80,7 +80,7 @@ namespace FsInfoCat.Desktop.ViewModel
 
         private void OnNewCrawl(object parameter)
         {
-            LocalData.CrawlConfigurations.ListingViewModel.GetNewItemEditPageAsync(Dispatcher).ContinueWith(task => Dispatcher.Invoke(() =>
+            LocalData.CrawlConfigurations.ListingViewModel.GetNewItemEditPageAsync(Dispatcher, _logger).ContinueWith(task => Dispatcher.Invoke(() =>
             {
                 if (task.IsCanceled)
                     return;

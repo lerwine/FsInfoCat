@@ -21,9 +21,13 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
                 target.IsBusy = backgroundService.IsActive;
             }
 
-            public void OnCompleted() => _target.Dispatcher.BeginInvoke(() => _target.IsBusy = false);
+            void IObserver<bool>.OnCompleted()
+            {
+                _target._logger.LogDebug($"{nameof(JobServiceStatusViewModel)}.{nameof(ActiveStateObserver)}.{nameof(IObserver<bool>.OnCompleted)} invoked");
+                _target.Dispatcher.BeginInvoke(() => _target.IsBusy = false);
+            }
 
-            public void OnError(Exception error)
+            void IObserver<bool>.OnError(Exception error)
             {
                 if (error is ActivityException activityException)
                     _target._logger.LogError(activityException.Code.ToEventId(), activityException, "Active state error observed: Activity={ShortDescription}; Status Message={Message}; Current Operation={CurrentOperation}; Activity ID={ActivityId}", activityException.Operation?.ShortDescription, activityException.Message, activityException.Operation?.CurrentOperation, activityException.Operation?.ActivityId);
@@ -31,7 +35,11 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
                     _target._logger.LogError(ErrorCode.Unexpected.ToEventId(), error, "Unexpected active state error observed");
             }
 
-            public void OnNext(bool value) => _target.Dispatcher.BeginInvoke(() => _target.IsBusy = value);
+            void IObserver<bool>.OnNext(bool value)
+            {
+                _target._logger.LogDebug($"{nameof(JobServiceStatusViewModel)}.{nameof(ActiveStateObserver)}.{nameof(IObserver<bool>.OnNext)} invoked; value = {{value}}", value);
+                _target.Dispatcher.BeginInvoke(() => _target.IsBusy = value);
+            }
         }
     }
 }

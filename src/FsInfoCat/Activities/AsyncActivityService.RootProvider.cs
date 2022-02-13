@@ -1,6 +1,9 @@
+using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace FsInfoCat.Activities
 {
@@ -10,7 +13,7 @@ namespace FsInfoCat.Activities
         /// The root <see cref="AsyncActivityProvider"/> (having no parent activity) for the <see cref="AsyncActivityService"/>.
         /// </summary>
         /// <seealso cref="AsyncActivityProvider" />
-        class RootProvider : AsyncActivityProvider
+        sealed class RootProvider : AsyncActivityProvider
         {
             /// <summary>
             /// Gets or sets a value indicating whether any <see cref="IAsyncActivity"/> objects started by this <c>RootProvider</c> are still running.
@@ -27,7 +30,7 @@ namespace FsInfoCat.Activities
             /// <summary>
             /// Initializes a new instance of the <c>RootProvider</c> class.
             /// </summary>
-            internal RootProvider() : base(null) { }
+            internal RootProvider() : base(Hosting.GetRequiredService<ILogger<RootProvider>>(), null) { }
 
             /// <summary>
             /// Notifies this <c>RootProvider</c> that an <see cref="IAsyncActivity"/> is starting.
@@ -50,6 +53,7 @@ namespace FsInfoCat.Activities
                         try
                         {
                             IsActive = true;
+                            Logger.LogDebug("Raising active status True");
                             ActiveStatusSource.RaiseNext(true);
                         }
                         catch
@@ -80,6 +84,7 @@ namespace FsInfoCat.Activities
                     if (IsEmpty() && IsActive)
                     {
                         IsActive = false;
+                        Logger.LogDebug("Raising active status False");
                         ActiveStatusSource.RaiseNext(false);
                     }
                 }

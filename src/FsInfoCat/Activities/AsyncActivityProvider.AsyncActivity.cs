@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -109,6 +110,8 @@ namespace FsInfoCat.Activities
             /// <value>The count of <see cref="IAsyncActivity"/> objects representing activities that the owner <see cref=AsyncActivityProvider"/> is runnning.</value>
             public int Count => _owner.Count;
 
+            protected ILogger Logger { get; }
+
             /// <summary>
             /// Initializes a new instance of the <see cref="AsyncActivity{TBaseEvent, TOperationEvent, TResultEvent, TTask}"/> class.
             /// </summary>
@@ -119,7 +122,7 @@ namespace FsInfoCat.Activities
             /// <exception cref="ArgumentException"><paramref name="activityDescription"/> or <paramref name="initialStatusMessage"/> is null, empty or whitespace.</exception>
             protected AsyncActivity([DisallowNull] AsyncActivityProvider owner, [DisallowNull] string activityDescription, [DisallowNull] string initialStatusMessage)
             {
-                _owner = owner ?? throw new ArgumentNullException(nameof(owner));
+                Logger = (_owner = owner ?? throw new ArgumentNullException(nameof(owner))).Logger;
                 if (activityDescription is null || (ShortDescription = activityDescription.Trim()).Length == 0)
                     throw new ArgumentException($"'{nameof(activityDescription)}' cannot be null or whitespace.", nameof(activityDescription));
                 if (initialStatusMessage is null || (StatusMessage = initialStatusMessage.Trim()).Length == 0)
@@ -146,8 +149,15 @@ namespace FsInfoCat.Activities
             /// </summary>
             protected virtual void OnBeforeAwaitTask()
             {
+                Logger.LogDebug("Setting activity {ActivityId} StatusValue to {StatusValue}", ActivityId, ActivityStatus.Running);
                 StatusValue = ActivityStatus.Running;
-                EventSource.RaiseNext(CreateInitialEvent());
+                TBaseEvent initialEvent = CreateInitialEvent();
+                Logger.LogDebug(@"Raising initial event ActivityId={ActivityId}; ParentActivityId={ParentActivityId}; MessageLevel={MessageLevel}
+ShortDescription={ShortDescription}
+StatusMessage={StatusMessage}
+Exception={Exception}", initialEvent.ActivityId, initialEvent.ParentActivityId, initialEvent.ShortDescription, initialEvent.MessageLevel, initialEvent.StatusMessage, initialEvent.Exception);
+                EventSource.RaiseNext(initialEvent);
+                Logger.LogDebug("Raising activity {ActivityId} Started event; ParentActivityId={ParentActivityId}", ActivityId, ParentActivityId);
                 _owner.ActivityStartedSource.RaiseNext(this);
             }
 
@@ -179,12 +189,16 @@ namespace FsInfoCat.Activities
             /// Notifies owner <see cref="AsyncActivityProvider"/> than an <see cref="IAsyncActivity"/> has been completed.
             /// </summary>
             /// <param name="node">The <see cref="LinkedListNode{IAsyncActivity}"/> that was returned by <see cref="OnStarting(IAsyncActivity)"/> which references the <see cref="IAsyncActivity"/> that ran to completion, faulted, or was canceled.</param>
-            /// <remarks>This obtains an exclusive <see cref="Monitor"/> lock on <see cref="AsyncActivityProvider.SyncRoot"/> and removes the specified <paramref name="node"/> from the underlying list.</remarks>
+            /// <remarks>This obtains an exclusive <see cref="Monitor"/> lock on <see cref="SyncRoot"/> and removes the specified <paramref name="node"/> from the underlying list.</remarks>
             /// <exception cref="ArgumentNullException"><paramref name="node"/> is <see langword="null"/>.</exception>
             protected void NotifyCompleted([DisallowNull] LinkedListNode<IAsyncActivity> node)
             {
                 try { _owner.OnCompleted(node); }
-                finally { EventSource.Dispose(); }
+                finally
+                {
+                    Logger.LogDebug("Disposing event source; ActivityId={ActivityId}", ActivityId);
+                    EventSource.Dispose();
+                }
             }
 
             /// <summary>

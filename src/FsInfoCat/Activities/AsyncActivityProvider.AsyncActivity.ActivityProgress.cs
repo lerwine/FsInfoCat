@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
@@ -79,9 +80,10 @@ namespace FsInfoCat.Activities
                 /// <summary>
                 /// Initializes a new instance of the <see cref="ActivityProgress{TActivity}"/> class.
                 /// </summary>
+                /// <param name="logger">The logger for the progress object.</param>
                 /// <param name="activity">The associated activity object.</param>
                 /// <exception cref="ArgumentNullException"><paramref name="activity"/> is <see langword="null"/>.</exception>
-                internal ActivityProgress([DisallowNull] TActivity activity) : base((activity ?? throw new ArgumentNullException(nameof(activity))).ParentActivityId) => (_activity, Token) = (activity, activity.TokenSource.Token);
+                internal ActivityProgress([DisallowNull] ILogger logger, [DisallowNull] TActivity activity) : base(logger, (activity ?? throw new ArgumentNullException(nameof(activity))).ParentActivityId) => (_activity, Token) = (activity, activity.TokenSource.Token);
 
                 /// <summary>
                 /// Creates an operational event object.
@@ -103,9 +105,9 @@ namespace FsInfoCat.Activities
                 /// <param name="percentComplete">The new value for <paramref name="IOperationInfo.PercentComplete" /> as value from <c>-1</c> through <c>100</c>, where <c>-1</c> indicates no completion percentage is
                 /// specified.</param>
                 /// <param name="isWarning">Reports a <see cref="StatusMessageLevel.Warning" /> if <see langword="true" />; otherwise, <see cref="StatusMessageLevel.Error" /> if <see langword="false" />.</param>
-                /// <exception cref="System.ArgumentException">statusDescription</exception>
-                /// <exception cref="System.ArgumentOutOfRangeException">percentComplete</exception>
-                /// <exception cref="System.ArgumentNullException">error</exception>
+                /// <exception cref="ArgumentException">statusDescription</exception>
+                /// <exception cref="ArgumentOutOfRangeException">percentComplete</exception>
+                /// <exception cref="ArgumentNullException">error</exception>
                 /// <remarks>Calling this method will result in an activity notification event being pushed with the specified <paramref name="error" /> as the <see cref="IActivityEvent.Exception" />,
                 /// even if the value of <see cref="IActivityInfo.StatusMessage" />, <see cref="IOperationInfo.CurrentOperation" /> or <see cref="IOperationInfo.PercentComplete" /> does not change.
                 /// <para>Any white space in <paramref name="statusDescription" /> will normalized before it is applied to <see cref="IActivityInfo.StatusMessage" />.</para><para>If <paramref name="currentOperation" /> is <see langword="null" /> it will converted to a <see cref="string.Empty" />; otherwise, any extraneous whitespace will be trimmed.</para></remarks>
@@ -129,6 +131,13 @@ namespace FsInfoCat.Activities
                         operationEvent = CreateOperationEvent(_activity, error, isWarning ? StatusMessageLevel.Warning : StatusMessageLevel.Error);
                     }
                     finally { Monitor.Exit(SyncRoot); }
+                    Logger.LogDebug(@"Raising operation event: ActivityId={ActivityId}; ParentActivityId={ParentActivityId}; MessageLevel={MessageLevel}
+ShortDescription={ShortDescription}
+StatusMessage={StatusMessage}
+CurrentOperation={CurrentOperation}
+PercentComplete={PercentComplete}; StatusValue={StatusValue}
+Exception={Exception}", operationEvent.ActivityId, operationEvent.ParentActivityId, operationEvent.MessageLevel, operationEvent.ShortDescription, operationEvent.StatusMessage, operationEvent.CurrentOperation, operationEvent.PercentComplete,
+                        operationEvent.StatusValue, operationEvent.Exception);
                     _activity.EventSource.RaiseNext(operationEvent);
                 }
 
@@ -141,8 +150,8 @@ namespace FsInfoCat.Activities
                 /// <param name="percentComplete">The new value for <paramref name="IOperationInfo.PercentComplete" /> as value from <c>-1</c> through <c>100</c>, where <c>-1</c> indicates no completion percentage is
                 /// specified.</param>
                 /// <param name="messageLevel">The <see cref="IActivityEvent.MessageLevel" /> value of the event.</param>
-                /// <exception cref="System.ArgumentException">statusDescription</exception>
-                /// <exception cref="System.ArgumentOutOfRangeException">percentComplete</exception>
+                /// <exception cref="ArgumentException">statusDescription</exception>
+                /// <exception cref="ArgumentOutOfRangeException">percentComplete</exception>
                 /// <remarks>If the value of <see cref="IActivityInfo.StatusMessage" />, <see cref="IOperationInfo.CurrentOperation" /> or <see cref="IOperationInfo.PercentComplete" /> changes, then an activity notification event will be
                 /// pushed to reflect the new operational state; otherwise, this will have no effect.
                 /// <para>Any white space in <paramref name="statusDescription" /> will normalized before it is applied to <see cref="IActivityInfo.StatusMessage" />.</para><para>If <paramref name="currentOperation" /> is <see langword="null" /> it will converted to a <see cref="string.Empty" />; otherwise, any extraneous whitespace will be trimmed.</para></remarks>
@@ -181,6 +190,13 @@ namespace FsInfoCat.Activities
                         operationEvent = CreateOperationEvent(_activity, null, messageLevel);
                     }
                     finally { Monitor.Exit(SyncRoot); }
+                    Logger.LogDebug(@"Raising operation event: ActivityId={ActivityId}; ParentActivityId={ParentActivityId}; MessageLevel={MessageLevel}
+ShortDescription={ShortDescription}
+StatusMessage={StatusMessage}
+CurrentOperation={CurrentOperation}
+PercentComplete={PercentComplete}; StatusValue={StatusValue}
+Exception={Exception}", operationEvent.ActivityId, operationEvent.ParentActivityId, operationEvent.MessageLevel, operationEvent.ShortDescription, operationEvent.StatusMessage, operationEvent.CurrentOperation, operationEvent.PercentComplete,
+                        operationEvent.StatusValue, operationEvent.Exception);
                     _activity.EventSource.RaiseNext(operationEvent);
                 }
 
@@ -191,8 +207,8 @@ namespace FsInfoCat.Activities
                 /// <param name="statusDescription">The new value of <see cref="IActivityInfo.StatusMessage" />.</param>
                 /// <param name="currentOperation">The new value for <see cref="IOperationInfo.CurrentOperation" />.</param>
                 /// <param name="isWarning">Reports a <see cref="StatusMessageLevel.Warning" /> if <see langword="true" />; otherwise, <see cref="StatusMessageLevel.Error" /> if <see langword="false" />.</param>
-                /// <exception cref="System.ArgumentException">statusDescription</exception>
-                /// <exception cref="System.ArgumentNullException">error</exception>
+                /// <exception cref="ArgumentException">statusDescription</exception>
+                /// <exception cref="ArgumentNullException">error</exception>
                 /// <remarks>Calling this method will result in an activity notification event being pushed with the specified <paramref name="error" /> as the <see cref="IActivityEvent.Exception" />,
                 /// even if the value of <see cref="IActivityInfo.StatusMessage" /> or <see cref="IOperationInfo.CurrentOperation" /> does not change.
                 /// <para>The <see cref="IOperationInfo.CurrentOperation" /> property will be set to a <see cref="string.Empty" /> on this progress object and on the pushed <see cref="IOperationEvent" />.</para><para>Any white space in <paramref name="statusDescription" /> will normalized before it is applied to <see cref="IActivityInfo.StatusMessage" />.</para><para>If <paramref name="currentOperation" /> is <see langword="null" /> it will converted to a <see cref="string.Empty" />; otherwise, any extraneous whitespace will be trimmed.</para></remarks>
@@ -211,6 +227,13 @@ namespace FsInfoCat.Activities
                         operationEvent = CreateOperationEvent(_activity, error, isWarning ? StatusMessageLevel.Warning : StatusMessageLevel.Error);
                     }
                     finally { Monitor.Exit(SyncRoot); }
+                    Logger.LogDebug(@"Raising operation event: ActivityId={ActivityId}; ParentActivityId={ParentActivityId}; MessageLevel={MessageLevel}
+ShortDescription={ShortDescription}
+StatusMessage={StatusMessage}
+CurrentOperation={CurrentOperation}
+PercentComplete={PercentComplete}; StatusValue={StatusValue}
+Exception={Exception}", operationEvent.ActivityId, operationEvent.ParentActivityId, operationEvent.MessageLevel, operationEvent.ShortDescription, operationEvent.StatusMessage, operationEvent.CurrentOperation, operationEvent.PercentComplete,
+                        operationEvent.StatusValue, operationEvent.Exception);
                     _activity.EventSource.RaiseNext(operationEvent);
                 }
 
@@ -222,9 +245,9 @@ namespace FsInfoCat.Activities
                 /// <param name="percentComplete">The new value for <paramref name="IOperationInfo.PercentComplete" /> as value from <c>-1</c> through <c>100</c>, where <c>-1</c> indicates no completion percentage is
                 /// specified.</param>
                 /// <param name="isWarning">Reports a <see cref="StatusMessageLevel.Warning" /> if <see langword="true" />; otherwise, <see cref="StatusMessageLevel.Error" /> if <see langword="false" />.</param>
-                /// <exception cref="System.ArgumentException">statusDescription</exception>
-                /// <exception cref="System.ArgumentOutOfRangeException">percentComplete</exception>
-                /// <exception cref="System.ArgumentNullException">error</exception>
+                /// <exception cref="ArgumentException">statusDescription</exception>
+                /// <exception cref="ArgumentOutOfRangeException">percentComplete</exception>
+                /// <exception cref="ArgumentNullException">error</exception>
                 /// <remarks>Calling this method will result in an activity notification event being pushed with the specified <paramref name="error" /> as the <see cref="IActivityEvent.Exception" />,
                 /// even if the value of <see cref="IActivityInfo.StatusMessage" /> or <see cref="IOperationInfo.PercentComplete" /> does not change.
                 /// <para>The <see cref="IOperationInfo.CurrentOperation" /> property will be set to a <see cref="string.Empty" /> on this progress object and on the pushed <see cref="IOperationEvent" />.</para><para>Any white space in <paramref name="statusDescription" /> will normalized before it is applied to <see cref="IActivityInfo.StatusMessage" />.</para></remarks>
@@ -251,6 +274,13 @@ namespace FsInfoCat.Activities
                         operationEvent = CreateOperationEvent(_activity, error, isWarning ? StatusMessageLevel.Warning : StatusMessageLevel.Error);
                     }
                     finally { Monitor.Exit(SyncRoot); }
+                    Logger.LogDebug(@"Raising operation event: ActivityId={ActivityId}; ParentActivityId={ParentActivityId}; MessageLevel={MessageLevel}
+ShortDescription={ShortDescription}
+StatusMessage={StatusMessage}
+CurrentOperation={CurrentOperation}
+PercentComplete={PercentComplete}; StatusValue={StatusValue}
+Exception={Exception}", operationEvent.ActivityId, operationEvent.ParentActivityId, operationEvent.MessageLevel, operationEvent.ShortDescription, operationEvent.StatusMessage, operationEvent.CurrentOperation, operationEvent.PercentComplete,
+                        operationEvent.StatusValue, operationEvent.Exception);
                     _activity.EventSource.RaiseNext(operationEvent);
                 }
 
@@ -260,7 +290,7 @@ namespace FsInfoCat.Activities
                 /// <param name="statusDescription">The new value of <see cref="IActivityInfo.StatusMessage" />.</param>
                 /// <param name="currentOperation">The new value for <see cref="IOperationInfo.CurrentOperation" />.</param>
                 /// <param name="messageLevel">The <see cref="IActivityEvent.MessageLevel" /> value of the event.</param>
-                /// <exception cref="System.ArgumentException">statusDescription</exception>
+                /// <exception cref="ArgumentException">statusDescription</exception>
                 /// <remarks>If the value of <see cref="IActivityInfo.StatusMessage" /> or <see cref="IOperationInfo.CurrentOperation" /> changes, then an activity notification event will be pushed to reflect the new operational state;
                 /// otherwise, this will have no effect.
                 /// <para>The pushed <see cref="IOperationEvent" /> will be populated with the latest <see cref="IOperationInfo.PercentComplete" /> value.</para><para>Any white space in <paramref name="statusDescription" /> will normalized before it is applied to <see cref="IActivityInfo.StatusMessage" />.</para><para>If <paramref name="currentOperation" /> is <see langword="null" /> it will converted to a <see cref="string.Empty" />; otherwise, any extraneous whitespace will be trimmed.</para></remarks>
@@ -286,6 +316,13 @@ namespace FsInfoCat.Activities
                         operationEvent = CreateOperationEvent(_activity, null, messageLevel);
                     }
                     finally { Monitor.Exit(SyncRoot); }
+                    Logger.LogDebug(@"Raising operation event: ActivityId={ActivityId}; ParentActivityId={ParentActivityId}; MessageLevel={MessageLevel}
+ShortDescription={ShortDescription}
+StatusMessage={StatusMessage}
+CurrentOperation={CurrentOperation}
+PercentComplete={PercentComplete}; StatusValue={StatusValue}
+Exception={Exception}", operationEvent.ActivityId, operationEvent.ParentActivityId, operationEvent.MessageLevel, operationEvent.ShortDescription, operationEvent.StatusMessage, operationEvent.CurrentOperation, operationEvent.PercentComplete,
+                        operationEvent.StatusValue, operationEvent.Exception);
                     _activity.EventSource.RaiseNext(operationEvent);
                 }
 
@@ -295,8 +332,8 @@ namespace FsInfoCat.Activities
                 /// <param name="error">The non-fatal error that was encountered by the current operation.</param>
                 /// <param name="statusDescription">The new value of <see cref="IActivityInfo.StatusMessage" />.</param>
                 /// <param name="isWarning">Reports a <see cref="StatusMessageLevel.Warning" /> if <see langword="true" />; otherwise, <see cref="StatusMessageLevel.Error" /> if <see langword="false" />.</param>
-                /// <exception cref="System.ArgumentException">statusDescription</exception>
-                /// <exception cref="System.ArgumentNullException">error</exception>
+                /// <exception cref="ArgumentException">statusDescription</exception>
+                /// <exception cref="ArgumentNullException">error</exception>
                 /// <remarks>Calling this method will result in an activity notification event being pushed with the specified <paramref name="error" /> as the <see cref="IActivityEvent.Exception" />,
                 /// even if the value of <see cref="IOperationInfo.CurrentOperation" /> does not change.
                 /// <para>The pushed <see cref="IOperationEvent" /> will be populated with the latest <see cref="IOperationInfo.PercentComplete" />, <see cref="IActivityInfo.StatusMessage" /> values.</para><para>Any white space in <paramref name="statusDescription" /> will normalized before it is applied to <see cref="IActivityInfo.StatusMessage" />.</para></remarks>
@@ -318,6 +355,13 @@ namespace FsInfoCat.Activities
                         operationEvent = CreateOperationEvent(_activity, error, isWarning ? StatusMessageLevel.Warning : StatusMessageLevel.Error);
                     }
                     finally { Monitor.Exit(SyncRoot); }
+                    Logger.LogDebug(@"Raising operation event: ActivityId={ActivityId}; ParentActivityId={ParentActivityId}; MessageLevel={MessageLevel}
+ShortDescription={ShortDescription}
+StatusMessage={StatusMessage}
+CurrentOperation={CurrentOperation}
+PercentComplete={PercentComplete}; StatusValue={StatusValue}
+Exception={Exception}", operationEvent.ActivityId, operationEvent.ParentActivityId, operationEvent.MessageLevel, operationEvent.ShortDescription, operationEvent.StatusMessage, operationEvent.CurrentOperation, operationEvent.PercentComplete,
+                        operationEvent.StatusValue, operationEvent.Exception);
                     _activity.EventSource.RaiseNext(operationEvent);
                 }
 
@@ -348,6 +392,13 @@ namespace FsInfoCat.Activities
                         operationEvent = CreateOperationEvent(_activity, null, messageLevel);
                     }
                     finally { Monitor.Exit(SyncRoot); }
+                    Logger.LogDebug(@"Raising operation event: ActivityId={ActivityId}; ParentActivityId={ParentActivityId}; MessageLevel={MessageLevel}
+ShortDescription={ShortDescription}
+StatusMessage={StatusMessage}
+CurrentOperation={CurrentOperation}
+PercentComplete={PercentComplete}; StatusValue={StatusValue}
+Exception={Exception}", operationEvent.ActivityId, operationEvent.ParentActivityId, operationEvent.MessageLevel, operationEvent.ShortDescription, operationEvent.StatusMessage, operationEvent.CurrentOperation, operationEvent.PercentComplete,
+                        operationEvent.StatusValue, operationEvent.Exception);
                     _activity.EventSource.RaiseNext(operationEvent);
                 }
 
@@ -365,6 +416,13 @@ namespace FsInfoCat.Activities
                     Monitor.Enter(SyncRoot);
                     try { operationEvent = CreateOperationEvent(_activity, value, isWarning ? StatusMessageLevel.Warning : StatusMessageLevel.Error); }
                     finally { Monitor.Exit(SyncRoot); }
+                    Logger.LogDebug(@"Raising operation event: ActivityId={ActivityId}; ParentActivityId={ParentActivityId}; MessageLevel={MessageLevel}
+ShortDescription={ShortDescription}
+StatusMessage={StatusMessage}
+CurrentOperation={CurrentOperation}
+PercentComplete={PercentComplete}; StatusValue={StatusValue}
+Exception={Exception}", operationEvent.ActivityId, operationEvent.ParentActivityId, operationEvent.MessageLevel, operationEvent.ShortDescription, operationEvent.StatusMessage, operationEvent.CurrentOperation, operationEvent.PercentComplete,
+                        operationEvent.StatusValue, operationEvent.Exception);
                     _activity.EventSource.RaiseNext(operationEvent);
                 }
 
@@ -376,8 +434,8 @@ namespace FsInfoCat.Activities
                 /// <param name="percentComplete">The new value for <paramref name="IOperationInfo.PercentComplete" /> as value from <c>-1</c> through <c>100</c>, where <c>-1</c> indicates no completion percentage is
                 /// specified.</param>
                 /// <param name="isWarning">Reports a <see cref="StatusMessageLevel.Warning" /> if <see langword="true" />; otherwise, <see cref="StatusMessageLevel.Error" /> if <see langword="false" />.</param>
-                /// <exception cref="System.ArgumentOutOfRangeException">percentComplete</exception>
-                /// <exception cref="System.ArgumentNullException">error</exception>
+                /// <exception cref="ArgumentOutOfRangeException">percentComplete</exception>
+                /// <exception cref="ArgumentNullException">error</exception>
                 /// <remarks>Calling this method will result in an activity notification event being pushed with the specified <paramref name="error" /> as the <see cref="IActivityEvent.Exception" />,
                 /// even if the value of <see cref="IOperationInfo.CurrentOperation" /> or <see cref="IOperationInfo.PercentComplete" /> does not change.
                 /// <para>The pushed <see cref="IOperationEvent" /> will be populated with the latest <see cref="IActivityInfo.StatusMessage" /> value.</para><para>If <paramref name="currentOperation" /> is <see langword="null" /> it will converted to a <see cref="string.Empty" />; otherwise, any extraneous whitespace will be trimmed.</para></remarks>
@@ -398,6 +456,13 @@ namespace FsInfoCat.Activities
                         operationEvent = CreateOperationEvent(_activity, error, isWarning ? StatusMessageLevel.Warning : StatusMessageLevel.Error);
                     }
                     finally { Monitor.Exit(SyncRoot); }
+                    Logger.LogDebug(@"Raising operation event: ActivityId={ActivityId}; ParentActivityId={ParentActivityId}; MessageLevel={MessageLevel}
+ShortDescription={ShortDescription}
+StatusMessage={StatusMessage}
+CurrentOperation={CurrentOperation}
+PercentComplete={PercentComplete}; StatusValue={StatusValue}
+Exception={Exception}", operationEvent.ActivityId, operationEvent.ParentActivityId, operationEvent.MessageLevel, operationEvent.ShortDescription, operationEvent.StatusMessage, operationEvent.CurrentOperation, operationEvent.PercentComplete,
+                        operationEvent.StatusValue, operationEvent.Exception);
                     _activity.EventSource.RaiseNext(operationEvent);
                 }
 
@@ -408,7 +473,7 @@ namespace FsInfoCat.Activities
                 /// <param name="percentComplete">The new value for <paramref name="IOperationInfo.PercentComplete" /> as value from <c>-1</c> through <c>100</c>, where <c>-1</c> indicates no completion percentage is
                 /// specified.</param>
                 /// <param name="messageLevel">The <see cref="IActivityEvent.MessageLevel" /> value of the event.</param>
-                /// <exception cref="System.ArgumentOutOfRangeException">percentComplete</exception>
+                /// <exception cref="ArgumentOutOfRangeException">percentComplete</exception>
                 /// <remarks>If the value of <see cref="IOperationInfo.CurrentOperation" /> or <paramref name="IOperationInfo.PercentComplete" /> changes, then an activity notification event will be pushed to reflect the new operational
                 /// state; otherwise, this will have no effect.
                 /// <para>The pushed <see cref="IOperationEvent" /> will be populated with the latest <see cref="IActivityInfo.StatusMessage" /> value.</para><para>If <paramref name="currentOperation" /> is <see langword="null" /> it will converted to a <see cref="string.Empty" />; otherwise, any extraneous whitespace will be trimmed.</para></remarks>
@@ -436,6 +501,13 @@ namespace FsInfoCat.Activities
                         operationEvent = CreateOperationEvent(_activity, null, messageLevel);
                     }
                     finally { Monitor.Exit(SyncRoot); }
+                    Logger.LogDebug(@"Raising operation event: ActivityId={ActivityId}; ParentActivityId={ParentActivityId}; MessageLevel={MessageLevel}
+ShortDescription={ShortDescription}
+StatusMessage={StatusMessage}
+CurrentOperation={CurrentOperation}
+PercentComplete={PercentComplete}; StatusValue={StatusValue}
+Exception={Exception}", operationEvent.ActivityId, operationEvent.ParentActivityId, operationEvent.MessageLevel, operationEvent.ShortDescription, operationEvent.StatusMessage, operationEvent.CurrentOperation, operationEvent.PercentComplete,
+                        operationEvent.StatusValue, operationEvent.Exception);
                     _activity.EventSource.RaiseNext(operationEvent);
                 }
 
@@ -445,7 +517,7 @@ namespace FsInfoCat.Activities
                 /// <param name="error">The non-fatal error that was encountered by the current operation.</param>
                 /// <param name="currentOperation">The new value for <see cref="IOperationInfo.CurrentOperation" />.</param>
                 /// <param name="isWarning">Reports a <see cref="StatusMessageLevel.Warning" /> if <see langword="true" />; otherwise, <see cref="StatusMessageLevel.Error" /> if <see langword="false" />.</param>
-                /// <exception cref="System.ArgumentNullException">error</exception>
+                /// <exception cref="ArgumentNullException">error</exception>
                 /// <remarks>Calling this method will result in an activity notification event being pushed with the specified <paramref name="error" /> as the <see cref="IActivityEvent.Exception" />,
                 /// even if the value of <see cref="IOperationInfo.CurrentOperation" /> does not change.
                 /// <para>The pushed <see cref="IOperationEvent" /> will be populated with the latest <see cref="IOperationInfo.PercentComplete" />, <see cref="IActivityInfo.StatusMessage" /> values.</para><para>If <paramref name="currentOperation" /> is <see langword="null" /> it will converted to a <see cref="string.Empty" />; otherwise, any extraneous whitespace will be trimmed.</para></remarks>
@@ -461,6 +533,14 @@ namespace FsInfoCat.Activities
                         operationEvent = CreateOperationEvent(_activity, error, isWarning ? StatusMessageLevel.Warning : StatusMessageLevel.Error);
                     }
                     finally { Monitor.Exit(SyncRoot); }
+                    Logger.LogDebug(@"Raising operation event: ActivityId={ActivityId}; ParentActivityId={ParentActivityId}; MessageLevel={MessageLevel}
+ShortDescription={ShortDescription}
+StatusMessage={StatusMessage}
+CurrentOperation={CurrentOperation}
+PercentComplete={PercentComplete}; StatusValue={StatusValue}
+Exception={Exception}", operationEvent.ActivityId, operationEvent.ParentActivityId, operationEvent.MessageLevel, operationEvent.ShortDescription, operationEvent.StatusMessage, operationEvent.CurrentOperation, operationEvent.PercentComplete,
+                        operationEvent.StatusValue, operationEvent.Exception);
+                    _activity.EventSource.RaiseNext(operationEvent);
                 }
 
                 /// <summary>
@@ -482,6 +562,13 @@ namespace FsInfoCat.Activities
                         operationEvent = CreateOperationEvent(_activity, null, messageLevel);
                     }
                     finally { Monitor.Exit(SyncRoot); }
+                    Logger.LogDebug(@"Raising operation event: ActivityId={ActivityId}; ParentActivityId={ParentActivityId}; MessageLevel={MessageLevel}
+ShortDescription={ShortDescription}
+StatusMessage={StatusMessage}
+CurrentOperation={CurrentOperation}
+PercentComplete={PercentComplete}; StatusValue={StatusValue}
+Exception={Exception}", operationEvent.ActivityId, operationEvent.ParentActivityId, operationEvent.MessageLevel, operationEvent.ShortDescription, operationEvent.StatusMessage, operationEvent.CurrentOperation, operationEvent.PercentComplete,
+                        operationEvent.StatusValue, operationEvent.Exception);
                     _activity.EventSource.RaiseNext(operationEvent);
                 }
 
@@ -523,6 +610,13 @@ namespace FsInfoCat.Activities
                         operationEvent = CreateOperationEvent(_activity, null, StatusMessageLevel.Information);
                     }
                     finally { Monitor.Exit(SyncRoot); }
+                    Logger.LogDebug(@"Raising operation event: ActivityId={ActivityId}; ParentActivityId={ParentActivityId}; MessageLevel={MessageLevel}
+ShortDescription={ShortDescription}
+StatusMessage={StatusMessage}
+CurrentOperation={CurrentOperation}
+PercentComplete={PercentComplete}; StatusValue={StatusValue}
+Exception={Exception}", operationEvent.ActivityId, operationEvent.ParentActivityId, operationEvent.MessageLevel, operationEvent.ShortDescription, operationEvent.StatusMessage, operationEvent.CurrentOperation, operationEvent.PercentComplete,
+                        operationEvent.StatusValue, operationEvent.Exception);
                     _activity.EventSource.RaiseNext(operationEvent);
                 }
 

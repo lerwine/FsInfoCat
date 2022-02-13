@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
@@ -6,9 +7,9 @@ namespace FsInfoCat.Activities
 {
     internal sealed partial class AsyncAction
     {
-        class AsyncActionProgress : ActivityProgress<AsyncAction>
+        sealed class AsyncActionProgress : ActivityProgress<AsyncAction>
         {
-            private AsyncActionProgress([DisallowNull] AsyncAction activity) : base(activity) { }
+            private AsyncActionProgress([DisallowNull] AsyncAction activity) : base(Hosting.GetRequiredService<ILogger<AsyncActionProgress>>(), activity) { }
 
             /// <summary>
             /// Start as an asynchronous operation.
@@ -21,11 +22,14 @@ namespace FsInfoCat.Activities
             internal static async Task StartAsync([DisallowNull] AsyncAction activity, [DisallowNull] Func<IActivityProgress, Task> asyncMethodDelegate)
             {
                 if (asyncMethodDelegate is null) throw new ArgumentNullException(nameof(asyncMethodDelegate));
+                activity.Logger.LogDebug("Invoking asyncMethodDelegate for AsyncAction {ActivityId} ({ShortDescription})", activity.ActivityId, activity.ShortDescription);
                 Task task = asyncMethodDelegate(new AsyncActionProgress(activity));
                 if (task is null)
                     throw new InvalidOperationException();
                 activity.OnBeforeAwaitTask();
+                activity.Logger.LogDebug("Awaiting task completion for AsyncAction {ActivityId} ({ShortDescription})", activity.ActivityId, activity.ShortDescription);
                 await task;
+                activity.Logger.LogDebug("Task for AsyncAction completed successfully", activity.ActivityId, activity.ShortDescription);
             }
 
             /// <summary>
@@ -52,7 +56,7 @@ namespace FsInfoCat.Activities
 
     internal sealed partial class AsyncAction<TState>
     {
-        class AsyncActionProgress : ActivityProgress<AsyncAction<TState>>, IActivityProgress<TState>
+        sealed class AsyncActionProgress : ActivityProgress<AsyncAction<TState>>, IActivityProgress<TState>
         {
             /// <summary>
             /// Gets the user-defined value.
@@ -60,7 +64,7 @@ namespace FsInfoCat.Activities
             /// <value>The user-defined vaue that is associated with the activity.</value>
             public TState AsyncState { get; }
 
-            private AsyncActionProgress([DisallowNull] AsyncAction<TState> activity) : base(activity) => AsyncState = activity.AsyncState;
+            private AsyncActionProgress([DisallowNull] AsyncAction<TState> activity) : base(Hosting.GetRequiredService<ILogger<AsyncActionProgress>>(), activity) => AsyncState = activity.AsyncState;
 
             /// <summary>
             /// Start as an asynchronous operation that is associated with a user-specified value.
@@ -73,11 +77,14 @@ namespace FsInfoCat.Activities
             internal static async Task StartAsync([DisallowNull] AsyncAction<TState> activity, [DisallowNull] Func<IActivityProgress<TState>, Task> asyncMethodDelegate)
             {
                 if (asyncMethodDelegate is null) throw new ArgumentNullException(nameof(asyncMethodDelegate));
+                activity.Logger.LogDebug("Invoking asyncMethodDelegate for AsyncAction {ActivityId} ({ShortDescription})", activity.ActivityId, activity.ShortDescription);
                 Task task = asyncMethodDelegate(new AsyncActionProgress(activity));
                 if (task is null)
                     throw new InvalidOperationException();
                 activity.OnBeforeAwaitTask();
+                activity.Logger.LogDebug("Awaiting task completion for AsyncAction {ActivityId} ({ShortDescription})", activity.ActivityId, activity.ShortDescription);
                 await task;
+                activity.Logger.LogDebug("Task for AsyncAction completed successfully", activity.ActivityId, activity.ShortDescription);
             }
 
             /// <summary>

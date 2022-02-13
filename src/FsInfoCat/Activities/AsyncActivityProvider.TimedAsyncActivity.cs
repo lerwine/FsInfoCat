@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using System;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -54,6 +55,7 @@ namespace FsInfoCat.Activities
             protected override void OnBeforeAwaitTask()
             {
                 Started = DateTime.Now;
+                Logger.LogDebug("Starting StopWatch");
                 _stopwatch.Start();
                 base.OnBeforeAwaitTask();
             }
@@ -61,7 +63,11 @@ namespace FsInfoCat.Activities
             /// <summary>
             /// Called when the associated task has completed.
             /// </summary>
-            protected void StopTimer() => _stopwatch.Stop();
+            protected void StopTimer()
+            {
+                Logger.LogDebug("Stopping StopWatch");
+                _stopwatch.Stop();
+            }
         }
     }
 }
