@@ -1,10 +1,10 @@
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
+using System.Threading;
 
 namespace FsInfoCat.Local
 {
@@ -12,13 +12,9 @@ namespace FsInfoCat.Local
     {
         #region Fields
 
-        private readonly IPropertyChangeTracker<Guid> _id;
-        private readonly IPropertyChangeTracker<string> _displayName;
-        private readonly IPropertyChangeTracker<bool> _readOnly;
-        private readonly IPropertyChangeTracker<uint> _maxNameLength;
-        private readonly IPropertyChangeTracker<DriveType?> _defaultDriveType;
-        private readonly IPropertyChangeTracker<string> _notes;
-        private readonly IPropertyChangeTracker<bool> _isInactive;
+        private Guid? _id;
+        private string _displayName = string.Empty;
+        private string _notes = string.Empty;
 
         #endregion
 
@@ -32,18 +28,22 @@ namespace FsInfoCat.Local
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_Id), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual Guid Id
         {
-            get => _id.GetValue();
+            get => _id ?? Guid.Empty;
             set
             {
-                if (_id.IsSet)
+                Monitor.Enter(SyncRoot);
+                try
                 {
-                    Guid id = _id.GetValue();
-                    if (id.Equals(value))
+                    if (_id.HasValue)
+                    {
+                        if (!_id.Value.Equals(value))
+                            throw new InvalidOperationException();
+                    }
+                    else if (value.Equals(Guid.Empty))
                         return;
-                    if (!id.Equals(Guid.Empty))
-                        throw new InvalidOperationException();
+                    _id = value;
                 }
-                _id.SetValue(value);
+                finally { Monitor.Exit(SyncRoot); }
             }
         }
 
@@ -52,52 +52,34 @@ namespace FsInfoCat.Local
             ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
         [StringLength(DbConstants.DbColMaxLen_LongName, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_DisplayNameLength),
             ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
-        public virtual string DisplayName { get => _displayName.GetValue(); set => _displayName.SetValue(value); }
+        public virtual string DisplayName { get => _displayName; set => _displayName = value.AsWsNormalizedOrEmpty(); }
 
         [Required]
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_ReadOnly), ResourceType = typeof(FsInfoCat.Properties.Resources))]
-        public virtual bool ReadOnly { get => _readOnly.GetValue(); set => _readOnly.SetValue(value); }
+        public virtual bool ReadOnly { get; set; }
 
         [Required]
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_MaxNameLength), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         [Range(1, uint.MaxValue, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_MaxNameLengthInvalid),
             ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
-        public virtual uint MaxNameLength { get => _maxNameLength.GetValue(); set => _maxNameLength.SetValue(value); }
+        public virtual uint MaxNameLength { get; set; } = DbConstants.DbColDefaultValue_MaxNameLength;
 
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_DefaultDriveType), ResourceType = typeof(FsInfoCat.Properties.Resources))]
-        public virtual DriveType? DefaultDriveType { get => _defaultDriveType.GetValue(); set => _defaultDriveType.SetValue(value); }
+        public virtual DriveType? DefaultDriveType { get; set; }
 
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_Notes), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         [Required(AllowEmptyStrings = true)]
-        public virtual string Notes { get => _notes.GetValue(); set => _notes.SetValue(value); }
+        public virtual string Notes { get => _notes; set => _notes = value.EmptyIfNullOrWhiteSpace(); }
 
         [Required]
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_IsInactive), ResourceType = typeof(FsInfoCat.Properties.Resources))]
-        public virtual bool IsInactive { get => _isInactive.GetValue(); set => _isInactive.SetValue(value); }
+        public virtual bool IsInactive { get; set; }
 
         FileSystemRow IIdentityReference<FileSystemRow>.Entity => this;
 
         IDbEntity IIdentityReference.Entity => this;
 
         #endregion
-
-        protected FileSystemRow()
-        {
-            _id = AddChangeTracker(nameof(Id), Guid.Empty);
-            _displayName = AddChangeTracker(nameof(DisplayName), "", TrimmedNonNullStringCoersion.Default);
-            _readOnly = AddChangeTracker(nameof(ReadOnly), false);
-            _maxNameLength = AddChangeTracker(nameof(MaxNameLength), DbConstants.DbColDefaultValue_MaxNameLength);
-            _defaultDriveType = AddChangeTracker<DriveType?>(nameof(DefaultDriveType), null);
-            _notes = AddChangeTracker(nameof(Notes), "", NonWhiteSpaceOrEmptyStringCoersion.Default);
-            _isInactive = AddChangeTracker(nameof(IsInactive), false);
-        }
-
-        protected override void OnPropertyChanging(PropertyChangingEventArgs args)
-        {
-            if (args.PropertyName == nameof(Id) && _id.IsChanged)
-                throw new InvalidOperationException();
-            base.OnPropertyChanging(args);
-        }
 
         protected override void OnValidate(ValidationContext validationContext, List<ValidationResult> results)
         {

@@ -7,15 +7,10 @@ namespace FsInfoCat.Local
     {
         public const string VIEW_NAME = "vSymbolicNameListing";
 
-        private readonly IPropertyChangeTracker<string> _fileSystemDisplayName;
+        private string _fileSystemDisplayName = string.Empty;
 
-        public string FileSystemDisplayName { get => _fileSystemDisplayName.GetValue(); set => _fileSystemDisplayName.SetValue(value); }
+        public string FileSystemDisplayName { get => _fileSystemDisplayName; set => _fileSystemDisplayName = value.AsWsNormalizedOrEmpty(); }
 
         internal static void OnBuildEntity(EntityTypeBuilder<SymbolicNameListItem> builder) => builder.ToView(VIEW_NAME).HasKey(nameof(Id));
-
-        public SymbolicNameListItem()
-        {
-            _fileSystemDisplayName = AddChangeTracker(nameof(FileSystemDisplayName), "", TrimmedNonNullStringCoersion.Default);
-        }
     }
 }

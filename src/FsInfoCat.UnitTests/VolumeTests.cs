@@ -99,7 +99,6 @@ namespace FsInfoCat.UnitTests
             using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction dbContextTransaction = dbContext.Database.BeginTransaction();
             Volume target = new() { DisplayName = displayName };
-            Assert.IsTrue(target.IsChanged());
             target.FileSystem = dbContext.FileSystems.Find(Guid.Parse("0af7fe3e-3bc2-41ac-b6b1-310ad5fc46cd"));
             target.Identifier = new VolumeIdentifier(Guid.NewGuid());
             string actualValue = target.DisplayName;
@@ -150,7 +149,6 @@ namespace FsInfoCat.UnitTests
         public void VolumeNameTestMethod(string volumeName, string expected, string errorMessage)
         {
             Volume target = new() { VolumeName = volumeName };
-            Assert.IsTrue(target.IsChanged());
             target.DisplayName = "Test";
             target.FileSystem = new();
             target.Identifier = new VolumeIdentifier(Guid.NewGuid());
@@ -182,7 +180,6 @@ namespace FsInfoCat.UnitTests
             using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction dbContextTransaction = dbContext.Database.BeginTransaction();
             Volume target = new() { Identifier = string.IsNullOrWhiteSpace(identifier) ? default : VolumeIdentifier.Parse(identifier) };
-            Assert.IsTrue(target.IsChanged());
             target.DisplayName = "Test";
             target.FileSystem = dbContext.FileSystems.Find(Guid.Parse("0af7fe3e-3bc2-41ac-b6b1-310ad5fc46cd"));
             VolumeIdentifier expectedValue = string.IsNullOrWhiteSpace(expected) ? default : VolumeIdentifier.Parse(expected);
@@ -222,7 +219,6 @@ namespace FsInfoCat.UnitTests
         {
             VolumeStatus value = (VolumeStatus)Enum.ToObject(typeof(VolumeStatus), sourceValue);
             Volume target = new() { Status = value };
-            Assert.IsTrue(target.IsChanged());
             target.DisplayName = "Test";
             target.FileSystem = new();
             target.Identifier = new VolumeIdentifier(Guid.NewGuid());
@@ -257,7 +253,6 @@ namespace FsInfoCat.UnitTests
         public void TypeTestMethod(DriveType value, string errorMessage)
         {
             Volume target = new() { Type = value };
-            Assert.IsTrue(target.IsChanged());
             target.DisplayName = "Test";
             target.FileSystem = new();
             target.Identifier = new VolumeIdentifier(Guid.NewGuid());
@@ -289,7 +284,6 @@ namespace FsInfoCat.UnitTests
         public void ReadOnlyTestMethod(bool? value)
         {
             Volume target = new() { ReadOnly = value };
-            Assert.IsTrue(target.IsChanged());
             bool? actualValue = target.ReadOnly;
             Assert.AreEqual(value, actualValue);
         }
@@ -303,7 +297,6 @@ namespace FsInfoCat.UnitTests
         public void MaxNameLengthTestMethod(uint? value, string errorMessage)
         {
             Volume target = new() { MaxNameLength = value };
-            Assert.IsTrue(target.IsChanged());
             target.DisplayName = "Test";
             target.FileSystem = new();
             target.Identifier = new VolumeIdentifier(Guid.NewGuid());
@@ -334,7 +327,6 @@ namespace FsInfoCat.UnitTests
         public void NotesTestMethod(string notes, string expected)
         {
             Volume target = new() { Notes = notes };
-            Assert.IsTrue(target.IsChanged());
             string actualValue = target.Notes;
             Assert.IsNotNull(actualValue);
             Assert.AreEqual(expected, actualValue);
@@ -349,7 +341,6 @@ namespace FsInfoCat.UnitTests
             Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction dbContextTransaction = dbContext.Database.BeginTransaction();
             Guid expectedFileSystemId = Guid.Parse("88a3cdb9-ed66-4778-a33b-437675a5ae38");
             Volume target = new() { FileSystemId = expectedFileSystemId };
-            Assert.IsTrue(target.IsChanged());
             Assert.IsNull(target.FileSystem);
             target.DisplayName = "Test";
             target.Identifier = new VolumeIdentifier(Guid.NewGuid());
@@ -408,7 +399,6 @@ namespace FsInfoCat.UnitTests
         {
             DateTime? expectedDateTime = string.IsNullOrWhiteSpace(lastSynchronizedOn) ? null : DateTime.Parse(lastSynchronizedOn);
             Volume target = new() { LastSynchronizedOn = expectedDateTime };
-            Assert.IsTrue(target.IsChanged());
             target.DisplayName = "Test"; target.FileSystem = new();
             target.Identifier = new VolumeIdentifier(Guid.NewGuid());
             target.CreatedOn = DateTime.Parse(createdOn);
@@ -442,7 +432,6 @@ namespace FsInfoCat.UnitTests
         {
             DateTime expectedValue = DateTime.Now.AddDays(-1);
             Volume target = new() { CreatedOn = expectedValue };
-            Assert.IsTrue(target.IsChanged());
             DateTime actualValue = target.CreatedOn;
             Assert.AreEqual(expectedValue, actualValue);
         }
@@ -452,19 +441,7 @@ namespace FsInfoCat.UnitTests
         {
             DateTime expectedValue = DateTime.Now.AddDays(-1);
             Volume target = new() { ModifiedOn = expectedValue };
-            Assert.IsTrue(target.IsChanged());
             DateTime actualValue = target.ModifiedOn;
-            Assert.AreEqual(expectedValue, actualValue);
-        }
-
-        [TestMethod("string Item[string]"), Priority(20), Ignore]
-        public void ItemColumnNameTestMethod()
-        {
-            // DEFERRED: Implement test for string Item[string]
-            string columnNameIndex = default;
-            Volume target = default; // TODO: Create and initialize Volume instance
-            string expectedValue = default;
-            string actualValue = target[columnNameIndex];
             Assert.AreEqual(expectedValue, actualValue);
         }
 
@@ -479,50 +456,6 @@ namespace FsInfoCat.UnitTests
             IEnumerable<ValidationResult> expectedReturnValue = default;
             IEnumerable<ValidationResult> actualReturnValue = target.Validate(validationContextArg);
             Assert.AreEqual(expectedReturnValue, actualReturnValue);
-        }
-
-        [TestMethod("bool HasErrors()"), Priority(20), Ignore]
-        public void HasErrorsTestMethod()
-        {
-            Assert.Inconclusive("Test not implemented");
-            // DEFERRED: Implement test for bool HasErrors()
-
-            Volume target = default; // TODO: Create and initialize Volume instance
-            bool expectedReturnValue = default;
-            bool actualReturnValue = target.HasErrors();
-            Assert.AreEqual(expectedReturnValue, actualReturnValue);
-        }
-
-        [TestMethod("void AcceptChanges()"), Priority(20), Ignore]
-        public void AcceptChangesTestMethod()
-        {
-            Assert.Inconclusive("Test not implemented");
-            // DEFERRED: Implement test for void AcceptChanges()
-
-            Volume target = default; // TODO: Create and initialize Volume instance
-            target.AcceptChanges();
-        }
-
-        [TestMethod("bool IsChanged()"), Priority(20), Ignore]
-        public void IsChangedTestMethod()
-        {
-            Assert.Inconclusive("Test not implemented");
-            // DEFERRED: Implement test for bool IsChanged()
-
-            Volume target = default; // TODO: Create and initialize Volume instance
-            bool expectedReturnValue = default;
-            bool actualReturnValue = target.IsChanged();
-            Assert.AreEqual(expectedReturnValue, actualReturnValue);
-        }
-
-        [TestMethod("void RejectChanges()"), Priority(20), Ignore]
-        public void RejectChangesTestMethod()
-        {
-            Assert.Inconclusive("Test not implemented");
-            // DEFERRED: Implement test for void RejectChanges()
-
-            Volume target = default; // TODO: Create and initialize Volume instance
-            target.RejectChanges();
         }
 
         [TestMethod("DbContext.Volumes.Add(Volume)"), Priority(20)]
@@ -548,7 +481,6 @@ namespace FsInfoCat.UnitTests
                 Type = expectdType,
                 ReadOnly = expectedReadOnly
             };
-            Assert.IsTrue(target.IsChanged());
             EntityEntry<Volume> entry = dbContext.Entry(target);
             Assert.AreEqual(EntityState.Detached, entry.State);
             dbContext.Volumes.Add(target);
@@ -561,7 +493,6 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(VolumeStatus.Controlled, target.Status);
             Assert.AreEqual(DriveType.CDRom, target.Type);
             Assert.IsTrue(target.ReadOnly);
-            Assert.IsTrue(target.IsChanged());
             dbContext.SaveChanges();
             Assert.AreEqual(EntityState.Unchanged, entry.State);
             Assert.AreEqual(id, target.Id);
@@ -571,7 +502,6 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(VolumeStatus.Controlled, target.Status);
             Assert.AreEqual(DriveType.CDRom, target.Type);
             Assert.IsTrue(target.ReadOnly);
-            Assert.IsFalse(target.IsChanged());
             target = new()
             {
                 DisplayName = expectedDisplayName,

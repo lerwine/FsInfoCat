@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
@@ -113,81 +114,527 @@ namespace FsInfoCat
             return referenceEntry.TargetEntry;
         }
 
-        public static void RejectChanges<T>(this DbSet<T> dbSet, Func<T, EntityEntry<T>> getEntry) where T : class, IRevertibleChangeTracking
-        {
-            if (getEntry is null)
-                throw new ArgumentNullException(nameof(getEntry));
-            if (dbSet is null)
-                return;
-            T[] items = dbSet.Local.ToArray();
-            foreach (T t in items)
-            {
-                EntityEntry<T> entry = getEntry(t);
-                if (entry is null)
-                    t.RejectChanges();
-                else
-                    RejectChanges(entry);
-            }
-        }
-
+        [Obsolete("Use DbContext.ChangeTracker, instead")]
         public static void RejectChanges(this DbContext dbContext)
         {
-            if (dbContext is null)
-                return;
-            EntityEntry[] entityEntries = dbContext.ChangeTracker.Entries().ToArray();
-            foreach (EntityEntry entry in entityEntries)
-            {
-                switch (entry.State)
-                {
-                    case EntityState.Added:
-                        _ = dbContext.Remove(entry.Entity);
-                        break;
-                    case EntityState.Modified:
-                        if (entry.Entity is IDbEntity dbEntity)
-                            dbEntity.RejectChanges();
-                        break;
-                }
-            }
+            throw new NotImplementedException();
         }
 
-        public static void RejectChanges(this EntityEntry entry)
+        /// <summary>
+        /// Matches <see cref="IFile"/> objects with <see cref="FileInfo"/> objects with the same file length.
+        /// </summary>
+        /// <typeparam name="TDbFile">The type of the database entity.</typeparam>
+        /// <param name="dbItems">The input database entity objects.</param>
+        /// <param name="osItems">The input OS file objects to match up with corresponding <paramref name="dbItems"/>.</param>
+        /// <param name="matchingPairs">Contains pairs of <typeparamref name="TDbFile"/> and <see cref="FileInfo"/> objects with the same file length.</param>
+        /// <param name="unmatchedDb"><typeparamref name="TDbFile"/> objects where the file length does not match the file length of any <see cref="FileInfo"/> objects.</param>
+        /// <param name="unmatchedFs"><see cref="FileInfo"/> objects where the file length does not match the file length of any <typeparamref name="TDbFile"/> objects.</param>
+        /// <returns>A <see cref="List{ValueTuple{List{TDbFile}, List{FileInfo}}}"/> representing sets of multiple <typeparamref name="TDbFile"/> and <see cref="FileInfo"/> objects that share the same file length.</returns>
+        private static List<(List<TDbFile> DbFile, List<FileInfo> FileInfo)> MatchByLength<TDbFile>(IEnumerable<TDbFile> dbItems, IEnumerable<FileInfo> osItems, List<(TDbFile DbFile, FileInfo FileInfo)> matchingPairs,
+            out List<TDbFile> unmatchedDb, out List<FileInfo> unmatchedFs)
+            where TDbFile : class, IFile
         {
-            if (entry is null)
-                return;
-            switch (entry.State)
+            List<TDbFile> udb = new();
+            List<(List<TDbFile>, List<FileInfo>)> mm = new();
+            long[] values = dbItems.GroupBy(d => d.BinaryProperties.Length).GroupJoin(osItems, g => g.Key, f => f.Length, (g, f) => (Group: g, f.ToList())).Where(a =>
             {
-                case EntityState.Added:
-                    //if (entry.Entity is IRevertibleChangeTracking rct)
-                    //    rct.RejectChanges();
-                    _ = entry.Context.Remove(entry.Entity);
-                    break;
-                case EntityState.Deleted:
-                    if (entry.Entity is IRevertibleChangeTracking rct2)
-                    {
-                        rct2.RejectChanges();
-                        entry.State = rct2.IsChanged ? EntityState.Modified : EntityState.Unchanged;
-                    }
-                    break;
-                case EntityState.Unchanged:
-                    break;
-                default:
-                    if (entry.Entity is IRevertibleChangeTracking rct3)
-                        rct3.RejectChanges();
-                    break;
-            }
+                (IGrouping<long, TDbFile> grp, List<FileInfo> fs) = a;
+                List<TDbFile> db = grp.ToList();
+                if (db.Count == 1 && fs.Count == 1)
+                    matchingPairs.Add((db[0], fs[0]));
+                else if (fs.Count > 0)
+                    mm.Add((db, fs));
+                else
+                {
+                    udb.AddRange(db);
+                    return false;
+                }
+                return true;
+            }).Select(a => a.Group.Key).ToArray();
+            unmatchedDb = udb;
+            unmatchedFs = ((values.Length == 0) ? osItems : osItems.Where(o => !values.Contains(o.Length))).ToList();
+            return mm;
         }
 
-        public static List<(TSubdirectory Subdirectory, DirectoryInfo DirectoryInfo)> ToMatchedPairs<TSubdirectory>(this IEnumerable<TSubdirectory> subdirectories, IEnumerable<DirectoryInfo> directoryInfos)
+        /// <summary>
+        /// Matches <see cref="IFile"/> objects with <see cref="FileInfo"/> objects with the same last write time.
+        /// </summary>
+        /// <typeparam name="TDbFile">The type of the database entity.</typeparam>
+        /// <param name="dbItems">The input database entity objects.</param>
+        /// <param name="osItems">The input OS file objects to match up with corresponding <paramref name="dbItems"/>.</param>
+        /// <param name="matchingPairs">Contains pairs of <typeparamref name="TDbFile"/> and <see cref="FileInfo"/> objects with the same file length and last write time.</param>
+        /// <param name="partialMatches">Sets of multiple <typeparamref name="TDbFile"/> and <see cref="FileInfo"/> objects that share only the same last write time with no matching file length.</param>
+        /// <param name="unmatchedDb"><typeparamref name="TDbFile"/> objects where neither the file length nor last write time matches the file length or last write time of any <see cref="FileInfo"/> objects.</param>
+        /// <param name="unmatchedFs"><see cref="FileInfo"/> objects where neither the file length nor last write time matches the file length or last write time of any <typeparamref name="TDbFile"/> objects.</param>
+        /// <returns>A <see cref="List{ValueTuple{List{TDbFile}, List{FileInfo}}}"/> representing sets of multiple <typeparamref name="TDbFile"/> and <see cref="FileInfo"/> objects that share the same file length and last write time.</returns>
+        private static List<(List<TDbFile> DbFile, List<FileInfo> FileInfo)> MatchByLastWriteTime<TDbFile>(IEnumerable<TDbFile> dbItems, IEnumerable<FileInfo> osItems, List<(TDbFile DbFile, FileInfo FileInfo)> matchingPairs,
+            out List<(List<TDbFile> DbFile, List<FileInfo> FileInfo)> partialMatches, out List<TDbFile> unmatchedDb, out List<FileInfo> unmatchedFs)
+            where TDbFile : class, IFile
+        {
+            List<TDbFile> udb1 = new();
+            List<FileInfo> ufs1 = new();
+            List<(List<TDbFile>, List<FileInfo>)> mm = new();
+            List<(List<TDbFile>, List<FileInfo>)> pm = new();
+            DateTime[] values = dbItems.GroupBy(d => d.LastWriteTime).GroupJoin(osItems, g => g.Key, f => f.LastWriteTime, (g, f) => (Group: g, f.ToList())).Where(a =>
+            {
+                (IGrouping<DateTime, TDbFile> grp, List<FileInfo> fs) = a;
+                List<TDbFile> db = grp.ToList();
+                if (db.Count == 1 && fs.Count == 1)
+                    matchingPairs.Add((db[0], fs[0]));
+                else if (fs.Count > 0)
+                {
+                    mm.AddRange(MatchByLength(db, fs, matchingPairs, out List<TDbFile> udb2, out List<FileInfo> ufs2));
+                    // udb2/ufs2 = Matches last write time but not length
+                    if (udb2.Count == 1 && ufs2.Count == 1)
+                        matchingPairs.Add((udb2[0], ufs2[0]));
+                    else if (ufs2.Count > 0)
+                        pm.Add((udb2, ufs2));
+                    else
+                        udb1.AddRange(udb2);
+                }
+                else
+                {
+                    udb1.AddRange(db);
+                    return false;
+                }
+                return true;
+            }).Select(a => a.Group.Key).ToArray();
+            unmatchedDb = udb1;
+            ufs1.AddRange((values.Length == 0) ? osItems : osItems.Where(o => !values.Contains(o.LastWriteTime)));
+            unmatchedFs = ufs1;
+            partialMatches = pm;
+            return mm;
+        }
+
+        /// <summary>
+        /// Matches <see cref="ISubdirectory"/> objects with <see cref="DirectoryInfo"/> objects with the same last write time.
+        /// </summary>
+        /// <typeparam name="TSubdirectory">The type of the database entity.</typeparam>
+        /// <param name="dbItems">The input database entity objects.</param>
+        /// <param name="osItems">The input OS subdirectory objects to match up with corresponding <paramref name="dbItems"/>.</param>
+        /// <param name="matchingPairs">Contains pairs of <typeparamref name="TSubdirectory"/> and <see cref="DirectoryInfo"/> objects with the same last write time.</param>
+        /// <param name="unmatchedDb"><typeparamref name="TSubdirectory"/> objects where the last write time does not match the last write time of any <see cref="DirectoryInfo"/> objects.</param>
+        /// <param name="unmatchedFs"><see cref="DirectoryInfo"/> objects where the last write time does not match the last write time of any <typeparamref name="TSubdirectory"/> objects.</param>
+        /// <returns>A <see cref="List{ValueTuple{List{TSubdirectory}, List{DirectoryInfo}}}"/> representing sets of multiple <typeparamref name="TSubdirectory"/> and <see cref="DirectoryInfo"/> objects that share the same last write time.</returns>
+        private static List<(List<TSubdirectory> DbDir, List<DirectoryInfo> DirectoryInfo)> MatchByLastWriteTime<TSubdirectory>(IEnumerable<TSubdirectory> dbItems, IEnumerable<DirectoryInfo> osItems,
+            List<(TSubdirectory DbDir, DirectoryInfo DirectoryInfo)> matchingPairs, out List<TSubdirectory> unmatchedDb, out List<DirectoryInfo> unmatchedFs)
+            where TSubdirectory : class, ISubdirectory
+        {
+            List<TSubdirectory> udb = new();
+            List<(List<TSubdirectory>, List<DirectoryInfo>)> mm = new();
+            DateTime[] values = dbItems.GroupBy(d => d.LastWriteTime).GroupJoin(osItems, g => g.Key, f => f.LastWriteTime, (g, f) => (Group: g, f.ToList())).Where(a =>
+            {
+                (IGrouping<DateTime, TSubdirectory> grp, List<DirectoryInfo> fs) = a;
+                List<TSubdirectory> db = grp.ToList();
+                if (db.Count == 1 && fs.Count == 1)
+                    matchingPairs.Add((db[0], fs[0]));
+                else if (fs.Count > 0)
+                    mm.Add((db, fs));
+                else
+                {
+                    udb.AddRange(db);
+                    return false;
+                }
+                return true;
+            }).Select(a => a.Group.Key).ToArray();
+            unmatchedDb = udb;
+            unmatchedFs = ((values.Length == 0) ? osItems : osItems.Where(o => !values.Contains(o.LastWriteTime))).ToList();
+            return mm;
+        }
+
+        /// <summary>
+        /// Matches <see cref="IFile"/> objects with <see cref="FileInfo"/> objects with the same creation time.
+        /// </summary>
+        /// <typeparam name="TDbFile">The type of the database entity.</typeparam>
+        /// <param name="dbItems">The input database entity objects.</param>
+        /// <param name="osItems">The input OS file objects to match up with corresponding <paramref name="dbItems"/>.</param>
+        /// <param name="matchingPairs">Contains pairs of <typeparamref name="TDbFile"/> and <see cref="FileInfo"/> objects with the same file length, last write time, and creation time.</param>
+        /// <param name="partialMatches">Sets of multiple <typeparamref name="TDbFile"/> and <see cref="FileInfo"/> objects that share the same creation time and may also share the same last write time.</param>
+        /// <param name="unmatchedDb"><typeparamref name="TDbFile"/> objects where neither the file length, last write time, nor creation time matches the file length, last write time or creation time of any <see cref="FileInfo"/> objects.</param>
+        /// <param name="unmatchedFs"><see cref="FileInfo"/> objects where neither the file length, last write time, nor creation time matches the file length, last write time or creation time of any <typeparamref name="TDbFile"/> objects.</param>
+        /// <returns>A <see cref="List{ValueTuple{List{TDbFile}, List{FileInfo}}}"/> representing sets of multiple <typeparamref name="TDbFile"/> and <see cref="FileInfo"/> objects that share the same file length, last write time, and creation time.</returns>
+        private static List<(List<TDbFile> DbFile, List<FileInfo> FileInfo)> MatchByCreationTime<TDbFile>(IEnumerable<TDbFile> dbItems, IEnumerable<FileInfo> osItems, List<(TDbFile DbFile, FileInfo FileInfo)> matchingPairs,
+            out List<(List<TDbFile> DbFile, List<FileInfo> FileInfo)> partialMatches, out List<TDbFile> unmatchedDb, out List<FileInfo> unmatchedFs)
+            where TDbFile : class, IFile
+        {
+            List<TDbFile> udb1 = new();
+            List<FileInfo> ufs1 = new();
+            List<(List<TDbFile>, List<FileInfo>)> mm = new();
+            List<(List<TDbFile>, List<FileInfo>)> pm = new();
+            DateTime[] values = dbItems.GroupBy(d => d.CreationTime).GroupJoin(osItems, g => g.Key, f => f.CreationTime, (g, f) => (Group: g, f.ToList())).Where(a =>
+            {
+                (IGrouping<DateTime, TDbFile> grp, List<FileInfo> fs) = a;
+                List<TDbFile> db = grp.ToList();
+                if (db.Count == 1 && fs.Count == 1)
+                    matchingPairs.Add((db[0], fs[0]));
+                else if (fs.Count > 0)
+                {
+                    mm.AddRange(MatchByLastWriteTime(db, fs, matchingPairs, out List<(List<TDbFile> DbFile, List<FileInfo> FileInfo)> pm2, out List<TDbFile> udb2, out List<FileInfo> ufs2));
+                    // pm2 = matches creation time and last write time, but not file length
+                    // udb2/ufs2 = matches creation time, but not last write time or file length.
+                    if (udb2.Count == 1 && ufs2.Count == 1)
+                        matchingPairs.Add((udb2[0], ufs2[0]));
+                    else if (ufs2.Count > 0)
+                    {
+
+                        pm.Add((udb2, ufs2));
+                    }
+                    else
+                        udb1.AddRange(udb2);
+                    pm.AddRange(pm2);
+                }
+                else
+                {
+                    udb1.AddRange(db);
+                    return false;
+                }
+                return true;
+            }).Select(a => a.Group.Key).ToArray();
+            ufs1.AddRange((values.Length == 0) ? osItems : osItems.Where(o => !values.Contains(o.CreationTime)));
+            if (ufs1.Count > 1 && udb1.Count > 1)
+                mm.AddRange(MatchByLength(udb1, ufs1, matchingPairs, out unmatchedDb, out unmatchedFs));
+            else
+            {
+                unmatchedFs = ufs1;
+                unmatchedDb = udb1;
+            }
+            partialMatches = pm;
+            return mm;
+        }
+
+        /// <summary>
+        /// Matches <see cref="ISubdirectory"/> objects with <see cref="DirectoryInfo"/> objects with the same creation time.
+        /// </summary>
+        /// <typeparam name="TSubdirectory">The type of the database entity.</typeparam>
+        /// <param name="dbItems">The input database entity objects.</param>
+        /// <param name="osItems">The input OS file objects to match up with corresponding <paramref name="dbItems"/>.</param>
+        /// <param name="matchingPairs">Contains pairs of <typeparamref name="TSubdirectory"/> and <see cref="DirectoryInfo"/> objects with the same last write time and creation time.</param>
+        /// <param name="partialMatches">Sets of multiple <typeparamref name="TSubdirectory"/> and <see cref="DirectoryInfo"/> objects that share only the same last write time with no matching creation time.</param>
+        /// <param name="unmatchedDb"><typeparamref name="TSubdirectory"/> objects where neither the last write time nor creation time matches the last write time or creation time of any <see cref="DirectoryInfo"/> objects.</param>
+        /// <param name="unmatchedFs"><see cref="DirectoryInfo"/> objects where neither the last write time nor creation time matches the last write time or creation time of any <typeparamref name="TSubdirectory"/> objects.</param>
+        /// <returns>A <see cref="List{ValueTuple{List{TSubdirectory}, List{DirectoryInfo}}}"/> representing sets of multiple <typeparamref name="TSubdirectory"/> and <see cref="DirectoryInfo"/> objects that share the same last write time and creation time.</returns>
+        private static List<(List<TSubdirectory> DbDir, List<DirectoryInfo> DirectoryInfo)> MatchByCreationTime<TSubdirectory>(IEnumerable<TSubdirectory> dbItems, IEnumerable<DirectoryInfo> osItems, List<(TSubdirectory DbDir, DirectoryInfo DirectoryInfo)> matchingPairs,
+            out List<(List<TSubdirectory> DbDir, List<DirectoryInfo> DirectoryInfo)> partialMatches, out List<TSubdirectory> unmatchedDb, out List<DirectoryInfo> unmatchedFs)
+            where TSubdirectory : class, ISubdirectory
+        {
+            List<TSubdirectory> udb1 = new();
+            List<DirectoryInfo> ufs1 = new();
+            List<(List<TSubdirectory>, List<DirectoryInfo>)> mm = new();
+            List<(List<TSubdirectory>, List<DirectoryInfo>)> pm = new();
+            DateTime[] values = dbItems.GroupBy(d => d.CreationTime).GroupJoin(osItems, g => g.Key, f => f.CreationTime, (g, f) => (Group: g, f.ToList())).Where(a =>
+            {
+                (IGrouping<DateTime, TSubdirectory> grp, List<DirectoryInfo> fs) = a;
+                List<TSubdirectory> db = grp.ToList();
+                if (db.Count == 1 && fs.Count == 1)
+                    matchingPairs.Add((db[0], fs[0]));
+                else if (fs.Count > 0)
+                {
+                    mm.AddRange(MatchByLastWriteTime(db, fs, matchingPairs, out List<TSubdirectory> udb2, out List<DirectoryInfo> ufs2));
+                    if (udb2.Count == 1 && ufs2.Count == 1)
+                        matchingPairs.Add((udb2[0], ufs2[0]));
+                    else if (ufs2.Count > 0)
+                        pm.Add((udb2, ufs2));
+                    else
+                        udb1.AddRange(udb2);
+                }
+                else
+                {
+                    udb1.AddRange(db);
+                    return false;
+                }
+                return true;
+            }).Select(a => a.Group.Key).ToArray();
+            unmatchedDb = udb1;
+            ufs1.AddRange((values.Length == 0) ? osItems : osItems.Where(o => !values.Contains(o.CreationTime)));
+            unmatchedFs = ufs1;
+            partialMatches = pm;
+            return mm;
+        }
+
+        /// <summary>
+        /// Matches <see cref="IFile"/> objects with <see cref="FileInfo"/> objects with the same name.
+        /// </summary>
+        /// <typeparam name="TDbFile">The type of the database entity.</typeparam>
+        /// <param name="dbItems">The input database entity objects.</param>
+        /// <param name="osItems">The input OS file objects to match up with corresponding <paramref name="dbItems"/>.</param>
+        /// <param name="comparer">The name comparer.</param>
+        /// <param name="partialMatches">Sets of multiple <typeparamref name="TDbFile"/> and <see cref="FileInfo"/> objects that share the same name and may also share the same creation time or last write time.</param>
+        /// <param name="unmatchedDb"><typeparamref name="TDbFile"/> objects where neither the name, file length, last write time, nor creation time matches the name, file length, last write time or creation time of any <see cref="FileInfo"/> objects.</param>
+        /// <param name="unmatchedFs"><see cref="FileInfo"/> objects where neither the name, file length, last write time, nor creation time matches the file name, length, last write time or creation time of any <typeparamref name="TDbFile"/> objects.</param>
+        /// <returns>A <see cref="List{ValueTuple{List{TDbFile}, List{FileInfo}}}"/> representing sets of multiple <typeparamref name="TDbFile"/> and <see cref="FileInfo"/> objects that share the same name, file length, last write time, and creation time.</returns>
+        private static List<(List<TDbFile> DbFile, List<FileInfo> FileInfo)> MatchByName<TDbFile>(IEnumerable<TDbFile> dbItems, IEnumerable<FileInfo> osItems, List<(TDbFile DbFile, FileInfo FileInfo)> matchingPairs, StringComparer comparer,
+            out List<(List<TDbFile> DbFile, List<FileInfo> FileInfo)> partialMatches, out List<TDbFile> unmatchedDb, out List<FileInfo> unmatchedFs)
+            where TDbFile : class, IFile
+        {
+            List<TDbFile> udb1 = new();
+            List<FileInfo> ufs1 = new();
+            List<(List<TDbFile>, List<FileInfo>)> mm = new();
+            List<(List<TDbFile>, List<FileInfo>)> pm = new();
+            string[] values = dbItems.GroupBy(d => d.Name ?? "", comparer).GroupJoin(osItems, g => g.Key, f => f.Name, (g, f) => (Group: g, f.ToList()), comparer).Where(a =>
+            {
+                (IGrouping<string, TDbFile> grp, List<FileInfo> fs) = a;
+                List<TDbFile> db = grp.ToList();
+                if (db.Count == 1 && fs.Count == 1)
+                    matchingPairs.Add((db[0], fs[0]));
+                else if (fs.Count > 0)
+                {
+                    mm.AddRange(MatchByCreationTime(db, fs, matchingPairs, out List<(List<TDbFile> DbFile, List<FileInfo> FileInfo)> pm2, out List<TDbFile> udb2, out List<FileInfo> ufs2));
+                    // pm2 = matches name and creation time (may match last write time)
+                    // udb2/ufs2 = matches name, but not creation time, file length or last write time
+                    if (udb2.Count == 1 && ufs2.Count == 1)
+                        matchingPairs.Add((udb2[0], ufs2[0]));
+                    else if (ufs2.Count > 0)
+                        pm.Add((udb2, ufs2));
+                    else
+                        udb1.AddRange(udb2);
+                    pm.AddRange(pm2);
+                }
+                else
+                {
+                    udb1.AddRange(db);
+                    return false;
+                }
+                return true;
+            }).Select(a => a.Group.Key).ToArray();
+            ufs1.AddRange((values.Length == 0) ? osItems : osItems.Where(o => !values.Contains(o.Name ?? "", comparer)));
+            if (ufs1.Count > 1 && udb1.Count > 1)
+            {
+                mm.AddRange(MatchByLastWriteTime(udb1, ufs1, matchingPairs, out List<(List<TDbFile> DbFile, List<FileInfo> FileInfo)> pm2, out unmatchedDb, out unmatchedFs));
+                pm.AddRange(pm2);
+            }
+            else
+            {
+                unmatchedDb = udb1;
+                unmatchedFs = ufs1;
+            }
+            partialMatches = pm;
+            return mm;
+        }
+
+        /// <summary>
+        /// Matches <see cref="ISubdirectory"/> objects with <see cref="DirectoryInfo"/> objects with the same creation time.
+        /// </summary>
+        /// <typeparam name="TSubdirectory">The type of the database entity.</typeparam>
+        /// <param name="dbItems">The input database entity objects.</param>
+        /// <param name="osItems">The input OS file objects to match up with corresponding <paramref name="dbItems"/>.</param>
+        /// <param name="comparer">The name comparer.</param>
+        /// <param name="matchingPairs">Contains pairs of <typeparamref name="TSubdirectory"/> and <see cref="DirectoryInfo"/> objects with the same last write time and creation time.</param>
+        /// <param name="partialMatches">Sets of multiple <typeparamref name="TSubdirectory"/> and <see cref="DirectoryInfo"/> objects that share the same name and may also share the same creation time or last write time.</param>
+        /// <param name="unmatchedDb"><typeparamref name="TSubdirectory"/> objects where neither the last write time nor creation time matches the last write time or creation time of any <see cref="DirectoryInfo"/> objects.</param>
+        /// <param name="unmatchedFs"><see cref="DirectoryInfo"/> objects where neither the last write time nor creation time matches the last write time or creation time of any <typeparamref name="TSubdirectory"/> objects.</param>
+        /// <returns>A <see cref="List{ValueTuple{List{TSubdirectory}, List{DirectoryInfo}}}"/> representing sets of multiple <typeparamref name="TSubdirectory"/> and <see cref="DirectoryInfo"/> objects that share the same name, last write time and creation time.</returns>
+        private static List<(List<TSubdirectory> DbDir, List<DirectoryInfo> DirectoryInfo)> MatchByName<TSubdirectory>(IEnumerable<TSubdirectory> dbItems, IEnumerable<DirectoryInfo> osItems, List<(TSubdirectory DbDir, DirectoryInfo DirectoryInfo)> matchingPairs,
+            StringComparer comparer, out List<(List<TSubdirectory> DbDir, List<DirectoryInfo> DirectoryInfo)> partialMatches, out List<TSubdirectory> unmatchedDb, out List<DirectoryInfo> unmatchedFs)
+            where TSubdirectory : class, ISubdirectory
+        {
+            List<TSubdirectory> udb1 = new();
+            List<DirectoryInfo> ufs1 = new();
+            List<(List<TSubdirectory>, List<DirectoryInfo>)> mm = new();
+            List<(List<TSubdirectory>, List<DirectoryInfo>)> pm = new();
+            string[] values = dbItems.GroupBy(d => d.Name ?? "", comparer).GroupJoin(osItems, g => g.Key, f => f.Name, (g, f) => (Group: g, f.ToList()), comparer).Where(a =>
+            {
+                (IGrouping<string, TSubdirectory> grp, List<DirectoryInfo> fs) = a;
+                List<TSubdirectory> db = grp.ToList();
+                if (db.Count == 1 && fs.Count == 1)
+                    matchingPairs.Add((db[0], fs[0]));
+                else if (fs.Count > 0)
+                {
+                    mm.AddRange(MatchByCreationTime(db, fs, matchingPairs, out List<(List<TSubdirectory> DbDir, List<DirectoryInfo> DirectoryInfo)> pm2, out List<TSubdirectory> udb2, out List<DirectoryInfo> ufs2));
+                    if (udb2.Count == 1 && ufs2.Count == 1)
+                        matchingPairs.Add((udb2[0], ufs2[0]));
+                    else if (ufs2.Count > 0)
+                        pm.Add((udb2, ufs2));
+                    else
+                        udb1.AddRange(udb2);
+                    pm.AddRange(pm2);
+                }
+                else
+                {
+                    udb1.AddRange(db);
+                    return false;
+                }
+                return true;
+            }).Select(a => a.Group.Key).ToArray();
+            ufs1.AddRange((values.Length == 0) ? osItems : osItems.Where(o => !values.Contains(o.Name ?? "", comparer)));
+            if (ufs1.Count > 1 && udb1.Count > 1)
+                mm.AddRange(MatchByLastWriteTime(udb1, ufs1, matchingPairs, out unmatchedDb, out unmatchedFs));
+            else
+            {
+                unmatchedDb = udb1;
+                unmatchedFs = ufs1;
+            }
+            partialMatches = pm;
+            return mm;
+        }
+
+        /// <summary>
+        /// Matches <see cref="IFile"/> objects with <see cref="FileInfo"/> objects with the same name and other matching property values.
+        /// </summary>
+        /// <typeparam name="TDbFile">The type of the database entity.</typeparam>
+        /// <param name="source1">The input database entity objects.</param>
+        /// <param name="source2">The input OS file objects to match up with corresponding <paramref name="source2"/>.</param>
+        /// <param name="unmatchedDb"><typeparamref name="TDbFile"/> objects where neither the length, last write time nor creation time matches the length, last write time or creation time of any <see cref="FileInfo"/> objects.</param>
+        /// <param name="unmatchedFs"><see cref="FileInfo"/> objects where neither the length, last write time nor creation time matches the length, last write time or creation time of any <typeparamref name="TDbFile"/> objects.</param>
+        /// <returns>A <see cref="List{ValueTuple{TDbFile, FileInfo}}"/> representing sets of multiple <typeparamref name="TDbFile"/> and <see cref="FileInfo"/> objects that share the same name, last write time, creation time and length.</returns>
+        public static List<(TDbFile DbFile, FileInfo FileInfo)> ToMatchedPairs<TDbFile>(this IEnumerable<TDbFile> source1, IEnumerable<FileInfo> source2, out List<TDbFile> unmatchedDb, out List<FileInfo> unmatchedFs)
+            where TDbFile : class, IFile
+        {
+            List<(TDbFile DbFile, FileInfo FileInfo)> matchingPairs = new();
+            List<(List<TDbFile> DbFile, List<FileInfo> FileInfo)> partialMatches;
+            foreach ((List<TDbFile> multiMatchDb, List<FileInfo> multiMatchFs) in MatchByName(source1, source2, matchingPairs, StringComparer.InvariantCultureIgnoreCase, out partialMatches, out unmatchedDb, out unmatchedFs))
+            {
+                List<TDbFile> udb;
+                List<FileInfo> ufs;
+                List<(List<TDbFile> DbFile, List<FileInfo> FileInfo)> pm;
+                foreach ((List<TDbFile> mmDb, List<FileInfo> mmFs) in MatchByName(multiMatchDb, multiMatchFs, matchingPairs, StringComparer.InvariantCulture, out pm, out udb, out ufs))
+                {
+                    if (mmDb.Count > mmFs.Count)
+                    {
+                        matchingPairs.AddRange(mmDb.Take(mmFs.Count).OrderBy(d => d.CreationTime).ThenBy(d => d.LastWriteTime).ThenBy(d => d.BinaryProperties.Length).Zip(mmFs.OrderBy(f => f.CreationTime).ThenBy(f => f.LastWriteTime).ThenBy(f => f.Length)));
+                        udb.AddRange(mmDb.Skip(mmFs.Count));
+                    }
+                    else if (mmDb.Count < mmFs.Count)
+                    {
+                        matchingPairs.AddRange(mmDb.OrderBy(d => d.CreationTime).ThenBy(d => d.LastWriteTime).ThenBy(d => d.BinaryProperties.Length).Zip(mmFs.Take(mmDb.Count).OrderBy(f => f.CreationTime).ThenBy(f => f.LastWriteTime).ThenBy(f => f.Length)));
+                        ufs.AddRange(mmFs.Skip(mmDb.Count));
+                    }
+                    else
+                        matchingPairs.AddRange(mmDb.OrderBy(d => d.CreationTime).ThenBy(d => d.LastWriteTime).ThenBy(d => d.BinaryProperties.Length).Zip(mmFs.OrderBy(f => f.CreationTime).ThenBy(f => f.LastWriteTime).ThenBy(f => f.Length)));
+                }
+                partialMatches.AddRange(pm);
+                if (udb.Count == 1 && ufs.Count == 1)
+                    matchingPairs.Add((udb[0], ufs[0]));
+                else if (udb.Count > 0)
+                {
+                    if (ufs.Count > 0)
+                    {
+                        if (udb.Count > ufs.Count)
+                        {
+                            matchingPairs.AddRange(udb.Take(ufs.Count).OrderBy(d => d.CreationTime).ThenBy(d => d.LastWriteTime).ThenBy(d => d.BinaryProperties.Length).Zip(ufs.OrderBy(f => f.CreationTime).ThenBy(f => f.LastWriteTime).ThenBy(f => f.Length)));
+                            unmatchedDb.AddRange(udb.Skip(ufs.Count));
+                        }
+                        else if (udb.Count < ufs.Count)
+                        {
+                            matchingPairs.AddRange(udb.OrderBy(d => d.CreationTime).ThenBy(d => d.LastWriteTime).ThenBy(d => d.BinaryProperties.Length).Zip(ufs.Take(udb.Count).OrderBy(f => f.CreationTime).ThenBy(f => f.LastWriteTime).ThenBy(f => f.Length)));
+                            unmatchedFs.AddRange(ufs.Skip(udb.Count));
+                        }
+                        else
+                            matchingPairs.AddRange(udb.OrderBy(d => d.CreationTime).ThenBy(d => d.LastWriteTime).ThenBy(d => d.BinaryProperties.Length).Zip(ufs.OrderBy(f => f.CreationTime).ThenBy(f => f.LastWriteTime).ThenBy(f => f.Length)));
+                    }
+                    else
+                        unmatchedDb.AddRange(udb);
+                }
+                else if (ufs.Count > 0)
+                    unmatchedFs.AddRange(ufs);
+            }
+            foreach ((List<TDbFile> db, List<FileInfo> fs) in partialMatches)
+            {
+                if (db.Count > fs.Count)
+                {
+                    matchingPairs.AddRange(db.Take(fs.Count).OrderBy(d => d.CreationTime).ThenBy(d => d.LastWriteTime).ThenBy(d => d.BinaryProperties.Length).Zip(fs.OrderBy(f => f.CreationTime).ThenBy(f => f.LastWriteTime).ThenBy(f => f.Length)));
+                    unmatchedDb.AddRange(db.Skip(fs.Count));
+                }
+                else if (db.Count < fs.Count)
+                {
+                    matchingPairs.AddRange(db.OrderBy(d => d.CreationTime).ThenBy(d => d.LastWriteTime).ThenBy(d => d.BinaryProperties.Length).Zip(fs.Take(db.Count).OrderBy(f => f.CreationTime).ThenBy(f => f.LastWriteTime).ThenBy(f => f.Length)));
+                    unmatchedFs.AddRange(fs.Skip(db.Count));
+                }
+                else
+                    matchingPairs.AddRange(db.OrderBy(d => d.CreationTime).ThenBy(d => d.LastWriteTime).ThenBy(d => d.BinaryProperties.Length).Zip(fs.OrderBy(f => f.CreationTime).ThenBy(f => f.LastWriteTime).ThenBy(f => f.Length)));
+            }
+            return matchingPairs;
+        }
+
+        /// <summary>
+        /// Matches <see cref="ISubdirectory"/> objects with <see cref="DirectoryInfo"/> objects with the same name and other matching property values.
+        /// </summary>
+        /// <typeparam name="TSubdirectory">The type of the database entity.</typeparam>
+        /// <param name="source1">The input database entity objects.</param>
+        /// <param name="source2">The input OS subdirectory objects to match up with corresponding <paramref name="source2"/>.</param>
+        /// <param name="unmatchedDb"><typeparamref name="TSubdirectory"/> objects where neither the last write time nor creation time matches the last write time or creation time of any <see cref="DirectoryInfo"/> objects.</param>
+        /// <param name="unmatchedFs"><see cref="DirectoryInfo"/> objects where neither the last write time nor creation time matches the last write time or creation time of any <typeparamref name="TSubdirectory"/> objects.</param>
+        /// <returns>A <see cref="List{ValueTuple{TSubdirectory, DirectoryInfo}}"/> representing sets of multiple <typeparamref name="TSubdirectory"/> and <see cref="DirectoryInfo"/> objects that share the same name, last write time and creation time.</returns>
+        public static List<(TSubdirectory Subdirectory, DirectoryInfo DirectoryInfo)> ToMatchedPairs<TSubdirectory>(this IEnumerable<TSubdirectory> source1, IEnumerable<DirectoryInfo> source2, out List<TSubdirectory> unmatchedDb, out List<DirectoryInfo> unmatchedFs)
+            where TSubdirectory : class, ISubdirectory
+        {
+            List<(TSubdirectory DbDir, DirectoryInfo DirectoryInfo)> matchingPairs = new();
+            List<(List<TSubdirectory> DbDir, List<DirectoryInfo> DirectoryInfo)> partialMatches;
+            foreach ((List<TSubdirectory> multiMatchDb, List<DirectoryInfo> multiMatchFs) in MatchByName(source1, source2, matchingPairs, StringComparer.InvariantCultureIgnoreCase, out partialMatches, out unmatchedDb, out unmatchedFs))
+            {
+                List<TSubdirectory> udb;
+                List<DirectoryInfo> ufs;
+                List<(List<TSubdirectory> DbDir, List<DirectoryInfo> DirectoryInfo)> pm;
+                foreach ((List<TSubdirectory> mmDb, List<DirectoryInfo> mmFs) in MatchByName(multiMatchDb, multiMatchFs, matchingPairs, StringComparer.InvariantCulture, out pm, out udb, out ufs))
+                {
+                    if (mmDb.Count > mmFs.Count)
+                    {
+                        matchingPairs.AddRange(mmDb.Take(mmFs.Count).OrderBy(d => d.CreationTime).ThenBy(d => d.LastWriteTime).Zip(mmFs.OrderBy(f => f.CreationTime).ThenBy(f => f.LastWriteTime)));
+                        udb.AddRange(mmDb.Skip(mmFs.Count));
+                    }
+                    else if (mmDb.Count < mmFs.Count)
+                    {
+                        matchingPairs.AddRange(mmDb.OrderBy(d => d.CreationTime).ThenBy(d => d.LastWriteTime).Zip(mmFs.Take(mmDb.Count).OrderBy(f => f.CreationTime).ThenBy(f => f.LastWriteTime)));
+                        ufs.AddRange(mmFs.Skip(mmDb.Count));
+                    }
+                    else
+                        matchingPairs.AddRange(mmDb.OrderBy(d => d.CreationTime).ThenBy(d => d.LastWriteTime).Zip(mmFs.OrderBy(f => f.CreationTime).ThenBy(f => f.LastWriteTime)));
+                }
+                partialMatches.AddRange(pm);
+                if (udb.Count == 1 && ufs.Count == 1)
+                    matchingPairs.Add((udb[0], ufs[0]));
+                else if (udb.Count > 0)
+                {
+                    if (ufs.Count > 0)
+                    {
+                        if (udb.Count > ufs.Count)
+                        {
+                            matchingPairs.AddRange(udb.Take(ufs.Count).OrderBy(d => d.CreationTime).ThenBy(d => d.LastWriteTime).Zip(ufs.OrderBy(f => f.CreationTime).ThenBy(f => f.LastWriteTime)));
+                            unmatchedDb.AddRange(udb.Skip(ufs.Count));
+                        }
+                        else if (udb.Count < ufs.Count)
+                        {
+                            matchingPairs.AddRange(udb.OrderBy(d => d.CreationTime).ThenBy(d => d.LastWriteTime).Zip(ufs.Take(udb.Count).OrderBy(f => f.CreationTime).ThenBy(f => f.LastWriteTime)));
+                            unmatchedFs.AddRange(ufs.Skip(udb.Count));
+                        }
+                        else
+                            matchingPairs.AddRange(udb.OrderBy(d => d.CreationTime).ThenBy(d => d.LastWriteTime).Zip(ufs.OrderBy(f => f.CreationTime).ThenBy(f => f.LastWriteTime)));
+                    }
+                    else
+                        unmatchedDb.AddRange(udb);
+                }
+                else if (ufs.Count > 0)
+                    unmatchedFs.AddRange(ufs);
+            }
+            foreach ((List<TSubdirectory> db, List<DirectoryInfo> fs) in partialMatches)
+            {
+                if (db.Count > fs.Count)
+                {
+                    matchingPairs.AddRange(db.Take(fs.Count).OrderBy(d => d.CreationTime).ThenBy(d => d.LastWriteTime).Zip(fs.OrderBy(f => f.CreationTime).ThenBy(f => f.LastWriteTime)));
+                    unmatchedDb.AddRange(db.Skip(fs.Count));
+                }
+                else if (db.Count < fs.Count)
+                {
+                    matchingPairs.AddRange(db.OrderBy(d => d.CreationTime).ThenBy(d => d.LastWriteTime).Zip(fs.Take(db.Count).OrderBy(f => f.CreationTime).ThenBy(f => f.LastWriteTime)));
+                    unmatchedFs.AddRange(fs.Skip(db.Count));
+                }
+                else
+                    matchingPairs.AddRange(db.OrderBy(d => d.CreationTime).ThenBy(d => d.LastWriteTime).Zip(fs.OrderBy(f => f.CreationTime).ThenBy(f => f.LastWriteTime)));
+            }
+            return matchingPairs;
+        }
+
+        [Obsolete("Use ToMatchedPairs(IEnumerable<TSubdirectory>, IEnumerable<DirectoryInfo>, IEnumerable<TSubdirectory>, out IEnumerable<DirectoryInfo>)")]
+        public static LinkedList<(TSubdirectory Subdirectory, DirectoryInfo DirectoryInfo)> ToMatchedPairs<TSubdirectory>(this IEnumerable<TSubdirectory> subdirectories, IEnumerable<DirectoryInfo> directoryInfos)
             where TSubdirectory : class, ISubdirectory
         {
             if (subdirectories is null || !(subdirectories = subdirectories.Where(s => s is not null)).Distinct().Any())
             {
                 if (directoryInfos is null || !(directoryInfos = directoryInfos.Where(d => d is not null)).Distinct().Any())
                     return new();
-                return directoryInfos.Select(d => ((TSubdirectory)null, d)).ToList();
+                return new(directoryInfos.Select(d => ((TSubdirectory)null, d)));
             }
             if (directoryInfos is null || !(directoryInfos = directoryInfos.Where(d => d is not null)).Distinct().Any())
-                return subdirectories.Select(s => (s, (DirectoryInfo)null)).ToList();
+                return new(subdirectories.Select(s => (s, (DirectoryInfo)null)));
 
             // BUG: Case-sensitive comparer is not being used.
             StringComparer csComparer = StringComparer.InvariantCulture;
@@ -196,7 +643,7 @@ namespace FsInfoCat
             List<TSubdirectory> unmatchedSubdirectories = new();
             if (directoryInfos is not List<DirectoryInfo> unmatchedDirectoryInfos)
                 unmatchedDirectoryInfos = directoryInfos.ToList();
-            List<(TSubdirectory Subdirectory, DirectoryInfo DirectoryInfo)> result = subdirectories.Select(Subdirectory =>
+            LinkedList<(TSubdirectory Subdirectory, DirectoryInfo DirectoryInfo)> result = new(subdirectories.Select(Subdirectory =>
             {
                 string n = Subdirectory.Name;
                 for (int i = 0; i < unmatchedDirectoryInfos.Count; i++)
@@ -217,11 +664,11 @@ namespace FsInfoCat
                         return false;
                     }
                     return true;
-                }).ToList();
+                }));
             if (unmatchedSubdirectories.Count == 0)
             {
                 foreach (DirectoryInfo di in unmatchedDirectoryInfos)
-                    result.Add(new(null, di));
+                    result.AddLast(((TSubdirectory)null, di));
             }
             else
             {
@@ -235,29 +682,31 @@ namespace FsInfoCat
                         {
                             DirectoryInfo d = di[0];
                             unmatchedDirectoryInfos.Remove(d);
-                            result.Add((subdirectoryByCiName.First(), d));
+                            result.AddLast((subdirectoryByCiName.First(), d));
                         }
                         else
-                            result.AddRange(subdirectoryByCiName.Select(s => (s, (DirectoryInfo)null)));
+                            foreach (TSubdirectory d in subdirectoryByCiName)
+                                result.AddLast((d, null));
                     }
                 }
                 foreach (TSubdirectory s in unmatchedSubdirectories)
-                    result.Add(new(s, null));
+                    result.AddLast((s, null));
             }
             return result;
         }
 
-        public static List<(TDbFile DbFile, FileInfo FileInfo)> ToMatchedPairs<TDbFile>(this IEnumerable<TDbFile> dbFiles, IEnumerable<FileInfo> fileInfos)
+        [Obsolete("Use ToMatchedPairs(IEnumerable<TDbFile>, IEnumerable<FileInfo>, IEnumerable<TDbFile>, out IEnumerable<FileInfo>)")]
+        public static LinkedList<(TDbFile DbFile, FileInfo FileInfo)> ToMatchedPairs<TDbFile>(this IEnumerable<TDbFile> dbFiles, IEnumerable<FileInfo> fileInfos)
             where TDbFile : class, IFile
         {
             if (dbFiles is null || !(dbFiles = dbFiles.Where(f => f is not null)).Distinct().Any())
             {
                 if (fileInfos is null || !(fileInfos = fileInfos.Where(f => f is not null)).Distinct().Any())
                     return new();
-                return fileInfos.Select(f => ((TDbFile)null, f)).ToList();
+                return new(fileInfos.Select(f => ((TDbFile)null, f)));
             }
             if (fileInfos is null || !(fileInfos = fileInfos.Where(f => f is not null)).Distinct().Any())
-                return dbFiles.Select(f => (f, (FileInfo)null)).ToList();
+                return new(dbFiles.Select(f => (f, (FileInfo)null)));
 
             // BUG: Case-sensitive comparer is not being used.
             StringComparer csComparer = StringComparer.InvariantCulture;
@@ -266,7 +715,7 @@ namespace FsInfoCat
             List<TDbFile> unmatchedDbFiles = new();
             if (fileInfos is not List<FileInfo> unmatchedFileInfos)
                 unmatchedFileInfos = fileInfos.ToList();
-            List<(TDbFile DbFile, FileInfo FileInfo)> result = dbFiles.Select(DbFile =>
+            LinkedList<(TDbFile DbFile, FileInfo FileInfo)> result = new(dbFiles.Select(DbFile =>
             {
                 string n = DbFile.Name;
                 for (int i = 0; i < unmatchedFileInfos.Count; i++)
@@ -287,11 +736,11 @@ namespace FsInfoCat
                     return false;
                 }
                 return true;
-            }).ToList();
+            }));
             if (unmatchedDbFiles.Count == 0)
             {
                 foreach (FileInfo fi in unmatchedFileInfos)
-                    result.Add(new(null, fi));
+                    result.AddLast((null, fi));
             }
             else
             {
@@ -305,16 +754,28 @@ namespace FsInfoCat
                         {
                             FileInfo f = fi[0];
                             unmatchedFileInfos.Remove(f);
-                            result.Add((dbFileByCiName.First(), f));
+                            result.AddLast((dbFileByCiName.First(), f));
                         }
                         else
-                            result.AddRange(dbFileByCiName.Select(f => (f, (FileInfo)null)));
+                            foreach (TDbFile f in dbFileByCiName)
+                                result.AddLast((f, null));
                     }
                 }
                 foreach (TDbFile f in unmatchedDbFiles)
-                    result.Add(new(f, null));
+                    result.AddLast((f, null));
             }
             return result;
         }
+    }
+
+    public class ReferenceComparer<T> : IEqualityComparer<T>
+    {
+        public static ReferenceComparer<T> Default = new();
+
+        private ReferenceComparer() { }
+
+        public bool Equals(T x, T y) => (x is null) ? y is null : x is not null && ReferenceEquals(x, y);
+
+        public int GetHashCode([DisallowNull] T obj) => (obj is null) ? 0 : obj.GetHashCode();
     }
 }

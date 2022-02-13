@@ -1,4 +1,4 @@
-﻿using FsInfoCat.Collections;
+using FsInfoCat.Collections;
 
 namespace FsInfoCat.Local
 {
@@ -6,85 +6,73 @@ namespace FsInfoCat.Local
     {
         #region Fields
 
-        private readonly IPropertyChangeTracker<string> _applicationName;
-        private readonly IPropertyChangeTracker<MultiStringValue> _author;
-        private readonly IPropertyChangeTracker<string> _comment;
-        private readonly IPropertyChangeTracker<MultiStringValue> _keywords;
-        private readonly IPropertyChangeTracker<string> _subject;
-        private readonly IPropertyChangeTracker<string> _title;
-        private readonly IPropertyChangeTracker<string> _company;
-        private readonly IPropertyChangeTracker<string> _contentType;
-        private readonly IPropertyChangeTracker<string> _copyright;
-        private readonly IPropertyChangeTracker<string> _parentalRating;
-        private readonly IPropertyChangeTracker<uint?> _rating;
-        private readonly IPropertyChangeTracker<MultiStringValue> _itemAuthors;
-        private readonly IPropertyChangeTracker<string> _itemType;
-        private readonly IPropertyChangeTracker<string> _itemTypeText;
-        private readonly IPropertyChangeTracker<MultiStringValue> _kind;
-        private readonly IPropertyChangeTracker<string> _mimeType;
-        private readonly IPropertyChangeTracker<string> _parentalRatingReason;
-        private readonly IPropertyChangeTracker<string> _parentalRatingsOrganization;
-        private readonly IPropertyChangeTracker<ushort?> _sensitivity;
-        private readonly IPropertyChangeTracker<string> _sensitivityText;
-        private readonly IPropertyChangeTracker<uint?> _simpleRating;
-        private readonly IPropertyChangeTracker<string> _trademarks;
-        private readonly IPropertyChangeTracker<string> _productName;
+        private string _applicationName = string.Empty;
+        private string _comment = string.Empty;
+        private string _subject = string.Empty;
+        private string _title = string.Empty;
+        private string _company = string.Empty;
+        private string _contentType = string.Empty;
+        private string _copyright = string.Empty;
+        private string _parentalRating = string.Empty;
+        private string _itemType = string.Empty;
+        private string _itemTypeText = string.Empty;
+        private string _mimeType = string.Empty;
+        private string _parentalRatingReason = string.Empty;
+        private string _parentalRatingsOrganization = string.Empty;
+        private string _sensitivityText = string.Empty;
+        private string _trademarks = string.Empty;
+        private string _productName = string.Empty;
 
         #endregion
 
         #region Properties
 
-        public string ApplicationName { get => _applicationName.GetValue(); set => _applicationName.SetValue(value); }
-        public MultiStringValue Author { get => _author.GetValue(); set => _author.SetValue(value); }
-        public string Comment { get => _comment.GetValue(); set => _comment.SetValue(value); }
-        public MultiStringValue Keywords { get => _keywords.GetValue(); set => _keywords.SetValue(value); }
-        public string Subject { get => _subject.GetValue(); set => _subject.SetValue(value); }
-        public string Title { get => _title.GetValue(); set => _title.SetValue(value); }
-        public string Company { get => _company.GetValue(); set => _company.SetValue(value); }
-        public string ContentType { get => _contentType.GetValue(); set => _contentType.SetValue(value); }
-        public string Copyright { get => _copyright.GetValue(); set => _copyright.SetValue(value); }
-        public string ParentalRating { get => _parentalRating.GetValue(); set => _parentalRating.SetValue(value); }
-        public uint? Rating { get => _rating.GetValue(); set => _rating.SetValue(value); }
-        public MultiStringValue ItemAuthors { get => _itemAuthors.GetValue(); set => _itemAuthors.SetValue(value); }
-        public string ItemType { get => _itemType.GetValue(); set => _itemType.SetValue(value); }
-        public string ItemTypeText { get => _itemTypeText.GetValue(); set => _itemTypeText.SetValue(value); }
-        public MultiStringValue Kind { get => _kind.GetValue(); set => _kind.SetValue(value); }
-        public string MIMEType { get => _mimeType.GetValue(); set => _mimeType.SetValue(value); }
-        public string ParentalRatingReason { get => _parentalRatingReason.GetValue(); set => _parentalRatingReason.SetValue(value); }
-        public string ParentalRatingsOrganization { get => _parentalRatingsOrganization.GetValue(); set => _parentalRatingsOrganization.SetValue(value); }
-        public ushort? Sensitivity { get => _sensitivity.GetValue(); set => _sensitivity.SetValue(value); }
-        public string SensitivityText { get => _sensitivityText.GetValue(); set => _sensitivityText.SetValue(value); }
-        public uint? SimpleRating { get => _simpleRating.GetValue(); set => _simpleRating.SetValue(value); }
-        public string Trademarks { get => _trademarks.GetValue(); set => _trademarks.SetValue(value); }
-        public string ProductName { get => _productName.GetValue(); set => _productName.SetValue(value); }
+        public string ApplicationName { get => _applicationName; set => _applicationName = value.AsWsNormalizedOrEmpty(); }
+
+        public MultiStringValue Author { get; set; }
+
+        public string Comment { get => _comment; set => _comment = value.AsWsNormalizedOrEmpty(); }
+
+        public MultiStringValue Keywords { get; set; }
+
+        public string Subject { get => _subject; set => _subject = value.AsWsNormalizedOrEmpty(); }
+
+        public string Title { get => _title; set => _title = value.AsWsNormalizedOrEmpty(); }
+
+        public string Company { get => _company; set => _company = value.AsWsNormalizedOrEmpty(); }
+
+        public string ContentType { get => _contentType; set => _contentType = value.AsWsNormalizedOrEmpty(); }
+
+        public string Copyright { get => _copyright; set => _copyright = value.AsWsNormalizedOrEmpty(); }
+
+        public string ParentalRating { get => _parentalRating; set => _parentalRating = value.AsWsNormalizedOrEmpty(); }
+
+        public uint? Rating { get; set; }
+
+        public MultiStringValue ItemAuthors { get; set; }
+
+        public string ItemType { get => _itemType; set => _itemType = value.AsWsNormalizedOrEmpty(); }
+
+        public string ItemTypeText { get => _itemTypeText; set => _itemTypeText = value.AsWsNormalizedOrEmpty(); }
+
+        public MultiStringValue Kind { get; set; }
+
+        public string MIMEType { get => _mimeType; set => _mimeType = value.AsWsNormalizedOrEmpty(); }
+
+        public string ParentalRatingReason { get => _parentalRatingReason; set => _parentalRatingReason = value.AsWsNormalizedOrEmpty(); }
+
+        public string ParentalRatingsOrganization { get => _parentalRatingsOrganization; set => _parentalRatingsOrganization = value.AsWsNormalizedOrEmpty(); }
+
+        public ushort? Sensitivity { get; set; }
+
+        public string SensitivityText { get => _sensitivityText; set => _sensitivityText = value.AsWsNormalizedOrEmpty(); }
+
+        public uint? SimpleRating { get; set; }
+
+        public string Trademarks { get; set; }
+
+        public string ProductName { get => _productName; set => _productName = value.AsWsNormalizedOrEmpty(); }
 
         #endregion
-
-        public SummaryPropertiesRow()
-        {
-            _applicationName = AddChangeTracker(nameof(ApplicationName), null, FilePropertiesComparer.NormalizedStringValueCoersion);
-            _author = AddChangeTracker<MultiStringValue>(nameof(Author), null);
-            _comment = AddChangeTracker(nameof(Comment), null, FilePropertiesComparer.StringValueCoersion);
-            _keywords = AddChangeTracker<MultiStringValue>(nameof(Keywords), null);
-            _subject = AddChangeTracker(nameof(Subject), null, FilePropertiesComparer.NormalizedStringValueCoersion);
-            _title = AddChangeTracker(nameof(Title), null, FilePropertiesComparer.NormalizedStringValueCoersion);
-            _company = AddChangeTracker(nameof(Company), null, FilePropertiesComparer.NormalizedStringValueCoersion);
-            _contentType = AddChangeTracker(nameof(ContentType), null, FilePropertiesComparer.NormalizedStringValueCoersion);
-            _copyright = AddChangeTracker(nameof(Copyright), null, FilePropertiesComparer.NormalizedStringValueCoersion);
-            _parentalRating = AddChangeTracker(nameof(ParentalRating), null, FilePropertiesComparer.NormalizedStringValueCoersion);
-            _rating = AddChangeTracker<uint?>(nameof(Rating), null);
-            _itemAuthors = AddChangeTracker<MultiStringValue>(nameof(ItemAuthors), null);
-            _itemType = AddChangeTracker(nameof(ItemType), null, FilePropertiesComparer.NormalizedStringValueCoersion);
-            _itemTypeText = AddChangeTracker(nameof(ItemTypeText), null, FilePropertiesComparer.StringValueCoersion);
-            _kind = AddChangeTracker<MultiStringValue>(nameof(Kind), null);
-            _mimeType = AddChangeTracker(nameof(MIMEType), null, FilePropertiesComparer.NormalizedStringValueCoersion);
-            _parentalRatingReason = AddChangeTracker(nameof(ParentalRatingReason), null, FilePropertiesComparer.StringValueCoersion);
-            _parentalRatingsOrganization = AddChangeTracker<string>(nameof(ParentalRatingsOrganization), null);
-            _sensitivity = AddChangeTracker<ushort?>(nameof(Sensitivity), null);
-            _sensitivityText = AddChangeTracker(nameof(SensitivityText), null, FilePropertiesComparer.StringValueCoersion);
-            _simpleRating = AddChangeTracker<uint?>(nameof(SimpleRating), null);
-            _trademarks = AddChangeTracker(nameof(Trademarks), null, FilePropertiesComparer.StringValueCoersion);
-            _productName = AddChangeTracker(nameof(ProductName), null, FilePropertiesComparer.NormalizedStringValueCoersion);
-        }
     }
 }

@@ -10,7 +10,6 @@ using System.Linq;
 
 namespace FsInfoCat
 {
-    // DEFERRED: May want to do away with RevertibleChangeTracking - can use EntityEntry.ReloadAsync, instead.
     public abstract class NotifyDataErrorInfo : RevertibleChangeTracking, IDataErrorInfo, INotifyDataErrorInfo
     {
         private readonly Dictionary<string, string[]> _lastValidationResults = new();

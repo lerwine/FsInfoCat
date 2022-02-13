@@ -8,24 +8,15 @@ namespace FsInfoCat.Local
     {
         public const string VIEW_NAME_WITH_FILESYSTEM = "vVolumeListingWithFileSystem";
 
-        private readonly IPropertyChangeTracker<string> _fileSystemDisplayName;
-        private readonly IPropertyChangeTracker<bool> _effectiveReadOnly;
-        private readonly IPropertyChangeTracker<uint> _effectiveMaxNameLength;
+        private string _fileSystemDisplayName = string.Empty;
 
-        public string FileSystemDisplayName { get => _fileSystemDisplayName.GetValue(); set => _fileSystemDisplayName.SetValue(value); }
+        public string FileSystemDisplayName { get => _fileSystemDisplayName; set => _fileSystemDisplayName = value.AsWsNormalizedOrEmpty(); }
 
-        public bool EffectiveReadOnly { get => _effectiveReadOnly.GetValue(); set => _effectiveReadOnly.SetValue(value); }
+        public bool EffectiveReadOnly { get; set; }
 
-        public uint EffectiveMaxNameLength { get => _effectiveMaxNameLength.GetValue(); set => _effectiveMaxNameLength.SetValue(value); }
+        public uint EffectiveMaxNameLength { get; set; }
 
         internal static void OnBuildEntity(EntityTypeBuilder<VolumeListItemWithFileSystem> builder) => (builder ?? throw new ArgumentOutOfRangeException(nameof(builder)))
             .ToView(VIEW_NAME_WITH_FILESYSTEM).Property(nameof(Identifier)).HasConversion(VolumeIdentifier.Converter);
-
-        public VolumeListItemWithFileSystem()
-        {
-            _fileSystemDisplayName = AddChangeTracker(nameof(FileSystemDisplayName), "", TrimmedNonNullStringCoersion.Default);
-            _effectiveReadOnly = AddChangeTracker(nameof(EffectiveReadOnly), false);
-            _effectiveMaxNameLength = AddChangeTracker(nameof(EffectiveMaxNameLength), 0u);
-        }
     }
 }

@@ -49,13 +49,14 @@ namespace FsInfoCat.Desktop.ViewModel
         public FsItemAncestorNameViewModel(TEntity entity)
         {
             Entity = entity ?? throw new ArgumentNullException(nameof(entity));
-            _ = WeakPropertyChangedEventRelay.Attach(entity, OnEntityPropertyChanged);
             Path = EntityExtensions.AncestorNamesToPath(Entity.AncestorNames);
             Name = Entity.Name;
         }
 
+        [Obsolete("Not using this type of change tracking")]
         protected virtual void OnEntityPropertyChanged(object sender, PropertyChangedEventArgs args) => OnEntityPropertyChanged(args.PropertyName ?? "");
 
+        [Obsolete("Not using this type of change tracking")]
         protected virtual void OnEntityPropertyChanged(string propertyName)
         {
             switch (propertyName)

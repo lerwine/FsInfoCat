@@ -9,29 +9,17 @@ namespace FsInfoCat.Local
 {
     public abstract class LocalDbEntity : DbEntity, ILocalDbEntity
     {
-        #region Fields
-
         internal const string ElementName_AccessError = "AccessError";
-        private readonly IPropertyChangeTracker<Guid?> _upstreamId;
-        private readonly IPropertyChangeTracker<DateTime?> _lastSynchronizedOn;
-
-        #endregion
 
         #region Properties
 
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_UpstreamId), ResourceType = typeof(FsInfoCat.Properties.Resources))]
-        public virtual Guid? UpstreamId { get => _upstreamId.GetValue(); set => _upstreamId.SetValue(value); }
+        public virtual Guid? UpstreamId { get; set; }
 
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_LastSynchronizedOn), ResourceType = typeof(FsInfoCat.Properties.Resources))]
-        public virtual DateTime? LastSynchronizedOn { get => _lastSynchronizedOn.GetValue(); set => _lastSynchronizedOn.SetValue(value); }
+        public virtual DateTime? LastSynchronizedOn { get; set; }
 
         #endregion
-
-        public LocalDbEntity()
-        {
-            _upstreamId = AddChangeTracker<Guid?>(nameof(UpstreamId), null);
-            _lastSynchronizedOn = AddChangeTracker<DateTime?>(nameof(LastSynchronizedOn), null);
-        }
 
         protected override void AddExportAttributes(XElement element)
         {

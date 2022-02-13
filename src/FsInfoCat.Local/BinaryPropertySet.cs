@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading;
@@ -23,9 +22,7 @@ namespace FsInfoCat.Local
     {
         #region Fields
 
-        private readonly IPropertyChangeTracker<Guid> _id;
-        private readonly IPropertyChangeTracker<long> _length;
-        private readonly IPropertyChangeTracker<MD5Hash?> _hash;
+        private Guid? _id;
         private HashSet<DbFile> _files = new();
         private HashSet<RedundantSet> _redundantSets = new();
 
@@ -41,37 +38,33 @@ namespace FsInfoCat.Local
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_Id), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual Guid Id
         {
-            get => _id.GetValue();
+            get => _id ?? Guid.Empty;
             set
             {
-                if (_id.IsSet)
+                Monitor.Enter(SyncRoot);
+                try
                 {
-                    Guid id = _id.GetValue();
-                    if (id.Equals(value))
+                    if (_id.HasValue)
+                    {
+                        if (!_id.Value.Equals(value))
+                            throw new InvalidOperationException();
+                    }
+                    else if (value.Equals(Guid.Empty))
                         return;
-                    if (!id.Equals(Guid.Empty))
-                        throw new InvalidOperationException();
+                    _id = value;
                 }
-                _id.SetValue(value);
+                finally { Monitor.Exit(SyncRoot); }
             }
         }
 
         [Required]
-        public virtual long Length { get => _length.GetValue(); set => _length.SetValue(value); }
+        public virtual long Length { get; set; }
 
-        public virtual MD5Hash? Hash { get => _hash.GetValue(); set => _hash.SetValue(value); }
+        public virtual MD5Hash? Hash { get; set; }
 
-        public virtual HashSet<DbFile> Files
-        {
-            get => _files;
-            set => CheckHashSetChanged(_files, value, h => _files = h);
-        }
+        public virtual HashSet<DbFile> Files { get => _files; set => _files = value ?? new(); }
 
-        public virtual HashSet<RedundantSet> RedundantSets
-        {
-            get => _redundantSets;
-            set => CheckHashSetChanged(_redundantSets, value, h => _redundantSets = h);
-        }
+        public virtual HashSet<RedundantSet> RedundantSets { get => _redundantSets; set => _redundantSets = value ?? new(); }
 
         #endregion
 
@@ -90,20 +83,6 @@ namespace FsInfoCat.Local
         IDbEntity IIdentityReference.Entity => this;
 
         #endregion
-
-        public BinaryPropertySet()
-        {
-            _id = AddChangeTracker(nameof(Id), Guid.Empty);
-            _length = AddChangeTracker(nameof(Length), 0L);
-            _hash = AddChangeTracker<MD5Hash?>(nameof(Hash), null);
-        }
-
-        protected override void OnPropertyChanging(PropertyChangingEventArgs args)
-        {
-            if (args.PropertyName == nameof(Id) && _id.IsChanged)
-                throw new InvalidOperationException();
-            base.OnPropertyChanging(args);
-        }
 
         protected override void OnValidate(ValidationContext validationContext, List<ValidationResult> results)
         {

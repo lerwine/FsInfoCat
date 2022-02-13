@@ -20,8 +20,8 @@ namespace FsInfoCat.Local
     {
         #region Fields
 
-        private readonly IPropertyChangeTracker<FileSystem> _fileSystem;
-        private readonly IPropertyChangeTracker<Subdirectory> _rootDirectory;
+        private FileSystem _fileSystem;
+        private Subdirectory _rootDirectory;
         private HashSet<VolumeAccessError> _accessErrors = new();
         private HashSet<PersonalVolumeTag> _personalTags = new();
         private HashSet<SharedVolumeTag> _sharedTags = new();
@@ -30,38 +30,71 @@ namespace FsInfoCat.Local
 
         #region Properties
 
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_FileSystem), ResourceType = typeof(FsInfoCat.Properties.Resources))]
-        public virtual FileSystem FileSystem
+        public override Guid FileSystemId
         {
-            get => _fileSystem.GetValue();
+            get
+            {
+                Monitor.Enter(SyncRoot);
+                try
+                {
+                    Guid? id = _fileSystem?.Id;
+                    if (id.HasValue && id.Value != base.FileSystemId)
+                    {
+                        base.FileSystemId = id.Value;
+                        return id.Value;
+                    }
+                    return base.FileSystemId;
+                }
+                finally { Monitor.Exit(SyncRoot); }
+            }
             set
             {
-                if (_fileSystem.SetValue(value))
-                    FileSystemId = value?.Id ?? Guid.Empty;
+                Monitor.Enter(SyncRoot);
+                try
+                {
+                    Guid? id = _fileSystem?.Id;
+                    if (id.HasValue && id.Value != value)
+                        _fileSystem = null;
+                    base.FileSystemId = value;
+                }
+                finally { Monitor.Exit(SyncRoot); }
             }
         }
 
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_FileSystem), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        public virtual FileSystem FileSystem
+        {
+            get => _fileSystem;
+            set
+            {
+                Monitor.Enter(SyncRoot);
+                try
+                {
+                    if (value is null)
+                    {
+                        if (_fileSystem is not null)
+                            base.FileSystemId = Guid.Empty;
+                    }
+                    else
+                    {
+                        base.FileSystemId = value.Id;
+                        _fileSystem = value;
+                    }
+                }
+                finally { Monitor.Exit(SyncRoot); }
+            }
+        }
+
+
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_RootDirectory), ResourceType = typeof(FsInfoCat.Properties.Resources))]
-        public virtual Subdirectory RootDirectory { get => _rootDirectory.GetValue(); set => _rootDirectory.SetValue(value); }
+        public virtual Subdirectory RootDirectory { get; set; }
 
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_AccessErrors), ResourceType = typeof(FsInfoCat.Properties.Resources))]
-        public virtual HashSet<VolumeAccessError> AccessErrors
-        {
-            get => _accessErrors;
-            set => CheckHashSetChanged(_accessErrors, value, h => _accessErrors = h);
-        }
+        public virtual HashSet<VolumeAccessError> AccessErrors { get => _accessErrors; set => _accessErrors = value ?? new(); }
 
-        public HashSet<PersonalVolumeTag> PersonalTags
-        {
-            get => _personalTags;
-            set => CheckHashSetChanged(_personalTags, value, h => _personalTags = h);
-        }
+        public HashSet<PersonalVolumeTag> PersonalTags { get => _personalTags; set => _personalTags = value ?? new(); }
 
-        public HashSet<SharedVolumeTag> SharedTags
-        {
-            get => _sharedTags;
-            set => CheckHashSetChanged(_sharedTags, value, h => _sharedTags = h);
-        }
+        public HashSet<SharedVolumeTag> SharedTags { get => _sharedTags; set => _sharedTags = value ?? new(); }
 
         #endregion
 
@@ -90,12 +123,6 @@ namespace FsInfoCat.Local
         Volume IIdentityReference<Volume>.Entity => this;
 
         #endregion
-
-        public Volume()
-        {
-            _fileSystem = AddChangeTracker<FileSystem>(nameof(FileSystem), null);
-            _rootDirectory = AddChangeTracker<Subdirectory>(nameof(RootDirectory), null);
-        }
 
         [Obsolete("Use FsInfoCat.Local.Background.IDeleteVolumeBackgroundService")]
         internal async Task<bool> ForceDeleteFromDbAsync(LocalDbContext dbContext, CancellationToken cancellationToken)
@@ -286,13 +313,6 @@ namespace FsInfoCat.Local
                 await transaction.CommitAsync();
                 return result;
             }
-        }
-
-        protected override void OnFileSystemIdChanged(Guid value)
-        {
-            FileSystem nav = _fileSystem.GetValue();
-            if (!(nav is null || nav.Id.Equals(value)))
-                _ = _fileSystem.SetValue(null);
         }
     }
 }

@@ -23,11 +23,7 @@ namespace FsInfoCat.Local
     {
         private HashSet<DbFile> _files = new();
 
-        public HashSet<DbFile> Files
-        {
-            get => _files;
-            set => CheckHashSetChanged(_files, value, h => _files = h);
-        }
+        public HashSet<DbFile> Files { get => _files; set => _files = value ?? new(); }
 
         #region Explicit Members
 

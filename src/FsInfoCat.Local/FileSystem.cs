@@ -25,18 +25,10 @@ namespace FsInfoCat.Local
         #region Properties
 
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_Volumes), ResourceType = typeof(FsInfoCat.Properties.Resources))]
-        public virtual HashSet<Volume> Volumes
-        {
-            get => _volumes;
-            set => CheckHashSetChanged(_volumes, value, h => _volumes = h);
-        }
+        public virtual HashSet<Volume> Volumes { get => _volumes; set => _volumes = value ?? new(); }
 
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_SymbolicNames), ResourceType = typeof(FsInfoCat.Properties.Resources))]
-        public virtual HashSet<SymbolicName> SymbolicNames
-        {
-            get => _symbolicNames;
-            set => CheckHashSetChanged(_symbolicNames, value, h => _symbolicNames = h);
-        }
+        public virtual HashSet<SymbolicName> SymbolicNames { get => _symbolicNames; set => _symbolicNames = value ?? new(); }
 
         #endregion
 

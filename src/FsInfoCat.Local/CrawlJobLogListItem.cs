@@ -7,15 +7,10 @@ namespace FsInfoCat.Local
 {
     public class CrawlJobLogListItem : CrawlJobLogRow, ILocalCrawlJobListItem
     {
-        private readonly IPropertyChangeTracker<string> _configurationDisplayName;
+        private string _configurationDisplayName = string.Empty;
         private const string VIEW_NAME = "vCrawlJobListing";
 
-        public string ConfigurationDisplayName { get => _configurationDisplayName.GetValue(); set => _configurationDisplayName.SetValue(value); }
-
-        public CrawlJobLogListItem()
-        {
-            _configurationDisplayName = AddChangeTracker(nameof(ConfigurationDisplayName), "", TrimmedNonNullStringCoersion.Default);
-        }
+        public string ConfigurationDisplayName { get => _configurationDisplayName; set => _configurationDisplayName = value.AsNonNullTrimmed(); }
 
         internal static void OnBuildEntity([DisallowNull] EntityTypeBuilder<CrawlJobLogListItem> builder) => (builder ?? throw new ArgumentOutOfRangeException(nameof(builder)))
             .ToView(VIEW_NAME);

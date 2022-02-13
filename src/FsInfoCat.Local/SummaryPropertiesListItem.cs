@@ -7,18 +7,10 @@ namespace FsInfoCat.Local
     public class SummaryPropertiesListItem : SummaryPropertiesRow, ILocalSummaryPropertiesListItem
     {
         public const string VIEW_NAME = "vSummaryPropertiesListing";
-        private readonly IPropertyChangeTracker<long> _existingFileCount;
-        private readonly IPropertyChangeTracker<long> _totalFileCount;
 
-        public long ExistingFileCount { get => _existingFileCount.GetValue(); set => _existingFileCount.SetValue(value); }
+        public long ExistingFileCount { get; set; }
 
-        public long TotalFileCount { get => _totalFileCount.GetValue(); set => _totalFileCount.SetValue(value); }
-
-        public SummaryPropertiesListItem()
-        {
-            _existingFileCount = AddChangeTracker(nameof(ExistingFileCount), 0L);
-            _totalFileCount = AddChangeTracker(nameof(TotalFileCount), 0L);
-        }
+        public long TotalFileCount { get; set; }
 
         internal static void OnBuildEntity(EntityTypeBuilder<SummaryPropertiesListItem> builder)
         {

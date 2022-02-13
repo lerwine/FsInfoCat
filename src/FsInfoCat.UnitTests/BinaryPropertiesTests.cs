@@ -182,19 +182,6 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expectedValue, actualValue);
         }
 
-        [TestMethod("string Item[string]"), Ignore]
-        public void ItemColumnNameTestMethod()
-        {
-            Assert.Inconclusive("Test not implemented");
-            // DEFERRED: Implement test for string Item[string]
-
-            string columnNameIndex = default;
-            BinaryPropertySet target = default; // TODO: Create and initialize BinaryProperties instance
-            string expectedValue = default;
-            string actualValue = target[columnNameIndex];
-            Assert.AreEqual(expectedValue, actualValue);
-        }
-
         [TestMethod("IEnumerable<ValidationResult> Validate(ValidationContext)"), Ignore]
         public void ValidateValidationContextTestMethod()
         {
@@ -206,50 +193,6 @@ namespace FsInfoCat.UnitTests
             IEnumerable<ValidationResult> expectedReturnValue = default;
             IEnumerable<ValidationResult> actualReturnValue = target.Validate(validationContextArg);
             Assert.AreEqual(expectedReturnValue, actualReturnValue);
-        }
-
-        [TestMethod("bool HasErrors()"), Ignore]
-        public void HasErrorsTestMethod()
-        {
-            Assert.Inconclusive("Test not implemented");
-            // DEFERRED: Implement test for bool HasErrors()
-
-            BinaryPropertySet target = default; // TODO: Create and initialize BinaryProperties instance
-            bool expectedReturnValue = default;
-            bool actualReturnValue = target.HasErrors();
-            Assert.AreEqual(expectedReturnValue, actualReturnValue);
-        }
-
-        [TestMethod("void AcceptChanges()"), Ignore]
-        public void AcceptChangesTestMethod()
-        {
-            Assert.Inconclusive("Test not implemented");
-            // DEFERRED: Implement test for void AcceptChanges()
-
-            BinaryPropertySet target = default; // TODO: Create and initialize BinaryProperties instance
-            target.AcceptChanges();
-        }
-
-        [TestMethod("bool IsChanged()"), Ignore]
-        public void IsChangedTestMethod()
-        {
-            Assert.Inconclusive("Test not implemented");
-            // DEFERRED: Implement test for bool IsChanged()
-
-            BinaryPropertySet target = default; // TODO: Create and initialize BinaryProperties instance
-            bool expectedReturnValue = default;
-            bool actualReturnValue = target.IsChanged();
-            Assert.AreEqual(expectedReturnValue, actualReturnValue);
-        }
-
-        [TestMethod("void RejectChanges()"), Ignore]
-        public void RejectChangesTestMethod()
-        {
-            Assert.Inconclusive("Test not implemented");
-            // DEFERRED: Implement test for void RejectChanges()
-
-            BinaryPropertySet target = default; // TODO: Create and initialize BinaryProperties instance
-            target.RejectChanges();
         }
     }
 }

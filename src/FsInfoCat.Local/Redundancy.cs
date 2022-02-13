@@ -21,12 +21,12 @@ namespace FsInfoCat.Local
     {
         #region Fields
 
-        private readonly IPropertyChangeTracker<Guid> _fileId;
-        private readonly IPropertyChangeTracker<Guid> _redundantSetId;
-        private readonly IPropertyChangeTracker<string> _reference;
-        private readonly IPropertyChangeTracker<string> _notes;
-        private readonly IPropertyChangeTracker<DbFile> _file;
-        private readonly IPropertyChangeTracker<RedundantSet> _redundantSet;
+        private Guid _fileId;
+        private Guid _redundantSetId;
+        private string _reference;
+        private string _notes;
+        private DbFile _file;
+        private RedundantSet _redundantSet;
 
         #endregion
 
@@ -35,50 +35,97 @@ namespace FsInfoCat.Local
         [Required]
         public virtual Guid FileId
         {
-            get => _fileId.GetValue();
+            get
+            {
+                Monitor.Enter(SyncRoot);
+                try
+                {
+                    Guid? id = _file?.Id;
+                    if (id.HasValue && id.Value != _fileId)
+                    {
+                        _fileId = id.Value;
+                        return id.Value;
+                    }
+                    return _fileId;
+                }
+                finally { Monitor.Exit(SyncRoot); }
+            }
             set
             {
-                if (_fileId.SetValue(value))
+                Monitor.Enter(SyncRoot);
+                try
                 {
-                    DbFile nav = _file.GetValue();
-                    if (!(nav is null || nav.Id.Equals(value)))
-                        _ = _file.SetValue(null);
+                    Guid? id = _file?.Id;
+                    if (id.HasValue && id.Value != value)
+                        _file = null;
+                    _fileId = value;
                 }
+                finally { Monitor.Exit(SyncRoot); }
             }
         }
 
         [Required]
         public virtual Guid RedundantSetId
         {
-            get => _redundantSetId.GetValue();
+            get
+            {
+                Monitor.Enter(SyncRoot);
+                try
+                {
+                    Guid? id = _redundantSet?.Id;
+                    if (id.HasValue && id.Value != _redundantSetId)
+                    {
+                        _redundantSetId = id.Value;
+                        return id.Value;
+                    }
+                    return _redundantSetId;
+                }
+                finally { Monitor.Exit(SyncRoot); }
+            }
             set
             {
-                if (_redundantSetId.SetValue(value))
+                Monitor.Enter(SyncRoot);
+                try
                 {
-                    RedundantSet nav = _redundantSet.GetValue();
-                    if (!(nav is null || nav.Id.Equals(value)))
-                        _ = _redundantSet.SetValue(null);
+                    Guid? id = _redundantSet?.Id;
+                    if (id.HasValue && id.Value != value)
+                        _redundantSet = null;
+                    _redundantSetId = value;
                 }
+                finally { Monitor.Exit(SyncRoot); }
             }
         }
 
         [Required(AllowEmptyStrings = true)]
         [StringLength(DbConstants.DbColMaxLen_ShortName, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_NameLength),
             ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
-        public virtual string Reference { get => _reference.GetValue(); set => _reference.SetValue(value); }
+        public virtual string Reference { get => _reference; set => _reference = value.AsWsNormalizedOrEmpty(); }
 
         [Required(AllowEmptyStrings = true)]
-        public virtual string Notes { get => _notes.GetValue(); set => _notes.SetValue(value); }
+        public virtual string Notes { get => _notes; set => _notes = value.TrimmedOrNullIfWhiteSpace(); }
 
         [Required(ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_FileRequired),
             ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual DbFile File
         {
-            get => _file.GetValue();
+            get => _file;
             set
             {
-                if (_file.SetValue(value))
-                    _ = _fileId.SetValue(value?.Id ?? Guid.Empty);
+                Monitor.Enter(SyncRoot);
+                try
+                {
+                    if (value is null)
+                    {
+                        if (_file is not null)
+                            _fileId = Guid.Empty;
+                    }
+                    else
+                    {
+                        _fileId = value.Id;
+                        _file = value;
+                    }
+                }
+                finally { Monitor.Exit(SyncRoot); }
             }
         }
 
@@ -87,11 +134,24 @@ namespace FsInfoCat.Local
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_RedundantSet), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual RedundantSet RedundantSet
         {
-            get => _redundantSet.GetValue();
+            get => _redundantSet;
             set
             {
-                if (_redundantSet.SetValue(value))
-                    _ = _redundantSetId.SetValue(value?.Id ?? Guid.Empty);
+                Monitor.Enter(SyncRoot);
+                try
+                {
+                    if (value is null)
+                    {
+                        if (_redundantSet is not null)
+                            _fileId = Guid.Empty;
+                    }
+                    else
+                    {
+                        _fileId = value.Id;
+                        _redundantSet = value;
+                    }
+                }
+                finally { Monitor.Exit(SyncRoot); }
             }
         }
 
@@ -133,16 +193,6 @@ namespace FsInfoCat.Local
         IDbEntity IIdentityReference.Entity => this;
 
         #endregion
-
-        public Redundancy()
-        {
-            _fileId = AddChangeTracker(nameof(FileId), Guid.Empty);
-            _redundantSetId = AddChangeTracker(nameof(RedundantSetId), Guid.Empty);
-            _reference = AddChangeTracker(nameof(Reference), "", TrimmedNonNullStringCoersion.Default);
-            _notes = AddChangeTracker(nameof(Notes), "", NonWhiteSpaceOrEmptyStringCoersion.Default);
-            _file = AddChangeTracker<DbFile>(nameof(File), null);
-            _redundantSet = AddChangeTracker<RedundantSet>(nameof(RedundantSet), null);
-        }
 
         internal static void OnBuildEntity(EntityTypeBuilder<Redundancy> builder)
         {

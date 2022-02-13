@@ -1,4 +1,4 @@
-﻿using FsInfoCat.Collections;
+using FsInfoCat.Collections;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -8,18 +8,9 @@ namespace FsInfoCat.Local
     {
         public const string VIEW_NAME = "vMusicPropertiesListing";
 
-        private readonly IPropertyChangeTracker<long> _existingFileCount;
-        private readonly IPropertyChangeTracker<long> _totalFileCount;
+        public long ExistingFileCount { get; set; }
 
-        public long ExistingFileCount { get => _existingFileCount.GetValue(); set => _existingFileCount.SetValue(value); }
-
-        public long TotalFileCount { get => _totalFileCount.GetValue(); set => _totalFileCount.SetValue(value); }
-
-        public MusicPropertiesListItem()
-        {
-            _existingFileCount = AddChangeTracker(nameof(ExistingFileCount), 0L);
-            _totalFileCount = AddChangeTracker(nameof(TotalFileCount), 0L);
-        }
+        public long TotalFileCount { get; set; }
 
         internal static void OnBuildEntity(EntityTypeBuilder<MusicPropertiesListItem> builder)
         {

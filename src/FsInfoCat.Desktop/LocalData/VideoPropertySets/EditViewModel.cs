@@ -36,16 +36,16 @@ namespace FsInfoCat.Desktop.LocalData.VideoPropertySets
         /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="SaveChanges" />.</param>
         protected virtual void OnSaveChangesCommand(object parameter)
         {
-            if (ApplyChanges() || IsNew)
-            {
-                // TODO: Implement VideoPropertySets.EditViewModel.OnSaveChangesCommand
-                throw new NotImplementedException();
-                //IWindowsAsyncJobFactoryService jobFactory = Hosting.GetRequiredService<IWindowsAsyncJobFactoryService>();
-                //IAsyncJob<VideoPropertiesListItem> job = jobFactory.StartNew("Saving changes", "Opening database", Entity, InvocationState, SaveChangesAsync);
-                //job.Task.ContinueWith(task => Dispatcher.Invoke(() => OnSaveTaskCompleted(task)));
-            }
-            else
-                RaiseItemUnmodifiedResult();
+            // TODO: Implement VideoPropertySets.EditViewModel.OnSaveChangesCommand
+            //if (ApplyChanges() || IsNew)
+            //{
+            //    throw new NotImplementedException();
+            //    //IWindowsAsyncJobFactoryService jobFactory = Hosting.GetRequiredService<IWindowsAsyncJobFactoryService>();
+            //    //IAsyncJob<VideoPropertiesListItem> job = jobFactory.StartNew("Saving changes", "Opening database", Entity, InvocationState, SaveChangesAsync);
+            //    //job.Task.ContinueWith(task => Dispatcher.Invoke(() => OnSaveTaskCompleted(task)));
+            //}
+            //else
+            //    RaiseItemUnmodifiedResult();
         }
 
         #endregion
@@ -148,10 +148,8 @@ namespace FsInfoCat.Desktop.LocalData.VideoPropertySets
             // TODO: Load option lists from database
         }
 
-        private bool ApplyChanges()
+        private void ApplyChanges()
         {
-            if (Entity.IsChanged())
-                Entity.RejectChanges();
             Entity.Compression = Compression;
             Entity.Director = Director;
             Entity.EncodingBitrate = EncodingBitrate;
@@ -164,7 +162,6 @@ namespace FsInfoCat.Desktop.LocalData.VideoPropertySets
             Entity.StreamNumber = StreamNumber;
             Entity.UpstreamId = UpstreamId;
             Entity.VerticalAspectRatio = VerticalAspectRatio;
-            return Entity.IsChanged();
         }
 
         private void ReinitializeFromEntity()
@@ -236,26 +233,26 @@ namespace FsInfoCat.Desktop.LocalData.VideoPropertySets
 
         void INavigatingFromNotifiable.OnNavigatingFrom(CancelEventArgs e)
         {
-            if (ApplyChanges())
-            {
-                switch (MessageBox.Show(Application.Current.MainWindow, "There are unsaved changes. Do you wish to save them before continuing?", "Unsaved Changes",
-                    MessageBoxButton.YesNoCancel, MessageBoxImage.Warning))
-                {
-                    case MessageBoxResult.Yes:
-                        // TODO: Implement VideoPropertySets.EditViewModel.OnNavigatingFrom
-                        throw new NotImplementedException();
-                        //IWindowsAsyncJobFactoryService jobFactory = Hosting.GetRequiredService<IWindowsAsyncJobFactoryService>();
-                        //IAsyncJob<VideoPropertiesListItem> job = jobFactory.StartNew("Saving changes", "Opening database", Entity, InvocationState, SaveChangesAsync);
-                        //job.Task.ContinueWith(task => Dispatcher.Invoke(() => OnSaveTaskCompleted(task)));
-                        //e.Cancel = true;
-                        //break;
-                    case MessageBoxResult.No:
-                        break;
-                    default:
-                        e.Cancel = true;
-                        break;
-                }
-            }
+            // TODO: Implement VideoPropertySets.EditViewModel.OnNavigatingFrom
+            //if (ApplyChanges())
+            //{
+            //    switch (MessageBox.Show(Application.Current.MainWindow, "There are unsaved changes. Do you wish to save them before continuing?", "Unsaved Changes",
+            //        MessageBoxButton.YesNoCancel, MessageBoxImage.Warning))
+            //    {
+            //        case MessageBoxResult.Yes:
+            //            throw new NotImplementedException();
+            //            //IWindowsAsyncJobFactoryService jobFactory = Hosting.GetRequiredService<IWindowsAsyncJobFactoryService>();
+            //            //IAsyncJob<VideoPropertiesListItem> job = jobFactory.StartNew("Saving changes", "Opening database", Entity, InvocationState, SaveChangesAsync);
+            //            //job.Task.ContinueWith(task => Dispatcher.Invoke(() => OnSaveTaskCompleted(task)));
+            //            //e.Cancel = true;
+            //            //break;
+            //        case MessageBoxResult.No:
+            //            break;
+            //        default:
+            //            e.Cancel = true;
+            //            break;
+            //    }
+            //}
         }
     }
 }

@@ -3,14 +3,12 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Security;
 using System.Threading;
 using System.Threading.Tasks;
@@ -21,9 +19,9 @@ namespace FsInfoCat.Local
     {
         #region Fields
 
-        private readonly IPropertyChangeTracker<Subdirectory> _parent;
-        private readonly IPropertyChangeTracker<CrawlConfiguration> _crawlConfiguration;
-        private readonly IPropertyChangeTracker<Volume> _volume;
+        private Subdirectory _parent;
+        private CrawlConfiguration _crawlConfiguration;
+        private Volume _volume;
         private HashSet<DbFile> _files = new();
         private HashSet<Subdirectory> _subDirectories = new();
         private HashSet<SubdirectoryAccessError> _accessErrors = new();
@@ -34,63 +32,137 @@ namespace FsInfoCat.Local
 
         #region Properties
 
-        public virtual Subdirectory Parent
+        public override Guid? ParentId
         {
-            get => _parent.GetValue();
+            get
+            {
+                Monitor.Enter(SyncRoot);
+                try
+                {
+                    Guid? id = _parent?.Id;
+                    if (id.HasValue && id.Value != base.ParentId)
+                    {
+                        base.ParentId = id.Value;
+                        return id.Value;
+                    }
+                    return base.ParentId;
+                }
+                finally { Monitor.Exit(SyncRoot); }
+            }
             set
             {
-                if (_parent.SetValue(value))
-                    ParentId = value?.Id;
+                Monitor.Enter(SyncRoot);
+                try
+                {
+                    Guid? id = _parent?.Id;
+                    if (value.HasValue)
+                    {
+                        if (id.HasValue && id.Value != value)
+                            _parent = null;
+                    }
+                    else
+                        _parent = null;
+                    base.ParentId = value;
+                }
+                finally { Monitor.Exit(SyncRoot); }
+            }
+        }
+
+        public virtual Subdirectory Parent
+        {
+            get => _parent;
+            set
+            {
+                Monitor.Enter(SyncRoot);
+                try
+                {
+                    if (value is null)
+                    {
+                        if (_parent is not null)
+                            base.ParentId = null;
+                    }
+                    else
+                    {
+                        base.ParentId = value.Id;
+                        _parent = value;
+                    }
+                }
+                finally { Monitor.Exit(SyncRoot); }
+            }
+        }
+
+        public override Guid? VolumeId
+        {
+            get
+            {
+                Monitor.Enter(SyncRoot);
+                try
+                {
+                    Guid? id = _volume?.Id;
+                    if (id.HasValue && id.Value != base.VolumeId)
+                    {
+                        base.VolumeId = id.Value;
+                        return id.Value;
+                    }
+                    return base.VolumeId;
+                }
+                finally { Monitor.Exit(SyncRoot); }
+            }
+            set
+            {
+                Monitor.Enter(SyncRoot);
+                try
+                {
+                    Guid? id = _volume?.Id;
+                    if (value.HasValue)
+                    {
+                        if (id.HasValue && id.Value != value)
+                            _volume = null;
+                    }
+                    else
+                        _volume = null;
+                    base.VolumeId = value;
+                }
+                finally { Monitor.Exit(SyncRoot); }
             }
         }
 
         public virtual Volume Volume
         {
-            get => _volume.GetValue();
+            get => _volume;
             set
             {
-                if (_volume.SetValue(value))
-                    VolumeId = value?.Id;
+                Monitor.Enter(SyncRoot);
+                try
+                {
+                    if (value is null)
+                    {
+                        if (_volume is not null)
+                            base.VolumeId = null;
+                    }
+                    else
+                    {
+                        base.VolumeId = value.Id;
+                        _volume = value;
+                    }
+                }
+                finally { Monitor.Exit(SyncRoot); }
             }
         }
 
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_CrawlConfiguration), ResourceType = typeof(FsInfoCat.Properties.Resources))]
-        public CrawlConfiguration CrawlConfiguration
-        {
-            get => _crawlConfiguration.GetValue();
-            set => _crawlConfiguration.SetValue(value);
-        }
+        public CrawlConfiguration CrawlConfiguration { get; set; }
 
-        public virtual HashSet<DbFile> Files
-        {
-            get => _files;
-            set => CheckHashSetChanged(_files, value, h => _files = h);
-        }
+        public virtual HashSet<DbFile> Files { get => _files; set => _files = value ?? new(); }
 
-        public virtual HashSet<Subdirectory> SubDirectories
-        {
-            get => _subDirectories;
-            set => CheckHashSetChanged(_subDirectories, value, h => _subDirectories = h);
-        }
+        public virtual HashSet<Subdirectory> SubDirectories { get => _subDirectories; set => _subDirectories = value ?? new(); }
 
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_AccessErrors), ResourceType = typeof(FsInfoCat.Properties.Resources))]
-        public virtual HashSet<SubdirectoryAccessError> AccessErrors
-        {
-            get => _accessErrors;
-            set => CheckHashSetChanged(_accessErrors, value, h => _accessErrors = h);
-        }
+        public virtual HashSet<SubdirectoryAccessError> AccessErrors { get => _accessErrors; set => _accessErrors = value ?? new(); }
 
-        public HashSet<PersonalSubdirectoryTag> PersonalTags
-        {
-            get => _personalTags;
-            set => CheckHashSetChanged(_personalTags, value, h => _personalTags = h);
-        }
+        public HashSet<PersonalSubdirectoryTag> PersonalTags { get => _personalTags; set => _personalTags = value ?? new(); }
 
-        public HashSet<SharedSubdirectoryTag> SharedTags
-        {
-            get => _sharedTags;
-            set => CheckHashSetChanged(_sharedTags, value, h => _sharedTags = h);
-        }
+        public HashSet<SharedSubdirectoryTag> SharedTags { get => _sharedTags; set => _sharedTags = value ?? new(); }
 
         #endregion
 
@@ -147,13 +219,6 @@ namespace FsInfoCat.Local
         IDbEntity IIdentityReference.Entity => this;
 
         #endregion
-
-        public Subdirectory()
-        {
-            _parent = AddChangeTracker<Subdirectory>(nameof(Parent), null);
-            _volume = AddChangeTracker<Volume>(nameof(Volume), null);
-            _crawlConfiguration = AddChangeTracker<CrawlConfiguration>(nameof(CrawlConfiguration), null);
-        }
 
         /// <summary>
         /// Asynchronously calculates the full path name of the current subdirectory.
@@ -345,7 +410,7 @@ namespace FsInfoCat.Local
                     else
                         shouldDelete = true;
                     break;
-                case ItemDeletionOption.NarkAsDeleted:
+                case ItemDeletionOption.MarkAsDeleted:
                     if (target.Status == DirectoryStatus.Deleted)
                         return false;
                     shouldDelete = false;
@@ -677,20 +742,6 @@ namespace FsInfoCat.Local
             }
             else
                 results.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_VolumeAndParent, new string[] { nameof(Volume) }));
-        }
-
-        protected override void OnParentIdChanged(Guid? value)
-        {
-            Subdirectory nav = _parent.GetValue();
-            if (!(nav is null || (value.HasValue && nav.Id.Equals(value.Value))))
-                _ = _parent.SetValue(null);
-        }
-
-        protected override void OnVolumeIdChanged(Guid? value)
-        {
-            Volume nav = _volume.GetValue();
-            if (!(nav is null || (value.HasValue && nav.Id.Equals(value.Value))))
-                _ = _volume.SetValue(null);
         }
     }
 }

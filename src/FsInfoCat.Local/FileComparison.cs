@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Threading;
 
 namespace FsInfoCat.Local
 {
@@ -28,12 +29,10 @@ namespace FsInfoCat.Local
         /// </summary>
         public const string ELEMENT_NAME = "Comparison";
 
-        private readonly IPropertyChangeTracker<Guid> _baselineId;
-        private readonly IPropertyChangeTracker<Guid> _correlativeId;
-        private readonly IPropertyChangeTracker<bool> _areEqual;
-        private readonly IPropertyChangeTracker<DateTime> _comparedOn;
-        private readonly IPropertyChangeTracker<DbFile> _baseline;
-        private readonly IPropertyChangeTracker<DbFile> _correlative;
+        private Guid _baselineId;
+        private Guid _correlativeId;
+        private DbFile _baseline;
+        private DbFile _correlative;
 
         #endregion
 
@@ -46,15 +45,32 @@ namespace FsInfoCat.Local
         /// <remarks>This is also part of this entity's compound primary key.</remarks>
         public virtual Guid BaselineId
         {
-            get => _baselineId.GetValue();
+            get
+            {
+                Monitor.Enter(SyncRoot);
+                try
+                {
+                    Guid? id = _baseline?.Id;
+                    if (id.HasValue && id.Value != _baselineId)
+                    {
+                        _baselineId = id.Value;
+                        return id.Value;
+                    }
+                    return _baselineId;
+                }
+                finally { Monitor.Exit(SyncRoot); }
+            }
             set
             {
-                if (_baselineId.SetValue(value))
+                Monitor.Enter(SyncRoot);
+                try
                 {
-                    DbFile nav = _baseline.GetValue();
-                    if (!(nav is null || nav.Id.Equals(value)))
-                        _ = _baseline.SetValue(null);
+                    Guid? id = _baseline?.Id;
+                    if (id.HasValue && id.Value != value)
+                        _baseline = null;
+                    _baselineId = value;
                 }
+                finally { Monitor.Exit(SyncRoot); }
             }
         }
 
@@ -65,15 +81,32 @@ namespace FsInfoCat.Local
         /// <remarks>This is also part of this entity's compound primary key.</remarks>
         public virtual Guid CorrelativeId
         {
-            get => _correlativeId.GetValue();
+            get
+            {
+                Monitor.Enter(SyncRoot);
+                try
+                {
+                    Guid? id = _correlative?.Id;
+                    if (id.HasValue && id.Value != _correlativeId)
+                    {
+                        _correlativeId = id.Value;
+                        return id.Value;
+                    }
+                    return _correlativeId;
+                }
+                finally { Monitor.Exit(SyncRoot); }
+            }
             set
             {
-                if (_correlativeId.SetValue(value))
+                Monitor.Enter(SyncRoot);
+                try
                 {
-                    DbFile nav = _correlative.GetValue();
-                    if (!(nav is null || nav.Id.Equals(value)))
-                        _ = _correlative.SetValue(null);
+                    Guid? id = _correlative?.Id;
+                    if (id.HasValue && id.Value != value)
+                        _correlative = null;
+                    _correlativeId = value;
                 }
+                finally { Monitor.Exit(SyncRoot); }
             }
         }
 
@@ -82,14 +115,14 @@ namespace FsInfoCat.Local
         /// </summary>
         /// <value><see langword="true" /> if <see cref="P:FsInfoCat.IComparison.Baseline" /> and <see cref="P:FsInfoCat.IComparison.Correlative" /> are identical byte-for-byte; otherwise, <see langword="false" />.</value>
         [Required]
-        public virtual bool AreEqual { get => _areEqual.GetValue(); set => _areEqual.SetValue(value); }
+        public virtual bool AreEqual { get; set; }
 
         /// <summary>
         /// Gets or sets the date and time when the files were compared.
         /// </summary>
         /// <value>The date and time when <see cref="P:FsInfoCat.IComparison.Baseline" /> was compared to <see cref="P:FsInfoCat.IComparison.Correlative" />.</value>
         [Required]
-        public virtual DateTime ComparedOn { get => _comparedOn.GetValue(); set => _comparedOn.SetValue(value); }
+        public virtual DateTime ComparedOn { get; set; }
 
         /// <summary>
         /// Gets or sets the baseline file in the comparison.
@@ -97,11 +130,24 @@ namespace FsInfoCat.Local
         /// <value>The generic <see cref="T:FsInfoCat.Local.ILocalFile" /> that represents the baseline file in the comparison.</value>
         public virtual DbFile Baseline
         {
-            get => _baseline.GetValue();
+            get => _baseline;
             set
             {
-                if (_baseline.SetValue(value))
-                    _baselineId.SetValue(value?.Id ?? Guid.Empty);
+                Monitor.Enter(SyncRoot);
+                try
+                {
+                    if (value is null)
+                    {
+                        if (_baseline is not null)
+                            _baselineId = Guid.Empty;
+                    }
+                    else
+                    {
+                        _baselineId = value.Id;
+                        _baseline = value;
+                    }
+                }
+                finally { Monitor.Exit(SyncRoot); }
             }
         }
 
@@ -111,11 +157,24 @@ namespace FsInfoCat.Local
         /// <value>The generic <see cref="T:FsInfoCat.Local.ILocalFile" /> that represents the correlative file, which is the new or changed file in the comparison.</value>
         public virtual DbFile Correlative
         {
-            get => _correlative.GetValue();
+            get => _correlative;
             set
             {
-                if (_correlative.SetValue(value))
-                    _correlativeId.SetValue(value?.Id ?? Guid.Empty);
+                Monitor.Enter(SyncRoot);
+                try
+                {
+                    if (value is null)
+                    {
+                        if (_correlative is not null)
+                            _correlativeId = Guid.Empty;
+                    }
+                    else
+                    {
+                        _correlativeId = value.Id;
+                        _correlative = value;
+                    }
+                }
+                finally { Monitor.Exit(SyncRoot); }
             }
         }
 
@@ -132,19 +191,6 @@ namespace FsInfoCat.Local
         IFile IComparison.Correlative { get => Correlative; }
 
         #endregion
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="FileComparison"/> class.
-        /// </summary>
-        public FileComparison()
-        {
-            _baselineId = AddChangeTracker(nameof(BaselineId), Guid.Empty);
-            _correlativeId = AddChangeTracker(nameof(CorrelativeId), Guid.Empty);
-            _areEqual = AddChangeTracker(nameof(AreEqual), false);
-            _comparedOn = AddChangeTracker(nameof(ComparedOn), CreatedOn);
-            _baseline = AddChangeTracker<DbFile>(nameof(Baseline), null);
-            _correlative = AddChangeTracker<DbFile>(nameof(Correlative), null);
-        }
 
         internal static void OnBuildEntity(EntityTypeBuilder<FileComparison> builder)
         {

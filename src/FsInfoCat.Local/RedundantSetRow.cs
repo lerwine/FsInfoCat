@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Text.RegularExpressions;
+using System.Threading;
 
 namespace FsInfoCat.Local
 {
@@ -26,11 +26,9 @@ namespace FsInfoCat.Local
     (?=[\w-.]{1,255}(?![\w-.]))
     (?<dns>[a-z\d][\w-]*(\.[a-z\d][\w-]*)*\.?)
 )$", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.IgnorePatternWhitespace);
-        private readonly IPropertyChangeTracker<Guid> _id;
-        private readonly IPropertyChangeTracker<string> _reference;
-        private readonly IPropertyChangeTracker<string> _notes;
-        private readonly IPropertyChangeTracker<Guid> _binaryPropertiesId;
-        private readonly IPropertyChangeTracker<RedundancyRemediationStatus> _status;
+        private Guid? _id;
+        private string _reference = string.Empty;
+        private string _notes = string.Empty;
 
         #endregion
 
@@ -44,64 +42,42 @@ namespace FsInfoCat.Local
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_Id), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual Guid Id
         {
-            get => _id.GetValue();
+            get => _id ?? Guid.Empty;
             set
             {
-                if (_id.IsSet)
+                Monitor.Enter(SyncRoot);
+                try
                 {
-                    Guid id = _id.GetValue();
-                    if (id.Equals(value))
+                    if (_id.HasValue)
+                    {
+                        if (!_id.Value.Equals(value))
+                            throw new InvalidOperationException();
+                    }
+                    else if (value.Equals(Guid.Empty))
                         return;
-                    if (!id.Equals(Guid.Empty))
-                        throw new InvalidOperationException();
+                    _id = value;
                 }
-                _id.SetValue(value);
+                finally { Monitor.Exit(SyncRoot); }
             }
         }
 
         [Required(AllowEmptyStrings = true)]
         [StringLength(DbConstants.DbColMaxLen_ShortName, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_NameLength),
             ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
-        public virtual string Reference { get => _reference.GetValue(); set => _reference.SetValue(value); }
+        public virtual string Reference { get => _reference; set => _reference = value.AsWsNormalizedOrEmpty(); }
 
-        public RedundancyRemediationStatus Status { get => _status.GetValue(); set => _status.SetValue(value); }
+        public RedundancyRemediationStatus Status { get; set; } = RedundancyRemediationStatus.Unconfirmed;
 
         [Required(AllowEmptyStrings = true)]
-        public virtual string Notes { get => _notes.GetValue(); set => _notes.SetValue(value); }
+        public virtual string Notes { get => _notes; set => _notes = value.EmptyIfNullOrWhiteSpace(); }
 
-        public virtual Guid BinaryPropertiesId
-        {
-            get => _binaryPropertiesId.GetValue();
-            set
-            {
-                if (_binaryPropertiesId.SetValue(value))
-                    OnBinaryPropertiesIdChanged(value);
-            }
-        }
+        public virtual Guid BinaryPropertiesId { get; set; }
 
         RedundantSetRow IIdentityReference<RedundantSetRow>.Entity => this;
 
         IDbEntity IIdentityReference.Entity => this;
 
-        protected virtual void OnBinaryPropertiesIdChanged(Guid value) { }
-
         #endregion
-
-        public RedundantSetRow()
-        {
-            _id = AddChangeTracker(nameof(Id), Guid.Empty);
-            _reference = AddChangeTracker(nameof(Reference), "", TrimmedNonNullStringCoersion.Default);
-            _notes = AddChangeTracker(nameof(Notes), "", NonWhiteSpaceOrEmptyStringCoersion.Default);
-            _binaryPropertiesId = AddChangeTracker(nameof(BinaryPropertiesId), Guid.Empty);
-            _status = AddChangeTracker(nameof(Status), RedundancyRemediationStatus.Unconfirmed);
-        }
-
-        protected override void OnPropertyChanging(PropertyChangingEventArgs args)
-        {
-            if (args.PropertyName == nameof(Id) && _id.IsChanged)
-                throw new InvalidOperationException();
-            base.OnPropertyChanging(args);
-        }
 
         IEnumerable<Guid> IIdentityReference.GetIdentifiers()
         {

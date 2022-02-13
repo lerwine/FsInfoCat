@@ -4,9 +4,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
@@ -17,12 +17,11 @@ namespace FsInfoCat.Local
     {
         #region Fields
 
-        private readonly IPropertyChangeTracker<Guid> _id;
-        private readonly IPropertyChangeTracker<string> _message;
-        private readonly IPropertyChangeTracker<ErrorCode> _errorCode;
-        private readonly IPropertyChangeTracker<string> _details;
-        private readonly IPropertyChangeTracker<Guid> _targetId;
-        private readonly IPropertyChangeTracker<Volume> _target;
+        private Guid? _id;
+        private Guid _targetId;
+        private Volume _target;
+        private string _message = string.Empty;
+        private string _details = string.Empty;
 
         #endregion
 
@@ -36,18 +35,22 @@ namespace FsInfoCat.Local
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_Id), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual Guid Id
         {
-            get => _id.GetValue();
+            get => _id ?? Guid.Empty;
             set
             {
-                if (_id.IsSet)
+                Monitor.Enter(SyncRoot);
+                try
                 {
-                    Guid id = _id.GetValue();
-                    if (id.Equals(value))
+                    if (_id.HasValue)
+                    {
+                        if (!_id.Value.Equals(value))
+                            throw new InvalidOperationException();
+                    }
+                    else if (value.Equals(Guid.Empty))
                         return;
-                    if (!id.Equals(Guid.Empty))
-                        throw new InvalidOperationException();
+                    _id = value;
                 }
-                _id.SetValue(value);
+                finally { Monitor.Exit(SyncRoot); }
             }
         }
 
@@ -55,37 +58,67 @@ namespace FsInfoCat.Local
             ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
         [StringLength(DbConstants.DbColMaxLen_LongName, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_NameLength),
             ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
-        public virtual string Message { get => _message.GetValue(); set => _message.SetValue(value); }
+        public virtual string Message { get => _message; set => _message = value.AsWsNormalizedOrEmpty(); }
 
         [Required(AllowEmptyStrings = true)]
-        public virtual string Details { get => _details.GetValue(); set => _details.SetValue(value); }
+        public virtual string Details { get => _details; set => _details = value.EmptyIfNullOrWhiteSpace(); }
 
         [Required]
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_ErrorCode), ResourceType = typeof(FsInfoCat.Properties.Resources))]
-        public ErrorCode ErrorCode { get => _errorCode.GetValue(); set => _errorCode.SetValue(value); }
+        public ErrorCode ErrorCode { get; set; } = ErrorCode.Unexpected;
 
         public virtual Guid TargetId
         {
-            get => _targetId.GetValue();
+            get
+            {
+                Monitor.Enter(SyncRoot);
+                try
+                {
+                    Guid? id = _target?.Id;
+                    if (id.HasValue && id.Value != _targetId)
+                    {
+                        _targetId = id.Value;
+                        return id.Value;
+                    }
+                    return _targetId;
+                }
+                finally { Monitor.Exit(SyncRoot); }
+            }
             set
             {
-                if (_targetId.SetValue(value))
+                Monitor.Enter(SyncRoot);
+                try
                 {
-                    Volume nav = _target.GetValue();
-                    if (!(nav is null || nav.Id.Equals(value)))
-                        _ = _targetId.SetValue(null);
+                    Guid? id = _target?.Id;
+                    if (id.HasValue && id.Value != value)
+                        _target = null;
+                    _targetId = value;
                 }
+                finally { Monitor.Exit(SyncRoot); }
             }
         }
 
         [Required]
         public Volume Target
         {
-            get => _target.GetValue();
+            get => _target;
             set
             {
-                if (_target.SetValue(value))
-                    _ = _targetId.SetValue(value?.Id ?? Guid.Empty);
+                Monitor.Enter(SyncRoot);
+                try
+                {
+                    if (value is null)
+                    {
+                        if (_target is not null)
+                            _targetId = Guid.Empty;
+                    }
+                    else
+                    {
+                        _targetId = value.Id;
+                        _target = value;
+                    }
+                }
+                finally { Monitor.Exit(SyncRoot); }
             }
         }
 
@@ -106,23 +139,6 @@ namespace FsInfoCat.Local
         IDbEntity IIdentityReference.Entity => this;
 
         #endregion
-
-        public VolumeAccessError()
-        {
-            _id = AddChangeTracker(nameof(Id), Guid.Empty);
-            _errorCode = AddChangeTracker(nameof(FsInfoCat.ErrorCode), ErrorCode.Unexpected);
-            _message = AddChangeTracker(nameof(Message), "", TrimmedNonNullStringCoersion.Default);
-            _details = AddChangeTracker(nameof(Details), "", NonWhiteSpaceOrEmptyStringCoersion.Default);
-            _targetId = AddChangeTracker(nameof(TargetId), Guid.Empty);
-            _target = AddChangeTracker<Volume>(nameof(Target), null);
-        }
-
-        protected override void OnPropertyChanging(PropertyChangingEventArgs args)
-        {
-            if (args.PropertyName == nameof(Id) && _id.IsChanged)
-                throw new InvalidOperationException();
-            base.OnPropertyChanging(args);
-        }
 
         protected override void OnValidate(ValidationContext validationContext, List<ValidationResult> results)
         {

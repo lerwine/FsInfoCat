@@ -63,10 +63,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="SaveChanges" />.</param>
         protected virtual void OnSaveChangesCommand(object parameter)
         {
-            if (ApplyChanges() || IsNew)
-                SaveChangesAsync(IsNew);
-            else
-                RaiseItemUnmodifiedResult();
+            // TODO: Implement  CrawlConfigurationEditViewModel<TEntity, TSubdirectoryEntity, TSubdirectoryItem, TCrawlJobLogEntity, TCrawlJobLogItem>.OnSaveChangesCommand
+            //if (ApplyChanges() || IsNew)
+            //    SaveChangesAsync(IsNew);
+            //else
+            //    RaiseItemUnmodifiedResult();
         }
 
         #endregion
@@ -290,7 +291,7 @@ namespace FsInfoCat.Desktop.ViewModel
             nextScheduledStart.SetValue(entity.NextScheduledStart);
         }
 
-        protected abstract bool ApplyChanges();
+        protected abstract void ApplyChanges();
 
         protected abstract IAsyncAction<IActivityEvent> SaveChangesAsync(bool isNew);
 

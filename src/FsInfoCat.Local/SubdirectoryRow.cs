@@ -1,7 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading;
@@ -12,16 +11,9 @@ namespace FsInfoCat.Local
     {
         #region Fields
 
-        private readonly IPropertyChangeTracker<Guid> _id;
-        private readonly IPropertyChangeTracker<string> _name;
-        private readonly IPropertyChangeTracker<DirectoryCrawlOptions> _options;
-        private readonly IPropertyChangeTracker<DirectoryStatus> _status;
-        private readonly IPropertyChangeTracker<DateTime> _lastAccessed;
-        private readonly IPropertyChangeTracker<string> _notes;
-        private readonly IPropertyChangeTracker<DateTime> _creationTime;
-        private readonly IPropertyChangeTracker<DateTime> _lastWriteTime;
-        private readonly IPropertyChangeTracker<Guid?> _parentId;
-        private readonly IPropertyChangeTracker<Guid?> _volumeId;
+        private Guid? _id;
+        private string _name = string.Empty;
+        private string _notes = string.Empty;
 
         #endregion
 
@@ -35,101 +27,54 @@ namespace FsInfoCat.Local
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_Id), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual Guid Id
         {
-            get => _id.GetValue();
+            get => _id ?? Guid.Empty;
             set
             {
-                if (_id.IsSet)
+                Monitor.Enter(SyncRoot);
+                try
                 {
-                    Guid id = _id.GetValue();
-                    if (id.Equals(value))
+                    if (_id.HasValue)
+                    {
+                        if (!_id.Value.Equals(value))
+                            throw new InvalidOperationException();
+                    }
+                    else if (value.Equals(Guid.Empty))
                         return;
-                    if (!id.Equals(Guid.Empty))
-                        throw new InvalidOperationException();
+                    _id = value;
                 }
-                _id.SetValue(value);
+                finally { Monitor.Exit(SyncRoot); }
             }
         }
 
         [StringLength(DbConstants.DbColMaxLen_FileName, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_NameLength),
             ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
-        public virtual string Name { get => _name.GetValue(); set => _name.SetValue(value); }
+        public virtual string Name { get => _name; set => _name = value ?? ""; }
 
         [Required]
-        public virtual DirectoryCrawlOptions Options { get => _options.GetValue(); set => _options.SetValue(value); }
+        public virtual DirectoryCrawlOptions Options { get; set; } = DirectoryCrawlOptions.None;
 
         [Required]
-        public virtual DateTime LastAccessed { get => _lastAccessed.GetValue(); set => _lastAccessed.SetValue(value); }
+        public virtual DateTime LastAccessed { get; set; }
 
         [Required(AllowEmptyStrings = true)]
-        public virtual string Notes { get => _notes.GetValue(); set => _notes.SetValue(value); }
+        public virtual string Notes { get => _notes; set => _notes = value.EmptyIfNullOrWhiteSpace(); }
 
         [Required]
-        public DirectoryStatus Status { get => _status.GetValue(); set => _status.SetValue(value); }
+        public DirectoryStatus Status { get; set; } = DirectoryStatus.Incomplete;
 
-        public DateTime CreationTime { get => _creationTime.GetValue(); set => _creationTime.SetValue(value); }
+        public DateTime CreationTime { get; set; }
 
-        public DateTime LastWriteTime { get => _lastWriteTime.GetValue(); set => _lastWriteTime.SetValue(value); }
+        public DateTime LastWriteTime { get; set; }
 
-        public virtual Guid? ParentId
-        {
-            get => _parentId.GetValue();
-            set
-            {
-                Monitor.Enter(_parentId);
-                try
-                {
-                    if (_parentId.SetValue(value))
-                        OnParentIdChanged(value);
-                }
-                finally { Monitor.Exit(_parentId); }
-            }
-        }
+        public virtual Guid? ParentId { get; set; }
 
-        protected virtual void OnParentIdChanged(Guid? value) { }
-
-        public virtual Guid? VolumeId
-        {
-            get => _volumeId.GetValue();
-            set
-            {
-                Monitor.Enter(_parentId);
-                try
-                {
-                    if (_volumeId.SetValue(value))
-                        OnVolumeIdChanged(value);
-                }
-                finally { Monitor.Exit(_parentId); }
-            }
-        }
-
-        protected virtual void OnVolumeIdChanged(Guid? value) { }
+        public virtual Guid? VolumeId { get; set; }
 
         SubdirectoryRow IIdentityReference<SubdirectoryRow>.Entity => this;
 
         IDbEntity IIdentityReference.Entity => this;
 
         #endregion
-
-        protected SubdirectoryRow()
-        {
-            _id = AddChangeTracker(nameof(Id), Guid.Empty);
-            _name = AddChangeTracker(nameof(Name), "", NonNullStringCoersion.Default);
-            _options = AddChangeTracker(nameof(Options), DirectoryCrawlOptions.None);
-            _status = AddChangeTracker(nameof(Status), DirectoryStatus.Incomplete);
-            _notes = AddChangeTracker(nameof(Notes), "", NonWhiteSpaceOrEmptyStringCoersion.Default);
-            _creationTime = AddChangeTracker(nameof(CreationTime), CreatedOn);
-            _lastWriteTime = AddChangeTracker(nameof(LastWriteTime), CreatedOn);
-            _parentId = AddChangeTracker<Guid?>(nameof(ParentId), null);
-            _volumeId = AddChangeTracker<Guid?>(nameof(VolumeId), null);
-            _lastAccessed = AddChangeTracker(nameof(LastAccessed), CreatedOn);
-        }
-
-        protected override void OnPropertyChanging(PropertyChangingEventArgs args)
-        {
-            if (args.PropertyName == nameof(Id) && _id.IsChanged)
-                throw new InvalidOperationException();
-            base.OnPropertyChanging(args);
-        }
 
         protected override void OnValidate(ValidationContext validationContext, List<ValidationResult> results)
         {

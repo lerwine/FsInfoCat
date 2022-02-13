@@ -2,17 +2,19 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.Threading;
 
 namespace FsInfoCat.Local
 {
-    public class SubdirectoryAncestorNames : RevertibleChangeTracking, ISubdirectoryAncestorName
+    public class SubdirectoryAncestorNames : ISubdirectoryAncestorName
     {
         public const string VIEW_NAME = "vSubdirectoryAncestorNames";
 
-        private readonly IPropertyChangeTracker<Guid> _id;
-        private readonly IPropertyChangeTracker<Guid?> _parentId;
-        private readonly IPropertyChangeTracker<string> _name;
-        private readonly IPropertyChangeTracker<string> _ancestorNames;
+        private readonly object SyncRoot = new();
+
+        private Guid? _id;
+        private string _name = string.Empty;
+        private string _ancestorNames = string.Empty;
 
         /// <summary>
         /// Gets the primary key value.
@@ -22,37 +24,33 @@ namespace FsInfoCat.Local
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_Id), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual Guid Id
         {
-            get => _id.GetValue();
+            get => _id ?? Guid.Empty;
             set
             {
-                if (_id.IsSet)
+                Monitor.Enter(SyncRoot);
+                try
                 {
-                    Guid id = _id.GetValue();
-                    if (id.Equals(value))
+                    if (_id.HasValue)
+                    {
+                        if (!_id.Value.Equals(value))
+                            throw new InvalidOperationException();
+                    }
+                    else if (value.Equals(Guid.Empty))
                         return;
-                    if (!id.Equals(Guid.Empty))
-                        throw new InvalidOperationException();
+                    _id = value;
                 }
-                _id.SetValue(value);
+                finally { Monitor.Exit(SyncRoot); }
             }
         }
 
         [StringLength(DbConstants.DbColMaxLen_FileName, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_NameLength),
             ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
-        public virtual string Name { get => _name.GetValue(); set => _name.SetValue(value); }
+        public virtual string Name { get => _name; set => _name = value ?? ""; }
 
-        public virtual Guid? ParentId { get => _parentId.GetValue(); set => _parentId.SetValue(value); }
+        public virtual Guid? ParentId { get; set; }
 
-        public string AncestorNames { get => _ancestorNames.GetValue(); set => _ancestorNames.SetValue(value); }
+        public string AncestorNames { get => _ancestorNames; set => _ancestorNames = value.EmptyIfNullOrWhiteSpace(); }
 
         internal static void OnBuildEntity(EntityTypeBuilder<SubdirectoryAncestorNames> builder) => builder.ToView(VIEW_NAME).HasKey(nameof(Id));
-
-        public SubdirectoryAncestorNames()
-        {
-            _id = AddChangeTracker(nameof(Id), Guid.Empty);
-            _parentId = AddChangeTracker<Guid?>(nameof(ParentId), null);
-            _name = AddChangeTracker(nameof(Name), "", NonNullStringCoersion.Default);
-            _ancestorNames = AddChangeTracker(nameof(AncestorNames), "", NonNullStringCoersion.Default);
-        }
     }
 }

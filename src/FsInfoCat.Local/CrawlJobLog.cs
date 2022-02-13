@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.Threading;
 
 namespace FsInfoCat.Local
 {
@@ -11,7 +12,38 @@ namespace FsInfoCat.Local
     /// <seealso cref="ILocalCrawlJobLog" />
     public class CrawlJobLog : CrawlJobLogRow, ILocalCrawlJobLog
     {
-        private readonly IPropertyChangeTracker<CrawlConfiguration> _configuration;
+        private CrawlConfiguration _crawlConfiguration;
+
+        public override Guid ConfigurationId
+        {
+            get
+            {
+                Monitor.Enter(SyncRoot);
+                try
+                {
+                    Guid? id = _crawlConfiguration?.Id;
+                    if (id.HasValue && id.Value != base.ConfigurationId)
+                    {
+                        base.ConfigurationId = id.Value;
+                        return id.Value;
+                    }
+                    return base.ConfigurationId;
+                }
+                finally { Monitor.Exit(SyncRoot); }
+            }
+            set
+            {
+                Monitor.Enter(SyncRoot);
+                try
+                {
+                    Guid? id = _crawlConfiguration?.Id;
+                    if (id.HasValue && id.Value != value)
+                        _crawlConfiguration = null;
+                    base.ConfigurationId = value;
+                }
+                finally { Monitor.Exit(SyncRoot); }
+            }
+        }
 
         /// <summary>
         /// Gets the configuration source for the file system crawl.
@@ -22,22 +54,30 @@ namespace FsInfoCat.Local
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_Configuration), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public CrawlConfiguration Configuration
         {
-            get => _configuration.GetValue();
+            get => _crawlConfiguration;
             set
             {
-                if (_configuration.SetValue(value))
-                    ConfigurationId = value?.Id ?? Guid.Empty;
+                Monitor.Enter(SyncRoot);
+                try
+                {
+                    if (value is null)
+                    {
+                        if (_crawlConfiguration is not null)
+                            base.ConfigurationId = Guid.Empty;
+                    }
+                    else
+                    {
+                        base.ConfigurationId = value.Id;
+                        _crawlConfiguration = value;
+                    }
+                }
+                finally { Monitor.Exit(SyncRoot); }
             }
         }
 
         ICrawlConfiguration ICrawlJobLog.Configuration => Configuration;
 
         ILocalCrawlConfiguration ILocalCrawlJobLog.Configuration => Configuration;
-
-        public CrawlJobLog()
-        {
-            _configuration = AddChangeTracker<CrawlConfiguration>(nameof(Configuration), null);
-        }
 
         internal static void OnBuildEntity(EntityTypeBuilder<CrawlJobLog> builder)
         {

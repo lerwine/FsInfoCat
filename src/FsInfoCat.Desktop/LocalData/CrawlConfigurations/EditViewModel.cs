@@ -187,7 +187,7 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
                 ReloadAsync();
         }
 
-        protected override bool ApplyChanges()
+        protected override void ApplyChanges()
         {
             Entity.CreatedOn = CreatedOn;
             Entity.DisplayName = DisplayName;
@@ -206,7 +206,6 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
             Entity.StatusValue = StatusValue;
             Entity.TTL = MaxDuration.ResultValue?.ToSeconds();
             Entity.UpstreamId = UpstreamId;
-            return Entity.IsChanged();
         }
 
         protected override void ReinitializeFromEntity()
@@ -277,26 +276,26 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
 
         void INavigatingFromNotifiable.OnNavigatingFrom(CancelEventArgs e)
         {
-            if (ApplyChanges())
-            {
-                switch (MessageBox.Show(Application.Current.MainWindow, "There are unsaved changes. Do you wish to save them before continuing?", "Unsaved Changes",
-                    MessageBoxButton.YesNoCancel, MessageBoxImage.Warning))
-                {
-                    case MessageBoxResult.Yes:
-                        // TODO: Implement CrawlConfigurations.EditViewModel.OnNavigatingFrom
-                        throw new NotImplementedException();
-                        //IWindowsAsyncJobFactoryService jobFactory = Hosting.GetRequiredService<IWindowsAsyncJobFactoryService>();
-                        //IAsyncJob<CrawlConfigListItemBase> job = jobFactory.StartNew("Saving changes", "Opening database", Entity, InvocationState, SaveChangesAsync);
-                        //job.Task.ContinueWith(task => Dispatcher.Invoke(() => OnSaveTaskCompleted(task)));
-                        e.Cancel = true;
-                        break;
-                    case MessageBoxResult.No:
-                        break;
-                    default:
-                        e.Cancel = true;
-                        break;
-                }
-            }
+            // TODO: Implement CrawlConfigurations.EditViewModel.OnNavigatingFrom
+            //if (ApplyChanges())
+            //{
+            //    switch (MessageBox.Show(Application.Current.MainWindow, "There are unsaved changes. Do you wish to save them before continuing?", "Unsaved Changes",
+            //        MessageBoxButton.YesNoCancel, MessageBoxImage.Warning))
+            //    {
+            //        case MessageBoxResult.Yes:
+            //            throw new NotImplementedException();
+            //            //IWindowsAsyncJobFactoryService jobFactory = Hosting.GetRequiredService<IWindowsAsyncJobFactoryService>();
+            //            //IAsyncJob<CrawlConfigListItemBase> job = jobFactory.StartNew("Saving changes", "Opening database", Entity, InvocationState, SaveChangesAsync);
+            //            //job.Task.ContinueWith(task => Dispatcher.Invoke(() => OnSaveTaskCompleted(task)));
+            //            e.Cancel = true;
+            //            break;
+            //        case MessageBoxResult.No:
+            //            break;
+            //        default:
+            //            e.Cancel = true;
+            //            break;
+            //    }
+            //}
         }
 
         protected override void OnReloadTaskFaulted(Exception exception)

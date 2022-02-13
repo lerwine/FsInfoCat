@@ -14,23 +14,14 @@ namespace FsInfoCat.Local
         private HashSet<PersonalSubdirectoryTag> _subdirectoryTags = new();
         private HashSet<PersonalVolumeTag> _volumeTags = new();
 
-        public virtual HashSet<PersonalFileTag> FileTags
-        {
-            get => _fileTags;
-            set => CheckHashSetChanged(_fileTags, value, h => _fileTags = h);
-        }
+        public virtual HashSet<PersonalFileTag> FileTags { get => _fileTags; set => _fileTags = value ?? new(); }
 
-        public virtual HashSet<PersonalSubdirectoryTag> SubdirectoryTags
-        {
-            get => _subdirectoryTags;
-            set => CheckHashSetChanged(_subdirectoryTags, value, h => _subdirectoryTags = h);
-        }
 
-        public virtual HashSet<PersonalVolumeTag> VolumeTags
-        {
-            get => _volumeTags;
-            set => CheckHashSetChanged(_volumeTags, value, h => _volumeTags = h);
-        }
+        public virtual HashSet<PersonalSubdirectoryTag> SubdirectoryTags { get => _subdirectoryTags; set => _subdirectoryTags = value ?? new(); }
+
+
+        public virtual HashSet<PersonalVolumeTag> VolumeTags { get => _volumeTags; set => _volumeTags = value ?? new(); }
+
 
         IEnumerable<ILocalFileTag> ILocalTagDefinition.FileTags => FileTags.Cast<ILocalFileTag>();
 

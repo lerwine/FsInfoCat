@@ -1,9 +1,9 @@
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Threading;
 
 namespace FsInfoCat.Local
 {
@@ -12,12 +12,9 @@ namespace FsInfoCat.Local
         #region Fields
 
         public const string Fallback_Symbolic_Name = "NTFS";
-        private readonly IPropertyChangeTracker<Guid> _id;
-        private readonly IPropertyChangeTracker<string> _name;
-        private readonly IPropertyChangeTracker<Guid> _fileSystemId;
-        private readonly IPropertyChangeTracker<string> _notes;
-        private readonly IPropertyChangeTracker<int> _priority;
-        private readonly IPropertyChangeTracker<bool> _isInactive;
+        private Guid? _id;
+        private string _name = string.Empty;
+        private string _notes = string.Empty;
 
         #endregion
 
@@ -31,18 +28,22 @@ namespace FsInfoCat.Local
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_Id), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual Guid Id
         {
-            get => _id.GetValue();
+            get => _id ?? Guid.Empty;
             set
             {
-                if (_id.IsSet)
+                Monitor.Enter(SyncRoot);
+                try
                 {
-                    Guid id = _id.GetValue();
-                    if (id.Equals(value))
+                    if (_id.HasValue)
+                    {
+                        if (!_id.Value.Equals(value))
+                            throw new InvalidOperationException();
+                    }
+                    else if (value.Equals(Guid.Empty))
                         return;
-                    if (!id.Equals(Guid.Empty))
-                        throw new InvalidOperationException();
+                    _id = value;
                 }
-                _id.SetValue(value);
+                finally { Monitor.Exit(SyncRoot); }
             }
         }
 
@@ -51,55 +52,29 @@ namespace FsInfoCat.Local
             ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
         [StringLength(DbConstants.DbColMaxLen_SimpleName, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_NameLength),
             ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
-        public virtual string Name { get => _name.GetValue(); set => _name.SetValue(value); }
+        public virtual string Name { get => _name; set => _name = value ?? ""; }
 
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_Notes), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         [Required(AllowEmptyStrings = true)]
-        public virtual string Notes { get => _notes.GetValue(); set => _notes.SetValue(value); }
+        public virtual string Notes { get => _notes; set => _notes = value.EmptyIfNullOrWhiteSpace(); }
 
         [Required]
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_IsInactive), ResourceType = typeof(FsInfoCat.Properties.Resources))]
-        public virtual bool IsInactive { get => _isInactive.GetValue(); set => _isInactive.SetValue(value); }
+        public virtual bool IsInactive { get; set; }
 
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_Priority), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         [Required]
-        public virtual int Priority { get => _priority.GetValue(); set => _priority.SetValue(value); }
+        public virtual int Priority { get; set; }
 
         [Required]
-        public virtual Guid FileSystemId
-        {
-            get => _fileSystemId.GetValue();
-            set
-            {
-                if (_fileSystemId.SetValue(value))
-                    OnFileSystemIdChanged(value);
-            }
-        }
+        public virtual Guid FileSystemId { get; set; }
+
 
         SymbolicNameRow IIdentityReference<SymbolicNameRow>.Entity => this;
 
         IDbEntity IIdentityReference.Entity => this;
 
-        protected virtual void OnFileSystemIdChanged(Guid value) { }
-
         #endregion
-
-        protected SymbolicNameRow()
-        {
-            _id = AddChangeTracker(nameof(Id), Guid.Empty);
-            _name = AddChangeTracker(nameof(Name), "", TrimmedNonNullStringCoersion.Default);
-            _priority = AddChangeTracker(nameof(Priority), 0);
-            _notes = AddChangeTracker(nameof(Notes), "", NonWhiteSpaceOrEmptyStringCoersion.Default);
-            _isInactive = AddChangeTracker(nameof(IsInactive), false);
-            _fileSystemId = AddChangeTracker(nameof(FileSystemId), Guid.Empty);
-        }
-
-        protected override void OnPropertyChanging(PropertyChangingEventArgs args)
-        {
-            if (args.PropertyName == nameof(Id) && _id.IsChanged)
-                throw new InvalidOperationException();
-            base.OnPropertyChanging(args);
-        }
 
         protected override void OnValidate(ValidationContext validationContext, List<ValidationResult> results)
         {

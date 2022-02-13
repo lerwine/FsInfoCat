@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
@@ -14,28 +15,68 @@ namespace FsInfoCat.Local
     {
         #region Fields
 
-        private readonly IPropertyChangeTracker<BinaryPropertySet> _binaryProperties;
+        private BinaryPropertySet _binaryProperties;
         private HashSet<Redundancy> _redundancies = new();
 
         #endregion
 
         #region Properties
 
-        public virtual BinaryPropertySet BinaryProperties
+        public override Guid BinaryPropertiesId
         {
-            get => _binaryProperties.GetValue();
+            get
+            {
+                Monitor.Enter(SyncRoot);
+                try
+                {
+                    Guid? id = _binaryProperties?.Id;
+                    if (id.HasValue && id.Value != base.BinaryPropertiesId)
+                    {
+                        base.BinaryPropertiesId = id.Value;
+                        return id.Value;
+                    }
+                    return base.BinaryPropertiesId;
+                }
+                finally { Monitor.Exit(SyncRoot); }
+            }
             set
             {
-                if (_binaryProperties.SetValue(value))
-                    BinaryPropertiesId = value?.Id ?? Guid.Empty;
+                Monitor.Enter(SyncRoot);
+                try
+                {
+                    Guid? id = _binaryProperties?.Id;
+                    if (id.HasValue && id.Value != value)
+                        _binaryProperties = null;
+                    base.BinaryPropertiesId = value;
+                }
+                finally { Monitor.Exit(SyncRoot); }
             }
         }
 
-        public virtual HashSet<Redundancy> Redundancies
+        public virtual BinaryPropertySet BinaryProperties
         {
-            get => _redundancies;
-            set => CheckHashSetChanged(_redundancies, value, h => _redundancies = h);
+            get => _binaryProperties;
+            set
+            {
+                Monitor.Enter(SyncRoot);
+                try
+                {
+                    if (value is null)
+                    {
+                        if (_binaryProperties is not null)
+                            base.BinaryPropertiesId = Guid.Empty;
+                    }
+                    else
+                    {
+                        base.BinaryPropertiesId = value.Id;
+                        _binaryProperties = value;
+                    }
+                }
+                finally { Monitor.Exit(SyncRoot); }
+            }
         }
+
+        public virtual HashSet<Redundancy> Redundancies { get => _redundancies; set => _redundancies = value ?? new(); }
 
         #endregion
 
@@ -55,11 +96,6 @@ namespace FsInfoCat.Local
 
         #endregion
 
-        public RedundantSet()
-        {
-            _binaryProperties = AddChangeTracker<BinaryPropertySet>(nameof(BinaryProperties), null);
-        }
-
         internal static void OnBuildEntity(EntityTypeBuilder<RedundantSet> builder)
         {
             _ = builder.HasOne(sn => sn.BinaryProperties).WithMany(d => d.RedundantSets).HasForeignKey(nameof(BinaryPropertiesId)).IsRequired().OnDelete(DeleteBehavior.Restrict);
@@ -74,13 +110,6 @@ namespace FsInfoCat.Local
                 .AppendString(nameof(Reference)).AppendElementString(nameof(Notes)).AppendDateTime(nameof(CreatedOn)).AppendDateTime(nameof(ModifiedOn))
                 .AppendDateTime(nameof(LastSynchronizedOn)).AppendGuid(nameof(UpstreamId)).ExecuteSqlAsync(dbContext.Database);
             return (redundantSetId, redundantSetElement.Elements(nameof(Redundancy)).ToArray());
-        }
-
-        protected override void OnBinaryPropertiesIdChanged(Guid value)
-        {
-            BinaryPropertySet nav = _binaryProperties.GetValue();
-            if (!(nav is null || nav.Id.Equals(value)))
-                _ = _binaryProperties.SetValue(null);
         }
     }
 }

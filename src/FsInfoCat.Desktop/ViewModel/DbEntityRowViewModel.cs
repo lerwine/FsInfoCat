@@ -10,7 +10,6 @@ namespace FsInfoCat.Desktop.ViewModel
         where TEntity : DbEntity
     {
         private TEntity _entity;
-        private readonly WeakPropertyChangedEventRelay _propertyChangedEventRelay;
 
         protected internal TEntity Entity
         {
@@ -19,15 +18,11 @@ namespace FsInfoCat.Desktop.ViewModel
             {
                 if (value is null)
                     throw new ArgumentNullException(nameof(value));
-                Dispatcher.CheckInvoke(() =>
-                {
-                    TEntity oldValue = _entity;
-                    _entity = value;
-                    if (ReferenceEquals(_entity, value))
-                        return;
-                    _propertyChangedEventRelay.Attach(value, true);
-                    OnEntityObjectChanged(oldValue, value);
-                });
+                if (ReferenceEquals(_entity, value))
+                    return;
+                TEntity oldValue = _entity;
+                _entity = value;
+                Dispatcher.CheckInvoke(() => OnEntityObjectChanged(oldValue, value));
             }
         }
 
@@ -77,26 +72,27 @@ namespace FsInfoCat.Desktop.ViewModel
         protected DbEntityRowViewModel([DisallowNull] TEntity entity)
         {
             _entity = entity ?? throw new ArgumentNullException(nameof(entity));
-            _propertyChangedEventRelay = WeakPropertyChangedEventRelay.Attach(entity, OnEntityPropertyChanged);
             CreatedOn = entity.CreatedOn;
             ModifiedOn = entity.ModifiedOn;
         }
 
+        [Obsolete("Not using change tracking")]
         protected virtual void RejectChanges()
         {
-            _entity.RejectChanges();
             CreatedOn = _entity.CreatedOn;
             ModifiedOn = _entity.ModifiedOn;
         }
 
         protected virtual void OnEntityObjectChanged([DisallowNull] TEntity oldValue, [DisallowNull] TEntity newValue)
         {
-            foreach (string n in RevertibleChangeTracking.GetDifferences(oldValue, newValue).ToArray())
-                OnEntityPropertyChanged(n);
+            CreatedOn = newValue.CreatedOn;
+            ModifiedOn = newValue.ModifiedOn;
         }
 
+        [Obsolete("Not using change tracking")]
         protected virtual void OnEntityPropertyChanged(object sender, PropertyChangedEventArgs args) => OnEntityPropertyChanged(args.PropertyName ?? "");
 
+        [Obsolete("Not using change tracking")]
         protected virtual void OnEntityPropertyChanged(string propertyName)
         {
             switch (propertyName)

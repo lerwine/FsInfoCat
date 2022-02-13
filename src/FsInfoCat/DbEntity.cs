@@ -13,14 +13,10 @@ namespace FsInfoCat
     /// </summary>
     /// <seealso cref="NotifyDataErrorInfo" />
     /// <seealso cref="IDbEntity" />
-    public abstract partial class DbEntity : NotifyDataErrorInfo, IDbEntity
+    // TODO: Do away with NotifyDataErrorInfo - can use EDM methods, instead.
+    public abstract partial class DbEntity : IDbEntity
     {
-        #region Fields
-
-        private readonly IPropertyChangeTracker<DateTime> _createdOn;
-        private readonly IPropertyChangeTracker<DateTime> _modifiedOn;
-
-        #endregion
+        protected readonly object SyncRoot = new();
 
         #region Properties
 
@@ -33,7 +29,7 @@ namespace FsInfoCat
         /// <see cref="DateTimeKind.Utc">UTC</see> date and time.</para></remarks>
         [Required]
         [Display(Name = nameof(Properties.Resources.DisplayName_CreatedOn), ResourceType = typeof(Properties.Resources))]
-        public virtual DateTime CreatedOn { get => _createdOn.GetValue(); set => _createdOn.SetValue(value); }
+        public virtual DateTime CreatedOn { get; set; }
 
         /// <summary>
         /// Gets or sets the database entity modification date/time.
@@ -44,17 +40,9 @@ namespace FsInfoCat
         /// <see cref="DateTimeKind.Utc">UTC</see> date and time.</para></remarks>
         [Required]
         [Display(Name = nameof(Properties.Resources.DisplayName_ModifiedOn), ResourceType = typeof(Properties.Resources))]
-        public virtual DateTime ModifiedOn { get => _modifiedOn.GetValue(); set => _modifiedOn.SetValue(value); }
+        public virtual DateTime ModifiedOn { get; set; }
 
         #endregion
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DbEntity"/> class.
-        /// </summary>
-        protected DbEntity()
-        {
-            _modifiedOn = AddChangeTracker(nameof(ModifiedOn), (_createdOn = AddChangeTracker(nameof(CreatedOn), DateTime.Now)).GetValue());
-        }
 
         protected virtual void AddExportAttributes([DisallowNull] XElement element)
         {

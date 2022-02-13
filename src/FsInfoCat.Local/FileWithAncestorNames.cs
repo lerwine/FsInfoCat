@@ -8,55 +8,36 @@ namespace FsInfoCat.Local
     {
         private const string VIEW_NAME = "vFileListingWithAncestorNames";
 
-        private readonly IPropertyChangeTracker<long> _accessErrorCount;
-        private readonly IPropertyChangeTracker<long> _personalTagCount;
-        private readonly IPropertyChangeTracker<long> _sharedTagCount;
-        private readonly IPropertyChangeTracker<string> _ancestorNames;
-        private readonly IPropertyChangeTracker<Guid> _effectiveVolumeId;
-        private readonly IPropertyChangeTracker<string> _volumeDisplayName;
-        private readonly IPropertyChangeTracker<string> _volumeName;
-        private readonly IPropertyChangeTracker<VolumeIdentifier> _volumeIdentifier;
-        private readonly IPropertyChangeTracker<string> _fileSystemDisplayName;
-        private readonly IPropertyChangeTracker<string> _fileSystemSymbolicName;
+        private string _ancestorNames = string.Empty;
+        private string _volumeDisplayName = string.Empty;
+        private string _volumeName = string.Empty;
+        private string _fileSystemDisplayName = string.Empty;
+        private string _fileSystemSymbolicName = string.Empty;
 
-        public long AccessErrorCount { get => _accessErrorCount.GetValue(); set => _accessErrorCount.SetValue(value); }
+        public long AccessErrorCount { get; set; }
 
-        public long PersonalTagCount { get => _personalTagCount.GetValue(); set => _personalTagCount.SetValue(value); }
+        public long PersonalTagCount { get; set; }
 
-        public long SharedTagCount { get => _sharedTagCount.GetValue(); set => _sharedTagCount.SetValue(value); }
+        public long SharedTagCount { get; set; }
 
-        public string AncestorNames { get => _ancestorNames.GetValue(); set => _ancestorNames.SetValue(value); }
+        public string AncestorNames { get => _ancestorNames; set => _ancestorNames = value.EmptyIfNullOrWhiteSpace(); }
 
-        public Guid EffectiveVolumeId { get => _effectiveVolumeId.GetValue(); set => _effectiveVolumeId.SetValue(value); }
+        public Guid EffectiveVolumeId { get; set; }
 
-        public string VolumeDisplayName { get => _volumeDisplayName.GetValue(); set => _volumeDisplayName.SetValue(value); }
+        public string VolumeDisplayName { get => _volumeDisplayName; set => _volumeDisplayName = value.EmptyIfNullOrWhiteSpace(); }
 
-        public string VolumeName { get => _volumeName.GetValue(); set => _volumeName.SetValue(value); }
+        public string VolumeName { get => _volumeName; set => _volumeName = value.EmptyIfNullOrWhiteSpace(); }
 
-        public VolumeIdentifier VolumeIdentifier { get => _volumeIdentifier.GetValue(); set => _volumeIdentifier.SetValue(value); }
+        public VolumeIdentifier VolumeIdentifier { get; set; } = VolumeIdentifier.Empty;
 
-        public string FileSystemDisplayName { get => _fileSystemDisplayName.GetValue(); set => _fileSystemDisplayName.SetValue(value); }
+        public string FileSystemDisplayName { get => _fileSystemDisplayName; set => _fileSystemDisplayName = value.EmptyIfNullOrWhiteSpace(); }
 
-        public string FileSystemSymbolicName { get => _fileSystemSymbolicName.GetValue(); set => _fileSystemSymbolicName.SetValue(value); }
+        public string FileSystemSymbolicName { get => _fileSystemSymbolicName; set => _fileSystemSymbolicName = value.EmptyIfNullOrWhiteSpace(); }
 
         internal static void OnBuildEntity(EntityTypeBuilder<FileWithAncestorNames> builder)
         {
             _ = builder.ToView(VIEW_NAME);
             _ = builder.Property(nameof(VolumeIdentifier)).HasConversion(VolumeIdentifier.Converter);
-        }
-
-        public FileWithAncestorNames()
-        {
-            _accessErrorCount = AddChangeTracker(nameof(AccessErrorCount), 0L);
-            _personalTagCount = AddChangeTracker(nameof(PersonalTagCount), 0L);
-            _sharedTagCount = AddChangeTracker(nameof(SharedTagCount), 0L);
-            _ancestorNames = AddChangeTracker(nameof(AncestorNames), "", NonNullStringCoersion.Default);
-            _effectiveVolumeId = AddChangeTracker(nameof(EffectiveVolumeId), Guid.Empty);
-            _volumeDisplayName = AddChangeTracker(nameof(VolumeDisplayName), "", NonNullStringCoersion.Default);
-            _volumeName = AddChangeTracker(nameof(VolumeName), "", NonNullStringCoersion.Default);
-            _volumeIdentifier = AddChangeTracker(nameof(VolumeIdentifier), VolumeIdentifier.Empty);
-            _fileSystemDisplayName = AddChangeTracker(nameof(FileSystemDisplayName), "", NonNullStringCoersion.Default);
-            _fileSystemSymbolicName = AddChangeTracker(nameof(FileSystemSymbolicName), "", NonNullStringCoersion.Default);
         }
     }
 }

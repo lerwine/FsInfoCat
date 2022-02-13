@@ -12,28 +12,15 @@ namespace FsInfoCat.Local
     {
         public const string VIEW_NAME = "vFileSystemListing";
 
-        private readonly IPropertyChangeTracker<Guid?> _primarySymbolicNameId;
-        private readonly IPropertyChangeTracker<string> _primarySymbolicName;
-        private readonly IPropertyChangeTracker<long> _symbolicNameCount;
-        private readonly IPropertyChangeTracker<long> _volumeCount;
+        public Guid? PrimarySymbolicNameId { get; set; }
 
-        public Guid? PrimarySymbolicNameId { get => _primarySymbolicNameId.GetValue(); set => _primarySymbolicNameId.SetValue(value); }
+        public string PrimarySymbolicName { get; set; }
 
-        public string PrimarySymbolicName { get => _primarySymbolicName.GetValue(); set => _primarySymbolicName.SetValue(value); }
+        public long SymbolicNameCount { get; set; }
 
-        public long SymbolicNameCount { get => _symbolicNameCount.GetValue(); set => _symbolicNameCount.SetValue(value); }
-
-        public long VolumeCount { get => _volumeCount.GetValue(); set => _volumeCount.SetValue(value); }
+        public long VolumeCount { get; set; }
 
         internal static void OnBuildEntity(EntityTypeBuilder<FileSystemListItem> builder) => builder.ToView(VIEW_NAME).HasKey(nameof(Id));
-
-        public FileSystemListItem()
-        {
-            _primarySymbolicNameId = AddChangeTracker<Guid?>(nameof(PrimarySymbolicNameId), null);
-            _primarySymbolicName = AddChangeTracker(nameof(PrimarySymbolicName), "", TrimmedNonNullStringCoersion.Default);
-            _symbolicNameCount = AddChangeTracker(nameof(SymbolicNameCount), 0L);
-            _volumeCount = AddChangeTracker(nameof(VolumeCount), 0L);
-        }
 
         public async Task<(SymbolicName[], VolumeListItem[])> LoadRelatedItemsAsync(IActivityProgress progress)
         {
