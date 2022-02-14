@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat.Local
 {
-    public class VideoPropertySet : VideoPropertiesRow, ILocalVideoPropertySet, ISimpleIdentityReference<VideoPropertySet>
+    public class VideoPropertySet : VideoPropertiesRow, ILocalVideoPropertySet, ISimpleIdentityReference<VideoPropertySet>, IEquatable<VideoPropertySet>
     {
         private HashSet<DbFile> _files = new();
 
@@ -69,6 +69,46 @@ namespace FsInfoCat.Local
                     cancellationToken.ThrowIfCancellationRequested();
                     break;
             }
+        }
+
+        protected bool ArePropertiesEqual([DisallowNull] ILocalVideoPropertySet other)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected bool ArePropertiesEqual([DisallowNull] IVideoPropertySet other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Equals(VideoPropertySet other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Equals(IVideoPropertySet other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override bool Equals(IVideoProperties other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override bool Equals(object obj)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override int GetHashCode()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override string ToString()
+        {
+            return base.ToString();
         }
 
         IEnumerable<Guid> IIdentityReference.GetIdentifiers()

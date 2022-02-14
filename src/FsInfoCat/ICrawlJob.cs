@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat
 {
-    public interface ICrawlJob : ICrawlSettings
+    public interface ICrawlJob : ICrawlSettings, IEquatable<ICrawlJob>
     {
         /// <summary>Gets the date and time when the crawl was started.</summary>
         /// <value>The date and time when the crawl was started.</value>
@@ -29,4 +29,3 @@ namespace FsInfoCat
         long FilesProcessed { get; }
     }
 }
-

@@ -2,13 +2,15 @@ using FsInfoCat.Activities;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace FsInfoCat.Local
 {
-    public class PersonalTagDefinition : PersonalTagDefinitionRow, ILocalPersonalTagDefinition
+    public class PersonalTagDefinition : PersonalTagDefinitionRow, ILocalPersonalTagDefinition, IEquatable<PersonalTagDefinition>
     {
         private HashSet<PersonalFileTag> _fileTags = new();
         private HashSet<PersonalSubdirectoryTag> _subdirectoryTags = new();
@@ -70,6 +72,41 @@ namespace FsInfoCat.Local
                 await transaction.CommitAsync(progress.Token);
                 return result;
             }
+        }
+
+        protected bool ArePropertiesEqual([DisallowNull] ILocalPersonalTagDefinition other)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected bool ArePropertiesEqual([DisallowNull] IPersonalTagDefinition other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Equals(PersonalTagDefinition other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Equals(IPersonalTagDefinition other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override bool Equals(object obj)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override int GetHashCode()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override string ToString()
+        {
+            throw new NotImplementedException();
         }
     }
 }

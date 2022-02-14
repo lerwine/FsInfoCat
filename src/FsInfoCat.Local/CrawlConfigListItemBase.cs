@@ -1,8 +1,9 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat.Local
 {
-    public class CrawlConfigListItemBase : CrawlConfigurationRow, ILocalCrawlConfigurationListItem
+    public abstract class CrawlConfigListItemBase : CrawlConfigurationRow, ILocalCrawlConfigurationListItem
     {
         private string _ancestorNames = string.Empty;
         private string _volumeDisplayName = string.Empty;
@@ -23,5 +24,17 @@ namespace FsInfoCat.Local
         public string FileSystemDisplayName { get => _fileSystemDisplayName; set => _fileSystemDisplayName = value ?? ""; }
 
         public string FileSystemSymbolicName { get => _fileSystemSymbolicName; set => _fileSystemSymbolicName = value ?? ""; }
+
+        protected bool ArePropertiesEqual([DisallowNull] ILocalCrawlConfigurationListItem other)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected bool ArePropertiesEqual([DisallowNull] ICrawlConfigurationListItem other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public abstract bool Equals(ICrawlConfigurationListItem other);
     }
 }

@@ -13,5 +13,10 @@ namespace FsInfoCat.Desktop.FileSystemDetail
         public bool? IsProtected { get; init; }
 
         public uint? PlayCount { get; init; }
+
+        public bool Equals(IDRMProperties other)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

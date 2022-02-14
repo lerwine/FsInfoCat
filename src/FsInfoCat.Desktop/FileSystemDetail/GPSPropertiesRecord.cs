@@ -27,5 +27,10 @@ namespace FsInfoCat.Desktop.FileSystemDetail
         public string ProcessingMethod { get; init; }
 
         public ByteValues VersionID { get; init; }
+
+        public bool Equals(IGPSProperties other)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

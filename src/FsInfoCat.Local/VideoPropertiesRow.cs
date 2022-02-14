@@ -1,8 +1,10 @@
 using FsInfoCat.Collections;
+using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat.Local
 {
-    public class VideoPropertiesRow : PropertiesRow, IVideoProperties
+    public abstract class VideoPropertiesRow : PropertiesRow, IVideoProperties
     {
         #region Fields
 
@@ -34,5 +36,12 @@ namespace FsInfoCat.Local
         public uint? VerticalAspectRatio { get; set; }
 
         #endregion
+
+        protected bool ArePropertiesEqual([DisallowNull] IVideoProperties other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public abstract bool Equals(IVideoProperties other);
     }
 }

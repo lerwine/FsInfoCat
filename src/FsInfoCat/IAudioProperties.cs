@@ -1,9 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat
 {
     /// <summary>Represents extended file properties for audio files.</summary>
-    public interface IAudioProperties
+    public interface IAudioProperties : IEquatable<IAudioProperties>
     {
         /// <summary>Gets the Compression Method.</summary>
         /// <value>Indicates the audio compression used on the audio file.</value>
@@ -217,6 +218,4 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_StreamNumber), ResourceType = typeof(Properties.Resources))]
         ushort? StreamNumber { get; }
     }
-
 }
-

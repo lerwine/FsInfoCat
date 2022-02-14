@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat.Local
 {
-    public class FileSystem : FileSystemRow, ILocalFileSystem, ISimpleIdentityReference<FileSystem>
+    public class FileSystem : FileSystemRow, ILocalFileSystem, ISimpleIdentityReference<FileSystem>, IEquatable<FileSystem>
     {
         #region Fields
 
@@ -127,6 +127,41 @@ namespace FsInfoCat.Local
                 await transaction.CommitAsync(progress.Token);
                 return result;
             }
+        }
+
+        protected bool ArePropertiesEqual([DisallowNull] ILocalFileSystem other)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected bool ArePropertiesEqual([DisallowNull] IFileSystem other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Equals(FileSystem other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Equals(IFileSystem other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override bool Equals(object obj)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override int GetHashCode()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override string ToString()
+        {
+            throw new NotImplementedException();
         }
     }
 }

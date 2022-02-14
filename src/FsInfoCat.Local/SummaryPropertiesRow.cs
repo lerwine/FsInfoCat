@@ -1,8 +1,10 @@
 using FsInfoCat.Collections;
+using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat.Local
 {
-    public class SummaryPropertiesRow : PropertiesRow, ISummaryProperties
+    public abstract class SummaryPropertiesRow : PropertiesRow, ISummaryProperties
     {
         #region Fields
 
@@ -69,10 +71,17 @@ namespace FsInfoCat.Local
 
         public uint? SimpleRating { get; set; }
 
-        public string Trademarks { get; set; }
+        public string Trademarks { get => _trademarks; set => _trademarks = value.AsWsNormalizedOrEmpty(); }
 
         public string ProductName { get => _productName; set => _productName = value.AsWsNormalizedOrEmpty(); }
 
         #endregion
+
+        protected bool ArePropertiesEqual([DisallowNull] ISummaryProperties other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public abstract bool Equals(ISummaryProperties other);
     }
 }

@@ -11,7 +11,7 @@ using System.Xml.Linq;
 
 namespace FsInfoCat.Local
 {
-    public class SymbolicName : SymbolicNameRow , ILocalSymbolicName, ISimpleIdentityReference<SymbolicName>
+    public class SymbolicName : SymbolicNameRow , ILocalSymbolicName, ISimpleIdentityReference<SymbolicName>, IEquatable<SymbolicName>
     {
         private FileSystem _fileSystem;
 
@@ -114,6 +114,41 @@ namespace FsInfoCat.Local
                 result.SetAttributeValue(nameof(Priority), Priority);
             AddExportAttributes(result);
             return result;
+        }
+
+        protected bool ArePropertiesEqual([DisallowNull] ILocalSymbolicName other)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected bool ArePropertiesEqual([DisallowNull] ISymbolicName other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Equals(SymbolicName other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Equals(ISymbolicName other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override bool Equals(object obj)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override int GetHashCode()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override string ToString()
+        {
+            throw new NotImplementedException();
         }
     }
 }

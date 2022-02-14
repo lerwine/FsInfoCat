@@ -1,10 +1,11 @@
 using FsInfoCat.Collections;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat
 {
     /// <summary>Represents extended file properties for GPS information.</summary>
-    public interface IGPSProperties
+    public interface IGPSProperties : IEquatable<IGPSProperties>
     {
         /// <summary>Gets the name of the GPS area.</summary>
         /// <value>The name of the GPS area.</value>
@@ -327,4 +328,3 @@ namespace FsInfoCat
         ByteValues VersionID { get; }
     }
 }
-

@@ -2,6 +2,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -146,6 +147,16 @@ namespace FsInfoCat.Local
         {
             if (!Enum.IsDefined(Type))
                 results.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_DriveTypeInvalid, new string[] { nameof(Type) }));
+        }
+
+        protected virtual bool ArePropertiesEqual([DisallowNull] ILocalVolumeRow other)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected virtual bool ArePropertiesEqual([DisallowNull] IVolumeRow other)
+        {
+            throw new NotImplementedException();
         }
 
         IEnumerable<Guid> IIdentityReference.GetIdentifiers()

@@ -18,7 +18,7 @@ namespace FsInfoCat.Local
     /// </summary>
     /// <seealso cref="LocalDbEntity" />
     /// <seealso cref="ILocalPhotoPropertySet" />
-    public class PhotoPropertySet : PhotoPropertiesRow, ILocalPhotoPropertySet, ISimpleIdentityReference<PhotoPropertySet>
+    public class PhotoPropertySet : PhotoPropertiesRow, ILocalPhotoPropertySet, ISimpleIdentityReference<PhotoPropertySet>, IEquatable<PhotoPropertySet>
     {
         private HashSet<DbFile> _files = new();
 
@@ -83,9 +83,49 @@ namespace FsInfoCat.Local
             }
         }
 
+        protected bool ArePropertiesEqual([DisallowNull] ILocalPhotoPropertySet other)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected bool ArePropertiesEqual([DisallowNull] IPhotoPropertySet other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Equals(PhotoPropertySet other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Equals(IPhotoPropertySet other)
+        {
+            throw new NotImplementedException();
+        }
+        public override bool Equals(IPhotoProperties other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override bool Equals(object obj)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override int GetHashCode()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override string ToString()
+        {
+            throw new NotImplementedException();
+        }
+
         IEnumerable<Guid> IIdentityReference.GetIdentifiers()
         {
             yield return Id;
         }
+
     }
 }

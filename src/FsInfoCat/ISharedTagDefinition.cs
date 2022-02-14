@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
+using System;
+using System.Collections.Generic;
 
 namespace FsInfoCat
 {
-    public interface ISharedTagDefinition : ITagDefinition
+    public interface ISharedTagDefinition : ITagDefinition, IEquatable<ISharedTagDefinition>
     {
         new IEnumerable<ISharedFileTag> FileTags { get; }
 

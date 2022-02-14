@@ -1,6 +1,9 @@
+using System;
+using System.Diagnostics.CodeAnalysis;
+
 namespace FsInfoCat.Local
 {
-    public class ImagePropertiesRow : PropertiesRow, IImageProperties
+    public abstract class ImagePropertiesRow : PropertiesRow, IImageProperties
     {
         #region Fields
 
@@ -35,5 +38,12 @@ namespace FsInfoCat.Local
 
 
         #endregion
+
+        protected bool ArePropertiesEqual([DisallowNull] IImageProperties other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public abstract bool Equals(IImageProperties other);
     }
 }

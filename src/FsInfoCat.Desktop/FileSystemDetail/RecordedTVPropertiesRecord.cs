@@ -21,5 +21,10 @@ namespace FsInfoCat.Desktop.FileSystemDetail
         public string StationCallSign { get; init; }
 
         public string StationName { get; init; }
+
+        public bool Equals(IRecordedTVProperties other)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

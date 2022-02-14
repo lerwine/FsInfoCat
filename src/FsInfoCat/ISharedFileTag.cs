@@ -1,4 +1,6 @@
-﻿namespace FsInfoCat
+using System;
+
+namespace FsInfoCat
 {
-    public interface ISharedFileTag : ISharedTag, IFileTag { }
+    public interface ISharedFileTag : ISharedTag, IFileTag, IEquatable<ISharedFileTag> { }
 }

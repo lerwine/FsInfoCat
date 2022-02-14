@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat
@@ -63,4 +63,3 @@ namespace FsInfoCat
         bool RescheduleAfterFail { get; }
     }
 }
-

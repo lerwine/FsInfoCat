@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat
@@ -5,7 +6,7 @@ namespace FsInfoCat
     /// <summary>Generic interface for subdirectory access error entities.</summary>
     /// <typeparam name="TTarget">The target entity type.</typeparam>
     /// <seealso cref="IAccessError" />
-    public interface ISubdirectoryAccessError : IAccessError
+    public interface ISubdirectoryAccessError : IAccessError, IEquatable<ISubdirectoryAccessError>
     {
         /// <summary>Gets the target subdirectory to which the access error applies.</summary>
         /// <value>The <typeparamref name="ISubdirectory" /> entity that this error applies to.</value>

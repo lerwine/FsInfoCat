@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 
 namespace FsInfoCat
 {
-    public interface IFileSystemListItem : IFileSystemRow
+    public interface IFileSystemListItem : IFileSystemRow, IEquatable<IFileSystemListItem>
     {
         Guid? PrimarySymbolicNameId { get; }
 
@@ -12,6 +12,4 @@ namespace FsInfoCat
 
         long VolumeCount { get; }
     }
-
 }
-

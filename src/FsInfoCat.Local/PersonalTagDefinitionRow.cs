@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 
 namespace FsInfoCat.Local
@@ -48,5 +49,15 @@ namespace FsInfoCat.Local
 
         [Required]
         public bool IsInactive { get; set; }
+
+        protected virtual bool ArePropertiesEqual([DisallowNull] ILocalTagDefinitionRow other)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected virtual bool ArePropertiesEqual([DisallowNull] ITagDefinitionRow other)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

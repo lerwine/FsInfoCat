@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -6,7 +7,7 @@ namespace FsInfoCat
     /// <summary>Specifies the configuration of a file system crawl.</summary>
     /// <seealso cref="IDbEntity" />
     /// <seealso cref="ICrawlSettings" />
-    public interface ICrawlConfiguration : ICrawlConfigurationRow
+    public interface ICrawlConfiguration : ICrawlConfigurationRow, IEquatable<ICrawlConfiguration>
     {
         /// <summary>
         /// Gets the starting subdirectory for the configured subdirectory crawl.
@@ -21,4 +22,3 @@ namespace FsInfoCat
         IEnumerable<ICrawlJobLog> Logs { get; }
     }
 }
-

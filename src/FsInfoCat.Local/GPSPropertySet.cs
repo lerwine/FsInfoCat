@@ -18,7 +18,7 @@ namespace FsInfoCat.Local
     /// </summary>
     /// <seealso cref="LocalDbEntity" />
     /// <seealso cref="ILocalGPSPropertySet" />
-    public class GPSPropertySet : GPSPropertiesRow, ILocalGPSPropertySet, ISimpleIdentityReference<GPSPropertySet>
+    public class GPSPropertySet : GPSPropertiesRow, ILocalGPSPropertySet, ISimpleIdentityReference<GPSPropertySet>, IEquatable<GPSPropertySet>
     {
         private HashSet<DbFile> _files = new();
 
@@ -76,6 +76,46 @@ namespace FsInfoCat.Local
                     cancellationToken.ThrowIfCancellationRequested();
                     break;
             }
+        }
+
+        protected bool ArePropertiesEqual([DisallowNull] ILocalGPSPropertySet other)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        protected bool ArePropertiesEqual([DisallowNull] IGPSPropertySet other)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public bool Equals(GPSPropertySet other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Equals(IGPSPropertySet other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override bool Equals(IGPSProperties other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override bool Equals(object obj)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override int GetHashCode()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override string ToString()
+        {
+            throw new NotImplementedException();
         }
 
         IEnumerable<Guid> IIdentityReference.GetIdentifiers()

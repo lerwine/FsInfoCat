@@ -1,6 +1,8 @@
-﻿namespace FsInfoCat
+using System;
+
+namespace FsInfoCat
 {
-    public interface IItemTagListItem : IItemTagRow
+    public interface IItemTagListItem : IItemTagRow, IEquatable<IItemTagListItem>
     {
         string Name { get; }
 

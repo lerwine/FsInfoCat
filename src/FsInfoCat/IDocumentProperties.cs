@@ -1,11 +1,11 @@
-﻿using FsInfoCat.Collections;
+using FsInfoCat.Collections;
 using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat
 {
     /// <summary>Represents extended file properties for document files.</summary>
-    public interface IDocumentProperties
+    public interface IDocumentProperties : IEquatable<IDocumentProperties>
     {
         /// <summary>Gets the Client ID.</summary>
         /// <value>The Client ID.</value>
@@ -302,6 +302,4 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_Version), ResourceType = typeof(Properties.Resources))]
         string Version { get; }
     }
-
 }
-

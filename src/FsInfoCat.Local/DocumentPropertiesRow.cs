@@ -1,9 +1,10 @@
 using FsInfoCat.Collections;
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat.Local
 {
-    public class DocumentPropertiesRow : PropertiesRow, IDocumentProperties
+    public abstract class DocumentPropertiesRow : PropertiesRow, IDocumentProperties
     {
         #region Fields
 
@@ -43,5 +44,12 @@ namespace FsInfoCat.Local
         public string Version { get => _version; set => _version = value.AsWsNormalizedOrEmpty(); }
 
         #endregion
+
+        protected bool ArePropertiesEqual([DisallowNull] IDocumentProperties other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public abstract bool Equals(IDocumentProperties other);
     }
 }

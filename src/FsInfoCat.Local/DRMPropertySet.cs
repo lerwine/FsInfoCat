@@ -16,7 +16,7 @@ namespace FsInfoCat.Local
     /// </summary>
     /// <seealso cref="LocalDbEntity" />
     /// <seealso cref="ILocalDRMPropertySet" />
-    public class DRMPropertySet : DRMPropertiesRow, ILocalDRMPropertySet, ISimpleIdentityReference<DRMPropertySet>
+    public class DRMPropertySet : DRMPropertiesRow, ILocalDRMPropertySet, ISimpleIdentityReference<DRMPropertySet>, IEquatable<DRMPropertySet>
     {
         private HashSet<DbFile> _files = new();
 
@@ -71,6 +71,46 @@ namespace FsInfoCat.Local
                     cancellationToken.ThrowIfCancellationRequested();
                     break;
             }
+        }
+
+        protected bool ArePropertiesEqual([DisallowNull] ILocalDRMPropertySet other)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        protected bool ArePropertiesEqual([DisallowNull] IDRMPropertySet other)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public bool Equals(DRMPropertySet other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Equals(IDRMPropertySet other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override bool Equals(IDRMProperties other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override bool Equals(object obj)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override int GetHashCode()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override string ToString()
+        {
+            throw new NotImplementedException();
         }
 
         IEnumerable<Guid> IIdentityReference.GetIdentifiers()

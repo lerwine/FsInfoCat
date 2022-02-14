@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 
 namespace FsInfoCat.Local
@@ -99,6 +100,16 @@ namespace FsInfoCat.Local
         DbFileRow IIdentityReference<DbFileRow>.Entity => this;
 
         IDbEntity IIdentityReference.Entity => this;
+
+        protected virtual bool ArePropertiesEqual([DisallowNull] ILocalFileRow other)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected virtual bool ArePropertiesEqual([DisallowNull] IFileRow other)
+        {
+            throw new NotImplementedException();
+        }
 
         IEnumerable<Guid> IIdentityReference.GetIdentifiers()
         {

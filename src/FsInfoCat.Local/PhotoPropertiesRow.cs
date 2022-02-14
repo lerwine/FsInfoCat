@@ -1,9 +1,10 @@
 using FsInfoCat.Collections;
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat.Local
 {
-    public class PhotoPropertiesRow : PropertiesRow, IPhotoProperties
+    public abstract class PhotoPropertiesRow : PropertiesRow, IPhotoProperties
     {
         #region Fields
 
@@ -33,5 +34,12 @@ namespace FsInfoCat.Local
         public MultiStringValue PeopleNames { get; set; }
 
         #endregion
+
+        protected bool ArePropertiesEqual([DisallowNull] IPhotoProperties other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public abstract bool Equals(IPhotoProperties other);
     }
 }

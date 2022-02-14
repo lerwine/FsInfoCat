@@ -1,8 +1,9 @@
+using System;
 using System.Collections.Generic;
 
 namespace FsInfoCat
 {
-    public interface IPersonalTagDefinition : ITagDefinition
+    public interface IPersonalTagDefinition : ITagDefinition, IEquatable<IPersonalTagDefinition>
     {
         new IEnumerable<IPersonalFileTag> FileTags { get; }
 

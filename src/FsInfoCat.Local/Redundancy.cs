@@ -17,7 +17,7 @@ using System.Xml.Linq;
 
 namespace FsInfoCat.Local
 {
-    public class Redundancy : LocalDbEntity, ILocalRedundancy, IIdentityPairReference<Redundancy>
+    public class Redundancy : LocalDbEntity, ILocalRedundancy, IIdentityPairReference<Redundancy>, IEquatable<Redundancy>
     {
         #region Fields
 
@@ -276,6 +276,41 @@ namespace FsInfoCat.Local
                 await transaction.CommitAsync(cancellationToken);
                 return result;
             }
+        }
+
+        protected bool ArePropertiesEqual([DisallowNull] ILocalRedundancy other)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected bool ArePropertiesEqual([DisallowNull] IRedundancy other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Equals(Redundancy other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Equals(IRedundancy other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override bool Equals(object obj)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override int GetHashCode()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override string ToString()
+        {
+            throw new NotImplementedException();
         }
     }
 }

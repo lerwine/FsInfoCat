@@ -23,5 +23,10 @@ namespace FsInfoCat.Desktop.FileSystemDetail
         public ushort? StreamNumber { get; init; }
 
         public uint? VerticalAspectRatio { get; init; }
+
+        public bool Equals(IVideoProperties other)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

@@ -1,8 +1,10 @@
 using FsInfoCat.Collections;
+using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat.Local
 {
-    public class GPSPropertiesRow : PropertiesRow, IGPSProperties
+    public abstract class GPSPropertiesRow : PropertiesRow, IGPSProperties
     {
         #region Fields
 
@@ -41,5 +43,12 @@ namespace FsInfoCat.Local
         public ByteValues VersionID { get; set; }
 
         #endregion
+
+        protected virtual bool ArePropertiesEqual([DisallowNull] IGPSProperties other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public abstract bool Equals(IGPSProperties other);
     }
 }

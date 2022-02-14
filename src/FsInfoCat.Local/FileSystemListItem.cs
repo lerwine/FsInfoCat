@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using FsInfoCat.Activities;
@@ -8,7 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace FsInfoCat.Local
 {
-    public class FileSystemListItem : FileSystemRow, ILocalFileSystemListItem
+    public class FileSystemListItem : FileSystemRow, ILocalFileSystemListItem, IEquatable<FileSystemListItem>
     {
         public const string VIEW_NAME = "vFileSystemListing";
 
@@ -21,6 +22,41 @@ namespace FsInfoCat.Local
         public long VolumeCount { get; set; }
 
         internal static void OnBuildEntity(EntityTypeBuilder<FileSystemListItem> builder) => builder.ToView(VIEW_NAME).HasKey(nameof(Id));
+
+        protected bool ArePropertiesEqual([DisallowNull] ILocalFileSystemListItem other)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected bool ArePropertiesEqual([DisallowNull] IFileSystemListItem other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Equals(FileSystemListItem other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Equals(IFileSystemListItem other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override bool Equals(object obj)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override int GetHashCode()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override string ToString()
+        {
+            throw new NotImplementedException();
+        }
 
         public async Task<(SymbolicName[], VolumeListItem[])> LoadRelatedItemsAsync(IActivityProgress progress)
         {

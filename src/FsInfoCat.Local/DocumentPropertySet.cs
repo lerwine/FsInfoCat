@@ -18,7 +18,7 @@ namespace FsInfoCat.Local
     /// </summary>
     /// <seealso cref="LocalDbEntity" />
     /// <seealso cref="ILocalDocumentPropertySet" />
-    public class DocumentPropertySet : DocumentPropertiesRow, ILocalDocumentPropertySet, ISimpleIdentityReference<DocumentPropertySet>
+    public class DocumentPropertySet : DocumentPropertiesRow, ILocalDocumentPropertySet, ISimpleIdentityReference<DocumentPropertySet>, IEquatable<DocumentPropertySet>
     {
         private HashSet<DbFile> _files = new();
 
@@ -75,6 +75,46 @@ namespace FsInfoCat.Local
                     cancellationToken.ThrowIfCancellationRequested();
                     break;
             }
+        }
+
+        protected bool ArePropertiesEqual([DisallowNull] ILocalDocumentPropertySet other)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        protected bool ArePropertiesEqual([DisallowNull] IDocumentPropertySet other)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public bool Equals(DocumentPropertySet other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Equals(IDocumentPropertySet other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override bool Equals(IDocumentProperties other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override bool Equals(object obj)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override int GetHashCode()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override string ToString()
+        {
+            throw new NotImplementedException();
         }
 
         IEnumerable<Guid> IIdentityReference.GetIdentifiers()

@@ -1,10 +1,11 @@
-﻿using FsInfoCat.Collections;
+using FsInfoCat.Collections;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat
 {
     /// <summary>Represents extended file properties for media files.</summary>
-    public interface IMediaProperties
+    public interface IMediaProperties : IEquatable<IMediaProperties>
     {
         /// <summary>Gets the Content Distributor.</summary>
         /// <value>The Content Distributor.</value>
@@ -409,6 +410,4 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_Year), ResourceType = typeof(Properties.Resources))]
         uint? Year { get; }
     }
-
 }
-

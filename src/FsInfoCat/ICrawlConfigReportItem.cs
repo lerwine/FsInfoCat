@@ -1,6 +1,8 @@
-﻿namespace FsInfoCat
+using System;
+
+namespace FsInfoCat
 {
-    public interface ICrawlConfigReportItem : ICrawlConfigurationListItem
+    public interface ICrawlConfigReportItem : ICrawlConfigurationListItem, IEquatable<ICrawlConfigReportItem>
     {
         long SucceededCount { get; }
 
@@ -17,4 +19,3 @@
         long? MaxDuration { get; }
     }
 }
-

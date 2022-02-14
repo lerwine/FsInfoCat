@@ -1,4 +1,6 @@
-﻿namespace FsInfoCat
+using System;
+
+namespace FsInfoCat
 {
-    public interface IPersonalFileTag : IPersonalTag, IFileTag { }
+    public interface IPersonalFileTag : IPersonalTag, IFileTag, IEquatable<IPersonalFileTag> { }
 }

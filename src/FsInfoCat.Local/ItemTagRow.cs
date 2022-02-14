@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat.Local
 {
@@ -27,5 +28,15 @@ namespace FsInfoCat.Local
         }
 
         (Guid, Guid) IHasIdentifierPair.Id => (DefinitionId, TaggedId);
+
+        protected virtual bool ArePropertiesEqual([DisallowNull] ILocalItemTagRow other)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected virtual bool ArePropertiesEqual([DisallowNull] IItemTagRow other)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

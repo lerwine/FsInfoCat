@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -5,7 +6,7 @@ namespace FsInfoCat
 {
     /// <summary>Interface for entities which represent a specific file system type.</summary>
     /// <seealso cref="IDbEntity" />
-    public interface IFileSystem : IFileSystemRow
+    public interface IFileSystem : IFileSystemRow, IEquatable<IFileSystem>
     {
         /// <summary>Gets the volumes that share this file system type.</summary>
         /// <value>The volumes that share this file system type.</value>
@@ -17,6 +18,4 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_SymbolicNames), ResourceType = typeof(Properties.Resources))]
         IEnumerable<ISymbolicName> SymbolicNames { get; }
     }
-
 }
-

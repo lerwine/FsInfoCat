@@ -1,10 +1,11 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat.Local
 {
-    public class SubdirectoryListItemWithAncestorNames : SubdirectoryListItem, ILocalSubdirectoryListItemWithAncestorNames
+    public class SubdirectoryListItemWithAncestorNames : SubdirectoryListItem, ILocalSubdirectoryListItemWithAncestorNames, IEquatable<SubdirectoryListItemWithAncestorNames>
     {
         public const string VIEW_NAME_WITH_ANCESTOR_NAMES = "vSubdirectoryListingWithAncestorNames";
 
@@ -32,6 +33,56 @@ namespace FsInfoCat.Local
         {
             _ = builder.ToView(VIEW_NAME_WITH_ANCESTOR_NAMES);
             _ = builder.Property(nameof(VolumeIdentifier)).HasConversion(VolumeIdentifier.Converter);
+        }
+
+        protected bool ArePropertiesEqual([DisallowNull] ILocalSubdirectoryListItemWithAncestorNames other)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected bool ArePropertiesEqual([DisallowNull] ISubdirectoryListItemWithAncestorNames other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Equals(SubdirectoryListItemWithAncestorNames other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override bool Equals(SubdirectoryListItem other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Equals(ISubdirectoryAncestorName other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Equals(ISubdirectoryListItemWithAncestorNames other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override bool Equals(ISubdirectoryListItem other)
+        {
+            return base.Equals(other);
+        }
+
+        public override bool Equals(object obj)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override int GetHashCode()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override string ToString()
+        {
+            return base.ToString();
         }
     }
 }

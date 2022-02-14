@@ -24,4 +24,3 @@ namespace FsInfoCat
         DateTime? CrawlEnd { get; }
     }
 }
-

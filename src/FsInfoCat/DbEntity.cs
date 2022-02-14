@@ -13,7 +13,6 @@ namespace FsInfoCat
     /// </summary>
     /// <seealso cref="NotifyDataErrorInfo" />
     /// <seealso cref="IDbEntity" />
-    // TODO: Do away with NotifyDataErrorInfo - can use EDM methods, instead.
     public abstract partial class DbEntity : IDbEntity
     {
         protected readonly object SyncRoot = new();

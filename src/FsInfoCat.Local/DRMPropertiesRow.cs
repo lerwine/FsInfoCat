@@ -1,8 +1,9 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat.Local
 {
-    public class DRMPropertiesRow : PropertiesRow, IDRMProperties
+    public abstract class DRMPropertiesRow : PropertiesRow, IDRMProperties
     {
         private string _description = string.Empty;
 
@@ -15,5 +16,12 @@ namespace FsInfoCat.Local
         public bool? IsProtected { get; set; }
 
         public uint? PlayCount { get; set; }
+
+        protected virtual bool ArePropertiesEqual([DisallowNull] IDRMProperties other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public abstract bool Equals(IDRMProperties other);
     }
 }

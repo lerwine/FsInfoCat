@@ -1,8 +1,9 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat.Local
 {
-    public class RecordedTVPropertiesRow : PropertiesRow, IRecordedTVProperties
+    public abstract class RecordedTVPropertiesRow : PropertiesRow, IRecordedTVProperties
     {
         #region Fields
 
@@ -35,5 +36,12 @@ namespace FsInfoCat.Local
         public string StationName { get => _stationName; set => _stationName = value.AsWsNormalizedOrEmpty(); }
 
         #endregion
+
+        protected bool ArePropertiesEqual([DisallowNull] IRecordedTVProperties other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public abstract bool Equals(IRecordedTVProperties other);
     }
 }

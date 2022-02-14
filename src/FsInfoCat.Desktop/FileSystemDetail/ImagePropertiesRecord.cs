@@ -23,5 +23,10 @@ namespace FsInfoCat.Desktop.FileSystemDetail
         public double? VerticalResolution { get; init; }
 
         public uint? VerticalSize { get; init; }
+
+        public bool Equals(IImageProperties other)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

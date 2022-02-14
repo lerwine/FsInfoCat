@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -5,7 +6,7 @@ namespace FsInfoCat
 {
     /// <summary>Represents a set of files that have the same file size and cryptographic hash.</summary>
     /// <seealso cref="IDbEntity" />
-    public interface IBinaryPropertySet : IDbEntity, IHasSimpleIdentifier
+    public interface IBinaryPropertySet : IDbEntity, IHasSimpleIdentifier, IEquatable<IBinaryPropertySet>
     {
         /// <summary>Gets the file length.</summary>
         /// <value>The file length in bytes.</value>
@@ -28,4 +29,3 @@ namespace FsInfoCat
         IEnumerable<IRedundantSet> RedundantSets { get; }
     }
 }
-

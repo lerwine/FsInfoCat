@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -13,7 +14,7 @@ using System.Xml.Linq;
 
 namespace FsInfoCat.Local
 {
-    public class SubdirectoryAccessError : DbEntity, ILocalSubdirectoryAccessError, ISimpleIdentityReference<SubdirectoryAccessError>
+    public class SubdirectoryAccessError : DbEntity, ILocalSubdirectoryAccessError, ISimpleIdentityReference<SubdirectoryAccessError>, IEquatable<SubdirectoryAccessError>
     {
         #region Fields
 
@@ -201,6 +202,41 @@ namespace FsInfoCat.Local
         IEnumerable<Guid> IIdentityReference.GetIdentifiers()
         {
             yield return Id;
+        }
+
+        protected bool ArePropertiesEqual([DisallowNull] ILocalSubdirectoryAccessError other)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected bool ArePropertiesEqual([DisallowNull] ISubdirectoryAccessError other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Equals(SubdirectoryAccessError other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Equals(ISubdirectoryAccessError other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override bool Equals(object obj)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override int GetHashCode()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override string ToString()
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -1,10 +1,11 @@
-﻿using FsInfoCat.Collections;
+using FsInfoCat.Collections;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat
 {
     /// <summary>Represents extended file properties for video files.</summary>
-    public interface IVideoProperties
+    public interface IVideoProperties : IEquatable<IVideoProperties>
     {
         /// <summary>Indicates the level of compression for the video stream.</summary>
         /// <value>Specifies the video compression format.</value>
@@ -271,6 +272,4 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_VerticalAspectRatio), ResourceType = typeof(Properties.Resources))]
         uint? VerticalAspectRatio { get; }
     }
-
 }
-

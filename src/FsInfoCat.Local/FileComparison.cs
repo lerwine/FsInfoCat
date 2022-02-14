@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 
 namespace FsInfoCat.Local
@@ -15,7 +16,7 @@ namespace FsInfoCat.Local
     /// <seealso cref="LocalDbEntity" />
     /// <seealso cref="ILocalComparison" />
     [Table(TABLE_NAME)]
-    public class FileComparison : LocalDbEntity, ILocalComparison
+    public class FileComparison : LocalDbEntity, ILocalComparison, IEquatable<FileComparison>
     {
         #region Fields
 
@@ -197,6 +198,41 @@ namespace FsInfoCat.Local
             _ = builder.HasKey(nameof(BaselineId), nameof(CorrelativeId));
             _ = builder.HasOne(sn => sn.Baseline).WithMany(d => d.BaselineComparisons).HasForeignKey(nameof(BaselineId)).IsRequired().OnDelete(DeleteBehavior.Restrict);
             _ = builder.HasOne(sn => sn.Correlative).WithMany(d => d.CorrelativeComparisons).HasForeignKey(nameof(CorrelativeId)).IsRequired().OnDelete(DeleteBehavior.Restrict);
+        }
+
+        protected bool ArePropertiesEqual([DisallowNull] ILocalComparison other)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected bool ArePropertiesEqual([DisallowNull] IComparison other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Equals(FileComparison other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Equals(IComparison other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override bool Equals(object obj)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override int GetHashCode()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override string ToString()
+        {
+            throw new NotImplementedException();
         }
     }
 }

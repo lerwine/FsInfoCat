@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat.Local
 {
-    public class Subdirectory : SubdirectoryRow, ILocalSubdirectory, ISimpleIdentityReference<Subdirectory>
+    public class Subdirectory : SubdirectoryRow, ILocalSubdirectory, ISimpleIdentityReference<Subdirectory>, IEquatable<Subdirectory>
     {
         #region Fields
 
@@ -742,6 +742,41 @@ namespace FsInfoCat.Local
             }
             else
                 results.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_VolumeAndParent, new string[] { nameof(Volume) }));
+        }
+
+        protected bool ArePropertiesEqual([DisallowNull] ILocalSubdirectory other)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected bool ArePropertiesEqual([DisallowNull] ISubdirectory other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Equals(Subdirectory other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Equals(ISubdirectory other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override bool Equals(object obj)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override int GetHashCode()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override string ToString()
+        {
+            throw new NotImplementedException();
         }
     }
 }

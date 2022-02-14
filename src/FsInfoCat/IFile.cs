@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -6,7 +7,7 @@ namespace FsInfoCat
 
     /// <summary>Represents a structural instance of file.</summary>
     /// <seealso cref="IDbFsItem" />
-    public interface IFile : IDbFsItem, IFileRow
+    public interface IFile : IDbFsItem, IFileRow, IEquatable<IFile>
     {
         /// <summary>Gets the binary properties for the current file.</summary>
         /// <value>The generic <see cref="IBinaryPropertySet" /> that contains the file size and optionally, the <see cref="MD5Hash">MD5 hash</see> value of its binary contents.</value>
@@ -96,4 +97,3 @@ namespace FsInfoCat
         new IEnumerable<ISharedFileTag> SharedTags { get; }
     }
 }
-

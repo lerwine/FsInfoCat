@@ -1,4 +1,6 @@
-﻿namespace FsInfoCat
+using System;
+
+namespace FsInfoCat
 {
-    public interface ISharedVolumeTag : ISharedTag, IVolumeTag { }
+    public interface ISharedVolumeTag : ISharedTag, IVolumeTag, IEquatable<ISharedVolumeTag> { }
 }

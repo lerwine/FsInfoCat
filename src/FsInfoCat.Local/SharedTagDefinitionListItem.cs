@@ -1,9 +1,11 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat.Local
 {
-    public class SharedTagDefinitionListItem : SharedTagDefinitionRow, ILocalTagDefinitionListItem
+    public class SharedTagDefinitionListItem : SharedTagDefinitionRow, ILocalTagDefinitionListItem, IEquatable<SharedTagDefinitionListItem>
     {
         public const string VIEW_NAME = "vSharedTagDefinitionListing";
 
@@ -14,5 +16,40 @@ namespace FsInfoCat.Local
         public long VolumeTagCount { get; set; }
 
         internal static void OnBuildEntity(EntityTypeBuilder<SharedTagDefinitionListItem> builder) => builder.ToView(VIEW_NAME).HasKey(nameof(Id));
+
+        protected bool ArePropertiesEqual([DisallowNull] ILocalTagDefinitionListItem other)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected bool ArePropertiesEqual([DisallowNull] ITagDefinitionListItem other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Equals(SharedTagDefinitionListItem other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Equals(ITagDefinitionListItem other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override bool Equals(object obj)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override int GetHashCode()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override string ToString()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

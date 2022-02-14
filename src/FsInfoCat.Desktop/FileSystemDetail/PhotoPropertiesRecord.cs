@@ -20,5 +20,10 @@ namespace FsInfoCat.Desktop.FileSystemDetail
         public string OrientationText { get; init; }
 
         public MultiStringValue PeopleNames { get; init; }
+
+        public bool Equals(IPhotoProperties other)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

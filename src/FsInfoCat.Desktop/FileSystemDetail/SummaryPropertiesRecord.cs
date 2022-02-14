@@ -27,5 +27,10 @@ namespace FsInfoCat.Desktop.FileSystemDetail
         public uint? SimpleRating { get; init; }
         public string Trademarks { get; init; }
         public string ProductName { get; init; }
+
+        public bool Equals(ISummaryProperties other)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

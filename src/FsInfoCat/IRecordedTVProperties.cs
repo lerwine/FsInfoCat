@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat
 {
     /// <summary>Represents extended file properties for recorded TV files.</summary>
-    public interface IRecordedTVProperties
+    public interface IRecordedTVProperties : IEquatable<IRecordedTVProperties>
     {
         /// <summary>Gets the Channel Number.</summary>
         /// <value>Example: 42 The recorded TV channels.</value>
@@ -248,6 +248,4 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_StationName), ResourceType = typeof(Properties.Resources))]
         string StationName { get; }
     }
-
 }
-

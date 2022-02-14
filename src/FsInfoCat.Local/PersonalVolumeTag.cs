@@ -2,11 +2,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 
 namespace FsInfoCat.Local
 {
-    public class PersonalVolumeTag : ItemTag, ILocalPersonalVolumeTag, IPersonalVolumeTag
+    public class PersonalVolumeTag : ItemTag, ILocalPersonalVolumeTag, IPersonalVolumeTag, IEquatable<PersonalVolumeTag>
     {
         private Volume _tagged;
         private PersonalTagDefinition _definition;
@@ -142,6 +143,41 @@ namespace FsInfoCat.Local
             _ = builder.HasKey(nameof(TaggedId), nameof(DefinitionId));
             _ = builder.HasOne(pft => pft.Definition).WithMany(d => d.VolumeTags).HasForeignKey(nameof(DefinitionId)).IsRequired().OnDelete(DeleteBehavior.Restrict);
             _ = builder.HasOne(pft => pft.Tagged).WithMany(d => d.PersonalTags).HasForeignKey(nameof(TaggedId)).IsRequired().OnDelete(DeleteBehavior.Restrict);
+        }
+
+        protected bool ArePropertiesEqual([DisallowNull] ILocalPersonalVolumeTag other)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected bool ArePropertiesEqual([DisallowNull] IPersonalVolumeTag other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Equals(PersonalVolumeTag other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Equals(IPersonalVolumeTag other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override bool Equals(object obj)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override int GetHashCode()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override string ToString()
+        {
+            throw new NotImplementedException();
         }
     }
 }

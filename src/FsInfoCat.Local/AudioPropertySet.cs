@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat.Local
 {
-    public class AudioPropertySet : AudioPropertiesRow, ILocalAudioPropertySet, ISimpleIdentityReference<AudioPropertySet>
+    public class AudioPropertySet : AudioPropertiesRow, ILocalAudioPropertySet, ISimpleIdentityReference<AudioPropertySet>, IEquatable<AudioPropertySet>
     {
         private HashSet<DbFile> _files = new();
 
@@ -63,6 +63,46 @@ namespace FsInfoCat.Local
                     cancellationToken.ThrowIfCancellationRequested();
                     break;
             }
+        }
+
+        protected bool ArePropertiesEqual([DisallowNull] ILocalAudioPropertySet other)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        protected bool ArePropertiesEqual([DisallowNull] IAudioPropertySet other)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public bool Equals(AudioPropertySet other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Equals(IAudioPropertySet other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override bool Equals(IAudioProperties other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override bool Equals(object obj)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override int GetHashCode()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override string ToString()
+        {
+            throw new NotImplementedException();
         }
 
         IEnumerable<Guid> IIdentityReference.GetIdentifiers()

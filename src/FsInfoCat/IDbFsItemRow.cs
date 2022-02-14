@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat
@@ -33,4 +33,3 @@ namespace FsInfoCat
         DateTime LastWriteTime { get; }
     }
 }
-

@@ -25,4 +25,3 @@ namespace FsInfoCat
         long SharedTagCount { get; }
     }
 }
-

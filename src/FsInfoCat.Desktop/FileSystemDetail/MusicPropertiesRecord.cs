@@ -25,5 +25,10 @@ namespace FsInfoCat.Desktop.FileSystemDetail
         public string Period { get; init; }
 
         public uint? TrackNumber { get; init; }
+
+        public bool Equals(IMusicProperties other)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

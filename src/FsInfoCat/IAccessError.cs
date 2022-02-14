@@ -27,4 +27,3 @@ namespace FsInfoCat
         IDbEntity Target { get; }
     }
 }
-

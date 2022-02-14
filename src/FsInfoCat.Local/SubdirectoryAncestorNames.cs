@@ -2,11 +2,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 
 namespace FsInfoCat.Local
 {
-    public class SubdirectoryAncestorNames : ISubdirectoryAncestorName
+    public class SubdirectoryAncestorNames : ISubdirectoryAncestorName, IEquatable<SubdirectoryAncestorNames>
     {
         public const string VIEW_NAME = "vSubdirectoryAncestorNames";
 
@@ -52,5 +53,35 @@ namespace FsInfoCat.Local
         public string AncestorNames { get => _ancestorNames; set => _ancestorNames = value.EmptyIfNullOrWhiteSpace(); }
 
         internal static void OnBuildEntity(EntityTypeBuilder<SubdirectoryAncestorNames> builder) => builder.ToView(VIEW_NAME).HasKey(nameof(Id));
+
+        protected bool ArePropertiesEqual([DisallowNull] ISubdirectoryAncestorName other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Equals(SubdirectoryAncestorNames other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Equals(ISubdirectoryAncestorName other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override bool Equals(object obj)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override int GetHashCode()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override string ToString()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -1,6 +1,8 @@
-﻿namespace FsInfoCat
+using System;
+
+namespace FsInfoCat
 {
-    public interface IFileListItemWithBinaryProperties : IDbFsItemListItem, IFileRow
+    public interface IFileListItemWithBinaryProperties : IDbFsItemListItem, IFileRow, IEquatable<IFileListItemWithBinaryProperties>
     {
         long Length { get; }
 
@@ -11,4 +13,3 @@
         long ComparisonCount { get; }
     }
 }
-

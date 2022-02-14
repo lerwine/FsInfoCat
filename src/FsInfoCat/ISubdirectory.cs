@@ -4,38 +4,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat
 {
-    public interface ISubdirectoryRow : IDbFsItemRow
-    {
-        /// <summary>Gets the crawl options for the current subdirectory.</summary>
-        /// <value>The crawl options for the current subdirectory.</value>
-        [Display(Name = nameof(Properties.Resources.DisplayName_Options), ResourceType = typeof(Properties.Resources))]
-        DirectoryCrawlOptions Options { get; }
-
-        /// <summary>Gets the status of the current subdirectory.</summary>
-        /// <value>The status value for the current subdirectory.</value>
-        [Display(Name = nameof(Properties.Resources.DisplayName_Status), ResourceType = typeof(Properties.Resources))]
-        DirectoryStatus Status { get; }
-
-        Guid? ParentId { get; }
-
-        Guid? VolumeId { get; }
-    }
-    public interface ISubdirectoryAncestorName : IDbFsItemAncestorName
-    {
-        Guid? ParentId { get; }
-    }
-    public interface ISubdirectoryListItem : IDbFsItemListItem, ISubdirectoryRow
-    {
-        long SubdirectoryCount { get; }
-
-        long FileCount { get; }
-
-        string CrawlConfigDisplayName { get; }
-    }
-    public interface ISubdirectoryListItemWithAncestorNames : IDbFsItemListItemWithAncestorNames, ISubdirectoryListItem, ISubdirectoryRow, ISubdirectoryAncestorName { }
     /// <summary>Interface for entities that represent a subdirectory node within a file system.</summary>
     /// <seealso cref="IDbFsItem" />
-    public interface ISubdirectory : ISubdirectoryRow, IDbFsItem
+    public interface ISubdirectory : ISubdirectoryRow, IDbFsItem, IEquatable<ISubdirectory>
     {
         /// <summary>Gets the parent subdirectory of the current file system item.</summary>
         /// <value>The parent <see cref="ISubdirectory" /> of the current file system item or <see langword="null" /> if this is the root subdirectory.</value>
@@ -72,6 +43,4 @@ namespace FsInfoCat
 
         new IEnumerable<ISharedSubdirectoryTag> SharedTags { get; }
     }
-
 }
-

@@ -33,5 +33,10 @@ namespace FsInfoCat.Desktop.FileSystemDetail
         public MultiStringValue Writer { get; init; }
 
         public uint? Year { get; init; }
+
+        public bool Equals(IMediaProperties other)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

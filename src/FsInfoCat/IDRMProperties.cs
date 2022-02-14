@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat
 {
     /// <summary>Represents extended file properties for DRM information.</summary>
-    public interface IDRMProperties
+    public interface IDRMProperties : IEquatable<IDRMProperties>
     {
         /// <summary>Indicates when play expires for digital rights management.</summary>
         /// <value>Indicates when play rights expire.</value>
@@ -138,6 +138,4 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_PlayCount), ResourceType = typeof(Properties.Resources))]
         uint? PlayCount { get; }
     }
-
 }
-

@@ -18,7 +18,7 @@ namespace FsInfoCat.Local
     /// </summary>
     /// <seealso cref="LocalDbEntity" />
     /// <seealso cref="ILocalMusicPropertySet" />
-    public class MusicPropertySet : MusicPropertiesRow, ILocalMusicPropertySet, ISimpleIdentityReference<MusicPropertySet>
+    public class MusicPropertySet : MusicPropertiesRow, ILocalMusicPropertySet, ISimpleIdentityReference<MusicPropertySet>, IEquatable<MusicPropertySet>
     {
         private HashSet<DbFile> _files = new();
 
@@ -83,6 +83,46 @@ namespace FsInfoCat.Local
                     cancellationToken.ThrowIfCancellationRequested();
                     break;
             }
+        }
+
+        protected bool ArePropertiesEqual([DisallowNull] ILocalMusicPropertySet other)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected bool ArePropertiesEqual([DisallowNull] IMusicPropertySet other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Equals(MusicPropertySet other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Equals(IMusicPropertySet other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override bool Equals(IMusicProperties other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override bool Equals(object obj)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override int GetHashCode()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override string ToString()
+        {
+            throw new NotImplementedException();
         }
 
         IEnumerable<Guid> IIdentityReference.GetIdentifiers()

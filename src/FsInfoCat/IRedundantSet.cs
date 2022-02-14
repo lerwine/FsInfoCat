@@ -4,35 +4,10 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat
 {
-    public interface IRedundantSetRow : IDbEntity, IHasSimpleIdentifier
-    {
-        /// <summary>Gets the custom reference value.</summary>
-        /// <value>The custom reference value which can be used to refer to external information regarding redundancy remediation, such as a ticket number.</value>
-        [Display(Name = nameof(Properties.Resources.DisplayName_Reference), ResourceType = typeof(Properties.Resources))]
-        string Reference { get; }
-
-        /// <summary>Gets custom notes to be associated with the current set of redunant files.</summary>
-        /// <value>The custom notes to associate with the current set of redunant files.</value>
-        [Display(Name = nameof(Properties.Resources.DisplayName_Notes), ResourceType = typeof(Properties.Resources))]
-        string Notes { get; }
-        
-        RedundancyRemediationStatus Status { get; }
-
-        Guid BinaryPropertiesId { get; }
-    }
-
-    public interface IRedundantSetListItem : IRedundantSetRow
-    {
-        long Length { get; }
-
-        MD5Hash? Hash { get; }
-
-        long RedundancyCount { get; }
-    }
 
     /// <summary>Represents a set of files that have the same size, Hash and remediation status.</summary>
     /// <seealso cref="IDbEntity" />
-    public interface IRedundantSet : IRedundantSetRow
+    public interface IRedundantSet : IRedundantSetRow, IEquatable<IRedundantSet>
     {
         /// <summary>Gets the binary properties in common with all files in the current redundant set.</summary>
         /// <value>The binary properties in common with all files in the current redundant set.</value>
@@ -44,6 +19,4 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_Redundancies), ResourceType = typeof(Properties.Resources))]
         IEnumerable<IRedundancy> Redundancies { get; }
     }
-
 }
-

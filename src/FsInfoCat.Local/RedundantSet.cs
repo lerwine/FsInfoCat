@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -11,7 +12,7 @@ using System.Xml.Linq;
 namespace FsInfoCat.Local
 {
 
-    public class RedundantSet : RedundantSetRow, ILocalRedundantSet, ISimpleIdentityReference<RedundantSet>
+    public class RedundantSet : RedundantSetRow, ILocalRedundantSet, ISimpleIdentityReference<RedundantSet>, IEquatable<RedundantSet>
     {
         #region Fields
 
@@ -110,6 +111,41 @@ namespace FsInfoCat.Local
                 .AppendString(nameof(Reference)).AppendElementString(nameof(Notes)).AppendDateTime(nameof(CreatedOn)).AppendDateTime(nameof(ModifiedOn))
                 .AppendDateTime(nameof(LastSynchronizedOn)).AppendGuid(nameof(UpstreamId)).ExecuteSqlAsync(dbContext.Database);
             return (redundantSetId, redundantSetElement.Elements(nameof(Redundancy)).ToArray());
+        }
+
+        protected bool ArePropertiesEqual([DisallowNull] ILocalRedundantSet other)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected bool ArePropertiesEqual([DisallowNull] IRedundantSet other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Equals(RedundantSet other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Equals(IRedundantSet other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override bool Equals(object obj)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override int GetHashCode()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override string ToString()
+        {
+            throw new NotImplementedException();
         }
     }
 }

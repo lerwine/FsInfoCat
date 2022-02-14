@@ -1,11 +1,11 @@
-﻿using System;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat
 {
     /// <summary>The results of a byte-for-byte comparison of 2 files.</summary>
     /// <seealso cref="IDbEntity" />
-    public interface IComparison : IDbEntity
+    public interface IComparison : IDbEntity, IEquatable<IComparison>
     {
         /// <summary>Gets a value indicating whether the <see cref="Baseline" /> and <see cref="Correlative" /> are identical byte-for-byte.</summary>
         /// <value><see langword="true" /> if <see cref="Baseline" /> and <see cref="Correlative" /> are identical byte-for-byte; otherwise, <see langword="false" />.</value>
@@ -39,6 +39,4 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_Correlative), ResourceType = typeof(Properties.Resources))]
         IFile Correlative { get; }
     }
-
 }
-

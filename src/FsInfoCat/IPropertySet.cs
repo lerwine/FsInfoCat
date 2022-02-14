@@ -13,4 +13,3 @@ namespace FsInfoCat
         IEnumerable<IFile> Files { get; }
     }
 }
-

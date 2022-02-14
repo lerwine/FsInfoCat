@@ -1,4 +1,4 @@
-﻿namespace FsInfoCat.Desktop
+namespace FsInfoCat.Desktop
 {
     public record AudioPropertiesRecord : IAudioProperties
     {
@@ -17,5 +17,10 @@
         public string StreamName { get; init; }
 
         public ushort? StreamNumber { get; init; }
+
+        public bool Equals(IAudioProperties other)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

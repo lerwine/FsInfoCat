@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 
 namespace FsInfoCat.Local
@@ -10,7 +11,7 @@ namespace FsInfoCat.Local
     /// <summary>Log of crawl job results.</summary>
     /// <seealso cref="LocalDbEntity" />
     /// <seealso cref="ILocalCrawlJobLog" />
-    public class CrawlJobLog : CrawlJobLogRow, ILocalCrawlJobLog
+    public class CrawlJobLog : CrawlJobLogRow, ILocalCrawlJobLog, IEquatable<CrawlJobLog>
     {
         private CrawlConfiguration _crawlConfiguration;
 
@@ -82,6 +83,41 @@ namespace FsInfoCat.Local
         internal static void OnBuildEntity(EntityTypeBuilder<CrawlJobLog> builder)
         {
             _ = builder.HasOne(sn => sn.Configuration).WithMany(d => d.Logs).HasForeignKey(nameof(ConfigurationId)).IsRequired().OnDelete(DeleteBehavior.Restrict);
+        }
+
+        protected bool ArePropertiesEqual([DisallowNull] ILocalCrawlJobLog other)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected bool ArePropertiesEqual([DisallowNull] ICrawlJobLog other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Equals(CrawlJobLog other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Equals(ICrawlJobLog other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override bool Equals(object obj)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override int GetHashCode()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override string ToString()
+        {
+            throw new NotImplementedException();
         }
     }
 }

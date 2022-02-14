@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace FsInfoCat
 {
@@ -7,4 +7,3 @@ namespace FsInfoCat
         Guid ParentId { get; }
     }
 }
-

@@ -1,9 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat
 {
     /// <summary>Represents extended file properties for image files.</summary>
-    public interface IImageProperties
+    public interface IImageProperties : IEquatable<IImageProperties>
     {
         /// <summary>Gets the Bit Depth.</summary>
         /// <value>Indicates how many bits are used in each pixel of the image.</value>
@@ -297,6 +298,4 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_VerticalSize), ResourceType = typeof(Properties.Resources))]
         uint? VerticalSize { get; }
     }
-
 }
-

@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -13,7 +14,7 @@ using System.Xml.Linq;
 
 namespace FsInfoCat.Local
 {
-    public class VolumeAccessError : DbEntity, ILocalVolumeAccessError, ISimpleIdentityReference<VolumeAccessError>
+    public class VolumeAccessError : DbEntity, ILocalVolumeAccessError, ISimpleIdentityReference<VolumeAccessError>, IEquatable<VolumeAccessError>
     {
         #region Fields
 
@@ -201,6 +202,41 @@ namespace FsInfoCat.Local
         IEnumerable<Guid> IIdentityReference.GetIdentifiers()
         {
             yield return Id;
+        }
+
+        protected virtual bool ArePropertiesEqual([DisallowNull] ILocalVolumeAccessError other)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        protected virtual bool ArePropertiesEqual([DisallowNull] IVolumeAccessError other)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public bool Equals(VolumeAccessError other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Equals(IVolumeAccessError other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override bool Equals(object obj)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override int GetHashCode()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override string ToString()
+        {
+            return base.ToString();
         }
     }
 }

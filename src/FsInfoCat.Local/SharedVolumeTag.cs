@@ -2,11 +2,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 
 namespace FsInfoCat.Local
 {
-    public class SharedVolumeTag : ItemTag, ILocalSharedVolumeTag, ISharedVolumeTag
+    public class SharedVolumeTag : ItemTag, ILocalSharedVolumeTag, ISharedVolumeTag, IEquatable<SharedVolumeTag>
     {
         private Volume _tagged;
         private SharedTagDefinition _definition;
@@ -142,6 +143,41 @@ namespace FsInfoCat.Local
             _ = builder.HasKey(nameof(TaggedId), nameof(DefinitionId));
             _ = builder.HasOne(pft => pft.Definition).WithMany(d => d.VolumeTags).HasForeignKey(nameof(DefinitionId)).IsRequired().OnDelete(DeleteBehavior.Restrict);
             _ = builder.HasOne(pft => pft.Tagged).WithMany(d => d.SharedTags).HasForeignKey(nameof(TaggedId)).IsRequired().OnDelete(DeleteBehavior.Restrict);
+        }
+
+        protected bool ArePropertiesEqual([DisallowNull] ILocalSharedVolumeTag other)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected bool ArePropertiesEqual([DisallowNull] ISharedVolumeTag other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Equals(SharedVolumeTag other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Equals(ISharedVolumeTag other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override bool Equals(object obj)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override int GetHashCode()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override string ToString()
+        {
+            throw new NotImplementedException();
         }
     }
 }

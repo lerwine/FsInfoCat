@@ -1,10 +1,12 @@
 using FsInfoCat.Collections;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat.Local
 {
-    public class MusicPropertiesListItem : MusicPropertiesRow, ILocalMusicPropertiesListItem
+    public class MusicPropertiesListItem : MusicPropertiesRow, ILocalMusicPropertiesListItem, IEquatable<MusicPropertiesListItem>
     {
         public const string VIEW_NAME = "vMusicPropertiesListing";
 
@@ -20,6 +22,46 @@ namespace FsInfoCat.Local
             _ = builder.Property(nameof(Conductor)).HasConversion(MultiStringValue.Converter);
             _ = builder.Property(nameof(Genre)).HasConversion(MultiStringValue.Converter);
             _ = builder.Property(nameof(Genre)).HasConversion(MultiStringValue.Converter);
+        }
+
+        protected bool ArePropertiesEqual([DisallowNull] ILocalMusicPropertiesListItem other)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected bool ArePropertiesEqual([DisallowNull] IMusicPropertiesListItem other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Equals(MusicPropertiesListItem other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Equals(IMusicPropertiesListItem other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override bool Equals(IMusicProperties other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override bool Equals(object obj)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override int GetHashCode()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override string ToString()
+        {
+            throw new NotImplementedException();
         }
     }
 }

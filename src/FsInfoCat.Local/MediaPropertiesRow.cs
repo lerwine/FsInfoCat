@@ -1,8 +1,10 @@
 using FsInfoCat.Collections;
+using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat.Local
 {
-    public class MediaPropertiesRow : PropertiesRow, IMediaProperties
+    public abstract class MediaPropertiesRow : PropertiesRow, IMediaProperties
     {
         #region Fields
 
@@ -52,5 +54,12 @@ namespace FsInfoCat.Local
         public uint? Year { get; set; }
 
         #endregion
+
+        protected bool ArePropertiesEqual([DisallowNull] IMediaProperties other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public abstract bool Equals(IMediaProperties other);
     }
 }

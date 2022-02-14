@@ -1,8 +1,10 @@
 using FsInfoCat.Collections;
+using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat.Local
 {
-    public class MusicPropertiesRow : PropertiesRow, IMusicProperties
+    public abstract class MusicPropertiesRow : PropertiesRow, IMusicProperties
     {
         #region Fields
 
@@ -39,5 +41,12 @@ namespace FsInfoCat.Local
         public uint? TrackNumber { get; set; }
 
         #endregion
+
+        protected bool ArePropertiesEqual([DisallowNull] IMusicProperties other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public abstract bool Equals(IMusicProperties other);
     }
 }

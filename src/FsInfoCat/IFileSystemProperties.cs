@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using System.IO;
 
 namespace FsInfoCat
@@ -25,6 +25,4 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_DefaultDriveType), ResourceType = typeof(Properties.Resources))]
         DriveType? DefaultDriveType { get; }
     }
-
 }
-

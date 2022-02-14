@@ -1,10 +1,11 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat.Local
 {
-    public class FileWithAncestorNames : DbFileRow, ILocalFileListItemWithAncestorNames
+    public class FileWithAncestorNames : DbFileRow, ILocalFileListItemWithAncestorNames, IEquatable<FileWithAncestorNames>
     {
         private const string VIEW_NAME = "vFileListingWithAncestorNames";
 
@@ -38,6 +39,41 @@ namespace FsInfoCat.Local
         {
             _ = builder.ToView(VIEW_NAME);
             _ = builder.Property(nameof(VolumeIdentifier)).HasConversion(VolumeIdentifier.Converter);
+        }
+
+        protected bool ArePropertiesEqual([DisallowNull] ILocalFileListItemWithAncestorNames other)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected bool ArePropertiesEqual([DisallowNull] IFileListItemWithAncestorNames other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Equals(FileWithAncestorNames other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Equals(IFileListItemWithAncestorNames other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override bool Equals(object obj)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override int GetHashCode()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override string ToString()
+        {
+            throw new NotImplementedException();
         }
     }
 }

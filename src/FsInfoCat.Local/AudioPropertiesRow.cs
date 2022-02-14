@@ -1,6 +1,8 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace FsInfoCat.Local
 {
-    public class AudioPropertiesRow : PropertiesRow, IAudioProperties
+    public abstract class AudioPropertiesRow : PropertiesRow, IAudioProperties
     {
         #region Fields
 
@@ -29,5 +31,12 @@ namespace FsInfoCat.Local
         public ushort? StreamNumber { get; set; }
 
         #endregion
+
+        protected bool ArePropertiesEqual([DisallowNull] IAudioProperties other)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public abstract bool Equals(IAudioProperties other);
     }
 }

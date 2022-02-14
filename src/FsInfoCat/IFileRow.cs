@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat
@@ -49,4 +49,3 @@ namespace FsInfoCat
         Guid? VideoPropertySetId { get; }
     }
 }
-

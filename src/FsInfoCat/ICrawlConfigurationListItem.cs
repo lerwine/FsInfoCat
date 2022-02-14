@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 
 namespace FsInfoCat
 {
-    public interface ICrawlConfigurationListItem : ICrawlConfigurationRow
+    public interface ICrawlConfigurationListItem : ICrawlConfigurationRow, IEquatable<ICrawlConfigurationListItem>
     {
         string AncestorNames { get; }
 
@@ -19,4 +19,3 @@ namespace FsInfoCat
         string FileSystemSymbolicName { get; }
     }
 }
-

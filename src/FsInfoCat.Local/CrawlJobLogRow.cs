@@ -1,10 +1,11 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 
 namespace FsInfoCat.Local
 {
-    public class CrawlJobLogRow : LocalDbEntity, ILocalCrawlJobLogRow
+    public class CrawlJobLogRow : LocalDbEntity, ILocalCrawlJobLogRow, IEquatable<CrawlJobLogRow>
     {
         #region Fields
 
@@ -105,5 +106,40 @@ namespace FsInfoCat.Local
         public virtual Guid ConfigurationId { get; set; }
 
         #endregion
+
+        protected virtual bool ArePropertiesEqual([DisallowNull] ILocalCrawlJobLogRow other)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected virtual bool ArePropertiesEqual([DisallowNull] ICrawlJobLogRow other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Equals(CrawlJobLogRow other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Equals(ICrawlJob other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override bool Equals(object obj)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override int GetHashCode()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override string ToString()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

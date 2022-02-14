@@ -18,7 +18,7 @@ namespace FsInfoCat.Local
     /// </summary>
     /// <seealso cref="LocalDbEntity" />
     /// <seealso cref="ILocalSummaryPropertySet" />
-    public class SummaryPropertySet : SummaryPropertiesRow, ILocalSummaryPropertySet, ISimpleIdentityReference<SummaryPropertySet>
+    public class SummaryPropertySet : SummaryPropertiesRow, ILocalSummaryPropertySet, ISimpleIdentityReference<SummaryPropertySet>, IEquatable<SummaryPropertySet>
     {
         private HashSet<DbFile> _files = new();
 
@@ -83,6 +83,46 @@ namespace FsInfoCat.Local
                     cancellationToken.ThrowIfCancellationRequested();
                     break;
             }
+        }
+
+        protected bool ArePropertiesEqual([DisallowNull] ILocalSummaryPropertySet other)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected bool ArePropertiesEqual([DisallowNull] ISummaryPropertySet other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Equals(SummaryPropertySet other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Equals(ISummaryPropertySet other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override bool Equals(ISummaryProperties other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override bool Equals(object obj)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override int GetHashCode()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override string ToString()
+        {
+            throw new NotImplementedException();
         }
 
         IEnumerable<Guid> IIdentityReference.GetIdentifiers()

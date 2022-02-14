@@ -26,5 +26,10 @@ namespace FsInfoCat.Desktop.FileSystemDetail
         public string PresentationFormat { get; init; }
 
         public string Version { get; init; }
+
+        public bool Equals(IDocumentProperties other)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

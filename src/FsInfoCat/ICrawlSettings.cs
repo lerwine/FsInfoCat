@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat
 {
@@ -23,6 +23,4 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_TTL), ResourceType = typeof(Properties.Resources))]
         long? TTL { get; }
     }
-
 }
-

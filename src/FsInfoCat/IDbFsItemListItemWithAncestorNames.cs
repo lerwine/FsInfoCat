@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace FsInfoCat
 {
@@ -17,4 +17,3 @@ namespace FsInfoCat
         string FileSystemSymbolicName { get; }
     }
 }
-

@@ -1,10 +1,11 @@
-﻿using FsInfoCat.Collections;
+using FsInfoCat.Collections;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat
 {
     /// <summary>Represents extended file summary properties.</summary>
-    public interface ISummaryProperties
+    public interface ISummaryProperties : IEquatable<ISummaryProperties>
     {
         /// <summary>Gets the Application Name.</summary>
         /// <value>The name of the application that created this file or item.</value>
@@ -631,6 +632,4 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_ProductName), ResourceType = typeof(Properties.Resources))]
         string ProductName { get; }
     }
-
 }
-

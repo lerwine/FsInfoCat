@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat.Local
 {
-    public class SharedTagDefinition : SharedTagDefinitionRow, ILocalSharedTagDefinition
+    public class SharedTagDefinition : SharedTagDefinitionRow, ILocalSharedTagDefinition, IEquatable<SharedTagDefinition>
     {
         private HashSet<SharedFileTag> _fileTags = new();
         private HashSet<SharedSubdirectoryTag> _subdirectoryTags = new();
@@ -73,6 +73,41 @@ namespace FsInfoCat.Local
                 await transaction.CommitAsync(progress.Token);
                 return entry;
             }
+        }
+
+        protected bool ArePropertiesEqual([DisallowNull] ILocalSharedTagDefinition other)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected bool ArePropertiesEqual([DisallowNull] ISharedTagDefinition other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Equals(SharedTagDefinition other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Equals(ISharedTagDefinition other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override bool Equals(object obj)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override int GetHashCode()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override string ToString()
+        {
+            throw new NotImplementedException();
         }
     }
 }

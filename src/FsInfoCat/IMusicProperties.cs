@@ -1,10 +1,11 @@
-﻿using FsInfoCat.Collections;
+using FsInfoCat.Collections;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat
 {
     /// <summary>Represents extended file properties for music files.</summary>
-    public interface IMusicProperties
+    public interface IMusicProperties : IEquatable<IMusicProperties>
     {
         /// <summary>Gets the Album Artist.</summary>
         /// <value>The Album Artist</value>
@@ -297,6 +298,4 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_TrackNumber), ResourceType = typeof(Properties.Resources))]
         uint? TrackNumber { get; }
     }
-
 }
-

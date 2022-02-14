@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat
 {
@@ -13,8 +13,6 @@ namespace FsInfoCat
         /// <value><see langword="true" /> if this file system type is inactive; otherwise, <see langword="false" />.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_IsInactive), ResourceType = typeof(Properties.Resources))]
         bool IsInactive { get; }
-
     }
-
 }
 

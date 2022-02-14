@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 namespace FsInfoCat.Local
 {
     [Table(TABLE_NAME)]
-    public class DbFile : DbFileRow, ILocalFile, ISimpleIdentityReference<DbFile>
+    public class DbFile : DbFileRow, ILocalFile, ISimpleIdentityReference<DbFile>, IEquatable<DbFile>
     {
         #region Fields
 
@@ -1284,6 +1284,41 @@ namespace FsInfoCat.Local
         public ISimpleIdentityReference<BinaryPropertySet> GetBinaryPropertySetReference()
         {
             // TODO: Implement GetBinaryPropertySetReference()
+            throw new NotImplementedException();
+        }
+
+        protected bool ArePropertiesEqual([DisallowNull] ILocalFile other)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected bool ArePropertiesEqual([DisallowNull] IFile other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Equals(DbFile other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Equals(IFile other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override bool Equals(object obj)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override int GetHashCode()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override string ToString()
+        {
             throw new NotImplementedException();
         }
     }

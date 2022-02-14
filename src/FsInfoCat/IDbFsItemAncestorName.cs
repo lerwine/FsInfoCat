@@ -20,4 +20,3 @@ namespace FsInfoCat
         string AncestorNames { get; }
     }
 }
-

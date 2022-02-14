@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat.Local
 {
-    public class Volume : VolumeRow, ILocalVolume, ISimpleIdentityReference<Volume>
+    public class Volume : VolumeRow, ILocalVolume, ISimpleIdentityReference<Volume>, IEquatable<Volume>
     {
         #region Fields
 
@@ -313,6 +313,36 @@ namespace FsInfoCat.Local
                 await transaction.CommitAsync();
                 return result;
             }
+        }
+
+        protected virtual bool ArePropertiesEqual(Volume other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Equals(Volume other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Equals(IVolume other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override bool Equals(object obj)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override int GetHashCode()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override string ToString()
+        {
+            return base.ToString();
         }
     }
 }

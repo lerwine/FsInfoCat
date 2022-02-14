@@ -636,7 +636,6 @@ namespace FsInfoCat
             if (directoryInfos is null || !(directoryInfos = directoryInfos.Where(d => d is not null)).Distinct().Any())
                 return new(subdirectories.Select(s => (s, (DirectoryInfo)null)));
 
-            // BUG: Case-sensitive comparer is not being used.
             StringComparer csComparer = StringComparer.InvariantCulture;
             StringComparer ciComparer = StringComparer.InvariantCultureIgnoreCase;
 
@@ -708,7 +707,6 @@ namespace FsInfoCat
             if (fileInfos is null || !(fileInfos = fileInfos.Where(f => f is not null)).Distinct().Any())
                 return new(dbFiles.Select(f => (f, (FileInfo)null)));
 
-            // BUG: Case-sensitive comparer is not being used.
             StringComparer csComparer = StringComparer.InvariantCulture;
             StringComparer ciComparer = StringComparer.InvariantCultureIgnoreCase;
 

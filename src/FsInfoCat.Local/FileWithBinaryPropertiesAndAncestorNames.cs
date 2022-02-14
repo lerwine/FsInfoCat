@@ -1,10 +1,11 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat.Local
 {
-    public class FileWithBinaryPropertiesAndAncestorNames : FileWithBinaryProperties, ILocalFileListItemWithBinaryPropertiesAndAncestorNames
+    public class FileWithBinaryPropertiesAndAncestorNames : FileWithBinaryProperties, ILocalFileListItemWithBinaryPropertiesAndAncestorNames, IEquatable<FileWithBinaryPropertiesAndAncestorNames>
     {
         private const string VIEW_NAME = "vFileListingWithBinaryPropertiesAndAncestorNames";
 
@@ -33,6 +34,56 @@ namespace FsInfoCat.Local
             _ = builder.ToView(VIEW_NAME);
             _ = builder.Property(nameof(Hash)).HasConversion(MD5Hash.Converter);
             _ = builder.Property(nameof(VolumeIdentifier)).HasConversion(VolumeIdentifier.Converter);
+        }
+
+        protected bool ArePropertiesEqual([DisallowNull] ILocalFileListItemWithBinaryProperties other)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected bool ArePropertiesEqual([DisallowNull] IFileListItemWithBinaryProperties other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Equals(FileWithBinaryPropertiesAndAncestorNames other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override bool Equals(FileWithBinaryProperties other)
+        {
+            return base.Equals(other);
+        }
+
+        public override bool Equals(IFileListItemWithBinaryProperties other)
+        {
+            return base.Equals(other);
+        }
+
+        public bool Equals(IFileListItemWithBinaryPropertiesAndAncestorNames other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Equals(IFileListItemWithAncestorNames other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override bool Equals(object obj)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override int GetHashCode()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override string ToString()
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -18,7 +19,7 @@ namespace FsInfoCat.Local
     /// </summary>
     /// <seealso cref="LocalDbEntity" />
     /// <seealso cref="ILocalBinaryPropertySet" />
-    public class BinaryPropertySet : LocalDbEntity, ILocalBinaryPropertySet, ISimpleIdentityReference<BinaryPropertySet>
+    public class BinaryPropertySet : LocalDbEntity, ILocalBinaryPropertySet, ISimpleIdentityReference<BinaryPropertySet>, IEquatable<BinaryPropertySet>
     {
         #region Fields
 
@@ -139,6 +140,41 @@ namespace FsInfoCat.Local
         IEnumerable<Guid> IIdentityReference.GetIdentifiers()
         {
             yield return Id;
+        }
+
+        protected bool ArePropertiesEqual([DisallowNull] ILocalBinaryPropertySet other)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected bool ArePropertiesEqual([DisallowNull] IBinaryPropertySet other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Equals(BinaryPropertySet other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Equals(IBinaryPropertySet other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override bool Equals(object obj)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override int GetHashCode()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override string ToString()
+        {
+            throw new NotImplementedException();
         }
     }
 }

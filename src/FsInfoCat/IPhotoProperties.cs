@@ -1,11 +1,11 @@
-﻿using FsInfoCat.Collections;
+using FsInfoCat.Collections;
 using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat
 {
     /// <summary>Represents extended file properties for photo files.</summary>
-    public interface IPhotoProperties
+    public interface IPhotoProperties : IEquatable<IPhotoProperties>
     {
         /// <summary>Gets the Camera Manufacturer.</summary>
         /// <value>The manufacturer name of the camera that took the photo, in a string format.</value>
@@ -220,6 +220,4 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_PeopleNames), ResourceType = typeof(Properties.Resources))]
         MultiStringValue PeopleNames { get; }
     }
-
 }
-

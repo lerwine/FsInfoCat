@@ -23,4 +23,3 @@ namespace FsInfoCat
         IEnumerable<ISharedTag> SharedTags { get; }
     }
 }
-

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 
 namespace FsInfoCat.Local
@@ -149,6 +150,16 @@ namespace FsInfoCat.Local
         {
             long? value = RescheduleInterval;
             return value.HasValue ? TimeSpan.FromSeconds(value.Value) : null;
+        }
+
+        protected virtual bool ArePropertiesEqual([DisallowNull] ILocalCrawlConfigurationRow other)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected virtual bool ArePropertiesEqual([DisallowNull] ICrawlConfigurationRow other)
+        {
+            throw new NotImplementedException();
         }
 
         IEnumerable<Guid> IIdentityReference.GetIdentifiers()
