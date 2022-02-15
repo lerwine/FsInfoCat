@@ -5713,7 +5713,7 @@ namespace FsInfoCat.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &quot;LastSynchronizedOn&quot; date is required when &quot;Upstream Id&quot; is specified..
+        ///   Looks up a localized string similar to &quot;Last Synchronized On&quot; date is required when &quot;Upstream Id&quot; is specified..
         /// </summary>
         public static string ErrorMessage_LastSynchronizedOnRequired {
             get {
@@ -5871,6 +5871,15 @@ namespace FsInfoCat.Properties {
         public static string ErrorMessage_UnexpectedError {
             get {
                 return ResourceManager.GetString("ErrorMessage_UnexpectedError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &quot;Upstream Id&quot; is required when &quot;Last Synchronized On&quot; date is specified..
+        /// </summary>
+        public static string ErrorMessage_UpstreamIdRequired {
+            get {
+                return ResourceManager.GetString("ErrorMessage_UpstreamIdRequired", resourceCulture);
             }
         }
         

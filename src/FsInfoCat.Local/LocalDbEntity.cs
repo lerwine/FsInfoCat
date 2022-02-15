@@ -37,10 +37,24 @@ namespace FsInfoCat.Local
             if (!string.IsNullOrWhiteSpace(validationContext.MemberName))
                 switch (validationContext.MemberName)
                 {
-                    case nameof(ModifiedOn):
-                    case nameof(CreatedOn):
                     case nameof(LastSynchronizedOn):
+                        if (LastSynchronizedOn.HasValue)
+                        {
+                            if (LastSynchronizedOn.Value.CompareTo(CreatedOn) < 0)
+                                results.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_LastSynchronizedOnBeforeCreatedOn,
+                                    new string[] { nameof(LastSynchronizedOn) }));
+                            else if (LastSynchronizedOn.Value.CompareTo(ModifiedOn) > 0)
+                                results.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_LastSynchronizedOnAfterModifiedOn,
+                                    new string[] { nameof(LastSynchronizedOn) }));
+                        }
+                        else if (UpstreamId.HasValue)
+                            results.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_LastSynchronizedOnRequired,
+                                    new string[] { nameof(LastSynchronizedOn) }));
+                        break;
                     case nameof(UpstreamId):
+                        if (LastSynchronizedOn.HasValue && !UpstreamId.HasValue)
+                            results.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_UpstreamIdRequired,
+                                    new string[] { nameof(UpstreamId) }));
                         break;
                     default:
                         return;
@@ -49,8 +63,9 @@ namespace FsInfoCat.Local
             {
                 if (LastSynchronizedOn.HasValue)
                 {
-                    if (results.Count > 0)
-                        return;
+                    if (!UpstreamId.HasValue)
+                        results.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_UpstreamIdRequired,
+                                new string[] { nameof(UpstreamId) }));
                     if (LastSynchronizedOn.Value.CompareTo(CreatedOn) < 0)
                         results.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_LastSynchronizedOnBeforeCreatedOn,
                             new string[] { nameof(LastSynchronizedOn) }));
