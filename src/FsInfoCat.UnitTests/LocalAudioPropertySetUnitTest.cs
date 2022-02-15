@@ -7,6 +7,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Threading;
 
 namespace FsInfoCat.UnitTests
 {
@@ -32,7 +33,6 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("AudioPropertySet Constructor Tests")]
-        [Ignore]
         public void AudioPropertySetConstructorTestMethod()
         {
             DateTime @then = DateTime.Now;
@@ -56,27 +56,25 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("AudioPropertySet Add/Remove Tests")]
-        [Ignore]
         public void AudioPropertySetAddRemoveTestMethod()
         {
-            Assert.Inconclusive("Test not implemented");
+            AudioPropertySet target = new();
             using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
             using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
-            AudioPropertySet target = new();
             EntityEntry<AudioPropertySet> entityEntry = dbContext.Entry(target);
             Assert.AreEqual(EntityState.Detached, entityEntry.State);
             entityEntry = dbContext.AudioPropertySets.Add(target);
             Assert.AreEqual(EntityState.Added, entityEntry.State);
-            Collection<ValidationResult> results = new();
-            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
-            Assert.IsTrue(success);
-            Assert.AreEqual(0, results.Count);
-            DateTime now = DateTime.Now;
+            DateTime beforeSave = DateTime.Now;
             dbContext.SaveChanges();
+            DateTime afterSave = DateTime.Now;
             Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
+            Assert.IsTrue(target.CreatedOn >= beforeSave);
+            Assert.IsTrue(target.CreatedOn <= afterSave);
+            Assert.AreEqual(target.CreatedOn, target.ModifiedOn);
             Assert.AreNotEqual(Guid.Empty, target.Id);
-            entityEntry.Reload();
-            // DEFERRED: Validate default values
+            Assert.IsNull(target.LastSynchronizedOn);
+            Assert.IsNull(target.UpstreamId);
             Assert.AreEqual(string.Empty, target.Compression);
             Assert.IsNull(target.EncodingBitrate);
             Assert.AreEqual(string.Empty, target.Format);
@@ -85,11 +83,8 @@ namespace FsInfoCat.UnitTests
             Assert.IsNull(target.SampleSize);
             Assert.AreEqual(string.Empty, target.StreamName);
             Assert.IsNull(target.StreamNumber);
-            Assert.IsNull(target.LastSynchronizedOn);
-            Assert.IsNull(target.UpstreamId);
-            Assert.IsTrue(target.CreatedOn >= now);
-            Assert.AreEqual(target.CreatedOn, target.ModifiedOn);
-
+            Assert.IsNotNull(target.Files);
+            Assert.AreEqual(0, target.Files.Count);
             entityEntry = dbContext.Remove(target);
             Assert.AreEqual(EntityState.Deleted, entityEntry.State);
             dbContext.SaveChanges();
@@ -97,7 +92,6 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("Guid Id")]
-        [Ignore]
         public void AudioPropertySetIdTestMethod()
         {
             AudioPropertySet target = new();
@@ -111,380 +105,258 @@ namespace FsInfoCat.UnitTests
             Assert.ThrowsException<InvalidOperationException>(() => target.Id = Guid.NewGuid());
         }
 
-        [TestMethod("AudioPropertySet Compression Validation Tests")]
+        [DataTestMethod]
         [Description("AudioPropertySet.Compression: NVARCHAR(256)")]
-        [Ignore]
-        public void AudioPropertySetCompressionTestMethod()
+        [DataRow(null, "", true)]
+        [DataRow("", "", true)]
+        [DataRow(" ", "", true)]
+        [DataRow(" \t", "", true)]
+        [DataRow("\n\r", "", true)]
+        [DataRow("Test", "Test", true)]
+        [DataRow("\n Test \r", "Test", true)]
+        [DataRow("Test Data", "Test Data", true)]
+        [DataRow("Test\tData", "Test Data", true)]
+        [DataRow(" Test Data ", "Test Data", true)]
+        [DataRow(" Test  Data ", "Test Data", true)]
+        [DataRow("\r\n Test \n Data \t", "Test Data", false)]
+        public void AudioPropertySetCompressionTestMethod(string compression, string expected, bool isValid)
         {
-            Assert.Inconclusive("Test not implemented");
             using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
             using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
-            string expected = default; // DEFERRED: Set invalid value
-            AudioPropertySet target = new() { Compression = expected };
-            EntityEntry<AudioPropertySet> entityEntry = dbContext.AudioPropertySets.Add(target);
+            AudioPropertySet target = new() { Compression = isValid ? compression : $"{compression} {new string('_', 256)}" };
+            Assert.AreEqual(isValid ? expected : $"{expected} {new string('_', 256)}", target.Compression);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
-            Assert.IsFalse(success);
-            Assert.AreEqual(1, results.Count);
-            Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.AudioPropertySet.Compression), results[0].MemberNames.First());
-            Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
-            Assert.AreEqual(expected, target.Compression);
-
-            expected = default; // DEFERRED: Set valid value
-            target.Compression = expected;
-            results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
-            Assert.IsTrue(success);
-            Assert.AreEqual(0, results.Count);
-            dbContext.SaveChanges();
-            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
-            entityEntry.Reload();
-            Assert.AreEqual(expected, target.Compression);
-
-            expected = default; // DEFERRED: Set invalid value
-            target.Compression = expected;
-            results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
-            Assert.IsFalse(success);
-            Assert.AreEqual(1, results.Count);
-            Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.AudioPropertySet.Compression), results[0].MemberNames.First());
-            Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
-            entityEntry = dbContext.AudioPropertySets.Update(target);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
-            Assert.AreEqual(EntityState.Modified, entityEntry.State);
-            Assert.AreEqual(expected, target.Compression);
+            Assert.AreEqual(isValid, success);
+            EntityEntry<AudioPropertySet> entityEntry = dbContext.AudioPropertySets.Add(target);
+            if (isValid)
+            {
+                Assert.AreEqual(0, results.Count);
+                dbContext.SaveChanges();
+                Assert.AreEqual(isValid ? expected : $"{expected} {new string('_', 256)}", target.Compression);
+                dbContext.AudioPropertySets.Remove(target);
+                dbContext.SaveChanges();
+                Assert.AreEqual(EntityState.Detached, entityEntry.State);
+            }
+            else
+            {
+                Assert.AreEqual(1, results.Count);
+                Assert.AreEqual(1, results[0].MemberNames.Count());
+                Assert.AreEqual(nameof(AudioPropertySet.Compression), results[0].MemberNames.First());
+                Assert.AreEqual($"{nameof(AudioPropertySet.Compression)} text is too long.", results[0].ErrorMessage);
+                Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+                Assert.AreEqual(EntityState.Added, entityEntry.State);
+                Assert.AreEqual(isValid ? expected : $"{expected} {new string('_', 256)}", target.Compression);
+            }
         }
 
-        [TestMethod("AudioPropertySet EncodingBitrate Validation Tests")]
+        [DataTestMethod]
         [TestProperty(TestHelper.TestProperty_Description, "AudioPropertySet.EncodingBitrate: BIGINT \"EncodingBitrate\" IS NULL OR (\"EncodingBitrate\">=0 AND \"EncodingBitrate\"<4294967296)")]
-        [Ignore]
-        public void AudioPropertySetEncodingBitrateTestMethod()
+        [DataRow(null)]
+        [DataRow(0u)]
+        [DataRow(256u)]
+        [DataRow(4294967295u)]
+        public void AudioPropertySetEncodingBitrateTestMethod(uint? expected)
         {
-            Assert.Inconclusive("Test not implemented");
             using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
             using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
-            uint? expected = default; // DEFERRED: Set invalid value
             AudioPropertySet target = new() { EncodingBitrate = expected };
+            Assert.AreEqual(expected, target.EncodingBitrate);
             EntityEntry<AudioPropertySet> entityEntry = dbContext.AudioPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
-            Assert.IsFalse(success);
-            Assert.AreEqual(1, results.Count);
-            Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.AudioPropertySet.EncodingBitrate), results[0].MemberNames.First());
-            Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
-            Assert.AreEqual(expected, target.EncodingBitrate);
-
-            expected = default; // DEFERRED: Set valid value
-            target.EncodingBitrate = expected;
-            results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             dbContext.SaveChanges();
-            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
-            entityEntry.Reload();
             Assert.AreEqual(expected, target.EncodingBitrate);
-
-            expected = default; // DEFERRED: Set invalid value
-            target.EncodingBitrate = expected;
-            results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
-            Assert.IsFalse(success);
-            Assert.AreEqual(1, results.Count);
-            Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.AudioPropertySet.EncodingBitrate), results[0].MemberNames.First());
-            Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
-            entityEntry = dbContext.AudioPropertySets.Update(target);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
-            Assert.AreEqual(EntityState.Modified, entityEntry.State);
-            Assert.AreEqual(expected, target.EncodingBitrate);
+            dbContext.AudioPropertySets.Remove(target);
+            dbContext.SaveChanges();
+            Assert.AreEqual(EntityState.Detached, entityEntry.State);
         }
 
-        [TestMethod("AudioPropertySet Format Validation Tests")]
+        [DataTestMethod]
         [Description("AudioPropertySet.Format: NVARCHAR(256)")]
-        [Ignore]
-        public void AudioPropertySetFormatTestMethod()
+        [DataRow(null, "", true)]
+        [DataRow("", "", true)]
+        [DataRow(" ", "", true)]
+        [DataRow(" \t", "", true)]
+        [DataRow("\n\r", "", true)]
+        [DataRow("Test", "Test", true)]
+        [DataRow("\n Test \r", "Test", true)]
+        [DataRow("Test Data", "Test Data", true)]
+        [DataRow("Test\tData", "Test Data", true)]
+        [DataRow(" Test Data ", "Test Data", true)]
+        [DataRow(" Test  Data ", "Test Data", true)]
+        [DataRow("\r\n Test \n Data \t", "Test Data", false)]
+        public void AudioPropertySetFormatTestMethod(string format, string expected, bool isValid)
         {
-            Assert.Inconclusive("Test not implemented");
             using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
             using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
-            string expected = default; // DEFERRED: Set invalid value
-            AudioPropertySet target = new() { Format = expected };
-            EntityEntry<AudioPropertySet> entityEntry = dbContext.AudioPropertySets.Add(target);
+            AudioPropertySet target = new() { Format = isValid ? format : $"{format} {new string('_', 256)}" };
+            Assert.AreEqual(isValid ? expected : $"{expected} {new string('_', 256)}", target.Format);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
-            Assert.IsFalse(success);
-            Assert.AreEqual(1, results.Count);
-            Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.AudioPropertySet.Format), results[0].MemberNames.First());
-            Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
-            Assert.AreEqual(expected, target.Format);
-
-            expected = default; // DEFERRED: Set valid value
-            target.Format = expected;
-            results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
-            Assert.IsTrue(success);
-            Assert.AreEqual(0, results.Count);
-            dbContext.SaveChanges();
-            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
-            entityEntry.Reload();
-            Assert.AreEqual(expected, target.Format);
-
-            expected = default; // DEFERRED: Set invalid value
-            target.Format = expected;
-            results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
-            Assert.IsFalse(success);
-            Assert.AreEqual(1, results.Count);
-            Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.AudioPropertySet.Format), results[0].MemberNames.First());
-            Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
-            entityEntry = dbContext.AudioPropertySets.Update(target);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
-            Assert.AreEqual(EntityState.Modified, entityEntry.State);
-            Assert.AreEqual(expected, target.Format);
+            Assert.AreEqual(isValid, success);
+            EntityEntry<AudioPropertySet> entityEntry = dbContext.AudioPropertySets.Add(target);
+            if (isValid)
+            {
+                Assert.AreEqual(0, results.Count);
+                dbContext.SaveChanges();
+                Assert.AreEqual(isValid ? expected : $"{expected} {new string('_', 256)}", target.Format);
+                dbContext.AudioPropertySets.Remove(target);
+                dbContext.SaveChanges();
+                Assert.AreEqual(EntityState.Detached, entityEntry.State);
+            }
+            else
+            {
+                Assert.AreEqual(1, results.Count);
+                Assert.AreEqual(1, results[0].MemberNames.Count());
+                Assert.AreEqual(nameof(AudioPropertySet.Format), results[0].MemberNames.First());
+                Assert.AreEqual($"{nameof(AudioPropertySet.Format)} text is too long.", results[0].ErrorMessage);
+                Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+                Assert.AreEqual(EntityState.Added, entityEntry.State);
+                Assert.AreEqual(isValid ? expected : $"{expected} {new string('_', 256)}", target.Format);
+            }
         }
 
-        [TestMethod("AudioPropertySet IsVariableBitrate Validation Tests")]
+        [DataTestMethod]
         [Description("AudioPropertySet.IsVariableBitrate: BIT")]
-        [Ignore]
-        public void AudioPropertySetIsVariableBitrateTestMethod()
+        [DataRow(null)]
+        [DataRow(true)]
+        [DataRow(false)]
+        public void AudioPropertySetIsVariableBitrateTestMethod(bool? expected)
         {
-            Assert.Inconclusive("Test not implemented");
             using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
             using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
-            bool? expected = default; // DEFERRED: Set invalid value
             AudioPropertySet target = new() { IsVariableBitrate = expected };
+            Assert.AreEqual(expected, target.IsVariableBitrate);
             EntityEntry<AudioPropertySet> entityEntry = dbContext.AudioPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
-            Assert.IsFalse(success);
-            Assert.AreEqual(1, results.Count);
-            Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.AudioPropertySet.IsVariableBitrate), results[0].MemberNames.First());
-            Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
-            Assert.AreEqual(expected, target.IsVariableBitrate);
-
-            expected = default; // DEFERRED: Set valid value
-            target.IsVariableBitrate = expected;
-            results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsTrue(success);
-            Assert.AreEqual(0, results.Count);
+            Assert.AreEqual(0, results.Count); ;
             dbContext.SaveChanges();
-            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
-            entityEntry.Reload();
             Assert.AreEqual(expected, target.IsVariableBitrate);
-
-            expected = default; // DEFERRED: Set invalid value
-            target.IsVariableBitrate = expected;
-            results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
-            Assert.IsFalse(success);
-            Assert.AreEqual(1, results.Count);
-            Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.AudioPropertySet.IsVariableBitrate), results[0].MemberNames.First());
-            Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
-            entityEntry = dbContext.AudioPropertySets.Update(target);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
-            Assert.AreEqual(EntityState.Modified, entityEntry.State);
-            Assert.AreEqual(expected, target.IsVariableBitrate);
+            dbContext.AudioPropertySets.Remove(target);
+            dbContext.SaveChanges();
+            Assert.AreEqual(EntityState.Detached, entityEntry.State);
         }
 
-        [TestMethod("AudioPropertySet SampleRate Validation Tests")]
+        [DataTestMethod]
         [TestProperty(TestHelper.TestProperty_Description, "AudioPropertySet.SampleRate: BIGINT \"SampleRate\" IS NULL OR (\"SampleRate\">=0 AND \"SampleRate\"<4294967296)")]
-        [Ignore]
-        public void AudioPropertySetSampleRateTestMethod()
+        [DataRow(null)]
+        [DataRow(0u)]
+        [DataRow(256u)]
+        [DataRow(4294967295u)]
+        public void AudioPropertySetSampleRateTestMethod(uint? expected)
         {
-            Assert.Inconclusive("Test not implemented");
             using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
             using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
-            uint? expected = default; // DEFERRED: Set invalid value
             AudioPropertySet target = new() { SampleRate = expected };
+            Assert.AreEqual(expected, target.SampleRate);
             EntityEntry<AudioPropertySet> entityEntry = dbContext.AudioPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
-            Assert.IsFalse(success);
-            Assert.AreEqual(1, results.Count);
-            Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.AudioPropertySet.SampleRate), results[0].MemberNames.First());
-            Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
-            Assert.AreEqual(expected, target.SampleRate);
-
-            expected = default; // DEFERRED: Set valid value
-            target.SampleRate = expected;
-            results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             dbContext.SaveChanges();
-            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
-            entityEntry.Reload();
             Assert.AreEqual(expected, target.SampleRate);
-
-            expected = default; // DEFERRED: Set invalid value
-            target.SampleRate = expected;
-            results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
-            Assert.IsFalse(success);
-            Assert.AreEqual(1, results.Count);
-            Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.AudioPropertySet.SampleRate), results[0].MemberNames.First());
-            Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
-            entityEntry = dbContext.AudioPropertySets.Update(target);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
-            Assert.AreEqual(EntityState.Modified, entityEntry.State);
-            Assert.AreEqual(expected, target.SampleRate);
+            dbContext.AudioPropertySets.Remove(target);
+            dbContext.SaveChanges();
+            Assert.AreEqual(EntityState.Detached, entityEntry.State);
         }
 
-        [TestMethod("AudioPropertySet SampleSize Validation Tests")]
+        [DataTestMethod]
         [TestProperty(TestHelper.TestProperty_Description, "AudioPropertySet.SampleSize: BIGINT \"SampleSize\" IS NULL OR (\"SampleSize\">=0 AND \"SampleSize\"<4294967296)")]
-        [Ignore]
-        public void AudioPropertySetSampleSizeTestMethod()
+        [DataRow(null)]
+        [DataRow(0u)]
+        [DataRow(256u)]
+        [DataRow(4294967295u)]
+        public void AudioPropertySetSampleSizeTestMethod(uint? expected)
         {
-            Assert.Inconclusive("Test not implemented");
             using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
             using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
-            uint? expected = default; // DEFERRED: Set invalid value
             AudioPropertySet target = new() { SampleSize = expected };
+            Assert.AreEqual(expected, target.SampleSize);
             EntityEntry<AudioPropertySet> entityEntry = dbContext.AudioPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
-            Assert.IsFalse(success);
-            Assert.AreEqual(1, results.Count);
-            Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.AudioPropertySet.SampleSize), results[0].MemberNames.First());
-            Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
-            Assert.AreEqual(expected, target.SampleSize);
-
-            expected = default; // DEFERRED: Set valid value
-            target.SampleSize = expected;
-            results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             dbContext.SaveChanges();
-            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
-            entityEntry.Reload();
             Assert.AreEqual(expected, target.SampleSize);
-
-            expected = default; // DEFERRED: Set invalid value
-            target.SampleSize = expected;
-            results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
-            Assert.IsFalse(success);
-            Assert.AreEqual(1, results.Count);
-            Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.AudioPropertySet.SampleSize), results[0].MemberNames.First());
-            Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
-            entityEntry = dbContext.AudioPropertySets.Update(target);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
-            Assert.AreEqual(EntityState.Modified, entityEntry.State);
-            Assert.AreEqual(expected, target.SampleSize);
+            dbContext.AudioPropertySets.Remove(target);
+            dbContext.SaveChanges();
+            Assert.AreEqual(EntityState.Detached, entityEntry.State);
         }
 
-        [TestMethod("AudioPropertySet StreamName Validation Tests")]
+        [DataTestMethod]
         [Description("AudioPropertySet.StreamName: NVARCHAR(256)")]
-        [Ignore]
-        public void AudioPropertySetStreamNameTestMethod()
+        [DataRow(null, "", true)]
+        [DataRow("", "", true)]
+        [DataRow(" ", "", true)]
+        [DataRow(" \t", "", true)]
+        [DataRow("\n\r", "", true)]
+        [DataRow("Test", "Test", true)]
+        [DataRow("\n Test \r", "Test", true)]
+        [DataRow("Test Data", "Test Data", true)]
+        [DataRow("Test\tData", "Test Data", true)]
+        [DataRow(" Test Data ", "Test Data", true)]
+        [DataRow(" Test  Data ", "Test Data", true)]
+        [DataRow("\r\n Test \n Data \t", "Test Data", false)]
+        public void AudioPropertySetStreamNameTestMethod(string streamName, string expected, bool isValid)
         {
-            Assert.Inconclusive("Test not implemented");
             using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
             using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
-            string expected = default; // DEFERRED: Set invalid value
-            AudioPropertySet target = new() { StreamName = expected };
-            EntityEntry<AudioPropertySet> entityEntry = dbContext.AudioPropertySets.Add(target);
+            AudioPropertySet target = new() { StreamName = isValid ? streamName : $"{streamName} {new string('_', 256)}" };
+            Assert.AreEqual(isValid ? expected : $"{expected} {new string('_', 256)}", target.StreamName);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
-            Assert.IsFalse(success);
-            Assert.AreEqual(1, results.Count);
-            Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.AudioPropertySet.StreamName), results[0].MemberNames.First());
-            Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
-            Assert.AreEqual(expected, target.StreamName);
-
-            expected = default; // DEFERRED: Set valid value
-            target.StreamName = expected;
-            results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
-            Assert.IsTrue(success);
-            Assert.AreEqual(0, results.Count);
-            dbContext.SaveChanges();
-            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
-            entityEntry.Reload();
-            Assert.AreEqual(expected, target.StreamName);
-
-            expected = default; // DEFERRED: Set invalid value
-            target.StreamName = expected;
-            results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
-            Assert.IsFalse(success);
-            Assert.AreEqual(1, results.Count);
-            Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.AudioPropertySet.StreamName), results[0].MemberNames.First());
-            Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
-            entityEntry = dbContext.AudioPropertySets.Update(target);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
-            Assert.AreEqual(EntityState.Modified, entityEntry.State);
-            Assert.AreEqual(expected, target.StreamName);
+            Assert.AreEqual(isValid, success);
+            EntityEntry<AudioPropertySet> entityEntry = dbContext.AudioPropertySets.Add(target);
+            if (isValid)
+            {
+                Assert.AreEqual(0, results.Count);
+                dbContext.SaveChanges();
+                Assert.AreEqual(isValid ? expected : $"{expected} {new string('_', 256)}", target.StreamName);
+                dbContext.AudioPropertySets.Remove(target);
+                dbContext.SaveChanges();
+                Assert.AreEqual(EntityState.Detached, entityEntry.State);
+            }
+            else
+            {
+                Assert.AreEqual(1, results.Count);
+                Assert.AreEqual(1, results[0].MemberNames.Count());
+                Assert.AreEqual(nameof(AudioPropertySet.StreamName), results[0].MemberNames.First());
+                Assert.AreEqual($"{nameof(AudioPropertySet.StreamName)} text is too long.", results[0].ErrorMessage);
+                Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+                Assert.AreEqual(EntityState.Added, entityEntry.State);
+                Assert.AreEqual(isValid ? expected : $"{expected} {new string('_', 256)}", target.StreamName);
+            }
         }
 
-        [TestMethod("AudioPropertySet StreamNumber Validation Tests")]
+        [DataTestMethod]
         [TestProperty(TestHelper.TestProperty_Description, "AudioPropertySet.StreamNumber: INT \"StreamNumber\" IS NULL OR (\"StreamNumber\">=0 AND \"StreamNumber\"<65536)")]
-        [Ignore]
-        public void AudioPropertySetStreamNumberTestMethod()
+        [DataRow(null)]
+        [DataRow((ushort)0)]
+        [DataRow((ushort)256)]
+        [DataRow((ushort)65535)]
+        public void AudioPropertySetStreamNumberTestMethod(ushort? expected)
         {
-            Assert.Inconclusive("Test not implemented");
             using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
             using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
-            ushort? expected = default; // DEFERRED: Set invalid value
             AudioPropertySet target = new() { StreamNumber = expected };
+            Assert.AreEqual(expected, target.StreamNumber);
             EntityEntry<AudioPropertySet> entityEntry = dbContext.AudioPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
-            Assert.IsFalse(success);
-            Assert.AreEqual(1, results.Count);
-            Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.AudioPropertySet.StreamNumber), results[0].MemberNames.First());
-            Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
-            Assert.AreEqual(expected, target.StreamNumber);
-
-            expected = default; // DEFERRED: Set valid value
-            target.StreamNumber = expected;
-            results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
             dbContext.SaveChanges();
-            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
-            entityEntry.Reload();
             Assert.AreEqual(expected, target.StreamNumber);
-
-            expected = default; // DEFERRED: Set invalid value
-            target.StreamNumber = expected;
-            results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
-            Assert.IsFalse(success);
-            Assert.AreEqual(1, results.Count);
-            Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.AudioPropertySet.StreamNumber), results[0].MemberNames.First());
-            Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
-            entityEntry = dbContext.AudioPropertySets.Update(target);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
-            Assert.AreEqual(EntityState.Modified, entityEntry.State);
-            Assert.AreEqual(expected, target.StreamNumber);
+            dbContext.AudioPropertySets.Remove(target);
+            dbContext.SaveChanges();
+            Assert.AreEqual(EntityState.Detached, entityEntry.State);
         }
     }
 }
