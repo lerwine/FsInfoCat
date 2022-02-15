@@ -193,6 +193,8 @@ namespace FsInfoCat.Local
 
         #endregion
 
+        public FileComparison() { ComparedOn = CreatedOn; }
+
         internal static void OnBuildEntity(EntityTypeBuilder<FileComparison> builder)
         {
             _ = builder.HasKey(nameof(BaselineId), nameof(CorrelativeId));

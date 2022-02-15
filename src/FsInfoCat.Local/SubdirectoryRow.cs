@@ -77,6 +77,11 @@ namespace FsInfoCat.Local
 
         #endregion
 
+        protected SubdirectoryRow()
+        {
+            CreationTime = LastWriteTime = LastAccessed = CreatedOn;
+        }
+
         protected override void OnValidate(ValidationContext validationContext, List<ValidationResult> results)
         {
             base.OnValidate(validationContext, results);

@@ -97,6 +97,11 @@ namespace FsInfoCat.Local
 
         #endregion
 
+        protected DbFileRow()
+        {
+            CreationTime = LastWriteTime = LastAccessed = CreatedOn;
+        }
+
         DbFileRow IIdentityReference<DbFileRow>.Entity => this;
 
         IDbEntity IIdentityReference.Entity => this;

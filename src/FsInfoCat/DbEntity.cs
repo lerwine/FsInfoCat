@@ -43,6 +43,11 @@ namespace FsInfoCat
 
         #endregion
 
+        protected DbEntity()
+        {
+            CreatedOn = ModifiedOn = DateTime.Now;
+        }
+
         protected virtual void AddExportAttributes([DisallowNull] XElement element)
         {
             element.SetAttributeValue(nameof(CreatedOn), XmlConvert.ToString(CreatedOn, XmlDateTimeSerializationMode.RoundtripKind));
