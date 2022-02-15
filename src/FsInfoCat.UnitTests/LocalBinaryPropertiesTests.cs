@@ -10,7 +10,7 @@ using System.ComponentModel.DataAnnotations;
 namespace FsInfoCat.UnitTests
 {
     [TestClass]
-    public class BinaryPropertiesTests
+    public class LocalBinaryPropertiesTests
     {
 #pragma warning disable IDE0052 // Remove unread private members
         private static TestContext _testContext;
@@ -22,41 +22,32 @@ namespace FsInfoCat.UnitTests
             _testContext = testContext;
         }
 
-        [TestMethod("new BinaryProperties()"), Ignore]
-        public void NewBinaryPropertiesTestMethod()
+        [TestInitialize]
+        public void OnTestInitialize()
         {
             using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
-            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetService<LocalDbContext>();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+            TestHelper.UndoChanges(dbContext);
+        }
+
+        [TestMethod("BinaryPropertySet Constructor Tests")]
+        [Ignore]
+        public void BinaryPropertiesConstructorTestMethod()
+        {
+            DateTime @then = DateTime.Now;
             BinaryPropertySet target = new();
-
-            EntityEntry<BinaryPropertySet> entry = dbContext.Entry(target);
-            Assert.AreEqual(EntityState.Detached, entry.State);
+            Assert.IsTrue(target.CreatedOn <= DateTime.Now);
+            Assert.IsTrue(target.CreatedOn >= @then);
+            Assert.AreEqual(target.CreatedOn, target.ModifiedOn);
             Assert.AreEqual(Guid.Empty, target.Id);
-            Assert.AreEqual(0L, target.Length);
+            Assert.IsNull(target.LastSynchronizedOn);
+            Assert.IsNull(target.UpstreamId);
             Assert.IsNull(target.Hash);
+            Assert.AreEqual(0L, target.Length);
             Assert.IsNotNull(target.Files);
             Assert.AreEqual(0, target.Files.Count);
             Assert.IsNotNull(target.RedundantSets);
             Assert.AreEqual(0, target.RedundantSets.Count);
-            Assert.IsNull(target.UpstreamId);
-            Assert.IsNull(target.LastSynchronizedOn);
-            Assert.AreEqual(target.CreatedOn, target.ModifiedOn);
-
-            Assert.Inconclusive("Test not implemented");
-            // DEFERRED: Implement test for new BinaryProperties()
-
-            dbContext.BinaryPropertySets.Add(target);
-            Assert.AreEqual(EntityState.Added, entry.State);
-            Assert.AreNotEqual(Guid.Empty, target.Id);
-            Assert.AreEqual(0L, target.Length);
-            Assert.IsNull(target.Hash);
-            Assert.IsNotNull(target.Files);
-            Assert.AreEqual(0, target.Files.Count);
-            Assert.IsNotNull(target.RedundantSets);
-            Assert.AreEqual(0, target.RedundantSets.Count);
-            Assert.IsNull(target.UpstreamId);
-            Assert.IsNull(target.LastSynchronizedOn);
-            Assert.AreEqual(target.CreatedOn, target.ModifiedOn);
         }
 
         [TestMethod("Guid Id"), Ignore]

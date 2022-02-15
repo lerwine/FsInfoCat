@@ -10,9 +10,11 @@ using System.ComponentModel.DataAnnotations;
 namespace FsInfoCat.UnitTests
 {
     [TestClass]
-    public class VolumeAccessErrorTests
+    public class LocalFileAccessErrorTests
     {
+#pragma warning disable IDE0052 // Remove unread private members
         private static TestContext _testContext;
+#pragma warning restore IDE0052 // Remove unread private members
 
         [ClassInitialize]
         public static void OnClassInitialize(TestContext testContext)
@@ -20,45 +22,35 @@ namespace FsInfoCat.UnitTests
             _testContext = testContext;
         }
 
-        [TestMethod("new VolumeAccessError()"), Ignore]
-        public void NewVolumeAccessErrorTestMethod()
+        [TestInitialize]
+        public void OnTestInitialize()
         {
             using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
             using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
-            VolumeAccessError target = new();
+            TestHelper.UndoChanges(dbContext);
+        }
 
-            EntityEntry<VolumeAccessError> entry = dbContext.Entry(target);
-            Assert.AreEqual(EntityState.Detached, entry.State);
+        [TestMethod("FileAccessError Constructor Tests")]
+        [Ignore]
+        public void FileAccessErrorConstructorTestMethod()
+        {
+            DateTime @then = DateTime.Now;
+            FileAccessError target = new();
+            Assert.IsTrue(target.CreatedOn <= DateTime.Now);
+            Assert.IsTrue(target.CreatedOn >= @then);
+            Assert.AreEqual(target.CreatedOn, target.ModifiedOn);
             Assert.AreEqual(Guid.Empty, target.Id);
-            Assert.IsNotNull(target.Message);
-            Assert.AreEqual("", target.Message);
-            Assert.IsNotNull(target.Details);
-            Assert.AreEqual("", target.Details);
+            Assert.AreEqual(string.Empty, target.Details);
             Assert.AreEqual(ErrorCode.Unexpected, target.ErrorCode);
-            Assert.AreEqual(Guid.Empty, target.TargetId);
+            Assert.AreEqual(string.Empty, target.Message);
             Assert.IsNull(target.Target);
-            Assert.AreEqual(target.CreatedOn, target.ModifiedOn);
-
-            Assert.Inconclusive("Test not implemented");
-            // DEFERRED: Implement test for new VolumeAccessError()
-
-            dbContext.VolumeAccessErrors.Add(target);
-            Assert.AreEqual(EntityState.Added, entry.State);
-            Assert.AreNotEqual(Guid.Empty, target.Id);
-            Assert.IsNotNull(target.Message);
-            Assert.AreEqual("", target.Message);
-            Assert.IsNotNull(target.Details);
-            Assert.AreEqual("", target.Details);
-            Assert.AreEqual(ErrorCode.Unexpected, target.ErrorCode);
             Assert.AreEqual(Guid.Empty, target.TargetId);
-            Assert.IsNull(target.Target);
-            Assert.AreEqual(target.CreatedOn, target.ModifiedOn);
         }
 
         [TestMethod("Guid Id"), Ignore]
         public void IdTestMethod()
         {
-            VolumeAccessError target = new();
+            FileAccessError target = new();
             Guid expectedValue = Guid.NewGuid();
             target.Id = expectedValue;
             Guid actualValue = target.Id;
@@ -77,7 +69,7 @@ namespace FsInfoCat.UnitTests
         [DataRow("\n Test \r", "Test", DisplayName = "string Message = \"\\n Test \\r\"")]
         public void MessageTestMethod(string message, string expected)
         {
-            VolumeAccessError target = new();
+            FileAccessError target = new();
             target.Message = message;
             string actualValue = target.Message;
             Assert.IsNotNull(actualValue);
@@ -92,7 +84,7 @@ namespace FsInfoCat.UnitTests
         [DataRow("\n Test \r", "\n Test \r", DisplayName = "string Details = \"\\n Test \\r\"")]
         public void DetailsTestMethod(string details, string expected)
         {
-            VolumeAccessError target = new();
+            FileAccessError target = new();
             target.Details = details;
             string actualValue = target.Details;
             Assert.IsNotNull(actualValue);
@@ -105,7 +97,7 @@ namespace FsInfoCat.UnitTests
             Assert.Inconclusive("Test not implemented");
             // DEFERRED: Implement test for ErrorCode ErrorCode
 
-            VolumeAccessError target = default; // TODO: Create and initialize VolumeAccessError instance
+            FileAccessError target = default; // TODO: Create and initialize FileAccessError instance
             ErrorCode expectedValue = default;
             target.ErrorCode = default;
             ErrorCode actualValue = target.ErrorCode;
@@ -118,34 +110,34 @@ namespace FsInfoCat.UnitTests
             Assert.Inconclusive("Test not implemented");
             // DEFERRED: Implement test for Guid TargetId
 
-            VolumeAccessError target = default; // TODO: Create and initialize VolumeAccessError instance
+            FileAccessError target = default; // TODO: Create and initialize FileAccessError instance
             Guid expectedValue = default;
             target.TargetId = default;
             Guid actualValue = target.TargetId;
             Assert.AreEqual(expectedValue, actualValue);
         }
 
-        [TestMethod("Volume Target"), Ignore]
+        [TestMethod("DbFile Target"), Ignore]
         public void TargetTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // DEFERRED: Implement test for Volume Target
+            // DEFERRED: Implement test for DbFile Target
 
-            VolumeAccessError target = default; // TODO: Create and initialize VolumeAccessError instance
-            Volume expectedValue = default;
+            FileAccessError target = default; // TODO: Create and initialize FileAccessError instance
+            DbFile expectedValue = default;
             target.Target = default;
-            Volume actualValue = target.Target;
+            DbFile actualValue = target.Target;
             Assert.AreEqual(expectedValue, actualValue);
         }
 
         [TestMethod("DateTime CreatedOn"), Ignore]
-        [Microsoft.VisualStudio.TestTools.UnitTesting.Description("BinaryProperties.CreatedOn: CreatedOn<=ModifiedOn")]
+        [Description("BinaryProperties.CreatedOn: CreatedOn<=ModifiedOn")]
         public void CreatedOnTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
             // DEFERRED: Implement test for DateTime CreatedOn
 
-            VolumeAccessError target = default; // TODO: Create and initialize VolumeAccessError instance
+            FileAccessError target = default; // TODO: Create and initialize FileAccessError instance
             DateTime expectedValue = default;
             target.CreatedOn = default;
             DateTime actualValue = target.CreatedOn;
@@ -158,7 +150,7 @@ namespace FsInfoCat.UnitTests
             Assert.Inconclusive("Test not implemented");
             // DEFERRED: Implement test for DateTime ModifiedOn
 
-            VolumeAccessError target = default; // TODO: Create and initialize VolumeAccessError instance
+            FileAccessError target = default; // TODO: Create and initialize FileAccessError instance
             DateTime expectedValue = default;
             target.ModifiedOn = default;
             DateTime actualValue = target.ModifiedOn;
@@ -172,7 +164,7 @@ namespace FsInfoCat.UnitTests
             // DEFERRED: Implement test for IEnumerable<ValidationResult> Validate(ValidationContext)
 
             ValidationContext validationContextArg = default;
-            VolumeAccessError target = default; // TODO: Create and initialize VolumeAccessError instance
+            FileAccessError target = default; // TODO: Create and initialize FileAccessError instance
             IEnumerable<ValidationResult> expectedReturnValue = default;
             IEnumerable<ValidationResult> actualReturnValue = target.Validate(validationContextArg);
             Assert.AreEqual(expectedReturnValue, actualReturnValue);

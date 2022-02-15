@@ -1,4 +1,5 @@
 using FsInfoCat.Collections;
+using FsInfoCat.Local;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.DependencyInjection;
@@ -24,8 +25,48 @@ namespace FsInfoCat.UnitTests
         [TestInitialize]
         public void OnTestInitialize()
         {
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
-            dbContext.RejectChanges();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+            TestHelper.UndoChanges(dbContext);
+        }
+
+        [TestMethod("SummaryPropertySet Constructor Tests")]
+        [Ignore]
+        public void SummaryPropertySetConstructorTestMethod()
+        {
+            DateTime @then = DateTime.Now;
+            SummaryPropertySet target = new();
+            Assert.IsTrue(target.CreatedOn <= DateTime.Now);
+            Assert.IsTrue(target.CreatedOn >= @then);
+            Assert.AreEqual(target.CreatedOn, target.ModifiedOn);
+            Assert.AreEqual(Guid.Empty, target.Id);
+            Assert.IsNull(target.LastSynchronizedOn);
+            Assert.IsNull(target.UpstreamId);
+            Assert.AreEqual(string.Empty, target.ApplicationName);
+            Assert.IsNull(target.Author);
+            Assert.AreEqual(string.Empty, target.Comment);
+            Assert.AreEqual(string.Empty, target.Company);
+            Assert.AreEqual(string.Empty, target.ContentType);
+            Assert.AreEqual(string.Empty, target.Copyright);
+            Assert.IsNull(target.ItemAuthors);
+            Assert.AreEqual(string.Empty, target.ItemType);
+            Assert.AreEqual(string.Empty, target.ItemTypeText);
+            Assert.IsNull(target.Keywords);
+            Assert.IsNull(target.Kind);
+            Assert.AreEqual(string.Empty, target.MIMEType);
+            Assert.AreEqual(string.Empty, target.ParentalRating);
+            Assert.AreEqual(string.Empty, target.ParentalRatingReason);
+            Assert.AreEqual(string.Empty, target.ParentalRatingsOrganization);
+            Assert.AreEqual(string.Empty, target.ProductName);
+            Assert.IsNull(target.Rating);
+            Assert.IsNull(target.Sensitivity);
+            Assert.AreEqual(string.Empty, target.SensitivityText);
+            Assert.IsNull(target.SimpleRating);
+            Assert.AreEqual(string.Empty, target.Subject);
+            Assert.AreEqual(string.Empty, target.Title);
+            Assert.AreEqual(string.Empty, target.Trademarks);
+            Assert.IsNotNull(target.Files);
+            Assert.AreEqual(0, target.Files.Count);
         }
 
         [TestMethod("SummaryPropertySet Add/Remove Tests")]
@@ -33,9 +74,10 @@ namespace FsInfoCat.UnitTests
         public void SummaryPropertySetAddRemoveTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
-            Local.SummaryPropertySet target = new();
-            EntityEntry<Local.SummaryPropertySet> entityEntry = dbContext.Entry(target);
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+            SummaryPropertySet target = new();
+            EntityEntry<SummaryPropertySet> entityEntry = dbContext.Entry(target);
             Assert.AreEqual(EntityState.Detached, entityEntry.State);
             entityEntry = dbContext.SummaryPropertySets.Add(target);
             Assert.AreEqual(EntityState.Added, entityEntry.State);
@@ -87,7 +129,7 @@ namespace FsInfoCat.UnitTests
         [Ignore]
         public void SummaryPropertySetIdTestMethod()
         {
-            Local.SummaryPropertySet target = new();
+            SummaryPropertySet target = new();
             Guid expectedValue = Guid.NewGuid();
             target.Id = expectedValue;
             Guid actualValue = target.Id;
@@ -104,10 +146,11 @@ namespace FsInfoCat.UnitTests
         public void SummaryPropertySetApplicationNameTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             string expected = default; // DEFERRED: Set invalid value
-            Local.SummaryPropertySet target = new() { ApplicationName = expected };
-            EntityEntry<Local.SummaryPropertySet> entityEntry = dbContext.SummaryPropertySets.Add(target);
+            SummaryPropertySet target = new() { ApplicationName = expected };
+            EntityEntry<SummaryPropertySet> entityEntry = dbContext.SummaryPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -150,10 +193,11 @@ namespace FsInfoCat.UnitTests
         public void SummaryPropertySetAuthorTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             MultiStringValue expected = default; // DEFERRED: Set invalid value
-            Local.SummaryPropertySet target = new() { Author = expected };
-            EntityEntry<Local.SummaryPropertySet> entityEntry = dbContext.SummaryPropertySets.Add(target);
+            SummaryPropertySet target = new() { Author = expected };
+            EntityEntry<SummaryPropertySet> entityEntry = dbContext.SummaryPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -196,10 +240,11 @@ namespace FsInfoCat.UnitTests
         public void SummaryPropertySetCommentTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             string expected = default; // DEFERRED: Set invalid value
-            Local.SummaryPropertySet target = new() { Comment = expected };
-            EntityEntry<Local.SummaryPropertySet> entityEntry = dbContext.SummaryPropertySets.Add(target);
+            SummaryPropertySet target = new() { Comment = expected };
+            EntityEntry<SummaryPropertySet> entityEntry = dbContext.SummaryPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -242,10 +287,11 @@ namespace FsInfoCat.UnitTests
         public void SummaryPropertySetKeywordsTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             MultiStringValue expected = default; // DEFERRED: Set invalid value
-            Local.SummaryPropertySet target = new() { Keywords = expected };
-            EntityEntry<Local.SummaryPropertySet> entityEntry = dbContext.SummaryPropertySets.Add(target);
+            SummaryPropertySet target = new() { Keywords = expected };
+            EntityEntry<SummaryPropertySet> entityEntry = dbContext.SummaryPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -288,10 +334,11 @@ namespace FsInfoCat.UnitTests
         public void SummaryPropertySetSubjectTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             string expected = default; // DEFERRED: Set invalid value
-            Local.SummaryPropertySet target = new() { Subject = expected };
-            EntityEntry<Local.SummaryPropertySet> entityEntry = dbContext.SummaryPropertySets.Add(target);
+            SummaryPropertySet target = new() { Subject = expected };
+            EntityEntry<SummaryPropertySet> entityEntry = dbContext.SummaryPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -334,10 +381,11 @@ namespace FsInfoCat.UnitTests
         public void SummaryPropertySetTitleTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             string expected = default; // DEFERRED: Set invalid value
-            Local.SummaryPropertySet target = new() { Title = expected };
-            EntityEntry<Local.SummaryPropertySet> entityEntry = dbContext.SummaryPropertySets.Add(target);
+            SummaryPropertySet target = new() { Title = expected };
+            EntityEntry<SummaryPropertySet> entityEntry = dbContext.SummaryPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -380,10 +428,11 @@ namespace FsInfoCat.UnitTests
         public void SummaryPropertySetCompanyTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             string expected = default; // DEFERRED: Set invalid value
-            Local.SummaryPropertySet target = new() { Company = expected };
-            EntityEntry<Local.SummaryPropertySet> entityEntry = dbContext.SummaryPropertySets.Add(target);
+            SummaryPropertySet target = new() { Company = expected };
+            EntityEntry<SummaryPropertySet> entityEntry = dbContext.SummaryPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -426,10 +475,11 @@ namespace FsInfoCat.UnitTests
         public void SummaryPropertySetContentTypeTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             string expected = default; // DEFERRED: Set invalid value
-            Local.SummaryPropertySet target = new() { ContentType = expected };
-            EntityEntry<Local.SummaryPropertySet> entityEntry = dbContext.SummaryPropertySets.Add(target);
+            SummaryPropertySet target = new() { ContentType = expected };
+            EntityEntry<SummaryPropertySet> entityEntry = dbContext.SummaryPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -472,10 +522,11 @@ namespace FsInfoCat.UnitTests
         public void SummaryPropertySetCopyrightTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             string expected = default; // DEFERRED: Set invalid value
-            Local.SummaryPropertySet target = new() { Copyright = expected };
-            EntityEntry<Local.SummaryPropertySet> entityEntry = dbContext.SummaryPropertySets.Add(target);
+            SummaryPropertySet target = new() { Copyright = expected };
+            EntityEntry<SummaryPropertySet> entityEntry = dbContext.SummaryPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -518,10 +569,11 @@ namespace FsInfoCat.UnitTests
         public void SummaryPropertySetParentalRatingTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             string expected = default; // DEFERRED: Set invalid value
-            Local.SummaryPropertySet target = new() { ParentalRating = expected };
-            EntityEntry<Local.SummaryPropertySet> entityEntry = dbContext.SummaryPropertySets.Add(target);
+            SummaryPropertySet target = new() { ParentalRating = expected };
+            EntityEntry<SummaryPropertySet> entityEntry = dbContext.SummaryPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -564,10 +616,11 @@ namespace FsInfoCat.UnitTests
         public void SummaryPropertySetRatingTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             uint? expected = default; // DEFERRED: Set invalid value
-            Local.SummaryPropertySet target = new() { Rating = expected };
-            EntityEntry<Local.SummaryPropertySet> entityEntry = dbContext.SummaryPropertySets.Add(target);
+            SummaryPropertySet target = new() { Rating = expected };
+            EntityEntry<SummaryPropertySet> entityEntry = dbContext.SummaryPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -610,10 +663,11 @@ namespace FsInfoCat.UnitTests
         public void SummaryPropertySetItemAuthorsTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             MultiStringValue expected = default; // DEFERRED: Set invalid value
-            Local.SummaryPropertySet target = new() { ItemAuthors = expected };
-            EntityEntry<Local.SummaryPropertySet> entityEntry = dbContext.SummaryPropertySets.Add(target);
+            SummaryPropertySet target = new() { ItemAuthors = expected };
+            EntityEntry<SummaryPropertySet> entityEntry = dbContext.SummaryPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -656,10 +710,11 @@ namespace FsInfoCat.UnitTests
         public void SummaryPropertySetItemTypeTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             string expected = default; // DEFERRED: Set invalid value
-            Local.SummaryPropertySet target = new() { ItemType = expected };
-            EntityEntry<Local.SummaryPropertySet> entityEntry = dbContext.SummaryPropertySets.Add(target);
+            SummaryPropertySet target = new() { ItemType = expected };
+            EntityEntry<SummaryPropertySet> entityEntry = dbContext.SummaryPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -702,10 +757,11 @@ namespace FsInfoCat.UnitTests
         public void SummaryPropertySetItemTypeTextTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             string expected = default; // DEFERRED: Set invalid value
-            Local.SummaryPropertySet target = new() { ItemTypeText = expected };
-            EntityEntry<Local.SummaryPropertySet> entityEntry = dbContext.SummaryPropertySets.Add(target);
+            SummaryPropertySet target = new() { ItemTypeText = expected };
+            EntityEntry<SummaryPropertySet> entityEntry = dbContext.SummaryPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -748,10 +804,11 @@ namespace FsInfoCat.UnitTests
         public void SummaryPropertySetKindTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             MultiStringValue expected = default; // DEFERRED: Set invalid value
-            Local.SummaryPropertySet target = new() { Kind = expected };
-            EntityEntry<Local.SummaryPropertySet> entityEntry = dbContext.SummaryPropertySets.Add(target);
+            SummaryPropertySet target = new() { Kind = expected };
+            EntityEntry<SummaryPropertySet> entityEntry = dbContext.SummaryPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -794,10 +851,11 @@ namespace FsInfoCat.UnitTests
         public void SummaryPropertySetMIMETypeTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             string expected = default; // DEFERRED: Set invalid value
-            Local.SummaryPropertySet target = new() { MIMEType = expected };
-            EntityEntry<Local.SummaryPropertySet> entityEntry = dbContext.SummaryPropertySets.Add(target);
+            SummaryPropertySet target = new() { MIMEType = expected };
+            EntityEntry<SummaryPropertySet> entityEntry = dbContext.SummaryPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -840,10 +898,11 @@ namespace FsInfoCat.UnitTests
         public void SummaryPropertySetParentalRatingReasonTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             string expected = default; // DEFERRED: Set invalid value
-            Local.SummaryPropertySet target = new() { ParentalRatingReason = expected };
-            EntityEntry<Local.SummaryPropertySet> entityEntry = dbContext.SummaryPropertySets.Add(target);
+            SummaryPropertySet target = new() { ParentalRatingReason = expected };
+            EntityEntry<SummaryPropertySet> entityEntry = dbContext.SummaryPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -886,10 +945,11 @@ namespace FsInfoCat.UnitTests
         public void SummaryPropertySetParentalRatingsOrganizationTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             string expected = default; // DEFERRED: Set invalid value
-            Local.SummaryPropertySet target = new() { ParentalRatingsOrganization = expected };
-            EntityEntry<Local.SummaryPropertySet> entityEntry = dbContext.SummaryPropertySets.Add(target);
+            SummaryPropertySet target = new() { ParentalRatingsOrganization = expected };
+            EntityEntry<SummaryPropertySet> entityEntry = dbContext.SummaryPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -932,10 +992,11 @@ namespace FsInfoCat.UnitTests
         public void SummaryPropertySetSensitivityTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             ushort? expected = default; // DEFERRED: Set invalid value
-            Local.SummaryPropertySet target = new() { Sensitivity = expected };
-            EntityEntry<Local.SummaryPropertySet> entityEntry = dbContext.SummaryPropertySets.Add(target);
+            SummaryPropertySet target = new() { Sensitivity = expected };
+            EntityEntry<SummaryPropertySet> entityEntry = dbContext.SummaryPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -978,10 +1039,11 @@ namespace FsInfoCat.UnitTests
         public void SummaryPropertySetSensitivityTextTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             string expected = default; // DEFERRED: Set invalid value
-            Local.SummaryPropertySet target = new() { SensitivityText = expected };
-            EntityEntry<Local.SummaryPropertySet> entityEntry = dbContext.SummaryPropertySets.Add(target);
+            SummaryPropertySet target = new() { SensitivityText = expected };
+            EntityEntry<SummaryPropertySet> entityEntry = dbContext.SummaryPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -1024,10 +1086,11 @@ namespace FsInfoCat.UnitTests
         public void SummaryPropertySetSimpleRatingTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             uint? expected = default; // DEFERRED: Set invalid value
-            Local.SummaryPropertySet target = new() { SimpleRating = expected };
-            EntityEntry<Local.SummaryPropertySet> entityEntry = dbContext.SummaryPropertySets.Add(target);
+            SummaryPropertySet target = new() { SimpleRating = expected };
+            EntityEntry<SummaryPropertySet> entityEntry = dbContext.SummaryPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -1070,10 +1133,11 @@ namespace FsInfoCat.UnitTests
         public void SummaryPropertySetTrademarksTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             string expected = default; // DEFERRED: Set invalid value
-            Local.SummaryPropertySet target = new() { Trademarks = expected };
-            EntityEntry<Local.SummaryPropertySet> entityEntry = dbContext.SummaryPropertySets.Add(target);
+            SummaryPropertySet target = new() { Trademarks = expected };
+            EntityEntry<SummaryPropertySet> entityEntry = dbContext.SummaryPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -1117,10 +1181,11 @@ namespace FsInfoCat.UnitTests
         public void SoftwarePropertySetProductNameTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             string expected = default; // DEFERRED: Set invalid value
-            Local.SummaryPropertySet target = new() { ProductName = expected };
-            EntityEntry<Local.SummaryPropertySet> entityEntry = dbContext.SummaryPropertySets.Add(target);
+            SummaryPropertySet target = new() { ProductName = expected };
+            EntityEntry<SummaryPropertySet> entityEntry = dbContext.SummaryPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);

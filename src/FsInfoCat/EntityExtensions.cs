@@ -113,13 +113,7 @@ namespace FsInfoCat
                 await referenceEntry.LoadAsync(cancellationToken);
             return referenceEntry.TargetEntry;
         }
-
-        [Obsolete("Use DbContext.ChangeTracker, instead")]
-        public static void RejectChanges(this DbContext dbContext)
-        {
-            throw new NotImplementedException();
-        }
-
+        
         /// <summary>
         /// Matches <see cref="IFile"/> objects with <see cref="FileInfo"/> objects with the same file length.
         /// </summary>

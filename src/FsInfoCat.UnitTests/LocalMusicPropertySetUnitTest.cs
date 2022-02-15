@@ -1,4 +1,5 @@
 using FsInfoCat.Collections;
+using FsInfoCat.Local;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.DependencyInjection;
@@ -26,8 +27,36 @@ namespace FsInfoCat.UnitTests
         [TestInitialize]
         public void OnTestInitialize()
         {
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
-            dbContext.RejectChanges();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+            TestHelper.UndoChanges(dbContext);
+        }
+
+        [TestMethod("MusicPropertySet Constructor Tests")]
+        [Ignore]
+        public void MusicPropertySetConstructorTestMethod()
+        {
+            DateTime @then = DateTime.Now;
+            MusicPropertySet target = new();
+            Assert.IsTrue(target.CreatedOn <= DateTime.Now);
+            Assert.IsTrue(target.CreatedOn >= @then);
+            Assert.AreEqual(target.CreatedOn, target.ModifiedOn);
+            Assert.AreEqual(Guid.Empty, target.Id);
+            Assert.IsNull(target.LastSynchronizedOn);
+            Assert.IsNull(target.UpstreamId);
+            Assert.AreEqual(string.Empty, target.AlbumArtist);
+            Assert.AreEqual(string.Empty, target.AlbumTitle);
+            Assert.IsNull(target.Artist);
+            Assert.IsNull(target.ChannelCount);
+            Assert.IsNull(target.Composer);
+            Assert.IsNull(target.Conductor);
+            Assert.AreEqual(string.Empty, target.DisplayArtist);
+            Assert.IsNull(target.Genre);
+            Assert.AreEqual(string.Empty, target.PartOfSet);
+            Assert.AreEqual(string.Empty, target.Period);
+            Assert.IsNull(target.TrackNumber);
+            Assert.IsNotNull(target.Files);
+            Assert.AreEqual(0, target.Files.Count);
         }
 
         [TestMethod("MusicPropertySet Add/Remove Tests")]
@@ -35,9 +64,10 @@ namespace FsInfoCat.UnitTests
         public void MusicPropertySetAddRemoveTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
-            Local.MusicPropertySet target = new();
-            EntityEntry<Local.MusicPropertySet> entityEntry = dbContext.Entry(target);
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+            MusicPropertySet target = new();
+            EntityEntry<MusicPropertySet> entityEntry = dbContext.Entry(target);
             Assert.AreEqual(EntityState.Detached, entityEntry.State);
             entityEntry = dbContext.MusicPropertySets.Add(target);
             Assert.AreEqual(EntityState.Added, entityEntry.State);
@@ -76,7 +106,7 @@ namespace FsInfoCat.UnitTests
         [Ignore]
         public void MusicPropertySetIdTestMethod()
         {
-            Local.MusicPropertySet target = new();
+            MusicPropertySet target = new();
             Guid expectedValue = Guid.NewGuid();
             target.Id = expectedValue;
             Guid actualValue = target.Id;
@@ -93,10 +123,11 @@ namespace FsInfoCat.UnitTests
         public void MusicPropertySetAlbumArtistTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             string expected = default; // DEFERRED: Set invalid value
-            Local.MusicPropertySet target = new() { AlbumArtist = expected };
-            EntityEntry<Local.MusicPropertySet> entityEntry = dbContext.MusicPropertySets.Add(target);
+            MusicPropertySet target = new() { AlbumArtist = expected };
+            EntityEntry<MusicPropertySet> entityEntry = dbContext.MusicPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -139,10 +170,11 @@ namespace FsInfoCat.UnitTests
         public void MusicPropertySetAlbumTitleTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             string expected = default; // DEFERRED: Set invalid value
-            Local.MusicPropertySet target = new() { AlbumTitle = expected };
-            EntityEntry<Local.MusicPropertySet> entityEntry = dbContext.MusicPropertySets.Add(target);
+            MusicPropertySet target = new() { AlbumTitle = expected };
+            EntityEntry<MusicPropertySet> entityEntry = dbContext.MusicPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -185,10 +217,11 @@ namespace FsInfoCat.UnitTests
         public void MusicPropertySetArtistTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             MultiStringValue expected = default; // DEFERRED: Set invalid value
-            Local.MusicPropertySet target = new() { Artist = expected };
-            EntityEntry<Local.MusicPropertySet> entityEntry = dbContext.MusicPropertySets.Add(target);
+            MusicPropertySet target = new() { Artist = expected };
+            EntityEntry<MusicPropertySet> entityEntry = dbContext.MusicPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -231,10 +264,11 @@ namespace FsInfoCat.UnitTests
         public void MusicPropertySetComposerTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             MultiStringValue expected = default; // DEFERRED: Set invalid value
-            Local.MusicPropertySet target = new() { Composer = expected };
-            EntityEntry<Local.MusicPropertySet> entityEntry = dbContext.MusicPropertySets.Add(target);
+            MusicPropertySet target = new() { Composer = expected };
+            EntityEntry<MusicPropertySet> entityEntry = dbContext.MusicPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -277,10 +311,11 @@ namespace FsInfoCat.UnitTests
         public void MusicPropertySetConductorTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             MultiStringValue expected = default; // DEFERRED: Set invalid value
-            Local.MusicPropertySet target = new() { Conductor = expected };
-            EntityEntry<Local.MusicPropertySet> entityEntry = dbContext.MusicPropertySets.Add(target);
+            MusicPropertySet target = new() { Conductor = expected };
+            EntityEntry<MusicPropertySet> entityEntry = dbContext.MusicPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -323,10 +358,11 @@ namespace FsInfoCat.UnitTests
         public void MusicPropertySetDisplayArtistTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             string expected = default; // DEFERRED: Set invalid value
-            Local.MusicPropertySet target = new() { DisplayArtist = expected };
-            EntityEntry<Local.MusicPropertySet> entityEntry = dbContext.MusicPropertySets.Add(target);
+            MusicPropertySet target = new() { DisplayArtist = expected };
+            EntityEntry<MusicPropertySet> entityEntry = dbContext.MusicPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -369,10 +405,11 @@ namespace FsInfoCat.UnitTests
         public void MusicPropertySetGenreTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             MultiStringValue expected = default; // DEFERRED: Set invalid value
-            Local.MusicPropertySet target = new() { Genre = expected };
-            EntityEntry<Local.MusicPropertySet> entityEntry = dbContext.MusicPropertySets.Add(target);
+            MusicPropertySet target = new() { Genre = expected };
+            EntityEntry<MusicPropertySet> entityEntry = dbContext.MusicPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -415,10 +452,11 @@ namespace FsInfoCat.UnitTests
         public void MusicPropertySetPartOfSetTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             string expected = default; // DEFERRED: Set invalid value
-            Local.MusicPropertySet target = new() { PartOfSet = expected };
-            EntityEntry<Local.MusicPropertySet> entityEntry = dbContext.MusicPropertySets.Add(target);
+            MusicPropertySet target = new() { PartOfSet = expected };
+            EntityEntry<MusicPropertySet> entityEntry = dbContext.MusicPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -461,10 +499,11 @@ namespace FsInfoCat.UnitTests
         public void MusicPropertySetPeriodTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             string expected = default; // DEFERRED: Set invalid value
-            Local.MusicPropertySet target = new() { Period = expected };
-            EntityEntry<Local.MusicPropertySet> entityEntry = dbContext.MusicPropertySets.Add(target);
+            MusicPropertySet target = new() { Period = expected };
+            EntityEntry<MusicPropertySet> entityEntry = dbContext.MusicPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -507,10 +546,11 @@ namespace FsInfoCat.UnitTests
         public void MusicPropertySetTrackNumberTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             uint? expected = default; // DEFERRED: Set invalid value
-            Local.MusicPropertySet target = new() { TrackNumber = expected };
-            EntityEntry<Local.MusicPropertySet> entityEntry = dbContext.MusicPropertySets.Add(target);
+            MusicPropertySet target = new() { TrackNumber = expected };
+            EntityEntry<MusicPropertySet> entityEntry = dbContext.MusicPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);

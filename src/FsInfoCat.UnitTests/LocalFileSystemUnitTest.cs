@@ -1,3 +1,4 @@
+using FsInfoCat.Local;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.DependencyInjection;
@@ -26,18 +27,44 @@ namespace FsInfoCat.UnitTests
         [TestInitialize]
         public void OnTestInitialize()
         {
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
-            dbContext.RejectChanges();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+            TestHelper.UndoChanges(dbContext);
+        }
+
+        [TestMethod("FileSystem Constructor Tests")]
+        [Ignore]
+        public void FileSystemConstructorTestMethod()
+        {
+            DateTime @then = DateTime.Now;
+            FileSystem target = new();
+            Assert.IsTrue(target.CreatedOn <= DateTime.Now);
+            Assert.IsTrue(target.CreatedOn >= @then);
+            Assert.AreEqual(target.CreatedOn, target.ModifiedOn);
+            Assert.AreEqual(Guid.Empty, target.Id);
+            Assert.IsNull(target.LastSynchronizedOn);
+            Assert.IsNull(target.UpstreamId);
+            Assert.IsNull(target.DefaultDriveType);
+            Assert.AreEqual(string.Empty, target.DisplayName);
+            Assert.IsFalse(target.IsInactive);
+            Assert.AreEqual(255u, target.MaxNameLength);
+            Assert.AreEqual(string.Empty, target.Notes);
+            Assert.IsFalse(target.ReadOnly);
+            Assert.IsNotNull(target.SymbolicNames);
+            Assert.AreEqual(0, target.SymbolicNames.Count);
+            Assert.IsNotNull(target.Volumes);
+            Assert.AreEqual(0, target.Volumes.Count);
         }
 
         [TestMethod("FileSystem Add/Remove Tests")]
         [Ignore]
         public void FileSystemAddRemoveTestMethod()
         {
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             string expected = "FileSystem Add/Remove Item";
-            Local.FileSystem target = new() { DisplayName = expected };
-            EntityEntry<Local.FileSystem> entityEntry = dbContext.Entry(target);
+            FileSystem target = new() { DisplayName = expected };
+            EntityEntry<FileSystem> entityEntry = dbContext.Entry(target);
             Assert.AreEqual(EntityState.Detached, entityEntry.State);
             entityEntry = dbContext.FileSystems.Add(target);
             Assert.AreEqual(EntityState.Added, entityEntry.State);
@@ -72,10 +99,11 @@ namespace FsInfoCat.UnitTests
         [Ignore]
         public void FileSystemDefaultDriveTypeTestMethod()
         {
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             DriveType expected = (DriveType)(object)-1;
-            Local.FileSystem target = new() { DefaultDriveType = expected, DisplayName = "FileSystem DefaultDriveType Item" };
-            EntityEntry<Local.FileSystem> entityEntry = dbContext.FileSystems.Add(target);
+            FileSystem target = new() { DefaultDriveType = expected, DisplayName = "FileSystem DefaultDriveType Item" };
+            EntityEntry<FileSystem> entityEntry = dbContext.FileSystems.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -120,11 +148,12 @@ namespace FsInfoCat.UnitTests
         [Ignore]
         public void FileSystemDisplayNameTestMethod()
         {
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             string expected = "";
-            Local.FileSystem target = new() { DisplayName = null };
+            FileSystem target = new() { DisplayName = null };
             Assert.AreEqual(expected, target.DisplayName);
-            EntityEntry<Local.FileSystem> entityEntry = dbContext.FileSystems.Add(target);
+            EntityEntry<FileSystem> entityEntry = dbContext.FileSystems.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -222,10 +251,11 @@ namespace FsInfoCat.UnitTests
         [Ignore]
         public void FileSystemMaxNameLengthTestMethod()
         {
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             uint expected = 0;
-            Local.FileSystem target = new() { DisplayName = "FileSystem MaxNameLength Item", MaxNameLength = expected };
-            EntityEntry<Local.FileSystem> entityEntry = dbContext.FileSystems.Add(target);
+            FileSystem target = new() { DisplayName = "FileSystem MaxNameLength Item", MaxNameLength = expected };
+            EntityEntry<FileSystem> entityEntry = dbContext.FileSystems.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -272,9 +302,10 @@ namespace FsInfoCat.UnitTests
         [Ignore]
         public void FileSystemCreatedOnTestMethod()
         {
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
-            Local.FileSystem target = new() { DisplayName = "FileSystem CreatedOn FileSystem" };
-            EntityEntry<Local.FileSystem> entityEntry = dbContext.FileSystems.Add(target);
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+            FileSystem target = new() { DisplayName = "FileSystem CreatedOn FileSystem" };
+            EntityEntry<FileSystem> entityEntry = dbContext.FileSystems.Add(target);
             dbContext.SaveChanges();
             entityEntry.Reload();
             target.CreatedOn = target.ModifiedOn.AddSeconds(2);
@@ -311,9 +342,10 @@ namespace FsInfoCat.UnitTests
         [Ignore]
         public void FileSystemLastSynchronizedOnTestMethod()
         {
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
-            Local.FileSystem target = new() { DisplayName = "FileSystem LastSynchronizedOn FileSystem", UpstreamId = Guid.NewGuid() };
-            EntityEntry<Local.FileSystem> entityEntry = dbContext.FileSystems.Add(target);
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+            FileSystem target = new() { DisplayName = "FileSystem LastSynchronizedOn FileSystem", UpstreamId = Guid.NewGuid() };
+            EntityEntry<FileSystem> entityEntry = dbContext.FileSystems.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsTrue(success);

@@ -1,3 +1,4 @@
+using FsInfoCat.Local;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.DependencyInjection;
@@ -24,8 +25,34 @@ namespace FsInfoCat.UnitTests
         [TestInitialize]
         public void OnTestInitialize()
         {
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
-            dbContext.RejectChanges();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+            TestHelper.UndoChanges(dbContext);
+        }
+
+        [TestMethod("Volume Constructor Test")]
+        [TestCategory(TestHelper.TestCategory_LocalDb)]
+        [Ignore]
+        public void VolumeConstructorTestMethod()
+        {
+            DateTime @then = DateTime.Now;
+            Volume target = new();
+            Assert.IsTrue(target.CreatedOn <= DateTime.Now);
+            Assert.IsTrue(target.CreatedOn >= @then);
+            Assert.AreEqual(target.CreatedOn, target.ModifiedOn);
+            Assert.IsNull(target.LastSynchronizedOn);
+            Assert.IsNull(target.UpstreamId);
+            Assert.AreEqual(Guid.Empty, target.Id);
+            Assert.AreEqual(string.Empty, target.DisplayName);
+            Assert.AreEqual(string.Empty, target.VolumeName);
+            Assert.AreEqual(VolumeIdentifier.Empty, target.Identifier);
+            Assert.AreEqual(Guid.Empty, target.FileSystemId);
+            Assert.IsNull(target.FileSystem);
+            Assert.AreEqual(DriveType.Unknown, target.Type);
+            Assert.IsNull(target.ReadOnly);
+            Assert.AreEqual(VolumeStatus.Unknown, target.Status);
+            Assert.IsNull(target.MaxNameLength);
+            Assert.AreEqual(string.Empty, target.Notes);
         }
 
         [TestMethod("Volume Add/Remove Tests")]
@@ -33,13 +60,14 @@ namespace FsInfoCat.UnitTests
         [Ignore]
         public void VolumeAddRemoveTestMethod()
         {
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             string displayName = "Volume Add/Remove Item", volumeName = "Volume_Add_Remove_Name";
             VolumeIdentifier identifier = new(Guid.NewGuid());
-            Local.FileSystem fileSystem = new() { DisplayName = "Volume Add/Remove FileSystem" };
+            FileSystem fileSystem = new() { DisplayName = "Volume Add/Remove FileSystem" };
             dbContext.FileSystems.Add(fileSystem);
-            Local.Volume target = new() { DisplayName = displayName, VolumeName = volumeName, Identifier = identifier, FileSystem = fileSystem };
-            EntityEntry<Local.Volume> entityEntry = dbContext.Entry(target);
+            Volume target = new() { DisplayName = displayName, VolumeName = volumeName, Identifier = identifier, FileSystem = fileSystem };
+            EntityEntry<Volume> entityEntry = dbContext.Entry(target);
             Assert.AreEqual(EntityState.Detached, entityEntry.State);
             entityEntry = dbContext.Volumes.Add(target);
             Assert.AreEqual(EntityState.Added, entityEntry.State);
@@ -80,15 +108,16 @@ namespace FsInfoCat.UnitTests
         [Ignore]
         public void VolumeIdentifierTestMethod()
         {
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             string displayName = "Volume Identifier Item", volumeName = "Volume_Identifier_Test";
             VolumeIdentifier expected = default;
-            Local.FileSystem fileSystem = new() { DisplayName = "Volume Identifier FileSystem" };
+            FileSystem fileSystem = new() { DisplayName = "Volume Identifier FileSystem" };
             dbContext.FileSystems.Add(fileSystem);
             dbContext.SaveChanges();
-            Local.Volume target = new() { DisplayName = displayName, VolumeName = volumeName, Identifier = default, FileSystem = fileSystem };
+            Volume target = new() { DisplayName = displayName, VolumeName = volumeName, Identifier = default, FileSystem = fileSystem };
             Assert.AreEqual(expected, target.Identifier);
-            EntityEntry<Local.Volume> entityEntry = dbContext.Volumes.Add(target);
+            EntityEntry<Volume> entityEntry = dbContext.Volumes.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -235,15 +264,16 @@ namespace FsInfoCat.UnitTests
         [Ignore]
         public void VolumeVolumeNameTestMethod()
         {
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             string expected = "";
             string displayName = "Volume VolumeName Item";
             VolumeIdentifier identifier = new(Guid.NewGuid());
-            Local.FileSystem fileSystem = new() { DisplayName = "Volume Name FileSystem" };
+            FileSystem fileSystem = new() { DisplayName = "Volume Name FileSystem" };
             dbContext.FileSystems.Add(fileSystem);
-            Local.Volume target = new() { DisplayName = displayName, VolumeName = null, Identifier = identifier, FileSystem = fileSystem };
+            Volume target = new() { DisplayName = displayName, VolumeName = null, Identifier = identifier, FileSystem = fileSystem };
             Assert.AreEqual(expected, target.VolumeName);
-            EntityEntry<Local.Volume> entityEntry = dbContext.Volumes.Add(target);
+            EntityEntry<Volume> entityEntry = dbContext.Volumes.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -354,15 +384,16 @@ namespace FsInfoCat.UnitTests
         [Ignore]
         public void VolumeDisplayNameTestMethod()
         {
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             string expected = "";
             string volumeName = "Volume_DisplayName";
             VolumeIdentifier identifier = new(Guid.NewGuid());
-            Local.FileSystem fileSystem = new() { DisplayName = "Volume DisplayName FileSystem" };
+            FileSystem fileSystem = new() { DisplayName = "Volume DisplayName FileSystem" };
             dbContext.FileSystems.Add(fileSystem);
-            Local.Volume target = new() { DisplayName = null, VolumeName = volumeName, Identifier = identifier, FileSystem = fileSystem };
+            Volume target = new() { DisplayName = null, VolumeName = volumeName, Identifier = identifier, FileSystem = fileSystem };
             Assert.AreEqual(expected, target.DisplayName);
-            EntityEntry<Local.Volume> entityEntry = dbContext.Volumes.Add(target);
+            EntityEntry<Volume> entityEntry = dbContext.Volumes.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -474,14 +505,15 @@ namespace FsInfoCat.UnitTests
         [Ignore]
         public void VolumeTypeTestMethod()
         {
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             DriveType expected = (DriveType)(object)-1;
-            Local.FileSystem fileSystem = new() { DisplayName = "Volume Type FileSystem" };
+            FileSystem fileSystem = new() { DisplayName = "Volume Type FileSystem" };
             dbContext.FileSystems.Add(fileSystem);
             string displayName = "Volume Type Item", volumeName = "VolumeType";
             VolumeIdentifier identifier = new(Guid.NewGuid());
-            Local.Volume target = new() { DisplayName = displayName, VolumeName = volumeName, Identifier = identifier, FileSystem = fileSystem, Type = expected };
-            EntityEntry<Local.Volume> entityEntry = dbContext.Volumes.Add(target);
+            Volume target = new() { DisplayName = displayName, VolumeName = volumeName, Identifier = identifier, FileSystem = fileSystem, Type = expected };
+            EntityEntry<Volume> entityEntry = dbContext.Volumes.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -524,12 +556,13 @@ namespace FsInfoCat.UnitTests
         [Ignore]
         public void VolumeFileSystemTestMethod()
         {
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
-            Local.FileSystem expected = null;
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+            FileSystem expected = null;
             string displayName = "Volume FileSystem Item", volumeName = "Volume_FileSystem_Name";
             VolumeIdentifier identifier = new(Guid.NewGuid());
-            Local.Volume target = new() { DisplayName = displayName, VolumeName = volumeName, Identifier = identifier, FileSystem = expected };
-            EntityEntry<Local.Volume> entityEntry = dbContext.Volumes.Add(target);
+            Volume target = new() { DisplayName = displayName, VolumeName = volumeName, Identifier = identifier, FileSystem = expected };
+            EntityEntry<Volume> entityEntry = dbContext.Volumes.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -540,7 +573,7 @@ namespace FsInfoCat.UnitTests
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
             Assert.IsNull(target.FileSystem);
 
-            expected = new Local.FileSystem { DisplayName = "Volume FileSystem" };
+            expected = new FileSystem { DisplayName = "Volume FileSystem" };
             dbContext.FileSystems.Add(expected);
             target.FileSystem = expected;
             results = new();
@@ -554,7 +587,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected.Id, target.FileSystemId);
             Assert.AreEqual(expected.Id, target.FileSystem.Id);
 
-            Local.FileSystem fs = new() { DisplayName = "Volume FileSystem 2" };
+            FileSystem fs = new() { DisplayName = "Volume FileSystem 2" };
             dbContext.FileSystems.Add(fs);
             dbContext.SaveChanges();
 
@@ -601,14 +634,15 @@ namespace FsInfoCat.UnitTests
         [Ignore]
         public void VolumeStatusTestMethod()
         {
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             VolumeStatus expected = (VolumeStatus)(object)(byte)255;
-            Local.FileSystem fileSystem = new() { DisplayName = "Volume Status FileSystem" };
+            FileSystem fileSystem = new() { DisplayName = "Volume Status FileSystem" };
             dbContext.FileSystems.Add(fileSystem);
             string displayName = "Volume Status Item", volumeName = "Volume_Status_Name";
             VolumeIdentifier identifier = new(Guid.NewGuid());
-            Local.Volume target = new() { DisplayName = displayName, VolumeName = volumeName, Identifier = identifier, FileSystem = fileSystem, Status = expected };
-            EntityEntry<Local.Volume> entityEntry = dbContext.Volumes.Add(target);
+            Volume target = new() { DisplayName = displayName, VolumeName = volumeName, Identifier = identifier, FileSystem = fileSystem, Status = expected };
+            EntityEntry<Volume> entityEntry = dbContext.Volumes.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -651,14 +685,15 @@ namespace FsInfoCat.UnitTests
         [Ignore]
         public void VolumeMaxNameLengthTestMethod()
         {
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             uint expected = 0;
-            Local.FileSystem fileSystem = new() { DisplayName = "Volume MaxNameLength FileSystem" };
+            FileSystem fileSystem = new() { DisplayName = "Volume MaxNameLength FileSystem" };
             dbContext.FileSystems.Add(fileSystem);
             string displayName = "Volume MaxNameLength Item", volumeName = "Volume_MaxNameLength_Name";
             VolumeIdentifier identifier = new(Guid.NewGuid());
-            Local.Volume target = new() { DisplayName = displayName, VolumeName = volumeName, Identifier = identifier, FileSystem = fileSystem, MaxNameLength = expected };
-            EntityEntry<Local.Volume> entityEntry = dbContext.Volumes.Add(target);
+            Volume target = new() { DisplayName = displayName, VolumeName = volumeName, Identifier = identifier, FileSystem = fileSystem, MaxNameLength = expected };
+            EntityEntry<Volume> entityEntry = dbContext.Volumes.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -706,13 +741,14 @@ namespace FsInfoCat.UnitTests
         [Ignore]
         public void VolumeCreatedOnTestMethod()
         {
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
-            Local.FileSystem fileSystem = new() { DisplayName = "Volume CreatedOn FileSystem" };
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+            FileSystem fileSystem = new() { DisplayName = "Volume CreatedOn FileSystem" };
             dbContext.FileSystems.Add(fileSystem);
             string displayName = "Volume CreatedOn Item", volumeName = "Volume_CreatedOn_Name";
             VolumeIdentifier identifier = new(Guid.NewGuid());
-            Local.Volume target = new() { DisplayName = displayName, VolumeName = volumeName, Identifier = identifier, FileSystem = fileSystem };
-            EntityEntry<Local.Volume> entityEntry = dbContext.Volumes.Add(target);
+            Volume target = new() { DisplayName = displayName, VolumeName = volumeName, Identifier = identifier, FileSystem = fileSystem };
+            EntityEntry<Volume> entityEntry = dbContext.Volumes.Add(target);
             dbContext.SaveChanges();
             entityEntry.Reload();
             target.CreatedOn = target.ModifiedOn.AddSeconds(2);
@@ -750,13 +786,14 @@ namespace FsInfoCat.UnitTests
         [Ignore]
         public void VolumeLastSynchronizedOnTestMethod()
         {
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
-            Local.FileSystem fileSystem = new() { DisplayName = "Volume LastSynchronizedOn FileSystem" };
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+            FileSystem fileSystem = new() { DisplayName = "Volume LastSynchronizedOn FileSystem" };
             dbContext.FileSystems.Add(fileSystem);
             string displayName = "Volume LastSynchronizedOn Item", volumeName = "Volume_LastSynchronizedOn_Name";
             VolumeIdentifier identifier = new(Guid.NewGuid());
-            Local.Volume target = new() { DisplayName = displayName, VolumeName = volumeName, Identifier = identifier, FileSystem = fileSystem, UpstreamId = Guid.NewGuid() };
-            EntityEntry<Local.Volume> entityEntry = dbContext.Volumes.Add(target);
+            Volume target = new() { DisplayName = displayName, VolumeName = volumeName, Identifier = identifier, FileSystem = fileSystem, UpstreamId = Guid.NewGuid() };
+            EntityEntry<Volume> entityEntry = dbContext.Volumes.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsTrue(success);

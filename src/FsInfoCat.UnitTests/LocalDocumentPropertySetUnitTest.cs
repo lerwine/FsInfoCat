@@ -1,3 +1,4 @@
+using FsInfoCat.Local;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.DependencyInjection;
@@ -25,8 +26,36 @@ namespace FsInfoCat.UnitTests
         [TestInitialize]
         public void OnTestInitialize()
         {
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
-            dbContext.RejectChanges();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+            TestHelper.UndoChanges(dbContext);
+        }
+
+        [TestMethod("DocumentPropertySet Constructor Tests")]
+        [Ignore]
+        public void DocumentPropertySetConstructorTestMethod()
+        {
+            DateTime @then = DateTime.Now;
+            DocumentPropertySet target = new();
+            Assert.IsTrue(target.CreatedOn <= DateTime.Now);
+            Assert.IsTrue(target.CreatedOn >= @then);
+            Assert.AreEqual(target.CreatedOn, target.ModifiedOn);
+            Assert.AreEqual(Guid.Empty, target.Id);
+            Assert.IsNull(target.LastSynchronizedOn);
+            Assert.IsNull(target.UpstreamId);
+            Assert.AreEqual(string.Empty, target.ClientID);
+            Assert.IsNull(target.Contributor);
+            Assert.IsNull(target.DateCreated);
+            Assert.AreEqual(string.Empty, target.Division);
+            Assert.AreEqual(string.Empty, target.DocumentID);
+            Assert.AreEqual(string.Empty, target.LastAuthor);
+            Assert.AreEqual(string.Empty, target.Manager);
+            Assert.AreEqual(string.Empty, target.PresentationFormat);
+            Assert.AreEqual(string.Empty, target.RevisionNumber);
+            Assert.IsNull(target.Security);
+            Assert.AreEqual(string.Empty, target.Version);
+            Assert.IsNotNull(target.Files);
+            Assert.AreEqual(0, target.Files.Count);
         }
 
         [TestMethod("DocumentPropertySet Add/Remove Tests")]
@@ -34,9 +63,10 @@ namespace FsInfoCat.UnitTests
         public void DocumentPropertySetAddRemoveTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
-            Local.DocumentPropertySet target = new();
-            EntityEntry<Local.DocumentPropertySet> entityEntry = dbContext.Entry(target);
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+            DocumentPropertySet target = new();
+            EntityEntry<DocumentPropertySet> entityEntry = dbContext.Entry(target);
             Assert.AreEqual(EntityState.Detached, entityEntry.State);
             entityEntry = dbContext.DocumentPropertySets.Add(target);
             Assert.AreEqual(EntityState.Added, entityEntry.State);
@@ -76,7 +106,7 @@ namespace FsInfoCat.UnitTests
         [Ignore]
         public void DocumentPropertySetIdTestMethod()
         {
-            Local.DocumentPropertySet target = new();
+            DocumentPropertySet target = new();
             Guid expectedValue = Guid.NewGuid();
             target.Id = expectedValue;
             Guid actualValue = target.Id;
@@ -93,10 +123,11 @@ namespace FsInfoCat.UnitTests
         public void DocumentPropertySetClientIDTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             string expected = default; // DEFERRED: Set invalid value
-            Local.DocumentPropertySet target = new() { ClientID = expected };
-            EntityEntry<Local.DocumentPropertySet> entityEntry = dbContext.DocumentPropertySets.Add(target);
+            DocumentPropertySet target = new() { ClientID = expected };
+            EntityEntry<DocumentPropertySet> entityEntry = dbContext.DocumentPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -139,10 +170,11 @@ namespace FsInfoCat.UnitTests
         public void DocumentPropertySetContributorTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             string[] expected = default; // DEFERRED: Set invalid value
-            Local.DocumentPropertySet target = new() { Contributor = expected };
-            EntityEntry<Local.DocumentPropertySet> entityEntry = dbContext.DocumentPropertySets.Add(target);
+            DocumentPropertySet target = new() { Contributor = expected };
+            EntityEntry<DocumentPropertySet> entityEntry = dbContext.DocumentPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -185,10 +217,11 @@ namespace FsInfoCat.UnitTests
         public void DocumentPropertySetDateCreatedTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             DateTime? expected = default; // DEFERRED: Set invalid value
-            Local.DocumentPropertySet target = new() { DateCreated = expected };
-            EntityEntry<Local.DocumentPropertySet> entityEntry = dbContext.DocumentPropertySets.Add(target);
+            DocumentPropertySet target = new() { DateCreated = expected };
+            EntityEntry<DocumentPropertySet> entityEntry = dbContext.DocumentPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -231,10 +264,11 @@ namespace FsInfoCat.UnitTests
         public void DocumentPropertySetLastAuthorTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             string expected = default; // DEFERRED: Set invalid value
-            Local.DocumentPropertySet target = new() { LastAuthor = expected };
-            EntityEntry<Local.DocumentPropertySet> entityEntry = dbContext.DocumentPropertySets.Add(target);
+            DocumentPropertySet target = new() { LastAuthor = expected };
+            EntityEntry<DocumentPropertySet> entityEntry = dbContext.DocumentPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -277,10 +311,11 @@ namespace FsInfoCat.UnitTests
         public void DocumentPropertySetRevisionNumberTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             string expected = default; // DEFERRED: Set invalid value
-            Local.DocumentPropertySet target = new() { RevisionNumber = expected };
-            EntityEntry<Local.DocumentPropertySet> entityEntry = dbContext.DocumentPropertySets.Add(target);
+            DocumentPropertySet target = new() { RevisionNumber = expected };
+            EntityEntry<DocumentPropertySet> entityEntry = dbContext.DocumentPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -323,10 +358,11 @@ namespace FsInfoCat.UnitTests
         public void DocumentPropertySetSecurityTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             int? expected = default; // DEFERRED: Set invalid value
-            Local.DocumentPropertySet target = new() { Security = expected };
-            EntityEntry<Local.DocumentPropertySet> entityEntry = dbContext.DocumentPropertySets.Add(target);
+            DocumentPropertySet target = new() { Security = expected };
+            EntityEntry<DocumentPropertySet> entityEntry = dbContext.DocumentPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -369,10 +405,11 @@ namespace FsInfoCat.UnitTests
         public void DocumentPropertySetDivisionTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             string expected = default; // DEFERRED: Set invalid value
-            Local.DocumentPropertySet target = new() { Division = expected };
-            EntityEntry<Local.DocumentPropertySet> entityEntry = dbContext.DocumentPropertySets.Add(target);
+            DocumentPropertySet target = new() { Division = expected };
+            EntityEntry<DocumentPropertySet> entityEntry = dbContext.DocumentPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -415,10 +452,11 @@ namespace FsInfoCat.UnitTests
         public void DocumentPropertySetDocumentIDTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             string expected = default; // DEFERRED: Set invalid value
-            Local.DocumentPropertySet target = new() { DocumentID = expected };
-            EntityEntry<Local.DocumentPropertySet> entityEntry = dbContext.DocumentPropertySets.Add(target);
+            DocumentPropertySet target = new() { DocumentID = expected };
+            EntityEntry<DocumentPropertySet> entityEntry = dbContext.DocumentPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -461,10 +499,11 @@ namespace FsInfoCat.UnitTests
         public void DocumentPropertySetManagerTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             string expected = default; // DEFERRED: Set invalid value
-            Local.DocumentPropertySet target = new() { Manager = expected };
-            EntityEntry<Local.DocumentPropertySet> entityEntry = dbContext.DocumentPropertySets.Add(target);
+            DocumentPropertySet target = new() { Manager = expected };
+            EntityEntry<DocumentPropertySet> entityEntry = dbContext.DocumentPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -507,10 +546,11 @@ namespace FsInfoCat.UnitTests
         public void DocumentPropertySetPresentationFormatTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             string expected = default; // DEFERRED: Set invalid value
-            Local.DocumentPropertySet target = new() { PresentationFormat = expected };
-            EntityEntry<Local.DocumentPropertySet> entityEntry = dbContext.DocumentPropertySets.Add(target);
+            DocumentPropertySet target = new() { PresentationFormat = expected };
+            EntityEntry<DocumentPropertySet> entityEntry = dbContext.DocumentPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -553,10 +593,11 @@ namespace FsInfoCat.UnitTests
         public void DocumentPropertySetVersionTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             string expected = default; // DEFERRED: Set invalid value
-            Local.DocumentPropertySet target = new() { Version = expected };
-            EntityEntry<Local.DocumentPropertySet> entityEntry = dbContext.DocumentPropertySets.Add(target);
+            DocumentPropertySet target = new() { Version = expected };
+            EntityEntry<DocumentPropertySet> entityEntry = dbContext.DocumentPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);

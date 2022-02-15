@@ -1,3 +1,4 @@
+using FsInfoCat.Local;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.DependencyInjection;
@@ -25,8 +26,28 @@ namespace FsInfoCat.UnitTests
         [TestInitialize]
         public void OnTestInitialize()
         {
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
-            dbContext.RejectChanges();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+            TestHelper.UndoChanges(dbContext);
+        }
+
+        [TestMethod("Redundancy Constructor Tests")]
+        [Ignore]
+        public void RedundancyConstructorTestMethod()
+        {
+            DateTime @then = DateTime.Now;
+            Redundancy target = new();
+            Assert.IsTrue(target.CreatedOn <= DateTime.Now);
+            Assert.IsTrue(target.CreatedOn >= @then);
+            Assert.AreEqual(target.CreatedOn, target.ModifiedOn);
+            Assert.IsNull(target.LastSynchronizedOn);
+            Assert.IsNull(target.UpstreamId);
+            Assert.IsNull(target.File);
+            Assert.AreEqual(Guid.Empty, target.FileId);
+            Assert.AreEqual(string.Empty, target.Notes);
+            Assert.IsNull(target.RedundantSet);
+            Assert.AreEqual(Guid.Empty, target.RedundantSetId);
+            Assert.AreEqual(string.Empty, target.Reference);
         }
 
         [TestMethod("Redundancy Add/Remove Tests")]
@@ -34,9 +55,10 @@ namespace FsInfoCat.UnitTests
         public void RedundancyAddRemoveTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
-            Local.Redundancy target = new() { /* DEFERRED: Initialize properties */ };
-            EntityEntry<Local.Redundancy> entityEntry = dbContext.Entry(target);
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+            Redundancy target = new() { /* DEFERRED: Initialize properties */ };
+            EntityEntry<Redundancy> entityEntry = dbContext.Entry(target);
             Assert.AreEqual(EntityState.Detached, entityEntry.State);
             entityEntry = dbContext.Redundancies.Add(target);
             Assert.AreEqual(EntityState.Added, entityEntry.State);
@@ -69,10 +91,11 @@ namespace FsInfoCat.UnitTests
         public void RedundancyReferenceTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             string expected = default; // DEFERRED: Set invalid value
-            Local.Redundancy target = new() { Reference = expected };
-            EntityEntry<Local.Redundancy> entityEntry = dbContext.Redundancies.Add(target);
+            Redundancy target = new() { Reference = expected };
+            EntityEntry<Redundancy> entityEntry = dbContext.Redundancies.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -115,10 +138,11 @@ namespace FsInfoCat.UnitTests
         public void RedundancyRedundantSetTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
-            Local.RedundantSet expected = default; // DEFERRED: Set invalid value
-            Local.Redundancy target = new() { RedundantSet = expected };
-            EntityEntry<Local.Redundancy> entityEntry = dbContext.Redundancies.Add(target);
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+            RedundantSet expected = default; // DEFERRED: Set invalid value
+            Redundancy target = new() { RedundantSet = expected };
+            EntityEntry<Redundancy> entityEntry = dbContext.Redundancies.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -161,10 +185,11 @@ namespace FsInfoCat.UnitTests
         public void RedundancyFileTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
-            Local.DbFile expected = default; // DEFERRED: Set invalid value
-            Local.Redundancy target = new() { File = expected };
-            EntityEntry<Local.Redundancy> entityEntry = dbContext.Redundancies.Add(target);
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+            DbFile expected = default; // DEFERRED: Set invalid value
+            Redundancy target = new() { File = expected };
+            EntityEntry<Redundancy> entityEntry = dbContext.Redundancies.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -207,9 +232,10 @@ namespace FsInfoCat.UnitTests
         public void RedundancyCreatedOnTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
-            Local.Redundancy target = new() {  /* DEFERRED: Initialize properties */ };
-            EntityEntry<Local.Redundancy> entityEntry = dbContext.Redundancies.Add(target);
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+            Redundancy target = new() {  /* DEFERRED: Initialize properties */ };
+            EntityEntry<Redundancy> entityEntry = dbContext.Redundancies.Add(target);
             dbContext.SaveChanges();
             entityEntry.Reload();
             target.CreatedOn = target.ModifiedOn.AddSeconds(2);
@@ -247,9 +273,10 @@ namespace FsInfoCat.UnitTests
         public void RedundancyLastSynchronizedOnTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
-            Local.Redundancy target = new() {  /* DEFERRED: Initialize properties */ UpstreamId = Guid.NewGuid() };
-            EntityEntry<Local.Redundancy> entityEntry = dbContext.Redundancies.Add(target);
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+            Redundancy target = new() {  /* DEFERRED: Initialize properties */ UpstreamId = Guid.NewGuid() };
+            EntityEntry<Redundancy> entityEntry = dbContext.Redundancies.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsTrue(success);

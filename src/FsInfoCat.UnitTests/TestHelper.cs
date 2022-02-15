@@ -1,3 +1,6 @@
+using FsInfoCat.Local;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -22,10 +25,32 @@ namespace FsInfoCat.UnitTests
         internal const string TestCategory_LocalDb = "LocalDb";
         internal const string TestProperty_Description = "Description";
 
-        internal static Local.FileSystem GetVFatFileSystem(Local.LocalDbContext dbContext)
+        internal static FileSystem GetVFatFileSystem(LocalDbContext dbContext)
         {
             Guid id = Guid.Parse("{53a9e9a4-f5f0-4b4c-9f1e-4e3a80a93cfd}");
             return dbContext.FileSystems.ToList().FirstOrDefault(fs => fs.Id.Equals(id));
+        }
+
+        internal static void UndoChanges(LocalDbContext dbContext)
+        {
+            dbContext.ChangeTracker.DetectChanges();
+            if (dbContext.ChangeTracker.HasChanges())
+                foreach (EntityEntry entityEntry in dbContext.ChangeTracker.Entries().Where(e => e.State != EntityState.Unchanged).ToArray())
+                {
+                    switch (entityEntry.State)
+                    {
+                        case EntityState.Modified:
+                            entityEntry.CurrentValues.SetValues(entityEntry.OriginalValues);
+                            entityEntry.State = EntityState.Unchanged;
+                            break;
+                        case EntityState.Added:
+                            entityEntry.State = EntityState.Detached;
+                            break;
+                        case EntityState.Deleted:
+                            entityEntry.State = EntityState.Unchanged;
+                            break;
+                    }
+                }
         }
 
         internal class ApplicationNavigationFakeOld : IApplicationNavigation

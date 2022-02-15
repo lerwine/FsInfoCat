@@ -1,3 +1,4 @@
+using FsInfoCat.Local;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.DependencyInjection;
@@ -25,8 +26,30 @@ namespace FsInfoCat.UnitTests
         [TestInitialize]
         public void OnTestInitialize()
         {
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
-            dbContext.RejectChanges();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+            TestHelper.UndoChanges(dbContext);
+        }
+
+        [TestMethod("DRMPropertySet Constructor Tests")]
+        [Ignore]
+        public void DRMPropertySetConstructorTestMethod()
+        {
+            DateTime @then = DateTime.Now;
+            DRMPropertySet target = new();
+            Assert.IsTrue(target.CreatedOn <= DateTime.Now);
+            Assert.IsTrue(target.CreatedOn >= @then);
+            Assert.AreEqual(target.CreatedOn, target.ModifiedOn);
+            Assert.AreEqual(Guid.Empty, target.Id);
+            Assert.IsNull(target.LastSynchronizedOn);
+            Assert.IsNull(target.UpstreamId);
+            Assert.IsNull(target.DatePlayExpires);
+            Assert.IsNull(target.DatePlayStarts);
+            Assert.AreEqual(string.Empty, target.Description);
+            Assert.IsNull(target.IsProtected);
+            Assert.IsNull(target.PlayCount);
+            Assert.IsNotNull(target.Files);
+            Assert.AreEqual(0, target.Files.Count);
         }
 
         [TestMethod("DRMPropertySet Add/Remove Tests")]
@@ -34,9 +57,10 @@ namespace FsInfoCat.UnitTests
         public void DRMPropertySetAddRemoveTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
-            Local.DRMPropertySet target = new();
-            EntityEntry<Local.DRMPropertySet> entityEntry = dbContext.Entry(target);
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+            DRMPropertySet target = new();
+            EntityEntry<DRMPropertySet> entityEntry = dbContext.Entry(target);
             Assert.AreEqual(EntityState.Detached, entityEntry.State);
             entityEntry = dbContext.DRMPropertySets.Add(target);
             Assert.AreEqual(EntityState.Added, entityEntry.State);
@@ -70,7 +94,7 @@ namespace FsInfoCat.UnitTests
         [Ignore]
         public void DRMPropertySetIdTestMethod()
         {
-            Local.DRMPropertySet target = new();
+            DRMPropertySet target = new();
             Guid expectedValue = Guid.NewGuid();
             target.Id = expectedValue;
             Guid actualValue = target.Id;
@@ -87,10 +111,11 @@ namespace FsInfoCat.UnitTests
         public void DRMPropertySetDatePlayExpiresTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             DateTime? expected = default; // DEFERRED: Set invalid value
-            Local.DRMPropertySet target = new() { DatePlayExpires = expected };
-            EntityEntry<Local.DRMPropertySet> entityEntry = dbContext.DRMPropertySets.Add(target);
+            DRMPropertySet target = new() { DatePlayExpires = expected };
+            EntityEntry<DRMPropertySet> entityEntry = dbContext.DRMPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -133,10 +158,11 @@ namespace FsInfoCat.UnitTests
         public void DRMPropertySetDatePlayStartsTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             DateTime? expected = default; // DEFERRED: Set invalid value
-            Local.DRMPropertySet target = new() { DatePlayStarts = expected };
-            EntityEntry<Local.DRMPropertySet> entityEntry = dbContext.DRMPropertySets.Add(target);
+            DRMPropertySet target = new() { DatePlayStarts = expected };
+            EntityEntry<DRMPropertySet> entityEntry = dbContext.DRMPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -179,10 +205,11 @@ namespace FsInfoCat.UnitTests
         public void DRMPropertySetDescriptionTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             string expected = default; // DEFERRED: Set invalid value
-            Local.DRMPropertySet target = new() { Description = expected };
-            EntityEntry<Local.DRMPropertySet> entityEntry = dbContext.DRMPropertySets.Add(target);
+            DRMPropertySet target = new() { Description = expected };
+            EntityEntry<DRMPropertySet> entityEntry = dbContext.DRMPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -225,10 +252,11 @@ namespace FsInfoCat.UnitTests
         public void DRMPropertySetIsProtectedTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             bool? expected = default; // DEFERRED: Set invalid value
-            Local.DRMPropertySet target = new() { IsProtected = expected };
-            EntityEntry<Local.DRMPropertySet> entityEntry = dbContext.DRMPropertySets.Add(target);
+            DRMPropertySet target = new() { IsProtected = expected };
+            EntityEntry<DRMPropertySet> entityEntry = dbContext.DRMPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -271,10 +299,11 @@ namespace FsInfoCat.UnitTests
         public void DRMPropertySetPlayCountTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             uint? expected = default; // DEFERRED: Set invalid value
-            Local.DRMPropertySet target = new() { PlayCount = expected };
-            EntityEntry<Local.DRMPropertySet> entityEntry = dbContext.DRMPropertySets.Add(target);
+            DRMPropertySet target = new() { PlayCount = expected };
+            EntityEntry<DRMPropertySet> entityEntry = dbContext.DRMPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);

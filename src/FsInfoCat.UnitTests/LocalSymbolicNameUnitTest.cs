@@ -1,3 +1,4 @@
+using FsInfoCat.Local;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.DependencyInjection;
@@ -23,8 +24,29 @@ namespace FsInfoCat.UnitTests
         [TestInitialize]
         public void OnTestInitialize()
         {
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
-            dbContext.RejectChanges();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+            TestHelper.UndoChanges(dbContext);
+        }
+
+        [TestMethod("SymbolicName Constructor Tests")]
+        [Ignore]
+        public void SymbolicNameConstructorTestMethod()
+        {
+            DateTime @then = DateTime.Now;
+            SymbolicName target = new();
+            Assert.IsTrue(target.CreatedOn <= DateTime.Now);
+            Assert.IsTrue(target.CreatedOn >= @then);
+            Assert.AreEqual(target.CreatedOn, target.ModifiedOn);
+            Assert.IsNull(target.UpstreamId);
+            Assert.AreEqual(Guid.Empty, target.Id);
+            Assert.IsNull(target.LastSynchronizedOn);
+            Assert.IsFalse(target.IsInactive);
+            Assert.AreEqual(string.Empty, target.Name);
+            Assert.AreEqual(string.Empty, target.Notes);
+            Assert.AreEqual(0, target.Priority);
+            Assert.IsNull(target.FileSystem);
+            Assert.AreEqual(Guid.Empty, target.FileSystemId);
         }
 
         [TestMethod("SymbolicName Add/Remove Tests")]
@@ -32,11 +54,12 @@ namespace FsInfoCat.UnitTests
         [Ignore]
         public void SymbolicNameAddRemoveTestMethod()
         {
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             string expected = "SymbolicNameAddRemove";
-            Local.FileSystem fileSystem = TestHelper.GetVFatFileSystem(dbContext);
-            Local.SymbolicName target = new() { Name = expected, FileSystem = fileSystem };
-            EntityEntry<Local.SymbolicName> entityEntry = dbContext.Entry(target);
+            FileSystem fileSystem = TestHelper.GetVFatFileSystem(dbContext);
+            SymbolicName target = new() { Name = expected, FileSystem = fileSystem };
+            EntityEntry<SymbolicName> entityEntry = dbContext.Entry(target);
             Assert.AreEqual(EntityState.Detached, entityEntry.State);
             entityEntry = dbContext.SymbolicNames.Add(target);
             Assert.AreEqual(EntityState.Added, entityEntry.State);
@@ -74,12 +97,13 @@ namespace FsInfoCat.UnitTests
         [Ignore]
         public void SymbolicNameNameTestMethod()
         {
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             string expected = "";
-            Local.FileSystem fileSystem = TestHelper.GetVFatFileSystem(dbContext);
-            Local.SymbolicName target = new() { Name = null, FileSystem = fileSystem };
+            FileSystem fileSystem = TestHelper.GetVFatFileSystem(dbContext);
+            SymbolicName target = new() { Name = null, FileSystem = fileSystem };
             Assert.AreEqual(expected, target.Name);
-            EntityEntry<Local.SymbolicName> entityEntry = dbContext.SymbolicNames.Add(target);
+            EntityEntry<SymbolicName> entityEntry = dbContext.SymbolicNames.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -161,10 +185,11 @@ namespace FsInfoCat.UnitTests
         [Ignore]
         public void SymbolicNameFileSystemTestMethod()
         {
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
-            Local.FileSystem expected = null;
-            Local.SymbolicName target = new() { Name = "SymbolicNameFileSystemTest", FileSystem = expected };
-            EntityEntry<Local.SymbolicName> entityEntry = dbContext.SymbolicNames.Add(target);
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+            FileSystem expected = null;
+            SymbolicName target = new() { Name = "SymbolicNameFileSystemTest", FileSystem = expected };
+            EntityEntry<SymbolicName> entityEntry = dbContext.SymbolicNames.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -195,10 +220,11 @@ namespace FsInfoCat.UnitTests
         [Ignore]
         public void SymbolicNameCreatedOnTestMethod()
         {
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
-            Local.FileSystem fileSystem = TestHelper.GetVFatFileSystem(dbContext);
-            Local.SymbolicName target = new() { Name = "SymbolicName CreatedOn Item", FileSystem = fileSystem };
-            EntityEntry<Local.SymbolicName> entityEntry = dbContext.SymbolicNames.Add(target);
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+            FileSystem fileSystem = TestHelper.GetVFatFileSystem(dbContext);
+            SymbolicName target = new() { Name = "SymbolicName CreatedOn Item", FileSystem = fileSystem };
+            EntityEntry<SymbolicName> entityEntry = dbContext.SymbolicNames.Add(target);
             dbContext.SaveChanges();
             entityEntry.Reload();
             target.CreatedOn = target.ModifiedOn.AddSeconds(2);
@@ -236,10 +262,11 @@ namespace FsInfoCat.UnitTests
         [Ignore]
         public void SymbolicNameLastSynchronizedOnTestMethod()
         {
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
-            Local.FileSystem fileSystem = TestHelper.GetVFatFileSystem(dbContext);
-            Local.SymbolicName target = new() { Name = "SymbolicName LastSynchronizedOn Item", FileSystem = fileSystem, UpstreamId = Guid.NewGuid() };
-            EntityEntry<Local.SymbolicName> entityEntry = dbContext.SymbolicNames.Add(target);
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+            FileSystem fileSystem = TestHelper.GetVFatFileSystem(dbContext);
+            SymbolicName target = new() { Name = "SymbolicName LastSynchronizedOn Item", FileSystem = fileSystem, UpstreamId = Guid.NewGuid() };
+            EntityEntry<SymbolicName> entityEntry = dbContext.SymbolicNames.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsTrue(success);

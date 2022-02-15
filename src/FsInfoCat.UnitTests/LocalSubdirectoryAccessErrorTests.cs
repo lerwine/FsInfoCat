@@ -10,11 +10,9 @@ using System.ComponentModel.DataAnnotations;
 namespace FsInfoCat.UnitTests
 {
     [TestClass]
-    public class FileAccessErrorTests
+    public class LocalSubdirectoryAccessErrorTests
     {
-#pragma warning disable IDE0052 // Remove unread private members
         private static TestContext _testContext;
-#pragma warning restore IDE0052 // Remove unread private members
 
         [ClassInitialize]
         public static void OnClassInitialize(TestContext testContext)
@@ -22,45 +20,35 @@ namespace FsInfoCat.UnitTests
             _testContext = testContext;
         }
 
-        [TestMethod("new FileAccessError()"), Ignore]
-        public void NewFileAccessErrorTestMethod()
+        [TestInitialize]
+        public void OnTestInitialize()
         {
             using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
-            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetService<LocalDbContext>();
-            FileAccessError target = new();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+            TestHelper.UndoChanges(dbContext);
+        }
 
-            EntityEntry<FileAccessError> entry = dbContext.Entry(target);
+        [TestMethod("SubdirectoryAccessError Constructor Tests")]
+        [Ignore]
+        public void SubdirectoryAccessErrorConstructorTestMethod()
+        {
+            DateTime @then = DateTime.Now;
+            SubdirectoryAccessError target = new();
+            Assert.IsTrue(target.CreatedOn <= DateTime.Now);
+            Assert.IsTrue(target.CreatedOn >= @then);
+            Assert.AreEqual(target.CreatedOn, target.ModifiedOn);
             Assert.AreEqual(Guid.Empty, target.Id);
-            Assert.AreEqual(EntityState.Detached, entry.State);
-            Assert.IsNotNull(target.Message);
-            Assert.AreEqual("", target.Message);
-            Assert.IsNotNull(target.Details);
-            Assert.AreEqual("", target.Details);
+            Assert.AreEqual(string.Empty, target.Details);
             Assert.AreEqual(ErrorCode.Unexpected, target.ErrorCode);
-            Assert.AreEqual(Guid.Empty, target.TargetId);
+            Assert.AreEqual(string.Empty, target.Message);
             Assert.IsNull(target.Target);
-            Assert.AreEqual(target.CreatedOn, target.ModifiedOn);
-
-            Assert.Inconclusive("Test not implemented");
-            // DEFERRED: Implement test for new FileAccessError()
-
-            dbContext.FileAccessErrors.Add(target);
-            Assert.AreNotEqual(Guid.Empty, target.Id);
-            Assert.AreEqual(EntityState.Added, entry.State);
-            Assert.IsNotNull(target.Message);
-            Assert.AreEqual("", target.Message);
-            Assert.IsNotNull(target.Details);
-            Assert.AreEqual("", target.Details);
-            Assert.AreEqual(ErrorCode.Unexpected, target.ErrorCode);
             Assert.AreEqual(Guid.Empty, target.TargetId);
-            Assert.IsNull(target.Target);
-            Assert.AreEqual(target.CreatedOn, target.ModifiedOn);
         }
 
         [TestMethod("Guid Id"), Ignore]
         public void IdTestMethod()
         {
-            FileAccessError target = new();
+            SubdirectoryAccessError target = new();
             Guid expectedValue = Guid.NewGuid();
             target.Id = expectedValue;
             Guid actualValue = target.Id;
@@ -79,7 +67,7 @@ namespace FsInfoCat.UnitTests
         [DataRow("\n Test \r", "Test", DisplayName = "string Message = \"\\n Test \\r\"")]
         public void MessageTestMethod(string message, string expected)
         {
-            FileAccessError target = new();
+            SubdirectoryAccessError target = new();
             target.Message = message;
             string actualValue = target.Message;
             Assert.IsNotNull(actualValue);
@@ -94,7 +82,7 @@ namespace FsInfoCat.UnitTests
         [DataRow("\n Test \r", "\n Test \r", DisplayName = "string Details = \"\\n Test \\r\"")]
         public void DetailsTestMethod(string details, string expected)
         {
-            FileAccessError target = new();
+            SubdirectoryAccessError target = new();
             target.Details = details;
             string actualValue = target.Details;
             Assert.IsNotNull(actualValue);
@@ -107,7 +95,7 @@ namespace FsInfoCat.UnitTests
             Assert.Inconclusive("Test not implemented");
             // DEFERRED: Implement test for ErrorCode ErrorCode
 
-            FileAccessError target = default; // TODO: Create and initialize FileAccessError instance
+            SubdirectoryAccessError target = default; // TODO: Create and initialize SubdirectoryAccessError instance
             ErrorCode expectedValue = default;
             target.ErrorCode = default;
             ErrorCode actualValue = target.ErrorCode;
@@ -120,34 +108,34 @@ namespace FsInfoCat.UnitTests
             Assert.Inconclusive("Test not implemented");
             // DEFERRED: Implement test for Guid TargetId
 
-            FileAccessError target = default; // TODO: Create and initialize FileAccessError instance
+            SubdirectoryAccessError target = default; // TODO: Create and initialize SubdirectoryAccessError instance
             Guid expectedValue = default;
             target.TargetId = default;
             Guid actualValue = target.TargetId;
             Assert.AreEqual(expectedValue, actualValue);
         }
 
-        [TestMethod("DbFile Target"), Ignore]
+        [TestMethod("Subdirectory Target"), Ignore]
         public void TargetTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            // DEFERRED: Implement test for DbFile Target
+            // DEFERRED: Implement test for Subdirectory Target
 
-            FileAccessError target = default; // TODO: Create and initialize FileAccessError instance
-            DbFile expectedValue = default;
+            SubdirectoryAccessError target = default; // TODO: Create and initialize SubdirectoryAccessError instance
+            Subdirectory expectedValue = default;
             target.Target = default;
-            DbFile actualValue = target.Target;
+            Subdirectory actualValue = target.Target;
             Assert.AreEqual(expectedValue, actualValue);
         }
 
         [TestMethod("DateTime CreatedOn"), Ignore]
-        [Microsoft.VisualStudio.TestTools.UnitTesting.Description("BinaryProperties.CreatedOn: CreatedOn<=ModifiedOn")]
+        [Description("BinaryProperties.CreatedOn: CreatedOn<=ModifiedOn")]
         public void CreatedOnTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
             // DEFERRED: Implement test for DateTime CreatedOn
 
-            FileAccessError target = default; // TODO: Create and initialize FileAccessError instance
+            SubdirectoryAccessError target = default; // TODO: Create and initialize SubdirectoryAccessError instance
             DateTime expectedValue = default;
             target.CreatedOn = default;
             DateTime actualValue = target.CreatedOn;
@@ -160,7 +148,7 @@ namespace FsInfoCat.UnitTests
             Assert.Inconclusive("Test not implemented");
             // DEFERRED: Implement test for DateTime ModifiedOn
 
-            FileAccessError target = default; // TODO: Create and initialize FileAccessError instance
+            SubdirectoryAccessError target = default; // TODO: Create and initialize SubdirectoryAccessError instance
             DateTime expectedValue = default;
             target.ModifiedOn = default;
             DateTime actualValue = target.ModifiedOn;
@@ -174,7 +162,7 @@ namespace FsInfoCat.UnitTests
             // DEFERRED: Implement test for IEnumerable<ValidationResult> Validate(ValidationContext)
 
             ValidationContext validationContextArg = default;
-            FileAccessError target = default; // TODO: Create and initialize FileAccessError instance
+            SubdirectoryAccessError target = default; // TODO: Create and initialize SubdirectoryAccessError instance
             IEnumerable<ValidationResult> expectedReturnValue = default;
             IEnumerable<ValidationResult> actualReturnValue = target.Validate(validationContextArg);
             Assert.AreEqual(expectedReturnValue, actualReturnValue);

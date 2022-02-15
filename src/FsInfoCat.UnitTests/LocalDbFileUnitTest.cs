@@ -1,3 +1,4 @@
+using FsInfoCat.Local;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.DependencyInjection;
@@ -25,8 +26,68 @@ namespace FsInfoCat.UnitTests
         [TestInitialize]
         public void OnTestInitialize()
         {
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
-            dbContext.RejectChanges();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+            TestHelper.UndoChanges(dbContext);
+        }
+
+        [TestMethod("DbFile Constructor Tests")]
+        [Ignore]
+        public void DbFileConstructorTestMethod()
+        {
+            DateTime @then = DateTime.Now;
+            DbFile target = new();
+            Assert.IsTrue(target.CreatedOn <= DateTime.Now);
+            Assert.IsTrue(target.CreatedOn >= @then);
+            Assert.AreEqual(target.CreatedOn, target.ModifiedOn);
+            Assert.AreEqual(target.CreatedOn, target.CreationTime);
+            Assert.AreEqual(target.CreatedOn, target.LastWriteTime);
+            Assert.AreEqual(target.CreatedOn, target.LastAccessed);
+            Assert.AreEqual(Guid.Empty, target.Id);
+            Assert.IsNull(target.LastSynchronizedOn);
+            Assert.IsNull(target.UpstreamId);
+            Assert.AreEqual(string.Empty, target.Name);
+            Assert.AreEqual(string.Empty, target.Notes);
+            Assert.AreEqual(FileCrawlOptions.None, target.Options);
+            Assert.AreEqual(FileCorrelationStatus.Dissociated, target.Status);
+            Assert.IsNull(target.Parent);
+            Assert.AreEqual(Guid.Empty, target.ParentId);
+            Assert.IsNotNull(target.AccessErrors);
+            Assert.AreEqual(0, target.AccessErrors.Count);
+            Assert.IsNotNull(target.BaselineComparisons);
+            Assert.AreEqual(0, target.BaselineComparisons.Count);
+            Assert.IsNotNull(target.CorrelativeComparisons);
+            Assert.AreEqual(0, target.CorrelativeComparisons.Count);
+            Assert.IsNotNull(target.PersonalTags);
+            Assert.AreEqual(0, target.PersonalTags.Count);
+            Assert.IsNotNull(target.SharedTags);
+            Assert.AreEqual(0, target.SharedTags.Count);
+            Assert.IsNull(target.AudioProperties);
+            Assert.IsNull(target.AudioPropertySetId);
+            Assert.IsNull(target.BinaryProperties);
+            Assert.IsNull(target.BinaryPropertySetId);
+            Assert.IsNull(target.DocumentProperties);
+            Assert.IsNull(target.DocumentPropertySetId);
+            Assert.IsNull(target.DRMProperties);
+            Assert.IsNull(target.DRMPropertySetId);
+            Assert.IsNull(target.GPSProperties);
+            Assert.IsNull(target.GPSPropertySetId);
+            Assert.IsNull(target.ImageProperties);
+            Assert.IsNull(target.ImagePropertySetId);
+            Assert.IsNull(target.LastHashCalculation);
+            Assert.IsNull(target.MediaProperties);
+            Assert.IsNull(target.MediaPropertySetId);
+            Assert.IsNull(target.MusicProperties);
+            Assert.IsNull(target.MusicPropertySetId);
+            Assert.IsNull(target.PhotoProperties);
+            Assert.IsNull(target.PhotoPropertySetId);
+            Assert.IsNull(target.RecordedTVProperties);
+            Assert.IsNull(target.RecordedTVPropertySetId);
+            Assert.IsNull(target.Redundancy);
+            Assert.IsNull(target.SummaryProperties);
+            Assert.IsNull(target.SummaryPropertySetId);
+            Assert.IsNull(target.VideoProperties);
+            Assert.IsNull(target.VideoPropertySetId);
         }
 
         [TestMethod("DbFile Add/Remove Tests")]
@@ -34,10 +95,11 @@ namespace FsInfoCat.UnitTests
         public void DbFileAddRemoveTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
-            Local.FileSystem fileSystem1 = new() { DisplayName = "Subdirectory Add/Remove FileSystem" };
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+            FileSystem fileSystem1 = new() { DisplayName = "Subdirectory Add/Remove FileSystem" };
             dbContext.FileSystems.Add(fileSystem1);
-            Local.Volume volume1 = new()
+            Volume volume1 = new()
             {
                 DisplayName = "Subdirectory Add/Remove Item",
                 VolumeName = "Subdirectory_Add_Remove_Name",
@@ -46,9 +108,9 @@ namespace FsInfoCat.UnitTests
             };
             dbContext.Volumes.Add(volume1);
             string expectedName = "";
-            Local.Subdirectory parent1 = new() { Volume = volume1 };
-            Local.DbFile target = new() { /* DEFERRED: Initialize properties */ };
-            EntityEntry<Local.DbFile> entityEntry = dbContext.Entry(target);
+            Subdirectory parent1 = new() { Volume = volume1 };
+            DbFile target = new() { /* DEFERRED: Initialize properties */ };
+            EntityEntry<DbFile> entityEntry = dbContext.Entry(target);
             Assert.AreEqual(EntityState.Detached, entityEntry.State);
             entityEntry = dbContext.Files.Add(target);
             Assert.AreEqual(EntityState.Added, entityEntry.State);
@@ -85,10 +147,11 @@ namespace FsInfoCat.UnitTests
         public void DbFileBinaryPropertiesTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
-            Local.BinaryPropertySet expected = default; // DEFERRED: Set invalid value
-            Local.DbFile target = new() { BinaryProperties = expected };
-            EntityEntry<Local.DbFile> entityEntry = dbContext.Files.Add(target);
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+            BinaryPropertySet expected = default; // DEFERRED: Set invalid value
+            DbFile target = new() { BinaryProperties = expected };
+            EntityEntry<DbFile> entityEntry = dbContext.Files.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -132,10 +195,11 @@ namespace FsInfoCat.UnitTests
         public void DbFileNameTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             string expected = default; // DEFERRED: Set invalid value
-            Local.DbFile target = new() { Name = expected };
-            EntityEntry<Local.DbFile> entityEntry = dbContext.Files.Add(target);
+            DbFile target = new() { Name = expected };
+            EntityEntry<DbFile> entityEntry = dbContext.Files.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -181,10 +245,11 @@ namespace FsInfoCat.UnitTests
         public void DbFileParentTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
-            Local.Subdirectory expected = default; // DEFERRED: Set invalid value
-            Local.DbFile target = new() { Parent = expected };
-            EntityEntry<Local.DbFile> entityEntry = dbContext.Files.Add(target);
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+            Subdirectory expected = default; // DEFERRED: Set invalid value
+            DbFile target = new() { Parent = expected };
+            EntityEntry<DbFile> entityEntry = dbContext.Files.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -228,10 +293,11 @@ namespace FsInfoCat.UnitTests
         public void DbFileOptionsTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             FileCrawlOptions expected = default; // DEFERRED: Set invalid value
-            Local.DbFile target = new() { Options = expected };
-            EntityEntry<Local.DbFile> entityEntry = dbContext.Files.Add(target);
+            DbFile target = new() { Options = expected };
+            EntityEntry<DbFile> entityEntry = dbContext.Files.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -274,9 +340,10 @@ namespace FsInfoCat.UnitTests
         public void DbFileCreatedOnTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
-            Local.DbFile target = new() {  /* DEFERRED: Initialize properties */ };
-            EntityEntry<Local.DbFile> entityEntry = dbContext.Files.Add(target);
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+            DbFile target = new() {  /* DEFERRED: Initialize properties */ };
+            EntityEntry<DbFile> entityEntry = dbContext.Files.Add(target);
             dbContext.SaveChanges();
             entityEntry.Reload();
             target.CreatedOn = target.ModifiedOn.AddSeconds(2);
@@ -314,9 +381,10 @@ namespace FsInfoCat.UnitTests
         public void DbFileLastSynchronizedOnTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
-            Local.DbFile target = new() {  /* DEFERRED: Initialize properties */ UpstreamId = Guid.NewGuid() };
-            EntityEntry<Local.DbFile> entityEntry = dbContext.Files.Add(target);
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+            DbFile target = new() {  /* DEFERRED: Initialize properties */ UpstreamId = Guid.NewGuid() };
+            EntityEntry<DbFile> entityEntry = dbContext.Files.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsTrue(success);

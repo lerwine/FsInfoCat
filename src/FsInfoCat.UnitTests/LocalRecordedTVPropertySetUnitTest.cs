@@ -1,3 +1,4 @@
+using FsInfoCat.Local;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.DependencyInjection;
@@ -25,8 +26,34 @@ namespace FsInfoCat.UnitTests
         [TestInitialize]
         public void OnTestInitialize()
         {
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
-            dbContext.RejectChanges();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+            TestHelper.UndoChanges(dbContext);
+        }
+
+        [TestMethod("RecordedTVPropertySet Constructor Tests")]
+        [Ignore]
+        public void RecordedTVPropertySetConstructorTestMethod()
+        {
+            DateTime @then = DateTime.Now;
+            RecordedTVPropertySet target = new();
+            Assert.IsTrue(target.CreatedOn <= DateTime.Now);
+            Assert.IsTrue(target.CreatedOn >= @then);
+            Assert.AreEqual(target.CreatedOn, target.ModifiedOn);
+            Assert.AreEqual(Guid.Empty, target.Id);
+            Assert.IsNull(target.LastSynchronizedOn);
+            Assert.IsNull(target.UpstreamId);
+            Assert.IsNull(target.ChannelNumber);
+            Assert.AreEqual(string.Empty, target.EpisodeName);
+            Assert.IsNull(target.IsDTVContent);
+            Assert.IsNull(target.IsHDContent);
+            Assert.AreEqual(string.Empty, target.NetworkAffiliation);
+            Assert.IsNull(target.OriginalBroadcastDate);
+            Assert.AreEqual(string.Empty, target.ProgramDescription);
+            Assert.AreEqual(string.Empty, target.StationCallSign);
+            Assert.AreEqual(string.Empty, target.StationName);
+            Assert.IsNotNull(target.Files);
+            Assert.AreEqual(0, target.Files.Count);
         }
 
         [TestMethod("RecordedTVPropertySet Add/Remove Tests")]
@@ -34,9 +61,10 @@ namespace FsInfoCat.UnitTests
         public void RecordedTVPropertySetAddRemoveTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
-            Local.RecordedTVPropertySet target = new();
-            EntityEntry<Local.RecordedTVPropertySet> entityEntry = dbContext.Entry(target);
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+            RecordedTVPropertySet target = new();
+            EntityEntry<RecordedTVPropertySet> entityEntry = dbContext.Entry(target);
             Assert.AreEqual(EntityState.Detached, entityEntry.State);
             entityEntry = dbContext.RecordedTVPropertySets.Add(target);
             Assert.AreEqual(EntityState.Added, entityEntry.State);
@@ -74,7 +102,7 @@ namespace FsInfoCat.UnitTests
         [Ignore]
         public void RecordedTVPropertySetIdTestMethod()
         {
-            Local.RecordedTVPropertySet target = new();
+            RecordedTVPropertySet target = new();
             Guid expectedValue = Guid.NewGuid();
             target.Id = expectedValue;
             Guid actualValue = target.Id;
@@ -91,10 +119,11 @@ namespace FsInfoCat.UnitTests
         public void RecordedTVPropertySetChannelNumberTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             uint? expected = default; // DEFERRED: Set invalid value
-            Local.RecordedTVPropertySet target = new() { ChannelNumber = expected };
-            EntityEntry<Local.RecordedTVPropertySet> entityEntry = dbContext.RecordedTVPropertySets.Add(target);
+            RecordedTVPropertySet target = new() { ChannelNumber = expected };
+            EntityEntry<RecordedTVPropertySet> entityEntry = dbContext.RecordedTVPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -137,10 +166,11 @@ namespace FsInfoCat.UnitTests
         public void RecordedTVPropertySetEpisodeNameTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             string expected = default; // DEFERRED: Set invalid value
-            Local.RecordedTVPropertySet target = new() { EpisodeName = expected };
-            EntityEntry<Local.RecordedTVPropertySet> entityEntry = dbContext.RecordedTVPropertySets.Add(target);
+            RecordedTVPropertySet target = new() { EpisodeName = expected };
+            EntityEntry<RecordedTVPropertySet> entityEntry = dbContext.RecordedTVPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -183,10 +213,11 @@ namespace FsInfoCat.UnitTests
         public void RecordedTVPropertySetIsDTVContentTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             bool? expected = default; // DEFERRED: Set invalid value
-            Local.RecordedTVPropertySet target = new() { IsDTVContent = expected };
-            EntityEntry<Local.RecordedTVPropertySet> entityEntry = dbContext.RecordedTVPropertySets.Add(target);
+            RecordedTVPropertySet target = new() { IsDTVContent = expected };
+            EntityEntry<RecordedTVPropertySet> entityEntry = dbContext.RecordedTVPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -229,10 +260,11 @@ namespace FsInfoCat.UnitTests
         public void RecordedTVPropertySetIsHDContentTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             bool? expected = default; // DEFERRED: Set invalid value
-            Local.RecordedTVPropertySet target = new() { IsHDContent = expected };
-            EntityEntry<Local.RecordedTVPropertySet> entityEntry = dbContext.RecordedTVPropertySets.Add(target);
+            RecordedTVPropertySet target = new() { IsHDContent = expected };
+            EntityEntry<RecordedTVPropertySet> entityEntry = dbContext.RecordedTVPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -275,10 +307,11 @@ namespace FsInfoCat.UnitTests
         public void RecordedTVPropertySetNetworkAffiliationTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             string expected = default; // DEFERRED: Set invalid value
-            Local.RecordedTVPropertySet target = new() { NetworkAffiliation = expected };
-            EntityEntry<Local.RecordedTVPropertySet> entityEntry = dbContext.RecordedTVPropertySets.Add(target);
+            RecordedTVPropertySet target = new() { NetworkAffiliation = expected };
+            EntityEntry<RecordedTVPropertySet> entityEntry = dbContext.RecordedTVPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -321,10 +354,11 @@ namespace FsInfoCat.UnitTests
         public void RecordedTVPropertySetOriginalBroadcastDateTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             DateTime? expected = default; // DEFERRED: Set invalid value
-            Local.RecordedTVPropertySet target = new() { OriginalBroadcastDate = expected };
-            EntityEntry<Local.RecordedTVPropertySet> entityEntry = dbContext.RecordedTVPropertySets.Add(target);
+            RecordedTVPropertySet target = new() { OriginalBroadcastDate = expected };
+            EntityEntry<RecordedTVPropertySet> entityEntry = dbContext.RecordedTVPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -367,10 +401,11 @@ namespace FsInfoCat.UnitTests
         public void RecordedTVPropertySetProgramDescriptionTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             string expected = default; // DEFERRED: Set invalid value
-            Local.RecordedTVPropertySet target = new() { ProgramDescription = expected };
-            EntityEntry<Local.RecordedTVPropertySet> entityEntry = dbContext.RecordedTVPropertySets.Add(target);
+            RecordedTVPropertySet target = new() { ProgramDescription = expected };
+            EntityEntry<RecordedTVPropertySet> entityEntry = dbContext.RecordedTVPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -413,10 +448,11 @@ namespace FsInfoCat.UnitTests
         public void RecordedTVPropertySetStationCallSignTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             string expected = default; // DEFERRED: Set invalid value
-            Local.RecordedTVPropertySet target = new() { StationCallSign = expected };
-            EntityEntry<Local.RecordedTVPropertySet> entityEntry = dbContext.RecordedTVPropertySets.Add(target);
+            RecordedTVPropertySet target = new() { StationCallSign = expected };
+            EntityEntry<RecordedTVPropertySet> entityEntry = dbContext.RecordedTVPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -459,10 +495,11 @@ namespace FsInfoCat.UnitTests
         public void RecordedTVPropertySetStationNameTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             string expected = default; // DEFERRED: Set invalid value
-            Local.RecordedTVPropertySet target = new() { StationName = expected };
-            EntityEntry<Local.RecordedTVPropertySet> entityEntry = dbContext.RecordedTVPropertySets.Add(target);
+            RecordedTVPropertySet target = new() { StationName = expected };
+            EntityEntry<RecordedTVPropertySet> entityEntry = dbContext.RecordedTVPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);

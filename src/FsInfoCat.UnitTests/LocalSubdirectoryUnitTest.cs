@@ -1,3 +1,4 @@
+using FsInfoCat.Local;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.DependencyInjection;
@@ -23,8 +24,49 @@ namespace FsInfoCat.UnitTests
         [TestInitialize]
         public void OnTestInitialize()
         {
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
-            dbContext.RejectChanges();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+            TestHelper.UndoChanges(dbContext);
+        }
+
+        [TestMethod("Subdirectory Constructor Tests")]
+        [Ignore]
+        public void SubdirectoryConstructorTestMethod()
+        {
+            DateTime @then = DateTime.Now;
+            Subdirectory target = new();
+            Assert.IsTrue(target.CreatedOn <= DateTime.Now);
+            Assert.IsTrue(target.CreatedOn >= @then);
+            Assert.AreEqual(target.CreatedOn, target.ModifiedOn);
+            Assert.AreEqual(target.CreatedOn, target.CreationTime);
+            Assert.AreEqual(target.CreatedOn, target.LastWriteTime);
+            Assert.AreEqual(target.CreatedOn, target.LastAccessed);
+            Assert.AreEqual(Guid.Empty, target.Id);
+            Assert.IsNull(target.LastSynchronizedOn);
+            Assert.IsNull(target.UpstreamId);
+            Assert.AreEqual(string.Empty, target.Name);
+            Assert.AreEqual(string.Empty, target.Notes);
+            Assert.AreEqual(DirectoryCrawlOptions.None, target.Options);
+            Assert.AreEqual(DirectoryStatus.Incomplete, target.Status);
+            Assert.IsNull(target.CrawlConfiguration);
+            Assert.IsNotNull(target.AccessErrors);
+            Assert.AreEqual(0, target.AccessErrors.Count);
+            Assert.IsNotNull(target.Files);
+            Assert.AreEqual(0, target.Files.Count);
+            Assert.IsNull(target.Parent);
+            Assert.IsNull(target.ParentId);
+            Assert.IsNotNull(target.PersonalTags);
+            Assert.AreEqual(0, target.PersonalTags.Count);
+            Assert.IsNotNull(target.SharedTags);
+            Assert.AreEqual(0, target.SharedTags.Count);
+            Assert.IsNotNull(target.PersonalTags);
+            Assert.AreEqual(0, target.PersonalTags.Count);
+            Assert.IsNotNull(target.SharedTags);
+            Assert.AreEqual(0, target.SharedTags.Count);
+            Assert.IsNotNull(target.SubDirectories);
+            Assert.AreEqual(0, target.SubDirectories.Count);
+            Assert.IsNull(target.Volume);
+            Assert.IsNull(target.VolumeId);
         }
 
         [TestMethod("Subdirectory Add/Remove Tests")]
@@ -32,10 +74,11 @@ namespace FsInfoCat.UnitTests
         [Ignore]
         public void SubdirectoryAddRemoveTestMethod()
         {
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
-            Local.FileSystem fileSystem1 = new() { DisplayName = "Subdirectory Add/Remove FileSystem" };
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+            FileSystem fileSystem1 = new() { DisplayName = "Subdirectory Add/Remove FileSystem" };
             dbContext.FileSystems.Add(fileSystem1);
-            Local.Volume volume1 = new()
+            Volume volume1 = new()
             {
                 DisplayName = "Subdirectory Add/Remove Item",
                 VolumeName = "Subdirectory_Add_Remove_Name",
@@ -44,8 +87,8 @@ namespace FsInfoCat.UnitTests
             };
             dbContext.Volumes.Add(volume1);
             string expectedName = "";
-            Local.Subdirectory target1 = new() { Volume = volume1 };
-            EntityEntry<Local.Subdirectory> entityEntry = dbContext.Entry(target1);
+            Subdirectory target1 = new() { Volume = volume1 };
+            EntityEntry<Subdirectory> entityEntry = dbContext.Entry(target1);
             Assert.AreEqual(EntityState.Detached, entityEntry.State);
             entityEntry = dbContext.Subdirectories.Add(target1);
             Assert.AreEqual(EntityState.Added, entityEntry.State);
@@ -83,11 +126,12 @@ namespace FsInfoCat.UnitTests
         [Ignore]
         public void SubdirectoryNameTestMethod()
         {
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             string expectedName = "";
-            Local.FileSystem fileSystem1 = new() { DisplayName = "Subdirectory NameTest FileSystem" };
+            FileSystem fileSystem1 = new() { DisplayName = "Subdirectory NameTest FileSystem" };
             dbContext.FileSystems.Add(fileSystem1);
-            Local.Volume volume1 = new()
+            Volume volume1 = new()
             {
                 DisplayName = "Subdirectory NameTest Item",
                 VolumeName = "Subdirectory_NameTest_Name",
@@ -95,11 +139,11 @@ namespace FsInfoCat.UnitTests
                 FileSystem = fileSystem1
             };
             dbContext.Volumes.Add(volume1);
-            Local.Subdirectory parent1 = new() { Volume = volume1 };
+            Subdirectory parent1 = new() { Volume = volume1 };
             dbContext.Subdirectories.Add(parent1);
             dbContext.SaveChanges();
-            Local.Subdirectory target1 = new();
-            EntityEntry<Local.Subdirectory> entityEntry = dbContext.Subdirectories.Add(target1);
+            Subdirectory target1 = new();
+            EntityEntry<Subdirectory> entityEntry = dbContext.Subdirectories.Add(target1);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target1, new ValidationContext(target1), results, true);
             Assert.IsFalse(success);
@@ -163,7 +207,7 @@ namespace FsInfoCat.UnitTests
             target1.Name = expectedName;
             dbContext.SaveChanges();
 
-            Local.Volume volume2 = new()
+            Volume volume2 = new()
             {
                 DisplayName = "Subdirectory NameTest Item 2",
                 VolumeName = "Subdirectory_NameTest_Name 2",
@@ -172,7 +216,7 @@ namespace FsInfoCat.UnitTests
             };
             dbContext.Volumes.Add(volume2);
             dbContext.SaveChanges();
-            Local.Volume volume3 = new()
+            Volume volume3 = new()
             {
                 DisplayName = "Subdirectory NameTest Item 3",
                 VolumeName = "Subdirectory_NameTest_Name 3",
@@ -182,7 +226,7 @@ namespace FsInfoCat.UnitTests
             dbContext.Volumes.Add(volume3);
             dbContext.SaveChanges();
 
-            Local.Subdirectory target2 = new() { Volume = volume2, Name = expectedName };
+            Subdirectory target2 = new() { Volume = volume2, Name = expectedName };
             Assert.AreEqual(expectedName, target2.Name);
             entityEntry = dbContext.Subdirectories.Add(target2);
             results = new();
@@ -191,7 +235,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(0, results.Count);
             dbContext.SaveChanges();
 
-            Local.Subdirectory target3 = new() { Parent = parent1, Name = expectedName };
+            Subdirectory target3 = new() { Parent = parent1, Name = expectedName };
             entityEntry = dbContext.Subdirectories.Add(target3);
             results = new();
             success = Validator.TryValidateObject(target3, new ValidationContext(target3), results, true);
@@ -206,7 +250,7 @@ namespace FsInfoCat.UnitTests
             dbContext.SaveChanges();
 
             expectedName = $"{expectedName[1..]}3";
-            Local.Subdirectory target4 = new() { Volume = volume3, Parent = parent1, Name = expectedName };
+            Subdirectory target4 = new() { Volume = volume3, Parent = parent1, Name = expectedName };
             entityEntry = dbContext.Subdirectories.Add(target4);
             results = new();
             success = Validator.TryValidateObject(target4, new ValidationContext(target4), results, true);
@@ -247,10 +291,11 @@ namespace FsInfoCat.UnitTests
         [Ignore]
         public void SubdirectoryOptionsTestMethod()
         {
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
-            Local.FileSystem fileSystem = new() { DisplayName = "Subdirectory OptionsTest FileSystem" };
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+            FileSystem fileSystem = new() { DisplayName = "Subdirectory OptionsTest FileSystem" };
             dbContext.FileSystems.Add(fileSystem);
-            Local.Volume volume = new()
+            Volume volume = new()
             {
                 DisplayName = "Subdirectory OptionsTest Item",
                 VolumeName = "Subdirectory_OptionsTest_Name",
@@ -258,12 +303,12 @@ namespace FsInfoCat.UnitTests
                 FileSystem = fileSystem
             };
             dbContext.Volumes.Add(volume);
-            Local.Subdirectory parent = new() { Volume = volume };
+            Subdirectory parent = new() { Volume = volume };
             dbContext.Subdirectories.Add(parent);
             dbContext.SaveChanges();
             DirectoryCrawlOptions expected = (DirectoryCrawlOptions)(object)(byte)64;
-            Local.Subdirectory target = new() { Options = expected, Name = "OptionsTest Dir", Parent = parent };
-            EntityEntry<Local.Subdirectory> entityEntry = dbContext.Subdirectories.Add(target);
+            Subdirectory target = new() { Options = expected, Name = "OptionsTest Dir", Parent = parent };
+            EntityEntry<Subdirectory> entityEntry = dbContext.Subdirectories.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -292,10 +337,11 @@ namespace FsInfoCat.UnitTests
         [Ignore]
         public void SubdirectoryCreatedOnTestMethod()
         {
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
-            Local.FileSystem fileSystem = new() { DisplayName = "Subdirectory CreatedOnTest FileSystem" };
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+            FileSystem fileSystem = new() { DisplayName = "Subdirectory CreatedOnTest FileSystem" };
             dbContext.FileSystems.Add(fileSystem);
-            Local.Volume volume = new()
+            Volume volume = new()
             {
                 DisplayName = "Subdirectory CreatedOnTest Item",
                 VolumeName = "Subdirectory_CreatedOnTest_Name",
@@ -303,11 +349,11 @@ namespace FsInfoCat.UnitTests
                 FileSystem = fileSystem
             };
             dbContext.Volumes.Add(volume);
-            Local.Subdirectory parent = new() { Volume = volume };
+            Subdirectory parent = new() { Volume = volume };
             dbContext.Subdirectories.Add(parent);
             dbContext.SaveChanges();
-            Local.Subdirectory target = new() { Name = "CreatedOnTest Dir", Parent = parent };
-            EntityEntry<Local.Subdirectory> entityEntry = dbContext.Subdirectories.Add(target);
+            Subdirectory target = new() { Name = "CreatedOnTest Dir", Parent = parent };
+            EntityEntry<Subdirectory> entityEntry = dbContext.Subdirectories.Add(target);
             dbContext.SaveChanges();
             entityEntry.Reload();
             target.CreatedOn = target.ModifiedOn.AddSeconds(2);
@@ -345,10 +391,11 @@ namespace FsInfoCat.UnitTests
         [Ignore]
         public void SubdirectoryLastSynchronizedOnTestMethod()
         {
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
-            Local.FileSystem fileSystem = new() { DisplayName = "Subdirectory LastSynchronizedOn FileSystem" };
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+            FileSystem fileSystem = new() { DisplayName = "Subdirectory LastSynchronizedOn FileSystem" };
             dbContext.FileSystems.Add(fileSystem);
-            Local.Volume volume = new()
+            Volume volume = new()
             {
                 DisplayName = "Subdirectory LastSynchronizedOn Item",
                 VolumeName = "Subdirectory_LastSynchronizedOn_Name",
@@ -356,11 +403,11 @@ namespace FsInfoCat.UnitTests
                 FileSystem = fileSystem
             };
             dbContext.Volumes.Add(volume);
-            Local.Subdirectory parent = new() { Volume = volume };
+            Subdirectory parent = new() { Volume = volume };
             dbContext.Subdirectories.Add(parent);
             dbContext.SaveChanges();
-            Local.Subdirectory target = new() { UpstreamId = Guid.NewGuid(), Parent = parent, Name = "LastSynchronizedOn Dir" };
-            EntityEntry<Local.Subdirectory> entityEntry = dbContext.Subdirectories.Add(target);
+            Subdirectory target = new() { UpstreamId = Guid.NewGuid(), Parent = parent, Name = "LastSynchronizedOn Dir" };
+            EntityEntry<Subdirectory> entityEntry = dbContext.Subdirectories.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsTrue(success);

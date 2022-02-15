@@ -1,4 +1,5 @@
 using FsInfoCat.Collections;
+using FsInfoCat.Local;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.DependencyInjection;
@@ -24,8 +25,34 @@ namespace FsInfoCat.UnitTests
         [TestInitialize]
         public void OnTestInitialize()
         {
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
-            dbContext.RejectChanges();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+            TestHelper.UndoChanges(dbContext);
+        }
+
+        [TestMethod("VideoPropertySet Constructor Tests")]
+        [Ignore]
+        public void VideoPropertySetConstructorTestMethod()
+        {
+            DateTime @then = DateTime.Now;
+            VideoPropertySet target = new();
+            Assert.IsTrue(target.CreatedOn <= DateTime.Now);
+            Assert.IsTrue(target.CreatedOn >= @then);
+            Assert.AreEqual(target.CreatedOn, target.ModifiedOn);
+            Assert.AreEqual(Guid.Empty, target.Id);
+            Assert.IsNull(target.LastSynchronizedOn);
+            Assert.IsNull(target.UpstreamId);
+            Assert.AreEqual(string.Empty, target.Compression);
+            Assert.IsNull(target.EncodingBitrate);
+            Assert.IsNull(target.FrameHeight);
+            Assert.IsNull(target.FrameRate);
+            Assert.IsNull(target.FrameWidth);
+            Assert.IsNull(target.HorizontalAspectRatio);
+            Assert.AreEqual(string.Empty, target.StreamName);
+            Assert.IsNull(target.StreamNumber);
+            Assert.IsNull(target.VerticalAspectRatio);
+            Assert.IsNotNull(target.Files);
+            Assert.AreEqual(0, target.Files.Count);
         }
 
         [TestMethod("VideoPropertySet Add/Remove Tests")]
@@ -33,9 +60,10 @@ namespace FsInfoCat.UnitTests
         public void VideoPropertySetAddRemoveTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
-            Local.VideoPropertySet target = new();
-            EntityEntry<Local.VideoPropertySet> entityEntry = dbContext.Entry(target);
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+            VideoPropertySet target = new();
+            EntityEntry<VideoPropertySet> entityEntry = dbContext.Entry(target);
             Assert.AreEqual(EntityState.Detached, entityEntry.State);
             entityEntry = dbContext.VideoPropertySets.Add(target);
             Assert.AreEqual(EntityState.Added, entityEntry.State);
@@ -74,7 +102,7 @@ namespace FsInfoCat.UnitTests
         [Ignore]
         public void VideoPropertySetIdTestMethod()
         {
-            Local.VideoPropertySet target = new();
+            VideoPropertySet target = new();
             Guid expectedValue = Guid.NewGuid();
             target.Id = expectedValue;
             Guid actualValue = target.Id;
@@ -91,10 +119,11 @@ namespace FsInfoCat.UnitTests
         public void VideoPropertySetCompressionTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             string expected = default; // DEFERRED: Set invalid value
-            Local.VideoPropertySet target = new() { Compression = expected };
-            EntityEntry<Local.VideoPropertySet> entityEntry = dbContext.VideoPropertySets.Add(target);
+            VideoPropertySet target = new() { Compression = expected };
+            EntityEntry<VideoPropertySet> entityEntry = dbContext.VideoPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -137,10 +166,11 @@ namespace FsInfoCat.UnitTests
         public void VideoPropertySetDirectorTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             MultiStringValue expected = default; // DEFERRED: Set invalid value
-            Local.VideoPropertySet target = new() { Director = expected };
-            EntityEntry<Local.VideoPropertySet> entityEntry = dbContext.VideoPropertySets.Add(target);
+            VideoPropertySet target = new() { Director = expected };
+            EntityEntry<VideoPropertySet> entityEntry = dbContext.VideoPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -183,10 +213,11 @@ namespace FsInfoCat.UnitTests
         public void VideoPropertySetEncodingBitrateTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             uint? expected = default; // DEFERRED: Set invalid value
-            Local.VideoPropertySet target = new() { EncodingBitrate = expected };
-            EntityEntry<Local.VideoPropertySet> entityEntry = dbContext.VideoPropertySets.Add(target);
+            VideoPropertySet target = new() { EncodingBitrate = expected };
+            EntityEntry<VideoPropertySet> entityEntry = dbContext.VideoPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -229,10 +260,11 @@ namespace FsInfoCat.UnitTests
         public void VideoPropertySetFrameHeightTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             uint? expected = default; // DEFERRED: Set invalid value
-            Local.VideoPropertySet target = new() { FrameHeight = expected };
-            EntityEntry<Local.VideoPropertySet> entityEntry = dbContext.VideoPropertySets.Add(target);
+            VideoPropertySet target = new() { FrameHeight = expected };
+            EntityEntry<VideoPropertySet> entityEntry = dbContext.VideoPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -275,10 +307,11 @@ namespace FsInfoCat.UnitTests
         public void VideoPropertySetFrameRateTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             uint? expected = default; // DEFERRED: Set invalid value
-            Local.VideoPropertySet target = new() { FrameRate = expected };
-            EntityEntry<Local.VideoPropertySet> entityEntry = dbContext.VideoPropertySets.Add(target);
+            VideoPropertySet target = new() { FrameRate = expected };
+            EntityEntry<VideoPropertySet> entityEntry = dbContext.VideoPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -321,10 +354,11 @@ namespace FsInfoCat.UnitTests
         public void VideoPropertySetFrameWidthTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             uint? expected = default; // DEFERRED: Set invalid value
-            Local.VideoPropertySet target = new() { FrameWidth = expected };
-            EntityEntry<Local.VideoPropertySet> entityEntry = dbContext.VideoPropertySets.Add(target);
+            VideoPropertySet target = new() { FrameWidth = expected };
+            EntityEntry<VideoPropertySet> entityEntry = dbContext.VideoPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -367,10 +401,11 @@ namespace FsInfoCat.UnitTests
         public void VideoPropertySetHorizontalAspectRatioTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             uint? expected = default; // DEFERRED: Set invalid value
-            Local.VideoPropertySet target = new() { HorizontalAspectRatio = expected };
-            EntityEntry<Local.VideoPropertySet> entityEntry = dbContext.VideoPropertySets.Add(target);
+            VideoPropertySet target = new() { HorizontalAspectRatio = expected };
+            EntityEntry<VideoPropertySet> entityEntry = dbContext.VideoPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -413,10 +448,11 @@ namespace FsInfoCat.UnitTests
         public void VideoPropertySetStreamNameTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             string expected = default; // DEFERRED: Set invalid value
-            Local.VideoPropertySet target = new() { StreamName = expected };
-            EntityEntry<Local.VideoPropertySet> entityEntry = dbContext.VideoPropertySets.Add(target);
+            VideoPropertySet target = new() { StreamName = expected };
+            EntityEntry<VideoPropertySet> entityEntry = dbContext.VideoPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -459,10 +495,11 @@ namespace FsInfoCat.UnitTests
         public void VideoPropertySetStreamNumberTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             ushort? expected = default; // DEFERRED: Set invalid value
-            Local.VideoPropertySet target = new() { StreamNumber = expected };
-            EntityEntry<Local.VideoPropertySet> entityEntry = dbContext.VideoPropertySets.Add(target);
+            VideoPropertySet target = new() { StreamNumber = expected };
+            EntityEntry<VideoPropertySet> entityEntry = dbContext.VideoPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -505,10 +542,11 @@ namespace FsInfoCat.UnitTests
         public void VideoPropertySetVerticalAspectRatioTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             uint? expected = default; // DEFERRED: Set invalid value
-            Local.VideoPropertySet target = new() { VerticalAspectRatio = expected };
-            EntityEntry<Local.VideoPropertySet> entityEntry = dbContext.VideoPropertySets.Add(target);
+            VideoPropertySet target = new() { VerticalAspectRatio = expected };
+            EntityEntry<VideoPropertySet> entityEntry = dbContext.VideoPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);

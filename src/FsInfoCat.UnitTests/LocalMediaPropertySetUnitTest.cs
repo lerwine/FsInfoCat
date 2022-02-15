@@ -1,3 +1,4 @@
+using FsInfoCat.Local;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.DependencyInjection;
@@ -25,8 +26,40 @@ namespace FsInfoCat.UnitTests
         [TestInitialize]
         public void OnTestInitialize()
         {
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
-            dbContext.RejectChanges();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+            TestHelper.UndoChanges(dbContext);
+        }
+
+        [TestMethod("MediaPropertySet Constructor Tests")]
+        [Ignore]
+        public void MediaPropertySetConstructorTestMethod()
+        {
+            DateTime @then = DateTime.Now;
+            MediaPropertySet target = new();
+            Assert.IsTrue(target.CreatedOn <= DateTime.Now);
+            Assert.IsTrue(target.CreatedOn >= @then);
+            Assert.AreEqual(target.CreatedOn, target.ModifiedOn);
+            Assert.AreEqual(Guid.Empty, target.Id);
+            Assert.IsNull(target.LastSynchronizedOn);
+            Assert.IsNull(target.UpstreamId);
+            Assert.AreEqual(string.Empty, target.ContentDistributor);
+            Assert.AreEqual(string.Empty, target.CreatorApplication);
+            Assert.AreEqual(string.Empty, target.CreatorApplicationVersion);
+            Assert.AreEqual(string.Empty, target.DateReleased);
+            Assert.IsNull(target.Duration);
+            Assert.AreEqual(string.Empty, target.DVDID);
+            Assert.IsNull(target.FrameCount);
+            Assert.IsNull(target.Producer);
+            Assert.AreEqual(string.Empty, target.ProtectionType);
+            Assert.AreEqual(string.Empty, target.ProviderRating);
+            Assert.AreEqual(string.Empty, target.ProviderStyle);
+            Assert.AreEqual(string.Empty, target.Publisher);
+            Assert.AreEqual(string.Empty, target.Subtitle);
+            Assert.IsNull(target.Writer);
+            Assert.IsNull(target.Year);
+            Assert.IsNotNull(target.Files);
+            Assert.AreEqual(0, target.Files.Count);
         }
 
         [TestMethod("MediaPropertySet Add/Remove Tests")]
@@ -34,9 +67,10 @@ namespace FsInfoCat.UnitTests
         public void MediaPropertySetAddRemoveTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
-            Local.MediaPropertySet target = new();
-            EntityEntry<Local.MediaPropertySet> entityEntry = dbContext.Entry(target);
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+            MediaPropertySet target = new();
+            EntityEntry<MediaPropertySet> entityEntry = dbContext.Entry(target);
             Assert.AreEqual(EntityState.Detached, entityEntry.State);
             entityEntry = dbContext.MediaPropertySets.Add(target);
             Assert.AreEqual(EntityState.Added, entityEntry.State);
@@ -80,7 +114,7 @@ namespace FsInfoCat.UnitTests
         [Ignore]
         public void MediaPropertySetIdTestMethod()
         {
-            Local.MediaPropertySet target = new();
+            MediaPropertySet target = new();
             Guid expectedValue = Guid.NewGuid();
             target.Id = expectedValue;
             Guid actualValue = target.Id;
@@ -97,10 +131,11 @@ namespace FsInfoCat.UnitTests
         public void MediaPropertySetContentDistributorTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             string expected = default; // DEFERRED: Set invalid value
-            Local.MediaPropertySet target = new() { ContentDistributor = expected };
-            EntityEntry<Local.MediaPropertySet> entityEntry = dbContext.MediaPropertySets.Add(target);
+            MediaPropertySet target = new() { ContentDistributor = expected };
+            EntityEntry<MediaPropertySet> entityEntry = dbContext.MediaPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -143,10 +178,11 @@ namespace FsInfoCat.UnitTests
         public void MediaPropertySetCreatorApplicationTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             string expected = default; // DEFERRED: Set invalid value
-            Local.MediaPropertySet target = new() { CreatorApplication = expected };
-            EntityEntry<Local.MediaPropertySet> entityEntry = dbContext.MediaPropertySets.Add(target);
+            MediaPropertySet target = new() { CreatorApplication = expected };
+            EntityEntry<MediaPropertySet> entityEntry = dbContext.MediaPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -189,10 +225,11 @@ namespace FsInfoCat.UnitTests
         public void MediaPropertySetCreatorApplicationVersionTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             string expected = default; // DEFERRED: Set invalid value
-            Local.MediaPropertySet target = new() { CreatorApplicationVersion = expected };
-            EntityEntry<Local.MediaPropertySet> entityEntry = dbContext.MediaPropertySets.Add(target);
+            MediaPropertySet target = new() { CreatorApplicationVersion = expected };
+            EntityEntry<MediaPropertySet> entityEntry = dbContext.MediaPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -235,10 +272,11 @@ namespace FsInfoCat.UnitTests
         public void MediaPropertySetDateReleasedTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             string expected = default; // DEFERRED: Set invalid value
-            Local.MediaPropertySet target = new() { DateReleased = expected };
-            EntityEntry<Local.MediaPropertySet> entityEntry = dbContext.MediaPropertySets.Add(target);
+            MediaPropertySet target = new() { DateReleased = expected };
+            EntityEntry<MediaPropertySet> entityEntry = dbContext.MediaPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -281,10 +319,11 @@ namespace FsInfoCat.UnitTests
         public void MediaPropertySetDurationTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             ulong? expected = default; // DEFERRED: Set invalid value
-            Local.MediaPropertySet target = new() { Duration = expected };
-            EntityEntry<Local.MediaPropertySet> entityEntry = dbContext.MediaPropertySets.Add(target);
+            MediaPropertySet target = new() { Duration = expected };
+            EntityEntry<MediaPropertySet> entityEntry = dbContext.MediaPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -327,10 +366,11 @@ namespace FsInfoCat.UnitTests
         public void MediaPropertySetDVDIDTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             string expected = default; // DEFERRED: Set invalid value
-            Local.MediaPropertySet target = new() { DVDID = expected };
-            EntityEntry<Local.MediaPropertySet> entityEntry = dbContext.MediaPropertySets.Add(target);
+            MediaPropertySet target = new() { DVDID = expected };
+            EntityEntry<MediaPropertySet> entityEntry = dbContext.MediaPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -373,10 +413,11 @@ namespace FsInfoCat.UnitTests
         public void MediaPropertySetFrameCountTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             uint? expected = default; // DEFERRED: Set invalid value
-            Local.MediaPropertySet target = new() { FrameCount = expected };
-            EntityEntry<Local.MediaPropertySet> entityEntry = dbContext.MediaPropertySets.Add(target);
+            MediaPropertySet target = new() { FrameCount = expected };
+            EntityEntry<MediaPropertySet> entityEntry = dbContext.MediaPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -419,10 +460,11 @@ namespace FsInfoCat.UnitTests
         public void MediaPropertySetProducerTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             string[] expected = default; // DEFERRED: Set invalid value
-            Local.MediaPropertySet target = new() { Producer = expected };
-            EntityEntry<Local.MediaPropertySet> entityEntry = dbContext.MediaPropertySets.Add(target);
+            MediaPropertySet target = new() { Producer = expected };
+            EntityEntry<MediaPropertySet> entityEntry = dbContext.MediaPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -465,10 +507,11 @@ namespace FsInfoCat.UnitTests
         public void MediaPropertySetProtectionTypeTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             string expected = default; // DEFERRED: Set invalid value
-            Local.MediaPropertySet target = new() { ProtectionType = expected };
-            EntityEntry<Local.MediaPropertySet> entityEntry = dbContext.MediaPropertySets.Add(target);
+            MediaPropertySet target = new() { ProtectionType = expected };
+            EntityEntry<MediaPropertySet> entityEntry = dbContext.MediaPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -511,10 +554,11 @@ namespace FsInfoCat.UnitTests
         public void MediaPropertySetProviderRatingTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             string expected = default; // DEFERRED: Set invalid value
-            Local.MediaPropertySet target = new() { ProviderRating = expected };
-            EntityEntry<Local.MediaPropertySet> entityEntry = dbContext.MediaPropertySets.Add(target);
+            MediaPropertySet target = new() { ProviderRating = expected };
+            EntityEntry<MediaPropertySet> entityEntry = dbContext.MediaPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -557,10 +601,11 @@ namespace FsInfoCat.UnitTests
         public void MediaPropertySetProviderStyleTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             string expected = default; // DEFERRED: Set invalid value
-            Local.MediaPropertySet target = new() { ProviderStyle = expected };
-            EntityEntry<Local.MediaPropertySet> entityEntry = dbContext.MediaPropertySets.Add(target);
+            MediaPropertySet target = new() { ProviderStyle = expected };
+            EntityEntry<MediaPropertySet> entityEntry = dbContext.MediaPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -603,10 +648,11 @@ namespace FsInfoCat.UnitTests
         public void MediaPropertySetPublisherTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             string expected = default; // DEFERRED: Set invalid value
-            Local.MediaPropertySet target = new() { Publisher = expected };
-            EntityEntry<Local.MediaPropertySet> entityEntry = dbContext.MediaPropertySets.Add(target);
+            MediaPropertySet target = new() { Publisher = expected };
+            EntityEntry<MediaPropertySet> entityEntry = dbContext.MediaPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -649,10 +695,11 @@ namespace FsInfoCat.UnitTests
         public void MediaPropertySetSubtitleTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             string expected = default; // DEFERRED: Set invalid value
-            Local.MediaPropertySet target = new() { Subtitle = expected };
-            EntityEntry<Local.MediaPropertySet> entityEntry = dbContext.MediaPropertySets.Add(target);
+            MediaPropertySet target = new() { Subtitle = expected };
+            EntityEntry<MediaPropertySet> entityEntry = dbContext.MediaPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -695,10 +742,11 @@ namespace FsInfoCat.UnitTests
         public void MediaPropertySetWriterTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             string[] expected = default; // DEFERRED: Set invalid value
-            Local.MediaPropertySet target = new() { Writer = expected };
-            EntityEntry<Local.MediaPropertySet> entityEntry = dbContext.MediaPropertySets.Add(target);
+            MediaPropertySet target = new() { Writer = expected };
+            EntityEntry<MediaPropertySet> entityEntry = dbContext.MediaPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -741,10 +789,11 @@ namespace FsInfoCat.UnitTests
         public void MediaPropertySetYearTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             uint? expected = default; // DEFERRED: Set invalid value
-            Local.MediaPropertySet target = new() { Year = expected };
-            EntityEntry<Local.MediaPropertySet> entityEntry = dbContext.MediaPropertySets.Add(target);
+            MediaPropertySet target = new() { Year = expected };
+            EntityEntry<MediaPropertySet> entityEntry = dbContext.MediaPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);

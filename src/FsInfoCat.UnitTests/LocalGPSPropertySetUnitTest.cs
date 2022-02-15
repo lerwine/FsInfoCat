@@ -1,4 +1,5 @@
 using FsInfoCat.Collections;
+using FsInfoCat.Local;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.DependencyInjection;
@@ -26,8 +27,37 @@ namespace FsInfoCat.UnitTests
         [TestInitialize]
         public void OnTestInitialize()
         {
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
-            dbContext.RejectChanges();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+            TestHelper.UndoChanges(dbContext);
+        }
+
+        [TestMethod("GPSPropertySet Constructor Tests")]
+        [Ignore]
+        public void GPSPropertySetConstructorTestMethod()
+        {
+            DateTime @then = DateTime.Now;
+            GPSPropertySet target = new();
+            Assert.IsTrue(target.CreatedOn <= DateTime.Now);
+            Assert.IsTrue(target.CreatedOn >= @then);
+            Assert.AreEqual(target.CreatedOn, target.ModifiedOn);
+            Assert.AreEqual(Guid.Empty, target.Id);
+            Assert.IsNull(target.LastSynchronizedOn);
+            Assert.IsNull(target.UpstreamId);
+            Assert.AreEqual(string.Empty, target.AreaInformation);
+            Assert.IsNull(target.LatitudeDegrees);
+            Assert.IsNull(target.LatitudeMinutes);
+            Assert.AreEqual(string.Empty, target.LatitudeRef);
+            Assert.IsNull(target.LatitudeSeconds);
+            Assert.IsNull(target.LongitudeDegrees);
+            Assert.IsNull(target.LongitudeMinutes);
+            Assert.AreEqual(string.Empty, target.LongitudeRef);
+            Assert.IsNull(target.LongitudeSeconds);
+            Assert.AreEqual(string.Empty, target.MeasureMode);
+            Assert.AreEqual(string.Empty, target.ProcessingMethod);
+            Assert.IsNull(target.VersionID);
+            Assert.IsNotNull(target.Files);
+            Assert.AreEqual(0, target.Files.Count);
         }
 
         [TestMethod("GPSPropertySet Add/Remove Tests")]
@@ -35,9 +65,10 @@ namespace FsInfoCat.UnitTests
         public void GPSPropertySetAddRemoveTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
-            Local.GPSPropertySet target = new();
-            EntityEntry<Local.GPSPropertySet> entityEntry = dbContext.Entry(target);
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+            GPSPropertySet target = new();
+            EntityEntry<GPSPropertySet> entityEntry = dbContext.Entry(target);
             Assert.AreEqual(EntityState.Detached, entityEntry.State);
             entityEntry = dbContext.GPSPropertySets.Add(target);
             Assert.AreEqual(EntityState.Added, entityEntry.State);
@@ -78,7 +109,7 @@ namespace FsInfoCat.UnitTests
         [Ignore]
         public void GPSPropertySetIdTestMethod()
         {
-            Local.GPSPropertySet target = new();
+            GPSPropertySet target = new();
             Guid expectedValue = Guid.NewGuid();
             target.Id = expectedValue;
             Guid actualValue = target.Id;
@@ -95,10 +126,11 @@ namespace FsInfoCat.UnitTests
         public void GPSPropertySetAreaInformationTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             string expected = default; // DEFERRED: Set invalid value
-            Local.GPSPropertySet target = new() { AreaInformation = expected };
-            EntityEntry<Local.GPSPropertySet> entityEntry = dbContext.GPSPropertySets.Add(target);
+            GPSPropertySet target = new() { AreaInformation = expected };
+            EntityEntry<GPSPropertySet> entityEntry = dbContext.GPSPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -141,10 +173,11 @@ namespace FsInfoCat.UnitTests
         public void GPSPropertySetLatitudeDegreesTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             double expected = default; // DEFERRED: Set invalid value
-            Local.GPSPropertySet target = new() { LatitudeDegrees = expected };
-            EntityEntry<Local.GPSPropertySet> entityEntry = dbContext.GPSPropertySets.Add(target);
+            GPSPropertySet target = new() { LatitudeDegrees = expected };
+            EntityEntry<GPSPropertySet> entityEntry = dbContext.GPSPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -187,10 +220,11 @@ namespace FsInfoCat.UnitTests
         public void GPSPropertySetLatitudeMinutesTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             double expected = default; // DEFERRED: Set invalid value
-            Local.GPSPropertySet target = new() { LatitudeMinutes = expected };
-            EntityEntry<Local.GPSPropertySet> entityEntry = dbContext.GPSPropertySets.Add(target);
+            GPSPropertySet target = new() { LatitudeMinutes = expected };
+            EntityEntry<GPSPropertySet> entityEntry = dbContext.GPSPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -233,10 +267,11 @@ namespace FsInfoCat.UnitTests
         public void GPSPropertySetLatitudeSecondsTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             double expected = default; // DEFERRED: Set invalid value
-            Local.GPSPropertySet target = new() { LatitudeSeconds = expected };
-            EntityEntry<Local.GPSPropertySet> entityEntry = dbContext.GPSPropertySets.Add(target);
+            GPSPropertySet target = new() { LatitudeSeconds = expected };
+            EntityEntry<GPSPropertySet> entityEntry = dbContext.GPSPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -279,10 +314,11 @@ namespace FsInfoCat.UnitTests
         public void GPSPropertySetLatitudeRefTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             string expected = default; // DEFERRED: Set invalid value
-            Local.GPSPropertySet target = new() { LatitudeRef = expected };
-            EntityEntry<Local.GPSPropertySet> entityEntry = dbContext.GPSPropertySets.Add(target);
+            GPSPropertySet target = new() { LatitudeRef = expected };
+            EntityEntry<GPSPropertySet> entityEntry = dbContext.GPSPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -325,10 +361,11 @@ namespace FsInfoCat.UnitTests
         public void GPSPropertySetLongitudeDegreesTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             double expected = default; // DEFERRED: Set invalid value
-            Local.GPSPropertySet target = new() { LongitudeDegrees = expected };
-            EntityEntry<Local.GPSPropertySet> entityEntry = dbContext.GPSPropertySets.Add(target);
+            GPSPropertySet target = new() { LongitudeDegrees = expected };
+            EntityEntry<GPSPropertySet> entityEntry = dbContext.GPSPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -371,10 +408,11 @@ namespace FsInfoCat.UnitTests
         public void GPSPropertySetLongitudeMinutesTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             double expected = default; // DEFERRED: Set invalid value
-            Local.GPSPropertySet target = new() { LongitudeMinutes = expected };
-            EntityEntry<Local.GPSPropertySet> entityEntry = dbContext.GPSPropertySets.Add(target);
+            GPSPropertySet target = new() { LongitudeMinutes = expected };
+            EntityEntry<GPSPropertySet> entityEntry = dbContext.GPSPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -417,10 +455,11 @@ namespace FsInfoCat.UnitTests
         public void GPSPropertySetLongitudeSecondsTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             double expected = default; // DEFERRED: Set invalid value
-            Local.GPSPropertySet target = new() { LongitudeSeconds = expected };
-            EntityEntry<Local.GPSPropertySet> entityEntry = dbContext.GPSPropertySets.Add(target);
+            GPSPropertySet target = new() { LongitudeSeconds = expected };
+            EntityEntry<GPSPropertySet> entityEntry = dbContext.GPSPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -463,10 +502,11 @@ namespace FsInfoCat.UnitTests
         public void GPSPropertySetLongitudeRefTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             string expected = default; // DEFERRED: Set invalid value
-            Local.GPSPropertySet target = new() { LongitudeRef = expected };
-            EntityEntry<Local.GPSPropertySet> entityEntry = dbContext.GPSPropertySets.Add(target);
+            GPSPropertySet target = new() { LongitudeRef = expected };
+            EntityEntry<GPSPropertySet> entityEntry = dbContext.GPSPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -509,10 +549,11 @@ namespace FsInfoCat.UnitTests
         public void GPSPropertySetMeasureModeTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             string expected = default; // DEFERRED: Set invalid value
-            Local.GPSPropertySet target = new() { MeasureMode = expected };
-            EntityEntry<Local.GPSPropertySet> entityEntry = dbContext.GPSPropertySets.Add(target);
+            GPSPropertySet target = new() { MeasureMode = expected };
+            EntityEntry<GPSPropertySet> entityEntry = dbContext.GPSPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -555,10 +596,11 @@ namespace FsInfoCat.UnitTests
         public void GPSPropertySetProcessingMethodTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             string expected = default; // DEFERRED: Set invalid value
-            Local.GPSPropertySet target = new() { ProcessingMethod = expected };
-            EntityEntry<Local.GPSPropertySet> entityEntry = dbContext.GPSPropertySets.Add(target);
+            GPSPropertySet target = new() { ProcessingMethod = expected };
+            EntityEntry<GPSPropertySet> entityEntry = dbContext.GPSPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -601,10 +643,11 @@ namespace FsInfoCat.UnitTests
         public void GPSPropertySetVersionIDTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
             ByteValues expected = default; // DEFERRED: Set invalid value
-            Local.GPSPropertySet target = new() { VersionID = expected };
-            EntityEntry<Local.GPSPropertySet> entityEntry = dbContext.GPSPropertySets.Add(target);
+            GPSPropertySet target = new() { VersionID = expected };
+            EntityEntry<GPSPropertySet> entityEntry = dbContext.GPSPropertySets.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);

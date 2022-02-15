@@ -1,3 +1,4 @@
+using FsInfoCat.Local;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.DependencyInjection;
@@ -25,8 +26,28 @@ namespace FsInfoCat.UnitTests
         [TestInitialize]
         public void OnTestInitialize()
         {
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
-            dbContext.RejectChanges();
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+            TestHelper.UndoChanges(dbContext);
+        }
+
+        [TestMethod("FileComparison Constructor Tests")]
+        [Ignore]
+        public void FileComparisonConstructorTestMethod()
+        {
+            DateTime @then = DateTime.Now;
+            FileComparison target = new();
+            Assert.IsTrue(target.CreatedOn <= DateTime.Now);
+            Assert.IsTrue(target.CreatedOn >= @then);
+            Assert.AreEqual(target.CreatedOn, target.ModifiedOn);
+            Assert.AreEqual(target.CreatedOn, target.ComparedOn);
+            Assert.IsNull(target.LastSynchronizedOn);
+            Assert.IsNull(target.UpstreamId);
+            Assert.IsFalse(target.AreEqual);
+            Assert.IsNull(target.Baseline);
+            Assert.AreEqual(Guid.Empty, target.BaselineId);
+            Assert.IsNull(target.Correlative);
+            Assert.AreEqual(Guid.Empty, target.CorrelativeId);
         }
 
         [TestMethod("FileComparison Add/Remove Tests")]
@@ -34,9 +55,10 @@ namespace FsInfoCat.UnitTests
         public void FileComparisonAddRemoveTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
-            Local.FileComparison target = new() { /* DEFERRED: Initialize properties */ };
-            EntityEntry<Local.FileComparison> entityEntry = dbContext.Entry(target);
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+            FileComparison target = new() { /* DEFERRED: Initialize properties */ };
+            EntityEntry<FileComparison> entityEntry = dbContext.Entry(target);
             Assert.AreEqual(EntityState.Detached, entityEntry.State);
             entityEntry = dbContext.Comparisons.Add(target);
             Assert.AreEqual(EntityState.Added, entityEntry.State);
@@ -68,10 +90,11 @@ namespace FsInfoCat.UnitTests
         public void FileComparisonBaselineTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
-            Local.DbFile expected = default; // DEFERRED: Set invalid value
-            Local.FileComparison target = new() { Baseline = expected };
-            EntityEntry<Local.FileComparison> entityEntry = dbContext.Comparisons.Add(target);
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+            DbFile expected = default; // DEFERRED: Set invalid value
+            FileComparison target = new() { Baseline = expected };
+            EntityEntry<FileComparison> entityEntry = dbContext.Comparisons.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -114,10 +137,11 @@ namespace FsInfoCat.UnitTests
         public void FileComparisonCorrelativeTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
-            Local.DbFile expected = default; // DEFERRED: Set invalid value
-            Local.FileComparison target = new() { Correlative = expected };
-            EntityEntry<Local.FileComparison> entityEntry = dbContext.Comparisons.Add(target);
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+            DbFile expected = default; // DEFERRED: Set invalid value
+            FileComparison target = new() { Correlative = expected };
+            EntityEntry<FileComparison> entityEntry = dbContext.Comparisons.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -160,9 +184,10 @@ namespace FsInfoCat.UnitTests
         public void FileComparisonCreatedOnTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
-            Local.FileComparison target = new() {  /* DEFERRED: Initialize properties */ };
-            EntityEntry<Local.FileComparison> entityEntry = dbContext.Comparisons.Add(target);
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+            FileComparison target = new() {  /* DEFERRED: Initialize properties */ };
+            EntityEntry<FileComparison> entityEntry = dbContext.Comparisons.Add(target);
             dbContext.SaveChanges();
             entityEntry.Reload();
             target.CreatedOn = target.ModifiedOn.AddSeconds(2);
@@ -200,9 +225,10 @@ namespace FsInfoCat.UnitTests
         public void FileComparisonLastSynchronizedOnTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
-            using var dbContext = Hosting.ServiceProvider.GetService<Local.LocalDbContext>();
-            Local.FileComparison target = new() {  /* DEFERRED: Initialize properties */ UpstreamId = Guid.NewGuid() };
-            EntityEntry<Local.FileComparison> entityEntry = dbContext.Comparisons.Add(target);
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+            FileComparison target = new() {  /* DEFERRED: Initialize properties */ UpstreamId = Guid.NewGuid() };
+            EntityEntry<FileComparison> entityEntry = dbContext.Comparisons.Add(target);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsTrue(success);
