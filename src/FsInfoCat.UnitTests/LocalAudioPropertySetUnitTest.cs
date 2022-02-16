@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -53,6 +54,111 @@ namespace FsInfoCat.UnitTests
             Assert.IsNull(target.StreamNumber);
             Assert.IsNotNull(target.Files);
             Assert.AreEqual(0, target.Files.Count);
+        }
+
+        [TestMethod]
+        public void EqualsTestMethod1()
+        {
+            AudioPropertySet target = new();
+            AudioPropertySet other = null;
+            Assert.IsFalse(target.Equals(other));
+            other = new();
+            Assert.AreEqual(target.CreatedOn.Equals(other.CreatedOn), target.Equals(other));
+        }
+
+        private static IEnumerable<object[]> GetEqualsTestData()
+        {
+            DateTime createdOn = DateTime.Now;
+            DateTime plus1 = DateTime.Now.AddMilliseconds(1.0);
+            DateTime plus2 = plus1.AddMilliseconds(2.0);
+            Guid id1 = Guid.NewGuid();
+            Guid id2 = Guid.NewGuid();
+            AudioPropertySet target = new() { Id = id1 };
+            yield return new object[] { target, target, true };
+            yield return new object[] { target, null, false };
+            target = new();
+            yield return new object[] { target, target, true };
+            yield return new object[] { target, new AudioPropertySet() { Id = id1 }, false };
+            yield return new object[] { target, null, false };
+            (AudioPropertySet, AudioPropertySet)[] getEqualPropertyItems() => new (AudioPropertySet, AudioPropertySet)[]
+            {
+                (new AudioPropertySet(), new AudioPropertySet()),
+                (new AudioPropertySet() { CreatedOn = createdOn, ModifiedOn = plus1 }, new AudioPropertySet() { CreatedOn = createdOn, ModifiedOn = plus1 }),
+                (new AudioPropertySet() { LastSynchronizedOn = plus1, UpstreamId = id2, CreatedOn = createdOn, ModifiedOn = plus2 }, new AudioPropertySet() { LastSynchronizedOn = plus1, UpstreamId = id2, CreatedOn = createdOn, ModifiedOn = plus2 }),
+                (new AudioPropertySet() { Compression = "Test" }, new AudioPropertySet() { Compression = "Test" }),
+                (new AudioPropertySet() { EncodingBitrate = 0u }, new AudioPropertySet() { EncodingBitrate = 0u }),
+                (new AudioPropertySet() { Format = "Test" }, new AudioPropertySet() { Format = "Test" }),
+                (new AudioPropertySet() { IsVariableBitrate = true }, new AudioPropertySet() { IsVariableBitrate = true }),
+                (new AudioPropertySet() { SampleRate = 0u }, new AudioPropertySet() { SampleRate = 0u }),
+                (new AudioPropertySet() { SampleSize = 0u }, new AudioPropertySet() { SampleSize = 0u }),
+                (new AudioPropertySet() { StreamName = "Test" }, new AudioPropertySet() { StreamName = "Test" }),
+                ( new AudioPropertySet() { StreamNumber = 0 }, new AudioPropertySet() { StreamNumber = 0 })
+            };
+            foreach ((AudioPropertySet t, AudioPropertySet other) in getEqualPropertyItems())
+                yield return new object[] { t, other, true };
+            foreach ((AudioPropertySet t, AudioPropertySet other) in getEqualPropertyItems())
+            {
+                t.Id = id1;
+                yield return new object[] { t, other, false };
+            }
+            foreach ((AudioPropertySet t, AudioPropertySet other) in getEqualPropertyItems())
+            {
+                other.Id = id2;
+                yield return new object[] { t, other, false };
+            }
+            foreach ((AudioPropertySet t, AudioPropertySet other) in getEqualPropertyItems())
+            {
+                t.Id = id1;
+                other.Id = id2;
+                yield return new object[] { t, other, false };
+            }
+            (AudioPropertySet, AudioPropertySet)[] getDifferingPropertyItems() => new (AudioPropertySet, AudioPropertySet)[]
+            {
+                (new AudioPropertySet(), new AudioPropertySet() { CreatedOn = createdOn, ModifiedOn = plus1 }),
+                (new AudioPropertySet() { CreatedOn = plus1, ModifiedOn = plus1 }, new AudioPropertySet() { CreatedOn = createdOn, ModifiedOn = plus1 }),
+                (new AudioPropertySet() { CreatedOn = createdOn, ModifiedOn = plus1 }, new AudioPropertySet() { CreatedOn = plus1, ModifiedOn = plus1 }),
+                (new AudioPropertySet() { CreatedOn = createdOn, ModifiedOn = plus2 }, new AudioPropertySet() { LastSynchronizedOn = plus1, UpstreamId = id1, CreatedOn = createdOn, ModifiedOn = plus2 }),
+                (new AudioPropertySet() { LastSynchronizedOn = plus1, UpstreamId = id1, CreatedOn = createdOn, ModifiedOn = plus2 }, new AudioPropertySet() { CreatedOn = createdOn, ModifiedOn = plus2 }),
+                (new AudioPropertySet() { LastSynchronizedOn = plus1, UpstreamId = id1, CreatedOn = createdOn, ModifiedOn = plus2 }, new AudioPropertySet() { LastSynchronizedOn = plus1, UpstreamId = id2, CreatedOn = createdOn, ModifiedOn = plus2 }),
+                (new AudioPropertySet() { LastSynchronizedOn = plus2, UpstreamId = id2, CreatedOn = createdOn, ModifiedOn = plus2 }, new AudioPropertySet() { LastSynchronizedOn = plus1, UpstreamId = id2, CreatedOn = createdOn, ModifiedOn = plus2 }),
+                (new AudioPropertySet() { LastSynchronizedOn = plus1, UpstreamId = id2, CreatedOn = createdOn, ModifiedOn = plus2 }, new AudioPropertySet() { LastSynchronizedOn = plus2, UpstreamId = id2, CreatedOn = createdOn, ModifiedOn = plus2 }),
+                (new AudioPropertySet() { Compression = "Test2" }, new AudioPropertySet() { Compression = "Test" }),
+                (new AudioPropertySet() { Compression = "Test" }, new AudioPropertySet()),
+                (new AudioPropertySet(), new AudioPropertySet() { Compression = "Test" }),
+                (new AudioPropertySet(), new AudioPropertySet() { EncodingBitrate = 0u }),
+                (new AudioPropertySet() { EncodingBitrate = 0u }, new AudioPropertySet()),
+                (new AudioPropertySet() { EncodingBitrate = 0u }, new AudioPropertySet() { EncodingBitrate = 1u }),
+                (new AudioPropertySet() { Format = "Test2" }, new AudioPropertySet() { Format = "Test" }),
+                (new AudioPropertySet() { Format = "Test" }, new AudioPropertySet()),
+                (new AudioPropertySet(), new AudioPropertySet() { Format = "Test" }),
+                (new AudioPropertySet(), new AudioPropertySet() { IsVariableBitrate = true }),
+                (new AudioPropertySet() { IsVariableBitrate = true }, new AudioPropertySet()),
+                (new AudioPropertySet(), new AudioPropertySet() { SampleRate = 0u }),
+                (new AudioPropertySet() { SampleRate = 0u }, new AudioPropertySet()),
+                (new AudioPropertySet() { SampleRate = 0u }, new AudioPropertySet() { SampleRate = 0u }),
+                (new AudioPropertySet() { SampleSize = 0u }, new AudioPropertySet() { SampleSize = 1u }),
+                (new AudioPropertySet(), new AudioPropertySet() { StreamName = "Test" }),
+                (new AudioPropertySet() { StreamName = "Test" }, new AudioPropertySet()),
+                (new AudioPropertySet() { StreamName = "Test" }, new AudioPropertySet() { StreamName = "Test2" }),
+                (new AudioPropertySet(), new AudioPropertySet() { StreamNumber = 0 }),
+                (new AudioPropertySet() { StreamNumber = 0 }, new AudioPropertySet()),
+                (new AudioPropertySet() { StreamNumber = 0 }, new AudioPropertySet() { StreamNumber = 1 })
+            };
+            foreach ((AudioPropertySet t, AudioPropertySet other) in getDifferingPropertyItems())
+                yield return new object[] { t, other, false };
+            foreach ((AudioPropertySet t, AudioPropertySet other) in getDifferingPropertyItems())
+            {
+                t.Id = other.Id = id1;
+                yield return new object[] { t, other, true };
+            }
+        }
+
+        [TestMethod]
+        [DynamicData("GetEqualsTestData", DynamicDataSourceType.Method)]
+        public void EqualsTestMethod2(AudioPropertySet target, AudioPropertySet other, bool expectedResult)
+        {
+            bool actualResult = target.Equals(other);
+            Assert.AreEqual(expectedResult, actualResult);
         }
 
         [TestMethod("AudioPropertySet Add/Remove Tests")]

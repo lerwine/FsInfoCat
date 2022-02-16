@@ -51,6 +51,92 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(0, target.RedundantSets.Count);
         }
 
+        [TestMethod]
+        public void EqualsTestMethod1()
+        {
+            BinaryPropertySet target = new();
+            BinaryPropertySet other = null;
+            Assert.IsFalse(target.Equals(other));
+            other = new();
+            Assert.AreEqual(target.CreatedOn.Equals(other.CreatedOn), target.Equals(other));
+        }
+
+        private static IEnumerable<object[]> GetEqualsTestData()
+        {
+            DateTime createdOn = DateTime.Now;
+            DateTime plus1 = DateTime.Now.AddMilliseconds(1.0);
+            DateTime plus2 = plus1.AddMilliseconds(2.0);
+            Guid id1 = Guid.NewGuid();
+            Guid id2 = Guid.NewGuid();
+            MD5Hash hash1 = new MD5Hash(Convert.FromBase64String("JHKSK4I8aid2KAi0+satWg=="));
+            MD5Hash hash2 = new MD5Hash(Convert.FromBase64String("lJ+PRmeVDep5IoN7Wn6/6g=="));
+            BinaryPropertySet target = new() { Id = id1 };
+            yield return new object[] { target, target, true };
+            yield return new object[] { target, null, false };
+            target = new();
+            yield return new object[] { target, target, true };
+            yield return new object[] { target, new BinaryPropertySet() { Id = id1 }, false };
+            yield return new object[] { target, null, false };
+            (BinaryPropertySet, BinaryPropertySet)[] getEqualPropertyItems() => new (BinaryPropertySet, BinaryPropertySet)[]
+            {
+                (new BinaryPropertySet(), new BinaryPropertySet()),
+                (new BinaryPropertySet() { CreatedOn = createdOn, ModifiedOn = plus1 }, new BinaryPropertySet() { CreatedOn = createdOn, ModifiedOn = plus1 }),
+                (new BinaryPropertySet() { LastSynchronizedOn = plus1, UpstreamId = id2, CreatedOn = createdOn, ModifiedOn = plus2 }, new BinaryPropertySet() { LastSynchronizedOn = plus1, UpstreamId = id2, CreatedOn = createdOn, ModifiedOn = plus2 }),
+                (new BinaryPropertySet() { Hash = hash1 }, new BinaryPropertySet() { Hash = hash1 }),
+                (new BinaryPropertySet() { Length = 1L }, new BinaryPropertySet() { Length = 1L })
+            };
+            foreach ((BinaryPropertySet t, BinaryPropertySet other) in getEqualPropertyItems())
+                yield return new object[] { t, other, true };
+            foreach ((BinaryPropertySet t, BinaryPropertySet other) in getEqualPropertyItems())
+            {
+                t.Id = id1;
+                yield return new object[] { t, other, false };
+            }
+            foreach ((BinaryPropertySet t, BinaryPropertySet other) in getEqualPropertyItems())
+            {
+                other.Id = id2;
+                yield return new object[] { t, other, false };
+            }
+            foreach ((BinaryPropertySet t, BinaryPropertySet other) in getEqualPropertyItems())
+            {
+                t.Id = id1;
+                other.Id = id2;
+                yield return new object[] { t, other, false };
+            }
+            (BinaryPropertySet, BinaryPropertySet)[] getDifferingPropertyItems() => new (BinaryPropertySet, BinaryPropertySet)[]
+            {
+                (new BinaryPropertySet(), new BinaryPropertySet() { CreatedOn = createdOn, ModifiedOn = plus1 }),
+                (new BinaryPropertySet() { CreatedOn = plus1, ModifiedOn = plus1 }, new BinaryPropertySet() { CreatedOn = createdOn, ModifiedOn = plus1 }),
+                (new BinaryPropertySet() { CreatedOn = createdOn, ModifiedOn = plus1 }, new BinaryPropertySet() { CreatedOn = plus1, ModifiedOn = plus1 }),
+                (new BinaryPropertySet() { CreatedOn = createdOn, ModifiedOn = plus2 }, new BinaryPropertySet() { LastSynchronizedOn = plus1, UpstreamId = id1, CreatedOn = createdOn, ModifiedOn = plus2 }),
+                (new BinaryPropertySet() { LastSynchronizedOn = plus1, UpstreamId = id1, CreatedOn = createdOn, ModifiedOn = plus2 }, new BinaryPropertySet() { CreatedOn = createdOn, ModifiedOn = plus2 }),
+                (new BinaryPropertySet() { LastSynchronizedOn = plus1, UpstreamId = id1, CreatedOn = createdOn, ModifiedOn = plus2 }, new BinaryPropertySet() { LastSynchronizedOn = plus1, UpstreamId = id2, CreatedOn = createdOn, ModifiedOn = plus2 }),
+                (new BinaryPropertySet() { LastSynchronizedOn = plus2, UpstreamId = id2, CreatedOn = createdOn, ModifiedOn = plus2 }, new BinaryPropertySet() { LastSynchronizedOn = plus1, UpstreamId = id2, CreatedOn = createdOn, ModifiedOn = plus2 }),
+                (new BinaryPropertySet() { LastSynchronizedOn = plus1, UpstreamId = id2, CreatedOn = createdOn, ModifiedOn = plus2 }, new BinaryPropertySet() { LastSynchronizedOn = plus2, UpstreamId = id2, CreatedOn = createdOn, ModifiedOn = plus2 }),
+                (new BinaryPropertySet() { Hash = hash1 }, new BinaryPropertySet() { Hash = hash2 }),
+                (new BinaryPropertySet() { Hash = hash1 }, new BinaryPropertySet()),
+                (new BinaryPropertySet(), new BinaryPropertySet() { Hash = hash2 }),
+                (new BinaryPropertySet(), new BinaryPropertySet() { Length = 1L }),
+                (new BinaryPropertySet() { Length = 1L }, new BinaryPropertySet()),
+                (new BinaryPropertySet() { Length = 1L }, new BinaryPropertySet() { Length = 2L })
+            };
+            foreach ((BinaryPropertySet t, BinaryPropertySet other) in getDifferingPropertyItems())
+                yield return new object[] { t, other, false };
+            foreach ((BinaryPropertySet t, BinaryPropertySet other) in getDifferingPropertyItems())
+            {
+                t.Id = other.Id = id1;
+                yield return new object[] { t, other, true };
+            }
+        }
+
+        [TestMethod]
+        [DynamicData("GetEqualsTestData", DynamicDataSourceType.Method)]
+        public void EqualsTestMethod2(BinaryPropertySet target, BinaryPropertySet other, bool expectedResult)
+        {
+            bool actualResult = target.Equals(other);
+            Assert.AreEqual(expectedResult, actualResult);
+        }
+
         [TestMethod("Guid Id")]
         public void IdTestMethod()
         {

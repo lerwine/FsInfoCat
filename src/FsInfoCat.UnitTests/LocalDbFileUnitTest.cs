@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -32,7 +33,6 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod("DbFile Constructor Tests")]
-        [Ignore]
         public void DbFileConstructorTestMethod()
         {
             DateTime @then = DateTime.Now;
@@ -88,6 +88,277 @@ namespace FsInfoCat.UnitTests
             Assert.IsNull(target.SummaryPropertySetId);
             Assert.IsNull(target.VideoProperties);
             Assert.IsNull(target.VideoPropertySetId);
+        }
+
+        [TestMethod]
+        public void EqualsTestMethod1()
+        {
+            DbFile target = new();
+            DbFile other = null;
+            Assert.IsFalse(target.Equals(other));
+            other = new();
+            Assert.AreEqual(target.CreatedOn.Equals(other.CreatedOn), target.Equals(other));
+        }
+
+        private static IEnumerable<object[]> GetEqualsTestData()
+        {
+            DateTime createdOn = DateTime.Now;
+            DateTime plus1 = DateTime.Now.AddMilliseconds(1.0);
+            DateTime plus2 = plus1.AddMilliseconds(2.0);
+            Guid id1 = Guid.NewGuid();
+            Guid id2 = Guid.NewGuid();
+            Guid binaryPropertySetId = Guid.NewGuid();
+            Guid parentId = Guid.NewGuid();
+            DbFile target = new() { Id = id1, BinaryProperties = new(), Parent = new() };
+            yield return new object[] { target, target, true };
+            yield return new object[] { target, null, false };
+            target = new() { BinaryProperties = new(), Parent = new() };
+            yield return new object[] { target, target, true };
+            yield return new object[] { target, new DbFile() { Id = id1 }, false };
+            yield return new object[] { target, null, false };
+            BinaryPropertySet binaryPropertiesA = new() { Id = binaryPropertySetId };
+            BinaryPropertySet binaryPropertiesB = new() { Id = binaryPropertySetId };
+            BinaryPropertySet binaryProperties2 = new() { Id = Guid.NewGuid() };
+            Subdirectory parentA = new() { Id = parentId, Volume = new() { Id = Guid.NewGuid(), FileSystem = new() { Id = Guid.NewGuid() } } };
+            parentA.Volume.RootDirectory = parentA;
+            Subdirectory parentB = new() { Id = parentId, Volume = new() { Id = parentA.Volume.Id, FileSystem = new() { Id = parentA.Volume.FileSystemId } } };
+            parentB.Volume.RootDirectory = parentB;
+            Subdirectory parent2 = new() { Id = Guid.NewGuid(), Volume = new() { Id = Guid.NewGuid(), FileSystem = new() { Id = Guid.NewGuid() } } };
+            parent2.Volume.RootDirectory = parent2;
+            (DbFile, DbFile)[] getEqualPropertyItems() => new (DbFile, DbFile)[]
+            {
+                (new DbFile() { BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { CreatedOn = createdOn, ModifiedOn = plus1, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { CreatedOn = createdOn, ModifiedOn = plus1, BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { LastSynchronizedOn = plus1, UpstreamId = id2, CreatedOn = createdOn, ModifiedOn = plus2, BinaryProperties = binaryPropertiesA, Parent = parentA },
+                    new DbFile() { LastSynchronizedOn = plus1, UpstreamId = id2, CreatedOn = createdOn, ModifiedOn = plus2, BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { AudioProperties = new() { Id = id2 }, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { AudioProperties = new() { Id = id2 }, BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { AudioPropertySetId = id2, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { AudioProperties = new() { Id = id2 }, BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { AudioProperties = new() { Id = id2 }, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { AudioPropertySetId = id2, BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { AudioPropertySetId = id2, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { AudioPropertySetId = id2, BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { BinaryProperties = new() { Id = binaryPropertySetId }, Parent = parentA }, new DbFile() { BinaryProperties = new() { Id = binaryPropertySetId }, Parent = parentB }),
+                (new DbFile() { BinaryPropertySetId = binaryPropertySetId, Parent = parentA }, new DbFile() { BinaryProperties = new() { Id = binaryPropertySetId }, Parent = parentB }),
+                (new DbFile() { BinaryProperties = new() { Id = binaryPropertySetId }, Parent = parentA }, new DbFile() { BinaryPropertySetId = binaryPropertySetId, Parent = parentB }),
+                (new DbFile() { BinaryPropertySetId = binaryPropertySetId, Parent = parentA }, new DbFile() { BinaryPropertySetId = binaryPropertySetId, Parent = parentB }),
+                (new DbFile() { CreationTime = plus1, LastWriteTime = plus2, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { CreationTime = plus1, LastWriteTime = plus2, BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { DocumentProperties = new() { Id = id2 }, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { DocumentProperties = new() { Id = id2 }, BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { DocumentPropertySetId = id2, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { DocumentProperties = new() { Id = id2 }, BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { DocumentProperties = new() { Id = id2 }, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { DocumentPropertySetId = id2, BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { DocumentPropertySetId = id2, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { DocumentPropertySetId = id2, BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { DRMProperties = new() { Id = id2 }, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { DRMProperties = new() { Id = id2 }, BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { DRMPropertySetId = id2, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { DRMProperties = new() { Id = id2 }, BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { DRMProperties = new() { Id = id2 }, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { DRMPropertySetId = id2, BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { DRMPropertySetId = id2, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { DRMPropertySetId = id2, BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { GPSProperties = new() { Id = id2 }, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { GPSProperties = new() { Id = id2 }, BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { GPSPropertySetId = id2, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { GPSProperties = new() { Id = id2 }, BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { GPSProperties = new() { Id = id2 }, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { GPSPropertySetId = id2, BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { GPSPropertySetId = id2, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { GPSPropertySetId = id2, BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { ImageProperties = new() { Id = id2 }, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { ImageProperties = new() { Id = id2 }, BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { ImagePropertySetId = id2, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { ImageProperties = new() { Id = id2 }, BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { ImageProperties = new() { Id = id2 }, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { ImagePropertySetId = id2, BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { ImagePropertySetId = id2, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { ImagePropertySetId = id2, BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { LastAccessed = plus2, LastWriteTime = plus1, CreatedOn = createdOn, ModifiedOn = plus2, BinaryProperties = binaryPropertiesA, Parent = parentA },
+                    new DbFile() { LastAccessed = plus2, LastWriteTime = plus1, CreatedOn = createdOn, ModifiedOn = plus2, BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { LastHashCalculation = plus1, LastAccessed = plus2, LastWriteTime = plus2, CreatedOn = createdOn, ModifiedOn = plus2, BinaryProperties = binaryPropertiesA, Parent = parentA },
+                    new DbFile() { LastHashCalculation = plus1, LastAccessed = plus2, LastWriteTime = plus2, CreatedOn = createdOn, ModifiedOn = plus2, BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { MediaProperties = new() { Id = id2 }, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { MediaProperties = new() { Id = id2 }, BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { MediaPropertySetId = id2, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { MediaProperties = new() { Id = id2 }, BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { MediaProperties = new() { Id = id2 }, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { MediaPropertySetId = id2, BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { MediaPropertySetId = id2, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { MediaPropertySetId = id2, BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { MusicProperties = new() { Id = id2 }, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { MusicProperties = new() { Id = id2 }, BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { MusicPropertySetId = id2, BinaryProperties = binaryPropertiesA, Parent = parentB }, new DbFile() { MusicProperties = new() { Id = id2 }, BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { MusicProperties = new() { Id = id2 }, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { MusicPropertySetId = id2, BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { MusicPropertySetId = id2, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { MusicPropertySetId = id2, BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { Name = "Test", BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { Name = "Test", BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { Notes = "Test", BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { Notes = "Test", BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { Options = FileCrawlOptions.FlaggedForRescan, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { Options = FileCrawlOptions.FlaggedForRescan, BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { Parent = new() { Id = parentId }, BinaryProperties = binaryPropertiesA }, new DbFile() { Parent = new() { Id = parentId }, BinaryProperties = binaryPropertiesB  }),
+                (new DbFile() { ParentId = parentId, BinaryProperties = binaryPropertiesA }, new DbFile() { Parent = new() { Id = parentId }, BinaryProperties = binaryPropertiesB }),
+                (new DbFile() { Parent = new() { Id = parentId }, BinaryProperties = binaryPropertiesA }, new DbFile() { ParentId = parentId, BinaryProperties = binaryPropertiesB }),
+                (new DbFile() { PhotoProperties = new() { Id = id2 }, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { PhotoProperties = new() { Id = id2 }, BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { PhotoPropertySetId = id2, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { PhotoProperties = new() { Id = id2 }, BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { PhotoProperties = new() { Id = id2 }, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { PhotoPropertySetId = id2, BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { PhotoPropertySetId = id2, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { PhotoPropertySetId = id2, BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { RecordedTVProperties = new() { Id = id2 }, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { RecordedTVProperties = new() { Id = id2 }, BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { RecordedTVPropertySetId = id2, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { RecordedTVProperties = new() { Id = id2 }, BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { RecordedTVProperties = new() { Id = id2 }, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { RecordedTVPropertySetId = id2, BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { RecordedTVPropertySetId = id2, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { RecordedTVPropertySetId = id2, BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { Status = FileCorrelationStatus.Correlated, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { Status = FileCorrelationStatus.Correlated, BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { SummaryProperties = new() { Id = id2 }, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { SummaryProperties = new() { Id = id2 }, BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { SummaryPropertySetId = id2, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { SummaryProperties = new() { Id = id2 }, BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { SummaryProperties = new() { Id = id2 }, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { SummaryPropertySetId = id2, BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { SummaryPropertySetId = id2, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { SummaryPropertySetId = id2, BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { VideoProperties = new() { Id = id2 }, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { VideoProperties = new() { Id = id2 }, BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { VideoPropertySetId = id2, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { VideoProperties = new() { Id = id2 }, BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { VideoProperties = new() { Id = id2 }, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { VideoPropertySetId = id2, BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { VideoPropertySetId = id2, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { VideoPropertySetId = id2, BinaryProperties = binaryPropertiesB, Parent = parentB })
+            };
+            foreach ((DbFile t, DbFile other) in getEqualPropertyItems())
+                yield return new object[] { t, other, true };
+            foreach ((DbFile t, DbFile other) in getEqualPropertyItems())
+            {
+                t.Id = id1;
+                yield return new object[] { t, other, false };
+            }
+            foreach ((DbFile t, DbFile other) in getEqualPropertyItems())
+            {
+                other.Id = id2;
+                yield return new object[] { t, other, false };
+            }
+            foreach ((DbFile t, DbFile other) in getEqualPropertyItems())
+            {
+                t.Id = id1;
+                other.Id = id2;
+                yield return new object[] { t, other, false };
+            }
+            (DbFile, DbFile)[] getDifferingPropertyItems() => new (DbFile, DbFile)[]
+            {
+                (new DbFile() { BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { CreatedOn = createdOn, ModifiedOn = plus1, BinaryProperties = binaryPropertiesA, Parent = parentA }),
+                (new DbFile() { CreatedOn = plus1, ModifiedOn = plus1, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { CreatedOn = createdOn, ModifiedOn = plus1, BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { CreatedOn = createdOn, ModifiedOn = plus1, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { CreatedOn = plus1, ModifiedOn = plus1, BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { CreatedOn = createdOn, ModifiedOn = plus2, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { LastSynchronizedOn = plus1, UpstreamId = id1, CreatedOn = createdOn, ModifiedOn = plus2, BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { LastSynchronizedOn = plus1, UpstreamId = id1, CreatedOn = createdOn, ModifiedOn = plus2, BinaryProperties = binaryPropertiesA, Parent = parentA },
+                    new DbFile() { CreatedOn = createdOn, ModifiedOn = plus2, BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { LastSynchronizedOn = plus1, UpstreamId = id1, CreatedOn = createdOn, ModifiedOn = plus2, BinaryProperties = binaryPropertiesA, Parent = parentA },
+                    new DbFile() { LastSynchronizedOn = plus1, UpstreamId = id2, CreatedOn = createdOn, ModifiedOn = plus2, BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { LastSynchronizedOn = plus2, UpstreamId = id2, CreatedOn = createdOn, ModifiedOn = plus2, BinaryProperties = binaryPropertiesA, Parent = parentA },
+                    new DbFile() { LastSynchronizedOn = plus1, UpstreamId = id2, CreatedOn = createdOn, ModifiedOn = plus2, BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { LastSynchronizedOn = plus1, UpstreamId = id2, CreatedOn = createdOn, ModifiedOn = plus2, BinaryProperties = binaryPropertiesA, Parent = parentA },
+                    new DbFile() { LastSynchronizedOn = plus2, UpstreamId = id2, CreatedOn = createdOn, ModifiedOn = plus2, BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { AudioProperties = new() { Id = id2 }, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { AudioProperties = new() { Id = Guid.NewGuid() }, BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { AudioPropertySetId = id2, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { AudioProperties = new() { Id = Guid.NewGuid() }, BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { AudioProperties = new() { Id = id2 }, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { AudioPropertySetId = Guid.NewGuid(), BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { AudioPropertySetId = id2, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { AudioPropertySetId = Guid.NewGuid(), BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { AudioProperties = new() { Id = id2 }, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { AudioPropertySetId = id2, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { AudioProperties = new() { Id = Guid.Empty }, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { AudioPropertySetId = Guid.Empty, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { BinaryProperties = new() { Id = binaryPropertySetId }, Parent = parentA }, new DbFile() { BinaryProperties = new() { Id = Guid.NewGuid() }, Parent = parentB }),
+                (new DbFile() { BinaryPropertySetId = binaryPropertySetId, Parent = parentA }, new DbFile() { BinaryProperties = new() { Id = Guid.NewGuid() }, Parent = parentB }),
+                (new DbFile() { BinaryProperties = new() { Id = binaryPropertySetId }, Parent = parentA }, new DbFile() { BinaryPropertySetId = Guid.NewGuid(), Parent = parentB }),
+                (new DbFile() { BinaryPropertySetId = binaryPropertySetId, Parent = parentA }, new DbFile() { BinaryPropertySetId = Guid.NewGuid(), Parent = parentB }),
+                (new DbFile() { BinaryProperties = new() { Id = binaryPropertySetId }, Parent = parentA }, new DbFile() { Parent = parentB }),
+                (new DbFile() { BinaryPropertySetId = binaryPropertySetId, Parent = parentA }, new DbFile() { Parent = parentB }),
+                (new DbFile() { BinaryProperties = new() { Id = Guid.Empty }, Parent = parentA }, new DbFile() { Parent = parentB }),
+                (new DbFile() { BinaryPropertySetId = Guid.Empty, Parent = parentA }, new DbFile() { Parent = parentB }),
+                (new DbFile() { CreationTime = plus1, LastWriteTime = plus2, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { CreationTime = plus1, LastWriteTime = plus1, BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { CreationTime = plus1, LastWriteTime = plus2, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { CreationTime = plus2, LastWriteTime = plus2, BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { DocumentProperties = new() { Id = id2 }, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { DocumentProperties = new() { Id = Guid.NewGuid() }, BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { DocumentPropertySetId = id2, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { DocumentProperties = new() { Id = Guid.NewGuid() }, BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { DocumentProperties = new() { Id = id2 }, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { DocumentPropertySetId = Guid.NewGuid(), BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { DocumentPropertySetId = id2, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { DocumentPropertySetId = Guid.NewGuid(), BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { DocumentProperties = new() { Id = id2 }, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { DocumentPropertySetId = id2, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { DocumentProperties = new() { Id = Guid.Empty }, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { DocumentPropertySetId = Guid.Empty, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { DRMProperties = new() { Id = id2 }, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { DRMProperties = new() { Id = Guid.NewGuid() }, BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { DRMPropertySetId = id2, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { DRMProperties = new() { Id = Guid.NewGuid() }, BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { DRMProperties = new() { Id = id2 }, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { DRMPropertySetId = Guid.NewGuid(), BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { DRMPropertySetId = id2, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { DRMPropertySetId = Guid.NewGuid(), BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { DRMProperties = new() { Id = id2 }, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { DRMPropertySetId = id2, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { DRMProperties = new() { Id = Guid.Empty }, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { DRMPropertySetId = Guid.Empty, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { GPSProperties = new() { Id = id2 }, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { GPSProperties = new() { Id = Guid.NewGuid() }, BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { GPSPropertySetId = id2, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { GPSProperties = new() { Id = Guid.NewGuid() }, BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { GPSProperties = new() { Id = id2 }, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { GPSPropertySetId = Guid.NewGuid(), BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { GPSPropertySetId = id2, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { GPSPropertySetId = Guid.NewGuid(), BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { GPSProperties = new() { Id = id2 }, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { GPSPropertySetId = id2, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { GPSProperties = new() { Id = Guid.Empty }, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { GPSPropertySetId = Guid.Empty, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { ImageProperties = new() { Id = id2 }, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { ImageProperties = new() { Id = Guid.NewGuid() }, BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { ImagePropertySetId = id2, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { ImageProperties = new() { Id = Guid.NewGuid() }, BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { ImageProperties = new() { Id = id2 }, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { ImagePropertySetId = Guid.NewGuid(), BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { ImagePropertySetId = id2, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { ImagePropertySetId = Guid.NewGuid(), BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { ImageProperties = new() { Id = id2 }, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { ImagePropertySetId = id2, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { ImageProperties = new() { Id = Guid.Empty }, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { ImagePropertySetId = Guid.Empty, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { LastAccessed = plus2, LastWriteTime = plus1, CreatedOn = createdOn, ModifiedOn = plus2, BinaryProperties = binaryPropertiesA, Parent = parentA },
+                    new DbFile() { LastAccessed = plus1, LastWriteTime = plus1, CreatedOn = createdOn, ModifiedOn = plus2, BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { LastAccessed = plus2, LastWriteTime = plus1, CreatedOn = createdOn, ModifiedOn = plus2, BinaryProperties = binaryPropertiesA, Parent = parentA },
+                    new DbFile() { LastAccessed = plus2, LastWriteTime = plus2, CreatedOn = createdOn, ModifiedOn = plus2, BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { LastHashCalculation = plus1, LastAccessed = plus2, LastWriteTime = plus2, CreatedOn = createdOn, ModifiedOn = plus2, BinaryProperties = binaryPropertiesA, Parent = parentA },
+                    new DbFile() { LastHashCalculation = plus2, LastAccessed = plus2, LastWriteTime = plus2, CreatedOn = createdOn, ModifiedOn = plus2, BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { MediaProperties = new() { Id = id2 }, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { MediaProperties = new() { Id = Guid.NewGuid() }, BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { MediaPropertySetId = id2, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { MediaProperties = new() { Id = Guid.NewGuid() }, BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { MediaProperties = new() { Id = id2 }, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { MediaPropertySetId = Guid.NewGuid(), BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { MediaPropertySetId = id2, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { MediaPropertySetId = Guid.NewGuid(), BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { MediaProperties = new() { Id = id2 }, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { MediaPropertySetId = id2, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { MediaProperties = new() { Id = Guid.Empty }, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { MediaPropertySetId = Guid.Empty, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { MusicProperties = new() { Id = id2 }, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { MusicProperties = new() { Id = Guid.NewGuid() }, BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { MusicPropertySetId = id2, BinaryProperties = binaryPropertiesA, Parent = parentB }, new DbFile() { MusicProperties = new() { Id = Guid.NewGuid() }, BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { MusicProperties = new() { Id = id2 }, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { MusicPropertySetId = Guid.NewGuid(), BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { MusicPropertySetId = id2, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { MusicPropertySetId = Guid.NewGuid(), BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { MusicProperties = new() { Id = id2 }, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { MusicPropertySetId = id2, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { MusicProperties = new() { Id = Guid.Empty }, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { MusicPropertySetId = Guid.Empty, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { Name = "Test", BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { Name = "Test2", BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { Name = "Test", BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { Name = "Test", BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { Notes = "Test", BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { Notes = "Test2", BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { Notes = "Test", BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { Notes = "Test", BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { Options = FileCrawlOptions.FlaggedForRescan, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { Options = FileCrawlOptions.DoNotCompare, BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { Parent = new() { Id = parentId }, BinaryProperties = binaryPropertiesA }, new DbFile() { Parent = new() { Id = Guid.NewGuid() }, BinaryProperties = binaryPropertiesB  }),
+                (new DbFile() { ParentId = parentId, BinaryProperties = binaryPropertiesA }, new DbFile() { Parent = new() { Id = Guid.NewGuid() }, BinaryProperties = binaryPropertiesB }),
+                (new DbFile() { Parent = new() { Id = parentId }, BinaryProperties = binaryPropertiesA }, new DbFile() { ParentId = Guid.NewGuid(), BinaryProperties = binaryPropertiesB }),
+                (new DbFile() { ParentId = parentId, BinaryProperties = binaryPropertiesA }, new DbFile() { BinaryProperties = binaryPropertiesB }),
+                (new DbFile() { Parent = new() { Id = parentId }, BinaryProperties = binaryPropertiesA }, new DbFile() { BinaryProperties = binaryPropertiesB }),
+                (new DbFile() { ParentId = Guid.Empty, BinaryProperties = binaryPropertiesA }, new DbFile() { BinaryProperties = binaryPropertiesB }),
+                (new DbFile() { Parent = new() { Id = Guid.Empty }, BinaryProperties = binaryPropertiesA }, new DbFile() { BinaryProperties = binaryPropertiesB }),
+                (new DbFile() { PhotoProperties = new() { Id = id2 }, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { PhotoProperties = new() { Id = Guid.NewGuid() }, BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { PhotoPropertySetId = id2, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { PhotoProperties = new() { Id = Guid.NewGuid() }, BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { PhotoProperties = new() { Id = id2 }, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { PhotoPropertySetId = Guid.NewGuid(), BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { PhotoPropertySetId = id2, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { PhotoPropertySetId = Guid.NewGuid(), BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { PhotoProperties = new() { Id = id2 }, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { PhotoPropertySetId = id2, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { PhotoProperties = new() { Id = Guid.Empty }, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { PhotoPropertySetId = Guid.Empty, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { RecordedTVProperties = new() { Id = id2 }, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { RecordedTVProperties = new() { Id = Guid.NewGuid() }, BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { RecordedTVPropertySetId = id2, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { RecordedTVProperties = new() { Id = Guid.NewGuid() }, BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { RecordedTVProperties = new() { Id = id2 }, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { RecordedTVPropertySetId = Guid.NewGuid(), BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { RecordedTVPropertySetId = id2, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { RecordedTVPropertySetId = Guid.NewGuid(), BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { RecordedTVProperties = new() { Id = id2 }, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { RecordedTVPropertySetId = id2, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { RecordedTVProperties = new() { Id = Guid.Empty }, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { RecordedTVPropertySetId = Guid.Empty, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { Status = FileCorrelationStatus.Correlated, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { SummaryProperties = new() { Id = id2 }, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { SummaryProperties = new() { Id = Guid.NewGuid() }, BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { SummaryPropertySetId = id2, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { SummaryProperties = new() { Id = Guid.NewGuid() }, BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { SummaryProperties = new() { Id = id2 }, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { SummaryPropertySetId = Guid.NewGuid(), BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { SummaryPropertySetId = id2, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { SummaryPropertySetId = Guid.NewGuid(), BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { SummaryProperties = new() { Id = id2 }, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { SummaryPropertySetId = id2, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { SummaryProperties = new() { Id = Guid.Empty }, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { SummaryPropertySetId = Guid.Empty, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { VideoProperties = new() { Id = id2 }, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { VideoProperties = new() { Id = Guid.NewGuid() }, BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { VideoPropertySetId = id2, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { VideoProperties = new() { Id = Guid.NewGuid() }, BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { VideoProperties = new() { Id = id2 }, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { VideoPropertySetId = Guid.NewGuid(), BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { VideoPropertySetId = id2, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { VideoPropertySetId = Guid.NewGuid(), BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { VideoProperties = new() { Id = id2 }, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { VideoPropertySetId = id2, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { VideoProperties = new() { Id = Guid.Empty }, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { BinaryProperties = binaryPropertiesB, Parent = parentB }),
+                (new DbFile() { VideoPropertySetId = Guid.Empty, BinaryProperties = binaryPropertiesA, Parent = parentA }, new DbFile() { BinaryProperties = binaryPropertiesB, Parent = parentB })
+            };
+            foreach ((DbFile t, DbFile other) in getDifferingPropertyItems())
+                yield return new object[] { t, other, false };
+            foreach ((DbFile t, DbFile other) in getDifferingPropertyItems())
+            {
+                t.Id = other.Id = id1;
+                yield return new object[] { t, other, true };
+            }
+        }
+
+        [TestMethod]
+        [DynamicData("GetEqualsTestData", DynamicDataSourceType.Method)]
+        public void EqualsTestMethod2(DbFile target, DbFile other, bool expectedResult)
+        {
+            bool actualResult = target.Equals(other);
+            Assert.AreEqual(expectedResult, actualResult);
         }
 
         [TestMethod("DbFile Add/Remove Tests")]

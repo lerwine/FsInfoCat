@@ -2,52 +2,36 @@
   <body>
     <h1>Test run details</h1>
     <div class="summary">
-      <div class="block"><span>Total tests</span><div class="total-tests">8</div><br></div>
-      <div class="block"><span>Passed  : </span><span class="passedTests">8</span><br><span>Failed  : </span><span class="failedTests">0</span><br><span>Skipped : </span><span class="skippedTests">0</span><br></div>
-      <div class="block"><span>Pass percentage</span><div class="pass-percentage">100 %</div><br></div>
-      <div class="block"><span>Run duration</span><div class="test-run-time">2s 637ms</div><br></div><br></div>
+      <div class="block"><span>Total tests</span><div class="total-tests">1</div><br></div>
+      <div class="block"><span>Passed  : </span><span class="passedTests">0</span><br><span>Failed  : </span><span class="failedTests">1</span><br><span>Skipped : </span><span class="skippedTests">0</span><br></div>
+      <div class="block"><span>Pass percentage</span><div class="pass-percentage">0 %</div><br></div>
+      <div class="block"><span>Run duration</span><div class="test-run-time">3s 851ms</div><br></div><br></div>
+    <h2>Failed Results</h2>
+    <div class="list-row" onclick="ToggleClass('-748628777-failedResult')">C:\Users\lerwi\Git\FsInfoCat\src\FsInfoCat.UnitTests\bin\Debug\net5.0-windows7.0\FsInfoCat.UnitTests.dll</div>
+    <div class="inner-row" Id="-748628777-failedResult" style="display:block;">
+      <div class="leaf-division">
+        <div><span class="fail">✘</span><span> EqualsTestMethod1</span><div class="duration"><span>1s 260ms</span><br></div>
+        </div>
+        <div class="error-info">
+    Error: <span class="error-message"><pre>Test method FsInfoCat.UnitTests.LocalAudioPropertySetUnitTest.EqualsTestMethod1 threw exception: 
+System.NotImplementedException: The method or operation is not implemented.</pre></span><br>
+    Stack trace: <span class="error-stack-trace"><pre>    at FsInfoCat.Local.AudioPropertySet.Equals(AudioPropertySet other) in C:\Users\lerwi\Git\FsInfoCat\src\FsInfoCat.Local\AudioPropertySet.cs:line 80
+   at FsInfoCat.UnitTests.LocalAudioPropertySetUnitTest.EqualsTestMethod1() in C:\Users\lerwi\Git\FsInfoCat\src\FsInfoCat.UnitTests\LocalAudioPropertySetUnitTest.cs:line 64
+</pre></span><br></div>
+      </div>
+    </div>
     <h2>All Results</h2>
     <div class="list-row" onclick="ToggleClass('-748628777')">C:\Users\lerwi\Git\FsInfoCat\src\FsInfoCat.UnitTests\bin\Debug\net5.0-windows7.0\FsInfoCat.UnitTests.dll</div>
     <div class="inner-row" Id="-748628777" style="display:none;">
       <div class="leaf-division">
-        <div><span class="pass">✔</span><span> UpstreamIdAndDatePropertiesTestMethod (68756572e69744609fb70de000baf4d3,2/14/2022 10:30:21 PM,2/14/2022 10:30:21 PM,2/14/2022 10:30:21 PM)</span><div class="duration"><span>1s 428ms</span><br></div>
+        <div><span class="fail">✘</span><span> EqualsTestMethod1</span><div class="duration"><span>1s 260ms</span><br></div>
         </div>
-        <div class="error-info"></div>
-      </div>
-      <div class="leaf-division">
-        <div><span class="pass">✔</span><span> UpstreamIdAndDatePropertiesTestMethod (f51d7039b01b4828853d3b7f1d3e9e95,2/14/2022 10:31:04 PM,2/14/2022 10:30:21 PM,2/14/2022 10:31:04 PM)</span><div class="duration"><span>&lt; 1ms</span><br></div>
-        </div>
-        <div class="error-info"></div>
-      </div>
-      <div class="leaf-division">
-        <div><span class="pass">✔</span><span> UpstreamIdAndDatePropertiesTestMethod (,,2/14/2022 10:30:21 PM,2/14/2022 10:31:04 PM)</span><div class="duration"><span>2ms</span><br></div>
-        </div>
-        <div class="error-info"></div>
-      </div>
-      <div class="leaf-division">
-        <div><span class="pass">✔</span><span> UpstreamIdAndDatePropertiesTestMethod (f51d7039b01b4828853d3b7f1d3e9e95,,2/14/2022 10:30:21 PM,2/14/2022 10:31:04 PM)</span><div class="duration"><span>2ms</span><br></div>
-        </div>
-        <div class="error-info"></div>
-      </div>
-      <div class="leaf-division">
-        <div><span class="pass">✔</span><span> UpstreamIdAndDatePropertiesTestMethod (,2/14/2022 10:31:04 PM,2/14/2022 10:30:21 PM,2/14/2022 10:31:04 PM)</span><div class="duration"><span>&lt; 1ms</span><br></div>
-        </div>
-        <div class="error-info"></div>
-      </div>
-      <div class="leaf-division">
-        <div><span class="pass">✔</span><span> UpstreamIdAndDatePropertiesTestMethod (9b59cbab78d947189d7e134b8a8a38dd,2/15/2022 2:07:04 AM,2/14/2022 10:30:21 PM,2/14/2022 10:31:04 PM)</span><div class="duration"><span>6ms</span><br></div>
-        </div>
-        <div class="error-info"></div>
-      </div>
-      <div class="leaf-division">
-        <div><span class="pass">✔</span><span> UpstreamIdAndDatePropertiesTestMethod (649abdaa012848c1a617f329b0e2d129,2/14/2022 10:31:04 PM,2/14/2022 10:30:21 PM,2/15/2022 2:07:04 AM)</span><div class="duration"><span>&lt; 1ms</span><br></div>
-        </div>
-        <div class="error-info"></div>
-      </div>
-      <div class="leaf-division">
-        <div><span class="pass">✔</span><span> UpstreamIdAndDatePropertiesTestMethod (,,2/14/2022 10:30:21 PM,2/15/2022 2:07:04 AM)</span><div class="duration"><span>&lt; 1ms</span><br></div>
-        </div>
-        <div class="error-info"></div>
+        <div class="error-info">
+    Error: <span class="error-message"><pre>Test method FsInfoCat.UnitTests.LocalAudioPropertySetUnitTest.EqualsTestMethod1 threw exception: 
+System.NotImplementedException: The method or operation is not implemented.</pre></span><br>
+    Stack trace: <span class="error-stack-trace"><pre>    at FsInfoCat.Local.AudioPropertySet.Equals(AudioPropertySet other) in C:\Users\lerwi\Git\FsInfoCat\src\FsInfoCat.Local\AudioPropertySet.cs:line 80
+   at FsInfoCat.UnitTests.LocalAudioPropertySetUnitTest.EqualsTestMethod1() in C:\Users\lerwi\Git\FsInfoCat\src\FsInfoCat.UnitTests\LocalAudioPropertySetUnitTest.cs:line 64
+</pre></span><br></div>
       </div>
     </div>
   </body><script language="javascript">
