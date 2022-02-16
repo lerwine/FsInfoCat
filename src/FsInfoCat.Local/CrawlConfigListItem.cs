@@ -13,10 +13,7 @@ namespace FsInfoCat.Local
             .ToView(VIEW_NAME)
             .Property(nameof(VolumeIdentifier)).HasConversion(VolumeIdentifier.Converter);
 
-        public bool Equals(CrawlConfigListItem other)
-        {
-            throw new NotImplementedException();
-        }
+        public bool Equals(CrawlConfigListItem other) => other is not null && ReferenceEquals(this, other) || Id.Equals(Guid.Empty) ? ArePropertiesEqual(this) : Id.Equals(other.Id);
 
         public override bool Equals(ICrawlConfigurationListItem other)
         {

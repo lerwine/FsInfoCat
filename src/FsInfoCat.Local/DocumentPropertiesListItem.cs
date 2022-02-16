@@ -30,10 +30,7 @@ namespace FsInfoCat.Local
             throw new NotImplementedException();
         }
 
-        public bool Equals(DocumentPropertiesListItem other)
-        {
-            throw new NotImplementedException();
-        }
+        public bool Equals(DocumentPropertiesListItem other) => other is not null && ReferenceEquals(this, other) || Id.Equals(Guid.Empty) ? ArePropertiesEqual(this) : Id.Equals(other.Id);
 
         public bool Equals(IDocumentPropertiesListItem other)
         {

@@ -39,10 +39,7 @@ namespace FsInfoCat.Local
             throw new NotImplementedException();
         }
 
-        public virtual bool Equals(FileWithBinaryProperties other)
-        {
-            throw new NotImplementedException();
-        }
+        public virtual bool Equals(FileWithBinaryProperties other) => other is not null && ReferenceEquals(this, other) || Id.Equals(Guid.Empty) ? ArePropertiesEqual(this) : Id.Equals(other.Id);
 
         public virtual bool Equals(IFileListItemWithBinaryProperties other)
         {

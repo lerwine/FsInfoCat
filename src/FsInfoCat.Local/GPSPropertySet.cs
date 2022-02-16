@@ -88,10 +88,7 @@ namespace FsInfoCat.Local
             throw new System.NotImplementedException();
         }
 
-        public bool Equals(GPSPropertySet other)
-        {
-            throw new NotImplementedException();
-        }
+        public bool Equals(GPSPropertySet other) => other is not null && ReferenceEquals(this, other) || Id.Equals(Guid.Empty) ? ArePropertiesEqual(this) : Id.Equals(other.Id);
 
         public bool Equals(IGPSPropertySet other)
         {

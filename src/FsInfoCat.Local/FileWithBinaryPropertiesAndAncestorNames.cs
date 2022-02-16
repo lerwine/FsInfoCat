@@ -46,10 +46,7 @@ namespace FsInfoCat.Local
             throw new NotImplementedException();
         }
 
-        public bool Equals(FileWithBinaryPropertiesAndAncestorNames other)
-        {
-            throw new NotImplementedException();
-        }
+        public bool Equals(FileWithBinaryPropertiesAndAncestorNames other) => other is not null && ReferenceEquals(this, other) || Id.Equals(Guid.Empty) ? ArePropertiesEqual(this) : Id.Equals(other.Id);
 
         public override bool Equals(FileWithBinaryProperties other)
         {

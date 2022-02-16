@@ -37,10 +37,7 @@ namespace FsInfoCat.Local
             throw new NotImplementedException();
         }
 
-        public bool Equals(CrawlConfigReportItem other)
-        {
-            throw new NotImplementedException();
-        }
+        public bool Equals(CrawlConfigReportItem other) => other is not null && ReferenceEquals(this, other) || Id.Equals(Guid.Empty) ? ArePropertiesEqual(this) : Id.Equals(other.Id);
 
         public bool Equals(ICrawlConfigReportItem other)
         {

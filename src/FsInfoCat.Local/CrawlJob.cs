@@ -43,10 +43,7 @@ namespace FsInfoCat.Local
             throw new NotImplementedException();
         }
 
-        public bool Equals(CrawlJob other)
-        {
-            throw new NotImplementedException();
-        }
+        public bool Equals(CrawlJob other) => other is not null && ReferenceEquals(this, other) || ArePropertiesEqual(this);
 
         public bool Equals(ICrawlJob other)
         {
