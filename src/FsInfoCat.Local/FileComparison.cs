@@ -214,7 +214,41 @@ namespace FsInfoCat.Local
 
         public bool Equals(FileComparison other)
         {
-            throw new NotImplementedException();
+            if (other is null)
+                return false;
+            if (ReferenceEquals(this, other))
+                return true;
+            DbFile b1 = Baseline;
+            DbFile b2 = other.Baseline;
+            if (b1 is null)
+            {
+                if (b2 is null)
+                {
+                    if (other.BaselineId.Equals(Guid.Empty))
+                        return BaselineId.Equals(Guid.Empty) && ArePropertiesEqual(other);
+                    return BaselineId.Equals(other.BaselineId);
+                }
+                return !BaselineId.Equals(Guid.Empty) && BaselineId.Equals(b2.Id);
+            }
+            if (b2 is null)
+                return !other.BaselineId.Equals(Guid.Empty) && other.BaselineId.Equals(b1.Id);
+            if (!b1.Equals(b2))
+                return false;
+            b1 = Correlative;
+            b2 = other.Correlative;
+            if (b1 is null)
+            {
+                if (b2 is null)
+                {
+                    if (other.BaselineId.Equals(Guid.Empty))
+                        return BaselineId.Equals(Guid.Empty) && ArePropertiesEqual(other);
+                    return BaselineId.Equals(other.BaselineId);
+                }
+                return !BaselineId.Equals(Guid.Empty) && BaselineId.Equals(b2.Id);
+            }
+            if (b2 is null)
+                return !other.BaselineId.Equals(Guid.Empty) && other.BaselineId.Equals(b1.Id);
+            return b1.Equals(b2);
         }
 
         public bool Equals(IComparison other)
