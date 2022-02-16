@@ -1,4 +1,4 @@
-﻿namespace FsInfoCat.Upstream
+namespace FsInfoCat.Upstream
 {
-    public interface IUpstreamPersonalSubdirectoryTag : IUpstreamPersonalTag, IUpstreamSubdirectoryTag { }
+    public interface IUpstreamPersonalSubdirectoryTag : IUpstreamPersonalTag, IPersonalSubdirectoryTag, IUpstreamSubdirectoryTag { }
 }

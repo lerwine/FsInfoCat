@@ -1,4 +1,4 @@
-﻿namespace FsInfoCat.Local
+namespace FsInfoCat.Local
 {
-    public interface ILocalSharedFileTag : ILocalSharedTag, ILocalFileTag { }
+    public interface ILocalSharedFileTag : ILocalSharedTag, ISharedFileTag, ILocalFileTag { }
 }

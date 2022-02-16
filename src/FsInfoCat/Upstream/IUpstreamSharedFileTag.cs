@@ -1,4 +1,4 @@
-﻿namespace FsInfoCat.Upstream
+namespace FsInfoCat.Upstream
 {
-    public interface IUpstreamSharedFileTag : IUpstreamSharedTag, IUpstreamFileTag { }
+    public interface IUpstreamSharedFileTag : IUpstreamSharedTag, ISharedFileTag, IUpstreamFileTag { }
 }

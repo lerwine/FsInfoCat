@@ -1,4 +1,4 @@
-﻿namespace FsInfoCat.Upstream
+namespace FsInfoCat.Upstream
 {
-    public interface IUpstreamPersonalVolumeTag : IUpstreamPersonalTag, IUpstreamVolumeTag { }
+    public interface IUpstreamPersonalVolumeTag : IUpstreamPersonalTag, IPersonalVolumeTag, IUpstreamVolumeTag { }
 }
