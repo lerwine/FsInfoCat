@@ -305,12 +305,21 @@ namespace FsInfoCat.Local
 
         public override int GetHashCode()
         {
-            throw new NotImplementedException();
-        }
-
-        public override string ToString()
-        {
-            throw new NotImplementedException();
+            if (Id.Equals(Guid.Empty))
+                unchecked
+                {
+                    int hash = 19;
+                    hash = (File is null) ? (FileId.Equals(Guid.Empty) ? hash * 109 : hash * 109 + FileId.GetHashCode()) : hash * 109 + (File?.GetHashCode() ?? 0);
+                    hash = (RedundantSet is null) ? (RedundantSetId.Equals(Guid.Empty) ? hash * 109 : hash * 109 + RedundantSetId.GetHashCode()) : hash * 109 + (RedundantSet?.GetHashCode() ?? 0);
+                    hash = hash * 29 + Reference.GetHashCode();
+                    hash = hash * 29 + Notes.GetHashCode();
+                    hash = UpstreamId.HasValue ? hash * 29 + (UpstreamId ?? default).GetHashCode() : hash * 29;
+                    hash = LastSynchronizedOn.HasValue ? hash * 29 + (LastSynchronizedOn ?? default).GetHashCode() : hash * 29;
+                    hash = hash * 29 + CreatedOn.GetHashCode();
+                    hash = hash * 29 + ModifiedOn.GetHashCode();
+                    return hash;
+                }
+            return Id.GetHashCode();
         }
     }
 }

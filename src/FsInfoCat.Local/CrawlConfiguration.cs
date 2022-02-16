@@ -217,12 +217,30 @@ namespace FsInfoCat.Local
 
         public override int GetHashCode()
         {
-            throw new NotImplementedException();
-        }
-
-        public override string ToString()
-        {
-            throw new NotImplementedException();
+            if (Id.Equals(Guid.Empty))
+                unchecked
+                {
+                    int hash = 59;
+                    hash = hash * 67 + DisplayName.GetHashCode();
+                    hash = hash * 67 + MaxRecursionDepth.GetHashCode();
+                    hash = MaxTotalItems.HasValue ? hash * 67 + (MaxTotalItems ?? default).GetHashCode() : hash * 67;
+                    hash = TTL.HasValue ? hash * 67 + TTL.Value.GetHashCode() : hash * 67;
+                    hash = hash * 67 + Notes.GetHashCode();
+                    hash = hash * 67 + StatusValue.GetHashCode();
+                    hash = LastCrawlStart.HasValue ? hash * 67 + (LastCrawlStart ?? default).GetHashCode() : hash * 67;
+                    hash = LastCrawlEnd.HasValue ? hash * 67 + (LastCrawlEnd ?? default).GetHashCode() : hash * 67;
+                    hash = NextScheduledStart.HasValue ? hash * 67 + (NextScheduledStart ?? default).GetHashCode() : hash * 67;
+                    hash = RescheduleInterval.HasValue ? hash * 67 + (RescheduleInterval ?? default).GetHashCode() : hash * 67;
+                    hash = hash * 67 + RescheduleFromJobEnd.GetHashCode();
+                    hash = hash * 67 + RescheduleAfterFail.GetHashCode();
+                    hash = (Root is null) ? (RootId.Equals(Guid.Empty) ? hash * 109 : hash * 109 + RootId.GetHashCode()) : hash * 109 + (Root?.GetHashCode() ?? 0);
+                    hash = UpstreamId.HasValue ? hash * 67 + (UpstreamId ?? default).GetHashCode() : hash * 67;
+                    hash = LastSynchronizedOn.HasValue ? hash * 67 + (LastSynchronizedOn ?? default).GetHashCode() : hash * 67;
+                    hash = hash * 67 + CreatedOn.GetHashCode();
+                    hash = hash * 67 + ModifiedOn.GetHashCode();
+                    return hash;
+                }
+            return Id.GetHashCode();
         }
     }
 }

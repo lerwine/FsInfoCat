@@ -56,12 +56,28 @@ namespace FsInfoCat.Local
 
         public override int GetHashCode()
         {
-            throw new NotImplementedException();
-        }
-
-        public override string ToString()
-        {
-            throw new NotImplementedException();
+            if (Id.Equals(Guid.Empty))
+                unchecked
+                {
+                    int hash = 47;
+                    hash = hash * 59 + AlbumArtist.GetHashCode();
+                    hash = hash * 59 + AlbumTitle.GetHashCode();
+                    hash = (Artist is null) ? hash * 59 : hash * 59 + (Artist?.GetHashCode() ?? 0);
+                    hash = ChannelCount.HasValue ? hash * 59 + (ChannelCount ?? default).GetHashCode() : hash * 59;
+                    hash = (Composer is null) ? hash * 59 : hash * 59 + (Composer?.GetHashCode() ?? 0);
+                    hash = (Conductor is null) ? hash * 59 : hash * 59 + (Conductor?.GetHashCode() ?? 0);
+                    hash = hash * 59 + DisplayArtist.GetHashCode();
+                    hash = (Genre is null) ? hash * 59 : hash * 59 + (Genre?.GetHashCode() ?? 0);
+                    hash = hash * 59 + PartOfSet.GetHashCode();
+                    hash = hash * 59 + Period.GetHashCode();
+                    hash = TrackNumber.HasValue ? hash * 59 + (TrackNumber ?? default).GetHashCode() : hash * 59;
+                    hash = UpstreamId.HasValue ? hash * 59 + (UpstreamId ?? default).GetHashCode() : hash * 59;
+                    hash = LastSynchronizedOn.HasValue ? hash * 59 + (LastSynchronizedOn ?? default).GetHashCode() : hash * 59;
+                    hash = hash * 59 + CreatedOn.GetHashCode();
+                    hash = hash * 59 + ModifiedOn.GetHashCode();
+                    return hash;
+                }
+            return Id.GetHashCode();
         }
     }
 }

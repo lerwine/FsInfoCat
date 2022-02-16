@@ -231,12 +231,17 @@ namespace FsInfoCat.Local
 
         public override int GetHashCode()
         {
-            throw new NotImplementedException();
-        }
-
-        public override string ToString()
-        {
-            return base.ToString();
+            unchecked
+            {
+                int hash = 13;
+                hash = hash * 19 + Message.GetHashCode();
+                hash = hash * 19 + Details.GetHashCode();
+                hash = hash * 19 + ErrorCode.GetHashCode();
+                hash = (Target is null) ? (TargetId.Equals(Guid.Empty) ? hash * 109 : hash * 109 + TargetId.GetHashCode()) : hash * 109 + (Target?.GetHashCode() ?? 0);
+                hash = hash * 19 + CreatedOn.GetHashCode();
+                hash = hash * 19 + ModifiedOn.GetHashCode();
+                return hash;
+            }
         }
     }
 }

@@ -77,12 +77,28 @@ namespace FsInfoCat.Local
 
         public override int GetHashCode()
         {
-            throw new NotImplementedException();
-        }
-
-        public override string ToString()
-        {
-            return base.ToString();
+            if (Id.Equals(Guid.Empty))
+                unchecked
+                {
+                    int hash = 47;
+                    hash = hash * 59 + AncestorNames.GetHashCode();
+                    hash = hash * 59 + CrawlConfigDisplayName.GetHashCode();
+                    hash = (ParentId is null) ? hash * 59 : hash * 59 + (ParentId?.GetHashCode() ?? 0);
+                    hash = (VolumeId is null) ? hash * 59 : hash * 59 + (VolumeId?.GetHashCode() ?? 0);
+                    hash = hash * 59 + Name.GetHashCode();
+                    hash = hash * 59 + Options.GetHashCode();
+                    hash = hash * 59 + LastAccessed.GetHashCode();
+                    hash = hash * 59 + Notes.GetHashCode();
+                    hash = hash * 59 + Status.GetHashCode();
+                    hash = hash * 59 + CreationTime.GetHashCode();
+                    hash = hash * 59 + LastWriteTime.GetHashCode();
+                    hash = UpstreamId.HasValue ? hash * 59 + (UpstreamId ?? default).GetHashCode() : hash * 59;
+                    hash = LastSynchronizedOn.HasValue ? hash * 59 + (LastSynchronizedOn ?? default).GetHashCode() : hash * 59;
+                    hash = hash * 59 + CreatedOn.GetHashCode();
+                    hash = hash * 59 + ModifiedOn.GetHashCode();
+                    return hash;
+                }
+            return Id.GetHashCode();
         }
     }
 }

@@ -35,6 +35,11 @@ namespace FsInfoCat.Local
             throw new NotImplementedException();
         }
 
+        public override bool Equals(ICrawlJob other)
+        {
+            throw new NotImplementedException();
+        }
+
         public override bool Equals(object obj)
         {
             throw new NotImplementedException();
@@ -42,12 +47,22 @@ namespace FsInfoCat.Local
 
         public override int GetHashCode()
         {
-            throw new NotImplementedException();
-        }
-
-        public override string ToString()
-        {
-            throw new NotImplementedException();
+            if (Id.Equals(Guid.Empty))
+                unchecked
+                {
+                    int hash = 23;
+                    hash = ConfigurationId.Equals(Guid.Empty) ? hash * 109 : hash * 109 + ConfigurationId.GetHashCode();
+                    hash = hash * 31 + RootPath.GetHashCode();
+                    hash = hash * 31 + MaxRecursionDepth.GetHashCode();
+                    hash = MaxTotalItems.HasValue ? hash * 31 + (MaxTotalItems ?? default).GetHashCode() : hash * 31;
+                    hash = TTL.HasValue ? hash * 31 + TTL.Value.GetHashCode() : hash * 31;
+                    hash = UpstreamId.HasValue ? hash * 31 + (UpstreamId ?? default).GetHashCode() : hash * 31;
+                    hash = LastSynchronizedOn.HasValue ? hash * 31 + (LastSynchronizedOn ?? default).GetHashCode() : hash * 31;
+                    hash = hash * 31 + CreatedOn.GetHashCode();
+                    hash = hash * 31 + ModifiedOn.GetHashCode();
+                    return hash;
+                }
+            return Id.GetHashCode();
         }
     }
 }

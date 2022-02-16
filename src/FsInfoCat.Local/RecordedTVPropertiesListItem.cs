@@ -47,12 +47,25 @@ namespace FsInfoCat.Local
 
         public override int GetHashCode()
         {
-            throw new NotImplementedException();
-        }
-
-        public override string ToString()
-        {
-            throw new NotImplementedException();
+            if (Id.Equals(Guid.Empty))
+                unchecked
+                {
+                    int hash = 41;
+                    hash = ChannelNumber.HasValue ? hash * 47 + (ChannelNumber ?? default).GetHashCode() : hash * 47;
+                    hash = hash * 47 + EpisodeName.GetHashCode();
+                    hash = IsDTVContent.HasValue ? hash * 47 + (IsDTVContent ?? default).GetHashCode() : hash * 47;
+                    hash = IsHDContent.HasValue ? hash * 47 + (IsHDContent ?? default).GetHashCode() : hash * 47;
+                    hash = hash * 47 + NetworkAffiliation.GetHashCode();
+                    hash = OriginalBroadcastDate.HasValue ? hash * 47 + (OriginalBroadcastDate ?? default).GetHashCode() : hash * 47;
+                    hash = hash * 47 + ProgramDescription.GetHashCode();
+                    hash = hash * 47 + StationCallSign.GetHashCode();
+                    hash = hash * 47 + StationName.GetHashCode();
+                    hash = UpstreamId.HasValue ? hash * 47 + (UpstreamId ?? default).GetHashCode() : hash * 47;
+                    hash = LastSynchronizedOn.HasValue ? hash * 47 + (LastSynchronizedOn ?? default).GetHashCode() : hash * 47;
+                    hash = hash * 47 + CreatedOn.GetHashCode();
+                    hash = hash * 47 + ModifiedOn.GetHashCode();
+                    return hash;
+                }
         }
     }
 }

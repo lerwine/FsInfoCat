@@ -114,12 +114,25 @@ namespace FsInfoCat.Local
 
         public override int GetHashCode()
         {
-            throw new NotImplementedException();
-        }
-
-        public override string ToString()
-        {
-            throw new NotImplementedException();
+            if (Id.Equals(Guid.Empty))
+                unchecked
+                {
+                    int hash = 37;
+                    hash = hash * 43 + CameraManufacturer.GetHashCode();
+                    hash = hash * 43 + CameraModel.GetHashCode();
+                    hash = DateTaken.HasValue ? hash * 43 + (DateTaken ?? default).GetHashCode() : hash * 43;
+                    hash = (Event is null) ? hash * 43 : hash * 43 + (Event?.GetHashCode() ?? 0);
+                    hash = hash * 43 + EXIFVersion.GetHashCode();
+                    hash = Orientation.HasValue ? hash * 43 + (Orientation ?? default).GetHashCode() : hash * 43;
+                    hash = hash * 43 + OrientationText.GetHashCode();
+                    hash = (PeopleNames is null) ? hash * 43 : hash * 43 + (PeopleNames?.GetHashCode() ?? 0);
+                    hash = UpstreamId.HasValue ? hash * 43 + (UpstreamId ?? default).GetHashCode() : hash * 43;
+                    hash = LastSynchronizedOn.HasValue ? hash * 43 + (LastSynchronizedOn ?? default).GetHashCode() : hash * 43;
+                    hash = hash * 43 + CreatedOn.GetHashCode();
+                    hash = hash * 43 + ModifiedOn.GetHashCode();
+                    return hash;
+                }
+            return Id.GetHashCode();
         }
 
         IEnumerable<Guid> IIdentityReference.GetIdentifiers()

@@ -229,12 +229,19 @@ namespace FsInfoCat.Local
 
         public override int GetHashCode()
         {
-            throw new NotImplementedException();
-        }
-
-        public override string ToString()
-        {
-            throw new NotImplementedException();
+            unchecked
+            {
+                int hash = 19;
+                hash = (Baseline is null) ? (BaselineId.Equals(Guid.Empty) ? hash * 109 : hash * 109 + BaselineId.GetHashCode()) : hash * 109 + (Baseline?.GetHashCode() ?? 0);
+                hash = (Correlative is null) ? (CorrelativeId.Equals(Guid.Empty) ? hash * 109 : hash * 109 + CorrelativeId.GetHashCode()) : hash * 109 + (Correlative?.GetHashCode() ?? 0);
+                hash = hash * 29 + AreEqual.GetHashCode();
+                hash = hash * 29 + ComparedOn.GetHashCode();
+                hash = UpstreamId.HasValue ? hash * 29 + (UpstreamId ?? default).GetHashCode() : hash * 29;
+                hash = LastSynchronizedOn.HasValue ? hash * 29 + (LastSynchronizedOn ?? default).GetHashCode() : hash * 29;
+                hash = hash * 29 + CreatedOn.GetHashCode();
+                hash = hash * 29 + ModifiedOn.GetHashCode();
+                return hash;
+            }
         }
     }
 }

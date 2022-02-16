@@ -103,12 +103,27 @@ namespace FsInfoCat.Local
 
         public override int GetHashCode()
         {
-            throw new NotImplementedException();
-        }
-
-        public override string ToString()
-        {
-            return base.ToString();
+            if (Id.Equals(Guid.Empty))
+                unchecked
+                {
+                    int hash = 43;
+                    hash = hash * 53 + Compression.GetHashCode();
+                    hash = (Director is null) ? hash * 53 : hash * 53 + (Director?.GetHashCode() ?? 0);
+                    hash = EncodingBitrate.HasValue ? hash * 53 + (EncodingBitrate ?? default).GetHashCode() : hash * 53;
+                    hash = FrameHeight.HasValue ? hash * 53 + (FrameHeight ?? default).GetHashCode() : hash * 53;
+                    hash = FrameRate.HasValue ? hash * 53 + (FrameRate ?? default).GetHashCode() : hash * 53;
+                    hash = FrameWidth.HasValue ? hash * 53 + (FrameWidth ?? default).GetHashCode() : hash * 53;
+                    hash = HorizontalAspectRatio.HasValue ? hash * 53 + (HorizontalAspectRatio ?? default).GetHashCode() : hash * 53;
+                    hash = hash * 53 + StreamName.GetHashCode();
+                    hash = StreamNumber.HasValue ? hash * 53 + (StreamNumber ?? default).GetHashCode() : hash * 53;
+                    hash = VerticalAspectRatio.HasValue ? hash * 53 + (VerticalAspectRatio ?? default).GetHashCode() : hash * 53;
+                    hash = UpstreamId.HasValue ? hash * 53 + (UpstreamId ?? default).GetHashCode() : hash * 53;
+                    hash = LastSynchronizedOn.HasValue ? hash * 53 + (LastSynchronizedOn ?? default).GetHashCode() : hash * 53;
+                    hash = hash * 53 + CreatedOn.GetHashCode();
+                    hash = hash * 53 + ModifiedOn.GetHashCode();
+                    return hash;
+                }
+            return Id.GetHashCode();
         }
 
         IEnumerable<Guid> IIdentityReference.GetIdentifiers()

@@ -60,7 +60,16 @@ namespace FsInfoCat.Local
 
         public override int GetHashCode()
         {
-            throw new NotImplementedException();
+            unchecked
+            {
+                int hash = 11;
+                hash = LogEntityId.HasValue ? hash * 17 + LogEntityId.Value.GetHashCode() : hash * 17;
+                hash = hash * 17 + ConfigurationId.GetHashCode();
+                hash = hash * 17 + MaxRecursionDepth.GetHashCode();
+                hash = MaxTotalItems.HasValue ? hash * 17 + MaxTotalItems.Value.GetHashCode() : hash * 17;
+                hash = TTL.HasValue ? hash * 17 + TTL.Value.GetHashCode() : hash * 17;
+                return hash;
+            }
         }
 
         public override string ToString()

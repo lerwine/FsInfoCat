@@ -52,12 +52,28 @@ namespace FsInfoCat.Local
 
         public override int GetHashCode()
         {
-            throw new NotImplementedException();
-        }
-
-        public override string ToString()
-        {
-            throw new NotImplementedException();
+            if (Id.Equals(Guid.Empty))
+                unchecked
+                {
+                    int hash = 47;
+                    hash = hash * 59 + ClientID.GetHashCode();
+                    hash = (Contributor is null) ? hash * 59 : hash * 59 + (Contributor?.GetHashCode() ?? 0);
+                    hash = DateCreated.HasValue ? hash * 59 + (DateCreated ?? default).GetHashCode() : hash * 59;
+                    hash = hash * 59 + LastAuthor.GetHashCode();
+                    hash = hash * 59 + RevisionNumber.GetHashCode();
+                    hash = Security.HasValue ? hash * 59 + (Security ?? default).GetHashCode() : hash * 59;
+                    hash = hash * 59 + Division.GetHashCode();
+                    hash = hash * 59 + DocumentID.GetHashCode();
+                    hash = hash * 59 + Manager.GetHashCode();
+                    hash = hash * 59 + PresentationFormat.GetHashCode();
+                    hash = hash * 59 + Version.GetHashCode();
+                    hash = UpstreamId.HasValue ? hash * 59 + (UpstreamId ?? default).GetHashCode() : hash * 59;
+                    hash = LastSynchronizedOn.HasValue ? hash * 59 + (LastSynchronizedOn ?? default).GetHashCode() : hash * 59;
+                    hash = hash * 59 + CreatedOn.GetHashCode();
+                    hash = hash * 59 + ModifiedOn.GetHashCode();
+                    return hash;
+                }
+            return Id.GetHashCode();
         }
     }
 }

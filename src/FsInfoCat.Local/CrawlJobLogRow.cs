@@ -5,7 +5,7 @@ using System.Threading;
 
 namespace FsInfoCat.Local
 {
-    public class CrawlJobLogRow : LocalDbEntity, ILocalCrawlJobLogRow, IEquatable<CrawlJobLogRow>
+    public abstract class CrawlJobLogRow : LocalDbEntity, ILocalCrawlJobLogRow
     {
         #region Fields
 
@@ -117,29 +117,6 @@ namespace FsInfoCat.Local
             throw new NotImplementedException();
         }
 
-        public bool Equals(CrawlJobLogRow other)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool Equals(ICrawlJob other)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override bool Equals(object obj)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override int GetHashCode()
-        {
-            throw new NotImplementedException();
-        }
-
-        public override string ToString()
-        {
-            throw new NotImplementedException();
-        }
+        public abstract bool Equals(ICrawlJob other);
     }
 }

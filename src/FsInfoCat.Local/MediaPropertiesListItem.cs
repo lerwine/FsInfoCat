@@ -53,12 +53,31 @@ namespace FsInfoCat.Local
 
         public override int GetHashCode()
         {
-            throw new NotImplementedException();
-        }
-
-        public override string ToString()
-        {
-            throw new NotImplementedException();
+            if (Id.Equals(Guid.Empty))
+                unchecked
+                {
+                    int hash = 61;
+                    hash = hash * 71 + ContentDistributor.GetHashCode();
+                    hash = hash * 71 + CreatorApplication.GetHashCode();
+                    hash = hash * 71 + CreatorApplicationVersion.GetHashCode();
+                    hash = hash * 71 + DateReleased.GetHashCode();
+                    hash = Duration.HasValue ? hash * 71 + (Duration ?? default).GetHashCode() : hash * 71;
+                    hash = hash * 71 + DVDID.GetHashCode();
+                    hash = FrameCount.HasValue ? hash * 71 + (FrameCount ?? default).GetHashCode() : hash * 71;
+                    hash = (Producer is null) ? hash * 71 : hash * 71 + (Producer?.GetHashCode() ?? 0);
+                    hash = hash * 71 + ProtectionType.GetHashCode();
+                    hash = hash * 71 + ProviderRating.GetHashCode();
+                    hash = hash * 71 + ProviderStyle.GetHashCode();
+                    hash = hash * 71 + Publisher.GetHashCode();
+                    hash = hash * 71 + Subtitle.GetHashCode();
+                    hash = (Writer is null) ? hash * 71 : hash * 71 + (Writer?.GetHashCode() ?? 0);
+                    hash = UpstreamId.HasValue ? hash * 71 + (UpstreamId ?? default).GetHashCode() : hash * 71;
+                    hash = LastSynchronizedOn.HasValue ? hash * 71 + (LastSynchronizedOn ?? default).GetHashCode() : hash * 71;
+                    hash = hash * 71 + CreatedOn.GetHashCode();
+                    hash = hash * 71 + ModifiedOn.GetHashCode();
+                    return hash;
+                }
+            return Id.GetHashCode();
         }
     }
 }

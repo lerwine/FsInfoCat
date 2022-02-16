@@ -54,15 +54,5 @@ namespace FsInfoCat.Local
         {
             throw new NotImplementedException();
         }
-
-        public override int GetHashCode()
-        {
-            throw new NotImplementedException();
-        }
-
-        public override string ToString()
-        {
-            return base.ToString();
-        }
     }
 }

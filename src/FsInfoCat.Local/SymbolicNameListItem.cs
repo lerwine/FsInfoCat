@@ -42,12 +42,22 @@ namespace FsInfoCat.Local
 
         public override int GetHashCode()
         {
-            throw new NotImplementedException();
-        }
-
-        public override string ToString()
-        {
-            throw new NotImplementedException();
+            if (Id.Equals(Guid.Empty))
+                unchecked
+                {
+                    int hash = 23;
+                    hash = hash * 31 + FileSystemDisplayName.GetHashCode();
+                    hash = hash * 31 + Name.GetHashCode();
+                    hash = hash * 31 + Notes.GetHashCode();
+                    hash = hash * 31 + IsInactive.GetHashCode();
+                    hash = hash * 31 + Priority.GetHashCode();
+                    hash = UpstreamId.HasValue ? hash * 31 + (UpstreamId ?? default).GetHashCode() : hash * 31;
+                    hash = LastSynchronizedOn.HasValue ? hash * 31 + (LastSynchronizedOn ?? default).GetHashCode() : hash * 31;
+                    hash = hash * 31 + CreatedOn.GetHashCode();
+                    hash = hash * 31 + ModifiedOn.GetHashCode();
+                    return hash;
+                }
+            return Id.GetHashCode();
         }
     }
 }

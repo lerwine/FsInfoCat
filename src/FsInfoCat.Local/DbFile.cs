@@ -1314,12 +1314,38 @@ namespace FsInfoCat.Local
 
         public override int GetHashCode()
         {
-            throw new NotImplementedException();
-        }
-
-        public override string ToString()
-        {
-            throw new NotImplementedException();
+            if (Id.Equals(Guid.Empty))
+                unchecked
+                {
+                    int hash = 97;
+                    hash = (BinaryProperties is null) ? (BinaryPropertySetId.Equals(Guid.Empty) ? hash * 109 : hash * 109 + BinaryPropertySetId.GetHashCode()) : hash * 109 + (BinaryProperties?.GetHashCode() ?? 0);
+                    hash = (Parent is null) ? (ParentId.Equals(Guid.Empty) ? hash * 109 : hash * 109 + ParentId.GetHashCode()) : hash * 109 + (Parent?.GetHashCode() ?? 0);
+                    hash = (Redundancy is null) ? hash * 103 : hash * 103 + (Redundancy?.GetHashCode() ?? 0);
+                    hash = (SummaryProperties is null) ? (SummaryPropertySetId.Equals(Guid.Empty) ? hash * 109 : hash * 109 + SummaryPropertySetId.GetHashCode()) : hash * 109 + (SummaryProperties?.GetHashCode() ?? 0);
+                    hash = (DocumentProperties is null) ? (DocumentPropertySetId.Equals(Guid.Empty) ? hash * 109 : hash * 109 + DocumentPropertySetId.GetHashCode()) : hash * 109 + (DocumentProperties?.GetHashCode() ?? 0);
+                    hash = (AudioProperties is null) ? (AudioPropertySetId.Equals(Guid.Empty) ? hash * 109 : hash * 109 + AudioPropertySetId.GetHashCode()) : hash * 109 + (AudioProperties?.GetHashCode() ?? 0);
+                    hash = (DRMProperties is null) ? (DRMPropertySetId.Equals(Guid.Empty) ? hash * 109 : hash * 109 + DRMPropertySetId.GetHashCode()) : hash * 109 + (DRMProperties?.GetHashCode() ?? 0);
+                    hash = (GPSProperties is null) ? (GPSPropertySetId.Equals(Guid.Empty) ? hash * 109 : hash * 109 + GPSPropertySetId.GetHashCode()) : hash * 109 + (GPSProperties?.GetHashCode() ?? 0);
+                    hash = (MediaProperties is null) ? (MediaPropertySetId.Equals(Guid.Empty) ? hash * 109 : hash * 109 + MediaPropertySetId.GetHashCode()) : hash * 109 + (MediaProperties?.GetHashCode() ?? 0);
+                    hash = (MusicProperties is null) ? (MusicPropertySetId.Equals(Guid.Empty) ? hash * 109 : hash * 109 + MusicPropertySetId.GetHashCode()) : hash * 109 + (MusicProperties?.GetHashCode() ?? 0);
+                    hash = (PhotoProperties is null) ? (PhotoPropertySetId.Equals(Guid.Empty) ? hash * 109 : hash * 109 + PhotoPropertySetId.GetHashCode()) : hash * 109 + (PhotoProperties?.GetHashCode() ?? 0);
+                    hash = (RecordedTVProperties is null) ? (RecordedTVPropertySetId.Equals(Guid.Empty) ? hash * 109 : hash * 109 + RecordedTVPropertySetId.GetHashCode()) : hash * 109 + (RecordedTVProperties?.GetHashCode() ?? 0);
+                    hash = (VideoProperties is null) ? (VideoPropertySetId.Equals(Guid.Empty) ? hash * 109 : hash * 109 + VideoPropertySetId.GetHashCode()) : hash * 109 + (VideoProperties?.GetHashCode() ?? 0);
+                    hash = hash * 103 + Name.GetHashCode();
+                    hash = hash * 103 + Status.GetHashCode();
+                    hash = hash * 103 + Options.GetHashCode();
+                    hash = hash * 103 + LastAccessed.GetHashCode();
+                    hash = LastHashCalculation.HasValue ? hash * 103 + (LastHashCalculation ?? default).GetHashCode() : hash * 103;
+                    hash = hash * 103 + Notes.GetHashCode();
+                    hash = hash * 103 + CreationTime.GetHashCode();
+                    hash = hash * 103 + LastWriteTime.GetHashCode();
+                    hash = UpstreamId.HasValue ? hash * 103 + (UpstreamId ?? default).GetHashCode() : hash * 103;
+                    hash = LastSynchronizedOn.HasValue ? hash * 103 + (LastSynchronizedOn ?? default).GetHashCode() : hash * 103;
+                    hash = hash * 103 + CreatedOn.GetHashCode();
+                    hash = hash * 103 + ModifiedOn.GetHashCode();
+                    return hash;
+                }
+            return Id.GetHashCode();
         }
     }
 }
