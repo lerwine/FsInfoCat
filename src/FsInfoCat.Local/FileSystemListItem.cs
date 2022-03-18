@@ -47,23 +47,24 @@ namespace FsInfoCat.Local
 
         public override int GetHashCode()
         {
-            if (Id.Equals(Guid.Empty))
+            Guid id = Id;
+            if (id.Equals(Guid.Empty))
                 unchecked
                 {
                     int hash = 29;
                     hash = hash * 37 + DisplayName.GetHashCode();
                     hash = hash * 37 + ReadOnly.GetHashCode();
                     hash = hash * 37 + MaxNameLength.GetHashCode();
-                    hash = DefaultDriveType.HasValue ? hash * 37 + (DefaultDriveType ?? default).GetHashCode() : hash * 37;
+                    hash = EntityExtensions.HashNullable(DefaultDriveType, hash, 37);
                     hash = hash * 37 + Notes.GetHashCode();
                     hash = hash * 37 + IsInactive.GetHashCode();
-                    hash = UpstreamId.HasValue ? hash * 37 + (UpstreamId ?? default).GetHashCode() : hash * 37;
-                    hash = LastSynchronizedOn.HasValue ? hash * 37 + (LastSynchronizedOn ?? default).GetHashCode() : hash * 37;
+                    hash = EntityExtensions.HashNullable(UpstreamId, hash, 37);
+                    hash = EntityExtensions.HashNullable(LastSynchronizedOn, hash, 37);
                     hash = hash * 37 + CreatedOn.GetHashCode();
                     hash = hash * 37 + ModifiedOn.GetHashCode();
                     return hash;
                 }
-            return Id.GetHashCode();
+            return id.GetHashCode();
         }
 
         public async Task<(SymbolicName[], VolumeListItem[])> LoadRelatedItemsAsync(IActivityProgress progress)

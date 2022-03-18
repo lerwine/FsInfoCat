@@ -758,16 +758,13 @@ namespace FsInfoCat
             }
             return result;
         }
-    }
 
-    public class ReferenceComparer<T> : IEqualityComparer<T>
-    {
-        public static ReferenceComparer<T> Default = new();
+        public static int HashGuid(Guid value, int hash, int prime) => value.Equals(Guid.Empty) ? hash * prime : hash * prime + value.GetHashCode();
 
-        private ReferenceComparer() { }
+        public static int HashNullable<T>(T? value, int hash, int prime) where T : struct => value.HasValue ? hash * prime + value.Value.GetHashCode() : hash * prime;
 
-        public bool Equals(T x, T y) => (x is null) ? y is null : x is not null && ReferenceEquals(x, y);
+        public static int HashRelatedEntity<T>(T value, Func<Guid> getId, int hash, int prime) where T : class, IHasSimpleIdentifier => (value is null) ? HashGuid(getId(), hash, prime) : hash * prime + value.GetHashCode();
 
-        public int GetHashCode([DisallowNull] T obj) => (obj is null) ? 0 : obj.GetHashCode();
+        public static int HashObject<T>(T value, int hash, int prime) where T : class => (value is null) ? hash * prime : hash * prime + value.GetHashCode();
     }
 }

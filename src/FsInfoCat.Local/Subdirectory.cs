@@ -771,13 +771,14 @@ namespace FsInfoCat.Local
 
         public override int GetHashCode()
         {
-            if (Id.Equals(Guid.Empty))
+            Guid id = Id;
+            if (id.Equals(Guid.Empty))
                 unchecked
                 {
                     int hash = 43;
-                    hash = (Parent is null) ? (ParentId.Equals(Guid.Empty) ? hash * 109 : hash * 109 + ParentId.GetHashCode()) : hash * 109 + (Parent?.GetHashCode() ?? 0);
-                    hash = (Volume is null) ? (VolumeId.Equals(Guid.Empty) ? hash * 109 : hash * 109 + VolumeId.GetHashCode()) : hash * 109 + (Volume?.GetHashCode() ?? 0);
-                    hash = (CrawlConfiguration is null) ? hash * 53 : hash * 53 + (CrawlConfiguration?.GetHashCode() ?? 0);
+                    hash = (Parent is null) ? (ParentId.Equals(Guid.Empty) ? hash * 53 : hash * 53 + ParentId.GetHashCode()) : hash * 53 + (Parent?.GetHashCode() ?? 0);
+                    hash = (Volume is null) ? (VolumeId.Equals(Guid.Empty) ? hash * 53 : hash * 53 + VolumeId.GetHashCode()) : hash * 53 + (Volume?.GetHashCode() ?? 0);
+                    hash = EntityExtensions.HashObject(CrawlConfiguration, hash, 53);
                     hash = hash * 53 + Name.GetHashCode();
                     hash = hash * 53 + Options.GetHashCode();
                     hash = hash * 53 + LastAccessed.GetHashCode();
@@ -785,13 +786,13 @@ namespace FsInfoCat.Local
                     hash = hash * 53 + Status.GetHashCode();
                     hash = hash * 53 + CreationTime.GetHashCode();
                     hash = hash * 53 + LastWriteTime.GetHashCode();
-                    hash = UpstreamId.HasValue ? hash * 53 + (UpstreamId ?? default).GetHashCode() : hash * 53;
-                    hash = LastSynchronizedOn.HasValue ? hash * 53 + (LastSynchronizedOn ?? default).GetHashCode() : hash * 53;
+                    hash = EntityExtensions.HashNullable(UpstreamId, hash, 53);
+                    hash = EntityExtensions.HashNullable(LastSynchronizedOn, hash, 53);
                     hash = hash * 53 + CreatedOn.GetHashCode();
                     hash = hash * 53 + ModifiedOn.GetHashCode();
                     return hash;
                 }
-            return Id.GetHashCode();
+            return id.GetHashCode();
 
         }
     }

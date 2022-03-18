@@ -228,19 +228,20 @@ namespace FsInfoCat.Local
 
         public override int GetHashCode()
         {
-            if (Id.Equals(Guid.Empty))
+            Guid id = Id;
+            if (id.Equals(Guid.Empty))
                 unchecked
                 {
                     int hash = 13;
                     hash = hash * 19 + Message.GetHashCode();
                     hash = hash * 19 + Details.GetHashCode();
                     hash = hash * 19 + ErrorCode.GetHashCode();
-                    hash = (Target is null) ? (TargetId.Equals(Guid.Empty) ? hash * 109 : hash * 109 + TargetId.GetHashCode()) : hash * 109 + (Target?.GetHashCode() ?? 0);
+                    hash = EntityExtensions.HashRelatedEntity(Target, () => TargetId, hash, 19);
                     hash = hash * 19 + CreatedOn.GetHashCode();
                     hash = hash * 19 + ModifiedOn.GetHashCode();
                     return hash;
                 }
-            return Id.GetHashCode();
+            return id.GetHashCode();
         }
     }
 }

@@ -65,37 +65,38 @@ namespace FsInfoCat.Local
 
         public override int GetHashCode()
         {
-            if (Id.Equals(Guid.Empty))
+            Guid id = Id;
+            if (id.Equals(Guid.Empty))
                 unchecked
                 {
                     int hash = 89;
                     hash = hash * 101 + Status.GetHashCode();
                     hash = hash * 101 + Options.GetHashCode();
                     hash = hash * 101 + LastAccessed.GetHashCode();
-                    hash = LastHashCalculation.HasValue ? hash * 101 + (LastHashCalculation ?? default).GetHashCode() : hash * 101;
+                    hash = EntityExtensions.HashNullable(LastHashCalculation, hash, 101);
                     hash = hash * 101 + Notes.GetHashCode();
                     hash = hash * 101 + CreationTime.GetHashCode();
                     hash = hash * 101 + LastWriteTime.GetHashCode();
                     hash = hash * 101 + ParentId.GetHashCode();
                     hash = hash * 101 + BinaryPropertySetId.GetHashCode();
-                    hash = SummaryPropertySetId.HasValue ? hash * 101 + (SummaryPropertySetId ?? default).GetHashCode() : hash * 101;
-                    hash = DocumentPropertySetId.HasValue ? hash * 101 + (DocumentPropertySetId ?? default).GetHashCode() : hash * 101;
-                    hash = AudioPropertySetId.HasValue ? hash * 101 + (AudioPropertySetId ?? default).GetHashCode() : hash * 101;
-                    hash = DRMPropertySetId.HasValue ? hash * 101 + (DRMPropertySetId ?? default).GetHashCode() : hash * 101;
-                    hash = GPSPropertySetId.HasValue ? hash * 101 + (GPSPropertySetId ?? default).GetHashCode() : hash * 101;
-                    hash = ImagePropertySetId.HasValue ? hash * 101 + (ImagePropertySetId ?? default).GetHashCode() : hash * 101;
-                    hash = MediaPropertySetId.HasValue ? hash * 101 + (MediaPropertySetId ?? default).GetHashCode() : hash * 101;
-                    hash = MusicPropertySetId.HasValue ? hash * 101 + (MusicPropertySetId ?? default).GetHashCode() : hash * 101;
-                    hash = PhotoPropertySetId.HasValue ? hash * 101 + (PhotoPropertySetId ?? default).GetHashCode() : hash * 101;
-                    hash = RecordedTVPropertySetId.HasValue ? hash * 101 + (RecordedTVPropertySetId ?? default).GetHashCode() : hash * 101;
-                    hash = VideoPropertySetId.HasValue ? hash * 101 + (VideoPropertySetId ?? default).GetHashCode() : hash * 101;
-                    hash = UpstreamId.HasValue ? hash * 101 + (UpstreamId ?? default).GetHashCode() : hash * 101;
-                    hash = LastSynchronizedOn.HasValue ? hash * 101 + (LastSynchronizedOn ?? default).GetHashCode() : hash * 101;
+                    hash = EntityExtensions.HashNullable(SummaryPropertySetId, hash, 101);
+                    hash = EntityExtensions.HashNullable(DocumentPropertySetId, hash, 101);
+                    hash = EntityExtensions.HashNullable(AudioPropertySetId, hash, 101);
+                    hash = EntityExtensions.HashNullable(DRMPropertySetId, hash, 101);
+                    hash = EntityExtensions.HashNullable(GPSPropertySetId, hash, 101);
+                    hash = EntityExtensions.HashNullable(ImagePropertySetId, hash, 101);
+                    hash = EntityExtensions.HashNullable(MediaPropertySetId, hash, 101);
+                    hash = EntityExtensions.HashNullable(MusicPropertySetId, hash, 101);
+                    hash = EntityExtensions.HashNullable(PhotoPropertySetId, hash, 101);
+                    hash = EntityExtensions.HashNullable(RecordedTVPropertySetId, hash, 101);
+                    hash = EntityExtensions.HashNullable(VideoPropertySetId, hash, 101);
+                    hash = EntityExtensions.HashNullable(UpstreamId, hash, 101);
+                    hash = EntityExtensions.HashNullable(LastSynchronizedOn, hash, 101);
                     hash = hash * 101 + CreatedOn.GetHashCode();
                     hash = hash * 101 + ModifiedOn.GetHashCode();
                     return hash;
                 }
-            return Id.GetHashCode();
+            return id.GetHashCode();
         }
 
         public override string ToString()

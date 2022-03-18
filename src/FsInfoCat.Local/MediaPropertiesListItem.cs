@@ -50,7 +50,8 @@ namespace FsInfoCat.Local
 
         public override int GetHashCode()
         {
-            if (Id.Equals(Guid.Empty))
+            Guid id = Id;
+            if (id.Equals(Guid.Empty))
                 unchecked
                 {
                     int hash = 61;
@@ -58,23 +59,23 @@ namespace FsInfoCat.Local
                     hash = hash * 71 + CreatorApplication.GetHashCode();
                     hash = hash * 71 + CreatorApplicationVersion.GetHashCode();
                     hash = hash * 71 + DateReleased.GetHashCode();
-                    hash = Duration.HasValue ? hash * 71 + (Duration ?? default).GetHashCode() : hash * 71;
+                    hash = EntityExtensions.HashNullable(Duration, hash, 71);
                     hash = hash * 71 + DVDID.GetHashCode();
-                    hash = FrameCount.HasValue ? hash * 71 + (FrameCount ?? default).GetHashCode() : hash * 71;
-                    hash = (Producer is null) ? hash * 71 : hash * 71 + (Producer?.GetHashCode() ?? 0);
+                    hash = EntityExtensions.HashNullable(FrameCount, hash, 71);
+                    hash = EntityExtensions.HashObject(Producer, hash, 71);
                     hash = hash * 71 + ProtectionType.GetHashCode();
                     hash = hash * 71 + ProviderRating.GetHashCode();
                     hash = hash * 71 + ProviderStyle.GetHashCode();
                     hash = hash * 71 + Publisher.GetHashCode();
                     hash = hash * 71 + Subtitle.GetHashCode();
-                    hash = (Writer is null) ? hash * 71 : hash * 71 + (Writer?.GetHashCode() ?? 0);
-                    hash = UpstreamId.HasValue ? hash * 71 + (UpstreamId ?? default).GetHashCode() : hash * 71;
-                    hash = LastSynchronizedOn.HasValue ? hash * 71 + (LastSynchronizedOn ?? default).GetHashCode() : hash * 71;
+                    hash = EntityExtensions.HashObject(Writer, hash, 71);
+                    hash = EntityExtensions.HashNullable(UpstreamId, hash, 71);
+                    hash = EntityExtensions.HashNullable(LastSynchronizedOn, hash, 71);
                     hash = hash * 71 + CreatedOn.GetHashCode();
                     hash = hash * 71 + ModifiedOn.GetHashCode();
                     return hash;
                 }
-            return Id.GetHashCode();
+            return id.GetHashCode();
         }
     }
 }

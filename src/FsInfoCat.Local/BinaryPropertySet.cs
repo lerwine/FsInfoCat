@@ -171,9 +171,9 @@ namespace FsInfoCat.Local
                 {
                     int hash = 13;
                     hash = hash * 19 + Length.GetHashCode();
-                    hash = Hash.HasValue ? hash * 19 + Hash.Value.GetHashCode() : hash * 19;
-                    hash = UpstreamId.HasValue ? hash * 19 + UpstreamId.Value.GetHashCode() : hash * 19;
-                    hash = LastSynchronizedOn.HasValue ? hash * 19 + LastSynchronizedOn.Value.GetHashCode() : hash * 19;
+                    hash = EntityExtensions.HashNullable(Hash, hash, 19);
+                    hash = EntityExtensions.HashNullable(UpstreamId, hash, 19);
+                    hash = EntityExtensions.HashNullable(LastSynchronizedOn, hash, 19);
                     hash = hash * 19 + CreatedOn.GetHashCode();
                     hash = hash * 19 + ModifiedOn.GetHashCode();
                     return hash;

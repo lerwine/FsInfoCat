@@ -102,28 +102,28 @@ namespace FsInfoCat.Local
 
         public override int GetHashCode()
         {
-            if (Id.Equals(Guid.Empty))
+            Guid id = Id;
+            if (id.Equals(Guid.Empty))
                 unchecked
                 {
-                    int hash = 47;
-                    hash = BitDepth.HasValue ? hash * 59 + (BitDepth ?? default).GetHashCode() : hash * 59;
-                    hash = ColorSpace.HasValue ? hash * 59 + (ColorSpace ?? default).GetHashCode() : hash * 59;
-                    hash = CompressedBitsPerPixel.HasValue ? hash * 59 + (CompressedBitsPerPixel ?? default).GetHashCode() : hash * 59;
-                    hash = Compression.HasValue ? hash * 59 + (Compression ?? default).GetHashCode() : hash * 59;
+                    int hash = EntityExtensions.HashNullable(BitDepth, 47, 59);
+                    hash = EntityExtensions.HashNullable(ColorSpace, hash, 59);
+                    hash = EntityExtensions.HashNullable(CompressedBitsPerPixel, hash, 59);
+                    hash = EntityExtensions.HashNullable(Compression, hash, 59);
                     hash = hash * 59 + CompressionText.GetHashCode();
-                    hash = HorizontalResolution.HasValue ? hash * 59 + (HorizontalResolution ?? default).GetHashCode() : hash * 59;
-                    hash = HorizontalSize.HasValue ? hash * 59 + (HorizontalSize ?? default).GetHashCode() : hash * 59;
+                    hash = EntityExtensions.HashNullable(HorizontalResolution, hash, 59);
+                    hash = EntityExtensions.HashNullable(HorizontalSize, hash, 59);
                     hash = hash * 59 + ImageID.GetHashCode();
-                    hash = ResolutionUnit.HasValue ? hash * 59 + (ResolutionUnit ?? default).GetHashCode() : hash * 59;
-                    hash = VerticalResolution.HasValue ? hash * 59 + (VerticalResolution ?? default).GetHashCode() : hash * 59;
-                    hash = VerticalSize.HasValue ? hash * 59 + (VerticalSize ?? default).GetHashCode() : hash * 59;
-                    hash = UpstreamId.HasValue ? hash * 59 + (UpstreamId ?? default).GetHashCode() : hash * 59;
-                    hash = LastSynchronizedOn.HasValue ? hash * 59 + (LastSynchronizedOn ?? default).GetHashCode() : hash * 59;
+                    hash = EntityExtensions.HashNullable(ResolutionUnit, hash, 59);
+                    hash = EntityExtensions.HashNullable(VerticalResolution, hash, 59);
+                    hash = EntityExtensions.HashNullable(VerticalSize, hash, 59);
+                    hash = EntityExtensions.HashNullable(UpstreamId, hash, 59);
+                    hash = EntityExtensions.HashNullable(LastSynchronizedOn, hash, 59);
                     hash = hash * 59 + CreatedOn.GetHashCode();
                     hash = hash * 59 + ModifiedOn.GetHashCode();
                     return hash;
                 }
-            return Id.GetHashCode();
+            return id.GetHashCode();
         }
 
         IEnumerable<Guid> IIdentityReference.GetIdentifiers()

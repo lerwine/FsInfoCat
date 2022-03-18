@@ -102,22 +102,23 @@ namespace FsInfoCat.Local
 
         public override int GetHashCode()
         {
-            if (Id.Equals(Guid.Empty))
+            Guid id = Id;
+            if (id.Equals(Guid.Empty))
                 unchecked
                 {
                     int hash = 23;
-                    hash = DatePlayExpires.HasValue ? hash * 31 + (DatePlayExpires ?? default).GetHashCode() : hash * 31;
-                    hash = DatePlayStarts.HasValue ? hash * 31 + (DatePlayStarts ?? default).GetHashCode() : hash * 31;
+                    hash = EntityExtensions.HashNullable(DatePlayExpires, hash, 31);
+                    hash = EntityExtensions.HashNullable(DatePlayStarts, hash, 31);
                     hash = hash * 31 + Description.GetHashCode();
                     hash = hash * 31 + IsProtected.GetHashCode();
-                    hash = PlayCount.HasValue ? hash * 31 + (PlayCount ?? default).GetHashCode() : hash * 31;
-                    hash = UpstreamId.HasValue ? hash * 31 + (UpstreamId ?? default).GetHashCode() : hash * 31;
-                    hash = LastSynchronizedOn.HasValue ? hash * 31 + (LastSynchronizedOn ?? default).GetHashCode() : hash * 31;
+                    hash = EntityExtensions.HashNullable(PlayCount, hash, 31);
+                    hash = EntityExtensions.HashNullable(UpstreamId, hash, 31);
+                    hash = EntityExtensions.HashNullable(LastSynchronizedOn, hash, 31);
                     hash = hash * 31 + CreatedOn.GetHashCode();
                     hash = hash * 31 + ModifiedOn.GetHashCode();
                     return hash;
                 }
-            return Id.GetHashCode();
+            return id.GetHashCode();
         }
 
         IEnumerable<Guid> IIdentityReference.GetIdentifiers()

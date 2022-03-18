@@ -48,26 +48,27 @@ namespace FsInfoCat.Local
 
         public override int GetHashCode()
         {
-            if (Id.Equals(Guid.Empty))
+            Guid id = Id;
+            if (id.Equals(Guid.Empty))
                 unchecked
                 {
                     int hash = 41;
-                    hash = hash * 47 + FileSystemId.GetHashCode();
+                    hash = EntityExtensions.HashGuid(FileSystemId, hash, 47);
                     hash = hash * 47 + RootPath.GetHashCode();
                     hash = hash * 47 + DisplayName.GetHashCode();
                     hash = hash * 47 + VolumeName.GetHashCode();
                     hash = hash * 47 + Identifier.GetHashCode();
                     hash = hash * 47 + Status.GetHashCode();
-                    hash = hash * 47 + Type.GetHashCode();
-                    hash = MaxNameLength.HasValue ? hash * 47 + (MaxNameLength ?? default).GetHashCode() : hash * 47;
+                    hash = hash * 47 + Type.GetHashCode(); ;
+                    hash = EntityExtensions.HashNullable(MaxNameLength, hash, 47);
                     hash = hash * 47 + Notes.GetHashCode();
-                    hash = UpstreamId.HasValue ? hash * 47 + (UpstreamId ?? default).GetHashCode() : hash * 47;
-                    hash = LastSynchronizedOn.HasValue ? hash * 47 + (LastSynchronizedOn ?? default).GetHashCode() : hash * 47;
+                    hash = EntityExtensions.HashNullable(UpstreamId, hash, 47);
+                    hash = EntityExtensions.HashNullable(LastSynchronizedOn, hash, 47);
                     hash = hash * 47 + CreatedOn.GetHashCode();
                     hash = hash * 47 + ModifiedOn.GetHashCode();
                     return hash;
                 }
-            return Id.GetHashCode();
+            return id.GetHashCode();
         }
     }
 }

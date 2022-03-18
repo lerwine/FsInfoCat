@@ -49,29 +49,30 @@ namespace FsInfoCat.Local
 
         public override int GetHashCode()
         {
-            if (Id.Equals(Guid.Empty))
+            Guid id = Id;
+            if (id.Equals(Guid.Empty))
                 unchecked
                 {
                     int hash = 53;
                     hash = hash * 61 + AreaInformation.GetHashCode();
-                    hash = LatitudeDegrees.HasValue ? hash * 61 + (LatitudeDegrees ?? default).GetHashCode() : hash * 61;
-                    hash = LatitudeMinutes.HasValue ? hash * 61 + (LatitudeMinutes ?? default).GetHashCode() : hash * 61;
-                    hash = LatitudeSeconds.HasValue ? hash * 61 + (LatitudeSeconds ?? default).GetHashCode() : hash * 61;
+                    hash = EntityExtensions.HashNullable(LatitudeDegrees, hash, 61);
+                    hash = EntityExtensions.HashNullable(LatitudeMinutes, hash, 61);
+                    hash = EntityExtensions.HashNullable(LatitudeSeconds, hash, 61);
                     hash = hash * 61 + LatitudeRef.GetHashCode();
-                    hash = LongitudeDegrees.HasValue ? hash * 61 + (LongitudeDegrees ?? default).GetHashCode() : hash * 61;
-                    hash = LongitudeMinutes.HasValue ? hash * 61 + (LongitudeMinutes ?? default).GetHashCode() : hash * 61;
-                    hash = LongitudeSeconds.HasValue ? hash * 61 + (LongitudeSeconds ?? default).GetHashCode() : hash * 61;
+                    hash = EntityExtensions.HashNullable(LongitudeDegrees, hash, 61);
+                    hash = EntityExtensions.HashNullable(LongitudeMinutes, hash, 61);
+                    hash = EntityExtensions.HashNullable(LongitudeSeconds, hash, 61);
                     hash = hash * 61 + LongitudeRef.GetHashCode();
                     hash = hash * 61 + MeasureMode.GetHashCode();
                     hash = hash * 61 + ProcessingMethod.GetHashCode();
-                    hash = (VersionID is null) ? hash * 61 : hash * 61 + (VersionID?.GetHashCode() ?? 0);
-                    hash = UpstreamId.HasValue ? hash * 61 + (UpstreamId ?? default).GetHashCode() : hash * 61;
-                    hash = LastSynchronizedOn.HasValue ? hash * 61 + (LastSynchronizedOn ?? default).GetHashCode() : hash * 61;
+                    hash = EntityExtensions.HashObject(VersionID, hash, 61);
+                    hash = EntityExtensions.HashNullable(UpstreamId, hash, 61);
+                    hash = EntityExtensions.HashNullable(LastSynchronizedOn, hash, 61);
                     hash = hash * 61 + CreatedOn.GetHashCode();
                     hash = hash * 61 + ModifiedOn.GetHashCode();
                     return hash;
                 }
-            return Id.GetHashCode();
+            return id.GetHashCode();
         }
     }
 }

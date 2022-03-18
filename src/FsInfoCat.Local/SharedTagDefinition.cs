@@ -105,8 +105,8 @@ namespace FsInfoCat.Local
             int hash = 13;
             hash = hash * 19 + Name.GetHashCode();
             hash = hash * 19 + Description.GetHashCode();
-            hash = UpstreamId.HasValue ? hash * 19 + (UpstreamId ?? default).GetHashCode() : hash * 19;
-            hash = LastSynchronizedOn.HasValue ? hash * 19 + (LastSynchronizedOn ?? default).GetHashCode() : hash * 19;
+            hash = EntityExtensions.HashNullable(UpstreamId, hash, 19);
+            hash = EntityExtensions.HashNullable(LastSynchronizedOn, hash, 19);
             hash = hash * 19 + CreatedOn.GetHashCode();
             hash = hash * 19 + ModifiedOn.GetHashCode();
             return hash;

@@ -337,26 +337,26 @@ namespace FsInfoCat.Local
 
         public override int GetHashCode()
         {
-            if (Id.Equals(Guid.Empty))
+            Guid id = Id;
+            if (id.Equals(Guid.Empty))
                 unchecked
                 {
-                    int hash = 41;
-                    hash = (FileSystem is null) ? (FileSystemId.Equals(Guid.Empty) ? hash * 109 : hash * 109 + FileSystemId.GetHashCode()) : hash * 109 + (FileSystem?.GetHashCode() ?? 0);
-                    hash = (RootDirectory is null) ? hash * 47 : hash * 47 + (RootDirectory?.GetHashCode() ?? 0);
+                    int hash = EntityExtensions.HashRelatedEntity(FileSystem, () => FileSystemId, 41, 47);
+                    hash = EntityExtensions.HashObject(RootDirectory, hash, 47);
                     hash = hash * 47 + DisplayName.GetHashCode();
                     hash = hash * 47 + VolumeName.GetHashCode();
                     hash = hash * 47 + Identifier.GetHashCode();
                     hash = hash * 47 + Status.GetHashCode();
                     hash = hash * 47 + Type.GetHashCode();
-                    hash = MaxNameLength.HasValue ? hash * 47 + (MaxNameLength ?? default).GetHashCode() : hash * 47;
+                    hash = EntityExtensions.HashNullable(MaxNameLength, hash, 47);
                     hash = hash * 47 + Notes.GetHashCode();
-                    hash = UpstreamId.HasValue ? hash * 47 + (UpstreamId ?? default).GetHashCode() : hash * 47;
-                    hash = LastSynchronizedOn.HasValue ? hash * 47 + (LastSynchronizedOn ?? default).GetHashCode() : hash * 47;
+                    hash = EntityExtensions.HashNullable(UpstreamId, hash, 47);
+                    hash = EntityExtensions.HashNullable(LastSynchronizedOn, hash, 47);
                     hash = hash * 47 + CreatedOn.GetHashCode();
                     hash = hash * 47 + ModifiedOn.GetHashCode();
                     return hash;
                 }
-            return Id.GetHashCode();
+            return id.GetHashCode();
         }
     }
 }

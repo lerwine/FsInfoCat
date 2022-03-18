@@ -206,17 +206,22 @@ namespace FsInfoCat.Local
 
         public override int GetHashCode()
         {
+            Guid taggedId = TaggedId;
+            Guid definitionId = DefinitionId;
+            if (taggedId.Equals(Guid.Empty) && DefinitionId.Equals(Guid.Empty))
+                unchecked
+                {
+                    int hash = 11;
+                    hash = hash * 17 + Notes.GetHashCode();
+                    hash = EntityExtensions.HashNullable(UpstreamId, hash, 17);
+                    hash = EntityExtensions.HashNullable(LastSynchronizedOn, hash, 17);
+                    hash = hash * 17 + CreatedOn.GetHashCode();
+                    hash = hash * 17 + ModifiedOn.GetHashCode();
+                    return hash;
+                }
             unchecked
             {
-                int hash = 17;
-                hash = (Tagged is null) ? (TaggedId.Equals(Guid.Empty) ? hash * 109 : hash * 109 + TaggedId.GetHashCode()) : hash * 109 + (Tagged?.GetHashCode() ?? 0);
-                hash = (Definition is null) ? (DefinitionId.Equals(Guid.Empty) ? hash * 109 : hash * 109 + DefinitionId.GetHashCode()) : hash * 109 + (Definition?.GetHashCode() ?? 0);
-                hash = hash * 23 + Notes.GetHashCode();
-                hash = UpstreamId.HasValue ? hash * 23 + (UpstreamId ?? default).GetHashCode() : hash * 23;
-                hash = LastSynchronizedOn.HasValue ? hash * 23 + (LastSynchronizedOn ?? default).GetHashCode() : hash * 23;
-                hash = hash * 23 + CreatedOn.GetHashCode();
-                hash = hash * 23 + ModifiedOn.GetHashCode();
-                return hash;
+                return EntityExtensions.HashGuid(definitionId, EntityExtensions.HashGuid(taggedId, 3, 7), 7);
             }
         }
     }

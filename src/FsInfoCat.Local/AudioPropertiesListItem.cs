@@ -44,25 +44,26 @@ namespace FsInfoCat.Local
 
         public override int GetHashCode()
         {
-            if (Id.Equals(Guid.Empty))
+            Guid id = Id;
+            if (id.Equals(Guid.Empty))
                 unchecked
                 {
                     int hash = 37;
                     hash = hash * 43 + Compression.GetHashCode();
-                    hash = EncodingBitrate.HasValue ? hash * 43 + EncodingBitrate.Value.GetHashCode() : hash * 43;
+                    hash = EntityExtensions.HashNullable(EncodingBitrate, hash, 43);
                     hash = hash * 43 + Format.GetHashCode();
-                    hash = IsVariableBitrate.HasValue ? hash * 43 + IsVariableBitrate.Value.GetHashCode() : hash * 43;
-                    hash = SampleRate.HasValue ? hash * 43 + SampleRate.Value.GetHashCode() : hash * 43;
-                    hash = SampleSize.HasValue ? hash * 43 + SampleSize.Value.GetHashCode() : hash * 43;
+                    hash = EntityExtensions.HashNullable(IsVariableBitrate, hash, 43);
+                    hash = EntityExtensions.HashNullable(SampleRate, hash, 43);
+                    hash = EntityExtensions.HashNullable(SampleSize, hash, 43);
                     hash = hash * 43 + StreamName.GetHashCode();
-                    hash = StreamNumber.HasValue ? hash * 43 + StreamNumber.Value.GetHashCode() : hash * 43;
-                    hash = UpstreamId.HasValue ? hash * 43 + UpstreamId.Value.GetHashCode() : hash * 43;
-                    hash = LastSynchronizedOn.HasValue ? hash * 43 + LastSynchronizedOn.Value.GetHashCode() : hash * 43;
+                    hash = EntityExtensions.HashNullable(StreamNumber, hash, 43);
+                    hash = EntityExtensions.HashNullable(UpstreamId, hash, 43);
+                    hash = EntityExtensions.HashNullable(LastSynchronizedOn, hash, 43);
                     hash = hash * 43 + CreatedOn.GetHashCode();
                     hash = hash * 43 + ModifiedOn.GetHashCode();
                     return hash;
                 }
-            return Id.GetHashCode();
+            return id.GetHashCode();
         }
     }
 }

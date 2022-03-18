@@ -55,40 +55,41 @@ namespace FsInfoCat.Local
 
         public override int GetHashCode()
         {
-            if (Id.Equals(Guid.Empty))
+            Guid id = Id;
+            if (id.Equals(Guid.Empty))
                 unchecked
                 {
                     int hash = 103;
                     hash = hash * 109 + ApplicationName.GetHashCode();
                     hash = hash * 109 + Author.GetHashCode();
                     hash = hash * 109 + Comment.GetHashCode();
-                    hash = (Keywords is null) ? hash * 109 : hash * 109 + (Keywords?.GetHashCode() ?? 0);
+                    hash = EntityExtensions.HashObject(Keywords, hash, 109);
                     hash = hash * 109 + Subject.GetHashCode();
                     hash = hash * 109 + Title.GetHashCode();
                     hash = hash * 109 + Company.GetHashCode();
                     hash = hash * 109 + ContentType.GetHashCode();
                     hash = hash * 109 + Copyright.GetHashCode();
                     hash = hash * 109 + ParentalRating.GetHashCode();
-                    hash = Rating.HasValue ? hash * 109 + (Rating ?? default).GetHashCode() : hash * 109;
-                    hash = (ItemAuthors is null) ? hash * 109 : hash * 109 + (ItemAuthors?.GetHashCode() ?? 0);
+                    hash = EntityExtensions.HashNullable(Rating, hash, 109);
+                    hash = EntityExtensions.HashObject(ItemAuthors, hash, 109);
                     hash = hash * 109 + ItemType.GetHashCode();
                     hash = hash * 109 + ItemTypeText.GetHashCode();
-                    hash = (Kind is null) ? hash * 109 : hash * 109 + (Kind?.GetHashCode() ?? 0);
+                    hash = EntityExtensions.HashObject(Kind, hash, 109);
                     hash = hash * 109 + MIMEType.GetHashCode();
                     hash = hash * 109 + ParentalRatingReason.GetHashCode();
                     hash = hash * 109 + ParentalRatingsOrganization.GetHashCode();
-                    hash = Sensitivity.HasValue ? hash * 109 + (Sensitivity ?? default).GetHashCode() : hash * 109;
+                    hash = EntityExtensions.HashNullable(Sensitivity, hash, 109);
                     hash = hash * 109 + SensitivityText.GetHashCode();
-                    hash = SimpleRating.HasValue ? hash * 109 + (SimpleRating ?? default).GetHashCode() : hash * 109;
+                    hash = EntityExtensions.HashNullable(SimpleRating, hash, 109);
                     hash = hash * 109 + Trademarks.GetHashCode();
                     hash = hash * 109 + ProductName.GetHashCode();
-                    hash = UpstreamId.HasValue ? hash * 109 + (UpstreamId ?? default).GetHashCode() : hash * 109;
-                    hash = LastSynchronizedOn.HasValue ? hash * 109 + (LastSynchronizedOn ?? default).GetHashCode() : hash * 109;
+                    hash = EntityExtensions.HashNullable(UpstreamId, hash, 109);
+                    hash = EntityExtensions.HashNullable(LastSynchronizedOn, hash, 109);
                     hash = hash * 109 + CreatedOn.GetHashCode();
                     hash = hash * 109 + ModifiedOn.GetHashCode();
                     return hash;
                 }
-            return Id.GetHashCode();
+            return id.GetHashCode();
         }
     }
 }

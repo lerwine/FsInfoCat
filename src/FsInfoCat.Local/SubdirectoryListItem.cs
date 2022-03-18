@@ -52,7 +52,8 @@ namespace FsInfoCat.Local
 
         public override int GetHashCode()
         {
-            if (Id.Equals(Guid.Empty))
+            Guid id = Id;
+            if (id.Equals(Guid.Empty))
                 unchecked
                 {
                     int hash = 43;
@@ -66,13 +67,13 @@ namespace FsInfoCat.Local
                     hash = hash * 53 + Status.GetHashCode();
                     hash = hash * 53 + CreationTime.GetHashCode();
                     hash = hash * 53 + LastWriteTime.GetHashCode();
-                    hash = UpstreamId.HasValue ? hash * 53 + (UpstreamId ?? default).GetHashCode() : hash * 53;
-                    hash = LastSynchronizedOn.HasValue ? hash * 53 + (LastSynchronizedOn ?? default).GetHashCode() : hash * 53;
+                    hash = EntityExtensions.HashNullable(UpstreamId, hash, 53);
+                    hash = EntityExtensions.HashNullable(LastSynchronizedOn, hash, 53);
                     hash = hash * 53 + CreatedOn.GetHashCode();
                     hash = hash * 53 + ModifiedOn.GetHashCode();
                     return hash;
                 }
-            return Id.GetHashCode();
+            return id.GetHashCode();
         }
     }
 }

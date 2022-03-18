@@ -44,22 +44,22 @@ namespace FsInfoCat.Local
 
         public override int GetHashCode()
         {
-            if (Id.Equals(Guid.Empty))
+            Guid id = Id;
+            if (id.Equals(Guid.Empty))
                 unchecked
                 {
-                    int hash = 23;
-                    hash = ConfigurationId.Equals(Guid.Empty) ? hash * 109 : hash * 109 + ConfigurationId.GetHashCode();
+                    int hash = EntityExtensions.HashGuid(ConfigurationId, 23, 31);
                     hash = hash * 31 + RootPath.GetHashCode();
                     hash = hash * 31 + MaxRecursionDepth.GetHashCode();
-                    hash = MaxTotalItems.HasValue ? hash * 31 + (MaxTotalItems ?? default).GetHashCode() : hash * 31;
-                    hash = TTL.HasValue ? hash * 31 + TTL.Value.GetHashCode() : hash * 31;
-                    hash = UpstreamId.HasValue ? hash * 31 + (UpstreamId ?? default).GetHashCode() : hash * 31;
-                    hash = LastSynchronizedOn.HasValue ? hash * 31 + (LastSynchronizedOn ?? default).GetHashCode() : hash * 31;
+                    hash = EntityExtensions.HashNullable(MaxTotalItems, hash, 31);
+                    hash = EntityExtensions.HashNullable(TTL, hash, 31);
+                    hash = EntityExtensions.HashNullable(UpstreamId, hash, 31);
+                    hash = EntityExtensions.HashNullable(LastSynchronizedOn, hash, 31);
                     hash = hash * 31 + CreatedOn.GetHashCode();
                     hash = hash * 31 + ModifiedOn.GetHashCode();
                     return hash;
                 }
-            return Id.GetHashCode();
+            return id.GetHashCode();
         }
     }
 }
