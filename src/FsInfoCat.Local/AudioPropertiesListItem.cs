@@ -15,31 +15,40 @@ namespace FsInfoCat.Local
 
         internal static void OnBuildEntity(EntityTypeBuilder<AudioPropertiesListItem> builder) => builder.ToView(VIEW_NAME).HasKey(nameof(Id));
 
-        protected bool ArePropertiesEqual([DisallowNull] ILocalAudioPropertiesListItem other)
-        {
-            throw new NotImplementedException();
-        }
+        protected bool ArePropertiesEqual([DisallowNull] ILocalAudioPropertiesListItem other) =>
+            EntityExtensions.NullablesEqual(UpstreamId, other.UpstreamId) && EntityExtensions.NullablesEqual(LastSynchronizedOn, other.LastSynchronizedOn) && ArePropertiesEqual((IAudioPropertiesListItem)other);
 
-        protected bool ArePropertiesEqual([DisallowNull] IAudioPropertiesListItem other)
-        {
-            throw new NotImplementedException();
-        }
+        protected bool ArePropertiesEqual([DisallowNull] IAudioPropertiesListItem other) => ExistingFileCount == other.ExistingFileCount && TotalFileCount == other.TotalFileCount && base.ArePropertiesEqual(other);
 
-        public bool Equals(AudioPropertiesListItem other) => other is not null && ReferenceEquals(this, other) || Id.Equals(Guid.Empty) ? ArePropertiesEqual(this) : Id.Equals(other.Id);
+        public bool Equals(AudioPropertiesListItem other) => other is not null && ReferenceEquals(this, other) || Id.Equals(Guid.Empty) ? (other.Id.Equals(Guid.Empty) && ArePropertiesEqual(other)) : Id.Equals(other.Id);
 
-        public bool Equals(IAudioPropertiesListItem other)
-        {
-            throw new NotImplementedException();
-        }
+        public bool Equals(IAudioPropertiesListItem other) => other is not null && (other is AudioPropertiesListItem audioPropertiesListItem) ? Equals(audioPropertiesListItem) :
+            Id.Equals(Guid.Empty) ? (other.Id.Equals(Guid.Empty) && ArePropertiesEqual(other)) : Id.Equals(other.Id);
 
         public override bool Equals(IAudioProperties other)
         {
-            throw new NotImplementedException();
+            if (other is null)
+                return false;
+            if (other is AudioPropertiesListItem audioPropertiesListItem)
+                return Equals(audioPropertiesListItem);
+            if (other is ILocalAudioPropertiesListItem localAudioPropertiesListItem)
+                return Equals(localAudioPropertiesListItem);
+            if (other is IAudioPropertiesListItem propertiesListItem)
+                return Id.Equals(Guid.Empty) ? (propertiesListItem.Id.Equals(Guid.Empty) && ArePropertiesEqual(propertiesListItem)) : Id.Equals(propertiesListItem.Id);
+            return ArePropertiesEqual(other);
         }
 
         public override bool Equals(object obj)
         {
-            throw new NotImplementedException();
+            if (obj is null)
+                return false;
+            if (obj is AudioPropertiesListItem audioPropertiesListItem)
+                return Equals(audioPropertiesListItem);
+            if (obj is ILocalAudioPropertiesListItem localAudioPropertiesListItem)
+                return Equals(localAudioPropertiesListItem);
+            if (obj is IAudioPropertiesListItem propertiesListItem)
+                return Id.Equals(Guid.Empty) ? (propertiesListItem.Id.Equals(Guid.Empty) && ArePropertiesEqual(propertiesListItem)) : Id.Equals(propertiesListItem.Id);
+            return obj is IAudioProperties other && ArePropertiesEqual(other);
         }
 
         public override int GetHashCode()

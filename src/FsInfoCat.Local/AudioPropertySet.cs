@@ -65,15 +65,8 @@ namespace FsInfoCat.Local
             }
         }
 
-        protected bool ArePropertiesEqual([DisallowNull] ILocalAudioPropertySet other)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        protected bool ArePropertiesEqual([DisallowNull] IAudioPropertySet other)
-        {
-            throw new System.NotImplementedException();
-        }
+        protected bool ArePropertiesEqual([DisallowNull] ILocalAudioPropertySet other) =>
+            EntityExtensions.NullablesEqual(UpstreamId, other.UpstreamId) && EntityExtensions.NullablesEqual(LastSynchronizedOn, other.LastSynchronizedOn) && ArePropertiesEqual((IAudioPropertySet)other);
 
         public bool Equals(AudioPropertySet other) => other is not null && ReferenceEquals(this, other) || Id.Equals(Guid.Empty) ? ArePropertiesEqual(this) : Id.Equals(other.Id);
 

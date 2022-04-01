@@ -32,10 +32,9 @@ namespace FsInfoCat.Local
 
         #endregion
 
-        protected bool ArePropertiesEqual([DisallowNull] IAudioProperties other)
-        {
-            throw new System.NotImplementedException();
-        }
+        protected bool ArePropertiesEqual([DisallowNull] IAudioProperties other) => EntityExtensions.NullablesEqual(EncodingBitrate, other.EncodingBitrate) && EntityExtensions.NullablesEqual(IsVariableBitrate, other.IsVariableBitrate) &&
+            EntityExtensions.NullablesEqual(SampleRate, other.SampleRate) && EntityExtensions.NullablesEqual(SampleSize, other.SampleSize) && EntityExtensions.NullablesEqual(StreamNumber, other.StreamNumber) &&
+            _compression.Equals(other.Compression) && _format.Equals(other.Format) && _streamName.Equals(other.StreamName);
 
         public abstract bool Equals(IAudioProperties other);
     }
