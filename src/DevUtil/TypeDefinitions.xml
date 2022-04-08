@@ -1,0 +1,2422 @@
+<TypeDefinitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="TypeDefinitions.xsd">
+    <Namespace Name="FsInfoCat">
+        <Enum Name="AppDataPathLevel" />
+        <Enum Name="CrawlStatus" UnderlyingType="byte" />
+        <Enum Name="DirectoryCrawlOptions" UnderlyingType="byte" />
+        <Enum Name="DirectoryStatus" UnderlyingType="byte" />
+        <Enum Name="ErrorCode" UnderlyingType="int" />
+        <Enum Name="FileCorrelationStatus" UnderlyingType="byte" />
+        <Enum Name="FileCrawlOptions" UnderlyingType="byte" />
+        <Interface Name="IAccessError">
+            <Implements Type="IDbEntity" />
+            <Implements Type="IHasSimpleIdentifier" />
+            <Properties>
+                <Value Type="ErrorCode" Name="ErrorCode" />
+                <String Name="Message" />
+                <String Name="Details" />
+                <Class Type="IDbEntity" Name="Target" />
+            </Properties>
+        </Interface>
+        <Interface Name="IAudioProperties">
+            <Properties>
+                <String Name="Compression" />
+                <UInt Name="EncodingBitrate" IsNullable="true" />
+                <String Name="Format" />
+                <Boolean Name="IsVariableBitrate" IsNullable="true" />
+                <UInt Name="SampleRate" IsNullable="true" />
+                <UInt Name="SampleSize" IsNullable="true" />
+                <String Name="StreamName" />
+                <UShort Name="StreamNumber" IsNullable="true" />
+            </Properties>
+        </Interface>
+        <Interface Name="IAudioPropertySet">
+            <Implements Type="IPropertySet" />
+            <Implements Type="IAudioProperties" />
+        </Interface>
+        <Interface Name="IBinaryPropertySet">
+            <Implements Type="IDbEntity" />
+            <Implements Type="IHasSimpleIdentifier" />
+            <Properties>
+                <Long Name="Length" />
+                <Value Type="MD5Hash" Name="Hash" IsNullable="true" />
+                <IEnumerable ItemType="IFile" Name="Files" />
+                <IEnumerable ItemType="IRedundantSet" Name="RedundantSets" />
+            </Properties>
+        </Interface>
+        <Interface Name="IComparison">
+            <Implements Type="IDbEntity" />
+            <Properties>
+                <Boolean Name="AreEqual" />
+                <DateTime Name="ComparedOn" />
+                <Guid Name="BaselineId" />
+                <Class Type="IFile" Name="Baseline" />
+                <Guid Name="CorrelativeId" />
+                <Class Type="IFile" Name="Correlative" />
+            </Properties>
+        </Interface>
+        <Interface Name="ICrawlConfigReportItem">
+            <Implements Type="ICrawlConfigurationListItem" />
+            <Properties>
+                <Long Name="SucceededCount" />
+                <Long Name="TimedOutCount" />
+                <Long Name="ItemLimitReachedCount" />
+                <Long Name="CanceledCount" />
+                <Long Name="FailedCount" />
+                <Long Name="AverageDuration" IsNullable="true" />
+                <Long Name="MaxDuration" IsNullable="true" />
+            </Properties>
+        </Interface>
+        <Interface Name="ICrawlConfiguration">
+            <Implements Type="ICrawlConfigurationRow" />
+            <Properties>
+                <Class Type="ISubdirectory" Name="Root" />
+                <IEnumerable ItemType="ICrawlJobLog" Name="Logs" />
+            </Properties>
+        </Interface>
+        <Interface Name="ICrawlConfigurationListItem">
+            <Implements Type="ICrawlConfigurationRow" />
+            <Properties>
+                <String Name="AncestorNames" />
+                <Guid Name="VolumeId" />
+                <String Name="VolumeDisplayName" />
+                <String Name="VolumeName" />
+                <Value Type="VolumeIdentifier" Name="VolumeIdentifier" />
+                <String Name="FileSystemDisplayName" />
+                <String Name="FileSystemSymbolicName" />
+            </Properties>
+        </Interface>
+        <Interface Name="ICrawlConfigurationRow">
+            <Implements Type="IDbEntity" />
+            <Implements Type="ICrawlSettings" />
+            <Implements Type="IHasSimpleIdentifier" />
+            <Properties>
+                <String Name="DisplayName" />
+                <String Name="Notes" />
+                <Value Type="CrawlStatus" Name="StatusValue" />
+                <DateTime Name="LastCrawlStart" IsNullable="true" />
+                <DateTime Name="LastCrawlEnd" IsNullable="true" />
+                <DateTime Name="NextScheduledStart" IsNullable="true" />
+                <Long Name="RescheduleInterval" IsNullable="true" />
+                <Boolean Name="RescheduleFromJobEnd" />
+                <Boolean Name="RescheduleAfterFail" />
+            </Properties>
+        </Interface>
+        <Interface Name="ICrawlJob">
+            <Implements Type="ICrawlSettings" />
+            <Properties>
+                <DateTime Name="CrawlStart" />
+                <String Name="StatusMessage" />
+                <String Name="StatusDetail" />
+                <Long Name="FoldersProcessed" />
+                <Long Name="FilesProcessed" />
+            </Properties>
+        </Interface>
+        <Interface Name="ICrawlJobListItem">
+            <Implements Type="ICrawlJobLogRow" />
+            <Properties>
+                <Guid Name="ConfigurationId" />
+                <String Name="ConfigurationDisplayName" />
+            </Properties>
+        </Interface>
+        <Interface Name="ICrawlJobLog">
+            <Implements Type="ICrawlJobLogRow" />
+            <Properties>
+                <Class Type="ICrawlConfiguration" Name="Configuration" />
+            </Properties>
+        </Interface>
+        <Interface Name="ICrawlJobLogRow">
+            <Implements Type="IDbEntity" />
+            <Implements Type="ICrawlJob" />
+            <Implements Type="IHasSimpleIdentifier" />
+            <Properties>
+                <String Name="RootPath" />
+                <Value Type="CrawlStatus" Name="StatusCode" />
+                <DateTime Name="CrawlEnd" IsNullable="true" />
+            </Properties>
+        </Interface>
+        <Interface Name="ICrawlSettings">
+            <Properties>
+                <UShort Name="MaxRecursionDepth" />
+                <ULong Name="MaxTotalItems" IsNullable="true" />
+                <Long Name="TTL" IsNullable="true" />
+            </Properties>
+        </Interface>
+        <Interface Name="IDbEntity">
+            <Properties>
+                <DateTime Name="CreatedOn" Access="GetSet" />
+                <DateTime Name="ModifiedOn" Access="GetSet" />
+            </Properties>
+        </Interface>
+        <Interface Name="IDbFsItem">
+            <Implements Type="IDbFsItemRow" />
+            <Properties>
+                <Class Type="ISubdirectory" Name="Parent" />
+                <IEnumerable ItemType="IAccessError" Name="AccessErrors" />
+                <IEnumerable ItemType="IPersonalTag" Name="PersonalTags" />
+                <IEnumerable ItemType="ISharedTag" Name="SharedTags" />
+            </Properties>
+        </Interface>
+        <Interface Name="IDbFsItemAncestorName">
+            <Implements Type="IHasSimpleIdentifier" />
+            <Properties>
+                <String Name="Name" />
+                <String Name="AncestorNames" />
+            </Properties>
+        </Interface>
+        <Interface Name="IDbFsItemListItem">
+            <Implements Type="IDbFsItemRow" />
+            <Properties>
+                <Long Name="AccessErrorCount" />
+                <Long Name="PersonalTagCount" />
+                <Long Name="SharedTagCount" />
+            </Properties>
+        </Interface>
+        <Interface Name="IDbFsItemListItemWithAncestorNames">
+            <Implements Type="IDbFsItemListItem" />
+            <Implements Type="IDbFsItemAncestorName" />
+            <Properties>
+                <Guid Name="EffectiveVolumeId" />
+                <String Name="VolumeDisplayName" />
+                <String Name="VolumeName" />
+                <Value Type="VolumeIdentifer" Name="VolumeIdentifer" />
+                <Value Type="VolumeIdentifier" Name="VolumeIdentifier" />
+                <String Name="FileSystemDisplayName" />
+                <String Name="FileSystemSymbolicName" />
+            </Properties>
+        </Interface>
+        <Interface Name="IDbFsItemRow">
+            <Implements Type="IDbEntity" />
+            <Implements Type="IHasSimpleIdentifier" />
+            <Properties>
+                <String Name="Name" />
+                <DateTime Name="LastAccessed" />
+                <String Name="Notes" />
+                <DateTime Name="CreationTime" />
+                <DateTime Name="LastWriteTime" />
+            </Properties>
+        </Interface>
+        <Interface Name="IDocumentProperties">
+            <Properties>
+                <String Name="ClientID" />
+                <Class Type="MultiStringValue" Name="Contributor" />
+                <DateTime Name="DateCreated" IsNullable="true" />
+                <String Name="LastAuthor" />
+                <String Name="RevisionNumber" />
+                <Int Name="Security" IsNullable="true" />
+                <String Name="Division" />
+                <String Name="DocumentID" />
+                <String Name="Manager" />
+                <String Name="PresentationFormat" />
+                <String Name="Version" />
+            </Properties>
+        </Interface>
+        <Interface Name="IDocumentPropertySet">
+            <Implements Type="IPropertySet" />
+            <Implements Type="IDocumentProperties" />
+            <Properties>
+                <DateTime Name="DatePlayExpires" IsNullable="true" />
+                <DateTime Name="DatePlayStarts" IsNullable="true" />
+                <String Name="Description" />
+                <Boolean Name="IsProtected" IsNullable="true" />
+                <UInt Name="PlayCount" IsNullable="true" />
+            </Properties>
+        </Interface>
+        <Interface Name="IDRMProperties">
+            <Properties>
+                <DateTime Name="DatePlayExpires" IsNullable="true" />
+                <DateTime Name="DatePlayStarts" IsNullable="true" />
+                <String Name="Description" />
+                <Boolean Name="IsProtected" IsNullable="true" />
+                <UInt Name="PlayCount" IsNullable="true" />
+            </Properties>
+        </Interface>
+        <Interface Name="IDRMPropertySet">
+            <Implements Type="IPropertySet" />
+            <Implements Type="IDRMProperties" />
+        </Interface>
+        <Interface Name="IFile">
+            <Implements Type="IDbFsItem" />
+            <Implements Type="IFileRow" />
+            <Properties>
+                <Class Type="IBinaryPropertySet" Name="BinaryProperties" />
+                <Class Type="ISummaryPropertySet" Name="SummaryProperties" />
+                <Class Type="IDocumentPropertySet" Name="DocumentProperties" />
+                <Class Type="IAudioPropertySet" Name="AudioProperties" />
+                <Class Type="IDRMPropertySet" Name="DRMProperties" />
+                <Class Type="IGPSPropertySet" Name="GPSProperties" />
+                <Class Type="IImagePropertySet" Name="ImageProperties" />
+                <Class Type="IMediaPropertySet" Name="MediaProperties" />
+                <Class Type="IMusicPropertySet" Name="MusicProperties" />
+                <Class Type="IPhotoPropertySet" Name="PhotoProperties" />
+                <Class Type="IRecordedTVPropertySet" Name="RecordedTVProperties" />
+                <Class Type="IVideoPropertySet" Name="VideoProperties" />
+                <Class Type="IRedundancy" Name="Redundancy" />
+                <IEnumerable ItemType="IComparison" Name="BaselineComparisons" />
+                <IEnumerable ItemType="IComparison" Name="CorrelativeComparisons" />
+                <IEnumerable ItemType="IFileAccessError" Name="AccessErrors" />
+                <IEnumerable ItemType="IPersonalFileTag" Name="PersonalTags" />
+                <IEnumerable ItemType="ISharedFileTag" Name="SharedTags" />
+            </Properties>
+        </Interface>
+        <Interface Name="IFileAccessError">
+            <Implements Type="IAccessError" />
+            <Properties>
+                <Class Type="IFile" Name="Target" />
+            </Properties>
+        </Interface>
+        <Interface Name="IFileAncestorName">
+            <Implements Type="IDbFsItemAncestorName" />
+            <Properties>
+                <Guid Name="ParentId" />
+            </Properties>
+        </Interface>
+        <Interface Name="IFileListItemWithAncestorNames">
+            <Implements Type="IDbFsItemListItemWithAncestorNames" />
+            <Implements Type="IFileRow" />
+            <Implements Type="IFileAncestorName" />
+        </Interface>
+        <Interface Name="IFileListItemWithBinaryProperties">
+            <Implements Type="IDbFsItemListItem" />
+            <Implements Type="IFileRow" />
+            <Properties>
+                <Long Name="Length" />
+                <Value Type="MD5Hash" Name="Hash" IsNullable="true" />
+                <Long Name="RedundancyCount" />
+                <Long Name="ComparisonCount" />
+            </Properties>
+        </Interface>
+        <Interface Name="IFileListItemWithBinaryPropertiesAndAncestorNames">
+            <Implements Type="IFileListItemWithAncestorNames" />
+            <Properties>
+                <Long Name="Length" />
+                <Value Type="MD5Hash" Name="Hash" IsNullable="true" />
+            </Properties>
+        </Interface>
+        <Interface Name="IFileRow">
+            <Implements Type="IDbFsItemRow" />
+            <Properties>
+                <Value Type="FileCrawlOptions" Name="Options" />
+                <Value Type="FileCorrelationStatus" Name="Status" />
+                <DateTime Name="LastHashCalculation" IsNullable="true" />
+                <Guid Name="ParentId" />
+                <Guid Name="BinaryPropertySetId" />
+                <Guid Name="SummaryPropertySetId" IsNullable="true" />
+                <Guid Name="DocumentPropertySetId" IsNullable="true" />
+                <Guid Name="AudioPropertySetId" IsNullable="true" />
+                <Guid Name="DRMPropertySetId" IsNullable="true" />
+                <Guid Name="GPSPropertySetId" IsNullable="true" />
+                <Guid Name="ImagePropertySetId" IsNullable="true" />
+                <Guid Name="MediaPropertySetId" IsNullable="true" />
+                <Guid Name="MusicPropertySetId" IsNullable="true" />
+                <Guid Name="PhotoPropertySetId" IsNullable="true" />
+                <Guid Name="RecordedTVPropertySetId" IsNullable="true" />
+                <Guid Name="VideoPropertySetId" IsNullable="true" />
+            </Properties>
+        </Interface>
+        <Interface Name="IFileSystem">
+            <Implements Type="IFileSystemRow" />
+            <Properties>
+                <IEnumerable ItemType="IVolume" Name="Volumes" />
+                <IEnumerable ItemType="ISymbolicName" Name="SymbolicNames" />
+            </Properties>
+        </Interface>
+        <Interface Name="IFileSystemListItem">
+            <Implements Type="IFileSystemRow" />
+            <Properties>
+                <Guid Name="PrimarySymbolicNameId" IsNullable="true" />
+                <String Name="PrimarySymbolicName" />
+                <Long Name="SymbolicNameCount" />
+                <Long Name="VolumeCount" />
+            </Properties>
+        </Interface>
+        <Interface Name="IFileSystemProperties">
+            <Properties>
+                <String Name="DisplayName" />
+                <Boolean Name="ReadOnly" />
+                <UInt Name="MaxNameLength" />
+                <Value Type="DriveType" Name="DefaultDriveType" IsNullable="true" />
+            </Properties>
+        </Interface>
+        <Interface Name="IFileSystemRow">
+            <Implements Type="IFileSystemProperties" />
+            <Implements Type="IDbEntity" />
+            <Implements Type="IHasSimpleIdentifier" />
+            <Properties>
+                <String Name="Notes" />
+                <Boolean Name="IsInactive" />
+            </Properties>
+        </Interface>
+        <Interface Name="IFileTag">
+            <Implements Type="IItemTag" />
+            <Properties>
+                <Class Type="IFile" Name="Tagged" />
+            </Properties>
+        </Interface>
+        <Interface Name="IGPSProperties">
+            <Properties>
+                <String Name="AreaInformation" />
+                <Double Name="LatitudeDegrees" IsNullable="true" />
+                <Double Name="LatitudeMinutes" IsNullable="true" />
+                <Double Name="LatitudeSeconds" IsNullable="true" />
+                <String Name="LatitudeRef" />
+                <Double Name="LongitudeDegrees" IsNullable="true" />
+                <Double Name="LongitudeMinutes" IsNullable="true" />
+                <Double Name="LongitudeSeconds" IsNullable="true" />
+                <String Name="LongitudeRef" />
+                <String Name="MeasureMode" />
+                <String Name="ProcessingMethod" />
+                <Class Type="ByteValues" Name="VersionID" />
+            </Properties>
+        </Interface>
+        <Interface Name="IGPSPropertySet">
+            <Implements Type="IPropertySet" />
+            <Implements Type="IGPSProperties" />
+        </Interface>
+        <Interface Name="IHasSimpleIdentifier">
+            <Properties>
+                <Guid Name="Id" />
+            </Properties>
+        </Interface>
+        <Interface Name="IImageProperties">
+            <Properties>
+                <UInt Name="BitDepth" IsNullable="true" />
+                <UShort Name="ColorSpace" IsNullable="true" />
+                <Double Name="CompressedBitsPerPixel" IsNullable="true" />
+                <UShort Name="Compression" IsNullable="true" />
+                <String Name="CompressionText" />
+                <Double Name="HorizontalResolution" IsNullable="true" />
+                <UInt Name="HorizontalSize" IsNullable="true" />
+                <String Name="ImageID" />
+                <Short Name="ResolutionUnit" IsNullable="true" />
+                <Double Name="VerticalResolution" IsNullable="true" />
+                <UInt Name="VerticalSize" IsNullable="true" />
+            </Properties>
+        </Interface>
+        <Interface Name="IImagePropertySet">
+            <Implements Type="IPropertySet" />
+            <Implements Type="IImageProperties" />
+        </Interface>
+        <Interface Name="IItemTag">
+            <Implements Type="IItemTagRow" />
+            <Properties>
+                <Class Type="IDbEntity" Name="Tagged" />
+                <Class Type="ITagDefinition" Name="Definition" />
+            </Properties>
+        </Interface>
+        <Interface Name="IItemTagListItem">
+            <Implements Type="IItemTagRow" />
+            <Properties>
+                <String Name="Name" />
+                <String Name="Description" />
+            </Properties>
+        </Interface>
+        <Interface Name="IItemTagRow">
+            <Implements Type="IDbEntity" />
+            <Properties>
+                <Guid Name="TaggedId" />
+                <Guid Name="DefinitionId" />
+                <String Name="Notes" />
+            </Properties>
+        </Interface>
+        <Interface Name="IMediaProperties">
+            <Properties>
+                <String Name="ContentDistributor" />
+                <String Name="CreatorApplication" />
+                <String Name="CreatorApplicationVersion" />
+                <String Name="DateReleased" />
+                <ULong Name="Duration" IsNullable="true" />
+                <String Name="DVDID" />
+                <UInt Name="FrameCount" IsNullable="true" />
+                <Class Type="MultiStringValue" Name="Producer" />
+                <String Name="ProtectionType" />
+                <String Name="ProviderRating" />
+                <String Name="ProviderStyle" />
+                <String Name="Publisher" />
+                <String Name="Subtitle" />
+                <Class Type="MultiStringValue" Name="Writer" />
+                <UInt Name="Year" IsNullable="true" />
+            </Properties>
+        </Interface>
+        <Interface Name="IMediaPropertySet">
+            <Implements Type="IPropertySet" />
+            <Implements Type="IMediaProperties" />
+        </Interface>
+        <Interface Name="IMusicProperties">
+            <Properties>
+                <String Name="AlbumArtist" />
+                <String Name="AlbumTitle" />
+                <Class Type="MultiStringValue" Name="Artist" />
+                <UInt Name="ChannelCount" IsNullable="true" />
+                <Class Type="MultiStringValue" Name="Composer" />
+                <Class Type="MultiStringValue" Name="Conductor" />
+                <String Name="DisplayArtist" />
+                <Class Type="MultiStringValue" Name="Genre" />
+                <String Name="PartOfSet" />
+                <String Name="Period" />
+                <UInt Name="TrackNumber" IsNullable="true" />
+            </Properties>
+        </Interface>
+        <Interface Name="IMusicPropertySet">
+            <Implements Type="IPropertySet" />
+            <Implements Type="IMusicProperties" />
+        </Interface>
+        <Interface Name="IPersonalFileTag">
+            <Implements Type="IPersonalTag" />
+            <Implements Type="IFileTag" />
+        </Interface>
+        <Interface Name="IPersonalSubdirectoryTag">
+            <Implements Type="IPersonalTag" />
+            <Implements Type="ISubdirectoryTag" />
+        </Interface>
+        <Interface Name="IPersonalTag">
+            <Implements Type="IItemTag" />
+            <Properties>
+                <Class Type="IPersonalTagDefinition" Name="Definition" />
+            </Properties>
+        </Interface>
+        <Interface Name="IPersonalTagDefinition">
+            <Implements Type="ITagDefinition" />
+            <Properties>
+                <IEnumerable ItemType="IPersonalFileTag" Name="FileTags" />
+                <IEnumerable ItemType="IPersonalSubdirectoryTag" Name="SubdirectoryTags" />
+                <IEnumerable ItemType="IPersonalVolumeTag" Name="VolumeTags" />
+            </Properties>
+        </Interface>
+        <Interface Name="IPersonalVolumeTag">
+            <Implements Type="IPersonalTag" />
+            <Implements Type="IVolumeTag" />
+        </Interface>
+        <Interface Name="IPhotoProperties">
+            <Properties>
+                <String Name="CameraManufacturer" />
+                <String Name="CameraModel" />
+                <DateTime Name="DateTaken" IsNullable="true" />
+                <Class Type="MultiStringValue" Name="Event" />
+                <String Name="EXIFVersion" />
+                <UShort Name="Orientation" IsNullable="true" />
+                <String Name="OrientationText" />
+                <Class Type="MultiStringValue" Name="PeopleNames" />
+            </Properties>
+        </Interface>
+        <Interface Name="IPhotoPropertySet">
+            <Implements Type="IPropertySet" />
+            <Implements Type="IPhotoProperties" />
+        </Interface>
+        <Interface Name="IPropertiesListItem">
+            <Implements Type="IDbEntity" />
+            <Implements Type="IHasSimpleIdentifier" />
+            <Properties>
+                <Long Name="ExistingFileCount" />
+                <Long Name="TotalFileCount" />
+            </Properties>
+        </Interface>
+        <Interface Name="ISummaryPropertiesListItem">
+            <Implements Type="IPropertiesListItem" />
+            <Implements Type="ISummaryProperties" />
+        </Interface>
+        <Interface Name="IDocumentPropertiesListItem">
+            <Implements Type="IPropertiesListItem" />
+            <Implements Type="IDocumentProperties" />
+        </Interface>
+        <Interface Name="IAudioPropertiesListItem">
+            <Implements Type="IPropertiesListItem" />
+            <Implements Type="IAudioProperties" />
+        </Interface>
+        <Interface Name="IDRMPropertiesListItem">
+            <Implements Type="IPropertiesListItem" />
+            <Implements Type="IDRMProperties" />
+        </Interface>
+        <Interface Name="IGPSPropertiesListItem">
+            <Implements Type="IPropertiesListItem" />
+            <Implements Type="IGPSProperties" />
+        </Interface>
+        <Interface Name="IImagePropertiesListItem">
+            <Implements Type="IPropertiesListItem" />
+            <Implements Type="IImageProperties" />
+        </Interface>
+        <Interface Name="IMediaPropertiesListItem">
+            <Implements Type="IPropertiesListItem" />
+            <Implements Type="IMediaProperties" />
+        </Interface>
+        <Interface Name="IMusicPropertiesListItem">
+            <Implements Type="IPropertiesListItem" />
+            <Implements Type="IMusicProperties" />
+        </Interface>
+        <Interface Name="IPhotoPropertiesListItem">
+            <Implements Type="IPropertiesListItem" />
+            <Implements Type="IPhotoProperties" />
+        </Interface>
+        <Interface Name="IRecordedTVPropertiesListItem">
+            <Implements Type="IPropertiesListItem" />
+            <Implements Type="IRecordedTVProperties" />
+        </Interface>
+        <Interface Name="IVideoPropertiesListItem">
+            <Implements Type="IPropertiesListItem" />
+            <Implements Type="IVideoProperties" />
+        </Interface>
+        <Interface Name="IPropertySet">
+            <Implements Type="IDbEntity" />
+            <Implements Type="IHasSimpleIdentifier" />
+            <Properties>
+                <IEnumerable ItemType="IFile" Name="Files" />
+            </Properties>
+        </Interface>
+        <Interface Name="IRecordedTVProperties">
+            <Properties>
+                <UInt Name="ChannelNumber" IsNullable="true" />
+                <String Name="EpisodeName" />
+                <Boolean Name="IsDTVContent" IsNullable="true" />
+                <Boolean Name="IsHDContent" IsNullable="true" />
+                <String Name="NetworkAffiliation" />
+                <DateTime Name="OriginalBroadcastDate" IsNullable="true" />
+                <String Name="ProgramDescription" />
+                <String Name="StationCallSign" />
+                <String Name="StationName" />
+            </Properties>
+        </Interface>
+        <Interface Name="IRecordedTVPropertySet">
+            <Implements Type="IPropertySet" />
+            <Implements Type="IRecordedTVProperties" />
+        </Interface>
+        <Interface Name="IRedundancy">
+            <Implements Type="IDbEntity" />
+            <Properties>
+                <String Name="Reference" />
+                <String Name="Notes" />
+                <Guid Name="FileId" />
+                <Class Type="IFile" Name="File" />
+                <Guid Name="RedundantSetId" />
+                <Class Type="IRedundantSet" Name="RedundantSet" />
+            </Properties>
+        </Interface>
+        <Interface Name="IRedundantSet">
+            <Implements Type="IRedundantSetRow" />
+            <Properties>
+                <Class Type="IBinaryPropertySet" Name="BinaryProperties" />
+                <IEnumerable ItemType="IRedundancy" Name="Redundancies" />
+            </Properties>
+        </Interface>
+        <Interface Name="IRedundantSetListItem">
+            <Implements Type="IRedundantSetRow" />
+            <Properties>
+                <Long Name="Length" />
+                <Value Type="MD5Hash" Name="Hash" IsNullable="true" />
+                <Long Name="RedundancyCount" />
+            </Properties>
+        </Interface>
+        <Interface Name="IRedundantSetRow">
+            <Implements Type="IDbEntity" />
+            <Implements Type="IHasSimpleIdentifier" />
+            <Properties>
+                <String Name="Reference" />
+                <String Name="Notes" />
+                <Value Type="RedundancyRemediationStatus" Name="Status" />
+                <Guid Name="BinaryPropertiesId" />
+            </Properties>
+        </Interface>
+        <Interface Name="ISharedFileTag">
+            <Implements Type="ISharedTag" />
+            <Implements Type="IFileTag" />
+        </Interface>
+        <Interface Name="ISharedSubdirectoryTag">
+            <Implements Type="ISharedTag" />
+            <Implements Type="ISubdirectoryTag" />
+        </Interface>
+        <Interface Name="ISharedTag">
+            <Implements Type="IItemTag" />
+            <Properties>
+                <Class Type="ISharedTagDefinition" Name="Definition" />
+            </Properties>
+        </Interface>
+        <Interface Name="ISharedTagDefinition">
+            <Implements Type="ITagDefinition" />
+            <Properties>
+                <IEnumerable ItemType="ISharedFileTag" Name="FileTags" />
+                <IEnumerable ItemType="ISharedSubdirectoryTag" Name="SubdirectoryTags" />
+                <IEnumerable ItemType="ISharedVolumeTag" Name="VolumeTags" />
+            </Properties>
+        </Interface>
+        <Interface Name="ISharedVolumeTag">
+            <Implements Type="ISharedTag" />
+            <Implements Type="IVolumeTag" />
+        </Interface>
+        <Interface Name="ISubdirectory">
+            <Implements Type="ISubdirectoryRow" />
+            <Implements Type="IDbFsItem" />
+            <Properties>
+                <Class Type="ISubdirectory" Name="Parent" />
+                <Class Type="IVolume" Name="Volume" />
+                <Class Type="ICrawlConfiguration" Name="CrawlConfiguration" />
+                <IEnumerable ItemType="IFile" Name="Files" />
+                <IEnumerable ItemType="ISubdirectory" Name="SubDirectories" />
+                <IEnumerable ItemType="ISubdirectoryAccessError" Name="AccessErrors" />
+                <IEnumerable ItemType="IPersonalSubdirectoryTag" Name="PersonalTags" />
+                <IEnumerable ItemType="ISharedSubdirectoryTag" Name="SharedTags" />
+            </Properties>
+        </Interface>
+        <Interface Name="ISubdirectoryAccessError">
+            <Implements Type="IAccessError" />
+            <Properties>
+                <Class Type="ISubdirectory" Name="Target" />
+            </Properties>
+        </Interface>
+        <Interface Name="ISubdirectoryAncestorName">
+            <Implements Type="IDbFsItemAncestorName" />
+            <Properties>
+                <Guid Name="ParentId" IsNullable="true" />
+            </Properties>
+        </Interface>
+        <Interface Name="ISubdirectoryListItem">
+            <Implements Type="IDbFsItemListItem" />
+            <Implements Type="ISubdirectoryRow" />
+            <Properties>
+                <Long Name="SubdirectoryCount" />
+                <Long Name="FileCount" />
+                <String Name="CrawlConfigDisplayName" />
+            </Properties>
+        </Interface>
+        <Interface Name="ISubdirectoryListItemWithAncestorNames">
+            <Implements Type="IDbFsItemListItemWithAncestorNames" />
+            <Implements Type="ISubdirectoryListItem" />
+            <Implements Type="ISubdirectoryRow" />
+            <Implements Type="ISubdirectoryAncestorName" />
+        </Interface>
+        <Interface Name="ISubdirectoryRow">
+            <Implements Type="IDbFsItemRow" />
+            <Properties>
+                <Value Type="DirectoryCrawlOptions" Name="Options" />
+                <Value Type="DirectoryStatus" Name="Status" />
+                <Guid Name="ParentId" IsNullable="true" />
+                <Guid Name="VolumeId" IsNullable="true" />
+            </Properties>
+        </Interface>
+        <Interface Name="ISubdirectoryTag">
+            <Implements Type="IItemTag" />
+            <Properties>
+                <Class Type="ISubdirectory" Name="Tagged" />
+            </Properties>
+        </Interface>
+        <Interface Name="ISummaryProperties">
+            <Properties>
+                <String Name="ApplicationName" />
+                <Class Type="MultiStringValue" Name="Author" />
+                <String Name="Comment" />
+                <Class Type="MultiStringValue" Name="Keywords" />
+                <String Name="Subject" />
+                <String Name="Title" />
+                <String Name="Company" />
+                <String Name="ContentType" />
+                <String Name="Copyright" />
+                <String Name="ParentalRating" />
+                <UInt Name="Rating" IsNullable="true" />
+                <Class Type="MultiStringValue" Name="ItemAuthors" />
+                <String Name="ItemType" />
+                <String Name="ItemTypeText" />
+                <Class Type="MultiStringValue" Name="Kind" />
+                <String Name="MIMEType" />
+                <String Name="ParentalRatingReason" />
+                <String Name="ParentalRatingsOrganization" />
+                <UShort Name="Sensitivity" IsNullable="true" />
+                <String Name="SensitivityText" />
+                <UInt Name="SimpleRating" IsNullable="true" />
+                <String Name="Trademarks" />
+                <String Name="ProductName" />
+            </Properties>
+        </Interface>
+        <Interface Name="ISummaryPropertySet">
+            <Implements Type="IPropertySet" />
+            <Implements Type="ISummaryProperties" />
+        </Interface>
+        <Interface Name="ISymbolicName">
+            <Implements Type="ISymbolicNameRow" />
+            <Properties>
+                <Class Type="IFileSystem" Name="FileSystem" />
+            </Properties>
+        </Interface>
+        <Interface Name="ISymbolicNameListItem">
+            <Implements Type="ISymbolicNameRow" />
+            <Properties>
+                <String Name="FileSystemDisplayName" />
+            </Properties>
+        </Interface>
+        <Interface Name="ISymbolicNameRow">
+            <Implements Type="IDbEntity" />
+            <Implements Type="IHasSimpleIdentifier" />
+            <Properties>
+                <String Name="Name" />
+                <String Name="Notes" />
+                <Int Name="Priority" />
+                <Boolean Name="IsInactive" />
+                <Guid Name="FileSystemId" />
+            </Properties>
+        </Interface>
+        <Interface Name="ITagDefinition">
+            <Implements Type="ITagDefinitionRow" />
+            <Properties>
+                <IEnumerable ItemType="IFileTag" Name="FileTags" />
+                <IEnumerable ItemType="ISubdirectoryTag" Name="SubdirectoryTags" />
+                <IEnumerable ItemType="IVolumeTag" Name="VolumeTags" />
+            </Properties>
+        </Interface>
+        <Interface Name="ITagDefinitionListItem">
+            <Implements Type="ITagDefinitionRow" />
+            <Properties>
+                <Long Name="FileTagCount" />
+                <Long Name="SubdirectoryTagCount" />
+                <Long Name="VolumeTagCount" />
+            </Properties>
+        </Interface>
+        <Interface Name="ITagDefinitionRow">
+            <Implements Type="IDbEntity" />
+            <Implements Type="IHasSimpleIdentifier" />
+            <Properties>
+                <String Name="Name" />
+                <String Name="Description" />
+                <Boolean Name="IsInactive" />
+            </Properties>
+        </Interface>
+        <Interface Name="IVideoProperties">
+            <Properties>
+                <String Name="Compression" />
+                <Class Type="MultiStringValue" Name="Director" />
+                <UInt Name="EncodingBitrate" IsNullable="true" />
+                <UInt Name="FrameHeight" IsNullable="true" />
+                <UInt Name="FrameRate" IsNullable="true" />
+                <UInt Name="FrameWidth" IsNullable="true" />
+                <UInt Name="HorizontalAspectRatio" IsNullable="true" />
+                <UShort Name="StreamNumber" IsNullable="true" />
+                <String Name="StreamName" />
+                <UInt Name="VerticalAspectRatio" IsNullable="true" />
+            </Properties>
+        </Interface>
+        <Interface Name="IVideoPropertySet">
+            <Implements Type="IPropertySet" />
+            <Implements Type="IVideoProperties" />
+        </Interface>
+        <Interface Name="IVolume">
+            <Implements Type="IVolumeRow" />
+            <Properties>
+                <Class Type="IFileSystem" Name="FileSystem" />
+                <Class Type="ISubdirectory" Name="RootDirectory" />
+                <IEnumerable ItemType="IVolumeAccessError" Name="AccessErrors" />
+                <IEnumerable ItemType="IPersonalVolumeTag" Name="PersonalTags" />
+                <IEnumerable ItemType="ISharedVolumeTag" Name="SharedTags" />
+            </Properties>
+        </Interface>
+        <Interface Name="IVolumeAccessError">
+            <Implements Type="IAccessError" />
+            <Properties>
+                <Class Type="IVolume" Name="Target" />
+            </Properties>
+        </Interface>
+        <Interface Name="IVolumeListItem">
+            <Implements Type="IVolumeRow" />
+            <Properties>
+                <String Name="RootPath" />
+                <Long Name="RootSubdirectoryCount" />
+                <Long Name="RootFileCount" />
+                <Long Name="AccessErrorCount" />
+                <Long Name="SharedTagCount" />
+                <Long Name="PersonalTagCount" />
+            </Properties>
+        </Interface>
+        <Interface Name="IVolumeListItemWithFileSystem">
+            <Implements Type="IVolumeListItem" />
+            <Properties>
+                <String Name="FileSystemDisplayName" />
+                <Boolean Name="EffectiveReadOnly" />
+                <UInt Name="EffectiveMaxNameLength" />
+            </Properties>
+        </Interface>
+        <Interface Name="IVolumeRow">
+            <Implements Type="IDbEntity" />
+            <Implements Type="IHasSimpleIdentifier" />
+            <Properties>
+                <String Name="DisplayName" />
+                <String Name="VolumeName" />
+                <Value Type="VolumeIdentifier" Name="Identifier" />
+                <Boolean Name="ReadOnly" IsNullable="true" />
+                <UInt Name="MaxNameLength" IsNullable="true" />
+                <Value Type="DriveType" Name="Type" />
+                <String Name="Notes" />
+                <Value Type="VolumeStatus" Name="Status" />
+                <Guid Name="FileSystemId" />
+            </Properties>
+        </Interface>
+        <Interface Name="IVolumeTag">
+            <Implements Type="IItemTag" />
+            <Properties>
+                <Class Type="IVolume" Name="Tagged" />
+            </Properties>
+        </Interface>
+        <Struct Name="MD5Hash">
+            <Properties>
+                <Long Name="LowBits" BackingField="_lowBits" Access="Get" />
+                <Long Name="HighBits" BackingField="_highBits" Access="Get" />
+            </Properties>
+        </Struct>
+        <Enum Name="MessageCode" UnderlyingType="int" />
+        <Enum Name="StatusMessageLevel" UnderlyingType="byte" />
+        <Struct Name="VolumeIdentifier">
+            <Properties>
+                <Guid Name="UUID" IsNullable="true" BackingField="_uuid" Access="Get" />
+                <UInt Name="SerialNumber" IsNullable="true" BackingField="_serialNumber" Access="Get" />
+                <Class Type="Uri" Name="Location" BackingField="_location" Access="Get" />
+            </Properties>
+        </Struct>
+        <Enum Name="VolumeStatus" UnderlyingType="byte" />
+        <Entity Name="DbEntity" IsAbstract="true">
+            <Properties>
+                <DateTime Name="CreatedOn" />
+                <DateTime Name="ModifiedOn" />
+            </Properties>
+        </Entity>
+    </Namespace>
+    <Namespace Name="FsInfoCat.Collections">
+        <Class Name="ByteValues" />
+        <Class Name="MultiStringValue" />
+    </Namespace>
+    <Namespace Name="FsInfoCat.Local">
+        <Interface Name="ILocalAccessError">
+            <Implements Type="IAccessError" />
+            <Implements Type="IDbEntity" />
+            <Properties>
+                <Class Type="ILocalDbEntity" Name="Target" />
+            </Properties>
+        </Interface>
+        <Interface Name="ILocalAudioPropertySet">
+            <Implements Type="ILocalPropertySet" />
+            <Implements Type="IAudioPropertySet" />
+        </Interface>
+        <Interface Name="ILocalBinaryPropertySet">
+            <Implements Type="ILocalDbEntity" />
+            <Implements Type="IBinaryPropertySet" />
+            <Properties>
+                <IEnumerable ItemType="ILocalFile" Name="Files" />
+                <IEnumerable ItemType="ILocalRedundantSet" Name="RedundantSets" />
+            </Properties>
+        </Interface>
+        <Interface Name="ILocalComparison">
+            <Implements Type="ILocalDbEntity" />
+            <Implements Type="IComparison" />
+            <Properties>
+                <Class Type="ILocalFile" Name="Baseline" />
+                <Class Type="ILocalFile" Name="Correlative" />
+            </Properties>
+        </Interface>
+        <Interface Name="ILocalCrawlConfigReportItem">
+            <Implements Type="ILocalCrawlConfigurationListItem" />
+            <Implements Type="ICrawlConfigReportItem" />
+        </Interface>
+        <Interface Name="ILocalCrawlConfiguration">
+            <Implements Type="ILocalDbEntity" />
+            <Implements Type="ICrawlConfiguration" />
+            <Properties>
+                <Guid Name="RootId" />
+                <Class Type="ILocalSubdirectory" Name="Root" />
+                <IEnumerable ItemType="ILocalCrawlJobLog" Name="Logs" />
+            </Properties>
+        </Interface>
+        <Interface Name="ILocalCrawlConfigurationListItem">
+            <Implements Type="ILocalDbEntity" />
+            <Implements Type="ICrawlConfigurationListItem" />
+        </Interface>
+        <Interface Name="ILocalCrawlConfigurationRow">
+            <Implements Type="ILocalDbEntity" />
+            <Implements Type="ICrawlConfigurationRow" />
+        </Interface>
+        <Interface Name="ILocalCrawlJobListItem">
+            <Implements Type="ILocalCrawlJobLogRow" />
+            <Implements Type="ICrawlJobListItem" />
+        </Interface>
+        <Interface Name="ILocalCrawlJobLog">
+            <Implements Type="ILocalCrawlJobLogRow" />
+            <Implements Type="ICrawlJobLog" />
+            <Properties>
+                <Class Type="ILocalCrawlConfiguration" Name="Configuration" />
+            </Properties>
+        </Interface>
+        <Interface Name="ILocalCrawlJobLogRow">
+            <Implements Type="ICrawlJobLogRow" />
+            <Implements Type="ILocalDbEntity" />
+        </Interface>
+        <Interface Name="ILocalDbEntity">
+            <Implements Type="IDbEntity" />
+            <Properties>
+                <Guid Name="UpstreamId" IsNullable="true" />
+                <DateTime Name="LastSynchronizedOn" IsNullable="true" />
+            </Properties>
+        </Interface>
+        <Interface Name="ILocalDbFsItem">
+            <Implements Type="ILocalDbFsItemRow" />
+            <Implements Type="IDbFsItem" />
+            <Properties>
+                <Class Type="ILocalSubdirectory" Name="Parent" />
+                <IEnumerable ItemType="ILocalAccessError" Name="AccessErrors" />
+                <IEnumerable ItemType="ILocalPersonalTag" Name="PersonalTags" />
+                <IEnumerable ItemType="ILocalSharedTag" Name="SharedTags" />
+            </Properties>
+        </Interface>
+        <Interface Name="ILocalDbFsItemListItem">
+            <Implements Type="IDbFsItemListItem" />
+            <Implements Type="ILocalDbFsItemRow" />
+        </Interface>
+        <Interface Name="ILocalDbFsItemListItemWithAncestorNames">
+            <Implements Type="IDbFsItemListItemWithAncestorNames" />
+            <Implements Type="ILocalDbFsItemListItem" />
+        </Interface>
+        <Interface Name="ILocalDbFsItemRow">
+            <Implements Type="ILocalDbEntity" />
+            <Implements Type="IDbFsItemRow" />
+        </Interface>
+        <Interface Name="ILocalDocumentPropertySet">
+            <Implements Type="ILocalPropertySet" />
+            <Implements Type="IDocumentPropertySet" />
+        </Interface>
+        <Interface Name="ILocalDRMPropertySet">
+            <Implements Type="ILocalPropertySet" />
+            <Implements Type="IDRMPropertySet" />
+        </Interface>
+        <Interface Name="ILocalFile">
+            <Implements Type="ILocalDbFsItem" />
+            <Implements Type="IFile" />
+            <Implements Type="ILocalFileRow" />
+            <Properties>
+                <Class Type="ILocalBinaryPropertySet" Name="BinaryProperties" />
+                <Class Type="ILocalSummaryPropertySet" Name="SummaryProperties" />
+                <Class Type="ILocalDocumentPropertySet" Name="DocumentProperties" />
+                <Class Type="ILocalAudioPropertySet" Name="AudioProperties" />
+                <Class Type="ILocalDRMPropertySet" Name="DRMProperties" />
+                <Class Type="ILocalGPSPropertySet" Name="GPSProperties" />
+                <Class Type="ILocalImagePropertySet" Name="ImageProperties" />
+                <Class Type="ILocalMediaPropertySet" Name="MediaProperties" />
+                <Class Type="ILocalMusicPropertySet" Name="MusicProperties" />
+                <Class Type="ILocalPhotoPropertySet" Name="PhotoProperties" />
+                <Class Type="ILocalRecordedTVPropertySet" Name="RecordedTVProperties" />
+                <Class Type="ILocalVideoPropertySet" Name="VideoProperties" />
+                <Class Type="ILocalRedundancy" Name="Redundancy" />
+                <IEnumerable ItemType="ILocalComparison" Name="BaselineComparisons" />
+                <IEnumerable ItemType="ILocalComparison" Name="CorrelativeComparisons" />
+                <IEnumerable ItemType="ILocalFileAccessError" Name="AccessErrors" />
+                <IEnumerable ItemType="ILocalPersonalFileTag" Name="PersonalTags" />
+                <IEnumerable ItemType="ILocalSharedFileTag" Name="SharedTags" />
+            </Properties>
+        </Interface>
+        <Interface Name="ILocalFileAccessError">
+            <Implements Type="ILocalAccessError" />
+            <Implements Type="IFileAccessError" />
+            <Properties>
+                <Class Type="ILocalFile" Name="Target" />
+            </Properties>
+        </Interface>
+        <Interface Name="ILocalFileListItemWithAncestorNames">
+            <Implements Type="ILocalDbFsItemListItem" />
+            <Implements Type="IFileListItemWithAncestorNames" />
+            <Implements Type="ILocalFileRow" />
+        </Interface>
+        <Interface Name="ILocalFileListItemWithBinaryProperties">
+            <Implements Type="ILocalDbFsItemListItem" />
+            <Implements Type="IFileListItemWithBinaryProperties" />
+            <Implements Type="ILocalFileRow" />
+        </Interface>
+        <Interface Name="ILocalFileListItemWithBinaryPropertiesAndAncestorNames">
+            <Implements Type="IFileListItemWithBinaryPropertiesAndAncestorNames" />
+            <Implements Type="ILocalFileListItemWithAncestorNames" />
+        </Interface>
+        <Interface Name="ILocalFileRow">
+            <Implements Type="ILocalDbFsItemRow" />
+            <Implements Type="IFileRow" />
+        </Interface>
+        <Interface Name="ILocalFileSystem">
+            <Implements Type="ILocalDbEntity" />
+            <Implements Type="IFileSystem" />
+            <Properties>
+                <IEnumerable ItemType="ILocalVolume" Name="Volumes" />
+                <IEnumerable ItemType="ILocalSymbolicName" Name="SymbolicNames" />
+            </Properties>
+        </Interface>
+        <Interface Name="ILocalFileSystemListItem">
+            <Implements Type="ILocalFileSystemRow" />
+            <Implements Type="IFileSystemListItem" />
+        </Interface>
+        <Interface Name="ILocalFileSystemRow">
+            <Implements Type="ILocalDbEntity" />
+            <Implements Type="IFileSystemRow" />
+        </Interface>
+        <Interface Name="ILocalFileTag">
+            <Implements Type="ILocalItemTag" />
+            <Implements Type="IFileTag" />
+            <Properties>
+                <Class Type="ILocalFile" Name="Tagged" />
+            </Properties>
+        </Interface>
+        <Interface Name="ILocalGPSPropertySet">
+            <Implements Type="ILocalPropertySet" />
+            <Implements Type="IGPSPropertySet" />
+        </Interface>
+        <Interface Name="ILocalImagePropertySet">
+            <Implements Type="ILocalPropertySet" />
+            <Implements Type="IImagePropertySet" />
+        </Interface>
+        <Interface Name="ILocalItemTagRow">
+            <Implements Type="ILocalDbEntity" />
+            <Implements Type="IItemTagRow" />
+        </Interface>
+        <Interface Name="ILocalItemTagListItem">
+            <Implements Type="IItemTagListItem" />
+            <Implements Type="ILocalItemTagRow" />
+        </Interface>
+        <Interface Name="ILocalItemTag">
+            <Implements Type="ILocalItemTagRow" />
+            <Implements Type="IItemTag" />
+            <Properties>
+                <Class Type="ILocalDbEntity" Name="Tagged" />
+                <Class Type="ILocalTagDefinition" Name="Definition" />
+            </Properties>
+        </Interface>
+        <Interface Name="ILocalMediaPropertySet">
+            <Implements Type="ILocalPropertySet" />
+            <Implements Type="IMediaPropertySet" />
+        </Interface>
+        <Interface Name="ILocalMusicPropertySet">
+            <Implements Type="ILocalPropertySet" />
+            <Implements Type="IMusicPropertySet" />
+        </Interface>
+        <Interface Name="ILocalPersonalFileTag">
+            <Implements Type="ILocalPersonalTag" />
+            <Implements Type="IPersonalFileTag" />
+            <Implements Type="ILocalFileTag" />
+        </Interface>
+        <Interface Name="ILocalPersonalSubdirectoryTag">
+            <Implements Type="ILocalPersonalTag" />
+            <Implements Type="IPersonalSubdirectoryTag" />
+            <Implements Type="ILocalSubdirectoryTag" />
+        </Interface>
+        <Interface Name="ILocalPersonalTag">
+            <Implements Type="ILocalItemTag" />
+            <Implements Type="IPersonalTag" />
+            <Properties>
+                <Class Type="ILocalPersonalTagDefinition" Name="Definition" />
+            </Properties>
+        </Interface>
+        <Interface Name="ILocalPersonalTagDefinition">
+            <Implements Type="ILocalTagDefinition" />
+            <Implements Type="IPersonalTagDefinition" />
+            <Properties>
+                <IEnumerable ItemType="ILocalPersonalFileTag" Name="FileTags" />
+                <IEnumerable ItemType="ILocalPersonalSubdirectoryTag" Name="SubdirectoryTags" />
+                <IEnumerable ItemType="ILocalPersonalVolumeTag" Name="VolumeTags" />
+            </Properties>
+        </Interface>
+        <Interface Name="ILocalPersonalVolumeTag">
+            <Implements Type="ILocalPersonalTag" />
+            <Implements Type="IPersonalVolumeTag" />
+            <Implements Type="ILocalVolumeTag" />
+        </Interface>
+        <Interface Name="ILocalPhotoPropertySet">
+            <Implements Type="ILocalPropertySet" />
+            <Implements Type="IPhotoPropertySet" />
+        </Interface>
+        <Interface Name="ILocalPropertySet">
+            <Implements Type="ILocalDbEntity" />
+            <Implements Type="IPropertySet" />
+            <Properties>
+                <IEnumerable ItemType="ILocalFile" Name="Files" />
+            </Properties>
+        </Interface>
+        <Interface Name="ILocalPropertiesListItem">
+            <Implements Type="IPropertiesListItem" />
+            <Implements Type="ILocalDbEntity" />
+        </Interface>
+        <Interface Name="ILocalSummaryPropertiesListItem">
+            <Implements Type="ILocalPropertiesListItem" />
+            <Implements Type="ISummaryPropertiesListItem" />
+        </Interface>
+        <Interface Name="ILocalDocumentPropertiesListItem">
+            <Implements Type="ILocalPropertiesListItem" />
+            <Implements Type="IDocumentPropertiesListItem" />
+        </Interface>
+        <Interface Name="ILocalAudioPropertiesListItem">
+            <Implements Type="ILocalPropertiesListItem" />
+            <Implements Type="IAudioPropertiesListItem" />
+        </Interface>
+        <Interface Name="ILocalDRMPropertiesListItem">
+            <Implements Type="ILocalPropertiesListItem" />
+            <Implements Type="IDRMPropertiesListItem" />
+        </Interface>
+        <Interface Name="ILocalGPSPropertiesListItem">
+            <Implements Type="ILocalPropertiesListItem" />
+            <Implements Type="IGPSPropertiesListItem" />
+        </Interface>
+        <Interface Name="ILocalImagePropertiesListItem">
+            <Implements Type="ILocalPropertiesListItem" />
+            <Implements Type="IImagePropertiesListItem" />
+        </Interface>
+        <Interface Name="ILocalMediaPropertiesListItem">
+            <Implements Type="ILocalPropertiesListItem" />
+            <Implements Type="IMediaPropertiesListItem" />
+        </Interface>
+        <Interface Name="ILocalMusicPropertiesListItem">
+            <Implements Type="ILocalPropertiesListItem" />
+            <Implements Type="IMusicPropertiesListItem" />
+        </Interface>
+        <Interface Name="ILocalPhotoPropertiesListItem">
+            <Implements Type="ILocalPropertiesListItem" />
+            <Implements Type="IPhotoPropertiesListItem" />
+        </Interface>
+        <Interface Name="ILocalRecordedTVPropertiesListItem">
+            <Implements Type="ILocalPropertiesListItem" />
+            <Implements Type="IRecordedTVPropertiesListItem" />
+        </Interface>
+        <Interface Name="ILocalVideoPropertiesListItem">
+            <Implements Type="ILocalPropertiesListItem" />
+            <Implements Type="IVideoPropertiesListItem" />
+        </Interface>
+        <Interface Name="ILocalRecordedTVPropertySet">
+            <Implements Type="ILocalPropertySet" />
+            <Implements Type="IRecordedTVPropertySet" />
+        </Interface>
+        <Interface Name="ILocalRedundancy">
+            <Implements Type="ILocalDbEntity" />
+            <Implements Type="IRedundancy" />
+            <Properties>
+                <Class Type="ILocalFile" Name="File" />
+                <Class Type="ILocalRedundantSet" Name="RedundantSet" />
+            </Properties>
+        </Interface>
+        <Interface Name="ILocalRedundantSetRow">
+            <Implements Type="ILocalDbEntity" />
+            <Implements Type="IRedundantSetRow" />
+        </Interface>
+        <Interface Name="ILocalRedundantSet">
+            <Implements Type="ILocalRedundantSetRow" />
+            <Implements Type="IRedundantSet" />
+            <Properties>
+                <Class Type="ILocalBinaryPropertySet" Name="BinaryProperties" />
+                <IEnumerable ItemType="ILocalRedundancy" Name="Redundancies" />
+            </Properties>
+        </Interface>
+        <Interface Name="ILocalRedundantSetListItem">
+            <Implements Type="IRedundantSetListItem" />
+            <Implements Type="ILocalRedundantSetRow" />
+        </Interface>
+        <Interface Name="ILocalSharedFileTag">
+            <Implements Type="ILocalSharedTag" />
+            <Implements Type="ISharedFileTag" />
+            <Implements Type="ILocalFileTag" />
+        </Interface>
+        <Interface Name="ILocalSharedSubdirectoryTag">
+            <Implements Type="ILocalSharedTag" />
+            <Implements Type="ISharedSubdirectoryTag" />
+            <Implements Type="ILocalSubdirectoryTag" />
+        </Interface>
+        <Interface Name="ILocalSharedTag">
+            <Implements Type="ILocalItemTag" />
+            <Implements Type="ISharedTag" />
+            <Properties>
+                <Class Type="ILocalSharedTagDefinition" Name="Definition" />
+            </Properties>
+        </Interface>
+        <Interface Name="ILocalSharedTagDefinition">
+            <Implements Type="ILocalTagDefinition" />
+            <Implements Type="ISharedTagDefinition" />
+            <Properties>
+                <IEnumerable ItemType="ILocalSharedFileTag" Name="FileTags" />
+                <IEnumerable ItemType="ILocalSharedSubdirectoryTag" Name="SubdirectoryTags" />
+                <IEnumerable ItemType="ILocalSharedVolumeTag" Name="VolumeTags" />
+            </Properties>
+        </Interface>
+        <Interface Name="ILocalSharedVolumeTag">
+            <Implements Type="ILocalSharedTag" />
+            <Implements Type="ISharedVolumeTag" />
+            <Implements Type="ILocalVolumeTag" />
+        </Interface>
+        <Interface Name="ILocalSubdirectoryRow">
+            <Implements Type="ILocalDbFsItemRow" />
+            <Implements Type="ISubdirectoryRow" />
+        </Interface>
+        <Interface Name="ILocalSubdirectoryListItem">
+            <Implements Type="ISubdirectoryListItem" />
+            <Implements Type="ILocalSubdirectoryRow" />
+        </Interface>
+        <Interface Name="ILocalSubdirectoryListItemWithAncestorNames">
+            <Implements Type="ISubdirectoryListItemWithAncestorNames" />
+            <Implements Type="ILocalSubdirectoryRow" />
+        </Interface>
+        <Interface Name="ILocalSubdirectory">
+            <Implements Type="ILocalDbFsItem" />
+            <Implements Type="ISubdirectory" />
+            <Implements Type="ILocalSubdirectoryRow" />
+            <Properties>
+                <Class Type="ILocalVolume" Name="Volume" />
+                <Class Type="ILocalCrawlConfiguration" Name="CrawlConfiguration" />
+                <IEnumerable ItemType="ILocalFile" Name="Files" />
+                <IEnumerable ItemType="ILocalSubdirectory" Name="SubDirectories" />
+                <IEnumerable ItemType="ILocalSubdirectoryAccessError" Name="AccessErrors" />
+                <IEnumerable ItemType="ILocalPersonalSubdirectoryTag" Name="PersonalTags" />
+                <IEnumerable ItemType="ILocalSharedSubdirectoryTag" Name="SharedTags" />
+            </Properties>
+        </Interface>
+        <Interface Name="ILocalSubdirectoryAccessError">
+            <Implements Type="ILocalAccessError" />
+            <Implements Type="ISubdirectoryAccessError" />
+            <Properties>
+                <Class Type="ILocalSubdirectory" Name="Target" />
+            </Properties>
+        </Interface>
+        <Interface Name="ILocalSubdirectoryTag">
+            <Implements Type="ILocalItemTag" />
+            <Implements Type="ISubdirectoryTag" />
+            <Properties>
+                <Class Type="ILocalSubdirectory" Name="Tagged" />
+            </Properties>
+        </Interface>
+        <Interface Name="ILocalSummaryPropertySet">
+            <Implements Type="ILocalPropertySet" />
+            <Implements Type="ISummaryPropertySet" />
+        </Interface>
+        <Interface Name="ILocalSymbolicNameRow">
+            <Implements Type="ILocalDbEntity" />
+            <Implements Type="ISymbolicNameRow" />
+        </Interface>
+        <Interface Name="ILocalSymbolicNameListItem">
+            <Implements Type="ILocalSymbolicNameRow" />
+            <Implements Type="ISymbolicNameListItem" />
+        </Interface>
+        <Interface Name="ILocalSymbolicName">
+            <Implements Type="ILocalSymbolicNameRow" />
+            <Implements Type="ISymbolicName" />
+            <Properties>
+                <Class Type="ILocalFileSystem" Name="FileSystem" />
+            </Properties>
+        </Interface>
+        <Interface Name="ILocalTagDefinitionRow">
+            <Implements Type="ILocalDbEntity" />
+            <Implements Type="ITagDefinitionRow" />
+        </Interface>
+        <Interface Name="ILocalTagDefinitionListItem">
+            <Implements Type="ITagDefinitionListItem" />
+            <Implements Type="ILocalTagDefinitionRow" />
+        </Interface>
+        <Interface Name="ILocalTagDefinition">
+            <Implements Type="ILocalTagDefinitionRow" />
+            <Implements Type="ITagDefinition" />
+            <Properties>
+                <IEnumerable ItemType="ILocalFileTag" Name="FileTags" />
+                <IEnumerable ItemType="ILocalSubdirectoryTag" Name="SubdirectoryTags" />
+                <IEnumerable ItemType="ILocalVolumeTag" Name="VolumeTags" />
+            </Properties>
+        </Interface>
+        <Interface Name="ILocalVideoPropertySet">
+            <Implements Type="ILocalPropertySet" />
+            <Implements Type="IVideoPropertySet" />
+        </Interface>
+        <Interface Name="ILocalVolumeRow">
+            <Implements Type="ILocalDbEntity" />
+            <Implements Type="IVolumeRow" />
+        </Interface>
+        <Interface Name="ILocalVolumeListItem">
+            <Implements Type="ILocalVolumeRow" />
+            <Implements Type="IVolumeListItem" />
+        </Interface>
+        <Interface Name="ILocalVolumeListItemWithFileSystem">
+            <Implements Type="ILocalVolumeListItem" />
+            <Implements Type="IVolumeListItemWithFileSystem" />
+        </Interface>
+        <Interface Name="ILocalVolume">
+            <Implements Type="ILocalVolumeRow" />
+            <Implements Type="IVolume" />
+            <Properties>
+                <Class Type="ILocalSubdirectory" Name="RootDirectory" />
+                <Class Type="ILocalFileSystem" Name="FileSystem" />
+                <IEnumerable ItemType="ILocalVolumeAccessError" Name="AccessErrors" />
+                <IEnumerable ItemType="ILocalPersonalVolumeTag" Name="PersonalTags" />
+                <IEnumerable ItemType="ILocalSharedVolumeTag" Name="SharedTags" />
+            </Properties>
+        </Interface>
+        <Interface Name="ILocalVolumeAccessError">
+            <Implements Type="ILocalAccessError" />
+            <Implements Type="IVolumeAccessError" />
+            <Properties>
+                <Class Type="ILocalVolume" Name="Target" />
+            </Properties>
+        </Interface>
+        <Interface Name="ILocalVolumeTag">
+            <Implements Type="ILocalItemTag" />
+            <Implements Type="IVolumeTag" />
+            <Properties>
+                <Class Type="ILocalVolume" Name="Tagged" />
+            </Properties>
+        </Interface>
+        <Interface Name="ILogicalDiskInfo">
+            <Properties>
+                <Boolean Name="IsReadOnly" />
+                <String Name="DisplayName" />
+                <Boolean Name="Compressed" />
+                <Value Type="DriveType" Name="DriveType" />
+                <String Name="FileSystemName" />
+                <UInt Name="MaxNameLength" />
+                <String Name="Name" />
+                <String Name="ProviderName" />
+                <String Name="VolumeName" />
+                <String Name="VolumeSerialNumber" />
+                <Boolean Name="ErrorCleared" IsNullable="true" />
+                <String Name="ErrorDescription" />
+                <UInt Name="LastErrorCode" IsNullable="true" />
+                <Class Type="IVolumeDirectory" Name="RootDirectory" />
+            </Properties>
+        </Interface>
+        <Interface Name="IVolumeDirectory">
+            <Properties>
+                <String Name="Name" />
+                <String Name="Caption" />
+                <String Name="Description" />
+                <String Name="Drive" />
+                <DateTime Name="CreationDate" IsNullable="true" />
+                <DateTime Name="LastModified" IsNullable="true" />
+                <Boolean Name="Hidden" IsNullable="true" />
+                <Boolean Name="Readable" />
+                <Boolean Name="Writeable" IsNullable="true" />
+            </Properties>
+        </Interface>
+        <Entity Name="AudioPropertiesListItem" Extends="AudioPropertiesRow">
+            <Implements Type="ILocalAudioPropertiesListItem" />
+            <IEquatable To="AudioPropertiesListItem" />
+            <Properties>
+                <Long Name="ExistingFileCount" />
+                <Long Name="TotalFileCount" />
+            </Properties>
+        </Entity>
+        <Entity Name="AudioPropertiesRow" Extends="PropertiesRow">
+            <Implements Type="IAudioProperties" />
+            <Properties>
+                <String Name="Compression" BackingField="_compression" IsNormalized="true" />
+                <UInt Name="EncodingBitrate" IsNullable="true" />
+                <String Name="Format" BackingField="_format" IsNormalized="true" />
+                <Boolean Name="IsVariableBitrate" IsNullable="true" />
+                <UInt Name="SampleRate" IsNullable="true" />
+                <UInt Name="SampleSize" IsNullable="true" />
+                <String Name="StreamName" BackingField="_streamName" IsNormalized="true" />
+                <UShort Name="StreamNumber" IsNullable="true" />
+            </Properties>
+        </Entity>
+        <Entity Name="AudioPropertySet" Extends="AudioPropertiesRow">
+            <Implements Type="ILocalAudioPropertySet" />
+            <Implements Type="IHasSimpleIdentifier" />
+            <IEquatable To="AudioPropertySet" />
+            <Properties>
+                <HashSet ItemType="DbFile" Name="Files" BackingField="_files" />
+            </Properties>
+        </Entity>
+        <Entity Name="BinaryPropertySet" Extends="LocalDbEntity">
+            <Implements Type="ILocalBinaryPropertySet" />
+            <Implements Type="IHasSimpleIdentifier" />
+            <IEquatable To="BinaryPropertySet" />
+            <Properties>
+                <PrimaryKey Name="Id" BackingField="_id" />
+                <Long Name="Length" />
+                <Value Type="MD5Hash" Name="Hash" IsNullable="true" />
+                <HashSet ItemType="DbFile" Name="Files" BackingField="_files" />
+                <HashSet ItemType="RedundantSet" Name="RedundantSets" BackingField="_redundantSets" />
+            </Properties>
+        </Entity>
+        <Entity Name="CrawlConfigListItem" Extends="CrawlConfigListItemBase">
+            <IEquatable To="CrawlConfigListItem" />
+        </Entity>
+        <Entity Name="CrawlConfigListItemBase" Extends="CrawlConfigurationRow">
+            <Implements Type="ILocalCrawlConfigurationListItem" />
+            <Properties>
+                <String Name="AncestorNames" BackingField="_ancestorNames" />
+                <Guid Name="VolumeId" />
+                <String Name="VolumeDisplayName" BackingField="_volumeDisplayName" />
+                <String Name="VolumeName" BackingField="_volumeName" />
+                <Value Type="VolumeIdentifier" Name="VolumeIdentifier" />
+                <String Name="FileSystemDisplayName" BackingField="_fileSystemDisplayName" />
+                <String Name="FileSystemSymbolicName" BackingField="_fileSystemSymbolicName" />
+            </Properties>
+        </Entity>
+        <Entity Name="CrawlConfigReportItem" Extends="CrawlConfigListItemBase">
+            <Implements Type="ILocalCrawlConfigReportItem" />
+            <IEquatable To="CrawlConfigReportItem" />
+            <Properties>
+                <Long Name="SucceededCount" />
+                <Long Name="TimedOutCount" />
+                <Long Name="ItemLimitReachedCount" />
+                <Long Name="CanceledCount" />
+                <Long Name="FailedCount" />
+                <Long Name="AverageDuration" IsNullable="true" />
+                <Long Name="MaxDuration" IsNullable="true" />
+            </Properties>
+        </Entity>
+        <Entity Name="CrawlConfiguration" Extends="CrawlConfigurationRow">
+            <Implements Type="ILocalCrawlConfiguration" />
+            <Implements Type="IHasSimpleIdentifier" />
+            <IEquatable To="CrawlConfiguration" />
+            <Properties>
+                <Guid Name="RootId" />
+                <Navigation ForiegnKeyProperty="RootId" Type="Subdirectory" Name="Root" BackingField="_root" />
+                <HashSet ItemType="CrawlJobLog" Name="Logs" BackingField="_logs" />
+            </Properties>
+        </Entity>
+        <Entity Name="CrawlConfigurationRow" Extends="LocalDbEntity">
+            <Implements Type="ILocalCrawlConfigurationRow" />
+            <Implements Type="IHasSimpleIdentifier" />
+            <Properties>
+                <PrimaryKey Name="Id" BackingField="_id" />
+                <String Name="DisplayName" BackingField="_displayName" IsNormalized="true" />
+                <UShort Name="MaxRecursionDepth" />
+                <ULong Name="MaxTotalItems" IsNullable="true" />
+                <Long Name="TTL" IsNullable="true" />
+                <String Name="Notes" BackingField="_notes" />
+                <Value Type="CrawlStatus" Name="StatusValue" />
+                <DateTime Name="LastCrawlStart" IsNullable="true" />
+                <DateTime Name="LastCrawlEnd" IsNullable="true" />
+                <DateTime Name="NextScheduledStart" IsNullable="true" />
+                <Long Name="RescheduleInterval" IsNullable="true" />
+                <Boolean Name="RescheduleFromJobEnd" />
+                <Boolean Name="RescheduleAfterFail" />
+                <Guid Name="RootId" />
+            </Properties>
+        </Entity>
+        <Entity Name="CrawlJobLog" Extends="CrawlJobLogRow">
+            <Implements Type="ILocalCrawlJobLog" />
+            <IEquatable To="CrawlJobLog" />
+            <Properties>
+                <Guid Name="ConfigurationId" />
+                <Navigation ForiegnKeyProperty="ConfigurationId" Type="CrawlConfiguration" Name="Configuration" BackingField="_crawlConfiguration" />
+            </Properties>
+        </Entity>
+        <Entity Name="CrawlJobLogListItem" Extends="CrawlJobLogRow">
+            <Implements Type="ILocalCrawlJobListItem" />
+            <IEquatable To="CrawlJobLogListItem" />
+            <Properties>
+                <String Name="ConfigurationDisplayName" BackingField="_configurationDisplayName" />
+            </Properties>
+        </Entity>
+        <Entity Name="CrawlJobLogRow" Extends="LocalDbEntity">
+            <Implements Type="ILocalCrawlJobLogRow" />
+            <Properties>
+                <PrimaryKey Name="Id" BackingField="_id" />
+                <String Name="RootPath" BackingField="_rootPath" />
+                <Value Type="CrawlStatus" Name="StatusCode" />
+                <DateTime Name="CrawlStart" />
+                <DateTime Name="CrawlEnd" IsNullable="true" />
+                <String Name="StatusMessage" BackingField="_statusMessage" />
+                <String Name="StatusDetail" BackingField="_statusDetail" />
+                <UShort Name="MaxRecursionDepth" />
+                <ULong Name="MaxTotalItems" IsNullable="true" />
+                <Long Name="TTL" IsNullable="true" />
+                <Long Name="FoldersProcessed" />
+                <Long Name="FilesProcessed" />
+                <Guid Name="ConfigurationId" />
+            </Properties>
+        </Entity>
+        <Entity Name="DbFile" Extends="DbFileRow">
+            <Implements Type="ILocalFile" />
+            <Implements Type="IHasSimpleIdentifier" />
+            <IEquatable To="DbFile" />
+            <Properties>
+                <Guid Name="BinaryPropertySetId" />
+                <Navigation ForiegnKeyProperty="BinaryPropertySetId" Type="BinaryPropertySet" Name="BinaryProperties" BackingField="_binaryProperties" />
+                <Guid Name="ParentId" />
+                <Navigation ForiegnKeyProperty="ParentId" Type="Subdirectory" Name="Parent" BackingField="_parent" />
+                <Navigation Type="Redundancy" Name="Redundancy" />
+                <Guid Name="SummaryPropertySetId" IsNullable="true" />
+                <Navigation ForiegnKeyProperty="SummaryPropertySetId" Type="SummaryPropertySet" Name="SummaryProperties" BackingField="_summaryProperties" />
+                <Guid Name="DocumentPropertySetId" IsNullable="true" />
+                <Navigation ForiegnKeyProperty="DocumentPropertySetId" Type="DocumentPropertySet" Name="DocumentProperties" BackingField="_documentProperties" />
+                <Guid Name="AudioPropertySetId" IsNullable="true" />
+                <Navigation ForiegnKeyProperty="AudioPropertySetId" Type="AudioPropertySet" Name="AudioProperties" BackingField="_audioProperties" />
+                <Guid Name="DRMPropertySetId" IsNullable="true" />
+                <Navigation ForiegnKeyProperty="DRMPropertySetId" Type="DRMPropertySet" Name="DRMProperties" BackingField="_drmProperties" />
+                <Guid Name="GPSPropertySetId" IsNullable="true" />
+                <Navigation ForiegnKeyProperty="GPSPropertySetId" Type="GPSPropertySet" Name="GPSProperties" BackingField="_gpsProperties" />
+                <Guid Name="ImagePropertySetId" IsNullable="true" />
+                <Navigation ForiegnKeyProperty="ImagePropertySetId" Type="ImagePropertySet" Name="ImageProperties" BackingField="_imageProperties" />
+                <Guid Name="MediaPropertySetId" IsNullable="true" />
+                <Navigation ForiegnKeyProperty="MediaPropertySetId" Type="MediaPropertySet" Name="MediaProperties" BackingField="_mediaProperties" />
+                <Guid Name="MusicPropertySetId" IsNullable="true" />
+                <Navigation ForiegnKeyProperty="MusicPropertySetId" Type="MusicPropertySet" Name="MusicProperties" BackingField="_musicProperties" />
+                <Guid Name="PhotoPropertySetId" IsNullable="true" />
+                <Navigation ForiegnKeyProperty="PhotoPropertySetId" Type="PhotoPropertySet" Name="PhotoProperties" BackingField="_photoProperties" />
+                <Guid Name="RecordedTVPropertySetId" IsNullable="true" />
+                <Navigation ForiegnKeyProperty="RecordedTVPropertySetId" Type="RecordedTVPropertySet" Name="RecordedTVProperties" BackingField="_recordedTVProperties" />
+                <Guid Name="VideoPropertySetId" IsNullable="true" />
+                <Navigation ForiegnKeyProperty="VideoPropertySetId" Type="VideoPropertySet" Name="VideoProperties" BackingField="_videoProperties" />
+                <HashSet ItemType="FileAccessError" Name="AccessErrors" BackingField="_accessErrors" />
+                <HashSet ItemType="FileComparison" Name="BaselineComparisons" BackingField="_baselineComparisons" />
+                <HashSet ItemType="FileComparison" Name="CorrelativeComparisons" BackingField="_correlativeComparisons" />
+                <HashSet ItemType="PersonalFileTag" Name="PersonalTags" BackingField="_personalTags" />
+                <HashSet ItemType="SharedFileTag" Name="SharedTags" BackingField="_sharedTags" />
+            </Properties>
+        </Entity>
+        <Entity Name="DbFileRow" Extends="LocalDbEntity">
+            <Implements Type="ILocalFileRow" />
+            <Implements Type="IHasSimpleIdentifier" />
+            <Properties>
+                <PrimaryKey Name="Id" BackingField="_id" />
+                <String Name="Name" BackingField="_name" />
+                <Value Type="FileCorrelationStatus" Name="Status" />
+                <Value Type="FileCrawlOptions" Name="Options" />
+                <DateTime Name="LastAccessed" />
+                <DateTime Name="LastHashCalculation" IsNullable="true" />
+                <String Name="Notes" BackingField="_notes" />
+                <DateTime Name="CreationTime" />
+                <DateTime Name="LastWriteTime" />
+                <Guid Name="ParentId" />
+                <Guid Name="BinaryPropertySetId" />
+                <Guid Name="SummaryPropertySetId" IsNullable="true" />
+                <Guid Name="DocumentPropertySetId" IsNullable="true" />
+                <Guid Name="AudioPropertySetId" IsNullable="true" />
+                <Guid Name="DRMPropertySetId" IsNullable="true" />
+                <Guid Name="GPSPropertySetId" IsNullable="true" />
+                <Guid Name="ImagePropertySetId" IsNullable="true" />
+                <Guid Name="MediaPropertySetId" IsNullable="true" />
+                <Guid Name="MusicPropertySetId" IsNullable="true" />
+                <Guid Name="PhotoPropertySetId" IsNullable="true" />
+                <Guid Name="RecordedTVPropertySetId" IsNullable="true" />
+                <Guid Name="VideoPropertySetId" IsNullable="true" />
+            </Properties>
+        </Entity>
+        <Entity Name="DocumentPropertiesListItem" Extends="DocumentPropertiesRow">
+            <Implements Type="ILocalDocumentPropertiesListItem" />
+            <IEquatable To="DocumentPropertiesListItem" />
+            <Properties>
+                <Long Name="ExistingFileCount" />
+                <Long Name="TotalFileCount" />
+            </Properties>
+        </Entity>
+        <Entity Name="DocumentPropertiesRow" Extends="PropertiesRow">
+            <Implements Type="IDocumentProperties" />
+            <Properties>
+                <String Name="ClientID" BackingField="_clientID" IsNormalized="true" />
+                <Class Type="MultiStringValue" Name="Contributor" />
+                <DateTime Name="DateCreated" IsNullable="true" />
+                <String Name="LastAuthor" BackingField="_lastAuthor" IsNormalized="true" />
+                <String Name="RevisionNumber" BackingField="_revisionNumber" IsNormalized="true" />
+                <Int Name="Security" IsNullable="true" />
+                <String Name="Division" BackingField="_division" IsNormalized="true" />
+                <String Name="DocumentID" BackingField="_documentID" IsNormalized="true" />
+                <String Name="Manager" BackingField="_manager" IsNormalized="true" />
+                <String Name="PresentationFormat" BackingField="_presentationFormat" IsNormalized="true" />
+                <String Name="Version" BackingField="_version" IsNormalized="true" />
+            </Properties>
+        </Entity>
+        <Entity Name="DocumentPropertySet" Extends="DocumentPropertiesRow">
+            <Implements Type="ILocalDocumentPropertySet" />
+            <Implements Type="IHasSimpleIdentifier" />
+            <IEquatable To="DocumentPropertySet" />
+            <Properties>
+                <HashSet ItemType="DbFile" Name="Files" BackingField="_files" />
+            </Properties>
+        </Entity>
+        <Entity Name="DRMPropertiesListItem" Extends="DRMPropertiesRow">
+            <Implements Type="ILocalDRMPropertiesListItem" />
+            <IEquatable To="DRMPropertiesListItem" />
+            <Properties>
+                <Long Name="ExistingFileCount" />
+                <Long Name="TotalFileCount" />
+            </Properties>
+        </Entity>
+        <Entity Name="DRMPropertiesRow" Extends="PropertiesRow">
+            <Implements Type="IDRMProperties" />
+            <Properties>
+                <DateTime Name="DatePlayExpires" IsNullable="true" />
+                <DateTime Name="DatePlayStarts" IsNullable="true" />
+                <String Name="Description" BackingField="_description" />
+                <Boolean Name="IsProtected" IsNullable="true" />
+                <UInt Name="PlayCount" IsNullable="true" />
+            </Properties>
+        </Entity>
+        <Entity Name="DRMPropertySet" Extends="DRMPropertiesRow">
+            <Implements Type="ILocalDRMPropertySet" />
+            <Implements Type="IHasSimpleIdentifier" />
+            <IEquatable To="DRMPropertySet" />
+            <Properties>
+                <HashSet ItemType="DbFile" Name="Files" BackingField="_files" />
+            </Properties>
+        </Entity>
+        <Entity Name="FileAccessError" Extends="DbEntity">
+            <Implements Type="ILocalFileAccessError" />
+            <Implements Type="IHasSimpleIdentifier" />
+            <IEquatable To="FileAccessError" />
+            <Properties>
+                <PrimaryKey Name="Id" BackingField="_id" />
+                <String Name="Message" BackingField="_message" IsNormalized="true" />
+                <String Name="Details" BackingField="_details" />
+                <Value Type="ErrorCode" Name="ErrorCode" />
+                <Guid Name="TargetId" BackingField="_targetId" />
+                <Navigation ForiegnKeyProperty="TargetId" Type="DbFile" Name="Target" BackingField="_target" />
+            </Properties>
+        </Entity>
+        <Entity Name="FileComparison" Extends="LocalDbEntity">
+            <Implements Type="ILocalComparison" />
+            <IEquatable To="FileComparison" />
+            <Properties>
+                <Guid Name="BaselineId" BackingField="_baselineId" />
+                <Guid Name="CorrelativeId" BackingField="_correlativeId" />
+                <Boolean Name="AreEqual" />
+                <DateTime Name="ComparedOn" />
+                <Navigation ForiegnKeyProperty="BaselineId" Type="DbFile" Name="Baseline" BackingField="_baseline" />
+                <Navigation ForiegnKeyProperty="CorrelativeId" Type="DbFile" Name="Correlative" BackingField="_correlative" />
+            </Properties>
+        </Entity>
+        <Entity Name="FileSystem" Extends="FileSystemRow">
+            <Implements Type="ILocalFileSystem" />
+            <Implements Type="IHasSimpleIdentifier" />
+            <IEquatable To="FileSystem" />
+            <Properties>
+                <HashSet ItemType="Volume" Name="Volumes" BackingField="_volumes" />
+                <HashSet ItemType="SymbolicName" Name="SymbolicNames" BackingField="_symbolicNames" />
+            </Properties>
+        </Entity>
+        <Entity Name="FileSystemListItem" Extends="FileSystemRow">
+            <Implements Type="ILocalFileSystemListItem" />
+            <IEquatable To="FileSystemListItem" />
+            <Properties>
+                <Guid Name="PrimarySymbolicNameId" IsNullable="true" />
+                <String Name="PrimarySymbolicName" />
+                <Long Name="SymbolicNameCount" />
+                <Long Name="VolumeCount" />
+            </Properties>
+        </Entity>
+        <Entity Name="FileSystemRow" Extends="LocalDbEntity">
+            <Implements Type="ILocalFileSystemRow" />
+            <Implements Type="IHasSimpleIdentifier" />
+            <Properties>
+                <PrimaryKey Name="Id" BackingField="_id" />
+                <String Name="DisplayName" BackingField="_displayName" IsNormalized="true" />
+                <Boolean Name="ReadOnly" />
+                <UInt Name="MaxNameLength" />
+                <Value Type="DriveType" Name="DefaultDriveType" IsNullable="true" />
+                <String Name="Notes" BackingField="_notes" />
+                <Boolean Name="IsInactive" />
+            </Properties>
+        </Entity>
+        <Entity Name="FileWithAncestorNames" Extends="DbFileRow">
+            <Implements Type="ILocalFileListItemWithAncestorNames" />
+            <IEquatable To="FileWithAncestorNames" />
+            <Properties>
+                <Long Name="AccessErrorCount" />
+                <Long Name="PersonalTagCount" />
+                <Long Name="SharedTagCount" />
+                <String Name="AncestorNames" BackingField="_ancestorNames" />
+                <Guid Name="EffectiveVolumeId" />
+                <String Name="VolumeDisplayName" BackingField="_volumeDisplayName" />
+                <String Name="VolumeName" BackingField="_volumeName" />
+                <Value Type="VolumeIdentifier" Name="VolumeIdentifier" />
+                <String Name="FileSystemDisplayName" BackingField="_fileSystemDisplayName" />
+                <String Name="FileSystemSymbolicName" BackingField="_fileSystemSymbolicName" />
+            </Properties>
+        </Entity>
+        <Entity Name="FileWithBinaryProperties" Extends="DbFileRow">
+            <Implements Type="ILocalFileListItemWithBinaryProperties" />
+            <IEquatable To="FileWithBinaryProperties" />
+            <Properties>
+                <Long Name="Length" />
+                <Value Type="MD5Hash" Name="Hash" IsNullable="true" />
+                <Long Name="RedundancyCount" />
+                <Long Name="ComparisonCount" />
+                <Long Name="AccessErrorCount" />
+                <Long Name="PersonalTagCount" />
+                <Long Name="SharedTagCount" />
+            </Properties>
+        </Entity>
+        <Entity Name="FileWithBinaryPropertiesAndAncestorNames" Extends="FileWithBinaryProperties">
+            <Implements Type="ILocalFileListItemWithBinaryPropertiesAndAncestorNames" />
+            <IEquatable To="FileWithBinaryPropertiesAndAncestorNames" />
+            <Properties>
+                <String Name="AncestorNames" BackingField="_ancestorNames" />
+                <Guid Name="EffectiveVolumeId" />
+                <String Name="VolumeDisplayName" BackingField="_volumeDisplayName" />
+                <String Name="VolumeName" BackingField="_volumeName" />
+                <Value Type="VolumeIdentifier" Name="VolumeIdentifier" />
+                <String Name="FileSystemDisplayName" BackingField="_fileSystemDisplayName" />
+                <String Name="FileSystemSymbolicName" BackingField="_fileSystemSymbolicName" />
+            </Properties>
+        </Entity>
+        <Entity Name="GPSPropertiesListItem" Extends="GPSPropertiesRow">
+            <Implements Type="ILocalGPSPropertiesListItem" />
+            <IEquatable To="GPSPropertiesListItem" />
+            <Properties>
+                <Long Name="ExistingFileCount" />
+                <Long Name="TotalFileCount" />
+            </Properties>
+        </Entity>
+        <Entity Name="GPSPropertiesRow" Extends="PropertiesRow">
+            <Implements Type="IGPSProperties" />
+            <Properties>
+                <String Name="AreaInformation" BackingField="_areaInformation" IsNormalized="true" />
+                <Double Name="LatitudeDegrees" IsNullable="true" />
+                <Double Name="LatitudeMinutes" IsNullable="true" />
+                <Double Name="LatitudeSeconds" IsNullable="true" />
+                <String Name="LatitudeRef" BackingField="_latitudeRef" IsNormalized="true" />
+                <Double Name="LongitudeDegrees" IsNullable="true" />
+                <Double Name="LongitudeMinutes" IsNullable="true" />
+                <Double Name="LongitudeSeconds" IsNullable="true" />
+                <String Name="LongitudeRef" BackingField="_longitudeRef" IsNormalized="true" />
+                <String Name="MeasureMode" BackingField="_measureMode" IsNormalized="true" />
+                <String Name="ProcessingMethod" BackingField="_processingMethod" IsNormalized="true" />
+                <Class Type="ByteValues" Name="VersionID" />
+            </Properties>
+        </Entity>
+        <Entity Name="GPSPropertySet" Extends="GPSPropertiesRow">
+            <Implements Type="ILocalGPSPropertySet" />
+            <Implements Type="IHasSimpleIdentifier" />
+            <IEquatable To="GPSPropertySet" />
+            <Properties>
+                <HashSet ItemType="DbFile" Name="Files" BackingField="_files" />
+            </Properties>
+        </Entity>
+        <Entity Name="ImagePropertiesListItem" Extends="ImagePropertiesRow">
+            <Implements Type="ILocalImagePropertiesListItem" />
+            <IEquatable To="ImagePropertiesListItem" />
+            <Properties>
+                <Long Name="ExistingFileCount" />
+                <Long Name="TotalFileCount" />
+            </Properties>
+        </Entity>
+        <Entity Name="ImagePropertiesRow" Extends="PropertiesRow">
+            <Implements Type="IImageProperties" />
+            <Properties>
+                <UInt Name="BitDepth" IsNullable="true" />
+                <UShort Name="ColorSpace" IsNullable="true" />
+                <Double Name="CompressedBitsPerPixel" IsNullable="true" />
+                <UShort Name="Compression" IsNullable="true" />
+                <String Name="CompressionText" BackingField="_compressionText" IsNormalized="true" />
+                <Double Name="HorizontalResolution" IsNullable="true" />
+                <UInt Name="HorizontalSize" IsNullable="true" />
+                <String Name="ImageID" BackingField="_imageID" IsNormalized="true" />
+                <Short Name="ResolutionUnit" IsNullable="true" />
+                <Double Name="VerticalResolution" IsNullable="true" />
+                <UInt Name="VerticalSize" IsNullable="true" />
+            </Properties>
+        </Entity>
+        <Entity Name="ImagePropertySet" Extends="ImagePropertiesRow">
+            <Implements Type="ILocalImagePropertySet" />
+            <Implements Type="IHasSimpleIdentifier" />
+            <IEquatable To="ImagePropertySet" />
+            <Properties>
+                <HashSet ItemType="DbFile" Name="Files" BackingField="_files" />
+            </Properties>
+        </Entity>
+        <Entity Name="ItemTag" Extends="ItemTagRow">
+            <Implements Type="ILocalItemTag" />
+        </Entity>
+        <Entity Name="ItemTagListItem" Extends="ItemTagRow">
+            <Implements Type="ILocalItemTagListItem" />
+            <IEquatable To="ItemTagListItem" />
+            <Properties>
+                <String Name="Name" BackingField="_name" IsNormalized="true" />
+                <String Name="Description" BackingField="_description" IsNormalized="true" />
+            </Properties>
+        </Entity>
+        <Entity Name="ItemTagRow" Extends="LocalDbEntity">
+            <Implements Type="ILocalItemTagRow" />
+            <Properties>
+                <Guid Name="TaggedId" />
+                <Guid Name="DefinitionId" />
+                <String Name="Notes" BackingField="_notes" />
+            </Properties>
+        </Entity>
+        <Entity Name="LocalDbEntity" Extends="DbEntity">
+            <Implements Type="ILocalDbEntity" />
+            <Properties>
+                <Guid Name="UpstreamId" IsNullable="true" />
+                <DateTime Name="LastSynchronizedOn" IsNullable="true" />
+            </Properties>
+        </Entity>
+        <Entity Name="MediaPropertiesListItem" Extends="MediaPropertiesRow">
+            <Implements Type="ILocalMediaPropertiesListItem" />
+            <IEquatable To="MediaPropertiesListItem" />
+            <Properties>
+                <Long Name="ExistingFileCount" />
+                <Long Name="TotalFileCount" />
+            </Properties>
+        </Entity>
+        <Entity Name="MediaPropertiesRow" Extends="PropertiesRow">
+            <Implements Type="IMediaProperties" />
+            <Properties>
+                <String Name="ContentDistributor" BackingField="_contentDistributor" IsNormalized="true" />
+                <String Name="CreatorApplication" BackingField="_creatorApplication" IsNormalized="true" />
+                <String Name="CreatorApplicationVersion" BackingField="_creatorApplicationVersion" IsNormalized="true" />
+                <String Name="DateReleased" BackingField="_dateReleased" IsNormalized="true" />
+                <ULong Name="Duration" IsNullable="true" />
+                <String Name="DVDID" BackingField="_dvdID" IsNormalized="true" />
+                <UInt Name="FrameCount" IsNullable="true" />
+                <Class Type="MultiStringValue" Name="Producer" />
+                <String Name="ProtectionType" BackingField="_protectionType" IsNormalized="true" />
+                <String Name="ProviderRating" BackingField="_providerRating" IsNormalized="true" />
+                <String Name="ProviderStyle" BackingField="_providerStyle" IsNormalized="true" />
+                <String Name="Publisher" BackingField="_publisher" IsNormalized="true" />
+                <String Name="Subtitle" BackingField="_subtitle" IsNormalized="true" />
+                <Class Type="MultiStringValue" Name="Writer" />
+                <UInt Name="Year" IsNullable="true" />
+            </Properties>
+        </Entity>
+        <Entity Name="MediaPropertySet" Extends="MediaPropertiesRow">
+            <Implements Type="ILocalMediaPropertySet" />
+            <Implements Type="IHasSimpleIdentifier" />
+            <IEquatable To="MediaPropertySet" />
+            <Properties>
+                <HashSet ItemType="DbFile" Name="Files" BackingField="_files" />
+            </Properties>
+        </Entity>
+        <Entity Name="MusicPropertiesListItem" Extends="MusicPropertiesRow">
+            <Implements Type="ILocalMusicPropertiesListItem" />
+            <IEquatable To="MusicPropertiesListItem" />
+            <Properties>
+                <Long Name="ExistingFileCount" />
+                <Long Name="TotalFileCount" />
+            </Properties>
+        </Entity>
+        <Entity Name="MusicPropertiesRow" Extends="PropertiesRow">
+            <Implements Type="IMusicProperties" />
+            <Properties>
+                <String Name="AlbumArtist" BackingField="_albumArtist" IsNormalized="true" />
+                <String Name="AlbumTitle" BackingField="_albumTitle" IsNormalized="true" />
+                <Class Type="MultiStringValue" Name="Artist" />
+                <UInt Name="ChannelCount" IsNullable="true" />
+                <Class Type="MultiStringValue" Name="Composer" />
+                <Class Type="MultiStringValue" Name="Conductor" />
+                <String Name="DisplayArtist" BackingField="_displayArtist" IsNormalized="true" />
+                <Class Type="MultiStringValue" Name="Genre" />
+                <String Name="PartOfSet" BackingField="_partOfSet" IsNormalized="true" />
+                <String Name="Period" BackingField="_period" IsNormalized="true" />
+                <UInt Name="TrackNumber" IsNullable="true" />
+            </Properties>
+        </Entity>
+        <Entity Name="MusicPropertySet" Extends="MusicPropertiesRow">
+            <Implements Type="ILocalMusicPropertySet" />
+            <Implements Type="IHasSimpleIdentifier" />
+            <IEquatable To="MusicPropertySet" />
+            <Properties>
+                <HashSet ItemType="DbFile" Name="Files" BackingField="_files" />
+            </Properties>
+        </Entity>
+        <Entity Name="PersonalFileTag" Extends="ItemTag">
+            <Implements Type="ILocalPersonalFileTag" />
+            <Implements Type="IPersonalFileTag" />
+            <IEquatable To="PersonalFileTag" />
+            <Properties>
+                <Guid Name="TaggedId" />
+                <Navigation ForiegnKeyProperty="TaggedId" Type="DbFile" Name="Tagged" BackingField="_tagged" />
+                <Guid Name="DefinitionId" />
+                <Navigation ForiegnKeyProperty="DefinitionId" Type="PersonalTagDefinition" Name="Definition" BackingField="_definition" />
+            </Properties>
+        </Entity>
+        <Entity Name="PersonalFileTagListItem" Extends="ItemTagListItem">
+            <IEquatable To="PersonalFileTagListItem" />
+        </Entity>
+        <Entity Name="PersonalSubdirectoryTag" Extends="ItemTag">
+            <Implements Type="ILocalPersonalSubdirectoryTag" />
+            <Implements Type="IPersonalSubdirectoryTag" />
+            <IEquatable To="PersonalSubdirectoryTag" />
+            <Properties>
+                <Guid Name="TaggedId" />
+                <Navigation ForiegnKeyProperty="TaggedId" Type="Subdirectory" Name="Tagged" BackingField="_tagged" />
+                <Guid Name="DefinitionId" />
+                <Navigation ForiegnKeyProperty="DefinitionId" Type="PersonalTagDefinition" Name="Definition" BackingField="_definition" />
+            </Properties>
+        </Entity>
+        <Entity Name="PersonalSubdirectoryTagListItem" Extends="ItemTagListItem">
+            <IEquatable To="PersonalSubdirectoryTagListItem" />
+        </Entity>
+        <Entity Name="PersonalTagDefinition" Extends="PersonalTagDefinitionRow">
+            <Implements Type="ILocalPersonalTagDefinition" />
+            <IEquatable To="PersonalTagDefinition" />
+            <Properties>
+                <HashSet ItemType="PersonalFileTag" Name="FileTags" BackingField="_fileTags" />
+                <HashSet ItemType="PersonalSubdirectoryTag" Name="SubdirectoryTags" BackingField="_subdirectoryTags" />
+                <HashSet ItemType="PersonalVolumeTag" Name="VolumeTags" BackingField="_volumeTags" />
+            </Properties>
+        </Entity>
+        <Entity Name="PersonalTagDefinitionListItem" Extends="PersonalTagDefinitionRow">
+            <Implements Type="ILocalTagDefinitionListItem" />
+            <IEquatable To="PersonalTagDefinitionListItem" />
+            <Properties>
+                <Long Name="FileTagCount" />
+                <Long Name="SubdirectoryTagCount" />
+                <Long Name="VolumeTagCount" />
+            </Properties>
+        </Entity>
+        <Entity Name="PersonalTagDefinitionRow" Extends="LocalDbEntity">
+            <Implements Type="ILocalTagDefinitionRow" />
+            <Properties>
+                <PrimaryKey Name="Id" BackingField="_id" />
+                <String Name="Name" BackingField="_name" IsNormalized="true" />
+                <String Name="Description" BackingField="_description" />
+                <Boolean Name="IsInactive" />
+            </Properties>
+        </Entity>
+        <Entity Name="PersonalVolumeTag" Extends="ItemTag">
+            <Implements Type="ILocalPersonalVolumeTag" />
+            <Implements Type="IPersonalVolumeTag" />
+            <IEquatable To="PersonalVolumeTag" />
+            <Properties>
+                <Guid Name="TaggedId" />
+                <Navigation ForiegnKeyProperty="TaggedId" Type="Volume" Name="Tagged" BackingField="_tagged" />
+                <Guid Name="DefinitionId" />
+                <Navigation ForiegnKeyProperty="DefinitionId" Type="PersonalTagDefinition" Name="Definition" BackingField="_definition" />
+            </Properties>
+        </Entity>
+        <Entity Name="PersonalVolumeTagListItem" Extends="ItemTagListItem">
+            <IEquatable To="PersonalVolumeTagListItem" />
+        </Entity>
+        <Entity Name="PhotoPropertiesListItem" Extends="PhotoPropertiesRow">
+            <Implements Type="ILocalPhotoPropertiesListItem" />
+            <IEquatable To="PhotoPropertiesListItem" />
+            <Properties>
+                <Long Name="ExistingFileCount" />
+                <Long Name="TotalFileCount" />
+            </Properties>
+        </Entity>
+        <Entity Name="PhotoPropertiesRow" Extends="PropertiesRow">
+            <Implements Type="IPhotoProperties" />
+            <Properties>
+                <String Name="CameraManufacturer" BackingField="_cameraManufacturer" IsNormalized="true" />
+                <String Name="CameraModel" BackingField="_cameraModel" IsNormalized="true" />
+                <DateTime Name="DateTaken" IsNullable="true" />
+                <Class Type="MultiStringValue" Name="Event" />
+                <String Name="EXIFVersion" BackingField="_exifVersion" IsNormalized="true" />
+                <UShort Name="Orientation" IsNullable="true" />
+                <String Name="OrientationText" BackingField="_orientationText" IsNormalized="true" />
+                <Class Type="MultiStringValue" Name="PeopleNames" />
+            </Properties>
+        </Entity>
+        <Entity Name="PhotoPropertySet" Extends="PhotoPropertiesRow">
+            <Implements Type="ILocalPhotoPropertySet" />
+            <Implements Type="IHasSimpleIdentifier" />
+            <IEquatable To="PhotoPropertySet" />
+            <Properties>
+                <HashSet ItemType="DbFile" Name="Files" BackingField="_files" />
+            </Properties>
+        </Entity>
+        <Entity Name="PropertiesRow" Extends="LocalDbEntity">
+            <Implements Type="IHasSimpleIdentifier" />
+            <Properties>
+                <PrimaryKey Name="Id" BackingField="_id" />
+            </Properties>
+        </Entity>
+        <Entity Name="RecordedTVPropertiesListItem" Extends="RecordedTVPropertiesRow">
+            <Implements Type="ILocalRecordedTVPropertiesListItem" />
+            <IEquatable To="RecordedTVPropertiesListItem" />
+            <Properties>
+                <Long Name="ExistingFileCount" />
+                <Long Name="TotalFileCount" />
+            </Properties>
+        </Entity>
+        <Entity Name="RecordedTVPropertiesRow" Extends="PropertiesRow">
+            <Implements Type="IRecordedTVProperties" />
+            <Properties>
+                <UInt Name="ChannelNumber" IsNullable="true" />
+                <String Name="EpisodeName" BackingField="_episodeName" IsNormalized="true" />
+                <Boolean Name="IsDTVContent" IsNullable="true" />
+                <Boolean Name="IsHDContent" IsNullable="true" />
+                <String Name="NetworkAffiliation" BackingField="_networkAffiliation" IsNormalized="true" />
+                <DateTime Name="OriginalBroadcastDate" IsNullable="true" />
+                <String Name="ProgramDescription" BackingField="_programDescription" IsNormalized="true" />
+                <String Name="StationCallSign" BackingField="_stationCallSign" IsNormalized="true" />
+                <String Name="StationName" BackingField="_stationName" IsNormalized="true" />
+            </Properties>
+        </Entity>
+        <Entity Name="RecordedTVPropertySet" Extends="RecordedTVPropertiesRow">
+            <Implements Type="ILocalRecordedTVPropertySet" />
+            <Implements Type="IHasSimpleIdentifier" />
+            <IEquatable To="RecordedTVPropertySet" />
+            <Properties>
+                <HashSet ItemType="DbFile" Name="Files" BackingField="_files" />
+            </Properties>
+        </Entity>
+        <Entity Name="Redundancy" Extends="LocalDbEntity">
+            <Implements Type="ILocalRedundancy" />
+            <IEquatable To="Redundancy" />
+            <Properties>
+                <Guid Name="FileId" BackingField="_fileId" />
+                <Guid Name="RedundantSetId" BackingField="_redundantSetId" />
+                <String Name="Reference" BackingField="_reference" IsNormalized="true" />
+                <String Name="Notes" BackingField="_notes" />
+                <Navigation ForiegnKeyProperty="FileId" Type="DbFile" Name="File" BackingField="_file" />
+                <Navigation ForiegnKeyProperty="RedundantSetId" Type="RedundantSet" Name="RedundantSet" BackingField="_redundantSet" />
+            </Properties>
+        </Entity>
+        <Entity Name="RedundantSet" Extends="RedundantSetRow">
+            <Implements Type="ILocalRedundantSet" />
+            <Implements Type="IHasSimpleIdentifier" />
+            <IEquatable To="RedundantSet" />
+            <Properties>
+                <Guid Name="BinaryPropertiesId" />
+                <Navigation ForiegnKeyProperty="BinaryPropertiesId" Type="BinaryPropertySet" Name="BinaryProperties" BackingField="_binaryProperties" />
+                <HashSet ItemType="Redundancy" Name="Redundancies" BackingField="_redundancies" />
+            </Properties>
+        </Entity>
+        <Entity Name="RedundantSetListItem" Extends="RedundantSetRow">
+            <Implements Type="ILocalRedundantSetListItem" />
+            <IEquatable To="RedundantSetListItem" />
+            <Properties>
+                <Long Name="Length" />
+                <Value Type="MD5Hash" Name="Hash" IsNullable="true" />
+                <Long Name="RedundancyCount" />
+            </Properties>
+        </Entity>
+        <Entity Name="RedundantSetRow" Extends="LocalDbEntity">
+            <Implements Type="ILocalRedundantSetRow" />
+            <Implements Type="IHasSimpleIdentifier" />
+            <Properties>
+                <PrimaryKey Name="Id" BackingField="_id" />
+                <String Name="Reference" BackingField="_reference" IsNormalized="true" />
+                <Value Type="RedundancyRemediationStatus" Name="Status" />
+                <String Name="Notes" BackingField="_notes" />
+                <Guid Name="BinaryPropertiesId" />
+            </Properties>
+        </Entity>
+        <Entity Name="SharedFileTag" Extends="ItemTag">
+            <Implements Type="ILocalSharedFileTag" />
+            <Implements Type="ISharedFileTag" />
+            <IEquatable To="SharedFileTag" />
+            <Properties>
+                <Guid Name="TaggedId" />
+                <Navigation ForiegnKeyProperty="TaggedId" Type="DbFile" Name="Tagged" BackingField="_tagged" />
+                <Guid Name="DefinitionId" />
+                <Navigation ForiegnKeyProperty="DefinitionId" Type="SharedTagDefinition" Name="Definition" BackingField="_definition" />
+            </Properties>
+        </Entity>
+        <Entity Name="SharedFileTagListItem" Extends="ItemTagListItem">
+            <IEquatable To="SharedFileTagListItem" />
+        </Entity>
+        <Entity Name="SharedSubdirectoryTag" Extends="ItemTag">
+            <Implements Type="ILocalSharedSubdirectoryTag" />
+            <Implements Type="ISharedSubdirectoryTag" />
+            <IEquatable To="SharedSubdirectoryTag" />
+            <Properties>
+                <Guid Name="TaggedId" />
+                <Navigation ForiegnKeyProperty="TaggedId" Type="Subdirectory" Name="Tagged" BackingField="_tagged" />
+                <Guid Name="DefinitionId" />
+                <Navigation ForiegnKeyProperty="DefinitionId" Type="SharedTagDefinition" Name="Definition" BackingField="_definition" />
+            </Properties>
+        </Entity>
+        <Entity Name="SharedSubdirectoryTagListItem" Extends="ItemTagListItem">
+            <IEquatable To="SharedFileTagListItem" />
+        </Entity>
+        <Entity Name="SharedTagDefinition" Extends="SharedTagDefinitionRow">
+            <Implements Type="ILocalSharedTagDefinition" />
+            <IEquatable To="SharedTagDefinition" />
+            <Properties>
+                <HashSet ItemType="SharedFileTag" Name="FileTags" BackingField="_fileTags" />
+                <HashSet ItemType="SharedSubdirectoryTag" Name="SubdirectoryTags" BackingField="_subdirectoryTags" />
+                <HashSet ItemType="SharedVolumeTag" Name="VolumeTags" BackingField="_volumeTags" />
+            </Properties>
+        </Entity>
+        <Entity Name="SharedTagDefinitionListItem" Extends="SharedTagDefinitionRow">
+            <Implements Type="ILocalTagDefinitionListItem" />
+            <IEquatable To="SharedTagDefinitionListItem" />
+            <Properties>
+                <Long Name="FileTagCount" />
+                <Long Name="SubdirectoryTagCount" />
+                <Long Name="VolumeTagCount" />
+            </Properties>
+        </Entity>
+        <Entity Name="SharedTagDefinitionRow" Extends="LocalDbEntity">
+            <Implements Type="ILocalTagDefinitionRow" />
+            <Properties>
+                <Guid Name="Id" BackingField="_id" />
+                <String Name="Name" BackingField="_name" IsNormalized="true" />
+                <String Name="Description" BackingField="_description" />
+                <Boolean Name="IsInactive" />
+            </Properties>
+        </Entity>
+        <Entity Name="SharedVolumeTag" Extends="ItemTag">
+            <Implements Type="ILocalSharedVolumeTag" />
+            <Implements Type="ISharedVolumeTag" />
+            <IEquatable To="SharedVolumeTag" />
+            <Properties>
+                <Guid Name="TaggedId" />
+                <Navigation ForiegnKeyProperty="TaggedId" Type="Volume" Name="Tagged" BackingField="_tagged" />
+                <Guid Name="DefinitionId" />
+                <Navigation ForiegnKeyProperty="DefinitionId" Type="SharedTagDefinition" Name="Definition" BackingField="_definition" />
+            </Properties>
+        </Entity>
+        <Entity Name="SharedVolumeTagListItem" Extends="ItemTagListItem">
+            <IEquatable To="SharedVolumeTagListItem" />
+        </Entity>
+        <Entity Name="Subdirectory" Extends="SubdirectoryRow">
+            <Implements Type="ILocalSubdirectory" />
+            <Implements Type="IHasSimpleIdentifier" />
+            <IEquatable To="Subdirectory" />
+            <Properties>
+                <Guid Name="ParentId" IsNullable="true" />
+                <Navigation ForiegnKeyProperty="ParentId" Type="Subdirectory" Name="Parent" BackingField="_parent" />
+                <Guid Name="VolumeId" IsNullable="true" />
+                <Navigation ForiegnKeyProperty="VolumeId" Type="Volume" Name="Volume" />
+                <Navigation Type="CrawlConfiguration" Name="CrawlConfiguration" />
+                <HashSet ItemType="DbFile" Name="Files" BackingField="_files" />
+                <HashSet ItemType="Subdirectory" Name="SubDirectories" BackingField="_subDirectories" />
+                <HashSet ItemType="SubdirectoryAccessError" Name="AccessErrors" BackingField="_accessErrors" />
+                <HashSet ItemType="PersonalSubdirectoryTag" Name="PersonalTags" BackingField="_personalTags" />
+                <HashSet ItemType="SharedSubdirectoryTag" Name="SharedTags" BackingField="_sharedTags" />
+            </Properties>
+        </Entity>
+        <Entity Name="SubdirectoryAccessError" Extends="DbEntity">
+            <Implements Type="ILocalSubdirectoryAccessError" />
+            <Implements Type="IHasSimpleIdentifier" />
+            <IEquatable To="SubdirectoryAccessError" />
+            <Properties>
+                <PrimaryKey Name="Id" BackingField="_id" />
+                <String Name="Message" BackingField="_message" IsNormalized="true" />
+                <String Name="Details" BackingField="_details" />
+                <Value Type="ErrorCode" Name="ErrorCode" />
+                <Guid Name="TargetId" BackingField="_targetId" />
+                <Navigation ForiegnKeyProperty="TargetId" Type="Subdirectory" Name="Target" BackingField="_target" />
+            </Properties>
+        </Entity>
+        <Entity Name="SubdirectoryAncestorNames">
+            <Implements Type="ISubdirectoryAncestorName" />
+            <IEquatable To="SubdirectoryAncestorNames" />
+            <Properties>
+                <PrimaryKey Name="Id" BackingField="_id" />
+                <String Name="Name" BackingField="_name" />
+                <Guid Name="ParentId" IsNullable="true" />
+                <String Name="AncestorNames" BackingField="_ancestorNames" />
+            </Properties>
+        </Entity>
+        <Entity Name="SubdirectoryListItem" Extends="SubdirectoryRow">
+            <Implements Type="ILocalSubdirectoryListItem" />
+            <IEquatable To="SubdirectoryListItem" />
+            <Properties>
+                <Long Name="SubdirectoryCount" />
+                <Long Name="FileCount" />
+                <Long Name="AccessErrorCount" />
+                <Long Name="PersonalTagCount" />
+                <Long Name="SharedTagCount" />
+                <String Name="CrawlConfigDisplayName" BackingField="_crawlConfigDisplayName" />
+            </Properties>
+        </Entity>
+        <Entity Name="SubdirectoryListItemWithAncestorNames" Extends="SubdirectoryListItem">
+            <Implements Type="ILocalSubdirectoryListItemWithAncestorNames" />
+            <IEquatable To="SubdirectoryListItemWithAncestorNames" />
+            <Properties>
+                <String Name="AncestorNames" BackingField="_ancestorNames" />
+                <Guid Name="EffectiveVolumeId" />
+                <String Name="VolumeDisplayName" BackingField="_volumeDisplayName" IsNormalized="true" />
+                <String Name="VolumeName" BackingField="_volumeName" />
+                <Value Type="VolumeIdentifier" Name="VolumeIdentifier" />
+                <String Name="FileSystemDisplayName" BackingField="_fileSystemDisplayName" IsNormalized="true" />
+                <String Name="FileSystemSymbolicName" BackingField="_fileSystemSymbolicName" />
+            </Properties>
+        </Entity>
+        <Entity Name="SubdirectoryRow" Extends="LocalDbEntity">
+            <Implements Type="ILocalSubdirectoryRow" />
+            <Implements Type="IHasSimpleIdentifier" />
+            <Properties>
+                <PrimaryKey Name="Id" BackingField="_id" />
+                <String Name="Name" BackingField="_name" />
+                <Value Type="DirectoryCrawlOptions" Name="Options" />
+                <DateTime Name="LastAccessed" />
+                <String Name="Notes" BackingField="_notes" />
+                <Value Type="DirectoryStatus" Name="Status" />
+                <DateTime Name="CreationTime" />
+                <DateTime Name="LastWriteTime" />
+                <Guid Name="ParentId" IsNullable="true" />
+                <Guid Name="VolumeId" IsNullable="true" />
+            </Properties>
+        </Entity>
+        <Entity Name="SummaryPropertiesListItem" Extends="SummaryPropertiesRow">
+            <Implements Type="ILocalSummaryPropertiesListItem" />
+            <IEquatable To="SummaryPropertiesListItem" />
+            <Properties>
+                <Long Name="ExistingFileCount" />
+                <Long Name="TotalFileCount" />
+            </Properties>
+        </Entity>
+        <Entity Name="SummaryPropertiesRow" Extends="PropertiesRow">
+            <Implements Type="ISummaryProperties" />
+            <Properties>
+                <String Name="ApplicationName" BackingField="_applicationName" IsNormalized="true" />
+                <Class Type="MultiStringValue" Name="Author" />
+                <String Name="Comment" BackingField="_comment" IsNormalized="true" />
+                <Class Type="MultiStringValue" Name="Keywords" />
+                <String Name="Subject" BackingField="_subject" IsNormalized="true" />
+                <String Name="Title" BackingField="_title" IsNormalized="true" />
+                <String Name="Company" BackingField="_company" IsNormalized="true" />
+                <String Name="ContentType" BackingField="_contentType" IsNormalized="true" />
+                <String Name="Copyright" BackingField="_copyright" IsNormalized="true" />
+                <String Name="ParentalRating" BackingField="_parentalRating" IsNormalized="true" />
+                <UInt Name="Rating" IsNullable="true" />
+                <Class Type="MultiStringValue" Name="ItemAuthors" />
+                <String Name="ItemType" BackingField="_itemType" IsNormalized="true" />
+                <String Name="ItemTypeText" BackingField="_itemTypeText" IsNormalized="true" />
+                <Class Type="MultiStringValue" Name="Kind" />
+                <String Name="MIMEType" BackingField="_mimeType" IsNormalized="true" />
+                <String Name="ParentalRatingReason" BackingField="_parentalRatingReason" IsNormalized="true" />
+                <String Name="ParentalRatingsOrganization" BackingField="_parentalRatingsOrganization" IsNormalized="true" />
+                <UShort Name="Sensitivity" IsNullable="true" />
+                <String Name="SensitivityText" BackingField="_sensitivityText" IsNormalized="true" />
+                <UInt Name="SimpleRating" IsNullable="true" />
+                <String Name="Trademarks" BackingField="_trademarks" IsNormalized="true" />
+                <String Name="ProductName" BackingField="_productName" IsNormalized="true" />
+            </Properties>
+        </Entity>
+        <Entity Name="SummaryPropertySet" Extends="SummaryPropertiesRow">
+            <Implements Type="ILocalSummaryPropertySet" />
+            <Implements Type="IHasSimpleIdentifier" />
+            <IEquatable To="SummaryPropertySet" />
+            <Properties>
+                <HashSet ItemType="DbFile" Name="Files" BackingField="_files" />
+            </Properties>
+        </Entity>
+        <Entity Name="SymbolicName" Extends="SymbolicNameRow">
+            <Implements Type="ILocalSymbolicName" />
+            <Implements Type="IHasSimpleIdentifier" />
+            <IEquatable To="SymbolicName" />
+            <Properties>
+                <Guid Name="FileSystemId" />
+                <Navigation ForiegnKeyProperty="FileSystemId" Type="FileSystem" Name="FileSystem" BackingField="_fileSystem" />
+            </Properties>
+        </Entity>
+        <Entity Name="SymbolicNameListItem" Extends="SymbolicNameRow">
+            <Implements Type="ILocalSymbolicNameListItem" />
+            <IEquatable To="SymbolicNameListItem" />
+            <Properties>
+                <String Name="FileSystemDisplayName" BackingField="_fileSystemDisplayName" IsNormalized="true" />
+            </Properties>
+        </Entity>
+        <Entity Name="SymbolicNameRow" Extends="LocalDbEntity">
+            <Implements Type="ILocalSymbolicNameRow" />
+            <Implements Type="IHasSimpleIdentifier" />
+            <Properties>
+                <PrimaryKey Name="Id" BackingField="_id" />
+                <String Name="Name" BackingField="_name" />
+                <String Name="Notes" BackingField="_notes" />
+                <Boolean Name="IsInactive" />
+                <Int Name="Priority" />
+                <Guid Name="FileSystemId" />
+            </Properties>
+        </Entity>
+        <Entity Name="VideoPropertiesListItem" Extends="VideoPropertiesRow">
+            <Implements Type="ILocalVideoPropertiesListItem" />
+            <IEquatable To="VideoPropertiesListItem" />
+            <Properties>
+                <Long Name="ExistingFileCount" />
+                <Long Name="TotalFileCount" />
+            </Properties>
+        </Entity>
+        <Entity Name="VideoPropertiesRow" Extends="PropertiesRow">
+            <Implements Type="IVideoProperties" />
+            <Properties>
+                <String Name="Compression" BackingField="_compression" IsNormalized="true" />
+                <Class Type="MultiStringValue" Name="Director" />
+                <UInt Name="EncodingBitrate" IsNullable="true" />
+                <UInt Name="FrameHeight" IsNullable="true" />
+                <UInt Name="FrameRate" IsNullable="true" />
+                <UInt Name="FrameWidth" IsNullable="true" />
+                <UInt Name="HorizontalAspectRatio" IsNullable="true" />
+                <String Name="StreamName" BackingField="_streamName" IsNormalized="true" />
+                <UShort Name="StreamNumber" IsNullable="true" />
+                <UInt Name="VerticalAspectRatio" IsNullable="true" />
+            </Properties>
+        </Entity>
+        <Entity Name="VideoPropertySet" Extends="VideoPropertiesRow">
+            <Implements Type="ILocalVideoPropertySet" />
+            <Implements Type="IHasSimpleIdentifier" />
+            <IEquatable To="VideoPropertySet" />
+            <Properties>
+                <HashSet ItemType="DbFile" Name="Files" BackingField="_files" />
+            </Properties>
+        </Entity>
+        <Entity Name="Volume" Extends="VolumeRow">
+            <Implements Type="ILocalVolume" />
+            <Implements Type="IHasSimpleIdentifier" />
+            <IEquatable To="Volume" />
+            <Properties>
+                <Guid Name="FileSystemId" />
+                <Navigation ForiegnKeyProperty="FileSystemId" Type="FileSystem" Name="FileSystem" BackingField="_fileSystem" />
+                <Navigation Type="Subdirectory" Name="RootDirectory" />
+                <HashSet ItemType="VolumeAccessError" Name="AccessErrors" BackingField="_accessErrors" />
+                <HashSet ItemType="PersonalVolumeTag" Name="PersonalTags" BackingField="_personalTags" />
+                <HashSet ItemType="SharedVolumeTag" Name="SharedTags" BackingField="_sharedTags" />
+            </Properties>
+        </Entity>
+        <Entity Name="VolumeAccessError" Extends="DbEntity">
+            <Implements Type="ILocalVolumeAccessError" />
+            <Implements Type="IHasSimpleIdentifier" />
+            <IEquatable To="VolumeAccessError" />
+            <Properties>
+                <PrimaryKey Name="Id" BackingField="_id" />
+                <String Name="Message" BackingField="_message" IsNormalized="true" />
+                <String Name="Details" BackingField="_details" />
+                <Value Type="ErrorCode" Name="ErrorCode" />
+                <Guid Name="TargetId" BackingField="_targetId" />
+                <Navigation ForiegnKeyProperty="TargetId" Type="Volume" Name="Target" BackingField="_target" />
+            </Properties>
+        </Entity>
+        <Entity Name="VolumeListItem" Extends="VolumeRow">
+            <Implements Type="ILocalVolumeListItem" />
+            <IEquatable To="VolumeListItem" />
+            <Properties>
+                <String Name="RootPath" BackingField="_rootPath" />
+                <Long Name="AccessErrorCount" />
+                <Long Name="PersonalTagCount" />
+                <Long Name="SharedTagCount" />
+                <Long Name="RootSubdirectoryCount" />
+                <Long Name="RootFileCount" />
+            </Properties>
+        </Entity>
+        <Entity Name="VolumeListItemWithFileSystem" Extends="VolumeListItem">
+            <Implements Type="ILocalVolumeListItemWithFileSystem" />
+            <IEquatable To="VolumeListItemWithFileSystem" />
+            <Properties>
+                <String Name="FileSystemDisplayName" BackingField="_fileSystemDisplayName" IsNormalized="true" />
+                <Boolean Name="EffectiveReadOnly" />
+                <UInt Name="EffectiveMaxNameLength" />
+            </Properties>
+        </Entity>
+        <Entity Name="VolumeRow" Extends="LocalDbEntity">
+            <Implements Type="ILocalVolumeRow" />
+            <Implements Type="IHasSimpleIdentifier" />
+            <Properties>
+                <PrimaryKey Name="Id" BackingField="_id" />
+                <String Name="DisplayName" BackingField="_displayName" IsNormalized="true" />
+                <String Name="VolumeName" BackingField="_volumeName" />
+                <Value Type="VolumeIdentifier" Name="Identifier" />
+                <Value Type="VolumeStatus" Name="Status" />
+                <Value Type="DriveType" Name="Type" />
+                <Boolean Name="ReadOnly" IsNullable="true" />
+                <UInt Name="MaxNameLength" IsNullable="true" />
+                <String Name="Notes" BackingField="_notes" />
+                <Guid Name="FileSystemId" />
+            </Properties>
+        </Entity>
+    </Namespace>
+    <Namespace Name="System">
+        <Enum Name="UriHostNameType" />
+        <Class Name="Uri">
+            <Properties>
+                <String Name="AbsolutePath" Access="Get" />
+                <String Name="AbsoluteUri" Access="Get" />
+                <String Name="LocalPath" Access="Get" />
+                <String Name="Authority" Access="Get" />
+                <Value Type="UriHostNameType" Name="HostNameType" />
+                <Boolean Name="IsDefaultPort" Access="Get" />
+                <Boolean Name="IsFile" Access="Get" />
+                <Boolean Name="IsLoopback" Access="Get" />
+                <String Name="PathAndQuery" Access="Get" />
+                <Array ElementType="string" Name="Segments" />
+                <Boolean Name="IsUnc" Access="Get" />
+                <String Name="Host" Access="Get" />
+                <Int Name="Port" Access="Get" />
+                <String Name="Query" Access="Get" />
+                <String Name="Fragment" Access="Get" />
+                <String Name="Scheme" Access="Get" />
+                <String Name="OriginalString" Access="Get" />
+                <String Name="DnsSafeHost" Access="Get" />
+                <String Name="IdnHost" Access="Get" />
+                <Boolean Name="IsAbsoluteUri" Access="Get" />
+                <Boolean Name="UserEscaped" Access="Get" />
+                <String Name="UserInfo" Access="Get" />
+            </Properties>
+        </Class>
+    </Namespace>
+    <Namespace Name="System.IO">
+        <Enum Name="DriveType" />
+    </Namespace>
+</TypeDefinitions>
