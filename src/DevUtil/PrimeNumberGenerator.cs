@@ -14,10 +14,12 @@ namespace DevUtil
         private static readonly object _syncRoot = new();
         private static uint[] _values = new uint[] { 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97 };
         private static readonly int _minArrayLength;
-        private static int _count;
+
         static PrimeNumberGenerator() => _minArrayLength = _values.Length;
 
         public static readonly PrimeNumberGenerator Instance = new();
+
+        public static int KnownNumberCount { get; private set; }
 
         public uint this[int index]
         {
@@ -28,7 +30,7 @@ namespace DevUtil
                 Monitor.Enter(_syncRoot);
                 try
                 {
-                    if (index > _count)
+                    if (index > KnownNumberCount)
                         throw new ArgumentOutOfRangeException(nameof(index));
                     return _values[index];
                 }
@@ -40,7 +42,7 @@ namespace DevUtil
 
         object IList.this[int index] { get => this[index]; set => throw new NotSupportedException(); }
 
-        public int Count => _count;
+        public int Count => KnownNumberCount;
 
         public object SyncRoot => _syncRoot;
 
@@ -52,7 +54,7 @@ namespace DevUtil
 
         bool ICollection.IsSynchronized => true;
 
-        private PrimeNumberGenerator() => _count = _minArrayLength;
+        private PrimeNumberGenerator() => KnownNumberCount = _minArrayLength;
 
         public static bool IsPrimeNumber(uint value)
         {
@@ -61,7 +63,7 @@ namespace DevUtil
             Monitor.Enter(_syncRoot);
             try
             {
-                int e = ((_count < _minArrayLength) ? _minArrayLength : _count) - 1;
+                int e = ((KnownNumberCount < _minArrayLength) ? _minArrayLength : KnownNumberCount) - 1;
                 uint v = _values[e];
                 if (value == v)
                     return true;
@@ -97,15 +99,15 @@ namespace DevUtil
             {
                 if (index < _values.Length)
                 {
-                    if (index >= _count)
-                        _count = index + 1;
+                    if (index >= KnownNumberCount)
+                        KnownNumberCount = index + 1;
                     return _values[index];
                 }
                 uint[] values = new uint[index];
                 Array.Copy(_values, values, values.Length);
-                uint i = _values[_count - 1] + 2;
+                uint i = _values[KnownNumberCount - 1] + 2;
                 while (!TestPrimeNumber(i)) i += 2;
-                int position = _count;
+                int position = KnownNumberCount;
                 _values[position] = i;
                 while (++position < index)
                 {
@@ -113,8 +115,23 @@ namespace DevUtil
                     while (!TestPrimeNumber(i)) i += 2;
                     _values[position] = i;
                 }
-                _count = index + 1;
+                KnownNumberCount = index + 1;
                 return i;
+            }
+            finally { Monitor.Exit(_syncRoot); }
+        }
+
+        public static uint Get(int index, int relativeIndex, out uint relativeValue)
+        {
+            if (index < 0 || index == int.MaxValue)
+                throw new ArgumentOutOfRangeException(nameof(index));
+            if (relativeIndex == 0 || (relativeIndex > 0) ? (int.MaxValue - index - relativeIndex < 1) : int.MinValue + index + relativeIndex > -1)
+                throw new ArgumentOutOfRangeException(nameof(relativeIndex));
+            Monitor.Enter(_syncRoot);
+            try
+            {
+                relativeValue = Get(index + relativeIndex);
+                return _values[index];
             }
             finally { Monitor.Exit(_syncRoot); }
         }
@@ -126,11 +143,11 @@ namespace DevUtil
             Monitor.Enter(_syncRoot);
             try
             {
-                if (_count < count)
+                if (KnownNumberCount < count)
                     throw new ArgumentOutOfRangeException(nameof(count));
-                if (count < _count)
+                if (count < KnownNumberCount)
                 {
-                    _count = count;
+                    KnownNumberCount = count;
                     if (count > _minArrayLength)
                         Array.Resize(ref _values, count);
                 }
@@ -201,7 +218,7 @@ namespace DevUtil
                         Monitor.Enter(PrimeNumberGenerator._syncRoot);
                         try
                         {
-                            if (_count != PrimeNumberGenerator._count)
+                            if (_count != PrimeNumberGenerator.KnownNumberCount)
                                 throw new InvalidOperationException("Source list has changed");
                             return _values[_index];
                         }
@@ -213,7 +230,7 @@ namespace DevUtil
 
             object IEnumerator.Current => Current;
 
-            internal Enumerator() => _count = PrimeNumberGenerator._count;
+            internal Enumerator() => _count = PrimeNumberGenerator.KnownNumberCount;
 
             public void Dispose()
             {
@@ -234,7 +251,7 @@ namespace DevUtil
                     Monitor.Enter(PrimeNumberGenerator._syncRoot);
                     try
                     {
-                        if (_count != PrimeNumberGenerator._count)
+                        if (_count != PrimeNumberGenerator.KnownNumberCount)
                             throw new InvalidOperationException("Source list has changed");
                         return ++_index < _count;
                     }
@@ -253,7 +270,7 @@ namespace DevUtil
                     Monitor.Enter(PrimeNumberGenerator._syncRoot);
                     try
                     {
-                        if (_count != PrimeNumberGenerator._count)
+                        if (_count != PrimeNumberGenerator.KnownNumberCount)
                             throw new InvalidOperationException("Source list has changed");
                         _index = -1;
                     }
