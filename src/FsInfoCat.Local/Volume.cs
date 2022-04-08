@@ -21,7 +21,6 @@ namespace FsInfoCat.Local
         #region Fields
 
         private FileSystem _fileSystem;
-        private Subdirectory _rootDirectory;
         private HashSet<VolumeAccessError> _accessErrors = new();
         private HashSet<PersonalVolumeTag> _personalTags = new();
         private HashSet<SharedVolumeTag> _sharedTags = new();
