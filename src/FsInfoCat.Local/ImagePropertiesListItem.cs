@@ -32,6 +32,11 @@ namespace FsInfoCat.Local
             throw new NotImplementedException();
         }
 
+        public override bool Equals(IImagePropertiesRow other)
+        {
+            throw new NotImplementedException();
+        }
+
         public override bool Equals(IImageProperties other)
         {
             throw new NotImplementedException();

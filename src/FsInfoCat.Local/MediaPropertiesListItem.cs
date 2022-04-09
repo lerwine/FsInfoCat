@@ -38,6 +38,11 @@ namespace FsInfoCat.Local
             throw new NotImplementedException();
         }
 
+        public override bool Equals(IMediaPropertiesRow other)
+        {
+            throw new NotImplementedException();
+        }
+
         public override bool Equals(IMediaProperties other)
         {
             throw new NotImplementedException();

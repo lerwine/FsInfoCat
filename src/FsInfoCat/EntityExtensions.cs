@@ -761,12 +761,16 @@ namespace FsInfoCat
 
         public static bool NullablesEqual<T>(T? x, T? y) where T : struct, IEquatable<T> => x.HasValue ? (y.HasValue && x.Value.Equals(y.Value)) : !y.HasValue;
 
+        [Obsolete]
         public static int HashGuid(Guid value, int hash, int prime) => value.Equals(Guid.Empty) ? hash * prime : hash * prime + value.GetHashCode();
 
+        [Obsolete]
         public static int HashNullable<T>(T? value, int hash, int prime) where T : struct => value.HasValue ? hash * prime + value.Value.GetHashCode() : hash * prime;
 
+        [Obsolete]
         public static int HashRelatedEntity<T>(T value, Func<Guid> getId, int hash, int prime) where T : class, IHasSimpleIdentifier => (value is null) ? HashGuid(getId(), hash, prime) : hash * prime + value.GetHashCode();
 
+        [Obsolete]
         public static int HashObject<T>(T value, int hash, int prime) where T : class => (value is null) ? hash * prime : hash * prime + value.GetHashCode();
     }
 }

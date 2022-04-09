@@ -4,7 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat.Local
 {
-    public abstract class MusicPropertiesRow : PropertiesRow, IMusicProperties
+    public abstract class MusicPropertiesRow : PropertiesRow, ILocalMusicPropertiesRow
     {
         #region Fields
 
@@ -46,6 +46,8 @@ namespace FsInfoCat.Local
         {
             throw new NotImplementedException();
         }
+
+        public abstract bool Equals(IMusicPropertiesRow other);
 
         public abstract bool Equals(IMusicProperties other);
     }

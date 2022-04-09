@@ -314,11 +314,6 @@ namespace FsInfoCat.Local
             }
         }
 
-        protected virtual bool ArePropertiesEqual(Volume other)
-        {
-            throw new NotImplementedException();
-        }
-
         public bool Equals(Volume other)
         {
             throw new NotImplementedException();

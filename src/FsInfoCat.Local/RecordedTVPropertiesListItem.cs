@@ -35,6 +35,11 @@ namespace FsInfoCat.Local
             throw new NotImplementedException();
         }
 
+        public override bool Equals(IRecordedTVPropertiesRow other)
+        {
+            throw new NotImplementedException();
+        }
+
         public override bool Equals(IRecordedTVProperties other)
         {
             throw new NotImplementedException();

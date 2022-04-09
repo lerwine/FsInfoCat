@@ -3,7 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat.Local
 {
-    public abstract class RecordedTVPropertiesRow : PropertiesRow, IRecordedTVProperties
+    public abstract class RecordedTVPropertiesRow : PropertiesRow, ILocalRecordedTVPropertiesRow
     {
         #region Fields
 
@@ -41,6 +41,8 @@ namespace FsInfoCat.Local
         {
             throw new NotImplementedException();
         }
+
+        public abstract bool Equals(IRecordedTVPropertiesRow other);
 
         public abstract bool Equals(IRecordedTVProperties other);
     }

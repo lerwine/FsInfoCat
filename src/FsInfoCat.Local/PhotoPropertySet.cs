@@ -102,6 +102,11 @@ namespace FsInfoCat.Local
         {
             throw new NotImplementedException();
         }
+
+        public override bool Equals(IPhotoPropertiesRow other)
+        {
+            throw new NotImplementedException();
+        }
         public override bool Equals(IPhotoProperties other)
         {
             throw new NotImplementedException();
@@ -136,10 +141,6 @@ namespace FsInfoCat.Local
             return id.GetHashCode();
         }
 
-        IEnumerable<Guid> IIdentityReference.GetIdentifiers()
-        {
-            yield return Id;
-        }
-
+        IEnumerable<Guid> IIdentityReference.GetIdentifiers() { yield return Id; }
     }
 }

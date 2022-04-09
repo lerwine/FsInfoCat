@@ -4,7 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat.Local
 {
-    public abstract class GPSPropertiesRow : PropertiesRow, IGPSProperties
+    public abstract class GPSPropertiesRow : PropertiesRow, ILocalGPSPropertiesRow
     {
         #region Fields
 
@@ -48,6 +48,8 @@ namespace FsInfoCat.Local
         {
             throw new NotImplementedException();
         }
+
+        public abstract bool Equals(IGPSPropertiesRow other);
 
         public abstract bool Equals(IGPSProperties other);
     }

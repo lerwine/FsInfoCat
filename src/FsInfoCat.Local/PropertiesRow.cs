@@ -4,7 +4,7 @@ using System.Threading;
 
 namespace FsInfoCat.Local
 {
-    public abstract class PropertiesRow : LocalDbEntity, IHasSimpleIdentifier
+    public abstract class PropertiesRow : LocalDbEntity, ILocalPropertiesRow
     {
         private Guid? _id;
 

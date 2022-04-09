@@ -2,7 +2,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat.Local
 {
-    public abstract class AudioPropertiesRow : PropertiesRow, IAudioProperties
+    public abstract class AudioPropertiesRow : PropertiesRow, ILocalAudioPropertiesRow
     {
         #region Fields
 
@@ -35,6 +35,8 @@ namespace FsInfoCat.Local
         protected bool ArePropertiesEqual([DisallowNull] IAudioProperties other) => EntityExtensions.NullablesEqual(EncodingBitrate, other.EncodingBitrate) && EntityExtensions.NullablesEqual(IsVariableBitrate, other.IsVariableBitrate) &&
             EntityExtensions.NullablesEqual(SampleRate, other.SampleRate) && EntityExtensions.NullablesEqual(SampleSize, other.SampleSize) && EntityExtensions.NullablesEqual(StreamNumber, other.StreamNumber) &&
             _compression.Equals(other.Compression) && _format.Equals(other.Format) && _streamName.Equals(other.StreamName);
+
+        public abstract bool Equals(IAudioPropertiesRow other);
 
         public abstract bool Equals(IAudioProperties other);
     }

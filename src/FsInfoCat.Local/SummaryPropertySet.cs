@@ -105,6 +105,11 @@ namespace FsInfoCat.Local
             throw new NotImplementedException();
         }
 
+        public override bool Equals(ISummaryPropertiesRow other)
+        {
+            throw new NotImplementedException();
+        }
+
         public override bool Equals(ISummaryProperties other)
         {
             throw new NotImplementedException();
@@ -119,44 +124,40 @@ namespace FsInfoCat.Local
         {
             Guid id = Id;
             if (id.Equals(Guid.Empty))
-                unchecked
-                {
-                    int hash = 103;
-                    hash = hash * 109 + ApplicationName.GetHashCode();
-                    hash = hash * 109 + Author.GetHashCode();
-                    hash = hash * 109 + Comment.GetHashCode();
-                    hash = EntityExtensions.HashObject(Keywords, hash, 109);
-                    hash = hash * 109 + Subject.GetHashCode();
-                    hash = hash * 109 + Title.GetHashCode();
-                    hash = hash * 109 + Company.GetHashCode();
-                    hash = hash * 109 + ContentType.GetHashCode();
-                    hash = hash * 109 + Copyright.GetHashCode();
-                    hash = hash * 109 + ParentalRating.GetHashCode();
-                    hash = EntityExtensions.HashNullable(Rating, hash, 109);
-                    hash = EntityExtensions.HashObject(ItemAuthors, hash, 109);
-                    hash = hash * 109 + ItemType.GetHashCode();
-                    hash = hash * 109 + ItemTypeText.GetHashCode();
-                    hash = EntityExtensions.HashObject(Kind, hash, 109);
-                    hash = hash * 109 + MIMEType.GetHashCode();
-                    hash = hash * 109 + ParentalRatingReason.GetHashCode();
-                    hash = hash * 109 + ParentalRatingsOrganization.GetHashCode();
-                    hash = EntityExtensions.HashNullable(Sensitivity, hash, 109);
-                    hash = hash * 109 + SensitivityText.GetHashCode();
-                    hash = EntityExtensions.HashNullable(SimpleRating, hash, 109);
-                    hash = hash * 109 + Trademarks.GetHashCode();
-                    hash = hash * 109 + ProductName.GetHashCode();
-                    hash = EntityExtensions.HashNullable(UpstreamId, hash, 109);
-                    hash = EntityExtensions.HashNullable(LastSynchronizedOn, hash, 109);
-                    hash = hash * 109 + CreatedOn.GetHashCode();
-                    hash = hash * 109 + ModifiedOn.GetHashCode();
-                    return hash;
-                }
+            {
+                HashCode hash = new();
+                hash.Add(ApplicationName);
+                hash.Add(Author);
+                hash.Add(Comment);
+                hash.Add(Keywords);
+                hash.Add(Subject);
+                hash.Add(Title);
+                hash.Add(Company);
+                hash.Add(ContentType);
+                hash.Add(Copyright);
+                hash.Add(ParentalRating);
+                hash.Add(Rating);
+                hash.Add(ItemAuthors);
+                hash.Add(ItemType);
+                hash.Add(ItemTypeText);
+                hash.Add(Kind);
+                hash.Add(MIMEType);
+                hash.Add(ParentalRatingReason);
+                hash.Add(ParentalRatingsOrganization);
+                hash.Add(Sensitivity);
+                hash.Add(SensitivityText);
+                hash.Add(SimpleRating);
+                hash.Add(Trademarks);
+                hash.Add(ProductName);
+                hash.Add(UpstreamId);
+                hash.Add(LastSynchronizedOn);
+                hash.Add(CreatedOn);
+                hash.Add(ModifiedOn);
+                return hash.ToHashCode();
+            }
             return id.GetHashCode();
         }
 
-        IEnumerable<Guid> IIdentityReference.GetIdentifiers()
-        {
-            yield return Id;
-        }
+        IEnumerable<Guid> IIdentityReference.GetIdentifiers() { yield return Id; }
     }
 }

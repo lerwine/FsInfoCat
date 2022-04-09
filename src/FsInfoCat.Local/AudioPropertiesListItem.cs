@@ -25,6 +25,11 @@ namespace FsInfoCat.Local
         public bool Equals(IAudioPropertiesListItem other) => other is not null && (other is AudioPropertiesListItem audioPropertiesListItem) ? Equals(audioPropertiesListItem) :
             Id.Equals(Guid.Empty) ? (other.Id.Equals(Guid.Empty) && ArePropertiesEqual(other)) : Id.Equals(other.Id);
 
+        public override bool Equals(IAudioPropertiesRow other)
+        {
+            throw new NotImplementedException();
+        }
+
         public override bool Equals(IAudioProperties other)
         {
             if (other is null)

@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat
 {
-    public interface IPropertiesListItem : IDbEntity, IHasSimpleIdentifier
+    public interface IPropertiesListItem : IPropertiesRow
     {
         [Display(Name = nameof(Properties.Resources.DisplayName_Files), ResourceType = typeof(Properties.Resources))]
         long ExistingFileCount { get; }
@@ -12,25 +12,25 @@ namespace FsInfoCat
         long TotalFileCount { get; }
     }
 
-    public interface ISummaryPropertiesListItem : IPropertiesListItem, ISummaryProperties, IEquatable<ISummaryPropertiesListItem> { }
+    public interface ISummaryPropertiesListItem : IPropertiesListItem, ISummaryPropertiesRow, IEquatable<ISummaryPropertiesListItem> { }
 
-    public interface IDocumentPropertiesListItem : IPropertiesListItem, IDocumentProperties, IEquatable<IDocumentPropertiesListItem> { }
+    public interface IDocumentPropertiesListItem : IPropertiesListItem, IDocumentPropertiesRow, IEquatable<IDocumentPropertiesListItem> { }
 
-    public interface IAudioPropertiesListItem : IPropertiesListItem, IAudioProperties, IEquatable<IAudioPropertiesListItem> { }
+    public interface IAudioPropertiesListItem : IPropertiesListItem, IAudioPropertiesRow, IEquatable<IAudioPropertiesListItem> { }
 
-    public interface IDRMPropertiesListItem : IPropertiesListItem, IDRMProperties, IEquatable<IDRMPropertiesListItem> { }
+    public interface IDRMPropertiesListItem : IPropertiesListItem, IDRMPropertiesRow, IEquatable<IDRMPropertiesListItem> { }
 
-    public interface IGPSPropertiesListItem : IPropertiesListItem, IGPSProperties, IEquatable<IGPSPropertiesListItem> { }
+    public interface IGPSPropertiesListItem : IPropertiesListItem, IGPSPropertiesRow, IEquatable<IGPSPropertiesListItem> { }
 
-    public interface IImagePropertiesListItem : IPropertiesListItem, IImageProperties, IEquatable<IImagePropertiesListItem> { }
+    public interface IImagePropertiesListItem : IPropertiesListItem, IImagePropertiesRow, IEquatable<IImagePropertiesListItem> { }
 
-    public interface IMediaPropertiesListItem : IPropertiesListItem, IMediaProperties, IEquatable<IMediaPropertiesListItem> { }
+    public interface IMediaPropertiesListItem : IPropertiesListItem, IMediaPropertiesRow, IEquatable<IMediaPropertiesListItem> { }
 
-    public interface IMusicPropertiesListItem : IPropertiesListItem, IMusicProperties, IEquatable<IMusicPropertiesListItem> { }
+    public interface IMusicPropertiesListItem : IPropertiesListItem, IMusicPropertiesRow, IEquatable<IMusicPropertiesListItem> { }
 
-    public interface IPhotoPropertiesListItem : IPropertiesListItem, IPhotoProperties, IEquatable<IPhotoPropertiesListItem> { }
+    public interface IPhotoPropertiesListItem : IPropertiesListItem, IPhotoPropertiesRow, IEquatable<IPhotoPropertiesListItem> { }
 
-    public interface IRecordedTVPropertiesListItem : IPropertiesListItem, IRecordedTVProperties, IEquatable<IRecordedTVPropertiesListItem> { }
+    public interface IRecordedTVPropertiesListItem : IPropertiesListItem, IRecordedTVPropertiesRow, IEquatable<IRecordedTVPropertiesListItem> { }
 
-    public interface IVideoPropertiesListItem : IPropertiesListItem, IVideoProperties, IEquatable<IVideoPropertiesListItem> { }
+    public interface IVideoPropertiesListItem : IPropertiesListItem, IVideoPropertiesRow, IEquatable<IVideoPropertiesListItem> { }
 }

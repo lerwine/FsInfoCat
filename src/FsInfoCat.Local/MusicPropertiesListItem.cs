@@ -41,6 +41,11 @@ namespace FsInfoCat.Local
             throw new NotImplementedException();
         }
 
+        public override bool Equals(IMusicPropertiesRow other)
+        {
+            throw new NotImplementedException();
+        }
+
         public override bool Equals(IMusicProperties other)
         {
             throw new NotImplementedException();

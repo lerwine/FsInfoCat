@@ -4,7 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat.Local
 {
-    public abstract class MediaPropertiesRow : PropertiesRow, IMediaProperties
+    public abstract class MediaPropertiesRow : PropertiesRow, ILocalMediaPropertiesRow
     {
         #region Fields
 
@@ -59,6 +59,8 @@ namespace FsInfoCat.Local
         {
             throw new NotImplementedException();
         }
+
+        public abstract bool Equals(IMediaPropertiesRow other);
 
         public abstract bool Equals(IMediaProperties other);
     }

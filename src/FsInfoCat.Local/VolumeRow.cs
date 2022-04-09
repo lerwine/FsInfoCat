@@ -149,19 +149,50 @@ namespace FsInfoCat.Local
                 results.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_DriveTypeInvalid, new string[] { nameof(Type) }));
         }
 
-        protected virtual bool ArePropertiesEqual([DisallowNull] ILocalVolumeRow other)
-        {
-            throw new NotImplementedException();
-        }
+        protected virtual bool ArePropertiesEqual([DisallowNull] ILocalVolumeRow other) => ArePropertiesEqual((IVolumeRow)other) &&
+                   EqualityComparer<Guid?>.Default.Equals(UpstreamId, other.UpstreamId) &&
+                   LastSynchronizedOn == other.LastSynchronizedOn;
 
-        protected virtual bool ArePropertiesEqual([DisallowNull] IVolumeRow other)
-        {
-            throw new NotImplementedException();
-        }
+        protected virtual bool ArePropertiesEqual([DisallowNull] IVolumeRow other) => CreatedOn == other.CreatedOn &&
+                   ModifiedOn == other.ModifiedOn &&
+                   Identifier.Equals(other.Identifier) &&
+                   Status == other.Status &&
+                   Type == other.Type &&
+                   ReadOnly == other.ReadOnly &&
+                   MaxNameLength == other.MaxNameLength &&
+                   FileSystemId.Equals(other.FileSystemId) &&
+                    _displayName == other.DisplayName &&
+                    _volumeName == other.VolumeName &&
+                    Notes == other.Notes;
 
         IEnumerable<Guid> IIdentityReference.GetIdentifiers()
         {
             yield return Id;
+        }
+
+
+        public override int GetHashCode()
+        {
+            Guid id = Id;
+            if (id.Equals(Guid.Empty))
+            {
+                HashCode hash = new();
+                hash.Add(CreatedOn);
+                hash.Add(ModifiedOn);
+                hash.Add(DisplayName);
+                hash.Add(VolumeName);
+                hash.Add(Notes);
+                hash.Add(Identifier);
+                hash.Add(Status);
+                hash.Add(Type);
+                hash.Add(ReadOnly);
+                hash.Add(MaxNameLength);
+                hash.Add(FileSystemId);
+                hash.Add(UpstreamId);
+                hash.Add(LastSynchronizedOn);
+                return hash.ToHashCode();
+            }
+            return id.GetHashCode();
         }
     }
 }

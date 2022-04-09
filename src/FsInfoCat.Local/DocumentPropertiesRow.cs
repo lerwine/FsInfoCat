@@ -4,7 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat.Local
 {
-    public abstract class DocumentPropertiesRow : PropertiesRow, IDocumentProperties
+    public abstract class DocumentPropertiesRow : PropertiesRow, ILocalDocumentPropertiesRow
     {
         #region Fields
 
@@ -49,6 +49,8 @@ namespace FsInfoCat.Local
         {
             throw new NotImplementedException();
         }
+
+        public abstract bool Equals(IDocumentPropertiesRow other);
 
         public abstract bool Equals(IDocumentProperties other);
     }

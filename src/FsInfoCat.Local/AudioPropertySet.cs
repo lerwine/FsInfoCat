@@ -72,6 +72,11 @@ namespace FsInfoCat.Local
 
         public bool Equals(IAudioPropertySet other) => other is not null && (other is AudioPropertySet p) ? Equals(p) : ArePropertiesEqual(other);
 
+        public override bool Equals(IAudioPropertiesRow other)
+        {
+            throw new NotImplementedException();
+        }
+
         public override bool Equals(IAudioProperties other) => other is not null && (other is AudioPropertySet p) ? Equals(p) : (other is ILocalAudioPropertySet l) ? ArePropertiesEqual(l) : (other is IAudioPropertySet a) ? ArePropertiesEqual(a) : ArePropertiesEqual(other);
 
         public override bool Equals(object obj) => obj is IAudioProperties i && ((obj is AudioPropertySet p) ? Equals(p) : (obj is ILocalAudioPropertySet l) ? ArePropertiesEqual(l) : (obj is IAudioPropertySet a) ? ArePropertiesEqual(a) : ArePropertiesEqual(i));
@@ -100,9 +105,6 @@ namespace FsInfoCat.Local
             return id.GetHashCode();
         }
 
-        IEnumerable<Guid> IIdentityReference.GetIdentifiers()
-        {
-            yield return Id;
-        }
+        IEnumerable<Guid> IIdentityReference.GetIdentifiers() { yield return Id; }
     }
 }

@@ -4,7 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat.Local
 {
-    public abstract class PhotoPropertiesRow : PropertiesRow, IPhotoProperties
+    public abstract class PhotoPropertiesRow : PropertiesRow, ILocalPhotoPropertiesRow
     {
         #region Fields
 
@@ -39,6 +39,8 @@ namespace FsInfoCat.Local
         {
             throw new NotImplementedException();
         }
+
+        public abstract bool Equals(IPhotoPropertiesRow other);
 
         public abstract bool Equals(IPhotoProperties other);
     }

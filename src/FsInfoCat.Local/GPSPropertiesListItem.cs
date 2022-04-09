@@ -37,6 +37,11 @@ namespace FsInfoCat.Local
             throw new NotImplementedException();
         }
 
+        public override bool Equals(IGPSPropertiesRow other)
+        {
+            throw new NotImplementedException();
+        }
+
         public override bool Equals(IGPSProperties other)
         {
             throw new NotImplementedException();

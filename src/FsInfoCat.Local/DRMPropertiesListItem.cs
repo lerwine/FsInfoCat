@@ -32,6 +32,11 @@ namespace FsInfoCat.Local
             throw new NotImplementedException();
         }
 
+        public override bool Equals(IDRMPropertiesRow other)
+        {
+            throw new NotImplementedException();
+        }
+
         public override bool Equals(IDRMProperties other)
         {
             throw new NotImplementedException();

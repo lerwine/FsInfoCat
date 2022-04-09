@@ -92,6 +92,11 @@ namespace FsInfoCat.Local
             throw new NotImplementedException();
         }
 
+        public override bool Equals(IRecordedTVPropertiesRow other)
+        {
+            throw new NotImplementedException();
+        }
+
         public override bool Equals(IRecordedTVProperties other)
         {
             throw new NotImplementedException();
@@ -126,9 +131,6 @@ namespace FsInfoCat.Local
             return id.GetHashCode();
         }
 
-        IEnumerable<Guid> IIdentityReference.GetIdentifiers()
-        {
-            yield return Id;
-        }
+        IEnumerable<Guid> IIdentityReference.GetIdentifiers() { yield return Id; }
     }
 }

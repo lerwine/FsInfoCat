@@ -37,6 +37,11 @@ namespace FsInfoCat.Local
             throw new NotImplementedException();
         }
 
+        public override bool Equals(IDocumentPropertiesRow other)
+        {
+            throw new NotImplementedException();
+        }
+
         public override bool Equals(IDocumentProperties other)
         {
             throw new NotImplementedException();

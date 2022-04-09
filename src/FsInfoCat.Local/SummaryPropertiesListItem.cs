@@ -43,6 +43,11 @@ namespace FsInfoCat.Local
             throw new NotImplementedException();
         }
 
+        public override bool Equals(ISummaryPropertiesRow other)
+        {
+            throw new NotImplementedException();
+        }
+
         public override bool Equals(ISummaryProperties other)
         {
             throw new NotImplementedException();

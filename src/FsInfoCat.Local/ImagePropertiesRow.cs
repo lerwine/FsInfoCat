@@ -3,7 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat.Local
 {
-    public abstract class ImagePropertiesRow : PropertiesRow, IImageProperties
+    public abstract class ImagePropertiesRow : PropertiesRow, ILocalImagePropertiesRow
     {
         #region Fields
 
@@ -43,6 +43,8 @@ namespace FsInfoCat.Local
         {
             throw new NotImplementedException();
         }
+
+        public abstract bool Equals(IImagePropertiesRow other);
 
         public abstract bool Equals(IImageProperties other);
     }

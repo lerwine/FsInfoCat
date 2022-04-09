@@ -4,7 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat.Local
 {
-    public abstract class SummaryPropertiesRow : PropertiesRow, ISummaryProperties
+    public abstract class SummaryPropertiesRow : PropertiesRow, ILocalSummaryPropertiesRow
     {
         #region Fields
 
@@ -81,6 +81,8 @@ namespace FsInfoCat.Local
         {
             throw new NotImplementedException();
         }
+
+        public abstract bool Equals(ISummaryPropertiesRow other);
 
         public abstract bool Equals(ISummaryProperties other);
     }
