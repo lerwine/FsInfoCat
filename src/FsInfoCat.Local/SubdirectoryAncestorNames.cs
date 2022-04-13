@@ -46,10 +46,12 @@ namespace FsInfoCat.Local
 
         [StringLength(DbConstants.DbColMaxLen_FileName, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_NameLength),
             ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [NotNull]
         public virtual string Name { get => _name; set => _name = value ?? ""; }
 
         public virtual Guid? ParentId { get; set; }
 
+        [NotNull]
         public string AncestorNames { get => _ancestorNames; set => _ancestorNames = value.EmptyIfNullOrWhiteSpace(); }
 
         internal static void OnBuildEntity(EntityTypeBuilder<SubdirectoryAncestorNames> builder) => builder.ToView(VIEW_NAME).HasKey(nameof(Id));

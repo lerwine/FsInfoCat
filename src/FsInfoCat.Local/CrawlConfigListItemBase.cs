@@ -11,29 +11,42 @@ namespace FsInfoCat.Local
         private string _fileSystemDisplayName = string.Empty;
         private string _fileSystemSymbolicName = string.Empty;
 
+        [NotNull]
         public string AncestorNames { get => _ancestorNames; set => _ancestorNames = value ?? ""; }
 
         public virtual Guid VolumeId { get; set; }
 
+        [NotNull]
         public virtual string VolumeDisplayName { get => _volumeDisplayName; set => _volumeDisplayName = value ?? ""; }
 
+        [NotNull]
         public virtual string VolumeName { get => _volumeName; set => _volumeName = value ?? ""; }
 
         public virtual VolumeIdentifier VolumeIdentifier { get; set; } = VolumeIdentifier.Empty;
 
+        [NotNull]
         public string FileSystemDisplayName { get => _fileSystemDisplayName; set => _fileSystemDisplayName = value ?? ""; }
 
+        [NotNull]
         public string FileSystemSymbolicName { get => _fileSystemSymbolicName; set => _fileSystemSymbolicName = value ?? ""; }
 
-        protected bool ArePropertiesEqual([DisallowNull] ILocalCrawlConfigurationListItem other)
-        {
-            throw new NotImplementedException();
-        }
+        protected bool ArePropertiesEqual([DisallowNull] ILocalCrawlConfigurationListItem other) => ArePropertiesEqual((ILocalCrawlConfigurationRow)other) &&
+            VolumeId.Equals(other.VolumeId) &&
+            VolumeIdentifier.Equals(other.VolumeIdentifier) &&
+            _ancestorNames == other.AncestorNames &&
+            _volumeDisplayName == other.VolumeDisplayName &&
+            _volumeName == other.VolumeName &&
+            _fileSystemDisplayName == other.FileSystemDisplayName &&
+            _fileSystemSymbolicName == other.FileSystemSymbolicName;
 
-        protected bool ArePropertiesEqual([DisallowNull] ICrawlConfigurationListItem other)
-        {
-            throw new NotImplementedException();
-        }
+        protected bool ArePropertiesEqual([DisallowNull] ICrawlConfigurationListItem other) => ArePropertiesEqual((ICrawlConfigurationRow)other) &&
+            VolumeId.Equals(other.VolumeId) &&
+            VolumeIdentifier.Equals(other.VolumeIdentifier) &&
+            _ancestorNames == other.AncestorNames &&
+            _volumeDisplayName == other.VolumeDisplayName &&
+            _volumeName == other.VolumeName &&
+            _fileSystemDisplayName == other.FileSystemDisplayName &&
+            _fileSystemSymbolicName == other.FileSystemSymbolicName;
 
         public abstract bool Equals(ICrawlConfigurationListItem other);
     }

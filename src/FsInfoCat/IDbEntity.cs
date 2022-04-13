@@ -24,6 +24,7 @@ namespace FsInfoCat
     /// <seealso cref="IItemTag" />
     /// <seealso cref="Local.ILocalDbEntity" />
     /// <seealso cref="Upstream.IUpstreamDbEntity" />
+    [EntityInterface]
     public interface IDbEntity : IValidatableObject
     {
         /// <summary>Gets or sets the database entity creation date/time.</summary>

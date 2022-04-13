@@ -42,9 +42,11 @@ namespace FsInfoCat.Local
             ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
         [StringLength(DbConstants.DbColMaxLen_SimpleName, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_NameLength),
             ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [NotNull]
         public virtual string Name { get => _name; set => _name = value.AsWsNormalizedOrEmpty(); }
 
         [Required(AllowEmptyStrings = true)]
+        [NotNull]
         public string Description { get => _description; set => _description = value.EmptyIfNullOrWhiteSpace(); }
 
         [Required]

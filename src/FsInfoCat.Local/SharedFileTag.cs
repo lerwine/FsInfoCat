@@ -60,10 +60,8 @@ namespace FsInfoCat.Local
                             base.TaggedId = Guid.Empty;
                     }
                     else
-                    {
                         base.TaggedId = value.Id;
-                        _tagged = value;
-                    }
+                    _tagged = value;
                 }
                 finally { Monitor.Exit(SyncRoot); }
             }
@@ -117,10 +115,8 @@ namespace FsInfoCat.Local
                             base.DefinitionId = Guid.Empty;
                     }
                     else
-                    {
                         base.DefinitionId = value.Id;
-                        _definition = value;
-                    }
+                    _definition = value;
                 }
                 finally { Monitor.Exit(SyncRoot); }
             }

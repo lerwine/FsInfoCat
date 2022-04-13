@@ -16,6 +16,7 @@ namespace FsInfoCat.Local
         public virtual Guid DefinitionId { get; set; }
 
         [Required(AllowEmptyStrings = true)]
+        [NotNull]
         public virtual string Notes { get => _notes; set => _notes = value.EmptyIfNullOrWhiteSpace(); }
 
         IEnumerable<Guid> IHasCompoundIdentifier.Id

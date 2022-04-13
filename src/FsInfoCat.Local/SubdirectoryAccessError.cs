@@ -59,9 +59,11 @@ namespace FsInfoCat.Local
             ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
         [StringLength(DbConstants.DbColMaxLen_LongName, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_NameLength),
             ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [NotNull]
         public virtual string Message { get => _message; set => _message = value.AsWsNormalizedOrEmpty(); }
 
         [Required(AllowEmptyStrings = true)]
+        [NotNull]
         public virtual string Details { get => _details; set => _details = value.EmptyIfNullOrWhiteSpace(); }
 
         [Required]
@@ -114,10 +116,8 @@ namespace FsInfoCat.Local
                             _targetId = Guid.Empty;
                     }
                     else
-                    {
                         _targetId = value.Id;
-                        _target = value;
-                    }
+                    _target = value;
                 }
                 finally { Monitor.Exit(SyncRoot); }
             }

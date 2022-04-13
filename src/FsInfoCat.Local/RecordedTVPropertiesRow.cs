@@ -19,20 +19,25 @@ namespace FsInfoCat.Local
 
         public uint? ChannelNumber { get; set; }
 
+        [NotNull]
         public string EpisodeName { get => _episodeName; set => _episodeName = value.AsWsNormalizedOrEmpty(); }
 
         public bool? IsDTVContent { get; set; }
 
         public bool? IsHDContent { get; set; }
 
+        [NotNull]
         public string NetworkAffiliation { get => _networkAffiliation; set => _networkAffiliation = value.AsWsNormalizedOrEmpty(); }
 
         public DateTime? OriginalBroadcastDate { get; set; }
 
+        [NotNull]
         public string ProgramDescription { get => _programDescription; set => _programDescription = value.AsWsNormalizedOrEmpty(); }
 
+        [NotNull]
         public string StationCallSign { get => _stationCallSign; set => _stationCallSign = value.AsWsNormalizedOrEmpty(); }
 
+        [NotNull]
         public string StationName { get => _stationName; set => _stationName = value.AsWsNormalizedOrEmpty(); }
 
         #endregion

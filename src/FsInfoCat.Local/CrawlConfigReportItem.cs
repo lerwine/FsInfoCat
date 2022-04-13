@@ -5,7 +5,9 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat.Local
 {
+#pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     public class CrawlConfigReportItem : CrawlConfigListItemBase, ILocalCrawlConfigReportItem, IEquatable<CrawlConfigReportItem>
+#pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     {
         private const string VIEW_NAME = "vCrawlConfigReport";
 
@@ -27,15 +29,23 @@ namespace FsInfoCat.Local
             .ToView(VIEW_NAME)
             .Property(nameof(VolumeIdentifier)).HasConversion(VolumeIdentifier.Converter);
 
-        protected bool ArePropertiesEqual([DisallowNull] ILocalCrawlConfigReportItem other)
-        {
-            throw new NotImplementedException();
-        }
+        protected bool ArePropertiesEqual([DisallowNull] ILocalCrawlConfigReportItem other) => ArePropertiesEqual((ILocalCrawlConfigurationListItem)other) &&
+            SucceededCount == other.SucceededCount &&
+            TimedOutCount == other.TimedOutCount &&
+            ItemLimitReachedCount == other.ItemLimitReachedCount &&
+            CanceledCount == other.CanceledCount &&
+            FailedCount == other.FailedCount &&
+            AverageDuration == other.AverageDuration &&
+            MaxDuration == other.MaxDuration;
 
-        protected bool ArePropertiesEqual([DisallowNull] ICrawlConfigReportItem other)
-        {
-            throw new NotImplementedException();
-        }
+        protected bool ArePropertiesEqual([DisallowNull] ICrawlConfigReportItem other) => ArePropertiesEqual((ICrawlConfigurationListItem)other) &&
+            SucceededCount == other.SucceededCount &&
+            TimedOutCount == other.TimedOutCount &&
+            ItemLimitReachedCount == other.ItemLimitReachedCount &&
+            CanceledCount == other.CanceledCount &&
+            FailedCount == other.FailedCount &&
+            AverageDuration == other.AverageDuration &&
+            MaxDuration == other.MaxDuration;
 
         public bool Equals(CrawlConfigReportItem other) => other is not null && ReferenceEquals(this, other) || Id.Equals(Guid.Empty) ? ArePropertiesEqual(this) : Id.Equals(other.Id);
 
@@ -52,36 +62,6 @@ namespace FsInfoCat.Local
         public override bool Equals(object obj)
         {
             throw new NotImplementedException();
-        }
-
-        public override int GetHashCode()
-        {
-            Guid id = Id;
-            if (id.Equals(Guid.Empty))
-                unchecked
-                {
-                    int hash = 61;
-                    hash = hash * 71 + AncestorNames.GetHashCode();
-                    hash = hash * 71 + DisplayName.GetHashCode();
-                    hash = hash * 71 + MaxRecursionDepth.GetHashCode();
-                    hash = EntityExtensions.HashNullable(MaxTotalItems, hash, 71);
-                    hash = EntityExtensions.HashNullable(TTL, hash, 71);
-                    hash = hash * 71 + Notes.GetHashCode();
-                    hash = hash * 71 + StatusValue.GetHashCode();
-                    hash = EntityExtensions.HashNullable(LastCrawlStart, hash, 71);
-                    hash = EntityExtensions.HashNullable(LastCrawlEnd, hash, 71);
-                    hash = EntityExtensions.HashNullable(NextScheduledStart, hash, 71);
-                    hash = EntityExtensions.HashNullable(RescheduleInterval, hash, 71);
-                    hash = hash * 71 + RescheduleFromJobEnd.GetHashCode();
-                    hash = hash * 71 + RescheduleAfterFail.GetHashCode();
-                    hash = EntityExtensions.HashGuid(RootId, hash, 71);
-                    hash = EntityExtensions.HashNullable(UpstreamId, hash, 71);
-                    hash = EntityExtensions.HashNullable(LastSynchronizedOn, hash, 71);
-                    hash = hash * 71 + CreatedOn.GetHashCode();
-                    hash = hash * 71 + ModifiedOn.GetHashCode();
-                    return hash;
-                }
-            return id.GetHashCode();
         }
     }
 }

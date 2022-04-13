@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations;
 namespace FsInfoCat
 {
     /// <summary>Represents extended file properties for photo files.</summary>
+    [EntityInterface]
     public interface IPhotoProperties : IEquatable<IPhotoProperties>
     {
         /// <summary>Gets the Camera Manufacturer.</summary>

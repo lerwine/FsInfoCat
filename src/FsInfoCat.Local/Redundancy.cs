@@ -99,9 +99,11 @@ namespace FsInfoCat.Local
         [Required(AllowEmptyStrings = true)]
         [StringLength(DbConstants.DbColMaxLen_ShortName, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_NameLength),
             ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [NotNull]
         public virtual string Reference { get => _reference; set => _reference = value.AsWsNormalizedOrEmpty(); }
 
         [Required(AllowEmptyStrings = true)]
+        [NotNull]
         public virtual string Notes { get => _notes; set => _notes = value.TrimmedOrNullIfWhiteSpace(); }
 
         [Required(ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_FileRequired),
@@ -120,10 +122,8 @@ namespace FsInfoCat.Local
                             _fileId = Guid.Empty;
                     }
                     else
-                    {
                         _fileId = value.Id;
-                        _file = value;
-                    }
+                    _file = value;
                 }
                 finally { Monitor.Exit(SyncRoot); }
             }
@@ -146,10 +146,8 @@ namespace FsInfoCat.Local
                             _fileId = Guid.Empty;
                     }
                     else
-                    {
                         _fileId = value.Id;
-                        _redundantSet = value;
-                    }
+                    _redundantSet = value;
                 }
                 finally { Monitor.Exit(SyncRoot); }
             }

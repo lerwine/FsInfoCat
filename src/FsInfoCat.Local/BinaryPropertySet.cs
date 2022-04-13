@@ -21,6 +21,16 @@ namespace FsInfoCat.Local
     /// <seealso cref="ILocalBinaryPropertySet" />
     public class BinaryPropertySet : LocalDbEntity, ILocalBinaryPropertySet, ISimpleIdentityReference<BinaryPropertySet>, IEquatable<BinaryPropertySet>
     {
+        #region Properties
+
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_UpstreamId), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        public virtual Guid? UpstreamId { get; set; }
+
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_LastSynchronizedOn), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        public virtual DateTime? LastSynchronizedOn { get; set; }
+
+        #endregion
+
         #region Fields
 
         private Guid? _id;
@@ -63,8 +73,10 @@ namespace FsInfoCat.Local
 
         public virtual MD5Hash? Hash { get; set; }
 
+        [NotNull]
         public virtual HashSet<DbFile> Files { get => _files; set => _files = value ?? new(); }
 
+        [NotNull]
         public virtual HashSet<RedundantSet> RedundantSets { get => _redundantSets; set => _redundantSets = value ?? new(); }
 
         #endregion
@@ -142,15 +154,14 @@ namespace FsInfoCat.Local
             yield return Id;
         }
 
-        protected bool ArePropertiesEqual([DisallowNull] ILocalBinaryPropertySet other)
-        {
-            throw new NotImplementedException();
-        }
+        protected bool ArePropertiesEqual([DisallowNull] ILocalBinaryPropertySet other) => ArePropertiesEqual((IBinaryPropertySet)other) &&
+            EqualityComparer<Guid?>.Default.Equals(UpstreamId, other.UpstreamId) &&
+            LastSynchronizedOn == other.LastSynchronizedOn;
 
-        protected bool ArePropertiesEqual([DisallowNull] IBinaryPropertySet other)
-        {
-            throw new NotImplementedException();
-        }
+        protected bool ArePropertiesEqual([DisallowNull] IBinaryPropertySet other) => CreatedOn == other.CreatedOn &&
+            ModifiedOn == other.ModifiedOn &&
+            Length == other.Length &&
+            EqualityComparer<MD5Hash?>.Default.Equals(Hash, other.Hash);
 
         public bool Equals(BinaryPropertySet other) => other is not null && ReferenceEquals(this, other) || Id.Equals(Guid.Empty) ? ArePropertiesEqual(this) : Id.Equals(other.Id);
 
@@ -166,19 +177,10 @@ namespace FsInfoCat.Local
 
         public override int GetHashCode()
         {
-            if (Id.Equals(Guid.Empty))
-                unchecked
-                {
-                    int hash = 13;
-                    hash = hash * 19 + Length.GetHashCode();
-                    hash = EntityExtensions.HashNullable(Hash, hash, 19);
-                    hash = EntityExtensions.HashNullable(UpstreamId, hash, 19);
-                    hash = EntityExtensions.HashNullable(LastSynchronizedOn, hash, 19);
-                    hash = hash * 19 + CreatedOn.GetHashCode();
-                    hash = hash * 19 + ModifiedOn.GetHashCode();
-                    return hash;
-                }
-            return Id.GetHashCode();
+            Guid id = Id;
+            if (id.Equals(Guid.Empty))
+                return HashCode.Combine(CreatedOn, ModifiedOn, Length, Hash, UpstreamId, LastSynchronizedOn);
+            return id.GetHashCode();
         }
     }
 }

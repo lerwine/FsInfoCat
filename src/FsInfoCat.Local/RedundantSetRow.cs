@@ -65,11 +65,13 @@ namespace FsInfoCat.Local
         [Required(AllowEmptyStrings = true)]
         [StringLength(DbConstants.DbColMaxLen_ShortName, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_NameLength),
             ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [NotNull]
         public virtual string Reference { get => _reference; set => _reference = value.AsWsNormalizedOrEmpty(); }
 
         public RedundancyRemediationStatus Status { get; set; } = RedundancyRemediationStatus.Unconfirmed;
 
         [Required(AllowEmptyStrings = true)]
+        [NotNull]
         public virtual string Notes { get => _notes; set => _notes = value.EmptyIfNullOrWhiteSpace(); }
 
         public virtual Guid BinaryPropertiesId { get; set; }

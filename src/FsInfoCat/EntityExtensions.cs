@@ -2,8 +2,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
@@ -113,7 +111,7 @@ namespace FsInfoCat
                 await referenceEntry.LoadAsync(cancellationToken);
             return referenceEntry.TargetEntry;
         }
-        
+
         /// <summary>
         /// Matches <see cref="IFile"/> objects with <see cref="FileInfo"/> objects with the same file length.
         /// </summary>

@@ -9,10 +9,13 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat.Local
 {
+#pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     public class AudioPropertySet : AudioPropertiesRow, ILocalAudioPropertySet, ISimpleIdentityReference<AudioPropertySet>, IEquatable<AudioPropertySet>
+#pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     {
         private HashSet<DbFile> _files = new();
 
+        [NotNull]
         public HashSet<DbFile> Files { get => _files; set => _files = value ?? new(); }
 
         #region Explicit Members
@@ -65,8 +68,12 @@ namespace FsInfoCat.Local
             }
         }
 
-        protected bool ArePropertiesEqual([DisallowNull] ILocalAudioPropertySet other) =>
-            EntityExtensions.NullablesEqual(UpstreamId, other.UpstreamId) && EntityExtensions.NullablesEqual(LastSynchronizedOn, other.LastSynchronizedOn) && ArePropertiesEqual((IAudioPropertySet)other);
+        protected bool ArePropertiesEqual([DisallowNull] ILocalAudioPropertySet other) => ArePropertiesEqual((IAudioPropertySet)other) &&
+                   EqualityComparer<Guid?>.Default.Equals(UpstreamId, other.UpstreamId) &&
+                   LastSynchronizedOn == other.LastSynchronizedOn;
+
+        protected bool ArePropertiesEqual([DisallowNull] IAudioPropertySet other) => ArePropertiesEqual((IAudioProperties)other) && CreatedOn == other.CreatedOn &&
+                   ModifiedOn == other.ModifiedOn;
 
         public bool Equals(AudioPropertySet other) => other is not null && ReferenceEquals(this, other) || Id.Equals(Guid.Empty) ? ArePropertiesEqual(this) : Id.Equals(other.Id);
 
@@ -80,30 +87,6 @@ namespace FsInfoCat.Local
         public override bool Equals(IAudioProperties other) => other is not null && (other is AudioPropertySet p) ? Equals(p) : (other is ILocalAudioPropertySet l) ? ArePropertiesEqual(l) : (other is IAudioPropertySet a) ? ArePropertiesEqual(a) : ArePropertiesEqual(other);
 
         public override bool Equals(object obj) => obj is IAudioProperties i && ((obj is AudioPropertySet p) ? Equals(p) : (obj is ILocalAudioPropertySet l) ? ArePropertiesEqual(l) : (obj is IAudioPropertySet a) ? ArePropertiesEqual(a) : ArePropertiesEqual(i));
-
-        public override int GetHashCode()
-        {
-            Guid id = Id;
-            if (id.Equals(Guid.Empty))
-                unchecked
-                {
-                    int hash = 37;
-                    hash = hash * 43 + Compression.GetHashCode();
-                    hash = EntityExtensions.HashNullable(EncodingBitrate, hash, 43);
-                    hash = hash * 43 + Format.GetHashCode();
-                    hash = EntityExtensions.HashNullable(IsVariableBitrate, hash, 43);
-                    hash = EntityExtensions.HashNullable(SampleRate, hash, 43);
-                    hash = EntityExtensions.HashNullable(SampleSize, hash, 43);
-                    hash = hash * 43 + StreamName.GetHashCode();
-                    hash = EntityExtensions.HashNullable(StreamNumber, hash, 43);
-                    hash = EntityExtensions.HashNullable(UpstreamId, hash, 43);
-                    hash = EntityExtensions.HashNullable(LastSynchronizedOn, hash, 43);
-                    hash = hash * 43 + CreatedOn.GetHashCode();
-                    hash = hash * 43 + ModifiedOn.GetHashCode();
-                    return hash;
-            }
-            return id.GetHashCode();
-        }
 
         IEnumerable<Guid> IIdentityReference.GetIdentifiers() { yield return Id; }
     }

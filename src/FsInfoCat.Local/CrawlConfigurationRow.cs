@@ -52,6 +52,7 @@ namespace FsInfoCat.Local
             ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
         [StringLength(DbConstants.DbColMaxLen_LongName, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_DisplayNameLength),
             ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [NotNull]
         public virtual string DisplayName { get => _displayName; set => _displayName = value.AsWsNormalizedOrEmpty(); }
 
         /// <summary>Gets the maximum recursion depth.</summary>
@@ -78,6 +79,7 @@ namespace FsInfoCat.Local
         /// <summary>Gets the custom notes.</summary>
         /// <value>The custom notes to associate with the current crawl configuration.</value>
         [Required(AllowEmptyStrings = true)]
+        [NotNull]
         public virtual string Notes { get => _notes; set => _notes = value.EmptyIfNullOrWhiteSpace(); }
 
         /// <summary>Gets a value indicating current crawl configuration status.</summary>
@@ -152,19 +154,56 @@ namespace FsInfoCat.Local
             return value.HasValue ? TimeSpan.FromSeconds(value.Value) : null;
         }
 
-        protected virtual bool ArePropertiesEqual([DisallowNull] ILocalCrawlConfigurationRow other)
-        {
-            throw new NotImplementedException();
-        }
+        protected virtual bool ArePropertiesEqual([DisallowNull] ILocalCrawlConfigurationRow other) => ArePropertiesEqual((ICrawlConfigurationRow)other) &&
+                   EqualityComparer<Guid?>.Default.Equals(UpstreamId, other.UpstreamId) &&
+                   LastSynchronizedOn == other.LastSynchronizedOn;
 
-        protected virtual bool ArePropertiesEqual([DisallowNull] ICrawlConfigurationRow other)
-        {
-            throw new NotImplementedException();
-        }
+        protected virtual bool ArePropertiesEqual([DisallowNull] ICrawlConfigurationRow other) => CreatedOn == other.CreatedOn &&
+                   ModifiedOn == other.ModifiedOn &&
+                   _displayName == other.DisplayName &&
+                   _notes == other.Notes &&
+                   MaxRecursionDepth == other.MaxRecursionDepth &&
+                   MaxTotalItems == other.MaxTotalItems &&
+                   TTL == other.TTL &&
+                   StatusValue == other.StatusValue &&
+                   LastCrawlStart == other.LastCrawlStart &&
+                   LastCrawlEnd == other.LastCrawlEnd &&
+                   NextScheduledStart == other.NextScheduledStart &&
+                   RescheduleInterval == other.RescheduleInterval &&
+                   RescheduleFromJobEnd == other.RescheduleFromJobEnd &&
+                   RescheduleAfterFail == other.RescheduleAfterFail;
 
         IEnumerable<Guid> IIdentityReference.GetIdentifiers()
         {
             yield return Id;
+        }
+
+        public override int GetHashCode()
+        {
+            Guid id = Id;
+            if (id.Equals(Guid.Empty))
+            {
+                HashCode hash = new HashCode();
+                hash.Add(CreatedOn);
+                hash.Add(ModifiedOn);
+                hash.Add(UpstreamId);
+                hash.Add(LastSynchronizedOn);
+                hash.Add(DisplayName);
+                hash.Add(Notes);
+                hash.Add(MaxRecursionDepth);
+                hash.Add(MaxTotalItems);
+                hash.Add(TTL);
+                hash.Add(StatusValue);
+                hash.Add(LastCrawlStart);
+                hash.Add(LastCrawlEnd);
+                hash.Add(NextScheduledStart);
+                hash.Add(RescheduleInterval);
+                hash.Add(RescheduleFromJobEnd);
+                hash.Add(RescheduleAfterFail);
+                hash.Add(RootId);
+                return hash.ToHashCode();
+            }
+            return id.GetHashCode();
         }
     }
 }

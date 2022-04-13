@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations;
 namespace FsInfoCat
 {
     /// <summary>Represents extended file properties for music files.</summary>
+    [EntityInterface]
     public interface IMusicProperties : IEquatable<IMusicProperties>
     {
         /// <summary>Gets the Album Artist.</summary>

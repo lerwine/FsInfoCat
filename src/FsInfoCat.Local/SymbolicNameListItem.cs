@@ -11,6 +11,7 @@ namespace FsInfoCat.Local
 
         private string _fileSystemDisplayName = string.Empty;
 
+        [NotNull]
         public string FileSystemDisplayName { get => _fileSystemDisplayName; set => _fileSystemDisplayName = value.AsWsNormalizedOrEmpty(); }
 
         internal static void OnBuildEntity(EntityTypeBuilder<SymbolicNameListItem> builder) => builder.ToView(VIEW_NAME).HasKey(nameof(Id));

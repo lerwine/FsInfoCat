@@ -13,6 +13,7 @@ namespace FsInfoCat.Local
 
         private string _rootPath = string.Empty;
 
+        [NotNull]
         public string RootPath { get => _rootPath; set => _rootPath = value ?? ""; }
 
         public long AccessErrorCount { get; set; }

@@ -15,6 +15,7 @@ namespace FsInfoCat.Local
 
         public Guid? PrimarySymbolicNameId { get; set; }
 
+        [NotNull]
         public string PrimarySymbolicName { get; set; }
 
         public long SymbolicNameCount { get; set; }

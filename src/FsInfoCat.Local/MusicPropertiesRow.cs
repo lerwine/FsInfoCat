@@ -18,8 +18,10 @@ namespace FsInfoCat.Local
 
         #region Properties
 
+        [NotNull]
         public string AlbumArtist { get => _albumArtist; set => _albumArtist = value.AsWsNormalizedOrEmpty(); }
 
+        [NotNull]
         public string AlbumTitle { get => _albumTitle; set => _albumTitle = value.AsWsNormalizedOrEmpty(); }
 
         public MultiStringValue Artist { get; set; }
@@ -30,12 +32,15 @@ namespace FsInfoCat.Local
 
         public MultiStringValue Conductor { get; set; }
 
+        [NotNull]
         public string DisplayArtist { get => _displayArtist; set => _displayArtist = value.AsWsNormalizedOrEmpty(); }
 
         public MultiStringValue Genre { get; set; }
 
+        [NotNull]
         public string PartOfSet { get => _partOfSet; set => _partOfSet = value.AsWsNormalizedOrEmpty(); }
 
+        [NotNull]
         public string Period { get => _period; set => _period = value.AsWsNormalizedOrEmpty(); }
 
         public uint? TrackNumber { get; set; }

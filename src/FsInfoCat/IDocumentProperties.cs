@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations;
 namespace FsInfoCat
 {
     /// <summary>Represents extended file properties for document files.</summary>
+    [EntityInterface]
     public interface IDocumentProperties : IEquatable<IDocumentProperties>
     {
         /// <summary>Gets the Client ID.</summary>

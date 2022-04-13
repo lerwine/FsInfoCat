@@ -82,10 +82,8 @@ namespace FsInfoCat.Local
                             base.ParentId = null;
                     }
                     else
-                    {
                         base.ParentId = value.Id;
-                        _parent = value;
-                    }
+                    _parent = value;
                 }
                 finally { Monitor.Exit(SyncRoot); }
             }
@@ -141,10 +139,8 @@ namespace FsInfoCat.Local
                             base.VolumeId = null;
                     }
                     else
-                    {
                         base.VolumeId = value.Id;
-                        _volume = value;
-                    }
+                    _volume = value;
                 }
                 finally { Monitor.Exit(SyncRoot); }
             }
@@ -153,15 +149,20 @@ namespace FsInfoCat.Local
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_CrawlConfiguration), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public CrawlConfiguration CrawlConfiguration { get; set; }
 
+        [NotNull]
         public virtual HashSet<DbFile> Files { get => _files; set => _files = value ?? new(); }
 
+        [NotNull]
         public virtual HashSet<Subdirectory> SubDirectories { get => _subDirectories; set => _subDirectories = value ?? new(); }
 
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_AccessErrors), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [NotNull]
         public virtual HashSet<SubdirectoryAccessError> AccessErrors { get => _accessErrors; set => _accessErrors = value ?? new(); }
 
+        [NotNull]
         public HashSet<PersonalSubdirectoryTag> PersonalTags { get => _personalTags; set => _personalTags = value ?? new(); }
 
+        [NotNull]
         public HashSet<SharedSubdirectoryTag> SharedTags { get => _sharedTags; set => _sharedTags = value ?? new(); }
 
         #endregion

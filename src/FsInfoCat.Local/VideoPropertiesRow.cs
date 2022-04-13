@@ -15,6 +15,7 @@ namespace FsInfoCat.Local
         #endregion
         #region Properties
 
+        [NotNull]
         public string Compression { get => _compression; set => _compression = value.AsWsNormalizedOrEmpty(); }
 
         public MultiStringValue Director { get; set; }
@@ -29,6 +30,7 @@ namespace FsInfoCat.Local
 
         public uint? HorizontalAspectRatio { get; set; }
 
+        [NotNull]
         public string StreamName { get => _streamName; set => _streamName = value.AsWsNormalizedOrEmpty(); }
 
         public ushort? StreamNumber { get; set; }

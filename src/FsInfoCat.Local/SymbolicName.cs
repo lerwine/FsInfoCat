@@ -63,10 +63,8 @@ namespace FsInfoCat.Local
                             base.FileSystemId = Guid.Empty;
                     }
                     else
-                    {
                         base.FileSystemId = value.Id;
-                        _fileSystem = value;
-                    }
+                    _fileSystem = value;
                 }
                 finally { Monitor.Exit(SyncRoot); }
             }

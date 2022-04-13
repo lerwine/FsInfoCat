@@ -18,7 +18,9 @@ namespace FsInfoCat.Local
     /// <summary>Specifies the configuration of a file system crawl.</summary>
     /// <seealso cref="LocalDbEntity" />
     /// <seealso cref="ILocalCrawlConfiguration" />
+#pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     public class CrawlConfiguration : CrawlConfigurationRow, ILocalCrawlConfiguration, ISimpleIdentityReference<CrawlConfiguration>, IEquatable<CrawlConfiguration>
+#pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     {
         #region Fields
 
@@ -77,10 +79,8 @@ namespace FsInfoCat.Local
                             base.RootId = Guid.Empty;
                     }
                     else
-                    {
                         base.RootId = value.Id;
-                        _root = value;
-                    }
+                    _root = value;
                 }
                 finally { Monitor.Exit(SyncRoot); }
             }
@@ -89,6 +89,7 @@ namespace FsInfoCat.Local
         /// <summary>Gets the crawl log entries.</summary>
         /// <value>The crawl log entries.</value>
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_Logs), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [NotNull]
         public virtual HashSet<CrawlJobLog> Logs { get => _logs; set => _logs = value ?? new(); }
 
         #endregion
@@ -190,15 +191,8 @@ namespace FsInfoCat.Local
             dbContext.CrawlConfigurations.Remove(entry.Entity);
         }
 
-        protected bool ArePropertiesEqual([DisallowNull] ILocalCrawlConfiguration other)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected bool ArePropertiesEqual([DisallowNull] ICrawlConfiguration other)
-        {
-            throw new NotImplementedException();
-        }
+        protected virtual bool ArePropertiesEqual([DisallowNull] ILocalCrawlConfiguration other) => ArePropertiesEqual((ILocalCrawlConfigurationRow)other) &&
+            RootId.Equals(other.RootId);
 
         public bool Equals(CrawlConfiguration other) => other is not null && ReferenceEquals(this, other) || Id.Equals(Guid.Empty) ? ArePropertiesEqual(this) : Id.Equals(other.Id);
 
@@ -210,35 +204,6 @@ namespace FsInfoCat.Local
         public override bool Equals(object obj)
         {
             throw new NotImplementedException();
-        }
-
-        public override int GetHashCode()
-        {
-            Guid id = Id;
-            if (id.Equals(Guid.Empty))
-                unchecked
-                {
-                    int hash = 59;
-                    hash = hash * 67 + DisplayName.GetHashCode();
-                    hash = hash * 67 + MaxRecursionDepth.GetHashCode();
-                    hash = EntityExtensions.HashNullable(MaxTotalItems, hash, 67);
-                    hash = EntityExtensions.HashNullable(TTL, hash, 67);
-                    hash = hash * 67 + Notes.GetHashCode();
-                    hash = hash * 67 + StatusValue.GetHashCode();
-                    hash = EntityExtensions.HashNullable(LastCrawlStart, hash, 67);
-                    hash = EntityExtensions.HashNullable(LastCrawlEnd, hash, 67);
-                    hash = EntityExtensions.HashNullable(NextScheduledStart, hash, 67);
-                    hash = EntityExtensions.HashNullable(RescheduleInterval, hash, 67);
-                    hash = hash * 67 + RescheduleFromJobEnd.GetHashCode();
-                    hash = hash * 67 + RescheduleAfterFail.GetHashCode();
-                    hash = EntityExtensions.HashGuid(RootId, hash, 67);
-                    hash = EntityExtensions.HashNullable(UpstreamId, hash, 67);
-                    hash = EntityExtensions.HashNullable(LastSynchronizedOn, hash, 67);
-                    hash = hash * 67 + CreatedOn.GetHashCode();
-                    hash = hash * 67 + ModifiedOn.GetHashCode();
-                    return hash;
-                }
-            return id.GetHashCode();
         }
     }
 }

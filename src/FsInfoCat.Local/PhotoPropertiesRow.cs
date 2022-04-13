@@ -17,18 +17,22 @@ namespace FsInfoCat.Local
 
         #region Properties
 
+        [NotNull]
         public string CameraManufacturer { get => _cameraManufacturer; set => _cameraManufacturer = value.AsWsNormalizedOrEmpty(); }
 
+        [NotNull]
         public string CameraModel { get => _cameraModel; set => _cameraModel = value.AsWsNormalizedOrEmpty(); }
 
         public DateTime? DateTaken { get; set; }
 
         public MultiStringValue Event { get; set; }
 
+        [NotNull]
         public string EXIFVersion { get => _exifVersion; set => _exifVersion = value.AsWsNormalizedOrEmpty(); }
 
         public ushort? Orientation { get; set; }
 
+        [NotNull]
         public string OrientationText { get => _orientationText; set => _orientationText = value.AsWsNormalizedOrEmpty(); }
 
         public MultiStringValue PeopleNames { get; set; }

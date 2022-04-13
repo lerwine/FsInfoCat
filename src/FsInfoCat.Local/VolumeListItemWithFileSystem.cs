@@ -1,11 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
-using System.IO;
-using System.Threading;
 
 namespace FsInfoCat.Local
 {
@@ -17,6 +13,7 @@ namespace FsInfoCat.Local
 
         private string _fileSystemDisplayName = string.Empty;
 
+        [NotNull]
         public string FileSystemDisplayName { get => _fileSystemDisplayName; set => _fileSystemDisplayName = value.AsWsNormalizedOrEmpty(); }
 
         public bool EffectiveReadOnly { get; set; }

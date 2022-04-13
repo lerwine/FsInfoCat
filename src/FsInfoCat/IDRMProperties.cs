@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 namespace FsInfoCat
 {
     /// <summary>Represents extended file properties for DRM information.</summary>
+    [EntityInterface]
     public interface IDRMProperties : IEquatable<IDRMProperties>
     {
         /// <summary>Indicates when play expires for digital rights management.</summary>

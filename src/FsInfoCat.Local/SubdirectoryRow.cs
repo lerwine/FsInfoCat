@@ -49,6 +49,7 @@ namespace FsInfoCat.Local
 
         [StringLength(DbConstants.DbColMaxLen_FileName, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_NameLength),
             ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [NotNull]
         public virtual string Name { get => _name; set => _name = value ?? ""; }
 
         [Required]
@@ -58,6 +59,7 @@ namespace FsInfoCat.Local
         public virtual DateTime LastAccessed { get; set; }
 
         [Required(AllowEmptyStrings = true)]
+        [NotNull]
         public virtual string Notes { get => _notes; set => _notes = value.EmptyIfNullOrWhiteSpace(); }
 
         [Required]

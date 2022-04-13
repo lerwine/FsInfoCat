@@ -89,10 +89,8 @@ namespace FsInfoCat.Local
                             base.BinaryPropertySetId = Guid.Empty;
                     }
                     else
-                    {
                         base.BinaryPropertySetId = value.Id;
-                        _binaryProperties = value;
-                    }
+                    _binaryProperties = value;
                 }
                 finally { Monitor.Exit(SyncRoot); }
             }
@@ -143,10 +141,8 @@ namespace FsInfoCat.Local
                             base.ParentId = Guid.Empty;
                     }
                     else
-                    {
                         base.ParentId = value.Id;
-                        _parent = value;
-                    }
+                    _parent = value;
                 }
                 finally { Monitor.Exit(SyncRoot); }
             }
@@ -793,16 +789,21 @@ namespace FsInfoCat.Local
         }
 
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_AccessErrors), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [NotNull]
         public virtual HashSet<FileAccessError> AccessErrors { get => _accessErrors; set => _accessErrors = value ?? new(); }
 
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_BaselineComparisons), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [NotNull]
         public virtual HashSet<FileComparison> BaselineComparisons { get => _baselineComparisons; set => _baselineComparisons = value ?? new(); }
 
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_CorrelativeComparisons), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [NotNull]
         public virtual HashSet<FileComparison> CorrelativeComparisons { get => _correlativeComparisons; set => _correlativeComparisons = value ?? new(); }
 
+        [NotNull]
         public HashSet<PersonalFileTag> PersonalTags { get => _personalTags; set => _personalTags = value ?? new(); }
 
+        [NotNull]
         public HashSet<SharedFileTag> SharedTags { get => _sharedTags; set => _sharedTags = value ?? new(); }
 
         #endregion

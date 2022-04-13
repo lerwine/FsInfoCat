@@ -23,30 +23,40 @@ namespace FsInfoCat.Local
 
         #region Properties
 
+        [NotNull]
         public string ContentDistributor { get => _contentDistributor; set => _contentDistributor = value.AsWsNormalizedOrEmpty(); }
 
+        [NotNull]
         public string CreatorApplication { get => _creatorApplication; set => _creatorApplication = value.AsWsNormalizedOrEmpty(); }
 
+        [NotNull]
         public string CreatorApplicationVersion { get => _creatorApplicationVersion; set => _creatorApplicationVersion = value.AsWsNormalizedOrEmpty(); }
 
+        [NotNull]
         public string DateReleased { get => _dateReleased; set => _dateReleased = value.AsWsNormalizedOrEmpty(); }
 
         public ulong? Duration { get; set; }
 
+        [NotNull]
         public string DVDID { get => _dvdID; set => _dvdID = value.AsWsNormalizedOrEmpty(); }
 
         public uint? FrameCount { get; set; }
 
         public MultiStringValue Producer { get; set; }
 
+        [NotNull]
         public string ProtectionType { get => _protectionType; set => _protectionType = value.AsWsNormalizedOrEmpty(); }
 
+        [NotNull]
         public string ProviderRating { get => _providerRating; set => _providerRating = value.AsWsNormalizedOrEmpty(); }
 
+        [NotNull]
         public string ProviderStyle { get => _providerStyle; set => _providerStyle = value.AsWsNormalizedOrEmpty(); }
 
+        [NotNull]
         public string Publisher { get => _publisher; set => _publisher = value.AsWsNormalizedOrEmpty(); }
 
+        [NotNull]
         public string Subtitle { get => _subtitle; set => _subtitle = value.AsWsNormalizedOrEmpty(); }
 
         public MultiStringValue Writer { get; set; }

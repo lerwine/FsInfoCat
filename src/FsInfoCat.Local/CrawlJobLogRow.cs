@@ -48,6 +48,7 @@ namespace FsInfoCat.Local
         /// <summary>Gets root path of the crawl.</summary>
         /// <value>The root path of the crawl.</value>
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_RootPath), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [NotNull]
         public string RootPath { get => _rootPath; set => _rootPath = value ?? ""; }
 
         /// <summary>Gets a value indicating whether the current crawl configuration has been deactivated.</summary>
@@ -71,11 +72,13 @@ namespace FsInfoCat.Local
         /// <summary>Gets the status message.</summary>
         /// <value>The crawl status message.</value>
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_Message), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [NotNull]
         public string StatusMessage { get => _statusMessage; set => _statusMessage = value.AsNonNullTrimmed(); }
 
         /// <summary>Gets the status details.</summary>
         /// <value>The status details.</value>
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_Details), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [NotNull]
         public string StatusDetail { get => _statusDetail; set => _statusDetail = value.AsNonNullTrimmed(); }
 
         /// <summary>Gets the maximum recursion depth.</summary>

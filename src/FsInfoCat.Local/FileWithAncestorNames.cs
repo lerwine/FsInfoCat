@@ -21,18 +21,23 @@ namespace FsInfoCat.Local
 
         public long SharedTagCount { get; set; }
 
+        [NotNull]
         public string AncestorNames { get => _ancestorNames; set => _ancestorNames = value.EmptyIfNullOrWhiteSpace(); }
 
         public Guid EffectiveVolumeId { get; set; }
 
+        [NotNull]
         public string VolumeDisplayName { get => _volumeDisplayName; set => _volumeDisplayName = value.EmptyIfNullOrWhiteSpace(); }
 
+        [NotNull]
         public string VolumeName { get => _volumeName; set => _volumeName = value.EmptyIfNullOrWhiteSpace(); }
 
         public VolumeIdentifier VolumeIdentifier { get; set; } = VolumeIdentifier.Empty;
 
+        [NotNull]
         public string FileSystemDisplayName { get => _fileSystemDisplayName; set => _fileSystemDisplayName = value.EmptyIfNullOrWhiteSpace(); }
 
+        [NotNull]
         public string FileSystemSymbolicName { get => _fileSystemSymbolicName; set => _fileSystemSymbolicName = value.EmptyIfNullOrWhiteSpace(); }
 
         internal static void OnBuildEntity(EntityTypeBuilder<FileWithAncestorNames> builder)

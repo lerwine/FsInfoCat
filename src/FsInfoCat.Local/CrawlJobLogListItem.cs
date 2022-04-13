@@ -10,6 +10,7 @@ namespace FsInfoCat.Local
         private string _configurationDisplayName = string.Empty;
         private const string VIEW_NAME = "vCrawlJobListing";
 
+        [NotNull]
         public string ConfigurationDisplayName { get => _configurationDisplayName; set => _configurationDisplayName = value.AsNonNullTrimmed(); }
 
         internal static void OnBuildEntity([DisallowNull] EntityTypeBuilder<CrawlJobLogListItem> builder) => (builder ?? throw new ArgumentOutOfRangeException(nameof(builder)))

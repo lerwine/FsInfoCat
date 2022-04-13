@@ -67,10 +67,8 @@ namespace FsInfoCat.Local
                             base.ConfigurationId = Guid.Empty;
                     }
                     else
-                    {
                         base.ConfigurationId = value.Id;
-                        _crawlConfiguration = value;
-                    }
+                    _crawlConfiguration = value;
                 }
                 finally { Monitor.Exit(SyncRoot); }
             }

@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 namespace FsInfoCat
 {
     /// <summary>Represents extended file properties for image files.</summary>
+    [EntityInterface]
     public interface IImageProperties : IEquatable<IImageProperties>
     {
         /// <summary>Gets the Bit Depth.</summary>

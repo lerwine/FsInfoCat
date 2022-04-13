@@ -16,10 +16,13 @@ namespace FsInfoCat.Local
         private HashSet<SharedSubdirectoryTag> _subdirectoryTags = new();
         private HashSet<SharedVolumeTag> _volumeTags = new();
 
+        [NotNull]
         public HashSet<SharedFileTag> FileTags { get => _fileTags; set => _fileTags = value ?? new(); }
 
+        [NotNull]
         public HashSet<SharedSubdirectoryTag> SubdirectoryTags { get => _subdirectoryTags; set => _subdirectoryTags = value ?? new(); }
 
+        [NotNull]
         public HashSet<SharedVolumeTag> VolumeTags { get => _volumeTags; set => _volumeTags = value ?? new(); }
 
         IEnumerable<ILocalFileTag> ILocalTagDefinition.FileTags => FileTags.Cast<ILocalFileTag>();

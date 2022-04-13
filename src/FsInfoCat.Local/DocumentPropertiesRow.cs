@@ -27,20 +27,27 @@ namespace FsInfoCat.Local
 
         public DateTime? DateCreated { get; set; }
 
+        [NotNull]
         public string LastAuthor { get => _lastAuthor; set => _lastAuthor = value.AsWsNormalizedOrEmpty(); }
 
+        [NotNull]
         public string RevisionNumber { get => _revisionNumber; set => _revisionNumber = value.AsWsNormalizedOrEmpty(); }
 
         public int? Security { get; set; }
 
+        [NotNull]
         public string Division { get => _division; set => _division = value.AsWsNormalizedOrEmpty(); }
 
+        [NotNull]
         public string DocumentID { get => _documentID; set => _documentID = value.AsWsNormalizedOrEmpty(); }
 
+        [NotNull]
         public string Manager { get => _manager; set => _manager = value.AsWsNormalizedOrEmpty(); }
 
+        [NotNull]
         public string PresentationFormat { get => _presentationFormat; set => _presentationFormat = value.AsWsNormalizedOrEmpty(); }
 
+        [NotNull]
         public string Version { get => _version; set => _version = value.AsWsNormalizedOrEmpty(); }
 
         #endregion

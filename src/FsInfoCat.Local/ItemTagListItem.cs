@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat.Local
 {
@@ -9,9 +10,11 @@ namespace FsInfoCat.Local
         private string _description = string.Empty;
 
         [Required]
+        [NotNull]
         public virtual string Name { get => _name; set => _name = value.AsWsNormalizedOrEmpty(); }
 
         [Required(AllowEmptyStrings = true)]
+        [NotNull]
         public virtual string Description { get => _description; set => _description = value.AsWsNormalizedOrEmpty(); }
 
         public bool Equals(ItemTagListItem other)

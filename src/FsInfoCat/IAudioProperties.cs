@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 namespace FsInfoCat
 {
     /// <summary>Represents extended file properties for audio files.</summary>
+    [EntityInterface]
     public interface IAudioProperties : IEquatable<IAudioProperties>
     {
         /// <summary>Gets the Compression Method.</summary>

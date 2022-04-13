@@ -18,6 +18,7 @@ namespace FsInfoCat.Local
 
         #region Properties
 
+        [NotNull]
         public string AreaInformation { get => _areaInformation; set => _areaInformation = value.AsWsNormalizedOrEmpty(); }
 
         public double? LatitudeDegrees { get; set; }
@@ -26,6 +27,7 @@ namespace FsInfoCat.Local
 
         public double? LatitudeSeconds { get; set; }
 
+        [NotNull]
         public string LatitudeRef { get => _latitudeRef; set => _latitudeRef = value.AsWsNormalizedOrEmpty(); }
 
         public double? LongitudeDegrees { get; set; }
@@ -34,10 +36,13 @@ namespace FsInfoCat.Local
 
         public double? LongitudeSeconds { get; set; }
 
+        [NotNull]
         public string LongitudeRef { get => _longitudeRef; set => _longitudeRef = value.AsWsNormalizedOrEmpty(); }
 
+        [NotNull]
         public string MeasureMode { get => _measureMode; set => _measureMode = value.AsWsNormalizedOrEmpty(); }
 
+        [NotNull]
         public string ProcessingMethod { get => _processingMethod; set => _processingMethod = value.AsWsNormalizedOrEmpty(); }
 
         public ByteValues VersionID { get; set; }

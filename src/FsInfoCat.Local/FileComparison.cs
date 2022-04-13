@@ -143,10 +143,8 @@ namespace FsInfoCat.Local
                             _baselineId = Guid.Empty;
                     }
                     else
-                    {
                         _baselineId = value.Id;
-                        _baseline = value;
-                    }
+                    _baseline = value;
                 }
                 finally { Monitor.Exit(SyncRoot); }
             }
@@ -170,10 +168,8 @@ namespace FsInfoCat.Local
                             _correlativeId = Guid.Empty;
                     }
                     else
-                    {
                         _correlativeId = value.Id;
-                        _correlative = value;
-                    }
+                    _correlative = value;
                 }
                 finally { Monitor.Exit(SyncRoot); }
             }

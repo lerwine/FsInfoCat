@@ -22,12 +22,14 @@ namespace FsInfoCat.Local
 
         public ushort? Compression { get; set; }
 
+        [NotNull]
         public string CompressionText { get => _compressionText; set => _compressionText = value.AsWsNormalizedOrEmpty(); }
 
         public double? HorizontalResolution { get; set; }
 
         public uint? HorizontalSize { get; set; }
 
+        [NotNull]
         public string ImageID { get => _imageID; set => _imageID = value.AsWsNormalizedOrEmpty(); }
 
         public short? ResolutionUnit { get; set; }

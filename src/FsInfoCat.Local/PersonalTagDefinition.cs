@@ -16,12 +16,13 @@ namespace FsInfoCat.Local
         private HashSet<PersonalSubdirectoryTag> _subdirectoryTags = new();
         private HashSet<PersonalVolumeTag> _volumeTags = new();
 
+        [NotNull]
         public virtual HashSet<PersonalFileTag> FileTags { get => _fileTags; set => _fileTags = value ?? new(); }
 
-
+        [NotNull]
         public virtual HashSet<PersonalSubdirectoryTag> SubdirectoryTags { get => _subdirectoryTags; set => _subdirectoryTags = value ?? new(); }
 
-
+        [NotNull]
         public virtual HashSet<PersonalVolumeTag> VolumeTags { get => _volumeTags; set => _volumeTags = value ?? new(); }
 
 

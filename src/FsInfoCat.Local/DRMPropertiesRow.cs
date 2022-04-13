@@ -11,6 +11,7 @@ namespace FsInfoCat.Local
 
         public DateTime? DatePlayStarts { get; set; }
 
+        [NotNull]
         public string Description { get => _description; set => _description = value.EmptyIfNullOrWhiteSpace(); }
 
         public bool? IsProtected { get; set; }

@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 namespace FsInfoCat
 {
     /// <summary>Represents extended file properties for recorded TV files.</summary>
+    [EntityInterface]
     public interface IRecordedTVProperties : IEquatable<IRecordedTVProperties>
     {
         /// <summary>Gets the Channel Number.</summary>

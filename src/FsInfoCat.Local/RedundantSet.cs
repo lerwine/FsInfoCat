@@ -68,15 +68,14 @@ namespace FsInfoCat.Local
                             base.BinaryPropertiesId = Guid.Empty;
                     }
                     else
-                    {
                         base.BinaryPropertiesId = value.Id;
-                        _binaryProperties = value;
-                    }
+                    _binaryProperties = value;
                 }
                 finally { Monitor.Exit(SyncRoot); }
             }
         }
 
+        [NotNull]
         public virtual HashSet<Redundancy> Redundancies { get => _redundancies; set => _redundancies = value ?? new(); }
 
         #endregion

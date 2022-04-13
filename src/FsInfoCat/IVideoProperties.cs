@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations;
 namespace FsInfoCat
 {
     /// <summary>Represents extended file properties for video files.</summary>
+    [EntityInterface]
     public interface IVideoProperties : IEquatable<IVideoProperties>
     {
         /// <summary>Indicates the level of compression for the video stream.</summary>

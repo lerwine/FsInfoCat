@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations;
 namespace FsInfoCat
 {
     /// <summary>Represents extended file properties for media files.</summary>
+    [EntityInterface]
     public interface IMediaProperties : IEquatable<IMediaProperties>
     {
         /// <summary>Gets the Content Distributor.</summary>

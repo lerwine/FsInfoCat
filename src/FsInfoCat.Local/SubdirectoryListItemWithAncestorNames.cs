@@ -15,18 +15,23 @@ namespace FsInfoCat.Local
         private string _fileSystemDisplayName = string.Empty;
         private string _fileSystemSymbolicName = string.Empty;
 
+        [NotNull]
         public string AncestorNames { get => _ancestorNames; set => _ancestorNames = value.AsNonNullTrimmed(); }
 
         public Guid EffectiveVolumeId { get; set; }
 
+        [NotNull]
         public string VolumeDisplayName { get => _volumeDisplayName; set => _volumeDisplayName = value.AsWsNormalizedOrEmpty(); }
 
+        [NotNull]
         public string VolumeName { get => _volumeName; set => _volumeName = value.AsNonNullTrimmed(); }
 
         public VolumeIdentifier VolumeIdentifier { get; set; }
 
+        [NotNull]
         public string FileSystemDisplayName { get => _fileSystemDisplayName; set => _fileSystemDisplayName = value.AsWsNormalizedOrEmpty(); }
 
+        [NotNull]
         public string FileSystemSymbolicName { get => _fileSystemSymbolicName; set => _fileSystemSymbolicName = value.AsNonNullTrimmed(); }
 
         internal static void OnBuildEntity(EntityTypeBuilder<SubdirectoryListItemWithAncestorNames> builder)

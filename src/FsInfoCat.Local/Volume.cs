@@ -75,10 +75,8 @@ namespace FsInfoCat.Local
                             base.FileSystemId = Guid.Empty;
                     }
                     else
-                    {
                         base.FileSystemId = value.Id;
-                        _fileSystem = value;
-                    }
+                    _fileSystem = value;
                 }
                 finally { Monitor.Exit(SyncRoot); }
             }
@@ -89,10 +87,13 @@ namespace FsInfoCat.Local
         public virtual Subdirectory RootDirectory { get; set; }
 
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_AccessErrors), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [NotNull]
         public virtual HashSet<VolumeAccessError> AccessErrors { get => _accessErrors; set => _accessErrors = value ?? new(); }
 
+        [NotNull]
         public HashSet<PersonalVolumeTag> PersonalTags { get => _personalTags; set => _personalTags = value ?? new(); }
 
+        [NotNull]
         public HashSet<SharedVolumeTag> SharedTags { get => _sharedTags; set => _sharedTags = value ?? new(); }
 
         #endregion
