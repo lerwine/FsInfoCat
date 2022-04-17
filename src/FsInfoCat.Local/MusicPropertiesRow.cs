@@ -1,4 +1,5 @@
 using FsInfoCat.Collections;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Diagnostics.CodeAnalysis;
 
@@ -19,9 +20,11 @@ namespace FsInfoCat.Local
         #region Properties
 
         [NotNull]
+        [BackingField(nameof(_albumArtist))]
         public string AlbumArtist { get => _albumArtist; set => _albumArtist = value.AsWsNormalizedOrEmpty(); }
 
         [NotNull]
+        [BackingField(nameof(_albumTitle))]
         public string AlbumTitle { get => _albumTitle; set => _albumTitle = value.AsWsNormalizedOrEmpty(); }
 
         public MultiStringValue Artist { get; set; }
@@ -33,14 +36,17 @@ namespace FsInfoCat.Local
         public MultiStringValue Conductor { get; set; }
 
         [NotNull]
+        [BackingField(nameof(_displayArtist))]
         public string DisplayArtist { get => _displayArtist; set => _displayArtist = value.AsWsNormalizedOrEmpty(); }
 
         public MultiStringValue Genre { get; set; }
 
         [NotNull]
+        [BackingField(nameof(_partOfSet))]
         public string PartOfSet { get => _partOfSet; set => _partOfSet = value.AsWsNormalizedOrEmpty(); }
 
         [NotNull]
+        [BackingField(nameof(_period))]
         public string Period { get => _period; set => _period = value.AsWsNormalizedOrEmpty(); }
 
         public uint? TrackNumber { get; set; }

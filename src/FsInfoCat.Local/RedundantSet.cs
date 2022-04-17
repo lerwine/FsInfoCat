@@ -54,6 +54,7 @@ namespace FsInfoCat.Local
             }
         }
 
+        [BackingField(nameof(_binaryProperties))]
         public virtual BinaryPropertySet BinaryProperties
         {
             get => _binaryProperties;
@@ -76,6 +77,7 @@ namespace FsInfoCat.Local
         }
 
         [NotNull]
+        [BackingField(nameof(_redundancies))]
         public virtual HashSet<Redundancy> Redundancies { get => _redundancies; set => _redundancies = value ?? new(); }
 
         #endregion

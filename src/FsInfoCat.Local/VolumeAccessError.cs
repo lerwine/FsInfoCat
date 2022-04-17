@@ -34,6 +34,7 @@ namespace FsInfoCat.Local
         /// <value>The <see cref="Guid">unique identifier</see> used as the current entity's primary key the database.</value>
         [Key]
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_Id), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [BackingField(nameof(_id))]
         public virtual Guid Id
         {
             get => _id ?? Guid.Empty;
@@ -60,16 +61,19 @@ namespace FsInfoCat.Local
         [StringLength(DbConstants.DbColMaxLen_LongName, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_NameLength),
             ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
         [NotNull]
+        [BackingField(nameof(_message))]
         public virtual string Message { get => _message; set => _message = value.AsWsNormalizedOrEmpty(); }
 
         [Required(AllowEmptyStrings = true)]
         [NotNull]
+        [BackingField(nameof(_details))]
         public virtual string Details { get => _details; set => _details = value.EmptyIfNullOrWhiteSpace(); }
 
         [Required]
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_ErrorCode), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public ErrorCode ErrorCode { get; set; } = ErrorCode.Unexpected;
 
+        [BackingField(nameof(_targetId))]
         public virtual Guid TargetId
         {
             get
@@ -102,6 +106,7 @@ namespace FsInfoCat.Local
         }
 
         [Required]
+        [BackingField(nameof(_target))]
         public Volume Target
         {
             get => _target;

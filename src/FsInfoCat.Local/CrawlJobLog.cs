@@ -53,6 +53,7 @@ namespace FsInfoCat.Local
         /// The configuration for the file system crawl.
         /// </value>
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_Configuration), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [BackingField(nameof(_crawlConfiguration))]
         public CrawlConfiguration Configuration
         {
             get => _crawlConfiguration;

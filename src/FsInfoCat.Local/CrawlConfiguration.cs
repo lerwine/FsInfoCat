@@ -65,6 +65,7 @@ namespace FsInfoCat.Local
         /// <summary>Gets the starting subdirectory for the configured subdirectory crawl.</summary>
         /// <value>The root subdirectory of the configured subdirectory crawl.</value>
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_Root), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [BackingField(nameof(_root))]
         public Subdirectory Root
         {
             get => _root;
@@ -89,6 +90,7 @@ namespace FsInfoCat.Local
         /// <summary>Gets the crawl log entries.</summary>
         /// <value>The crawl log entries.</value>
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_Logs), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [BackingField(nameof(_logs))]
         [NotNull]
         public virtual HashSet<CrawlJobLog> Logs { get => _logs; set => _logs = value ?? new(); }
 

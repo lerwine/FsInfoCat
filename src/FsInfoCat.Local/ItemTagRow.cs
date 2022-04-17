@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -17,6 +18,7 @@ namespace FsInfoCat.Local
 
         [Required(AllowEmptyStrings = true)]
         [NotNull]
+        [BackingField(nameof(_notes))]
         public virtual string Notes { get => _notes; set => _notes = value.EmptyIfNullOrWhiteSpace(); }
 
         IEnumerable<Guid> IHasCompoundIdentifier.Id

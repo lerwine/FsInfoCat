@@ -22,6 +22,7 @@ namespace FsInfoCat.Local
         /// </summary>
         /// <value>The <see cref="Guid">unique identifier</see> used as the current entity's primary key the database.</value>
         [Key]
+        [BackingField(nameof(_id))]
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_Id), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual Guid Id
         {
@@ -47,11 +48,13 @@ namespace FsInfoCat.Local
         [StringLength(DbConstants.DbColMaxLen_FileName, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_NameLength),
             ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
         [NotNull]
+        [BackingField(nameof(_name))]
         public virtual string Name { get => _name; set => _name = value ?? ""; }
 
         public virtual Guid? ParentId { get; set; }
 
         [NotNull]
+        [BackingField(nameof(_ancestorNames))]
         public string AncestorNames { get => _ancestorNames; set => _ancestorNames = value.EmptyIfNullOrWhiteSpace(); }
 
         internal static void OnBuildEntity(EntityTypeBuilder<SubdirectoryAncestorNames> builder) => builder.ToView(VIEW_NAME).HasKey(nameof(Id));

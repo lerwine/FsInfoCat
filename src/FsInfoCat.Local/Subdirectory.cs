@@ -68,6 +68,7 @@ namespace FsInfoCat.Local
             }
         }
 
+        [BackingField(nameof(_parent))]
         public virtual Subdirectory Parent
         {
             get => _parent;
@@ -125,6 +126,7 @@ namespace FsInfoCat.Local
             }
         }
 
+        [BackingField(nameof(_volume))]
         public virtual Volume Volume
         {
             get => _volume;
@@ -150,19 +152,24 @@ namespace FsInfoCat.Local
         public CrawlConfiguration CrawlConfiguration { get; set; }
 
         [NotNull]
+        [BackingField(nameof(_files))]
         public virtual HashSet<DbFile> Files { get => _files; set => _files = value ?? new(); }
 
         [NotNull]
+        [BackingField(nameof(_subDirectories))]
         public virtual HashSet<Subdirectory> SubDirectories { get => _subDirectories; set => _subDirectories = value ?? new(); }
 
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_AccessErrors), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         [NotNull]
+        [BackingField(nameof(_accessErrors))]
         public virtual HashSet<SubdirectoryAccessError> AccessErrors { get => _accessErrors; set => _accessErrors = value ?? new(); }
 
         [NotNull]
+        [BackingField(nameof(_personalTags))]
         public HashSet<PersonalSubdirectoryTag> PersonalTags { get => _personalTags; set => _personalTags = value ?? new(); }
 
         [NotNull]
+        [BackingField(nameof(_sharedTags))]
         public HashSet<SharedSubdirectoryTag> SharedTags { get => _sharedTags; set => _sharedTags = value ?? new(); }
 
         #endregion

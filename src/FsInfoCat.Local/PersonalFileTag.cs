@@ -46,6 +46,7 @@ namespace FsInfoCat.Local
         [Required(ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_FileRequired),
             ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_Tagged_File), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [BackingField(nameof(_tagged))]
         public DbFile Tagged
         {
             get => _tagged;
@@ -101,6 +102,7 @@ namespace FsInfoCat.Local
         [Required(ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_TagDefinitionRequired),
             ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_TagDefinition), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [BackingField(nameof(_definition))]
         public PersonalTagDefinition Definition
         {
             get => _definition;

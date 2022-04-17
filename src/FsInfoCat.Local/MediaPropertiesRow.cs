@@ -1,4 +1,5 @@
 using FsInfoCat.Collections;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Diagnostics.CodeAnalysis;
 
@@ -24,20 +25,25 @@ namespace FsInfoCat.Local
         #region Properties
 
         [NotNull]
+        [BackingField(nameof(_contentDistributor))]
         public string ContentDistributor { get => _contentDistributor; set => _contentDistributor = value.AsWsNormalizedOrEmpty(); }
 
         [NotNull]
+        [BackingField(nameof(_creatorApplication))]
         public string CreatorApplication { get => _creatorApplication; set => _creatorApplication = value.AsWsNormalizedOrEmpty(); }
 
         [NotNull]
+        [BackingField(nameof(_creatorApplicationVersion))]
         public string CreatorApplicationVersion { get => _creatorApplicationVersion; set => _creatorApplicationVersion = value.AsWsNormalizedOrEmpty(); }
 
         [NotNull]
+        [BackingField(nameof(_dateReleased))]
         public string DateReleased { get => _dateReleased; set => _dateReleased = value.AsWsNormalizedOrEmpty(); }
 
         public ulong? Duration { get; set; }
 
         [NotNull]
+        [BackingField(nameof(_dvdID))]
         public string DVDID { get => _dvdID; set => _dvdID = value.AsWsNormalizedOrEmpty(); }
 
         public uint? FrameCount { get; set; }
@@ -45,18 +51,23 @@ namespace FsInfoCat.Local
         public MultiStringValue Producer { get; set; }
 
         [NotNull]
+        [BackingField(nameof(_protectionType))]
         public string ProtectionType { get => _protectionType; set => _protectionType = value.AsWsNormalizedOrEmpty(); }
 
         [NotNull]
+        [BackingField(nameof(_providerRating))]
         public string ProviderRating { get => _providerRating; set => _providerRating = value.AsWsNormalizedOrEmpty(); }
 
         [NotNull]
+        [BackingField(nameof(_providerStyle))]
         public string ProviderStyle { get => _providerStyle; set => _providerStyle = value.AsWsNormalizedOrEmpty(); }
 
         [NotNull]
+        [BackingField(nameof(_publisher))]
         public string Publisher { get => _publisher; set => _publisher = value.AsWsNormalizedOrEmpty(); }
 
         [NotNull]
+        [BackingField(nameof(_subtitle))]
         public string Subtitle { get => _subtitle; set => _subtitle = value.AsWsNormalizedOrEmpty(); }
 
         public MultiStringValue Writer { get; set; }

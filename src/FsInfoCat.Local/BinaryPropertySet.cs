@@ -46,6 +46,7 @@ namespace FsInfoCat.Local
         /// </summary>
         /// <value>The <see cref="Guid">unique identifier</see> used as the current entity's primary key the database.</value>
         [Key]
+        [BackingField(nameof(_id))]
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_Id), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual Guid Id
         {
@@ -74,9 +75,11 @@ namespace FsInfoCat.Local
         public virtual MD5Hash? Hash { get; set; }
 
         [NotNull]
+        [BackingField(nameof(_files))]
         public virtual HashSet<DbFile> Files { get => _files; set => _files = value ?? new(); }
 
         [NotNull]
+        [BackingField(nameof(_redundantSets))]
         public virtual HashSet<RedundantSet> RedundantSets { get => _redundantSets; set => _redundantSets = value ?? new(); }
 
         #endregion

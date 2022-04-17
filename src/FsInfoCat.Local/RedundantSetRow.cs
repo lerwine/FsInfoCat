@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -40,6 +41,7 @@ namespace FsInfoCat.Local
         /// </summary>
         /// <value>The <see cref="Guid">unique identifier</see> used as the current entity's primary key the database.</value>
         [Key]
+        [BackingField(nameof(_id))]
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_Id), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual Guid Id
         {
@@ -66,12 +68,14 @@ namespace FsInfoCat.Local
         [StringLength(DbConstants.DbColMaxLen_ShortName, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_NameLength),
             ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
         [NotNull]
+        [BackingField(nameof(_reference))]
         public virtual string Reference { get => _reference; set => _reference = value.AsWsNormalizedOrEmpty(); }
 
         public RedundancyRemediationStatus Status { get; set; } = RedundancyRemediationStatus.Unconfirmed;
 
         [Required(AllowEmptyStrings = true)]
         [NotNull]
+        [BackingField(nameof(_notes))]
         public virtual string Notes { get => _notes; set => _notes = value.EmptyIfNullOrWhiteSpace(); }
 
         public virtual Guid BinaryPropertiesId { get; set; }

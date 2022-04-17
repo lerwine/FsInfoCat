@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Diagnostics.CodeAnalysis;
 
@@ -12,6 +13,7 @@ namespace FsInfoCat.Local
         public DateTime? DatePlayStarts { get; set; }
 
         [NotNull]
+        [BackingField(nameof(_description))]
         public string Description { get => _description; set => _description = value.EmptyIfNullOrWhiteSpace(); }
 
         public bool? IsProtected { get; set; }

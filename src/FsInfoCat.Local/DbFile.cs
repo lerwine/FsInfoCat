@@ -75,6 +75,7 @@ namespace FsInfoCat.Local
             }
         }
 
+        [BackingField(nameof(_binaryProperties))]
         public virtual BinaryPropertySet BinaryProperties
         {
             get => _binaryProperties;
@@ -127,6 +128,7 @@ namespace FsInfoCat.Local
             }
         }
 
+        [BackingField(nameof(_parent))]
         public virtual Subdirectory Parent
         {
             get => _parent;
@@ -186,6 +188,7 @@ namespace FsInfoCat.Local
             }
         }
 
+        [BackingField(nameof(_summaryProperties))]
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_SummaryProperties), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual SummaryPropertySet SummaryProperties
         {
@@ -244,6 +247,7 @@ namespace FsInfoCat.Local
             }
         }
 
+        [BackingField(nameof(_documentProperties))]
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_DocumentProperties), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual DocumentPropertySet DocumentProperties
         {
@@ -302,6 +306,7 @@ namespace FsInfoCat.Local
             }
         }
 
+        [BackingField(nameof(_audioProperties))]
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_AudioProperties), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual AudioPropertySet AudioProperties
         {
@@ -360,6 +365,7 @@ namespace FsInfoCat.Local
             }
         }
 
+        [BackingField(nameof(_drmProperties))]
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_DRMProperties), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual DRMPropertySet DRMProperties
         {
@@ -418,6 +424,7 @@ namespace FsInfoCat.Local
             }
         }
 
+        [BackingField(nameof(_gpsProperties))]
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_GPSProperties), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual GPSPropertySet GPSProperties
         {
@@ -476,6 +483,7 @@ namespace FsInfoCat.Local
             }
         }
 
+        [BackingField(nameof(_imageProperties))]
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_ImageProperties), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual ImagePropertySet ImageProperties
         {
@@ -534,6 +542,7 @@ namespace FsInfoCat.Local
             }
         }
 
+        [BackingField(nameof(_mediaProperties))]
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_MediaProperties), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual MediaPropertySet MediaProperties
         {
@@ -592,6 +601,7 @@ namespace FsInfoCat.Local
             }
         }
 
+        [BackingField(nameof(_musicProperties))]
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_MusicProperties), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual MusicPropertySet MusicProperties
         {
@@ -650,6 +660,7 @@ namespace FsInfoCat.Local
             }
         }
 
+        [BackingField(nameof(_photoProperties))]
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_PhotoProperties), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual PhotoPropertySet PhotoProperties
         {
@@ -708,6 +719,7 @@ namespace FsInfoCat.Local
             }
         }
 
+        [BackingField(nameof(_recordedTVProperties))]
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_RecordedTVProperties), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual RecordedTVPropertySet RecordedTVProperties
         {
@@ -766,6 +778,7 @@ namespace FsInfoCat.Local
             }
         }
 
+        [BackingField(nameof(_videoProperties))]
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_VideoProperties), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual VideoPropertySet VideoProperties
         {
@@ -788,21 +801,26 @@ namespace FsInfoCat.Local
             }
         }
 
+        [BackingField(nameof(_accessErrors))]
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_AccessErrors), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         [NotNull]
         public virtual HashSet<FileAccessError> AccessErrors { get => _accessErrors; set => _accessErrors = value ?? new(); }
 
+        [BackingField(nameof(_baselineComparisons))]
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_BaselineComparisons), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         [NotNull]
         public virtual HashSet<FileComparison> BaselineComparisons { get => _baselineComparisons; set => _baselineComparisons = value ?? new(); }
 
+        [BackingField(nameof(_correlativeComparisons))]
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_CorrelativeComparisons), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         [NotNull]
         public virtual HashSet<FileComparison> CorrelativeComparisons { get => _correlativeComparisons; set => _correlativeComparisons = value ?? new(); }
 
+        [BackingField(nameof(_personalTags))]
         [NotNull]
         public HashSet<PersonalFileTag> PersonalTags { get => _personalTags; set => _personalTags = value ?? new(); }
 
+        [BackingField(nameof(_sharedTags))]
         [NotNull]
         public HashSet<SharedFileTag> SharedTags { get => _sharedTags; set => _sharedTags = value ?? new(); }
 

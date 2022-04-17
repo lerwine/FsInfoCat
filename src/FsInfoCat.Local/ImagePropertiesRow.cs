@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Diagnostics.CodeAnalysis;
 
@@ -23,6 +24,7 @@ namespace FsInfoCat.Local
         public ushort? Compression { get; set; }
 
         [NotNull]
+        [BackingField(nameof(_compressionText))]
         public string CompressionText { get => _compressionText; set => _compressionText = value.AsWsNormalizedOrEmpty(); }
 
         public double? HorizontalResolution { get; set; }
@@ -30,6 +32,7 @@ namespace FsInfoCat.Local
         public uint? HorizontalSize { get; set; }
 
         [NotNull]
+        [BackingField(nameof(_imageID))]
         public string ImageID { get => _imageID; set => _imageID = value.AsWsNormalizedOrEmpty(); }
 
         public short? ResolutionUnit { get; set; }

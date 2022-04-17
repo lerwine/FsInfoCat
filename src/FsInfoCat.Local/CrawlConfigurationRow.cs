@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -23,6 +24,7 @@ namespace FsInfoCat.Local
         /// </summary>
         /// <value>The <see cref="Guid">unique identifier</see> used as the current entity's primary key the database.</value>
         [Key]
+        [BackingField(nameof(_id))]
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_Id), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual Guid Id
         {
@@ -53,6 +55,7 @@ namespace FsInfoCat.Local
         [StringLength(DbConstants.DbColMaxLen_LongName, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_DisplayNameLength),
             ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
         [NotNull]
+        [BackingField(nameof(_displayName))]
         public virtual string DisplayName { get => _displayName; set => _displayName = value.AsWsNormalizedOrEmpty(); }
 
         /// <summary>Gets the maximum recursion depth.</summary>
@@ -80,6 +83,7 @@ namespace FsInfoCat.Local
         /// <value>The custom notes to associate with the current crawl configuration.</value>
         [Required(AllowEmptyStrings = true)]
         [NotNull]
+        [BackingField(nameof(_notes))]
         public virtual string Notes { get => _notes; set => _notes = value.EmptyIfNullOrWhiteSpace(); }
 
         /// <summary>Gets a value indicating current crawl configuration status.</summary>

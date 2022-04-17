@@ -14,6 +14,7 @@ namespace FsInfoCat.Local
         private string _fileSystemDisplayName = string.Empty;
 
         [NotNull]
+        [BackingField(nameof(_fileSystemDisplayName))]
         public string FileSystemDisplayName { get => _fileSystemDisplayName; set => _fileSystemDisplayName = value.AsWsNormalizedOrEmpty(); }
 
         public bool EffectiveReadOnly { get; set; }

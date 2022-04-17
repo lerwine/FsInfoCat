@@ -26,10 +26,12 @@ namespace FsInfoCat.Local
 
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_Volumes), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         [NotNull]
+        [BackingField(nameof(_volumes))]
         public virtual HashSet<Volume> Volumes { get => _volumes; set => _volumes = value ?? new(); }
 
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_SymbolicNames), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         [NotNull]
+        [BackingField(nameof(_symbolicNames))]
         public virtual HashSet<SymbolicName> SymbolicNames { get => _symbolicNames; set => _symbolicNames = value ?? new(); }
 
         #endregion

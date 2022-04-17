@@ -1,4 +1,5 @@
 using FsInfoCat.Collections;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Diagnostics.CodeAnalysis;
 
@@ -19,6 +20,7 @@ namespace FsInfoCat.Local
         #region Properties
 
         [NotNull]
+        [BackingField(nameof(_areaInformation))]
         public string AreaInformation { get => _areaInformation; set => _areaInformation = value.AsWsNormalizedOrEmpty(); }
 
         public double? LatitudeDegrees { get; set; }
@@ -28,6 +30,7 @@ namespace FsInfoCat.Local
         public double? LatitudeSeconds { get; set; }
 
         [NotNull]
+        [BackingField(nameof(_latitudeRef))]
         public string LatitudeRef { get => _latitudeRef; set => _latitudeRef = value.AsWsNormalizedOrEmpty(); }
 
         public double? LongitudeDegrees { get; set; }
@@ -37,12 +40,15 @@ namespace FsInfoCat.Local
         public double? LongitudeSeconds { get; set; }
 
         [NotNull]
+        [BackingField(nameof(_longitudeRef))]
         public string LongitudeRef { get => _longitudeRef; set => _longitudeRef = value.AsWsNormalizedOrEmpty(); }
 
         [NotNull]
+        [BackingField(nameof(_measureMode))]
         public string MeasureMode { get => _measureMode; set => _measureMode = value.AsWsNormalizedOrEmpty(); }
 
         [NotNull]
+        [BackingField(nameof(_processingMethod))]
         public string ProcessingMethod { get => _processingMethod; set => _processingMethod = value.AsWsNormalizedOrEmpty(); }
 
         public ByteValues VersionID { get; set; }

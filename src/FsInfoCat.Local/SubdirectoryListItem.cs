@@ -22,6 +22,7 @@ namespace FsInfoCat.Local
         public long SharedTagCount { get; set; }
 
         [NotNull]
+        [BackingField(nameof(_crawlConfigDisplayName))]
         public string CrawlConfigDisplayName { get => _crawlConfigDisplayName; set => _crawlConfigDisplayName = value.AsNonNullTrimmed(); }
 
         internal static void OnBuildEntity(EntityTypeBuilder<SubdirectoryListItem> builder) => builder.ToView(VIEW_NAME).HasKey(nameof(Id));

@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
@@ -11,10 +12,12 @@ namespace FsInfoCat.Local
 
         [Required]
         [NotNull]
+        [BackingField(nameof(_name))]
         public virtual string Name { get => _name; set => _name = value.AsWsNormalizedOrEmpty(); }
 
         [Required(AllowEmptyStrings = true)]
         [NotNull]
+        [BackingField(nameof(_description))]
         public virtual string Description { get => _description; set => _description = value.AsWsNormalizedOrEmpty(); }
 
         public bool Equals(ItemTagListItem other)

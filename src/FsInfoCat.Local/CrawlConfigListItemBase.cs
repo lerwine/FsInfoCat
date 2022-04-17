@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Diagnostics.CodeAnalysis;
 
@@ -12,22 +13,27 @@ namespace FsInfoCat.Local
         private string _fileSystemSymbolicName = string.Empty;
 
         [NotNull]
+        [BackingField(nameof(_ancestorNames))]
         public string AncestorNames { get => _ancestorNames; set => _ancestorNames = value ?? ""; }
 
         public virtual Guid VolumeId { get; set; }
 
         [NotNull]
+        [BackingField(nameof(_volumeDisplayName))]
         public virtual string VolumeDisplayName { get => _volumeDisplayName; set => _volumeDisplayName = value ?? ""; }
 
         [NotNull]
+        [BackingField(nameof(_volumeName))]
         public virtual string VolumeName { get => _volumeName; set => _volumeName = value ?? ""; }
 
         public virtual VolumeIdentifier VolumeIdentifier { get; set; } = VolumeIdentifier.Empty;
 
         [NotNull]
+        [BackingField(nameof(_fileSystemDisplayName))]
         public string FileSystemDisplayName { get => _fileSystemDisplayName; set => _fileSystemDisplayName = value ?? ""; }
 
         [NotNull]
+        [BackingField(nameof(_fileSystemSymbolicName))]
         public string FileSystemSymbolicName { get => _fileSystemSymbolicName; set => _fileSystemSymbolicName = value ?? ""; }
 
         protected bool ArePropertiesEqual([DisallowNull] ILocalCrawlConfigurationListItem other) => ArePropertiesEqual((ILocalCrawlConfigurationRow)other) &&

@@ -49,6 +49,7 @@ namespace FsInfoCat.Local
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_FileSystem), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         [Required(ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_FileSystemRequired),
             ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [BackingField(nameof(_fileSystem))]
         public virtual FileSystem FileSystem
         {
             get => _fileSystem;

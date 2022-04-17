@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Diagnostics.CodeAnalysis;
 
@@ -20,6 +21,7 @@ namespace FsInfoCat.Local
         public uint? ChannelNumber { get; set; }
 
         [NotNull]
+        [BackingField(nameof(_episodeName))]
         public string EpisodeName { get => _episodeName; set => _episodeName = value.AsWsNormalizedOrEmpty(); }
 
         public bool? IsDTVContent { get; set; }
@@ -27,17 +29,21 @@ namespace FsInfoCat.Local
         public bool? IsHDContent { get; set; }
 
         [NotNull]
+        [BackingField(nameof(_networkAffiliation))]
         public string NetworkAffiliation { get => _networkAffiliation; set => _networkAffiliation = value.AsWsNormalizedOrEmpty(); }
 
         public DateTime? OriginalBroadcastDate { get; set; }
 
         [NotNull]
+        [BackingField(nameof(_programDescription))]
         public string ProgramDescription { get => _programDescription; set => _programDescription = value.AsWsNormalizedOrEmpty(); }
 
         [NotNull]
+        [BackingField(nameof(_stationCallSign))]
         public string StationCallSign { get => _stationCallSign; set => _stationCallSign = value.AsWsNormalizedOrEmpty(); }
 
         [NotNull]
+        [BackingField(nameof(_stationName))]
         public string StationName { get => _stationName; set => _stationName = value.AsWsNormalizedOrEmpty(); }
 
         #endregion

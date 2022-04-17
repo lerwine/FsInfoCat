@@ -1,4 +1,5 @@
 using FsInfoCat.Collections;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Diagnostics.CodeAnalysis;
 
@@ -28,26 +29,33 @@ namespace FsInfoCat.Local
         public DateTime? DateCreated { get; set; }
 
         [NotNull]
+        [BackingField(nameof(_lastAuthor))]
         public string LastAuthor { get => _lastAuthor; set => _lastAuthor = value.AsWsNormalizedOrEmpty(); }
 
         [NotNull]
+        [BackingField(nameof(_revisionNumber))]
         public string RevisionNumber { get => _revisionNumber; set => _revisionNumber = value.AsWsNormalizedOrEmpty(); }
 
         public int? Security { get; set; }
 
         [NotNull]
+        [BackingField(nameof(_division))]
         public string Division { get => _division; set => _division = value.AsWsNormalizedOrEmpty(); }
 
         [NotNull]
+        [BackingField(nameof(_documentID))]
         public string DocumentID { get => _documentID; set => _documentID = value.AsWsNormalizedOrEmpty(); }
 
         [NotNull]
+        [BackingField(nameof(_manager))]
         public string Manager { get => _manager; set => _manager = value.AsWsNormalizedOrEmpty(); }
 
         [NotNull]
+        [BackingField(nameof(_presentationFormat))]
         public string PresentationFormat { get => _presentationFormat; set => _presentationFormat = value.AsWsNormalizedOrEmpty(); }
 
         [NotNull]
+        [BackingField(nameof(_version))]
         public string Version { get => _version; set => _version = value.AsWsNormalizedOrEmpty(); }
 
         #endregion

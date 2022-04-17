@@ -61,6 +61,7 @@ namespace FsInfoCat.Local
         }
 
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_FileSystem), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [BackingField(nameof(_fileSystem))]
         public virtual FileSystem FileSystem
         {
             get => _fileSystem;
@@ -88,12 +89,15 @@ namespace FsInfoCat.Local
 
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_AccessErrors), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         [NotNull]
+        [BackingField(nameof(_accessErrors))]
         public virtual HashSet<VolumeAccessError> AccessErrors { get => _accessErrors; set => _accessErrors = value ?? new(); }
 
         [NotNull]
+        [BackingField(nameof(_personalTags))]
         public HashSet<PersonalVolumeTag> PersonalTags { get => _personalTags; set => _personalTags = value ?? new(); }
 
         [NotNull]
+        [BackingField(nameof(_sharedTags))]
         public HashSet<SharedVolumeTag> SharedTags { get => _sharedTags; set => _sharedTags = value ?? new(); }
 
         #endregion

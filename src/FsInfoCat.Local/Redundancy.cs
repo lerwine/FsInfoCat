@@ -33,6 +33,7 @@ namespace FsInfoCat.Local
         #region Properties
 
         [Required]
+        [BackingField(nameof(_fileId))]
         public virtual Guid FileId
         {
             get
@@ -65,6 +66,7 @@ namespace FsInfoCat.Local
         }
 
         [Required]
+        [BackingField(nameof(_redundantSetId))]
         public virtual Guid RedundantSetId
         {
             get
@@ -100,14 +102,17 @@ namespace FsInfoCat.Local
         [StringLength(DbConstants.DbColMaxLen_ShortName, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_NameLength),
             ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
         [NotNull]
+        [BackingField(nameof(_reference))]
         public virtual string Reference { get => _reference; set => _reference = value.AsWsNormalizedOrEmpty(); }
 
         [Required(AllowEmptyStrings = true)]
         [NotNull]
+        [BackingField(nameof(_notes))]
         public virtual string Notes { get => _notes; set => _notes = value.TrimmedOrNullIfWhiteSpace(); }
 
         [Required(ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_FileRequired),
             ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [BackingField(nameof(_file))]
         public virtual DbFile File
         {
             get => _file;
@@ -132,6 +137,7 @@ namespace FsInfoCat.Local
         [Required(ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_RedundantSetRequired),
             ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_RedundantSet), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [BackingField(nameof(_redundantSet))]
         public virtual RedundantSet RedundantSet
         {
             get => _redundantSet;

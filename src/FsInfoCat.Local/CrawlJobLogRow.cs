@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
@@ -23,6 +24,7 @@ namespace FsInfoCat.Local
         /// </summary>
         /// <value>The <see cref="Guid">unique identifier</see> used as the current entity's primary key the database.</value>
         [Key]
+        [BackingField(nameof(_id))]
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_Id), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual Guid Id
         {
@@ -49,6 +51,7 @@ namespace FsInfoCat.Local
         /// <value>The root path of the crawl.</value>
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_RootPath), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         [NotNull]
+        [BackingField(nameof(_rootPath))]
         public string RootPath { get => _rootPath; set => _rootPath = value ?? ""; }
 
         /// <summary>Gets a value indicating whether the current crawl configuration has been deactivated.</summary>
@@ -73,12 +76,14 @@ namespace FsInfoCat.Local
         /// <value>The crawl status message.</value>
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_Message), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         [NotNull]
+        [BackingField(nameof(_statusMessage))]
         public string StatusMessage { get => _statusMessage; set => _statusMessage = value.AsNonNullTrimmed(); }
 
         /// <summary>Gets the status details.</summary>
         /// <value>The status details.</value>
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_Details), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         [NotNull]
+        [BackingField(nameof(_statusDetail))]
         public string StatusDetail { get => _statusDetail; set => _statusDetail = value.AsNonNullTrimmed(); }
 
         /// <summary>Gets the maximum recursion depth.</summary>

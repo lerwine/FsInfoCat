@@ -44,6 +44,7 @@ namespace FsInfoCat.Local
         /// </summary>
         /// <value>The primary key of the <see cref="P:FsInfoCat.IComparison.Baseline" />.</value>
         /// <remarks>This is also part of this entity's compound primary key.</remarks>
+        [BackingField(nameof(_baselineId))]
         public virtual Guid BaselineId
         {
             get
@@ -80,6 +81,7 @@ namespace FsInfoCat.Local
         /// </summary>
         /// <value>The primary key of the <see cref="P:FsInfoCat.IComparison.Correlative" />, which is the new or changed file that is being compared to a <see cref="P:FsInfoCat.IComparison.Baseline" /> file.</value>
         /// <remarks>This is also part of this entity's compound primary key.</remarks>
+        [BackingField(nameof(_correlativeId))]
         public virtual Guid CorrelativeId
         {
             get
@@ -129,6 +131,7 @@ namespace FsInfoCat.Local
         /// Gets or sets the baseline file in the comparison.
         /// </summary>
         /// <value>The generic <see cref="T:FsInfoCat.Local.ILocalFile" /> that represents the baseline file in the comparison.</value>
+        [BackingField(nameof(_baseline))]
         public virtual DbFile Baseline
         {
             get => _baseline;
@@ -154,6 +157,7 @@ namespace FsInfoCat.Local
         /// Gets or sets the correlative file in the comparison.
         /// </summary>
         /// <value>The generic <see cref="T:FsInfoCat.Local.ILocalFile" /> that represents the correlative file, which is the new or changed file in the comparison.</value>
+        [BackingField(nameof(_correlative))]
         public virtual DbFile Correlative
         {
             get => _correlative;

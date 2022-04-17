@@ -1,4 +1,5 @@
 using FsInfoCat.Activities;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Logging;
@@ -17,12 +18,15 @@ namespace FsInfoCat.Local
         private HashSet<PersonalVolumeTag> _volumeTags = new();
 
         [NotNull]
+        [BackingField(nameof(_fileTags))]
         public virtual HashSet<PersonalFileTag> FileTags { get => _fileTags; set => _fileTags = value ?? new(); }
 
         [NotNull]
+        [BackingField(nameof(_subdirectoryTags))]
         public virtual HashSet<PersonalSubdirectoryTag> SubdirectoryTags { get => _subdirectoryTags; set => _subdirectoryTags = value ?? new(); }
 
         [NotNull]
+        [BackingField(nameof(_volumeTags))]
         public virtual HashSet<PersonalVolumeTag> VolumeTags { get => _volumeTags; set => _volumeTags = value ?? new(); }
 
 

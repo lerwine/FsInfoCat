@@ -21,6 +21,7 @@ namespace FsInfoCat.Local
         private HashSet<DbFile> _files = new();
 
         [NotNull]
+        [BackingField(nameof(_files))]
         public HashSet<DbFile> Files { get => _files; set => _files = value ?? new(); }
 
         #region Explicit Members
