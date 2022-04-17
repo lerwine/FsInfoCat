@@ -11,7 +11,7 @@ using System.Xml.Linq;
 
 namespace FsInfoCat.Local
 {
-    public class SymbolicName : SymbolicNameRow , ILocalSymbolicName, ISimpleIdentityReference<SymbolicName>, IEquatable<SymbolicName>
+    public class SymbolicName : SymbolicNameRow, ILocalSymbolicName, ISimpleIdentityReference<SymbolicName>, IEquatable<SymbolicName>
     {
         private FileSystem _fileSystem;
 

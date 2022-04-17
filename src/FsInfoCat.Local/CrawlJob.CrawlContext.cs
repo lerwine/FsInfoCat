@@ -43,7 +43,7 @@ namespace FsInfoCat.Local
                         await Subdirectory.DeleteAsync(d, DbContext, token);
                     foreach (DbFile f in fileEntities)
                         await DbFile.DeleteAsync(f, DbContext, token);
-                    return (Array.Empty<CrawlContext>(), Array.Empty<(DbFile, FileInfo) >(), false);
+                    return (Array.Empty<CrawlContext>(), Array.Empty<(DbFile, FileInfo)>(), false);
                 }
                 FileInfo[] fileInfos = ParentDirectory.GetFiles();
                 DirectoryInfo[] childDirectories;
