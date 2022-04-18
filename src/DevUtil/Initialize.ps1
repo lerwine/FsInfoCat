@@ -1,0 +1,1 @@
+Add-Type -Path ([Environment]::GetFolderPath([Environment+SpecialFolder]::UserProfile) | Join-Path -ChildPath '.nuget\packages\microsoft.entityframeworkcore\5.0.9\lib\netstandard2.1\Microsoft.EntityFrameworkCore.dll') -ErrorAction Stop;
