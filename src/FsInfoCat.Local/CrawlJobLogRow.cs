@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
@@ -115,16 +116,49 @@ namespace FsInfoCat.Local
 
         #endregion
 
-        protected virtual bool ArePropertiesEqual([DisallowNull] ILocalCrawlJobLogRow other)
-        {
-            throw new NotImplementedException();
-        }
+        protected virtual bool ArePropertiesEqual([DisallowNull] ILocalCrawlJobLogRow other) => ArePropertiesEqual((ICrawlJobLogRow)other) && EqualityComparer<Guid?>.Default.Equals(UpstreamId, other.UpstreamId) && LastSynchronizedOn == other.LastSynchronizedOn;
 
-        protected virtual bool ArePropertiesEqual([DisallowNull] ICrawlJobLogRow other)
-        {
-            throw new NotImplementedException();
-        }
+        protected virtual bool ArePropertiesEqual([DisallowNull] ICrawlJobLogRow other) => ArePropertiesEqual((ICrawlJob)other) && RootPath == other.RootPath && StatusCode == other.StatusCode && CrawlEnd == other.CrawlEnd && CreatedOn == other.CreatedOn && ModifiedOn == other.ModifiedOn;
+
+        protected virtual bool ArePropertiesEqual([DisallowNull] ICrawlJob other) => other is not null && CrawlStart == other.CrawlStart && StatusMessage == other.StatusMessage && StatusDetail == other.StatusDetail && MaxRecursionDepth == other.MaxRecursionDepth &&
+            MaxTotalItems == other.MaxTotalItems && TTL == other.TTL && FoldersProcessed == other.FoldersProcessed && FilesProcessed == other.FilesProcessed;
 
         public abstract bool Equals(ICrawlJob other);
+
+        public override int GetHashCode()
+        {
+            Guid? id = _id;
+            if (id.HasValue) return id.Value.GetHashCode();
+            HashCode hash = new HashCode();
+            hash.Add(_rootPath);
+            hash.Add(StatusCode);
+            hash.Add(CrawlStart);
+            hash.Add(CrawlEnd);
+            hash.Add(_statusMessage);
+            hash.Add(_statusDetail);
+            hash.Add(MaxRecursionDepth);
+            hash.Add(MaxTotalItems);
+            hash.Add(TTL);
+            hash.Add(FoldersProcessed);
+            hash.Add(FilesProcessed);
+            hash.Add(ConfigurationId);
+            hash.Add(UpstreamId);
+            hash.Add(LastSynchronizedOn);
+            hash.Add(CreatedOn);
+            hash.Add(ModifiedOn);
+            return hash.ToHashCode();
+        }
+
+        protected bool TryGetId(out Guid result)
+        {
+            Guid? id = _id;
+            if (id.HasValue)
+            {
+                result = id.Value;
+                return true;
+            }
+            result = Guid.Empty;
+            return false;
+        }
     }
 }

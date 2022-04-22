@@ -196,16 +196,53 @@ namespace FsInfoCat.Local
         protected virtual bool ArePropertiesEqual([DisallowNull] ILocalCrawlConfiguration other) => ArePropertiesEqual((ILocalCrawlConfigurationRow)other) &&
             RootId.Equals(other.RootId);
 
-        public bool Equals(CrawlConfiguration other) => other is not null && ReferenceEquals(this, other) || Id.Equals(Guid.Empty) ? ArePropertiesEqual(this) : Id.Equals(other.Id);
+        protected virtual bool ArePropertiesEqual([DisallowNull] ICrawlConfiguration other)
+        {
+            if (ArePropertiesEqual((ICrawlConfigurationRow)other))
+            {
+                Guid? id = other.Root?.Id;
+                return id.HasValue ? id.Value.Equals(RootId) : RootId.Equals(Guid.Empty);
+            }
+            return false;
+        }
+
+        public bool Equals(CrawlConfiguration other)
+        {
+            if (other is null) return false;
+            if (ReferenceEquals(this, other)) return true;
+            if (TryGetId(out Guid id))
+                return other.TryGetId(out Guid g) && id.Equals(g);
+            return !other.TryGetId(out _) && ArePropertiesEqual(other);
+        }
 
         public bool Equals(ICrawlConfiguration other)
         {
-            throw new NotImplementedException();
+            if (other is null) return false;
+            if (other is CrawlConfiguration crawlConfiguration) return Equals(crawlConfiguration);
+            if (TryGetId(out Guid id)) id.Equals(other.Id);
+            if (!other.Id.Equals(Guid.Empty)) return false;
+            if (other is ILocalCrawlConfiguration localCrawlConfig)
+                return ArePropertiesEqual(localCrawlConfig);
+            return ArePropertiesEqual(other);
         }
 
         public override bool Equals(object obj)
         {
-            throw new NotImplementedException();
+            if (obj is null) return false;
+            if (obj is CrawlConfiguration crawlConfiguration) return Equals(crawlConfiguration);
+            if (obj is ICrawlConfigurationRow row)
+            {
+                if (TryGetId(out Guid id)) id.Equals(row.Id);
+                if (!row.Id.Equals(Guid.Empty)) return false;
+                if (row is ILocalCrawlConfiguration localCrawlConfig)
+                    return ArePropertiesEqual(localCrawlConfig);
+                if (row is ICrawlConfiguration crawlConfig)
+                    return ArePropertiesEqual(crawlConfig);
+                if (row is (ILocalCrawlConfigurationRow localRow))
+                    return ArePropertiesEqual(localRow);
+                return ArePropertiesEqual(row);
+            }
+            return false;
         }
     }
 }

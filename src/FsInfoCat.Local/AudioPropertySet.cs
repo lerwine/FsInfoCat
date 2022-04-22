@@ -76,18 +76,79 @@ namespace FsInfoCat.Local
         protected bool ArePropertiesEqual([DisallowNull] IAudioPropertySet other) => ArePropertiesEqual((IAudioProperties)other) && CreatedOn == other.CreatedOn &&
                    ModifiedOn == other.ModifiedOn;
 
-        public bool Equals(AudioPropertySet other) => other is not null && ReferenceEquals(this, other) || Id.Equals(Guid.Empty) ? ArePropertiesEqual(this) : Id.Equals(other.Id);
+        public bool Equals(AudioPropertySet other)
+        {
+            if (other is null) return false;
+            if (ReferenceEquals(this, other)) return true;
+            if (TryGetId(out Guid id))
+                return other.TryGetId(out Guid g) && id.Equals(g);
+            return !other.TryGetId(out _) && ArePropertiesEqual(other);
+        }
 
-        public bool Equals(IAudioPropertySet other) => other is not null && (other is AudioPropertySet p) ? Equals(p) : ArePropertiesEqual(other);
+        public bool Equals(IAudioPropertySet other)
+        {
+            if (other is null) return false;
+            if (other is AudioPropertySet audioPropertySet) return Equals(audioPropertySet);
+            if (TryGetId(out Guid id)) return id.Equals(other.Id);
+            if (!other.Id.Equals(Guid.Empty)) return false;
+            if (other is ILocalAudioPropertySet localPropertySet)
+                return ArePropertiesEqual(localPropertySet);
+            return ArePropertiesEqual(other);
+        }
 
         public override bool Equals(IAudioPropertiesRow other)
         {
-            throw new NotImplementedException();
+            if (other is null) return false;
+            if (other is AudioPropertySet audioPropertySet) return Equals(audioPropertySet);
+            if (TryGetId(out Guid id)) return id.Equals(other.Id);
+            if (!other.Id.Equals(Guid.Empty)) return false;
+            if (other is ILocalAudioPropertySet localPropertySet)
+                return ArePropertiesEqual(localPropertySet);
+            if (other is IAudioPropertySet propertySet)
+                return ArePropertiesEqual(propertySet);
+            if (other is ILocalAudioPropertiesRow localRow)
+                return ArePropertiesEqual(localRow);
+            return ArePropertiesEqual(other);
         }
 
-        public override bool Equals(IAudioProperties other) => other is not null && (other is AudioPropertySet p) ? Equals(p) : (other is ILocalAudioPropertySet l) ? ArePropertiesEqual(l) : (other is IAudioPropertySet a) ? ArePropertiesEqual(a) : ArePropertiesEqual(other);
+        public override bool Equals(IAudioProperties other)
+        {
+            if (other is null) return false;
+            if (other is AudioPropertySet audioPropertySet) return Equals(audioPropertySet);
+            if (other is IAudioPropertiesRow row)
+            {
+                if (TryGetId(out Guid id)) return id.Equals(row.Id);
+                if (!row.Id.Equals(Guid.Empty)) return false;
+                if (row is ILocalAudioPropertySet localPropertySet)
+                    return ArePropertiesEqual(localPropertySet);
+                if (row is IAudioPropertySet propertySet)
+                    return ArePropertiesEqual(propertySet);
+                if (row is ILocalAudioPropertiesRow localRow)
+                    return ArePropertiesEqual(localRow);
+                return ArePropertiesEqual(row);
+            }
+            return ArePropertiesEqual(other);
+        }
 
-        public override bool Equals(object obj) => obj is IAudioProperties i && ((obj is AudioPropertySet p) ? Equals(p) : (obj is ILocalAudioPropertySet l) ? ArePropertiesEqual(l) : (obj is IAudioPropertySet a) ? ArePropertiesEqual(a) : ArePropertiesEqual(i));
+        public override bool Equals(object obj)
+        {
+            if (obj is null) return false;
+            if (obj is AudioPropertySet audioPropertySet) return Equals(audioPropertySet);
+            if (obj is IAudioPropertiesRow row)
+            {
+                if (TryGetId(out Guid id)) return id.Equals(row.Id);
+                if (!row.Id.Equals(Guid.Empty)) return false;
+                if (row is ILocalAudioPropertySet localPropertySet)
+                    return ArePropertiesEqual(localPropertySet);
+                if (row is IAudioPropertySet propertySet)
+                    return ArePropertiesEqual(propertySet);
+                if (row is ILocalAudioPropertiesRow localRow)
+                    return ArePropertiesEqual(localRow);
+                return ArePropertiesEqual(row);
+                return id.Equals(row.Id);
+            }
+            return obj is IAudioProperties other && ArePropertiesEqual(other);
+        }
 
         IEnumerable<Guid> IIdentityReference.GetIdentifiers() { yield return Id; }
     }

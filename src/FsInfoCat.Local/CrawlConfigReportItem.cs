@@ -47,21 +47,62 @@ namespace FsInfoCat.Local
             AverageDuration == other.AverageDuration &&
             MaxDuration == other.MaxDuration;
 
-        public bool Equals(CrawlConfigReportItem other) => other is not null && ReferenceEquals(this, other) || Id.Equals(Guid.Empty) ? ArePropertiesEqual(this) : Id.Equals(other.Id);
+        public bool Equals(CrawlConfigReportItem other)
+        {
+            if (other is null) return false;
+            if (ReferenceEquals(this, other)) return true;
+            if (TryGetId(out Guid id))
+                return other.TryGetId(out Guid g) && id.Equals(g);
+            return !other.TryGetId(out _) && ArePropertiesEqual(other);
+        }
 
         public bool Equals(ICrawlConfigReportItem other)
         {
-            throw new NotImplementedException();
+            if (other is null) return false;
+            if (other is CrawlConfigReportItem crawlConfigReportItem) return Equals(crawlConfigReportItem);
+            if (TryGetId(out Guid id)) id.Equals(other.Id);
+            if (!other.Id.Equals(Guid.Empty)) return false;
+            if (other is ILocalCrawlConfigReportItem localReportItem)
+                return ArePropertiesEqual(localReportItem);
+            return ArePropertiesEqual(other);
         }
 
         public override bool Equals(ICrawlConfigurationListItem other)
         {
-            throw new NotImplementedException();
+            if (other is null) return false;
+            if (other is CrawlConfigReportItem crawlConfigReportItem) return Equals(crawlConfigReportItem);
+            if (TryGetId(out Guid id)) id.Equals(other.Id);
+            if (!other.Id.Equals(Guid.Empty)) return false;
+            if (other is ILocalCrawlConfigReportItem localReportItem)
+                return ArePropertiesEqual(localReportItem);
+            if (other is ICrawlConfigReportItem reportItem)
+                return ArePropertiesEqual(reportItem);
+            if (other is ILocalCrawlConfigurationListItem localListItem)
+                return ArePropertiesEqual(localListItem);
+            return ArePropertiesEqual(other);
         }
 
         public override bool Equals(object obj)
         {
-            throw new NotImplementedException();
+            if (obj is null) return false;
+            if (obj is CrawlConfigReportItem crawlConfigReportItem) return Equals(crawlConfigReportItem);
+            if (obj is ICrawlConfigurationRow row)
+            {
+                if (TryGetId(out Guid id)) id.Equals(row.Id);
+                if (!row.Id.Equals(Guid.Empty)) return false;
+                if (row is ILocalCrawlConfigReportItem localReportItem)
+                    return ArePropertiesEqual(localReportItem);
+                if (row is ICrawlConfigReportItem reportItem)
+                    return ArePropertiesEqual(reportItem);
+                if (row is ILocalCrawlConfigurationListItem localListItem)
+                    return ArePropertiesEqual(localListItem);
+                if (row is ICrawlConfigurationListItem listItem)
+                    return ArePropertiesEqual(listItem);
+                if (row is (ILocalCrawlConfigurationRow localRow))
+                    return ArePropertiesEqual(localRow);
+                return ArePropertiesEqual(row);
+            }
+            return false;
         }
     }
 }

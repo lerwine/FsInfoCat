@@ -159,55 +159,61 @@ namespace FsInfoCat.Local
         }
 
         protected virtual bool ArePropertiesEqual([DisallowNull] ILocalCrawlConfigurationRow other) => ArePropertiesEqual((ICrawlConfigurationRow)other) &&
-                   EqualityComparer<Guid?>.Default.Equals(UpstreamId, other.UpstreamId) &&
-                   LastSynchronizedOn == other.LastSynchronizedOn;
+            EqualityComparer<Guid?>.Default.Equals(UpstreamId, other.UpstreamId) &&
+            LastSynchronizedOn == other.LastSynchronizedOn;
 
         protected virtual bool ArePropertiesEqual([DisallowNull] ICrawlConfigurationRow other) => CreatedOn == other.CreatedOn &&
-                   ModifiedOn == other.ModifiedOn &&
-                   _displayName == other.DisplayName &&
-                   _notes == other.Notes &&
-                   MaxRecursionDepth == other.MaxRecursionDepth &&
-                   MaxTotalItems == other.MaxTotalItems &&
-                   TTL == other.TTL &&
-                   StatusValue == other.StatusValue &&
-                   LastCrawlStart == other.LastCrawlStart &&
-                   LastCrawlEnd == other.LastCrawlEnd &&
-                   NextScheduledStart == other.NextScheduledStart &&
-                   RescheduleInterval == other.RescheduleInterval &&
-                   RescheduleFromJobEnd == other.RescheduleFromJobEnd &&
-                   RescheduleAfterFail == other.RescheduleAfterFail;
+            ModifiedOn == other.ModifiedOn &&
+            _displayName == other.DisplayName &&
+            _notes == other.Notes &&
+            MaxRecursionDepth == other.MaxRecursionDepth &&
+            MaxTotalItems == other.MaxTotalItems &&
+            TTL == other.TTL &&
+            StatusValue == other.StatusValue &&
+            LastCrawlStart == other.LastCrawlStart &&
+            LastCrawlEnd == other.LastCrawlEnd &&
+            NextScheduledStart == other.NextScheduledStart &&
+            RescheduleInterval == other.RescheduleInterval &&
+            RescheduleFromJobEnd == other.RescheduleFromJobEnd &&
+            RescheduleAfterFail == other.RescheduleAfterFail;
 
-        IEnumerable<Guid> IIdentityReference.GetIdentifiers()
-        {
-            yield return Id;
-        }
+        IEnumerable<Guid> IIdentityReference.GetIdentifiers() { yield return Id; }
 
         public override int GetHashCode()
         {
-            Guid id = Id;
-            if (id.Equals(Guid.Empty))
+            Guid? id = _id;
+            if (id.HasValue) return id.Value.GetHashCode();
+            HashCode hash = new HashCode();
+            hash.Add(CreatedOn);
+            hash.Add(ModifiedOn);
+            hash.Add(UpstreamId);
+            hash.Add(LastSynchronizedOn);
+            hash.Add(_displayName);
+            hash.Add(_notes);
+            hash.Add(MaxRecursionDepth);
+            hash.Add(MaxTotalItems);
+            hash.Add(TTL);
+            hash.Add(StatusValue);
+            hash.Add(LastCrawlStart);
+            hash.Add(LastCrawlEnd);
+            hash.Add(NextScheduledStart);
+            hash.Add(RescheduleInterval);
+            hash.Add(RescheduleFromJobEnd);
+            hash.Add(RescheduleAfterFail);
+            hash.Add(RootId);
+            return hash.ToHashCode();
+        }
+
+        protected bool TryGetId(out Guid result)
+        {
+            Guid? id = _id;
+            if (id.HasValue)
             {
-                HashCode hash = new HashCode();
-                hash.Add(CreatedOn);
-                hash.Add(ModifiedOn);
-                hash.Add(UpstreamId);
-                hash.Add(LastSynchronizedOn);
-                hash.Add(DisplayName);
-                hash.Add(Notes);
-                hash.Add(MaxRecursionDepth);
-                hash.Add(MaxTotalItems);
-                hash.Add(TTL);
-                hash.Add(StatusValue);
-                hash.Add(LastCrawlStart);
-                hash.Add(LastCrawlEnd);
-                hash.Add(NextScheduledStart);
-                hash.Add(RescheduleInterval);
-                hash.Add(RescheduleFromJobEnd);
-                hash.Add(RescheduleAfterFail);
-                hash.Add(RootId);
-                return hash.ToHashCode();
+                result = id.Value;
+                return true;
             }
-            return id.GetHashCode();
+            result = Guid.Empty;
+            return false;
         }
     }
 }

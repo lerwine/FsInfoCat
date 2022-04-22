@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
@@ -11,7 +12,9 @@ namespace FsInfoCat.Local
     /// <summary>Log of crawl job results.</summary>
     /// <seealso cref="LocalDbEntity" />
     /// <seealso cref="ILocalCrawlJobLog" />
+#pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     public class CrawlJobLog : CrawlJobLogRow, ILocalCrawlJobLog, IEquatable<CrawlJobLog>
+#pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     {
         private CrawlConfiguration _crawlConfiguration;
 
@@ -79,56 +82,68 @@ namespace FsInfoCat.Local
 
         ILocalCrawlConfiguration ILocalCrawlJobLog.Configuration => Configuration;
 
-        internal static void OnBuildEntity(EntityTypeBuilder<CrawlJobLog> builder)
-        {
-            _ = builder.HasOne(sn => sn.Configuration).WithMany(d => d.Logs).HasForeignKey(nameof(ConfigurationId)).IsRequired().OnDelete(DeleteBehavior.Restrict);
-        }
+        internal static void OnBuildEntity(EntityTypeBuilder<CrawlJobLog> builder) => _ = builder.HasOne(sn => sn.Configuration).WithMany(d => d.Logs).HasForeignKey(nameof(ConfigurationId)).IsRequired().OnDelete(DeleteBehavior.Restrict);
 
-        protected bool ArePropertiesEqual([DisallowNull] ILocalCrawlJobLog other)
-        {
-            throw new NotImplementedException();
-        }
+        protected bool ArePropertiesEqual([DisallowNull] ILocalCrawlJobLog other) => ArePropertiesEqual((ILocalCrawlJobLogRow)other) && EqualityComparer<Guid?>.Default.Equals(UpstreamId, other.UpstreamId) && LastSynchronizedOn == other.LastSynchronizedOn;
 
-        protected bool ArePropertiesEqual([DisallowNull] ICrawlJobLog other)
-        {
-            throw new NotImplementedException();
-        }
+        protected bool ArePropertiesEqual([DisallowNull] ICrawlJobLog other) => ArePropertiesEqual((ICrawlJobLogRow)other) && ConfigurationId.Equals(other?.Configuration.Id ?? Guid.Empty);
 
-        public bool Equals(CrawlJobLog other) => other is not null && ReferenceEquals(this, other) || Id.Equals(Guid.Empty) ? ArePropertiesEqual(this) : Id.Equals(other.Id);
+        public bool Equals(CrawlJobLog other)
+        {
+            if (other is null) return false;
+            if (ReferenceEquals(this, other)) return true;
+            if (TryGetId(out Guid id))
+                return other.TryGetId(out Guid g) && id.Equals(g);
+            return !other.TryGetId(out _) && ArePropertiesEqual(other) && ConfigurationId.Equals(other.ConfigurationId);
+        }
 
         public bool Equals(ICrawlJobLog other)
         {
-            throw new NotImplementedException();
+            if (other is null) return false;
+            if (other is CrawlJobLog crawlJobLog) return Equals(crawlJobLog);
+            if (TryGetId(out Guid id)) id.Equals(other.Id);
+            if (!other.Id.Equals(Guid.Empty)) return false;
+            if (other is ILocalCrawlJobLog localJobLog)
+                return ArePropertiesEqual(localJobLog);
+            return ArePropertiesEqual(other);
         }
 
         public override bool Equals(ICrawlJob other)
         {
-            throw new NotImplementedException();
+            if (other is null) return false;
+            if (other is CrawlJobLog crawlJobLog) return Equals(crawlJobLog);
+            if (other is ICrawlJobLogRow row)
+            {
+                if (TryGetId(out Guid id)) id.Equals(row.Id);
+                if (!row.Id.Equals(Guid.Empty)) return false;
+                if (row is ILocalCrawlJobLog localJobLog)
+                    return ArePropertiesEqual(localJobLog);
+                if (row is ICrawlJobLog jobLog)
+                    return ArePropertiesEqual(jobLog);
+                if (row is (ILocalCrawlJobLogRow localRow))
+                    return ArePropertiesEqual(localRow);
+                return ArePropertiesEqual(row);
+            }
+            return ArePropertiesEqual(other);
         }
 
         public override bool Equals(object obj)
         {
-            throw new NotImplementedException();
-        }
-
-        public override int GetHashCode()
-        {
-            Guid id = Id;
-            if (id.Equals(Guid.Empty))
-                unchecked
-                {
-                    int hash = EntityExtensions.HashGuid(ConfigurationId, 23, 31);
-                    hash = hash * 31 + RootPath.GetHashCode();
-                    hash = hash * 31 + MaxRecursionDepth.GetHashCode();
-                    hash = EntityExtensions.HashNullable(MaxTotalItems, hash, 31);
-                    hash = EntityExtensions.HashNullable(TTL, hash, 31);
-                    hash = EntityExtensions.HashNullable(UpstreamId, hash, 31);
-                    hash = EntityExtensions.HashNullable(LastSynchronizedOn, hash, 31);
-                    hash = hash * 31 + CreatedOn.GetHashCode();
-                    hash = hash * 31 + ModifiedOn.GetHashCode();
-                    return hash;
-                }
-            return id.GetHashCode();
+            if (obj is null) return false;
+            if (obj is CrawlJobLog crawlJobLog) return Equals(crawlJobLog);
+            if (obj is ICrawlJobLogRow row)
+            {
+                if (TryGetId(out Guid id)) id.Equals(row.Id);
+                if (!row.Id.Equals(Guid.Empty)) return false;
+                if (row is ILocalCrawlJobLog localJobLog)
+                    return ArePropertiesEqual(localJobLog);
+                if (row is ICrawlJobLog jobLog)
+                    return ArePropertiesEqual(jobLog);
+                if (row is (ILocalCrawlJobLogRow localRow))
+                    return ArePropertiesEqual(localRow);
+                return ArePropertiesEqual(row);
+            }
+            return obj is ICrawlJob job && ArePropertiesEqual(job);
         }
     }
 }

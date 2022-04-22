@@ -21,16 +21,6 @@ namespace FsInfoCat.Local
     /// <seealso cref="ILocalBinaryPropertySet" />
     public class BinaryPropertySet : LocalDbEntity, ILocalBinaryPropertySet, ISimpleIdentityReference<BinaryPropertySet>, IEquatable<BinaryPropertySet>
     {
-        #region Properties
-
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_UpstreamId), ResourceType = typeof(FsInfoCat.Properties.Resources))]
-        public virtual Guid? UpstreamId { get; set; }
-
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_LastSynchronizedOn), ResourceType = typeof(FsInfoCat.Properties.Resources))]
-        public virtual DateTime? LastSynchronizedOn { get; set; }
-
-        #endregion
-
         #region Fields
 
         private Guid? _id;
@@ -152,10 +142,7 @@ namespace FsInfoCat.Local
             return bps;
         }
 
-        IEnumerable<Guid> IIdentityReference.GetIdentifiers()
-        {
-            yield return Id;
-        }
+        IEnumerable<Guid> IIdentityReference.GetIdentifiers() { yield return Id; }
 
         protected bool ArePropertiesEqual([DisallowNull] ILocalBinaryPropertySet other) => ArePropertiesEqual((IBinaryPropertySet)other) &&
             EqualityComparer<Guid?>.Default.Equals(UpstreamId, other.UpstreamId) &&
@@ -166,24 +153,48 @@ namespace FsInfoCat.Local
             Length == other.Length &&
             EqualityComparer<MD5Hash?>.Default.Equals(Hash, other.Hash);
 
-        public bool Equals(BinaryPropertySet other) => other is not null && ReferenceEquals(this, other) || Id.Equals(Guid.Empty) ? ArePropertiesEqual(this) : Id.Equals(other.Id);
+        public bool Equals(BinaryPropertySet other)
+        {
+            if (other is null) return false;
+            if (ReferenceEquals(this, other)) return true;
+            Guid? id = _id;
+            if (id.HasValue) return EqualityComparer<Guid?>.Default.Equals(id, other._id);
+            return !other._id.HasValue && ArePropertiesEqual(other);
+        }
 
         public bool Equals(IBinaryPropertySet other)
         {
-            throw new NotImplementedException();
+            if (other is null) return false;
+            if (other is BinaryPropertySet binaryPropertySet) return Equals(binaryPropertySet);
+            Guid? id = _id;
+            if (id.HasValue) return id.Equals(other.Id);
+            if (!other.Id.Equals(Guid.Empty)) return false;
+            if (other is ILocalBinaryPropertySet localProperties)
+                return ArePropertiesEqual(localProperties);
+            return ArePropertiesEqual(other);
         }
 
         public override bool Equals(object obj)
         {
-            throw new NotImplementedException();
+            if (obj is null) return false;
+            if (obj is BinaryPropertySet binaryPropertySet) return Equals(binaryPropertySet);
+            if (obj is IBinaryPropertySet propertySet)
+            {
+                Guid? id = _id;
+                if (id.HasValue) return id.Equals(propertySet.Id);
+                if (!propertySet.Id.Equals(Guid.Empty)) return false;
+                if (propertySet is ILocalBinaryPropertySet localProperties)
+                    return ArePropertiesEqual(localProperties);
+                return ArePropertiesEqual(propertySet);
+            }
+            return false;
         }
 
         public override int GetHashCode()
         {
-            Guid id = Id;
-            if (id.Equals(Guid.Empty))
-                return HashCode.Combine(CreatedOn, ModifiedOn, Length, Hash, UpstreamId, LastSynchronizedOn);
-            return id.GetHashCode();
+            Guid? id = _id;
+            if (id.HasValue) return id.Value.GetHashCode();
+            return HashCode.Combine(CreatedOn, ModifiedOn, Length, Hash, UpstreamId, LastSynchronizedOn);
         }
     }
 }
