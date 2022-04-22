@@ -16,7 +16,9 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat.Local
 {
+#pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     public class Volume : VolumeRow, ILocalVolume, ISimpleIdentityReference<Volume>, IEquatable<Volume>
+#pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     {
         #region Fields
 
@@ -332,30 +334,6 @@ namespace FsInfoCat.Local
         public override bool Equals(object obj)
         {
             throw new NotImplementedException();
-        }
-
-        public override int GetHashCode()
-        {
-            Guid id = Id;
-            if (id.Equals(Guid.Empty))
-                unchecked
-                {
-                    int hash = EntityExtensions.HashRelatedEntity(FileSystem, () => FileSystemId, 41, 47);
-                    hash = EntityExtensions.HashObject(RootDirectory, hash, 47);
-                    hash = hash * 47 + DisplayName.GetHashCode();
-                    hash = hash * 47 + VolumeName.GetHashCode();
-                    hash = hash * 47 + Identifier.GetHashCode();
-                    hash = hash * 47 + Status.GetHashCode();
-                    hash = hash * 47 + Type.GetHashCode();
-                    hash = EntityExtensions.HashNullable(MaxNameLength, hash, 47);
-                    hash = hash * 47 + Notes.GetHashCode();
-                    hash = EntityExtensions.HashNullable(UpstreamId, hash, 47);
-                    hash = EntityExtensions.HashNullable(LastSynchronizedOn, hash, 47);
-                    hash = hash * 47 + CreatedOn.GetHashCode();
-                    hash = hash * 47 + ModifiedOn.GetHashCode();
-                    return hash;
-                }
-            return id.GetHashCode();
         }
     }
 }

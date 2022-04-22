@@ -86,15 +86,14 @@ namespace FsInfoCat.Local
 
         #endregion
 
-        protected bool ArePropertiesEqual([DisallowNull] ILocalRedundantSetRow other)
-        {
-            throw new NotImplementedException();
-        }
+        protected bool ArePropertiesEqual([DisallowNull] ILocalRedundantSetRow other) => ArePropertiesEqual((IRedundantSetRow)other) && EqualityComparer<Guid?>.Default.Equals(UpstreamId, other.UpstreamId) && LastSynchronizedOn == other.LastSynchronizedOn;
 
-        protected bool ArePropertiesEqual([DisallowNull] IRedundantSetRow other)
-        {
-            throw new NotImplementedException();
-        }
+        protected bool ArePropertiesEqual([DisallowNull] IRedundantSetRow other) => CreatedOn == other.CreatedOn &&
+            ModifiedOn == other.ModifiedOn &&
+            Reference == other.Reference &&
+            Notes == other.Notes &&
+            Status == other.Status &&
+            BinaryPropertiesId.Equals(other.BinaryPropertiesId);
 
         IEnumerable<Guid> IIdentityReference.GetIdentifiers() { yield return Id; }
 

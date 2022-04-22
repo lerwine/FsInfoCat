@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
@@ -56,15 +57,14 @@ namespace FsInfoCat.Local
         [Required]
         public bool IsInactive { get; set; }
 
-        protected virtual bool ArePropertiesEqual([DisallowNull] ILocalTagDefinitionRow other)
-        {
-            throw new NotImplementedException();
-        }
+        protected virtual bool ArePropertiesEqual([DisallowNull] ILocalTagDefinitionRow other) => ArePropertiesEqual((ITagDefinitionRow)other) && EqualityComparer<Guid?>.Default.Equals(UpstreamId, other.UpstreamId) &&
+            LastSynchronizedOn == other.LastSynchronizedOn;
 
-        protected virtual bool ArePropertiesEqual([DisallowNull] ITagDefinitionRow other)
-        {
-            throw new NotImplementedException();
-        }
+        protected virtual bool ArePropertiesEqual([DisallowNull] ITagDefinitionRow other) => CreatedOn == other.CreatedOn &&
+            ModifiedOn == other.ModifiedOn &&
+            _name == other.Name &&
+            _description == other.Description &&
+            IsInactive == other.IsInactive;
 
         public override int GetHashCode()
         {

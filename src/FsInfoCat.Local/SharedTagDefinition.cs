@@ -11,7 +11,9 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat.Local
 {
+#pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     public class SharedTagDefinition : SharedTagDefinitionRow, ILocalSharedTagDefinition, IEquatable<SharedTagDefinition>
+#pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     {
         private HashSet<SharedFileTag> _fileTags = new();
         private HashSet<SharedSubdirectoryTag> _subdirectoryTags = new();
@@ -82,16 +84,6 @@ namespace FsInfoCat.Local
             }
         }
 
-        protected bool ArePropertiesEqual([DisallowNull] ILocalSharedTagDefinition other)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected bool ArePropertiesEqual([DisallowNull] ISharedTagDefinition other)
-        {
-            throw new NotImplementedException();
-        }
-
         public bool Equals(SharedTagDefinition other)
         {
             throw new NotImplementedException();
@@ -105,18 +97,6 @@ namespace FsInfoCat.Local
         public override bool Equals(object obj)
         {
             throw new NotImplementedException();
-        }
-
-        public override int GetHashCode()
-        {
-            int hash = 13;
-            hash = hash * 19 + Name.GetHashCode();
-            hash = hash * 19 + Description.GetHashCode();
-            hash = EntityExtensions.HashNullable(UpstreamId, hash, 19);
-            hash = EntityExtensions.HashNullable(LastSynchronizedOn, hash, 19);
-            hash = hash * 19 + CreatedOn.GetHashCode();
-            hash = hash * 19 + ModifiedOn.GetHashCode();
-            return hash;
         }
     }
 }

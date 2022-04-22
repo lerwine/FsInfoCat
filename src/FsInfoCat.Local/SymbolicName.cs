@@ -11,7 +11,9 @@ using System.Xml.Linq;
 
 namespace FsInfoCat.Local
 {
+#pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     public class SymbolicName : SymbolicNameRow, ILocalSymbolicName, ISimpleIdentityReference<SymbolicName>, IEquatable<SymbolicName>
+#pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     {
         private FileSystem _fileSystem;
 
@@ -115,16 +117,6 @@ namespace FsInfoCat.Local
             return result;
         }
 
-        protected bool ArePropertiesEqual([DisallowNull] ILocalSymbolicName other)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected bool ArePropertiesEqual([DisallowNull] ISymbolicName other)
-        {
-            throw new NotImplementedException();
-        }
-
         public bool Equals(SymbolicName other)
         {
             throw new NotImplementedException();
@@ -138,26 +130,6 @@ namespace FsInfoCat.Local
         public override bool Equals(object obj)
         {
             throw new NotImplementedException();
-        }
-
-        public override int GetHashCode()
-        {
-            Guid id = Id;
-            if (id.Equals(Guid.Empty))
-                unchecked
-                {
-                    int hash = EntityExtensions.HashRelatedEntity(FileSystem, () => FileSystemId, 23, 31);
-                    hash = hash * 31 + Name.GetHashCode();
-                    hash = hash * 31 + Notes.GetHashCode();
-                    hash = hash * 31 + IsInactive.GetHashCode();
-                    hash = hash * 31 + Priority.GetHashCode();
-                    hash = EntityExtensions.HashNullable(UpstreamId, hash, 31);
-                    hash = EntityExtensions.HashNullable(LastSynchronizedOn, hash, 31);
-                    hash = hash * 31 + CreatedOn.GetHashCode();
-                    hash = hash * 31 + ModifiedOn.GetHashCode();
-                    return hash;
-                }
-            return id.GetHashCode();
         }
     }
 }

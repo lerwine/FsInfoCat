@@ -5,7 +5,9 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat.Local
 {
+#pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     public class FileWithBinaryPropertiesAndAncestorNames : FileWithBinaryProperties, ILocalFileListItemWithBinaryPropertiesAndAncestorNames, IEquatable<FileWithBinaryPropertiesAndAncestorNames>
+#pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     {
         private const string VIEW_NAME = "vFileListingWithBinaryPropertiesAndAncestorNames";
 
@@ -44,16 +46,6 @@ namespace FsInfoCat.Local
             _ = builder.ToView(VIEW_NAME);
             _ = builder.Property(nameof(Hash)).HasConversion(MD5Hash.Converter);
             _ = builder.Property(nameof(VolumeIdentifier)).HasConversion(VolumeIdentifier.Converter);
-        }
-
-        protected bool ArePropertiesEqual([DisallowNull] ILocalFileListItemWithBinaryProperties other)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected bool ArePropertiesEqual([DisallowNull] IFileListItemWithBinaryProperties other)
-        {
-            throw new NotImplementedException();
         }
 
         public bool Equals(FileWithBinaryPropertiesAndAncestorNames other) => other is not null && ReferenceEquals(this, other) || Id.Equals(Guid.Empty) ? ArePropertiesEqual(this) : Id.Equals(other.Id);

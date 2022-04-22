@@ -12,7 +12,9 @@ using System.Xml.Linq;
 namespace FsInfoCat.Local
 {
 
+#pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     public class RedundantSet : RedundantSetRow, ILocalRedundantSet, ISimpleIdentityReference<RedundantSet>, IEquatable<RedundantSet>
+#pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     {
         #region Fields
 
@@ -114,16 +116,6 @@ namespace FsInfoCat.Local
             return (redundantSetId, redundantSetElement.Elements(nameof(Redundancy)).ToArray());
         }
 
-        protected bool ArePropertiesEqual([DisallowNull] ILocalRedundantSet other)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected bool ArePropertiesEqual([DisallowNull] IRedundantSet other)
-        {
-            throw new NotImplementedException();
-        }
-
         public bool Equals(RedundantSet other)
         {
             throw new NotImplementedException();
@@ -137,25 +129,6 @@ namespace FsInfoCat.Local
         public override bool Equals(object obj)
         {
             throw new NotImplementedException();
-        }
-
-        public override int GetHashCode()
-        {
-            if (Id.Equals(Guid.Empty))
-                unchecked
-                {
-                    int hash = 19;
-                    hash = (BinaryProperties is null) ? (BinaryPropertiesId.Equals(Guid.Empty) ? hash * 109 : hash * 109 + BinaryPropertiesId.GetHashCode()) : hash * 109 + (BinaryProperties?.GetHashCode() ?? 0);
-                    hash = hash * 29 + Reference.GetHashCode();
-                    hash = hash * 29 + Status.GetHashCode();
-                    hash = hash * 29 + Notes.GetHashCode();
-                    hash = UpstreamId.HasValue ? hash * 29 + (UpstreamId ?? default).GetHashCode() : hash * 29;
-                    hash = LastSynchronizedOn.HasValue ? hash * 29 + (LastSynchronizedOn ?? default).GetHashCode() : hash * 29;
-                    hash = hash * 29 + CreatedOn.GetHashCode();
-                    hash = hash * 29 + ModifiedOn.GetHashCode();
-                    return hash;
-                }
-            return Id.GetHashCode();
         }
     }
 }

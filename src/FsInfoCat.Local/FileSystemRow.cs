@@ -127,15 +127,10 @@ namespace FsInfoCat.Local
                 results.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_DuplicateDisplayName, new string[] { nameof(DisplayName) }));
         }
 
-        protected virtual bool ArePropertiesEqual([DisallowNull] ILocalFileSystemRow other)
-        {
-            throw new NotImplementedException();
-        }
+        protected virtual bool ArePropertiesEqual([DisallowNull] ILocalFileSystemRow other) => ArePropertiesEqual((IFileSystemRow)other) && EqualityComparer<Guid?>.Default.Equals(UpstreamId, other.UpstreamId) && LastSynchronizedOn == other.LastSynchronizedOn;
 
-        protected virtual bool ArePropertiesEqual([DisallowNull] IFileSystemRow other)
-        {
-            throw new NotImplementedException();
-        }
+        protected virtual bool ArePropertiesEqual([DisallowNull] IFileSystemRow other) => CreatedOn == other.CreatedOn && ModifiedOn == other.ModifiedOn && _notes == other.Notes && IsInactive == other.IsInactive && _displayName == other.DisplayName && ReadOnly == other.ReadOnly &&
+                MaxNameLength == other.MaxNameLength && DefaultDriveType == other.DefaultDriveType;
 
         IEnumerable<Guid> IIdentityReference.GetIdentifiers() { yield return Id; }
 

@@ -5,7 +5,9 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat.Local
 {
+#pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     public class FileWithAncestorNames : DbFileRow, ILocalFileListItemWithAncestorNames, IEquatable<FileWithAncestorNames>
+#pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     {
         private const string VIEW_NAME = "vFileListingWithAncestorNames";
 
@@ -51,16 +53,6 @@ namespace FsInfoCat.Local
             _ = builder.Property(nameof(VolumeIdentifier)).HasConversion(VolumeIdentifier.Converter);
         }
 
-        protected bool ArePropertiesEqual([DisallowNull] ILocalFileListItemWithAncestorNames other)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected bool ArePropertiesEqual([DisallowNull] IFileListItemWithAncestorNames other)
-        {
-            throw new NotImplementedException();
-        }
-
         public bool Equals(FileWithAncestorNames other) => other is not null && ReferenceEquals(this, other) || Id.Equals(Guid.Empty) ? ArePropertiesEqual(this) : Id.Equals(other.Id);
 
         public bool Equals(IFileListItemWithAncestorNames other)
@@ -69,47 +61,6 @@ namespace FsInfoCat.Local
         }
 
         public override bool Equals(object obj)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override int GetHashCode()
-        {
-            Guid id = Id;
-            if (id.Equals(Guid.Empty))
-                unchecked
-                {
-                    int hash = 89;
-                    hash = hash * 101 + Status.GetHashCode();
-                    hash = hash * 101 + Options.GetHashCode();
-                    hash = hash * 101 + LastAccessed.GetHashCode();
-                    hash = EntityExtensions.HashNullable(LastHashCalculation, hash, 101);
-                    hash = hash * 101 + Notes.GetHashCode();
-                    hash = hash * 101 + CreationTime.GetHashCode();
-                    hash = hash * 101 + LastWriteTime.GetHashCode();
-                    hash = hash * 101 + ParentId.GetHashCode();
-                    hash = hash * 101 + BinaryPropertySetId.GetHashCode();
-                    hash = EntityExtensions.HashNullable(SummaryPropertySetId, hash, 101);
-                    hash = EntityExtensions.HashNullable(DocumentPropertySetId, hash, 101);
-                    hash = EntityExtensions.HashNullable(AudioPropertySetId, hash, 101);
-                    hash = EntityExtensions.HashNullable(DRMPropertySetId, hash, 101);
-                    hash = EntityExtensions.HashNullable(GPSPropertySetId, hash, 101);
-                    hash = EntityExtensions.HashNullable(ImagePropertySetId, hash, 101);
-                    hash = EntityExtensions.HashNullable(MediaPropertySetId, hash, 101);
-                    hash = EntityExtensions.HashNullable(MusicPropertySetId, hash, 101);
-                    hash = EntityExtensions.HashNullable(PhotoPropertySetId, hash, 101);
-                    hash = EntityExtensions.HashNullable(RecordedTVPropertySetId, hash, 101);
-                    hash = EntityExtensions.HashNullable(VideoPropertySetId, hash, 101);
-                    hash = EntityExtensions.HashNullable(UpstreamId, hash, 101);
-                    hash = EntityExtensions.HashNullable(LastSynchronizedOn, hash, 101);
-                    hash = hash * 101 + CreatedOn.GetHashCode();
-                    hash = hash * 101 + ModifiedOn.GetHashCode();
-                    return hash;
-                }
-            return id.GetHashCode();
-        }
-
-        public override string ToString()
         {
             throw new NotImplementedException();
         }

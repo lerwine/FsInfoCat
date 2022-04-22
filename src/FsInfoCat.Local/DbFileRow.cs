@@ -111,15 +111,31 @@ namespace FsInfoCat.Local
 
         IDbEntity IIdentityReference.Entity => this;
 
-        protected virtual bool ArePropertiesEqual([DisallowNull] ILocalFileRow other)
-        {
-            throw new NotImplementedException();
-        }
+        protected virtual bool ArePropertiesEqual([DisallowNull] ILocalFileRow other) => ArePropertiesEqual((IFileRow)other) && EqualityComparer<Guid?>.Default.Equals(UpstreamId, other.UpstreamId) && LastSynchronizedOn == other.LastSynchronizedOn;
 
-        protected virtual bool ArePropertiesEqual([DisallowNull] IFileRow other)
-        {
-            throw new NotImplementedException();
-        }
+        protected virtual bool ArePropertiesEqual([DisallowNull] IFileRow other) => ArePropertiesEqual((IFileRow)other) && CreatedOn == other.CreatedOn &&
+            ModifiedOn == other.ModifiedOn &&
+            _name == other.Name &&
+            LastAccessed == other.LastAccessed &&
+            _notes == other.Notes &&
+            CreationTime == other.CreationTime &&
+            LastWriteTime == other.LastWriteTime &&
+            Options == other.Options &&
+            Status == other.Status &&
+            LastHashCalculation == other.LastHashCalculation &&
+            ParentId.Equals(other.ParentId) &&
+            BinaryPropertySetId.Equals(other.BinaryPropertySetId) &&
+            EqualityComparer<Guid?>.Default.Equals(SummaryPropertySetId, other.SummaryPropertySetId) &&
+            EqualityComparer<Guid?>.Default.Equals(DocumentPropertySetId, other.DocumentPropertySetId) &&
+            EqualityComparer<Guid?>.Default.Equals(AudioPropertySetId, other.AudioPropertySetId) &&
+            EqualityComparer<Guid?>.Default.Equals(DRMPropertySetId, other.DRMPropertySetId) &&
+            EqualityComparer<Guid?>.Default.Equals(GPSPropertySetId, other.GPSPropertySetId) &&
+            EqualityComparer<Guid?>.Default.Equals(ImagePropertySetId, other.ImagePropertySetId) &&
+            EqualityComparer<Guid?>.Default.Equals(MediaPropertySetId, other.MediaPropertySetId) &&
+            EqualityComparer<Guid?>.Default.Equals(MusicPropertySetId, other.MusicPropertySetId) &&
+            EqualityComparer<Guid?>.Default.Equals(PhotoPropertySetId, other.PhotoPropertySetId) &&
+            EqualityComparer<Guid?>.Default.Equals(RecordedTVPropertySetId, other.RecordedTVPropertySetId) &&
+            EqualityComparer<Guid?>.Default.Equals(VideoPropertySetId, other.VideoPropertySetId);
 
         IEnumerable<Guid> IIdentityReference.GetIdentifiers() { yield return Id; }
 

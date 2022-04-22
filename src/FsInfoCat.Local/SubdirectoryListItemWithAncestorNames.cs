@@ -5,7 +5,9 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat.Local
 {
+#pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     public class SubdirectoryListItemWithAncestorNames : SubdirectoryListItem, ILocalSubdirectoryListItemWithAncestorNames, IEquatable<SubdirectoryListItemWithAncestorNames>
+#pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     {
         public const string VIEW_NAME_WITH_ANCESTOR_NAMES = "vSubdirectoryListingWithAncestorNames";
 
@@ -45,16 +47,6 @@ namespace FsInfoCat.Local
             _ = builder.Property(nameof(VolumeIdentifier)).HasConversion(VolumeIdentifier.Converter);
         }
 
-        protected bool ArePropertiesEqual([DisallowNull] ILocalSubdirectoryListItemWithAncestorNames other)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected bool ArePropertiesEqual([DisallowNull] ISubdirectoryListItemWithAncestorNames other)
-        {
-            throw new NotImplementedException();
-        }
-
         public bool Equals(SubdirectoryListItemWithAncestorNames other)
         {
             throw new NotImplementedException();
@@ -83,33 +75,6 @@ namespace FsInfoCat.Local
         public override bool Equals(object obj)
         {
             throw new NotImplementedException();
-        }
-
-        public override int GetHashCode()
-        {
-            Guid id = Id;
-            if (id.Equals(Guid.Empty))
-                unchecked
-                {
-                    int hash = 47;
-                    hash = hash * 59 + AncestorNames.GetHashCode();
-                    hash = hash * 59 + CrawlConfigDisplayName.GetHashCode();
-                    hash = (ParentId is null) ? hash * 59 : hash * 59 + (ParentId?.GetHashCode() ?? 0);
-                    hash = (VolumeId is null) ? hash * 59 : hash * 59 + (VolumeId?.GetHashCode() ?? 0);
-                    hash = hash * 59 + Name.GetHashCode();
-                    hash = hash * 59 + Options.GetHashCode();
-                    hash = hash * 59 + LastAccessed.GetHashCode();
-                    hash = hash * 59 + Notes.GetHashCode();
-                    hash = hash * 59 + Status.GetHashCode();
-                    hash = hash * 59 + CreationTime.GetHashCode();
-                    hash = hash * 59 + LastWriteTime.GetHashCode();
-                    hash = EntityExtensions.HashNullable(UpstreamId, hash, 59);
-                    hash = EntityExtensions.HashNullable(LastSynchronizedOn, hash, 59);
-                    hash = hash * 59 + CreatedOn.GetHashCode();
-                    hash = hash * 59 + ModifiedOn.GetHashCode();
-                    return hash;
-                }
-            return id.GetHashCode();
         }
     }
 }

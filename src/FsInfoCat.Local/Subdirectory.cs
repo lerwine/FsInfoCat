@@ -15,12 +15,13 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat.Local
 {
+#pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     public class Subdirectory : SubdirectoryRow, ILocalSubdirectory, ISimpleIdentityReference<Subdirectory>, IEquatable<Subdirectory>
+#pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     {
         #region Fields
 
         private Subdirectory _parent;
-        private CrawlConfiguration _crawlConfiguration;
         private Volume _volume;
         private HashSet<DbFile> _files = new();
         private HashSet<Subdirectory> _subDirectories = new();
@@ -752,16 +753,6 @@ namespace FsInfoCat.Local
                 results.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_VolumeAndParent, new string[] { nameof(Volume) }));
         }
 
-        protected bool ArePropertiesEqual([DisallowNull] ILocalSubdirectory other)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected bool ArePropertiesEqual([DisallowNull] ISubdirectory other)
-        {
-            throw new NotImplementedException();
-        }
-
         public bool Equals(Subdirectory other)
         {
             throw new NotImplementedException();
@@ -775,33 +766,6 @@ namespace FsInfoCat.Local
         public override bool Equals(object obj)
         {
             throw new NotImplementedException();
-        }
-
-        public override int GetHashCode()
-        {
-            Guid id = Id;
-            if (id.Equals(Guid.Empty))
-                unchecked
-                {
-                    int hash = 43;
-                    hash = (Parent is null) ? (ParentId.Equals(Guid.Empty) ? hash * 53 : hash * 53 + ParentId.GetHashCode()) : hash * 53 + (Parent?.GetHashCode() ?? 0);
-                    hash = (Volume is null) ? (VolumeId.Equals(Guid.Empty) ? hash * 53 : hash * 53 + VolumeId.GetHashCode()) : hash * 53 + (Volume?.GetHashCode() ?? 0);
-                    hash = EntityExtensions.HashObject(CrawlConfiguration, hash, 53);
-                    hash = hash * 53 + Name.GetHashCode();
-                    hash = hash * 53 + Options.GetHashCode();
-                    hash = hash * 53 + LastAccessed.GetHashCode();
-                    hash = hash * 53 + Notes.GetHashCode();
-                    hash = hash * 53 + Status.GetHashCode();
-                    hash = hash * 53 + CreationTime.GetHashCode();
-                    hash = hash * 53 + LastWriteTime.GetHashCode();
-                    hash = EntityExtensions.HashNullable(UpstreamId, hash, 53);
-                    hash = EntityExtensions.HashNullable(LastSynchronizedOn, hash, 53);
-                    hash = hash * 53 + CreatedOn.GetHashCode();
-                    hash = hash * 53 + ModifiedOn.GetHashCode();
-                    return hash;
-                }
-            return id.GetHashCode();
-
         }
     }
 }

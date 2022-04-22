@@ -15,7 +15,9 @@ using System.Threading.Tasks;
 namespace FsInfoCat.Local
 {
     [Table(TABLE_NAME)]
+#pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     public class DbFile : DbFileRow, ILocalFile, ISimpleIdentityReference<DbFile>, IEquatable<DbFile>
+#pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     {
         #region Fields
 
@@ -1303,16 +1305,6 @@ namespace FsInfoCat.Local
             throw new NotImplementedException();
         }
 
-        protected bool ArePropertiesEqual([DisallowNull] ILocalFile other)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected bool ArePropertiesEqual([DisallowNull] IFile other)
-        {
-            throw new NotImplementedException();
-        }
-
         public bool Equals(DbFile other) => other is not null && ReferenceEquals(this, other) || Id.Equals(Guid.Empty) ? ArePropertiesEqual(this) : Id.Equals(other.Id);
 
         public bool Equals(IFile other)
@@ -1323,41 +1315,6 @@ namespace FsInfoCat.Local
         public override bool Equals(object obj)
         {
             throw new NotImplementedException();
-        }
-
-        public override int GetHashCode()
-        {
-            Guid id = Id;
-            if (id.Equals(Guid.Empty))
-                unchecked
-                {
-                    int hash = EntityExtensions.HashRelatedEntity(BinaryProperties, () => BinaryPropertySetId, 97, 103);
-                    hash = EntityExtensions.HashRelatedEntity(Parent, () => ParentId, hash, 103);
-                    hash = EntityExtensions.HashNullable(SummaryPropertySetId, hash, 103);
-                    hash = EntityExtensions.HashNullable(DocumentPropertySetId, hash, 103);
-                    hash = EntityExtensions.HashNullable(AudioPropertySetId, hash, 103);
-                    hash = EntityExtensions.HashNullable(DRMPropertySetId, hash, 103);
-                    hash = EntityExtensions.HashNullable(GPSPropertySetId, hash, 103);
-                    hash = EntityExtensions.HashNullable(MediaPropertySetId, hash, 103);
-                    hash = EntityExtensions.HashNullable(MusicPropertySetId, hash, 103);
-                    hash = EntityExtensions.HashNullable(PhotoPropertySetId, hash, 103);
-                    hash = EntityExtensions.HashNullable(RecordedTVPropertySetId, hash, 103);
-                    hash = EntityExtensions.HashNullable(VideoPropertySetId, hash, 103);
-                    hash = hash * 103 + Name.GetHashCode();
-                    hash = hash * 103 + Status.GetHashCode();
-                    hash = hash * 103 + Options.GetHashCode();
-                    hash = hash * 103 + LastAccessed.GetHashCode();
-                    hash = EntityExtensions.HashNullable(LastHashCalculation, hash, 103);
-                    hash = hash * 103 + Notes.GetHashCode();
-                    hash = hash * 103 + CreationTime.GetHashCode();
-                    hash = hash * 103 + LastWriteTime.GetHashCode();
-                    hash = EntityExtensions.HashNullable(UpstreamId, hash, 103);
-                    hash = EntityExtensions.HashNullable(LastSynchronizedOn, hash, 103);
-                    hash = hash * 103 + CreatedOn.GetHashCode();
-                    hash = hash * 103 + ModifiedOn.GetHashCode();
-                    return hash;
-                }
-            return id.GetHashCode();
         }
     }
 }

@@ -1,11 +1,14 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat.Local
 {
+#pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     public class RedundantSetListItem : RedundantSetRow, ILocalRedundantSetListItem, IEquatable<RedundantSetListItem>
+#pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     {
         private const string VIEW_NAME = "vRedundantSetListing";
 
@@ -21,15 +24,9 @@ namespace FsInfoCat.Local
             _ = builder.Property(nameof(Hash)).HasConversion(MD5Hash.Converter);
         }
 
-        protected bool ArePropertiesEqual([DisallowNull] ILocalRedundantSetListItem other)
-        {
-            throw new NotImplementedException();
-        }
+        protected bool ArePropertiesEqual([DisallowNull] ILocalRedundantSetListItem other) => ArePropertiesEqual((ILocalRedundantSetRow)other) && Length == other.Length && EqualityComparer<MD5Hash?>.Default.Equals(Hash, other.Hash);
 
-        protected bool ArePropertiesEqual([DisallowNull] IRedundantSetListItem other)
-        {
-            throw new NotImplementedException();
-        }
+        protected bool ArePropertiesEqual([DisallowNull] IRedundantSetListItem other) => ArePropertiesEqual((IRedundantSetRow)other) && Length == other.Length && EqualityComparer<MD5Hash?>.Default.Equals(Hash, other.Hash);
 
         public bool Equals(RedundantSetListItem other)
         {
@@ -44,26 +41,6 @@ namespace FsInfoCat.Local
         public override bool Equals(object obj)
         {
             throw new NotImplementedException();
-        }
-
-        public override int GetHashCode()
-        {
-            if (Id.Equals(Guid.Empty))
-                unchecked
-                {
-                    int hash = 23;
-                    hash = hash * 31 + Length.GetHashCode();
-                    hash = Hash.HasValue ? hash * 31 + (Hash ?? default).GetHashCode() : hash * 31;
-                    hash = hash * 31 + Reference.GetHashCode();
-                    hash = hash * 31 + Status.GetHashCode();
-                    hash = hash * 31 + Notes.GetHashCode();
-                    hash = UpstreamId.HasValue ? hash * 31 + (UpstreamId ?? default).GetHashCode() : hash * 31;
-                    hash = LastSynchronizedOn.HasValue ? hash * 31 + (LastSynchronizedOn ?? default).GetHashCode() : hash * 31;
-                    hash = hash * 31 + CreatedOn.GetHashCode();
-                    hash = hash * 31 + ModifiedOn.GetHashCode();
-                    return hash;
-                }
-            return Id.GetHashCode();
         }
     }
 }

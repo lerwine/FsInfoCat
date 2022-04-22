@@ -13,7 +13,9 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat.Local
 {
+#pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     public class FileSystem : FileSystemRow, ILocalFileSystem, ISimpleIdentityReference<FileSystem>, IEquatable<FileSystem>
+#pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     {
         #region Fields
 
@@ -133,16 +135,6 @@ namespace FsInfoCat.Local
             }
         }
 
-        protected bool ArePropertiesEqual([DisallowNull] ILocalFileSystem other)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected bool ArePropertiesEqual([DisallowNull] IFileSystem other)
-        {
-            throw new NotImplementedException();
-        }
-
         public bool Equals(FileSystem other) => other is not null && ReferenceEquals(this, other) || Id.Equals(Guid.Empty) ? ArePropertiesEqual(this) : Id.Equals(other.Id);
 
         public bool Equals(IFileSystem other)
@@ -153,28 +145,6 @@ namespace FsInfoCat.Local
         public override bool Equals(object obj)
         {
             throw new NotImplementedException();
-        }
-
-        public override int GetHashCode()
-        {
-            Guid id = Id;
-            if (id.Equals(Guid.Empty))
-                unchecked
-                {
-                    int hash = 29;
-                    hash = hash * 37 + DisplayName.GetHashCode();
-                    hash = hash * 37 + ReadOnly.GetHashCode();
-                    hash = hash * 37 + MaxNameLength.GetHashCode();
-                    hash = EntityExtensions.HashNullable(DefaultDriveType, hash, 37);
-                    hash = hash * 37 + Notes.GetHashCode();
-                    hash = hash * 37 + IsInactive.GetHashCode();
-                    hash = EntityExtensions.HashNullable(UpstreamId, hash, 37);
-                    hash = EntityExtensions.HashNullable(LastSynchronizedOn, hash, 37);
-                    hash = hash * 37 + CreatedOn.GetHashCode();
-                    hash = hash * 37 + ModifiedOn.GetHashCode();
-                    return hash;
-                }
-            return id.GetHashCode();
         }
     }
 }
