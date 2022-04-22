@@ -65,5 +65,24 @@ namespace FsInfoCat.Local
         {
             throw new NotImplementedException();
         }
+
+        public override int GetHashCode()
+        {
+            Guid? id = _id;
+            if (id.HasValue) return id.Value.GetHashCode();
+            return HashCode.Combine(_name, _description, IsInactive, UpstreamId, LastSynchronizedOn, CreatedOn, ModifiedOn);
+        }
+
+        protected bool TryGetId(out Guid result)
+        {
+            Guid? id = _id;
+            if (id.HasValue)
+            {
+                result = id.Value;
+                return true;
+            }
+            result = Guid.Empty;
+            return false;
+        }
     }
 }

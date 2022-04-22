@@ -88,12 +88,12 @@ namespace FsInfoCat.Local
 
         protected bool ArePropertiesEqual([DisallowNull] ILocalMediaPropertySet other)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         protected bool ArePropertiesEqual([DisallowNull] IMediaPropertySet other)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public bool Equals(MediaPropertySet other) => other is not null && ReferenceEquals(this, other) || Id.Equals(Guid.Empty) ? ArePropertiesEqual(this) : Id.Equals(other.Id);

@@ -61,7 +61,7 @@ namespace FsInfoCat.Local
         public override int GetHashCode()
         {
             if (TryGetId(out Guid id)) return id.GetHashCode();
-            HashCode hash = new HashCode();
+            HashCode hash = new();
             hash.Add(CreatedOn);
             hash.Add(ModifiedOn);
             hash.Add(UpstreamId);

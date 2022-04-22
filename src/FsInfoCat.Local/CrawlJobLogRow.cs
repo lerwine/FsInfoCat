@@ -129,7 +129,7 @@ namespace FsInfoCat.Local
         {
             Guid? id = _id;
             if (id.HasValue) return id.Value.GetHashCode();
-            HashCode hash = new HashCode();
+            HashCode hash = new();
             hash.Add(_rootPath);
             hash.Add(StatusCode);
             hash.Add(CrawlStart);

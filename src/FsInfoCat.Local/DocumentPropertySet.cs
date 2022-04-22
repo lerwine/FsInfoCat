@@ -81,12 +81,12 @@ namespace FsInfoCat.Local
 
         protected bool ArePropertiesEqual([DisallowNull] ILocalDocumentPropertySet other)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         protected bool ArePropertiesEqual([DisallowNull] IDocumentPropertySet other)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public bool Equals(DocumentPropertySet other) => other is not null && ReferenceEquals(this, other) || Id.Equals(Guid.Empty) ? ArePropertiesEqual(this) : Id.Equals(other.Id);

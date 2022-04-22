@@ -38,7 +38,7 @@ namespace FsInfoCat.Local
 
         public bool Equals(IRedundantSetListItem other)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public override bool Equals(object obj)

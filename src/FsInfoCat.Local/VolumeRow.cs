@@ -175,29 +175,37 @@ namespace FsInfoCat.Local
 
         IEnumerable<Guid> IIdentityReference.GetIdentifiers() { yield return Id; }
 
-
         public override int GetHashCode()
         {
-            Guid id = Id;
-            if (id.Equals(Guid.Empty))
+            Guid? id = _id;
+            if (id.HasValue) return id.Value.GetHashCode();
+            HashCode hash = new();
+            hash.Add(CreatedOn);
+            hash.Add(ModifiedOn);
+            hash.Add(_displayName);
+            hash.Add(_volumeName);
+            hash.Add(_notes);
+            hash.Add(Identifier);
+            hash.Add(Status);
+            hash.Add(Type);
+            hash.Add(ReadOnly);
+            hash.Add(MaxNameLength);
+            hash.Add(FileSystemId);
+            hash.Add(UpstreamId);
+            hash.Add(LastSynchronizedOn);
+            return hash.ToHashCode();
+        }
+
+        protected bool TryGetId(out Guid result)
+        {
+            Guid? id = _id;
+            if (id.HasValue)
             {
-                HashCode hash = new();
-                hash.Add(CreatedOn);
-                hash.Add(ModifiedOn);
-                hash.Add(DisplayName);
-                hash.Add(VolumeName);
-                hash.Add(Notes);
-                hash.Add(Identifier);
-                hash.Add(Status);
-                hash.Add(Type);
-                hash.Add(ReadOnly);
-                hash.Add(MaxNameLength);
-                hash.Add(FileSystemId);
-                hash.Add(UpstreamId);
-                hash.Add(LastSynchronizedOn);
-                return hash.ToHashCode();
+                result = id.Value;
+                return true;
             }
-            return id.GetHashCode();
+            result = Guid.Empty;
+            return false;
         }
     }
 }

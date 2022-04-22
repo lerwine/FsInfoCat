@@ -122,5 +122,50 @@ namespace FsInfoCat.Local
         }
 
         IEnumerable<Guid> IIdentityReference.GetIdentifiers() { yield return Id; }
+
+        public override int GetHashCode()
+        {
+            Guid? id = _id;
+            if (id.HasValue) return id.Value.GetHashCode();
+            HashCode hash = new();
+            hash.Add(_name);
+            hash.Add(Status);
+            hash.Add(Options);
+            hash.Add(LastAccessed);
+            hash.Add(LastHashCalculation);
+            hash.Add(_notes);
+            hash.Add(CreationTime);
+            hash.Add(LastWriteTime);
+            hash.Add(ParentId);
+            hash.Add(BinaryPropertySetId);
+            hash.Add(SummaryPropertySetId);
+            hash.Add(DocumentPropertySetId);
+            hash.Add(AudioPropertySetId);
+            hash.Add(DRMPropertySetId);
+            hash.Add(GPSPropertySetId);
+            hash.Add(ImagePropertySetId);
+            hash.Add(MediaPropertySetId);
+            hash.Add(MusicPropertySetId);
+            hash.Add(PhotoPropertySetId);
+            hash.Add(RecordedTVPropertySetId);
+            hash.Add(VideoPropertySetId);
+            hash.Add(UpstreamId);
+            hash.Add(LastSynchronizedOn);
+            hash.Add(CreatedOn);
+            hash.Add(ModifiedOn);
+            return hash.ToHashCode();
+        }
+
+        protected bool TryGetId(out Guid result)
+        {
+            Guid? id = _id;
+            if (id.HasValue)
+            {
+                result = id.Value;
+                return true;
+            }
+            result = Guid.Empty;
+            return false;
+        }
     }
 }

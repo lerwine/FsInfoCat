@@ -138,5 +138,35 @@ namespace FsInfoCat.Local
         }
 
         IEnumerable<Guid> IIdentityReference.GetIdentifiers() { yield return Id; }
+
+        public override int GetHashCode()
+        {
+            Guid? id = _id;
+            if (id.HasValue) return id.Value.GetHashCode();
+            HashCode hash = new();
+            hash.Add(_displayName);
+            hash.Add(ReadOnly);
+            hash.Add(MaxNameLength);
+            hash.Add(DefaultDriveType);
+            hash.Add(_notes);
+            hash.Add(IsInactive);
+            hash.Add(UpstreamId);
+            hash.Add(LastSynchronizedOn);
+            hash.Add(CreatedOn);
+            hash.Add(ModifiedOn);
+            return hash.ToHashCode();
+        }
+
+        protected bool TryGetId(out Guid result)
+        {
+            Guid? id = _id;
+            if (id.HasValue)
+            {
+                result = id.Value;
+                return true;
+            }
+            result = Guid.Empty;
+            return false;
+        }
     }
 }

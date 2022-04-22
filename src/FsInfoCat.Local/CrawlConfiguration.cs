@@ -147,7 +147,7 @@ namespace FsInfoCat.Local
                     await dbContext.SaveChangesAsync(progress.Token);
                 }
                 else
-                    status = await CrawlAsync<T>(dbContext, ctx, subdir, progress, crawl);
+                    status = await CrawlAsync(dbContext, ctx, subdir, progress, crawl);
                 if (status.HasValue)
                     return status.Value;
             }

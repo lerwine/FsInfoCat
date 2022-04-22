@@ -230,20 +230,9 @@ namespace FsInfoCat.Local
 
         public override int GetHashCode()
         {
-            Guid id = Id;
-            if (id.Equals(Guid.Empty))
-                unchecked
-                {
-                    int hash = 13;
-                    hash = hash * 19 + Message.GetHashCode();
-                    hash = hash * 19 + Details.GetHashCode();
-                    hash = hash * 19 + ErrorCode.GetHashCode();
-                    hash = EntityExtensions.HashRelatedEntity(Target, () => TargetId, hash, 19);
-                    hash = hash * 19 + CreatedOn.GetHashCode();
-                    hash = hash * 19 + ModifiedOn.GetHashCode();
-                    return hash;
-                }
-            return id.GetHashCode();
+            Guid? id = _id;
+            if (id.HasValue) return id.Value.GetHashCode();
+            return HashCode.Combine(_message, _details, ErrorCode, TargetId, CreatedOn, ModifiedOn);
         }
     }
 }

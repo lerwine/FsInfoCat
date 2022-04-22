@@ -36,12 +36,16 @@ namespace FsInfoCat.Local
 
         public long? TTL { get; }
 
-        protected bool ArePropertiesEqual([DisallowNull] ICrawlJob other)
-        {
-            throw new NotImplementedException();
-        }
+        protected bool ArePropertiesEqual([DisallowNull] ICrawlJob other) => CrawlStart == other.CrawlStart &&
+                   StatusMessage == other.StatusMessage &&
+                   StatusDetail == other.StatusDetail &&
+                   FoldersProcessed == other.FoldersProcessed &&
+                   FilesProcessed == other.FilesProcessed &&
+                   MaxRecursionDepth == other.MaxRecursionDepth &&
+                   MaxTotalItems == other.MaxTotalItems &&
+                   TTL == other.TTL;
 
-        public bool Equals(CrawlJob other) => other is not null && ReferenceEquals(this, other) || ArePropertiesEqual(this);
+        public bool Equals(CrawlJob other) => other is not null && ReferenceEquals(this, other) || (ArePropertiesEqual(this) && EqualityComparer<Guid?>.Default.Equals(LogEntityId, other.LogEntityId) && ConfigurationId.Equals(other.ConfigurationId) && TotalCount == other.TotalCount);
 
         public bool Equals(ICrawlJob other)
         {
@@ -55,15 +59,19 @@ namespace FsInfoCat.Local
 
         public override int GetHashCode()
         {
-            unchecked
-            {
-                int hash = EntityExtensions.HashNullable(LogEntityId, 11, 17);
-                hash = hash * 17 + ConfigurationId.GetHashCode();
-                hash = hash * 17 + MaxRecursionDepth.GetHashCode();
-                hash = EntityExtensions.HashNullable(MaxTotalItems, hash, 17);
-                hash = EntityExtensions.HashNullable(TTL, hash, 17);
-                return hash;
-            }
+            HashCode hash = new();
+            hash.Add(LogEntityId);
+            hash.Add(ConfigurationId);
+            hash.Add(CrawlStart);
+            hash.Add(StatusMessage);
+            hash.Add(StatusDetail);
+            hash.Add(FoldersProcessed);
+            hash.Add(FilesProcessed);
+            hash.Add(TotalCount);
+            hash.Add(MaxRecursionDepth);
+            hash.Add(MaxTotalItems);
+            hash.Add(TTL);
+            return hash.ToHashCode();
         }
 
         public override string ToString()

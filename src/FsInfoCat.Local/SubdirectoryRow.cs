@@ -181,5 +181,38 @@ namespace FsInfoCat.Local
         }
 
         IEnumerable<Guid> IIdentityReference.GetIdentifiers() { yield return Id; }
+
+        public override int GetHashCode()
+        {
+            Guid? id = _id;
+            if (id.HasValue) return id.Value.GetHashCode();
+            HashCode hash = new();
+            hash.Add(_name);
+            hash.Add(Options);
+            hash.Add(LastAccessed);
+            hash.Add(_notes);
+            hash.Add(Status);
+            hash.Add(CreationTime);
+            hash.Add(LastWriteTime);
+            hash.Add(ParentId);
+            hash.Add(VolumeId);
+            hash.Add(UpstreamId);
+            hash.Add(LastSynchronizedOn);
+            hash.Add(CreatedOn);
+            hash.Add(ModifiedOn);
+            return hash.ToHashCode();
+        }
+
+        protected bool TryGetId(out Guid result)
+        {
+            Guid? id = _id;
+            if (id.HasValue)
+            {
+                result = id.Value;
+                return true;
+            }
+            result = Guid.Empty;
+            return false;
+        }
     }
 }

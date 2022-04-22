@@ -77,12 +77,12 @@ namespace FsInfoCat.Local
 
         protected bool ArePropertiesEqual([DisallowNull] ILocalDRMPropertySet other)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         protected bool ArePropertiesEqual([DisallowNull] IDRMPropertySet other)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public bool Equals(DRMPropertySet other) => other is not null && ReferenceEquals(this, other) || Id.Equals(Guid.Empty) ? ArePropertiesEqual(this) : Id.Equals(other.Id);

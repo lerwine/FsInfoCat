@@ -183,7 +183,7 @@ namespace FsInfoCat.Local
         {
             Guid? id = _id;
             if (id.HasValue) return id.Value.GetHashCode();
-            HashCode hash = new HashCode();
+            HashCode hash = new();
             hash.Add(CreatedOn);
             hash.Add(ModifiedOn);
             hash.Add(UpstreamId);
