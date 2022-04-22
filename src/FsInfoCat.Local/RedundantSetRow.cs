@@ -96,9 +96,6 @@ namespace FsInfoCat.Local
             throw new NotImplementedException();
         }
 
-        IEnumerable<Guid> IIdentityReference.GetIdentifiers()
-        {
-            yield return Id;
-        }
+        IEnumerable<Guid> IIdentityReference.GetIdentifiers() { yield return Id; }
     }
 }

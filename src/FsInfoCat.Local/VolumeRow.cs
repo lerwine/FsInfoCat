@@ -173,10 +173,7 @@ namespace FsInfoCat.Local
                     _volumeName == other.VolumeName &&
                     Notes == other.Notes;
 
-        IEnumerable<Guid> IIdentityReference.GetIdentifiers()
-        {
-            yield return Id;
-        }
+        IEnumerable<Guid> IIdentityReference.GetIdentifiers() { yield return Id; }
 
 
         public override int GetHashCode()

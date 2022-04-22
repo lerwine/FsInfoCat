@@ -36,5 +36,17 @@ namespace FsInfoCat.Local
                 finally { Monitor.Exit(SyncRoot); }
             }
         }
+
+        protected bool TryGetId(out Guid result)
+        {
+            Guid? id = _id;
+            if (id.HasValue)
+            {
+                result = id.Value;
+                return true;
+            }
+            result = Guid.Empty;
+            return false;
+        }
     }
 }

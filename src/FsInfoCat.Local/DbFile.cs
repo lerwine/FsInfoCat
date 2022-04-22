@@ -1295,10 +1295,7 @@ namespace FsInfoCat.Local
             return entry;
         }
 
-        IEnumerable<Guid> IIdentityReference.GetIdentifiers()
-        {
-            yield return Id;
-        }
+        IEnumerable<Guid> IIdentityReference.GetIdentifiers() { yield return Id; }
 
         public ISimpleIdentityReference<BinaryPropertySet> GetBinaryPropertySetReference()
         {

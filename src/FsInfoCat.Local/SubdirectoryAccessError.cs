@@ -204,10 +204,7 @@ namespace FsInfoCat.Local
             _ = builder.HasOne(e => e.Target).WithMany(d => d.AccessErrors).HasForeignKey(nameof(TargetId)).IsRequired().OnDelete(DeleteBehavior.Restrict);
         }
 
-        IEnumerable<Guid> IIdentityReference.GetIdentifiers()
-        {
-            yield return Id;
-        }
+        IEnumerable<Guid> IIdentityReference.GetIdentifiers() { yield return Id; }
 
         protected bool ArePropertiesEqual([DisallowNull] ILocalSubdirectoryAccessError other)
         {
