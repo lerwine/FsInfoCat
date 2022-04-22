@@ -1,6 +1,6 @@
 Import-Module -Name './bin/Debug/net5.0/DevHelper' -ErrorAction Stop;
 
-[Type[]]$ConcreteTypes = [DevUtil.EntityHelper]::GetLocalConcreteTypes();
-$t = $ConcreteTypes | where-object { $_.Name -eq 'CrawlConfigListItemBase' }
-$Fields = [DevUtil.EntityHelper]::GetFields($t);
-$Fields;
+[DevUtil.EnhancedTypeDescriptor[]]$ConcreteTypes = [DevUtil.EnhancedTypeDescriptor]::GetFsInfoCatTypes();
+$t = $ConcreteTypes | where-object { $_.BaseName -eq 'CrawlJobLogRow' }
+$StringBuilder = [DevUtil.ReflectionExtensions]::WriteCodeTemplate([System.Text.StringBuilder]::new(), $t);
+$StringBuilder.ToString();

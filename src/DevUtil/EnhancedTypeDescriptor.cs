@@ -2,46 +2,33 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading;
 
 namespace DevUtil
 {
-    public class EnhancedTypeDescriptor
+    public abstract class EnhancedTypeDescriptor : IEquatable<EnhancedTypeDescriptor>
     {
         private static readonly Collection<EnhancedTypeDescriptor> _cache = new();
 
-        public static readonly Type ValueTypeType = typeof(ValueType);
-
-        public static readonly Type NullableType = typeof(Nullable<>);
-
-        public static readonly Type IEnumerableType = typeof(IEnumerable<>);
-
-        public static readonly Type IEquatableType = typeof(IEquatable<>);
-
         public Type Type { get; }
 
-        public string TypeName { get; }
+        public abstract string BaseName { get; }
 
-        public string BaseName { get; }
+        public abstract string Namespace { get; }
 
-        public string Namespace { get; }
-
-        public string ComponentName { get; }
+        public abstract string ComponentName { get; }
 
         public TypeCategory Category { get; }
 
-        public bool IsLocalEntityType { get; }
+        public abstract bool IsLocalEntityType { get; }
 
-        public bool IsEntityType { get; }
+        public abstract bool ImplementsIDbEntity { get; }
 
-        public EnhancedTypeDescriptor UnderlyingType { get; }
+        public abstract EnhancedTypeDescriptor BaseType { get; }
 
-        public EnhancedTypeDescriptor ElementType { get; }
-
-        public EnhancedTypeDescriptor BaseType { get; }
-
-        public ReadOnlyCollection<EnhancedTypeDescriptor> GenericArguments { get; }
+        public abstract EnhancedTypeDescriptor UnderlyingType { get; }
 
         public ReadOnlyCollection<EnhancedTypeDescriptor> EquatableTo { get; }
 
@@ -52,283 +39,278 @@ namespace DevUtil
         public ReadOnlyCollection<EnhancedTypeDescriptor> OtherInterfaceTypes { get; }
 
         public ReadOnlyCollection<EnhancedPropertyDescriptor> Properties { get; }
+        public EnhancedTypeDescriptor DeclaringType { get; }
 
-        public static EnhancedTypeDescriptor Get(Type type)
-        {
-            EnhancedTypeDescriptor td;
-            Monitor.Enter(_cache);
-            try
-            {
-                td = _cache.FirstOrDefault(t => t.Type.Equals(type));
-                if (td is null)
-                {
-                    td = new(type);
-                }
-            }
-            finally { Monitor.Exit(_cache); }
-            return td;
-        }
+        public static IEnumerable<EnhancedTypeDescriptor> GetFsInfoCatTypes() => ReflectionExtensions.LocalAssembly.GetTypes().Concat(ReflectionExtensions.BaseAssembly.GetTypes()).Select(t => EnhancedDefinedTypeDescriptor.Get(t));
 
-        protected EnhancedTypeDescriptor(Type type)
+        public static IEnumerable<EnhancedTypeDescriptor> GetBaseAssemblyTypes() => ReflectionExtensions.BaseAssembly.GetTypes().Select(t => EnhancedDefinedTypeDescriptor.Get(t));
+
+        public static IEnumerable<EnhancedTypeDescriptor> GetLocalAssemblyTypes() => ReflectionExtensions.LocalAssembly.GetTypes().Select(t => EnhancedDefinedTypeDescriptor.Get(t));
+
+        public static IEnumerable<EnhancedTypeDescriptor> GetDbEntityTypes() => ReflectionExtensions.LocalAssembly.GetTypes().Concat(ReflectionExtensions.BaseAssembly.GetTypes()).Where(t => t.ImplementsIDbEntity()).Select(t => EnhancedDefinedTypeDescriptor.Get(t));
+
+        public static IEnumerable<EnhancedTypeDescriptor> GetBaseDbEntityTypes() => ReflectionExtensions.BaseAssembly.GetTypes().Where(t => t.ImplementsIDbEntity()).Select(t => EnhancedDefinedTypeDescriptor.Get(t));
+
+        public static IEnumerable<EnhancedTypeDescriptor> GetLocalDbEntityTypes() => ReflectionExtensions.LocalAssembly.GetTypes().Concat(ReflectionExtensions.BaseAssembly.GetTypes()).Where(t => t.ImplementsILocalDbEntity()).Select(t => EnhancedDefinedTypeDescriptor.Get(t));
+
+        protected EnhancedTypeDescriptor([DisallowNull] Type type)
         {
             Type = type;
             _cache.Add(this);
-            Collection<EnhancedTypeDescriptor> genericArguments = new();
-            if (type.IsArray)
-            {
-                Category = TypeCategory.Array;
-                ComponentName = BaseName = (UnderlyingType = Get(type.GetElementType())).BaseName;
-                Namespace = UnderlyingType.Namespace;
-                int rank = type.GetArrayRank();
-                TypeName = (rank > 1) ? $"{UnderlyingType.TypeName}[{new string(',', rank - 1)}]" : $"{UnderlyingType.TypeName}[]";
-            }
-            else if (type.IsByRef)
-            {
-                Category = TypeCategory.ByRef;
-                ComponentName = BaseName = (UnderlyingType = Get(type.GetElementType())).BaseName;
-                Namespace = UnderlyingType.Namespace;
-                TypeName = $"{UnderlyingType.TypeName}&";
-            }
-            else if (type.IsPointer)
-            {
-                Category = TypeCategory.Pointer;
-                ComponentName = BaseName = (UnderlyingType = Get(type.GetElementType())).BaseName;
-                Namespace = UnderlyingType.Namespace;
-                TypeName = $"{UnderlyingType.TypeName}*";
-            }
-            else
-            {
-                if (type.IsValueType)
-                {
-                    if (type.IsEnum)
-                    {
-                        Category = TypeCategory.Enum;
-                        BaseType = UnderlyingType = Get(Enum.GetUnderlyingType(type));
-                        BaseName = type.Name;
-                        Namespace = type.Namespace ?? "";
-                    }
-                    else if (type.IsPrimitive)
-                    {
-                        Category = TypeCategory.Primitive;
-                        if (type == typeof(bool))
-                            BaseName = "bool";
-                        else if (type == typeof(short))
-                            BaseName = "short";
-                        else if (type == typeof(ushort))
-                            BaseName = "ushort";
-                        else if (type == typeof(int))
-                            BaseName = "int";
-                        else if (type == typeof(uint))
-                            BaseName = "uint";
-                        else if (type == typeof(long))
-                            BaseName = "long";
-                        else if (type == typeof(ulong))
-                            BaseName = "ulong";
-                        else if (type == typeof(float))
-                            BaseName = "float";
-                        else
-                            BaseName = type.Name.ToLower();
-                        Namespace = "";
-                    }
-                    else if (type.Equals(typeof(decimal)) || type.Equals(typeof(void)))
-                    {
-                        Category = TypeCategory.Struct;
-                        BaseName = TypeName = type.Name.ToLower();
-                        Namespace = "";
-                    }
-                    else
-                    {
-                        Namespace = type.Namespace ?? "";
-                        bool isNullable;
-                        if (type.IsGenericType)
-                        {
-                            if (type.IsGenericTypeDefinition)
-                            {
-                                isNullable = type.Equals(NullableType);
-                                int i = type.Name.IndexOf("`");
-                                BaseName = type.Name.Substring(0, i);
-                            }
-                            else if (type.GetGenericTypeDefinition().Equals(NullableType))
-                            {
-                                isNullable = true;
-                                BaseName = (UnderlyingType = Get(Nullable.GetUnderlyingType(type))).BaseName;
-                                BaseType = Get(NullableType);
-                            }
-                            else
-                            {
-                                isNullable = false;
-                                int i = type.Name.IndexOf("`");
-                                BaseName = type.Name.Substring(0, i);
-                            }
-                        }
-                        else
-                        {
-                            isNullable = false;
-                            BaseName = type.Name;
-                        }
-                        if (isNullable)
-                        {
-                            IsEntityType = UnderlyingType.IsEntityType;
-                            IsLocalEntityType = UnderlyingType.IsLocalEntityType;
-                            Category = TypeCategory.Nullable;
-                        }
-                        else
-                        {
-                            foreach (Type i in type.GetInterfaces())
-                                if (i.Equals(EntityHelper.LocalDbEntityInterfaceType))
-                                {
-                                    IsLocalEntityType = IsEntityType = true;
-                                    break;
-                                }
-                                else if (i.Equals(EntityHelper.DbEntityInterfaceType))
-                                {
-                                    IsEntityType = true;
-                                    break;
-                                }
-
-                            Category = TypeCategory.Struct;
-                        }
-                    }
-                    ComponentName = BaseName;
-                }
-                else
-                {
-                    if (type.IsInterface)
-                    {
-                        foreach (Type i in type.GetInterfaces())
-                            if (i.Equals(EntityHelper.LocalDbEntityInterfaceType))
-                            {
-                                IsLocalEntityType = true;
-                                break;
-                            }
-                            else if (i.Equals(EntityHelper.DbEntityInterfaceType))
-                            {
-                                IsEntityType = true;
-                                break;
-                            }
-                        Category = TypeCategory.Interface;
-                    }
-                    else
-                    {
-                        Type t = type;
-                        do
-                        {
-                            if (t.Equals(EntityHelper.LocalDbEntityClassType))
-                            {
-                                IsLocalEntityType = true;
-                                break;
-                            }
-                            else if (t.Equals(EntityHelper.DbEntityClassType))
-                            {
-                                IsEntityType = true;
-                                break;
-                            }
-                        } while ((t = t.BaseType) is not null && !t.Equals(EntityHelper.ObjectType));
-                        Category = TypeCategory.Class;
-                    }
-                    string componentName = TypeDescriptor.GetComponentName(type);
-                    if (type.IsGenericType)
-                    {
-                        if (type.IsGenericTypeDefinition)
-                        {
-                            if (type.IsClass && type.BaseType is not null && !type.BaseType.Equals(EntityHelper.ObjectType))
-                                BaseType = Get(type.BaseType);
-                        }
-                        else
-                            BaseType = Get(type.GetGenericTypeDefinition());
-                        int i = type.Name.IndexOf("`");
-                        BaseName = type.Name.Substring(0, i);
-                        Namespace = type.Namespace ?? "";
-                    }
-                    else if (type.IsClass)
-                    {
-                        if (type.BaseType is not null && !type.BaseType.Equals(EntityHelper.ObjectType))
-                        {
-                            BaseType = Get(type.BaseType);
-                            BaseName = type.Name;
-                            Namespace = type.Namespace ?? "";
-                        }
-                        else if (type.Equals(typeof(string)))
-                        {
-                            BaseName = TypeName = "string";
-                            Namespace = "";
-                        }
-                        else
-                            Namespace = type.Namespace ?? "";
-                    }
-                    else
-                    {
-                        BaseName = type.Name;
-                        Namespace = type.Namespace ?? "";
-                    }
-                    ComponentName = string.IsNullOrWhiteSpace(componentName) ? BaseName : componentName;
-                }
-
-                if (type.IsGenericType)
-                {
-                    if (type.IsGenericTypeDefinition)
-                    {
-                        int n = type.GetGenericArguments().Length - 1;
-                        switch (n)
-                        {
-                            case 0:
-                                TypeName = $"{BaseName}<>";
-                                break;
-                            case 1:
-                                TypeName = $"{BaseName}<,>";
-                                break;
-                            default:
-                                TypeName = $"{BaseName}<{new string(',', n)}>";
-                                break;
-                        }
-                    }
-                    else
-                    {
-                        foreach (Type t in type.GetGenericArguments())
-                            genericArguments.Add(Get(t));
-                        if (Category == TypeCategory.Nullable)
-                            TypeName = $"{BaseName}?";
-                        else if (genericArguments.Count == 1)
-                            TypeName = $"{BaseName}<{genericArguments[0].TypeName}>";
-                        else
-                            TypeName = $"{BaseName}<{string.Join(',', genericArguments.Select(a => a.TypeName))}>";
-                    }
-                }
-                else
-                    TypeName = BaseName;
-            }
             Collection<EnhancedTypeDescriptor> equatableTo = new();
             Collection<EnhancedTypeDescriptor> enumerableInterfaces = new();
             Collection<EnhancedTypeDescriptor> implementedEntityTypes = new();
             Collection<EnhancedTypeDescriptor> otherInterfaceTypes = new();
-            foreach (Type i in type.GetInterfaces())
-            {
-                if (i.IsGenericType && !i.IsGenericTypeDefinition)
-                {
-                    Type g = i.GetGenericTypeDefinition();
-                    if (g.Equals(IEnumerableType))
-                    {
-                        enumerableInterfaces.Add(Get(i));
-                        continue;
-                    }
-                    if (g.Equals(IEquatableType))
-                    {
-                        equatableTo.Add(Get(i.GetGenericArguments()[0]));
-                        continue;
-                    }
-                }
-                EnhancedTypeDescriptor td = Get(i);
-                if (td.IsEntityType)
-                    implementedEntityTypes.Add(td);
-                else
-                    otherInterfaceTypes.Add(td);
-            }
-            GenericArguments = new(genericArguments);
+            Collection<EnhancedPropertyDescriptor> properties = new();
             EquatableTo = new(equatableTo);
             EnumerableInterfaces = new(enumerableInterfaces);
             ImplementedEntityTypes = new(implementedEntityTypes);
             OtherInterfaceTypes = new(otherInterfaceTypes);
-            Properties = new(EnhancedPropertyDescriptor.Create(this));
+            Properties = new(properties);
+            if (type.IsArray)
+                Category = TypeCategory.Array;
+            else if (type.IsByRef)
+                Category = TypeCategory.ByRef;
+            else if (type.IsPointer)
+                Category = TypeCategory.Pointer;
+            else if (type.IsEnum)
+                Category = TypeCategory.Enum;
+            else if (type.IsPrimitive)
+                Category = TypeCategory.Primitive;
+            else if (type.IsConstructedNullableType())
+                Category = TypeCategory.Nullable;
+            else if (type.IsValueType)
+                Category = TypeCategory.Struct;
+            else if (type.IsInterface)
+                Category = TypeCategory.Interface;
+            else
+                Category = TypeCategory.Class;
+            foreach (Type i in type.GetInterfaces())
+            {
+                if (i.IsConstructedGenericType)
+                {
+                    Type d = i.GetGenericTypeDefinition();
+                    if (d.Equals(typeof(IEnumerable<>)))
+                    {
+                        enumerableInterfaces.Add(new EnhancedConstructedTypeDescriptor(i));
+                        continue;
+                    }
+                    if (d.Equals(typeof(IEquatable<>)))
+                    {
+                        equatableTo.Add(EnhancedDefinedTypeDescriptor.Get(i.GetGenericArguments()[0]));
+                        continue;
+                    }
+                }
+                EnhancedTypeDescriptor td = EnhancedDefinedTypeDescriptor.Get(i);
+                if (td.ImplementsIDbEntity)
+                    implementedEntityTypes.Add(td);
+                else
+                    otherInterfaceTypes.Add(td);
+            }
+            if (type.IsNested)
+                DeclaringType = EnhancedDefinedTypeDescriptor.Get(type.DeclaringType);
+            EnhancedPropertyDescriptor.Create(this, properties);
+        }
+
+        protected static EnhancedTypeDescriptor Get(Type type, Func<EnhancedDefinedTypeDescriptor> createFunc)
+        {
+            if (type is null) throw new ArgumentNullException(nameof(type));
+            Monitor.Enter(_cache);
+            try { return _cache.FirstOrDefault(t => t.Type.Equals(type)) ?? ((type.IsArray || type.IsByRef || type.IsPointer || type.IsConstructedGenericType) ? (EnhancedTypeDescriptor)new EnhancedConstructedTypeDescriptor(type) : createFunc()); }
+            finally { Monitor.Exit(_cache); }
+        }
+
+        public override bool Equals(object obj) => Equals(obj as EnhancedTypeDescriptor);
+
+        public bool Equals(EnhancedTypeDescriptor other) => other is not null && Type.Equals(other.Type);
+
+        public override int GetHashCode() => Type.AssemblyQualifiedName.GetHashCode();
+    }
+
+    public sealed class EnhancedDefinedTypeDescriptor : EnhancedTypeDescriptor
+    {
+        private readonly string _baseName;
+        private readonly string _componentName;
+        private readonly string _namespace;
+        private readonly EnhancedTypeDescriptor _underlyingType;
+        private readonly EnhancedTypeDescriptor _baseType;
+        private readonly bool _implementsIDbEntity;
+        private readonly bool _isLocalEntityType;
+
+        public override string BaseName => _baseName;
+
+        public override string Namespace => _namespace;
+
+        public override string ComponentName => _componentName;
+
+        public override EnhancedTypeDescriptor BaseType => _baseType;
+
+        public override EnhancedTypeDescriptor UnderlyingType => _underlyingType;
+
+        public override bool IsLocalEntityType => _implementsIDbEntity;
+
+        public override bool ImplementsIDbEntity => _isLocalEntityType;
+
+        private EnhancedDefinedTypeDescriptor([DisallowNull] Type type) : base(type)
+        {
+            switch (Category)
+            {
+                case TypeCategory.Enum:
+                    _baseType = _underlyingType = Get(Enum.GetUnderlyingType(type));
+                    _componentName = _baseName = type.Name;
+                    _namespace = type.Namespace ?? "";
+                    break;
+                case TypeCategory.Primitive:
+                    if (type == typeof(bool))
+                        _baseName = "bool";
+                    else if (type == typeof(short))
+                        _baseName = "short";
+                    else if (type == typeof(ushort))
+                        _baseName = "ushort";
+                    else if (type == typeof(int))
+                        _baseName = "int";
+                    else if (type == typeof(uint))
+                        _baseName = "uint";
+                    else if (type == typeof(long))
+                        _baseName = "long";
+                    else if (type == typeof(ulong))
+                        _baseName = "ulong";
+                    else if (type == typeof(float))
+                        _baseName = "float";
+                    else
+                        _baseName = type.Name.ToLower();
+                    _namespace = "";
+                    _componentName = _baseName;
+                    break;
+                case TypeCategory.Array:
+                case TypeCategory.ByRef:
+                case TypeCategory.Pointer:
+                case TypeCategory.Nullable:
+                    throw new ArgumentException("Nullable, array, ByRef, and pointer types not supported", nameof(type));
+                default:
+                    if (type.IsConstructedGenericType)
+                        throw new ArgumentException("Constructed generic types not supported", nameof(type));
+                    if (type.Equals(typeof(decimal)) || type.Equals(typeof(void)))
+                    {
+                        _componentName = _baseName = type.Name.ToLower();
+                        _namespace = "";
+                    }
+                    else
+                    {
+                        if (type.IsGenericType)
+                        {
+                            int i = type.Name.IndexOf("`");
+                            _baseName = (i < 0) ? type.Name : type.Name.Substring(0, i);
+                        }
+                        else
+                            _baseName = type.Name;
+                        _namespace = type.Namespace ?? "";
+                        string componentName = TypeDescriptor.GetComponentName(type);
+                        _componentName = string.IsNullOrWhiteSpace(componentName) ? BaseName : componentName;
+                        if (!(type.IsValueType || type.IsInterface || type.BaseType is null || type.BaseType == typeof(object)))
+                            _baseType = Get(type.BaseType);
+                        if (type.ImplementsIDbEntity())
+                        {
+                            _implementsIDbEntity = true;
+                            _isLocalEntityType = type.ImplementsILocalDbEntity();
+                        }
+                    }
+                    break;
+            }
+        }
+
+        public static EnhancedTypeDescriptor Get([DisallowNull] Type type) => Get(type, () => new EnhancedDefinedTypeDescriptor(type));
+    }
+
+    public sealed class EnhancedConstructedTypeDescriptor : EnhancedTypeDescriptor
+    {
+        private readonly string _baseName;
+        private readonly string _componentName;
+        private readonly string _namespace;
+        private readonly EnhancedTypeDescriptor _underlyingType;
+        private readonly EnhancedTypeDescriptor _baseType;
+        private readonly bool _implementsIDbEntity;
+        private readonly bool _isLocalEntityType;
+
+        public override string BaseName => _baseName;
+
+        public override string Namespace => _namespace;
+
+        public override string ComponentName => _componentName;
+
+        public override EnhancedTypeDescriptor BaseType => _baseType;
+
+        public override EnhancedTypeDescriptor UnderlyingType => _underlyingType;
+
+        public EnhancedTypeDescriptor ElementType { get; }
+
+        public ReadOnlyCollection<EnhancedTypeDescriptor> GenericArguments { get; }
+
+        public override bool IsLocalEntityType => _implementsIDbEntity;
+
+        public override bool ImplementsIDbEntity => _isLocalEntityType;
+
+        public EnhancedConstructedTypeDescriptor([DisallowNull] Type type) : base(type)
+        {
+            Collection<EnhancedTypeDescriptor> genericArguments = new();
+            GenericArguments = new(genericArguments);
+            switch (Category)
+            {
+                case TypeCategory.Array:
+                case TypeCategory.ByRef:
+                case TypeCategory.Pointer:
+                    _baseName = (_underlyingType = EnhancedDefinedTypeDescriptor.Get(type.GetElementType())).BaseName;
+                    _componentName = UnderlyingType.ComponentName;
+                    _namespace = UnderlyingType.Namespace;
+                    break;
+                case TypeCategory.Nullable:
+                    _baseType = EnhancedDefinedTypeDescriptor.Get(typeof(Nullable<>));
+                    _baseName = (_underlyingType = EnhancedDefinedTypeDescriptor.Get(Nullable.GetUnderlyingType(type))).BaseName;
+                    _implementsIDbEntity = UnderlyingType.ImplementsIDbEntity;
+                    _isLocalEntityType = UnderlyingType.IsLocalEntityType;
+                    _componentName = UnderlyingType.ComponentName;
+                    _namespace = UnderlyingType.Namespace;
+                    break;
+                default:
+                    if (type.IsConstructedGenericType)
+                    {
+                        int i = type.Name.IndexOf("`");
+                        _baseName = (i < 0) ? type.Name : type.Name.Substring(0, i);
+                        _namespace = type.Namespace ?? "";
+                        string componentName = TypeDescriptor.GetComponentName(type);
+                        _componentName = string.IsNullOrWhiteSpace(componentName) ? BaseName : componentName;
+                        foreach (Type t in type.GetGenericArguments())
+                            genericArguments.Add(EnhancedDefinedTypeDescriptor.Get(t));
+                        if (type.ImplementsIDbEntity())
+                        {
+                            _implementsIDbEntity = true;
+                            _isLocalEntityType = type.ImplementsILocalDbEntity();
+                        }
+                    }
+                    else
+                    {
+                        if (type.IsGenericType)
+                            throw new ArgumentException("Unconstructed generic types not supported", nameof(type));
+                        if (Category == TypeCategory.Struct || Category == TypeCategory.Interface)
+                            throw new ArgumentException("Struct and Interface types not supported unless constructed generic type", nameof(type));
+                        if (type.Equals(typeof(string)))
+                        {
+                            _componentName = _baseName = "string";
+                            _namespace = "";
+                        }
+                        else
+                        {
+                            if (!(type.IsValueType || type.BaseType is null || type.BaseType == typeof(object)))
+                                _baseType = EnhancedDefinedTypeDescriptor.Get(type.BaseType);
+                            if (type.ImplementsIDbEntity())
+                            {
+                                _implementsIDbEntity = true;
+                                _isLocalEntityType = type.ImplementsILocalDbEntity();
+                            }
+                        }
+                    }
+                    break;
+            }
         }
     }
 }

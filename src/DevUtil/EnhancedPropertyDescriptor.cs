@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -33,7 +33,7 @@ namespace DevUtil
         {
             Owner = owner;
             Name = (BackingDescriptor = backingDescriptor).Name;
-            Type = EnhancedTypeDescriptor.Get(backingDescriptor.PropertyType);
+            Type = EnhancedDefinedTypeDescriptor.Get(backingDescriptor.PropertyType);
             IsKey = backingDescriptor.Attributes.OfType<KeyAttribute>().Any();
             switch (Type.Category)
             {
@@ -70,7 +70,7 @@ namespace DevUtil
             }
             else
             {
-                Type = EnhancedTypeDescriptor.Get((BackingDescriptor = backingDescriptor).PropertyType);
+                Type = EnhancedDefinedTypeDescriptor.Get((BackingDescriptor = backingDescriptor).PropertyType);
                 IsKey = baseDescriptor.IsKey || backingDescriptor.Attributes.OfType<KeyAttribute>().Any();
                 switch (Type.Category)
                 {
@@ -94,11 +94,21 @@ namespace DevUtil
             }
         }
 
-        internal static Collection<EnhancedPropertyDescriptor> Create(EnhancedTypeDescriptor owner)
+        internal static void Create(EnhancedTypeDescriptor owner, Collection<EnhancedPropertyDescriptor> properties)
         {
-            Collection<EnhancedPropertyDescriptor> properties = new();
             IEnumerable<IGrouping<string, PropertyDescriptor>> propertiesByName = TypeDescriptor.GetProperties(owner.Type).OfType<PropertyDescriptor>().GroupBy(p => p.Name);
-            if (owner.BaseType is null)
+            if (owner.Category == TypeCategory.Interface)
+            {
+                foreach (IGrouping<string, PropertyDescriptor> png in propertiesByName)
+                {
+                    PropertyDescriptor pd = png.FirstOrDefault(p => owner.Type.Equals(p.ComponentType));
+                    properties.Add(new(owner, pd ?? png.First()));
+                }
+                foreach (EnhancedPropertyDescriptor pd in owner.ImplementedEntityTypes.Concat(owner.OtherInterfaceTypes).SelectMany(t => t.Properties).GroupBy(p => p.Name).Select(g => g.First()))
+                    if (!properties.Any(p => p.Name == pd.Name))
+                        properties.Add(new(owner, pd, null));
+            }
+            else if (owner.BaseType is null)
                 foreach (PropertyDescriptor propertyDescriptor in propertiesByName.Select(g => g.FirstOrDefault(p => owner.Type.Equals(p.ComponentType)) ?? g.First()))
                     properties.Add(new(owner, propertyDescriptor));
             else
@@ -116,7 +126,6 @@ namespace DevUtil
                     if (!properties.Any(p => p.Name == pd.Name))
                         properties.Add(new(owner, pd, null));
             }
-            return properties;
         }
     }
 }

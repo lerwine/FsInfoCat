@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Reflection;
 
@@ -24,7 +24,7 @@ namespace DevUtil
         {
             Property = propertyDescriptor;
             FieldInfo = fieldInfo;
-            Type = EnhancedTypeDescriptor.Get(fieldInfo.FieldType);
+            Type = EnhancedDefinedTypeDescriptor.Get(fieldInfo.FieldType);
             switch (Type.Category)
             {
                 case TypeCategory.Enum:
