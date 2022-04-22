@@ -44,28 +44,15 @@ namespace FsInfoCat.Local
 
         public override bool Equals(object obj)
         {
+            // TODO: Implement Equals(object)
             throw new NotImplementedException();
         }
 
         public override int GetHashCode()
         {
-            Guid id = Id;
-            if (id.Equals(Guid.Empty))
-                unchecked
-                {
-                    int hash = 23;
-                    hash = EntityExtensions.HashNullable(DatePlayExpires, hash, 31);
-                    hash = EntityExtensions.HashNullable(DatePlayStarts, hash, 31);
-                    hash = hash * 31 + Description.GetHashCode();
-                    hash = hash * 31 + IsProtected.GetHashCode();
-                    hash = EntityExtensions.HashNullable(PlayCount, hash, 31);
-                    hash = EntityExtensions.HashNullable(UpstreamId, hash, 31);
-                    hash = EntityExtensions.HashNullable(LastSynchronizedOn, hash, 31);
-                    hash = hash * 31 + CreatedOn.GetHashCode();
-                    hash = hash * 31 + ModifiedOn.GetHashCode();
-                    return hash;
-                }
-            return id.GetHashCode();
+            if (TryGetId(out Guid id)) return id.GetHashCode();
+            // TODO: Implement GetHashCode()
+            throw new NotImplementedException();
         }
     }
 }

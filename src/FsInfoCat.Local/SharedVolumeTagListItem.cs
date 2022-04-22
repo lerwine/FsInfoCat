@@ -17,6 +17,7 @@ namespace FsInfoCat.Local
 
         public override bool Equals(object obj)
         {
+            // TODO: Implement Equals(object)
             throw new NotImplementedException();
         }
 
@@ -25,22 +26,9 @@ namespace FsInfoCat.Local
             Guid taggedId = TaggedId;
             Guid definitionId = DefinitionId;
             if (taggedId.Equals(Guid.Empty) && DefinitionId.Equals(Guid.Empty))
-                unchecked
-                {
-                    int hash = 17;
-                    hash = hash * 23 + Name.GetHashCode();
-                    hash = hash * 23 + Description.GetHashCode();
-                    hash = hash * 23 + Notes.GetHashCode();
-                    hash = EntityExtensions.HashNullable(UpstreamId, hash, 23);
-                    hash = EntityExtensions.HashNullable(LastSynchronizedOn, hash, 23);
-                    hash = hash * 23 + CreatedOn.GetHashCode();
-                    hash = hash * 23 + ModifiedOn.GetHashCode();
-                    return hash;
-                }
-            unchecked
-            {
-                return EntityExtensions.HashGuid(definitionId, EntityExtensions.HashGuid(taggedId, 3, 7), 7);
-            }
+                // TODO: Implement Equals(object)
+                throw new NotImplementedException();
+            return HashCode.Combine(taggedId, definitionId);
         }
     }
 }

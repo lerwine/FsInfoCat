@@ -116,34 +116,15 @@ namespace FsInfoCat.Local
 
         public override bool Equals(object obj)
         {
+            // TODO: Implement Equals(object)
             throw new NotImplementedException();
         }
 
         public override int GetHashCode()
         {
-            Guid id = Id;
-            if (id.Equals(Guid.Empty))
-                unchecked
-                {
-                    int hash = 47;
-                    hash = hash * 59 + AlbumArtist.GetHashCode();
-                    hash = hash * 59 + AlbumTitle.GetHashCode();
-                    hash = EntityExtensions.HashObject(Artist, hash, 59);
-                    hash = EntityExtensions.HashNullable(ChannelCount, hash, 59);
-                    hash = EntityExtensions.HashObject(Composer, hash, 59);
-                    hash = EntityExtensions.HashObject(Conductor, hash, 59);
-                    hash = hash * 59 + DisplayArtist.GetHashCode();
-                    hash = EntityExtensions.HashObject(Genre, hash, 59);
-                    hash = hash * 59 + PartOfSet.GetHashCode();
-                    hash = hash * 59 + Period.GetHashCode();
-                    hash = EntityExtensions.HashNullable(TrackNumber, hash, 59);
-                    hash = EntityExtensions.HashNullable(UpstreamId, hash, 59);
-                    hash = EntityExtensions.HashNullable(LastSynchronizedOn, hash, 59);
-                    hash = hash * 59 + CreatedOn.GetHashCode();
-                    hash = hash * 59 + ModifiedOn.GetHashCode();
-                    return hash;
-                }
-            return id.GetHashCode();
+            if (TryGetId(out Guid id)) return id.GetHashCode();
+            // TODO: Implement GetHashCode()
+            throw new NotImplementedException();
         }
 
         IEnumerable<Guid> IIdentityReference.GetIdentifiers() { yield return Id; }

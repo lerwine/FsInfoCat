@@ -104,33 +104,15 @@ namespace FsInfoCat.Local
 
         public override bool Equals(object obj)
         {
+            // TODO: Implement Equals(object)
             throw new NotImplementedException();
         }
 
         public override int GetHashCode()
         {
-            Guid id = Id;
-            if (id.Equals(Guid.Empty))
-                unchecked
-                {
-                    int hash = EntityExtensions.HashNullable(BitDepth, 47, 59);
-                    hash = EntityExtensions.HashNullable(ColorSpace, hash, 59);
-                    hash = EntityExtensions.HashNullable(CompressedBitsPerPixel, hash, 59);
-                    hash = EntityExtensions.HashNullable(Compression, hash, 59);
-                    hash = hash * 59 + CompressionText.GetHashCode();
-                    hash = EntityExtensions.HashNullable(HorizontalResolution, hash, 59);
-                    hash = EntityExtensions.HashNullable(HorizontalSize, hash, 59);
-                    hash = hash * 59 + ImageID.GetHashCode();
-                    hash = EntityExtensions.HashNullable(ResolutionUnit, hash, 59);
-                    hash = EntityExtensions.HashNullable(VerticalResolution, hash, 59);
-                    hash = EntityExtensions.HashNullable(VerticalSize, hash, 59);
-                    hash = EntityExtensions.HashNullable(UpstreamId, hash, 59);
-                    hash = EntityExtensions.HashNullable(LastSynchronizedOn, hash, 59);
-                    hash = hash * 59 + CreatedOn.GetHashCode();
-                    hash = hash * 59 + ModifiedOn.GetHashCode();
-                    return hash;
-                }
-            return id.GetHashCode();
+            if (TryGetId(out Guid id)) return id.GetHashCode();
+            // TODO: Implement GetHashCode()
+            throw new NotImplementedException();
         }
 
         IEnumerable<Guid> IIdentityReference.GetIdentifiers() { yield return Id; }

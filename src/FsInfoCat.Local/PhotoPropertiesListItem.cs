@@ -53,31 +53,15 @@ namespace FsInfoCat.Local
 
         public override bool Equals(object obj)
         {
+            // TODO: Implement Equals(object)
             throw new NotImplementedException();
         }
 
         public override int GetHashCode()
         {
-            Guid id = Id;
-            if (id.Equals(Guid.Empty))
-                unchecked
-                {
-                    int hash = 37;
-                    hash = hash * 43 + CameraManufacturer.GetHashCode();
-                    hash = hash * 43 + CameraModel.GetHashCode();
-                    hash = EntityExtensions.HashNullable(DateTaken, hash, 43);
-                    hash = EntityExtensions.HashObject(Event, hash, 43);
-                    hash = hash * 43 + EXIFVersion.GetHashCode();
-                    hash = EntityExtensions.HashNullable(Orientation, hash, 43);
-                    hash = hash * 43 + OrientationText.GetHashCode();
-                    hash = EntityExtensions.HashObject(PeopleNames, hash, 43);
-                    hash = EntityExtensions.HashNullable(UpstreamId, hash, 43);
-                    hash = EntityExtensions.HashNullable(LastSynchronizedOn, hash, 43);
-                    hash = hash * 43 + CreatedOn.GetHashCode();
-                    hash = hash * 43 + ModifiedOn.GetHashCode();
-                    return hash;
-                }
-            return id.GetHashCode();
+            if (TryGetId(out Guid id)) return id.GetHashCode();
+            // TODO: Implement GetHashCode()
+            throw new NotImplementedException();
         }
     }
 }

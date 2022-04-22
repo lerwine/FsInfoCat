@@ -119,45 +119,15 @@ namespace FsInfoCat.Local
 
         public override bool Equals(object obj)
         {
+            // TODO: Implement Equals(object)
             throw new NotImplementedException();
         }
 
         public override int GetHashCode()
         {
-            Guid id = Id;
-            if (id.Equals(Guid.Empty))
-            {
-                HashCode hash = new();
-                hash.Add(ApplicationName);
-                hash.Add(Author);
-                hash.Add(Comment);
-                hash.Add(Keywords);
-                hash.Add(Subject);
-                hash.Add(Title);
-                hash.Add(Company);
-                hash.Add(ContentType);
-                hash.Add(Copyright);
-                hash.Add(ParentalRating);
-                hash.Add(Rating);
-                hash.Add(ItemAuthors);
-                hash.Add(ItemType);
-                hash.Add(ItemTypeText);
-                hash.Add(Kind);
-                hash.Add(MIMEType);
-                hash.Add(ParentalRatingReason);
-                hash.Add(ParentalRatingsOrganization);
-                hash.Add(Sensitivity);
-                hash.Add(SensitivityText);
-                hash.Add(SimpleRating);
-                hash.Add(Trademarks);
-                hash.Add(ProductName);
-                hash.Add(UpstreamId);
-                hash.Add(LastSynchronizedOn);
-                hash.Add(CreatedOn);
-                hash.Add(ModifiedOn);
-                return hash.ToHashCode();
-            }
-            return id.GetHashCode();
+            if (TryGetId(out Guid id)) return id.GetHashCode();
+            // TODO: Implement GetHashCode()
+            throw new NotImplementedException();
         }
 
         IEnumerable<Guid> IIdentityReference.GetIdentifiers() { yield return Id; }

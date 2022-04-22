@@ -49,34 +49,15 @@ namespace FsInfoCat.Local
 
         public override bool Equals(object obj)
         {
+            // TODO: Implement Equals(object)
             throw new NotImplementedException();
         }
 
         public override int GetHashCode()
         {
-            Guid id = Id;
-            if (id.Equals(Guid.Empty))
-                unchecked
-                {
-                    int hash = 47;
-                    hash = hash * 59 + ClientID.GetHashCode();
-                    hash = EntityExtensions.HashObject(Contributor, hash, 59);
-                    hash = EntityExtensions.HashNullable(DateCreated, hash, 59);
-                    hash = hash * 59 + LastAuthor.GetHashCode();
-                    hash = hash * 59 + RevisionNumber.GetHashCode();
-                    hash = EntityExtensions.HashNullable(Security, hash, 59);
-                    hash = hash * 59 + Division.GetHashCode();
-                    hash = hash * 59 + DocumentID.GetHashCode();
-                    hash = hash * 59 + Manager.GetHashCode();
-                    hash = hash * 59 + PresentationFormat.GetHashCode();
-                    hash = hash * 59 + Version.GetHashCode();
-                    hash = EntityExtensions.HashNullable(UpstreamId, hash, 59);
-                    hash = EntityExtensions.HashNullable(LastSynchronizedOn, hash, 59);
-                    hash = hash * 59 + CreatedOn.GetHashCode();
-                    hash = hash * 59 + ModifiedOn.GetHashCode();
-                    return hash;
-                }
-            return id.GetHashCode();
+            if (TryGetId(out Guid id)) return id.GetHashCode();
+            // TODO: Implement GetHashCode()
+            throw new NotImplementedException();
         }
     }
 }

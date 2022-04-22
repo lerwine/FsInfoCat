@@ -258,24 +258,18 @@ namespace FsInfoCat.Local
 
         public override bool Equals(object obj)
         {
+            // TODO: Implement Equals(object)
             throw new NotImplementedException();
         }
 
         public override int GetHashCode()
         {
-            unchecked
-            {
-                int hash = 19;
-                hash = EntityExtensions.HashRelatedEntity(Baseline, () => BaselineId, hash, 29);
-                hash = EntityExtensions.HashRelatedEntity(Correlative, () => CorrelativeId, hash, 29);
-                hash = hash * 29 + AreEqual.GetHashCode();
-                hash = hash * 29 + ComparedOn.GetHashCode();
-                hash = EntityExtensions.HashNullable(UpstreamId, hash, 29);
-                hash = EntityExtensions.HashNullable(LastSynchronizedOn, hash, 29);
-                hash = hash * 29 + CreatedOn.GetHashCode();
-                hash = hash * 29 + ModifiedOn.GetHashCode();
-                return hash;
-            }
+            Guid baselineId = BaselineId;
+            Guid correlativeId = CorrelativeId;
+            if (baselineId.Equals(Guid.Empty) && correlativeId.Equals(Guid.Empty))
+                throw new NotImplementedException();
+            // TODO: Implement GetHashCode()
+            return HashCode.Combine(baselineId, correlativeId);
         }
     }
 }

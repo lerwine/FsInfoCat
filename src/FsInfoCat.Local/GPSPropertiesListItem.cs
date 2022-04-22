@@ -49,35 +49,15 @@ namespace FsInfoCat.Local
 
         public override bool Equals(object obj)
         {
+            // TODO: Implement Equals(object)
             throw new NotImplementedException();
         }
 
         public override int GetHashCode()
         {
-            Guid id = Id;
-            if (id.Equals(Guid.Empty))
-                unchecked
-                {
-                    int hash = 53;
-                    hash = hash * 61 + AreaInformation.GetHashCode();
-                    hash = EntityExtensions.HashNullable(LatitudeDegrees, hash, 61);
-                    hash = EntityExtensions.HashNullable(LatitudeMinutes, hash, 61);
-                    hash = EntityExtensions.HashNullable(LatitudeSeconds, hash, 61);
-                    hash = hash * 61 + LatitudeRef.GetHashCode();
-                    hash = EntityExtensions.HashNullable(LongitudeDegrees, hash, 61);
-                    hash = EntityExtensions.HashNullable(LongitudeMinutes, hash, 61);
-                    hash = EntityExtensions.HashNullable(LongitudeSeconds, hash, 61);
-                    hash = hash * 61 + LongitudeRef.GetHashCode();
-                    hash = hash * 61 + MeasureMode.GetHashCode();
-                    hash = hash * 61 + ProcessingMethod.GetHashCode();
-                    hash = EntityExtensions.HashObject(VersionID, hash, 61);
-                    hash = EntityExtensions.HashNullable(UpstreamId, hash, 61);
-                    hash = EntityExtensions.HashNullable(LastSynchronizedOn, hash, 61);
-                    hash = hash * 61 + CreatedOn.GetHashCode();
-                    hash = hash * 61 + ModifiedOn.GetHashCode();
-                    return hash;
-                }
-            return id.GetHashCode();
+            if (TryGetId(out Guid id)) return id.GetHashCode();
+            // TODO: Implement GetHashCode()
+            throw new NotImplementedException();
         }
     }
 }

@@ -50,37 +50,15 @@ namespace FsInfoCat.Local
 
         public override bool Equals(object obj)
         {
+            // TODO: Implement Equals(object)
             throw new NotImplementedException();
         }
 
         public override int GetHashCode()
         {
-            Guid id = Id;
-            if (id.Equals(Guid.Empty))
-                unchecked
-                {
-                    int hash = 61;
-                    hash = hash * 71 + ContentDistributor.GetHashCode();
-                    hash = hash * 71 + CreatorApplication.GetHashCode();
-                    hash = hash * 71 + CreatorApplicationVersion.GetHashCode();
-                    hash = hash * 71 + DateReleased.GetHashCode();
-                    hash = EntityExtensions.HashNullable(Duration, hash, 71);
-                    hash = hash * 71 + DVDID.GetHashCode();
-                    hash = EntityExtensions.HashNullable(FrameCount, hash, 71);
-                    hash = EntityExtensions.HashObject(Producer, hash, 71);
-                    hash = hash * 71 + ProtectionType.GetHashCode();
-                    hash = hash * 71 + ProviderRating.GetHashCode();
-                    hash = hash * 71 + ProviderStyle.GetHashCode();
-                    hash = hash * 71 + Publisher.GetHashCode();
-                    hash = hash * 71 + Subtitle.GetHashCode();
-                    hash = EntityExtensions.HashObject(Writer, hash, 71);
-                    hash = EntityExtensions.HashNullable(UpstreamId, hash, 71);
-                    hash = EntityExtensions.HashNullable(LastSynchronizedOn, hash, 71);
-                    hash = hash * 71 + CreatedOn.GetHashCode();
-                    hash = hash * 71 + ModifiedOn.GetHashCode();
-                    return hash;
-                }
-            return id.GetHashCode();
+            if (TryGetId(out Guid id)) return id.GetHashCode();
+            // TODO: Implement GetHashCode()
+            throw new NotImplementedException();
         }
     }
 }
