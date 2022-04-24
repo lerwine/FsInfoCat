@@ -1,6 +1,7 @@
 using FsInfoCat.Collections;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat.Local
@@ -76,13 +77,62 @@ namespace FsInfoCat.Local
 
         #endregion
 
-        protected bool ArePropertiesEqual([DisallowNull] IMediaProperties other)
-        {
-            throw new NotImplementedException();
-        }
+        protected bool ArePropertiesEqual([DisallowNull] ILocalMediaPropertiesRow other) => ArePropertiesEqual((IMediaPropertiesRow)other) &&
+            EqualityComparer<Guid?>.Default.Equals(UpstreamId, other.UpstreamId) &&
+            LastSynchronizedOn == other.LastSynchronizedOn;
+
+        protected bool ArePropertiesEqual([DisallowNull] IMediaPropertiesRow other) => ArePropertiesEqual((IMediaProperties)other) &&
+            CreatedOn == other.CreatedOn &&
+            ModifiedOn == other.ModifiedOn;
+
+        protected bool ArePropertiesEqual([DisallowNull] IMediaProperties other) => _contentDistributor == other.ContentDistributor &&
+            _creatorApplication == other.CreatorApplication &&
+            _creatorApplicationVersion == other.CreatorApplicationVersion &&
+            _dateReleased == other.DateReleased &&
+            _dvdID == other.DVDID &&
+            _protectionType == other.ProtectionType &&
+            _providerRating == other.ProviderRating &&
+            _providerStyle == other.ProviderStyle &&
+            _publisher == other.Publisher &&
+            _subtitle == other.Subtitle &&
+            Duration == other.Duration &&
+            FrameCount == other.FrameCount &&
+            EqualityComparer<MultiStringValue>.Default.Equals(Producer, other.Producer) &&
+            EqualityComparer<MultiStringValue>.Default.Equals(Writer, other.Writer) &&
+            Year == other.Year;
+        //EqualityComparer<Guid?>.Default.Equals(UpstreamId, other.UpstreamId) &&
+        //LastSynchronizedOn == other.LastSynchronizedOn &&
+        //CreatedOn == other.CreatedOn &&
+        //ModifiedOn == other.ModifiedOn;
 
         public abstract bool Equals(IMediaPropertiesRow other);
 
         public abstract bool Equals(IMediaProperties other);
+
+        public override int GetHashCode()
+        {
+            if (TryGetId(out Guid id)) return id.GetHashCode();
+            HashCode hash = new();
+            hash.Add(_contentDistributor);
+            hash.Add(_creatorApplication);
+            hash.Add(_creatorApplicationVersion);
+            hash.Add(_dateReleased);
+            hash.Add(_dvdID);
+            hash.Add(_protectionType);
+            hash.Add(_providerRating);
+            hash.Add(_providerStyle);
+            hash.Add(_publisher);
+            hash.Add(_subtitle);
+            hash.Add(Duration);
+            hash.Add(FrameCount);
+            hash.Add(Producer);
+            hash.Add(Writer);
+            hash.Add(Year);
+            hash.Add(UpstreamId);
+            hash.Add(LastSynchronizedOn);
+            hash.Add(CreatedOn);
+            hash.Add(ModifiedOn);
+            return hash.ToHashCode();
+        }
     }
 }

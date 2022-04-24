@@ -1301,21 +1301,31 @@ namespace FsInfoCat.Local
 
         public ISimpleIdentityReference<BinaryPropertySet> GetBinaryPropertySetReference()
         {
-            // TODO: Implement GetBinaryPropertySetReference()
-            throw new NotImplementedException();
+            BinaryPropertySet binaryPropertySet = BinaryProperties;
+            return (binaryPropertySet is null) ? (TryGetId(out Guid id) ? new SimpleIdentityOnlyReference<BinaryPropertySet>(id) : null) : new SimpleIdentityReference<BinaryPropertySet>(binaryPropertySet, b => b.Id);
         }
 
-        public bool Equals(DbFile other) => other is not null && ReferenceEquals(this, other) || Id.Equals(Guid.Empty) ? ArePropertiesEqual(this) : Id.Equals(other.Id);
+        public bool Equals(DbFile other) => other is not null && (ReferenceEquals(this, other) || (TryGetId(out Guid id) ? id.Equals(other.Id) : other.Id.Equals(Guid.Empty) && ArePropertiesEqual(this)));
+
+        public override bool Equals(DbFileRow other) => other is not null && ((other is DbFile file) ? Equals(file) : base.Equals(other));
 
         public bool Equals(IFile other)
         {
-            throw new NotImplementedException();
+            if (other is null) return false;
+            if (other is DbFile dbFile) return Equals(dbFile);
+            return TryGetId(out Guid id) ? id.Equals(other.Id) : (other.Id.Equals(Guid.Empty) && ArePropertiesEqual(this));
         }
 
         public override bool Equals(object obj)
         {
-            // TODO: Implement Equals(object)
-            throw new NotImplementedException();
+            if (obj is null) return false;
+            if (obj is DbFile dbFile) return Equals(dbFile);
+            if (obj is not IFileRow row) return false;
+            if (TryGetId(out Guid id)) return id.Equals(row.Id);
+            if (row.Id.Equals(Guid.Empty)) return false;
+            if (row is ILocalFileRow localRow) return ArePropertiesEqual(localRow);
+            if (row is IFile file) return ArePropertiesEqual(file);
+            return ArePropertiesEqual(row);
         }
     }
 }

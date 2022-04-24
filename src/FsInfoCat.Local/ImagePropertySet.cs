@@ -16,7 +16,9 @@ namespace FsInfoCat.Local
     /// </summary>
     /// <seealso cref="LocalDbEntity" />
     /// <seealso cref="ILocalImagePropertySet" />
+#pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     public class ImagePropertySet : ImagePropertiesRow, ILocalImagePropertySet, ISimpleIdentityReference<ImagePropertySet>, IEquatable<ImagePropertySet>
+#pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     {
         private HashSet<DbFile> _files = new();
 
@@ -75,44 +77,54 @@ namespace FsInfoCat.Local
             }
         }
 
-        protected bool ArePropertiesEqual([DisallowNull] ILocalImagePropertySet other)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected bool ArePropertiesEqual([DisallowNull] IImagePropertySet other)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool Equals(ImagePropertySet other) => other is not null && ReferenceEquals(this, other) || Id.Equals(Guid.Empty) ? ArePropertiesEqual(this) : Id.Equals(other.Id);
+        public bool Equals(ImagePropertySet other) => other is not null && (ReferenceEquals(this, other) || (TryGetId(out Guid id) ? id.Equals(other.Id) : !other.TryGetId(out _) && ArePropertiesEqual(other)));
 
         public bool Equals(IImagePropertySet other)
         {
-            throw new NotImplementedException();
+            if (other is null) return false;
+            if (other is ImagePropertySet propertySet) return Equals(propertySet);
+            if (TryGetId(out Guid id)) return id.Equals(other.Id);
+            if (!other.Id.Equals(Guid.Empty)) return false;
+            if (other is ILocalImagePropertiesRow localRow) return ArePropertiesEqual(localRow);
+            return ArePropertiesEqual(other);
         }
 
         public override bool Equals(IImagePropertiesRow other)
         {
-            throw new NotImplementedException();
+            if (other is null) return false;
+            if (other is ImagePropertySet propertySet) return Equals(propertySet);
+            if (TryGetId(out Guid id)) return id.Equals(other.Id);
+            if (!other.Id.Equals(Guid.Empty)) return false;
+            if (other is ILocalImagePropertiesRow localRow) return ArePropertiesEqual(localRow);
+            return ArePropertiesEqual(other);
         }
 
         public override bool Equals(IImageProperties other)
         {
-            throw new NotImplementedException();
+            if (other is null) return false;
+            if (other is ImagePropertySet propertySet) return Equals(propertySet);
+            if (other is IImagePropertiesRow row)
+            {
+                if (TryGetId(out Guid id)) return id.Equals(row.Id);
+                if (!row.Id.Equals(Guid.Empty)) return false;
+                if (row is ILocalImagePropertiesRow localRow) return ArePropertiesEqual(localRow);
+                return ArePropertiesEqual(row);
+            }
+            return ArePropertiesEqual(other);
         }
 
         public override bool Equals(object obj)
         {
-            // TODO: Implement Equals(object)
-            throw new NotImplementedException();
-        }
-
-        public override int GetHashCode()
-        {
-            if (TryGetId(out Guid id)) return id.GetHashCode();
-            // TODO: Implement GetHashCode()
-            throw new NotImplementedException();
+            if (obj is null) return false;
+            if (obj is ImagePropertySet other) return Equals(other);
+            if (obj is IImagePropertiesRow row)
+            {
+                if (TryGetId(out Guid id)) return id.Equals(row.Id);
+                if (!row.Id.Equals(Guid.Empty)) return false;
+                if (obj is ILocalImagePropertiesRow localRow) return ArePropertiesEqual(localRow);
+                return ArePropertiesEqual(row);
+            }
+            return obj is IImageProperties properties && ArePropertiesEqual(properties);
         }
 
         IEnumerable<Guid> IIdentityReference.GetIdentifiers() { yield return Id; }

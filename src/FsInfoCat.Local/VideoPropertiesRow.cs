@@ -42,14 +42,22 @@ namespace FsInfoCat.Local
 
         #endregion
 
-        protected bool ArePropertiesEqual([DisallowNull] IVideoProperties other) => Compression == other.Compression &&
+        protected bool ArePropertiesEqual([DisallowNull] ILocalVideoPropertiesRow other) => ArePropertiesEqual((IVideoPropertiesRow)other) &&
+            EqualityComparer<Guid?>.Default.Equals(UpstreamId, other.UpstreamId) &&
+            LastSynchronizedOn == other.LastSynchronizedOn;
+
+        protected bool ArePropertiesEqual([DisallowNull] IVideoPropertiesRow other) => ArePropertiesEqual((IVideoProperties)other) &&
+            CreatedOn == other.CreatedOn &&
+            ModifiedOn == other.ModifiedOn;
+
+        protected bool ArePropertiesEqual([DisallowNull] IVideoProperties other) => _compression == other.Compression &&
+            _streamName == other.StreamName &&
             EqualityComparer<MultiStringValue>.Default.Equals(Director, other.Director) &&
             EncodingBitrate == other.EncodingBitrate &&
             FrameHeight == other.FrameHeight &&
             FrameRate == other.FrameRate &&
             FrameWidth == other.FrameWidth &&
             HorizontalAspectRatio == other.HorizontalAspectRatio &&
-            StreamName == other.StreamName &&
             StreamNumber == other.StreamNumber &&
             VerticalAspectRatio == other.VerticalAspectRatio;
 
@@ -59,27 +67,23 @@ namespace FsInfoCat.Local
 
         public override int GetHashCode()
         {
-            Guid id = Id;
-            if (id.Equals(Guid.Empty))
-            {
-                HashCode hash = new();
-                hash.Add(CreatedOn);
-                hash.Add(ModifiedOn);
-                hash.Add(UpstreamId);
-                hash.Add(LastSynchronizedOn);
-                hash.Add(_compression);
-                hash.Add(Director);
-                hash.Add(EncodingBitrate);
-                hash.Add(FrameHeight);
-                hash.Add(FrameRate);
-                hash.Add(FrameWidth);
-                hash.Add(HorizontalAspectRatio);
-                hash.Add(_streamName);
-                hash.Add(StreamNumber);
-                hash.Add(VerticalAspectRatio);
-                return hash.ToHashCode();
-            }
-            return id.GetHashCode();
+            if (TryGetId(out Guid id)) return id.GetHashCode();
+            HashCode hash = new();
+            hash.Add(_compression);
+            hash.Add(_streamName);
+            hash.Add(Director);
+            hash.Add(EncodingBitrate);
+            hash.Add(FrameHeight);
+            hash.Add(FrameRate);
+            hash.Add(FrameWidth);
+            hash.Add(HorizontalAspectRatio);
+            hash.Add(StreamNumber);
+            hash.Add(VerticalAspectRatio);
+            hash.Add(UpstreamId);
+            hash.Add(LastSynchronizedOn);
+            hash.Add(CreatedOn);
+            hash.Add(ModifiedOn);
+            return hash.ToHashCode();
         }
     }
 }

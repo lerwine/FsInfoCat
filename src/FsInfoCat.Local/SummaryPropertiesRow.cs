@@ -1,6 +1,7 @@
 using FsInfoCat.Collections;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat.Local
@@ -110,13 +111,78 @@ namespace FsInfoCat.Local
 
         #endregion
 
-        protected bool ArePropertiesEqual([DisallowNull] ISummaryProperties other)
-        {
-            throw new NotImplementedException();
-        }
+        protected bool ArePropertiesEqual([DisallowNull] ILocalSummaryPropertiesRow other) => ArePropertiesEqual((ISummaryPropertiesRow)other) &&
+            EqualityComparer<Guid?>.Default.Equals(UpstreamId, other.UpstreamId) &&
+            LastSynchronizedOn == other.LastSynchronizedOn;
+
+        protected bool ArePropertiesEqual([DisallowNull] ISummaryPropertiesRow other) => ArePropertiesEqual((ISummaryProperties)other) &&
+            CreatedOn == other.CreatedOn &&
+            ModifiedOn == other.ModifiedOn;
+
+        protected bool ArePropertiesEqual([DisallowNull] ISummaryProperties other) => _applicationName == other.ApplicationName &&
+            _comment == other.Comment &&
+            _subject == other.Subject &&
+            _title == other.Title &&
+            _company == other.Company &&
+            _contentType == other.ContentType &&
+            _copyright == other.Copyright &&
+            _parentalRating == other.ParentalRating &&
+            _itemType == other.ItemType &&
+            _itemTypeText == other.ItemTypeText &&
+            _mimeType == other.MIMEType &&
+            _parentalRatingReason == other.ParentalRatingReason &&
+            _parentalRatingsOrganization == other.ParentalRatingsOrganization &&
+            _sensitivityText == other.SensitivityText &&
+            _trademarks == other.Trademarks &&
+            _productName == other.ProductName &&
+            EqualityComparer<MultiStringValue>.Default.Equals(Author, other.Author) &&
+            EqualityComparer<MultiStringValue>.Default.Equals(Keywords, other.Keywords) &&
+            Rating == other.Rating &&
+            EqualityComparer<MultiStringValue>.Default.Equals(ItemAuthors, other.ItemAuthors) &&
+            EqualityComparer<MultiStringValue>.Default.Equals(Kind, other.Kind) &&
+            Sensitivity == other.Sensitivity &&
+            SimpleRating == other.SimpleRating;
+        //EqualityComparer<Guid?>.Default.Equals(UpstreamId, other.UpstreamId) &&
+        //LastSynchronizedOn == other.LastSynchronizedOn &&
+        //CreatedOn == other.CreatedOn &&
+        //ModifiedOn == other.ModifiedOn;
 
         public abstract bool Equals(ISummaryPropertiesRow other);
 
         public abstract bool Equals(ISummaryProperties other);
+
+        public override int GetHashCode()
+        {
+            if (TryGetId(out Guid id)) return id.GetHashCode();
+            HashCode hash = new();
+            hash.Add(_applicationName);
+            hash.Add(_comment);
+            hash.Add(_subject);
+            hash.Add(_title);
+            hash.Add(_company);
+            hash.Add(_contentType);
+            hash.Add(_copyright);
+            hash.Add(_parentalRating);
+            hash.Add(_itemType);
+            hash.Add(_itemTypeText);
+            hash.Add(_mimeType);
+            hash.Add(_parentalRatingReason);
+            hash.Add(_parentalRatingsOrganization);
+            hash.Add(_sensitivityText);
+            hash.Add(_trademarks);
+            hash.Add(_productName);
+            hash.Add(Author);
+            hash.Add(Keywords);
+            hash.Add(Rating);
+            hash.Add(ItemAuthors);
+            hash.Add(Kind);
+            hash.Add(Sensitivity);
+            hash.Add(SimpleRating);
+            hash.Add(UpstreamId);
+            hash.Add(LastSynchronizedOn);
+            hash.Add(CreatedOn);
+            hash.Add(ModifiedOn);
+            return hash.ToHashCode();
+        }
     }
 }

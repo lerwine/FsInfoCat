@@ -45,6 +45,10 @@ namespace FsInfoCat.Local
             EqualityComparer<Guid?>.Default.Equals(UpstreamId, other.UpstreamId) &&
             LastSynchronizedOn == other.LastSynchronizedOn;
 
+        protected bool ArePropertiesEqual([DisallowNull] IAudioPropertiesRow other) => ArePropertiesEqual((IAudioProperties)other) &&
+            CreatedOn == other.CreatedOn &&
+            ModifiedOn == other.ModifiedOn;
+
         protected bool ArePropertiesEqual([DisallowNull] IAudioProperties other) => _compression == other.Compression &&
             _format == other.Format &&
             _streamName == other.StreamName &&

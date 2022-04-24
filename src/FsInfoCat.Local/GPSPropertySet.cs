@@ -18,7 +18,9 @@ namespace FsInfoCat.Local
     /// </summary>
     /// <seealso cref="LocalDbEntity" />
     /// <seealso cref="ILocalGPSPropertySet" />
+#pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     public class GPSPropertySet : GPSPropertiesRow, ILocalGPSPropertySet, ISimpleIdentityReference<GPSPropertySet>, IEquatable<GPSPropertySet>
+#pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     {
         private HashSet<DbFile> _files = new();
 
@@ -80,44 +82,54 @@ namespace FsInfoCat.Local
             }
         }
 
-        protected bool ArePropertiesEqual([DisallowNull] ILocalGPSPropertySet other)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected bool ArePropertiesEqual([DisallowNull] IGPSPropertySet other)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool Equals(GPSPropertySet other) => other is not null && ReferenceEquals(this, other) || Id.Equals(Guid.Empty) ? ArePropertiesEqual(this) : Id.Equals(other.Id);
+        public bool Equals(GPSPropertySet other) => other is not null && (ReferenceEquals(this, other) || (TryGetId(out Guid id) ? id.Equals(other.Id) : !other.TryGetId(out _) && ArePropertiesEqual(other)));
 
         public bool Equals(IGPSPropertySet other)
         {
-            throw new NotImplementedException();
+            if (other is null) return false;
+            if (other is GPSPropertySet propertySet) return Equals(propertySet);
+            if (TryGetId(out Guid id)) return id.Equals(other.Id);
+            if (!other.Id.Equals(Guid.Empty)) return false;
+            if (other is ILocalGPSPropertiesRow localRow) return ArePropertiesEqual(localRow);
+            return ArePropertiesEqual(other);
         }
 
         public override bool Equals(IGPSPropertiesRow other)
         {
-            throw new NotImplementedException();
+            if (other is null) return false;
+            if (other is GPSPropertySet propertySet) return Equals(propertySet);
+            if (TryGetId(out Guid id)) return id.Equals(other.Id);
+            if (!other.Id.Equals(Guid.Empty)) return false;
+            if (other is ILocalGPSPropertiesRow localRow) return ArePropertiesEqual(localRow);
+            return ArePropertiesEqual(other);
         }
 
         public override bool Equals(IGPSProperties other)
         {
-            throw new NotImplementedException();
+            if (other is null) return false;
+            if (other is GPSPropertySet propertySet) return Equals(propertySet);
+            if (other is IGPSPropertiesRow row)
+            {
+                if (TryGetId(out Guid id)) return id.Equals(row.Id);
+                if (!row.Id.Equals(Guid.Empty)) return false;
+                if (row is ILocalGPSPropertiesRow localRow) return ArePropertiesEqual(localRow);
+                return ArePropertiesEqual(row);
+            }
+            return ArePropertiesEqual(other);
         }
 
         public override bool Equals(object obj)
         {
-            // TODO: Implement Equals(object)
-            throw new NotImplementedException();
-        }
-
-        public override int GetHashCode()
-        {
-            if (TryGetId(out Guid id)) return id.GetHashCode();
-            // TODO: Implement GetHashCode()
-            throw new NotImplementedException();
+            if (obj is null) return false;
+            if (obj is GPSPropertySet other) return Equals(other);
+            if (obj is IGPSPropertiesRow row)
+            {
+                if (TryGetId(out Guid id)) return id.Equals(row.Id);
+                if (!row.Id.Equals(Guid.Empty)) return false;
+                if (obj is ILocalGPSPropertiesRow localRow) return ArePropertiesEqual(localRow);
+                return ArePropertiesEqual(row);
+            }
+            return obj is IGPSProperties properties && ArePropertiesEqual(properties);
         }
 
         IEnumerable<Guid> IIdentityReference.GetIdentifiers() { yield return Id; }

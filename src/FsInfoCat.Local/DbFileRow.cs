@@ -7,7 +7,7 @@ using System.Threading;
 
 namespace FsInfoCat.Local
 {
-    public abstract class DbFileRow : LocalDbEntity, ILocalFileRow, ISimpleIdentityReference<DbFileRow>
+    public abstract class DbFileRow : LocalDbEntity, ILocalFileRow, ISimpleIdentityReference<DbFileRow>, IEquatable<DbFileRow>
     {
         #region Fields
 
@@ -113,7 +113,7 @@ namespace FsInfoCat.Local
 
         protected virtual bool ArePropertiesEqual([DisallowNull] ILocalFileRow other) => ArePropertiesEqual((IFileRow)other) && EqualityComparer<Guid?>.Default.Equals(UpstreamId, other.UpstreamId) && LastSynchronizedOn == other.LastSynchronizedOn;
 
-        protected virtual bool ArePropertiesEqual([DisallowNull] IFileRow other) => ArePropertiesEqual((IFileRow)other) && CreatedOn == other.CreatedOn &&
+        protected virtual bool ArePropertiesEqual([DisallowNull] IFileRow other) => ArePropertiesEqual(other) && CreatedOn == other.CreatedOn &&
             ModifiedOn == other.ModifiedOn &&
             _name == other.Name &&
             LastAccessed == other.LastAccessed &&
@@ -182,6 +182,21 @@ namespace FsInfoCat.Local
             }
             result = Guid.Empty;
             return false;
+        }
+
+        public virtual bool Equals(DbFileRow other) => other is not null && (ReferenceEquals(this, other) || (_id?.Equals(other.Id) ?? !other._id.HasValue && ArePropertiesEqual(other)));
+
+        public override bool Equals(object obj)
+        {
+            if (obj is null) return false;
+            if (obj is DbFileRow fileRow) return Equals(fileRow);
+            if (obj is not IFileRow row) return false;
+            Guid? id = _id;
+            if (id.HasValue) return id.Value.Equals(row.Id);
+            if (row.Id.Equals(Guid.Empty)) return false;
+            if (row is ILocalFileRow localRow) return ArePropertiesEqual(localRow);
+            if (row is IFile file) return ArePropertiesEqual(file);
+            return ArePropertiesEqual(row);
         }
     }
 }

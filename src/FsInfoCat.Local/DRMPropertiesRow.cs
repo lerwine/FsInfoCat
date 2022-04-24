@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat.Local
@@ -20,13 +21,42 @@ namespace FsInfoCat.Local
 
         public uint? PlayCount { get; set; }
 
-        protected virtual bool ArePropertiesEqual([DisallowNull] IDRMProperties other)
-        {
-            throw new NotImplementedException();
-        }
+        protected bool ArePropertiesEqual([DisallowNull] ILocalDRMPropertiesRow other) => ArePropertiesEqual((IDRMPropertiesRow)other) &&
+            EqualityComparer<Guid?>.Default.Equals(UpstreamId, other.UpstreamId) &&
+            LastSynchronizedOn == other.LastSynchronizedOn;
+
+        protected bool ArePropertiesEqual([DisallowNull] IDRMPropertiesRow other) => ArePropertiesEqual((IDRMProperties)other) &&
+            CreatedOn == other.CreatedOn &&
+            ModifiedOn == other.ModifiedOn;
+
+        protected virtual bool ArePropertiesEqual([DisallowNull] IDRMProperties other) => _description == other.Description &&
+            DatePlayExpires == other.DatePlayExpires &&
+            DatePlayStarts == other.DatePlayStarts &&
+            IsProtected == other.IsProtected &&
+            PlayCount == other.PlayCount;
+        //EqualityComparer<Guid?>.Default.Equals(UpstreamId, other.UpstreamId) &&
+        //LastSynchronizedOn == other.LastSynchronizedOn &&
+        //CreatedOn == other.CreatedOn &&
+        //ModifiedOn == other.ModifiedOn;
 
         public abstract bool Equals(IDRMPropertiesRow other);
 
         public abstract bool Equals(IDRMProperties other);
+
+        public override int GetHashCode()
+        {
+            if (TryGetId(out Guid id)) return id.GetHashCode();
+            HashCode hash = new();
+            hash.Add(_description);
+            hash.Add(DatePlayExpires);
+            hash.Add(DatePlayStarts);
+            hash.Add(IsProtected);
+            hash.Add(PlayCount);
+            hash.Add(UpstreamId);
+            hash.Add(LastSynchronizedOn);
+            hash.Add(CreatedOn);
+            hash.Add(ModifiedOn);
+            return hash.ToHashCode();
+        }
     }
 }

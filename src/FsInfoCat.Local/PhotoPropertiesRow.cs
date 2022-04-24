@@ -1,6 +1,7 @@
 using FsInfoCat.Collections;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat.Local
@@ -44,13 +45,48 @@ namespace FsInfoCat.Local
 
         #endregion
 
-        protected bool ArePropertiesEqual([DisallowNull] IPhotoProperties other)
-        {
-            throw new NotImplementedException();
-        }
+        protected bool ArePropertiesEqual([DisallowNull] ILocalPhotoPropertiesRow other) => ArePropertiesEqual((IPhotoPropertiesRow)other) &&
+            EqualityComparer<Guid?>.Default.Equals(UpstreamId, other.UpstreamId) &&
+            LastSynchronizedOn == other.LastSynchronizedOn;
+
+        protected bool ArePropertiesEqual([DisallowNull] IPhotoPropertiesRow other) => ArePropertiesEqual((IPhotoProperties)other) &&
+            CreatedOn == other.CreatedOn &&
+            ModifiedOn == other.ModifiedOn;
+
+        protected bool ArePropertiesEqual([DisallowNull] IPhotoProperties other) => _cameraManufacturer == other.CameraManufacturer &&
+            _cameraModel == other.CameraModel &&
+            _exifVersion == other.EXIFVersion &&
+            _orientationText == other.OrientationText &&
+            DateTaken == other.DateTaken &&
+            EqualityComparer<MultiStringValue>.Default.Equals(Event, other.Event) &&
+            Orientation == other.Orientation &&
+            EqualityComparer<MultiStringValue>.Default.Equals(PeopleNames, other.PeopleNames);
+        //EqualityComparer<Guid?>.Default.Equals(UpstreamId, other.UpstreamId) &&
+        //LastSynchronizedOn == other.LastSynchronizedOn &&
+        //CreatedOn == other.CreatedOn &&
+        //ModifiedOn == other.ModifiedOn;
 
         public abstract bool Equals(IPhotoPropertiesRow other);
 
         public abstract bool Equals(IPhotoProperties other);
+
+        public override int GetHashCode()
+        {
+            if (TryGetId(out Guid id)) return id.GetHashCode();
+            HashCode hash = new();
+            hash.Add(_cameraManufacturer);
+            hash.Add(_cameraModel);
+            hash.Add(_exifVersion);
+            hash.Add(_orientationText);
+            hash.Add(DateTaken);
+            hash.Add(Event);
+            hash.Add(Orientation);
+            hash.Add(PeopleNames);
+            hash.Add(UpstreamId);
+            hash.Add(LastSynchronizedOn);
+            hash.Add(CreatedOn);
+            hash.Add(ModifiedOn);
+            return hash.ToHashCode();
+        }
     }
 }

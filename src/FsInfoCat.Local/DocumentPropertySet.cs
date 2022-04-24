@@ -18,7 +18,9 @@ namespace FsInfoCat.Local
     /// </summary>
     /// <seealso cref="LocalDbEntity" />
     /// <seealso cref="ILocalDocumentPropertySet" />
+#pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     public class DocumentPropertySet : DocumentPropertiesRow, ILocalDocumentPropertySet, ISimpleIdentityReference<DocumentPropertySet>, IEquatable<DocumentPropertySet>
+#pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     {
         private HashSet<DbFile> _files = new();
 
@@ -79,45 +81,54 @@ namespace FsInfoCat.Local
             }
         }
 
-        protected bool ArePropertiesEqual([DisallowNull] ILocalDocumentPropertySet other)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected bool ArePropertiesEqual([DisallowNull] IDocumentPropertySet other)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool Equals(DocumentPropertySet other) => other is not null && ReferenceEquals(this, other) || Id.Equals(Guid.Empty) ? ArePropertiesEqual(this) : Id.Equals(other.Id);
+        public bool Equals(DocumentPropertySet other) => other is not null && (ReferenceEquals(this, other) || (TryGetId(out Guid id) ? id.Equals(other.Id) : !other.TryGetId(out _) && ArePropertiesEqual(other)));
 
         public bool Equals(IDocumentPropertySet other)
         {
-            throw new NotImplementedException();
+            if (other is null) return false;
+            if (other is DocumentPropertySet propertySet) return Equals(propertySet);
+            if (TryGetId(out Guid id)) return id.Equals(other.Id);
+            if (!other.Id.Equals(Guid.Empty)) return false;
+            if (other is ILocalDocumentPropertiesRow localRow) return ArePropertiesEqual(localRow);
+            return ArePropertiesEqual(other);
         }
 
         public override bool Equals(IDocumentPropertiesRow other)
         {
-            throw new NotImplementedException();
+            if (other is null) return false;
+            if (other is DocumentPropertySet propertySet) return Equals(propertySet);
+            if (TryGetId(out Guid id)) return id.Equals(other.Id);
+            if (!other.Id.Equals(Guid.Empty)) return false;
+            if (other is ILocalDocumentPropertiesRow localRow) return ArePropertiesEqual(localRow);
+            return ArePropertiesEqual(other);
         }
 
         public override bool Equals(IDocumentProperties other)
         {
-            throw new NotImplementedException();
+            if (other is null) return false;
+            if (other is DocumentPropertySet propertySet) return Equals(propertySet);
+            if (other is IDocumentPropertiesRow row)
+            {
+                if (TryGetId(out Guid id)) return id.Equals(row.Id);
+                if (!row.Id.Equals(Guid.Empty)) return false;
+                if (row is ILocalDocumentPropertiesRow localRow) return ArePropertiesEqual(localRow);
+                return ArePropertiesEqual(row);
+            }
+            return ArePropertiesEqual(other);
         }
 
         public override bool Equals(object obj)
         {
-            // TODO: Implement Equals(object)
-            throw new NotImplementedException();
-        }
-
-        public override int GetHashCode()
-        {
-            if (TryGetId(out Guid id)) return id.GetHashCode();
-            // TODO: Implement GetHashCode()
-            throw new NotImplementedException();
-            return id.GetHashCode();
+            if (obj is null) return false;
+            if (obj is DocumentPropertySet other) return Equals(other);
+            if (obj is IDocumentPropertiesRow row)
+            {
+                if (TryGetId(out Guid id)) return id.Equals(row.Id);
+                if (!row.Id.Equals(Guid.Empty)) return false;
+                if (obj is ILocalDocumentPropertiesRow localRow) return ArePropertiesEqual(localRow);
+                return ArePropertiesEqual(row);
+            }
+            return obj is IDocumentProperties properties && ArePropertiesEqual(properties);
         }
 
         IEnumerable<Guid> IIdentityReference.GetIdentifiers() { yield return Id; }

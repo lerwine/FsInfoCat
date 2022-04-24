@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat.Local
@@ -48,13 +49,50 @@ namespace FsInfoCat.Local
 
         #endregion
 
-        protected bool ArePropertiesEqual([DisallowNull] IRecordedTVProperties other)
-        {
-            throw new NotImplementedException();
-        }
+        protected bool ArePropertiesEqual([DisallowNull] ILocalRecordedTVPropertiesRow other) => ArePropertiesEqual((IRecordedTVPropertiesRow)other) &&
+            EqualityComparer<Guid?>.Default.Equals(UpstreamId, other.UpstreamId) &&
+            LastSynchronizedOn == other.LastSynchronizedOn;
+
+        protected bool ArePropertiesEqual([DisallowNull] IRecordedTVPropertiesRow other) => ArePropertiesEqual((IRecordedTVProperties)other) &&
+            CreatedOn == other.CreatedOn &&
+            ModifiedOn == other.ModifiedOn;
+
+        protected bool ArePropertiesEqual([DisallowNull] IRecordedTVProperties other) => _episodeName == other.EpisodeName &&
+            _networkAffiliation == other.NetworkAffiliation &&
+            _programDescription == other.ProgramDescription &&
+            _stationCallSign == other.StationCallSign &&
+            _stationName == other.StationName &&
+            ChannelNumber == other.ChannelNumber &&
+            IsDTVContent == other.IsDTVContent &&
+            IsHDContent == other.IsHDContent &&
+            OriginalBroadcastDate == other.OriginalBroadcastDate;
+        //EqualityComparer<Guid?>.Default.Equals(UpstreamId, other.UpstreamId) &&
+        //LastSynchronizedOn == other.LastSynchronizedOn &&
+        //CreatedOn == other.CreatedOn &&
+        //ModifiedOn == other.ModifiedOn;
 
         public abstract bool Equals(IRecordedTVPropertiesRow other);
 
         public abstract bool Equals(IRecordedTVProperties other);
+
+        public override int GetHashCode()
+        {
+            if (TryGetId(out Guid id)) return id.GetHashCode();
+            HashCode hash = new();
+            hash.Add(_episodeName);
+            hash.Add(_networkAffiliation);
+            hash.Add(_programDescription);
+            hash.Add(_stationCallSign);
+            hash.Add(_stationName);
+            hash.Add(ChannelNumber);
+            hash.Add(IsDTVContent);
+            hash.Add(IsHDContent);
+            hash.Add(OriginalBroadcastDate);
+            hash.Add(UpstreamId);
+            hash.Add(LastSynchronizedOn);
+            hash.Add(CreatedOn);
+            hash.Add(ModifiedOn);
+            return hash.ToHashCode();
+        }
     }
 }

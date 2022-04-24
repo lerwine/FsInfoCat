@@ -1,6 +1,7 @@
 using FsInfoCat.Collections;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat.Local
@@ -60,13 +61,50 @@ namespace FsInfoCat.Local
 
         #endregion
 
-        protected bool ArePropertiesEqual([DisallowNull] IDocumentProperties other)
-        {
-            throw new NotImplementedException();
-        }
+        protected bool ArePropertiesEqual([DisallowNull] ILocalDocumentPropertiesRow other) => ArePropertiesEqual((IDocumentPropertiesRow)other) &&
+            EqualityComparer<Guid?>.Default.Equals(UpstreamId, other.UpstreamId) &&
+            LastSynchronizedOn == other.LastSynchronizedOn;
+
+        protected bool ArePropertiesEqual([DisallowNull] IDocumentPropertiesRow other) => ArePropertiesEqual((IDocumentProperties)other) &&
+            CreatedOn == other.CreatedOn &&
+            ModifiedOn == other.ModifiedOn;
+
+        protected bool ArePropertiesEqual([DisallowNull] IDocumentProperties other) => _clientID == other.ClientID &&
+            EqualityComparer<MultiStringValue>.Default.Equals(Contributor, other.Contributor) &&
+            DateCreated == other.DateCreated &&
+            _lastAuthor == other.LastAuthor &&
+            _revisionNumber == other.RevisionNumber &&
+            Security == other.Security &&
+            _division == other.Division &&
+            _documentID == other.DocumentID &&
+            _manager == other.Manager &&
+            _presentationFormat == other.PresentationFormat &&
+            _version == other.Version;
 
         public abstract bool Equals(IDocumentPropertiesRow other);
 
         public abstract bool Equals(IDocumentProperties other);
+
+        public override int GetHashCode()
+        {
+            if (TryGetId(out Guid id)) return id.GetHashCode();
+            HashCode hash = new();
+            hash.Add(_clientID);
+            hash.Add(Contributor);
+            hash.Add(DateCreated);
+            hash.Add(_lastAuthor);
+            hash.Add(_revisionNumber);
+            hash.Add(Security);
+            hash.Add(_division);
+            hash.Add(_documentID);
+            hash.Add(_manager);
+            hash.Add(_presentationFormat);
+            hash.Add(_version);
+            hash.Add(UpstreamId);
+            hash.Add(LastSynchronizedOn);
+            hash.Add(CreatedOn);
+            hash.Add(ModifiedOn);
+            return hash.ToHashCode();
+        }
     }
 }

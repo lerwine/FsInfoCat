@@ -18,7 +18,9 @@ namespace FsInfoCat.Local
     /// </summary>
     /// <seealso cref="LocalDbEntity" />
     /// <seealso cref="ILocalMusicPropertySet" />
+#pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     public class MusicPropertySet : MusicPropertiesRow, ILocalMusicPropertySet, ISimpleIdentityReference<MusicPropertySet>, IEquatable<MusicPropertySet>
+#pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     {
         private HashSet<DbFile> _files = new();
 
@@ -87,44 +89,50 @@ namespace FsInfoCat.Local
             }
         }
 
-        protected bool ArePropertiesEqual([DisallowNull] ILocalMusicPropertySet other)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected bool ArePropertiesEqual([DisallowNull] IMusicPropertySet other)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool Equals(MusicPropertySet other) => other is not null && ReferenceEquals(this, other) || Id.Equals(Guid.Empty) ? ArePropertiesEqual(this) : Id.Equals(other.Id);
+        public bool Equals(MusicPropertySet other) => other is not null && (ReferenceEquals(this, other) || (TryGetId(out Guid id) ? id.Equals(other.Id) : !other.TryGetId(out _) && ArePropertiesEqual(other)));
 
         public bool Equals(IMusicPropertySet other)
         {
-            throw new NotImplementedException();
+            if (TryGetId(out Guid id)) return id.Equals(other.Id);
+            if (!other.Id.Equals(Guid.Empty)) return false;
+            if (other is ILocalMusicPropertiesRow localRow) return ArePropertiesEqual(localRow);
+            return ArePropertiesEqual(other);
         }
 
         public override bool Equals(IMusicPropertiesRow other)
         {
-            throw new NotImplementedException();
+            if (TryGetId(out Guid id)) return id.Equals(other.Id);
+            if (!other.Id.Equals(Guid.Empty)) return false;
+            if (other is ILocalMusicPropertiesRow localRow) return ArePropertiesEqual(localRow);
+            return ArePropertiesEqual(other);
         }
 
         public override bool Equals(IMusicProperties other)
         {
-            throw new NotImplementedException();
+            if (other is null) return false;
+            if (other is MusicPropertySet propertySet) return Equals(propertySet);
+            if (other is IMusicPropertiesRow row)
+            {
+                if (TryGetId(out Guid id)) return id.Equals(row.Id);
+                if (!row.Id.Equals(Guid.Empty)) return false;
+                if (row is ILocalMusicPropertiesRow localRow) return ArePropertiesEqual(localRow);
+                return ArePropertiesEqual(row);
+            }
+            return ArePropertiesEqual(other);
         }
 
         public override bool Equals(object obj)
         {
-            // TODO: Implement Equals(object)
-            throw new NotImplementedException();
-        }
-
-        public override int GetHashCode()
-        {
-            if (TryGetId(out Guid id)) return id.GetHashCode();
-            // TODO: Implement GetHashCode()
-            throw new NotImplementedException();
+            if (obj is null) return false;
+            if (obj is MusicPropertySet other) return Equals(other);
+            if (obj is IMusicPropertiesRow row)
+            {
+                if (TryGetId(out Guid id)) return id.Equals(row.Id);
+                if (!row.Id.Equals(Guid.Empty)) return false;
+                if (obj is ILocalMusicPropertiesRow localRow) return ArePropertiesEqual(localRow);
+                return ArePropertiesEqual(row);
+            }
+            return obj is IMusicProperties properties && ArePropertiesEqual(properties);
         }
 
         IEnumerable<Guid> IIdentityReference.GetIdentifiers() { yield return Id; }

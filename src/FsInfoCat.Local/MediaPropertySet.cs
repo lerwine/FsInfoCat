@@ -19,7 +19,9 @@ namespace FsInfoCat.Local
     /// </summary>
     /// <seealso cref="LocalDbEntity" />
     /// <seealso cref="ILocalMediaPropertySet" />
+#pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     public class MediaPropertySet : MediaPropertiesRow, ILocalMediaPropertySet, ISimpleIdentityReference<MediaPropertySet>, IEquatable<MediaPropertySet>
+#pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     {
         private HashSet<DbFile> _files = new();
 
@@ -86,44 +88,54 @@ namespace FsInfoCat.Local
             }
         }
 
-        protected bool ArePropertiesEqual([DisallowNull] ILocalMediaPropertySet other)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected bool ArePropertiesEqual([DisallowNull] IMediaPropertySet other)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool Equals(MediaPropertySet other) => other is not null && ReferenceEquals(this, other) || Id.Equals(Guid.Empty) ? ArePropertiesEqual(this) : Id.Equals(other.Id);
+        public bool Equals(MediaPropertySet other) => other is not null && (ReferenceEquals(this, other) || (TryGetId(out Guid id) ? id.Equals(other.Id) : !other.TryGetId(out _) && ArePropertiesEqual(other)));
 
         public bool Equals(IMediaPropertySet other)
         {
-            throw new NotImplementedException();
+            if (other is null) return false;
+            if (other is MediaPropertySet propertySet) return Equals(propertySet);
+            if (TryGetId(out Guid id)) return id.Equals(other.Id);
+            if (!other.Id.Equals(Guid.Empty)) return false;
+            if (other is ILocalMediaPropertiesRow localRow) return ArePropertiesEqual(localRow);
+            return ArePropertiesEqual(other);
         }
 
         public override bool Equals(IMediaPropertiesRow other)
         {
-            throw new NotImplementedException();
+            if (other is null) return false;
+            if (other is MediaPropertySet propertySet) return Equals(propertySet);
+            if (TryGetId(out Guid id)) return id.Equals(other.Id);
+            if (!other.Id.Equals(Guid.Empty)) return false;
+            if (other is ILocalMediaPropertiesRow localRow) return ArePropertiesEqual(localRow);
+            return ArePropertiesEqual(other);
         }
 
         public override bool Equals(IMediaProperties other)
         {
-            throw new NotImplementedException();
+            if (other is null) return false;
+            if (other is MediaPropertySet propertySet) return Equals(propertySet);
+            if (other is IMediaPropertiesRow row)
+            {
+                if (TryGetId(out Guid id)) return id.Equals(row.Id);
+                if (!row.Id.Equals(Guid.Empty)) return false;
+                if (row is ILocalMediaPropertiesRow localRow) return ArePropertiesEqual(localRow);
+                return ArePropertiesEqual(row);
+            }
+            return ArePropertiesEqual(other);
         }
 
         public override bool Equals(object obj)
         {
-            // TODO: Implement Equals(object)
-            throw new NotImplementedException();
-        }
-
-        public override int GetHashCode()
-        {
-            if (TryGetId(out Guid id)) return id.GetHashCode();
-            // TODO: Implement GetHashCode()
-            throw new NotImplementedException();
+            if (obj is null) return false;
+            if (obj is MediaPropertySet other) return Equals(other);
+            if (obj is IMediaPropertiesRow row)
+            {
+                if (TryGetId(out Guid id)) return id.Equals(row.Id);
+                if (!row.Id.Equals(Guid.Empty)) return false;
+                if (obj is ILocalMediaPropertiesRow localRow) return ArePropertiesEqual(localRow);
+                return ArePropertiesEqual(row);
+            }
+            return obj is IMediaProperties properties && ArePropertiesEqual(properties);
         }
 
         IEnumerable<Guid> IIdentityReference.GetIdentifiers() { yield return Id; }

@@ -2,8 +2,6 @@ using FsInfoCat.Collections;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat.Local
 {
@@ -23,51 +21,54 @@ namespace FsInfoCat.Local
             _ = builder.Property(nameof(Director)).HasConversion(MultiStringValue.Converter);
         }
 
-        protected bool ArePropertiesEqual([DisallowNull] ILocalVideoPropertiesListItem other) => ArePropertiesEqual((IVideoPropertySet)other) &&
-            EqualityComparer<Guid?>.Default.Equals(UpstreamId, other.UpstreamId) &&
-            LastSynchronizedOn == other.LastSynchronizedOn;
-
-        public bool Equals(VideoPropertiesListItem other)
-        {
-            throw new NotImplementedException();
-        }
+        public bool Equals(VideoPropertiesListItem other) => other is not null && (ReferenceEquals(this, other) || (TryGetId(out Guid id) ? id.Equals(other.Id) : !other.TryGetId(out _) && ArePropertiesEqual(other)));
 
         public bool Equals(IVideoPropertiesListItem other)
         {
-            throw new NotImplementedException();
+            if (other is null) return false;
+            if (other is VideoPropertiesListItem listItem) return Equals(listItem);
+            if (TryGetId(out Guid id)) return id.Equals(other.Id);
+            if (other.Id.Equals(Guid.Empty)) return false;
+            if (other is ILocalVideoPropertiesRow localRow) return ArePropertiesEqual(localRow);
+            return ArePropertiesEqual(other);
         }
 
         public override bool Equals(IVideoPropertiesRow other)
         {
-            throw new NotImplementedException();
+            if (other is null) return false;
+            if (other is VideoPropertiesListItem listItem) return Equals(listItem);
+            if (TryGetId(out Guid id)) return id.Equals(other.Id);
+            if (other.Id.Equals(Guid.Empty)) return false;
+            if (other is ILocalVideoPropertiesRow localRow) return ArePropertiesEqual(localRow);
+            return ArePropertiesEqual(other);
         }
 
         public override bool Equals(IVideoProperties other)
         {
-            throw new NotImplementedException();
+            if (other is null) return false;
+            if (other is VideoPropertiesListItem listItem) return Equals(listItem);
+            if (other is IVideoPropertiesRow row)
+            {
+                if (TryGetId(out Guid id)) return id.Equals(row.Id);
+                if (row.Id.Equals(Guid.Empty)) return false;
+                if (row is ILocalVideoPropertiesRow localRow) return ArePropertiesEqual(localRow);
+                return ArePropertiesEqual(row);
+            }
+            return ArePropertiesEqual(other);
         }
 
         public override bool Equals(object obj)
         {
             if (obj is null) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            if (obj is VideoPropertiesListItem videoPropertiesListItem) return Equals(videoPropertiesListItem);
-            if (obj is ILocalVideoPropertiesListItem localVideoPropertiesListItem)
+            if (obj is VideoPropertiesListItem listItem) return Equals(listItem);
+            if (obj is IVideoPropertiesRow row)
             {
-                if (Id.Equals(Guid.Empty)) return localVideoPropertiesListItem.Id.Equals(Guid.Empty) && ArePropertiesEqual(localVideoPropertiesListItem);
-                return Id.Equals(localVideoPropertiesListItem.Id);
+                if (TryGetId(out Guid id)) return id.Equals(row.Id);
+                if (row.Id.Equals(Guid.Empty)) return false;
+                if (row is ILocalVideoPropertiesRow localRow) return ArePropertiesEqual(localRow);
+                return ArePropertiesEqual(row);
             }
-            if (obj is IVideoPropertySet iVideoPropertySet)
-            {
-                if (Id.Equals(Guid.Empty)) return iVideoPropertySet.Id.Equals(Guid.Empty) && ArePropertiesEqual(iVideoPropertySet);
-                return Id.Equals(iVideoPropertySet.Id);
-            }
-            if (obj is ILocalVideoPropertySet localVideoPropertySet)
-            {
-                if (Id.Equals(Guid.Empty)) return localVideoPropertySet.Id.Equals(Guid.Empty) && ArePropertiesEqual(localVideoPropertySet);
-                return Id.Equals(localVideoPropertySet.Id);
-            }
-            return obj is IVideoProperties videoProperties && ArePropertiesEqual(videoProperties);
+            return obj is IVideoProperties properties && ArePropertiesEqual(properties);
         }
     }
 }

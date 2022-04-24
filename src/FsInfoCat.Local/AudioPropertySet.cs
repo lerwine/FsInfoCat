@@ -69,21 +69,8 @@ namespace FsInfoCat.Local
             }
         }
 
-        protected bool ArePropertiesEqual([DisallowNull] ILocalAudioPropertySet other) => ArePropertiesEqual((IAudioPropertySet)other) &&
-                   EqualityComparer<Guid?>.Default.Equals(UpstreamId, other.UpstreamId) &&
-                   LastSynchronizedOn == other.LastSynchronizedOn;
+        public bool Equals(AudioPropertySet other) => other is not null && (ReferenceEquals(this, other) || (TryGetId(out Guid id) ? id.Equals(other.Id) : !other.TryGetId(out _) && ArePropertiesEqual(other)));
 
-        protected bool ArePropertiesEqual([DisallowNull] IAudioPropertySet other) => ArePropertiesEqual((IAudioProperties)other) && CreatedOn == other.CreatedOn &&
-                   ModifiedOn == other.ModifiedOn;
-
-        public bool Equals(AudioPropertySet other)
-        {
-            if (other is null) return false;
-            if (ReferenceEquals(this, other)) return true;
-            if (TryGetId(out Guid id))
-                return other.TryGetId(out Guid g) && id.Equals(g);
-            return !other.TryGetId(out _) && ArePropertiesEqual(other);
-        }
 
         public bool Equals(IAudioPropertySet other)
         {
@@ -99,32 +86,22 @@ namespace FsInfoCat.Local
         public override bool Equals(IAudioPropertiesRow other)
         {
             if (other is null) return false;
-            if (other is AudioPropertySet audioPropertySet) return Equals(audioPropertySet);
+            if (other is AudioPropertySet propertySet) return Equals(propertySet);
             if (TryGetId(out Guid id)) return id.Equals(other.Id);
             if (!other.Id.Equals(Guid.Empty)) return false;
-            if (other is ILocalAudioPropertySet localPropertySet)
-                return ArePropertiesEqual(localPropertySet);
-            if (other is IAudioPropertySet propertySet)
-                return ArePropertiesEqual(propertySet);
-            if (other is ILocalAudioPropertiesRow localRow)
-                return ArePropertiesEqual(localRow);
+            if (other is ILocalAudioPropertiesRow localRow) return ArePropertiesEqual(localRow);
             return ArePropertiesEqual(other);
         }
 
         public override bool Equals(IAudioProperties other)
         {
             if (other is null) return false;
-            if (other is AudioPropertySet audioPropertySet) return Equals(audioPropertySet);
+            if (other is AudioPropertySet propertySet) return Equals(propertySet);
             if (other is IAudioPropertiesRow row)
             {
                 if (TryGetId(out Guid id)) return id.Equals(row.Id);
                 if (!row.Id.Equals(Guid.Empty)) return false;
-                if (row is ILocalAudioPropertySet localPropertySet)
-                    return ArePropertiesEqual(localPropertySet);
-                if (row is IAudioPropertySet propertySet)
-                    return ArePropertiesEqual(propertySet);
-                if (row is ILocalAudioPropertiesRow localRow)
-                    return ArePropertiesEqual(localRow);
+                if (row is ILocalAudioPropertiesRow localRow) return ArePropertiesEqual(localRow);
                 return ArePropertiesEqual(row);
             }
             return ArePropertiesEqual(other);
@@ -138,14 +115,8 @@ namespace FsInfoCat.Local
             {
                 if (TryGetId(out Guid id)) return id.Equals(row.Id);
                 if (!row.Id.Equals(Guid.Empty)) return false;
-                if (row is ILocalAudioPropertySet localPropertySet)
-                    return ArePropertiesEqual(localPropertySet);
-                if (row is IAudioPropertySet propertySet)
-                    return ArePropertiesEqual(propertySet);
-                if (row is ILocalAudioPropertiesRow localRow)
-                    return ArePropertiesEqual(localRow);
+                if (row is ILocalAudioPropertiesRow localRow) return ArePropertiesEqual(localRow);
                 return ArePropertiesEqual(row);
-                return id.Equals(row.Id);
             }
             return obj is IAudioProperties other && ArePropertiesEqual(other);
         }

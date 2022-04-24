@@ -1,6 +1,7 @@
 using FsInfoCat.Collections;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat.Local
@@ -55,13 +56,56 @@ namespace FsInfoCat.Local
 
         #endregion
 
-        protected virtual bool ArePropertiesEqual([DisallowNull] IGPSProperties other)
-        {
-            throw new NotImplementedException();
-        }
+        protected bool ArePropertiesEqual([DisallowNull] ILocalGPSPropertiesRow other) => ArePropertiesEqual((IGPSPropertiesRow)other) &&
+            EqualityComparer<Guid?>.Default.Equals(UpstreamId, other.UpstreamId) &&
+            LastSynchronizedOn == other.LastSynchronizedOn;
+
+        protected bool ArePropertiesEqual([DisallowNull] IGPSPropertiesRow other) => ArePropertiesEqual((IGPSProperties)other) &&
+            CreatedOn == other.CreatedOn &&
+            ModifiedOn == other.ModifiedOn;
+
+        protected virtual bool ArePropertiesEqual([DisallowNull] IGPSProperties other) => _areaInformation == other.AreaInformation &&
+            _latitudeRef == other.LatitudeRef &&
+            _longitudeRef == other.LongitudeRef &&
+            _measureMode == other.MeasureMode &&
+            _processingMethod == other.ProcessingMethod &&
+            LatitudeDegrees == other.LatitudeDegrees &&
+            LatitudeMinutes == other.LatitudeMinutes &&
+            LatitudeSeconds == other.LatitudeSeconds &&
+            LongitudeDegrees == other.LongitudeDegrees &&
+            LongitudeMinutes == other.LongitudeMinutes &&
+            LongitudeSeconds == other.LongitudeSeconds &&
+            EqualityComparer<ByteValues>.Default.Equals(VersionID, other.VersionID);
+        //EqualityComparer<Guid?>.Default.Equals(UpstreamId, other.UpstreamId) &&
+        //LastSynchronizedOn == other.LastSynchronizedOn &&
+        //CreatedOn == other.CreatedOn &&
+        //ModifiedOn == other.ModifiedOn
 
         public abstract bool Equals(IGPSPropertiesRow other);
 
         public abstract bool Equals(IGPSProperties other);
+
+        public override int GetHashCode()
+        {
+            if (TryGetId(out Guid id)) return id.GetHashCode();
+            HashCode hash = new();
+            hash.Add(_areaInformation);
+            hash.Add(_latitudeRef);
+            hash.Add(_longitudeRef);
+            hash.Add(_measureMode);
+            hash.Add(_processingMethod);
+            hash.Add(LatitudeDegrees);
+            hash.Add(LatitudeMinutes);
+            hash.Add(LatitudeSeconds);
+            hash.Add(LongitudeDegrees);
+            hash.Add(LongitudeMinutes);
+            hash.Add(LongitudeSeconds);
+            hash.Add(VersionID);
+            hash.Add(UpstreamId);
+            hash.Add(LastSynchronizedOn);
+            hash.Add(CreatedOn);
+            hash.Add(ModifiedOn);
+            return hash.ToHashCode();
+        }
     }
 }
