@@ -206,37 +206,41 @@ namespace FsInfoCat.Local
 
         IEnumerable<Guid> IIdentityReference.GetIdentifiers() { yield return Id; }
 
-        protected virtual bool ArePropertiesEqual([DisallowNull] ILocalVolumeAccessError other)
-        {
-            throw new NotImplementedException();
-        }
+        protected virtual bool ArePropertiesEqual([DisallowNull] ILocalVolumeAccessError other) => ArePropertiesEqual((IVolumeAccessError)other) &&
+            CreatedOn == other.CreatedOn &&
+            ModifiedOn == other.ModifiedOn;
 
-        protected virtual bool ArePropertiesEqual([DisallowNull] IVolumeAccessError other)
-        {
-            throw new NotImplementedException();
-        }
+        protected virtual bool ArePropertiesEqual([DisallowNull] IVolumeAccessError other) => ErrorCode == other.ErrorCode &&
+            Message == other.Message &&
+            Details == other.Details;
 
-        public bool Equals(VolumeAccessError other)
-        {
-            throw new NotImplementedException();
-        }
+        public bool Equals(VolumeAccessError other) => other is not null && ReferenceEquals(this, other) || Id.Equals(Guid.Empty) ?
+            (Target?.Id ?? _targetId).Equals(other.Target?.Id ?? other._targetId) && ArePropertiesEqual(this) : Id.Equals(other.Id);
 
         public bool Equals(IVolumeAccessError other)
         {
-            throw new NotImplementedException();
+            if (other is null) return false;
+            if (other is VolumeAccessError volumeAccessError) return Equals(volumeAccessError);
+            Guid? id = _id;
+            if (id.HasValue) return id.Value.Equals(other.Id);
+            if (other.Id.Equals(Guid.Empty)) return false;
+            return (other is ILocalVolumeAccessError localAccessError) ? ArePropertiesEqual(localAccessError) : ArePropertiesEqual(other);
         }
 
         public override bool Equals(object obj)
         {
-            // TODO: Implement Equals(object)
-            throw new NotImplementedException();
+            if (obj is null) return false;
+            if (obj is VolumeAccessError volumeAccessError) return Equals(volumeAccessError);
+            if (obj is IVolumeAccessError accessError)
+            {
+                Guid? id = _id;
+                if (id.HasValue) return id.Value.Equals(accessError.Id);
+                if (accessError.Id.Equals(Guid.Empty)) return false;
+                return (accessError is ILocalVolumeAccessError localAccessError) ? ArePropertiesEqual(localAccessError) : ArePropertiesEqual(accessError);
+            }
+            return false;
         }
 
-        public override int GetHashCode()
-        {
-            Guid? id = _id;
-            if (id.HasValue) return id.Value.GetHashCode();
-            return HashCode.Combine(_message, _details, ErrorCode, TargetId, CreatedOn, ModifiedOn);
-        }
+        public override int GetHashCode() => _id?.GetHashCode() ?? HashCode.Combine(_message, _details, ErrorCode, TargetId, CreatedOn, ModifiedOn);
     }
 }

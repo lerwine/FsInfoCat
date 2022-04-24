@@ -206,37 +206,41 @@ namespace FsInfoCat.Local
 
         IEnumerable<Guid> IIdentityReference.GetIdentifiers() { yield return Id; }
 
-        protected bool ArePropertiesEqual([DisallowNull] ILocalSubdirectoryAccessError other)
-        {
-            throw new NotImplementedException();
-        }
+        protected bool ArePropertiesEqual([DisallowNull] ILocalSubdirectoryAccessError other) => ArePropertiesEqual((ISubdirectoryAccessError)other) &&
+            CreatedOn == other.CreatedOn &&
+            ModifiedOn == other.ModifiedOn;
 
-        protected bool ArePropertiesEqual([DisallowNull] ISubdirectoryAccessError other)
-        {
-            throw new NotImplementedException();
-        }
+        protected bool ArePropertiesEqual([DisallowNull] ISubdirectoryAccessError other) => ErrorCode == other.ErrorCode &&
+            Message == other.Message &&
+            Details == other.Details;
 
-        public bool Equals(SubdirectoryAccessError other)
-        {
-            throw new NotImplementedException();
-        }
+        public bool Equals(SubdirectoryAccessError other) => other is not null && ReferenceEquals(this, other) || Id.Equals(Guid.Empty) ?
+            (Target?.Id ?? _targetId).Equals(other.Target?.Id ?? other._targetId) && ArePropertiesEqual(this) : Id.Equals(other.Id);
 
         public bool Equals(ISubdirectoryAccessError other)
         {
-            throw new NotImplementedException();
+            if (other is null) return false;
+            if (other is SubdirectoryAccessError subdirctoryAccessError) return Equals(subdirctoryAccessError);
+            Guid? id = _id;
+            if (id.HasValue) return id.Value.Equals(other.Id);
+            if (other.Id.Equals(Guid.Empty)) return false;
+            return (other is ILocalSubdirectoryAccessError localAccessError) ? ArePropertiesEqual(localAccessError) : ArePropertiesEqual(other);
         }
 
         public override bool Equals(object obj)
         {
-            // TODO: Implement Equals(object)
-            throw new NotImplementedException();
+            if (obj is null) return false;
+            if (obj is SubdirectoryAccessError volumeAccessError) return Equals(volumeAccessError);
+            if (obj is ISubdirectoryAccessError accessError)
+            {
+                Guid? id = _id;
+                if (id.HasValue) return id.Value.Equals(accessError.Id);
+                if (accessError.Id.Equals(Guid.Empty)) return false;
+                return (accessError is ILocalSubdirectoryAccessError localAccessError) ? ArePropertiesEqual(localAccessError) : ArePropertiesEqual(accessError);
+            }
+            return false;
         }
 
-        public override int GetHashCode()
-        {
-            Guid? id = _id;
-            if (id.HasValue) return id.Value.GetHashCode();
-            return HashCode.Combine(_message, _details, ErrorCode, TargetId, CreatedOn, ModifiedOn);
-        }
+        public override int GetHashCode() => _id?.GetHashCode() ?? HashCode.Combine(_message, _details, ErrorCode, TargetId, CreatedOn, ModifiedOn);
     }
 }

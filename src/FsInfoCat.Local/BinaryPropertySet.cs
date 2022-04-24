@@ -190,11 +190,6 @@ namespace FsInfoCat.Local
             return false;
         }
 
-        public override int GetHashCode()
-        {
-            Guid? id = _id;
-            if (id.HasValue) return id.Value.GetHashCode();
-            return HashCode.Combine(CreatedOn, ModifiedOn, Length, Hash, UpstreamId, LastSynchronizedOn);
-        }
+        public override int GetHashCode() => _id?.GetHashCode() ?? HashCode.Combine(CreatedOn, ModifiedOn, Length, Hash, UpstreamId, LastSynchronizedOn);
     }
 }
