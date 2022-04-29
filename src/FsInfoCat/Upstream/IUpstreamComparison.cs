@@ -1,11 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.Upstream
 {
     /// <summary>The results of a byte-for-byte comparison of 2 files.</summary>
     /// <seealso cref="IUpstreamDbEntity" />
     /// <seealso cref="IComparison" />
-    public interface IUpstreamComparison : IUpstreamDbEntity, IComparison
+    public interface IUpstreamComparison : IUpstreamDbEntity, IComparison, IHasMembershipKeyReference<IUpstreamFile, IUpstreamFile>
     {
         /// <summary>Gets the baseline file in the comparison.</summary>
         /// <value>The generic <see cref="IUpstreamFile" /> that represents the baseline file in the comparison.</value>

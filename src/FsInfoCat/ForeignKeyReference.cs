@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat
 {
-    public sealed class ForeignKeyReference<TEntity> : IForeignKeyReference<TEntity>
+    public class ForeignKeyReference<TEntity> : IForeignKeyReference<TEntity>
         where TEntity : class, IHasSimpleIdentifier
     {
         private Guid? _id;
@@ -38,6 +38,8 @@ namespace FsInfoCat
             SyncRoot = syncRoot ?? new();
             _id = id;
         }
+
+        public ForeignKeyReference(object syncRoot) { SyncRoot = syncRoot ?? new(); }
 
         public bool HasId() => this.SyncDerive(() => (_entity is null) ? _id.HasValue : _entity.TryGetId(out _));
 

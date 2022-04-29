@@ -1,6 +1,6 @@
 namespace FsInfoCat
 {
-    public interface IHasMembershipKeyReference : ISynchronizable
+    public interface IHasMembershipKeyReference : ISynchronizable, IHasIdentifierPair
     {
         IForeignKeyReference Ref1 { get; }
 

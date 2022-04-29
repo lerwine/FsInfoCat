@@ -16,62 +16,24 @@ using System.Xml.Linq;
 
 namespace FsInfoCat.Local
 {
-    public class Redundancy : LocalDbEntity, ILocalRedundancy, IIdentityPairReference<Redundancy>, IEquatable<Redundancy>
+    public class Redundancy : LocalDbEntity, IHasMembershipKeyReference<RedundantSet, DbFile>, ILocalRedundancy, IEquatable<Redundancy>
     {
         #region Fields
 
-        private Guid? _fileId;
-        private Guid? _redundantSetId;
         private string _reference;
         private string _notes;
-        private DbFile _file;
-        private RedundantSet _redundantSet;
+        private readonly FileReference _file;
+        private readonly RedundantSetReference _redundantSet;
 
         #endregion
 
         #region Properties
 
         [Required]
-        [BackingField(nameof(_fileId))]
-        public virtual Guid FileId
-        {
-            get => _file?.Id ?? _fileId ?? Guid.Empty;
-            set
-            {
-                Monitor.Enter(SyncRoot);
-                try
-                {
-                    if (_file is not null)
-                    {
-                        if (_file.Id.Equals(value)) return;
-                        _file = null;
-                    }
-                    _fileId = value;
-                }
-                finally { Monitor.Exit(SyncRoot); }
-            }
-        }
+        public virtual Guid FileId { get => _file.Id; set => _file.SetId(value); }
 
         [Required]
-        [BackingField(nameof(_redundantSetId))]
-        public virtual Guid RedundantSetId
-        {
-            get => _redundantSet?.Id ?? _redundantSetId ?? Guid.Empty;
-            set
-            {
-                Monitor.Enter(SyncRoot);
-                try
-                {
-                    if (_redundantSet is not null)
-                    {
-                        if (_redundantSet.Id.Equals(value)) return;
-                        _redundantSet = null;
-                    }
-                    _redundantSetId = value;
-                }
-                finally { Monitor.Exit(SyncRoot); }
-            }
-        }
+        public virtual Guid RedundantSetId { get => _redundantSet.Id; set => _redundantSet.SetId(value); }
 
         [Required(AllowEmptyStrings = true)]
         [StringLength(DbConstants.DbColMaxLen_ShortName, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_NameLength),
@@ -87,42 +49,12 @@ namespace FsInfoCat.Local
 
         [Required(ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_FileRequired),
             ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
-        [BackingField(nameof(_file))]
-        public virtual DbFile File
-        {
-            get => _file;
-            set
-            {
-                Monitor.Enter(SyncRoot);
-                try
-                {
-                    if (value is not null && _file is not null && ReferenceEquals(value, _file)) return;
-                    _fileId = null;
-                    _file = value;
-                }
-                finally { Monitor.Exit(SyncRoot); }
-            }
-        }
+        public virtual DbFile File { get => _file.Entity; set => _file.Entity = value; }
 
         [Required(ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_RedundantSetRequired),
             ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_RedundantSet), ResourceType = typeof(FsInfoCat.Properties.Resources))]
-        [BackingField(nameof(_redundantSet))]
-        public virtual RedundantSet RedundantSet
-        {
-            get => _redundantSet;
-            set
-            {
-                Monitor.Enter(SyncRoot);
-                try
-                {
-                    if ((value is null) ? _redundantSet is null : ReferenceEquals(value, _redundantSet)) return;
-                    _redundantSetId = null;
-                    _redundantSet = value;
-                }
-                finally { Monitor.Exit(SyncRoot); }
-            }
-        }
+        public virtual RedundantSet RedundantSet { get => _redundantSet.Entity; set => _redundantSet.Entity = value; }
 
         #endregion
 
@@ -140,29 +72,38 @@ namespace FsInfoCat.Local
         {
             get
             {
-                ValueTuple<Guid, Guid> id = Id;
-                yield return id.Item1;
-                yield return id.Item2;
+                yield return _redundantSet.Id;
+                yield return _file.Id;
             }
         }
 
-        private ValueTuple<Guid, Guid> Id => (RedundantSetId, FileId);
+        (Guid, Guid) IHasIdentifierPair.Id => (_redundantSet.Id, _file.Id);
 
-        (Guid, Guid) IHasIdentifierPair.Id => (RedundantSetId, FileId);
+        IForeignKeyReference<RedundantSet> IHasMembershipKeyReference<RedundantSet, DbFile>.Ref1 => _redundantSet;
 
-        IEnumerable<Guid> IIdentityReference.GetIdentifiers()
-        {
-            ValueTuple<Guid, Guid> id = Id;
-            yield return id.Item1;
-            yield return id.Item2;
-        }
+        IForeignKeyReference<DbFile> IHasMembershipKeyReference<RedundantSet, DbFile>.Ref2 => _file;
 
-        Redundancy IIdentityReference<Redundancy>.Entity => this;
+        IForeignKeyReference IHasMembershipKeyReference.Ref1 => _redundantSet;
 
-        IDbEntity IIdentityReference.Entity => this;
+        IForeignKeyReference IHasMembershipKeyReference.Ref2 => _file;
+
+        object ISynchronizable.SyncRoot => SyncRoot;
+
+        IForeignKeyReference<IRedundantSet> IHasMembershipKeyReference<IRedundantSet, IFile>.Ref1 => _redundantSet;
+
+        IForeignKeyReference<IFile> IHasMembershipKeyReference<IRedundantSet, IFile>.Ref2 => _file;
+
+        IForeignKeyReference<ILocalRedundantSet> IHasMembershipKeyReference<ILocalRedundantSet, ILocalFile>.Ref1 => _redundantSet;
+
+        IForeignKeyReference<ILocalFile> IHasMembershipKeyReference<ILocalRedundantSet, ILocalFile>.Ref2 => _file;
 
         #endregion
 
+        public Redundancy()
+        {
+            _redundantSet = new(SyncRoot);
+            _file = new(SyncRoot);
+        }
         internal static void OnBuildEntity(EntityTypeBuilder<Redundancy> builder)
         {
             _ = builder.HasKey(nameof(FileId), nameof(RedundantSetId));
@@ -229,10 +170,10 @@ namespace FsInfoCat.Local
             if (target is null) throw new ArgumentNullException(nameof(target));
             if (dbContext is null) throw new ArgumentNullException(nameof(dbContext));
             if (logger is null) throw new ArgumentNullException(nameof(logger));
-            using (logger.BeginScope(target.Id))
+            using (logger.BeginScope((target._redundantSet.Id, target._file.Id)))
             {
                 using IDbContextTransaction transaction = dbContext.Database.BeginTransaction();
-                logger.LogInformation("Removing Redundancy {{ Id = {Id} }}", target.Id);
+                logger.LogInformation("Removing Redundancy {{ Id = {Id} }}", (target._redundantSet.Id, target._file.Id));
                 EntityEntry<Redundancy> entry = dbContext.Entry(target);
                 EntityEntry<RedundantSet> redundantSet = await entry.GetRelatedTargetEntryAsync(e => e.RedundantSet, cancellationToken);
                 _ = dbContext.Redundancies.Remove(target);
@@ -273,56 +214,31 @@ namespace FsInfoCat.Local
             throw new NotImplementedException();
         }
 
-        public override int GetHashCode()
+        public override int GetHashCode() => this.SyncDerive<RedundantSet, DbFile, int>((id1, id2) => HashCode.Combine(id1, id2),
+            (id, file) => HashCode.Combine(_reference, _notes, UpstreamId, LastSynchronizedOn, CreatedOn, ModifiedOn, id, file),
+            (rs, id) => HashCode.Combine(_reference, _notes, UpstreamId, LastSynchronizedOn, CreatedOn, ModifiedOn, rs, id),
+            (rs, file) => HashCode.Combine(_reference, _notes, UpstreamId, LastSynchronizedOn, CreatedOn, ModifiedOn, rs, file));
+
+        public bool TryGetFileId(out Guid fileId) => _file.TryGetId(out fileId);
+
+        public bool TryGetRedundantSetId(out Guid redundantSetId) => _redundantSet.TryGetId(out redundantSetId);
+
+        protected class FileReference : ForeignKeyReference<DbFile>, IForeignKeyReference<ILocalFile>, IForeignKeyReference<IFile>
         {
-            Guid? fileId = _file?.Id ?? _fileId;
-            Guid? redundantSetId = _redundantSet?.Id ?? _redundantSetId;
-            if (fileId.HasValue && redundantSetId.HasValue)
-                return HashCode.Combine(fileId.Value, redundantSetId.Value);
-            // TODO: Implement GetHashCode()
-            throw new NotImplementedException();
+            internal FileReference(object syncRoot) : base(syncRoot) { }
+
+            ILocalFile IForeignKeyReference<ILocalFile>.Entity => Entity;
+
+            IFile IForeignKeyReference<IFile>.Entity => Entity;
         }
 
-        public bool TryGetFileId(out Guid fileId)
+        protected class RedundantSetReference : ForeignKeyReference<RedundantSet>, IForeignKeyReference<ILocalRedundantSet>, IForeignKeyReference<IRedundantSet>
         {
-            Monitor.Enter(SyncRoot);
-            try
-            {
-                if (_file is null)
-                {
-                    if (_fileId.HasValue)
-                    {
-                        fileId = _fileId.Value;
-                        return true;
-                    }
-                }
-                else
-                    return _file.TryGetId(out fileId);
-            }
-            finally { Monitor.Exit(SyncRoot); }
-            fileId = Guid.Empty;
-            return false;
-        }
+            internal RedundantSetReference(object syncRoot) : base(syncRoot) { }
 
-        public bool TryGetRedundantSetId(out Guid redundantSetId)
-        {
-            Monitor.Enter(SyncRoot);
-            try
-            {
-                if (_redundantSet is null)
-                {
-                    if (_redundantSetId.HasValue)
-                    {
-                        redundantSetId = _redundantSetId.Value;
-                        return true;
-                    }
-                }
-                else
-                    return _redundantSet.TryGetId(out redundantSetId);
-            }
-            finally { Monitor.Exit(SyncRoot); }
-            redundantSetId = Guid.Empty;
-            return false;
+            ILocalRedundantSet IForeignKeyReference<ILocalRedundantSet>.Entity => Entity;
+
+            IRedundantSet IForeignKeyReference<IRedundantSet>.Entity => Entity;
         }
     }
 }

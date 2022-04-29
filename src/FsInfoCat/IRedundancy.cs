@@ -5,7 +5,7 @@ namespace FsInfoCat
 {
     /// <summary>.</summary>
     /// <seealso cref="IDbEntity" />
-    public interface IRedundancy : IDbEntity, IHasIdentifierPair, IEquatable<IRedundancy>
+    public interface IRedundancy : IDbEntity, IHasMembershipKeyReference<IRedundantSet, IFile>, IEquatable<IRedundancy>
     {
         /// <summary>Gets the custom reference value.</summary>
         /// <value>The custom reference value which can be used to refer to external information regarding redundancy remediation, such as a ticket number.</value>

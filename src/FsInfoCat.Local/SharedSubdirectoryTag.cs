@@ -7,91 +7,26 @@ using System.Threading;
 
 namespace FsInfoCat.Local
 {
-    public class SharedSubdirectoryTag : ItemTag, ILocalSharedSubdirectoryTag, ISharedSubdirectoryTag, IEquatable<SharedSubdirectoryTag>
+    public class SharedSubdirectoryTag : ItemTag, IHasMembershipKeyReference<Subdirectory, SharedTagDefinition>, ILocalSharedSubdirectoryTag, ISharedSubdirectoryTag, IEquatable<SharedSubdirectoryTag>
     {
-        private Guid? _taggedId;
-        private Subdirectory _tagged;
-        private Guid? _definitionId;
-        private SharedTagDefinition _definition;
+        private readonly SubdirectoryReference _tagged;
+        private readonly SharedTagReference _definition;
 
-        public override Guid TaggedId
-        {
-            get => _tagged?.Id ?? _taggedId ?? Guid.Empty;
-            set
-            {
-                Monitor.Enter(SyncRoot);
-                try
-                {
-                    if (_tagged is not null)
-                    {
-                        if (_tagged.Id.Equals(value)) return;
-                        _tagged = null;
-                    }
-                    _taggedId = value;
-                }
-                finally { Monitor.Exit(SyncRoot); }
-            }
-        }
+        public override Guid TaggedId { get => _tagged.Id; set => _tagged.SetId(value); }
 
         [Required(ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_SubdirectoryRequired),
             ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_Tagged_Subdirectory), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         [BackingField(nameof(_tagged))]
-        public Subdirectory Tagged
-        {
-            get => _tagged;
-            set
-            {
-                Monitor.Enter(SyncRoot);
-                try
-                {
-                    if (value is not null && _tagged is not null && ReferenceEquals(value, _tagged)) return;
-                    _taggedId = null;
-                    _tagged = value;
-                }
-                finally { Monitor.Exit(SyncRoot); }
-            }
-        }
+        public Subdirectory Tagged { get => _tagged.Entity; set => _tagged.Entity = value; }
 
-        public override Guid DefinitionId
-        {
-            get => _definition?.Id ?? _definitionId ?? Guid.Empty;
-            set
-            {
-                Monitor.Enter(SyncRoot);
-                try
-                {
-                    if (_definition is not null)
-                    {
-                        if (_definition.Id.Equals(value)) return;
-                        _definition = null;
-                    }
-                    _definitionId = value;
-                }
-                finally { Monitor.Exit(SyncRoot); }
-            }
-        }
+        public override Guid DefinitionId { get => _definition.Id; set => _definition.SetId(value); }
 
         [Required(ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_TagDefinitionRequired),
             ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_TagDefinition), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         [BackingField(nameof(_definition))]
-        public SharedTagDefinition Definition
-        {
-            get => _definition;
-            set
-            {
-                Monitor.Enter(SyncRoot);
-                try
-                {
-                    if (value is not null && _definition is not null && ReferenceEquals(value, _definition)) return;
-                    _definitionId = null;
-                    _definition = value;
-                    _definition = value;
-                }
-                finally { Monitor.Exit(SyncRoot); }
-            }
-        }
+        public SharedTagDefinition Definition { get => _definition.Entity; set => _definition.Entity = value; }
 
         ILocalSharedTagDefinition ILocalSharedTag.Definition => Definition;
 
@@ -100,6 +35,38 @@ namespace FsInfoCat.Local
         ILocalSubdirectory ILocalSubdirectoryTag.Tagged => Tagged;
 
         ISubdirectory ISubdirectoryTag.Tagged => Tagged;
+
+        IForeignKeyReference<Subdirectory> IHasMembershipKeyReference<Subdirectory, SharedTagDefinition>.Ref1 => _tagged;
+
+        IForeignKeyReference<SharedTagDefinition> IHasMembershipKeyReference<Subdirectory, SharedTagDefinition>.Ref2 => _definition;
+
+        IForeignKeyReference IHasMembershipKeyReference.Ref1 => _tagged;
+
+        IForeignKeyReference IHasMembershipKeyReference.Ref2 => _definition;
+
+        object ISynchronizable.SyncRoot => SyncRoot;
+
+        IForeignKeyReference<ISubdirectory> IHasMembershipKeyReference<ISubdirectory, ISharedTagDefinition>.Ref1 => _tagged;
+
+        IForeignKeyReference<ISharedTagDefinition> IHasMembershipKeyReference<ISubdirectory, ISharedTagDefinition>.Ref2 => _definition;
+
+        IForeignKeyReference<ISubdirectory> IHasMembershipKeyReference<ISubdirectory, ITagDefinition>.Ref1 => _tagged;
+
+        IForeignKeyReference<ITagDefinition> IHasMembershipKeyReference<ISubdirectory, ITagDefinition>.Ref2 => _definition;
+
+        IForeignKeyReference<ILocalSubdirectory> IHasMembershipKeyReference<ILocalSubdirectory, ITagDefinition>.Ref1 => _tagged;
+
+        IForeignKeyReference<ITagDefinition> IHasMembershipKeyReference<ILocalSubdirectory, ITagDefinition>.Ref2 => _definition;
+
+        IForeignKeyReference<ILocalSubdirectory> IHasMembershipKeyReference<ILocalSubdirectory, ILocalSharedTagDefinition>.Ref1 => _tagged;
+
+        IForeignKeyReference<ILocalSharedTagDefinition> IHasMembershipKeyReference<ILocalSubdirectory, ILocalSharedTagDefinition>.Ref2 => _definition;
+
+        public SharedSubdirectoryTag()
+        {
+            _tagged = new(SyncRoot);
+            _definition = new(SyncRoot);
+        }
 
         protected override ILocalTagDefinition GetDefinition() => Definition;
 
@@ -182,46 +149,8 @@ namespace FsInfoCat.Local
             return HashCode.Combine(taggedId, definitionId);
         }
 
-        public override bool TryGetDefinitionId(out Guid definitionId)
-        {
-            Monitor.Enter(SyncRoot);
-            try
-            {
-                if (_definition is null)
-                {
-                    if (_definitionId.HasValue)
-                    {
-                        definitionId = _definitionId.Value;
-                        return true;
-                    }
-                }
-                else
-                    return _definition.TryGetId(out definitionId);
-            }
-            finally { Monitor.Exit(SyncRoot); }
-            definitionId = Guid.Empty;
-            return false;
-        }
+        public override bool TryGetDefinitionId(out Guid definitionId) => _definition.TryGetId(out definitionId);
 
-        public override bool TryGetTaggedId(out Guid taggedId)
-        {
-            Monitor.Enter(SyncRoot);
-            try
-            {
-                if (_tagged is null)
-                {
-                    if (_taggedId.HasValue)
-                    {
-                        taggedId = _taggedId.Value;
-                        return true;
-                    }
-                }
-                else
-                    return _tagged.TryGetId(out taggedId);
-            }
-            finally { Monitor.Exit(SyncRoot); }
-            taggedId = Guid.Empty;
-            return false;
-        }
+        public override bool TryGetTaggedId(out Guid taggedId) => _tagged.TryGetId(out taggedId);
     }
 }

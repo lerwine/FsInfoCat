@@ -1,11 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.Local
 {
     /// <summary>.</summary>
     /// <seealso cref="ILocalDbEntity" />
     /// <seealso cref="IRedundancy" />
-    public interface ILocalRedundancy : ILocalDbEntity, IRedundancy
+    public interface ILocalRedundancy : ILocalDbEntity, IRedundancy, IHasMembershipKeyReference<ILocalRedundantSet, ILocalFile>
     {
         /// <summary>Gets the file that belongs to the redundancy set.</summary>
         /// <value>The file that belongs to the redundancy set.</value>

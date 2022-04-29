@@ -7,90 +7,26 @@ using System.Threading;
 
 namespace FsInfoCat.Local
 {
-    public class PersonalVolumeTag : ItemTag, ILocalPersonalVolumeTag, IPersonalVolumeTag, IEquatable<PersonalVolumeTag>
+    public class PersonalVolumeTag : ItemTag, IHasMembershipKeyReference<Volume, PersonalTagDefinition>, ILocalPersonalVolumeTag, IPersonalVolumeTag, IEquatable<PersonalVolumeTag>
     {
-        private Guid? _taggedId;
-        private Volume _tagged;
-        private Guid? _definitionId;
-        private PersonalTagDefinition _definition;
+        private readonly VolumeReference _tagged;
+        private readonly PersonalTagReference _definition;
 
-        public override Guid TaggedId
-        {
-            get => _tagged?.Id ?? _taggedId ?? Guid.Empty;
-            set
-            {
-                Monitor.Enter(SyncRoot);
-                try
-                {
-                    if (_tagged is not null)
-                    {
-                        if (_tagged.Id.Equals(value)) return;
-                        _tagged = null;
-                    }
-                    _taggedId = value;
-                }
-                finally { Monitor.Exit(SyncRoot); }
-            }
-        }
+        public override Guid TaggedId { get => _tagged.Id; set => _tagged.SetId(value); }
 
         [Required(ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_VolumeRequired),
             ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_Tagged_Volume), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         [BackingField(nameof(_tagged))]
-        public Volume Tagged
-        {
-            get => _tagged;
-            set
-            {
-                Monitor.Enter(SyncRoot);
-                try
-                {
-                    if (value is not null && _tagged is not null && ReferenceEquals(value, _tagged)) return;
-                    _taggedId = null;
-                    _tagged = value;
-                }
-                finally { Monitor.Exit(SyncRoot); }
-            }
-        }
+        public Volume Tagged { get => _tagged.Entity; set => _tagged.Entity = value; }
 
-        public override Guid DefinitionId
-        {
-            get => _definition?.Id ?? _definitionId ?? Guid.Empty;
-            set
-            {
-                Monitor.Enter(SyncRoot);
-                try
-                {
-                    if (_definition is not null)
-                    {
-                        if (_definition.Id.Equals(value)) return;
-                        _definition = null;
-                    }
-                    _definitionId = value;
-                }
-                finally { Monitor.Exit(SyncRoot); }
-            }
-        }
+        public override Guid DefinitionId { get => _definition.Id; set => _definition.SetId(value); }
 
         [Required(ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_TagDefinitionRequired),
             ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_TagDefinition), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         [BackingField(nameof(_definition))]
-        public PersonalTagDefinition Definition
-        {
-            get => _definition;
-            set
-            {
-                Monitor.Enter(SyncRoot);
-                try
-                {
-                    if (value is not null && _definition is not null && ReferenceEquals(value, _definition)) return;
-                    _definitionId = null;
-                    _definition = value;
-                }
-                finally { Monitor.Exit(SyncRoot); }
-            }
-        }
+        public PersonalTagDefinition Definition { get => _definition.Entity; set => _definition.Entity = value; }
 
         ILocalPersonalTagDefinition ILocalPersonalTag.Definition => Definition;
 
@@ -99,6 +35,38 @@ namespace FsInfoCat.Local
         ILocalVolume ILocalVolumeTag.Tagged => Tagged;
 
         IVolume IVolumeTag.Tagged => Tagged;
+
+        IForeignKeyReference<Volume> IHasMembershipKeyReference<Volume, PersonalTagDefinition>.Ref1 => _tagged;
+
+        IForeignKeyReference<PersonalTagDefinition> IHasMembershipKeyReference<Volume, PersonalTagDefinition>.Ref2 => _definition;
+
+        IForeignKeyReference IHasMembershipKeyReference.Ref1 => _tagged;
+
+        IForeignKeyReference IHasMembershipKeyReference.Ref2 => _definition;
+
+        object ISynchronizable.SyncRoot => SyncRoot;
+
+        IForeignKeyReference<IVolume> IHasMembershipKeyReference<IVolume, IPersonalTagDefinition>.Ref1 => _tagged;
+
+        IForeignKeyReference<IPersonalTagDefinition> IHasMembershipKeyReference<IVolume, IPersonalTagDefinition>.Ref2 => _definition;
+
+        IForeignKeyReference<IVolume> IHasMembershipKeyReference<IVolume, ITagDefinition>.Ref1 => _tagged;
+
+        IForeignKeyReference<ITagDefinition> IHasMembershipKeyReference<IVolume, ITagDefinition>.Ref2 => _definition;
+
+        IForeignKeyReference<ILocalVolume> IHasMembershipKeyReference<ILocalVolume, ITagDefinition>.Ref1 => _tagged;
+
+        IForeignKeyReference<ITagDefinition> IHasMembershipKeyReference<ILocalVolume, ITagDefinition>.Ref2 => _definition;
+
+        IForeignKeyReference<ILocalVolume> IHasMembershipKeyReference<ILocalVolume, ILocalPersonalTagDefinition>.Ref1 => _tagged;
+
+        IForeignKeyReference<ILocalPersonalTagDefinition> IHasMembershipKeyReference<ILocalVolume, ILocalPersonalTagDefinition>.Ref2 => _definition;
+
+        public PersonalVolumeTag()
+        {
+            _tagged = new(SyncRoot);
+            _definition = new(SyncRoot);
+        }
 
         protected override ILocalTagDefinition GetDefinition() => Definition;
 
@@ -181,46 +149,8 @@ namespace FsInfoCat.Local
             return HashCode.Combine(taggedId, definitionId);
         }
 
-        public override bool TryGetDefinitionId(out Guid definitionId)
-        {
-            Monitor.Enter(SyncRoot);
-            try
-            {
-                if (_definition is null)
-                {
-                    if (_definitionId.HasValue)
-                    {
-                        definitionId = _definitionId.Value;
-                        return true;
-                    }
-                }
-                else
-                    return _definition.TryGetId(out definitionId);
-            }
-            finally { Monitor.Exit(SyncRoot); }
-            definitionId = Guid.Empty;
-            return false;
-        }
+        public override bool TryGetDefinitionId(out Guid definitionId) => _definition.TryGetId(out definitionId);
 
-        public override bool TryGetTaggedId(out Guid taggedId)
-        {
-            Monitor.Enter(SyncRoot);
-            try
-            {
-                if (_tagged is null)
-                {
-                    if (_taggedId.HasValue)
-                    {
-                        taggedId = _taggedId.Value;
-                        return true;
-                    }
-                }
-                else
-                    return _tagged.TryGetId(out taggedId);
-            }
-            finally { Monitor.Exit(SyncRoot); }
-            taggedId = Guid.Empty;
-            return false;
-        }
+        public override bool TryGetTaggedId(out Guid taggedId) => _tagged.TryGetId(out taggedId);
     }
 }
