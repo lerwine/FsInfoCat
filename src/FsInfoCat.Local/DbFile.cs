@@ -1033,12 +1033,6 @@ namespace FsInfoCat.Local
 
         IEnumerable<Guid> IIdentityReference.GetIdentifiers() { yield return Id; }
 
-        public ISimpleIdentityReference<BinaryPropertySet> GetBinaryPropertySetReference()
-        {
-            BinaryPropertySet binaryPropertySet = BinaryProperties;
-            return (binaryPropertySet is null) ? (TryGetId(out Guid id) ? new SimpleIdentityOnlyReference<BinaryPropertySet>(id) : null) : new SimpleIdentityReference<BinaryPropertySet>(binaryPropertySet, b => b.Id);
-        }
-
         public bool Equals(DbFile other) => other is not null && (ReferenceEquals(this, other) || (TryGetId(out Guid id) ? id.Equals(other.Id) : other.Id.Equals(Guid.Empty) && ArePropertiesEqual(this)));
 
         public override bool Equals(DbFileRow other) => other is not null && ((other is DbFile file) ? Equals(file) : base.Equals(other));
